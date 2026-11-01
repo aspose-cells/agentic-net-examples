@@ -1,45 +1,53 @@
-// Title: Set custom page margins and freeze the top worksheet row using Aspose.Cells for .NET
-// AI Prompts: Write a C# snippet with Aspose.Cells that assigns specific left, right, top, and bottom margins (in inches) and then freezes the first row of the worksheet. | Generate .NET code that enables PrintHeadings, applies custom margins, and calls FreezePanes to keep the header row visible on screen and printed pages. | Create an Aspose.Cells workbook that configures printable area margins and freezes the top row before saving the file.
-// Common Searches: Aspose.Cells C# set page margins in inches and freeze first row | how to keep header row visible while printing with Aspose.Cells .NET | freeze panes top row and set custom margins using Aspose.Cells API | print headings and custom margins in Excel workbook with Aspose.Cells | C# example for setting margins and freezing rows in Aspose.Cells
-// Tags: custom page margins Aspose.Cells | freeze top row worksheet Aspose.Cells | enable PrintHeadings Aspose.Cells | set margins inches .NET | freeze panes C# Aspose.Cells
+// Title: Define custom page margins and freeze the top row in an Excel worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to set left, right, top, bottom, header, and footer margins in inches and freeze the first worksheet row. | Create a .NET example that configures page margins, applies FreezePanes to keep the header row visible, and saves the workbook as an XLSX file.
+// Common Searches: Aspose.Cells C# set page margins in inches and freeze first row | How to freeze top row after defining custom margins with Aspose.Cells .NET | C# example for configuring header and footer margins and FreezePanes in Aspose.Cells | Saving workbook with custom printable area and frozen header using Aspose.Cells | Aspose.Cells page setup margins and freeze panes code sample
+// Tags: page margins Aspose.Cells C# | freeze panes top row Aspose.Cells | header footer margin configuration Aspose.Cells | save workbook as xlsx Aspose.Cells | custom printable area Aspose.Cells | worksheet page setup C# Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates a new workbook, applies 0.5‑0.75 inch margins, enables PrintHeadings, freezes the first row, and saves the file as CustomMarginAndFreeze.xlsx.
-class Program
+namespace AsposeCellsMarginAndFreezeExample
 {
-    static void Main()
+    // The program creates a new workbook, sets custom left, right, top, bottom, header, and footer margins in inches, freezes the first worksheet row with FreezePanes, and saves the file as MarginAndFreezeDemo.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set custom page margins (in inches)
-            PageSetup pageSetup = sheet.PageSetup;
-            pageSetup.LeftMargin = 0.5;    // Left margin
-            pageSetup.RightMargin = 0.5;   // Right margin
-            pageSetup.TopMargin = 0.75;    // Top margin
-            pageSetup.BottomMargin = 0.75; // Bottom margin
+                // -------------------------
+                // Define custom page margins (in inches)
+                // -------------------------
+                // Set left, right, top, and bottom margins
+                sheet.PageSetup.LeftMargin = 0.5;    // 0.5 inch left margin
+                sheet.PageSetup.RightMargin = 0.5;   // 0.5 inch right margin
+                sheet.PageSetup.TopMargin = 0.75;    // 0.75 inch top margin
+                sheet.PageSetup.BottomMargin = 0.75; // 0.75 inch bottom margin
 
-            // Freeze the top row so it stays visible
-            // FreezePanes(row, column, totalRows, totalColumns)
-            // row/column define the first scrollable cell; totalRows/totalColumns define how many rows/columns to freeze
-            sheet.FreezePanes(1, 0, 1, 0);
+                // Optionally set header and footer margins
+                sheet.PageSetup.HeaderMargin = 0.3;
+                sheet.PageSetup.FooterMargin = 0.3;
 
-            // Ensure headings are printed (helps keep frozen rows on printed pages)
-            pageSetup.PrintHeadings = true;
+                // -------------------------
+                // Freeze the top row so it stays visible and within the printable area
+                // -------------------------
+                // FreezePanes(row, column, totalRows, totalColumns)
+                // Freeze the first row (totalRows = 1) and no columns
+                sheet.FreezePanes(1, 0, 1, 0);
 
-            // Save the workbook
-            workbook.Save("CustomMarginAndFreeze.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook to a file
+                workbook.Save("MarginAndFreezeDemo.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,49 +1,84 @@
-// Title: How to clear all slicer selections, refresh them, and export an Excel workbook to PDF with slicer graphics using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, iterates through every worksheet, sets ShowAllItems = true on each slicer, calls Refresh, and saves the workbook as a PDF with slicer visuals preserved. | Generate a method using Aspose.Cells that removes all slicer filters, updates the linked pivot tables, and creates a PDF output using PdfSaveOptions. | Provide a snippet that demonstrates unselecting slicer items across all sheets, invoking slicer.Refresh, and exporting the workbook to PDF while keeping the slicer shapes intact.
-// Common Searches: Aspose.Cells C# clear slicer filter before converting Excel to PDF | How to refresh slicer‑linked pivot tables and keep slicer appearance in PDF export | Export workbook to PDF with slicer graphics using Aspose.Cells .NET
-// Tags: reset slicer selections Aspose.Cells | slicer.Refresh update pivot table | PdfSaveOptions SheetSet.Visible | enumerate worksheet slicer collection C# | preserve slicer rendering during PDF conversion
+// Title: How to deselect all slicer items, refresh slicers and pivot tables, and export an Excel workbook to PDF with slicer rendering using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through every worksheet, clears the selection of each slicer item, calls Refresh on each slicer, refreshes all pivot tables, and saves the workbook as a PDF while preserving slicer appearance. | Provide an example that uses Aspose.Cells PdfSaveOptions to enable slicer rendering mode when exporting an Excel file to PDF after programmatically resetting slicer selections.
+// Common Searches: Aspose.Cells C# clear all slicer selections before exporting to PDF | programmatically deselect slicer items in an Excel workbook using Aspose.Cells | refresh pivot tables after modifying slicer cache with Aspose.Cells .NET | export Excel to PDF with slicer rendering mode Aspose.Cells | preserve slicer appearance when saving workbook as PDF using Aspose.Cells
+// Tags: Aspose.Cells clear slicer cache items | Aspose.Cells slicer refresh method | Aspose.Cells PDF export with slicer rendering | Aspose.Cells pivot table data refresh | Aspose.Cells workbook to PDF C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Pivot;
 
-// // Load the workbook, loop through each worksheet's slicer collection, set ShowAllItems = true to clear selections, call Refresh on each slicer, then save the workbook as a PDF using PdfSaveOptions (SheetSet.Visible) so slicer graphics are retained.
-class SlicerPdfExport
+// The sample loads an Excel workbook, loops through each worksheet to deselect every item in all slicers via the SlicerCache, calls Refresh on each slicer, refreshes all pivot tables, and then saves the workbook as a PDF using PdfSaveOptions (optionally setting SlicerRenderingMode to keep slicer visuals).
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook that contains a slicer
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.pdf";
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists before attempting to load it.
+        if (!File.Exists(inputPath))
         {
-            // Get the slicer collection for the current worksheet
-            SlicerCollection slicers = sheet.Slicers;
-
-            // Process each slicer
-            for (int i = 0; i < slicers.Count; i++)
-            {
-                Slicer slicer = slicers[i];
-
-                // Unselect all items by showing all items (clears any filter)
-                slicer.ShowAllItems = true;
-
-                // Refresh the slicer (also refreshes the underlying pivot table)
-                slicer.Refresh();
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Prepare PDF save options – export all visible sheets (default) and keep slicer appearance
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            // Ensure the slicer is rendered as part of the sheet
-            // No additional settings are required; slicers are included by default
-            SheetSet = SheetSet.Visible
-        };
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as PDF
-        workbook.Save("output.pdf", pdfOptions);
+            // Process slicers: clear selections and refresh.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Slicers != null && sheet.Slicers.Count > 0)
+                {
+                    foreach (Slicer slicer in sheet.Slicers)
+                    {
+                        try
+                        {
+                            // Clear selection of all slicer items if the API is available.
+                            if (slicer.SlicerCache != null && slicer.SlicerCache.SlicerCacheItems != null)
+                            {
+                                foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+                                {
+                                    item.Selected = false;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log but continue if clearing fails.
+                            Console.WriteLine($"Failed to clear slicer selections: {ex.Message}");
+                        }
+
+                        // Refresh the slicer to apply any changes.
+                        slicer.Refresh();
+                    }
+                }
+            }
+
+            // Refresh all pivot tables (if any).
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pt in sheet.PivotTables)
+                {
+                    pt.RefreshData();
+                }
+            }
+
+            // Save the workbook as PDF.
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // If the Aspose.Cells version supports slicer rendering mode, uncomment the line below:
+            // pdfOptions.SlicerRenderingMode = SlicerRenderingMode.Pdf;
+
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

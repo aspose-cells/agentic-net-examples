@@ -1,55 +1,67 @@
-// Title: How to enumerate VBA macro names in an .xlsm workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsm file with Aspose.Cells, accesses its VbaProject, and returns a list of all Sub and Function names. | Update the example to output each macro name together with the name of the module that contains it. | Create a reusable method `GetMacroNames(Workbook workbook)` that extracts macro names and returns them as a `List<string>` instead of printing to the console. | Add robust error handling that skips empty modules and logs a warning when no macros are found.
-// Common Searches: aspocells c# list all macros in xlsm workbook | extract VBA procedure names from Excel file using Aspose.Cells .NET | how to read VBA modules and get Sub names with Aspose.Cells | enumerate macro names in an Excel macro-enabled workbook programmatically c# | retrieve VBA macro list from .xlsm using Aspose.Cells API
-// Tags: Aspose.Cells enumerate VBA macros | C# extract macro names from .xlsm | VbaProject modules iteration Aspose.Cells | regex parse Sub Function declarations C# | load workbook access VbaProject .NET
+// Title: Enumerate VBA macro names from an XLSM workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# how to list all VBA macro names in an .xlsm file with Aspose.Cells | Aspose.Cells enumerate VBA procedures from workbook modules C# | extract Sub and Function identifiers from Excel macro-enabled workbook using Aspose.Cells .NET | read VBA project modules and get macro names with Aspose.Cells C# example | list VBA macros in an XLSM workbook programmatically using Aspose.Cells for .NET
+// Tags: enumerate VBA macros Aspose.Cells | read VbaProject modules C# | extract macro names from XLSM workbook | regex parse VBA source code C# | load workbook with VBA project Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Vba;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Aspose.Cells;
-using Aspose.Cells.Vba;   // Required for VbaModule
 
-// The program loads an .xlsm workbook with Aspose.Cells, checks for a VBA project, iterates through each VbaModule, uses a regular expression to locate Sub and Function declarations, and writes each macro name to the console.
+// The sample verifies the XLSM file exists, loads it with Aspose.Cells (which automatically loads any VBA project), accesses the VbaProject, iterates through each VbaModule, retrieves the module's source code via a dynamic call, applies a regular expression to capture Sub and Function declarations, and prints each macro name prefixed by its module name while handling missing projects and read errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsm";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsm";
+            // Load the workbook (VBA project is loaded automatically if present)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
+            if (vbaProject == null)
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine("No VBA project found in the workbook.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Regex to find Sub and Function declarations (macro names)
+            Regex macroRegex = new Regex(
+                @"^\s*(Public\s+|Private\s+)?(Sub|Function)\s+([A-Za-z0-9_]+)",
+                RegexOptions.Multiline);
 
-            // Check if the workbook contains a VBA project
-            if (workbook.VbaProject != null)
+            // Enumerate modules and extract macro names
+            foreach (VbaModule module in vbaProject.Modules)
             {
-                // Iterate through each VBA module in the project
-                foreach (VbaModule module in workbook.VbaProject.Modules)
+                string code = string.Empty;
+
+                // Use dynamic to access SourceCode property (handles API variations)
+                try
                 {
-                    string code = module.Codes;
-
-                    // Find Sub and Function declarations using regex
-                    foreach (Match match in Regex.Matches(code,
-                        @"\b(Sub|Function)\s+([A-Za-z_][A-Za-z0-9_]*)",
-                        RegexOptions.IgnoreCase))
-                    {
-                        // The second capture group contains the macro name
-                        string macroName = match.Groups[2].Value;
-                        Console.WriteLine(macroName);
-                    }
+                    dynamic dm = module;
+                    code = dm.SourceCode as string ?? string.Empty;
                 }
-            }
-            else
-            {
-                Console.WriteLine("No VBA project found in the workbook.");
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to read source code from module '{module.Name}': {ex.Message}");
+                    continue;
+                }
+
+                foreach (Match match in macroRegex.Matches(code))
+                {
+                    string macroName = match.Groups[3].Value;
+                    Console.WriteLine($"{module.Name}: {macroName}");
+                }
             }
         }
         catch (Exception ex)

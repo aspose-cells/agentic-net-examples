@@ -1,12 +1,11 @@
-// Title: Define a dynamic print area in an Aspose.Cells worksheet that grows with added rows and columns using C#
-// AI Prompts: Generate C# code that creates a workbook with Aspose.Cells, sets Worksheet.PageSetup.PrintArea to an OFFSET formula that automatically expands as data is added, and saves the file. | Update an existing Aspose.Cells worksheet to apply a COUNTA‑driven OFFSET range as the print area so the printable region updates when new rows or columns are inserted.
-// Common Searches: C# Aspose.Cells set print area that expands with new data | How to use OFFSET and COUNTA for dynamic print range in Aspose.Cells | Aspose.Cells PageSetup.PrintArea dynamic range example | Automatically adjust worksheet print area in C# with Aspose.Cells
-// Tags: auto expanding print area Aspose.Cells C# | OFFSET formula PageSetup.PrintArea | COUNTA driven print range | worksheet print area automation Aspose.Cells | C# Excel dynamic print range
+// Title: Define a dynamic print area that expands with data in an Aspose.Cells worksheet (C#)
+// Common Searches: C# Aspose.Cells set print area to range of used cells | How to automatically expand worksheet print area when adding rows in Aspose.Cells | Aspose.Cells PageSetup.PrintArea based on MaxDataRow and MaxDataColumn | Set print area to last populated cell in an Excel workbook using Aspose.Cells | Dynamic print range for Excel files with Aspose.Cells .NET
+// Tags: Aspose.Cells dynamic worksheet print area | PageSetup.PrintArea using MaxDataRow | auto expand Excel print range C# | calculate used range for print area Aspose.Cells | programmatic worksheet print area definition
 
 using Aspose.Cells;
 using System;
 
-// Creates a new workbook, defines a dynamic print area using an OFFSET formula that references COUNTA on column A and row 1, assigns it to Worksheet.PageSetup.PrintArea, and saves the workbook as DynamicPrintArea.xlsx.
+// The example creates a workbook, populates sample data, determines the last occupied row and column with MaxDataRow and MaxDataColumn, builds an A1‑style address from A1 to that cell, assigns the range to Worksheet.PageSetup.PrintArea, and saves the file, resulting in a print area that automatically grows as new data is added.
 class Program
 {
     static void Main()
@@ -14,23 +13,27 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet
+        // Get the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Data";
 
-        // (Optional) Populate some sample data
-        // for (int i = 0; i < 10; i++)
-        // {
-        //     sheet.Cells[i, 0].PutValue($"Item {i + 1}");
-        //     sheet.Cells[i, 1].PutValue(i * 10);
-        // }
+        // Sample data (replace with your actual data population logic)
+        sheet.Cells["A1"].PutValue("Header1");
+        sheet.Cells["B1"].PutValue("Header2");
+        sheet.Cells["A2"].PutValue(100);
+        sheet.Cells["B2"].PutValue(200);
+        sheet.Cells["A3"].PutValue(300);
+        sheet.Cells["B3"].PutValue(400);
 
-        // Define a dynamic print area that expands with new rows in column A
-        // and new columns in row 1 using Excel formulas.
-        string dynamicRange = "OFFSET($A$1,0,0,COUNTA($A:$A),COUNTA($1:$1))";
+        // Determine the last row and column that contain data
+        int lastRow = sheet.Cells.MaxDataRow;      // zero‑based index
+        int lastCol = sheet.Cells.MaxDataColumn;   // zero‑based index
 
-        // Apply the dynamic print area to the worksheet
-        sheet.PageSetup.PrintArea = dynamicRange;
+        // Build the A1‑style address for the dynamic print area
+        string startAddress = sheet.Cells[0, 0].Name;                 // "A1"
+        string endAddress   = sheet.Cells[lastRow, lastCol].Name;    // e.g., "B3"
+
+        // Set the worksheet's print area to the calculated range
+        sheet.PageSetup.PrintArea = $"{startAddress}:{endAddress}";
 
         // Save the workbook
         workbook.Save("DynamicPrintArea.xlsx");

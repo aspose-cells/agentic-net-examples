@@ -1,50 +1,48 @@
-// Title: Export hidden worksheets to HTML with BestFit layout using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# console program that loads an .xlsx file, sets HtmlSaveOptions.ExportHiddenWorksheet to true, applies PresentationPreference.BestFit, and saves the workbook as an HTML file using Aspose.Cells. | Show the steps to configure Aspose.Cells HtmlSaveOptions for exporting hidden sheets and using the BestFit layout when converting Excel to HTML in .NET.
-// Common Searches: asp.net aspose.cells convert excel to html with hidden worksheets included | c# set presentationpreference bestfit for html export using aspose.cells | how to include hidden sheets in html output from workbook aspose.cells | example of HtmlSaveOptions with ExportHiddenWorksheet and PresentationPreference in C# | save excel workbook as html bestfit layout asp.net
-// Tags: Aspose.Cells HtmlSaveOptions export hidden worksheets | Aspose.Cells PresentationPreference BestFit | C# Excel to HTML conversion using Aspose.Cells | Include hidden sheets in HTML output Aspose.Cells | HtmlSaveOptions set PresentationPreference
+// Title: Export hidden worksheets and apply best‑fit column widths when converting an Excel workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, enables HtmlSaveOptions.ExportHiddenWorksheet, sets PresentationPreference to BestFit, and saves the workbook as HTML using Aspose.Cells. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to include hidden sheets and automatically adjust column widths for optimal HTML rendering. | Provide error‑handling logic for missing input files while converting Excel to HTML with hidden worksheets in C#.
+// Common Searches: asp.net convert excel to html include hidden worksheets Aspose.Cells | c# Aspose.Cells PresentationPreference BestFit HTML export example | how to export hidden sheets to html using Aspose.Cells | auto‑fit column widths when saving workbook as html with Aspose.Cells | HtmlSaveOptions settings for hidden worksheets and best fit layout
+// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | Aspose.Cells PresentationPreference BestFit | C# Excel to HTML hidden sheet conversion | auto‑fit column widths Aspose.Cells HTML output | Aspose.Cells hidden sheet inclusion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The sample verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to export hidden worksheets and (optionally) apply the BestFit presentation preference, then saves the workbook as output.html while handling any exceptions.
+// The example checks for the input file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to export hidden worksheets (and optionally set PresentationPreference.BestFit for column auto‑fit), then saves the workbook as an HTML file while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input workbook exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
             // Load the Excel workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
                 // Export hidden worksheets as part of the HTML output
                 ExportHiddenWorksheet = true
-                // Note: PresentationPreference property may not be available in all versions.
-                // If needed, uncomment the following line after confirming the enum exists.
-                // PresentationPreference = PresentationPreference.BestFit
+                // PresentationPreference property removed for compatibility with current API version
             };
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputPath, htmlOptions);
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, saveOptions);
             Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for troubleshooting
+            // Handle any runtime exceptions gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

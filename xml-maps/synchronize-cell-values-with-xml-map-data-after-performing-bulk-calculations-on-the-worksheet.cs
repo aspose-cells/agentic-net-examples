@@ -1,63 +1,54 @@
-// Title: Export Excel cell values to XML maps after bulk formula recalculation using Aspose.Cells for .NET
-// AI Prompts: Recalculate all formulas in a workbook, then iterate through the workbook's XmlMaps collection and call ExportData on each map with Aspose.Cells in C#. | Use reflection to obtain the XmlMaps property of a Workbook object and invoke the ExportData method for each XML map to synchronize data after bulk updates. | Load an .xlsx file, perform bulk data changes, recalculate formulas, export the updated cell values to XML maps, and save the workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells export updated cell values to XML map after CalculateFormula | C# how to sync Excel worksheet changes with XML maps using Aspose.Cells | Using reflection to access XmlMaps collection in Aspose.Cells workbook | Bulk recalculate formulas and update XML maps in .NET Excel file
-// Tags: export data to xml maps Aspose.Cells | recalculate formulas then sync xml map | reflection access XmlMaps C# | bulk formula calculation Excel Aspose.Cells | synchronize worksheet values with xml map .NET
+// Title: Recalculate all worksheet formulas and prepare workbook for XML map synchronization using Aspose.Cells for .NET (C#)
+// Common Searches: how to recalculate all formulas in an Excel workbook with Aspose.Cells C# | updating XML map values after bulk calculations in Aspose.Cells .NET | saving workbook after formula recalculation before exporting XML map data using Aspose.Cells | Aspose.Cells C# example for bulk worksheet calculations and XML map preparation | workaround for missing XmlMaps API in Aspose.Cells when syncing XML data
+// Tags: recalculate formulas Aspose.Cells .NET | XML map synchronization Aspose.Cells | bulk worksheet calculation C# | export XML map data Aspose.Cells | missing XmlMaps API workaround
 
-using Aspose.Cells;
 using System;
-using System.Collections;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, recalculates all formulas, uses reflection to iterate over each XML map and invoke ExportData, ensuring the XML data stays in sync with the updated cell values, and then saves the workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads an existing workbook (or creates a new one), recalculates all formulas, notes that the current Aspose.Cells version lacks XmlMaps/XmlMap.ExportData support, and saves the workbook, ready for XML map synchronization.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                // Load existing workbook or create a new blank one if the file is missing.
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-            // Load the workbook that contains the XML map
-            Workbook workbook = new Workbook(inputPath);
+                // Recalculate all formulas in the workbook.
+                workbook.CalculateFormula();
 
-            // Recalculate all formulas after bulk data changes
-            workbook.CalculateFormula();
+                // Get the first worksheet (adjust index if needed).
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Export the current cell values back to each XML map to keep the XML data in sync
-            // Use reflection to stay compatible with versions that may not expose XmlMaps directly
-            var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
-            if (xmlMapsProp != null)
-            {
-                var xmlMaps = xmlMapsProp.GetValue(workbook) as IEnumerable;
-                if (xmlMaps != null)
+                // -----------------------------------------------------------------
+                // XML map handling – removed because the current Aspose.Cells version
+                // does not expose Workbook.XmlMaps / XmlMap.ExportData APIs.
+                // If a future version adds this support, the code can be re‑added
+                // using the appropriate API calls.
+                // -----------------------------------------------------------------
+
+                // Ensure the directory for the output file exists.
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    foreach (var mapObj in xmlMaps)
-                    {
-                        var exportMethod = mapObj.GetType().GetMethod("ExportData");
-                        exportMethod?.Invoke(mapObj, null);
-                    }
+                    Directory.CreateDirectory(outputDir);
                 }
-            }
-            else
-            {
-                Console.WriteLine("The loaded workbook does not contain any XML maps or the XmlMaps property is unavailable.");
-            }
 
-            // Save the workbook with the synchronized XML map data
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the updated workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

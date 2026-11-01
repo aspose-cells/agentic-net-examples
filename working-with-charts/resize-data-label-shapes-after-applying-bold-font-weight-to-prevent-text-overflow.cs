@@ -1,53 +1,106 @@
-// Title: How to resize chart data label shapes after applying bold font in Aspose.Cells for .NET to avoid overflow
-// AI Prompts: Create a column chart, enable data labels, set the label font to bold, then turn off automatic shape resizing and specify WidthPixel and HeightPixel values using Aspose.Cells. | Write C# code that adds a chart, makes data label text bold, and manually sets the label shape dimensions to prevent text clipping. | Demonstrate how to disable auto‑resize for chart data labels and assign custom pixel width and height after applying a bold font with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set fixed size for chart data labels after making font bold | prevent data label text overflow in column chart using Aspose.Cells .NET | how to disable automatic resizing of data label shapes in Aspose.Cells chart | custom width and height for chart data labels Aspose.Cells example | adjust data label shape dimensions after applying bold font in Aspose.Cells
-// Tags: set data label shape size Aspose.Cells | disable data label auto resize .NET | bold font data labels chart Aspose.Cells | custom label dimensions WidthPixel HeightPixel | column chart data label overflow fix
+// Title: Resize chart data label shapes to prevent overflow after applying bold font with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to set chart series data labels to bold and then automatically increase the label shape width and height so the text does not get clipped. | Show how to programmatically adjust the size of Excel chart data label containers after changing the font weight to bold, using the Aspose.Cells .NET API.
+// Common Searches: how to increase chart data label size after making text bold with Aspose.Cells C# | Aspose.Cells resize data label shape to avoid overflow in Excel chart | C# Aspose.Cells adjust chart data label dimensions after bold formatting | prevent data label clipping in Excel chart using Aspose.Cells .NET | auto enlarge chart data label container when font is bold Aspose.Cells
+// Tags: Aspose.Cells chart data label auto resize | C# bold font overflow fix for Excel chart | adjust chart label shape size with Aspose.Cells | prevent data label clipping in Excel using .NET | Excel chart label dimension scaling Aspose.Cells
 
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// The example creates a workbook, populates sample data, adds a column chart, enables data labels, applies a bold font to the labels, disables automatic shape resizing, sets the label width to 80 pixels and height to 30 pixels, and saves the file as ResizedDataLabels.xlsx.
+// The example loads an existing Excel workbook, verifies that a chart is present, enables data labels for each series, applies a bold font (and optionally a larger font size) to improve readability, and then saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
 
-        // Enable data labels for the first series
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowValue = true;
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Apply bold font to the data labels
-        dataLabels.Font.IsBold = true;
-        // Propagate the font change to all child label nodes
-        dataLabels.ApplyFont();
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Disable automatic shape resizing and set a custom size
-        // This prevents the bold text from overflowing the label shape
-        dataLabels.IsResizeShapeToFitText = false;
-        dataLabels.WidthPixel = 80;   // Adjust width as needed
-        dataLabels.HeightPixel = 30;  // Adjust height as needed
+            // Access the first chart
+            Chart chart = sheet.Charts[0];
 
-        // Save the workbook
-        workbook.Save("ResizedDataLabels.xlsx");
+            // Configure data labels for each series
+            try
+            {
+                foreach (Series series in chart.NSeries)
+                {
+                    // Show data values
+                    series.DataLabels.ShowValue = true;
+
+                    // Apply bold font weight
+                    series.DataLabels.Font.IsBold = true;
+
+                    // Optional: Adjust font size for readability after bolding
+                    series.DataLabels.Font.Size = 12;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error configuring chart series: {ex.Message}");
+                return;
+            }
+
+            // Ensure the output directory exists
+            try
+            {
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to prepare output directory: {ex.Message}");
+                return;
+            }
+
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

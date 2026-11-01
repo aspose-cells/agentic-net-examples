@@ -1,59 +1,51 @@
-// Title: How to link a rectangle shape to a cell containing a CONCAT formula and display the result using Aspose.Cells for .NET
-// AI Prompts: Create a rectangle shape on a worksheet and set its Text property to reference cell C1 that holds a CONCAT formula. | Execute Workbook.CalculateFormula() and then read Shape.Text to confirm the concatenated string appears inside the shape. | Save the workbook as an .xlsx file after linking the shape to ensure the linked text is persisted.
-// Common Searches: Aspose.Cells .NET link shape text to cell formula example | display CONCAT result inside a shape using Aspose.Cells | bind rectangle shape to cell C1 and get updated text after calculation | how to use shape.Text = "=C1" with CONCAT in Aspose.Cells | verify shape displays concatenated values from A1 and B1 in Aspose.Cells
-// Tags: shape-to-cell formula binding Aspose.Cells | rectangle shape displays CONCAT output | calculate workbook formulas before shape read | Aspose.Cells linked shape persistence | C# linking shape text to cell reference
+// Title: Bind a rectangle shape’s text to a CONCAT formula and verify the result using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a rectangle shape on a worksheet and assign its Text property to the formula =CONCAT(A1,B1) with Aspose.Cells in C#. | Run Workbook.CalculateFormula to evaluate the shape’s formula, then read Shape.Text to verify the concatenated output. | Save the workbook to an .xlsx file and print the absolute file path after linking the shape to the cell values.
+// Common Searches: asp.net how to bind a shape’s text to a CONCAT formula using Aspose.Cells | c# display concatenated cell values inside a rectangle shape with Aspose.Cells | retrieve evaluated shape text after calling CalculateFormula in Aspose.Cells | link shape to worksheet cells via formula and save as xlsx Aspose.Cells C#
+// Tags: Aspose.Cells set shape text to formula | C# rectangle shape CONCAT cell values | calculate workbook formulas Aspose.Cells | read evaluated shape text Aspose.Cells | save workbook as xlsx Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// The example creates a workbook, writes values to A1 and B1, sets a CONCAT formula in C1, adds a rectangle shape, links the shape's Text property to C1, calculates formulas, prints the shape's displayed text (expected "Hello World!"), and saves the file as LinkedShape.xlsx.
+// The example creates a new workbook, writes "Hello " to A1 and "World!" to B1, adds a rectangle shape, sets its Text to the CONCAT formula referencing those cells, recalculates formulas, reads the shape's displayed text (expected "Hello World!"), and saves the file as ShapeConcat.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Populate cells A1 and B1 with sample text
-            ws.Cells["A1"].PutValue("Hello ");
-            ws.Cells["B1"].PutValue("World!");
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Set formula in C1 that concatenates A1 and B1 using CONCAT
-            ws.Cells["C1"].Formula = "CONCAT(A1,B1)";
+            // Put sample values into cells A1 and B1
+            sheet.Cells["A1"].PutValue("Hello ");
+            sheet.Cells["B1"].PutValue("World!");
 
-            // Add a rectangle shape to the worksheet and obtain the Shape object directly
-            Shape shape = ws.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 120, 30);
+            // Add a rectangle shape to the worksheet
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 100, 30);
 
-            // Link the shape's text to cell C1
-            shape.Text = "=C1";
+            // Set the shape's text to a formula that concatenates A1 and B1
+            shape.Text = "=CONCAT(A1,B1)";
 
-            // Calculate all formulas in the workbook
-            wb.CalculateFormula();
+            // Recalculate all formulas so the shape displays the result
+            workbook.CalculateFormula();
 
-            // Verify that the shape now displays the concatenated string
-            Console.WriteLine("Shape text: " + shape.Text); // Expected output: "Hello World!"
+            // Retrieve the displayed text from the shape after calculation
+            string displayedText = shape.Text;
+            Console.WriteLine("Shape displays: " + displayedText); // Expected: "Hello World!"
 
-            // Save the workbook (optional)
-            string outputPath = "LinkedShape.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            wb.Save(outputPath);
+            // Save the workbook
+            string outputPath = "ShapeConcat.xlsx";
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

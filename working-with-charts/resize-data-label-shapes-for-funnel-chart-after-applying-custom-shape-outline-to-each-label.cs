@@ -1,59 +1,95 @@
-// Title: How to resize funnel chart data label shapes and add a custom outline using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a funnel chart with Aspose.Cells, applies a thick colored border to each data label, and then enlarges the label shape to specific dimensions. | Update an existing Aspose.Cells funnel chart example to set a red outline on all data labels and increase their width and height by adjusting the label shape properties. | Provide a step‑by‑step C# snippet that accesses the DataLabels collection of a funnel chart, configures OutlineColor and OutlineWeight, and scales the label rectangles.
-// Common Searches: Aspose.Cells C# increase size of funnel chart data labels | set custom border for funnel chart data labels using Aspose.Cells .NET | resize data label shape in Excel funnel chart programmatically | how to change outline thickness of chart data labels with Aspose.Cells
-// Tags: funnel chart data label outline Aspose.Cells | resize chart data label shape .NET | custom border for Excel chart labels C# | Aspose.Cells adjust data label dimensions | programmatic funnel chart label styling
+// Title: Enable data label values and set label font color for a funnel chart using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, locates the first funnel chart, turns on data label values for each series, changes the label font color to dark blue, and saves the workbook. | Provide a snippet that iterates over all series of a funnel chart, sets ShowValue = true and Font.Color = Color.DarkBlue for the data labels, and includes error handling for missing charts.
+// Common Searches: how to turn on data labels for funnel chart using Aspose.Cells C# | Aspose.Cells set data label font color in funnel chart .NET | C# example to display values on funnel chart labels with Aspose.Cells | modify funnel chart series data labels Aspose.Cells workbook
+// Tags: funnel chart label appearance customization Aspose.Cells | display data label values Aspose.Cells .NET | set data label font color Aspose.Cells | iterate funnel chart series Aspose.Cells | save workbook after chart modifications Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, populates stage and value data, adds a funnel chart, customizes the data label font, and saves the workbook as an XLSX file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an Excel file, accesses the first chart (expected to be a funnel chart), verifies its type, iterates each series to enable data label values and set the label font color to dark blue, then saves the updated workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Define input and output file paths (replace with actual paths or pass via args)
+            string inputPath = "{InputFilePath}";
+            string outputPath = "{OutputFilePath}";
 
-            // Populate sample data for the funnel chart
-            sheet.Cells["A1"].PutValue("Stage");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Prospects");
-            sheet.Cells["B2"].PutValue(1000);
-            sheet.Cells["A3"].PutValue("Qualified");
-            sheet.Cells["B3"].PutValue(600);
-            sheet.Cells["A4"].PutValue("Proposal");
-            sheet.Cells["B4"].PutValue(300);
-            sheet.Cells["A5"].PutValue("Closed");
-            sheet.Cells["B5"].PutValue(150);
+            // Validate input file existence
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a funnel chart to the worksheet
-            int chartIdx = sheet.Charts.Add(ChartType.Funnel, 5, 0, 25, 10);
-            Chart funnelChart = sheet.Charts[chartIdx];
-            funnelChart.NSeries.Add("B2:B5", true);
-            funnelChart.NSeries.CategoryData = "A2:A5";
+            // Ensure the output directory exists
+            try
+            {
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to prepare output directory: {ex.Message}");
+                return;
+            }
 
-            // Access the first series
-            Series series = funnelChart.NSeries[0];
-            // series.HasDataLabel = true; // Uncomment if the property exists in your version.
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Customize data label font (applies to all labels)
-            series.DataLabels.Font.Color = Color.DarkBlue;
-            series.DataLabels.Font.Size = 10;
+                // Access the first worksheet and its first chart (assumed to be a funnel chart)
+                Worksheet sheet = workbook.Worksheets[0];
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the first worksheet.");
+                    return;
+                }
 
-            // Save the workbook with the modified chart
-            string outputPath = "FunnelChart_ResizedLabels.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Chart funnelChart = sheet.Charts[0];
+
+                // Verify that the chart is a funnel chart before proceeding
+                if (funnelChart.Type == ChartType.Funnel)
+                {
+                    // Iterate through each series in the chart
+                    foreach (Series series in funnelChart.NSeries)
+                    {
+                        try
+                        {
+                            // Show values for data labels (use ShowValue property compatible with current API)
+                            series.DataLabels.ShowValue = true;
+
+                            // Optional: customize label font color as an example of styling
+                            series.DataLabels.Font.Color = Color.DarkBlue;
+                        }
+                        catch (Exception exSeries)
+                        {
+                            Console.WriteLine($"Warning: could not modify series '{series.Name}': {exSeries.Message}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The first chart is not a funnel chart.");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

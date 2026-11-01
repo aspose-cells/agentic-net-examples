@@ -1,68 +1,84 @@
-// Title: Remove duplicate rows from a CSV file using Aspose.Cells in C# and export to XLSX
-// AI Prompts: Generate C# code that loads a CSV with Aspose.Cells, removes rows that have duplicate values in a specified column, and saves the cleaned data as an XLSX workbook. | Adjust the duplicate‑removal step to keep the last occurrence of each key column value when calling Cells.RemoveDuplicates. | Extend the solution to accept a custom delimiter and perform case‑insensitive duplicate detection while processing the CSV with Aspose.Cells.
-// Common Searches: aspnet remove duplicate rows from csv using aspose.cells | c# aspose.cells import csv and delete duplicate entries based on column | how to use Cells.RemoveDuplicates with key column index in Aspose.Cells | convert csv to xlsx while filtering duplicate records in .NET
-// Tags: Aspose.Cells duplicate row removal | Cells.RemoveDuplicates key column usage | CSV to XLSX conversion with duplicate filtering | C# duplicate detection in CSV using Aspose.Cells | Aspose.Cells CSV data cleaning
+// Title: How to remove duplicate rows from a CSV file using a key column with Aspose.Cells for .NET
+// Common Searches: C# code to delete duplicate rows in a CSV based on the first column using Aspose.Cells | Aspose.Cells .NET remove duplicate records from CSV file by key column | Load CSV with Aspose.Cells, deduplicate rows, and save as new CSV in C# | Using HashSet to filter duplicate rows when processing CSV with Aspose.Cells | Aspose.Cells example for deleting rows while iterating from bottom to top
+// Tags: duplicate row removal CSV Aspose.Cells | key column deduplication .NET | load CSV LoadOptions Aspose.Cells | delete rows programmatically Aspose.Cells | save CSV SaveFormat.Csv Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDuplicateRemoval
+// The example loads a CSV file with Aspose.Cells, iterates rows from bottom to top, uses a case‑insensitive HashSet to track values from a specified key column, deletes rows whose key has already been seen, ensures the output directory exists, and saves the cleaned data as a new CSV file.
+class Program
 {
-    // Loads a CSV into an Aspose.Cells workbook, removes rows that share duplicate values in a designated key column using Cells.RemoveDuplicates, and saves the deduplicated result as an XLSX file.
-    public class RemoveCsvDuplicates
+    static void Main()
     {
-        public static void Run()
+        // Paths for input and output CSV files
+        string inputPath = "input.csv";
+        string outputPath = "output.csv";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Path to the source CSV file
-                string csvPath = "input.csv";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Path for the resulting Excel file
-                string outputPath = "output.xlsx";
+            // Load the CSV file with appropriate load options
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-                // Index of the column that serves as the key for duplicate detection (0‑based)
-                int keyColumnIndex = 0; // Example: first column
+            // CSV is loaded into the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Verify that the CSV file exists
-                if (!File.Exists(csvPath))
+            // Zero‑based index of the column used as the duplicate key (e.g., 0 = column A)
+            int keyColumnIndex = 0;
+
+            // Track keys that have already been encountered
+            HashSet<string> seenKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // Determine the total number of used rows (MaxDataRow is zero‑based)
+            int totalRows = cells.MaxDataRow + 1;
+
+            // Iterate from bottom to top so row deletions do not affect the loop index
+            for (int row = totalRows - 1; row >= 0; row--)
+            {
+                // Retrieve the key value from the designated column
+                string key = cells[row, keyColumnIndex].StringValue?.Trim() ?? string.Empty;
+
+                // Skip empty keys (treat as unique)
+                if (string.IsNullOrEmpty(key))
+                    continue;
+
+                if (seenKeys.Contains(key))
                 {
-                    Console.WriteLine($"CSV file not found: {csvPath}");
-                    return;
+                    // Delete the duplicate row
+                    cells.DeleteRows(row, 1);
                 }
-
-                // Create a new workbook and get the first worksheet's cells collection
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Import the CSV data starting at cell A1 (row 0, column 0)
-                cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-                // Determine the actual range of imported data
-                int lastRow = cells.MaxDataRow;          // zero‑based index of the last row with data
-                int lastColumn = cells.MaxDataColumn;    // zero‑based index of the last column with data
-
-                // Remove duplicate rows based on the key column
-                cells.RemoveDuplicates(0, 0, lastRow, lastColumn, true, new int[] { keyColumnIndex });
-
-                // Save the cleaned workbook as an XLSX file
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Duplicates removed. Output saved to {outputPath}");
+                else
+                {
+                    // First occurrence – add to the set
+                    seenKeys.Add(key);
+                }
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the cleaned data back to CSV format
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Duplicate removal completed. Output saved to: {outputPath}");
+        }
+        catch (Exception ex)
         {
-            RemoveCsvDuplicates.Run();
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

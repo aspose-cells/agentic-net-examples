@@ -1,71 +1,68 @@
-// Title: How to set a 120% zoom on every worksheet and save each sheet as an individual XLS file with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells in C# to iterate through all worksheets, set each sheet’s Zoom property to 120, and write the sheet to its own Excel 97‑2003 (.xls) file. | Create a separate workbook for each worksheet, copy the original sheet, apply a 120 % zoom level, and save the workbook as an .xls file while sanitizing the sheet name for a valid filename.
-// Common Searches: Aspose.Cells set worksheet zoom to 120 percent in C# | Save each worksheet as a separate .xls file using Aspose.Cells .NET | Copy a sheet to a new workbook and apply zoom with Aspose.Cells | How to generate individual Excel 97‑2003 files from a multi‑sheet workbook in C# | Sanitize worksheet names for file output Aspose.Cells
-// Tags: worksheet zoom 120% Aspose.Cells | export single sheet to XLS Aspose.Cells | copy worksheet to new workbook C# | sanitize filename from sheet name C# | Aspose.Cells SaveFormat.Excel97To2003 | iterate worksheets Aspose.Cells C#
+// Title: Set 120% zoom for every worksheet and export each sheet as an individual XLS file with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set worksheet zoom to 120 percent and save each sheet as its own XLS file | How to split an Excel workbook into separate XLS files while applying a custom zoom level using Aspose.Cells | Aspose.Cells copy a single worksheet to a new workbook and change the zoom factor in C# | Programmatically export each worksheet to separate .xls files with a specific zoom setting using Aspose.Cells | Apply 120% zoom to all sheets in a workbook before saving them individually with Aspose.Cells .NET
+// Tags: worksheet zoom setting Aspose.Cells C# | export single worksheet to XLS Aspose.Cells | split workbook into separate files Aspose.Cells | apply custom zoom factor to sheets Aspose.Cells | copy worksheet to new workbook C# Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads a multi‑sheet workbook, sets each worksheet’s Zoom property to 120 %, creates a new workbook containing only that sheet, sanitizes the sheet name to form a valid filename, and saves each sheet as an individual Excel 97‑2003 (.xls) file using Aspose.Cells for .NET.
+// The example loads an input.xlsx workbook, iterates through all worksheets, sets each sheet's Zoom property to 120%, creates a new workbook containing only that sheet, and saves it as a separate .xls file named after the worksheet, with error handling for missing files and per‑sheet exceptions.
 class Program
 {
     static void Main()
     {
+        // Path to the source workbook
+        string sourcePath = "input.xlsx";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
+
         try
         {
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(inputPath);
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Process each worksheet
-            foreach (Worksheet sheet in sourceWorkbook.Worksheets)
+            // Iterate through each worksheet in the source workbook
+            for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
             {
-                // Apply 120% zoom
-                sheet.Zoom = 120;
+                Worksheet sheet = sourceWorkbook.Worksheets[i];
 
-                // Create a new workbook for the single sheet
-                Workbook singleSheetWorkbook = new Workbook();
+                try
+                {
+                    // Apply 120% zoom level to the current worksheet
+                    sheet.Zoom = 120;
 
-                // Remove the default empty sheet
-                singleSheetWorkbook.Worksheets.Clear();
+                    // Create a new workbook to hold only this worksheet
+                    Workbook singleSheetWorkbook = new Workbook();
 
-                // Copy the current worksheet by name
-                singleSheetWorkbook.Worksheets.AddCopy(sheet.Name);
+                    // Remove the default empty sheet that Aspose.Cells creates
+                    singleSheetWorkbook.Worksheets.Clear();
 
-                // Rename the copied sheet to match the original name
-                singleSheetWorkbook.Worksheets[0].Name = sheet.Name;
+                    // Copy the current worksheet into the new workbook by name
+                    singleSheetWorkbook.Worksheets.AddCopy(sheet.Name);
 
-                // Ensure a valid file name for the output
-                string safeName = MakeValidFileName(sheet.Name);
-                string outputFileName = $"{safeName}.xls";
+                    // Define the output file name (one XLS file per worksheet)
+                    string outputFileName = $"{sheet.Name}.xls";
 
-                // Save as Excel 97‑2003 format
-                singleSheetWorkbook.Save(outputFileName, SaveFormat.Excel97To2003);
-                Console.WriteLine($"Saved sheet '{sheet.Name}' to {outputFileName}");
+                    // Save the new workbook; format is inferred from the file extension
+                    singleSheetWorkbook.Save(outputFileName);
+                    Console.WriteLine($"Saved worksheet '{sheet.Name}' to '{outputFileName}'.");
+                }
+                catch (Exception ex)
+                {
+                    // Handle errors for individual worksheets
+                    Console.WriteLine($"Error processing worksheet '{sheet.Name}': {ex.Message}");
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Helper method to replace invalid filename characters
-    private static string MakeValidFileName(string name)
-    {
-        foreach (char c in Path.GetInvalidFileNameChars())
-        {
-            name = name.Replace(c, '_');
-        }
-        return name;
     }
 }

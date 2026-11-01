@@ -1,80 +1,75 @@
-// Title: Import a decimal ArrayList into an Excel worksheet and round each cell to two decimal places with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to import a System.Collections.ArrayList of decimal values vertically into column A of a new workbook, round every imported cell to two decimal places, and save the file as an .xlsx document. | Show how to adjust the import routine to place the decimal values horizontally across the first row, apply a numeric format with two decimal places, and save the workbook using Aspose.Cells. | Create C# logic that iterates over cells after importing an ArrayList with Aspose.Cells, skips non‑numeric entries, rounds numeric values to two decimal places, and writes the results back to the worksheet.
-// Common Searches: c# aspocells import arraylist of decimals and round to two decimal places | how to round imported numeric cells in Aspose.Cells .NET | vertical import of decimal values into Excel using Aspose.Cells | Aspose.Cells round cells after ImportArrayList method | convert decimal to double and round in Aspose.Cells workbook
-// Tags: ImportArrayList decimal values Aspose.Cells | round cell values two decimal places .NET | vertical data import Aspose.Cells C# | numeric formatting after import Aspose.Cells | handle decimal and double types Aspose.Cells
+// Title: Import an ArrayList of decimal numbers into an Excel worksheet and round each cell to two decimal places using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an ArrayList of decimal values, writes them to column A of a new workbook with Aspose.Cells, then rounds every numeric cell in the used range to two decimal places before saving as XLSX. | Show how to use Aspose.Cells' MaxDisplayRange to iterate over all populated cells and apply Math.Round with MidpointRounding.AwayFromZero to each numeric cell after importing data from a collection. | Create a .NET example that converts each item in an ArrayList to decimal, inserts it into a worksheet, formats the cells to display two decimal places, and saves the workbook.
+// Common Searches: C# Aspose.Cells load decimal numbers from a List into Excel column A | Apply two‑decimal rounding to all numeric cells after populating a worksheet with Aspose.Cells | Iterate over used range in Aspose.Cells and round values in C# | Save Aspose.Cells workbook as XLSX after rounding decimal data | Add decimal values from an ArrayList to cells in Aspose.Cells
+// Tags: insert decimal data into worksheet Aspose.Cells | round numeric cells to two decimals Aspose.Cells | enumerate worksheet cells Aspose.Cells | write workbook to XLSX format Aspose.Cells
 
 using System;
 using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, imports a list of decimal numbers from an ArrayList into column A, iterates over the used range to round each numeric cell to two decimal places, and saves the result as output.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, importing a System.Collections.ArrayList of decimal numbers vertically into column A, rounding each imported cell to two decimal places, and saving the workbook as ImportArrayListRounded.xlsx using Aspose.Cells for .NET.
-    public class ImportArrayListAndRoundDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data: ArrayList of decimal numbers.
+            ArrayList data = new ArrayList
             {
-                // Create a new workbook and get the first worksheet's cells collection
-                Workbook workbook = new Workbook();
-                Cells cells = workbook.Worksheets[0].Cells;
+                12.3456m,
+                78.9012m,
+                3.14159m,
+                0.9999m,
+                123.4567m
+            };
 
-                // Prepare an ArrayList of decimal numbers
-                ArrayList decimalData = new ArrayList
+            // Import data into column A starting at row 0.
+            for (int i = 0; i < data.Count; i++)
+            {
+                // Safely convert each item to decimal and assign to the cell.
+                decimal value = Convert.ToDecimal(data[i]);
+                sheet.Cells[i, 0].PutValue(value);
+            }
+
+            // Round each numeric cell value in the used range to two decimal places.
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+            for (int row = usedRange.FirstRow; row <= usedRange.FirstRow + usedRange.RowCount - 1; row++)
+            {
+                for (int col = usedRange.FirstColumn; col <= usedRange.FirstColumn + usedRange.ColumnCount - 1; col++)
                 {
-                    12.3456m,
-                    78.9012m,
-                    3.14159m,
-                    0.9999m,
-                    123.4567m
-                };
-
-                // Import the ArrayList vertically starting at cell A1 (row 0, column 0)
-                // Parameters: (ArrayList, firstRow, firstColumn, isVertical)
-                cells.ImportArrayList(decimalData, 0, 0, true);
-
-                // Round each imported cell value to two decimal places
-                for (int row = 0; row < decimalData.Count; row++)
-                {
-                    // Retrieve the cell that was just populated
-                    Cell cell = cells[row, 0];
-
-                    // The ImportArrayList method stores numbers as double by default,
-                    // so we handle both decimal and double types.
-                    if (cell.Value is decimal decVal)
+                    Cell cell = sheet.Cells[row, col];
+                    if (cell.Type == CellValueType.IsNumeric)
                     {
-                        cell.PutValue(Math.Round(decVal, 2));
-                    }
-                    else if (cell.Value is double dblVal)
-                    {
-                        cell.PutValue(Math.Round(dblVal, 2));
-                    }
-                    else if (cell.Value != null)
-                    {
-                        // Fallback: try to convert to double and round
-                        if (double.TryParse(cell.Value.ToString(), out double parsed))
-                        {
-                            cell.PutValue(Math.Round(parsed, 2));
-                        }
+                        double original = cell.DoubleValue;
+                        double rounded = Math.Round(original, 2, MidpointRounding.AwayFromZero);
+                        cell.PutValue(rounded);
                     }
                 }
-
-                // Save the workbook to a file
-                workbook.Save("ImportArrayListRounded.xlsx");
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists.
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the workbook to a file.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
         {
-            ImportArrayListAndRoundDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

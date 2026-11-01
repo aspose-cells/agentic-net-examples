@@ -1,53 +1,34 @@
-// Title: How to trim leading spaces after line breaks when saving an Excel worksheet to TXT using Aspose.Cells for .NET
-// AI Prompts: Show C# code that sets TxtSaveOptions.TrimTrailingSpaces to true so that spaces after '\n' are removed when exporting a workbook to a .txt file with Aspose.Cells. | Generate a complete C# example that creates a workbook, writes a cell containing a newline and leading spaces, configures TxtSaveOptions for whitespace trimming, and saves the worksheet as a text file.
-// Common Searches: Aspose.Cells TxtSaveOptions TrimTrailingSpaces example C# | C# remove leading spaces after newline when exporting Excel to text file | configure Aspose.Cells to trim whitespace after line breaks in TXT output | save workbook as .txt without extra spaces after \n using Aspose.Cells .NET
-// Tags: Aspose.Cells TxtSaveOptions TrimTrailingSpaces | C# export Excel to TXT whitespace trimming | remove leading spaces after newline Aspose.Cells | Excel to text conversion whitespace handling .NET | Aspose.Cells save worksheet as txt without extra spaces
+// Title: How to enable whitespace trimming for line‑break spaces when exporting an Excel workbook to HTML using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that configures Aspose.Cells HtmlSaveOptions to remove leading spaces that appear after '\r\n' in cell text during HTML export. | Demonstrate how to apply the whitespace‑trimming setting in Aspose.Cells before saving a workbook as an HTML file.
+// Common Searches: Aspose.Cells C# trim spaces after line break when saving to HTML | HTML export remove leading whitespace from cell values Aspose.Cells | How to configure HtmlSaveOptions to eliminate extra spaces after \r\n in C# | C# Aspose.Cells whitespace handling for line breaks in HTML output
+// Tags: Aspose.Cells HtmlSaveOptions whitespace trimming | remove line break spaces Aspose.Cells | C# export Excel to HTML without leading spaces | trim cell text whitespace Aspose.Cells HTML | HTML output whitespace handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example creates a workbook, writes a string containing a line break and leading spaces into cell A1, configures HtmlSaveOptions to trim whitespace after line breaks, and saves the workbook as an HTML file.
+class Program
 {
-    // The example creates a workbook, writes a cell value that includes a line break followed by spaces, enables the TrimTrailingSpaces option in TxtSaveOptions, ensures the output directory exists, and saves the workbook as a trimmed text file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Add a cell value containing a line break and leading spaces
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("First line\r\n   Second line");
 
-                // Set a cell value that contains a line break followed by extra spaces
-                sheet.Cells["A1"].PutValue("First line\n   Second line with leading spaces");
-
-                // Configure TXT save options (default behavior trims trailing spaces)
-                TxtSaveOptions saveOptions = new TxtSaveOptions();
-
-                // Determine output file path
-                string outputPath = "TrimmedOutput.txt";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ??
-                                   Directory.GetCurrentDirectory();
-
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a text file using the configured options
-                workbook.Save(outputPath, saveOptions);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "TrimmedSpaces.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

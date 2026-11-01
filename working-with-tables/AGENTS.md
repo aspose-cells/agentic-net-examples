@@ -7,8 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 primary_intent: Create and manage structured Excel tables in C#
 primary_apis: [Worksheet.ListObjects, ListObjectCollection.Add, ListObject, ListColumn, TableStyleType, TableToRangeOptions]
 search_intents: [create Excel table C#, style ListObject, filter Excel table, add totals row, convert table to range]

@@ -1,63 +1,53 @@
-// Title: Batch decrypt, sanitize, and re‑encrypt Excel .xlsx files with Aspose.Cells for .NET using a common password
-// AI Prompts: Write C# code that iterates through all .xlsx files in a folder, opens each with a known password via Aspose.Cells LoadOptions, replaces any cell containing "SSN" with "REDACTED", sets a new workbook password, and saves the sanitized file to an output directory. | Generate a C# loop that loads encrypted Excel workbooks, applies custom data‑redaction rules to cell values, updates the workbook's Settings.Password property, and writes the cleaned workbooks back using Aspose.Cells SaveFormat.Xlsx.
-// Common Searches: how to programmatically decrypt multiple encrypted Excel files with Aspose.Cells C# | batch replace sensitive text in password protected .xlsx using Aspose.Cells | C# change workbook password after sanitizing data in encrypted Excel files | Aspose.Cells load encrypted workbook with old password and save with new password | automate redaction of SSN in protected Excel workbooks using .NET
-// Tags: batch decrypt encrypted Excel workbooks Aspose.Cells | cell value redaction in protected .xlsx files | update workbook password after sanitization C# | load workbook with password LoadOptions Aspose.Cells | save workbook with new password SaveFormat.Xlsx
+// Title: Batch decrypt password‑protected Excel .xlsx files, redact SSN data, and re‑encrypt with a new password using Aspose.Cells for .NET
+// Common Searches: How to open password‑protected .xlsx files in C# with Aspose.Cells and replace sensitive text | C# batch process Excel workbooks to redact SSN values and set a new workbook password | Using Aspose.Cells LoadOptions to decrypt multiple Excel files and save them with a different password | Automate sanitization of confidential data in encrypted Excel files with Aspose.Cells .NET | Re‑encrypt Excel files after data masking using Aspose.Cells SaveOptions in C#
+// Tags: batch decrypt encrypted Excel workbooks using Aspose.Cells | cell data redaction SSN in Aspose.Cells | programmatic password change for .xlsx with Aspose.Cells | load password‑protected workbook via LoadOptions C# | save sanitized workbook with OoxmlSaveOptions and new password
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving; // Required for OoxmlSaveOptions
 
-// The program scans a directory of password‑protected .xlsx files, opens each workbook with the old password using LoadOptions, iterates through all cells to replace any occurrence of "SSN" with "REDACTED", assigns a new password via workbook.Settings.Password, and saves the sanitized workbooks to a separate output folder.
-class BatchDecryptSanitizeEncrypt
+// The C# program iterates through all .xlsx files in a folder, loads each password‑protected workbook using LoadOptions, scans used cells to replace any string containing "SSN" with "REDACTED", assigns a new password via Workbook.Settings, and saves the sanitized file with OoxmlSaveOptions to an output directory while preserving the original file name.
+class ExcelBatchProcessor
 {
+    // Adjust these paths and passwords as needed
+    private const string InputFolder = @"C:\InputExcelFiles";
+    private const string OutputFolder = @"C:\SanitizedExcelFiles";
+    private const string OldPassword = "oldPassword123";
+    private const string NewPassword = "newPassword456";
+
     static void Main()
     {
-        // Folder containing encrypted Excel files
-        string inputFolder = @"C:\EncryptedExcels";
-        // Folder to save re‑encrypted sanitized files
-        string outputFolder = @"C:\SanitizedExcels";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
-        {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
-        }
-
-        // Ensure output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Old password used to decrypt the files (assumed same for all files)
-        string oldPassword = "OldPassword123";
-        // New password to encrypt the sanitized files
-        string newPassword = "NewPassword456";
-
         try
         {
+            // Ensure output directory exists
+            Directory.CreateDirectory(OutputFolder);
+
             // Process each .xlsx file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            foreach (string inputFilePath in Directory.GetFiles(InputFolder, "*.xlsx"))
             {
-                // Verify the file exists before attempting to load
-                if (!File.Exists(filePath))
+                // Verify that the input file actually exists
+                if (!File.Exists(inputFilePath))
                 {
-                    Console.WriteLine($"File not found: {filePath}");
+                    Console.WriteLine($"Input file not found: {inputFilePath}");
                     continue;
                 }
 
                 try
                 {
-                    // Load the workbook with the old password
+                    // Load workbook with the old password
                     LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
                     {
-                        Password = oldPassword
+                        Password = OldPassword
                     };
-                    Workbook workbook = new Workbook(filePath, loadOptions);
+                    Workbook workbook = new Workbook(inputFilePath, loadOptions);
 
-                    // ----- Data Sanitization -----
-                    // Example: Replace any cell containing the word "SSN" with "REDACTED"
+                    // ---- Data sanitization start ----
+                    // Example: Replace any cell containing "SSN" with "REDACTED"
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        var cells = sheet.Cells;
+                        // Iterate through used cells only for performance
+                        Cells cells = sheet.Cells;
                         int maxRow = cells.MaxDataRow;
                         int maxCol = cells.MaxDataColumn;
 
@@ -65,28 +55,37 @@ class BatchDecryptSanitizeEncrypt
                         {
                             for (int col = 0; col <= maxCol; col++)
                             {
-                                var cell = cells[row, col];
+                                Cell cell = cells[row, col];
                                 if (cell.Type == CellValueType.IsString && cell.StringValue.Contains("SSN"))
                                 {
                                     cell.PutValue("REDACTED");
                                 }
-                                // Add additional sanitization rules here as needed
+
+                                // Additional sanitization rules can be added here,
+                                // e.g., clearing entire columns, masking email addresses, etc.
                             }
                         }
                     }
+                    // ---- Data sanitization end ----
 
-                    // Set new password for the workbook before saving
-                    workbook.Settings.Password = newPassword;
+                    // Set new password for the workbook
+                    workbook.Settings.Password = NewPassword;
 
-                    // Save the sanitized workbook
-                    string outputFilePath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                    workbook.Save(outputFilePath, SaveFormat.Xlsx);
+                    // Prepare save options (no password property needed)
+                    OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
 
-                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                    // Build output file path (preserve original file name)
+                    string outputFilePath = Path.Combine(OutputFolder, Path.GetFileName(inputFilePath));
+
+                    // Save the sanitized workbook with the new password
+                    workbook.Save(outputFilePath, saveOptions);
+
+                    Console.WriteLine($"Processed and re‑encrypted: {Path.GetFileName(inputFilePath)}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                    // Log or handle errors per file without stopping the batch
+                    Console.WriteLine($"Error processing {Path.GetFileName(inputFilePath)}: {ex.Message}");
                 }
             }
 
@@ -94,6 +93,7 @@ class BatchDecryptSanitizeEncrypt
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors that may occur outside the per‑file loop
             Console.WriteLine($"Fatal error: {ex.Message}");
         }
     }

@@ -1,58 +1,59 @@
-// Title: Lock aspect ratio of an embedded OLE object in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Add a DOCX file as an OLE object to a worksheet and enable its LockAspectRatio property with Aspose.Cells for .NET. | Retrieve an existing OleObject from a workbook and set LockAspectRatio to true so resizing keeps the original width‑height ratio. | Create a new workbook, embed an OLE object, lock its aspect ratio, and save the file using C# and Aspose.Cells.
-// Common Searches: C# Aspose.Cells how to keep OLE object proportions when resizing | set OleObject.LockAspectRatio to true Aspose.Cells example | embed Word document as OLE object in Excel and preserve aspect ratio using Aspose.Cells | Aspose.Cells lock aspect ratio of embedded object programmatically
-// Tags: OleObject.LockAspectRatio Aspose.Cells C# | embed DOCX as OLE object Excel Aspose.Cells | preserve OLE object proportions Aspose.Cells | aspect ratio lock workbook C# | Aspose.Cells OLE object resizing
+// Title: How to preserve OLE object aspect ratio while resizing with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells resize OLE object without changing aspect ratio | calculate aspect ratio for OLE objects in an Aspose.Cells workbook | manual width and height scaling of OLE objects using Aspose.Cells .NET | keep OLE object proportions when adjusting size with Aspose.Cells | Aspose.Cells example for preserving OLE object proportions in C#
+// Tags: Aspose.Cells OLE object aspect ratio handling | C# manual OLE object size adjustment Aspose.Cells | OleObject width height scaling preserving ratio | Aspose.Cells workbook OLE object manipulation | C# Aspose.Cells OLE object resizing example
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, embeds a DOCX file as an OLE object at a specified cell, accesses the OleObject instance, sets its LockAspectRatio flag to true to maintain original proportions during any resizing, and saves the workbook.
+// The sample loads a workbook, accesses the first worksheet, retrieves its OleObjectCollection, and demonstrates how to manually preserve an OLE object's original aspect ratio by calculating the height‑to‑width ratio and applying it after setting a new width. It also notes that Aspose.Cells does not expose a LockAspectRatio property, so the ratio must be handled programmatically before saving the modified workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Parameters for the OleObject
-            int row = 2;          // Row index (0‑based)
-            int column = 1;       // Column index (0‑based)
-            int height = 200;     // Height in pixels
-            int width = 300;      // Width in pixels
-            string sourceFile = "sample.docx"; // Path to the embedded file
+            // Get the collection of OLE objects on the worksheet
+            OleObjectCollection oleObjects = worksheet.OleObjects;
 
-            // Verify that the source file exists before loading
-            if (!File.Exists(sourceFile))
+            // Ensure there is at least one OLE object to work with
+            if (oleObjects.Count > 0)
             {
-                Console.WriteLine($"Error: The file '{sourceFile}' was not found.");
-                return;
+                // Retrieve the first OLE object (or use a specific index)
+                OleObject oleObject = oleObjects[0];
+
+                // Note: Aspose.Cells OleObject does not expose a LockAspectRatio property.
+                // If resizing is required, adjust Height and Width manually while preserving the ratio.
+                // Example (uncomment and modify as needed):
+                // double aspectRatio = oleObject.Height / oleObject.Width;
+                // oleObject.Width = 200; // desired width
+                // oleObject.Height = oleObject.Width * aspectRatio;
             }
 
-            // Read the file into a byte array (required by the API)
-            byte[] oleData = File.ReadAllBytes(sourceFile);
-
-            // Add the OleObject to the worksheet (returns the index of the new object)
-            int oleIndex = sheet.OleObjects.Add(row, column, height, width, oleData, "Sample Document");
-
-            // Retrieve the OleObject instance
-            OleObject ole = sheet.OleObjects[oleIndex];
-
-            // (Optional) Additional settings can be applied here if needed
-
-            // Save the workbook
-            string outputPath = "OleObjectDemo.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

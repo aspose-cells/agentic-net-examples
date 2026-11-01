@@ -1,64 +1,55 @@
-// Title: Export a workbook to HTML with Aspose.Cells and keep 64‑bit integers from converting to scientific notation
-// AI Prompts: Generate C# code that inserts a 64‑bit integer into a worksheet cell, applies a numeric style that forces the full value to show, and saves the workbook as HTML using Aspose.Cells. | Add logic that reads the saved HTML file and asserts the large integer appears as plain text rather than in exponential form. | Describe how to combine HtmlSaveOptions with cell styling to prevent scientific notation in the HTML output.
-// Common Searches: how to prevent scientific notation when exporting Excel to HTML with Aspose.Cells | Aspose.Cells display large 64-bit integer as plain text in HTML output | C# set numeric style for cell before saving as HTML | verify large number string in generated HTML file Aspose.Cells | Aspose.Cells HTML export large integer formatting issue
-// Tags: Aspose.Cells custom numeric format plain text | HTML export large integer formatting | C# cell style full integer display | verify generated HTML contains number | HTML save options for integer formatting
+// Title: Export a workbook to HTML with Aspose.Cells while keeping large numbers displayed as plain text (no scientific notation)
+// AI Prompts: Generate C# code that writes a very large double to a cell, applies a custom number format to force integer display, saves the workbook as HTML, and then scans the resulting HTML to confirm the number is not shown in exponential form. | Write a C# program using Aspose.Cells that formats large numeric values with a "0" custom format, exports the worksheet to HTML, reads the HTML file, and validates that no scientific‑notation pattern appears.
+// Common Searches: Aspose.Cells export to HTML large double without scientific notation | C# prevent exponential format when saving Excel as HTML using Aspose.Cells | how to verify numeric formatting in generated HTML file Aspose.Cells | custom number format 0 for large numbers Aspose.Cells C#
+// Tags: HTML export custom number format Aspose.Cells | suppress scientific notation large numbers Aspose.Cells | validate numeric representation in HTML C# | apply integer format to cell Aspose.Cells | read generated HTML file Aspose.Cells
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example creates a Workbook, writes a 64‑bit integer to cell A1, applies a numeric style "0" to keep the full value visible, saves the workbook as HTML with HtmlSaveOptions, then reads the HTML file to confirm the exact number is present as plain text, ensuring no scientific notation appears.
+// The program creates a new workbook, inserts a very large double into cell A1, sets a custom number format "0" to force plain‑text integer display, saves the workbook as HTML, reads the generated file, and uses a regular expression to ensure the number is not rendered in exponential notation.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define a large number for testing
-            long largeNumber = 1234567890123456789L;
+            // Define a large number
+            double largeNumber = 1234567890123456789.0;
 
-            // Place the large number into cell A1
+            // Put the large number into cell A1
             Cell cell = sheet.Cells["A1"];
             cell.PutValue(largeNumber);
 
-            // Apply a custom numeric format to force plain text representation
+            // Apply a custom number format to force plain‑text representation (no scientific notation)
             Style style = cell.GetStyle();
-            style.Custom = "0"; // Displays the full integer without scientific notation
+            style.Custom = "0"; // Display as integer without exponent
             cell.SetStyle(style);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // The custom format already ensures the value is rendered as plain text,
-            // so no additional option is required here.
-
             // Save the workbook as HTML
-            string htmlPath = "output.html";
-            workbook.Save(htmlPath, htmlOptions);
+            string htmlPath = "LargeNumber.html";
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            // The ExportNumericFormat property is not required for this version; default behavior preserves formatting
+            workbook.Save(htmlPath, saveOptions);
 
-            // Verify the generated HTML
-            if (File.Exists(htmlPath))
-            {
-                string htmlContent = File.ReadAllText(htmlPath);
-                if (htmlContent.Contains(largeNumber.ToString()))
-                {
-                    Console.WriteLine("Verification passed: Large number is displayed as plain text.");
-                }
-                else
-                {
-                    Console.WriteLine("Verification failed: Large number is displayed in exponential format.");
-                }
-            }
+            // Ensure the HTML file was created before reading
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException($"The file '{htmlPath}' was not found after saving.");
+
+            // Read the generated HTML
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // Verify that the large number appears as plain text (no exponential notation)
+            bool containsExponential = Regex.IsMatch(htmlContent, @"E\+|\e\+|\d\.\d+e", RegexOptions.IgnoreCase);
+            if (containsExponential)
+                Console.WriteLine("Test Failed: Large number is displayed in exponential form.");
             else
-            {
-                Console.WriteLine($"Error: The file '{htmlPath}' was not created.");
-            }
+                Console.WriteLine("Test Passed: Large number is displayed as plain text.");
         }
         catch (Exception ex)
         {

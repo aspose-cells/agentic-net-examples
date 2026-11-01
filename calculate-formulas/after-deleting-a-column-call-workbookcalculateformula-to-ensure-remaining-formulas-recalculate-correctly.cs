@@ -1,55 +1,52 @@
-// Title: Delete a column and recalculate dependent formulas in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to remove column B from a worksheet and automatically adjust any formulas that reference the removed column. | After removing a column, invoke the method that recomputes all workbook formulas and then save the updated .xlsx file. | Show how to shift cells left when deleting a column and ensure formulas like =A1+B1 update correctly with Aspose.Cells.
-// Common Searches: Aspose.Cells C# delete a column and update formulas automatically | How to recalculate Excel formulas after column removal with Aspose.Cells .NET | Workbook.CalculateFormula usage after structural changes in Aspose.Cells | Shift cells left and refresh dependent formulas using Aspose.Cells C# | Delete column B and keep =A1+B1 correct in Aspose.Cells
-// Tags: delete column Aspose.Cells recalculate formulas | recalculate workbook formulas after column removal C# | adjust formula references Aspose.Cells delete column | Workbook.CalculateFormula after structural change .NET | shift cells left delete column Aspose.Cells | update dependent formulas C# Aspose.Cells
+// Title: Delete a column from an Excel worksheet and recalculate formulas using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells delete column and force formula recalculation | How to use Workbook.CalculateFormula after removing a worksheet column | Remove column B from Excel file with Aspose.Cells and update dependent formulas | Aspose.Cells recalculate all formulas after structural changes in .NET | Delete worksheet column and refresh formulas using Aspose.Cells C# example
+// Tags: remove worksheet column Aspose.Cells C# | Workbook.CalculateFormula after structural modification | full formula recalculation .NET Excel | update dependent formulas after column removal | exception handling for missing or protected workbook Aspose.Cells | save modified workbook after column removal C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel file, removes column B from the first worksheet, forces a complete formula recalculation with Workbook.CalculateFormula, and saves the updated workbook while handling file‑not‑found, password‑protected, and other Aspose.Cells exceptions.
+class Program
 {
-    // The example creates a new workbook, writes values to A1 and B1, sets C1 to =A1+B1, deletes column B while shifting cells left, calls Workbook.CalculateFormula to recompute the formula, and saves the file as DeleteColumnRecalcDemo.xlsx.
-    public class DeleteColumnAndRecalculateDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Add sample data and a formula that references columns A and B
-                cells["A1"].PutValue(10);
-                cells["B1"].PutValue(20);
-                cells["C1"].Formula = "=A1+B1";
-
-                // Delete column B (index 1) and update references in formulas
-                cells.DeleteColumn(1, true);
-
-                // Recalculate all formulas after the column deletion
-                workbook.CalculateFormula();
-
-                // Save the modified workbook
-                string outputPath = "DeleteColumnRecalcDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook (no password supplied). If the file is password‑protected,
+            // an exception will be caught below.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Delete column B (zero‑based index 1) from the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells.DeleteColumn(1);
+
+            // Recalculate all formulas after the column deletion
+            workbook.CalculateFormula();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (CellsException ex)
         {
-            DeleteColumnAndRecalculateDemo.Run();
+            // Handles Aspose.Cells specific errors (e.g., password protection)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -1,43 +1,48 @@
-// Title: Copy an XLSM workbook while preserving VBA macros and UserForm storage using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a macro‑enabled XLSM workbook, sets Settings.EnableMacros, and saves it as a new XLSM file so that all VBA modules and UserForms remain intact. | Show how to duplicate a macro‑enabled Excel file with Aspose.Cells without stripping any VBA code or UserForm data.
-// Common Searches: how to keep VBA UserForms when duplicating an xlsm file with Aspose.Cells | Aspose.Cells .NET copy macro-enabled workbook without losing VBA code | C# save workbook as xlsm while preserving macros and forms | clone an xlsm workbook preserving all VBA components using Aspose.Cells
-// Tags: copy macro-enabled XLSM using Aspose.Cells | retain VBA UserForms Aspose.Cells .NET | enable macro support SaveFormat.Xlsm | clone workbook with VBA modules intact | macro-enabled workbook cloning .NET
+// Title: Copy an XLSM workbook with VBA UserForms while preserving macros using Aspose.Cells for .NET
+// Common Searches: how to duplicate a macro-enabled .xlsm file with UserForms using Aspose.Cells in C# | preserve VBA UserForm storage when saving a workbook as Xlsm with Aspose.Cells .NET | copy Excel workbook with macros and keep macro functionality using Aspose.Cells C# | save workbook to new location without losing macros Aspose.Cells SaveFormat.Xlsm | Aspose.Cells copy workbook while retaining VBA code and UserForms
+// Tags: copy Xlsm workbook Aspose.Cells | retain VBA UserForms .NET | save as Xlsm retaining macros | workbook duplication with macro support | Aspose.Cells macro-enabled file handling
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Loads a macro‑enabled XLSM workbook, enables macro support, and saves it as a new XLSM file, preserving all VBA macros and UserForm components.
-class PreserveMacrosAndUserForms
+// The example loads a macro‑enabled .xlsm workbook that contains VBA UserForms, ensures the output directory exists, and saves it to a new location using SaveFormat.Xlsm. Aspose.Cells automatically retains all VBA code and UserForm storage, providing a straightforward way to duplicate macro‑enabled workbooks without losing functionality.
+class Program
 {
     static void Main()
     {
         try
         {
-            string sourcePath = "SourceWithMacros.xlsm";
-            string destPath = "DestinationPreserved.xlsm";
+            // Path to the source workbook containing macros and UserForms
+            string sourcePath = @"C:\Input\SourceWithMacros.xlsm";
 
-            // Verify source file exists to avoid FileNotFoundException
+            // Verify source file exists
             if (!File.Exists(sourcePath))
             {
                 Console.WriteLine($"Source file not found: {sourcePath}");
                 return;
             }
 
-            // Load the source workbook; macros and UserForms are retained automatically
+            // Load the source workbook (macros are retained automatically)
             Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Enable macro support when saving
-            sourceWorkbook.Settings.EnableMacros = true;
+            // Path for the destination workbook
+            string destinationPath = @"C:\Output\DestinationWithMacros.xlsm";
 
-            // Save the workbook as XLSM, preserving all VBA components
-            sourceWorkbook.Save(destPath, SaveFormat.Xlsm);
+            // Ensure the output directory exists
+            string? destDir = Path.GetDirectoryName(destinationPath);
+            if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
 
-            Console.WriteLine($"Workbook saved successfully to {destPath}");
+            // Save the workbook to the destination path preserving macros
+            sourceWorkbook.Save(destinationPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Destination workbook saved successfully: {destinationPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

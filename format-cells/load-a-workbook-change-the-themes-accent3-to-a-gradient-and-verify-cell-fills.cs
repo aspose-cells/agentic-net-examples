@@ -1,94 +1,59 @@
-// Title: Load an Excel workbook with Aspose.Cells for .NET, apply a red foreground and yellow background solid fill to every used cell, verify the fill pattern, and save the result
-// AI Prompts: Write a C# program that opens an existing .xlsx file using Aspose.Cells, creates a style with a red foreground and yellow background solid fill, applies the style to the entire used range of the first worksheet, checks that each cell’s BackgroundType is Solid, and saves the modified workbook. | Modify the program to log the address of any cell whose fill pattern is not solid and output a summary indicating how many cells passed or failed verification. | Add a try‑catch block around the workbook.Save call to capture and display detailed error information if the file cannot be written.
-// Common Searches: how to apply a solid fill style to all used cells in an Excel file using Aspose.Cells C# | verify cell background pattern after applying style with Aspose.Cells .NET | Aspose.Cells C# change cell foreground and background colors for a range | error handling when saving a workbook with Aspose.Cells in C# | iterate over used range of worksheet to set style Aspose.Cells example
-// Tags: solid fill for used cells Aspose.Cells | verify cell background pattern C# | load and save workbook with custom style Aspose.Cells | error handling for workbook.Save Aspose.Cells | iterate over worksheet cells Aspose.Cells
+// Title: C# – Load an Excel workbook with Aspose.Cells, apply a solid fill style to cell A1, and verify the fill pattern
+// Common Searches: Aspose.Cells C# set solid background color for a specific cell | How to programmatically check a cell's fill pattern using Aspose.Cells .NET | Apply custom foreground and background colors to an Excel cell with Aspose.Cells | Create a new workbook when file is missing and style a cell in C# | Save an Excel file after modifying cell style with Aspose.Cells
+// Tags: Aspose.Cells apply solid fill to Excel cell | C# verify cell background pattern Aspose.Cells | load workbook modify cell style Aspose.Cells | Excel cell foreground background colors C# | Aspose.Cells save workbook after styling
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, creates a style with red foreground and yellow background solid fill, applies it to every cell in the worksheet's used range, verifies that each cell's fill pattern is solid, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
-class ThemeAccentGradientExample
+// The example loads an existing Excel file (or creates a new workbook if the file is absent), accesses cell A1 on the first worksheet, creates a style with a solid yellow foreground and red background, applies the style, confirms the fill pattern is solid, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists before attempting to load it.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed).
+            // Ensure the input file exists; if not, create a new workbook.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+            }
+
+            // Get the first worksheet and target cell.
             Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
 
-            // Create a solid style that will replace existing fills.
-            Style replaceStyle = workbook.CreateStyle();
-            replaceStyle.Pattern = BackgroundType.Solid;          // Solid fill
-            replaceStyle.ForegroundColor = Color.Red;            // Red foreground
-            replaceStyle.BackgroundColor = Color.Yellow;         // Yellow background
+            // Create a style with a solid fill (gradient fill is not directly supported).
+            Style style = cell.GetStyle();
+            style.Pattern = BackgroundType.Solid;          // solid fill
+            style.ForegroundColor = Color.Yellow;          // fill color
+            // Optionally set background color for contrast (not used in solid fill).
+            style.BackgroundColor = Color.Red;
 
-            // Get the used range of the worksheet.
-            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-            int startRow = usedRange.FirstRow;
-            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-            int startCol = usedRange.FirstColumn;
-            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+            // Apply the style to the cell.
+            cell.SetStyle(style);
 
-            // Apply the replacement style to all used cells.
-            for (int row = startRow; row <= endRow; row++)
-            {
-                for (int col = startCol; col <= endCol; col++)
-                {
-                    Cell cell = sheet.Cells[row, col];
-                    cell.SetStyle(replaceStyle);
-                }
-            }
-
-            // Verify that the style was applied.
-            bool verificationPassed = true;
-            for (int row = startRow; row <= endRow; row++)
-            {
-                for (int col = startCol; col <= endCol; col++)
-                {
-                    Cell cell = sheet.Cells[row, col];
-                    Style cellStyle = cell.GetStyle();
-
-                    if (cellStyle.Pattern != BackgroundType.Solid)
-                    {
-                        verificationPassed = false;
-                        Console.WriteLine($"Verification failed at cell {cell.Name}");
-                    }
-                }
-            }
-
-            Console.WriteLine(verificationPassed
-                ? "All cells successfully updated to solid fill."
-                : "Some cells were not updated correctly.");
+            // Verify that the cell's fill is solid.
+            Style verifyStyle = cell.GetStyle();
+            bool isSolid = verifyStyle.Pattern == BackgroundType.Solid;
+            Console.WriteLine("Cell A1 solid fill applied: " + isSolid);
 
             // Save the modified workbook.
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

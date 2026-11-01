@@ -1,56 +1,61 @@
-// Title: How to concatenate raw string values from an Aspose.Cells range and write the result to a summary cell in C#
-// AI Prompts: Write C# code that iterates over an Aspose.Cells Range, extracts each cell's StringValue, concatenates the values with a StringBuilder, and stores the combined text in a target cell. | Show an example of using Aspose.Cells for .NET to read raw strings from a multi‑cell range, merge them into a single string, write the merged string to another cell, and then save the workbook.
-// Common Searches: Aspose.Cells C# concatenate values from A1:C2 into D1 | retrieve StringValue from each cell in a range using Aspose.Cells .NET | combine multiple cell strings into one cell with Aspose.Cells API | how to iterate over an Aspose.Cells range and build a single string | save workbook after merging cell text in Aspose.Cells C#
-// Tags: concatenate range StringValue Aspose.Cells C# | write merged text to cell Aspose.Cells | Aspose.Cells range iteration example | StringBuilder usage with Aspose.Cells | save workbook after cell concatenation Aspose.Cells
+// Title: Concatenate raw string values from a specific Excel range and write the result to a summary cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, iterate over cells A1:C3, collect only string values, concatenate them, and store the combined text in cell D1 with Aspose.Cells in C#. | Create a C# script that uses Aspose.Cells to define a range, filter cells by CellValueType.IsString, build a single string from those values, and write it to a designated summary cell. | Write C# code that reads raw strings from a given range, merges them into one string, places the result in another cell, and saves the workbook using Aspose.Cells.
+// Common Searches: how to concatenate text from a range of cells using Aspose.Cells in C# | Aspose.Cells read only string cells from A1:C3 and combine them into D1 | C# example for merging Excel cell strings and saving the workbook with Aspose.Cells
+// Tags: concatenate string values range Aspose.Cells C# | filter cells by CellValueType.IsString Aspose.Cells | output combined text to cell D1 Aspose.Cells | create range and iterate cells Aspose.Cells | save updated Excel workbook Aspose.Cells .NET
 
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsConcatenateExample
+// Loads an Excel workbook (or creates a new one), reads raw string values from the range A1:C3 on the first worksheet, concatenates them, writes the combined text to cell D1, and saves the workbook to the specified output file using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a workbook, fills cells A1:C2 with text, iterates over the defined range to collect each cell's raw StringValue, concatenates them using StringBuilder, writes the combined string to cell D1, and saves the file as ConcatenatedResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Paths to the input and output Excel files
+            string inputPath = @"C:\Data\Input.xlsx";
+            string outputPath = @"C:\Data\Output.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Load the workbook or create a new one if the input file is missing
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the range to read raw strings from (e.g., A1:C3)
+            string rangeAddress = "A1:C3";
+
+            // Explicitly use Aspose.Cells.Range to avoid conflict with System.Range
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(rangeAddress);
+
+            // Concatenate raw string values from the range
+            StringBuilder concatenated = new StringBuilder();
+
+            foreach (Cell cell in range)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate a sample range with string values
-                cells["A1"].PutValue("Hello");
-                cells["B1"].PutValue("World");
-                cells["C1"].PutValue("!");
-                cells["A2"].PutValue("Foo");
-                cells["B2"].PutValue("Bar");
-                cells["C2"].PutValue("Baz");
-
-                // Define the range from which raw strings will be retrieved
-                AsposeRange sourceRange = cells.CreateRange("A1:C2");
-
-                // Concatenate the raw string values of all cells in the range
-                StringBuilder concatenated = new StringBuilder();
-                foreach (Cell cell in sourceRange)
+                if (cell.Type == CellValueType.IsString)
                 {
-                    // StringValue returns the formatted text of the cell
                     concatenated.Append(cell.StringValue);
                 }
-
-                // Write the concatenated result to a summary cell (e.g., D1)
-                cells["D1"].PutValue(concatenated.ToString());
-
-                // Save the workbook to a file
-                workbook.Save("ConcatenatedResult.xlsx");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Write the concatenated result to a summary cell (e.g., D1)
+            sheet.Cells["D1"].PutValue(concatenated.ToString());
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

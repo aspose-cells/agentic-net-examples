@@ -1,51 +1,54 @@
-// Title: How to make chart data labels bold and center-aligned using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that sets chart series data labels to a bold font and centers the text horizontally. | Show how to apply font styling and horizontal alignment to column chart data labels in a .NET workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set data label font to bold for column chart | center align data labels in Aspose.Cells chart programmatically | apply font style to chart series data labels using Aspose.Cells .NET | C# Aspose.Cells make data labels bold and centered in Excel file | formatting chart data labels with Aspose.Cells API
-// Tags: bold font chart data labels Aspose.Cells | center horizontal alignment data labels Aspose.Cells | apply font styling to chart series Aspose.Cells C# | format chart data labels Excel Aspose.Cells | column chart label formatting Aspose.Cells .NET
+// Title: Apply bold font style to chart data labels in an Aspose.Cells column chart using C#
+// Common Searches: how to set chart data label font to bold with Aspose.Cells C# | Aspose.Cells C# make data labels bold in a column chart | C# Aspose.Cells enable and style data labels for chart series | format chart data labels as bold using Aspose.Cells .NET | display and customize data labels in an Aspose.Cells column chart C#
+// Tags: Aspose.Cells chart data label bold styling | column chart data label formatting Aspose.Cells | C# chart data label appearance customization | Excel workbook chart label styling .NET | Aspose.Cells series label font configuration
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds sample data, inserts a column chart, enables data labels, sets the labels to bold font and center alignment, applies the font settings, and saves the file as BoldCenteredDataLabels.xlsx.
-class ApplyBoldCenteredDataLabels
+// The example loads an existing workbook, adds a column chart, creates a series from range A1:A5, enables data labels, sets the data label font to bold, and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first series and enable data labels
-        Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = true;
+            // Add a column chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
 
-        // Apply bold font style to the data labels
-        series.DataLabels.Font.IsBold = true;
+            // Add a series using the values range (A1:A5)
+            chart.NSeries.Add("A1:A5", false);
 
-        // Center align the data label text horizontally
-        series.DataLabels.TextHorizontalAlignment = TextAlignmentType.Center;
+            // Show data labels (values) for the series
+            chart.NSeries[0].DataLabels.ShowValue = true;
 
-        // Propagate the font settings to all child label nodes
-        series.DataLabels.ApplyFont();
+            // Apply bold font style to the data labels
+            chart.NSeries[0].DataLabels.Font.IsBold = true;
 
-        // Save the workbook
-        workbook.Save("BoldCenteredDataLabels.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

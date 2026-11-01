@@ -1,128 +1,115 @@
-// Title: Combine multiple Excel files into one workbook while preserving each sheet’s page‑setup settings using Aspose.Cells for .NET
-// AI Prompts: Write a C# routine that accepts an array of .xlsx file paths, merges them into a single Workbook, and copies the PageSetup of every source Worksheet to the corresponding sheet in the merged workbook using Aspose.Cells. | Implement a helper method that transfers all PageSetup properties (orientation, paper size, margins, print area, etc.) from a source Worksheet.PageSetup object to a target Worksheet.PageSetup object in Aspose.Cells. | Add robust error handling that skips missing source files, logs processing errors, and creates the destination folder automatically before saving the merged workbook.
-// Common Searches: how to merge several .xlsx files and keep original print margins with Aspose.Cells C# | copy worksheet page setup when adding sheets to a merged workbook in .NET | C# Aspose.Cells merge workbooks preserve orientation and paper size | skip missing Excel files during workbook merge using Aspose.Cells | create output directory automatically when saving merged workbook Aspose.Cells
-// Tags: Aspose.Cells merge workbooks with page‑setup copy | C# copy worksheet print layout between workbooks | preserve Excel sheet margins during merge | handle missing source files Aspose.Cells | auto‑create output folder before saving workbook
+// Title: Merge multiple Excel workbooks in C# while copying worksheet PageSetup settings with Aspose.Cells
+// Common Searches: c# merge several .xlsx files and keep original page setup using Aspose.Cells | how to copy worksheet print settings when combining Excel workbooks in .NET | Aspose.Cells preserve margins and orientation during workbook merge | copy page setup from source to destination worksheet while merging workbooks in C# | merge Excel workbooks without losing print area configuration Aspose.Cells
+// Tags: workbook merge page setup cloning Aspose.Cells | copy worksheet print options C# | retain Excel print margins during merge | transfer page orientation Aspose.Cells | duplicate page setup across merged worksheets
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookMergeApp
+namespace WorkbookMergeExample
 {
-    // Provides a C# example that merges an array of Excel files into a single workbook using Aspose.Cells, copies each source worksheet’s PageSetup (orientation, paper size, margins, print area, etc.) to the newly added sheet, skips missing files, creates the output directory if needed, and saves the combined workbook.
-    public class WorkbookMerger
+    // The example loads a list of source .xlsx files, adds copies of each worksheet to a new destination workbook, and uses a helper method to copy all PageSetup properties (paper size, orientation, zoom, margins, print area, gridlines, headings, comments, centering, etc.) from the source worksheet to the newly added worksheet before saving the merged workbook.
+    class Program
     {
-        /// <param name="sourceFiles">Array of full paths to source Excel files.</param>
-        /// <param name="outputFile">Full path for the merged workbook to be saved.</param>
-        public static void MergeWorkbooks(string[] sourceFiles, string outputFile)
+        static void Main(string[] args)
         {
-            if (sourceFiles == null || sourceFiles.Length == 0)
-                throw new ArgumentException("No source files provided.");
-
-            if (string.IsNullOrWhiteSpace(outputFile))
-                throw new ArgumentException("Output file path is required.");
-
-            // Create an empty workbook that will hold the merged result.
-            Workbook mergedWorkbook = new Workbook();
-
-            // Remove the default empty sheet that Aspose.Cells creates.
-            if (mergedWorkbook.Worksheets.Count > 0)
-                mergedWorkbook.Worksheets.RemoveAt(0);
-
-            // Iterate through each source file.
-            foreach (string srcPath in sourceFiles)
+            // List of source workbook file paths to be merged
+            List<string> sourceFiles = new List<string>
             {
-                if (!File.Exists(srcPath))
-                {
-                    Console.WriteLine($"Source file not found: {srcPath}");
-                    continue; // skip missing file
-                }
+                @"C:\Data\Source1.xlsx",
+                @"C:\Data\Source2.xlsx",
+                @"C:\Data\Source3.xlsx"
+            };
 
+            // Destination workbook where all sheets will be merged
+            Workbook destination = new Workbook(); // create-workbook rule
+            // Remove the default empty sheet created by Aspose.Cells
+            destination.Worksheets.Clear();
+
+            foreach (string filePath in sourceFiles)
+            {
                 try
                 {
-                    // Load the source workbook.
-                    Workbook srcWorkbook = new Workbook(srcPath);
-
-                    // Loop through all worksheets in the source workbook.
-                    foreach (Worksheet srcSheet in srcWorkbook.Worksheets)
+                    // Ensure the source file exists before loading
+                    if (!File.Exists(filePath))
                     {
-                        // Add a copy of the source worksheet to the merged workbook.
-                        int newIndex = mergedWorkbook.Worksheets.AddCopy(srcSheet.Name);
+                        Console.WriteLine($"Source file not found: {filePath}");
+                        continue;
+                    }
 
-                        // Retrieve the newly added worksheet.
-                        Worksheet destSheet = mergedWorkbook.Worksheets[newIndex];
+                    // Load each source workbook
+                    Workbook source = new Workbook(filePath); // load-workbook rule
 
-                        // Copy page‑setup settings from source to destination.
+                    // Iterate through all worksheets in the source workbook
+                    foreach (Worksheet srcSheet in source.Worksheets)
+                    {
+                        // Add a copy of the source worksheet to the destination workbook
+                        int newIndex = destination.Worksheets.AddCopy(srcSheet.Name); // add-copy rule
+
+                        // Retrieve the newly added worksheet
+                        Worksheet destSheet = destination.Worksheets[newIndex];
+
+                        // Copy page‑setup settings from source to destination worksheet
                         CopyPageSetup(srcSheet.PageSetup, destSheet.PageSetup);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{srcPath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                 }
             }
 
-            // Ensure output directory exists.
-            string outDir = Path.GetDirectoryName(outputFile);
-            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-
-            // Save the merged workbook to the specified output file.
             try
             {
-                mergedWorkbook.Save(outputFile);
+                // Ensure the output directory exists
+                string outputPath = @"C:\Data\MergedResult.xlsx";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the merged workbook
+                destination.Save(outputPath); // save-workbook rule
+                Console.WriteLine($"Merged workbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save merged workbook: {ex.Message}");
-                throw;
+                Console.WriteLine($"Error saving merged workbook: {ex.Message}");
             }
         }
 
-        private static void CopyPageSetup(PageSetup source, PageSetup target)
+        /// <param name="source">The source PageSetup.</param>
+        /// <param name="dest">The destination PageSetup.</param>
+        private static void CopyPageSetup(PageSetup source, PageSetup dest)
         {
-            target.Orientation = source.Orientation;
-            target.PaperSize = source.PaperSize;
-            target.FitToPagesTall = source.FitToPagesTall;
-            target.FitToPagesWide = source.FitToPagesWide;
-            target.TopMargin = source.TopMargin;
-            target.BottomMargin = source.BottomMargin;
-            target.LeftMargin = source.LeftMargin;
-            target.RightMargin = source.RightMargin;
-            target.HeaderMargin = source.HeaderMargin;
-            target.FooterMargin = source.FooterMargin;
-            target.CenterHorizontally = source.CenterHorizontally;
-            target.CenterVertically = source.CenterVertically;
-            target.PrintArea = source.PrintArea;
-            target.PrintTitleColumns = source.PrintTitleColumns;
-            target.PrintTitleRows = source.PrintTitleRows;
-            target.BlackAndWhite = source.BlackAndWhite;
-            target.PrintGridlines = source.PrintGridlines;
-            target.PrintHeadings = source.PrintHeadings;
-        }
-    }
+            // Basic layout settings
+            dest.PaperSize = source.PaperSize;
+            dest.Orientation = source.Orientation;
+            dest.Zoom = source.Zoom;
+            dest.FitToPagesTall = source.FitToPagesTall;
+            dest.FitToPagesWide = source.FitToPagesWide;
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Example usage – adjust paths as needed.
-            string[] files = {
-                @"C:\Data\Report1.xlsx",
-                @"C:\Data\Report2.xlsx",
-                @"C:\Data\Report3.xlsx"
-            };
-            string output = @"C:\Data\MergedReport.xlsx";
+            // Margins (in points)
+            dest.TopMargin = source.TopMargin;
+            dest.BottomMargin = source.BottomMargin;
+            dest.LeftMargin = source.LeftMargin;
+            dest.RightMargin = source.RightMargin;
+            dest.HeaderMargin = source.HeaderMargin;
+            dest.FooterMargin = source.FooterMargin;
 
-            try
-            {
-                WorkbookMerger.MergeWorkbooks(files, output);
-                Console.WriteLine($"Merged workbook saved to: {output}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            // Print options
+            dest.PrintGridlines = source.PrintGridlines;
+            dest.PrintHeadings = source.PrintHeadings;
+            dest.PrintComments = source.PrintComments;
+            dest.PrintArea = source.PrintArea;
+
+            // Centering options
+            dest.CenterHorizontally = source.CenterHorizontally;
+            dest.CenterVertically = source.CenterVertically;
+
+            // Additional settings can be added here as needed
         }
     }
 }

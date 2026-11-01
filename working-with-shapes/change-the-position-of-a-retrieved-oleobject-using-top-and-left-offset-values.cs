@@ -1,14 +1,14 @@
-// Title: How to reposition an embedded OleObject in an Excel worksheet by setting Top and Left offsets using Aspose.Cells for .NET (C#)
-// AI Prompts: Set the Top and Left properties of the first OleObject on a worksheet to 50 and 100 points with Aspose.Cells in C#. | Write C# code that moves an embedded OLE object to a new location by assigning integer offsets via the Aspose.Cells API. | Update an Excel file to change the position of an OleObject using Aspose.Cells' OleObject.Top and OleObject.Left members.
-// Common Searches: Aspose.Cells C# change position of embedded OLE object in Excel | set oleobject top left coordinates Aspose.Cells .NET | move oleobject to specific cell location using Aspose.Cells | programmatically adjust OLE object placement in workbook with C# | how to offset OleObject location in Excel using Aspose API
-// Tags: Aspose.Cells OleObject repositioning | C# set OleObject Top property | Aspose.Cells adjust OleObject coordinates | Excel OLE object placement .NET | OleObject coordinate adjustment Aspose
+// Title: Shift an OleObject’s position in an Excel worksheet using top and left offsets with Aspose.Cells for .NET
+// AI Prompts: Retrieve the first OleObject from a worksheet, increase its Top by 20 points and Left by 30 points, then save the workbook using Aspose.Cells. | Programmatically adjust the placement of an embedded OLE object in Excel by applying top and left offset values with C# and Aspose.Cells.
+// Common Searches: C# Aspose.Cells how to move an OleObject down and right in Excel | set OleObject Top property Aspose.Cells .NET example | change position of embedded OLE object programmatically using Aspose.Cells | adjust OleObject coordinates worksheet Aspose.Cells C# tutorial | offset OleObject location in Excel file with Aspose.Cells API
+// Tags: oleobject position offset Aspose.Cells | modify oleobject top left C# | adjust embedded OLE object placement .NET | excel worksheet oleobject relocation Aspose | aspocells oleobject coordinate update
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// The example loads an existing workbook, retrieves the first OleObject on the first worksheet, assigns new Top (50) and Left (100) offset values, and saves the modified file.
+// Loads an Excel workbook, retrieves the first OleObject from the first worksheet, adds 20 points to its Top and 30 points to its Left to reposition it, and saves the updated file.
 class Program
 {
     static void Main()
@@ -31,23 +31,20 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one OleObject on the sheet
-            if (sheet.OleObjects.Count == 0)
+            // Ensure there is at least one OleObject
+            if (sheet.OleObjects.Count > 0)
             {
-                Console.WriteLine("No OleObjects found on the worksheet.");
-                return;
+                // Retrieve the first OleObject
+                OleObject ole = sheet.OleObjects[0];
+
+                // Apply top and left offsets
+                ole.Top += 20;   // move down
+                ole.Left += 30;  // move right
             }
-
-            // Retrieve the first OleObject
-            OleObject oleObject = sheet.OleObjects[0];
-
-            // Define new position (in points) and convert to integer as required by the API
-            int topOffset = 50;   // distance from the top edge
-            int leftOffset = 100; // distance from the left edge
-
-            // Apply the new position
-            oleObject.Top = topOffset;
-            oleObject.Left = leftOffset;
+            else
+            {
+                Console.WriteLine("No OleObjects found in the worksheet.");
+            }
 
             // Save the modified workbook
             workbook.Save(outputPath);

@@ -1,31 +1,24 @@
-// Title: Check that a converted Excel workbook contains no ListObject tables using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that loads an Excel file with Aspose.Cells and returns true if any worksheet has ListObject tables. | Enhance the validation tool to output the names of worksheets that still contain ListObjects after conversion. | Create a reusable method `bool HasListObjects(string workbookPath)` that uses Aspose.Cells to detect ListObjects in a workbook.
-// Common Searches: how to programmatically verify that an Excel file has no tables after conversion using Aspose.Cells C# | C# Aspose.Cells detect remaining ListObject objects in a workbook | sample code to iterate worksheets and check ListObjects collection Aspose.Cells .NET | validate removal of Excel tables (ListObjects) after saving with Aspose.Cells
-// Tags: Aspose.Cells ListObject enumeration .NET | validate workbook tables removal Aspose.Cells | detect Excel ListObjects using C# | check worksheet ListObjects Aspose.Cells | C# workbook validation for table absence
+// Title: Check for remaining ListObject tables in a workbook after converting it with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, saves it as PDF, then iterates all worksheets to detect any ListObject tables and returns a boolean result. | Create a method using Aspose.Cells for .NET that validates a workbook contains zero ListObject objects after any format conversion. | Generate a console application that converts an .xlsx file to PDF and prints a message indicating whether any worksheet still has ListObjects.
+// Common Searches: how to programmatically verify that an Excel workbook has no tables after saving with Aspose.Cells | Aspose.Cells C# detect ListObject objects after exporting to PDF | C# code to ensure all ListObjects are removed from worksheets after conversion | validate workbook contains zero ListObjects using Aspose.Cells .NET API
+// Tags: Aspose.Cells listobject detection after conversion | C# validate workbook tables post PDF export | check worksheet ListObjects with Aspose.Cells | ensure no Excel tables after format conversion .NET | listobject presence verification in Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads a workbook with Aspose.Cells, iterates through each worksheet to examine the ListObjects collection, and prints a pass/fail message indicating whether any ListObject tables remain in the file.
-class WorkbookListObjectValidator
+// Loads an Excel workbook, saves it as PDF using Aspose.Cells, then scans every worksheet for ListObject tables and reports whether any remain.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Expect the path to the converted workbook as the first argument.
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Please provide the path to the workbook file.");
-            return;
-        }
+        // Load the source workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        string workbookPath = args[0];
+        // Example conversion: save the workbook to PDF (any other format can be used)
+        workbook.Save("output.pdf", SaveFormat.Pdf);
 
-        // Load the workbook (using the provided load rule).
-        Workbook workbook = new Workbook(workbookPath);
-
+        // Validate that no ListObject (table) exists in any worksheet after conversion
         bool containsListObjects = false;
-
-        // Iterate through all worksheets and check for ListObjects.
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             if (sheet.ListObjects.Count > 0)
@@ -35,14 +28,9 @@ class WorkbookListObjectValidator
             }
         }
 
-        // Output validation result.
-        if (containsListObjects)
-        {
-            Console.WriteLine("Validation failed: The workbook still contains ListObject(s).");
-        }
-        else
-        {
-            Console.WriteLine("Validation passed: No ListObject objects found in the workbook.");
-        }
+        // Output the validation result
+        Console.WriteLine(containsListObjects
+            ? "Validation failed: ListObject objects are still present."
+            : "Validation succeeded: No ListObject objects found.");
     }
 }

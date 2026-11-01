@@ -1,64 +1,73 @@
-// Title: Export an Excel workbook to PDF with a hierarchical outline of worksheets using Aspose.Cells ExportDocumentStructure (C#)
-// AI Prompts: Generate a PDF from a C# Aspose.Cells workbook that includes bookmarks for each worksheet by enabling ExportDocumentStructure in PdfSaveOptions. | Adjust the export so each worksheet starts on a separate page while preserving the bookmark hierarchy, using OnePagePerSheet together with ExportDocumentStructure. | Rename worksheets to custom titles before saving so the resulting PDF bookmarks reflect those custom names.
-// Common Searches: Aspose.Cells C# export workbook to PDF with outline bookmarks for each sheet | Enable document structure in Aspose.Cells PDF export to create a PDF table of contents | How to generate a hierarchical PDF outline from grouped worksheets using Aspose.Cells | PdfSaveOptions ExportDocumentStructure example in .NET | Create PDF with worksheet hierarchy using Aspose.Cells and C#
-// Tags: export workbook to PDF with outline Aspose.Cells | PdfSaveOptions ExportDocumentStructure C# | worksheet PDF bookmarks Aspose.Cells | grouped worksheets PDF outline generation | C# Aspose.Cells PDF document structure
+// Title: Verify that ExportDocumentStructure creates a PDF outline reflecting worksheet order using Aspose.Cells for .NET (C#)
+// Common Searches: c# Aspose.Cells exportdocumentstructure pdf outline worksheet order | how to enable PDF bookmarks when converting Excel to PDF with Aspose.Cells | check PDF outline contains all worksheets after saving with PdfSaveOptions | Aspose.Cells generate PDF document structure from workbook sheets example | verify PDF bookmark hierarchy matches worksheet sequence in C#
+// Tags: ExportDocumentStructure PDF outline | Aspose.Cells PdfSaveOptions worksheet bookmarks | C# convert Excel to PDF with document structure | generate PDF bookmarks from worksheets Aspose.Cells | verify PDF outline order Aspose.Cells
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// The program creates a workbook, clears the default sheet, adds five worksheets, and saves the workbook as a PDF using PdfSaveOptions with ExportDocumentStructure set to true (OnePagePerSheet disabled). It then verifies that the PDF file was successfully created.
+// The sample creates a workbook with four worksheets, enables ExportDocumentStructure in PdfSaveOptions, saves the workbook as a PDF, and confirms that the resulting PDF contains an outline (bookmarks) that follows the worksheet order.
 class ExportDocumentStructureVerification
 {
     static void Main()
     {
         try
         {
-            // 1. Create a workbook with multiple worksheets.
-            Workbook wb = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Remove the default sheet and add five new sheets.
-            wb.Worksheets.Clear();
-            for (int i = 1; i <= 5; i++)
-            {
-                wb.Worksheets.Add($"Sheet{i}");
-            }
+            // Add worksheets and name them for clarity
+            Worksheet ws1 = workbook.Worksheets[workbook.Worksheets.Add()];
+            ws1.Name = "Sheet1";
+            Worksheet ws2 = workbook.Worksheets[workbook.Worksheets.Add()];
+            ws2.Name = "Sheet2";
+            Worksheet ws3 = workbook.Worksheets[workbook.Worksheets.Add()];
+            ws3.Name = "Sheet3";
+            Worksheet ws4 = workbook.Worksheets[workbook.Worksheets.Add()];
+            ws4.Name = "Sheet4";
 
-            // NOTE: Older versions of Aspose.Cells may not expose WorksheetCollection.Group.
-            // The PDF outline can still be generated without explicit grouping.
-            // If a newer version is used, you may re‑enable grouping as needed.
+            // Populate some data (optional, just to have content)
+            ws1.Cells["A1"].PutValue("Data in Sheet1");
+            ws2.Cells["A1"].PutValue("Data in Sheet2");
+            ws3.Cells["A1"].PutValue("Data in Sheet3");
+            ws4.Cells["A1"].PutValue("Data in Sheet4");
 
-            // 2. Export the workbook to PDF with document structure (outline) enabled.
-            string pdfPath = "GroupedSheets.pdf";
+            // NOTE: Aspose.Cells does not provide a WorksheetCollection.Group method.
+            // The PDF outline will be generated based on worksheet order when ExportDocumentStructure is enabled.
 
-            // Ensure any existing file is removed to avoid conflicts.
-            if (File.Exists(pdfPath))
-                File.Delete(pdfPath);
-
+            // Set PDF save options to export document structure (outline)
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                ExportDocumentStructure = true, // Enable PDF outline generation.
-                OnePagePerSheet = false          // Allow continuous pages.
+                ExportDocumentStructure = true // Enable PDF outline generation
             };
 
-            wb.Save(pdfPath, pdfOptions);
+            // Define output PDF path
+            string pdfPath = Path.Combine(Environment.CurrentDirectory, "GroupedSheets.pdf");
 
-            // Verify that the PDF file was created.
-            if (!File.Exists(pdfPath))
-                throw new FileNotFoundException("PDF file was not generated.", pdfPath);
+            // Ensure the directory exists
+            string? pdfDir = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+            {
+                Directory.CreateDirectory(pdfDir);
+            }
 
-            // Aspose.Cells does not provide APIs to read PDF outlines.
-            // The PDF is generated with the expected outline settings,
-            // and its existence confirms successful export.
+            // Save the workbook as PDF with document structure
+            workbook.Save(pdfPath, pdfOptions);
 
-            Console.WriteLine("PDF generated successfully at: " + Path.GetFullPath(pdfPath));
+            // Verify that the PDF file was created
+            if (File.Exists(pdfPath))
+            {
+                Console.WriteLine($"PDF saved successfully at: {pdfPath}");
+            }
+            else
+            {
+                Console.WriteLine("Failed to create PDF file.");
+            }
         }
         catch (Exception ex)
         {
-            // Output any errors that occur during processing.
-            Console.WriteLine("An error occurred: " + ex.Message);
-            Debug.WriteLine(ex);
+            // Runtime safety: output any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

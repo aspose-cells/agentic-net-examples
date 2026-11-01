@@ -1,60 +1,55 @@
-// Title: Load only worksheets named Q followed by numbers using Aspose.Cells LoadOptions.LoadFilter with a regular expression in C#
-// AI Prompts: Load an Excel file with Aspose.Cells using LoadOptions.LoadFilter and the regex ^Q[0-9]+$ so that only matching worksheets are loaded, then save the workbook. | Replace the manual sheet‑removal loop with a LoadFilter that selects worksheets whose names start with "Q" and contain only digits. | Create a helper method that accepts a file path and a regex pattern, loads only the matching sheets via LoadOptions.LoadFilter, and returns the filtered Workbook object.
-// Common Searches: Aspose.Cells C# load workbook with regex to include specific worksheets | How to use LoadOptions.LoadFilter for sheet name pattern matching in Aspose.Cells | Filter Excel worksheets by name using a regular expression when opening with Aspose.Cells | Load only sheets named Q1, Q2, etc., using Aspose.Cells LoadFilter | Example of regex sheet selection with Aspose.Cells LoadOptions in C#
-// Tags: loadfilter regex aspose.cells | worksheet name regex filter aspose.cells c# | select specific sheets during workbook load aspose.cells | exclude nonmatching worksheets aspose.cells | regex based sheet loading aspose.cells
+// Title: C# example: Load an Excel workbook and keep only worksheets whose names match the pattern Q[0-9]+ using a regular expression filter
+// Common Searches: how to filter worksheets by name pattern when opening an Excel file with Aspose.Cells in C# | C# Aspose.Cells load workbook and retain only sheets starting with Q followed by numbers | using regex to select specific worksheets during workbook processing with Aspose.Cells | remove non‑matching worksheets from an Excel workbook programmatically in C# | Aspose.Cells example for keeping only Q1, Q2, etc. sheets after loading
+// Tags: Aspose.Cells worksheet name regex filter C# | load workbook selective sheets Aspose.Cells | regex based worksheet selection Excel C# | filter Excel worksheets by pattern Aspose.Cells | remove nonmatching sheets Aspose.Cells C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Aspose.Cells;
 
-// The program demonstrates how to open an Excel workbook with Aspose.Cells, apply LoadOptions.LoadFilter using a regular expression (^Q[0-9]+$) to load only worksheets whose names match the pattern, and then save the filtered workbook.
+// The sample checks that the source Excel file exists, opens it with Aspose.Cells, iterates through the worksheets in reverse order, removes any sheet whose name does not satisfy the regular expression ^Q\d+$, prints the names of the retained sheets, and saves the resulting workbook to a new file while handling exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+
         try
         {
-            // Define the path to the source workbook.
-            string sourcePath = "input.xlsx";
-
-            // Verify that the source file exists to avoid FileNotFoundException.
-            if (!File.Exists(sourcePath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
                 return;
             }
 
-            // Load the workbook without any filter.
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the workbook without a filter (filtering will be done manually)
+            Workbook workbook = new Workbook(inputFile);
 
-            // Regular expression to match worksheet names like "Q1", "Q23", etc.
-            Regex regex = new Regex(@"^Q[0-9]+$", RegexOptions.Compiled);
-
-            // Collect worksheets that do NOT match the pattern.
-            var sheetsToRemove = new System.Collections.Generic.List<Worksheet>();
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Remove worksheets whose names do not match the pattern Q[0-9]+
+            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
             {
-                if (!regex.IsMatch(sheet.Name))
+                Worksheet sheet = workbook.Worksheets[i];
+                if (!Regex.IsMatch(sheet.Name, @"^Q\d+$"))
                 {
-                    sheetsToRemove.Add(sheet);
+                    workbook.Worksheets.RemoveAt(i);
                 }
             }
 
-            // Remove the non‑matching worksheets.
-            foreach (Worksheet sheet in sheetsToRemove)
+            // Output the names of the remaining worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                workbook.Worksheets.RemoveAt(sheet.Index);
+                Console.WriteLine(sheet.Name);
             }
 
-            // Save the filtered workbook to a new file.
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Filtered workbook saved to: {outputPath}");
+            // Save the processed workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to \"{outputFile}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors.
+            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

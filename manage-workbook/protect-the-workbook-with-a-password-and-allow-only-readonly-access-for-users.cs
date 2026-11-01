@@ -1,12 +1,12 @@
-// Title: How to password‑protect an Excel workbook for read‑only access using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to apply a password to a workbook's structure and windows, then save it as a read‑only .xlsx file. | Show an example of calling workbook.Protect with ProtectionType.All and a password, followed by saving the protected workbook in C#. | Demonstrate creating a workbook, inserting data, setting a password for read‑only access, and exporting the file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# protect workbook with password and restrict editing | Set read‑only mode for an Excel file using Aspose.Cells .NET | How to apply structure and windows protection to an .xlsx with Aspose.Cells | C# example for password‑protected Excel workbook using Aspose.Cells
-// Tags: Aspose.Cells workbook.Protect method | C# Excel workbook password protection | read‑only .xlsx Aspose.Cells | protect workbook structure windows Aspose | save protected workbook .NET
+// Title: How to password‑protect an Excel workbook and enforce read‑only access using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# protect workbook structure and windows with a password | Set an Excel file to read‑only mode using Aspose.Cells .NET | Apply password protection to an Excel workbook and prevent editing with Aspose.Cells | Use ProtectionType Structure | Windows in Aspose.Cells to lock a workbook | Save a password‑protected read‑only Excel workbook with Aspose.Cells C#
+// Tags: Aspose.Cells workbook password protection | C# protect Excel workbook structure windows | read‑only Excel file Aspose.Cells | Aspose.Cells ProtectionType Structure Windows | save protected workbook Aspose.Cells .NET
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The sample creates a new Workbook, adds data to the first worksheet, protects the workbook's structure and windows with a password using workbook.Protect(ProtectionType.All, password), and saves the resulting read‑only Excel file as 'ProtectedWorkbook.xlsx'.
+// The example creates a new Workbook, writes sample data, applies password protection to both the workbook's structure and windows using ProtectionType.Structure | ProtectionType.Windows, and saves the file as a read‑only, password‑protected Excel workbook.
 class Program
 {
     static void Main()
@@ -14,25 +14,25 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
             // Add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["A2"].PutValue("Data");
+            var cells = workbook.Worksheets[0].Cells;
+            cells["A1"].PutValue("Sample");
+            cells["B1"].PutValue("Data");
 
-            // Protect the workbook (structure and windows) with a password
-            string password = "MySecretPassword";
-            workbook.Protect(ProtectionType.All, password);
+            // Protect the workbook structure and windows with a password
+            // Combine Structure and Windows flags using bitwise OR
+            workbook.Protect(ProtectionType.Structure | ProtectionType.Windows, "MyPassword123");
 
             // Save the protected workbook
             string outputPath = "ProtectedWorkbook.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

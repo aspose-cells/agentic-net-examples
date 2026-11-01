@@ -5,8 +5,8 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 primary_intent: Format Excel cells, rows, columns, and ranges in C#
 primary_apis: [Style, Cell.GetStyle, Cell.SetStyle, Workbook.CreateStyle, StyleFlag, Cells.ApplyStyle]
 related_categories: [../cells-data/, ../managing-ranges/, ../rows-and-columns/, ../globalization-and-localization/]

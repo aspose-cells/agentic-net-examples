@@ -1,61 +1,100 @@
-// Title: Batch process 100 Excel workbooks in C# with Aspose.Cells: add author and custom properties, remove unused styles
-// AI Prompts: Create a C# console application that loops from Workbook1.xlsx to Workbook100.xlsx, loads each file with Aspose.Cells, sets the built‑in Author property, adds a custom ProcessedDate property, invokes RemoveUnusedStyles, and saves the modified workbook to a designated output folder. | Enhance the batch processor to accept command‑line parameters for input folder, output folder, and the start/end workbook numbers, and write a log file that records missing source files and any processing exceptions.
-// Common Searches: C# Aspose.Cells loop through multiple XLSX files and set document properties | remove unused styles from a batch of Excel workbooks using Aspose.Cells | add custom ProcessedDate property to many Excel files programmatically .NET | how to handle missing Excel files in a bulk processing script with Aspose.Cells | save modified workbooks to a different directory using Aspose.Cells C#
-// Tags: batch update built‑in author property Aspose.Cells | add custom ProcessedDate property to XLSX files | clean unused cell styles Aspose.Cells | bulk workbook processing C# console | output directory saving Aspose.Cells
+// Title: C# batch job to process up to 100 Excel workbooks with Aspose.Cells: add optional custom metadata and remove unused styles
+// Common Searches: how to batch process up to 100 Excel workbooks using Aspose.Cells in C# | add a custom document property to multiple Excel files with Aspose.Cells C# | remove unused styles from a workbook programmatically with Aspose.Cells | save processed Excel workbooks to a separate folder using Aspose.Cells C# | limit Aspose.Cells workbook processing loop to first 100 files in C#
+// Tags: excel batch processing Aspose.Cells C# | custom document property addition Aspose.Cells | unused style cleanup Aspose.Cells | process first 100 workbooks limit | output directory saving Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program iterates over 100 Excel files, loads each with Aspose.Cells, sets the Author built‑in property, adds a custom ProcessedDate property, removes any styles that are not referenced, and saves the updated workbook to an output folder while handling missing files and logging errors.
-class BatchWorkbookProcessor
+namespace AsposeCellsBatchJob
 {
-    static void Main()
+    // The WorkbookProcessor class loads up to 100 Excel workbooks from a source folder, optionally adds a custom document property, removes any unused styles, and saves each workbook to a specified output directory using Aspose.Cells in C#.
+    public class WorkbookProcessor
     {
-        // Define input and output directories
-        string inputDir = @"C:\Workbooks\Input";
-        string outputDir = @"C:\Workbooks\Output";
+        // Path to the folder containing source workbooks
+        private readonly string _sourceFolder;
+        // Path to the folder where processed workbooks will be saved
+        private readonly string _outputFolder;
+        // Optional metadata to add (key/value). Set to null if not needed.
+        private readonly (string Key, string Value)? _optionalMetadata;
 
-        // Ensure output directory exists
-        Directory.CreateDirectory(outputDir);
-
-        // Process workbooks named Workbook1.xlsx to Workbook100.xlsx
-        for (int i = 1; i <= 100; i++)
+        public WorkbookProcessor(string sourceFolder, string outputFolder, (string Key, string Value)? optionalMetadata = null)
         {
-            string inputFile = Path.Combine(inputDir, $"Workbook{i}.xlsx");
-            string outputFile = Path.Combine(outputDir, $"Workbook{i}.xlsx");
+            _sourceFolder = sourceFolder;
+            _outputFolder = outputFolder;
+            _optionalMetadata = optionalMetadata;
+        }
 
-            // Skip if the input file does not exist
-            if (!File.Exists(inputFile))
+        public void ProcessAll()
+        {
+            // Ensure output directory exists
+            Directory.CreateDirectory(_outputFolder);
+
+            // Get first 100 workbook files (any supported format)
+            string[] workbookFiles = Directory.GetFiles(_sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            int processedCount = 0;
+
+            foreach (string filePath in workbookFiles)
             {
-                Console.WriteLine($"Input file not found: {inputFile}");
-                continue;
-            }
+                if (processedCount >= 100)
+                    break;
 
-            try
-            {
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(inputFile);
+                // Load workbook (using provided load rule)
+                Workbook workbook = LoadWorkbook(filePath);
 
-                // ---- Optional Metadata Section ----
-                // Set built‑in property (e.g., Author)
-                workbook.BuiltInDocumentProperties["Author"].Value = "BatchProcessor";
+                // Add optional metadata if supplied
+                if (_optionalMetadata.HasValue)
+                {
+                    // Use custom document property to store metadata
+                    workbook.CustomDocumentProperties.Add(_optionalMetadata.Value.Key, _optionalMetadata.Value.Value);
+                }
 
-                // Add custom property (e.g., ProcessedDate)
-                workbook.CustomDocumentProperties.Add("ProcessedDate", DateTime.Now);
-
-                // ---- Remove Unused Styles ----
-                // Cleans up any style definitions that are not referenced by cells
+                // Remove styles that are not used in the workbook (using provided rule)
                 workbook.RemoveUnusedStyles();
 
-                // Save the modified workbook (lifecycle rule: save)
-                workbook.Save(outputFile, SaveFormat.Xlsx);
-                Console.WriteLine($"Processed and saved: {outputFile}");
+                // Determine output file path
+                string fileName = Path.GetFileName(filePath);
+                string outputPath = Path.Combine(_outputFolder, fileName);
+
+                // Save workbook (using provided save rule)
+                SaveWorkbook(workbook, outputPath);
+
+                processedCount++;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file {inputFile}: {ex.Message}");
-            }
+        }
+
+        // Load rule placeholder – loads a workbook from a file path
+        private Workbook LoadWorkbook(string path)
+        {
+            // The actual rule implementation is assumed to be provided elsewhere.
+            // Here we invoke the standard Aspose.Cells load method.
+            return new Workbook(path);
+        }
+
+        // Save rule placeholder – saves a workbook to a file path
+        private void SaveWorkbook(Workbook workbook, string path)
+        {
+            // The actual rule implementation is assumed to be provided elsewhere.
+            // Here we invoke the standard Aspose.Cells save method.
+            workbook.Save(path);
+        }
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            string sourceFolder = @"C:\Workbooks\Input";
+            string outputFolder = @"C:\Workbooks\Processed";
+
+            // Optional metadata example: add a custom property "ProcessedBy" with value "BatchJob"
+            var metadata = ("ProcessedBy", "BatchJob");
+
+            var processor = new WorkbookProcessor(sourceFolder, outputFolder, metadata);
+            processor.ProcessAll();
+
+            Console.WriteLine("Batch processing completed.");
         }
     }
 }

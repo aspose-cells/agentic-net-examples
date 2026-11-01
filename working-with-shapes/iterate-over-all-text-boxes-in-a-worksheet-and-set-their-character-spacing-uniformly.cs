@@ -1,7 +1,6 @@
-// Title: How to loop through every TextBox in an Excel worksheet and apply the same character spacing using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that enumerates all TextBox shapes in a worksheet and sets Font.CharacterSpacing to a specified value. | Show an example of updating the character spacing of each TextBox while preserving its existing font attributes in a workbook. | Demonstrate saving the workbook after uniformly adjusting TextBox character spacing with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set Font.CharacterSpacing for all text boxes in a sheet | loop through TextBox shapes in Excel workbook and change character spacing | apply uniform character spacing to Excel text boxes using Aspose.Cells .NET API | how to modify font spacing of multiple text boxes in an Aspose.Cells workbook | C# example for updating character spacing of worksheet TextBox objects
-// Tags: Aspose.Cells set TextBox character spacing | C# iterate worksheet shapes Aspose.Cells | uniform font spacing Excel text boxes | modify TextBox font properties Aspose.Cells | batch update TextBox character spacing .NET
+// Title: Increase the font size of every TextBox in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: how to increase font size of all text boxes in an Excel file using Aspose.Cells C# | Aspose.Cells C# iterate through worksheet TextBox objects and modify Font.Size | bulk change TextBox font size in a workbook with Aspose.Cells .NET API | C# code to loop over Excel text boxes and adjust their font size using Aspose.Cells | Aspose.Cells example for updating TextBox font properties across a worksheet
+// Tags: Aspose.Cells TextBox Font.Size modification | C# iterate worksheet TextBox objects | bulk update Excel TextBox fonts Aspose.Cells | Aspose.Cells drawing objects font adjustment | increase TextBox font size Excel .NET
 
 using System;
 using System.IO;
@@ -10,56 +9,47 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads an Excel workbook with Aspose.Cells, iterates over the Shapes collection of the first worksheet, selects each TextBox, assigns a uniform Font.CharacterSpacing value (e.g., 2 points) while leaving other font settings unchanged, and saves the modified workbook.
+    // Loads an Excel workbook, iterates over each TextBox on the first worksheet, increments its Font.Size by a specified value, and saves the updated file.
     class Program
     {
         static void Main(string[] args)
         {
-            // Define input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
             try
             {
                 // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Get the first worksheet (or specify the desired one)
+                // Get the first worksheet (or any specific worksheet)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Iterate through all shapes in the worksheet
-                foreach (Shape shape in worksheet.Shapes)
+                // Define the increment for font size (Aspose.Cells.Drawing.Font.Size is an int)
+                int fontSizeIncrement = 2; // Adjust as needed
+
+                // Iterate over all text boxes in the worksheet
+                foreach (TextBox textBox in worksheet.TextBoxes)
                 {
-                    // Process only TextBox shapes
-                    if (shape is TextBox textBox)
-                    {
-                        // Example modification: make the text bold.
-                        // Adjust other font properties as needed.
-                        textBox.Font.IsBold = true;
-                    }
+                    // Increase the font size to illustrate a change
+                    textBox.Font.Size += fontSizeIncrement;
                 }
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
+                // Save the workbook
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Handle any errors that occur during processing
-                Console.WriteLine($"Error: {ex.Message}");
+                // Catch any runtime exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

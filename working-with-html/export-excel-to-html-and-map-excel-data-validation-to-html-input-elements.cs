@@ -1,218 +1,205 @@
-// Title: Convert an Excel workbook to HTML and map Aspose.Cells data‑validation rules to corresponding HTML form controls (C#)
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, iterates through each worksheet, and generates an HTML file where cells with data‑validation are rendered as appropriate <input> or <select> elements. | Enhance the generated HTML by adding CSS classes that indicate the validation type (list, numeric, date, text length) and ensure all worksheets in the workbook are processed. | Add support for list‑type validations that reference a range or named range, extracting the allowed values and populating a <select> dropdown in the output HTML.
-// Common Searches: how to export Excel to HTML with Aspose.Cells and preserve data validation as form fields in C# | C# Aspose.Cells generate HTML table with input elements for cells that have validation rules | map Excel list validation to HTML select using Aspose.Cells .NET | render numeric and date validation from Excel as HTML input type number/date with Aspose.Cells | extract range‑based validation options from an Excel worksheet when converting to HTML
-// Tags: Aspose.Cells HTML export with data validation | Excel list validation to HTML select C# | numeric validation to number input Aspose.Cells | date validation to date input Aspose.Cells | extract validation options from range Aspose.Cells
+// Title: Convert an Excel worksheet to an HTML table with data‑validation rendered as form controls using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export Excel sheet to HTML with dropdowns for list validation | How to map Excel data validation to HTML input elements using Aspose.Cells in .NET | Generate HTML table from Excel file while preserving validation rules with Aspose.Cells C# | Aspose.Cells create HTML select element from Excel validation list in C# | Export Excel to HTML and convert numeric validation to <input type="number"> using Aspose.Cells
+// Tags: Aspose.Cells HTML export with validation mapping | Excel list validation to HTML select Aspose.Cells | C# numeric validation to HTML number input | Excel date validation to HTML date field | Generate HTML table from Excel using Aspose.Cells
 
 using System;
-using System.IO;
-using System.Text;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 using Aspose.Cells;
 
-// The program loads an Excel workbook using Aspose.Cells, builds a lookup of cell addresses to their Validation objects, and writes an HTML file where each cell is displayed either as plain text or as an appropriate <input> or <select> element based on its validation type (list, numeric, date, text length, etc.).
-class ExcelToHtmlWithValidation
+namespace ExcelToHtmlWithValidation
 {
-    static void Main()
+    // The C# program loads an Excel workbook with Aspose.Cells, builds a lookup of each cell's Validation object, and iterates over the used range to produce an HTML table. Cells with validation are rendered as appropriate form controls—<select> for list validation, <input type="number"> with min/max for numeric validation, <input type="date"> for date validation, and <input type="text"> for other types—while all other cells are displayed as plain text. The resulting HTML file is saved to disk.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Load the Excel workbook (use the provided load rule)
-            string excelPath = "input.xlsx";
-
-            if (!File.Exists(excelPath))
+            try
             {
-                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
-                return;
-            }
+                // Path to the source Excel file
+                string excelPath = "input.xlsx";
 
-            Workbook workbook = new Workbook(excelPath);
+                // Verify that the input file exists
+                if (!File.Exists(excelPath))
+                {
+                    Console.WriteLine($"Error: Input file \"{excelPath}\" not found.");
+                    return;
+                }
 
-            // Prepare a StringBuilder to hold the generated HTML
-            StringBuilder html = new StringBuilder();
+                // Path to the output HTML file
+                string htmlPath = "output.html";
 
-            // Basic HTML header
-            html.AppendLine("<!DOCTYPE html>");
-            html.AppendLine("<html>");
-            html.AppendLine("<head>");
-            html.AppendLine("<meta charset=\"UTF-8\">");
-            html.AppendLine("<title>Excel Export</title>");
-            html.AppendLine("</head>");
-            html.AppendLine("<body>");
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(excelPath);
 
-            // Process each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                html.AppendLine($"<h2>{WebUtility.HtmlEncode(sheet.Name)}</h2>");
-                html.AppendLine("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">");
+                // Get the first worksheet (adjust as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Build a lookup for data validations for quick access
-                var validationMap = BuildValidationMap(sheet);
+                // Build a lookup for cell address -> Validation
+                Dictionary<string, Validation> validationMap = new Dictionary<string, Validation>(StringComparer.OrdinalIgnoreCase);
+                foreach (Validation val in sheet.Validations)
+                {
+                    // A Validation can apply to a range; map each cell in the range
+                    foreach (CellArea area in val.Areas)
+                    {
+                        for (int row = area.StartRow; row <= area.EndRow; row++)
+                        {
+                            for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                            {
+                                string address = CellsHelper.CellIndexToName(row, col);
+                                validationMap[address] = val;
+                            }
+                        }
+                    }
+                }
 
-                // Determine the used range of the sheet
-                int maxRow = sheet.Cells.MaxDataRow;
-                int maxCol = sheet.Cells.MaxDataColumn;
+                // Build HTML output
+                StringBuilder html = new StringBuilder();
+
+                // Basic HTML header
+                html.AppendLine("<!DOCTYPE html>");
+                html.AppendLine("<html>");
+                html.AppendLine("<head>");
+                html.AppendLine("<meta charset=\"UTF-8\">");
+                html.AppendLine("<title>Excel Export</title>");
+                html.AppendLine("<style>");
+                html.AppendLine("table { border-collapse: collapse; }");
+                html.AppendLine("td, th { border: 1px solid #999; padding: 4px; }");
+                html.AppendLine("</style>");
+                html.AppendLine("</head>");
+                html.AppendLine("<body>");
+                html.AppendLine("<table>");
+
+                // Determine the used range
+                int minRow = cells.MinRow;
+                int maxRow = cells.MaxRow;
+                int minCol = cells.MinColumn;
+                int maxCol = cells.MaxColumn;
+
+                // Optional: render header row with column letters
+                html.AppendLine("<tr>");
+                html.AppendLine("<th></th>"); // top-left empty cell
+                for (int col = minCol; col <= maxCol; col++)
+                {
+                    string colName = CellsHelper.ColumnIndexToName(col);
+                    html.AppendFormat("<th>{0}</th>", colName);
+                    html.AppendLine();
+                }
+                html.AppendLine("</tr>");
 
                 // Iterate through rows
-                for (int row = 0; row <= maxRow; row++)
+                for (int row = minRow; row <= maxRow; row++)
                 {
                     html.AppendLine("<tr>");
-                    // Iterate through columns
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = sheet.Cells[row, col];
-                        string cellAddress = cell.Name; // e.g., "A1"
 
-                        // Check if this cell has a data validation rule
-                        if (validationMap.TryGetValue(cellAddress, out Validation dv))
+                    // Row header with row number
+                    html.AppendFormat("<th>{0}</th>", (row + 1));
+                    html.AppendLine();
+
+                    for (int col = minCol; col <= maxCol; col++)
+                    {
+                        string address = CellsHelper.CellIndexToName(row, col);
+                        Cell cell = cells[row, col];
+                        string cellText = cell.Value?.ToString() ?? string.Empty;
+
+                        if (validationMap.TryGetValue(address, out Validation val))
                         {
-                            // Render an appropriate HTML input element based on the validation type
-                            string inputHtml = RenderInputForValidation(cell, dv);
-                            html.AppendLine($"<td>{inputHtml}</td>");
+                            // Map validation to appropriate HTML input element
+                            string inputHtml = GenerateInputHtml(val, cellText);
+                            html.AppendFormat("<td>{0}</td>", inputHtml);
                         }
                         else
                         {
-                            // No validation – just output the cell's displayed value
-                            string displayedValue = cell.StringValue ?? string.Empty;
-                            displayedValue = WebUtility.HtmlEncode(displayedValue);
-                            html.AppendLine($"<td>{displayedValue}</td>");
+                            // No validation – just display the cell value
+                            html.AppendFormat("<td>{0}</td>", WebUtility.HtmlEncode(cellText));
                         }
+
+                        html.AppendLine();
                     }
+
                     html.AppendLine("</tr>");
                 }
 
                 html.AppendLine("</table>");
+                html.AppendLine("</body>");
+                html.AppendLine("</html>");
+
+                // Save the HTML (lifecycle rule: save)
+                File.WriteAllText(htmlPath, html.ToString(), Encoding.UTF8);
+                Console.WriteLine($"HTML file generated at \"{htmlPath}\".");
             }
-
-            // Close HTML tags
-            html.AppendLine("</body>");
-            html.AppendLine("</html>");
-
-            // Save the HTML content to a file (use the provided save rule)
-            string htmlPath = "output.html";
-            File.WriteAllText(htmlPath, html.ToString(), Encoding.UTF8);
-            Console.WriteLine($"HTML file generated successfully at \"{htmlPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Builds a dictionary that maps cell addresses to their Validation objects
-    private static Dictionary<string, Validation> BuildValidationMap(Worksheet sheet)
-    {
-        var map = new Dictionary<string, Validation>(StringComparer.OrdinalIgnoreCase);
-        foreach (Validation dv in sheet.Validations)
-        {
-            // A validation can apply to a range of cells; iterate through each cell in the range
-            foreach (CellArea area in dv.Areas)
+            catch (Exception ex)
             {
-                for (int r = area.StartRow; r <= area.EndRow; r++)
-                {
-                    for (int c = area.StartColumn; c <= area.EndColumn; c++)
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private static string GenerateInputHtml(Validation val, string defaultValue)
+        {
+            // Escape default value for HTML attribute
+            string escapedValue = WebUtility.HtmlEncode(defaultValue);
+
+            switch (val.Type)
+            {
+                case ValidationType.List:
+                    // List validation – create a <select> element
+                    List<string> items = new List<string>();
+                    if (!string.IsNullOrEmpty(val.Formula1) && !val.Formula1.StartsWith("="))
                     {
-                        string address = CellsHelper.CellIndexToName(r, c);
-                        // If multiple validations overlap, keep the first one encountered
-                        if (!map.ContainsKey(address))
-                            map[address] = dv;
+                        // Comma‑separated list
+                        string[] parts = val.Formula1.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string p in parts)
+                            items.Add(p.Trim());
                     }
-                }
-            }
-        }
-        return map;
-    }
 
-    // Generates HTML input/select markup based on the type of Validation
-    private static string RenderInputForValidation(Cell cell, Validation dv)
-    {
-        // Determine the validation type
-        switch (dv.Type)
-        {
-            case ValidationType.List:
-                // List validation – render a <select> element
-                var options = GetListOptions(dv, cell.Worksheet);
-                StringBuilder select = new StringBuilder();
-                select.Append("<select>");
-                foreach (string opt in options)
-                {
-                    string encoded = WebUtility.HtmlEncode(opt);
-                    select.Append($"<option value=\"{encoded}\">{encoded}</option>");
-                }
-                select.Append("</select>");
-                return select.ToString();
-
-            case ValidationType.WholeNumber:
-            case ValidationType.Decimal:
-                // Numeric validation – render an <input type=\"number\">
-                string numVal = WebUtility.HtmlEncode(cell.StringValue ?? string.Empty);
-                return $"<input type=\"number\" value=\"{numVal}\" />";
-
-            case ValidationType.Date:
-                // Date validation – render an <input type=\"date\">
-                string dateVal = cell.StringValue ?? string.Empty;
-                if (DateTime.TryParse(dateVal, out DateTime dt))
-                    dateVal = dt.ToString("yyyy-MM-dd");
-                dateVal = WebUtility.HtmlEncode(dateVal);
-                return $"<input type=\"date\" value=\"{dateVal}\" />";
-
-            case ValidationType.TextLength:
-                // Text length – render a simple text input
-                string txt = WebUtility.HtmlEncode(cell.StringValue ?? string.Empty);
-                return $"<input type=\"text\" value=\"{txt}\" />";
-
-            default:
-                // Fallback – plain text input
-                string fallback = WebUtility.HtmlEncode(cell.StringValue ?? string.Empty);
-                return $"<input type=\"text\" value=\"{fallback}\" />";
-        }
-    }
-
-    // Retrieves the list of allowed values for a List-type validation
-    private static List<string> GetListOptions(Validation dv, Worksheet sheet)
-    {
-        var options = new List<string>();
-
-        // The list can be defined directly (comma‑separated) or via a range reference
-        string formula = dv.Formula1?.Trim();
-
-        if (string.IsNullOrEmpty(formula))
-            return options;
-
-        // If the formula starts with '=', it's a range reference
-        if (formula.StartsWith("="))
-        {
-            // Remove leading '='
-            string rangeRef = formula.Substring(1);
-            try
-            {
-                // Resolve the range (supports same‑sheet references)
-                Aspose.Cells.Range range = sheet.Cells.CreateRange(rangeRef);
-                if (range != null)
-                {
-                    for (int r = 0; r < range.RowCount; r++)
+                    StringBuilder select = new StringBuilder();
+                    select.Append("<select>");
+                    foreach (string opt in items)
                     {
-                        for (int c = 0; c < range.ColumnCount; c++)
-                        {
-                            string val = range[r, c].StringValue ?? string.Empty;
-                            options.Add(val);
-                        }
+                        string selected = (opt == defaultValue) ? " selected" : "";
+                        select.AppendFormat("<option value=\"{0}\"{1}>{0}</option>", WebUtility.HtmlEncode(opt), selected);
                     }
-                }
-            }
-            catch (Exception)
-            {
-                // If the range cannot be resolved, return empty options
-            }
-        }
-        else
-        {
-            // Comma‑separated list
-            string[] parts = formula.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string part in parts)
-                options.Add(part.Trim());
-        }
+                    select.Append("</select>");
+                    return select.ToString();
 
-        return options;
+                case ValidationType.WholeNumber:
+                case ValidationType.Decimal:
+                    // Numeric validation – create <input type="number">
+                    string minAttr = "";
+                    string maxAttr = "";
+
+                    // Handle common operators
+                    if (val.Operator == OperatorType.Between && !string.IsNullOrEmpty(val.Formula1) && !string.IsNullOrEmpty(val.Formula2))
+                    {
+                        minAttr = $" min=\"{val.Formula1}\"";
+                        maxAttr = $" max=\"{val.Formula2}\"";
+                    }
+                    else if (val.Operator == OperatorType.GreaterThan && !string.IsNullOrEmpty(val.Formula1))
+                    {
+                        minAttr = $" min=\"{val.Formula1}\"";
+                    }
+                    else if (val.Operator == OperatorType.LessThan && !string.IsNullOrEmpty(val.Formula1))
+                    {
+                        maxAttr = $" max=\"{val.Formula1}\"";
+                    }
+
+                    return $"<input type=\"number\" value=\"{escapedValue}\"{minAttr}{maxAttr} />";
+
+                case ValidationType.Date:
+                    // Date validation – create <input type="date">
+                    return $"<input type=\"date\" value=\"{escapedValue}\" />";
+
+                case ValidationType.TextLength:
+                    // Text length – create <input type=\"text\">
+                    return $"<input type=\"text\" value=\"{escapedValue}\" />";
+
+                default:
+                    // Fallback – plain text input
+                    return $"<input type=\"text\" value=\"{escapedValue}\" />";
+            }
+        }
     }
 }

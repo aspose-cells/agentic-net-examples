@@ -1,39 +1,49 @@
-// Title: Import a CSV file, sum the second column with a SUM formula, and save the total to a new cell in an XLSX workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to load data.csv, place a =SUM(B:B) formula in cell C1, calculate all formulas, and export the workbook as result.xlsx. | Write a C# program that calls Cells.ImportCSV to read a CSV, adds a SUM formula for column B, triggers workbook.CalculateFormula, and saves the file in XLSX format.
-// Common Searches: Aspose.Cells C# import CSV and calculate column sum | How to add a SUM formula after importing CSV with Aspose.Cells .NET | Save CSV data as Excel with total of a column using Aspose.Cells | C# Aspose.Cells calculate formulas after ImportCSV | Sum values in second column of CSV and write result to Excel using Aspose.Cells
-// Tags: ImportCSV method Aspose.Cells | SUM formula column B Aspose.Cells | Calculate workbook formulas Aspose.Cells | Save workbook as XLSX Aspose.Cells | aggregate numeric column CSV Aspose.Cells
+// Title: Sum a numeric column in a CSV file and write the total to a new cell with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells calculate total of a column in a CSV workbook | How to add a sum row after CSV data using Aspose.Cells .NET | Write aggregated value to a new cell in Excel after loading CSV with Aspose.Cells | Aspose.Cells iterate over CSV rows to compute column sum in C# | Export CSV to XLSX with summed column value using Aspose.Cells
+// Tags: column sum calculation Aspose.Cells C# | insert result cell after data Aspose.Cells | CSV to XLSX conversion with total row Aspose.Cells | load CSV workbook LoadOptions Aspose.Cells | aggregate numeric column Aspose.Cells worksheet
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to import a CSV file into a workbook with Aspose.Cells for .NET, apply a SUM formula to column B, evaluate the formula, and save the result as an XLSX file.
-class CsvSumExample
+// The example loads a CSV file into an Aspose.Cells Workbook using LoadOptions, iterates through a specified numeric column to compute the sum while skipping non‑numeric cells, writes a label and the calculated total a couple of rows below the existing data, and saves the result as an XLSX file.
+class Program
 {
     static void Main()
     {
         // Path to the source CSV file
-        string csvPath = "data.csv";
+        string csvPath = "input.csv";
 
-        // Path for the resulting Excel file
-        string outputPath = "result.xlsx";
+        // Load the CSV file into a workbook (Aspose.Cells automatically parses CSV)
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+        Workbook workbook = new Workbook(csvPath, loadOptions);
 
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Get the first worksheet (the CSV data is placed here)
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Import the CSV data starting at cell A1 (row 0, column 0)
-        // Using comma as delimiter and converting numeric strings to numbers
-        cells.ImportCSV(csvPath, ",", true, 0, 0);
+        // Index of the numeric column to sum (0‑based). Example: column B => index 1
+        int numericColumnIndex = 1;
 
-        // Place a formula in cell C1 that sums the entire second column (B)
-        // The formula will automatically calculate the sum of all numeric values in column B
-        cells["C1"].Formula = "=SUM(B:B)";
+        // Calculate the sum of the numeric column
+        double sum = 0;
+        // Determine the last row that contains data
+        int lastDataRow = sheet.Cells.MaxDataRow;
+        for (int row = 0; row <= lastDataRow; row++)
+        {
+            // Try to parse the cell value as a double; ignore non‑numeric cells
+            double value;
+            if (double.TryParse(sheet.Cells[row, numericColumnIndex].StringValue, out value))
+            {
+                sum += value;
+            }
+        }
 
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
+        // Write the result into a new cell.
+        // Place a label in column A and the sum in column B, two rows after the data.
+        int resultRow = lastDataRow + 2;
+        sheet.Cells[resultRow, 0].PutValue("Sum");
+        sheet.Cells[resultRow, 1].PutValue(sum);
 
-        // Save the workbook to the specified output file
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+        // Save the workbook to an XLSX file (or any format you need)
+        workbook.Save("output.xlsx");
     }
 }

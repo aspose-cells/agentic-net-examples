@@ -1,34 +1,47 @@
-// Title: How to protect an Excel workbook with Aspose.Cells for .NET to block printing while still allowing on‑screen viewing
-// AI Prompts: Write C# code that uses Aspose.Cells to protect a workbook with a password and configure the protection options so that printing is prohibited but all other view features remain enabled. | Show the Aspose.Cells API calls required to disable the Print command in a protected Excel file while keeping the worksheet visible to users. | Provide a complete example that creates or loads a workbook, applies workbook protection with printing disabled, and saves the result.
-// Common Searches: Aspose.Cells C# disable print option in protected Excel workbook | prevent printing of Excel file using Aspose.Cells .NET API | how to allow view‑only access to Excel workbook with Aspose.Cells | C# set workbook protection to block printing but keep sheet visible Aspose
-// Tags: Aspose.Cells workbook protection disable printing | C# Aspose.Cells set print restriction | Excel file view‑only protection Aspose.Cells | Aspose.Cells protect workbook with password | disable Excel printing via Aspose.Cells API
+// Title: Password‑protect an Excel workbook and attempt to block printing with Aspose.Cells for .NET
+// Common Searches: how to protect an Excel workbook with a password using Aspose.Cells in C# and stop users from printing | Aspose.Cells C# disable print command on a protected workbook | set view‑only protection on an Excel file while preventing printing with Aspose.Cells .NET | C# code example for workbook.Protect to block printing in Aspose.Cells | which Aspose.Cells version supports printing restriction on protected workbooks
+// Tags: password protect workbook Aspose.Cells C# | printing restriction workbook protection Aspose.Cells | Aspose.Cells workbook.Protect API usage | protect Excel structure windows Aspose.Cells | view‑only workbook protection Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook (or loads an existing one), applies password‑protected workbook protection, configures the protection settings to prevent printing while still allowing users to view the sheets on screen, and saves the protected file.
-class Program
+// The sample loads an existing XLSX file, applies full workbook protection (structure and windows) with a password via workbook.Protect(ProtectionType.All, "MySecretPassword"), notes that disabling printing may not be available in all Aspose.Cells versions, saves the protected file, and includes basic error handling.
+class WorkbookProtectionExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "protected.xlsx";
 
-            // Protect the entire workbook with a password
-            // ProtectionType.All protects structure, windows, and objects
-            workbook.Protect(ProtectionType.All, "securePassword");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Protect the workbook (structure and windows) with a password
+            // ProtectionType.All protects the entire workbook
+            workbook.Protect(ProtectionType.All, "MySecretPassword");
+
+            // Note: Disabling printing via WorkbookProtection is not available in all versions.
+            // If needed, additional logic can be added here using the appropriate API for the target version.
 
             // Save the protected workbook
-            string outputPath = "ProtectedWorkbook.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook has been protected and saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log or display the error details
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any unexpected exceptions to prevent the application from crashing
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

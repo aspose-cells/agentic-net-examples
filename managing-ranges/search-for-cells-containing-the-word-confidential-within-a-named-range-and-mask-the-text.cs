@@ -1,90 +1,76 @@
-// Title: Mask the word “confidential” in cells of a named range using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook, retrieves a specific named range, and replaces every occurrence of the word “confidential” with asterisks using Aspose.Cells. | Generate a case‑insensitive regex routine that scans string cells inside a defined name range and masks the matched word with asterisks in C# with Aspose.Cells. | Create robust error‑handling for missing input files and undefined named ranges while performing text masking in an Excel worksheet using Aspose.Cells.
-// Common Searches: aspocells c# mask confidential word in named range | replace specific text in defined name range using Aspose.Cells .NET | case insensitive search and replace in Excel cells with Aspose.Cells C#
-// Tags: mask confidential text in named range Aspose.Cells | regex replace in Excel cells C# | defined name range iteration Aspose.Cells | case‑insensitive text masking workbook .NET | load and save workbook after text replacement Aspose.Cells
+// Title: C# code to mask the word “confidential” in all cells of a named range using Aspose.Cells
+// Common Searches: how to replace a specific word in an Excel named range with Aspose.Cells C# | mask confidential text in cells of a named range using Aspose.Cells .NET | case‑insensitive string replacement in an Excel named range with Aspose.Cells | iterate through cells of a named range and modify their content in C# | Aspose.Cells find and mask keyword in a workbook named range
+// Tags: mask keyword in named range Aspose.Cells | case‑insensitive string replacement Aspose.Cells C# | iterate over named range cells Aspose.Cells | regex based text masking Excel Aspose.Cells | search cells by keyword Aspose.Cells workbook
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel file, obtains the named range "MyNamedRange", iterates through each string cell in that range, uses a case‑insensitive regular expression to find the word "confidential", replaces each occurrence with asterisks, and saves the modified workbook. It includes checks for missing files, undefined named ranges, and logs cell‑level errors without stopping the process.
+// The example loads an Excel workbook, retrieves a named range called "MyNamedRange", iterates through each cell in that range, and for any string cell containing the word "confidential" (case‑insensitive) replaces it with ten asterisks using a regular expression, then saves the modified workbook.
 class MaskConfidentialInNamedRange
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string namedRangeName = "MyNamedRange";
+
+        // Verify input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-            const string namedRangeName = "MyNamedRange";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook from the specified file
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the defined name (named range) from the workbook
-            Name namedRange = workbook.Worksheets.Names[namedRangeName];
+            // Retrieve the named range (use GetRangeByName)
+            Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName(namedRangeName);
             if (namedRange == null)
             {
-                Console.WriteLine($"Named range \"{namedRangeName}\" not found.");
+                Console.WriteLine($"Error: Named range \"{namedRangeName}\" not found.");
                 return;
             }
 
-            // Obtain the actual cell range that the name refers to
-            AsposeRange range = namedRange.GetRange();
-
-            // Case‑insensitive regex to locate the word "confidential"
-            Regex confidentialRegex = new Regex("confidential", RegexOptions.IgnoreCase);
-
-            // Iterate through each cell in the range
-            Worksheet ws = range.Worksheet;
-            for (int i = 0; i < range.RowCount; i++)
+            // Iterate through all cells in the named range
+            for (int row = namedRange.FirstRow; row <= namedRange.FirstRow + namedRange.RowCount - 1; row++)
             {
-                for (int j = 0; j < range.ColumnCount; j++)
+                for (int col = namedRange.FirstColumn; col <= namedRange.FirstColumn + namedRange.ColumnCount - 1; col++)
                 {
-                    try
-                    {
-                        Cell cell = ws.Cells[range.FirstRow + i, range.FirstColumn + j];
+                    Cell cell = namedRange.Worksheet.Cells[row, col];
 
-                        // Process only string cells
-                        if (cell.Value != null && cell.Type == CellValueType.IsString)
+                    // Process only string cells
+                    if (cell.Type == CellValueType.IsString)
+                    {
+                        string text = cell.StringValue;
+
+                        // Check for the word "confidential" (case‑insensitive)
+                        if (text.IndexOf("confidential", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            string originalText = cell.StringValue;
+                            // Mask the word with asterisks
+                            string masked = Regex.Replace(
+                                text,
+                                "confidential",
+                                "**********",          // 10 asterisks as mask
+                                RegexOptions.IgnoreCase);
 
-                            // Mask occurrences of the word "confidential"
-                            if (confidentialRegex.IsMatch(originalText))
-                            {
-                                string maskedText = confidentialRegex.Replace(originalText,
-                                    m => new string('*', m.Length));
-
-                                cell.PutValue(maskedText);
-                            }
+                            // Write the masked text back to the cell
+                            cell.PutValue(masked);
                         }
-                    }
-                    catch (Exception cellEx)
-                    {
-                        // Log cell‑level errors but continue processing other cells
-                        string colName = CellsHelper.ColumnIndexToName(range.FirstColumn + j);
-                        Console.WriteLine($"Error processing cell {ws.Name}!{colName}{range.FirstRow + i + 1}: {cellEx.Message}");
                     }
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

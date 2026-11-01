@@ -1,72 +1,105 @@
-// Title: Set the print area to a slicer's bounding rectangle and export the worksheet as a high‑resolution PNG using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that detects slicers on a worksheet, sets the print area to the slicer's bounding range, and saves the sheet as a 300 DPI PNG with Aspose.Cells. | Show how to configure ImageOrPrintOptions for high‑resolution PNG export and render a single‑page image of a worksheet using SheetRender in .NET. | Write a .NET program that adjusts the page setup print area based on slicer presence and creates a high‑quality PNG image of the entire sheet.
-// Common Searches: Aspose.Cells set print area to slicer range and export to PNG | C# export Excel worksheet as 300 DPI PNG with slicer handling | How to use ImageOrPrintOptions for high resolution PNG in Aspose.Cells | Render worksheet to single image when slicers are present using Aspose.Cells | Set page setup print area programmatically based on slicer in .NET
-// Tags: set print area based on slicer Aspose.Cells | export worksheet to 300dpi PNG Aspose.Cells | ImageOrPrintOptions high resolution PNG | SheetRender single page image export | check slicer count before setting print area
+// Title: Set worksheet print area to a slicer's bounds and export as a 300 dpi PNG with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads the first slicer's UpperLeftRow/UpperLeftColumn and BottomRightRow/BottomRightColumn via reflection, assigns that range to the worksheet's PrintArea, and saves the sheet as a 300 dpi PNG using Aspose.Cells. | Show how to configure ImageOrPrintOptions for high‑resolution PNG output after setting a custom print area based on slicer coordinates in Aspose.Cells for .NET. | Create a reusable method that takes input and output file paths, extracts slicer bounds, applies them as the page‑setup print area, and renders the first worksheet page to a PNG image with 300 dpi resolution.
+// Common Searches: how to set print area from slicer location using Aspose.Cells C# | export Excel sheet to high resolution PNG based on slicer bounds Aspose.Cells | retrieve slicer coordinates with reflection Aspose.Cells .NET | Aspose.Cells ImageOrPrintOptions set horizontal and vertical resolution
+// Tags: set print area from slicer bounds Aspose.Cells | export worksheet to high‑resolution PNG Aspose.Cells | retrieve slicer coordinates reflection .NET | ImageOrPrintOptions resolution settings | SheetRender export first page PNG
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsExample
+// // Loads an Excel workbook, obtains the first slicer's bounding rows and columns via reflection, sets the worksheet's print area to that range, and renders the first page to a 300 dpi PNG image using Aspose.Cells.
+class Program
 {
-    // The example loads an Excel workbook, checks whether the first worksheet contains slicers, sets the worksheet's print area to the slicer's bounding rectangle when present, configures ImageOrPrintOptions for 300 DPI PNG output, and uses SheetRender to generate a single‑page high‑resolution PNG image of the sheet.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Input and output file paths
-                string inputPath = "input.xlsx";
-                string outputImagePath = "output.png";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.png";
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Attempt to set print area based on the first slicer, if possible
+            if (worksheet.Slicers.Count > 0)
+            {
+                Slicer slicer = worksheet.Slicers[0];
+                int startRow = 0, startColumn = 0, endRow = 0, endColumn = 0;
+                bool boundsObtained = false;
+
+                try
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // Use reflection to access slicer bounds (covers different library versions)
+                    Type slicerType = slicer.GetType();
+                    PropertyInfo propStartRow = slicerType.GetProperty("UpperLeftRow");
+                    PropertyInfo propStartCol = slicerType.GetProperty("UpperLeftColumn");
+                    PropertyInfo propEndRow = slicerType.GetProperty("BottomRightRow");
+                    PropertyInfo propEndCol = slicerType.GetProperty("BottomRightColumn");
+
+                    if (propStartRow != null && propStartCol != null && propEndRow != null && propEndCol != null)
+                    {
+                        startRow = (int)propStartRow.GetValue(slicer);
+                        startColumn = (int)propStartCol.GetValue(slicer);
+                        endRow = (int)propEndRow.GetValue(slicer);
+                        endColumn = (int)propEndCol.GetValue(slicer);
+                        boundsObtained = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Reflection error while retrieving slicer bounds: {ex.Message}");
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // If the worksheet contains slicers, set the print area to the used range
-                if (worksheet.Slicers.Count > 0)
+                if (boundsObtained)
                 {
-                    // Use the worksheet's used range as the print area
-                    var usedRange = worksheet.Cells.MaxDisplayRange;
-                    string startCell = CellsHelper.CellIndexToName(usedRange.FirstRow, usedRange.FirstColumn);
-                    string endCell = CellsHelper.CellIndexToName(
-                        usedRange.FirstRow + usedRange.RowCount - 1,
-                        usedRange.FirstColumn + usedRange.ColumnCount - 1);
-
+                    string startCell = CellsHelper.CellIndexToName(startRow, startColumn);
+                    string endCell = CellsHelper.CellIndexToName(endRow, endColumn);
                     worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
                 }
-
-                // Configure image export options for high‑resolution PNG
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                else
                 {
-                    // Default format is PNG; explicit setting omitted to avoid API mismatch
-                    HorizontalResolution = 300, // DPI
-                    VerticalResolution = 300,   // DPI
-                    OnePagePerSheet = true      // Export the whole sheet as a single image
-                };
-
-                // Render the worksheet to an image using the specified options
-                SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
-                sheetRender.ToImage(0, outputImagePath); // Page index 0, output file name
-
-                Console.WriteLine($"Worksheet rendered to image: {outputImagePath}");
+                    Console.WriteLine("Unable to retrieve slicer bounds; exporting the full worksheet.");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No slicers found; exporting the full worksheet.");
             }
+
+            // Configure image export options (PNG is default)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 300,
+                VerticalResolution = 300
+            };
+
+            // Render the worksheet to a PNG image (first page)
+            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
+            sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Image exported successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

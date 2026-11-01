@@ -1,74 +1,60 @@
-// Title: Apply a custom CultureInfo (comma decimal, dot thousand, Euro currency) to all Excel workbooks in a folder using Aspose.Cells for .NET
-// AI Prompts: Generate a C# console application that scans a specified directory for .xlsx, .xls, and .xlsm files, loads each workbook with Aspose.Cells, assigns a cloned InvariantCulture where NumberDecimalSeparator=',' , NumberGroupSeparator='.', CurrencySymbol='€', and saves the modified workbook to an output folder. | Update the batch utility so that after applying the custom CultureInfo it overwrites the original Excel files instead of writing copies to a separate directory. | Add comprehensive logging to the processing loop that writes the file path, success status, and any exception details to a log file for each workbook.
-// Common Searches: how to change decimal separator for multiple Excel files using Aspose.Cells in C# | batch set custom CultureInfo for all workbooks in a folder Aspose.Cells .NET | C# script to apply Euro currency format to a directory of .xls and .xlsx files with Aspose | automate globalization settings across many spreadsheets using Aspose.Cells | process all Excel workbooks in a folder with custom number format using Aspose.Cells
-// Tags: Aspose.Cells apply custom CultureInfo to Excel workbooks | batch processing Excel files with Aspose.Cells | set number decimal separator programmatically Aspose.Cells | globalization settings for .xlsx files C# | replace workbook with updated culture Aspose.Cells
+// Title: How to batch apply a custom CultureInfo (e.g., French) to all .xlsx workbooks in a folder using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set workbook CultureInfo for every file in a directory | batch change Excel workbook locale to fr-FR with Aspose.Cells | process multiple .xlsx files to apply custom globalization settings in .NET | automate Excel globalization settings across a folder of workbooks in C# | apply same CultureInfo to all workbooks in a folder using Aspose.Cells
+// Tags: batch set workbook CultureInfo Aspose.Cells | apply custom locale to .xlsx files C# | globalization settings for multiple Excel workbooks | process folder of workbooks Aspose.Cells | load and save workbooks with CultureInfo C#
 
 using System;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// The program iterates through a given input folder, loads each .xlsx, .xls, or .xlsm workbook with Aspose.Cells, applies a custom CultureInfo that uses a comma as the decimal separator, a dot as the thousands separator, and the Euro symbol for currency, then saves the workbook to an output directory (or overwrites the original file if configured).
+// The example scans a specified folder for *.xlsx files, loads each workbook with Aspose.Cells, assigns a custom CultureInfo (e.g., fr-FR) to the workbook's Settings, and saves the file back, overwriting the original while handling missing files and exceptions.
 class GlobalizationBatchProcessor
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Folder containing the source workbooks
-        string inputFolder = @"C:\Workbooks\Input";
+        // Folder containing the workbooks to process
+        string sourceFolder = @"C:\InputFolder";
 
-        // Folder where the processed workbooks will be saved (can be the same as inputFolder to overwrite)
-        string outputFolder = @"C:\Workbooks\Output";
-
-        // Ensure the input and output directories exist
-        if (!Directory.Exists(inputFolder))
+        // Verify that the source folder exists
+        if (!Directory.Exists(sourceFolder))
         {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            Console.WriteLine($"Source folder does not exist: {sourceFolder}");
             return;
         }
-        Directory.CreateDirectory(outputFolder);
 
-        // Retrieve all Excel files in the input folder
-        string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-        foreach (string filePath in excelFiles)
+        // Get all Excel files in the folder (you can adjust the pattern as needed)
+        string[] workbookFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
+
+        // Define the custom globalization settings
+        CultureInfo customCulture = new CultureInfo("fr-FR"); // Example: French (France)
+
+        foreach (string filePath in workbookFiles)
         {
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm")
-                continue; // Skip non‑Excel files
-
-            // Verify the file exists before attempting to load
+            // Ensure the file still exists before attempting to load
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"File not found, skipping: {filePath}");
                 continue;
             }
 
             try
             {
-                // Load the workbook
+                // Load the workbook using Aspose.Cells
                 Workbook workbook = new Workbook(filePath);
 
-                // Create a custom CultureInfo with desired separators and currency settings
-                CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
-                customCulture.NumberFormat.NumberDecimalSeparator = ",";   // Use comma as decimal separator
-                customCulture.NumberFormat.NumberGroupSeparator = ".";    // Use dot as thousands separator
-                customCulture.NumberFormat.CurrencySymbol = "€";          // Euro symbol
-                customCulture.NumberFormat.CurrencyPositivePattern = 2; // "€ n"
-                customCulture.NumberFormat.CurrencyNegativePattern = 9; // "€-n"
-
-                // Apply the custom culture to the workbook
+                // Apply custom globalization settings
                 workbook.Settings.CultureInfo = customCulture;
+                // Note: Use1904DateSystem property is not available in the current Aspose.Cells version.
 
-                // Save the modified workbook to the output folder (preserving original name)
-                string fileName = Path.GetFileName(filePath);
-                string outputPath = Path.Combine(outputFolder, fileName);
-                workbook.Save(outputPath);
+                // Save the workbook (overwrites the original file)
+                workbook.Save(filePath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Processed successfully: {filePath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
-
-        Console.WriteLine("Custom globalization settings have been applied to all workbooks.");
     }
 }

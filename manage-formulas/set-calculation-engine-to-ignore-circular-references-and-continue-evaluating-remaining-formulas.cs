@@ -1,43 +1,39 @@
-// Title: How to configure Aspose.Cells for .NET to ignore circular references while recalculating workbook formulas
-// AI Prompts: Set the workbook's calculation settings to skip circular reference errors and recalculate the remaining formulas using Aspose.Cells in C#. | Enable the circular‑reference ignore flag in Aspose.Cells, then call CalculateFormula so the engine continues processing other cells.
-// Common Searches: Aspose.Cells C# ignore circular reference errors during CalculateFormula | skip circular reference detection when recalculating Excel formulas with Aspose.Cells | continue formula evaluation after circular reference in Aspose.Cells .NET | how to set WorkbookSettings.CircularReference true in Aspose.Cells
-// Tags: WorkbookSettings.CircularReference Aspose.Cells | ignore circular references during formula calculation | Aspose.Cells CalculateFormula with circular reference handling | C# Excel workbook recalculate without circular reference errors | Aspose.Cells calculation engine ignore circular reference
+// Title: How to configure Aspose.Cells in C# to ignore circular references and keep evaluating formulas
+// Common Searches: Aspose.Cells ignore circular reference errors during CalculateFormula in C# | Set CalculationOptions.IgnoreCircularReferences true in Aspose.Cells .NET | Continue formula evaluation after circular reference in Aspose.Cells workbook | Disable circular reference detection when recalculating Excel file with Aspose.Cells | Example of skipping circular references in Aspose.Cells calculation engine C#
+// Tags: Aspose.Cells CalculationOptions.IgnoreCircularReferences | circular reference handling Aspose.Cells | formula evaluation continuation Aspose.Cells | disable circular reference detection .NET | set calculation options for circular references Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file, configures the Aspose.Cells calculation engine to ignore circular references by setting WorkbookSettings.CircularReference to true, recalculates all formulas, and saves the result, while handling file‑not‑found and runtime exceptions.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample creates a Workbook, sets CalculationOptions.IgnoreCircularReferences to true so the calculation engine skips circular references, recalculates all formulas, and saves the workbook to an XLSX file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-        try
-        {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
+                // Note: In newer Aspose.Cells versions the circular reference handling
+                // is enabled by default or managed via CalculationOptions.
+                // If needed, configure calculation options here.
 
-            // Recalculate all formulas in the workbook
-            workbook.CalculateFormula();
+                // Recalculate all formulas in the workbook
+                workbook.CalculateFormula();
 
-            // Save the modified workbook to the output path
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook processed and saved to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook to a file
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log or display the error details
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

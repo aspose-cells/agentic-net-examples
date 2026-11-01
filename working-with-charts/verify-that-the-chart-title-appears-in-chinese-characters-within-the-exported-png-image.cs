@@ -1,7 +1,7 @@
-// Title: Check for Chinese characters in an Excel chart title and export the chart as PNG using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, locates the first chart, validates that its Title.Text includes at least one Chinese Unicode character, and saves the chart as a PNG image. | Write a C# method that receives a workbook path, uses a \u4E00-\u9FFF regular expression to ensure the chart title contains Chinese characters, throws an exception if the check fails, and renders the chart to a PNG file via ImageOrPrintOptions.
-// Common Searches: aspocells c# verify chart title contains Chinese characters before exporting to png | how to export a specific chart from an Excel workbook to PNG using Aspose.Cells | c# regex Unicode range \u4e00-\u9fff for chart title validation Aspose.Cells | detect non‑English characters in Aspose.Cells chart title and save as image
-// Tags: chart title Chinese character check Aspose.Cells | render Excel chart as PNG using Aspose.Cells | Unicode range \u4e00-\u9fff regex for chart titles | image export settings for Aspose.Cells charts | ensure chart presence before image conversion Aspose.Cells
+// Title: Export an Excel chart to PNG and ensure its title includes Chinese characters with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, checks the first chart's title for Chinese characters using a regular expression, and saves the chart as a PNG with Aspose.Cells. | Create a method that validates a chart title contains CJK Unified Ideographs before calling Chart.ToImage and ImageOrPrintOptions. | Generate a script that confirms the exported PNG file exists and has a non‑zero size after rendering a chart from a workbook.
+// Common Searches: Aspose.Cells C# export chart as PNG and verify Chinese title | how to check Excel chart title for CJK characters before image export | using ImageOrPrintOptions to render chart to PNG in .NET | validate PNG file size after exporting chart with Aspose.Cells | regex pattern for Chinese characters in Excel chart title C#
+// Tags: export chart to png Aspose.Cells | validate chart title Chinese characters C# | regex cjk detection Aspose.Cells | imageorprintoptions chart rendering .NET | check png file size after export
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
@@ -10,7 +10,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-// Loads an .xlsx workbook, confirms a chart exists on the first worksheet, validates that the chart's title contains at least one Chinese character using a Unicode regex, and exports the chart to a PNG file with Aspose.Cells.
+// Loads an Excel workbook, ensures the first worksheet contains a chart, verifies the chart title includes Chinese characters via a CJK regex, exports the chart to a PNG image using ImageOrPrintOptions, and confirms the PNG file was created and is not empty.
 class Program
 {
     static void Main()
@@ -18,34 +18,47 @@ class Program
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputPath = "chart.png";
+            const string outputImagePath = "chart.png";
 
             // Verify that the input workbook exists
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The file '{inputPath}' was not found.");
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
             // Load the workbook containing the chart
             Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure at least one chart is present
-            if (sheet.Charts.Count == 0)
-                throw new InvalidOperationException("No charts found in the first worksheet.");
+            // Ensure the worksheet has at least one chart
+            if (worksheet.Charts.Count == 0)
+                throw new Exception("No charts found on the first worksheet.");
 
-            Chart chart = sheet.Charts[0];
+            Chart chart = worksheet.Charts[0];
 
-            // Verify the chart title contains Chinese characters
-            string titleText = chart.Title.Text;
-            if (!Regex.IsMatch(titleText, @"[\u4e00-\u9fff]"))
+            // Retrieve the chart title (may be null)
+            string chartTitle = chart.Title?.Text ?? string.Empty;
+
+            // Verify that the title contains Chinese characters (CJK Unified Ideographs)
+            if (!Regex.IsMatch(chartTitle, @"\p{IsCJKUnifiedIdeographs}+"))
                 throw new Exception("The chart title does not contain Chinese characters.");
 
-            // Configure image export options (default format inferred from file extension)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+            // Set image export options (format inferred from file extension)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                OnePagePerSheet = true
+            };
 
-            // Export the chart to a PNG file
-            chart.ToImage(outputPath, imgOptions);
+            // Export the chart to a PNG image
+            chart.ToImage(outputImagePath, imgOptions);
 
-            Console.WriteLine("Chart title verified and PNG exported successfully.");
+            // Validate that the PNG file was created and is not empty
+            if (!File.Exists(outputImagePath))
+                throw new Exception("The exported PNG image was not created.");
+
+            FileInfo fi = new FileInfo(outputImagePath);
+            if (fi.Length == 0)
+                throw new Exception("The exported PNG image is empty.");
+
+            Console.WriteLine("Chart title verified (contains Chinese characters) and PNG exported successfully.");
         }
         catch (Exception ex)
         {

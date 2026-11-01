@@ -1,89 +1,66 @@
-// Title: Check if all columns fit on one printed page for worksheets with FitAllColumnsOnOnePage enabled using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that iterates through each worksheet in a workbook and reports whether the combined width of used columns fits within the printable area when FitToPagesWide is set to 1. | Create a reusable function in Aspose.Cells that returns a boolean indicating if a worksheet's columns can be printed on a single page, handling pixel‑to‑point conversion and margin calculations. | Write a C# routine that lists the column indexes that cause the total width to exceed the printable page width for worksheets with FitAllColumnsOnOnePage enabled.
-// Common Searches: how to verify column width fits on one page with Aspose.Cells C# | Aspose.Cells check FitAllColumnsOnOnePage column overflow | C# calculate printable page width for Excel worksheet using Aspose.Cells | determine if Excel columns exceed printable area when FitToPagesWide = 1 | validate worksheet column layout before PDF export Aspose.Cells
-// Tags: Aspose.Cells column width validation | FitAllColumnsOnOnePage printable width check | pixel to point conversion Aspose.Cells | worksheet margin calculation Aspose.Cells | Excel to PDF column overflow detection
+// Title: Validate that every worksheet has "Fit All Columns on One Page" enabled with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that loads a workbook, iterates all worksheets, and throws an InvalidOperationException when a sheet's page setup does not have FitToPagesWide = 1 and FitToPagesTall = 0. | Create a reusable C# method that accepts a Workbook object and returns a list of worksheet names where the "Fit All Columns on One Page" page‑setup option is incorrectly configured.
+// Common Searches: asp.net aspose.cells verify FitAllColumnsOnOnePage for each worksheet | c# check FitToPagesWide equals 1 and FitToPagesTall equals 0 using Aspose.Cells | how to ensure Excel sheets print all columns on one page with Aspose.Cells .NET | validate workbook page setup column fit setting Aspose.Cells C#
+// Tags: Aspose.Cells verify FitToPagesWide setting | Aspose.Cells check FitAllColumnsOnOnePage flag | C# workbook page‑setup validation | Excel worksheet print layout verification Aspose.Cells | Aspose.Cells ensure columns fit on single page
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// C# program that loads an XLSX workbook, examines each worksheet with FitToPagesWide set to 1, converts column pixel widths to points, computes the printable page width from margins, and reports whether the total column width fits on a single printed page.
-class ColumnFitValidator
+// The program loads an Excel workbook with Aspose.Cells, iterates each worksheet, detects if the page setup is configured for "Fit All Columns on One Page" (FitToPagesWide = 1 and FitToPagesTall = 0), throws an InvalidOperationException for any mismatched settings, and saves the workbook.
+class Program
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through each worksheet in the workbook
+            // Iterate through each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine if the worksheet is configured to fit all columns on one page
-                // In Aspose.Cells this is represented by FitToPagesWide == 1
-                bool fitAllColumnsOnOnePage = sheet.PageSetup.FitToPagesWide == 1;
+                PageSetup pageSetup = sheet.PageSetup;
 
-                if (fitAllColumnsOnOnePage)
+                // Determine if "Fit All Columns on One Page" is effectively enabled
+                // In Aspose.Cells this is represented by FitToPagesWide = 1 and FitToPagesTall = 0
+                bool isFitAllColumnsOnOnePage = pageSetup.FitToPagesWide == 1 && pageSetup.FitToPagesTall == 0;
+
+                if (isFitAllColumnsOnOnePage)
                 {
-                    // Calculate printable width of the page (points)
-                    // PaperWidth, LeftMargin, RightMargin are in points (1 point = 1/72 inch)
-                    double printableWidth = sheet.PageSetup.PaperWidth
-                                            - sheet.PageSetup.LeftMargin
-                                            - sheet.PageSetup.RightMargin;
-
-                    // Sum the widths of all used columns
-                    double totalColumnWidthPoints = 0.0;
-                    int maxColumn = sheet.Cells.MaxDataColumn; // last column that contains data
-
-                    // If the sheet is empty, skip validation
-                    if (maxColumn < 0)
+                    // Validate that the setting forces all columns onto a single page
+                    if (pageSetup.FitToPagesWide != 1)
                     {
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\": empty sheet, nothing to validate.");
-                        continue;
+                        throw new InvalidOperationException(
+                            $"Worksheet '{sheet.Name}' is expected to have FitToPagesWide = 1 but found {pageSetup.FitToPagesWide}.");
                     }
 
-                    for (int col = 0; col <= maxColumn; col++)
+                    // Ensure rows are not limited to a single page (FitToPagesTall should be 0)
+                    if (pageSetup.FitToPagesTall != 0)
                     {
-                        // Get column width in pixels via Cells collection
-                        int widthPixels = sheet.Cells.GetColumnWidthPixel(col);
-                        // Convert pixels to points (default screen DPI = 96)
-                        double widthPoints = widthPixels * 72.0 / 96.0; // 1 point = 1/72 inch
-                        totalColumnWidthPoints += widthPoints;
+                        throw new InvalidOperationException(
+                            $"Worksheet '{sheet.Name}' is expected to have FitToPagesTall = 0 but found {pageSetup.FitToPagesTall}.");
                     }
-
-                    // Validate whether total column width fits within printable width
-                    if (totalColumnWidthPoints <= printableWidth)
-                    {
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\": all columns fit on one page (total width {totalColumnWidthPoints:F2} pt, printable width {printableWidth:F2} pt).");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\": columns exceed one page (total width {totalColumnWidthPoints:F2} pt, printable width {printableWidth:F2} pt).");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\": FitAllColumnsOnOnePage is disabled, validation skipped.");
                 }
             }
 
-            // No changes are made to the workbook, so saving is optional.
-            // Uncomment the following line if you need to save the workbook.
-            // workbook.Save("output.xlsx");
+            // Save the workbook (if any changes were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

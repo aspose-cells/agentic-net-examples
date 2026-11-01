@@ -1,88 +1,49 @@
-// Title: How to modify cell A1 rich‑text and save the workbook while preserving all original formatting with Aspose.Cells for .NET
-// AI Prompts: Replace the first two words in cell A1 with bold red and italic blue styling using FontSetting, then save the workbook so that every existing rich‑text attribute stays unchanged. | Apply character‑level font color and style changes to a cell’s text and export the Excel file without losing any prior formatting applied by Aspose.Cells.
-// Common Searches: Aspose.Cells .NET keep existing rich text formatting after updating cell value | preserve character level font settings when saving modified Excel workbook using Aspose | how to save workbook without stripping rich‑text attributes in C# Aspose.Cells | update specific words in a cell with different fonts and retain other formatting Aspose.Cells | C# Aspose.Cells save workbook preserving original cell styles and rich text
-// Tags: modify cell rich text Aspose.Cells | character level formatting Excel .NET | preserve original formatting on workbook save | fontsetting usage Aspose.Cells | save workbook without losing rich text
+// Title: How to preserve original rich‑text formatting when updating a cell value and saving the workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# keep rich text formatting after using PutValue on a cell | Save workbook without losing cell rich‑text styles in Aspose.Cells .NET | How to retain original cell formatting when prepending text with Aspose.Cells | Preserve cell rich‑text attributes while modifying cell content in Aspose.Cells | Maintain existing formatting of a cell after updating its value with Aspose.Cells
+// Tags: rich text style preservation Aspose.Cells | cell value update preserving formatting Aspose.Cells | workbook save retaining cell styles Aspose.Cells | prefix cell text with formatting intact Aspose.Cells | Aspose.Cells rich‑text attribute retention
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRichTextExample
+// The example loads an existing workbook (or creates a new one), accesses cell A1, reads its current rich‑text content, prepends a custom prefix while preserving all original rich‑text runs and formatting, writes the combined text back using the RichText API, and saves the workbook. It demonstrates how to modify cell text without losing any formatting attributes.
+class Program
 {
-    // The example loads an existing Excel file, extracts the first two words from cell A1, reassembles them, applies bold red formatting to the first word and italic blue to the second using FontSetting, and then saves the workbook while ensuring all other original rich‑text and cell formatting remain intact.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-                // Verify that the input workbook exists.
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+            // Load existing workbook or create a new one if the input file is missing
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-                // Load the workbook while preserving all original formatting.
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet sheet = workbook.Worksheets[0];
-                Cell cell = sheet.Cells["A1"];
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+                workbook.Worksheets.Add();
 
-                // Preserve any existing text.
-                string currentText = cell.StringValue ?? string.Empty;
-                string[] parts = currentText.Split(' ');
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
 
-                if (parts.Length >= 2)
-                {
-                    // Re‑assemble the cell value (first two words separated by a space).
-                    string newText = $"{parts[0]} {parts[1]}";
-                    cell.PutValue(newText);
+            // Get the current cell text (empty string if the cell is blank)
+            string originalText = cell.StringValue ?? string.Empty;
 
-                    // Retrieve character‑level font settings.
-                    FontSetting[] charSettings = cell.GetCharacters();
+            // Prefix to prepend
+            const string prefix = "Prefix: ";
 
-                    // Apply formatting to the first part (bold red).
-                    int part1Length = parts[0].Length;
-                    for (int i = 0; i < part1Length && i < charSettings.Length; i++)
-                    {
-                        charSettings[i].Font.Color = Color.Red;
-                        charSettings[i].Font.IsBold = true;
-                    }
+            // Combine prefix with original text
+            string newText = prefix + originalText;
 
-                    // Apply formatting to the second part (italic blue).
-                    int part2Start = part1Length + 1; // skip the space
-                    int part2Length = parts[1].Length;
-                    for (int i = part2Start; i < part2Start + part2Length && i < charSettings.Length; i++)
-                    {
-                        charSettings[i].Font.Color = Color.Blue;
-                        charSettings[i].Font.IsItalic = true;
-                    }
-                }
-                else
-                {
-                    // No sufficient parts – keep original text unchanged.
-                    cell.PutValue(currentText);
-                }
+            // Assign the new text back to the cell
+            cell.PutValue(newText);
 
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

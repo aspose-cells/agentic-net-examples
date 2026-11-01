@@ -1,55 +1,82 @@
-// Title: How to insert a numeric value into a cell and update the first data cell of its linked table using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that puts a number into cell A1, uses Cell.GetTable to locate any ListObject that begins at that cell, and then writes the same number into the first cell of the table's DataRange with Aspose.Cells. | Show a step‑by‑step example of inserting a numeric value into a worksheet cell, retrieving the associated table via Cell.GetTable, and updating the top‑left data cell of that table in C#.
-// Common Searches: Aspose.Cells C# get ListObject from a specific cell and set value | How to use Cell.GetTable to find a table and write to its first data cell in .NET | C# example inserting numeric value into a cell and updating linked table with Aspose.Cells | Cell.PutValue followed by ListObject DataRange update Aspose.Cells
-// Tags: Cell.GetTable retrieve ListObject | Cell.PutValue numeric insertion | Aspose.Cells ListObject DataRange update | C# Aspose.Cells table cell value modification | Aspose.Cells save workbook Result.xlsx
+// Title: Add a ListObject table to a worksheet and write a numeric value to a specific cell using Cell.PutValue in Aspose.Cells for .NET (C#)
+// Common Searches: how to create a ListObject table in Aspose.Cells C# and set a numeric value in a cell | Aspose.Cells C# insert number into a table cell with Cell.PutValue | retrieve table range and write data using Aspose.Cells .NET API | C# example for adding a table to a worksheet and updating a cell value in Aspose.Cells | Aspose.Cells put numeric value into second column of first data row of a ListObject
+// Tags: ListObject creation Aspose.Cells C# | Cell.PutValue usage Aspose.Cells | populate table cell Aspose.Cells .NET | Aspose.Cells table range retrieval | insert numeric data into Aspose.Cells table
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
+using Aspose.Cells.Tables; // Required for ListObject
 
-// Demonstrates creating a workbook, inserting a numeric value into cell A1, retrieving any table that starts at that cell via Cell.GetTable, and writing the same value into the first cell of the table's DataRange before saving the file as Result.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new Workbook, defines a range A1:B2, adds a ListObject (table) covering that range, then uses Cell.PutValue to insert the number 12345 into the second column of the first data row, and finally saves the workbook as output.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook(); // {CreateWorkbook}
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Get the cell at A1
-            Cell cell = sheet.Cells["A1"];
-
-            // Insert a numeric value into the cell
-            cell.PutValue(12345); // {PutValue}
-
-            // Retrieve the table (ListObject) that starts from this cell, if any
-            ListObject table = cell.GetTable();
-
-            // If a table exists, obtain its data range and write a value to its first cell
-            if (table != null)
+            try
             {
-                // DataRange returns an Aspose.Cells.Range object
-                AsposeRange dataRange = table.DataRange;
+                // Create a new workbook (create rule)
+                Workbook workbook = new Workbook();
 
-                // Use FirstRow and FirstColumn to locate the top‑left cell of the range
-                int startRow = dataRange.FirstRow;
-                int startColumn = dataRange.FirstColumn;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Write a value to the first cell of the table's data range
-                sheet.Cells[startRow, startColumn].PutValue(12345);
+                // -------------------------------------------------
+                // Prepare a simple table to work with (header + data)
+                // -------------------------------------------------
+                worksheet.Cells["A1"].PutValue("Header1");
+                worksheet.Cells["B1"].PutValue("Header2");
+                worksheet.Cells["A2"].PutValue("Data1");
+                worksheet.Cells["B2"].PutValue("Data2");
+
+                // Define the range that will become a table (A1:B2)
+                int firstRow = 0;          // A1 row index
+                int firstColumn = 0;       // A1 column index
+                int totalRows = 2;
+                int totalColumns = 2;
+
+                // Add a ListObject (table) to the worksheet
+                int tableIndex = worksheet.ListObjects.Add(
+                    firstRow,
+                    firstColumn,
+                    firstRow + totalRows - 1,
+                    firstColumn + totalColumns - 1,
+                    true);
+
+                ListObject table = worksheet.ListObjects[tableIndex];
+
+                // -------------------------------------------------
+                // Insert a numeric value into a specific cell within the table
+                // -------------------------------------------------
+                // Determine the first data row (skip the header row)
+                int firstDataRow = table.DataRange.FirstRow;
+
+                // Choose the column where the value will be placed (e.g., second column of the table)
+                int targetColumn = table.DataRange.FirstColumn + 1;
+
+                // Get the target cell and insert the numeric value
+                Cell targetCell = worksheet.Cells[firstDataRow, targetColumn];
+                targetCell.PutValue(12345);
+
+                // Define output file path
+                string outputPath = "output.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook (save rule)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
-
-            // Save the workbook
-            workbook.Save("Result.xlsx"); // {SaveWorkbook}
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

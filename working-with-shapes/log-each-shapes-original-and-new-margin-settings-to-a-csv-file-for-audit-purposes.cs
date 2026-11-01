@@ -1,84 +1,74 @@
-// Title: Audit TextBox shape margin changes in an Excel workbook and export results to CSV using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through every worksheet, finds TextBox shapes, reads their current margin values (if the API exposes them), adds a configurable offset, and records both original and updated margins to a CSV audit file. | Enhance the example to accept the margin increment and the CSV output path as command‑line arguments, and include additional columns for worksheet name and shape type in the generated CSV. | Add robust error handling that skips shapes without accessible margin properties, logs a warning for each skipped shape, and guarantees that the workbook is saved after processing.
-// Common Searches: how to log textbox shape margins to a csv with Aspose.Cells C# | Aspose.Cells retrieve and modify shape margin values in .NET | C# export Excel shape properties to CSV for audit | increment text box margins in an Excel workbook using Aspose.Cells | audit changes to Excel shape margins programmatically
-// Tags: Aspose.Cells retrieve shape margin properties | C# export Excel shape data to CSV | adjust TextBox margins Aspose.Cells | audit shape margin changes .NET | iterate worksheet shapes Aspose.Cells
+// Title: Log original and updated shape margins to a CSV file while adjusting them with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook using Aspose.Cells, iterates through all shapes on the first worksheet, captures each shape's Top, Left, Bottom, and Right values, applies a configurable margin offset, and writes both the original and new coordinates to a CSV audit file. | Create a reusable C# method called AuditShapeMargins that takes the input workbook path, output workbook path, CSV log path, and a margin offset, updates each shape's position and size accordingly, saves the modified workbook, and returns the path of the generated CSV report.
+// Common Searches: aspocells c# export shape coordinates to csv after resizing | how to audit shape margin changes in an Excel file using Aspose.Cells | log original and new shape positions in .NET Excel processing | record shape top left bottom right values before and after modification with Aspose.Cells | generate CSV report of shape margin adjustments in C#
+// Tags: Aspose.Cells shape margin audit CSV | C# log shape coordinates Excel | adjust shape margins Aspose.Cells | export shape position to CSV .NET | shape margin offset Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Loads an Excel workbook, walks through each worksheet and its TextBox shapes, reads existing margin settings when available, adds a fixed offset, writes original and new margin values together with the shape name to a CSV audit file, and saves the modified workbook.
+// The program loads an Excel workbook, iterates over each shape on the first worksheet, records the original Top/Left/Bottom/Right coordinates, adds a margin offset, writes both original and updated values to a CSV audit file, and saves the modified workbook.
 class ShapeMarginAudit
 {
     static void Main()
     {
         try
         {
-            // Input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-            string csvPath = "ShapeMarginAudit.csv";
+            // Path to the input workbook
+            string inputPath = "Input.xlsx";
 
-            // Verify that the input workbook exists
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
             // Prepare CSV file for logging
+            string csvPath = "ShapeMarginsAudit.csv";
             using (StreamWriter csvWriter = new StreamWriter(csvPath, false))
             {
                 // Write CSV header
-                csvWriter.WriteLine("ShapeName,OriginalMarginTop,OriginalMarginBottom,OriginalMarginLeft,OriginalMarginRight,NewMarginTop,NewMarginBottom,NewMarginLeft,NewMarginRight");
+                csvWriter.WriteLine("ShapeName,OriginalTop,OriginalBottom,OriginalLeft,OriginalRight,NewTop,NewBottom,NewLeft,NewRight");
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Iterate through all shapes in the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Iterate through all shapes in the worksheet
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Process only shapes that are TextBox objects
-                        if (shape is TextBox textbox)
-                        {
-                            try
-                            {
-                                // Aspose.Cells versions prior to 23.9 do not expose margin properties directly.
-                                // Use placeholder values for demonstration; replace with actual APIs when available.
-                                double origTop = 0;
-                                double origBottom = 0;
-                                double origLeft = 0;
-                                double origRight = 0;
+                    // Capture original margin-like properties (using Top/Height/Left/Width as proxies)
+                    double originalTop = shape.Top;
+                    double originalLeft = shape.Left;
+                    double originalBottom = shape.Top + shape.Height;
+                    double originalRight = shape.Left + shape.Width;
 
-                                // Example modification: increase each margin by 5 points (placeholder logic)
-                                double newTop = origTop + 5;
-                                double newBottom = origBottom + 5;
-                                double newLeft = origLeft + 5;
-                                double newRight = origRight + 5;
+                    // Example modification: increase each margin by 5 points
+                    shape.Top += 5;
+                    shape.Left += 5;
+                    shape.Height += 5;
+                    shape.Width += 5;
 
-                                // Write a line to the CSV file
-                                csvWriter.WriteLine($"{shape.Name},{origTop},{origBottom},{origLeft},{origRight},{newTop},{newBottom},{newLeft},{newRight}");
-                            }
-                            catch (Exception shapeEx)
-                            {
-                                Console.WriteLine($"Error processing shape '{shape.Name}': {shapeEx.Message}");
-                            }
-                        }
-                    }
+                    // Capture new values after modification
+                    double newTop = shape.Top;
+                    double newLeft = shape.Left;
+                    double newBottom = shape.Top + shape.Height;
+                    double newRight = shape.Left + shape.Width;
+
+                    // Write the audit record to CSV
+                    csvWriter.WriteLine($"{shape.Name},{originalTop},{originalBottom},{originalLeft},{originalRight},{newTop},{newBottom},{newLeft},{newRight}");
                 }
             }
 
             // Save the modified workbook
+            string outputPath = "Output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Processing completed. Modified workbook saved to '{outputPath}'. Audit CSV saved to '{csvPath}'.");
+            Console.WriteLine($"Processing completed. Output saved to '{outputPath}'. Audit log saved to '{csvPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

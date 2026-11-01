@@ -1,85 +1,63 @@
-// Title: Apply a custom currency number format to every cell in the named range "CurrencyValues" using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, retrieves the named range "CurrencyValues", and sets the custom number format "$#,##0.00" on each cell before saving the file. | Show how to iterate over all cells in a named range with Aspose.Cells and assign a currency style programmatically in a .NET application.
-// Common Searches: aspnet aspose.cells apply custom currency format to named range | c# set number format for cells in a named range using Aspose.Cells | how to format all cells in a named range as currency with Aspose.Cells .NET | apply custom number format to range "CurrencyValues" in Excel using Aspose.Cells
-// Tags: apply custom number format Aspose.Cells | named range formatting C# | currency style cells Aspose.Cells | loop through range cells .NET | save workbook after formatting Aspose.Cells
+// Title: Apply a custom currency number format to all cells in the "CurrencyValues" named range with Aspose.Cells for .NET
+// Common Searches: how to set a custom currency number format for a named range using Aspose.Cells in C# | Aspose.Cells C# apply number format to every cell in a specific named range | using StyleFlag to change only the number format of a range in Aspose.Cells | format cells in the "CurrencyValues" range as currency with Aspose.Cells .NET | apply a custom Excel currency format to a named range programmatically
+// Tags: custom currency format Aspose.Cells | named range number format C# | StyleFlag NumberFormat Aspose.Cells | range.ApplyStyle currency style | Excel named range formatting .NET
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// Alias to avoid conflict with System.Range introduced in C# 8.0
-using AsposeRange = Aspose.Cells.Range;
-
-// The example loads "input.xlsx", obtains the named range "CurrencyValues", loops through each cell in that range, applies the custom currency format "$#,##0.00" via cell styles, and saves the updated workbook as "output.xlsx" with appropriate error handling.
+// The example loads an existing workbook, retrieves the named range "CurrencyValues", creates a style with the custom currency format "$#,##0.00", applies only the number format to the entire range using a StyleFlag, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Retrieve the named range "CurrencyValues"
-            AsposeRange namedRange = workbook.Worksheets.GetRangeByName("CurrencyValues");
-            if (namedRange == null)
-            {
-                Console.WriteLine("Named range 'CurrencyValues' not found.");
-                return;
-            }
-
-            // Define the custom number format (currency with two decimals)
-            const string customFormat = "$#,##0.00";
-
-            // Apply the custom format to every cell in the named range
-            Worksheet ws = namedRange.Worksheet;
-            int firstRow = namedRange.FirstRow;
-            int firstColumn = namedRange.FirstColumn;
-            int rowCount = namedRange.RowCount;
-            int columnCount = namedRange.ColumnCount;
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    try
-                    {
-                        Cell cell = ws.Cells[firstRow + i, firstColumn + j];
-                        Style style = cell.GetStyle();
-                        style.Custom = customFormat;
-                        cell.SetStyle(style);
-                    }
-                    catch (Exception cellEx)
-                    {
-                        Console.WriteLine($"Failed to format cell at ({firstRow + i}, {firstColumn + j}): {cellEx.Message}");
-                    }
-                }
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Load the workbook
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Retrieve the named range "CurrencyValues"
+        Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName("CurrencyValues");
+        if (range == null)
+        {
+            Console.WriteLine("Named range 'CurrencyValues' not found.");
+            return;
+        }
+
+        // Create a style with custom currency number format
+        Style currencyStyle = workbook.CreateStyle();
+        currencyStyle.Custom = "$#,##0.00";
+
+        // Apply only the number format to the entire range
+        StyleFlag flag = new StyleFlag { NumberFormat = true };
+        range.ApplyStyle(currencyStyle, flag);
+
+        try
+        {
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

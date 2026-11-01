@@ -1,12 +1,12 @@
-// Title: Recalculate all formulas in an Excel workbook and print the evaluated value of cell E3 using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an .xlsx file, call Workbook.CalculateFormula, and display the computed value of cell E3 from the first worksheet in C# with Aspose.Cells. | Show how to retrieve the post‑calculation result of cell E3 after forcing formula evaluation in an Aspose.Cells workbook. | Write C# code that opens a workbook, forces a full formula recalculation, reads cell E3’s value, and writes it to the console using Aspose.Cells.
-// Common Searches: Aspose.Cells C# get value of cell E3 after CalculateFormula | how to read evaluated result of a formula cell in Excel using Aspose.Cells .NET | example code to recalculate formulas and read a specific cell value with Aspose.Cells | display final value of E3 after workbook.CalculateFormula in Aspose.Cells C#
-// Tags: calculateformula method Aspose.Cells | read cell value after formula evaluation C# | access specific cell E3 Aspose.Cells | recalculate all formulas .xlsx Aspose.Cells | output evaluated Excel cell result .NET
+// Title: Recalculate all formulas in an Excel workbook and retrieve the calculated value of cell E3 with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, invokes Workbook.CalculateFormula(), and prints the resulting value of cell E3. | Adapt the sample to return the numeric result of the formula in cell G10 after the workbook has been recalculated. | Add comprehensive error handling to catch missing file errors and null cell values while still displaying the calculated result.
+// Common Searches: Aspose.Cells C# how to force formula recalculation and read a specific cell value | Get the result of cell E3 after CalculateFormula in Aspose.Cells .NET | C# example for loading an Excel file, recalculating formulas, and extracting a computed cell | Retrieve formula output from an .xlsx workbook using Aspose.Cells for .NET | Read calculated value of a cell after workbook.CalculateFormula in C#
+// Tags: Aspose.Cells workbook.CalculateFormula | read calculated cell value C# | extract formula result from .xlsx | recalculate Excel formulas Aspose.Cells | access cell after formula evaluation .NET
 
 using Aspose.Cells;
 using System;
 
-// The program loads an Excel workbook, forces a full formula recalculation with Workbook.CalculateFormula, reads the resulting value of cell E3 from the first worksheet, and writes that final calculated value to the console.
+// // Loads an Excel workbook, forces a full formula recalculation with CalculateFormula(), then reads and prints the computed value of cell E3.
 class Program
 {
     static void Main()
@@ -14,16 +14,17 @@ class Program
         // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Recalculate all formulas to ensure the latest values
+        // Recalculate all formulas in the workbook
         workbook.CalculateFormula();
 
-        // Access cell E3 in the first worksheet
-        Cell e3 = workbook.Worksheets[0].Cells["E3"];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Retrieve the calculated value (handles nulls)
-        string calculatedValue = e3.Value?.ToString() ?? "null";
+        // Retrieve the calculated value of cell E3
+        Cell cell = sheet.Cells["E3"];
+        object value = cell.Value;
 
-        // Display the final calculated value of E3
-        Console.WriteLine("Final calculated value of E3: " + calculatedValue);
+        // Display the final calculated value
+        Console.WriteLine("Calculated value of E3: " + value);
     }
 }

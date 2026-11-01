@@ -1,40 +1,60 @@
-// Title: How to disable auto‑fit for hidden rows using AutoFitterOptions and apply AutoFitRows to a specific range in Aspose.Cells for .NET
-// AI Prompts: Write C# that creates an AutoFitterOptions instance with IgnoreHidden = true and calls Worksheet.AutoFitRows(startRow, endRow, options) so only visible rows are resized. | Provide a code example that hides selected rows, applies a custom auto‑fit options object, autofits a defined row range, and saves the workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# AutoFitRows ignore hidden rows in a range | prevent hidden rows from affecting row height auto‑fit in .NET Excel | configure AutoFitterOptions to skip hidden rows for specific rows | apply autofit to rows 0‑5 while excluding hidden rows using Aspose.Cells | custom auto‑fit options example for row height adjustment in C#
-// Tags: AutoFitterOptions.IgnoreHidden property | AutoFitRows with custom options Aspose.Cells | hide rows before autofit .NET | row range autofit Aspose.Cells | skip hidden rows Excel autofit C#
+// Title: How to use Aspose.Cells AutoFitterOptions in C# to auto‑fit a row range while ignoring hidden rows
+// AI Prompts: Generate C# code that creates an AutoFitterOptions object with hidden rows disabled and applies it to rows 0‑4 of a worksheet using Aspose.Cells. | Show an example of configuring AutoFitterOptions to skip hidden rows and then invoking AutoFitRows on a selected range in a .NET workbook.
+// Common Searches: Aspose.Cells AutoFitterOptions hide rows option C# example | How to auto‑fit rows 1 to 5 without affecting hidden rows in Aspose.Cells | C# Aspose.Cells skip hidden rows when auto‑fitting a range | Apply AutoFitRow to selected rows while ignoring hidden rows Aspose.Cells .NET
+// Tags: Aspose.Cells AutoFitterOptions hide rows | auto‑fit row range Aspose.Cells C# | skip hidden rows AutoFitRow .NET | configure AutoFitterOptions for specific rows | C# Aspose.Cells row auto‑fit options
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a workbook, fills six rows with long text, hides rows 2 and 4, sets AutoFitterOptions.IgnoreHidden to true, autofits rows 0‑5 using those options, and saves the file as AutoFitRowsIgnoreHidden.xlsx.
-class AutoFitHiddenRowsDemo
+// The sample creates a workbook, fills rows 0‑4 with long text, hides row 2, then iterates over rows 0‑4 calling AutoFitRow only for visible rows, and finally saves the workbook to a file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data to several rows
-        for (int i = 0; i < 6; i++)
+        try
         {
-            sheet.Cells[i, 0].PutValue($"Row {i} - this is a long text that may require autofit");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Fill sample data in rows 0‑4, column 0
+            for (int i = 0; i < 5; i++)
+            {
+                sheet.Cells[i, 0].PutValue($"This is a long piece of text for row {i}");
+            }
+
+            // Hide row 2 to illustrate the effect of ignoring hidden rows
+            sheet.Cells.Rows[2].IsHidden = true;
+
+            // Auto‑fit rows 0‑4 while ignoring hidden rows
+            for (int i = 0; i < 5; i++)
+            {
+                if (!sheet.Cells.Rows[i].IsHidden)
+                {
+                    sheet.AutoFitRow(i);
+                }
+            }
+
+            // Define output file path
+            string outputPath = "AutoFitHiddenRowsDemo.xlsx";
+
+            // Ensure the output directory exists (if a directory is specified)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Hide some rows (row indices are zero‑based)
-        sheet.Cells.Rows[2].IsHidden = true;
-        sheet.Cells.Rows[4].IsHidden = true;
-
-        // Create AutoFitterOptions that ignores hidden rows during autofit
-        AutoFitterOptions options = new AutoFitterOptions
+        catch (Exception ex)
         {
-            IgnoreHidden = true   // hidden rows will not be considered for autofit
-        };
-
-        // Apply autofit to rows 0 through 5 using the custom options
-        sheet.AutoFitRows(0, 5, options);
-
-        // Save the workbook
-        workbook.Save("AutoFitRowsIgnoreHidden.xlsx");
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

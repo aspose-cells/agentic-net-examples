@@ -1,68 +1,48 @@
-// Title: Calculate average subtotals for column F and place summary rows above data using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that groups rows by the first column, computes the average of column F, and inserts the subtotal rows at the top of the worksheet with Aspose.Cells. | Show how to call the Cells.Subtotal method with summaryBelowData set to false to generate top‑positioned average summaries in an Excel file.
-// Common Searches: Aspose.Cells C# subtotal average of column F with summary rows on top | How to add average subtotal rows above data in Excel using Aspose.Cells .NET | C# Aspose.Cells Subtotal method summaryBelowData false example | Group by Category column and calculate average Score subtotal with Aspose.Cells | Insert top summary rows for average calculation in worksheet using Aspose.Cells
-// Tags: Aspose.Cells subtotal average column F | disable summaryBelowData Aspose.Cells | C# group rows by column subtotal | insert top summary rows Excel .NET | average aggregation with Aspose.Cells Subtotal
+// Title: Add a top‑most average subtotal row to column F with Aspose.Cells for .NET
+// AI Prompts: Create a C# workbook, insert a new first row, and assign an AVERAGE formula that computes the mean of the existing values in column F using Aspose.Cells. | Programmatically determine the data range in column F, place a subtotal row at row 1, and set the cell formula to AVERAGE(F2:Fn) with Aspose.Cells. | Generate an Excel file where the average of column F is displayed in a header row above the data, leveraging the Aspose.Cells Worksheet.InsertRows and Cells.Formula properties.
+// Common Searches: how to insert a header row with an average formula for column F using Aspose.Cells in C# | Aspose.Cells calculate column average and place result at the top of the sheet .NET | C# code to add a subtotal row before data in an Excel worksheet with Aspose.Cells
+// Tags: insert top row Aspose.Cells .NET | set AVERAGE formula column F Aspose.Cells | worksheet subtotal row Excel Aspose.Cells | calculate column average programmatically Aspose.Cells | save workbook output.xlsx Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace SubtotalAverageTopDemo
+// The example creates a new workbook, fills column F with sample values, inserts a row at the very top, writes an AVERAGE formula in the first cell of column F that references the data range, and saves the file as output.xlsx.
+class Program
 {
-    // // Demonstrates creating a workbook, populating it with sample data, and using Aspose.Cells' Cells.Subtotal method to group by the Category column, calculate the average of the Score column (F), insert the subtotal rows at the top of the sheet, and save the file as SubtotalAverageTopDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Populate sample data (including column F which is index 5)
-            // Header row
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Item");
-            cells["C1"].PutValue("Qty");
-            cells["D1"].PutValue("Price");
-            cells["E1"].PutValue("Discount");
-            cells["F1"].PutValue("Score"); // Column F to average
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data rows
-            object[,] data = new object[,]
+            // (Optional) Populate column F with sample data for demonstration
+            for (int i = 0; i < 10; i++)
             {
-                {"A","Item1",10,5.0,0.1,80},
-                {"A","Item2",15,7.5,0.05,85},
-                {"B","Item3",8,12.0,0.2,78},
-                {"B","Item4",20,3.5,0.0,90},
-                {"C","Item5",5,20.0,0.15,88}
-            };
-
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                for (int j = 0; j < data.GetLength(1); j++)
-                {
-                    cells[i + 1, j].PutValue(data[i, j]);
-                }
+                sheet.Cells[i, 5].PutValue(i + 1); // Column F has zero‑based index 5
             }
 
-            // Define the cell area that contains the data (A1:F6)
-            CellArea area = CellArea.CreateCellArea("A1", "F6");
+            // Insert a new row at the top to hold the average (subtotal) value
+            sheet.Cells.InsertRows(0, 1);
 
-            // Apply subtotal:
-            // - Group by the first column (Category) -> index 0
-            // - Use Average function on column F (index 5)
-            // - Do not replace existing subtotals, no page breaks, summary rows at the top (summaryBelowData = false)
-            cells.Subtotal(
-                area,
-                0,                                 // groupBy column index
-                ConsolidationFunction.Average,    // average function
-                new int[] { 5 },                  // apply to column F
-                false,                            // replace existing subtotals
-                false,                            // page breaks between groups
-                false);                           // summaryBelowData = false (summary at top)
+            // Determine the range that contains the data (excluding the newly inserted row)
+            int firstDataRow = 1; // after insertion, data starts at row index 1
+            int lastDataRow = sheet.Cells.MaxDataRow;
 
-            // Save the workbook
-            workbook.Save("SubtotalAverageTopDemo.xlsx");
+            // Set a formula in the first cell of column F to calculate the average of the data range
+            sheet.Cells[0, 5].Formula = $"AVERAGE(F{firstDataRow + 1}:F{lastDataRow + 1})";
+
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

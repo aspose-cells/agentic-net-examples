@@ -1,85 +1,67 @@
 // Title: Export only visible rows from an Excel workbook to a tab‑delimited TXT file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, uses ExportTableOptions.PlotVisibleRows to skip hidden rows, and saves the visible data as a tab‑separated .txt file. | Show how to export a worksheet's visible range to a DataTable with column headers and then write that DataTable to a tab‑delimited text file in C#. | Demonstrate robust error handling for missing input files and runtime exceptions while exporting visible rows to a TXT file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# export visible rows to tab delimited text file | ignore hidden rows when converting Excel to txt using Aspose.Cells | ExportTableOptions PlotVisibleRows usage example .NET | write DataTable to tab delimited file in C# after Excel export | check workbook existence before exporting with Aspose.Cells
-// Tags: Aspose.Cells ExportTableOptions PlotVisibleRows | export visible rows to TXT Aspose.Cells | C# tab delimited text export from Excel | DataTable to text file Aspose.Cells | handle missing workbook Aspose.Cells C#
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates through rows, skips any row where Cells.Rows[row].IsHidden is true, and writes the remaining cells to a tab‑separated .txt file. | Show how to add robust file‑existence checking and exception handling when exporting visible worksheet rows to a text file with Aspose.Cells. | Demonstrate using StreamWriter to create a tab‑delimited text export of visible data from the first worksheet of a workbook loaded by Aspose.Cells.
+// Common Searches: C# Aspose.Cells export visible rows to tab delimited text file | How to ignore hidden rows when saving Excel data as .txt using Aspose.Cells | Export first worksheet data without hidden rows to TXT in .NET | Aspose.Cells write visible cells to text file with tab separators | Skip hidden rows during Excel to TXT conversion in C#
+// Tags: Aspose.Cells visible rows text export | filter hidden rows Aspose.Cells C# | tab delimited Excel to TXT conversion | worksheet row visibility check Aspose.Cells | streamwriter tab separated output .NET
 
 using System;
-using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportVisibleRows
+// Loads an Excel workbook, iterates over the first worksheet, skips rows flagged as hidden, and writes the visible cell values to a tab‑separated text file using StreamWriter.
+class ExportVisibleRowsToTxt
 {
-    // Loads an Excel workbook, extracts only rows that are not hidden using ExportTableOptions, and writes the data with column headers to a tab‑separated .txt file, including file existence checks and exception handling.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.txt";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Path to the input workbook
-                string inputPath = "input.xlsx";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Determine the used range size
-                int totalRows = cells.MaxDataRow + 1;      // MaxDataRow is zero‑based
-                int totalCols = cells.MaxDataColumn + 1;   // MaxDataColumn is zero‑based
-
-                // Set up export options to include only visible rows and column headers
-                ExportTableOptions exportOptions = new ExportTableOptions
-                {
-                    PlotVisibleRows = true,      // Export only rows that are not hidden
-                    ExportColumnName = true      // Include column headers in the export
-                };
-
-                // Export the data range to a DataTable
-                DataTable dataTable = cells.ExportDataTable(0, 0, totalRows, totalCols, exportOptions);
-
-                // Write the DataTable to a TXT file (tab‑separated)
-                string outputPath = "visible_data.txt";
-                using (StreamWriter writer = new StreamWriter(outputPath))
-                {
-                    // Write column headers
-                    for (int col = 0; col < dataTable.Columns.Count; col++)
-                    {
-                        writer.Write(dataTable.Columns[col].ColumnName);
-                        if (col < dataTable.Columns.Count - 1)
-                            writer.Write('\t');
-                    }
-                    writer.WriteLine();
-
-                    // Write each data row
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        for (int col = 0; col < dataTable.Columns.Count; col++)
-                        {
-                            writer.Write(row[col]?.ToString() ?? string.Empty);
-                            if (col < dataTable.Columns.Count - 1)
-                                writer.Write('\t');
-                        }
-                        writer.WriteLine();
-                    }
-                }
-
-                Console.WriteLine($"Visible rows exported to '{outputPath}'.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Prepare a StreamWriter for the output TXT file
+            using (StreamWriter writer = new StreamWriter(outputPath))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Determine the range of used rows and columns
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxColumn = sheet.Cells.MaxDataColumn;
+
+                for (int rowIndex = 0; rowIndex <= maxRow; rowIndex++)
+                {
+                    // Skip hidden rows using the Row object from Cells.Rows collection
+                    if (sheet.Cells.Rows[rowIndex].IsHidden)
+                        continue;
+
+                    // Collect cell values for the current visible row
+                    string[] values = new string[maxColumn + 1];
+                    for (int colIndex = 0; colIndex <= maxColumn; colIndex++)
+                    {
+                        Cell cell = sheet.Cells[rowIndex, colIndex];
+                        values[colIndex] = cell?.StringValue ?? string.Empty;
+                    }
+
+                    // Write the row to the TXT file, separating values with a tab character
+                    writer.WriteLine(string.Join("\t", values));
+                }
             }
+
+            Console.WriteLine($"Visible data exported to \"{outputPath}\"");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred during export:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

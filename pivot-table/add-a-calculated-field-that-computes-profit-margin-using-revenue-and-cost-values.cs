@@ -1,64 +1,57 @@
-// Title: Add a profit‑margin calculated field to an Aspose.Cells pivot table in C# and format it as a percentage
-// AI Prompts: Generate C# code that creates a PivotTable with Revenue and Cost columns, inserts a calculated field named ProfitMargin using the formula (Revenue‑Cost)/Revenue, applies a 0.00% number format, refreshes the pivot, and saves the workbook. | Show how to use Aspose.Cells for .NET to add a custom calculated field to an existing pivot table, set its number format to percentage, recalculate the pivot data, and export the file.
-// Common Searches: asp.net aspose.cells add profit margin calculated field to pivot table | c# Aspose.Cells pivot table calculated field percentage format example | how to refresh Aspose.Cells pivot after adding a custom calculated field
-// Tags: add calculated field to Aspose.Cells pivot table | profit margin calculated field Aspose.Cells | percentage format for pivot calculated field | refresh pivot after adding calculated field Aspose.Cells | Aspose.Cells pivot table C# example
+// Title: Add a Profit Margin calculated field to an existing PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a calculated field named ProfitMargin to a PivotTable with Aspose.Cells C# | Aspose.Cells C# add custom formula (Revenue-Cost)/Revenue to pivot table | programmatically insert profit margin calculation into Excel pivot using Aspose.Cells | C# code to create a calculated field in an existing workbook pivot table with Aspose | Aspose.Cells add calculated field to a pivot table without rebuilding the pivot
+// Tags: Aspose.Cells calculated field pivot table | profit margin formula pivot C# | custom calculation Excel pivot Aspose.Cells | modify existing pivot table Aspose.Cells | C# add field to Excel pivot using Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCalculatedField
+// The example loads an existing workbook, checks for a pivot table on the first worksheet, adds a calculated field called "ProfitMargin" with the formula "(Revenue-Cost)/Revenue", and saves the updated file.
+class Program
 {
-    // The sample creates a workbook, fills it with Product, Revenue, and Cost data, builds a pivot table, adds a calculated field called ProfitMargin using the formula (Revenue‑Cost)/Revenue, formats this field as a percentage, refreshes and calculates the pivot, and saves the result as PivotTable_ProfitMargin.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data: Product, Revenue, Cost
-            cells["A1"].Value = "Product";
-            cells["B1"].Value = "Revenue";
-            cells["C1"].Value = "Cost";
-
-            string[] products = { "A", "B", "C", "A", "B", "C" };
-            double[] revenues = { 200, 300, 250, 180, 320, 260 };
-            double[] costs = { 120, 150, 130, 110, 140, 150 };
-
-            for (int i = 0; i < products.Length; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                int row = i + 2;
-                cells[$"A{row}"].Value = products[i];
-                cells[$"B{row}"].Value = revenues[i];
-                cells[$"C{row}"].Value = costs[i];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Create a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add fields to the pivot table
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Revenue");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a calculated field for profit margin and drag it to the data area
+            // Ensure that at least one pivot table exists
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
+
+            // Retrieve the first pivot table (adjust index if there are multiple)
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Add a calculated field named "ProfitMargin"
             // Formula: (Revenue - Cost) / Revenue
-            pivotTable.AddCalculatedField("ProfitMargin", "=(Revenue-Cost)/Revenue", true);
+            // Column names must match the field names used in the pivot table source data
+            pivotTable.AddCalculatedField("ProfitMargin", "(Revenue-Cost)/Revenue");
 
-            // Format the calculated field as percentage
-            PivotField profitMarginField = pivotTable.DataFields[pivotTable.DataFields.Count - 1];
-            profitMarginField.NumberFormat = "0.00%";
-
-            // Refresh and calculate the pivot table
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTable_ProfitMargin.xlsx");
+            // Save the workbook with the new calculated field
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

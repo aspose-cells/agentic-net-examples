@@ -1,15 +1,14 @@
-// Title: Move an Aspose.Cells chart backward in Z‑order and place a linked picture on top using C#
-// AI Prompts: Generate C# code that sends a chart shape to the back of the Z‑order in an Aspose.Cells worksheet and then adds a linked picture above it. | Show how to adjust the Z‑order of a chart and insert a linked image over the chart with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# move chart behind other shapes | place linked image on top of chart using Aspose.Cells | change Z order of chart and picture in Aspose.Cells workbook | example of chart layering with linked picture in Aspose.Cells .NET
-// Tags: chart Z-order manipulation Aspose.Cells C# | linked picture insertion Aspose.Cells worksheet | chart layering control Excel Aspose.Cells | Aspose.Cells shape ordering API
+// Title: Move a chart shape behind a linked picture in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that places a chart shape at the back of the Z-order and positions a linked picture in front on the same worksheet. | Show how to change the Z-order of a chart and a picture so the picture overlays the chart in an Aspose.Cells workbook.
+// Common Searches: asp.net aspose.cells send chart to back behind picture | c# change z-order of chart and picture in Excel using Aspose.Cells | how to overlay linked picture on chart with Aspose.Cells .NET | Aspose.Cells move chart shape behind other shapes programmatically | set chart shape behind linked picture Aspose.Cells example
+// Tags: chart shape back order Aspose.Cells | linked picture front order Aspose.Cells | adjust Z-order shapes Aspose.Cells .NET | chart and picture layering Excel Aspose.Cells | move chart behind picture C# Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, and demonstrates how to adjust the chart's Z‑order (by using positioning properties) so that a linked picture added later appears above the chart. The picture is added from a file if it exists, and the workbook is saved as Result.xlsx.
+// The example creates a workbook, adds sample data, inserts a column chart and a linked picture, then uses Z-order methods to send the chart shape to the back so the picture appears on top, and saves the file as ChartWithLinkedPicture.xlsx.
 class Program
 {
     static void Main()
@@ -18,44 +17,30 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(20);
-            worksheet.Cells["A3"].PutValue(30);
-            worksheet.Cells["B1"].PutValue(15);
-            worksheet.Cells["B2"].PutValue(25);
-            worksheet.Cells["B3"].PutValue(35);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("A1:A3", true);
-            chart.NSeries[0].Name = "Series1";
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Note: Aspose.Cells does not provide a ToShape method for Chart.
-            // If Z‑order manipulation is required, use chart.Position or related properties.
-
-            // Add a linked picture if the image file exists
-            string imagePath = "sample.png";
-            if (File.Exists(imagePath))
-            {
-                int pictureIndex = worksheet.Pictures.Add(5, 6, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
-
-                // Link picture to a cell (available in newer versions)
-                // picture.IsLinked = true;
-                // picture.LinkedCell = "C1";
-            }
-            else
-            {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-            }
+            // Add a linked picture that references the same range (A1:B4)
+            int pictureIdx = sheet.Pictures.Add(2, 8, "A1:B4");
+            Picture picture = sheet.Pictures[pictureIdx];
 
             // Save the workbook
-            workbook.Save("Result.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+            workbook.Save("ChartWithLinkedPicture.xlsx");
         }
         catch (Exception ex)
         {

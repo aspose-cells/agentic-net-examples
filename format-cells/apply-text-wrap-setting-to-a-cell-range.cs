@@ -1,23 +1,38 @@
-// Title: How to enable text wrapping for a specific cell range in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a style with IsTextWrapped = true and applies it to the range A1:C3 using Aspose.Cells. | Show how to use Aspose.Cells StyleFlag to apply a text‑wrap style to an entire cell range and then save the workbook. | Explain the steps to define a cell range, enable text wrapping, and export the file as WrappedText.xlsx with Aspose.Cells for .NET.
-// Common Searches: asp.net aspose.cells set wrap text for range A1:C3 c# | c# aspose.cells apply text wrapping to multiple cells | how to use StyleFlag to enable text wrap in an Aspose.Cells workbook | save Excel file with wrapped text using Aspose.Cells .NET
-// Tags: apply text wrap style Aspose.Cells | Aspose.Cells StyleFlag text wrapping | C# set IsTextWrapped property | wrap text for cell range Excel Aspose | save workbook with wrapped cells Aspose.Cells
+// Title: Enable text wrap for a specific cell range (A1:C3) using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# enable wrap text for a range of cells | How to apply text wrapping to multiple cells with Aspose.Cells API | Using StyleFlag to set IsTextWrapped on a cell block in Aspose.Cells | CreateRange ApplyStyle example for text wrap in Aspose.Cells .NET | Set wrap text style for A1:C3 in an Excel workbook with Aspose.Cells
+// Tags: apply text wrap Aspose.Cells | StyleFlag ApplyStyle range | CreateRange text wrapping | IsTextWrapped property C# | wrap text Excel Aspose.Cells
 
-// Create a new workbook
-var workbook = new Aspose.Cells.Workbook();
+using Aspose.Cells;
+using System;
 
-// Access the first worksheet
-var worksheet = workbook.Worksheets[0];
+// The example creates a workbook, defines the A1:C3 range, builds a style with IsTextWrapped enabled, uses a StyleFlag with All set to true, applies the style to the range via CreateRange.ApplyStyle, and saves the file as WrappedText.xlsx.
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-// Define the cell range to apply text wrap (e.g., A1:C3)
-var range = worksheet.Cells.CreateRange("A1:C3");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-// Create a style object and enable text wrapping
-var style = workbook.CreateStyle();
-style.IsTextWrapped = true;
+        // Define the cell range (A1:C3) to apply text wrap
+        int startRow = 0;      // Row 1 (zero‑based)
+        int startColumn = 0;   // Column A
+        int totalRows = 3;     // Rows 1‑3
+        int totalColumns = 3;  // Columns A‑C
 
-// Apply the style to the defined range
-range.ApplyStyle(style, new Aspose.Cells.StyleFlag() { All = true });
+        // Create a style with text wrap enabled
+        Style wrapStyle = workbook.CreateStyle();
+        wrapStyle.IsTextWrapped = true;
 
-// Save the workbook to a file
-workbook.Save("WrappedText.xlsx");
+        // Define which style attributes to apply (all in this case)
+        StyleFlag flag = new StyleFlag() { All = true };
+
+        // Apply the wrap style to the specified range
+        sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns).ApplyStyle(wrapStyle, flag);
+
+        // Save the workbook
+        workbook.Save("WrappedText.xlsx");
+    }
+}

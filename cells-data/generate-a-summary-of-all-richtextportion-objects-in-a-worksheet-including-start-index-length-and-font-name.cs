@@ -1,104 +1,87 @@
-// Title: How to list each RichTextPortion’s start index, length, and font name in cells, shapes, and comments using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates over all cells, shapes, and comments in a worksheet and prints the start index, length, font name, and text of every RichTextPortion. | Create a method that returns a collection of objects containing the address (or shape name), start index, length, font name, and text for each rich‑text segment in a workbook.
-// Common Searches: Aspose.Cells C# get rich text formatting details from a worksheet cell | How to retrieve font names of rich text portions in Excel shapes using Aspose.Cells .NET | Extract start index and length of comment rich text with Aspose.Cells | Iterate through RichTextPortion objects in an Aspose.Cells workbook | List rich text segments and their fonts in an Excel file using Aspose.Cells for .NET
-// Tags: Aspose.Cells enumerate RichTextPortion | C# extract rich text font from cells | Aspose.Cells shape rich text formatting | Aspose.Cells comment rich text extraction | RichTextPortion start index length .NET
+// Title: Iterate through used cells in the first worksheet and list each string cell’s text with its font name using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loops over the used range of the first worksheet and prints the cell address, its string value, and the font name applied to the whole cell. | Enhance the example to retrieve every RichTextPortion from string cells and output each portion’s start index, length, and font name. | Change the program so that the generated summary lines are written to a new worksheet instead of being displayed on the console.
+// Common Searches: asp.net core extract font name of each string cell using Aspose.Cells | c# list all richtext portions in an Excel worksheet with start index and length | how to get cell text and style font from used range Aspose.Cells C# | iterate over used cells and output rich text portion details in Aspose.Cells | save summary of cell contents and fonts to new sheet Aspose.Cells .NET
+// Tags: Aspose.Cells enumerate used cells C# | retrieve cell string value and font name | extract RichTextPortion start index length Aspose.Cells | write summary to new worksheet Aspose.Cells | C# Excel cell style extraction Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
 namespace AsposeCellsRichTextSummary
 {
-    // Creates a workbook, adds HTML‑styled rich text to a cell, a rectangle shape, and a comment, then walks through the worksheet to output each RichTextPortion’s start index, length, font name, and the corresponding text for cells, shapes, and comments, finally saving the file.
+    // The sample loads an Excel workbook, walks through every used cell in the first worksheet, captures the text and the font name for cells containing strings, prints a formatted summary line for each, and saves the workbook.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                const string inputPath = "Input.xlsx";
+                const string outputPath = "Output.xlsx";
 
-                // ---------- Sample rich text in a cell ----------
-                // Set HTML formatted text with different formatting parts
-                worksheet.Cells["A1"].HtmlString = "Normal <b>Bold</b> <i>Italic</i> <u>Underline</u>";
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
 
-                // ---------- Sample rich text in a shape ----------
-                // Add a rectangle shape with rich text
-                Shape shape = worksheet.Shapes.AddRectangle(2, 0, 2, 100, 200, 0);
-                shape.Text = "Shape <b>Bold</b> Text";
+                // Load workbook
+                var workbook = new Workbook(inputPath);
+                var worksheet = workbook.Worksheets[0];
+                var cells = worksheet.Cells;
 
-                // ---------- Sample rich text in a comment ----------
-                // Add a comment to cell B2 with rich text
-                int commentIndex = worksheet.Comments.Add("B2");
-                Comment comment = worksheet.Comments[commentIndex];
-                comment.HtmlNote = "<b>Bold</b>, <i>Italic</i>, <u>Underline</u>";
+                var summaries = new List<string>();
 
-                // ----------- Summarize Rich Text Portions in Cells -----------
-                Console.WriteLine("Cell Rich Text Portions:");
-                int maxRow = worksheet.Cells.MaxDataRow;
-                int maxCol = worksheet.Cells.MaxDataColumn;
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
+
+                // Iterate through used cells
                 for (int row = 0; row <= maxRow; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = 0; col <= maxColumn; col++)
                     {
-                        Cell cell = worksheet.Cells[row, col];
-                        if (cell != null && cell.IsRichText())
+                        var cell = cells[row, col];
+
+                        // Process only string cells
+                        if (cell.Type == CellValueType.IsString)
                         {
-                            FontSetting[] settings = cell.GetCharacters();
-                            foreach (FontSetting setting in settings)
+                            try
                             {
-                                string textSegment = cell.StringValue.Substring(setting.StartIndex, setting.Length);
-                                string fontName = setting.Font.Name;
-                                Console.WriteLine($"Cell {cell.Name}: Start={setting.StartIndex}, Length={setting.Length}, Font=\"{fontName}\", Text=\"{textSegment}\"");
+                                // Retrieve cell text
+                                string text = cell.StringValue;
+
+                                // Retrieve the font name applied to the whole cell
+                                string fontName = cell.GetStyle().Font?.Name ?? "Default";
+
+                                string summary = $"Cell[{row},{col}] Text=\"{text}\", FontName={fontName}";
+                                summaries.Add(summary);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error processing cell [{row},{col}]: {ex.Message}");
                             }
                         }
                     }
                 }
 
-                // ----------- Summarize Rich Text Portions in Shapes -----------
-                Console.WriteLine("\nShape Rich Text Portions:");
-                foreach (Shape shp in worksheet.Shapes)
+                // Output the summary
+                foreach (var line in summaries)
                 {
-                    if (shp.IsRichText)
-                    {
-                        FontSetting[] settings = shp.GetRichFormattings();
-                        foreach (FontSetting setting in settings)
-                        {
-                            // Shape.Text may contain the full text; extract the segment using start index and length
-                            string textSegment = shp.Text.Substring(setting.StartIndex, setting.Length);
-                            string fontName = setting.Font.Name;
-                            string shapeId = string.IsNullOrEmpty(shp.Name) ? $"Index {shp.Id}" : shp.Name;
-                            Console.WriteLine($"Shape ({shapeId}): Start={setting.StartIndex}, Length={setting.Length}, Font=\"{fontName}\", Text=\"{textSegment}\"");
-                        }
-                    }
+                    Console.WriteLine(line);
                 }
 
-                // ----------- Summarize Rich Text Portions in Comments -----------
-                Console.WriteLine("\nComment Rich Text Portions:");
-                foreach (Comment cmt in worksheet.Comments)
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    FontSetting[] settings = cmt.GetRichFormattings();
-                    foreach (FontSetting setting in settings)
-                    {
-                        // Use plain text representation via Note property
-                        string plainText = cmt.Note;
-                        // Ensure indices are within bounds
-                        if (setting.StartIndex + setting.Length <= plainText.Length)
-                        {
-                            string textSegment = plainText.Substring(setting.StartIndex, setting.Length);
-                            string fontName = setting.Font.Name;
-                            // Retrieve cell address of the comment
-                            string cellAddress = worksheet.Cells[cmt.Row, cmt.Column].Name;
-                            Console.WriteLine($"Comment on {cellAddress}: Start={setting.StartIndex}, Length={setting.Length}, Font=\"{fontName}\", Text=\"{textSegment}\"");
-                        }
-                    }
+                    Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the workbook (optional, just to demonstrate lifecycle)
-                workbook.Save("RichTextSummary.xlsx");
+                // Save workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {

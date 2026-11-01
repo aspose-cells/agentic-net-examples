@@ -1,30 +1,50 @@
-// Title: Load an Excel workbook, add an external reference formula to a cell, recalculate, and save with Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a formula that links cell B2 to A1 in an external workbook (External.xlsx) and recalculate the workbook using Aspose.Cells in C#. | Load a .xlsx file, assign a cross‑file reference formula, trigger calculation, and write the updated workbook to a new file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# create formula that points to a cell in a different workbook | recalculate all formulas after adding a cross‑file link with Aspose.Cells | save modified workbook after changing cell formula using Aspose.Cells .NET | sample code for cross‑workbook cell reference in Aspose.Cells C# | load Excel file, add external reference, and write output.xlsx with Aspose.Cells
-// Tags: add cross‑workbook formula Aspose.Cells | trigger formula calculation C# | open and save workbook Aspose.Cells .NET | set cell B2 external reference Aspose.Cells | programmatic Excel formula update C#
+// Title: Load an Excel workbook, add an external SUM formula, and save the file using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a formula that references another workbook with Aspose.Cells C# | Aspose.Cells C# load existing workbook and set external SUM formula | saving workbook after updating cell formula using Aspose.Cells .NET | C# code to set formula =SUM('[ExternalFile.xlsx]Sheet1'!A1:A10) with Aspose.Cells | handling missing input file when loading workbook in Aspose.Cells C#
+// Tags: load workbook with Aspose.Cells LoadOptions | set external reference formula Aspose.Cells | update cell formula in Excel using Aspose.Cells C# | save workbook after formula modification Aspose.Cells | handle CellsException in Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Loads "input.xlsx", sets B2 to a formula referencing A1 in "External.xlsx", recalculates all formulas, and saves the result as "output.xlsx" using Aspose.Cells for .NET.
+// The example checks for the presence of 'input.xlsx', loads it with Aspose.Cells using default LoadOptions, accesses the first worksheet, assigns a SUM formula that references an external workbook ('[ExternalFile.xlsx]Sheet1'!A1:A10) to cell B1, saves the modified workbook as 'output.xlsx', and includes error handling for CellsException and generic exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Get the first worksheet (you can change the index or name as needed)
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Set a formula that references a cell in an external workbook.
-        // Example: reference cell A1 in Sheet1 of External.xlsx
-        sheet.Cells["B2"].Formula = "='[External.xlsx]Sheet1'!A1";
+        try
+        {
+            // Load the existing workbook (no password required)
+            var loadOptions = new LoadOptions(); // Add password here if needed: loadOptions.Password = "yourPassword";
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Recalculate formulas so the new value is evaluated (optional)
-        workbook.CalculateFormula();
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the modified workbook back to disk
-        workbook.Save("output.xlsx");
+            // Set a formula that references an external workbook.
+            // Example: =SUM('[ExternalFile.xlsx]Sheet1'!A1:A10)
+            sheet.Cells["B1"].Formula = "SUM('[ExternalFile.xlsx]Sheet1'!A1:A10)";
+
+            // Save the workbook with the updated formula
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

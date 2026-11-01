@@ -1,51 +1,52 @@
-// Title: Decrypt an encrypted XLSX file and save it as an unprotected workbook while preserving formulas and formatting with Aspose.Cells for .NET
-// AI Prompts: Load a password‑protected XLSX using Aspose.Cells LoadOptions, then save it without a password to keep all formulas and styles. | Write C# code that opens an encrypted Excel workbook with a given password and outputs a plain XLSX file that retains worksheet content. | Show how to remove workbook encryption in Aspose.Cells while ensuring formulas, charts, and formatting remain intact.
-// Common Searches: asp.net how to open encrypted xlsx with password using aspose.cells | c# remove password from excel file without losing formulas | convert protected xlsx to unprotected using Aspose.Cells LoadOptions | preserve cell formatting when decrypting an Excel workbook in .NET | Aspose.Cells decrypt workbook and save as plain xlsx example
-// Tags: Aspose.Cells load encrypted XLSX | Aspose.Cells save workbook without password | remove Excel file encryption C# | preserve formulas when decrypting Excel | LoadOptions password protected workbook
+// Title: Decrypt a password‑protected XLSX file and save it as an unencrypted workbook while preserving formulas and formatting using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells load password protected XLSX and save without password | How to open an encrypted Excel file with Aspose.Cells and keep all formulas | Remove workbook encryption in .NET while preserving cell formatting using Aspose.Cells | Decrypt an XLSX file programmatically with Aspose.Cells LoadOptions | Save a protected Excel workbook as plain XLSX in C#
+// Tags: Aspose.Cells LoadOptions password | decrypt password protected XLSX Aspose.Cells | save unencrypted XLSX Aspose.Cells | preserve formulas during workbook decryption | C# remove Excel file encryption programmatically
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Opens an encrypted XLSX using LoadOptions with the supplied password, then saves it as a new XLSX without a password, preserving all formulas, styles, and other worksheet content.
+// The example loads a password‑protected XLSX workbook using Aspose.Cells LoadOptions with the supplied password, then saves it to a new XLSX file without a password, ensuring that all formulas, formatting, and other content remain unchanged.
 class Program
 {
     static void Main()
     {
         // Path to the encrypted XLSX file
-        string encryptedFilePath = "encrypted.xlsx";
-
-        // Verify that the encrypted file exists
-        if (!File.Exists(encryptedFilePath))
-        {
-            Console.WriteLine($"Error: The file \"{encryptedFilePath}\" was not found.");
-            return;
-        }
+        string encryptedFilePath = @"C:\Path\To\EncryptedFile.xlsx";
 
         // Password used to encrypt the file
-        string password = "yourPassword";
+        string password = "YourPassword";
+
+        // Path where the unencrypted XLSX will be saved
+        string unencryptedFilePath = @"C:\Path\To\UnencryptedFile.xlsx";
 
         try
         {
-            // Load the encrypted workbook using LoadOptions with the password
+            // Verify that the encrypted file exists before attempting to load it
+            if (!File.Exists(encryptedFilePath))
+                throw new FileNotFoundException("Encrypted file not found.", encryptedFilePath);
+
+            // LoadOptions allows specifying the password for opening the encrypted workbook
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = password
             };
+
+            // Load the encrypted workbook; formulas, formatting, and other content are preserved
             Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
-            // Path for the unencrypted output file
-            string unencryptedFilePath = "unencrypted.xlsx";
-
-            // Save the workbook without a password (unencrypted)
-            // Using SaveFormat directly avoids version‑specific SaveOptions classes
+            // Save the workbook without specifying a password – it will be saved as an unencrypted file
             workbook.Save(unencryptedFilePath, SaveFormat.Xlsx);
 
-            Console.WriteLine($"Workbook saved successfully to \"{unencryptedFilePath}\".");
+            Console.WriteLine("Conversion completed successfully.");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

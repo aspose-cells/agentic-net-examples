@@ -1,54 +1,56 @@
-// Title: How to filter and work with only SmartArt shapes in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates over worksheet.Shapes, and runs custom logic only when shape.IsSmartArt is true. | Provide a C# example that enumerates SmartArt shapes, prints each shape's Name and Type, and saves the workbook after processing.
-// Common Searches: C# Aspose.Cells iterate worksheet shapes and check IsSmartArt property | How to list SmartArt objects in an Excel file using Aspose.Cells for .NET | Filter SmartArt shapes in an Aspose.Cells workbook before saving | Retrieve name and type of SmartArt shapes with Aspose.Cells C# example
-// Tags: Aspose.Cells filter SmartArt shapes C# | Iterate worksheet shapes IsSmartArt Aspose.Cells | List SmartArt shape names and types Aspose.Cells | Process only SmartArt objects Excel .NET | SmartArt shape handling Aspose.Cells workbook
+// Title: How to filter and process only SmartArt shapes in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops over the worksheet.Shapes collection and runs custom logic exclusively for shapes where IsSmartArt is true, using the Aspose.Cells API. | Provide an example that prints the names of SmartArt objects in a workbook while skipping all other shape types with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# list SmartArt shapes in a worksheet | filter SmartArt objects in an Excel file using Aspose.Cells .NET | C# iterate worksheet shapes and filter by IsSmartArt property | how to identify SmartArt shapes with Aspose.Cells API | example to process only SmartArt shapes in an Excel workbook using Aspose.Cells
+// Tags: filter SmartArt shapes Aspose.Cells | enumerate worksheet shapes C# | check IsSmartArt property Aspose.Cells | process only SmartArt objects Excel .NET | Aspose.Cells shape iteration example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an Excel file with Aspose.Cells, accesses the first worksheet, loops through all shapes, and processes only those where the IsSmartArt property is true, outputting each SmartArt shape's name and type before saving the workbook.
+// The program loads an Excel workbook, iterates over all shapes on the first worksheet, selects only those where IsSmartArt is true, outputs their names, and saves the workbook unchanged.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook (lifecycle rule)
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Iterate through all shapes in the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            foreach (Shape shape in worksheet.Shapes)
             {
                 // Process only SmartArt shapes
                 if (shape.IsSmartArt)
                 {
-                    Console.WriteLine($"SmartArt Shape: Name = {shape.Name}, Type = {shape.Type}");
+                    // Example processing: output the shape name
+                    Console.WriteLine($"SmartArt Shape: {shape.Name}");
                     // Additional SmartArt-specific logic can be placed here
                 }
             }
 
-            // Save the workbook
+            // Save the workbook (lifecycle rule) – unchanged if no modifications were made
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

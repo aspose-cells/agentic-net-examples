@@ -1,50 +1,46 @@
-// Title: Configure Aspose.Cells workbook for SemiAutomatic calculation mode to update only dependent cells in C#
-// AI Prompts: Write C# code that sets Workbook.Settings.FormulaSettings.CalculationMode to CalcModeType.SemiAutomatic, modifies a source cell, invokes Workbook.CalculateFormula, and saves the workbook. | Show an Aspose.Cells example that demonstrates recalculating only formulas that depend on changed cells while operating in SemiAutomatic mode.
-// Common Searches: Aspose.Cells C# set calculation mode to SemiAutomatic for dependent cell updates | How to recalculate only formulas that depend on a changed cell using Aspose.Cells .NET | C# example of CalcModeType.SemiAutomatic with Aspose.Cells | Update a cell and trigger dependent formula recalculation in an Aspose.Cells workbook | Aspose.Cells calculate formulas after editing a cell without full workbook recalculation
-// Tags: Aspose.Cells configure calculation mode | C# dependent formula update with Aspose.Cells | Workbook.CalculateFormula usage example | FormulaSettings CalculationMode property | Aspose.Cells recalculate only dependent cells
+// Title: How to set Aspose.Cells Workbook CalculationMode to SemiAutomatic for dependent‑cell recalculation in C#
+// Common Searches: Aspose.Cells C# set workbook calculation mode to SemiAutomatic | recalculate only dependent cells after updating a value with Aspose.Cells | partial formula evaluation example using Aspose.Cells .NET | disable full workbook recalculation in Aspose.Cells C# code | configure semi‑automatic calculation mode in Aspose.Cells workbook
+// Tags: Aspose.Cells semi‑automatic calculation mode C# | dependent cell formula evaluation Aspose.Cells | set workbook CalculationMode .NET | partial Excel recalculation using Aspose.Cells | optimize formula calculation performance Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace SemiAutomaticModeExample
+// The example creates a new Workbook, sets its Settings.CalculationMode to SemiAutomatic so only cells that depend on changed values are recalculated, updates a base cell and a dependent formula, invokes CalculateFormula to refresh dependent cells, and saves the result to an XLSX file.
+class Program
 {
-    // The sample creates a new Workbook, places values in cells A1 and A2, defines a formula in B1 that sums them, sets the workbook's calculation mode to SemiAutomatic so only dependent formulas are refreshed, changes the value of A1, calls CalculateFormula to update B1, and saves the file as an .xlsx document.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Example modification: set a value and a formula that depends on it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);          // Base value
+            sheet.Cells["B1"].Formula = "=A1*2";     // Dependent formula
+
+            // Trigger calculation for dependent cells
+            workbook.CalculateFormula();
+
+            // Define output path
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists (if any)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Add sample data and a formula that depends on other cells
-                cells["A1"].PutValue(10);
-                cells["A2"].PutValue(20);
-                cells["B1"].Formula = "=A1+A2"; // B1 depends on A1 and A2
-
-                // Set calculation mode to Automatic (default Excel behavior)
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-                // Modify a cell value
-                cells["A1"].PutValue(30);
-
-                // Recalculate formulas – only dependent cells (B1) will be updated
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                string outputFile = "SemiAutomaticModeExample.xlsx";
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

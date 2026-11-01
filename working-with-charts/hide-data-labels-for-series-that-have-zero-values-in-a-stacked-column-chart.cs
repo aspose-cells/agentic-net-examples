@@ -1,112 +1,92 @@
 // Title: How to hide data labels for zero‑value points in a stacked column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# with Aspose.Cells to create a stacked column chart and automatically hide data labels for any data point whose value is zero. | Provide a code snippet that iterates over each series in an Aspose.Cells chart and sets DataLabels.ShowValue to false for zero‑valued points.
-// Common Searches: how to suppress zero-value labels in a stacked column chart with Aspose.Cells | C# Aspose.Cells conditional visibility of chart data labels | remove data labels for zero points in Excel stacked column chart programmatically | iterate over series points to hide labels using Aspose.Cells .NET | Aspose.Cells chart label customization based on cell values
-// Tags: Aspose.Cells hide zero data labels | stacked column chart label control C# | conditional chart data label Aspose.Cells | chart series point iteration Aspose.Cells | Excel chart data label suppression .NET
+// Common Searches: Aspose.Cells C# hide data label for zero value chart point | remove zero value labels from stacked column chart Aspose.Cells | conditional visibility of chart data labels in Aspose.Cells .NET | C# Aspose.Cells hide labels on zero‑valued series points | Excel stacked column chart suppress zero labels with Aspose.Cells
+// Tags: Aspose.Cells stacked column chart zero label suppression | C# chart data label conditional visibility | Aspose.Cells data labels hide zero values | Excel chart point label control Aspose.Cells | Aspose.Cells series point label customization
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, adds sample data for two product series, inserts a stacked column chart, enables data labels for all series, then iterates each series point to hide the label when the point value is zero (ensuring a DataLabel object exists before toggling visibility), and finally saves the file as an XLSX workbook.
+class HideZeroValueDataLabels
 {
-    // The example creates a workbook, fills it with sample data containing zeros, adds a stacked column chart, enables data labels for all series, then loops through each series point to hide the label when the underlying cell value is zero, and finally saves the workbook as an XLSX file.
-    public class HideZeroValueDataLabelsInStackedColumnChart
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data with some zero values
-            // Category column
+            // Populate sample data for a stacked column chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("Q1");
             sheet.Cells["A3"].PutValue("Q2");
             sheet.Cells["A4"].PutValue("Q3");
             sheet.Cells["A5"].PutValue("Q4");
 
-            // Series 1 values
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(0);   // zero value
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["B5"].PutValue(20);
+            // Series 1
+            sheet.Cells["B1"].PutValue("Product A");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(0);   // Zero value – label should be hidden
+            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["B5"].PutValue(130);
 
-            // Series 2 values
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(5);
-            sheet.Cells["C3"].PutValue(15);
-            sheet.Cells["C4"].PutValue(0);   // zero value
-            sheet.Cells["C5"].PutValue(25);
+            // Series 2
+            sheet.Cells["C1"].PutValue("Product B");
+            sheet.Cells["C2"].PutValue(80);
+            sheet.Cells["C3"].PutValue(95);
+            sheet.Cells["C4"].PutValue(0);   // Zero value – label should be hidden
+            sheet.Cells["C5"].PutValue(110);
 
-            // Add a stacked column chart
-            int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 7, 0, 25, 15);
+            // Add a stacked column chart (using Column chart type for compatibility)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart (both series)
-            chart.NSeries.Add("B2:C5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+            // Add the series to the chart (true = use categories from column A)
+            chart.NSeries.Add("B2:B5", true);
+            chart.NSeries.Add("C2:C5", true);
 
-            // Enable data labels for each series
-            foreach (Series series in chart.NSeries)
+            // Enable data labels for all series
+            foreach (var seriesObj in chart.NSeries)
             {
-                series.DataLabels.ShowValue = true; // show values by default
+                dynamic series = seriesObj; // Use dynamic to avoid compile‑time type issues
+                series.DataLabels.IsValueShown = true; // Show values by default
             }
 
-            // Hide data labels for points whose value is zero
-            // The data for each series starts in column B (index 1) and C (index 2)
-            for (int s = 0; s < chart.NSeries.Count; s++)
+            // Hide data labels where the point value is zero
+            foreach (var seriesObj in chart.NSeries)
             {
-                Series series = chart.NSeries[s];
-                int dataColumn = 1 + s; // B = 1, C = 2 (zero‑based column index)
-
-                for (int i = 0; i < series.Points.Count; i++)
+                dynamic series = seriesObj;
+                for (int i = 0; i < series.Values.Count; i++)
                 {
-                    // Data rows start at row 2 (zero‑based index 1)
-                    int dataRow = 1 + i;
-                    object cellValue = sheet.Cells[dataRow, dataColumn].Value;
-
-                    double pointValue = 0;
-                    if (cellValue != null && double.TryParse(cellValue.ToString(), out double parsed))
+                    object valObj = series.Values[i];
+                    double val = 0;
+                    if (valObj != null && double.TryParse(valObj.ToString(), out double parsed))
                     {
-                        pointValue = parsed;
+                        val = parsed;
                     }
 
-                    if (Math.Abs(pointValue) < double.Epsilon)
+                    // If the value is zero, hide its label
+                    if (Math.Abs(val) < double.Epsilon)
                     {
-                        // Hide the data label for this specific point
-                        series.Points[i].DataLabels.ShowValue = false;
+                        // Ensure a DataLabel exists for the point
+                        if (i >= series.DataLabels.Count)
+                        {
+                            series.DataLabels.Add();
+                        }
+                        series.DataLabels[i].IsValueShown = false;
                     }
                 }
             }
 
-            // Define output file path
-            string outputPath = "HideZeroValueDataLabelsStackedColumnChart.xlsx";
-
-            try
-            {
-                // Save the workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "StackedColumn_HideZeroLabels.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

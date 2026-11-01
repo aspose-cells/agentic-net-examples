@@ -1,14 +1,13 @@
-// Title: Add margin offsets to the first shape's absolute position in an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Read the Top and Left values of the first worksheet shape, add a 10‑point vertical and 15‑point horizontal margin, and save the workbook with Aspose.Cells in C#. | Programmatically shift a drawing object in an Excel file by a custom point offset using the Aspose.Cells Shape.Top and Shape.Left properties. | Update the absolute coordinates of an Excel shape to include a margin, then persist the changes to a new .xlsx file via Aspose.Cells.
-// Common Searches: how to move an Excel shape by points using Aspose.Cells C# | retrieve shape coordinates and apply offset in .NET workbook | add custom margin to first drawing object in Aspose.Cells worksheet | adjust shape top left position programmatically in Excel file | Aspose.Cells shape reposition example with margin offsets
-// Tags: Aspose.Cells shape position offset | C# adjust Excel drawing coordinates | apply point margin to worksheet shape | modify absolute position of Excel shape | move first shape with Aspose.Cells API
+// Title: Read a shape’s absolute Top/Left coordinates and shift it by a margin offset with Aspose.Cells for .NET
+// Common Searches: aspnet cells get shape top left coordinates c# | aspnet cells move an Excel shape by a specific offset c# | aspnet cells add margin to a worksheet shape programmatically | aspnet cells reposition shape using Top and Left properties c# | aspnet cells adjust shape location after loading workbook c#
+// Tags: Aspose.Cells shape repositioning | Aspose.Cells shape coordinate offset | Aspose.Cells get shape absolute location | Aspose.Cells worksheet shape margin adjustment | Aspose.Cells C# shape positioning
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The sample loads an existing workbook, accesses the first worksheet, retrieves the first shape's Top and Left coordinates, adds a 10‑point vertical and 15‑point horizontal margin, updates the shape's absolute position, and saves the modified file to a new location.
+// Loads an Excel workbook, reads the Top and Left properties of the first shape on the first worksheet, adds a 10‑point horizontal and 5‑point vertical margin, updates the shape’s position, and saves the modified file.
 class Program
 {
     static void Main()
@@ -21,48 +20,45 @@ class Program
             // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure at least one shape exists
-            if (worksheet.Shapes.Count == 0)
+            // Ensure the worksheet contains at least one shape
+            if (sheet.Shapes.Count == 0)
             {
                 Console.WriteLine("No shapes found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first shape
-            Shape shape = worksheet.Shapes[0];
+            // Retrieve the first shape (or use sheet.Shapes["ShapeName"] for a named shape)
+            Shape shape = sheet.Shapes[0];
 
-            // Current absolute position (points)
+            // Get current absolute position (in points)
             int currentTop = shape.Top;
             int currentLeft = shape.Left;
 
-            // Margin offsets (points)
-            int marginTop = 10;   // move down by 10 points
-            int marginLeft = 15;  // move right by 15 points
+            // Define margin offsets (in points)
+            int offsetX = 10; // shift right by 10 points
+            int offsetY = 5;  // shift down by 5 points
 
-            // Apply the margin offsets
-            shape.Top = currentTop + marginTop;
-            shape.Left = currentLeft + marginLeft;
+            // Compute new position
+            int newTop = currentTop + offsetY;
+            int newLeft = currentLeft + offsetX;
 
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Apply new position to the shape
+            shape.Top = newTop;
+            shape.Left = newLeft;
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

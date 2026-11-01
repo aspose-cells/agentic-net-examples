@@ -1,105 +1,60 @@
-// Title: Copy all shapes from one worksheet to another while preserving positions, size, rotation, and text using Aspose.Cells for .NET (C#)
-// AI Prompts: Copy every shape from Sheet1 to Sheet2, keeping its cell range, dimensions, rotation angle, and alternative text with Aspose.Cells in C#. | Duplicate Excel text boxes, images, and other drawing objects to a target worksheet while preserving alignment and formatting using the Shapes.AddCopy method. | Programmatically transfer all worksheet shapes to another sheet, retaining height, width, and text properties intact with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# copy shapes between worksheets preserving coordinates | how to duplicate Excel shapes with same size and rotation using Aspose.Cells | copy text boxes and images from one sheet to another programmatically in .NET
-// Tags: Shapes.AddCopy method Aspose.Cells C# | copy worksheet shapes preserving coordinates | duplicate Excel drawing objects Aspose.Cells | preserve shape dimensions and rotation .NET | transfer shape alternative text Aspose.Cells
+// Title: Copy all shapes from one worksheet to another while preserving positions with Aspose.Cells for .NET
+// Common Searches: how to copy all shapes from one Excel sheet to another using Aspose.Cells C# | preserve shape coordinates when moving drawings between worksheets in Aspose.Cells | Aspose.Cells AddCopy shape method example for copying shapes between sheets | duplicate Excel worksheet drawings programmatically with Aspose.Cells .NET | copy shapes with exact size and location from source sheet to target sheet Aspose
+// Tags: Aspose.Cells copy shapes between worksheets | preserve shape coordinates Excel .NET | AddCopy shape method Aspose.Cells | duplicate worksheet drawings programmatically | copy Excel drawing objects with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook (creating a placeholder if missing), accesses Sheet1 and Sheet2, iterates through each Shape in Sheet1, adds a copy to Sheet2 at the same cell range using Shapes.AddCopy, and then copies height, width, rotation angle, alternative text, and text alignment properties before saving the workbook to output.xlsx.
-class Program
+// The example loads a workbook, obtains a source and destination worksheet (creating the destination if needed), iterates through each Shape in the source sheet, captures its UpperLeftRow/Column and LowerRightRow/Column values, and uses Shapes.AddCopy to place an identical shape at the same coordinates on the destination sheet before saving the workbook.
+class ShapeCopyExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "source.xlsx";
+            const string sourcePath = "source.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Load existing workbook or create a placeholder if missing
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Sheet1";
-                int idx = workbook.Worksheets.Add();
-                workbook.Worksheets[idx].Name = "Sheet2";
-                workbook.Save(inputPath);
-                Console.WriteLine($"Input file not found. Created a placeholder workbook at '{inputPath}'.");
-            }
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
 
-            // Source worksheet (contains shapes)
+            // Load the workbook containing the source and destination worksheets
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Get the source worksheet (replace with your actual sheet name or index)
             Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
             if (sourceSheet == null)
+                throw new ArgumentException("Source worksheet 'Sheet1' does not exist.");
+
+            // Get the destination worksheet (replace with your actual sheet name or index)
+            Worksheet destinationSheet = workbook.Worksheets["Sheet2"];
+            // If the destination worksheet does not exist, create it
+            if (destinationSheet == null)
+                destinationSheet = workbook.Worksheets.Add("Sheet2");
+
+            // Iterate through all shapes in the source worksheet and copy them
+            foreach (Shape shape in sourceSheet.Shapes)
             {
-                Console.WriteLine("Source worksheet 'Sheet1' not found.");
-                return;
+                // Preserve the original position of the shape using properties
+                int upperLeftRow = shape.UpperLeftRow;
+                int upperLeftColumn = shape.UpperLeftColumn;
+                int lowerRightRow = shape.LowerRightRow;
+                int lowerRightColumn = shape.LowerRightColumn;
+
+                // Add a copy of the shape to the destination worksheet at the same position
+                destinationSheet.Shapes.AddCopy(shape, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn);
             }
 
-            // Destination worksheet (where shapes will be copied)
-            Worksheet destSheet = workbook.Worksheets["Sheet2"];
-            if (destSheet == null)
-            {
-                int index = workbook.Worksheets.Add();
-                destSheet = workbook.Worksheets[index];
-                destSheet.Name = "Sheet2";
-            }
-
-            // Copy each shape from source to destination
-            foreach (Shape srcShape in sourceSheet.Shapes)
-            {
-                try
-                {
-                    // Add a copy of the shape to the destination sheet at the same position
-                    Shape destShape = destSheet.Shapes.AddCopy(
-                        srcShape,
-                        srcShape.UpperLeftRow,
-                        srcShape.UpperLeftColumn,
-                        srcShape.LowerRightRow,
-                        srcShape.LowerRightColumn);
-
-                    // Preserve size and rotation
-                    destShape.Height = srcShape.Height;
-                    destShape.Width = srcShape.Width;
-                    destShape.RotationAngle = srcShape.RotationAngle;
-
-                    // Preserve alternative text
-                    destShape.AlternativeText = srcShape.AlternativeText;
-
-                    // Preserve text and its alignment for text‑based shapes
-                    if (!string.IsNullOrEmpty(srcShape.Text))
-                    {
-                        destShape.Text = srcShape.Text;
-                        destShape.TextHorizontalAlignment = srcShape.TextHorizontalAlignment;
-                        destShape.TextVerticalAlignment = srcShape.TextVerticalAlignment;
-                    }
-                }
-                catch (Exception shapeEx)
-                {
-                    Console.WriteLine($"Failed to copy shape '{srcShape.Name}': {shapeEx.Message}");
-                }
-            }
-
-            // Save the workbook with copied shapes
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook with the copied shapes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

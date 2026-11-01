@@ -1,21 +1,30 @@
-// Title: Enable printing of gridlines only on the first three worksheets of an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Load a workbook, set PageSetup.PrintGridlines = true for the first three worksheets, and save the updated file. | Iterate through up to three sheets in a .xlsx and turn on gridline printing while leaving all other sheets unchanged using Aspose.Cells C#.
-// Common Searches: Aspose.Cells C# enable gridlines on first three worksheets only | Print gridlines for selected sheets in an existing Excel file using Aspose.Cells | Set PrintGridlines property for multiple worksheets in .NET | How to keep default gridline settings on later sheets while changing first sheets in Aspose.Cells
-// Tags: Aspose.Cells set PrintGridlines for specific worksheets | C# enable gridline printing on selected Excel sheets | page setup gridlines first three worksheets Aspose.Cells | modify workbook gridline settings Aspose.Cells .NET | selective worksheet printing options Aspose.Cells
+// Title: How to enable printing of gridlines only on the first three worksheets in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, sets the PageSetup.PrintGridlines flag to true for the first three worksheets, and saves the updated file. | Generate a C# loop using Aspose.Cells that applies the gridline‑printing setting to selected sheets while leaving the rest unchanged. | Create a .NET snippet that modifies an existing Excel file so that only the initial three sheets print gridlines when printed.
+// Common Searches: Aspose.Cells C# enable gridline printing for specific sheets in a workbook | how to apply page setup options to the first three worksheets using Aspose.Cells | C# loop through Excel worksheets and turn on gridlines for selected sheets with Aspose.Cells | set print options per worksheet Aspose.Cells .NET example
+// Tags: Aspose.Cells set PrintGridlines per worksheet | C# enable gridline printing for selected Excel sheets | Aspose.Cells page setup gridlines first three sheets | modify workbook print options Aspose.Cells .NET | loop worksheets Aspose.Cells PrintGridlines
 
-// Load an existing workbook
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
+using Aspose.Cells;
+using System;
 
-// Enable printing of gridlines for the first three worksheets (or fewer if the workbook has less)
-int sheetsToProcess = System.Math.Min(3, workbook.Worksheets.Count);
-for (int i = 0; i < sheetsToProcess; i++)
+// Loads an existing Excel workbook, enables gridline printing on the first three worksheets by setting PageSetup.PrintGridlines to true, and saves the modified file.
+class Program
 {
-    // Access the worksheet
-    Aspose.Cells.Worksheet sheet = workbook.Worksheets[i];
+    static void Main()
+    {
+        // Load an existing workbook (replace with your file path)
+        string inputPath = @"C:\Input\Sample.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-    // Set the page setup option to print gridlines
-    sheet.PageSetup.PrintGridlines = true;
+        // Enable printing of gridlines for the first three worksheets
+        for (int i = 0; i < workbook.Worksheets.Count && i < 3; i++)
+        {
+            Worksheet sheet = workbook.Worksheets[i];
+            // Set the PrintOptions to print gridlines
+            sheet.PageSetup.PrintGridlines = true;
+        }
+
+        // Save the modified workbook (replace with your desired output path)
+        string outputPath = @"C:\Output\Sample_GridlinesEnabled.xlsx";
+        workbook.Save(outputPath);
+    }
 }
-
-// Save the modified workbook
-workbook.Save("output.xlsx");

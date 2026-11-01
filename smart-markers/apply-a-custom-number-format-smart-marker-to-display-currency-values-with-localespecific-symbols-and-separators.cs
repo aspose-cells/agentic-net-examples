@@ -1,52 +1,69 @@
-// Title: Apply a locale‑specific custom currency format to a cell range using Aspose.Cells smart markers in C#
-// AI Prompts: Write C# code that sets Workbook.Settings.CultureInfo to a target locale, creates a Style with a custom currency pattern, and applies only the NumberFormat flag to cells A1:A3 via Aspose.Cells. | Show how to format negative monetary values in red while automatically using the locale's currency symbol in an Aspose.Cells workbook. | Demonstrate applying a custom number‑format style to a range through a smart‑marker without altering other cell attributes in Aspose.Cells.
-// Common Searches: Aspose.Cells C# set workbook culture to French for currency formatting | How to apply a custom number format to a range of cells with Aspose.Cells | Display negative amounts in red using Aspose.Cells style flags | Use smart markers to format currency values based on locale in Aspose.Cells
-// Tags: set workbook cultureinfo Aspose.Cells | custom currency number format style Aspose.Cells | apply numberformat flag to range Aspose.Cells | negative amount red formatting Aspose.Cells | smart marker locale currency Aspose.Cells
+// Title: How to apply a US‑locale custom currency number format to a smart marker using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that inserts a smart marker, creates a style with the format string "[$-en-US]$#,##0.00", applies the style to the marker cell, and processes the workbook with WorkbookDesigner. | Demonstrate binding a DataSet to a smart marker and formatting the resulting cell as a monetary value in the generated workbook. | Provide a complete example that saves the workbook to an .xlsx file, creates the output directory if needed, and includes basic error handling.
+// Common Searches: aspnet apply US dollar number format to smart marker Aspose.Cells | c# Aspose.Cells WorkbookDesigner format cell as currency with locale | how to use format string [$-en-US] with smart markers in Excel using Aspose | set locale specific currency style for smart marker data source Aspose.Cells C# example
+// Tags: US currency formatting smart marker | WorkbookDesigner custom number style | apply custom number style to cell Aspose.Cells | export Excel with currency formatting C# | smart marker data binding Aspose.Cells
 
 using System;
-using System.Globalization;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to set the workbook culture, create a custom currency number format style, apply only the number‑format flag to cells A1:A3, and save the file using Aspose.Cells smart markers.
-class CustomCurrencySmartMarkerDemo
+namespace SmartMarkerCurrencyExample
 {
-    static void Main()
+    // The example creates a workbook, places a smart marker "&[Amount]" in cell A1, defines a US‑locale custom currency format "[$-en-US]$#,##0.00", applies this style to the marker cell, binds a DataSet containing an Amount column (1234.56) to the smart marker, processes it with WorkbookDesigner, and saves the result as SmartMarkerCurrency.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Set the workbook culture to French (France) – this changes the currency symbol and separators
-            wb.Settings.CultureInfo = new CultureInfo("fr-FR");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet ws = wb.Worksheets[0];
+                // Insert a smart marker that will be replaced by a currency value
+                sheet.Cells["A1"].PutValue("&[Amount]");
 
-            // Populate some numeric values
-            ws.Cells["A1"].PutValue(1234.56);
-            ws.Cells["A2"].PutValue(7890.12);
-            ws.Cells["A3"].PutValue(-345.67);
+                // Define a custom number format for currency (US locale)
+                Style currencyStyle = workbook.CreateStyle();
+                currencyStyle.Custom = "[$-en-US]$#,##0.00";
 
-            // Create a style with a custom currency format
-            // The "$" placeholder will be replaced by the locale‑specific symbol via CultureInfo
-            Style style = wb.CreateStyle();
-            style.Custom = "$#,##0.00;[Red]($#,##0.00)";
+                // Apply the custom style to the cell containing the smart marker
+                sheet.Cells["A1"].SetStyle(currencyStyle);
 
-            // Apply only the number format part of the style
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true;
+                // Prepare the data source for the smart marker using a DataSet
+                DataTable table = new DataTable();
+                table.Columns.Add("Amount", typeof(double));
+                table.Rows.Add(1234.56);
 
-            // Apply the style to the range A1:A3
-            Aspose.Cells.Range range = ws.Cells.CreateRange("A1:A3");
-            range.ApplyStyle(style, flag);
+                DataSet dataSet = new DataSet();
+                dataSet.Tables.Add(table);
 
-            // Save the workbook
-            wb.Save("CustomCurrencySmartMarker.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Process the smart marker using WorkbookDesigner
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dataSet);
+                designer.Process();
+
+                // Determine output path and ensure the directory exists
+                string outputFile = "SmartMarkerCurrency.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
+
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the resulting workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while generating the workbook:");
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

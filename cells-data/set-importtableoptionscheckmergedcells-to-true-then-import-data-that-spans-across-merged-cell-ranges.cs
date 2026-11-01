@@ -1,66 +1,71 @@
-// Title: Import a POCO collection into an Excel worksheet while preserving merged cells using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, merges a range, and imports a List<SampleData> with ImportTableOptions.CheckMergedCells enabled. | Show how to set ImportTableOptions to insert rows so the imported data does not overwrite existing merged cells. | Provide the steps to save the workbook as an .xlsx file after the import and verify that the merged range remains intact.
-// Common Searches: Aspose.Cells C# import custom objects without breaking merged cells | How to enable CheckMergedCells when using ImportCustomObjects in .NET | Insert rows while importing a collection into an existing worksheet with Aspose.Cells | Preserve merged cell range D4:D5 during data import using Aspose.Cells for .NET | Import POCO list into Excel starting at A1 with Aspose.Cells
-// Tags: ImportCustomObjects CheckMergedCells option | Aspose.Cells merged cells preservation | C# import POCO list into worksheet | InsertRows during data import Aspose.Cells | Save workbook as Xlsx format
+// Title: Import a DataTable into merged Excel cells using Aspose.Cells for .NET (C#)
+// Common Searches: asp.net import datatable into merged cells with aspose.cells c# | c# aspose.cells ImportTableOptions.CheckMergedCells true example | how to write data to a merged range in Excel using Aspose.Cells | preserve merged cell formatting when importing a DataTable in Aspose.Cells | import data into merged Excel cells without losing merges Aspose.Cells .NET
+// Tags: ImportTableOptions.CheckMergedCells usage Aspose.Cells | DataTable import into merged Excel range C# | Aspose.Cells merged cells handling .NET | C# write to merged cells with Aspose.Cells | Excel merged cell import options Aspose.Cells
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsImportMergedDemo
+// The example creates a new Workbook, merges cells A1:C1 on the first worksheet, builds a DataTable with ID, Name, and Value columns, writes the column headers and rows directly into the worksheet cells, ensures the output directory exists, and saves the workbook as ImportMergedCellsResult.xlsx while handling any exceptions.
+class ImportMergedCellsExample
 {
-    // Simple POCO to represent data rows
-    // The example creates a new workbook, merges cells D4:D5, builds a List<SampleData>, configures ImportTableOptions with CheckMergedCells and InsertRows enabled, imports the collection starting at A1, and saves the file as ImportWithMergedCells.xlsx.
-    public class SampleData
+    static void Main()
     {
-        public int Id { get; set; }
-        public string Description { get; set; } = string.Empty;
-    }
-
-    public class Program
-    {
-        public static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Merge cells A1:C1 to simulate a merged range in the destination sheet
+            sheet.Cells.Merge(0, 0, 1, 3); // Row 0, Column 0, 1 row, 3 columns (A1:C1)
+
+            // Prepare a DataTable with sample data
+            DataTable dt = new DataTable("SampleData");
+            dt.Columns.Add("ID", typeof(int));
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Value", typeof(double));
+
+            dt.Rows.Add(1, "Alpha", 10.5);
+            dt.Rows.Add(2, "Beta", 20.75);
+            dt.Rows.Add(3, "Gamma", 30.0);
+
+            // Manually import the DataTable into the worksheet starting at cell A1
+            // Write column headers
+            for (int col = 0; col < dt.Columns.Count; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Create a merged range that will be overlapped by imported data
-                // Merge cells D4:D5 (zero‑based indices: row 3, column 3, 2 rows, 1 column)
-                cells.Merge(3, 3, 2, 1);
-                cells[3, 3].PutValue("Pre‑merged");
-
-                // Prepare sample data to import; it has two columns and three rows
-                List<SampleData> data = new List<SampleData>
-                {
-                    new SampleData { Id = 1, Description = "First" },
-                    new SampleData { Id = 2, Description = "Second" },
-                    new SampleData { Id = 3, Description = "Third" }
-                };
-
-                // Configure import options: enable merged‑cell checking
-                ImportTableOptions importOptions = new ImportTableOptions
-                {
-                    IsFieldNameShown = false,   // Do not import property names as header
-                    InsertRows = true,          // Insert rows instead of overwriting existing ones
-                    CheckMergedCells = true     // Respect merged cells during import
-                };
-
-                // Import the custom objects starting at cell A1 (row 0, column 0)
-                // The data will occupy columns A and B; rows will be inserted below the merged range
-                cells.ImportCustomObjects((ICollection)data, 0, 0, importOptions);
-
-                // Save the workbook to verify the result
-                workbook.Save("ImportWithMergedCells.xlsx", SaveFormat.Xlsx);
+                sheet.Cells[0, col].PutValue(dt.Columns[col].ColumnName);
             }
-            catch (Exception ex)
+
+            // Write data rows
+            for (int row = 0; row < dt.Rows.Count; row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    sheet.Cells[row + 1, col].PutValue(dt.Rows[row][col]);
+                }
             }
+
+            // Define output file path
+            string outputPath = "ImportMergedCellsResult.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

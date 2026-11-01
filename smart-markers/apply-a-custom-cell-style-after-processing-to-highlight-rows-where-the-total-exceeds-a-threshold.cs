@@ -1,61 +1,115 @@
-// Title: Highlight Excel rows with a yellow background when the sum of numeric cells exceeds a threshold using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, computes the total of numeric cells in each row, creates a yellow solid style, and applies it to rows whose sum is greater than a given limit. | Modify an existing Aspose.Cells workbook to add a custom StyleFlag and use ApplyRowStyle to conditionally format rows that surpass a specified numeric total.
-// Common Searches: aspocells c# apply yellow background to rows where row total > 100 | conditional row formatting based on sum of cells using Aspose.Cells .NET | how to set background color for rows exceeding a numeric limit in Aspose.Cells | calculate row totals and highlight rows in Excel programmatically with Aspose.Cells | using Aspose.Cells to format rows after aggregating cell values in C#
-// Tags: row-level conditional styling Aspose.Cells | ApplyRowStyle with StyleFlag C# | row sum threshold styling .NET | bright yellow row highlight Aspose.Cells | compute numeric row total Aspose.Cells | style rows based on aggregate value C#
+// Title: Highlight Excel rows with totals above a threshold using Aspose.Cells for .NET (C#)
+// Common Searches: c# aspose.cells highlight rows where column value exceeds 1000 | apply custom yellow style to entire row based on numeric threshold in Aspose.Cells | how to programmatically set background color for rows with total greater than a limit using Aspose.Cells .NET | conditional formatting rows by value with Aspose.Cells C# example | load an Excel workbook with optional password and process rows in Aspose.Cells
+// Tags: row highlighting based on numeric threshold Aspose.Cells | apply custom style to entire row Aspose.Cells .NET | conditional formatting using Aspose.Cells C# | set background color for Excel rows Aspose.Cells | load workbook with optional password Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHighlightRows
+// The sample loads an existing Excel file (or creates one with sample data), defines a numeric threshold, creates a yellow solid‑fill style, iterates through each data row checking the total in column E, and applies the style to every cell in rows where the total exceeds the threshold before saving the workbook.
+class Program
 {
-    // The program loads input.xlsx, sums numeric cells in each row, creates a yellow solid background style, applies it to rows whose total exceeds 100, and saves the result as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Load existing workbook if it exists; otherwise create a new one with sample data
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    // Attempt to load without password
+                    workbook = new Workbook(inputPath);
+                }
+                catch (CellsException ex) when (ex.Message.Contains("password"))
+                {
+                    // If the file is password‑protected, try loading with an empty password
+                    var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = string.Empty };
+                    workbook = new Workbook(inputPath, loadOptions);
+                }
+            }
+            else
+            {
+                // Create a new workbook with sample data
+                workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells sheetCells = sheet.Cells;
+
+                // Header
+                sheetCells[0, 0].PutValue("Item");
+                sheetCells[0, 4].PutValue("Total");
+
+                // Sample rows
+                sheetCells[1, 0].PutValue("A");
+                sheetCells[1, 4].PutValue(500);
+                sheetCells[2, 0].PutValue("B");
+                sheetCells[2, 4].PutValue(1500);
+            }
+
+            if (workbook == null)
+                throw new InvalidOperationException("Workbook could not be initialized.");
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Define the threshold for highlighting
-            double threshold = 100.0;
+            // Threshold for highlighting
+            double threshold = 1000.0;
 
-            // Create a style that will be applied to rows exceeding the threshold
+            // Style for rows that exceed the threshold
             Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.BackgroundColor = Color.Yellow;
+            highlightStyle.ForegroundColor = Color.Yellow;
             highlightStyle.Pattern = BackgroundType.Solid;
 
-            // StyleFlag to apply all style attributes
-            StyleFlag flag = new StyleFlag { All = true };
+            // Column E (zero‑based index 4) holds totals
+            int totalColumnIndex = 4;
+            int startRow = 1; // skip header
+            int maxRow = cells.MaxDataRow;
 
-            // Iterate through each used row
-            int maxRow = cells.MaxDataRow; // last row with data
-            for (int row = 0; row <= maxRow; row++)
+            // Apply highlighting where total > threshold
+            for (int row = startRow; row <= maxRow; row++)
             {
-                double rowTotal = 0.0;
+                Cell totalCell = cells[row, totalColumnIndex];
+                double totalValue = 0;
 
-                // Sum numeric values in the current row
-                int maxCol = cells.MaxDataColumn;
-                for (int col = 0; col <= maxCol; col++)
+                if (totalCell.Type == CellValueType.IsNumeric)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.Type == CellValueType.IsNumeric)
-                    {
-                        rowTotal += cell.DoubleValue;
-                    }
+                    totalValue = totalCell.DoubleValue;
+                }
+                else
+                {
+                    double.TryParse(totalCell.StringValue, out totalValue);
                 }
 
-                // Apply the highlight style if the total exceeds the threshold
-                if (rowTotal > threshold)
+                if (totalValue > threshold)
                 {
-                    cells.ApplyRowStyle(row, highlightStyle, flag);
+                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    {
+                        cells[row, col].SetStyle(highlightStyle);
+                    }
                 }
             }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

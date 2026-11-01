@@ -1,53 +1,86 @@
-// Title: How to abort Aspose.Cells Workbook.CalculateFormula with a timeout using ThreadInterruptMonitor in C#
-// AI Prompts: Generate C# code that configures a ThreadInterruptMonitor with a 2‑second limit, runs Workbook.CalculateFormula, and catches the interruption exception. | Show how to handle a CellsException of type Interrupted after a calculation timeout and continue program execution. | Provide an example of saving the workbook when the calculation is stopped early due to the timeout.
-// Common Searches: Aspose.Cells stop CalculateFormula after 2000 ms in C# | C# ThreadInterruptMonitor example for aborting long Excel calculations | How to handle interrupted calculation exception in Aspose.Cells workbook
-// Tags: Aspose.Cells calculation timeout ThreadInterruptMonitor | Workbook.CalculateFormula interruption handling | catch CellsException Interrupted Aspose.Cells | save partially calculated workbook Aspose.Cells | C# Excel formula evaluation timeout
+// Title: Use a CancellationToken to abort Aspose.Cells workbook.CalculateFormula after a 10‑second timeout in C#
+// Common Searches: c# how to stop Aspose.Cells workbook.CalculateFormula after a timeout | using CancellationTokenSource with Aspose.Cells CalculateFormula method | abort Excel formula calculation in Aspose.Cells when it takes too long | set timeout for workbook.CalculateFormula in Aspose.Cells C# example | handle OperationCanceledException while calculating formulas with Aspose.Cells
+// Tags: Aspose.Cells calculation timeout with CancellationToken | Workbook.CalculateFormula cancellation in .NET | Excel formula evaluation abort using CancellationToken | C# task‑based timeout for Aspose.Cells calculation | OperationCanceledException handling in Aspose.Cells
 
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample creates a workbook with thousands of simple formulas, attaches a ThreadInterruptMonitor set to a 2000 ms limit, invokes Workbook.CalculateFormula, catches the CellsException when the calculation exceeds the timeout, stops the monitor, and saves the workbook containing whatever results were computed before the interruption.
-class WorkbookCalculationWithTimeout
+// The example loads an Excel workbook, creates a CancellationTokenSource with a 10‑second timeout, runs workbook.CalculateFormula on a background task, waits for completion or cancellation, catches OperationCanceledException and other errors, reports the result, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add sample data/formulas
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate many rows to make calculation take noticeable time
-        for (int i = 0; i < 5000; i++)
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            sheet.Cells[i, 0].PutValue(i);                     // Column A values
-            sheet.Cells[i, 1].Formula = $"=A{i}+1";           // Column B formulas
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        // Create a thread‑based interrupt monitor
-        ThreadInterruptMonitor monitor = new ThreadInterruptMonitor(false);
-        // Assign the monitor to the workbook
-        workbook.InterruptMonitor = monitor;
-
-        // Start the monitor with a time limit (e.g., 2000 ms = 2 seconds)
-        monitor.StartMonitor(2000);
-
+        Workbook workbook;
         try
         {
-            // Perform calculation; it will be interrupted if it exceeds the time limit
-            workbook.CalculateFormula();
-            Console.WriteLine("Calculation completed successfully.");
+            // Load the existing workbook
+            workbook = new Workbook(inputPath);
         }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+        catch (Exception ex)
         {
-            // Handle the interruption caused by the timeout
-            Console.WriteLine("Calculation was interrupted due to timeout.");
-        }
-        finally
-        {
-            // Ensure the monitor is stopped
-            monitor.FinishMonitor();
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // Save the workbook (optional, will contain whatever was calculated before interruption)
-        workbook.Save("Result.xlsx");
+        // Set a timeout of 10 seconds for the calculation
+        using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
+        {
+            bool completed = false;
+            try
+            {
+                // Run calculation on a separate task to enable timeout handling
+                Task calcTask = Task.Run(() => workbook.CalculateFormula(), cts.Token);
+
+                // Wait for the task to complete or be cancelled
+                calcTask.Wait(cts.Token);
+                completed = true;
+            }
+            catch (OperationCanceledException)
+            {
+                // Calculation was aborted due to timeout
+                Console.WriteLine("Calculation was cancelled after the timeout period.");
+            }
+            catch (AggregateException ae)
+            {
+                // Unwrap any exceptions thrown during calculation
+                foreach (var inner in ae.InnerExceptions)
+                {
+                    Console.WriteLine($"Calculation error: {inner.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error during calculation: {ex.Message}");
+            }
+
+            if (completed)
+            {
+                Console.WriteLine("Calculation completed successfully.");
+            }
+        }
+
+        // Save the workbook after calculation
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

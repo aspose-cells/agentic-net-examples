@@ -1,14 +1,12 @@
-// Title: Create a light‑blue solid fill style with bold font and apply it to a cell range using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that defines a Style having a solid light‑blue background and bold text, then applies it to the range A1:C10. | Demonstrate how to use a StyleFlag with All=true to apply every style attribute to a specified range in Aspose.Cells. | Adapt the example to use a different background color (e.g., LightGreen) and a different cell range while preserving the bold font setting.
-// Common Searches: Aspose.Cells C# set solid fill color and bold font for a cell range | apply custom style to A1:C10 using Aspose.Cells .NET | how to use StyleFlag to apply full style in Aspose.Cells | change background color of a range in Aspose.Cells workbook C# | save styled worksheet as Excel file with Aspose.Cells
-// Tags: Aspose.Cells solid background style | C# apply style to cell range Aspose.Cells | Aspose.Cells StyleFlag usage | Aspose.Cells bold font formatting | Aspose.Cells save styled workbook
+// Title: Apply a light‑blue solid fill and bold font style to a DataSet range using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply solid fill color to a range of cells | How to set bold font and background color for an imported DataSet in Aspose.Cells | Create and apply custom style to a worksheet range with Aspose.Cells .NET | Use StyleFlag to style a DataSet range in Aspose.Cells C# | Set light blue background for cells using Aspose.Cells style object
+// Tags: Aspose.Cells create style with solid fill | apply custom style to worksheet range | set bold font and background color Aspose.Cells | StyleFlag All attribute for range styling | style DataSet range in Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
-using CellsRange = Aspose.Cells.Range;
 
-// The program creates a new workbook, defines the range A1:C10, builds a Style with a solid light‑blue fill and bold font, applies the style to the range using a StyleFlag with All=true, and saves the workbook as StyledDataSet.xlsx.
+// Demonstrates how to create a Style with a light‑blue solid fill and bold font, configure a StyleFlag to include all attributes, and apply the style to a specified cell range representing a DataSet in an Aspose.Cells workbook before saving the file as StyledData.xlsx.
 class Program
 {
     static void Main()
@@ -21,8 +19,19 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range to which the style will be applied (example: A1:C10)
-            CellsRange dataRange = sheet.Cells.CreateRange("A1", "C10");
+            // -------------------------------------------------
+            // OPTIONAL: Import a DataSet into the worksheet.
+            // Replace this placeholder with actual DataSet code.
+            // DataSet ds = GetYourDataSet();
+            // sheet.Cells.ImportDataTable(ds.Tables[0], true, "A1");
+            // -------------------------------------------------
+
+            // Define the range that contains the data set.
+            // Adjust these values to match the actual size of your data.
+            int firstRow = 0;          // Row index for the first row (0 = A1)
+            int firstColumn = 0;       // Column index for the first column (0 = A)
+            int totalRows = 10;        // Number of rows in the data set
+            int totalColumns = 4;      // Number of columns in the data set
 
             // Create a new style object
             Style style = workbook.CreateStyle();
@@ -31,22 +40,22 @@ class Program
             style.ForegroundColor = Color.LightBlue;
             style.Pattern = BackgroundType.Solid;
 
-            // Set the font to bold
+            // Set bold font
             style.Font.IsBold = true;
 
-            // Apply the style to the entire range
-            StyleFlag flag = new StyleFlag
-            {
-                All = true // Apply all style attributes
-            };
-            dataRange.ApplyStyle(style, flag);
+            // Prepare a StyleFlag to apply all style attributes
+            StyleFlag flag = new StyleFlag { All = true };
 
-            // Save the workbook with the applied style
-            workbook.Save("StyledDataSet.xlsx");
+            // Apply the style to the defined range
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
+            range.ApplyStyle(style, flag);
+
+            // Save the workbook to a file
+            workbook.Save("StyledData.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

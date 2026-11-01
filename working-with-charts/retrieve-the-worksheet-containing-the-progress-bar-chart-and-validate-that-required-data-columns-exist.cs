@@ -1,92 +1,87 @@
-// Title: Find the worksheet that contains a 'Progress Bar' chart and validate required columns (Task, StartDate, EndDate) with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to iterate through all worksheets and return the name of the sheet that contains a chart titled 'Progress Bar'. | Create a method that loads an Excel workbook, locates the 'Progress Bar' chart, and checks whether the first row includes the headers Task, StartDate, and EndDate, returning a boolean indicating completeness. | Generate a reusable validator that logs any missing required columns and outputs the zero‑based index of the worksheet where the 'Progress Bar' chart is found.
-// Common Searches: asp.net aspose.cells find worksheet by chart title progress bar | c# verify that Excel sheet has Task, StartDate, EndDate headers for a specific chart | how to locate chart named 'Progress Bar' in an Excel workbook using Aspose.Cells | validate required data columns for a progress bar chart in .NET Excel processing
-// Tags: worksheet lookup by chart name Aspose.Cells | required column header validation Excel .NET | progress bar chart column check Aspose.Cells | chart presence verification C# | first row header extraction Aspose.Cells
+// Title: Find the worksheet that contains a 'Progress Bar' chart and ensure it has Task, Start, and Finish columns using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loops through all worksheets, detects the chart titled "Progress Bar", and returns the worksheet that hosts it. | Add logic to the Aspose.Cells example to read the first row of the identified worksheet, verify the presence of the headers "Task", "Start", and "Finish", and throw a descriptive exception if any are missing.
+// Common Searches: asp.net locate worksheet with specific chart title using Aspose.Cells | c# validate that Excel sheet contains Task, Start, Finish columns before processing | Aspose.Cells find chart named "Progress Bar" and get its parent worksheet | how to throw exception when required columns are missing in Aspose.Cells workbook | check header row for required columns in Excel file with Aspose.Cells C#
+// Tags: find worksheet by chart title Aspose.Cells | validate required headers Excel Aspose.Cells | check Task Start Finish columns C# | exception handling missing chart Aspose.Cells | progress bar chart worksheet retrieval .NET
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an Excel workbook, scans each worksheet and its charts to find a chart titled 'Progress Bar', identifies the containing worksheet, reads the first row to collect header values, and confirms that the columns 'Task', 'StartDate', and 'EndDate' exist, reporting missing columns if any.
-class ProgressBarChartValidator
+namespace Example
 {
-    static void Main()
+    // The example loads an Excel workbook with Aspose.Cells, iterates through each worksheet and its charts to locate a chart whose title equals "Progress Bar", captures the containing worksheet, then scans the first row for the required headers "Task", "Start", and "Finish". If any header is absent, it throws an exception; otherwise, the workbook is saved.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Path to the input workbook
-            string workbookPath = "input.xlsx";
-
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            try
             {
-                Console.WriteLine($"File not found: {workbookPath}");
-                return;
-            }
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+                // Ensure the input file exists before loading
+                if (!File.Exists(inputPath))
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Locate the worksheet containing the "Progress Bar" chart
-            Worksheet chartWorksheet = null;
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Chart chart in sheet.Charts)
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Locate the worksheet that contains the chart titled "Progress Bar"
+                Worksheet progressWorksheet = null;
+                foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    if (string.Equals(chart.Name, "Progress Bar", StringComparison.OrdinalIgnoreCase))
+                    foreach (Chart chart in ws.Charts)
                     {
-                        chartWorksheet = sheet;
+                        if (chart.Title != null && chart.Title.Text == "Progress Bar")
+                        {
+                            progressWorksheet = ws;
+                            break;
+                        }
+                    }
+                    if (progressWorksheet != null)
                         break;
+                }
+
+                // Throw if the chart (and thus the worksheet) cannot be found
+                if (progressWorksheet == null)
+                    throw new Exception("Progress Bar chart not found in any worksheet.");
+
+                // Validate that required data columns exist in the worksheet
+                // Assumption: the first row (index 0) holds column headers
+                Cells cells = progressWorksheet.Cells;
+                int headerRowIndex = 0;
+
+                // Define the required column names
+                string[] requiredColumns = { "Task", "Start", "Finish" };
+                bool[] columnFound = new bool[requiredColumns.Length];
+
+                // Scan the header row cells
+                foreach (Cell cell in cells.Rows[headerRowIndex])
+                {
+                    string header = cell.StringValue.Trim();
+                    for (int i = 0; i < requiredColumns.Length; i++)
+                    {
+                        if (header.Equals(requiredColumns[i], StringComparison.OrdinalIgnoreCase))
+                            columnFound[i] = true;
                     }
                 }
-                if (chartWorksheet != null)
-                    break;
-            }
 
-            if (chartWorksheet == null)
-            {
-                Console.WriteLine("The workbook does not contain a chart named 'Progress Bar'.");
-                return;
-            }
-
-            Console.WriteLine($"Chart found in worksheet: {chartWorksheet.Name}");
-
-            // Required column headers
-            List<string> requiredHeaders = new List<string> { "Task", "StartDate", "EndDate" };
-
-            // Assume the first row (index 0) contains headers
-            Row headerRow = chartWorksheet.Cells.Rows[0];
-            HashSet<string> existingHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (Cell cell in headerRow)
-            {
-                // Use Cell.Type to determine if the cell is empty
-                if (cell.Type != CellValueType.IsNull)
+                // If any required column is missing, raise an exception
+                for (int i = 0; i < requiredColumns.Length; i++)
                 {
-                    existingHeaders.Add(cell.StringValue.Trim());
+                    if (!columnFound[i])
+                        throw new Exception($"Required column \"{requiredColumns[i]}\" is missing in worksheet \"{progressWorksheet.Name}\".");
                 }
-            }
 
-            // Validate required columns
-            bool allPresent = true;
-            foreach (string header in requiredHeaders)
+                // Save the workbook after validation if further processing is needed
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook validated and saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
             {
-                if (!existingHeaders.Contains(header))
-                {
-                    Console.WriteLine($"Missing required column: {header}");
-                    allPresent = false;
-                }
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
-
-            Console.WriteLine(allPresent
-                ? "All required data columns are present."
-                : "One or more required columns are missing.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

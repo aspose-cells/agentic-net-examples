@@ -1,51 +1,41 @@
-// Title: Set the default workbook style to a two-decimal-place percentage format using Aspose.Cells for .NET
-// AI Prompts: Write C# code that changes a workbook's DefaultStyle to the custom number format "0.00%" so every cell displays percentages with two decimal places. | Show how to apply a workbook‑wide percentage format (0.00%) to a newly created Aspose.Cells workbook and save it as an .xlsx file.
-// Common Searches: asp.net set default number format to percentage in Aspose.Cells workbook | c# apply 0.00% format to all cells Aspose.Cells | how to change default style to percentage format Aspose.Cells .NET | global percentage number format for new workbook using Aspose.Cells
-// Tags: default workbook style custom format Aspose.Cells | apply workbook-wide percentage format Aspose.Cells | set default number format two decimal places .NET | percentage custom format 0.00% Excel Aspose.Cells | global cell style configuration Aspose.Cells
+// Title: How to set a worksheet’s default number format to a two‑decimal‑place percentage using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set default cell format to percentage with two decimal places | apply a global 0.00% number format to a new workbook in Aspose.Cells | Aspose.Cells .NET change workbook DefaultStyle to percentage format | set default number format for all cells in Aspose.Cells C# example | how to use custom number format 0.00% with Aspose.Cells workbook
+// Tags: Aspose.Cells defaultstyle percentage | workbook-wide number format Aspose.Cells | custom percentage style .NET | set default worksheet format C# | global numeric format Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example creates a new Workbook, modifies its DefaultStyle to use the custom number format "0.00%" (percentage with two decimal places), ensures the output directory exists, saves the file as output.xlsx, and confirms successful creation.
+class Program
 {
-    // // Creates a new workbook, modifies its DefaultStyle to use the custom number format "0.00%" so every cell shows percentages with two decimal places, and saves the file as FormattedPercentages.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Set the default number format to percentage with two decimal places
+            Style defaultStyle = workbook.DefaultStyle;
+            defaultStyle.Custom = "0.00%";
+            workbook.DefaultStyle = defaultStyle; // apply the modified style
+
+            // Ensure the output directory exists
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Retrieve the workbook's default style
-                Style defaultStyle = workbook.DefaultStyle;
-
-                // Set a custom number format to display percentages with two decimal places
-                defaultStyle.Custom = "0.00%";
-
-                // Apply the modified style back as the workbook's default style
-                workbook.DefaultStyle = defaultStyle;
-
-                // Define output file path
-                string outputPath = "FormattedPercentages.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

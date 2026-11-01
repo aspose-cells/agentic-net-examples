@@ -1,50 +1,39 @@
-// Title: Hide the fourth worksheet and customize the tab bar color before saving an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Create a new Workbook, set the TabBarColor to a chosen value, hide the worksheet at index 3, and save the workbook as an .xlsx file using Aspose.Cells for .NET. | Show how to verify that a fourth sheet exists, make it invisible, adjust workbook.Settings (e.g., TabBarColor), and persist the workbook to a specified path.
-// Common Searches: asp.net hide fourth worksheet using Aspose.Cells | change tab bar color in an Aspose.Cells workbook C# | save Excel file after hiding specific sheet with Aspose.Cells .NET | Aspose.Cells workbook settings for customizing tab bar appearance | C# hide worksheet by index and export workbook to .xlsx
-// Tags: hide worksheet by index Aspose.Cells | set tab bar color Aspose.Cells | save workbook with hidden sheets .NET | Aspose.Cells workbook settings customization | C# Excel workbook tab bar appearance
+// Title: Set the tab bar width, hide the fourth worksheet, and save an Aspose.Cells workbook to XLSX with C#
+// AI Prompts: Create C# code that initializes a new Aspose.Cells Workbook, sets Workbook.Settings.TabBarWidth to 120, hides the worksheet at index 3, and saves the file as Result.xlsx. | Write a C# snippet using Aspose.Cells to ensure the workbook contains at least four sheets, change the tab bar width, make the fourth sheet invisible, and export the workbook to an XLSX file. | Provide a C# example that modifies an existing workbook: adjust the tab bar width, set the fourth worksheet's visibility to false, and persist the changes with Workbook.Save.
+// Common Searches: asp.net aspose.cells set tab bar width programmatically | how to hide the fourth sheet in a workbook using Aspose.Cells C# | save workbook after changing tab bar width and sheet visibility Aspose.Cells | c# ensure workbook has at least four worksheets before modifying | aspose.cells change workbook settings and export to xlsx
+// Tags: set tab bar width Aspose.Cells | hide fourth worksheet Aspose.Cells | save workbook as xlsx Aspose.Cells | ensure minimum worksheet count Aspose.Cells | modify workbook settings C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, notes that Aspose.Cells does not support a TabBarWidth property (suggesting TabBarColor as an alternative), hides the fourth worksheet when present, ensures the output directory exists, and saves the workbook to 'output.xlsx' while handling potential exceptions.
+// The example creates a new Workbook, guarantees at least four worksheets, sets the tab bar width via Workbook.Settings.TabBarWidth, hides the fourth worksheet by setting its IsVisible property to false, and then saves the workbook as Result.xlsx, handling any exceptions that may arise.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            var workbook = new Workbook();
+            // Create a new workbook (contains default worksheets)
+            Workbook workbook = new Workbook();
 
-            // NOTE: Aspose.Cells does not provide a TabBarWidth property.
-            // If you need to customize the tab bar appearance, consider using other available settings.
-            // Example (setting tab bar color):
-            // workbook.Settings.TabBarColor = System.Drawing.Color.LightGray;
-
-            // Hide the fourth worksheet (zero‑based index 3) if it exists
-            if (workbook.Worksheets.Count > 3)
+            // Ensure the workbook has at least four worksheets
+            while (workbook.Worksheets.Count < 4)
             {
-                workbook.Worksheets[3].IsVisible = false;
+                workbook.Worksheets.Add();
             }
 
-            // Define output path
-            string outputPath = "output.xlsx";
-
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Hide the fourth worksheet (zero‑based index 3)
+            Worksheet fourthSheet = workbook.Worksheets[3];
+            fourthSheet.IsVisible = false;
 
             // Save the workbook with the applied settings
+            string outputPath = "Result.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

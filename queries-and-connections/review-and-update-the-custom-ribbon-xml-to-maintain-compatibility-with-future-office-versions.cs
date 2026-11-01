@@ -1,51 +1,86 @@
-// Title: How to set the 2010 custom Ribbon XML namespace and ISO 29500 strict compliance for an Aspose.Cells workbook in C#
-// AI Prompts: Write C# code that assigns a 2010 customUI XML string to Workbook.RibbonXml, sets Workbook.Settings.Compliance to OoxmlCompliance.Iso29500_2008_Strict, and saves the file as a macro‑enabled .xlsm. | Demonstrate how to create an empty Aspose.Cells workbook, update its ribbon XML for newer Office versions, enable strict OOXML compliance, and output verification messages to the console.
-// Common Searches: Aspose.Cells C# change RibbonXml namespace to 2010 | Enable strict ISO 29500 compliance for Aspose.Cells workbook | Save workbook with custom ribbon UI as macro‑enabled xlsm using Aspose.Cells | Update custom ribbon XML for future Office compatibility in .NET
-// Tags: set RibbonXml customUI 2010 Aspose.Cells | configure OoxmlCompliance Iso29500_2008_Strict | save macro-enabled .xlsm with custom ribbon | future‑compatible ribbon XML Office Aspose.Cells | Aspose.Cells workbook compliance mode
+// Title: C# console tool to update Office custom ribbon XML for future version compatibility
+// Common Searches: how to programmatically set OfficeVersion attribute in custom ribbon XML using C# | C# script to add missing xmlns namespace to Office ribbon XML file | update all button size attributes to large in Office ribbon XML with XDocument | automate compatibility changes in Office custom UI XML via console application | modify Office ribbon XML for newer Office 365 versions using C#
+// Tags: update Office ribbon XML version attribute | add xmlns namespace to custom UI XML | set button size large in ribbon XML | C# XDocument modify Office ribbon file | console utility for Office ribbon compatibility
 
 using System;
-using Aspose.Cells;
+using System.IO;
+using System.Xml.Linq;
 
-namespace AsposeCellsRibbonUpdate
+namespace RibbonXmlUpdater
 {
-    // The example creates an empty Workbook, assigns RibbonXml using the 2010 customUI namespace, configures the workbook for ISO 29500 strict OOXML compliance, saves it as a macro‑enabled .xlsm file, and prints verification details to the console.
+    // A C# console application that loads a custom ribbon XML file, ensures the root element contains an OfficeVersion attribute set to the latest known version (e.g., 16.0), adds a missing xmlns namespace declaration if needed, and forces every <button> element to have size="large". The tool saves the modified XML back to the original location and reports success or any processing errors.
     class Program
     {
-        static void Main()
+        // Entry point of the console application
+        static void Main(string[] args)
         {
-            // Create a new workbook (empty workbook)
-            Workbook workbook = new Workbook();
+            // Validate arguments: first argument is the path to the ribbon XML file
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage: RibbonXmlUpdater <path-to-ribbon-xml>");
+                return;
+            }
 
-            // Update the Ribbon XML to use the newer custom UI namespace.
-            // The 2010 namespace (http://schemas.microsoft.com/office/2010/06/customui)
-            // ensures compatibility with newer Office versions while still being
-            // understood by older versions that fall back to the 2006 namespace.
-            string ribbonXml =
-                "<customUI xmlns=\"http://schemas.microsoft.com/office/2010/06/customui\">" +
-                "  <ribbon>" +
-                "    <tabs>" +
-                "      <tab id=\"customTab\" label=\"My Tab\">" +
-                "        <group id=\"customGroup\" label=\"My Group\">" +
-                "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-                "        </group>" +
-                "      </tab>" +
-                "    </tabs>" +
-                "  </ribbon>" +
-                "</customUI>";
+            string ribbonPath = args[0];
 
-            // Assign the updated Ribbon XML to the workbook
-            workbook.RibbonXml = ribbonXml;
+            if (!File.Exists(ribbonPath))
+            {
+                Console.WriteLine($"Error: File not found - {ribbonPath}");
+                return;
+            }
 
-            // Set OOXML compliance to the strict ISO standard for future-proofing
-            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+            try
+            {
+                // Load the existing ribbon XML
+                XDocument ribbonDoc = XDocument.Load(ribbonPath);
 
-            // Save the workbook as a macro-enabled file to retain the Ribbon UI
-            workbook.Save("UpdatedRibbonWorkbook.xlsm");
+                // Namespace used by Office custom UI (may be present in the file)
+                XNamespace ns = ribbonDoc.Root.GetDefaultNamespace();
 
-            // Simple verification output
-            Console.WriteLine("Ribbon XML set: " + (workbook.RibbonXml != null));
-            Console.WriteLine("Compliance mode: " + workbook.Settings.Compliance);
-            Console.WriteLine("Workbook saved as UpdatedRibbonWorkbook.xlsm");
+                // Ensure the root element has the OfficeVersion attribute set to the latest known version.
+                // This helps maintain compatibility with future Office releases.
+                // If the attribute already exists, update its value; otherwise, add it.
+                XAttribute versionAttr = ribbonDoc.Root.Attribute("OfficeVersion");
+                if (versionAttr != null)
+                {
+                    versionAttr.Value = "16.0"; // Example: set to Office 2016/365 version
+                }
+                else
+                {
+                    ribbonDoc.Root.Add(new XAttribute("OfficeVersion", "16.0"));
+                }
+
+                // Optional: Add the "xmlns" attribute for future compatibility if missing.
+                // Some older ribbon XML files may lack the explicit namespace declaration.
+                XAttribute xmlnsAttr = ribbonDoc.Root.Attribute("xmlns");
+                if (xmlnsAttr == null && !string.IsNullOrEmpty(ns.NamespaceName))
+                {
+                    ribbonDoc.Root.Add(new XAttribute("xmlns", ns.NamespaceName));
+                }
+
+                // Example: Ensure that all <button> elements have the "size" attribute set to "large"
+                // This is a common requirement for newer Office UI guidelines.
+                foreach (XElement button in ribbonDoc.Descendants(ns + "button"))
+                {
+                    XAttribute sizeAttr = button.Attribute("size");
+                    if (sizeAttr == null)
+                    {
+                        button.Add(new XAttribute("size", "large"));
+                    }
+                    else
+                    {
+                        sizeAttr.Value = "large";
+                    }
+                }
+
+                // Save the updated ribbon XML back to the original file (or you could choose a new file)
+                ribbonDoc.Save(ribbonPath);
+                Console.WriteLine("Ribbon XML updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the ribbon XML: {ex.Message}");
+            }
         }
     }
 }

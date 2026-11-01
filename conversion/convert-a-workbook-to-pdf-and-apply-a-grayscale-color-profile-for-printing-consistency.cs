@@ -1,19 +1,18 @@
-// Title: Convert an Excel workbook to PDF with a grayscale color profile using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ImageColorMode to Grayscale, and saves the workbook as a PDF. | Show a C# example that verifies the source Excel file exists, applies grayscale rendering when the ImageColorMode property is supported, and includes robust exception handling for the PDF conversion.
-// Common Searches: aspnet convert excel to pdf grayscale Aspose.Cells | c# Aspose.Cells PdfSaveOptions ImageColorMode grayscale example | how to save workbook as PDF with grayscale color profile using Aspose.Cells | set grayscale rendering for PDF output in Aspose.Cells .NET | Aspose.Cells PDF conversion with grayscale image mode
-// Tags: Aspose.Cells PDFSaveOptions grayscale | Excel to PDF conversion grayscale Aspose.Cells | C# Aspose.Cells set ImageColorMode | PDF rendering grayscale Aspose.Cells .NET | Workbook to PDF with grayscale profile
+// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET (grayscale rendering unavailable)
+// Common Searches: how to save an .xlsx file as PDF with Aspose.Cells in C# | Aspose.Cells PDFSaveOptions grayscale rendering limitation | C# convert Excel to PDF with printing color profile using Aspose.Cells | example of workbook.Save to PDF with error handling in Aspose.Cells | verify input Excel file exists before converting to PDF with Aspose.Cells
+// Tags: Aspose.Cells PDFSaveOptions configuration | Aspose.Cells workbook to PDF conversion | grayscale PDF rendering limitation Aspose.Cells | Excel to PDF printing color profile Aspose.Cells | Aspose.Cells conversion exception handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // For ImageColorMode enum (if supported)
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsExample
 {
-    // The sample verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (optionally setting ImageColorMode to Grayscale when supported), and saves the workbook as a PDF while handling any runtime exceptions.
+    // The sample verifies that the source XLSX file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (noting that grayscale rendering is not supported in the current version), and saves the workbook as a PDF while handling any runtime exceptions.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -30,16 +29,12 @@ namespace AsposeCellsExample
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Configure PDF save options
+                // Configure PDF save options (grayscale rendering not supported in this version)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Attempt to set grayscale rendering if the property is available in the referenced version
-                // Uncomment the following line if ImageColorMode is supported:
-                // pdfOptions.ImageColorMode = ImageColorMode.Grayscale;
-
-                // Save the workbook as PDF
+                // Save the workbook as a PDF
                 workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {

@@ -1,15 +1,13 @@
-// Title: Use Aspose.Cells FindOptions in C# to locate #DIV/0! and other error cells inside a named range
-// AI Prompts: Write C# code that leverages Aspose.Cells FindOptions to scan a named range and return the addresses of cells whose value type is IsError. | Show how to apply a red fill style to every error cell identified by FindOptions within a specific named range in an Excel workbook. | Create a reusable method that accepts a Workbook and a range name, uses FindOptions to collect error cells, and returns a List<string> of their cell names.
-// Common Searches: Aspose.Cells FindOptions error cells in a named range C# | detect #DIV/0! errors inside a specific range with Aspose.Cells .NET | C# code to highlight Excel error values using Aspose.Cells FindOptions | retrieve addresses of cells containing errors from a named range Aspose.Cells | search for error type cells in an Excel workbook with Aspose.Cells FindOptions
-// Tags: Aspose.Cells FindOptions error search | C# locate Excel error cells | named range error detection Aspose.Cells | highlight error values in Excel using Aspose.Cells | retrieve cell addresses with IsError type
+// Title: How to detect Excel error values such as #DIV/0! inside a named range using Aspose.Cells for .NET
+// Common Searches: C# code to list cells that contain #DIV/0! errors within a named range using Aspose.Cells | Aspose.Cells iterate over a named range and identify error cell types | Find Excel error values in a specific range with Aspose.Cells .NET library | Retrieve addresses of cells with error values from a named range in C# | Detect #N/A and #DIV/0! errors in a workbook using Aspose.Cells
+// Tags: error cell detection Aspose.Cells | named range iteration C# | Excel error value search .NET | Aspose.Cells locate #DIV/0! cells | C# workbook error analysis
 
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads a workbook, obtains the named range "MyRange", iterates through its cells, checks each cell's Type for CellValueType.IsError, collects the error cells, prints their addresses, and saves the workbook unchanged.
-class Program
+// The example loads an Excel workbook, obtains the named range "MyRange", walks through each cell in that range, checks for error values (e.g., #DIV/0!, #N/A), prints the addresses of error cells, and saves the workbook unchanged.
+class FindErrorInNamedRange
 {
     static void Main()
     {
@@ -18,10 +16,10 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists
+            // Ensure the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
@@ -32,45 +30,34 @@ class Program
             Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName("MyRange");
             if (namedRange == null)
             {
-                Console.WriteLine("Named range 'MyRange' not found.");
+                Console.WriteLine("Named range \"MyRange\" not found.");
                 return;
             }
 
-            // Collect cells that contain any error (including #DIV/0!) within the named range
-            List<Cell> errorCells = new List<Cell>();
-            int firstRow = namedRange.FirstRow;
-            int firstCol = namedRange.FirstColumn;
-            int lastRow = firstRow + namedRange.RowCount - 1;
-            int lastCol = firstCol + namedRange.ColumnCount - 1;
+            // Iterate through all cells in the named range and detect error cells
+            int startRow = namedRange.FirstRow;
+            int startColumn = namedRange.FirstColumn;
+            int rowCount = namedRange.RowCount;
+            int columnCount = namedRange.ColumnCount;
 
-            for (int row = firstRow; row <= lastRow; row++)
+            for (int i = 0; i < rowCount; i++)
             {
-                for (int col = firstCol; col <= lastCol; col++)
+                for (int j = 0; j < columnCount; j++)
                 {
-                    Cell cell = namedRange.Worksheet.Cells[row, col];
+                    Cell cell = workbook.Worksheets[0].Cells[startRow + i, startColumn + j];
+
+                    // Check if the cell contains an error value
                     if (cell.Type == CellValueType.IsError)
                     {
-                        errorCells.Add(cell);
+                        // Output the address of the error cell
+                        Console.WriteLine($"Error found at {cell.Name}");
                     }
                 }
             }
 
-            // Output the addresses of the error cells
-            foreach (Cell errCell in errorCells)
-            {
-                Console.WriteLine($"Error found at {errCell.Name}");
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the workbook (no modifications made in this example)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

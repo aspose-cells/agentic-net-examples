@@ -1,18 +1,18 @@
-// Title: Convert an Excel workbook to a PDF/A‑2b file while preserving the original ICC color profile with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, sets PdfSaveOptions.Compliance to PdfA2b, and saves the workbook as a PDF preserving the source ICC profile. | Show how to verify the input Excel file exists, configure PDF/A‑2b compliance, and embed the workbook’s color profile when exporting to PDF with Aspose.Cells. | Provide a robust example that handles exceptions, applies PDF/A‑2b settings, and ensures accurate color reproduction in the resulting PDF.
-// Common Searches: Aspose.Cells C# export Excel to PDF/A-2b with original ICC profile | how to keep color accuracy when converting .xlsx to PDF/A-2b using Aspose.Cells | set PdfSaveOptions compliance to PdfA2b and embed color profile in .NET | sample code for PDF/A‑2b conversion of Excel workbook preserving colors Aspose.Cells
-// Tags: Aspose.Cells PDF/A-2b compliance | preserve ICC profile Aspose.Cells | Excel to PDF/A-2b conversion C# | PdfSaveOptions compliance setting | color accuracy PDF export Aspose.Cells
+// Title: Convert an Excel workbook to PDF/A‑2b while preserving original color profiles using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export Excel workbook to PDF/A-2b preserving ICC profiles | how to set PDF/A-2b compliance using PdfSaveOptions in Aspose.Cells | retain original color profiles when converting Excel to PDF/A-2b with Aspose.Cells | Aspose.Cells PDF export color accuracy PDF/A-2b example | save workbook as PDF/A-2b with Aspose.Cells .NET code
+// Tags: Aspose.Cells PDF/A-2b compliance setting | PdfSaveOptions compliance property C# | Excel to PDF/A-2b conversion Aspose.Cells | preserve ICC color profiles Aspose.Cells PDF export | color accuracy PDF output Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example checks for the input XLSX file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, sets its Compliance property to PdfA2b to meet PDF/A‑2b standards, and saves the workbook as a PDF while preserving the original ICC color profile and handling any errors.
-class Program
+namespace AsposeCellsPdfExport
 {
-    static void Main()
+    // The sample verifies the input Excel file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions with Compliance set to PdfCompliance.PdfA2b, and saves the workbook as a PDF/A‑2b file. Aspose.Cells retains the workbook's original color profiles, ensuring accurate color reproduction in the generated PDF.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
@@ -20,27 +20,30 @@ class Program
             // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                // Load the source workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Configure PDF save options for PDF/A‑2b compliance
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    Compliance = PdfCompliance.PdfA2b
+                };
 
-            // Uncomment the following line if the Aspose.Cells version supports PDF/A compliance
-            // pdfOptions.Compliance = PdfCompliance.PdfA2b;
-
-            // Save the workbook as a PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook as a PDF/A‑2b document
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF/A‑2b to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors (e.g., loading, saving)
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,22 +1,21 @@
-// Title: C# command‑line program to load an Excel workbook with Aspose.Cells, add a custom document property, and ensure proper disposal
-// AI Prompts: Generate a C# console application that accepts an Excel file path argument, opens the file with Aspose.Cells.Workbook, adds a custom document property named "OptionalProperty" with the value "OptionalValue", and disposes the workbook in a finally block. | Extend the console app to allow the property name and value to be supplied as optional command‑line parameters, defaulting to "OptionalProperty" and "OptionalValue" when omitted, while still guaranteeing workbook disposal. | Implement robust error handling for the console tool that logs any exceptions during workbook loading or property addition and ensures the Workbook object is always disposed, even on failure.
-// Common Searches: how to add a custom document property to an Excel file using Aspose.Cells in a C# console application | C# command line tool for loading an Excel workbook with Aspose.Cells and releasing resources | example of disposing Aspose.Cells Workbook safely in .NET console app | Aspose.Cells command line program to set optional property and close workbook | using Aspose.Cells to add custom properties from command line arguments in C#
-// Tags: aspocells add custom document property | aspocells workbook disposal .net | c# console load excel aspocells | command line excel processing aspocells | optional custom property workbook aspocells
+// Title: C# console application using Aspose.Cells to load an Excel workbook, optionally add a custom document property, and ensure proper disposal
+// Common Searches: c# console program to load an Excel file with Aspose.Cells and add a custom document property | how to add or update a custom document property in an existing workbook using Aspose.Cells CLI | ensure Aspose.Cells workbook is disposed correctly in a C# command line application | aspose.cells command line tool for adding custom properties to Excel spreadsheets | example of using Aspose.Cells in a C# console app to modify workbook metadata
+// Tags: custom document property addition Aspose.Cells | load workbook from file Aspose.Cells | workbook disposal pattern Aspose.Cells | C# console Excel modification utility | update workbook metadata Aspose.Cells | command line Excel processing Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCommandLine
 {
-    // A C# console utility that reads an Excel file path from the command line, loads the workbook with Aspose.Cells, adds (or overwrites) a custom document property called "OptionalProperty" with a default value "OptionalValue", handles any loading errors, and guarantees the Workbook is disposed to free resources.
+    // A C# console utility that accepts a file path, loads the Excel workbook with Aspose.Cells, optionally adds or updates a custom document property based on additional arguments, and guarantees the workbook is disposed in a finally block to release resources.
     class Program
     {
         static void Main(string[] args)
         {
-            // Verify that a file path argument was provided
+            // Verify that at least the file path is provided
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: AsposeCellsCommandLine <excel-file-path>");
+                Console.WriteLine("Usage: AsposeCellsCommandLine <filePath> [propertyName propertyValue]");
                 return;
             }
 
@@ -28,11 +27,27 @@ namespace AsposeCellsCommandLine
             {
                 workbook = new Workbook(filePath);
 
-                // Add an optional custom document property
-                // If the property already exists, it will be overwritten
-                workbook.CustomDocumentProperties.Add("OptionalProperty", "OptionalValue");
+                // If a property name and value are supplied, add them as a custom document property
+                if (args.Length >= 3)
+                {
+                    string propertyName = args[1];
+                    string propertyValue = args[2];
 
-                // Optionally, you could perform additional operations here
+                    // Add or update the custom property
+                    // If the property already exists, remove it first to avoid duplication
+                    var existingProp = workbook.CustomDocumentProperties[propertyName];
+                    if (existingProp != null)
+                    {
+                        workbook.CustomDocumentProperties.Remove(propertyName);
+                    }
+
+                    workbook.CustomDocumentProperties.Add(propertyName, propertyValue);
+                    Console.WriteLine($"Added custom property: {propertyName} = {propertyValue}");
+                }
+                else
+                {
+                    Console.WriteLine("No custom property supplied; workbook loaded without modifications.");
+                }
             }
             catch (Exception ex)
             {
@@ -41,7 +56,10 @@ namespace AsposeCellsCommandLine
             finally
             {
                 // Ensure the workbook is properly disposed to release resources
-                workbook?.Dispose();
+                if (workbook != null)
+                {
+                    workbook.Dispose();
+                }
             }
         }
     }

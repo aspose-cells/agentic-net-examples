@@ -1,41 +1,80 @@
-// Title: Convert an Excel workbook from a byte array to CSV using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that accepts a byte[] containing an Excel file, loads it into an Aspose.Cells Workbook via MemoryStream, and saves it as a CSV file using the default SaveFormat.Csv options. | Write a method that reads Excel bytes, creates a Workbook object, and exports the data directly to a CSV file without creating intermediate files, leveraging Aspose.Cells' Save method.
-// Common Searches: how to convert excel byte array to csv with aspose.cells in c# | asp.net core load excel from memory stream and save as csv using aspose | c# convert in‑memory workbook to csv default settings aspose.cells | save workbook from byte[] to csv file Aspose.Cells example
-// Tags: byte-array to workbook Aspose.Cells | Workbook.Save CSV Aspose.Cells | in-memory Excel CSV export C# | Aspose.Cells memory stream conversion
+// Title: Convert an Excel workbook from a byte array to CSV using Aspose.Cells in C#
+// Common Searches: Aspose.Cells convert Excel byte array to CSV in C# without writing to disk | How to load an Excel file from a MemoryStream and export as CSV with Aspose.Cells | C# example for reading .xlsx from byte[] and generating .csv using Aspose.Cells | In‑memory Excel to CSV conversion using Aspose.Cells SaveFormat.Csv | Aspose.Cells C# code to transform workbook loaded from byte[] into CSV stream
+// Tags: Aspose.Cells load workbook from byte array | Aspose.Cells save workbook as CSV | in-memory Excel to CSV conversion C# | Workbook.Save with SaveFormat.Csv | MemoryStream Excel conversion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example reads an Excel file into a byte array, wraps it in a MemoryStream, loads it into an Aspose.Cells Workbook, and saves the workbook directly to a CSV file using the default CSV save options.
-public class CsvConversionDemo
+namespace ExcelToCsvApp
 {
-    // Loads an Excel workbook from a byte array and saves it as CSV using default options.
-    public static void ConvertExcelBytesToCsv(byte[] excelBytes, string csvFilePath)
+    // Loads an Excel workbook from a byte array via a MemoryStream, saves it directly to CSV using Aspose.Cells default settings into another MemoryStream, and returns the CSV data as a byte array.
+    public class ExcelToCsvConverter
     {
-        // Wrap the byte array in a MemoryStream (lifecycle rule: Workbook(Stream) constructor)
-        using (MemoryStream stream = new MemoryStream(excelBytes))
+        /// <param name="excelBytes">Byte array representing the source Excel file.</param>
+        /// <returns>Byte array containing the generated CSV data.</returns>
+        public static byte[] ConvertToCsv(byte[] excelBytes)
         {
-            // Load the workbook from the stream
-            Workbook workbook = new Workbook(stream);
+            try
+            {
+                // Load the workbook from the provided byte array using a memory stream.
+                using (var inputStream = new MemoryStream(excelBytes))
+                {
+                    var workbook = new Workbook(inputStream);
 
-            // Save the workbook directly to CSV (default options, using Save method with format)
-            workbook.Save(csvFilePath, SaveFormat.Csv);
+                    // Save the workbook directly to CSV format into another memory stream.
+                    using (var outputStream = new MemoryStream())
+                    {
+                        workbook.Save(outputStream, SaveFormat.Csv);
+                        return outputStream.ToArray();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error converting Excel to CSV: {ex.Message}");
+                throw;
+            }
         }
     }
 
-    // Example usage
-    public static void Main()
+    public class Program
     {
-        // Sample Excel data (replace with actual byte array in real scenario)
-        byte[] sampleExcel = File.ReadAllBytes("sample.xlsx");
+        public static void Main(string[] args)
+        {
+            // Expect first argument as input Excel file path, second as output CSV path.
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: ExcelToCsvApp <input.xlsx> <output.csv>");
+                return;
+            }
 
-        // Destination CSV file path
-        string outputCsv = "output.csv";
+            string inputPath = args[0];
+            string outputPath = args[1];
 
-        // Perform conversion
-        ConvertExcelBytesToCsv(sampleExcel, outputCsv);
+            // Verify input file exists to prevent FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.Error.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        Console.WriteLine($"Workbook converted to CSV at: {outputCsv}");
+            try
+            {
+                // Read Excel file into byte array.
+                byte[] excelBytes = File.ReadAllBytes(inputPath);
+
+                // Convert to CSV.
+                byte[] csvBytes = ExcelToCsvConverter.ConvertToCsv(excelBytes);
+
+                // Write CSV data to output file.
+                File.WriteAllBytes(outputPath, csvBytes);
+                Console.WriteLine($"CSV file generated successfully at: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Operation failed: {ex.Message}");
+            }
+        }
     }
 }

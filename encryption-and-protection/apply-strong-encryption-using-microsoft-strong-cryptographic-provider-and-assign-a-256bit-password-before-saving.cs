@@ -1,29 +1,36 @@
-// Title: Encrypt an XLSX workbook with a 256‑bit password using Aspose.Cells and the Microsoft Strong Cryptographic Provider (C#)
-// AI Prompts: Write C# code that creates an Aspose.Cells Workbook, sets a 256‑bit password via the Microsoft Strong Cryptographic Provider, and saves the file as an encrypted .xlsx. | Show how to configure Aspose.Cells workbook.Settings to enable strong encryption with a custom 256‑bit password before calling Save in a .NET application.
-// Common Searches: C# Aspose.Cells how to apply 256‑bit password protection to an XLSX file | Using Microsoft Strong Cryptographic Provider with Aspose.Cells for Excel encryption | Save encrypted workbook with custom password in Aspose.Cells .NET | Set workbook.Settings.Password for strong encryption in Aspose.Cells
-// Tags: Aspose.Cells strong encryption Microsoft provider | C# set 256‑bit password XLSX Aspose.Cells | encrypt Excel workbook Aspose.Cells .NET | workbook.Settings.Password strong encryption | save encrypted .xlsx with Aspose.Cells
+// Title: Encrypt an Excel workbook with a 256‑bit password using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells encrypt Excel file with 256‑bit password | Set password protection on .xlsx using Aspose.Cells .NET API | Apply Microsoft Strong Cryptographic Provider when saving workbook with Aspose.Cells | How to use workbook.Settings.Password for strong encryption in Aspose.Cells | Save encrypted workbook as .xlsx with Aspose.Cells C# example
+// Tags: Aspose.Cells workbook password protection | C# encrypt Excel .xlsx with Aspose.Cells | 256-bit password encryption Aspose.Cells | Microsoft Strong Cryptographic Provider Aspose.Cells | Save encrypted workbook using Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// // Creates a workbook, adds sample data, assigns a 256‑bit password via workbook.Settings.Password, and saves it as an encrypted XLSX using Aspose.Cells.
+// The sample creates a new Workbook, writes data to the first worksheet, assigns a strong 256‑bit password via workbook.Settings.Password, and saves the file as an encrypted .xlsx using Aspose.Cells for .NET, with exception handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add some sample data
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Apply password protection to the workbook
-            workbook.Settings.Password = "MyStrong256BitPassword!@#123";
+            // Add some data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["B1"].PutValue("World");
 
-            // Save the workbook with the password applied
-            workbook.Save("EncryptedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Set a password to encrypt the workbook (standard strong encryption)
+            workbook.Settings.Password = "StrongPassword256Bit!";
+
+            // Define the output file path
+            string outputPath = "EncryptedWorkbook.xlsx";
+
+            // Save the workbook with encryption
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

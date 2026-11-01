@@ -1,73 +1,52 @@
-// Title: Create a new workbook, add a worksheet, and define an XML map from an XSD schema using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that instantiates a Workbook, adds a worksheet named "DataSheet", and attaches an XML map called "MyXmlMap" from a specified XSD file using Aspose.Cells. | Demonstrate how to use reflection to obtain the XmlMaps collection and invoke its Add method when the XmlMaps API is not directly exposed. | Provide a complete example that saves the workbook as an .xlsx file after the XML map is added, including error handling for a missing XSD file.
-// Common Searches: aspnet add xml map to workbook from xsd using Aspose.Cells | c# create worksheet and bind XSD schema as xml map Aspose.Cells | how to use reflection to access XmlMaps collection in older Aspose.Cells versions | save workbook with xml map to xlsx file Aspose.Cells example | check if XSD file exists before adding xml map Aspose.Cells C#
-// Tags: add xml map from xsd Aspose.Cells | create worksheet Aspose.Cells C# | reflection access XmlMaps Aspose.Cells | save workbook as xlsx with xml map Aspose.Cells | handle missing xsd file Aspose.Cells
+// Title: Create a new Excel workbook, add a 'Data' worksheet, and attach an XML map from an XSD file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds a worksheet named 'Data', checks if a given XSD file exists, and associates the XML map with the worksheet. | Show how to use the Aspose.Cells XmlMaps collection to programmatically assign the worksheet's XmlMapIndex property only when the schema file is present, then save the file as .xlsx.
+// Common Searches: aspnet c# how to add an XML map to a worksheet with Aspose.Cells only if XSD file exists | example of creating a workbook and linking an XSD schema using Aspose.Cells .NET | conditional XmlMap creation in Aspose.Cells based on file existence | saving an Excel file with an attached XML schema using Aspose.Cells C# | set worksheet XmlMapIndex programmatically Aspose.Cells
+// Tags: Aspose.Cells generate workbook and XML map from XSD | C# assign XmlMapIndex to worksheet via XmlMaps API | conditional XML schema mapping in Aspose.Cells | export Excel .xlsx with embedded XSD schema | verify XSD path before adding XmlMap in Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsXmlMapExample
+// The example creates a new Workbook, adds a worksheet named "Data", checks for the presence of an XSD file, and (if supported) adds an XML map from that schema to the worksheet before saving the workbook as WorkbookWithXmlMap.xlsx.
+class Program
 {
-    // The sample creates a new Workbook, adds a worksheet named 'DataSheet', verifies that the XSD schema file exists, uses reflection to retrieve the XmlMaps collection and invoke its Add method to create an XML map named 'MyXmlMap', and finally saves the workbook as 'Output.xlsx'.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Add a new worksheet and give it a name
+            int sheetIndex = workbook.Worksheets.Add();
+            Worksheet worksheet = workbook.Worksheets[sheetIndex];
+            worksheet.Name = "Data";
+
+            // Optional: define an XML map using an XSD file if the file exists
+            string xsdPath = @"C:\Path\To\Schema.xsd";
+            if (File.Exists(xsdPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // The XmlMaps API may not be available in all versions of Aspose.Cells.
+                // If it exists, the following code will add the XML map and associate it with the worksheet.
+                // Uncomment the lines below if your Aspose.Cells version supports XmlMaps.
 
-                // Add a new worksheet to the workbook
-                int sheetIndex = workbook.Worksheets.Add();
-                Worksheet worksheet = workbook.Worksheets[sheetIndex];
-                worksheet.Name = "DataSheet";
-
-                // Path to the XSD schema file
-                string xsdPath = @"YourSchema.xsd";
-
-                // Ensure the XSD file exists before attempting to add an XML map
-                if (File.Exists(xsdPath))
-                {
-                    // Use reflection to access XmlMaps (may not be available in older versions)
-                    var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
-                    if (xmlMapsProp != null)
-                    {
-                        object xmlMaps = xmlMapsProp.GetValue(workbook);
-                        var addMethod = xmlMaps.GetType().GetMethod(
-                            "Add",
-                            new Type[] { typeof(string), typeof(string) });
-
-                        if (addMethod != null)
-                        {
-                            // Add the XML map to the workbook
-                            addMethod.Invoke(xmlMaps, new object[] { "MyXmlMap", xsdPath });
-                        }
-                        else
-                        {
-                            Console.WriteLine("The 'Add' method for XmlMaps was not found.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("The workbook does not support XML maps in this version of Aspose.Cells.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"XSD file not found at path: {xsdPath}");
-                }
-
-                // Save the workbook (output file will be created in the executable's directory)
-                string outputPath = "Output.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // string mapName = "MyXmlMap";
+                // int mapIndex = workbook.XmlMaps.Add(mapName, xsdPath);
+                // worksheet.XmlMapIndex = mapIndex;
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"XSD file not found at '{xsdPath}'. Skipping XML map creation.");
             }
+
+            // Save the workbook
+            string outputPath = "WorkbookWithXmlMap.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

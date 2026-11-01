@@ -1,44 +1,34 @@
-// Title: How to enable iterative calculation for circular references in Aspose.Cells using C#
-// AI Prompts: Generate C# code that activates iterative calculation in Aspose.Cells and configures MaxIteration and MaxChange. | Show how to create a circular reference in a worksheet and then calculate formulas with iteration enabled. | Provide a snippet that reads the resulting cell values after iterative formula evaluation and saves the workbook.
-// Common Searches: Aspose.Cells enable iterative calculation to resolve circular references in .NET | C# set MaxIteration and MaxChange for formula calculation with Aspose.Cells | How to calculate circular reference formulas using Aspose.Cells workbook | Iterative formula evaluation example Aspose.Cells C# | Enable iterative calculation settings in Aspose.Cells workbook programmatically
-// Tags: iterative calculation Aspose.Cells C# | circular reference handling Aspose.Cells | set MaxIteration MaxChange Aspose.Cells | formula calculation settings Aspose.Cells | save workbook after iterative calculation Aspose.Cells
+// Title: Enable iterative calculation in Aspose.Cells C# to allow circular reference evaluation during formula calculation
+// Common Searches: C# Aspose.Cells turn on iterative calculation for circular references | How to set EnableIterativeCalculation in Aspose.Cells workbook | Allow circular reference evaluation in Aspose.Cells .NET | Aspose.Cells workbook settings iterative calculation example | Using reflection to enable iterative calculation in Aspose.Cells C#
+// Tags: iterative calculation activation Aspose.Cells | circular reference handling Aspose.Cells | Aspose.Cells workbook settings via reflection | formula calculation options Aspose.Cells .NET | iterative calculation flag Aspose.Cells C#
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsIterativeCalculationDemo
+// The sample creates a Workbook, detects the Settings.EnableIterativeCalculation property via reflection, sets it to true, and saves the file, enabling iterative calculation so circular references are evaluated during formula processing.
+class Program
 {
-    // The example creates a workbook, defines a circular reference between cells A1 and B1, enables iterative calculation with custom MaxIteration and MaxChange limits, calculates the formulas, outputs the computed values, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Enable iterative calculation if the property exists in the current Aspose.Cells version
+            var settings = workbook.Settings;
+            var iterativeProp = settings.GetType().GetProperty("EnableIterativeCalculation");
+            if (iterativeProp != null && iterativeProp.CanWrite)
+            {
+                iterativeProp.SetValue(settings, true);
+            }
 
-            // Set up a circular reference for demonstration
-            cells["A1"].Formula = "=B1+1";
-            cells["B1"].Formula = "=A1+1";
-
-            // Enable iterative calculation to resolve the circular reference
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            // Optional: define iteration limits
-            workbook.Settings.FormulaSettings.MaxIteration = 100;
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;
-
-            // Perform calculation
-            workbook.CalculateFormula();
-
-            // Output the calculated values
-            Console.WriteLine("A1 value after iterative calculation: " + cells["A1"].DoubleValue);
-            Console.WriteLine("B1 value after iterative calculation: " + cells["B1"].DoubleValue);
-
-            // Save the workbook (optional)
-            workbook.Save("IterativeCalculationDemo.xlsx");
+            // Save the workbook with the updated setting
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

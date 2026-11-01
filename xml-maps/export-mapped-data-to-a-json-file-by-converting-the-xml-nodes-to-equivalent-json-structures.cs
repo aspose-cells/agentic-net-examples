@@ -1,141 +1,82 @@
-// Title: Convert XML to formatted JSON file in C# using XmlDocument and System.Text.Json with attribute and array support
-// AI Prompts: Write a C# console application that loads an XML file, walks the XmlDocument tree, converts each node into a JsonNode hierarchy, and writes the result to a pretty‑printed JSON file. | Create a ConvertXmlNodeToJsonNode method that maps XML attributes to keys prefixed with '@', element text to a '#text' property, and groups elements with identical names into JsonArray objects using System.Text.Json.
-// Common Searches: c# convert xml to json while keeping attributes and element arrays | sample code for mapping XmlNode hierarchy to JsonNode in .NET | generate indented json output from xml document using System.Text.Json
-// Tags: xml to json conversion with System.Text.Json | attribute preservation in xml to json mapping | duplicate element handling as json arrays | recursive xml node processing in C# | pretty printed json file generation in .NET
+// Title: Recursively convert an XML document to a formatted JSON file with C# JsonNode and XElement
+// AI Prompts: Create a C# console program that reads an XML file, recursively maps each element and attribute to JsonNode objects (attributes prefixed with '@' and mixed text stored under '#text'), and writes the indented JSON to a specified output file. | Enhance the conversion method to handle XML namespaces and output property names in camelCase while keeping attribute and array handling intact.
+// Common Searches: c# convert xml file to json preserving attributes and arrays | recursive xml to json conversion using System.Text.Json.Nodes | map repeated xml elements to json arrays in c# | include element text and attributes when converting xml to json c# | how to handle xml namespaces during xml to json conversion c#
+// Tags: xml to json conversion JsonNode C# | preserve xml attributes as @properties json | xml repeated elements to json arrays | recursive XElement to JsonObject mapping | indented json output C#
 
 using System;
 using System.IO;
-using System.Xml;
+using System.Linq;
+using System.Xml.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// The example loads an XML file with XmlDocument, verifies its structure, and recursively transforms the root XmlNode into a JsonNode tree. Attributes are stored with an '@' prefix, text content uses a '#text' key, and repeated element names are aggregated into JsonArray objects. The resulting JsonNode is serialized with indentation via System.Text.Json and saved to a specified JSON file, with comprehensive error handling for missing files and malformed XML.
+// The program loads an XML file, recursively transforms each XElement (including attributes prefixed with '@' and mixed content captured under '#text') into a JsonNode hierarchy, serializes it with indentation, and writes the resulting JSON to an output file.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Paths for input XML and output JSON
-            string xmlPath = "input.xml";
-            string jsonPath = "output.json";
+        // Paths for input XML and output JSON
+        string xmlPath = "input.xml";
+        string jsonPath = "output.json";
 
-            // Verify that the XML file exists
-            if (!File.Exists(xmlPath))
-            {
-                Console.WriteLine($"Error: The file '{xmlPath}' was not found.");
-                return;
-            }
+        // Load the XML document
+        XDocument xdoc = XDocument.Load(xmlPath);
 
-            // Load the XML document
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(xmlPath);
+        // Convert the root element to a JSON node hierarchy
+        JsonNode jsonRoot = ConvertElement(xdoc.Root);
 
-            // Ensure the document has a root element
-            if (xmlDoc.DocumentElement == null)
-            {
-                Console.WriteLine("Error: The XML document does not contain a root element.");
-                return;
-            }
+        // Serialize JSON with indentation for readability
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string jsonString = jsonRoot.ToJsonString(options);
 
-            // Convert the root XML node to a JsonNode hierarchy
-            JsonNode jsonRoot = ConvertXmlNodeToJsonNode(xmlDoc.DocumentElement);
-
-            // Serialize the JsonNode to a formatted JSON string
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = jsonRoot.ToJsonString(jsonOptions);
-
-            // Write the JSON string to the output file
-            File.WriteAllText(jsonPath, jsonString);
-
-            Console.WriteLine($"XML has been successfully converted to JSON and saved to '{jsonPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Write the JSON string to a file
+        File.WriteAllText(jsonPath, jsonString);
     }
 
-    static JsonNode ConvertXmlNodeToJsonNode(XmlNode xmlNode)
+    // Recursively converts an XElement into a JsonNode
+    static JsonNode ConvertElement(XElement element)
     {
-        // Guard against null nodes
-        if (xmlNode == null)
-            return null;
-
-        // Create a JSON object to represent the current XML element
-        JsonObject jsonObj = new JsonObject();
-
-        // Process attributes (if any)
-        if (xmlNode.Attributes != null && xmlNode.Attributes.Count > 0)
+        // If the element has no children and no attributes, return its text value directly
+        if (!element.HasElements && !element.HasAttributes)
         {
-            foreach (XmlAttribute attr in xmlNode.Attributes)
+            return element.Value;
+        }
+
+        var obj = new JsonObject();
+
+        // Include attributes as properties prefixed with '@'
+        foreach (var attr in element.Attributes())
+        {
+            obj[$"@{attr.Name.LocalName}"] = attr.Value;
+        }
+
+        // Group child elements by name to handle single vs. multiple occurrences
+        var groups = element.Elements().GroupBy(e => e.Name.LocalName);
+        foreach (var group in groups)
+        {
+            if (group.Count() == 1)
             {
-                // Prefix attribute names with '@' to distinguish them from child elements
-                jsonObj[$"@{attr.Name}"] = attr.Value;
+                // Single child element becomes a nested object/property
+                obj[group.Key] = ConvertElement(group.First());
+            }
+            else
+            {
+                // Multiple child elements with the same name become a JSON array
+                var array = new JsonArray();
+                foreach (var child in group)
+                {
+                    array.Add(ConvertElement(child));
+                }
+                obj[group.Key] = array;
             }
         }
 
-        // Process child nodes
-        foreach (XmlNode child in xmlNode.ChildNodes)
+        // Preserve element text when mixed with child elements, using "#text" key
+        if (!string.IsNullOrWhiteSpace(element.Value) && element.HasElements)
         {
-            switch (child.NodeType)
-            {
-                case XmlNodeType.Element:
-                    // Recursively convert child elements
-                    JsonNode childJson = ConvertXmlNodeToJsonNode(child);
-                    if (childJson == null)
-                        continue;
-
-                    // Handle multiple elements with the same name
-                    if (jsonObj.ContainsKey(child.Name))
-                    {
-                        JsonNode existing = jsonObj[child.Name];
-                        if (existing is JsonArray array)
-                        {
-                            // Add the new element to the existing array
-                            array.Add(childJson);
-                        }
-                        else
-                        {
-                            // Replace the single object with an array containing both values
-                            JsonArray newArray = new JsonArray
-                            {
-                                // Clone the existing node via serialization to avoid parent conflicts
-                                JsonNode.Parse(existing.ToJsonString()),
-                                childJson
-                            };
-                            jsonObj[child.Name] = newArray;
-                        }
-                    }
-                    else
-                    {
-                        jsonObj[child.Name] = childJson;
-                    }
-                    break;
-
-                case XmlNodeType.Text:
-                case XmlNodeType.CDATA:
-                    // Text content of the element
-                    string text = child.Value?.Trim();
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        // Use '#text' as the property name for element text
-                        jsonObj["#text"] = text;
-                    }
-                    break;
-
-                // Ignore comments, processing instructions, etc.
-                default:
-                    break;
-            }
+            obj["#text"] = element.Value.Trim();
         }
 
-        // If the element has no attributes or child elements, return its text directly
-        if (jsonObj.Count == 0 && !string.IsNullOrEmpty(xmlNode.InnerText))
-        {
-            return JsonValue.Create(xmlNode.InnerText);
-        }
-
-        return jsonObj;
+        return obj;
     }
 }

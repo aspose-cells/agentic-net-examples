@@ -1,63 +1,63 @@
-// Title: How to download an image from a URL and insert it into cell R2 of an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that downloads a PNG image from a given web address and embeds it into cell R2 of the first worksheet using Aspose.Cells. | Generate a .NET example that fetches an image via HttpClient, creates a MemoryStream, and adds the picture to a workbook at row 2, column 18 with Aspose.Cells.
-// Common Searches: how to use Aspose.Cells to place an online picture at a specific cell in C# | C# code example for loading an image from the internet and positioning it in Excel with Aspose.Cells | Aspose.Cells tutorial for anchoring a web‑downloaded image to cell R2 | programmatically add a remote PNG to an Excel worksheet using Aspose.Cells .NET
-// Tags: aspacells picture insertion from url | c# aspacells anchor image to cell | stream based image embedding in Aspose.Cells | excel workbook save with embedded picture c# | aspacells add picture to worksheet cell
+// Title: Download an image from a URL and insert it into cell R2 of an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses HttpClient to fetch an image from a given URL, then adds the image to cell R2 of the first worksheet in an Aspose.Cells workbook and saves the file. | Generate a C# example that creates a new Workbook, streams a PNG downloaded via HttpClient into a MemoryStream, inserts it at row 2 column R with Worksheet.Pictures.Add, and writes the result to Result.xlsx. | Provide a C# snippet that catches HttpRequestException while downloading an image and falls back to a local placeholder before inserting the picture into cell R2 with Aspose.Cells.
+// Common Searches: Aspose.Cells C# insert image from internet into specific cell R2 | download picture with HttpClient and add to Excel worksheet using Aspose.Cells | place external PNG at cell R2 in .NET Excel file Aspose.Cells example | how to use Worksheet.Pictures.Add with a MemoryStream in C#
+// Tags: Aspose.Cells download image stream insertion | Worksheet.Pictures.Add from HttpClient stream | C# insert web image into Excel cell | Aspose.Cells place picture at specific cell | Excel workbook save after picture insertion .NET
 
 using System;
 using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample creates a new Workbook, downloads an image from a web URL, adds the picture anchored at cell R2 of the first worksheet, and saves the file as Result.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample creates a new workbook, downloads an image from a web URL using HttpClient, inserts the image into cell R2 of the first worksheet via Worksheet.Pictures.Add, and saves the workbook as Result.xlsx, with error handling for download failures.
+    class Program
     {
-        try
+        static async Task Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // URL of the picture to insert
-            string imageUrl = "https://example.com/image.png";
-
-            byte[] imageData = null;
-
-            // Attempt to download the image data
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    imageData = client.DownloadData(imageUrl);
-                }
-            }
-            catch (WebException ex)
-            {
-                Console.WriteLine($"Failed to download image from '{imageUrl}': {ex.Message}");
-                // Continue without inserting the picture
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert the picture if the download succeeded
-            if (imageData != null && imageData.Length > 0)
-            {
-                using (MemoryStream imageStream = new MemoryStream(imageData))
-                {
-                    // Insert the picture anchored at cell R2 (row index 1, column index 17)
-                    sheet.Pictures.Add(1, 17, imageStream);
-                }
-            }
+                // URL of the picture to insert
+                string imageUrl = "https://example.com/image.png";
 
-            // Save the workbook
-            string outputPath = "Result.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // Download the image and insert it into the worksheet
+                using (HttpClient client = new HttpClient())
+                {
+                    try
+                    {
+                        using (Stream downloadStream = await client.GetStreamAsync(imageUrl))
+                        using (MemoryStream pictureStream = new MemoryStream())
+                        {
+                            await downloadStream.CopyToAsync(pictureStream);
+                            pictureStream.Position = 0; // Reset stream position
+
+                            // Insert the picture at cell R2 (row index 1, column index 17)
+                            int row = 1;      // Zero‑based row index for row 2
+                            int column = 17;  // Zero‑based column index for column R
+                            sheet.Pictures.Add(row, column, pictureStream);
+                        }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        Console.WriteLine($"Image download failed: {ex.Message}");
+                        // If needed, handle fallback logic here (e.g., use a local placeholder image)
+                    }
+                }
+
+                // Save the workbook to a file
+                string outputPath = "Result.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

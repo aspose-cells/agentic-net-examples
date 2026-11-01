@@ -1,15 +1,15 @@
-// Title: How to link a rectangle shape to a TODAY() formula cell and display a custom formatted date using Aspose.Cells for .NET (C#)
-// AI Prompts: Create C# code that adds a rectangular drawing object, associates its displayed text with the value of a cell that uses the current date function, and formats the text as dd-MMM-yyyy using Aspose.Cells. | Generate an Excel workbook with Aspose.Cells where a shape automatically reflects the formatted date from a linked cell and save the file as LinkedShape.xlsx.
-// Common Searches: Aspose.Cells C# shape text bound to TODAY() cell value | display custom formatted date inside a rectangle shape using Aspose.Cells | how to update shape text automatically after formula recalculation in Aspose.Cells
-// Tags: link shape to cell Aspose.Cells C# | add shape type Rectangle Aspose.Cells | custom date format dd-MMM-yyyy Aspose.Cells | bind shape text to formula result Aspose.Cells | save workbook with linked shape Aspose.Cells
+// Title: Link a rectangle shape to a TODAY() date cell and display it with a custom date format using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, sets cell A1 to =TODAY() with a custom "dd-MMM-yyyy" format, adds a rectangle shape, links the shape's text to A1, and saves the file. | Show how to configure a shape's Placement property to MoveAndSize so the shape moves and resizes together with its linked date cell in Aspose.Cells. | Demonstrate applying blue, 12‑point bold font styling to a shape that displays a linked date value.
+// Common Searches: Aspose.Cells example linking shape text to a date formula cell | C# how to set a custom date format for a cell and reflect it in a linked shape | MoveAndSize placement for shapes linked to cells in Aspose.Cells .NET | Formatting font of a shape that shows a linked cell value in Aspose.Cells | Saving a workbook with a rectangle shape linked to TODAY() cell using Aspose.Cells
+// Tags: link shape text to cell formula Aspose.Cells | custom date format dd-MMM-yyyy Aspose.Cells | shape placement MoveAndSize .NET | rectangle shape font styling blue bold Aspose.Cells | date cell TODAY() linked shape example
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, inserts a TODAY() formula in cell B2, applies a custom date format (dd-MMM-yyyy), recalculates formulas, adds a rectangle shape, sets the shape's text to the formatted cell value, and saves the workbook as LinkedShape.xlsx.
-class Program
+// The example creates a workbook, assigns =TODAY() to cell A1 with the custom format "dd-MMM-yyyy", adds a rectangle shape, links the shape's text to the date cell, sets the shape's placement to MoveAndSize, styles the shape's font in blue, 12‑pt bold, and saves the result as ShapeLinkedToDate.xlsx.
+class ShapeLinkToDateCell
 {
     static void Main()
     {
@@ -18,48 +18,43 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a date formula in cell B2
-            Cell dateCell = sheet.Cells["B2"];
+            // Set a date formula in cell A1 (e.g., TODAY())
+            Cell dateCell = sheet.Cells["A1"];
             dateCell.Formula = "=TODAY()";
 
-            // Apply a custom date format pattern (e.g., 15-Mar-2023)
+            // Apply a custom date format to the cell (e.g., "dd-MMM-yyyy")
             Style dateStyle = workbook.CreateStyle();
             dateStyle.Custom = "dd-MMM-yyyy";
             dateCell.SetStyle(dateStyle);
 
-            // Recalculate formulas so the date value is available
-            workbook.CalculateFormula();
-
-            // Add a rectangle shape to the worksheet
-            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            // Add a rectangle shape to the worksheet.
+            // Parameters: type, upperLeftRow, upperLeftColumn, topOffset, leftOffset, height, width
             Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                5,    // upper left row
-                0,    // upper left column
-                0,    // top offset (in pixels)
-                0,    // left offset (in pixels)
-                30,   // height (in points)
-                150); // width (in points)
+                MsoDrawingType.Rectangle,
+                5,   // upper left row
+                5,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                30,  // height (pixels)
+                100  // width (pixels)
+            );
 
-            // Set initial text (will be refreshed automatically if linked)
-            shape.Text = dateCell.StringValue;
+            // Set the shape's placement so it moves and sizes with the linked cell
+            shape.Placement = PlacementType.MoveAndSize;
 
-            // Define output file path
-            string outputPath = "LinkedShape.xlsx";
+            // Link the shape's text to the cell by using a formula reference
+            shape.Text = "=A1";
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Optional: format the shape's text appearance
+            shape.Font.Color = Color.Blue;
+            shape.Font.Size = 12;
+            shape.Font.IsBold = true;
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook to a file
+            workbook.Save("ShapeLinkedToDate.xlsx");
         }
         catch (Exception ex)
         {

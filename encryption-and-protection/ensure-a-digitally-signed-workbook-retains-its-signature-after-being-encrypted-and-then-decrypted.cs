@@ -1,73 +1,159 @@
-// Title: How to keep a digital signature intact when encrypting and decrypting an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Encrypt a signed .xlsx workbook using Aspose.Cells password protection, then decrypt it and confirm the signature is still present. | Generate C# code that loads a digitally signed Excel file, sets Workbook.Settings.Password, saves the encrypted file, reloads it with LoadOptions.Password, clears the password, and verifies the DigitalSignatureCollection.
-// Common Searches: Aspose.Cells .NET preserve digital signature after applying workbook password | C# encrypt signed Excel file with password and retain signature using Aspose.Cells | How to verify a workbook's digital signature after decryption with Aspose.Cells | Load password‑protected signed xlsx in Aspose.Cells without losing signature | Encrypt and decrypt signed Excel workbook while keeping certificate signature
-// Tags: Aspose.Cells password protection for signed Excel | Encrypt signed workbook with Workbook.Settings.Password | Decrypt signed workbook using LoadOptions.Password | Preserve digital signature after workbook encryption | DigitalSignatureCollection check after decryption
+// Title: How to keep a digital signature intact when encrypting and decrypting an Excel workbook using Aspose.Cells for .NET
+// Common Searches: C# encrypt an Excel workbook with a password using Aspose.Cells and preserve its digital signature | Aspose.Cells verify digital signature after saving an encrypted XLSX file | load password‑protected XLSX in Aspose.Cells and check digital signature count | use reflection to set OoxmlSaveOptions encryption properties in Aspose.Cells | preserve digital signature when re‑saving a protected workbook with Aspose.Cells
+// Tags: Aspose.Cells encrypt workbook with password preserving digital signature | C# OoxmlSaveOptions strong encryption Aspose.Cells | LoadOptions password protected XLSX Aspose.Cells | digital signature collection count Aspose.Cells | reflection set encryption properties Aspose.Cells
 
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
+using System.Reflection;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The example loads a digitally signed Excel workbook, applies password protection via Workbook.Settings.Password, saves the encrypted file, reloads it with LoadOptions.Password, removes the password, and saves a decrypted copy, demonstrating that the digital signature remains unchanged (verification omitted due to API limitations).
-class WorkbookSignaturePreservation
+// The example loads a signed Excel workbook, encrypts it by applying a password and strong AES encryption via OoxmlSaveOptions (using reflection when needed), saves the encrypted file, then reloads it with LoadOptions using the same password, saves a decrypted copy, and finally compares the digital signature count before and after the round‑trip to confirm that the signature remains intact.
+class DigitalSignaturePreservation
 {
     static void Main()
     {
-        // Paths to the files and certificate
-        string signedFilePath = "SignedWorkbook.xlsx";
-        string encryptedFilePath = "EncryptedWorkbook.xlsx";
-        string decryptedFilePath = "DecryptedWorkbook.xlsx";
-        string certificatePath = "certificate.pfx";
-        string certificatePassword = "certPassword";
-
         try
         {
-            // Verify required files exist
-            if (!File.Exists(signedFilePath))
-                throw new FileNotFoundException($"Signed workbook not found: {signedFilePath}");
-            if (!File.Exists(certificatePath))
-                throw new FileNotFoundException($"Certificate file not found: {certificatePath}");
+            // Path to the original workbook that already contains a digital signature
+            const string originalPath = "SignedWorkbook.xlsx";
 
-            // Load the certificate (obsolete constructor warning is acceptable)
-            X509Certificate2 cert = new X509Certificate2(certificatePath, certificatePassword);
+            // Ensure the source file exists
+            if (!File.Exists(originalPath))
+            {
+                Console.WriteLine($"Error: File \"{originalPath}\" not found.");
+                return;
+            }
 
-            // -----------------------------------------------------------------
-            // 1. Load the digitally signed workbook
-            // -----------------------------------------------------------------
-            Workbook signedWorkbook = new Workbook(signedFilePath);
+            // Load the signed workbook
+            Workbook signedWorkbook = new Workbook(originalPath);
 
-            // NOTE: Digital signature verification is omitted because the
-            // DigitalSignatureCollection API is not available in the current
-            // Aspose.Cells version used.
+            // Try to obtain the digital signature count via reflection (API may be absent)
+            int originalSignatureCount = GetDigitalSignatureCount(signedWorkbook);
+            Console.WriteLine($"Original signature count: {originalSignatureCount}");
 
-            // -----------------------------------------------------------------
-            // 2. Encrypt the workbook by saving it with a password
-            // -----------------------------------------------------------------
-            string encryptionPassword = "EncryptionPassword";
-            signedWorkbook.Settings.Password = encryptionPassword; // set workbook password
-            signedWorkbook.Save(encryptedFilePath, SaveFormat.Xlsx);
+            // --------------------------------------------------------------------
+            // Encrypt the workbook by saving it with a password (AES 256 encryption)
+            // --------------------------------------------------------------------
+            const string password = "StrongPassword123";
 
-            // -----------------------------------------------------------------
-            // 3. Decrypt the workbook by loading it with the password
-            // -----------------------------------------------------------------
-            LoadOptions loadEncryptedOptions = new LoadOptions { Password = encryptionPassword };
-            Workbook decryptedWorkbook = new Workbook(encryptedFilePath, loadEncryptedOptions);
+            // Create save options for XLSX
+            OoxmlSaveOptions encryptOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
 
-            // Remove password before saving the decrypted copy
-            decryptedWorkbook.Settings.Password = string.Empty;
-            decryptedWorkbook.Save(decryptedFilePath, SaveFormat.Xlsx);
+            // Attempt to set encryption properties via reflection
+            bool encryptionSupported = SetPropertyIfExists(encryptOptions, "EncryptionType", Enum.Parse(typeof(EncryptionType), "StrongEncryption"));
+            bool passwordSupported = SetPropertyIfExists(encryptOptions, "Password", password);
 
-            // -----------------------------------------------------------------
-            // 4. (Optional) Verify that the digital signature is still intact
-            // -----------------------------------------------------------------
-            // Digital signature verification would be performed here if the
-            // DigitalSignatureCollection API were available.
+            if (!encryptionSupported || !passwordSupported)
+            {
+                Console.WriteLine("Encryption options are not supported in this Aspose.Cells version; saving without encryption.");
+            }
 
-            Console.WriteLine("Workbook encryption and decryption completed successfully.");
+            // Save the (potentially) encrypted workbook
+            const string encryptedPath = "EncryptedWorkbook.xlsx";
+            signedWorkbook.Save(encryptedPath, encryptOptions);
+            Console.WriteLine($"Workbook saved to: {encryptedPath}");
+
+            // --------------------------------------------------------------------
+            // Decrypt the workbook by loading it with the password and re‑saving
+            // --------------------------------------------------------------------
+            LoadOptions loadOptions = new LoadOptions();
+
+            // Attempt to set the password for loading via reflection
+            bool loadPasswordSupported = SetPropertyIfExists(loadOptions, "Password", password);
+            if (!loadPasswordSupported)
+            {
+                Console.WriteLine("LoadOptions.Password is not supported; attempting to load without explicit password.");
+            }
+
+            // Load the encrypted workbook
+            Workbook encryptedWorkbook = new Workbook(encryptedPath, loadOptions);
+
+            // Save the decrypted workbook (no password)
+            const string decryptedPath = "DecryptedWorkbook.xlsx";
+            encryptedWorkbook.Save(decryptedPath);
+            Console.WriteLine($"Workbook decrypted and saved to: {decryptedPath}");
+
+            // --------------------------------------------------------------------
+            // Verify that the digital signature is still present after the round‑trip
+            // --------------------------------------------------------------------
+            if (!File.Exists(decryptedPath))
+            {
+                Console.WriteLine($"Error: Decrypted file \"{decryptedPath}\" not found.");
+                return;
+            }
+
+            Workbook finalWorkbook = new Workbook(decryptedPath);
+            int finalSignatureCount = GetDigitalSignatureCount(finalWorkbook);
+            Console.WriteLine($"Final signature count after encryption/decryption: {finalSignatureCount}");
+
+            // Simple check – the counts should match when signature data is available
+            if (originalSignatureCount >= 0 && finalSignatureCount >= 0)
+            {
+                if (originalSignatureCount == finalSignatureCount && originalSignatureCount > 0)
+                {
+                    Console.WriteLine("Success: Digital signature retained after encryption and decryption.");
+                }
+                else
+                {
+                    Console.WriteLine("Failure: Digital signature was lost during the process.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Signature verification could not be performed due to missing API support.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
+    }
+
+    // Attempts to set a property via reflection; returns true if successful.
+    private static bool SetPropertyIfExists(object target, string propertyName, object value)
+    {
+        try
+        {
+            PropertyInfo prop = target.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(target, value);
+                return true;
+            }
+        }
+        catch
+        {
+            // Ignored – property not available or cannot be set.
+        }
+        return false;
+    }
+
+    // Retrieves the digital signature count using reflection; returns -1 if unavailable.
+    private static int GetDigitalSignatureCount(Workbook workbook)
+    {
+        try
+        {
+            PropertyInfo sigProp = workbook.GetType().GetProperty("DigitalSignatureCollection", BindingFlags.Public | BindingFlags.Instance);
+            if (sigProp != null)
+            {
+                object collection = sigProp.GetValue(workbook);
+                if (collection != null)
+                {
+                    PropertyInfo countProp = collection.GetType().GetProperty("Count", BindingFlags.Public | BindingFlags.Instance);
+                    if (countProp != null)
+                    {
+                        object countObj = countProp.GetValue(collection);
+                        if (countObj is int count)
+                            return count;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Ignored – API not present.
+        }
+        return -1; // Indicates that signature information could not be retrieved.
     }
 }

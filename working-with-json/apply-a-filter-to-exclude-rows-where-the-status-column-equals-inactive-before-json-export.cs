@@ -1,71 +1,62 @@
-// Title: How to hide rows with "Inactive" status in an Excel worksheet before exporting to JSON using Aspose.Cells for .NET
-// AI Prompts: Hide rows where the Status column equals "Inactive" and then save the worksheet as JSON with Aspose.Cells in C#. | Filter out rows with a specific status value before performing a JSON export using Aspose.Cells. | Programmatically exclude rows based on column content when converting an Excel file to JSON with Aspose.Cells. | Use Aspose.Cells to hide rows with a given status and generate a JSON file that omits those rows.
-// Common Searches: Aspose.Cells hide rows with specific cell value before JSON export C# | Exclude rows where Status = Inactive when converting Excel to JSON using Aspose.Cells | C# filter Excel data by column value prior to JSON serialization with Aspose.Cells | How to prevent hidden rows from appearing in JSON output from Aspose.Cells | Remove inactive records from Excel to JSON conversion in .NET
-// Tags: hide rows based on column value Aspose.Cells | filter Excel rows before JSON export C# | exclude inactive status Aspose.Cells JSON conversion | row visibility control Aspose.Cells | Excel to JSON conversion with row filtering .NET
+// Title: How to filter out rows with Status = "Inactive" in an Excel worksheet before exporting to JSON using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells remove rows where column value is Inactive before saving as JSON in C# | C# filter Excel rows by status column using Aspose.Cells and export to JSON | Delete rows with specific cell text in Aspose.Cells workbook prior to JSON conversion | How to exclude inactive records from Excel when generating JSON with Aspose.Cells | Aspose.Cells C# example for row deletion based on cell content before JSON export
+// Tags: Aspose.Cells row deletion by cell value | filter Excel rows before JSON conversion Aspose.Cells | C# Aspose.Cells SaveFormat.Json with filtered worksheet | exclude inactive records Excel Aspose.Cells | reverse row iteration for safe deletion Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, hides any rows where the Status column (index 2) contains "Inactive", and then saves the worksheet as a JSON file. Aspose.Cells automatically omits hidden rows from the exported JSON, providing a filtered output.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates rows in reverse, deletes any row whose Status column contains "Inactive", and then saves the cleaned worksheet to a JSON file using Aspose.Cells SaveFormat.Json.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.json";
-
-        // Verify that the input file exists
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Zero‑based index of the "Status" column (e.g., column C => 2)
-        int statusColumnIndex = 2;
-
-        // Determine the last row that contains data
-        int lastDataRow = sheet.Cells.MaxDataRow;
-
-        // Loop through data rows (skip header row at index 0)
-        for (int row = 1; row <= lastDataRow; row++)
-        {
-            // Get the cell value in the Status column
-            Cell statusCell = sheet.Cells[row, statusColumnIndex];
-
-            // If the status equals "Inactive", hide the entire row
-            if (statusCell.StringValue.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                // Hide the row using Cells.Rows collection
-                sheet.Cells.Rows[row].IsHidden = true;
-            }
-        }
+                // Load an existing workbook if it exists; otherwise create a new one
+                string inputPath = "input.xlsx";
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-        try
-        {
-            // Export the worksheet to JSON (hidden rows are excluded)
-            workbook.Save(outputPath, SaveFormat.Json);
-            Console.WriteLine($"Workbook saved as JSON to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to save JSON: {ex.Message}");
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Column index for the "Status" column (e.g., column B => index 1)
+                int statusColumnIndex = 1;
+
+                // Determine the data range
+                int minRow = sheet.Cells.MinDataRow;
+                int maxRow = sheet.Cells.MaxDataRow;
+
+                // Remove rows where Status = "Inactive"
+                for (int rowIndex = maxRow; rowIndex >= minRow; rowIndex--)
+                {
+                    try
+                    {
+                        Cell statusCell = sheet.Cells[rowIndex, statusColumnIndex];
+                        if (statusCell != null && statusCell.Type == CellValueType.IsString &&
+                            string.Equals(statusCell.StringValue, "Inactive", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Delete the entire row
+                            sheet.Cells.DeleteRows(rowIndex, 1);
+                        }
+                    }
+                    catch (Exception exRow)
+                    {
+                        Console.WriteLine($"Warning: Could not process row {rowIndex}. {exRow.Message}");
+                    }
+                }
+
+                // Save the workbook as JSON
+                string outputPath = "output.json";
+                workbook.Save(outputPath, SaveFormat.Json);
+                Console.WriteLine($"Workbook saved as JSON to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

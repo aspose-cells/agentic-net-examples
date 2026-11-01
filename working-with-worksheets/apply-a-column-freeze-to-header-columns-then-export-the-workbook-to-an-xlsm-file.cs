@@ -1,13 +1,13 @@
-// Title: Freeze the first column of a worksheet and export the workbook as a macro‑enabled XLSM file with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to freeze column A on a worksheet and then saves the workbook in macro‑enabled XLSM format. | Generate a .NET example that applies FreezePanes to the header column and writes the file using SaveFormat.Xlsm.
-// Common Searches: C# Aspose.Cells freeze first column while scrolling | how to save a workbook as macro enabled XLSM using Aspose.Cells .NET | freeze panes header columns and export as XLSM Aspose.Cells example | Aspose.Cells SaveFormat.Xlsm usage in C#
-// Tags: freeze panes first column Aspose.Cells | export workbook to XLSM Aspose.Cells | macro enabled Excel file generation .NET | worksheet FreezePanes API | SaveFormat.Xlsm example C#
+// Title: Freeze header columns in a worksheet and export the workbook as a macro‑enabled XLSM file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that freezes the first two columns of a worksheet and then saves the workbook as a macro‑enabled XLSM file with Aspose.Cells. | Show an example of applying column freeze to header columns and exporting the result to an .xlsm file using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# freeze first two columns and save as macro enabled workbook | how to use FreezePanes to lock header columns and export to XLSM in .NET | C# example for column freeze and XLSM export with Aspose.Cells | freeze panes header columns then save workbook as .xlsm using Aspose.Cells
+// Tags: freeze panes columns Aspose.Cells | save workbook as XLSM Aspose.Cells | column freeze header Aspose.Cells C# | export frozen worksheet to macro enabled XLSM
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Creates a new workbook, freezes column A on the first worksheet, ensures the output directory exists, and saves the file as a macro‑enabled XLSM using Aspose.Cells.
+// Creates a new workbook, freezes the first two columns (A and B) on the first worksheet, and saves the file as a macro‑enabled XLSM document using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -15,31 +15,32 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
             // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            var sheet = workbook.Worksheets[0];
 
-            // Freeze the first column (A) so header columns stay visible while scrolling
-            // Parameters: totalRows, totalColumns, rows to freeze, columns to freeze
-            sheet.FreezePanes(0, 0, 0, 1);
+            // (Optional) Populate some data for demonstration
+            // sheet.Cells["A1"].PutValue("Header1");
+            // sheet.Cells["B1"].PutValue("Header2");
+            // sheet.Cells["C1"].PutValue("Data1");
+            // sheet.Cells["C2"].PutValue(123);
+
+            // Freeze the first two columns (A and B) while keeping all rows unfrozen
+            // Parameters: row index, column index where the freeze starts,
+            // total rows to freeze, total columns to freeze.
+            sheet.FreezePanes(0, 2, 0, 2);
 
             // Define output file path
-            string outputPath = "Output.xlsm";
+            string outputPath = "output.xlsm";
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Export the workbook as an XLSM (macro‑enabled) file
+            // Save the workbook as a macro‑enabled XLSM file
             workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

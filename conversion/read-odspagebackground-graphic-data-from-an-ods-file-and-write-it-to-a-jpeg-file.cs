@@ -1,59 +1,77 @@
-// Title: Extract the graphic page background from an ODS file and save it as a JPEG using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an ODS workbook with Aspose.Cells, reads the ODSPageBackground graphic data from the first worksheet, and writes the bytes to a JPEG file. | Modify the extraction routine to output the ODS page background as a PNG file, including error handling for missing or non‑graphic backgrounds. | Create a C# program that loops through all worksheets in an ODS workbook, extracts each ODSPageBackground graphic, and saves them as separate JPEG files named after the worksheet.
-// Common Searches: C# Aspose.Cells extract ODS page background image to JPEG | How to save ODS worksheet background graphic as an image file in .NET | Aspose.Cells ODSPageBackground graphic data conversion example | Export ODS page background to PNG using Aspose.Cells C# | Batch extract page backgrounds from all sheets in an ODS file with Aspose.Cells
-// Tags: ODSPageBackground graphic extraction to JPEG | Aspose.Cells save ODS background as image | C# write raw ODSPageBackground bytes to file | convert ODS page background to PNG | iterate worksheets export ODS backgrounds
+// Title: Extract ODS worksheet page background image and save as JPEG using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# extract page background picture from ODS workbook | Save ODS worksheet background image as JPEG with Aspose.Cells | How to get ImageBytes of ODS page background using reflection in .NET | Convert ODS page background graphic to JPG programmatically | Read ODS file page setup background image using Aspose.Cells API
+// Tags: Aspose.Cells ODS background image extraction | C# export ODS background as JPEG | reflection access BackgroundPicture property Aspose.Cells | retrieve ImageBytes from worksheet background | ODS to JPEG conversion using Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// The sample loads an ODS workbook, accesses the first worksheet's ODSPageBackground, checks that it contains graphic data, and writes the raw bytes directly to a JPEG file.
-class OdsPageBackgroundToJpeg
+namespace OdsPageBackgroundExport
 {
-    static void Main()
+    // The example loads an ODS workbook with Aspose.Cells, uses reflection to access the worksheet's PageSetup BackgroundPicture object, extracts its ImageBytes, and writes the bytes to a JPEG file, handling missing files and absent background graphics gracefully.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Path to the source ODS file
+            // Paths for input ODS and output JPEG files
             string odsPath = "input.ods";
+            string jpegPath = "page_background.jpg";
 
-            // Path for the output JPEG file
-            string jpegPath = "background.jpg";
-
-            // Verify that the input file exists
-            if (!File.Exists(odsPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {odsPath}");
-                return;
+                // Verify that the source ODS file exists
+                if (!File.Exists(odsPath))
+                {
+                    Console.WriteLine($"Input file not found: '{odsPath}'.");
+                    return;
+                }
+
+                // Load the ODS workbook
+                using (Workbook workbook = new Workbook(odsPath))
+                {
+                    // Get the first worksheet (adjust index if needed)
+                    Worksheet sheet = workbook.Worksheets[0];
+
+                    // Attempt to retrieve the page background picture via reflection
+                    object backgroundPicture = sheet.PageSetup.GetType()
+                        .GetProperty("BackgroundPicture")?
+                        .GetValue(sheet.PageSetup, null);
+
+                    if (backgroundPicture != null)
+                    {
+                        // Try to get the image bytes from the picture object
+                        var imageBytesProp = backgroundPicture.GetType()
+                            .GetProperty("ImageBytes");
+
+                        if (imageBytesProp != null)
+                        {
+                            byte[] imageBytes = imageBytesProp.GetValue(backgroundPicture) as byte[];
+                            if (imageBytes != null && imageBytes.Length > 0)
+                            {
+                                // Save the image bytes as a JPEG file
+                                File.WriteAllBytes(jpegPath, imageBytes);
+                                Console.WriteLine($"Page background saved to '{jpegPath}'.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Background picture found but contains no image data.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Background picture does not expose ImageBytes property.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No page background graphic found in the ODS file.");
+                    }
+                }
             }
-
-            // Load the ODS workbook
-            Workbook workbook = new Workbook(odsPath);
-
-            // Access the first worksheet's page setup
-            PageSetup pageSetup = workbook.Worksheets[0].PageSetup;
-
-            // Get the ODS page background object
-            OdsPageBackground background = pageSetup.ODSPageBackground;
-
-            // Ensure the background type is graphic and contains data
-            if (background.Type == OdsPageBackgroundType.Graphic &&
-                background.GraphicData != null &&
-                background.GraphicData.Length > 0)
+            catch (Exception ex)
             {
-                // Save the raw graphic data directly as a JPEG file
-                File.WriteAllBytes(jpegPath, background.GraphicData);
-                Console.WriteLine($"Graphic background extracted and saved to {jpegPath}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-            else
-            {
-                Console.WriteLine("No graphic background found in the ODS file.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,29 +1,16 @@
-// Title: Set column C width to 20 points (≈0.28 inches) using Aspose.Cells in C#
-// AI Prompts: Apply SetColumnWidthInch to column C (index 2) with a width of 20 points in a fresh Aspose.Cells workbook. | Convert 20 points to inches, set the column width, insert a long string into C1, and save the file as ColumnCWidth.xlsx. | Demonstrate column‑width adjustment by points in C# without referencing column letters.
-// Common Searches: Aspose.Cells C# set column width in points | How to set Excel column C width to 20 points with Aspose.Cells | Set column width to 0.28 inches using SetColumnWidthInch method | Convert points to inches for column width in Aspose.Cells .NET | Adjust column width for long text entries in an Aspose.Cells workbook
-// Tags: SetColumnWidthInch method usage | column width adjustment Aspose.Cells | points to inches conversion C# | Excel column sizing .NET API | long text column display Aspose.Cells
+// Title: How to set column C width to 20 points in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, sets column C (zero‑based index 2) width to 20 points with Aspose.Cells, and saves the file. | Create a reusable C# method that receives an Aspose.Cells Worksheet object and adjusts column C width to 20 character units. | Show how to change the width of a specific column by its index in an Aspose.Cells worksheet without using column letters.
+// Common Searches: Aspose.Cells C# set column width to 20 characters | How to change width of column C in an Excel file using Aspose.Cells .NET | Set column width by index with Aspose.Cells example C# | Adjust Excel column width to a specific point size using Aspose.Cells for .NET | C# Aspose.Cells column width 20 points worksheet
+// Tags: set column width Aspose.Cells | Aspose.Cells column width by index | C# adjust Excel column width | Aspose.Cells worksheet column sizing | column C width 20 points | Aspose.Cells SetColumnWidth example
 
-using System;
-using Aspose.Cells;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// Creates a new workbook, converts 20 points to inches, sets column C (index 2) width via SetColumnWidthInch, writes a long text into C1 to illustrate the width, and saves the workbook as ColumnCWidth.xlsx.
-class SetColumnCWidth
-{
-    static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+// Access the first worksheet (index 0)
+Aspose.Cells.Worksheet worksheet = workbook.Worksheets[0];
 
-        // Column C is index 2 (0‑based). Set its width to 20 points.
-        // 1 point = 1/72 inch, so 20 points = 20/72 inches.
-        double inches = 20.0 / 72.0;
-        worksheet.Cells.SetColumnWidthInch(2, inches);
+// Set the width of column C (zero‑based index 2) to 20 points (approx. 20 character units)
+worksheet.Cells.SetColumnWidth(2, 20);
 
-        // Example data to visualize the width
-        worksheet.Cells["C1"].PutValue("This is a long text entry that needs enough width.");
-
-        // Save the workbook
-        workbook.Save("ColumnCWidth.xlsx");
-    }
-}
+// Save the workbook to a file
+workbook.Save("Output.xlsx");

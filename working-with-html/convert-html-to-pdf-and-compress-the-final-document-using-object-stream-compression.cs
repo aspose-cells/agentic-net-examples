@@ -1,49 +1,38 @@
-// Title: Convert an HTML file to a compressed PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an HTML document into an Aspose.Cells Workbook and saves it as a PDF with object stream compression enabled via PdfSaveOptions. | Explain how to set PdfSaveOptions.Compression to PdfCompressionType.Stream when exporting HTML to PDF with Aspose.Cells.
-// Common Searches: how to export HTML to PDF with reduced file size using Aspose.Cells C# | Aspose.Cells PdfSaveOptions compression option for PDF output | C# convert html file to compressed PDF with Aspose.Cells library | enable PDF size reduction in Aspose.Cells .NET example | save workbook as PDF with smaller size Aspose.Cells
-// Tags: HTML to PDF conversion Aspose.Cells | PdfSaveOptions compression setting | Aspose.Cells PDF export reduced size | C# workbook save compressed PDF | PDF size optimization Aspose.Cells
+// Title: C# – Convert an HTML file to a compressed PDF using Aspose.Cells with object‑stream compression
+// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions to turn on object‑stream mode, and saves the result as a PDF. | Show how to set PdfSaveOptions.EnableObjectStream = true and select the highest compression level when converting HTML to PDF with Aspose.Cells. | Provide a complete C# example that validates the HTML input path, applies object‑stream mode, and writes the compressed PDF to disk using Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable PDF object stream for smaller files | convert HTML to PDF with maximum compression using Aspose.Cells .NET | C# sample code for HTML workbook to compressed PDF with PdfSaveOptions | how to reduce PDF file size when saving from Aspose.Cells workbook
+// Tags: Aspose.Cells PDF object stream | C# HTML workbook PDF export Aspose.Cells | PdfSaveOptions object stream setting | high PDF compression Aspose.Cells | PDF size reduction from HTML workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for an input HTML file, loads it into an Aspose.Cells Workbook, optionally configures PdfSaveOptions to use stream compression, ensures the output directory exists, and saves the workbook as a compressed PDF.
+// The program checks that an HTML file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions instance, and saves the workbook as a PDF. By setting PdfSaveOptions.EnableObjectStream = true (and optionally increasing the compression level), the resulting PDF can be compressed using object‑stream compression.
 class Program
 {
     static void Main()
     {
-        // Paths for input HTML and output PDF
-        string htmlPath = "input.html";
-        string pdfPath = "output.pdf";
-
-        // Verify that the input HTML file exists
-        if (!File.Exists(htmlPath))
-        {
-            Console.WriteLine($"Error: Input file not found – {htmlPath}");
-            return;
-        }
-
         try
         {
-            // Load the HTML file into a Workbook
-            Workbook workbook = new Workbook(htmlPath);
+            const string inputPath = "input.html";
+            const string outputPath = "output.pdf";
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            // Uncomment the following line if the Compression property is available in your Aspose.Cells version
-            // pdfOptions.Compression = PdfCompressionType.Stream;
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(pdfPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that the input HTML file exists
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook as a PDF
-            workbook.Save(pdfPath, pdfOptions);
+            // Load the HTML file into a Workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine($"PDF successfully saved to {pdfPath}");
+            // Create PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

@@ -1,59 +1,34 @@
-// Title: Create a backup of an Excel workbook and change all worksheet TabId values using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that copies an existing .xlsx file to a backup location, then iterates through each worksheet and sets its TabId to Index+1 using Aspose.Cells. | Show how to create a minimal workbook when the source file is missing, ensure the backup and output directories exist, and save the modified workbook to a separate path with Aspose.Cells.
-// Common Searches: aspocells c# backup workbook before changing worksheet TabId | set worksheet TabId programmatically with Aspose.Cells after creating backup | C# example to copy Excel file, modify sheet TabId, and save to new location using Aspose.Cells
-// Tags: Aspose.Cells workbook backup creation | Aspose.Cells modify worksheet TabId | Aspose.Cells save workbook to new file path | Aspose.Cells ensure output directory exists | Aspose.Cells generate placeholder workbook if missing
+// Title: Create a backup of an Excel workbook before updating worksheet TabId values with Aspose.Cells in C#
+// Common Searches: c# asp.net create backup of Excel workbook before changing worksheet tab identifiers with Aspose.Cells | how to preserve original Excel file while updating worksheet TabId using Aspose.Cells library | example code to save a copy of a workbook and then set TabId values in C# | aspocells backup workbook then modify worksheet properties programmatically | C# Aspose.Cells modify worksheet TabId after creating backup copy
+// Tags: Aspose.Cells generate backup copy of workbook | set worksheet TabId using Aspose.Cells C# | Workbook.Save duplicate file programmatically | modify worksheet properties with Aspose.Cells | retain source workbook during Excel modifications
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to verify an Excel file's existence, create a minimal workbook if needed, back up the original workbook, update each worksheet's TabId to its index plus one, and save the modified workbook to a separate location using Aspose.Cells for .NET.
-class WorkbookBackupAndModify
+// The sample loads an existing Excel file, creates a duplicate backup using Workbook.Save, updates each worksheet's TabId property, and then saves the altered workbook as a new file, ensuring the original workbook remains unchanged.
+class Program
 {
     static void Main()
     {
-        // Paths for the original workbook, backup copy, and the modified workbook
-        string originalPath = @"C:\Data\OriginalWorkbook.xlsx";
-        string backupPath   = @"C:\Data\Backup\OriginalWorkbook_Backup.xlsx";
-        string outputPath   = @"C:\Data\Modified\OriginalWorkbook_Modified.xlsx";
+        // Path to the original workbook
+        string originalPath = "original.xlsx";
 
-        try
+        // Load the workbook (load rule)
+        Workbook workbook = new Workbook(originalPath);
+
+        // Create a backup copy before making any changes (save rule)
+        string backupPath = "original_backup.xlsx";
+        workbook.Save(backupPath);
+
+        // Modify TabId values for each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Ensure the original file exists; if not, create a minimal workbook
-            if (!File.Exists(originalPath))
-            {
-                // Create directory if needed
-                Directory.CreateDirectory(Path.GetDirectoryName(originalPath));
-
-                // Create a new workbook with a single worksheet and save it as the original file
-                var newWb = new Workbook();
-                newWb.Worksheets[0].Name = "Sheet1";
-                newWb.Save(originalPath, SaveFormat.Xlsx);
-            }
-
-            // Load the original workbook
-            Workbook workbook = new Workbook(originalPath);
-
-            // Ensure backup and output directories exist
-            Directory.CreateDirectory(Path.GetDirectoryName(backupPath));
-            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-
-            // Create a backup of the workbook before any changes
-            workbook.Save(backupPath, SaveFormat.Xlsx);
-
-            // Modify the TabId of each worksheet as needed (example: index + 1)
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // TabId must be a positive integer; adjust as required
-                sheet.TabId = sheet.Index + 1;
-            }
-
-            // Save the modified workbook to a new file
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Example: set TabId to a new unique value (e.g., current index + 100)
+            sheet.TabId = sheet.Index + 100;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+
+        // Save the modified workbook (save rule)
+        string modifiedPath = "original_modified.xlsx";
+        workbook.Save(modifiedPath);
     }
 }

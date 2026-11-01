@@ -1,12 +1,12 @@
-// Title: Get the active worksheet's paper height with Aspose.Cells for .NET and output it to the console
-// AI Prompts: Write a C# console program that loads a workbook using Aspose.Cells, accesses the active worksheet's PageSetup, and prints the PaperHeight value. | Show how to retrieve the PaperHeight property from the active sheet's PageSetup in Aspose.Cells and display the result in the console. | Generate minimal Aspose.Cells code that reads the current paper height setting of the workbook's active worksheet and writes it to standard output.
-// Common Searches: asp.net aspose.cells retrieve active worksheet paper height | c# get worksheet page setup paper height using Aspose.Cells | how to print worksheet PaperHeight to console with Aspose.Cells .NET
-// Tags: Aspose.Cells active worksheet PaperHeight | C# PageSetup retrieve paper height | console output worksheet paper dimensions | Aspose.Cells get page setup size | read active sheet paper height .NET
+// Title: Read the active worksheet's paper height with Aspose.Cells for .NET and output it to the console
+// AI Prompts: Generate C# code that accesses the active worksheet's PageSetup and prints the PaperHeight value in points. | Show how to retrieve the worksheet paper height using Aspose.Cells and display it on the console without loading an external file.
+// Common Searches: aspocells c# get active worksheet page setup paper height | how to print Excel worksheet paper height using Aspose.Cells .NET | retrieve paper height from worksheet PageSetup Aspose.Cells example | display worksheet page dimensions in console with Aspose.Cells | Aspose.Cells get paper size height of active sheet
+// Tags: Aspose.Cells read worksheet PaperHeight | C# PageSetup PaperHeight extraction | output worksheet page dimensions console | active sheet page setup size retrieval | Aspose.Cells paper size height
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to obtain the PaperHeight from the active worksheet's PageSetup using Aspose.Cells for .NET and print the value to the console.
+// The sample creates a Workbook, obtains the active Worksheet, reads its PageSetup.PaperHeight property (in points), and writes the height value to the console.
 class Program
 {
     static void Main()
@@ -17,10 +17,10 @@ class Program
         // Get the active worksheet
         Worksheet activeSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
-        // Retrieve the paper height from the worksheet's PageSetup
+        // Retrieve the paper height (in points) from the worksheet's PageSetup
         double paperHeight = activeSheet.PageSetup.PaperHeight;
 
         // Display the paper height in the console
-        Console.WriteLine($"Paper Height: {paperHeight}");
+        Console.WriteLine($"Paper Height: {paperHeight} points");
     }
 }

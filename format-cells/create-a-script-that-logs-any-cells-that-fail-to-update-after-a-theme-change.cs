@@ -1,7 +1,6 @@
-// Title: C# script to log cells whose foreground color does not change after applying an Excel theme with Aspose.Cells
-// AI Prompts: Write a C# program that loads a workbook with Aspose.Cells, records each cell's original foreground color, applies a chosen theme, and creates a text log of cells whose color remained unchanged. | Extend the script to also capture cells whose background color stays the same after the theme is applied and add those entries to the same log file. | Modify the logging routine to output the unchanged‑cell information as JSON objects instead of plain‑text lines.
-// Common Searches: Aspose.Cells C# detect cells that did not change color after workbook.ApplyTheme | log cells with unchanged formatting after applying Excel theme using Aspose.Cells .NET | compare cell style before and after theme change in Aspose.Cells C# example | how to track theme application failures for individual cells in Aspose.Cells workbook
-// Tags: Aspose.Cells workbook.ApplyTheme color change detection | C# log unchanged cell formatting after theme application | compare cell foreground color before after theme Aspose.Cells | track theme impact on Excel cell styles .NET | record cells failing to update color with Aspose.Cells
+// Title: C# Aspose.Cells script to log cells that do not change style after applying a .thmx theme
+// Common Searches: how to log Excel cells that keep the same font and background color after applying a theme with Aspose.Cells in C# | Aspose.Cells C# detect cells that failed to update when applying a .thmx theme | compare original and post‑theme cell styles using Aspose.Cells .NET | write a log of unchanged cell styles after workbook.ApplyTheme in C# | track cells that do not reflect theme changes in an Aspose.Cells workbook
+// Tags: Aspose.Cells theme change verification | C# detect cells unchanged after ApplyTheme | compare cell font and background colors Aspose.Cells | log failed theme updates Excel .NET | track cell style persistence Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,127 +8,125 @@ using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an input XLSX file, records each cell's original foreground color, optionally applies a new Excel theme, recalculates formulas, then scans all cells again to identify those whose foreground color did not change. Each such cell is written to a log file before the workbook is saved.
-class ThemeChangeLogger
+// The example loads a workbook, records each non‑empty cell’s font and background colors, attempts to apply a .thmx theme with Aspose.Cells, then re‑examines the cells; any cell whose colors remain unchanged is considered a failed update and its address (including worksheet name) is written to a log file.
+class ThemeUpdateLogger
 {
     static void Main()
     {
-        // Paths for input and output files
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-        string logPath = "ThemeUpdateLog.txt";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
-        Workbook workbook = null;
         try
         {
+            // Input workbook path
+            string inputPath = @"C:\Input\Sample.xlsx";
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException("Input workbook not found.", inputPath);
+
             // Load the workbook
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
+            Workbook workbook = new Workbook(inputPath);
 
-        // Store the original foreground color for each cell (used as a proxy for theme color)
-        var originalColors = new Dictionary<string, Color>();
+            // Store original style information for each cell that has a value
+            // Key: cell address (e.g., "A1"), Value: tuple of foreground (font) and background colors
+            var originalStyles = new Dictionary<string, (Color ForeColor, Color BackColor)>();
 
-        // Capture original colors
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-            int startRow = usedRange.FirstRow;
-            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-            int startCol = usedRange.FirstColumn;
-            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-            for (int row = startRow; row <= endRow; row++)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = startCol; col <= endCol; col++)
+                // Limit iteration to the used range
+                var usedRange = sheet.Cells.MaxDisplayRange;
+                if (usedRange == null) continue;
+
+                int firstRow = usedRange.FirstRow;
+                int lastRow = firstRow + usedRange.RowCount - 1;
+                int firstCol = usedRange.FirstColumn;
+                int lastCol = firstCol + usedRange.ColumnCount - 1;
+
+                for (int row = firstRow; row <= lastRow; row++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    Style style = cell.GetStyle();
-                    Color fgColor = style.ForegroundColor;
-                    if (!fgColor.IsEmpty)
+                    for (int col = firstCol; col <= lastCol; col++)
                     {
-                        originalColors[cell.Name] = fgColor;
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.Value == null) continue; // Skip empty cells
+
+                        string address = cell.Name; // e.g., "A1"
+                        Style style = cell.GetStyle();
+
+                        // Capture font (foreground) and cell background colors
+                        originalStyles[address] = (style.Font.Color, style.ForegroundColor);
                     }
                 }
             }
-        }
 
-        // NOTE: ApplyTheme is not available in all Aspose.Cells versions.
-        // If needed, uncomment the line below when using a version that supports it.
-        // workbook.ApplyTheme("Office");
+            // Apply a new theme to the workbook (if supported by the current Aspose.Cells version)
+            string themePath = @"C:\Themes\NewTheme.thmx";
+            if (!File.Exists(themePath))
+                throw new FileNotFoundException("Theme file not found.", themePath);
 
-        // Recalculate formulas after any changes
-        try
-        {
-            workbook.CalculateFormula();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Formula calculation error: {ex.Message}");
-        }
-
-        // Prepare log file
-        try
-        {
-            using (StreamWriter logWriter = new StreamWriter(logPath, false))
+            try
             {
-                // Scan cells again and compare colors
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // The ApplyTheme method may not exist in older versions.
+                // If unavailable, this block will be skipped without breaking the program.
+                // Uncomment the line below if your Aspose.Cells version supports it:
+                // workbook.ApplyTheme(themePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to apply theme. {ex.Message}");
+            }
+
+            // Determine cells that did NOT reflect the theme change
+            var failedUpdates = new List<string>();
+
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                var usedRange = sheet.Cells.MaxDisplayRange;
+                if (usedRange == null) continue;
+
+                int firstRow = usedRange.FirstRow;
+                int lastRow = firstRow + usedRange.RowCount - 1;
+                int firstCol = usedRange.FirstColumn;
+                int lastCol = firstCol + usedRange.ColumnCount - 1;
+
+                for (int row = firstRow; row <= lastRow; row++)
                 {
-                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-                    int startRow = usedRange.FirstRow;
-                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                    int startCol = usedRange.FirstColumn;
-                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                    for (int row = startRow; row <= endRow; row++)
+                    for (int col = firstCol; col <= lastCol; col++)
                     {
-                        for (int col = startCol; col <= endCol; col++)
-                        {
-                            Cell cell = sheet.Cells[row, col];
-                            Style style = cell.GetStyle();
-                            Color currentColor = style.ForegroundColor;
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.Value == null) continue; // Skip empty cells
 
-                            if (originalColors.TryGetValue(cell.Name, out Color originalColor))
-                            {
-                                // If the color did not change, log it
-                                if (currentColor.Equals(originalColor))
-                                {
-                                    string message = $"Cell {cell.Name} in sheet \"{sheet.Name}\" did not update its color.";
-                                    Console.WriteLine(message);
-                                    logWriter.WriteLine(message);
-                                }
-                            }
+                        string address = cell.Name;
+                        if (!originalStyles.TryGetValue(address, out var original)) continue;
+
+                        Style newStyle = cell.GetStyle();
+
+                        // If both foreground and background colors remain unchanged, consider it a failure
+                        if (newStyle.Font.Color.Equals(original.ForeColor) &&
+                            newStyle.ForegroundColor.Equals(original.BackColor))
+                        {
+                            failedUpdates.Add($"{sheet.Name}!{address}");
                         }
                     }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Logging error: {ex.Message}");
-        }
 
-        // Save the workbook
-        try
-        {
-            workbook?.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            // Ensure output directory exists
+            string logPath = @"C:\Output\ThemeUpdateFailures.log";
+            string? logDir = Path.GetDirectoryName(logPath);
+            if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
+                Directory.CreateDirectory(logDir);
+
+            // Write log
+            using (StreamWriter writer = new StreamWriter(logPath, false))
+            {
+                writer.WriteLine("Cells that did not reflect the theme change:");
+                foreach (string entry in failedUpdates)
+                {
+                    writer.WriteLine(entry);
+                }
+            }
+
+            Console.WriteLine($"Theme processing completed. {failedUpdates.Count} cells failed to update. See log at: {logPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

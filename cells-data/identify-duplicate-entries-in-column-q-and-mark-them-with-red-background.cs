@@ -1,61 +1,62 @@
-// Title: Highlight duplicate values in column Q with a red background using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to add a DuplicateValues conditional format to column Q and set a solid red fill for the matching cells. | Generate a .NET program that loads an Excel workbook, applies a red background style to any duplicate entries in column Q via conditional formatting, and saves the file.
-// Common Searches: Aspose.Cells C# highlight duplicate cells in column Q with red fill | How to apply conditional formatting for duplicate values in a specific column using Aspose.Cells .NET | Set red background for duplicate entries in Excel column Q programmatically with Aspose.Cells | C# example for duplicate value detection and styling in column Q using Aspose.Cells
-// Tags: Aspose.Cells duplicate values conditional formatting | red fill style for duplicate cells .NET | column Q duplicate detection Aspose.Cells | conditional formatting red background Excel .NET | highlight duplicate entries column Q C#
+// Title: Highlight duplicate values in column Q of an Excel workbook with a red background using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, finds repeated values in column Q, and applies a solid red fill style to those cells. | Create a reusable C# method using Aspose.Cells that returns the duplicate cells in a specified column and colors them red.
+// Common Searches: Aspose.Cells C# how to color duplicate cells in a specific column red | C# find and highlight duplicate entries in column Q of an Excel file using Aspose.Cells | Mark repeated values with red background in Excel using Aspose.Cells .NET | Detect duplicate strings in column Q and apply red fill with Aspose.Cells for .NET
+// Tags: duplicate detection column Q Aspose.Cells | red background formatting Aspose.Cells | highlight repeated entries C# | Excel column duplicate marking Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
-namespace AsposeCellsDuplicateHighlight
+// The program loads an input.xlsx workbook, scans column Q for duplicate string values, collects the duplicate cells, applies a solid red background style to each, and saves the result as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // The example loads or creates a workbook, defines a conditional formatting range for column Q, adds a DuplicateValues condition, applies a solid red fill style to the duplicates, and saves the modified file as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet sheet = workbook.Worksheets[0]; // work with the first worksheet
+
+        // Column Q corresponds to index 16 (zero‑based)
+        int columnIndex = 16;
+
+        // Track values that have already been seen
+        HashSet<string> seenValues = new HashSet<string>();
+        // Collect cells that are duplicates
+        List<Cell> duplicateCells = new List<Cell>();
+
+        // Determine the last row that contains data in the sheet
+        int lastRow = sheet.Cells.MaxDataRow;
+
+        // Scan each cell in column Q
+        for (int row = 0; row <= lastRow; row++)
         {
-            // Create a new workbook or load an existing one
-            // Replace "input.xlsx" with your source file if needed
-            Workbook workbook = new Workbook(); // new workbook
-            // If you have an existing file, use:
-            // Workbook workbook = new Workbook("input.xlsx");
+            Cell cell = sheet.Cells[row, columnIndex];
+            string cellText = cell.StringValue?.Trim();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Skip empty cells
+            if (string.IsNullOrEmpty(cellText))
+                continue;
 
-            // Determine the last row that contains data in column Q (index 16)
-            int lastRow = worksheet.Cells.MaxDataRow;
-
-            // Define the range that covers column Q from the first row to the last data row
-            CellArea duplicateRange = new CellArea
+            // If the value is already in the set, it's a duplicate
+            if (!seenValues.Add(cellText))
             {
-                StartRow = 0,
-                EndRow = lastRow,
-                StartColumn = 16,   // Column Q (0‑based index)
-                EndColumn = 16
-            };
-
-            // Add a new conditional formatting collection to the worksheet
-            int cfIndex = worksheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
-
-            // Apply the range to the conditional formatting
-            fcs.AddArea(duplicateRange);
-
-            // Add a condition that highlights duplicate values
-            int conditionIndex = fcs.AddCondition(FormatConditionType.DuplicateValues);
-            FormatCondition duplicateCondition = fcs[conditionIndex];
-
-            // Create a style with a red background
-            Style redStyle = workbook.CreateStyle();
-            redStyle.ForegroundColor = Color.Red;
-            redStyle.Pattern = BackgroundType.Solid;
-
-            // Assign the style to the condition
-            duplicateCondition.Style = redStyle;
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
+                duplicateCells.Add(cell);
+            }
         }
+
+        // Create a style with a solid red background
+        Style redBackground = workbook.CreateStyle();
+        redBackground.ForegroundColor = Color.Red;
+        redBackground.Pattern = BackgroundType.Solid;
+
+        // Apply the red background style to each duplicate cell
+        foreach (Cell dupCell in duplicateCells)
+        {
+            dupCell.SetStyle(redBackground);
+        }
+
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,73 +1,98 @@
-// Title: Render an Excel worksheet to a PNG image and upload it with HttpClient multipart POST in C# using Aspose.Cells
-// AI Prompts: Generate C# code that uses Aspose.Cells to render the first worksheet of a workbook to a PNG stream and sends it to a given REST endpoint with HttpClient multipart/form-data. | Show how to add bearer‑token authentication to the HttpClient request when uploading the PNG image generated from an Aspose.Cells worksheet. | Provide an example that batches multiple worksheet PNG streams into a single multipart/form-data POST request using Aspose.Cells and HttpClient.
-// Common Searches: how to export an Excel sheet as PNG and post it to a web API using Aspose.Cells | C# Aspose.Cells render worksheet to image and upload with HttpClient multipart | sending Excel worksheet image to REST service with authentication in .NET | convert Excel worksheet to PNG in memory and call external API from C# | Aspose.Cells SheetRender PNG upload example
-// Tags: export worksheet to PNG with Aspose.Cells | multipart/form-data image upload via HttpClient | in‑memory PNG stream from Excel sheet | authenticated POST of PNG to web service | Aspose.Cells SheetRender PNG generation | C# send workbook image to API
+// Title: Render an Excel worksheet to PNG and upload it via HTTP POST using Aspose.Cells in C#
+// Common Searches: C# generate PNG from first worksheet using Aspose.Cells and send to web API | Upload Excel worksheet image to REST service with HttpClient multipart/form-data | Aspose.Cells render worksheet to memory stream and post as image/png | Send worksheet screenshot to external endpoint from .NET console app | Convert Excel sheet to PNG and call POST endpoint in C#
+// Tags: Aspose.Cells PNG rendering of worksheet | C# HttpClient form-data image POST | SheetRender ToImage memory stream usage | Upload PNG to REST API from .NET | Excel sheet image conversion with Aspose.Cells
 
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;   // Required for ImageOrPrintOptions and SheetRender
+using Aspose.Cells.Rendering;
 
-// The program creates a workbook, renders the first worksheet to a PNG image in a memory stream, and uploads the image to a REST API using HttpClient with multipart/form-data, optionally supporting authentication.
+// The console program loads a workbook, renders the first worksheet to a PNG image in a memory stream using Aspose.Cells' SheetRender, and then posts the image as multipart/form-data to a specified REST endpoint with HttpClient, handling responses and errors.
 class Program
 {
     static async Task Main(string[] args)
     {
+        // Expect two arguments: path to the workbook and the REST endpoint URL
+        if (args.Length != 2)
+        {
+            Console.WriteLine("Usage: Program <workbookPath> <endpointUrl>");
+            return;
+        }
+
+        string workbookPath = args[0];
+        string endpointUrl = args[1];
+
+        await SendWorksheetImageAsync(workbookPath, endpointUrl);
+    }
+
+    static async Task SendWorksheetImageAsync(string workbookPath, string endpointUrl)
+    {
+        // Verify that the workbook file exists
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Workbook file not found: {workbookPath}");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["B2"].PutValue(12345);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Configure image export options (default format is PNG)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Select the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set rendering options (default image format is PNG)
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
                 OnePagePerSheet = true
             };
 
-            // Render the worksheet to an image and store it in a memory stream
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            // Render the worksheet to a memory stream (no temporary file needed)
             using (MemoryStream imageStream = new MemoryStream())
             {
-                // Export the first page (index 0) of the worksheet as PNG
+                SheetRender renderer = new SheetRender(sheet, options);
                 renderer.ToImage(0, imageStream);
                 imageStream.Position = 0; // Reset stream position for reading
 
-                // Prepare HTTP client for POST request
-                using (HttpClient httpClient = new HttpClient())
+                // Prepare HTTP client and multipart/form-data content
+                using (HttpClient client = new HttpClient())
+                using (MultipartFormDataContent multipart = new MultipartFormDataContent())
                 {
-                    // Create multipart/form-data content
-                    using (MultipartFormDataContent multipartContent = new MultipartFormDataContent())
+                    StreamContent fileContent = new StreamContent(imageStream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                    multipart.Add(fileContent, "file", "worksheet.png");
+
+                    try
                     {
-                        // Add the PNG image as a byte array content
-                        ByteArrayContent imageContent = new ByteArrayContent(imageStream.ToArray());
-                        imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-                        multipartContent.Add(imageContent, "file", "worksheet.png");
-
-                        // Define the REST endpoint URL
-                        string endpointUrl = "https://example.com/api/upload";
-
-                        // Send POST request
-                        HttpResponseMessage response = await httpClient.PostAsync(endpointUrl, multipartContent);
+                        // Send the PNG image via HTTP POST to the REST endpoint
+                        HttpResponseMessage response = await client.PostAsync(endpointUrl, multipart);
                         response.EnsureSuccessStatusCode();
 
-                        // Optionally read response content
+                        // Output server response for verification
                         string responseBody = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Upload successful. Server response:");
-                        Console.WriteLine(responseBody);
+                        Console.WriteLine($"Server response: {responseBody}");
+                    }
+                    catch (Exception httpEx)
+                    {
+                        Console.WriteLine($"HTTP request failed: {httpEx.Message}");
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

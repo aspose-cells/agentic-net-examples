@@ -1,79 +1,89 @@
-// Title: Validate row count of each detail worksheet against a source collection using Aspose.Cells for .NET
-// AI Prompts: Create a C# method that iterates through all worksheets in an Aspose.Cells workbook, compares each sheet's RowCollection.Count to a supplied expected count, and writes pass/fail messages to the console. | Write C# code that fills multiple worksheets with items from a List<string> starting at cell A1, then checks that every worksheet contains exactly the same number of rows as the list.
-// Common Searches: aspnet aspose.cells verify each worksheet row count matches list size | c# how to check row count of all sheets in an Aspose.Cells workbook | validate detail worksheets row numbers against source collection aspose.cells | aspose.cells RowCollection.Count example for row validation | c# populate Excel worksheets from List<string> and confirm row count
-// Tags: Aspose.Cells worksheet row count validation | C# populate worksheet from List<string> | Aspose.Cells RowCollection.Count usage | validate detail sheets in Excel workbook | Aspose.Cells verify row count per sheet
+// Title: Validate that detail worksheets created with Aspose.Cells smart markers have the expected row count in C#
+// Common Searches: C# Aspose.Cells validate row count of a generated detail worksheet | how to compare MaxDataRow to expected rows using Aspose.Cells | verify smart markers detail sheet row numbers match source collection in .NET | Aspose.Cells workbook row count validation with dictionary of expected values | throw exception when worksheet row count does not match expected in C# Excel report
+// Tags: Aspose.Cells worksheet row count check | C# MaxDataRow usage for row verification | smart markers generated sheet validation | expected rows dictionary validation in Excel | exception handling for row mismatch Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationDemo
+namespace AsposeCellsExample
 {
-    // Shows how to create a workbook, populate multiple worksheets from a List<string>, and validate that each worksheet's row count matches the source list count using Aspose.Cells RowCollection.Count.
-    class Program
+    // The DetailWorksheetValidator class loads an Excel workbook with Aspose.Cells, iterates each worksheet, and for those listed in a supplied dictionary compares the actual data row count (Cells.MaxDataRow + 1) to the expected count. It throws an InvalidOperationException when a mismatch is found and writes a success message when all detail worksheets contain the expected number of rows.
+    public class DetailWorksheetValidator
     {
-        static void Main()
+        /// <param name="workbookPath">Full path to the Excel file to validate.</param>
+        /// <param name="expectedRowCounts">
+        /// A dictionary where the key is the worksheet name and the value is the expected number of data rows.
+        /// </param>
+        public void Validate(string workbookPath, Dictionary<string, int> expectedRowCounts)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"The workbook file was not found: {workbookPath}");
 
-            // Example source collection whose count we expect in each detail worksheet
-            List<string> sourceData = new List<string>
+            Workbook workbook;
+            try
             {
-                "Item 1",
-                "Item 2",
-                "Item 3",
-                "Item 4"
-            };
-            int expectedRowCount = sourceData.Count;
-
-            // Populate two detail worksheets with data from the source collection
-            Worksheet detailSheet1 = workbook.Worksheets[workbook.Worksheets.Add()];
-            detailSheet1.Name = "DetailSheet1";
-            PopulateWorksheet(detailSheet1, sourceData);
-
-            Worksheet detailSheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
-            detailSheet2.Name = "DetailSheet2";
-            PopulateWorksheet(detailSheet2, sourceData);
-
-            // Validate that each detail worksheet has the expected number of rows
-            ValidateDetailWorksheets(workbook, expectedRowCount);
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ValidatedWorkbook.xlsx");
-        }
-
-        // Helper method to fill a worksheet with the source data starting at row 0, column 0
-        private static void PopulateWorksheet(Worksheet sheet, List<string> data)
-        {
-            for (int i = 0; i < data.Count; i++)
-            {
-                // Put each item into column A of the worksheet
-                sheet.Cells[i, 0].PutValue(data[i]);
+                // Load the workbook using Aspose.Cells
+                workbook = new Workbook(workbookPath);
             }
-        }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to load workbook '{workbookPath}'.", ex);
+            }
 
-        // Validation method that checks each worksheet's row count against the expected count
-        private static void ValidateDetailWorksheets(Workbook workbook, int expectedRowCount)
-        {
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Retrieve the RowCollection for the current worksheet
-                RowCollection rows = sheet.Cells.Rows; // uses RowCollection property
+                // Validate only worksheets that are present in the expected dictionary
+                if (!expectedRowCounts.ContainsKey(sheet.Name))
+                    continue;
 
-                // Get the actual number of rows (property Count)
-                int actualRowCount = rows.Count; // Count property of RowCollection
+                // MaxDataRow is zero‑based; add 1 to get the count of rows that contain data
+                int actualRowCount = sheet.Cells.MaxDataRow + 1;
+                int expectedCount = expectedRowCounts[sheet.Name];
 
-                // Output validation result
-                if (actualRowCount == expectedRowCount)
+                if (actualRowCount != expectedCount)
                 {
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\" validation passed. Row count: {actualRowCount}");
+                    throw new InvalidOperationException(
+                        $"Worksheet \"{sheet.Name}\" contains {actualRowCount} rows, but the expected count is {expectedCount}.");
                 }
-                else
+            }
+
+            Console.WriteLine("All detail worksheets contain the expected number of rows.");
+        }
+    }
+
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            try
+            {
+                // Example usage
+                var validator = new DetailWorksheetValidator();
+                var expected = new Dictionary<string, int>
                 {
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\" validation FAILED. Expected rows: {expectedRowCount}, Actual rows: {actualRowCount}");
-                }
+                    { "DetailSales", 150 },
+                    { "DetailInventory", 78 }
+                };
+
+                // Adjust the path to point to an existing workbook on your machine
+                string workbookPath = @"C:\Reports\GeneratedReport.xlsx";
+
+                validator.Validate(workbookPath, expected);
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.Error.WriteLine($"File error: {fnfEx.Message}");
+            }
+            catch (InvalidOperationException invEx)
+            {
+                Console.Error.WriteLine($"Validation error: {invEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

@@ -1,44 +1,61 @@
-// Title: Export an Excel workbook to HTML with Aspose.Cells C# while handling missing HtmlCrossType.MSExport
-// AI Prompts: Write C# code that loads a .xlsx file, checks if HtmlCrossType.MSExport is supported, and saves the workbook as HTML using Aspose.Cells with a fallback when the property is unavailable. | Modify the Aspose.Cells example to detect the library version and conditionally apply HtmlCrossType for Excel‑compatible HTML output. | Describe strategies for achieving Excel‑style HTML export in Aspose.Cells when the HtmlCrossType property does not exist in the current SDK.
-// Common Searches: how to export Excel to HTML with Aspose.Cells C# preserving formatting | Aspose.Cells HtmlCrossType MSExport not available in current version | C# save workbook as HTML using Aspose.Cells with fallback for missing HtmlCrossType | handle FileNotFoundException when converting .xlsx to HTML with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions HTML export | C# export Excel to HTML Aspose.Cells | HtmlCrossType MSExport fallback | Excel native HTML style Aspose.Cells | Workbook.Save HTML Aspose.Cells C#
+// Title: Export an Excel workbook to HTML using Aspose.Cells with HtmlCrossType.MSExport to preserve Excel’s native layout
+// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells and saves it as HTML using HtmlSaveOptions configured for the Microsoft‑style export mode. | Show how to set up Aspose.Cells HtmlSaveOptions to use the MSExport cross type and export a workbook to an HTML file while handling missing input files.
+// Common Searches: asp.net convert Excel workbook to HTML while keeping cell styles | using Aspose.Cells to generate HTML that matches Excel's built‑in HTML output | C# code example for saving .xlsx as HTML with Microsoft‑style cross type
+// Tags: Aspose.Cells HTML conversion with Microsoft‑style rendering | C# workbook to HTML preserving Excel layout | HtmlCrossType configuration for native Excel HTML | Aspose.Cells save options for HTML output | Export .xlsx to HTML using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample verifies the existence of an input .xlsx file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions for HTML output, notes that HtmlCrossType.MSExport is unavailable in the current SDK, and saves the workbook as an HTML file while handling exceptions.
+// The program verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions (which default to HtmlCrossType.MSExport), and saves the workbook as output.html, handling any load or save exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.html";
+            // Path to the source Excel file
+            string inputPath = "input.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing Excel workbook
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-            // Configure HTML save options (using default settings)
+            // Configure HTML save options (default cross type is MSExport)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: HtmlCrossType property is not available in the current Aspose.Cells version,
-            // so default cross‑type handling is used.
 
-            // Export the workbook to an HTML file
-            workbook.Save(outputFile, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+            // Path for the output HTML file
+            string outputPath = "output.html";
+
+            // Save the workbook as HTML
+            try
+            {
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save HTML: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,89 +1,57 @@
-// Title: Remove extra spaces after line breaks in Excel cells before exporting to HTML using Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates through all string cells in an Aspose.Cells workbook, uses a regular expression to delete spaces that follow newline characters, and then saves the workbook as HTML. | Update an Aspose.Cells HTML export routine to strip whitespace occurring after '\r\n' or '\n' line breaks in cell contents.
-// Common Searches: aspocells c# remove spaces after newline when saving as html | how to clean Excel cell text line break whitespace before html export using Aspose.Cells | regex to trim spaces after line breaks in Excel cells with Aspose.Cells .NET | remove trailing spaces after line breaks in workbook cells during HTML conversion Aspose.Cells
-// Tags: Aspose.Cells regex newline whitespace cleanup | trim cell string values before HTML conversion | remove redundant line break spaces in Excel workbook | C# iterate worksheet cells for whitespace normalization | HTML export whitespace handling with Aspose.Cells
+// Title: Remove extra spaces that follow line‑break characters in Excel cells before saving as HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, iterates every worksheet, and trims whitespace that appears after newline characters in string cells, then saves the workbook as HTML. | Create a reusable method that replaces a line‑break followed by one or more spaces with a single line‑break in all cell values of a workbook via Aspose.Cells. | Demonstrate how to apply a regular expression to clean up cell text whitespace across a workbook before exporting to HTML with Aspose.Cells.
+// Common Searches: aspocells how to eliminate spaces after line feeds when exporting to html | c# delete trailing whitespace in excel cell strings before html conversion | regex to clean up newline spacing in an Aspose.Cells workbook | export excel to html without extra blank spaces using Aspose.Cells
+// Tags: remove newline trailing spaces Aspose.Cells | regex cleanup cell text C# | process all worksheets string cells Aspose.Cells | html export without extra line break spaces Aspose.Cells
 
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsHtmlConversion
+// The program loads an Excel workbook, scans each string cell, uses a regular expression to replace line‑breaks followed by spaces with a single line‑break, updates modified cells, and saves the workbook as an HTML file using Aspose.Cells.
+class Program
 {
-    // The program loads an Excel workbook, walks through each worksheet's used range, applies a regular expression to replace line‑break characters followed by spaces with just the line break in string cells, updates any modified cells, and finally saves the workbook as an HTML file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Define a regex that matches line breaks followed by one or more spaces
+        Regex lineBreakSpaceRegex = new Regex(@"(\r?\n)\s+", RegexOptions.Compiled);
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Get the used range to limit iteration to cells that contain data
+            var cells = sheet.Cells;
+            var maxRow = cells.MaxDataRow;
+            var maxColumn = cells.MaxDataColumn;
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            for (int row = 0; row <= maxRow; row++)
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    // Get the used range of the worksheet
-                    AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-                    if (usedRange == null)
-                        continue; // Skip empty sheets
-
-                    int startRow = usedRange.FirstRow;
-                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                    int startCol = usedRange.FirstColumn;
-                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                    // Loop through each cell in the used range
-                    for (int row = startRow; row <= endRow; row++)
+                    Cell cell = cells[row, col];
+                    // Process only string cells
+                    if (cell.Type == CellValueType.IsString && cell.Value != null)
                     {
-                        for (int col = startCol; col <= endCol; col++)
+                        string original = cell.StringValue;
+                        // Replace line break + spaces with just line break
+                        string cleaned = lineBreakSpaceRegex.Replace(original, "$1");
+                        // Update the cell only if changes were made
+                        if (!original.Equals(cleaned))
                         {
-                            Cell cell = sheet.Cells[row, col];
-
-                            // Process only cells that contain string data
-                            if (cell.Type == CellValueType.IsString && !string.IsNullOrEmpty(cell.StringValue))
-                            {
-                                // Remove redundant spaces after line breaks
-                                // Pattern: line break (\r\n or \n) followed by one or more spaces
-                                // Replacement: keep only the line break
-                                string cleaned = Regex.Replace(cell.StringValue, @"(\r?\n)\s+", "$1");
-
-                                // Update the cell value if changes were made
-                                if (!cleaned.Equals(cell.StringValue, StringComparison.Ordinal))
-                                {
-                                    cell.PutValue(cleaned);
-                                }
-                            }
+                            cell.PutValue(cleaned);
                         }
                     }
                 }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as HTML
-                workbook.Save(outputPath, SaveFormat.Html);
-                Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
+        // Set HTML save options if needed (e.g., to embed CSS)
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        saveOptions.ExportActiveWorksheetOnly = false; // export all worksheets
+
+        // Save the workbook as HTML
+        workbook.Save("output.html", saveOptions);
     }
 }

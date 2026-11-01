@@ -1,13 +1,13 @@
-// Title: How to set Latin (Arial) and FarEast (MS Mincho) fonts for mixed-language cells using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, defines a style with Arial for Latin characters and MS Mincho for FarEast characters, applies the style to a cell containing English and Japanese text, and saves the file. | Show how to use Aspose.Cells Style.Font.Name and, when supported, Style.Font.FarEastName to assign separate fonts for Latin and FarEast scripts in an Excel worksheet.
-// Common Searches: Aspose.Cells set Latin font to Arial and FarEast font to MS Mincho in C# | C# example for applying different fonts to English and Japanese text in Excel with Aspose.Cells | How to style mixed language cells in Aspose.Cells .NET | Set FarEast font name for Japanese characters using Aspose.Cells API | Apply multilingual font styling to a worksheet cell in Aspose.Cells for .NET
-// Tags: aspocells set latin font c# | aspocells far east font name | multilingual font styling aspocells | excel cell style mixed language c# | aspocells style font far east
+// Title: Set Arial for Latin text and MS Mincho for Japanese text in specific Excel cells using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an Excel workbook, applies the Arial font to cells A1:B1 for Latin characters, and sets the MS Mincho font for cell B1 to display Japanese text, using Aspose.Cells styling APIs. | Show how to define separate Style objects for Western and Far‑East fonts and assign them to ranges or individual cells in a .NET workbook with Aspose.Cells.
+// Common Searches: how to apply different fonts for western and CJK characters in Aspose.Cells .NET | Aspose.Cells set Japanese font MS Mincho for a single cell | C# Aspose.Cells change font to Arial for a range of cells | apply Arial font to a range and a different FarEast font to another cell using Aspose.Cells | multilingual font styling in Excel with Aspose.Cells for .NET
+// Tags: Aspose.Cells set western font Arial | Aspose.Cells apply FarEast font MS Mincho | C# style cells with different fonts | multilingual font styling in Excel | Excel workbook font assignment using Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a new Workbook, defines a Style with the Latin font set to Arial and, when supported, the FarEast font set to MS Mincho, writes English‑Japanese text into cell A1, applies the style, and saves the workbook as MultilingualText.xlsx. It also notes that the FarEast font property may be unavailable in older Aspose.Cells versions, in which case the default FarEast font is used.
-class Program
+// Demonstrates creating a new workbook, defining separate Style objects for Latin (Arial) and Far‑East (MS Mincho) text, applying the styles to a range and an individual cell, inserting English and Japanese strings, and saving the file as MultilingualFonts.xlsx.
+class SetMultilingualFonts
 {
     static void Main()
     {
@@ -19,24 +19,32 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style to set the Latin font
-            Style multilingualStyle = workbook.CreateStyle();
+            // ---------- Latin (Western) style ----------
+            Style latinStyle = workbook.CreateStyle();
+            latinStyle.Font.Name = "Arial";
 
-            // Set Latin font name to Arial
-            multilingualStyle.Font.Name = "Arial";
+            // Apply the Latin style to the range A1:B1
+            Aspose.Cells.Range latinRange = sheet.Cells.CreateRange("A1:B1");
+            latinRange.ApplyStyle(latinStyle, new StyleFlag() { Font = true });
 
-            // NOTE: The FarEast font property is not available in the current Aspose.Cells version.
-            // The default FarEast font will be used for characters such as Japanese.
+            // Put Latin text
+            sheet.Cells["A1"].PutValue("Hello");
 
-            // Put multilingual text into a cell
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("English 日本語");
+            // ---------- Far East (CJK) style ----------
+            Style feStyle = workbook.CreateStyle();
+            // Set a CJK font for the style
+            feStyle.Font.Name = "MS Mincho";
 
-            // Apply the multilingual style to the cell
-            cell.SetStyle(multilingualStyle);
+            // Apply the Far East style to cell B1
+            sheet.Cells["B1"].SetStyle(feStyle);
+
+            // Put Japanese text
+            sheet.Cells["B1"].PutValue("こんにちは");
 
             // Save the workbook
-            workbook.Save("MultilingualText.xlsx");
+            string outputPath = "MultilingualFonts.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

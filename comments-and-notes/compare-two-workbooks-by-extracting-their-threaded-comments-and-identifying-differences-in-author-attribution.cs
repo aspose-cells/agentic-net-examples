@@ -1,111 +1,158 @@
-// Title: Extract and compare threaded comment authors across two Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Load two .xlsx files, build a dictionary of Sheet!Cell → ordered list of threaded comment authors, and output cells where the author sequences differ. | Write a C# routine that iterates through all worksheets, gathers each threaded comment's author name, and returns a map suitable for cross‑workbook comparison. | Enhance the comparer to also list cells that contain threaded comments in only one of the two workbooks.
-// Common Searches: how to extract threaded comment authors from an Excel file using Aspose.Cells C# | compare comment author lists between two .xlsx workbooks in .NET | C# code to find cells with different threaded comment authors in two spreadsheets | list cells that have comments in one workbook but not the other using Aspose.Cells
-// Tags: extract threaded comments Aspose.Cells C# | compare comment authors between workbooks | map sheet cell to comment author list | detect mismatched threaded comment authors .NET | identify exclusive comments in one workbook Aspose.Cells
+// Title: How to compare threaded comment authors between two Excel workbooks using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to extract threaded comment authors from an Excel workbook with Aspose.Cells | compare comment author lists of two .xlsx files using Aspose.Cells .NET | find cells with different comment authors in two workbooks using Aspose.Cells | Aspose.Cells example for detecting comment author differences across worksheets | threaded comment author comparison between Workbook1.xlsx and Workbook2.xlsx in C#
+// Tags: extract threaded comment authors Aspose.Cells | compare comment author sets .NET | cell-level comment author difference detection | Aspose.Cells workbook comment comparison | C# threaded comment author analysis
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// The sample loads two Excel workbooks, extracts every threaded comment together with its author name per cell, stores the data in dictionaries keyed by "Sheet!Cell", and then compares the dictionaries to report cells where the ordered author lists differ or where comments exist only in one of the workbooks.
+// The sample loads two Excel workbooks, iterates each worksheet to collect the authors of threaded comments per cell, stores the data in a dictionary keyed by sheet name and cell address, and then compares the dictionaries to report cells where the set of comment authors differs between the two files.
 class ThreadedCommentComparer
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Expect two workbook file paths as arguments
-        if (args.Length < 2)
+        const string file1 = "Workbook1.xlsx";
+        const string file2 = "Workbook2.xlsx";
+
+        // Verify that the input files exist to avoid FileNotFoundException
+        if (!File.Exists(file1))
         {
-            Console.WriteLine("Usage: ThreadedCommentComparer <workbook1.xlsx> <workbook2.xlsx>");
+            Console.WriteLine($"Error: File \"{file1}\" not found.");
             return;
         }
 
-        string filePath1 = args[0];
-        string filePath2 = args[1];
-
-        // Load the workbooks (lifecycle rule)
-        Workbook wb1 = new Workbook(filePath1);
-        Workbook wb2 = new Workbook(filePath2);
-
-        // Extract threaded comments with their authors from each workbook
-        var commentsMap1 = ExtractThreadedComments(wb1);
-        var commentsMap2 = ExtractThreadedComments(wb2);
-
-        // Compare the two dictionaries and report differences in author attribution
-        foreach (var kvp in commentsMap1)
+        if (!File.Exists(file2))
         {
-            string cellKey = kvp.Key;                     // e.g., Sheet1!A1
-            List<string> authors1 = kvp.Value;
-
-            if (commentsMap2.TryGetValue(cellKey, out var authors2))
-            {
-                if (!AreAuthorListsEqual(authors1, authors2))
-                {
-                    Console.WriteLine($"Author difference in {cellKey}:");
-                    Console.WriteLine($"  Workbook1: {string.Join(", ", authors1)}");
-                    Console.WriteLine($"  Workbook2: {string.Join(", ", authors2)}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Threaded comments exist only in Workbook1 for {cellKey}.");
-            }
+            Console.WriteLine($"Error: File \"{file2}\" not found.");
+            return;
         }
 
-        // Cells that have threaded comments only in Workbook2
-        foreach (var cellKey in commentsMap2.Keys)
+        Workbook wb1;
+        Workbook wb2;
+
+        try
         {
-            if (!commentsMap1.ContainsKey(cellKey))
+            // Load the two workbooks to compare
+            wb1 = new Workbook(file1);
+            wb2 = new Workbook(file2);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbooks: {ex.Message}");
+            return;
+        }
+
+        Dictionary<CellKey, HashSet<string>> commentsInfo1;
+        Dictionary<CellKey, HashSet<string>> commentsInfo2;
+
+        try
+        {
+            // Extract comment author information from each workbook
+            commentsInfo1 = ExtractComments(wb1);
+            commentsInfo2 = ExtractComments(wb2);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error extracting comments: {ex.Message}");
+            return;
+        }
+
+        // Compare the extracted information and report differences in author attribution
+        Console.WriteLine("Differences in comment authors:");
+        foreach (var key in commentsInfo1.Keys)
+        {
+            if (commentsInfo2.ContainsKey(key))
             {
-                Console.WriteLine($"Threaded comments exist only in Workbook2 for {cellKey}.");
+                var authors1 = commentsInfo1[key];
+                var authors2 = commentsInfo2[key];
+
+                // Find authors that are present in one workbook but not the other
+                var onlyInFirst = new HashSet<string>(authors1, StringComparer.OrdinalIgnoreCase);
+                onlyInFirst.ExceptWith(authors2);
+
+                var onlyInSecond = new HashSet<string>(authors2, StringComparer.OrdinalIgnoreCase);
+                onlyInSecond.ExceptWith(authors1);
+
+                if (onlyInFirst.Count > 0 || onlyInSecond.Count > 0)
+                {
+                    Console.WriteLine($"Sheet: {key.SheetName}, Cell: {key.CellName}");
+                    if (onlyInFirst.Count > 0)
+                        Console.WriteLine($"  Authors only in {file1}: {string.Join(", ", onlyInFirst)}");
+                    if (onlyInSecond.Count > 0)
+                        Console.WriteLine($"  Authors only in {file2}: {string.Join(", ", onlyInSecond)}");
+                }
             }
         }
     }
 
-    // Extracts a map: "SheetName!CellAddress" -> list of author names (ordered)
-    static Dictionary<string, List<string>> ExtractThreadedComments(Workbook workbook)
+    // Helper method to extract comment authors keyed by sheet and cell address
+    private static Dictionary<CellKey, HashSet<string>> ExtractComments(Workbook workbook)
     {
-        var map = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        var result = new Dictionary<CellKey, HashSet<string>>();
 
+        // Iterate through all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
+            // Access the collection of comments for the current worksheet
             CommentCollection comments = sheet.Comments;
 
-            // Iterate through all comments in the worksheet
-            for (int i = 0; i < comments.Count; i++)
+            // Iterate through each comment
+            foreach (Comment comment in comments)
             {
-                Comment comment = comments[i];
+                // Determine the cell address the comment is attached to
+                int row = comment.Row;       // zero‑based row index
+                int column = comment.Column; // zero‑based column index
+                string cellName = CellsHelper.CellIndexToName(row, column); // e.g., "B5"
 
-                // Each comment may contain a collection of threaded comments
-                foreach (ThreadedComment tc in comment.ThreadedComments)
+                // Create a key that uniquely identifies the comment location
+                var key = new CellKey(sheet.Name, cellName);
+
+                // Ensure the dictionary entry exists
+                if (!result.ContainsKey(key))
                 {
-                    // Convert row/column indices to Excel cell name (e.g., A1)
-                    string cellAddress = CellsHelper.CellIndexToName(tc.Row, tc.Column);
-                    string key = $"{sheet.Name}!{cellAddress}";
+                    result[key] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                }
 
-                    if (!map.TryGetValue(key, out var authorList))
-                    {
-                        authorList = new List<string>();
-                        map[key] = authorList;
-                    }
-
-                    // Store the author name; fallback to "Unknown" if null
-                    authorList.Add(tc.Author?.Name ?? "Unknown");
+                // Add the author of the comment to the set (ignore null/empty authors)
+                if (!string.IsNullOrEmpty(comment.Author))
+                {
+                    result[key].Add(comment.Author);
                 }
             }
         }
 
-        return map;
+        return result;
     }
 
-    // Simple ordered comparison of two author name lists
-    static bool AreAuthorListsEqual(List<string> list1, List<string> list2)
+    // Simple struct to act as a composite key for sheet name + cell address
+    private struct CellKey : IEquatable<CellKey>
     {
-        if (list1.Count != list2.Count) return false;
-        for (int i = 0; i < list1.Count; i++)
+        public string SheetName { get; }
+        public string CellName { get; }
+
+        public CellKey(string sheetName, string cellName)
         {
-            if (!string.Equals(list1[i], list2[i], StringComparison.Ordinal))
-                return false;
+            SheetName = sheetName;
+            CellName = cellName;
         }
-        return true;
+
+        public bool Equals(CellKey other)
+        {
+            return string.Equals(SheetName, other.SheetName, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(CellName, other.CellName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override bool Equals(object obj) => obj is CellKey other && Equals(other);
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashSheet = SheetName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(SheetName) : 0;
+                int hashCell = CellName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(CellName) : 0;
+                return (hashSheet * 397) ^ hashCell;
+            }
+        }
     }
 }

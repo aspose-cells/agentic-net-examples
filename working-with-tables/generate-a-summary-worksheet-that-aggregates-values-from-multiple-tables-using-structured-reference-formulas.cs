@@ -1,106 +1,123 @@
-// Title: Generate an Excel summary sheet that totals amounts from multiple ListObject tables using structured reference formulas with Aspose.Cells for .NET
-// AI Prompts: Create a workbook containing two worksheets, convert each data range into a ListObject named SalesQ1Table and SalesQ2Table, then add a third worksheet called Summary. | On the Summary sheet, assign B2 the formula =SUM(SalesQ1Table[Amount]), B3 the formula =SUM(SalesQ2Table[Amount]), and B4 the formula =SUM(SalesQ1Table[Amount], SalesQ2Table[Amount]). | Auto‑fit all columns in every worksheet and save the workbook as SummaryWorkbook.xlsx using Aspose.Cells.
-// Common Searches: aspnet c# how to sum a column in an Aspose.Cells ListObject using structured references | create summary worksheet that aggregates data from multiple Excel tables with Aspose.Cells | Aspose.Cells example for grand total across two tables in .xlsx file | using ListObject tables and SUM formula in Aspose.Cells .NET
-// Tags: structured reference SUM formula with Aspose.Cells ListObject | aggregate column values across multiple Excel tables in C# | create summary worksheet using Aspose.Cells tables | auto fit columns Aspose.Cells workbook | save workbook as .xlsx Aspose.Cells .NET
+// Title: Create a summary worksheet that totals sales and expenses using structured reference formulas with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to calculate total sales using a structured reference to a ListObject table | C# generate a summary sheet that sums columns from multiple tables with Aspose.Cells formulas | How to compute net revenue from SalesTable and ExpenseTable in Aspose.Cells .NET | Add a summary worksheet with SUM formulas referencing ListObject columns using Aspose.Cells | Aspose.Cells example for aggregating data across worksheets into a net revenue calculation
+// Tags: structured reference SUM formula Aspose.Cells | aggregate table columns across worksheets C# | create summary worksheet Aspose.Cells .NET | ListObject table aggregation Aspose.Cells | net revenue calculation using Aspose.Cells formulas
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// The program builds a workbook with two data sheets, converts each range into ListObject tables (SalesQ1Table, SalesQ2Table), adds a Summary sheet that uses structured reference formulas (=SUM(Table[Amount])) to compute quarterly totals and a grand total, auto‑fits all columns, and saves the file as SummaryWorkbook.xlsx via Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsSummaryExample
 {
-    static void Main()
+    // The example creates a workbook with SalesData and ExpenseData worksheets, converts each range into ListObject tables named SalesTable and ExpenseTable, then adds a Summary worksheet that uses structured reference formulas (e.g., =SUM(SalesTable[Amount])) to compute total sales, total expenses, and net revenue, auto‑fits columns, and saves the file as SummaryWorkbook.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // ---------- First data worksheet ----------
-            Worksheet ws1 = workbook.Worksheets[workbook.Worksheets.Add()];
-            ws1.Name = "SalesQ1";
-
-            // Header
-            ws1.Cells["A1"].PutValue("Product");
-            ws1.Cells["B1"].PutValue("Amount");
-
-            // Sample data
-            ws1.Cells["A2"].PutValue("A");
-            ws1.Cells["B2"].PutValue(1200);
-            ws1.Cells["A3"].PutValue("B");
-            ws1.Cells["B3"].PutValue(850);
-            ws1.Cells["A4"].PutValue("C");
-            ws1.Cells["B4"].PutValue(430);
-
-            // Convert the range to a table (ListObject)
-            int rows1 = ws1.Cells.MaxDataRow + 1;
-            int cols1 = ws1.Cells.MaxDataColumn + 1;
-            int tableIdx1 = ws1.ListObjects.Add(0, 0, rows1 - 1, cols1 - 1, true);
-            ListObject table1 = ws1.ListObjects[tableIdx1];
-            table1.DisplayName = "SalesQ1Table"; // Set table name
-
-            // ---------- Second data worksheet ----------
-            Worksheet ws2 = workbook.Worksheets[workbook.Worksheets.Add()];
-            ws2.Name = "SalesQ2";
-
-            ws2.Cells["A1"].PutValue("Product");
-            ws2.Cells["B1"].PutValue("Amount");
-
-            ws2.Cells["A2"].PutValue("A");
-            ws2.Cells["B2"].PutValue(1500);
-            ws2.Cells["A3"].PutValue("B");
-            ws2.Cells["B3"].PutValue(950);
-            ws2.Cells["A4"].PutValue("C");
-            ws2.Cells["B4"].PutValue(600);
-
-            int rows2 = ws2.Cells.MaxDataRow + 1;
-            int cols2 = ws2.Cells.MaxDataColumn + 1;
-            int tableIdx2 = ws2.ListObjects.Add(0, 0, rows2 - 1, cols2 - 1, true);
-            ListObject table2 = ws2.ListObjects[tableIdx2];
-            table2.DisplayName = "SalesQ2Table"; // Set table name
-
-            // ---------- Summary worksheet ----------
-            Worksheet summary = workbook.Worksheets[workbook.Worksheets.Add()];
-            summary.Name = "Summary";
-
-            // Header for summary
-            summary.Cells["A1"].PutValue("Quarter");
-            summary.Cells["B1"].PutValue("Total Amount");
-
-            // Q1 total using structured reference
-            summary.Cells["A2"].PutValue("Q1");
-            summary.Cells["B2"].Formula = "=SUM(SalesQ1Table[Amount])";
-
-            // Q2 total using structured reference
-            summary.Cells["A3"].PutValue("Q2");
-            summary.Cells["B3"].Formula = "=SUM(SalesQ2Table[Amount])";
-
-            // Grand total across both tables
-            summary.Cells["A4"].PutValue("Grand Total");
-            summary.Cells["B4"].Formula = "=SUM(SalesQ1Table[Amount], SalesQ2Table[Amount])";
-
-            // Auto-fit columns for better readability
-            ws1.AutoFitColumns();
-            ws2.AutoFitColumns();
-            summary.AutoFitColumns();
-
-            // Determine output path and ensure directory exists
-            string outputFile = "SummaryWorkbook.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
-
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook
-            workbook.Save(outputFile);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // -------------------------------------------------
+                // Worksheet 1: SalesData
+                // -------------------------------------------------
+                Worksheet wsSales = workbook.Worksheets[0];
+                wsSales.Name = "SalesData";
+
+                // Populate sample data
+                wsSales.Cells["A1"].PutValue("Region");
+                wsSales.Cells["B1"].PutValue("Product");
+                wsSales.Cells["C1"].PutValue("Amount");
+
+                wsSales.Cells["A2"].PutValue("North");
+                wsSales.Cells["B2"].PutValue("Widget");
+                wsSales.Cells["C2"].PutValue(1200);
+
+                wsSales.Cells["A3"].PutValue("South");
+                wsSales.Cells["B3"].PutValue("Gadget");
+                wsSales.Cells["C3"].PutValue(850);
+
+                wsSales.Cells["A4"].PutValue("East");
+                wsSales.Cells["B4"].PutValue("Widget");
+                wsSales.Cells["C4"].PutValue(970);
+
+                // Convert range to a table (ListObject) and give it a name
+                int firstRow = 0;          // zero‑based index
+                int firstColumn = 0;
+                int totalRows = 4;         // header + 3 data rows
+                int totalColumns = 3;
+                int salesTableIndex = wsSales.ListObjects.Add(
+                    firstRow,
+                    firstColumn,
+                    firstRow + totalRows - 1,
+                    firstColumn + totalColumns - 1,
+                    true);
+                ListObject salesTable = wsSales.ListObjects[salesTableIndex];
+                salesTable.DisplayName = "SalesTable";
+
+                // -------------------------------------------------
+                // Worksheet 2: ExpenseData
+                // -------------------------------------------------
+                Worksheet wsExpense = workbook.Worksheets.Add("ExpenseData");
+
+                // Populate sample data
+                wsExpense.Cells["A1"].PutValue("Category");
+                wsExpense.Cells["B1"].PutValue("Month");
+                wsExpense.Cells["C1"].PutValue("Cost");
+
+                wsExpense.Cells["A2"].PutValue("Travel");
+                wsExpense.Cells["B2"].PutValue("Jan");
+                wsExpense.Cells["C2"].PutValue(300);
+
+                wsExpense.Cells["A3"].PutValue("Supplies");
+                wsExpense.Cells["B3"].PutValue("Jan");
+                wsExpense.Cells["C3"].PutValue(150);
+
+                wsExpense.Cells["A4"].PutValue("Travel");
+                wsExpense.Cells["B4"].PutValue("Feb");
+                wsExpense.Cells["C4"].PutValue(420);
+
+                // Convert range to a table and name it
+                int expenseTableIndex = wsExpense.ListObjects.Add(0, 0, 3, 2, true);
+                ListObject expenseTable = wsExpense.ListObjects[expenseTableIndex];
+                expenseTable.DisplayName = "ExpenseTable";
+
+                // -------------------------------------------------
+                // Worksheet 3: Summary (aggregates using structured references)
+                // -------------------------------------------------
+                Worksheet wsSummary = workbook.Worksheets.Add("Summary");
+
+                // Header for summary
+                wsSummary.Cells["A1"].PutValue("Metric");
+                wsSummary.Cells["B1"].PutValue("Value");
+
+                // Row 2: Total Sales Amount (SUM of SalesTable[Amount])
+                wsSummary.Cells["A2"].PutValue("Total Sales");
+                wsSummary.Cells["B2"].Formula = "=SUM(SalesTable[Amount])";
+
+                // Row 3: Total Expense Cost (SUM of ExpenseTable[Cost])
+                wsSummary.Cells["A3"].PutValue("Total Expenses");
+                wsSummary.Cells["B3"].Formula = "=SUM(ExpenseTable[Cost])";
+
+                // Row 4: Net Revenue (Total Sales - Total Expenses)
+                wsSummary.Cells["A4"].PutValue("Net Revenue");
+                wsSummary.Cells["B4"].Formula = "=B2-B3";
+
+                // Auto‑fit columns for better readability
+                wsSummary.AutoFitColumns();
+
+                // -------------------------------------------------
+                // Save the workbook to a file
+                // -------------------------------------------------
+                string outputPath = "SummaryWorkbook.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

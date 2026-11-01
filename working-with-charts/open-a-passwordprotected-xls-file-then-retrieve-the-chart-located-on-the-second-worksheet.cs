@@ -1,49 +1,51 @@
-// Title: Open a password‑protected XLS workbook and retrieve the first chart from the second worksheet using Aspose.Cells for .NET
-// AI Prompts: Load an encrypted XLS file with Aspose.Cells LoadOptions and obtain the chart object from worksheet index 1 in C#. | Demonstrate how to access the Charts collection of the second worksheet after opening a password‑protected workbook. | Show code to read a protected Excel file, check for charts, and print the chart type using Aspose.Cells.
-// Common Searches: aspnet load password protected xls file Aspose.Cells and get chart from second sheet | c# Aspose.Cells retrieve chart from worksheet index 1 in encrypted workbook | how to use LoadOptions.Password to open protected Excel and access chart collection | example code for reading chart from protected XLS using Aspose.Cells for .NET | extract first chart on second worksheet from password secured Excel file C#
-// Tags: Aspose.Cells load password protected XLS | retrieve chart from specific worksheet | chart extraction from encrypted workbook | C# access worksheet charts collection | LoadOptions password property usage
+// Title: Load a password‑protected XLS workbook and read the first chart from the second worksheet using Aspose.Cells for .NET
+// Common Searches: asp.net load password protected xls file with Aspose.Cells LoadOptions | c# get chart from second worksheet in a protected Excel workbook using Aspose.Cells | how to read chart properties from a password protected XLS in C# | retrieve chart series count from protected workbook Aspose.Cells | open encrypted Excel file and access charts with Aspose.Cells .NET
+// Tags: load protected XLS using Aspose.Cells LoadOptions | retrieve first chart from worksheet index 1 | extract chart name and type C# | Aspose.Cells workbook password decryption | chart series count extraction Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads a password‑protected XLS file via LoadOptions, selects the second worksheet, checks for charts, and retrieves the first chart, outputting its type and parent worksheet name.
+// The example verifies the XLS file exists, loads the password‑protected workbook with LoadOptions, accesses the second worksheet (index 1), checks for charts, and if present outputs the first chart's name, type, and series count, while handling any exceptions.
 class Program
 {
     static void Main()
     {
         // Path to the password‑protected XLS file
-        string filePath = "protected.xls";
-        // Password used to protect the workbook
-        string password = "myPassword";
+        string filePath = @"C:\Path\To\Your\ProtectedFile.xls";
 
-        // Verify that the input file exists before attempting to load it
+        // Verify that the file exists to prevent FileNotFoundException
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
+        // Password for the protected workbook
+        string password = "yourPassword";
+
         try
         {
-            // Load the workbook with the password (auto‑detect format)
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.Password = password;
+            // Load the workbook with the password using LoadOptions (format auto‑detected)
+            LoadOptions loadOptions = new LoadOptions
+            {
+                Password = password
+            };
             Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Access the second worksheet (index 1)
-            Worksheet secondWorksheet = workbook.Worksheets[1];
+            // Access the second worksheet (index 1 because collection is zero‑based)
+            Worksheet secondSheet = workbook.Worksheets[1];
 
-            // Check if the worksheet contains any charts
-            if (secondWorksheet.Charts.Count > 0)
+            // Retrieve the first chart on the second worksheet (if any)
+            if (secondSheet.Charts.Count > 0)
             {
-                // Retrieve the first chart on the second worksheet
-                Chart chart = secondWorksheet.Charts[0];
+                Chart chart = secondSheet.Charts[0];
 
-                // Example usage: display chart type and its worksheet name
-                Console.WriteLine("Chart type: " + chart.Type);
-                Console.WriteLine("Chart belongs to worksheet: " + chart.Worksheet.Name);
+                // Output some chart information
+                Console.WriteLine($"Chart Name: {chart.Name}");
+                Console.WriteLine($"Chart Type: {chart.Type}");
+                Console.WriteLine($"Number of Series: {chart.NSeries.Count}");
             }
             else
             {
@@ -52,8 +54,7 @@ class Program
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

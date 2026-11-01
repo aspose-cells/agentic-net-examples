@@ -1,43 +1,30 @@
-// Title: Repeat a header row on each PDF page when exporting an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that sets the first worksheet row as a print title so the header repeats on every PDF page, then saves the workbook as a PDF. | Show how to define a custom print area and configure page‑setup options (print titles, margins) before converting an Excel file to PDF with Aspose.Cells in C#. | Provide an example that creates sample data, applies a repeat‑header setting, and exports the sheet to a PDF using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# export Excel to PDF with repeating header row on each page | set print title rows in Aspose.Cells before PDF conversion .NET | how to define print area and repeat header when saving workbook as PDF using Aspose.Cells | C# Aspose.Cells page setup repeat header on PDF pages | export worksheet to PDF with print titles using Aspose.Cells for .NET
-// Tags: Aspose.Cells set print title rows C# | Aspose.Cells define print area PDF export | repeat header rows PDF generation Aspose.Cells | page setup configuration Aspose.Cells .NET | export Excel worksheet to PDF Aspose.Cells
+// Title: Repeat header rows on each PDF page with Aspose.Cells for .NET (C#)
+// AI Prompts: Configure the worksheet's PageSetup.PrintTitleRows to the first row and save the workbook as a PDF using Aspose.Cells in C#. | Set print title rows (and optionally columns) before exporting an Excel file to PDF with Aspose.Cells for .NET. | Apply page‑setup settings to repeat a header row on every PDF page and generate the PDF via Workbook.Save.
+// Common Searches: Aspose.Cells C# repeat first row as header on every PDF page | How to set PrintTitleRows in Aspose.Cells before PDF export | Export Excel to PDF with repeated header rows using Aspose.Cells .NET | PageSetup.PrintTitleRows example for PDF generation in C# | Aspose.Cells repeat column titles on each PDF page C#
+// Tags: Aspose.Cells PrintTitleRows PDF export | C# page setup header row repetition | Export workbook to PDF with titles | Configure print title columns Aspose.Cells | Workbook.Save PDF with header repetition | Aspose.Cells page setup PDF conversion
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// // Creates a workbook, adds a header and sample rows, sets the first row as a print title to repeat on every PDF page, defines the print area, and saves the workbook as a PDF.
-class Program
+// The example loads an Excel workbook, sets the first row as a print title so it repeats on every printed page via the worksheet's PageSetup, and then saves the workbook as a PDF, preserving the repeated header.
+class PrintTitlesToPdf
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet
+        // Access the first worksheet (or any specific worksheet)
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Data";
 
-        // Populate header row
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["C1"].PutValue("Score");
-
-        // Populate sample data rows
-        for (int i = 2; i <= 20; i++)
-        {
-            sheet.Cells[i - 1, 0].PutValue(i - 1);               // ID
-            sheet.Cells[i - 1, 1].PutValue($"Item {i - 1}");    // Name
-            sheet.Cells[i - 1, 2].PutValue(50 + i);             // Score
-        }
-
-        // Set the first row as print title (repeat on each PDF page)
+        // Set the rows to repeat on each printed page (e.g., first row as header)
+        // The range is specified in A1 style. "$1:$1" means row 1.
         sheet.PageSetup.PrintTitleRows = "$1:$1";
 
-        // Define the print area to include all data
-        sheet.PageSetup.PrintArea = "$A$1:$C$20";
+        // Optional: If you also want to repeat columns, set PrintTitleColumns similarly
+        // sheet.PageSetup.PrintTitleColumns = "$A:$A";
 
-        // Save the workbook as PDF
-        workbook.Save("Output.pdf", SaveFormat.Pdf);
+        // Save the worksheet as a PDF. The print titles will be applied automatically.
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

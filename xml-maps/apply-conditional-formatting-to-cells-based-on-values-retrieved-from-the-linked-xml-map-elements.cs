@@ -1,87 +1,88 @@
-// Title: Apply red fill conditional formatting to cells with values > 100 after importing XML map data using Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates a workbook, imports an XML file via an Aspose.Cells XML map, defines a target range, and adds a conditional formatting rule that colors cells red when the value exceeds 100. | Show how to use dynamic objects in C# with Aspose.Cells to attach a cell‑value condition to a specific range after loading XML map data.
-// Common Searches: asp.net c# how to import XML map with Aspose.Cells and set conditional formatting for values above 100 | conditional formatting based on XML map data in Aspose.Cells C# example | apply red background to cells greater than 100 after XML map import using Aspose.Cells | using dynamic objects to add conditional formatting in Aspose.Cells C# | create range and add cell value condition from imported XML data Aspose.Cells
-// Tags: xml map import Aspose.Cells C# | conditional formatting cell value Aspose.Cells | apply red fill style Aspose.Cells | dynamic object Aspose.Cells API | range creation Aspose.Cells C#
+// Title: Apply red fill conditional formatting to cells with values greater than 100 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that scans the used range of a worksheet and adds a red background conditional formatting rule for any cell whose numeric value exceeds 100. | Create a function in C# using Aspose.Cells that defines a CellValue > 100 condition, applies a solid red style, and attaches the rule to each matching cell in a workbook.
+// Common Searches: Aspose.Cells C# apply conditional formatting to cells greater than 100 | how to set red background for numeric values over 100 with Aspose.Cells .NET | programmatically add CellValue > 100 conditional format in an Excel workbook using Aspose.Cells | iterate over used range and apply conditional formatting rule Aspose.Cells C# | Aspose.Cells conditional formatting based on numeric threshold example
+// Tags: Aspose.Cells conditional formatting numeric threshold | C# iterate worksheet cells apply style | Aspose.Cells red fill style for values > 100 | CellArea single cell conditional rule Aspose.Cells | CreateStyle background color Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, imports data from a local XML file through an Aspose.Cells XML map named "MyMap", defines the range B2:B10, adds a conditional formatting rule that highlights cells with values greater than 100 in red, and saves the workbook as output.xlsx.
+// The example loads (or creates) an Excel workbook, iterates through every used cell, and for each numeric cell with a value greater than 100 adds a conditional formatting rule that fills the cell with a solid red background, then saves the updated file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet and rename it
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
-
-            // Path to the XML file that contains the data
-            string xmlPath = "data.xml";
-
-            // Ensure the XML file exists before attempting to import
-            if (File.Exists(xmlPath))
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                try
-                {
-                    // Use dynamic to call XML map APIs that may not be present in older versions
-                    dynamic wbDynamic = workbook;
-                    wbDynamic.XmlMaps.Add("MyMap", "Root", string.Empty);
-                    wbDynamic.ImportXmlMap(xmlPath, "MyMap");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"XML import failed: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Warning: XML file not found at path '{xmlPath}'. Skipping XML import.");
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                // Populate some sample data
+                tempSheet.Cells["A1"].PutValue(50);
+                tempSheet.Cells["B2"].PutValue(150);
+                tempSheet.Cells["C3"].PutValue(200);
+                tempWb.Save(inputPath);
             }
 
-            // Define the range where the XML data (or sample data) is located
-            int firstRow = 1;      // Row index 1 => Excel row 2
-            int firstColumn = 1;   // Column index 1 => Excel column B
-            int totalRows = 9;     // Rows 2 through 10
-            int totalColumns = 1;  // Single column
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+            var sheet = workbook.Worksheets[0];
 
-            // Create the range object (fully qualified to avoid ambiguity with System.Range)
-            Aspose.Cells.Range range = sheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
+            // Iterate through all used cells and apply conditional formatting to values > 100
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-            // Add a conditional formatting rule to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    var cell = sheet.Cells[row, col];
+                    if (double.TryParse(cell.StringValue, out double numericValue) && numericValue > 100)
+                    {
+                        // Add a new conditional formatting rule for this cell
+                        int cfIndex = sheet.ConditionalFormattings.Add();
+                        var cf = sheet.ConditionalFormattings[cfIndex];
 
-            // Use dynamic to avoid compile‑time dependency on ConditionalFormatting type
-            dynamic cf = sheet.ConditionalFormattings[cfIndex];
-            cf.AddArea(range); // Apply to the defined range
+                        // Define the area for this single cell
+                        var area = new CellArea
+                        {
+                            StartRow = row,
+                            StartColumn = col,
+                            EndRow = row,
+                            EndColumn = col
+                        };
+                        cf.AddArea(area);
 
-            // Condition: cell value greater than 100
-            int conditionIndex = cf.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "100",
-                string.Empty);
+                        // Define the condition (cell value > 100)
+                        int conditionIndex = cf.AddCondition(
+                            FormatConditionType.CellValue,
+                            OperatorType.GreaterThan,
+                            "100",
+                            string.Empty); // formula2 not required for this operator
 
-            // Define the style for the condition
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Red;
-            style.Pattern = BackgroundType.Solid;
-            cf[conditionIndex].Style = style;
+                        // Configure the style to apply when the condition is met
+                        var style = workbook.CreateStyle();
+                        style.ForegroundColor = Color.Red;
+                        style.Pattern = BackgroundType.Solid;
 
-            // Save the workbook with the applied conditional formatting
-            string outputPath = "output.xlsx";
+                        cf[conditionIndex].Style = style;
+                    }
+                }
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

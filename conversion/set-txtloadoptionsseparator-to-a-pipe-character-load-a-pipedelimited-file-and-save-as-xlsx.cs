@@ -1,49 +1,26 @@
-// Title: Load a pipe‑delimited text file using TxtLoadOptions.Separator and convert it to XLSX with Aspose.Cells for .NET (C#)
-// AI Prompts: Set TxtLoadOptions.Separator='|' to read a pipe‑separated .txt file into an Aspose.Cells Workbook, then save the workbook as an .xlsx file. | Configure a custom delimiter in TxtLoadOptions, load the source text into a Workbook, and export the result to XLSX format using Aspose.Cells in C#.
-// Common Searches: how to set TxtLoadOptions.Separator to pipe character in Aspose.Cells C# | convert pipe delimited txt file to xlsx with Aspose.Cells .NET | load custom delimited text into Aspose.Cells workbook example | Aspose.Cells C# load text file with custom separator and save as Excel | reading pipe separated values using Aspose.Cells TxtLoadOptions
-// Tags: pipe delimited import TxtLoadOptions Aspose.Cells | custom separator loading txt C# | convert txt to xlsx Aspose.Cells | Aspose.Cells workbook save as xlsx | C# load text with custom delimiter Aspose.Cells
+// Title: Load a pipe‑delimited text file with TxtLoadOptions.Separator and export to XLSX using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load pipe delimited txt file with custom separator | How to convert pipe‑separated values to Excel workbook in .NET | Set TxtLoadOptions.Separator to '|' for reading pipe delimited files with Aspose.Cells | Save a workbook loaded from a pipe‑delimited text as .xlsx using Aspose.Cells | C# example for loading custom delimited text into Aspose.Cells and exporting to XLSX
+// Tags: TxtLoadOptions custom delimiter | pipe delimited text to XLSX conversion | Aspose.Cells load txt with separator | C# export workbook to XLSX | Aspose.Cells delimiter handling
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPipeDelimiterExample
+// Demonstrates using Aspose.Cells for .NET to set TxtLoadOptions.Separator to the pipe character, load a pipe‑delimited text file into a Workbook, and save the workbook as an XLSX file.
+class Program
 {
-    // The example checks for a pipe‑delimited text file, sets TxtLoadOptions.Separator to '|', loads the file into an Aspose.Cells Workbook, and then saves the workbook as an XLSX file, handling errors and reporting file paths.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define load options for a pipe‑delimited text file
+        TxtLoadOptions loadOptions = new TxtLoadOptions
         {
-            // Path to the pipe‑delimited source file
-            string sourcePath = "data_pipe.txt";
+            // Set the column separator to the pipe character '|'
+            Separator = '|'
+        };
 
-            // Verify that the source file exists before attempting to load it
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {Path.GetFullPath(sourcePath)}");
-                return;
-            }
+        // Load the pipe‑delimited file into a workbook using the specified options
+        Workbook workbook = new Workbook("input.txt", loadOptions);
 
-            try
-            {
-                // Configure load options to use pipe character as the separator
-                TxtLoadOptions loadOptions = new TxtLoadOptions
-                {
-                    Separator = '|'
-                };
-
-                // Load the pipe‑delimited file into a workbook using the configured options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-                // Save the loaded workbook as an XLSX file
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook in XLSX format
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

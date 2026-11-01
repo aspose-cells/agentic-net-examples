@@ -1,7 +1,7 @@
-// Title: Set a custom fill color for the third series of a chart in an existing XLSX workbook using Aspose.Cells for .NET
-// AI Prompts: Load an existing XLSX file with Aspose.Cells, locate the first chart on the first worksheet, change the fill color of its third series to red, and save the workbook as a new file. | In C#, verify that a worksheet contains a chart with at least three series, set the Area.ForegroundColor of the third series to a specific color, and write the updated workbook to disk using Aspose.Cells.
-// Common Searches: aspnet how to change the color of the third series in an Excel chart with Aspose.Cells | c# set custom color for a specific chart series in an existing XLSX using Aspose.Cells | Aspose.Cells modify chart series fill color programmatically in .NET | change chart series area foreground color in Excel file with Aspose.Cells C#
-// Tags: Aspose.Cells set chart series fill color | modify third series color Aspose.Cells | chart series custom palette .NET | Excel chart series styling Aspose.Cells | update chart series color in existing workbook
+// Title: How to set a solid red fill and border for the third series of a chart in an existing XLSX workbook with Aspose.Cells for .NET
+// AI Prompts: Load an existing XLSX file, locate the first chart, change the area foreground and border colors of the third series to red, and save the workbook using Aspose.Cells in C#. | Using Aspose.Cells for .NET, modify a chart's third series to apply a solid red fill and border, including checks for missing charts or insufficient series count. | Write C# code that opens a workbook, verifies at least three series in the first chart, sets the third series' Area.ForegroundColor and Border.Color to Color.Red, and saves the updated file.
+// Common Searches: Aspose.Cells set third chart series fill color to red in C# | Change chart series border color in existing Excel file using Aspose.Cells .NET | C# example for modifying specific series of an Excel chart with Aspose.Cells | How to apply solid color to a chart series in an XLSX workbook using Aspose.Cells | Error handling when updating chart series colors with Aspose.Cells for .NET
+// Tags: Aspose.Cells chart series solid fill C# | modify third series color Aspose.Cells | Excel chart series formatting Aspose.Cells .NET | set chart series border color C# Aspose | load and save workbook with chart updates Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // Loads 'input.xlsx', ensures a chart with at least three series exists, sets the third series' Area.ForegroundColor to red, and saves the modified workbook as 'output.xlsx'.
+// The sample loads an existing XLSX workbook, checks that the first worksheet contains at least one chart with three series, then sets the area foreground and border colors of the third series to solid red before saving the workbook, with error handling for missing files, charts, or series.
 class Program
 {
     static void Main()
@@ -19,50 +19,60 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists
+            // Verify that the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the existing XLSX workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count == 0)
+            if (worksheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Get the first chart on the worksheet
-            Chart chart = sheet.Charts[0];
+            // Access the first chart
+            Chart chart = worksheet.Charts[0];
 
-            // Ensure the chart has at least three series
-            if (chart.NSeries.Count < 3)
+            // Verify that the chart has at least three series
+            if (chart.NSeries.Count >= 3)
             {
-                Console.WriteLine("The chart does not contain a third series.");
-                return;
+                // Get the third series (zero‑based index 2)
+                Series thirdSeries = chart.NSeries[2];
+
+                try
+                {
+                    // Apply a solid red color to the entire series area
+                    thirdSeries.Area.ForegroundColor = Color.Red;
+
+                    // Apply a solid red color to the series border
+                    thirdSeries.Border.Color = Color.Red;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set series color: {ex.Message}");
+                }
             }
-
-            // Access the third series (zero‑based index)
-            Series thirdSeries = chart.NSeries[2];
-
-            // Assign a custom color to the third series (example: solid red)
-            // Use the Area's ForegroundColor to set the series fill color
-            thirdSeries.Area.ForegroundColor = Color.Red;
+            else
+            {
+                Console.WriteLine("The chart does not contain at least three series.");
+            }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

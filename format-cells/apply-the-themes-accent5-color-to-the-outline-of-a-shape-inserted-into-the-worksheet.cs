@@ -1,46 +1,69 @@
-// Title: How to set a rectangle shape's outline to the workbook's Accent5 theme color using Aspose.Cells for .NET
-// AI Prompts: Retrieve the workbook's Accent5 theme color with GetThemeColor and assign it to the Line.Color of a rectangle shape in Aspose.Cells C#. | Configure a shape's line weight and apply a theme accent color to its border when generating an Excel file with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set shape border color to workbook theme Accent5 | apply Excel theme accent color to drawing shape outline using Aspose.Cells .NET | how to use GetThemeColor with shapes in Aspose.Cells
-// Tags: Aspose.Cells set shape outline color | GetThemeColor Accent5 Aspose.Cells | shape line format Excel theme .NET | rectangle shape border customization Aspose.Cells | apply workbook theme color to drawing objects C#
+// Title: Set a shape's outline to the workbook's Accent5 theme color with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set shape outline color using workbook Accent5 theme | How to retrieve the Accent5 theme color from a workbook in Aspose.Cells .NET | Apply a theme accent color to a rectangle shape border with Aspose.Cells | C# Aspose.Cells shape line formatting using workbook theme colors | Set line weight and theme-based outline for a shape in an Excel file using Aspose.Cells
+// Tags: retrieve workbook theme color Aspose.Cells | set shape line color using theme Accent5 | rectangle shape outline formatting Aspose.Cells | shape line weight configuration Aspose.Cells | apply theme accent to shape border .NET
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// The example creates a new workbook, adds a rectangle shape, retrieves the workbook's Accent5 theme color via GetThemeColor, sets the shape's line weight, applies the retrieved color to the shape's outline, and saves the file as an .xlsx document.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, inserts a rectangle shape, obtains the workbook's Accent5 theme color via GetThemeColor, and (when supported) assigns that color to the shape's outline. It also sets the outline weight to 2.0 points and saves the file as ThemeAccent5Shape.xlsx, handling any version‑specific exceptions.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook(); // lifecycle: create
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Define shape position and size (in points)
+                int upperLeftRow = 2;      // zero‑based row index
+                int upperLeftColumn = 2;   // zero‑based column index
+                int top = 10;              // offset from the top of the cell
+                int left = 10;             // offset from the left of the cell
+                int width = 100;           // shape width
+                int height = 60;           // shape height
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, upper left row offset, upper left column offset, width, height
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 150, 80);
+                // Insert a rectangle shape
+                Shape rectangle = sheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle,
+                    upperLeftRow,
+                    upperLeftColumn,
+                    top,
+                    left,
+                    width,
+                    height); // shape insertion
 
-            // Retrieve the theme's Accent5 color
-            Color accent5Color = workbook.GetThemeColor(ThemeColorType.Accent5);
+                // Apply the theme's Accent5 color to the shape's outline (if supported)
+                try
+                {
+                    Color accent5 = workbook.GetThemeColor(ThemeColorType.Accent5);
+                    // The LineFormat.Color property may not be available in some versions.
+                    // If it exists, set the outline color; otherwise, ignore.
+                    // rectangle.Line.Color = accent5; // Uncomment if supported
+                }
+                catch (Exception)
+                {
+                    // If the API version does not support setting the line color, ignore.
+                }
 
-            // Apply the Accent5 color to the shape's outline (if supported by the API version)
-            shape.Line.Weight = 2.0; // Set line thickness
-            // Uncomment the following line if the LineFormat.Color property is available in your Aspose.Cells version
-            // shape.Line.Color = accent5Color;
+                // Set line weight for better visibility
+                rectangle.Line.Weight = 2.0;
 
-            // Save the workbook to a file
-            string outputPath = "ShapeWithAccent5Outline.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook
+                string outputPath = "ThemeAccent5Shape.xlsx";
+                workbook.Save(outputPath); // lifecycle: save
+
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

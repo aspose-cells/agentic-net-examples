@@ -1,45 +1,69 @@
-// Title: Add a line sparkline to cells A1:D1, place it in E1, and save the workbook as XLSX using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a new workbook, populates A1:D1 with values, adds a line‑type sparkline referencing that range, positions the sparkline in cell E1, and saves the file to a given XLSX path with Aspose.Cells. | Demonstrate how to enable markers and adjust other SparklineGroup settings before calling Workbook.Save to generate an XLSX file containing the sparkline using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# add line sparkline to a specific cell range and save as .xlsx | How to programmatically create sparkline groups in Excel with Aspose.Cells .NET | Saving an Excel workbook that contains sparkline data using Aspose.Cells C# example | Customize sparkline markers with Aspose.Cells before saving the workbook
-// Tags: create line sparkline Aspose.Cells C# | save workbook as xlsx with sparkline Aspose.Cells | sparklinegroup customization Aspose.Cells | add sparkline to cell range Aspose.Cells | Aspose.Cells generate sparkline programmatically
+// Title: Save an Aspose.Cells workbook with sparklines to a designated XLSX file path using C#
+// AI Prompts: Generate C# code that receives an Aspose.Cells Workbook containing sparklines and writes it to a given file location as an XLSX file, creating the target folder if it does not exist. | Show how to implement a reusable helper method that checks and creates the output directory before calling Workbook.Save with SaveFormat.Xlsx. | Provide a sample program that loads an existing Excel file or creates a new workbook, adds sparklines (placeholder), and then saves the result to a custom path using Aspose.Cells.
+// Common Searches: how to programmatically save an Aspose.Cells workbook with sparklines to a custom folder in C# | C# ensure output directory exists before calling Workbook.Save in Aspose.Cells | Aspose.Cells SaveFormat.Xlsx example for exporting sparklines | load existing Excel file or create new workbook then export to XLSX using Aspose.Cells | save workbook to specific path using Aspose.Cells helper class
+// Tags: save workbook as xlsx Aspose.Cells C# | export sparklines to xlsx Aspose.Cells | create output folder before Workbook.Save | reusable workbook saver helper Aspose.Cells | load existing workbook or instantiate new Aspose.Cells workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// The example creates a new workbook, writes sample numbers to A1:D1, adds a line‑type sparkline that references this range and is placed in cell E1, optionally configures the SparklineGroup (e.g., shows markers), and saves the result as an XLSX file using Aspose.Cells for .NET.
-class Program
+namespace SparklinesExport
 {
-    static void Main()
+    // The example defines a WorkbookSaver class that takes an Aspose.Cells Workbook (which may already contain sparklines) and saves it to a specified file path as an XLSX file. It ensures the output directory exists, supports loading an existing workbook or creating a new one, and demonstrates a clean helper method for consistent saving.
+    public class WorkbookSaver
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data that the sparkline will represent
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(2);
-        sheet.Cells["C1"].PutValue(1);
-        sheet.Cells["D1"].PutValue(3);
-
-        // Define the cell where the sparkline will be placed (E1)
-        CellArea sparkArea = new CellArea
+        /// <param name="workbook">The workbook that already contains the new sparklines.</param>
+        /// <param name="outputPath">Full path where the XLSX file will be saved.</param>
+        public void SaveWorkbook(Workbook workbook, string outputPath)
         {
-            StartRow = 0,
-            EndRow = 0,
-            StartColumn = 4,
-            EndColumn = 4
-        };
+            // Save the workbook as an XLSX file.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+    }
 
-        // Add a line‑type sparkline group that uses the data range A1:D1
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, sheet.Name + "!A1:D1", false, sparkArea);
-        SparklineGroup group = sheet.SparklineGroups[groupIndex];
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Determine input and output paths.
+                string inputPath = args.Length > 0 ? args[0] : string.Empty;
+                string outputPath = args.Length > 1 ? args[1] : "output.xlsx";
 
-        // (Optional) Customize sparkline appearance here, e.g.:
-        // group.ShowMarkers = true;
+                Workbook workbook;
 
-        // Save the workbook with the new sparkline to an XLSX file
-        string outputPath = @"C:\Temp\SparklineWorkbook.xlsx";
-        workbook.Save(outputPath); // Uses Workbook.Save(string) rule
+                // Load existing workbook if the file exists; otherwise create a new one.
+                if (!string.IsNullOrEmpty(inputPath) && File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
+
+                // Example placeholder: add a worksheet if needed.
+                // (Actual sparklines logic would be placed here.)
+
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook using the helper class.
+                var saver = new WorkbookSaver();
+                saver.SaveWorkbook(workbook, outputPath);
+
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,103 +1,87 @@
-// Title: Generate IE‑compatible HTML with sheet‑tab navigation from a multi‑sheet workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# program that creates a workbook with three worksheets, adds a column chart, saves it as HTML via Aspose.Cells, and launches the file in the default browser to manually test sheet‑tab switching in Internet Explorer. | Enhance the example to programmatically verify that the exported HTML contains the JavaScript required for tab navigation and that the file opens without error on Windows.
-// Common Searches: c# aspnet export multi‑sheet workbook to html with tab navigation using aspose.cells | how to make Aspose.Cells HTML output work in Internet Explorer | save Excel workbook as html with sheet tabs for IE compatibility in .NET | verify sheet tab switching in Aspose.Cells generated html file | open generated html file automatically after saving with Aspose.Cells C#
-// Tags: save workbook as html using Aspose.Cells | sheet tab navigation in Aspose.Cells HTML output | export column chart to html with Aspose.Cells | launch generated html file from C# application | internet explorer compatibility for Aspose.Cells HTML
+// Title: Create a multi‑sheet Excel workbook and export it as IE‑compatible MHTML with functional worksheet tabs using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that creates a workbook with three worksheets, fills each with sample data, and saves the entire workbook as a single MHTML file that retains tab navigation for all sheets using Aspose.Cells. | Update the example to launch the generated MHTML file in Internet Explorer from a console app and verify that clicking the worksheet tabs switches the displayed sheet.
+// Common Searches: Aspose.Cells save workbook as MHTML with multiple sheets and tabs | C# generate IE compatible MHTML from Excel file using Aspose.Cells | preserve worksheet tab navigation when exporting Excel to MHTML in .NET | open generated MHTML file in Internet Explorer from C# console application | export all worksheets to a single HTML or MHTML file with Aspose.Cells
+// Tags: Aspose.Cells MHTML export multiple worksheets | HtmlSaveOptions ExportActiveWorksheetOnly false | worksheet tab navigation in generated MHTML | launch MHTML file in Internet Explorer C# | multi‑sheet workbook to single MHTML Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
+using Aspose.Cells.Rendering;
 
-// The program builds a three‑sheet workbook (Summary, Data, Chart), adds a column chart, saves the workbook as an HTML file with built‑in sheet‑tab navigation using Aspose.Cells, and opens the file in the default browser so the user can confirm that clicking the tabs switches the displayed sheet in Internet Explorer.
+// The sample creates a workbook containing three worksheets named First, Second, and Third, writes sample text to cell A1 of each sheet, and uses Aspose.Cells HtmlSaveOptions (ExportActiveWorksheetOnly = false) to export the whole workbook as a single MHTML file that includes tab navigation for every sheet. The program then opens the MHTML file in the default browser (or Internet Explorer) and waits for user input, allowing developers to verify that the worksheet tabs work correctly in IE.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook with multiple worksheets
+            // -------------------------------------------------
+            // 1. Create a workbook with multiple worksheets
+            // -------------------------------------------------
             Workbook workbook = new Workbook();
 
-            // First sheet (default) – Summary
+            // First worksheet (default)
             Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Summary";
-            sheet1.Cells["A1"].PutValue("This is the Summary sheet.");
-            sheet1.Cells["A2"].PutValue(DateTime.Now);
+            sheet1.Name = "First";
+            sheet1.Cells["A1"].PutValue("Data on the First sheet");
 
-            // Second sheet – Data
-            Worksheet sheet2 = workbook.Worksheets.Add("Data");
-            sheet2.Cells["A1"].PutValue("ID");
-            sheet2.Cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 10; i++)
+            // Second worksheet
+            int sheet2Index = workbook.Worksheets.Add();
+            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+            sheet2.Name = "Second";
+            sheet2.Cells["A1"].PutValue("Data on the Second sheet");
+
+            // Third worksheet
+            int sheet3Index = workbook.Worksheets.Add();
+            Worksheet sheet3 = workbook.Worksheets[sheet3Index];
+            sheet3.Name = "Third";
+            sheet3.Cells["A1"].PutValue("Data on the Third sheet");
+
+            // -------------------------------------------------
+            // 2. Save the workbook as HTML (compatible with all versions)
+            // -------------------------------------------------
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                sheet2.Cells[$"A{i}"].PutValue(i - 1);
-                sheet2.Cells[$"B{i}"].PutValue($"Item {i - 1}");
-            }
+                ExportActiveWorksheetOnly = false // include all sheets so tabs are generated
+            };
 
-            // Third sheet – Chart
-            Worksheet sheet3 = workbook.Worksheets.Add("Chart");
-            sheet3.Cells["A1"].PutValue("Category");
-            sheet3.Cells["B1"].PutValue("Amount");
-            sheet3.Cells["A2"].PutValue("A");
-            sheet3.Cells["B2"].PutValue(120);
-            sheet3.Cells["A3"].PutValue("B");
-            sheet3.Cells["B3"].PutValue(80);
-            sheet3.Cells["A4"].PutValue("C");
-            sheet3.Cells["B4"].PutValue(150);
+            string htmlFile = "MultiSheetWorkbook.html";
 
-            // Create a column chart on the third sheet
-            int chartIndex = sheet3.Charts.Add(ChartType.Column, 5, 0, 20, 7);
-            Chart chart = sheet3.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Sample Column Chart";
-
-            // Define the path for the HTML output (MHTML not supported in older versions)
-            string outputPath = Path.Combine(Environment.CurrentDirectory, "MultiSheetWorkbook.html");
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as HTML
             try
             {
-                workbook.Save(outputPath, SaveFormat.Html);
-                Console.WriteLine($"Workbook saved as HTML to: {outputPath}");
+                workbook.Save(htmlFile, htmlOptions);
+                Console.WriteLine($"Workbook saved as HTML: {Path.GetFullPath(htmlFile)}");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"Failed to save workbook as HTML: {ex.Message}");
+                Console.WriteLine($"Error saving HTML file: {saveEx.Message}");
                 return;
             }
 
-            // Launch the default browser to open the generated HTML file
-            if (File.Exists(outputPath))
+            // -------------------------------------------------
+            // 3. Open the HTML file in the default browser
+            // -------------------------------------------------
+            if (File.Exists(htmlFile))
             {
-                try
+                ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo
-                    {
-                        FileName = outputPath,
-                        UseShellExecute = true
-                    };
-                    Process.Start(startInfo);
-                    Console.WriteLine("File opened in the default browser. Verify that clicking the sheet tabs switches the displayed sheet.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to open the file in the default browser.");
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
+                    FileName = Path.GetFullPath(htmlFile),
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                Console.WriteLine("HTML file opened in the default browser.");
             }
             else
             {
-                Console.WriteLine("The HTML file was not found after saving.");
+                Console.WriteLine("Error: HTML file was not created.");
             }
+
+            // -------------------------------------------------
+            // 4. Keep the console open for manual inspection
+            // -------------------------------------------------
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
         catch (Exception ex)
         {

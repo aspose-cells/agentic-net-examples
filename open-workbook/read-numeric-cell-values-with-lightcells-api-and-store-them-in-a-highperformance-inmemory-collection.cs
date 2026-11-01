@@ -1,60 +1,76 @@
-// Title: How to read only numeric cells from an Excel worksheet with Aspose.Cells in C# and store them in a high‑performance in‑memory collection
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, iterates over the used range of the first worksheet, and adds each numeric cell value to a List<double>. | Adapt the sample to use a thread‑safe collection such as ConcurrentBag<double> for storing numeric values when processing the worksheet in parallel. | Create a C# snippet that calculates the total count and sum of the numeric values collected from the worksheet and prints the results.
-// Common Searches: aspnet read numeric values from Excel using Aspose.Cells without loading entire workbook | c# extract double values from first worksheet cells with Aspose.Cells | high‑performance in‑memory collection for Excel numeric data .net core | how to count and sum numeric cells in an .xlsx file using Aspose.Cells C# | using Aspose.Cells to filter numeric cells only in a worksheet
-// Tags: Aspose.Cells numeric cell extraction C# | read used cells performance .NET | store Excel double values in List<double> | thread‑safe collection for Excel data Aspose | calculate sum of numeric cells Aspose.Cells
+// Title: Read only numeric cells from an XLSX worksheet into a high‑performance List<double> using Aspose.Cells for .NET (C#)
+// Common Searches: how to extract only numeric values from an Excel file with Aspose.Cells in C# | Aspose.Cells iterate used range and collect numeric data into List<double> | C# read numeric cells from .xlsx workbook using Aspose.Cells without loading formulas | store Excel numeric values in memory efficiently with Aspose.Cells .NET | filter non‑numeric cells while reading Excel worksheet using Aspose.Cells C#
+// Tags: Aspose.Cells numeric cell extraction C# | XLSX used range iteration Aspose.Cells | store numeric Excel data in List<double> | filter numeric cell types C# Aspose.Cells | high‑performance in‑memory numeric collection .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example opens an .xlsx file with Aspose.Cells, accesses the first worksheet, iterates through all used cells, selects those whose type is numeric, adds their double values to a List<double>, and then outputs the total number of numeric cells and their sum, with file‑existence checking and exception handling.
-public class Program
+// The example loads an XLSX workbook with Aspose.Cells, accesses the first worksheet, determines its used range, and iterates each cell. It checks each cell's Value for numeric types (double, int, float, long) and adds the values to a List<double>, providing a fast in‑memory collection of numeric data while handling missing files and runtime exceptions.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         const string inputPath = "input.xlsx";
 
-        // Verify that the input file exists before attempting to load it
+        // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: File not found – {inputPath}");
             return;
         }
 
         try
         {
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
+            // Load the workbook with explicit format
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            var workbook = new Workbook(inputPath, loadOptions);
 
-            // Get the first worksheet
+            // Access the first worksheet
             var worksheet = workbook.Worksheets[0];
+            var cells = worksheet.Cells;
 
-            // Collection to store numeric values
-            List<double> numericValues = new List<double>();
+            // Collection for numeric values
+            var numericValues = new List<double>();
 
-            // Iterate through all used cells in the worksheet
-            foreach (Cell cell in worksheet.Cells)
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Iterate through each cell in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Check if the cell contains a numeric value
-                if (cell.Type == CellValueType.IsNumeric)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    numericValues.Add(cell.DoubleValue);
+                    var cellValue = cells[row, col].Value;
+
+                    // Store only numeric values
+                    switch (cellValue)
+                    {
+                        case double d:
+                            numericValues.Add(d);
+                            break;
+                        case int i:
+                            numericValues.Add(i);
+                            break;
+                        case float f:
+                            numericValues.Add(f);
+                            break;
+                        case long l:
+                            numericValues.Add(l);
+                            break;
+                        // Add other numeric types if needed
+                    }
                 }
             }
 
-            // Output results
-            Console.WriteLine($"Total numeric cells read: {numericValues.Count}");
-
-            double sum = 0;
-            foreach (double val in numericValues)
-            {
-                sum += val;
-            }
-            Console.WriteLine($"Sum of numeric values: {sum}");
+            // Output the result
+            Console.WriteLine($"Total numeric values read: {numericValues.Count}");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

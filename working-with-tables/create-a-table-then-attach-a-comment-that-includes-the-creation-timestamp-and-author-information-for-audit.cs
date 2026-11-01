@@ -1,77 +1,60 @@
-// Title: Generate an Excel ListObject table and embed an audit comment with author and timestamp using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a worksheet, adds a ListObject table over a data range, and inserts a comment on the header cell containing a given author name and the current date‑time. | Extend the Aspose.Cells example to include a total row in the ListObject and format the audit comment so the author and timestamp appear in bold. | Create a reusable C# method that accepts author, data range, and output path, then builds a ListObject table, attaches the audit comment to the first header cell, and saves the workbook.
-// Common Searches: how to add a ListObject table with a header comment in Aspose.Cells C# | Aspose.Cells create Excel table and set author timestamp comment on cell A1 | C# Aspose.Cells add audit metadata comment to worksheet header row
-// Tags: Aspose.Cells create ListObject table | Aspose.Cells add cell comment with timestamp | C# generate Excel table with audit metadata | Aspose.Cells save workbook as .xlsx with audit comment | Aspose.Cells ListObject total row customization
+// Title: Generate an Excel ListObject table and add a timestamped author comment with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to create a ListObject table, fill it with sample rows, and insert a comment on cell A1 that includes the current date, time, and Windows user name. | Show how to add an audit‑trail comment to the header cell of an Excel table in a workbook created with Aspose.Cells for .NET. | Demonstrate saving the workbook as an .xlsx file after adding a ListObject and a timestamped comment in C#. | Explain how to retrieve the current environment username and embed it in a cell comment with Aspose.Cells.
+// Common Searches: aspocells c# create listobject table with header and add comment containing date and user | how to programmatically add an audit comment to Excel cell using Aspose.Cells .NET | C# Aspose.Cells add timestamped comment to cell A1 in new workbook | save workbook as AuditTable.xlsx after inserting ListObject and comment Aspose.Cells
+// Tags: Aspose.Cells ListObject creation C# | Aspose.Cells add cell comment with timestamp | Excel table header row ListObject Aspose | audit comment author environment username Aspose.Cells | save workbook as .xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // Required for ListObject
+using Aspose.Cells.Tables;
 
-// Demonstrates using Aspose.Cells for .NET to create a new workbook, add a ListObject (Excel table) with headers and sample data, attach a comment containing the author name and current timestamp to the first header cell, and save the file as AuditTable.xlsx.
+// Creates a new workbook, defines a two‑column ListObject named 'AuditTable' with sample data, adds a comment to cell A1 that records the current date, time and Windows user, and saves the file as AuditTable.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
 
-            // Populate header row
+            // Populate sample data for the table
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Score");
-
-            // Populate sample data rows
             sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["C2"].PutValue(85);
-
+            sheet.Cells["B2"].PutValue("John");
             sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-            sheet.Cells["C3"].PutValue(92);
+            sheet.Cells["B3"].PutValue("Jane");
 
-            // Define the range for the table (including header)
-            int firstRow = 0;          // zero‑based index for row 1
-            int firstColumn = 0;       // zero‑based index for column A
-            int totalRows = 3;         // header + 2 data rows
-            int totalColumns = 3;      // ID, Name, Score
+            // Define the range of the table (including header row)
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 3;     // rows 1‑3
+            int totalColumns = 2;  // columns A‑B
 
             // Add a ListObject (Excel table) to the worksheet
-            int tableIndex = sheet.ListObjects.Add(
-                firstRow,
-                firstColumn,
-                firstRow + totalRows - 1,
-                firstColumn + totalColumns - 1,
-                true);
-
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
             ListObject table = sheet.ListObjects[tableIndex];
-            // Use DisplayName instead of Name (compatible with all versions)
             table.DisplayName = "AuditTable";
             table.ShowHeaderRow = true;
-            // ShowTotalRow property may not be available in older versions; omit if not present
+            // ShowTotalRow property is not available in this version; default is false.
 
-            // Prepare audit comment with timestamp and author
-            string author = "John Doe";
-            string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string commentText = $"Created by {author} on {timestamp}";
-
-            // Attach the comment to the first header cell (A1)
-            int commentIndex = sheet.Comments.Add("A1");
+            // Create a comment on the top‑left cell (A1) with timestamp and author
+            string cellName = "A1";
+            int commentIndex = sheet.Comments.Add(cellName);
             Comment comment = sheet.Comments[commentIndex];
-            comment.Note = commentText;
-            comment.Author = author;
+            comment.Author = Environment.UserName;
+            comment.Note = $"Created on {DateTime.Now:yyyy-MM-dd HH:mm:ss} by {Environment.UserName}";
 
             // Save the workbook to a file
-            workbook.Save("AuditTable.xlsx");
+            string outputPath = "AuditTable.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

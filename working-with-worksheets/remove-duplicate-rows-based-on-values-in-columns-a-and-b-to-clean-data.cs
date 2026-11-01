@@ -1,57 +1,50 @@
-// Title: How to delete rows with duplicate values in columns A and B using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that scans an .xlsx file and eliminates rows where the combination of column A and column B repeats. | Demonstrate using a case‑insensitive HashSet to store A‑B pairs while traversing rows from bottom to top and removing later occurrences. | Create a reusable method that loads a workbook, purges duplicate A‑B entries, and writes the cleaned file to a new location.
-// Common Searches: Aspose.Cells C# delete rows when A and B columns have the same values | C# remove repeated records in Excel based on two columns using Aspose | How to filter out duplicate A‑B pairs in an .xlsx file with Aspose.Cells | Programmatic way to clean Excel sheet by dropping rows with identical column A and B values in .NET
-// Tags: duplicate A‑B key removal Aspose.Cells | hashset based row deduplication .NET | bottom‑up row deletion Aspose.Cells | excel worksheet data cleaning C# | case‑insensitive key comparison Aspose
+// Title: Remove duplicate rows from an Excel worksheet based on columns A and B using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, checks for duplicate values in columns A and B, removes those rows, and saves the result. | Provide a C# snippet demonstrating how to invoke Worksheet.Cells.RemoveDuplicates for the first two columns with proper error handling. | Create a reusable C# method that accepts input and output file paths and column indexes, then eliminates duplicate rows using Aspose.Cells.
+// Common Searches: asp.net aspose.cells remove duplicate rows based on two columns | c# example using Worksheet.Cells.RemoveDuplicates to clean Excel data | how to delete rows with identical values in columns A and B in an .xlsx file using Aspose.Cells | remove repeated rows from Excel workbook with Aspose.Cells .NET library
+// Tags: Aspose.Cells RemoveDuplicates columns A B | C# deduplicate Excel worksheet Aspose.Cells | Worksheet.Cells.RemoveDuplicates .NET usage | clean Excel data duplicate rows Aspose.Cells | duplicate row elimination .xlsx C# Aspose.Cells
 
-using System;
-using System.Collections.Generic;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example loads input.xlsx, iterates from the last row upward, builds a case‑insensitive key from columns A and B, uses a HashSet to detect repeats, deletes any row whose key already exists, and saves the cleaned workbook as output.xlsx.
+// // This C# program verifies the input.xlsx file, loads it with Aspose.Cells, removes rows that have identical values in columns A and B using Worksheet.Cells.RemoveDuplicates, and saves the cleaned workbook as output.xlsx while handling exceptions.
 class RemoveDuplicateRows
 {
     static void Main()
     {
-        // Input and output file paths
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Load the workbook (create/load rule)
-        Workbook workbook = new Workbook(inputPath);
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Determine the last row that contains data
-        int lastRow = cells.MaxDataRow; // zero‑based index
-
-        // HashSet to store unique combinations of column A and B values
-        HashSet<string> uniqueKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        // Iterate from bottom to top to safely delete rows
-        for (int row = lastRow; row >= 0; row--)
+        try
         {
-            // Read values from column A (index 0) and column B (index 1)
-            string valueA = cells[row, 0].StringValue?.Trim() ?? string.Empty;
-            string valueB = cells[row, 1].StringValue?.Trim() ?? string.Empty;
-
-            // Combine the two values to form a unique key
-            string key = $"{valueA}|{valueB}";
-
-            if (uniqueKeys.Contains(key))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Duplicate found – delete the entire row
-                worksheet.Cells.DeleteRow(row);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            else
-            {
-                // First occurrence – add the key to the set
-                uniqueKeys.Add(key);
-            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine the used range of rows (MaxDataRow is zero‑based)
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = 2; // Columns A and B (0‑based index)
+
+            // Remove duplicate rows based on values in columns A and B
+            // The last parameter (columnOffsets) is set to null because no offsets are needed
+            sheet.Cells.RemoveDuplicates(0, 0, totalRows, totalColumns, false, null);
+
+            // Save the cleaned workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Duplicates removed. Output saved to {outputPath}");
         }
-
-        // Save the cleaned workbook (save rule)
-        workbook.Save(outputPath);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

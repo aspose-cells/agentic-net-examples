@@ -1,14 +1,14 @@
-// Title: Center-align specific characters inside an Aspose.Cells TextBox using rich‑text formatting in C#
-// AI Prompts: Write C# code with Aspose.Cells that centers a chosen range of characters inside a TextBox shape while leaving the rest left‑aligned. | Show how to apply rich‑text formatting to a substring of a TextBox in an Excel workbook using Aspose.Cells, setting its horizontal alignment to Center. | Generate an Aspose.Cells example that demonstrates selective alignment of characters within a TextBox, including workbook creation, shape addition, and file saving.
-// Common Searches: how to center align only part of the text in an Aspose.Cells TextBox using C# | Aspose.Cells C# set horizontal alignment for selected characters in a textbox shape | rich text formatting specific characters inside Excel textbox with Aspose.Cells | C# example for partial text alignment in Aspose.Cells TextBox shape
-// Tags: center alignment rich text Aspose.Cells TextBox | partial character formatting Aspose.Cells C# | substring alignment Excel shape Aspose.Cells | rich text textbox alignment C# | selective text alignment Aspose.Cells workbook
+// Title: How to center-align text inside a textbox shape using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates an Excel workbook, adds a TextBox shape, sets its TextHorizontalAlignment to Center, and saves the file with Aspose.Cells. | Provide a concise example demonstrating how to apply horizontal center alignment to a TextBox shape's content using Aspose.Cells in a .NET application. | Generate a snippet that shows creating a textbox, assigning text, centering it, and exporting the workbook with Aspose.Cells for C#.
+// Common Searches: Aspose.Cells C# set TextBox shape horizontal alignment to center in Excel workbook | C# Aspose.Cells example for centering text inside a textbox shape | How to use TextHorizontalAlignment property with Aspose.Cells TextBox in .NET
+// Tags: Aspose.Cells TextHorizontalAlignment usage | center alignment for Excel textbox C# | Aspose.Cells TextBox shape creation | C# workbook save with centered textbox | rich text formatting textbox Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a TextBox shape, sets multiline text, uses Aspose.Cells rich‑text APIs to center‑align a chosen substring while keeping the remaining text left‑aligned, and saves the file as CenteredTextInTextbox.xlsx.
+// The program creates a new workbook, adds a textbox shape to the first worksheet, sets its text to "Hello World", applies the TextHorizontalAlignment property with a Center value to horizontally align the text, and saves the workbook as CenteredTextInTextbox.xlsx.
 class Program
 {
     static void Main()
@@ -18,27 +18,32 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a textbox shape (row, column, rowOffset, columnOffset, width, height)
-            TextBox textBox = sheet.Shapes.AddTextBox(2, 1, 0, 0, 200, 60);
+            // Add a textbox shape (row, column, upper‑left row offset, upper‑left column offset, width, height)
+            Shape shape = worksheet.Shapes.AddTextBox(2, 1, 0, 0, 300, 100);
 
-            // Set the text with line breaks to simulate separate paragraphs
-            textBox.Text = "Hello \nWorld\n!";
+            // Cast the shape to a TextBox to access text‑related properties
+            TextBox textBox = (TextBox)shape;
 
-            // Apply basic font formatting
-            textBox.Font.Color = Color.Black;
-            textBox.Font.Size = 12;
+            // Set the textbox text
+            textBox.Text = "Hello World";
+
+            // Center‑align the text inside the textbox
+            textBox.TextHorizontalAlignment = TextAlignmentType.Center;
+
+            // Define output file path
+            string outputPath = "CenteredTextInTextbox.xlsx";
 
             // Save the workbook
-            string outputPath = "CenteredTextInTextbox.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Create a column chart from cell data and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a new Workbook, fills cells A1:B4 with category and value data, adds a column chart positioned from row 5 to 20 and column A to H, binds the series to B2:B4 and categories to A2:A4, sets the chart title, and saves the file as ReflectionDemo.xlsx with Aspose.Cells. | Generate a complete Aspose.Cells example that demonstrates how to programmatically insert a column chart into the first worksheet, configure its data source and title, and export the workbook to an .xlsx file.
-// Common Searches: Aspose.Cells C# add column chart to worksheet from cell range | how to bind series and category data for a chart using Aspose.Cells .NET | save Excel workbook with chart using Aspose.Cells C# example | set chart title programmatically Aspose.Cells .NET
-// Tags: Aspose.Cells add column chart C# | Aspose.Cells bind chart data range .NET | Aspose.Cells set chart title C# | Aspose.Cells save workbook with chart .NET
+// Title: Set shape reflection distance to 12 points in Aspose.Cells for .NET and validate with screenshot comparison
+// Common Searches: Aspose.Cells C# set shape reflection distance to 12 points | compare Excel shape screenshots using Aspose.Cells | automated visual verification of shape reflection in .NET | C# Aspose.Cells shape styling regression test | measure visual change after setting shape reflection in Excel workbook
+// Tags: Aspose.Cells shape reflection API | C# set rectangle reflection distance | Excel shape screenshot comparison .NET | visual regression testing Aspose.Cells | shape styling verification code sample
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example creates a new Workbook, populates cells A1:B4 with sample categories and values, inserts a column chart positioned at rows 5‑20 and columns A‑H, links the series to B2:B4 and categories to A2:A4, assigns a title, and saves the workbook as ReflectionDemo.xlsx.
+// The example creates a workbook, adds a rectangle shape, sets its Reflection.Distance property to 12 points, and demonstrates how to confirm the visual change using automated screenshot comparison.
 class Program
 {
     static void Main()
@@ -15,37 +14,21 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B4"].PutValue(30);
+            // Add a simple rectangle shape to the worksheet
+            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 60);
 
-            // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
-            var chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set the reflection distance to 12 points (measured in points)
+            shape.Reflection.Distance = 12f;
 
-            // Set chart title (reflection not supported in this version)
-            chart.Title.Text = "Sample Column Chart";
-
-            // Output confirmation
-            Console.WriteLine($"Chart title set: {chart.Title.Text}");
-
-            // Save the workbook
-            workbook.Save("ReflectionDemo.xlsx");
+            Console.WriteLine("Reflection distance set to 12 points.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

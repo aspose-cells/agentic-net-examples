@@ -1,46 +1,54 @@
-// Title: How to import a 2D string array into an Aspose.Cells worksheet and enable text wrap for all cells in C#
-// AI Prompts: Load a two‑dimensional string array into the first worksheet of a new Workbook and apply a wrap‑text style to every cell using Aspose.Cells for .NET. | Create a Style with IsTextWrapped set to true, configure a StyleFlag that only affects WrapText, and apply it to the worksheet’s Cells collection. | Auto‑fit the rows after the wrap style is applied and save the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells C# import 2D string array and wrap text in all cells | apply text wrapping to entire worksheet after ImportTwoDimensionArray Aspose.Cells | auto fit rows after enabling wrap text with Aspose.Cells .NET example
-// Tags: import 2d string array wrap text Aspose.Cells | StyleFlag wrap text Aspose.Cells | auto fit rows after wrap text Aspose.Cells | apply style to all worksheet cells Aspose.Cells | save workbook as xlsx Aspose.Cells
+// Title: Import a 2D string array into an Aspose.Cells worksheet and apply text wrapping to every cell using C#
+// AI Prompts: Load a two‑dimensional string array into a worksheet with Worksheet.Cells.ImportTwoDimensionArray, then create a Style with IsTextWrapped = true and assign it to the worksheet's used range. | Generate a wrap‑enabled style in Aspose.Cells, iterate over the MaxDisplayRange after importing data, and set each cell's style to enable text wrapping. | Save the workbook after applying the wrap style to ensure long text is displayed without truncation in the resulting .xlsx file.
+// Common Searches: C# Aspose.Cells import 2D string array and wrap text in cells | how to enable text wrapping for all cells after importing data with Aspose.Cells | Aspose.Cells set IsTextWrapped property for a range of cells in .NET | prevent text truncation in Excel by applying wrap style using Aspose.Cells C# | apply a style to the used range after ImportTwoDimensionArray in Aspose.Cells
+// Tags: import two-dimensional array Aspose.Cells C# | text wrap style for used range | IsTextWrapped property Aspose.Cells | wrap long text Excel cells C# | save formatted workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a new workbook, imports a two‑dimensional string array starting at A1, defines a style with IsTextWrapped enabled, applies the style to every cell using a StyleFlag that only wraps text, auto‑fits the rows so the wrapped content is fully visible, and saves the file as WrappedTextOutput.xlsx.
+// The program creates a new Workbook, imports a two‑dimensional string array into the first worksheet, builds a Style with text wrapping enabled, applies that style to every cell in the used range, and saves the file as WrappedArray.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Two‑dimensional array of strings to import
-        string[,] data = new string[,]
+        try
         {
-            { "This is a very long piece of text that should wrap inside the cell to avoid truncation.", "Short" },
-            { "Another lengthy text entry that needs wrapping for proper display.", "Medium length text" }
-        };
+            // Sample two‑dimensional array of strings
+            string[,] data = new string[,]
+            {
+                { "Header1", "Header2", "Header3" },
+                { "This is a long piece of text that should wrap within the cell", "Short", "Another long text that needs wrapping" },
+                { "Row3Col1", "Row3Col2", "Row3Col3" }
+            };
 
-        // Import the array starting at cell A1 (row 0, column 0)
-        cells.ImportTwoDimensionArray(data, 0, 0);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Create a style with text wrapping enabled
-        Style wrapStyle = workbook.CreateStyle();
-        wrapStyle.IsTextWrapped = true;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a style flag to apply only the wrap setting
-        StyleFlag flag = new StyleFlag();
-        flag.WrapText = true;
+            // Import the array starting at cell A1 (row 0, column 0)
+            sheet.Cells.ImportTwoDimensionArray(data, 0, 0);
 
-        // Apply the wrap style to all cells in the worksheet
-        cells.ApplyStyle(wrapStyle, flag);
+            // Get the used range of cells after import
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-        // Auto‑fit rows so the wrapped text becomes fully visible
-        worksheet.AutoFitRows();
+            // Create a style with text wrap enabled
+            Style wrapStyle = workbook.CreateStyle();
+            wrapStyle.IsTextWrapped = true;
 
-        // Save the workbook
-        workbook.Save("WrappedTextOutput.xlsx");
+            // Apply the wrap style to every cell in the used range
+            foreach (Cell cell in usedRange)
+            {
+                cell.SetStyle(wrapStyle);
+            }
+
+            // Save the workbook to a file
+            workbook.Save("WrappedArray.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,59 +1,70 @@
-// Title: Capture and log unsupported feature warnings when loading an XLSX workbook with Aspose.Cells for .NET
-// AI Prompts: Implement an IWarningCallback that records each load warning from Aspose.Cells and appends it with a timestamp to a log file. | Modify the workbook loading code to use LoadOptions with a warning callback that writes unsupported‑feature warnings to app.log. | Provide C# sample that accesses the warning collection after opening an Excel file and logs every entry.
-// Common Searches: how to log unsupported feature warnings from Aspose.Cells when opening an xlsx file in C# | Aspose.Cells .NET capture load warnings using IWarningCallback example | write Excel load warnings to a custom log file with Aspose.Cells LoadOptions | retrieve warning messages for unsupported Excel features during workbook load in C#
-// Tags: Aspose.Cells IWarningCallback implementation | log Excel load warnings .NET | capture unsupported feature warnings Aspose.Cells | load workbook with warning callback C# | write load warnings to application log
+// Title: Log unsupported feature load warnings from an Excel workbook using Aspose.Cells LoadOptions and IWarningCallback in C#
+// Common Searches: how to log load warnings from Aspose.Cells workbook in C# | using LoadOptions WarningCallback to capture unsupported feature warnings in .NET | example of IWarningCallback for Excel file loading with Aspose.Cells | recording Aspose.Cells load warnings to a custom log file | C# code to write Aspose.Cells load warnings to application log
+// Tags: Aspose.Cells load warning callback | custom IWarningCallback implementation C# | log unsupported feature warnings .NET | LoadOptions warning callback example | append workbook load warnings to file
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example shows how to load an XLSX workbook with Aspose.Cells using LoadOptions, attach an IWarningCallback to capture any unsupported‑feature warnings, and append each warning with a timestamp to a specified application log file while handling load errors gracefully.
+// The sample creates an application log file, configures LoadOptions with a custom IWarningCallback (LoadWarningLogger) that writes each warning's description and a timestamp to the log, loads an Excel workbook using these options, and logs any unexpected exceptions, ensuring all load‑time warnings about unsupported features are captured.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file to load
-        string inputPath = "input.xlsx";
-
-        // Path to the application log file
+        // Paths for the workbook to load and the log file
+        string workbookPath = "input.xlsx";
         string logPath = "app.log";
 
-        // Verify that the input file exists to prevent FileNotFoundException
-        if (!File.Exists(inputPath))
+        // Ensure the log file exists
+        if (!File.Exists(logPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            using (File.Create(logPath)) { }
+        }
+
+        // Verify that the workbook file exists before attempting to load it
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
             return;
         }
 
         try
         {
-            // Prepare load options (adjust the format if needed)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            // Configure load options with a warning callback
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                WarningCallback = new LoadWarningLogger(logPath)
+            };
 
-            // Load the workbook using the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook using the configured options
+            Workbook workbook = new Workbook(workbookPath, loadOptions);
 
-            // NOTE: Aspose.Cells does not expose load warnings via a property on Workbook in all versions.
-            // If needed, warnings can be captured via LoadOptions or other mechanisms in newer releases.
-
-            // (Optional) Continue processing the workbook as needed
-            // ...
+            // Workbook is now loaded; further processing can be done here
         }
         catch (Exception ex)
         {
-            // Log unexpected errors
-            try
-            {
-                string errorEntry = $"{DateTime.Now:u} - ERROR: {ex.Message}{Environment.NewLine}";
-                File.AppendAllText(logPath, errorEntry);
-            }
-            catch
-            {
-                // If logging fails, write to console only
-                Console.WriteLine("Failed to write to log file.");
-            }
-
+            // Log any unexpected errors
+            File.AppendAllText(logPath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Exception: {ex.Message}{Environment.NewLine}");
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+}
+
+// Implements Aspose.Cells.IWarningCallback to handle load warnings
+class LoadWarningLogger : IWarningCallback
+{
+    private readonly string _logFilePath;
+
+    public LoadWarningLogger(string logFilePath)
+    {
+        _logFilePath = logFilePath;
+    }
+
+    // Called by Aspose.Cells for each warning encountered during loading
+    public void Warning(WarningInfo info)
+    {
+        // Use the Description property for the warning message
+        string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {info.Description}{Environment.NewLine}";
+        File.AppendAllText(_logFilePath, logEntry);
     }
 }

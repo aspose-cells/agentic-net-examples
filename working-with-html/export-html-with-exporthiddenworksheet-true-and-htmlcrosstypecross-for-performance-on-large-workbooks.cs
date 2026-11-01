@@ -1,42 +1,43 @@
-// Title: Export hidden worksheets to HTML using Aspose.Cells in C# and apply HtmlCrossType.Cross for faster processing of large workbooks
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportHiddenWorksheet to true, applies HtmlCrossType.Cross when the property is available, and saves the result as an HTML file. | Refactor the provided Aspose.Cells example into a reusable method that accepts input and output paths, ensures hidden sheets are included in the HTML output, and uses HtmlCrossType.Cross for performance on workbooks with many rows. | Create a C# snippet that checks the Aspose.Cells version, configures HtmlSaveOptions for hidden worksheet export, conditionally sets HtmlCrossType.Cross if supported, and writes the HTML file while handling file‑not‑found and runtime errors.
-// Common Searches: how to include hidden worksheets when saving an Excel file as HTML with Aspose.Cells C# | HtmlCrossType.Cross setting for improving HTML export speed in Aspose.Cells | export large Excel workbook to HTML using Aspose.Cells performance tips | Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet example C# | why HtmlCrossType property is missing in current Aspose.Cells version
-// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | Aspose.Cells HtmlCrossType performance | C# Excel hidden sheets HTML export | large workbook HTML conversion Aspose.Cells | HTML export optimization Aspose.Cells
+// Title: Export hidden worksheets to HTML with Aspose.Cells for .NET – guidance for large workbook performance
+// AI Prompts: Generate C# code that loads an Excel workbook and saves it as an HTML file while preserving hidden worksheets using Aspose.Cells HtmlSaveOptions. | Write a C# example that configures HtmlSaveOptions to include hidden sheets in the HTML output and demonstrates saving a large workbook efficiently with Aspose.Cells.
+// Common Searches: asp.net aspose.cells export hidden worksheets to html | c# htmlsaveoptions include hidden sheets aspose.cells | optimizing html export performance for large Excel files using aspose.cells | how to convert Excel to html and keep hidden worksheets in .net | aspose.cells html conversion settings for big workbooks
+// Tags: Aspose.Cells HtmlSaveOptions export hidden worksheets | C# convert Excel to HTML performance | large workbook HTML export Aspose.Cells | include hidden sheets in HTML output Aspose.Cells | Aspose.Cells HTML conversion settings | optimize Aspose.Cells HTML export for big files
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads 'input.xlsx' with Aspose.Cells, configures HtmlSaveOptions to include hidden worksheets (ExportHiddenWorksheet = true), notes that HtmlCrossType may not be present in older versions, and saves the workbook as 'output.html' while handling missing files and runtime exceptions.
-class Program
+// // Loads an Excel file, sets HtmlSaveOptions.ExportHiddenWorksheet = true, and saves the workbook as an HTML document using Aspose.Cells for .NET.
+class ExportHtmlExample
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
+            string inputPath = "input.xlsx";
+            string outputPath = "output.html";
+
+            // Ensure the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                ExportHiddenWorksheet = true // Include hidden worksheets in the HTML output
-                // HtmlCrossType property is not available in the current Aspose.Cells version
+                // Export hidden worksheets as part of the HTML output
+                ExportHiddenWorksheet = true
+                // HtmlCrossType property is not available in this version of Aspose.Cells
             };
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {

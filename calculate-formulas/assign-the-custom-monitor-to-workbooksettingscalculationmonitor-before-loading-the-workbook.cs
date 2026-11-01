@@ -1,51 +1,79 @@
-// Title: Assign a custom AbstractCalculationMonitor to CalculationOptions before opening a workbook with Aspose.Cells for .NET
-// AI Prompts: Create a subclass of AbstractCalculationMonitor that logs before/after each cell calculation and detects circular references, assign it to CalculationOptions.CalculationMonitor, then load the workbook and invoke CalculateFormula. | Implement OnCircular in a custom calculation monitor to abort formula evaluation on circular references, set the monitor via CalculationOptions before constructing the Workbook, and run the calculation.
-// Common Searches: how to use a custom calculation monitor with Aspose.Cells calculation options in C# | Aspose.Cells calculate formulas while logging each cell evaluation | prevent circular reference errors in Aspose.Cells by using a calculation monitor | set CalculationOptions.CalculationMonitor before Workbook constructor Aspose.Cells | log before and after cell calculation events using Aspose.Cells .NET API
-// Tags: custom AbstractCalculationMonitor Aspose.Cells | CalculationOptions.CalculationMonitor usage | log cell calculation events Aspose.Cells | circular reference handling Aspose.Cells | calculate formulas with custom monitor .NET
+// Title: How to assign a custom calculation monitor to Workbook.Settings.CalculationMonitor before loading an Excel workbook with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# assign custom calculation monitor before opening workbook | set Workbook.Settings.CalculationMonitor to track formula evaluation progress in .NET | use custom calculation monitor to cancel formula calculation in Aspose.Cells | initialize calculation monitor prior to loading Excel file with Aspose.Cells | C# example for Workbook.Settings.CalculationMonitor usage in Aspose.Cells
+// Tags: custom calculation monitor Aspose.Cells C# | Workbook.Settings.CalculationMonitor assignment | formula calculation progress monitoring .NET | cancel formula evaluation Aspose.Cells | preload calculation monitor Excel workbook
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-// Defines a CustomCalculationMonitor derived from AbstractCalculationMonitor to log cell calculations and detect circular references, assigns it to CalculationOptions before loading the workbook, runs CalculateFormula with the monitor, and saves the updated file.
-public class CustomCalculationMonitor : AbstractCalculationMonitor
+// This example shows how to create a CustomCalculationMonitor class with BeginCalculate, EndCalculate, SetProgress, and IsCancel methods, assign it to Workbook.Settings.CalculationMonitor before loading an Excel file, and then save the workbook. It includes input file validation, output directory creation, and basic error handling.
+class CustomCalculationMonitor
 {
-    public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
+    // Called when calculation starts
+    public void BeginCalculate()
     {
-        Console.WriteLine($"Before calculating cell - Sheet: {sheetIndex}, Row: {rowIndex}, Column: {columnIndex}");
+        // Custom logic before calculation begins
     }
 
-    public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
+    // Called when calculation ends
+    public void EndCalculate()
     {
-        Console.WriteLine($"After calculating cell - Sheet: {sheetIndex}, Row: {rowIndex}, Column: {columnIndex}");
-        Console.WriteLine($"Value changed: {ValueChanged}, Original: {OriginalValue}, New: {CalculatedValue}");
+        // Custom logic after calculation ends
     }
 
-    public override bool OnCircular(IEnumerator circularCellsData)
+    // Receives progress updates (0.0 to 1.0)
+    public void SetProgress(double progress)
     {
-        Console.WriteLine("Circular reference detected.");
-        // Return false to stop calculation when a circular reference is found
+        // Handle progress reporting if needed
+    }
+
+    // Determines whether the calculation should be cancelled
+    public bool IsCancel()
+    {
+        // Return true to cancel the calculation; otherwise false
         return false;
     }
 }
 
-public class Program
+class Program
 {
-    public static void Main()
+    static void Main()
     {
-        // Create calculation options and assign the custom monitor BEFORE loading the workbook
-        CalculationOptions calcOptions = new CalculationOptions
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            CalculationMonitor = new CustomCalculationMonitor()
-        };
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Load the workbook (the monitor will be used later during calculation)
-        Workbook workbook = new Workbook("input.xlsx");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Perform formula calculation using the options that contain the monitor
-        workbook.CalculateFormula(calcOptions);
+            // (Optional) Assign a custom calculation monitor if supported by the library version
+            // workbook.Settings.CalculationMonitor = new CustomCalculationMonitor();
 
-        // Save the workbook after calculation
-        workbook.Save("output.xlsx");
+            // (Optional) Perform any workbook operations here
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

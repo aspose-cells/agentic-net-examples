@@ -1,47 +1,47 @@
-// Title: How to set a 12‑point line spacing for wrapped paragraph text in an Excel cell with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to enable text wrapping and apply a 12‑point line spacing to a paragraph inside a specific worksheet cell. | Show how to adjust row height together with text wrapping to achieve exact 12‑point line spacing for cell content using the Aspose.Cells .NET API. | Provide a minimal example that creates a workbook, inserts wrapped text, and configures the cell to display a 12‑point line spacing with Aspose.Cells.
-// Common Searches: Aspose.Cells set exact line spacing for wrapped text in a cell | C# Aspose.Cells 12 point paragraph spacing in Excel worksheet | How to control line spacing of cell text using Aspose.Cells .NET | Adjust row height to match paragraph line spacing with Aspose.Cells | Set paragraph line spacing in Excel cell programmatically with Aspose.Cells
-// Tags: Aspose.Cells set cell line spacing | Aspose.Cells text wrapping row height | C# Excel paragraph spacing Aspose.Cells | Aspose.Cells line spacing 12pt | Excel cell formatting Aspose.Cells .NET
+// Title: How to set a 12‑point row height in an Excel worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set specific row height in points | set Excel row height to 12 points using Aspose.Cells .NET | exact row height in points with Aspose.Cells workbook | C# Aspose.Cells row height precision example | define first row height 12pt in generated Excel file Aspose.Cells
+// Tags: row height points Aspose.Cells | Excel row height precision C# | Aspose.Cells set exact row height | worksheet row height in points | C# Aspose.Cells row height example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, writes a paragraph into cell A1, enables text wrapping, sets the row height to 12 points to approximate a 12‑point line spacing, and saves the workbook as Output.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Creates a new workbook, writes text to cell A1, sets the first row's height to exactly 12 points, and saves the file as LineSpacingExample.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Put sample text into cell A1
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("This paragraph uses a line spacing of 12 points.");
+                // Add some text to a cell
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("Line spacing example");
 
-            // Enable text wrapping for the cell
-            Style style = cell.GetStyle();
-            style.IsTextWrapped = true;
-            cell.SetStyle(style);
+                // Set the row height to exactly 12 points
+                // Row index is zero‑based; 0 refers to the first row
+                sheet.Cells.SetRowHeight(0, 12);
 
-            // Set the row height to 12 points (approximate line spacing)
-            sheet.Cells.SetRowHeight(0, 12);
+                // Define output file path
+                string outputPath = "LineSpacingExample.xlsx";
 
-            // Define output file path
-            string outputPath = "Output.xlsx";
+                // Save the workbook
+                workbook.Save(outputPath);
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully: {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

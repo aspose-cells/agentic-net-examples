@@ -1,7 +1,7 @@
-// Title: Generate HTML from an Aspose.Cells workbook in C# while hiding cell comments for legacy browser support
-// AI Prompts: Write a C# console program that creates a workbook, adds a comment to a cell, saves it as HTML using Aspose.Cells with comments excluded, and displays the output file path. | Configure Aspose.Cells HtmlSaveOptions to disable comment export and show how to confirm that the comment text is not present in the generated HTML. | Add code that reads the saved HTML file, searches for a specific comment string, and prints a verification result indicating whether the comment was successfully hidden.
-// Common Searches: how to export Excel to HTML with Aspose.Cells without comments for IE8 | C# Aspose.Cells HtmlSaveOptions hide cell comments legacy browsers | verify that Aspose.Cells generated HTML does not contain cell comments | prevent comment export when saving workbook as HTML using Aspose.Cells C# | legacy browser compatible HTML output from Aspose.Cells workbook
-// Tags: Aspose.Cells HtmlSaveOptions hide comments | C# export workbook to HTML without comments | legacy browser compatible HTML from Excel | cell comment exclusion Aspose.Cells | verify HTML comment omission C#
+// Title: Verify that hidden cell comments are excluded when exporting an Aspose.Cells workbook to HTML using C#
+// AI Prompts: Create a C# console application that generates a workbook, adds a comment to a cell, sets Comment.IsVisible = false, saves the workbook as HTML with HtmlSaveOptions, reads the resulting HTML file, and confirms the comment text is absent. | Adapt existing Aspose.Cells code to ensure hidden comments are omitted from the HTML output and output a pass/fail result based on whether the comment string appears in the file.
+// Common Searches: how to prevent Aspose.Cells hidden comments from appearing in exported HTML C# | C# Aspose.Cells export to HTML without cell comments | verify hidden comment removal in Aspose.Cells HTML output | Aspose.Cells HtmlSaveOptions hide comments for legacy browsers | check generated HTML for absent comment text using Aspose.Cells C#
+// Tags: Aspose.Cells HTML export without cell comments | C# HtmlSaveOptions comment visibility control | detect absent comment text in generated HTML | legacy browser compatibility Aspose.Cells HTML output | cell comment IsVisible false Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,60 +9,73 @@ using Aspose.Cells;
 
 namespace AsposeCellsLegacyHtmlTest
 {
-    // The example creates a workbook, adds sample data and a comment to cell A1, then saves the workbook as an HTML file using HtmlSaveOptions that omit comments. After saving, it reads the HTML file to ensure the comment text is not present, printing the file location and verification result.
+    // The sample creates a workbook, adds a hidden comment to cell A1, saves the workbook as HTML using HtmlSaveOptions, reads the HTML file, and verifies that the comment text does not appear, printing PASS or FAIL.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Path to the output HTML file
-                string htmlPath = "LegacyCommentTest.html";
+                // Paths for temporary files
+                string excelPath = "TestWorkbook.xlsx";
+                string htmlPath = "TestWorkbook.html";
 
-                // Create a new workbook and access the first worksheet
+                // 1. Create a new workbook and add a comment to a cell
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Data";
 
-                // Add some sample data
+                // Sample data
                 sheet.Cells["A1"].PutValue("Hello");
                 sheet.Cells["B1"].PutValue("World");
 
-                // Add a comment to cell A1
-                int commentIndex = sheet.Comments.Add("A1");
-                Comment comment = sheet.Comments[commentIndex];
-                comment.Note = "This is a test comment that should be hidden in legacy browsers.";
+                // Add a comment to cell A1 and hide it
+                int commentIdx = sheet.Comments.Add("A1");
+                Comment comment = sheet.Comments[commentIdx];
+                comment.Note = "This is a test comment";
+                comment.IsVisible = false; // Hide comment in output
 
-                // Configure HTML save options (comments are not exported by default)
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                // Save the workbook as an Excel file (optional)
+                workbook.Save(excelPath);
+
+                // 2. Save the workbook as HTML (comments are hidden because they are not visible)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                workbook.Save(htmlPath, htmlOptions);
+
+                // 3. Load the generated HTML file safely
+                if (!File.Exists(htmlPath))
                 {
-                    ExportActiveWorksheetOnly = true
-                    // Additional options can be set here if needed for legacy compatibility
-                };
-
-                // Save the workbook as an HTML file using the configured options
-                workbook.Save(htmlPath, saveOptions);
-
-                // Verify that the comment text does not appear in the generated HTML
-                if (File.Exists(htmlPath))
-                {
-                    string htmlContent = File.ReadAllText(htmlPath);
-                    bool commentFound = htmlContent.Contains("This is a test comment");
-
-                    Console.WriteLine($"HTML file generated at: {Path.GetFullPath(htmlPath)}");
-                    Console.WriteLine($"Comment hidden in HTML: {!commentFound}");
-
-                    // Optional: Output a snippet of the HTML for manual inspection
-                    Console.WriteLine("\n--- HTML snippet ---");
-                    Console.WriteLine(htmlContent.Substring(0, Math.Min(500, htmlContent.Length)));
+                    Console.WriteLine("Error: HTML file was not generated.");
+                    return;
                 }
-                else
+
+                string htmlContent;
+                try
                 {
-                    Console.WriteLine($"Failed to generate HTML file at: {Path.GetFullPath(htmlPath)}");
+                    htmlContent = File.ReadAllText(htmlPath);
                 }
+                catch (Exception readEx)
+                {
+                    Console.WriteLine($"Error reading HTML file: {readEx.Message}");
+                    return;
+                }
+
+                // 4. Verify that the comment text does not appear in the HTML output
+                string commentText = "This is a test comment";
+                bool commentFound = htmlContent.Contains(commentText);
+
+                // 5. Output the verification result
+                Console.WriteLine(commentFound
+                    ? "FAIL: Comment text was found in the HTML output."
+                    : "PASS: Comment text is hidden in the HTML output.");
+
+                // Optional cleanup
+                // if (File.Exists(excelPath)) File.Delete(excelPath);
+                // if (File.Exists(htmlPath)) File.Delete(htmlPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Exception: {ex.Message}");
             }
         }
     }

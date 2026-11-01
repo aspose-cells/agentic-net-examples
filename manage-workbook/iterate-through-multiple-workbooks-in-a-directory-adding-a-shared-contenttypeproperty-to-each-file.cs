@@ -1,69 +1,72 @@
-// Title: Batch add a shared custom document property to all .xlsx workbooks in a folder using Aspose.Cells for .NET
-// AI Prompts: Write C# code that enumerates every .xlsx file in a given directory, loads each workbook with Aspose.Cells, checks for a custom document property named 'SharedProperty', adds it with value 'SharedValue' when missing, and saves the file. | Create a robust .NET routine that processes a folder of Excel files, injects a shared custom document property via Aspose.Cells, includes existence check and exception handling, and overwrites the original workbooks.
-// Common Searches: Aspose.Cells C# add same custom document property to multiple Excel files in a folder | how to batch update custom document properties in .xlsx workbooks using .NET | iterate through directory of workbooks and set shared property with Aspose.Cells API
-// Tags: batch add custom document property Aspose.Cells | enumerate .xlsx files C# Aspose.Cells | shared custom property across workbooks .NET | custom document properties automation Aspose.Cells | process Excel workbooks in folder Aspose.Cells
+// Title: Batch add or update a shared ContentTypeProperty in multiple Excel workbooks with Aspose.Cells for .NET (C#)
+// Common Searches: C# code to add the same ContentTypeProperty to every .xlsx file in a folder using Aspose.Cells | How to loop through a directory of Excel workbooks and set a custom ContentTypeProperty with Aspose.Cells | Aspose.Cells batch update of custom properties across multiple Excel files in C# | Programmatically add or modify a shared ContentTypeProperty in many workbooks with Aspose.Cells .NET | Iterate over Excel files in a directory and overwrite them after adding a ContentTypeProperty using C#
+// Tags: Aspose.Cells batch add ContentTypeProperty | C# update Excel custom properties multiple workbooks | process directory of .xlsx files Aspose.Cells | overwrite workbook after property modification Aspose.Cells | iterate Excel files folder C# Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Scans a specified folder for .xlsx files, loads each workbook with Aspose.Cells, adds a custom document property named 'SharedProperty' with value 'SharedValue' if it does not already exist, and saves the workbook back to its original location.
+// The program verifies a target directory, enumerates .xlsx, .xls, and .xlsm files, loads each workbook with Aspose.Cells, adds or updates a ContentTypeProperty named "SharedProperty" with the value "SharedValue", saves the workbook back to the original file, and logs each processed file or any errors encountered.
 class Program
 {
     static void Main()
     {
-        try
+        // Path to the directory containing the workbooks
+        string folderPath = @"C:\Path\To\Workbooks";
+
+        // Verify that the directory exists
+        if (!Directory.Exists(folderPath))
         {
-            // Directory containing the workbooks
-            string folderPath = @"C:\Workbooks";
-
-            if (!Directory.Exists(folderPath))
-            {
-                Console.WriteLine($"Folder not found: {folderPath}");
-                return;
-            }
-
-            // Name and value of the shared custom document property to add
-            const string propertyName = "SharedProperty";
-            const string propertyValue = "SharedValue";
-
-            // Get all Excel files in the directory
-            string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            foreach (string filePath in files)
-            {
-                try
-                {
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found: {filePath}");
-                        continue;
-                    }
-
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Add the shared custom document property if it does not already exist
-                    if (!workbook.CustomDocumentProperties.Contains(propertyName))
-                    {
-                        // Add a new custom document property directly
-                        workbook.CustomDocumentProperties.Add(propertyName, propertyValue);
-                    }
-
-                    // Save the workbook (overwrites the original file)
-                    workbook.Save(filePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
-            }
-
-            Console.WriteLine("Custom document property added to all workbooks.");
+            Console.WriteLine($"Directory not found: {folderPath}");
+            return;
         }
-        catch (Exception ex)
+
+        // Define the shared ContentTypeProperty name and value
+        string propertyName = "SharedProperty";
+        string propertyValue = "SharedValue";
+
+        // Retrieve all files in the directory
+        string[] files = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+
+        foreach (string file in files)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Process only Excel workbook files
+            string ext = Path.GetExtension(file).ToLowerInvariant();
+            if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm")
+                continue;
+
+            // Ensure the file still exists before loading
+            if (!File.Exists(file))
+            {
+                Console.WriteLine($"File not found (skipped): {file}");
+                continue;
+            }
+
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(file);
+
+                // Add the shared ContentTypeProperty (or update if it already exists)
+                var existingProp = workbook.ContentTypeProperties[propertyName];
+                if (existingProp != null)
+                {
+                    existingProp.Value = propertyValue;
+                }
+                else
+                {
+                    workbook.ContentTypeProperties.Add(propertyName, propertyValue);
+                }
+
+                // Save the workbook, overwriting the original file
+                workbook.Save(file);
+                Console.WriteLine($"Processed: {file}");
+            }
+            catch (Exception ex)
+            {
+                // Log any errors for this file and continue with the next one
+                Console.WriteLine($"Error processing file '{file}': {ex.Message}");
+            }
         }
     }
 }

@@ -1,44 +1,43 @@
-// Title: Set Aspose.Cells workbook to Manual calculation mode, bulk‑populate cells, then run a single CalculateFormula in C#
-// AI Prompts: Demonstrate how to turn off automatic formula recalculation, efficiently fill a large cell range, add dependent formulas, and invoke Workbook.CalculateFormula once using Aspose.Cells for .NET. | Provide C# code that sets Workbook.Settings.FormulaSettings.CalculationMode to Manual, performs high‑volume cell updates, and triggers a single formula evaluation.
-// Common Searches: asp.net aspose.cells manual calculation mode for bulk data import | c# fill thousands of cells in worksheet then calculate formulas once | how to improve performance when inserting large ranges with Aspose.Cells | disable automatic recalculation Aspose.Cells before bulk update | example of using CalcModeType.Manual with SUM formulas in Aspose.Cells
-// Tags: manual formula evaluation Aspose.Cells | bulk cell insertion .NET | CalculateFormula after large data load | FormulaSettings.CalcModeType.Manual usage | high‑volume worksheet population Aspose.Cells
+// Title: Set Workbook.Settings.CalculationMode to Manual, batch update cells, and recalculate formulas once with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells set calculation mode manual before bulk cell insertion C# | How to disable automatic formula calculation in Aspose.Cells and run CalculateFormula once | Best practice for updating thousands of rows in Aspose.Cells without triggering recalculation each time | C# Aspose.Cells performance tips for bulk data load with manual calculation mode | Calling Workbook.CalculateFormula after batch updates in Aspose.Cells .NET
+// Tags: manual calculation mode Aspose.Cells | bulk worksheet cell insertion | Workbook.CalculateFormula execution | high‑performance Excel generation .NET | turn off auto calculation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, switches calculation to Manual, efficiently fills a 1000 × 10 range, adds SUM formulas, runs a single CalculateFormula call, and saves the file as BulkUpdateManualCalc.xlsx.
-class BulkUpdateWithManualCalculation
+// Creates a new workbook, fills 1,000 rows with numeric values and dependent formulas, sets calculation mode to Manual, runs Workbook.CalculateFormula once to evaluate all formulas, and saves the result as an XLSX file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Set calculation mode to Manual
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Perform bulk updates (example: fill a 1000x10 range with values)
-        for (int row = 0; row < 1000; row++)
+        try
         {
-            for (int col = 0; col < 10; col++)
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Perform bulk updates (example: fill 1000 rows with data and formulas)
+            Worksheet sheet = workbook.Worksheets[0];
+            for (int row = 0; row < 1000; row++)
             {
-                cells[row, col].PutValue(row + col);
+                // Put a numeric value in column A
+                sheet.Cells[row, 0].PutValue(row);
+
+                // Set a formula in column B that depends on column A
+                sheet.Cells[row, 1].Formula = $"=A{row + 1}*2";
             }
+
+            // Recalculate the workbook once after all updates
+            workbook.CalculateFormula();
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Add some formulas that depend on the bulk data
-        cells["K1"].Formula = "=SUM(A1:J1)";
-        cells["K2"].Formula = "=SUM(A2:J2)";
-        cells["K3"].Formula = "=SUM(A3:J3)";
-
-        // Calculate all formulas once
-        workbook.CalculateFormula();
-
-        // Save the workbook
-        workbook.Save("BulkUpdateManualCalc.xlsx");
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

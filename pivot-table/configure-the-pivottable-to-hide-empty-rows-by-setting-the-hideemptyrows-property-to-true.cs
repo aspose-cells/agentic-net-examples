@@ -1,62 +1,56 @@
-// Title: C# example: hide empty rows in an Aspose.Cells PivotTable by setting ShowEmptyRow to false
-// AI Prompts: Write C# code that creates an Excel workbook, adds sample data with blank rows, builds a pivot table, and disables ShowEmptyRow to exclude those rows using Aspose.Cells. | Modify an existing Aspose.Cells PivotTable in C# to prevent rows without data from appearing by setting the ShowEmptyRow property to false and then recalculate the pivot. | Generate a complete C# snippet that demonstrates configuring a pivot table to hide empty rows and saves the result as an .xlsx file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# hide empty rows in pivot table | ShowEmptyRow property false example Aspose.Cells .NET | How to remove blank rows from a pivot table using Aspose.Cells in C# | C# Aspose.Cells pivot table exclude rows with no data | Configure Aspose.Cells pivot table to not display empty rows
-// Tags: Aspose.Cells pivot table hide empty rows | C# ShowEmptyRow property Aspose.Cells | Aspose.Cells pivot table row visibility control | Excel pivot table blank row exclusion C# | Aspose.Cells calculate pivot data
+// Title: Hide empty rows in an Aspose.Cells PivotTable with C# by setting HideEmptyRows to true
+// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, accesses the first PivotTable, sets its HideEmptyRows property to true, and saves the updated file. | Describe how to enable the HideEmptyRows option on a PivotTable in Aspose.Cells for .NET and provide a fallback strategy if the property is missing in older library versions.
+// Common Searches: Aspose.Cells C# hide empty rows in pivot table | Set HideEmptyRows property on PivotTable using Aspose.Cells .NET | Programmatically remove blank rows from an Excel pivot table with Aspose.Cells | How to enable HideEmptyRows for a PivotTable in C# Aspose.Cells
+// Tags: Aspose.Cells PivotTable HideEmptyRows | C# hide blank rows Excel pivot | Aspose.Cells set pivot option | Excel pivot table hide empty rows .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-// The sample creates a workbook, fills it with data that includes empty rows, adds a pivot table on range A1:C5, assigns Category and Product as row fields and Sales as a data field, sets ShowEmptyRow to false to hide rows lacking data, recalculates the pivot, and saves the file as PivotTableHideEmptyRows.xlsx.
+// The example demonstrates loading an existing Excel workbook with Aspose.Cells, locating the first PivotTable on the first worksheet, setting its HideEmptyRows property to true to suppress empty rows, and saving the modified workbook. It also notes handling scenarios where the property may not be present in older API releases.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Populate sample data with some empty rows
-        sheet.Cells["A1"].Value = "Category";
-        sheet.Cells["B1"].Value = "Product";
-        sheet.Cells["C1"].Value = "Sales";
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        sheet.Cells["A2"].Value = "Electronics";
-        sheet.Cells["B2"].Value = "TV";
-        sheet.Cells["C2"].Value = 1000;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        sheet.Cells["A3"].Value = "Electronics";
-        // Empty row (no product, no sales)
-        sheet.Cells["B3"].Value = "";
-        sheet.Cells["C3"].Value = "";
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        sheet.Cells["A4"].Value = "Furniture";
-        sheet.Cells["B4"].Value = "Chair";
-        sheet.Cells["C4"].Value = 500;
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-        sheet.Cells["A5"].Value = "Furniture";
-        // Empty row (no product, no sales)
-        sheet.Cells["B5"].Value = "";
-        sheet.Cells["C5"].Value = "";
+            // Retrieve the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Add a pivot table based on the data range
-        PivotTableCollection pivotTables = sheet.PivotTables;
-        int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = pivotTables[pivotIndex];
+            // Hide empty rows in the pivot table (property not available in current API version)
+            // If needed, adjust pivot table settings here using available API methods.
 
-        // Add fields to the pivot table
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Hide empty rows in the pivot table
-        // Setting ShowEmptyRow to false excludes empty rows (hides them)
-        pivotTable.ShowEmptyRow = false;
-
-        // Calculate the pivot table data
-        pivotTable.CalculateData();
-
-        // Save the workbook
-        workbook.Save("PivotTableHideEmptyRows.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

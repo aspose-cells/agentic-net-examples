@@ -1,30 +1,39 @@
-// Title: Load an XLSX file into an Aspose.Cells Workbook and confirm worksheet collection in C#
-// AI Prompts: Generate C# code that opens a given .xlsx file with Aspose.Cells, checks that the Worksheets collection is instantiated, and prints the number of sheets. | Write a reusable function `bool IsWorkbookReady(string path)` that loads the workbook using Aspose.Cells and returns true only if at least one worksheet is present.
-// Common Searches: C# Aspose.Cells how to open an .xlsx file and verify sheets exist | check if Excel workbook loaded with Aspose.Cells has any worksheets | Aspose.Cells .NET load workbook from file path and validate worksheet count | sample code to confirm successful workbook initialization using Aspose.Cells
-// Tags: load xlsx workbook Aspose.Cells C# | verify worksheet collection Aspose.Cells | initialize workbook from file path .NET | check sheet count after loading Excel Aspose.Cells | Aspose.Cells workbook validation C#
+// Title: Load an XLSX workbook from a file path and confirm it contains worksheets using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, checks that the Workbook object is instantiated and has at least one worksheet, then prints the worksheet count. | Write a C# try‑catch example that loads a workbook from a given path using Aspose.Cells, validates successful loading, and logs any exception messages.
+// Common Searches: asp.net load excel file with Aspose.Cells and verify worksheets exist | c# check if workbook loaded from path contains any sheets using Aspose.Cells | how to handle exceptions when opening an .xlsx file with Aspose.Cells in .NET | determine number of worksheets after initializing Aspose.Cells workbook from file | sample code for validating workbook initialization in Aspose.Cells C#
+// Tags: load xlsx workbook Aspose.Cells C# | validate worksheet presence Aspose.Cells | exception handling Aspose.Cells file load | retrieve worksheet count Aspose.Cells | initialize workbook from file path .NET
 
 using System;
 using Aspose.Cells;
 
-// The example demonstrates loading an .xlsx file from a specified path using Aspose.Cells for .NET, then confirming that the Workbook object and its Worksheets collection are instantiated and contain at least one sheet.
+// Shows how to load an XLSX file into an Aspose.Cells Workbook in C#, verify that the workbook is instantiated and contains at least one worksheet, output the sheet count, and handle any loading errors.
 class Program
 {
     static void Main()
     {
-        // Path to the XLSX file
-        string filePath = "input.xlsx";
+        // Path to the XLSX file to be loaded
+        string filePath = @"C:\Path\To\Your\File.xlsx";
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(filePath);
-
-        // Verify successful initialization
-        if (workbook != null && workbook.Worksheets != null && workbook.Worksheets.Count > 0)
+        try
         {
-            Console.WriteLine("Workbook loaded successfully. Sheet count: " + workbook.Worksheets.Count);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
+
+            // Verify successful initialization
+            if (workbook != null && workbook.Worksheets.Count > 0)
+            {
+                Console.WriteLine("Workbook loaded successfully.");
+                Console.WriteLine($"Number of worksheets: {workbook.Worksheets.Count}");
+            }
+            else
+            {
+                Console.WriteLine("Workbook loaded, but it contains no worksheets.");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("Failed to load workbook.");
+            // Handle any errors that occur during loading
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
         }
     }
 }

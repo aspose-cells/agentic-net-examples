@@ -1,76 +1,83 @@
-// Title: Create a sum subtotal in an Excel worksheet using Aspose.Cells C# with zero‑based start row indexing
-// AI Prompts: Generate C# code that builds a workbook, sets up a header row, populates data, defines a CellArea beginning at row 0, and calls Cells.Subtotal to group by the first column and sum the third column. | Demonstrate how to configure Cells.Subtotal in Aspose.Cells when the start row is zero, including the correct zero‑based EndRow calculation. | Provide a step‑by‑step example of applying a subtotal to the Sales column while grouping by Region using Aspose.Cells with zero‑based row numbers.
-// Common Searches: Aspose.Cells C# subtotal startrow zero based indexing example | How to use Cells.Subtotal with zero‑based row numbers in .NET | C# code to group rows by Region and sum Sales using Aspose.Cells Subtotal | Define CellArea that includes header row for subtotal in Aspose.Cells | Apply sum subtotal on a specific column with Aspose.Cells zero‑based rows
-// Tags: Aspose.Cells Subtotal zero-based indexing | C# define CellArea for subtotal | Aspose.Cells sum subtotal by column | Excel workbook subtotal using Aspose.Cells C# | zero-based row indexing Aspose.Cells
+// Title: Insert subtotal rows for each category in an Excel worksheet using Aspose.Cells with zero‑based row indexing (C#)
+// AI Prompts: Generate C# code that groups rows by a column, computes the sum for each group, and inserts a subtotal row using Aspose.Cells while accounting for zero‑based row numbers. | Show how to adjust row offsets when inserting new rows for subtotals in an Aspose.Cells workbook that starts at index 0.
+// Common Searches: how to add subtotal rows after each category group using Aspose.Cells in C# with zero based indexing | Aspose.Cells C# insert rows for group totals while handling row offset | calculate category totals and insert subtotal rows in Excel workbook using Aspose.Cells .NET | zero based row indexing Aspose.Cells subtotal example C#
+// Tags: Aspose.Cells insert rows | Aspose.Cells calculate subtotals | zero-based row indexing Aspose.Cells | grouped data totals C# Aspose.Cells | Excel subtotal implementation Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.Collections.Generic;
+using Aspose.Cells;
 
-// The example creates a new workbook, adds a header row and sample data, defines a CellArea that starts at row 0 to include the header, and uses Cells.Subtotal to group by the Region column (first column) while summing the Sales column (third column) with zero‑based indexing. The workbook is saved as SubtotalZeroBasedDemo.xlsx.
-public class SubtotalZeroBasedDemo
+// The example creates a workbook, writes a header and sample category/amount data starting at row 0, computes sums per category with a dictionary, inserts a subtotal row after each category block while adjusting for row offsets, and saves the file as SubtotalResult.xlsx.
+class SubtotalExample
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Add header row (zero‑based row index 0)
-            cells["A1"].PutValue("Region");
-            cells["B1"].PutValue("Product");
-            cells["C1"].PutValue("Sales");
+            // Populate sample data starting from row 0 (zero‑based)
+            // Header row
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
 
-            // Sample data (5 rows)
-            object[,] data = new object[,]
+            // Data rows
+            string[] categories = { "Food", "Food", "Transport", "Transport", "Utilities", "Utilities" };
+            double[] amounts = { 120.5, 80.0, 45.0, 60.0, 100.0, 150.0 };
+
+            for (int i = 0; i < categories.Length; i++)
             {
-                { "North", "Widget", 5000 },
-                { "North", "Gadget", 3000 },
-                { "South", "Widget", 6000 },
-                { "South", "Gadget", 4000 },
-                { "West",  "Widget", 4500 }
-            };
-
-            // Populate data starting at row index 1 (zero‑based)
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                cells[i + 1, 0].PutValue(data[i, 0]); // Region
-                cells[i + 1, 1].PutValue(data[i, 1]); // Product
-                cells[i + 1, 2].PutValue(data[i, 2]); // Sales
+                // Row index is i + 1 because row 0 holds the header
+                sheet.Cells[i + 1, 0].PutValue(categories[i]);   // Column A (index 0)
+                sheet.Cells[i + 1, 1].PutValue(amounts[i]);     // Column B (index 1)
             }
 
-            // Define the cell area covering header + data.
-            // StartRow = 0 (first row), EndRow = 5 (last data row index)
-            CellArea area = new CellArea
+            // ----- Manual subtotal implementation -----
+            // Calculate sum per category
+            var sums = new Dictionary<string, double>();
+            for (int i = 0; i < categories.Length; i++)
             {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = data.GetLength(0), // 5 (zero‑based index of last row)
-                EndColumn = 2
-            };
+                if (!sums.ContainsKey(categories[i]))
+                    sums[categories[i]] = 0.0;
+                sums[categories[i]] += amounts[i];
+            }
 
-            // Apply subtotal:
-            // - groupBy: column 0 (Region) – zero‑based index
-            // - function: Sum
-            // - totalList: column 2 (Sales) – zero‑based index
-            cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 });
+            // Insert subtotal rows after each category block
+            // Keep track of the current insertion offset due to added rows
+            int offset = 0;
+            string previousCategory = null;
+            for (int i = 0; i < categories.Length; i++)
+            {
+                string currentCategory = categories[i];
+                // When category changes (or at the end of the list), insert subtotal for the previous category
+                bool isLastRow = (i == categories.Length - 1);
+                if (previousCategory != null && (currentCategory != previousCategory || isLastRow))
+                {
+                    // Determine the row index where the subtotal should be inserted
+                    int insertRow = i + 1 + offset; // +1 to place below the last data row of the group
+                    // Insert a new row for the subtotal
+                    sheet.Cells.InsertRows(insertRow, 1);
+                    // Write subtotal label and value
+                    sheet.Cells[insertRow, 0].PutValue($"{previousCategory} Total");
+                    sheet.Cells[insertRow, 1].PutValue(sums[previousCategory]);
+                    // Update offset because we added a row
+                    offset++;
+                }
+                previousCategory = currentCategory;
+            }
 
-            // Save the workbook
-            workbook.Save("SubtotalZeroBasedDemo.xlsx");
+            // Save the workbook (save rule)
+            string outputPath = "SubtotalResult.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        SubtotalZeroBasedDemo.Run();
     }
 }

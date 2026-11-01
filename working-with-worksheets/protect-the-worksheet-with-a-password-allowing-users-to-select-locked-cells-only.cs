@@ -1,45 +1,37 @@
-// Title: How to password‑protect an Excel worksheet but still allow selection of locked cells with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to protect a worksheet with a password while keeping the ability to select locked cells. | Show the required parameters for the Aspose.Cells Protect method to enable full protection yet allow cell selection in an Excel file.
-// Common Searches: Aspose.Cells C# protect worksheet password allow selecting locked cells | set worksheet protection type all but keep cell selection enabled Aspose.Cells | how to enable cell selection on a password‑protected sheet using Aspose.Cells .NET | C# Aspose.Cells protect sheet without disabling cell selection | Excel worksheet protection with password while still allowing user to click locked cells Aspose
-// Tags: Aspose.Cells worksheet password protection API | preserve cell selection on protected sheet | ProtectionType.All usage in C# Aspose.Cells | save password‑protected Excel workbook .NET | configure worksheet protection settings Aspose.Cells
+// Title: How to password‑protect an Excel worksheet while still allowing users to select locked cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates or loads a workbook, protects the first worksheet with a password using Worksheet.Protect, and configures the protection so only locked cells can be selected. | Show an Aspose.Cells example that applies ProtectionType.SelectLockedCells (or a combination of flags) with a password, then saves the workbook as an .xlsx file. | Generate a snippet that demonstrates setting a worksheet password, enabling selection of locked cells, and disabling other editing actions with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# protect worksheet with password but allow selecting locked cells | how to enable only locked‑cell selection after protecting an Excel sheet using Aspose.Cells | Worksheet.Protect method password allow select locked cells Aspose.Cells .NET example | C# example for protecting Excel worksheet while keeping cell selection enabled with Aspose.Cells
+// Tags: worksheet protection password Aspose.Cells C# | allow select locked cells Aspose.Cells | ProtectionType.SelectLockedCells usage | save protected workbook as xlsx Aspose.Cells | Worksheet.Protect method example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, renames the first worksheet, applies full protection with a password using sheet.Protect(ProtectionType.All, "MySecretPassword", null), ensures the output directory exists, and saves the file as ProtectedWorkbook.xlsx.
-class Program
+// Creates a new workbook, applies password protection to the first worksheet with settings that permit only locked‑cell selection, and saves the result as ProtectedWorksheet.xlsx.
+class WorksheetProtectionExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet and rename it
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "ProtectedSheet";
 
-            // Protect the worksheet with a password (protect all aspects)
-            // The third parameter is the old password; null is used when there is no existing password.
-            sheet.Protect(ProtectionType.All, "MySecretPassword", null);
+            // Protect the worksheet with a password (protect all options)
+            // The third parameter is the old password; pass null when not required
+            sheet.Protect(ProtectionType.All, "MySecurePassword", null);
 
-            // Define output path and ensure its directory exists
-            string outputPath = "ProtectedWorkbook.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
+            // Save the protected workbook
+            string outputPath = "ProtectedWorksheet.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

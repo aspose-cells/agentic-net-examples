@@ -1,61 +1,57 @@
-// Title: Merge two Excel workbooks and recalculate all formulas with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens two .xlsx files, copies every worksheet into a new workbook, removes the initial empty sheet, calls Workbook.CalculateFormula, and saves the merged file. | Write a .NET program using Aspose.Cells to combine worksheets from multiple workbooks and automatically recalculate every formula before exporting. | Create an example that demonstrates merging Excel workbooks, invoking CalculateFormula on the combined workbook, and writing the result as merged.xlsx.
-// Common Searches: Aspose.Cells C# merge two workbooks and recalculate formulas | How to use Workbook.CalculateFormula after copying worksheets with Aspose.Cells | C# code to combine Excel files and update all formulas using Aspose.Cells | Remove default sheet and merge worksheets in Aspose.Cells before saving | Recalculate formulas in a merged workbook using Aspose.Cells .NET
-// Tags: Aspose.Cells merge worksheets C# | Workbook.CalculateFormula after merge | copy worksheets between workbooks Aspose.Cells | clear default worksheet Aspose.Cells | merge Excel files recalculate formulas .NET
+// Title: Recalculate formulas after merging worksheets with Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells recalculate formulas after merging two workbooks | How to force formula recalculation in a merged Excel file using Aspose.Cells | Aspose.Cells CalculateFormula method after adding worksheets programmatically | Merge Excel workbooks and update all formulas with Aspose.Cells .NET | Recalculate all cells after workbook merge using Aspose.Cells API
+// Tags: Aspose.Cells CalculateFormula after merging workbooks | addcopy worksheet recalc formulas C# | merged Excel workbook formula refresh Aspose.Cells | update all formulas post workbook merge .NET | Excel workbook merge with formula recalculation using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads two Excel files, copies all their worksheets into a new workbook after clearing the default sheet, recalculates every formula with CalculateFormula, and saves the merged workbook as merged.xlsx.
+// The example loads a primary and a secondary Excel workbook, copies each worksheet from the secondary into the primary using AddCopy, invokes CalculateFormula to recompute every formula across the merged workbook, and saves the updated file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Verify source files exist before loading
-            const string sourcePath1 = "source1.xlsx";
-            const string sourcePath2 = "source2.xlsx";
+            const string primaryPath = "PrimaryWorkbook.xlsx";
+            const string mergePath = "WorkbookToMerge.xlsx";
+            const string outputPath = "MergedWorkbook.xlsx";
 
-            if (!File.Exists(sourcePath1))
-                throw new FileNotFoundException($"Source file not found: {sourcePath1}");
-            if (!File.Exists(sourcePath2))
-                throw new FileNotFoundException($"Source file not found: {sourcePath2}");
-
-            // Load the workbooks that need to be merged
-            Workbook wb1 = new Workbook(sourcePath1);
-            Workbook wb2 = new Workbook(sourcePath2);
-
-            // Create a new workbook that will contain the merged worksheets
-            Workbook merged = new Workbook();
-
-            // Remove the default empty worksheet created by the constructor
-            merged.Worksheets.Clear();
-
-            // Copy all worksheets from the first source workbook
-            foreach (Worksheet ws in wb1.Worksheets)
+            // Verify input files exist
+            if (!File.Exists(primaryPath))
             {
-                merged.Worksheets.AddCopy(ws.Name);
+                Console.WriteLine($"Error: File not found - {primaryPath}");
+                return;
+            }
+            if (!File.Exists(mergePath))
+            {
+                Console.WriteLine($"Error: File not found - {mergePath}");
+                return;
             }
 
-            // Copy all worksheets from the second source workbook
-            foreach (Worksheet ws in wb2.Worksheets)
+            // Load the primary workbook
+            Workbook primaryWb = new Workbook(primaryPath);
+
+            // Load the workbook to be merged
+            Workbook mergeWb = new Workbook(mergePath);
+
+            // Copy each worksheet from the merge workbook into the primary workbook
+            foreach (Worksheet sheet in mergeWb.Worksheets)
             {
-                merged.Worksheets.AddCopy(ws.Name);
+                // Add a copy of the source worksheet to the destination workbook using its name
+                primaryWb.Worksheets.AddCopy(sheet.Name);
             }
 
             // Recalculate all formulas in the merged workbook
-            merged.CalculateFormula();
+            primaryWb.CalculateFormula();
 
-            // Save the merged workbook to a file
-            const string outputPath = "merged.xlsx";
-            merged.Save(outputPath);
-            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
+            // Save the merged workbook with recalculated formulas
+            primaryWb.Save(outputPath);
+            Console.WriteLine($"Merged workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

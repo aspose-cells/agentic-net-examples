@@ -1,46 +1,39 @@
-// Title: Export only the first row (column headers) of an Excel worksheet to CSV using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loads an Excel workbook, clears all data rows while preserving the first row, and writes the result to a CSV file. | Demonstrate how to configure CSV save options in Aspose.Cells to output only the worksheet's column header row.
-// Common Searches: Aspose.Cells C# export worksheet header row to CSV without data rows | How to save only the first row of an Excel sheet as CSV using Aspose.Cells | Remove data rows before converting Excel to CSV with Aspose.Cells .NET
-// Tags: Aspose.Cells header-only CSV conversion | delete rows after header Aspose.Cells C# | configure CSV save options Aspose.Cells | export worksheet column names as CSV Aspose.Cells
+// Title: Convert an Excel workbook to CSV with only the header row using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export only the first row of an Excel sheet to CSV | How to save Excel column headers as CSV without data using Aspose.Cells | Aspose.Cells .NET create CSV file that contains just the header row | Extract header row from .xlsx and write to CSV with Aspose.Cells in C# | Generate CSV header‑only file from Excel workbook using Aspose.Cells API
+// Tags: Aspose.Cells header‑only CSV export | C# copy first worksheet row to new workbook | Save Excel workbook as CSV without data rows | Extract column headers from .xlsx using Aspose.Cells | Generate CSV file containing only headers in .NET
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// The example loads an Excel workbook, deletes every row below the first (header) row in the first worksheet, and saves the remaining header row as a CSV file using Aspose.Cells with appropriate CSV save options.
+// The example loads an input .xlsx file, reads the first worksheet, determines the number of used columns, creates a new workbook, copies only the first (header) row into it, and saves the result as a CSV file that contains just the column headers.
 class WorkbookToCsvHeadersOnly
 {
     static void Main()
     {
-        // Path to the source workbook (any supported format, e.g., XLSX)
-        string sourcePath = "input.xlsx";
+        // Load the source workbook (replace with your actual file path)
+        Workbook srcWorkbook = new Workbook("input.xlsx");
 
-        // Path for the resulting CSV file containing only the header row
-        string csvPath = "output.csv";
+        // Get the first worksheet (adjust index if needed)
+        Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
-        // Load the workbook with default load options
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
+        // Determine the number of used columns in the first row (headers)
+        // MaxColumn returns the zero‑based index of the last used column
+        int lastColumnIndex = srcSheet.Cells.MaxColumn;
+        int columnCount = lastColumnIndex + 1; // total columns
 
-        // Work with the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook that will contain only the header row
+        Workbook destWorkbook = new Workbook();
+        Worksheet destSheet = destWorkbook.Worksheets[0];
 
-        // Determine the last row that contains data
-        int lastDataRow = sheet.Cells.MaxDataRow;
-
-        // If there are rows beyond the header (row 0), delete them
-        if (lastDataRow > 0)
+        // Copy header values from the source sheet to the destination sheet
+        for (int col = 0; col < columnCount; col++)
         {
-            // Delete rows starting from row index 1 (second row) to the last data row
-            sheet.Cells.DeleteRows(1, lastDataRow);
+            // Preserve the exact text of each header cell
+            string headerValue = srcSheet.Cells[0, col].StringValue;
+            destSheet.Cells[0, col].PutValue(headerValue);
         }
 
-        // Prepare CSV save options
-        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
-        // Ensure leading blank rows/columns are trimmed (optional but typical for CSV)
-        csvOptions.TrimLeadingBlankRowAndColumn = true;
-
-        // Save the workbook as CSV; only the header row remains
-        workbook.Save(csvPath, csvOptions);
+        // Save the new workbook as CSV – it will contain only the header row
+        destWorkbook.Save("output.csv", SaveFormat.Csv);
     }
 }

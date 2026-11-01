@@ -1,7 +1,6 @@
-// Title: Apply full workbook password protection with a strong password using Aspose.Cells Protect method in C#
-// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, applies Workbook.Protect with ProtectionType.All and a strong password, then saves to a new file. | Modify the example to first detect if the workbook is already protected and only set a new password when it is unprotected. | Create a version that protects only the workbook structure and windows (not cells) using Protect with specific ProtectionType flags and a custom password.
-// Common Searches: how to use Aspose.Cells Protect method to secure an entire Excel workbook in C# | C# example for applying a strong password to an unprotected .xlsx file with Aspose.Cells | Aspose.Cells set ProtectionType.All password protection code snippet | save a password‑protected workbook to a different location using Aspose.Cells | check workbook protection status before applying password with Aspose.Cells .NET
-// Tags: Aspose.Cells Workbook.Protect method C# | full workbook password protection Excel Aspose.Cells | ProtectionType.All usage Aspose.Cells | save protected workbook to new file Aspose.Cells | detect existing workbook protection Aspose.Cells
+// Title: Protect an unprotected Excel workbook with a strong password using Aspose.Cells Protect method in C#
+// Common Searches: C# Aspose.Cells protect workbook with password only if not already protected | How to add full workbook protection using Aspose.Cells Protect in .NET | Set ProtectionType.All and password when saving an Excel file with Aspose.Cells | Check file existence and apply password protection to Excel using Aspose.Cells C# | Apply strong password to an Excel workbook programmatically with Aspose.Cells
+// Tags: Aspose.Cells workbook protection API | ProtectionType.All usage Aspose.Cells | Excel workbook password encryption Aspose.Cells | File existence check before loading Aspose.Cells | Save workbook with protection Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,44 +8,39 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // Loads an existing Excel workbook, applies full protection with a strong password via Workbook.Protect(ProtectionType.All), and saves the protected file to a specified output path.
+    // The example verifies the input Excel file, loads it into an Aspose.Cells Workbook, applies full workbook protection with a strong password using the Protect method (ProtectionType.All), saves the protected workbook to a new file, and handles any runtime exceptions gracefully.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string password = "Str0ngP@ssw0rd!#2026";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             try
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Apply password protection (all protection types)
-                // If the workbook is already protected, this will overwrite the existing protection.
-                workbook.Protect(ProtectionType.All, "Str0ngP@ssw0rd!2026");
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Protect the entire workbook with the specified password
+                // (Aspose.Cells will overwrite existing protection if present)
+                workbook.Protect(ProtectionType.All, password);
 
                 // Save the protected workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

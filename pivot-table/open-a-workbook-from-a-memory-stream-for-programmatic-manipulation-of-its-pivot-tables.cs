@@ -1,69 +1,71 @@
-// Title: Load an Excel workbook from a MemoryStream, refresh its pivot tables, and disable auto‑refresh using Aspose.Cells for .NET
-// AI Prompts: Open a workbook from a MemoryStream, call RefreshPivotTables on the worksheet, set RefreshDataOnOpeningFile to false for each pivot table, then save the workbook to a new stream. | Read an in‑memory Excel file, modify pivot table settings (e.g., turn off automatic refresh), and write the updated workbook as an Xlsx stream with Aspose.Cells.
-// Common Searches: Aspose.Cells .NET load workbook from MemoryStream and update pivot tables | How to refresh all pivot tables after opening an Excel file from a stream using Aspose.Cells | Disable pivot table refresh on file open with Aspose.Cells C# | Convert a workbook saved to a MemoryStream (xls) to Xlsx after modifying pivot tables | Programmatically manipulate pivot tables after loading Excel from a stream in C#
-// Tags: memory stream workbook loading Aspose.Cells | refresh all pivot tables Aspose.Cells | disable pivot table auto refresh Aspose.Cells | convert workbook stream to Xlsx Aspose.Cells | programmatic pivot table manipulation .NET
+// Title: Load an Excel workbook from a MemoryStream and rename/refresh its pivot tables using Aspose.Cells for .NET
+// Common Searches: how to open an Excel file from a byte array with Aspose.Cells in C# | rename pivot tables programmatically with Aspose.Cells .NET | refresh pivot table data after modifying a workbook in memory using Aspose.Cells | save a workbook to a file after processing pivot tables in C#
+// Tags: open workbook from memory stream Aspose.Cells | pivot table rename operation Aspose.Cells | pivot table refresh operation Aspose.Cells | save workbook to byte array C# | in‑memory pivot table manipulation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable classes
 
-// The example demonstrates how to create a workbook with a pivot table, save it to a MemoryStream, reload it from that stream, refresh all pivot tables, turn off automatic refresh on opening, and finally save the modified workbook as an Xlsx file.
+// The example reads an existing Excel file (or creates a blank one if missing), loads it into a byte array, opens the workbook from a MemoryStream, accesses the first worksheet, iterates through all pivot tables to append "_Modified" to each name, refreshes and recalculates the pivot data, and finally saves the updated workbook to a new file via another MemoryStream.
 class Program
 {
     static void Main()
     {
-        // 1. Create a workbook with sample data and a pivot table
-        Workbook sourceWb = new Workbook();
-        Worksheet ws = sourceWb.Worksheets[0];
-        Cells cells = ws.Cells;
-
-        cells["A1"].PutValue("Category");
-        cells["B1"].PutValue("Amount");
-        cells["A2"].PutValue("Food");
-        cells["B2"].PutValue(100);
-        cells["A3"].PutValue("Drink");
-        cells["B3"].PutValue(150);
-        cells["A4"].PutValue("Food");
-        cells["B4"].PutValue(200);
-
-        // Add a pivot table based on the data range
-        int ptIndex = ws.PivotTables.Add("A1:B4", "D1", "Pivot1");
-        PivotTable pt = ws.PivotTables[ptIndex];
-        pt.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-        pt.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
-
-        // 2. Save the workbook to a memory stream (xls format) using the provided SaveToStream method
-        MemoryStream memStream = sourceWb.SaveToStream();
-
-        // Reset the stream position before reading
-        memStream.Position = 0;
-
-        // 3. Load the workbook from the memory stream using the Stream constructor
-        Workbook wb = new Workbook(memStream);
-
-        // 4. Manipulate pivot tables programmatically
-        Worksheet loadedWs = wb.Worksheets[0];
-
-        // Refresh all pivot tables in the worksheet
-        loadedWs.RefreshPivotTables();
-
-        // Example: disable automatic refresh when the file is opened
-        if (loadedWs.PivotTables.Count > 0)
+        try
         {
-            PivotTable loadedPt = loadedWs.PivotTables[0];
-            loadedPt.RefreshDataOnOpeningFile = false;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // 5. Save the modified workbook back to a new memory stream (xlsx format)
-        using (MemoryStream outStream = new MemoryStream())
+            // Ensure the input file exists; if not, create a blank workbook as a fallback
+            if (!File.Exists(inputPath))
+            {
+                // Create a new workbook with a single worksheet
+                var newWb = new Workbook();
+                newWb.Worksheets[0].Name = "Sheet1";
+                newWb.Save(inputPath, SaveFormat.Xlsx);
+            }
+
+            // Load the Excel file into a byte array
+            byte[] excelBytes = File.ReadAllBytes(inputPath);
+
+            // Open the workbook from a memory stream
+            using (MemoryStream inputStream = new MemoryStream(excelBytes))
+            {
+                // Create a Workbook instance from the stream
+                Workbook workbook = new Workbook(inputStream);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Get the collection of pivot tables on the worksheet
+                PivotTableCollection pivotTables = sheet.PivotTables;
+
+                // Example manipulation: rename each pivot table and refresh it
+                foreach (PivotTable pt in pivotTables)
+                {
+                    // Append a suffix to the pivot table name
+                    pt.Name = pt.Name + "_Modified";
+
+                    // Refresh data and recalculate the pivot table after changes
+                    pt.RefreshData();
+                    pt.CalculateData();
+                }
+
+                // Save the modified workbook back to a memory stream
+                using (MemoryStream outputStream = new MemoryStream())
+                {
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
+                    File.WriteAllBytes(outputPath, outputStream.ToArray());
+                }
+            }
+
+            Console.WriteLine("Processing completed successfully.");
+        }
+        catch (Exception ex)
         {
-            wb.Save(outStream, SaveFormat.Xlsx);
-            // For demonstration, write the result to a physical file
-            File.WriteAllBytes("ModifiedWorkbook.xlsx", outStream.ToArray());
+            // Log or display the error details
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
-
-        // Clean up resources
-        memStream.Dispose();
     }
 }

@@ -1,46 +1,47 @@
-// Title: Save an Excel workbook as HTML with original cell styles and Arial fallback font using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, verifies its existence, sets HtmlSaveOptions.DefaultFontName to "Arial", and saves the workbook as HTML while preserving all cell formatting with Aspose.Cells. | Create a C# example showing how to export an Excel workbook to HTML using Aspose.Cells, configuring a default fallback font and keeping the original cell styles intact.
-// Common Searches: Aspose.Cells .NET export Excel to HTML preserving cell formatting | How to set a fallback font when saving a workbook as HTML with Aspose.Cells | C# HtmlSaveOptions DefaultFontName usage example | Convert .xlsx to .html with original styles using Aspose.Cells | Save workbook as HTML with Arial as default font Aspose.Cells C#
-// Tags: Aspose.Cells HtmlSaveOptions DefaultFontName | Excel to HTML conversion preserving styles | C# Aspose.Cells export workbook to HTML | fallback font configuration Aspose.Cells | cell style retention in HTML output Aspose.Cells
+// Title: Export an Excel workbook to HTML with full cell style preservation and a fallback Arial font using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions.DefaultFontName to "Arial", enables style preservation, and saves the workbook as an HTML document. | Show how to set up Aspose.Cells HtmlSaveOptions in C# to retain borders, fonts, and colors while providing a default font for missing typefaces during HTML export.
+// Common Searches: Aspose.Cells C# export Excel to HTML keep original formatting and specify default font | How to set fallback font when converting .xlsx to HTML with Aspose.Cells | Preserve cell borders and colors in HTML output using Aspose.Cells HtmlSaveOptions | C# HtmlSaveOptions DefaultFontName example for Excel to HTML conversion
+// Tags: Aspose.Cells HtmlSaveOptions default font | Excel to HTML style preservation Aspose.Cells | C# export workbook with fallback font | HTML conversion retain cell formatting Aspose.Cells | Aspose.Cells save format Html default font
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample checks for the input Excel file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with DefaultFontName set to "Arial" to provide a fallback when the original font is missing, and saves the workbook as an HTML file while preserving all cell styles.
+// The program checks for the input.xlsx file, loads it with Aspose.Cells, configures HtmlSaveOptions to use Arial as the DefaultFontName while preserving all original cell styles, and saves the result as output.html.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.html";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the source workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Specify a fallback font when the original font is not available on the system
+                // Specify a fallback font to use when the original font is not available
                 DefaultFontName = "Arial"
-                // Cell styles are exported by default; no explicit ExportCellStyles property needed
+                // Other style‑preserving options (borders, fonts, colors) are true by default
             };
 
             // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

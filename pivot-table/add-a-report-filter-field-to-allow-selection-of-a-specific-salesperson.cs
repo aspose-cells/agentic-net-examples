@@ -1,66 +1,72 @@
-// Title: Add a salesperson report filter (page field) to a pivot table using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a pivot table from a data range and adds a page field named Salesperson as a report filter with Aspose.Cells. | Demonstrate how to rename a pivot table page field and programmatically open its filter dialog using Aspose.Cells for .NET. | Outline the steps to refresh, calculate, and save a workbook containing a pivot table with a salesperson filter to an .xlsx file.
-// Common Searches: how to add a page field as a report filter in an Aspose.Cells pivot table C# | Aspose.Cells rename pivot table filter field and display filter page example | C# code to create a salesperson filter for a pivot table using Aspose.Cells | saving a workbook with a pivot table and report filter using Aspose.Cells .NET | display report filter dialog for a pivot table programmatically Aspose.Cells
-// Tags: pivot table page field Aspose.Cells C# | rename pivot filter field Aspose.Cells | show report filter dialog Aspose.Cells | save workbook with pivot filter Aspose.Cells | salesperson report filter pivot table Aspose.Cells
+// Title: Add a Salesperson report filter (Page field) to an Excel PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add a page field to an existing PivotTable | How to set a report filter for the Salesperson column in an Excel PivotTable with Aspose.Cells | C# code to add a Salesperson filter to a PivotTable in a workbook using Aspose.Cells | Adding a report filter field to a PivotTable programmatically with Aspose.Cells .NET | Example of using PivotFieldType.Page to filter PivotTable data in C#
+// Tags: Aspose.Cells PivotTable page field insertion | Salesperson filter addition to Excel PivotTable | using PivotFieldType.Page in C# | modify PivotTable filter programmatically | save workbook after PivotTable update Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The example creates a workbook, fills it with sample sales data, adds a pivot table, sets Region as a row field and Sales as a data field, adds Salesperson as a page (report filter) field, renames the filter to "SalespersonFilter", opens the filter page, refreshes and calculates the pivot data, and saves the workbook as SalesPivotReportFilter.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, locates the first PivotTable on the 'Data' worksheet, adds the 'Salesperson' column as a Page (report filter) field using PivotTable.AddFieldToArea with PivotFieldType.Page, and saves the modified file, including checks for missing files, worksheet, and PivotTable.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        static void Main()
+        {
+            try
+            {
+                string inputPath = "Report.xlsx";
+                string outputPath = "Report_With_Salesperson_Filter.xlsx";
 
-        // Populate sample sales data
-        cells["A1"].Value = "Salesperson";
-        cells["B1"].Value = "Region";
-        cells["C1"].Value = "Sales";
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        cells["A2"].Value = "Alice";
-        cells["B2"].Value = "North";
-        cells["C2"].Value = 1200;
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        cells["A3"].Value = "Bob";
-        cells["B3"].Value = "South";
-        cells["C3"].Value = 1500;
+                // Access the worksheet that contains the PivotTable
+                Worksheet worksheet = workbook.Worksheets["Data"];
+                if (worksheet == null)
+                {
+                    Console.WriteLine("Worksheet 'Data' not found.");
+                    return;
+                }
 
-        cells["A4"].Value = "Alice";
-        cells["B4"].Value = "East";
-        cells["C4"].Value = 800;
+                // Ensure there is at least one PivotTable
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No PivotTables found in the worksheet.");
+                    return;
+                }
 
-        cells["A5"].Value = "Charlie";
-        cells["B5"].Value = "West";
-        cells["C5"].Value = 950;
+                // Get the first PivotTable
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Add the "Salesperson" field as a Report Filter (Page field)
+                try
+                {
+                    // Use overload that accepts field name directly
+                    pivotTable.AddFieldToArea(PivotFieldType.Page, "Salesperson");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add 'Salesperson' as a page field: {ex.Message}");
+                    return;
+                }
 
-        // Add Region as a row field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-
-        // Add Sales as a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Add Salesperson as a page (report filter) field
-        pivotTable.AddFieldToArea(PivotFieldType.Page, "Salesperson");
-        // Optionally rename the filter field for clarity
-        pivotTable.PageFields[0].Name = "SalespersonFilter";
-
-        // Refresh and calculate the pivot table data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Show the report filter page for the salesperson filter
-        pivotTable.ShowReportFilterPageByName("SalespersonFilter");
-
-        // Save the workbook with the pivot table and filter page
-        workbook.Save("SalesPivotReportFilter.xlsx");
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

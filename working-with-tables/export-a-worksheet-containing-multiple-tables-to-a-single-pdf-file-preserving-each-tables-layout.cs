@@ -1,59 +1,96 @@
-// Title: Export a worksheet with multiple Excel tables to a single PDF while preserving table layouts using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, selects a worksheet containing several tables, and saves it as one PDF file keeping the original table formatting with Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to retain column widths, row heights, and table structures when converting a worksheet to PDF.
-// Common Searches: Aspose.Cells C# export worksheet with multiple tables to a single PDF file | preserve Excel table formatting when converting to PDF using Aspose.Cells | how to keep table layout in PDF output from Aspose.Cells .NET | PdfSaveOptions settings for exporting tables on one PDF page Aspose.Cells | C# convert Excel sheet containing several tables to PDF preserving layout
-// Tags: Aspose.Cells export worksheet to PDF | PdfSaveOptions preserve table layout | C# convert Excel tables to PDF | single PDF output for multiple tables Aspose.Cells | maintain column widths row heights PDF conversion
+// Title: Export multiple Excel tables on a single worksheet to one PDF file with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export worksheet containing several ListObjects to a single PDF | How to convert multiple Excel tables on the same sheet into one PDF using Aspose.Cells | Aspose.Cells save workbook as PDF while preserving table styles in C# | Export Excel tables to PDF with auto‑fit columns using Aspose.Cells .NET | Generate PDF from Excel sheet that has two ListObject tables in C#
+// Tags: export worksheet tables to PDF Aspose.Cells | Aspose.Cells ListObject PDF conversion | preserve Excel table styles during PDF export | auto-fit columns for PDF layout Aspose.Cells | save workbook as single PDF with multiple tables
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Tables;
 
-// The example verifies the input Excel file, loads it with Aspose.Cells, accesses the first worksheet, optionally configures PdfSaveOptions, and saves the worksheet as a single PDF while retaining column widths, row heights, and the layout of all tables on the sheet.
-class ExportTablesToPdf
+// The example creates a workbook, adds two ListObject tables with different styles on the same worksheet, auto‑fits the columns, ensures the output folder exists, and saves the entire sheet as a single PDF file named 'MultipleTables.pdf' using Aspose.Cells for .NET.
+class ExportMultipleTablesToPdf
 {
     static void Main()
     {
         try
         {
-            // Path to the source Excel file
-            const string inputPath = "input.xlsx";
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "DataSheet";
+
+            // Populate data for the first table.
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
+
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
+
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
+
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
+
+            sheet.Cells["A5"].PutValue(4);
+            sheet.Cells["B5"].PutValue("Diana");
+            sheet.Cells["C5"].PutValue(88);
+
+            // Add the first table (range A1:C5) with headers.
+            int table1Index = sheet.ListObjects.Add("Table1", "A1:C5", true);
+            ListObject table1 = sheet.ListObjects[table1Index];
+            table1.TableStyleType = TableStyleType.TableStyleMedium2;
+
+            // Populate data for the second table.
+            sheet.Cells["E1"].PutValue("Product");
+            sheet.Cells["F1"].PutValue("Category");
+            sheet.Cells["G1"].PutValue("Price");
+
+            sheet.Cells["E2"].PutValue("Laptop");
+            sheet.Cells["F2"].PutValue("Electronics");
+            sheet.Cells["G2"].PutValue(1200);
+
+            sheet.Cells["E3"].PutValue("Desk");
+            sheet.Cells["F3"].PutValue("Furniture");
+            sheet.Cells["G3"].PutValue(350);
+
+            sheet.Cells["E4"].PutValue("Pen");
+            sheet.Cells["F4"].PutValue("Stationery");
+            sheet.Cells["G4"].PutValue(2.5);
+
+            sheet.Cells["E5"].PutValue("Coffee");
+            sheet.Cells["F5"].PutValue("Beverage");
+            sheet.Cells["G5"].PutValue(5);
+
+            // Add the second table (range E1:G5) with headers.
+            int table2Index = sheet.ListObjects.Add("Table2", "E1:G5", true);
+            ListObject table2 = sheet.ListObjects[table2Index];
+            table2.TableStyleType = TableStyleType.TableStyleMedium9;
+
+            // Adjust column widths for better PDF layout.
+            sheet.AutoFitColumns();
+
+            // Ensure the output directory exists.
+            string outputPath = "MultipleTables.pdf";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Load the workbook containing the worksheet with multiple tables
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (or specify by name/index as needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Uncomment to force each worksheet onto a single PDF page
-                // OnePagePerSheet = true,
-
-                // Preserve original column widths and row heights (default behavior)
-                // No direct property needed; keep defaults
-
-                // Keep gridlines if required
-                // GridlineType = GridlineType.Gridline
-            };
-
-            // Save the workbook (or the selected worksheet) to a PDF file
-            const string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF successfully created at '{outputPath}'.");
+            // Export the worksheet to PDF.
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF file saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

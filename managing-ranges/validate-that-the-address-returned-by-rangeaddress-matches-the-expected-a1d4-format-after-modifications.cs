@@ -1,60 +1,48 @@
-// Title: Validate that an Aspose.Cells range returns the A1:D4 address string in C#
-// AI Prompts: Write C# code using Aspose.Cells to create a worksheet, define a range from A1 to D4, fill it with data, and assert that the Range.Address property equals "A1:D4" with a case‑insensitive check. | Show how to retrieve the A1‑style address of an Aspose.Cells range and compare it to an expected value, printing a success or failure message. | Provide a concise Aspose.Cells example that demonstrates verifying the address string of a newly created range.
-// Common Searches: C# Aspose.Cells verify range address is A1:D4 | How to assert Range.Address equals expected string in Aspose.Cells | Check Excel range address format using Aspose.Cells C# example
-// Tags: Aspose.Cells range address validation | C# Aspose.Range.Address comparison | A1 style address check .NET | Excel range address verification | Aspose.Cells create range A1:D4
+// Title: Validate that a Range.Address returns the exact "A1:D4" string after modifying cells using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to check if Range.Address equals A1:D4 after cell updates | Verify range address format in a .NET workbook with Aspose.Cells | C# code to compare Range.Address property to expected A1:D4 string | Get and validate Excel range address using Aspose.Cells API | Confirm that a created range still reports A1:D4 after modifying its cells
+// Tags: Aspose.Cells range address validation | C# Aspose.Cells compare Range.Address | Aspose.Cells verify A1:D4 range | Aspose.Cells modify cells range address check | Aspose.Cells .NET workbook range address property
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-// // Demonstrates creating a workbook, defining a range A1:D4 with Aspose.Cells, optionally populating it, retrieving the range's Address property, and confirming it matches the expected "A1:D4" string.
+// The example creates a workbook, fills cells A1 through D4, defines a range covering those cells, updates values inside the range, retrieves the range's Address property, compares it to the expected "A1:D4" string, prints the validation result, and saves the workbook as ModifiedWorkbook.xlsx.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook (using the provided creation rule)
+        var workbook = new Workbook();
+
+        // Access the first worksheet
+        var sheet = workbook.Worksheets[0];
+
+        // Populate some data within the range A1:D4
+        sheet.Cells["A1"].PutValue(1);
+        sheet.Cells["B2"].PutValue(2);
+        sheet.Cells["C3"].PutValue(3);
+        sheet.Cells["D4"].PutValue(4);
+
+        // Create a range that covers cells A1 through D4
+        var range = sheet.Cells.CreateRange("A1", "D4");
+
+        // Modify values inside the range (the range itself is not moved)
+        range[0, 0].PutValue(10); // A1
+        range[3, 3].PutValue(40); // D4
+
+        // Retrieve the address of the range after modifications
+        string address = range.Address;
+
+        // Validate that the address matches the expected A1:D4 format
+        if (address == "A1:D4")
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define a range covering cells A1 to D4
-            AsposeRange range = sheet.Cells.CreateRange("A1", "D4");
-
-            // Fill the range with sample data (optional)
-            int value = 1;
-            for (int row = 0; row < range.RowCount; row++)
-            {
-                for (int col = 0; col < range.ColumnCount; col++)
-                {
-                    range[row, col].PutValue(value++);
-                }
-            }
-
-            // Retrieve the address of the range in A1 style
-            string address = range.Address;
-
-            // Expected address
-            string expected = "A1:D4";
-
-            // Validate the address
-            if (address.Equals(expected, StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine($"Success: Range address is '{address}'.");
-            }
-            else
-            {
-                Console.WriteLine($"Failure: Expected '{expected}' but got '{address}'.");
-            }
-
-            // Optionally save the workbook (not required for validation)
-            // workbook.Save("output.xlsx");
+            Console.WriteLine("Address validation passed: " + address);
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Address validation failed. Expected A1:D4 but got {address}");
         }
+
+        // Save the workbook (using the provided save rule)
+        workbook.Save("ModifiedWorkbook.xlsx");
     }
 }

@@ -1,55 +1,41 @@
-// Title: Convert an Excel workbook to HTML with embedded Base64 images using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to embed all worksheet images as Base64 data URIs, and saves the result as an HTML file. | Show how to export only the active worksheet to HTML while embedding its pictures as Base64 using Aspose.Cells' HtmlSaveOptions in a .NET application. | Demonstrate retrieving the generated HTML as a UTF‑8 string from a MemoryStream after setting ExportImagesAsBase64, then writing it to disk with Aspose.Cells.
-// Common Searches: how to export excel to html with embedded images using aspose.cells c# | aspnet convert xlsx to html base64 image data uri | aspose.cells save workbook as html string with base64 pictures | c# generate html from excel workbook with inline base64 images | aspose.cells HtmlSaveOptions ExportImagesAsBase64 example
-// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | export Excel to HTML with inline images | embed worksheet pictures as data URIs C# | save workbook to MemoryStream Aspose.Cells | convert xlsx to html string .NET
+// Title: Convert an Excel workbook to a single HTML file with embedded Base64 images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions to embed all worksheet images as Base64 data URIs, and saves the result to an HTML file. | Show how to use a MemoryStream with Aspose.Cells to produce HTML output that contains inline Base64 images. | Adapt the example to export only the active worksheet while still embedding images as Base64 data URIs.
+// Common Searches: Aspose.Cells C# export workbook to HTML with inline Base64 images | How to embed Excel chart images in HTML using Aspose.Cells .NET | Save Excel as HTML without external image files in C# | HtmlSaveOptions ExportImagesAsBase64 example code | Convert Excel to single HTML page with embedded pictures Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | excel to html base64 image embedding | c# memory stream html generation Aspose.Cells | inline data uri images in html Aspose.Cells | single html output from workbook .net
 
-using Aspose.Cells;
 using System;
 using System.IO;
-using System.Text;
+using Aspose.Cells;
 
-// The sample verifies the input file, loads it into an Aspose.Cells Workbook, sets HtmlSaveOptions.ExportImagesAsBase64 to true, saves the workbook to a MemoryStream as HTML, reads the UTF‑8 HTML string, and writes it to an output file, handling missing files and exceptions.
+// Loads input.xlsx, sets HtmlSaveOptions.ExportImagesAsBase64 = true, saves the workbook as HTML to a MemoryStream, reads the HTML string, and writes it to output.html, embedding all worksheet images as Base64 data URIs.
 class Program
 {
     static void Main()
     {
-        try
+        // Load the Excel workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Configure HTML save options to embed images as Base64 data URIs
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // This flag tells Aspose.Cells to convert all images to Base64 strings
+            ExportImagesAsBase64 = true,
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
+            // Export all worksheets (set to true if you only need the active sheet)
+            ExportActiveWorksheetOnly = false
+        };
 
-            // Load the source Excel workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Set HTML save options to embed images as Base64 data URIs
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                ExportImagesAsBase64 = true   // Embed images directly in the HTML
-                // ExportActiveWorksheetOnly = true // Optional: export only the active sheet
-            };
-
-            // Save the workbook to a memory stream to obtain the HTML as a string
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Save(ms, htmlOptions);
-                ms.Position = 0;
-                string htmlContent = new StreamReader(ms, Encoding.UTF8).ReadToEnd();
-
-                // Write the HTML output to a file (or use it as needed)
-                File.WriteAllText(outputPath, htmlContent, Encoding.UTF8);
-                Console.WriteLine($"Excel exported to HTML with embedded Base64 images: \"{outputPath}\"");
-            }
-        }
-        catch (Exception ex)
+        // Save the workbook to a memory stream using the HTML options
+        using (MemoryStream ms = new MemoryStream())
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            workbook.Save(ms, htmlOptions);
+            ms.Position = 0;
+
+            // Read the generated HTML content from the memory stream
+            string htmlContent = new StreamReader(ms).ReadToEnd();
+
+            // Write the HTML (with embedded Base64 images) to an output file
+            File.WriteAllText("output.html", htmlContent);
         }
     }
 }

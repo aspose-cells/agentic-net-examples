@@ -1,53 +1,64 @@
-// Title: Display "N/A" for null cells in an Aspose.Cells pivot table using C#
-// AI Prompts: Create a C# program that builds a workbook, adds rows with null entries, generates a pivot table, and configures the pivot to show "N/A" for null cells by setting DisplayNullString and NullString. | Show how to enable custom null string handling for a pivot table in Aspose.Cells .NET and save the workbook as an XLSX file.
-// Common Searches: Aspose.Cells pivot table replace blank values with N/A using C# | How to configure null value display in an Aspose.Cells generated pivot | Using DisplayNullString to show N/A in Aspose.Cells pivot tables | C# code sample for null string handling in Aspose.Cells pivot | Aspose.Cells C# pivot table custom null placeholder example
-// Tags: Aspose.Cells pivot null placeholder | C# DisplayNullString Aspose.Cells | Aspose.Cells pivot custom null text | Excel pivot N/A display Aspose | Aspose.Cells workbook null handling
+// Title: How to replace empty cells with 'N/A' in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that walks through the worksheet’s used area and writes "N/A" into each empty cell. | Show a method to iterate over all cells in an Aspose.Cells workbook and assign a placeholder text when a cell has no value before saving.
+// Common Searches: how to display N/A for empty cells using Aspose.Cells C# | replace null values with placeholder text in Excel file programmatically Aspose.Cells | iterate over used range and set default value for blank cells Aspose.Cells .NET | Aspose.Cells C# set default string for empty worksheet cells
+// Tags: fill missing entries Aspose.Cells C# | scan worksheet area Aspose.Cells | default text for absent cells Excel .NET | populate N/A values Aspose.Cells | null cell handling Aspose.Cells C#
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsNullDisplayDemo
+namespace AsposeCellsNullDisplay
 {
-    // The example creates a workbook, inserts sample data containing null entries, adds a pivot table, enables custom null display by setting DisplayNullString to true and NullString to "N/A", refreshes and calculates the pivot, and saves the file as PivotTable_NullAsNA.xlsx.
-    public class Program
+    // The program creates a new workbook, adds sample data with intentional empty cells, walks through the worksheet's used area, replaces any null cell values with the string "N/A", and saves the result as NullValuesDisplayed.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data with null values
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(1500);
-            sheet.Cells["A4"].PutValue(null);      // Null product name
-            sheet.Cells["B4"].PutValue(null);      // Null sales value
+                // Populate sample data (some cells intentionally left empty)
+                sheet.Cells["A1"].PutValue("Name");
+                sheet.Cells["B1"].PutValue("Score");
+                sheet.Cells["A2"].PutValue("Alice");
+                sheet.Cells["B2"].PutValue(85);
+                sheet.Cells["A3"].PutValue("Bob");
+                // B3 left empty
+                sheet.Cells["A4"].PutValue("Charlie");
+                // B4 left empty
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Get the used range of the worksheet (use Aspose.Cells.Range to avoid ambiguity with System.Range)
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-            // Configure the pivot table: rows = Product, data = Sales
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+                // Replace empty cells with "N/A"
+                for (int row = startRow; row <= endRow; row++)
+                {
+                    for (int col = startCol; col <= endCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.Value == null)
+                        {
+                            cell.PutValue("N/A");
+                        }
+                    }
+                }
 
-            // Enable custom display for null values and set the desired string
-            pivotTable.DisplayNullString = true;
-            pivotTable.NullString = "N/A";
-
-            // Refresh and calculate the pivot table to apply changes
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTable_NullAsNA.xlsx");
+                // Save the workbook
+                workbook.Save("NullValuesDisplayed.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

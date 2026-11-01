@@ -1,14 +1,12 @@
-// Title: Create a rectangle shape linked to a formatted cell with thousand separators using Aspose.Cells for .NET
-// AI Prompts: Add a rectangle shape to a worksheet and set its Text property to a formula that references cell A1, which contains a number formatted with "#,##0". | Apply a custom number format "#,##0" to a numeric cell so the value displays with thousand separators. | Configure the shape's Placement to MoveAndSize so it moves and resizes with the underlying cells, then save the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells how to bind shape text to a cell value with custom number format | C# add rectangle shape that displays cell A1 formatted with thousand separator | set shape placement move and size in Aspose.Cells .NET example | apply "#,##0" number format to a cell and link it to a shape using Aspose.Cells | save workbook with shape linked to formatted cell Aspose.Cells
-// Tags: drawing rectangle object Aspose.Cells | link shape text to cell formula | custom number format "#,##0" Aspose.Cells | placement mode MoveAndSize for shapes .NET | save workbook with linked shape xlsx
+// Title: Create a rectangle shape linked to a cell formatted with thousand separators using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a rectangle shape that displays a cell value with thousand separators in Aspose.Cells C# | Aspose.Cells C# linking shape text to a worksheet cell using a formula | apply custom number format '#,##0.00' to a cell and show it inside a shape with Aspose.Cells | center text inside a rectangle shape on an Excel worksheet with Aspose.Cells for .NET | save a workbook containing a linked shape as an .xlsx file using Aspose.Cells
+// Tags: add rectangle shape to worksheet Aspose.Cells | link shape text to cell formula Aspose.Cells | custom numeric format with thousand separator Aspose.Cells | center shape text horizontally vertically Aspose.Cells | save workbook as xlsx Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
-using System.IO;
 
-// The example creates a new workbook, writes 1234567 to cell A1, applies the custom number format "#,##0" for thousand separators, adds a rectangle shape, links its text to A1, sets the shape to move and size with cells, and saves the file as ShapeLinkedToCell.xlsx.
+// The example creates a new workbook, writes a numeric value to cell A1, applies the custom number format "#,##0.00" (thousand separator), adds a rectangle shape at row 2 column 2, links the shape's text to cell A1 with a formula, centers the text inside the shape, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
@@ -23,27 +21,26 @@ class Program
 
             // Set a numeric value in cell A1
             Cell cell = sheet.Cells["A1"];
-            cell.PutValue(1234567);
+            cell.PutValue(1234567.89);
 
             // Apply custom number format with thousand separator
             Style style = cell.GetStyle();
-            style.Custom = "#,##0";
+            style.Custom = "#,##0.00";
             cell.SetStyle(style);
 
             // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top, left, height, width
+            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
             Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
 
-            // Link the shape's text to cell A1 so it displays the formatted value
+            // Link the shape's text to cell A1 using a formula
             shape.Text = "=A1";
 
-            // Ensure the shape moves and sizes with the cells
-            shape.Placement = PlacementType.MoveAndSize;
+            // Center the text inside the shape
+            shape.TextHorizontalAlignment = TextAlignmentType.Center;
+            shape.TextVerticalAlignment = TextAlignmentType.Center;
 
             // Save the workbook
-            string outputPath = "ShapeLinkedToCell.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {

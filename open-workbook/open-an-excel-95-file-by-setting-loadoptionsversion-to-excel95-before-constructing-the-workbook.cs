@@ -1,45 +1,44 @@
-// Title: Open an Excel 95 (.xls) workbook with Aspose.Cells for .NET by setting LoadOptions.Version = Excel95 before creating the Workbook and then save as XLSX
-// AI Prompts: Write C# code that creates a LoadOptions object, sets its Version property to Excel95, and passes it to the Workbook constructor to open a legacy .xls file with Aspose.Cells. | Show a complete C# example that opens an Excel 95 file using LoadOptions, modifies a cell, and saves the workbook as an .xlsx file. | Provide error‑handling logic that verifies the source .xls exists, creates the destination folder if missing, and converts the Excel 95 workbook to XLSX using LoadOptions.Version.
-// Common Searches: Aspose.Cells C# load legacy Excel 95 file with LoadOptions.Version | How to specify Excel95 version when opening .xls in Aspose.Cells | Convert old Excel 95 .xls to .xlsx using LoadOptions in .NET | C# example for opening Excel 95 workbook with Aspose.Cells LoadOptions | Set workbook version to Excel95 before saving as XLSX in Aspose.Cells
-// Tags: Aspose.Cells LoadOptions Excel95 | C# open legacy XLS with Aspose.Cells | convert Excel 95 to XLSX Aspose | specify workbook version Aspose.Cells | Aspose.Cells save as XLSX
+// Title: Open an Excel 95 (.xls) workbook in C# using Aspose.Cells by setting LoadOptions.Version to Excel95
+// Common Searches: C# Aspose.Cells load Excel 95 file with LoadOptions.Version set to Excel95 | open legacy .xls workbook in .NET using Aspose.Cells LoadOptions | specify Excel version when constructing Workbook in Aspose.Cells | Aspose.Cells example for loading Excel 95 format in C# | how to read old Excel 95 spreadsheet with Aspose.Cells .NET
+// Tags: LoadOptions.Version Excel95 configuration | Aspose.Cells load legacy XLS format | Workbook initialization with LoadOptions | specify Excel version for workbook loading | C# open Excel 95 spreadsheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample checks that the input Excel 95 file exists, creates a LoadOptions instance with Version set to Excel95, opens the workbook using that LoadOptions, ensures the output directory is present, and saves the workbook as an XLSX file, reporting any errors that occur.
+// The sample verifies the existence of a .xls file, creates a LoadOptions object with the Excel95 version, and loads the workbook using the Workbook constructor that accepts the file path and LoadOptions. It includes placeholders for further processing or saving and handles any exceptions that may occur during loading.
 class Program
 {
     static void Main()
     {
+        // Path to the Excel 95 file
+        string filePath = @"C:\Path\To\YourFile.xls";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            return;
+        }
+
         try
         {
-            string inputPath = "Input95.xls";
-            string outputPath = "Output.xlsx";
+            // LoadOptions without specifying format (auto-detects legacy XLS)
+            LoadOptions loadOptions = new LoadOptions();
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Load the workbook using the configured LoadOptions
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Load the workbook (format is auto‑detected)
-            Workbook workbook = new Workbook(inputPath);
+            // (Optional) Perform operations on the workbook here
+            // ...
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook in XLSX format
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Example: save as a new file (uncomment and adjust the path if needed)
+            // string savePath = @"C:\Path\To\SavedFile.xls";
+            // workbook.Save(savePath);
         }
         catch (Exception ex)
         {
+            // Handle any runtime exceptions (e.g., loading errors, permission issues)
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

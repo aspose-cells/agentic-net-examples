@@ -1,37 +1,69 @@
-// Title: Exclude hidden worksheets from HTML conversion with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that hides a worksheet, sets HtmlSaveOptions.ExportHiddenWorksheet to false, saves the workbook as HTML, and checks that the hidden sheet name does not appear in the generated file. | Show how to programmatically verify that a hidden worksheet is omitted from the HTML output produced by Aspose.Cells by reading the file content and searching for the sheet name.
-// Common Searches: Aspose.Cells C# export workbook to HTML without hidden sheets | How to prevent hidden worksheets from being saved in HTML using Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet false example in .NET | Verify hidden worksheet exclusion after HTML conversion with Aspose.Cells | C# code to hide worksheet and exclude it from HTML output Aspose
-// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | C# hide worksheet for HTML export | HTML conversion excluding hidden sheets | verify hidden worksheet omission Aspose.Cells | Aspose.Cells workbook to HTML without hidden worksheets
+// Title: Export a workbook to HTML while omitting hidden worksheets using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, hides one of its worksheets, sets HtmlSaveOptions.ExportHiddenWorksheet to false, saves the file as HTML, and then reads the HTML to confirm the hidden sheet data is absent. | Show a step‑by‑step C# example with Aspose.Cells that demonstrates hiding a worksheet, configuring HTML export options to exclude hidden sheets, saving the workbook, and programmatically verifying the omission.
+// Common Searches: Aspose.Cells C# export workbook to HTML without hidden sheets | HtmlSaveOptions ExportHiddenWorksheet false example | how to hide a worksheet and exclude it from HTML output using Aspose.Cells | verify hidden worksheet content is not in generated HTML Aspose.Cells | C# Aspose.Cells HTML conversion options for visible worksheets only
+// Tags: HtmlSaveOptions ExportHiddenWorksheet false | hide worksheet Aspose.Cells C# | export workbook to HTML Aspose.Cells | verify hidden sheet exclusion HTML | Aspose.Cells HTML conversion options
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, marks the first worksheet as hidden, configures HtmlSaveOptions.ExportHiddenWorksheet to false, saves the workbook as an HTML file, reads the generated HTML, and confirms that the hidden worksheet's name is not present, demonstrating how to exclude hidden sheets from HTML conversion using Aspose.Cells for .NET.
-class Program
+// Demonstrates creating a workbook with a visible and a hidden worksheet, configuring HtmlSaveOptions.ExportHiddenWorksheet = false, saving the workbook as HTML, and checking the generated HTML to ensure the hidden worksheet's content is not included.
+class ExportHiddenWorksheetDemo
 {
     static void Main()
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Ensure the first worksheet is hidden for the test
-        Worksheet hiddenSheet = workbook.Worksheets[0];
-        hiddenSheet.IsVisible = false;
+            // Access the default first worksheet and add some data
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "VisibleSheet";
+            sheet1.Cells["A1"].PutValue("This is a visible sheet.");
 
-        // Set HTML save options to exclude hidden worksheets
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportHiddenWorksheet = false;
+            // Add a second worksheet and hide it
+            int hiddenSheetIndex = workbook.Worksheets.Add();
+            Worksheet hiddenSheet = workbook.Worksheets[hiddenSheetIndex];
+            hiddenSheet.Name = "HiddenSheet";
+            hiddenSheet.Cells["A1"].PutValue("This content should NOT appear in HTML.");
+            hiddenSheet.IsVisible = false; // Hide the worksheet
 
-        // Save the workbook as HTML
-        string htmlPath = "output.html";
-        workbook.Save(htmlPath, htmlOptions);
+            // Prepare HTML save options and exclude hidden worksheets from export
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportHiddenWorksheet = false
+                // Additional options can be set here if needed
+            };
 
-        // Verify that the hidden worksheet name does not appear in the generated HTML
-        string htmlContent = File.ReadAllText(htmlPath);
-        bool hiddenSheetPresent = htmlContent.Contains(hiddenSheet.Name);
-        Console.WriteLine(hiddenSheetPresent
-            ? "Hidden worksheet was exported."
-            : "Hidden worksheet correctly excluded from HTML.");
+            // Define output folder and file
+            string outputFolder = Path.Combine(Environment.CurrentDirectory, "Output");
+            Directory.CreateDirectory(outputFolder);
+            string htmlFilePath = Path.Combine(outputFolder, "Workbook.html");
+
+            // Save the workbook as HTML using the options
+            workbook.Save(htmlFilePath, htmlOptions);
+
+            // Verify that the hidden worksheet content is not present in the generated HTML
+            if (File.Exists(htmlFilePath))
+            {
+                string htmlContent = File.ReadAllText(htmlFilePath);
+                bool hiddenContentFound = htmlContent.Contains("HiddenSheet") ||
+                                          htmlContent.Contains("This content should NOT appear in HTML.");
+
+                Console.WriteLine("HTML export completed.");
+                Console.WriteLine(hiddenContentFound
+                    ? "Verification FAILED: Hidden worksheet content was found in the HTML."
+                    : "Verification PASSED: Hidden worksheet content is excluded from the HTML.");
+            }
+            else
+            {
+                Console.WriteLine("HTML file was not created.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

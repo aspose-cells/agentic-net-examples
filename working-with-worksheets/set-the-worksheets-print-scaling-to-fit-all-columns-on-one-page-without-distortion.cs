@@ -1,50 +1,31 @@
-// Title: Set worksheet print scaling to fit all columns on one page using Aspose.Cells for .NET (C#)
-// AI Prompts: Load a workbook, set the first worksheet's PageSetup.FitToPagesWide to 1 and FitToPagesTall to 0, then save the file. | Write C# code that adjusts the print layout of an existing .xlsx so that columns fit within a single page width while rows may continue onto additional pages, using Aspose.Cells. | Create a .NET program that opens an Excel file, configures the worksheet's print scaling to one-page width without distortion, and outputs the modified workbook.
-// Common Searches: Aspose.Cells C# set worksheet to print all columns on one page width | How to configure FitToPagesWide in Aspose.Cells .NET | Print scaling Excel worksheet to fit columns using Aspose.Cells library | C# Aspose.Cells fit columns to single printed page without affecting rows | Adjust page setup for Excel print layout programmatically with Aspose.Cells
-// Tags: Aspose.Cells column scaling configuration | worksheet page configuration .NET | single-page width column fit C# | Excel workbook scaling preserving layout | programmatic page scaling with Aspose
+// Title: How to set worksheet print scaling to fit all columns on one page using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set worksheet to print all columns on a single page | Aspose.Cells PageSetup FitToPagesWide and FitToPagesTall example | fit worksheet columns to page width without scaling rows Aspose.Cells | set worksheet print zoom to 100 percent with Aspose.Cells .NET | configure worksheet print scaling to avoid distortion using Aspose.Cells
+// Tags: Aspose.Cells PageSetup FitToPagesWide usage | fit worksheet columns to single page width C# | disable vertical page scaling Aspose.Cells | worksheet print zoom control Aspose.Cells | C# Aspose.Cells print scaling configuration
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// The example creates a workbook, accesses the first worksheet, sets PageSetup.FitToPagesWide to 1 so all columns fit the page width, sets FitToPagesTall to 0 to prevent vertical scaling, ensures the zoom is 100%, and saves the file as ScaledWorksheet.xlsx.
+class Program
 {
-    // The program loads an existing Excel workbook, sets the first worksheet's PageSetup to fit all columns on a single printed page width (FitToPagesWide = 1, FitToPagesTall = 0), and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // creates a new workbook with a default worksheet
 
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+        // Set the page setup to fit all columns on one page without distortion
+        // FitToPagesWide = 1 forces all columns to fit on a single page width
+        // FitToPagesTall = 0 allows rows to span multiple pages (no vertical scaling)
+        sheet.PageSetup.FitToPagesWide = 1;
+        sheet.PageSetup.FitToPagesTall = 0;
 
-                // Access the first worksheet (index 0)
-                Worksheet sheet = workbook.Worksheets[0];
+        // Ensure the zoom does not interfere with the fit settings
+        sheet.PageSetup.Zoom = 100;
 
-                // Fit all columns on one page width; rows can span multiple pages
-                sheet.PageSetup.FitToPagesWide = 1;
-                sheet.PageSetup.FitToPagesTall = 0;
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook to a file
+        workbook.Save("ScaledWorksheet.xlsx");
     }
 }

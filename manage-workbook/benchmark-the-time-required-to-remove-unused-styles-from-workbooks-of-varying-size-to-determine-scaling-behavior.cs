@@ -1,70 +1,98 @@
-// Title: Measure how Workbook.RemoveUnusedStyles scales with increasing numbers of unused styles in C# using Aspose.Cells
-// AI Prompts: Generate a C# console application that creates a workbook, adds a configurable number of unused styles, applies a few used styles, and records the elapsed milliseconds of Workbook.RemoveUnusedStyles(). | Write a script that iterates over style counts (e.g., 1000, 5000, 10000, 20000), builds a workbook for each count, invokes RemoveUnusedStyles, and prints the performance results to the console. | Create a performance benchmark that varies the number of styles in an Aspose.Cells workbook, calls Workbook.RemoveUnusedStyles, and logs the timing data for each iteration.
-// Common Searches: c# benchmark Aspose.Cells RemoveUnusedStyles performance with thousands of styles | how does RemoveUnusedStyles execution time grow with workbook size in Aspose.Cells | measure time to clean up unused styles in large Excel workbook using Aspose.Cells C# | performance testing of Aspose.Cells style removal for 10k and 20k styles
-// Tags: Aspose.Cells remove unused styles performance benchmark | C# workbook style cleanup timing | measure RemoveUnusedStyles scaling behavior | large workbook unused style removal Aspose.Cells | performance test for Aspose.Cells style count
+// Title: How to benchmark the execution time of Aspose.Cells RemoveUnusedStyles on workbooks of different sizes in C#
+// Common Searches: C# benchmark RemoveUnusedStyles method for large Excel workbooks using Aspose.Cells | measure performance of Aspose.Cells style cleanup as workbook rows and columns increase | determine scaling of RemoveUnusedStyles with workbook dimensions in .NET | time how long Aspose.Cells takes to delete unused styles in a 2000x2000 sheet | profile Aspose.Cells RemoveUnusedStyles for varying workbook sizes in C#
+// Tags: Aspose.Cells RemoveUnusedStyles performance benchmark | C# workbook style cleanup timing | scaling analysis of style removal in large Excel files | measure Aspose.Cells style removal latency .NET | benchmarking workbook size impact on RemoveUnusedStyles | performance testing of Aspose.Cells style optimization
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using Aspose.Cells;
 
-// The example creates workbooks with 1,000, 5,000, 10,000 and 20,000 unused styles, applies a few default styles to a 10x10 cell range, then measures and prints the milliseconds required for Workbook.RemoveUnusedStyles() for each style count, illustrating the scaling behavior of the cleanup operation.
-class RemoveUnusedStylesBenchmark
+namespace AsposeCellsBenchmark
 {
-    static void Main()
+    // The sample creates workbooks of several dimensions, applies a pool of random styles to every cell, optionally warms up the workbook, then measures and outputs the elapsed milliseconds for the RemoveUnusedStyles call, allowing developers to see how the cleanup time scales with workbook size.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Different numbers of styles to add (simulating varying workbook sizes)
-            int[] styleCounts = new int[] { 1000, 5000, 10000, 20000 };
-
-            foreach (int count in styleCounts)
+            try
             {
-                try
+                // Define workbook sizes to test (rows x columns)
+                var sizes = new List<(int rows, int cols)>
                 {
-                    // Create a new workbook
-                    Workbook workbook = new Workbook();
+                    (100, 100),
+                    (500, 500),
+                    (1000, 1000),
+                    (2000, 2000)
+                };
 
-                    // Add a large number of unused styles to the workbook
-                    for (int i = 0; i < count; i++)
-                    {
-                        // Create a new style based on the default style
-                        Style newStyle = workbook.CreateStyle();
-                        newStyle.Font.Color = (i % 2 == 0) ? Color.Red : Color.Blue;
-                        newStyle.Font.Size = 10 + (i % 5);
-                        // No need to explicitly add to the collection; CreateStyle registers it.
-                    }
+                // Number of distinct styles to apply before cleanup
+                const int styleCount = 50;
 
-                    // Apply a few styles to cells so that some styles are used
-                    Worksheet sheet = workbook.Worksheets[0];
-                    for (int row = 0; row < 10; row++)
-                    {
-                        for (int col = 0; col < 10; col++)
-                        {
-                            Cell cell = sheet.Cells[row, col];
-                            cell.PutValue($"R{row}C{col}");
-                            // Apply the default style for simplicity
-                            cell.SetStyle(workbook.DefaultStyle);
-                        }
-                    }
+                foreach (var (rows, cols) in sizes)
+                {
+                    // Create workbook and populate with data and styles
+                    var workbook = CreateWorkbook(rows, cols, styleCount);
 
-                    // Measure the time required to remove unused styles
-                    Stopwatch sw = Stopwatch.StartNew();
+                    // Warm up (optional)
+                    workbook.CalculateFormula();
+
+                    // Benchmark RemoveUnusedStyles
+                    var sw = Stopwatch.StartNew();
                     workbook.RemoveUnusedStyles();
                     sw.Stop();
 
-                    // Output the result
-                    Console.WriteLine($"Styles added: {count}, Time to remove unused styles: {sw.ElapsedMilliseconds} ms");
-                }
-                catch (Exception innerEx)
-                {
-                    Console.WriteLine($"Error processing count {count}: {innerEx.Message}");
+                    Console.WriteLine(
+                        $"Size: {rows}x{cols}, Styles Applied: {styleCount}, RemoveUnusedStyles Time: {sw.ElapsedMilliseconds} ms");
                 }
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Creates a workbook with the specified number of rows and columns,
+        // and applies a set of random styles to cells.
+        private static Workbook CreateWorkbook(int rows, int cols, int styleCount)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+
+            // Generate a pool of distinct styles
+            var styles = new List<Style>();
+            var random = new Random();
+
+            for (int i = 0; i < styleCount; i++)
+            {
+                var s = workbook.CreateStyle();
+
+                // Randomly set some style properties
+                s.Font.Color = System.Drawing.Color.FromArgb(
+                    random.Next(256), random.Next(256), random.Next(256));
+                s.Font.IsBold = random.Next(2) == 0;
+                s.ForegroundColor = System.Drawing.Color.FromArgb(
+                    random.Next(256), random.Next(256), random.Next(256));
+                s.Pattern = random.Next(2) == 0 ? BackgroundType.Solid : BackgroundType.None;
+
+                // The 'Custom' property is read‑only or of a different type; omit setting it.
+                styles.Add(s);
+            }
+
+            // Populate cells with data and assign random styles
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    var cell = sheet.Cells[r, c];
+                    cell.PutValue($"R{r}C{c}");
+
+                    // Assign a random style from the pool
+                    int styleIndex = random.Next(styleCount);
+                    cell.SetStyle(styles[styleIndex]);
+                }
+            }
+
+            return workbook;
         }
     }
 }

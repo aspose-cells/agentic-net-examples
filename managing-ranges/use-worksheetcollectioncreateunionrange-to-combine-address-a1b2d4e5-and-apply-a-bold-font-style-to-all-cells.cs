@@ -1,44 +1,54 @@
-// Title: Create a union range for cells A1:B2 and D4:E5 and apply a bold font style with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses WorksheetCollection.CreateUnionRange to merge the ranges A1:B2 and D4:E5 and then applies a bold font to every cell in the union using Aspose.Cells. | Show how to define a Style and StyleFlag in Aspose.Cells and apply them to a non‑contiguous union range created from multiple addresses. | Explain the steps required to create a union range and style it bold in an in‑memory workbook with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# create union range from multiple addresses and set bold font | How to apply a style to non‑contiguous cells using CreateUnionRange in Aspose.Cells | C# example for formatting union range A1:B2,D4:E5 with Aspose.Cells | Apply bold text to a union range in an Aspose.Cells workbook | WorksheetCollection.CreateUnionRange usage for styling cells in .NET
-// Tags: grouped cell range bold styling Aspose.Cells | C# discontiguous cells format Aspose.Cells | WorksheetCollection range grouping example | apply style to multiple address blocks Aspose.Cells | save XLSX workbook with styled cell groups
+// Title: Create a union range from A1:B2 and D4:E5 and apply bold font style using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# create union range from addresses A1:B2 and D4:E5 | How to apply a bold font to a union range using WorksheetCollection.CreateUnionRange | Example of formatting non‑contiguous cells with StyleFlag in Aspose.Cells | Saving a workbook after styling a union range in Aspose.Cells .NET | C# try‑catch pattern for workbook generation with Aspose.Cells
+// Tags: WorksheetCollection.CreateUnionRange with StyleFlag | bold font style for union range Aspose.Cells | format non‑contiguous cells C# Aspose.Cells | save workbook after applying style Aspose.Cells | exception handling in Aspose.Cells workbook creation
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// // This program creates an in‑memory workbook, builds a union range covering A1:B2 and D4:E5 on the first worksheet, defines a bold font style, applies it to all cells in the union range, and saves the workbook to Output.xlsx.
+// The sample creates a new workbook, builds a union range covering cells A1:B2 and D4:E5 on the first worksheet, defines a bold font style with a StyleFlag, applies the style to the entire union range, ensures the output directory exists, and saves the workbook to output.xlsx while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (in-memory)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Ensure at least one worksheet exists
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the worksheets collection
+            WorksheetCollection worksheets = workbook.Worksheets;
 
-            // Create a union range that combines the two address blocks on the first sheet (index 0)
-            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A1:B2,D4:E5", 0);
+            // Create a union range from the specified addresses on the first worksheet (index 0)
+            UnionRange unionRange = worksheets.CreateUnionRange("A1:B2,D4:E5", 0);
 
-            // Define a style with a bold font
+            // Create a style with bold font
             Style boldStyle = workbook.CreateStyle();
             boldStyle.Font.IsBold = true;
 
-            // Prepare a StyleFlag to apply all style attributes
-            StyleFlag flag = new StyleFlag { All = true };
+            // Define a style flag to apply only the font bold attribute
+            StyleFlag flag = new StyleFlag
+            {
+                FontBold = true
+            };
 
             // Apply the bold style to all cells in the union range
             unionRange.ApplyStyle(boldStyle, flag);
 
             // Define output file path
-            string outputPath = "Output.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory exists (handle case when outputPath has no directory part)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

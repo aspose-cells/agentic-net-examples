@@ -1,49 +1,52 @@
-// Title: How to update XML‑mapped cells in an Excel workbook and save the changes using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with an XML map, changes the values of mapped cells (e.g., Price and Quantity), and saves the workbook to a new file using Aspose.Cells. | Write a step‑by‑step C# example that accesses a worksheet, updates cells linked to XML elements, and persists the workbook with Aspose.Cells.
-// Common Searches: c# asp.net update xml mapped cells in existing excel file using aspose.cells | how to edit xml map data in a workbook and save it with Aspose.Cells for .NET | example of changing values of cells linked to XML elements in an xlsx via Aspose.Cells | programmatically modify xml map linked cells and export updated workbook in C#
-// Tags: xml map cell update Aspose.Cells | modify mapped cells in xlsx C# | save workbook after xml map edit Aspose.Cells | Aspose.Cells XML map editing example | update Excel cell values linked to XML elements
+// Title: How to modify XML‑mapped cells in a workbook and save the changes back to an XML file using Aspose.Cells for .NET
+// AI Prompts: Load an XML file as a workbook with Aspose.Cells, update the values of cells A1, B2, and C3 that are mapped to XML nodes, and save the workbook as a new XML document. | Create a minimal XML workbook when the source file is missing, then edit the mapped cells and export the updated XML using C# and Aspose.Cells. | Use LoadOptions with LoadFormat.Xml to open an XML‑mapped workbook, set new values for specific cells, and persist the modifications to another XML file.
+// Common Searches: Aspose.Cells C# update values of cells linked to XML map and export updated XML | How to write changes from Excel cells back to original XML using Aspose.Cells .NET | Save modified XML‑mapped workbook to a new XML file with Aspose.Cells LoadOptions
+// Tags: modify XML-mapped cells Aspose.Cells | export workbook to XML C# | LoadOptions LoadFormat.Xml usage | fallback minimal XML workbook creation | synchronize Excel edits with XML source
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an existing workbook (MappedWorkbook.xlsx) that contains an XML map, updates two mapped cells (B2 and C5) representing XML elements such as <Price> and <Quantity>, and saves the modified workbook as MappedWorkbook_Updated.xlsx using Aspose.Cells for .NET. It notes that the XmlMaps API may not be available in all library versions.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an XML file as a workbook via Aspose.Cells, updates the values of cells A1, B2, and C3 that are mapped to XML nodes, and saves the workbook to a new XML file, creating a minimal XML workbook when the source file is absent.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputFile = "MappedWorkbook.xlsx";
-            const string outputFile = "MappedWorkbook_Updated.xlsx";
-
-            // Verify that the input workbook exists.
-            if (!File.Exists(inputFile))
+            try
             {
-                Console.WriteLine($"Input file \"{inputFile}\" not found.");
-                return;
+                string inputPath = "input.xml";
+                string outputPath = "output.xml";
+
+                // Ensure the input XML file exists; create a minimal workbook if it doesn't.
+                if (!File.Exists(inputPath))
+                {
+                    Workbook tempWb = new Workbook();
+                    tempWb.Save(inputPath, SaveFormat.Xml);
+                }
+
+                // Load the workbook that is linked to an XML data source.
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
+                Workbook workbook = new Workbook(inputPath, loadOptions);
+
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Update values in cells mapped to XML nodes.
+                cells["A1"].PutValue("UpdatedValue1");
+                cells["B2"].PutValue(12345);
+                cells["C3"].PutValue(DateTime.Now);
+
+                // Save the workbook back to XML format.
+                workbook.Save(outputPath, SaveFormat.Xml);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputFile);
-
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Update cells that are mapped to XML elements/attributes.
-            sheet.Cells["B2"].PutValue(199.99); // Example: mapped to <Price>
-            sheet.Cells["C5"].PutValue(42);     // Example: mapped to <Quantity>
-
-            // NOTE: The XmlMaps API may not be available in all Aspose.Cells versions.
-            // If needed, XML map export can be implemented using a compatible version of the library.
-
-            // Save the updated workbook.
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved as \"{outputFile}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

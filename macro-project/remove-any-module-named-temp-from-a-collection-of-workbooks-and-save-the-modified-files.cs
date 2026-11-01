@@ -1,72 +1,102 @@
-// Title: Batch delete VBA modules named "Temp" from .xlsx workbooks and overwrite files using Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, removes any VBA module whose name equals "Temp" (case‑insensitive), and saves the workbook back to its original location. | Enhance the program to create a log file that records the name of each workbook processed and indicates whether a "Temp" module was found and removed. | Add robust error handling that detects password‑protected Excel files, skips them, and continues processing the remaining workbooks without aborting.
-// Common Searches: asp.net remove specific VBA module from multiple Excel files programmatically | how to batch delete a macro named Temp in .xlsx using Aspose.Cells C# | skip password protected Excel workbook when iterating with Aspose.Cells library | overwrite original Excel file after VBA cleanup with Aspose.Cells | C# code to remove VBA modules from workbooks in a folder
-// Tags: batch delete VBA module Aspose.Cells | remove Temp macro .xlsx C# | ignore password‑protected workbooks Aspose.Cells | overwrite workbook after VBA removal | iterate workbook files Aspose.Cells .NET
+// Title: Remove a VBA module named "Temp" from multiple Excel workbooks using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# remove VBA module named Temp from workbook | batch delete specific VBA module in Excel files using Aspose.Cells .NET | C# code to iterate VBA modules collection and remove by name with Aspose.Cells | preserve original Excel file format when saving after VBA changes Aspose.Cells | handle missing Excel files while removing VBA modules with Aspose.Cells
+// Tags: remove VBA module Aspose.Cells | batch process Excel workbooks C# | preserve original file format Aspose.Cells | case-insensitive module name removal C# | VBA modules collection iteration Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookProcessor
+// The example loads each workbook from a list of file paths, checks for a VBA project, and removes any module whose name matches "Temp" (case‑insensitive). It determines the original file format from the file extension and saves the workbook back, preserving the format while handling missing files and runtime errors.
+public class WorkbookProcessor
 {
-    // Scans a directory for .xlsx files, loads each workbook with Aspose.Cells, deletes any VBA module named "Temp" (case‑insensitive), skips password‑protected files, and saves the modified workbook back to the original file.
-    class Program
+    /// <param name="workbookPaths">Full file paths of the workbooks to process.</param>
+    public void RemoveTempModules(IEnumerable<string> workbookPaths)
     {
-        static void Main()
+        foreach (var path in workbookPaths)
         {
-            // Folder that contains the workbooks to process
-            string folderPath = @"C:\Workbooks";
-
-            if (!Directory.Exists(folderPath))
+            // Skip non‑existent files to avoid FileNotFoundException.
+            if (!File.Exists(path))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
-                return;
+                Console.WriteLine($"File not found: {path}");
+                continue;
             }
 
-            // Get all Excel files in the folder
-            string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx");
-
-            foreach (string filePath in workbookFiles)
+            try
             {
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
+                // Load the workbook from file.
+                var workbook = new Workbook(path);
 
-                try
+                // Ensure the workbook contains a VBA project.
+                if (workbook.VbaProject != null && workbook.VbaProject.Modules != null)
                 {
-                    // Load the workbook (skip if password protected)
-                    Workbook workbook = new Workbook(filePath);
+                    var modules = workbook.VbaProject.Modules;
 
-                    // Remove VBA modules named "Temp" (case‑insensitive)
-                    if (workbook.VbaProject != null)
+                    // Iterate backwards so removal does not affect the index of remaining items.
+                    for (int i = modules.Count - 1; i >= 0; i--)
                     {
-                        var modules = workbook.VbaProject.Modules;
-                        for (int i = modules.Count - 1; i >= 0; i--)
+                        // Check if the module name matches "Temp" (case‑insensitive).
+                        if (string.Equals(modules[i].Name, "Temp", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (string.Equals(modules[i].Name, "Temp", StringComparison.OrdinalIgnoreCase))
-                            {
-                                modules.RemoveAt(i);
-                            }
+                            // Remove the matching module.
+                            modules.RemoveAt(i);
                         }
                     }
+                }
 
-                    // Save the modified workbook, overwriting the original file
-                    workbook.Save(filePath);
-                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
-                }
-                // Catch password‑protected files (Aspose.Cells throws CellsException with a message containing "Password")
-                catch (CellsException ex) when (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    Console.WriteLine($"Skipping password‑protected file: {Path.GetFileName(filePath)}");
-                }
-                catch (Exception ex)
-                {
-                    // Log any other errors and continue processing remaining files
-                    Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
-                }
+                // Determine the original file format to preserve it on save.
+                SaveFormat format = GetSaveFormatFromExtension(Path.GetExtension(path));
+
+                // Save the modified workbook, overwriting the original file.
+                workbook.Save(path, format);
+                Console.WriteLine($"Processed and saved: {path}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{path}': {ex.Message}");
             }
         }
+    }
+
+    private SaveFormat GetSaveFormatFromExtension(string extension)
+    {
+        switch (extension?.ToLowerInvariant())
+        {
+            case ".xls":
+                return SaveFormat.Excel97To2003;
+            case ".xlsx":
+                return SaveFormat.Xlsx;
+            case ".xlsm":
+                return SaveFormat.Xlsm;
+            case ".csv":
+                return SaveFormat.Csv; // Updated to non‑obsolete enum
+            case ".ods":
+                return SaveFormat.Ods; // Updated to non‑obsolete enum
+            default:
+                // Default to XLSX if the extension is unrecognized.
+                return SaveFormat.Xlsx;
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Collect workbook paths from command‑line arguments or define them manually.
+        var workbookPaths = new List<string>();
+
+        if (args.Length > 0)
+        {
+            workbookPaths.AddRange(args);
+        }
+        else
+        {
+            // Example placeholder – replace with actual file paths as needed.
+            // workbookPaths.Add(@"C:\Path\To\YourWorkbook.xlsx");
+        }
+
+        var processor = new WorkbookProcessor();
+        processor.RemoveTempModules(workbookPaths);
     }
 }

@@ -1,62 +1,60 @@
-// Title: How to enable data labels that display point values for the first series of a column chart in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to turn on ShowValue for the first series of a column chart so each column shows its numeric value. | Add a step to an existing Aspose.Cells workbook that activates data labels for the first series of a chart and then saves the file. | Demonstrate how to calculate a chart after enabling data labels for its first series and export the workbook as an .xlsx file in C#. | Show the minimal Aspose.Cells API calls required to set DataLabels.ShowValue = true on the first series of a chart.
-// Common Searches: Aspose.Cells C# enable data labels for first series of a column chart | How to show values on each column in an Aspose.Cells chart using .NET | Set ShowValue property on chart series with Aspose.Cells API | C# example to display point values in a column chart created by Aspose.Cells | Enable data labels for a specific series in an Aspose.Cells workbook
-// Tags: Aspose.Cells enable data labels first series | column chart series ShowValue .NET | C# chart point values Aspose.Cells | set data labels for chart series Aspose.Cells | calculate and save chart Aspose.Cells
+// Title: Enable data labels that display point values for the first series of a column chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a new workbook, adds sample data, inserts a column chart, and activates ShowValue on the first series to display each point's value. | Modify an existing Aspose.Cells chart in C# so that the first NSeries shows its values as data labels without altering other series. | Generate an Excel file with a column chart where the chart's first series automatically shows data labels containing the underlying cell values, using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# enable data labels for first series of column chart | how to turn on ShowValue for a chart series using Aspose.Cells .NET | display point values as data labels in Excel column chart with Aspose.Cells | C# code example for adding data labels to the first series of an Aspose chart
+// Tags: Aspose.Cells chart series ShowValue | C# column chart data labels Aspose | Enable data labels Excel chart Aspose.Cells | Aspose.Cells NSeries data label configuration | Excel workbook column chart Aspose.NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, fills cells A1:B4 with sample data, adds a column chart, defines the first series range (B2:B4), enables data labels to show point values for that series, and saves the file as output.xlsx.
+class Program
 {
-    // // This example creates a workbook, fills it with sample data, adds a column chart, enables data labels for the first series to display each point's value, calculates the chart, and saves the workbook as an .xlsx file.
-    public class EnableDataLabelsFirstSeries
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Populate sample data for the chart
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["A4"].PutValue("C");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["B4"].PutValue(30);
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            // Add a column chart to the worksheet
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIdx];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set data range for the series
+            // Set the data range for the series (categories will be taken from column A automatically)
             chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
 
-            // Enable data labels for the first series to show point values
-            Series firstSeries = chart.NSeries[0];
-            firstSeries.DataLabels.ShowValue = true;
+            // Enable data labels to display point values
+            chart.NSeries[0].DataLabels.ShowValue = true;
 
-            // Calculate the chart (optional)
-            chart.Calculate();
+            // Determine output path and ensure its directory exists
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("EnableDataLabelsFirstSeries.xlsx");
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

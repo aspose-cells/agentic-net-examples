@@ -1,76 +1,65 @@
-// Title: Make an Excel chart 40% transparent and overlay it on a worksheet background image using Aspose.Cells for .NET
-// AI Prompts: Write C# code that adds a PNG picture as a free‑floating background to a worksheet and sets the chart’s opacity to 40 % using Aspose.Cells. | Show how to configure the ChartArea and PlotArea objects to be 40 % transparent while positioning the chart over an inserted image in an Excel workbook with Aspose.Cells for .NET. | Generate a complete Aspose.Cells example that creates a column chart, binds sample data, inserts a background picture, and applies 40 % transparency to both the chart and plot areas.
-// Common Searches: asp.net aspose.cells make chart semi transparent over background picture | c# set chart opacity 40 percent in Excel using Aspose.Cells | how to place a chart on top of an image in an Excel file with Aspose.Cells | adjust plot area opacity in Aspose.Cells chart example | Aspose.Cells overlay chart on worksheet image tutorial
-// Tags: chart opacity setting Aspose.Cells | plot area opacity Aspose.Cells | free floating picture insertion Aspose.Cells | column chart data binding Aspose.Cells C# | excel workbook save with transparent chart Aspose.Cells
+// Title: Apply 40% transparency to a chart’s plot and chart areas and overlay it on a worksheet image with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that inserts a PNG image into a worksheet, adds a column chart, and sets the chart’s PlotArea and ChartArea fill transparency to 0.4 using Aspose.Cells. | Show how to configure Aspose.Cells chart objects so the chart blends with a background picture by adjusting the FillFormat.Transparency property for both plot and chart areas.
+// Common Searches: Aspose.Cells C# set chart plot area transparency to 40 percent | overlay transparent chart on worksheet background image using Aspose.Cells | how to make chart area semi‑transparent in an Excel file with Aspose.Cells .NET | C# Aspose.Cells add picture to worksheet and apply chart transparency | adjust chart fill transparency for image overlay in Aspose.Cells workbook
+// Tags: chart plot area transparency Aspose.Cells | chart area fill transparency .NET | overlay chart on worksheet image C# | add background picture to worksheet Aspose.Cells | column chart transparency Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsChartTransparencyDemo
+namespace AsposeCellsExamples
 {
-    // Creates a new workbook, optionally inserts a PNG as a free‑floating background picture, adds a column chart with sample data, sets both the chart area and plot area opacity to 40 %, and saves the file as ChartWithTransparency.xlsx.
+    // The example creates a new workbook, inserts a PNG picture as a worksheet background, adds a column chart, sets both the PlotArea and ChartArea fill transparency to 40%, and saves the result as ChartWithTransparentOverlay.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Insert an image that will serve as the background if the file exists
-                const string backgroundPath = "background.png";
-                if (File.Exists(backgroundPath))
+                // Path to the background image
+                string imagePath = "image.png";
+
+                // Ensure the image file exists before adding it
+                if (File.Exists(imagePath))
                 {
-                    int pictureIndex = worksheet.Pictures.Add(0, 0, backgroundPath);
-                    // Set picture to free floating so it can be positioned independently
-                    worksheet.Pictures[pictureIndex].Placement = PlacementType.FreeFloating;
+                    // Insert the background image onto the worksheet (row 0, column 0)
+                    worksheet.Pictures.Add(0, 0, imagePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: Background image '{backgroundPath}' not found. Skipping image insertion.");
+                    Console.WriteLine($"Warning: Image file '{imagePath}' not found. Skipping image insertion.");
                 }
 
-                // Add a sample chart that will be placed over the image
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                // Add a chart that will be placed over the image
+                // Parameters: chart type, first row, first column, total rows, total columns
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
                 Chart chart = worksheet.Charts[chartIndex];
 
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
+                // Example: add a data series to the chart (replace with actual data range)
+                chart.NSeries.Add("A1:A5", true);
+                chart.NSeries[0].Name = "Sample Series";
 
-                // Bind data to the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+                // Set the chart's plot area transparency to 40% (0.4 = 40%)
+                chart.PlotArea.Area.FillFormat.Transparency = 0.4;
 
-                // Make the chart area transparent (40% transparent)
-                ChartArea chartArea = chart.ChartArea;
-                chartArea.BackgroundMode = BackgroundMode.Transparent;
-                chartArea.Area.Transparency = 0.4; // 0.0 = opaque, 1.0 = fully clear
+                // Optionally, also set the chart area transparency to 40%
+                chart.ChartArea.Area.FillFormat.Transparency = 0.4;
 
-                // Also make the plot area transparent for a cleaner overlay
-                PlotArea plotArea = chart.PlotArea;
-                plotArea.Area.Transparency = 0.4;
-
-                // Save the workbook
-                const string outputPath = "ChartWithTransparency.xlsx";
+                // Save the workbook with the chart overlaying the image
+                string outputPath = "ChartWithTransparentOverlay.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

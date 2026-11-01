@@ -1,66 +1,46 @@
-// Title: Insert a SUBTOTAL formula and freeze header rows in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a C# program that adds a SUBTOTAL(9,…) formula to column D, generates grouped subtotals by region, and freezes the top rows using Aspose.Cells. | Use the Cells.Subtotal method to sum sales per region, then call Worksheet.FreezePanes so the header and first subtotal stay visible in the generated Excel file. | Generate an Excel report with automatic subtotals and frozen header rows in C# without relying on Excel interop.
-// Common Searches: aspnet add subtotal formula and freeze panes in generated Excel using Aspose.Cells | c# Aspose.Cells how to group rows by column and keep header fixed | programmatically create Excel subtotal rows and freeze top rows with Aspose.Cells .NET | using Aspose.Cells Subtotal method and FreezePanes together in C# example | generate Excel report with region totals and frozen header using Aspose.Cells
-// Tags: Aspose.Cells SUBTOTAL function C# | Aspose.Cells FreezePanes API | automatic subtotals grouped by column Aspose.Cells | freeze header rows after subtotal Aspose.Cells | C# generate Excel with subtotal and frozen panes
+// Title: How to add a SUBTOTAL formula and freeze the top rows in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that populates column B, inserts a SUBTOTAL(9,B2:B10) formula in B11, adds a "Subtotal" label in A11, freezes the first 11 rows, and saves the workbook as SubtotalsAndFreeze.xlsx. | Generate an Aspose.Cells example that demonstrates inserting a SUBTOTAL function that ignores hidden rows, then applies FreezePanes to keep the subtotal row visible while scrolling.
+// Common Searches: Aspose.Cells C# insert SUBTOTAL function and freeze header rows | C# freeze panes after adding subtotal formula with Aspose.Cells | How to keep subtotal row visible in Excel using Aspose.Cells FreezePanes | Using Aspose.Cells to calculate subtotal that ignores hidden rows in .NET | Example of SUBTOTAL(9,…) with FreezePanes in Aspose.Cells for .NET
+// Tags: Aspose.Cells insert SUBTOTAL formula | Aspose.Cells freeze panes rows | C# calculate subtotal ignoring hidden rows | Aspose.Cells generate Excel with frozen rows | SUBTOTAL function with FreezePanes in .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsSubtotalAndFreezeDemo
+// The program creates a new workbook, fills cells B2:B10 with incremental values, places a SUBTOTAL(9,B2:B10) formula in B11 with a "Subtotal" label in A11, freezes the first 11 rows to keep the subtotal visible, and saves the file as SubtotalsAndFreeze.xlsx.
+class Program
 {
-    // The example creates a new workbook, fills it with region, product, and sales data, inserts a SUBTOTAL(9,…) formula in column D, applies automatic subtotals grouped by the Region column, freezes the header and first subtotal row using FreezePanes, and saves the result as SubtotalAndFreezeDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // ----- Populate sample data -----
-            // Header row
-            cells["A1"].PutValue("Region");
-            cells["B1"].PutValue("Product");
-            cells["C1"].PutValue("Sales");
-
-            // Data rows
-            object[,] data = new object[,]
+            // Populate sample data in column B (cells B2:B10)
+            for (int i = 1; i <= 9; i++) // rows 2‑10 (zero‑based index)
             {
-                {"North", "Widget", 5000},
-                {"North", "Gadget", 3000},
-                {"South", "Widget", 6000},
-                {"South", "Gadget", 4000},
-                {"West",  "Widget", 4500}
-            };
-
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                cells[i + 1, 0].PutValue(data[i, 0]); // Region
-                cells[i + 1, 1].PutValue(data[i, 1]); // Product
-                cells[i + 1, 2].PutValue(data[i, 2]); // Sales
+                sheet.Cells[i, 1].PutValue(i * 10); // example values: 10, 20, ...
             }
 
-            // ----- Insert a formula that calculates a subtotal for the Sales column -----
-            // The SUBTOTAL function (function_num 9 = SUM) will sum the visible cells in the range.
-            // Place the formula in column D, row 2 (first data row). It will be copied down later if needed.
-            cells["D2"].Formula = "=SUBTOTAL(9,C2:C6)";
+            // Insert a SUBTOTAL formula in row 11 (cell B11)
+            // Function_num 9 = SUM, which ignores hidden rows
+            sheet.Cells[10, 1].Formula = "SUBTOTAL(9,B2:B10)";
 
-            // ----- Add automatic subtotals using the Cells.Subtotal method -----
-            // Define the range that includes the header and data (A1:C6)
-            CellArea area = CellArea.CreateCellArea("A1", "C6");
+            // Optional label for the subtotal
+            sheet.Cells[10, 0].PutValue("Subtotal");
 
-            // Group by the first column (Region), sum the Sales column (index 2),
-            // replace existing subtotals, no page breaks, place summary rows below data.
-            cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 }, true, false, true);
+            // Freeze rows up to the subtotal row (rows 1‑11)
+            // Parameters: totalRows, totalColumns, frozenRows, frozenColumns
+            // Using 0 for totalRows/totalColumns means the whole sheet.
+            sheet.FreezePanes(0, 0, 11, 0);
 
-            // ----- Freeze panes so that the header and the first subtotal row stay visible -----
-            // After Subtotal is applied, the first subtotal row appears after the first group.
-            // Freezing at cell "A2" keeps the header row (row 1) fixed while scrolling.
-            sheet.FreezePanes("A2", 1, 0);
-
-            // ----- Save the workbook -----
-            workbook.Save("SubtotalAndFreezeDemo.xlsx");
+            // Save the workbook
+            workbook.Save("SubtotalsAndFreeze.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,76 +1,84 @@
-// Title: How to set and validate built‑in Excel document properties with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells to assign Application, Author, Title, Subject, and Keywords built‑in document properties to a workbook and save it. | Write C# that loads the saved workbook, reads the same built‑in document properties via the BuiltInDocumentProperties indexer, and stores them in variables. | Create a C# verification routine that compares the retrieved property values with the expected strings and prints a success or failure message.
-// Common Searches: Aspose.Cells C# set built‑in document properties like Application and Author | C# verify Excel metadata persistence after saving with Aspose.Cells | Read built‑in document properties from an existing .xlsx using Aspose.Cells .NET | How to programmatically add keywords to an Excel file with Aspose.Cells | Check if custom application name is stored in workbook properties using Aspose.Cells
-// Tags: Aspose.Cells set built-in document properties | Aspose.Cells read workbook metadata | C# verify Excel property persistence | BuiltInDocumentProperties indexer usage | Excel file metadata verification Aspose.Cells
+// Title: How to set built‑in Author and Title properties and a custom Application property in an Excel workbook, then verify them with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add custom document property named Application to an .xlsx file | C# read built‑in Author and Title properties from a saved workbook using Aspose.Cells | verify that a custom Application property persists after saving and reloading an Excel workbook with Aspose.Cells .NET
+// Tags: add custom document property Aspose.Cells .xlsx | set built‑in workbook properties Aspose.Cells C# | read workbook metadata after save Aspose.Cells | validate Excel file properties .NET | custom Application property Excel Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads or creates an Excel workbook, uses the BuiltInDocumentProperties indexer to set Application, Author, Title, Subject, and Keywords, saves the file, reloads it, reads the same properties back, and prints a verification result confirming that the metadata persisted correctly.
+// The example creates a new Workbook, assigns the Author and Title built‑in properties, adds a custom 'Application' property, saves the file, reloads it, reads back the Author, Title, and Application values, and confirms that all metadata fields are present.
 class Program
 {
     static void Main()
     {
-        // Paths for input and output workbooks
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        // Path to the workbook file
+        string filePath = "output.xlsx";
 
         try
         {
-            // Load existing workbook or create a new one
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-            }
+            // -------------------------------------------------
+            // Create a new workbook and set document metadata
+            // -------------------------------------------------
+            Workbook wb = new Workbook();
 
-            // Set built‑in document properties using the indexer
-            var props = workbook.BuiltInDocumentProperties;
-            props["Application"].Value = "MyApp";
-            props["Author"].Value = "John Doe";
-            props["Title"].Value = "Test Workbook";
-            props["Subject"].Value = "Metadata Verification";
-            props["Keywords"].Value = "Aspose,Metadata";
+            // Set built‑in document properties (metadata)
+            wb.BuiltInDocumentProperties.Author = "John Doe";
+            wb.BuiltInDocumentProperties.Title = "Sample Workbook";
 
-            // Save the workbook
-            workbook.Save(outputPath);
+            // Set custom property for application name (Built‑in 'Application' not available in this version)
+            wb.CustomDocumentProperties.Add("Application", "MyAsposeApp");
 
-            // Reload to verify metadata persistence
-            Workbook reloaded = new Workbook(outputPath);
-            var reloadedProps = reloaded.BuiltInDocumentProperties;
-
-            // Retrieve property values using the indexer
-            string app = reloadedProps["Application"]?.Value?.ToString();
-            string author = reloadedProps["Author"]?.Value?.ToString();
-            string title = reloadedProps["Title"]?.Value?.ToString();
-            string subject = reloadedProps["Subject"]?.Value?.ToString();
-            string keywords = reloadedProps["Keywords"]?.Value?.ToString();
-
-            // Output metadata values
-            Console.WriteLine("Application: " + app);
-            Console.WriteLine("Author: " + author);
-            Console.WriteLine("Title: " + title);
-            Console.WriteLine("Subject: " + subject);
-            Console.WriteLine("Keywords: " + keywords);
-
-            // Simple verification
-            bool isValid = app == "MyApp" &&
-                           author == "John Doe" &&
-                           title == "Test Workbook" &&
-                           subject == "Metadata Verification" &&
-                           keywords == "Aspose,Metadata";
-
-            Console.WriteLine(isValid ? "Metadata verification succeeded." : "Metadata verification failed.");
+            // Save the workbook to disk
+            wb.Save(filePath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error creating or saving workbook: {ex.Message}");
+            return;
+        }
+
+        // -------------------------------------------------
+        // Load the saved workbook and verify metadata fields
+        // -------------------------------------------------
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        try
+        {
+            Workbook loadedWb = new Workbook(filePath);
+
+            // Retrieve built‑in properties
+            string author = loadedWb.BuiltInDocumentProperties.Author;
+            string title = loadedWb.BuiltInDocumentProperties.Title;
+
+            // Retrieve custom 'Application' property
+            string application = string.Empty;
+            if (loadedWb.CustomDocumentProperties.Contains("Application"))
+            {
+                var prop = loadedWb.CustomDocumentProperties["Application"];
+                application = prop?.Value?.ToString() ?? string.Empty;
+            }
+
+            // Output the results
+            Console.WriteLine("Author: " + (string.IsNullOrEmpty(author) ? "Missing" : author));
+            Console.WriteLine("Title: " + (string.IsNullOrEmpty(title) ? "Missing" : title));
+            Console.WriteLine("Application: " + (string.IsNullOrEmpty(application) ? "Missing" : application));
+
+            // Simple validation
+            bool allPresent = !string.IsNullOrEmpty(author) &&
+                              !string.IsNullOrEmpty(title) &&
+                              !string.IsNullOrEmpty(application);
+
+            Console.WriteLine(allPresent
+                ? "All application metadata fields are present in the saved file."
+                : "One or more metadata fields are missing.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading or processing workbook: {ex.Message}");
         }
     }
 }

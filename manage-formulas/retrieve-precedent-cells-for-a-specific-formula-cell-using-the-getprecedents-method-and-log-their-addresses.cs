@@ -1,61 +1,59 @@
-// Title: How to retrieve and log precedent cell addresses for a specific formula cell using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, finds the cells a formula references, and prints each referenced cell's address. | Create a C# helper that receives a worksheet and a cell reference, returns all cells referenced by that formula using Aspose.Cells, and logs their addresses. | Modify the sample to write the referenced cell addresses to a CSV file instead of the console output.
-// Common Searches: Aspose.Cells C# get all cells referenced by a formula | How to list precedent cells for a specific cell using Aspose.Cells .NET | C# example for retrieving formula precedents in Aspose.Cells | Export precedent cell addresses from Excel using Aspose.Cells in C# | Iterate ReferredAreaCollection to read referenced cells in Aspose.Cells
-// Tags: GetPrecedents method Aspose.Cells | enumerate dependent cells C# | Aspose.Cells referenced area enumeration | display dependent cell addresses in console | write cell list to CSV Aspose.Cells
+// Title: Retrieve precedent cells of a formula in an Excel workbook using Aspose.Cells GetPrecedents (C#)
+// Common Searches: C# Aspose.Cells get cells referenced by a formula | Using GetPrecedents to list precedent cell addresses in Excel with Aspose.Cells | Example code for retrieving precedent areas of a formula cell in Aspose.Cells .NET | How to iterate over ReferredAreaCollection returned by GetPrecedents in C# | Aspose.Cells GetPrecedents method sample for Excel file
+// Tags: Aspose.Cells GetPrecedents API | enumerate precedent cells Excel .NET | ReferredAreaCollection iteration C# | retrieve formula precedents Aspose.Cells | Excel formula dependency extraction C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example checks for the presence of Input.xlsx, loads it with Aspose.Cells, accesses the first worksheet, selects cell B2, calls GetPrecedents to obtain its ReferredAreaCollection, and iterates through each area to print the address of every precedent cell, handling any exceptions that may occur.
+class PrecedentRetriever
 {
-    // The example loads an Excel workbook, selects a target formula cell, uses Aspose.Cells' GetPrecedents method to obtain all referenced areas, iterates through each ReferredArea to access individual precedent cells, and writes each cell's address to the console while handling missing files and runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "Input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            string inputPath = "input.xlsx";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Cell that contains the formula whose precedents we want
+            Cell formulaCell = worksheet.Cells["B2"];
+
+            // Retrieve the collection of precedent areas
+            ReferredAreaCollection precedentAreas = formulaCell.GetPrecedents();
+
+            // Iterate through each area and output the address of every precedent cell
+            foreach (ReferredArea area in precedentAreas)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index or name as needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Specify the formula cell whose precedents you want to retrieve
-                Cell formulaCell = worksheet.Cells["C5"]; // change to your target cell
-
-                // Get all precedent areas for the specified formula cell
-                ReferredAreaCollection precedentAreas = formulaCell.GetPrecedents();
-
-                // Iterate through each area and each cell within the area
-                foreach (ReferredArea area in precedentAreas)
+                for (int row = area.StartRow; row <= area.EndRow; row++)
                 {
-                    for (int row = area.StartRow; row <= area.EndRow; row++)
+                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
                     {
-                        for (int col = area.StartColumn; col <= area.EndColumn; col++)
-                        {
-                            Cell precedentCell = worksheet.Cells[row, col];
-                            // Log the address of each precedent cell
-                            Console.WriteLine($"Precedent cell address: {precedentCell.Name}");
-                        }
+                        Cell precedentCell = worksheet.Cells[row, col];
+                        Console.WriteLine(precedentCell.Name);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle any runtime exceptions gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // (Optional) Save the workbook if any changes were made
+            // workbook.Save("Output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

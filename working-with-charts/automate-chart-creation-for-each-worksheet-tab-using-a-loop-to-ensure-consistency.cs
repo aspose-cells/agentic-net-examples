@@ -1,77 +1,72 @@
-// Title: Add a clustered column chart to every worksheet in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# that loops through all worksheets in a Workbook, inserts a clustered column chart using the range A1:B5, and saves the file as a new workbook with Aspose.Cells. | Demonstrate how to assign each chart’s title to the corresponding worksheet name and set a series name using the Aspose.Cells chart API.
-// Common Searches: asp.net create column chart on each sheet using Aspose.Cells | c# loop through worksheets and add the same chart Aspose.Cells example | how to set chart title to worksheet name in Aspose.Cells .NET | generate clustered column charts for multiple worksheets programmatically | Aspose.Cells add chart from range A1:B5 to every worksheet
-// Tags: add column chart per worksheet Aspose.Cells | loop worksheets generate charts .NET | clustered column chart range A1:B5 Aspose.Cells | set chart title to worksheet name Aspose.Cells | save workbook with charts Aspose.Cells
+// Title: Create a column chart on every worksheet of an Excel file using Aspose.Cells for .NET in a loop
+// Common Searches: C# loop through all worksheets and add a column chart with Aspose.Cells | Aspose.Cells generate a chart for each sheet programmatically | How to set chart title per worksheet using Aspose.Cells .NET
+// Tags: add column chart to each worksheet Aspose.Cells | loop over workbook worksheets create charts C# | bind chart series to cell range Aspose.Cells | dynamic chart title per sheet Aspose.Cells | save Excel workbook with charts .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// The program creates a sample workbook if missing, loads it, iterates over each worksheet, adds a clustered column chart that references cells A1:B5, sets the series name, customizes the chart title with the sheet name, and saves the modified workbook as output.xlsx.
+// The example loads an existing Excel workbook, iterates over every worksheet, adds a column chart positioned between rows 5‑20 and columns 0‑10, binds the series to the B2:B5 range (optionally sets category data from A2:A5), assigns a title that includes the worksheet name, and saves the updated file as a new workbook.
 class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Ensure the input file exists; create a simple workbook if it does not.
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-                ws.Name = "Sheet1";
-
-                // Sample data in A1:B5
-                for (int i = 0; i < 5; i++)
-                {
-                    ws.Cells[i, 0].PutValue($"Category {i + 1}");
-                    ws.Cells[i, 1].PutValue(i + 1);
-                }
-
-                wb.Save(inputPath);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Load the workbook.
-            var workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Iterate over each worksheet and add a column chart.
+            // Iterate over each worksheet and add a column chart
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Add a clustered column chart at the specified position.
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
+                try
+                {
+                    // Add a column chart (type, upper‑left row, upper‑left column, lower‑right row, lower‑right column)
+                    int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                    Chart chart = sheet.Charts[chartIdx];
 
-                // Define the data range (A1:B5).
-                int firstRow = 0;      // zero‑based row index
-                int firstColumn = 0;   // zero‑based column index (A)
-                int totalRows = 5;     // number of rows in the range
+                    // Add the data series (values)
+                    int seriesIdx = chart.NSeries.Add($"{sheet.Name}!$B$2:$B$5", true);
 
-                string categoryRange = $"{sheet.Name}!${CellsHelper.ColumnIndexToName(firstColumn)}${firstRow + 1}:${CellsHelper.ColumnIndexToName(firstColumn)}${firstRow + totalRows}";
-                string valuesRange = $"{sheet.Name}!${CellsHelper.ColumnIndexToName(firstColumn + 1)}${firstRow + 1}:${CellsHelper.ColumnIndexToName(firstColumn + 1)}${firstRow + totalRows}";
+                    // Optionally set the category (X‑axis) data for the series
+                    // Note: In some Aspose.Cells versions the CategoryData property may not be available.
+                    // If needed, you can uncomment the line below and ensure your Aspose.Cells version supports it.
+                    // chart.NSeries[seriesIdx].CategoryData = $"{sheet.Name}!$A$2:$A$5";
 
-                // Add the series to the chart (valuesRange, true indicates data is in rows/columns as needed).
-                int seriesIndex = chart.NSeries.Add(valuesRange, true);
-                // Set series name.
-                chart.NSeries[seriesIndex].Name = "Series";
-
-                // NOTE: CategoryData property may not be available in some versions.
-                // If needed, uncomment the following line after confirming the API supports it.
-                // chart.NSeries[seriesIndex].CategoryData = categoryRange;
-
-                // Set a title for the chart.
-                chart.Title.Text = $"Chart for {sheet.Name}";
+                    // Set a title for the chart
+                    chart.Title.Text = $"Chart for {sheet.Name}";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
+                }
             }
 
-            // Save the workbook with the newly created charts.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
+            // Catch any runtime errors and display a message
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

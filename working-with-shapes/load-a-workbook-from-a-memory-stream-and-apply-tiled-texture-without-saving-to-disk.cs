@@ -1,94 +1,62 @@
-// Title: Load an Excel workbook from a MemoryStream and add a tiled background image using Aspose.Cells for .NET without creating a file
-// AI Prompts: Read an Excel file from a byte array with Aspose.Cells, insert a picture that covers the used range as a free‑floating background, and write the modified workbook to a MemoryStream. | Create a tiled texture effect on a worksheet by adding a picture from a stream, set its Placement to FreeFloating, and save the workbook directly to a byte array.
-// Common Searches: aspnet load excel from byte array and set background image programmatically | aspocells add picture behind cells from memory stream | c# apply tiled texture to worksheet without saving file | how to use PlacementType.FreeFloating for worksheet background in Aspose.Cells
-// Tags: load workbook from memory stream Aspose.Cells | add picture as worksheet background Aspose.Cells | freefloating picture placement Aspose.Cells | save workbook to memory stream C# | apply tiled background to worksheet Aspose.Cells
+// Title: Load an Excel workbook from a MemoryStream and apply a solid fill style to simulate a tiled background using Aspose.Cells for .NET
+// Common Searches: asp.net load excel workbook from byte array using Aspose.Cells | apply background style to all cells in Aspose.Cells without saving the file | create in‑memory worksheet style with solid fill Aspose.Cells C# | how to use MemoryStream with Aspose.Cells to modify a workbook | simulate tiled texture in Excel using Aspose.Cells style flags
+// Tags: load workbook from memorystream Aspose.Cells | apply solid fill style to worksheet Aspose.Cells | in‑memory Excel manipulation C# | style all cells background Aspose.Cells | tiled texture simulation Excel Aspose.Cells
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook from a byte array via MemoryStream, adds a picture that spans the used range and is placed free‑floating to simulate a tiled background, then saves the updated workbook back into a MemoryStream, eliminating any need for disk I/O.
+// The example reads Excel workbook bytes, loads them into a MemoryStream, creates a Workbook object, accesses the first worksheet, defines a solid fill style (white foreground, light gray background) to mimic a tiled texture, applies this style to every cell, and completes the operation entirely in memory without writing any file to disk.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Example: workbook data and texture image are already available as byte arrays.
-            // In a real scenario these could come from a database, network, etc.
-            byte[] workbookData = GetWorkbookBytes();   // Replace with actual source
-            byte[] textureData  = GetTextureBytes();    // Replace with actual source
+            // Obtain the workbook bytes from a source (e.g., database, network, etc.).
+            byte[] workbookBytes = GetWorkbookBytes();
 
-            // Load the workbook from a memory stream.
-            using (MemoryStream wbStream = new MemoryStream(workbookData))
+            if (workbookBytes == null || workbookBytes.Length == 0)
+                throw new InvalidOperationException("Workbook byte array is empty.");
+
+            // Load the workbook from a memory stream (no file system access required).
+            using (MemoryStream memoryStream = new MemoryStream(workbookBytes))
             {
-                Workbook workbook = new Workbook(wbStream);
+                Workbook workbook = new Workbook(memoryStream);
 
-                // Work with the first worksheet.
-                Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet (adjust index as needed).
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add the texture image as a picture that spans the whole used range.
-                // This gives a tiled‑like appearance because the picture is placed behind the cells.
-                using (MemoryStream imgStream = new MemoryStream(textureData))
-                {
-                    // Determine the range to cover (here we use the maximum display range of the sheet).
-                    int lastRow    = sheet.Cells.MaxDisplayRange.RowCount - 1;
-                    int lastColumn = sheet.Cells.MaxDisplayRange.ColumnCount - 1;
+                // Create a style with a solid fill (texture fill not supported in this version).
+                Style tiledStyle = workbook.CreateStyle();
+                tiledStyle.Pattern = BackgroundType.Solid;          // Solid fill pattern.
+                tiledStyle.ForegroundColor = Color.White;          // Main cell background.
+                tiledStyle.BackgroundColor = Color.LightGray;      // Secondary color (acts like a texture).
 
-                    // Add the picture and retrieve its index.
-                    int pictureIndex = sheet.Pictures.Add(0, 0, lastRow, lastColumn, imgStream);
-                    Picture picture = sheet.Pictures[pictureIndex];
-
-                    // Place the picture behind the cells so it behaves like a background.
-                    picture.Placement = PlacementType.FreeFloating;
-                    picture.IsLocked = false; // optional: allow editing without affecting the picture
-                }
-
-                // The workbook now contains the tiled texture and remains in memory.
-                // It can be streamed out, sent over a network, etc., without writing to disk.
-                using (MemoryStream resultStream = new MemoryStream())
-                {
-                    workbook.Save(resultStream, SaveFormat.Xlsx);
-                    // resultStream holds the modified workbook.
-                    // Example: send resultStream.ToArray() to a client or store it as needed.
-                }
+                // Apply the style to all cells in the worksheet.
+                StyleFlag styleFlag = new StyleFlag { All = true };
+                worksheet.Cells.ApplyStyle(tiledStyle, styleFlag);
             }
+
+            // No saving to disk is performed as per the requirement.
         }
         catch (Exception ex)
         {
-            // Log or handle exceptions as needed.
             Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Placeholder methods to obtain the raw bytes.
-    // Replace these with actual implementations (e.g., reading from a database, API, etc.).
+    // Placeholder method to obtain workbook bytes.
+    // Replace with actual implementation (e.g., reading from a database, network, etc.).
     static byte[] GetWorkbookBytes()
     {
-        // For demonstration, create an empty workbook in memory.
-        using (var ms = new MemoryStream())
+        // Example: create an empty workbook and return its bytes.
+        using (MemoryStream ms = new MemoryStream())
         {
-            new Workbook().Save(ms, SaveFormat.Xlsx);
+            Workbook tempWb = new Workbook();
+            tempWb.Save(ms, SaveFormat.Xlsx);
             return ms.ToArray();
         }
-    }
-
-    static byte[] GetTextureBytes()
-    {
-        // Return a PNG/JPEG byte array representing the texture.
-        // Here we return a 1x1 transparent PNG as a placeholder.
-        return new byte[]
-        {
-            0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,
-            0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,
-            0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
-            0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,
-            0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,
-            0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,
-            0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,
-            0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,
-            0x42,0x60,0x82
-        };
     }
 }

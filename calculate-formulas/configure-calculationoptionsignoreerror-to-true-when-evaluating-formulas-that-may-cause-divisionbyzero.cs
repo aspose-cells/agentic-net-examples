@@ -1,44 +1,47 @@
-// Title: How to suppress #DIV/0! errors by setting CalculationOptions.IgnoreError to true when calculating formulas in Aspose.Cells (C#)
-// AI Prompts: Write C# code that creates a workbook, inserts a division‑by‑zero formula, enables CalculationOptions.IgnoreError, and runs CalculateFormula. | Generate a C# example that first calculates with CalculationOptions.IgnoreError = true, then repeats the calculation with IgnoreError = false and catches the resulting exception. | Explain step‑by‑step how to configure Aspose.Cells CalculationOptions to ignore formula errors and retrieve the cell value after calculation.
-// Common Searches: Aspose.Cells C# calculate workbook formulas while ignoring division by zero errors | set CalculationOptions.IgnoreError to true in Aspose.Cells example | how to handle #DIV/0! in Aspose.Cells CalculateFormula method | C# Aspose.Cells ignore formula errors during calculation
-// Tags: Aspose.Cells CalculationOptions.IgnoreError | C# ignore #DIV/0! Aspose.Cells | Aspose.Cells calculate formulas with error suppression | handling division by zero in Aspose.Cells workbook | Aspose.Cells formula evaluation error handling C#
+// Title: How to suppress #DIV/0! errors by setting CalculationOptions.IgnoreError in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells ignore division by zero during workbook.CalculateFormula in C# | set CalculationOptions.IgnoreError true to avoid #DIV/0! in Aspose.Cells | C# example for handling formula errors with Aspose.Cells CalculationOptions | prevent Excel #DIV/0! exception when recalculating formulas using Aspose.Cells | ignore formula errors while calculating workbook in Aspose.Cells .NET
+// Tags: Aspose.Cells CalculationOptions IgnoreError | C# ignore #DIV/0! Aspose.Cells | formula error handling Aspose.Cells .NET | Workbook.CalculateFormula error suppression | division by zero handling Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates configuring CalculationOptions.IgnoreError to true to suppress division‑by‑zero (#DIV/0!) errors when calculating formulas in an Aspose.Cells workbook, and shows the exception thrown when the option is disabled.
-class DivisionByZeroIgnoreErrorDemo
+// Creates an in‑memory workbook, inserts a formula that divides by zero, configures CalculationOptions.IgnoreError to true, recalculates all formulas so the cell returns 0 instead of an error, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Set a normal value and a formula that causes division by zero
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["B1"].Formula = "=A1/0"; // Division by zero
-
-        // Configure calculation options to ignore errors
-        CalculationOptions calcOptions = new CalculationOptions
-        {
-            IgnoreError = true // Suppress errors such as #DIV/0!
-        };
-
-        // Calculate all formulas using the options
-        workbook.CalculateFormula(calcOptions);
-
-        // Display the result of the division‑by‑zero formula
-        Console.WriteLine("B1 value after calculation (ignore error): " + worksheet.Cells["B1"].StringValue);
-
-        // Demonstrate behavior when errors are not ignored
         try
         {
-            workbook.CalculateFormula(new CalculationOptions { IgnoreError = false });
+            // Create a new workbook (in-memory)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Insert a formula that could cause division‑by‑zero
+            sheet.Cells["A1"].Formula = "10/0";
+
+            // Configure calculation options to ignore errors such as division‑by‑zero
+            CalculationOptions calcOptions = new CalculationOptions
+            {
+                IgnoreError = true
+            };
+
+            // Recalculate all formulas in the workbook using the options
+            workbook.CalculateFormula(calcOptions);
+
+            // Output the evaluated value (will be 0 because the error is ignored)
+            Console.WriteLine("A1 Value: " + sheet.Cells["A1"].Value);
+
+            // Save the workbook to a file (optional)
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error when not ignoring: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

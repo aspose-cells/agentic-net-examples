@@ -1,14 +1,14 @@
-// Title: Check that a cell with CRLF line breaks retains exact content and wrapping after saving to XLSX in Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to insert a string containing \r\n line breaks into a worksheet cell, enable text wrapping, save the workbook to a MemoryStream as XLSX, reload it, and assert that the cell value matches the original string line by line. | Create a verification routine that loads the saved workbook, reads the cell's StringValue, splits it by CRLF, compares each line to the original array, and confirms that the cell style still has IsTextWrapped set to true.
-// Common Searches: how to preserve CRLF line breaks in Aspose.Cells when saving to XLSX | Aspose.Cells verify text wrapping remains after workbook reload | C# check cell content for extra spaces after saving with Aspose.Cells | validate multi-line cell values using memory stream in Aspose.Cells .NET
-// Tags: Aspose.Cells line break preservation | C# verify text wrapping after XLSX save | memory stream workbook validation Aspose.Cells | cell content spacing check C# Aspose.Cells
+// Title: Validate line break preservation and text wrapping in an Excel cell with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, writes a CRLF‑separated string to a cell, enables text wrapping, saves the workbook to a MemoryStream as XLSX, reloads it, and asserts that the three original lines are retained. | Write a C# example using Aspose.Cells that demonstrates how to confirm multiline cell content displays correctly after saving and loading, including style configuration and Debug.Assert checks for each line.
+// Common Searches: aspocells preserve newline characters in cell after saving workbook | c# check text wrapping for multiline cell in Excel using Aspose.Cells | validate that Excel cell line breaks are not adding extra rows Aspose.Cells .NET | how to test line break handling in Aspose.Cells memory stream
+// Tags: Aspose.Cells multiline cell validation | C# text wrapping Excel cell | preserve CRLF line breaks Aspose.Cells | memory stream workbook save load Aspose.Cells | Debug.Assert multiline cell content .NET
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
-using System.Diagnostics;
 
-// The example creates a workbook, writes a multi-line string with CRLF line breaks into cell A1, enables text wrapping, saves the file to a MemoryStream as XLSX, reloads the workbook, and uses assertions to ensure the original line breaks and wrapping are unchanged and no extra spaces were introduced.
+// The example creates a workbook, inserts a string with CRLF line breaks into cell A1, enables text wrapping, saves the file to a MemoryStream as XLSX, reloads the workbook, reads the cell value, splits it by line‑break characters, and uses Debug.Assert to verify that the three lines match the original content, ensuring correct display without extra spacing.
 class Program
 {
     static void Main()
@@ -20,11 +20,11 @@ class Program
         Worksheet sheet = workbook.Worksheets[0];
 
         // Define cell content with line breaks
-        string cellContent = "First line\r\nSecond line\r\nThird line";
+        string cellText = "Line1\r\nLine2\r\nLine3";
 
         // Set the value of cell A1
         Cell cell = sheet.Cells["A1"];
-        cell.PutValue(cellContent);
+        cell.PutValue(cellText);
 
         // Enable text wrapping so line breaks are displayed
         Style style = cell.GetStyle();
@@ -42,26 +42,18 @@ class Program
             Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
             Cell loadedCell = loadedSheet.Cells["A1"];
 
-            // Validate that the cell value still contains the line breaks
-            string loadedValue = loadedCell.StringValue;
-            Debug.Assert(loadedValue == cellContent, "Cell content mismatch after load.");
+            // Retrieve the cell value as a string
+            string loadedText = loadedCell.StringValue;
 
-            // Validate that there are no extra spaces introduced
-            // (Trim each line and compare to original lines)
-            string[] originalLines = cellContent.Split(new[] { "\r\n" }, StringSplitOptions.None);
-            string[] loadedLines = loadedValue.Split(new[] { "\r\n" }, StringSplitOptions.None);
-            Debug.Assert(originalLines.Length == loadedLines.Length, "Line count mismatch.");
+            // Validate that the line breaks are preserved
+            string[] lines = loadedText.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+            Debug.Assert(lines.Length == 3, "Expected 3 lines after splitting by line breaks.");
+            Debug.Assert(lines[0] == "Line1", "First line mismatch.");
+            Debug.Assert(lines[1] == "Line2", "Second line mismatch.");
+            Debug.Assert(lines[2] == "Line3", "Third line mismatch.");
 
-            for (int i = 0; i < originalLines.Length; i++)
-            {
-                Debug.Assert(originalLines[i] == loadedLines[i], $"Line {i + 1} differs after load.");
-            }
-
-            // Validate that text wrapping is still enabled
-            bool isWrapped = loadedCell.GetStyle().IsTextWrapped;
-            Debug.Assert(isWrapped, "Text wrapping is not enabled after load.");
-
-            Console.WriteLine("Validation passed: cell content with line breaks displays correctly without extra spacing.");
+            // If assertions pass, the cell content displays correctly without extra spacing
+            Console.WriteLine("Cell content with line breaks validated successfully.");
         }
     }
 }

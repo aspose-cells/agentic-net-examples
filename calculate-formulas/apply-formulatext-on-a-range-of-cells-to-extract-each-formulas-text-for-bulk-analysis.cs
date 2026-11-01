@@ -1,83 +1,69 @@
-// Title: Extract Excel formulas from a defined range and export them to a new worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, creates a range (e.g., A1:C10), reads each cell's formula via GetFormula(false,false), collects the formulas in a list, and writes the list to column A of a newly added worksheet before saving. | Show how to iterate over an Aspose.Cells.Range, skip cells without formulas, retrieve the formula text in A1 notation, and export the gathered formulas to a separate sheet in the same workbook.
-// Common Searches: aspocells c# extract formulas from a range and save to new worksheet | how to get formula text for multiple cells using Aspose.Cells GetFormula | C# Aspose.Cells bulk formula extraction from A1:C10 | write extracted Excel formulas to another sheet with Aspose.Cells .NET | retrieve non‑empty formulas in a range using Aspose.Cells API
-// Tags: Aspose.Cells GetFormula usage | range-based formula retrieval C# | export formula list to new sheet Aspose.Cells | bulk formula analysis .xlsx Aspose.Cells | create and iterate Aspose.Cells range
+// Title: Extract formula text from a defined cell range and create a formula report worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: how to extract all formula strings from a range like A1:C10 using Aspose.Cells in C# | Aspose.Cells C# example for reading formulas from a worksheet range | generate a formula report sheet by collecting formulas from a specific range with Aspose.Cells | C# code to iterate over cells and get Formula property using Aspose.Cells | save extracted formulas to a new worksheet using Aspose.Cells for .NET
+// Tags: Aspose.Cells extract formulas from range | C# read cell Formula property | create formula report worksheet Aspose.Cells | iterate worksheet cells IsFormula C# | export formula strings to new workbook Aspose.Cells | bulk formula text extraction .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaExtraction
+// The sample loads an existing workbook, defines a cell range (A1:C10) on the first worksheet, iterates through each cell, collects the Formula text of cells that contain formulas, writes those formulas to a newly added worksheet named "FormulaReport", and saves the updated workbook as output.xlsx.
+class Program
 {
-    // The program loads input.xlsx, iterates over the A1:C10 range, captures each cell's formula with GetFormula(false,false), writes the formulas to column A of a newly added worksheet, and saves the workbook as output_with_formulas.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output_with_formulas.xlsx";
-
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Define the range from which to extract formulas (e.g., A1:C10)
-                string rangeAddress = "A1:C10";
-
-                // Use fully qualified Aspose.Cells.Range to avoid conflict with System.Range
-                Aspose.Cells.Range range = cells.CreateRange(rangeAddress);
-
-                // List to hold formula texts for bulk analysis
-                List<string> formulaTexts = new List<string>();
-
-                // Iterate through each cell in the defined range
-                foreach (Cell cell in range)
-                {
-                    // The Formula property returns an empty string if there is no formula
-                    if (!string.IsNullOrEmpty(cell.Formula))
-                    {
-                        // Get the formula text in A1 notation (isR1C1 = false, isLocal = false)
-                        string formula = cell.GetFormula(false, false);
-                        formulaTexts.Add(formula);
-
-                        // Optional: output to console for immediate verification
-                        Console.WriteLine($"{cell.Name}: {formula}");
-                    }
-                }
-
-                // Create a new worksheet to store the extracted formulas
-                int newSheetIndex = workbook.Worksheets.Add();
-                Worksheet analysisSheet = workbook.Worksheets[newSheetIndex];
-                Cells analysisCells = analysisSheet.Cells;
-
-                // Write each formula into column A of the new sheet
-                for (int i = 0; i < formulaTexts.Count; i++)
-                {
-                    analysisCells[i, 0].PutValue(formulaTexts[i]);
-                }
-
-                // Save the workbook with the analysis sheet added
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the address of the range to analyze
+            string rangeAddress = "A1:C10";
+
+            // Create an Aspose.Cells.Range (fully qualified to avoid conflict with System.Range)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(rangeAddress);
+
+            // Collect formula texts
+            List<string> formulaTexts = new List<string>();
+
+            // Iterate through each cell in the range
+            foreach (Cell cell in range)
             {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                if (cell.IsFormula)
+                {
+                    string formula = cell.Formula;
+                    formulaTexts.Add(formula);
+                    Console.WriteLine($"Cell {cell.Name} : {formula}");
+                }
             }
+
+            // Write extracted formulas to a new worksheet for reporting
+            Worksheet reportSheet = workbook.Worksheets.Add("FormulaReport");
+            for (int i = 0; i < formulaTexts.Count; i++)
+            {
+                reportSheet.Cells[i, 0].PutValue(formulaTexts[i]);
+            }
+
+            // Save the workbook with the added report sheet
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,62 +1,65 @@
-// Title: Copy a range of cells containing formulas to a new location while preserving calculation dependencies with Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to copy a source range that includes formulas to a destination range and have the library automatically adjust the cell references. | Load or create a workbook, define source and target ranges, and call the Range.Copy method to duplicate formulas while keeping their calculation relationships intact.
-// Common Searches: Aspose.Cells copy range with formulas and keep relative references in C# | How to duplicate a cell block containing formulas to another area using Aspose.Cells for .NET | Preserve formula dependencies when moving a range in an Excel workbook with Aspose.Cells | C# Aspose.Cells Range.Copy updates cell references automatically
-// Tags: Aspose.Cells range copy with formulas | preserve formula references Aspose.Cells C# | copy cell block maintaining dependencies .NET | Range.Copy method Aspose.Cells example
+// Title: Copy a formula‑containing range to another location while preserving calculation dependencies using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells copy range with formulas preserving cell references in C# | How to duplicate a range of formula cells and keep dependencies in .NET | Copy Excel range with formulas using PasteOptions in Aspose.Cells C# | Preserve formula links when moving cells to a new range with Aspose.Cells | Recalculate workbook after copying formula range with Aspose.Cells | Copy A1:C10 to E1 using Aspose.Cells while maintaining calculations
+// Tags: Aspose.Cells PasteOptions All copy | range.Copy preserving dependencies | duplicate Excel range maintaining calculations | recalculate formulas after range copy | preserve cell reference integrity Aspose.Cells | copy formula range to another worksheet .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an existing workbook or creates a new one with sample data and formulas in A1:C5, defines a source range (A1:C5) and a destination range (E1:G5), copies the source range using Range.Copy which preserves the formulas and automatically updates cell references, and saves the result as result.xlsx.
+// The sample loads an existing workbook, defines a source range (A1:C10) that contains formulas, creates a destination range of identical size starting at E1, and copies the source to the destination using PasteOptions.PasteType.All to retain formulas, values, and formatting. It then recalculates all formulas to update dependent cells and saves the workbook to a new file, with basic file‑existence validation and exception handling.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string sourcePath = "source.xlsx";
-            const string resultPath = "result.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure the source file exists; if not, create a new workbook with sample data.
-            Workbook workbook;
-            if (File.Exists(sourcePath))
-            {
-                workbook = new Workbook(sourcePath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-                // Populate sample data and formulas in A1:C5
-                ws.Cells["A1"].PutValue(1);
-                ws.Cells["B1"].PutValue(2);
-                ws.Cells["C1"].Formula = "=A1+B1";
-                ws.Cells["A2"].PutValue(3);
-                ws.Cells["B2"].PutValue(4);
-                ws.Cells["C2"].Formula = "=A2+B2";
-                // Extend as needed...
-                workbook.Save(sourcePath);
-            }
-
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the source range that contains formulas
-            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("A1:C5");
+            // Define the source range that contains formulas (e.g., A1:C10)
+            AsposeRange sourceRange = sheet.Cells.CreateRange("A1", "C10");
 
-            // Define the destination range where the formulas will be copied
-            Aspose.Cells.Range destinationRange = sheet.Cells.CreateRange("E1:G5");
+            // Determine size of the source range
+            int rowCount = sourceRange.RowCount;
+            int columnCount = sourceRange.ColumnCount;
 
-            // Copy the source range to the destination.
-            // This preserves formulas and automatically updates cell references.
-            sourceRange.Copy(destinationRange);
+            // Define the destination range start cell (e.g., E1) with the same size as source
+            AsposeRange destRange = sheet.Cells.CreateRange(0, 4, rowCount, columnCount);
 
-            // Save the workbook with the updated data
-            workbook.Save(resultPath);
+            // Set paste options to preserve formulas, values, and styles
+            PasteOptions pasteOptions = new PasteOptions
+            {
+                PasteType = PasteType.All // copies everything including formulas, values, formats
+            };
+
+            // Copy the source range to the destination range while preserving calculation dependencies
+            sourceRange.Copy(destRange, pasteOptions);
+
+            // Recalculate the workbook to ensure all dependent formulas are updated
+            workbook.CalculateFormula();
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

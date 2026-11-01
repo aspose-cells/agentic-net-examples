@@ -1,87 +1,81 @@
-// Title: How to apply a custom currency number format and bold style to a PivotTable grand total row using Aspose.Cells for C#
-// AI Prompts: Generate C# code with Aspose.Cells that sets a currency number format (e.g., $#,##0.00) for the PivotTable’s total line. | Show how to locate the Grand Total label cell in a PivotTable and apply a bold, dark‑blue font style to the entire line using Aspose.Cells. | Explain the steps to refresh and recalculate a PivotTable after modifying its number format and row style with Aspose.Cells in .NET.
-// Common Searches: Aspose.Cells C# apply custom currency pattern to pivot table totals | make pivot table overall total row bold dark blue with Aspose.Cells | update pivot table data after applying new number format using Aspose.Cells .NET
-// Tags: pivot table total line custom number format Aspose.Cells | apply highlighted styling to pivot total line C# | recalculate pivot calculations following number format update Aspose.Cells | set data field number format for pivot table Aspose.Cells | style grand total line in Excel workbook using Aspose.Cells
+// Title: Apply a custom number format to a PivotTable's grand total row with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to format the grand total row of a pivot table | apply custom number format to pivot table totals using Aspose.Cells .NET | set red negative number format for pivot table grand total in Aspose.Cells | format numeric cells in the grand total row of an Excel pivot table with Aspose.Cells | Aspose.Cells change number format of pivot table grand total row programmatically
+// Tags: pivot table grand total numeric style Aspose.Cells | Aspose.Cells set custom numeric style C# | format numeric cells in pivot table totals | apply style to pivot table grand total row | Aspose.Cells custom style for Excel pivot totals
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;   // Required for PivotTable, PivotField, PivotFieldType
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, locates the first PivotTable, determines the grand total row, and applies a custom number format ("#,##0.00;[Red]-#,##0.00") to each numeric cell in that row using Aspose.Cells before saving the file.
+class Program
 {
-    // The example creates a workbook, fills it with sample sales data, adds a PivotTable, assigns a currency number format to the data field, defines a style with bold dark‑blue font, finds the Grand Total label, applies the style to the entire total line, refreshes and recalculates the PivotTable, and saves the file as PivotTable_GrandTotal_CustomFormat.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Region");
-                sheet.Cells["C1"].PutValue("Sales");
+            // Load the workbook that contains a PivotTable
+            Workbook workbook = new Workbook(inputPath);
 
-                sheet.Cells["A2"].PutValue("Laptop");
-                sheet.Cells["B2"].PutValue("North");
-                sheet.Cells["C2"].PutValue(1200);
+            // Access the first worksheet (modify index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-                sheet.Cells["A3"].PutValue("Laptop");
-                sheet.Cells["B3"].PutValue("South");
-                sheet.Cells["C3"].PutValue(1500);
+            // Ensure the worksheet has at least one PivotTable
+            if (sheet.PivotTables.Count > 0)
+            {
+                // Get the first PivotTable in the worksheet
+                PivotTable pivot = sheet.PivotTables[0];
 
-                sheet.Cells["A4"].PutValue("Phone");
-                sheet.Cells["B4"].PutValue("North");
-                sheet.Cells["C4"].PutValue(800);
+                // Retrieve the range occupied by the PivotTable (TableRange1 is the correct property)
+                CellArea range = pivot.TableRange1;
 
-                sheet.Cells["A5"].PutValue("Phone");
-                sheet.Cells["B5"].PutValue("South");
-                sheet.Cells["C5"].PutValue(1100);
+                // Starting position of the PivotTable
+                int startRow = range.StartRow;
+                int startCol = range.StartColumn;
 
-                // Add a pivot table based on the data range
-                int ptIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[ptIndex];
+                // Total size of the PivotTable
+                int totalRows = range.EndRow - range.StartRow + 1;
+                int totalCols = range.EndColumn - range.StartColumn + 1;
 
-                // Configure the pivot table fields
-                pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-                int dataFieldIdx = pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Row index of the Grand Total row (last row of the PivotTable)
+                int grandTotalRow = startRow + totalRows - 1;
 
-                // Set the number format for the data field (e.g., currency)
-                PivotField dataField = pivot.DataFields[dataFieldIdx];
-                dataField.NumberFormat = "$#,##0.00";
+                // Define the custom number format for totals
+                const string customFormat = "#,##0.00;[Red]-#,##0.00";
 
-                // Refresh and calculate the pivot table to populate data
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // Create a style for the grand total row
-                Style grandTotalStyle = workbook.CreateStyle();
-                grandTotalStyle.Custom = "$#,##0.00";
-                grandTotalStyle.Font.IsBold = true;
-                grandTotalStyle.Font.Color = Color.DarkBlue;
-
-                // Locate the cell that contains the Grand Total label
-                Cell grandTotalLabelCell = sheet.Cells.Find(pivot.GrandTotalName, null);
-                if (grandTotalLabelCell != null)
+                // Apply the custom format to each numeric cell in the Grand Total row
+                for (int col = startCol; col < startCol + totalCols; col++)
                 {
-                    // Apply the style to the entire grand total row
-                    pivot.FormatRow(grandTotalLabelCell.Row, grandTotalStyle);
-                }
+                    Cell cell = sheet.Cells[grandTotalRow, col];
 
-                // Save the workbook
-                string outputPath = "PivotTable_GrandTotal_CustomFormat.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                    // Apply only to cells that contain numeric values
+                    if (cell.Type == CellValueType.IsNumeric)
+                    {
+                        Style style = cell.GetStyle();
+                        style.Custom = customFormat;
+                        cell.SetStyle(style);
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+
+            // Save the workbook with the applied formatting
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,72 +1,62 @@
-// Title: Log start and end timestamps of smart marker processing using ISmartMarkerCallBack in Aspose.Cells for .NET
-// AI Prompts: Create an ISmartMarkerCallBack implementation that records the first and last processing timestamps of smart markers and returns the elapsed TimeSpan. | Demonstrate how to assign the timing callback to a WorkbookDesigner, invoke Process, retrieve the total duration, and output it in milliseconds. | Add per‑marker console logging that shows sheet index, row index, column index, table name, and column name while measuring overall processing time.
-// Common Searches: aspnet log smart marker processing start and end time with Aspose.Cells | measure execution time of smart markers using ISmartMarkerCallBack | how to get total smart marker processing duration in C# Aspose.Cells | record timestamps for each smart marker callback in WorkbookDesigner | performance monitoring of smart markers Aspose.Cells .NET
-// Tags: smart marker timing callback | Aspose.Cells processing duration measurement | ISmartMarkerCallBack timestamp logging | WorkbookDesigner smart marker performance | C# log smart marker execution time
+// Title: Log start and end timestamps to measure smart marker processing time using Aspose.Cells for .NET
+// AI Prompts: Insert DateTime.Now before and after WorkbookDesigner.Process() and output the elapsed seconds in the console. | Wrap the smart marker processing call with a Stopwatch to log execution duration in a C# console application. | Generate code that prints the start time, end time, and total processing time for Aspose.Cells smart markers.
+// Common Searches: how to time Aspose.Cells smart marker processing in C# | C# log execution time of WorkbookDesigner.Process method | measure performance of smart markers with Aspose.Cells .NET | log start and end timestamps around smart marker processing Aspose.Cells
+// Tags: smart marker processing timing Aspose.Cells | WorkbookDesigner.Process performance measurement | log execution duration C# Aspose.Cells | timestamp logging for Excel smart markers | measure smart marker processing time .NET
 
 using System;
+using System.IO;
 using System.Data;
 using Aspose.Cells;
 
-// The example defines a SmartMarkerTimingCallback that captures the first and last timestamps of smart marker processing, provides a GetDuration method, attaches the callback to a WorkbookDesigner, processes markers with a DataTable source, prints the total processing time in milliseconds, and saves the resulting workbook.
-public class SmartMarkerTimingCallback : ISmartMarkerCallBack
-{
-    private DateTime? _startTime;
-    private DateTime? _endTime;
-
-    // Called for each smart marker during processing
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
-    {
-        // Record start time on first call
-        if (_startTime == null)
-            _startTime = DateTime.Now;
-
-        // Update end time on every call (will hold time of last processed marker)
-        _endTime = DateTime.Now;
-
-        // Optional per‑marker logging
-        Console.WriteLine($"Processed marker at {DateTime.Now:O} - Sheet:{sheetIndex} Row:{rowIndex} Col:{colIndex} Table:{tableName} Column:{columnName}");
-    }
-
-    // Returns the total duration between first and last marker processing
-    public TimeSpan? GetDuration()
-    {
-        if (_startTime.HasValue && _endTime.HasValue)
-            return _endTime - _startTime;
-        return null;
-    }
-}
-
+// // Loads an input workbook, creates a DataTable as a data source, assigns it to a WorkbookDesigner, logs the start and end DateTime around designer.Process(), calculates the total seconds elapsed, and saves the processed workbook to an output file.
 public class Program
 {
     public static void Main()
     {
-        // Load the template workbook that contains smart markers
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = new Workbook("SmartMarkerTemplate.xlsx");
+        try
+        {
+            string inputPath = "Input.xlsx";
+            string outputPath = "Output.xlsx";
 
-        // Attach the callback that measures processing time
-        SmartMarkerTimingCallback callback = new SmartMarkerTimingCallback();
-        designer.CallBack = callback;
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Prepare a simple data source
-        DataTable dt = new DataTable("Employees");
-        dt.Columns.Add("Name", typeof(string));
-        dt.Columns.Add("Age", typeof(int));
-        dt.Rows.Add("John", 30);
-        dt.Rows.Add("Jane", 28);
-        designer.SetDataSource(dt);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Process all smart markers in the workbook
-        designer.Process(true);
+            // Create a simple data source
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Name");
+            dt.Columns.Add("Score");
+            dt.Rows.Add("Alice", 85);
+            dt.Rows.Add("Bob", 92);
+            dt.Rows.Add("Charlie", 78);
 
-        // Output total processing time measured by the callback
-        TimeSpan? duration = callback.GetDuration();
-        if (duration.HasValue)
-            Console.WriteLine($"Total smart marker processing time: {duration.Value.TotalMilliseconds} ms");
-        else
-            Console.WriteLine("Processing time could not be determined.");
+            // Set up the designer with the data source
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dt);
 
-        // Save the resulting workbook
-        designer.Workbook.Save("SmartMarkerResult.xlsx");
+            // Process smart markers and log timing
+            DateTime startTime = DateTime.Now;
+            Console.WriteLine($"Smart marker processing started at {startTime:O}");
+
+            designer.Process();
+
+            DateTime endTime = DateTime.Now;
+            Console.WriteLine($"Smart marker processing finished at {endTime:O}");
+            Console.WriteLine($"Total processing time: {(endTime - startTime).TotalSeconds} seconds");
+
+            // Save the processed workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

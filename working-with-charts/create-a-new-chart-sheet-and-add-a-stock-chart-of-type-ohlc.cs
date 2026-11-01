@@ -1,109 +1,81 @@
-// Title: Generate a separate chart sheet with an OHLC (Open‑High‑Low‑Close) stock chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to add a new worksheet as a chart sheet and place a StockOpenHighLowClose chart that pulls its data from another sheet. | Show how to configure the category axis to a date range and assign custom series names (Open, High, Low, Close) for an OHLC chart on a dedicated chart sheet with Aspose.Cells.
-// Common Searches: how to add an OHLC stock chart on a separate worksheet with Aspose.Cells C# | Aspose.Cells create chart sheet for Open High Low Close data | C# example of StockOpenHighLowClose chart on its own sheet using Aspose.Cells | set category axis dates for OHLC chart in Aspose.Cells workbook | save workbook with chart sheet containing OHLC chart Aspose.Cells .NET
-// Tags: Aspose.Cells separate chart worksheet | StockOpenHighLowClose chart generation C# | OHLC chart data source Aspose.Cells | date category axis Aspose.Cells | custom series names OHLC Aspose.Cells
+// Title: How to add a separate chart sheet with an OHLC (Open‑High‑Low‑Close) stock chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new workbook, adds a dedicated chart sheet, inserts an OHLC stock chart, links it to data on another worksheet, and saves the file. | Show how to fill Open, High, Low, and Close columns in a worksheet and reference that range for an OHLC chart placed on a separate chart sheet with Aspose.Cells. | Provide an example that sets the OHLC chart’s position and dimensions in pixels and ensures the output directory exists before saving the workbook.
+// Common Searches: Aspose.Cells create chart sheet with OHLC stock chart in C# | C# generate Open High Low Close chart on separate worksheet using Aspose.Cells | How to bind an OHLC chart to a data range in Aspose.Cells .NET | Set chart size in pixels Aspose.Cells C# example | Save workbook to specific folder after creating OHLC chart with Aspose.Cells
+// Tags: chart sheet creation OHLC Aspose.Cells | populate OHLC data worksheet C# | bind chart to range Sheet1!A2:D6 Aspose.Cells | chart pixel dimensions Aspose.Cells | save workbook OHLCChart.xlsx Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsStockChartExample
+// The program creates a new workbook, adds a dedicated chart sheet named "OHLCChart", inserts an Open‑High‑Low‑Close stock chart at pixel coordinates (0,0) with size 400×500, fills sample Open, High, Low, and Close values in the first worksheet, binds the chart to the range A2:D6, ensures the output directory exists, and saves the workbook as OHLCChart.xlsx.
+class Program
 {
-    // The example creates a workbook, fills a data sheet with Date, Open, High, Low, and Close columns, adds a new worksheet that serves as a chart sheet, inserts a StockOpenHighLowClose (OHLC) chart referencing the data ranges, sets the chart title and date-based category axis, defines four series with names Open, High, Low, and Close, and saves the file as OHLC_Chart_Sheet.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook with a default worksheet
+            Workbook workbook = new Workbook();
+
+            // Add a worksheet that will host the OHLC chart
+            Worksheet chartSheet = workbook.Worksheets.Add("OHLCChart");
+
+            // Add an OHLC chart (Open‑High‑Low‑Close) to the worksheet
+            // Position (row, column) and size (height, width) are specified in pixels
+            int chartIndex = chartSheet.Charts.Add(0, 0, 400, 500, (int)ChartType.StockOpenHighLowClose);
+            Chart ohlcChart = chartSheet.Charts[chartIndex];
+
+            // Fill sample data into the first worksheet (Sheet1)
+            worksheetData(workbook.Worksheets[0]);
+
+            // Set the data range for the chart (A2:D6)
+            ohlcChart.NSeries.Add("Sheet1!A2:D6", true);
+
+            // Save the workbook to a file
+            string outputPath = "OHLCChart.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the default worksheet (Sheet1) to store sample data
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
-
-                // Populate sample data for OHLC chart
-                dataSheet.Cells["A1"].PutValue("Date");
-                dataSheet.Cells["B1"].PutValue("Open");
-                dataSheet.Cells["C1"].PutValue("High");
-                dataSheet.Cells["D1"].PutValue("Low");
-                dataSheet.Cells["E1"].PutValue("Close");
-
-                dataSheet.Cells["A2"].PutValue("2023-01-01");
-                dataSheet.Cells["A3"].PutValue("2023-01-02");
-                dataSheet.Cells["A4"].PutValue("2023-01-03");
-                dataSheet.Cells["A5"].PutValue("2023-01-04");
-
-                dataSheet.Cells["B2"].PutValue(120);
-                dataSheet.Cells["B3"].PutValue(125);
-                dataSheet.Cells["B4"].PutValue(123);
-                dataSheet.Cells["B5"].PutValue(128);
-
-                dataSheet.Cells["C2"].PutValue(130);
-                dataSheet.Cells["C3"].PutValue(135);
-                dataSheet.Cells["C4"].PutValue(133);
-                dataSheet.Cells["C5"].PutValue(138);
-
-                dataSheet.Cells["D2"].PutValue(115);
-                dataSheet.Cells["D3"].PutValue(118);
-                dataSheet.Cells["D4"].PutValue(119);
-                dataSheet.Cells["D5"].PutValue(122);
-
-                dataSheet.Cells["E2"].PutValue(128);
-                dataSheet.Cells["E3"].PutValue(132);
-                dataSheet.Cells["E4"].PutValue(130);
-                dataSheet.Cells["E5"].PutValue(135);
-
-                // Add a new worksheet that will contain the chart
-                Worksheet chartSheet = workbook.Worksheets.Add("OHLCChart");
-
-                // Add a Stock Open‑High‑Low‑Close chart (OHLC)
-                // The Charts.Add method expects an int for the chart type, so cast the enum.
-                int chartIndex = chartSheet.Charts.Add(0, 0, 15, 10, (int)ChartType.StockOpenHighLowClose);
-                Chart ohlcChart = chartSheet.Charts[chartIndex];
-
-                // Set the chart title
-                ohlcChart.Title.Text = "Sample OHLC Stock Chart";
-
-                // Set the categories (X‑axis) to the dates column
-                ohlcChart.NSeries.CategoryData = "Data!A2:A5";
-
-                // Add series for Open, High, Low, and Close values
-                ohlcChart.NSeries.Add("Data!B2:B5", false); // Open
-                ohlcChart.NSeries.Add("Data!C2:C5", false); // High
-                ohlcChart.NSeries.Add("Data!D2:D5", false); // Low
-                ohlcChart.NSeries.Add("Data!E2:E5", false); // Close
-
-                // Set series names (displayed in the legend)
-                ohlcChart.NSeries[0].Name = "Open";
-                ohlcChart.NSeries[1].Name = "High";
-                ohlcChart.NSeries[2].Name = "Low";
-                ohlcChart.NSeries[3].Name = "Close";
-
-                // Define output file path
-                string outputPath = "OHLC_Chart_Sheet.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (string.IsNullOrEmpty(outputDir))
-                {
-                    outputDir = Directory.GetCurrentDirectory();
-                }
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to fill sample data into the first worksheet
+    static void worksheetData(Worksheet sheet)
+    {
+        // Headers
+        sheet.Cells["A1"].PutValue("Open");
+        sheet.Cells["B1"].PutValue("High");
+        sheet.Cells["C1"].PutValue("Low");
+        sheet.Cells["D1"].PutValue("Close");
+
+        // Sample numeric data
+        double[,] data = new double[,]
+        {
+            { 100, 110, 95, 105 },
+            { 105, 115, 100, 110 },
+            { 110, 120, 105, 115 },
+            { 115, 125, 110, 120 },
+            { 120, 130, 115, 125 }
+        };
+
+        for (int i = 0; i < data.GetLength(0); i++)
+        {
+            for (int j = 0; j < data.GetLength(1); j++)
             {
-                Console.WriteLine("An error occurred while creating the OHLC chart workbook:");
-                Console.WriteLine(ex.Message);
+                // Rows are zero‑based; add 1 to skip header row
+                sheet.Cells[i + 1, j].PutValue(data[i, j]);
             }
         }
     }

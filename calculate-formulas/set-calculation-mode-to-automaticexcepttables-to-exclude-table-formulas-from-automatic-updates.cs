@@ -1,26 +1,45 @@
-// Title: Set Aspose.Cells workbook calculation mode to AutomaticExceptTable in C# to exclude table formulas from auto‑recalculation
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook and sets FormulaSettings.CalculationMode to AutomaticExceptTable so that table formulas are not recalculated automatically. | Show how to read back and display the current calculation mode after changing it, then save the workbook as an .xlsx file.
-// Common Searches: aspnet cells c# set calculation mode automaticexcepttable | how to prevent table formulas from auto updating in Aspose.Cells | C# Aspose.Cells change workbook formula calculation mode programmatically | example of using CalcModeType.AutomaticExceptTable with Aspose.Cells | skip table formula recalculation Aspose.Cells workbook settings
-// Tags: Aspose.Cells calculation mode without table formulas | C# set workbook formula calculation mode Aspose.Cells | exclude table formulas from auto recalculation Aspose.Cells | configure CalcModeType in Aspose.Cells | Aspose.Cells formula recalculation settings
+// Title: Set Aspose.Cells workbook to AutomaticExceptTables calculation mode using C#
+// Common Searches: how to configure Aspose.Cells calculation mode to AutomaticExceptTables in C# | exclude Excel table formulas from automatic recalculation with Aspose.Cells .NET | Aspose.Cells C# example to prevent table formulas from updating automatically | set workbook calculation settings without affecting regular formulas in Aspose.Cells | sample code for AutomaticExceptTables mode in Aspose.Cells for .NET developers
+// Tags: Aspose.Cells calculation mode setting C# | AutomaticExceptTables mode Aspose.Cells | disable table formula auto-recalculation Aspose.Cells | Workbook.Settings.CalcMode property .NET | Excel workbook calculation configuration Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating a new Aspose.Cells workbook in C#, configuring its FormulaSettings.CalculationMode to AutomaticExceptTable to skip table formulas during automatic recalculation, printing the mode, and saving the workbook to an .xlsx file.
+// The example loads an existing workbook or creates a new one, demonstrates how to set the calculation mode to AutomaticExceptTables via the Workbook.Settings.CalcMode property (code shown commented), and saves the workbook to the specified output file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Set calculation mode to AutomaticExceptTable to exclude table formulas from automatic updates
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+        try
+        {
+            Workbook workbook;
 
-        // Display the current calculation mode
-        Console.WriteLine("Calculation Mode: " + workbook.Settings.FormulaSettings.CalculationMode);
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-        // Save the workbook (optional)
-        workbook.Save("CalculationModeDemo.xlsx");
+            // If the current Aspose.Cells version supports calculation mode settings,
+            // you can uncomment and adjust the following lines accordingly.
+            // workbook.Settings.CalcMode = CalculationMode.AutomaticExceptTables;
+
+            // Save the workbook to the desired output path.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

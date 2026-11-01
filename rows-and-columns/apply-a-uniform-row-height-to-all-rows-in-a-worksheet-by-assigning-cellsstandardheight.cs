@@ -1,47 +1,24 @@
-// Title: Apply a uniform row height to every row in an Aspose.Cells worksheet using the Cells.StandardHeight property (C#)
-// AI Prompts: Create a new Workbook, assign worksheet.Cells.StandardHeight = 25 points, and save the file as UniformRowHeightDemo.xlsx with Aspose.Cells for .NET. | Read the worksheet.Cells.StandardHeight value after setting it to confirm that the same height is applied to all rows in the sheet. | Define a custom height variable, set worksheet.Cells.StandardHeight to that value, and generate the spreadsheet without looping through individual rows.
-// Common Searches: Aspose.Cells C# set default row height for entire worksheet | How to change row height globally using Cells.StandardHeight in .NET | Set uniform row height across all rows without iterating Aspose.Cells | C# example of applying same row height to every row in an Excel file with Aspose | Cells.StandardHeight property usage for setting row height points
-// Tags: Aspose.Cells row height configuration | C# Cells.StandardHeight property | uniform worksheet row height Aspose | apply row height points Aspose.Cells | save workbook after setting row height
+// Title: How to set a uniform row height for every row in an Aspose.Cells worksheet using Cells.StandardHeight in C#
+// Common Searches: Aspose.Cells C# set same row height for all rows in a worksheet | using Cells.StandardHeight to define default row height in .NET Excel file | apply global row height to Excel worksheet with Aspose.Cells API | C# code to set uniform row height across entire sheet using Aspose.Cells | change default row height for new rows in Aspose.Cells workbook
+// Tags: uniform row height Aspose.Cells C# | Cells.StandardHeight usage .NET | global worksheet row height Aspose.Cells | default Excel row height C# Aspose | apply row height to entire sheet Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new Workbook, accesses its first Worksheet, sets the Cells.StandardHeight property to 20 points, which makes every row in the sheet have the same height, and then saves the file as UniformRowHeight.xlsx.
+class Program
 {
-    // Creates a workbook, sets worksheet.Cells.StandardHeight to 25 points to make all rows the same height, prints the applied height, and saves the file as UniformRowHeightDemo.xlsx.
-    public class UniformRowHeightDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet in the workbook
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Apply a uniform row height to all rows via the StandardHeight property (points)
-                worksheet.Cells.StandardHeight = 25; // set every row to 25 points height
+        // Apply a uniform row height (e.g., 20 points) to all rows in the worksheet
+        worksheet.Cells.StandardHeight = 20;
 
-                // Optional: display the applied standard height
-                Console.WriteLine("Standard row height set to: " + worksheet.Cells.StandardHeight);
-
-                // Save the workbook
-                string outputPath = "UniformRowHeightDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Save the workbook to a file
+        workbook.Save("UniformRowHeight.xlsx");
     }
 }

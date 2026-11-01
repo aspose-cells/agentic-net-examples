@@ -1,61 +1,64 @@
-// Title: Apply a light gray solid fill pattern to all cells in a specific table range (A1:D10) using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a Style with a solid light gray fill and applies it to the range A1:D10 in an Aspose.Cells workbook. | Write a method that loads an Excel file (or creates a new workbook if missing), defines a table range, and sets a light gray background for every cell using Aspose.Cells for .NET. | Provide a reusable function that accepts an Aspose.Cells Range object and applies a solid light gray background style to all its cells.
-// Common Searches: how to set a solid light gray background for a range of cells in Aspose.Cells C# | Aspose.Cells apply fill color to entire table A1:D10 | C# Aspose.Cells style cells with light gray pattern | set background color for Excel table using Aspose.Cells .NET API
-// Tags: Aspose.Cells apply solid fill to range | C# set cell background color Aspose.Cells | light gray fill pattern Excel Aspose | style table range Aspose.Cells .NET | create style and apply to cells Aspose.Cells
+// Title: How to apply a light gray solid fill pattern to an entire Excel table range using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set solid light gray background for a specific range of cells | Apply fill pattern to all cells in an Excel table with Aspose.Cells .NET | How to use StyleFlag to format a table range in Aspose.Cells C# | Change cell background color to light gray for A1:D10 using Aspose.Cells | Aspose.Cells create and style a range with solid fill in C#
+// Tags: apply solid fill Aspose.Cells C# | style entire range Excel Aspose.Cells | light gray cell background Aspose.Cells | create range A1:D10 Aspose.Cells | use StyleFlag All property Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// // Loads an existing workbook or creates a new one, defines the table range A1:D10, creates a style with a solid light gray fill, applies the style to all cells in the range, and saves the workbook as output.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing workbook, defines the range A1:D10, creates a style with a solid light gray foreground fill, applies the style to every cell in the range using a StyleFlag with All=true, and saves the modified workbook to a new file.
+    class Program
     {
-        try
+        static void Main()
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists; if not, create a new workbook with a default sheet.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input file exists before attempting to load it.
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                // Optionally add some sample data to avoid an empty sheet.
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue("Sample");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Access the first worksheet.
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Load the workbook. If the file is password‑protected, provide the password here.
+                var loadOptions = new LoadOptions(); // Add Password = "yourPassword" if needed.
+                var workbook = new Workbook(inputPath, loadOptions);
 
-            // Define the range representing the table (A1:D10).
-            AsposeRange tableRange = worksheet.Cells.CreateRange("A1", "D10");
+                // Get the first worksheet (adjust index if needed).
+                var worksheet = workbook.Worksheets[0];
 
-            // Create a new style for the fill pattern.
-            Style fillStyle = workbook.CreateStyle();
-            fillStyle.Pattern = BackgroundType.Solid;          // Solid fill.
-            fillStyle.ForegroundColor = Color.LightGray;      // Light gray color.
-            fillStyle.BackgroundColor = Color.White;          // Optional background color.
+                // Define the range that represents the table.
+                // Replace "A1:D10" with the actual address of your table.
+                var range = worksheet.Cells.CreateRange("A1:D10");
 
-            // Apply the style to all cells in the range.
-            StyleFlag styleFlag = new StyleFlag { All = true };
-            tableRange.ApplyStyle(fillStyle, styleFlag);
+                // Create a style with a light gray solid fill pattern.
+                var style = workbook.CreateStyle();
+                style.Pattern = BackgroundType.Solid;          // Solid fill.
+                style.ForegroundColor = Color.LightGray;      // Light gray color.
+                style.BackgroundColor = Color.White;          // Optional background color.
 
-            // Save the modified workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Apply the style to all cells in the range.
+                var styleFlag = new StyleFlag { All = true };
+                range.ApplyStyle(style, styleFlag);
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

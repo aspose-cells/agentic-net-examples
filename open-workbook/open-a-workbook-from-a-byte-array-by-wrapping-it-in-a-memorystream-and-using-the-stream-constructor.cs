@@ -1,28 +1,35 @@
-// Title: Load an Excel workbook from a byte array using Aspose.Cells Workbook constructor with MemoryStream in C#
-// AI Prompts: Write C# code that reads an .xlsx file into a byte[] and creates an Aspose.Cells Workbook from a MemoryStream. | Show how to open an Excel workbook directly from in‑memory bytes with Aspose.Cells without writing a temporary file.
-// Common Searches: C# Aspose.Cells read Excel file from byte array memory stream | how to create Workbook from in‑memory byte array using Aspose.Cells | Aspose.Cells open workbook from stream without saving to disk | load xlsx from byte[] with Aspose.Cells C# example
-// Tags: Aspose.Cells workbook from MemoryStream C# | load Excel bytes into Aspose.Cells Workbook | open xlsx from byte array without disk write | stream‑based workbook initialization Aspose.Cells | C# read Excel bytes with Aspose.Cells
+// Title: Open an Excel workbook from a byte array using Aspose.Cells MemoryStream constructor in C#
+// Common Searches: C# Aspose.Cells load workbook from a byte[] using MemoryStream | How to create an Aspose.Cells Workbook from Excel bytes in .NET | Read Excel file stored as byte array into Aspose.Cells workbook | Using Stream constructor to open .xlsx from memory with Aspose.Cells | Load workbook from byte array without saving to disk Aspose.Cells C#
+// Tags: load workbook from MemoryStream Aspose.Cells | create workbook from byte array stream C# | Aspose.Cells Workbook constructor Stream overload | open Excel bytes in .NET without file | initialize Aspose.Cells workbook with in‑memory data
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Reads an .xlsx file into a byte array, wraps it in a MemoryStream, opens it as an Aspose.Cells Workbook, and prints the first worksheet name.
+// The example demonstrates wrapping an Excel byte array in a MemoryStream and passing it to the Aspose.Cells Workbook constructor that accepts a Stream, allowing the workbook to be opened directly from memory and accessed programmatically.
 class Program
 {
     static void Main()
     {
-        // Load the Excel file into a byte array (replace with your source of bytes)
-        byte[] excelBytes = File.ReadAllBytes("input.xlsx");
+        // Obtain the Excel file as a byte array (replace with your actual source)
+        byte[] excelBytes = GetExcelFileBytes();
 
         // Wrap the byte array in a MemoryStream
-        using (MemoryStream ms = new MemoryStream(excelBytes))
+        using (MemoryStream stream = new MemoryStream(excelBytes))
         {
-            // Open the workbook from the stream using the Stream constructor
-            Workbook workbook = new Workbook(ms);
+            // Load the workbook from the stream using the Workbook constructor that accepts a Stream
+            Workbook workbook = new Workbook(stream);
 
-            // Example operation: print the name of the first worksheet
+            // Example usage: print the name of the first worksheet
             Console.WriteLine("First worksheet: " + workbook.Worksheets[0].Name);
         }
+    }
+
+    // Placeholder method to retrieve the byte array; replace with your actual implementation.
+    static byte[] GetExcelFileBytes()
+    {
+        // Example: read an existing .xlsx file into a byte array.
+        // In practice, the bytes could come from a database, web service, etc.
+        return File.ReadAllBytes("sample.xlsx");
     }
 }

@@ -1,14 +1,16 @@
-// Title: How to unmerge cells B1:B4 and add thin black borders to each cell using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads an Excel workbook, unmerges the range B1:B4, and applies thin black borders to every cell in that range. | Generate a .NET example that removes merging from column B rows 1‑4 and sets uniform thin black borders on each resulting cell using Aspose.Cells.
-// Common Searches: Aspose.Cells C# unmerge cells in column B rows 1 to 4 | C# add thin black borders after unmerging a range with Aspose.Cells | How to restore individual cell borders after unmerge using Aspose.Cells for .NET | Unmerge B1:B4 and apply border style with Aspose.Cells in a C# project
-// Tags: unmerge range B1:B4 Aspose.Cells | apply thin black borders Aspose.Cells C# | cell border styling after unmerge Aspose.Cells | Aspose.Cells range unmerge and style | C# Excel border formatting Aspose.Cells
+// Title: Unmerge cells B1:B4 and apply thin black borders using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# unmerge cells in column B and set individual borders | C# code to split merged range B1:B4 and apply thin black borders with Aspose.Cells | How to restore cell borders after unmerging cells using Aspose.Cells for .NET | Unmerge specific range B1:B4 in an Excel workbook with Aspose.Cells and format borders | Aspose.Cells example for unmerging cells and applying border style in C#
+// Tags: Aspose.Cells unmerge specific range | Aspose.Cells set thin borders | Excel unmerge cells with Aspose.Cells | C# apply cell borders after unmerge | Aspose.Cells range unmerge example
 
 using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
 
-// The example loads an existing Excel workbook, defines the B1:B4 range, unmerges any merged cells within that range, and then applies thin black borders to the top, bottom, left, and right of each individual cell before saving the modified file.
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The C# program loads an existing Excel workbook, checks for the file, defines the B1:B4 range, unmerges any merged cells within that range, applies thin black borders to each individual cell, and saves the modified workbook while handling potential errors.
 class Program
 {
     static void Main()
@@ -21,41 +23,29 @@ class Program
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing workbook
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
-            }
-
+            Workbook workbook = new Workbook(inputPath);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range B1:B4 (rows 0-3, column 1)
-            int startRow = 0;
-            int endRow = 3;
-            int column = 1; // Column B
+            // Define the range B1:B4 (zero‑based indices)
+            int startRow = 0;      // B1
+            int endRow = 3;        // B4
+            int column = 1;        // Column B
 
-            // Unmerge cells in the specified range (if any)
-            try
+            // Unmerge the cells in the specified range if they are merged
+            for (int row = startRow; row <= endRow; row++)
             {
-                int totalRows = endRow - startRow + 1;
-                int totalColumns = 1;
-                // Use fully qualified Aspose.Cells.Range to avoid ambiguity with System.Range
-                Aspose.Cells.Range range = sheet.Cells.CreateRange(startRow, column, totalRows, totalColumns);
-                range.UnMerge();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Warning: Unable to unmerge cells – {ex.Message}");
+                Cell cell = sheet.Cells[row, column];
+                if (cell.IsMerged)
+                {
+                    // Unmerge the merged range that this cell belongs to
+                    AsposeRange mergedRange = cell.GetMergedRange();
+                    mergedRange.UnMerge();
+                }
             }
 
             // Apply thin black borders to each individual cell in the range
@@ -64,40 +54,32 @@ class Program
                 Cell cell = sheet.Cells[row, column];
                 Style style = cell.GetStyle();
 
-                // Set all four borders to thin black
+                // Top border
                 style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-
                 style.Borders[BorderType.TopBorder].Color = Color.Black;
+
+                // Bottom border
+                style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
                 style.Borders[BorderType.BottomBorder].Color = Color.Black;
+
+                // Left border
+                style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
                 style.Borders[BorderType.LeftBorder].Color = Color.Black;
+
+                // Right border
+                style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
                 style.Borders[BorderType.RightBorder].Color = Color.Black;
 
                 cell.SetStyle(style);
             }
 
-            // Ensure the output directory exists
-            try
-            {
-                string? outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Warning: Could not create output directory – {ex.Message}");
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

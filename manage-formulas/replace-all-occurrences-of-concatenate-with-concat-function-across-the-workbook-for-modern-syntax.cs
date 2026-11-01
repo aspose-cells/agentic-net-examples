@@ -1,60 +1,66 @@
-// Title: Replace every CONCATENATE function with CONCAT in all formulas of an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# program with Aspose.Cells that loads an .xlsx file, walks through each worksheet and cell, finds formulas containing the CONCATENATE function (ignoring case), swaps them to the CONCAT function, and saves the updated workbook. | Generate Aspose.Cells code that performs a case‑insensitive string replacement of "CONCATENATE" to "CONCAT" across all formula cells in a workbook and writes the result to a new file.
-// Common Searches: Aspose.Cells C# replace CONCATENATE with CONCAT in all worksheet formulas | how to bulk update Excel formulas from CONCATENATE to CONCAT using .NET | programmatically change old Excel function names to new ones with Aspose.Cells | C# iterate through workbook cells and modify formula functions Aspose.Cells
-// Tags: bulk replace Excel formula function Aspose.Cells | update CONCATENATE to CONCAT C# | iterate worksheets cells formula Aspose.Cells | case-insensitive formula string replacement .NET | save modified workbook as .xlsx Aspose.Cells
+// Title: Replace CONCATENATE with CONCAT in every formula of an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to programmatically change CONCATENATE to CONCAT in an .xlsx file with Aspose.Cells C# | Aspose.Cells replace legacy CONCATENATE function across all worksheets | C# code to update Excel formulas from CONCATENATE to CONCAT using Aspose.Cells | bulk formula text substitution in Excel workbook with Aspose.Cells .NET | iterate through cells and modify formula strings in Aspose.Cells
+// Tags: replace CONCATENATE with CONCAT Aspose.Cells | bulk formula update .xlsx C# | iterate worksheets cells Aspose.Cells | modify Excel formula text programmatically | load save workbook after formula change Aspose.Cells
 
 using System;
-using System.Text.RegularExpressions;
+using System.IO;
 using Aspose.Cells;
 
-// C# code that loads an Excel workbook with Aspose.Cells, iterates over every worksheet and cell, detects formulas containing the legacy CONCATENATE function (case‑insensitive), replaces it with the modern CONCAT function, and saves the modified workbook.
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and cell, detects formulas containing the legacy CONCATENATE function, replaces it with the modern CONCAT function, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with actual input file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Cells cells = sheet.Cells;
-
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxColumn; col++)
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook (use LoadOptions in case the file is password‑protected)
+            var loadOptions = new LoadOptions
+            {
+                // If a password is required, set it here; empty string for no password
+                Password = string.Empty
+            };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                // Iterate through all cells that contain data
+                foreach (Cell cell in cells)
                 {
-                    Cell cell = cells[row, col];
-
-                    // Process only cells that contain a formula
-                    if (cell.IsFormula)
+                    // Check if the cell contains a formula with CONCATENATE
+                    if (cell.IsFormula && cell.Formula != null && cell.Formula.Contains("CONCATENATE"))
                     {
-                        string formula = cell.Formula;
-
-                        // Check if the formula uses the old CONCATENATE function (case‑insensitive)
-                        if (!string.IsNullOrEmpty(formula) &&
-                            formula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            // Replace CONCATENATE with the modern CONCAT function
-                            string updatedFormula = Regex.Replace(
-                                formula,
-                                "CONCATENATE",
-                                "CONCAT",
-                                RegexOptions.IgnoreCase);
-
-                            // Assign the updated formula back to the cell
-                            cell.Formula = updatedFormula;
-                        }
+                        // Replace CONCATENATE with CONCAT
+                        string updatedFormula = cell.Formula.Replace("CONCATENATE", "CONCAT");
+                        cell.Formula = updatedFormula;
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (replace with desired output file path)
-        workbook.Save("output.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

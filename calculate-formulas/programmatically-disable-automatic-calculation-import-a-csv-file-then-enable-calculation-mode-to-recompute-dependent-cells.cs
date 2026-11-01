@@ -1,43 +1,42 @@
-// Title: Disable automatic calculation, import a CSV file, then re‑enable calculation and recalculate formulas with Aspose.Cells for .NET
-// AI Prompts: Write C# code that sets Workbook.Settings.FormulaSettings.CalculationMode to Manual, uses Cells.ImportCSV to load a CSV file into the first worksheet, switches the mode back to Automatic, and calls Workbook.CalculateFormula to update all dependent cells. | Provide a step‑by‑step example showing how to pause formula evaluation in an Aspose.Cells workbook, import CSV data, resume automatic calculation, and force a full formula recomputation.
-// Common Searches: Aspose.Cells C# import CSV without triggering formula calculation | How to set manual calculation mode before loading data in Aspose.Cells .NET | Recalculate all formulas after importing CSV with Aspose.Cells | Temporarily disable formula evaluation in an Aspose.Cells workbook
-// Tags: Aspose.Cells manual calculation mode .NET | Cells.ImportCSV CSV data loading | Aspose.Cells automatic calculation mode | Workbook.CalculateFormula full recalculation | disable formula evaluation Aspose.Cells
+// Title: How to control calculation mode while importing a CSV and saving as XLSX using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load CSV without triggering automatic calculation | programmatically enable formula recalculation after importing CSV with Aspose.Cells | disable workbook auto‑calculate, import CSV, then recalculate formulas in .NET | convert CSV to XLSX and force CalculateFormula using Aspose.Cells API | set calculation mode before saving workbook after CSV import in C#
+// Tags: disable automatic calculation Aspose.Cells | import CSV workbook Aspose.Cells C# | enable calculation mode Aspose.Cells | calculate formulas after CSV import | convert CSV to XLSX Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCalcModeExample
+// The example checks for an input CSV file, loads it into an Aspose.Cells Workbook with CSV LoadOptions, optionally controls the calculation mode, forces a full formula recalculation using CalculateFormula, and saves the result as an XLSX file.
+class Program
 {
-    // The example creates a new workbook, switches the calculation mode to manual, imports CSV data starting at cell A1, restores automatic calculation, forces a full formula recalculation, and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            // Verify that the input CSV file exists to avoid FileNotFoundException
+            const string inputPath = "input.csv";
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Access the first worksheet and its cells
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Load the CSV file into a workbook using LoadOptions for CSV format
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Disable automatic calculation (FormulaSettings.CalculationMode = Manual)
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Path to the CSV file to be imported
-            string csvPath = "data.csv";
-
-            // Import CSV data starting at cell A1 (row 0, column 0)
-            // Using comma as delimiter and converting numeric data
-            cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-            // Re‑enable automatic calculation (or choose another mode as needed)
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-            // Recalculate all formulas after the import
+            // Force a full recalculation of formulas (if any)
             workbook.CalculateFormula();
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("Result.xlsx", SaveFormat.Xlsx);
+            // Save the result in XLSX format
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

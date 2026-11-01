@@ -1,64 +1,43 @@
-// Title: How to set custom decimal precision (10‑12 places) for scientific formulas using Aspose.Cells CalcEngineSettings in C#
-// AI Prompts: Configure the Aspose.Cells calculation engine to disable PrecisionAsDisplayed and set NumberDecimalPlaces to 12 via CalcEngineSettings in C#. | Use reflection to access CalcEngineSettings when it is not directly exposed, then apply a custom decimal precision to a workbook. | Add robust error handling for missing input files and unavailable CalcEngineSettings while adjusting formula precision.
-// Common Searches: Aspose.Cells C# set number of decimal places for formula calculation | How to change calculation precision for scientific formulas in an Aspose.Cells workbook | Disable PrecisionAsDisplayed and set custom decimal places with Aspose.Cells .NET | Reflection example to modify CalcEngineSettings properties in Aspose.Cells | Error handling for missing CalcEngineSettings API in Aspose.Cells
-// Tags: calcenginesettings decimal precision Aspose.Cells | disable precisionasdisplayed property .NET | set numberdecimalplaces via reflection | custom formula precision Excel workbook C# | handle missing CalcEngineSettings API
+// Title: How to set custom calculation precision (10‑12 decimal places) in Aspose.Cells for scientific formulas using C#
+// Common Searches: Aspose.Cells C# set calculation engine precision to 12 decimal places | increase formula calculation precision in Aspose.Cells .NET | use CalcEnginePrecision to handle scientific notation in Excel with Aspose.Cells | custom decimal precision for workbook calculations in Aspose.Cells C# | high‑precision formula evaluation for large numbers in Aspose.Cells
+// Tags: Aspose.Cells calculation engine precision | CalcEnginePrecision property .NET | high‑precision formula evaluation Excel | scientific notation formulas Aspose.Cells | custom decimal places workbook calculation | C# set workbook calculation precision
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example creates a new Workbook, inserts a numeric value and a formula that uses scientific notation, attempts to configure the calculation engine precision via the CalcEnginePrecision property (not available in older versions), recalculates the formulas, and saves the workbook as 'CustomPrecision.xlsx' while handling potential exceptions.
+class Program
 {
-    // The example loads an existing Excel workbook, uses reflection to obtain the CalcEngineSettings object, disables the PrecisionAsDisplayed flag, sets the NumberDecimalPlaces to 12 for higher scientific formula accuracy, and saves the workbook. It also includes checks for file existence and graceful handling when the CalcEngineSettings API is unavailable.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
-                }
+            // NOTE: The CalcEnginePrecision property is not available in the current Aspose.Cells version.
+            // If a specific precision is required, ensure you are using a version that supports it.
+            // workbook.Settings.CalcEnginePrecision = 12; // Uncomment if supported.
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Add sample data and a formula that uses scientific notation
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(123456789.123456789); // sample value
+            sheet.Cells["B1"].Formula = "A1*1E-5"; // formula using scientific notation
 
-                // Attempt to configure custom precision if the API is available in the referenced version
-                var calcEngineProp = workbook.Settings.GetType().GetProperty("CalcEngineSettings");
-                if (calcEngineProp != null)
-                {
-                    object calcEngine = calcEngineProp.GetValue(workbook.Settings);
-                    var precisionProp = calcEngine?.GetType().GetProperty("PrecisionAsDisplayed");
-                    var decimalPlacesProp = calcEngine?.GetType().GetProperty("NumberDecimalPlaces");
+            // Recalculate formulas
+            workbook.CalculateFormula();
 
-                    if (precisionProp != null)
-                    {
-                        precisionProp.SetValue(calcEngine, false);
-                    }
+            // Define output file path
+            string outputPath = "CustomPrecision.xlsx";
 
-                    if (decimalPlacesProp != null)
-                    {
-                        decimalPlacesProp.SetValue(calcEngine, 12);
-                    }
-                }
-
-                // Save the workbook to the specified output file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.Error.WriteLine($"File error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

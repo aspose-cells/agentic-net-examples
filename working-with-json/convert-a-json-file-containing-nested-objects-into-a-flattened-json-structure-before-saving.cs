@@ -1,73 +1,64 @@
-// Title: Flatten nested JSON exported from an Excel workbook using Aspose.Cells in C# and save it as a .json file
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, converts the workbook to a JSON string, recursively flattens the JSON into dot‑separated paths, and writes the flattened result to a .json file. | Write a C# recursive method that takes a System.Text.Json JsonElement and populates a Dictionary<string, object?> with full property paths, handling objects, arrays, and primitive values. | Adjust the flattening routine to use underscore separators for property paths while preserving array index notation, and output the result with System.Text.Json.
-// Common Searches: c# flatten json produced by Aspose.Cells export workbook to json | how to convert nested json from excel to flat key‑value pairs using Aspose.Cells | recursive json flattening with dot notation in .net core | export excel to json and flatten structure with Aspose.Cells library | flatten json arrays to indexed keys in c# using System.Text.Json
-// Tags: Aspose.Cells export workbook to JSON C# | C# recursive JSON flattening | dot‑separated property paths for flattened JSON | flatten JSON arrays with index keys C# | write flattened JSON file using System.Text.Json
+// Title: Flatten a nested JSON file to a single‑level JSON using System.Text.Json in C#
+// AI Prompts: Create a C# console app that reads a JSON file, recursively flattens objects and arrays into dot‑separated keys, and writes the flat JSON to a new file. | Modify the flattening routine to generate snake_case keys instead of dot notation while keeping array indices intact. | Add a command‑line switch that omits entries with null values from the flattened JSON output.
+// Common Searches: how to flatten nested JSON to dot‑separated keys with System.Text.Json in .NET | C# convert hierarchical JSON into a flat key/value dictionary | flatten JSON arrays with index notation using System.Text.Json | save flattened JSON output to a file in a C# console application | exclude null values while flattening JSON in C#
+// Tags: flatten JSON with System.Text.Json C# | hierarchical key notation for JSON flattening | recursive JSON element processing C# | preserve numeric types during JSON flattening | write flattened JSON to file .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.Json;
-using Aspose.Cells;
 
-// The program loads an Excel file via Aspose.Cells, saves the workbook as a JSON string, recursively flattens the nested JSON into dot‑separated keys (including array indices), and writes the flattened JSON to an output file.
+// The example reads an input JSON file, parses it with System.Text.Json, recursively flattens objects and arrays into a dictionary using dot‑separated paths (including array indices), serializes the dictionary as indented JSON, and writes the result to an output file while handling parsing, I/O, and unexpected errors.
 class Program
 {
     static void Main()
     {
-        const string inputExcelPath = "input.xlsx";
-        const string outputJsonPath = "flattened.json";
+        // Paths to the source and output JSON files
+        string inputPath = "input.json";
+        string outputPath = "flattened.json";
+
+        // Verify that the input file exists before attempting to read it
+        if (!File.Exists(inputPath))
+        {
+            Console.Error.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
 
         try
         {
-            // Verify that the input Excel file exists
-            if (!File.Exists(inputExcelPath))
-            {
-                Console.WriteLine($"Error: Input file '{inputExcelPath}' not found.");
-                return;
-            }
-
-            // Load the workbook using Aspose.Cells
-            var workbook = new Workbook(inputExcelPath);
-
-            // Export workbook to JSON string via a memory stream
-            string jsonContent;
-            using (var ms = new MemoryStream())
-            {
-                var saveOptions = new JsonSaveOptions(); // Correct save options for JSON
-                workbook.Save(ms, saveOptions);
-                ms.Position = 0;
-                using var reader = new StreamReader(ms, Encoding.UTF8);
-                jsonContent = reader.ReadToEnd();
-            }
-
-            // Parse the JSON document
+            // Load the JSON document from file
+            string jsonContent = File.ReadAllText(inputPath);
             using JsonDocument doc = JsonDocument.Parse(jsonContent);
-            JsonElement root = doc.RootElement;
 
             // Flatten the JSON structure
-            var flatDictionary = new Dictionary<string, object?>();
-            FlattenElement(root, "", flatDictionary);
+            var flatDictionary = new Dictionary<string, object>();
+            FlattenElement(doc.RootElement, "", flatDictionary);
 
-            // Serialize the flattened dictionary back to JSON
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string flattenedJson = JsonSerializer.Serialize(flatDictionary, options);
+            // Convert the flat dictionary to a formatted JSON string
+            string flattenedJson = JsonSerializer.Serialize(
+                flatDictionary,
+                new JsonSerializerOptions { WriteIndented = true });
 
-            // Write the flattened JSON to the output file
-            File.WriteAllText(outputJsonPath, flattenedJson, Encoding.UTF8);
+            // Save the flattened JSON to the output file
+            File.WriteAllText(outputPath, flattenedJson);
 
-            Console.WriteLine($"Flattened JSON has been saved to '{outputJsonPath}'.");
+            Console.WriteLine($"Flattened JSON has been saved to '{outputPath}'.");
+        }
+        catch (JsonException jsonEx)
+        {
+            Console.Error.WriteLine($"JSON parsing error: {jsonEx.Message}");
+        }
+        catch (IOException ioEx)
+        {
+            Console.Error.WriteLine($"I/O error: {ioEx.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 
-    /// <param name="element">The current JsonElement to process.</param>
-    /// <param name="prefix">The accumulated property path.</param>
-    /// <param name="result">The dictionary collecting flattened key‑value pairs.</param>
-    static void FlattenElement(JsonElement element, string prefix, Dictionary<string, object?> result)
+    static void FlattenElement(JsonElement element, string prefix, Dictionary<string, object> result)
     {
         switch (element.ValueKind)
         {
@@ -90,16 +81,17 @@ class Program
                 break;
 
             case JsonValueKind.String:
-                result[prefix] = element.GetString();
+                result[prefix] = element.GetString()!;
                 break;
 
             case JsonValueKind.Number:
+                // Preserve the numeric type as best as possible
                 if (element.TryGetInt64(out long l))
                     result[prefix] = l;
                 else if (element.TryGetDouble(out double d))
                     result[prefix] = d;
                 else
-                    result[prefix] = element.GetDecimal();
+                    result[prefix] = element.GetRawText();
                 break;
 
             case JsonValueKind.True:
@@ -108,11 +100,11 @@ class Program
                 break;
 
             case JsonValueKind.Null:
-                result[prefix] = null;
+                result[prefix] = null!;
                 break;
 
             default:
-                // For other kinds (e.g., Undefined), store the raw text
+                // For any other kinds, store the raw JSON text
                 result[prefix] = element.GetRawText();
                 break;
         }

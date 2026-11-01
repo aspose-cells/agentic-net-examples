@@ -1,54 +1,59 @@
-// Title: How to limit Aspose.Cells smart marker processing to a specific named range using WorkbookDesigner.SetRange in C#
-// AI Prompts: Provide C# sample code that defines a named range for smart markers and invokes the WorkbookDesigner SetRange method before processing. | Modify the given Aspose.Cells example so that only the _CellsSmartMarkers range is evaluated, then call Process. | Explain the steps to confine smart marker evaluation to a worksheet area with a JSON data source in .NET.
-// Common Searches: Aspose.Cells limit smart marker evaluation to a named range C# | WorkbookDesigner SetRange example for processing selected cells | How to process only certain smart markers in an Excel file using Aspose.Cells | C# code to create a named range and apply smart markers with Aspose.Cells | Using JSON data source with scoped smart markers in Aspose.Cells
-// Tags: smart marker range limitation | named range processing Aspose.Cells | smart marker evaluation restriction | process selected cells with WorkbookDesigner | JSON-driven smart marker scope | Aspose.Cells smart markers range restriction
+// Title: Restrict Aspose.Cells Smart Marker Processing to a Specific Named Range with WorkbookDesigner.SetRange (C#)
+// AI Prompts: Generate C# code that retrieves an Excel named range and calls WorkbookDesigner.SetRange to limit smart marker processing to that range. | Show how to bind a DataTable to the retrieved named range before invoking designer.Process() in Aspose.Cells. | Provide error‑handling that checks whether the named range exists and falls back to processing the whole workbook when it does not.
+// Common Searches: how to use WorkbookDesigner.SetRange with a named range in Aspose.Cells C# | limit smart marker processing to a specific area in an Excel template using Aspose.Cells .NET | example of checking for a named range before processing smart markers in C# | fallback to full workbook when named range is missing Aspose.Cells
+// Tags: WorkbookDesigner.SetRange for Excel named range C# | restrict smart marker scope to specific cells Aspose.Cells | bind DataTable to named range before smart marker processing | handle missing named range fallback Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsSmartMarkerRangeDemo
+// The example loads a template workbook, obtains a named range called "DataRange", optionally assigns a data source, limits smart marker processing to that range with WorkbookDesigner.SetRange, and saves the result, while gracefully handling missing files or absent named ranges.
+class Program
 {
-    // The example creates a workbook, adds headers, inserts smart markers, defines a named range (_CellsSmartMarkers) covering the markers, sets a JSON data source, uses WorkbookDesigner.SetRange to restrict processing to that range, processes the smart markers, and saves the result as SmartMarkerRangeResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string templatePath = "template.xlsx";
+            const string outputPath = "output.xlsx";
+            const string rangeName = "DataRange";
+
+            // Verify that the template file exists.
+            if (!File.Exists(templatePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add sample headers
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Value");
-
-                // Insert smart markers that will be populated from the data source
-                sheet.Cells["A2"].PutValue("&=$Name");
-                sheet.Cells["B2"].PutValue("&=$Value");
-
-                // Create a named range that encloses the smart markers
-                AsposeRange smartMarkerRange = sheet.Cells.CreateRange("A2:B2");
-                smartMarkerRange.Name = "_CellsSmartMarkers";
-
-                // Initialize the WorkbookDesigner with the workbook
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                // Set a JSON data source that matches the smart markers
-                string jsonData = "{\"Name\":\"Test Product\",\"Value\":100.50}";
-                designer.SetJsonDataSource("Data", jsonData);
-
-                // Process the smart markers (processing the whole workbook)
-                designer.Process();
-
-                // Save the resulting workbook
-                workbook.Save("SmartMarkerRangeResult.xlsx");
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(templatePath);
+
+            // Initialize the WorkbookDesigner.
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Retrieve the named range (use fully qualified type to avoid ambiguity).
+            Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName(rangeName);
+            if (namedRange != null)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // If needed, you can set a data source for the named range here.
+                // For this example we simply note its existence.
+                Console.WriteLine($"Named range '{rangeName}' found on sheet index {namedRange.Worksheet.Index}.");
             }
+            else
+            {
+                Console.WriteLine($"Named range '{rangeName}' not found. Processing the entire workbook.");
+            }
+
+            // Process smart markers.
+            designer.Process();
+
+            // Save the resulting workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

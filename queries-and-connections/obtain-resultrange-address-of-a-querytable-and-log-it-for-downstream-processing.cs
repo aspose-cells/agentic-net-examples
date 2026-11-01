@@ -1,67 +1,37 @@
-// Title: How to obtain and log the ResultRange address of a QueryTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that checks a worksheet for QueryTables, retrieves the first QueryTable's ResultRange, and prints its address with Aspose.Cells. | Create a C# loop that iterates over all QueryTables in a worksheet, extracts each ResultRange, and writes the addresses to the console. | Add comprehensive error handling to a C# Aspose.Cells routine that safely accesses ResultRange even when no QueryTables exist, and logs an appropriate message.
-// Common Searches: Aspose.Cells C# get address of QueryTable ResultRange | How to log QueryTable result range in a .NET Excel workbook | Check for QueryTables before accessing ResultRange with Aspose.Cells | Iterate through multiple QueryTables and retrieve their ResultRange addresses in C# | Aspose.Cells handling missing QueryTables when reading ResultRange
-// Tags: Aspose.Cells QueryTable ResultRange address | C# retrieve QueryTable result range | enumerate QueryTables Aspose.Cells | log Excel query table range C# | error handling missing QueryTables Aspose.Cells
+// Title: How to retrieve and log the ResultRange address of a QueryTable with Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# function that opens an Excel file using Aspose.Cells, finds the first QueryTable on a worksheet, and returns its ResultRange address as a string. | Generate C# code to iterate through all QueryTables in a workbook with Aspose.Cells and print each ResultRange address to the console. | Create a reusable method in C# that accepts a workbook path and a QueryTable index, then logs the corresponding ResultRange address using Aspose.Cells.
+// Common Searches: Aspose.Cells C# get address of QueryTable result range | How to print QueryTable ResultRange address in .NET Excel processing | Retrieve QueryTable output range address with Aspose.Cells for .NET
+// Tags: Aspose.Cells QueryTable ResultRange retrieval | C# log QueryTable address with Aspose | Excel workbook QueryTable range extraction .NET | Iterate QueryTables Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates creating a workbook, optionally populating data, checking for QueryTables, retrieving the first QueryTable's read‑only ResultRange, logging its address, and saving the file, with guidance for iterating multiple tables and handling absent QueryTables.
-public class QueryTableResultRangeDemo
+// Loads an Excel workbook with Aspose.Cells, accesses the first worksheet, checks for QueryTables, obtains the ResultRange.Address of the first QueryTable, and writes the address to the console for downstream processing.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
-        try
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (or any specific worksheet by index/name)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet contains at least one QueryTable
+        if (worksheet.QueryTables.Count > 0)
         {
-            // Create a new workbook (create rule)
-            Workbook workbook = new Workbook();
+            // Get the first QueryTable (adjust index if needed)
+            QueryTable queryTable = worksheet.QueryTables[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Obtain the address of the ResultRange
+            string resultRangeAddress = queryTable.ResultRange.Address;
 
-            // Populate sample data to simulate a query table
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("John");
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Mary");
-
-            // In a real scenario a QueryTable would be added via an external connection.
-            // Here we simply check if any QueryTables exist and retrieve the ResultRange.
-            if (worksheet.QueryTables.Count > 0)
-            {
-                // Get the first QueryTable
-                QueryTable queryTable = worksheet.QueryTables[0];
-
-                // Obtain the ResultRange (read‑only property)
-                AsposeRange resultRange = queryTable.ResultRange;
-
-                // Log the address for downstream processing
-                Console.WriteLine("QueryTable ResultRange Address: " + resultRange.Address);
-            }
-            else
-            {
-                Console.WriteLine("No QueryTables found in the worksheet.");
-            }
-
-            // Save the workbook (save rule)
-            workbook.Save("QueryTableResultRangeDemo.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+            // Log the address for downstream processing
+            Console.WriteLine("QueryTable ResultRange address: " + resultRangeAddress);
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("No QueryTable found in the worksheet.");
         }
-    }
-}
-
-// Entry point for the application
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        QueryTableResultRangeDemo.Run();
     }
 }

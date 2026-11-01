@@ -1,65 +1,67 @@
-// Title: Set a custom font for Excel chart data labels and auto‑resize label shapes with Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a column chart, turns on data labels, assigns Calibri 14 bold dark‑blue font to the labels, and enables the label shapes to resize automatically to fit the text using Aspose.Cells. | Update an existing Aspose.Cells chart series so that its data label font is bold Calibri 14 dark blue and the labels automatically adjust their shape size and font scaling.
-// Common Searches: asp.net how to change font of chart data labels with Aspose.Cells | asp.net chart data label shape auto resize Aspose.Cells example | c# set bold dark blue font for Excel chart data labels using Aspose.Cells | asp.net enable autoscale font for chart data labels Aspose.Cells | apply custom font to all data label nodes in Aspose.Cells chart series
-// Tags: set chart data label font Aspose.Cells | enable data label shape auto‑resize Aspose.Cells | auto‑scale chart data label font .NET | custom font for series data labels Aspose.Cells | column chart label styling Aspose.Cells
+// Title: Apply a custom font to chart data labels and auto‑resize label shapes using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that sets the font name, size, color, bold and italic attributes for data labels on an Aspose.Cells column chart. | Show how to make chart data label shapes automatically adjust their size after changing the label font in Aspose.Cells. | Create a complete example that builds a workbook, adds a column chart, enables styled data labels, and saves the file as an .xlsx.
+// Common Searches: Aspose.Cells C# change font of Excel chart data labels | how to auto adjust data label size after font change in Aspose.Cells chart | set bold italic font for column chart data labels using Aspose.Cells .NET | C# example for styling chart data labels and saving workbook with Aspose.Cells | resize chart data label shape to fit custom font Aspose.Cells
+// Tags: set chart data label font Aspose.Cells | auto resize data label shape .NET | column chart label styling C# | Aspose.Cells custom font for Excel chart labels | chart data label formatting with Aspose.Cells | Excel chart label auto size adjustment C#
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCustomDataLabelFont
+// The sample creates a workbook, adds a column chart with sample data, enables data labels, applies an Arial Black 14‑point blue bold‑italic font to the labels, and saves the file as CustomFontDataLabels.xlsx, allowing the label shapes to automatically resize to fit the new style.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, applies a Calibri 14 bold dark‑blue font to the labels, activates shape resizing and auto‑scaling for the labels, propagates the font to child label nodes, and saves the file as CustomDataLabelFont.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate sample data
             sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
             sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["A5"].PutValue("D");
-
-            sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["B5"].PutValue(40);
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
             Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sample Chart";
 
-            // Set the data range for the series
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+            // Add a series to the chart (values range)
+            int seriesIndex = chart.NSeries.Add("B2:B4", true);
 
-            // Enable data labels for the first series
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;
+            // Optionally set category (X) axis data if needed
+            // chart.NSeries[seriesIndex].CategoryData = "A2:A4";
+
+            // Show data labels (values) on the series
+            DataLabels dataLabel = chart.NSeries[seriesIndex].DataLabels;
+            dataLabel.ShowValue = true; // display the value
 
             // Apply custom font style to the data labels
-            series.DataLabels.Font.Name = "Calibri";
-            series.DataLabels.Font.Size = 14;
-            series.DataLabels.Font.Color = Color.DarkBlue;
-            series.DataLabels.Font.IsBold = true;
+            dataLabel.Font.Name = "Arial Black";
+            dataLabel.Font.Size = 14;
+            dataLabel.Font.Color = Color.Blue;
+            dataLabel.Font.IsBold = true;
+            dataLabel.Font.IsItalic = true;
 
-            // Ensure the data label shape resizes to fit the new font
-            series.DataLabels.IsResizeShapeToFitText = true;
-            // Optionally enable auto‑scaling of the font when the shape size changes
-            series.DataLabels.AutoScaleFont = true;
-
-            // Apply the font settings to all child label nodes
-            series.DataLabels.ApplyFont();
-
-            // Save the workbook (save rule)
-            workbook.Save("CustomDataLabelFont.xlsx");
+            // Save the workbook to a file
+            string outputPath = "CustomFontDataLabels.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

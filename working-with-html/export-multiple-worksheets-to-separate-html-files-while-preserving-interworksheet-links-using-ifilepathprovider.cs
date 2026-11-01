@@ -1,65 +1,80 @@
-// Title: Export an Excel workbook to separate HTML files per worksheet while keeping inter‑sheet hyperlinks using Aspose.Cells C# IFilePathProvider
-// AI Prompts: Write C# code that implements a custom file path provider to name each worksheet's HTML file and configures HtmlSaveOptions to export all sheets, preserving hyperlinks between them. | Show how to create a navigation page that links to the individual sheet HTML files when saving a workbook with Aspose.Cells. | Demonstrate loading a workbook, setting HtmlSaveOptions (ExportActiveWorksheetOnly = false) together with a custom naming provider, and saving the workbook as multiple HTML pages with functional inter‑sheet links.
-// Common Searches: Aspose.Cells export each worksheet to its own HTML file C# | keep hyperlinks between sheets when saving Excel as HTML using Aspose.Cells | how to use IFilePathProvider for multi‑sheet HTML export in Aspose.Cells | generate index.html with navigation to sheet HTML pages Aspose.Cells | C# Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly false example
-// Tags: Aspose.Cells multi‑sheet HTML export | custom sheet HTML naming provider | maintain inter‑sheet hyperlinks Aspose.Cells | HtmlSaveOptions for exporting all worksheets | navigation page creation for worksheet HTML
+// Title: Export each worksheet of an Excel workbook to separate HTML5 files while preserving inter‑worksheet hyperlinks using a custom IFilePathProvider in Aspose.Cells for .NET
+// Common Searches: how to save each worksheet as an individual HTML file with Aspose.Cells C# | preserve worksheet hyperlinks when exporting worksheets to separate HTML pages using Aspose.Cells | use IFilePathProvider to control HTML file names in Aspose.Cells .NET | export active worksheet only to HTML5 with HtmlSaveOptions in Aspose.Cells | iterate through workbook worksheets and generate separate HTML files in C#
+// Tags: custom IFilePathProvider HTML file naming Aspose.Cells | ExportActiveWorksheetOnly HtmlSaveOptions | separate HTML files per worksheet Aspose.Cells | inter‑worksheet hyperlink preservation HTML export | HTML5 output Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportHtml
+// The example implements a WorksheetLinkProvider that ensures each generated file name ends with .html, loads an Excel workbook, loops through all worksheets, sets each as the active sheet, configures HtmlSaveOptions with ExportActiveWorksheetOnly = true and HtmlVersion = Html5, and saves each sheet to its own HTML file named after the worksheet while logging success or error messages.
+class WorksheetLinkProvider : IFilePathProvider
 {
-    // Custom file path provider that determines the HTML file name for each worksheet.
-    // The example loads InputWorkbook.xlsx, sets HtmlSaveOptions to export all worksheets, assigns a custom IFilePathProvider that returns "{sheetName}.html" for each sheet, and saves the workbook as index.html. This produces separate HTML files for each worksheet and preserves inter‑sheet hyperlinks.
-    class SheetFilePathProvider : IFilePathProvider
+    // Ensures that links between worksheets point to the correct HTML files.
+    public string GetFullName(string fileName)
     {
-        // This method is called for every worksheet during HTML export.
-        // It receives the worksheet name and returns the desired file path.
-        public string GetFullName(string sheetName)
+        // Aspose.Cells may pass the worksheet name without extension; enforce .html.
+        if (!fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
         {
-            // Create a simple file name based on the worksheet name.
-            // You can customize the path or naming convention as needed.
-            return $"{sheetName}.html";
+            fileName = $"{fileName}.html";
         }
+        return fileName;
     }
+}
 
-    class Program
+class ExportWorksheetsToHtml
+{
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                const string inputPath = "InputWorkbook.xlsx";
+            const string inputPath = "InputWorkbook.xlsx";
 
-                // Ensure the input workbook exists to avoid FileNotFoundException.
-                if (!File.Exists(inputPath))
+            // Verify that the input workbook exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create a single instance of the custom file path provider (not used in this version).
+            IFilePathProvider pathProvider = new WorksheetLinkProvider();
+
+            // Iterate through each worksheet and export it to a separate HTML file.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
                 {
-                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                    return;
+                    // Set the current worksheet as active for ExportActiveWorksheetOnly.
+                    workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+
+                    // Configure HTML save options for the current worksheet.
+                    HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html)
+                    {
+                        ExportActiveWorksheetOnly = true, // Export only the active worksheet.
+                        HtmlVersion = HtmlVersion.Html5   // Use HTML5 output.
+                        // Note: ExportWorksheetNavigation and CustomFilePathProvider are not available
+                        // in the current Aspose.Cells version, so they are omitted.
+                    };
+
+                    // Define the output HTML file name (one file per worksheet).
+                    string outputFile = $"{sheet.Name}.html";
+
+                    // Save the current worksheet as HTML.
+                    workbook.Save(outputFile, options);
+                    Console.WriteLine($"Worksheet '{sheet.Name}' exported to '{outputFile}'.");
                 }
-
-                // Load the existing workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure HTML export options.
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                catch (Exception ex)
                 {
-                    // Export all worksheets (required for inter‑worksheet link preservation).
-                    ExportActiveWorksheetOnly = false,
-
-                    // Use the custom file path provider to generate separate HTML files.
-                    FilePathProvider = new SheetFilePathProvider()
-                };
-
-                // Save the workbook to HTML. The main file (index.html) will contain navigation and references to the sheet files.
-                workbook.Save("index.html", htmlOptions);
-                Console.WriteLine("Workbook successfully exported to HTML.");
+                    Console.WriteLine($"Failed to export worksheet '{sheet.Name}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

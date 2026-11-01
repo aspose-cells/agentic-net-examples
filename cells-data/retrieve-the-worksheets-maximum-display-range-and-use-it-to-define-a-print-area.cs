@@ -1,51 +1,55 @@
-// Title: Set the worksheet print area to its MaxDisplayRange using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that obtains a worksheet's MaxDisplayRange with Aspose.Cells, converts the range to A1 notation, and assigns it to PageSetup.PrintArea. | Show how to calculate the start and end cell addresses from MaxDisplayRange properties and apply them as the print area in a .NET Excel workbook.
-// Common Searches: C# Aspose.Cells how to set print area based on worksheet's maximum display range | using MaxDisplayRange to define print area in Aspose.Cells .NET | Aspose.Cells retrieve MaxDisplayRange and set PageSetup.PrintArea programmatically | convert MaxDisplayRange indices to A1 address for printing with Aspose.Cells
-// Tags: Aspose.Cells print area from MaxDisplayRange | C# retrieve worksheet MaxDisplayRange | PageSetup.PrintArea configuration Aspose.Cells | Excel A1 notation generation C# | define worksheet print region programmatically
+// Title: Set worksheet print area to its maximum display range using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set worksheet print area to the used range | How to retrieve MaxDisplayRange and assign it as print area in Aspose.Cells | Aspose.Cells .NET example for defining print area based on data range | Set Excel print area programmatically using MaxDisplayRange with Aspose.Cells
+// Tags: Aspose.Cells MaxDisplayRange print area | C# worksheet page setup print area | define print area from used cells Aspose.Cells | Excel workbook set print area programmatically | Aspose.Cells retrieve maximum display range
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// The example creates a workbook, adds sample data, obtains the worksheet's MaxDisplayRange, translates its bounds to A1-style addresses, sets PageSetup.PrintArea to that range, and saves the file.
-class SetPrintAreaFromMaxDisplayRange
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, gets the first worksheet, obtains its MaxDisplayRange (the area containing data or formatting), converts the range to an A1‑style reference, assigns that reference to the worksheet's PageSetup.PrintArea, and saves the workbook with the updated print settings.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Sample data to create a display range
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue(100);
-            sheet.Cells["B2"].PutValue(200);
-            sheet.Cells["C5"].PutValue("Extra");
-
-            // Retrieve the maximum display range (includes data, merged cells, shapes)
-            AsposeRange maxRange = sheet.Cells.MaxDisplayRange;
-
-            if (maxRange != null)
+            try
             {
-                // Convert range indices to Excel cell addresses (e.g., A1, D10)
-                string startAddress = CellsHelper.CellIndexToName(maxRange.FirstRow, maxRange.FirstColumn);
-                string endAddress = CellsHelper.CellIndexToName(
-                    maxRange.FirstRow + maxRange.RowCount - 1,
-                    maxRange.FirstColumn + maxRange.ColumnCount - 1);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Define the print area using the calculated addresses
-                sheet.PageSetup.PrintArea = $"{startAddress}:{endAddress}";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve the maximum display range (the area that contains data or formatting)
+                AsposeRange maxRange = sheet.Cells.MaxDisplayRange;
+
+                // Convert the range to an A1‑style reference string (e.g., "A1:D20")
+                string printArea = maxRange.RefersTo; // or maxRange.GetRefersTo()
+
+                // Set the print area for the worksheet
+                sheet.PageSetup.PrintArea = printArea;
+
+                // Save the workbook with the new print area settings
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-
-            // Save the workbook with the defined print area
-            workbook.Save("PrintAreaFromMaxDisplayRange.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

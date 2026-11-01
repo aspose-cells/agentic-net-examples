@@ -1,45 +1,33 @@
-// Title: Set worksheet default print resolution to 600 DPI with Aspose.Cells for .NET (C#)
-// AI Prompts: Configure PageSetup.PrintQuality = 600 on a worksheet using Aspose.Cells in C#. | Programmatically increase Excel sheet print resolution to 600 DPI with the Aspose.Cells .NET API. | Apply high‑definition print quality to the first worksheet before saving the workbook.
-// Common Searches: Aspose.Cells how to change default print DPI for a worksheet in C# | C# set Excel worksheet print quality to 600 DPI using Aspose.Cells | Increase print resolution of generated Excel file with Aspose.Cells .NET | Set PageSetup.PrintQuality property to 600 in Aspose.Cells example
-// Tags: Aspose.Cells worksheet print quality DPI | C# PageSetup.PrintQuality property | high‑resolution Excel export Aspose.Cells | default print resolution .NET
+// Title: Set worksheet default print resolution to 600 DPI with Aspose.Cells for .NET
+// AI Prompts: Set the PageSetup.PrintQuality of a worksheet to 600 DPI using Aspose.Cells before saving the workbook. | Apply a 600 DPI default print quality to every worksheet in an existing Aspose.Cells workbook programmatically. | Read back and verify the current print resolution of a worksheet after modifying PageSetup.PrintQuality.
+// Common Searches: Aspose.Cells how to change worksheet print DPI to 600 | C# set default print quality for Excel workbook using Aspose.Cells | increase Excel print resolution for high‑definition output with Aspose.Cells .NET
+// Tags: worksheet PageSetup.PrintQuality 600 DPI | Aspose.Cells high‑resolution print setting | default print quality configuration .NET | programmatic Excel print DPI adjustment | set worksheet print resolution Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// // Creates a workbook, accesses the first worksheet, sets PageSetup.PrintQuality to 600 DPI, ensures the output folder exists, and saves the file as HighResolutionOutput.xlsx.
+// // Creates a new workbook, sets the first worksheet's PageSetup.PrintQuality to 600 DPI for high‑definition printing, and saves the file as HighResolutionOutput.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the default print quality (resolution) to 600 DPI
+            // Set the default print quality to 600 DPI for high‑definition output
             sheet.PageSetup.PrintQuality = 600;
 
-            // Define output file path
-            string outputPath = "HighResolutionOutput.xlsx";
-
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("HighResolutionOutput.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

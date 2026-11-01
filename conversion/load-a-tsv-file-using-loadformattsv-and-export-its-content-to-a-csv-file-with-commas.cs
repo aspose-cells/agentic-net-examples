@@ -1,37 +1,23 @@
-// Title: How to convert a TSV file to a comma‑separated CSV with Aspose.Cells in C# (.NET)
-// AI Prompts: Load a tab‑delimited file using Aspose.Cells TxtLoadOptions with a '\t' separator and then save it as a CSV using TxtSaveOptions with a ',' separator. | Generate C# code that reads an input.tsv, sets TxtLoadOptions.Separator to tab, and writes output.csv with TxtSaveOptions.Separator set to comma.
-// Common Searches: aspocells c# convert tab separated values file to csv | load tsv with TxtLoadOptions and export as comma delimited csv example | c# Aspose.Cells save workbook as csv with custom delimiter | how to set separator for TxtLoadOptions in Aspose.Cells | convert large tsv to csv using Aspose.Cells .NET
-// Tags: tab‑separator loading options Aspose.Cells | comma‑separator saving options Aspose.Cells | TSV to CSV conversion using Aspose.Cells | C# read TSV with Aspose.Cells | export workbook to CSV Aspose.Cells
+// Title: Load a TSV file and export it to CSV using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# load TSV file with LoadFormat.Tsv and save as CSV | Convert tab‑separated values to comma‑separated values using Aspose.Cells in .NET | C# example for TxtSaveOptions SaveFormat.CSV after loading a TSV workbook | How to read a .tsv file with Aspose.Cells and write a .csv file in C# | Using LoadOptions to import TSV and TxtSaveOptions to export CSV in .NET
+// Tags: LoadOptions with LoadFormat.Tsv | TxtSaveOptions for CSV output | TSV to CSV conversion using Aspose.Cells | Workbook.Save CSV format C# example | Aspose.Cells import TSV file
 
-using System;
 using Aspose.Cells;
+using System;
 
-// // Loads a tab‑separated values (TSV) file via TxtLoadOptions (tab separator) and saves it as a comma‑separated CSV using TxtSaveOptions (comma separator).
-class TsvToCsvConverter
+// The sample loads a tab‑separated values (TSV) file using LoadOptions configured with LoadFormat.Tsv, then saves the workbook as a comma‑separated values (CSV) file using TxtSaveOptions set to SaveFormat.CSV.
+class Program
 {
     static void Main()
     {
-        // Input TSV file path
-        string inputPath = "input.tsv";
+        // Load the TSV file using the TSV load format
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
+        Workbook workbook = new Workbook("input.tsv", loadOptions);
 
-        // Output CSV file path
-        string outputPath = "output.csv";
+        // Prepare CSV save options (comma is the default delimiter for CSV)
+        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.CSV);
 
-        // Load options for TSV format
-        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Tsv);
-        // TSV uses tab as separator; set explicitly for clarity
-        loadOptions.Separator = '\t';
-
-        // Load the TSV file into a workbook
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Save options for CSV with comma separator
-        TxtSaveOptions saveOptions = new TxtSaveOptions();
-        saveOptions.Separator = ',';
-        // Optional: set encoding if needed
-        // saveOptions.Encoding = System.Text.Encoding.UTF8;
-
-        // Save the workbook as a CSV file
-        workbook.Save(outputPath, saveOptions);
+        // Export the workbook content to a CSV file
+        workbook.Save("output.csv", saveOptions);
     }
 }

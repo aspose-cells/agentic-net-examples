@@ -1,15 +1,14 @@
-// Title: Export the first worksheet page to a 150 DPI PNG image using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and saves the first worksheet as a PNG image at 150 DPI. | Show how to configure ImageOrPrintOptions for horizontal and vertical resolution and use SheetRender to generate a PNG file. | Add checks for the source file’s existence and create the destination directory before exporting the worksheet to PNG.
-// Common Searches: Aspose.Cells C# export worksheet page to PNG with specific DPI | how to set 150 dpi when converting Excel sheet to image using Aspose.Cells | C# example for saving Excel worksheet as high‑resolution PNG | render first sheet of workbook to PNG file with custom resolution Aspose.Cells
-// Tags: worksheet to PNG conversion with custom DPI Aspose.Cells | ImageOrPrintOptions DPI setting C# | SheetRender export Excel sheet as PNG | C# file existence check before Aspose.Cells export | create output directory for Aspose.Cells image rendering
+// Title: Export a worksheet to a high‑resolution PNG (150 DPI) using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export worksheet to PNG with 150 DPI | How to set image resolution when converting Excel sheet to PNG in Aspose.Cells | Aspose.Cells SheetRender ToImage high resolution PNG example | Saving Excel worksheet as PNG at specific DPI using Aspose.Cells .NET | Render entire Excel worksheet to a single PNG page with custom DPI in C#
+// Tags: Aspose.Cells worksheet to PNG export | ImageOrPrintOptions DPI setting | SheetRender ToImage high resolution | C# export Excel sheet as PNG | OnePagePerSheet image rendering
 
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example loads an Excel workbook, verifies the input file, configures ImageOrPrintOptions to 150 DPI, uses SheetRender to render the first worksheet page, creates the output folder if missing, and saves the result as a PNG image.
-class Program
+// The sample loads an Excel workbook, selects a worksheet, configures ImageOrPrintOptions with 150 horizontal and vertical DPI and OnePagePerSheet enabled, then uses SheetRender to render the first page of the sheet as a PNG file, handling missing files and runtime exceptions.
+class ExportWorksheetAsPng
 {
     static void Main()
     {
@@ -21,43 +20,34 @@ class Program
             // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (or any specific worksheet you need)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet (or specify by name/index)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Configure image rendering options: 150 DPI resolution
+            // Configure image export options
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // Image format defaults to PNG when the file extension is .png,
-                // so we omit setting ImageFormat to avoid API version issues.
-                HorizontalResolution = 150,
-                VerticalResolution = 150
+                // Default format is PNG; explicit setting omitted to avoid missing API issues
+                HorizontalResolution = 150, // Set horizontal DPI
+                VerticalResolution = 150,   // Set vertical DPI
+                OnePagePerSheet = true      // Export whole sheet on a single page
             };
 
-            // Create a SheetRender object using the worksheet and the image options
-            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+            // Render the worksheet to an image
+            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
+            sheetRender.ToImage(0, outputPath); // Export the first page as PNG
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Export the first page of the worksheet to a PNG file
-            sheetRender.ToImage(0, outputPath);
-
-            Console.WriteLine($"Worksheet exported successfully to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Worksheet exported successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

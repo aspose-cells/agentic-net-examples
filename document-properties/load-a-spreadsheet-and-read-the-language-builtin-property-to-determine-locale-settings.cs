@@ -1,26 +1,46 @@
-// Title: How to read the Language built-in document property (locale) from an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells and prints the workbook's BuiltInDocumentProperties.Language value. | Create a reusable C# method that accepts a file path or stream and returns the locale string from the workbook's Language built-in property using Aspose.Cells. | Show how to modify the example to retrieve the Language property from a workbook loaded from a MemoryStream instead of a file path.
-// Common Searches: aspnet read language built-in property from excel file using aspose.cells | c# get locale setting from workbook builtindocumentproperties language | how to extract excel document language (locale) with aspose.cells in .net | retrieve language built-in property from .xlsx using aspose.cells c# example | asp.net core read workbook language property aspose.cells
-// Tags: language built-in property extraction Aspose.Cells | workbook locale retrieval Aspose.Cells C# | builtindocumentproperties language access Aspose.Cells | xlsx language attribute reading Aspose.Cells | c# get excel document locale Aspose.Cells
+// Title: Read the Language built‑in document property from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read Language built‑in property from .xlsx file | how to get Excel document language setting with Aspose.Cells in .NET | retrieve built‑in Language metadata from workbook using Aspose.Cells | Aspose.Cells example to read locale information from Excel file | load workbook and access Language property via BuiltInDocumentProperties in C#
+// Tags: read built-in document properties Aspose.Cells | retrieve language metadata Excel C# | Aspose.Cells workbook locale property | C# get Excel language built-in property | Aspose.Cells built-in properties access example
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads 'input.xlsx' with Aspose.Cells, accesses the workbook's BuiltInDocumentProperties, reads the Language property (locale), and writes the value to the console.
+// The sample verifies that 'input.xlsx' exists, loads it into an Aspose.Cells Workbook, accesses the BuiltInDocumentProperties collection, safely reads the 'Language' property, prints its value (or 'N/A' if absent), and handles any exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the spreadsheet from a file
-        var workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string filePath = "input.xlsx";
 
-        // Access the built‑in document properties
-        var builtInProps = workbook.BuiltInDocumentProperties;
+            // Ensure the input file exists before loading
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File \"{filePath}\" not found.");
+                return;
+            }
 
-        // Read the Language property which indicates the locale settings
-        string language = builtInProps.Language;
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
 
-        // Output the language (locale) information
-        Console.WriteLine("Document Language (Locale): " + language);
+            // Access built‑in document properties
+            var builtInProps = workbook.BuiltInDocumentProperties;
+
+            // Retrieve the "Language" property safely using the indexer
+            var languageProp = builtInProps["Language"];
+            string languageValue = languageProp != null && languageProp.Value != null
+                ? languageProp.Value.ToString()
+                : "N/A";
+
+            // Display the language setting
+            Console.WriteLine("Document Language: " + languageValue);
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

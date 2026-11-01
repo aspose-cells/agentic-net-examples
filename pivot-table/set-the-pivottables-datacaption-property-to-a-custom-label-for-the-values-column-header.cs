@@ -1,70 +1,71 @@
-// Title: Changing the values column header of an Aspose.Cells PivotTable with C#
-// AI Prompts: Generate a new workbook, add a PivotTable, and replace the default "Values" caption with a custom label by setting the DataFieldHeaderName property using the Aspose.Cells .NET API (C#). | Update an existing PivotTable in a workbook to rename its data field header to a specific string via the PivotTable.DataFieldHeaderName setter in C#.
-// Common Searches: Aspose.Cells C# change pivot table values column caption | Set custom header for data field in Excel pivot table using Aspose.Cells | Example of setting pivot table data caption in Aspose.Cells .NET | Rename "Values" column in programmatic pivot table Aspose.Cells C# | How to customize pivot table data caption with Aspose.Cells API
-// Tags: Aspose.Cells pivot table custom data caption | C# set pivot table values header | Aspose.Cells modify pivot data field label | Excel pivot table header customization via .NET | Aspose.Cells API rename pivot values column
+// Title: Set a custom caption for the values column of a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to change the caption of the first data field in an existing PivotTable to a custom label and save the workbook. | Programmatically rename the values column header of a PivotTable by assigning a new Name to its DataFields[0] with Aspose.Cells for .NET. | Load an Excel file, modify the PivotTable's data field caption to "Custom Values", and write the updated file using Aspose.Cells C# API.
+// Common Searches: aspocells change pivot table values column header c# | rename data field caption in Excel pivot table using Aspose.Cells .NET | set custom DataCaption for pivot table values column programmatically | how to modify pivot table data field name with Aspose.Cells C#
+// Tags: Aspose.Cells pivot table values column caption | C# rename pivot table data field | set DataCaption property Aspose.Cells | custom values header Excel pivot table .NET | modify PivotTable DataFields name Aspose
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-// The sample creates a workbook, fills it with sample data, adds a PivotTable, assigns a custom caption to the values column using the DataFieldHeaderName property, refreshes and calculates the pivot, and saves the file as PivotTableCustomDataCaption.xlsx.
-class SetPivotDataCaption
+// Loads an Excel workbook, accesses the first worksheet's first PivotTable, changes the caption of its first data field to "Custom Values", and saves the modified workbook.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Region");
-            sheet.Cells["C1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Laptop");
-            sheet.Cells["B2"].PutValue("North");
-            sheet.Cells["C2"].PutValue(1000);
-            sheet.Cells["A3"].PutValue("Laptop");
-            sheet.Cells["B3"].PutValue("South");
-            sheet.Cells["C3"].PutValue(1500);
-            sheet.Cells["A4"].PutValue("Phone");
-            sheet.Cells["B4"].PutValue("North");
-            sheet.Cells["C4"].PutValue(800);
-            sheet.Cells["A5"].PutValue("Phone");
-            sheet.Cells["B5"].PutValue("South");
-            sheet.Cells["C5"].PutValue(1200);
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a pivot table to the worksheet
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region as column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set a custom caption for the values (data) column header
-            pivotTable.DataFieldHeaderName = "Custom Values";
+            // Ensure a pivot table exists
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            // Refresh and calculate the pivot table to apply changes
-            pivotTable.RefreshData();   // Correct API to refresh pivot cache
-            pivotTable.CalculateData();
+            // Retrieve the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Save the workbook with the customized pivot table
-            workbook.Save("PivotTableCustomDataCaption.xlsx");
+            // Set a custom label for the first values column header, if a data field exists
+            if (pivotTable.DataFields.Count > 0)
+            {
+                // Change the caption of the first data field
+                pivotTable.DataFields[0].Name = "Custom Values";
+            }
+            else
+            {
+                Console.WriteLine("Pivot table has no data fields to rename.");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        SetPivotDataCaption.Run();
     }
 }

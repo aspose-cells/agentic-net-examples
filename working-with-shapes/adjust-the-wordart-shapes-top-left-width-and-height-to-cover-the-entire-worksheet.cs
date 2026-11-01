@@ -1,63 +1,77 @@
-// Title: How to resize an Aspose.Cells WordArt shape to fill the entire worksheet in C#
-// AI Prompts: Create a WordArt shape on a worksheet, compute the total pixel width of all used columns and the total pixel height of all used rows, then set the shape's Top, Left, Width, and Height properties so it spans the whole sheet using Aspose.Cells for .NET. | Programmatically adjust a WordArt object's dimensions to match the used range of an Excel worksheet by iterating through columns and rows to obtain pixel sizes with GetColumnWidthPixel and GetRowHeightPixel in C#.
-// Common Searches: Aspose.Cells C# set WordArt size to match used range | Resize WordArt to cover full worksheet with Aspose.Cells | Calculate pixel dimensions of Excel sheet for shape sizing in .NET | How to make WordArt fill entire Excel sheet using Aspose.Cells API | C# code to expand WordArt across all rows and columns in a workbook
-// Tags: Aspose.Cells WordArt full sheet sizing | C# compute worksheet pixel dimensions Aspose.Cells | adjust WordArt size to used range Aspose.Cells | shape spanning entire worksheet Aspose.Cells | Excel WordArt dimension control C#
+// Title: How to expand an Aspose.Cells WordArt shape to cover the full worksheet in C#
+// Common Searches: C# Aspose.Cells set WordArt shape size to worksheet dimensions | Resize WordArt to fill entire Excel sheet using Aspose.Cells API | Calculate total worksheet width and height for shape positioning in Aspose.Cells | Aspose.Cells WordArt top left zero full sheet coverage example | Programmatically make WordArt span whole worksheet in .NET
+// Tags: Aspose.Cells WordArt full worksheet sizing | C# calculate worksheet dimensions points Aspose | set shape top left width height Aspose.Cells | resize WordArt to match sheet size .NET | shape positioning Excel using Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The example creates a new workbook, adds a WordArt shape, calculates the combined pixel width of all used columns and the combined pixel height of all used rows, positions the shape at the top‑left corner, assigns the calculated Width and Height so the WordArt covers the entire worksheet area, and saves the file.
+// The example loads a workbook, adds a WordArt shape, computes the worksheet's total width and height in points by iterating over columns and rows, sets the shape's Top and Left to zero, assigns its Width and Height to the calculated totals, and saves the workbook so the WordArt covers the entire sheet.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add a WordArt shape to the worksheet
-            // Parameters: style, text, font size, top, left, width, height, rotationAngle
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,
-                "Full Sheet WordArt",
-                24,
-                0, 0, 0, 0, 0);
-
-            // Calculate total width of all used columns (in pixels)
-            int totalWidth = 0;
-            int maxColumn = worksheet.Cells.MaxColumn; // zero‑based index of the last used column
-            for (int col = 0; col <= maxColumn; col++)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                totalWidth += (int)worksheet.Cells.GetColumnWidthPixel(col);
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Calculate total height of all used rows (in pixels)
-            int totalHeight = 0;
-            int maxRow = worksheet.Cells.MaxRow; // zero‑based index of the last used row
-            for (int row = 0; row <= maxRow; row++)
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a WordArt shape (provide required width and height parameters)
+            Shape wordArt;
+            try
             {
-                totalHeight += (int)worksheet.Cells.GetRowHeightPixel(row);
+                wordArt = sheet.Shapes.AddWordArt(
+                    PresetWordArtStyle.WordArtStyle1, // any preset style
+                    "WordArt Text",
+                    0, 0,               // upper‑left cell
+                    0, 0,               // lower‑right cell (same as upper‑left for positioning)
+                    100, 30);           // initial width and height in points
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to add WordArt: {ex.Message}");
+                return;
             }
 
-            // Position the WordArt at the top‑left corner (cell A1)
+            // Approximate total worksheet width in points (1 character ≈ 7 points)
+            double totalWidthPt = 0;
+            for (int col = 0; col <= sheet.Cells.MaxColumn; col++)
+            {
+                totalWidthPt += sheet.Cells.GetColumnWidth(col) * 7.0;
+            }
+
+            // Total worksheet height in points (row height is already in points)
+            double totalHeightPt = 0;
+            for (int row = 0; row <= sheet.Cells.MaxRow; row++)
+            {
+                totalHeightPt += sheet.Cells.GetRowHeight(row);
+            }
+
+            // Position the WordArt at the top‑left corner and size it to cover the whole sheet
             wordArt.Top = 0;
             wordArt.Left = 0;
+            wordArt.Width = (int)totalWidthPt;
+            wordArt.Height = (int)totalHeightPt;
 
-            // Resize the WordArt to cover the entire worksheet area
-            wordArt.Width = totalWidth;
-            wordArt.Height = totalHeight;
-
-            // Save the workbook
-            string outputPath = "WordArtFullSheet.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

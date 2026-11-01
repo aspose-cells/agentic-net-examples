@@ -1,41 +1,71 @@
-// Title: How to retrieve and log the data validation type and formulas of cell J5 with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook, accesses cell J5, obtains its Validation object, and prints Validation.Type, Validation.Formula1, and Validation.Formula2 to the console using Aspose.Cells. | Show how to verify whether a specific cell has data validation and output its type and formula values in a .NET console application with Aspose.Cells.
-// Common Searches: Aspose.Cells C# read data validation type from a specific cell | Get validation formulas for a target cell using Aspose.Cells .NET | How to determine if a cell contains data validation with Aspose.Cells | Log Excel validation details in a .NET console application
-// Tags: aspocells read cell validation .net | aspocells retrieve validation formulas c# | excel data validation extraction using aspocells | c# console log validation type aspocells | target cell validation aspocells example
+// Title: How to read a cell’s data‑validation type and formulas (Formula1, Formula2) with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells get data validation type of a specific cell | read validation Formula1 and Formula2 from cell J5 using Aspose.Cells | Aspose.Cells retrieve data validation details for an Excel cell in .NET | how to check if a worksheet cell has data validation with Aspose.Cells C# | extract data validation rules from a worksheet cell using Aspose.Cells API
+// Tags: Aspose.Cells read cell validation .NET | data validation extraction Aspose.Cells C# | cell validation type retrieval Excel .NET | GetValidation API usage Aspose.Cells | read validation formulas Excel workbook C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Loads an Excel workbook, accesses cell J5 on the first worksheet, obtains its Validation object (if present), and writes the validation type together with Formula1 and Formula2 to the console.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing XLSX workbook, accesses the first worksheet, obtains cell J5, and uses the GetValidation method to fetch any data‑validation applied. It then prints the validation type along with Formula1 and Formula2, handling cases where no validation exists and catching CellsException for password‑protected or corrupted files.
+    class Program
     {
-        // Load an existing workbook that contains validation on cell J5.
-        // Replace "input.xlsx" with the actual file path.
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (or change index as needed).
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Get the cell J5.
-        Cell cell = worksheet.Cells["J5"];
-
-        // Retrieve the validation applied to this cell.
-        Validation validation = cell.GetValidation();
-
-        if (validation != null)
+        static void Main()
         {
-            // Log the validation type.
-            Console.WriteLine("Validation Type: " + validation.Type);
+            string inputPath = "input.xlsx";
 
-            // Log the first and second formula values (if any).
-            Console.WriteLine("Formula1: " + validation.Formula1);
-            Console.WriteLine("Formula2: " + validation.Formula2);
-        }
-        else
-        {
-            Console.WriteLine("No validation applied to cell J5.");
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"File not found: {inputPath}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook (no password). If the file is password‑protected,
+                // a CellsException will be thrown and handled in the catch block below.
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Get cell J5
+                Cell cell = worksheet.Cells["J5"];
+
+                // Retrieve any data validation applied to the cell
+                Validation validation = cell.GetValidation();
+
+                if (validation != null)
+                {
+                    Console.WriteLine($"Validation Type: {validation.Type}");
+                    Console.WriteLine($"Formula1: {validation.Formula1}");
+                    Console.WriteLine($"Formula2: {validation.Formula2}");
+                }
+                else
+                {
+                    Console.WriteLine("Cell J5 does not have any data validation applied.");
+                }
+
+                // (Optional) Save the workbook if any changes were made
+                // workbook.Save("output.xlsx");
+            }
+            catch (CellsException ce)
+            {
+                // Handle password‑protected workbook or other CellsException cases
+                Console.WriteLine($"CellsException: {ce.Message}");
+
+                // Example of loading a password‑protected workbook:
+                // string password = "yourPassword";
+                // LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+                // Workbook workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                // General exception handling
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

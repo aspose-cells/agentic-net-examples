@@ -1,50 +1,69 @@
-// Title: C# Aspose.Cells example: Detect URLs in a cell’s displayed text and add a clickable hyperlink
-// AI Prompts: Generate C# code using Aspose.Cells that reads a cell’s DisplayStringValue, extracts any http/https URL with a regular expression, and inserts a hyperlink into the same cell while preserving the original sentence as the link text. | Create a reusable C# method for Aspose.Cells that accepts a Worksheet and cell address, finds the first URL in the cell’s formatted string, adds a hyperlink pointing to that URL, and returns the hyperlink index. | Show how to modify an existing Aspose.Cells workbook so that cells containing URLs in their displayed text are automatically converted to clickable hyperlinks during a save operation.
-// Common Searches: Aspose.Cells C# add hyperlink to a cell based on its displayed string | How to extract URL from Excel cell text using Aspose.Cells .NET | C# regex to find http links in a worksheet cell with Aspose.Cells | Convert plain text URL in Excel to clickable link using Aspose.Cells API | Programmatically create hyperlink in .xlsx file from cell content in C#
-// Tags: Aspose.Cells add hyperlink from cell text | DisplayStringValue URL extraction Aspose.Cells | C# regex hyperlink creation Excel | Aspose.Cells .xlsx hyperlink insertion | programmatic Excel hyperlink generation C#
+// Title: Read a cell's displayed text, detect embedded URLs, and convert them into clickable hyperlinks with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that reads the formatted string from a worksheet cell, uses a regular expression to locate an http or https URL, and inserts a hyperlink into that same cell. | Demonstrate how to apply the conventional hyperlink appearance (blue font color and single underline) to a cell after adding a hyperlink with Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert URL found in cell text to clickable hyperlink | detect and replace URLs with hyperlinks in Excel using Aspose.Cells .NET | add hyperlink to Excel cell based on regex match with Aspose.Cells | C# Aspose.Cells create hyperlink from cell string value and style it | read formatted cell value and insert hyperlink programmatically in Aspose.Cells
+// Tags: read cell display text Aspose.Cells | regex URL detection worksheet cell C# | insert cell hyperlink Aspose.Cells | apply hyperlink style blue underline Aspose.Cells | save workbook after hyperlink insertion Aspose.Cells
 
-using System;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Text.RegularExpressions;
 
-namespace AsposeCellsHyperlinkDemo
+// The example loads or creates an Excel workbook, reads the formatted text of a target cell, uses a regular expression to find an http/https URL, adds a hyperlink that covers the same cell, applies the standard blue underlined hyperlink style, and saves the updated workbook.
+class Program
 {
-    // Demonstrates retrieving a cell's displayed string with DisplayStringValue, using a regular expression to locate an http/https URL, adding a hyperlink to the same cell while keeping the original text as the link label, and saving the workbook as an .xlsx file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Sample cell that may contain a URL
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("Visit our site at https://www.example.com for more info.");
+            Workbook workbook;
 
-            // Retrieve the formatted string value of the cell
-            // DisplayStringValue returns the value as shown in Excel (respecting cell style)
-            string formattedText = cell.DisplayStringValue;
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets.Add();
+            }
 
-            // Simple regex to detect URLs starting with http or https
-            Regex urlRegex = new Regex(@"(http|https)://[^\s]+", RegexOptions.IgnoreCase);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Target cell (modify address as needed)
+            Cell cell = worksheet.Cells["A1"];
+
+            // Retrieve the cell's formatted string
+            string formattedText = cell.StringValue;
+
+            // Detect a URL in the formatted text
+            Regex urlRegex = new Regex(@"\bhttps?://[^\s]+", RegexOptions.IgnoreCase);
             Match match = urlRegex.Match(formattedText);
 
             if (match.Success)
             {
                 string url = match.Value;
 
-                // Add a hyperlink to the same cell (A1) pointing to the detected URL
-                // The Add method returns the index of the created hyperlink
-                int hyperlinkIndex = sheet.Hyperlinks.Add("A1", 1, 1, url);
+                // Add a hyperlink that covers the same cell
+                worksheet.Hyperlinks.Add(cell.Row, cell.Column, 1, 1, url);
 
-                // Optionally set the display text of the hyperlink to the original cell text
-                Hyperlink hyperlink = sheet.Hyperlinks[hyperlinkIndex];
-                hyperlink.TextToDisplay = formattedText;
+                // Apply typical hyperlink style (blue & underlined)
+                Style hyperlinkStyle = workbook.CreateStyle();
+                hyperlinkStyle.Font.Color = Color.Blue;
+                hyperlinkStyle.Font.Underline = FontUnderlineType.Single;
+                cell.SetStyle(hyperlinkStyle);
             }
 
-            // Save the workbook to a file
-            workbook.Save("HyperlinkResult.xlsx", SaveFormat.Xlsx);
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

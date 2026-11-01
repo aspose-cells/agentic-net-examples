@@ -1,77 +1,69 @@
-// Title: Use Aspose.Cells WorkbookDesigner to fill an Excel template from a List<Person> while preserving cell formatting (CopyStyle) in C#
-// AI Prompts: Write C# code that loads an .xlsx template, binds a List<Person> to a smart marker named "Person", enables style inheritance, processes the template with WorkbookDesigner, and saves the output workbook. | Show how to configure DesignerOptions.CopyStyle (or the equivalent setting) for WorkbookDesigner in Aspose.Cells to keep original cell styles during smart‑marker processing. | Add robust error handling that checks for a missing template file, creates the result directory if it does not exist, and logs any exceptions that occur while processing the template.
-// Common Searches: Aspose.Cells C# WorkbookDesigner copy style option example | How to keep original cell formatting when using smart markers in Aspose.Cells | Populate Excel template with a list of objects using Aspose.Cells and preserve styles | Enable CopyStyle attribute in Aspose.Cells .NET for template processing | C# code to bind List<Person> to smart marker and retain formatting
-// Tags: WorkbookDesigner copy style C# | Aspose.Cells smart markers preserve formatting | populate Excel template from List<Person> | error handling missing template Aspose.Cells | create output directory before saving workbook
+// Title: Insert multiple rows with inherited formatting from an Excel template using Aspose.Cells InsertRows (CopyStyle) in C#
+// Common Searches: C# Aspose.Cells insert rows and keep template row style | How to use InsertRows with CopyStyle true to preserve formatting in Aspose.Cells | Load an Excel template and add data rows while inheriting cell styles with Aspose.Cells | Aspose.Cells InsertRows copy style example for dynamic record insertion | Preserve row formatting when inserting rows in a workbook using Aspose.Cells C#
+// Tags: InsertRows CopyStyle Aspose.Cells C# | inherit row formatting Excel template Aspose | dynamic row insertion Excel workbook Aspose.Cells | load template workbook Aspose.Cells C# | preserve cell style when adding records Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// The example loads an Excel template, uses WorkbookDesigner to bind a List<Person> to the "Person" smart marker, enables style inheritance (CopyStyle) so original cell formatting is retained, processes the template, ensures the output folder exists, and saves the resulting workbook, with basic exception handling for missing files and runtime errors.
-class Program
+namespace Example
 {
-    static void Main()
+    // The example loads an existing Excel template (or creates a new workbook if the template is missing), inserts the required number of rows at a specified start index using InsertRows with the CopyStyle flag set to true so the new rows inherit the template row's formatting, populates the rows with data, and saves the workbook as an XLSX file.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string templatePath = "Template.xlsx";
-
-            // Verify that the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            try
             {
-                Console.WriteLine($"Template file '{templatePath}' not found.");
-                return;
+                // Define template and output file paths
+                string templatePath = "template.xlsx";
+                string outputPath = "output.xlsx";
+
+                Workbook workbook;
+
+                // Load existing template if it exists; otherwise create a new workbook
+                if (File.Exists(templatePath))
+                {
+                    workbook = new Workbook(templatePath);
+                }
+                else
+                {
+                    workbook = new Workbook(); // creates a default workbook with one worksheet
+                }
+
+                var worksheet = workbook.Worksheets[0];
+
+                // Sample data to be added as new records
+                var records = new List<string[]>
+                {
+                    new[] { "Alice", "Johnson", "28" },
+                    new[] { "Bob", "Williams", "35" }
+                };
+
+                // Row index (zero‑based) where new records should start, e.g., after a header row
+                int startRow = 1;
+
+                // Insert the required number of rows and inherit the formatting from the template row
+                worksheet.Cells.InsertRows(startRow, records.Count, true); // CopyStyle = true
+
+                // Fill the inserted rows with data
+                for (int i = 0; i < records.Count; i++)
+                {
+                    for (int j = 0; j < records[i].Length; j++)
+                    {
+                        worksheet.Cells[startRow + i, j].PutValue(records[i][j]);
+                    }
+                }
+
+                // Save the workbook with the new data
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
-
-            // Load the workbook template that contains markers for data insertion
-            Workbook templateWorkbook = new Workbook(templatePath);
-
-            // Initialize WorkbookDesigner with the loaded template
-            WorkbookDesigner designer = new WorkbookDesigner(templateWorkbook);
-
-            // NOTE: In some Aspose.Cells versions the Options property is unavailable.
-            // Copying of cell styles is handled automatically, or can be configured via DesignerOptions if supported.
-
-            // Sample data source: a list of records to be merged into the template
-            List<Person> data = new List<Person>
+            catch (Exception ex)
             {
-                new Person { Name = "Alice", Age = 30 },
-                new Person { Name = "Bob", Age = 25 },
-                new Person { Name = "Charlie", Age = 28 }
-            };
-
-            // Bind the data source to the marker named "Person" in the template
-            designer.SetDataSource("Person", data);
-
-            // Process the template – markers are replaced with data
-            designer.Process();
-
-            // Save the resulting workbook
-            const string resultPath = "Result.xlsx";
-
-            // Ensure the directory for the result file exists
-            string resultDir = Path.GetDirectoryName(resultPath);
-            if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
-            {
-                Directory.CreateDirectory(resultDir);
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            designer.Workbook.Save(resultPath);
-            Console.WriteLine($"Result workbook saved to '{resultPath}'.");
         }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Simple POCO class representing a record
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
     }
 }

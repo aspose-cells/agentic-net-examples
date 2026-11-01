@@ -1,24 +1,22 @@
-// Title: Copy a specific cell range to a new workbook and set the workbook's creation date metadata with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing Excel file, copy the range A1:C10 into a freshly created workbook, and assign DateTime.Now to the new workbook's BuiltInDocumentProperties.CreatedTime. | Create a new workbook, transfer a defined cell block from a source worksheet, then update the workbook's creation timestamp before saving the file.
-// Common Searches: aspocells c# copy range A1:C10 to new workbook and set createdtime | how to set workbook creation date property after copying cells with Aspose.Cells | copy cell block from one Excel file to another using Aspose.Cells .NET | Aspose.Cells set BuiltInDocumentProperties.CreatedTime to current time in C# | example of copying a range and updating metadata in Aspose.Cells for .NET
-// Tags: Aspose.Cells copy range to new workbook | BuiltInDocumentProperties CreatedTime C# | copy cell block A1:C10 Aspose.Cells | set workbook metadata timestamp Aspose.Cells | C# Aspose.Cells range.Copy example
+// Title: Copy a specific cell range to a new workbook and set the workbook's creation date using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy range A1:C10 to a new workbook | How to set the CreatedTime property of an Excel file with Aspose.Cells | Copy cells from one worksheet to another workbook while preserving styles using Aspose.Cells | Set workbook metadata creation date to the current timestamp in C# Aspose.Cells | Example of copying a range and updating workbook properties with Aspose.Cells .NET
+// Tags: copy range A1:C10 into new workbook Aspose.Cells | assign current timestamp to CreatedTime Aspose.Cells | preserve cell formatting during range copy Aspose.Cells | C# Aspose.Cells workbook metadata example | copy cells between workbooks Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Copies the A1:C10 range from a source workbook into a new workbook, updates the new workbook's CreatedTime property to the current timestamp, and saves the result.
+// The sample loads source.xlsx, copies the cells A1:C10 (including values and styles) from the first worksheet into a newly created workbook's first sheet named "CopiedData", sets the destination workbook's CreatedTime built‑in document property to DateTime.Now, and saves the result as destination.xlsx while handling missing files and copy errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the source workbook
-            string sourcePath = "SourceWorkbook.xlsx";
+            const string sourcePath = "source.xlsx";
+            const string destinationPath = "destination.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
+            // Verify source file exists to avoid FileNotFoundException
             if (!File.Exists(sourcePath))
             {
                 Console.WriteLine($"Source file not found: {sourcePath}");
@@ -26,34 +24,59 @@ class Program
             }
 
             // Load the source workbook
-            Workbook srcWorkbook = new Workbook(sourcePath);
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Create a new workbook (contains a default worksheet)
-            Workbook newWorkbook = new Workbook();
+            // Define the range to copy (e.g., A1:C10)
+            CellArea sourceRange = CellArea.CreateCellArea("A1", "C10");
 
-            // Define the range to copy from the source workbook (e.g., A1:C10 on the first worksheet)
-            AsposeRange srcRange = srcWorkbook.Worksheets[0].Cells.CreateRange("A1:C10");
+            // Create a new workbook (destination)
+            Workbook destinationWorkbook = new Workbook();
 
-            // Define the destination range in the new workbook (starting at A1 on the first worksheet)
-            AsposeRange destRange = newWorkbook.Worksheets[0].Cells.CreateRange("A1");
+            // Get the first worksheet in the destination workbook and rename it
+            Worksheet destSheet = destinationWorkbook.Worksheets[0];
+            destSheet.Name = "CopiedData";
 
-            // Copy the source range to the destination range
-            srcRange.Copy(destRange);
+            // Calculate rows and columns count for the copy operation
+            int totalRows = sourceRange.EndRow - sourceRange.StartRow + 1;
+            int totalColumns = sourceRange.EndColumn - sourceRange.StartColumn + 1;
+
+            // Copy the defined range from the source workbook to the destination worksheet starting at A1
+            try
+            {
+                Worksheet srcSheet = sourceWorkbook.Worksheets[0];
+                for (int i = 0; i < totalRows; i++)
+                {
+                    for (int j = 0; j < totalColumns; j++)
+                    {
+                        // Source cell
+                        Cell srcCell = srcSheet.Cells[sourceRange.StartRow + i, sourceRange.StartColumn + j];
+                        // Destination cell
+                        Cell destCell = destSheet.Cells[i, j];
+
+                        // Copy value
+                        destCell.PutValue(srcCell.Value);
+                        // Copy style
+                        destCell.SetStyle(srcCell.GetStyle());
+                    }
+                }
+            }
+            catch (Exception copyEx)
+            {
+                Console.WriteLine($"Error during copy operation: {copyEx.Message}");
+                return;
+            }
 
             // Set the workbook's creation date metadata to the current timestamp
-            newWorkbook.BuiltInDocumentProperties.CreatedTime = DateTime.Now;
-
-            // Path for the output workbook
-            string outputPath = "CopiedRangeWorkbook.xlsx";
+            destinationWorkbook.BuiltInDocumentProperties.CreatedTime = DateTime.Now;
 
             // Save the new workbook
-            newWorkbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            destinationWorkbook.Save(destinationPath);
+            Console.WriteLine($"Workbook saved successfully to {destinationPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log or display any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

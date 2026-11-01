@@ -1,70 +1,68 @@
-// Title: C# script to unzip Excel files and convert each workbook to HTML with Aspose.Cells
-// AI Prompts: Create a C# console application that opens a ZIP archive, extracts every .xls or .xlsx file, loads each into an Aspose.Cells Workbook, and saves the workbook as an individual HTML file. | Add detailed logging to the zip‑to‑HTML conversion program to record which workbooks were successfully converted and which were skipped, while ignoring non‑Excel entries. | Modify the script to also handle .xlsm files and accept the output HTML directory as a command‑line parameter.
-// Common Searches: how to batch convert Excel files inside a zip archive to HTML using Aspose.Cells C# | C# unzip multiple .xlsx files and save each as HTML with Aspose.Cells SaveFormat.Html | process compressed Excel workbooks and generate HTML reports in .NET
-// Tags: Aspose.Cells unzip Excel to HTML conversion | C# extract .xlsx from ZIP archive | SaveFormat.Html workbook export | batch Excel to HTML with Aspose.Cells | skip non‑Excel entries during ZIP processing
+// Title: Extract Excel workbooks from a ZIP archive and convert each to HTML with Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that opens a zip file, iterates over every .xls or .xlsx entry, loads each workbook with Aspose.Cells, and saves it as an HTML file using SaveFormat.Html. | Extend the program to accept command‑line parameters for the zip path and output directory, and generate a log file that records the conversion result for each workbook.
+// Common Searches: how to batch convert .xlsx files inside a zip to html using Aspose.Cells C# | C# extract Excel workbooks from a zip archive and export to html | Aspose.Cells convert multiple Excel files to html in a loop .NET
+// Tags: Aspose.Cells unzip Excel to HTML | C# batch convert Excel workbooks to HTML | SaveFormat.Html workbook export | process zip entries with Aspose.Cells | convert .xlsx stream to HTML C#
 
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 
-// The example opens a specified ZIP file, iterates through its entries, loads each .xls or .xlsx workbook into an Aspose.Cells Workbook, and saves the workbook as an HTML file in a target folder, creating the folder if necessary and handling errors gracefully.
-class ExcelZipToHtmlConverter
+// The program opens a ZIP archive, extracts each .xls/.xlsx entry, loads it into an Aspose.Cells Workbook, and saves the workbook as an HTML file in a specified output folder.
+class Program
 {
     static void Main(string[] args)
     {
         // Path to the zip archive containing Excel files
-        string zipPath = @"C:\Path\To\Your\Archive.zip";
+        string zipPath = "input.zip";
+
+        // Verify that the zip file exists
+        if (!File.Exists(zipPath))
+        {
+            Console.WriteLine($"Error: Zip file '{zipPath}' not found.");
+            return;
+        }
 
         // Directory where the generated HTML files will be saved
-        string outputDirectory = @"C:\Path\To\Output\Html";
+        string outputDirectory = "output_html";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDirectory);
 
         try
         {
-            // Verify that the zip archive exists
-            if (!File.Exists(zipPath))
-            {
-                Console.WriteLine($"Error: Zip archive not found at '{zipPath}'.");
-                return;
-            }
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputDirectory);
-
             // Open the zip archive for reading
             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
-                // Iterate through each entry in the zip archive
+                // Iterate through each entry in the archive
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
                     // Process only files with .xls or .xlsx extensions
-                    string extension = Path.GetExtension(entry.FullName);
-                    if (extension.Equals(".xls", StringComparison.OrdinalIgnoreCase) ||
-                        extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    if (entry.FullName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
+                        entry.FullName.EndsWith(".xls", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Open the entry stream
+                        // Open a stream for the current Excel entry
                         using (Stream entryStream = entry.Open())
                         {
-                            // Load the Excel file into an Aspose.Cells Workbook
+                            // Load the workbook from the stream
                             Workbook workbook = new Workbook(entryStream);
 
-                            // Determine the output HTML file path
+                            // Determine the output HTML file name
                             string htmlFileName = Path.GetFileNameWithoutExtension(entry.Name) + ".html";
-                            string htmlFilePath = Path.Combine(outputDirectory, htmlFileName);
+                            string htmlPath = Path.Combine(outputDirectory, htmlFileName);
 
                             // Save the workbook as an HTML file
-                            workbook.Save(htmlFilePath, SaveFormat.Html);
+                            workbook.Save(htmlPath, SaveFormat.Html);
                         }
                     }
                 }
             }
 
-            Console.WriteLine("Conversion completed. HTML files are located at: " + outputDirectory);
+            Console.WriteLine("All Excel files have been converted to HTML.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred during conversion:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,28 +1,30 @@
-// Title: Use Aspose.Cells for .NET to set a PNG worksheet background from a MemoryStream in C#
-// AI Prompts: Read a PNG file into a MemoryStream, assign its byte array to Worksheet.BackgroundImage, and save the workbook with Aspose.Cells in C#. | Create a new workbook, apply a PNG background to the first worksheet using a byte array without persisting the image file, and handle missing‑file exceptions. | Programmatically add a PNG picture as the worksheet background and export the Excel file while ensuring the output directory exists with Aspose.Cells.
-// Common Searches: aspnet set worksheet background image from memory stream Aspose.Cells | c# Aspose.Cells load png bytes as worksheet background | how to assign background picture to Excel sheet without saving image file using Aspose.Cells | Aspose.Cells background image from byte array example | save workbook with PNG background using Aspose.Cells .NET
-// Tags: background image assignment via byte array | Aspose.Cells PNG background integration | C# create workbook with background picture | error handling for missing background file | ensure output directory before saving workbook
+// Title: How to assign a PNG image as a worksheet background using a MemoryStream in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set worksheet background image from a MemoryStream | load PNG into Excel sheet background using Aspose.Cells .NET | assign background image bytes to a worksheet with Aspose.Cells | create workbook and set sheet background from PNG file in C# | use Aspose.Cells to add PNG background to first worksheet
+// Tags: BackgroundImage property PNG Aspose.Cells | MemoryStream worksheet background .NET | load PNG bytes into Aspose.Cells workbook | assign image byte array to worksheet C# | add PNG as worksheet background Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample reads a PNG file, loads its bytes into a MemoryStream, creates a new workbook, sets the first worksheet's BackgroundImage property using the byte array, creates the output folder if needed, and saves the workbook, with proper error handling for missing image files.
+// The example reads a PNG file into a byte array, creates a new Workbook, retrieves the first worksheet, sets the PNG bytes to the worksheet's BackgroundImage property, and saves the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the background PNG image
-            string pngPath = @"C:\Images\background.png";
+            const string backgroundPath = "background.png";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the PNG file exists
-            if (!File.Exists(pngPath))
-                throw new FileNotFoundException("Background image not found.", pngPath);
+            // Verify that the background image file exists
+            if (!File.Exists(backgroundPath))
+            {
+                Console.WriteLine($"Error: File \"{backgroundPath}\" not found.");
+                return;
+            }
 
-            // Load PNG file bytes
-            byte[] pngBytes = File.ReadAllBytes(pngPath);
+            // Load the PNG file into a byte array
+            byte[] pngBytes = File.ReadAllBytes(backgroundPath);
 
             // Create a new workbook
             Workbook workbook = new Workbook();
@@ -30,22 +32,16 @@ class Program
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Assign the PNG bytes as the worksheet background image
+            // Assign the image bytes as the worksheet background image
             sheet.BackgroundImage = pngBytes;
 
-            // Ensure the output directory exists
-            string outputPath = @"C:\Output\WorkbookWithBackground.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
             // Save the workbook
-            workbook.Save(outputPath);
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log or display the error as needed
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

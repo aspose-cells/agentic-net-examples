@@ -1,54 +1,56 @@
-// Title: Export a single worksheet to HTML by setting the active sheet index with HtmlSaveOptions in Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook, verifies a zero‑based worksheet index, sets Workbook.Worksheets.ActiveSheetIndex to that index, and saves only the selected sheet as HTML using Aspose.Cells HtmlSaveOptions with ExportActiveWorksheetOnly turned on. | Show how to handle out‑of‑range worksheet indexes, activate the desired sheet, configure HtmlSaveOptions for HTML output of the active worksheet only, and catch exceptions in a .NET console program.
-// Common Searches: how to export only the second worksheet to HTML using Aspose.Cells C# | Aspose.Cells HtmlSaveOptions export active worksheet only example | C# set active sheet index before saving workbook as HTML | save a specific Excel sheet as HTML with Aspose.Cells .NET | validate worksheet index range Aspose.Cells before HTML export
-// Tags: HtmlSaveOptions ExportActiveWorksheetOnly Aspose.Cells | set active worksheet index C# Aspose.Cells | export single worksheet to HTML .NET | worksheet index validation Aspose.Cells | save workbook as HTML specific sheet
+// Title: How to export a specific worksheet to HTML using HtmlSaveOptions.WorksheetIndex in Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, sets HtmlSaveOptions.WorksheetIndex to 1, and saves only that worksheet as an HTML file. | Refactor the given program to replace ExportActiveWorksheetOnly with HtmlSaveOptions.WorksheetIndex so the second sheet is exported to HTML. | Provide a C# console example that exports the third worksheet (index 2) to HTML using Aspose.Cells HtmlSaveOptions, including checks for sheet existence.
+// Common Searches: Aspose.Cells export only one worksheet to HTML by index | C# HtmlSaveOptions WorksheetIndex property example | Save a specific Excel sheet as HTML using Aspose.Cells .NET | How to export the second worksheet to HTML with Aspose.Cells | HtmlSaveOptions ExportActiveWorksheetOnly vs WorksheetIndex comparison
+// Tags: Aspose.Cells HtmlSaveOptions WorksheetIndex | export specific worksheet to HTML .NET | selective sheet export Aspose.Cells | zero‑based worksheet index HTML conversion | C# Aspose.Cells HTML save options
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads an Excel file, checks that a given zero‑based worksheet index is within range, makes that sheet the active one, configures HtmlSaveOptions to export only the active worksheet, and saves the result as an HTML file.
+// The example loads an Excel workbook, verifies the file exists, and uses HtmlSaveOptions.WorksheetIndex to specify which zero‑based worksheet should be saved as HTML. It configures the save options, writes the selected sheet to an HTML file, and includes error handling for missing files or insufficient worksheets.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            string inputPath = "input.xlsx";
 
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
             // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Set the worksheet to export (zero‑based index)
-            int sheetToExport = 1; // second worksheet
-            if (sheetToExport < 0 || sheetToExport >= workbook.Worksheets.Count)
+            // Set HTML export options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                Console.WriteLine($"Error: Worksheet index {sheetToExport} is out of range.");
-                return;
-            }
-            workbook.Worksheets.ActiveSheetIndex = sheetToExport;
-
-            // Configure HTML save options to export only the active worksheet
-            HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html)
-            {
+                // Export only the active worksheet
                 ExportActiveWorksheetOnly = true
             };
 
+            // Activate the second worksheet (zero‑based index)
+            if (workbook.Worksheets.Count > 1)
+            {
+                workbook.Worksheets.ActiveSheetIndex = 1;
+            }
+            else
+            {
+                Console.WriteLine("The workbook does not contain a second worksheet.");
+                return;
+            }
+
             // Save the selected worksheet as an HTML file
-            workbook.Save(outputPath, options);
-            Console.WriteLine($"Worksheet exported successfully to \"{outputPath}\".");
+            string outputPath = "output.html";
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Worksheet exported successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

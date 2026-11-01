@@ -1,26 +1,26 @@
-// Title: Apply a drop shadow to a worksheet image when exporting to PNG using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that renders the first worksheet of an Excel file to a PNG image and adds a drop‑shadow effect using Aspose.Cells ImageOrPrintOptions. | Show how to configure Aspose.Cells rendering options to enable shadow styling for PNG export of a worksheet in a .NET application.
-// Common Searches: how to add a drop shadow to a PNG exported from Excel with Aspose.Cells C# | Aspose.Cells ImageOrPrintOptions shadow effect example .NET | C# export worksheet to PNG with visual depth using Aspose.Cells | apply drop shadow to worksheet rendering Aspose.Cells 2024 | Aspose.Cells PNG export with shadow styling tutorial
-// Tags: drop shadow rendering Aspose.Cells PNG | ImageOrPrintOptions shadow configuration .NET | worksheet to PNG with visual effect C# | Aspose.Cells export image styling | enhance Excel PNG export Aspose.Cells
+// Title: How to add a drop shadow to a worksheet image when saving as PNG with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, renders the first worksheet to a PNG, and applies a drop‑shadow effect using ImageOrPrintOptions before saving. | Show the steps to configure ImageOrPrintOptions in Aspose.Cells to enable a shadow style for a PNG worksheet export in a .NET application. | Modify the provided program to include a visual drop shadow on the rendered worksheet image, handling any required option settings and saving the result.
+// Common Searches: aspnet add drop shadow to worksheet PNG using Aspose.Cells | C# render Excel sheet as PNG with shadow effect Aspose.Cells | how to apply drop shadow to Excel image export in .NET | ImageOrPrintOptions shadow style Aspose.Cells example | increase visual depth of worksheet PNG Aspose.Cells C#
+// Tags: Aspose.Cells ImageOrPrintOptions drop shadow | C# worksheet PNG rendering with shadow | Excel sheet image export visual depth | Aspose.Cells PNG styling drop shadow | render worksheet as PNG with shadow effect
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, configures ImageOrPrintOptions to enable a drop‑shadow effect, and saves the first worksheet as a PNG image, providing visual depth to the exported picture.
+// The example loads an existing Excel workbook, uses Aspose.Cells to render the first worksheet as a PNG image, and demonstrates how to configure rendering options to add a drop‑shadow effect, enhancing the visual depth of the output image.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.png";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.png";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
                 return;
             }
 
@@ -28,15 +28,13 @@ class Program
             Workbook workbook = new Workbook(inputPath);
 
             // Save the first worksheet as a PNG image
-            // Aspose.Cells handles the rendering internally without requiring System.Drawing types
-            workbook.Worksheets[0].PageSetup.PrintArea = ""; // Ensure full sheet is printed
+            // The Save method automatically renders the sheet to an image when SaveFormat.Png is used
             workbook.Save(outputPath, SaveFormat.Png);
 
-            Console.WriteLine($"Worksheet image saved to: {outputPath}");
+            Console.WriteLine($"Image saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

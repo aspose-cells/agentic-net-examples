@@ -1,50 +1,40 @@
-// Title: Set a custom height for the header row and auto‑fit the remaining rows with Aspose.Cells for .NET (C#)
-// AI Prompts: Set the first worksheet row to 30 points high and automatically size all subsequent rows using Aspose.Cells in C#. | Modify the example to use a different header height while preserving automatic row sizing only for data rows. | Insert code that auto‑size columns after adjusting row heights in an Aspose.Cells workbook.
-// Common Searches: Aspose.Cells C# set header row height and auto size other rows | how to exclude first row from AutoFitRows in Aspose.Cells .NET | adjust row height in points then auto‑fit rows range Aspose.Cells | auto‑fit columns after setting custom row heights using Aspose.Cells C# | sample code for header row formatting with Aspose.Cells workbook
-// Tags: header row custom height Aspose.Cells | row auto‑size excluding header .NET | set row height points C# | column width auto‑fit after row height Aspose.Cells | auto‑fit rows range without header Aspose.Cells
+// Title: Set header row height and auto‑fit remaining rows in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that sets the first worksheet row height to a specific point value, then iterates through the remaining rows to auto‑fit each one before saving the file. | Demonstrate how to emphasize a header row by adjusting its height and automatically resize all data rows in an Excel file using Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# set first row height to 30 points | How to auto‑fit rows after the header row using Aspose.Cells .NET | C# Aspose.Cells example for custom header height and row auto‑fit | Adjust Excel header row size and auto‑size data rows with Aspose.Cells library | Set row height and auto‑fit rows programmatically in Aspose.Cells for .NET
+// Tags: set row height Aspose.Cells C# | auto‑fit rows Aspose.Cells .NET | header row formatting Excel Aspose | Aspose.Cells row height and autofit example | C# Excel workbook row sizing Aspose
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// // Demonstrates creating a workbook, setting the first row height to 30 points, populating sample data, auto‑fitting rows 2‑n, auto‑fitting columns, and saving the file as XLSX.
-class SetHeaderRowHeightAndAutoFit
+// Sets the first worksheet row height to 30 points, adds sample data, auto‑fits all subsequent rows, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (lifecycle create)
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Add header values
-        cells["A1"].PutValue("Header 1");
-        cells["B1"].PutValue("Header 2");
-        cells["C1"].PutValue("Header 3");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a custom height for the header row (row index 0)
-        worksheet.Cells.Rows[0].Height = 30; // height in points
+        // Set the height of the header row (row index 0) to emphasize it
+        sheet.Cells.SetRowHeight(0, 30); // Height in points
 
-        // Populate some sample data rows
-        for (int i = 1; i <= 10; i++)
-        {
-            cells[i, 0].PutValue($"Item {i}");
-            cells[i, 1].PutValue($"Description for item {i} that might be long and wrap");
-            cells[i, 2].PutValue(i * 10);
-        }
+        // Example data population (optional, for demonstration)
+        sheet.Cells["A1"].PutValue("Header");
+        sheet.Cells["A2"].PutValue("Row 1");
+        sheet.Cells["A3"].PutValue("Row 2");
+        sheet.Cells["B2"].PutValue(123);
+        sheet.Cells["B3"].PutValue(456);
 
         // Auto‑fit all rows except the header row
-        int startDataRow = 1;                       // first data row index
-        int endDataRow = cells.MaxDataRow;          // last row that contains data
-        worksheet.AutoFitRows(startDataRow, endDataRow);
+        // MaxDataRow returns the last row that contains data
+        for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
+        {
+            sheet.AutoFitRow(row);
+        }
 
-        // Optional: auto‑fit columns for better visibility
-        worksheet.AutoFitColumns();
-
-        // Save the workbook
-        string outputPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            "HeaderRowHeightDemo.xlsx");
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+        // Save the workbook (lifecycle save)
+        workbook.Save("output.xlsx");
     }
 }

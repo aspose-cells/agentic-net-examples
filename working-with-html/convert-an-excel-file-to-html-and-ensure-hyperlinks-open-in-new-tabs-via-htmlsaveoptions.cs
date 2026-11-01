@@ -1,14 +1,13 @@
-// Title: Save an Excel workbook as HTML with hyperlinks opening in new tabs using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to export hyperlinks with target="_blank", and saves the workbook as an .html file. | Explain how to use Aspose.Cells HtmlSaveOptions in .NET to ensure that hyperlinks in the generated HTML open in a new browser tab.
-// Common Searches: Aspose.Cells C# export Excel to HTML with links opening in new tab | How to make hyperlinks open in a new window when saving workbook as HTML using Aspose.Cells | HtmlSaveOptions target blank property Aspose.Cells .NET | Convert .xlsx to .html preserving hyperlink target attribute with Aspose.Cells | C# Aspose.Cells HTML save options hyperlink behavior
-// Tags: Aspose.Cells HtmlSaveOptions hyperlink target | export Excel to HTML C# Aspose.Cells | set target blank Aspose.Cells HTML | convert .xlsx to .html Aspose.Cells .NET | hyperlink behavior Aspose.Cells HTML export
+// Title: Convert an Excel workbook to HTML in C# with Aspose.Cells and configure hyperlinks to open in a new browser tab
+// Common Searches: Aspose.Cells C# convert .xlsx to HTML with links opening in new tab | set hyperlink target attribute when saving Excel as HTML using Aspose.Cells | HtmlSaveOptions ExportHyperlinkTarget property missing Aspose.Cells version | C# save Excel workbook as HTML and make hyperlinks open in a new window | how to ensure HTML output from Aspose.Cells opens links in a new tab
+// Tags: Aspose.Cells HtmlSaveOptions SaveFormat.Html | C# convert Excel to HTML Aspose.Cells | hyperlink target attribute HTML export Aspose.Cells | export workbook as HTML with new tab links | Aspose.Cells HTML save options hyperlink handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Saving;
 
-// Demonstrates loading an Excel workbook with Aspose.Cells, configuring HtmlSaveOptions for HTML output, and saving the file so that all hyperlinks are rendered with target="_blank" (new‑tab behavior). Includes file existence verification and basic error handling.
+// The example loads an Excel file with Aspose.Cells, creates HtmlSaveOptions for HTML output, notes that the ExportHyperlinkTarget property is unavailable in the current version, and saves the workbook as an HTML file while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
@@ -19,29 +18,26 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
             return;
         }
 
         try
         {
-            // Load the source Excel workbook
+            // Load the source Excel file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
+            // Set HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-
-            // Note: In recent Aspose.Cells versions the property to add target="_blank"
-            // is not required; hyperlinks are exported with the appropriate target.
-            // If a specific property exists in your version, set it here.
+            // Note: ExportHyperlinkTarget property is not available in this version of Aspose.Cells.
+            // If needed, adjust hyperlink rendering via other available options.
 
             // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

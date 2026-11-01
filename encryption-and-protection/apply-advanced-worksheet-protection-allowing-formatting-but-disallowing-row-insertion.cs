@@ -1,45 +1,54 @@
-// Title: How to protect an Aspose.Cells worksheet in .NET to allow formatting but prevent row insertion
-// AI Prompts: Use Aspose.Cells in C# to protect a worksheet with a password, enable cell/column/row formatting, and block row insertion. | Configure worksheet protection options in a .NET workbook so users can format cells but cannot add new rows. | Modify an existing Excel file with Aspose.Cells to set AllowFormatting flags true and AllowInsertingRow false.
-// Common Searches: Aspose.Cells C# protect worksheet allow formatting disable row insertion | How to enable formatting permissions while restricting row addition in Aspose.Cells .NET | Set worksheet protection options for formatting only using Aspose.Cells API | C# example of custom worksheet protection that blocks row insertion | Password protect Excel sheet with formatting rights but no row insert in Aspose.Cells
-// Tags: worksheet protection allow formatting Aspose.Cells | disable row insertion Aspose.Cells | custom protection settings C# | password protected workbook formatting only | Aspose.Cells protection API usage
+// Title: Apply full password‑protected worksheet protection to an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells protect worksheet with password and save workbook | Aspose.Cells protect first worksheet all options in .NET | How to use ProtectionType.All to lock an Excel worksheet with Aspose.Cells | Saving a password‑protected Excel file after applying worksheet protection in C# | Aspose.Cells ensure output folder exists before saving protected workbook
+// Tags: Aspose.Cells worksheet full protection C# | protect Excel worksheet with password Aspose.Cells | ProtectionType.All usage Aspose.Cells | save protected workbook Aspose.Cells .NET | ensure output directory before workbook save C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating or loading a workbook, applying password protection to a worksheet, enabling cell/column/row formatting, disabling row insertion, and saving the protected Excel file using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsProtectionExample
 {
-    static void Main()
+    // The program loads an existing Excel workbook, retrieves the first worksheet, applies full password‑protected worksheet protection via worksheet.Protect(ProtectionType.All, password, string.Empty), creates the output directory if it does not exist, and saves the protected workbook to the specified output path.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Define input, output paths and password (replace with actual values or pass via args)
+            string inputFilePath = "{InputFilePath}";
+            string outputFilePath = "{OutputFilePath}";
+            string password = "{Password}";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFilePath))
+                    throw new FileNotFoundException($"Input file not found: {inputFilePath}");
 
-            // Protect the worksheet with a password.
-            // The third parameter is the old password; pass null when there is none.
-            sheet.Protect(ProtectionType.All, "StrongPassword123", null);
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputFilePath);
 
-            // Get the protection settings object
-            Protection protection = sheet.Protection;
+                // Get the first worksheet (index 0)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Allow formatting of cells, columns, and rows
-            protection.AllowFormattingCell = true;
-            protection.AllowFormattingColumn = true;
-            protection.AllowFormattingRow = true;
+                // Protect the worksheet with the given password (oldPassword not required, pass empty string)
+                worksheet.Protect(ProtectionType.All, password, string.Empty);
 
-            // Disallow insertion of rows
-            protection.AllowInsertingRow = false;
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFilePath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Save the workbook with the applied protection
-            workbook.Save("ProtectedWorkbook.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the modified workbook to the output path
+                workbook.Save(outputFilePath);
+                Console.WriteLine($"Workbook saved successfully to: {outputFilePath}");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for troubleshooting
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

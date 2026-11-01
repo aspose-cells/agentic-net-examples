@@ -1,65 +1,29 @@
-// Title: Count worksheets in an Excel file loaded from a byte array using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that receives a byte[] of an Excel workbook, creates a MemoryStream, loads it with Aspose.Cells, and returns the total number of worksheets. | Demonstrate how to read an Excel file into a byte array, pass it to a helper class, and print the worksheet count without writing the file to disk using Aspose.Cells.
-// Common Searches: aspnet count worksheets in excel file from memory stream | aspocells get number of sheets from byte array | c# load excel workbook from byte[] without saving to disk | how to retrieve worksheet count using Aspose.Cells and MemoryStream | read excel file into byte array and count sheets in .NET
-// Tags: Aspose.Cells load workbook from byte array | retrieve worksheet count in .NET | C# MemoryStream Excel workbook | count sheets without saving file | Aspose.Cells worksheets collection count
+// Title: Read an Excel file from a MemoryStream and get the total number of worksheets with Aspose.Cells for .NET
+// AI Prompts: Write C# code that accepts a byte array of an XLSX file, creates a MemoryStream, loads it into an Aspose.Cells Workbook, and returns the sheet total. | Generate a method that takes a Stream containing Excel data and prints how many worksheets it contains without writing the file to disk using Aspose.Cells. | Show how to instantiate a Workbook from a MemoryStream and access the Worksheets.Count property in C#.
+// Common Searches: aspocells load workbook from memory stream and count sheets | c# get number of worksheets from excel byte array using Aspose.Cells | how to read worksheet count without saving excel file in .NET | retrieve sheet total from stream with Aspose.Cells library
+// Tags: Aspose.Cells load workbook from MemoryStream | C# determine sheet total from Excel stream | count Excel sheets using Aspose.Cells API | read workbook without saving file .NET | access Worksheets.Count via Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook from a byte array via MemoryStream using Aspose.Cells and returns the total number of worksheets in the workbook.
-public class ExcelHelper
+// The example loads an XLSX file into a byte array, wraps it in a MemoryStream, creates an Aspose.Cells Workbook from the stream, and outputs the total number of worksheets without persisting the file.
+class Program
 {
-    /// <param name="excelData">Byte array containing the Excel file.</param>
-    /// <returns>Count of worksheets in the workbook.</returns>
-    public int GetWorksheetCount(byte[] excelData)
+    static void Main()
     {
-        // Create a memory stream from the provided byte array
-        using (MemoryStream stream = new MemoryStream(excelData))
+        // Load the Excel file bytes into a memory stream (replace with your actual source)
+        byte[] excelBytes = File.ReadAllBytes("input.xlsx"); // placeholder for source data
+        using (MemoryStream memoryStream = new MemoryStream(excelBytes))
         {
-            // Load the workbook from the memory stream
-            Workbook workbook = new Workbook(stream);
+            // Create a Workbook object from the memory stream
+            Workbook workbook = new Workbook(memoryStream);
 
-            // Retrieve and return the worksheet count
-            return workbook.Worksheets.Count;
-        }
-    }
-}
+            // Retrieve the number of worksheets in the workbook
+            int worksheetCount = workbook.Worksheets.Count;
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        try
-        {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Usage: AsposeCellsRunner <excel-file-path>");
-                return;
-            }
-
-            string filePath = args[0];
-
-            // Prevent FileNotFoundException by checking existence
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: File not found - {filePath}");
-                return;
-            }
-
-            // Read the Excel file into a byte array
-            byte[] excelData = File.ReadAllBytes(filePath);
-
-            // Use ExcelHelper to get worksheet count
-            ExcelHelper helper = new ExcelHelper();
-            int sheetCount = helper.GetWorksheetCount(excelData);
-
-            Console.WriteLine($"Worksheet count: {sheetCount}");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Display the worksheet count
+            Console.WriteLine($"Worksheet count: {worksheetCount}");
         }
     }
 }

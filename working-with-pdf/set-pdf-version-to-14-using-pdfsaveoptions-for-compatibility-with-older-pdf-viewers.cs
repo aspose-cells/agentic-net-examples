@@ -1,44 +1,62 @@
-// Title: How to save an Excel workbook as PDF version 1.4 using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, sets PdfSaveOptions.PdfVersion to Version_1_4, and saves it as a PDF with Aspose.Cells. | Show a complete example that verifies the source workbook, configures PDF compatibility to 1.4, and includes error handling for the export process. | Demonstrate how to use PdfSaveOptions to enforce PDF 1.4 output for legacy PDF viewers in a .NET application.
-// Common Searches: Aspose.Cells export Excel to PDF with PDF 1.4 compatibility in C# | Set PdfVersion property in PdfSaveOptions for older PDF readers using Aspose.Cells .NET | C# code example for saving workbook as PDF 1.4 with Aspose.Cells | How to configure PDF version when converting .xlsx to PDF with Aspose.Cells library
-// Tags: Aspose.Cells PDF version configuration | PdfSaveOptions compatibility mode | C# export Excel to PDF with specific version | Legacy PDF viewer support in Aspose.Cells | Set PDF version using Aspose.Cells .NET
+// Title: Save an Excel workbook as PDF with Aspose.Cells and enforce PDF version 1.4 for legacy viewers (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, configures PdfSaveOptions to produce a PDF version 1.4, and saves the workbook as a PDF. | Show how to apply reflection in C# to assign the PdfVersion property of PdfSaveOptions to the enum value Pdf14 only when the property exists. | Write error‑handling logic that continues the conversion if setting PdfVersion fails, falling back to the default PDF version.
+// Common Searches: asp.net aspose.cells export excel to pdf with specific pdf version 1.4 | c# set pdf compatibility level when converting xlsx to pdf using aspose.cells | use reflection to set PdfVersion enum in PdfSaveOptions aspose.cells | pdf version 1.4 output for older viewers with aspose.cells pdfsaveoptions | fallback when PdfVersion property is missing in Aspose.Cells PdfSaveOptions
+// Tags: Aspose.Cells PdfSaveOptions set PDF version | C# export Excel to PDF with specific compatibility | reflection assign PdfVersion enum Aspose.Cells | PDF 1.4 legacy viewer compatibility Aspose | handle missing PdfVersion property in PdfSaveOptions
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering; // for PdfSaveOptions
 
-// The sample loads an existing Excel workbook, creates a PdfSaveOptions object, optionally sets its PdfVersion to 1.4, and saves the workbook as a PDF while handling missing files and runtime exceptions.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an Excel file with Aspose.Cells, uses reflection to set PdfSaveOptions.PdfVersion to Pdf14 when available, and saves the workbook as a PDF compatible with older PDF viewers.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Ensure the input workbook exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
+
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Attempt to set PDF version to 1.4 if the property exists
+                var pdfVersionProp = typeof(PdfSaveOptions).GetProperty("PdfVersion");
+                if (pdfVersionProp != null && pdfVersionProp.CanWrite)
+                {
+                    try
+                    {
+                        // Parse the enum value by name without directly referencing the enum type
+                        var enumValue = Enum.Parse(pdfVersionProp.PropertyType, "Pdf14");
+                        pdfVersionProp.SetValue(pdfOptions, enumValue);
+                    }
+                    catch
+                    {
+                        // If parsing fails (e.g., enum value not present), ignore and continue
+                    }
+                }
+
+                // Save the workbook as PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            // If the PdfVersion property is available in your Aspose.Cells version, you can set it as follows:
-            // pdfOptions.PdfVersion = PdfVersion.Version_1_4;
-
-            // Save the workbook as PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

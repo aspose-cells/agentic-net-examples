@@ -1,46 +1,61 @@
-// Title: Assign a worksheet cell range as the X‑axis category labels for a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that links a worksheet range to a chart’s category axis using Aspose.Cells. | Show how to use Aspose.Cells to set X‑axis labels from cells A2:A10 for a column chart. | Provide an example of binding worksheet data to a chart’s category axis in C# with Aspose.Cells.
-// Common Searches: how to set X axis labels from worksheet cells in Aspose.Cells C# | Aspose.Cells programmatic column chart category range example | C# code for assigning category axis range to Aspose.Cells chart | binding worksheet cells to chart categories in a .NET workbook
-// Tags: Aspose.Cells NSeries.CategoryData binding | C# column chart X‑axis label assignment | chart category data range definition Aspose.Cells | programmatic chart data source configuration .NET | worksheet range to chart category mapping
+// Title: Assign a specific cell range as the category axis labels for a column chart with Aspose.Cells in C#
+// AI Prompts: Generate a column chart and set its category axis to the cells A2:A5 using Aspose.Cells NSeries.CategoryData in C#. | Bind worksheet range A2:A5 as category labels for a chart series programmatically with Aspose.Cells for .NET. | Create a workbook, add sample data, and configure the chart’s category data range without using the UI.
+// Common Searches: Aspose.Cells C# bind category labels to a chart from a worksheet range | set NSeries.CategoryData property for a column chart in .NET | example code assigning chart category axis values using Aspose.Cells | C# create column chart with custom category axis range Aspose.Cells | Aspose.Cells chart series category data from cells A2:A5
+// Tags: Aspose.Cells set chart category data range | C# NSeries.CategoryData usage | column chart category axis from worksheet cells | Aspose.Cells chart series values and categories | programmatic chart axis binding Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCategoryDataExample
+namespace AsposeCellsChartExample
 {
-    // The example creates a workbook, fills column A with category labels and column B with values, adds a column chart, sets the series values to B2:B10, assigns the X‑axis (category) labels to A2:A10 via the chart’s NSeries.CategoryData property, and saves the file as CategoryDataDemo.xlsx.
+    // The example creates a new workbook, fills cells A1:B5 with sample data, adds a column chart, assigns the series values from B2:B5, sets the category axis labels to the range A2:A5 via the NSeries.CategoryData property, and saves the workbook as ChartWithCategoryAxis.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 10; i++)
+            try
             {
-                sheet.Cells[$"A{i}"].PutValue($"Cat {i - 1}");
-                sheet.Cells[$"B{i}"].PutValue(i * 10);
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the chart (optional but makes the chart visible)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["A5"].PutValue("Apr");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["B5"].PutValue(40);
+
+                // Add a column chart to the worksheet (positioned from row 5, column 0 to row 15, column 5)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Add a data series for the chart (values from B2:B5)
+                chart.NSeries.Add("B2:B5", true);
+
+                // Assign a specific cell range as the category axis values (A2:A5)
+                chart.NSeries.CategoryData = "A2:A5";
+
+                // Define output file path
+                string outputPath = "ChartWithCategoryAxis.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the series values (Y‑axis data)
-            chart.NSeries.Add("=Sheet1!$B$2:$B$10", true);
-
-            // Assign the cell range that will be used for the category (X‑axis) values
-            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$10";
-
-            // Save the workbook
-            workbook.Save("CategoryDataDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

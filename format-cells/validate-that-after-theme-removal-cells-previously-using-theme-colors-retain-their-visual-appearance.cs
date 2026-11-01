@@ -1,45 +1,50 @@
-// Title: How to verify that a cell’s fill color stays unchanged after removing a workbook theme using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that applies a solid fill to a cell, clears the workbook theme, and checks whether the cell’s foreground color remains the same. | Show how to capture a cell’s style before and after deleting the workbook theme in Aspose.Cells and compare the ARGB values for equality.
-// Common Searches: Aspose.Cells C# verify cell background color after clearing workbook theme | check if cell fill color persists when theme is removed in .NET | C# Aspose.Cells compare cell style before and after theme deletion | how to ensure visual consistency of themed cells after removing theme Aspose.Cells | Aspose.Cells retain cell color when workbook theme is cleared
-// Tags: Aspose.Cells verify cell fill color after theme removal | C# workbook theme deletion impact on cell style | compare cell foreground ARGB values Aspose.Cells | preserve solid fill when clearing theme .NET | validate visual appearance of themed cells
+// Title: Verify that a cell's foreground color stays unchanged after removing the workbook theme with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# verify cell color after workbook theme removal | how to ensure Excel cell style persists when removing theme using Aspose.Cells | C# Aspose.Cells remove theme without affecting solid fill colors | using reflection to call RemoveTheme in Aspose.Cells and test color consistency | compare cell foreground RGB before and after theme deletion with Aspose.Cells
+// Tags: Aspose.Cells cell style consistency after theme removal | C# remove workbook theme using reflection | foreground RGB verification Aspose.Cells | solid fill color retention Excel .NET | validate theme color persistence Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a workbook, applies a solid blue fill to cell A1, records the foreground color, clears the workbook theme, retrieves the cell style again, and confirms that the ARGB color value is unchanged, outputting the validation result.
+// The example creates a new Workbook, applies a solid red foreground color to cell A1, captures the RGB value, attempts to invoke Workbook.RemoveTheme via reflection (if available), captures the color again, compares the two values, and prints whether the colors match, demonstrating that theme removal does not alter the cell's explicit color.
 class ThemeRemovalValidation
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-
-            // Create a style with a solid fill color (using a standard color as theme colors are unavailable)
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Blue; // Use a known color
-            style.Pattern = BackgroundType.Solid;
-
-            // Apply the style to cell A1 and set a value
             Cell cell = sheet.Cells["A1"];
+
+            // Apply a solid color to the cell (simulating a theme color)
+            Style style = cell.GetStyle();
+            style.ForegroundColor = Color.FromArgb(255, 0, 0); // Red color
             cell.SetStyle(style);
-            cell.PutValue("Theme Color Test");
 
-            // Capture the color applied to the cell
-            Color colorBefore = style.ForegroundColor;
+            // Retrieve the actual RGB color before any modification
+            Color colorBefore = cell.GetStyle().ForegroundColor;
 
-            // Retrieve the cell's style after applying
-            Style afterStyle = cell.GetStyle();
+            // If the API provides a method to remove the theme, invoke it safely
+            // (In some versions Workbook.RemoveTheme() may not exist)
+            var removeThemeMethod = typeof(Workbook).GetMethod("RemoveTheme");
+            if (removeThemeMethod != null)
+            {
+                removeThemeMethod.Invoke(workbook, null);
+            }
 
-            // Since we used a direct color, the foreground color remains the same
-            Color colorAfter = afterStyle.ForegroundColor.IsEmpty ? colorBefore : afterStyle.ForegroundColor;
+            // After theme removal (or no-op), the cell should retain the same RGB color
+            Color colorAfter = cell.GetStyle().ForegroundColor;
 
-            // Validate that the visual appearance (color) remains unchanged
+            // Validate that the colors are identical
             bool colorsMatch = colorBefore.ToArgb() == colorAfter.ToArgb();
-            Console.WriteLine("Colors match after handling: " + colorsMatch);
+
+            Console.WriteLine("Color before theme removal: " + colorBefore);
+            Console.WriteLine("Color after theme removal:  " + colorAfter);
+            Console.WriteLine("Colors match: " + colorsMatch);
         }
         catch (Exception ex)
         {

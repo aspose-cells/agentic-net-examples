@@ -1,64 +1,64 @@
-// Title: Add error handling for Cell.Characters SetCharacters when the specified character range exceeds the cell text length in Aspose.Cells for .NET
-// AI Prompts: Check that startIndex and length do not exceed cell.StringValue.Length before calling cell.Characters, and output a clear error message if they do. | Wrap the cell.SetCharacters call in a try‑catch block to log any exception that occurs during rich‑text formatting. | If the requested range is larger than the text, truncate the length to the maximum possible value and then apply the formatting.
-// Common Searches: Aspose.Cells .NET prevent SetCharacters out of range error | C# validate character range before using Cell.Characters in Aspose.Cells | example of try catch around SetCharacters for rich text formatting | how to handle SetCharacters exception when start index is beyond cell text length
-// Tags: Aspose.Cells SetCharacters range validation | Cell.Characters length check .NET | rich text formatting error handling Aspose.Cells | SetCharacters exception handling C# | Aspose.Cells workbook save after formatting
+// Title: Validate character range and handle errors when using SetCharacters in Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to check character range before calling SetCharacters | Aspose.Cells SetCharacters throws ArgumentOutOfRangeException when range exceeds cell text | example of error handling for SetCharacters method in Aspose.Cells .NET | prevent out of range error while replacing characters in an Excel cell with Aspose.Cells | validate start index and length for cell text in Aspose.Cells C#
+// Tags: SetCharacters range validation Aspose.Cells | ArgumentOutOfRangeException handling Aspose.Cells C# | replace characters in Excel cell Aspose.Cells .NET | cell text length check Aspose.Cells | error handling for Excel cell modification Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using System.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, writes "Hello Aspose" to cell A1, verifies that the zero‑based start index and length do not exceed the existing cell text, throws an ArgumentOutOfRangeException for invalid ranges, replaces the specified characters with "World" when valid, saves the file, and logs any exceptions.
+class Program
 {
-    // Demonstrates how to validate the start index and length against the cell's text, apply rich‑text formatting with SetCharacters inside a try‑catch block, and handle cases where the character range exceeds the cell content before saving the workbook.
-    public class SetCharactersErrorHandlingDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access cell A1 and set a short text value
-            Cell cell = worksheet.Cells["A1"];
-            cell.Value = "Hello";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the character range we want to format
-            int startIndex = 0;
-            int length = 10; // Intentionally exceeds the text length (5)
+            // Put initial text into cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Hello Aspose");
 
-            // Retrieve the current cell text
-            string cellText = cell.StringValue ?? string.Empty;
+            // Define the character range to replace
+            int startIndex = 6;   // zero‑based start position
+            int length = 10;      // number of characters to replace
+            string newText = "World";
 
-            // Prepare an array to hold FontSetting objects
-            FontSetting[] fontSettings = new FontSetting[1];
+            // Retrieve the current text of the cell
+            string currentText = cell.StringValue ?? string.Empty;
 
-            // Validate the range before calling SetCharacters
-            if (startIndex < 0 || length < 0 || startIndex + length > cellText.Length)
+            // Validate that the specified range does not exceed the text length
+            if (startIndex < 0 || length < 0 || startIndex + length > currentText.Length)
             {
-                Console.WriteLine("Error: Specified character range exceeds the cell's text length.");
-                Console.WriteLine($"Cell text length: {cellText.Length}, Requested range: start={startIndex}, length={length}");
+                throw new ArgumentOutOfRangeException(
+                    nameof(startIndex),
+                    "The specified character range exceeds the cell's text length.");
             }
-            else
-            {
-                // Create the FontSetting for the valid range
-                fontSettings[0] = cell.Characters(startIndex, length);
-                fontSettings[0].Font.IsBold = true;
-                fontSettings[0].Font.Color = Color.Blue;
 
-                // Apply the rich text formatting using SetCharacters with error handling
-                try
-                {
-                    cell.SetCharacters(fontSettings);
-                    Console.WriteLine("SetCharacters executed successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Exception during SetCharacters: {ex.Message}");
-                }
+            // Replace the specified character range with new text
+            string updatedText = currentText.Remove(startIndex, length).Insert(startIndex, newText);
+            cell.PutValue(updatedText);
+
+            // Define output file path
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook
-            workbook.Save("SetCharactersErrorHandlingDemo.xlsx");
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

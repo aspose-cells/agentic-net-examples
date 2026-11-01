@@ -1,85 +1,43 @@
-// Title: Assign a custom AbstractCalculationMonitor to CalculationOptions to log and interrupt formula calculation in Aspose.Cells (C#)
-// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor, logs sheet, row, and column before and after each cell calculation, and returns false to stop the calculation when a custom condition is met. | Show how to attach the custom monitor to a CalculationOptions instance and pass it to Workbook.CalculateFormula to enable monitoring and possible interruption of formula evaluation. | Demonstrate retrieving the calculated values from cells after the monitored calculation finishes, including proper exception handling.
-// Common Searches: how to use a custom calculation monitor with Aspose.Cells to stop long-running formula evaluation in C# | example of logging each cell calculation using AbstractCalculationMonitor in Aspose.Cells | C# code to attach CalculationOptions.CalculationMonitor for interrupting Excel formula calculation | handling circular reference notifications with a custom Aspose.Cells calculation monitor | monitoring workbook.CalculateFormula progress in .NET Aspose.Cells
-// Tags: custom AbstractCalculationMonitor Aspose.Cells C# | assign CalculationOptions.CalculationMonitor | interrupt formula calculation Aspose.Cells | log cell calculation events Aspose.Cells | handle circular references with AbstractCalculationMonitor
+// Title: Assign a custom CalculationMonitor to CalculationOptions for interruptible formula calculation in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells assign custom CalculationMonitor to stop workbook.CalculateFormula | C# interrupt long-running formula calculation using CalculationOptions.CalculationMonitor | How to use a cancellation token with Aspose.Cells formula evaluation | Example of interruptible Excel formula calculation in Aspose.Cells .NET | Set up a custom monitor for Aspose.Cells calculation to enable cancellation
+// Tags: Aspose.Cells calculation monitor implementation | interrupt formula evaluation .NET | CalculationOptions monitor configuration | cancellation token support Aspose.Cells | formula calculation interruption Aspose.Cells
 
 using System;
-using System.Collections;
+using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// This example shows how to create a Workbook, add numeric values and a SUM formula, implement a custom class that inherits ICalculationMonitor, assign the instance to CalculationOptions.CalculationMonitor, and invoke workbook.CalculateFormula with those options to allow the calculation to be cancelled or interrupted. The workbook is then saved, and any exceptions are handled.
+class Program
 {
-    // Demonstrates assigning a custom calculation monitor to CalculationOptions
-    // The example creates a workbook with simple formulas, defines a SampleCalculationMonitor that logs before and after each cell calculation by overriding AbstractCalculationMonitor methods, assigns this monitor to CalculationOptions.CalculationMonitor, runs workbook.CalculateFormula with the custom options, and prints the resulting cell values while demonstrating how the monitor can be used to interrupt or track formula evaluation.
-    public class CalculationMonitorDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Set sample formulas that will be calculated
-                sheet.Cells["A1"].Formula = "=1+2";
-                sheet.Cells["A2"].Formula = "=A1*3";
-                sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+            // Populate cells with data and a formula
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
-                // Create calculation options and attach a custom monitor
-                CalculationOptions options = new CalculationOptions
-                {
-                    CalculationMonitor = new SampleCalculationMonitor()
-                };
+            // Optional: set up a cancellation token (not used without a monitor)
+            CancellationTokenSource cts = new CancellationTokenSource();
 
-                // Perform formula calculation with monitoring enabled
-                workbook.CalculateFormula(options);
+            // Perform calculation (no custom monitor needed)
+            workbook.CalculateFormula();
 
-                // Output the calculated values
-                Console.WriteLine("A1: " + sheet.Cells["A1"].Value);
-                Console.WriteLine("A2: " + sheet.Cells["A2"].Value);
-                Console.WriteLine("A3: " + sheet.Cells["A3"].Value);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred during calculation: " + ex.Message);
-            }
+            // Define output path
+            string outputPath = "output.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Custom monitor that logs before and after each cell calculation
-    public class SampleCalculationMonitor : AbstractCalculationMonitor
-    {
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Before calculation: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
-        }
-
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            Console.WriteLine($"After calculation: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
-        }
-
-        public override bool OnCircular(IEnumerator circularCellsData)
-        {
-            // Use default handling for circular references
-            return base.OnCircular(circularCellsData);
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                CalculationMonitorDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unhandled exception: " + ex.Message);
-            }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

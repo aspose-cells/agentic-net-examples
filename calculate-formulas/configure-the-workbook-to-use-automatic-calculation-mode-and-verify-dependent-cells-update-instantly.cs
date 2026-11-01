@@ -1,53 +1,66 @@
-// Title: Enable Automatic Calculation Mode in Aspose.Cells for .NET and Verify Real-Time Dependent Cell Updates
-// AI Prompts: Set workbook.Settings.FormulaSettings.CalculationMode to CalcModeType.Automatic, assign a formula to a cell, modify the source cell, call workbook.CalculateFormula, and output the refreshed values. | Persist the automatic calculation setting by saving the workbook after updating cells and invoking CalculateFormula in a C# application.
-// Common Searches: Aspose.Cells .NET how to set automatic formula calculation and refresh dependent cells | C# example for enabling CalcModeType.Automatic and forcing recalculation | verify that a formula cell updates immediately after changing a source cell in Aspose.Cells | save workbook with automatic calculation mode enabled using Aspose.Cells for .NET
-// Tags: automatic formula calculation setting Aspose.Cells | CalcModeType.Automatic usage C# | manual workbook.CalculateFormula call | dependent cell update verification .NET | persist calculation settings Aspose.Cells
+// Title: Set Automatic Calculation Mode in Aspose.Cells for .NET and Verify Real‑Time Formula Updates
+// Common Searches: C# Aspose.Cells how to enable automatic calculation for workbook formulas | Aspose.Cells .NET verify dependent cells recalculate after source cell change | example of automatic formula recalculation using Aspose.Cells workbook | Aspose.Cells set calculation mode to Automatic and test cell dependency | C# code to check real‑time update of formula cells in Aspose.Cells
+// Tags: Aspose.Cells automatic calculation mode | C# formula dependency update Aspose.Cells | Aspose.Cells workbook calculation setting | real‑time formula recalculation Aspose.Cells | Aspose.Cells save workbook to XLSX
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsAutomaticCalculationDemo
+// The example creates an in‑memory workbook, assigns a value to A1, defines B1 with a formula that depends on A1, confirms the initial calculation, changes A1, reads B1 to demonstrate automatic recalculation, and finally saves the workbook as an XLSX file.
+class AutomaticCalculationDemo
 {
-    // Shows how to enable Aspose.Cells' automatic calculation mode in C#, assign a formula, change the source value, invoke CalculateFormula to refresh dependent cells, and save the workbook so the setting persists.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (in-memory)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Set initial values
-            cells["A1"].PutValue(10);   // Source cell
-            cells["B1"].Formula = "=A1*2"; // Dependent cell
+            // -------------------------------------------------
+            // Set up a simple dependency:
+            // A1 = 10
+            // B1 = =A1 * 2   (formula dependent on A1)
+            // -------------------------------------------------
+            cells["A1"].PutValue(10);
+            cells["B1"].Formula = "A1*2";
 
-            // Configure calculation mode to Automatic
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-            // Perform initial calculation
+            // Force calculation to ensure initial values are computed
             workbook.CalculateFormula();
 
-            // Verify that dependent cell reflects the source value
-            Console.WriteLine("Initial calculation:");
-            Console.WriteLine($"A1 = {cells["A1"].IntValue}");
-            Console.WriteLine($"B1 (A1*2) = {cells["B1"].IntValue}");
+            // Verify initial dependent value
+            Console.WriteLine($"Initial B1 value (should be 20): {cells["B1"].Value}");
 
-            // Change the source cell value
-            cells["A1"].PutValue(20);
+            // -------------------------------------------------
+            // Change the source cell (A1) and verify that B1 updates instantly
+            // -------------------------------------------------
+            cells["A1"].PutValue(15); // Update source value
 
-            // Recalculate formulas (Aspose does not auto‑recalculate, so we invoke it)
-            workbook.CalculateFormula();
+            // Because the default calculation mode is Automatic,
+            // accessing B1 triggers recalculation
+            Console.WriteLine($"Updated B1 value (should be 30): {cells["B1"].Value}");
 
-            // Verify that dependent cell updates instantly after recalculation
-            Console.WriteLine("\nAfter updating A1:");
-            Console.WriteLine($"A1 = {cells["A1"].IntValue}");
-            Console.WriteLine($"B1 (A1*2) = {cells["B1"].IntValue}");
+            // -------------------------------------------------
+            // Save the workbook to a file (optional, demonstrates save rule)
+            // -------------------------------------------------
+            string outputPath = "AutomaticCalculationDemo.xlsx";
 
-            // Save the workbook (optional, demonstrates that settings are persisted)
-            workbook.Save("AutomaticCalculationDemo.xlsx");
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

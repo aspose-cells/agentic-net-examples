@@ -1,89 +1,139 @@
-// Title: Check for duplicate rows in an Excel ListObject using composite key columns with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates a ListObject, builds a composite key from specified columns, and prints the row numbers that share duplicate keys. | Enhance the duplicate‑row validator to apply a red background style to rows identified as duplicates and save the modified workbook as a new file.
-// Common Searches: aspocells c# find duplicate rows in a table using multiple columns | how to validate uniqueness of rows in an Excel ListObject with Aspose.Cells | c# Aspose.Cells check for duplicate entries based on composite key | detect duplicate rows in Excel table programmatically using Aspose.Cells .NET | using HashSet to identify duplicate rows in Aspose.Cells ListObject
-// Tags: Aspose.Cells ListObject duplicate detection | composite key validation Aspose.Cells | C# HashSet for row uniqueness | Excel table duplicate check .NET | format duplicate rows Aspose.Cells
+// Title: Detect and Highlight Duplicate Rows in an Excel ListObject Using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to find duplicate rows in an Excel table with Aspose.Cells | how to highlight duplicate records in a ListObject using Aspose.Cells .NET | validate unique composite key (ID, Date) in Excel worksheet with Aspose.Cells | Aspose.Cells C# example for marking duplicate rows with custom style | detect duplicate rows based on multiple columns in an .xlsx file using Aspose.Cells
+// Tags: duplicate row detection Aspose.Cells ListObject | highlight duplicate rows Excel C# | composite key validation Aspose.Cells | apply custom style to cells Aspose.Cells | hashset uniqueness check C# Excel
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The program loads an Excel workbook, accesses a ListObject named "Table1", builds a composite key from selected columns for each data row, uses a HashSet to detect duplicate keys, reports duplicate row numbers, and can optionally highlight and save the workbook.
-class DuplicateRowValidator
+namespace AsposeCellsDuplicateValidator
 {
-    static void Main()
+    // The sample loads an Excel workbook, accesses the first ListObject table, defines "ID" and "Date" as key columns, and uses a HashSet to identify rows with identical composite keys. Duplicate rows are logged and then highlighted with a LightCoral background style before the workbook is saved to a new file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Path to the input workbook
-            string inputPath = "input.xlsx";
-
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output_with_duplicates_highlighted.xlsx";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (or specify by name/index)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Retrieve the table (ListObject) by its name; adjust the name as needed
-            ListObject table = worksheet.ListObjects["Table1"];
-            if (table == null)
-            {
-                Console.WriteLine("Error: Table \"Table1\" was not found in the worksheet.");
-                return;
-            }
-
-            // Define zero‑based indices of the key columns within the table (e.g., columns A and C)
-            int[] keyColumnIndices = new int[] { 0, 2 };
-
-            // Set to store unique composite keys
-            HashSet<string> uniqueKeys = new HashSet<string>();
-            bool duplicateFound = false;
-
-            // Determine the data range of the table
-            int firstDataRow = table.DataRange.FirstRow;
-            int lastDataRow = firstDataRow + table.DataRange.RowCount - 1;
-            int firstDataCol = table.DataRange.FirstColumn;
-
-            // Iterate over each data row
-            for (int row = firstDataRow; row <= lastDataRow; row++)
-            {
-                // Build a composite key from the specified columns
-                List<string> keyParts = new List<string>();
-                foreach (int colIndex in keyColumnIndices)
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    string cellValue = worksheet.Cells[row, firstDataCol + colIndex].StringValue?.Trim() ?? string.Empty;
-                    keyParts.Add(cellValue);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                string compositeKey = string.Join("||", keyParts);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Detect duplicates
-                if (!uniqueKeys.Add(compositeKey))
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one table (ListObject)
+                if (worksheet.ListObjects.Count == 0)
                 {
-                    duplicateFound = true;
-                    Console.WriteLine($"Duplicate row detected at table row {row - firstDataRow + 1}.");
+                    Console.WriteLine("No tables found in the worksheet.");
+                    return;
                 }
-            }
 
-            if (!duplicateFound)
+                // Retrieve the first table
+                ListObject table = worksheet.ListObjects[0];
+
+                // Define key columns (as they appear in the table header)
+                string[] keyColumnNames = { "ID", "Date" };
+
+                // Map column names to zero‑based indices within the table
+                Dictionary<string, int> columnNameToIndex = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                for (int col = 0; col < table.ListColumns.Count; col++)
+                {
+                    columnNameToIndex[table.ListColumns[col].Name] = col;
+                }
+
+                // Verify that all key columns exist in the table
+                foreach (string keyName in keyColumnNames)
+                {
+                    if (!columnNameToIndex.ContainsKey(keyName))
+                    {
+                        Console.WriteLine($"Key column \"{keyName}\" not found in the table.");
+                        return;
+                    }
+                }
+
+                // Track unique composite keys
+                HashSet<string> uniqueKeys = new HashSet<string>();
+                bool duplicateFound = false;
+
+                // First pass: detect duplicates
+                for (int row = 0; row < table.DataRange.RowCount; row++)
+                {
+                    List<string> keyParts = new List<string>();
+                    foreach (string keyName in keyColumnNames)
+                    {
+                        int colIndex = columnNameToIndex[keyName];
+                        object cellValue = table.DataRange[row, colIndex].Value;
+                        keyParts.Add(cellValue?.ToString() ?? string.Empty);
+                    }
+
+                    string compositeKey = string.Join("||", keyParts);
+
+                    if (!uniqueKeys.Add(compositeKey))
+                    {
+                        duplicateFound = true;
+                        Console.WriteLine($"Duplicate row detected at table row {row + 2} (Excel row {table.DataRange.FirstRow + row + 2}).");
+                    }
+                }
+
+                if (!duplicateFound)
+                {
+                    Console.WriteLine("No duplicate rows found based on the specified key columns.");
+                    return;
+                }
+
+                // Prepare style for duplicate rows
+                Style duplicateStyle = workbook.CreateStyle();
+                duplicateStyle.ForegroundColor = Color.LightCoral;
+                duplicateStyle.Pattern = BackgroundType.Solid;
+
+                StyleFlag styleFlag = new StyleFlag { CellShading = true };
+
+                // Second pass: apply style to duplicate rows
+                uniqueKeys.Clear(); // reuse set
+                for (int row = 0; row < table.DataRange.RowCount; row++)
+                {
+                    List<string> keyParts = new List<string>();
+                    foreach (string keyName in keyColumnNames)
+                    {
+                        int colIndex = columnNameToIndex[keyName];
+                        object cellValue = table.DataRange[row, colIndex].Value;
+                        keyParts.Add(cellValue?.ToString() ?? string.Empty);
+                    }
+
+                    string compositeKey = string.Join("||", keyParts);
+
+                    if (!uniqueKeys.Add(compositeKey))
+                    {
+                        // Apply style to each cell in the duplicate row
+                        for (int col = 0; col < table.DataRange.ColumnCount; col++)
+                        {
+                            Cell cell = table.DataRange[row, col];
+                            cell.SetStyle(duplicateStyle, styleFlag);
+                        }
+                    }
+                }
+
+                // Save the workbook with highlights
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved with duplicate rows highlighted: {outputPath}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("No duplicate rows found based on the specified key columns.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Optionally, save the workbook (e.g., after marking duplicates)
-            // workbook.Save("output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

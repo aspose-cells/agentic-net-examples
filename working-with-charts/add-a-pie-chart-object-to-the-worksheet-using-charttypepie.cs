@@ -1,41 +1,73 @@
-// Title: Add a Pie chart to an Excel worksheet with Aspose.Cells for .NET (C# example)
-// AI Prompts: Write C# code that creates a new workbook, populates category and value cells, inserts a Pie chart using ChartType.Pie, binds the series to B2:B4 and categories to A2:A4, and saves the file as an .xlsx with Aspose.Cells. | Demonstrate how to adjust the position and size of a Pie chart in an Aspose.Cells worksheet by specifying start and end rows and columns. | Provide a C# snippet that adds a title and legend to a Pie chart created with Aspose.Cells, then exports the workbook to a file named PieChart.xlsx.
-// Common Searches: aspnet cells c# how to insert a pie chart into an existing worksheet | example of binding category labels to a pie chart using Aspose.Cells | aspose.cells create pie chart from cell range B2:B4 and A2:A4 | set pie chart dimensions rows 5 to 15 columns 0 to 5 Aspose.Cells | save workbook with pie chart as PieChart.xlsx using Aspose.Cells
-// Tags: Aspose.Cells add pie chart C# | Aspose.Cells chart data binding | Aspose.Cells set chart position rows columns | Aspose.Cells export workbook to xlsx | Aspose.Cells customize pie chart title legend
+// Title: Add a Pie chart to an Excel worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new workbook, fills a range with categories and values, inserts a Pie chart using ChartType.Pie, binds the series to the values range, sets a chart title, and saves the file. | Show how to position a Pie chart on a worksheet and optionally assign category labels from a cell range using Aspose.Cells in C#.
+// Common Searches: asp.net add pie chart to Excel file using Aspose.Cells | c# Aspose.Cells create pie chart from cell range | how to set title of a pie chart with Aspose.Cells C# | Aspose.Cells chart positioning rows columns example | binding category labels to pie chart Aspose.Cells C#
+// Tags: Aspose.Cells create pie chart C# | Aspose.Cells bind pie chart data range | Aspose.Cells set chart title C# | Aspose.Cells chart position rows columns | Aspose.Cells add chart to worksheet C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // Creates a new workbook, fills A1:B4 with category and value data, adds a Pie chart covering rows 5‑15 and columns 0‑5, binds values from B2:B4 and categories from A2:A4, then saves the workbook as PieChart.xlsx.
-class Program
+// The example creates a new workbook, writes category and value data to cells A1:B5, adds a Pie chart positioned from rows 6‑20 and columns 0‑7, binds the series to the range B2:B5, sets the chart title "Fruit Distribution", and saves the workbook as PieChartExample.xlsx.
+class AddPieChartExample
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the pie chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(50);
-        sheet.Cells["B3"].PutValue(30);
-        sheet.Cells["B4"].PutValue(20);
+            // Populate sample data for the pie chart.
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Bananas");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("Cherries");
+            sheet.Cells["B4"].PutValue(25);
+            sheet.Cells["A5"].PutValue("Dates");
+            sheet.Cells["B5"].PutValue(25);
 
-        // Add a pie chart to the worksheet (rows 5‑15, columns 0‑5)
-        int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a Pie chart to the worksheet.
+            int upperLeftRow = 6;          // 0‑based row index where the chart starts
+            int upperLeftColumn = 0;       // 0‑based column index where the chart starts
+            int lowerRightRow = 20;
+            int lowerRightColumn = 7;
 
-        // Define the data series and category labels for the chart
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Charts.Add returns the index of the newly added chart.
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn);
+            Chart pieChart = sheet.Charts[chartIndex];
 
-        // Save the workbook with the newly added chart
-        workbook.Save("PieChart.xlsx", SaveFormat.Xlsx);
+            // Set the data source for the chart (values).
+            pieChart.NSeries.Add("B2:B5", true);
+            // Category labels are optional; if not set, Aspose.Cells will use default labels.
+            // pieChart.NSeries[0].CategoryData = "A2:A5";
+
+            // Optional: set a title for the chart.
+            pieChart.Title.Text = "Fruit Distribution";
+
+            // Define output file path.
+            string outputPath = "PieChartExample.xlsx";
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

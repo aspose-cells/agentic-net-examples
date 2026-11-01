@@ -1,73 +1,77 @@
-// Title: Verify that a workbook saved as an encrypted XLSX using Aspose.Cells for .NET is password‑protected by reopening it
-// AI Prompts: Generate C# code that saves a Workbook with a password, then attempts to open the file without a password and returns a boolean indicating whether the file is encrypted. | Create a .NET snippet that uses Aspose.Cells LoadOptions to load an Excel file and catches CellsException to detect a missing password. | Write a method that accepts a file path, opens it with Aspose.Cells, and throws a custom exception if the workbook is not password‑protected.
-// Common Searches: Aspose.Cells .NET check if saved XLSX is password protected after saving | C# detect encrypted Excel workbook by loading without password | How to programmatically confirm workbook encryption with Aspose.Cells | LoadOptions without password throws CellsException for protected file | Validate encryption status of an Excel file using Aspose.Cells API
-// Tags: Aspose.Cells workbook encryption verification | C# load encrypted XLSX with LoadOptions | detect password‑protected Excel using CellsException | verify Excel file protection programmatically | Aspose.Cells password protection status check
+// Title: Verify that a saved XLSX workbook is password‑encrypted by reopening it with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to confirm an XLSX file is password protected after saving | detect encryption of an Excel workbook when loading without a password using Aspose.Cells | Aspose.Cells .NET check if saved workbook requires a password to open | validate workbook encryption status programmatically with Aspose.Cells | catch CellsException for encrypted Excel file in C# Aspose.Cells example
+// Tags: verify workbook encryption Aspose.Cells | load encrypted XLSX without password | catch CellsException password protection | check encryption status after save Aspose.Cells | password protected Excel file validation C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a Workbook, assigns a password to encrypt it, saves it as an XLSX file, then attempts to reload the file without providing a password. If Aspose.Cells throws a CellsException, the code marks the workbook as encrypted and outputs the result.
+// The example creates a workbook, adds data, sets a password to encrypt it, saves the file as XLSX, then attempts to reload the file without providing a password. It catches the expected CellsException that indicates the workbook is encrypted and outputs the encryption status, demonstrating how to programmatically verify password protection of a saved Excel file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Path to the Excel file
+            string filePath = "EncryptedWorkbook.xlsx";
+
+            // -----------------------------------------------------------------
+            // Create a new workbook and encrypt it with a password
+            // -----------------------------------------------------------------
+            // Create a new workbook (empty)
             Workbook workbook = new Workbook();
 
-            // Set a password to encrypt the workbook when it is saved
+            // Add some sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+
+            // Set password to encrypt the workbook
             workbook.Settings.Password = "MySecretPassword";
 
-            // Save the workbook as an encrypted XLSX file
-            string encryptedFilePath = "encrypted.xlsx";
+            // Save the workbook (encryption will be applied automatically)
+            workbook.Save(filePath, SaveFormat.Xlsx);
+
+            // Ensure the file was created
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("The workbook file was not created.", filePath);
+
+            // -----------------------------------------------------------------
+            // Reopen the saved file without providing a password
+            // and verify that it is encrypted
+            // -----------------------------------------------------------------
+            bool isEncrypted = false;
 
             try
             {
-                workbook.Save(encryptedFilePath, SaveFormat.Xlsx);
+                // Attempt to load without a password; this should fail if encrypted
+                Workbook loadedWorkbook = new Workbook(filePath);
+                // If loading succeeds, the workbook is not encrypted
+                isEncrypted = false;
             }
-            catch (Exception saveEx)
+            catch (CellsException ex) when (ex.Message.Contains("password"))
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                return;
+                // Expected exception for encrypted workbook
+                isEncrypted = true;
+            }
+            catch (Exception ex)
+            {
+                // Unexpected exception
+                Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
+                throw;
             }
 
-            // Verify the encryption status by attempting to load without a password
-            bool isEncrypted = false;
+            // Output the result
+            Console.WriteLine($"Is the workbook encrypted? {isEncrypted}");
 
-            if (File.Exists(encryptedFilePath))
-            {
-                try
-                {
-                    // Attempt to load without providing a password
-                    LoadOptions loadOptions = new LoadOptions(); // no password supplied
-                    Workbook reopenedWorkbook = new Workbook(encryptedFilePath, loadOptions);
-                    // If loading succeeds, the file is not password protected
-                    isEncrypted = false;
-                }
-                catch (CellsException)
-                {
-                    // Loading failed because a password is required
-                    isEncrypted = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
-                    return;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"File not found: {encryptedFilePath}");
-                return;
-            }
-
-            Console.WriteLine($"Workbook encrypted: {isEncrypted}");
+            // Optional: assert the expected condition
+            if (!isEncrypted)
+                throw new InvalidOperationException("The workbook was expected to be encrypted but is not.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // General error handling
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,7 +1,6 @@
-// Title: Load an Excel workbook, apply a Unicode‑compatible default font, and save it as PDF with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, sets Workbook.DefaultStyle.Font to a Unicode‑capable typeface such as Arial Unicode MS, and saves the workbook as a PDF. | Show how to configure FontSettings or the default style in Aspose.Cells for .NET so that supplementary Unicode characters render correctly during Excel‑to‑PDF conversion.
-// Common Searches: how to use a Unicode font with Aspose.Cells when converting Excel to PDF in C# | Aspose.Cells .NET set default workbook font for supplementary characters before PDF export | C# example of loading Arial Unicode MS in Aspose.Cells to preserve emojis in PDF | configure FontSettings in Aspose.Cells to support Unicode characters during PDF conversion
-// Tags: Aspose.Cells set default font Unicode | Excel to PDF conversion Unicode support | C# Aspose.Cells FontSettings PDF | load Arial Unicode MS Aspose.Cells | supplementary Unicode characters PDF export
+// Title: Set a Unicode‑compatible default font in Aspose.Cells C# before converting an Excel workbook to PDF
+// Common Searches: how to specify a Unicode font for PDF export in Aspose.Cells C# | Aspose.Cells convert Excel to PDF with supplementary characters support | C# load Noto Sans as default workbook font for PDF generation using Aspose.Cells | prevent missing characters when saving Excel as PDF with Aspose.Cells | configure default style font for Unicode in Aspose.Cells PDF conversion
+// Tags: Aspose.Cells set default font for PDF | C# Unicode font for Excel to PDF conversion | supplementary character support in PDF export | load Noto Sans with Aspose.Cells | Excel workbook default style font Unicode
 
 using System;
 using System.IO;
@@ -9,40 +8,39 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The sample loads an existing Excel workbook, changes its DefaultStyle.Font to a Unicode‑compatible typeface (e.g., Arial Unicode MS) to ensure proper rendering of supplementary characters, and then saves the workbook as a PDF using Aspose.Cells for .NET, including basic file existence checks and error handling.
+    // The example checks for the input XLSX file, loads it into an Aspose.Cells Workbook, assigns a Unicode‑compatible default font (e.g., Noto Sans) to the workbook's style, ensures the output directory exists, and then saves the workbook as a PDF, handling any errors that occur.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Define input and output file paths
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
-
-                // Verify that the input workbook exists
+                // Verify that the input workbook exists before loading
+                string inputPath = @"C:\Data\input.xlsx";
                 if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
-                    return;
-                }
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-                // Load the workbook
+                // Load the source workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Set a default font that supports Unicode characters (e.g., Arial Unicode MS)
-                // Use the DefaultStyle's Font property to specify the default font.
-                workbook.DefaultStyle.Font.Name = "Arial Unicode MS";
+                // Set a default font that supports Unicode characters (must be installed on the system)
+                workbook.DefaultStyle.Font.Name = "Noto Sans";
 
-                // Save the workbook as PDF
+                // Define output path and ensure the directory exists
+                string outputPath = @"C:\Data\output.pdf";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Convert and save the workbook to PDF
                 workbook.Save(outputPath, SaveFormat.Pdf);
-
-                Console.WriteLine($"PDF file has been successfully created at \"{outputPath}\".");
+                Console.WriteLine($"PDF saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

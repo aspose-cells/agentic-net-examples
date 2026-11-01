@@ -1,66 +1,46 @@
-// Title: Create a backup of an Excel workbook before adding an XML map and setting the worksheet XmlMapIndex with Aspose.Cells for .NET
-// AI Prompts: Write C# code that copies an existing .xlsx file to a backup, loads it with Aspose.Cells, adds an XML map from a specified XML file, assigns the map to the first worksheet using the XmlMapIndex property (using reflection if the property is not directly accessible), and saves the modified workbook. | Demonstrate a safe workflow in C# for modifying Excel XML maps with Aspose.Cells: verify source files, create a backup copy, add the XML map, set the worksheet's XmlMapIndex via reflection, and handle any errors gracefully.
-// Common Searches: how to backup an Excel file before modifying XML maps using Aspose.Cells C# | c# add xml map to workbook and set worksheet XmlMapIndex with Aspose.Cells | asp.net create copy of .xlsx then associate xml map via reflection | aspose.cells save backup workbook then add xml map example
-// Tags: backup workbook before xml map addition Aspose.Cells | add xml map to worksheet Aspose.Cells C# | set worksheet XmlMapIndex via reflection | save modified workbook after xml map Aspose.Cells | validate file existence Aspose.Cells
+// Title: How to create a backup of an Excel workbook before editing XML maps with Aspose.Cells for .NET (C#)
+// Common Searches: C# code to copy an existing .xlsx file using Aspose.Cells before modifying XML maps | Aspose.Cells save workbook as backup before changing XmlMap properties in .NET | Create a duplicate workbook for rollback when updating XML map name with Aspose.Cells | How to preserve the original Excel file while editing XML maps using Aspose.Cells in C# | Backup Excel workbook to a separate file then overwrite after XML map changes with Aspose.Cells
+// Tags: Aspose.Cells backup workbook before XML map edit | save workbook copy Xlsx Aspose.Cells C# | modify XmlMap name Aspose.Cells | rollback Excel changes Aspose.Cells XML maps | duplicate Excel file Aspose.Cells SaveFormat
 
-using Aspose.Cells;
 using System;
-using System.IO;
-using System.Reflection;
+using Aspose.Cells;
 
-// The example checks that the original Excel workbook and XML file exist, creates a backup copy of the workbook, loads it with Aspose.Cells, adds an XML map from the XML file, attempts to assign the map to the first worksheet using the XmlMapIndex property via reflection, and finally saves the modified workbook while handling potential errors.
-class Program
+// The example loads an existing workbook, creates a backup copy using SaveFormat.Xlsx, checks for XML maps, modifies the first map's name if present, and finally overwrites the original file with the updated workbook.
+class WorkbookBackupExample
 {
     static void Main()
     {
-        try
+        // Paths for the original workbook and its backup copy
+        string originalPath = "input.xlsx";
+        string backupPath = "input_backup.xlsx";
+
+        // Load the original workbook
+        Workbook workbook = new Workbook(originalPath);
+
+        // Create a backup copy before making any changes
+        workbook.Save(backupPath, SaveFormat.Xlsx);
+
+        // -------------------------------------------------
+        // Begin modifications to XML maps (example placeholder)
+        // -------------------------------------------------
+        // Ensure there is at least one XML map to work with
+        if (workbook.Worksheets.XmlMaps.Count > 0)
         {
-            const string originalPath = "original.xlsx";
-            const string backupPath = "original_backup.xlsx";
-            const string modifiedPath = "original_modified.xlsx";
-            const string xmlFilePath = "data.xml";
+            // Access the first XML map
+            XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
 
-            // Verify required files exist
-            if (!File.Exists(originalPath))
-                throw new FileNotFoundException($"Workbook file not found: {originalPath}");
-            if (!File.Exists(xmlFilePath))
-                throw new FileNotFoundException($"XML file not found: {xmlFilePath}");
+            // Example modification: change the name of the XML map
+            xmlMap.Name = "ModifiedXmlMapName";
 
-            // Load the original workbook
-            Workbook workbook = new Workbook(originalPath);
-
-            // Save a backup before modifications
-            workbook.Save(backupPath);
-
-            // Add a new XML map from the XML file
-            XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-            int mapIndex = xmlMaps.Add(xmlFilePath);
-
-            // Attempt to associate the first worksheet with the new XML map using reflection
-            if (workbook.Worksheets.Count > 0)
-            {
-                try
-                {
-                    Worksheet ws = workbook.Worksheets[0];
-                    PropertyInfo prop = ws.GetType().GetProperty("XmlMapIndex", BindingFlags.Public | BindingFlags.Instance);
-                    if (prop != null && prop.CanWrite)
-                    {
-                        prop.SetValue(ws, mapIndex);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // If association fails, continue without it
-                    Console.WriteLine($"Warning: Unable to set XmlMapIndex - {ex.Message}");
-                }
-            }
-
-            // Save the modified workbook
-            workbook.Save(modifiedPath);
+            // Additional XML map modifications can be performed here
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // If no XML maps exist, you could add a new one as needed
+            // XmlMap newMap = workbook.Worksheets.XmlMaps.Add("NewMap", "http://example.com/schema");
         }
+
+        // Save the workbook after modifications (overwrites the original file)
+        workbook.Save(originalPath, SaveFormat.Xlsx);
     }
 }

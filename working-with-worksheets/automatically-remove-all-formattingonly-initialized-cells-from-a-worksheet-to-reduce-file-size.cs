@@ -1,61 +1,63 @@
-// Title: How to remove formatting‑only cells from every worksheet in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loops through all worksheets and deletes cells that contain only formatting, leaving the workbook smaller. | Create a reusable method that accepts input and output file paths, finds cells where CellValueType.IsNull, and empties them with PutValue(null). | Demonstrate how to gather formatting‑only cells into a collection and clear them efficiently to reduce file size in Aspose.Cells.
-// Common Searches: asp.net remove cells that only have formatting from Excel workbook | Aspose.Cells delete empty styled cells to shrink file size | C# clear cells with CellValueType.IsNull across all worksheets | optimize Excel file size by cleaning up formatting‑only cells using Aspose.Cells | batch remove formatting‑only cells from large workbook .NET
-// Tags: strip formatting‑only cells Aspose.Cells | clear IsNull cells across worksheets | reduce Excel workbook size with cell cleanup | Aspose.Cells delete empty styled cells | batch clear null‑type cells .NET
+// Title: How to remove formatting‑only initialized cells from every worksheet in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets and resets the style of cells that have no value to the workbook's default style. | Create a function that iterates through a workbook, detects empty cells with custom formatting, clears their formatting to reduce file size, and saves the result.
+// Common Searches: Aspose.Cells remove custom formatting from blank cells to shrink workbook size | C# iterate all worksheets and clear styles of empty cells using Aspose | How to reset style of cells without values in an Excel file with Aspose.Cells | Reduce Excel file size by deleting formatting‑only cells in .NET
+// Tags: clear formatting of empty cells Aspose.Cells | reset cell style to default .NET | optimize workbook size by removing styles | iterate worksheets to clean up formatting Aspose | remove formatting‑only initialized cells C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, iterates each worksheet, identifies cells whose Type is IsNull (indicating no data, only formatting), sets their value to null to clear them, and saves the cleaned workbook, resulting in a smaller file.
-class Program
+// The example loads an Excel workbook, loops through each worksheet and every cell, and for cells that contain no value but have a non‑default style, it resets the style to the default before saving the modified workbook, thereby reducing file size.
+class RemoveFormattingOnlyCells
 {
     static void Main()
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
         try
         {
-            // Ensure the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook from the input file
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Collect cells that contain no data (only formatting)
-                List<Cell> cellsToClear = new List<Cell>();
-                foreach (Cell cell in sheet.Cells)
-                {
-                    if (cell.Type == CellValueType.IsNull)
-                    {
-                        cellsToClear.Add(cell);
-                    }
-                }
+                Cells cells = sheet.Cells;
 
-                // Clear the collected cells (remove any residual data)
-                foreach (Cell cell in cellsToClear)
+                // Loop through each cell in the collection
+                foreach (Cell cell in cells)
                 {
-                    // Setting the value to null ensures the cell is truly empty
-                    cell.PutValue(null);
+                    // Determine if the cell has no value and a non‑default style (formatting only)
+                    if (cell.Value == null)
+                    {
+                        Style cellStyle = cell.GetStyle();
+                        Style defaultStyle = workbook.CreateStyle(); // default (no formatting) style
+
+                        // If the cell's style differs from the default, reset it
+                        if (!cellStyle.Equals(defaultStyle))
+                        {
+                            cell.SetStyle(defaultStyle);
+                        }
+                    }
                 }
             }
 
-            // Save the modified workbook to the output file
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

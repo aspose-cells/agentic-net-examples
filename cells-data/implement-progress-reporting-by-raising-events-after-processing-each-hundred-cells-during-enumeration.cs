@@ -1,106 +1,86 @@
-// Title: Raise a custom progress event after every 100 cells while enumerating a worksheet with Aspose.Cells for .NET
-// AI Prompts: Write a C# CellProcessor class that iterates through all cells of an Aspose.Cells worksheet and triggers a CellsBatchProcessed event after each 100‑cell batch. | Add a configurable batchSize argument to the cell enumeration method so that a progress event is raised after the specified number of cells have been processed. | Create an event handler that logs the processed cell count each time the CellsBatchProcessed event fires during worksheet traversal.
-// Common Searches: Aspose.Cells C# raise progress event every 100 cells during worksheet iteration | how to implement batch progress notifications while looping through cells in Aspose.Cells | C# example of custom event for cell processing count in Aspose.Cells workbook | track enumeration progress of Excel cells using Aspose.Cells .NET API
-// Tags: Aspose.Cells cell enumeration progress event | C# batch processing of worksheet cells | custom progress event Aspose.Cells | enumerate Excel cells with callback | cell batch size configurable Aspose
+// Title: Raise a progress event after every 100 cells while iterating an Aspose.Cells workbook in C#
+// Common Searches: c# Aspose.Cells iterate through cells with progress callback every 100 cells | how to report processing progress during Excel cell enumeration using Aspose.Cells | Aspose.Cells raise custom event after processing a batch of cells in C# | track cell processing count with event handler while looping over used range in Aspose.Cells | C# example for progress notification every 100 cells in Aspose.Cells workbook
+// Tags: Aspose.Cells cell enumeration progress event | C# batch cell processing callback | Excel workbook processing progress Aspose.Cells | event-driven cell iteration Aspose.Cells | progress reporting for used range cells C#
 
 using System;
-using System.Collections;
 using Aspose.Cells;
 
 namespace AsposeCellsProgressDemo
 {
-    // Delegate for progress event
-    public delegate void CellsBatchProcessedHandler(object sender, CellsBatchProcessedEventArgs e);
+    // Delegate for progress reporting
+    public delegate void ProgressEventHandler(int processedCells);
 
-    // Event arguments containing the number of cells processed so far
-    // The sample defines a CellsBatchProcessed event that fires after each 100‑cell batch during worksheet enumeration. A CellProcessor class handles the iteration, raises the event, and a console handler displays the cumulative cell count, demonstrating progress reporting in Aspose.Cells for .NET.
-    public class CellsBatchProcessedEventArgs : EventArgs
+    // The sample defines a WorkbookProcessor that loads an Excel file with Aspose.Cells, iterates over all cells in the first worksheet, and raises a ProgressChanged event after each 100 cells (including any remaining cells). Consumers subscribe to the event to receive the processed cell count, enabling real‑time progress reporting during workbook processing.
+    public class WorkbookProcessor
     {
-        public int CellsProcessed { get; }
+        // Event raised after each 100 cells are processed
+        public event ProgressEventHandler ProgressChanged;
 
-        public CellsBatchProcessedEventArgs(int cellsProcessed)
+        // Method to process the workbook
+        public void Process(string inputFilePath)
         {
-            CellsProcessed = cellsProcessed;
-        }
-    }
+            // Load the workbook (using the provided load rule)
+            Workbook workbook = new Workbook(inputFilePath);
 
-    // Processor that enumerates cells and raises an event after each 100 cells
-    public class CellProcessor
-    {
-        // Event raised after each batch of 100 cells
-        public event CellsBatchProcessedHandler CellsBatchProcessed;
+            // Get the first worksheet (adjust as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Enumerates all cells in the given worksheet
-        public void ProcessCells(Worksheet worksheet)
-        {
-            if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
+            int processedCount = 0;
 
-            IEnumerator enumerator = worksheet.Cells.GetEnumerator();
-            int count = 0;
-
-            while (enumerator.MoveNext())
+            // Enumerate all cells in the used range
+            foreach (Cell cell in cells)
             {
-                // Access the current cell (optional processing can be added here)
-                Cell cell = (Cell)enumerator.Current;
-
-                // Example processing: just read the value (no modification)
+                // Example processing: read the cell value (replace with actual logic)
                 var value = cell.Value;
 
-                count++;
+                // Increment processed counter
+                processedCount++;
 
                 // After each 100 cells, raise the progress event
-                if (count % 100 == 0)
+                if (processedCount % 100 == 0)
                 {
-                    OnCellsBatchProcessed(new CellsBatchProcessedEventArgs(count));
+                    OnProgressChanged(processedCount);
                 }
             }
 
-            // Raise event for any remaining cells that didn't fill a complete batch
-            if (count % 100 != 0)
+            // Optionally raise event for any remaining cells (<100)
+            if (processedCount % 100 != 0)
             {
-                OnCellsBatchProcessed(new CellsBatchProcessedEventArgs(count));
+                OnProgressChanged(processedCount);
             }
+
+            // Save the workbook (using the provided save rule)
+            workbook.Save("Processed_" + System.IO.Path.GetFileName(inputFilePath));
         }
 
         // Helper method to invoke the event safely
-        protected virtual void OnCellsBatchProcessed(CellsBatchProcessedEventArgs e)
+        protected virtual void OnProgressChanged(int processedCells)
         {
-            CellsBatchProcessed?.Invoke(this, e);
+            ProgressChanged?.Invoke(processedCells);
         }
     }
 
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Example usage
+            string inputPath = "Sample.xlsx";
 
-            // Populate sample data (more than 200 cells to demonstrate batching)
-            for (int row = 0; row < 20; row++)
-            {
-                for (int col = 0; col < 15; col++)
-                {
-                    worksheet.Cells[row, col].PutValue($"R{row}C{col}");
-                }
-            }
+            WorkbookProcessor processor = new WorkbookProcessor();
 
-            // Instantiate the processor and subscribe to the progress event
-            CellProcessor processor = new CellProcessor();
-            processor.CellsBatchProcessed += Processor_CellsBatchProcessed;
+            // Subscribe to the progress event
+            processor.ProgressChanged += Processor_ProgressChanged;
 
-            // Process cells with progress reporting
-            processor.ProcessCells(worksheet);
-
-            // Save the workbook (using the standard save method)
-            workbook.Save("ProgressDemo.xlsx");
+            // Start processing
+            processor.Process(inputPath);
         }
 
-        // Event handler that receives progress notifications
-        private static void Processor_CellsBatchProcessed(object sender, CellsBatchProcessedEventArgs e)
+        // Event handler that receives progress updates
+        private static void Processor_ProgressChanged(int processedCells)
         {
-            Console.WriteLine($"Processed {e.CellsProcessed} cells.");
+            Console.WriteLine($"Processed {processedCells} cells.");
         }
     }
 }

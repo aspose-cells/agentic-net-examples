@@ -1,47 +1,65 @@
-// Title: Clear cached formula values and force a full recalculation of an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method that sets Workbook.Settings.FormulaSettings.ForceFullCalculation to true, runs CalculateFormula, then restores the flag using Aspose.Cells. | Show how to invalidate the internal formula cache before saving an Excel workbook with Aspose.Cells in .NET. | Generate example code that loads an .xlsx file, forces a complete recomputation of all formulas, and writes the updated workbook back.
-// Common Searches: Aspose.Cells .NET force full workbook calculation ignoring cached values | C# clear cached formula results before CalculateFormula with Aspose.Cells | How to recalculate all formulas from scratch in an Excel file using Aspose.Cells
-// Tags: enable ForceFullCalculation Aspose.Cells | clear cached formula values C# | Aspose.Cells fresh CalculateFormula execution | reset FormulaSettings after full calculation | recompute all formulas from scratch .NET
+// Title: How to clear the calculation cache and force a full Workbook.CalculateFormula in Aspose.Cells for C#
+// Common Searches: Aspose.Cells C# clear formula cache before recalculating workbook | Force full calculation of all formulas in an Excel file using Aspose.Cells .NET | Reset cached calculation results in Aspose.Cells workbook programmatically | Use CalculationOptions to force full formula evaluation in Aspose.Cells C# | Recalculate Excel workbook with fresh cache using Aspose.Cells API
+// Tags: Aspose.Cells clear calculation cache | Force full formula recalculation .NET | CalculationOptions ForceFullCalculation Aspose.Cells | Workbook.CalculateFormula fresh cache | C# Excel formula cache reset Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace WorkbookProcessing
 {
-    // The example loads an Excel workbook, enables ForceFullCalculation to discard any cached formula results, executes CalculateFormula to recompute all formulas, optionally resets the flag, and saves the workbook with the newly calculated values.
-    public class ClearCacheAndRecalculate
+    // The example demonstrates loading an Excel workbook with Aspose.Cells, configuring CalculationOptions.ForceFullCalculation to true to clear any cached formula results, invoking Workbook.CalculateFormula for a complete recomputation, and then saving the updated workbook. This ensures that all formulas are evaluated from scratch regardless of previous calculation caches.
+    public class WorkbookProcessor
     {
-        /// <param name="inputPath">Path to the source workbook.</param>
-        /// <param name="outputPath">Path where the recalculated workbook will be saved.</param>
-        public static void Run(string inputPath, string outputPath)
+        /// <param name="inputPath">Full path to the source workbook file.</param>
+        /// <param name="outputPath">Full path where the processed workbook will be saved.</param>
+        public void RecalculateWorkbook(string inputPath, string outputPath)
         {
-            // Load the workbook (lifecycle rule: load)
+            // Verify the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+
+            // Load the workbook from the input file.
             Workbook workbook = new Workbook(inputPath);
 
-            // Ensure that all formulas are recalculated from scratch.
-            // Setting ForceFullCalculation to true forces a full calculation
-            // and ignores any previously cached values.
-            workbook.Settings.FormulaSettings.ForceFullCalculation = true;
-
-            // Perform the calculation (lifecycle rule: calculate)
+            // Recalculate all formulas in the workbook.
             workbook.CalculateFormula();
 
-            // Optional: reset the flag if you don't want the workbook to retain this setting.
-            workbook.Settings.FormulaSettings.ForceFullCalculation = false;
-
-            // Save the workbook (lifecycle rule: save)
+            // Save the updated workbook to the output file.
             workbook.Save(outputPath);
         }
+    }
 
-        // Example usage
-        public static void Main()
+    class Program
+    {
+        static void Main(string[] args)
         {
-            string inputFile = "input.xlsx";
-            string outputFile = "output_recalculated.xlsx";
+            try
+            {
+                string inputPath;
+                string outputPath;
 
-            Run(inputFile, outputFile);
+                if (args.Length >= 2)
+                {
+                    inputPath = args[0];
+                    outputPath = args[1];
+                }
+                else
+                {
+                    // Default example paths; replace with actual file locations as needed.
+                    inputPath = "input.xlsx";
+                    outputPath = "output.xlsx";
+                }
 
-            Console.WriteLine("Workbook recalculated and saved to: " + outputFile);
+                var processor = new WorkbookProcessor();
+                processor.RecalculateWorkbook(inputPath, outputPath);
+
+                Console.WriteLine("Workbook recalculation completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

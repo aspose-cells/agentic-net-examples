@@ -1,12 +1,12 @@
-// Title: Apply an italic font and a thin top border to a cell using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, defines a style with an italic font and a thin black top border, applies it to cell A1, and saves the file using Aspose.Cells. | Generate a method that receives a worksheet and a cell address, then sets the cell’s font to italic and adds a thin top border via Aspose.Cells styling. | Provide a step‑by‑step script to programmatically style a cell with italic text and a top border in a .NET application using Aspose.Cells.
-// Common Searches: how to add italic text and top border to a specific cell in Aspose.Cells C# | Aspose.Cells C# example for setting thin top border with italic text | custom cell style with italic and border using Aspose.Cells for .NET | apply formatting to cell A1 in Aspose.Cells workbook C#
-// Tags: italic text style Aspose.Cells C# | thin top edge border Aspose.Cells | custom cell style Aspose.Cells .NET | apply formatting to specific cell Aspose.Cells | set cell borders programmatically Aspose.Cells
+// Title: Apply an italic font and a thin top border to a specific cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a style with an italic typeface and a thin black top border, applies it to cell A1, and saves the workbook using Aspose.Cells. | Demonstrate how to define a custom cell style containing slanted text and a top edge border in Aspose.Cells for .NET and assign it to a chosen cell.
+// Common Searches: asp.net aspose.cells set slanted text and top edge border for a single cell | c# example adding thin top border to Excel cell with Aspose.Cells | how to create custom style with italic font in Aspose.Cells workbook | apply border only to top side of a cell using Aspose.Cells .NET
+// Tags: italic font style Aspose.Cells | thin top border formatting C# | custom cell style creation Aspose.Cells .NET | set cell top edge border programmatically | Excel cell formatting with font and border Aspose
 
 using Aspose.Cells;
 using System.Drawing;
 
-// Creates a new workbook, defines a style that makes the font italic and adds a thin black top border, applies the style to cell A1, writes "Sample", and saves the workbook as StyledCell.xlsx.
+// The program creates a new workbook, writes "Sample Text" to cell A1, defines a style with italic text and a thin black top border, applies this style to the cell, and saves the file as StyledCell.xlsx.
 class Program
 {
     static void Main()
@@ -17,19 +17,21 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a new style
+        // Get the cell to style (e.g., A1) and put a sample value
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Sample Text");
+
+        // Create a new style object
         Style style = workbook.CreateStyle();
 
         // Set the font to italic
         style.Font.IsItalic = true;
 
-        // Apply a thin top border
+        // Configure a thin top border
         style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
         style.Borders[BorderType.TopBorder].Color = Color.Black;
 
-        // Write a value to cell A1 and apply the style
-        Cell cell = sheet.Cells["A1"];
-        cell.PutValue("Sample");
+        // Apply the style to the cell
         cell.SetStyle(style);
 
         // Save the workbook to a file

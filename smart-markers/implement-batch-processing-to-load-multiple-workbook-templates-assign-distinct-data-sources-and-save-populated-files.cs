@@ -1,111 +1,145 @@
-// Title: Batch generate Excel files from multiple templates with individual smart‑marker data sources using Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates over a list of template workbook paths, assigns a separate List<Person> as the 'Employees' smart‑marker data source for each workbook using WorkbookDesigner, processes the markers, and saves the result to corresponding output files. | Create a robust Aspose.Cells batch routine that checks each template file exists, loads it into a Workbook, sets a distinct data source, calls Designer.Process(), and implements try‑catch logging for any failures. | Generate a reusable method that accepts arrays of template filenames, output filenames, and data source objects, then performs smart‑marker processing for each entry with Aspose.Cells.
-// Common Searches: asp.net c# generate reports from several Excel templates using Aspose.Cells smart markers | assign unique data collections to each Excel template when using Aspose.Cells | loop through multiple workbook templates and populate them with different data sets in C# | how to verify Excel template files exist before processing with Aspose.Cells | error handling strategy for batch Excel generation with Aspose.Cells
-// Tags: batch processing smart markers Aspose.Cells | assign distinct data source per workbook | process multiple Excel templates C# | validate template file existence Aspose.Cells | exception handling Aspose.Cells batch generation
+// Title: Generate multiple Excel reports from different templates with individual DataTable sources using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over a list of Excel template files, loads each with Aspose.Cells, inserts the matching DataTable into the first worksheet, and saves the workbook with a filename that combines the template name and the table name. | Refactor the batch example to employ Aspose.Cells smart markers so the DataTable is mapped automatically instead of using manual cell loops. | Add robust error handling to the batch processor: skip missing template files, log each step, and continue processing remaining items after any exception.
+// Common Searches: c# Aspose.Cells batch generate reports from multiple templates with separate data tables | how to use Aspose.Cells to fill different Excel templates with DataTable in a loop | save Aspose.Cells workbook with dynamic filename based on template and data source | Aspose.Cells smart markers batch processing multiple workbooks .NET | error handling for missing Excel template files Aspose.Cells batch
+// Tags: batch workbook generation Aspose.Cells | populate Excel template from DataTable Aspose.Cells | dynamic output filename Aspose.Cells | smart markers data insertion Aspose.Cells | error handling missing template Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+namespace BatchWorkbookProcessor
 {
-    // Sample data class used as a data source for the smart markers
-    // The example defines a Person class and three List<Person> collections, then iterates over parallel arrays of template paths, output paths, and data sources. For each entry it verifies the template file exists, loads it into a Workbook, uses WorkbookDesigner to bind the 'Employees' smart‑marker data source, processes the markers, saves the populated workbook, and logs progress while handling exceptions.
-    public class Person
+    // The program loops through a collection of Excel template paths, loads each workbook with Aspose.Cells, clears the first worksheet, writes the associated DataTable (including column headers) into the sheet, and saves the result to an output folder using a filename that merges the template name and the DataTable name.
+    class Program
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Department { get; set; }
-
-        public Person(string name, int age, string department)
+        static void Main(string[] args)
         {
-            Name = name;
-            Age = age;
-            Department = department;
-        }
-    }
-
-    public class BatchProcessor
-    {
-        public static void Run()
-        {
-            // Define the template files, output files and the corresponding data sources
-            string[] templateFiles = { "Template1.xlsx", "Template2.xlsx", "Template3.xlsx" };
-            string[] outputFiles   = { "Result1.xlsx",   "Result2.xlsx",   "Result3.xlsx"   };
-            string   dataSourceName = "Employees";
-
-            // Prepare distinct data sources for each template
-            var dataSource1 = new List<Person>
+            // Define template files and corresponding data sources
+            var templates = new List<string>
             {
-                new Person("John Doe", 30, "Sales"),
-                new Person("Jane Smith", 28, "Marketing")
+                @"C:\Templates\ReportTemplate1.xlsx",
+                @"C:\Templates\ReportTemplate2.xlsx",
+                @"C:\Templates\ReportTemplate3.xlsx"
             };
 
-            var dataSource2 = new List<Person>
+            // Example data sources – in real scenarios these could come from a database, service, etc.
+            var dataSources = new List<DataTable>
             {
-                new Person("Alice Brown", 35, "HR"),
-                new Person("Bob Johnson", 40, "Finance"),
-                new Person("Carol White", 25, "IT")
+                CreateSampleDataTable("Sales Q1"),
+                CreateSampleDataTable("Sales Q2"),
+                CreateSampleDataTable("Sales Q3")
             };
 
-            var dataSource3 = new List<Person>
+            // Output folder
+            string outputFolder = @"C:\GeneratedReports\";
+
+            // Ensure output directory exists
+            try
             {
-                new Person("David Green", 45, "Operations")
-            };
-
-            object[] dataSources = { dataSource1, dataSource2, dataSource3 };
-
-            // Ensure the arrays have the same length
-            if (templateFiles.Length != outputFiles.Length || templateFiles.Length != dataSources.Length)
-                throw new InvalidOperationException("Template, output and data source arrays must have the same length.");
-
-            // Process each workbook template
-            for (int i = 0; i < templateFiles.Length; i++)
+                if (!Directory.Exists(outputFolder))
+                {
+                    Directory.CreateDirectory(outputFolder);
+                }
+            }
+            catch (Exception ex)
             {
+                Console.WriteLine($"Failed to create output directory: {ex.Message}");
+                return;
+            }
+
+            // Process each template with its data source
+            for (int i = 0; i < templates.Count; i++)
+            {
+                string templatePath = templates[i];
+                DataTable data = dataSources[i];
+
+                // Verify template file exists
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template not found: {templatePath}");
+                    continue;
+                }
+
                 try
                 {
-                    // Verify template file exists
-                    if (!File.Exists(templateFiles[i]))
+                    // Load the workbook template
+                    Workbook workbook = new Workbook(templatePath);
+
+                    // Ensure there is at least one worksheet
+                    if (workbook.Worksheets.Count == 0)
                     {
-                        Console.WriteLine($"Template file '{templateFiles[i]}' not found. Skipping this entry.");
+                        Console.WriteLine($"No worksheets found in template: {templatePath}");
                         continue;
                     }
 
-                    // Load the template workbook
-                    Workbook workbook = new Workbook(templateFiles[i]);
+                    // Assume the first worksheet is the target for data import
+                    Worksheet sheet = workbook.Worksheets[0];
 
-                    // Initialize the WorkbookDesigner and assign the loaded workbook
-                    WorkbookDesigner designer = new WorkbookDesigner
+                    // Clear existing data (optional, depending on template design)
+                    sheet.Cells.Clear();
+
+                    // Write DataTable to worksheet manually (headers + rows)
+                    try
                     {
-                        Workbook = workbook
-                    };
+                        int rowIndex = 0;
 
-                    // Set the distinct data source for this workbook
-                    designer.SetDataSource(dataSourceName, dataSources[i]);
+                        // Write column headers
+                        for (int col = 0; col < data.Columns.Count; col++)
+                        {
+                            sheet.Cells[rowIndex, col].PutValue(data.Columns[col].ColumnName);
+                        }
+                        rowIndex++;
 
-                    // Process smart markers in the workbook
-                    designer.Process();
+                        // Write each data row
+                        foreach (DataRow dr in data.Rows)
+                        {
+                            for (int col = 0; col < data.Columns.Count; col++)
+                            {
+                                sheet.Cells[rowIndex, col].PutValue(dr[col]);
+                            }
+                            rowIndex++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to write data into worksheet: {ex.Message}");
+                        continue;
+                    }
 
-                    // Save the populated workbook to the specified output file
-                    designer.Workbook.Save(outputFiles[i]);
+                    // Build the output file name (e.g., ReportTemplate1_Sales Q1.xlsx)
+                    string templateFileName = Path.GetFileNameWithoutExtension(templatePath);
+                    string outputFileName = $"{templateFileName}_{data.TableName}.xlsx";
+                    string outputPath = Path.Combine(outputFolder, outputFileName);
 
-                    Console.WriteLine($"Processed '{templateFiles[i]}' and saved as '{outputFiles[i]}'.");
+                    // Save the populated workbook
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                    Console.WriteLine($"Generated: {outputPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{templateFiles[i]}': {ex.Message}");
+                    Console.WriteLine($"Error processing template '{templatePath}': {ex.Message}");
                 }
             }
-        }
-    }
 
-    // Entry point for demonstration
-    class Program
-    {
-        static void Main()
+            Console.WriteLine("Batch processing completed.");
+        }
+
+        // Helper method to create a sample DataTable for demonstration purposes
+        private static DataTable CreateSampleDataTable(string tableName)
         {
-            BatchProcessor.Run();
+            DataTable dt = new DataTable(tableName);
+            dt.Columns.Add("Product", typeof(string));
+            dt.Columns.Add("Quantity", typeof(int));
+            dt.Columns.Add("Price", typeof(decimal));
+
+            dt.Rows.Add("Widget A", 120, 9.99m);
+            dt.Rows.Add("Widget B", 85, 14.50m);
+            dt.Rows.Add("Widget C", 60, 7.25m);
+
+            return dt;
         }
     }
 }

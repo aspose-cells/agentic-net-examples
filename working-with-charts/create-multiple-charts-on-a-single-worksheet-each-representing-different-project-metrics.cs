@@ -1,106 +1,98 @@
-// Title: Generate column, line, and pie charts on the same worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a column chart for tasks completed per month, a line chart for budget planned vs spent, and a pie chart for issue type distribution on one worksheet using Aspose.Cells in C#. | Specify start and end cell coordinates to position each chart when adding them to the worksheet with Aspose.Cells. | Add a stacked bar chart for task data while keeping the existing column, line, and pie charts on the same sheet using Aspose.Cells.
-// Common Searches: aspnet how to place multiple chart types on a single Excel sheet with Aspose.Cells | c# Aspose.Cells add column chart and line chart together on one worksheet | example code for creating a pie chart and line chart on the same sheet using Aspose.Cells for .NET | Aspose.Cells set chart location using cell range in C# | generate project metrics dashboard with several charts in one worksheet Aspose.Cells
-// Tags: Aspose.Cells create column chart C# | Aspose.Cells line chart budget comparison | Aspose.Cells pie chart issue distribution | Aspose.Cells multiple charts same worksheet | Aspose.Cells set chart position by cell range
+// Title: Generate column, line, and pie charts on the same worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, fills it with monthly project data, and adds a column chart for tasks completed, a line chart for budget used, and a pie chart for hours spent, each positioned in separate ranges on the same sheet. | Demonstrate how to set chart titles, series names, category labels, and then save the workbook as an .xlsx file with Aspose.Cells.
+// Common Searches: how to add multiple different chart types to a single worksheet with Aspose.Cells C# | Aspose.Cells place column, line and pie charts on the same sheet with custom positions | C# example for creating project metrics dashboard using Aspose.Cells charts | set category axis labels for a column chart in Aspose.Cells .NET | save workbook containing several charts to Excel file using Aspose.Cells
+// Tags: create multiple chart types Aspose.Cells C# | position charts on worksheet Aspose.Cells | define chart series range Aspose.Cells | add column chart with category labels Aspose.Cells | export workbook with charts to XLSX Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System;
 using System.IO;
 
-// Demonstrates building a workbook, populating three metric tables, and adding a column chart, a line chart, and a pie chart to the same worksheet with Aspose.Cells for .NET, then saving the file as ProjectMetrics.xlsx.
+// Shows how to build a workbook, populate it with sample project metric data, and add three distinct charts (column, line, pie) with specific positions, titles, and series on a single worksheet, then save the file as ProjectMetrics.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and give it a meaningful name
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "ProjectMetrics";
 
-            // -------------------- Fill sample data --------------------
-            // Metric 1: Tasks Completed per Month
+            // -------------------------------------------------
+            // Populate sample data for three different metrics
+            // -------------------------------------------------
+            // Header row
             sheet.Cells["A1"].PutValue("Month");
             sheet.Cells["B1"].PutValue("Tasks Completed");
+            sheet.Cells["C1"].PutValue("Budget Used");
+            sheet.Cells["D1"].PutValue("Hours Spent");
+
+            // Sample data
             string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
             int[] tasks = { 20, 35, 30, 45, 50 };
+            double[] budget = { 5000, 7000, 6500, 8000, 9000 };
+            int[] hours = { 120, 150, 130, 170, 200 };
+
             for (int i = 0; i < months.Length; i++)
             {
-                sheet.Cells[i + 1, 0].PutValue(months[i]); // Column A
-                sheet.Cells[i + 1, 1].PutValue(tasks[i]); // Column B
+                int row = i + 1; // Data starts at row 2 (index 1)
+                sheet.Cells[row, 0].PutValue(months[i]);   // Column A
+                sheet.Cells[row, 1].PutValue(tasks[i]);    // Column B
+                sheet.Cells[row, 2].PutValue(budget[i]);   // Column C
+                sheet.Cells[row, 3].PutValue(hours[i]);    // Column D
             }
 
-            // Metric 2: Budget Planned vs Spent
-            sheet.Cells["D1"].PutValue("Month");
-            sheet.Cells["E1"].PutValue("Planned");
-            sheet.Cells["F1"].PutValue("Spent");
-            int[] planned = { 100, 120, 130, 150, 170 };
-            int[] spent = { 90, 110, 140, 160, 180 };
-            for (int i = 0; i < months.Length; i++)
-            {
-                sheet.Cells[i + 1, 3].PutValue(months[i]); // Column D
-                sheet.Cells[i + 1, 4].PutValue(planned[i]); // Column E
-                sheet.Cells[i + 1, 5].PutValue(spent[i]); // Column F
-            }
-
-            // Metric 3: Issue Types Distribution
-            sheet.Cells["H1"].PutValue("Issue Type");
-            sheet.Cells["I1"].PutValue("Count");
-            string[] issueTypes = { "Bug", "Feature", "Improvement" };
-            int[] counts = { 15, 8, 12 };
-            for (int i = 0; i < issueTypes.Length; i++)
-            {
-                sheet.Cells[i + 1, 7].PutValue(issueTypes[i]); // Column H
-                sheet.Cells[i + 1, 8].PutValue(counts[i]); // Column I
-            }
-
-            // -------------------- Create charts --------------------
-            // Column chart for Tasks Completed
-            int chartIndex1 = sheet.Charts.Add(ChartType.Column, 7, 0, 22, 7);
-            Chart chart1 = sheet.Charts[chartIndex1];
+            // -------------------------------------------------
+            // Create a Column chart for "Tasks Completed"
+            // -------------------------------------------------
+            // Parameters: ChartType, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIdx1 = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart1 = sheet.Charts[chartIdx1];
             chart1.Title.Text = "Tasks Completed per Month";
-            chart1.NSeries.Add("B2:B6", true);               // Y values
-            chart1.NSeries.CategoryData = "A2:A6";           // X categories
+            // Add series: data range B2:B6, use categories from column A
+            chart1.NSeries.Add("B2:B6", true);
+            chart1.NSeries[0].Name = "Tasks Completed";
 
-            // Line chart for Budget Planned vs Spent
-            int chartIndex2 = sheet.Charts.Add(ChartType.Line, 7, 8, 22, 15);
-            Chart chart2 = sheet.Charts[chartIndex2];
-            chart2.Title.Text = "Budget: Planned vs Spent";
-            chart2.NSeries.Add("E2:E6", true);               // Planned series
-            chart2.NSeries.Add("F2:F6", true);               // Spent series
-            chart2.NSeries.CategoryData = "D2:D6";           // X categories (Month)
+            // -------------------------------------------------
+            // Create a Line chart for "Budget Used"
+            // -------------------------------------------------
+            int chartIdx2 = sheet.Charts.Add(ChartType.Line, 5, 8, 20, 15);
+            Chart chart2 = sheet.Charts[chartIdx2];
+            chart2.Title.Text = "Budget Used per Month";
+            chart2.NSeries.Add("C2:C6", true);
+            chart2.NSeries[0].Name = "Budget Used";
 
-            // Pie chart for Issue Types Distribution
-            int chartIndex3 = sheet.Charts.Add(ChartType.Pie, 24, 0, 38, 7);
-            Chart chart3 = sheet.Charts[chartIndex3];
-            chart3.Title.Text = "Issue Types Distribution";
-            chart3.NSeries.Add("I2:I4", true);               // Values
-            chart3.NSeries.CategoryData = "H2:H4";           // Labels
+            // -------------------------------------------------
+            // Create a Pie chart for "Hours Spent"
+            // -------------------------------------------------
+            int chartIdx3 = sheet.Charts.Add(ChartType.Pie, 22, 0, 35, 7);
+            Chart chart3 = sheet.Charts[chartIdx3];
+            chart3.Title.Text = "Hours Spent Distribution";
+            chart3.NSeries.Add("D2:D6", true);
+            chart3.NSeries[0].Name = "Hours Spent";
 
-            // -------------------- Save workbook --------------------
+            // -------------------------------------------------
+            // Save the workbook to a file
+            // -------------------------------------------------
             string outputPath = "ProjectMetrics.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
-
-            if (!Directory.Exists(outputDir))
+            // Ensure the directory exists (useful if a path is provided)
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                Directory.CreateDirectory(outputDir);
+                Directory.CreateDirectory(directory);
             }
 
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("An error occurred while creating the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

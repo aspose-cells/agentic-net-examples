@@ -1,84 +1,93 @@
-// Title: Apply custom column widths and row heights to every worksheet and generate PNG thumbnails using Aspose.Cells for .NET
-// AI Prompts: Develop a C# console program that loops through all worksheets, changes column A to a width of 20 characters and row 1 to a height of 30 points, saves the modified workbook, and creates a PNG thumbnail for each sheet with Aspose.Cells SheetRender. | Implement a .NET solution that uses ImageOrPrintOptions with OnePagePerSheet to render each worksheet as a separate PNG preview after applying layout adjustments with Aspose.Cells.
-// Common Searches: asp.net generate a preview image for every Excel worksheet after adjusting column sizes | c# Aspose.Cells produce PNG files for each sheet following row height changes | how to use SheetRender to output separate PNGs per worksheet in .NET | save workbook with custom column widths then create visual previews of all sheets
-// Tags: column width adjustment Aspose.Cells C# | row height modification Aspose.Cells | SheetRender PNG export per worksheet | ImageOrPrintOptions OnePagePerSheet setting | worksheet thumbnail generation Aspose.Cells | apply layout changes workbook Aspose.Cells
+// Title: Generate PNG thumbnails for each worksheet after applying custom column widths and row heights using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# generate PNG thumbnail for each Excel worksheet after resizing columns | How to set column width and row height then export sheet image with Aspose.Cells | Create worksheet preview images in .NET after custom column sizing | Save Excel workbook as PDF and also produce PNG previews of each sheet using Aspose.Cells
+// Tags: custom column width row height Aspose.Cells | worksheet to PNG thumbnail rendering | OnePagePerSheet image options Aspose.Cells | save workbook as PDF Aspose.Cells | sanitize worksheet name for file path C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example loads an existing Excel file, iterates through each worksheet to set column A width to 20 characters and row 1 height to 30 points, saves the updated workbook, and then uses SheetRender with OnePagePerSheet to create a PNG thumbnail for every sheet in a designated folder.
-class Program
+// The example loads an Excel workbook, sets column A to 20 characters and row 1 to 30 points on every worksheet, creates a thumbnails folder, and renders each sheet to a 96‑DPI PNG image using ImageOrPrintOptions with OnePagePerSheet enabled. It also saves the whole workbook as a PDF and includes a helper to make worksheet names safe for file paths.
+class WorksheetPdfThumbnailGenerator
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-            const string thumbnailFolder = "Thumbnails";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Input workbook path – verify existence to avoid FileNotFoundException
+            string workbookPath = @"C:\Input\Sample.xlsx";
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Workbook not found: {workbookPath}");
                 return;
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
             // Apply custom column widths and row heights to each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Set column A (index 0) width to 20 characters
+                // Set column A width to 20 characters
                 sheet.Cells.SetColumnWidth(0, 20);
-                // Set row 1 (index 0) height to 30 points
+                // Set row 1 height to 30 points
                 sheet.Cells.SetRowHeight(0, 30);
             }
 
-            // Ensure the thumbnail folder exists
+            // Folder to store generated thumbnails
+            string thumbnailFolder = @"C:\Output\Thumbnails";
             Directory.CreateDirectory(thumbnailFolder);
 
-            // Configure image rendering options (PNG is default, one page per sheet)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                OnePagePerSheet = true
-            };
-
-            // Generate a PNG thumbnail for each worksheet
+            // Iterate through each worksheet to create PNG thumbnails
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 try
                 {
-                    string thumbPath = Path.Combine(thumbnailFolder, $"{sheet.Name}_thumb.png");
-                    SheetRender renderer = new SheetRender(sheet, imgOptions);
-                    // Render the first (and only) page directly to a file
-                    renderer.ToImage(0, thumbPath);
+                    // Configure image rendering options
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    {
+                        // Default format is PNG; explicit setting omitted for compatibility
+                        HorizontalResolution = 96,
+                        VerticalResolution = 96,
+                        OnePagePerSheet = true
+                    };
+
+                    // Render the worksheet to a PNG thumbnail
+                    SheetRender sr = new SheetRender(sheet, imgOptions);
+                    string safeSheetName = GetSafeFileName(sheet.Name);
+                    string thumbnailPath = Path.Combine(thumbnailFolder, $"{safeSheetName}_Thumbnail.png");
+                    sr.ToImage(0, thumbnailPath);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to create thumbnail for sheet '{sheet.Name}': {ex.Message}");
+                    Console.WriteLine($"Failed to generate thumbnail for sheet '{sheet.Name}': {ex.Message}");
                 }
             }
 
-            // Save the workbook with the applied size changes
+            // Optional: Save the entire workbook as a PDF for reference
+            string pdfOutputPath = @"C:\Output\Workbook.pdf";
             try
             {
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved successfully.");
+                workbook.Save(pdfOutputPath, SaveFormat.Pdf);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook as PDF: {ex.Message}");
             }
-
-            Console.WriteLine("Processing completed successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Helper to remove invalid filename characters
+    private static string GetSafeFileName(string name)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(c, '_');
+        }
+        return name;
     }
 }

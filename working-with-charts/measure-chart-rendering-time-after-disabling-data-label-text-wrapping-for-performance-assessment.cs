@@ -1,54 +1,73 @@
-// Title: Benchmark Aspose.Cells chart layout and file save time after turning off data label text wrapping in C#
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells, disables DataLabels.IsTextWrapped, and measures the execution time of Chart.Calculate and Workbook.Save using Stopwatch. | Show how to profile the performance impact of turning off data label text wrapping on an Aspose.Cells chart by timing the layout calculation and workbook export.
-// Common Searches: how to measure Aspose.Cells chart.Calculate execution time in .NET | benchmark workbook.save performance after modifying chart data labels in C# | does disabling DataLabels.IsTextWrapped improve chart rendering speed in Aspose.Cells | C# example for timing chart layout calculation with Aspose.Cells
-// Tags: Aspose.Cells chart layout timing | Aspose.Cells DataLabels.IsTextWrapped impact | C# benchmark workbook.Save latency | Aspose.Cells chart rendering speed measurement | disable data label wrapping Aspose chart
+// Title: How to measure Aspose.Cells chart rendering time after disabling data label text wrapping in C#
+// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells, disables data label text wrapping, renders the chart to a MemoryStream, and records the elapsed time using Stopwatch. | Show how to configure ImageOrPrintOptions for chart image export and output the rendering duration in milliseconds for performance testing. | Provide a complete example that saves the workbook, prints the chart rendering time, and handles any exceptions.
+// Common Searches: aspnet measure chart rendering performance with Aspose.Cells | disable data label text wrap Aspose.Cells chart speed test | C# stopwatch chart image generation Aspose.Cells benchmark | how to time Aspose.Cells chart to image conversion | chart rendering latency after turning off data labels wrapping in .NET
+// Tags: chart rendering performance Aspose.Cells C# | disable data label text wrap Aspose.Cells chart | measure chart image generation time Stopwatch | export Aspose.Cells column chart to image benchmark | Aspose.Cells workbook save with chart timing
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Drawing.Imaging;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Rendering;
 
-// // Demonstrates creating a workbook with a column chart, turning off data label text wrapping, and using Stopwatch to time Chart.Calculate and Workbook.Save operations for performance analysis.
-class ChartRenderingTimeDemo
+// Creates a workbook, adds sample data, builds a column chart, disables data label text wrapping, renders the chart to an image while timing the operation with Stopwatch, outputs the elapsed milliseconds, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart to the worksheet
-        int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIdx];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Enable data labels and disable text wrapping (performance tweak)
-        DataLabels labels = chart.NSeries[0].DataLabels;
-        labels.ShowValue = true;
-        labels.IsTextWrapped = false; // using DataLabels.IsTextWrapped property
+            // Set the data range for the series
+            chart.NSeries.Add("B2:B4", true);
 
-        // Measure time taken to calculate the chart layout
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
-        chart.Calculate(); // using Chart.Calculate()
-        sw.Stop();
-        Console.WriteLine($"Chart.Calculate() elapsed time: {sw.ElapsedMilliseconds} ms");
+            // Enable data labels for the series
+            chart.NSeries[0].DataLabels.ShowValue = true;          // Show the value on each data label
+            chart.NSeries[0].DataLabels.IsTextWrapped = false;    // Disable text wrapping for performance
 
-        // Measure time taken to save the workbook (rendering)
-        sw.Restart();
-        workbook.Save("ChartRenderingTime.xlsx");
-        sw.Stop();
-        Console.WriteLine($"Workbook.Save() elapsed time: {sw.ElapsedMilliseconds} ms");
+            // Prepare image rendering options (default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+
+            // Measure the time taken to render the chart to an image
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                chart.ToImage(ms, imgOptions);
+                // Optionally, write the image to a file for verification
+                // File.WriteAllBytes("ChartImage.png", ms.ToArray());
+            }
+
+            timer.Stop();
+            Console.WriteLine($"Chart rendering time (ms): {timer.ElapsedMilliseconds}");
+
+            // Save the workbook to a file
+            string outputPath = "ChartRenderingTime.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

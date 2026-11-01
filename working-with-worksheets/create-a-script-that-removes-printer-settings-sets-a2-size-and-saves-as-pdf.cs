@@ -1,29 +1,35 @@
-// Title: Remove worksheet printer settings, set A2 paper size, and save as PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, clears the PrinterSettings for every worksheet, changes the PaperSize to A2, and saves the result as a PDF. | Show how to iterate through all worksheets, set PageSetup.PrinterSettings to null, apply PaperSizeType.PaperA2, and export the workbook to a PDF file using Aspose.Cells.
-// Common Searches: aspnet remove printer settings from Excel worksheets before PDF conversion | set A2 page size for all sheets using Aspose.Cells C# | export Excel to PDF with custom page setup Aspose.Cells .NET | how to clear PageSetup.PrinterSettings in Aspose.Cells
-// Tags: clear worksheet printer settings Aspose.Cells | set A2 paper size Aspose.Cells | convert workbook to PDF Aspose.Cells | modify page setup all worksheets .NET | printer settings nullification Aspose.Cells
+// Title: C# – Clear worksheet printer settings, set paper size to A2, and export Excel to PDF with Aspose.Cells
+// Common Searches: how to clear printer settings of all worksheets and set A2 paper size before converting to PDF with Aspose.Cells in C# | Aspose.Cells C# remove print area and printer settings then save workbook as PDF | set worksheet PaperSize to A2 using Aspose.Cells and export to PDF | reset PrinterSettings property for each sheet in Aspose.Cells before PDF generation | clear print titles and centering options in Aspose.Cells C#
+// Tags: worksheet printer configuration reset Aspose.Cells | A2 paper size setting Aspose.Cells C# | PDF export with custom page setup Aspose.Cells | remove print area and titles Aspose.Cells | nullify PrinterSettings object Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// // Loads an Excel file, clears the PrinterSettings for each worksheet, sets each sheet's PaperSize to A2, and saves the workbook as a PDF using Aspose.Cells.
+// The example loads an Excel workbook, iterates through every worksheet, clears printer‑related properties (PrintArea, PrintTitleRows, PrintTitleColumns, centering flags, and the PrinterSettings object), sets the paper size to A2, and then saves the workbook as a PDF file.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your source file path)
+        // Load the existing Excel workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets to modify page setup
+        // Process each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            PageSetup setup = sheet.PageSetup;
+            PageSetup pageSetup = sheet.PageSetup;
 
-            // Remove any printer settings associated with the worksheet
-            setup.PrinterSettings = null;
+            // Remove printer settings by clearing related properties
+            pageSetup.PrintArea = "";
+            pageSetup.PrintTitleRows = "";
+            pageSetup.PrintTitleColumns = "";
+            pageSetup.CenterHorizontally = false;
+            pageSetup.CenterVertically = false;
+
+            // If a PrinterSettings object exists, reset it
+            pageSetup.PrinterSettings = null;
 
             // Set the paper size to A2
-            setup.PaperSize = PaperSizeType.PaperA2;
+            pageSetup.PaperSize = PaperSizeType.PaperA2;
         }
 
         // Save the modified workbook as a PDF file

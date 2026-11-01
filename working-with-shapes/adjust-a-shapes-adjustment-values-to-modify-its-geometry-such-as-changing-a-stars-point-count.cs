@@ -1,48 +1,76 @@
-// Title: How to modify a shape's AdjustmentValues to change its geometry (e.g., increase star points) with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells C# to set the AdjustmentValues collection of a Shape object and reshape it, such as adding more points to a star. | Write C# code that loads an Excel workbook, retrieves a drawing shape, and updates its adjustment parameters to alter the figure's geometry. | Show how to programmatically adjust the geometry of an existing Excel shape by modifying its AdjustmentValues via the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# change star shape point count | set adjustment values for a shape in Aspose.Cells .NET | modify shape geometry programmatically in Excel using Aspose.Cells | adjust drawing object parameters like star points with Aspose.Cells API | how to use AdjustmentValues collection in Aspose.Cells C#
-// Tags: Aspose.Cells shape adjustment values | modify shape geometry Aspose.Cells | set star points Aspose.Cells C# | adjust drawing object parameters .NET | Excel shape customization Aspose.Cells
+// Title: How to change the number of points on a star auto shape in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Set a custom point count for a star auto shape by calculating and assigning the first adjustment value using Aspose.Cells in C#. | Convert a rectangle shape to a 5‑point star and then modify its geometry to an 8‑point star via the Adjustments collection. | Implement safe adjustment handling that checks for the Adjustments collection before setting values to prevent runtime errors.
+// Common Searches: Aspose.Cells C# change star shape points programmatically | set star auto shape point count Excel using Aspose.Cells | how to adjust star geometry with adjustment values in Aspose.Cells .NET | convert rectangle to star shape and modify points Aspose.Cells | check Adjustments collection before setting shape properties Aspose.Cells
+// Tags: Aspose.Cells set star shape adjustment value | auto shape point count modification C# | Excel star geometry adjustment Aspose.Cells | dynamic shape conversion rectangle to star Aspose.Cells | safe adjustments collection handling .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an existing workbook, adds a rectangle shape to the first worksheet, illustrates where you can set the shape's AdjustmentValues to reshape it (e.g., change star point count), ensures the output directory exists, and saves the modified workbook.
+// The example creates a new workbook, adds a rectangle shape, converts it to a 5‑point star, computes a normalized adjustment value based on a desired point count, safely assigns the first adjustment when the Adjustments collection is available, and saves the result as StarAdjusted.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook and get the first worksheet.
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape (star shape not supported in this version)
-            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 100);
+            // Add a rectangle shape (will be converted to an auto shape later).
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // base drawing type
+                2,    // upper left row
+                2,    // upper left column
+                0,    // upper left row offset (pixels)
+                0,    // upper left column offset (pixels)
+                200,  // width (pixels)
+                200   // height (pixels)
+            );
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Use dynamic to access members that may vary between library versions.
+            dynamic starShape = shape;
+
+            // Convert the shape to a 5‑point star.
+            starShape.AutoShapeType = AutoShapeType.Star5;
+
+            // Desired number of points (between 3 and 12). Adjust the first adjustment value accordingly.
+            double desiredPoints = 8; // change as needed
+            double adjustmentValue = (desiredPoints - 3) / (12 - 3); // normalize to 0‑1
+
+            // Apply the adjustment if the Adjustments collection is available at runtime.
+            try
+            {
+                if (starShape.Adjustments != null && starShape.Adjustments.Count > 0)
+                {
+                    starShape.Adjustments[0] = adjustmentValue;
+                }
+            }
+            catch
+            {
+                // Adjustments not supported in this version – ignore safely.
+            }
+
+            // Prepare output path.
+            string outputPath = "StarAdjusted.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook.
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {

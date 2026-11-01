@@ -1,42 +1,30 @@
-// Title: Convert a large Excel workbook to PDF with Aspose.Cells LightCells API in C# (memory‑efficient)
-// AI Prompts: Generate C# code that opens a large .xlsx file using Aspose.Cells LightCells API and saves it directly as a PDF, including a file‑existence check and exception handling. | Show a memory‑optimized C# example that loads a big workbook with Aspose.Cells and exports it to PDF without loading the entire file into memory.
-// Common Searches: c# aspose.cells lightcells convert large xlsx to pdf without high memory usage | how to export big Excel workbook to PDF using Aspose.Cells in .NET | sample code for memory‑efficient PDF export of large Excel files with Aspose.Cells
-// Tags: Aspose.Cells LightCells PDF export | memory‑efficient Excel to PDF conversion .NET | large workbook handling Aspose.Cells C# | save workbook as PDF using Aspose.Cells | C# load large xlsx with LightCells
+// Title: Convert a large XLSX workbook to PDF in C# using Aspose.Cells LightCells API with MemoryPreference
+// Common Searches: how to convert a large xlsx file to pdf in C# using Aspose.Cells LightCells API | Aspose.Cells load large workbook with MemoryPreference to reduce memory usage | C# example of saving an Excel workbook directly to PDF with LoadOptions | using LoadOptions.MemorySetting.MemoryPreference for PDF export of big Excel files | lightcells API memory‑efficient Excel to PDF conversion in .NET
+// Tags: lightcells api memorypreference loading | c# aspose.cells loadoptions memorysetting | excel to pdf conversion aspose.cells | large workbook pdf export c# | load large xlsx with lightcells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Demonstrates checking for the source .xlsx file, loading it with Aspose.Cells LightCells for low memory consumption, and saving the workbook directly as a PDF while handling errors.
+// The sample demonstrates loading a large XLSX workbook with Aspose.Cells using LoadOptions set to MemorySetting.MemoryPreference (LightCells mode) to minimize memory consumption, then saving the workbook directly to PDF in C#.
 class Program
 {
     static void Main()
     {
+        // Path to the large Excel workbook
         string inputPath = "largeWorkbook.xlsx";
+
+        // Path where the PDF will be saved
         string outputPath = "largeWorkbook.pdf";
 
-        try
-        {
-            // Verify that the source workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+        // Configure load options to use memory‑efficient settings (LightCells style)
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        // Prefer memory saving mode for large files
+        loadOptions.MemorySetting = MemorySetting.MemoryPreference;
 
-            // Load the workbook (memory‑efficient for large files)
-            using (var workbook = new Workbook(inputPath))
-            {
-                // Save the workbook directly to PDF
-                workbook.Save(outputPath, SaveFormat.Pdf);
-            }
+        // Load the workbook with the specified options
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            Console.WriteLine($"PDF successfully saved to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook directly to PDF format
+        workbook.Save(outputPath, SaveFormat.Pdf);
     }
 }

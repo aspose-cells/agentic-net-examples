@@ -1,45 +1,74 @@
-// Title: Copy background shading from a template row to newly inserted rows with Aspose.Cells in C#
-// AI Prompts: Insert a row and duplicate the source row’s background color using Row.CopySettings and ApplyStyle in Aspose.Cells C#. | Transfer a template row’s shading to generated rows by copying its style flags with Aspose.Cells. | Apply the CellShading style flag from a source row to a destination row after inserting rows in a workbook.
-// Common Searches: Aspose.Cells how to copy row shading when inserting rows in C# | C# copy background color from one row to another using Aspose.Cells | Use CopySettings to preserve row formatting in Aspose.Cells workbook | Apply template row style to new rows Aspose.Cells C# example | Transfer cell shading between rows with Aspose.Cells API
-// Tags: row.CopySettings with style flag cell shading | inherit row background color Aspose.Cells C# | apply template row style to inserted rows | transfer row formatting using Aspose.Cells | copy row shading Aspose.Cells workbook
+// Title: Copy background shading from a template row to inserted rows using Aspose.Cells CopyStyle in C#
+// Common Searches: Aspose.Cells copy row background color to new rows C# | How to preserve template row shading when inserting rows with Aspose.Cells | C# insert rows and inherit cell style using SetStyle Aspose.Cells | CopyStyle method to duplicate row formatting in an Excel workbook C# | Apply template row formatting to multiple inserted rows Aspose.Cells
+// Tags: copy row style Aspose.Cells C# | inherit background shading inserted rows | template row formatting Aspose.Cells | setstyle bulk cell styling | copystyle method Aspose.Cells C# | insert rows preserve Excel formatting Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
-namespace AsposeCellsRowStyleCopyDemo
+// The example loads a template workbook, inserts a set of blank rows at a chosen position, and uses GetStyle/SetStyle (CopyStyle) to transfer the full style—including background color—from a designated template row to every cell of the newly added rows, then saves the result with robust file‑existence checks and per‑cell error handling.
+class Program
 {
-    // The code loads a template workbook, inserts a new row, copies the source row’s settings with Row.CopySettings (including style), then applies the source style using a StyleFlag that enables CellShading, and saves the workbook so the inserted row inherits the template’s background shading.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the template workbook that contains the desired row shading scheme
-            Workbook workbook = new Workbook("Template.xlsx"); // load
-            Worksheet sheet = workbook.Worksheets[0];
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
 
-            // Define source row (the row whose background color we want to inherit)
-            int sourceRowIndex = 0; // e.g., first row in the template
-            Row sourceRow = sheet.Cells.Rows[sourceRowIndex];
+            // Verify that the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
 
-            // Insert a new blank row at the desired position
-            int destinationRowIndex = 5; // example target row index
-            sheet.Cells.InsertRows(destinationRowIndex, 1);
+            // Load the template workbook
+            var workbook = new Workbook(templatePath);
+            var sheet = workbook.Worksheets[0];
 
-            // Get the newly inserted row
-            Row destinationRow = sheet.Cells.Rows[destinationRowIndex];
+            // Row that contains the desired background shading (0‑based)
+            int templateRowIndex = 1; // adjust as needed
+            // Position where new rows will be inserted (0‑based)
+            int insertAtRow = 5;
+            // Number of rows to add
+            int rowsToAdd = 4;
 
-            // Copy all settings (including style) from the source row to the destination row
-            // checkStyle = true ensures style is gathered correctly even if workbooks differ
-            destinationRow.CopySettings(sourceRow, true);
+            // Insert blank rows
+            sheet.Cells.InsertRows(insertAtRow, rowsToAdd);
 
-            // Optionally, apply the style explicitly to ensure cell shading is transferred
-            // This applies the style flags that affect cell shading
-            Style sourceStyle = sourceRow.GetStyle();
-            destinationRow.ApplyStyle(sourceStyle, new StyleFlag { CellShading = true });
+            // Determine the number of columns to copy styles for
+            int maxColumn = sheet.Cells.MaxColumn + 1;
+
+            // Copy style from the template row to each newly inserted row
+            for (int i = 0; i < rowsToAdd; i++)
+            {
+                int targetRowIndex = insertAtRow + i;
+                for (int col = 0; col < maxColumn; col++)
+                {
+                    try
+                    {
+                        var templateCell = sheet.Cells[templateRowIndex, col];
+                        var targetCell = sheet.Cells[targetRowIndex, col];
+                        // Copy the entire style (including background color)
+                        targetCell.SetStyle(templateCell.GetStyle());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log but continue with other cells
+                        Console.WriteLine($"Failed to copy style for cell [{targetRowIndex}, {col}]: {ex.Message}");
+                    }
+                }
+            }
 
             // Save the modified workbook
-            workbook.Save("Result.xlsx"); // save
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

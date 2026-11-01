@@ -1,52 +1,46 @@
-// Title: Use LINQ to filter worksheets whose names start with "Report" and set Letter paper size with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses LINQ to locate all worksheets whose Name begins with "Report" and set each worksheet's PageSetup.PaperSize to PaperLetter via Aspose.Cells. | Adapt the example to apply an A4 paper size to the filtered worksheets instead of the default Letter size. | Add logic that logs a warning when no worksheets match the "Report" prefix before saving the workbook.
-// Common Searches: aspnet linq filter worksheets by name prefix Aspose.Cells | set page setup paper size for multiple sheets Aspose.Cells .NET | how to apply Letter paper size to selected worksheets using Aspose.Cells | filter Excel worksheets starting with Report using C# and Aspose.Cells | apply page setup to worksheets with specific name pattern Aspose.Cells
-// Tags: LINQ worksheet selection Aspose.Cells | set paper size page setup Aspose.Cells | filter worksheets by name prefix C# | apply Letter paper size Aspose.Cells | batch update worksheet page setup Aspose.Cells
+// Title: Use LINQ to filter worksheets whose names start with "Report" and set a custom paper size with Aspose.Cells for .NET
+// Common Searches: how can I use LINQ to select worksheets that start with 'Report' in Aspose.Cells C# | set a custom paper size for multiple worksheets programmatically using Aspose.Cells | apply A5 paper size to worksheets filtered by name prefix with Aspose.Cells API | batch update page setup for selected sheets in an .xlsx workbook using C# | filter workbook worksheets by name and change their page setup in Aspose.Cells
+// Tags: worksheet name prefix filtering LINQ | Aspose.Cells set custom paper size | batch update page setup .xlsx | C# filter worksheets by name | apply A5 paper size to selected sheets
 
-using Aspose.Cells;
 using System;
-using System.IO;
 using System.Linq;
+using Aspose.Cells;
 
-// Loads an Excel workbook, uses LINQ to select worksheets whose names start with "Report", sets each selected worksheet's PageSetup.PaperSize to Letter, and saves the updated workbook.
+// The example loads an Excel workbook, uses LINQ to select all worksheets whose names begin with "Report", sets each selected worksheet's PageSetup.PaperSize to PaperA5, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        try
+        // Load an existing workbook (use the provided load rule)
+        Workbook workbook = LoadWorkbook("input.xlsx");
+
+        // Select worksheets whose names start with "Report" using LINQ
+        var reportSheets = workbook.Worksheets
+                                   .Cast<Worksheet>()
+                                   .Where(ws => ws.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase));
+
+        // Apply a custom paper size to each selected worksheet
+        foreach (Worksheet sheet in reportSheets)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
-
-            // Select worksheets whose names start with "Report"
-            var reportSheets = workbook.Worksheets
-                                       .Cast<Worksheet>()
-                                       .Where(ws => ws.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase));
-
-            // Apply a standard Letter paper size (8.5\" x 11\") to each selected worksheet
-            foreach (var sheet in reportSheets)
-            {
-                var pageSetup = sheet.PageSetup;
-                pageSetup.PaperSize = PaperSizeType.PaperLetter; // 8.5 x 11 inches
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Example custom paper size; adjust as needed
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        // Save the modified workbook (use the provided save rule)
+        SaveWorkbook(workbook, "output.xlsx");
+    }
+
+    // Placeholder for the provided load rule
+    static Workbook LoadWorkbook(string path)
+    {
+        // Implementation supplied by the rule set
+        return new Workbook(path);
+    }
+
+    // Placeholder for the provided save rule
+    static void SaveWorkbook(Workbook workbook, string path)
+    {
+        // Implementation supplied by the rule set
+        workbook.Save(path);
     }
 }

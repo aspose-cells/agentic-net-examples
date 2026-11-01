@@ -1,47 +1,46 @@
-// Title: How to lock a picture shape in an Aspose.Cells worksheet and verify its IsLocked property using C#
-// AI Prompts: Insert a picture into a worksheet, set its IsLocked flag to true, protect the sheet with all options, and print the lock status. | Update the sample to gracefully handle a missing image file and confirm that the picture remains locked after worksheet protection.
-// Common Searches: C# Aspose.Cells lock inserted image from editing when worksheet is protected | Aspose.Cells picture.IsLocked verification after protecting a sheet | prevent users from moving or resizing pictures in a protected Excel worksheet using Aspose.Cells .NET | how to check if a picture shape is locked in an Aspose.Cells workbook | example code for locking a picture shape and protecting a worksheet in Aspose.Cells
-// Tags: lock picture shape Aspose.Cells | picture.IsLocked property C# | protect worksheet Aspose.Cells | add picture to worksheet Aspose.Cells | verify picture lock status Aspose.Cells
+// Title: Lock a picture shape in an Excel worksheet with Aspose.Cells for .NET and verify its IsLocked property
+// AI Prompts: Add a PNG file to a worksheet, set its IsLocked property to true, protect the sheet with all options, and save the workbook. | Read and print the IsLocked flag of a picture after the worksheet has been protected. | Insert several picture shapes, lock each one, apply worksheet protection, and output the lock status for every picture.
+// Common Searches: asp.net how to lock an inserted picture in Excel using Aspose.Cells | c# verify picture IsLocked after worksheet protection Aspose.Cells example | prevent editing of images in a protected Excel workbook with Aspose.Cells for .NET | set picture.IsLocked before protecting sheet Aspose.Cells C# code | example of locking picture shapes in Excel file using Aspose.Cells library
+// Tags: picture shape lock Aspose.Cells | worksheet protection image IsLocked | insert PNG protect sheet C# | verify picture lock status Aspose.Cells | prevent image editing Excel Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// The example creates a new workbook, adds a picture from a file to cell B2, sets the picture's IsLocked property to true, prints the lock state, protects the worksheet with all protection options, and saves the file as LockedPicture.xlsx while handling missing image files.
+// // Creates a new workbook, inserts a PNG picture at cell B3, sets picture.IsLocked = true, protects the worksheet with all protection options, prints the lock status to the console, and saves the file as LockedPicture.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
+            // Path to the image file to be inserted
+            string imagePath = "sample.png";
+
+            // Ensure the image file exists to avoid FileNotFoundException
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
+
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Path to the image file
-            string imagePath = "sample.png";
+            // Add the picture to the worksheet at row 2, column 2 (zero‑based indices)
+            int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-            // Ensure the image file exists before adding it to the worksheet
-            if (File.Exists(imagePath))
-            {
-                // Add a picture shape to the worksheet (row 1, column 1 – zero‑based index)
-                int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
+            // Lock the picture so it cannot be edited when the sheet is protected
+            picture.IsLocked = true;
 
-                // Lock the picture shape so it cannot be edited when the sheet is protected
-                picture.IsLocked = true;
-
-                // Verify the Locked property of the picture
-                Console.WriteLine("Picture Locked: " + picture.IsLocked);
-            }
-            else
-            {
-                Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
-            }
-
-            // Protect the worksheet (all protection options enabled)
+            // Protect the worksheet with all protection options
             worksheet.Protect(ProtectionType.All);
+
+            // Output verification
+            Console.WriteLine("Picture IsLocked property: " + picture.IsLocked);
 
             // Save the workbook
             string outputPath = "LockedPicture.xlsx";
@@ -50,6 +49,7 @@ class Program
         }
         catch (Exception ex)
         {
+            // Handle unexpected errors gracefully
             Console.WriteLine("An error occurred: " + ex.Message);
         }
     }

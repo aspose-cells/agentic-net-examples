@@ -1,51 +1,64 @@
-// Title: Save a workbook containing a customized column chart as XLSX with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a workbook, adds a column chart, changes its title, and saves it as an XLSX file using Aspose.Cells. | Write a .NET example that modifies a chart's properties in an Aspose.Cells workbook and persists the workbook in XLSX format while keeping chart formatting. | Provide a snippet to export an Aspose.Cells workbook with a customized chart to an XLSX file, ensuring the chart appearance is retained.
-// Common Searches: how to export an Aspose.Cells workbook with a modified chart to XLSX in C# | Aspose.Cells save chart formatting when saving workbook as .xlsx | C# example for adding a column chart and saving as XLSX using Aspose.Cells | preserve column chart title changes in Aspose.Cells XLSX output | Aspose.Cells .NET save workbook with updated chart properties
-// Tags: save workbook as xlsx Aspose.Cells | modify chart title Aspose.Cells C# | export column chart to xlsx .NET | preserve chart formatting Aspose.Cells | add column chart Aspose.Cells example
+// Title: Modify the first chart series data range and save the workbook as XLSX with Aspose.Cells for .NET
+// AI Prompts: Load an existing Excel file using Aspose.Cells, set the first chart's series Values to the range A2:A5 and XValues to B2:B5, then save the workbook as an XLSX file to keep all chart formatting. | Using C# and Aspose.Cells, open a workbook, update the data source of the first chart series, and export the workbook to XLSX while preserving chart appearance and other formatting.
+// Common Searches: c# aspnet change chart series range in existing Excel file using Aspose.Cells | how to preserve chart formatting when saving workbook as xlsx with Aspose.Cells | update first chart series values and categories in Aspose.Cells .NET example | Aspose.Cells save workbook after modifying chart data source to XLSX
+// Tags: chart series range update Aspose.Cells | save workbook as XLSX preserving charts | modify chart data source C# Aspose.Cells | Aspose.Cells chart formatting retention | load existing Excel workbook edit chart Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartSaveExample
+// Loads an existing workbook, updates the first chart's first series Values and XValues ranges, and saves the workbook as an XLSX file to retain all formatting and chart details.
+class Program
 {
-    // The program creates a new workbook, fills cells with sample data, adds a column chart, sets the chart title to "Fruit Sales", and then saves the workbook as ModifiedChart.xlsx in XLSX format, preserving the chart's formatting.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook (XLSX, XLS, etc.)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Cherry");
+            // Ensure there is at least one chart in the worksheet
+            if (sheet.Charts.Count > 0)
+            {
+                // Get the first chart
+                Chart chart = sheet.Charts[0];
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(45);
-            sheet.Cells["B4"].PutValue(25);
+                // Modify the first series if it exists
+                if (chart.NSeries.Count > 0)
+                {
+                    // Set new data source for the series values (Y values)
+                    chart.NSeries[0].Values = "A2:A5";
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                    // Optionally set new X values (categories)
+                    chart.NSeries[0].XValues = "B2:B5";
+                }
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Additional chart customizations can be added here
+                // e.g., chart.Title.Text = "Updated Chart Title";
+            }
 
-            // Modify chart properties (e.g., title) to demonstrate a change
-            chart.Title.Text = "Fruit Sales";
-
-            // Save the workbook as XLSX to preserve formatting (lifecycle: save)
-            workbook.Save("ModifiedChart.xlsx", SaveFormat.Xlsx);
-
-            Console.WriteLine("Workbook with modified chart saved as 'ModifiedChart.xlsx'.");
+            // Save the workbook as XLSX to preserve all formatting and chart details
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

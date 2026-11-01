@@ -1,16 +1,16 @@
-// Title: Generate a React JSX component that embeds an SVG column chart created with Aspose.Cells in C#
-// AI Prompts: Write C# code that builds a column chart with Aspose.Cells, exports it to SVG using ImageOrPrintOptions, and creates a React functional component (.jsx) containing the SVG markup. | Update the generated React component to accept width and height props and apply them to the root <svg> element. | Add a step that saves the exported SVG to a separate .svg file before embedding it into the JSX component.
-// Common Searches: how to export an Aspose.Cells chart to SVG and use it in a React component | C# create SVG chart with Aspose.Cells and generate a .jsx file | embedding raw SVG markup into a React functional component from C# | using ImageOrPrintOptions SaveFormat.Svg to render charts for web applications
-// Tags: Aspose.Cells export chart to SVG | C# generate React JSX with embedded SVG | ImageOrPrintOptions SaveFormat.Svg usage | write .jsx file using StringBuilder | embed raw SVG markup in React component
+// Title: Export an Excel chart to SVG with Aspose.Cells (C#) and generate a React TypeScript component that renders the SVG
+// AI Prompts: Write C# code that creates a workbook, adds a column chart, and saves the worksheet as an SVG string using Aspose.Cells ImageSaveOptions. | Create a React TypeScript functional component that accepts SVG markup as a prop and renders it with dangerouslySetInnerHTML. | Combine the SVG export and component generation so the C# program writes a .tsx file containing a React component with the embedded SVG markup.
+// Common Searches: how to use Aspose.Cells in C# to export an Excel chart as SVG for a React app | C# generate SVG from Excel chart and embed it in a TypeScript React component | React component that displays SVG markup from Aspose.Cells export | export multiple worksheets to separate SVG files with Aspose.Cells and create React components | dangerouslySetInnerHTML example for inline SVG in a React TSX file
+// Tags: Aspose.Cells ImageSaveOptions SVG export | C# Excel chart to SVG conversion | React TypeScript component rendering inline SVG | dangerouslySetInnerHTML SVG embedding in React | generate .tsx file from C# code | multiple worksheet SVG export Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;
 
-// // This example creates a workbook, adds sample data, builds a column chart, exports it as SVG via ImageOrPrintOptions, and generates a React functional component (.jsx) that embeds the SVG markup.
+// The program builds a workbook with sample data, adds a column chart, and uses Aspose.Cells ImageSaveOptions to export the chart as SVG. It then constructs a React TypeScript functional component that embeds the SVG markup via dangerouslySetInnerHTML and writes the component to a .tsx file, enabling seamless integration of Excel charts into web applications.
 class Program
 {
     static void Main()
@@ -18,56 +18,72 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B4"].PutValue(180);
 
             // Add a column chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);               // Values
-            chart.NSeries.CategoryData = "A2:A4";           // Categories
+            var chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true); // Values
+            chart.Title.Text = "Quarterly Sales";
 
-            // Export the chart to SVG using ImageOrPrintOptions
-            string svgContent;
-            using (MemoryStream ms = new MemoryStream())
+            // Configure SVG export using ImageSaveOptions (recommended API)
+            var svgOptions = new ImageSaveOptions(SaveFormat.Svg);
+            svgOptions.ImageOrPrintOptions.OnePagePerSheet = true;
+
+            // Export the worksheet (which contains the chart) to SVG in memory
+            using (var ms = new MemoryStream())
             {
-                ImageOrPrintOptions options = new ImageOrPrintOptions
+                try
                 {
-                    SaveFormat = SaveFormat.Svg
-                };
-                chart.ToImage(ms, options);
+                    workbook.Save(ms, svgOptions);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Failed to save workbook as SVG: {ex.Message}");
+                    return;
+                }
+
                 ms.Position = 0;
-                using (StreamReader reader = new StreamReader(ms))
+                string svgContent = new StreamReader(ms).ReadToEnd();
+
+                // Prepare a React functional component that embeds the SVG using dangerouslySetInnerHTML
+                string componentName = "ChartComponent";
+                string reactFilePath = $"{componentName}.tsx";
+
+                var sb = new StringBuilder();
+                sb.AppendLine("import * as React from \"react\";");
+                sb.AppendLine();
+                sb.AppendLine($"export const {componentName}: React.FC = () => (");
+                sb.AppendLine("  <div");
+                sb.AppendLine("    dangerouslySetInnerHTML={{ __html: `");
+                // Escape backticks to keep the template literal valid
+                sb.AppendLine(svgContent.Replace("`", "\\`"));
+                sb.AppendLine("` }}");
+                sb.AppendLine("  />");
+                sb.AppendLine(");");
+
+                // Write the component to a .tsx file
+                try
                 {
-                    svgContent = reader.ReadToEnd();
+                    File.WriteAllText(reactFilePath, sb.ToString());
+                    Console.WriteLine($"React component written to {reactFilePath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Failed to write React component: {ex.Message}");
                 }
             }
-
-            // Build a React functional component that embeds the SVG markup
-            StringBuilder componentBuilder = new StringBuilder();
-            componentBuilder.AppendLine("import React from 'react';");
-            componentBuilder.AppendLine();
-            componentBuilder.AppendLine("const ChartComponent = () => (");
-            componentBuilder.AppendLine("  <>"); // React fragment start
-            componentBuilder.AppendLine(svgContent); // Insert raw SVG
-            componentBuilder.AppendLine("  </>"); // React fragment end
-            componentBuilder.AppendLine(");");
-            componentBuilder.AppendLine();
-            componentBuilder.AppendLine("export default ChartComponent;");
-
-            // Write the component to a .jsx file
-            string outputPath = "ChartComponent.jsx";
-            File.WriteAllText(outputPath, componentBuilder.ToString());
         }
         catch (Exception ex)
         {

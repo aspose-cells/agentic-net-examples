@@ -1,69 +1,56 @@
-// Title: Configure Aspose.Cells to recalculate formulas after processing smart markers in a C# workbook
-// AI Prompts: Write C# code that loads an Excel template containing smart markers, binds a DataTable to a WorkbookDesigner, sets Designer.CalculateFormula to true, processes the markers, enables Workbook.Settings.FormulaSettings.CalculateOnSave, and saves the updated file. | Show how to programmatically force all formulas to refresh after inserting smart markers using Aspose.Cells WorkbookDesigner and FormulaSettings in a .NET application.
-// Common Searches: Aspose.Cells how to refresh formulas after smart marker processing in C# | C# set calculate on save for workbook with smart markers | Enable automatic formula calculation when using WorkbookDesigner Aspose.Cells | Smart marker data binding recalculate formulas Aspose.Cells .NET example
-// Tags: WorkbookDesigner calculate formulas | FormulaSettings calculate on save | smart marker data binding C# | Aspose.Cells recalculate formulas after processing | Excel smart markers automatic calculation
+// Title: How to recalculate all formulas after inserting smart markers with Aspose.Cells in C#
+// AI Prompts: Use WorkbookDesigner to populate a workbook via smart markers, then call CalculateFormula to update every formula before saving. | Process smart markers in an Aspose.Cells workbook and trigger automatic formula refresh prior to export in C#. | Force immediate evaluation of Excel formulas after WorkbookDesigner.Process() using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# recalculate formulas after WorkbookDesigner.Process | force formula calculation after smart marker data insertion Aspose.Cells | how to update Excel formulas after using smart markers with Aspose.Cells .NET
+// Tags: smart marker data binding with WorkbookDesigner | force formula calculation after smart marker processing | Aspose.Cells recalculate formulas C# | Excel template update using smart markers | automatic formula refresh Aspose.Cells
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an Excel template, creates a DataTable of employee data, processes smart markers with WorkbookDesigner, forces immediate formula calculation using CalculateFormula, and saves the result, ensuring all formulas reflect the inserted data.
+class Program
 {
-    // The example demonstrates loading an Excel template with smart markers, creating a DataTable of employee data, binding it to a WorkbookDesigner, enabling automatic formula calculation, processing the markers, configuring the workbook to recalculate formulas on save, and saving the result to a new file.
-    public class SmartMarkerRecalculateDemo
+    static void Main()
     {
-        public static void Run()
+        const string templatePath = "SmartMarkerTemplate.xlsx";
+        const string resultPath = "Result.xlsx";
+
+        // Verify that the template file exists to avoid FileNotFoundException
+        if (!File.Exists(templatePath))
         {
-            try
-            {
-                string templatePath = "SmartMarkerTemplate.xlsx";
-
-                // Verify template file exists
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                // Load a workbook that contains smart markers
-                Workbook workbook = new Workbook(templatePath);
-
-                // Prepare a simple data source (DataTable) for demonstration
-                DataTable dt = new DataTable("Employees");
-                dt.Columns.Add("Name");
-                dt.Columns.Add("Salary", typeof(double));
-                dt.Rows.Add("John Doe", 5000);
-                dt.Rows.Add("Jane Smith", 6200);
-
-                // Initialize the WorkbookDesigner with the loaded workbook
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                // Bind the data source to the designer
-                designer.SetDataSource(dt);
-                designer.CalculateFormula = true; // Enable automatic formula calculation
-
-                // Process all smart markers in the workbook
-                designer.Process();
-
-                // Ensure that formulas are also recalculated when the workbook is saved
-                workbook.Settings.FormulaSettings.CalculateOnSave = true;
-
-                // Save the resulting workbook
-                string outputPath = "SmartMarkerRecalculated.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Template file \"{templatePath}\" not found.");
+            return;
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            Run();
+            // Load the workbook that contains smart markers
+            Workbook workbook = new Workbook(templatePath);
+
+            // Prepare a data source for the smart markers
+            DataTable dt = new DataTable("Employees");
+            dt.Columns.Add("Name");
+            dt.Columns.Add("Salary", typeof(double));
+            dt.Rows.Add("John Doe", 50000);
+            dt.Rows.Add("Jane Smith", 60000);
+
+            // Process the smart markers with the data source
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dt);
+            designer.Process();
+
+            // Force immediate calculation of all formulas
+            workbook.CalculateFormula();
+
+            // Save the updated workbook
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to \"{resultPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

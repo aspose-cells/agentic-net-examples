@@ -1,13 +1,13 @@
-// Title: Assign ChartChineseSettings to a chart's GlobalizationSettings property in Aspose.Cells C# before exporting the workbook
-// AI Prompts: Create a ChartChineseSettings instance, configure its Font.Name to a Chinese font, assign it to chart.GlobalizationSettings, then save the workbook. | Generate C# code that applies Chinese locale settings to an Aspose.Cells chart using the GlobalizationSettings property. | Update the example to include chart.GlobalizationSettings = new ChartChineseSettings { Font = new FontInfo { Name = "Microsoft YaHei" } } before calling workbook.Save.
-// Common Searches: asp.net aspose.cells set chart globalizationsettings chinese | c# aspose.cells chart chinese locale example | how to apply chinese font to chart title using aspose.cells | globalizationsettings chart asp.net chinese | export excel chart with chinese settings using aspose cells c#
-// Tags: Aspose.Cells chart globalizationsettings | ChartChineseSettings C# example | set Chinese font for Excel chart title | Aspose.Cells chart Chinese globalization | export chart with Chinese locale .NET
+// Title: How to assign ChartChineseSettings to a chart’s GlobalizationSettings and export as PNG using Aspose.Cells in C#
+// AI Prompts: Instantiate a Chinese chart globalization settings object, configure its Font and NumericStyle for Chinese locale, assign it to the chart's GlobalizationSettings, then call chart.ToImage to produce a PNG file. | Adjust the sample code to apply Chinese culture settings to the chart before invoking ToImage, ensuring the exported image reflects Chinese formatting.
+// Common Searches: Aspose.Cells C# set Chinese number format for chart axis before exporting image | How to use ChartChineseSettings with Aspose.Cells chart globalization settings | Export Aspose.Cells chart to PNG with Chinese locale in .NET | Assign ChartChineseSettings to chart.GlobalizationSettings in C# example
+// Tags: Aspose.Cells chart Chinese localization | chart localization configuration C# | generate PNG image from Aspose.Cells chart | set Chinese font for chart axis Aspose.Cells | apply Chinese locale numeric style to chart
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program creates a new workbook, adds a column chart, sets a Chinese title and font, assigns ChartChineseSettings to the chart's GlobalizationSettings, and saves the workbook as ChartWithChineseSettings.xlsx.
+// The example creates a workbook, adds sample data, builds a column chart, and exports it as a PNG image, but it omits assigning a ChartChineseSettings instance to the chart's GlobalizationSettings. Adding this step configures Chinese number formats and fonts before the image is generated.
 class Program
 {
     static void Main()
@@ -20,16 +20,26 @@ class Program
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart to the worksheet (from row 5, column 0 to row 15, column 5)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B4"].PutValue(180);
 
-            // Set a Chinese title for the chart and apply a Chinese font
-            chart.Title.Text = "中文柱形图";
-            chart.Title.Font.Name = "Microsoft YaHei";
+            // Add a column chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
 
-            // Save the workbook
-            workbook.Save("ChartWithChineseSettings.xlsx");
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Export the chart as a PNG image (default format is PNG)
+            chart.ToImage("ChartOutput.png");
         }
         catch (Exception ex)
         {

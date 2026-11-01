@@ -1,40 +1,32 @@
-// Title: Insert multiple rows with inherited formatting at row 21 and export the worksheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, inserts five rows starting at row 21 while copying the style from the preceding row, updates any formula references, and saves the result as a PDF with Aspose.Cells. | Demonstrate how to use Aspose.Cells InsertOptions with CopyFormatType.SameAsAbove to add rows and then convert the workbook to PDF in a single operation. | Generate a snippet that shows inserting rows at a specific index, preserving cell formatting and references, and calling Workbook.Save with SaveFormat.Pdf.
-// Common Searches: how to insert rows with same formatting as above using Aspose.Cells C# | Aspose.Cells C# insert multiple rows and keep formulas then save as PDF | convert Excel worksheet to PDF after adding rows with inherited style Aspose.Cells
-// Tags: CopyFormatType.SameAsAbove row insertion Aspose.Cells | update cell references after row insertion Aspose.Cells | export worksheet to PDF Aspose.Cells | row insertion at specific index Aspose.Cells | batch insert rows Aspose.Cells
+// Title: Insert rows at a specific index in an Excel worksheet, copy formatting from shifted rows, and export the workbook to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert one row at zero‑based index 20 in an existing Excel file, copy the formatting of the rows that are shifted down, and save the workbook as a PDF with Aspose.Cells for .NET. | Add multiple consecutive rows at a given position in a worksheet, preserve the original cell styles of the shifted rows, and generate a PDF output using Aspose.Cells.
+// Common Searches: Aspose.Cells C# insert row at row 21 keep formatting | how to add rows to an Excel file and export to PDF with Aspose.Cells .NET | copy cell style when inserting rows using Aspose.Cells for .NET | insert rows at specific index and save workbook as PDF in C# | preserve formatting during row insertion Aspose.Cells
+// Tags: insert rows with formatting Aspose.Cells | worksheet.Cells.InsertRows C# | export workbook to PDF Aspose.Cells | zero‑based row index insertion Excel .NET | preserve cell styles during row insertion | Aspose.Cells row insertion PDF conversion
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
 
-// // Loads input.xlsx, inserts five rows at row 21 copying the style from the row above and updating formulas, then saves the worksheet directly as output.pdf in PDF format using Aspose.Cells.
-class InsertRowsAndConvertToPdf
+// The program loads 'input.xlsx', inserts one row at zero‑based index 20 while copying the formatting of the rows that are shifted down, and saves the modified workbook as 'output.pdf' using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string inputFile = "input.xlsx";
+        // Load the existing Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Path for the resulting PDF file
-        string outputPdf = "output.pdf";
-
-        // Load the workbook from the file (lifecycle rule: load)
-        Workbook workbook = new Workbook(inputFile);
-
-        // Access the first worksheet (you can change the index as needed)
+        // Access the first worksheet (adjust index or name as needed)
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Configure insert options to copy formatting from the row above
-        InsertOptions insertOptions = new InsertOptions
-        {
-            CopyFormatType = CopyFormatType.SameAsAbove, // copy format from the row above
-            UpdateReference = true                       // update formulas/references if any
-        };
+        // Define the row index where new rows will be inserted (zero‑based, so 20 = row 21 in Excel)
+        int insertRowIndex = 20;
 
-        // Insert 5 rows starting at row index 20 (zero‑based) with the specified options
-        worksheet.Cells.InsertRows(20, 5, insertOptions);
+        // Number of rows to insert
+        int rowsToInsert = 1;   // change as required
 
-        // Save the modified workbook directly as PDF (lifecycle rule: save)
-        workbook.Save(outputPdf, SaveFormat.Pdf);
+        // Insert rows and copy formatting from the source rows that are being shifted down
+        worksheet.Cells.InsertRows(insertRowIndex, rowsToInsert, true);
+
+        // Save the modified workbook as a PDF document
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

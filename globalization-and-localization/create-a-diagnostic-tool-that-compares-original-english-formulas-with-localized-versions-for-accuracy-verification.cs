@@ -1,122 +1,153 @@
-// Title: C# Aspose.Cells utility to compare English and localized Excel formulas and generate a diagnostic workbook
-// AI Prompts: Write C# code that opens two Excel files with Aspose.Cells, iterates every worksheet and cell, and logs any formula differences into a new workbook. | Enhance the comparison routine to identify cells that contain a formula in only one of the workbooks and label them as missing or extra. | Adapt the tool to output the comparison results as a CSV file while preserving worksheet names and cell addresses.
-// Common Searches: how to use Aspose.Cells in C# to compare formulas of original and translated Excel workbooks | C# example for generating a formula mismatch report between English and localized spreadsheets | detect missing or extra formulas after localizing Excel files with Aspose.Cells
-// Tags: Aspose.Cells compare workbook formulas | Excel formula localization verification C# | generate formula mismatch report Aspose.Cells | detect missing formulas in translated Excel | export comparison results to CSV Aspose.Cells
+// Title: Validate Excel formula localization between English and translated workbooks using Aspose.Cells for .NET
+// Common Searches: aspnet compare formulas in original and localized Excel files with Aspose.Cells | c# generate report of mismatched formulas between English and translated workbooks | how to verify formula localization accuracy in multi‑language spreadsheets using Aspose.Cells | detect formula differences in localized Excel workbook using C# | create formula mismatch report for translated Excel files with Aspose.Cells .NET
+// Tags: Aspose.Cells formula comparison | Excel formula localization validation | C# formula mismatch reporting | compare worksheet formulas Aspose.Cells | detect localized formula differences .NET
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The FormulaLocalizationDiagnostic class loads an original English workbook and a localized workbook using Aspose.Cells, sets the localized workbook’s culture to expose English formulas, iterates through matching worksheets and cells, compares formula presence and text, records mismatches, missing, and extra formulas into a new report workbook, and saves the diagnostic report to the specified path.
-public class FormulaLocalizationDiagnostic
+// The utility loads an English workbook and its localized counterpart, iterates through matching worksheets, determines a combined used range, and compares cell formulas case‑insensitively after normalizing whitespace. Any mismatched formulas are collected with sheet and cell identifiers, displayed on the console, and written to a new report workbook (FormulaLocalizationReport.xlsx) for further analysis.
+class FormulaLocalizationValidator
 {
-    /// <param name="originalPath">Path to the original English workbook.</param>
-    /// <param name="localizedPath">Path to the localized workbook.</param>
-    /// <param name="reportPath">Path where the diagnostic report will be saved.</param>
-    public void CompareFormulas(string originalPath, string localizedPath, string reportPath)
+    // Simple container for mismatch information
+    class MismatchInfo
+    {
+        public string SheetName { get; set; } = string.Empty;
+        public string CellName { get; set; } = string.Empty;
+        public string EnglishFormula { get; set; } = string.Empty;
+        public string LocalizedFormula { get; set; } = string.Empty;
+    }
+
+    static void Main(string[] args)
     {
         try
         {
-            // Verify input files exist.
-            if (!File.Exists(originalPath))
-                throw new FileNotFoundException($"Original workbook not found: {originalPath}");
+            // Paths to the source workbooks
+            string englishPath = "OriginalEnglish.xlsx";
+            string localizedPath = "LocalizedVersion.xlsx";
+
+            // Verify that input files exist
+            if (!File.Exists(englishPath))
+                throw new FileNotFoundException($"English workbook not found: {englishPath}");
             if (!File.Exists(localizedPath))
                 throw new FileNotFoundException($"Localized workbook not found: {localizedPath}");
 
-            // Load workbooks.
-            Workbook originalWb = new Workbook(originalPath);
+            // Load the workbooks
+            Workbook englishWb = new Workbook(englishPath);
             Workbook localizedWb = new Workbook(localizedPath);
-            // Ensure localized workbook can expose English formulas.
-            localizedWb.Settings.CultureInfo = CultureInfo.CurrentCulture;
 
-            // Create report workbook.
-            Workbook reportWb = new Workbook();
-            Worksheet reportSheet = reportWb.Worksheets[0];
-            Cells reportCells = reportSheet.Cells;
+            // Collect all mismatches
+            List<MismatchInfo> mismatches = new List<MismatchInfo>();
 
-            // Header row.
-            reportCells["A1"].PutValue("Worksheet");
-            reportCells["B1"].PutValue("Cell Address");
-            reportCells["C1"].PutValue("Issue Type");
-            reportCells["D1"].PutValue("Original Formula (English)");
-            reportCells["E1"].PutValue("Localized Formula (English)");
-            int reportRow = 1; // zero‑based index after header.
-
-            // Iterate through matching worksheets.
-            int sheetCount = Math.Min(originalWb.Worksheets.Count, localizedWb.Worksheets.Count);
-            for (int i = 0; i < sheetCount; i++)
+            // Compare worksheets one‑by‑one
+            int sheetCount = Math.Min(englishWb.Worksheets.Count, localizedWb.Worksheets.Count);
+            for (int s = 0; s < sheetCount; s++)
             {
-                Worksheet origSheet = originalWb.Worksheets[i];
-                Worksheet locSheet = localizedWb.Worksheets[i];
-                Cells origCells = origSheet.Cells;
-                Cells locCells = locSheet.Cells;
+                Worksheet engSheet = englishWb.Worksheets[s];
+                Worksheet locSheet = localizedWb.Worksheets[s];
 
-                int maxRow = Math.Max(origCells.MaxDataRow, locCells.MaxDataRow);
-                int maxCol = Math.Max(origCells.MaxDataColumn, locCells.MaxDataColumn);
+                // Determine the used range for both sheets
+                AsposeRange engRange = engSheet.Cells.MaxDisplayRange;
+                AsposeRange locRange = locSheet.Cells.MaxDisplayRange;
 
-                for (int row = 0; row <= maxRow; row++)
+                // If a sheet is empty, MaxDisplayRange may be null; handle gracefully
+                if (engRange == null && locRange == null) continue;
+                if (engRange == null) engRange = locRange;
+                if (locRange == null) locRange = engRange;
+
+                // Calculate combined boundaries
+                int firstRow = Math.Min(engRange.FirstRow, locRange.FirstRow);
+                int lastRow = Math.Max(
+                    engRange.FirstRow + engRange.RowCount - 1,
+                    locRange.FirstRow + locRange.RowCount - 1);
+                int firstCol = Math.Min(engRange.FirstColumn, locRange.FirstColumn);
+                int lastCol = Math.Max(
+                    engRange.FirstColumn + engRange.ColumnCount - 1,
+                    locRange.FirstColumn + locRange.ColumnCount - 1);
+
+                // Scan every cell in the combined range
+                for (int row = firstRow; row <= lastRow; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = firstCol; col <= lastCol; col++)
                     {
-                        Cell origCell = origCells[row, col];
-                        Cell locCell = locCells[row, col];
-                        bool origHasFormula = origCell.IsFormula;
-                        bool locHasFormula = locCell.IsFormula;
+                        Cell engCell = engSheet.Cells[row, col];
+                        Cell locCell = locSheet.Cells[row, col];
 
-                        if (origHasFormula && locHasFormula)
+                        // Compare only when both cells contain formulas
+                        if (engCell.IsFormula && locCell.IsFormula)
                         {
-                            string origFormula = origCell.Formula; // English.
-                            string locFormula = locCell.Formula;   // English version of localized formula.
+                            string? engFormula = engCell.Formula?.Replace(" ", "").Trim();
+                            string? locFormula = locCell.Formula?.Replace(" ", "").Trim();
 
-                            if (!string.Equals(origFormula, locFormula, StringComparison.OrdinalIgnoreCase))
+                            // Case‑insensitive comparison of normalized formulas
+                            if (!string.Equals(engFormula, locFormula, StringComparison.OrdinalIgnoreCase))
                             {
-                                reportCells[reportRow, 0].PutValue(origSheet.Name);
-                                reportCells[reportRow, 1].PutValue(origCell.Name);
-                                reportCells[reportRow, 2].PutValue("Mismatch");
-                                reportCells[reportRow, 3].PutValue(origFormula);
-                                reportCells[reportRow, 4].PutValue(locFormula);
-                                reportRow++;
+                                mismatches.Add(new MismatchInfo
+                                {
+                                    SheetName = engSheet.Name,
+                                    CellName = engCell.Name,
+                                    EnglishFormula = engCell.Formula ?? string.Empty,
+                                    LocalizedFormula = locCell.Formula ?? string.Empty
+                                });
                             }
-                        }
-                        else if (origHasFormula && !locHasFormula)
-                        {
-                            reportCells[reportRow, 0].PutValue(origSheet.Name);
-                            reportCells[reportRow, 1].PutValue(origCell.Name);
-                            reportCells[reportRow, 2].PutValue("Missing in Localized");
-                            reportCells[reportRow, 3].PutValue(origCell.Formula);
-                            reportCells[reportRow, 4].PutValue(string.Empty);
-                            reportRow++;
-                        }
-                        else if (!origHasFormula && locHasFormula)
-                        {
-                            reportCells[reportRow, 0].PutValue(origSheet.Name);
-                            reportCells[reportRow, 1].PutValue(locCell.Name);
-                            reportCells[reportRow, 2].PutValue("Extra in Localized");
-                            reportCells[reportRow, 3].PutValue(string.Empty);
-                            reportCells[reportRow, 4].PutValue(locCell.Formula);
-                            reportRow++;
                         }
                     }
                 }
             }
 
-            // Save the diagnostic report.
-            reportWb.Save(reportPath);
+            // Output results to console
+            if (mismatches.Count == 0)
+            {
+                Console.WriteLine("All formulas match between the English and localized workbooks.");
+            }
+            else
+            {
+                Console.WriteLine("Formula mismatches detected:");
+                foreach (var m in mismatches)
+                {
+                    Console.WriteLine($"Sheet: {m.SheetName}, Cell: {m.CellName}, English: \"{m.EnglishFormula}\", Localized: \"{m.LocalizedFormula}\"");
+                }
+            }
+
+            // Create a simple report workbook
+            Workbook reportWb = new Workbook();
+            Worksheet reportSheet = reportWb.Worksheets[0];
+            reportSheet.Name = "Formula Mismatches";
+
+            // Header row
+            reportSheet.Cells[0, 0].PutValue("Sheet");
+            reportSheet.Cells[0, 1].PutValue("Cell");
+            reportSheet.Cells[0, 2].PutValue("English Formula");
+            reportSheet.Cells[0, 3].PutValue("Localized Formula");
+
+            // Populate report rows
+            for (int i = 0; i < mismatches.Count; i++)
+            {
+                var m = mismatches[i];
+                int row = i + 1;
+                reportSheet.Cells[row, 0].PutValue(m.SheetName);
+                reportSheet.Cells[row, 1].PutValue(m.CellName);
+                reportSheet.Cells[row, 2].PutValue(m.EnglishFormula);
+                reportSheet.Cells[row, 3].PutValue(m.LocalizedFormula);
+            }
+
+            // Save the report
+            try
+            {
+                string reportPath = "FormulaLocalizationReport.xlsx";
+                reportWb.Save(reportPath);
+                Console.WriteLine($"Report saved to \"{reportPath}\"");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save report: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during formula comparison: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-}
-
-static class Program
-{
-    static void Main(string[] args)
-    {
-        // Example usage – adjust file paths as needed.
-        var diagnostic = new FormulaLocalizationDiagnostic();
-        diagnostic.CompareFormulas("OriginalEnglish.xlsx", "Localized.xlsx", "FormulaComparisonReport.xlsx");
     }
 }

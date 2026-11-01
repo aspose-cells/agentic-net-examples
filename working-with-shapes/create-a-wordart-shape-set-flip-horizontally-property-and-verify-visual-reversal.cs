@@ -1,67 +1,59 @@
-// Title: Add a WordArt (TextEffect) shape to an Excel worksheet, flip it horizontally with rotation, and verify the flip using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that inserts a TextEffect (WordArt) shape into a worksheet and creates a horizontal mirror effect by setting the shape's RotationAngle to 180 degrees. | Show how to programmatically confirm that the WordArt shape has been mirrored by checking that its RotationAngle property equals 180 after the transformation.
-// Common Searches: C# Aspose.Cells how to mirror a WordArt shape horizontally | set rotation angle 180 for TextEffect shape in Aspose.Cells | verify that a WordArt shape is flipped in an Excel file using Aspose.Cells .NET | example of adding WordArt and rotating it with Aspose.Cells for .NET
-// Tags: add wordart shape aspose.cells | horizontal mirror rotation aspose.cells | validate shape rotation aspose.cells c# | text effect shape excel .net | simulate flip using rotation aspose.cells
+// Title: Create a WordArt shape and flip it horizontally in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to flip a WordArt shape horizontally in Aspose.Cells C# | Aspose.Cells rotate shape 180 degrees to mirror text in a worksheet | add WordArt to an Excel file and set horizontal flip with .NET | C# code to create WordArt and simulate horizontal mirroring using Aspose.Cells | save an XLSX workbook with a flipped WordArt shape in Aspose.Cells
+// Tags: Aspose.Cells create WordArt shape C# | horizontal flip shape Aspose.Cells | rotate shape 180 degrees Aspose.Cells | WordArt shape formatting Aspose.Cells | save workbook with flipped WordArt Aspose.Cells
 
+using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
 
-// The program creates a new workbook, adds a WordArt (TextEffect) shape to the first worksheet, simulates a horizontal flip by setting RotationAngle to 180°, checks that the rotation value is applied, and saves the file as WordArtFlipH.xlsx.
+// The example creates a new workbook, adds a rectangular shape as a WordArt placeholder, sets its text and formatting, rotates the shape 180 degrees to achieve a horizontal flip effect, and saves the workbook as WordArtFlipH.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Parameters for the shape position and size
-            int upperLeftRow = 5;
-            int upperLeftColumn = 5;
-            int top = 0;
-            int left = 0;
-            int width = 200;
-            int height = 50;
+            // Define the cell range for the shape
+            int upperRow = 2;      // Row index (zero‑based)
+            int upperColumn = 2;   // Column index (zero‑based)
+            int lowerRow = 6;
+            int lowerColumn = 6;
 
-            // Add a WordArt (TextEffect) shape using the correct API
-            Shape wordArt = sheet.Shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1, // preset effect
-                "Aspose.Cells",                  // text
-                "Arial",                         // font name
-                36,                              // font size
-                false,                           // bold
-                false,                           // italic
-                upperLeftRow,
-                upperLeftColumn,
-                top,
-                left,
-                width,
-                height);
+            // Add a rectangular shape (used as a placeholder for WordArt)
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                upperRow, upperColumn, 0, 0,
+                lowerRow, lowerColumn);
 
-            // Simulate horizontal flip by rotating 180 degrees
-            wordArt.RotationAngle = 180;
+            // Set the displayed text
+            shape.Text = "Aspose.Cells";
 
-            // Verify that the rotation (flip) was applied
-            if (Math.Abs(wordArt.RotationAngle - 180) < 0.001)
-            {
-                Console.WriteLine("WordArt shape is flipped horizontally (simulated by 180° rotation).");
-            }
-            else
-            {
-                Console.WriteLine("Flip horizontally simulation not applied.");
-            }
+            // Apply formatting so the shape is clearly visible
+            shape.Font.Color = Color.Blue;
+            shape.Font.Size = 24;
 
-            // Save the workbook
-            workbook.Save("WordArtFlipH.xlsx", SaveFormat.Xlsx);
+            // Rotate the shape 180 degrees to simulate a horizontal flip
+            shape.RotationAngle = 180;
+
+            // Define output file path
+            string outputPath = "WordArtFlipH.xlsx";
+
+            // Save the workbook (lifecycle: save)
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

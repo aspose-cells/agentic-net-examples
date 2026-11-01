@@ -1,53 +1,79 @@
-// Title: Replace legacy CONCATENATE formulas with the modern CONCAT operator in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Scan every worksheet in a .xlsx file with Aspose.Cells, locate cells whose formula contains CONCATENATE, and rewrite the formula to use CONCAT. | Write C# code that iterates through the used cell range, performs a case‑insensitive replacement of the CONCATENATE function with CONCAT, and saves the updated workbook.
-// Common Searches: Aspose.Cells C# replace CONCATENATE function in all formulas | How to update Excel formulas from CONCATENATE to CONCAT programmatically | Bulk modify formulas in .xlsx using Aspose.Cells .NET | Iterate through worksheets and change legacy functions with Aspose.Cells
-// Tags: replace CONCATENATE with CONCAT Aspose.Cells C# | bulk formula update Excel .xlsx Aspose.Cells | iterate worksheets modify formulas .NET | case-insensitive function rename Aspose.Cells | modernize Excel formulas Aspose.Cells
+// Title: How to replace CONCATENATE formulas with the CONCAT operator in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# replace CONCATENATE function with CONCAT in all worksheets | Update Excel formulas from CONCATENATE to CONCAT using Aspose.Cells .NET | Programmatically change CONCATENATE to CONCAT operator in a workbook with Aspose.Cells | C# code to convert legacy CONCATENATE formulas to modern CONCAT in Excel files
+// Tags: replace CONCATENATE with CONCAT using Aspose.Cells | bulk formula update Excel .NET | regex formula transformation Aspose.Cells | recalculate workbook after formula change Aspose.Cells | save modified Excel workbook Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using Aspose.Cells;
 
-// The example loads an existing Excel workbook, iterates through each worksheet and its used cell range, detects formulas that contain the legacy CONCATENATE function, replaces the function name with the modern CONCAT operator in a case‑insensitive way, and saves the modified workbook to a new file.
-class Program
+// The C# example loads an existing workbook (creating a blank one if missing), scans every worksheet and cell for formulas containing the legacy CONCATENATE function, replaces it with the modern CONCAT operator using a case‑insensitive regular expression, recalculates the workbook, and saves the updated file to a new location with Aspose.Cells.
+class ReplaceConcatenateWithConcat
 {
     static void Main()
     {
-        // Load the existing workbook
-        var workbook = new Workbook("input.xlsx");
+        // Define input and output file paths
+        string inputPath = @"C:\Docs\InputWorkbook.xlsx";
+        string outputPath = @"C:\Docs\OutputWorkbook.xlsx";
 
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            var cells = sheet.Cells;
-
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists; create a blank workbook if it does not
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                Workbook emptyWb = new Workbook();
+                // Ensure the directory for the input file exists
+                string inputDir = Path.GetDirectoryName(inputPath);
+                if (!string.IsNullOrEmpty(inputDir) && !Directory.Exists(inputDir))
                 {
-                    var cell = cells[row, col];
+                    Directory.CreateDirectory(inputDir);
+                }
+                emptyWb.Save(inputPath);
+                Console.WriteLine($"Created empty workbook at {inputPath}");
+            }
 
-                    // Process only cells that contain a formula
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Regular expression to replace CONCATENATE( with CONCAT(
+            Regex concatRegex = new Regex(@"CONCATENATE\s*\(", RegexOptions.IgnoreCase);
+
+            // Iterate through all worksheets and cells containing formulas
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Cell cell in sheet.Cells)
+                {
                     if (cell.IsFormula)
                     {
-                        string formula = cell.Formula;
-
-                        // Check if the formula uses the old CONCATENATE function
-                        if (!string.IsNullOrEmpty(formula) &&
-                            formula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase) >= 0)
+                        string originalFormula = cell.Formula;
+                        if (originalFormula.IndexOf("CONCATENATE", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            // Replace CONCATENATE with the modern CONCAT function
-                            string newFormula = formula.Replace("CONCATENATE", "CONCAT", StringComparison.OrdinalIgnoreCase);
-                            cell.Formula = newFormula;
+                            // Replace CONCATENATE with CONCAT
+                            string updatedFormula = concatRegex.Replace(originalFormula, "CONCAT(");
+                            cell.Formula = updatedFormula;
                         }
                     }
                 }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Recalculate all formulas after modifications
+            workbook.CalculateFormula();
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

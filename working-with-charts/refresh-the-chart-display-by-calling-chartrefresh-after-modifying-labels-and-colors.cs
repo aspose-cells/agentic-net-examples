@@ -1,15 +1,14 @@
-// Title: How to refresh an Aspose.Cells chart after changing series label and fill color in C#
-// AI Prompts: Load an existing Excel workbook with Aspose.Cells, change the first chart series name to "Updated Series", set its fill color to orange, invoke Chart.Refresh, and save the file. | Using Aspose.Cells for .NET, modify a chart's series label and background color, call Chart.Refresh to apply the changes, then write the updated workbook to a new output file.
-// Common Searches: Aspose.Cells C# refresh chart after updating series name | call Chart.Refresh to apply series color change in Excel using Aspose.Cells | C# example of updating chart series label and fill color with Aspose.Cells | why chart changes not visible without Chart.Refresh in Aspose.Cells | programmatically refresh Excel chart display after editing series in .NET
-// Tags: Chart.Refresh method Aspose.Cells | update chart series label C# Aspose.Cells | change chart series fill color Aspose.Cells | refresh Excel chart programmatically .NET | modify chart series Aspose.Cells example
+// Title: Update Excel chart title, change series fill color, and refresh the chart using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# example to modify chart title and redraw chart | how to change series fill color in an Excel chart with Aspose.Cells and refresh it | C# code for calling Chart.Refresh after updating chart labels in Aspose.Cells | programmatically refresh an Excel chart after editing title and series color using .NET
+// Tags: Aspose.Cells chart title modification C# | Chart.Refresh method Aspose.Cells .NET | change series fill color Aspose.Cells chart | update Excel chart labels Aspose.Cells | refresh Excel chart display C# Aspose
 
+using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
-using System.Drawing;
-using System.IO;
 
-// The code loads 'input.xlsx', changes the first chart series name and its fill color, but does not call Chart.Refresh, so the visual updates may not appear. Adding Chart.Refresh after the modifications ensures the chart is refreshed before saving the workbook as 'output.xlsx'.
+// This example demonstrates how to load an Excel workbook with Aspose.Cells, access the first chart, update its title, change the fill color of the first data series, invoke Chart.Refresh to redraw the chart, and save the workbook.
 class Program
 {
     static void Main()
@@ -19,46 +18,45 @@ class Program
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count == 0)
+            if (worksheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Get the first chart
-            Chart chart = sheet.Charts[0];
+            // Access the first chart
+            Chart chart = worksheet.Charts[0];
 
-            // Modify the first series if it exists
+            // Modify the chart title
+            chart.Title.Text = "Updated Chart Title";
+
+            // Change fill color of the first series if it exists
             if (chart.NSeries.Count > 0)
             {
-                // Update series name (label)
-                chart.NSeries[0].Name = "Updated Series";
-
-                // Change series fill color
-                chart.NSeries[0].Area.ForegroundColor = Color.Orange;
+                chart.NSeries[0].Area.ForegroundColor = Color.LightBlue;
             }
 
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

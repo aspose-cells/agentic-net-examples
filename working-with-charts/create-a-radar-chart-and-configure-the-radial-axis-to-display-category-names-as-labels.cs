@@ -1,48 +1,55 @@
-// Title: Create a radar chart in C# with category names displayed on the radial axis using Aspose.Cells
-// AI Prompts: Write C# code that uses Aspose.Cells to add a radar chart, link category data from worksheet cells, and enable radial axis labels. | Show how to set the HasRadarAxisLabels property for a radar chart's category axis in Aspose.Cells. | Demonstrate populating a radar chart from a cell range and turning on category labels on the axis with Aspose.Cells.
-// Common Searches: Aspose.Cells C# radar chart show category labels on radial axis | How to enable HasRadarAxisLabels for a radar chart in Aspose.Cells | C# example of creating a radar chart with category axis labels using Aspose.Cells | Bind worksheet range to radar chart series Aspose.Cells C#
-// Tags: radar chart category axis labels Aspose.Cells | add radar chart Aspose.Cells C# | HasRadarAxisLabels property Aspose.Cells | bind chart series to worksheet range Aspose.Cells | populate radar chart data from cells Aspose.Cells | save workbook as XLSX Aspose.Cells
+// Title: Generate a radar chart in C# with Aspose.Cells and display category names on the radial axis
+// AI Prompts: Write C# code using Aspose.Cells to create a radar chart, bind categories from column A and values from column B, and show the category names on the radial axis. | Demonstrate how to add a series with a combined range and assign a chart title for a radar chart in Aspose.Cells for .NET.
+// Common Searches: aspnet how to bind category labels to the radial axis of a radar chart with Aspose.Cells | c# create radar chart from worksheet data using Aspose.Cells | set custom axis labels on Aspose.Cells radar chart example | Aspose.Cells radar chart series range A2:A6,B2:B6 explanation
+// Tags: Aspose.Cells radar chart with category axis labels | C# create radar chart from worksheet range | set radial axis labels Aspose.Cells | add series using combined range Aspose.Cells | save radar chart to Excel file Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace RadarChartExample
+// The program creates a new workbook, fills column A with category names and column B with numeric values, adds a radar chart, binds the series to the combined range A2:A6,B2:B6 so the radial axis displays those category names, sets a chart title, and saves the workbook as RadarChart.xlsx.
+class Program
 {
-    // Creates a new workbook, writes category names and series values to cells, adds a radar chart, links the series and category data ranges, enables radial axis labels via the HasRadarAxisLabels property, and saves the file as RadarChartWithCategoryLabels.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data: categories in column A, values in column B
+            // Populate data: categories in column A, values in column B
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Cat1");
-            sheet.Cells["A3"].PutValue("Cat2");
-            sheet.Cells["A4"].PutValue("Cat3");
+            sheet.Cells["A2"].PutValue("Alpha");
+            sheet.Cells["A3"].PutValue("Beta");
+            sheet.Cells["A4"].PutValue("Gamma");
+            sheet.Cells["A5"].PutValue("Delta");
+            sheet.Cells["A6"].PutValue("Epsilon");
 
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(4);
-            sheet.Cells["B3"].PutValue(2);
-            sheet.Cells["B4"].PutValue(5);
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(15);
+            sheet.Cells["B5"].PutValue(30);
+            sheet.Cells["B6"].PutValue(25);
 
             // Add a radar chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Radar, 5, 0, 20, 8);
+            int chartIndex = sheet.Charts.Add(ChartType.Radar, 7, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add the series data (values) and link the category axis data
-            int seriesIndex = chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add series with categories and values in a single range
+            // The range "A2:A6,B2:B6" sets category data (A) and value data (B)
+            chart.NSeries.Add("A2:A6,B2:B6", true);
 
-            // Enable category (radial) axis labels for the radar chart
-            Series series = chart.NSeries[seriesIndex];
-            series.HasRadarAxisLabels = true;
+            // Optional: set a chart title
+            chart.Title.Text = "Sample Radar Chart";
 
-            // Save the workbook with the radar chart
-            workbook.Save("RadarChartWithCategoryLabels.xlsx");
+            // Save the workbook
+            workbook.Save("RadarChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,49 +1,49 @@
-// Title: Detect legacy .xls format and apply password protection with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, checks the file extension, sets workbook.Settings.Password, and saves the file keeping its original extension. | Create a reusable method that receives inputPath, outputPath, and password, validates the file, determines if it is binary (.xls) or OpenXML (.xlsx), and applies opening password accordingly. | Demonstrate exception handling while encrypting both legacy and modern Excel files using Aspose.Cells, ensuring the output file retains the same format.
-// Common Searches: how to add opening password to a .xls file using Aspose.Cells C# | encrypt legacy Excel binary workbook with Aspose.Cells without converting to .xlsx | detect Excel file type and set password protection in Aspose.Cells for .NET | apply password protection to Excel files while preserving original format Aspose.Cells | C# Aspose.Cells encrypt both .xls and .xlsx files with same code
-// Tags: Aspose.Cells opening password for binary XLS | C# detect Excel workbook format Aspose.Cells | password protect legacy Excel file without conversion | preserve original file extension when encrypting Excel Aspose.Cells | use workbook.Settings.Password to secure Excel workbook
+// Title: Detect legacy XLS (Excel 97-2003) format and apply password protection with Aspose.Cells for .NET
+// Common Searches: how to check if an Excel workbook is XLS format using Aspose.Cells C# | apply password protection to a binary .xls file with Aspose.Cells | save encrypted workbook in original format (XLS or XLSX) using Aspose.Cells | set Workbook.Settings.Password for legacy Excel files in C# | detect Excel97To2003 format before encrypting with Aspose.Cells
+// Tags: identify legacy binary XLS using Aspose.Cells | apply password encryption to Excel97To2003 workbook | choose SaveFormat based on source file type Aspose.Cells | Workbook.Settings.Password example C# | encrypt Excel file while preserving original format
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel file (either .xls or .xlsx) with Aspose.Cells, verifies its existence, sets an opening password via workbook.Settings.Password, and saves the workbook, letting Aspose.Cells infer the format from the file extension so the original file type is preserved.
+// The example loads an Excel workbook, determines if it is the legacy Excel97To2003 (XLS) format via Workbook.FileFormat, sets a password with Workbook.Settings.Password, selects the appropriate SaveFormat (Excel97To2003 for .xls or Xlsx for .xlsx), and saves the encrypted file, preserving the original file type.
 class ExcelEncryption
 {
     static void Main()
     {
-        // Input Excel file path (could be .xls or .xlsx)
-        string inputPath = "input.xls";
+        // Paths for source and encrypted files
+        string sourcePath = "input.xls";      // can be .xls or .xlsx
+        string encryptedPath = "encrypted.xls";
 
-        // Output encrypted Excel file path
-        string outputPath = "encrypted.xls";
-
-        // Password to apply
-        string password = "Secret123";
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
 
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Load the workbook (Aspose.Cells automatically detects the format)
+            Workbook workbook = new Workbook(sourcePath);
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Determine if the workbook is in legacy binary format (XLS)
+            bool isLegacyXls = workbook.FileFormat == FileFormatType.Excel97To2003;
 
-            // Apply opening password protection (works for both legacy and modern formats)
-            workbook.Settings.Password = password;
+            // Set password for encryption
+            workbook.Settings.Password = "MySecretPassword";
 
-            // Save the encrypted workbook; format is inferred from the file extension
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook encrypted and saved to: {outputPath}");
+            // Choose appropriate save format based on the original file type
+            SaveFormat saveFormat = isLegacyXls ? SaveFormat.Excel97To2003 : SaveFormat.Xlsx;
+
+            // Save the encrypted workbook
+            workbook.Save(encryptedPath, saveFormat);
+
+            Console.WriteLine($"File encrypted successfully. Legacy XLS: {isLegacyXls}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

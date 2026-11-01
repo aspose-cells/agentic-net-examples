@@ -1,12 +1,11 @@
-// Title: Hide columns C and D in an Excel workbook using Aspose.Cells for .NET and save while preserving hidden columns
-// AI Prompts: Load an existing .xlsx file with Aspose.Cells, hide columns C and D, and save the workbook so the hidden state remains intact. | Programmatically conceal specific columns in a worksheet using Aspose.Cells for .NET and export the file with the hidden columns retained.
-// Common Searches: asp.net hide column c and d using aspose.cells | preserve hidden columns when saving excel workbook with aspose.cells .net | aspose.cells hide multiple columns by index c# | how to keep columns hidden after exporting workbook with aspose.cells
-// Tags: hide columns Aspose.Cells | preserve hidden column state on save | Aspose.Cells hide column by index | export workbook with hidden columns .NET
+// Title: Hide columns C and D in an Excel workbook and preserve their hidden state when saving using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx file with Aspose.Cells, hide column C (index 2) and column D (index 3) in the first worksheet, then save the workbook so the hidden columns remain hidden. | Using Aspose.Cells for .NET, programmatically set column visibility to hidden for specific columns and export the workbook without revealing those columns.
+// Common Searches: C# Aspose.Cells hide specific columns and keep them hidden after saving the workbook | How to preserve hidden column settings when exporting Excel with Aspose.Cells .NET | Aspose.Cells hide column by index example C# | Save Excel file with hidden columns using Aspose.Cells for .NET
+// Tags: hide column by index Aspose.Cells | preserve column visibility on workbook save | Aspose.Cells hide columns C D | export Excel with hidden columns C# | column visibility control Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
 
-// // Loads 'input.xlsx', hides columns C (index 2) and D (index 3) on the first worksheet using Aspose.Cells, then saves to 'output.xlsx' while retaining the hidden column settings.
+// Loads 'input.xlsx', hides columns C (index 2) and D (index 3) on the first worksheet, and saves as 'output.xlsx' while retaining the hidden column settings.
 class Program
 {
     static void Main()
@@ -14,14 +13,14 @@ class Program
         // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the first worksheet (adjust index or name as needed)
-        Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet (you can change the index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Hide column C (zero‑based index 2) and column D (index 3)
-        sheet.Cells.HideColumn(2);
-        sheet.Cells.HideColumn(3);
+        worksheet.Cells.HideColumn(2);
+        worksheet.Cells.HideColumn(3);
 
-        // Save the workbook; hidden columns are preserved automatically
+        // Save the workbook; hidden columns are preserved in the saved file
         workbook.Save("output.xlsx");
     }
 }

@@ -1,35 +1,24 @@
-// Title: Insert five rows at row 31 with formatting copied from the above row and export the worksheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Insert five new rows starting at row 31 in an existing Excel file, copy the formatting of the preceding rows, and save the workbook as a PDF using Aspose.Cells in C#. | Add multiple rows at a specific index while preserving the original row style and updating formulas, then generate a PDF output with Aspose.Cells for .NET. | Use InsertOptions to copy formatting from the row above when inserting rows, and export the modified worksheet to PDF via Workbook.Save.
-// Common Searches: how to insert rows with same formatting in Aspose.Cells C# | Aspose.Cells insert multiple rows at specific position and export to PDF | preserve cell references when adding rows using Aspose.Cells .NET | copy row style when inserting rows in Excel workbook with Aspose.Cells | save modified workbook as PDF after inserting rows Aspose.Cells
-// Tags: insert rows with formatting Aspose.Cells | copy format from above row C# | save workbook as PDF Aspose.Cells | update references after row insertion Aspose.Cells | insert multiple rows at specific index .NET
+// Title: Insert five rows at row 30 with formatting preserved and export the worksheet to PDF using Aspose.Cells for .NET
+// AI Prompts: Load an existing Excel workbook, insert five rows beginning at row 30 while copying the source row styles, and save the result as a PDF file using Aspose.Cells in C#. | Using Aspose.Cells, add five new rows at position 30 in the first worksheet, ensure all cell formatting from the original rows is retained, then generate a PDF output. | Programmatically insert multiple rows with style duplication at a specific index and convert the modified workbook to PDF with Aspose.Cells for .NET.
+// Common Searches: how to insert rows with style copy in Aspose.Cells C# | Aspose.Cells insert multiple rows at specific index and keep formatting | convert modified Excel workbook to PDF after inserting rows using Aspose.Cells .NET | C# Aspose.Cells insert rows at row 30 and export to PDF | preserve cell formatting when adding rows with Aspose.Cells
+// Tags: Aspose.Cells insert rows preserve formatting | C# Aspose.Cells generate PDF from workbook | multiple row insertion Aspose.Cells | copy cell style on row insert Aspose.Cells | save workbook as PDF Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Loads an existing Excel workbook, inserts five rows at the 31st row copying the formatting from the row above, updates cell references, and saves the result as a PDF.
-class InsertRowsAndExportPdf
+// The sample loads 'input.xlsx' into a Workbook, inserts five rows at the 30th position (zero‑based index 29) on the first worksheet while copying existing styles, and then saves the modified workbook as 'output.pdf' in PDF format.
+class Program
 {
     static void Main()
     {
-        // Path to the existing workbook
-        string inputFile = "input.xlsx";
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook (uses the Workbook(string) constructor)
-        Workbook workbook = new Workbook(inputFile);
+        // Insert five rows at position 30 (zero‑based index 29) and copy formatting
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.InsertRows(29, 5, true); // true = copy style and formatting
 
-        // Configure insertion options to copy formatting from the row above
-        InsertOptions insertOptions = new InsertOptions
-        {
-            CopyFormatType = CopyFormatType.SameAsAbove,
-            UpdateReference = true
-        };
-
-        // Insert 5 rows starting at row index 30 (31st row, zero‑based indexing)
-        // The formatting of the rows above will be copied to the new rows
-        workbook.Worksheets[0].Cells.InsertRows(30, 5, insertOptions);
-
-        // Save the modified workbook as PDF (uses Workbook.Save(string, SaveFormat))
-        string outputPdf = "output.pdf";
-        workbook.Save(outputPdf, SaveFormat.Pdf);
+        // Save the workbook as PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

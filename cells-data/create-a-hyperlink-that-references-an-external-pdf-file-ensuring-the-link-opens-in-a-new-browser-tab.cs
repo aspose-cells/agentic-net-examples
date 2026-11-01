@@ -1,32 +1,48 @@
-// Title: Generate an HTML file with a cell hyperlink to an external PDF that opens in a new browser tab using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to insert a hyperlink to a PDF URL in cell A1 and export the workbook to HTML with the link set to open in a new tab. | Show how to set HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank so that external links open in a new window when saving a workbook as HTML. | Demonstrate adding a worksheet cell hyperlink and saving the workbook as an HTML file while preserving the hyperlink's target behavior.
-// Common Searches: Aspose.Cells C# add hyperlink to PDF and export as HTML with _blank target | How to make hyperlinks open in a new tab when saving Excel to HTML using Aspose.Cells | Set HtmlLinkTargetType to Blank for external links in Aspose.Cells HTML export | Create HTML link to external PDF from Excel cell using Aspose.Cells .NET
-// Tags: Aspose.Cells PDF hyperlink cell | HtmlSaveOptions target blank | HTML export external links Aspose.Cells | C# set hyperlink new tab | save workbook as HTML Aspose.Cells .NET
+// Title: Create a blue underlined hyperlink to an external PDF that opens in a new browser tab using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add hyperlink to external PDF that opens in new tab | How to set display text for a PDF link in an Excel cell with Aspose.Cells | Formatting Excel cell as hyperlink with blue underline using Aspose.Cells .NET | Save Excel workbook with PDF hyperlink using Aspose.Cells API | Add single‑cell hyperlink to PDF URL in Aspose.Cells C# example
+// Tags: Aspose.Cells external PDF link creation | C# Excel hyperlink cell formatting | display text for Aspose.Cells hyperlink | persist workbook with PDF hyperlink | blue underlined hyperlink style Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Drawing;
 
-// The example creates a new workbook, places a hyperlink in cell A1 that points to an external PDF, configures HtmlSaveOptions.LinkTargetType to Blank so the link opens in a new browser tab, and saves the workbook as an HTML file.
-class CreatePdfHyperlink
+// The example creates a new workbook, accesses the first worksheet, adds a hyperlink in cell A1 that points to an external PDF URL, sets the cell value to "Open PDF" as the display text, applies a blue underlined style to mimic a typical hyperlink, and saves the workbook as HyperlinkToPdf.xlsx.
+class HyperlinkExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Set the display text for the hyperlink
-        sheet.Cells["A1"].PutValue("Open PDF");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a hyperlink to an external PDF file (opens in a browser)
-        // Parameters: cell name, total rows, total columns, address (URL to PDF)
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://example.com/document.pdf");
+            // Define the cell where the hyperlink will be placed (e.g., A1)
+            int row = 0;    // zero‑based index for row 1
+            int column = 0; // zero‑based index for column A
 
-        // Configure HTML save options to open links in a new tab/window
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.LinkTargetType = HtmlLinkTargetType.Blank; // _blank target
+            // Add a hyperlink to the specified cell (single cell range)
+            // Note: Aspose.Cells does not have an overload that sets display text directly.
+            // Set the cell value to the desired display text after adding the hyperlink.
+            sheet.Hyperlinks.Add(row, column, 1, 1, "https://example.com/document.pdf");
+            sheet.Cells[row, column].PutValue("Open PDF");
 
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("PdfLink.html", saveOptions);
+            // Optionally, format the cell to look like a typical hyperlink
+            Style style = workbook.CreateStyle();
+            style.Font.Color = Color.Blue;
+            style.Font.Underline = FontUnderlineType.Single;
+            sheet.Cells[row, column].SetStyle(style);
+
+            // Save the workbook to a file
+            string outputPath = "HyperlinkToPdf.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

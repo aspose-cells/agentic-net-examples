@@ -1,47 +1,48 @@
-// Title: Set Author and Title built‑in document properties and freeze the first worksheet row with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that assigns "John Smith" to the Author property and "Sample Workbook" to the Title property of a Workbook, then freezes the top row of the first worksheet using Aspose.Cells. | Write a C# example that updates built‑in document properties of an Excel file and applies FreezePanes to keep the header row visible while scrolling.
-// Common Searches: Aspose.Cells C# set workbook author and title metadata | freeze header row in Excel using Aspose.Cells FreezePanes C# | how to update built‑in document properties in an Aspose.Cells workbook | C# example to freeze first row after modifying workbook properties with Aspose.Cells
-// Tags: update built‑in document properties Aspose.Cells C# | freeze top row worksheet Aspose.Cells | set author metadata Excel .NET | apply FreezePanes method Aspose.Cells | initialize workbook and modify properties Aspose.Cells
+// Title: Set Excel workbook author and title properties and freeze the first row using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens an existing .xlsx file, changes the BuiltInDocumentProperties Author and Title, freezes the top row of the first worksheet, and saves the updated workbook. | Show how to use the FreezePanes method to lock the first row after updating workbook metadata in a .NET console application with Aspose.Cells.
+// Common Searches: C# Aspose.Cells set workbook author property programmatically | How to change Excel file title metadata with Aspose.Cells .NET | Freeze first row in an Excel worksheet using Aspose.Cells C# example | Update built-in document properties and apply freeze panes in Aspose.Cells | Aspose.Cells freeze panes after modifying workbook properties
+// Tags: built-in document properties update Aspose.Cells C# | freeze first worksheet row Aspose.Cells | set Excel author title Aspose.Cells | apply FreezePanes method Aspose.Cells | modify workbook metadata programmatically Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsDemo
+// Loads an existing .xlsx workbook, updates its Author and Title built‑in document properties, freezes the first row of the first worksheet, and saves the modified file.
+class Program
 {
-    // Creates a new Workbook, sets the Author and Title built‑in document properties, freezes the first row of the first worksheet, and saves the file as UpdatedWorkbook.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle create)
-                Workbook workbook = new Workbook();
-
-                // Update built‑in document properties (author and title)
-                DocumentProperty authorProp = workbook.BuiltInDocumentProperties["Author"];
-                authorProp.Value = "John Smith";
-
-                DocumentProperty titleProp = workbook.BuiltInDocumentProperties["Title"];
-                titleProp.Value = "Sample Workbook";
-
-                // Freeze the first row of the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                // FreezePanes(row, column, totalRows, totalColumns)
-                // Freeze rows above 'row' index and columns left of 'column' index
-                sheet.FreezePanes(1, 0, 0, 0); // freezes the top row
-
-                // Save the workbook (lifecycle save)
-                workbook.Save("UpdatedWorkbook.xlsx");
-
-                // Optional: display confirmation
-                Console.WriteLine("Workbook saved with updated properties and first row frozen.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Update built‑in document properties
+            workbook.BuiltInDocumentProperties.Author = "John Doe";
+            workbook.BuiltInDocumentProperties.Title = "Sales Report Q4";
+
+            // Freeze the first row on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            // Freeze the first row (row index 1) and no columns
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

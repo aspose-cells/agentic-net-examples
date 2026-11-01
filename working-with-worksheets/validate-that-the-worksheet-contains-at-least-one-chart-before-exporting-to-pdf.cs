@@ -1,22 +1,20 @@
-// Title: Check for at least one chart in an Excel workbook before saving as PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that iterates through all worksheets in an Aspose.Cells workbook, detects if any chart objects exist, and skips the PDF export when none are found. | Show how to add a pre‑export validation step using Aspose.Cells to abort Workbook.Save when the chart collection count is zero. | Provide an example that logs a message and returns early if a workbook loaded with Aspose.Cells contains no charts before calling Save with SaveFormat.Pdf.
-// Common Searches: Aspose.Cells C# verify chart presence before PDF conversion | prevent PDF export in Aspose.Cells when workbook has no charts | how to check chart count in Aspose.Cells workbook using C# | skip saving Excel to PDF with Aspose.Cells if there are no charts | C# Aspose.Cells example to abort PDF save when chart collection is empty
-// Tags: Aspose.Cells chart detection before PDF export | C# workbook chart count validation | conditional PDF generation with Aspose.Cells | Excel to PDF conversion skip when no charts | pre‑export chart check Aspose.Cells
+// Title: Check for charts in an Excel workbook before exporting to PDF with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to detect if a worksheet contains any charts before saving as PDF | prevent PDF generation in Aspose.Cells when workbook has no chart objects | verify chart presence in Excel file using Aspose.Cells .NET prior to PDF export | skip PDF conversion if workbook worksheets have zero charts Aspose.Cells C# | conditional PDF save based on chart count in Aspose.Cells workbook
+// Tags: chart detection before PDF export Aspose.Cells | conditional workbook.Save to PDF based on chart count | worksheet chart count validation C# | Aspose.Cells abort PDF when no charts | Excel to PDF conversion with chart prerequisite
 
 using Aspose.Cells;
 using System;
 
-// The sample loads an Excel workbook, scans each worksheet for chart objects, aborts the PDF conversion with a console message when no charts are found, and otherwise saves the workbook as a PDF using Aspose.Cells.
+// The example loads an Excel workbook, scans all worksheets for at least one chart, aborts the PDF conversion with a console message if none are found, and otherwise saves the workbook as a PDF using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with actual file path)
-        Workbook workbook = new Workbook("input.xlsx"); // load rule
+        // Load the workbook (load rule)
+        var workbook = new Workbook("input.xlsx");
 
+        // Check if any worksheet contains at least one chart
         bool hasChart = false;
-
-        // Check each worksheet for at least one chart
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             if (sheet.Charts.Count > 0)
@@ -32,7 +30,8 @@ class Program
             return;
         }
 
-        // Export the workbook to PDF (replace with desired output path)
-        workbook.Save("output.pdf", SaveFormat.Pdf); // save rule
+        // Export the workbook to PDF (save rule)
+        workbook.Save("output.pdf", SaveFormat.Pdf);
+        Console.WriteLine("Workbook exported to PDF successfully.");
     }
 }

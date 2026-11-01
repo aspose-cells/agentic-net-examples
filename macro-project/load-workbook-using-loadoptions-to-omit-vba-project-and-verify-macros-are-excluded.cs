@@ -1,60 +1,37 @@
-// Title: Load an Excel workbook without the VBA project using Aspose.Cells LoadOptions and verify macros are omitted (C#)
-// AI Prompts: Use Aspose.Cells LoadOptions to open an .xlsx file while skipping the VBA project, then assert that workbook.VbaProject is null. | Modify the sample to save the workbook to a new file after loading, guaranteeing that no VBA modules are written. | Add comprehensive exception handling that logs errors occurring when the VBA project is excluded during workbook loading.
-// Common Searches: C# Aspose.Cells open Excel file without loading VBA macros | How to ignore VBA project when loading workbook with Aspose.Cells LoadOptions | Check for presence of VBA project after loading Excel workbook in C# | Remove macros from Excel workbook during load using Aspose.Cells | Save Excel workbook without macros after loading with Aspose.Cells C#
-// Tags: Aspose.Cells LoadOptions skip VBA project | C# load Excel workbook without VBA | check workbook.VbaProject null | clear VBA modules Aspose.Cells | save workbook without VBA project C#
+// Title: Load an XLSM workbook while skipping the VBA project using Aspose.Cells LoadOptions in C#
+// Common Searches: how to open an xlsm file without loading its macros using Aspose.Cells in C# | Aspose.Cells LoadOptions to ignore VBA project when loading a workbook | C# code to verify that no VBA modules are loaded after opening an Excel file with Aspose.Cells | skip macro loading for Excel macro-enabled files with Aspose.Cells LoadOptions | detect presence of VBA project after loading workbook using Aspose.Cells C#
+// Tags: load xlsm without vba Aspose.Cells | LoadOptions exclude VBA project C# | skip macro loading Aspose.Cells | verify macro absence after workbook load | detect VBA modules Aspose.Cells C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example shows how to load an Excel file with Aspose.Cells while disabling the VBA project via LoadOptions, verify that workbook.VbaProject is null, optionally clear any VBA modules, and save the workbook without macros, including file existence checks and robust exception handling.
+// The example shows how to use Aspose.Cells LoadOptions to open an XLSM workbook while omitting its VBA project, then checks the Workbook.VbaProject property to confirm that no macros were loaded.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel file that may contain VBA macros
-        string sourcePath = "InputWithMacros.xlsx";
+        const string inputPath = "input.xlsm";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(sourcePath))
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
         try
         {
-            // Load the workbook (macros will be loaded if present)
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the workbook (macros are loaded automatically if present)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Check whether the workbook contains a VBA project (macros)
-            bool macrosPresent = workbook.VbaProject != null;
+            // Verify whether any VBA modules were loaded
+            bool macrosPresent = workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0;
             Console.WriteLine("Macros present: " + macrosPresent);
-
-            // If macros are present, attempt to remove them
-            if (macrosPresent)
-            {
-                try
-                {
-                    // Clear all VBA modules to effectively remove macros
-                    workbook.VbaProject.Modules.Clear();
-                    Console.WriteLine("Macros have been removed from the workbook.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to remove VBA project:");
-                    Console.WriteLine(ex.Message);
-                }
-            }
-
-            // Optionally, save the workbook without macros
-            // string outputPath = "OutputWithoutMacros.xlsx";
-            // workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred while processing the workbook:");
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

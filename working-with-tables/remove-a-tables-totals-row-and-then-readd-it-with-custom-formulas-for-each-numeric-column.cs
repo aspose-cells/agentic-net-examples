@@ -1,14 +1,13 @@
-// Title: Hide an Excel table’s totals row and re‑add it with structured SUM formulas for numeric columns using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that hides a ListObject’s totals row, then shows it again and inserts a SUM formula only for columns that contain numbers. | Create a method that iterates through each column of a worksheet table, detects numeric data types, and assigns a structured reference SUM formula to the totals row. | Write a script that loads an Excel file, validates the presence of a table, toggles the ShowTotals property, and applies custom formulas to the totals row based on column content.
-// Common Searches: aspnet hide table totals row and add sum formulas with Aspose.Cells | how to use structured references for totals row in Aspose.Cells C# | detect numeric columns in Excel table and set SUM formula programmatically | Aspose.Cells toggle ShowTotals and apply custom formulas to totals row
-// Tags: Aspose.Cells hide table totals row | Aspose.Cells add structured SUM to totals row | detect numeric columns ListObject C# | ShowTotals property Aspose.Cells | Excel table totals row custom formulas
+// Title: How to remove an Excel table totals row and re‑add it with custom SUM formulas for numeric columns using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# remove table totals row and add SUM formulas | C# hide totals row then show it again in an Excel table with Aspose.Cells | Set structured reference SUM formula for each numeric column in an Aspose.Cells ListObject | Detect numeric columns in an Excel table and apply totals row formulas using Aspose.Cells .NET | Recreate an Excel table totals row after deletion with Aspose.Cells for .NET
+// Tags: Aspose.Cells remove table totals row C# | Aspose.Cells add SUM formulas to totals row | structured reference formula in Aspose.Cells ListObject | detect numeric columns in Excel table Aspose.Cells | recreate Excel table totals row Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The program loads an Excel workbook, ensures a table exists, hides its totals row, re‑shows it, scans each column to determine if it holds numeric data, and inserts a structured reference SUM formula into the totals row for those columns before saving the file.
+// The example loads an Excel workbook, checks for a ListObject, hides and then shows the totals row to recreate it, calculates the totals row index, iterates each column to determine if the first data cell is numeric, applies a structured‑reference SUM formula to numeric columns, clears non‑numeric totals cells, and saves the updated workbook.
 class Program
 {
     static void Main()
@@ -16,83 +15,93 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
+        // Verify input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure at least one table exists
+            // Ensure there is at least one table (ListObject) in the worksheet
             if (worksheet.ListObjects.Count == 0)
             {
-                Console.WriteLine("No tables found on the worksheet.");
+                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
                 return;
             }
 
-            // Work with the first table
             ListObject table = worksheet.ListObjects[0];
 
-            // 1. Remove existing totals row
+            // Hide and then show totals row to (re)create it
             table.ShowTotals = false;
-
-            // 2. Re‑add totals row
             table.ShowTotals = true;
 
-            // Totals row index after ShowTotals = true
-            int totalsRowIndex = table.EndRow;
+            // Calculate the index of the totals row
+            // Header row + data rows + totals row
+            int totalRowIndex = table.StartRow + 1 + table.DataRange.RowCount;
 
             // Iterate through each column in the table
-            for (int i = 0; i < table.ListColumns.Count; i++)
+            for (int colIndex = 0; colIndex < table.ListColumns.Count; colIndex++)
             {
-                ListColumn column = table.ListColumns[i];
+                int dataRow = table.StartRow + 1; // first data row (after header)
+                int dataCol = table.StartColumn + colIndex;
+                Cell firstDataCell = worksheet.Cells[dataRow, dataCol];
 
-                // Worksheet column index (zero‑based)
-                int worksheetColumnIndex = table.StartColumn + i;
+                // Determine if the first data cell contains a numeric value
+                bool isNumeric = firstDataCell.Value is double ||
+                                 firstDataCell.Value is int ||
+                                 firstDataCell.Value is decimal;
 
-                // Determine data range rows (excluding header and totals)
-                int firstDataRow = table.DataRange.FirstRow;
-                int lastDataRow = firstDataRow + table.DataRange.RowCount - 1;
-
-                bool isNumeric = false;
-
-                // Scan cells to detect numeric data
-                for (int row = firstDataRow; row <= lastDataRow; row++)
-                {
-                    object cellValue = worksheet.Cells[row, worksheetColumnIndex].Value;
-                    if (cellValue is double || cellValue is int || cellValue is decimal)
-                    {
-                        isNumeric = true;
-                        break;
-                    }
-                }
+                // Reference the cell in the totals row for this column
+                Cell totalCell = worksheet.Cells[totalRowIndex, dataCol];
 
                 if (isNumeric)
                 {
-                    // Set SUM formula using structured reference
-                    string formula = $"=SUM([{column.Name}])";
-                    worksheet.Cells[totalsRowIndex, worksheetColumnIndex].Formula = formula;
+                    // Build SUM formula for the column using structured reference
+                    string columnName = table.ListColumns[colIndex].Name;
+                    string formula = $"=SUM([{columnName}])";
+
+                    // Apply the formula to the totals row cell
+                    totalCell.Formula = formula;
                 }
                 else
                 {
-                    // Clear any existing formula for non‑numeric columns
-                    worksheet.Cells[totalsRowIndex, worksheetColumnIndex].Formula = string.Empty;
+                    // Clear any existing formula or value for non‑numeric columns
+                    totalCell.Formula = string.Empty;
+                    totalCell.PutValue(string.Empty);
                 }
             }
 
             // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred during processing: {ex.Message}");
         }
     }
 }

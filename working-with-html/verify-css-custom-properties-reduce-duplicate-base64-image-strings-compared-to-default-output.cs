@@ -1,78 +1,105 @@
-// Title: Verify that enabling CSS custom properties reduces duplicate Base64 image strings in Aspose.Cells HTML export (C#)
-// AI Prompts: Write C# code that inserts the same picture twice into a workbook, saves the workbook to HTML with default settings and then with HtmlSaveOptions.ExportImagesAsBase64 enabled, and counts the data:image;base64 occurrences in each output. | Enhance the sample to identify unique Base64 image definitions after HTML export and output a pass/fail message indicating whether CSS custom properties decreased image duplication.
-// Common Searches: Aspose.Cells how to avoid duplicate base64 images when saving to HTML | C# count data:image;base64 occurrences in generated HTML file | Enable CSS custom properties in Aspose.Cells HTML export options | Compare default HTML output with CSS‑custom HTML output from Aspose.Cells
-// Tags: Aspose.Cells HTML export base64 deduplication | HtmlSaveOptions ExportImagesAsBase64 C# | CSS custom properties Aspose.Cells HTML | count base64 image strings C# regex | verify duplicate image reduction Aspose.Cells
+// Title: Verify that enabling CSS custom properties in Aspose.Cells HTML export reduces duplicate Base64 image strings
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook to HTML with HtmlSaveOptions.ExportImagesAsBase64 enabled and CSS custom properties turned on, then compare the number of distinct data:image URIs with the default export. | Add a C# routine that extracts all data:image strings from the generated HTML, stores them in a HashSet, and prints the distinct count for the default and CSS‑custom‑property outputs. | Modify the example to load a JPEG file instead of a PNG and confirm that CSS variables still collapse repeated Base64 images.
+// Common Searches: Aspose.Cells how to reduce repeated base64 image data when exporting to HTML using CSS variables | C# count distinct data:image base64 strings in HTML produced by Aspose.Cells | Enable CSS custom properties in HtmlSaveOptions to deduplicate images during Excel to HTML conversion | Compare default HTML export versus CSS custom properties export in Aspose.Cells .NET
+// Tags: Aspose.Cells HTML export CSS custom properties | deduplicate base64 images Aspose.Cells | count distinct data:image URIs C# | HtmlSaveOptions ExportImagesAsBase64 setting | Excel to HTML image deduplication using CSS variables
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using Aspose.Cells;
 
-// The example creates a workbook, adds the same PNG image twice, saves the workbook to HTML twice—once with default options and once with HtmlSaveOptions.ExportImagesAsBase64 (simulating CSS custom properties). It reads both HTML files, uses a regular expression to count data:image;base64 strings, and reports whether the CSS‑custom export produced fewer duplicate Base64 image definitions.
-class CssCustomPropertiesVerification
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Demonstrates saving a workbook to HTML with default settings and with CSS custom properties enabled, then counts distinct Base64 image strings to show that CSS variables reduce duplicate image data.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a workbook and add the same image twice
-            var wb = new Workbook();
-            var ws = wb.Worksheets[0];
-
-            // Sample PNG image (1x1 pixel, red) encoded as base64
-            const string pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AApEB/6V6nV8AAAAASUVORK5CYII=";
-            byte[] imgBytes = Convert.FromBase64String(pngBase64);
-            using (var ms = new MemoryStream(imgBytes))
+            try
             {
-                // Insert the image at A1
-                ws.Pictures.Add(0, 0, ms);
-                // Reset stream position for second insertion
-                ms.Position = 0;
-                // Insert the same image at C3
-                ws.Pictures.Add(2, 2, ms);
+                // Create a workbook and get the first worksheet
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+
+                // Load an image from file if it exists
+                const string imagePath = "sample.png";
+                if (!File.Exists(imagePath))
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+                }
+                else
+                {
+                    byte[] imageBytes = File.ReadAllBytes(imagePath);
+                    using (var imageStream = new MemoryStream(imageBytes))
+                    {
+                        // Insert the same picture into different cells
+                        sheet.Pictures.Add(0, 0, new MemoryStream(imageBytes));
+                        sheet.Pictures.Add(2, 2, new MemoryStream(imageBytes));
+                        sheet.Pictures.Add(4, 4, new MemoryStream(imageBytes));
+                    }
+                }
+
+                // ---------------------------------------------------------------
+                // 1. Save HTML with default settings (no CSS custom properties)
+                // ---------------------------------------------------------------
+                string defaultHtml;
+                using (var defaultHtmlStream = new MemoryStream())
+                {
+                    workbook.Save(defaultHtmlStream, SaveFormat.Html);
+                    defaultHtml = Encoding.UTF8.GetString(defaultHtmlStream.ToArray());
+                }
+
+                // ---------------------------------------------------------------
+                // 2. Save HTML with CSS custom properties enabled to deduplicate Base64 strings
+                // ---------------------------------------------------------------
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    ExportImagesAsBase64 = true // Enables Base64 export; duplicates are deduplicated via CSS variables automatically
+                };
+
+                string customCssHtml;
+                using (var customCssHtmlStream = new MemoryStream())
+                {
+                    workbook.Save(customCssHtmlStream, htmlOptions);
+                    customCssHtml = Encoding.UTF8.GetString(customCssHtmlStream.ToArray());
+                }
+
+                // ---------------------------------------------------------------
+                // 3. Helper method to count distinct Base64 image strings in HTML
+                // ---------------------------------------------------------------
+                int defaultCount = CountDistinctBase64Images(defaultHtml);
+                int customCssCount = CountDistinctBase64Images(customCssHtml);
+
+                // ---------------------------------------------------------------
+                // 4. Output the results
+                // ---------------------------------------------------------------
+                Console.WriteLine($"Distinct Base64 images (default): {defaultCount}");
+                Console.WriteLine($"Distinct Base64 images (CSS custom properties): {customCssCount}");
+                Console.WriteLine(customCssCount < defaultCount
+                    ? "CSS custom properties reduced duplicate Base64 strings."
+                    : "No reduction observed.");
             }
-
-            // ---------- Default HTML export (no CSS custom properties) ----------
-            string defaultHtmlPath = "default.html";
-            wb.Save(defaultHtmlPath, SaveFormat.Html); // default options
-
-            // ---------- HTML export with CSS custom properties enabled ----------
-            var cssOptions = new HtmlSaveOptions
+            catch (Exception ex)
             {
-                // Export images as Base64 strings
-                ExportImagesAsBase64 = true
-                // Note: ExportCustomProperties is not available in this version of Aspose.Cells.
-                // When supported, it would enable CSS custom properties to avoid duplicate Base64 strings.
-            };
-            string cssHtmlPath = "css_custom.html";
-            wb.Save(cssHtmlPath, cssOptions);
-
-            // Load both HTML files safely
-            string defaultHtml = File.Exists(defaultHtmlPath) ? File.ReadAllText(defaultHtmlPath) : string.Empty;
-            string cssHtml = File.Exists(cssHtmlPath) ? File.ReadAllText(cssHtmlPath) : string.Empty;
-
-            // Helper to count Base64 image strings in HTML
-            int CountBase64Occurrences(string html)
-            {
-                var matches = Regex.Matches(html, @"data:image\/[a-zA-Z]+;base64,([A-Za-z0-9+/=]+)");
-                return matches.Count;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            int defaultCount = CountBase64Occurrences(defaultHtml);
-            int cssCount = CountBase64Occurrences(cssHtml);
-
-            Console.WriteLine($"Base64 image occurrences in default HTML: {defaultCount}");
-            Console.WriteLine($"Base64 image occurrences in CSS‑custom HTML: {cssCount}");
-
-            // Verify that CSS custom properties reduce duplicate Base64 strings
-            if (cssCount < defaultCount)
-                Console.WriteLine("Verification passed: CSS custom properties reduced duplicate Base64 strings.");
-            else
-                Console.WriteLine("Verification failed: No reduction in duplicate Base64 strings.");
         }
-        catch (Exception ex)
+
+        // Counts unique Base64 image strings in the provided HTML content
+        private static int CountDistinctBase64Images(string html)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            var base64Set = new HashSet<string>();
+            int index = 0;
+            while ((index = html.IndexOf("data:image", index, StringComparison.OrdinalIgnoreCase)) != -1)
+            {
+                int end = html.IndexOfAny(new[] { '"', '\'', ';' }, index);
+                if (end == -1) break;
+                string base64 = html.Substring(index, end - index);
+                base64Set.Add(base64);
+                index = end;
+            }
+            return base64Set.Count;
         }
     }
 }

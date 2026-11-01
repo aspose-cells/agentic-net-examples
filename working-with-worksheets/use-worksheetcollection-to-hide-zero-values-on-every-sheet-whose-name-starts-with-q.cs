@@ -1,75 +1,58 @@
-// Title: C# Aspose.Cells: Hide zero values on all worksheets whose names start with "Q" using WorksheetCollection
-// AI Prompts: Generate C# code that loops through Workbook.Worksheets, selects sheets whose Name begins with "Q", and assigns a custom number format (e.g., "0;-0;;@") to each cell to suppress zero display. | Write a reusable method in Aspose.Cells for .NET that receives a Workbook, finds every worksheet prefixed with "Q", and updates the cell styles so zeros are not shown.
-// Common Searches: Aspose.Cells hide zeros on worksheets starting with Q in C# | Custom number format to suppress zero values on selected sheets using Aspose.Cells .NET | Iterate over WorksheetCollection and change cell formatting for zero values in C# | C# Aspose.Cells hide zero values only on specific worksheets
-// Tags: suppress zero display Aspose.Cells worksheet collection | select worksheets by name prefix C# Aspose.Cells | number format hide zeros Aspose.Cells | apply cell style to mask zero entries Aspose.Cells .NET
+// Title: Hide zero values on worksheets whose names start with "Q" using Aspose.Cells WorksheetCollection in C#
+// Common Searches: C# Aspose.Cells hide zero values on worksheets with name prefix Q | How to set IsZeroValuesHidden for specific sheets using WorksheetCollection in Aspose.Cells | Iterate worksheets and hide zero values based on sheet name in Aspose.Cells .NET | Apply reflection to set IsZeroValuesHidden property for Excel sheets starting with Q in C# | Filter worksheets by name and hide zero values with Aspose.Cells API
+// Tags: WorksheetCollection filter by name prefix | set IsZeroValuesHidden property Aspose.Cells | hide zero values Excel worksheet C# | process worksheets starting with Q Aspose.Cells | reflection based property setting Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
 
-// The example loads an Excel workbook, checks each worksheet for a name that starts with "Q", and provides a place to add custom logic that hides zero values on those sheets before saving the workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates through all worksheets, and for each sheet whose name begins with "Q" it uses reflection to set the IsZeroValuesHidden property to true via the WorksheetCollection API, effectively hiding zero values before saving the workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook;
             try
             {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception loadEx)
-            {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
-            }
-
-            // Determine if any worksheet name starts with "Q"
-            bool hasQSheet = false;
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                if (sheet.Name.StartsWith("Q", StringComparison.OrdinalIgnoreCase))
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
                 {
-                    hasQSheet = true;
-                    // Additional per‑sheet processing can be added here
+                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                    return;
                 }
-            }
 
-            // Hide zero values globally if a matching sheet exists
-            // Note: ShowZeroValues property is not available in the current Aspose.Cells version.
-            // If needed, implement custom logic to hide zeros per cell.
-            if (hasQSheet)
-            {
-                // Placeholder for zero‑value hiding logic.
-                // Example: iterate cells and apply a custom number format that hides zeros.
-            }
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the modified workbook
-            try
-            {
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Process only worksheets whose name starts with "Q"
+                    if (sheet.Name.StartsWith("Q", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Hide zero values on this worksheet (using reflection for compatibility)
+                        PropertyInfo prop = sheet.GetType().GetProperty("IsZeroValuesHidden", BindingFlags.Public | BindingFlags.Instance);
+                        if (prop != null && prop.CanWrite)
+                        {
+                            prop.SetValue(sheet, true);
+                        }
+                    }
+                }
+
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

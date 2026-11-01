@@ -1,12 +1,10 @@
-// Title: How to set rows 1‑3 as repeating print titles on an Aspose.Cells worksheet in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to configure the first three rows as print titles so they appear on every printed page. | Demonstrate how to assign PageSetup.PrintTitleRows for rows 1 through 3 and save the workbook as an .xlsx file with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# repeat first three rows on each printed page | Set print title rows 1 to 3 in an Excel workbook using Aspose.Cells .NET | How to use PageSetup.PrintTitleRows to create repeating header rows in Aspose.Cells | C# example for printing repeated header rows with Aspose.Cells | Configure worksheet print titles across pages in Aspose.Cells for .NET
-// Tags: Aspose.Cells PageSetup.PrintTitleRows property | C# Aspose.Cells configure print title rows | Excel workbook repeat rows on print Aspose.Cells | Aspose.Cells worksheet print setup .NET | save workbook with print titles Aspose.Cells
+// Title: Set rows 1‑3 as repeat print titles on each printed page using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set rows 1 to 3 as print titles for each page | repeat header rows on every printed page with Aspose.Cells .NET | PageSetup.PrintTitleRows example in C# for Excel worksheets | how to configure print title rows in Aspose.Cells workbook | C# code to make first three rows repeat when printing an Excel file
+// Tags: Aspose.Cells PageSetup.PrintTitleRows API | C# configure worksheet page setup | Excel print titles via Aspose.Cells | Set repeat rows in workbook using .NET | Aspose.Cells workbook print configuration
 
 using Aspose.Cells;
-using System;
 
-// The program creates a new workbook, accesses the first worksheet, configures rows 1‑3 as print titles using the PageSetup.PrintTitleRows property so they repeat on every printed page, and saves the file as Output.xlsx.
+// The example creates a workbook, accesses the first worksheet, assigns rows 1‑3 as print titles using the PageSetup.PrintTitleRows property, and saves the file as PrintTitlesExample.xlsx.
 class Program
 {
     static void Main()
@@ -15,13 +13,13 @@ class Program
         Workbook workbook = new Workbook();
 
         // Get the active worksheet (first worksheet by default)
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Set rows 1 to 3 as print titles so they repeat on each printed page
-        // The format is "$StartRow:$EndRow"
-        worksheet.PageSetup.PrintTitleRows = "$1:$3";
+        // The range is specified in A1 style with absolute references
+        sheet.PageSetup.PrintTitleRows = "$1:$3";
 
-        // Save the workbook to a file
-        workbook.Save("Output.xlsx");
+        // Save the workbook to verify the setting
+        workbook.Save("PrintTitlesExample.xlsx");
     }
 }

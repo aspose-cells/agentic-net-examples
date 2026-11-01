@@ -1,57 +1,64 @@
-// Title: Add a calculated item to a pivot table row field with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, builds a pivot table from a data range, and uses PivotField.AddCalculatedItem to define a new row item that sums two categories. | Show how to refresh and recalculate a pivot table after adding a calculated item using the Aspose.Cells API. | Generate a complete example that saves the workbook with the custom calculated pivot item to an .xlsx file.
-// Common Searches: aspnet add calculated item to pivot table using Aspose.Cells | C# Aspose.Cells PivotField AddCalculatedItem example code | how to sum two row items in an Aspose.Cells pivot table | create custom calculated row item in Excel workbook with Aspose.Cells .NET | Aspose.Cells calculated item expression syntax for pivot tables
-// Tags: Aspose.Cells calculated pivot item API C# | pivot table custom expression in Aspose.Cells | C# generate .xlsx with calculated row item | refresh and calculate pivot after adding item Aspose.Cells | define calculated item for row field Aspose.Cells
+// Title: How to add a calculated item to a pivot table row field using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add calculated item to pivot row field example | Create a calculated item in Excel pivot table with AddCalculatedItem in .NET | C# code to insert a calculated item into an existing pivot table using Aspose.Cells | Define a calculated item expression for a pivot field in Aspose.Cells workbook | Add calculated item HighValue to Category field in Excel pivot via Aspose.Cells
+// Tags: AddCalculatedItem Aspose.Cells C# | pivot table calculated item .NET | Excel pivot row field calculated item | Aspose.Cells workbook pivot manipulation | C# expression for calculated pivot item
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsCalculatedItemDemo
+// The program loads an existing workbook, verifies a pivot table is present, retrieves the 'Category' row field, adds a calculated item named 'HighValue' with the expression ='Category'="Premium", and saves the updated workbook to a new file.
+class Program
 {
-    // The example creates a new workbook, fills it with sample Category and Amount data, adds a pivot table on range A1:B5, places the Category field in the row area and Amount in the data area, then adds a calculated row item named 'Food_Drink_Total' with the expression '=Food + Drink' using PivotField.AddCalculatedItem, refreshes and calculates the pivot, and finally saves the file as PivotTableWithCalculatedItem.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["A2"].Value = "Food";
-            sheet.Cells["A3"].Value = "Drink";
-            sheet.Cells["A4"].Value = "Food";
-            sheet.Cells["A5"].Value = "Drink";
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            sheet.Cells["B1"].Value = "Amount";
-            sheet.Cells["B2"].Value = 120;
-            sheet.Cells["B3"].Value = 80;
-            sheet.Cells["B4"].Value = 150;
-            sheet.Cells["B5"].Value = 70;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a pivot table covering the data range and place it at D1
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add the "Category" field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            // Add the "Amount" field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Access the first pivot table (adjust index if needed)
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Retrieve the row field (Category) and add a calculated item
-            // The calculated item will sum the values of "Food" and "Drink"
-            PivotField categoryField = pivotTable.RowFields[0];
-            categoryField.AddCalculatedItem("Food_Drink_Total", "=Food + Drink");
+            // Get the row field named "Category"
+            PivotField field = pivotTable.RowFields["Category"];
+            if (field == null)
+            {
+                Console.WriteLine("Pivot field \"Category\" not found.");
+                return;
+            }
 
-            // Refresh and calculate the pivot table to apply the new item
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+            // Add a calculated item named "HighValue" with the desired expression
+            // The expression must be a valid Excel formula for a calculated item.
+            field.AddCalculatedItem("HighValue", "='Category'=\"Premium\"");
 
-            // Save the workbook to a file
-            workbook.Save("PivotTableWithCalculatedItem.xlsx");
+            // Save the workbook with the new calculated item
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

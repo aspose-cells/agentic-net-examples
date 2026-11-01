@@ -1,83 +1,114 @@
-// Title: How to convert an Excel worksheet background image stream to a Base64 string using Aspose.Cells in C#
-// AI Prompts: Write a C# method that accepts a Stream containing a worksheet background image and returns its Base64 encoded string, including null checks and stream positioning. | Demonstrate loading an Excel file with Aspose.Cells, retrieving the BackgroundImage byte array from the first worksheet, and feeding it to the conversion method to obtain a Base64 string. | Enhance the conversion routine to detect when a worksheet has no background image and throw a descriptive exception.
-// Common Searches: aspocells c# get worksheet background image as base64 string | convert excel worksheet background image stream to base64 using Aspose.Cells | c# read background image bytes from Aspose.Cells worksheet and encode to base64 | how to handle missing background image when converting to base64 with Aspose.Cells
-// Tags: Aspose.Cells worksheet background image to Base64 | C# stream to Base64 conversion for Excel images | extract background image bytes Aspose.Cells | encode Excel background image as Base64 in .NET | handle missing worksheet background image Aspose.Cells
+// Title: Convert an Excel worksheet's background image to a Base64 string using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells read worksheet background picture and return Base64 | How to extract Excel sheet background image without System.Drawing | Retrieve first worksheet background image as PNG Base64 with Aspose.Cells | Encode worksheet background image to Base64 using reflection in .NET | Load workbook from stream and get background image Base64 in C#
+// Tags: worksheet background image extraction Aspose.Cells | background image to Base64 conversion .NET | load workbook from stream Aspose.Cells | reflection based image saving C# | encode Excel background picture PNG
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-// // Loads an Excel workbook with Aspose.Cells, extracts the first worksheet's BackgroundImage byte array, converts it to a Base64 string via a helper method that processes a Stream, and prints the result while handling null checks and missing images.
-public class ImageHelper
+namespace AsposeCellsExample
 {
-    /// <param name="imageStream">Stream containing the image data.</param>
-    /// <returns>Base64 encoded representation of the image.</returns>
-    public string ConvertBackgroundImageToBase64(Stream imageStream)
+    // The GetWorksheetBackgroundImageBase64 method loads an Excel workbook from a stream, accesses the first worksheet, obtains its BackgroundImage, and uses reflection to invoke the Image.Save method with PNG format. The image bytes are written to a MemoryStream, converted to a Base64 string, and returned; null is returned if no background image exists or any step fails.
+    public class BackgroundImageHelper
     {
-        if (imageStream == null)
-            throw new ArgumentNullException(nameof(imageStream));
-
-        // Ensure the stream is positioned at the beginning.
-        if (imageStream.CanSeek)
-            imageStream.Position = 0;
-
-        // Copy the input stream into a MemoryStream to obtain a byte array.
-        using (var memory = new MemoryStream())
+        /// <param name="workbookStream">Stream containing the Excel workbook.</param>
+        /// <returns>Base64 string of the background image, or null.</returns>
+        public string GetWorksheetBackgroundImageBase64(Stream workbookStream)
         {
-            imageStream.CopyTo(memory);
-            byte[] imageBytes = memory.ToArray();
+            if (workbookStream == null) throw new ArgumentNullException(nameof(workbookStream));
 
-            // Convert the byte array to a Base64 string.
-            return Convert.ToBase64String(imageBytes);
+            try
+            {
+                // Load the workbook from the provided stream.
+                Workbook workbook = new Workbook(workbookStream);
+
+                // Access the first worksheet (modify index if needed).
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve the background image (type is System.Drawing.Image internally).
+                object bgImage = sheet.BackgroundImage;
+
+                // If no background image is set, return null.
+                if (bgImage == null)
+                    return null;
+
+                // Use reflection to avoid a direct dependency on System.Drawing.Common.
+                Type imageFormatType = Type.GetType("System.Drawing.Imaging.ImageFormat");
+                if (imageFormatType == null)
+                    return null; // Unable to locate ImageFormat type.
+
+                // Get the static property ImageFormat.Png.
+                PropertyInfo pngProperty = imageFormatType.GetProperty("Png", BindingFlags.Public | BindingFlags.Static);
+                object pngFormat = pngProperty?.GetValue(null);
+                if (pngFormat == null)
+                    return null; // PNG format not available.
+
+                // Locate the Save(Stream, ImageFormat) method on the image object.
+                MethodInfo saveMethod = bgImage.GetType().GetMethod("Save", new[] { typeof(Stream), imageFormatType });
+                if (saveMethod == null)
+                    return null; // Save method not found.
+
+                // Convert the image to a Base64 string.
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Invoke Save to write PNG data into the memory stream.
+                    saveMethod.Invoke(bgImage, new object[] { ms, pngFormat });
+                    byte[] imageBytes = ms.ToArray();
+                    return Convert.ToBase64String(imageBytes);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed.
+                Console.Error.WriteLine($"Error extracting background image: {ex.Message}");
+                return null;
+            }
         }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    internal class Program
     {
-        try
+        private static void Main(string[] args)
         {
-            // Path to the Excel file (adjust as needed).
-            string excelPath = "SampleWorkbook.xlsx";
-
-            // Verify the file exists to avoid FileNotFoundException.
-            if (!File.Exists(excelPath))
+            // Example usage:
+            // args[0] should contain the path to the Excel file.
+            if (args.Length == 0)
             {
-                Console.WriteLine($"File not found: {excelPath}");
+                Console.WriteLine("Please provide the path to an Excel file as an argument.");
                 return;
             }
 
-            // Load the workbook using Aspose.Cells.
-            Workbook workbook = new Workbook(excelPath);
+            string filePath = args[0];
 
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Retrieve the background image bytes, if any.
-            byte[] bgBytes = sheet.BackgroundImage;
-
-            if (bgBytes == null || bgBytes.Length == 0)
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine("No background image found in the worksheet.");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
-            // Convert the background image bytes to a Base64 string.
-            using (MemoryStream imgStream = new MemoryStream(bgBytes))
+            try
             {
-                ImageHelper helper = new ImageHelper();
-                string base64 = helper.ConvertBackgroundImageToBase64(imgStream);
+                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    BackgroundImageHelper helper = new BackgroundImageHelper();
+                    string base64 = helper.GetWorksheetBackgroundImageBase64(fs);
 
-                Console.WriteLine("Base64 representation of the background image:");
-                Console.WriteLine(base64);
+                    if (base64 != null)
+                    {
+                        Console.WriteLine("Background image (Base64):");
+                        Console.WriteLine(base64);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No background image found in the first worksheet.");
+                    }
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,50 +1,43 @@
-// Title: Link a rectangle shape to a CONCATENATE formula cell and display the combined text using Aspose.Cells for .NET (C#)
-// AI Prompts: Create an Excel workbook, write a CONCATENATE formula in a cell, calculate the workbook, add a rectangle shape, and assign the shape's Text property to the evaluated cell value with Aspose.Cells in C#. | Generate a .xlsx file where a rectangle shape automatically reflects the result of a CONCATENATE formula after the workbook is calculated, using the Aspose.Cells .NET API. | Programmatically bind a shape's displayed text to the value of a formula cell, ensuring the formula is evaluated first, via Aspose.Cells C# methods.
-// Common Searches: Aspose.Cells C# link shape text to cell formula result | set rectangle shape text from CONCATENATE formula in Excel using Aspose.Cells | display calculated CONCATENATE value inside a shape with Aspose.Cells .NET
-// Tags: Aspose.Cells bind shape to calculated cell | C# rectangle shape displays formula result | evaluate workbook before shape assignment Aspose.Cells | Excel shape text from CONCATENATE cell using .NET | link shape to cell value Aspose.Cells API
+// Title: How to bind a rectangle shape’s text to a CONCATENATE formula cell using Aspose.Cells for .NET
+// AI Prompts: Create a rectangle shape on a worksheet and set its Text property to reference a cell containing a CONCATENATE formula with Aspose.Cells for .NET. | Link a shape’s displayed text to the result of a CONCATENATE function, apply fill color and line weight, then save the workbook. | Update a linked shape so its text automatically reflects changes in the underlying concatenated cell value.
+// Common Searches: Aspose.Cells .NET link shape text to cell formula result | display CONCATENATE function output inside a rectangle shape using Aspose.Cells | bind Excel shape to cell with formula using C# Aspose.Cells example | how to make shape text update when CONCATENATE cell changes in Aspose.Cells
+// Tags: shape text bound to formula cell Aspose.Cells | rectangle shape linked to CONCATENATE result .NET | Aspose.Cells set shape text from cell | dynamic shape content based on formula Aspose.Cells | formatting linked shape fill color Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, inserts a CONCATENATE formula in B2, calculates the formula, adds a rectangle shape, sets the shape's Text property to the evaluated string from B2, and saves the file as LinkedShape.xlsx.
+// The example creates a workbook, writes "Hello" and "World" to A1 and B1, sets C1 to a CONCATENATE formula, adds a rectangle shape at row 2 column 2, links the shape’s Text property to C1 so it displays the combined text, applies a light‑yellow fill and a thin border, and saves the file as LinkedShape.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Put a CONCATENATE formula in cell B2
-            sheet.Cells["B2"].Formula = "=CONCATENATE(\"Hello \",\"World\")";
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Evaluate the formula so the cell contains the combined text
-            workbook.CalculateFormula();
+        // Set values in A1 and B1
+        cells["A1"].PutValue("Hello");
+        cells["B1"].PutValue("World");
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: drawing type, upper left row, upper left column, top, left, height, width
-            Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                2,    // upper left row
-                0,    // upper left column
-                0,    // top offset (pixels)
-                100,  // left offset (pixels)
-                30,   // height (pixels)
-                200   // width (pixels)
-            );
+        // Set a formula in C1 that concatenates A1 and B1 with a space
+        cells["C1"].Formula = "=CONCATENATE(A1, \" \", B1)";
 
-            // Link the shape's displayed text to the value of cell B2
-            shape.Text = sheet.Cells["B2"].StringValue;
+        // Add a rectangle shape to the worksheet
+        // Parameters: type, upper left row, upper left column, top, left, height, width
+        Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 30);
 
-            // Save the workbook
-            workbook.Save("LinkedShape.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Link the shape's text to cell C1 so it displays the concatenated result
+        shape.Text = "=C1";
+
+        // Optionally format the shape (e.g., fill color, line)
+        shape.FillFormat.ForeColor = System.Drawing.Color.LightYellow;
+        shape.LineFormat.Weight = 1.0;
+
+        // Save the workbook
+        workbook.Save("LinkedShape.xlsx");
     }
 }

@@ -1,62 +1,73 @@
-// Title: Rename Excel worksheets to include their TabId using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, iterates over each Worksheet, and sets its Name to "Sheet_{TabId}". | Show a C# snippet that saves the updated workbook to a new file path, creating the destination folder automatically if it does not exist. | Provide error‑handling logic that checks for a missing input file and logs exceptions while renaming worksheets by TabId.
-// Common Searches: aspocells c# rename worksheet to include tabid | how to change Excel sheet names to Sheet_ followed by TabId in .NET | c# Aspose.Cells iterate worksheets and set name based on TabId | save workbook to different folder after renaming sheets with TabId using Aspose.Cells | error handling for missing Excel file when renaming worksheets Aspose.Cells
-// Tags: rename worksheets by TabId Aspose.Cells | Aspose.Cells set worksheet name | C# iterate workbook worksheets | save workbook to new path Aspose.Cells | create output directory before saving Excel file
+// Title: Rename Excel worksheets to unique names based on their TabId using Aspose.Cells for .NET
+// AI Prompts: Generate a C# routine that opens an Excel workbook with Aspose.Cells, reads each worksheet's TabId, creates a name like "Sheet_<TabId>", ensures the name does not clash with existing sheets, renames the worksheet, and saves the file. | Write code that iterates through Workbook.Worksheets, retrieves Worksheet.TabId, builds a unique sheet name, assigns it to Worksheet.Name, and includes error handling for missing files and duplicate names. | Create a method that accepts input and output file paths, loads the workbook, renames all sheets based on their TabId while handling name collisions, and returns a status message.
+// Common Searches: Aspose.Cells C# rename all worksheets using TabId and keep names unique | How to programmatically set Excel sheet name to its TabId with Aspose.Cells .NET | C# example for iterating worksheets and renaming them based on TabId in Aspose.Cells
+// Tags: Aspose.Cells TabId sheet naming pattern | avoid duplicate worksheet titles .NET | C# iterate workbook worksheets Aspose.Cells | load and persist Excel workbook Aspose.Cells | error handling for missing Excel file C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, loops through all worksheets, renames each to "Sheet_{TabId}", ensures the output directory exists, and saves the modified file to the specified location with basic error handling.
-public static class WorksheetRenamer
+namespace WorksheetRenamerApp
 {
-    /// <param name="inputPath">Full path to the source Excel file.</param>
-    /// <param name="outputPath">Full path where the modified Excel file will be saved.</param>
-    public static void RenameWorksheetsByTabId(string inputPath, string outputPath)
+    // The WorksheetRenamer class loads a workbook, iterates each worksheet, builds a name using the sheet's TabId (e.g., Sheet_3), ensures the name is unique within the workbook, assigns it to the worksheet, and saves the modified file to the specified output path.
+    public class WorksheetRenamer
     {
-        try
+        /// <param name="inputFilePath">Full path to the source Excel file.</param>
+        /// <param name="outputFilePath">Full path where the modified Excel file will be saved.</param>
+        public void RenameWorksheetsByTabId(string inputFilePath, string outputFilePath)
         {
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook from the specified file.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Construct a new name that includes the worksheet's TabId.
-                string newName = $"Sheet_{sheet.TabId}";
-                sheet.Name = newName;
+                // Verify that the input file exists.
+                if (!File.Exists(inputFilePath))
+                    throw new FileNotFoundException($"Input file not found: {inputFilePath}");
+
+                // Load the workbook from the specified file.
+                Workbook workbook = new Workbook(inputFilePath);
+
+                // Iterate through all worksheets in the workbook.
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Retrieve the TabId of the current worksheet.
+                    int tabId = sheet.TabId;
+
+                    // Build a new name using the TabId.
+                    string newName = $"Sheet_{tabId}";
+
+                    // Ensure the new name is unique within the workbook.
+                    int suffix = 1;
+                    string uniqueName = newName;
+                    while (workbook.Worksheets[uniqueName] != null)
+                    {
+                        uniqueName = $"{newName}_{suffix}";
+                        suffix++;
+                    }
+
+                    // Rename the worksheet.
+                    sheet.Name = uniqueName;
+                }
+
+                // Save the modified workbook to the specified output path.
+                workbook.Save(outputFilePath);
+                Console.WriteLine($"Workbook saved successfully to: {outputFilePath}");
             }
-
-            // Ensure the output directory exists.
-            string outDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-
-            // Save the modified workbook to the desired location.
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 
-    /// <summary>
-    /// Entry point for the console application.
-    /// </summary>
-    /// <param name="args">Expected arguments: inputPath outputPath</param>
-    public static void Main(string[] args)
+    class Program
     {
-        if (args.Length < 2)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Usage: WorksheetRenamer <inputPath> <outputPath>");
-            return;
-        }
+            // Example usage: provide input and output file paths.
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        RenameWorksheetsByTabId(args[0], args[1]);
+            WorksheetRenamer renamer = new WorksheetRenamer();
+            renamer.RenameWorksheetsByTabId(inputPath, outputPath);
+        }
     }
 }

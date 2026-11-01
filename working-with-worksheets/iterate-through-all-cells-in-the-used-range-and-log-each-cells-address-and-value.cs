@@ -1,13 +1,13 @@
-// Title: Read every cell in the used range of an Excel worksheet and print its address and value with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, obtains the worksheet's MaxDisplayRange, and writes each cell's address and value to the console. | Adjust the iteration to skip cells whose Value is null or an empty string, outputting only populated cells. | Extend the sample to export each cell's address and value to a CSV file instead of console output, using Aspose.Cells.
-// Common Searches: C# Aspose.Cells iterate over used range and display cell addresses | How to print each cell value with its address using Aspose.Cells .NET | Aspose.Cells MaxDisplayRange loop example for reading Excel data | Skip empty cells while enumerating worksheet cells with Aspose.Cells | Export cell address and value to CSV using Aspose.Cells in C#
-// Tags: iterate used range cells Aspose.Cells C# | print cell address and value Aspose.Cells | export worksheet data to CSV Aspose.Cells | skip empty cells Aspose.Cells iteration | maxdisplayrange enumeration Aspose.Cells
+// Title: How to loop through a worksheet's used range and log each cell's address and value with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, obtains the first worksheet's MaxDisplayRange, and writes each cell's address and its value to the console. | Create a reusable C# method that takes an Excel file path, iterates over all cells in the first sheet's used range using Aspose.Cells, and returns a collection of strings formatted as "A1: 123".
+// Common Searches: Aspose.Cells C# iterate over MaxDisplayRange and print cell names | C# read every cell value from first worksheet using Aspose.Cells | How to get cell address and value while looping through used range in Aspose.Cells | Example of logging Excel cell addresses with Aspose.Cells .NET
+// Tags: Aspose.Cells used range iteration C# | Aspose.Cells cell address logging | MaxDisplayRange cell enumeration Aspose | C# console output Excel cell values | read worksheet cells Aspose.Cells .NET
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Loads an .xlsx workbook with Aspose.Cells, retrieves the first worksheet's MaxDisplayRange, and iterates through each cell, printing its address (e.g., A1) and value to the console. Includes file existence check and exception handling.
+// The program loads "input.xlsx", accesses the first worksheet's MaxDisplayRange via Aspose.Cells, iterates over each cell, prints the cell name and its value to the console, and finally saves the workbook as "output.xlsx".
 class Program
 {
     static void Main()
@@ -15,43 +15,42 @@ class Program
         try
         {
             const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to prevent FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the used range of the worksheet (returns an Aspose.Cells.Range object)
-            Aspose.Cells.Range usedRange = worksheet.Cells.MaxDisplayRange;
-
-            // Determine the start and end indices for rows and columns
-            int startRow = usedRange.FirstRow;
-            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-            int startCol = usedRange.FirstColumn;
-            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+            // Get the used range of the worksheet (explicitly use Aspose.Cells.Range)
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
             // Iterate through each cell in the used range
-            for (int row = startRow; row <= endRow; row++)
+            for (int row = usedRange.FirstRow; row < usedRange.FirstRow + usedRange.RowCount; row++)
             {
-                for (int col = startCol; col <= endCol; col++)
+                for (int col = usedRange.FirstColumn; col < usedRange.FirstColumn + usedRange.ColumnCount; col++)
                 {
-                    Cell cell = worksheet.Cells[row, col];
-                    // Output the cell address (e.g., "A1") and its value
+                    Cell cell = sheet.Cells[row, col];
+                    // Log cell address and its value
                     Console.WriteLine($"{cell.Name}: {cell.Value}");
                 }
             }
+
+            // Save the workbook (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

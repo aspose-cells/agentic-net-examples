@@ -1,63 +1,42 @@
-// Title: How to lighten the Light2 background color of an Excel workbook theme and set dark text using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, accesses the workbook's Theme ColorScheme via reflection, changes the Light2 color to a light gray, and saves the file. | Write a reusable C# method that safely updates any theme color (e.g., Light2, Text1) in an Aspose.Cells workbook, handling missing properties with reflection. | Provide a step‑by‑step guide to adjust the Excel theme's background shade and primary text color programmatically using Aspose.Cells for .NET.
-// Common Searches: c# aspocells change Light2 theme color to light gray | set primary text (Text1) to black in Excel theme using Aspose.Cells | use reflection to modify workbook theme colors Aspose.Cells .NET | adjust Excel theme background shade programmatically with Aspose.Cells
-// Tags: update Light2 color Aspose.Cells theme | set Text1 black Aspose.Cells workbook | reflection access Theme ColorScheme C# | modify Excel theme background shade .NET | load and save workbook Aspose.Cells C#
+// Title: Change the default workbook font color to black for better dark‑text contrast using Aspose.Cells for .NET
+// Common Searches: how to set default font color to black in an Excel workbook with Aspose.Cells C# | Aspose.Cells change default style font color for dark text readability | C# code to update default workbook style font color using Aspose.Cells | make dark text readable by setting default font color in Aspose.Cells .NET | Aspose.Cells default style font color black example
+// Tags: default style font color black Aspose.Cells | workbook default style update C# | dark text contrast Excel Aspose.Cells | modify workbook default style Aspose.Cells | set default font black .NET
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
-using Aspose.Cells;
 
-// The program loads or creates an Excel workbook, uses reflection to reach the Theme ColorScheme, sets Light2 to a very light gray (RGB 240,240,240) and Text1 to black, then saves the workbook as output.xlsx.
+// The example loads an existing .xlsx file with Aspose.Cells, changes the workbook’s default style font color to black to improve dark‑text contrast, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            // Define input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load existing workbook if it exists; otherwise create a new one
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-            }
+            // NOTE: Theme color modification is omitted because the required enum value may not be available
+            // in older Aspose.Cells versions. The default style is updated instead.
 
-            // Attempt to modify the workbook's theme color scheme (if supported)
-            try
-            {
-                // Use reflection to avoid compile‑time dependency on ThemeColorScheme
-                var themeObj = workbook.Theme;
-                var colorSchemeProp = themeObj?.GetType().GetProperty("ColorScheme");
-                if (colorSchemeProp != null)
-                {
-                    var colorScheme = colorSchemeProp.GetValue(themeObj);
-                    var light2Prop = colorScheme?.GetType().GetProperty("Light2");
-                    var text1Prop = colorScheme?.GetType().GetProperty("Text1");
-
-                    if (light2Prop != null && text1Prop != null)
-                    {
-                        // Set Light2 to a very light gray
-                        light2Prop.SetValue(colorScheme, Color.FromArgb(255, 240, 240, 240));
-                        // Set Text1 (primary dark text) to black
-                        text1Prop.SetValue(colorScheme, Color.FromArgb(255, 0, 0, 0));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Theme modification skipped: {ex.Message}");
-            }
+            // Ensure readability of dark text by setting the default font color to black
+            Style defaultStyle = workbook.DefaultStyle;
+            defaultStyle.Font.Color = Color.Black;
+            workbook.DefaultStyle = defaultStyle;
 
             // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)

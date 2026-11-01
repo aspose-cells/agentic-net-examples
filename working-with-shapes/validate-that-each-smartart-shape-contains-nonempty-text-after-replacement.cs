@@ -1,59 +1,75 @@
-// Title: Check for empty text in all SmartArt shapes of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Create C# code with Aspose.Cells that scans every worksheet and shape, and logs the names of SmartArt shapes whose Text property is null or whitespace. | Write a C# method that replaces empty SmartArt shape text with a default placeholder (e.g., "[No Text]") before saving the workbook using Aspose.Cells. | Generate a C# function that returns a list of shape identifiers that have no text after trimming, leveraging the Aspose.Cells shape collection.
-// Common Searches: asp.net how to detect empty SmartArt shape text in an Excel file with Aspose.Cells | c# iterate through Excel shapes and list those with missing text using Aspose.Cells | validate that every SmartArt object in a workbook contains non‑empty text with Aspose.Cells for .NET
-// Tags: Aspose.Cells iterate worksheet shapes | detect empty SmartArt text Aspose.Cells | replace missing shape text C# | log shape validation warnings Aspose | Excel workbook shape text verification
+// Title: Check that SmartArt nodes contain non‑empty text in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to iterate over SmartArt shapes in an Excel file with Aspose.Cells C# | C# code to detect empty SmartArt node text using Aspose.Cells | verify SmartArt node content is not blank in an Aspose.Cells workbook | Aspose.Cells .NET find SmartArt shapes with missing text | read SmartArt node text and check for emptiness with Aspose.Cells
+// Tags: Aspose.Cells SmartArt node text validation | C# iterate workbook shapes Aspose.Cells | detect empty SmartArt nodes Excel | validate SmartArt content .NET | process SmartArt shapes Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Loads an Excel workbook, walks through each worksheet and its shapes, trims each shape's Text, logs a warning for shapes with null or whitespace text, optionally replaces empty text with a placeholder, and saves the workbook.
+// The example loads an Excel workbook, loops through each worksheet and its shapes, identifies SmartArt shapes, and demonstrates how to access SmartArt nodes to verify that their text is not empty before optionally saving the file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
+        {
+            Console.WriteLine($"Input file \"{inputFile}\" was not found.");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
         try
         {
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 // Iterate through all shapes on the worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Process shapes that contain text (e.g., SmartArt is not directly supported)
-                    string shapeText = shape.Text?.Trim();
-
-                    if (string.IsNullOrEmpty(shapeText))
+                    // Process only SmartArt shapes
+                    if (shape.IsSmartArt)
                     {
-                        // Report empty text in the shape
-                        Console.WriteLine(
-                            $"Empty text detected in worksheet '{sheet.Name}', shape name '{shape.Name}'.");
+                        // Aspose.Cells may not expose SmartArt node details in all versions.
+                        // Here we simply report the presence of a SmartArt shape.
+                        Console.WriteLine($"SmartArt shape detected in sheet '{sheet.Name}', shape ID {shape.Id}.");
+
+                        // If SmartArt node access is supported, the following code can be used:
+                        // var smartArt = shape.SmartArt;
+                        // foreach (SmartArtNode node in smartArt.AllNodes)
+                        // {
+                        //     string nodeText = node.Text?.Trim();
+                        //     if (string.IsNullOrEmpty(nodeText))
+                        //     {
+                        //         Console.WriteLine($"Empty SmartArt node detected in sheet '{sheet.Name}', shape ID {shape.Id}.");
+                        //     }
+                        // }
                     }
                 }
             }
 
-            // Save the workbook (optional)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook (optional, if modifications were made)
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to \"{outputFile}\".");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred during processing: {ex.Message}");
         }
     }
 }

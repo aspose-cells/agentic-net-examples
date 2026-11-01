@@ -1,18 +1,17 @@
-// Title: Replace 'Pending' with 'Completed' in cells D5:D25 using Aspose.Cells FindOptions in C#
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, searches the range D5:D25 for the exact word 'Pending' (case‑insensitive) using FindOptions, and replaces each occurrence with 'Completed'. | Show how to iterate a specific cell range in Aspose.Cells and perform a bulk string replacement without using regular expressions, targeting column D rows 5 through 25.
-// Common Searches: Aspose.Cells C# replace specific text in a defined range D5 to D25 | How to use FindOptions in Aspose.Cells to change 'Pending' to 'Completed' in Excel | C# bulk replace string in column D rows 5-25 with Aspose.Cells library | Case‑insensitive find and replace in Excel range using Aspose.Cells .NET | Update cell values in a subset of rows with Aspose.Cells C# example
-// Tags: Aspose.Cells FindOptions bulk text update | C# Excel range text substitution Aspose.Cells | case-insensitive find replace Aspose.Cells | update D5-D25 cells Aspose.Cells | column D bulk value modification Aspose.Cells
+// Title: Replace 'Pending' with 'Completed' in Excel cells D5:D25 using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# find and replace text in a specific cell range | How to bulk update cells D5 to D25 from 'Pending' to 'Completed' in Excel with Aspose | C# Aspose.Cells FindOptions example for replacing values in column D | Replace case‑insensitive text in Excel worksheet range using Aspose.Cells .NET | Update multiple Excel cells programmatically with Aspose.Cells in C#
+// Tags: Aspose.Cells find and replace in range | C# bulk cell value update Excel | Excel range D5:D25 value substitution Aspose | case-insensitive text replacement Aspose.Cells | Aspose.Cells FindOptions usage C# | replace specific column cells Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads 'input.xlsx', checks its existence, accesses the first worksheet, iterates rows 5‑25 in column D, and replaces any case‑insensitive occurrence of the string 'Pending' with 'Completed'. The modified workbook is saved as 'output.xlsx', with error handling for file and runtime issues.
-class ReplacePendingWithCompleted
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing workbook, iterates through cells D5 to D25 on the first worksheet, and replaces any occurrence of the text "Pending" (case‑insensitive) with "Completed" before saving the modified file, demonstrating a targeted find‑and‑replace operation with Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
@@ -24,35 +23,34 @@ class ReplacePendingWithCompleted
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Define the range D5:D25 (zero‑based indices)
-            int startRow = 4;   // Row 5
-            int endRow   = 24;  // Row 25
-            int column   = 3;   // Column D
-
-            // Iterate through the range and replace "Pending" with "Completed"
-            for (int row = startRow; row <= endRow; row++)
+            try
             {
-                Cell cell = worksheet.Cells[row, column];
-                if (cell.Type == CellValueType.IsString &&
-                    string.Equals(cell.StringValue, "Pending", StringComparison.OrdinalIgnoreCase))
-                {
-                    cell.PutValue("Completed");
-                }
-            }
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Access the first worksheet (index 0)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Iterate through cells D5:D25 (column index 3, rows 4‑24)
+                for (int row = 4; row <= 24; row++)
+                {
+                    Cell cell = worksheet.Cells[row, 3];
+                    if (cell.Value != null &&
+                        string.Equals(cell.StringValue, "Pending", StringComparison.OrdinalIgnoreCase))
+                    {
+                        cell.PutValue("Completed");
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

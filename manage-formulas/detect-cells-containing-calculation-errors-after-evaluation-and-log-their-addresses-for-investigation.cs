@@ -1,61 +1,102 @@
-// Title: Identify and log Excel cells that contain calculation errors after evaluating formulas with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, calls Workbook.CalculateFormula, scans all worksheets, and returns a list of A1‑style addresses for cells where Cell.Type equals CellValueType.IsError. | Modify the example to export the collected error cell addresses to a CSV file, including the worksheet name as a prefix for each entry.
-// Common Searches: Aspose.Cells .NET find cells that return #VALUE! after CalculateFormula | C# list all error cells in an Excel workbook using Aspose.Cells | how to extract addresses of formula errors from a spreadsheet with Aspose.Cells | detect #DIV/0 and other calculation errors in Excel using Aspose.Cells C# | log cells with evaluation errors after running Workbook.CalculateFormula in .NET
-// Tags: detect calculation errors Aspose.Cells | collect error cell addresses C# | scan used range for IsError Aspose.Cells | export error cell list to CSV .NET | Workbook.CalculateFormula error handling
+// Title: Find and log Excel cells with calculation errors after recalculating formulas using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to list cells that return #ERROR after workbook.CalculateFormula | Aspose.Cells .NET detect cells with formula errors and get their addresses | Retrieve addresses of error cells in an Excel workbook using Aspose.Cells C# | Log calculation error cells after recalculating formulas with Aspose.Cells in a .NET application | Find cells with CellValueType.IsError in Aspose.Cells after evaluating formulas
+// Tags: recalculate formulas Aspose.Cells | detect error cells Aspose.Cells | CellValueType.IsError C# | list error cell addresses Excel | load password protected workbook Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
-// The sample loads an Excel workbook, evaluates all formulas, iterates each worksheet's used range, records the A1‑style addresses of cells whose value type is IsError, and outputs the list of error cell addresses for further investigation.
+// The example loads an Excel workbook (prompting for a password if required), recalculates all formulas with Workbook.CalculateFormula, scans each worksheet for cells whose type is CellValueType.IsError, collects their sheet!A1 addresses, writes the list to the console, and saves the workbook.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Evaluate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // List to hold addresses of cells with errors
-        List<string> errorCellAddresses = new List<string>();
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
+        Workbook workbook = null;
 
-            // Scan each cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+        try
+        {
+            // Attempt to load the workbook without a password
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            // If loading fails, assume the file may be password‑protected
+            Console.WriteLine("Failed to load workbook: " + ex.Message);
+            Console.Write("If the file is password protected, please enter the password (or press Enter to abort): ");
+            string password = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(password))
             {
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    Cell cell = cells[row, col];
+                Console.WriteLine("No password provided. Exiting.");
+                return;
+            }
 
-                    // Check if the cell contains a calculation error
-                    if (cell.Type == CellValueType.IsError)
-                    {
-                        // Record the address in A1 style, prefixed with the sheet name
-                        string address = $"{sheet.Name}!{cell.Name}";
-                        errorCellAddresses.Add(address);
-                    }
-                }
+            try
+            {
+                // Load with the supplied password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception innerEx)
+            {
+                Console.WriteLine("Unable to load workbook with the provided password: " + innerEx.Message);
+                return;
             }
         }
 
-        // Output the addresses of all error cells
-        Console.WriteLine("Cells containing calculation errors:");
-        foreach (string addr in errorCellAddresses)
+        try
         {
-            Console.WriteLine(addr);
-        }
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Optional: save the workbook if modifications were made
-        // workbook.Save("output.xlsx");
+            List<string> errorCellAddresses = new List<string>();
+
+            // Scan each worksheet for cells that contain errors
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        if (cell.Type == CellValueType.IsError)
+                        {
+                            string address = $"{sheet.Name}!{cell.Name}";
+                            errorCellAddresses.Add(address);
+                        }
+                    }
+                }
+            }
+
+            // Output the addresses of error cells
+            Console.WriteLine("Cells containing calculation errors:");
+            foreach (string address in errorCellAddresses)
+            {
+                Console.WriteLine(address);
+            }
+
+            // Save the workbook after processing
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred during processing: " + ex.Message);
+        }
     }
 }

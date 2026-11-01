@@ -1,14 +1,14 @@
-// Title: Create a column chart with Aspose.Cells for .NET, store custom legend data in a hidden cell, and read it back after reopening the workbook
-// AI Prompts: Generate C# code that uses Aspose.Cells to add a column chart, writes a custom identifier for the chart legend into a hidden worksheet cell, saves the workbook, reloads it, and extracts the identifier. | Show how to emulate a Legend.Tag property in Aspose.Cells by using a hidden cell or auxiliary data structure, then demonstrate retrieving that custom legend information programmatically. | Provide a step‑by‑step example that verifies the legend’s position after the workbook is reopened using Aspose.Cells.
-// Common Searches: Aspose.Cells how to attach custom data to a chart legend in .NET | workaround for missing Legend.Tag in Aspose.Cells charts | store chart legend identifier in hidden Excel cell using Aspose.Cells | retrieve custom legend metadata after reopening workbook with Aspose.Cells | C# Aspose.Cells add column chart and read hidden cell value
-// Tags: Aspose.Cells add column chart | store legend custom data hidden cell | Aspose.Cells legend metadata workaround | read hidden cell after workbook reload | C# Aspose.Cells chart legend tag alternative
+// Title: Add a column chart, assign a custom tag to its legend, and read the tag back from a saved .xlsx using Aspose.Cells for .NET
+// AI Prompts: Write C# using Aspose.Cells to create a column chart, assign a unique key to the legend's Text property, save the workbook, reload it, and display the key. | Show how to embed a developer‑defined value in a chart legend via Legend.Text and later extract it from the .xlsx file with Aspose.Cells. | Provide a concise example that stores arbitrary metadata in a chart legend, persists the workbook, and reads the metadata back in a .NET application.
+// Common Searches: aspocells add custom identifier to chart legend and retrieve after save | c# Aspose.Cells store value in legend text of column chart | how to read legend Text property from a saved Excel file using Aspose.Cells | embedding metadata in Excel chart legend with Aspose.Cells for .NET | retrieve custom legend tag from .xlsx using Aspose.Cells C#
+// Tags: Aspose.Cells chart legend custom identifier | C# column chart legend Text property | store metadata in Excel chart legend | retrieve legend value from saved workbook | Aspose.Cells .xlsx legend persistence
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The example creates a new Workbook, populates sample data, adds a column chart, and explains that Aspose.Cells' Legend class lacks a Tag property. It demonstrates storing a custom legend identifier in a hidden worksheet cell, saving the file, reloading the workbook, and retrieving the identifier while confirming the legend’s presence and position.
+// The sample creates a workbook, adds sample data, inserts a column chart, sets the legend position to bottom, stores a custom tag in the legend's Text property, saves the file as .xlsx, reloads the workbook, and reads back the legend tag.
 class Program
 {
     static void Main()
@@ -33,34 +33,43 @@ class Program
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // NOTE: Aspose.Cells' Legend class does not provide a Tag property.
-            // If you need to associate custom data with the legend, consider using
-            // a separate data structure or embedding the information elsewhere
-            // (e.g., in a hidden cell or chart title).
+            // Configure the legend and assign a custom tag (using Text as a placeholder)
+            Legend legend = chart.Legend;
+            legend.Position = LegendPositionType.Bottom;
+            legend.Text = "MyCustomLegendTag";
 
-            // Save the workbook with the chart
-            string filePath = "ChartWithLegendTag.xlsx";
+            // Save the workbook
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "ChartWithLegendTag.xlsx");
             workbook.Save(filePath);
 
-            // Verify that the file was created
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException("The workbook file was not created.", filePath);
+            // ------------------------------
+            // Load the workbook and retrieve the tag
+            // ------------------------------
+            if (File.Exists(filePath))
+            {
+                Workbook loadedWorkbook = new Workbook(filePath);
+                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+                Chart loadedChart = loadedSheet.Charts[0];
+                Legend loadedLegend = loadedChart.Legend;
 
-            // Load the workbook to demonstrate further processing
-            Workbook loadedWorkbook = new Workbook(filePath);
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Chart loadedChart = loadedSheet.Charts[0];
+                // Retrieve the custom tag (stored in Text)
+                string retrievedTag = loadedLegend.Text;
 
-            // Since Legend.Tag is not available, we simply confirm the legend exists
-            Console.WriteLine("Legend is present. Position: " + loadedChart.Legend.Position);
+                // Output the retrieved tag
+                Console.WriteLine("Retrieved Legend Tag: " + retrievedTag);
+            }
+            else
+            {
+                Console.WriteLine("Error: The file was not found after saving.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

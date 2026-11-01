@@ -1,60 +1,89 @@
-// Title: How to retrieve a worksheet shape by name or index using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that fetches a shape from a worksheet by its assigned name using Aspose.Cells. | Show a C# example that accesses a shape from the Shapes collection by zero‑based index with bounds checking in Aspose.Cells. | Provide a C# snippet that verifies a shape exists before reading its properties from an Excel workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# retrieve shape by name from worksheet | C# get shape at specific index using Aspose.Cells Shapes collection | Check if a shape exists in an Excel file before accessing it with Aspose.Cells | How to list and access shapes in a .xlsx workbook using Aspose.Cells for .NET
-// Tags: shape retrieval by name Aspose.Cells | shape retrieval by index Aspose.Cells | worksheet shapes collection handling Aspose.Cells | verify shape existence Aspose.Cells | load workbook and access shapes Aspose.Cells
+// Title: How to retrieve an Excel worksheet shape by name or index with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# get shape by its name from worksheet | retrieve shape at specific index using Aspose.Cells .NET | C# code to access worksheet Shapes collection by name | find first shape in Excel file with Aspose.Cells API | Aspose.Cells example for shape name lookup and index lookup
+// Tags: retrieve worksheet shape by name Aspose.Cells | access shape by index Aspose.Cells | Aspose.Cells Shapes collection lookup | C# Aspose.Cells shape properties extraction | Excel shape retrieval using Aspose.Cells .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Demonstrates loading a workbook, then retrieving a shape named "MyShape" and a shape at index 0 from the first worksheet using Aspose.Cells for .NET, with safety checks and console output.
-class RetrieveShapeExample
+// The sample loads an existing Excel workbook (or creates a new one), selects the first worksheet, and demonstrates two methods to obtain a Shape object: using the shape's assigned name via the Shapes collection indexer and using its zero‑based index in the collection. It prints each shape's Name and Type when found and saves the workbook to an output file.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            string inputPath = "input.xlsx";
+            Workbook workbook;
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                workbook.Worksheets.Add("Sheet1");
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Ensure there is at least one worksheet.
+            if (workbook.Worksheets.Count == 0)
+            {
+                workbook.Worksheets.Add("Sheet1");
+            }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // ----- Retrieve shape by its name -----
-            Shape shapeByName = sheet.Shapes["MyShape"];
-            if (shapeByName != null)
-            {
-                Console.WriteLine($"Shape found by name: {shapeByName.Name}, Type: {shapeByName.Type}");
-            }
-            else
-            {
-                Console.WriteLine("No shape with the name 'MyShape' was found.");
-            }
+            // Replace "MyShapeName" with the actual name of the shape you want to get.
+            Shape shapeByName = worksheet.Shapes["MyShapeName"];
 
             // ----- Retrieve shape by its index -----
-            int shapeIndex = 0; // example index
-            if (shapeIndex >= 0 && shapeIndex < sheet.Shapes.Count)
+            // Index is zero‑based. This gets the first shape in the collection.
+            Shape shapeByIndex = worksheet.Shapes.Count > 0 ? worksheet.Shapes[0] : null;
+
+            // Display some properties of the retrieved shapes.
+            if (shapeByName != null)
             {
-                Shape shapeByIndex = sheet.Shapes[shapeIndex];
-                Console.WriteLine($"Shape found by index {shapeIndex}: {shapeByIndex.Name}, Type: {shapeByIndex.Type}");
+                Console.WriteLine($"Shape by name: Name = {shapeByName.Name}, Type = {shapeByName.Type}");
             }
             else
             {
-                Console.WriteLine($"Shape index {shapeIndex} is out of range. Total shapes: {sheet.Shapes.Count}");
+                Console.WriteLine("Shape with the specified name was not found.");
             }
 
-            // (Optional) Save the workbook if any modifications were made
-            // workbook.Save("output.xlsx");
+            if (shapeByIndex != null)
+            {
+                Console.WriteLine($"Shape by index: Name = {shapeByIndex.Name}, Type = {shapeByIndex.Type}");
+            }
+            else
+            {
+                Console.WriteLine("No shapes exist at the specified index.");
+            }
+
+            // Save the workbook (optional if modifications were made).
+            try
+            {
+                // Ensure the directory for the output file exists.
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {

@@ -1,137 +1,107 @@
-// Title: Validate VBA project digital signatures in an Excel workbook against a trusted root certificate with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file, extracts its VBA project digital signatures using Aspose.Cells, and checks each signature against a supplied trusted root X509 certificate. | Show how to obtain the DigitalSignatureCollection from a Workbook via reflection to keep the code compatible with different Aspose.Cells versions. | Demonstrate configuring X509ChainPolicy with a custom trusted root and evaluating the validity of each Excel signature, then outputting the results.
-// Common Searches: aspnet verify Excel VBA digital signature with custom root certificate | c# Aspose.Cells check if workbook signatures are trusted | how to use reflection to get DigitalSignatureCollection in Aspose.Cells | validate Excel file signatures against a self‑signed root CA in .NET | sample code for X509Chain validation of Excel digital signatures
-// Tags: Aspose.Cells VBA digital signature validation | C# X509Chain custom root certificate for Excel signatures | reflection retrieve DigitalSignatureCollection Aspose.Cells | validate Excel workbook signatures against trusted root | load trusted root X509Certificate2 for signature verification
+// Title: How to verify a VBA project's digital signature against a trusted root certificate using Aspose.Cells for .NET
+// Common Searches: C# code to check VBA macro signature in an Excel file with Aspose.Cells | validate Excel VBA project signature using X509Chain in .NET | load VBA project signature bytes from workbook via reflection Aspose.Cells | verify VBA digital signature against a custom root certificate in C# | Aspose.Cells example for VBA signature validation in .NET
+// Tags: Aspose.Cells VBA signature extraction | X509Chain trusted root verification | C# VBA project digital signature validation | reflection get SignatureInfo property | load trusted root certificate for chain
 
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;   // Required for DigitalSignature classes
 
-// The example loads an Excel workbook, reads a trusted root certificate, uses a reflection‑based extension to fetch the DigitalSignatureCollection, iterates through each VBA project signature, builds an X509Chain with the custom root to determine validity, reports each signature's status, and saves the workbook.
-class Program
+namespace VbaSignatureValidation
 {
-    static void Main()
+    // The sample loads an Excel workbook with Aspose.Cells, detects a VBA project, uses reflection to retrieve the SignatureInfo property, extracts the raw signature bytes, creates an X509Certificate2 from those bytes, loads a trusted root certificate, builds an X509Chain that includes the trusted root, validates the VBA project's digital signature, and outputs whether the signature is valid, handling missing files and errors gracefully.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-            const string trustedRootPath = "trustedRoot.cer";
-
-            // Verify required files exist
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input workbook not found: {inputPath}");
-                return;
-            }
-
-            if (!File.Exists(trustedRootPath))
-            {
-                Console.WriteLine($"Trusted root certificate not found: {trustedRootPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Load the trusted root certificate (using the obsolete ctor is acceptable for this example)
-            X509Certificate2 trustedRoot;
             try
             {
-                trustedRoot = new X509Certificate2(trustedRootPath);
+                // Path to the Excel file containing the VBA project
+                string excelPath = "input.xlsx";
+
+                // Verify that the Excel file exists
+                if (!File.Exists(excelPath))
+                {
+                    Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
+
+                // Check if the workbook contains a VBA project
+                if (workbook.VbaProject != null)
+                {
+                    // Try to obtain the SignatureInfo property via reflection (available in newer versions)
+                    var signatureInfoProp = workbook.VbaProject.GetType().GetProperty("SignatureInfo");
+                    if (signatureInfoProp != null)
+                    {
+                        var signatureInfo = signatureInfoProp.GetValue(workbook.VbaProject);
+                        if (signatureInfo != null)
+                        {
+                            // Retrieve the raw signature bytes
+                            var signatureBytesProp = signatureInfo.GetType().GetProperty("Signature");
+                            var signatureBytes = signatureBytesProp?.GetValue(signatureInfo) as byte[];
+
+                            if (signatureBytes != null && signatureBytes.Length > 0)
+                            {
+                                // Load the signature as an X509Certificate2 object
+#pragma warning disable SYSLIB0057 // Suppress obsolete constructor warning
+                                X509Certificate2 signatureCertificate = new X509Certificate2(signatureBytes);
+#pragma warning restore SYSLIB0057
+
+                                // Path to the trusted root authority certificate
+                                string trustedRootPath = "trustedRoot.cer";
+
+                                // Verify that the trusted root certificate file exists
+                                if (!File.Exists(trustedRootPath))
+                                {
+                                    Console.WriteLine($"Error: The trusted root certificate \"{trustedRootPath}\" was not found.");
+                                    return;
+                                }
+
+                                // Load the trusted root certificate
+#pragma warning disable SYSLIB0057
+                                X509Certificate2 trustedRoot = new X509Certificate2(trustedRootPath);
+#pragma warning restore SYSLIB0057
+
+                                // Build a certificate chain to validate the signature against the trusted root
+                                X509Chain chain = new X509Chain();
+                                chain.ChainPolicy.ExtraStore.Add(trustedRoot);
+                                chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+
+                                // Perform the validation
+                                bool isValid = chain.Build(signatureCertificate);
+
+                                // Output the validation result
+                                Console.WriteLine(isValid ? "VBA project signature is valid." : "VBA project signature is invalid.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("No digital signature found in the VBA project.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Signature information is not available in this VBA project.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("The current Aspose.Cells version does not expose VBA signature information.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The workbook does not contain a VBA project.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load trusted root certificate: {ex.Message}");
-                return;
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Configure chain policy to trust the loaded root certificate
-            X509ChainPolicy chainPolicy = new X509ChainPolicy
-            {
-                ExtraStore = { trustedRoot },
-                VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority,
-                RevocationMode = X509RevocationMode.NoCheck
-            };
-
-            bool anyValidSignature = false;
-
-            // Access the digital signature collection via reflection (compatible with multiple Aspose.Cells versions)
-            DigitalSignatureCollection signatures = workbook.GetDigitalSignatureCollection();
-
-            if (signatures != null)
-            {
-                // Iterate through all digital signatures in the workbook
-                foreach (DigitalSignature signature in signatures)
-                {
-                    try
-                    {
-                        // Get the signing certificate
-                        X509Certificate2 signingCert = signature.Certificate;
-
-                        // Build and validate the certificate chain
-                        using (X509Chain chain = new X509Chain())
-                        {
-                            chain.ChainPolicy = chainPolicy;
-                            bool isValid = chain.Build(signingCert);
-                            Console.WriteLine($"Signature by {signingCert.Subject}: {(isValid ? "Valid" : "Invalid")}");
-                            if (isValid)
-                                anyValidSignature = true;
-                        }
-                    }
-                    catch (Exception exSig)
-                    {
-                        Console.WriteLine($"Error processing a signature: {exSig.Message}");
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No digital signatures found in the workbook.");
-            }
-
-            if (!anyValidSignature)
-            {
-                Console.WriteLine("No valid digital signature found in the workbook.");
-            }
-
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook (optional)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-// Extension method to obtain DigitalSignatureCollection via reflection.
-// This avoids compile‑time dependency on a specific Aspose.Cells version.
-static class WorkbookExtensions
-{
-    public static DigitalSignatureCollection GetDigitalSignatureCollection(this Workbook wb)
-    {
-        var prop = wb.GetType().GetProperty("DigitalSignatureCollection");
-        if (prop != null)
-        {
-            return prop.GetValue(wb) as DigitalSignatureCollection;
-        }
-        // Fallback for older versions where the property might be named differently.
-        var method = wb.GetType().GetMethod("GetDigitalSignatureCollection");
-        if (method != null)
-        {
-            return method.Invoke(wb, null) as DigitalSignatureCollection;
-        }
-        return null;
     }
 }

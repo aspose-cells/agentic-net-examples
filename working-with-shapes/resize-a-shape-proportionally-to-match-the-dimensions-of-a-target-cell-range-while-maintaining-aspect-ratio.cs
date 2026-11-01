@@ -1,95 +1,74 @@
-// Title: Proportionally resize an Aspose.Cells shape to fit a target cell range while preserving aspect ratio in C#
-// AI Prompts: Determine the pixel dimensions of a target cell area and scale the first worksheet shape to fit within it while maintaining its original aspect ratio using Aspose.Cells for .NET. | Compute the appropriate scaling factor from the target range size and apply proportional width and height changes to a shape in an Excel workbook with Aspose.Cells C#. | After resizing a shape proportionally, align it to the top‑left corner of the specified cell range using Aspose.Cells positioning methods.
-// Common Searches: Aspose.Cells C# resize shape to fit inside a specific cell block | maintain shape aspect ratio while scaling in Excel using Aspose.Cells | C# example to place a picture into B2:D5 range with Aspose.Cells | determine cell range dimensions for shape alignment Aspose.Cells .NET | move and size Excel shape based on cell coordinates with Aspose.Cells
-// Tags: shape proportional scaling Aspose.Cells | fit shape into cell range C# | preserve aspect ratio Aspose.Cells shape | cell range pixel dimension calculation Aspose.Cells | shape placement using cell offsets Aspose.Cells
+// Title: C# – Resize an Aspose.Cells shape proportionally to match a specific cell range while preserving aspect ratio
+// Common Searches: how to proportionally resize a shape to a cell range using Aspose.Cells in C# | Aspose.Cells calculate pixel width and height of a worksheet range for shape scaling | C# set shape size to fit Excel cells without distortion with Aspose.Cells | place a shape at the top‑left corner of a target range in Aspose.Cells C# | preserve aspect ratio when fitting a picture into a range of Excel cells using Aspose
+// Tags: proportional shape resizing Aspose.Cells | fit shape to Excel cell range C# | preserve aspect ratio shape Aspose.Cells | worksheet range pixel dimension calculation C# | shape upper left placement Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel workbook, retrieves the first shape on the first worksheet, calculates the pixel width and height of a target cell range (e.g., B2:D5), scales the shape proportionally to fit inside that range while preserving its aspect ratio, positions the shape at the top‑left corner of the range, and saves the modified workbook.
-class Program
+// The example loads a workbook, defines a target cell range, computes its total pixel width and height, retrieves a shape by name, calculates a uniform scaling factor using the smaller of the width and height ratios to keep the original aspect ratio, resizes the shape accordingly, aligns its upper‑left corner with the first cell of the range, and saves the updated file.
+class ShapeResizer
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape on the sheet
-            if (sheet.Shapes.Count == 0)
-            {
-                Console.WriteLine("No shapes found on the worksheet.");
-                return;
-            }
+            // Define the target cell range (e.g., B2:D10)
+            AsposeRange targetRange = sheet.Cells.CreateRange("B2:D10");
 
-            // Get the shape to resize (first shape)
-            Shape shape = sheet.Shapes[0];
-
-            // Define the target cell range that the shape should fit into (e.g., B2:D5)
-            CellArea targetRange = CellArea.CreateCellArea("B2", "D5");
-
-            // ---------- Calculate pixel dimensions of the target range ----------
+            // Calculate the pixel dimensions of the target range
             double targetWidth = 0;
-            for (int col = targetRange.StartColumn; col <= targetRange.EndColumn; col++)
-            {
+            for (int col = targetRange.FirstColumn; col < targetRange.FirstColumn + targetRange.ColumnCount; col++)
                 targetWidth += sheet.Cells.GetColumnWidthPixel(col);
-            }
 
             double targetHeight = 0;
-            for (int row = targetRange.StartRow; row <= targetRange.EndRow; row++)
-            {
+            for (int row = targetRange.FirstRow; row < targetRange.FirstRow + targetRange.RowCount; row++)
                 targetHeight += sheet.Cells.GetRowHeightPixel(row);
-            }
 
-            // ---------- Get current shape size (in pixels) ----------
-            int shapeWidthPx = shape.Width;
-            int shapeHeightPx = shape.Height;
+            // Retrieve the shape to be resized (by name)
+            Shape shape = sheet.Shapes["MyShape"];
+            if (shape == null)
+                throw new InvalidOperationException("Shape named 'MyShape' was not found in the worksheet.");
 
-            // ---------- Compute scaling factor while preserving aspect ratio ----------
-            double widthScale = targetWidth / shapeWidthPx;
-            double heightScale = targetHeight / shapeHeightPx;
-            double scale = Math.Min(widthScale, heightScale); // Fit inside the target range
+            // Original dimensions of the shape in pixels
+            double shapeWidth = shape.Width;
+            double shapeHeight = shape.Height;
 
-            // ---------- Apply new size ----------
-            shape.Width = (int)(shapeWidthPx * scale);
-            shape.Height = (int)(shapeHeightPx * scale);
+            // Compute scaling factor while preserving aspect ratio
+            double widthScale = targetWidth / shapeWidth;
+            double heightScale = targetHeight / shapeHeight;
+            double scale = Math.Min(widthScale, heightScale); // choose the smaller factor
 
-            // ---------- Position shape at the top‑left corner of the target range ----------
-            double leftOffset = 0;
-            for (int col = 0; col < targetRange.StartColumn; col++)
-            {
-                leftOffset += sheet.Cells.GetColumnWidthPixel(col);
-            }
-            shape.Left = (int)leftOffset;
+            // Apply proportional resizing (cast to int because Width/Height are integer pixels)
+            shape.Width = (int)(shapeWidth * scale);
+            shape.Height = (int)(shapeHeight * scale);
 
-            double topOffset = 0;
-            for (int row = 0; row < targetRange.StartRow; row++)
-            {
-                topOffset += sheet.Cells.GetRowHeightPixel(row);
-            }
-            shape.Top = (int)topOffset;
+            // Position the shape at the top‑left corner of the target range
+            shape.UpperLeftRow = targetRange.FirstRow;
+            shape.UpperLeftColumn = targetRange.FirstColumn;
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,14 +1,13 @@
-// Title: Create a progress bar chart in Aspose.Cells (C#) and save to XLSX while keeping cell formulas intact
-// AI Prompts: Generate C# code with Aspose.Cells that builds a bar chart from formula‑calculated progress percentages and writes the workbook to an XLSX file while retaining every formula. | Update an existing Aspose.Cells workbook to add a green progress bar chart, assign task names as X‑axis categories, show percentages as data labels, and export the file without converting formulas to values.
-// Common Searches: Aspose.Cells C# how to keep formulas when saving workbook to XLSX | create a progress bar chart from formula cells using Aspose.Cells .NET | set X axis categories to task names in Aspose.Cells chart | display percentage data labels on Aspose.Cells bar chart | export Aspose.Cells workbook with formulas unchanged
-// Tags: Aspose.Cells create bar chart from formula cells | Aspose.Cells export to XLSX with formulas intact | Aspose.Cells set chart XValues range | Aspose.Cells format data labels as percentage | Aspose.Cells apply green fill to bar series
+// Title: Save an Aspose.Cells workbook containing a stacked progress‑bar chart to XLSX while retaining formula cells (C#)
+// Common Searches: Aspose.Cells C# save workbook to XLSX with formulas preserved | create stacked bar progress chart in Excel using Aspose.Cells .NET | keep cell formulas when exporting an Aspose.Cells workbook that includes a chart | export Excel file with a progress‑bar chart and formula‑based data using Aspose.Cells | Aspose.Cells chart series from formula range and save as .xlsx
+// Tags: preserve formulas on workbook save Aspose.Cells | stacked bar progress chart Aspose.Cells C# | export workbook with chart to XLSX using Aspose.Cells | formula‑driven series in Aspose.Cells chart | save Excel file with chart and formulas .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System.Drawing;
 
-// The example creates a workbook, fills task data with a formula for progress percentage, adds a green bar chart linked to the progress column, configures task names as X‑axis categories, shows percentage data labels, and saves the file as an XLSX workbook while preserving all cell formulas.
+// The example creates a new workbook, fills task data with static completed values and formulas for remaining percentages, adds a stacked bar chart that acts as a progress bar, and saves the workbook as an XLSX file while ensuring all formulas remain intact.
 class Program
 {
     static void Main()
@@ -18,59 +17,54 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet and rename it
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Progress";
+            Cells cells = sheet.Cells;
 
+            // ----- Populate data -----
             // Header row
-            sheet.Cells["A1"].PutValue("Task");
-            sheet.Cells["B1"].PutValue("Completed");
-            sheet.Cells["C1"].PutValue("Total");
-            sheet.Cells["D1"].PutValue("Progress %");
+            cells["A1"].PutValue("Task");
+            cells["B1"].PutValue("Completed");
+            cells["C1"].PutValue("Remaining");
 
-            // Sample data
-            string[] tasks = { "Design", "Development", "Testing", "Deployment" };
-            int[] completed = { 30, 50, 20, 5 };
-            int[] total = { 100, 100, 100, 100 };
+            // Task names
+            cells["A2"].PutValue("Task 1");
+            cells["A3"].PutValue("Task 2");
+            cells["A4"].PutValue("Task 3");
 
-            // Fill data rows and set formula for progress percentage
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                int row = i + 2; // Data starts at row 2
-                sheet.Cells[row, 0].PutValue(tasks[i]);          // Column A: Task name
-                sheet.Cells[row, 1].PutValue(completed[i]);      // Column B: Completed
-                sheet.Cells[row, 2].PutValue(total[i]);          // Column C: Total
-                sheet.Cells[row, 3].Formula = $"=B{row}/C{row}"; // Column D: Progress %
-            }
+            // Completed percentages (static values)
+            cells["B2"].PutValue(30);
+            cells["B3"].PutValue(70);
+            cells["B4"].PutValue(50);
 
-            // Add a bar chart to visualize progress
-            int chartIndex = sheet.Charts.Add(ChartType.Bar, 6, 0, 20, 7);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.Title.Text = "Project Progress";
+            // Remaining percentages calculated with formulas (preserved on save)
+            cells["C2"].Formula = "100-B2";
+            cells["C3"].Formula = "100-B3";
+            cells["C4"].Formula = "100-B4";
 
-            // Define the data range for the series (Progress % values)
-            int firstDataRow = 2;
-            int lastDataRow = tasks.Length + 1;
-            chart.NSeries.Add($"D{firstDataRow}:D{lastDataRow}", true);
+            // ----- Add a stacked bar chart to act as a progress bar -----
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIdx = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.Title.Text = "Progress Bar";
 
-            // Set category (X) axis to task names
-            // In some Aspose.Cells versions the property is XValues; use it for compatibility
-            chart.NSeries[0].XValues = $"A{firstDataRow}:A{lastDataRow}";
-            chart.NSeries[0].Name = "Progress";
+            // Series for Completed values
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[0].Name = "Completed";
 
-            // Format the series: green fill for the bars
-            chart.NSeries[0].Area.ForegroundColor = Color.Green;
+            // Series for Remaining values (calculated via formulas)
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries[1].Name = "Remaining";
 
-            // Show data labels as percentages
-            chart.NSeries[0].DataLabels.ShowValue = true;
-            chart.NSeries[0].DataLabels.NumberFormat = "0%";
+            // Optional: hide Remaining series from legend (if supported)
+            // chart.NSeries[1].IsShowInLegend = false;
 
-            // Save the workbook to XLSX while preserving all cell formulas
+            // ----- Save workbook preserving formulas -----
             workbook.Save("ProgressBarChart.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,97 +1,83 @@
-// Title: Create an Excel report of OLE object names, labels, class identifiers, and file sizes using Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that loads a source workbook with Aspose.Cells, loops through each worksheet's OleObjectCollection, extracts the OLE object's Name, Label, ClassIdentifier (converted to a hex string), and the length of its ObjectData, writes these values to a new worksheet, auto‑fits the columns, and saves the report workbook. | Include robust error handling that checks for the existence of the input file, gracefully handles OLE objects without embedded data, and prints a confirmation message with the output file path.
-// Common Searches: Aspose.Cells C# list all OLE objects in an Excel workbook and export their properties | How to retrieve the ClassIdentifier of embedded OLE objects using Aspose.Cells for .NET | Create a summary sheet of OLE object metadata (name, label, size) with Aspose.Cells | Get embedded file size of OLE objects in a .xlsx file via Aspose.Cells API | Generate a report of OLE objects across worksheets using Aspose.Cells C# example
-// Tags: Aspose.Cells OLE object enumeration to Excel | extract OLE metadata using Aspose.Cells C# | convert ClassIdentifier byte array to hex Aspose.Cells | calculate embedded OLE file size Aspose.Cells | auto-fit columns Aspose.Cells report
+// Title: Create an Excel report of embedded OLE object details (name, label, class ID, file size) using Aspose.Cells for .NET
+// Common Searches: how to enumerate embedded OLE objects in an Excel workbook with Aspose.Cells C# | Aspose.Cells C# extract OLE object name, label and class identifier | generate a spreadsheet listing OLE object file sizes using Aspose.Cells .NET | C# code to write OLE object metadata to a new Excel file with Aspose.Cells | retrieve embedded OLE data length from a worksheet using Aspose.Cells API
+// Tags: enumerate OleObject collection Aspose.Cells | extract OLE metadata to Excel workbook | write OLE object details with Aspose.Cells .NET | calculate embedded OLE file size C# | generate OLE objects report Excel Aspose
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace OleObjectReport
+// The sample loads a source workbook, iterates through each worksheet's OleObject collection, captures each object's Name, Label, ClassIdentifier, and the size of its embedded data (when accessible), writes these values into a new worksheet named "OLE Objects Report", and saves the report as a separate Excel file.
+class OLEReportGenerator
 {
-    // The program loads an input workbook, iterates every worksheet's OleObjectCollection, extracts each OLE object's Name, Label, ClassIdentifier (as a hex string), and embedded file size, writes these details to a new worksheet, auto‑fits columns, and saves the generated report.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string sourcePath = "source.xlsx";
+            const string reportPath = "OLEObjectsReport.xlsx";
+
+            // Verify that the source workbook exists
+            if (!File.Exists(sourcePath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-                // Verify input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // Load the source workbook containing OLE objects
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+
+            // Create a new workbook for the OLE objects report
+            Workbook reportWorkbook = new Workbook();
+            Worksheet reportSheet = reportWorkbook.Worksheets[0];
+            reportSheet.Name = "OLE Objects Report";
+
+            // Write column headers
+            reportSheet.Cells[0, 0].PutValue("Name");
+            reportSheet.Cells[0, 1].PutValue("Label");
+            reportSheet.Cells[0, 2].PutValue("Class Identifier");
+            reportSheet.Cells[0, 3].PutValue("File Size (bytes)");
+
+            int currentRow = 1; // Start writing data from the second row
+
+            // Iterate through each worksheet in the source workbook
+            foreach (Worksheet ws in sourceWorkbook.Worksheets)
+            {
+                // Iterate through each OLE object in the current worksheet
+                foreach (OleObject ole in ws.OleObjects)
                 {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+                    // Write OLE object details to the report sheet
+                    reportSheet.Cells[currentRow, 0].PutValue(ole.Name);
+                    reportSheet.Cells[currentRow, 1].PutValue(ole.Label);
+                    reportSheet.Cells[currentRow, 2].PutValue(ole.ClassIdentifier);
 
-                // Load the source workbook that contains OLE objects
-                Workbook sourceWorkbook = new Workbook(inputPath);
-
-                // Create a new workbook for the report
-                Workbook reportWorkbook = new Workbook();
-                Worksheet reportSheet = reportWorkbook.Worksheets[0];
-                reportSheet.Name = "OLE Report";
-
-                // Write header row
-                reportSheet.Cells[0, 0].PutValue("Worksheet");
-                reportSheet.Cells[0, 1].PutValue("OLE Name");
-                reportSheet.Cells[0, 2].PutValue("Label");
-                reportSheet.Cells[0, 3].PutValue("Class Identifier");
-                reportSheet.Cells[0, 4].PutValue("File Size (bytes)");
-
-                int reportRow = 1; // start after header
-
-                // Iterate through each worksheet in the source workbook
-                foreach (Worksheet ws in sourceWorkbook.Worksheets)
-                {
-                    // Access the collection of OLE objects on the current worksheet
-                    OleObjectCollection oleObjects = ws.OleObjects;
-
-                    // Loop through each OLE object
-                    foreach (OleObject ole in oleObjects)
+                    // Determine the file size of the embedded OLE object (using dynamic to avoid compile‑time binding)
+                    int fileSize = 0;
+                    try
                     {
-                        // Retrieve required properties
-                        string oleName = ole.Name;                     // OLE object's name
-                        string oleLabel = ole.Label;                   // OLE object's label (display text)
-
-                        // ClassIdentifier returns a byte[]; convert to a readable hex string
-                        byte[] classIdBytes = ole.ClassIdentifier;
-                        string classId = classIdBytes != null && classIdBytes.Length > 0
-                            ? BitConverter.ToString(classIdBytes).Replace("-", "")
-                            : string.Empty;
-
-                        // Get embedded file size if available
-                        int fileSize = 0;
-                        if (ole.ObjectData != null)
+                        var oleData = ((dynamic)ole).OleObjectData;
+                        if (oleData != null && oleData.Data != null)
                         {
-                            fileSize = ole.ObjectData.Length;
+                            fileSize = oleData.Data.Length;
                         }
-
-                        // Write data to the report sheet
-                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(oleName);
-                        reportSheet.Cells[reportRow, 2].PutValue(oleLabel);
-                        reportSheet.Cells[reportRow, 3].PutValue(classId);
-                        reportSheet.Cells[reportRow, 4].PutValue(fileSize);
-
-                        reportRow++;
                     }
+                    catch
+                    {
+                        // Property not available in this version; leave fileSize as 0
+                    }
+
+                    reportSheet.Cells[currentRow, 3].PutValue(fileSize);
+                    currentRow++;
                 }
-
-                // Auto-fit columns for better readability
-                reportSheet.AutoFitColumns();
-
-                // Save the report workbook
-                reportWorkbook.Save(outputPath);
-                Console.WriteLine($"Report saved to \"{outputPath}\".");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the generated report to a new Excel file
+            reportWorkbook.Save(reportPath);
+            Console.WriteLine($"Report saved to {reportPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

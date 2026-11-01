@@ -1,68 +1,70 @@
-// Title: Batch convert a folder of .xlsx workbooks to HTML with external image files using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that scans a specified directory for *.xlsx files, loads each workbook with Aspose.Cells, and saves it as HTML using HtmlSaveOptions with ExportImagesAsBase64 set to false. | Create a .NET script that ensures an output folder exists, processes every Excel file in an input folder, configures HtmlSaveOptions to export images as separate files, and logs conversion results or errors. | Generate example code showing how to use Aspose.Cells HtmlSaveOptions to batch convert multiple Excel workbooks to HTML while keeping images external for CSS‑based deduplication.
-// Common Searches: how to batch convert xlsx files to html with aspose.cells c# | c# console app to export excel workbooks as html without base64 images | asp.net script for converting a folder of excel files to html using aspose.cells | save excel as html with external image files using Aspose.Cells HtmlSaveOptions
-// Tags: batch excel to html conversion Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 false | external image files from excel html export | c# console application Aspose.Cells | css custom properties image deduplication Aspose.Cells
+// Title: Batch convert multiple .xlsx workbooks to HTML with embedded base64 images using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that scans a specified directory for *.xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file using HtmlSaveOptions with ExportImagesAsBase64 enabled. | Add code to verify that the input folder exists, create the output folder if it does not, and log a success or error message for every workbook processed. | Configure HtmlSaveOptions so that the generated HTML file name matches the source workbook name (without extension) and all worksheet images are embedded as base64 strings.
+// Common Searches: how to batch convert xlsx files to html with aspose.cells in c# | c# aspose.cells export images as base64 in html output for multiple workbooks | asp.net core program to convert a folder of excel files to html with embedded images | example of HtmlSaveOptions ExportImagesAsBase64 for batch processing Excel files | c# console app to generate html files from excel workbooks using Aspose.Cells
+// Tags: batch excel to html conversion Aspose.Cells | export images as base64 HtmlSaveOptions | c# console workbook folder processing | aspose.cells htmlsaveoptions configuration | generate html filenames from workbook names
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample iterates over all .xlsx files in a given input directory, loads each workbook with Aspose.Cells, configures HtmlSaveOptions to keep images as separate files (ExportImagesAsBase64 = false), and saves each workbook as an HTML file in an output folder, handling missing files and logging success or errors.
-class Program
+// A C# console program iterates over all .xlsx files in an input directory, loads each workbook with Aspose.Cells, and saves it as an HTML file in an output directory. HtmlSaveOptions are configured with ExportImagesAsBase64=true, and the code ensures the output folder exists and logs conversion results.
+class ExcelToHtmlBatchConverter
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Folder containing the source Excel files
-        string inputFolder = @"C:\InputExcel";
-        // Folder where the HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
+        // Input folder containing Excel files
+        string inputFolder = @"C:\InputExcelFiles";
+        // Output folder for generated HTML files
+        string outputFolder = @"C:\OutputHtmlFiles";
 
-        try
+        // Verify input directory exists
+        if (!Directory.Exists(inputFolder))
         {
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
+            Console.WriteLine($"Input folder not found: {inputFolder}");
+            return;
+        }
 
-            // Retrieve all Excel files (adjust the pattern if you need .xls files as well)
-            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputFolder);
 
-            foreach (string excelPath in excelFiles)
+        // Get all Excel files (adjust the pattern as needed)
+        string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string excelPath in excelFiles)
+        {
+            try
             {
-                // Verify the source file exists before attempting to load
+                // Verify the file still exists before loading
                 if (!File.Exists(excelPath))
                 {
                     Console.WriteLine($"File not found: {excelPath}");
                     continue;
                 }
 
-                try
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
+
+                // Configure HTML save options
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    // Load the Excel workbook
-                    Workbook workbook = new Workbook(excelPath);
+                    ExportImagesAsBase64 = true
+                };
 
-                    // Set HTML save options
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        // Keep images as separate files (set to true if you prefer Base64)
-                        ExportImagesAsBase64 = false
-                    };
+                // Determine output HTML file path
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+                string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
 
-                    // Build the output HTML file path
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
-                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, saveOptions);
 
-                    // Save the workbook as HTML using the configured options
-                    workbook.Save(htmlPath, saveOptions);
-                    Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
-                }
+                Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
+
+        Console.WriteLine("Batch conversion completed.");
     }
 }

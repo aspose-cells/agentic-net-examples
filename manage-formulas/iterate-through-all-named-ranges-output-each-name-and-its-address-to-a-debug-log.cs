@@ -1,34 +1,73 @@
-// Title: Log each named range and its address from an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# program that opens an .xlsx file with Aspose.Cells, iterates the workbook's NameCollection, and writes each range's Text and RefersTo to the Debug console. | Generate a .NET method that returns a collection of (rangeName, rangeAddress) tuples by scanning all defined names in a workbook via Aspose.Cells. | Create a snippet that uses Aspose.Cells to list all named ranges in a spreadsheet and outputs their addresses using System.Diagnostics.Debug.
-// Common Searches: how to enumerate defined names in an Excel file with Aspose.Cells C# | Aspose.Cells get address of each named range programmatically | C# debug write named range references from workbook using Aspose.Cells | list all workbook names and references Aspose.Cells .NET example | retrieve named range Text and RefersTo Aspose.Cells C#
-// Tags: Aspose.Cells enumerate named ranges | C# debug output Aspose.Cells | retrieve named range address .NET | list workbook defined names Aspose.Cells | iterate NameCollection Excel
+// Title: How to enumerate all named ranges in an Excel workbook and write their names and addresses to the debug log using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells list all named ranges with their RefersTo addresses | iterate through NameCollection in Aspose.Cells and output to Debug.WriteLine | retrieve named range address from workbook using Aspose.Cells .NET | log Excel named range names and addresses in C# with Aspose.Cells | how to get name and address of each defined name in an Excel file using Aspose.Cells
+// Tags: Aspose.Cells enumerate named ranges | C# retrieve RefersTo address Aspose.Cells | debug log Excel named ranges .NET | NameCollection iteration Aspose.Cells | list defined names workbook Aspose.Cells | extract named range addresses C#
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// Loads 'input.xlsx' with Aspose.Cells, accesses workbook.Worksheets.Names, loops through each Name, and writes its Text and RefersTo values to the Debug log.
+// The example loads an Excel workbook with Aspose.Cells, accesses its NameCollection, iterates over each defined name, extracts the range's name and RefersTo address, and writes the information to the debug output using Debug.WriteLine.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the input workbook
+        string filePath = "input.xlsx";
 
-        // Get the collection of all named ranges in the workbook
-        NameCollection namedRanges = workbook.Worksheets.Names;
-
-        // Iterate through each named range
-        foreach (Name namedRange in namedRanges)
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Retrieve the name of the range
-            string rangeName = namedRange.Text;
-
-            // Retrieve the address (reference) of the range
-            string rangeAddress = namedRange.RefersTo;
-
-            // Output the name and address to the debug log
-            Debug.WriteLine($"Name: {rangeName}, Address: {rangeAddress}");
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            return;
         }
+
+        Workbook workbook = null;
+
+        try
+        {
+            // Load the workbook (no password supplied)
+            workbook = new Workbook(filePath);
+        }
+        catch (CellsException ex)
+        {
+            // Handle password-protected workbook
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password to open it.");
+            }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Get the collection of all named ranges in the workbook
+            NameCollection names = workbook.Worksheets.Names;
+
+            // Iterate through each named range and output its details
+            foreach (Name name in names)
+            {
+                string rangeName = name.Text;   // The name of the range
+                string address = name.RefersTo; // The address it refers to (e.g., =Sheet1!$A$1:$B$5)
+
+                Debug.WriteLine($"Name: {rangeName}, Address: {address}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing named ranges: {ex.Message}");
+        }
+
+        // (Optional) Save the workbook if any changes were made
+        // workbook.Save("output.xlsx");
     }
 }

@@ -1,7 +1,6 @@
-// Title: Add a rectangle shape that reflects a data‑validation list selection by linking its text to a cell in Aspose.Cells for .NET
-// AI Prompts: Insert a rectangle shape at C3, bind its Text property to cell B2 with a formula, and create a dropdown list in B2 using Aspose.Cells for .NET. | Generate a workbook, populate a source range for a list validation, apply the validation to B2, and configure a shape to display the chosen list item. | Create a shape, set its text formula to reference a validated cell, and save the workbook as an .xlsx file with Aspose.Cells.
-// Common Searches: Aspose.Cells how to link shape text to a cell value | C# add rectangle shape that displays selected dropdown value in Aspose.Cells | set shape text formula to reference a data validation cell using Aspose.Cells .NET | create data validation list and bind it to a shape in an Excel file with Aspose.Cells | display selected option from a list validation inside a shape in .xlsx using Aspose.Cells
-// Tags: add shape linked to cell Aspose.Cells | cell B2 list validation Aspose.Cells | shape text formula reference Aspose.Cells | display dropdown selection in shape .NET | save workbook with linked shape Aspose.Cells
+// Title: Create a rectangle shape linked to a data‑validation list cell and display the selected option with Aspose.Cells for .NET (C#)
+// Common Searches: how to bind a shape's text to a dropdown cell using Aspose.Cells C# | Aspose.Cells C# add rectangle shape that shows the selected value from a data validation list | set shape text to a formula like =B2 with Aspose.Cells .NET | display data validation list selection in a shape in an Excel workbook using Aspose.Cells | add data validation list to a cell and link a shape to it in C# Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells | link shape text to cell formula Aspose.Cells | create data validation list Aspose.Cells | display dropdown selection in shape Aspose.Cells | C# Aspose.Cells shape text binding
 
 using System;
 using System.IO;
@@ -10,10 +9,10 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new workbook, fills D1:D5 with option values, adds a list validation to cell B2, inserts a rectangle shape at C3, sets the shape's text to the formula =B2 so it updates with the selected dropdown item, applies basic line styling, and saves the file as ShapeLinkedToValidation.xlsx.
+    // The example creates a new workbook, adds a list‑type data validation to cell B2 with three options, inserts a rectangle shape at a specified location, sets the shape's text to the formula "=B2" so it automatically reflects the selected dropdown value, and saves the file as ShapeLinkedToValidation.xlsx.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -23,63 +22,65 @@ namespace AsposeCellsExample
                 // Access the first worksheet
                 var worksheet = workbook.Worksheets[0];
 
-                // Populate a list of values for the validation (e.g., D1:D5)
-                worksheet.Cells["D1"].PutValue("Option 1");
-                worksheet.Cells["D2"].PutValue("Option 2");
-                worksheet.Cells["D3"].PutValue("Option 3");
-                worksheet.Cells["D4"].PutValue("Option 4");
-                worksheet.Cells["D5"].PutValue("Option 5");
-
-                // Define the cell area for the validation (B2)
-                var validationArea = new CellArea
+                // -------------------------------------------------
+                // 1. Add a data‑validation list to cell B2
+                // -------------------------------------------------
+                // Define the cell area for B2 (row 1, column 1 – zero‑based)
+                var cellArea = new CellArea
                 {
-                    StartRow = 1,    // zero‑based row index for B2
-                    StartColumn = 1, // zero‑based column index for B2
+                    StartRow = 1,
+                    StartColumn = 1,
                     EndRow = 1,
                     EndColumn = 1
                 };
 
-                // Add a data‑validation list to cell B2
-                int validationIndex = worksheet.Validations.Add(validationArea);
+                // Add validation for the defined area
+                int validationIndex = worksheet.Validations.Add(cellArea);
                 var validation = worksheet.Validations[validationIndex];
                 validation.Type = ValidationType.List;
-                validation.InCellDropDown = true;               // Show dropdown arrow
-                validation.Formula1 = "D1:D5";                  // Source range for the list
+                validation.Operator = OperatorType.None;
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: type, upper left row, upper left column, top, left, height, width
+                // List items as a comma‑separated string enclosed in quotes
+                validation.Formula1 = "\"Option1,Option2,Option3\"";
+
+                // -------------------------------------------------
+                // 2. Insert a shape (rectangle) onto the sheet
+                // -------------------------------------------------
+                int upperLeftRow = 4;      // zero‑based row index where the shape starts
+                int upperLeftColumn = 1;   // zero‑based column index where the shape starts
+                int top = 0;               // offset in pixels from the top of the cell
+                int left = 0;              // offset in pixels from the left of the cell
+                int height = 60;           // shape height in pixels
+                int width = 200;           // shape width in pixels
+
                 var shape = worksheet.Shapes.AddShape(
                     MsoDrawingType.Rectangle,
-                    2,    // upper left row (zero‑based, row 3)
-                    2,    // upper left column (zero‑based, column C)
-                    5,    // top offset (pixels)
-                    5,    // left offset (pixels)
-                    50,   // height (pixels)
-                    150); // width (pixels)
+                    upperLeftRow,
+                    upperLeftColumn,
+                    top,
+                    left,
+                    height,
+                    width);
 
-                // Set the shape's text to a formula that references cell B2.
+                // Optional: give the shape a meaningful name
+                shape.Name = "SelectionDisplay";
+
+                // -------------------------------------------------
+                // 3. Link the shape's text to the validated cell (B2)
+                // -------------------------------------------------
+                // Setting the Text to a formula makes the shape display the cell's value.
                 shape.Text = "=B2";
 
-                // Optional styling for better visibility
-                shape.Line.Weight = 1.0;
-                shape.Line.DashStyle = MsoLineDashStyle.Solid;
-
-                // Save the workbook
+                // -------------------------------------------------
+                // 4. Save the workbook
+                // -------------------------------------------------
                 string outputPath = "ShapeLinkedToValidation.xlsx";
-
-                // Ensure the directory exists (if a directory part is present)
-                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

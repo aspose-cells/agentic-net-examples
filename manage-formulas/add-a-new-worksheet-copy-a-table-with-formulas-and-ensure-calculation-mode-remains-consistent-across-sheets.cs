@@ -1,24 +1,22 @@
-// Title: Copy a formula‑filled range to a newly added worksheet while keeping the workbook’s calculation mode unchanged using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells in C# to copy a range that contains formulas from one sheet to a newly created sheet without altering the workbook’s calculation mode. | Add a new worksheet to an existing workbook and duplicate a table with formulas, ensuring the calculation setting (automatic or manual) stays the same after saving. | Adjust the copy operation so that the source worksheet’s calculation mode is preserved when transferring the range to another sheet with Aspose.Cells.
-// Common Searches: Aspose.Cells copy range with formulas to another sheet keep calculation mode | C# add new worksheet and duplicate Excel table formulas using Aspose.Cells | preserve workbook calculation settings when copying formulas between worksheets Aspose.Cells | how to retain automatic calculation after copying cells in Aspose.Cells .NET
-// Tags: copy formula range Aspose.Cells C# | add worksheet duplicate table Aspose.Cells | preserve calculation mode Aspose.Cells | workbook calculation settings .NET | duplicate Excel table with formulas Aspose.Cells
+// Title: Copy a formula‑rich table to a newly added worksheet while preserving the workbook’s calculation mode with Aspose.Cells for .NET
+// Common Searches: asp.net copy range with formulas to a new worksheet using Aspose.Cells | how to keep Excel calculation mode unchanged after adding a sheet in Aspose.Cells | duplicate a table that contains formulas without breaking references Aspose.Cells C# | preserve workbook calculation settings while copying data between worksheets Aspose.Cells | copy Excel range preserving formulas and calculation mode programmatically in C#
+// Tags: copy range with formulas Aspose.Cells | add worksheet duplicate table C# | preserve workbook calculation mode Aspose.Cells | copy Excel table preserving references C# | Aspose.Cells range copy between worksheets
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an existing workbook, locates the "SourceSheet" worksheet, defines the A1:D10 range that contains formulas, adds a new worksheet named "CopiedTableSheet", creates a matching destination range, copies the source range (including formulas) to the new sheet, and saves the workbook while preserving the original calculation mode.
+// The example loads an existing workbook, adds a new worksheet named "CopiedTable", defines a source range (A1:C10) on the original sheet, creates a matching destination range on the new sheet, copies the range while retaining all formulas, and saves the workbook, ensuring the original calculation mode remains unchanged.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Define input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,34 +26,33 @@ class Program
             // Load the existing workbook
             var workbook = new Workbook(inputPath);
 
-            // Get the source worksheet (replace with actual sheet name if different)
-            var sourceSheet = workbook.Worksheets["SourceSheet"];
+            // Add a new worksheet to hold the copied table
+            var newSheet = workbook.Worksheets.Add("CopiedTable");
+
+            // Reference the source worksheet and the range containing the table with formulas
+            var sourceSheet = workbook.Worksheets["Sheet1"]; // adjust name as needed
             if (sourceSheet == null)
             {
-                Console.WriteLine("Source worksheet 'SourceSheet' not found.");
+                Console.WriteLine("Source worksheet 'Sheet1' not found.");
                 return;
             }
 
-            // Define the range of the table to copy
-            var sourceRange = sourceSheet.Cells.CreateRange("A1:D10");
+            // Create source range using row/column indices (A1:C10 => rows 0-9, columns 0-2)
+            var sourceRange = sourceSheet.Cells.CreateRange(0, 0, 10, 3);
 
-            // Add a new worksheet to hold the copied table
-            int newSheetIndex = workbook.Worksheets.Add();
-            var newSheet = workbook.Worksheets[newSheetIndex];
-            newSheet.Name = "CopiedTableSheet";
+            // Create a destination range on the new sheet with the same size as the source range
+            var destRange = newSheet.Cells.CreateRange(0, 0, sourceRange.RowCount, sourceRange.ColumnCount);
 
-            // Create a destination range in the new worksheet
-            var destRange = newSheet.Cells.CreateRange("A1:D10");
-
-            // Copy the source range (including formulas) to the destination range
-            destRange.Copy(sourceRange);
+            // Copy the source range to the destination range, preserving formulas
+            sourceRange.Copy(destRange);
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

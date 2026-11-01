@@ -1,59 +1,49 @@
-// Title: Generate an Excel workbook with a fiscal quarter formula (April start) using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that inserts today's date into cell A1 and assigns the formula INT(MOD(MONTH(A1)-4,12)/3)+1 to cell B1 to compute the fiscal quarter. | Show how to programmatically evaluate all formulas in an Aspose.Cells workbook and retrieve the calculated fiscal quarter value from cell B1. | Demonstrate creating the output directory if it does not exist before saving the workbook as FiscalQuarterReport.xlsx with Aspose.Cells.
-// Common Searches: Aspose.Cells C# calculate fiscal quarter when fiscal year starts in April | How to add a custom quarter formula to an Excel file using Aspose.Cells .NET | C# example inserting date and fiscal quarter formula with Aspose.Cells | Saving Aspose.Cells workbook to a specific folder after ensuring the directory exists
-// Tags: apply fiscal quarter formula Aspose.Cells | insert date cell C# Aspose.Cells | evaluate workbook formulas Aspose.Cells | save workbook with directory check .NET | INT MOD MONTH fiscal quarter Excel formula
+// Title: Use a custom Excel formula in C# to calculate fiscal quarter in an Aspose.Cells workbook
+// Common Searches: how to add a fiscal quarter formula to an Aspose.Cells worksheet using C# | C# Aspose.Cells example for quarter calculation when fiscal year starts in July | Excel formula with MONTH and INT to determine fiscal quarter in Aspose.Cells | generate a workbook that returns fiscal quarter from a date with Aspose.Cells .NET | calculate fiscal quarter in code using a custom formula in Aspose.Cells
+// Tags: fiscal quarter formula Aspose.Cells C# | custom Excel formula fiscal year start July | calculate quarter from date Aspose.Cells | INT function usage in Aspose.Cells formula | save workbook with fiscal quarter calculation .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace FiscalQuarterExample
+// The example creates a new Workbook, writes a sample date to cell A1, assigns the Excel formula =INT((MONTH(A1)-7+12)/3)+1 to cell B1 to compute the fiscal quarter for a fiscal year that begins in July, evaluates all formulas, ensures the output directory exists, and saves the file as FiscalQuarterExample.xlsx.
+class Program
 {
-    // The program creates a new workbook, writes the current date to cell A1, sets a formula (INT(MOD(MONTH(A1)-4,12)/3)+1) in cell B1 to calculate the fiscal quarter assuming the fiscal year starts in April, evaluates the formulas, prints the quarter, ensures the output directory exists, and saves the file as FiscalQuarterReport.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet.
-                Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Put a sample date into A1.
-                sheet.Cells["A1"].PutValue(DateTime.Now);
+            // Place a sample date in cell A1.
+            sheet.Cells["A1"].PutValue(new DateTime(2023, 8, 15));
 
-                // Use a formula that calculates the fiscal quarter.
-                // Fiscal year starts in April (month 4).
-                // Formula: INT(MOD(MONTH(A1)-4,12)/3)+1
-                sheet.Cells["B1"].Formula = "INT(MOD(MONTH(A1)-4,12)/3)+1";
+            // Use an Excel formula to calculate the fiscal quarter.
+            // Fiscal year starts in July: Q1 = Jul‑Sep, Q2 = Oct‑Dec, Q3 = Jan‑Mar, Q4 = Apr‑Jun
+            // Formula: =INT((MONTH(A1)-7+12)/3)+1
+            sheet.Cells["B1"].Formula = "INT((MONTH(A1)-7+12)/3)+1";
 
-                // Calculate formulas.
-                workbook.CalculateFormula();
+            // Calculate all formulas.
+            workbook.CalculateFormula();
 
-                // Retrieve and display the result.
-                Console.WriteLine("Fiscal Quarter: " + sheet.Cells["B1"].StringValue);
+            // Define output file path.
+            string outputPath = "FiscalQuarterExample.xlsx";
 
-                // Define output file path.
-                string outputPath = "FiscalQuarterReport.xlsx";
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
 
-                // Ensure the directory exists.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

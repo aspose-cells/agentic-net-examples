@@ -1,47 +1,50 @@
-// Title: Insert a SUM formula that references an external workbook and keep the link dynamic when the source file is moved using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells to add a SUM formula that pulls data from a range in another workbook, using a configurable file path. | Adapt the code to use a relative path and ensure the external link updates automatically if the source workbook is relocated.
-// Common Searches: Aspose.Cells C# create external reference formula that updates after moving source file | how to set a formula that links to another Excel workbook using Aspose.Cells .NET | save workbook with external link and maintain link when source path changes in Aspose.Cells | C# Aspose.Cells external workbook SUM formula with relative path | update external workbook reference automatically in Aspose.Cells when file is moved
-// Tags: Aspose.Cells external workbook formula | C# external link formula Aspose.Cells | dynamic external link path .NET | Aspose.Cells workbook with external link | relative path external Excel reference C#
+// Title: Create an external workbook reference formula that auto‑updates when the source file moves using Aspose.Cells for .NET
+// Common Searches: how to set an external workbook reference in Aspose.Cells C# that follows moved source file | Aspose.Cells C# external SUM formula with dynamic file path | update linked workbook formula path after moving source Excel file using Aspose.Cells | check external source file existence before assigning formula in Aspose.Cells C# | build external reference formula with folder and file variables in Aspose.Cells .NET
+// Tags: Aspose.Cells external workbook linking | C# dynamic Excel formula path | verify external workbook existence Aspose.Cells | auto‑refresh linked workbook reference Aspose.Cells | construct external SUM formula Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks that a source Excel file exists, creates a new workbook with Aspose.Cells, inserts a SUM formula in cell A1 that references a range in the external workbook using a specified path, and saves the workbook, illustrating how to keep an external link functional when the source file is moved.
+// The example creates a new workbook, constructs an external SUM formula that references a source workbook using folder, file, and sheet variables, verifies the source file exists, assigns the formula to cell A1, and saves the result as Result.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the external workbook (absolute or relative)
-            string externalPath = @"C:\Data\Source.xlsx";
-
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(externalPath))
-            {
-                Console.WriteLine($"Source file not found: {externalPath}");
-                return;
-            }
-
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a formula that references a range in the external workbook
-            // Example formula: =SUM('[C:\Data\Source.xlsx]Sheet1'!A1:A10)
-            sheet.Cells["A1"].Formula = $"=SUM('[{externalPath}]Sheet1'!A1:A10)";
+            // Define parts of the external reference
+            string externalFolder = @"C:\Data";
+            string externalFile = "Source.xlsx";
+            string externalSheet = "Sheet1";
 
-            // Save the workbook with the external link
-            string outputPath = "ExternalLinkDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully: {outputPath}");
+            // Verify that the external source file exists to avoid FileNotFoundException
+            string externalFullPath = Path.Combine(externalFolder, externalFile);
+            if (!File.Exists(externalFullPath))
+            {
+                Console.WriteLine($"Warning: External source file not found: {externalFullPath}");
+            }
+
+            // Build the external formula (e.g., =SUM('C:\Data\[Source.xlsx]Sheet1'!A1:A10))
+            string formula = $"=SUM('{externalFolder}\\[{externalFile}]{externalSheet}'!A1:A10)";
+
+            // Assign the formula to a cell
+            sheet.Cells["A1"].Formula = formula;
+
+            // Save the workbook
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(resultPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

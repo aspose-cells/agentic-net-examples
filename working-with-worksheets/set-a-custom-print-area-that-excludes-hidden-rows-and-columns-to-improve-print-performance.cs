@@ -1,13 +1,13 @@
-// Title: Set a custom print area that skips hidden rows and columns using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that identifies the first and last visible rows and columns in a worksheet and assigns the resulting range to PageSetup.PrintArea. | Create a reusable method that receives a Worksheet object, computes the visible cell range excluding hidden rows and columns, and returns the address string for setting the print area. | Show how to load an existing Excel file, apply a print area limited to visible cells, and save the workbook with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# set print area to visible cells only | How to exclude hidden rows and columns from Excel print area with Aspose.Cells .NET | Determine visible range in worksheet for custom print area using Aspose.Cells | Improve Excel printing performance by defining print area without hidden rows in C#
-// Tags: Aspose.Cells set custom print area | skip hidden rows columns Aspose.Cells | PageSetup.PrintArea visible range .NET | determine first last visible row column C# | optimize Excel print performance Aspose.Cells
+// Title: Set a print area that excludes hidden rows and columns using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans a worksheet for the first and last visible rows and columns and assigns that range to PageSetup.PrintArea. | Write a program that loads an existing Excel file, removes hidden rows/columns from the printable area, and saves the workbook with the updated print settings. | Create a method that calculates the visible data bounds based on MaxDataRow/MaxDataColumn and configures the worksheet's print area accordingly.
+// Common Searches: how to define a print area in Aspose.Cells that ignores hidden rows and columns | Aspose.Cells .NET set printable range based on visible cells only | C# exclude hidden rows from Excel print area using Aspose.Cells | optimize Excel printing speed by limiting print area to non‑hidden rows Aspose | PageSetup.PrintArea custom range for visible data Aspose.Cells
+// Tags: Aspose.Cells set print area excluding hidden rows | visible rows print range Aspose.Cells .NET | PageSetup.PrintArea hidden columns handling | optimize Excel print performance with Aspose.Cells | calculate visible data bounds Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example loads an Excel workbook, scans the first worksheet to find the first and last non‑hidden rows and columns, builds a range string from those indices, assigns it to the worksheet's PageSetup.PrintArea, and saves the modified file, thereby improving print performance by omitting hidden rows and columns.
+// The example loads a workbook, determines the first and last non‑hidden rows and columns by checking the IsHidden property, builds a cell range string, assigns it to the worksheet's PageSetup.PrintArea, and saves the updated file.
 class Program
 {
     static void Main()
@@ -20,7 +20,7 @@ class Program
             // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
@@ -28,55 +28,57 @@ class Program
             Workbook workbook = new Workbook(inputPath);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Variables to hold the first and last visible row/column indices
+            // Determine the range of rows that actually contain data
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxColumn = sheet.Cells.MaxDataColumn;
+
+            // If the worksheet is empty, there is nothing to set as print area
+            if (maxRow < 0 || maxColumn < 0)
+            {
+                Console.WriteLine("Worksheet contains no data.");
+                workbook.Save(outputPath);
+                return;
+            }
+
+            // Find first and last visible rows
             int firstVisibleRow = -1;
             int lastVisibleRow = -1;
+            for (int i = 0; i <= maxRow; i++)
+            {
+                if (!sheet.Cells.Rows[i].IsHidden)
+                {
+                    if (firstVisibleRow == -1) firstVisibleRow = i;
+                    lastVisibleRow = i;
+                }
+            }
+
+            // Find first and last visible columns
             int firstVisibleColumn = -1;
             int lastVisibleColumn = -1;
-
-            // Determine visible rows
-            int maxRow = sheet.Cells.MaxDataRow;
-            for (int row = 0; row <= maxRow; row++)
+            for (int j = 0; j <= maxColumn; j++)
             {
-                // Access the Row object via Cells.Rows collection
-                if (!sheet.Cells.Rows[row].IsHidden)
+                if (!sheet.Cells.Columns[j].IsHidden)
                 {
-                    if (firstVisibleRow == -1) firstVisibleRow = row;
-                    lastVisibleRow = row;
+                    if (firstVisibleColumn == -1) firstVisibleColumn = j;
+                    lastVisibleColumn = j;
                 }
             }
 
-            // Determine visible columns
-            int maxColumn = sheet.Cells.MaxDataColumn;
-            for (int col = 0; col <= maxColumn; col++)
-            {
-                // Access the Column object via Cells.Columns collection
-                if (!sheet.Cells.Columns[col].IsHidden)
-                {
-                    if (firstVisibleColumn == -1) firstVisibleColumn = col;
-                    lastVisibleColumn = col;
-                }
-            }
-
-            // If there is at least one visible row and column, set the custom print area
+            // Set custom print area if visible rows/columns were found
             if (firstVisibleRow != -1 && firstVisibleColumn != -1)
             {
-                // Convert numeric indices to Excel cell references (e.g., 0 -> A)
-                string startCell = CellsHelper.ColumnIndexToName(firstVisibleColumn) + (firstVisibleRow + 1);
-                string endCell = CellsHelper.ColumnIndexToName(lastVisibleColumn) + (lastVisibleRow + 1);
-                string printArea = $"{startCell}:{endCell}";
-
-                // Apply the print area to the worksheet
-                sheet.PageSetup.PrintArea = printArea;
+                string startCell = CellsHelper.CellIndexToName(firstVisibleRow, firstVisibleColumn);
+                string endCell = CellsHelper.CellIndexToName(lastVisibleRow, lastVisibleColumn);
+                sheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
             }
 
             // Save the workbook with the new print area
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

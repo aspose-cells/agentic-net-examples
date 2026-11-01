@@ -1,57 +1,88 @@
-// Title: Get a list of unique column headers from the first row of an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that reads the first row of a worksheet and returns a collection of distinct header strings, ignoring case. | Show how to use a HashSet<string> to eliminate duplicate column names while iterating over cells in Aspose.Cells. | Provide an example that prints the unique headers and saves the workbook after processing.
-// Common Searches: aspnet c# how to retrieve distinct column names from first row using Aspose.Cells | remove duplicate header values in Excel file with Aspose.Cells .NET API | enumerate cells in first row and get unique headers Aspose.Cells example | max data column first row Aspose.Cells get header list
-// Tags: unique header extraction Aspose.Cells | first row column enumeration .NET | deduplication of Excel headers using .NET collection | retrieve last populated column Aspose.Cells | persist workbook after header extraction
+// Title: How to list distinct column headers from the first row of an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read first row and get unique header names | extract distinct column names from Excel worksheet using Aspose.Cells .NET | enumerate header row in Excel and remove duplicates with Aspose.Cells | get list of non‑empty column headers from first row in C# Aspose.Cells | handle password‑protected workbook while extracting unique headers Aspose.Cells
+// Tags: Aspose.Cells distinct header extraction | C# read first row Excel | HashSet case‑insensitive header collection | Workbook load error handling Aspose.Cells | MaxDataColumn usage Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The sample creates a workbook, adds sample headers (including duplicates) to the first row, determines the last populated column, iterates over the first row collecting non‑empty header values into a case‑insensitive HashSet, converts the set to a list preserving insertion order, prints each unique header, and finally saves the workbook as UniqueHeadersDemo.xlsx.
-    class UniqueColumnHeadersDemo
+    // The example loads an Excel workbook with Aspose.Cells, safely handles missing or password‑protected files, accesses the first worksheet, determines the last populated column in the first row, and uses a case‑insensitive HashSet to collect non‑empty, trimmed header strings, finally printing the distinct column headers.
+    class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            const string filePath = "input.xlsx";
 
-            // Sample data: first row contains headers (some duplicates)
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["C1"].PutValue("Name");   // duplicate header
-            cells["D1"].PutValue("Email");
-            cells["E1"].PutValue("Age");    // duplicate header
-
-            // Determine the last column that contains data in the first row
-            int lastColumn = cells.MaxDataColumn;
-
-            // Use a HashSet to collect distinct header values
-            HashSet<string> uniqueHeadersSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            for (int col = 0; col <= lastColumn; col++)
+            // Verify that the input file exists
+            if (!File.Exists(filePath))
             {
-                string header = cells[0, col].StringValue?.Trim();
-                if (!string.IsNullOrEmpty(header))
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            Workbook workbook = null;
+            try
+            {
+                // Attempt to load the workbook (no password supplied)
+                workbook = new Workbook(filePath);
+            }
+            catch (CellsException ex)
+            {
+                // Handle password‑protected files or other loading issues
+                if (!string.IsNullOrEmpty(ex.Message) &&
+                    ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    uniqueHeadersSet.Add(header);
+                    Console.WriteLine("The workbook is password protected and cannot be opened without a password.");
+                }
+                else
+                {
+                    Console.WriteLine($"Error loading workbook: {ex.Message}");
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error loading workbook: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Determine the last column that contains data in the first row
+                int lastColumn = sheet.Cells.MaxDataColumn;
+
+                // Store unique header values (case‑insensitive)
+                HashSet<string> uniqueHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                // Enumerate the first row and collect distinct values
+                for (int col = 0; col <= lastColumn; col++)
+                {
+                    Cell cell = sheet.Cells[0, col];
+                    string header = cell.StringValue?.Trim();
+
+                    if (!string.IsNullOrEmpty(header))
+                    {
+                        uniqueHeaders.Add(header);
+                    }
+                }
+
+                // Output the unique column headers
+                Console.WriteLine("Unique column headers:");
+                foreach (string header in uniqueHeaders)
+                {
+                    Console.WriteLine(header);
                 }
             }
-
-            // Convert the set to a list (preserves insertion order in .NET 6+)
-            List<string> uniqueHeaders = new List<string>(uniqueHeadersSet);
-
-            // Display the unique headers
-            Console.WriteLine("Unique column headers:");
-            foreach (string header in uniqueHeaders)
+            catch (Exception ex)
             {
-                Console.WriteLine(header);
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
-
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("UniqueHeadersDemo.xlsx");
         }
     }
 }

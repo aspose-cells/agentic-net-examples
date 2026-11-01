@@ -1,32 +1,25 @@
-// Title: Add two blank rows at row index 50 in an Excel worksheet using Aspose.Cells for .NET and convert the workbook to PDF
-// AI Prompts: Add two blank rows at row index 50 in an existing .xlsx file with Aspose.Cells for .NET, then save the workbook as a PDF using C#. | Demonstrate placing default‑formatted rows at a specific worksheet position and exporting the result to PDF with Aspose.Cells in C#.
-// Common Searches: C# Aspose.Cells insert blank rows at row 51 and generate PDF | how to place rows with default formatting in Excel using Aspose.Cells before PDF conversion | Aspose.Cells preserve formatting when adding rows then export workbook to PDF | convert edited Excel file to PDF after inserting rows with Aspose.Cells .NET
-// Tags: Aspose.Cells insert rows C# | Aspose.Cells default formatting for new rows | Aspose.Cells export workbook to PDF | Aspose.Cells worksheet row insertion .NET
+// Title: Insert two rows at row 51 in an Excel workbook with Aspose.Cells for .NET and save the updated file as PDF
+// AI Prompts: Use Aspose.Cells for .NET to add two rows after row 50 in an existing .xlsx file while keeping the original formatting, then export the workbook to a PDF. | Write C# code that loads an Excel workbook, inserts rows at index 50 preserving default styles, and saves the modified document as a PDF using Aspose.Cells.
+// Common Searches: how to add rows at a specific index in an Excel file using Aspose.Cells C# | Aspose.Cells insert rows preserve formatting then convert to PDF | C# example for inserting rows in .xlsx and exporting to PDF with Aspose.Cells | insert multiple rows at row 51 using Aspose.Cells for .NET | convert modified Excel workbook to PDF after inserting rows Aspose.Cells
+// Tags: insert rows Aspose.Cells C# | preserve formatting when inserting rows Aspose.Cells | export Excel to PDF Aspose.Cells .NET | modify workbook then save as PDF Aspose.Cells | row insertion index 50 Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsInsertRowsAndPdf
+// Loads an existing .xlsx workbook, inserts two rows at zero‑based index 50 (row 51) while copying surrounding formatting, and saves the result as a PDF using Aspose.Cells for .NET.
+class Program
 {
-    // Loads an existing Excel file, adds two blank rows at zero‑based index 50 on the first worksheet (keeping default formatting), and saves the modified workbook as a PDF.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet (you can change the index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Insert two rows at index 50 (zero‑based index, i.e., after row 49)
+        // This operation copies the default formatting from the surrounding rows.
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.InsertRows(50, 2);
 
-            // Insert two rows at row index 50 (zero‑based). 
-            // The inserted rows will have default formatting (same as the rows above).
-            worksheet.Cells.InsertRows(50, 2);
-
-            // Save the modified workbook as a PDF. The format is inferred from the file extension.
-            workbook.Save("output.pdf");
-
-            Console.WriteLine("Rows inserted and PDF generated successfully.");
-        }
+        // Save the modified workbook as a PDF (replace with desired output path)
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

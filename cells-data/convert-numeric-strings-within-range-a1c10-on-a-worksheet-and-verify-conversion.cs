@@ -1,67 +1,65 @@
-// Title: Convert numeric strings to numbers in range A1:C10 using Aspose.Cells for .NET and verify each cell's type
-// AI Prompts: Write C# code with Aspose.Cells that populates cells A1:C10 with alternating numeric‑string and text values, invokes ConvertStringToNumericValue, and logs whether each cell was converted to a numeric type. | Show how to loop through a defined range after calling ConvertStringToNumericValue to output the cell address, its resulting data type, and the numeric value when conversion succeeds.
-// Common Searches: Aspose.Cells C# convert string values to numbers in a specific range and check conversion result | How to use ConvertStringToNumericValue on cells A1:C10 and determine which cells became numeric | C# Aspose.Cells example for populating mixed data and converting numeric strings to numeric types | Verify cell data type after ConvertStringToNumericValue in Aspose.Cells .NET | Convert numeric string to double in Excel worksheet using Aspose.Cells API
-// Tags: Aspose.Cells ConvertStringToNumericValue example | numeric string to double conversion Aspose.Cells | C# iterate over range A1:C10 cells | verify cell type after conversion Aspose.Cells | populate worksheet with mixed string data Aspose.Cells
+// Title: Convert numeric strings to numbers in cells A1:C10 and count numeric cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Scan the range A1:C10 with Aspose.Cells, identify string cells that represent numbers, and replace each with its numeric value. | After converting the strings, iterate the same range to tally how many cells are now of numeric type and output the total. | Save the modified workbook to a new file after the data‑type conversion.
+// Common Searches: C# Aspose.Cells convert string cells to numbers in a specific range | How to count numeric cells after type conversion with Aspose.Cells | Parse numeric strings using invariant culture in Aspose.Cells C# example | Iterate over A1:C10 range and change data type in Aspose.Cells | Save workbook after converting string values to numeric in Aspose.Cells
+// Tags: convert string cells to numeric Aspose.Cells | cell range iteration A1:C10 Aspose.Cells | numeric cell count after conversion C# | parse double invariant culture Aspose.Cells | save workbook after data type conversion Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Globalization;
 
-// Creates a workbook, fills A1:C10 with alternating numeric‑string and text entries, runs ConvertStringToNumericValue to turn convertible strings into numeric values, iterates the range to output each cell's address, resulting data type and value, and saves the file as ConvertedRange.xlsx.
+// The example loads an Excel file, iterates through cells A1:C10, parses any string that can be interpreted as a double using invariant culture, replaces the string with the numeric value, counts how many cells in that range are now numeric, prints the count, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet's cells
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate range A1:C10 with mixed data (numeric strings and regular text)
-        for (int row = 0; row < 10; row++)
+        // Get the first worksheet (or specify by name)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define the target range A1:C10
+        CellArea range = CellArea.CreateCellArea("A1", "C10");
+
+        // Convert numeric strings to actual numbers
+        for (int row = range.StartRow; row <= range.EndRow; row++)
         {
-            for (int col = 0; col < 3; col++)
+            for (int col = range.StartColumn; col <= range.EndColumn; col++)
             {
-                // Even sum of indices -> numeric string, odd sum -> non‑numeric text
-                if ((row + col) % 2 == 0)
+                Cell cell = sheet.Cells[row, col];
+
+                // Process only string cells
+                if (cell.Type == CellValueType.IsString)
                 {
-                    // Example numeric string: "1.1", "2.2", etc.
-                    string numericString = (row + 1).ToString() + "." + (col + 1).ToString();
-                    cells[row, col].PutValue(numericString);
-                }
-                else
-                {
-                    // Example non‑numeric string
-                    cells[row, col].PutValue($"Text{row + 1}{col + 1}");
+                    string text = cell.StringValue.Trim();
+
+                    // Try parsing the string as a double using invariant culture
+                    if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
+                    {
+                        // Replace the string with the numeric value
+                        cell.PutValue(number);
+                    }
                 }
             }
         }
 
-        // Convert all string data in the worksheet to numeric values where possible
-        // (this will affect the numeric strings in A1:C10)
-        cells.ConvertStringToNumericValue();
-
-        // Verify conversion for each cell in the range A1:C10
-        for (int row = 0; row < 10; row++)
+        // Verify conversion: count how many cells are now numeric
+        int numericCount = 0;
+        for (int row = range.StartRow; row <= range.EndRow; row++)
         {
-            for (int col = 0; col < 3; col++)
+            for (int col = range.StartColumn; col <= range.EndColumn; col++)
             {
-                Cell cell = cells[row, col];
-                string address = cell.Name; // e.g., "A1"
-
-                if (cell.IsNumericValue)
+                Cell cell = sheet.Cells[row, col];
+                if (cell.Type == CellValueType.IsNumeric)
                 {
-                    // Cell was successfully converted to a numeric type
-                    Console.WriteLine($"{address} converted to numeric: {cell.DoubleValue}");
-                }
-                else
-                {
-                    // Cell remains a string (non‑numeric)
-                    Console.WriteLine($"{address} remains string: {cell.StringValue}");
+                    numericCount++;
                 }
             }
         }
 
-        // Save the workbook to verify the result in Excel
-        workbook.Save("ConvertedRange.xlsx");
+        Console.WriteLine($"Number of numeric cells after conversion: {numericCount}");
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

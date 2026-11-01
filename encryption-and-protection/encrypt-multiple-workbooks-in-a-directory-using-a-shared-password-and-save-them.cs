@@ -1,49 +1,45 @@
 // Title: Encrypt multiple Excel workbooks in a folder with a shared password using Aspose.Cells for .NET
-// AI Prompts: Create a C# program that scans a specified directory for .xlsx files, sets the same password on each workbook via Workbook.Settings.Password, and writes the encrypted files to a target folder. | Write a script using Aspose.Cells for .NET to load every Excel workbook in a source path, apply a common encryption password, and save the protected copies to a separate output directory.
-// Common Searches: Aspose.Cells C# batch encrypt Excel files with same password | C# program to apply password protection to all .xlsx files in a folder | how to save encrypted workbooks to a different directory using Aspose.Cells | automate encryption of multiple Excel workbooks with Aspose.Cells .NET
-// Tags: batch workbook encryption Aspose.Cells | Workbook.Settings.Password usage | encrypt .xlsx files C# Aspose.Cells | save protected Excel files to separate folder | shared password for multiple workbooks Aspose.Cells
+// Common Searches: C# code to batch encrypt all .xlsx files in a directory with Aspose.Cells | How to apply the same password to many Excel workbooks using Aspose.Cells .NET | Save encrypted Excel files to a separate output folder with Aspose.Cells | Automate workbook password protection for multiple files in C# | Aspose.Cells example for encrypting workbooks in bulk
+// Tags: batch encrypt Excel workbooks Aspose.Cells | shared password workbook protection C# | save encrypted .xlsx to output directory | Workbook.Settings.Password Aspose.Cells example | process multiple Excel files Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example iterates over every .xlsx file in a source directory, loads each workbook with Aspose.Cells, assigns a common password through Workbook.Settings.Password, and saves the encrypted workbooks to a designated output folder.
+// The program iterates through every .xlsx file in a specified input folder, loads each workbook with Aspose.Cells, assigns a common password via the Workbook.Settings.Password property, and saves the encrypted workbook to a designated output folder, creating the output directory if it does not exist.
 class EncryptWorkbooks
 {
     static void Main()
     {
-        // Directory containing the source workbooks
-        string sourceDirectory = @"C:\InputWorkbooks";
+        // Directory containing the original workbooks
+        string inputDirectory = @"C:\InputWorkbooks";
 
         // Directory where encrypted workbooks will be saved
-        string destinationDirectory = @"C:\EncryptedWorkbooks";
+        string outputDirectory = @"C:\EncryptedWorkbooks";
 
         // Shared password for all workbooks
-        string sharedPassword = "MySecurePassword";
+        string password = "MySecretPassword";
 
-        // Ensure the destination directory exists
-        if (!Directory.Exists(destinationDirectory))
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDirectory);
+
+        // Process each .xlsx file in the input directory
+        foreach (string inputPath in Directory.GetFiles(inputDirectory, "*.xlsx"))
         {
-            Directory.CreateDirectory(destinationDirectory);
-        }
+            // Load the workbook from file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Process each .xlsx file in the source directory
-        foreach (string sourceFilePath in Directory.GetFiles(sourceDirectory, "*.xlsx"))
-        {
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(sourceFilePath);
+            // Apply password protection (encryption)
+            workbook.Settings.Password = password;
 
-            // Apply password protection (encryption) to the workbook
-            workbook.Settings.Password = sharedPassword;
-
-            // Determine the output file path (overwrite with same name in destination folder)
-            string fileName = Path.GetFileName(sourceFilePath);
-            string destinationFilePath = Path.Combine(destinationDirectory, fileName);
+            // Determine the output file path
+            string fileName = Path.GetFileName(inputPath);
+            string outputPath = Path.Combine(outputDirectory, fileName);
 
             // Save the encrypted workbook
-            workbook.Save(destinationFilePath);
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
 
-        Console.WriteLine("All workbooks have been encrypted and saved.");
+        Console.WriteLine("Encryption completed for all workbooks.");
     }
 }

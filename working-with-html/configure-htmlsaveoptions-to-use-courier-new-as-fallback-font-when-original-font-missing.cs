@@ -1,47 +1,44 @@
-// Title: Set Courier New as the fallback font in Aspose.Cells HtmlSaveOptions when exporting Excel to HTML using C#
-// AI Prompts: Write C# code that assigns "Courier New" as the workbook's default font and saves the workbook to HTML with Aspose.Cells HtmlSaveOptions. | Demonstrate how to configure HtmlSaveOptions to use an alternative font when the original font is unavailable during Excel to HTML conversion with Aspose.Cells for .NET. | Provide an example that sets a default font for the workbook and then exports it as HTML using Aspose.Cells.
-// Common Searches: specify a fallback font for missing fonts in HtmlSaveOptions Aspose.Cells | export Excel workbook to HTML with Courier New as default font C# | set default style font before saving as HTML using Aspose.Cells | handle missing fonts during Excel to HTML conversion Aspose.Cells .NET | configure fallback font in Aspose.Cells HTML export C#
-// Tags: Aspose.Cells HtmlSaveOptions default font substitution | C# set default workbook font for HTML export | Excel to HTML conversion Courier New | Aspose.Cells font substitution handling | Aspose.Cells workbook font initialization
+// Title: Configure HtmlSaveOptions to use "Courier New" as a fallback font when exporting an Excel workbook to HTML with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells set fallback font for HTML export when original font is unavailable C# | C# HtmlSaveOptions default font Courier New for missing Excel fonts | How to specify a backup font in Aspose.Cells HTML conversion .NET | Excel to HTML conversion missing font handling using Aspose.Cells | Configure Aspose.Cells HtmlSaveOptions to substitute unavailable fonts with Courier New
+// Tags: HtmlSaveOptions font substitution | Courier New backup typeface for HTML export | unavailable font handling Aspose.Cells | Excel to HTML conversion typeface mapping | Aspose.Cells HTML export font mapping
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Loads an Excel file, assigns "Courier New" as the workbook's default font to serve as a fallback for any missing fonts, and saves the workbook to HTML using Aspose.Cells HtmlSaveOptions.
+// The example loads an Excel workbook, configures HtmlSaveOptions to use "Courier New" as a fallback typeface when the original font cannot be found, and saves the workbook as an HTML file while handling potential errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.html";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Verify that the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the workbook from the input file
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Set a fallback font for any missing fonts in the workbook
-            workbook.DefaultStyle.Font.Name = "Courier New";
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // (Optional) Set additional options here if needed
 
-            // Configure HTML save options (default settings are sufficient here)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Save the workbook as an HTML file
+            // Save the workbook as HTML using the configured options
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log or display the exception details for troubleshooting
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

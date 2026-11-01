@@ -1,85 +1,57 @@
-// Title: Use Aspose.Cells WorkbookDesigner to bind a List<Product> custom collection to smart markers and export to Excel in C#
-// AI Prompts: Write C# code that creates a WorkbookDesigner, adds smart marker expressions for a product list, binds a List<Product> via SetDataSource, processes the markers, and saves the workbook as an .xlsx file. | Show how to insert header cells and smart marker placeholders (e.g., &=Products.Name) into a worksheet before attaching a custom object collection in Aspose.Cells. | Demonstrate proper error handling while populating an Excel template from a collection of objects using Aspose.Cells WorkbookDesigner in .NET.
-// Common Searches: aspnet bind List<Product> to Aspose.Cells WorkbookDesigner smart markers | c# generate Excel rows from custom object collection using Aspose.Cells | how to use SetDataSource with a List of objects in Aspose.Cells WorkbookDesigner | populate Excel template with product data using smart markers in C# | Aspose.Cells WorkbookDesigner example for dynamic table generation from objects
-// Tags: WorkbookDesigner SetDataSource with List<T> | Aspose.Cells smart markers collection binding | C# generate Excel from object list | dynamic row insertion using smart markers | export custom collection to .xlsx with Aspose.Cells
+// Title: How to bind a List<Employee> as a data source for WorkbookDesigner smart‑marker merging in Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a List<Employee>, loads an Excel template containing ${Employees.*} markers, and uses WorkbookDesigner.SetDataSource to merge the data. | Show how to substitute the List<Employee> with a DataTable while preserving the same ${Employees.*} smart markers in the template. | Add a calculated Bonus property to the Employee class and demonstrate merging it via a new ${Employees.Bonus} smart marker.
+// Common Searches: Aspose.Cells WorkbookDesigner setdata source list of objects example | C# smart markers using custom POCO collection in Excel template | how to merge employee data into Excel with Aspose.Cells smart markers | replace List<Employee> with DataTable for WorkbookDesigner in .NET | add computed field to smart marker collection in Aspose.Cells
+// Tags: WorkbookDesigner SetDataSource with List<T> | Aspose.Cells smart markers custom POCO collection | Excel template merging using ${Employees.*} | C# replace List with DataTable in WorkbookDesigner | computed property merging Aspose.Cells smart markers
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsCustomDataSource
 {
-    // The sample creates a new Workbook, writes header cells, places smart marker expressions referencing a "Products" collection, builds a List<Product> with sample data, binds this collection to WorkbookDesigner via SetDataSource, processes the markers to fill the worksheet, and saves the result as CustomCollectionOutput.xlsx.
-    public class Product
+    // Define a custom class that represents a row of data.
+    // The program defines an Employee POCO, builds a List<Employee>, loads an Excel template that contains ${Employees.Name}, ${Employees.Department}, and ${Employees.Salary} smart markers, assigns the list to WorkbookDesigner via SetDataSource("Employees", employees), processes the template to merge the data, and saves the populated workbook as Result.xlsx.
+    public class Employee
     {
         public string Name { get; set; }
-        public double Price { get; set; }
-        public int Quantity { get; set; }
+        public string Department { get; set; }
+        public double Salary { get; set; }
 
-        public Product(string name, double price, int quantity)
+        public Employee(string name, string department, double salary)
         {
             Name = name;
-            Price = price;
-            Quantity = quantity;
+            Department = department;
+            Salary = salary;
         }
     }
 
-    public class WorkbookDesignerCustomCollectionDemo
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            try
+            // 1. Create a collection of custom objects.
+            List<Employee> employees = new List<Employee>
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                new Employee("John Doe", "Finance", 75000),
+                new Employee("Jane Smith", "HR", 68000),
+                new Employee("Bob Johnson", "IT", 82000)
+            };
 
-                // Header row
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["C1"].PutValue("Quantity");
+            // 2. Load the Excel template that contains merge fields.
+            //    The template should have placeholders like ${Employees.Name}, ${Employees.Department}, ${Employees.Salary}
+            Workbook workbook = new Workbook("Template.xlsx");
 
-                // Smart markers that reference the collection named "Products"
-                sheet.Cells["A2"].PutValue("&=Products.Name");
-                sheet.Cells["B2"].PutValue("&=Products.Price");
-                sheet.Cells["C2"].PutValue("&=Products.Quantity");
+            // 3. Initialize WorkbookDesigner and set the custom collection as a data source.
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // The name "Employees" will be used in the template as the collection identifier.
+            designer.SetDataSource("Employees", employees);
 
-                // Prepare a custom collection of objects
-                List<Product> products = new List<Product>
-                {
-                    new Product("Apple", 1.20, 50),
-                    new Product("Banana", 0.80, 100),
-                    new Product("Orange", 1.50, 75)
-                };
+            // 4. Process the template to merge data.
+            designer.Process();
 
-                // Initialize the designer and assign the workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // Bind the custom collection to the smart marker variable "Products"
-                designer.SetDataSource("Products", products);
-
-                // Process the smart markers to populate the worksheet
-                designer.Process();
-
-                // Save the populated workbook
-                workbook.Save("CustomCollectionOutput.xlsx");
-                Console.WriteLine("Workbook saved as CustomCollectionOutput.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookDesignerCustomCollectionDemo.Run();
+            // 5. Save the resulting workbook.
+            workbook.Save("Result.xlsx");
         }
     }
 }

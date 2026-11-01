@@ -1,7 +1,7 @@
-// Title: Insert a rectangle shape in an Excel workbook with Aspose.Cells, load expected coordinates from a JSON file, and verify the shape’s position in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to add a rectangle shape to a worksheet, reads the expected shape name and coordinates from a JSON configuration, and asserts that the shape's UpperLeftRow and UpperLeftColumn are within a small tolerance of the expected values. | Write a method that deserializes a JSON file containing a shape name and a list of expected points, retrieves the matching shape from an Aspose.Cells workbook, and returns true only if every actual connection point matches the expected point within 0.001 units.
-// Common Searches: c# Aspose.Cells verify shape position using JSON configuration file | how to compare Aspose.Cells shape connection points with expected coordinates | read shape expected points from config.json and validate in Aspose.Cells workbook | Aspose.Cells shape UpperLeftRow UpperLeftColumn tolerance check in C# | load shape name and points from JSON and match with workbook shape Aspose.Cells
-// Tags: add rectangle shape to worksheet Aspose.Cells C# | deserialize shape config JSON in C# | validate shape coordinates against expected values Aspose.Cells | compare actual shape points with tolerance C# | save workbook after shape verification Aspose.Cells
+// Title: Add a rectangle shape with Aspose.Cells, retrieve its connection points, and validate them against a JSON configuration file (C#)
+// AI Prompts: Write C# code that inserts a rectangle shape using Aspose.Cells, reads expected connection point data from a JSON file, and verifies each point with Shape.GetConnectionPoints(). | Demonstrate how to change the shape type, position, or size while preserving the JSON‑driven connection‑point validation logic. | Create a reusable method that logs any mismatched connection points, returns a validation flag, and saves the workbook to a given path.
+// Common Searches: how to get connection points of a shape using Aspose.Cells C# | compare Excel shape coordinates with values from a JSON config in .NET | validate shape geometry in Aspose.Cells workbook against expected points | read expected shape connection points from a config file and verify in C# | Aspose.Cells Shape.GetConnectionPoints example with JSON validation
+// Tags: Aspose.Cells retrieve shape connection points | validate shape geometry with JSON Aspose.Cells | add rectangle shape and compare points C# | Shape.GetConnectionPoints verification | JSON driven shape coordinate validation Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -10,117 +10,112 @@ using System.Text.Json;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, inserts a rectangle shape named "MyShape", reads the expected shape name and coordinate points from a config.json file, compares the shape's UpperLeftRow and UpperLeftColumn to the expected values within a 0.001 tolerance, reports the match result, and saves the workbook as output.xlsx.
-public class ConfigPoint
+namespace ShapeConnectionPointsDemo
 {
-    public double X { get; set; }
-    public double Y { get; set; }
-}
-
-public class ShapeConfig
-{
-    public string ShapeName { get; set; } = string.Empty;
-    public List<ConfigPoint> ExpectedPoints { get; set; } = new();
-}
-
-class Program
-{
-    static void Main()
+    // Classes to map the configuration file
+    // The sample creates a new workbook, adds a rectangle shape to the first worksheet, loads expected connection point coordinates from a JSON configuration file, retrieves the shape's actual connection points via GetConnectionPoints(), compares each point's row, column, offsetX, and offsetY with the expected values, logs any mismatches, and saves the workbook.
+    public class Config
     {
-        try
+        public List<ExpectedPoint> ExpectedPoints { get; set; } = new();
+    }
+
+    public class ExpectedPoint
+    {
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public int OffsetX { get; set; }
+        public int OffsetY { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
         {
-            // ---------- Create a new workbook ----------
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-
-            // ---------- Add a rectangle shape ----------
-            // AddShape returns a Shape object in recent Aspose.Cells versions
-            Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                1,    // upper left row
-                1,    // upper left column
-                0,    // upper left row offset (in points)
-                0,    // upper left column offset (in points)
-                100,  // height (in points)
-                100); // width (in points)
-
-            shape.Name = "MyShape";
-
-            // ---------- Retrieve shape position as a sample point ----------
-            var actualPoints = new List<ConfigPoint>
-            {
-                new ConfigPoint
-                {
-                    X = shape.UpperLeftRow,
-                    Y = shape.UpperLeftColumn
-                }
-            };
-
-            // ---------- Load expected coordinates from config ----------
-            const string configPath = "config.json";
-            if (!File.Exists(configPath))
-            {
-                Console.WriteLine($"Config file not found: {configPath}");
-                return;
-            }
-
-            string json = File.ReadAllText(configPath);
-            ShapeConfig? config = JsonSerializer.Deserialize<ShapeConfig>(json);
-            if (config == null)
-            {
-                Console.WriteLine("Failed to deserialize configuration.");
-                return;
-            }
-
-            // ---------- Compare actual vs. expected ----------
-            bool match = true;
-
-            if (!string.Equals(shape.Name, config.ShapeName, StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine($"Shape name mismatch. Workbook shape: {shape.Name}, Config shape: {config.ShapeName}");
-                match = false;
-            }
-            else if (config.ExpectedPoints == null || config.ExpectedPoints.Count != actualPoints.Count)
-            {
-                Console.WriteLine("Number of points does not match the expected count.");
-                match = false;
-            }
-            else
-            {
-                const double tolerance = 0.001;
-                for (int i = 0; i < actualPoints.Count; i++)
-                {
-                    double dx = Math.Abs(actualPoints[i].X - config.ExpectedPoints[i].X);
-                    double dy = Math.Abs(actualPoints[i].Y - config.ExpectedPoints[i].Y);
-                    if (dx > tolerance || dy > tolerance)
-                    {
-                        Console.WriteLine($"Point {i} mismatch. Actual: ({actualPoints[i].X}, {actualPoints[i].Y}) " +
-                                          $"Expected: ({config.ExpectedPoints[i].X}, {config.ExpectedPoints[i].Y})");
-                        match = false;
-                        break;
-                    }
-                }
-            }
-
-            Console.WriteLine(match
-                ? "Points match expected coordinates."
-                : "Points do NOT match expected coordinates.");
-
-            // ---------- Save the workbook ----------
-            const string outputPath = "output.xlsx";
             try
             {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // ----- Load expected coordinates from config file -----
+                const string configPath = "config.json";
+                if (!File.Exists(configPath))
+                {
+                    Console.WriteLine($"Config file not found: {configPath}");
+                    return;
+                }
+
+                string json = File.ReadAllText(configPath);
+                Config? config = JsonSerializer.Deserialize<Config>(json);
+                if (config == null || config.ExpectedPoints == null)
+                {
+                    Console.WriteLine("Failed to deserialize configuration.");
+                    return;
+                }
+
+                // ----- Create a new workbook and add a shape -----
+                Workbook workbook = new Workbook();                     // Create a new workbook
+                Worksheet sheet = workbook.Worksheets[0];              // Get the first worksheet
+
+                // Add a rectangle shape (you can change the type as needed)
+                // Parameters: type, upperRow, upperColumn, upperRowOffset, lowerRow, lowerColumn, lowerRowOffset
+                Shape shape = sheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // Shape type
+                    2, 1, 0,                  // Upper left cell (row 2, column 1) with no offset
+                    5, 4, 0);                 // Lower right cell (row 5, column 4) with no offset
+
+                shape.Width = 120;   // Optional: set explicit width
+                shape.Height = 80;   // Optional: set explicit height
+
+                // ----- Retrieve connection points of the shape -----
+                // The method returns an array of connection point objects.
+                var actualPoints = shape.GetConnectionPoints();
+
+                // ----- Compare actual points with expected points from config -----
+                bool allMatch = true;
+
+                if (actualPoints.Length != config.ExpectedPoints.Count)
+                {
+                    allMatch = false;
+                    Console.WriteLine($"Count mismatch: actual={actualPoints.Length}, expected={config.ExpectedPoints.Count}");
+                }
+                else
+                {
+                    for (int i = 0; i < actualPoints.Length; i++)
+                    {
+                        // Use dynamic to avoid compile‑time dependency on the exact type name.
+                        dynamic actual = actualPoints[i];
+                        ExpectedPoint expected = config.ExpectedPoints[i];
+
+                        if (actual.Row != expected.Row ||
+                            actual.Column != expected.Column ||
+                            actual.OffsetX != expected.OffsetX ||
+                            actual.OffsetY != expected.OffsetY)
+                        {
+                            allMatch = false;
+                            Console.WriteLine($"Point {i} mismatch:");
+                            Console.WriteLine($"  Actual   -> Row:{actual.Row}, Column:{actual.Column}, OffsetX:{actual.OffsetX}, OffsetY:{actual.OffsetY}");
+                            Console.WriteLine($"  Expected -> Row:{expected.Row}, Column:{expected.Column}, OffsetX:{expected.OffsetX}, OffsetY:{expected.OffsetY}");
+                        }
+                    }
+                }
+
+                Console.WriteLine(allMatch
+                    ? "All connection points match the expected coordinates."
+                    : "Some connection points do not match the expected coordinates.");
+
+                // ----- Save the workbook -----
+                const string outputPath = "ShapeWithConnectionPoints.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

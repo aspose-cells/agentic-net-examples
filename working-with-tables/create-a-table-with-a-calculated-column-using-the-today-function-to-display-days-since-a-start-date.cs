@@ -1,69 +1,75 @@
-// Title: Add a calculated column that shows days since a start date using TODAY() in an Aspose.Cells Excel table (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a worksheet, inserts a ListObject table, and sets the third column formula to =TODAY()-[StartDate]. | Rename the start‑date column to "BeginDate" and adjust the calculated column formula to reference the new header. | Apply a medium‑style table format, force formula recalculation, and save the workbook as TableWithCalculatedColumn.xlsx.
-// Common Searches: how to use TODAY() in a calculated column of an Aspose.Cells ListObject table in C# | Aspose.Cells C# create Excel table with days‑since‑start column | C# Aspose.Cells structured reference formula for date difference in a table | calculate days between today and a date column using Aspose.Cells | apply table style and recalculate formulas in Aspose.Cells workbook C#
-// Tags: Aspose.Cells calculated column TODAY() formula | C# ListObject table structured reference | Excel table style assignment Aspose.Cells | recalculate workbook formulas Aspose.Cells | save workbook as .xlsx Aspose.Cells
+// Title: Add a calculated column that shows days since a start date using TODAY in an Excel table with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# create table with calculated column using TODAY function | how to compute days elapsed from a start date in an Excel table via Aspose.Cells | C# Aspose.Cells structured reference formula for days since date | generate Excel workbook with ListObject and dynamic days‑since column in .NET | using TODAY() in Aspose.Cells table formula to calculate age of dates
+// Tags: Aspose.Cells calculated column TODAY formula | C# ListObject table structured reference | Excel table days‑since column Aspose.Cells | Aspose.Cells auto‑fit columns workbook | Aspose.Cells .NET table style TableStyleMedium9
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The program creates a new workbook, adds a ListObject table with ID, StartDate, and DaysSinceStart columns, defines a calculated column using the formula =TODAY()-[StartDate], applies a medium table style, forces formula recalculation, and saves the file as TableWithCalculatedColumn.xlsx.
+// The example creates a new workbook, adds a ListObject table with "StartDate" and "DaysSince" headers, fills start dates, defines a calculated column "DaysSince" using the formula "=TODAY()-[StartDate]", applies a table style, auto‑fits columns, and saves the file as TableWithDaysSince.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook.
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
 
-            // Add headers
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("StartDate");
-            sheet.Cells["C1"].PutValue("DaysSinceStart");
+            // Set headers for the table.
+            sheet.Cells["A1"].PutValue("StartDate");
+            sheet.Cells["B1"].PutValue("DaysSince");
 
-            // Add sample data
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue(new DateTime(2023, 6, 15));
-            sheet.Cells["A4"].PutValue(3);
-            sheet.Cells["B4"].PutValue(new DateTime(2024, 2, 20));
+            // Populate some start dates.
+            sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["A3"].PutValue(new DateTime(2023, 3, 15));
+            sheet.Cells["A4"].PutValue(new DateTime(2023, 6, 30));
+            sheet.Cells["A5"].PutValue(new DateTime(2023, 12, 1));
 
-            // Determine the range that will become the table (including header)
-            int firstRow = 0;          // zero‑based index for row 1
-            int firstColumn = 0;       // zero‑based index for column A
-            int totalRows = sheet.Cells.MaxDataRow + 1; // includes header row
-            int totalColumns = 3;      // ID, StartDate, DaysSinceStart
+            // Define the range that will become a table (ListObject).
+            // The range includes headers and data rows.
+            int firstRow = 0;   // zero‑based index for row 1
+            int firstCol = 0;   // zero‑based index for column A
+            int totalRows = 5;  // header + 4 data rows
+            int totalCols = 2;  // StartDate and DaysSince
 
-            // Add a ListObject (Excel table) to the worksheet; hasHeaders = true
+            // Add the table to the worksheet (hasHeaders = true).
             int tableIndex = sheet.ListObjects.Add(
                 firstRow,
-                firstColumn,
+                firstCol,
                 firstRow + totalRows - 1,
-                firstColumn + totalColumns - 1,
+                firstCol + totalCols - 1,
                 true);
 
             ListObject table = sheet.ListObjects[tableIndex];
-            // Table name and header visibility are already set by the Add method
-            table.TableStyleType = TableStyleType.TableStyleMedium9;
+            // Header row is already shown because hasHeaders = true.
+            // Totals row is not required for this example.
+            table.TableStyleType = TableStyleType.TableStyleMedium9; // optional styling
 
-            // Set a calculated column formula: DaysSinceStart = TODAY() - StartDate
-            // Use structured reference to the StartDate column
-            ListColumn calcColumn = table.ListColumns[2]; // third column (zero‑based)
-            calcColumn.Formula = "=TODAY()-[StartDate]";
+            // Set the name of the calculated column.
+            table.ListColumns[1].Name = "DaysSince";
 
-            // Recalculate formulas so the workbook contains the computed values
-            workbook.CalculateFormula();
+            // Apply a calculated formula using the TODAY function.
+            // The formula uses a structured reference to the StartDate column.
+            table.ListColumns[1].Formula = "=TODAY()-[StartDate]";
 
-            // Save the workbook
-            workbook.Save("TableWithCalculatedColumn.xlsx");
+            // Auto‑fit columns for better visibility.
+            sheet.AutoFitColumns();
+
+            // Determine output path.
+            string outputPath = "TableWithDaysSince.xlsx";
+
+            // Save the workbook to a file.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

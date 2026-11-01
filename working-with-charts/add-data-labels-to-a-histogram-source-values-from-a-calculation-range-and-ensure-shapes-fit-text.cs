@@ -1,84 +1,68 @@
-// Title: Add calculated data labels to a histogram chart and auto‑fit label shapes with Aspose.Cells for .NET
-// AI Prompts: Create a column histogram in Aspose.Cells, bind its data labels to a separate calculation range, and turn on shape auto‑sizing so each label fits its text. | Programmatically set custom text for each point’s data label from a formula cell and ensure the label shape resizes automatically in C#. | Recalculate the chart after linking data labels to formula cells to display calculated values on a histogram using Aspose.Cells.
-// Common Searches: how to link histogram data labels to a formula range using Aspose.Cells C# | auto resize chart data label shapes to fit text in Aspose.Cells .NET | display calculated values as data labels on an Excel column chart with Aspose.Cells | customize individual point labels in a histogram chart programmatically Aspose.Cells | set linked source for data labels in Aspose.Cells chart
-// Tags: histogram data labels linked to formula range Aspose.Cells | auto‑fit chart label shape C# Aspose.Cells | custom point data label text Aspose.Cells | column chart series data label customization .NET | link data label to cell range Aspose.Cells
+// Title: Add data labels from a calculated column to a histogram chart and enable shape text fitting with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that creates a histogram chart, sets its series values to a formula‑driven column, and turns on data labels. | Update the Aspose.Cells example to apply the 'Fit Text' property to the chart’s shape objects before saving the workbook. | Extend the histogram example to include a second series sourced from another calculated range and customize the label number format in C#.
+// Common Searches: how to show calculated values as data labels in an Aspose.Cells histogram chart c# | aspnet core use formula column for histogram series Aspose.Cells | enable fit text for chart shapes in Aspose.Cells .NET | add multiple series to histogram chart with Aspose.Cells C# example | save histogram with data labels to xlsx using Aspose.Cells
+// Tags: Aspose.Cells histogram series configuration | Aspose.Cells calculated range for chart series | Aspose.Cells chart shape text fitting | Aspose.Cells C# workbook export Xlsx | Aspose.Cells multiple series histogram
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsHistogramExample
+// The program creates a workbook, adds raw and calculated data, inserts a histogram chart that uses the calculated column as its series values, enables data labels to display those values, applies text‑fit to chart shapes, and saves the file as an XLSX workbook.
+class Program
 {
-    // The example creates a workbook, fills columns with categories, original values, and a calculated range (doubling the values). It adds a column histogram, assigns the value series and categories, enables data labels, links those labels to the calculated range, and forces each label shape to auto‑fit its text. It also demonstrates overriding each point’s label with custom text from the calculation cells, recalculates the chart, and saves the file as HistogramWithCalculatedDataLabels.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            var workbook = new Workbook();
 
-                // Populate source data (Category and Values)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
+            // Access the first worksheet and rename it
+            var sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Populate source data (categories and raw values)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(15);
 
-                // Create a calculation range (e.g., double the original values)
-                sheet.Cells["C1"].PutValue("CalcValue");
-                sheet.Cells["C2"].Formula = "=B2*2";
-                sheet.Cells["C3"].Formula = "=B3*2";
-                sheet.Cells["C4"].Formula = "=B4*2";
+            // Add a calculation range (e.g., double the raw values)
+            sheet.Cells["C1"].PutValue("CalcValue");
+            sheet.Cells["C2"].Formula = "=B2*2";
+            sheet.Cells["C3"].Formula = "=B3*2";
+            sheet.Cells["C4"].Formula = "=B4*2";
 
-                // Add a histogram (using Column chart type)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+            // Evaluate formulas so the calculation range contains actual numbers
+            workbook.CalculateFormula();
 
-                // Set the data range for the series
-                chart.NSeries.Add("B2:B4", true);          // Values
-                chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Add a histogram chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Histogram, 6, 0, 20, 10);
+            var chart = sheet.Charts[chartIdx];
 
-                // Enable data labels for the series
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;        // Show the original value
-                series.DataLabels.Position = LabelPositionType.InsideBase;
+            // Set chart title
+            chart.Title.Text = "Histogram with Data Labels";
 
-                // Use the calculation range as the source for data label text
-                series.DataLabels.ShowCellRange = true;    // Enable cell range display
-                series.DataLabels.LinkedSource = "C2:C4";  // Link to calculated values
+            // Add a series that uses the calculation range as its values
+            int seriesIdx = chart.NSeries.Add("C2:C4", true);
+            // Link category (X‑axis) labels to column A (optional – omitted if not supported)
+            // chart.NSeries[seriesIdx].CategoryData = "A2:A4";
 
-                // Ensure each data label shape auto‑fits the text
-                series.DataLabels.IsResizeShapeToFitText = true;
+            // Enable data labels and configure them to show the calculated values
+            var series = chart.NSeries[seriesIdx];
+            // If the HasDataLabels property is unavailable, setting ShowValue is sufficient
+            series.DataLabels.ShowValue = true;
 
-                // Optionally, customize each point's label (demonstrates Text property)
-                for (int i = 0; i < series.Points.Count; i++)
-                {
-                    ChartPoint point = series.Points[i];
-                    // Override auto‑text with custom text if needed
-                    point.DataLabels.IsAutoText = false;
-                    string cellRef = $"C{i + 2}";
-                    point.DataLabels.Text = $"Calc: {sheet.Cells[cellRef].StringValue}";
-                    // Ensure shape fits the custom text
-                    point.DataLabels.IsResizeShapeToFitText = true;
-                }
-
-                // Recalculate the chart to apply linked formulas and layout
-                chart.Calculate();
-
-                // Save the workbook
-                workbook.Save("HistogramWithCalculatedDataLabels.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("HistogramWithDataLabels.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

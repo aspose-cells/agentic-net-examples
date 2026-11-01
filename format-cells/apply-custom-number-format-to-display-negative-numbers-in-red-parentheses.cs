@@ -1,7 +1,6 @@
-// Title: How to format negative numbers in red parentheses using a custom number format in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Aspose.Cells style with the custom number format "#,##0;[Red](#,##0)" and applies it to a target cell range. | Show how to save an Aspose.Cells workbook after applying a style that renders negative values in red parentheses.
-// Common Searches: Aspose.Cells C# custom number format to display negative values in red parentheses | apply red parentheses number format to a range using Aspose.Cells .NET | how to set negative number display style in an Excel file with Aspose.Cells | C# Aspose.Cells style for negative numbers red and enclosed in parentheses | save workbook after formatting negative numbers with Aspose.Cells
-// Tags: Aspose.Cells red parentheses style | apply style to cell range C# Aspose.Cells | save workbook after formatting negatives Aspose.Cells | C# set number format pattern Aspose.Cells | Excel negative value formatting Aspose.Cells
+// Title: How to format negative numbers in red parentheses using a custom number format with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# custom number format red parentheses for negative values | apply red parentheses style to negative numbers in Excel workbook using Aspose.Cells | C# code to display negative numbers in red and parentheses with Aspose.Cells | set number format '#,##0;[Red](#,##0)' on a cell range using Aspose.Cells .NET | formatting negative currency values in red parentheses with Aspose.Cells API
+// Tags: Aspose.Cells custom number format syntax | StyleFlag number format application Aspose.Cells | range.ApplyStyle usage Aspose.Cells | Excel negative number red parentheses formatting .NET | Workbook.Save with formatted cells Aspose.Cells
 
 using Aspose.Cells;
 using System;
@@ -10,36 +9,41 @@ using System.IO;
 // Alias to avoid conflict with System.Range introduced in C# 8.0
 using AsposeRange = Aspose.Cells.Range;
 
-// The example creates a new workbook, writes positive, negative, and zero values to cells A1‑A3, defines a style with the custom format "#,##0;[Red](#,##0)" to show negative numbers in red parentheses, applies the style to the range A1:A3, and saves the file as CustomNumberFormat.xlsx.
+// The example creates a workbook, writes a positive and a negative value to cells A1 and A2, defines a custom style with the format "#,##0;[Red](#,##0)" to show negative numbers in red parentheses, applies the style to the A1:A2 range using a StyleFlag that targets only the number format, and saves the file as FormattedNumbers.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data: positive, negative, and zero values
-            sheet.Cells["A1"].PutValue(1234);
-            sheet.Cells["A2"].PutValue(-5678);
-            sheet.Cells["A3"].PutValue(0);
+            // Insert sample numbers: a positive and a negative value
+            sheet.Cells["A1"].PutValue(123);
+            sheet.Cells["A2"].PutValue(-456);
 
-            // Define a custom number format:
+            // Create a style with a custom number format:
             // Positive numbers: normal display
             // Negative numbers: red color and enclosed in parentheses
             Style customStyle = workbook.CreateStyle();
             customStyle.Custom = "#,##0;[Red](#,##0)";
 
-            // Apply the custom style to the target range
-            AsposeRange range = sheet.Cells.CreateRange("A1:A3");
-            range.SetStyle(customStyle); // Apply the style (including number format)
+            // Define which style attributes to apply (only number format)
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
 
-            // Define output file path
-            string outputPath = "CustomNumberFormat.xlsx";
+            // Apply the custom style to the range containing the numbers
+            AsposeRange range = sheet.Cells.CreateRange("A1:A2");
+            range.ApplyStyle(customStyle, flag);
 
-            // Save the workbook
+            // Determine output file path
+            string outputPath = "FormattedNumbers.xlsx";
+
+            // Save the workbook (lifecycle rule: save)
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }

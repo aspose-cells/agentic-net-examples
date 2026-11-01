@@ -1,7 +1,7 @@
-// Title: Load an Excel workbook from a remote URL using HttpClient, modify the first worksheet with Aspose.Cells, and save the updated file
-// AI Prompts: Generate C# code that uses HttpClient to download an .xlsx file from a specified URL, streams the response into an Aspose.Cells Workbook, reads the value of cell A1 on the first worksheet, writes a new value to cell B2, and saves the workbook as a new file. | Create a resilient C# routine that, if the HTTP download fails, loads a local Excel file or creates a new workbook, then performs the same first‑worksheet cell updates using Aspose.Cells.
-// Common Searches: how to stream an Excel file from a web URL into Aspose.Cells in C# | Aspose.Cells load workbook from HttpClient response stream | C# fallback to local Excel file when remote download fails using Aspose.Cells | update first worksheet cell values after downloading .xlsx with Aspose.Cells | save modified workbook as a new .xlsx file using Aspose.Cells .NET
-// Tags: httpclient download excel aspocells | load workbook from stream aspocells .net | fallback to local excel file aspocells | edit first worksheet cell aspocells | save modified workbook aspocells
+// Title: Load an Excel workbook from a remote URL with HttpClient, fallback to a local file, and read cell A1 using Aspose.Cells for .NET
+// AI Prompts: Create C# code that fetches an .xlsx file from a given URL using HttpClient, loads it into an Aspose.Cells Workbook from the response stream, and prints the value of cell A1 on the first worksheet. | Add logic so that if the HTTP download fails, the program loads the workbook from a specified local .xlsx path, handling HttpRequestException and file‑access exceptions. | Enhance the sample with detailed try‑catch blocks that log errors for network failures, invalid workbook streams, and worksheet processing problems.
+// Common Searches: asp.net download excel file with HttpClient and open it using Aspose.Cells | c# load workbook from stream fallback to local file Aspose.Cells | read cell value from first worksheet after downloading xlsx in .NET | handle HttpRequestException when loading Excel workbook with Aspose.Cells | example code for loading Excel from URL and reading A1 using Aspose.Cells
+// Tags: httpclient fetch xlsx Aspose.Cells | stream based workbook loading Aspose.Cells C# | local fallback workbook Aspose.Cells | retrieve A1 cell value Aspose.Cells | robust workbook loading error handling .NET
 
 using System;
 using System.IO;
@@ -9,51 +9,42 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The program attempts to download an .xlsx file from a given URL using HttpClient, loads it into an Aspose.Cells Workbook (or falls back to a local file or a new workbook), reads cell A1 from the first worksheet, writes "Processed" to cell B2, and saves the updated workbook as "Processed.xlsx".
+// The example demonstrates how to download an .xlsx file from a remote URL using HttpClient, load it into an Aspose.Cells Workbook via a stream, and read the value of cell A1 from the first worksheet. It includes a fallback to a local file when the download fails and provides comprehensive exception handling for network, file, and processing errors.
 class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
-        Workbook workbook = null;
         string url = "https://example.com/sample.xlsx";
-        string fallbackPath = "sample.xlsx";
+        string localPath = "sample.xlsx";
 
+        Workbook workbook = null;
+
+        // Attempt to download the workbook from the URL
         try
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(url))
+            using (HttpClient httpClient = new HttpClient())
+            using (Stream stream = await httpClient.GetStreamAsync(url))
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    using (Stream stream = await response.Content.ReadAsStreamAsync())
-                    {
-                        // Load workbook from downloaded stream
-                        workbook = new Workbook(stream);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Unable to download file (Status {response.StatusCode}). Attempting to load local fallback.");
-                }
+                workbook = new Workbook(stream);
             }
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Error downloading file: {ex.Message}");
+            Console.WriteLine($"Failed to download file: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Unexpected error during download: {ex.Message}");
         }
 
-        // If download failed, try loading a local file if it exists
+        // Fallback to local file if download failed
         if (workbook == null)
         {
-            if (File.Exists(fallbackPath))
+            if (File.Exists(localPath))
             {
                 try
                 {
-                    workbook = new Workbook(fallbackPath);
+                    workbook = new Workbook(localPath);
                 }
                 catch (Exception ex)
                 {
@@ -63,28 +54,17 @@ class Program
             }
             else
             {
-                // Create a new workbook as a last resort
-                workbook = new Workbook();
-                Console.WriteLine("Created a new workbook because no source file was available.");
+                Console.WriteLine($"Local file '{localPath}' not found.");
+                return;
             }
         }
 
+        // Process the workbook
         try
         {
-            // Access the first worksheet
             Worksheet firstSheet = workbook.Worksheets[0];
-
-            // Read value from cell A1
-            string a1Value = firstSheet.Cells["A1"].StringValue;
-            Console.WriteLine($"Value of A1: {a1Value}");
-
-            // Write a value to cell B2
-            firstSheet.Cells["B2"].PutValue("Processed");
-
-            // Save the modified workbook
-            string outputPath = "Processed.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Cell cellA1 = firstSheet.Cells["A1"];
+            Console.WriteLine($"Value in A1: {cellA1.Value}");
         }
         catch (Exception ex)
         {

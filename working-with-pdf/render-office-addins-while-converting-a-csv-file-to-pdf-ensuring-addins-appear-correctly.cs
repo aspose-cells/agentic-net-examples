@@ -1,44 +1,57 @@
-// Title: Convert a CSV file to PDF in C# with Aspose.Cells and ensure Office Add‑Ins are rendered in the output
-// AI Prompts: Generate C# code that uses Aspose.Cells to load a CSV file, configure PDF export options, and save the workbook as a PDF while preserving any Office Add‑Ins. | Describe how to verify that Office Add‑Ins appear correctly in the PDF produced from a CSV workbook using Aspose.Cells. | Provide error‑handling and logging steps for a console app that converts CSV to PDF and checks for add‑in rendering with Aspose.Cells.
-// Common Searches: Aspose.Cells export CSV to PDF with Office Add‑Ins rendering in C# | C# how to keep Excel add‑ins visible when converting CSV to PDF using Aspose.Cells | PDFSaveOptions settings for preserving Office Add‑Ins in Aspose.Cells .NET | Verify Office Add‑Ins in PDF generated from CSV workbook with Aspose.Cells | Convert CSV to PDF and include Excel add‑ins using Aspose.Cells library
-// Tags: CSV to PDF conversion Aspose.Cells C# | Office Add‑Ins rendering PDFSaveOptions | Aspose.Cells preserve add‑ins during PDF export | C# Aspose.Cells PDF export with add‑ins | verify add‑ins in PDF generated from CSV workbook
+// Title: Convert CSV to PDF with Aspose.Cells for .NET, preserving worksheet layout and attempting to render Office Add‑Ins
+// AI Prompts: Write C# code that loads a CSV file using Aspose.Cells LoadOptions and saves it as a PDF with PdfSaveOptions.OnePagePerSheet enabled. | Add robust validation to check that the source CSV exists, create the target directory if it does not, and output clear error messages on failure. | Describe the extent to which Aspose.Cells can render Office Add‑In UI elements when exporting a workbook to PDF.
+// Common Searches: asp.net convert csv to pdf using aspose.cells with onepagepersheet option | how to load a csv file into an Aspose.Cells workbook in C# | c# export workbook to pdf and keep each worksheet on a separate page | does Aspose.Cells render Office Add‑Ins when saving to PDF | error handling for missing csv file during Aspose.Cells conversion
+// Tags: csv to pdf conversion Aspose.Cells .NET | PdfSaveOptions OnePagePerSheet usage | LoadOptions for CSV in Aspose.Cells | file existence validation C# Aspose.Cells | export workbook to pdf c# Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace CsvToPdfWithAddIns
+namespace AsposeCellsCsvToPdf
 {
-    // The example loads a CSV file into an Aspose.Cells Workbook, applies default PdfSaveOptions, and saves the workbook as a PDF. It includes guidance on configuring export settings and checking that any Office Add‑Ins present in the source are rendered correctly in the resulting PDF.
+    // The program checks for the CSV file, creates the output folder if needed, loads the CSV into an Aspose.Cells Workbook via LoadOptions, configures PdfSaveOptions with OnePagePerSheet to keep each worksheet on its own page, and saves the workbook as a PDF while handling errors gracefully.
     class Program
     {
         static void Main(string[] args)
         {
             // Path to the source CSV file
-            string csvPath = "input.csv";
+            string csvFilePath = @"C:\Data\input.csv";
 
-            // Path for the resulting PDF file
-            string pdfPath = "output.pdf";
+            // Path where the resulting PDF will be saved
+            string pdfFilePath = @"C:\Data\output.pdf";
 
             try
             {
-                // Ensure the CSV file exists before loading
-                if (!File.Exists(csvPath))
+                // Verify that the CSV file exists
+                if (!File.Exists(csvFilePath))
                 {
-                    Console.WriteLine($"Error: CSV file not found at '{csvPath}'.");
+                    Console.WriteLine($"Error: CSV file not found at '{csvFilePath}'.");
                     return;
                 }
 
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(pdfFilePath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 // Load the CSV file into a Workbook object
-                Workbook workbook = new Workbook(csvPath);
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+                Workbook workbook = new Workbook(csvFilePath, loadOptions);
 
-                // Configure PDF save options (default options are sufficient for CSV to PDF)
-                PdfSaveOptions saveOptions = new PdfSaveOptions();
+                // Configure PDF save options (optional settings)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Render each worksheet on a separate page (useful for multi‑sheet workbooks)
+                    OnePagePerSheet = true
+                    // Note: Aspose.Cells for .NET does not expose an EmbedStandardFonts property.
+                };
 
-                // Save the workbook as a PDF document using the configured options
-                workbook.Save(pdfPath, saveOptions);
-
-                Console.WriteLine("CSV has been successfully converted to PDF.");
+                // Save the workbook as a PDF file
+                workbook.Save(pdfFilePath, pdfOptions);
+                Console.WriteLine($"PDF successfully saved to '{pdfFilePath}'.");
             }
             catch (Exception ex)
             {

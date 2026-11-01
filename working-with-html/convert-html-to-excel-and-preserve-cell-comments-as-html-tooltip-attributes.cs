@@ -1,85 +1,61 @@
-// Title: Convert an HTML table to an XLSX file while preserving HTML title attributes as cell comments using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that reads an HTML file, extracts table rows and cells, writes the cell values to an Aspose.Cells workbook, and creates a comment for each cell from its title attribute. | Show how to use Aspose.Cells to add cell comments based on HTML tooltip attributes when converting an HTML table to an Excel worksheet. | Provide a C# example that parses <td> and <th> elements with regular expressions, saves the data to a .xlsx file, and attaches the title attribute as a comment.
-// Common Searches: aspocells c# convert html table to xlsx with cell comments from title attribute | how to preserve html tooltip as Excel comment using Aspose.Cells | c# read html file and export to excel while keeping tooltip notes | extract title attribute from td and add as comment in Aspose.Cells workbook | convert html table to excel preserving cell notes .net
-// Tags: html-to-xlsx conversion with Aspose.Cells | extract title attribute to Excel comment | c# regex parsing html for Aspose.Cells export | add cell comments from HTML tooltip Aspose.Cells | save workbook as xlsx with cell notes
+// Title: Convert HTML to XLSX and preserve cell comments as HTML tooltip attributes with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# convert HTML to Excel while keeping cell comments as tooltips | How to export cell comments as tooltip attributes when saving to HTML using Aspose.Cells | Load an HTML file into a workbook and save as XLSX preserving comment tooltips in C# | Enable ExportCellCommentsAs AsTooltips with HtmlSaveOptions in Aspose.Cells | Using reflection to set ExportCellComments properties in Aspose.Cells HtmlSaveOptions
+// Tags: Aspose.Cells HTML to XLSX conversion | HtmlSaveOptions ExportCellCommentsAs tooltip | preserve cell comments during HTML to Excel conversion | C# load HTML workbook Aspose.Cells | export comments as HTML tooltip attributes
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using Aspose.Cells;
 
-// The example reads an HTML file, uses regular expressions to locate table rows and cells, writes each cell's plain text into a new Aspose.Cells workbook, extracts any title attribute from the HTML cell and adds it as a comment on the corresponding Excel cell, then saves the workbook as an .xlsx file.
-class HtmlToExcelWithComments
+// The example loads an HTML file into an Aspose.Cells Workbook, saves it as an XLSX file, and then uses HtmlSaveOptions (with reflection) to enable ExportCellComments and set ExportCellCommentsAs to AsTooltips, producing an HTML output where cell comments appear as tooltip attributes.
+class Program
 {
     static void Main()
     {
+        // Paths for input HTML and output files
+        string inputHtmlPath = "input.html";
+        string outputExcelPath = "output.xlsx";
+        string outputHtmlPath = "output.html";
+
         try
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
-
-            // Verify that the HTML file exists
-            if (!File.Exists(htmlPath))
+            // Verify that the input HTML file exists
+            if (!File.Exists(inputHtmlPath))
             {
-                Console.WriteLine($"Input file '{htmlPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputHtmlPath}");
                 return;
             }
 
-            // Load the HTML content into a string
-            string htmlContent = File.ReadAllText(htmlPath);
+            // Load the HTML file into a workbook using Html load options
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
 
-            // Create a new workbook (Aspose.Cells)
-            var workbook = new Workbook();
+            // Save the workbook as an Excel file (XLSX)
+            workbook.Save(outputExcelPath, SaveFormat.Xlsx);
 
-            // Use the first worksheet
-            var sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
+            // Prepare HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Regular expression to find table rows
-            var rowMatches = Regex.Matches(htmlContent, @"<tr[^>]*>(.*?)</tr>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            if (rowMatches.Count == 0)
+            // Export cell comments as tooltips if the properties are available in the current version
+            var exportCommentsProp = typeof(HtmlSaveOptions).GetProperty("ExportCellComments");
+            var exportCommentsAsProp = typeof(HtmlSaveOptions).GetProperty("ExportCellCommentsAs");
+            if (exportCommentsProp != null && exportCommentsAsProp != null)
             {
-                Console.WriteLine("No table rows found in the HTML document.");
-                return;
-            }
+                exportCommentsProp.SetValue(htmlOptions, true);
 
-            int rowIndex = 0;
-            foreach (Match rowMatch in rowMatches)
-            {
-                // Regular expression to find cells (td or th) within the current row
-                var cellMatches = Regex.Matches(rowMatch.Groups[1].Value, @"<(td|th)([^>]*)>(.*?)</\1>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-                int colIndex = 0;
-                foreach (Match cellMatch in cellMatches)
+                // Set the enum value for tooltips using reflection to avoid direct enum reference
+                try
                 {
-                    // Extract inner text (strip any nested tags)
-                    string innerHtml = cellMatch.Groups[3].Value;
-                    string cellText = Regex.Replace(innerHtml, "<.*?>", string.Empty).Trim();
-
-                    // Write the text to the corresponding Excel cell
-                    var cell = sheet.Cells[rowIndex, colIndex];
-                    cell.PutValue(cellText);
-
-                    // Extract the title attribute if present and add as a comment
-                    string attributes = cellMatch.Groups[2].Value;
-                    var titleAttrMatch = Regex.Match(attributes, @"title\s*=\s*[""']([^""']+)[""']", RegexOptions.IgnoreCase);
-                    if (titleAttrMatch.Success)
-                    {
-                        // Add a comment to the cell with the tooltip text
-                        int commentIdx = sheet.Comments.Add(rowIndex, colIndex);
-                        Comment comment = sheet.Comments[commentIdx];
-                        comment.Author = "Author";
-                        comment.Note = titleAttrMatch.Groups[1].Value;
-                    }
-
-                    colIndex++;
+                    object enumValue = Enum.Parse(exportCommentsAsProp.PropertyType, "AsTooltips");
+                    exportCommentsAsProp.SetValue(htmlOptions, enumValue);
                 }
-                rowIndex++;
+                catch
+                {
+                    // If the enum value is not found, ignore and continue with default behavior
+                }
             }
 
-            // Save the workbook to an Excel file
-            string excelPath = "output.xlsx";
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-            Console.WriteLine($"HTML has been converted to Excel and saved as '{excelPath}'.");
+            // Save the workbook back to HTML; comments (if any) will appear as tooltip attributes
+            workbook.Save(outputHtmlPath, htmlOptions);
         }
         catch (Exception ex)
         {

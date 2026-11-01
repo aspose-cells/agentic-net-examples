@@ -1,101 +1,115 @@
-// Title: Validate PivotTable timeline dates against a predefined calendar and log out-of-range entries using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, adds a PivotTable with a linked Timeline, checks each date in the source range against a hard‑coded allowed date set, and writes any out‑of‑range dates to a text file. | Modify the example to load the allowed dates from an external CSV file, then validate the Timeline dates and include the worksheet name in each log entry. | Enhance the program to apply a red background style to rows containing invalid dates after they have been logged.
-// Common Searches: aspocells c# validate timeline dates against custom calendar and log errors | how to log out-of-range dates from an Excel PivotTable timeline using Aspose.Cells | example code for checking date consistency in a PivotTable timeline in .NET
-// Tags: Aspose.Cells timeline date validation | C# pivot table timeline consistency check | log invalid Excel dates with StreamWriter | custom calendar filtering for Aspose.Cells timeline | write timeline inconsistencies to text file
+// Title: Validate timeline start and end dates against a calendar worksheet and log errors using Aspose.Cells in C#
+// AI Prompts: Create a C# console program that opens an Excel workbook containing 'Timeline' and 'Calendar' sheets, builds a HashSet of dates from column A of the Calendar sheet, checks each row in the Timeline sheet for valid DateTime values, ensures the start date is not later than the end date, and writes any violations to a specified text log. | Modify an existing Aspose.Cells script to handle missing worksheets, verify date formats, compare dates against a predefined calendar range, and output detailed discrepancy messages (including row number and ID) to a log file.
+// Common Searches: aspnet c# how to check if Excel dates exist in a separate calendar sheet using Aspose.Cells | c# Aspose.Cells validate start date before end date in timeline worksheet | write validation log for Excel date range errors with Aspose.Cells | load Excel workbook and verify date consistency across two sheets in C# | fast lookup of calendar dates in C# using Aspose.Cells
+// Tags: Aspose.Cells read Excel dates into HashSet | compare timeline entries to master calendar using Aspose.Cells | log Excel validation errors to text file | ensure chronological order of timeline dates with Aspose.Cells | detect missing calendar dates in Excel timeline
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Timelines;
 
-// Demonstrates creating a workbook with sample dates, building a PivotTable and linked Timeline, defining an allowed date range, validating each source date against this range, logging any out-of-range dates to a text file, and saving the workbook.
-class TimelineDateValidator
+namespace TimelineValidation
 {
-    static void Main()
+    // A C# console application that loads 'TimelineData.xlsx', extracts valid dates from the 'Calendar' sheet into a HashSet, iterates through rows of the 'Timeline' sheet, validates date formats, checks that start dates precede end dates, confirms each date exists in the calendar, and records any inconsistencies to 'TimelineValidationLog.txt'.
+    class TimelineValidator
     {
-        try
+        static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Paths to the Excel file and the log file
+            string excelPath = @"C:\Data\TimelineData.xlsx";
+            string logPath = @"C:\Data\TimelineValidationLog.txt";
 
-            // ------------------------------------------------------------
-            // Populate sample data (Date column + Value column)
-            // ------------------------------------------------------------
-            sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("Value");
-
-            DateTime[] sampleDates = new DateTime[]
+            // Ensure the Excel file exists before loading
+            if (!File.Exists(excelPath))
             {
-                new DateTime(2023, 1, 2),
-                new DateTime(2023, 1, 5),
-                new DateTime(2023, 1, 12), // outside allowed range
-                new DateTime(2023, 1, 8),
-                new DateTime(2023, 2, 1)   // outside allowed range
-            };
-
-            for (int i = 0; i < sampleDates.Length; i++)
-            {
-                sheet.Cells[i + 1, 0].PutValue(sampleDates[i]); // Date column
-                sheet.Cells[i + 1, 1].PutValue((i + 1) * 100); // Value column
+                Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
+                return;
             }
 
-            // ------------------------------------------------------------
-            // 2. Create a PivotTable based on the data range
-            // ------------------------------------------------------------
-            PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIdx = pivots.Add("A1:B6", "D1", "PivotTable1");
-            PivotTable pivot = pivots[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // ------------------------------------------------------------
-            // 3. Add a Timeline linked to the Date field of the PivotTable
-            // ------------------------------------------------------------
-            // Use row/column indices to avoid overload issues
-            // Destination cell F1 corresponds to row 0, column 5
-            sheet.Timelines.Add(pivot, 0, 5, "Date");
-
-            // ------------------------------------------------------------
-            // 4. Define a predefined calendar (allowed dates)
-            // ------------------------------------------------------------
-            HashSet<DateTime> allowedDates = new HashSet<DateTime>();
-            for (DateTime d = new DateTime(2023, 1, 1); d <= new DateTime(2023, 1, 10); d = d.AddDays(1))
+            try
             {
-                allowedDates.Add(d.Date);
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
-            // ------------------------------------------------------------
-            // 5. Validate each date in the source range against the calendar
-            //    and log any inconsistencies to a text file
-            // ------------------------------------------------------------
-            string logFilePath = "TimelineInconsistencies.txt";
-            using (StreamWriter writer = new StreamWriter(logFilePath, false))
-            {
-                for (int row = 1; row <= sampleDates.Length; row++)
+                // Retrieve required worksheets
+                Worksheet timelineSheet = workbook.Worksheets["Timeline"];
+                Worksheet calendarSheet = workbook.Worksheets["Calendar"];
+
+                if (timelineSheet == null || calendarSheet == null)
                 {
-                    DateTime cellDate = sheet.Cells[row, 0].DateTimeValue.Date;
-                    if (!allowedDates.Contains(cellDate))
+                    Console.WriteLine("Error: Required worksheets 'Timeline' or 'Calendar' not found.");
+                    return;
+                }
+
+                // Build a set of valid dates from the calendar sheet (dates in column A)
+                HashSet<DateTime> validDates = new HashSet<DateTime>();
+                int calendarRowCount = calendarSheet.Cells.MaxDataRow + 1;
+                for (int i = 0; i < calendarRowCount; i++)
+                {
+                    object cellValue = calendarSheet.Cells[i, 0].Value;
+                    if (cellValue is DateTime dt)
                     {
-                        string logMessage = $"Row {row + 1}: Date {cellDate:yyyy-MM-dd} is not within the allowed calendar.";
-                        writer.WriteLine(logMessage);
+                        validDates.Add(dt.Date); // store date only
                     }
                 }
-            }
 
-            // ------------------------------------------------------------
-            // 6. Save the workbook
-            // ------------------------------------------------------------
-            string outputPath = "TimelineValidationDemo.xlsx";
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Ensure the log directory exists
+                string logDir = Path.GetDirectoryName(logPath);
+                if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+
+                // Prepare the log file (overwrite any existing content)
+                using (StreamWriter logWriter = new StreamWriter(logPath, false))
+                {
+                    // Iterate through timeline rows (header in row 0, data starts at row 1)
+                    int timelineRowCount = timelineSheet.Cells.MaxDataRow + 1;
+                    for (int row = 1; row < timelineRowCount; row++)
+                    {
+                        // Read ID (optional, for reporting)
+                        string id = timelineSheet.Cells[row, 0].StringValue;
+
+                        // Read start and end dates (columns B and C)
+                        object startObj = timelineSheet.Cells[row, 1].Value;
+                        object endObj = timelineSheet.Cells[row, 2].Value;
+
+                        // Validate that both cells contain dates
+                        if (!(startObj is DateTime startDate) || !(endObj is DateTime endDate))
+                        {
+                            logWriter.WriteLine($"Row {row + 1} (ID: {id}) - Invalid date format.");
+                            continue;
+                        }
+
+                        // Normalize to date only
+                        startDate = startDate.Date;
+                        endDate = endDate.Date;
+
+                        // Check logical order
+                        if (startDate > endDate)
+                        {
+                            logWriter.WriteLine($"Row {row + 1} (ID: {id}) - Start date {startDate:d} is after end date {endDate:d}.");
+                        }
+
+                        // Verify each date falls within the predefined calendar
+                        if (!validDates.Contains(startDate))
+                        {
+                            logWriter.WriteLine($"Row {row + 1} (ID: {id}) - Start date {startDate:d} is not in the calendar.");
+                        }
+
+                        if (!validDates.Contains(endDate))
+                        {
+                            logWriter.WriteLine($"Row {row + 1} (ID: {id}) - End date {endDate:d} is not in the calendar.");
+                        }
+                    }
+                }
+
+                Console.WriteLine($"Validation completed. Log written to '{logPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

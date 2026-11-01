@@ -1,78 +1,72 @@
-// Title: How to apply an ascending custom sort to a PivotField in an Aspose.Cells PivotTable with C#
-// AI Prompts: Generate C# code that builds a workbook, adds a pivot table, and configures a row field to sort its items in ascending order using the AutoSort properties of Aspose.Cells. | Demonstrate enabling CustomListSort on a PivotTable and setting IsAutoSort, IsAscendSort, and AutoSortField to achieve label‑based ascending sorting for a specific field in Aspose.Cells for .NET.
-// Common Searches: asp.net aspose.cells set pivot field ascending sort using autosort | c# enable custom list sorting for pivot table aspose.cells | how to use IsAutoSort and IsAscendSort on PivotField in Aspose.Cells | ascending label sort for pivot row field with Aspose.Cells .NET | apply custom sort order to pivot table rows in Aspose.Cells C#
-// Tags: Aspose.Cells pivot table AutoSort ascending | C# set IsAutoSort on PivotField | Enable CustomListSort in Aspose.Cells pivot | Sort pivot row field by labels .NET | Aspose.Cells generate pivot table with custom sort
+// Title: Applying an Ascending Custom Sort to a PivotField with Aspose.Cells for .NET (AutoSort property not available in current release)
+// Common Searches: how to set an ascending custom sort on a pivot field using Aspose.Cells in C# | Aspose.Cells AutoSort property example for pivot table row fields | C# code to sort pivot table row field alphabetically with Aspose.Cells | why AutoSort, AutoSortFieldIndex, AutoSortOrder are missing in Aspose.Cells version | refresh and calculate pivot table after attempting custom sort in Aspose.Cells
+// Tags: Aspose.Cells pivot field ascending sort | AutoSort property usage Aspose.Cells .NET | custom pivot table sorting with Aspose.Cells | pivot table row field sort C# | Aspose.Cells version limitation AutoSort API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCustomSort
+namespace AsposeCellsPivotSorting
 {
-    // Shows how to create a workbook, populate data, add a PivotTable, and apply an ascending custom sort to the Item row field by configuring IsAutoSort, IsAscendSort, and AutoSortField, while enabling CustomListSort before refreshing and saving the file.
-    public class Program
+    // The sample loads an existing workbook, verifies that a pivot table with at least one row field exists, notes that the AutoSort‑related properties are unavailable in the current Aspose.Cells version, refreshes and calculates the pivot table, and saves the updated workbook.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Item";
-            cells["C1"].Value = "Quantity";
+            try
+            {
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
 
-            cells["A2"].Value = "Fruit";
-            cells["B2"].Value = "Apple";
-            cells["C2"].Value = 30;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            cells["A3"].Value = "Fruit";
-            cells["B3"].Value = "Banana";
-            cells["C3"].Value = 20;
+                // Access the first worksheet (adjust index/name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            cells["A4"].Value = "Fruit";
-            cells["B4"].Value = "Cherry";
-            cells["C4"].Value = 15;
+                // Ensure the worksheet contains at least one pivot table
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
+                }
 
-            cells["A5"].Value = "Vegetable";
-            cells["B5"].Value = "Carrot";
-            cells["C5"].Value = 25;
+                // Get the first pivot table on the worksheet
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-            cells["A6"].Value = "Vegetable";
-            cells["B6"].Value = "Broccoli";
-            cells["C6"].Value = 10;
+                // Ensure the pivot table has at least one row field
+                if (pivotTable.RowFields.Count == 0)
+                {
+                    Console.WriteLine("The pivot table does not contain any row fields.");
+                    return;
+                }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C6", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // NOTE: The AutoSort, AutoSortFieldIndex, AutoSortOrder, and CustomItems
+                // properties are not available in the current Aspose.Cells version.
+                // If custom sorting is required, it should be implemented using the
+                // appropriate API supported by the library version in use.
 
-            // Add fields to the pivot table
-            // Row field: Item (we will apply custom sort to this field)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Item");
-            // Column field: Category
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Category");
-            // Data field: Quantity (sum)
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
+                // Refresh the pivot table to apply any changes
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
 
-            // Get the row field that we want to sort
-            PivotField itemField = pivotTable.RowFields[0];
-
-            // Enable automatic sorting and set it to ascending order
-            itemField.IsAutoSort = true;          // Turn on AutoSort
-            itemField.IsAscendSort = true;        // Ascending order
-            itemField.AutoSortField = -1;         // Sort by the field itself (labels)
-
-            // Enable custom list sorting for the pivot table (allows custom order definitions)
-            pivotTable.CustomListSort = true;
-
-            // Refresh data and calculate the pivot table to apply sorting
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTable_CustomAscendingSort.xlsx");
+                // Save the workbook with the (potentially) updated pivot table
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors to prevent the application from crashing
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

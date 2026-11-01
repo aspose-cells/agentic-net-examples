@@ -1,51 +1,60 @@
-// Title: How to add a strikethrough font to rows with "Completed" status in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a strikeout font style with Aspose.Cells and applies it to every cell in rows where the Status column equals "Completed". | Write a C# program that loads an existing workbook, scans column B for the value "Completed", sets a strikethrough style on the entire matching rows, and saves the result to a new file. | Show how to define a reusable Aspose.Cells style with IsStrikeout = true and assign it to a range of rows based on a cell condition in C#.
-// Common Searches: C# Aspose.Cells apply strikethrough to entire row based on cell value | How to format completed tasks with strikeout font in Excel using Aspose.Cells | Aspose.Cells set font.IsStrikeout for rows where column B = 'Completed' | Iterate rows in Aspose.Cells and change style conditionally in .NET | Save modified workbook after applying conditional row formatting with Aspose.Cells
-// Tags: strikeout row formatting Aspose.Cells C# | conditional row style based on cell value Aspose.Cells | set font.IsStrikeout property Aspose.Cells | load workbook modify styles Aspose.Cells | save updated Excel file Aspose.Cells C#
+// Title: Apply a strikethrough font style to rows marked as Completed in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply strikethrough to rows where status equals Completed | How to format completed tasks with a strikeout font in an Excel file using Aspose.Cells .NET | Programmatically set strikeout font for an entire row in Excel with Aspose.Cells API | C# loop through worksheet rows and apply a custom style based on cell value using Aspose.Cells | Create and reuse a strikeout style for Excel rows in a .NET application with Aspose.Cells
+// Tags: strikethrough row formatting Aspose.Cells | custom style IsStrikeout Excel .NET | conditional row styling based on cell value Aspose.Cells | apply style to entire Excel row C# | Excel strikeout font using Aspose.Cells API | reusable workbook style Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The program loads Tasks.xlsx, creates a style with Font.IsStrikeout = true, checks column B for "Completed", applies the style to every cell in matching rows, and saves the modified workbook as Tasks_Updated.xlsx.
+// The example loads or creates an Excel workbook, defines a custom style with the IsStrikeout font property, scans each data row for the value "Completed" in the Status column, and applies the strikeout style to every cell in those rows before saving the updated file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "Tasks.xlsx";
-            const string outputPath = "Tasks_Updated.xlsx";
+            const string inputFile = "Tasks.xlsx";
+            const string outputFile = "Tasks_Updated.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Ensure the input workbook exists; create a simple one if missing
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
+                var sampleWb = new Workbook();
+                var ws = sampleWb.Worksheets[0];
+                var sampleCells = ws.Cells; // renamed to avoid conflict
+                sampleCells[0, 0].PutValue("Task");
+                sampleCells[0, 1].PutValue("Status");
+                sampleCells[1, 0].PutValue("Task 1");
+                sampleCells[1, 1].PutValue("Completed");
+                sampleCells[2, 0].PutValue("Task 2");
+                sampleCells[2, 1].PutValue("Pending");
+                sampleWb.Save(inputFile);
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Load the existing workbook (guard against missing file)
+            if (!File.Exists(inputFile))
+                throw new FileNotFoundException($"Input file '{inputFile}' not found.");
+
+            var workbook = new Workbook(inputFile);
+            var sheet = workbook.Worksheets[0];
+            var cells = sheet.Cells;
 
             // Create a style with strikethrough font effect
-            Style strikeStyle = workbook.CreateStyle();
+            var strikeStyle = workbook.CreateStyle();
             strikeStyle.Font.IsStrikeout = true;
 
-            // Assume the "Status" column is column B (index 1) and data starts at row 2 (skip header)
-            int firstDataRow = 1; // zero‑based index, so row 2 in Excel
+            // Assume column B (index 1) holds the task status
+            int firstDataRow = 1; // row 0 contains headers
             int totalRows = cells.MaxDataRow;
-            int totalColumns = cells.MaxDataColumn;
+            int totalCols = cells.MaxDataColumn;
 
-            // Iterate through rows and apply the style to rows marked as "Completed"
             for (int row = firstDataRow; row <= totalRows; row++)
             {
-                string status = cells[row, 1].StringValue?.Trim() ?? string.Empty;
-                if (string.Equals(status, "Completed", StringComparison.OrdinalIgnoreCase))
+                var statusCell = cells[row, 1];
+                if (statusCell.StringValue.Equals("Completed", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Apply the strikethrough style to every cell in the current row
-                    for (int col = 0; col <= totalColumns; col++)
+                    // Apply the strikethrough style to every cell in the completed task row
+                    for (int col = 0; col <= totalCols; col++)
                     {
                         cells[row, col].SetStyle(strikeStyle);
                     }
@@ -53,12 +62,11 @@ class Program
             }
 
             // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully as \"{outputPath}\".");
+            workbook.Save(outputFile);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

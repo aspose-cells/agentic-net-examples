@@ -1,7 +1,7 @@
-// Title: Encrypt an Excel workbook as a multi‑page TIFF and upload it securely via FTPS (TLS) using C# and Aspose.Cells
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, saves it as a multi‑page TIFF in memory, encrypts the TIFF using AES‑256‑CBC with a password‑derived key, and uploads the encrypted bytes to an FTPS server using FtpWebRequest with TLS. | Show how to modify the encryption routine to use a custom salt and store the initialization vector in a separate file before performing the FTPS upload. | Create a streaming implementation that encrypts the workbook image on‑the‑fly and streams the encrypted data directly to the FTPS request without loading the entire TIFF into memory.
-// Common Searches: C# convert Excel workbook to multi‑page TIFF with Aspose.Cells and upload via FTPS | How to encrypt a TIFF image using AES in .NET before sending over secure FTP | Upload encrypted files to an FTPS server using FtpWebRequest and TLS in C# | Save Excel as TIFF in memory and stream to FTPS without temporary files | Derive AES key from password for encrypting workbook images in C#
-// Tags: Aspose.Cells export workbook to multi-page TIFF | AES-CBC image encryption in C# | FTPS file transfer with FtpWebRequest .NET | secure upload of encrypted Excel images | on‑the‑fly encryption and streaming to FTPS
+// Title: Convert an Excel workbook to an encrypted TIFF and upload it securely via FTPS using C# and Aspose.Cells
+// AI Prompts: Generate C# code that loads a .xlsx file, saves it as a TIFF with Aspose.Cells, encrypts the TIFF using AES‑256‑CBC, and uploads the encrypted file to an FTPS server with TLS. | Show how to derive an AES key from a password with Rfc2898DeriveBytes and apply it to encrypt a TIFF before sending it over FTPS in C#. | Provide a C# snippet that deletes the temporary TIFF files after a successful FTPS upload and logs the FTP response.
+// Common Searches: c# export excel to tiff then encrypt and upload via ftps | how to use aspocells to save workbook as tiff in .net core | ftps upload encrypted image file using FtpWebRequest c# | aes 256 cbc encryption of tiff file in c# example | delete temporary files after ftps upload c#
+// Tags: aspocells save workbook as tiff | aes cbc encryption of tiff c# | secure ftps transfer of encrypted tiff via FtpWebRequest | remove temporary tiff files post ftps upload | derive aes key from password c#
 
 using System;
 using System.IO;
@@ -9,59 +9,48 @@ using System.Net;
 using System.Security.Cryptography;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, renders it to a multi‑page TIFF in memory, encrypts the TIFF bytes with AES‑256‑CBC using a password‑derived key, and uploads the encrypted file to an FTPS server via TLS using FtpWebRequest.
+// // This program creates a sample Excel workbook if missing, saves it as a TIFF using Aspose.Cells, encrypts the TIFF with AES‑256‑CBC, uploads the encrypted file to an FTPS server via FtpWebRequest, and then deletes the temporary files.
 class Program
 {
     static void Main()
     {
+        // Paths for the source Excel file, intermediate TIFF, and encrypted TIFF
+        string excelPath = @"C:\Data\Workbook.xlsx";
+        string tiffPath = @"C:\Data\Workbook.tiff";
+        string encryptedTiffPath = @"C:\Data\Workbook_encrypted.tiff";
+
+        // FTP server details (replace with actual values)
+        string ftpHost = "ftps.example.com";
+        string ftpUser = "ftpUser";
+        string ftpPassword = "ftpPassword";
+        string remoteFilePath = "/uploads/Workbook_encrypted.tiff";
+
         try
         {
-            // Paths and credentials (replace with actual values)
-            string workbookPath = @"C:\Input\Sample.xlsx";
-            string tiffFileName = "WorkbookImage.tiff";
-            string ftpServer = "ftps://secureftp.example.com/upload/";
-            string ftpUser = "ftpUser";
-            string ftpPassword = "ftpPassword";
-            string encryptionPassword = "StrongEncryptionKey"; // password for AES encryption
-
-            // Verify workbook file exists
-            if (!File.Exists(workbookPath))
+            // -----------------------------------------------------------------
+            // 1. Ensure the Excel workbook exists; create a simple one if missing
+            // -----------------------------------------------------------------
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Workbook file not found: {workbookPath}");
-                return;
+                Directory.CreateDirectory(Path.GetDirectoryName(excelPath));
+                Workbook newWb = new Workbook();
+                newWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+                newWb.Save(excelPath);
+                Console.WriteLine($"Created placeholder workbook at '{excelPath}'.");
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            // Load the workbook and export it as a TIFF image
+            Workbook workbook = new Workbook(excelPath);
+            workbook.Save(tiffPath, SaveFormat.Tiff);
+            Console.WriteLine($"Workbook exported to TIFF at '{tiffPath}'.");
 
-            // Render the workbook to a TIFF image in memory
-            using (MemoryStream tiffStream = new MemoryStream())
-            {
-                // Save the entire workbook as a multi‑page TIFF
-                workbook.Save(tiffStream, SaveFormat.Tiff);
-                byte[] tiffBytes = tiffStream.ToArray();
-
-                // Encrypt the TIFF bytes using AES
-                byte[] encryptedBytes = EncryptData(tiffBytes, encryptionPassword);
-
-                // Upload the encrypted file via FTPS (TLS)
-                UploadFileToFtps(ftpServer + tiffFileName, encryptedBytes, ftpUser, ftpPassword);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Encrypt data with AES (CBC, PKCS7 padding)
-    private static byte[] EncryptData(byte[] plainData, string password)
-    {
-        // Derive a 256‑bit key and a 128‑bit IV from the password
-        using (var rfc2898 = new Rfc2898DeriveBytes(password, 16, 10000, HashAlgorithmName.SHA256))
-        {
-            byte[] key = rfc2898.GetBytes(32); // 256‑bit key
-            byte[] iv = rfc2898.GetBytes(16);  // 128‑bit IV
+            // -----------------------------------------------------------------
+            // 2. Encrypt the TIFF file using AES (CBC mode with PKCS7 padding)
+            // -----------------------------------------------------------------
+            byte[] key = new byte[32]; // 256‑bit key
+            byte[] iv = new byte[16];  // 128‑bit IV
+            for (int i = 0; i < key.Length; i++) key[i] = (byte)i;
+            for (int i = 0; i < iv.Length; i++) iv[i] = (byte)(i + 1);
 
             using (Aes aes = Aes.Create())
             {
@@ -70,50 +59,47 @@ class Program
                 aes.Mode = CipherMode.CBC;
                 aes.Padding = PaddingMode.PKCS7;
 
-                using (var encryptor = aes.CreateEncryptor())
-                using (var ms = new MemoryStream())
+                using (FileStream inputFile = new FileStream(tiffPath, FileMode.Open, FileAccess.Read))
+                using (FileStream outputFile = new FileStream(encryptedTiffPath, FileMode.Create, FileAccess.Write))
+                using (CryptoStream cryptoStream = new CryptoStream(outputFile, aes.CreateEncryptor(), CryptoStreamMode.Write))
                 {
-                    // Prepend IV for later decryption (optional)
-                    ms.Write(iv, 0, iv.Length);
-                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                    {
-                        cs.Write(plainData, 0, plainData.Length);
-                        cs.FlushFinalBlock();
-                    }
-                    return ms.ToArray();
+                    inputFile.CopyTo(cryptoStream);
                 }
             }
-        }
-    }
+            Console.WriteLine($"Encrypted TIFF saved to '{encryptedTiffPath}'.");
 
-    // Upload encrypted data to an FTPS server using TLS
-    private static void UploadFileToFtps(string uri, byte[] data, string user, string password)
-    {
-        try
-        {
-            // Create the request
+            // -----------------------------------------------------------------
+            // 3. Upload the encrypted TIFF to a secure FTP server using TLS (FTPS)
+            // -----------------------------------------------------------------
+            string uri = $"ftps://{ftpHost}{remoteFilePath}";
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uri);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(user, password);
-            request.EnableSsl = true;               // Use TLS/SSL
+            request.Credentials = new NetworkCredential(ftpUser, ftpPassword);
+            request.EnableSsl = true;               // Enforce TLS
             request.UseBinary = true;
-            request.ContentLength = data.Length;
+            request.KeepAlive = false;
 
-            // Write the encrypted data to the request stream
+            byte[] fileContents = File.ReadAllBytes(encryptedTiffPath);
+            request.ContentLength = fileContents.Length;
+
             using (Stream requestStream = request.GetRequestStream())
             {
-                requestStream.Write(data, 0, data.Length);
+                requestStream.Write(fileContents, 0, fileContents.Length);
             }
 
-            // Get the response to ensure the upload succeeded
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {
                 Console.WriteLine($"Upload status: {response.StatusDescription}");
             }
+
+            // Cleanup temporary files (optional)
+            File.Delete(tiffPath);
+            File.Delete(encryptedTiffPath);
+            Console.WriteLine("Temporary files deleted.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"FTPS upload error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

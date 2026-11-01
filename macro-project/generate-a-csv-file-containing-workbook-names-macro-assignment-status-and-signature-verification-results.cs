@@ -1,121 +1,110 @@
-// Title: Generate a CSV report of macro presence and digital signature verification for Excel workbooks using Aspose.Cells in C#
-// AI Prompts: Write a C# console application that scans a folder for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, determines whether VBA macros exist, checks digital signatures via the DigitalSignatureCollection (using reflection for version‑agnostic support), and writes the workbook name, macro flag, and signature status to a UTF‑8 CSV file. | Update the program to gracefully handle environments where the DigitalSignatureCollection API is unavailable, output "Not Supported" for signature status in those cases, and ensure the CSV header columns are Workbook Name, Has Macros, and Signature Verification.
-// Common Searches: c# Aspose.Cells batch export macro detection results to CSV | how to check VBA macros in multiple Excel files with Aspose.Cells .NET | retrieve digital signature status of Excel workbooks using Aspose.Cells reflection | generate UTF-8 CSV report of workbook name macro presence signature verification Aspose.Cells | process .xlsb files for macro and signature info with Aspose.Cells
-// Tags: export macro detection results to CSV using Aspose.Cells | detect VBA modules in Excel workbooks .NET | verify Excel digital signatures via Aspose.Cells reflection | batch process .xlsb .xlsx files for macro status Aspose.Cells | Aspose.Cells workbook metadata extraction to CSV
+// Title: Generate a CSV report of workbook macro presence and digital signature status using Aspose.Cells for .NET
+// Common Searches: C# code to list Excel files with VBA macros and their digital signature results using Aspose.Cells | how to create a CSV file that shows macro detection and signature verification for multiple workbooks in .NET | batch process .xls* files to export macro flag and signature validity with Aspose.Cells | using reflection to read DigitalSignatureCollection in Aspose.Cells C# example | Aspose.Cells macro detection and signature check script for Windows folder
+// Tags: Aspose.Cells macro detection CSV export | digital signature verification Aspose.Cells .NET | VBA project enumeration Aspose.Cells | reflection access DigitalSignatureCollection C# | batch workbook analysis Aspose.Cells | UTF‑8 CSV generation C# Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text;
-using System.Collections;
 using Aspose.Cells;
 
-// A C# console utility that iterates over a directory of Excel files (.xls, .xlsx, .xlsm, .xlsb), loads each workbook with Aspose.Cells, identifies the presence of VBA macros, evaluates digital signature validity (using reflection to stay compatible with older library versions), and writes a UTF‑8 CSV containing the workbook name, macro presence (Yes/No), and signature verification result (Valid, Invalid, No Signatures, Not Supported).
-class WorkbookInfoExporter
+// The sample scans a directory for Excel workbooks, loads each file with Aspose.Cells, determines whether a VBA project exists, attempts to verify the first digital signature via reflection on the DigitalSignatureCollection, and writes a UTF‑8 CSV containing the workbook name, a macro‑presence flag, and the signature verification outcome.
+class Program
 {
     static void Main()
     {
-        // Folder containing the Excel workbooks to process
-        string inputFolder = @"C:\Workbooks";
-
-        // Path for the generated CSV file
-        string outputCsvPath = @"C:\WorkbookReport.csv";
-
-        // Ensure the input folder exists
-        if (!Directory.Exists(inputFolder))
-        {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
-        }
-
-        // Prepare a StringBuilder for CSV content
-        StringBuilder csvBuilder = new StringBuilder();
-
-        // Write CSV header
-        csvBuilder.AppendLine("Workbook Name,Has Macros,Signature Verification");
-
-        // Process each Excel file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
-        {
-            // Consider only Excel file extensions
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm" && extension != ".xlsb")
-                continue;
-
-            // Verify the file exists before loading
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                continue;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Determine macro assignment status
-                bool hasMacros = workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0;
-                string macroStatus = hasMacros ? "Yes" : "No";
-
-                // Determine signature verification result (using reflection to stay compatible with versions lacking the API)
-                string signatureStatus = "No Signatures";
-                try
-                {
-                    var dsProp = workbook.GetType().GetProperty("DigitalSignatureCollection");
-                    var dsCollection = dsProp?.GetValue(workbook, null);
-                    if (dsCollection != null)
-                    {
-                        var countProp = dsCollection.GetType().GetProperty("Count");
-                        int count = (int)countProp.GetValue(dsCollection);
-                        if (count > 0)
-                        {
-                            bool allValid = true;
-                            foreach (object signature in (IEnumerable)dsCollection)
-                            {
-                                var verifyMethod = signature.GetType().GetMethod("Verify");
-                                if (verifyMethod != null)
-                                {
-                                    bool isValid = (bool)verifyMethod.Invoke(signature, null);
-                                    if (!isValid)
-                                    {
-                                        allValid = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            signatureStatus = allValid ? "Valid" : "Invalid";
-                        }
-                    }
-                    else
-                    {
-                        signatureStatus = "Not Supported";
-                    }
-                }
-                catch
-                {
-                    // If any reflection step fails, mark as not supported
-                    signatureStatus = "Not Supported";
-                }
-
-                // Append a line for the current workbook
-                string workbookName = Path.GetFileName(filePath);
-                csvBuilder.AppendLine($"{workbookName},{macroStatus},{signatureStatus}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
-        }
-
         try
         {
-            // Save the CSV content to file
-            File.WriteAllText(outputCsvPath, csvBuilder.ToString(), Encoding.UTF8);
-            Console.WriteLine($"Report generated at: {outputCsvPath}");
+            // Folder containing the Excel workbooks to analyze
+            string folderPath = @"C:\Workbooks";
+
+            // Path of the CSV file to generate
+            string csvPath = @"C:\Report\WorkbookReport.csv";
+
+            // Prepare CSV header
+            var sb = new StringBuilder();
+            sb.AppendLine("WorkbookName,HasMacros,SignatureVerification");
+
+            // Ensure the source folder exists
+            if (!Directory.Exists(folderPath))
+            {
+                Console.WriteLine($"Source folder does not exist: {folderPath}");
+                return;
+            }
+
+            // Process each Excel file in the folder
+            foreach (string filePath in Directory.GetFiles(folderPath, "*.xls*"))
+            {
+                // Verify the file exists before loading
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found, skipping: {filePath}");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook (Aspose.Cells handles .xls, .xlsx, .xlsm, etc.)
+                    var workbook = new Workbook(filePath);
+
+                    // Determine whether the workbook contains VBA macros
+                    bool hasMacros = workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0;
+
+                    // Verify digital signatures (if supported by the library version)
+                    string signatureResult = "NotSupported";
+
+                    // Use reflection to access DigitalSignatureCollection safely
+                    var sigProp = workbook.GetType().GetProperty("DigitalSignatureCollection");
+                    if (sigProp != null)
+                    {
+                        var signaturesObj = sigProp.GetValue(workbook);
+                        if (signaturesObj != null)
+                        {
+                            // Use dynamic to avoid compile‑time dependency on the type
+                            dynamic signatures = signaturesObj;
+                            try
+                            {
+                                if (signatures.Count > 0)
+                                {
+                                    var signature = signatures[0];
+                                    bool isValid = signature.Verify();
+                                    signatureResult = isValid ? "Valid" : "Invalid";
+                                }
+                                else
+                                {
+                                    signatureResult = "NoSignature";
+                                }
+                            }
+                            catch
+                            {
+                                // If any member is unavailable, fall back to NotSupported
+                                signatureResult = "NotSupported";
+                            }
+                        }
+                    }
+
+                    // Append the result line to the CSV content
+                    sb.AppendLine($"{Path.GetFileName(filePath)},{hasMacros},{signatureResult}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(csvPath);
+            if (!string.IsNullOrEmpty(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Write the CSV file (UTF‑8 encoding)
+            File.WriteAllText(csvPath, sb.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Report generated at: {csvPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to write CSV file: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

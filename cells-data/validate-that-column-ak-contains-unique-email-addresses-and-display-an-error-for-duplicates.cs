@@ -1,76 +1,80 @@
-// Title: Validate unique email addresses in column AK using Aspose.Cells C# custom data validation
-// AI Prompts: Write C# code with Aspose.Cells that adds a custom ValidationType.Custom rule using a COUNTIF formula to guarantee each email in column AK appears only once and shows an error for duplicates. | Generate a snippet that creates a CellArea for column AK, sets the validation formula =COUNTIF($AK:$AK,AK2)=1, and configures an error title and message for duplicate email entries. | Provide a complete example that loads an Excel workbook, applies the uniqueness validation to column AK, and saves the workbook with the rule applied.
-// Common Searches: aspocells c# validate unique emails in a specific column | how to add a custom COUNTIF validation to an Excel column using Aspose.Cells .NET | prevent duplicate email entries in Excel with Aspose.Cells validation rule | set error message for duplicate values in column AK programmatically Aspose.Cells | c# aspocells data validation for email uniqueness
-// Tags: Aspose.Cells custom validation COUNTIF | C# email uniqueness validation Excel | Aspose.Cells column AK data validation | Excel duplicate email error message .NET | programmatic data validation Aspose.Cells
+// Title: Enforce unique email addresses in Excel column AK with Aspose.Cells for .NET using custom data validation
+// Common Searches: Aspose.Cells C# add custom validation to prevent duplicate emails in column AK | How to set a uniqueness rule for an email column in an Excel file using Aspose.Cells .NET | C# Aspose.Cells COUNTIF formula to ensure each email in column AK is unique | Validate duplicate email addresses in Excel with Aspose.Cells and display an error alert | Create data validation that blocks duplicate emails in column AK using Aspose.Cells
+// Tags: custom validation unique email column Aspose.Cells | COUNTIF uniqueness rule Excel .NET | error alert duplicate email Aspose.Cells | column AK data validation Aspose.Cells | prevent duplicate emails Excel C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEmailValidation
+namespace AsposeCellsExample
 {
-    // The example loads an existing workbook, defines a CellArea covering column AK, adds a custom validation with a COUNTIF formula to ensure each email address is unique, configures a duplicate‑email error title and message, and saves the workbook with the validation applied.
+    // The example loads an existing workbook, defines a CellArea covering column AK, adds a custom validation rule with a COUNTIF formula that forces each email to appear only once, configures a stop‑style error alert titled "Duplicate Email", and saves the modified workbook.
     class Program
     {
-        // Convert zero‑based column index to Excel column name (e.g., 0 -> "A")
-        static string GetColumnName(int columnIndex)
-        {
-            int dividend = columnIndex + 1;
-            string columnName = String.Empty;
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modulo) + columnName;
-                dividend = (dividend - modulo) / 26;
-            }
-            return columnName;
-        }
-
         static void Main(string[] args)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Column AK is the 37th column (zero‑based index 36)
-            int emailColumnIndex = 36;
-
-            // Determine the last row that contains data
-            int lastDataRow = worksheet.Cells.MaxDataRow; // zero‑based
-
-            // Assume the first row (row 0) contains a header, start validation from row 1
-            int startRow = 1;
-
-            // Define the area for the validation (entire column AK from startRow to lastDataRow)
-            CellArea emailArea = new CellArea
+            try
             {
-                StartRow = startRow,
-                EndRow = lastDataRow,
-                StartColumn = emailColumnIndex,
-                EndColumn = emailColumnIndex
-            };
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Add a custom validation to the defined area
-            int validationIndex = worksheet.Validations.Add(emailArea);
-            Validation validation = worksheet.Validations[validationIndex];
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Set validation type to Custom
-            validation.Type = ValidationType.Custom;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Build the formula: =COUNTIF($AK:$AK,AK2)=1
-            // $AK:$AK locks the whole column, AK2 is a relative reference to the top‑left cell of the area
-            string columnLetter = GetColumnName(emailColumnIndex);
-            string formula = $"=COUNTIF(${columnLetter}:${columnLetter},{columnLetter}{startRow + 1})=1";
-            validation.Formula1 = formula;
+                // Get the first worksheet (or specify the required one)
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure the error message that will be shown when a duplicate is entered
-            validation.ShowError = true;
-            validation.ErrorTitle = "Duplicate Email";
-            validation.ErrorMessage = "Each email address in column AK must be unique.";
+                // Determine the last used row in the sheet (zero‑based index)
+                int lastRow = sheet.Cells.MaxDataRow;
 
-            // Save the workbook with the validation applied
-            workbook.Save("output.xlsx");
+                // Define the area covering column AK (index 36) from the first row to the last used row
+                CellArea emailArea = new CellArea
+                {
+                    StartRow = 0,
+                    EndRow = lastRow,
+                    StartColumn = 36,   // AK = 37th column (zero‑based index 36)
+                    EndColumn = 36
+                };
+
+                // Add a custom data‑validation rule to the defined area
+                int validationIndex = sheet.Validations.Add(emailArea);
+                Validation emailValidation = sheet.Validations[validationIndex];
+
+                // Set the validation type to Custom and provide a formula that ensures uniqueness
+                emailValidation.Type = ValidationType.Custom;
+                // Formula checks that the current email appears only once in the whole column
+                emailValidation.Formula1 = $"COUNTIF($AK$1:$AK${lastRow + 1},AK1)=1";
+
+                // Configure the error alert that will be shown when a duplicate is entered
+                emailValidation.ShowError = true;
+                // Default alert style is Stop, which blocks entry; explicit setting omitted for compatibility
+                emailValidation.ErrorTitle = "Duplicate Email";
+                emailValidation.ErrorMessage = "The email address must be unique in column AK.";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to the desired output path
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,72 +1,63 @@
-// Title: Clear all AutoFilter criteria from a ListObject (Excel table) using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, retrieves the first ListObject, removes every AutoFilter condition, refreshes the worksheet filter, and saves the workbook with Aspose.Cells. | Show a .NET example that programmatically resets all filter columns of an Excel table (ListObject) and persists the changes using Aspose.Cells.
-// Common Searches: Aspose.Cells C# clear filters on Excel ListObject | remove all AutoFilter criteria from a worksheet table using Aspose.Cells .NET | reset Excel table filters programmatically with Aspose.Cells | how to refresh worksheet autofilter after clearing filters in C#
-// Tags: clear ListObject autofilter Aspose.Cells | reset Excel table filters C# | Aspose.Cells refresh worksheet autofilter | save workbook after filter removal .NET | programmatic table filter management Aspose.Cells
+// Title: Clear all filters from an Excel table (ListObject) using Aspose.Cells for .NET
+// Common Searches: asp.net clear excel table filters using Aspose.Cells | c# remove all auto filter criteria from a ListObject in a workbook | programmatically reset excel table filters with Aspose.Cells .NET | how to refresh worksheet after clearing table filters in Aspose.Cells | example code to clear filters on an Excel ListObject using Aspose.Cells
+// Tags: Aspose.Cells reset ListObject auto filter | C# clear Excel table filter criteria Aspose.Cells | Aspose.Cells refresh worksheet after filter removal | Excel ListObject filter reset using Aspose.Cells .NET | Aspose.Cells save workbook after clearing filters
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
 namespace AsposeCellsExample
 {
-    // The sample loads an Excel workbook, accesses the first ListObject on the first worksheet, clears any AutoFilter criteria by emptying the FilterColumns collection, refreshes the worksheet AutoFilter, and saves the modified file.
+    // Loads a workbook, checks for a ListObject on the first worksheet, accesses its AutoFilter, clears all filter columns, refreshes the filter to display all rows, and saves the updated workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "Input.xlsx";
+            string outputPath = "Output.xlsx";
 
             try
             {
-                // Verify that the input file exists to avoid FileNotFoundException
+                // Verify that the input file exists
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
                 }
 
-                // Load the workbook containing the table with filters
-                Workbook workbook = new Workbook(inputPath);
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
 
-                // Access the first worksheet (adjust index or name as needed)
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-                // Retrieve the first table (ListObject) on the worksheet
+                // Ensure the worksheet contains at least one table (ListObject)
                 if (worksheet.ListObjects.Count == 0)
                 {
-                    Console.WriteLine("No tables (ListObjects) found on the worksheet.");
-                    return;
+                    Console.WriteLine("No tables found in the worksheet.");
                 }
-
-                ListObject table = worksheet.ListObjects[0];
-
-                // Clear any filter criteria applied to the table
-                if (table.AutoFilter != null)
+                else
                 {
-                    // Remove all filter columns
-                    table.AutoFilter.FilterColumns.Clear();
+                    // Get the first table
+                    var table = worksheet.ListObjects[0];
 
-                    // Refresh the worksheet's autofilter to display all rows
-                    worksheet.AutoFilter.Refresh();
+                    // Clear all filters applied to the table
+                    var autoFilter = table.AutoFilter;
+                    if (autoFilter != null)
+                    {
+                        // Remove any filter criteria
+                        autoFilter.FilterColumns.Clear();
+                        // Refresh to show all rows
+                        autoFilter.Refresh();
+                    }
                 }
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook; the table will now display all rows without any filters
+                // Save the workbook with filters cleared
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

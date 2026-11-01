@@ -1,96 +1,98 @@
-// Title: Create a C# method that loads an Excel template, binds any data source with Aspose.Cells smart markers, and returns the populated workbook as a MemoryStream (XLS)
-// AI Prompts: Write a C# function that receives an object (list, DataTable, or custom class) and a file path to an Excel template, uses WorkbookDesigner to set the data source named "Data", processes the smart markers, and returns the result as a MemoryStream. | Show how to invoke the function with a List<Person>, obtain the MemoryStream, and write it to an .xls file on disk. | Explain how to validate the template file path before creating the WorkbookDesigner to avoid FileNotFoundException. | Demonstrate returning the generated MemoryStream from a Web API endpoint for client download.
-// Common Searches: asp.net core return excel file from template using aspose.cells smart markers | c# generate memorystream from excel template with workbookdesigner | how to bind a list of objects to aspose.cells smart markers in a template | save processed aspose.cells workbook to stream instead of file | populate excel template with custom object and get xls stream in .net
-// Tags: aspose.cells workbookdesigner data binding | excel template to memorystream c# | smart markers generate xls stream | c# populate excel template using aspose.cells | return workbook as memorystream after processing markers
+// Title: C# method to populate an Excel template from a dictionary of cell addresses or named ranges and return the workbook as an XLSX MemoryStream using Aspose.Cells
+// AI Prompts: Generate a C# function that accepts an IDictionary<string, object> and a path to an .xlsx template, writes each entry to the matching cell address or named range with Aspose.Cells, and returns the filled workbook as a MemoryStream. | Write code that loads an Excel template via Aspose.Cells, iterates over a key‑value collection, updates cells or named ranges accordingly, saves the workbook to a MemoryStream in XLSX format, and includes argument validation and error handling.
+// Common Searches: asp.net populate excel template from dictionary using Aspose.Cells | c# fill named ranges in an xlsx template and get MemoryStream | how to write values to specific cells in a template workbook with Aspose.Cells | return populated workbook as stream without saving to disk Aspose.Cells | load excel template and map keys to cell addresses c# aspose.cells
+// Tags: populate workbook from dictionary Aspose.Cells | write values to named ranges C# | export workbook to MemoryStream XLSX | load Excel template Aspose.Cells | map cell addresses to values C#
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel template, assigns the supplied data object to the smart marker name "Data" via WorkbookDesigner, processes the markers, and returns the filled workbook as a MemoryStream (XLS), which can then be saved to a file or sent to a client.
-public class Program
+// The PopulateWorkbook method loads an Excel template, iterates over a IDictionary<string, object> where each key is either a cell address or a named range, writes the corresponding value using Aspose.Cells, saves the result as an XLSX MemoryStream, and provides comprehensive validation and exception handling.
+public static class WorkbookHelper
 {
-    public static void Main(string[] args)
+    /// <param name="data">
+    /// Expected to be a dictionary where the key is either a cell address (e.g., "A1") or a named range defined in the template,
+    /// and the value is the content to write into that cell/range.
+    /// </param>
+    /// <param name="templatePath">Full path to the Excel template file.</param>
+    /// <returns>A MemoryStream containing the populated workbook (XLSX format).</returns>
+    public static MemoryStream PopulateWorkbook(object data, string templatePath)
     {
+        if (string.IsNullOrWhiteSpace(templatePath))
+            throw new ArgumentException("Template path must be provided.", nameof(templatePath));
+
+        if (!File.Exists(templatePath))
+            throw new FileNotFoundException("The specified template file was not found.", templatePath);
+
         try
         {
-            // Determine template path (default to "Template.xlsx" if not provided)
-            string templatePath = args.Length > 0 ? args[0] : "Template.xlsx";
+            // Load the template workbook from the specified path.
+            Workbook workbook = new Workbook(templatePath);
 
-            // Verify that the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            // Get the first worksheet (modify if a different sheet is required).
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the data object is a dictionary we can iterate.
+            if (data is IDictionary<string, object> dict)
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
-                return;
+                foreach (KeyValuePair<string, object> entry in dict)
+                {
+                    string key = entry.Key;
+                    object value = entry.Value;
+
+                    // Try to resolve the key as a named range first.
+                    AsposeRange namedRange = workbook.Worksheets.GetRangeByName(key);
+                    if (namedRange != null)
+                    {
+                        // Write the value to the first cell of the named range.
+                        Cell firstCell = namedRange[0, 0];
+                        firstCell.PutValue(value);
+                    }
+                    else
+                    {
+                        // Treat the key as a regular cell address (e.g., "B2").
+                        Cell cell = worksheet.Cells[key];
+                        cell.PutValue(value);
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Data must be a dictionary with string keys and object values.", nameof(data));
             }
 
-            // Example data source: a list of Person objects
-            var data = new List<Person>
-            {
-                new Person { Name = "John Doe", Age = 30 },
-                new Person { Name = "Jane Smith", Age = 25 }
-            };
+            // Save the populated workbook into a memory stream.
+            MemoryStream stream = new MemoryStream();
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0; // Reset stream position for reading.
 
-            // Generate the workbook using the utility method
-            MemoryStream workbookStream = WorkbookGenerator.GenerateWorkbook(data, templatePath);
-
-            // Save the generated workbook to an output file
-            string outputPath = "Output.xls";
-            using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-            {
-                workbookStream.WriteTo(fileStream);
-            }
-
-            Console.WriteLine($"Workbook generated successfully: {outputPath}");
+            return stream;
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a message
-            Console.WriteLine($"Error: {ex.Message}");
+            // Wrap any exception to provide context while preserving the original stack trace.
+            throw new InvalidOperationException("Failed to populate the workbook.", ex);
         }
     }
 }
 
-// Simple data class used in the example
-public class Person
+// Minimal entry point to satisfy the compiler.
+public class Program
 {
-    public string Name { get; set; }
-    public int Age { get; set; }
-}
-
-public static class WorkbookGenerator
-{
-    /// <param name="data">The data source object (e.g., a list, DataTable, or custom class).</param>
-    /// <param name="templatePath">Full path to the Excel template containing smart markers.</param>
-    /// <returns>A MemoryStream containing the populated workbook (XLS format).</returns>
-    public static MemoryStream GenerateWorkbook(object data, string templatePath)
+    public static void Main()
     {
-        try
-        {
-            // Load the template workbook from the specified file path.
-            Workbook workbook = new Workbook(templatePath);
-
-            // Initialize the WorkbookDesigner and associate it with the loaded workbook.
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-
-            // Bind the provided data object to a smart marker name (e.g., "Data").
-            // The template should contain markers like &Data.PropertyName.
-            designer.SetDataSource("Data", data);
-
-            // Process the smart markers to populate the worksheet with data.
-            designer.Process();
-
-            // Save the processed workbook to a memory stream (XLS format) and return it.
-            return workbook.SaveToStream();
-        }
-        catch
-        {
-            // Rethrow the exception to be handled by the caller.
-            throw;
-        }
+        // Example usage (optional):
+        // var data = new Dictionary<string, object>
+        // {
+        //     { "A1", "Sample Text" },
+        //     { "MyNamedRange", 12345 }
+        // };
+        // string templatePath = "template.xlsx";
+        // using (MemoryStream ms = WorkbookHelper.PopulateWorkbook(data, templatePath))
+        // {
+        //     // Process the resulting stream as needed.
+        // }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Unprotect an Aspose.Cells worksheet in C# to insert rows while preserving existing cell values
-// AI Prompts: Write C# code that protects a worksheet with a password using Aspose.Cells, attempts to insert a row (expecting an exception), then unprotects the sheet and successfully inserts a new row. | Show how to iterate through the first column after unprotecting a worksheet to confirm that original data remains unchanged. | Explain how to catch and handle the exception thrown when inserting rows into a password‑protected worksheet with Aspose.Cells.
-// Common Searches: Aspose.Cells C# unprotect worksheet before inserting rows example | how to catch row insertion error on protected Excel sheet using Aspose.Cells | verify data integrity after unprotecting a password‑protected worksheet in C# | insert blank row between header and data after removing protection with Aspose.Cells | save workbook after unprotecting and modifying rows in C# Aspose.Cells
-// Tags: worksheet unprotect Aspose.Cells C# | insert rows after worksheet unprotected Aspose.Cells | password protected Excel sheet Aspose.Cells handling | exception on row insertion in protected worksheet Aspose.Cells | data integrity verification after row insertion Aspose.Cells
+// Title: How to unprotect an Excel worksheet and insert rows while preserving data integrity using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# unprotect worksheet then insert a row | verify row insertion after removing protection with Aspose.Cells | C# example to test worksheet protection and data shift in Excel using Aspose.Cells | how to insert rows in a protected Excel sheet with Aspose.Cells | check data integrity after unprotecting a sheet in Aspose.Cells .NET
+// Tags: worksheet security removal Aspose.Cells | post-unprotect row insertion API Aspose.Cells | worksheet protection handling Aspose.Cells .NET | excel data shift verification Aspose.Cells | save workbook after modifications Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example creates a workbook, protects the first worksheet with a password, attempts a row insertion that throws an exception, then unprotects the sheet, inserts a new row, iterates through the column to confirm original data is intact, and finally saves the workbook.
+// The sample creates a workbook, protects the first worksheet with a password, confirms that row insertion fails while protected, then unprotects the sheet, inserts a new row, validates that existing data shifts correctly and integrity is maintained, and finally saves the workbook.
 class Program
 {
     static void Main()
@@ -19,25 +18,24 @@ class Program
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "TestSheet";
 
-            // Populate initial data
+            // Populate the worksheet with sample data
             sheet.Cells["A1"].PutValue("Header");
             sheet.Cells["A2"].PutValue("Row1");
             sheet.Cells["A3"].PutValue("Row2");
 
-            // Protect the worksheet with a password (oldPassword is empty for new protection)
-            sheet.Protect(ProtectionType.All, "SecretPwd", string.Empty);
+            // Protect the worksheet with a password (oldPassword is not required, pass null)
+            sheet.Protect(ProtectionType.All, "pwd123", null);
 
             // Attempt to insert a row while the sheet is protected (should throw)
             bool insertFailed = false;
             try
             {
-                // Insert one row after the header (row index 1)
-                sheet.Cells.InsertRows(1, 1);
+                sheet.Cells.InsertRows(2, 1); // Insert before row 2
             }
             catch (Exception ex)
             {
                 insertFailed = true;
-                Console.WriteLine("Expected failure while inserting on protected sheet: " + ex.Message);
+                Console.WriteLine("Insert failed as expected while protected: " + ex.Message);
             }
 
             if (!insertFailed)
@@ -46,28 +44,42 @@ class Program
             }
 
             // Unprotect the worksheet
-            sheet.Unprotect("SecretPwd");
+            sheet.Unprotect("pwd123");
 
             // Insert a new row now that the sheet is unprotected
-            sheet.Cells.InsertRows(1, 1); // Inserts a blank row between Header and Row1
+            sheet.Cells.InsertRows(2, 1); // Insert before row 2
 
-            // Verify data integrity after insertion
-            Console.WriteLine("Data after unprotected insertion:");
-            for (int row = 0; row < 4; row++)
+            // Verify that existing data shifted correctly
+            string header = sheet.Cells["A1"].StringValue; // Should be "Header"
+            string insertedRow = sheet.Cells["A2"].StringValue; // Should be empty
+            string row1 = sheet.Cells["A3"].StringValue; // Should be "Row1"
+            string row2 = sheet.Cells["A4"].StringValue; // Should be "Row2"
+
+            Console.WriteLine($"Header: {header}");
+            Console.WriteLine($"Inserted Row (expected empty): '{insertedRow}'");
+            Console.WriteLine($"Row1 after insert: {row1}");
+            Console.WriteLine($"Row2 after insert: {row2}");
+
+            // Simple integrity check
+            if (header == "Header" && row1 == "Row1" && row2 == "Row2")
             {
-                Console.WriteLine($"Row {row + 1}: {sheet.Cells[row, 0].StringValue}");
+                Console.WriteLine("Data integrity maintained after unprotecting and inserting rows.");
+            }
+            else
+            {
+                Console.WriteLine("Data integrity issue detected.");
             }
 
-            // Save the workbook (optional, demonstrates that the file is valid)
-            string outputPath = "UnprotectWorksheetTest.xlsx";
+            // Save the workbook for manual inspection if needed
+            string outputPath = "UnprotectTest.xlsx";
             try
             {
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine("Failed to save workbook: " + saveEx.Message);
+                Console.WriteLine("Failed to save workbook: " + ex.Message);
             }
         }
         catch (Exception ex)

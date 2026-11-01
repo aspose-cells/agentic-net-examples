@@ -1,33 +1,57 @@
-// Title: Refresh all PivotTables in an Excel workbook and export to PDF while preserving layout using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file, refreshes every PivotTable, recalculates all formulas, and saves the workbook as a PDF with the original layout using Aspose.Cells. | Generate a C# example that updates PivotTable data, applies PdfSaveOptions to keep document structure, and exports the refreshed workbook to a PDF file.
-// Common Searches: c# aspose.cells refresh pivot tables before converting to pdf | preserve pivot table formatting when saving Excel as PDF with Aspose.Cells | export refreshed pivot table to PDF while keeping layout in .NET | how to use PdfSaveOptions ExportDocumentStructure for pivot tables
-// Tags: refresh pivot tables Aspose.Cells | export workbook to PDF Aspose.Cells | preserve pivot table layout PDF | PdfSaveOptions ExportDocumentStructure | recalculate formulas before PDF export
+// Title: Refresh all pivot tables in an Excel workbook and export the result to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to refresh pivot tables in an Excel file before saving as PDF with Aspose.Cells | How to recalculate pivot table data and export workbook to PDF using Aspose.Cells .NET | Aspose.Cells example for updating pivot tables and generating PDF output | Export refreshed pivot tables to PDF while preserving layout in C# | Saving an Excel workbook with refreshed pivot tables to PDF using Aspose.Cells API
+// Tags: Aspose.Cells update pivot cache C# | PDF conversion preserving pivot layout Aspose.Cells | calculate pivot data before PDF save | save refreshed Excel workbook as PDF .NET | Aspose.Cells pivot table layout retention PDF
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-// Loads an Excel workbook, refreshes all PivotTables, recalculates formulas, and saves the workbook as a PDF while preserving the original layout and document structure.
-class ExportPivotPdf
+// The sample loads an existing Excel workbook, checks the file's existence, iterates through each worksheet to refresh and recalculate every pivot table, recalculates the whole workbook to update dependent formulas, and finally saves the refreshed workbook as a PDF while preserving the pivot table layout and calculated values. Exceptions are caught and logged.
+class ExportPivotTableToPdf
 {
     static void Main()
     {
-        // Load the workbook that contains the PivotTable
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Refresh all PivotTables to reflect the latest source data
-        workbook.Worksheets.RefreshPivotTables();
-
-        // Recalculate any formulas that might affect the PivotTable
-        workbook.CalculateFormula();
-
-        // Configure PDF save options to preserve the document structure (layout)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            ExportDocumentStructure = true
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Export the refreshed workbook (including the PivotTable) to PDF
-        workbook.Save("output.pdf", pdfOptions);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Refresh all pivot tables in the workbook and recalculate their values
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pivot in sheet.PivotTables)
+                {
+                    // Refresh the data source of the pivot table
+                    pivot.RefreshData();
+
+                    // Recalculate the pivot table data
+                    pivot.CalculateData();
+                }
+            }
+
+            // Recalculate the entire workbook (covers any formulas that depend on the pivot data)
+            workbook.CalculateFormula();
+
+            // Save the refreshed workbook as a PDF, preserving layout and calculated values
+            workbook.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"Successfully exported pivot tables to PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

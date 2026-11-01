@@ -1,46 +1,53 @@
-// Title: How to Auto‑Fit an Aspose.Cells TextBox to Its Content in C#
-// AI Prompts: Generate C# code that measures the rendered size of a TextBox's text using Aspose.Cells font settings and then sets the TextBox shape's width and height to fit the content. | Create a reusable Aspose.Cells helper method that adds a TextBox to a worksheet and automatically adjusts its dimensions based on the supplied string and font.
-// Common Searches: asp.net cells auto fit textbox shape based on text length c# | c# calculate required width for Aspose.Cells textbox from string | dynamic resizing of Aspose.Cells textbox using font metrics
-// Tags: auto-fit textbox Aspose.Cells | calculate textbox size from text C# | Aspose.Cells shape resizing based on content | text measurement for Aspose.Cells shapes | dynamic textbox dimensions .NET
+// Title: How to enable auto‑fit for a TextBox shape in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# make textbox shape resize to fit its text | C# Aspose.Cells auto‑size textbox based on content length | set textbox shape to auto‑fit its text in Aspose.Cells .NET | Aspose.Cells textbox auto‑fit not working in C# example
+// Tags: Aspose.Cells TextBox auto‑fit limitation | C# Aspose.Cells shape resize to content | Excel workbook textbox auto‑size with Aspose.Cells | Aspose.Cells shape dimensions based on text length
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example shows how to add a TextBox shape to a worksheet, assign text, and programmatically determine the required width and height using Aspose.Cells font metrics, then resize the shape so it auto‑fits the content before saving the workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new Workbook, adds a TextBox shape, assigns a long string, and demonstrates that the AutoSize property is unavailable in the current Aspose.Cells version, requiring manual size adjustment before saving the file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Add a textbox shape to the worksheet
+                // Parameters: upper left row, upper left column, offsetX, offsetY, width, height
+                TextBox textBox = sheet.Shapes.AddTextBox(2, 1, 0, 0, 100, 30);
 
-            // Add a textbox shape.
-            // Parameters: upper left row, upper left column, row offset, column offset, width, height
-            TextBox textbox = sheet.Shapes.AddTextBox(2, 1, 0, 0, 100, 30);
+                // Set the textbox content
+                textBox.Text = "This is a sample text that is long enough to demonstrate auto‑fit functionality.";
 
-            // Set the text that the textbox will contain
-            textbox.Text = "This is a sample text that will determine the size of the textbox automatically.";
+                // AutoSize property is not available in this version of Aspose.Cells.
+                // The textbox size is kept as defined; adjust manually if needed.
 
-            // Note: Aspose.Cells TextBox does not expose an AutoSize property in this version.
-            // The textbox size can be adjusted manually if needed.
+                // Define output file path
+                string outputPath = "AutoFitTextbox.xlsx";
 
-            // Optional formatting
-            textbox.Font.Color = Color.Black;
-            textbox.Font.Size = 12;
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Save the workbook
-            workbook.Save("AutoFitTextbox.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
-// Title: Set the second chart series to a custom theme color in an existing XLSX workbook using Aspose.Cells for .NET
-// AI Prompts: Load an XLSX file with Aspose.Cells, locate the first chart on the first worksheet, change the foreground color of its second series to a specific RGB value, and save the workbook. | Using Aspose.Cells for .NET, retrieve the second series of a chart, assign a custom palette color (e.g., Accent1), and write the updated workbook to a new XLSX file.
-// Common Searches: Aspose.Cells C# change color of second series in an existing chart | how to apply custom RGB color to a specific chart series using Aspose.Cells | update chart series theme color in a loaded workbook with Aspose.Cells for .NET | C# code to modify second series foreground color in Excel chart and save file | set custom palette color for chart series in Aspose.Cells workbook
-// Tags: Aspose.Cells set chart series color C# | modify second series foreground Aspose.Cells | custom theme palette for Excel chart series | load workbook update chart Aspose.Cells | save workbook after chart formatting C#
+// Title: Set a custom palette color for the second series of the first chart in an existing XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Open input.xlsx with Aspose.Cells, locate the first worksheet’s first chart, change the second series’ Area.ForegroundColor to a chosen Color (e.g., Red), and save the workbook as output.xlsx. | Using Aspise.Cells for .NET, verify that a chart contains at least two series, assign a custom palette color to the second series, and write the modified workbook back to an XLSX file.
+// Common Searches: Aspose.Cells C# change color of second chart series in existing Excel file | set custom palette for a specific chart series using Aspose.Cells .NET | programmatically modify chart series foreground color in XLSX with Aspose | how to update chart series theme color without recreating chart Aspose.Cells
+// Tags: Aspose.Cells chart series foreground color | second series color update Excel C# | apply custom series color Aspose.Cells | modify chart series theme Aspose.Cells | save workbook after chart color change .NET
 
 using System;
 using System.IO;
@@ -9,58 +9,60 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program loads "input.xlsx", accesses the first worksheet's first chart, changes the foreground color of the second series to a custom RGB value, and saves the modified workbook as "output.xlsx" using Aspose.Cells for .NET.
+// The example loads an existing XLSX file, accesses the first worksheet and its first chart, checks that the chart has at least two series, sets the foreground color of the second series to a custom color (e.g., Red), and saves the modified workbook as a new XLSX file, handling missing files and errors gracefully.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "input.xlsx";
-        const string outputFile = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Verify that the input workbook exists
-        if (!File.Exists(inputFile))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
             return;
         }
 
         try
         {
             // Load the existing workbook
-            Workbook workbook = new Workbook(inputFile);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
+            // Assume the first worksheet contains the chart
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first chart on the worksheet
+            // Ensure the worksheet has at least one chart
             if (sheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found on the first worksheet.");
                 return;
             }
 
+            // Get the first chart (index 0)
             Chart chart = sheet.Charts[0];
 
-            // Verify that the chart has at least two series
-            if (chart.NSeries.Count > 1)
+            // Ensure there are at least two series in the chart
+            if (chart.NSeries.Count >= 2)
             {
-                // Retrieve the second series (index 1)
+                // Get the second series (index 1)
                 Series secondSeries = chart.NSeries[1];
 
-                // Set its color (example: use Accent1 theme color)
-                secondSeries.Area.ForegroundColor = Color.FromArgb(0, 112, 192); // custom color or theme accent
+                // Set the series color to a custom color (e.g., Red)
+                secondSeries.Area.ForegroundColor = Color.Red;
             }
             else
             {
                 Console.WriteLine("The chart does not contain a second series.");
             }
 
-            // Save the workbook back to XLSX format
-            workbook.Save(outputFile, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+            // Save the workbook back to XLSX
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

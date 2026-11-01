@@ -1,13 +1,12 @@
-// Title: How to load an Excel workbook in C# with Aspose.Cells and convert numeric cells to text using LoadOptions.ConvertNumericToText
-// AI Prompts: Load an .xlsx file with Aspose.Cells, set LoadOptions.ConvertNumericToText = true, and read cell A1 as a string using StringValue. | Write a reusable C# method that takes a file path, enables numeric‑to‑text conversion via LoadOptions, and returns the string values of specified cell addresses. | Show how to save the workbook after loading it with ConvertNumericToText enabled, ensuring numeric data remains as text in the output file.
-// Common Searches: Aspose.Cells C# load workbook with numeric values as strings | Convert numeric cells to text on load using LoadOptions in Aspose.Cells .NET | Read Excel cell as string instead of number with Aspose.Cells LoadOptions | Enable ConvertNumericToText option when opening .xlsx in C# | Prevent numeric conversion when reading Excel with Aspose.Cells
-// Tags: load option ConvertNumericToText | numeric cell to string Aspose.Cells | C# load .xlsx with text values | preserve numeric formatting as text | read cell StringValue Aspose
+// Title: Load an Excel workbook in C# with Aspose.Cells and read numeric cells as text using ConvertNumericToText
+// Common Searches: Aspose.Cells C# load workbook and treat numbers as strings | How to get string value of a numeric cell with LoadOptions ConvertNumericToText | Read Excel cell A1 as text instead of number using Aspose.Cells | Enable ConvertNumericToText option when opening XLSX in C#
+// Tags: Aspose.Cells LoadOptions ConvertNumericToText | numeric cell stringvalue C# | Excel workbook load numeric as text | XLSX loading option Aspose.Cells | C# Aspose.Cells cell.StringValue usage
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads an XLSX workbook in C# using Aspose.Cells, activates LoadOptions.ConvertNumericToText so numeric cells are treated as strings, reads cell A1 via StringValue, and saves the workbook, all with proper exception handling.
+// The example demonstrates loading an XLSX file with Aspose.Cells using LoadOptions that enable ConvertNumericToText, then accessing a cell's StringValue to retrieve numeric data as plain text, and finally saving the workbook while handling missing files and exceptions.
 class Program
 {
     static void Main()
@@ -17,31 +16,31 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Configure load options (numeric-to-text conversion not available in this version)
+            // Load the workbook (numeric cells will be accessible as text via StringValue)
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-
-            // Load the workbook using the configured options
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Example: read a cell value as text
-            Cell cell = workbook.Worksheets[0].Cells["A1"];
-            string textValue = cell.StringValue; // numeric content is now a string representation
-            Console.WriteLine($"A1 as text: {textValue}");
+            // Access the first worksheet and read cell A1 as text
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
+            string cellText = cell.StringValue; // Numeric cell represented as text
 
-            // Save the workbook if further processing or output is required
+            Console.WriteLine($"Cell A1 as text: {cellText}");
+
+            // Save the workbook (optional)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

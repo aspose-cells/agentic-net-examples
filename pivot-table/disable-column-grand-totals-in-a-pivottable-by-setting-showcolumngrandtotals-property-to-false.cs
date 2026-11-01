@@ -1,52 +1,55 @@
-// Title: Disable column grand totals in an Excel PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads an existing workbook, locates the first PivotTable, and sets ShowColumnGrandTotals to false. | Show how to add error handling for a missing input file and for worksheets without PivotTables while turning off column grand totals. | Demonstrate saving the workbook to a new file after programmatically disabling column grand totals in a PivotTable.
-// Common Searches: Aspose.Cells C# hide column grand totals in pivot table | set ShowColumnGrandTotals false programmatically .NET | remove column grand total from Excel pivot using Aspose.Cells | how to turn off column grand totals in a PivotTable with C# | Aspose.Cells pivot table display options column totals
-// Tags: Aspose.Cells ShowColumnGrandTotals property | C# disable pivot table column grand totals | Aspose.Cells modify pivot table display settings | Excel pivot column totals Aspose.Cells .NET | programmatic pivot table formatting C#
+// Title: Hide column grand totals in an Aspose.Cells PivotTable using C#
+// Common Searches: Aspose.Cells C# hide column grand totals in pivot table | disable column grand totals for Excel pivot table with Aspose.Cells .NET | set PivotTable.ColumnGrand false in C# Aspose.Cells example | remove column grand total from generated Excel pivot using Aspose.Cells | programmatically hide column grand totals in Excel pivot via Aspose.Cells library
+// Tags: Aspose.Cells PivotTable ColumnGrand property | disable column grand totals Aspose.Cells | C# hide Excel pivot column totals | Excel pivot table formatting Aspose.Cells | programmatic pivot table grand totals C#
 
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using System;
-using System.IO;
 
-// The example loads an existing Excel workbook, accesses the first worksheet and its first PivotTable, sets the ShowColumnGrandTotals property to false to hide column grand totals, and saves the result to a new file. It also includes checks for a missing input file and for worksheets that contain no PivotTables.
+// The example creates a workbook, adds sample data, builds a PivotTable on a new sheet, assigns the Category field to rows and the Amount field to data, disables column grand totals while keeping row grand totals visible, and saves the workbook as an .xlsx file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook that contains the PivotTable
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook and populate sample data
+            Workbook wb = new Workbook();
+            Worksheet dataSheet = wb.Worksheets[0];
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(100);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(200);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(150);
+            dataSheet.Cells["A5"].PutValue("B");
+            dataSheet.Cells["B5"].PutValue(250);
 
-            // Get the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Add a worksheet to host the pivot table
+            int pivotSheetIndex = wb.Worksheets.Add();
+            Worksheet pivotSheet = wb.Worksheets[pivotSheetIndex];
 
-            // Ensure the worksheet contains at least one PivotTable
-            if (sheet.PivotTables.Count == 0)
-            {
-                Console.WriteLine("No PivotTables found on the first worksheet.");
-                return;
-            }
+            // Define source data range
+            string sourceData = "=Sheet1!A1:B5";
 
-            // Access the first PivotTable on the worksheet
-            PivotTable pivotTable = sheet.PivotTables[0];
+            // Add the pivot table and obtain its index
+            int pivotTableIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
 
-            // Disable column grand totals
-            pivotTable.ShowColumnGrandTotals = false;
+            // Add "Category" to rows (field index 0) and "Amount" to data area (field index 1)
+            pivotTable.RowFields.Add(pivotTable.RowFields[0]);   // Category
+            pivotTable.DataFields.Add(pivotTable.DataFields[0]); // Amount
 
-            // Save the workbook with the updated PivotTable settings
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            // Disable column grand totals, keep row grand totals enabled
+            pivotTable.ColumnGrand = false; // hide column grand totals
+            pivotTable.RowGrand = true;     // show row grand totals
+
+            // Save the workbook
+            string outputPath = "PivotTable_NoColumnGrandTotals.xlsx";
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

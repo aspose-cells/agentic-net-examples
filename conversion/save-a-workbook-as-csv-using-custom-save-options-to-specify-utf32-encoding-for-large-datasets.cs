@@ -1,65 +1,45 @@
-// Title: Save an Aspose.Cells workbook as a UTF-32 encoded CSV file using TxtSaveOptions in C#
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, populates it with data, and saves it as a CSV file using TxtSaveOptions with UTF-32 encoding. | Show how to configure TxtSaveOptions for CSV export with Encoding.UTF32 to handle large datasets in Aspose.Cells. | Demonstrate setting the Encoding property of TxtSaveOptions before calling Workbook.Save to produce a UTF-32 CSV file.
-// Common Searches: Aspose.Cells C# export workbook to CSV with UTF-32 encoding | How to set UTF-32 encoding for CSV output using TxtSaveOptions in Aspose.Cells | Saving large Excel data as UTF-32 CSV with Aspose.Cells .NET | TxtSaveOptions SaveFormat.Csv custom encoding example | C# Aspose.Cells CSV export encoding options
-// Tags: TxtSaveOptions CSV UTF-32 encoding | Aspose.Cells workbook to CSV conversion | C# export large dataset as UTF-32 CSV | Save workbook with custom encoding Aspose.Cells | CSV export encoding Aspose.Cells .NET
+// Title: Save a large Excel workbook to CSV with UTF‑32 encoding using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export workbook to CSV with UTF-32 encoding for large data sets | How to set UTF-32 encoding when saving CSV with Aspose.Cells TxtSaveOptions | C# save Excel worksheet as CSV using UTF-32 with Aspose.Cells | Generate CSV from a 10,000‑row Excel file with custom encoding in .NET | Aspose.Cells example for CSV conversion with UTF-32 encoding
+// Tags: Aspose.Cells TxtSaveOptions CSV encoding | C# export workbook to CSV UTF-32 | large dataset CSV conversion Aspose.Cells | .NET custom CSV encoding Aspose.Cells | save Excel as CSV with UTF-32 using Aspose
 
-using System;
-using System.IO;
-using System.Text;
 using Aspose.Cells;
+using System;
+using System.Text;
 
-namespace AsposeCellsCsvExport
+// The example creates a new Workbook, populates the first worksheet with 10,000 rows of sample data, configures TxtSaveOptions for CSV output with UTF‑32 encoding and a comma separator, and saves the workbook as "LargeDataset.csv" while handling any exceptions.
+class Program
 {
-    // The example creates a workbook, fills it with sample rows, configures TxtSaveOptions for CSV format with UTF-32 encoding, ensures the output directory exists, and saves the workbook as a UTF-32 encoded CSV file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate the worksheet with a large dataset (example)
+            for (int row = 0; row < 10000; row++)
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Populate the workbook with sample data (replace with your own data as needed)
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Example: fill first 10 rows with sample data
-                for (int i = 0; i < 10; i++)
-                {
-                    cells[i, 0].PutValue($"Row {i + 1}");
-                    cells[i, 1].PutValue(i * 10);
-                    cells[i, 2].PutValue(DateTime.Now.AddDays(i));
-                }
-
-                // Configure CSV save options with UTF-32 encoding using TxtSaveOptions
-                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
-                {
-                    // Set the desired encoding to UTF-32
-                    Encoding = Encoding.UTF32
-
-                    // ConvertNumericData property is no longer available; default behavior is sufficient
-                };
-
-                // Define output path and ensure the directory exists
-                string outputPath = "LargeDatasetExport.csv";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-
-                // If the file is in the current directory, outputDir may be null
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a CSV file using the custom options
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Workbook saved as CSV with UTF-32 encoding to: {outputPath}");
+                sheet.Cells[row, 0].PutValue($"Row {row + 1}");
+                sheet.Cells[row, 1].PutValue(row);
             }
-            catch (Exception ex)
+
+            // Set up TXT save options for CSV output with UTF‑32 encoding
+            TxtSaveOptions txtOptions = new TxtSaveOptions(SaveFormat.Csv)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                Encoding = Encoding.UTF32,   // Specify UTF‑32 encoding
+                Separator = ','              // Use comma as delimiter
+                // Numeric data is saved as numbers by default
+            };
+
+            // Save the workbook as a CSV file using the custom options
+            workbook.Save("LargeDataset.csv", txtOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

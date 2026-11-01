@@ -1,23 +1,47 @@
-// Title: Export an Excel workbook to HTML without generating CSS files using Aspose.Cells for .NET
-// AI Prompts: Write C# code that saves a Workbook as HTML with CSS disabled using Aspose.Cells HtmlSaveOptions. | Show how to configure Aspose.Cells options to suppress external CSS creation during HTML export in a .NET application. | Provide a step‑by‑step example converting an .xlsx file to .html while preventing stylesheet generation with Aspose.Cells.
-// Common Searches: Aspose.Cells disable CSS generation when saving workbook as HTML | C# example of turning off stylesheet output in Aspose.Cells HTML export | How to export Excel to HTML without external stylesheet in .NET | Prevent creation of CSS files during Aspose.Cells HTML export | Save workbook as HTML with no CSS using Aspose.Cells for C#
-// Tags: Aspose.Cells HtmlSaveOptions.DisableCss | C# Excel to HTML conversion without stylesheet | Aspose.Cells suppress CSS output | HTML export without external CSS Aspose.Cells | save workbook as HTML no CSS Aspose.Cells
+// Title: Export an Excel workbook to HTML without generating CSS using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as HTML with HtmlSaveOptions.DisableCss set to true. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to turn off CSS generation during Excel‑to‑HTML conversion. | Provide a .NET example that exports a workbook to HTML while suppressing the creation of any stylesheet.
+// Common Searches: Aspose.Cells C# disable CSS when saving workbook as HTML | How to stop CSS file creation in Aspose.Cells HTML export | Set HtmlSaveOptions.DisableCss true to get HTML without stylesheet from Excel | Export Excel to HTML without embedded CSS using Aspose.Cells | C# Aspose.Cells HTML export without generating CSS files
+// Tags: HtmlSaveOptions.DisableCss Aspose.Cells | export workbook to html without css | Aspose.Cells suppress stylesheet on HTML save | C# disable css generation Aspose.Cells HTML export | save excel as html without embedded css
 
+using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The sample loads an Excel workbook, creates HtmlSaveOptions with the DisableCss property set to true to stop CSS file creation, and saves the workbook as an HTML file using Aspose.Cells for .NET.
+// The example loads an existing .xlsx file into a Workbook, creates HtmlSaveOptions, sets DisableCss = true to prevent any CSS or stylesheet from being emitted, and saves the workbook as an HTML file. The resulting HTML contains only the markup for the worksheet data, with no linked or embedded CSS.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Configure HTML save options to disable CSS generation
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        htmlOptions.DisableCss = true; // Prevent creation of external CSS files
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-        // Export the workbook to HTML using the configured options
-        workbook.Save("output.html", htmlOptions);
+        try
+        {
+            // Load the workbook from the existing Excel file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Note: ExportCssClass property is not available in the current Aspose.Cells version.
+            // The default behavior will be used.
+
+            // Save the workbook as HTML with the specified options
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

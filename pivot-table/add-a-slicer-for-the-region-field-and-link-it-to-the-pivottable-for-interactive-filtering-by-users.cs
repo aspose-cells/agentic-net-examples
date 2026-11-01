@@ -1,70 +1,71 @@
-// Title: Create and link a Region slicer to a PivotTable in Aspose.Cells for C#
-// AI Prompts: Write C# code with Aspose.Cells that adds a slicer for the 'Region' field, connects it to an existing PivotTable, refreshes the slicer, and saves the workbook. | Demonstrate how to programmatically attach a slicer to a PivotTable in Aspose.Cells .NET, set its position, refresh it after pivot calculations, and export the file.
-// Common Searches: Aspose.Cells C# add slicer to pivot table example | How to link a slicer with a PivotTable using Aspose.Cells .NET | Refresh slicer after pivot calculation Aspose.Cells C# | Set slicer location and connect to pivot in Aspose.Cells workbook | Create region slicer for pivot table with Aspose.Cells API
-// Tags: Aspose.Cells pivot table slicer | C# add slicer to pivot table | link slicer to pivot in Aspose.Cells | refresh slicer after pivot calculation | region field slicer Aspose.Cells
+// Title: How to add a Region slicer linked to a PivotTable in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add slicer for PivotTable field Region | Create an interactive slicer for a PivotTable with Aspose.Cells .NET | Programmatically place a slicer at a specific cell using Aspose.Cells | Link a slicer to an existing PivotTable in C# with Aspose.Cells | Set slicer name and configure filtering for Excel workbook via Aspose.Cells
+// Tags: Aspose.Cells add slicer to pivot table | C# slicer placement in Excel worksheet | link region field slicer to pivot table Aspose | programmatic Excel slicer creation .NET | pivot table interactive filtering with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;   // For PivotTable
+using Aspose.Cells.Slicers; // For Slicer
 
-namespace AsposeCellsSlicerExample
+namespace AsposeCellsExample
 {
-    // Shows how to build a workbook, generate a PivotTable from sample data, add a slicer for the Region field, explicitly link the slicer to the PivotTable, refresh it, and save the result as PivotTableWithRegionSlicer.xlsx using Aspose.Cells for .NET.
-    public class Program
+    // The example loads an existing Excel file, checks for a PivotTable, and adds a slicer for the "Region" field at cell F6 (row 5, column 5) on the same worksheet. The slicer is named "RegionSlicer" and is linked to the first PivotTable, providing users with interactive filtering capabilities. The modified workbook is then saved to the specified output path.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data: Product, Region, Sales
-            sheet.Cells["A1"].Value = "Product";
-            sheet.Cells["B1"].Value = "Region";
-            sheet.Cells["C1"].Value = "Sales";
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            sheet.Cells["A2"].Value = "Apple";
-            sheet.Cells["B2"].Value = "North";
-            sheet.Cells["C2"].Value = 1200;
+                // Load the workbook containing a PivotTable
+                Workbook workbook = new Workbook(inputPath);
 
-            sheet.Cells["A3"].Value = "Apple";
-            sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 800;
+                // Access the first worksheet (adjust if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["A4"].Value = "Banana";
-            sheet.Cells["B4"].Value = "North";
-            sheet.Cells["C4"].Value = 600;
+                // Ensure there is at least one PivotTable
+                if (worksheet.PivotTables == null || worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No PivotTables found in the worksheet.");
+                    return;
+                }
 
-            sheet.Cells["A5"].Value = "Banana";
-            sheet.Cells["B5"].Value = "South";
-            sheet.Cells["C5"].Value = 900;
+                // Retrieve the first PivotTable
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Add a PivotTable based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
+                // Add a slicer for the "Region" field at cell F6 (row=5, column=5)
+                // Note: The correct overload order is (PivotTable, firstRow, firstColumn, fieldName)
+                int slicerIndex = worksheet.Slicers.Add(pivotTable, 5, 5, "Region");
 
-            // Configure the PivotTable: Product as rows, Region as columns, Sales as data
-            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Configure the slicer (optional: set a friendly name)
+                Slicer slicer = worksheet.Slicers[slicerIndex];
+                slicer.Name = "RegionSlicer";
 
-            // Refresh and calculate the PivotTable so that slicer can work with up‑to‑date data
-            pivot.RefreshData();
-            pivot.CalculateData();
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Add a slicer for the "Region" field; place it starting at cell A1
-            int slicerIndex = sheet.Slicers.Add(pivot, "A1", "Region");
-            Slicer slicer = sheet.Slicers[slicerIndex];
-
-            // Ensure the slicer is linked to the PivotTable (optional, but explicit)
-            slicer.AddPivotConnection(pivot);
-
-            // Refresh the slicer to reflect the current PivotTable state
-            slicer.Refresh();
-
-            // Save the workbook
-            workbook.Save("PivotTableWithRegionSlicer.xlsx");
+                // Save the workbook with the new slicer
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,107 +1,136 @@
-// Title: Import a JSON array into an Excel worksheet and create a ListObject table with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses System.Text.Json to deserialize a JSON array into a list of POCO objects and inserts the data with column headers into an Aspose.Cells worksheet. | Show how to define the data range and add a ListObject (Excel table) over it using Aspose.Cells. | Demonstrate applying a built‑in table style, auto‑fitting columns, and saving the workbook with proper exception handling.
-// Common Searches: C# Aspose.Cells import JSON array into Excel table with headers | How to create a ListObject from deserialized JSON data using Aspose.Cells | Aspose.Cells auto fit columns after writing JSON objects to worksheet | Saving workbook to specific folder after adding table in Aspose.Cells C#
-// Tags: JSON deserialization to POCO collection C# | populate Aspose.Cells worksheet from object list | add ListObject table over data range Aspose.Cells | apply built‑in table style to ListObject Aspose.Cells | auto‑fit columns after data import Aspose.Cells | save workbook with exception handling Aspose.Cells
+// Title: Import a JSON array into an Excel worksheet as a table with automatic column mapping using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells import JSON array and create table with dynamic columns | Aspose.Cells .NET read JSON and populate worksheet rows automatically | Generate Excel column headers from JSON properties using Aspose.Cells | Save JSON data to an Excel file with Aspose.Cells in C# | Parse JsonDocument and write to Excel table using Aspose.Cells
+// Tags: Aspose.Cells JSON to Excel conversion | automatic column mapping from JSON | create Excel table from JsonDocument | C# write JSON array to worksheet | dynamic Excel headers based on JSON fields
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Aspose.Cells;
 
-// The example creates a new workbook, deserializes a JSON array into a list of Person POCOs, writes column headers and each record to the first worksheet, defines the occupied range, adds a ListObject (Excel table) over that range, optionally applies a built‑in table style, auto‑fits the columns, and saves the file as JsonImport.xlsx with comprehensive error handling.
+// The program creates a new workbook, parses a JSON array, derives column headers from the first object's properties, writes the headers to the first row, iterates through each JSON element to populate subsequent rows handling numbers, strings, and booleans, and saves the workbook as 'JsonData.xlsx'.
 class Program
 {
-    // Simple POCO to hold JSON data
-    private class Person
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;   // avoid nullable warning
-        public int Score { get; set; }
-    }
-
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // ---------- Load / Create Workbook ----------
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // JSON data to import
-            string json = @"[
-                { ""Id"": 1, ""Name"": ""Alice"", ""Score"": 85 },
-                { ""Id"": 2, ""Name"": ""Bob"", ""Score"": 92 },
-                { ""Id"": 3, ""Name"": ""Charlie"", ""Score"": 78 }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // ---------- Sample JSON ----------
+            // This JSON string represents an array of objects.
+            // In a real scenario, you might read it from a file or other source.
+            string json = @"
+            [
+                { ""Id"": 1, ""Name"": ""Alice"", ""Score"": 85.5 },
+                { ""Id"": 2, ""Name"": ""Bob"",   ""Score"": 92.0 },
+                { ""Id"": 3, ""Name"": ""Carol"", ""Score"": 78.0 }
             ]";
 
-            // Deserialize JSON into a list of Person objects
-            List<Person> people = JsonSerializer.Deserialize<List<Person>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<Person>();
+            // ---------- Parse JSON ----------
+            using JsonDocument doc = JsonDocument.Parse(json);
+            JsonElement root = doc.RootElement;
 
-            // Write headers
-            int startRow = 0;
-            int startCol = 0;
-            sheet.Cells[startRow, startCol].PutValue("Id");
-            sheet.Cells[startRow, startCol + 1].PutValue("Name");
-            sheet.Cells[startRow, startCol + 2].PutValue("Score");
-
-            // Write data rows
-            int currentRow = startRow + 1;
-            foreach (var p in people)
+            if (root.ValueKind != JsonValueKind.Array)
             {
-                sheet.Cells[currentRow, startCol].PutValue(p.Id);
-                sheet.Cells[currentRow, startCol + 1].PutValue(p.Name);
-                sheet.Cells[currentRow, startCol + 2].PutValue(p.Score);
+                Console.WriteLine("JSON root is not an array.");
+                return;
+            }
+
+            // Determine column headers from the first element's property names
+            List<string> headers = new List<string>();
+            if (root.GetArrayLength() > 0)
+            {
+                foreach (JsonProperty prop in root[0].EnumerateObject())
+                {
+                    headers.Add(prop.Name);
+                }
+            }
+
+            // Write headers to the first row (A1, B1, ...)
+            for (int i = 0; i < headers.Count; i++)
+            {
+                sheet.Cells[0, i].PutValue(headers[i]);
+            }
+
+            // Write data rows starting from row index 1
+            int currentRow = 1;
+            foreach (JsonElement element in root.EnumerateArray())
+            {
+                for (int col = 0; col < headers.Count; col++)
+                {
+                    string header = headers[col];
+                    if (element.TryGetProperty(header, out JsonElement value))
+                    {
+                        // Handle different JSON value types
+                        switch (value.ValueKind)
+                        {
+                            case JsonValueKind.Number:
+                                if (value.TryGetInt32(out int intVal))
+                                    sheet.Cells[currentRow, col].PutValue(intVal);
+                                else if (value.TryGetDouble(out double dblVal))
+                                    sheet.Cells[currentRow, col].PutValue(dblVal);
+                                break;
+                            case JsonValueKind.String:
+                                sheet.Cells[currentRow, col].PutValue(value.GetString());
+                                break;
+                            case JsonValueKind.True:
+                            case JsonValueKind.False:
+                                sheet.Cells[currentRow, col].PutValue(value.GetBoolean());
+                                break;
+                            default:
+                                sheet.Cells[currentRow, col].PutValue(value.ToString());
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // If the property is missing, leave the cell blank
+                        sheet.Cells[currentRow, col].PutValue(string.Empty);
+                    }
+                }
                 currentRow++;
             }
 
-            // Create a table (ListObject) over the imported range
-            int totalRows = people.Count + 1; // including header
-            int totalCols = 3;
-            // Add returns the index of the created ListObject in older API versions
-            int listIndex = sheet.ListObjects.Add(startRow, startCol, totalRows, totalCols, true);
-            ListObject listObject = sheet.ListObjects[listIndex];
+            // ---------- Save Workbook ----------
+            string outputPath = "JsonData.xlsx";
 
-            // Optional: apply a built‑in table style if desired (skip if not supported)
-            try
-            {
-                // Example style application (uncomment if your version supports it)
-                // listObject.Style = workbook.TableStyles[TableStyleType.TableStyleMedium2];
-            }
-            catch
-            {
-                // Ignore styling errors for older API versions
-            }
-
-            // Auto‑fit columns for better appearance
-            sheet.AutoFitColumns();
-
-            // Determine output path and ensure the directory exists
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "JsonImport.xlsx");
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Helper method to convert zero‑based column index to Excel column name (A, B, ..., AA, AB, ...)
+    static string CellIndexToName(int columnIndex)
+    {
+        const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        string result = string.Empty;
+        int dividend = columnIndex + 1;
+
+        while (dividend > 0)
+        {
+            int modulo = (dividend - 1) % 26;
+            result = letters[modulo] + result;
+            dividend = (dividend - modulo) / 26;
+        }
+
+        return result;
     }
 }

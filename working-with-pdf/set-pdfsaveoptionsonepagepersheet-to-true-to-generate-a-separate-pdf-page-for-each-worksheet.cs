@@ -1,48 +1,47 @@
 // Title: Generate a PDF with a separate page for each worksheet using Aspose.Cells PdfSaveOptions.OnePagePerSheet in C#
-// AI Prompts: Write C# code that loads an .xlsx workbook, sets PdfSaveOptions.OnePagePerSheet to true, and saves it as a PDF where each worksheet appears on its own page. | Show how to configure Aspose.Cells PdfSaveOptions to produce a multi‑page PDF, one page per sheet, and persist the workbook in a .NET application.
-// Common Searches: how to export each Excel sheet to a separate PDF page using Aspose.Cells C# | Aspose.Cells PdfSaveOptions OnePagePerSheet property example | C# convert workbook to PDF with one page per worksheet Aspose | save Excel file as multi‑page PDF per sheet Aspose.Cells .NET
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export Excel to PDF per worksheet | generate multi-page PDF from workbook Aspose | set per-sheet pagination PDF Aspose.Cells | save workbook as PDF with sheet separation .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.OnePagePerSheet to true, and saves each worksheet as an individual PDF page. | Show how to add file‑existence validation and exception handling when converting an Excel workbook to PDF with one page per sheet using Aspose.Cells. | Demonstrate configuring PdfSaveOptions for PDF export of multiple worksheets in a single PDF document in C#.
+// Common Searches: asp.net convert excel workbook to pdf with one page per worksheet using aspose.cells | c# pdfsaveoptions onepagepersheet example | how to export each worksheet to separate pdf page with aspose cells | check if excel file exists before saving as pdf in c# asp.net | asp.net core aspose cells pdf export multiple sheets separate pages
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export Excel to PDF separate worksheet pages | file existence validation before Aspose.Cells conversion | exception handling Aspose.Cells PDF export | multi-sheet PDF generation with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace Example
 {
-    // The program loads an existing Excel workbook, enables PdfSaveOptions.OnePagePerSheet, and saves the file as a PDF where each worksheet is rendered on a separate page.
+    // Loads an Excel workbook, verifies the source file, configures PdfSaveOptions.OnePagePerSheet = true, and saves the workbook as a PDF where each worksheet appears on its own page, with basic error handling.
     class Program
     {
         static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.pdf";
-
-                // Verify that the input workbook exists to avoid FileNotFoundException
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the existing workbook
+                // Load the workbook from the specified file
                 Workbook workbook = new Workbook(inputPath);
 
-                // Configure PDF save options: one page per worksheet
+                // Set PDF save options: one page per worksheet
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
                     OnePagePerSheet = true
                 };
 
-                // Save the workbook as PDF using the configured options
+                // Save the workbook as a PDF using the configured options
                 workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors
+                // Handle any runtime errors gracefully
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

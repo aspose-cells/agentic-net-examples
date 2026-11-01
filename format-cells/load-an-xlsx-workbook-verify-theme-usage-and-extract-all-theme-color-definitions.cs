@@ -1,60 +1,62 @@
-// Title: C# example to load an XLSX workbook with Aspose.Cells and list all theme color definitions
-// AI Prompts: Write C# code that opens a .xlsx file using Aspose.Cells, iterates through the ThemeColorType enum, and prints each theme color's ARGB components. | Create a C# routine that extracts the workbook's theme colors via Workbook.GetThemeColor and writes the definitions to a JSON file. | Enhance the theme‑color extraction to continue enumeration when a ThemeColorType cannot be retrieved, logging a warning instead of throwing.
-// Common Searches: how to retrieve Excel theme colors with Aspose.Cells in C# | list all ThemeColorType values and their ARGB values using Aspose.Cells .NET | extract theme palette from an XLSX file programmatically with Aspose.Cells | C# code sample for reading workbook theme colors via GetThemeColor
-// Tags: Aspose.Cells GetThemeColor C# | extract Excel theme palette .NET | enumerate ThemeColorType values Aspose.Cells | load XLSX workbook theme colors Aspose | theme color definitions ARGB Aspose.Cells
+// Title: Extract all theme color definitions from an XLSX workbook using Aspose.Cells for .NET
+// Common Searches: how to read Excel theme colors with Aspose.Cells in C# | C# code to list workbook theme color values using GetThemeColor | retrieve all ThemeColorType entries from an XLSX file with Aspose.Cells | extract theme palette colors from a .xlsx workbook programmatically | Aspose.Cells get theme color hex codes from workbook
+// Tags: Aspose.Cells GetThemeColor usage | enumerate ThemeColorType in .NET | extract Excel theme palette colors C# | load XLSX workbook with Aspose.Cells | convert theme colors to hex representation
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Aspose.Cells;
 using System.Drawing;
+using System.IO;
 
-// The sample loads an XLSX workbook with Aspose.Cells, iterates over every ThemeColorType enum value, obtains each color using Workbook.GetThemeColor, formats the ARGB components, and outputs the complete list of theme color definitions.
-class ThemeExtractor
+// The example verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, iterates over every ThemeColorType enum value, retrieves each theme color via Workbook.GetThemeColor, stores the results in a dictionary, and prints each color name with its hexadecimal RGB value.
+class Program
 {
     static void Main()
     {
+        const string inputFile = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputFile))
+        {
+            Console.WriteLine($"Input file '{inputFile}' not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"File not found: {inputPath}");
-                return;
-            }
-
             // Load the XLSX workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Collect theme color definitions using Workbook.GetThemeColor
-            List<string> themeColors = new List<string>();
-
-            foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
-            {
-                try
-                {
-                    Color color = workbook.GetThemeColor(colorType);
-                    string definition = $"{colorType}: ARGB({color.A}, {color.R}, {color.G}, {color.B})";
-                    themeColors.Add(definition);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to get color for {colorType}: {ex.Message}");
-                }
-            }
-
-            // Output the extracted theme color definitions
-            Console.WriteLine("Theme color definitions:");
-            foreach (string def in themeColors)
-            {
-                Console.WriteLine(def);
-            }
+            workbook = new Workbook(inputFile);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Extract all theme color definitions using Workbook.GetThemeColor
+        var themeColors = new Dictionary<string, Color>();
+
+        foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
+        {
+            try
+            {
+                // Retrieve the color for the current theme color type
+                Color color = workbook.GetThemeColor(colorType);
+                themeColors.Add(colorType.ToString(), color);
+            }
+            catch (Exception ex)
+            {
+                // If a specific color type is not available, skip it
+                Console.WriteLine($"Unable to retrieve color for {colorType}: {ex.Message}");
+            }
+        }
+
+        // Output the extracted theme colors
+        foreach (var kvp in themeColors)
+        {
+            // Display color name and its hex representation
+            Console.WriteLine($"{kvp.Key}: #{kvp.Value.R:X2}{kvp.Value.G:X2}{kvp.Value.B:X2}");
         }
     }
 }

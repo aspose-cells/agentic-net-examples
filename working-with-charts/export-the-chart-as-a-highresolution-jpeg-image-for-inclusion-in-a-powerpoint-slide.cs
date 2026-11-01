@@ -1,50 +1,74 @@
-// Title: Export a column chart from Aspose.Cells to a 300 DPI JPEG for PowerPoint using C#
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and saves it as a 300 DPI JPEG image suitable for PowerPoint slides. | Show how to configure ImageOrPrintOptions for maximum JPEG quality and specific DPI when exporting an Aspose.Cells chart.
-// Common Searches: c# export aspose.cells chart as 300 dpi jpeg for powerpoint | how to set jpeg quality when saving an aspose.cells chart | imageorprintoptions high resolution jpeg example aspose.cells | save column chart as high resolution jpeg using aspose.cells c# | export chart image for slide deck aspose.cells c#
-// Tags: Aspose.Cells chart JPEG export | high‑resolution chart image C# | ImageOrPrintOptions 300 DPI | column chart to JPEG Aspose.Cells | chart export for PowerPoint slide
+// Title: Export an Excel chart to a high‑resolution JPEG file for PowerPoint using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells export chart to JPEG with 300 DPI resolution | How to save an Excel chart as a high quality JPEG for PowerPoint slides using Aspose.Cells | Aspose.Cells ImageOrPrintOptions set DPI when converting chart to image | Export first worksheet chart to JPEG file in .NET | Generate high‑resolution chart image from Excel workbook using Aspose.Cells API
+// Tags: Aspose.Cells chart JPEG export | high‑resolution chart image .NET | ImageOrPrintOptions DPI setting | Excel chart to image for PowerPoint | C# Aspose.Cells chart rendering
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// The example creates a workbook, adds sample data, builds a column chart, configures ImageOrPrintOptions for 300 DPI and maximum JPEG quality, and exports the chart as a high‑resolution JPEG file ready for inclusion in a PowerPoint presentation.
-class ExportChartHighResJpeg
+// Loads an Excel workbook, retrieves the first chart from the first worksheet, configures ImageOrPrintOptions with 300 DPI horizontal and vertical resolution, and saves the chart as a high‑resolution JPEG file suitable for embedding in PowerPoint presentations.
+class ExportChartToJpeg
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Path to the source Excel file containing the chart
+            string workbookPath = @"C:\Data\SampleChart.xlsx";
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(120);
-        worksheet.Cells["B3"].PutValue(80);
-        worksheet.Cells["B4"].PutValue(150);
+            // Path where the high‑resolution JPEG image will be saved
+            string jpegPath = @"C:\Data\ChartImage.jpg";
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"Workbook file not found: {workbookPath}");
+                return;
+            }
 
-        // Set high‑resolution JPEG options
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Jpeg;        // Output format
-        options.HorizontalResolution = 300;       // 300 DPI horizontal
-        options.VerticalResolution = 300;         // 300 DPI vertical
-        options.Quality = 100;                    // Maximum JPEG quality
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(jpegPath);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Export the chart as a high‑resolution JPEG image
-        string outputPath = "HighResolutionChart.jpg";
-        chart.ToImage(outputPath, options);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-        Console.WriteLine($"Chart successfully exported to: {outputPath}");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
+
+            // Retrieve the first chart
+            Chart chart = sheet.Charts[0];
+
+            // Configure image export options for high resolution
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Image format is inferred from the file extension (.jpg)
+                HorizontalResolution = 300, // DPI
+                VerticalResolution = 300,   // DPI
+                Transparent = false
+            };
+
+            // Export the chart to a high‑resolution JPEG image
+            chart.ToImage(jpegPath, imgOptions);
+
+            Console.WriteLine($"Chart exported successfully to: {jpegPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

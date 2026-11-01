@@ -1,28 +1,30 @@
-// Title: Insert a PNG image into an Excel worksheet and attach a clickable hyperlink to a DOCX file using Aspose.Cells for .NET (C#)
-// AI Prompts: Add a picture to cell B2 of a new workbook and set its Hyperlink.Address to a .docx file with Aspose.Cells in C#. | Create an Excel file, embed a PNG, and make the image open a target document when clicked using the Aspose.Cells API. | Programmatically attach a hyperlink to a Picture object in Aspose.Cells and save the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells C# insert image and link it to a Word document | set hyperlink on picture in Excel using Aspose.Cells for .NET | clickable image in generated XLSX that opens a DOCX file with Aspose.Cells
-// Tags: insert picture Aspose.Cells C# | picture hyperlink Aspose.Cells | add png to worksheet Aspose.Cells | hyperlink property for picture Aspose.Cells | link image to docx Aspose.Cells
+// Title: Insert a PNG image into a worksheet cell and attach a file:// hyperlink that opens a PDF when clicked using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a picture from a PNG file into cell B2 of a new workbook and set its Hyperlink.Address to a local PDF file path with a screen tip. | Add an image to an Excel worksheet, assign a file:// hyperlink that opens a document, and save the workbook using the Aspose.Cells C# API. | Create a workbook, embed a PNG picture, configure the picture's Hyperlink properties (Address and ScreenTip), and export the file as XLSX.
+// Common Searches: Aspose.Cells C# how to add a picture to a specific cell and link it to a local PDF file | set hyperlink on an inserted image in Excel using Aspose.Cells .NET | embed PNG in worksheet and open PDF on click with Aspose.Cells | assign screen tip to picture hyperlink in Aspose.Cells C# example
+// Tags: insert picture into worksheet cell Aspose.Cells | picture hyperlink to local file C# | set picture screen tip Aspose.Cells | save workbook with linked image .NET | add PNG image to Excel using Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The example creates a new workbook, inserts a PNG image at cell B2, assigns a hyperlink that points to a DOCX file to the picture, and saves the result as an XLSX file.
+// The sample creates a new workbook, inserts a PNG image into cell B2, assigns a file:// hyperlink pointing to a PDF with a screen tip, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Path to the image that will be inserted
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Path to the image you want to insert
             string imagePath = "sample.png";
 
-            // Ensure the image file exists to avoid FileNotFoundException
+            // Ensure the image file exists before attempting to insert
             if (!File.Exists(imagePath))
             {
                 Console.WriteLine($"Image file not found: {imagePath}");
@@ -30,18 +32,27 @@ class Program
             }
 
             // Insert the picture at cell B2 (row index 1, column index 1)
-            // (lifecycle rule: insert picture)
-            int pictureIdx = sheet.Pictures.Add(1, 1, imagePath);
-            Picture picture = sheet.Pictures[pictureIdx];
+            int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
 
-            // Attach a hyperlink to the picture that opens a document when clicked
-            // The Hyperlink object is read‑only; set its Address property directly
-            picture.Hyperlink.Address = "targetDocument.docx";
+            // Retrieve the inserted picture object
+            Picture picture = worksheet.Pictures[pictureIndex];
 
-            // Save the workbook (lifecycle rule: save)
-            string resultPath = "Result.xlsx";
-            workbook.Save(resultPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+            // Set hyperlink properties (the Hyperlink object is read‑only, so modify its members)
+            picture.Hyperlink.Address = "file:///C:/Docs/target.pdf";
+            picture.Hyperlink.ScreenTip = "Open target PDF";
+
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

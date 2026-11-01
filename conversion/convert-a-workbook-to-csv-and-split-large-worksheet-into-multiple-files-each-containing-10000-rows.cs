@@ -1,63 +1,71 @@
-// Title: Convert an Excel workbook to CSV and split each worksheet into 10,000‑row files with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to load an XLSX workbook, iterate every worksheet, and create CSV files that contain no more than 10,000 rows each. | Demonstrate how to copy cell values and their styles from a source worksheet into a new workbook chunk and save that chunk as a CSV using Aspose.Cells SaveFormat.Csv. | Provide a loop that builds CSV filenames from the original workbook name, worksheet name, and part number while handling an arbitrary number of worksheets.
-// Common Searches: Aspose.Cells C# split large worksheet into multiple CSV files with row limit | How to export Excel sheet to CSV in 10k‑row chunks using Aspose.Cells .NET | C# example for chunked CSV generation from an XLSX workbook with Aspose | Save each 10,000 rows of an Excel worksheet as separate CSV files using Aspose.Cells | Preserve cell formatting while converting Excel to CSV in chunks with Aspose.Cells
-// Tags: Aspose.Cells CSV chunk export | C# Excel to CSV with row limit | 10k‑row CSV chunking using Aspose.Cells | preserve formatting in CSV export Aspose | batch CSV generation from large Excel
+// Title: Convert an Excel workbook to CSV and split a large worksheet into 10,000‑row CSV files using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells split large Excel sheet into multiple CSV files each containing 10,000 rows | how to export an Excel worksheet to CSV in 10k‑row chunks with Aspose.Cells for .NET | Aspose.Cells copy rows and preserve column widths when saving a worksheet as CSV | generate several CSV parts from one workbook using Aspose.Cells C# example | convert Excel to CSV and break data into 10,000‑row files with Aspose.Cells
+// Tags: Aspose.Cells copy rows to new workbook C# | export worksheet to CSV preserving column widths Aspose.Cells | split Excel sheet into chunked CSV files .NET | save workbook as CSV format using Aspose.Cells | process large Excel data in 10k row batches C# | Aspose.Cells CSV generation for large worksheets
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample loads an input.xlsx workbook, walks through every worksheet, calculates the total data rows, and processes the sheet in 10,000‑row blocks. For each block it creates a temporary workbook, copies cell values and styles, names the output file with the original workbook name, worksheet name, and part number, and saves the block as a CSV file using Aspose.Cells.
-class Program
+// The sample loads an input.xlsx workbook, determines the populated row and column range of the first worksheet, and iterates through the data in 10,000‑row blocks. For each block it creates a new workbook, copies rows together with their styles and column widths, and saves the chunk as a CSV file (output_part_1.csv, output_part_2.csv, …). It logs progress and includes basic file‑existence and exception handling.
+class WorkbookCsvSplitter
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook srcWorkbook = new Workbook("input.xlsx");
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet srcSheet in srcWorkbook.Worksheets)
+        try
         {
-            // Determine the total number of rows that contain data
-            int totalRows = srcSheet.Cells.MaxDataRow + 1; // MaxDataRow is zero‑based
-            int chunkSize = 10000;                         // Rows per CSV file
-            int partNumber = 1;
+            const string inputPath = "input.xlsx";
 
-            // Process the worksheet in chunks of 10,000 rows
-            for (int startRow = 0; startRow < totalRows; startRow += chunkSize, partNumber++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook that will hold the current chunk
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(inputPath);
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+
+            // Determine the total number of rows and columns that contain data
+            int totalRows = sourceSheet.Cells.MaxDataRow + 1;      // MaxDataRow is zero‑based
+            int totalColumns = sourceSheet.Cells.MaxDataColumn + 1; // MaxDataColumn is zero‑based
+
+            const int rowsPerFile = 10000;
+            int partIndex = 1;
+
+            // Process rows in chunks of 10,000
+            for (int startRow = 0; startRow < totalRows; startRow += rowsPerFile)
+            {
+                int rowsToCopy = Math.Min(rowsPerFile, totalRows - startRow);
+
+                // Create a new workbook for the current chunk
                 Workbook chunkWorkbook = new Workbook();
                 Worksheet chunkSheet = chunkWorkbook.Worksheets[0];
-                chunkSheet.Name = srcSheet.Name;
 
-                // Number of rows to copy in this chunk
-                int rowsInChunk = Math.Min(chunkSize, totalRows - startRow);
+                // Copy rows from source sheet to the chunk sheet
+                // The overload copies rows along with their styles
+                chunkSheet.Cells.CopyRows(sourceSheet.Cells, startRow, 0, rowsToCopy);
 
-                // Copy cells from the source worksheet to the chunk worksheet
-                for (int r = 0; r < rowsInChunk; r++)
+                // Copy column widths to preserve layout
+                for (int col = 0; col < totalColumns; col++)
                 {
-                    int srcRowIndex = startRow + r;
-                    for (int c = 0; c <= srcSheet.Cells.MaxDataColumn; c++)
-                    {
-                        Cell srcCell = srcSheet.Cells[srcRowIndex, c];
-                        if (srcCell != null && srcCell.Type != CellValueType.IsNull)
-                        {
-                            Cell destCell = chunkSheet.Cells[r, c];
-                            destCell.PutValue(srcCell.Value);
-                            // Preserve cell style (optional)
-                            destCell.SetStyle(srcCell.GetStyle());
-                        }
-                    }
+                    double width = sourceSheet.Cells.GetColumnWidth(col);
+                    chunkSheet.Cells.SetColumnWidth(col, width);
                 }
 
-                // Build the output CSV file name
-                string baseName = Path.GetFileNameWithoutExtension("input.xlsx");
-                string csvFileName = $"{baseName}_{srcSheet.Name}_Part{partNumber}.csv";
-
                 // Save the chunk as a CSV file
-                chunkWorkbook.Save(csvFileName, SaveFormat.Csv);
+                string outputFileName = $"output_part_{partIndex}.csv";
+                chunkWorkbook.Save(outputFileName, SaveFormat.Csv);
+
+                Console.WriteLine($"Created {outputFileName} with rows {startRow + 1} to {startRow + rowsToCopy}");
+                partIndex++;
             }
+
+            Console.WriteLine("Splitting completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,60 +1,49 @@
-// Title: Convert an Excel workbook containing WordArt to W3C‑valid HTML with CSS gradients using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with WordArt, configures HtmlSaveOptions to render WordArt as native HTML/CSS, outputs the CSS to a separate file, and enables CSS gradient generation for W3C‑compliant HTML. | Demonstrate how to validate the generated HTML and CSS files against W3C standards after converting an Excel workbook with WordArt using Aspose.Cells.
-// Common Searches: how to export WordArt from Excel to HTML using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions enable CSS gradients for W3C validation | save Excel workbook as HTML with separate CSS file in C# | convert Excel with WordArt to standards‑compliant HTML using Aspose.Cells | C# example for exporting Excel to HTML with native WordArt rendering
-// Tags: Aspose.Cells HtmlSaveOptions CSS gradients | export WordArt as native HTML Aspose.Cells | Excel to HTML conversion .NET | separate CSS file generation Aspose.Cells | W3C‑compliant HTML output from Excel
+// Title: Convert an Excel workbook containing WordArt to W3C‑validated HTML with embedded Base64 images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a .xlsx file with WordArt, configures HtmlSaveOptions to embed all images as Base64 and export only the active worksheet, then saves the result as HTML that passes W3C CSS gradient validation. | Show how to add file‑existence checking and robust exception handling around an Aspose.Cells workbook‑to‑HTML conversion that includes WordArt content. | Demonstrate setting Aspose.Cells HtmlSaveOptions so that the generated CSS for gradient fills complies with W3C standards.
+// Common Searches: aspnet convert excel with wordart to html base64 images w3c css validation | c# Aspose.Cells export active worksheet only as html gradient fill | how to embed wordart images as base64 when saving excel to html using Aspose.Cells | validate css gradients in html output from Aspose.Cells workbook conversion
+// Tags: Aspose.Cells HtmlSaveOptions Base64 image embedding | export active worksheet to html Aspose.Cells | WordArt gradient CSS W3C validation | excel to html conversion C# Aspose.Cells | Base64 image embedding in html Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace WorkbookToHtml
+// // This program checks for the presence of an Excel file that contains WordArt, loads it with Aspose.Cells, configures HtmlSaveOptions to embed images as Base64 and export only the active sheet, then saves the workbook as an HTML file that adheres to W3C CSS gradient standards.
+class Program
 {
-    // C# program that loads an Excel workbook containing WordArt, configures HtmlSaveOptions (including placeholders for native WordArt rendering, separate CSS output, and CSS gradient support), and saves the workbook as W3C‑valid HTML with optional external CSS.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the source Excel file that contains WordArt
-            string sourcePath = @"C:\Input\WordArtWorkbook.xlsx";
+            const string sourceFile = "WordArtWorkbook.xlsx";
+            const string outputFile = "WordArtWorkbook.html";
 
-            // Path where the resulting HTML file will be saved
-            string htmlPath = @"C:\Output\WordArtWorkbook.html";
-
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFile))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Error: The file '{sourceFile}' was not found.");
                 return;
             }
 
-            try
+            // Load the workbook that contains WordArt
+            Workbook workbook = new Workbook(sourceFile);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(sourcePath);
+                // Embed images (including gradient images) as Base64 strings
+                ExportImagesAsBase64 = true,
+                // Export only the active worksheet (optional)
+                ExportActiveWorksheetOnly = true
+            };
 
-                // Configure HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    // Export WordArt as native HTML/CSS instead of images (if supported)
-                    // The property may not exist in some versions; ignore if unavailable.
-                    // ExportWordArtAsImage = false,
-
-                    // Export CSS to a separate file for readability (if supported)
-                    // ExportCssSeparately = true,
-
-                    // Use standard CSS gradients (if supported)
-                    // ExportCssGradients = true
-                };
-
-                // Save the workbook to HTML (lifecycle rule: save)
-                workbook.Save(htmlPath, saveOptions);
-
-                Console.WriteLine("Workbook successfully converted to HTML.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
-            }
+            // Save the workbook as HTML using the configured options
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

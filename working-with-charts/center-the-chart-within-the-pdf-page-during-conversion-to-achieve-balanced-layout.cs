@@ -1,53 +1,57 @@
-// Title: How to center an Aspose.Cells chart on a PDF page using C# and the Chart.ToPdf method
-// AI Prompts: Write C# code that creates a worksheet, builds a column chart, and exports it to a PDF with both horizontal and vertical alignment set to Center via the Chart.ToPdf method. | Show how to define custom page dimensions and apply PageLayoutAlignmentType.Center to position a chart in the middle of the PDF during conversion with Aspose.Cells.
-// Common Searches: Aspose.Cells C# export chart to PDF centered on page | Chart.ToPdf alignment parameters example in .NET | How to set horizontal and vertical alignment for chart PDF export Aspose.Cells | Centering Excel chart in PDF using Aspose.Cells with custom page size | PageLayoutAlignmentType.Center usage for chart PDF conversion
-// Tags: center alignment for chart PDF export | Aspose.Cells chart PDF conversion with custom page dimensions | using PageLayoutAlignmentType to align chart in PDF | C# chart export to PDF centered layout | Aspose.Cells PDF page size and chart positioning
+// Title: How to center an Excel chart on a PDF page when converting with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# center chart on PDF page during workbook.Save | Set horizontal and vertical centering for charts in PDF output using Aspose.Cells | Align Excel chart to the middle of a PDF page with Aspose.Cells .NET | Center printed area that contains a chart when saving Excel to PDF in C# | PageSetup.CenterHorizontally not affecting chart placement in PDF Aspose.Cells
+// Tags: Aspose.Cells PageSetup centering | C# PDF chart positioning | Excel workbook SaveFormat.Pdf layout | center chart using PageSetup | PDF page layout Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace ChartPdfCenterExample
+// The example loads an existing Excel file (or creates a new workbook), accesses the first worksheet, enables both horizontal and vertical centering of the printed area—including any charts—via the PageSetup properties, and then saves the workbook as a PDF, handling Aspose.Cells, I/O, and general exceptions.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, and uses Chart.ToPdf to export the chart to a PDF named CenteredChart.pdf. It specifies an 8.5 × 11 inch page and applies PageLayoutAlignmentType.Center for both horizontal and vertical alignment, resulting in a chart that is centered on the PDF page.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Workbook workbook;
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists; if not, create a new workbook.
+            const string inputPath = "input.xlsx";
+            if (File.Exists(inputPath))
+            {
+                // Load the existing workbook.
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                // Create a new workbook with a default worksheet.
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+            }
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["A4"].PutValue("Cherries");
+            // Access the first worksheet (or the one containing the chart).
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(40);
-            sheet.Cells["B3"].PutValue(55);
-            sheet.Cells["B4"].PutValue(30);
+            // Center the printed area (including charts) on the PDF page.
+            PageSetup pageSetup = worksheet.PageSetup;
+            pageSetup.CenterHorizontally = true;
+            pageSetup.CenterVertically = true;
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Define desired PDF page size (in inches)
-            float pageWidth = 8.5f;   // Standard Letter width
-            float pageHeight = 11f;   // Standard Letter height
-
-            // Export the chart to PDF with both horizontal and vertical alignment set to Center
-            chart.ToPdf("CenteredChart.pdf", pageWidth, pageHeight,
-                        PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
-
-            Console.WriteLine("Chart has been exported to PDF with centered alignment.");
+            // Save the workbook as a PDF file.
+            const string outputPath = "output.pdf";
+            workbook.Save(outputPath, SaveFormat.Pdf);
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"I/O error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

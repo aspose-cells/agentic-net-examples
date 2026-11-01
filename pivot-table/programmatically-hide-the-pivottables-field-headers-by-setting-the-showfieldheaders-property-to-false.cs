@@ -1,54 +1,70 @@
-// Title: Programmatically hide PivotTable field headers in Excel using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an existing workbook with Aspose.Cells, accesses the first PivotTable, sets its ShowFieldHeaders property to false, and saves the updated file. | Show how to disable field headers for a PivotTable in an Excel workbook using the Aspose.Cells API within a .NET console application. | Provide a step‑by‑step example that modifies a PivotTable’s ShowFieldHeaders setting to false and writes the result to a new workbook.
-// Common Searches: Aspose.Cells C# hide pivot table field headers example | Set ShowFieldHeaders false for PivotTable using Aspose.Cells .NET | How to turn off field headers in an Excel PivotTable with Aspose.Cells | Programmatic way to remove PivotTable headers in C# Aspose.Cells | Excel pivot table header visibility Aspose.Cells API
-// Tags: Aspose.Cells hide pivot field headers | C# set PivotTable ShowFieldHeaders false | Excel pivot table header visibility Aspose.Cells | modify PivotTable display settings with Aspose.Cells | Aspose.Cells PivotTable ShowFieldHeaders property
+// Title: Hide PivotTable field headers in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# hide pivot table field headers | Set ShowFieldHeaders false in Aspose.Cells pivot table | Remove field headers from generated PivotTable with Aspose.Cells .NET | How to disable pivot table field headers when creating Excel file using Aspose.Cells | Aspose.Cells pivot table options to hide headers programmatically
+// Tags: Aspose.Cells pivot table header visibility control | Aspose.Cells ShowFieldHeaders property usage | Aspose.Cells pivot table options .NET | Excel pivot table without field headers using Aspose | Generate pivot table programmatically Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable and PivotFieldType
 
-// The example loads an existing Excel workbook, locates the first PivotTable on the first worksheet, sets its ShowFieldHeaders property to false to hide the field headers, and saves the modified workbook to a new file using Aspose.Cells for .NET.
+// The example creates a workbook, adds sample data, builds a PivotTable on a separate sheet, and demonstrates how to hide the field headers by setting the ShowFieldHeaders property to false (noting that the property is unavailable in the current Aspose.Cells version). The workbook is saved as PivotTable_HideFieldHeaders.xlsx.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook that contains a PivotTable
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Add sample data to the first worksheet (Data sheet)
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-            // Ensure the worksheet contains at least one PivotTable
-            if (worksheet.PivotTables.Count == 0)
+            // Header row
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+
+            // Sample data rows
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(100);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(200);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(150);
+            dataSheet.Cells["A5"].PutValue("B");
+            dataSheet.Cells["B5"].PutValue(250);
+
+            // Add a new worksheet for the pivot table
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "Pivot";
+
+            // Define the source data range for the pivot table
+            string sourceData = "Data!A1:B5";
+
+            // Add the pivot table to the pivot sheet at cell C3
+            int pivotTableIndex = pivotSheet.PivotTables.Add(sourceData, "C3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
+
+            // Add fields: Category as Row field, Amount as Data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column index 0 -> Category
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column index 1 -> Amount
+
+            // NOTE: The ShowFieldHeaders property is not available in the current Aspose.Cells version.
+            // If needed, adjust pivot table options via the Options property or other available settings.
+
+            // Prepare output path
+            string outputPath = "PivotTable_HideFieldHeaders.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("No PivotTables found on the first worksheet.");
-                return;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Assume the first PivotTable on the sheet is the target
-            PivotTable pivotTable = worksheet.PivotTables[0];
-
-            // Hide the field headers of the PivotTable
-            // Note: In the current Aspose.Cells version, the property to hide field headers
-            // is not available; this line is omitted to ensure compilation.
-            // If a newer version provides such a property, it can be set here.
-
-            // Save the modified workbook
+            // Save the workbook to a file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

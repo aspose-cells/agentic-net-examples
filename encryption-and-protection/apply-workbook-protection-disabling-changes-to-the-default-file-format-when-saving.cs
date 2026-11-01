@@ -1,47 +1,28 @@
-// Title: Password‑protect Excel workbook structure and save as default XLSX with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing .xlsx file, applies structure protection with a password using Aspose.Cells, and saves the workbook in the default XLSX format. | Show how to implement robust error handling for missing input files and protection failures when using Aspose.Cells to protect and save an Excel workbook.
-// Common Searches: how to protect Excel workbook structure with a password using Aspose.Cells C# | save a password‑protected workbook as XLSX default format Aspose.Cells .NET | C# check if Excel file exists before loading with Aspose.Cells | Aspose.Cells exception handling for workbook protection errors
-// Tags: structure protection with password Aspose.Cells | save workbook as default XLSX Aspose.Cells | file existence validation Aspose.Cells C# | exception handling for workbook protection .NET | protect Excel file programmatically Aspose.Cells
+// Title: How to protect an entire workbook with a password, disable editing changes, and save it in the default .xlsx format using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# protect whole workbook with password and prevent edits before saving | Save a password‑protected Excel file in default .xlsx format using Aspose.Cells for .NET | Disable workbook changes by applying full protection in Aspose.Cells and export as .xlsx | C# code to apply workbook protection and export protected workbook with default Excel extension | Aspose.Cells protect workbook and keep default file format when calling Save
+// Tags: workbook password protection Aspose.Cells | save protected workbook as xlsx Aspose.Cells | disable workbook editing changes C# Aspose.Cells | full workbook protection API Aspose.Cells | Aspose.Cells default file format save
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, applies structure protection using a password, and then saves the protected workbook in the default XLSX format, with comprehensive try‑catch blocks to handle missing files, protection failures, and other runtime errors.
+    // Demonstrates creating or loading a Workbook, applying full protection with a password using ProtectionType.All to block all editing changes, and saving the protected workbook in the default .xlsx format while handling potential exceptions.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputFile = "input.xlsx";
-                const string outputFile = "protected_output.xlsx";
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
-                    return;
-                }
+                // Protect the entire workbook with a password
+                workbook.Protect(ProtectionType.All, "MySecurePassword");
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Protect the workbook structure with a password
-                try
-                {
-                    workbook.Protect(ProtectionType.Structure, "MyPassword");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Unable to protect workbook. {ex.Message}");
-                }
-
-                // Save the protected workbook in XLSX format
-                workbook.Save(outputFile, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+                // Granular protection options (e.g., AllowEditObject) are not exposed in this API version.
+                // Save the protected workbook
+                workbook.Save("ProtectedWorkbook.xlsx");
             }
             catch (Exception ex)
             {

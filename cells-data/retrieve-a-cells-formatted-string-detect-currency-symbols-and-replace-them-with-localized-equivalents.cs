@@ -1,70 +1,77 @@
-// Title: Read a cell's formatted value and localize its currency symbol to the workbook's culture using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to obtain a cell's DisplayStringValue, detect any common currency symbol (e.g., $, €, £, ¥) and replace it with the CurrencySymbol of a provided CultureInfo, then write the localized string to another cell. | Create a reusable C# method that accepts a formatted numeric string and a CultureInfo, swaps known currency symbols with the culture's currency symbol, and demonstrate its integration in an Aspose.Cells workbook workflow.
-// Common Searches: Aspose.Cells C# get formatted cell value and change currency symbol based on workbook culture | replace dollar sign with workbook CultureInfo currency symbol using Aspose.Cells | detect and localize currency symbols in Excel cell values with Aspose.Cells .NET | how to use DisplayStringValue to apply culture‑specific currency formatting in Aspose.Cells
-// Tags: retrieve cell display string Aspose.Cells | currency symbol localization CultureInfo | replace known currency symbols formatted value C# | custom number format currency Aspose.Cells | write localized string to Excel cell Aspose.Cells
+// Title: Read a cell's formatted string and replace currency symbols with locale codes using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# get displayed value of a formatted cell | replace $ € £ ¥ with USD EUR GBP JPY in Excel using Aspose.Cells | how to map currency symbols to locale codes in Aspose.Cells .NET | read formatted cell value and write localized string to another cell with Aspose.Cells | use regex to substitute currency symbols in an Excel cell via Aspose.Cells
+// Tags: formatted cell value retrieval Aspose.Cells | currency symbol to locale code mapping .NET | regex based currency replacement Excel | write localized string to another cell Aspose.Cells | apply built-in currency number format Aspose.Cells
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsCurrencyLocalization
+// The example creates a workbook (if missing), applies a built‑in currency number format to cell B2, reads the cell's displayed (formatted) string, uses a regular expression to replace common currency symbols ($, €, £, ¥) with their locale codes (USD, EUR, GBP, JPY), writes the localized text to cell C2, and saves the modified workbook.
+class CurrencyLocalization
 {
-    // Shows how to extract a cell's formatted string with Aspose.Cells, detect common currency symbols, replace them with the workbook's CultureInfo currency symbol, and write the localized result back to another cell in a .NET application.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Put a numeric value into cell A1
-            Cell cell = cells["A1"];
-            cell.PutValue(1234.56);
-
-            // Apply a custom currency format that uses the dollar sign
-            Style style = cell.GetStyle();
-            style.Custom = "$#,##0.00";
-            cell.SetStyle(style);
-
-            // Retrieve the formatted string as displayed in Excel
-            string formatted = cell.DisplayStringValue; // e.g., "$1,234.56"
-            Console.WriteLine("Original formatted value: " + formatted);
-
-            // Replace currency symbols with the symbols of the workbook's culture
-            string localized = ReplaceCurrencySymbols(formatted, workbook.Settings.CultureInfo);
-            Console.WriteLine("Localized formatted value: " + localized);
-
-            // Optionally write the localized string back to another cell
-            cells["B1"].PutValue(localized);
-            cells["B1"].SetStyle(style); // keep the same number format for demonstration
-
-            // Save the workbook
-            workbook.Save("CurrencyLocalizationDemo.xlsx");
-        }
-
-        /// <param name="input">The formatted string containing a currency symbol.</param>
-        /// <param name="culture">The target culture for localization.</param>
-        /// <returns>The string with the currency symbol replaced.</returns>
-        static string ReplaceCurrencySymbols(string input, CultureInfo culture)
-        {
-            // Get the currency symbol for the target culture
-            string targetSymbol = culture.NumberFormat.CurrencySymbol;
-
-            // Define a set of common currency symbols to replace
-            string[] commonSymbols = new[] { "$", "€", "£", "¥", "₹", "₽", "₩", "₺", "₫", "₴", "₦", "₱", "₪", "₭", "₮", "₲", "₡", "₵", "₿" };
-
-            // Replace any occurrence of a known symbol with the target symbol
-            foreach (string symbol in commonSymbols)
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                if (input.Contains(symbol))
-                {
-                    input = input.Replace(symbol, targetSymbol);
-                }
+                var wb = new Workbook();
+                var ws = wb.Worksheets[0];
+                // Sample value with currency format
+                ws.Cells["B2"].PutValue(1234.56);
+                // Apply a currency number format (e.g., $#,##0.00)
+                var style = ws.Cells["B2"].GetStyle();
+                style.Number = 164;
+                ws.Cells["B2"].SetStyle(style);
+                wb.Save(inputPath);
             }
 
-            return input;
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+            var worksheet = workbook.Worksheets[0];
+
+            // Target cell whose formatted string we want to process
+            var cell = worksheet.Cells["B2"];
+
+            // Retrieve the cell's displayed (formatted) string
+            string formatted = cell.StringValue;
+
+            // Mapping of common currency symbols to their localized textual equivalents
+            var currencyMap = new Dictionary<string, string>
+            {
+                { "$", "USD" },
+                { "€", "EUR" },
+                { "£", "GBP" },
+                { "¥", "JPY" }
+            };
+
+            // Replace any currency symbol found in the formatted string with the mapped value
+            string localized = Regex.Replace(formatted, @"[\$\€\£\¥]", match =>
+            {
+                string symbol = match.Value;
+                return currencyMap.TryGetValue(symbol, out var replacement) ? replacement : symbol;
+            });
+
+            // Display the original and the localized strings
+            Console.WriteLine("Original formatted: " + formatted);
+            Console.WriteLine("Localized string   : " + localized);
+
+            // Write the localized string back to another cell
+            worksheet.Cells["C2"].PutValue(localized);
+
+            // Save the workbook with the changes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

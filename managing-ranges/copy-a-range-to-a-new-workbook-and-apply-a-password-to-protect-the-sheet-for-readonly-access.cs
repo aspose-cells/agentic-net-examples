@@ -1,29 +1,25 @@
-// Title: Copy a specific range from an existing workbook to a new workbook and apply password protection to the sheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells to copy cells A1:C10 from source.xlsx into a new workbook named destination.xlsx while preserving formulas and formatting. | Create a new workbook without the default sheet, add a worksheet called "CopiedRange", and paste the copied range at the top‑left corner. | Apply read‑only password protection to the newly added worksheet using the Protect method with ProtectionType.All.
-// Common Searches: Aspose.Cells copy range to new workbook C# example | How to protect an Aspose.Cells worksheet with a password for read‑only access | Remove default worksheet before adding a custom sheet in Aspose.Cells | Copy cells with formulas and styles using Aspose.Range in C#
-// Tags: copy cell block to separate workbook Aspose.Cells | read‑only worksheet protection Aspose.Cells C# | clear default worksheet Aspose.Cells before adding new | Aspose.Range transfer formulas styles | sheet protection using ProtectionType.All Aspose.Cells
+// Title: Copy a cell range from one workbook to a new workbook and set read‑only password protection on the sheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy A1:C10 range to a new workbook | How to protect an Aspose.Cells worksheet with a read‑only password in C# | Copy cells with formatting to another workbook using Aspose.Cells .NET | Set sheet protection type All with password using Aspose.Cells C# example | Create a new workbook from a selected range and apply password protection with Aspose.Cells
+// Tags: range copy with style preservation Aspose.Cells | worksheet password protection read‑only Aspose.Cells | manual cell‑by‑cell copy Aspose.Cells C# | Protect method with ProtectionType.All example | export selected range to separate workbook C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Alias to avoid conflict with System.Range introduced in C# 8.0
-using AsposeRange = Aspose.Cells.Range;
-
-// The sample loads source.xlsx, creates a new workbook without the default sheet, adds a worksheet named "CopiedRange", copies the A1:C10 range (including values, formulas, and styles) from the source sheet to the new sheet, protects the worksheet with a read‑only password, and saves the result as destination.xlsx.
+// The code loads source.xlsx, manually copies the A1:C10 range (including values and styles) from the first worksheet to a newly created workbook's "CopiedData" sheet, applies read‑only protection to that sheet with a password using Protect(ProtectionType.All,…), and saves the result as dest.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string sourcePath = "source.xlsx";
-            const string destinationPath = "destination.xlsx";
+            // Path to the source workbook
+            string sourcePath = "source.xlsx";
 
-            // Verify source file exists to avoid FileNotFoundException
+            // Verify that the source file exists
             if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                Console.WriteLine($"Source file not found: {sourcePath}");
                 return;
             }
 
@@ -31,30 +27,53 @@ class Program
             Workbook sourceWorkbook = new Workbook(sourcePath);
             Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
 
-            // Define the range to copy (e.g., A1:C10)
-            int startRow = 0;          // Row index for A1 (zero‑based)
-            int startColumn = 0;       // Column index for A1 (zero‑based)
-            int totalRows = 10;        // Number of rows to copy
-            int totalColumns = 3;      // Number of columns to copy (A‑C)
+            // Define the range to copy (A1:C10)
+            CellArea sourceArea = new CellArea
+            {
+                StartRow = 0,    // Row 1
+                StartColumn = 0, // Column A
+                EndRow = 9,      // Row 10
+                EndColumn = 2    // Column C
+            };
 
-            // Create a new workbook for the copied range
-            Workbook destinationWorkbook = new Workbook();
-            destinationWorkbook.Worksheets.Clear(); // Remove default sheet
-            Worksheet destinationSheet = destinationWorkbook.Worksheets.Add("CopiedRange");
+            // Create a new workbook and add a fresh worksheet
+            Workbook destWorkbook = new Workbook();
+            destWorkbook.Worksheets.Clear();
+            Worksheet destSheet = destWorkbook.Worksheets.Add("CopiedData");
 
-            // Copy the defined range from the source sheet to the destination sheet
-            // Using AsposeRange.Copy to transfer values, formulas, and styles
-            AsposeRange sourceRange = sourceSheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
-            AsposeRange destRange = destinationSheet.Cells.CreateRange(0, 0, totalRows, totalColumns);
-            sourceRange.Copy(destRange);
+            // Manually copy the defined range from source to destination sheet
+            try
+            {
+                for (int row = sourceArea.StartRow; row <= sourceArea.EndRow; row++)
+                {
+                    for (int col = sourceArea.StartColumn; col <= sourceArea.EndColumn; col++)
+                    {
+                        Cell srcCell = sourceSheet.Cells[row, col];
+                        Cell destCell = destSheet.Cells[row - sourceArea.StartRow, col - sourceArea.StartColumn];
 
-            // Apply password protection to the destination sheet for read‑only access
+                        // Copy value
+                        destCell.PutValue(srcCell.Value);
+
+                        // Copy style
+                        Style srcStyle = srcCell.GetStyle();
+                        destCell.SetStyle(srcStyle);
+                    }
+                }
+            }
+            catch (Exception copyEx)
+            {
+                Console.WriteLine($"Error during range copy: {copyEx.Message}");
+                return;
+            }
+
+            // Protect the destination sheet (read‑only) with a password
             string password = "myPassword";
-            destinationSheet.Protect(ProtectionType.All, password, string.Empty);
+            destSheet.Protect(ProtectionType.All, password, null);
 
             // Save the new workbook
-            destinationWorkbook.Save(destinationPath);
-            Console.WriteLine($"Range copied and saved to \"{destinationPath}\".");
+            string destPath = "dest.xlsx";
+            destWorkbook.Save(destPath);
+            Console.WriteLine($"Workbook saved successfully to {destPath}");
         }
         catch (Exception ex)
         {

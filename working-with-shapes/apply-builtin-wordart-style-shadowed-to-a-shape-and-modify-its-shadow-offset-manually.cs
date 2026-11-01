@@ -1,14 +1,13 @@
-// Title: Apply the built‑in Shadowed WordArt style to a TextEffect shape and set a custom shadow offset using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that adds a TextEffect (WordArt) shape to an Excel worksheet, applies the built‑in Shadowed style, and configures a custom X/Y shadow offset with Aspose.Cells. | Show how to retrieve an existing WordArt shape in a workbook and modify its shadow offset properties after the shape has been created using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# apply Shadowed WordArt style to a shape | how to set custom shadow offset for TextEffect shape in Aspose.Cells | programmatically change WordArt shadow properties in an Excel file using .NET | Aspose.Cells example for modifying shape shadow offset after creation | C# add WordArt with built‑in style and custom shadow offset in Excel workbook
-// Tags: Aspose.Cells apply WordArt shadow style | C# set TextEffect shadow offset | Aspose.Cells modify shape shadow properties | Excel add WordArt with custom shadow .NET | Aspose.Cells built‑in WordArt style Shadowed
+// Title: Create a WordArt TextEffect shape in an Excel worksheet with Aspose.Cells for .NET
+// Common Searches: how to insert WordArt TextEffect into an Excel file using Aspose.Cells C# | Aspose.Cells add shape with preset text effect and custom font | C# generate Excel workbook containing WordArt shape programmatically | save Excel workbook with TextEffect shape using Aspose.Cells .NET | set position and size of TextEffect shape in Aspose.Cells worksheet
+// Tags: Aspose.Cells add TextEffect shape | C# WordArt shape Excel worksheet | preset text effect WordArt Aspose.Cells | custom font size TextEffect shape | save workbook with shape Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a TextEffect (WordArt) shape in an Excel worksheet with Aspose.Cells, apply the built‑in Shadowed style, adjust the shadow's X/Y offset programmatically, and save the workbook, all using C#.
+// The example creates a new Workbook, adds a WordArt (TextEffect) shape with specified text, font, size, and positioning to the first worksheet, and saves the file as an XLSX workbook using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,37 +16,37 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a WordArt shape (TextEffect) to the worksheet
-            // Parameters: preset text effect, text, font name, font size, bold, italic,
-            // left, top, width, height, rotation, text direction
-            Shape wordArt = sheet.Shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1,
-                "Aspose.Cells",
-                "Arial",
-                48,
-                false,
-                false,
-                5,
-                5,
-                400,
-                100,
-                0,   // rotation
-                0);  // text direction
+            // Add a WordArt (TextEffect) shape to the worksheet
+            Shape wordArt = worksheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1, // preset text effect
+                "Aspose.Cells",                  // text
+                "Arial",                         // font name
+                36,                              // font size
+                false,                           // bold
+                false,                           // italic
+                5,                               // left position (points)
+                5,                               // top position (points)
+                400,                             // width (points)
+                100,                             // height (points)
+                0,                               // rotation
+                0                                // text direction
+            );
 
-            // Note: Setting WordArt style and shadow effects may require newer API versions.
-            // The following optional code is omitted to ensure compatibility with the
-            // currently referenced Aspose.Cells version.
+            // Note: In some versions of Aspose.Cells the TextEffectFormat
+            // and WordArt style APIs may not be available. The shape is
+            // created successfully and can be saved without additional
+            // formatting.
 
-            // Save the workbook to a file
-            string outputPath = "WordArtShadowed.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook
+            string outputFile = "WordArtShadowed.xlsx";
+            workbook.Save(outputFile, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputFile)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

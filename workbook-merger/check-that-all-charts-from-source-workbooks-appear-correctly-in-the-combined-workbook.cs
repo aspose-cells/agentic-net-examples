@@ -1,69 +1,107 @@
-// Title: Check that all charts from multiple source workbooks remain after using Workbook.Combine in Aspose.Cells for .NET
-// AI Prompts: Load each source workbook, count its charts, combine them with Workbook.Combine, then assert that the combined workbook’s chart count equals the sum of the source counts. | Create C# code that merges several Excel files containing charts using Aspose.Cells and automatically verifies chart integrity by comparing pre‑merge and post‑merge chart totals. | Add exception handling that throws a descriptive error when the chart count after Workbook.Combine does not match the expected total.
-// Common Searches: Aspose.Cells how to ensure charts are kept when merging multiple Excel files in C# | C# verify chart count after Workbook.Combine operation | compare chart totals before and after combining workbooks with Aspose.Cells | detect missing charts after merging Excel workbooks using Aspose.Cells .NET
-// Tags: Workbook.Combine chart preservation | Aspose.Cells chart count validation | merge Excel workbooks with charts .NET | chart integrity after workbook combine | verify combined workbook chart total
+// Title: Combine multiple Excel workbooks into one and ensure all charts are copied correctly using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads several .xlsx files, copies each worksheet with its charts into a new Workbook using Aspose.Cells, and saves the merged file. | Add logic to count the charts in each source worksheet, compare those counts with the corresponding worksheets in the merged workbook, and output any mismatches. | Include robust error handling for missing source files and exceptions during loading or saving, and log verification results to the console.
+// Common Searches: aspnet c# combine multiple Excel files keep charts Aspose.Cells | how to verify chart count after merging workbooks with Aspose.Cells | copy worksheets with embedded charts using Aspose.Cells AddCopy method | merge Excel workbooks and detect missing charts in C# | handle missing source workbook files when merging with Aspose.Cells
+// Tags: addcopy worksheet charts Aspose.Cells | chart count verification Aspose.Cells | merge multiple workbooks C# Aspose.Cells | handle missing source files Aspose.Cells | combined workbook chart integrity
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Aspose.Cells;
 
-namespace ChartCombineVerification
+namespace ChartCombinationDemo
 {
-    // The example loads a list of source Excel workbooks, counts the charts in each worksheet, merges them into a new workbook using Workbook.Combine, compares the total chart count before and after the merge, reports whether all charts are present, and saves the combined file as CombinedWorkbook.xlsx.
+    // The sample loads a list of source .xlsx files, copies each worksheet (including its charts) into a new workbook using Workbook.Worksheets.AddCopy, records chart counts for source and destination worksheets, compares them to detect mismatches, handles missing files and other errors, and saves the combined workbook as CombinedWorkbook.xlsx.
     class Program
     {
         static void Main()
         {
-            // Paths to source workbooks that contain charts
-            List<string> sourcePaths = new List<string>
+            // List of source workbook file paths
+            List<string> sourceFiles = new List<string>
             {
                 "SourceWorkbook1.xlsx",
-                "SourceWorkbook2.xlsx"
-                // Add more paths as needed
+                "SourceWorkbook2.xlsx",
+                // add more source files as needed
             };
 
-            // Create an empty destination workbook
-            Workbook destWorkbook = new Workbook();
+            // ---------- Create destination workbook ----------
+            Workbook combinedWorkbook = new Workbook();
 
-            // Keep track of total number of charts in all source workbooks
-            int totalSourceCharts = 0;
+            // Remove the default empty worksheet that Aspose.Cells creates (if any)
+            if (combinedWorkbook.Worksheets.Count > 0)
+                combinedWorkbook.Worksheets.RemoveAt(0);
 
-            // Load each source workbook, count its charts, and combine it into the destination workbook
-            foreach (string path in sourcePaths)
+            // Keep track of chart counts for verification
+            Dictionary<string, int> sourceChartCounts = new Dictionary<string, int>();
+            Dictionary<string, int> combinedChartCounts = new Dictionary<string, int>();
+
+            // ---------- Load each source workbook and copy its worksheets ----------
+            foreach (string sourcePath in sourceFiles)
             {
-                // Load source workbook
-                Workbook sourceWorkbook = new Workbook(path);
+                try
+                {
+                    // Ensure the source file exists before attempting to load
+                    if (!File.Exists(sourcePath))
+                    {
+                        Console.WriteLine($"Source file not found: {sourcePath}. Skipping.");
+                        continue;
+                    }
 
-                // Count charts in the current source workbook
-                int sourceCharts = sourceWorkbook.Worksheets
-                    .Cast<Worksheet>()
-                    .Sum(ws => ws.Charts.Count);
-                totalSourceCharts += sourceCharts;
+                    // Load source workbook
+                    Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Combine the source workbook into the destination workbook
-                destWorkbook.Combine(sourceWorkbook);
+                    // Record chart counts per worksheet in the source workbook
+                    foreach (Worksheet srcWs in sourceWorkbook.Worksheets)
+                    {
+                        string key = $"{sourcePath}:{srcWs.Name}";
+                        sourceChartCounts[key] = srcWs.Charts.Count;
+                    }
+
+                    // Copy each worksheet (including its charts) to the combined workbook
+                    foreach (Worksheet srcWs in sourceWorkbook.Worksheets)
+                    {
+                        // AddCopy expects the worksheet name, not the Worksheet object
+                        int newIndex = combinedWorkbook.Worksheets.AddCopy(srcWs.Name);
+
+                        // Record chart counts for the newly added worksheet
+                        Worksheet destWs = combinedWorkbook.Worksheets[newIndex];
+                        string destKey = $"{sourcePath}:{srcWs.Name}";
+                        combinedChartCounts[destKey] = destWs.Charts.Count;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{sourcePath}': {ex.Message}");
+                }
             }
 
-            // After combining, count charts in the combined workbook
-            int combinedCharts = destWorkbook.Worksheets
-                .Cast<Worksheet>()
-                .Sum(ws => ws.Charts.Count);
-
-            // Verify that all charts from source workbooks are present in the combined workbook
-            if (combinedCharts == totalSourceCharts)
+            // ---------- Verification ----------
+            // Ensure that every chart present in the source worksheets appears in the combined workbook
+            foreach (var kvp in sourceChartCounts)
             {
-                Console.WriteLine("All charts are present after combination.");
-                Console.WriteLine($"Total source charts: {totalSourceCharts}, Combined workbook charts: {combinedCharts}");
-            }
-            else
-            {
-                Console.WriteLine("Chart count mismatch after combination.");
-                Console.WriteLine($"Total source charts: {totalSourceCharts}, Combined workbook charts: {combinedCharts}");
+                string worksheetKey = kvp.Key;
+                int sourceCount = kvp.Value;
+                int combinedCount = combinedChartCounts.ContainsKey(worksheetKey) ? combinedChartCounts[worksheetKey] : -1;
+
+                if (sourceCount != combinedCount)
+                {
+                    Console.WriteLine($"Chart mismatch in worksheet '{worksheetKey}'. Source charts: {sourceCount}, Combined charts: {combinedCount}");
+                }
+                else
+                {
+                    Console.WriteLine($"Charts verified for worksheet '{worksheetKey}'. Count: {sourceCount}");
+                }
             }
 
-            // Save the combined workbook
-            destWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
+            // ---------- Save the combined workbook ----------
+            try
+            {
+                combinedWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Combined workbook saved successfully as 'CombinedWorkbook.xlsx'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving combined workbook: {ex.Message}");
+            }
         }
     }
 }

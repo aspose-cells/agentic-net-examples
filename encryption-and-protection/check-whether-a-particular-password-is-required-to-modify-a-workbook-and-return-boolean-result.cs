@@ -1,83 +1,74 @@
-// Title: Determine whether an Excel workbook requires a password and validate it with Aspose.Cells for .NET
-// AI Prompts: Write a C# method that tries to open an Excel file with Aspose.Cells and returns true only when the workbook is encrypted and the supplied password successfully loads it. | Build a console application that accepts a file path and optional password, uses Aspose.Cells LoadOptions to detect encryption, and prints a boolean indicating if the password is correct.
-// Common Searches: how to programmatically check if an Excel file is password protected using Aspose.Cells in C# | C# Aspose.Cells load encrypted workbook with password and verify correctness | detect workbook encryption status before opening with Aspose.Cells .NET | validate Excel file password without opening the file using Aspose.Cells | Aspose.Cells determine if password is required for a given Excel workbook
-// Tags: Aspose.Cells workbook password verification | C# detect encrypted Excel workbook | LoadOptions password validation Aspose.Cells | check Excel file protection status .NET | programmatic Excel encryption detection Aspose
+// Title: Determine whether an Excel .xlsx workbook is protected by a modify password using Aspose.Cells in C#
+// Common Searches: how to detect a modify password on an Excel file using Aspose.Cells in C# | C# Aspose.Cells check if workbook requires a modify password before editing | programmatically verify Excel .xlsx modify protection with Aspose.Cells | using Aspose.Cells Unprotect method to test workbook modify password validity | determine if Excel workbook is locked for modifications in .NET
+// Tags: Aspose.Cells workbook unprotect operation | C# Excel modify password verification | Aspose.Cells workbook protection status query | .xlsx modify password check using .NET | Excel file modification lock detection
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example provides a WorkbookPasswordChecker.IsPasswordRequired method that first attempts to load an Excel file without a password using Aspose.Cells; if that fails, it retries with the supplied password via LoadOptions. It returns true only when the workbook is encrypted and the password is correct, otherwise false.
-public class WorkbookPasswordChecker
+namespace WorkbookPasswordCheckerApp
 {
-    /// <param name="filePath">Full path to the Excel file.</param>
-    /// <param name="password">Password to test.</param>
-    /// <returns>
-    /// True if the file is password‑protected and the supplied password is correct;
-    /// false if the file is not protected or the password is incorrect.
-    /// </returns>
-    public static bool IsPasswordRequired(string filePath, string password)
+    // IsModifyPasswordRequired loads the workbook with Aspose.Cells, attempts to unprotect it using the supplied password, and returns true when a modify password exists or the password is incorrect; otherwise it returns false. It throws FileNotFoundException for missing files and wraps loading errors in InvalidOperationException.
+    public class WorkbookPasswordChecker
     {
-        // Ensure the file exists before attempting to load it.
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException("The specified Excel file was not found.", filePath);
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <param name="password">Password to test.</param>
+        /// <returns>True if a modify password is required (or the supplied password is incorrect); otherwise false.</returns>
+        public static bool IsModifyPasswordRequired(string filePath, string password)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Excel file not found.", filePath);
 
-        // First, try to open the workbook without a password.
-        try
-        {
-            Workbook wb = new Workbook(filePath);
-            // Loaded successfully – no password is required.
-            return false;
-        }
-        catch (CellsException)
-        {
-            // An exception likely means the workbook is encrypted; try with the supplied password.
+            Workbook workbook;
             try
             {
-                LoadOptions loadOptions = new LoadOptions();
-                loadOptions.Password = password;
-                Workbook wb = new Workbook(filePath, loadOptions);
-                // Loaded successfully with the password – password is required and correct.
-                return true;
+                // Load the workbook without a password (modify password does not affect opening)
+                workbook = new Workbook(filePath);
             }
-            catch (CellsException)
+            catch (Exception ex)
             {
-                // Loading failed even with the password – password is incorrect.
+                // Wrap loading errors for clearer diagnostics
+                throw new InvalidOperationException("Failed to load workbook.", ex);
+            }
+
+            try
+            {
+                // Attempt to unprotect using the supplied password.
+                workbook.Unprotect(password);
+                // No exception means either no modify password or the password is correct.
                 return false;
+            }
+            catch
+            {
+                // Exception indicates a modify password exists and the supplied password is wrong.
+                return true;
             }
         }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    class Program
     {
-        // Example usage:
-        // args[0] = path to Excel file, args[1] = password to test (optional)
-        if (args.Length == 0)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Please provide the path to the Excel file as the first argument.");
-            return;
-        }
+            // Example usage: file path and password can be passed via command line arguments.
+            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+            string password = args.Length > 1 ? args[1] : string.Empty;
 
-        string filePath = args[0];
-        string password = args.Length > 1 ? args[1] : string.Empty;
-
-        try
-        {
-            bool result = WorkbookPasswordChecker.IsPasswordRequired(filePath, password);
-            Console.WriteLine(result
-                ? "The workbook is password‑protected and the supplied password is correct."
-                : "The workbook is either not password‑protected or the supplied password is incorrect.");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            try
+            {
+                bool isRequired = WorkbookPasswordChecker.IsModifyPasswordRequired(filePath, password);
+                Console.WriteLine(isRequired
+                    ? "A modify password is required (or the supplied password is incorrect)."
+                    : "No modify password required or the supplied password is correct.");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine($"Error: {fnfEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

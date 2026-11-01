@@ -1,68 +1,76 @@
-// Title: Convert absolute external link paths to relative paths in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, enumerates its Worksheets.ExternalLinks collection, and replaces each link's DataSource that is an absolute file path with a path relative to the workbook's folder. | Add console logging that displays the original absolute path and the new relative path for every updated external link, then save the workbook back to the same location.
-// Common Searches: how to make external links in an Excel file portable using Aspose.Cells C# | Aspose.Cells C# convert absolute DataSource of external links to relative path | C# Path.GetRelativePath with Aspose.Cells external link collection example | update external link paths in workbook to relative using Aspose.Cells for .NET | save Excel workbook after modifying external link DataSource in C#
-// Tags: Aspose.Cells external link relative path conversion | C# calculate relative path for Excel external links | update ExternalLinkCollection DataSource in .NET | make Excel workbook external links portable Aspose.Cells | Path.GetRelativePath usage with Aspose.Cells external links
+// Title: Update Excel workbook external links to relative paths using Aspose.Cells for .NET (C#)
+// AI Prompts: Load the workbook, iterate workbook.Worksheets.ExternalLinks, and replace each SourceFullName that is an absolute path with a path relative to the workbook folder. | Create Uri objects for the workbook directory and the target file, compute the relative URI, convert it to a file system string, and assign it back to the external link. | Save the workbook after all external links have been rewritten to preserve the new relative references.
+// Common Searches: how to make external links in an Excel file portable with Aspose.Cells C# | convert absolute external link paths to relative in .NET workbook | Aspose.Cells update external connection source path to relative | C# change Excel external link SourceFullName to relative path | relative path for external links in Aspose.Cells workbook
+// Tags: external link sourcefullName conversion Aspose.Cells | absolute external link to relative Excel .NET | Aspose.Cells external connections path adjustment | portable workbook external references C# | relative URI calculation for Excel links
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace UpdateExternalLinks
+// The example loads an Excel workbook, walks through its external links, replaces any absolute SourceFullName values with paths computed relative to the workbook's directory, and saves the file, making the workbook portable across environments.
+class UpdateExternalLinks
 {
-    // The example loads an Excel workbook, iterates through its ExternalLinkCollection, converts any absolute DataSource paths to relative paths based on the workbook's directory using Path.GetRelativePath, updates each link, logs the changes, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the workbook that contains external links
+        string workbookPath = @"C:\Data\MyWorkbook.xlsx";
+
+        // Verify that the workbook file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            // Path to the workbook that contains external links
-            string workbookPath = @"C:\Data\MainWorkbook.xlsx";
+            Console.WriteLine($"Error: Workbook not found at '{workbookPath}'.");
+            return;
+        }
 
-            // Verify the workbook file exists
-            if (!File.Exists(workbookPath))
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Directory of the workbook – used as the base for relative paths
+            string workbookDirectory = Path.GetDirectoryName(workbookPath) ?? string.Empty;
+            // Ensure the directory ends with a separator for correct Uri handling
+            Uri workbookDirUri = new Uri(workbookDirectory + Path.DirectorySeparatorChar);
+
+            // Iterate through all external links in the workbook
+            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
             {
-                Console.WriteLine($"Workbook file not found: {workbookPath}");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Base directory for relative path calculation (the workbook's folder)
-                string workbookDir = Path.GetDirectoryName(workbookPath);
-
-                // Access the collection of external links
-                ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-                // Iterate through each external link and convert its DataSource to a relative path
-                for (int i = 0; i < externalLinks.Count; i++)
+                try
                 {
-                    ExternalLink link = externalLinks[i];
-                    string originalPath = link.DataSource;
+                    // Use dynamic to access SourceFullName (property name may vary across versions)
+                    dynamic dLink = link;
+                    string originalPath = dLink.SourceFullName as string;
 
-                    // Only process if the path is absolute
+                    // Process only if the path is absolute (rooted)
                     if (!string.IsNullOrEmpty(originalPath) && Path.IsPathRooted(originalPath))
                     {
-                        // Compute relative path from the workbook folder to the external file
-                        string relativePath = Path.GetRelativePath(workbookDir, originalPath);
+                        // Create a Uri for the target file
+                        Uri targetUri = new Uri(originalPath);
+
+                        // Compute the relative Uri from the workbook directory to the target
+                        Uri relativeUri = workbookDirUri.MakeRelativeUri(targetUri);
+
+                        // Convert the relative Uri to a file system path
+                        string relativePath = Uri.UnescapeDataString(relativeUri.ToString())
+                                                .Replace('/', Path.DirectorySeparatorChar);
 
                         // Update the link to use the relative path
-                        link.DataSource = relativePath;
-
-                        // Optional: log the change
-                        Console.WriteLine($"Updated link: '{originalPath}' -> '{relativePath}'");
+                        dLink.SourceFullName = relativePath;
                     }
                 }
+                catch (Exception exLink)
+                {
+                    Console.WriteLine($"Failed to process a link: {exLink.Message}");
+                }
+            }
 
-                // Save the workbook (overwrites the original file)
-                workbook.Save(workbookPath);
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(workbookPath);
+            Console.WriteLine("External links updated successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

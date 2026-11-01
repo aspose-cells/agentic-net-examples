@@ -1,16 +1,16 @@
-// Title: Generate HTML from an Aspose.Cells workbook with a custom TableCssId and automatically avoid CSS class name collisions in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to save a workbook as HTML, sets HtmlSaveOptions.TableCssId to a given value, reads the generated file, extracts the CSS block, and if the TableCssId appears as a CSS class selector, modifies the ID and repeats until it is unique. | Create a .NET helper method that parses the first <style> element from an HTML string, returns all CSS class names, and validates a custom TableCssId against those names to prevent collisions.
-// Common Searches: Aspose.Cells C# export workbook to HTML with custom TableCssId and avoid ID conflicts | how to check for CSS class name collision with TableCssId in Aspose.Cells HTML output | C# loop to generate unique TableCssId when exporting Excel to HTML using Aspose.Cells | extract CSS from generated HTML file using regex in .NET for Aspose.Cells export | prevent duplicate element IDs in HTML saved by Aspose.Cells HtmlSaveOptions
-// Tags: Aspose.Cells HtmlSaveOptions TableCssId custom | C# detect CSS class collision in generated HTML | unique TableCssId generation Aspose.Cells | extract embedded CSS from HTML .NET | retry mechanism for HTML export Aspose.Cells
+// Title: Export an Aspose.Cells workbook to HTML with a unique TableCssId and detect CSS class collisions in C#
+// AI Prompts: Create C# code that saves a Workbook as HTML using HtmlSaveOptions, assigns a GUID‑based TableCssId, and checks the generated HTML for any CSS class with the same name. | Modify the export to prepend a custom prefix to the TableCssId and log a warning if that prefixed ID already exists among CSS class selectors. | Implement a regex that extracts all CSS class selectors from the HTML stream and validates that the TableCssId is not present.
+// Common Searches: Aspose.Cells C# how to set a custom TableCssId when saving to HTML | detecting CSS id and class name collisions in Aspose.Cells HTML output | generate unique table identifier for Excel to HTML conversion using Aspose.Cells | C# regex to list CSS class selectors from Aspose.Cells generated HTML | prevent TableCssId conflict with existing CSS classes in exported HTML
+// Tags: Aspose.Cells HTML export custom TableCssId | C# detect CSS id class collision Aspose.Cells | unique table identifier GUID C# | regex extract CSS class selectors Aspose HTML | memory stream HTML save options Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example creates a workbook, exports it to HTML with Aspose.Cells while assigning a custom TableCssId, reads the resulting HTML to extract the embedded CSS, checks whether the TableCssId conflicts with any CSS class selector, and if a collision is found appends a numeric suffix and retries up to five times, finally reporting the unique TableCssId or an error.
-class HtmlExportWithCustomTableId
+// The program creates a workbook, adds sample data, generates a GUID‑based TableCssId, saves the workbook as HTML with HtmlSaveOptions, extracts CSS class names via a regular expression, and verifies that the TableCssId does not collide with any existing CSS class in the output.
+class Program
 {
     static void Main()
     {
@@ -19,93 +19,58 @@ class HtmlExportWithCustomTableId
             // Create a new workbook and add some sample data
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Score");
-            sheet.Cells["A2"].PutValue("Alice");
-            sheet.Cells["B2"].PutValue(85);
-            sheet.Cells["A3"].PutValue("Bob");
-            sheet.Cells["B3"].PutValue(92);
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue("Data1");
+            sheet.Cells["B2"].PutValue("Data2");
 
-            // Desired custom Table CSS Id
-            const string baseTableId = "myCustomTable";
-            string tableId = baseTableId;
+            // Generate a unique TableCssId to avoid collisions
+            string tableCssId = "tbl_" + Guid.NewGuid().ToString("N");
 
-            // Path settings
-            string outputHtmlPath = "output.html";
-
-            // Maximum attempts to avoid infinite loop
-            const int maxAttempts = 5;
-            int attempt = 0;
-            bool collisionDetected;
-
-            do
+            // Configure HTML save options with the custom TableCssId
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Configure HTML save options (only properties supported by the current Aspose.Cells version)
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    ExportActiveWorksheetOnly = true,
-                    TableCssId = tableId // set custom Table CSS Id
-                };
+                ExportActiveWorksheetOnly = true, // export only the active sheet
+                TableCssId = tableCssId            // set custom table id
+            };
 
-                // Save workbook as HTML (CSS will be embedded in the HTML file)
-                workbook.Save(outputHtmlPath, saveOptions);
+            // Save the workbook to a memory stream as HTML
+            using (MemoryStream htmlStream = new MemoryStream())
+            {
+                workbook.Save(htmlStream, htmlOptions);
+                htmlStream.Position = 0;
 
-                // Ensure the HTML file exists before reading
-                if (!File.Exists(outputHtmlPath))
+                string htmlContent;
+                using (StreamReader reader = new StreamReader(htmlStream))
                 {
-                    Console.WriteLine("Failed to generate the HTML file.");
-                    return;
+                    htmlContent = reader.ReadToEnd();
                 }
 
-                // Load generated HTML content
-                string htmlContent = File.ReadAllText(outputHtmlPath);
-
-                // Extract CSS block from <style> tag
-                string cssContent = ExtractCssFromHtml(htmlContent);
-
-                // Find all CSS class selectors in the extracted CSS
-                var classMatches = Regex.Matches(cssContent, @"\.([A-Za-z0-9_-]+)");
-                collisionDetected = false;
-                foreach (Match match in classMatches)
+                // Extract all CSS class names defined in the generated HTML
+                HashSet<string> cssClassNames = new HashSet<string>();
+                Regex classRegex = new Regex(@"\.([A-Za-z0-9_-]+)\s*\{", RegexOptions.Compiled);
+                foreach (Match match in classRegex.Matches(htmlContent))
                 {
-                    string className = match.Groups[1].Value;
-                    if (string.Equals(className, tableId, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Collision found
-                        collisionDetected = true;
-                        break;
-                    }
+                    cssClassNames.Add(match.Groups[1].Value);
                 }
 
-                if (collisionDetected)
+                // Verify that the TableCssId does not collide with any CSS class name
+                if (cssClassNames.Contains(tableCssId))
                 {
-                    // Modify the TableCssId to avoid collision and retry
-                    attempt++;
-                    tableId = $"{baseTableId}_{attempt}";
+                    Console.WriteLine("Collision detected: TableCssId matches an existing CSS class name.");
+                }
+                else
+                {
+                    Console.WriteLine($"No collision detected. TableCssId = \"{tableCssId}\"");
                 }
 
-            } while (collisionDetected && attempt < maxAttempts);
-
-            if (collisionDetected)
-            {
-                Console.WriteLine("Unable to generate a unique TableCssId after multiple attempts.");
-            }
-            else
-            {
-                Console.WriteLine($"HTML exported successfully with TableCssId = \"{tableId}\"");
-                Console.WriteLine($"HTML file: {Path.GetFullPath(outputHtmlPath)}");
+                // Optionally write the HTML to a file for inspection
+                File.WriteAllText("output.html", htmlContent);
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Helper method to extract CSS content from the first <style>...</style> block in the HTML
-    private static string ExtractCssFromHtml(string html)
-    {
-        var styleMatch = Regex.Match(html, @"<style[^>]*>(.*?)</style>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-        return styleMatch.Success ? styleMatch.Groups[1].Value : string.Empty;
     }
 }

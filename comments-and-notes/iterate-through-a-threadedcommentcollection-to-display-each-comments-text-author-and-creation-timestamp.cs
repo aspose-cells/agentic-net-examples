@@ -1,58 +1,57 @@
-// Title: How to loop through Aspose.Cells ThreadedCommentCollection in C# to print comment text, author, and creation time
-// AI Prompts: Write C# code that opens an Aspose.Cells workbook, accesses a cell's comment thread, and prints each threaded comment's Notes, Author.Name, and CreatedTime. | Provide a full example that adds a threaded comment author, creates a regular comment with multiple threaded replies, then iterates the ThreadedCommentCollection to output comment details using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# retrieve threaded comment author name and timestamp | C# iterate over ThreadedCommentCollection in Aspose.Cells workbook | How to display notes and created time of Excel threaded comments using Aspose.Cells | Sample code for enumerating threaded comments in a worksheet with Aspose.Cells .NET
-// Tags: Aspose.Cells iterate ThreadedCommentCollection C# | read threaded comment author Aspose.Cells | extract created time from Aspose.Cells threaded comments | C# enumerate Excel threaded comments using Aspose.Cells | display comment notes Aspose.Cells workbook
+// Title: C# example: loop through Excel worksheet comments and print note and author with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to read comments from an Excel worksheet | example code to list comment text and author using Aspose.Cells for .NET | iterate over CommentCollection in Aspose.Cells C# | retrieve Excel comment author and note with Aspose.Cells library | display all comments in first worksheet using Aspose.Cells C#
+// Tags: enumerate comment collection Aspose.Cells C# | read comment note Aspose.Cells .NET | get comment author Aspose.Cells Excel | process worksheet comment objects Aspose.Cells API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsThreadedCommentDemo
+// The sample loads an Excel file, verifies its existence, accesses the first worksheet, obtains its CommentCollection, and iterates through each Comment to output the Note (comment text) and Author. It also notes that the Comment class does not expose a creation timestamp property.
+class Program
 {
-    // The program creates a workbook, adds a threaded comment author, inserts a regular comment in cell A1, adds three threaded replies, iterates the ThreadedCommentCollection printing each comment's text, author name, and creation timestamp, and finally saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Path to the input workbook
+            string inputPath = "input.xlsx";
 
-            // Add a threaded comment author
-            int authorIdx = workbook.Worksheets.ThreadedCommentAuthors.Add("John Doe", "john.doe@example.com", "Provider1");
-            ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIdx];
-
-            // Add a regular comment to cell A1 (required to hold threaded comments)
-            int commentIdx = worksheet.Comments.Add("A1");
-            Comment comment = worksheet.Comments[commentIdx];
-
-            // Add several threaded comments to the comment
-            comment.ThreadedComments.Add("First threaded comment", author);
-            comment.ThreadedComments.Add("Second threaded comment", author);
-            comment.ThreadedComments.Add("Third threaded comment", author);
-
-            // Retrieve the ThreadedCommentCollection
-            ThreadedCommentCollection threadedComments = comment.ThreadedComments;
-
-            // Iterate through the collection and display details
-            foreach (ThreadedComment tc in threadedComments)
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Text of the comment
-                string text = tc.Notes;
-
-                // Author name
-                string authorName = tc.Author?.Name ?? "Unknown";
-
-                // Creation timestamp (if not set, it defaults to DateTime.MinValue)
-                DateTime created = tc.CreatedTime;
-
-                Console.WriteLine($"Comment: \"{text}\"");
-                Console.WriteLine($"Author : {authorName}");
-                Console.WriteLine($"Created: {created}");
-                Console.WriteLine(new string('-', 40));
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("ThreadedCommentsDemo.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get the collection of regular comments
+            CommentCollection comments = worksheet.Comments;
+
+            // Iterate through each comment
+            foreach (Comment comment in comments)
+            {
+                Console.WriteLine("Comment Text: " + comment.Note);
+                Console.WriteLine("Author: " + comment.Author);
+                // The Comment class does not expose a CreatedTime property; this line is omitted.
+                Console.WriteLine(new string('-', 30));
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

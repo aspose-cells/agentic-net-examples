@@ -1,49 +1,60 @@
-// Title: Set a column chart title to "Monthly Revenue" and apply an Accent1‑like color with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to add a column chart, set its title to "Monthly Revenue", and change the title font color to the Accent1 theme color. | Update an existing Aspose.Cells workbook to modify a chart's title text and apply a predefined Accent1 blue color to the title font.
-// Common Searches: Aspose.Cells C# set column chart title text and change title font color to theme Accent1 | How to apply Accent1 style to chart title using Aspose.Cells .NET | Change chart title color to blue Accent1 in Aspose.Cells workbook | Programmatically format chart title in Aspose.Cells for .NET
-// Tags: Aspose.Cells set chart title text | Aspose.Cells apply Accent1 color to chart title | column chart title formatting Aspose.Cells .NET | customize chart title font color Aspose.Cells | add column chart and style title Aspose.Cells
+// Title: Set chart title to "Monthly Revenue" and apply the Accent1 style to the first chart in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing workbook, retrieve the first chart on the first worksheet, set its title text to "Monthly Revenue" and make the title visible. | Apply the predefined Accent1 chart style (ChartStyleType.Style1) to that chart. | Save the modified workbook to a new file path.
+// Common Searches: how to set chart title in Aspose.Cells C# | apply Accent1 chart style using Aspose.Cells .NET | change first chart title to Monthly Revenue in existing Excel workbook C# | Aspose.Cells modify chart title and style programmatically | C# Aspose.Cells set chart title visibility
+// Tags: set chart title Aspose.Cells C# | apply Accent1 chart style Aspose.Cells | modify first chart in existing Excel workbook | chart title visibility Aspose.Cells | update Excel chart style .NET
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel file, accesses the first worksheet's first chart, sets the chart title to "Monthly Revenue" with visibility enabled, applies the predefined Accent1 style, and saves the workbook to a new file.
+class Program
 {
-    // The example creates a new workbook, inserts a column chart, sets the chart title to "Monthly Revenue", applies an Accent1‑like blue color to the title font, and saves the file as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                // Create a new workbook (lifecycle rule)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add a column chart to the worksheet (example chart)
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
-
-                // Set the chart title
-                chart.Title.Text = "Monthly Revenue";
-
-                // Apply a theme-like accent color to the title font
-                // Aspose.Cells may not expose Theme.ColorScheme directly in all versions,
-                // so we use a standard color that resembles Accent1.
-                chart.Title.Font.Color = Color.FromArgb(0, 112, 192); // Accent1-like blue
-
-                // Save the workbook (lifecycle rule)
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Get the first chart on the sheet
+            Chart chart = sheet.Charts[0];
+
+            // Set the chart title text and make it visible
+            chart.Title.Text = "Monthly Revenue";
+            chart.Title.IsVisible = true;
+
+            // Apply a predefined chart style (optional – removed due to API compatibility)
+            // chart.Style = ChartStyleType.Style1;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

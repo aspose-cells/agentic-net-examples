@@ -1,71 +1,79 @@
-// Title: Identify and list broken #REF! formula references in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program with Aspose.Cells that opens a given .xlsx file, scans every worksheet for formulas containing "#REF!", and prints the sheet name, cell address, and full formula for each broken reference. | Create a reusable C# method that receives a Workbook object and returns a collection of cells whose formulas have invalid references, leveraging the Aspose.Cells API. | Add robust error handling to a C# Aspose.Cells script that verifies the input file exists before loading, then logs any detected #REF! errors to the console.
-// Common Searches: C# Aspose.Cells how to detect #REF! errors in all worksheets of an Excel file | list cells with broken formula references using Aspose.Cells .NET | validate formulas for missing references in an .xlsx workbook with Aspose.Cells | Aspose.Cells iterate through cells to find invalid #REF! formulas in C# console app
-// Tags: detect broken #REF! formulas Aspose.Cells | iterate worksheets cells Aspose.Cells C# | validate Excel formulas .NET | log invalid formula references Aspose.Cells | check formula integrity Excel .xlsx Aspose
+// Title: Detect and list broken #REF! formula references in an Excel workbook with Aspose.Cells for C#
+// Common Searches: how to detect #REF! errors in an Excel file using Aspose.Cells C# | C# code to list cells with broken formula references in a workbook with Aspose.Cells | validate all formulas in an Excel workbook and find invalid references using Aspose.Cells .NET | Aspose.Cells calculate formulas and check for #REF! results in C# | enumerate cells containing #REF! after formula calculation with Aspose.Cells | report broken formula references in Excel using Aspose.Cells library
+// Tags: broken formula reference detection Aspose.Cells | formula cell enumeration C# | pre‑calculate workbook formulas Aspose.Cells | #REF! error listing Excel .NET | Excel formula validation Aspose.Cells C#
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook with Aspose.Cells, forces a full formula calculation, then iterates through each worksheet and every cell that contains a formula. It checks the evaluated cell value for the "#REF!" error, collects the sheet name, cell address, and formula for any broken references, and outputs the list or reports that no broken references were found.
+class Program
 {
-    // A C# console example that loads an .xlsx workbook with Aspose.Cells, iterates through all worksheets and cells, identifies formulas containing the "#REF!" token, and outputs the sheet name, cell address, and formula for each broken reference, with file‑existence checks and exception handling.
-    class FormulaReferenceValidator
+    static void Main()
     {
-        static void Main()
+        try
         {
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Force calculation of all formulas so that error values are up‑to‑date
             try
             {
-                // Path to the input workbook
-                string inputPath = "input.xlsx";
+                workbook.CalculateFormula();
+            }
+            catch (Exception calcEx)
+            {
+                Console.WriteLine($"Formula calculation error: {calcEx.Message}");
+            }
 
-                // Verify that the file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // List to hold information about broken formula references
+            List<string> brokenFormulas = new List<string>();
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each cell that contains a formula
+                foreach (Cell cell in sheet.Cells)
                 {
-                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                bool hasBrokenReferences = false;
-
-                // Iterate through all worksheets and cells to detect broken references (#REF!)
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-                    foreach (Cell cell in cells)
+                    if (cell.IsFormula)
                     {
-                        if (cell.IsFormula)
+                        // Check if the formula result is a #REF! error (string comparison)
+                        if (cell.Value != null && cell.Value.ToString() == "#REF!")
                         {
-                            string formula = cell.Formula;
-                            if (!string.IsNullOrEmpty(formula) && formula.Contains("#REF!"))
-                            {
-                                hasBrokenReferences = true;
-                                Console.WriteLine("Broken reference found:");
-                                Console.WriteLine($"  Sheet : {sheet.Name}");
-                                Console.WriteLine($"  Cell  : {cell.Name}");
-                                Console.WriteLine($"  Formula: {formula}");
-                                Console.WriteLine();
-                            }
+                            brokenFormulas.Add($"{sheet.Name}!{cell.Name}: {cell.Formula}");
                         }
                     }
                 }
-
-                if (!hasBrokenReferences)
-                {
-                    Console.WriteLine("No broken references were detected in any formula.");
-                }
-
-                // Optionally, save a copy of the workbook (if modifications were made)
-                // workbook.Save("output.xlsx");
             }
-            catch (Exception ex)
+
+            // Output the results
+            if (brokenFormulas.Count > 0)
             {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Broken formula references found:");
+                foreach (string info in brokenFormulas)
+                {
+                    Console.WriteLine(info);
+                }
             }
+            else
+            {
+                Console.WriteLine("No broken formula references detected.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Set a sans‑serif default font for an entire Excel workbook and apply it to all existing cells using Aspose.Cells for .NET (C#)
-// AI Prompts: Load a workbook with Aspose.Cells, change its DefaultStyle.Font to "Arial", and propagate the font to every used range in all worksheets. | Write a reusable C# method that takes a font name, updates the workbook’s global font, and applies the style to all cells that already contain data. | Save the modified workbook to a new file after globally setting a sans‑serif font using Aspose.Cells style flags.
-// Common Searches: Aspose.Cells C# change default workbook font to Arial and apply to existing cells | how to set a global sans‑serif font for all worksheets in an Excel file using Aspose.Cells | apply default style font to used range of each sheet with Aspose.Cells .NET | programmatically update Excel theme primary font in C# Aspose.Cells | save workbook after changing default font across all cells Aspose.Cells
-// Tags: default font update Aspose.Cells C# | apply global font style used range | set workbook default style Arial | propagate default style to existing cells | save workbook with modified theme font
+// Title: How to set a global sans‑serif font scheme (major and minor) for an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# change workbook default font to Arial | Set major and minor fonts for all cells in an Excel file with Aspose.Cells | Apply a global Calibri style to a worksheet using Aspose.Cells .NET | Programmatically update Excel theme fonts using Aspose.Cells in C# | How to use StyleFlag to apply a font to an entire worksheet with Aspose.Cells
+// Tags: set workbook default font Aspose.Cells | apply global sans-serif font Excel .NET | use StyleFlag to apply font to worksheet | change major font to Arial Aspose.Cells | update minor font Calibri across cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing .xlsx file, sets the workbook's DefaultStyle.Font to a sans‑serif type (Arial), iterates through each worksheet to apply this default style to the entire used range using a StyleFlag that targets the font, ensures the output directory exists, and saves the updated workbook to a new file.
+// The example loads an existing workbook, sets the workbook's default (major) font to Arial, creates a Calibri style for the minor font, applies that style to all cells in the first worksheet using a StyleFlag, and saves the modified file.
 class Program
 {
     static void Main()
@@ -17,42 +16,29 @@ class Program
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            // Verify that the input file exists before attempting to load it
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Set the default (global) font to a sans‑serif font (e.g., Arial)
+            // Update the default (major) font to a sans‑serif font (e.g., Arial)
             workbook.DefaultStyle.Font.Name = "Arial";
 
-            // Optionally, apply the default style to all existing cells
-            // This ensures the change affects already formatted cells
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Apply the default style to the entire used range of the sheet
-                var usedRange = sheet.Cells.MaxDisplayRange;
-                if (usedRange != null)
-                {
-                    Style defaultStyle = workbook.DefaultStyle;
-                    usedRange.ApplyStyle(defaultStyle, new StyleFlag { Font = true });
-                }
-            }
+            // (Optional) Update the default minor font by setting the style for the whole workbook
+            // Here we create a style with the desired minor font and apply it to all cells
+            Style minorStyle = workbook.CreateStyle();
+            minorStyle.Font.Name = "Calibri";
+            StyleFlag flag = new StyleFlag { Font = true };
+            workbook.Worksheets[0].Cells.ApplyStyle(minorStyle, flag);
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the updated font applied globally
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

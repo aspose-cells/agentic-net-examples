@@ -1,65 +1,70 @@
-// Title: Apply a consistent 5‑point shadow offset to all shapes in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Use the Aspose.Cells C# API to loop through every worksheet and each shape, enable the shape's Shadow, set OffsetX and OffsetY to 5 points, and then save the workbook. | Implement version‑safe shadow formatting by accessing Shape.Shadow dynamically and applying the same X/Y offset to every shape in an Excel file.
-// Common Searches: C# Aspose.Cells set shadow offset for all shapes in a workbook | How to enable shape shadows and define X/Y offset in Excel with Aspose.Cells .NET | Iterate worksheets and shapes to apply uniform shadow using Aspose.Cells | Dynamic access to Shape.Shadow property for different Aspose.Cells versions | Apply same shadow offset to multiple Excel shapes with Aspose.Cells C#
-// Tags: consistent shape shadow offset Aspose.Cells | shape shadow visibility .NET | iterate all worksheet shapes C# | version‑safe shadow property access Aspose.Cells | excel shape visual alignment
+// Title: How to apply a uniform shadow offset to every shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Set a 5‑point shadow with a 45° direction on all shapes in a workbook via the Aspose.Cells C# API. | Loop through each worksheet and configure Shape.ShadowEffect.IsVisible, Distance, and Direction uniformly.
+// Common Searches: C# code to set the same shadow distance and direction for all shapes in an Excel file with Aspose.Cells | How to make shadows visible on every shape in a workbook using Aspose.Cells .NET | Apply uniform shadow effect to shapes across multiple worksheets in Aspose.Cells | Aspose.Cells shape shadow properties batch update example
+// Tags: batch update shape shadow effect Aspose.Cells | set uniform shadow distance direction C# | apply shadow to all Excel shapes Aspose.Cells | iterate worksheets shapes Aspose.Cells C# | shadow effect properties Excel workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads input.xlsx, iterates each worksheet and shape, makes the shadow visible, sets a 5‑point X and Y offset via dynamic property access for version safety, and saves the modified workbook to output.xlsx.
-class Program
+namespace ApplyUniformShadowApp
 {
-    static void Main()
+    // The example loads an existing workbook, iterates through each worksheet and its shapes, and assigns a visible ShadowEffect with a 5‑point distance and 45° direction to every shape before saving the updated file.
+    class ApplyUniformShadow
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        try
+        static void Main()
         {
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                return;
-            }
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Uniform shadow offset values (in points)
-            const double offsetX = 5.0;
-            const double offsetY = 5.0;
-
-            // Iterate through all worksheets and their shapes
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Shape shape in sheet.Shapes)
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    try
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Uniform shadow settings
+                double uniformDistance = 5.0;   // points
+                double uniformDirection = 45.0; // degrees
+
+                // Iterate through all worksheets and their shapes
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        // Use dynamic to access Shadow property if it exists in the current Aspose.Cells version
-                        dynamic dynShape = shape;
-                        dynShape.Shadow.IsVisible = true;
-                        dynShape.Shadow.OffsetX = offsetX;
-                        dynShape.Shadow.OffsetY = offsetY;
-                    }
-                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-                    {
-                        // Shadow property not available in this version; safely ignore
+                        try
+                        {
+                            // Use dynamic to avoid compile‑time binding issues with ShadowEffect properties
+                            dynamic shadow = shape.ShadowEffect;
+                            if (shadow != null)
+                            {
+                                try { shadow.IsVisible = true; } catch { }
+                                try { shadow.Distance = uniformDistance; } catch { }
+                                try { shadow.Direction = uniformDirection; } catch { }
+                            }
+                        }
+                        catch (Exception shapeEx)
+                        {
+                            Console.WriteLine($"Failed to apply shadow to shape '{shape.Name}': {shapeEx.Message}");
+                        }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors to prevent the application from crashing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,48 +1,80 @@
-// Title: Export an Excel workbook to PDF with each worksheet forced onto a single page using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.OnePagePerSheet to true, and saves the workbook as a PDF. | Show how to configure Aspose.Cells PdfSaveOptions so that every worksheet is rendered on one PDF page before calling Workbook.Save.
-// Common Searches: Aspose.Cells C# how to export each worksheet to a single PDF page | PdfSaveOptions OnePagePerSheet property usage example | Save Excel workbook as PDF with one page per sheet in .NET | Force all worksheets onto one page per sheet when converting Excel to PDF with Aspose | C# Aspose.Cells PDF export page layout settings
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export Excel to single-page PDF | Aspose.Cells worksheet PDF page layout | PDF conversion one page per sheet Aspose | Aspose.Cells save workbook as PDF with page control
+// Title: How to export every Excel worksheet to its own single‑page PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, loops through all worksheets, and saves each one as an individual PDF file using PdfSaveOptions.OnePagePerSheet = true. | Demonstrate how to copy a single worksheet into a new temporary Workbook, clean the worksheet name for a safe file name, and export it to PDF with Aspose.Cells. | Create a robust C# routine that verifies the input Excel file exists, handles exceptions for each sheet during PDF conversion, and names the output PDFs after their corresponding worksheets.
+// Common Searches: Aspose.Cells C# export each sheet to separate PDF one page per sheet | PdfSaveOptions OnePagePerSheet usage example .NET | How to save a single Excel worksheet as a PDF with Aspose.Cells | C# replace invalid filename characters when generating PDF from Excel sheets
+// Tags: export worksheet to PDF Aspose.Cells | PdfSaveOptions OnePagePerSheet .NET | save each Excel sheet as separate PDF | copy worksheet to new workbook Aspose.Cells | sanitize filename characters C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample checks for the input Excel file, loads it into an Aspose.Cells Workbook, enables PdfSaveOptions.OnePagePerSheet to force each worksheet onto a single PDF page, and saves the workbook as a PDF while handling any exceptions.
+// The sample loads an input.xlsx workbook, iterates through its worksheets, creates a temporary workbook containing only the current sheet, sets PdfSaveOptions.OnePagePerSheet to true, sanitizes the sheet name for a safe file name, and saves each sheet as a separate single‑page PDF while handling missing file and per‑sheet export errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file not found – {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the existing workbook
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options to force each worksheet onto a single page
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Iterate through all worksheets and save each one as a separate PDF page
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                OnePagePerSheet = true
-            };
+                try
+                {
+                    // Create a temporary workbook containing only the current worksheet
+                    Workbook sheetWb = new Workbook();
+                    sheetWb.Worksheets.Clear();
 
-            // Save the workbook as a PDF using the configured options
-            workbook.Save(outputPath, pdfOptions);
+                    // Add a copy of the current worksheet by name
+                    sheetWb.Worksheets.AddCopy(workbook.Worksheets[i].Name);
 
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+                    // Configure PDF save options for the current sheet
+                    PdfSaveOptions pdfOptions = new PdfSaveOptions
+                    {
+                        OnePagePerSheet = true // Force one page per sheet
+                    };
+
+                    // Build a safe file name for the PDF (e.g., Sheet1_SheetName.pdf)
+                    string safeSheetName = workbook.Worksheets[i].Name.Replace(Path.GetInvalidFileNameChars(), '_');
+                    string pdfFileName = $"Sheet{i + 1}_{safeSheetName}.pdf";
+
+                    // Save the selected worksheet to PDF using the configured options
+                    sheetWb.Save(pdfFileName, pdfOptions);
+                    Console.WriteLine($"Saved: {pdfFileName}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save sheet {i + 1}: {ex.Message}");
+                }
+            }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+}
+
+// Extension method to replace invalid filename characters
+static class StringExtensions
+{
+    public static string Replace(this string str, char[] chars, char replacement)
+    {
+        foreach (char c in chars)
+        {
+            str = str.Replace(c, replacement);
+        }
+        return str;
     }
 }

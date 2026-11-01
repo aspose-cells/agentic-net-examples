@@ -1,78 +1,73 @@
-// Title: Create a new worksheet, copy source data, and add a linked PivotTable with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to copy a range from a source worksheet to a newly added worksheet and then creates a linked PivotTable on a third worksheet referencing the copied range. | Show how to adapt the example to open an existing workbook, copy its data to another sheet, and define the PivotTable source as a dynamic named range.
-// Common Searches: asp.net aspose.cells copy data to new worksheet and create linked pivot table | c# programmatically add worksheet and linked pivot table using Aspose.Cells | how to reference a copied range in a PivotTable with Aspose.Cells .NET | Aspose.Cells example for creating a PivotTable that uses data from another sheet | C# Aspose.Cells create linked pivot table from copied data range
-// Tags: Aspose.Cells copy worksheet range C# | Aspose.Cells linked pivot table creation | Aspose.Cells add worksheet and pivot table | Aspose.Cells set pivot source to another sheet | Aspose.Cells refresh pivot data programmatically
+// Title: Add a new worksheet and create a linked PivotTable from a data range using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a worksheet and generate a linked pivot table with Aspose.Cells in C# | Aspose.Cells C# create pivot table on separate sheet referencing source range | sample code for linked pivot table using Aspose.Cells .NET | define source data range for pivot table in Aspose.Cells C# example | save workbook with pivot table using Aspose.Cells for .NET
+// Tags: insert new worksheet Aspose.Cells .NET | generate pivot table Aspose.Cells | pivot table source range C# | pivotfieldtype row and data Aspose.Cells | save workbook with pivot table Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-namespace AsposeCellsPivotExample
+// The example creates a workbook, writes sample source data to the first sheet, adds a second sheet, defines the source range "SourceData!A1:B5", creates a linked PivotTable named "LinkedPivot" at cell C3, assigns the Category column as a row field and the Amount column as a data field, and saves the file as "LinkedPivotTable.xlsx".
+class Program
 {
-    // The program creates a workbook, adds a source worksheet with sample data, copies that data to a new worksheet, then adds a third worksheet containing a linked PivotTable that references the copied range, configures row and data fields, refreshes and calculates the pivot, and saves the file as LinkedPivotTableDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-                // ---------- Source Worksheet ----------
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "SourceData";
+            // -------------------------------------------------
+            // Prepare source data on the first worksheet.
+            // -------------------------------------------------
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.Name = "SourceData";
 
-                // Populate sample source data
-                sourceSheet.Cells["A1"].PutValue("Category");
-                sourceSheet.Cells["B1"].PutValue("Value");
-                sourceSheet.Cells["A2"].PutValue("A");
-                sourceSheet.Cells["B2"].PutValue(10);
-                sourceSheet.Cells["A3"].PutValue("B");
-                sourceSheet.Cells["B3"].PutValue(20);
-                sourceSheet.Cells["A4"].PutValue("A");
-                sourceSheet.Cells["B4"].PutValue(30);
+            // Header.
+            sourceSheet.Cells["A1"].PutValue("Category");
+            sourceSheet.Cells["B1"].PutValue("Amount");
 
-                // ---------- Destination Worksheet (copy of source) ----------
-                Worksheet copySheet = workbook.Worksheets.Add("CopyData");
+            // Sample rows.
+            sourceSheet.Cells["A2"].PutValue("Food");
+            sourceSheet.Cells["B2"].PutValue(120);
+            sourceSheet.Cells["A3"].PutValue("Transport");
+            sourceSheet.Cells["B3"].PutValue(80);
+            sourceSheet.Cells["A4"].PutValue("Food");
+            sourceSheet.Cells["B4"].PutValue(150);
+            sourceSheet.Cells["A5"].PutValue("Transport");
+            sourceSheet.Cells["B5"].PutValue(70);
 
-                // Determine the used range in the source sheet
-                AsposeRange sourceRange = sourceSheet.Cells.MaxDisplayRange;
+            // -------------------------------------------------
+            // Add a new worksheet that will host the PivotTable.
+            // -------------------------------------------------
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotSheet");
 
-                // Copy the source range to the destination sheet starting at A1
-                int rowCount = sourceRange.RowCount;
-                int colCount = sourceRange.ColumnCount;
-                AsposeRange destRange = copySheet.Cells.CreateRange(0, 0, rowCount, colCount);
-                sourceRange.Copy(destRange);
+            // Define the source data range.
+            string sourceData = "SourceData!A1:B5";
 
-                // ---------- PivotTable Worksheet ----------
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // -------------------------------------------------
+            // Create a PivotTable referencing the source data.
+            // -------------------------------------------------
+            // Add the PivotTable to the pivot sheet at cell C3.
+            int pivotIndex = pivotSheet.PivotTables.Add(
+                sourceData,   // source data range
+                "C3",         // destination cell
+                "LinkedPivot" // PivotTable name
+            );
 
-                // Build the source data reference string for the copied data
-                AsposeRange copiedRange = copySheet.Cells.MaxDisplayRange;
-                string sourceData = $"=CopyData!{copiedRange.Address}";
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                // Add a linked PivotTable that uses the copied data as its source
-                PivotTableCollection pivotTables = pivotSheet.PivotTables;
-                int pivotIndex = pivotTables.Add(sourceData, "A1", "LinkedPivot");
+            // Add fields: Category as Row field, Amount as Data field.
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column A (Category)
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column B (Amount)
 
-                // Configure the PivotTable (optional but typical)
-                PivotTable pivotTable = pivotTables[pivotIndex];
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-                // Refresh and calculate the PivotTable data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("LinkedPivotTableDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // -------------------------------------------------
+            // Save the workbook.
+            // -------------------------------------------------
+            workbook.Save("LinkedPivotTable.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

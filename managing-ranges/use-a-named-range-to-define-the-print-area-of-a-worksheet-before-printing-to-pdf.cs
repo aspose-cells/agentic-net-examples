@@ -1,13 +1,11 @@
-// Title: Define a worksheet print area and save as PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to assign a cell range as the worksheet's print area and then generate a PDF file. | Show how to configure portrait orientation, fit‑to‑page dimensions, and create the target folder before saving a workbook as PDF with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set worksheet print area for PDF export | define print area without named range Aspose.Cells .NET | export specific range to PDF using Aspose.Cells in C# | page setup fit to page and orientation Aspose.Cells PDF | create output directory automatically when saving PDF Aspose.Cells
-// Tags: Aspose.Cells set print region C# | Aspose.Cells export PDF from worksheet | Aspose.Cells page setup fit to page | Aspose.Cells portrait orientation PDF | Aspose.Cells create output folder
+// Title: Set a worksheet's print area and export it to PDF using Aspose.Cells for .NET
+// Common Searches: how to define a custom print area for an Excel worksheet before PDF conversion with Aspose.Cells C# | Aspose.Cells .NET example for setting PageSetup.PrintArea and saving as PDF | C# code to limit printed range to A1:D10 when exporting workbook to PDF using Aspose.Cells | configure worksheet print settings in Aspose.Cells prior to PDF generation
+// Tags: worksheet print area Aspose.Cells | PDF export from Excel Aspose.Cells | page setup print area C# | save workbook as PDF .NET | custom print range Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, fills cells A1‑B2, assigns the print area via PageSetup.PrintArea, sets portrait orientation and fit‑to‑page options, ensures the destination folder exists, and saves the worksheet as a PDF file.
+// The sample creates a new workbook, fills cells A1 through D10 with data, assigns the range A1:D10 to the worksheet's PageSetup.PrintArea, and then saves the workbook directly as a PDF file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,42 +15,33 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and set its name
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "Sheet1";
 
-            // Populate sample data
+            // Populate some sample data (optional, just for illustration)
             sheet.Cells["A1"].PutValue("Header1");
             sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
-
-            // Define the print area directly (no need for a named range)
-            string printAreaAddress = "'Sheet1'!$A$1:$B$2";
-            sheet.PageSetup.PrintArea = printAreaAddress;
-
-            // Optional page setup adjustments
-            sheet.PageSetup.Orientation = PageOrientationType.Portrait;
-            sheet.PageSetup.FitToPagesWide = 1;
-            sheet.PageSetup.FitToPagesTall = 1;
-
-            // Define output file path
-            string outputPath = "PrintedSheet.pdf";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            sheet.Cells["C1"].PutValue("Header3");
+            sheet.Cells["D1"].PutValue("Header4");
+            for (int row = 2; row <= 10; row++)
             {
-                Directory.CreateDirectory(outputDir);
+                sheet.Cells[$"A{row}"].PutValue($"R{row - 1}C1");
+                sheet.Cells[$"B{row}"].PutValue($"R{row - 1}C2");
+                sheet.Cells[$"C{row}"].PutValue($"R{row - 1}C3");
+                sheet.Cells[$"D{row}"].PutValue($"R{row - 1}C4");
             }
 
+            // Define the print area (A1:D10)
+            string printArea = "$A$1:$D$10";
+            sheet.PageSetup.PrintArea = printArea;
+
             // Save the workbook as a PDF file
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("output.pdf", SaveFormat.Pdf);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

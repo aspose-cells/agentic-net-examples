@@ -1,7 +1,6 @@
-// Title: Read a numeric cell with German locale formatting using Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook with Aspose.Cells, assign CultureInfo('de-DE') to workbook.Settings, then retrieve the raw double from a cell and convert it to a culture‑aware string. | Demonstrate how to obtain the displayed text of a cell that uses locale‑specific number formatting by accessing Cell.StringValue after setting the workbook culture. | Show how to format a numeric value according to the workbook’s CultureInfo without altering the underlying double value.
-// Common Searches: Aspose.Cells C# read cell value with German number format | How to set workbook culture to de-DE for numeric parsing in Aspose.Cells | Get displayed text of a formatted Excel cell using Aspose.Cells .NET | Retrieve raw double and formatted string from Excel cell with locale settings | Read locale‑specific numeric cells in Aspose.Cells without losing precision
-// Tags: culture-aware numeric extraction Aspose.Cells | set workbook CultureInfo de-DE | read cell StringValue with locale formatting | format double using workbook settings | load Excel workbook with locale-specific number format
+// Title: Read Excel cell numeric value with French locale using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# read cell value with French number format | How to set workbook culture to fr-FR in Aspose.Cells .NET | Retrieve double value from Excel cell respecting locale in Aspose.Cells | Parse Excel cell string to double using CultureInfo with Aspose.Cells | Load workbook and read localized numeric value in C# Aspose.Cells
+// Tags: Aspose.Cells set workbook CultureInfo | read numeric cell value Aspose.Cells | parse cell string with CultureInfo C# | Excel locale-specific number parsing Aspose | Workbook.Settings.CultureInfo usage
 
 using System;
 using System.Globalization;
@@ -10,52 +9,60 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example loads an Excel file with Aspose.Cells, sets the workbook's CultureInfo to German (de-DE), accesses a specific cell, obtains its raw double value, formats it using the workbook's culture, retrieves the displayed text via StringValue, and prints both the raw and culture‑aware representations.
+    // The example loads an Excel workbook, assigns the French (fr-FR) CultureInfo to the workbook's Settings, accesses cell A1 on the first worksheet, and obtains its numeric value both via the DoubleValue property (which respects the workbook's culture) and by manually parsing the cell's raw string with the same CultureInfo. It also demonstrates handling of password‑protected files and generic exception handling.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"File not found: {inputPath}");
+                return;
+            }
+
             try
             {
-                string inputPath = "input.xlsx";
+                // Load the workbook (no password). If the file is password‑protected,
+                // a CellsException will be thrown.
+                var loadOptions = new LoadOptions();
+                Workbook workbook = new Workbook(inputPath, loadOptions);
 
-                // Ensure the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"File not found: {inputPath}");
-                    return;
-                }
+                // Set the culture that matches the number format in the workbook
+                workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(inputPath);
-
-                // Set the culture that matches the number formatting used in the worksheet (German example)
-                workbook.Settings.CultureInfo = new CultureInfo("de-DE");
-
-                // Access the first worksheet (index 0)
+                // Access the first worksheet and cell A1
                 Worksheet sheet = workbook.Worksheets[0];
+                Cell cell = sheet.Cells["A1"];
 
-                // Read a specific cell (e.g., B2) that contains a number formatted with the culture‑specific pattern
-                Cell cell = sheet.Cells["B2"];
+                // Option 1: Use DoubleValue – respects the workbook's CultureInfo setting
+                double valueFromDouble = cell.DoubleValue;
 
-                // Retrieve the raw numeric value (as double) – culture does not affect the underlying value
-                double rawNumber = cell.Value is double d ? d : 0.0;
+                // Option 2: Read the raw string and parse it manually with the same CultureInfo
+                string rawString = cell.StringValue;
+                double valueFromString = double.Parse(rawString, workbook.Settings.CultureInfo);
 
-                // Convert the numeric value to a string using the workbook's culture settings
-                string formattedNumber = rawNumber.ToString(workbook.Settings.CultureInfo);
-
-                // Get the displayed text as it appears in Excel (using StringValue which reflects the displayed format)
-                string displayedText = cell.StringValue;
-
-                // Output results
-                Console.WriteLine($"Raw value: {rawNumber}");
-                Console.WriteLine($"Formatted (culture aware): {formattedNumber}");
-                Console.WriteLine($"Displayed text from cell: {displayedText}");
+                // Output the results
+                Console.WriteLine($"Value via DoubleValue: {valueFromDouble}");
+                Console.WriteLine($"Value via parsed string: {valueFromString}");
+            }
+            catch (CellsException ex)
+            {
+                // Detect password protection via message content (fallback for API versions without ErrorCode)
+                if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine("The workbook is password protected. Provide a password in LoadOptions.");
+                }
+                else
+                {
+                    Console.WriteLine($"CellsException: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

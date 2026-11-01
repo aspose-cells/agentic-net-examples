@@ -1,50 +1,63 @@
-// Title: Convert an Excel workbook to HTML with active hyperlinks and embedded images using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to keep hyperlinks clickable, and saves the workbook as an HTML file with images embedded as base64. | Show how to use Aspose.Cells HtmlSaveOptions to export all worksheets to a single HTML page while preserving hyperlink functionality.
-// Common Searches: asp.net convert xlsx to html preserving hyperlink clicks | c# Aspose.Cells export workbook to html with base64 images | how to keep Excel hyperlinks working after saving as html using Aspose.Cells | save multiple worksheets to one html file Aspose.Cells C#
-// Tags: Aspose.Cells HtmlSaveOptions export hyperlinks | C# export Excel to HTML with base64 images | preserve Excel hyperlinks in HTML output | convert multiple worksheets to single HTML page | Aspose.Cells workbook to HTML conversion
+// Title: Convert an Excel workbook to a self‑contained HTML file with active hyperlinks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a .xlsx file with Aspose.Cells and saves it as an HTML document while keeping all hyperlinks clickable. | Show how to set HtmlSaveOptions to embed worksheet images as Base64 strings and export every worksheet in the workbook. | Add error handling that verifies the source file exists, creates the destination folder if needed, and logs any conversion exceptions.
+// Common Searches: Aspose.Cells .NET export Excel to HTML preserving hyperlinks | C# generate self‑contained HTML from .xlsx with embedded images | How to keep Excel cell links active when converting to HTML using Aspose | HtmlSaveOptions ExportActiveWorksheetOnly false example | Save workbook as HTML with Base64 images Aspose.Cells C#
+// Tags: Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly | Aspose.Cells embed images Base64 HTML | Aspose.Cells preserve hyperlinks HTML export | C# convert Excel to self-contained HTML | Aspose.Cells create output directory before save
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for the input.xlsx file, loads it with Aspose.Cells, sets HtmlSaveOptions to export all worksheets, embed images as base64, and retain functional hyperlinks, then saves the result as output.html.
-class Program
+namespace ExcelToHtmlExport
 {
-    static void Main()
+    // The program loads an Excel workbook, configures HtmlSaveOptions to export all worksheets and embed images as Base64, ensures the output folder exists, and saves the workbook as a self‑contained HTML file where all original hyperlinks remain functional, with error handling for missing files and conversion failures.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+            // Path to the source Excel file
+            string excelPath = @"C:\Input\SampleWorkbook.xlsx";
 
-        try
-        {
-            // Load the source Excel workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Path for the generated HTML file
+            string htmlPath = @"C:\Output\SampleWorkbook.html";
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            // Verify that the input file exists
+            if (!File.Exists(excelPath))
             {
-                // Export all worksheets (set to true to export only the active sheet)
-                ExportActiveWorksheetOnly = false,
+                Console.WriteLine($"Input file not found: {excelPath}");
+                return;
+            }
 
-                // Embed images directly into the HTML as base64 strings
-                ExportImagesAsBase64 = true
-            };
+            try
+            {
+                // Load the workbook from the file system
+                Workbook workbook = new Workbook(excelPath);
 
-            // Save the workbook as an HTML file with functional hyperlinks
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(htmlPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Configure HTML save options
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Export all worksheets (set to true to export only the active sheet)
+                    ExportActiveWorksheetOnly = false,
+
+                    // Embed images as Base64 strings to keep the HTML self‑contained
+                    ExportImagesAsBase64 = true
+                };
+
+                // Save the workbook as HTML using the configured options
+                workbook.Save(htmlPath, saveOptions);
+
+                Console.WriteLine("Excel file has been successfully exported to HTML with functional hyperlinks.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
         }
     }
 }

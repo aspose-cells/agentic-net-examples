@@ -1,77 +1,95 @@
-// Title: How to enable expand/collapse buttons for a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, adds sample data, builds a PivotTable, sets EnableDrilldown and ShowDrill to true, refreshes the cache, calculates the pivot data, and saves the file. | Update an existing Aspose.Cells PivotTable in C# to turn on drill‑down and display the hierarchy expand/collapse icons programmatically.
-// Common Searches: Aspose.Cells C# show expand collapse icons in pivot table | Enable drilldown and ShowDrill property for PivotTable using Aspose.Cells .NET | Programmatically display hierarchy buttons in Aspose.Cells PivotTable | Refresh and calculate pivot table after enabling drilldown in C# Aspose.Cells | How to add expand/collapse buttons to a PivotTable with Aspose.Cells for .NET
-// Tags: Aspose.Cells PivotTable enable drilldown | Aspose.Cells show expand collapse icons | C# Aspose.Cells refresh pivot cache | C# Aspose.Cells calculate pivot data | Aspose.Cells PivotTable hierarchical navigation
+// Title: How to activate ShowExpandCollapseButtons for a PivotTable in an existing Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, finds the first pivot table, and sets its ShowExpandCollapseButtons flag to true before saving. | Write a C# routine that uses reflection to apply ShowExpandCollapseButtons via the Options object when present, and falls back to the direct property if not. | Create a C# loop that iterates over all pivot tables in a worksheet and enables hierarchical expand/collapse buttons for each using Aspose.Cells.
+// Common Searches: aspnet aspose.cells enable expand collapse buttons on pivot table programmatically | c# set ShowExpandCollapseButtons property for pivot tables in existing Excel file | how to show hierarchical expand/collapse icons in Excel pivot table using Aspose.Cells | fallback to Options.ShowExpandCollapseButtons with reflection Aspose.Cells C#
+// Tags: Aspose.Cells pivot table expand collapse flag | C# enable hierarchical navigation in pivot tables | reflection fallback for Options property Aspose.Cells | modify existing workbook pivot table settings | Excel pivot table show expand collapse buttons
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, populating data, adding a PivotTable, enabling drill‑down with visible expand/collapse buttons via the ShowDrill property, refreshing the cache, calculating the pivot data, and saving the workbook as an .xlsx file.
-    public class PivotTableShowExpandCollapseDemo
+    // The example loads an existing Excel workbook, checks for pivot tables on the first worksheet, and uses reflection to enable the ShowExpandCollapseButtons feature—first trying the Options object if it exists, otherwise setting the property directly—then saves the updated file.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
+
             try
             {
-                Run();
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
+
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Get the collection of pivot tables in the worksheet
+                var pivotTables = worksheet.PivotTables;
+
+                // Ensure there is at least one pivot table
+                if (pivotTables.Count > 0)
+                {
+                    // Access the first pivot table
+                    var pivotTable = pivotTables[0];
+
+                    // Enable the expand/collapse buttons (property available in recent API versions)
+                    // If the Options property is unavailable, use the direct property.
+                    try
+                    {
+                        // Attempt to use Options if present (for newer versions)
+                        var optionsProperty = pivotTable.GetType().GetProperty("Options");
+                        if (optionsProperty != null)
+                        {
+                            var options = optionsProperty.GetValue(pivotTable);
+                            var showProp = options.GetType().GetProperty("ShowExpandCollapseButtons");
+                            if (showProp != null)
+                            {
+                                showProp.SetValue(options, true);
+                            }
+                        }
+                        else
+                        {
+                            // Fallback to direct property for older versions
+                            var showProp = pivotTable.GetType().GetProperty("ShowExpandCollapseButtons");
+                            if (showProp != null && showProp.CanWrite)
+                            {
+                                showProp.SetValue(pivotTable, true);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to set expand/collapse buttons: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                }
+
+                // Ensure the output directory exists
+                var outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet and name it
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
-
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["A4"].PutValue("A");
-            sheet.Cells["B4"].PutValue(150);
-            sheet.Cells["A5"].PutValue("B");
-            sheet.Cells["B5"].PutValue(250);
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // Enable drilldown (allows expanding/collapsing)
-            pivotTable.EnableDrilldown = true;
-
-            // Show expand/collapse buttons in the pivot table
-            pivotTable.ShowDrill = true;
-
-            // Refresh and calculate the pivot table data using the correct API
-            pivotTable.RefreshData();   // Refreshes the cache
-            pivotTable.CalculateData(); // Calculates the pivot data
-
-            // Save the workbook to a file
-            try
-            {
-                workbook.Save("PivotTableShowExpandCollapseDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

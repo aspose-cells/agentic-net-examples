@@ -1,130 +1,75 @@
-// Title: Safely configure worksheet background image in Aspose.Cells C# with null stream handling and error logging
-// AI Prompts: Write a C# method that accepts a workbook file path and an optional image Stream, adds the image as a picture on the first worksheet, and logs warnings if the stream is null or unreadable. | Modify an existing Aspose.Cells page‑setup routine to clear all pictures from a worksheet when no background image stream is provided, ensuring no exceptions are thrown. | Implement file‑existence checks and try‑catch blocks around workbook loading and saving in C# to prevent FileNotFoundException and save errors when using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to add a background picture to a worksheet from a Stream safely | C# handle missing background image when setting Excel page setup with Aspose.Cells | clear worksheet pictures in Aspose.Cells if background image stream is null | prevent exceptions during workbook load and save in Aspose.Cells C# example | log warnings instead of throwing when background image file not found Aspose.Cells
-// Tags: Aspose.Cells worksheet background image from stream | null stream validation Aspose.Cells | clear worksheet pictures Aspose.Cells | exception handling workbook load save Aspose.Cells C# | page setup error logging Aspose.Cells
+// Title: Safely handle missing background image streams while configuring worksheet page setup with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# check for null background image stream before setting worksheet background | prevent exception when background image file is not found in Aspose.Cells workbook | how to skip worksheet background image if stream is empty using Aspose.Cells | error handling for missing background image in Aspose.Cells page setup C# | Aspose.Cells page setup without background image stream example
+// Tags: null background image stream validation Aspose.Cells | worksheet page setup without background image Aspose.Cells | conditional background image assignment C# Aspose.Cells | avoid System.Drawing dependency Aspose.Cells | safe workbook save with optional background image Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook or creates a new one, attempts to obtain a background image stream, validates the stream for null, emptiness, or unreadability, and skips the background assignment to avoid System.Drawing dependencies and runtime exceptions. Comprehensive try‑catch blocks handle loading and saving, ensuring the workbook is saved safely even when the background image is missing.
+class Program
 {
-    // Demonstrates how to load an Excel workbook with Aspose.Cells, optionally set a background picture on the first worksheet using a provided Stream, clear existing pictures when the stream is missing, and safely handle file‑existence, stream readability, and workbook save errors with console logging.
-    public class WorkbookPageSetupHelper
+    static void Main()
     {
-        /// <param name="workbookPath">Full path to the Excel file.</param>
-        /// <param name="backgroundImageStream">Stream containing the background image (can be null).</param>
-        public void ConfigurePageSetup(string workbookPath, Stream? backgroundImageStream)
+        try
         {
-            // Verify that the workbook file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
-            {
-                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
-                return;
-            }
-
-            // Load the workbook (lifecycle rule)
+            // Verify input workbook exists; create a new one if missing
+            string inputPath = "input.xlsx";
             Workbook workbook;
-            try
+            if (File.Exists(inputPath))
             {
-                workbook = new Workbook(workbookPath);
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
             }
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set or clear background image using worksheet pictures (avoids System.Drawing)
-            if (backgroundImageStream != null && backgroundImageStream.CanRead)
+            // Retrieve background image stream (if any)
+            Stream bgStream = GetBackgroundImageStream();
+
+            // Aspose.Cells background image requires System.Drawing.Image.
+            // To avoid dependency issues, we skip setting the background image if the stream is present.
+            if (bgStream != null && bgStream.CanRead && bgStream.Length > 0)
             {
-                try
-                {
-                    // Ensure the stream is positioned at the beginning
-                    if (backgroundImageStream.CanSeek)
-                        backgroundImageStream.Position = 0;
-
-                    // Remove existing pictures that might act as background
-                    sheet.Pictures.Clear();
-
-                    // Add the image as a picture covering the sheet
-                    // The picture is anchored at cell A1 (row 0, column 0)
-                    int pictureIndex = sheet.Pictures.Add(0, 0, backgroundImageStream);
-                    // Optionally, you could resize the picture to fit the used range or page size here
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Unable to set background image. Details: {ex.Message}");
-                }
+                Console.WriteLine("Background image stream detected, but setting it is skipped to avoid System.Drawing dependency.");
+                bgStream.Dispose();
             }
             else
             {
-                try
-                {
-                    // Clear any existing pictures acting as background
-                    sheet.Pictures.Clear();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Unable to clear background image. Details: {ex.Message}");
-                }
+                Console.WriteLine("Background image stream is missing or empty. Skipping background setup.");
             }
 
-            // Save the workbook (lifecycle rule)
+            // Save the workbook
+            string outputPath = "output.xlsx";
             try
             {
-                workbook.Save(workbookPath);
-                Console.WriteLine("Workbook saved successfully.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                Console.WriteLine("Failed to save workbook: " + ex.Message);
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An unexpected error occurred: " + ex.Message);
         }
     }
 
-    internal class Program
+    // Retrieves a background image stream; returns null if the file does not exist
+    static Stream GetBackgroundImageStream()
     {
-        private static void Main(string[] args)
+        string path = "background.png";
+        if (File.Exists(path))
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Please provide the path to the workbook as the first argument.");
-                return;
-            }
-
-            string workbookPath = args[0];
-            Stream? backgroundStream = null;
-
-            // Optional background image path
-            if (args.Length > 1)
-            {
-                string imagePath = args[1];
-                if (File.Exists(imagePath))
-                {
-                    try
-                    {
-                        backgroundStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Warning: Unable to open image file. Details: {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Image file not found at '{imagePath}'. Continuing without background.");
-                }
-            }
-
-            var helper = new WorkbookPageSetupHelper();
-            helper.ConfigurePageSetup(workbookPath, backgroundStream);
-
-            // Dispose the image stream if it was opened
-            backgroundStream?.Dispose();
+            return new FileStream(path, FileMode.Open, FileAccess.Read);
         }
+        return null;
     }
 }

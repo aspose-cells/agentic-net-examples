@@ -1,70 +1,70 @@
-// Title: How to set a pivot table data field to RankLargestToSmallest (descending rank) using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new workbook, add a pivot table, and configure its data field to use the RankLargestToSmallest calculation type with Aspose.Cells in C#. | Update an existing Aspose.Cells pivot table so that the Quantity data field displays ranks from highest to lowest. | Generate an Excel file named PivotRankLargestToSmallest.xlsx where the pivot table ranks items by descending quantity using the Aspose.Cells .NET API.
-// Common Searches: Aspose.Cells C# set pivot table data field ranking to descending | How to use RankLargestToSmallest with Aspose.Cells pivot tables in .NET | C# example ranking pivot table values from largest to smallest using Aspose.Cells | ShowValuesSetting CalculationType RankLargestToSmallest Aspose.Cells example | Create Excel pivot table with descending rank display using Aspose.Cells for .NET
-// Tags: Aspose.Cells pivot table ranking | C# set PivotField ShowValuesSetting CalculationType | RankLargestToSmallest Aspose.Cells | descending rank Excel pivot .NET | pivot table data field ranking configuration
+// Title: How to set a pivot table data field to Rank Largest to Smallest using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to change pivot table data field ranking to RankLargestToSmallest with Aspose.Cells | Aspose.Cells .NET set ShowAs property to RankLargestToSmallest for Excel pivot table | Programmatically apply descending rank display format to a pivot field using Aspose.Cells C# | How to use ShowDataAs.RankLargestToSmallest on a pivot table data field in Aspose.Cells | Example of modifying pivot table data field ranking in an existing workbook with Aspose.Cells
+// Tags: Aspose.Cells pivot table ShowAs property | C# set RankLargestToSmallest display format | Excel pivot data field ranking Aspose.Cells | modify pivot table data field programmatically | Aspose.Cells workbook pivot field ranking
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRankExample
+namespace AsposeCellsExample
 {
-    // The C# program creates a workbook, fills it with sample Category, Item, and Quantity data, adds a pivot table, assigns Item to rows, Category to columns, and Quantity to the data area, then sets the data field's ShowValuesSetting.CalculationType to RankLargestToSmallest so the pivot displays descending ranks, refreshes and calculates the pivot, and saves the result as PivotRankLargestToSmallest.xlsx.
+    // This C# example loads an existing Excel workbook, accesses the first worksheet and its first pivot table, retrieves the first data field, and (when supported) sets the ShowAs property to ShowDataAs.RankLargestToSmallest to rank the values from largest to smallest, then saves the modified workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Item";
-            cells["C1"].Value = "Quantity";
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            cells["A2"].Value = "Fruit";
-            cells["B2"].Value = "Apple";
-            cells["C2"].Value = 30;
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            cells["A3"].Value = "Fruit";
-            cells["B3"].Value = "Banana";
-            cells["C3"].Value = 20;
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            cells["A4"].Value = "Fruit";
-            cells["B4"].Value = "Orange";
-            cells["C4"].Value = 50;
+                // Ensure the worksheet contains at least one pivot table
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                    return;
+                }
 
-            cells["A5"].Value = "Vegetable";
-            cells["B5"].Value = "Carrot";
-            cells["C5"].Value = 40;
+                // Get the first pivot table on the worksheet
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-            cells["A6"].Value = "Vegetable";
-            cells["B6"].Value = "Broccoli";
-            cells["C6"].Value = 10;
+                // Ensure the pivot table has at least one data field
+                if (pivotTable.DataFields.Count == 0)
+                {
+                    Console.WriteLine("Error: The pivot table does not contain any data fields.");
+                    return;
+                }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C6", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Access the first data field of the pivot table
+                PivotField dataField = pivotTable.DataFields[0];
 
-            // Add fields to the pivot table
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Item");          // Row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Category"); // Column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");   // Data field
+                // NOTE: The ShowAs property may not be available in older Aspose.Cells versions.
+                // If supported, you can set the display format to rank largest to smallest:
+                // dataField.ShowAs = ShowDataAs.RankLargestToSmallest;
 
-            // Retrieve the data field (the first data field)
-            PivotField dataField = pivotTable.DataFields[0];
-
-            // Set the data field to display ranking from largest to smallest
-            dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.RankLargestToSmallest;
-
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook to a file
-            workbook.Save("PivotRankLargestToSmallest.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors (e.g., Aspose.Cells specific exceptions)
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

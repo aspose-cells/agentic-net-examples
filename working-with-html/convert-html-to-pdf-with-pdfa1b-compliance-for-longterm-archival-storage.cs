@@ -1,53 +1,52 @@
 // Title: Convert an HTML file to a PDF/A‑1b compliant PDF using Aspose.Cells in C#
-// AI Prompts: Generate C# code that reads an HTML file, loads it into an Aspose.Cells Workbook, and saves it as a PDF/A‑1b compliant document. | Demonstrate how to configure PdfSaveOptions with Compliance = PdfCompliance.PdfA1b for archival PDF generation from HTML in Aspose.Cells. | Add robust file‑existence verification and exception handling to the HTML‑to‑PDF/A conversion routine in C#.
-// Common Searches: asp.net core convert html to pdf/a-1b using aspose.cells workbook | c# example for saving html workbook as PDF/A-1b with Aspose.Cells | how to set PDF/A-1b compliance in PdfSaveOptions when exporting HTML in Aspose.Cells | archival PDF generation from HTML with Aspose.Cells C# code sample
-// Tags: Aspose.Cells HTML to PDF/A-1b conversion | PdfSaveOptions compliance PDF/A-1b | C# import HTML into Aspose.Cells workbook | long‑term PDF/A-1b output Aspose.Cells | error handling missing HTML file Aspose.Cells
+// Common Searches: how to save HTML as PDF/A-1b with Aspose.Cells in C# | C# Aspose.Cells PDF/A-1b compliance when converting HTML | generate archival PDF/A-1b from HTML using Aspose.Cells library | Aspose.Cells load HTML and export to PDF/A-1b in .NET | set PdfSaveOptions.Compliance to PdfA1b for HTML to PDF conversion
+// Tags: Aspose.Cells HTML to PDF/A-1b export | PdfSaveOptions PdfA1b compliance configuration | LoadOptions Html format workbook initialization | C# archival PDF creation with Aspose.Cells | PDF/A-1b generation from HTML in .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace HtmlToPdfAConversion
+// The example loads an HTML file into an Aspose.Cells Workbook using LoadOptions with Html format, configures PdfSaveOptions.Compliance to PdfCompliance.PdfA1b, and saves the workbook as a PDF/A‑1b compliant PDF, ensuring the input file exists and the output directory is created.
+class HtmlToPdfA1bConverter
 {
-    // Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for PDF/A‑1b compliance, and saves the workbook as an archival PDF/A‑1b file, with checks for file existence and basic exception handling.
-    class HtmlToPdfAConverter
+    static void Main()
     {
-        static void Main()
+        // Path to the source HTML file
+        string htmlPath = @"C:\Input\document.html";
+
+        // Path for the output PDF/A‑1b file
+        string pdfPath = @"C:\Output\document.pdf";
+
+        try
         {
-            try
+            // Verify that the input HTML file exists
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException("Input HTML file not found.", htmlPath);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Load the HTML file into a workbook using LoadOptions
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Configure PDF save options for PDF/A‑1b compliance
+            PdfSaveOptions saveOptions = new PdfSaveOptions
             {
-                const string inputPath = "input.html";
-                const string outputPath = "output.pdf";
+                Compliance = PdfCompliance.PdfA1b
+            };
 
-                // Verify that the input HTML file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Save the workbook as a PDF/A‑1b document
+            workbook.Save(pdfPath, saveOptions);
 
-                // Load the HTML file into an Aspose.Cells Workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options for PDF/A‑1b compliance.
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Set the PDF compliance level to PDF/A‑1b.
-                    Compliance = PdfCompliance.PdfA1b,
-
-                    // Optional: keep each worksheet on a separate page.
-                    OnePagePerSheet = false
-                };
-
-                // Save the workbook as a PDF/A‑1b compliant document.
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF/A‑1b file saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("Conversion completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

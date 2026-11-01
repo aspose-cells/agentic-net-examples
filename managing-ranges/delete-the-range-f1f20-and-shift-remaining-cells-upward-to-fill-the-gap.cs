@@ -1,58 +1,51 @@
-// Title: Delete rows F1:F20 and shift remaining cells upward using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to delete the rows covering the range F1:F20 and automatically shift the subsequent rows up. | Show how to create a range object for F1:F20 in Aspose.Cells, remove those rows, and save the workbook. | Provide a complete example that loads an Excel file, deletes the specified range, and writes the updated file with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# delete rows F1 to F20 and shift up | How to remove a specific cell range and collapse rows in an Excel workbook with Aspose.Cells | C# Aspose.Cells DeleteRows method for range F1:F20 example | Delete range F1:F20 in Excel using Aspose.Cells for .NET
-// Tags: Aspose.Cells DeleteRows method C# | range deletion Aspose.Cells Excel | shift cells upward after row removal .NET | remove rows F1-F20 Aspose.Cells | Excel workbook manipulation Aspose.Cells C#
+// Title: Delete cells F1:F20 and shift remaining rows upward with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells delete range F1:F20 and shift cells up | Aspose.Cells DeleteRange example shifting rows upward in .NET | Remove vertical range F1 to F20 from Excel worksheet using Aspose.Cells | How to shift rows up after deleting a range with Aspose.Cells C# | Delete specific rows in Excel with Aspose.Cells DeleteRange ShiftType.Up
+// Tags: Aspose.Cells DeleteRange ShiftType.Up | C# delete Excel range F1:F20 | remove vertical cell block Aspose.Cells | shift rows upward after deletion .NET | Excel worksheet range deletion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, creates a range for cells F1:F20 on the first worksheet, deletes the rows covered by that range (which automatically shifts the remaining rows upward), and saves the modified workbook to a new file.
+// The example loads an existing workbook (or creates a new one), accesses the first worksheet, defines the vertical range F1:F20, deletes that range while shifting the remaining cells upward, and saves the modified file as output.xlsx, with error handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the input workbook
-            string inputPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Load existing workbook if the file exists; otherwise create a new workbook
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
-
-            // Ensure there is at least one worksheet
-            if (workbook.Worksheets.Count == 0)
+            // Load existing workbook or create a new one if it does not exist
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                workbook.Worksheets.Add();
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+                workbook.Save(inputPath);
             }
 
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create the range F1:F20 (use fully qualified Aspose.Cells.Range to avoid ambiguity)
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("F1", "F20");
+            // Define the range F1:F20 (zero‑based indices)
+            int firstRow = 0;      // Row 1
+            int totalRows = 20;    // 20 rows
+            int firstColumn = 5;   // Column F
+            int totalColumns = 1;  // Single column
 
-            // Delete the rows covered by the range (shifts cells up automatically)
-            int startRow = range.FirstRow;
-            int rowsToDelete = range.RowCount;
-            sheet.Cells.DeleteRows(startRow, rowsToDelete);
-
-            // Path to the output workbook
-            string outputPath = "output.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Delete the range and shift remaining cells upward
+            sheet.Cells.DeleteRange(firstRow, totalRows, firstColumn, totalColumns, ShiftType.Up);
 
             // Save the modified workbook
             workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

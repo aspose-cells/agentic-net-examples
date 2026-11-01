@@ -1,68 +1,67 @@
-// Title: Batch convert multiple Excel workbooks to HTML with a custom default font for each file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that iterates over a collection of Excel file paths, assigns a specific HtmlSaveOptions.DefaultFontName for each workbook, and saves the output as HTML with Aspose.Cells. | Write a .NET routine that checks whether each source Excel file exists, creates the target HTML folder if it doesn't exist, and exports the workbook to HTML using a distinct default font defined in HtmlSaveOptions. | Add robust exception handling to a batch HTML export loop that logs missing source files and continues processing the remaining workbooks.
-// Common Searches: Aspose.Cells C# batch export Excel to HTML with different default fonts per workbook | How to set HtmlSaveOptions.DefaultFontName for each file in a bulk conversion loop | C# code sample for converting multiple .xlsx files to HTML using Aspose.Cells and custom fonts | Save Excel workbook as HTML with a specific font using Aspose.Cells .NET API
-// Tags: batch Excel to HTML conversion Aspose.Cells | HtmlSaveOptions.DefaultFontName per workbook | C# iterate workbook list export HTML | create output directory before saving Aspose.Cells | exception handling batch HTML export Aspose.Cells
+// Title: Batch convert multiple Excel workbooks to HTML with individual default fonts using Aspose.Cells for .NET
+// AI Prompts: Generate a C# program that iterates over a collection of Excel file paths, loads each workbook with Aspose.Cells, and saves it as HTML using HtmlSaveOptions where the DefaultFontName is assigned uniquely for each workbook. | Write a C# script that validates the existence of source files, creates missing output directories, and exports each workbook to HTML with grid lines, embedded base64 images, and a custom default font specified per conversion.
+// Common Searches: asp.net batch export Excel to HTML with different default fonts per file | c# Aspose.Cells convert multiple .xlsx to .html using HtmlSaveOptions DefaultFontName | how to set a unique default font for each HTML export in Aspose.Cells | automate Excel to HTML conversion with gridlines and base64 images in C#
+// Tags: Aspose.Cells multiple workbook HTML export | set specific font for HTML export in Aspose.Cells | C# convert Excel to HTML with embedded images | base64 image embedding in Aspose.Cells HTML | automated Excel to HTML conversion script .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchHtmlExport
+// The example defines a list of conversion tasks, each containing a source Excel file, a destination HTML file, and a default font name. For every task it checks the source file, creates the output folder if necessary, loads the workbook, configures HtmlSaveOptions to export grid lines, embed images as base64, and apply the specified DefaultFontName, then saves the workbook as HTML and logs the outcome, handling any errors and reporting completion.
+class BatchHtmlConverter
 {
-    // The example defines a list of (sourcePath, htmlPath, defaultFont) tuples, validates each source file, ensures the output directory exists, loads the workbook, configures HtmlSaveOptions.DefaultFontName with the specified font, and saves the workbook as HTML. Errors are caught and logged, allowing the batch process to continue until all workbooks are processed.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // List of conversion tasks: source workbook, destination HTML, and default font for HTML export.
+        var conversionTasks = new List<(string sourcePath, string htmlPath, string defaultFont)>
         {
-            // Define the batch conversion list: each entry contains the source workbook path,
-            // the target HTML path, and the default font to be used during HTML export.
-            var conversionTasks = new List<(string sourcePath, string htmlPath, string defaultFont)>
+            (@"C:\Workbooks\Report1.xlsx", @"C:\HtmlOutputs\Report1.html", "Arial"),
+            (@"C:\Workbooks\Report2.xlsx", @"C:\HtmlOutputs\Report2.html", "Times New Roman"),
+            (@"C:\Workbooks\Report3.xlsx", @"C:\HtmlOutputs\Report3.html", "Calibri")
+            // Add more entries as needed.
+        };
+
+        foreach (var task in conversionTasks)
+        {
+            try
             {
-                (@"C:\Workbooks\Report1.xlsx", @"C:\HtmlOutputs\Report1.html", "Arial"),
-                (@"C:\Workbooks\Report2.xlsx", @"C:\HtmlOutputs\Report2.html", "Times New Roman"),
-                (@"C:\Workbooks\Report3.xlsx", @"C:\HtmlOutputs\Report3.html", "Calibri")
-                // Add more entries as needed
-            };
-
-            // Process each workbook in the batch
-            foreach (var task in conversionTasks)
-            {
-                try
+                // Verify source file exists.
+                if (!File.Exists(task.sourcePath))
                 {
-                    // Verify source file exists
-                    if (!File.Exists(task.sourcePath))
-                    {
-                        Console.WriteLine($"Source file not found: {task.sourcePath}");
-                        continue;
-                    }
-
-                    // Ensure output directory exists
-                    string outputDir = Path.GetDirectoryName(task.htmlPath);
-                    if (!Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Load the workbook from the specified file
-                    Workbook workbook = new Workbook(task.sourcePath);
-
-                    // Configure HTML save options with the distinct default font
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-                    htmlOptions.DefaultFontName = task.defaultFont; // Set the default font for this export
-
-                    // Save the workbook as an HTML file using the configured options
-                    workbook.Save(task.htmlPath, htmlOptions);
-
-                    Console.WriteLine($"Converted '{task.sourcePath}' to HTML with default font '{task.defaultFont}'.");
+                    Console.WriteLine($"Source file not found: {task.sourcePath}");
+                    continue;
                 }
-                catch (Exception ex)
+
+                // Ensure the output directory exists.
+                string? outputDir = Path.GetDirectoryName(task.htmlPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Console.WriteLine($"Error processing '{task.sourcePath}': {ex.Message}");
+                    Directory.CreateDirectory(outputDir);
                 }
+
+                // Load the workbook.
+                Workbook workbook = new Workbook(task.sourcePath);
+
+                // Configure HTML save options, including the default font.
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    ExportGridLines = true,
+                    ExportImagesAsBase64 = true,
+                    DefaultFontName = task.defaultFont // Correct property name
+                };
+
+                // Save as HTML.
+                workbook.Save(task.htmlPath, saveOptions);
+
+                Console.WriteLine($"Converted '{task.sourcePath}' to HTML with default font '{task.defaultFont}'.");
             }
-
-            Console.WriteLine("Batch conversion completed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{task.sourcePath}': {ex.Message}");
+            }
         }
+
+        Console.WriteLine("Batch conversion completed.");
     }
 }

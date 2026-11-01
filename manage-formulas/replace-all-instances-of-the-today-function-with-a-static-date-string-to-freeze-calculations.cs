@@ -1,51 +1,83 @@
-// Title: Freeze TODAY() formulas by substituting a static date string in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that loads a workbook, walks through every worksheet and cell, and replaces each TODAY() call in a formula with a quoted fixed date string, then saves the result. | Generate a method that accepts an input file path, a static date value, and an output path, and updates all formulas containing TODAY() to use the provided date while preserving other parts of the expression. | Create a snippet that detects cells whose formula is exactly TODAY() and converts them to a plain date value, handling TODAY() embedded in larger expressions as well.
-// Common Searches: C# Aspose.Cells replace TODAY() function with a constant date in all worksheets | How to freeze dynamic TODAY() values in an Excel file using Aspose.Cells .NET | Iterate through cells and substitute TODAY() in formulas with a fixed date string Aspose.Cells | Save workbook after converting TODAY() formulas to static dates in C# | Example of changing TODAY() to a hard‑coded date in Excel using Aspose.Cells API
-// Tags: replace TODAY() with constant date Aspose.Cells | freeze dynamic date values in Excel Aspose.Cells | modify formulas across worksheets C# | convert TODAY() formula to static value .NET | save workbook after formula update Aspose.Cells | static date string substitution Excel formulas
+// Title: How to replace TODAY() formulas with a fixed date string in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to freeze TODAY() function in an Excel file with Aspose.Cells | Aspose.Cells replace dynamic TODAY() formula with static date in .NET | Iterate all cells in a workbook and change TODAY() to a constant date using Aspose.Cells | How to convert TODAY() formulas to a specific date string when saving Excel with Aspose.Cells | Remove volatile TODAY() formulas from Excel worksheets programmatically in C#
+// Tags: replace TODAY formula Aspose.Cells C# | static date substitution Excel Aspose.Cells | freeze volatile date calculation .NET | iterate worksheets cells Aspose.Cells | save workbook after formula modification Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The program loads an Excel file, iterates through every worksheet and cell, replaces any TODAY() occurrences in formulas with a fixed date string (as a value for standalone TODAY() formulas or as a quoted string within larger formulas), and saves the modified workbook to a new file.
-class FreezeTodayFunction
+// The example loads an Excel workbook with Aspose.Cells, scans every worksheet and cell for formulas containing TODAY(), replaces each matching formula with a static date string formatted as yyyy-MM-dd, and saves the updated workbook while handling missing files, password protection, and other exceptions.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook (lifecycle rule: load)
         string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        string outputPath = "output.xlsx";
 
-        // Define the static date string to replace TODAY()
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook = null;
+
+        try
+        {
+            // Attempt to load the workbook (no password supplied)
+            workbook = new Workbook(inputPath);
+        }
+        catch (CellsException ex)
+        {
+            // Handle password‑protected files or other loading issues
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Static date string to replace TODAY() formulas
         string staticDate = DateTime.Today.ToString("yyyy-MM-dd");
 
-        // Iterate through all worksheets and cells
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Cells cells = sheet.Cells;
-
-            // Use the Cells iterator for efficient traversal
-            foreach (Cell cell in cells)
+            // Iterate through each worksheet and replace TODAY() formulas
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Process only cells that contain a formula
-                if (cell.IsFormula && cell.Formula != null && cell.Formula.IndexOf("TODAY()", StringComparison.OrdinalIgnoreCase) >= 0)
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // If the formula is exactly TODAY(), replace the whole cell with the static date value
-                    if (cell.Formula.Trim().Equals("TODAY()", StringComparison.OrdinalIgnoreCase))
+                    for (int col = 0; col <= maxColumn; col++)
                     {
-                        cell.PutValue(staticDate);
-                    }
-                    else
-                    {
-                        // Replace each occurrence of TODAY() within the formula with a quoted static date string
-                        string newFormula = cell.Formula.Replace("TODAY()", $"\"{staticDate}\"", StringComparison.OrdinalIgnoreCase);
-                        cell.Formula = newFormula;
+                        Cell cell = cells[row, col];
+                        if (cell.IsFormula)
+                        {
+                            string formula = cell.Formula;
+                            if (!string.IsNullOrEmpty(formula) &&
+                                formula.IndexOf("TODAY()", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                // Replace the formula with the static date value
+                                cell.PutValue(staticDate);
+                            }
+                        }
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (lifecycle rule: save)
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+        }
     }
 }

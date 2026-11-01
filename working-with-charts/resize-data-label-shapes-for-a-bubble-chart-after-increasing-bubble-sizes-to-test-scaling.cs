@@ -1,68 +1,80 @@
-// Title: Manually resize bubble chart data label shapes after increasing bubble scale with Aspose.Cells for .NET
-// AI Prompts: Generate C# code using Aspose.Cells that sets a bubble chart's BubbleScale to 200% and assigns a fixed width and height to each data label shape. | Show how to turn off automatic resizing of data label shapes and specify custom dimensions for bubble chart points in a .NET workbook.
-// Common Searches: Aspose.Cells C# set bubble chart label width and height | increase bubble scale while keeping data label size constant Aspose.Cells | prevent data label shape auto‑sizing in bubble chart using Aspose.Cells .NET | programmatically adjust bubble chart data label dimensions Aspose.Cells | how to change bubble chart data label size after scaling in C#
-// Tags: bubble chart data label custom size Aspose.Cells | set bubble scale Aspose.Cells C# | data label auto‑resize off Aspose.Cells | manual data label dimensions .NET chart | Aspose.Cells bubble chart label resizing
+// Title: Resize data label font size for a bubble chart after scaling bubble sizes with Aspose.Cells for .NET
+// AI Prompts: Create a new Excel workbook, add a bubble chart, multiply the size values by a scaling factor, recalculate the chart, and set the data label font size proportionally using Aspose.Cells in C#. | Update an existing bubble chart's data label font size to reflect a custom scaling factor applied to the bubble size series in a .NET application. | Write C# code that reads bubble size data, applies a multiplier, refreshes the chart, and adjusts the data label font size before saving the workbook with Aspose.Cells.
+// Common Searches: how to change bubble chart data label font size with Aspose.Cells C# | scale bubble sizes and automatically resize labels in Excel using .NET | Aspose.Cells example for adjusting data label size after increasing bubble size | C# code to recalculate bubble chart after modifying size values | programmatically increase bubble chart markers and update label font in Aspose.Cells
+// Tags: bubble chart data label font resizing Aspose.Cells | scale bubble sizes chart .NET | adjust chart series data labels C# | Aspose.Cells bubble chart scaling example | programmatic Excel chart label customization
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The example creates a workbook, adds a bubble chart with sample X, Y, and size data, sets the BubbleScale to 200%, enables data labels to show values and bubble sizes, disables automatic shape resizing for each point, assigns a fixed width of 80 and height of 30 points to the data label shapes, recalculates the chart, and saves the file as BubbleChartDataLabelResize.xlsx.
-class ResizeDataLabelShapesBubbleChart
+// Demonstrates creating a bubble chart, scaling the bubble size values by a factor, recalculating the chart, and proportionally resizing the data label font before saving the workbook using Aspose.Cells for .NET.
+class ResizeBubbleChartDataLabels
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the bubble chart
-        sheet.Cells["A1"].PutValue("X");
-        sheet.Cells["B1"].PutValue("Y");
-        sheet.Cells["C1"].PutValue("Size");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["C2"].PutValue(5);
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["C3"].PutValue(10);
-        sheet.Cells["A4"].PutValue(3);
-        sheet.Cells["B4"].PutValue(30);
-        sheet.Cells["C4"].PutValue(15);
-
-        // Add a bubble chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Bubble, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Add a series and assign X, Y and bubble size ranges
-        int seriesIndex = chart.NSeries.Add("B2:B4", true);
-        chart.NSeries[seriesIndex].XValues = "A2:A4";
-        chart.NSeries[seriesIndex].BubbleSizes = "C2:C4";
-
-        // Increase bubble size scaling to 200% to test label scaling
-        chart.NSeries[seriesIndex].BubbleScale = 200;
-
-        // Enable data labels and display bubble size values
-        Series series = chart.NSeries[seriesIndex];
-        series.DataLabels.ShowValue = true;
-        series.DataLabels.ShowBubbleSize = true;
-
-        // Resize each data label shape manually
-        foreach (ChartPoint point in series.Points)
+        try
         {
-            // Disable automatic shape resizing to fit text
-            point.DataLabels.IsResizeShapeToFitText = false;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Set custom dimensions for the data label shape (units are points)
-            point.DataLabels.Width = 80;
-            point.DataLabels.Height = 30;
+            // Populate sample data for a bubble chart
+            // Column A: X values, Column B: Y values, Column C: Bubble sizes
+            sheet.Cells["A1"].PutValue("X");
+            sheet.Cells["B1"].PutValue("Y");
+            sheet.Cells["C1"].PutValue("Size");
+
+            double[] xValues = { 1, 2, 3, 4, 5 };
+            double[] yValues = { 2, 4, 1, 3, 5 };
+            double[] sizes   = { 10, 20, 30, 40, 50 }; // initial bubble sizes
+
+            for (int i = 0; i < xValues.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(xValues[i]); // A column
+                sheet.Cells[i + 1, 1].PutValue(yValues[i]); // B column
+                sheet.Cells[i + 1, 2].PutValue(sizes[i]);   // C column
+            }
+
+            // Add a bubble chart
+            int chartIndex = sheet.Charts.Add(ChartType.Bubble, 7, 0, 27, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Add series and set its data range (X, Y, Size)
+            int seriesIndex = chart.NSeries.Add("A2:C6", true);
+            Series series = chart.NSeries[seriesIndex];
+
+            // Show data labels for the series
+            series.DataLabels.ShowValue = true;
+
+            // Increase bubble sizes to test scaling (multiply by a factor)
+            double scaleFactor = 3.0;
+            for (int i = 0; i < sizes.Length; i++)
+            {
+                double newSize = sizes[i] * scaleFactor;
+                sheet.Cells[i + 1, 2].PutValue(newSize);
+            }
+
+            // Refresh the chart to reflect new bubble sizes
+            chart.Calculate();
+
+            // Resize data label font size proportionally to bubble scaling
+            foreach (Series ser in chart.NSeries)
+            {
+                if (ser.DataLabels != null)
+                {
+                    ser.DataLabels.Font.Size = (int)(8 * scaleFactor); // base size 8pt
+                }
+            }
+
+            // Save the workbook
+            string outputPath = "BubbleChart_WithResizedDataLabels.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Recalculate the chart to apply the changes
-        chart.Calculate();
-
-        // Save the workbook with the modified chart
-        workbook.Save("BubbleChartDataLabelResize.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

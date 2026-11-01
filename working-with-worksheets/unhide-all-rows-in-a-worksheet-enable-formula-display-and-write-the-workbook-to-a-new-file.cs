@@ -1,46 +1,57 @@
-// Title: Unhide every row in all worksheets, display formulas, and save as a new Excel file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing .xlsx workbook with Aspose.Cells, iterates through each worksheet, and sets every row's IsHidden property to false. | Provide a C# snippet that activates the Settings.ShowFormula option in Aspose.Cells so formulas are shown instead of their calculated results before saving. | Create a robust C# example that verifies the source file, unhides all rows, toggles formula view, and writes the modified workbook to a different output path with proper exception handling.
-// Common Searches: Aspose.Cells C# unhide all rows in every worksheet of an Excel workbook | How to show formulas instead of values when saving a workbook with Aspose.Cells .NET | C# iterate through all worksheets and change row visibility using Aspose.Cells | Saving a modified Excel file to a new location with Aspose.Cells for .NET | Check if input Excel file exists before processing with Aspose.Cells C#
-// Tags: unhide rows Aspose.Cells .NET | show formulas Settings.ShowFormula | iterate worksheets Aspose.Cells C# | save workbook to new file Aspose.Cells | file existence check C# Aspose.Cells
+// Title: Unhide every row in all worksheets, show formulas, and save as a new Excel file with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that loads an existing .xlsx workbook, iterates through each worksheet, makes all rows visible, enables formula display, and saves the result to a new file. | Create a .NET method that accepts input and output paths, opens the workbook with Aspose.Cells, clears hidden flags for all rows containing data, sets Settings.ShowFormula to true, and writes the modified workbook to a different filename.
+// Common Searches: Aspose.Cells C# unhide all rows in a workbook and keep formulas visible | How to display formulas instead of values when saving an Excel file with Aspose.Cells | C# iterate through worksheets and unhide rows up to the last used row using Aspose.Cells | Saving a modified workbook to a new file name with Aspose.Cells .NET
+// Tags: unhide all rows Aspose.Cells | display formulas Aspose.Cells | save modified workbook Aspose.Cells | worksheet iteration Aspose.Cells | max data row detection Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example checks that input.xlsx exists, loads it with Aspose.Cells, loops through each worksheet to set every row's IsHidden flag to false, optionally enables Settings.ShowFormula to display formulas, and then saves the updated workbook as output.xlsx while handling potential exceptions.
+// The program loads "input.xlsx", iterates over every worksheet, determines the last data row, clears the IsHidden flag for all rows up to that index, optionally sets Settings.ShowFormula to true, ensures the output directory exists, and saves the updated workbook as "output_unhidden.xlsx" while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output_unhidden.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
             // Load the existing workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
 
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Unhide all rows in the current worksheet
-                int totalRows = sheet.Cells.Rows.Count;
-                for (int i = 0; i < totalRows; i++)
+                // Determine the last row that contains data
+                int maxDataRow = sheet.Cells.MaxDataRow;
+                int rowsToProcess = maxDataRow >= 0 ? maxDataRow + 1 : 0;
+
+                // Unhide every row that may contain data
+                for (int i = 0; i < rowsToProcess; i++)
                 {
+                    // Access the row via Cells.Rows collection
                     sheet.Cells.Rows[i].IsHidden = false;
                 }
             }
 
-            // Optionally display formulas instead of results if the API supports it
-            // Uncomment the following line if your Aspose.Cells version includes ShowFormula
+            // If the current Aspose.Cells version supports showing formulas,
+            // uncomment the following line. Otherwise, this step is skipped.
             // workbook.Settings.ShowFormula = true;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the modified workbook to a new file
             workbook.Save(outputPath);
@@ -48,6 +59,7 @@ class Program
         }
         catch (Exception ex)
         {
+            // Catch any runtime exceptions and display an informative message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

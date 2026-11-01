@@ -1,162 +1,120 @@
-// Title: Generate a Euclidean distance matrix for all shapes in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Extract the absolute pixel coordinates (X, Y) of every shape on each worksheet with Aspose.Cells and store them in a C# collection. | Compute the Euclidean distance between each pair of shape coordinates and assemble a symmetric distance matrix in C#. | Create a new worksheet named "DistanceMatrix", write shape names as headers and the distance values into the cells, auto‑fit the columns, and save the workbook.
-// Common Searches: how to get absolute position of shapes in Excel using Aspose.Cells C# | create distance matrix of Excel shapes with Aspose.Cells .NET | compute Euclidean distance between shapes across worksheets Aspose.Cells | add a new sheet with shape distance calculations in Aspose.Cells | Aspose.Cells shape coordinates pixel offset example
-// Tags: retrieve shape pixel positions Aspose.Cells | build symmetric distance matrix C# | populate distance matrix sheet Aspose.Cells | aggregate shape coordinates across worksheets | auto‑fit columns Aspose.Cells matrix
+// Title: Generate a distance matrix worksheet with Euclidean distances between all shapes in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to iterate through every worksheet, collect each shape's UpperLeftRow and UpperLeftColumn, compute the Euclidean distance between every pair of shapes, and output the results into a new worksheet named "DistanceMatrix". | Adjust the calculation to use each shape's center point (derived from UpperLeft and LowerRight coordinates) and export the resulting distance matrix as a CSV file with Aspose.Cells. | Enhance the distance matrix worksheet by applying conditional formatting that highlights cells where the distance exceeds a configurable threshold.
+// Common Searches: asp.net how to calculate distances between shapes in an Excel file with Aspose.Cells | c# create distance matrix for shapes across multiple worksheets using Aspose.Cells | extract shape coordinates and generate Euclidean distance table in Excel via Aspose.Cells | save shape distance matrix to a new worksheet in Aspose.Cells C# example | Aspose.Cells tutorial for building a shape distance matrix in a workbook
+// Tags: Aspose.Cells shape distance calculation | C# extract shape coordinates from Excel | generate Euclidean distance matrix in workbook | add computed matrix worksheet Aspose.Cells | shape position to distance table C#
 
 using System;
 using System.Collections.Generic;
+using System.Drawing; // For PointF
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // For Shape
 
 namespace ShapeDistanceMatrix
 {
-    // The example loads an Excel workbook, gathers the absolute pixel X/Y coordinates of every shape from all worksheets, calculates Euclidean distances between each pair to form a symmetric matrix, creates a new worksheet called "DistanceMatrix" with shape names as row and column headers, writes the distance values, auto‑fits the columns for readability, and saves the updated file.
+    // The sample loads an Excel workbook, gathers the UpperLeftRow and UpperLeftColumn of every shape across all worksheets, creates a new worksheet called "DistanceMatrix", writes shape names as row and column headers, computes Euclidean distances between each pair of shapes, fills the matrix with those distances, and saves the updated workbook to a new file.
     class Program
     {
-        // Simple container for shape position data
-        class ShapeInfo
-        {
-            public string Name { get; set; } = string.Empty;
-            public double X { get; set; } // absolute X in pixels
-            public double Y { get; set; } // absolute Y in pixels
-        }
-
         static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Input and output file paths
+            string inputFile = @"C:\Input\WorkbookWithShapes.xlsx";
+            string outputFile = @"C:\Output\WorkbookWithDistances.xlsx";
 
             try
             {
-                // Load the workbook that contains the shapes
-                Workbook workbook = new Workbook(inputPath);
-
-                // Collect all shapes from every worksheet
-                List<ShapeInfo> shapes = new List<ShapeInfo>();
-
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify input file exists
+                if (!File.Exists(inputFile))
                 {
-                    // Pre‑calculate cumulative column widths and row heights for speed
-                    int maxColumn = sheet.Cells.MaxColumn + 1;
-                    int maxRow = sheet.Cells.MaxRow + 1;
-
-                    double[] cumColumnWidths = new double[maxColumn + 1];
-                    for (int col = 0; col < maxColumn; col++)
-                    {
-                        cumColumnWidths[col + 1] = cumColumnWidths[col] + sheet.Cells.GetColumnWidthPixel(col);
-                    }
-
-                    double[] cumRowHeights = new double[maxRow + 1];
-                    for (int row = 0; row < maxRow; row++)
-                    {
-                        cumRowHeights[row + 1] = cumRowHeights[row] + sheet.Cells.GetRowHeightPixel(row);
-                    }
-
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Upper‑left cell indices
-                        int rowIdx = shape.UpperLeftRow;
-                        int colIdx = shape.UpperLeftColumn;
-
-                        // Offsets inside the cell (if available, otherwise 0)
-                        int rowOffset = 0;
-                        int colOffset = 0;
-
-                        // Some Aspose.Cells versions expose offset properties; use reflection to retrieve them safely
-                        try
-                        {
-                            var rowOffsetProp = shape.GetType().GetProperty("UpperLeftRowOffset");
-                            var colOffsetProp = shape.GetType().GetProperty("UpperLeftColumnOffset");
-                            if (rowOffsetProp != null && colOffsetProp != null)
-                            {
-                                rowOffset = (int)rowOffsetProp.GetValue(shape);
-                                colOffset = (int)colOffsetProp.GetValue(shape);
-                            }
-                        }
-                        catch
-                        {
-                            // Ignore if properties are not present
-                        }
-
-                        // Absolute pixel coordinates
-                        double absoluteX = cumColumnWidths[colIdx] + colOffset;
-                        double absoluteY = cumRowHeights[rowIdx] + rowOffset;
-
-                        shapes.Add(new ShapeInfo
-                        {
-                            Name = string.IsNullOrEmpty(shape.Name) ? $"Shape_{shapes.Count}" : shape.Name,
-                            X = absoluteX,
-                            Y = absoluteY
-                        });
-                    }
-                }
-
-                int shapeCount = shapes.Count;
-                if (shapeCount == 0)
-                {
-                    Console.WriteLine("No shapes found in the workbook.");
+                    Console.WriteLine($"Input file not found: {inputFile}");
                     return;
                 }
 
-                // Compute Euclidean distances between each pair of shapes
-                double[,] distanceMatrix = new double[shapeCount, shapeCount];
-                for (int i = 0; i < shapeCount; i++)
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    for (int j = i; j < shapeCount; j++)
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // -----------------------------------------------------------------
+                // 1. Collect all shapes from all worksheets with their positions
+                // -----------------------------------------------------------------
+                var shapesInfo = new List<(string Name, PointF Position)>();
+
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    foreach (Shape shape in ws.Shapes)
                     {
-                        double dx = shapes[i].X - shapes[j].X;
-                        double dy = shapes[i].Y - shapes[j].Y;
-                        double distance = Math.Sqrt(dx * dx + dy * dy);
-                        distanceMatrix[i, j] = distance;
-                        distanceMatrix[j, i] = distance; // symmetric
+                        // Use the shape's upper‑left cell coordinates as its position
+                        PointF pos = new PointF(shape.UpperLeftColumn, shape.UpperLeftRow);
+
+                        // Use the shape's name if set; otherwise generate a default name.
+                        string shapeName = !string.IsNullOrEmpty(shape.Name)
+                            ? shape.Name
+                            : $"Shape_{shapesInfo.Count + 1}";
+
+                        shapesInfo.Add((shapeName, pos));
                     }
                 }
 
-                // Add a new worksheet to hold the distance matrix
+                // If there are less than two shapes, no matrix is needed.
+                if (shapesInfo.Count < 2)
+                {
+                    Console.WriteLine("Not enough shapes to calculate distances.");
+                    workbook.Save(outputFile);
+                    return;
+                }
+
+                // -----------------------------------------------------------------
+                // 2. Create a new worksheet to hold the distance matrix
+                // -----------------------------------------------------------------
                 int matrixSheetIndex = workbook.Worksheets.Add();
-                Worksheet matrixSheet = workbook.Worksheets[matrixSheetIndex];
-                matrixSheet.Name = "DistanceMatrix";
+                Worksheet matrixWs = workbook.Worksheets[matrixSheetIndex];
+                matrixWs.Name = "DistanceMatrix";
 
-                // Write header row (shape names)
-                for (int col = 0; col < shapeCount; col++)
+                // -----------------------------------------------------------------
+                // 3. Write header row and column (shape names)
+                // -----------------------------------------------------------------
+                // First cell (A1) left empty
+                matrixWs.Cells[0, 0].PutValue(string.Empty);
+
+                // Write shape names across the first row (starting at B1)
+                for (int col = 0; col < shapesInfo.Count; col++)
                 {
-                    matrixSheet.Cells[0, col + 1].PutValue(shapes[col].Name);
+                    matrixWs.Cells[0, col + 1].PutValue(shapesInfo[col].Name);
                 }
 
-                // Write header column (shape names) and matrix values
-                for (int row = 0; row < shapeCount; row++)
+                // Write shape names down the first column (starting at A2)
+                for (int row = 0; row < shapesInfo.Count; row++)
                 {
-                    // Header column
-                    matrixSheet.Cells[row + 1, 0].PutValue(shapes[row].Name);
+                    matrixWs.Cells[row + 1, 0].PutValue(shapesInfo[row].Name);
+                }
 
-                    // Distance values
-                    for (int col = 0; col < shapeCount; col++)
+                // -----------------------------------------------------------------
+                // 4. Calculate Euclidean distances between each pair of shapes
+                // -----------------------------------------------------------------
+                for (int i = 0; i < shapesInfo.Count; i++)
+                {
+                    for (int j = 0; j < shapesInfo.Count; j++)
                     {
-                        matrixSheet.Cells[row + 1, col + 1].PutValue(distanceMatrix[row, col]);
+                        float dx = shapesInfo[i].Position.X - shapesInfo[j].Position.X;
+                        float dy = shapesInfo[i].Position.Y - shapesInfo[j].Position.Y;
+                        double distance = Math.Sqrt(dx * dx + dy * dy);
+
+                        // Write distance into cell (row i+1, column j+1) because of headers
+                        matrixWs.Cells[i + 1, j + 1].PutValue(distance);
                     }
                 }
 
-                // Auto‑fit columns for better readability
-                matrixSheet.AutoFitColumns();
-
-                // Save the workbook with the new matrix worksheet
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Distance matrix saved to {outputPath}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                }
+                // -----------------------------------------------------------------
+                // 5. Save the workbook
+                // -----------------------------------------------------------------
+                workbook.Save(outputFile);
+                Console.WriteLine($"Distance matrix written to worksheet '{matrixWs.Name}' and saved to '{outputFile}'.");
             }
             catch (Exception ex)
             {

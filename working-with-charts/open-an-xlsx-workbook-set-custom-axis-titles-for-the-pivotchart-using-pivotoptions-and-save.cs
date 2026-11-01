@@ -1,75 +1,56 @@
-// Title: Set custom X‑axis and Y‑axis titles on a PivotChart in an existing XLSX workbook using Aspose.Cells for .NET
-// AI Prompts: Open an existing XLSX file with Aspose.Cells, locate the first PivotChart, enable axis title visibility, assign new text to the category and value axes, and save the workbook. | Programmatically change the category (X) axis label and the value (Y) axis label of a PivotChart in C# using Aspose.Cells' Axis.Title properties. | Update a workbook's PivotChart to display custom axis titles and write the modified file to a new location with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set pivot chart X axis title in existing workbook | how to change Y axis label of a PivotChart using Aspose.Cells for .NET | modify axis titles of a chart in an XLSX file with Aspose.Cells C# example | update pivot chart axis text programmatically Aspose.Cells
-// Tags: pivot chart axis title Aspose.Cells | set category axis text .NET | modify value axis label C# | Aspose.Cells update chart axis labels XLSX | axis title modification workbook
+// Title: Add custom X‑axis and Y‑axis titles to a PivotChart in an existing XLSX workbook using Aspose.Cells for .NET (C#)
+// Common Searches: how to change the X axis title of a PivotChart using Aspose.Cells C# | Aspose.Cells set custom category axis label on an existing Excel PivotChart | C# update value axis title of a PivotChart in an XLSX file with Aspose.Cells | modify pivot chart axis titles programmatically with Aspose.Cells for .NET | load workbook and edit PivotChart axis labels using Aspose.Cells API
+// Tags: Aspose.Cells pivot chart axis title modification | C# set custom axis titles in Excel PivotChart | Aspose.Cells edit chart axis labels XLSX | programmatic pivot chart axis customization .NET | load workbook modify pivot chart Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The example loads an existing XLSX workbook, accesses the first chart (assumed to be a PivotChart), assigns custom text to the CategoryAxis and ValueAxis titles, and saves the workbook, with basic error handling for missing files or charts.
+class Program
 {
-    // The example loads an existing XLSX workbook, verifies a chart exists, assumes the first chart is a PivotChart, makes the category and value axis titles visible, sets custom text for each axis, and saves the updated workbook to a new file, handling missing files or axes gracefully.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing XLSX workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (adjust index if needed)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one chart on the sheet
-                if (sheet.Charts.Count == 0)
-                {
-                    Console.WriteLine("No charts found in the worksheet.");
-                    return;
-                }
-
-                // Assume the first chart on the sheet is a PivotChart
-                Chart pivotChart = sheet.Charts[0];
-
-                // Set custom titles for the category (X) and value (Y) axes
-                // Ensure the axis titles are visible
-                if (pivotChart.CategoryAxis != null && pivotChart.ValueAxis != null)
-                {
-                    // Category axis (usually X axis)
-                    Axis categoryAxis = pivotChart.CategoryAxis;
-                    categoryAxis.Title.IsVisible = true;
-                    categoryAxis.Title.Text = "Custom Category Axis Title";
-
-                    // Value axis (usually Y axis)
-                    Axis valueAxis = pivotChart.ValueAxis;
-                    valueAxis.Title.IsVisible = true;
-                    valueAxis.Title.Text = "Custom Value Axis Title";
-                }
-                else
-                {
-                    Console.WriteLine("The chart does not have both category and value axes to set titles.");
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume the first worksheet contains the PivotChart
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
             }
+
+            // Get the first chart (expected to be a PivotChart)
+            Chart pivotChart = sheet.Charts[0];
+
+            // Set custom titles for the X (Category) and Y (Value) axes
+            pivotChart.CategoryAxis.Title.Text = "Custom X Axis Title";
+            pivotChart.ValueAxis.Title.Text = "Custom Y Axis Title";
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

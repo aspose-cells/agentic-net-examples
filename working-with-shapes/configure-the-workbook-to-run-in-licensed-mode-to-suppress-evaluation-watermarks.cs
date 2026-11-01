@@ -1,56 +1,44 @@
-// Title: How to apply an Aspose.Cells license in C# to eliminate evaluation watermarks before creating a Workbook
-// AI Prompts: Write a C# method that receives a file path, verifies the Aspose.Cells .lic file exists, and applies the license using the License class. | Create a try‑catch block in C# that loads an Aspose.Cells license from a specified location and logs success or error details to the console. | Generate sample code that sets the Aspose.Cells license before any Workbook instantiation to ensure the workbook runs in licensed mode.
-// Common Searches: c# set Aspose.Cells license before workbook creation to remove evaluation watermark | how to programmatically verify Aspose.Cells license file existence in .NET | apply Aspose.Cells .lic file in console application and suppress evaluation message | Aspose.Cells licensing example for C# console projects
-// Tags: Aspose.Cells License.SetLicense C# | suppress Aspose.Cells evaluation watermark | check license file existence .NET | apply license before Workbook instantiation | exception handling Aspose.Cells license loading
+// Title: Load an Aspose.Cells license in C# to run workbooks without evaluation watermarks
+// Common Searches: C# code example for applying Aspose.Cells license before creating a workbook | how to suppress Aspose.Cells evaluation watermark using a .lic file in .NET | setting Aspose.Cells license programmatically in a C# console application | remove Aspose.Cells trial watermark by loading license at runtime | initialize Aspose.Cells License object in C# to enable licensed mode
+// Tags: Aspose.Cells license activation C# | disable Aspose.Cells trial watermark .NET | programmatic .lic file usage Aspose.Cells | licensed mode setup Aspose.Cells API | runtime license loading Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsLicenseDemo
+// The example checks for an Aspose.Cells.lic file, loads it with a License object to enable licensed mode (otherwise it runs in evaluation mode), creates a new Workbook, and saves it as output.xlsx.
+class Program
 {
-    // Demonstrates loading an Aspose.Cells license from a given path, verifying the file exists, applying it via the License class, and handling errors so that workbooks run in licensed mode without evaluation watermarks.
-    public class WorkbookLicenseConfigurator
+    static void Main()
     {
-        public static void ApplyLicense()
+        try
         {
-            try
+            // Load license if it exists; otherwise run in evaluation mode
+            string licensePath = "Aspose.Cells.lic";
+            if (File.Exists(licensePath))
             {
-                // Path to the Aspose.Cells license file
-                string licensePath = @"C:\Path\To\Aspose.Cells.lic";
-
-                // Verify that the license file is present to avoid FileNotFoundException
-                if (!File.Exists(licensePath))
-                {
-                    Console.WriteLine($"License file not found at: {licensePath}");
-                    return;
-                }
-
-                // Initialize the Aspose.Cells license object and apply the license
-                var license = new License();
+                License license = new License();
                 license.SetLicense(licensePath);
-                Console.WriteLine("Aspose.Cells license applied successfully.");
             }
-            catch (Exception ex)
+            else
             {
-                // Log any unexpected errors during license application
-                Console.WriteLine($"Error applying Aspose.Cells license: {ex.Message}");
+                Console.WriteLine($"License file not found at '{licensePath}'. Running in evaluation mode.");
             }
+
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Perform any workbook operations here
+            // ...
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-    }
-
-    public class Program
-    {
-        /// <summary>
-        /// Entry point of the application.
-        /// </summary>
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            // Apply the Aspose.Cells license before any workbook operations
-            WorkbookLicenseConfigurator.ApplyLicense();
-
-            // Additional workbook processing can be placed here
-            Console.WriteLine("Program execution completed.");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,55 +1,56 @@
-// Title: Copy a row from one workbook to another while preserving cell formatting using Aspose.Cells PasteOptions in C#
-// AI Prompts: Write C# code that copies a specific row from a source worksheet to a destination worksheet and keeps all cell styles by setting PasteOptions.PasteType to All. | Show how to configure CopyOptions and PasteOptions in Aspose.Cells to transfer a styled row between workbooks without losing background colors or fonts. | Provide a complete example that creates a source workbook, applies a yellow background style to a row, copies the row to a new workbook, and saves the file while preserving the style.
-// Common Searches: Aspose.Cells C# copy row with formatting between workbooks | how to retain cell background color when copying rows using Aspose.Cells | PasteOptions PasteType.All usage for row copy in .NET | CopyRows method preserving styles Aspose.Cells example | C# Aspose.Cells copy rows without losing style
-// Tags: CopyRows with PasteOptions in Aspose.Cells | preserve cell formatting during row copy | PasteType.All for style retention | C# Aspose.Cells row copy between workbooks | apply background color style Aspose.Cells
+// Title: Copy an Excel row to another location while preserving cell styles using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that copies row 2 to row 6 in an existing .xlsx workbook, ensuring all cell formatting (fonts, colors, borders) is retained using Aspose.Cells PasteOptions. | Show how to use Aspose.Cells Range.Copy with PasteOptions to duplicate a row while preserving its style in a .NET console application. | Write a C# snippet that loads an Excel file, copies a source row to a destination row, and saves the file, keeping the original cell styles intact.
+// Common Searches: Aspose.Cells .NET copy row preserving formatting to another row index | How to keep cell styles when copying rows with Aspose.Cells in C# | Using PasteOptions to retain formatting while copying Excel rows in Aspose.Cells | Copy entire row with formatting using Aspose.Cells Range.Copy C# example
+// Tags: Aspose.Cells row copy style retention | PasteOptions keep cell formatting .NET | range.Copy preserve cell styles Aspose.Cells | C# duplicate Excel row with formatting | Excel row copy preserving styles Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a source workbook, applies a yellow background style to the first row, then uses CopyRows with PasteOptions set to PasteType.All to copy that row into a new workbook while preserving all cell formatting, and finally saves the result as PreserveStyleCopy.xlsx.
-class PreserveRowStyleCopy
+// The example loads an existing workbook, defines source and destination row ranges, copies the source row to the target row while preserving all cell formatting using Aspose.Cells, and saves the result to a new file.
+class Program
 {
     static void Main()
     {
-        // Create source workbook and apply a style to the first row
-        Workbook srcWorkbook = new Workbook();
-        Worksheet srcSheet = srcWorkbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Fill some data in the first row
-        srcSheet.Cells["A1"].PutValue("Styled Text");
-        srcSheet.Cells["B1"].PutValue(123);
-
-        // Create a style with a yellow background
-        Style rowStyle = srcWorkbook.CreateStyle();
-        rowStyle.ForegroundColor = Color.Yellow;
-        rowStyle.Pattern = BackgroundType.Solid;
-
-        // Apply the style to the range A1:B1 (first row)
-        srcSheet.Cells.CreateRange("A1:B1").SetStyle(rowStyle);
-
-        // Create destination workbook where the row will be copied
-        Workbook destWorkbook = new Workbook();
-        Worksheet destSheet = destWorkbook.Worksheets[0];
-
-        // Prepare copy and paste options
-        CopyOptions copyOptions = new CopyOptions(); // default copy options
-        PasteOptions pasteOptions = new PasteOptions
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Use PasteType.All to preserve all data, including cell styles
-            PasteType = PasteType.All
-        };
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Copy the first row from source to destination while preserving styles
-        destSheet.Cells.CopyRows(
-            srcSheet.Cells,   // source cells
-            0,                // source row index (first row)
-            0,                // destination row index (first row)
-            1,                // number of rows to copy
-            copyOptions,      // copy options
-            pasteOptions);    // paste options with style preservation
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the resulting workbook
-        destWorkbook.Save("PreserveStyleCopy.xlsx");
+            // Define source and destination row indices (0‑based)
+            int sourceRow = 1;        // Row to copy (second row)
+            int destinationRow = 5;   // Row where the copy will be placed
+
+            // Determine the number of columns to copy (entire used range)
+            int maxColumn = sheet.Cells.MaxColumn;
+
+            // Create source range covering the entire source row
+            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange(sourceRow, 0, 1, maxColumn + 1);
+
+            // Create destination range with the same width
+            Aspose.Cells.Range destRange = sheet.Cells.CreateRange(destinationRow, 0, 1, maxColumn + 1);
+
+            // Copy the source range to the destination range preserving all data and styles
+            sourceRange.Copy(destRange);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

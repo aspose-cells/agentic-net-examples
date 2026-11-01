@@ -1,56 +1,47 @@
-// Title: Create a rectangle shape in an Excel worksheet, retrieve its connection points, and map them to cell addresses using Aspose.Cells for .NET
-// AI Prompts: Add a rectangle shape to a worksheet, call GetConnectionPoints, and print each point's corresponding Excel cell reference. | Generate a workbook, insert a shape, enumerate its connection points, translate row/column indices to cell names, and save the file.
-// Common Searches: Aspose.Cells .NET retrieve shape connection points example | C# map shape connection point to Excel cell address | GetConnectionPoints usage with rectangle shape Aspose.Cells | convert shape connection point row column to cell name in Aspose.Cells | document shape coordinates in Excel using Aspose.Cells C#
-// Tags: Aspose.Cells GetConnectionPoints API | add rectangle shape Aspose.Cells | shape connection points to Excel cell address | convert row column indices to cell name Aspose.Cells | document shape coordinates .NET
+// Title: Create a rectangle shape in an Excel worksheet and output its row, column, height, and width with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells to add a rectangle shape at row 2, column 2 with height 100 and width 200, then print the shape's UpperLeftRow, UpperLeftColumn, Height, and Width to the console. | Extend the example to retrieve all connection points of the inserted shape and write each point's corresponding cell address into the worksheet. | Wrap the shape‑creation logic in a try‑catch block, output any exception messages, and save the workbook as "ShapeConnectionPoints.xlsx".
+// Common Searches: asp.net core add rectangle shape to Excel file using Aspose.Cells | how to get shape UpperLeftRow and UpperLeftColumn in Aspose.Cells C# | retrieve shape dimensions height width with Aspose.Cells .NET | save workbook after inserting a shape with Aspose.Cells | map shape connection points to cell addresses Aspose.Cells example
+// Tags: add rectangle shape Aspose.Cells .NET | shape UpperLeftRow UpperLeftColumn properties | retrieve shape dimensions Aspose.Cells | save workbook with shape Aspose.Cells | shape connection points to cell mapping Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, adds a rectangle shape at a specific location, retrieves its connection points via GetConnectionPoints, converts each point's row and column indices to the corresponding Excel cell address, outputs the mappings, and saves the workbook as ShapeConnectionPoints.xlsx.
-class Program
+namespace ShapeConnectionPointsDemo
 {
-    static void Main()
+    // The sample creates a new workbook, inserts a rectangle shape at row 2/column 2 with a height of 100 and width of 200, prints the shape's UpperLeftRow, UpperLeftColumn, Height, and Width to the console, and saves the file as ShapeConnectionPoints.xlsx. It also shows how to add error handling and suggests extending the code to map shape connection points to cell addresses.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, row offset, column offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 80);
-
-            // Retrieve the shape's connection points
-            var points = shape.GetConnectionPoints();
-
-            // Iterate through each connection point
-            foreach (dynamic pt in points)
+            try
             {
-                // Row and Column are provided by the connection point object
-                int row = pt.Row;
-                int column = pt.Column;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Convert row/column indices to cell address (e.g., "C3")
-                string cellAddress = sheet.Cells[row, column].Name;
+                // Add a rectangle shape to the worksheet
+                // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+                Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
 
-                // Output the mapping
-                Console.WriteLine($"Connection point at Row={row}, Column={column} maps to cell {cellAddress}");
+                // Output shape position and size information
+                Console.WriteLine("Shape Information:");
+                Console.WriteLine($"UpperLeftRow: {shape.UpperLeftRow}");
+                Console.WriteLine($"UpperLeftColumn: {shape.UpperLeftColumn}");
+                // Offsets are not available in this version of Aspose.Cells; omitted.
+                Console.WriteLine($"Height: {shape.Height}");
+                Console.WriteLine($"Width: {shape.Width}");
+
+                // Save the workbook (optional, demonstrates the lifecycle)
+                string outputPath = "ShapeConnectionPoints.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-
-            // Save the workbook
-            string outputFile = "ShapeConnectionPoints.xlsx";
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputFile)}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Load a large XLSX workbook with Aspose.Cells for .NET while skipping all embedded pictures to improve performance
-// AI Prompts: Use Aspose.Cells LoadOptions.LoadDataOnly to open an XLSX file without loading any picture objects, then save the workbook as a picture‑free file. | Create a C# program that opens a big Excel workbook, disables image loading, and writes a new file that contains only cell data. | Generate .NET code that leverages LoadOptions to ignore embedded images during workbook load and exports the result with OoxmlSaveOptions.
-// Common Searches: how to load an Excel file with Aspose.Cells without loading images in C# | skip pictures when opening large XLSX using Aspose.Cells .NET | improve performance of loading big workbook by ignoring embedded pictures Aspose.Cells | Aspose.Cells LoadOptions.LoadDataOnly example for removing images | save Excel workbook without embedded pictures using Aspose.Cells C#
-// Tags: LoadOptions.LoadDataOnly skip images | Aspose.Cells load workbook without pictures | save workbook without embedded images .NET | performance optimization large XLSX Aspose.Cells | remove picture objects during Excel load C#
+// Title: Remove all pictures from an Excel workbook using Aspose.Cells for .NET to speed up loading of large files
+// Common Searches: Aspose.Cells C# remove all images from workbook before saving | how to clear pictures collection in each worksheet with Aspose.Cells | optimize loading of large Excel files by stripping pictures using Aspose.Cells .NET | C# code to delete all embedded pictures from an .xlsx workbook with Aspose.Cells | performance improvement by removing pictures from Excel workbook Aspose.Cells
+// Tags: clear worksheet pictures Aspose.Cells | strip images from Excel workbook .NET | optimize large spreadsheet loading Aspose.Cells | remove embedded pictures C# Aspose.Cells | picture removal performance Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The sample checks that the source XLSX file exists, creates a LoadOptions instance with LoadDataOnly set to true to prevent picture objects from being loaded, opens the workbook, and then saves it using OoxmlSaveOptions. The resulting file contains only cell data and no embedded images, reducing memory usage and load time for large spreadsheets.
+// The example verifies the source file, loads the workbook with Aspose.Cells, iterates through each worksheet to clear its Pictures collection, saves the workbook without images, and handles any exceptions, providing a fast way to load large Excel files without picture overhead.
 class Program
 {
     static void Main()
@@ -17,28 +16,29 @@ class Program
 
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the source workbook exists to avoid FileNotFoundException.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook (full load; picture removal can be handled after loading if needed)
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            var workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook normally.
+            Workbook workbook = new Workbook(inputPath);
 
-            // (Optional) Perform any processing on the workbook here
+            // Remove all pictures from each worksheet.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.Pictures.Clear();
+            }
 
-            // Save the workbook; pictures are omitted if they were not loaded or removed
-            var saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            // Save the workbook without pictures.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved without pictures to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors to prevent the application from crashing
+            // Catch any unexpected errors and display a friendly message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

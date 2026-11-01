@@ -1,35 +1,41 @@
-// Title: Add a Profit calculated field ([Revenue]-[Cost]) to a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a calculated field named Profit with the expression [Revenue]-[Cost] into the first PivotTable of a workbook via Aspose.Cells C#. | Refresh the PivotTable after adding the calculated field and write the updated workbook to a new Excel file. | Check for the existence of the source file and handle exceptions when loading the workbook.
-// Common Searches: Aspose.Cells C# add profit calculated field to existing pivot table | C# code to create calculated field [Revenue]-[Cost] in Excel pivot using Aspose | Refresh pivot table after adding calculated field Aspose.Cells .NET example | Handle missing input.xlsx when loading workbook with Aspose.Cells C#
-// Tags: calculated field insertion pivot Aspose.Cells | profit formula [Revenue]-[Cost] C# | pivot table data refresh Aspose.Cells | export updated workbook Aspose.Cells .NET | input file validation Aspose.Cells
+// Title: Add a Profit calculated field ([Revenue]-[Cost]) to an existing Excel PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a calculated field named Profit to a PivotTable with Aspose.Cells in C# | Aspose.Cells C# add custom formula [Revenue]-[Cost] to an existing PivotTable | programmatically insert a calculated field into an Excel PivotTable using Aspose.Cells .NET | C# code to create a Profit field in a PivotTable from Revenue and Cost columns | Aspose.Cells example for adding a calculated field to a workbook PivotTable
+// Tags: calculated field addition PivotTable Aspose.Cells | Profit field expression Revenue minus Cost C# | modify existing PivotTable programmatically Aspose.Cells | Excel workbook calculated field automation .NET | Aspose.Cells custom PivotTable formula example
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable class
 
-// The program loads an existing Excel workbook, accesses its first worksheet and PivotTable, adds a calculated field called Profit defined as [Revenue]-[Cost], refreshes the PivotTable to apply the change, and saves the result to a new file while safely handling missing input files and other exceptions.
+// The sample loads an existing Excel workbook, checks for a PivotTable on the first worksheet, adds a calculated field called "Profit" with the formula "[Revenue]-[Cost]", and saves the updated file.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "input.xlsx";
-        const string outputFile = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the existing file
-            Workbook workbook = new Workbook(inputFile);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the existing workbook that contains the PivotTable
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the worksheet where the PivotTable resides (first worksheet in this example)
             Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("Error: No PivotTables found on the first worksheet.");
+                return;
+            }
 
             // Retrieve the first PivotTable on the worksheet
             PivotTable pivotTable = worksheet.PivotTables[0];
@@ -37,16 +43,13 @@ class Program
             // Add a calculated field named "Profit" with the expression [Revenue]-[Cost]
             pivotTable.AddCalculatedField("Profit", "[Revenue]-[Cost]");
 
-            // Refresh the PivotTable to apply the new calculated field
-            pivotTable.RefreshData();
-
-            // Save the modified workbook to a new file
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+            // Save the workbook with the new calculated field
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,92 +1,110 @@
-// Title: C# Aspose.Cells program to generate a report of workbook formulas that use unsupported Excel functions
-// AI Prompts: Write C# code with Aspose.Cells that iterates every worksheet, extracts each formula, compares the called functions against a predefined whitelist, and creates a new Excel file listing the sheet name, cell address, full formula, and the unsupported functions. | Adapt the script to load the whitelist of supported functions from an external text or JSON file and include the complete argument list of each unsupported function in the generated report. | Enhance the output workbook by applying conditional formatting that highlights rows containing more than one unsupported function.
-// Common Searches: how to find Excel functions not supported by Aspose.Cells in a .NET workbook | C# Aspose.Cells generate list of cells with unknown functions | scan an Excel file for non‑standard formulas using Aspose.Cells | export unsupported formula functions to a separate workbook with Aspose.Cells | create compliance report for Excel functions in a .NET application
-// Tags: unsupported function detection Aspose.Cells | formula audit workbook .NET | extract Excel function names C# | generate unsupported functions report Excel | conditional formatting rows multiple unsupported functions
+// Title: Create a .NET report of Excel formulas that use unsupported functions with Aspose.Cells
+// Common Searches: aspnet cells generate report of formulas containing unsupported functions | c# find Excel formulas that use functions not in supported list using Aspose.Cells | how to extract and list unknown functions from Excel cell formulas in .NET | regex to identify unsupported Excel functions in workbook with Aspose.Cells | create audit workbook of invalid formulas in Excel using Aspose.Cells C#
+// Tags: unsupported Excel function detection Aspose.Cells | formula audit report generation .NET | extract function names from Excel formulas C# | cross‑reference supported function list Aspose.Cells | programmatic Excel workbook report creation | regex based formula parsing Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
-// The example loads an input workbook, defines a HashSet of supported Excel function names, walks through every cell that contains a formula, uses a regular expression to capture each function call, records any functions not present in the supported set, and writes the sheet name, cell address, original formula, and the list of unsupported functions to a new workbook saved as UnsupportedFunctionsReport.xlsx.
-class UnsupportedFunctionsReport
+// The example loads an input .xlsx file with Aspose.Cells, defines a HashSet of supported Excel functions, scans every worksheet and cell, uses a regular expression to pull function names from each formula, records any functions not in the supported set, and writes an output workbook that lists the sheet, cell address, original formula, and the unsupported functions.
+class Program
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook srcWorkbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string reportPath = "UnsupportedFormulasReport.xlsx";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        Workbook sourceWorkbook;
+        try
+        {
+            // Load the source workbook (no password supplied)
+            sourceWorkbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
         // Define a set of supported Excel functions (add more as needed)
-        HashSet<string> supportedFunctions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        var supportedFunctions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "SUM","AVERAGE","MIN","MAX","COUNT","IF","AND","OR","NOT",
-            "VLOOKUP","HLOOKUP","INDEX","MATCH","LEFT","RIGHT","MID",
-            "LEN","ROUND","ROUNDUP","ROUNDDOWN","CONCATENATE","TEXT"
+            "SUM", "AVERAGE", "MIN", "MAX", "COUNT", "IF", "AND", "OR", "NOT",
+            "VLOOKUP", "HLOOKUP", "INDEX", "MATCH", "LEFT", "RIGHT", "MID",
+            "LEN", "ROUND", "ROUNDUP", "ROUNDDOWN", "CONCATENATE", "TEXT"
         };
 
-        // List to store information about formulas that use unsupported functions
-        List<(string SheetName, string CellName, string Formula, List<string> UnsupportedFuncs)> unsupportedFormulas
-            = new List<(string, string, string, List<string>)>();
+        // Create a new workbook for the report
+        var reportWorkbook = new Workbook();
+        var reportSheet = reportWorkbook.Worksheets[0];
+        reportSheet.Name = "Unsupported Formulas";
 
-        // Regex to extract function names from a formula (e.g., SUM(A1:B2) -> SUM)
-        Regex funcRegex = new Regex(@"([A-Z][A-Z0-9\.]*)\s*\(", RegexOptions.Compiled);
+        // Write header row
+        reportSheet.Cells[0, 0].PutValue("Sheet");
+        reportSheet.Cells[0, 1].PutValue("Cell");
+        reportSheet.Cells[0, 2].PutValue("Formula");
+        reportSheet.Cells[0, 3].PutValue("Unsupported Functions");
 
-        // Iterate through each worksheet and each cell that contains a formula
-        foreach (Worksheet sheet in srcWorkbook.Worksheets)
+        int reportRow = 1;
+
+        // Regex to extract function names from a formula (e.g., SUM( )
+        var functionRegex = new Regex(@"([A-Za-z_][A-Za-z0-9_]*)\s*\(", RegexOptions.Compiled);
+
+        // Iterate through all worksheets and cells in the source workbook
+        foreach (Worksheet ws in sourceWorkbook.Worksheets)
         {
-            Cells cells = sheet.Cells;
+            Cells cells = ws.Cells;
             foreach (Cell cell in cells)
             {
                 if (!string.IsNullOrEmpty(cell.Formula))
                 {
-                    string formula = cell.Formula;
-                    MatchCollection matches = funcRegex.Matches(formula);
-                    List<string> unsupported = new List<string>();
+                    // Find all function names used in the formula
+                    MatchCollection matches = functionRegex.Matches(cell.Formula);
+                    var unsupported = new List<string>();
 
                     foreach (Match match in matches)
                     {
                         string funcName = match.Groups[1].Value;
-                        // If the function is not in the supported list, record it
-                        if (!supportedFunctions.Contains(funcName))
+                        if (!supportedFunctions.Contains(funcName) && !unsupported.Contains(funcName))
                         {
                             unsupported.Add(funcName);
                         }
                     }
 
+                    // If any unsupported functions are found, add an entry to the report
                     if (unsupported.Count > 0)
                     {
-                        unsupportedFormulas.Add((sheet.Name, cell.Name, formula, unsupported));
+                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
+                        reportSheet.Cells[reportRow, 1].PutValue(cell.Name);
+                        reportSheet.Cells[reportRow, 2].PutValue(cell.Formula);
+                        reportSheet.Cells[reportRow, 3].PutValue(string.Join(", ", unsupported));
+                        reportRow++;
                     }
                 }
             }
         }
 
-        // Create a new workbook for the report
-        Workbook reportWorkbook = new Workbook();
-        Worksheet reportSheet = reportWorkbook.Worksheets[0];
-        Cells reportCells = reportSheet.Cells;
-
-        // Write header row
-        reportCells["A1"].PutValue("Sheet");
-        reportCells["B1"].PutValue("Cell");
-        reportCells["C1"].PutValue("Formula");
-        reportCells["D1"].PutValue("Unsupported Functions");
-
-        // Populate the report with collected data
-        int row = 1; // zero‑based index; row 1 is the second row in the sheet
-        foreach (var entry in unsupportedFormulas)
-        {
-            reportCells[row, 0].PutValue(entry.SheetName);
-            reportCells[row, 1].PutValue(entry.CellName);
-            reportCells[row, 2].PutValue(entry.Formula);
-            reportCells[row, 3].PutValue(string.Join(", ", entry.UnsupportedFuncs));
-            row++;
-        }
-
         // Adjust column widths for readability
         reportSheet.AutoFitColumns();
 
-        // Save the report workbook
-        reportWorkbook.Save("UnsupportedFunctionsReport.xlsx");
+        // Save the report workbook with error handling
+        try
+        {
+            reportWorkbook.Save(reportPath);
+            Console.WriteLine($"Report saved successfully to \"{reportPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving report: {ex.Message}");
+        }
     }
 }

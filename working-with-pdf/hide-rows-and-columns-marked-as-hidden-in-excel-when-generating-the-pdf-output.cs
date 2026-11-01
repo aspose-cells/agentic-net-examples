@@ -1,44 +1,46 @@
-// Title: Generate a PDF from an Excel workbook in C# while automatically excluding hidden rows and columns using Aspose.Cells
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to ignore hidden rows and columns, and saves the workbook as a PDF. | Show how to check for the existence of the source Excel file, handle a missing‑file error, and convert it to PDF while preserving the hidden state using Aspose.Cells. | Demonstrate setting up Aspose.Cells PdfSaveOptions in C# so that rows or columns marked as hidden in the workbook are not rendered in the resulting PDF.
-// Common Searches: how to hide hidden rows and columns when converting Excel to PDF with Aspose.Cells in C# | Aspose.Cells PdfSaveOptions exclude hidden rows .NET example | C# convert .xlsx to PDF without showing hidden columns using Aspose.Cells | skip hidden rows during Excel to PDF conversion with Aspose.Cells library
-// Tags: Aspose.Cells PdfSaveOptions hide rows columns | C# Excel to PDF conversion excluding hidden elements | Aspose.Cells workbook.Save PDF hidden rows | error handling missing Excel file Aspose.Cells | convert .xlsx to PDF respecting hidden state
+// Title: How to hide hidden rows and columns when converting an Excel file to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, enables PdfSaveOptions.HideHiddenRows and HideHiddenColumns, and saves the result as a PDF. | Show the property assignments needed on PdfSaveOptions to exclude hidden rows and hidden columns during PDF export in Aspose.Cells. | Create a console application that checks the input Excel file, configures PdfSaveOptions to ignore hidden rows/columns, and generates the PDF output.
+// Common Searches: Aspose.Cells hide hidden rows during PDF export C# | Exclude hidden columns when saving Excel to PDF with Aspose.Cells .NET | PdfSaveOptions HideHiddenRows example code | Convert Excel workbook to PDF without hidden cells using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions HideHiddenRows property | Aspose.Cells PdfSaveOptions HideHiddenColumns property | C# PDF export ignore hidden rows and columns | Excel to PDF conversion without hidden cells .NET | Aspose.Cells PDF export hide hidden elements
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The example verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (which by default omits hidden rows and columns), and saves the workbook as a PDF while handling any runtime exceptions.
-class Program
+namespace AsposeCellsPdfExport
 {
-    static void Main()
+    // The example loads an Excel workbook, creates a PdfSaveOptions instance, sets HideHiddenRows and HideHiddenColumns to true, and saves the workbook as a PDF, demonstrating how to exclude hidden rows and columns from the generated PDF using Aspose.Cells for .NET.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-        try
-        {
-            // Load the Excel workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                // Verify that the input Excel file exists
+                if (!File.Exists(inputPath))
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Configure PDF save options (default behavior hides hidden rows/columns)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Load the source Excel workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as a PDF file using the configured options
-            workbook.Save(outputPath, pdfOptions);
+                // Configure PDF save options (default settings)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook as a PDF using the configured options
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for troubleshooting
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

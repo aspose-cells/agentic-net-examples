@@ -1,57 +1,67 @@
-// Title: Generate an Excel combo chart that displays volume as an Area series and trend as a Line series using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, fills it with month, volume, and trend data, adds an Area chart, and then changes the second series to a Line chart to form a combo visualization. | Demonstrate how to programmatically set different chart types for individual series in an Aspose.Cells chart and save the result as an XLSX file.
-// Common Searches: aspocells c# create combo chart with area and line series | how to change a series to line type in Aspose.Cells chart | example of mixed area and line chart using Aspose.Cells .NET | Aspose.Cells set chart series type programmatically C# | generate Excel chart showing sales volume as area and forecast as line with Aspose.Cells
-// Tags: Aspose.Cells create combo area line chart | Aspose.Cells set series type programmatically | C# Aspose.Cells mixed chart types | Aspose.Cells generate Excel chart with area and line series | Aspose.Cells chart series type conversion
+// Title: Create a mixed Area‑Line chart with month categories in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates an Excel workbook, inserts an Area series for volume data and a Line series for trend data on the same chart, and sets month names as the category axis with Aspose.Cells. | Show how to change the chart type of individual series after they have been added to an Aspose.Cells chart in C#. | Demonstrate exporting the workbook that contains both area and line series to an .xlsx file using Aspose.Cells.
+// Common Searches: asp.net aspose.cells create combined area line chart with month category axis | c# set different chart types for each series in Aspose.Cells chart | how to add a line series to an existing area chart using Aspose.Cells | example of area and line series together for monthly data with Aspose.Cells .NET
+// Tags: insert area series Aspose.Cells C# | insert line series Aspose.Cells C# | modify series chart type Aspose.Cells | configure category axis month labels Aspose.Cells | save workbook to xlsx Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program builds a new workbook, inserts month, volume, and trend data, adds an Area chart covering the data range, converts the second series to a Line chart to produce a combo chart, sets a title and legend, and saves the workbook as ComboAreaLineChart.xlsx.
-class ComboAreaLineChart
+// The sample creates a new workbook, fills columns with month, volume, and trend values, adds an Area chart, inserts an Area series for volume and a Line series for trend, assigns the month range as the category axis, and saves the file as CombinedAreaLineChart.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data:
-        // Column A – Category (e.g., months)
-        // Column B – Volume (to be shown as Area)
-        // Column C – Trend (to be shown as Line)
-        sheet.Cells["A1"].PutValue("Month");
-        sheet.Cells["B1"].PutValue("Volume");
-        sheet.Cells["C1"].PutValue("Trend");
-
-        string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
-        double[] volume = { 120, 150, 180, 130, 170, 200 };
-        double[] trend = { 100, 130, 160, 110, 150, 190 };
-
-        for (int i = 0; i < months.Length; i++)
+        try
         {
-            sheet.Cells[i + 1, 0].PutValue(months[i]);   // A column
-            sheet.Cells[i + 1, 1].PutValue(volume[i]);  // B column
-            sheet.Cells[i + 1, 2].PutValue(trend[i]);   // C column
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data: Month, Volume (area), Trend (line)
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Volume");
+            sheet.Cells["C1"].PutValue("Trend");
+
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+            double[] volume = { 120, 150, 130, 170, 160, 180 };
+            double[] trend = { 100, 130, 110, 150, 140, 160 };
+
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A: Month
+                sheet.Cells[i + 1, 1].PutValue(volume[i]);  // Column B: Volume
+                sheet.Cells[i + 1, 2].PutValue(trend[i]);   // Column C: Trend
+            }
+
+            // Add a chart to the worksheet (initially Area type)
+            int chartIndex = sheet.Charts.Add(ChartType.Area, 8, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set chart title
+            chart.Title.Text = "Volume (Area) and Trend (Line)";
+
+            // Add Area series for Volume (B2:B7)
+            chart.NSeries.Add("B2:B7", true);
+            chart.NSeries[0].Name = "Volume";
+            chart.NSeries[0].Type = ChartType.Area; // Ensure this series is Area
+
+            // Add Line series for Trend (C2:C7)
+            chart.NSeries.Add("C2:C7", true);
+            chart.NSeries[1].Name = "Trend";
+            chart.NSeries[1].Type = ChartType.Line; // Set this series to Line
+
+            // Set category axis labels (Month column)
+            chart.NSeries.CategoryData = "A2:A7";
+
+            // Save the workbook with the combined chart
+            workbook.Save("CombinedAreaLineChart.xlsx");
         }
-
-        // Add a chart. Start with Area type; we'll later change the second series to Line.
-        int chartIndex = sheet.Charts.Add(ChartType.Area, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Set the data range for the chart (including all three columns)
-        chart.SetChartDataRange("A1:C7", true);
-
-        // By default, all series inherit the chart type (Area). Change the second series (Trend) to Line.
-        // Series collection order follows the order of data columns (B then C).
-        // Series[0] corresponds to Volume (Area), Series[1] corresponds to Trend (Line).
-        chart.NSeries[1].Type = ChartType.Line;
-
-        // Optional: give the chart a title and enable legend
-        chart.Title.Text = "Volume (Area) and Trend (Line) Combo Chart";
-        chart.ShowLegend = true;
-
-        // Save the workbook to an XLSX file
-        workbook.Save("ComboAreaLineChart.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

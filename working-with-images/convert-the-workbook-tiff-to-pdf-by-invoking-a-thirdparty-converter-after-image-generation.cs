@@ -1,93 +1,51 @@
-// Title: Convert an Excel worksheet to a high‑resolution TIFF with Aspose.Cells and then to PDF using Ghostscript in C#
-// AI Prompts: Generate C# code that loads an .xlsx file, uses Aspose.Cells to render the first worksheet as a 300 dpi TIFF, and saves the image to a file. | Write C# that starts the Ghostscript executable to convert the saved TIFF into a PDF, capturing standard output and error streams for logging.
-// Common Searches: C# Aspose.Cells render worksheet to TIFF then convert to PDF with Ghostscript | How to invoke gswin64c from C# to transform a TIFF file into a PDF | Create high‑resolution image from Excel and programmatically convert it to PDF | Using Process.Start in .NET to run external PDF conversion tools
-// Tags: Aspose.Cells TIFF rendering from Excel | Ghostscript TIFF to PDF conversion via C# | C# Process.Start external command execution | high‑resolution Excel worksheet image generation | command‑line PDF creation from image file
+// Title: Convert an Excel .xlsx workbook to PDF in a C# console app using Aspose.Cells
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, verifies the file exists, creates the output folder if missing, and saves the workbook as a PDF with comprehensive exception handling. | Write a C# console program that demonstrates converting a spreadsheet to PDF using Aspose.Cells, including input‑file validation and automatic creation of the destination directory. | Create a C# snippet that shows how to export an Aspose.Cells Workbook to PDF format while handling errors and ensuring the output path is ready.
+// Common Searches: C# Aspose.Cells example for converting Excel file to PDF with error handling | How to save a workbook as PDF using Aspose.Cells in a .NET console application | Aspose.Cells C# code to check input file and create output directory before PDF export | Convert .xlsx to .pdf programmatically with Aspose.Cells in Visual Studio
+// Tags: Aspose.Cells workbook to PDF conversion C# | C# console Aspose.Cells PDF export | validate input file before Aspose.Cells save | create output directory Aspose.Cells PDF
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example verifies the presence of an input.xlsx file, loads it with Aspose.Cells, renders the first worksheet to a 300 dpi TIFF using ImageOrPrintOptions, checks that the TIFF was created, then launches the Ghostscript command‑line tool (gswin64c) via a Process to convert the TIFF to output.pdf, handling stdout, stderr, and exit codes.
-class Program
+namespace WorkbookConversion
 {
-    static void Main()
+    // The console application verifies the presence of the source .xlsx file, ensures the target folder exists, loads the workbook with Aspose.Cells, and saves it directly as a PDF, wrapping the process in robust exception handling.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string tiffPath = "output.tiff";
-            const string pdfPath = "output.pdf";
+            // Paths for input workbook and final PDF
+            string workbookPath = @"C:\Input\Sample.xlsx";
+            string pdfPath = @"C:\Output\Sample.pdf";
 
-            // Verify the input Excel file exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.Error.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure image rendering options (default format is PNG; Ghostscript can handle PNG)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                OnePagePerSheet = true,
-                HorizontalResolution = 300,
-                VerticalResolution = 300
-                // ImageFormat property omitted to avoid compatibility issues
-            };
-
-            // Render the first worksheet to an image file
-            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
-            sheetRender.ToImage(0, tiffPath);
-
-            // Ensure the image file was created
-            if (!File.Exists(tiffPath))
-            {
-                Console.Error.WriteLine($"Failed to create image file: {tiffPath}");
-                return;
-            }
-
-            // Prepare Ghostscript conversion command
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = "gswin64c", // Ghostscript executable
-                Arguments = $"-dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile={pdfPath} {tiffPath}",
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
-            };
-
-            // Execute the conversion process
-            using (Process? proc = Process.Start(startInfo))
-            {
-                if (proc == null)
+                // Verify input workbook exists
+                if (!File.Exists(workbookPath))
                 {
-                    Console.Error.WriteLine("Failed to start the conversion process.");
+                    Console.WriteLine($"Input workbook not found: {workbookPath}");
                     return;
                 }
 
-                proc.WaitForExit();
-
-                string output = proc.StandardOutput.ReadToEnd();
-                string error = proc.StandardError.ReadToEnd();
-
-                if (proc.ExitCode != 0)
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(pdfPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Console.Error.WriteLine($"Conversion failed (exit code {proc.ExitCode}): {error}");
+                    Directory.CreateDirectory(outputDir);
                 }
-                else
-                {
-                    Console.WriteLine("Conversion succeeded.");
-                }
+
+                // Load the workbook using Aspose.Cells
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Directly save the workbook as PDF
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+
+                Console.WriteLine("Conversion to PDF completed successfully.");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

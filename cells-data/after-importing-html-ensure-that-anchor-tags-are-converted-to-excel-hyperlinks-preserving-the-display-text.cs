@@ -1,96 +1,68 @@
-// Title: Convert HTML <a> tags to Excel cell hyperlinks while preserving display text using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an HTML file into an Aspose.Cells Workbook, locate cells containing <a> elements, replace the cell value with the anchor's inner text, and attach a hyperlink to the same cell via Hyperlinks.Add. | Iterate over the worksheet's used range, apply a regular expression to capture the href URL and link text from each anchor tag, then call sheet.Hyperlinks.Add(row, column, 1, 1, url) to create a single‑cell hyperlink. | Include error handling for missing input files and hyperlink insertion failures, and save the modified workbook as an XLSX file.
-// Common Searches: Aspose.Cells C# convert HTML anchor tags to Excel hyperlinks preserving link text | how to add cell hyperlinks after loading HTML with Aspose.Cells | regex extract href and display text from HTML for Aspose.Cells hyperlink creation | load HTML into workbook and replace <a> tags with plain text and hyperlink in .NET
-// Tags: HTML to Excel hyperlink conversion Aspose.Cells | Aspose.Cells Hyperlinks.Add single‑cell overload | C# regex extract href display text | preserve link text during HTML import Aspose.Cells | load HTML workbook SaveFormat.Xlsx Aspose.Cells
+// Title: Import HTML into Excel with Aspose.Cells and keep <a> tag text as hyperlink display text (C#)
+// Common Searches: Aspose.Cells C# import HTML and retain anchor text as hyperlink label | How to preserve <a> tag display text when converting HTML to XLSX using Aspose.Cells | C# code to map HTML hyperlinks to Excel cells with original link text using Aspose.Cells | Load HTML file into Workbook and keep hyperlink text in Excel with Aspose.Cells | Aspose.Cells hyperlink collection after HTML import to set cell value to link text
+// Tags: HTML anchor to Excel hyperlink conversion Aspose.Cells | preserve hyperlink display text during HTML import | Workbook Hyperlink collection iteration C# | dynamic casting for Hyperlink row column Aspose.Cells | save workbook as XLSX with hyperlinks Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using Aspose.Cells;
 
-namespace HtmlAnchorToHyperlinkApp
+// The example loads an HTML file into an Aspose.Cells Workbook, iterates each worksheet's Hyperlink collection, uses dynamic access to retrieve the hyperlink's first row and column, writes the original anchor's display text into the corresponding cell, and saves the result as an XLSX file with functional hyperlinks.
+class Program
 {
-    // The program loads an HTML file into an Aspose.Cells Workbook, scans each used cell for <a> tags, extracts the href URL and inner text using a regular expression, replaces the cell content with the link text, adds a hyperlink to the same cell with Hyperlinks.Add(row, column, 1, 1, url), and saves the result as an XLSX workbook.
-    class HtmlAnchorToHyperlink
+    static void Main()
     {
-        static void Main()
+        const string inputFile = "input.html";
+        const string outputFile = "output.xlsx";
+
+        // Verify that the input HTML file exists
+        if (!File.Exists(inputFile))
         {
-            try
+            Console.WriteLine($"Input file \"{inputFile}\" not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the HTML file into a workbook
+            var loadOptions = new LoadOptions(LoadFormat.Html);
+            var workbook = new Workbook(inputFile, loadOptions);
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Path to the source HTML file
-                string htmlPath = "input.html";
-
-                // Ensure the input file exists
-                if (!File.Exists(htmlPath))
+                // Process each hyperlink that was created from an <a> tag
+                foreach (Hyperlink link in sheet.Hyperlinks)
                 {
-                    Console.WriteLine($"Input file '{htmlPath}' not found.");
-                    return;
-                }
-
-                // Load the HTML file into a workbook
-                Workbook workbook;
-                try
-                {
-                    HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-                    workbook = new Workbook(htmlPath, loadOptions);
-                }
-                catch (Exception loadEx)
-                {
-                    Console.WriteLine($"Failed to load HTML file: {loadEx.Message}");
-                    return;
-                }
-
-                // Work with the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Regex to capture <a href="...">display text</a>
-                Regex anchorRegex = new Regex(
-                    @"<a\s+[^>]*href=['""](?<url>[^'""]+)['""][^>]*>(?<text>.*?)</a>",
-                    RegexOptions.IgnoreCase);
-
-                // Iterate through all used cells
-                for (int row = 0; row <= cells.MaxDataRow; row++)
-                {
-                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    try
                     {
-                        string cellText = cells[row, col].StringValue;
-                        if (string.IsNullOrEmpty(cellText))
-                            continue;
+                        // Use dynamic to access FirstRow/FirstColumn (avoids compile‑time binding issues)
+                        dynamic dLink = link;
+                        int row = dLink.FirstRow;
+                        int col = dLink.FirstColumn;
 
-                        Match match = anchorRegex.Match(cellText);
-                        if (match.Success)
-                        {
-                            // Extract URL and display text
-                            string url = match.Groups["url"].Value;
-                            string displayText = match.Groups["text"].Value;
-
-                            // Replace cell value with the display text
-                            cells[row, col].PutValue(displayText);
-
-                            // Add a hyperlink to the same cell (covers a single cell)
-                            try
-                            {
-                                // Use the 5‑argument overload (row, column, rows, columns, url)
-                                sheet.Hyperlinks.Add(row, col, 1, 1, url);
-                            }
-                            catch (Exception hlEx)
-                            {
-                                Console.WriteLine($"Failed to add hyperlink at {cells[row, col].Name}: {hlEx.Message}");
-                            }
-                        }
+                        // Preserve the anchor's display text as the cell value
+                        Cell cell = sheet.Cells[row, col];
+                        cell.PutValue(dLink.TextToDisplay);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to process a hyperlink: {ex.Message}");
                     }
                 }
+            }
 
-                // Save the workbook with hyperlinks
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputFile);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook as an Excel file
+            workbook.Save(outputFile, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

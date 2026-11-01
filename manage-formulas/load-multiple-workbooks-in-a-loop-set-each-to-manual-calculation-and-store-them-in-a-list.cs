@@ -1,62 +1,64 @@
-// Title: Load several .xlsx files into Aspose.Cells Workbook objects, set each workbook to Manual calculation mode, and collect them in a List in C#
-// AI Prompts: Write C# code that iterates over an array of Excel file paths, creates a Workbook for each using Aspose.Cells, sets Settings.CalcMode to Manual, and adds the workbook to a List<Workbook>. | Refactor the loading loop to accept a calculation mode argument (Manual or Automatic) and apply it to each workbook without using reflection. | Enhance the batch loading routine with comprehensive error handling that logs missing files and any exceptions while continuing to load the remaining workbooks.
-// Common Searches: aspocells set calculation mode manual for multiple workbooks c# | how to load a list of Excel files into Aspose.Cells and change CalcMode | batch loading Excel workbooks with manual calculation using Aspose.Cells .NET
-// Tags: Aspose.Cells batch workbook loading | manual CalcMode configuration | C# workbook collection handling | reflection alternative for CalcMode | robust Excel file loading errors
+// Title: How to load several Excel workbooks, switch each to manual calculation mode, and store them in a List with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells load multiple .xlsx files in a loop C# | set workbook calculation mode to manual for each workbook using Aspose.Cells | batch load Excel workbooks and disable automatic calculation with Aspose.Cells | C# reflection to change CalcMode to Manual in Aspose.Cells workbook | store loaded Aspose.Cells Workbook objects in a List collection
+// Tags: Aspose.Cells load multiple workbooks | manual calculation mode Aspose.Cells | C# reflection set CalcMode | batch process Excel workbooks Aspose.Cells | store Workbook objects in List
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using System.Reflection;
 
-// The example demonstrates how to load a predefined collection of .xlsx files into Aspose.Cells Workbook objects, set each workbook's calculation mode to Manual via reflection, handle missing files and loading exceptions, and store the successfully loaded workbooks in a List<Workbook> for further processing.
+// The example shows how to define a list of Excel file paths, iterate through them, verify each file exists, load each workbook with Aspose.Cells, use reflection to set the workbook's calculation mode to Manual when the property is available, add the successfully loaded Workbook objects to a List, handle any loading or reflection errors, and finally report the total number of workbooks loaded.
 class Program
 {
     static void Main()
     {
-        // Paths of the workbooks to be loaded
+        // Define the paths of the workbooks to be loaded.
         var filePaths = new List<string>
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx"
+            "Book1.xlsx",
+            "Book2.xlsx",
+            "Book3.xlsx"
+            // Add more file names as needed.
         };
 
-        // List that will hold the loaded workbooks
+        // List that will hold the loaded Workbook objects.
         var workbooks = new List<Workbook>();
 
+        // Loop through each file path, load the workbook, set manual calculation (if supported), and store it.
         foreach (var path in filePaths)
         {
+            // Verify that the file exists before attempting to load it.
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"File not found: {path}");
+                continue;
+            }
+
             try
             {
-                // Verify that the file exists before attempting to load it
-                if (!File.Exists(path))
-                {
-                    Console.WriteLine($"File not found: {path}");
-                    continue;
-                }
-
-                // Load the workbook from the file
+                // Load the workbook from the specified file.
                 var wb = new Workbook(path);
 
-                // Attempt to set calculation mode to Manual via reflection (avoids compile‑time enum reference)
+                // Attempt to set the calculation mode to Manual using reflection.
+                // This avoids compile‑time dependencies on APIs that may not exist in older versions.
                 try
                 {
                     var settings = wb.Settings;
-                    PropertyInfo calcModeProp = settings.GetType().GetProperty("CalcMode");
-                    if (calcModeProp != null && calcModeProp.CanWrite)
+                    var prop = settings.GetType().GetProperty("CalcMode");
+                    if (prop != null && prop.CanWrite)
                     {
-                        // Parse the enum value "Manual" from the property type
-                        object manualValue = Enum.Parse(calcModeProp.PropertyType, "Manual");
-                        calcModeProp.SetValue(settings, manualValue);
+                        var enumType = prop.PropertyType;
+                        var manualValue = Enum.Parse(enumType, "Manual", ignoreCase: true);
+                        prop.SetValue(settings, manualValue);
                     }
                 }
                 catch (Exception ex)
                 {
+                    // If reflection fails or the enum value is unavailable, ignore and continue.
                     Console.WriteLine($"Unable to set manual calculation mode for '{path}': {ex.Message}");
                 }
 
-                // Add the workbook to the collection
+                // Add the workbook to the collection.
                 workbooks.Add(wb);
             }
             catch (Exception ex)
@@ -65,7 +67,7 @@ class Program
             }
         }
 
-        // At this point 'workbooks' contains all successfully loaded workbooks.
-        Console.WriteLine($"Loaded {workbooks.Count} workbook(s) with manual calculation mode where possible.");
+        // At this point, 'workbooks' contains all successfully loaded workbooks.
+        Console.WriteLine($"Total workbooks loaded: {workbooks.Count}");
     }
 }

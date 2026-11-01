@@ -1,78 +1,73 @@
-// Title: Iterate rows of an XLSX workbook with Aspose.Cells and export to CSV in C#
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, uses the LightCells API to walk through each row of the used range, and writes the cell values to a CSV stream applying RFC 4180 escaping. | Create a method that receives a worksheet, determines its MaxDataRow and MaxDataColumn, and outputs a CSV line for every row while handling commas, quotes, and line breaks correctly.
-// Common Searches: Aspose.Cells C# export large Excel sheet to CSV using row-by-row processing | How to write CSV from an Excel workbook with proper quoting in .NET Aspose.Cells | LightCells API example for streaming XLSX data to CSV in C# | C# convert XLSX to CSV without loading the entire worksheet into memory Aspose.Cells | Iterate worksheet rows and generate CSV file with Aspose.Cells LoadOptions
-// Tags: lightcells row iteration csv export | aspose.cells export worksheet to csv | c# csv escaping for excel values | stream xlsx rows to csv .net | rfc4180 compliant csv generation aspnet
+// Title: Export rows from an Excel workbook to a CSV file using Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# write each Excel row to a CSV file | C# export used range of an Excel worksheet to CSV with Aspose.Cells | How to escape commas and quotes when converting Excel to CSV using Aspose.Cells | Save large Excel data as CSV line by line in .NET with Aspose.Cells | Convert Excel workbook to CSV without loading the whole sheet into memory Aspose
+// Tags: Aspose.Cells export worksheet to CSV | C# iterate Excel rows with Aspose.Cells | CSV field escaping Aspose.Cells conversion | MaxDataRow MaxDataColumn used range Aspose.Cells | StreamWriter write CSV from Excel Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an XLSX workbook with Aspose.Cells, determines the used range, iterates each cell row‑by‑row using LightCells, applies CSV escaping for commas, quotes and newlines, and writes the formatted rows to an output CSV file.
+// The example loads an Excel workbook with Aspose.Cells, determines the used rows and columns via MaxDataRow/MaxDataColumn, iterates each cell, applies CSV‑compatible escaping for commas, quotes, and newlines, wraps fields in double quotes when needed, and writes each row as a comma‑separated line to a CSV file using StreamWriter, while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.csv";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.csv";
-
-            // Verify input file exists to avoid FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Select the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Open a StreamWriter for the CSV output
+            using (StreamWriter csvWriter = new StreamWriter(outputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            using (var workbook = new Workbook(inputPath, loadOptions))
-            {
-                // Get the first worksheet
-                var worksheet = workbook.Worksheets[0];
-
-                // Determine the used range
-                int maxRow = worksheet.Cells.MaxDataRow;
-                int maxCol = worksheet.Cells.MaxDataColumn;
-
-                // Open CSV writer
-                using (var csvWriter = new StreamWriter(outputPath))
+                // Iterate over each used row
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Iterate through each row in the used range
-                    for (int row = 0; row <= maxRow; row++)
+                    string[] csvFields = new string[maxCol + 1];
+
+                    // Iterate over each used column in the current row
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        var rowValues = new List<string>();
+                        object cellValue = cells[row, col]?.Value;
+                        string field = cellValue?.ToString() ?? string.Empty;
 
-                        // Iterate through each column in the current row
-                        for (int col = 0; col <= maxCol; col++)
-                        {
-                            // Retrieve the cell value as a string (handles nulls)
-                            string cellText = worksheet.Cells[row, col].StringValue ?? string.Empty;
+                        // Escape double quotes by doubling them
+                        if (field.Contains("\""))
+                            field = field.Replace("\"", "\"\"");
 
-                            // Escape double quotes by doubling them
-                            if (cellText.Contains("\""))
-                                cellText = cellText.Replace("\"", "\"\"");
+                        // Wrap the field in double quotes if it contains commas, quotes, or newlines
+                        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+                            field = $"\"{field}\"";
 
-                            // Enclose the value in quotes if it contains commas, quotes, or newlines
-                            if (cellText.Contains(",") || cellText.Contains("\r") || cellText.Contains("\n") || cellText.Contains("\""))
-                                cellText = $"\"{cellText}\"";
-
-                            rowValues.Add(cellText);
-                        }
-
-                        // Write the CSV line
-                        csvWriter.WriteLine(string.Join(",", rowValues));
+                        csvFields[col] = field;
                     }
+
+                    // Write the CSV line
+                    string csvLine = string.Join(",", csvFields);
+                    csvWriter.WriteLine(csvLine);
                 }
             }
 
-            Console.WriteLine("CSV export completed successfully.");
+            Console.WriteLine($"Conversion completed successfully. CSV saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log the exception details for troubleshooting
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

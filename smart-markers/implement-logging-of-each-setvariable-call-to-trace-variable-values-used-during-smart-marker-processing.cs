@@ -1,57 +1,150 @@
-// Title: Log each WorkbookDesigner.SetVariable call to trace smart‑marker variable values in C# using Aspose.Cells
-// AI Prompts: Write C# code that creates a subclass of WorkbookDesigner overriding SetVariable to write the variable name and value to a console or file log before calling the base method. | Show how to attach a delegate to Aspose.Cells events to capture and log every SetVariable invocation during smart‑marker processing. | Provide a reusable helper method that wraps WorkbookDesigner.SetVariable, logs the parameters, and then forwards the call for use in smart‑marker templates.
-// Common Searches: how to capture WorkbookDesigner SetVariable values for debugging Aspose.Cells smart markers C# | example of logging variable assignments when processing smart markers with Aspose.Cells | trace smart marker variables in Aspose.Cells using custom logger | C# Aspose.Cells SetVariable debug output to console or file | record smart marker variable values during WorkbookDesigner.Process execution
-// Tags: WorkbookDesigner SetVariable logging C# | smart marker variable tracing Aspose.Cells | custom logger for Aspose.Cells smart markers | debug Aspose.Cells smart marker processing | log variable values during Excel template generation
+// Title: Add console logging for every WorkbookDesigner.SetVariable invocation while processing smart markers with Aspose.Cells in C#
+// AI Prompts: Create a C# wrapper that logs the variable name and value to the console before calling WorkbookDesigner.SetDataSource during smart marker processing. | Show how to instrument the Aspose.Cells smart marker workflow so that each SetVariable call writes its parameters to a log file or console. | Demonstrate adding exception handling around SetVariable while preserving detailed logging of the variable data.
+// Common Searches: how can I log the values passed to SetVariable in Aspose.Cells smart markers using C# | trace variable assignments during smart marker processing with Aspose.Cells WorkbookDesigner | debugging Aspose.Cells smart markers by printing SetVariable parameters to console | C# example of logging each SetVariable call before processing smart markers | Aspose.Cells SetVariable fallback to SetDataSource with logging
+// Tags: Aspose.Cells log SetVariable calls | WorkbookDesigner variable tracing C# | smart marker debugging Aspose.Cells | setvariable console logging Aspose.Cells | smart marker variable logging C#
 
 using System;
-using System.Data;
-using Aspose.Cells; // Aspose.Cells contains WorkbookDesigner and related classes
+using System.IO;
+using Aspose.Cells;
 
-// The example demonstrates how to intercept each WorkbookDesigner.SetVariable call, log the variable name and value (to console or a file), and then continue processing smart markers. It includes a subclass or wrapper approach, optional event handling, and shows the full workflow from template creation to saving the resulting workbook.
+// The example wraps WorkbookDesigner.SetVariable in a method that writes the variable name and value to the console, then forwards the call to SetDataSource. This provides traceable logging for each variable used in Aspose.Cells smart marker processing, while preserving error handling and the ability to load templates, process markers, and save the workbook.
+public class SmartMarkerProcessor
+{
+    private Workbook _workbook;
+    private WorkbookDesigner _designer;
+
+    // Constructor creates a new empty workbook and its designer
+    public SmartMarkerProcessor()
+    {
+        try
+        {
+            _workbook = CreateWorkbook();
+            _designer = new WorkbookDesigner(_workbook);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing processor: {ex.Message}");
+            throw;
+        }
+    }
+
+    // Loads a template workbook if the file exists
+    public void LoadTemplate(string templatePath)
+    {
+        try
+        {
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Template file not found: {templatePath}");
+
+            _workbook = LoadWorkbook(templatePath);
+            _designer = new WorkbookDesigner(_workbook);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading template: {ex.Message}");
+            throw;
+        }
+    }
+
+    // Wrapper for setting a variable (uses SetDataSource as fallback)
+    public void SetVariable(string name, object value)
+    {
+        try
+        {
+            Console.WriteLine($"SetVariable called: Name = {name}, Value = {value}");
+            // WorkbookDesigner.SetVariable may not be available in some versions;
+            // SetDataSource works for scalar values as an alternative.
+            _designer.SetDataSource(name, value);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error setting variable '{name}': {ex.Message}");
+            throw;
+        }
+    }
+
+    // Executes smart marker processing
+    public void ProcessSmartMarkers()
+    {
+        try
+        {
+            _designer.Process();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing smart markers: {ex.Message}");
+            throw;
+        }
+    }
+
+    // Saves the workbook to the specified path
+    public void Save(string outputPath)
+    {
+        try
+        {
+            // Ensure the directory exists
+            string dir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            SaveWorkbook(_workbook, outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
+            throw;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Lifecycle rule placeholders – DO NOT modify the internal logic
+    // -------------------------------------------------------------------------
+
+    private Workbook CreateWorkbook()
+    {
+        // {CreateWorkbook} – creates a new empty workbook
+        return new Workbook();
+    }
+
+    private Workbook LoadWorkbook(string path)
+    {
+        // {LoadWorkbook} – loads a workbook from the specified file
+        return new Workbook(path);
+    }
+
+    private void SaveWorkbook(Workbook wb, string path)
+    {
+        // {SaveWorkbook} – saves the workbook to the specified file
+        wb.Save(path);
+    }
+}
+
+// Example usage
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (template)
-            Workbook workbook = new Workbook();
+            var processor = new SmartMarkerProcessor();
 
-            // Add a worksheet that will contain smart markers
-            Worksheet templateSheet = workbook.Worksheets[0];
-            templateSheet.Name = "Template";
+            // Load a template that contains smart markers
+            processor.LoadTemplate("Template.xlsx");
 
-            // Smart marker that references a variable (syntax: &VariableName)
-            templateSheet.Cells["A1"].PutValue("&MyVariable");
+            // Set variables – each call will be logged
+            processor.SetVariable("CustomerName", "John Doe");
+            processor.SetVariable("OrderDate", DateTime.Now);
+            processor.SetVariable("TotalAmount", 1234.56);
 
-            // Prepare data source with a column matching the smart marker name
-            string varValue = "Hello Aspose!";
-
-            // Log the variable assignment
-            Console.WriteLine($"[SetVariable] Name: \"MyVariable\", Value: \"{varValue ?? "null"}\"");
-
-            // Build a DataTable as the data source for the smart marker
-            DataTable dt = new DataTable("Data");
-            dt.Columns.Add("MyVariable", typeof(string));
-            dt.Rows.Add(varValue);
-
-            // Initialize the workbook designer
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // Set the data source for smart markers
-            designer.SetDataSource(dt);
-
-            // Process smart markers (variables will be replaced)
-            designer.Process();
+            // Process the smart markers with the variables set above
+            processor.ProcessSmartMarkers();
 
             // Save the result
-            string outputPath = "SmartMarkerWithLogging.xlsx";
-            designer.Workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            processor.Save("Result.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

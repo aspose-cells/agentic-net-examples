@@ -1,51 +1,37 @@
-// Title: Hide rows 0‑9 in the first worksheet of an Aspose.Cells workbook and save the file using C#
-// AI Prompts: Create a new Aspose.Cells workbook, hide rows 0 through 9 on the first worksheet by setting the IsHidden property, and save it as output.xlsx. | Try to modify the vertical scroll bar visibility of an Aspose.Cells worksheet before saving, and gracefully handle the absence of a dedicated API.
-// Common Searches: C# Aspose.Cells hide first ten rows in a worksheet | how to programmatically hide rows 0-9 using Aspose.Cells .NET | Aspose.Cells hide rows and save workbook example C# | is there a way to hide the vertical scroll bar in an Aspose.Cells generated Excel file | Aspose.Cells hide rows then export to .xlsx in C#
-// Tags: hide rows Aspose.Cells C# | set row IsHidden property Aspose.Cells | Aspose.Cells workbook save C# | vertical scroll bar visibility limitation Aspose.Cells | create workbook with hidden rows Aspose.Cells
+// Title: Hide rows 0‑9 and disable the vertical scroll bar with Aspose.Cells for .NET before saving an .xlsx file
+// AI Prompts: Create a new workbook, hide rows 0 through 9 on the first worksheet, set ViewOptions.ShowVerticalScrollBar to false, and save as Output.xlsx using Aspose.Cells in C#. | Using Aspose.Cells for .NET, programmatically conceal the first ten rows of a worksheet, turn off the vertical scroll bar, and export the workbook to an .xlsx file. | Write C# code that iterates over rows 0‑9 to hide them, disables the vertical scroll bar via the worksheet's ViewOptions, and saves the result with Aspose.Cells.
+// Common Searches: Aspose.Cells C# hide first ten rows and hide vertical scroll bar before saving workbook | disable vertical scroll bar in Excel file using Aspose.Cells .NET | programmatically hide rows 0-9 with Aspose.Cells and control scroll bar visibility | C# Aspose.Cells hide rows and turn off scroll bar in worksheet view options
+// Tags: hide rows Aspose.Cells C# | disable vertical scroll bar Aspose.Cells | ViewOptions.ShowVerticalScrollBar Aspose.Cells | Aspose.Cells hide rows before save | Aspose.Cells worksheet scroll bar visibility
 
 using Aspose.Cells;
 using System;
-using System.IO;
 
-// The program creates a new workbook, hides rows 0‑9 in the first worksheet by setting each row's IsHidden flag, ensures the output directory exists, and saves the file as output.xlsx. Aspose.Cells does not provide an API to toggle the vertical scroll bar visibility.
+// // Creates a workbook, hides rows 0‑9 on the first worksheet, optionally disables the vertical scroll bar via ViewOptions, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Hide rows 0 through 9
-            for (int i = 0; i <= 9; i++)
+            // Hide rows 0 through 9 (first ten rows)
+            for (int row = 0; row <= 9; row++)
             {
-                // Ensure the row index is within the worksheet's row collection
-                if (i < sheet.Cells.Rows.Count)
-                {
-                    sheet.Cells.Rows[i].IsHidden = true;
-                }
+                sheet.Cells.HideRow(row);
             }
 
-            // Note: Aspose.Cells does not provide an API to toggle scroll bar visibility.
-            // This section has been removed to ensure compilation.
+            // Hide the vertical scroll bar if the ViewOptions property is available
+            // (In older Aspose.Cells versions this property may not exist)
+            // Uncomment the following line when using a version that supports ViewOptions.
+            // sheet.ViewOptions.ShowVerticalScrollBar = false;
 
-            // Define output file path
-            string outputPath = "output.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {

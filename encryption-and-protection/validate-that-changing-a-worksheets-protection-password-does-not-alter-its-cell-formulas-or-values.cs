@@ -1,13 +1,12 @@
-// Title: Check that updating a worksheet's protection password does not modify formulas or calculated values with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to protect a worksheet, change its password, recalculate formulas, and assert that the original formula text and result remain unchanged. | Create a .NET example that saves a workbook to a MemoryStream after changing the worksheet protection password, reloads it, and verifies that the formula and its evaluated value are preserved.
-// Common Searches: Aspose.Cells C# verify formula remains same after changing worksheet password | how to change worksheet protection password without affecting calculated cells in .NET | test if unprotect and protect worksheet alters cell formulas Aspose.Cells | preserve Excel formula values when updating sheet protection password using Aspose.Cells | reload workbook from stream to confirm formula persistence after password change
-// Tags: worksheet protection password change Aspose.Cells | formula integrity after unprotect protect | recalculate formulas after worksheet password update | save workbook to memory stream Aspose.Cells | load workbook from stream verify formula
+// Title: Validate that changing a worksheet protection password does not alter cell formulas or values with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# verify that changing worksheet protection password does not modify formulas | Check cell values remain unchanged after updating worksheet password with Aspose.Cells | How to test worksheet protection password update without affecting calculated results in .NET | Validate formula integrity after protecting a sheet with a new password using Aspose.Cells
+// Tags: worksheet protection password update validation | preserve cell formulas after sheet protect Aspose.Cells | ensure cell values unchanged on password change C# | Aspose.Cells formula consistency after password modification | C# worksheet protect without data loss
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
 
-// The example creates a workbook, fills cells, sets a formula, protects the sheet, changes the protection password by unprotecting and re‑protecting, recalculates, and confirms that both the formula text and its evaluated value stay unchanged. It then saves the workbook to a MemoryStream, reloads it, and validates that the formula integrity persists after the password update.
+// The example creates a workbook, fills cells with values and formulas, calculates them, stores the original formulas and values, protects the worksheet with an initial password, changes the protection password, recalculates, and then iterates through all cells to compare current formulas and values with the stored originals, reporting whether any changes occurred.
 class Program
 {
     static void Main()
@@ -15,57 +14,68 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells with data
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["B1"].PutValue(10);
+            // Fill cells with values and formulas
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].Formula = "=A1+A2";          // 30
+            sheet.Cells["B1"].Formula = "=SUM(A1:A2)";    // 30
+            sheet.Cells["B2"].Formula = "=A3*2";          // 60
 
-            // Set a formula in C1
-            sheet.Cells["C1"].Formula = "=A1+B1";
-
-            // Calculate formulas to obtain values
+            // Calculate all formulas
             workbook.CalculateFormula();
 
-            // Store original formula and evaluated value
-            string originalFormula = sheet.Cells["C1"].Formula;
-            object originalValue = sheet.Cells["C1"].Value;
+            // Store original formulas and values for later comparison
+            var originalFormulas = new Dictionary<string, string>();
+            var originalValues = new Dictionary<string, object>();
 
-            // Protect the worksheet with an initial password (oldPassword not required, pass null)
-            sheet.Protect(ProtectionType.All, "oldpwd", null);
-
-            // Change the protection password: unprotect then protect with a new password
-            sheet.Unprotect("oldpwd");
-            sheet.Protect(ProtectionType.All, "newpwd", null);
-
-            // Recalculate to ensure formulas are still valid
-            workbook.CalculateFormula();
-
-            // Verify that the formula and its value have not changed
-            bool formulaUnchanged = sheet.Cells["C1"].Formula == originalFormula;
-            bool valueUnchanged = Equals(sheet.Cells["C1"].Value, originalValue);
-
-            Console.WriteLine($"Formula unchanged after password change: {formulaUnchanged}");
-            Console.WriteLine($"Value unchanged after password change: {valueUnchanged}");
-
-            // Save the workbook to a memory stream (demonstrating the save rule)
-            using (var ms = new MemoryStream())
+            foreach (Cell cell in sheet.Cells)
             {
-                workbook.Save(ms, SaveFormat.Xlsx);
-                ms.Position = 0;
+                if (!string.IsNullOrEmpty(cell.Formula))
+                    originalFormulas[cell.Name] = cell.Formula;
 
-                // Load the workbook from the memory stream (demonstrating the load rule)
-                var loadedWorkbook = new Workbook(ms);
-                var loadedSheet = loadedWorkbook.Worksheets[0];
-
-                // Verify again after load to ensure persistence
-                bool formulaAfterLoad = loadedSheet.Cells["C1"].Formula == originalFormula;
-                bool valueAfterLoad = Equals(loadedSheet.Cells["C1"].Value, originalValue);
-
-                Console.WriteLine($"Formula unchanged after load: {formulaAfterLoad}");
-                Console.WriteLine($"Value unchanged after load: {valueAfterLoad}");
+                originalValues[cell.Name] = cell.Value;
             }
+
+            // Protect the worksheet with an initial password.
+            // The Protect method requires the old password parameter; use empty string for initial protection.
+            sheet.Protect(ProtectionType.All, "oldpwd", string.Empty);
+
+            // Change the protection password
+            sheet.Protection.Password = "newpwd";
+
+            // Re‑calculate to ensure no side‑effects (optional)
+            workbook.CalculateFormula();
+
+            // Verify that formulas and values have not changed
+            bool validationPassed = true;
+
+            foreach (Cell cell in sheet.Cells)
+            {
+                string name = cell.Name;
+
+                // Check formula consistency
+                string originalFormula = originalFormulas.ContainsKey(name) ? originalFormulas[name] : string.Empty;
+                if (cell.Formula != originalFormula)
+                {
+                    validationPassed = false;
+                    Console.WriteLine($"Formula changed in {name}: before='{originalFormula}', after='{cell.Formula}'");
+                }
+
+                // Check value consistency
+                object originalValue = originalValues[name];
+                if (!object.Equals(cell.Value, originalValue))
+                {
+                    validationPassed = false;
+                    Console.WriteLine($"Value changed in {name}: before='{originalValue}', after='{cell.Value}'");
+                }
+            }
+
+            Console.WriteLine(validationPassed
+                ? "Validation passed: worksheet protection password change did not alter formulas or values."
+                : "Validation failed: some formulas or values were altered.");
         }
         catch (Exception ex)
         {

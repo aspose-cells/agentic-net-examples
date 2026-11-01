@@ -1,54 +1,68 @@
-// Title: How to protect an Excel workbook's structure with a password and ensure worksheet renaming is blocked using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that protects the workbook structure using a password, then attempts to rename a worksheet and captures the resulting CellsException. | Show how to verify that a worksheet's name stays unchanged after a failed rename operation when the workbook structure is protected in Aspose.Cells.
-// Common Searches: Aspose.Cells C# protect workbook structure and prevent sheet rename | how to catch CellsException when renaming a worksheet after protecting workbook | verify worksheet name unchanged after structure protection Aspose.Cells .NET | prevent users from renaming sheets in Excel file using Aspose.Cells password protection
-// Tags: structure protection password Aspose.Cells | worksheet rename exception Aspose.Cells | check sheet name stability Aspose.Cells | block sheet rename Aspose.Cells | cells exception handling .NET
+// Title: Protect an Excel workbook’s structure and confirm worksheet rename is blocked using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells protect workbook structure C# example | how to block worksheet rename after protecting workbook with Aspose.Cells | C# code to verify rename operation is prevented when workbook structure is locked | Aspose.Cells exception handling for renaming sheet on a protected workbook | save Excel file after applying structure protection with Aspose.Cells
+// Tags: Aspose.Cells workbook structure lock C# | worksheet rename restriction Aspose.Cells | structure protection exception handling C# | save protected Excel workbook Aspose.Cells | verify sheet rename blocked .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Creates a new workbook, applies structure protection with a password, attempts to rename the first worksheet, catches the CellsException indicating the rename is blocked, and confirms the sheet name remains unchanged.
+// The sample creates a new Workbook, names the first worksheet, applies structure protection (without a password), attempts to rename the sheet, catches the expected exception to confirm the rename is blocked, and finally saves the protected workbook to disk.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (contains a default worksheet)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Reference to the first worksheet
+            // Set initial name for the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            string originalName = sheet.Name;
+            sheet.Name = "Original";
 
-            // Protect the workbook structure with a password
-            workbook.Protect(ProtectionType.Structure, "secret");
+            // Protect the workbook structure (prevents adding, deleting, moving, renaming sheets)
+            // Provide an empty password to use default protection
+            workbook.Protect(ProtectionType.Structure, string.Empty);
 
-            // Attempt to rename the worksheet while the structure is protected
+            // Attempt to rename the worksheet
+            bool renameSucceeded = true;
             try
             {
-                sheet.Name = "RenamedSheet";
-                Console.WriteLine("Worksheet renamed successfully (unexpected).");
+                sheet.Name = "Renamed";
             }
-            catch (CellsException ex)
+            catch (Exception ex)
             {
                 // Expected: operation is blocked because the structure is protected
-                Console.WriteLine($"Rename blocked: {ex.Message}");
+                renameSucceeded = false;
+                Console.WriteLine("Rename blocked: " + ex.Message);
             }
 
-            // Confirm that the worksheet name has not changed
-            if (sheet.Name == originalName)
+            // Confirm that the rename operation was blocked
+            if (!renameSucceeded || sheet.Name != "Renamed")
             {
-                Console.WriteLine("Worksheet name unchanged as expected.");
+                Console.WriteLine("Worksheet rename was blocked as expected.");
             }
             else
             {
-                Console.WriteLine("Worksheet name was changed unexpectedly.");
+                Console.WriteLine("Worksheet rename succeeded unexpectedly.");
+            }
+
+            // Save the workbook (optional, demonstrates that the file is still valid)
+            string outputPath = "ProtectedWorkbook.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving workbook: " + ex.Message);
             }
         }
         catch (Exception ex)
         {
-            // General exception handling for unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any unexpected errors
+            Console.WriteLine("Unexpected error: " + ex.Message);
         }
     }
 }

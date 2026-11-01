@@ -1,14 +1,14 @@
-// Title: Convert an Excel .xlsx workbook to compact-width HTML using Aspose.Cells for .NET with PresentationPreference.AutoFit
-// AI Prompts: Write C# code that loads a .xlsx file, verifies its existence, sets HtmlSaveOptions.PresentationPreference to AutoFit, and saves the workbook as an HTML file with compact column widths using Aspose.Cells. | Provide a C# example that handles a missing input file while converting an Excel workbook to HTML with auto‑fitted columns via Aspose.Cells.
-// Common Searches: Aspose.Cells C# export Excel to HTML with auto‑fit column widths | C# convert .xlsx to HTML using PresentationPreference.AutoFit in Aspose.Cells | Save workbook as HTML with compact columns Aspose.Cells .NET example | HtmlSaveOptions PresentationPreference.AutoFit usage Aspose.Cells | C# Aspose.Cells HTML export handling file not found error
-// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference.AutoFit | Excel to HTML conversion C# Aspose.Cells | auto‑fit column widths Aspose.Cells HTML export | C# file existence check before Aspose.Cells conversion | error handling Aspose.Cells workbook save to HTML
+// Title: How to convert an Excel .xlsx workbook to compact HTML using Aspose.Cells PresentationPreference.AutoFit in C#
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to AutoFit, and saves it as an HTML file. | Show a C# example that checks for the source Excel file, configures HtmlSaveOptions for automatic column width fitting, and writes the output HTML. | Provide a try‑catch block in C# that handles missing input files and exceptions while converting Excel to HTML with compact column widths using Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert xlsx to html with auto fit column widths | HtmlSaveOptions PresentationPreference.AutoFit sample code | Generate narrow column HTML from Excel using Aspose.Cells .NET | C# export workbook to html with column width optimization
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference.AutoFit | C# Excel to HTML compact column layout | auto-fit columns Aspose.Cells HTML conversion | save workbook as html with column optimization .NET | load xlsx and export to html Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks that the specified .xlsx file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with PresentationPreference.AutoFit to produce compact column widths, saves the workbook as an HTML file, and reports success or any caught exceptions.
-class Program
+// The example verifies the input .xlsx file, loads it into an Aspose.Cells Workbook, optionally sets HtmlSaveOptions.PresentationPreference to AutoFit for tighter column widths, and saves the workbook as an HTML file while handling errors gracefully.
+class ExcelToHtmlConverter
 {
     static void Main()
     {
@@ -20,19 +20,21 @@ class Program
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the Excel workbook from file
+            // Load the Excel workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options (auto‑fit columns not directly supported; default behavior is used)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            // Uncomment the following line if the PresentationPreference enum is available in your Aspose.Cells version
+            // saveOptions.PresentationPreference = PresentationPreference.AutoFit;
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to HTML: {outputPath}");
         }
         catch (Exception ex)
         {

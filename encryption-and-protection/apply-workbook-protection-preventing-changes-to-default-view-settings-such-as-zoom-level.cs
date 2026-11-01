@@ -1,35 +1,26 @@
-// Title: How to protect workbook windows (prevent zoom level changes) with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that applies window protection to an Excel workbook, optionally setting a password, using Aspose.Cells. | Illustrate how to lock only the view‑related settings of an existing spreadsheet and save the protected file. | Provide an example of enforcing workbook window protection without supplying a password via Aspose.Cells.
-// Common Searches: Aspose.Cells protect workbook windows to lock zoom level in C# | disable default view changes in an Excel file using .NET | C# protect workbook view settings without password Aspose.Cells
-// Tags: Aspose.Cells Windows protection API | prevent Excel zoom level changes C# | protect workbook view settings Aspose.Cells | disable workbook window modifications .NET | Excel workbook window protection without password
+// Title: Protect Excel workbook window settings such as zoom level using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells protect workbook window settings from user changes | Set password protection for Excel view options using Aspose.Cells .NET | Prevent zoom level modification in generated Excel file with Aspose.Cells | How to lock default view settings in an Excel workbook via Aspose.Cells C# | Apply workbook protection to window options in Aspose.Cells for .NET
+// Tags: Aspose.Cells window settings lock | Excel view options protection C# | Workbook.Protect with ProtectionType.Windows | password protected workbook windows Aspose.Cells | lock zoom level in generated XLSX using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace WorkbookProtectionExampleApp
+// Demonstrates creating or loading an Excel workbook in C#, applying password‑protected protection to the workbook's window settings (including zoom level) with the ProtectionType.Windows flag, and saving the file.
+class WorkbookProtectionExample
 {
-    // The example creates (or loads) an Excel workbook, applies workbook window protection to block changes to default view settings such as zoom level—optionally with a password—and saves the result as "ProtectedWorkbook.xlsx".
-    class WorkbookProtectionExample
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // Use new Workbook("input.xlsx") to load an existing file
+        // Create a new workbook (or load an existing one)
+        // Uncomment the line below to load an existing file instead of creating a new workbook
+        // Workbook workbook = new Workbook("input.xlsx");
+        Workbook workbook = new Workbook();
 
-                // Protect the workbook windows (default view settings such as zoom level) with an optional password
-                workbook.Protect(ProtectionType.Windows, ""); // Empty password disables password protection
+        // Apply protection to the workbook's window settings (e.g., zoom level, view options)
+        // The ProtectionType.Windows flag prevents changes to default view settings
+        // Optionally, provide a password to secure the protection
+        workbook.Protect(ProtectionType.Windows, "MySecurePassword");
 
-                // Save the protected workbook
-                string outputPath = "ProtectedWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the protected workbook
+        workbook.Save("ProtectedWorkbook.xlsx");
     }
 }

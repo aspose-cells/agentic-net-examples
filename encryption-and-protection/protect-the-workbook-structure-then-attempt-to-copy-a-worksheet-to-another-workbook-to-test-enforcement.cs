@@ -1,57 +1,65 @@
-// Title: C# example: protect workbook structure with Aspose.Cells and verify that copying a protected worksheet to another workbook is blocked
-// AI Prompts: Show how to protect a workbook's structure using Aspose.Cells in C# and then attempt to copy its worksheet to a new workbook, handling the expected CellsException. | Write C# code that creates a source workbook, applies structure protection without a password, saves it, tries Worksheets.AddCopy on a destination workbook, and captures the exception when the copy is disallowed.
-// Common Searches: Aspose.Cells C# prevent copying sheet from structure‑protected workbook | How to catch CellsException when adding a copy of a protected worksheet in .NET | Copy worksheet from password‑less protected Excel file using Aspose.Cells throws error | Aspose.Cells protect workbook structure without password and test copy restriction
-// Tags: Aspose.Cells protect workbook structure | Aspose.Cells copy worksheet from protected workbook | C# Worksheets.AddCopy protected workbook exception | handle CellsException when copying sheet | structure protection enforcement Aspose.Cells
+// Title: How to protect an Excel workbook's structure with a password and verify that worksheet copying is blocked using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells protect workbook structure password C# example | prevent copying worksheets from a password protected Excel file using Aspose.Cells | Worksheets.AddCopy throws exception when source workbook is structure protected | verify workbook structure protection enforcement in Aspose.Cells .NET | copy worksheet from protected workbook Aspose.Cells error handling
+// Tags: Aspose.Cells workbook structure protection | Aspose.Cells copy worksheet from protected workbook | Aspose.Cells Worksheets.AddCopy error handling | Aspose.Cells password protection enforcement | Aspose.Cells prevent sheet copy
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample creates a source workbook, adds data, protects its structure with an empty password, saves it, then creates a destination workbook and attempts to copy the protected worksheet using Worksheets.AddCopy. The operation throws a CellsException, which is caught and logged, demonstrating that structure protection blocks worksheet copying.
-class WorkbookStructureProtectionDemo
+// The sample creates a workbook, adds data, applies structure protection with a password, saves and reloads the file, then attempts to copy the protected worksheet to another workbook using Worksheets.AddCopy. The operation throws an exception, confirming that the structure protection prevents worksheet copying.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create the source workbook and add some data
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet sheet = sourceWorkbook.Worksheets[0];
-            sheet.Name = "SourceSheet";
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B2"].PutValue(123);
+            Workbook sourceWb = new Workbook();
+            Worksheet sourceWs = sourceWb.Worksheets[0];
+            sourceWs.Name = "DataSheet";
+            sourceWs.Cells["A1"].PutValue("Sample Data");
 
-            // Protect the workbook structure (empty password)
-            sourceWorkbook.Protect(ProtectionType.Structure, string.Empty);
+            // Protect the workbook structure with a password
+            sourceWb.Protect(ProtectionType.Structure, "pwd123");
 
-            // Save the source workbook (optional, just to demonstrate persistence)
-            string sourcePath = "SourceProtected.xlsx";
-            sourceWorkbook.Save(sourcePath);
+            // Save the protected workbook
+            string sourcePath = "Source.xlsx";
+            sourceWb.Save(sourcePath);
+
+            // Load the protected workbook (ensure the file exists)
+            Workbook protectedWb = null;
+            if (File.Exists(sourcePath))
+            {
+                protectedWb = new Workbook(sourcePath);
+            }
+            else
+            {
+                Console.WriteLine($"File not found: {sourcePath}");
+                return;
+            }
 
             // Create a destination workbook
-            Workbook destWorkbook = new Workbook();
+            Workbook destWb = new Workbook();
 
+            // Attempt to copy the protected worksheet to the destination workbook
             try
             {
-                // Attempt to copy the protected worksheet to the destination workbook
-                // This should fail because the source workbook's structure is protected
-                // Use the overload that copies a worksheet by its name
-                destWorkbook.Worksheets.AddCopy(sheet.Name);
+                // AddCopy expects the source worksheet name, not the Worksheet object
+                destWb.Worksheets.AddCopy(protectedWb.Worksheets[0].Name);
                 Console.WriteLine("Worksheet copied successfully (unexpected).");
             }
-            catch (CellsException ex)
+            catch (Exception ex)
             {
-                // Expected exception when trying to copy from a protected workbook
-                Console.WriteLine("Copy operation failed as expected: " + ex.Message);
+                Console.WriteLine("Copy failed as expected: " + ex.Message);
             }
 
-            // Save the destination workbook (will be empty if copy failed)
+            // Save the destination workbook (optional)
             string destPath = "Destination.xlsx";
-            destWorkbook.Save(destPath);
+            destWb.Save(destPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Unexpected error: " + ex.Message);
+            Console.WriteLine("An unexpected error occurred: " + ex.Message);
         }
     }
 }

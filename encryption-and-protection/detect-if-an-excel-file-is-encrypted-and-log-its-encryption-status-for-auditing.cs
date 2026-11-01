@@ -1,40 +1,42 @@
-// Title: Check whether an Excel workbook is password‑protected with Aspose.Cells for .NET and log the result
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, catches the CellsException when the file is password‑protected, and prints "Encrypted" or "Not Encrypted" to the console. | Create a .NET console application that verifies a given Excel file exists, attempts to open it without a password via Aspose.Cells, determines its encryption status, and writes the status to a log output.
-// Common Searches: asp.net how to detect password protection on an Excel file using Aspose.Cells | c# Aspose.Cells check if .xlsx is encrypted without providing a password | log encryption status of an Excel workbook with Aspose.Cells in a console app | catch CellsException to determine if an Excel file is password‑protected | determine Excel workbook encryption state using Aspose.Cells for .NET
-// Tags: Aspose.Cells detect encrypted workbook | C# check Excel file password protection | log Excel encryption status .NET | handle CellsException for password‑protected file | audit Excel workbook encryption Aspose
+// Title: Check if an Excel workbook is password‑protected and log its encryption status using Aspose.Cells for .NET
+// Common Searches: how to detect password protection on an .xlsx file with Aspose.Cells in C# | determine if an Excel workbook is encrypted without supplying a password using Aspose.Cells | log encryption status of a spreadsheet after loading it with Aspose.Cells | catch CellsException to identify protected Excel files in .NET | audit Excel file encryption state programmatically with Aspose.Cells
+// Tags: Aspose.Cells detect encrypted workbook | C# check Excel file password protection | load Excel workbook without password Aspose.Cells | handle CellsException for protected spreadsheets | audit Excel encryption status .NET
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example verifies the existence of a specified .xlsx file, attempts to load it with Aspose.Cells without a password, catches a CellsException containing the word "password" to identify encryption, and outputs the encryption status (Encrypted or Not Encrypted) to the console for auditing purposes.
-class ExcelEncryptionChecker
+// The example loads an Excel file with Aspose.Cells using LoadOptions without a password, catches a CellsException that indicates a required password, sets an encryption flag, and writes the file path and encryption status to the console for auditing purposes.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Path to the Excel file to be audited
+        // Path to the Excel file to be inspected
         string filePath = "sample.xlsx";
 
         // Verify that the file exists before attempting to load it
         if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file '{filePath}' was not found.");
+            Console.WriteLine($"Error: File not found - {filePath}");
             return;
         }
 
+        // Prepare load options (no password supplied)
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        Workbook workbook = null;
         bool isEncrypted = false;
 
         try
         {
-            // Attempt to load the workbook without providing a password
-            Workbook workbook = new Workbook(filePath);
+            // Attempt to load the workbook without a password
+            workbook = new Workbook(filePath, loadOptions);
             // If loading succeeds, the file is not encrypted
             isEncrypted = false;
         }
         catch (CellsException ex)
         {
-            // Aspose.Cells throws a CellsException when the file is password‑protected.
-            // Check the exception message for password‑related text.
+            // Aspose.Cells throws an exception when a password is required.
+            // Detect encryption based on the exception message.
             if (!string.IsNullOrEmpty(ex.Message) &&
                 ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -42,18 +44,20 @@ class ExcelEncryptionChecker
             }
             else
             {
-                // Re‑throw unexpected CellsException errors
-                throw;
+                // Other CellsException – rethrow or handle as needed
+                Console.WriteLine($"CellsException: {ex.Message}");
+                return;
             }
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any other unexpected exceptions
+            Console.WriteLine($"Unexpected error: {ex.Message}");
             return;
         }
 
-        // Log the encryption status
-        Console.WriteLine($"File '{filePath}' encryption status: {(isEncrypted ? "Encrypted" : "Not Encrypted")}");
+        // Log the encryption status for auditing
+        Console.WriteLine($"File: {filePath}");
+        Console.WriteLine($"Encrypted: {isEncrypted}");
     }
 }

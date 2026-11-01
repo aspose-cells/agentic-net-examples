@@ -1,41 +1,57 @@
-// Title: Generate a column chart, update a data point, and save the workbook as ChartReport.xlsx using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a column chart from a data range, changes the value of a specific data point, and saves the workbook to ChartReport.xlsx. | Show how to programmatically modify the series data of an existing chart in a workbook and export the updated file as a new XLSX using Aspose.Cells.
-// Common Searches: how to add a column chart to a new workbook and change a series value with Aspose.Cells C# | Aspose.Cells C# update chart data point and save as new Excel file | save modified Excel chart to a different filename using Aspose.Cells .NET | C# Aspose.Cells example for creating chart, editing data, and exporting to ChartReport.xlsx
-// Tags: create column chart Aspose.Cells C# | modify chart series value Aspose.Cells | save workbook as xlsx Aspose.Cells | update chart data range Aspose.Cells .NET | export chart report Aspose.Cells
+// Title: Change the first chart series range to B2:B6 and save the workbook as ChartReport.xlsx using Aspose.Cells for .NET (C#)
+// AI Prompts: Load Input.xlsx, locate the first chart on the first worksheet, set its first series values to the range B2:B6, and save the workbook as ChartReport.xlsx with Aspose.Cells in C#. | Create C# code that checks whether an Excel file exists, opens it with Aspose.Cells, updates the first chart's series data source to B2:B6, and writes the modified workbook to a new file named ChartReport.xlsx.
+// Common Searches: asp.net change chart series data range to B2:B6 using Aspose.Cells | save modified workbook to a new Excel file with Aspose.Cells C# | how to update first chart on a worksheet in an existing workbook Aspose.Cells | verify Excel file existence before loading with Aspose.Cells in C#
+// Tags: update chart series values Aspose.Cells | save workbook to new Excel file C# | check input file existence Aspose.Cells | modify first worksheet chart Aspose.Cells | set NSeries range B2:B6
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // This program creates a new workbook, inserts sample data, adds a column chart linked to that data, updates a data point, and saves the workbook as ChartReport.xlsx.
-class ChartReportGenerator
+// The program verifies that Input.xlsx exists, opens it with Aspose.Cells, accesses the first worksheet, updates the first chart's first series to use the data range B2:B6, and saves the modified workbook as ChartReport.xlsx while handling any exceptions.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "ChartReport.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Add a column chart linked to the data range
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Update chart data (e.g., modify a value)
-        sheet.Cells["B3"].PutValue(25); // change value for category B
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the modified workbook to the specified file
-        workbook.Save("ChartReport.xlsx", SaveFormat.Xlsx);
+            // Ensure there is at least one chart on the sheet
+            if (sheet.Charts.Count > 0)
+            {
+                // Get the first chart
+                Chart chart = sheet.Charts[0];
+
+                // Modify the first series' values if a series exists
+                if (chart.NSeries.Count > 0)
+                {
+                    // Set new data range for the series (e.g., B2:B6)
+                    chart.NSeries[0].Values = "B2:B6";
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

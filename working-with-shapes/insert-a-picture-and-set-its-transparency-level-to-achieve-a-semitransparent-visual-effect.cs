@@ -1,51 +1,61 @@
-// Title: Insert a PNG picture into an Excel worksheet and achieve a semi‑transparent effect with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that inserts a PNG image into a specific cell using Aspose.Cells and applies 40% opacity by adjusting the image’s alpha channel before adding it to the workbook. | Update the example to use the Shape.Transparency property (available in newer Aspose.Cells releases) to set a picture’s transparency to 30% after insertion. | Create a helper method that loads an image file, changes its transparency to a given percentage, and returns a stream suitable for Worksheet.Pictures.Add in Aspose.Cells.
-// Common Searches: how to make an inserted picture semi transparent in Aspose.Cells C# | Aspose.Cells set picture opacity programmatically | pre‑process PNG transparency before adding to Excel with Aspose.Cells | use Shape.Transparency property Aspose.Cells 2023 version | insert image into specific cell and adjust alpha channel Aspose.Cells .NET
-// Tags: aspocells insert picture opacity c# | aspocells shape transparency feature | c# pre‑process png alpha channel for excel | excel worksheet semi transparent image aspocells | worksheet pictures add transparent png
+// Title: Insert a PNG picture into a specific worksheet cell using Aspose.Cells for .NET and manage unsupported transparency
+// AI Prompts: Insert a PNG image into cell B2 of a new workbook with Aspose.Cells for .NET, then attempt to apply 50% opacity, and include code that detects the absence of a Transparency property and logs a fallback message. | Create C# code that validates an image file path, adds the picture to an Excel worksheet at a given cell, and tries to set its alpha value, providing alternative handling when the API does not expose picture transparency. | Generate an example that demonstrates adding a picture to a worksheet, checking for the Picture.Transparency member, and gracefully handling scenarios where the current Aspose.Cells version lacks transparency support.
+// Common Searches: asp.net insert png into excel cell with aspose.cells and set opacity | c# aspose.cells picture transparency not available | how to make an inserted picture semi transparent in excel using aspose.cells | aspose.cells add image to specific cell and adjust alpha channel | check for picture.Transparency property in Aspose.Cells C# example
+// Tags: add picture to worksheet cell Aspose.Cells | png image insertion Aspose.Cells .NET | picture transparency limitation Aspose.Cells | fallback handling missing Transparency property C# | set picture opacity Aspose.Cells API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, checks for a PNG file, inserts the image at row 5 column 3, and saves the file as Result.xlsx. It notes that the Transparency property is not available in the current Aspose.Cells version, recommending either pre‑adjusting the image’s alpha channel before insertion or using the Shape.Transparency property in newer releases to achieve a semi‑transparent picture.
-class InsertPictureWithTransparency
+// The program creates a new workbook, verifies that a PNG file exists, inserts the picture into cell B2 of the first worksheet, notes that the Picture.Transparency property is unavailable in the current Aspose.Cells version, and saves the workbook as output.xlsx while handling file‑not‑found and unsupported‑feature errors.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook.
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet.
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Path to the image file to be inserted.
+            // Path to the image you want to insert
             string imagePath = "sample.png";
 
-            // Verify that the image file exists to avoid FileNotFoundException.
-            if (!File.Exists(imagePath))
+            // Verify that the image file exists before attempting to load it
+            if (File.Exists(imagePath))
+            {
+                try
+                {
+                    // Insert the picture at cell B2 (row index 1, column index 1)
+                    using (FileStream imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        int pictureIndex = sheet.Pictures.Add(1, 1, imageStream);
+                        Picture picture = sheet.Pictures[pictureIndex];
+
+                        // Note: Transparency property is not available in this version of Aspose.Cells.
+                        // If needed, adjust picture appearance using other available properties.
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to insert picture: {ex.Message}");
+                }
+            }
+            else
             {
                 Console.WriteLine($"Image file not found: {imagePath}");
-                return;
             }
 
-            // Insert the picture at row 5, column 3 (zero‑based indices).
-            int pictureIndex = sheet.Pictures.Add(4, 2, imagePath);
-            Picture pic = sheet.Pictures[pictureIndex];
-
-            // Note: The Transparency property is not available in this version of Aspose.Cells.
-            // If needed, adjust image transparency before inserting or use Shape.Transparency in newer versions.
-
-            // Save the workbook to a file.
-            string resultPath = "Result.xlsx";
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

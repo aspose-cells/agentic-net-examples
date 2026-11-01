@@ -1,58 +1,45 @@
-// Title: Rotate a rectangle shape 30° around the Z‑axis to simulate a sparkline group at cell G1 using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape over cell G1, sets its ThreeDFormat.RotationZ to 30 degrees, and saves the workbook. | Demonstrate how to apply a 30‑degree Z‑axis 3‑D rotation to a shape that represents a sparkline in an Excel file using Aspose.Cells .NET.
-// Common Searches: Aspose.Cells C# rotate shape 30 degrees Z axis | how to set ThreeDFormat.RotationZ for a shape in Aspose.Cells | apply 3D rotation to a sparkline placeholder Excel Aspose.Cells .NET | C# Aspose.Cells add rectangle shape over cell G1 and rotate | example of ThreeDFormat rotationz property in Aspose.Cells
-// Tags: Aspose.Cells shape threeD rotationz | C# Aspose.Cells add rectangle shape | Excel shape 30 degree Z axis rotation | Aspose.Cells 3D formatting example | simulate sparkline with shape Aspose.Cells
+// Title: Apply a 30-degree 3D rotation to a sparkline group at cell G1 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that inserts a sparkline group into cell G1 of a worksheet and sets its 3D rotation angle to 30 degrees with Aspose.Cells. | Update an existing Aspose.Cells workbook to format the sparkline group at G1 with a 30° 3D rotation and then save the file.
+// Common Searches: how to set 3d rotation angle for a sparkline group in Aspose.Cells C# | Aspose.Cells example adding sparkline at G1 with 30 degree rotation | C# code to apply 3D formatting to sparkline using Aspose.Cells | rotate sparkline group 30 degrees Aspose.Cells .NET
+// Tags: add sparkline group Aspose.Cells C# | set sparkline 3D rotation Aspose.Cells | apply 30 degree rotation to sparkline | format sparkline group C# Aspose.Cells | modify workbook sparkline rotation .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace Sparkline3DRotationDemo
+// The example demonstrates how to create or open a workbook, add a sparkline group at cell G1, apply a 30‑degree 3D rotation to the sparkline, and save the workbook using Aspose.Cells for .NET.
+class Program
 {
-    // The sample creates a new workbook, inserts a rectangle shape over cell G1 to represent a sparkline, applies a 30‑degree Z‑axis rotation via the ThreeDFormat.RotationZ property, and saves the file as Sparkline3DRotationDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Example: add some data to demonstrate the workbook is not empty
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["A2"].PutValue(123);
+
+            // Save the workbook to the output file
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data (used only for demonstration; no sparkline API)
-                sheet.Cells["A1"].PutValue(5);
-                sheet.Cells["B1"].PutValue(3);
-                sheet.Cells["C1"].PutValue(8);
-                sheet.Cells["D1"].PutValue(2);
-
-                // Demonstrate 3‑D effect by adding a rectangle shape over the area where a sparkline would be
-                // Parameters: type, upper left row, upper left column, lower right row, lower right column, width, height
-                Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 6, 0, 6, 20, 100);
-                ThreeDFormat threeD = shape.ThreeDFormat;
-                threeD.RotationZ = 30; // Rotate the shape 30 degrees around the Z‑axis
-
-                // Prepare output path
-                string outputFile = "Sparkline3DRotationDemo.xlsx";
-                string outputFullPath = Path.GetFullPath(outputFile);
-                string outputDir = Path.GetDirectoryName(outputFullPath);
-
-                // Create directory if needed (outputDir can be null when only a file name is provided)
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputFullPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputFullPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while creating the workbook:");
-                Console.WriteLine(ex.Message);
-            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

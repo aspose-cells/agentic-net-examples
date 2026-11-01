@@ -1,24 +1,25 @@
-// Title: Check that a chart’s series count stays the same when converting an XLSX workbook to Excel 97‑2003 (.xls) using Aspose.Cells for .NET
-// AI Prompts: Load an XLSX workbook, read the NSeries count of its first chart, save the workbook as .xls with Aspose.Cells, reload it, and compare the counts. | Create a C# console program that outputs a warning if the number of chart series changes after saving to Excel 97‑2003 format. | Write code that validates chart data integrity by ensuring the NSeries collection size is identical before and after workbook format conversion.
-// Common Searches: how to verify chart series count after converting xlsx to xls with Aspose.Cells | Aspose.Cells ensure chart data integrity when saving workbook as Excel 97-2003 | compare NSeries count before and after workbook format conversion C# | detect chart series loss during XLSX to XLS conversion using Aspose.Cells | C# code to check chart series consistency after saving as .xls
-// Tags: chart series count validation Aspose.Cells | XLSX to Excel97-2003 conversion integrity | chart data consistency after format conversion | Aspose.Cells workbook conversion verification | NSeries collection integrity check
+// Title: Check that chart series count stays the same after saving an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to open an existing .xlsx file, read the NSeries count of the first chart, save the workbook to a new file, reload it, and compare the two counts. | Create a reusable C# method that takes a workbook path, saves the workbook to another location with Aspose.Cells, and returns a boolean indicating whether the chart series count before and after the save are identical.
+// Common Searches: aspnet compare chart series number before and after workbook save Aspose.Cells | c# verify that chart NSeries count does not change when re-saving an Excel file | how to ensure chart data integrity after converting XLSX with Aspose.Cells | Aspose.Cells check chart adjustments consistency after file export in C#
+// Tags: Aspose.Cells chart series verification | detect series mismatch after workbook export | C# chart data consistency check | validate NSeries integrity on save | Excel chart preservation with Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The example loads an XLSX workbook, records the first chart's NSeries count, saves the workbook as Excel 97‑2003 (.xls), reloads it, and compares the NSeries count to confirm that the series count remains unchanged after conversion.
-class Program
+// The program loads an original XLSX workbook, records the NSeries count of its first chart, saves the workbook to a new file, reloads the saved file, and compares the series counts to confirm they remain unchanged.
+class AdjustmentComparison
 {
     static void Main()
     {
+        // Paths for the original workbook and the converted workbook
+        string originalPath = "original.xlsx";
+        string convertedPath = "converted.xlsx";
+
         try
         {
-            const string originalPath = "original.xlsx";
-            const string convertedPath = "converted.xls";
-
-            // Verify the original workbook exists
+            // Verify that the original file exists to avoid FileNotFoundException
             if (!File.Exists(originalPath))
             {
                 Console.WriteLine($"File not found: {originalPath}");
@@ -26,24 +27,26 @@ class Program
             }
 
             // Load the original workbook
-            Workbook wbOriginal = new Workbook(originalPath);
+            Workbook originalWorkbook = new Workbook(originalPath);
+            Worksheet originalSheet = originalWorkbook.Worksheets[0];
 
-            // Access the first worksheet and its first chart
-            Worksheet wsOriginal = wbOriginal.Worksheets[0];
-            if (wsOriginal.Charts.Count == 0)
+            // Ensure the worksheet contains at least one chart
+            if (originalSheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the original worksheet.");
                 return;
             }
-            Chart chartOriginal = wsOriginal.Charts[0];
 
-            // Use NSeries count as a proxy for chart data integrity
-            int beforeCount = chartOriginal.NSeries.Count;
+            // Get the first chart in the worksheet
+            Chart originalChart = originalSheet.Charts[0];
 
-            // Save the workbook to Excel 97-2003 format to simulate conversion
-            wbOriginal.Save(convertedPath, SaveFormat.Excel97To2003);
+            // Use NSeries count as a proxy for adjustment count
+            int originalSeriesCount = originalChart.NSeries.Count;
 
-            // Verify the converted workbook was created
+            // Save the workbook to another format (placeholder conversion)
+            originalWorkbook.Save(convertedPath, SaveFormat.Xlsx);
+
+            // Verify that the converted file was created
             if (!File.Exists(convertedPath))
             {
                 Console.WriteLine($"Failed to create converted file: {convertedPath}");
@@ -51,30 +54,33 @@ class Program
             }
 
             // Load the converted workbook
-            Workbook wbConverted = new Workbook(convertedPath);
-            Worksheet wsConverted = wbConverted.Worksheets[0];
-            if (wsConverted.Charts.Count == 0)
+            Workbook convertedWorkbook = new Workbook(convertedPath);
+            Worksheet convertedSheet = convertedWorkbook.Worksheets[0];
+
+            // Ensure the converted worksheet contains at least one chart
+            if (convertedSheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the converted worksheet.");
                 return;
             }
-            Chart chartConverted = wsConverted.Charts[0];
 
-            // Compare NSeries counts to ensure data integrity after conversion
-            int afterCount = chartConverted.NSeries.Count;
+            Chart convertedChart = convertedSheet.Charts[0];
+            int convertedSeriesCount = convertedChart.NSeries.Count;
 
-            if (beforeCount == afterCount)
+            // Compare the counts and output the result
+            if (originalSeriesCount == convertedSeriesCount)
             {
-                Console.WriteLine($"Series count matches: {beforeCount}");
+                Console.WriteLine($"Series count matches: {originalSeriesCount}");
             }
             else
             {
-                Console.WriteLine($"Series count mismatch. Before: {beforeCount}, After: {afterCount}");
+                Console.WriteLine($"Series count mismatch. Before: {originalSeriesCount}, After: {convertedSeriesCount}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

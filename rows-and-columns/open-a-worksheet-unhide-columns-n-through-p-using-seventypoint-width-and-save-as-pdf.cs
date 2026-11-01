@@ -1,27 +1,69 @@
-// Title: How to unhide columns N‑P, set a 70‑point width, and export a worksheet to PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Unhide columns N through P, set each column width to 70 points, and save the workbook as a PDF with Aspose.Cells in C#. | Load an existing .xlsx, reveal columns 14‑16, adjust their width to 70 points, then export the sheet to PDF using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# unhide columns N to P and set column width in points | Set column width to 70 points before exporting Excel to PDF with Aspose.Cells | How to reveal hidden columns and export worksheet as PDF using Aspose.Cells .NET | C# code to unhide a range of columns and convert workbook to PDF with Aspose.Cells
-// Tags: unhide columns N-P Aspose.Cells | set column width 70 points Aspose.Cells | export worksheet to PDF Aspose.Cells | column range operations Aspose.Cells C# | excel to pdf conversion after column adjustment Aspose.Cells
+// Title: How to unhide columns N‑P, set a 70‑point column width, and export an Excel worksheet to PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# unhide columns N to P and set column width in points | Set column width to 70 points and export worksheet as PDF with Aspose.Cells | Convert Excel to PDF after adjusting column visibility using Aspose.Cells .NET | C# code to unhide specific columns and define column width before PDF conversion | How to change column width in pixels for Aspose.Cells before saving as PDF
+// Tags: unhide specific column range Aspose.Cells | set column width in points Aspose.Cells | convert Excel worksheet to PDF Aspose.Cells | column width pixel calculation Aspose.Cells | adjust column visibility before PDF export Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads input.xlsx, unhides columns N‑P (indexes 13‑15), sets each column width to 70 points, and saves the workbook as output.pdf using Aspose.Cells for .NET.
+// The example loads an existing Excel workbook, unhides columns N through P on the first worksheet, sets each column's width to 70 points (converted to pixels), and then saves the workbook as a PDF, with error handling for missing files, loading issues, column processing, and PDF export.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-        // Access the first worksheet in the workbook
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Unhide columns N (index 13) through P (index 15) and set their width to 70 points
-        // Parameters: start column index, number of columns, width in points
-        worksheet.Cells.UnhideColumns(13, 3, 70);
+        Workbook workbook;
+        try
+        {
+            // Load the workbook from the existing file
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-        // Save the modified workbook as a PDF file
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+        // Get the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Columns N (index 13) through P (index 15)
+        for (int col = 13; col <= 15; col++)
+        {
+            try
+            {
+                // Unhide the column using the Columns collection
+                sheet.Cells.Columns[col].IsHidden = false;
+
+                // Set column width to 70 points.
+                // Convert points to pixels: 1 point = 1/72 inch, 96 DPI => pixels = points * 96 / 72
+                int pixelWidth = (int)Math.Ceiling(70.0 * 96.0 / 72.0);
+                sheet.Cells.SetColumnWidthPixel(col, pixelWidth);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing column {col}: {ex.Message}");
+            }
+        }
+
+        try
+        {
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving PDF: {ex.Message}");
+        }
     }
 }

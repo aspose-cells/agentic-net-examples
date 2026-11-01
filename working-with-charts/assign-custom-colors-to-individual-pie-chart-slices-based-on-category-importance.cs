@@ -1,54 +1,63 @@
-// Title: How to assign custom colors to individual slices of a pie chart in Excel using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a pie chart from worksheet data and set the foreground color of each slice (High, Medium, Low) to red, orange, and green with Aspose.Cells in C#. | Disable automatic color variation for a pie chart series and apply specific Color values to chart points via the Points collection using Aspose.Cells.
-// Common Searches: C# Aspose.Cells assign red orange green colors to pie chart slices | How to turn off color variation in a pie chart using Aspose.Cells .NET | Customizing individual pie slice colors based on category importance in Excel with Aspose.Cells | Aspose.Cells example for coloring pie chart points programmatically
-// Tags: pie chart slice custom colors Aspose.Cells C# | disable automatic color variation Aspose.Cells chart series | set point foreground color Aspose.Cells chart | Excel pie chart color customization .NET | category based slice coloring Aspose.Cells
+// Title: Assign custom colors to each slice of a pie chart using Aspose.Cells for .NET
+// AI Prompts: Create a workbook, add a pie chart, enable IsColorVaried, and set a distinct ForegroundColor for each point from a Color array in C#. | Generate an Excel file with a pie chart where slice colors are mapped to importance levels by assigning colors to chart.NSeries[0].Points. | Show how to programmatically customize individual pie slice colors in Aspose.Cells without relying on the default palette.
+// Common Searches: Aspose.Cells set individual slice colors in a pie chart C# | C# how to use IsColorVaried for pie chart series in Aspose.Cells | assign custom foreground colors to chart points Aspose.Cells .NET example | change pie chart slice colors based on data importance using Aspose.Cells | create Excel pie chart with specific colors for each category Aspose.Cells
+// Tags: pie chart custom slice colors Aspose.Cells | IsColorVaried property C# chart | assign point foreground color Aspose.Cells | Excel pie chart color mapping .NET | generate colored pie chart workbook Aspose | color variation per data point Aspose.Cells
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// // This example creates a workbook, adds category data, inserts a pie chart, disables automatic color variation, and assigns red, orange, and green to the High, Medium, and Low slices before saving the file.
-class CustomPieSliceColors
+// The example creates a new workbook, fills category data, adds a pie chart, enables varied colors for the series, and applies a predefined Red‑Orange‑Green‑Blue color array to each slice before saving the file as PieChartCustomColors.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data: categories and their values
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
+            // Populate data: categories and their corresponding values
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
 
-        sheet.Cells["A2"].PutValue("High");
-        sheet.Cells["A3"].PutValue("Medium");
-        sheet.Cells["A4"].PutValue("Low");
+            string[] categories = { "A", "B", "C", "D" };
+            double[] values = { 30, 20, 25, 25 };
 
-        sheet.Cells["B2"].PutValue(50);
-        sheet.Cells["B3"].PutValue(30);
-        sheet.Cells["B4"].PutValue(20);
+            for (int i = 0; i < categories.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(categories[i]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(values[i]);    // Column B
+            }
 
-        // Add a pie chart to the worksheet
-        int chartIdx = sheet.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIdx];
+            // Add a pie chart to the worksheet
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 25, 7);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Bind the chart to the data range
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Set the data range for the series (values)
+            chart.NSeries.Add("B2:B5", true);
 
-        // Disable automatic color variation so we can set colors manually
-        chart.NSeries[0].IsColorVaried = false;
+            // Allow each slice to have its own color
+            chart.NSeries[0].IsColorVaried = true;
 
-        // Assign custom colors to each slice based on importance
-        // Slice 0 (High)   -> Red
-        chart.NSeries[0].Points[0].Area.ForegroundColor = Color.Red;
-        // Slice 1 (Medium) -> Orange
-        chart.NSeries[0].Points[1].Area.ForegroundColor = Color.Orange;
-        // Slice 2 (Low)    -> Green
-        chart.NSeries[0].Points[2].Area.ForegroundColor = Color.Green;
+            // Define custom colors for each slice based on importance
+            Color[] sliceColors = { Color.Red, Color.Orange, Color.Green, Color.Blue };
 
-        // Save the workbook with the customized pie chart
-        workbook.Save("CustomPieSliceColors.xlsx");
+            // Apply the custom colors to the individual points (slices)
+            for (int i = 0; i < sliceColors.Length; i++)
+            {
+                chart.NSeries[0].Points[i].Area.ForegroundColor = sliceColors[i];
+            }
+
+            // Save the workbook with the customized pie chart
+            workbook.Save("PieChartCustomColors.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

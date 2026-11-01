@@ -1,13 +1,13 @@
-// Title: How to verify that all worksheets in an Aspose.Cells workbook have unique TabId values using C#
-// AI Prompts: Write a C# method that takes an Aspose.Cells Workbook, iterates through its worksheets, and throws an InvalidOperationException with the sheet name when a duplicate TabId is found. | Generate C# code that uses a HashSet to detect duplicate TabId values across worksheets in an Aspose.Cells workbook and logs each conflict before saving the file.
-// Common Searches: aspocells c# check for duplicate worksheet tabid | ensure each Excel sheet has a unique TabId with Aspose.Cells | detect duplicate TabId in workbook using Aspose.Cells C# | C# Aspose.Cells validate worksheet TabId uniqueness before saving | how to enforce unique TabId values in an Excel workbook with Aspose.Cells
-// Tags: Aspose.Cells worksheet TabId uniqueness check | C# HashSet duplicate TabId detection | Aspose.Cells workbook validation for TabId conflicts | exception handling duplicate TabId Aspose.Cells | unique TabId enforcement in Excel workbook C#
+// Title: Check for duplicate worksheet TabId values in an Aspose.Cells workbook with C#
+// AI Prompts: Generate C# code using Aspose.Cells that iterates through all worksheets and logs any repeated TabId values. | Create a reusable C# method that returns true only if every worksheet in a workbook has a distinct TabId. | Write a C# routine that validates worksheet TabId uniqueness and saves the workbook only when no duplicates are found.
+// Common Searches: aspnet c# how to ensure each Excel sheet has a unique TabId with Aspose.Cells | detect duplicate worksheet TabId in Aspose.Cells .NET library | C# code sample for validating worksheet TabId uniqueness in an Excel workbook | Aspose.Cells check for repeated TabId after modifying worksheets
+// Tags: Aspose.Cells validate worksheet TabId uniqueness | C# detect duplicate worksheet TabId | Aspose.Cells worksheet TabId duplicate check | hashset duplicate detection Aspose.Cells | Excel workbook TabId validation C#
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 
-// C# example that iterates through all worksheets in an Aspose.Cells workbook, uses a HashSet to ensure each TabId is unique, throws an InvalidOperationException on duplicates, and saves the workbook if validation passes.
+// The program loads an Excel workbook with Aspose.Cells, optionally modifies worksheets, then uses a HashSet to ensure each worksheet's TabId is unique, reports any duplicates, and saves the file only if validation succeeds.
 class Program
 {
     static void Main()
@@ -15,23 +15,33 @@ class Program
         // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
+        // -------------------------------------------------
+        // Perform any worksheet modifications here
+        // -------------------------------------------------
+        // Example: workbook.Worksheets[0].Name = "FirstSheet";
+
         // Validate that each worksheet has a unique TabId
         HashSet<int> tabIdSet = new HashSet<int>();
+        bool duplicateFound = false;
+
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            int tabId = sheet.TabId;
+            int tabId = sheet.TabId; // Get the TabId of the current worksheet
 
-            // If the TabId already exists in the set, a duplicate is found
+            // Try to add the TabId to the set; if it already exists, we have a duplicate
             if (!tabIdSet.Add(tabId))
             {
-                // Throw an exception or handle the duplicate as needed
-                throw new InvalidOperationException(
-                    $"Duplicate TabId {tabId} detected in worksheet \"{sheet.Name}\".");
+                Console.WriteLine($"Duplicate TabId detected: {tabId} on worksheet \"{sheet.Name}\"");
+                duplicateFound = true;
             }
         }
 
-        // If no exception was thrown, all TabIds are unique
-        // Save the workbook if further processing is required
+        if (!duplicateFound)
+        {
+            Console.WriteLine("Validation passed: all worksheets have unique TabId values.");
+        }
+
+        // Save the workbook after validation (optional)
         workbook.Save("output.xlsx");
     }
 }

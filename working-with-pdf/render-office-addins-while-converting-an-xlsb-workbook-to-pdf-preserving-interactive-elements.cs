@@ -1,43 +1,47 @@
-// Title: Convert an XLSB workbook to PDF with Aspose.Cells for .NET and handle missing file errors
-// AI Prompts: Write a C# console program that checks whether an .xlsb file exists, loads it with Aspose.Cells, and saves it as a PDF using the default PdfSaveOptions, wrapping the whole process in a try‑catch block. | Show how to log detailed exception information when converting an XLSB workbook to PDF with Aspose.Cells in a .NET application. | Demonstrate customizing PdfSaveOptions (e.g., embedding fonts) while converting an XLSB file to PDF using Aspose.Cells in C#. | Provide a C# snippet that returns the output PDF path after successfully converting an XLSB workbook with Aspose.Cells.
-// Common Searches: asp.net convert xlsb file to pdf using aspose.cells with file not found check | c# example for saving an xlsb workbook as pdf with Aspose.Cells PdfSaveOptions | how to handle exceptions when converting xlsb to pdf in a .NET console app | default pdf save options for Aspose.Cells workbook conversion | sample code to verify input file existence before Aspose.Cells PDF export
-// Tags: xlsb to pdf conversion Aspose.Cells | Aspose.Cells PdfSaveOptions C# | file existence validation Aspose.Cells | exception handling workbook to pdf .NET | convert binary Excel workbook to PDF using Aspose | default PDF export settings Aspose.Cells
+// Title: C# code to load an XLSB workbook with Aspose.Cells and export it to PDF using default PdfSaveOptions
+// AI Prompts: Write a C# program that verifies an XLSB file path, loads the workbook with Aspose.Cells LoadOptions, and saves it as a PDF with basic PdfSaveOptions. | Demonstrate how to configure Aspose.Cells LoadOptions for the XLSB format before performing a PDF conversion in .NET. | Create a C# snippet that catches and logs any exceptions occurring during the XLSB‑to‑PDF conversion with Aspose.Cells.
+// Common Searches: asp.net convert xlsb workbook to pdf using aspose.cells c# example | c# loadoptions xlsb format aspose.cells documentation | how to use pdfsaveoptions for simple pdf export in aspose.cells c# | c# check file existence before converting workbook to pdf aspose.cells
+// Tags: XLSB workbook loading Aspose.Cells | PDF export PdfSaveOptions Aspose.Cells | C# file existence validation for conversion | exception handling Aspose.Cells workbook save | basic PDF conversion Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example verifies that the source .xlsb file exists, loads it into an Aspose.Cells Workbook, and saves it as a PDF using the default PdfSaveOptions, while gracefully handling any runtime exceptions.
+// The program checks that an XLSB file exists, loads it with Aspose.Cells using LoadOptions set to the XLSB format, and saves it as a PDF with default PdfSaveOptions while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsb";
-        const string outputPath = "output.pdf";
+        // Path to the source XLSB workbook
+        string sourcePath = @"C:\Input\Workbook.xlsb";
+
+        // Path for the output PDF file
+        string outputPath = @"C:\Output\Workbook.pdf";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
 
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+            // Load the XLSB workbook with appropriate load options
+            var loadOptions = new LoadOptions(LoadFormat.Xlsb);
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // Load the XLSB workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure PDF save options (default options are sufficient for most scenarios)
+            // Configure PDF save options (basic options; advanced properties like PreserveOfficeAddIns are not available)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
             // Save the workbook as PDF with the specified options
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+
+            Console.WriteLine($"Workbook successfully saved as PDF to: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Handle any runtime exceptions gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

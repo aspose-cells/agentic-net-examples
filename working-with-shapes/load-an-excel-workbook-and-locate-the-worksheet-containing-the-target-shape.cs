@@ -1,50 +1,50 @@
-// Title: Find the worksheet that contains a specific shape name in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through all worksheets and returns the name of the sheet where a shape with a given Name is found. | Show how to exit nested loops efficiently after locating a target shape in a workbook and optionally save the modified file.
-// Common Searches: asp.net locate worksheet that holds a shape named MyShape using Aspose.Cells | c# iterate over workbook worksheets to find a specific drawing shape | asp.net core retrieve sheet index of a shape in an Excel file with Aspose.Cells | how to determine which worksheet contains a particular shape in Excel via Aspose.Cells | c# break out of nested loops after finding a shape in Aspose.Cells workbook
-// Tags: shape name lookup Aspose.Cells | worksheet identification from shape C# | loop through workbook shapes Aspose.Cells | conditional break after shape detection .NET
+// Title: Locate the worksheet that contains a named shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# find which worksheet a shape belongs to by shape name | search for a specific shape across all sheets in an Excel workbook with Aspose.Cells | determine worksheet containing a shape named MyShape using Aspose.Cells .NET | iterate worksheets to locate a shape by name in Aspose.Cells C# example | how to get worksheet reference for a shape in an Excel file using Aspose.Cells
+// Tags: iterate worksheets Aspose.Cells | shape name lookup Aspose.Cells | retrieve worksheet for shape Aspose.Cells | search shapes across worksheets C# | find shape location Excel Aspose.Cells
 
-// Load the Excel workbook
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
+using Aspose.Cells;
+using System;
 
-// Define the name (or other identifier) of the target shape
-string targetShapeName = "MyShape";
-
-// Variable to hold the worksheet that contains the shape
-Aspose.Cells.Worksheet targetWorksheet = null;
-
-// Iterate through all worksheets in the workbook
-foreach (Aspose.Cells.Worksheet sheet in workbook.Worksheets)
+// The sample loads an Excel workbook, defines the target shape name, loops through each worksheet and its Shapes collection, compares each shape's Name property to the target, captures the worksheet where the match is found, and prints the worksheet name or a not‑found message.
+class Program
 {
-    // Check if the worksheet has any shapes
-    if (sheet.Shapes.Count > 0)
+    static void Main()
     {
-        // Iterate through the shapes in the current worksheet
-        foreach (Aspose.Cells.Drawing.Shape shape in sheet.Shapes)
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Define the name of the shape to locate
+        string targetShapeName = "MyShape";
+
+        // Variable to hold the worksheet that contains the target shape
+        Worksheet targetWorksheet = null;
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Compare shape name (or other property) with the target identifier
-            if (shape.Name == targetShapeName)
+            // Iterate through all shapes in the current worksheet
+            foreach (Aspose.Cells.Drawing.Shape shape in sheet.Shapes)
             {
-                targetWorksheet = sheet;
-                break;
+                // Check if the shape's name matches the target name
+                if (shape.Name == targetShapeName)
+                {
+                    targetWorksheet = sheet;
+                    break; // Shape found, exit inner loop
+                }
             }
+
+            if (targetWorksheet != null)
+                break; // Shape found, exit outer loop
+        }
+
+        // Output the result
+        if (targetWorksheet != null)
+        {
+            Console.WriteLine($"Shape '{targetShapeName}' found in worksheet: {targetWorksheet.Name}");
+        }
+        else
+        {
+            Console.WriteLine($"Shape '{targetShapeName}' not found in any worksheet.");
         }
     }
-
-    // If the shape has been found, exit the outer loop as well
-    if (targetWorksheet != null)
-        break;
 }
-
-// At this point, targetWorksheet holds the worksheet containing the shape (or null if not found)
-if (targetWorksheet != null)
-{
-    // Example: output the name of the worksheet
-    System.Console.WriteLine("Shape found in worksheet: " + targetWorksheet.Name);
-}
-else
-{
-    System.Console.WriteLine("Shape not found in any worksheet.");
-}
-
-// (Optional) Save the workbook if any modifications were made
-// workbook.Save("output.xlsx");

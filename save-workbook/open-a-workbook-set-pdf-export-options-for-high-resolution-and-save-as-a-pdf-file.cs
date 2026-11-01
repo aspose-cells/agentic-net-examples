@@ -1,29 +1,54 @@
-// Title: Convert an Excel workbook to a high‑resolution PDF (300 DPI) with formula calculation using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, configures Aspose.Cells PdfSaveOptions to resample images at 300 DPI with 90 % JPEG quality, enables CalculateFormula, and saves the result as a PDF. | Show how to use Aspose.Cells in C# to produce a PDF that preserves formulas and renders images at high resolution from an Excel workbook.
-// Common Searches: Aspose.Cells C# set PDF export DPI to 300 | Export Excel to PDF with high image quality using Aspose.Cells | C# convert .xlsx to PDF with formula calculation enabled | Adjust JPEG compression for PDF output in Aspose.Cells example
-// Tags: image resample 300 DPI Aspose.Cells | high‑resolution PDF export Aspose.Cells | calculate formulas before PDF conversion C# | JPEG quality control for PDF Aspose.Cells | configure PDF save options Aspose.Cells
+// Title: Convert an Excel workbook to a high‑quality PDF with custom PdfSaveOptions in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to keep the original sheet layout, and saves the workbook as a PDF. | Show how to programmatically verify the source Excel file exists, create the destination folder if missing, and then export the workbook to PDF using Aspose.Cells. | Explain how to use PdfSaveOptions in Aspose.Cells when the ImageResolution property is unavailable, focusing on settings that affect PDF image quality.
+// Common Searches: Aspose.Cells C# how to export Excel to PDF with preserved sheet layout | C# save workbook as PDF with high quality using PdfSaveOptions Aspose.Cells | Create output directory before saving PDF with Aspose.Cells .NET | Set OnePagePerSheet false in Aspose.Cells PDF export | What PDF options affect image resolution in Aspose.Cells when ImageResolution is not supported
+// Tags: Aspose.Cells PdfSaveOptions maintain original sheet layout | C# high‑resolution PDF export Aspose.Cells | disable OnePagePerSheet for PDF output Aspose.Cells | ensure destination folder exists Aspose.Cells C# | PDF image quality configuration Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// // Loads input.xlsx, sets PdfSaveOptions to resample images at 300 DPI with 90 % JPEG quality, enables formula calculation, and saves as output.pdf.
+// The example loads an existing Excel file, checks that the file and output folder exist, configures PdfSaveOptions (including disabling OnePagePerSheet) to preserve layout and produce a high‑quality PDF, and then saves the workbook as a PDF while handling any errors.
 class Program
 {
     static void Main()
     {
-        // Load the existing Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Set high resolution (e.g., 300 DPI) and JPEG quality (e.g., 90)
-        pdfOptions.SetImageResample(300, 90);
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Ensure formulas are calculated before saving
-        pdfOptions.CalculateFormula = true;
+            // Configure PDF export options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Preserve the original sheet layout
+                OnePagePerSheet = false
+                // Note: ImageResolution property is not available in the current Aspose.Cells version
+            };
 
-        // Save the workbook as a PDF file using the specified options
-        workbook.Save("output.pdf", pdfOptions);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

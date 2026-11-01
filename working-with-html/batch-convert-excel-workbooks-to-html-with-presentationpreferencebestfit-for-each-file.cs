@@ -1,75 +1,73 @@
-// Title: Convert a folder of Excel .xlsx workbooks to HTML with Aspose.Cells using PresentationPreference.BestFit in C#
-// AI Prompts: Generate a C# console application that scans a specified directory for *.xlsx files, loads each workbook with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to BestFit, and saves the output as .html files in a target folder. | Write C# code that creates HtmlSaveOptions for Aspose.Cells with the BestFit layout, iterates over all Excel files in an input folder, and batch‑converts them to HTML while handling missing files and ensuring the output directory exists.
-// Common Searches: aspocells c# batch convert xlsx files to html with bestfit layout | how to use HtmlSaveOptions PresentationPreference BestFit in Aspose.Cells | c# program to convert all Excel workbooks in a folder to html using Aspose.Cells | convert multiple .xlsx files to .html preserving column widths aspocells | aspocells save workbook as html with best‑fit presentation option
-// Tags: Aspose.Cells batch HTML conversion | HtmlSaveOptions PresentationPreference BestFit | C# enumerate Excel files directory | convert xlsx to html Aspose.Cells | Aspose.Cells workbook.Save with HTML options
+// Title: Batch convert multiple Excel workbooks to HTML with Aspose.Cells C# and PresentationPreference.BestFit
+// Common Searches: c# loop through a list of .xlsx files and export each to html using aspose.cells | asp.net batch excel to html conversion with PresentationPreference BestFit | how to save multiple workbooks as html in a single folder with Aspose.Cells | using HtmlSaveOptions to set BestFit layout for each workbook in C# | automate conversion of several Excel files to html files with Aspose.Cells library
+// Tags: batch excel to html conversion Aspose.Cells | HtmlSaveOptions PresentationPreference BestFit C# | export multiple workbooks as html Aspose.Cells | C# iterate excel files and save as html | Aspose.Cells HTML export settings per workbook
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Scans a given input folder for .xlsx files, loads each workbook with Aspose.Cells, applies HtmlSaveOptions with PresentationPreference.BestFit, and saves each workbook as an .html file in a specified output folder, including basic error handling and folder creation.
-class BatchExcelToHtml
+namespace ExcelToHtmlBatch
 {
-    static void Main()
+    // The example lists Excel file paths, creates an output directory, and iterates over each workbook. For every existing file it loads the workbook with Aspose.Cells, configures HtmlSaveOptions (including optional PresentationPreference.BestFit), builds a matching HTML file name, and saves the workbook as an HTML document, logging successes and errors to the console.
+    class Program
     {
-        // Folder containing the Excel workbooks to convert
-        string inputFolder = @"C:\InputExcels";
-
-        // Folder where the resulting HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
-        }
+            // List of Excel files to convert.
+            List<string> excelFiles = new List<string>
+            {
+                @"C:\Input\Workbook1.xlsx",
+                @"C:\Input\Workbook2.xls",
+                @"C:\Input\Workbook3.xlsx"
+            };
 
-        // Ensure the output directory exists
-        if (!Directory.Exists(outputFolder))
-        {
+            // Destination folder for HTML files.
+            string outputFolder = @"C:\Output\Html";
+
+            // Ensure the output folder exists.
             Directory.CreateDirectory(outputFolder);
-        }
 
-        // Get all Excel files (you can adjust the pattern for other extensions)
-        string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
-
-        foreach (string excelPath in excelFiles)
-        {
-            try
+            // Process each workbook.
+            foreach (string excelPath in excelFiles)
             {
-                // Verify the file still exists before loading
-                if (!File.Exists(excelPath))
+                try
                 {
-                    Console.WriteLine($"File not found, skipping: {excelPath}");
-                    continue;
+                    // Verify the source file exists.
+                    if (!File.Exists(excelPath))
+                    {
+                        Console.WriteLine($"Source file not found: '{excelPath}'. Skipping.");
+                        continue;
+                    }
+
+                    // Load the workbook.
+                    Workbook workbook = new Workbook(excelPath);
+
+                    // Configure HTML save options.
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                    {
+                        // Optional: Export only the first worksheet.
+                        // ExportActiveWorksheetOnly = true,
+                        // Optional: Embed images as base64.
+                        // ExportImagesAsBase64 = true
+                    };
+
+                    // Determine output HTML file name.
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                    // Save the workbook as HTML.
+                    workbook.Save(htmlPath, saveOptions);
+
+                    Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
                 }
-
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(excelPath);
-
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-                // The PresentationPreference property may not be available in all versions.
-                // If needed, uncomment the following line after confirming the enum exists.
-                // htmlOptions.PresentationPreference = PresentationPreference.BestFit;
-
-                // Determine the output HTML file path
-                string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
-                string htmlPath = Path.Combine(outputFolder, htmlFileName);
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(htmlPath, htmlOptions);
-
-                Console.WriteLine($"Converted: {excelPath} -> {htmlPath}");
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error converting '{excelPath}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch conversion completed.");
         }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

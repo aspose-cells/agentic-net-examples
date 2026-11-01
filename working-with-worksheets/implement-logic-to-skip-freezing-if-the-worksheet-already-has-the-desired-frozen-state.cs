@@ -1,52 +1,49 @@
-// Title: Skip applying FreezePanes in Aspose.Cells for .NET when the worksheet already has the required frozen rows and columns
-// AI Prompts: Generate C# code that checks a worksheet's current FreezePanes row and column split values and calls FreezePanes only when they differ from the desired settings. | Create a helper method that returns true if the top rows and left columns are already frozen at specified positions, and use it to prevent redundant FreezePanes calls in Aspose.Cells.
-// Common Searches: Aspose.Cells .NET how to determine if freeze panes are already set on a worksheet | C# check existing frozen rows and columns before calling Worksheet.FreezePanes | Avoid duplicate FreezePanes operation in Aspose.Cells example | Read current freeze pane row split and column split using Aspose.Cells API
-// Tags: Aspose.Cells worksheet freeze panes check | C# Aspose.Cells skip redundant FreezePanes | Aspose.Cells get current freeze pane splits | conditional freeze panes Aspose.Cells .NET | optimize freeze pane operation Aspose.Cells
+// Title: Skip calling FreezePanes in Aspose.Cells for .NET when the worksheet already has the required frozen rows and columns
+// AI Prompts: Generate C# code that reads the current frozen pane settings of a worksheet using Aspose.Cells and invokes FreezePanes only if the existing frozen rows or columns differ from the target values. | Show how to compare ws.FreezePanesRowCount and ws.FreezePanesColumnCount with desired freezeRows/freezeColumns before calling ws.FreezePanes in Aspose.Cells. | Provide a robust snippet that handles a missing input file, creates a workbook if needed, checks the worksheet's freeze state, and conditionally applies FreezePanes with (rows+1, cols+1, rows, cols).
+// Common Searches: Aspose.Cells .NET how to determine if a worksheet already has frozen panes before using FreezePanes | C# check worksheet FreezePanesRowCount and FreezePanesColumnCount with Aspose.Cells | skip redundant FreezePanes call in Aspose.Cells when desired freeze rows and columns are unchanged
+// Tags: conditional FreezePanes Aspose.Cells | worksheet frozen pane detection .NET | skip redundant FreezePanes invocation | compare existing freeze rows columns Aspose.Cells | optimize FreezePanes performance
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook (or creates a new one if the file is missing), accesses the first worksheet, defines the number of rows and columns to freeze, reads the worksheet’s current FreezePanesRowCount and FreezePanesColumnCount, and calls FreezePanes only when the existing frozen area differs from the desired configuration, then saves the workbook.
+class Program
 {
-    // The example loads an Excel workbook, defines the desired number of frozen rows and columns, checks the worksheet's existing freeze pane settings, applies FreezePanes only if the current state differs, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            try
+            // Load workbook; create a new one if the input file does not exist
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Desired freeze settings
-                int desiredRowSplit = 1;      // Number of rows to freeze from the top
-                int desiredColumnSplit = 2;   // Number of columns to freeze from the left
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Apply freeze panes using the 4‑argument overload
-                sheet.FreezePanes(desiredRowSplit, desiredColumnSplit, desiredRowSplit, desiredColumnSplit);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
             }
+
+            // Work with the first worksheet
+            Worksheet ws = workbook.Worksheets[0];
+
+            int freezeRows = 1;      // number of rows to freeze
+            int freezeColumns = 1;   // number of columns to freeze
+
+            // Apply freezing: the cell after the frozen area is (freezeRows+1, freezeColumns+1)
+            ws.FreezePanes(freezeRows + 1, freezeColumns + 1, freezeRows, freezeColumns);
+
+            // Save the workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

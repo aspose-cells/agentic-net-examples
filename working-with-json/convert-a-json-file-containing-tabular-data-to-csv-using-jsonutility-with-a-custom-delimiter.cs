@@ -1,56 +1,56 @@
-// Title: Convert a JSON file to CSV with a semicolon delimiter using Aspose.Cells in C#
-// AI Prompts: Generate C# code that reads a JSON file, loads it into an Aspose.Cells Workbook with auto‑detect, and saves the first worksheet as a CSV using a semicolon as the separator. | Show how to configure TxtSaveOptions in Aspose.Cells to export workbook data to CSV with a custom delimiter in a .NET console application.
-// Common Searches: aspocells c# convert json file to csv with custom separator | how to set semicolon delimiter when saving workbook as csv using Aspose.Cells | load json data into workbook and export to csv using TxtSaveOptions in .NET | c# Aspose.Cells JsonUtility load json and save as csv with custom delimiter
-// Tags: Aspose.Cells JsonUtility load JSON | TxtSaveOptions CSV separator | Workbook.Save CSV with semicolon | C# Aspose.Cells JSON to CSV conversion | LoadOptions auto format detection
+// Title: Convert a JSON file to a CSV file with a semicolon delimiter using Aspose.Cells JsonUtility in C#
+// AI Prompts: Generate C# code that reads a JSON file, imports the data into an Aspose.Cells workbook with JsonUtility, and exports it to a CSV file using a semicolon as the field separator. | Show how to configure TxtSaveOptions to specify a custom delimiter when saving a workbook as CSV with Aspose.Cells. | Add robust error handling that checks for the JSON input file's existence and captures exceptions during the JSON‑to‑CSV conversion.
+// Common Searches: c# Aspose.Cells convert json to csv with custom delimiter | how to set semicolon separator when exporting workbook to csv using Aspose.Cells | JsonUtility import json data into worksheet then save as csv Aspose.Cells example | error handling for missing json file Aspose.Cells JsonUtility conversion | save workbook as csv with custom separator using TxtSaveOptions in .NET
+// Tags: Aspose.Cells JsonUtility import JSON to worksheet | Aspose.Cells TxtSaveOptions custom CSV delimiter | JSON to CSV conversion C# Aspose.Cells | file existence validation Aspose.Cells conversion | exception handling Aspose.Cells JSON import
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-// The example reads a JSON file, loads its tabular data into an Aspose.Cells Workbook using auto‑detect load options, and then saves the first worksheet as a CSV file where the fields are separated by a semicolon.
+// The sample reads a JSON file, uses Aspose.Cells JsonUtility to load the tabular data into a workbook, and saves the workbook as a CSV file with a semicolon delimiter via TxtSaveOptions, while validating the input file and handling potential errors.
 class JsonToCsvConverter
 {
     static void Main()
     {
+        // Paths to the input JSON file and the output CSV file
+        string jsonFilePath = "data.json";
+        string csvFilePath = "output.csv";
+
+        // Define the custom delimiter for the CSV output
+        char customDelimiter = ';';
+
         try
         {
-            // Path to the source JSON file
-            string jsonFilePath = "input.json";
-
-            // Verify that the JSON file exists
+            // Verify that the JSON input file exists
             if (!File.Exists(jsonFilePath))
-            {
-                Console.WriteLine($"Error: JSON file '{jsonFilePath}' not found.");
-                return;
-            }
+                throw new FileNotFoundException($"Input JSON file not found: {jsonFilePath}");
 
-            // Read the entire JSON content
+            // Read the entire JSON content from the file
             string jsonContent = File.ReadAllText(jsonFilePath);
 
-            // Load JSON data into a workbook using LoadOptions with Auto detection
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-            Workbook workbook;
-            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonContent)))
-            {
-                workbook = new Workbook(ms, loadOptions);
-            }
+            // Create a new empty workbook
+            Workbook workbook = new Workbook();
 
-            // Configure CSV save options with a custom delimiter (e.g., semicolon)
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            // Prepare JSON layout options (first row contains column names)
+            JsonLayoutOptions jsonOptions = new JsonLayoutOptions();
+            // jsonOptions.FirstRowIsColumnNames = true; // Uncomment if supported by your version
+
+            // Import the JSON data into the first worksheet starting at cell A1 (row 0, column 0)
+            JsonUtility.ImportData(jsonContent, workbook.Worksheets[0].Cells, 0, 0, jsonOptions);
+
+            // Set up CSV save options with the custom delimiter using TxtSaveOptions
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV)
             {
-                Separator = ';'   // Custom delimiter
+                Separator = customDelimiter
             };
 
-            // Save the first worksheet as a CSV file using the specified options
-            string csvOutputPath = "output.csv";
-            workbook.Save(csvOutputPath, csvOptions);
-
-            Console.WriteLine($"JSON data has been converted to CSV and saved to '{csvOutputPath}'.");
+            // Save the workbook as a CSV file using the specified options
+            workbook.Save(csvFilePath, csvOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

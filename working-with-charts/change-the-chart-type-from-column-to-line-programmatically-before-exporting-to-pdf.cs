@@ -1,49 +1,56 @@
-// Title: Programmatically change a column chart to a line chart and export it as a PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that converts an existing column chart to a line chart in an Aspose.Cells workbook and saves the chart as a PDF file. | Write a C# snippet using Aspose.Cells to set Chart.Type from Column to Line and then call Chart.ToPdf to export only the chart. | Create a C# example that builds a column chart, switches its type to line, and uses the Aspose.Cells API to produce a PDF of the chart.
-// Common Searches: Aspose.Cells C# change chart type from column to line before PDF export | How to export only a chart to PDF using Aspose.Cells .NET | C# Aspose.Cells convert column chart to line chart and save as PDF | Chart.ToPdf method example for line chart in Aspose.Cells | Modify chart type programmatically Aspose.Cells .NET
-// Tags: Aspose.Cells change chart type | Aspose.Cells export chart to PDF | C# chart type conversion line | Aspose.Cells Chart.ToPdf usage | programmatic chart type modification Aspose.Cells
+// Title: Convert column and stacked column charts to line charts programmatically before saving an Excel workbook as PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an XLSX file, changes every Column or StackedColumn chart to a Line chart, and saves the workbook as a PDF using Aspose.Cells. | Generate a script that iterates through all worksheets in a workbook, updates chart.Type from Column/ColumnStacked to Line, then exports the result to PDF. | Provide a .NET example that replaces column‑type charts with line charts in an existing workbook and creates a PDF output.
+// Common Searches: how to change column chart to line chart with Aspose.Cells C# before PDF export | Aspose.Cells .NET replace stacked column chart with line chart programmatically | convert Excel chart types to line and generate PDF using Aspose.Cells | C# iterate workbook charts and modify type prior to saving as PDF
+// Tags: chart type conversion using Aspose.Cells | programmatic chart replacement before PDF generation | Aspose.Cells workbook chart manipulation example | C# export Excel to PDF after chart changes | update Excel chart objects with .NET API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartConversion
+// The code loads an existing XLSX workbook, loops through each worksheet and its charts, converts any Column or Stacked Column chart to a Line chart, and then saves the modified workbook as a PDF.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, changes its type to a line chart via the Chart.Type property, and then exports the chart directly to a PDF file using the Chart.ToPdf method.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Cherry");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(45);
-            sheet.Cells["B4"].PutValue(25);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a column chart (initial type)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts in the worksheet
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Convert column charts (including stacked) to line charts
+                    if (chart.Type == ChartType.Column ||
+                        chart.Type == ChartType.ColumnStacked)
+                    {
+                        chart.Type = ChartType.Line;
+                    }
+                }
+            }
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Change the chart type from Column to Line
-            chart.Type = ChartType.Line;
-
-            // Export the chart to a PDF file
-            chart.ToPdf("LineChartOutput.pdf");
-
-            Console.WriteLine("Chart type changed to Line and exported to PDF successfully.");
+            // Export the modified workbook to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

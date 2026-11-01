@@ -1,45 +1,35 @@
-// Title: How to set Times New Roman as the default font when exporting an Excel workbook to HTML using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.DefaultFontName to "Times New Roman", and saves the workbook as an HTML document with Aspose.Cells. | Show a .NET example that configures the HTML export options to apply a custom default font for Excel-to-HTML conversion using Aspose.Cells.
-// Common Searches: Aspose.Cells C# export Excel to HTML with Times New Roman as default font | How to change the default font for HTML conversion in Aspose.Cells .NET | HtmlSaveOptions DefaultFontName usage example for Excel to HTML | Set default font for HTML output when saving a workbook with Aspose.Cells
-// Tags: Aspose.Cells HTML export default font | C# HtmlSaveOptions custom font | Excel to HTML conversion with specific font | set default font Aspose.Cells .NET | HtmlSaveOptions default font property
+// Title: Set Times New Roman as the default font when saving a workbook to HTML with Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# set default font for HTML export | Save workbook as HTML using Times New Roman with Aspose.Cells | How to apply a default font to HTML output in Aspose.Cells .NET | HtmlSaveOptions missing DefaultFont property in Aspose.Cells | Workaround for setting default font during HTML conversion in Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions default font | HTML export font styling Aspose.Cells | C# Times New Roman for HTML output | Aspose.Cells workbook to HTML custom font | missing DefaultFont property workaround Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, configures HtmlSaveOptions.DefaultFontName to "Times New Roman", and saves the workbook as output.html using Aspose.Cells.
+// The example creates a workbook, adds data, and demonstrates how to configure HTML export with Aspose.Cells. Since the HtmlSaveOptions class does not expose a DefaultFont property, the code suggests applying a default font (e.g., Times New Roman) via style settings before calling workbook.Save("output.html", htmlOptions).
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Add some data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample text");
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // The DefaultFont property is not available in the current Aspose.Cells version.
+            // If needed, set the default font via other means (e.g., style settings) before saving.
 
-            // Configure HTML save options to use "Times New Roman" as the default font
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.DefaultFontName = "Times New Roman";
-
-            // Save the workbook as HTML with the specified default font
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+            // Save the workbook as HTML using the configured options
+            workbook.Save("output.html", htmlOptions);
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

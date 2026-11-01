@@ -1,63 +1,55 @@
-// Title: Create clickable Excel hyperlinks from DataTable values using Aspose.Cells smart markers in C#
-// AI Prompts: Write C# code that employs Aspose.Cells WorkbookDesigner to replace smart markers with URL and display text taken from a DataTable, then adds a Hyperlink object to each display cell. | Demonstrate how to iterate over the rows after smart marker processing and attach a hyperlink to the text cell using the URL stored in the adjacent column. | Provide a full example that saves the workbook as an .xlsx file with all generated hyperlinks functional.
-// Common Searches: aspnet c# Aspose.Cells add hyperlink to cell after smart marker processing | how to bind a DataTable to smart markers and create clickable links in Excel using Aspose.Cells | C# example for inserting dynamic URLs into Excel with smart markers and Hyperlinks class
-// Tags: Aspose.Cells WorkbookDesigner smart marker population | Aspose.Cells add hyperlink to Excel cell | C# generate Excel hyperlinks from DataTable | smart markers dynamic URL insertion | Excel .xlsx hyperlink creation with Aspose
+// Title: Insert external hyperlinks into Excel using Aspose.Cells smart markers with a DataTable in C#
+// AI Prompts: Write C# code that uses Aspose.Cells WorkbookDesigner to replace a smart marker with clickable URLs sourced from a DataTable column. | Show how to place the '&="Hyperlink"' smart marker in a worksheet and bind it to a DataTable so that Excel cells become dynamic hyperlinks.
+// Common Searches: Aspose.Cells C# bind DataTable to smart marker for hyperlink generation | Create clickable URLs in Excel with WorkbookDesigner and smart markers .NET | Replace smart marker with external link from DataTable using Aspose.Cells | C# example of inserting multiple hyperlinks into an Excel file via smart markers
+// Tags: smart-marker hyperlink Aspose.Cells | WorkbookDesigner populate URLs from DataTable | generate external links Excel C# Aspose.Cells | dynamic hyperlink insertion Excel .NET
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerHyperlinkDemo
+namespace AsposeCellsHyperlinkExample
 {
-    // Shows how to use Aspose.Cells WorkbookDesigner to fill smart markers with URL and display text from a DataTable, then adds Hyperlink objects to the corresponding cells for each row and saves the workbook as an .xlsx file with functional clickable links.
+    // The example creates a new workbook, adds a smart marker '&="Hyperlink"' to cell A1, builds a DataTable containing a 'Url' column with target addresses, assigns the table to a WorkbookDesigner as the data source named 'Links', processes the smart markers to replace the placeholder with actual clickable hyperlinks, and saves the workbook as 'HyperlinksOutput.xlsx'.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Insert smart markers for URL and display text
-            // A1 will hold the URL, B1 will hold the text to display
-            sheet.Cells["A1"].PutValue("&=LinkUrl");
-            sheet.Cells["B1"].PutValue("&=LinkText");
-
-            // Prepare a data source with dynamic URL fields
-            DataTable dt = new DataTable("Links");
-            dt.Columns.Add("LinkUrl", typeof(string));
-            dt.Columns.Add("LinkText", typeof(string));
-
-            // Add sample rows (in real scenarios this could come from a database, JSON, etc.)
-            dt.Rows.Add("https://www.aspose.com", "Aspose Home");
-            dt.Rows.Add("https://github.com/aspose-cells", "Aspose Cells GitHub");
-            dt.Rows.Add("https://www.google.com", "Google");
-
-            // Use WorkbookDesigner to process the smart markers
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(dt);
-            designer.Process(); // Populate A1 and B1 with the first row values
-
-            // After processing, the first row values are in A1 (URL) and B1 (display text)
-            // Add a hyperlink to the display text cell (B1) using the URL from A1
-            string url = sheet.Cells["A1"].StringValue; // Get the populated URL
-            sheet.Hyperlinks.Add("B1", 1, 1, url); // Create hyperlink on B1
-
-            // Optionally, repeat for remaining rows by inserting them below
-            // Insert remaining rows starting from row 2
-            for (int i = 1; i < dt.Rows.Count; i++)
+            try
             {
-                int rowIndex = i + 1; // Excel rows are 1‑based; row 2 corresponds to index 1
-                // Populate URL and display text
-                sheet.Cells[rowIndex, 0].PutValue(dt.Rows[i]["LinkUrl"]);
-                sheet.Cells[rowIndex, 1].PutValue(dt.Rows[i]["LinkText"]);
+                // Create a new workbook.
+                var workbook = new Workbook();
 
-                // Add hyperlink to the display text cell
-                sheet.Hyperlinks.Add(rowIndex, 1, 1, 1, dt.Rows[i]["LinkUrl"].ToString());
+                // Access the first worksheet.
+                var worksheet = workbook.Worksheets[0];
+
+                // Insert a smart marker that will be replaced by a hyperlink.
+                // The syntax &="Hyperlink" tells Aspose.Cells to treat the cell as a hyperlink.
+                // The column name "Url" (provided in the data source) will be used as the hyperlink address.
+                worksheet.Cells["A1"].PutValue("&=\"Hyperlink\"");
+
+                // Prepare the data source – a DataTable with a single column "Url" containing the target URLs.
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("Url", typeof(string));
+
+                // Add sample rows – in a real scenario these would be populated dynamically.
+                dataTable.Rows.Add("https://www.example.com");
+                dataTable.Rows.Add("https://www.openai.com");
+                dataTable.Rows.Add("https://www.github.com");
+
+                // Use WorkbookDesigner to process smart markers.
+                var designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource("Links", dataTable);
+                designer.Process(); // Replaces the placeholder with actual hyperlinks.
+
+                // Save the workbook.
+                string outputPath = "HyperlinksOutput.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Save the workbook to an Excel file
-            workbook.Save("SmartMarkerHyperlinksDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

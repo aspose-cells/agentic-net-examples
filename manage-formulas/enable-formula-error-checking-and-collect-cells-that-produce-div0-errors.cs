@@ -1,72 +1,91 @@
-// Title: Detect and list cells that return #DIV/0! errors after calculating formulas with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to calculate all formulas in a workbook and return a List<string> of cell addresses where the result is a #DIV/0! error. | Create a reusable method that scans every worksheet’s used range, checks CellValueType.IsError, and collects the names of cells that contain any formula error. | Extend the solution to separate cells by error type (e.g., #DIV/0!, #VALUE!, #REF!) and output each group as a distinct list.
-// Common Searches: Aspose.Cells C# find cells with #DIV/0! after CalculateFormula | How to enumerate Excel formula errors using Aspose.Cells .NET | Get addresses of division by zero errors in a workbook with Aspose.Cells | C# iterate used range to collect error cells in Aspose.Cells workbook | Programmatically list cells that contain #DIV/0! in Excel using Aspose.Cells
-// Tags: Aspose.Cells calculate formulas and detect division by zero errors | C# enumerate error cells in Excel workbook | retrieve cell addresses of #DIV/0! using Aspose.Cells | iterate used range to collect formula error values | Workbook error handling for #DIV/0! in .NET
+// Title: Identify and Highlight #DIV/0! Formula Errors in an Excel Workbook Using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to locate #DIV/0! cells in an Excel file with Aspose.Cells | how to highlight division by zero errors in Excel using Aspose.Cells .NET | collect addresses of formula errors across all worksheets with Aspose.Cells | apply background color to error cells in a workbook using Aspose.Cells C#
+// Tags: detect division by zero errors Aspose.Cells | apply error cell background Aspose.Cells | iterate worksheets collect formula errors | use IsErrorValue to find #DIV/0! Aspose.Cells | save workbook after error highlighting C# | store cell addresses of formula errors
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Aspose.Cells;
+using System.Drawing;
 
-// The example creates a workbook, inserts values and formulas that may cause division by zero, runs CalculateFormula, iterates each worksheet's used range, checks for CellValueType.IsError, gathers the addresses of cells that evaluate to #DIV/0! (or any error), prints the list, and saves the file.
-class Program
+namespace AsposeCellsFormulaErrorCheck
 {
-    static void Main()
+    // The example loads an XLSX workbook with Aspose.Cells, scans every worksheet's used range, detects cells where IsErrorValue is true and the string equals "#DIV/0!", records each cell's A1 address with its sheet name, prints the list, applies a LightCoral solid background to those cells, and saves the updated workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and access the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // Input and output file paths (adjust as needed)
+            string inputFile = "input.xlsx";
+            string outputFile = "output.xlsx";
 
-            // Populate cells with values and formulas that may cause division by zero
-            ws.Cells["A1"].PutValue(10);      // Numerator
-            ws.Cells["A2"].PutValue(0);       // Denominator (zero)
-            ws.Cells["B1"].Formula = "A1/A2"; // Will result in #DIV/0!
-            ws.Cells["B2"].Formula = "A1/5";  // Normal division
-
-            // Calculate all formulas in the workbook
-            wb.CalculateFormula();
-
-            // Collect addresses of cells that contain #DIV/0! errors
-            List<string> divZeroCells = new List<string>();
-
-            foreach (Worksheet sheet in wb.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                // Get the used range of the sheet
-                var usedRange = sheet.Cells.MaxDisplayRange;
-                int startRow = usedRange.FirstRow;
-                int endRow = startRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = startCol + usedRange.ColumnCount - 1;
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
+            }
 
-                for (int row = startRow; row <= endRow; row++)
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // List to store addresses of cells that contain #DIV/0! errors
+                List<string> divZeroCells = new List<string>();
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    for (int col = startCol; col <= endCol; col++)
-                    {
-                        Cell cell = sheet.Cells[row, col];
+                    // Get the used range of the worksheet
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-                        // If the cell contains any error (including #DIV/0!), record its address
-                        if (cell.Type == CellValueType.IsError)
+                    // Iterate through each cell in the used range
+                    foreach (Cell cell in usedRange)
+                    {
+                        // Check if the cell contains an error value and specifically #DIV/0!
+                        if (cell.IsErrorValue && cell.StringValue == "#DIV/0!")
                         {
-                            divZeroCells.Add(cell.Name);
+                            // Store the cell address in A1 style with sheet name
+                            string address = $"{sheet.Name}!{cell.Name}";
+                            divZeroCells.Add(address);
                         }
                     }
                 }
-            }
 
-            // Output the collected cell addresses
-            Console.WriteLine("Cells with #DIV/0! errors:");
-            foreach (string address in divZeroCells)
+                // Output the collected addresses
+                Console.WriteLine("Cells with #DIV/0! errors:");
+                foreach (string addr in divZeroCells)
+                {
+                    Console.WriteLine(addr);
+                }
+
+                // Highlight the error cells (e.g., set background color)
+                foreach (string addr in divZeroCells)
+                {
+                    // Split sheet name and cell address
+                    int exclPos = addr.IndexOf('!');
+                    string sheetName = addr.Substring(0, exclPos);
+                    string cellRef = addr.Substring(exclPos + 1);
+
+                    Worksheet sheet = workbook.Worksheets[sheetName];
+                    Cell cell = sheet.Cells[cellRef];
+
+                    // Apply a light red background to highlight the error cell
+                    Style style = cell.GetStyle();
+                    style.ForegroundColor = Color.LightCoral;
+                    style.Pattern = BackgroundType.Solid;
+                    cell.SetStyle(style);
+                }
+
+                // Save the workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved to {outputFile}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(address);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook (optional)
-            wb.Save("Output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

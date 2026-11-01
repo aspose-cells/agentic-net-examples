@@ -1,85 +1,92 @@
-// Title: C# example: enumerate all PivotFields in an Aspose.Cells PivotTable and log each PivotItem’s absolute Position for debugging
-// AI Prompts: Write C# code with Aspose.Cells that iterates over every PivotField in a PivotTable, checks for PivotItems, and prints each item's Name and Position to the console. | Demonstrate how to output row, column, data, and page field items together with their absolute positions from an Aspose.Cells PivotTable to aid troubleshooting.
-// Common Searches: Aspose.Cells C# get absolute position of pivot items in a PivotTable | How to list all pivot field items with positions using Aspose.Cells .NET | Debugging Aspose.Cells pivot tables by printing row and column field items
-// Tags: Aspose.Cells enumerate pivot fields C# | Aspose.Cells pivot item position debugging | C# Aspose.Cells pivot table item iteration | Aspose.Cells log pivot items absolute position
+// Title: How to enumerate all PivotField items and log their zero‑based positions using Aspose.Cells for .NET
+// Common Searches: asp.net list pivot field items with their index using Aspose.Cells | c# get absolute position of each pivot item in an Excel pivot table Aspose.Cells | debug pivot table item order with Aspose.Cells .NET | iterate through pivot fields and output item positions Aspose.Cells | retrieve pivot item index programmatically in C# Aspose.Cells
+// Tags: Aspose.Cells pivot item enumeration | Aspose.Cells pivot item position logging | C# pivot table field iteration | Excel pivot table debugging Aspose | Aspose.Cells zero‑based item index
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotDebug
+// The example loads an Excel workbook (creating a new one if the source file is missing), walks through every worksheet and each PivotTable it contains, and for each Row, Column, Data, and Page field calls a helper method that writes the field name and, for every PivotItem in that field, prints the item's name together with its zero‑based Position value for debugging. The workbook is then saved.
+class Program
 {
-    // The sample creates a workbook, adds data, builds a PivotTable, then iterates through each PivotField collection (row, column, data, page). For every field that contains PivotItems it prints the item name and its absolute Position, helping developers debug pivot structures, and finally saves the workbook as PivotFieldItemsPositionsDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Ensure the input file exists; if not, create an empty workbook
+            if (File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["A4"].PutValue("A");
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a pivot table to the worksheet
-                int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
-
-                // Refresh and calculate the pivot table
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Helper method to iterate over a collection of PivotFields
-                void LogPivotFields(PivotFieldCollection fields)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all pivot tables on the worksheet
+                foreach (PivotTable pivotTable in sheet.PivotTables)
                 {
-                    foreach (PivotField field in fields)
+                    Console.WriteLine($"PivotTable: {pivotTable.Name} (Sheet: {sheet.Name})");
+
+                    // Row fields
+                    foreach (PivotField field in pivotTable.RowFields)
                     {
-                        Console.WriteLine($"PivotField: {field.Name}");
-                        // Some field types (e.g., Data fields) may not have PivotItems
-                        if (field.PivotItems != null)
-                        {
-                            foreach (PivotItem item in field.PivotItems)
-                            {
-                                // Position property gives the absolute position of the item
-                                Console.WriteLine($"  Item: {item.Name}, Position: {item.Position}");
-                            }
-                        }
+                        LogPivotFieldItems(field);
+                    }
+
+                    // Column fields
+                    foreach (PivotField field in pivotTable.ColumnFields)
+                    {
+                        LogPivotFieldItems(field);
+                    }
+
+                    // Data fields
+                    foreach (PivotField field in pivotTable.DataFields)
+                    {
+                        LogPivotFieldItems(field);
+                    }
+
+                    // Page fields (filters)
+                    foreach (PivotField field in pivotTable.PageFields)
+                    {
+                        LogPivotFieldItems(field);
                     }
                 }
-
-                // Log all pivot fields in each area
-                Console.WriteLine("=== Row Fields ===");
-                LogPivotFields(pivotTable.RowFields);
-
-                Console.WriteLine("=== Column Fields ===");
-                LogPivotFields(pivotTable.ColumnFields);
-
-                Console.WriteLine("=== Data Fields ===");
-                LogPivotFields(pivotTable.DataFields);
-
-                Console.WriteLine("=== Page Fields ===");
-                LogPivotFields(pivotTable.PageFields);
-
-                // Save the workbook (debug workbook can be inspected if needed)
-                workbook.Save("PivotFieldItemsPositionsDemo.xlsx");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method to list items of a pivot field and log their absolute positions
+    static void LogPivotFieldItems(PivotField field)
+    {
+        Console.WriteLine($"  Field: {field.Name}");
+
+        // Iterate over each PivotItem in the field
+        foreach (PivotItem item in field.PivotItems)
+        {
+            // Position is the zero‑based index of the item within the field
+            int position = item.Position;
+
+            // Log the item name and its absolute position for debugging
+            Console.WriteLine($"    Item: {item.Name}, Position: {position}");
         }
     }
 }

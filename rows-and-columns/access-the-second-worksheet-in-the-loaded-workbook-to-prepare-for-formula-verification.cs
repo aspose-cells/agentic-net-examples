@@ -1,32 +1,44 @@
-// Title: How to access the second worksheet in an Excel workbook with Aspose.Cells (C#) and verify formula results
-// AI Prompts: Load 'input.xlsx' using Aspose.Cells, select the worksheet at index 1, call workbook.CalculateFormula(), and output the evaluated value of cell B2. | Make the second worksheet the active sheet, recalculate all formulas, then save the workbook as 'output.xlsx' after confirming the cell value.
-// Common Searches: Aspose.Cells C# get value of cell B2 on the second sheet after formula calculation | C# Aspose.Cells calculate formulas on a specific worksheet by index | How to set active worksheet to the second sheet in Aspose.Cells before saving | Retrieve and verify formula results on sheet index 1 using Aspose.Cells C# | Load workbook and access worksheet[1] with Aspose.Cells for formula evaluation
-// Tags: access worksheet by index Aspose.Cells C# | calculate workbook formulas Aspose.Cells | retrieve cell value after formula evaluation C# | set active sheet index Aspose.Cells | save workbook after verification Aspose.Cells
+// Title: Load an Excel workbook and access the second worksheet (index 1) using Aspose.Cells for .NET to enable formula verification
+// AI Prompts: Open a .xlsx file with Aspose.Cells, retrieve the worksheet at zero‑based index 1, and store it for subsequent formula checks. | After loading the workbook, call Workbook.CalculateFormula() to evaluate all formulas, then use the obtained second worksheet for validation.
+// Common Searches: Aspose.Cells .NET how to get the second worksheet by index | C# calculate all formulas after loading an Excel workbook with Aspose.Cells | prepare worksheet for formula validation using Aspose.Cells in a console application | access worksheet at index 1 in Aspose.Cells and run full calculation
+// Tags: Aspose.Cells load workbook .xlsx C# | Aspose.Cells get worksheet by zero‑based index | Aspose.Cells calculate all formulas | prepare second worksheet for formula verification | C# Excel formula validation with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file, selects the second worksheet (index 1), optionally makes it the active sheet, recalculates all formulas, reads the value of cell B2 to confirm the calculation, and saves the workbook.
+// Loads an existing .xlsx file, verifies its existence, opens it with Aspose.Cells, accesses the second worksheet (index 1), forces a full formula calculation, and leaves the worksheet ready for further formula verification.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Access the second worksheet (zero‑based index = 1)
-        Worksheet secondWorksheet = workbook.Worksheets[1];
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Optionally make it the active sheet
-        workbook.Worksheets.ActiveSheetIndex = secondWorksheet.Index;
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Calculate all formulas in the workbook (including those on the second sheet)
-        workbook.CalculateFormula();
+            // Access the second worksheet (index 1 because the collection is zero‑based)
+            Worksheet secondWorksheet = workbook.Worksheets[1];
 
-        // Example: output the value of a cell on the second worksheet to verify calculation
-        Console.WriteLine("Value of B2 on second sheet: " + secondWorksheet.Cells["B2"].Value);
+            // Force an immediate calculation of all formulas
+            workbook.CalculateFormula();
 
-        // Save the workbook after verification (if any changes were made)
-        workbook.Save("output.xlsx");
+            // The secondWorksheet variable is now ready for further formula verification steps
+            Console.WriteLine("Workbook loaded and formulas calculated successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

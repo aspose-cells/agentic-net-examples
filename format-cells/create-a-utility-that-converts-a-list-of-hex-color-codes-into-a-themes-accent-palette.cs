@@ -1,89 +1,86 @@
-// Title: Create an Excel workbook with a custom theme accent palette from hex color codes using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that accepts a file path and a List<string> of hex colors, converts each hex value to System.Drawing.Color, and assigns it to ThemeColorType.Accent1‑Accent6 using Workbook.SetThemeColor. | Add logic to verify the output directory exists, create it if missing, and save the workbook to the specified location with Aspose.Cells. | Show how to call the utility with six sample hex values (e.g., #FF5733) and save the themed workbook to the desktop.
-// Common Searches: Aspose.Cells how to programmatically set theme accent colors from hex values in C# | C# convert hex color string to Excel theme palette using Aspose.Cells | Set custom theme colors for a new workbook with Aspose.Cells .NET example | Create workbook with user-defined accent palette using Aspose.Cells and System.Drawing.Color | Save themed Excel file to a specific folder after creating output directory in C#
-// Tags: Aspose.Cells set custom theme accent palette | Workbook.SetThemeColor with hex colors | C# convert hex to System.Drawing.Color for Excel theme | Create themed Excel workbook .NET | Ensure output directory exists before saving workbook
+// Title: Apply a List of Hex Color Codes to an Excel Workbook’s Theme Accent Palette with Aspose.Cells for .NET (C#)
+// Common Searches: c# aspose.cells set workbook theme accent colors from hex strings | how to populate Excel theme accent palette using a hex color array in Aspose.Cells | convert hex color list to theme accents in a .NET workbook with Aspose.Cells | dynamic assignment of theme.Accent1‑Accent6 properties in Aspose.Cells C# | save workbook after customizing theme colors using hex codes Aspose.Cells
+// Tags: Aspose.Cells set theme accent palette C# | hex color to System.Drawing.Color conversion | custom Excel theme colors using Aspose.Cells | dynamic theme property access Aspose.Cells | populate workbook theme accents from list
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing; // Retained for potential future use
 
-namespace AsposeCellsExamples
+namespace ThemeUtility
 {
-    // The utility creates a new Workbook, ensures the target folder exists, converts each supplied hex string to System.Drawing.Color, maps the colors to ThemeColorType.Accent1‑Accent6 via Workbook.SetThemeColor, and saves the workbook to the given path.
-    public static class ThemePaletteUtility
+    // The example shows how to take up to six hex color strings, convert each to a System.Drawing.Color, and assign them to the workbook's Theme Accent1‑Accent6 properties via dynamic access. It validates inputs, creates a new Workbook, applies the custom palette, ensures the output folder exists, saves the workbook as an .xlsx file, and logs the result.
+    public static class ThemeHelper
     {
-        /// <param name="outputPath">Full path where the workbook will be saved.</param>
-        /// <param name="hexColors">List of hex color strings (e.g., "#FF5733"). Up to six colors are used.</param>
-        public static void CreateWorkbookWithAccentPalette(string outputPath, List<string> hexColors)
+        /// <param name="hexColors">List of hex color strings (e.g., "#FF5733").</param>
+        /// <param name="workbook">The Aspose.Cells workbook whose theme will be modified.</param>
+        public static void ApplyHexColorsToThemePalette(List<string> hexColors, Workbook workbook)
         {
-            try
+            if (hexColors == null) throw new ArgumentNullException(nameof(hexColors));
+            if (workbook == null) throw new ArgumentNullException(nameof(workbook));
+
+            // Use dynamic to avoid compile‑time dependency on the Theme type (may vary by version).
+            dynamic theme = workbook.Theme;
+
+            int count = Math.Min(6, hexColors.Count);
+            for (int i = 0; i < count; i++)
             {
-                // Ensure the output directory exists
-                string directory = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                Color color = ColorTranslator.FromHtml(hexColors[i]);
+
+                // Map each color to the corresponding accent property.
+                switch (i)
                 {
-                    Directory.CreateDirectory(directory);
+                    case 0: theme.Accent1 = color; break;
+                    case 1: theme.Accent2 = color; break;
+                    case 2: theme.Accent3 = color; break;
+                    case 3: theme.Accent4 = color; break;
+                    case 4: theme.Accent5 = color; break;
+                    case 5: theme.Accent6 = color; break;
                 }
-
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Map each hex color to the corresponding accent slot (Accent1‑Accent6)
-                ThemeColorType[] accentTypes = new ThemeColorType[]
-                {
-                    ThemeColorType.Accent1,
-                    ThemeColorType.Accent2,
-                    ThemeColorType.Accent3,
-                    ThemeColorType.Accent4,
-                    ThemeColorType.Accent5,
-                    ThemeColorType.Accent6
-                };
-
-                for (int i = 0; i < hexColors.Count && i < accentTypes.Length; i++)
-                {
-                    // Convert hex string to System.Drawing.Color
-                    Color color = ColorTranslator.FromHtml(hexColors[i]);
-
-                    // Apply the color to the workbook's theme accent
-                    workbook.SetThemeColor(accentTypes[i], color);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error creating workbook: {ex.Message}");
-                throw;
             }
         }
-    }
 
-    // Simple entry point for demonstration
-    public class Program
-    {
+        // Example usage.
         public static void Main()
         {
             try
             {
-                var colors = new List<string>
+                // Sample list of hex color codes.
+                List<string> hexColors = new List<string>
                 {
-                    "#FF5733", "#33FF57", "#3357FF",
-                    "#F1C40F", "#9B59B6", "#1ABC9C"
+                    "#FF5733", // Accent1
+                    "#33FF57", // Accent2
+                    "#3357FF", // Accent3
+                    "#F1C40F", // Accent4
+                    "#9B59B6", // Accent5
+                    "#1ABC9C"  // Accent6
                 };
 
-                string outputPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                    "ThemedWorkbook.xlsx");
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
 
-                ThemePaletteUtility.CreateWorkbookWithAccentPalette(outputPath, colors);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                // Apply the hex colors to the workbook's theme.
+                ApplyHexColorsToThemePalette(hexColors, workbook);
+
+                // Define output path.
+                string outputPath = "ThemedWorkbook.xlsx";
+
+                // Ensure the directory exists.
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to verify the theme changes.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

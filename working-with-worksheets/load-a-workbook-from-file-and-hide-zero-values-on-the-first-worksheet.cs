@@ -1,13 +1,12 @@
-// Title: Load an Excel workbook and hide zero values on the first worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, applies a custom number format to hide zero values on the first worksheet, and saves the result to a new file. | Explain a workaround for hiding zero values in a worksheet when the IsZeroValuesHidden property is not available in the current Aspose.Cells version. | Show how to combine file existence checking with workbook loading and zero‑value suppression in Aspose.Cells for a .NET application.
-// Common Searches: Aspose.Cells hide zero values on first sheet C# example | workaround for IsZeroValuesHidden missing in Aspose.Cells .NET | load existing Excel file and suppress zero display using Aspose.Cells | C# apply custom number format to hide zeros in Aspose.Cells worksheet | check file existence before opening workbook Aspose.Cells C#
-// Tags: load workbook from file Aspose.Cells | hide zero values worksheet Aspose.Cells | custom number format suppress zeros C# | file existence validation before workbook load | save modified Excel file Aspose.Cells | zero values visibility workaround Aspose.Cells
+// Title: Load an Excel workbook from a file and hide zero values on the first worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load existing workbook and hide zero values on first sheet | how to set Worksheet.IsZeroValuesHidden property in Aspose.Cells .NET | C# hide zero values in Excel worksheet using Aspose.Cells reflection | load workbook from file and hide zero values with Aspose.Cells API | Aspose.Cells hide zero values when property is unavailable in older versions
+// Tags: load workbook from file Aspose.Cells | set Worksheet.IsZeroValuesHidden via reflection | first worksheet zero-value hiding Aspose.Cells | save modified workbook Aspose.Cells | handle missing input.xlsx Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, accesses the first worksheet, uses a technique such as a custom number format to hide zero values when the IsZeroValuesHidden property is unavailable, and saves the modified workbook while handling possible exceptions.
+// The example loads "input.xlsx" (or creates a new workbook if the file is absent), accesses the first worksheet, uses reflection to enable the Worksheet.IsZeroValuesHidden property when available, and saves the result as "output.xlsx" while handling potential exceptions.
 class Program
 {
     static void Main()
@@ -15,31 +14,35 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the existing file
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook;
 
-            // Access the first worksheet (index 0)
-            Worksheet firstSheet = workbook.Worksheets[0];
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+            }
 
-            // NOTE: The IsZeroValuesHidden property is not available in the current Aspose.Cells version.
-            // If needed, alternative approaches can be applied here.
+            // Get the first worksheet (index 0)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Save the modified workbook to a new file
+            // Hide zero values if the property is available in the current Aspose.Cells version
+            var prop = typeof(Worksheet).GetProperty("IsZeroValuesHidden");
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(worksheet, true);
+            }
+
+            // Save the workbook with the changes
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

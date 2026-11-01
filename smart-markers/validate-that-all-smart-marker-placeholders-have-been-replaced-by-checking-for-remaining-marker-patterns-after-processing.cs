@@ -1,62 +1,52 @@
-// Title: Validate that all smart markers are replaced after processing an Excel workbook with Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an Excel template, binds a DataTable to WorkbookDesigner, processes smart markers, and asserts GetSmartMarkers returns an empty array. | Add error‑handling to a WorkbookDesigner workflow that logs each unreplaced smart marker returned by GetSmartMarkers. | Create a reusable C# method IsSmartMarkerProcessingComplete(WorkbookDesigner designer) that returns true when no markers remain after Process(false).
-// Common Searches: C# Aspose.Cells how to ensure no smart markers remain after processing | GetSmartMarkers returns empty array after WorkbookDesigner.Process in .NET | detect leftover smart markers in Excel template using Aspose.Cells WorkbookDesigner | verify smart marker replacement outcome programmatically with Aspose.Cells
-// Tags: Aspose.Cells smart marker replacement validation | C# WorkbookDesigner process smart markers | GetSmartMarkers unreplaced placeholder detection | Excel template smart marker verification with Aspose
+// Title: C# code to confirm all Aspose.Cells smart marker placeholders are replaced after WorkbookDesigner processing
+// AI Prompts: Write a C# routine that runs WorkbookDesigner.Process() on a workbook and then scans every cell with a regex to report any remaining ${...} or #=...# smart markers. | Create a method that iterates through all worksheets in an Aspose.Cells workbook, uses a pattern matcher to detect unreplaced smart marker syntax, and logs the sheet name and cell address for each occurrence.
+// Common Searches: how to check for unreplaced smart markers in an Aspose.Cells workbook using C# | C# verify that ${...} placeholders are removed after processing with WorkbookDesigner | regex pattern to find #=...# smart markers in Excel after Aspose.Cells processing | detect leftover smart marker syntax in saved Excel file C# Aspose.Cells | post‑processing validation of smart markers in Excel with Aspose.Cells API
+// Tags: smart marker replacement verification Aspose.Cells | regex detection of ${} placeholders in Excel | WorkbookDesigner post‑process validation C# | scan workbook cells for smart marker patterns | unreplaced smart marker detection C#
 
 using System;
-using System.Data;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace SmartMarkerValidationDemo
+// The program loads an Excel workbook, processes its smart markers using WorkbookDesigner, saves the result, and then iterates through every worksheet and cell. A regular expression identifies any remaining ${...} or #=...# placeholders, logging their locations and reporting whether all smart markers were successfully replaced.
+class Program
 {
-    // The example loads a template workbook, binds a DataTable as the data source, processes smart markers with preservation disabled, retrieves any remaining markers via GetSmartMarkers, reports whether all placeholders were replaced, and saves the processed workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that contains smart markers
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Process smart markers (assumes data sources are already set on the designer)
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        // Example: designer.SetDataSource("Data", dataTable);
+        designer.Process();
+
+        // Save the processed workbook
+        workbook.Save("output.xlsx");
+
+        // Validate that no smart marker placeholders remain
+        bool markersFound = false;
+        // Regex matches common smart marker patterns like ${...} or #=...#
+        Regex markerPattern = new Regex(@"\$\{.*?\}|\#\=.+?\#");
+
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load the template workbook that contains smart markers
-            Workbook templateWorkbook = new Workbook("template.xlsx");
-
-            // Initialize the WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
+            foreach (Cell cell in sheet.Cells)
             {
-                Workbook = templateWorkbook
-            };
-
-            // Prepare a simple data source that matches the smart markers in the template
-            // Example assumes markers like &=$Employee.Name and &=$Employee.Age
-            DataTable employeeTable = new DataTable("Employee");
-            employeeTable.Columns.Add("Name", typeof(string));
-            employeeTable.Columns.Add("Age", typeof(int));
-            employeeTable.Rows.Add("John Doe", 30);
-            employeeTable.Rows.Add("Jane Smith", 28);
-
-            // Bind the data source to the designer
-            designer.SetDataSource(employeeTable);
-
-            // Process the smart markers (true = preserve unrecognized markers, false = remove them)
-            // Here we set false to attempt full replacement
-            designer.Process(false);
-
-            // After processing, retrieve any remaining smart markers
-            string[] remainingMarkers = designer.GetSmartMarkers();
-
-            // Validate that all placeholders have been replaced
-            if (remainingMarkers.Length == 0)
-            {
-                Console.WriteLine("All smart markers have been successfully replaced.");
-            }
-            else
-            {
-                Console.WriteLine("The following smart markers were not replaced:");
-                foreach (string marker in remainingMarkers)
+                if (cell.Type == CellValueType.IsString && markerPattern.IsMatch(cell.StringValue))
                 {
-                    Console.WriteLine(marker);
+                    markersFound = true;
+                    Console.WriteLine($"Remaining marker found in sheet '{sheet.Name}' cell {cell.Name}: {cell.StringValue}");
                 }
             }
+        }
 
-            // Save the processed workbook
-            designer.Workbook.Save("output.xlsx");
+        if (!markersFound)
+        {
+            Console.WriteLine("All smart markers have been replaced successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Some smart markers were not replaced.");
         }
     }
 }

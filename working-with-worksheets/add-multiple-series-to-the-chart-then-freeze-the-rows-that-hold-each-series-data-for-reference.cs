@@ -1,13 +1,14 @@
-// Title: Create a column chart with two data series and freeze the source rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that adds two separate series to a column chart, each referencing its own X‑value range, with Aspose.Cells. | Show how to freeze the first five rows of a worksheet after inserting chart data using the FreezePanes method in Aspose.Cells for .NET. | Provide a complete Aspose.Cells C# example that builds a workbook, fills series data, creates a column chart, applies row freezing, and saves the file.
-// Common Searches: how to add multiple series to a column chart in Aspose.Cells C# | Aspose.Cells FreezePanes to lock header rows for chart data | C# Aspose.Cells example creating column chart with separate X values | freeze rows 1-5 in worksheet after chart creation Aspose.Cells | populate chart data ranges and freeze rows using Aspose.Cells .NET
-// Tags: add multiple series to column chart Aspose.Cells | set XValues for chart series Aspose.Cells C# | freeze worksheet rows using FreezePanes Aspose.Cells | populate chart data ranges Aspose.Cells .NET | save workbook as Excel file Aspose.Cells C#
+// Title: Create a multi‑series column chart in Aspose.Cells for .NET and freeze the data rows above the chart
+// AI Prompts: Write a C# program using Aspose.Cells that builds a worksheet with category labels and three numeric series, adds a column chart referencing those series, sets the category axis to the first column, freezes the rows containing the source data, and saves the workbook as an .xlsx file. | Using Aspose.Cells for .NET, generate a column chart from ranges B2:B6, C2:C6, D2:D6, assign A2:A6 as category labels, apply FreezePanes at row 7 to keep the data visible while scrolling, and export the file.
+// Common Searches: how to add multiple series to a column chart with Aspose.Cells in C# | Aspose.Cells freeze panes above a chart programmatically | set category axis range for a chart in Aspose.Cells .NET | create multi series column chart and keep source rows visible in Excel using Aspose.Cells | C# Aspose.Cells example for chart with three data series and frozen rows
+// Tags: column chart multiple series Aspose.Cells | freeze panes above chart Aspose.Cells | category axis range definition Aspose.Cells | populate worksheet series data C# Aspose.Cells | export workbook with multi‑series chart .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // Demonstrates creating a workbook, populating two data series, adding a column chart with distinct X‑value ranges, freezing the first five rows, and saving the file as ChartWithMultipleSeries.xlsx.
+// The example creates a new workbook, adds a worksheet named 'Data', writes category labels and three numeric series, builds a column chart that references those series, sets the X‑axis labels from the first column, freezes the rows containing the source data (rows 1‑6) to keep them visible while scrolling, and saves the file as MultiSeriesChart.xlsx.
 class Program
 {
     static void Main()
@@ -17,65 +18,63 @@ class Program
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // -------------------------------------------------
-            // Populate sample data for two series
-            // -------------------------------------------------
-            // Header row
+            // Write header row
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["C1"].PutValue("Category");
-            sheet.Cells["D1"].PutValue("Series 2");
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["D1"].PutValue("Series 3");
 
-            // Data rows (rows 2‑5)
-            for (int i = 0; i < 4; i++)
+            // Sample data
+            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+            double[] series1 = { 10, 20, 30, 40, 50 };
+            double[] series2 = { 15, 25, 35, 45, 55 };
+            double[] series3 = { 12, 22, 32, 42, 52 };
+
+            // Populate worksheet with data
+            for (int i = 0; i < categories.Length; i++)
             {
-                // Category labels (same for both series)
-                sheet.Cells[i + 1, 0].PutValue("Item " + (i + 1));
-
-                // Series 1 values
-                sheet.Cells[i + 1, 1].PutValue(i + 2); // 2,3,4,5
-
-                // Series 2 values
-                sheet.Cells[i + 1, 3].PutValue((i + 1) * 3); // 3,6,9,12
+                int row = i + 2; // Data starts at row 2 (1‑based)
+                sheet.Cells[row, 0].PutValue(categories[i]); // Column A
+                sheet.Cells[row, 1].PutValue(series1[i]);    // Column B
+                sheet.Cells[row, 2].PutValue(series2[i]);    // Column C
+                sheet.Cells[row, 3].PutValue(series3[i]);    // Column D
             }
 
-            // -------------------------------------------------
-            // Add a column chart to the worksheet
-            // -------------------------------------------------
-            // Parameters: chart type, upper‑left row/col, lower‑right row/col
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Multi‑Series Column Chart";
 
-            // -------------------------------------------------
-            // Add first series (Series 1)
-            // -------------------------------------------------
-            int seriesIdx1 = chart.NSeries.Add("B2:B5", true);
-            chart.NSeries[seriesIdx1].Name = "Series 1";
-            chart.NSeries[seriesIdx1].XValues = "A2:A5";
+            // Define series ranges
+            chart.NSeries.Add("Data!$B$2:$B$6", true); // Series 1
+            chart.NSeries.Add("Data!$C$2:$C$6", true); // Series 2
+            chart.NSeries.Add("Data!$D$2:$D$6", true); // Series 3
 
-            // -------------------------------------------------
-            // Add second series (Series 2)
-            // -------------------------------------------------
-            int seriesIdx2 = chart.NSeries.Add("D2:D5", true);
-            chart.NSeries[seriesIdx2].Name = "Series 2";
-            chart.NSeries[seriesIdx2].XValues = "C2:C5";
+            // Set category (X‑axis) labels
+            chart.NSeries.CategoryData = "Data!$A$2:$A$6";
 
-            // -------------------------------------------------
-            // Freeze rows that contain the series data (rows 1‑5)
-            // -------------------------------------------------
-            // FreezePanes(row, column, freezableRows, freezableColumns)
-            // Row index is zero‑based; to freeze rows 0‑4 set row = 5.
-            sheet.FreezePanes(5, 0, 5, 0);
+            // Freeze rows 1‑6 (rows above row 7)
+            sheet.FreezePanes(7, 0, 0, 0);
 
-            // -------------------------------------------------
+            // Prepare output path
+            string outputPath = "MultiSeriesChart.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+
+            // Ensure the output directory exists
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             // Save the workbook
-            // -------------------------------------------------
-            workbook.Save("ChartWithMultipleSeries.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,7 +1,6 @@
-// Title: How to serialize Aspose.Cells watch window configuration to JSON and restore it in C#
-// AI Prompts: Write a C# method that loops through Worksheet.CellWatches, creates a DTO with CellName, Row, and Column, and saves the collection as an indented JSON file using System.Text.Json. | Develop a C# routine that reads a JSON file containing watch entries, clears the existing CellWatches on a worksheet, re‑adds each watch (using the stored cell name or converting row/column to an address), and saves the workbook.
-// Common Searches: Aspose.Cells export watch window to JSON file C# | C# restore cell watches from JSON using Aspose.Cells | Save and load worksheet watch list Aspose.Cells .NET | How to persist Aspose.Cells CellWatches across sessions | Serialize Aspose.Cells watch configuration for version control
-// Tags: Aspose.Cells serialize watch window to JSON | C# deserialize CellWatches from JSON | Aspose.Cells watch list persistence | JSON export of worksheet CellWatches | Reapply Aspose.Cells watch configuration programmatically
+// Title: Serialize and restore Aspose.Cells Watch Window configuration to JSON in C#
+// Common Searches: C# Aspose.Cells export WatchWindow items to a JSON file | deserialize WatchWindow configuration from JSON using Aspose.Cells .NET | save Excel watch window settings with Aspose.Cells and reload later | example of Aspose.Cells WatchWindow serialization in C# | use reflection to access the WatchWindow property in an Aspose.Cells worksheet | persist worksheet watch items to JSON and restore with Aspose.Cells
+// Tags: Aspose.Cells WatchWindow JSON serialization | C# serialize worksheet watch items | Aspose.Cells restore watch window from JSON | reflection access WatchWindow property Aspose.Cells | persist Excel watch window configuration .NET
 
 using System;
 using System.Collections.Generic;
@@ -9,127 +8,124 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsWatchWindowJsonDemo
+// The WatchWindowSerializer class demonstrates how to use reflection to obtain a worksheet's WatchWindow, convert its WatchItems collection into a simple DTO list, serialize the list to an indented JSON file, and later deserialize the JSON to recreate the watch items, enabling persistent storage and restoration of Excel watch window settings with Aspose.Cells for .NET.
+class WatchWindowSerializer
 {
-    // Simple DTO for serializing CellWatch information
-    // This example shows how to capture the CellWatches of the first worksheet in an Aspose.Cells workbook, serialize each watch's name, row, and column to a formatted JSON file, and later deserialize that JSON to rebuild the watch list and save the workbook.
-    public class CellWatchInfo
+    // Serialize the Watch Window configuration of the first worksheet to a JSON file.
+    public static void SerializeWatchWindow(string workbookPath, string jsonPath)
     {
-        public string CellName { get; set; }
-        public int Row { get; set; }
-        public int Column { get; set; }
-    }
-
-    public class WatchWindowJsonHandler
-    {
-        // Serialize the current watch window configuration to a JSON file
-        public static void SaveWatchWindowConfig(string workbookPath, string jsonPath)
+        try
         {
-            // Load or create a workbook
-            Workbook workbook = File.Exists(workbookPath) ? new Workbook(workbookPath) : new Workbook();
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook not found: {workbookPath}");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Example: add some watch items if none exist
-            if (sheet.CellWatches.Count == 0)
-            {
-                sheet.CellWatches.Add("B2");
-                sheet.CellWatches.Add("C5");
-            }
-
-            // Collect watch information into a list of DTOs
-            List<CellWatchInfo> watchList = new List<CellWatchInfo>();
-            for (int i = 0; i < sheet.CellWatches.Count; i++)
-            {
-                CellWatch cw = sheet.CellWatches[i];
-                watchList.Add(new CellWatchInfo
-                {
-                    CellName = cw.CellName,
-                    Row = cw.Row,
-                    Column = cw.Column
-                });
-            }
-
-            // Serialize with indentation for readability
-            JsonSerializerOptions jsonOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            string json = JsonSerializer.Serialize(watchList, jsonOptions);
-
-            // Write JSON to the specified file
-            File.WriteAllText(jsonPath, json);
-        }
-
-        // Restore the watch window configuration from a JSON file
-        public static void RestoreWatchWindowConfig(string workbookPath, string jsonPath)
-        {
-            // Load the workbook (must exist)
+            // Load the workbook.
             Workbook workbook = new Workbook(workbookPath);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Read and deserialize the JSON file
-            string json = File.ReadAllText(jsonPath);
-            List<CellWatchInfo> watchList = JsonSerializer.Deserialize<List<CellWatchInfo>>(json);
+            // Use reflection to obtain the WatchWindow (may not exist in older versions).
+            var watchWindowProp = sheet.GetType().GetProperty("WatchWindow");
+            if (watchWindowProp == null)
+                throw new NotSupportedException("WatchWindow feature is not available in this Aspose.Cells version.");
 
-            // Clear existing watches (optional, depending on desired behavior)
-            sheet.CellWatches.Clear();
+            dynamic watchWindow = watchWindowProp.GetValue(sheet);
+            if (watchWindow == null)
+                throw new InvalidOperationException("Unable to retrieve WatchWindow.");
 
-            // Re‑add each watch item
-            foreach (CellWatchInfo info in watchList)
+            // Retrieve the collection of watch items.
+            var watchItems = watchWindow.WatchItems as IEnumerable<object>;
+            if (watchItems == null)
+                throw new InvalidOperationException("WatchItems collection is unavailable.");
+
+            // Convert to DTO list for JSON serialization.
+            List<WatchItemDto> items = new List<WatchItemDto>();
+            foreach (dynamic watchItem in watchItems)
             {
-                // Add by cell name; if CellName is null/empty, construct from row/column
-                if (!string.IsNullOrEmpty(info.CellName))
+                items.Add(new WatchItemDto
                 {
-                    sheet.CellWatches.Add(info.CellName);
-                }
-                else
-                {
-                    // Convert zero‑based row/column to Excel style address (e.g., B2)
-                    string address = CellsHelper.CellIndexToName(info.Row, info.Column);
-                    sheet.CellWatches.Add(address);
-                }
+                    CellName = watchItem.CellName,
+                    Comment = watchItem.Comment
+                });
             }
 
-            // Save the workbook after restoration
-            workbook.Save(workbookPath);
+            // Serialize with indentation.
+            string json = JsonSerializer.Serialize(items, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(jsonPath, json);
         }
-
-        // Demonstration entry point
-        public static void RunDemo()
+        catch (Exception ex)
         {
-            string workbookFile = "WatchDemo.xlsx";
-            string jsonFile = "WatchConfig.json";
-
-            // Create a workbook and add some data
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue("Sample");
-            ws.Cells["B2"].PutValue(123);
-            ws.Cells["C5"].PutValue("WatchMe");
-            wb.Save(workbookFile);
-
-            // Save watch configuration to JSON
-            SaveWatchWindowConfig(workbookFile, jsonFile);
-            Console.WriteLine($"Watch configuration saved to {jsonFile}");
-
-            // Modify workbook (remove watches) to demonstrate restoration
-            Workbook wb2 = new Workbook(workbookFile);
-            wb2.Worksheets[0].CellWatches.Clear();
-            wb2.Save(workbookFile);
-
-            // Restore watch configuration from JSON
-            RestoreWatchWindowConfig(workbookFile, jsonFile);
-            Console.WriteLine("Watch configuration restored from JSON.");
+            Console.WriteLine($"Error during serialization: {ex.Message}");
         }
     }
 
-    class Program
+    // Restore a Watch Window configuration from a JSON file into the first worksheet of a workbook.
+    public static void RestoreWatchWindow(string workbookPath, string jsonPath, string outputWorkbookPath)
     {
-        static void Main()
+        try
         {
-            WatchWindowJsonHandler.RunDemo();
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook not found: {workbookPath}");
+            if (!File.Exists(jsonPath))
+                throw new FileNotFoundException($"JSON file not found: {jsonPath}");
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(workbookPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Obtain WatchWindow via reflection.
+            var watchWindowProp = sheet.GetType().GetProperty("WatchWindow");
+            if (watchWindowProp == null)
+                throw new NotSupportedException("WatchWindow feature is not available in this Aspose.Cells version.");
+
+            dynamic watchWindow = watchWindowProp.GetValue(sheet);
+            if (watchWindow == null)
+                throw new InvalidOperationException("Unable to retrieve WatchWindow.");
+
+            // Clear existing items.
+            watchWindow.Clear();
+
+            // Read and deserialize JSON.
+            string json = File.ReadAllText(jsonPath);
+            List<WatchItemDto>? items = JsonSerializer.Deserialize<List<WatchItemDto>>(json);
+            if (items == null)
+                throw new InvalidOperationException("Deserialized watch items are null.");
+
+            // Re‑add each watch item.
+            foreach (WatchItemDto dto in items)
+            {
+                watchWindow.Add(dto.CellName, dto.Comment);
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputWorkbookPath);
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during restoration: {ex.Message}");
+        }
+    }
+
+    // Simple DTO used for JSON serialization.
+    private class WatchItemDto
+    {
+        public string CellName { get; set; } = string.Empty;
+        public string Comment { get; set; } = string.Empty;
+    }
+}
+
+// Example usage.
+class Program
+{
+    static void Main()
+    {
+        string sourceWorkbook = "Source.xlsx";
+        string jsonFile = "WatchWindowConfig.json";
+        string restoredWorkbook = "Restored.xlsx";
+
+        // Serialize current Watch Window to JSON.
+        WatchWindowSerializer.SerializeWatchWindow(sourceWorkbook, jsonFile);
+
+        // Restore Watch Window from JSON into a new workbook copy.
+        WatchWindowSerializer.RestoreWatchWindow(sourceWorkbook, jsonFile, restoredWorkbook);
     }
 }

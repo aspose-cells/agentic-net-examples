@@ -1,51 +1,39 @@
-// Title: How to apply a custom number format with thousand separators to chart data labels in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and sets the data label number format to "#,##0" to show values with commas and no decimal places. | Show the steps to enable data labels on an Aspose.Cells chart series and apply a thousand‑separator format without decimals. | Provide an example of formatting chart series values using a custom number format in an Aspose.Cells workbook.
-// Common Searches: Aspose.Cells C# chart data label format "#,##0" thousand separator | set custom number format for Excel chart values using Aspose.Cells | how to display numbers with commas in Aspose.Cells chart labels | C# Aspose.Cells column chart label formatting without decimals | apply number format to series data labels in Aspose.Cells workbook
-// Tags: chart data label number format Aspose.Cells | thousand separator formatting Excel chart C# | custom number format "#,##0" Aspose.Cells | apply number format to series values Aspose.Cells | column chart label formatting Aspose.Cells
+// Title: How to apply a custom number format with thousand separators and no decimal places to Excel cells using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set cell format to display numbers with commas and no decimals | C# Aspose.Cells custom number format '#,##0' for an Excel column | Formatting numeric cells with thousand separators in Aspose.Cells .NET | Apply number style without fractional part using Aspose.Cells API | Save workbook after applying custom number format in Aspose.Cells C#
+// Tags: custom number format Aspose.Cells C# | thousand separator cell style Aspose.Cells | apply numeric format without decimals Aspose.Cells | Excel number formatting Aspose.Cells .NET | set cell style custom format Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsNumberFormatDemo
+// The example creates a workbook, writes quantity values to a worksheet, applies the custom number format "#,##0" to each cell to show thousand separators with no decimal places, and saves the file as QuantitiesFormatted.xlsx.
+class Program
 {
-    // Creates a workbook, adds item and quantity data, inserts a column chart, enables data labels, sets the data label NumberFormat to "#,##0" to display quantities with commas and no decimal places, and saves the file as QuantitiesWithThousandSeparator.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook (or load an existing one if needed)
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Quantities";
+
+        // Sample data: quantities to display
+        double[] quantities = { 1234, 56789, 1234567, 89012345 };
+
+        // Write the quantities to column A starting from row 1
+        for (int i = 0; i < quantities.Length; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data (quantities)
-            worksheet.Cells["A1"].PutValue("Item");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["A4"].PutValue("Cherry");
-
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["B2"].PutValue(1234);
-            worksheet.Cells["B3"].PutValue(56789);
-            worksheet.Cells["B4"].PutValue(101112);
-
-            // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";     // Categories
-
-            // Enable data labels to show the values on the chart
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;
+            // Write raw numeric value
+            Cell cell = sheet.Cells[i, 0];
+            cell.PutValue(quantities[i]);
 
             // Apply custom number format: thousand separators, no decimals
-            series.DataLabels.NumberFormat = "#,##0";
-
-            // Save the workbook
-            workbook.Save("QuantitiesWithThousandSeparator.xlsx");
+            Style style = cell.GetStyle();
+            style.Custom = "#,##0";   // e.g., 1,234 ; 56,789 ; 1,234,567
+            cell.SetStyle(style);
         }
+
+        // Save the workbook to a file
+        workbook.Save("QuantitiesFormatted.xlsx");
     }
 }

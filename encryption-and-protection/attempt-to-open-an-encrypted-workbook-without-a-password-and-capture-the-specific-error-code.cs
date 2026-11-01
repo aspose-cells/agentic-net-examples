@@ -1,21 +1,20 @@
-// Title: Open an encrypted Excel workbook with Aspose.Cells for .NET without a password and capture the CellsException error code
-// AI Prompts: Generate C# code that loads a password‑protected .xlsx using Aspose.Cells without providing a password and logs the resulting CellsException error number. | Write a try‑catch example in C# that opens an encrypted workbook with Aspose.Cells, catches CellsException, and prints both the exception message and its numeric error code. | Show how to handle FileNotFoundException and any other unexpected exceptions when attempting to open a protected Excel file with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells .NET how to get error code when opening password protected Excel without password | C# catch CellsException for encrypted workbook and retrieve error number | What exception is thrown by Aspose.Cells when a workbook requires a password | How to detect missing password error while loading encrypted .xlsx with Aspose.Cells
-// Tags: Aspose.Cells load encrypted workbook without password | CellsException error code retrieval | handling password required exception Aspose.Cells | C# file not found handling Aspose.Cells | catch generic exceptions Aspose.Cells workbook load
+// Title: Detect encrypted Excel workbook by handling Aspose.Cells CellsException without providing a password in C#
+// Common Searches: Aspose.Cells catch CellsException for encrypted workbook when password not supplied C# | How to determine if an Excel file is password protected using Aspose.Cells .NET | Retrieve error message from Aspose.Cells when opening encrypted .xlsx without a password | What exception does Aspose.Cells Workbook constructor throw for encrypted files | Check encryption status of an Excel file with Aspose.Cells without opening it
+// Tags: Aspose.Cells catch CellsException encrypted workbook | Workbook constructor encrypted Excel .NET | detect password protected Excel Aspose.Cells | handle encryption error Aspose.Cells C# | CellsException error code encrypted file
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample checks for the presence of an encrypted Excel file, attempts to open it with Aspose.Cells for .NET without supplying a password, and uses distinct catch blocks to handle CellsException (indicating a missing password), FileNotFoundException, and any other unexpected errors, outputting the relevant messages and error codes.
+// The sample verifies the existence of an encrypted.xlsx file, attempts to load it with the Workbook constructor without a password, catches the resulting CellsException, outputs the exception message, and checks the message for the term "encrypted" to confirm that the workbook requires a password.
 class Program
 {
     static void Main()
     {
         // Path to the encrypted workbook
-        string filePath = "EncryptedWorkbook.xlsx";
+        string filePath = "encrypted.xlsx";
 
-        // Verify that the file exists before attempting to load it
+        // Verify that the file exists to avoid FileNotFoundException
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
@@ -25,23 +24,24 @@ class Program
         try
         {
             // Attempt to load the workbook without providing a password
-            Workbook wb = new Workbook(filePath);
+            Workbook workbook = new Workbook(filePath);
             Console.WriteLine("Workbook opened successfully (unexpected).");
         }
         catch (CellsException ex)
         {
-            // Output the exception message (e.g., password required)
-            Console.WriteLine($"Failed to open workbook. Reason: {ex.Message}");
-        }
-        catch (FileNotFoundException ex)
-        {
-            // Handle missing file scenario
-            Console.WriteLine($"File not found: {ex.Message}");
+            // Handle Aspose.Cells specific exceptions
+            Console.WriteLine($"Failed to open workbook: {ex.Message}");
+
+            // Simple check for encryption based on exception message
+            if (ex.Message.IndexOf("encrypted", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("The workbook is encrypted and requires a password.");
+            }
         }
         catch (Exception ex)
         {
             // Handle any other unexpected exceptions
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,41 @@
-// Title: How to create a thin border style and apply it to cells N5:N15 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that defines a Style with thin borders on all sides and applies it only to the range N5:N15. | Show how to use StyleFlag to restrict formatting to borders when applying a style to a specific column range in an Aspose.Cells workbook.
-// Common Searches: Aspose.Cells C# set thin border for range N5 to N15 | Apply only border formatting to a column range with Aspose.Cells .NET | Create and apply a style with thin borders to cells in column N using Aspose.Cells | How to use StyleFlag to apply border style without affecting other cell formatting in Aspose.Cells | C# Aspose.Cells create range and set border style for multiple rows
-// Tags: Aspose.Cells thin border style C# | apply border style to range N5:N15 Aspose.Cells | StyleFlag border-only formatting Aspose.Cells | create range N5 N15 Aspose.Cells | C# workbook border formatting Aspose.Cells
+// Title: Create a thin border style and apply it to the N5:N15 range with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set thin borders on a specific column range | How to apply a custom style to cells N5 through N15 using Aspose.Cells | Using StyleFlag to apply borders to a range in Aspose.Cells for .NET | Create and apply a thin border style to a range in an Excel workbook with Aspose.Cells | Apply borders to range N5:N15 programmatically with Aspose.Cells C#
+// Tags: Aspose.Cells thin border style | range.ApplyStyle method Aspose.Cells | StyleFlag All property usage | CreateStyle with borders Aspose.Cells | C# Excel border formatting Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// // This program creates a new workbook, defines a Style with thin borders on all sides, and applies that border style exclusively to the cells in column N rows 5 through 15 before saving the file as output.xlsx.
+// The example demonstrates how to create a Style with thin borders on all sides, configure a StyleFlag to apply all style attributes, and apply the style to the N5:N15 range of the first worksheet using Aspose.Cells for .NET, then save the workbook as StyledRange.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle create rule)
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style with thin borders on all sides
+            // Create a new style object
             Style style = workbook.CreateStyle();
+
+            // Set thin borders on all four sides
             style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
             style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
             style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
             style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
 
-            // Apply the style to the range N5:N15
-            AsposeRange range = sheet.Cells.CreateRange("N5", "N15");
-            StyleFlag flag = new StyleFlag
-            {
-                Borders = true // Apply only border formatting
-            };
+            // Prepare a StyleFlag to apply all style attributes
+            StyleFlag flag = new StyleFlag { All = true };
+
+            // Define the target range N5:N15 and apply the style
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("N5:N15");
             range.ApplyStyle(style, flag);
 
-            // Save the workbook
-            workbook.Save("output.xlsx");
+            // Save the workbook (lifecycle save rule)
+            workbook.Save("StyledRange.xlsx");
         }
         catch (Exception ex)
         {

@@ -1,62 +1,63 @@
-// Title: Read a shape's width and height and write the dimensions to Excel cells with Aspose.Cells for .NET
-// AI Prompts: Load "input.xlsx" if it exists; otherwise create a new Workbook, locate the shape named "MyShape" on the first worksheet, read its Width and Height properties, and store the numeric values in cells A2 and B2. | Write the labels "Width" and "Height" to cells A1 and B1, then save the workbook as "output.xlsx" after extracting the shape's bounding box dimensions.
-// Common Searches: Aspose.Cells C# get shape width and height from worksheet | how to write shape dimensions to specific Excel cells using Aspose.Cells | read shape bounding box measurements with Aspose.Cells .NET | create workbook when missing and extract shape size Aspose.Cells example | Aspose.Cells example reading shape size and saving to new file
-// Tags: Aspose.Cells read shape dimensions | C# write shape size to worksheet cells | shape bounding box extraction Aspose | missing workbook handling Aspose.Cells | retrieve shape width height .NET
+// Title: Read a shape's width and height from an Excel worksheet and write the values to cells using Aspose.Cells for .NET
+// Common Searches: how to retrieve shape width and height in an Excel file with Aspose.Cells C# | write shape dimensions to specific cells in a workbook using Aspose.Cells for .NET | Aspose.Cells get shape size and store in A1 and B1 cells C# example | C# code to read shape bounding box dimensions from Excel and save to a new file | extract shape dimensions from the first worksheet shape using Aspose.Cells
+// Tags: Aspose.Cells shape width extraction | Aspose.Cells shape height extraction | write shape size to worksheet cells C# | read shape bounding box dimensions Aspose.Cells | export shape dimensions to Excel cells .NET | process first worksheet shape Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeBoundingBoxExample
+namespace AsposeCellsExample
 {
-    // The example loads an existing workbook (or creates a new one if the file is absent), accesses the first worksheet, finds a shape named "MyShape", reads its Width and Height properties, writes the labels and values to cells A1:B2, and saves the result to an output Excel file.
+    // The example loads an existing workbook, checks for at least one shape on the first worksheet, reads the shape's Width and Height properties, writes the width to cell A1 and the height to cell B1, and saves the modified workbook to a new file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Load existing workbook or create a new one if the file is missing.
-                Workbook workbook;
-                if (File.Exists(inputPath))
+                // Verify input file existence
+                if (!File.Exists(inputPath))
                 {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Retrieve the shape by its name.
-                Shape shape = worksheet.Shapes["MyShape"]; // Change "MyShape" to your shape's name.
-
-                if (shape == null)
-                {
-                    Console.WriteLine("Shape \"MyShape\" not found in the worksheet.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Use the shape's Width and Height properties to obtain its dimensions.
-                double width = shape.Width;
-                double height = shape.Height;
+                // Load workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Write the dimensions to worksheet cells.
-                worksheet.Cells["A1"].PutValue("Width");
-                worksheet.Cells["B1"].PutValue("Height");
-                worksheet.Cells["A2"].PutValue(width);
-                worksheet.Cells["B2"].PutValue(height);
+                // Ensure the worksheet contains at least one shape
+                if (sheet.Shapes.Count == 0)
+                {
+                    Console.WriteLine("No shapes found in the worksheet.");
+                    return;
+                }
 
-                // Save the workbook.
+                // Get the first shape
+                Shape shape = sheet.Shapes[0];
+
+                // Use shape's Width and Height as the bounding dimensions
+                float width = shape.Width;
+                float height = shape.Height;
+
+                // Write dimensions to cells A1 (width) and B1 (height)
+                sheet.Cells["A1"].PutValue(width);
+                sheet.Cells["B1"].PutValue(height);
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Dimensions saved to {outputPath}");
             }
             catch (Exception ex)
             {

@@ -1,78 +1,88 @@
-// Title: How to collapse specific row items in an Aspose.Cells pivot table using C# by setting IsDetailHidden
-// AI Prompts: Generate C# code that creates a pivot table with Aspose.Cells, refreshes the data, and collapses each row item by setting PivotItem.IsDetailHidden = true. | Show a C# snippet that iterates over a PivotField's PivotItems in Aspose.Cells and hides their details to collapse the items. | Explain how to programmatically collapse selected pivot items after refreshing the pivot cache in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# collapse row items in pivot table programmatically | Set IsDetailHidden for all PivotItems in Aspose.Cells example | How to hide details of pivot row fields using Aspose.Cells .NET | Iterate PivotItems to collapse them in Aspose.Cells workbook
-// Tags: collapse pivot row items Aspose.Cells C# | PivotItem.IsDetailHidden Aspose.Cells | iterate PivotField items Aspose.Cells | refresh pivot cache Aspose.Cells before collapsing | Aspose.Cells pivot table row field manipulation
+// Title: Collapse all PivotItems in an Excel PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# collapse all pivot items in a pivot table | set PivotItem IsVisible false for all rows and columns using Aspose.Cells | programmatically hide pivot field items in Excel with Aspose.Cells .NET | iterate PivotFields to collapse items in an existing workbook using C# | how to collapse pivot table rows and columns via Aspose.Cells API
+// Tags: collapse pivot table items Aspose.Cells | set PivotItem IsVisible false C# | hide pivot field items programmatically | modify Excel pivot table visibility .NET | iterate PivotFields Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotCollapse
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, refreshes it, then iterates the row field's PivotItems and sets IsDetailHidden to true to collapse each item before saving the file.
-    public class CollapseSpecificPivotItems
+    // The example loads an existing workbook, iterates through each PivotTable on the first worksheet, loops over all row and column PivotFields, and uses a dynamic cast to set each PivotItem's IsVisible property to false, collapsing the items, then saves the modified workbook.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                const string inputPath = "Input.xlsx";
+                const string outputPath = "Output.xlsx";
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("Fruit");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["A3"].PutValue("Fruit");
-                sheet.Cells["B3"].PutValue(150);
-                sheet.Cells["A4"].PutValue("Vegetable");
-                sheet.Cells["B4"].PutValue(200);
-                sheet.Cells["A5"].PutValue("Vegetable");
-                sheet.Cells["B5"].PutValue(250);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Add the "Category" field as a row field and "Amount" as a data field
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-                // Refresh the pivot cache and calculate the pivot table so that items are generated
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Collapse each row item by hiding its detail
-                PivotField rowField = pivotTable.RowFields[0];
-                foreach (PivotItem item in rowField.PivotItems)
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
                 {
-                    item.IsDetailHidden = true;
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
                 }
 
-                // Recalculate after changing the collapse state
-                pivotTable.CalculateData();
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Save the workbook
-                string outputPath = "CollapsedPivotItems.xlsx";
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Access the collection of pivot tables on the worksheet
+                PivotTableCollection pivotTables = sheet.PivotTables;
+
+                // Iterate through each pivot table
+                foreach (PivotTable pivotTable in pivotTables)
+                {
+                    // Collapse items in row fields
+                    foreach (PivotField rowField in pivotTable.RowFields)
+                    {
+                        foreach (PivotItem item in rowField.PivotItems)
+                        {
+                            try
+                            {
+                                // Use dynamic to set IsVisible at runtime (avoids compile‑time binding issues)
+                                dynamic dynItem = item;
+                                dynItem.IsVisible = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Warning: Unable to hide row item '{item.Name}'. {ex.Message}");
+                            }
+                        }
+                    }
+
+                    // Collapse items in column fields (optional)
+                    foreach (PivotField columnField in pivotTable.ColumnFields)
+                    {
+                        foreach (PivotItem item in columnField.PivotItems)
+                        {
+                            try
+                            {
+                                dynamic dynItem = item;
+                                dynItem.IsVisible = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Warning: Unable to hide column item '{item.Name}'. {ex.Message}");
+                            }
+                        }
+                    }
+                }
+
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CollapseSpecificPivotItems.Run();
         }
     }
 }

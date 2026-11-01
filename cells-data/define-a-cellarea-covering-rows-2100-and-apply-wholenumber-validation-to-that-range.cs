@@ -1,38 +1,45 @@
-// Title: Add whole-number data validation to rows 2‑100 in column A using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a CellArea for rows 2 through 100 in column A and applies a WholeNumber validation with a Between operator ranging from 1 to 1000 using Aspose.Cells. | Show how to configure an Aspose.Cells Validation object to restrict values to whole numbers within a custom range for a specific column range in an Excel worksheet. | Generate a complete example that saves the workbook after adding numeric validation to the defined cell area.
-// Common Searches: Aspose.Cells C# apply integer validation to a column range | Create CellArea for rows 2-100 column A and set numeric validation in Aspose.Cells | Configure between operator for integer validation in Aspose.Cells .NET | Example of adding data validation to specific rows using Aspose.Cells C#
-// Tags: Aspose.Cells integer validation C# | CellArea range validation Aspose.Cells | Excel numeric validation between operator | C# Aspose.Cells data validation example
+// Title: Create a CellArea for rows 2‑100 and enforce whole‑number validation across all columns with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# how to set whole number validation for rows 2 through 100 | Define a CellArea covering rows 2 to 100 and apply integer data validation in .NET | Add data validation to an entire column range using Aspose.Cells validation API | Set input and error messages for whole number validation in an Excel workbook with Aspose.Cells | Apply Between operator integer validation to a large cell range in C# Aspose.Cells
+// Tags: Aspose.Cells integer validation C# | CellArea rows 2-100 definition | Excel whole number data validation Aspose.Cells | Between operator validation Aspose.Cells | Custom input error messages validation Aspose
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationDemo
+// The example creates a new workbook, defines a CellArea that spans rows 2‑100 and all columns, adds a whole‑number validation using the Between operator with the full 32‑bit integer range, sets optional input and error messages, and saves the file as WholeNumberValidation.xlsx.
+class Program
 {
-    // The sample creates a new workbook, defines a CellArea covering rows 2‑100 in column A, adds a whole-number validation with a Between operator limited to 1‑1000, and saves the file as WholeNumberValidation.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define a CellArea that covers rows 2‑100 (zero‑based index 1‑99)
+        // and all columns from A to the maximum column (0‑255)
+        CellArea area = new CellArea
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            StartRow = 1,      // Row 2
+            EndRow = 99,       // Row 100
+            StartColumn = 0,   // Column A
+            EndColumn = 255    // Up to column IV (max column in Excel)
+        };
 
-            // Define a CellArea that covers rows 2‑100 (zero‑based indices 1‑99) in column A (column index 0)
-            CellArea validationArea = CellArea.CreateCellArea(1, 0, 99, 0);
+        // Add a validation rule for the defined area
+        int validationIndex = sheet.Validations.Add(area);
+        Validation validation = sheet.Validations[validationIndex];
 
-            // Add a validation to the worksheet for the defined area
-            int validationIndex = sheet.Validations.Add(validationArea);
-            Validation validation = sheet.Validations[validationIndex];
+        // Set the validation type to WholeNumber
+        validation.Type = ValidationType.WholeNumber;
 
-            // Configure the validation as Whole Number
-            validation.Type = ValidationType.WholeNumber;
-            // Optional: restrict the whole numbers to a range, e.g., 1‑1000
-            validation.Operator = OperatorType.Between;
-            validation.Formula1 = "1";
-            validation.Formula2 = "1000";
+        // Use the Between operator with a very wide range to allow any whole number
+        validation.Operator = OperatorType.Between;
+        validation.Formula1 = "-2147483648"; // Minimum 32‑bit integer
+        validation.Formula2 = "2147483647";  // Maximum 32‑bit integer
 
-            // Save the workbook
-            workbook.Save("WholeNumberValidation.xlsx", SaveFormat.Xlsx);
-        }
+        // Optional: set input and error messages
+        validation.InputMessage = "Please enter a whole number.";
+        validation.ErrorMessage = "The value must be a whole number.";
+
+        // Save the workbook to a file
+        workbook.Save("WholeNumberValidation.xlsx");
     }
 }

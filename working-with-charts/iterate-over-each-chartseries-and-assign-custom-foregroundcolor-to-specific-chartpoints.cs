@@ -1,68 +1,87 @@
-// Title: How to set custom foreground colors for individual chart points in an Aspose.Cells column chart using C#
-// AI Prompts: Write C# code with Aspose.Cells that loops through each series in a column chart and assigns a distinct ForegroundColor to every ChartPoint. | Show how to change the area color of chart points based on their index (e.g., first point red, second green, others blue) and then save the workbook. | Provide a complete example that creates sample data, adds a column chart, and customizes the foreground colors of individual data points programmatically.
-// Common Searches: Aspose.Cells C# set foreground color for individual chart points in a column chart | how to change color of specific data points in an Excel chart using Aspose.Cells | loop through chart series and points to apply custom colors with Aspose.Cells .NET | example of customizing chart point area colors in Aspose.Cells C# | assign different colors to each data point in a column chart programmatically Aspose.Cells
-// Tags: set chart point foreground color Aspose.Cells C# | iterate chart series points Aspose.Cells | customize column chart data point colors | apply individual point colors Excel chart Aspose | foreground color for chart point area Aspose.Cells
+// Title: Set custom foreground colors for each chart point in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to loop through all worksheets, locate every chart, and assign Red to the first point, Blue to the second, and Green to all remaining points by setting point.Area.ForegroundColor. | Update an existing Aspose.Cells workbook so that each chart series' points are colored based on their index, handling multiple worksheets and charts, then save the modified file.
+// Common Searches: asp.net change color of individual data points in Excel chart using Aspose.Cells | c# set foreground color for chart point Aspose.Cells example | iterate over chart series and points to apply custom colors Aspose.Cells | how to color first two points differently in Excel chart with Aspose.Cells | Aspose.Cells programmatically customize chart point colors in .xlsx file
+// Tags: Aspose.Cells chart point foreground color | C# iterate chart series Aspose.Cells | set individual chart point color Excel | dynamic series points Aspose.Cells | customize chart colors .xlsx Aspose.Cells
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, then iterates through each series and its points, assigning red, green, or blue foreground colors to the point areas based on the point index, and finally saves the file as SeriesPointsForegroundColor.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates through each worksheet and its charts, walks every series and its points, and sets the Area.ForegroundColor of the first point to red, the second to blue, and all other points to green, then saves the updated workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-
-        // Set the data range for the series and categories
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Iterate over each series in the chart
-        for (int seriesIdx = 0; seriesIdx < chart.NSeries.Count; seriesIdx++)
+        static void Main(string[] args)
         {
-            Series series = chart.NSeries[seriesIdx];
-
-            // Iterate over each point in the current series
-            for (int pointIdx = 0; pointIdx < series.Points.Count; pointIdx++)
+            try
             {
-                ChartPoint point = series.Points[pointIdx];
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Assign custom foreground colors based on point index
-                if (pointIdx == 0)
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    point.Area.ForegroundColor = Color.Red;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
-                else if (pointIdx == 1)
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through worksheets and their charts
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    point.Area.ForegroundColor = Color.Green;
+                    foreach (Chart chart in sheet.Charts)
+                    {
+                        try
+                        {
+                            // Iterate through each series in the chart
+                            for (int s = 0; s < chart.NSeries.Count; s++)
+                            {
+                                // Use dynamic to avoid version‑specific type issues
+                                dynamic series = chart.NSeries[s];
+
+                                // Process each point in the series
+                                for (int i = 0; i < series.Points.Count; i++)
+                                {
+                                    dynamic point = series.Points[i];
+
+                                    if (i == 0)
+                                    {
+                                        // First point – Red
+                                        point.Area.ForegroundColor = Color.Red;
+                                    }
+                                    else if (i == 1)
+                                    {
+                                        // Second point – Blue
+                                        point.Area.ForegroundColor = Color.Blue;
+                                    }
+                                    else
+                                    {
+                                        // Other points – Green
+                                        point.Area.ForegroundColor = Color.Green;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception exChart)
+                        {
+                            Console.WriteLine($"Error processing chart on sheet '{sheet.Name}': {exChart.Message}");
+                        }
+                    }
                 }
-                else
-                {
-                    point.Area.ForegroundColor = Color.Blue;
-                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Save the workbook with the customized chart
-        workbook.Save("SeriesPointsForegroundColor.xlsx");
     }
 }

@@ -1,13 +1,13 @@
-// Title: How to limit an Aspose.Cells PDF export to 10 pages using PdfSaveOptions.MaxPageCount in C#
-// AI Prompts: Write C# code that creates an Excel workbook, fills it with data, and saves it as a PDF limited to ten pages by configuring PdfSaveOptions.MaxPageCount. | Show the steps to set PdfSaveOptions.MaxPageCount = 10 when converting a workbook to PDF with Aspose.Cells for .NET. | Adapt existing Aspose.Cells PDF conversion code to enforce a maximum of 10 pages in the generated PDF.
-// Common Searches: Aspose.Cells C# limit PDF to specific number of pages | PdfSaveOptions.MaxPageCount usage example Aspose.Cells | How to restrict PDF page count when exporting Excel with Aspose.Cells .NET | C# code sample for setting max page count in Aspose.Cells PDF conversion | Export workbook to PDF with ten-page limit using Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions MaxPageCount | C# limit PDF pages Aspose.Cells | Excel to PDF page count restriction .NET | Aspose.Cells PDF export page limit | Configure PDF save options Aspose.Cells
+// Title: Limit PDF output to the first 10 pages when saving an Aspose.Cells workbook in C#
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook to PDF using PdfSaveOptions with a maximum of 10 pages. | Show how to set PageIndex and PageCount in PdfSaveOptions to export only the first ten pages of a workbook. | Demonstrate configuring Aspose.Cells PDF export to restrict the generated PDF to ten pages.
+// Common Searches: how to export only first 10 pages of Excel to PDF using Aspose.Cells C# | Aspose.Cells PdfSaveOptions limit number of pages .NET | C# specify maximum pages when saving workbook to PDF with Aspose.Cells | how to cap PDF output at ten pages using Aspose.Cells | Aspose.Cells PDF export page range example C#
+// Tags: Aspose.Cells PDF export page limit | PdfSaveOptions page limit C# | limit PDF pages Aspose.Cells | export workbook to PDF first ten pages | C# Aspose.Cells PDF page range
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// // Creates a workbook, populates rows, sets PdfSaveOptions.MaxPageCount = 10 to cap the PDF at ten pages, and saves the file as output.pdf.
+// The program creates a workbook, populates it with sample data, and saves it as a PDF limited to the first ten pages by configuring PdfSaveOptions with PageIndex = 0 and PageCount = 10.
 class Program
 {
     static void Main()
@@ -21,26 +21,23 @@ class Program
             Worksheet sheet = workbook.Worksheets[0];
             for (int row = 0; row < 200; row++)
             {
-                sheet.Cells[row, 0].PutValue($"Row {row + 1}");
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                }
             }
 
-            // Configure PDF save options to limit the output to ten pages
+            // Configure PDF save options to limit the output to the first 10 pages
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Limit PDF to a maximum of 10 pages (if supported by the API)
+                // Zero‑based index of the first page to render
+                PageIndex = 0,
+                // Number of pages to render starting from PageIndex
                 PageCount = 10
             };
 
-            // Determine output file path and ensure the directory exists
-            string outputPath = "output.pdf";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as a PDF using the configured options
-            workbook.Save(outputPath, pdfOptions);
+            // Save the workbook as PDF using the configured options
+            workbook.Save("LimitedOutput.pdf", pdfOptions);
         }
         catch (Exception ex)
         {

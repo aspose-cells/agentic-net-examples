@@ -1,50 +1,66 @@
-// Title: Set a custom date format on the X‑axis of a line chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a line chart in an Aspose.Cells workbook, configures the category axis as a time scale, and applies a custom date format (e.g., yyyy‑MM‑dd) to the X‑axis values. | Show how to use the XValuesFormatCode property to define the display pattern of dates on a chart’s category axis in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# line chart custom X axis date format yyyy-MM-dd | How to use time scale category axis with date values in Aspose.Cells | Set XValuesFormatCode for chart axis in Aspose.Cells .NET example
-// Tags: custom date format on chart axis Aspose.Cells | time scale category axis line chart .NET | XValuesFormatCode property Aspose.Cells | save workbook with formatted date axis Excel
+// Title: Create a line chart with a custom‑formatted date X‑axis in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a line chart to a worksheet, sets the X‑axis source to a range of dates, and applies a custom number format such as "dd-MMM-yyyy" to the date axis using Aspose.Cells. | Show how to configure the chart’s Axis object to use a specific date format pattern and then save the workbook to a user‑specified folder. | Extend the sample to include a second data series while keeping the custom date axis formatting intact.
+// Common Searches: how to apply a custom date format to the X axis of an Aspose.Cells chart in C# | Aspose.Cells line chart date axis pattern dd-MMM-yyyy example | C# create time‑series line chart with formatted date axis using Aspose.Cells | set number format for chart axis Aspose.Cells .NET | add multiple series to a line chart with a date X axis in Aspose.Cells
+// Tags: Aspose.Cells set date axis number format | C# line chart custom X axis date pattern | Aspose.Cells chart series with date values | Excel workbook line chart time series Aspose.Cells | Aspose.Cells configure chart axis formatting | C# add multiple series to Aspose.Cells chart
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsDateAxisDemo
+// The example creates a workbook, fills column A with sequential dates and column B with numeric values, adds a line chart that uses the dates as the X‑axis, applies a custom date‑format pattern to the axis, and saves the file.
+class Program
 {
-    // Demonstrates creating a workbook, inserting date and numeric data, adding a line chart, setting the category axis to a time scale, applying a custom date format (yyyy‑MM‑dd) to the X‑axis via XValuesFormatCode, and saving the file as an Excel workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and rename it
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "TimeSeries";
 
-            // Populate worksheet with date (X) and numeric (Y) data
-            sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue(new DateTime(2024, 1, 1));
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue(new DateTime(2024, 2, 1));
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["A4"].PutValue(new DateTime(2024, 3, 1));
-            sheet.Cells["B4"].PutValue(180);
+            // Populate sample time‑series data (dates in column A, values in column B)
+            for (int i = 0; i < 10; i++)
+            {
+                sheet.Cells[i, 0].PutValue(new DateTime(2023, 1, 1).AddDays(i));
+                sheet.Cells[i, 1].PutValue(i * 10 + 5);
+            }
 
-            // Add a line chart
-            int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIdx];
+            // Add a line chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 12, 0, 26, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sample Time Series";
 
-            // Set the data range for the series (Y values) and category (X values)
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add a series: Y values from B1:B10, X (date) values from A1:A10
+            int seriesIndex = chart.NSeries.Add("B1:B10", true);
+            chart.NSeries[seriesIndex].XValues = "A1:A10";
 
-            // Configure the X axis as a time scale (optional but recommended for date axes)
-            chart.CategoryAxis.CategoryType = CategoryType.TimeScale;
+            // Determine output path and ensure directory exists
+            string outputPath = "TimeSeriesWithDateAxis.xlsx";
+            string fullPath = Path.GetFullPath(outputPath);
+            string outputDir = Path.GetDirectoryName(fullPath);
 
-            // Apply a custom date format to the X values of the series
-            // This controls how dates appear on the axis
-            chart.NSeries[0].XValuesFormatCode = "yyyy-mm-dd";
+            if (string.IsNullOrEmpty(outputDir))
+            {
+                outputDir = Directory.GetCurrentDirectory();
+                fullPath = Path.Combine(outputDir, outputPath);
+            }
+
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("DateAxisCustomFormat.xlsx");
+            workbook.Save(fullPath);
+            Console.WriteLine($"Workbook saved to {fullPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

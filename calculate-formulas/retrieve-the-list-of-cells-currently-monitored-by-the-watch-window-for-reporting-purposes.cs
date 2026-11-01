@@ -1,36 +1,75 @@
-// Title: How to list cells monitored by the Watch Window using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, accesses the worksheet's CellWatches collection, and prints each watched cell's address, row, and column. | Create a method that returns a formatted string containing all watch‑window entries (cell name, row, column) from a specified worksheet using Aspose.Cells. | Demonstrate how to iterate over Worksheet.CellWatches in Aspose.Cells and output the watch details to the console or a log file.
-// Common Searches: Aspose.Cells C# retrieve watch window cell list from worksheet | How to enumerate CellWatchCollection in Aspose.Cells .NET | Get monitored cells from an Excel file using Aspose.Cells API | List watch window entries programmatically with Aspose.Cells for .NET | Extract cell watch information from a workbook using C# Aspose.Cells
-// Tags: Aspose.Cells enumerate CellWatchCollection | C# list watch window cells | Aspose.Cells retrieve monitored cells .xlsx | Worksheet.CellWatches iteration | Aspose.Cells watch window reporting
+// Title: List all cells monitored by the Watch Window in an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to retrieve watched cells from Aspose.Cells WatchWindow | How to enumerate WatchWindowCell objects in Aspose.Cells .NET | Get addresses of cells monitored by Watch Window with Aspose.Cells | Aspose.Cells dynamic worksheet WatchWindow example C# | Extract WatchWindow cell list from workbook using Aspose.Cells
+// Tags: Aspose.Cells WatchWindow cell enumeration C# | retrieve WatchWindowCell addresses Aspose.Cells | dynamic worksheet access Aspose.Cells .NET | zero based index to A1 address conversion C# | list monitored cells Excel Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Microsoft.CSharp.RuntimeBinder;
 
-namespace AsposeCellsWatchWindowReport
+// The example loads an Excel workbook, accesses the first worksheet as a dynamic object to obtain its WatchWindow, iterates through the WatchWindowCells collection, converts each cell's zero‑based row and column indices to an A1‑style address, and outputs the worksheet name and cell address.
+class Program
 {
-    // The example loads an Excel workbook, accesses the first worksheet, obtains its CellWatches collection, and writes each watched cell's name, row, and column to the console, illustrating how to report watch‑window entries with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Get the first worksheet (or any specific worksheet)
-            Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the collection of cell watches for this worksheet
-            CellWatchCollection watches = sheet.CellWatches;
+            // Access the first worksheet as a dynamic object to allow late‑bound members (e.g., WatchWindow)
+            dynamic worksheet = workbook.Worksheets[0];
+            dynamic watchWindow;
 
-            // Report each watched cell's details
-            Console.WriteLine("Watched Cells:");
-            foreach (CellWatch watch in watches)
+            try
             {
-                Console.WriteLine($"Cell Name: {watch.CellName}, Row: {watch.Row}, Column: {watch.Column}");
+                // Attempt to retrieve the WatchWindow; may throw if the feature is unavailable in this version
+                watchWindow = worksheet.WatchWindow;
+            }
+            catch (RuntimeBinderException)
+            {
+                Console.WriteLine("WatchWindow feature is not supported in the current Aspose.Cells version.");
+                return;
             }
 
-            // Optionally, save the workbook if any changes were made
-            // workbook.Save("output.xlsx");
+            // Iterate through all cells monitored by the Watch Window
+            foreach (dynamic watchedCell in watchWindow.WatchWindowCells)
+            {
+                // Worksheet index of the watched cell
+                int wsIndex = watchedCell.WorksheetIndex;
+                string sheetName = workbook.Worksheets[wsIndex].Name;
+
+                // Convert zero‑based row/column to A1 address
+                string address = CellReference(watchedCell.Row, watchedCell.Column);
+                Console.WriteLine($"Worksheet: {sheetName}, Cell: {address}");
+            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper: convert zero‑based row/column indices to A1 style address
+    static string CellReference(int row, int column)
+    {
+        int dividend = column + 1;
+        string columnName = "";
+        while (dividend > 0)
+        {
+            int modulo = (dividend - 1) % 26;
+            columnName = Convert.ToChar('A' + modulo) + columnName;
+            dividend = (dividend - modulo) / 26;
+        }
+        return $"{columnName}{row + 1}";
     }
 }

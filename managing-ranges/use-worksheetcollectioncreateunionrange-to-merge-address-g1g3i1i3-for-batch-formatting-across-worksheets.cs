@@ -1,48 +1,55 @@
-// Title: Apply a yellow fill to a union range G1:G3,I1:I3 across all worksheets using WorksheetCollection.CreateUnionRange in Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a union range for cells G1:G3 and I1:I3 on every worksheet in a workbook and applies a solid yellow background using Aspose.Cells. | Demonstrate how to use WorksheetCollection.CreateUnionRange to batch‑style the same cell addresses on multiple sheets in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells how to format the same cell range on all worksheets in C# | CreateUnionRange example for applying style to multiple sheets | Batch apply yellow fill to G1:G3 and I1:I3 across workbook using Aspose.Cells | WorksheetCollection.CreateUnionRange usage for uniform cell styling | C# Aspose.Cells union range across worksheets tutorial
-// Tags: union range styling Aspose.Cells | WorksheetCollection.CreateUnionRange C# | apply solid fill to multiple sheets Aspose.Cells | batch cell formatting across worksheets | G1:G3 I1:I3 union range Aspose.Cells
+// Title: How to merge cells G1:G3 and I1:I3 across multiple worksheets and apply a solid background style using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# create combined range for G1:G3 and I1:I3 on every worksheet | How to apply a solid background color to the same cells across multiple sheets with Aspose.Cells | Batch formatting non‑contiguous cells using CreateUnionRange in a .NET Excel workbook | C# example for merging G1:G3 and I1:I3 ranges across sheets with Aspose.Cells | Set uniform style for a multi‑sheet range in Aspose.Cells for .NET
+// Tags: combined cell range batch formatting | multi‑sheet style application Aspose.Cells | solid fill for non‑contiguous cells | C# Aspose.Cells unified range formatting | Excel workbook unified range styling
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 using System.Drawing;
-using System.IO;
 
-// The sample creates a workbook with three worksheets, builds a union range that includes cells G1:G3 and I1:I3 on every sheet via WorksheetCollection.CreateUnionRange, applies a solid yellow fill style to the range, and saves the file as UnionRangeFormatted.xlsx.
-class Program
+namespace AsposeCellsUnionRangeExample
 {
-    static void Main()
+    // The example creates a workbook with two worksheets, builds a union address that includes the ranges G1:G3 and I1:I3 on each sheet, creates a UnionRange via CreateUnionRange, applies a solid light‑blue background style to all cells in the union, and saves the file as MergedRangeFormatted.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook (contains one default worksheet)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add additional worksheets
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
+                // Rename the default worksheet and add another one
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Worksheets.Add("Sheet2");
 
-            // Create a union range that spans the same address on every worksheet in the collection,
-            // starting from the first worksheet (index 0)
-            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("G1:G3,I1:I3", 0);
+                // Build the union address that includes the same ranges on each worksheet
+                string unionAddress = "";
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    // Append the ranges for the current worksheet
+                    unionAddress += $"{ws.Name}!G1:G3,{ws.Name}!I1:I3,";
+                }
+                // Remove the trailing comma
+                unionAddress = unionAddress.TrimEnd(',');
 
-            // Define a style (yellow fill)
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Yellow;
-            style.Pattern = BackgroundType.Solid;
+                // Create the UnionRange across all worksheets (sheetIndex 0 is required by the API)
+                UnionRange unionRange = workbook.Worksheets.CreateUnionRange(unionAddress, 0);
 
-            // Apply the style to the union range
-            unionRange.ApplyStyle(style, new StyleFlag { All = true });
+                // Apply batch formatting (e.g., set a solid background color)
+                Style style = workbook.CreateStyle();
+                style.ForegroundColor = Color.LightBlue;
+                style.Pattern = BackgroundType.Solid;
+                unionRange.ApplyStyle(style, new StyleFlag { All = true });
 
-            // Save the workbook
-            string outputPath = "UnionRangeFormatted.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                string outputPath = "MergedRangeFormatted.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

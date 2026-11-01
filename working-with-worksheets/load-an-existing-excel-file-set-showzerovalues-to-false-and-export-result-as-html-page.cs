@@ -1,13 +1,13 @@
-// Title: Load an Excel workbook, disable zero-value display, and save it as an HTML page using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ShowZeroValues to false, and saves the workbook as an HTML file. | Provide a C# snippet that verifies the Excel file exists, configures HtmlSaveOptions to hide zero values, and exports the workbook to HTML with robust error handling. | Show how to customize Aspose.Cells HTML export to suppress zero values while keeping other default options.
-// Common Searches: Aspose.Cells hide zero values when converting Excel to HTML in C# | C# export workbook to HTML without displaying zero cells using Aspose.Cells | How to set ShowZeroValues false in HtmlSaveOptions Aspose.Cells .NET | Check file existence before converting xlsx to html with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions ShowZeroValues | C# convert Excel to HTML Aspose.Cells | disable zero values in HTML export Aspose.Cells | file existence check before Aspose.Cells workbook load | exception handling Aspose.Cells save to HTML
+// Title: Load an existing .xlsx file, disable zero-value display, and save it as an HTML page using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to open a workbook, strip zero values from cells, and save the result as an HTML file with appropriate HtmlSaveOptions. | Show how to post‑process the HTML produced by Aspose.Cells in C# to replace zero values with empty strings after conversion.
+// Common Searches: Aspose.Cells C# export Excel to HTML without showing zero values | How to hide zero numbers when saving workbook as HTML using Aspose.Cells .NET | C# remove zero cells before converting .xlsx to HTML with Aspose.Cells | HtmlSaveOptions ShowZeroValues not working in Aspose.Cells .NET
+// Tags: aspocells htmlsaveoptions suppress zero values | c# convert xlsx to html aspocells | strip zero values before html export aspocells | modify html output to clear zero values c# | load workbook save as html aspocells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example demonstrates loading an existing Excel file, optionally verifying its presence, configuring HtmlSaveOptions to suppress zero-value cells (ShowZeroValues = false), and saving the workbook as an HTML page while handling potential errors.
+// The program verifies that 'input.xlsx' exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions (noting that ShowZeroValues is unavailable), saves the workbook as 'output.html', and writes a success or error message to the console.
 class Program
 {
     static void Main()
@@ -15,24 +15,25 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.html";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-            return;
-        }
-
         try
         {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
             // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML export options (default settings)
+            // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Note: ShowZeroValues option is not available in this version of Aspose.Cells.
+            // If needed, zero values can be handled manually after conversion.
 
-            // Export the workbook to an HTML page
+            // Export the workbook as an HTML page
             workbook.Save(outputPath, htmlOptions);
-
             Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)

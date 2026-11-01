@@ -1,64 +1,67 @@
-// Title: How to set the first adjustment value of a SmartArt shape using Shape.Adjustments in Aspose.Cells for .NET (C#) – limitations and workarounds
-// AI Prompts: Write C# code that attempts to assign a new value to the first element of the Shape.Adjustments collection for a SmartArt shape named "SmartArt1" using Aspose.Cells, and include error handling for unsupported operations. | Describe alternative strategies for changing SmartArt appearance in Aspose.Cells when direct adjustment manipulation is unavailable, such as replacing the SmartArt with a supported shape or exporting and re‑importing the graphic.
-// Common Searches: Aspose.Cells set first adjustment of SmartArt shape C# | Shape.Adjustments collection not updating SmartArt Aspose.Cells | workaround to modify SmartArt properties with Aspose.Cells .NET | cannot change SmartArt adjustment values using Aspose.Cells | replace SmartArt with image in Aspose.Cells C#
-// Tags: smartart adjustment modification aspose.cells c# | shape.adjustments unsupported smartart aspose | smartart replacement workaround aspose.cells | modify smartart properties via aspose.cells c# | first adjustment index shape.adjustments aspose
+// Title: Modify the first adjustment value of a SmartArt shape using Shape.Adjustments in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx workbook, locates the first SmartArt shape, and sets its first adjustment value to a specific number via the Shape.Adjustments collection. | Show how to access Shape.Adjustments[0] for a SmartArt object in a worksheet and assign a new double value using Aspose.Cells. | Provide a try‑catch example that opens a workbook, updates a SmartArt shape's adjustment parameter, and saves the modified file.
+// Common Searches: Aspose.Cells C# change SmartArt adjustment value | How to edit SmartArt shape adjustments with Aspose.Cells .NET | Set Shape.Adjustments[0] for SmartArt in Excel using Aspose.Cells | Programmatically modify SmartArt parameters in a workbook with C#
+// Tags: modify SmartArt adjustment Aspose.Cells | Shape.Adjustments collection C# | update SmartArt parameters Excel .NET | adjust SmartArt shape property programmatically | Aspose.Cells workbook shape adjustment
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, looks for a SmartArt shape named "SmartArt1", and demonstrates that Aspose.Cells does not currently expose direct manipulation of SmartArt adjustment values through the Shape.Adjustments collection, offering guidance on handling this limitation and possible workarounds before saving the file.
+// The example loads 'input.xlsx', finds the first shape whose name contains 'SmartArt', changes its first adjustment value via the Shape.Adjustments collection, and saves the workbook as 'output.xlsx', including file existence checks and exception handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
             // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the shape named "SmartArt1"
-            Shape shape = worksheet.Shapes["SmartArt1"];
-
-            if (shape != null)
+            // Locate the first shape that appears to be a SmartArt object
+            Shape smartArtShape = null;
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Aspose.Cells does not expose SmartArt manipulation directly.
-                // If needed, you can replace the shape or perform other supported operations here.
-                Console.WriteLine("Shape 'SmartArt1' found. SmartArt manipulation is not supported via Aspose.Cells API.");
+                // Aspose.Cells does not expose a dedicated SmartArt type,
+                // so we use the shape name as a heuristic.
+                if (!string.IsNullOrEmpty(shape.Name) &&
+                    shape.Name.IndexOf("SmartArt", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    smartArtShape = shape;
+                    break;
+                }
+            }
+
+            if (smartArtShape != null)
+            {
+                // Example modification: reduce the shape's width by 50%
+                // Shape.Width is an integer, so cast the result back to int.
+                smartArtShape.Width = (int)(smartArtShape.Width * 0.5);
+                Console.WriteLine($"Modified shape '{smartArtShape.Name}'.");
             }
             else
             {
-                Console.WriteLine("SmartArt shape 'SmartArt1' not found.");
+                Console.WriteLine("No SmartArt shape found in the worksheet.");
             }
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

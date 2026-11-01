@@ -1,21 +1,20 @@
-// Title: How to subclass ChartGlobalizationSettings in Aspose.Cells for .NET to provide a localized “Other” label in a pie chart
-// AI Prompts: Define a class that inherits from ChartGlobalizationSettings and override GetOtherName to return a custom string. | Create a workbook, add sample data, insert a pie chart, and assign the custom globalization settings to the chart. | Change the return value of GetOtherName to output a different language translation for the “Other” slice.
-// Common Searches: Aspose.Cells C# change pie chart other slice label language | override GetOtherName in ChartGlobalizationSettings example | localize pie chart labels using custom globalization settings Aspose.Cells | set custom other category name for pie chart in .NET workbook | how to apply ChartGlobalizationSettings to a chart in Aspose.Cells
-// Tags: ChartGlobalizationSettings subclass for pie chart localization | override GetOtherName method Aspose.Cells | custom other slice label .NET Excel chart | localize chart labels Aspose.Cells C# | pie chart globalization settings example
+// Title: Create a custom ChartGlobalizationSettings class in C# to localize the “Other” slice label of an Aspose.Cells pie chart
+// Common Searches: how to localize the 'Other' slice label in an Aspose.Cells pie chart using C# | override GetOtherName in ChartGlobalizationSettings for French label in Aspose.Cells | apply custom chart globalization settings to a pie chart in Aspose.Cells C# example | Aspose.Cells pie chart display 'Other' category with custom text | set custom 'Other' label for small categories in Aspose.Cells chart
+// Tags: chart globalization settings customization Aspose.Cells | custom GetOtherName implementation for pie chart | localized other slice label in Excel chart | Aspose.Cells C# example for pie chart localization | Excel workbook pie chart other category localization
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Derive from ChartGlobalizationSettings to provide a localized "Other" label
-// The example shows how to create a CustomChartGlobalizationSettings class that inherits from ChartGlobalizationSettings and overrides GetOtherName to return a localized string (e.g., French "Autre"). It then builds a workbook, fills it with sample data, adds a pie chart, applies the custom globalization settings to the chart, and saves the workbook as an XLSX file, including basic error handling.
-public class CustomChartGlobalizationSettings : ChartGlobalizationSettings
+// Custom globalization settings for charts
+// The example defines a MyChartGlobalizationSettings class that overrides GetOtherName to return the French word "Autre". It creates a workbook with category data, adds many small categories to trigger an "Other" slice, inserts a pie chart, applies the custom globalization settings via reflection to WorkbookSettings, and saves the file as ChartWithLocalizedOther.xlsx.
+public class MyChartGlobalizationSettings : ChartGlobalizationSettings
 {
-    // Override the method that returns the name for the "Other" slice in a pie chart
+    // Override the default "Other" label used in pie charts
     public override string GetOtherName()
     {
-        // Example localization: French
+        // Return a localized string, e.g., French for "Other"
         return "Autre";
     }
 }
@@ -29,56 +28,46 @@ class Program
             // Create a new workbook
             var workbook = new Workbook();
 
-            // Populate data for the pie chart
-            var cells = workbook.Worksheets[0].Cells;
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Value");
-            cells["A2"].PutValue("A");
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("B");
-            cells["B3"].PutValue(20);
-            cells["A4"].PutValue("C");
-            cells["B4"].PutValue(10);
-            // Remaining categories will be grouped under "Other"
+            // Prepare data for a pie chart
+            var sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(10);
 
-            // Add a pie chart (Charts.Add returns the chart index)
-            int chartIndex = workbook.Worksheets[0].Charts.Add(ChartType.Pie, 5, 0, 20, 7);
-            Chart chart = workbook.Worksheets[0].Charts[chartIndex];
-
-            // Set the data range for the chart (values)
-            chart.NSeries.Add("B2:B4", true);
-            // Category data can be omitted; Aspose.Cells will infer it from the adjacent column
-
-            // Apply the custom globalization settings to localize the "Other" label
-            // Note: The GlobalizationSettings property is available in newer versions of Aspose.Cells.
-            // If using an older version, this line must be omitted or the library upgraded.
-            // chart.GlobalizationSettings = new CustomChartGlobalizationSettings();
-
-            // Define output file path
-            string outputPath = "PieChartWithOtherLabel.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Add many small categories to trigger the "Other" slice
+            for (int i = 5; i <= 20; i++)
             {
-                Directory.CreateDirectory(outputDir);
+                sheet.Cells[$"A{i}"].PutValue($"Cat{i}");
+                sheet.Cells[$"B{i}"].PutValue(1);
+            }
+
+            // Insert a pie chart (Charts.Add returns the chart index)
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 5, 20, 15);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B20", true);
+            chart.NSeries.CategoryData = "A2:A20";
+
+            // Apply the custom globalization settings if the property exists
+            var settings = workbook.Settings;
+            var prop = typeof(WorkbookSettings).GetProperty("ChartGlobalizationSettings");
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(settings, new MyChartGlobalizationSettings());
             }
 
             // Save the workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.Error.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            string outputPath = "ChartWithLocalizedOther.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

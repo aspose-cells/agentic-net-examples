@@ -1,68 +1,78 @@
-// Title: Measure how removing whitespace with HtmlSaveOptions affects Aspose.Cells HTML export speed and file size in C#
-// AI Prompts: Write a C# console application that creates a workbook with sample data, saves it to HTML using default settings, then saves it again with HtmlSaveOptions configured to minimize whitespace, and prints the elapsed time for each save operation. | Enhance the benchmark to also display the file size of each generated HTML file and compute the percentage reduction achieved by whitespace minimization. | Extend the program to iterate over multiple workbook sizes (e.g., 500x25, 2000x100) and record how the Minimize setting influences both save duration and output size for each scenario.
-// Common Searches: c# Aspose.Cells benchmark HTML save time with and without whitespace minimization | how does HtmlSaveOptions Minimize affect generated HTML size in Aspose.Cells | compare default HTML export vs compact export performance Aspose.Cells | measure impact of removing spaces on rendering speed of Aspose.Cells HTML files | Aspose.Cells HTML export performance testing for large worksheets
-// Tags: Aspose.Cells HtmlSaveOptions whitespace minimization | HTML export performance measurement in C# | benchmarking Aspose.Cells HTML save duration | file size reduction using HtmlSaveOptions Minimize | large workbook HTML generation Aspose.Cells
+// Title: Compare Aspose.Cells HTML export speed and output size before and after whitespace removal using C#
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, saves it to HTML, then creates a second HTML version by stripping redundant spaces with a regular expression, and records the elapsed time for each step. | Write a C# snippet that prints both the generation time and the file size of the original HTML and the whitespace‑collapsed HTML produced by Aspose.Cells.
+// Common Searches: how to benchmark Aspose.Cells HTML conversion time in C# | C# compare size of Aspose.Cells generated HTML with and without minification | measure performance impact of removing spaces from HTML saved by Aspose.Cells | regex to collapse whitespace between HTML tags after exporting Excel with Aspose.Cells | Aspose.Cells HTML export file size difference after whitespace cleanup
+// Tags: Aspose.Cells HTML export performance | C# whitespace removal from generated HTML | HTML file size comparison after Aspose.Cells conversion | benchmark Excel to HTML conversion timing | C# regex for HTML whitespace reduction
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example builds a sizable workbook, saves it to HTML twice—once with default settings and once with HtmlSaveOptions set to minimize whitespace—then reports the elapsed milliseconds for each save. It also shows how to capture file sizes, enabling developers to compare both performance and output size when whitespace is removed from the generated HTML.
+// The example loads an Excel workbook with Aspose.Cells, saves it to HTML twice, measures the time taken for each save, removes redundant whitespace from the second output using regular expressions, writes both versions to disk, and displays the generation times and file sizes to illustrate the impact of whitespace removal on performance and output size.
 class HtmlSpaceRemovalPerformance
 {
     static void Main()
     {
-        try
+        // Path to the source Excel file
+        string excelPath = "Sample.xlsx";
+
+        // Load the workbook (lifecycle rule: load)
+        Workbook workbook = new Workbook(excelPath);
+
+        // Prepare HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            // Create a new workbook and fill it with sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Export the entire workbook to a single HTML page
+            ExportActiveWorksheetOnly = false,
+            // Keep the original formatting
+            ExportImagesAsBase64 = true
+        };
 
-            for (int row = 0; row < 1000; row++)
-            {
-                for (int col = 0; col < 50; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
-                }
-            }
-
-            // Measure performance of saving HTML with default options (includes spaces)
-            Stopwatch swDefault = Stopwatch.StartNew();
-            try
-            {
-                workbook.Save("default.html", SaveFormat.Html);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving default HTML: {ex.Message}");
-            }
+        // Measure time to save with default formatting (including spaces)
+        Stopwatch swDefault = Stopwatch.StartNew();
+        using (MemoryStream msDefault = new MemoryStream())
+        {
+            workbook.Save(msDefault, htmlOptions);
             swDefault.Stop();
 
-            // Measure performance of saving HTML with compact options (minimal formatting)
-            HtmlSaveOptions compactOptions = new HtmlSaveOptions();
-            // The HtmlFormattingOptions property may not be available in older versions.
-            // If supported, uncomment the following line to minimize spaces:
-            // compactOptions.HtmlFormattingOptions = HtmlFormattingOptions.Minimize;
+            // Get the generated HTML as a string
+            string htmlDefault = Encoding.UTF8.GetString(msDefault.ToArray());
 
-            Stopwatch swCompact = Stopwatch.StartNew();
-            try
-            {
-                workbook.Save("compact.html", compactOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving compact HTML: {ex.Message}");
-            }
-            swCompact.Stop();
-
-            // Output the measured times
-            Console.WriteLine($"Default HTML save time: {swDefault.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Compact HTML (space‑removed) save time: {swCompact.ElapsedMilliseconds} ms");
-            Console.WriteLine("Check the generated files to compare file sizes and rendering performance.");
+            // Write the default HTML to a file for reference
+            File.WriteAllText("Output_Default.html", htmlDefault, Encoding.UTF8);
         }
-        catch (Exception ex)
+
+        // Measure time to save and then remove unnecessary spaces
+        Stopwatch swTrimmed = Stopwatch.StartNew();
+        using (MemoryStream msTrimmed = new MemoryStream())
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            workbook.Save(msTrimmed, htmlOptions);
+            swTrimmed.Stop();
+
+            // Convert to string
+            string htmlTrimmed = Encoding.UTF8.GetString(msTrimmed.ToArray());
+
+            // Remove redundant whitespace (spaces, tabs, line breaks) between tags
+            // This regex collapses multiple whitespace characters into a single space
+            // and removes spaces between '>' and '<' to tighten the markup.
+            htmlTrimmed = Regex.Replace(htmlTrimmed, @">\s+<", "><");
+            htmlTrimmed = Regex.Replace(htmlTrimmed, @"\s{2,}", " ");
+
+            // Write the trimmed HTML to a file
+            File.WriteAllText("Output_Trimmed.html", htmlTrimmed, Encoding.UTF8);
         }
+
+        // Output the measured times
+        Console.WriteLine($"HTML generation time (with spaces): {swDefault.ElapsedMilliseconds} ms");
+        Console.WriteLine($"HTML generation time (spaces removed): {swTrimmed.ElapsedMilliseconds} ms");
+        Console.WriteLine("Check Output_Default.html and Output_Trimmed.html for size differences.");
+
+        // Optionally, display file size comparison
+        FileInfo defaultInfo = new FileInfo("Output_Default.html");
+        FileInfo trimmedInfo = new FileInfo("Output_Trimmed.html");
+        Console.WriteLine($"Default HTML size: {defaultInfo.Length} bytes");
+        Console.WriteLine($"Trimmed HTML size: {trimmedInfo.Length} bytes");
     }
 }

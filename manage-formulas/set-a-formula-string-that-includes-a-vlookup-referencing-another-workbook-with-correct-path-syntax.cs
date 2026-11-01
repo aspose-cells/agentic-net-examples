@@ -1,35 +1,31 @@
-// Title: Add a VLOOKUP formula with an external workbook reference using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook with Aspose.Cells, builds a VLOOKUP formula that points to a range in another Excel file using the correct external reference syntax, and writes the formula to a cell. | Show how to format the external workbook path and sheet name in a VLOOKUP string for Aspose.Cells, then assign it to a cell programmatically. | Provide a step‑by‑step example of constructing and applying a cross‑file VLOOKUP formula in Aspose.Cells, including saving the resulting workbook.
-// Common Searches: how to set a VLOOKUP formula that references another Excel workbook in Aspose.Cells C# | Aspose.Cells external workbook VLOOKUP syntax example | C# create VLOOKUP with external file path using Aspose.Cells | building cross‑workbook lookup formula in .NET Aspose.Cells
-// Tags: Aspose.Cells set external VLOOKUP formula | C# construct Excel VLOOKUP with file reference | cross‑workbook lookup using Aspose.Cells | external range syntax in Aspose.Cells formulas | assign formula to cell Aspose.Cells .NET
+// Title: Create a VLOOKUP formula that references an external workbook file path using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set VLOOKUP formula with external workbook reference | How to build Excel VLOOKUP formula that points to another .xlsx file using Aspose.Cells | C# code for VLOOKUP across workbooks with full file path in Aspose.Cells | Aspose.Cells external workbook path syntax in formula string | Set cell formula to lookup value in different workbook using Aspose.Cells .NET
+// Tags: VLOOKUP external workbook reference Aspose.Cells | assign formula to cell Aspose.Cells C# | Excel file path syntax in Aspose.Cells formula | cross-workbook lookup using Aspose.Cells | Aspose.Cells .NET external workbook formula
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates creating a new workbook with Aspose.Cells, constructing a VLOOKUP formula that references a range in an external Excel file using proper path syntax, assigning the formula to cell B2, and saving the workbook as Output.xlsx.
+// The example creates a new workbook, builds a VLOOKUP formula string that includes a full path to another Excel file, assigns the formula to cell B2, and saves the workbook as Output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the external workbook path and sheet name
-        string externalWorkbookPath = @"C:\Data\Source.xlsx";
-        string externalSheetName = "Data";
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Define the lookup range inside the external sheet
-        string externalRange = "$A$1:$B$10";
+        // Define the external workbook path, sheet name, and lookup range
+        string externalWorkbookPath = @"C:\Data\OtherWorkbook.xlsx";
+        string externalSheetName = "Sheet1";
+        string lookupRange = "$A$1:$B$10";
 
-        // Build the VLOOKUP formula that references the external workbook
-        // Excel syntax: =VLOOKUP(A2,'C:\Data\[Source.xlsx]Data'!$A$1:$B$10,2,FALSE)
-        string formula = $"=VLOOKUP(A2,'{externalWorkbookPath.Replace("\\", "/")}[{System.IO.Path.GetFileName(externalWorkbookPath)}]{externalSheetName}'!{externalRange},2,FALSE)";
+        // Set a VLOOKUP formula in cell B2 that references the external workbook
+        // Formula format: =VLOOKUP(A2,'[C:\Data\OtherWorkbook.xlsx]Sheet1'!$A$1:$B$10,2,FALSE)
+        worksheet.Cells["B2"].Formula = $"=VLOOKUP(A2,'[{externalWorkbookPath}]{externalSheetName}'!{lookupRange},2,FALSE)";
 
-        // Set the formula in cell B2 (adjust as needed)
-        sheet.Cells["B2"].Formula = formula;
-
-        // Save the workbook
+        // Save the workbook to a file
         workbook.Save("Output.xlsx");
     }
 }

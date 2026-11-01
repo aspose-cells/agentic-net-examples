@@ -1,42 +1,52 @@
-// Title: Configure Aspose.Cells workbook to use French (fr-FR) culture for locale‑specific formatting of optional property values during export
-// AI Prompts: Assign a specific CultureInfo (e.g., fr-FR) to Workbook.Settings.CultureInfo so that all date and numeric values are formatted according to that locale when the file is saved. | Create built‑in date and number styles that automatically follow the workbook's culture settings and export the workbook to an XLSX file.
-// Common Searches: how to set cultureinfo for Aspose.Cells workbook export | Aspose.Cells format dates and numbers using French locale | export Excel with locale specific formatting Aspose.Cells .NET | configure workbook settings culture for optional property values Aspose.Cells
-// Tags: Aspose.Cells workbook locale configuration | locale-aware number formatting Aspose.Cells | export Excel with French locale .NET | apply built-in date style using workbook culture | culture-specific optional property export Aspose.Cells
+// Title: Setting workbook CultureInfo to French (France) for culture‑aware date formatting during PDF export with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set workbook culture to French before PDF conversion | export PDF from Aspose.Cells with French date format in .NET | configure Settings.CultureInfo for optional property values in Aspose.Cells | apply locale‑specific date formatting when converting Excel to PDF using Aspose.Cells | how to use CultureInfo with Aspose.Cells PDFSaveOptions
+// Tags: Aspose.Cells workbook Settings.CultureInfo | PDF export culture-specific formatting | French locale date style Aspose.Cells | culture-aware Excel to PDF conversion .NET | custom date format dd MMMM yyyy Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Globalization;
-using Aspose.Cells;
+using System.IO;
 
-// // This program creates a new workbook, sets its Settings.CultureInfo to French (fr-FR), inserts a date and a number, applies built‑in date and numeric styles that honor the culture, and saves the workbook as ExportedWorkbook.xlsx.
+// The example creates a Workbook, assigns Settings.CultureInfo to "fr-FR", writes the current date to a cell, applies a custom date style (dd MMMM yyyy) that follows the French locale, and saves the workbook as a PDF using PdfSaveOptions, demonstrating culture‑aware formatting during export.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Configure the workbook to use a specific culture (e.g., French - France)
-        // This culture will be applied when formatting optional property values during export.
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Set the workbook's culture to French (France)
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-        // Example data to demonstrate culture-specific formatting
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+            // Add sample data to demonstrate culture‑sensitive formatting
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue(DateTime.Now); // Insert current date/time
 
-        // Insert a date and a number that will be formatted according to the specified culture
-        cells["A1"].PutValue(DateTime.Now);
-        cells["A2"].PutValue(12345.67);
+            // Apply a date format that will be rendered according to the culture
+            Style style = cell.GetStyle();
+            style.Custom = "dd MMMM yyyy";
+            cell.SetStyle(style);
 
-        // Apply a number format that relies on the workbook's culture settings
-        Style style = workbook.CreateStyle();
-        style.Number = 14; // Built‑in date format
-        cells["A1"].SetStyle(style);
+            // Configure PDF export options (no culture property needed)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        style = workbook.CreateStyle();
-        style.Number = 2; // Built‑in number format with two decimal places
-        cells["A2"].SetStyle(style);
+            // Ensure the output directory exists
+            string outputPath = "ExportedWorkbook.pdf";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Save the workbook (lifecycle rule: save)
-        workbook.Save("ExportedWorkbook.xlsx");
+            // Export the workbook to PDF using the specified culture settings
+            workbook.Save(outputPath, pdfOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

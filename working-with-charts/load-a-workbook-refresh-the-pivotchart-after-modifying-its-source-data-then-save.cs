@@ -1,64 +1,54 @@
-// Title: Refresh a PivotChart after changing source data in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing .xlsx file, modify a cell that feeds a PivotTable, refresh the PivotTable cache and its linked PivotChart, then save the workbook with Aspose.Cells in C#. | Generate C# code that verifies the input workbook, updates cell B2, calls PivotTable.RefreshData() and PivotTable.CalculateData(), and writes the result to a new Excel file. | Create a script that programmatically validates the source file, edits source data, forces a PivotTable refresh to update the associated chart, and outputs the updated workbook using Aspose.Cells.
-// Common Searches: how to programmatically refresh a pivot chart after editing source data with Aspose.Cells C# | Aspose.Cells .NET refresh pivot table cache and linked chart after changing cell value | C# example to update Excel cell and recalculate pivot chart using Aspose.Cells library | refresh pivot chart in workbook without opening Excel using Aspose.Cells | Aspose.Cells RefreshData CalculateData methods for pivot tables
-// Tags: Aspose.Cells pivot chart refresh C# | update source cell pivot table cache .NET | RefreshData method Aspose.Cells | CalculateData method Aspose.Cells | load workbook modify cell save Excel
+// Title: Modify a worksheet cell, refresh all PivotTables, and automatically update linked PivotCharts in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Change a cell value, call RefreshData and CalculateData on each PivotTable, then save the workbook with Aspose.Cells in C#. | Programmatically ensure that PivotCharts reflect edited source data by recalculating all PivotTables before saving the file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# recalculate pivot tables after editing source data | Update cell A2 and auto‑refresh linked pivot chart with Aspose.Cells | How to programmatically refresh pivot tables in an Excel workbook using Aspose.Cells | Save workbook after pivot table recalculation using Aspose.Cells .NET example
+// Tags: pivot table refresh operation Aspose.Cells | modify worksheet cell Aspose.Cells | linked pivot chart auto update Aspose.Cells | save workbook after pivot refresh .NET | pivot table data update Aspose.Cells Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // PivotTable related classes
 
-// The example checks for an input Excel file, loads it with Aspose.Cells, changes the value of cell B2 (the PivotTable source), refreshes the first PivotTable using RefreshData and CalculateData (which also updates any linked PivotChart), and saves the modified workbook to a new file while handling possible errors.
-class PivotChartRefreshExample
+// The sample loads 'input.xlsx', changes the value of cell A2 to 12345, iterates through every worksheet to refresh and recalculate each PivotTable (which automatically updates any linked PivotCharts), and then saves the modified workbook as 'output.xlsx'. It includes error handling for missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Example modification: change value in cell A2 of the first worksheet
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Cells["A2"].PutValue(12345);
 
-            // ----- Modify source data -----
-            // Example: change the value of cell B2 (source data for the pivot)
-            worksheet.Cells["B2"].PutValue(12345);
-
-            // ----- Refresh the PivotTable (which updates the linked PivotChart) -----
-            // Assuming the first PivotTable on the sheet is the one used by the chart
-            if (worksheet.PivotTables.Count > 0)
+            // Refresh all pivot tables (linked pivot charts are refreshed automatically)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                PivotTable pivotTable = worksheet.PivotTables[0];
-
-                // Refresh the data cache of the PivotTable
-                pivotTable.RefreshData();
-
-                // Recalculate the PivotTable values after the data refresh
-                pivotTable.CalculateData();
-            }
-            else
-            {
-                Console.WriteLine("Warning: No PivotTable found on the first worksheet.");
+                foreach (PivotTable pivotTable in sheet.PivotTables)
+                {
+                    pivotTable.RefreshData();   // Refresh source data
+                    pivotTable.CalculateData(); // Recalculate the pivot table
+                }
             }
 
-            // ----- Save the workbook with the refreshed PivotChart -----
+            // Save the updated workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

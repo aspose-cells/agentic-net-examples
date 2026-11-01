@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Aspose.Cells for .NET Examples Generator",
-    "version": "0.1.0"
+    "version": "26.9.0"
   },
   "servers": [
     {
@@ -119,4 +119,4 @@
     "description": "Aspose.Cells Agentic .NET Examples repository",
     "url": "https://github.com/aspose-cells/agentic-net-examples"
   }
-}
+} 

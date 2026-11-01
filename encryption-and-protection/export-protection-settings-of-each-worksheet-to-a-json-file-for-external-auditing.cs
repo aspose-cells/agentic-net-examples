@@ -1,136 +1,68 @@
-// Title: Export worksheet protection settings to a JSON file with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, reads each worksheet's Protection properties, and writes the collected flags to an indented JSON file. | Create a reusable method that uses reflection to safely obtain all boolean protection options from a Worksheet object and returns a serializable model for JSON export. | Modify the export routine to also include the worksheet password hash (if any) alongside the protection flags in the generated JSON report.
-// Common Searches: Aspose.Cells C# export worksheet protection flags to JSON | how to read Excel sheet protection settings with Aspose.Cells | serialize Excel worksheet security options to a JSON file in .NET | audit protected worksheets by extracting protection options using Aspose.Cells
-// Tags: Aspose.Cells worksheet protection JSON export | C# serialize Excel sheet security settings | reflection based extraction of protection flags | audit Excel worksheet protection with JSON | export workbook protection configuration .NET
+// Title: Export each worksheet's protection status to JSON using Aspose.Cells for .NET
+// Common Searches: how to extract worksheet protection flags with Aspose.Cells and write them to a JSON file in C# | C# Aspose.Cells code to audit Excel sheets for protection and password presence | serialize Excel worksheet IsProtected property to JSON for external review using Aspose.Cells | retrieve password‑set indicator for every worksheet in a workbook with Aspose.Cells .NET | list protected worksheets and export their status to a JSON report in C#
+// Tags: export worksheet protection to JSON | Aspose.Cells worksheet IsProtected extraction | C# audit Excel sheet protection | serialize Excel protection settings Aspose.Cells | list worksheet password presence .NET
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Aspose.Cells;
 
-namespace WorksheetProtectionExport
+// The example loads an Excel workbook with Aspose.Cells, iterates through all worksheets, captures each sheet's name, protection flag, and whether a password is set, then serializes this data to a formatted JSON file for auditing purposes, with error handling for missing files and per‑sheet issues.
+class Program
 {
-    // Model representing protection settings of a worksheet
-    // The program loads an Excel workbook via Aspose.Cells, iterates through each worksheet, captures all protection-related boolean flags using reflection, and writes the aggregated data as a formatted JSON file for external auditing.
-    public class WorksheetProtectionInfo
+    static void Main()
     {
-        public string SheetName { get; set; } = string.Empty;
-        public bool IsProtected { get; set; }
-        public bool AllowDeleteColumns { get; set; }
-        public bool AllowDeleteRows { get; set; }
-        public bool AllowEditObject { get; set; }
-        public bool AllowEditScenario { get; set; }
-        public bool AllowFilter { get; set; }
-        public bool AllowFormatCells { get; set; }
-        public bool AllowFormatColumns { get; set; }
-        public bool AllowFormatRows { get; set; }
-        public bool AllowInsertColumns { get; set; }
-        public bool AllowInsertHyperlinks { get; set; }
-        public bool AllowInsertRows { get; set; }
-        public bool AllowPivotTables { get; set; }
-        public bool AllowSelectLockedCells { get; set; }
-        public bool AllowSelectUnlockedCells { get; set; }
-        public bool AllowSort { get; set; }
-    }
-
-    class Program
-    {
-        // Helper to safely read a boolean property via reflection
-        private static bool GetBoolProperty(object obj, string propertyName)
+        try
         {
-            try
-            {
-                var prop = obj.GetType().GetProperty(propertyName);
-                if (prop != null && prop.PropertyType == typeof(bool))
-                {
-                    return (bool)prop.GetValue(obj)!;
-                }
-            }
-            catch
-            {
-                // Ignore any reflection errors and fall back to false
-            }
-            return false;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "worksheet_protection.json";
 
-        static void Main(string[] args)
-        {
-            // Path to the source Excel file
-            string sourceFilePath = "input.xlsx";
-
-            // Path to the output JSON file
-            string outputJsonPath = "worksheet_protection.json";
-
-            // Verify that the source file exists
-            if (!File.Exists(sourceFilePath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file '{sourceFilePath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            var protectionInfoList = new List<object>();
+
+            // Collect protection details for each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the workbook (using Aspose.Cells)
-                Workbook workbook = new Workbook(sourceFilePath);
-
-                // List to hold protection info for each worksheet
-                List<WorksheetProtectionInfo> protectionInfoList = new List<WorksheetProtectionInfo>();
-
-                // Iterate through all worksheets in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
+                try
                 {
-                    // Access the protection object of the worksheet
                     var protection = sheet.Protection;
 
-                    // Populate the model using reflection to avoid version‑specific API issues
-                    WorksheetProtectionInfo info = new WorksheetProtectionInfo
+                    var sheetInfo = new
                     {
                         SheetName = sheet.Name,
-                        IsProtected = GetBoolProperty(protection, "IsProtected"),
-                        AllowDeleteColumns = GetBoolProperty(protection, "AllowDeleteColumns"),
-                        AllowDeleteRows = GetBoolProperty(protection, "AllowDeleteRows"),
-                        AllowEditObject = GetBoolProperty(protection, "AllowEditObject"),
-                        AllowEditScenario = GetBoolProperty(protection, "AllowEditScenario"),
-                        AllowFilter = GetBoolProperty(protection, "AllowFilter"),
-                        AllowFormatCells = GetBoolProperty(protection, "AllowFormatCells"),
-                        AllowFormatColumns = GetBoolProperty(protection, "AllowFormatColumns"),
-                        AllowFormatRows = GetBoolProperty(protection, "AllowFormatRows"),
-                        AllowInsertColumns = GetBoolProperty(protection, "AllowInsertColumns"),
-                        AllowInsertHyperlinks = GetBoolProperty(protection, "AllowInsertHyperlinks"),
-                        AllowInsertRows = GetBoolProperty(protection, "AllowInsertRows"),
-                        AllowPivotTables = GetBoolProperty(protection, "AllowPivotTables"),
-                        AllowSelectLockedCells = GetBoolProperty(protection, "AllowSelectLockedCells"),
-                        AllowSelectUnlockedCells = GetBoolProperty(protection, "AllowSelectUnlockedCells"),
-                        AllowSort = GetBoolProperty(protection, "AllowSort")
+                        IsProtected = sheet.IsProtected,               // correct property on Worksheet
+                        HasPassword = !string.IsNullOrEmpty(protection.Password) // password presence flag
                     };
 
-                    protectionInfoList.Add(info);
+                    protectionInfoList.Add(sheetInfo);
                 }
-
-                // Serialize the list to JSON with indentation for readability
-                JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+                catch (Exception exSheet)
                 {
-                    WriteIndented = true
-                };
-                string jsonString = JsonSerializer.Serialize(protectionInfoList, jsonOptions);
-
-                // Ensure the output directory exists
-                string? outputDir = Path.GetDirectoryName(outputJsonPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {exSheet.Message}");
                 }
-
-                // Write JSON to the output file
-                File.WriteAllText(outputJsonPath, jsonString);
-
-                Console.WriteLine($"Protection settings exported to '{outputJsonPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Serialize the information to formatted JSON
+            string json = JsonSerializer.Serialize(protectionInfoList, new JsonSerializerOptions { WriteIndented = true });
+
+            // Write JSON to the output file
+            File.WriteAllText(outputPath, json);
+            Console.WriteLine($"Worksheet protection information saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

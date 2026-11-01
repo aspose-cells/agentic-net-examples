@@ -1,61 +1,80 @@
-// Title: Backup an Excel worksheet to a JSON file by enumerating cells with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, identifies the worksheet's used area, and saves each cell's address and value to a JSON file, ensuring empty cells appear as null. | Implement a C# helper method that receives a worksheet index and an output path, sets JsonSaveOptions to keep original data types, and uses Aspose.Cells utilities to convert the selected range into JSON. | Modify the export routine so that the first row is treated as a header row, turning its values into property names for the subsequent rows in the generated JSON document.
-// Common Searches: Aspose.Cells C# export used range of worksheet to JSON file | include empty cells when converting Excel to JSON with Aspose.Cells | C# example for backing up Excel worksheet data as JSON using JsonSaveOptions | how to serialize cell address and value pairs from Excel to JSON in .NET | Aspose.Cells JsonSaveOptions ExportEmptyCells true example
-// Tags: Aspose.Cells export worksheet to JSON | JsonSaveOptions include empty cells | C# backup Excel worksheet as JSON | serialize used cell range Aspose.Cells | export address-value pairs to JSON
+// Title: Create a JSON backup of an Excel worksheet by iterating cells with Aspose.Cells for .NET (C#)
+// Common Searches: C# code to export Excel worksheet cells to a JSON file using Aspose.Cells | How to iterate over the used range in Aspose.Cells and save cell address/value pairs as JSON | Backup Excel data to JSON with the Aspose.Cells .NET library | Serialize Excel cell addresses and values to JSON in a C# console application | Aspose.Cells example for converting a worksheet to a JSON dictionary
+// Tags: Aspose.Cells iterate used range | Excel worksheet to JSON conversion | cell address value mapping C# | Aspose.Cells JSON serialization example | backup Excel data as JSON .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
-// The example loads an .xlsx workbook, selects the first worksheet's used range, configures JsonSaveOptions to include empty cells and preserve data types, exports the range to a JSON string via Aspose.Cells, and writes the result to a backup file named worksheet_backup.json.
-class BackupWorksheetToJson
+// This C# console sample loads an Excel workbook with Aspose.Cells, selects the first worksheet, determines its used range, iterates each populated cell, stores the cell's address (e.g., "A1") and value in a dictionary, serializes the dictionary to an indented JSON string using System.Text.Json, and writes the JSON to a file, handling missing files and runtime exceptions.
+class WorksheetBackup
 {
     static void Main()
     {
+        // Paths for input Excel file and output JSON backup
+        string excelPath = "input.xlsx";
+        string jsonPath = "backup.json";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "worksheet_backup.json";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Verify that the source Excel file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(excelPath);
 
-            // Access the first worksheet (or any specific worksheet)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the used range of the worksheet
-            int maxRow = worksheet.Cells.MaxDataRow;          // zero‑based index of last used row
-            int maxColumn = worksheet.Cells.MaxDataColumn;    // zero‑based index of last used column
+            // Dictionary to hold cell address‑value pairs
+            var cellData = new Dictionary<string, object>();
 
-            // Create a range that covers all used cells
-            // Add 1 because CreateRange expects count, not last index
-            Aspose.Cells.Range usedRange = worksheet.Cells.CreateRange(0, 0, maxRow + 1, maxColumn + 1);
+            // Access the cells collection of the worksheet
+            Cells cells = sheet.Cells;
 
-            // Configure JSON export options
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            // Determine the used range (last row/column with data)
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
+
+            // Enumerate each cell within the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                ExportEmptyCells = true,   // include empty cells as null
-                HasHeaderRow = false,      // treat first row as data, not header
-                ExportAsString = false     // keep original data types
-            };
+                for (int col = 0; col <= maxColumn; col++)
+                {
+                    Cell cell = cells[row, col];
 
-            // Export the range to a JSON string
-            string json = JsonUtility.ExportRangeToJson(usedRange, jsonOptions);
+                    // Skip cells without a value to keep the JSON concise
+                    if (cell.Value == null)
+                        continue;
 
-            // Write the JSON string to a file (backup)
-            File.WriteAllText(outputPath, json);
-            Console.WriteLine($"Worksheet backup saved to \"{outputPath}\".");
+                    // Use the cell's address (e.g., "A1") as the key
+                    string address = cell.Name;
+
+                    // Store the cell's value; Aspose.Cells returns the value as an object
+                    object value = cell.Value;
+
+                    cellData[address] = value;
+                }
+            }
+
+            // Serialize the dictionary to a formatted JSON string
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(cellData, jsonOptions);
+
+            // Write the JSON content to the specified file
+            File.WriteAllText(jsonPath, json);
+
+            Console.WriteLine($"Backup completed successfully. JSON saved to \"{jsonPath}\".");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

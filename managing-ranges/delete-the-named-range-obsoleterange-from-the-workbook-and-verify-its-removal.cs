@@ -1,13 +1,12 @@
-// Title: Delete the named range "ObsoleteRange" from an Excel workbook using Aspose.Cells for .NET and verify that it no longer exists
-// AI Prompts: Load an Excel file with Aspose.Cells, remove the named range "ObsoleteRange", and save the workbook to a new file. | After deleting a named range, query the workbook to confirm the range is absent and output a success or failure message.
-// Common Searches: aspocells c# delete specific named range from workbook | how to confirm a named range was removed using Aspose.Cells | remove named range and save workbook with Aspose.Cells .NET | check if a named range exists after deletion in C# Aspose.Cells
-// Tags: Aspose.Cells remove named range | C# verify named range deletion | Aspose.Cells workbook save after range removal | C# Excel named range existence check
+// Title: Delete the named range "ObsoleteRange" from an Excel workbook using Aspose.Cells for .NET and confirm its removal
+// Common Searches: Aspose.Cells C# remove named range ObsoleteRange from workbook | C# verify that a named range has been deleted with Aspose.Cells | How to delete a specific named range and check its existence using Aspose.Cells .NET | Remove a named range by name and save the workbook with Aspose.Cells | Aspose.Cells .NET confirm named range no longer present after deletion
+// Tags: delete named range Aspose.Cells .NET | named range removal Excel Aspose.Cells | verify named range absence C# | Aspose.Cells workbook save after range deletion | remove range by name Aspose.Cells API
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example loads "input.xlsx", deletes the named range "ObsoleteRange" if present, confirms the range is no longer in the workbook, and saves the result as "output.xlsx" while handling missing files and exceptions.
+// The example loads an existing Excel file, accesses the named range "ObsoleteRange" via the workbook's Names collection, removes it if present, checks that the range no longer exists, and saves the modified workbook to a new file, handling missing input files and creating output directories as needed.
 class Program
 {
     static void Main()
@@ -16,45 +15,46 @@ class Program
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
-            const string rangeName = "ObsoleteRange";
+            const string targetRangeName = "ObsoleteRange";
 
-            // Ensure the input file exists before loading
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Attempt to retrieve the named range
-            Name namedRange = workbook.Worksheets.Names[rangeName];
+            // Retrieve the named range object by its name using the indexer
+            Name namedRange = workbook.Worksheets.Names[targetRangeName];
 
             // Delete the named range if it exists
             if (namedRange != null)
             {
-                // Remove by name (correct API overload)
-                workbook.Worksheets.Names.Remove(rangeName);
-                Console.WriteLine($"Named range \"{rangeName}\" removed.");
+                // Remove by name (string) rather than Name object
+                workbook.Worksheets.Names.Remove(targetRangeName);
             }
-            else
+
+            // Verify that the named range has been removed
+            bool stillExists = workbook.Worksheets.Names[targetRangeName] != null;
+            Console.WriteLine($"ObsoleteRange exists after deletion: {stillExists}");
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Named range \"{rangeName}\" does not exist.");
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Verify removal
-            bool stillExists = workbook.Worksheets.Names[rangeName] != null;
-            Console.WriteLine(stillExists
-                ? "Named range still exists."
-                : "Named range successfully removed.");
-
-            // Save the workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

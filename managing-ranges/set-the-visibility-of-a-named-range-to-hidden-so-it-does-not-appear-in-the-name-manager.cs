@@ -1,59 +1,62 @@
-// Title: Hide a specific named range from the Name Manager in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to retrieve a named range by its name, set its IsVisible property to false, and save the workbook. | Write C# code that loads an existing .xlsx file, hides a given named range from the Name Manager, and writes the result to a new file with Aspose.Cells. | Programmatically make a named range invisible in Excel using Aspose.Cells for .NET, handling missing files and ensuring the output directory exists.
-// Common Searches: how to hide a named range from name manager using Aspose.Cells C# | Aspose.Cells set named range visibility false example | C# hide Excel named range programmatically with Aspose.Cells | remove named range from name manager without deleting it Aspose.Cells | save workbook after changing named range visibility Aspose.Cells .NET
-// Tags: Aspose.Cells hide named range | C# set named range visibility | Excel Name Manager invisible entry | Aspose.Cells modify name visibility | save workbook after hiding named range
+// Title: Hide a specific named range from the Name Manager using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# hide a named range from the Name Manager | Set IsVisible property false for an Excel named range with Aspose.Cells | Programmatically conceal a named range in a .NET workbook using Aspose.Cells | How to prevent a named range from appearing in Excel's Name Manager via code | C# example to hide MyNamedRange using Aspose.Cells API
+// Tags: Aspose.Cells named range visibility control | Name.IsVisible false Aspose.Cells | Excel named range hide .NET API | Workbook.Worksheets.Names hide range | Aspose.Cells conceal Name Manager entry
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook, locates the named range 'MyNamedRange', sets its IsVisible property to false so it no longer appears in the Name Manager, and saves the modified file to a new location, including checks for file existence and error handling.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads (or creates) an Excel workbook, retrieves the named range "MyNamedRange", sets its IsVisible property to false to hide it from the Name Manager, saves the workbook, and includes handling for Aspose.Cells-specific and general exceptions.
+    class Program
     {
-        try
+        static void Main()
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                Workbook workbook;
+
+                if (File.Exists(inputPath))
+                {
+                    // Load the workbook. If the file is password‑protected, set the password in LoadOptions.
+                    var loadOptions = new LoadOptions();
+                    // loadOptions.Password = "yourPassword"; // Uncomment and set if needed
+                    workbook = new Workbook(inputPath, loadOptions);
+                }
+                else
+                {
+                    // Create a new workbook when the input file is missing.
+                    workbook = new Workbook();
+                }
+
+                // Retrieve the named range.
+                Name namedRange = workbook.Worksheets.Names["MyNamedRange"];
+                if (namedRange != null)
+                {
+                    // Hide the named range so it does not appear in the Name Manager.
+                    namedRange.IsVisible = false;
+                }
+                else
+                {
+                    Console.WriteLine("Named range 'MyNamedRange' not found.");
+                }
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-
-            // Load the workbook from the existing file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Retrieve the named range by its name
-            Name namedRange = workbook.Worksheets.Names["MyNamedRange"];
-            if (namedRange != null)
+            catch (CellsException ex)
             {
-                // Hide the named range from the Name Manager
-                namedRange.IsVisible = false;
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Named range 'MyNamedRange' not found.");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the updated visibility setting
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

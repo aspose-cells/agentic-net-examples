@@ -1,121 +1,65 @@
-// Title: How to set different SettableGlobalizationSettings for English and French pivot tables using Aspose.Cells in C#
-// AI Prompts: Generate two workbooks with identical sales data, add a pivot table to each, and apply distinct SettableGlobalizationSettings for English and French labels before refreshing and saving the files. | Create a helper method that takes custom label strings and returns a configured SettablePivotGlobalizationSettings object, then use it to assign language‑specific globalization settings to a workbook's pivot tables. | Extend the sample to produce a third workbook with Spanish pivot labels by reusing the helper method and saving the result as a separate Excel file.
-// Common Searches: Aspose.Cells C# set custom pivot table labels per workbook | How to apply different globalization settings to multiple Excel files using Aspose.Cells | C# example for multilingual pivot tables with SettablePivotGlobalizationSettings | Refresh pivot after changing SettableGlobalizationSettings in Aspose.Cells | Create English and French pivot tables in the same Aspose.Cells project
-// Tags: settableglobalizationsettings for pivot tables | aspocells multilingual pivot labels | c# apply language specific pivot globalization | refresh pivot after globalization change | excel workbook separate language settings
+// Title: Set workbook CultureInfo and refresh pivot tables to create multilingual labels with Aspose.Cells for .NET
+// Common Searches: how to change workbook culture to French before refreshing pivot tables using Aspose.Cells C# | Aspose.Cells example for applying different CultureInfo to multiple Excel files and updating pivot tables | C# code to localize pivot table field captions by setting workbook Settings.CultureInfo | refresh pivot tables after changing workbook globalization settings in Aspose.Cells | generate German and French pivot table labels from an English source workbook with Aspose.Cells
+// Tags: set workbook cultureinfo Aspose.Cells | pivot table data refresh Aspose.Cells | multilingual pivot labels .NET | process multiple workbooks distinct cultures | apply globalization settings Excel Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Settings;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // For PivotTable class
 
-namespace AsposeCellsMultilingualPivot
+// The sample loads an English workbook, assigns a specific CultureInfo (e.g., fr-FR or de-DE) to the workbook's Settings, iterates through each worksheet to refresh and calculate all pivot tables, and saves the result as a localized file. The ProcessWorkbook method is called separately for each target language, enabling distinct globalization settings per workbook.
+class Program
 {
-    // The example creates two workbooks with identical sales data, adds a pivot table to each, configures separate SettableGlobalizationSettings for English and French (customizing labels such as Total, Grand Total, Row Labels, etc.), refreshes and calculates the pivots, and saves the workbooks as distinct Excel files.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ==============================
-            // Workbook 1 – English labels
-            // ==============================
-            Workbook wbEn = new Workbook();
-            Worksheet wsEn = wbEn.Worksheets[0];
-
-            // Sample data
-            wsEn.Cells["A1"].PutValue("Product");
-            wsEn.Cells["B1"].PutValue("Region");
-            wsEn.Cells["C1"].PutValue("Sales");
-            wsEn.Cells["A2"].PutValue("Apple");
-            wsEn.Cells["B2"].PutValue("North");
-            wsEn.Cells["C2"].PutValue(1200);
-            wsEn.Cells["A3"].PutValue("Apple");
-            wsEn.Cells["B3"].PutValue("South");
-            wsEn.Cells["C3"].PutValue(800);
-            wsEn.Cells["A4"].PutValue("Orange");
-            wsEn.Cells["B4"].PutValue("North");
-            wsEn.Cells["C4"].PutValue(1500);
-            wsEn.Cells["A5"].PutValue("Orange");
-            wsEn.Cells["B5"].PutValue("South");
-            wsEn.Cells["C5"].PutValue(900);
-
-            // Create pivot table
-            int pivotIdxEn = wsEn.PivotTables.Add("A1:C5", "E2", "SalesPivot_EN");
-            PivotTable pivotEn = wsEn.PivotTables[pivotIdxEn];
-            pivotEn.AddFieldToArea(PivotFieldType.Row, 0);      // Product
-            pivotEn.AddFieldToArea(PivotFieldType.Column, 1);   // Region
-            pivotEn.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
-
-            // Configure English globalization settings
-            SettableGlobalizationSettings gSettingsEn = new SettableGlobalizationSettings();
-            SettablePivotGlobalizationSettings pSettingsEn = new SettablePivotGlobalizationSettings();
-
-            pSettingsEn.SetTextOfTotal("Total");
-            pSettingsEn.SetTextOfGrandTotal("Grand Total");
-            pSettingsEn.SetTextOfRowLabels("Row Labels");
-            pSettingsEn.SetTextOfColumnLabels("Column Labels");
-            pSettingsEn.SetTextOfMultipleItems("(Multiple Items)");
-            pSettingsEn.SetTextOfAll("All");
-
-            gSettingsEn.PivotSettings = pSettingsEn;
-            wbEn.Settings.GlobalizationSettings = gSettingsEn;
-
-            // Refresh and calculate pivot to apply settings
-            pivotEn.RefreshData();
-            pivotEn.CalculateData();
-
-            // Save English workbook
-            wbEn.Save("Pivot_Multilingual_EN.xlsx");
-
-            // ==============================
-            // Workbook 2 – French labels
-            // ==============================
-            Workbook wbFr = new Workbook();
-            Worksheet wsFr = wbFr.Worksheets[0];
-
-            // Same sample data
-            wsFr.Cells["A1"].PutValue("Produit");
-            wsFr.Cells["B1"].PutValue("Région");
-            wsFr.Cells["C1"].PutValue("Ventes");
-            wsFr.Cells["A2"].PutValue("Pomme");
-            wsFr.Cells["B2"].PutValue("Nord");
-            wsFr.Cells["C2"].PutValue(1200);
-            wsFr.Cells["A3"].PutValue("Pomme");
-            wsFr.Cells["B3"].PutValue("Sud");
-            wsFr.Cells["C3"].PutValue(800);
-            wsFr.Cells["A4"].PutValue("Orange");
-            wsFr.Cells["B4"].PutValue("Nord");
-            wsFr.Cells["C4"].PutValue(1500);
-            wsFr.Cells["A5"].PutValue("Orange");
-            wsFr.Cells["B5"].PutValue("Sud");
-            wsFr.Cells["C5"].PutValue(900);
-
-            // Create pivot table
-            int pivotIdxFr = wsFr.PivotTables.Add("A1:C5", "E2", "SalesPivot_FR");
-            PivotTable pivotFr = wsFr.PivotTables[pivotIdxFr];
-            pivotFr.AddFieldToArea(PivotFieldType.Row, 0);      // Produit
-            pivotFr.AddFieldToArea(PivotFieldType.Column, 1);   // Région
-            pivotFr.AddFieldToArea(PivotFieldType.Data, 2);     // Ventes
-
-            // Configure French globalization settings
-            SettableGlobalizationSettings gSettingsFr = new SettableGlobalizationSettings();
-            SettablePivotGlobalizationSettings pSettingsFr = new SettablePivotGlobalizationSettings();
-
-            pSettingsFr.SetTextOfTotal("Total");
-            pSettingsFr.SetTextOfGrandTotal("Total Général");
-            pSettingsFr.SetTextOfRowLabels("Étiquettes de lignes");
-            pSettingsFr.SetTextOfColumnLabels("Étiquettes de colonnes");
-            pSettingsFr.SetTextOfMultipleItems("(Éléments multiples)");
-            pSettingsFr.SetTextOfAll("Tous");
-
-            gSettingsFr.PivotSettings = pSettingsFr;
-            wbFr.Settings.GlobalizationSettings = gSettingsFr;
-
-            // Refresh and calculate pivot to apply French labels
-            pivotFr.RefreshData();
-            pivotFr.CalculateData();
-
-            // Save French workbook
-            wbFr.Save("Pivot_Multilingual_FR.xlsx");
+            // Process English source workbook for French localization
+            ProcessWorkbook("Workbook_English.xlsx", "Workbook_French.xlsx", new CultureInfo("fr-FR"));
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing French workbook: {ex.Message}");
+        }
+
+        try
+        {
+            // Process English source workbook for German localization
+            ProcessWorkbook("Workbook_English.xlsx", "Workbook_German.xlsx", new CultureInfo("de-DE"));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing German workbook: {ex.Message}");
+        }
+    }
+
+    /// <param name="inputPath">Path to the source workbook.</param>
+    /// <param name="outputPath">Path where the localized workbook will be saved.</param>
+    /// <param name="culture">CultureInfo to apply.</param>
+    private static void ProcessWorkbook(string inputPath, string outputPath, CultureInfo culture)
+    {
+        if (!File.Exists(inputPath))
+            throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+        // Load the workbook
+        Workbook workbook = new Workbook(inputPath);
+
+        // Apply the desired culture to the workbook settings
+        workbook.Settings.CultureInfo = culture;
+
+        // Refresh all pivot tables to reflect the new culture
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            foreach (PivotTable pivot in sheet.PivotTables)
+            {
+                pivot.RefreshData();
+                pivot.CalculateData();
+            }
+        }
+
+        // Save the localized workbook
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved: {outputPath}");
     }
 }

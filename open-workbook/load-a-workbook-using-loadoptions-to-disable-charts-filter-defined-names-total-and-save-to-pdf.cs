@@ -1,51 +1,48 @@
-// Title: Load an XLSX workbook with charts disabled, keep only the 'Total' defined name, and export to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file with LoadOptions configured to ignore chart objects, removes every defined name except "Total", and saves the workbook as a PDF using Aspose.Cells. | Provide a step‑by‑step C# example showing how to enable LoadDataOnly in LoadOptions, filter named ranges to retain only "Total", and convert the workbook to PDF.
-// Common Searches: Aspose.Cells C# load workbook without charts and convert to PDF | How to remove all named ranges except a specific one before PDF export in Aspose.Cells | LoadOptions LoadDataOnly example for disabling charts in Aspose.Cells | Save Excel to PDF while preserving only selected defined name using Aspose.Cells .NET | C# Aspose.Cells filter defined names and export workbook to PDF
-// Tags: loadoptions disable chart objects aspnet cells | filter defined names aspnet cells | save workbook as pdf aspnet cells | loaddataonly usage aspnet cells | retain specific named range aspnet cells
+// Title: Load an Excel workbook, keep only the defined name "Total", and export it to PDF with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# how to retain only a specific defined name when converting Excel to PDF | C# remove all named ranges except 'Total' before saving workbook as PDF using Aspose.Cells | load Excel file with Aspose.Cells and export to PDF without including charts | filter defined names in Aspose.Cells workbook programmatically C# | convert .xlsx to .pdf in C# while preserving only selected named ranges
+// Tags: keep selected defined name Aspose.Cells C# | export workbook to PDF Aspose.Cells | remove unwanted named ranges Aspose.Cells | load Excel without charts Aspose.Cells | save Excel as PDF C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks for the input XLSX file, creates LoadOptions (optionally enabling LoadDataOnly to skip chart objects), loads the workbook, removes all defined names except the one named "Total", and then saves the modified workbook as a PDF.
+// The example loads an existing XLSX file with Aspose.Cells, removes every defined name that is not exactly "Total", and then saves the modified workbook as a PDF, handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+            // Load the workbook (charts are loaded; disabling them can be added if supported by the library version)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Keep only defined names that are exactly "Total"
+            var definedNames = workbook.Worksheets.Names;
+            for (int i = definedNames.Count - 1; i >= 0; i--)
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load options: disable charts and other non‑data objects (if supported)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            // The LoadDataOnly property may not be available in older versions; omit if not present.
-
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Keep only the defined name "Total"
-            for (int i = workbook.Worksheets.Names.Count - 1; i >= 0; i--)
-            {
-                if (!string.Equals(workbook.Worksheets.Names[i].Text, "Total", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(definedNames[i].Text, "Total", StringComparison.OrdinalIgnoreCase))
                 {
-                    workbook.Worksheets.Names.RemoveAt(i);
+                    definedNames.RemoveAt(i);
                 }
             }
 
             // Save the workbook as PDF
             workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

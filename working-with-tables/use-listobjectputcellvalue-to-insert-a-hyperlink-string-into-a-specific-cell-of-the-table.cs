@@ -1,68 +1,60 @@
-// Title: Insert a hyperlink into a specific cell of an Aspose.Cells ListObject table using C#
-// AI Prompts: Generate C# code that creates a workbook, adds a ListObject table, and uses ListObject.PutCellValue to set a cell to a URL string. | Write a C# snippet that places the hyperlink "https://www.example.com" into the third row, second column of an Aspose.Cells ListObject and saves the file. | Provide C# example code for adding a ListObject to a worksheet, inserting a hyperlink into a table cell with PutCellValue, and handling output folder creation.
-// Common Searches: Aspose.Cells C# put hyperlink into ListObject table cell | How to use ListObject.PutCellValue to add a URL in Aspose.Cells | C# Aspose.Cells insert URL into specific table cell example | Saving workbook after adding hyperlink to Excel table with Aspose.Cells
-// Tags: Aspose.Cells ListObject PutCellValue hyperlink | C# insert URL into Excel table cell | Aspose.Cells create ListObject table | save workbook Aspose.Cells C# | set cell value to string Aspose.Cells | handle output directory Aspose.Cells
+// Title: Insert a hyperlink into a specific ListObject cell using ListObject.PutCellValue in Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add a hyperlink formula to a table cell using ListObject.PutCellValue | How to set an Excel HYPERLINK in a ListObject column with Aspose.Cells .NET | Aspose.Cells example for inserting a clickable link into a table row programmatically | Use PutCellValue to write a HYPERLINK formula into a ListObject cell in C# | Create an Excel table and add a hyperlink to a cell using the Aspose.Cells API
+// Tags: ListObject.PutCellValue with HYPERLINK formula | Aspose.Cells add hyperlink to table cell | C# insert Excel hyperlink into ListObject | Aspose.Cells table cell value assignment | Excel table hyperlink using Aspose.Cells .NET | programmatic hyperlink insertion in Aspose.Cells ListObject
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsExample
+// The sample creates a new workbook, defines the range A1:B3 as a ListObject named "MyTable", and uses ListObject.PutCellValue to place an Excel HYPERLINK formula (=HYPERLINK("https://www.example.com","Example Site")) into the second row, second column of the table. The workbook is then saved as output.xlsx.
+class Program
 {
-    // The example creates a new workbook, adds a ListObject spanning A1:C5, and uses ListObject.PutCellValue to insert the URL https://www.example.com into the cell at the third row, second column of the table, then saves the workbook to output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate header and sample data for the table
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+
+            // Define the range that will become the ListObject (table)
+            CellArea tableArea = new CellArea
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                StartRow = 0,    // Row 1 (zero‑based)
+                StartColumn = 0, // Column A
+                EndRow = 2,      // Row 3
+                EndColumn = 1    // Column B
+            };
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Convert CellArea to an address string (e.g., "A1:B3")
+            string startCell = CellsHelper.CellIndexToName(tableArea.StartRow, tableArea.StartColumn);
+            string endCell = CellsHelper.CellIndexToName(tableArea.EndRow, tableArea.EndColumn);
+            string source = $"{startCell}:{endCell}";
 
-                // Define the range for the table (ListObject)
-                // Table starts at cell A1 and spans 5 rows × 3 columns
-                int firstRow = 0;          // zero‑based index for row 1 (A1)
-                int firstColumn = 0;       // zero‑based index for column A
-                int totalRows = 5;
-                int totalColumns = 3;
+            // Add the ListObject to the worksheet (provide a name for the table)
+            int listObjectIndex = sheet.ListObjects.Add("MyTable", source, true);
+            ListObject table = sheet.ListObjects[listObjectIndex];
 
-                // Add the ListObject (table) to the worksheet
-                int tableIndex = worksheet.ListObjects.Add(
-                    firstRow,
-                    firstColumn,
-                    firstRow + totalRows,
-                    firstColumn + totalColumns,
-                    true);
+            // Insert a hyperlink using the Excel HYPERLINK formula
+            string hyperlinkFormula = "=HYPERLINK(\"https://www.example.com\",\"Example Site\")";
+            table.PutCellValue(1, 1, hyperlinkFormula); // Row index 1 = second row, Column index 1 = second column
 
-                ListObject table = worksheet.ListObjects[tableIndex];
-
-                // Insert a hyperlink string into a specific cell of the table
-                // 3rd row (index 2) and 2nd column (index 1) within the table
-                string hyperlink = "https://www.example.com";
-                table.PutCellValue(2, 1, hyperlink);
-
-                // Define output file path
-                string outputPath = "output.xlsx";
-
-                // Ensure the directory exists (handle case when outputPath has no directory part)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

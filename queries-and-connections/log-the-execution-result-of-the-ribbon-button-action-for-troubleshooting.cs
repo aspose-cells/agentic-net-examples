@@ -1,74 +1,82 @@
-// Title: How to log the execution result of a custom Ribbon button in an Aspose.Cells macro‑enabled workbook using C#
-// AI Prompts: Write C# code that creates a macro‑enabled workbook with a custom Ribbon XML button and logs the button's action result to a text file. | Add robust exception handling to the ribbon button handler so that both success and error messages are appended to a persistent log. | Generate a C# method that reads the latest entry from RibbonActionLog.txt and displays the timestamp of the most recent button execution.
-// Common Searches: C# log custom UI button click in Aspose.Cells macro workbook | Aspose.Cells add Ribbon XML button and write execution details to file | how to capture and persist ribbon button action result in Excel using Aspose.Cells | troubleshooting Aspose.Cells custom UI button by logging output to text file | save macro‑enabled .xlsm with custom ribbon and log button activity C#
-// Tags: ribbon UI button logging Aspose.Cells | macro-enabled workbook Ribbon XML C# | append execution result to text file | exception handling for ribbon button action | persisted log for Excel custom UI
+// Title: Record success or failure of an Aspose.Cells custom ribbon button in a timestamped log file using C#
+// AI Prompts: Write C# code that appends a timestamped success or error message to a text file when an Aspose.Cells ribbon button is clicked. | Add robust exception handling to the ribbon button handler so any thrown exception is captured and logged with a timestamp. | Refactor the LogResult method to write CSV rows containing timestamp, status, and worksheet name for each ribbon button execution.
+// Common Searches: C# how to create a log file for Aspose.Cells ribbon button actions | Aspose.Cells add worksheet and write execution result to a text log | timestamped logging of custom Excel ribbon button using Aspose.Cells .NET | exception handling and logging pattern for Aspose.Cells UI ribbon events | save log of ribbon button click to file in Aspose.Cells C# add-in
+// Tags: aspocells ribbon button execution logging | timestamped text log c# aspocells | add worksheet and log result aspocells | exception handling aspocells ribbon handler | c# aspocells file logging for excel automation
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example creates a macro‑enabled .xlsm workbook with a custom Ribbon XML button using Aspose.Cells, saves it, and then simulates the button click. The button handler writes a success message with a timestamp to both the console and a persistent text log, while also capturing and logging any exceptions.
-class RibbonButtonLogger
+// The example defines a RibbonHandler class that ensures a workbook exists, adds a new worksheet named "LogSheet", saves the workbook, and writes a timestamped success or error entry to a text log file, creating the log directory if needed. It demonstrates logging, exception handling, and basic worksheet manipulation with Aspose.Cells in a C# console scenario.
+public class RibbonHandler
 {
-    static void Main()
+    // Path to the workbook that the ribbon button will work with
+    private const string WorkbookPath = @"C:\Temp\Sample.xlsx";
+
+    // Path to the log file where execution results are recorded
+    private const string LogPath = @"C:\Temp\RibbonActionLog.txt";
+
+    // Method to be called when the ribbon button is clicked
+    public void OnRibbonButtonClick()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Ensure the workbook file exists; create a new one if it doesn't
+            Workbook workbook;
+            if (File.Exists(WorkbookPath))
+            {
+                workbook = new Workbook(WorkbookPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook
+                workbook.Save(WorkbookPath);
+            }
 
-            // Define custom Ribbon XML with a button that calls a macro named "OnCustomButtonClick"
-            string ribbonXml =
-                @"<customUI xmlns=""http://schemas.microsoft.com/office/2006/01/customui"">
-                    <ribbon>
-                        <tabs>
-                            <tab id=""customTab"" label=""My Tab"">
-                                <group id=""customGroup"" label=""My Group"">
-                                    <button id=""customButton"" label=""Run Action"" size=""large"" onAction=""OnCustomButtonClick""/>
-                                </group>
-                            </tab>
-                        </tabs>
-                    </ribbon>
-                  </customUI>";
+            // Example operation: add a new worksheet
+            int newSheetIndex = workbook.Worksheets.Add();
+            Worksheet newSheet = workbook.Worksheets[newSheetIndex];
+            newSheet.Name = "LogSheet";
 
-            // Assign the Ribbon XML to the workbook
-            workbook.RibbonXml = ribbonXml;
+            // Save the workbook after modification
+            workbook.Save(WorkbookPath);
 
-            // Save the workbook as a macro-enabled file (the button will appear when opened in Excel)
-            string filePath = "RibbonDemo.xlsm";
-            workbook.Save(filePath, SaveFormat.Xlsm);
-
-            Console.WriteLine("Workbook with custom Ribbon saved to " + filePath);
+            // Log successful execution
+            LogResult($"Ribbon button executed successfully. Added worksheet '{newSheet.Name}' at index {newSheetIndex}.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("[ERROR] Failed to create or save workbook: " + ex.Message);
+            // Log any error that occurs during execution
+            LogResult($"Ribbon button execution failed: {ex.Message}");
         }
-
-        // Simulate the ribbon button click for troubleshooting purposes
-        ExecuteRibbonButtonAction();
     }
 
-    // This method represents the action that would be triggered by the ribbon button.
-    // It logs the execution result to both console and a simple text log file.
-    static void ExecuteRibbonButtonAction()
+    // Helper method to append a timestamped entry to the log file
+    private void LogResult(string message)
     {
         try
         {
-            // Example operation performed by the button
-            string result = $"Action executed successfully at {DateTime.Now:O}";
+            // Ensure the log directory exists
+            string logDir = Path.GetDirectoryName(LogPath);
+            if (!Directory.Exists(logDir))
+                Directory.CreateDirectory(logDir);
 
-            // Log to console (Info level)
-            Console.WriteLine("[INFO] Ribbon button action result: " + result);
-
-            // Append the result to a log file for persistent troubleshooting
-            File.AppendAllText("RibbonActionLog.txt", result + Environment.NewLine);
+            string entry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}{Environment.NewLine}";
+            File.AppendAllText(LogPath, entry);
         }
-        catch (Exception ex)
+        catch
         {
-            // Log any errors (Error level)
-            Console.WriteLine("[ERROR] Ribbon button action failed: " + ex.Message);
-            File.AppendAllText("RibbonActionLog.txt", "Error: " + ex.Message + Environment.NewLine);
+            // Suppress any logging exceptions to avoid secondary failures
         }
+    }
+}
+
+// Entry point for the console application
+public class Program
+{
+    public static void Main()
+    {
+        RibbonHandler handler = new RibbonHandler();
+        handler.OnRibbonButtonClick();
     }
 }

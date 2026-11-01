@@ -1,39 +1,39 @@
-// Title: Load an HTML file into an Aspose.Cells workbook without preserving DIV layout using C#
-// AI Prompts: Load an HTML document into a Workbook with HtmlLoadOptions while keeping EnableDivTagLayout disabled. | Convert an HTML file to XLSX in C# with Aspose.Cells, ensuring DIV tags are not retained. | Add a pre‑load file‑existence check before importing HTML into an Aspose.Cells workbook.
-// Common Searches: C# Aspose.Cells load html file without preserving div tag layout | How to disable EnableDivTagLayout when importing HTML to a workbook in Aspose.Cells | Convert HTML to XLSX using Aspose.Cells while ignoring div elements | Aspose.Cells HtmlLoadOptions default behavior for div layout | Check file existence before loading HTML into Aspose.Cells workbook C#
-// Tags: HtmlLoadOptions disable div layout | load html workbook Aspose.Cells C# | html to xlsx conversion Aspose.Cells | file existence check Aspose.Cells | EnableDivTagLayout false Aspose.Cells | Aspose.Cells HTML import settings
+// Title: How to load an HTML file into an Aspose.Cells workbook in C# without preserving DIV layout
+// AI Prompts: Load an HTML document into a Workbook with EnableDivTagLayout set to false using Aspose.Cells. | Convert an HTML file to XLSX in C# while ignoring DIV tags with Aspose.Cells. | Import HTML into a workbook and save as Excel without retaining the original DIV structure.
+// Common Searches: Aspose.Cells C# load html without preserving div layout | disable EnableDivTagLayout when importing HTML to a workbook with Aspose.Cells | convert HTML to Excel using Aspose.Cells ignoring div tags
+// Tags: Aspose.Cells HtmlLoadOptions disable div layout | C# load html into workbook without div tags | Convert html to xlsx with EnableDivTagLayout false | Aspose.Cells import html ignoring div structure
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates loading an HTML file into an Aspose.Cells Workbook in C# with HtmlLoadOptions (EnableDivTagLayout left false), includes a file‑existence check, and saves the result as an XLSX file.
+// The example checks for an input HTML file, loads it into an Aspose.Cells Workbook using HtmlLoadOptions with EnableDivTagLayout disabled (default), and saves the result as an XLSX workbook.
 class Program
 {
     static void Main()
     {
-        // Path to the source HTML file
-        string htmlPath = "input.html";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(htmlPath))
-        {
-            Console.WriteLine($"Error: Input file not found at '{htmlPath}'.");
-            return;
-        }
-
         try
         {
-            // Configure load options (default settings do not preserve DIV tag layout)
+            // Path to the HTML file to be loaded.
+            string htmlPath = "input.html";
+
+            // Ensure the input file exists.
+            if (!File.Exists(htmlPath))
+            {
+                Console.WriteLine($"Input file not found: {htmlPath}");
+                return;
+            }
+
+            // Load HTML with default options (DIV layout is not preserved by default).
             HtmlLoadOptions loadOptions = new HtmlLoadOptions();
 
-            // Load the HTML file into a workbook using the specified options
+            // Load the HTML file into a workbook.
             Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-            // (Optional) Save the workbook to another format, e.g., XLSX
+            // Save the workbook to verify the load.
             string outputPath = "output.xlsx";
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

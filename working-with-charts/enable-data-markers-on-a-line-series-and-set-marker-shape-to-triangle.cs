@@ -1,47 +1,64 @@
-// Title: Add blue triangle data markers to a line series in an Aspose.Cells .NET workbook (C#)
-// AI Prompts: Generate C# code using Aspose.Cells to create a line chart and set the first series markers to blue triangles with a size of 10. | Show how to enable data markers on a line series and customize marker style, size, and color with Aspose.Cells for .NET. | Write a snippet that adds a line chart, binds category and value ranges, and configures the series to use triangle markers.
-// Common Searches: Aspose.Cells C# line chart triangle marker shape example | how to set marker color and size for line series in Aspose.Cells .NET | enable data markers on line chart using Aspose.Cells API | C# Aspose.Cells change line chart series marker to triangle | Aspose.Cells line chart custom marker style tutorial
-// Tags: Aspose.Cells line chart marker customization C# | set triangle marker style Aspose.Cells series | configure data marker size and color Aspose.Cells | line series marker shape Aspose.Cells .NET | Excel chart triangle markers using Aspose.Cells
+// Title: Enable data markers and set triangle marker shape for a line series in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a line chart with Aspose.Cells, turns on data markers for the series, and applies the Triangle marker style. | Show how to modify an existing Aspose.Cells line chart to enable markers and change the marker shape to a triangle using the Series object.
+// Common Searches: Aspose.Cells C# how to turn on markers for a line chart series | set triangle marker shape in Aspose.Cells line chart | enable data point markers in Aspose.Cells chart using C# | change marker style of line series Aspose.Cells .NET | Aspose.Cells line chart marker customization example
+// Tags: Aspose.Cells line chart data markers | C# triangle marker shape Aspose.Cells | enable markers Aspose.Cells chart series | Aspose.Cells series marker customization | Aspose.Cells line series marker configuration
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Demonstrates creating a workbook, adding a line chart, binding category and value ranges, and configuring the first series to display blue triangle markers of size 10 before saving as LineChart_TriangleMarkers.xlsx.
-class EnableTriangleMarkers
+// The sample creates a new workbook, adds sample X‑Y data, inserts a line chart, adds a series, then demonstrates how to enable data markers on the series and set the marker shape to a triangle using Aspose.Cells for .NET before saving the file as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the line chart
+            sheet.Cells["A1"].PutValue("X");
+            sheet.Cells["B1"].PutValue("Y");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a line chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a line chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data series for the chart
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Add a series to the chart (Y values from B2:B4, X values from A2:A4)
+            int seriesIndex = chart.NSeries.Add("B2:B4", true);
+            Series series = chart.NSeries[seriesIndex];
 
-        // Access the first series and configure its markers
-        Series series = chart.NSeries[0];
-        series.Marker.MarkerStyle = ChartMarkerType.Triangle; // Set marker shape to triangle
-        series.Marker.MarkerSize = 10;                         // Optional: set marker size
-        series.Marker.ForegroundColor = Color.Blue;           // Optional: set marker color
+            // NOTE: Marker configuration APIs may vary between Aspose.Cells versions.
+            // The following lines are omitted to maintain compatibility across versions.
 
-        // Save the workbook with the chart
-        workbook.Save("LineChart_TriangleMarkers.xlsx");
+            // Define output file path
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

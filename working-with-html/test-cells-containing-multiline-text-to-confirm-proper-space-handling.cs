@@ -1,45 +1,55 @@
-// Title: Verify that multi‑line text with spaces is preserved when saving and loading an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Create a C# example that writes a multi‑line string containing leading, trailing, and internal spaces to cell A1, saves the workbook as .xlsx, reloads it, and asserts that the loaded string matches the original exactly. | Modify the program to test both "\n" and "\r\n" line separators and confirm that whitespace is retained after each save‑load cycle. | Add error handling that logs a detailed message when the cell value after reload differs from the original multi‑line text.
-// Common Searches: Aspose.Cells C# preserve spaces and line breaks when writing multi‑line text to a cell | how to test that Excel cell retains whitespace after saving with Aspose.Cells | compare original and loaded cell string with spaces using Aspose.Cells .NET | verify multi‑line string integrity in Excel workbook after reload Aspose.Cells | C# Aspose.Cells line break handling in cell values
-// Tags: cell.PutValue multi‑line Aspose.Cells | Workbook.Save preserve cell content | reload workbook cell string verification | Aspose.Cells newline handling | C# Excel cell whitespace validation
+// Title: Check that spaces in multi‑line cell text are retained after saving and loading with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that writes a multi‑line string with leading, trailing, and internal spaces into a worksheet cell, enables text wrapping, saves the workbook to a MemoryStream, reloads it, and asserts that the cell value matches the original string exactly. | Create a C# unit‑test that inserts multi‑line text containing varied whitespace into cell A1 with Aspose.Cells, performs a save/load round‑trip via a memory stream, and verifies each line’s spaces are unchanged.
+// Common Searches: Aspose.Cells .NET keep whitespace in multiline Excel cell after save | C# verify line breaks and spaces are preserved in Excel cell using Aspose.Cells | unit test Aspose.Cells memory stream round‑trip for cell A1 multiline text | how to assert exact whitespace in cell value with Aspose.Cells C# | text wrapping and space handling in Aspose.Cells workbook
+// Tags: multiline text whitespace preservation Aspose.Cells | text wrapping cell A1 Aspose.Cells | save workbook to memory stream Aspose.Cells | load workbook from stream verify cell value Aspose.Cells | debug.assert whitespace check Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Diagnostics;
 
-// // This program creates a workbook, writes a multi‑line string with varying spaces into cell A1, saves and reloads the file, then compares the original and loaded text to confirm that spaces and line breaks are preserved.
+// The example creates a workbook, inserts a multi‑line string with leading, trailing, and internal spaces into cell A1, enables text wrapping, saves the file to a MemoryStream as XLSX, reloads it, and uses Debug.Assert to confirm that the loaded string matches the original line‑by‑line, ensuring whitespace is preserved throughout the save/load cycle.
 class MultiLineTextTest
 {
     static void Main()
     {
-        // Create a new workbook (using the standard creation rule)
-        Workbook workbook = new Workbook();
+        // Create a new workbook
+        var workbook = new Workbook();
+        var sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Define multi‑line text with spaces and line breaks
-        string multiLine = "Line 1 with spaces   \nLine 2  with  more spaces\n   Line 3 leading spaces";
+        // Define multi‑line text containing various spaces
+        string multiLine = "Line1 with spaces   \nLine2  with  more spaces\n   Line3 leading spaces";
 
         // Put the multi‑line text into cell A1
-        Cell cell = sheet.Cells["A1"];
+        var cell = sheet.Cells["A1"];
         cell.PutValue(multiLine);
 
-        // Save the workbook (using the standard save rule)
-        workbook.Save("MultiLineTest.xlsx");
+        // Enable text wrapping so the line breaks are retained when displayed
+        var style = cell.GetStyle();
+        style.IsTextWrapped = true;
+        cell.SetStyle(style);
 
-        // Reload the workbook to ensure the text is persisted correctly
-        Workbook loadedWorkbook = new Workbook("MultiLineTest.xlsx");
-        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-        string loadedText = loadedSheet.Cells["A1"].StringValue;
+        // Save the workbook to a memory stream (in‑memory test, no file I/O)
+        using (var ms = new MemoryStream())
+        {
+            workbook.Save(ms, SaveFormat.Xlsx);
+            ms.Position = 0; // Reset stream position for reading
 
-        // Verify that the loaded text matches the original (including spaces and line breaks)
-        bool isEqual = string.Equals(multiLine, loadedText, StringComparison.Ordinal);
+            // Load the workbook back from the memory stream
+            var loadedWorkbook = new Workbook(ms);
+            var loadedCell = loadedWorkbook.Worksheets[0].Cells["A1"];
+            string loadedValue = loadedCell.StringValue;
 
-        // Output the result
-        Console.WriteLine("Original Text:");
-        Console.WriteLine(multiLine);
-        Console.WriteLine("\nLoaded Text:");
-        Console.WriteLine(loadedText);
-        Console.WriteLine($"\nSpace and line‑break handling correct: {isEqual}");
+            // Verify that the loaded value matches the original multi‑line text
+            Debug.Assert(loadedValue == multiLine, "Multi‑line text does not match after load/save.");
+
+            // Additional checks: ensure spaces are preserved on each line
+            var lines = loadedValue.Split('\n');
+            Debug.Assert(lines[0] == "Line1 with spaces   ", "First line spaces mismatch.");
+            Debug.Assert(lines[1] == "Line2  with  more spaces", "Second line spaces mismatch.");
+            Debug.Assert(lines[2] == "   Line3 leading spaces", "Third line spaces mismatch.");
+
+            Console.WriteLine("All multi‑line space handling tests passed.");
+        }
     }
 }

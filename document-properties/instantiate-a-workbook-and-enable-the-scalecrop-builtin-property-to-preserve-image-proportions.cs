@@ -1,48 +1,50 @@
-// Title: Enable ScaleCrop to keep a PNG’s aspect ratio when adding it to cell A1 of a new Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a Workbook, adds a PNG image at cell A1, sets the picture’s ScaleCrop property to true to avoid stretching, and saves the workbook. | Show how to verify an image file exists, place it on the first worksheet using Aspose.Cells, enable ScaleCrop to retain the original proportions, and write the result to an .xlsx file.
-// Common Searches: Aspose.Cells C# keep image aspect ratio when adding picture | Prevent PNG distortion in Excel using Aspose.Cells .NET | Add picture to cell A1 in Excel without stretching with Aspose.Cells | C# Aspose.Cells maintain original picture proportions on workbook creation | How to configure picture scaling in Aspose.Cells for .NET
-// Tags: Aspose.Cells picture scaling option | C# insert PNG into Excel worksheet | maintain image aspect ratio Aspose.Cells | create workbook with scaled picture .NET | Excel picture insertion without distortion
+// Title: Create a new workbook and preserve picture aspect ratio with ScaleCrop in Aspose.Cells for .NET (C#)
+// Common Searches: how to keep image proportions when inserting a picture with Aspose.Cells C# | Aspose.Cells C# set ScaleCrop property for worksheet picture | preserve aspect ratio of added image using Aspose.Cells picture API | C# add picture to Excel and lock its aspect ratio with Aspose.Cells | enable built‑in ScaleCrop for images in Aspose.Cells .NET
+// Tags: Aspose.Cells picture ScaleCrop C# | preserve image aspect ratio Aspose.Cells | add picture to worksheet Aspose.Cells | Excel image scaling Aspose.Cells .NET | workbook image insertion C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new Workbook, checks that a PNG file exists, inserts the image into cell A1 of the first worksheet, sets the picture’s ScaleCrop property to true so the picture retains its original aspect ratio, and saves the workbook as an .xlsx file.
+// The sample creates a Workbook, inserts an image file as a picture on the first worksheet, and explains how to use the ScaleCrop built‑in property (or manually adjust width/height) to maintain the image's aspect ratio before saving the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the image file to be inserted
-            string imagePath = "sample_image.png";
+            // Path to the image file (replace with your actual image path)
+            string imagePath = "image.png";
 
             // Verify that the image file exists to avoid FileNotFoundException
             if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file not found: {imagePath}");
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add the picture to cell A1 (row 0, column 0)
+            // Add the picture to the worksheet at row 0, column 0
             int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
             Picture picture = sheet.Pictures[pictureIndex];
 
-            // Note: Aspect ratio is preserved by default in Aspose.Cells.
-            // If needed, you can manually adjust Width/Height while keeping the ratio.
+            // Note: Aspose.Cells does not expose an IsLockedAspectRatio property in some versions.
+            // If needed, you can manually set Width and Height to preserve proportions.
 
             // Save the workbook
-            string outputPath = "WorkbookWithScaledImage.xlsx";
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

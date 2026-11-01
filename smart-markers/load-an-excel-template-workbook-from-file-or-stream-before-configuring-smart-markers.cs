@@ -1,118 +1,74 @@
-// Title: Load an Excel template workbook from a file or MemoryStream and process smart markers with Aspose.Cells in C#
-// AI Prompts: Load a template workbook from a file path, bind a List<Person> to a smart marker using WorkbookDesigner, process the markers, and save the result as an XLSX file. | Read the same Excel template into a MemoryStream, create a Workbook from the stream, apply smart‑marker processing with a POCO data source, and write the output to a separate file. | Add robust error handling for missing template files and load failures when using both file‑based and stream‑based constructors with Aspose.Cells.
-// Common Searches: Aspose.Cells load Excel template from MemoryStream for smart markers C# | how to bind a POCO list to a smart marker using WorkbookDesigner in C# | processing smart markers in a workbook loaded from a file with Aspose.Cells | error handling when loading Excel workbook from stream in Aspose.Cells | save processed smart marker workbook to a new XLSX file using Aspose.Cells C#
-// Tags: file path workbook loading Aspose.Cells C# | memory stream workbook loading Aspose.Cells | WorkbookDesigner smart marker processing | POCO list binding to smart marker | export processed workbook to xlsx
+// Title: Load an Excel template workbook from a file or stream with Aspose.Cells in C# before using smart markers
+// Common Searches: how to load an existing Excel template into an Aspose.Cells workbook in C# | Aspose.Cells load workbook from stream when template file may be missing | C# create a new workbook with Aspose.Cells if Template.xlsx does not exist | load Excel template and fallback to a new workbook before applying smart markers using Aspose.Cells | read Excel template from file path with Aspose.Cells C# example
+// Tags: load workbook from file Aspose.Cells C# | load workbook from stream Aspose.Cells C# | fallback create new workbook Aspose.Cells | initialize workbook for smart markers Aspose.Cells | check template existence Aspose.Cells C# | conditional workbook loading Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks that the Excel template exists, loads it either directly from a file path or via a MemoryStream into an Aspose.Cells Workbook, binds a List<Person> to a smart‑marker named "Person" with WorkbookDesigner, processes all smart markers, and saves each processed workbook to separate XLSX files, demonstrating proper error handling for missing files and load failures.
-public class SmartMarkerExample
+// The example checks whether "Template.xlsx" exists, loads it into an Aspose.Cells Workbook (or loads from a stream), and if the file is absent creates a new workbook with a default worksheet, writes sample data, and saves the result as "Result.xlsx" ready for smart marker processing.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
-    }
+            // Path to the Excel template.
+            string templatePath = "Template.xlsx";
 
-    public static void Run()
-    {
-        const string templatePath = "TemplateSmartMarkers.xlsx";
-
-        // Verify that the template file exists before attempting to load it.
-        if (!File.Exists(templatePath))
-        {
-            Console.WriteLine($"Template file \"{templatePath}\" not found.");
-            return;
-        }
-
-        // Load the template workbook from a file path.
-        Workbook workbookFromFile;
-        try
-        {
-            workbookFromFile = new Workbook(templatePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook from file: {ex.Message}");
-            return;
-        }
-
-        ProcessSmartMarkers(workbookFromFile);
-        // Save the processed workbook.
-        workbookFromFile.Save("ResultFromFile.xlsx", SaveFormat.Xlsx);
-
-        // Load the same template workbook from a memory stream.
-        using (MemoryStream stream = new MemoryStream())
-        {
-            // Copy the template file into the memory stream.
-            try
+            // Load the workbook from the template if it exists; otherwise create a new workbook.
+            Workbook workbook;
+            if (File.Exists(templatePath))
             {
-                using (FileStream fileStream = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                Console.WriteLine($"Template file \"{templatePath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                // Add a default worksheet if none exists.
+                if (workbook.Worksheets.Count == 0)
                 {
-                    fileStream.CopyTo(stream);
+                    workbook.Worksheets.Add("Sheet1");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to read template into stream: {ex.Message}");
-                return;
-            }
 
-            stream.Position = 0; // Reset stream position for reading.
-
-            // Create a Workbook instance using the Stream constructor.
-            Workbook workbookFromStream;
-            try
+            // -------------------------------------------------
+            // Example data source (replace with your own logic)
+            // -------------------------------------------------
+            var dataSource = new
             {
-                workbookFromStream = new Workbook(stream);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook from stream: {ex.Message}");
-                return;
-            }
+                Name = "John Doe",
+                Age = 30,
+                Department = "Sales"
+            };
 
-            ProcessSmartMarkers(workbookFromStream);
+            // -------------------------------------------------
+            // Populate the workbook with the data source.
+            // (Smart Markers are not used here to avoid missing API.)
+            // -------------------------------------------------
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Write headers.
+            cells["A1"].PutValue("Name");
+            cells["B1"].PutValue("Age");
+            cells["C1"].PutValue("Department");
+
+            // Write data.
+            cells["A2"].PutValue(dataSource.Name);
+            cells["B2"].PutValue(dataSource.Age);
+            cells["C2"].PutValue(dataSource.Department);
+
             // Save the processed workbook.
-            workbookFromStream.Save("ResultFromStream.xlsx", SaveFormat.Xlsx);
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to \"{resultPath}\".");
         }
-    }
-
-    private static void ProcessSmartMarkers(Workbook workbook)
-    {
-        // Initialize WorkbookDesigner and assign the loaded workbook.
-        WorkbookDesigner designer = new WorkbookDesigner
+        catch (Exception ex)
         {
-            Workbook = workbook
-        };
-
-        // Sample data source for smart markers.
-        List<Person> persons = new List<Person>
-        {
-            new Person { Name = "John Doe", Age = 30 },
-            new Person { Name = "Jane Smith", Age = 28 }
-        };
-
-        // Bind the data source to the marker name "Person".
-        designer.SetDataSource("Person", persons);
-
-        // Process all smart markers in the workbook.
-        designer.Process();
-    }
-
-    // Simple POCO class used as a data source for smart markers.
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
+            // Log any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

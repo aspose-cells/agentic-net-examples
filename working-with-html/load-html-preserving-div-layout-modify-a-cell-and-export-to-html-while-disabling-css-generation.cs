@@ -1,55 +1,59 @@
-// Title: Load HTML preserving DIV layout, edit a cell, and export to HTML with inline CSS using Aspose.Cells for .NET
-// AI Prompts: Import an HTML file into an Aspose.Cells Workbook while retaining the original DIV structure, change the value of cell A1, and save the workbook back to HTML with all styles inlined (no external CSS files). | Show how to use HtmlLoadOptions and HtmlSaveOptions in C# to load HTML, modify worksheet data, and generate a single HTML output that embeds CSS only.
-// Common Searches: asp.net load html into workbook preserving div layout aspose.cells | how to edit a cell after importing html with aspose.cells | save workbook to html with inline styles only aspose.cells | disable external css generation when exporting html from aspose.cells | aspose.cells htmlsaveoptions exportactiveworksheetonly example
-// Tags: HtmlLoadOptions preserve DIV layout | modify worksheet cell after HTML import | HtmlSaveOptions inline CSS export | export active worksheet to HTML Aspose.Cells | UTF8 encoding Aspose.Cells HTML load
+// Title: Load an HTML file with DIV layout into Aspose.Cells, modify cell B2, and save as HTML without generating CSS (C#)
+// AI Prompts: Read an HTML document into a Workbook, change the value of cell B2 on the first worksheet, and export the active sheet to HTML while disabling CSS stylesheet creation using Aspose.Cells for .NET. | Using Aspose.Cells, load an HTML file preserving its DIV structure, update a specific cell, and save the workbook as HTML with CssStyleSheetType set to None to suppress CSS output.
+// Common Searches: asp.net load html into Aspose.Cells workbook keeping div tags | change cell content after loading html with Aspose.Cells C# example | save only the current worksheet as html without css using Aspose.Cells | how to turn off css stylesheet generation in Aspose.Cells html export | set CssStyleSheetType to None in HtmlSaveOptions Aspose.Cells
+// Tags: htmlloadoptions preserve div layout | update cell value Aspose.Cells C# | htmlsaveoptions no css stylesheet | export active worksheet only html | disable css generation Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-// C# example that loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions (UTF‑8), updates cell A1, and saves the workbook to a single HTML file with inline CSS via HtmlSaveOptions, avoiding external stylesheet files.
+// The example loads an HTML file into an Aspose.Cells Workbook while retaining the original DIV layout, updates cell B2 in the first worksheet, and saves the workbook as HTML. It exports only the active worksheet and suppresses CSS generation by setting the CssStyleSheetType to None when the property is available.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input HTML file path
             const string inputPath = "input.html";
+            const string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input HTML file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load HTML file (preserving the original layout as much as possible)
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions
-            {
-                Encoding = Encoding.UTF8 // ensure proper text encoding
-            };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the HTML file with default options
+            var loadOptions = new HtmlLoadOptions();
+            var workbook = new Workbook(inputPath, loadOptions);
 
-            // Example modification: set cell A1 to a new value
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Modified");
+            // Modify cell B2 in the first worksheet
+            var cell = workbook.Worksheets[0].Cells["B2"];
+            cell.PutValue("New Value");
 
-            // Export back to HTML without generating separate CSS files
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Prepare save options
+            var saveOptions = new HtmlSaveOptions
             {
-                ExportActiveWorksheetOnly = true, // export only the modified sheet
-                Encoding = Encoding.UTF8
-                // Note: Aspose.Cells generates CSS inline by default; no separate CSS file is created.
+                ExportActiveWorksheetOnly = true // export only the active sheet
             };
-            const string outputPath = "output.html";
+
+            // If the CssStyleSheetType property exists, set it to None to suppress CSS generation
+            var cssProp = typeof(HtmlSaveOptions).GetProperty("CssStyleSheetType");
+            if (cssProp != null && cssProp.CanWrite)
+            {
+                var enumType = cssProp.PropertyType;
+                var noneValue = Enum.Parse(enumType, "None");
+                cssProp.SetValue(saveOptions, noneValue);
+            }
+
+            // Save the workbook as HTML
             workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"HTML saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

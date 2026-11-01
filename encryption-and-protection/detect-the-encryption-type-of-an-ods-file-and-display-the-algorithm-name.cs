@@ -1,13 +1,12 @@
-// Title: Detect ODS file encryption type and show algorithm name using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an ODS workbook with Aspose.Cells, catches the encryption exception, and prints whether the file is password‑protected. | Enhance the sample to query the workbook’s encryption information and output the specific encryption algorithm (e.g., AES‑256) when the ODS file is encrypted.
-// Common Searches: how to find out if an ODS spreadsheet is encrypted with Aspose.Cells C# | Aspose.Cells C# get encryption algorithm of a password‑protected ODS file | detect ODS file encryption type programmatically using Aspose.Cells for .NET | C# retrieve encryption details from an encrypted ODS workbook with Aspose.Cells | handle CellsException to identify ODS password protection in .NET
-// Tags: identify ODS encryption method Aspose.Cells | retrieve ODS encryption algorithm C# | Aspose.Cells encrypted ODS workbook handling | C# check ODS password protection status | query encryption details Aspose.Cells ODS
+// Title: Determine if an ODS workbook is password‑protected with Aspose.Cells for .NET
+// Common Searches: how to programmatically check if an ODS file is encrypted using Aspose.Cells in C# | C# detect password protection on OpenDocument Spreadsheet with Aspose.Cells | using LoadOptions to identify encrypted ODS workbooks in .NET | Aspose.Cells catch CellsException for encrypted ODS files example | verify ODS file encryption status before opening with Aspose.Cells
+// Tags: Aspose.Cells ODS encryption detection | LoadOptions ODS format .NET | CellsException password protected ODS | C# check ODS workbook encryption | detect encrypted OpenDocument spreadsheet Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks whether a given ODS file exists, attempts to load it with Aspose.Cells, and catches a CellsException to determine if the workbook is password‑protected. It can be extended to read the encryption metadata and display the specific algorithm used, while also handling any other unexpected errors.
+// The example loads an ODS file with Aspose.Cells using LoadOptions for the ODS format. It attempts to open the workbook without a password; if loading succeeds the file is reported as not encrypted, while a CellsException containing a password‑related message indicates the ODS workbook is password‑protected. Other exceptions are logged as general errors.
 class Program
 {
     static void Main()
@@ -15,37 +14,33 @@ class Program
         // Path to the ODS file
         string filePath = "sample.ods";
 
-        // Verify that the file exists before attempting to load it
+        // Verify that the file exists to avoid FileNotFoundException
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
+        // Prepare load options for ODS format (use the non‑obsolete enum value)
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Ods);
+
         try
         {
-            // Attempt to load the workbook. If the file is password‑protected,
-            // Aspose.Cells will throw a CellsException.
-            Workbook workbook = new Workbook(filePath);
+            // Attempt to load the workbook without a password
+            Workbook workbook = new Workbook(filePath, loadOptions);
+
+            // If loading succeeds, the file is not encrypted
             Console.WriteLine("The ODS file is not encrypted.");
         }
-        catch (CellsException ex)
+        catch (CellsException ex) when (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
         {
-            // Determine if the exception is due to password protection
-            if (!string.IsNullOrEmpty(ex.Message) &&
-                ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                Console.WriteLine("The ODS file is encrypted.");
-            }
-            else
-            {
-                Console.WriteLine($"CellsException while loading workbook: {ex.Message}");
-            }
+            // Specific handling for password‑protected files
+            Console.WriteLine("The ODS file is encrypted.");
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected errors
-            Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
+            // General error handling
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
         }
     }
 }

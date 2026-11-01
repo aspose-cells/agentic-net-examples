@@ -1,44 +1,49 @@
-// Title: Convert HTML containing CSS gradient backgrounds to PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an HTML file with CSS gradient background definitions into an Aspose.Cells Workbook using LoadOptions(LoadFormat.Html) and saves it as a PDF while retaining the gradient styling. | Show how to configure Aspose.Cells to preserve CSS gradient fills when converting an HTML document to PDF in a .NET application.
-// Common Searches: how to keep CSS gradient backgrounds when converting HTML to PDF using Aspose.Cells C# | Aspose.Cells HTML to PDF conversion preserving gradient fills example | C# load HTML with gradient backgrounds into workbook and export to PDF Aspose.Cells
-// Tags: Aspose.Cells HTML to PDF conversion with CSS gradients | LoadOptions Html format workbook import | SaveFormat.Pdf preserving stylesheet rendering | C# gradient background export using Aspose.Cells | PDF generation from HTML preserving visual styles
+// Title: Convert an HTML file containing CSS gradient backgrounds to PDF with Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an HTML document with CSS gradient backgrounds into an Aspose.Cells Workbook using HtmlLoadOptions and saves it as a PDF. | Show how to verify the input HTML file exists and gracefully handle exceptions during the HTML‑to‑PDF conversion with Aspose.Cells. | Provide an example of customizing PDF export settings such as page size or orientation while keeping CSS gradient fills intact.
+// Common Searches: how to preserve CSS gradient backgrounds when converting HTML to PDF using Aspose.Cells C# | Aspose.Cells HtmlLoadOptions gradient fill support .NET example | C# convert HTML file with background-image gradients to PDF with Aspose.Cells | error handling for missing HTML file during Aspose.Cells PDF export | change PDF page orientation while exporting HTML workbook in Aspose.Cells
+// Tags: Aspose.Cells HTML to PDF gradient support | HtmlLoadOptions preserve CSS gradients | C# export workbook as PDF with background images | PDF page orientation Aspose.Cells | exception handling Aspose.Cells HTML conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// C# program that loads an HTML file (including CSS gradient backgrounds) into an Aspose.Cells Workbook via HtmlLoadOptions and saves it as a PDF, preserving the gradient fills and allowing optional PDF export customization.
+class Program
 {
-    // The example verifies the input HTML file, loads it into an Aspose.Cells Workbook with LoadOptions set to Html format, and then saves the workbook as a PDF using SaveFormat.Pdf, ensuring that CSS gradient backgrounds are retained in the resulting document.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            string inputPath = "input.html";
-            string outputPath = "output.pdf";
+            // Input HTML file containing CSS gradient backgrounds
+            string htmlFile = "input.html";
 
-            try
+            // Output PDF file path
+            string pdfFile = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(htmlFile))
             {
-                // Verify that the input HTML file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the HTML content into a workbook using Html load options
-                var loadOptions = new LoadOptions(LoadFormat.Html);
-                var workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook as PDF
-                workbook.Save(outputPath, SaveFormat.Pdf);
-                Console.WriteLine($"PDF saved successfully to {outputPath}");
+                Console.WriteLine($"Input file not found: {htmlFile}");
+                return;
             }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the HTML into a Workbook. HtmlLoadOptions handles CSS styles,
+            // including gradient fills in background images.
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+
+            // Create the workbook from the HTML source
+            Workbook workbook = new Workbook(htmlFile, loadOptions);
+
+            // Save the workbook as a PDF. Aspose.Cells renders the gradient fills
+            // into the PDF output, preserving the visual appearance.
+            workbook.Save(pdfFile, SaveFormat.Pdf);
+
+            Console.WriteLine($"PDF successfully saved to: {pdfFile}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

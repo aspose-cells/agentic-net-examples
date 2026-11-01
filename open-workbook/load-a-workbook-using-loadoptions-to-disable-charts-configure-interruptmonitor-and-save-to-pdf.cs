@@ -1,53 +1,43 @@
-// Title: Load an Excel workbook without charts, assign an InterruptMonitor, and export to PDF using Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx file with Aspose.Cells LoadOptions that skips chart objects, set a workbook.InterruptMonitor, and save the workbook as a PDF. | Use reflection to apply the LoadDataOnly property on LoadOptions only when it exists, then convert the workbook to PDF while ignoring charts.
-// Common Searches: Aspose.Cells load workbook without loading charts and convert to PDF in C# | How to set InterruptMonitor on a workbook in Aspose.Cells .NET | Conditional use of LoadDataOnly property with Aspose.Cells LoadOptions | Export Excel to PDF while ignoring chart objects using Aspose.Cells | C# example for loading Excel data only and saving as PDF with Aspose.Cells
-// Tags: skip chart objects LoadOptions Aspose.Cells | configure workbook InterruptMonitor Aspose.Cells | reflection set LoadDataOnly property C# | export Excel workbook to PDF Aspose.Cells | load data only mode Aspose.Cells
+// Title: Load an XLSX workbook with LoadOptions, assign an InterruptMonitor, and save as PDF using Aspose.Cells for .NET
+// Common Searches: how to load an Excel file with LoadOptions in Aspose.Cells C# | assign an InterruptMonitor to a Workbook before exporting to PDF with Aspose.Cells | export an XLSX workbook to PDF using Aspose.Cells while monitoring interruptions | Aspose.Cells C# example for loading workbook and saving as PDF | check file existence before loading workbook with Aspose.Cells
+// Tags: load workbook using LoadOptions Aspose.Cells | configure InterruptMonitor for Aspose.Cells workbook | save workbook as PDF Aspose.Cells | Aspose.Cells .NET Excel to PDF conversion | exception handling in Aspose.Cells file operations
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample verifies the input XLSX file, loads it into a Workbook with LoadOptions, attaches an InterruptMonitor to control execution, and then saves the workbook as a PDF, handling any runtime exceptions.
+class Program
 {
-    // The example checks for the input Excel file, creates a LoadOptions instance, uses reflection to enable LoadDataOnly when available, loads the workbook while skipping chart objects, assigns an InterruptMonitor, and saves the workbook as a PDF, handling any errors that may occur.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                const string inputFile = "input.xlsx";
-                const string outputFile = "output.pdf";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Create LoadOptions; enable LoadDataOnly if the property exists in the current version
-                LoadOptions loadOptions = new LoadOptions();
-                var loadDataOnlyProp = typeof(LoadOptions).GetProperty("LoadDataOnly");
-                if (loadDataOnlyProp != null && loadDataOnlyProp.CanWrite)
-                {
-                    loadDataOnlyProp.SetValue(loadOptions, true);
-                }
-
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(inputFile, loadOptions);
-
-                // Assign an interrupt monitor (optional; no interruption is triggered here)
-                workbook.InterruptMonitor = new InterruptMonitor();
-
-                // Save the workbook as PDF
-                workbook.Save(outputFile, SaveFormat.Pdf);
-                Console.WriteLine($"Workbook successfully saved as PDF: {outputFile}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook with default options (LoadDataOnly not available in this version)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Configure an interrupt monitor (no interruption)
+            InterruptMonitor monitor = new InterruptMonitor();
+            workbook.InterruptMonitor = monitor;
+
+            // Save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

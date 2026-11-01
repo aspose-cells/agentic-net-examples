@@ -1,53 +1,30 @@
-// Title: How to export a worksheet with merged rows and columns to PDF while preserving the merge using Aspose.Cells for C#
-// AI Prompts: Write C# code that merges a header across multiple columns and a label across multiple rows, then saves the worksheet to PDF using Aspose.Cells with options that keep the merged cells intact. | Demonstrate how to configure PdfSaveOptions in Aspose.Cells to prevent page breaks from splitting merged cells and to force all columns onto a single PDF page. | Show how to apply center alignment to merged cells in a workbook before exporting to PDF with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# export merged cells to PDF without losing span | keep merged cell layout when saving Excel as PDF using Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet effect on merged cells Aspose | C# merge cells A1:C1 and A2:A4 then convert to PDF with Aspose.Cells | prevent page break inside merged cells Aspose.Cells PDF export
-// Tags: Aspose.Cells merge cells export PDF | PdfSaveOptions preserve merged layout | C# center alignment merged cells Aspose | AllColumnsInOnePagePerSheet merged cells | prevent page break merged cells Aspose.Cells
+// Title: Convert Excel to PDF in C# with Aspose.Cells while preserving merged cell spans across rows and columns
+// AI Prompts: Generate a PDF from an .xlsx workbook in C# using Aspose.Cells, ensuring merged cells retain their spanning layout. | Export an Excel worksheet to PDF with Aspose.Cells PdfSaveOptions, keeping merged ranges intact and placing each sheet on its own page. | Recalculate all formulas and export the workbook to PDF in C#, ensuring merged cells appear exactly as in Excel.
+// Common Searches: C# Aspose.Cells how to keep merged cells when converting Excel to PDF | preserve merged cell formatting during PDF export with Aspose.Cells .NET | Aspose.Cells PdfSaveOptions OnePagePerSheet merged cells issue | convert workbook to PDF and retain merged ranges using Aspose.Cells for .NET
+// Tags: Aspose.Cells PDF conversion merged cells | PdfSaveOptions OnePagePerSheet C# | Excel to PDF export preserving merged ranges | recalculate formulas before PDF export Aspose.Cells | C# export workbook as PDF with merged cell rendering
 
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example creates a workbook, merges cells A1:C1 and A2:A4, centers the text in those merged cells, configures PdfSaveOptions with OnePagePerSheet = false and AllColumnsInOnePagePerSheet = true, and saves the worksheet as a PDF, ensuring the merged cells retain their spanning in the output.
+// Loads an Excel workbook, recalculates formulas, and saves it as a PDF using Aspose.Cells PdfSaveOptions with OnePagePerSheet enabled, ensuring merged cells are rendered correctly across rows and columns.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load the Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Recalculate formulas to ensure all values are up‑to‑date
+        workbook.CalculateFormula();
 
-        // Populate some data
-        sheet.Cells["A1"].PutValue("Header");
-        sheet.Cells["A2"].PutValue("Row1");
-        sheet.Cells["B2"].PutValue("Data1");
-        sheet.Cells["C2"].PutValue("Data2");
-
-        // Merge cells A1:C1 so the header spans three columns
-        // Parameters: start row, start column, total rows, total columns
-        sheet.Cells.Merge(0, 0, 1, 3); // A1:C1
-
-        // Merge cells A2:A4 so the label spans three rows
-        sheet.Cells["A2"].PutValue("Group");
-        sheet.Cells.Merge(1, 0, 3, 1); // A2:A4
-
-        // Optional: center the text in the merged cells
-        Style mergedStyle = sheet.Cells["A1"].GetStyle();
-        mergedStyle.HorizontalAlignment = TextAlignmentType.Center;
-        mergedStyle.VerticalAlignment = TextAlignmentType.Center;
-        sheet.Cells["A1"].SetStyle(mergedStyle);
-        sheet.Cells["A2"].SetStyle(mergedStyle);
-
-        // Configure PDF save options to keep the layout intact
+        // Configure PDF save options (merged cells are preserved by default)
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Prevent automatic page breaks that could split merged cells
-            OnePagePerSheet = false,
-            // Force all columns of a sheet onto a single PDF page to preserve spanning
-            AllColumnsInOnePagePerSheet = true
+            // Optional: keep each worksheet on a separate PDF page
+            OnePagePerSheet = true
         };
 
-        // Save the workbook as PDF; merged cells will retain their spanning
-        workbook.Save("MergedCells.pdf", pdfOptions);
+        // Save the workbook as a PDF with merged cells rendered correctly
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

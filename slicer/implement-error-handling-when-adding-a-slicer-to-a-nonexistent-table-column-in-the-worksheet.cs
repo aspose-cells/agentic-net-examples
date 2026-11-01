@@ -1,62 +1,73 @@
-// Title: How to catch ArgumentOutOfRangeException when adding a slicer to a non‑existent table column in Aspose.Cells for .NET
-// AI Prompts: Write C# code that validates a ListObject column index before creating a slicer and wraps the operation in a try‑catch block for Aspose.Cells. | Show an example that catches ArgumentOutOfRangeException when calling Worksheet.Slicers.Add with an out‑of‑range column in Aspose.Cells. | Demonstrate how to log the error and continue processing after a slicer addition fails because the target table column is missing in Aspose.Cells.
-// Common Searches: aspnet add slicer to table column index out of range exception handling | c# Aspose.Cells slicer creation fails when column does not exist | how to validate slicer column index before adding in Aspose.Cells workbook | catch ArgumentOutOfRangeException for slicer.Add in Aspose.Cells .NET
-// Tags: Aspose.Cells slicer column existence check | C# try‑catch for slicer addition errors | ListObject column range validation Aspose.Cells | Workbook save after slicer failure Aspose.Cells | Exception handling pattern for Aspose.Cells slicers
+// Title: How to catch and log exceptions when adding a slicer to a non‑existent column in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a slicer to a pivot table with Aspose.Cells and wraps the worksheet.Slicers.Add call in a try‑catch block to handle invalid column indexes. | Show how to verify that a column index exists in a ListObject before creating a slicer using Aspose.Cells in C#. | Create a sample that logs the exception message when worksheet.Slicers.Add throws an error because the specified table column is missing. | Provide a reusable pattern for global error handling around slicer creation in an Aspose.Cells workbook.
+// Common Searches: aspocells c# slicer add invalid column index exception handling | how to validate slicer column before adding in Aspose.Cells .NET | catch error when adding slicer to pivot table Aspose.Cells | log slicer creation failure Aspose.Cells workbook C#
+// Tags: aspocells slicer column validation | c# exception handling aspocells slicer | add slicer to pivot table aspocells | invalid column index error aspocells | logging slicer creation errors c#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // For ListObject
+using Aspose.Cells.Pivot;    // For PivotTable
 
-namespace AsposeCellsSlicerErrorHandling
+// Demonstrates creating a workbook with a table and pivot table, then attempts to add a slicer using an out‑of‑range column index, catches the resulting exception, logs the error message, and saves the workbook.
+class SlicerErrorHandling
 {
-    // The example creates a workbook with a two‑column table, then attempts to add a slicer for a column index that does not exist. The slicer addition is enclosed in a try‑catch block that specifically handles ArgumentOutOfRangeException and a generic Exception, logs appropriate messages, and finally saves the workbook regardless of success.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();                     // create rule
+            Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Name = "DataSheet";
 
-            // Populate some sample data for a table (2 columns)
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue("Fruit");
-            worksheet.Cells["A3"].PutValue("Carrot");
-            worksheet.Cells["B3"].PutValue("Vegetable");
+            // Populate sample data for a table
+            worksheet.Cells["A1"].PutValue("ID");
+            worksheet.Cells["B1"].PutValue("Name");
+            worksheet.Cells["A2"].PutValue(1);
+            worksheet.Cells["B2"].PutValue("Alice");
+            worksheet.Cells["A3"].PutValue(2);
+            worksheet.Cells["B3"].PutValue("Bob");
 
-            // Add a ListObject (table) covering the data range
-            int tableIndex = worksheet.ListObjects.Add("A1", "B3", true);
+            // Define the range of the table (including header row)
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 3;     // rows 1‑3 (header + 2 data rows)
+            int totalColumns = 2;  // columns A‑B
+
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = worksheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
             ListObject table = worksheet.ListObjects[tableIndex];
-            table.TableStyleType = TableStyleType.TableStyleMedium2;
+            table.DisplayName = "Employees";
 
-            // Attempt to add a slicer for a column that does NOT exist (e.g., index 5)
+            // Build the source range string for the pivot table (including header)
+            string startCell = CellsHelper.CellIndexToName(firstRow, firstColumn);
+            string endCell = CellsHelper.CellIndexToName(firstRow + totalRows - 1, firstColumn + totalColumns - 1);
+            string sourceData = $"'{worksheet.Name}'!{startCell}:{endCell}";
+
+            // Create a PivotTable based on the table (required for slicer API in this version)
+            int pivotIndex = worksheet.PivotTables.Add(sourceData, "E1", "PivotTable1");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+
+            // Attempt to add a slicer for a column that does NOT exist (using an invalid column index)
             try
             {
-                // This will throw if the column index is out of range
-                ListColumn nonExistentColumn = table.ListColumns[5]; // zero‑based index
-                // Add slicer using the valid overload that accepts ListColumn and destination cell name
-                SlicerCollection slicers = worksheet.Slicers;        // property rule
-                slicers.Add(table, nonExistentColumn, "D5");        // add rule
-                Console.WriteLine("Slicer added successfully.");
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                // Handle the specific case where the column index is invalid
-                Console.WriteLine("Error: The specified table column does not exist.");
-                Console.WriteLine($"Details: {ex.Message}");
+                // Column index 5 does not exist in the pivot table; this will raise an exception
+                worksheet.Slicers.Add(pivotTable, 5, 5, 0);
             }
             catch (Exception ex)
             {
-                // General fallback for any other unexpected errors
-                Console.WriteLine("An unexpected error occurred while adding the slicer.");
-                Console.WriteLine($"Details: {ex.Message}");
+                // Handle the error gracefully – log or inform the user
+                Console.WriteLine($"Error adding slicer: {ex.Message}");
             }
 
-            // Save the workbook (even if slicer addition failed)
-            workbook.Save("SlicerErrorHandlingOutput.xlsx");        // save rule
+            // Save the workbook
+            workbook.Save("SlicerErrorHandling.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

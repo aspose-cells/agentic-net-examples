@@ -1,66 +1,85 @@
-// Title: Use Aspose.Cells for .NET to highlight and list Excel cells that contain VLOOKUP or SUMIFS formulas
-// AI Prompts: Iterate through every worksheet, detect formulas that include VLOOKUP or SUMIFS, apply a yellow background to those cells, and write their addresses to a new "FormulaReview" sheet using Aspose.Cells in C#. | Extend the filter to additional functions, change the highlight color to red, and export the matching cell references together with their original formulas to a CSV file with Aspose.Cells. | Modify the program to generate a summary workbook that groups identified formulas by worksheet and includes the full formula text beside each highlighted cell using Aspose.Cells.
-// Common Searches: Aspose.Cells C# highlight cells containing VLOOKUP formula and create a review worksheet | list Excel cells with SUMIFS function using Aspose.Cells .NET | filter workbook formulas by function name and export results with Aspose.Cells
-// Tags: highlight VLOOKUP and SUMIFS cells Aspose.Cells | collect formula addresses C# Aspose.Cells | search Excel workbook for function names .NET | generate formula review sheet Aspose.Cells | export matched formulas CSV Aspose.Cells
+// Title: Identify and highlight Excel cells with VLOOKUP or SUMIFS formulas using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to find cells that contain VLOOKUP formula in an .xlsx workbook with Aspose.Cells | how to highlight SUMIFS formulas in Excel using Aspose.Cells .NET library | list all formulas containing specific functions in a workbook with Aspose.Cells C# | filter Excel cells by formula function name using Aspose.Cells API | detect and mark VLOOKUP or SUMIFS formulas in a spreadsheet programmatically in C#
+// Tags: formula function search Aspose.Cells | cell highlighting based on formula content C# | retrieve formula addresses for VLOOKUP SUMIFS | worksheet iteration for formula detection .NET | apply yellow background style to matched cells
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Aspose.Cells;
 
-// Loads an Excel file, scans all worksheets for formulas containing VLOOKUP or SUMIFS, highlights matching cells, records their addresses on a new "FormulaReview" sheet, and saves the modified workbook.
+// The example loads an .xlsx workbook, iterates through each worksheet and cell, detects formulas that contain the VLOOKUP or SUMIFS functions (case‑insensitive), records their addresses, highlights those cells with a yellow background, saves the modified file, and prints the matched formulas to the console.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
+        Workbook workbook = null;
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Load the workbook (no password handling in this example)
+            var loadOptions = new LoadOptions();
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (Exception ex)
+        {
+            // Simple detection of password‑protected files via message inspection
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
+                Console.WriteLine("Error: The workbook is password protected. Unable to open without a password.");
             }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
+        }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+        // List to collect cells that contain the target functions
+        List<string> matchedFormulas = new List<string>();
 
-            // List to collect addresses of cells containing target functions
-            List<string> targetFormulas = new List<string>();
+        // Functions to search for (case‑insensitive)
+        string[] targetFunctions = { "VLOOKUP", "SUMIFS" };
 
-            // Functions to search for
-            string[] functions = new string[] { "VLOOKUP", "SUMIFS" };
-
-            // Iterate through all worksheets
+        try
+        {
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine the used range of the worksheet
-                var usedRange = sheet.Cells.MaxDisplayRange;
+                Cells cells = sheet.Cells;
 
-                // Loop through each cell in the used range
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+                // Determine the used range to limit iteration
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-                for (int row = startRow; row <= endRow; row++)
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    for (int col = startCol; col <= endCol; col++)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        Cell cell = sheet.Cells[row, col];
+                        Cell cell = cells[row, col];
+
+                        // Process only cells that contain a formula
                         if (cell.IsFormula)
                         {
                             string formula = cell.Formula;
-                            foreach (string func in functions)
+
+                            // Check if the formula contains any of the target functions
+                            foreach (string func in targetFunctions)
                             {
                                 if (formula.IndexOf(func, StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
-                                    // Record the cell address with sheet name
-                                    targetFormulas.Add($"{sheet.Name}!{cell.Name}");
+                                    // Record the cell address and its formula
+                                    matchedFormulas.Add($"{sheet.Name}!{cell.Name}: {formula}");
 
                                     // Highlight the cell for visual review
                                     Style style = cell.GetStyle();
@@ -68,7 +87,8 @@ class Program
                                     style.Pattern = BackgroundType.Solid;
                                     cell.SetStyle(style);
 
-                                    break; // Move to next cell after first match
+                                    // No need to check other functions once a match is found
+                                    break;
                                 }
                             }
                         }
@@ -76,22 +96,19 @@ class Program
                 }
             }
 
-            // Create a new worksheet to list the identified formulas
-            Worksheet resultSheet = workbook.Worksheets.Add("FormulaReview");
-            resultSheet.Cells[0, 0].PutValue("Cell Address");
-
-            for (int i = 0; i < targetFormulas.Count; i++)
-            {
-                resultSheet.Cells[i + 1, 0].PutValue(targetFormulas[i]);
-            }
-
-            // Save the workbook with the highlights and review sheet
+            // Save the workbook with highlighted cells
             workbook.Save(outputPath);
-            Console.WriteLine($"Processing completed. Output saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            return;
+        }
+
+        // Output the list of matched formulas to the console
+        foreach (string entry in matchedFormulas)
+        {
+            Console.WriteLine(entry);
         }
     }
 }

@@ -1,7 +1,6 @@
-// Title: Preserve the original thread culture while loading an Excel workbook with French CultureInfo using Aspose.Cells LoadOptions in C#
-// AI Prompts: Load an XLSX workbook with a French CultureInfo via Aspose.Cells LoadOptions, temporarily set Thread.CurrentThread.CurrentCulture to French, and then restore the original culture after the workbook is loaded. | Add robust error handling that guarantees the original thread culture is reinstated even when the input file is missing or an exception occurs during workbook loading.
-// Common Searches: c# aspocells load workbook with french cultureinfo without changing global thread culture | how to use LoadOptions.CultureInfo to load an Excel file in a specific locale | restore original thread culture after Aspose.Cells workbook load | aspocells example for temporary thread culture switch during file load | check file existence before loading workbook with Aspose.Cells in C#
-// Tags: load workbook with specific CultureInfo Aspose.Cells | temporary thread culture switch C# | Aspose.Cells LoadOptions CultureInfo setting | handle missing Excel file Aspose.Cells | restore original thread culture after workbook load
+// Title: Preserve original thread culture while loading an Excel workbook with French CultureInfo using Aspose.Cells LoadOptions in C#
+// Common Searches: c# load excel workbook with specific cultureinfo using aspose.cells loadoptions | preserve thread culture after switching to French locale in Aspose.Cells | set French culture for workbook loading without affecting global thread settings | how to restore original CultureInfo after loading an Excel file with Aspose.Cells | use LoadOptions.CultureInfo to read localized numbers in Excel with Aspose.Cells
+// Tags: loadoptions cultureinfo excel c# | aspose.cells thread culture management | french locale workbook loading | cultureinfo reset after workbook load | excel globalization with aspose.cells
 
 using System;
 using System.Globalization;
@@ -9,57 +8,53 @@ using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example saves the current thread's CultureInfo, switches the thread to French (fr-FR), verifies the Excel file exists, configures LoadOptions with French CultureInfo, loads the workbook, reads a cell value, and finally restores the original thread cultures while handling any exceptions.
+class Program
 {
-    // The example stores the current thread culture, sets a French CultureInfo on LoadOptions, temporarily changes Thread.CurrentThread.CurrentCulture to French before loading the workbook, restores the original culture after loading (including in catch blocks), validates the input file's existence, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Preserve original thread cultures
+        CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
+        CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+
+        try
         {
-            // Store the original thread culture to restore it later.
-            CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
+            // Switch thread culture to French (France)
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
 
-            // Define the French culture that will be used while loading the workbook.
-            CultureInfo frenchCulture = new CultureInfo("fr-FR");
+            string filePath = "SampleFr.xlsx";
 
-            // Create LoadOptions and assign the French culture to it.
+            // Ensure the input file exists before loading
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File '{filePath}' not found.");
+                return;
+            }
+
+            // Configure LoadOptions with French culture
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                CultureInfo = frenchCulture
+                CultureInfo = new CultureInfo("fr-FR")
             };
 
-            // Path to the input workbook.
-            string inputPath = "SampleFrench.xlsx";
+            // Load the workbook using the specified options
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            try
-            {
-                // Prevent FileNotFoundException by checking file existence.
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
-                }
-
-                // Temporarily switch the thread culture to French before loading.
-                Thread.CurrentThread.CurrentCulture = frenchCulture;
-
-                // Load the workbook using the specified LoadOptions.
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Restore the original thread culture after loading.
-                Thread.CurrentThread.CurrentCulture = originalCulture;
-
-                // Save the workbook to verify successful loading.
-                string outputPath = "Output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                // Ensure original culture is restored in case of an error.
-                Thread.CurrentThread.CurrentCulture = originalCulture;
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Example operation: read a cell value
+            string cellValue = workbook.Worksheets[0].Cells["A1"].StringValue;
+            Console.WriteLine($"Value in A1: {cellValue}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+        finally
+        {
+            // Restore the original thread cultures
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+            Thread.CurrentThread.CurrentUICulture = originalUICulture;
         }
     }
 }

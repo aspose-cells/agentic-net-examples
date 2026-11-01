@@ -1,17 +1,45 @@
-// Title: Generate a PDF from an Aspose.Cells workbook with one PDF page per worksheet using C#
-// AI Prompts: Provide C# code that loads an existing Excel file and saves it as a PDF where each worksheet appears on its own page using Aspose.Cells PdfSaveOptions. | Demonstrate how to configure Aspose.Cells PdfSaveOptions.OnePagePerSheet in C# before calling Workbook.Save. | Show how to export a newly created workbook to PDF with separate pages per sheet using Aspose.Cells in .NET.
-// Common Searches: Aspose.Cells C# how to export each worksheet to a separate PDF page | PdfSaveOptions OnePagePerSheet property usage example .NET | Save Excel workbook as PDF with one page per sheet using Aspose.Cells library | C# code sample for PDF export with one page per worksheet in Aspose.Cells | Aspose.Cells PDF save options to generate individual pages per sheet
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export workbook to PDF per worksheet | PDF save options separate sheet pages Aspose | .NET generate PDF with one page per Excel sheet | Aspose.Cells PDF export per sheet
+// Title: Save an Excel workbook as a PDF with one page per worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export workbook to PDF with each sheet on a separate page | PdfSaveOptions OnePagePerSheet property usage example in .NET | How to generate PDF where each Excel worksheet becomes its own page using Aspose.Cells | C# code to convert .xlsx to PDF with per‑sheet pagination via Aspose | Set one page per sheet when saving Excel to PDF with Aspose.Cells library
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# Excel to PDF per worksheet | PDF export with sheet-wise pagination Aspose | Aspose.Cells workbook.Save PDF options | one page per sheet PDF conversion .NET
 
-// Create a new workbook (or load an existing one)
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook(); // create rule
+using System;
+using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// If you need to load an existing workbook, uncomment the line below and provide the path
-// workbook = new Aspose.Cells.Workbook("input.xlsx"); // load rule
+// The example loads an existing .xlsx file into an Aspose.Cells Workbook, configures PdfSaveOptions with OnePagePerSheet = true, and saves the workbook as a PDF so that each worksheet appears on its own page, including basic file‑existence checks and exception handling.
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-// Configure PDF save options to generate one PDF page per worksheet
-Aspose.Cells.PdfSaveOptions pdfOptions = new Aspose.Cells.PdfSaveOptions();
-pdfOptions.OnePagePerSheet = true; // set the required option
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-// Save the workbook to PDF using the configured options
-workbook.Save("output.pdf", pdfOptions); // save rule
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set PDF save options: one page per worksheet
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = true
+            };
+
+            // Save the workbook to PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}

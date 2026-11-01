@@ -1,118 +1,103 @@
-// Title: Log timestamped additions, modifications, and deletions of Excel named ranges using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that captures the original RefersTo values of all named ranges in an Aspose.Cells workbook, applies changes, and appends a log entry with the current timestamp for each added, modified, or removed range to a text file. | Generate a C# example that compares a workbook's NameCollection before and after updates, detects differences, and creates audit entries like 'Added', 'Modified', 'Deleted' with old and new references and timestamps using Aspose.Cells.
-// Common Searches: C# Aspose.Cells how to audit named range additions and deletions | track Excel named range reference changes with timestamp in .NET | detect modified named ranges in a workbook using Aspose.Cells C# | write named range change log to a text file with Aspose.Cells | compare original and current RefersTo values for Excel named ranges in C#
-// Tags: Aspose.Cells named range audit logging | C# timestamped Excel named range change detection | compare NameCollection before after Aspose.Cells | log RefersTo updates to text file C# | detect added deleted named ranges Aspose.Cells
+// Title: C# code to log added, modified, and deleted named ranges with timestamps using Aspose.Cells
+// Common Searches: how to audit named range changes in an Excel file with Aspose.Cells C# | C# write timestamped log of added and removed named ranges | track modifications to named ranges and export to text file using Aspose.Cells | compare original and current named ranges in .NET and generate change report | Aspose.Cells example for logging named range updates with old and new references
+// Tags: named range change tracking Aspose.Cells | timestamped named range log C# | detect added deleted named ranges .NET | export named range modifications to text file | original vs current named range comparison Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace NamedRangeLogger
+// This C# example loads an Excel workbook with Aspose.Cells, captures the initial set of named ranges, then after any additions, updates, or deletions it compares the current named ranges to the original collection and writes a timestamped log file that records added, modified (showing old and new references) and deleted ranges, before saving the workbook.
+class NamedRangeLogger
 {
-    // The example loads an Excel workbook with Aspose.Cells, records each named range's original RefersTo string, performs sample modifications (update, add, remove), then iterates the current NameCollection to identify added, modified, and deleted ranges. For every change it builds a timestamped log entry showing the old and new references and writes the entries to a text file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook (replace with your actual file path)
+        string workbookPath = "InputWorkbook.xlsx";
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Capture the initial state of all named ranges
+        Dictionary<string, string> originalRanges = new Dictionary<string, string>();
+        foreach (Name name in workbook.Worksheets.Names)
         {
-            // Paths for input workbook and log file
-            string workbookPath = "input.xlsx";
-            string logFilePath = "NamedRangeChanges.log";
-
-            // Ensure the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
-            {
-                Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-                NameCollection names = workbook.Worksheets.Names;
-
-                // Capture original references of all named ranges
-                var originalReferences = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (Name name in names)
-                {
-                    originalReferences[name.Text] = name.RefersTo;
-                }
-
-                // -----------------------------------------------------------------
-                // Example modifications to named ranges (replace with actual logic)
-                // -----------------------------------------------------------------
-
-                // 1. Change the reference of an existing named range
-                Name myRange = names["MyRange"];
-                if (myRange != null)
-                {
-                    myRange.RefersTo = "=Sheet1!$C$1:$D$5";
-                }
-
-                // 2. Add a new named range
-                int newIdx = names.Add("NewRange");
-                Name newRange = names[newIdx];
-                newRange.RefersTo = "=Sheet2!$A$1:$A$10";
-
-                // 3. Delete an existing named range
-                if (names["OldRange"] != null)
-                {
-                    names.Remove("OldRange");
-                }
-
-                // -----------------------------------------------------------------
-                // Detect changes by comparing the current state with the original state
-                // -----------------------------------------------------------------
-
-                var logEntries = new List<string>();
-
-                // Check for added or modified named ranges
-                foreach (Name currentName in names)
-                {
-                    string nameText = currentName.Text;
-                    string currentRef = currentName.RefersTo;
-
-                    if (originalReferences.TryGetValue(nameText, out string oldRef))
-                    {
-                        // Modified?
-                        if (!string.Equals(oldRef, currentRef, StringComparison.OrdinalIgnoreCase))
-                        {
-                            string entry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Modified: '{nameText}' " +
-                                           $"Old Ref = {oldRef}, New Ref = {currentRef}";
-                            logEntries.Add(entry);
-                        }
-
-                        // Remove processed entry to later identify deletions
-                        originalReferences.Remove(nameText);
-                    }
-                    else
-                    {
-                        // Newly added range
-                        string entry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added: '{nameText}' " +
-                                       $"Ref = {currentRef}";
-                        logEntries.Add(entry);
-                    }
-                }
-
-                // Remaining items are deleted named ranges
-                foreach (var kvp in originalReferences)
-                {
-                    string entry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Deleted: '{kvp.Key}' " +
-                                   $"Old Ref = {kvp.Value}";
-                    logEntries.Add(entry);
-                }
-
-                // Append log entries to the log file
-                File.AppendAllLines(logFilePath, logEntries);
-
-                // Optionally, save the workbook if modifications need to be persisted
-                // workbook.Save("output.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Store the name and its reference (e.g., Sheet1!$A$1:$B$2)
+            originalRanges[name.Text] = name.RefersTo;
         }
+
+        // -----------------------------------------------------------------
+        // Perform modifications to named ranges here.
+        // Example modifications (replace with actual logic):
+        //   - Add a new named range
+        //   - Change the reference of an existing named range
+        //   - Delete a named range
+        // -----------------------------------------------------------------
+        // Example: Add a new named range
+        // workbook.Worksheets.Names.Add("NewRange", "Sheet1!$C$1:$D$5");
+
+        // Example: Change an existing named range
+        // Name existing = workbook.Worksheets.Names["ExistingRange"];
+        // existing.RefersTo = "Sheet2!$A$1:$A$10";
+
+        // Example: Delete a named range
+        // workbook.Worksheets.Names.Remove("ObsoleteRange");
+
+        // -----------------------------------------------------------------
+        // End of modifications
+        // -----------------------------------------------------------------
+
+        // Prepare the log file
+        string logFilePath = "NamedRangeChanges.log";
+        using (StreamWriter logWriter = new StreamWriter(logFilePath, true))
+        {
+            // Timestamp for this logging session
+            string timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            logWriter.WriteLine($"--- Modification Log: {timeStamp} ---");
+
+            // Capture the current state of named ranges
+            Dictionary<string, string> currentRanges = new Dictionary<string, string>();
+            foreach (Name name in workbook.Worksheets.Names)
+            {
+                currentRanges[name.Text] = name.RefersTo;
+            }
+
+            // Detect added or modified named ranges
+            foreach (var kvp in currentRanges)
+            {
+                string name = kvp.Key;
+                string newRef = kvp.Value;
+
+                if (originalRanges.TryGetValue(name, out string oldRef))
+                {
+                    if (!string.Equals(oldRef, newRef, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Modified range
+                        logWriter.WriteLine($"[Modified] Name: {name}");
+                        logWriter.WriteLine($"    Old Reference: {oldRef}");
+                        logWriter.WriteLine($"    New Reference: {newRef}");
+                    }
+                    // Remove from original dictionary to simplify later detection of deletions
+                    originalRanges.Remove(name);
+                }
+                else
+                {
+                    // Added range
+                    logWriter.WriteLine($"[Added] Name: {name}");
+                    logWriter.WriteLine($"    Reference: {newRef}");
+                }
+            }
+
+            // Remaining entries in originalRanges are deleted ranges
+            foreach (var kvp in originalRanges)
+            {
+                logWriter.WriteLine($"[Deleted] Name: {kvp.Key}");
+                logWriter.WriteLine($"    Last Reference: {kvp.Value}");
+            }
+
+            logWriter.WriteLine(); // Blank line for readability
+        }
+
+        // Save the workbook if needed (replace with your desired output path)
+        string outputPath = "OutputWorkbook.xlsx";
+        workbook.Save(outputPath);
     }
 }

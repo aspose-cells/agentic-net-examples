@@ -1,40 +1,37 @@
-// Title: Calculate the total number of cells in a merged A1:C3 range with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that merges cells A1:C3 using Worksheet.Cells.Merge and then computes the total cell count of the merged area. | Show how to create a CellArea for a merged range and calculate its rows, columns, and total cells with Aspose.Cells. | Provide a console application example that outputs the number of cells covered by a merged range after merging.
-// Common Searches: C# Aspose.Cells how to get cell count of a merged range A1:C3 | determine size of merged cells using Worksheet.Cells.Merge in Aspose.Cells | calculate rows and columns of a merged area with Aspose.Cells for .NET | example code to count cells in merged range after calling Merge in Aspose.Cells | Aspose.Cells merged range total cells calculation tutorial
-// Tags: Worksheet.Cells.Merge total cell count | CellArea size calculation Aspose.Cells | merged range cell count C# | Aspose.Cells determine merged area dimensions | calculate merged cells rows columns Aspose.Cells
+// Title: Calculate the total number of cells in a merged A1:C3 range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# count cells in merged range A1:C3 | how to determine size of merged area with Aspose.Cells Merge method | C# Aspose.Cells get RowCount and ColumnCount of a merged range | example of calculating total cells after merging cells in Aspose.Cells workbook | retrieve total cell count from merged range in Aspose.Cells .NET API
+// Tags: Aspose.Cells merge range cell count | C# Aspose.Cells RowCount ColumnCount calculation | merged range size Aspose.Cells .NET | Aspose.Cells CreateRange usage | total cells in merged area C#
 
 using Aspose.Cells;
 using System;
 
-// The example creates a workbook, merges the range A1:C3, defines the corresponding CellArea, computes the number of rows, columns, and total cells in that merged area, and prints the result to the console.
+// The example creates a new workbook, merges cells A1:C3 on the first worksheet, builds a Range object for the merged area, computes the total number of cells by multiplying RowCount and ColumnCount, and outputs the result to the console.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge the range A1:C3 (rows 0-2, columns 0-2)
-            // Parameters: startRow, startColumn, totalRows, totalColumns
-            sheet.Cells.Merge(0, 0, 3, 3);
+            // Define the range to merge (A1:C3)
+            int startRow = 0;      // Row 1 (zero‑based index)
+            int startColumn = 0;   // Column A
+            int totalRows = 3;     // Rows 1 to 3
+            int totalColumns = 3;  // Columns A to C
 
-            // Since GetMergedRange is not available in this version,
-            // we manually define the merged area based on the merge parameters.
-            CellArea mergedArea = new CellArea
-            {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = 0 + 3 - 1,      // startRow + totalRows - 1
-                EndColumn = 0 + 3 - 1    // startColumn + totalColumns - 1
-            };
+            // Perform the merge operation
+            sheet.Cells.Merge(startRow, startColumn, totalRows, totalColumns);
+
+            // Create a Range object representing the merged area
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
 
             // Calculate the total number of cells in the merged range
-            int totalRows = mergedArea.EndRow - mergedArea.StartRow + 1;
-            int totalCols = mergedArea.EndColumn - mergedArea.StartColumn + 1;
-            int totalCells = totalRows * totalCols;
+            int totalCells = mergedRange.RowCount * mergedRange.ColumnCount;
 
             // Output the result
             Console.WriteLine("Total cells in merged range A1:C3: " + totalCells);

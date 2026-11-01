@@ -1,22 +1,21 @@
-// Title: Switch a PivotTable to Outline form using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing .xlsx file, locates the first PivotTable, calls ShowInOutlineForm(), and saves the workbook to a new file. | Demonstrate how to use Aspose.Cells to change a PivotTable's display mode to Outline view while handling missing input files. | Provide a step‑by‑step example of enabling outline form for a PivotTable in a .NET console application with error handling.
-// Common Searches: Aspose.Cells C# example to enable outline view for a PivotTable | How to programmatically set PivotTable ShowInOutlineForm in .NET | C# load workbook, modify PivotTable layout to outline, save file using Aspose.Cells | Switch PivotTable to outline form with Aspose.Cells for .NET tutorial
-// Tags: Aspose.Cells PivotTable ShowInOutlineForm | C# modify PivotTable layout outline | Aspose.Cells load workbook adjust PivotTable | save Excel workbook after PivotTable changes Aspose.Cells | error handling missing Excel file Aspose.Cells C#
+// Title: How to convert an Excel PivotTable to Outline view using Aspose.Cells ShowInOutlineForm in C#
+// Common Searches: C# code to set Excel pivot table to outline form with Aspose.Cells | Aspose.Cells ShowInOutlineForm method example for .NET | Programmatically change pivot table layout to outline in a workbook using Aspose.Cells | Switch pivot table display mode to outline using Aspose.Cells for .NET | Load workbook, modify first pivot table to outline view, save with Aspose.Cells C#
+// Tags: Aspose.Cells ShowInOutlineForm C# | pivot table outline layout Aspose.Cells | modify pivot table display mode .NET | Excel workbook pivot table outline conversion | programmatic pivot table layout change Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// // Loads an existing Excel workbook, retrieves the first PivotTable on the first worksheet, switches it to Outline form by calling ShowInOutlineForm(), and saves the modified workbook to a new file, with basic file‑existence checks and error handling.
-class Program
+// The example loads an existing Excel workbook, accesses the first worksheet, retrieves the first PivotTable, switches its layout to outline form by calling ShowInOutlineForm(), and saves the modified workbook to a new file using Aspose.Cells for .NET.
+class PivotTableOutlineExample
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
             // Verify input file exists
             if (!File.Exists(inputPath))
@@ -25,39 +24,32 @@ class Program
                 return;
             }
 
-            // Load the workbook containing the PivotTable
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet contains at least one PivotTable
-            if (worksheet.PivotTables == null || worksheet.PivotTables.Count == 0)
+            // Ensure at least one pivot table exists
+            if (sheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("No PivotTables found in the worksheet.");
+                Console.WriteLine("No pivot tables found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first PivotTable
-            PivotTable pivotTable = worksheet.PivotTables[0];
+            // Get the first pivot table
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-            // Switch the PivotTable to Outline form (method, not property)
+            // Switch the pivot table to outline form
             pivotTable.ShowInOutlineForm();
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

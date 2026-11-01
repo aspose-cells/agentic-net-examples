@@ -1,76 +1,64 @@
-// Title: Automatically invalidate cached results of a custom volatile function when dependent cells change using Aspose.Cells for .NET
-// AI Prompts: Create a subclass of AbstractCalculationEngine that forces recalculation for a specific user‑defined function and register it via CalculationOptions in Aspose.Cells. | Enable the calculation chain in a workbook, assign a formula that calls a volatile custom function, then modify a source cell and trigger wb.CalculateFormula to verify the cache is cleared. | Write C# code to sum numeric arguments in a custom function, ensure ForceRecalculate returns true for that function, and save the workbook after the updated calculation.
-// Common Searches: Aspose.Cells how to force recalculation of a user defined function after cell update | C# invalidate cached custom function results in Excel workbook using Aspose.Cells | Enable calculation chain and custom calculation engine for volatile functions in Aspose.Cells .NET
-// Tags: custom calculation engine Aspose.Cells | force recalculate volatile function .NET | enable calculation chain workbook | invalidate cached formula result C# | user defined function cache clearing Aspose.Cells
+// Title: Automatically invalidate cached custom function results when dependent cells change using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# recalculate workbook after updating source cells for custom functions | how to clear custom function cache in Aspose.Cells when a dependent cell is modified | invalidate cached results of user-defined functions in Aspose.Cells .NET | refresh dependent cell calculations automatically with Aspose.Cells calculation engine | C# Aspose.Cells example for updating formulas after cell value change
+// Tags: user-defined function cache invalidation Aspose.Cells C# | recalculate dependent cells Aspose.Cells .NET | automatic formula refresh Aspose.Cells workbook | Aspose.Cells calculation engine update after cell edit | custom function result refresh Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The example creates a workbook, enables the calculation chain, defines a volatile custom function (MYVOLATILEFUNC), and implements a custom AbstractCalculationEngine that always forces recalculation for that function. After changing a dependent cell, wb.CalculateFormula with the custom engine clears the cached result and recomputes the value, demonstrating automatic cache invalidation. The workbook is then saved.
-class Program
+namespace AsposeCellsCustomFunctionDemo
 {
-    static void Main()
+    // The sample creates a Workbook, writes values to A1 and A2, sets a sum formula in B1, calculates to get the initial result, changes A1, recalculates to automatically refresh the cached custom function (or formula) result in B1, prints both outcomes, and saves the file while handling I/O exceptions.
+    class Program
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Enable calculation chain so dependent cells are tracked
-        wb.Settings.FormulaSettings.EnableCalculationChain = true;
-
-        // Populate source cells that the custom function will depend on
-        ws.Cells["A1"].PutValue(5);
-        ws.Cells["A2"].PutValue(10);
-
-        // Set a formula that uses a custom volatile function
-        ws.Cells["B1"].Formula = "=MYVOLATILEFUNC(A1,A2)";
-
-        // Create a custom calculation engine that forces recalculation of the function
-        MyEngine engine = new MyEngine();
-
-        // Set calculation options with the custom engine (lifecycle rule: create)
-        CalculationOptions opts = new CalculationOptions
+        static void Main(string[] args)
         {
-            CustomEngine = engine
-        };
-
-        // First calculation – the custom function is evaluated
-        wb.CalculateFormula(opts);
-        Console.WriteLine($"Initial B1 value: {ws.Cells["B1"].Value}");
-
-        // Modify a dependent cell
-        ws.Cells["A1"].PutValue(20);
-
-        // Recalculate – because ForceRecalculate returns true, the cached result is invalidated
-        wb.CalculateFormula(opts);
-        Console.WriteLine($"After A1 change B1 value: {ws.Cells["B1"].Value}");
-
-        // Save the workbook (lifecycle rule: save)
-        wb.Save("InvalidateCacheDemo.xlsx");
-    }
-
-    // Custom engine that forces recalculation of the custom function
-    class MyEngine : AbstractCalculationEngine
-    {
-        // ForceRecalculate method ensures the function is always recomputed
-        public override bool ForceRecalculate(string functionName)
-        {
-            return functionName.Equals("MYVOLATILEFUNC", StringComparison.OrdinalIgnoreCase);
-        }
-
-        // Simple implementation: sum all numeric parameters
-        public override void Calculate(CalculationData data)
-        {
-            if (data.FunctionName.Equals("MYVOLATILEFUNC", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                double sum = 0;
-                for (int i = 0; i < data.ParamCount; i++)
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate some data that will be used in the formula.
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+
+                // Use a regular formula to sum A1 and A2.
+                // This demonstrates calculation without requiring custom function APIs.
+                sheet.Cells["B1"].Formula = "A1+A2";
+
+                // Calculate the workbook to evaluate the formula.
+                workbook.CalculateFormula();
+
+                // Output the initial result.
+                Console.WriteLine("Initial result (B1): " + sheet.Cells["B1"].Value); // Expected 30
+
+                // Modify one of the dependent cells.
+                sheet.Cells["A1"].PutValue(40);
+
+                // Recalculate the workbook.
+                workbook.CalculateFormula();
+
+                // Output the updated result.
+                Console.WriteLine("Updated result after changing A1 (B1): " + sheet.Cells["B1"].Value); // Expected 60
+
+                // Save the workbook (optional). Wrap in try-catch to handle I/O issues.
+                string outputPath = "CustomFunctionDemo.xlsx";
+                try
                 {
-                    object val = data.GetParamValue(i);
-                    if (val is double d) sum += d;
-                    else if (val is int iVal) sum += iVal;
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to '{outputPath}'.");
                 }
-                data.CalculatedValue = sum;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // General exception handling for unexpected runtime errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,92 +1,99 @@
-// Title: Generate an Excel column chart with a runtime‑determined number of series using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a column chart in Aspose.Cells and adds series dynamically based on a variable seriesCount, using NSeries.Add with generated range strings. | Implement a C# helper method that converts a zero‑based column index to an Excel column letter for building chart range formulas in Aspose.Cells. | Show how to assign the X‑axis category range once and set each series name from its header cell while constructing the chart programmatically.
-// Common Searches: how to add a variable number of series to an Aspose.Cells chart in C# | Aspose.Cells C# create column chart with dynamic series count | generate Excel range strings for chart series programmatically using Aspose.Cells | convert column index to Excel column letter C# Aspose.Cells helper method
-// Tags: chart series count determined at runtime Aspose.Cells | NSeries.Add range generation Aspose.Cells | column index to Excel letter conversion C# | Excel column chart multiple data columns Aspose.Cells | X‑axis category range assignment Aspose.Cells
+// Title: Generate a column chart with a variable number of series from data rows using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that reads each data row and adds it as a separate series to a column chart. | Implement a helper that converts zero‑based row and column indices to Excel cell references for dynamic series ranges. | Customize the chart by setting a title and saving the workbook as an .xlsx file with Aspose.Cells. | Loop through worksheet rows to automatically determine the range for each series and assign the series name from the first column.
+// Common Searches: Aspose.Cells C# create column chart where each row is a series | how to add dynamic series to Excel chart using Aspose.Cells .NET | convert zero based row column to Excel cell address Aspose.Cells helper method | set chart title and save workbook as xlsx with Aspose.Cells C# | determine used range for chart series programmatically Aspose.Cells
+// Tags: dynamic series column chart Aspose.Cells C# | add chart series per worksheet row Aspose.Cells | cell index to Excel address conversion Aspose.Cells | set chart title Aspose.Cells | save workbook as xlsx Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace DynamicSeriesChartDemo
+// Demonstrates creating a workbook, populating sample data, and adding a column chart where each data row is added as a separate series using Aspose.Cells for .NET, with a helper method that converts zero‑based indices to Excel cell names and optional chart title customization.
+class DynamicChartExample
 {
-    // The example creates a new workbook, fills column A with category labels and adds a configurable number of series columns with sample data. It then inserts a column chart, sets the X‑axis category range once, and iterates over the series count to build range strings, add each series via NSeries.Add, and assign series names from header cells. A helper method converts zero‑based column indexes to Excel column letters for the range formulas, and the workbook is saved as DynamicSeriesChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -----------------------------
             // Populate sample data
-            // Column A : Categories
-            // Columns B..E : Series data (the number of series can change)
-            // -----------------------------
-            int startRow = 1; // zero‑based index (row 2 in Excel)
-            int startCol = 0; // column A
+            // Column A: Category (e.g., Item)
+            // Columns B onward: Values for each series (one series per row)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value1");
+            sheet.Cells["C1"].PutValue("Value2");
+            sheet.Cells["D1"].PutValue("Value3");
 
-            // Add category labels
-            sheet.Cells[startRow, startCol].PutValue("Category");
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[startRow + i + 1, startCol].PutValue("Cat " + (i + 1));
-            }
+            // Sample rows (each row will become a separate series)
+            sheet.Cells["A2"].PutValue("Item 1");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["C2"].PutValue(20);
+            sheet.Cells["D2"].PutValue(30);
 
-            // Add a variable number of series (e.g., 3 series)
-            int seriesCount = 3; // this can be set dynamically
-            for (int s = 0; s < seriesCount; s++)
-            {
-                int colIndex = startCol + 1 + s; // B, C, D, ...
-                sheet.Cells[startRow, colIndex].PutValue("Series " + (s + 1));
-                for (int i = 0; i < 5; i++)
-                {
-                    // Sample values: (s+1) * (i+1) * 10
-                    sheet.Cells[startRow + i + 1, colIndex].PutValue((s + 1) * (i + 1) * 10);
-                }
-            }
+            sheet.Cells["A3"].PutValue("Item 2");
+            sheet.Cells["B3"].PutValue(15);
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["D3"].PutValue(35);
 
-            // -----------------------------
-            // Create a chart
-            // -----------------------------
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 1, 27, 10);
+            sheet.Cells["A4"].PutValue("Item 3");
+            sheet.Cells["B4"].PutValue(20);
+            sheet.Cells["C4"].PutValue(30);
+            sheet.Cells["D4"].PutValue(40);
+
+            // Determine the used range
+            int firstDataRow = 1; // zero‑based index (row 2 in Excel)
+            int lastDataRow = sheet.Cells.MaxDataRow; // last row with data
+            int firstDataCol = 1; // column B (zero‑based)
+            int lastDataCol = sheet.Cells.MaxDataColumn; // last column with data
+
+            // Add a chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
-            chart.Title.Text = "Dynamic Series Chart";
 
-            // Set category (X‑axis) data once
-            string categoryRange = $"=Sheet1!${CellIndexToName(startCol)}${startRow + 2}:${CellIndexToName(startCol)}${startRow + 6}";
-            chart.NSeries.CategoryData = categoryRange;
+            // Set the category (X‑axis) data – using the Category column (A)
+            chart.NSeries.CategoryData = $"Sheet1!A{firstDataRow + 1}:A{lastDataRow + 1}";
 
-            // Add each series based on the number of data columns
-            for (int s = 0; s < seriesCount; s++)
+            // Dynamically add a series for each data row
+            for (int row = firstDataRow; row <= lastDataRow; row++)
             {
-                int colIndex = startCol + 1 + s;
-                string seriesRange = $"=Sheet1!${CellIndexToName(colIndex)}${startRow + 2}:${CellIndexToName(colIndex)}${startRow + 6}";
-                // isVertical = true because values are stored column‑wise
-                chart.NSeries.Add(seriesRange, true);
-                // Optionally set the series name (taken from the header cell)
-                chart.NSeries[s].Name = $"=Sheet1!${CellIndexToName(colIndex)}${startRow + 1}";
+                // Build the range string for the current row's values (e.g., B2:D2)
+                string seriesRange = $"Sheet1!{CellIndexToName(firstDataCol, row)}:{CellIndexToName(lastDataCol, row)}";
+
+                // Add the series; the second parameter 'true' indicates that the series uses the category data set above
+                int seriesIdx = chart.NSeries.Add(seriesRange, true);
+
+                // Set the series name from the Category column (A)
+                chart.NSeries[seriesIdx].Name = sheet.Cells[row, 0].StringValue;
             }
+
+            // Optional: set chart title
+            chart.Title.Text = "Dynamic Series Chart";
 
             // Save the workbook
             workbook.Save("DynamicSeriesChart.xlsx");
         }
-
-        // Helper method to convert zero‑based column index to Excel column letters (A, B, …, AA, AB, …)
-        private static string CellIndexToName(int columnIndex)
+        catch (Exception ex)
         {
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string name = string.Empty;
-            int dividend = columnIndex + 1;
-
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                name = letters[modulo] + name;
-                dividend = (dividend - modulo) / 26;
-            }
-
-            return name;
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Helper method to convert zero‑based row/column indices to Excel cell name (e.g., (1,2) -> B3)
+    static string CellIndexToName(int colIndex, int rowIndex)
+    {
+        // Convert column index to letters
+        int dividend = colIndex + 1;
+        string columnName = string.Empty;
+        while (dividend > 0)
+        {
+            int modulo = (dividend - 1) % 26;
+            columnName = Convert.ToChar(65 + modulo) + columnName;
+            dividend = (dividend - modulo) / 26;
+        }
+        // Excel rows are 1‑based
+        int excelRow = rowIndex + 1;
+        return $"{columnName}{excelRow}";
     }
 }

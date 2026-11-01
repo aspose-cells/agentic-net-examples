@@ -1,55 +1,37 @@
-// Title: Encrypt an Excel workbook with a Unicode password and validate decryption using Aspose.Cells for .NET
-// AI Prompts: Set wb.Settings.Password to a Unicode string (including accented characters or emojis) and save the workbook as an encrypted .xlsx file with Aspose.Cells. | Load the encrypted .xlsx file using LoadOptions.Password set to the same Unicode password, then read a cell to confirm the original content is intact. | Replace the Unicode password with a different non‑ASCII string, re‑encrypt the workbook, and repeat the load‑and‑verify steps to demonstrate consistent handling.
-// Common Searches: asp.net set Unicode password for Excel file encryption with Aspose.Cells | load password protected xlsx containing emoji using Aspose.Cells C# | verify workbook decryption after applying non‑ASCII password in Aspose.Cells | how to encrypt Excel workbook with special characters in password using Aspose.Cells .NET
-// Tags: unicode password encryption Aspose.Cells | load encrypted workbook with LoadOptions password | c# verify workbook decryption Aspose.Cells | excel file protection non-ascii password .NET | save encrypted xlsx using wb.Settings.Password
+// Title: Encrypt an Excel workbook with a Unicode (accented & emoji) password and verify decryption using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells encrypt Excel workbook with Unicode password C# | How to open a password‑protected .xlsx that contains an emoji using Aspose.Cells | Set workbook password with accented characters in Aspose.Cells .NET | Load encrypted Excel file with special‑character password via LoadOptions C# | Confirm decryption of a workbook after saving it with a non‑ASCII password in Aspose.Cells
+// Tags: non‑ASCII password workbook encryption Aspose.Cells | LoadOptions password for encrypted xlsx Aspose.Cells | verify workbook decryption Aspose.Cells .NET | protect Excel file using special‑character password .NET | emoji‑based password support Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The example creates a workbook, assigns a Unicode password (e.g., containing accented letters and an emoji) via wb.Settings.Password, saves it as an encrypted .xlsx file, then reloads it with LoadOptions.Password and checks that cell A1 still contains "Hello, World!" to confirm successful decryption.
+// The example creates a Workbook, writes data to cell A1, assigns a password containing accented letters and an emoji via wb.Settings.Password, saves the file as an encrypted .xlsx, then reloads it with a LoadOptions object that supplies the same Unicode password, and finally reads cell A1 to confirm successful decryption.
 class Program
 {
     static void Main()
     {
-        // Define a Unicode password
-        string unicodePassword = "Pässwörd🔐";
-
-        // -------------------------
-        // Create a new workbook
-        // -------------------------
+        // Create a new workbook and add some data.
         Workbook wb = new Workbook();
-
-        // Add some sample data to the first worksheet
         Worksheet sheet = wb.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello, World!");
-        sheet.Cells["A2"].PutValue(DateTime.Now);
+        sheet.Cells["A1"].PutValue("Hello, Unicode!");
 
-        // Set the password for encryption (Unicode supported)
-        wb.Settings.Password = unicodePassword;
+        // Set a password containing Unicode characters.
+        // Example password includes accented letters and an emoji.
+        wb.Settings.Password = "Päßwörd🔐";
 
-        // Save the encrypted workbook
+        // Save the encrypted workbook.
         string encryptedPath = "encrypted.xlsx";
         wb.Save(encryptedPath);
 
-        // -------------------------
-        // Load the workbook with the password
-        // -------------------------
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.Password = unicodePassword;
-
+        // Load the workbook using the same password.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+        {
+            Password = "Päßwörd🔐"
+        };
         Workbook loadedWb = new Workbook(encryptedPath, loadOptions);
 
-        // Verify that the data was decrypted correctly
-        Worksheet loadedSheet = loadedWb.Worksheets[0];
-        string cellValue = loadedSheet.Cells["A1"].StringValue;
-
-        if (cellValue == "Hello, World!")
-        {
-            Console.WriteLine("Workbook decrypted successfully with Unicode password.");
-        }
-        else
-        {
-            Console.WriteLine("Decryption failed or data corrupted.");
-        }
+        // Verify that the workbook was decrypted successfully.
+        string cellValue = loadedWb.Worksheets[0].Cells["A1"].StringValue;
+        Console.WriteLine("Decrypted cell A1 value: " + cellValue);
     }
 }

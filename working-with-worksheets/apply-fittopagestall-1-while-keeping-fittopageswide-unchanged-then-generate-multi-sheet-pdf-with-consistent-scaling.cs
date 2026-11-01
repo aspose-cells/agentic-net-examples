@@ -1,13 +1,14 @@
-// Title: Apply FitToPagesTall = 1 to all worksheets while keeping existing FitToPagesWide and export as a multi‑sheet PDF with Aspose.Cells for .NET
-// AI Prompts: Iterate through every worksheet, set the page setup's FitToPagesTall property to 1 without altering the width scaling, then save the workbook as a PDF. | Create a multi‑sheet PDF where each sheet is constrained to one page tall while preserving its original width scaling using Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# set each worksheet to fit one page tall keep current width scaling | export Excel workbook to PDF with uniform page‑height scaling across all sheets Aspose.Cells | retain original width scaling while setting page height to one page for all worksheets in .NET
-// Tags: fit page tall scaling Aspose.Cells | maintain existing width scaling Aspose.Cells | multi‑sheet PDF export C# Aspose.Cells | apply page setup to all worksheets Aspose.Cells
+// Title: Set FitToPagesTall = 1 while keeping FitToPagesWide default and export a multi‑sheet PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Configure each worksheet's PageSetup to set FitToPagesTall = 1, leave FitToPagesWide unchanged, and save the workbook as a multi‑sheet PDF using Aspose.Cells in C#. | Create a PDF where every sheet fits vertically on a single page while width scaling stays automatic by applying per‑sheet FitToPagesTall and using PdfSaveOptions with AllColumnsInOnePagePerSheet set to false.
+// Common Searches: Aspose.Cells C# set FitToPagesTall to 1 without changing FitToPagesWide for PDF export | How to export each Excel worksheet to a single‑page‑height PDF while preserving automatic width scaling | C# Aspose.Cells multi‑sheet PDF with vertical fit only per worksheet | PdfSaveOptions settings to respect worksheet FitToPagesTall in Aspose.Cells | FitToPagesTall 1 PDF conversion Aspose.Cells .NET example
+// Tags: page-setup vertical page fit per worksheet | maintain automatic width scaling during pdf export | multi-sheet pdf generation with per-sheet scaling | c# pdfsaveoptions allcolumnsononepagepersheet false | aspocells page-setup scaling example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// // Loads an Excel file, forces every worksheet to fit to a single page tall while preserving its existing width scaling, and saves the workbook as a multi‑sheet PDF.
+// The program loads input.xlsx, sets each worksheet's PageSetup.FitToPagesTall to 1 while leaving FitToPagesWide at its default, configures PdfSaveOptions to honor those per‑sheet settings, and saves the workbook as a multi‑sheet PDF (output.pdf) with consistent vertical scaling.
 class Program
 {
     static void Main()
@@ -17,7 +18,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
@@ -27,24 +28,24 @@ class Program
             // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Apply FitToPagesTall = 1 to every worksheet while preserving FitToPagesWide
+            // Apply FitToPagesTall = 1 to every worksheet while leaving FitToPagesWide unchanged
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 PageSetup pageSetup = sheet.PageSetup;
-
-                // Preserve the existing FitToPagesWide value (no change needed)
-                int currentFitWide = pageSetup.FitToPagesWide;
-
-                // Set FitToPagesTall to 1
-                pageSetup.FitToPagesTall = 1;
-
-                // Reassign FitToPagesWide to keep the original setting (optional)
-                pageSetup.FitToPagesWide = currentFitWide;
+                pageSetup.FitToPagesTall = 1; // Force each sheet to fit into one page vertically
+                // pageSetup.FitToPagesWide remains at its default (0) – automatic width scaling
             }
 
-            // Save the workbook as a multi‑sheet PDF with the applied scaling
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+            // Configure PDF save options to preserve the per‑sheet scaling settings
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                AllColumnsInOnePagePerSheet = false, // Respect each sheet's width setting
+                OnePagePerSheet = false               // Allow multiple pages per sheet if needed
+            };
+
+            // Save the workbook as a multi‑sheet PDF with consistent scaling
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

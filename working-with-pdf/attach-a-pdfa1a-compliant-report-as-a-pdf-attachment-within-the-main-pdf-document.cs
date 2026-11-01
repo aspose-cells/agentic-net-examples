@@ -1,54 +1,52 @@
-// Title: Attach a PDF/A‑1a compliant report as an OLE object to an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, reads a PDF/A‑1a file into a byte array, embeds it as an OLE object on the first worksheet, sets the object name and enables auto‑size, then saves the updated workbook. | Show how to verify the existence of the Excel and PDF files, handle possible exceptions, and configure OleObject properties (Name, IsAutoSize) when attaching a PDF report to a workbook with Aspose.Cells.
-// Common Searches: c# aspose.cells embed pdf/a-1a report as ole object in excel workbook | how to add pdf attachment to existing .xlsx using aspose.cells library | asp.net core load pdf file into byte array and insert as ole object in worksheet | aspose.cells example for embedding external pdf into first worksheet | error handling when embedding pdf as ole object with aspose.cells c#
-// Tags: pdf oleobject insertion aspose.cells c# | excel workbook pdf attachment aspose | configure oleobject name autosize aspose.cells | read pdf into byte array aspose.cells | save workbook with embedded pdf aspose
+// Title: How to embed a PDF/A‑1a report as an OLE object in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a PDF/A‑1a file and inserts it as an OLE object at a specified cell range in an existing .xlsx workbook. | Show how to add error handling for missing workbook or PDF files and set custom dimensions and a name for the embedded PDF OLE object using Aspose.Cells. | Demonstrate saving the workbook after embedding the PDF/A‑1a report and verifying that the OLE object appears correctly in Excel.
+// Common Searches: aspocells c# embed pdf a1a as ole object in existing workbook | how to attach a pdf file to an excel sheet using aspose.cells .net | set position and size of embedded pdf ole object in excel with c# | error handling for missing pdf or xlsx when embedding with aspose.cells | embed pdf/a-1a compliance report into excel using aspose.cells api
+// Tags: aspose.cells embed pdf oleobject | c# embed pdf/a-1a into xlsx | oleobject placement row column aspose.cells | excel workbook pdf attachment aspnet | aspose.cells error handling missing files
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // For OleObject
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-// The example checks that both the main Excel file and the PDF/A‑1a report exist, loads the workbook with Aspose.Cells, reads the PDF into a byte array, adds it as an OLE object to the first worksheet, sets the object's name and auto‑size property, and saves the workbook containing the embedded PDF.
-class PdfAttachmentExample
+// The example loads an existing Excel workbook, reads a PDF/A‑1a file into a byte array, adds it as an embedded OLE object at a defined row and column with custom dimensions and a name, handles missing file errors, and saves the workbook with the PDF attached.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string mainFilePath = "MainDocument.xlsx";
-            const string reportFilePath = "Report.pdf";
-            const string outputFilePath = "MainDocument_WithReport.xlsx";
+            // Paths for the main workbook and the PDF to embed
+            string mainWorkbookPath = "MainDocument.xlsx";
+            string pdfAttachmentPath = "Report_PDF_A1a.pdf";
 
-            // Verify that the main Excel file exists
-            if (!File.Exists(mainFilePath))
-                throw new FileNotFoundException($"The main Excel file '{mainFilePath}' was not found.");
+            // Verify that required files exist
+            if (!File.Exists(mainWorkbookPath))
+                throw new FileNotFoundException($"Main workbook not found: {mainWorkbookPath}");
+            if (!File.Exists(pdfAttachmentPath))
+                throw new FileNotFoundException($"Attachment PDF not found: {pdfAttachmentPath}");
 
-            // Verify that the PDF report exists
-            if (!File.Exists(reportFilePath))
-                throw new FileNotFoundException($"The PDF report file '{reportFilePath}' was not found.");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(mainWorkbookPath);
+            Worksheet sheet = workbook.Worksheets[0]; // use the first worksheet
 
-            // Load the main workbook
-            Workbook workbook = new Workbook(mainFilePath);
+            // Read the PDF file bytes
+            byte[] pdfData = File.ReadAllBytes(pdfAttachmentPath);
 
-            // Ensure there is at least one worksheet
-            if (workbook.Worksheets.Count == 0)
-                throw new InvalidOperationException("The workbook does not contain any worksheets.");
+            // Define placement for the embedded OLE object (row, column, height, width)
+            int row = 5;          // zero‑based row index
+            int column = 2;       // zero‑based column index
+            int height = 100;     // in pixels
+            int width = 100;      // in pixels
 
-            // Read PDF file into a byte array (required by OleObjects.Add)
-            byte[] pdfData = File.ReadAllBytes(reportFilePath);
+            // Add an embedded OLE object representing the PDF using the byte array
+            // Add returns the index of the newly added object
+            int oleIndex = sheet.OleObjects.Add(row, column, height, width, pdfData);
+            OleObject ole = sheet.OleObjects[oleIndex];
+            ole.Name = "PDF_A1a_Report";   // optional name for the OLE object
 
-            // Add the PDF as an OLE object to the first worksheet
-            // Parameters: upper-left row, column, height (pixels), width (pixels), byte[] data
-            int oleIndex = workbook.Worksheets[0].OleObjects.Add(0, 0, 100, 100, pdfData);
-
-            // Configure the OLE object (optional)
-            OleObject ole = workbook.Worksheets[0].OleObjects[oleIndex];
-            ole.Name = "Report.pdf";
-            ole.IsAutoSize = true; // Auto‑size to fit the cell
-
-            // Save the updated workbook with the embedded PDF
-            workbook.Save(outputFilePath);
-            Console.WriteLine($"Workbook saved successfully to '{outputFilePath}'.");
+            // Save the workbook with the embedded PDF
+            string outputPath = "MainDocument_WithAttachment.xlsx";
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {

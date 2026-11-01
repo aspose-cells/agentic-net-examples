@@ -1,57 +1,54 @@
-// Title: Unprotect a workbook’s structure, add a hidden sheet, and re‑protect it with a new password using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to remove existing workbook structure protection with a known password, add a concealed worksheet, and then protect the structure again using a different password. | Write C# code that loads or creates an Excel workbook, calls Workbook.Unprotect, creates a concealed worksheet, and applies Workbook.Protect with ProtectionType.Structure and a new password.
-// Common Searches: unprotect workbook structure and then hide a new sheet using Aspose.Cells in C# | protect only the workbook structure with a new password after adding a hidden sheet Aspose.Cells | hide a worksheet and set structure protection using Aspose.Cells .NET | change workbook protection password while keeping hidden sheets Aspose.Cells | unprotect workbook, add hidden sheet, re‑protect structure example Aspose.Cells
-// Tags: unprotect workbook structure Aspose.Cells | insert hidden sheet Aspose.Cells C# | protect workbook structure with new password Aspose.Cells | excel structure protection Aspose.Cells | hide worksheet programmatically Aspose.Cells
+// Title: How to unprotect an Excel workbook structure, insert a hidden worksheet, and re‑protect it with a new password using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# remove workbook structure protection and add a hidden sheet | C# code to unprotect an Excel file, hide a newly added worksheet, then protect the structure with a new password | programmatically change workbook protection password after inserting a hidden worksheet using Aspose.Cells | load existing XLSX, unprotect, add hidden worksheet, and protect structure with Aspose.Cells .NET | using Workbook.Unprotect and Workbook.Protect to modify Excel protection in C#
+// Tags: Workbook.Unprotect method Aspose.Cells | hidden worksheet insertion Aspose.Cells | Workbook.Protect structure password .NET | Excel workbook protection workflow Aspose.Cells | change workbook protection password C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing XLSX file, removes its workbook‑structure protection with the old password, adds a new hidden worksheet, then re‑applies structure protection using a new password, and saves the updated workbook.
+class WorkbookProtectionExample
 {
-    // C# example that unprotects an Excel workbook's structure with the current password, adds a hidden worksheet named "HiddenSheet", re‑applies structure protection using a new password, and saves the file as output.xlsx using Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string oldPassword = "oldPassword";   // replace with actual password if needed
+        const string newPassword = "newPassword";   // replace with desired password
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook. To load an existing file, uncomment the lines below
-                // string inputPath = "input.xlsx";
-                // Workbook workbook;
-                // if (File.Exists(inputPath))
-                // {
-                //     workbook = new Workbook(inputPath);
-                // }
-                // else
-                // {
-                //     Console.WriteLine($"Input file not found: {inputPath}");
-                //     return;
-                // }
-                Workbook workbook = new Workbook(); // create a new workbook
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-                // Unprotect the workbook structure if it is protected
-                // If the workbook is not protected, this call has no effect
-                workbook.Unprotect("CurrentPassword");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Add a new worksheet and hide it
-                int newSheetIndex = workbook.Worksheets.Add();
-                Worksheet newSheet = workbook.Worksheets[newSheetIndex];
-                newSheet.Name = "HiddenSheet";
-                newSheet.IsVisible = false; // hide the sheet
+            // Unprotect the workbook (removes all protection, including structure)
+            // If the workbook is not password‑protected, pass null or an empty string
+            workbook.Unprotect(string.IsNullOrEmpty(oldPassword) ? null : oldPassword);
 
-                // Protect only the workbook structure with a new password
-                workbook.Protect(ProtectionType.Structure, "NewPassword");
+            // Add a new worksheet
+            int newSheetIndex = workbook.Worksheets.Add();
 
-                // Save the workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Get reference to the newly added worksheet and hide it
+            Worksheet newSheet = workbook.Worksheets[newSheetIndex];
+            newSheet.IsVisible = false;
+
+            // Protect only the workbook structure with a new password
+            workbook.Protect(ProtectionType.Structure, newPassword);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

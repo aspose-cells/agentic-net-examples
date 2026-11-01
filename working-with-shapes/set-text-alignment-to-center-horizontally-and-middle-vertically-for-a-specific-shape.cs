@@ -1,7 +1,7 @@
-// Title: Center text horizontally and vertically in a specific shape using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, locate a shape by index or name, and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center with Aspose.Cells in C#. | Programmatically align the text inside a shape to the middle on both axes, then save the updated workbook using Aspose.Cells for .NET. | Retrieve the first shape on the first worksheet, apply centered alignment for both horizontal and vertical text, and write the changes to a new file with Aspose.Cells.
-// Common Searches: aspnet aspose.cells set shape text alignment to center | c# aspose.cells align shape text horizontally and vertically | how to center text inside an Excel shape using Aspose.Cells library | aspose.cells change text alignment of a shape programmatically | example code for TextHorizontalAlignment and TextVerticalAlignment in C#
-// Tags: Aspose.Cells shape alignment settings | Aspose.Cells shape text positioning | Excel shape formatting with Aspose | C# modify shape properties Aspose.Cells | Aspose.Cells text alignment API
+// Title: How to center text horizontally and vertically in a specific shape using Aspose.Cells for .NET (C#)
+// AI Prompts: Set both TextHorizontalAlignment and TextVerticalAlignment of a worksheet shape to Center with Aspose.Cells in C#. | Create a rectangle shape when none exists and then align its text to the middle horizontally and vertically using Aspose.Cells for .NET. | Update an existing shape's text alignment to center on both axes and save the workbook with the Aspose.Cells C# API.
+// Common Searches: Aspose.Cells C# align shape text to center horizontally and vertically | set text alignment for Excel shape using Aspose.Cells .NET | programmatically center text inside a shape in an Excel file with Aspose.Cells | C# Aspose.Cells example for TextHorizontalAlignment and TextVerticalAlignment | add rectangle shape if missing and center its text using Aspose.Cells
+// Tags: Aspose.Cells TextHorizontalAlignment | Aspose.Cells TextVerticalAlignment | shape text alignment Aspose.Cells | add rectangle shape Aspose.Cells | modify shape properties .NET | Excel shape alignment C#
 
 using System;
 using System.IO;
@@ -10,17 +10,17 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The program loads an existing Excel file, accesses the first shape on the first worksheet, sets its TextHorizontalAlignment and TextVerticalAlignment to Center, and saves the modified workbook to a new file.
+    // The example loads a workbook, ensures a shape exists (adding a rectangle if needed), sets the shape's TextHorizontalAlignment and TextVerticalAlignment properties to Center, and saves the updated file.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Verify that the input file exists to avoid FileNotFoundException
+                // Verify input file exists
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
@@ -29,21 +29,22 @@ namespace AsposeCellsExample
 
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                Shape shape;
 
-                // Ensure there is at least one shape in the worksheet
-                if (worksheet.Shapes.Count == 0)
+                // Ensure there is at least one shape; create one if none exist
+                if (sheet.Shapes.Count > 0)
                 {
-                    Console.WriteLine("No shapes found in the worksheet.");
-                    return;
+                    shape = sheet.Shapes[0];
+                }
+                else
+                {
+                    // Add a simple rectangle shape as a placeholder
+                    shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 30);
                 }
 
-                // Retrieve the first shape (or you could use a specific name)
-                Shape shape = worksheet.Shapes[0];
-
-                // Set horizontal and vertical text alignment to center
+                // Set text alignment to center both horizontally and vertically
                 shape.TextHorizontalAlignment = TextAlignmentType.Center;
                 shape.TextVerticalAlignment = TextAlignmentType.Center;
 
@@ -53,7 +54,6 @@ namespace AsposeCellsExample
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

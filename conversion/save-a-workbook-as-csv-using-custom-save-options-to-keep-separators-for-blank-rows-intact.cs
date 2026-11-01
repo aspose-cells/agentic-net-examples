@@ -1,36 +1,58 @@
-// Title: Save an Aspose.Cells workbook to CSV while preserving column separators for blank rows using TxtSaveOptions (C#)
-// AI Prompts: Write C# code that creates a Workbook, adds data with intentional empty rows, and saves it as a CSV using TxtSaveOptions with KeepSeparatorsForBlankRow enabled. | Show how to configure TxtSaveOptions for ASCII encoding, a comma delimiter, and blank‑row separator preservation when exporting to CSV with Aspose.Cells. | Demonstrate exporting an Aspose.Cells workbook to CSV while ensuring separator characters are written for rows that contain no data.
-// Common Searches: how to keep commas for empty rows when saving Excel to CSV with Aspose.Cells C# | Aspose.Cells TxtSaveOptions KeepSeparatorsForBlankRow C# example | save workbook as CSV preserving blank line delimiters Aspose.Cells | C# Aspose.Cells export CSV with custom separator and blank row handling
-// Tags: Aspose.Cells CSV export KeepSeparatorsForBlankRow | TxtSaveOptions custom CSV settings C# | preserve blank row separators Aspose.Cells | ASCII encoding CSV Aspose.Cells | export workbook to CSV blank rows
+// Title: Export an Aspose.Cells workbook to CSV in C# while preserving blank rows using TxtSaveOptions
+// Common Searches: C# Aspose.Cells export workbook to CSV keep blank rows | How to retain empty lines when saving Excel as CSV with Aspose.Cells | Using TxtSaveOptions to preserve blank rows in CSV output in C# | Aspose.Cells CSV save options for custom separator and empty rows | Exporting Excel to CSV with Aspose.Cells without removing blank rows
+// Tags: Aspose.Cells TxtSaveOptions CSV export | preserve empty rows CSV Aspose.Cells | custom CSV separator Aspose.Cells C# | export workbook to CSV with blank lines | C# Aspose.Cells save workbook as CSV
 
 using System;
-using System.Text;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, inserts values with intentional empty rows, configures TxtSaveOptions to use ASCII encoding, a comma delimiter, and KeepSeparatorsForBlankRow=true, then saves the workbook as output.csv.
-class SaveCsvWithBlankRowSeparators
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new Workbook, adds header and data rows with an intentional blank row, configures TxtSaveOptions for CSV format using a comma separator, ensures the output directory exists, saves the workbook to 'output.csv', and logs the file path while handling any exceptions.
+    class Program
     {
-        // Create a new workbook and get its cells collection
-        Workbook workbook = new Workbook();
-        Cells cells = workbook.Worksheets[0].Cells;
-
-        // Add data with intentional blank rows (rows 1 and 2 are left empty)
-        cells[0, 0].PutValue("a");
-        cells[0, 1].PutValue("b");
-        cells[3, 0].PutValue("c");
-        cells[4, 1].PutValue("d");
-
-        // Configure TxtSaveOptions to keep separators for blank rows
-        TxtSaveOptions saveOptions = new TxtSaveOptions
+        static void Main()
         {
-            Encoding = Encoding.ASCII,
-            Separator = ',',               // Use comma as CSV delimiter
-            KeepSeparatorsForBlankRow = true
-        };
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Save the workbook as CSV using the configured options
-        workbook.Save("output.csv", saveOptions);
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate data with a blank row between rows 2 and 4
+                sheet.Cells["A1"].PutValue("Header1");
+                sheet.Cells["B1"].PutValue("Header2");
+                sheet.Cells["A2"].PutValue("Row1Col1");
+                sheet.Cells["B2"].PutValue("Row1Col2");
+                // Row 3 is intentionally left blank
+                sheet.Cells["A4"].PutValue("Row2Col1");
+                sheet.Cells["B4"].PutValue("Row2Col2");
+
+                // Configure CSV save options (separator = comma)
+                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+                {
+                    Separator = ',' // Use comma as delimiter
+                };
+
+                // Define output file path and ensure directory exists
+                string outputPath = "output.csv";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as CSV using the custom options
+                workbook.Save(outputPath, csvOptions);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log any errors that occur during processing
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

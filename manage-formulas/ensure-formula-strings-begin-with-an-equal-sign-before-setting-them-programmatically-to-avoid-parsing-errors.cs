@@ -1,50 +1,33 @@
-// Title: Add a leading '=' to Excel formula strings before assigning them to cells with Aspose.Cells in C# to prevent parsing errors
-// AI Prompts: Write a C# utility method that checks a formula string and prepends an '=' if it is missing, then use it when setting Worksheet.Cells[].Formula with Aspose.Cells. | Refactor the example to automatically sanitize any formula input before assigning it to a cell, ensuring the workbook saves without formula parsing exceptions.
-// Common Searches: Aspose.Cells C# how to add missing equal sign to formula before setting cell value | prevent formula parsing error when using Worksheet.Cells[].Formula in Aspose.Cells | C# helper function to ensure Excel formulas start with '=' for Aspose.Cells workbooks
-// Tags: prepend equal sign to Excel formula Aspose.Cells | formula sanitization before setting cell C# | avoid formula parsing errors Aspose.Cells | validate Excel formula string Aspose.Cells | cell formula helper method C#
+// Title: Ensuring Excel formula strings start with '=' before assigning them with Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells add missing equal sign to formula before setting a cell | Why does Aspose.Cells throw a parsing error when a formula lacks the leading = sign | Programmatically validate that an Excel formula string begins with '=' using Aspose.Cells | How to automatically prepend '=' to formulas when using Aspose.Cells .NET | Set cell formula in Aspose.Cells without encountering an invalid formula error
+// Tags: prepend equal sign to Excel formula Aspose.Cells | validate formula starts with equals Aspose.Cells C# | handle missing leading equals in Aspose.Cells formula assignment | Excel formula parsing error Aspose.Cells | set cell formula programmatically Aspose.Cells .NET
 
 using Aspose.Cells;
-using System;
 
-// Demonstrates creating a workbook, trimming a raw formula, ensuring it begins with '=', assigning it to cell B1, and saving as output.xlsx using Aspose.Cells for .NET.
+// The example creates a workbook, checks a formula string for a leading '=', adds it if missing, assigns the corrected formula to cell B1, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook workbook = new Workbook();
+        var workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        var sheet = workbook.Worksheets[0];
 
-        // Example formula string that may be missing the leading equal sign
-        string rawFormula = "SUM(A1:A10)";
+        // Define the formula string (without leading equal sign)
+        string formula = "SUM(A1:A10)";
 
-        // Ensure the formula string starts with '=' to avoid parsing errors
-        string safeFormula = EnsureFormulaStartsWithEqual(rawFormula);
+        // Ensure the formula starts with an equal sign
+        if (!formula.StartsWith("="))
+        {
+            formula = "=" + formula;
+        }
 
         // Set the formula to cell B1
-        cells["B1"].Formula = safeFormula;
+        sheet.Cells["B1"].Formula = formula;
 
         // Save the workbook to a file
         workbook.Save("output.xlsx");
-    }
-
-    // Helper method to prepend '=' if it's not already present
-    static string EnsureFormulaStartsWithEqual(string formula)
-    {
-        if (string.IsNullOrWhiteSpace(formula))
-            return formula; // Return as is if null or empty
-
-        // Trim leading whitespace
-        string trimmed = formula.TrimStart();
-
-        // If the trimmed formula already starts with '=', return it unchanged
-        if (trimmed.StartsWith("="))
-            return trimmed;
-
-        // Otherwise, prepend '='
-        return "=" + trimmed;
     }
 }

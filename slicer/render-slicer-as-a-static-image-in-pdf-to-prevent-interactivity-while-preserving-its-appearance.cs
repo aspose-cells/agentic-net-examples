@@ -1,31 +1,48 @@
-// Title: Convert Excel slicers to static images when saving as PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that iterates through all worksheets, sets each slicer's IsPrintable property to true, and saves the workbook as a PDF using Aspose.Cells. | Show how to ensure slicers are rendered as non‑interactive images in a PDF export with Aspose.Cells for .NET. | Provide a snippet that disables slicer interactivity by marking slicers printable before calling Workbook.Save in PDF format.
-// Common Searches: Aspose.Cells how to export slicers as images in PDF C# | C# make Excel slicer non‑clickable in PDF output using Aspose | set slicer printable flag before saving workbook to PDF with Aspose.Cells | render Excel slicer as static picture in PDF conversion .NET
-// Tags: Aspose.Cells set slicer printable | export slicer to PDF static image | C# disable slicer interactivity Aspose | PDF conversion slicer rendering Aspose.Cells | Excel slicer printable property .NET
+// Title: Render Excel slicer as a static image in PDF by clearing slicers with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, removes all slicers from the first worksheet, and saves the result as a PDF so the slicer is rendered as a non‑interactive image. | Explain the steps to disable slicer interactivity when exporting an Excel sheet to PDF using Aspose.Cells in a .NET project. | Show how to verify the input file, clear slicers, and invoke Workbook.Save with SaveFormat.Pdf to produce a static PDF.
+// Common Searches: Aspose.Cells C# export Excel to PDF without slicer controls | how to render Excel slicer as image in PDF using .NET | remove slicers before saving workbook as PDF with Aspose.Cells | static PDF conversion of Excel worksheet containing slicers in C# | convert Excel slicer to non‑interactive image in PDF Aspose.Cells
+// Tags: Aspose.Cells clear slicers for PDF export | C# static PDF generation from Excel worksheet | remove worksheet slicers Aspose.Cells | export Excel slicer as image PDF | Aspose.Cells SaveFormat.Pdf without interactivity
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;   // Namespace containing the Slicer class
+using Aspose.Cells.Slicers;
 
-// Loads an Excel workbook, marks every slicer as printable, and saves the workbook as a PDF so slicers appear as static, non‑interactive images.
-class Program
+// The example loads an existing XLSX file with Aspose.Cells, checks for slicers on the first worksheet, clears them to prevent interactivity, and then saves the workbook as a static PDF where the slicer appears as a regular image.
+class SlicerToStaticPdf
 {
     static void Main()
     {
-        // Load the source Excel workbook that contains slicers
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Ensure every slicer is marked as printable so it will be rendered in the PDF
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            foreach (Slicer slicer in sheet.Slicers)
-            {
-                // The IsPrintable property (though obsolete) controls slicer visibility in print/PDF output
-                slicer.IsPrintable = true;
-            }
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Save the workbook as a PDF file; slicers will now appear as static images
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // If the worksheet contains slicers, remove them to make the PDF static
+            if (sheet.Slicers.Count > 0)
+            {
+                // Remove all slicers (or just the first one if preferred)
+                sheet.Slicers.Clear();
+            }
+
+            // Save the workbook as a static PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

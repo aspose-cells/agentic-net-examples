@@ -1,11 +1,11 @@
-// Title: Set columns A and B as repeating print titles in an Aspose.Cells worksheet using C#
-// AI Prompts: Generate C# code that configures Aspose.Cells PageSetup to repeat columns A and B as print titles on every printed page. | Show how to assign the PrintTitleColumns property to "$A:$B" and then save the workbook with Aspose.Cells. | Provide a complete example that creates a workbook, sets print title columns, and verifies the setting in C#.
-// Common Searches: asp.net aspose.cells set print title columns a:b | repeat first two columns on each printed page using Aspose.Cells C# | how to configure worksheet print titles programmatically in .NET | C# Aspose.Cells PageSetup PrintTitleColumns example | save Excel file after setting print title columns with Aspose.Cells
-// Tags: Aspose.Cells worksheet PrintTitleColumns property | C# repeat column headers on printed pages | Aspose.Cells PageSetup configuration for Excel export | set print titles for Excel workbook using .NET | save workbook after configuring print titles Aspose.Cells
+// Title: Set columns A and B as repeating print titles on each printed page with Aspose.Cells for .NET (C#)
+// AI Prompts: In C#, use Aspose.Cells to assign "$A:$B" to Worksheet.PageSetup.PrintTitleColumns and save the workbook as an XLSX file. | Create a workbook, access the first worksheet, configure it to repeat the first two columns on every printed page, then write the file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to repeat first two columns on printed pages | set print title columns A B using Aspose.Cells .NET | C# Aspose.Cells PageSetup PrintTitleColumns example code | repeat column headers on each sheet printout Aspose.Cells | configure worksheet print titles for columns in Aspose.Cells C#
+// Tags: Aspose.Cells PrintTitleColumns property | Aspose.Cells column header repetition | C# worksheet page setup print titles | Aspose.Cells set repeated columns A B | export workbook with print title columns Aspose.Cells
 
 using Aspose.Cells;
 
-// // Creates a new workbook, sets columns A and B as print title columns so they repeat on each printed page, and saves the file as PrintTitleColumns.xlsx.
+// The program creates a new workbook, accesses the first worksheet, sets the PrintTitleColumns property to "$A:$B" so columns A and B repeat on every printed page, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
@@ -13,13 +13,13 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet
+        // Get the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Set print title columns to columns A and B (repeated on each printed page)
+        // Set the print title columns to columns A and B (repeated column headers)
         sheet.PageSetup.PrintTitleColumns = "$A:$B";
 
-        // Save the workbook
-        workbook.Save("PrintTitleColumns.xlsx");
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

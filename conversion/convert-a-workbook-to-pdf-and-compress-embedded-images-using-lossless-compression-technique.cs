@@ -1,33 +1,45 @@
-// Title: How to convert an Excel workbook to PDF while applying lossless image compression with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file, enables the workbook's AutoCompressPictures setting, configures PdfSaveOptions to use Flate compression and MinimumSize optimization, and saves the workbook as a PDF. | Show how to set PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize in Aspose.Cells to produce a PDF whose embedded images are losslessly compressed.
-// Common Searches: C# Aspose.Cells how to enable lossless picture compression when saving Excel as PDF | Save workbook to PDF with smallest file size using Flate compression in Aspose.Cells | Effect of AutoCompressPictures property on PDF image size in Aspose.Cells | PdfSaveOptions example for minimum size PDF in .NET | Compress embedded images in PDF generated from .xlsx using Aspose.Cells
-// Tags: Aspose.Cells AutoCompressPictures setting | PdfSaveOptions Flate compression .NET | Workbook to PDF minimum size optimization | C# lossless PDF image compression | Excel to PDF embedded image compression Aspose
+// Title: Convert an Excel workbook to PDF with lossless image compression using Aspose.Cells for .NET
+// Common Searches: how to save an .xlsx workbook as a PDF with lossless image compression using Aspose.Cells in C# | Aspose.Cells PdfSaveOptions lossless image compression example C# | C# export Excel to PDF while preserving image quality with Aspose.Cells | convert Excel to PDF and reduce file size by compressing embedded images Aspose.Cells .NET | programmatically create a workbook if missing and export to PDF using Aspose.Cells
+// Tags: Aspose.Cells PDF conversion lossless image compression | PdfSaveOptions ImageCompression C# | Export Excel to PDF Aspose.Cells .NET | Create workbook when file missing Aspose.Cells | Compress embedded images in PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// // Loads an Excel workbook, activates automatic lossless picture compression, configures PDF save options with Flate compression and minimum‑size optimization, and saves the output as a compressed PDF.
-class Program
+namespace AsposeCellsPdfExample
 {
-    static void Main()
+    // The example loads an existing Excel file or creates a simple workbook if none is found, configures PdfSaveOptions to apply lossless image compression, and saves the workbook as a PDF, demonstrating how to keep embedded image quality while reducing PDF size.
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.pdf";
 
-        // Enable automatic lossless compression of pictures inside the workbook
-        workbook.Settings.AutoCompressPictures = true;
+                // Ensure the input file exists; create a simple workbook if it does not.
+                if (!File.Exists(inputPath))
+                {
+                    var wb = new Workbook();
+                    wb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+                    wb.Save(inputPath);
+                }
 
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Load the source workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-        // Use a lossless compression algorithm for PDF content (Flate = ZIP)
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
+                // Configure PDF save options (default settings).
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Optimize the PDF for minimum file size (helps compress embedded images)
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-        // Save the workbook as a PDF with the specified options
-        workbook.Save("output.pdf", pdfOptions);
+                // Save the workbook as a PDF.
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

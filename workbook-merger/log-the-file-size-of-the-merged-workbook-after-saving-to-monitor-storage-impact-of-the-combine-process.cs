@@ -1,63 +1,68 @@
-// Title: Merge multiple Excel workbooks with Aspose.Cells for .NET and log the saved file size
-// AI Prompts: Write C# code that uses Aspose.Cells to combine several .xlsx files and prints the byte size of the resulting file after saving. | Create a program that generates sample workbooks, merges them with Workbook.Combine, saves the merged workbook, and outputs the file length. | Show how to measure the storage impact of merging Excel files by retrieving the FileInfo.Length after calling Workbook.Save in C#.
-// Common Searches: C# Aspose.Cells combine two workbooks and get output file size | how to retrieve size of merged Excel file after using Workbook.Combine | Aspose.Cells .NET log file size after saving merged workbook | measure storage increase when merging multiple .xlsx files with Aspose.Cells | get byte count of saved workbook in C# Aspose.Cells
-// Tags: combine workbooks Aspose.Cells C# | retrieve saved workbook size .NET | measure merged Excel file size | Workbook.Combine storage impact | track file length after Aspose.Cells Save | monitor Excel merge file size
+// Title: Log the size of a merged Excel workbook after saving with Aspose.Cells for .NET
+// AI Prompts: Write C# code that merges two .xlsx workbooks using Aspose.Cells, saves the combined workbook, and prints the saved file size in bytes. | Show how to retrieve and log the file size of a workbook after calling Workbook.Save in a .NET console application with Aspose.Cells.
+// Common Searches: aspnet get file size after saving merged workbook with Aspose.Cells | c# log merged Excel file size after combining worksheets using Aspose.Cells | how to measure output size of merged workbook in Aspose.Cells .NET | retrieve byte length of saved workbook after Aspose.Cells Save method | monitor storage impact when merging multiple Excel files with Aspose.Cells
+// Tags: Aspose.Cells merge workbooks and log file size | C# retrieve workbook byte length after Save | measure Excel output size with Aspose.Cells | log merged workbook storage impact .NET | Aspose.Cells SaveFormat.Xlsx file size monitoring
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeAndLogSize
+// // Merges two Excel workbooks using Aspose.Cells, saves the result as 'MergedWorkbook.xlsx', and writes the resulting file size in bytes to the console.
+class Program
 {
-    // The example creates two sample Excel workbooks, merges them into a single workbook using Aspose.Cells' Combine method, saves the merged file, and then logs the saved file's size in bytes before cleaning up the temporary source files.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Prepare temporary files to be merged
-            string[] sourceFiles = { "Source1.xlsx", "Source2.xlsx" };
-            CreateSampleWorkbook(sourceFiles[0], "Data from source 1");
-            CreateSampleWorkbook(sourceFiles[1], "Data from source 2");
+            // Input workbook file paths
+            string path1 = "Workbook1.xlsx";
+            string path2 = "Workbook2.xlsx";
 
-            // Load the first workbook which will receive the others
-            Workbook mergedWorkbook = new Workbook(sourceFiles[0]);
-
-            // Load and combine the remaining workbooks
-            for (int i = 1; i < sourceFiles.Length; i++)
+            // Verify that the source files exist
+            if (!File.Exists(path1))
             {
-                Workbook wb = new Workbook(sourceFiles[i]);
-                mergedWorkbook.Combine(wb);
-                wb.Dispose();
+                Console.WriteLine($"File not found: {path1}");
+                return;
+            }
+            if (!File.Exists(path2))
+            {
+                Console.WriteLine($"File not found: {path2}");
+                return;
             }
 
-            // Define output path for the merged workbook
-            string mergedFilePath = "MergedResult.xlsx";
+            // Load the workbooks to be merged
+            Workbook wb1 = new Workbook(path1);
+            Workbook wb2 = new Workbook(path2);
 
-            // Save the merged workbook (uses the provided Save method)
-            mergedWorkbook.Save(mergedFilePath);
-            mergedWorkbook.Dispose();
+            // Create a new workbook that will contain the merged sheets
+            Workbook merged = new Workbook();
 
-            // Log the file size after saving
-            FileInfo info = new FileInfo(mergedFilePath);
-            Console.WriteLine($"Merged workbook saved to '{mergedFilePath}'.");
-            Console.WriteLine($"File size: {info.Length} bytes.");
+            // Remove the default empty worksheet created with a new workbook
+            merged.Worksheets.Clear();
 
-            // Clean up temporary source files
-            foreach (string file in sourceFiles)
+            // Copy all worksheets from the first workbook into the merged workbook
+            foreach (Worksheet ws in wb1.Worksheets)
             {
-                if (File.Exists(file))
-                    File.Delete(file);
+                merged.Worksheets.AddCopy(ws.Name);
             }
+
+            // Copy all worksheets from the second workbook into the merged workbook
+            foreach (Worksheet ws in wb2.Worksheets)
+            {
+                merged.Worksheets.AddCopy(ws.Name);
+            }
+
+            // Define the output file path and save the merged workbook
+            string outputPath = "MergedWorkbook.xlsx";
+            merged.Save(outputPath, SaveFormat.Xlsx);
+
+            // After saving, obtain and log the file size to monitor storage impact
+            FileInfo fileInfo = new FileInfo(outputPath);
+            Console.WriteLine($"Merged workbook size: {fileInfo.Length} bytes");
         }
-
-        // Helper to create a simple workbook with a single cell value and save it
-        private static void CreateSampleWorkbook(string filePath, string cellValue)
+        catch (Exception ex)
         {
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue(cellValue);
-            wb.Save(filePath);
-            wb.Dispose();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

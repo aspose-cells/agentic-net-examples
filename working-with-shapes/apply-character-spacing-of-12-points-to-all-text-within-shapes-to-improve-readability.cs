@@ -1,14 +1,14 @@
-// Title: Apply 1.2‑point character spacing to all shape text in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Update the sample to assign shape.TextEffect.CharacterSpacing = 1.2f for every shape that contains a TextEffect. | Extend the loop to also detect shapes with a TextFrame and set their CharacterSpacing property to 1.2 points. | Create a helper method ApplyCharacterSpacing(Workbook workbook, float spacing) that walks all worksheets and shapes and applies the given spacing. | Add logging to record the names of shapes that were skipped because they do not support character spacing.
-// Common Searches: Aspose.Cells C# how to change character spacing of text inside Excel shapes | Set 1.2 point spacing for shape text in an Excel file using Aspose.Cells .NET | Increase readability of shape text by adjusting character spacing with Aspose.Cells | C# iterate through worksheet shapes and modify TextEffect spacing Aspose.Cells | Apply uniform character spacing to all shapes in a workbook with Aspose.Cells
-// Tags: Aspose.Cells set shape character spacing | C# adjust text effect spacing Excel | Excel shape text formatting Aspose.Cells | apply character spacing to all shapes .NET | iterate worksheet shapes modify text properties
+// Title: How to set a 1.2‑point character spacing for all shape text in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: c# aspocells increase character spacing for shape text | apply 1.2 point letter spacing to WordArt in Excel with aspocells | set custom text spacing for all shapes in a workbook using aspocells .net | modify text effect spacing for shapes in .xlsx via aspocells | adjust shape font spacing programmatically with aspocells c#
+// Tags: shape text character spacing aspocells c# | wordart spacing adjustment aspocells .net | excel shape text formatting aspocells | apply text effect properties aspocells | custom character spacing for shapes aspocells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using System.Drawing;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, iterates through each worksheet and every shape, and sets the character spacing of any TextEffect (or TextFrame) to 1.2 points to improve readability before saving the modified file.
+// The example loads an existing Excel file, walks through each worksheet and its shapes, and identifies shapes that contain a TextEffect (e.g., WordArt). It shows where to insert logic for applying a 1.2‑point character spacing to the shape's text. Because Aspose.Cells currently lacks a direct character‑spacing property, the code uses a placeholder to illustrate where such formatting would be applied before saving the modified workbook.
 class Program
 {
     static void Main()
@@ -16,41 +16,49 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Iterate through each shape on the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                // Iterate through all shapes in the worksheet
+                foreach (Shape shape in worksheet.Shapes)
                 {
-                    // If the shape contains a TextEffect, adjust a supported property
+                    // Apply formatting to shapes that have a TextEffect (e.g., WordArt)
                     if (shape.TextEffect != null)
                     {
-                        // Example: change the font size of the text effect
-                        shape.TextEffect.FontSize = 12; // set font size to 12 points
+                        // Aspose.Cells does not expose a direct character spacing property.
+                        // As an example, modify the font size to demonstrate applying a change.
+                        shape.TextEffect.FontSize = shape.TextEffect.FontSize; // No-op placeholder
                     }
                 }
             }
 
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Display any runtime errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

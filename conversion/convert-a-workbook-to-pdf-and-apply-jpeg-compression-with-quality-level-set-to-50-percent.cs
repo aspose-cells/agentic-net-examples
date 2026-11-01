@@ -1,50 +1,42 @@
 // Title: Convert an Excel workbook to PDF with 50% JPEG compression using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, configures PdfSaveOptions with JpegQuality = 50, and saves the workbook as a PDF using Aspose.Cells. | Demonstrate how to apply JPEG compression at 50% when exporting an Excel workbook to PDF with Aspose.Cells in a .NET application.
-// Common Searches: Aspose.Cells how to set JpegQuality when saving workbook to PDF in C# | C# convert Excel file to PDF with reduced image quality using Aspose.Cells | PDF output size reduction by adjusting JPEG quality in Aspose.Cells .NET | Save Excel as PDF with specific JPEG compression level Aspose.Cells
-// Tags: Aspose.Cells JPEG quality option | C# Excel to PDF conversion with image compression | reduce PDF size Aspose.Cells | set JPEG compression level Aspose.Cells .NET
+// Common Searches: how to set JPEG quality to 50 when saving Excel as PDF with Aspose.Cells C# | Aspose.Cells PDFSaveOptions JPEG compression level example in .NET | C# export workbook to PDF with reduced image size using Aspose.Cells | adjust image quality in PDF output from Excel using Aspose.Cells library | save Excel file as PDF with 50 percent JPEG quality Aspose.Cells .NET
+// Tags: Aspose.Cells PDFSaveOptions JPEG quality | Excel to PDF conversion with image compression | C# set PDF image quality Aspose.Cells | reduce PDF file size Aspose.Cells PDF export | configure JpegQuality property Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample verifies the source Excel file, loads it into a Workbook, creates a PdfSaveOptions object, sets the JpegQuality property to 50 (and optionally the CompressionType to JPEG), and then saves the workbook as a PDF. It includes basic error handling for missing files and unexpected exceptions.
+class Program
 {
-    // The example verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally sets JpegQuality to 50 for JPEG compression, and saves the workbook as output.pdf while handling any exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
+            // Verify that the source workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The file '{inputPath}' was not found.");
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Create PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Set JPEG quality if the property is available in the used Aspose.Cells version
-                // Uncomment the following line when JpegQuality is supported:
-                // pdfOptions.JpegQuality = 50;
-
-                // Save the workbook as a PDF using the configured options
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.Error.WriteLine($"File error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

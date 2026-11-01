@@ -1,44 +1,41 @@
-// Title: How to embed an image from a file path into an Excel cell using Aspose.Cells smart markers in C#
-// AI Prompts: Write C# code that places a smart marker "&=Image" in a worksheet cell and uses WorkbookDesigner to replace it with an image loaded from a file path supplied in a DataTable. | Show how to bind a DataTable column that holds image file paths to a smart marker and generate an Excel workbook with those pictures inserted. | Modify the example to process multiple rows, inserting a different picture for each row using the same smart marker definition.
-// Common Searches: aspocells smart marker insert image from file path c# example | c# workbookdesigner replace smart marker with picture using datatable | how to bind image column to smart marker in aspocells | dynamic image insertion into excel using aspocells smart markers
-// Tags: Aspose.Cells WorkbookDesigner image smart marker | C# embed picture into Excel via smart marker | smart marker image file path binding | dynamic picture insertion Aspose.Cells | Excel generation with image column DataTable
+// Title: Insert an image into an Excel worksheet using Aspose.Cells smart markers with a file path in C#
+// AI Prompts: Generate C# code that places a smart marker '&=Image: {ImagePath}' in a cell, provides a DataTable containing the image file path, runs WorkbookDesigner.Process, and saves the workbook. | Demonstrate how to embed a local JPEG into an Excel cell by configuring a smart marker image placeholder and a data source with Aspose.Cells.
+// Common Searches: C# Aspose.Cells smart marker insert image from local file path | How to use WorkbookDesigner to embed pictures via smart markers | Aspose.Cells example populating Excel cell with image using a DataTable | Insert JPEG into Excel worksheet using smart marker placeholder in C#
+// Tags: Aspose.Cells WorkbookDesigner image smart marker | embed picture from file path Excel C# | smart marker image placeholder processing | populate Excel cell with image via data source | Aspose.Cells insert image using smart marker
 
 using System;
 using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartMarkerImageExample
+// The program creates a new workbook, adds a smart marker '&=Image: {ImagePath}' to cell A1, builds a DataTable with the image file path, sets it as the data source for WorkbookDesigner, processes the marker to embed the picture, and saves the result as Output.xlsx.
+class Program
 {
-    // The program creates a workbook, adds a smart marker "&=Image" to cell A1, supplies a DataTable with an "Image" column containing a file path, processes the marker with WorkbookDesigner, and saves the result as SmartMarkerImageOutput.xlsx, embedding the referenced picture into the worksheet.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Insert a smart marker that expects an image.
-            // The marker name "Image" will be matched with the column name in the data source.
-            sheet.Cells["A1"].PutValue("&=Image");
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Prepare a data source with a column named "Image" containing the file path.
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Image", typeof(string));
+        // Insert a smart marker that will be replaced by an image.
+        // The placeholder {ImagePath} will be filled with the file path of the picture.
+        sheet.Cells["A1"].PutValue("&=Image: {ImagePath}");
 
-            // Add a row with the image file path (adjust the path as needed).
-            DataRow row = dt.NewRow();
-            row["Image"] = "C:\\Images\\sample.jpg"; // Path to the image file
-            dt.Rows.Add(row);
+        // Prepare a data source containing the image file path.
+        DataTable dt = new DataTable("Images");
+        dt.Columns.Add("ImagePath", typeof(string));
+        // Add a row with the full path to the image file you want to embed.
+        dt.Rows.Add(@"C:\Images\sample1.jpg");
 
-            // Use WorkbookDesigner to process the smart marker.
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(dt);
-            designer.Process();
+        // Set the data source for the smart marker processor.
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource(dt);
 
-            // Save the resulting workbook.
-            workbook.Save("SmartMarkerImageOutput.xlsx");
-        }
+        // Process the smart markers – the image will be inserted into the cell.
+        designer.Process();
+
+        // Save the resulting workbook.
+        workbook.Save("Output.xlsx", SaveFormat.Xlsx);
     }
 }

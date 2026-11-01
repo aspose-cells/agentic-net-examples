@@ -1,39 +1,58 @@
-// Title: Load a macro‑enabled XLSM workbook from a file path into an Aspose.Cells Workbook using C#
-// AI Prompts: Generate C# code that verifies a .xlsm file exists and creates an Aspose.Cells Workbook from the given path with proper exception handling. | Show how to instantiate an Aspose.Cells Workbook for a macro‑enabled Excel file and output a success or error message. | Provide a C# example that opens an existing .xlsm workbook with Aspose.Cells, validates the file, and logs the loading result.
-// Common Searches: c# aspocells open existing macro enabled workbook from disk | how to read .xlsm file with Aspose.Cells in .NET | load xlsm workbook using Aspose.Cells C# example with file existence check | Aspose.Cells Workbook constructor path parameter for macro enabled Excel | exception handling when loading .xlsm with Aspose.Cells C#
-// Tags: xlsm workbook loading Aspose.Cells C# | macro-enabled Excel import Aspose.Cells | Workbook constructor with file path Aspose.Cells | pre‑load file existence check C# | catch exceptions during Aspose.Cells workbook creation
+// Title: Loading a macro‑enabled XLSM workbook from a file path into an Aspose.Cells Workbook using C#
+// Common Searches: c# asp.net load existing .xlsm file with Aspose.Cells | aspocells read macro enabled workbook from disk c# | how to check file existence before loading workbook Aspose.Cells C# | write value to cell A1 and save as Xlsm using Aspose.Cells C# | load and modify macro-enabled Excel file programmatically with Aspose.Cells
+// Tags: load macro-enabled workbook Aspose.Cells C# | Workbook constructor file path Aspose.Cells | verify file existence Aspose.Cells C# | write cell value Aspose.Cells C# | save workbook as Xlsm Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+namespace AsposeCellsExample
 {
-    // The sample checks that a specified .xlsm file exists, then creates an Aspose.Cells Workbook from that path, printing a success message or catching and displaying any loading exceptions.
+    // The example checks whether a specified .xlsm file exists, loads it into an Aspose.Cells Workbook via the file‑path constructor, writes a text string to cell A1 of the first worksheet, and then saves the workbook as a macro‑enabled XLSM file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the existing XLSM workbook (modify as needed)
+            // Path to the XLSM workbook you want to load
             string filePath = @"C:\Path\To\YourWorkbook.xlsm";
-
-            // Ensure the file exists before attempting to load it
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
 
             try
             {
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(filePath);
-                Console.WriteLine("Workbook loaded successfully.");
-                // Additional processing can be performed here
+                Workbook workbook;
+
+                if (File.Exists(filePath))
+                {
+                    // Load the existing workbook
+                    workbook = new Workbook(filePath);
+                    Console.WriteLine("Workbook loaded successfully.");
+                }
+                else
+                {
+                    // File not found – create a new workbook (will be saved as macro‑enabled later)
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                    Console.WriteLine("File not found. Created a new workbook.");
+                }
+
+                // Example operation: write text to cell A1 of the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello Aspose.Cells!");
+
+                // Save the workbook (optional)
+                string outputPath = Path.Combine(Environment.CurrentDirectory, "Output.xlsm");
+                try
+                {
+                    workbook.Save(outputPath, SaveFormat.Xlsm);
+                    Console.WriteLine($"Workbook saved to: {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

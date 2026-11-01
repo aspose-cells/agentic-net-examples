@@ -1,86 +1,106 @@
-// Title: How to add a custom data label to the highest value point in an Aspose.Cells column chart using C#
-// AI Prompts: Generate C# code that creates an Excel workbook with a column chart, finds the series point with the maximum value, and adds a data label showing "Peak: {value}" above that column using Aspose.Cells. | Show how to iterate through ChartPoint objects in Aspose.Cells to locate the peak value and configure its DataLabels properties (ShowValue, Position, Text) in C#. | Provide a complete Aspose.Cells example that saves an .xlsx file where only the highest column in a chart is highlighted with a custom label.
-// Common Searches: aspocells add label to highest point in column chart c# example | c# aspocells find max value in chart series and set data label | how to display custom text for peak column in Aspose.Cells chart | Aspose.Cells C# chart label only for maximum data point
-// Tags: Aspose.Cells add data label to chart point | C# locate maximum value in chart series | column chart peak label Aspose.Cells | custom label position above column | Excel chart customization using Aspose.Cells
+// Title: Highlight the peak point in an Excel chart with a red bold data label using Aspose.Cells for .NET
+// AI Prompts: Locate the maximum numeric value across all chart series and apply a red bold data label only to that point with Aspose.Cells. | Refactor the chart code so that data labels are shown solely for the highest data point instead of the entire series. | Change the data label appearance to use a red font and bold style for the peak point in an Excel chart via Aspose.Cells C#.
+// Common Searches: Aspose.Cells C# add data label to the highest point of a chart | how to show only the peak value label in an Excel chart using Aspose.Cells | set red bold data label for a specific chart point with Aspose.Cells .NET | find maximum series value and label it in an Aspose.Cells chart
+// Tags: add data label to peak chart point Aspose.Cells | customize data label font Aspose.Cells C# | find maximum value in chart series Aspose.Cells | highlight highest point Excel chart Aspose.Cells | set data label color red Aspose.Cells
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartPeakLabel
+// The program loads an Excel workbook, identifies the data point with the highest numeric value across all series in the first chart, enables a data label for that point with red bold font, and saves the updated workbook.
+class AddPeakDataLabel
 {
-    // Demonstrates creating a workbook, adding a column chart, programmatically finding the point with the highest Y value, applying a custom data label that reads "Peak: {value}" positioned above the column, and saving the workbook as an .xlsx file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Populate sample data (Category in column A, Values in column B)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["A5"].PutValue("Apr");
-                sheet.Cells["B2"].PutValue(15);
-                sheet.Cells["B3"].PutValue(42); // Highest value
-                sheet.Cells["B4"].PutValue(27);
-                sheet.Cells["B5"].PutValue(33);
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-                Chart chart = sheet.Charts[chartIndex];
+            // Ensure there is at least one chart on the first worksheet
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
+            }
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B5", true);          // Values
-                chart.NSeries.CategoryData = "A2:A5";     // Categories
+            Chart chart = sheet.Charts[0];
 
-                // Identify the point with the highest Y value in the first series
-                Series series = chart.NSeries[0];
-                ChartPoint highestPoint = null;
-                double maxY = double.MinValue;
+            // Variables to track the point with the highest value
+            int maxSeriesIndex = -1;
+            int maxPointIndex = -1;
+            double maxValue = double.MinValue;
 
-                foreach (ChartPoint point in series.Points)
+            // Scan all series to locate the peak value
+            for (int s = 0; s < chart.NSeries.Count; s++)
+            {
+                Series series = chart.NSeries[s];
+                object valuesObj = series.Values;
+                if (valuesObj == null) continue;
+
+                double[] values = null;
+
+                if (valuesObj is double[] dArr)
                 {
-                    // YValue is of type object; safely convert to double
-                    if (point.YValue != null && double.TryParse(point.YValue.ToString(), out double yValue))
+                    values = dArr;
+                }
+                else if (valuesObj is int[] iArr)
+                {
+                    values = new double[iArr.Length];
+                    for (int i = 0; i < iArr.Length; i++) values[i] = iArr[i];
+                }
+                else if (valuesObj is string[] sArr)
+                {
+                    values = new double[sArr.Length];
+                    for (int i = 0; i < sArr.Length; i++)
+                        double.TryParse(sArr[i], out values[i]);
+                }
+
+                if (values == null) continue;
+
+                for (int p = 0; p < values.Length; p++)
+                {
+                    double pointValue = values[p];
+                    if (pointValue > maxValue)
                     {
-                        if (yValue > maxY)
-                        {
-                            maxY = yValue;
-                            highestPoint = point;
-                        }
+                        maxValue = pointValue;
+                        maxSeriesIndex = s;
+                        maxPointIndex = p;
                     }
                 }
-
-                // If a highest point was found, enable its data label and customize it
-                if (highestPoint != null)
-                {
-                    // Show the value of the point
-                    highestPoint.DataLabels.ShowValue = true;
-
-                    // Position the label above the column (suitable for column charts)
-                    highestPoint.DataLabels.Position = LabelPositionType.Above;
-
-                    // Set custom text to highlight the peak
-                    highestPoint.DataLabels.Text = $"Peak: {maxY}";
-                }
-
-                // Save the workbook with the chart and highlighted peak label
-                string outputPath = "ChartWithPeakLabel.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception ex)
+
+            // Apply a data label to the series containing the peak point
+            if (maxSeriesIndex >= 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Series maxSeries = chart.NSeries[maxSeriesIndex];
+
+                // Show data labels for the series
+                maxSeries.DataLabels.ShowValue = true;
+                maxSeries.DataLabels.Font.Color = Color.Red;
+                maxSeries.DataLabels.Font.IsBold = true;
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

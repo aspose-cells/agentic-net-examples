@@ -1,62 +1,39 @@
-// Title: Split an Excel worksheet into four quadrants by freezing panes horizontally and vertically with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to create a workbook, populate cells, and freeze panes at a given row and column to produce four quadrants. | Demonstrate how to call Worksheet.FreezePanes to split a sheet both horizontally and vertically and then set the active pane. | Adjust the split row and column values in an Aspose.Cells example to customize the size and position of the quadrants.
-// Common Searches: Aspose.Cells C# freeze panes both rows and columns to create quadrant view | How to split an Excel worksheet into four panes using Aspose.Cells .NET | Set active pane after freezing rows and columns with Aspose.Cells | Example of Worksheet.FreezePanes for horizontal and vertical split in C# | Customize split positions for quadrants in Aspose.Cells workbook
-// Tags: Worksheet.FreezePanes Aspose.Cells C# | split worksheet quadrants Aspose.Cells | set active pane Excel Aspose.Cells | freeze panes horizontally and vertically .NET | programmatic quadrant layout Excel C#
+// Title: How to split an Excel worksheet into four quadrants by freezing panes horizontally and vertically using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that creates a new workbook, freezes panes after row 15 and column 8 to produce four quadrants, and saves the file as QuadrantView.xlsx. | Modify the sample to split the sheet at row 25 and column 12, then save the workbook as SplitQuadrants.xlsx. | Detail how the four arguments of Worksheet.FreezePanes determine the position of the frozen area for quadrant splitting.
+// Common Searches: Aspose.Cells C# how to freeze both rows and columns to get a quadrant layout | example code for dividing an Excel worksheet into four sections using FreezePanes in .NET | setting horizontal and vertical split points with Worksheet.FreezePanes Aspose.Cells | freeze first 10 rows and 5 columns in an Excel file using Aspose.Cells .NET | understanding FreezePanes parameters for creating pane quadrants in Excel
+// Tags: Worksheet.FreezePanes quadrant layout | Aspose.Cells pane splitting API | C# generate four quadrant Excel view | programmatic Excel pane split .NET | freeze pane configuration Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace SplitPaneExample
+// The example creates a new workbook, accesses the first worksheet, and calls Worksheet.FreezePanes to freeze the first 10 rows and 5 columns, thereby dividing the sheet into four quadrants. The workbook is saved as Quadrants.xlsx and the full output path is displayed.
+class Program
 {
-    // Creates a new workbook, fills a 20x10 range with sample data, freezes panes at row 10 and column 5 to divide the first worksheet into four quadrants, and saves the file as SplitPaneResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Fill some data to visualize the quadrants
-                for (int row = 0; row < 20; row++)
-                {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
+            // Freeze panes after row 10 and column 5 (zero‑based indices)
+            // totalRows = 10, totalColumns = 5 to freeze the first 10 rows and 5 columns
+            sheet.FreezePanes(10, 5, 10, 5);
 
-                // Define split positions (zero‑based)
-                int splitRow = 10;   // splits after row 10
-                int splitColumn = 5; // splits after column 5
+            // Define output file name
+            string outputPath = "Quadrants.xlsx";
 
-                // Split the worksheet and set the active pane.
-                // Using FreezePanes without PaneType for compatibility with all versions.
-                sheet.FreezePanes(splitRow, splitColumn, splitRow, splitColumn);
-
-                // Define output file path
-                string outputPath = "SplitPaneResult.xlsx";
-
-                // Ensure the directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

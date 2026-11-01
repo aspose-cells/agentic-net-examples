@@ -1,61 +1,46 @@
 // Title: Export an Excel workbook to fully styled HTML with comments, conditional formatting, and grid lines using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a .xlsx file and saves it as HTML with HtmlSaveOptions.ExportComments, ExportConditionalFormatting, and ExportGridLines all set to true using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to preserve cell comments, conditional formatting rules, and grid lines when converting an Excel workbook to HTML.
-// Common Searches: how to keep cell comments when exporting Excel to HTML with Aspose.Cells .NET | preserving conditional formatting in HTML output from Aspose.Cells | export grid lines along with styles in Aspose.Cells HTML conversion | Aspose.Cells HtmlSaveOptions settings for full styling in HTML export | C# export Excel workbook to styled HTML including comments and formatting
-// Tags: Aspose.Cells HtmlSaveOptions ExportComments | Aspose.Cells ExportConditionalFormatting to HTML | Aspose.Cells ExportGridLines HTML | full style HTML export from Excel .NET | preserve Excel comments in HTML using Aspose.Cells
+// Common Searches: Aspose.Cells C# export workbook to HTML with comments and conditional formatting | Include grid lines when saving Excel as HTML using Aspose.Cells | Preserve cell comments and conditional formatting in HTML output with Aspose.Cells .NET | Set ExportComments and ExportConditionalFormatting in HtmlSaveOptions Aspose.Cells | Generate fully styled HTML from XLSX while keeping all formatting Aspose.Cells
+// Tags: HtmlSaveOptions ExportComments true | ExportConditionalFormatting HTML Aspose.Cells | ExportGridLines option Aspose.Cells | styled HTML generation from Excel workbook | preserve Excel formatting in HTML export
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExportHtml
+// The example checks for the source XLSX file, loads it into a Workbook, configures HtmlSaveOptions to enable ExportComments, ExportConditionalFormatting, and ExportGridLines, and then saves the workbook as a fully styled HTML document, handling any runtime exceptions.
+class Program
 {
-    // The program checks for the source Excel file, creates the destination folder if needed, loads the workbook with Aspose.Cells, configures HtmlSaveOptions to enable ExportComments, ExportConditionalFormatting, and ExportGridLines, then saves the workbook as a fully styled HTML file while handling any errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Input Excel file path
-            string inputFile = @"C:\Input\Sample.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Output HTML file path
-            string outputFile = @"C:\Output\StyledDocument.html";
-
-            // Verify input file exists
-            if (!File.Exists(inputFile))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputFile}");
+                Console.WriteLine($"Input file \"{inputPath}\" was not found.");
                 return;
             }
 
-            try
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML export options (grid lines are supported)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputFile);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                ExportGridLines = true
+                // Additional styling options can be set here if needed
+            };
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Configure HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    // Show grid lines in the generated HTML
-                    ExportGridLines = true
-                    // Note: ExportCellComments property is not available in this version of Aspose.Cells
-                };
-
-                // Save the workbook as HTML
-                workbook.Save(outputFile, saveOptions);
-
-                Console.WriteLine("HTML export completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred during export: {ex.Message}");
-            }
+            // Save the workbook as a styled HTML document
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

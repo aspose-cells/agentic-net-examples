@@ -1,48 +1,48 @@
-// Title: Add a cumulative running‑total formula to each row of a financial worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that iterates over all data rows and writes a `=SUM($C$2:C{row})` formula into column D, then forces calculation. | Show how to modify the loop so the running total can start from any given row and column while keeping the workbook auto‑calculated. | Generate a reusable method that accepts a worksheet, start row, amount column index, and total column index, and inserts cumulative sum formulas using Aspose.Cells.
-// Common Searches: aspnet c# how to programmatically add a cumulative sum column with Aspose.Cells | Aspose.Cells loop to insert running total formula in Excel sheet | set SUM($C$2:Crow) formula for each row using Aspose.Cells .NET | auto calculate workbook after inserting formulas Aspose.Cells C# | change start row for running total column in Aspose.Cells example
-// Tags: insert cumulative sum formula Aspose.Cells | loop to set SUM formula column D C# | auto calculate workbook Aspose.Cells | financial worksheet running total automation | parameterized running total method Aspose.Cells
+// Title: How to add a cumulative running‑total column with a SUM formula loop using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells example to insert a running total formula in each row of an Excel sheet | loop through rows and set SUM($B$2:Brow) formula with Aspose.Cells .NET | create financial worksheet with cumulative totals using Aspose.Cells C# | automate running total column in Excel workbook via Aspose.Cells API | calculate running totals per row in Aspose.Cells workbook programmatically
+// Tags: Aspose.Cells cumulative sum loop | C# assign cell formula dynamically | Excel workbook SUM formula per row | financial sheet total calculation Aspose.Cells | programmatic formula insertion .NET
 
 using System;
 using Aspose.Cells;
 
-namespace FinancialRunningTotal
+// The C# program creates a new workbook, adds a "Financial" worksheet with Date, Amount, and Running Total headers, populates rows 2‑10 with dates and sample amounts, then iterates over each data row to assign a SUM($B$2:B{row}) formula in column C, recalculates the workbook, and saves it as FinancialRunningTotal.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, populating column C with sample amounts, looping through each data row to place a cumulative `=SUM($C$2:Crow)` formula in column D, triggering calculation, and saving the file as FinancialRunningTotal.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+
+        // Get the first worksheet and name it
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Financial";
+
+        // Add headers
+        sheet.Cells["A1"].PutValue("Date");
+        sheet.Cells["B1"].PutValue("Amount");
+        sheet.Cells["C1"].PutValue("Running Total");
+
+        // Populate sample data (rows 2 to 10)
+        for (int i = 2; i <= 10; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add a worksheet named "Financial"
-            Worksheet sheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            sheet.Name = "Financial";
-
-            // Example data: populate column C with some amounts starting from row 2
-            // (In a real scenario the data would already exist)
-            for (int i = 2; i <= 10; i++)
-            {
-                sheet.Cells[i, 2].PutValue(100 * i); // Column C (index 2)
-            }
-
-            // Insert running total formula in column D for each row
-            // Formula: =SUM($C$2:C2) -> cumulative sum up to the current row
-            for (int row = 2; row <= sheet.Cells.MaxDataRow; row++)
-            {
-                // Build the formula string with absolute reference to the start row
-                string formula = $"=SUM($C$2:C{row})";
-
-                // Place the formula in column D (index 3) of the current row
-                sheet.Cells[row, 3].Formula = formula;
-            }
-
-            // Auto-calculate the workbook to evaluate the formulas
-            workbook.CalculateFormula();
-
-            // Save the workbook to a file
-            workbook.Save("FinancialRunningTotal.xlsx");
+            // Date column (A)
+            sheet.Cells[i, 0].PutValue(DateTime.Today.AddDays(i - 2));
+            // Amount column (B) – example values
+            sheet.Cells[i, 1].PutValue(i * 100);
         }
+
+        // Insert running total formula in column C for each data row
+        // Formula for row r: =SUM($B$2:B{r})
+        for (int row = 2; row <= sheet.Cells.MaxDataRow; row++)
+        {
+            string formula = $"SUM($B$2:B{row})";
+            sheet.Cells[row, 2].Formula = formula;
+        }
+
+        // Recalculate all formulas so the running totals are evaluated
+        workbook.CalculateFormula();
+
+        // Save the workbook (lifecycle rule)
+        workbook.Save("FinancialRunningTotal.xlsx");
     }
 }

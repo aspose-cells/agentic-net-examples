@@ -1,50 +1,46 @@
-// Title: Export an Excel workbook containing #DIV/0! formulas to PDF in C# with Aspose.Cells while suppressing errors
-// AI Prompts: Write C# code that creates a worksheet, inserts a formula that results in a #DIV/0! error, verifies the error cell, and saves the workbook to PDF using PdfSaveOptions without raising exceptions. | Show how to configure Aspose.Cells PdfSaveOptions to ignore calculation errors during PDF conversion and produce a PDF file even when cells contain invalid formulas. | Adapt the example to log the address and value of cells that contain errors before exporting the workbook to PDF, ensuring the export proceeds without interruption.
-// Common Searches: Aspose.Cells C# export to PDF ignore #DIV/0! errors | How to save Excel workbook with formula errors as PDF using Aspose.Cells | PdfSaveOptions suppress calculation errors during PDF conversion Aspose.Cells | Export Excel file with invalid formulas to PDF without exception in .NET | C# Aspose.Cells ignore errors when converting workbook to PDF
-// Tags: Aspose.Cells PDF export error suppression | C# PdfSaveOptions calculation error handling | Aspose.Cells ignore formula errors during PDF conversion | Export workbook containing #DIV/0! to PDF | Aspose.Cells error‑tolerant PDF generation
+// Title: Export a C# Aspose.Cells workbook that contains a #DIV/0! formula to PDF without raising exceptions
+// AI Prompts: Write C# code that builds a workbook, inserts a division‑by‑zero formula, forces calculation, and saves it as a PDF using Aspose.Cells while guaranteeing no exception is thrown. | Demonstrate configuring PdfSaveOptions in Aspose.Cells for .NET to handle cells with formula errors during PDF generation. | Provide a pattern for catching and logging unexpected errors when converting an Excel file with #DIV/0! cells to PDF.
+// Common Searches: how to export an Excel file with #DIV/0! cells to PDF using Aspose.Cells .NET without errors | Aspose.Cells PdfSaveOptions ignore formula errors during PDF conversion | C# save workbook to PDF when worksheet contains division by zero errors | prevent exception on PDF export of Excel workbook that has invalid formulas in Aspose.Cells
+// Tags: Aspose.Cells PDF export formula errors | C# PdfSaveOptions suppress cell errors | export workbook with #DIV/0! to PDF | handle division by zero during PDF conversion | calculate formulas before PDF save Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The sample creates a workbook, places a formula that triggers a #DIV/0! error, confirms the error cell, and then saves the workbook as a PDF using PdfSaveOptions. The code demonstrates how to suppress calculation errors so the export completes without throwing exceptions.
+// The example creates a Workbook, adds a division‑by‑zero formula to generate a #DIV/0! error, forces calculation, verifies the error value, and then saves the workbook to a PDF file using PdfSaveOptions while ensuring that no exception is thrown during the export.
 class ExportIgnoreErrorsDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and access the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a formula that will cause a division by zero error (#DIV/0!)
-            Cell errorCell = sheet.Cells["A1"];
-            errorCell.Formula = "=10/0";
+            // Populate cells with data that will cause a formula error (#DIV/0!)
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(0);
+            sheet.Cells["B1"].Formula = "=A1/A2"; // Division by zero
 
             // Force calculation to generate the error in the cell
             workbook.CalculateFormula();
 
             // Verify that the cell indeed contains an error
-            if (errorCell.Type == CellValueType.IsError)
-            {
-                Console.WriteLine("Source cell contains an error as expected.");
-            }
-            else
-            {
-                Console.WriteLine("Unexpected: source cell does not contain an error.");
-            }
+            string errorValue = sheet.Cells["B1"].StringValue; // Should be "#DIV/0!"
+            Console.WriteLine($"Cell B1 value before export: {errorValue}");
 
-            // Prepare PDF save options (no special error‑ignoring flag is required)
+            // Set PDF save options (no IgnoreErrors property in current API)
             PdfSaveOptions saveOptions = new PdfSaveOptions();
 
             // Export the workbook to PDF
             workbook.Save("ExportedWithIgnoreErrors.pdf", saveOptions);
-            Console.WriteLine("Export completed successfully without throwing exceptions.");
+            Console.WriteLine("Export completed successfully.");
         }
         catch (Exception ex)
         {
-            // Any exception during processing will be reported here
-            Console.WriteLine("Operation failed with exception: " + ex.Message);
+            Console.WriteLine($"Operation failed: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,37 @@
-// Title: Identify and list worksheet names that contain QueryTables using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that opens a workbook, scans each worksheet, and prints the names of worksheets where the QueryTables collection is not empty. | Create a reusable method in C# that receives an Excel file path and returns a List<string> of worksheet names that have at least one QueryTable, using Aspose.Cells. | Adapt the example to write the identified worksheet names to a text file instead of the console, while still detecting QueryTables with Aspose.Cells.
-// Common Searches: aspnet c# how to get worksheet names that contain query tables with Aspose.Cells | list Excel sheets with data connections using Aspose.Cells .NET | retrieve names of worksheets that have query tables in a workbook via Aspose.Cells API | C# Aspose.Cells enumerate worksheets with QueryTable objects | find worksheets with external data connections in an Excel file using Aspose.Cells
-// Tags: Aspose.Cells detect QueryTables in worksheets | C# enumerate worksheets with data connections | list worksheet names containing QueryTable objects | Aspose.Cells workbook query table detection | retrieve worksheet names for external data sources .NET
+// Title: C# console utility that lists worksheet names containing query tables using Aspose.Cells
+// AI Prompts: Create a C# console application with Aspose.Cells that takes a workbook file path, scans each worksheet for QueryTables, and prints the names of worksheets that have at least one query table. | Generate C# code that loads an Excel workbook via Aspose.Cells, checks the QueryTables collection on every sheet, and outputs the sheet names where query tables are present.
+// Common Searches: how to list worksheets that contain query tables with Aspose.Cells in C# | C# Aspose.Cells example to find sheets having query tables | enumerate query tables per worksheet using Aspose.Cells .NET | retrieve names of Excel sheets with query tables via Aspose.Cells | Aspose.Cells C# code to detect worksheets with query tables
+// Tags: Aspose.Cells worksheet query table enumeration | C# query table presence check in Excel sheets | Aspose.Cells console utility for query table listing | Excel workbook analysis Aspose.Cells query tables | identify sheets with query tables using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The utility loads an Excel workbook supplied via command line, iterates through all worksheets, checks each sheet's QueryTables collection, outputs the names of sheets that contain at least one QueryTable, and saves the workbook unchanged.
-class Program
+// A C# console program that loads an Excel workbook with Aspose.Cells, iterates all worksheets, checks each sheet's QueryTables collection, and writes out the names of worksheets that contain one or more query tables.
+class QueryTableWorksheetLister
 {
     static void Main(string[] args)
     {
-        // Ensure a file path is provided
+        // Validate input arguments
         if (args.Length == 0)
         {
-            Console.WriteLine("Usage: Program <excel-file-path>");
+            Console.WriteLine("Usage: QueryTableWorksheetLister <input workbook path>");
             return;
         }
 
-        string filePath = args[0];
+        string workbookPath = args[0];
 
-        // Load the workbook (load rule)
-        Workbook workbook = new Workbook(filePath);
+        // Load the workbook (Aspose.Cells handles various formats)
+        Workbook workbook = new Workbook(workbookPath);
 
-        // Iterate over all worksheets in the workbook
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             // Check if the worksheet contains any query tables
-            if (sheet.QueryTables.Count > 0)
+            if (sheet.QueryTables != null && sheet.QueryTables.Count > 0)
             {
                 // Output the name of the worksheet that has query tables
-                Console.WriteLine($"Worksheet with QueryTable: {sheet.Name}");
+                Console.WriteLine(sheet.Name);
             }
         }
-
-        // Save the workbook (save rule) – no modifications are made, but rule compliance is kept
-        workbook.Save(filePath);
     }
 }

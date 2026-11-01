@@ -1,45 +1,49 @@
-// Title: Convert HTML from a Web URL to an XLSX Workbook Using Aspose.Cells and a MemoryStream in C#
-// AI Prompts: Write C# code that downloads an HTML page with HttpClient, loads the content into a MemoryStream, creates an Aspose.Cells Workbook via HtmlLoadOptions, and saves it as an .xlsx file. | Modify the example to accept the source URL and output file path as command‑line arguments, while still using a stream‑based conversion with Aspose.Cells. | Add comprehensive error handling for network failures, invalid HTML, and ensure all disposable objects are wrapped in using statements during the HTML‑to‑Excel conversion.
-// Common Searches: aspnet convert remote html page to excel workbook using aspose.cells | c# load html from url into workbook without saving temporary file | how to use HtmlLoadOptions with a memory stream in Aspose.Cells | download html with HttpClient and export to xlsx in .net core | stream based html to xlsx conversion using Aspose.Cells C# example
-// Tags: html to xlsx conversion using Aspose.Cells MemoryStream | load HTML stream into Aspose.Cells Workbook | Aspose.Cells HtmlLoadOptions with HttpClient | download web page as MemoryStream for Excel export | command line parameters for HTML to Excel conversion C#
+// Title: Convert HTML from a Web URL to an Excel workbook using Aspose.Cells and a MemoryStream in C#
+// AI Prompts: Write C# code that downloads an HTML page from a specified URL, loads it into an Aspose.Cells Workbook via a MemoryStream, and saves the workbook as an XLSX file. | Refactor the example to use async/await with HttpClient, accept the source URL and destination file path as parameters, and ensure all disposable objects are properly released. | Demonstrate how to configure LoadOptions for HTML format when creating a Workbook from a stream with Aspose.Cells.
+// Common Searches: how to load html from a url into Aspose.Cells workbook using memory stream c# | aspocells convert web page to excel file programmatically | c# download html content and save as xlsx with Aspose.Cells | using LoadOptions Html with Aspose.Cells to import html stream
+// Tags: Aspose.Cells HTML stream import to workbook | MemoryStream based HTML to XLSX conversion | C# HttpClient fetch HTML for Aspose.Cells processing | LoadOptions Html usage in Aspose.Cells | Save Aspose.Cells workbook in XLSX format
 
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample downloads HTML from a specified URL using HttpClient, copies it into a MemoryStream, loads it into an Aspose.Cells Workbook via HtmlLoadOptions, and saves the workbook as an XLSX file.
+// The sample program uses HttpClient to download HTML from a given URL, copies the response into a MemoryStream, loads the HTML into an Aspose.Cells Workbook with LoadOptions set to Html, and saves the workbook as an XLSX file.
 class Program
 {
-    static async Task Main(string[] args)
+    static void Main()
     {
+        const string htmlUrl = "https://example.com/sample.html";
+        const string outputPath = "ConvertedFromHtml.xlsx";
+
         try
         {
-            // URL of the HTML page to convert
-            const string url = "https://example.com/sample.html";
-
-            // Download the HTML content into a memory stream
-            using (HttpClient httpClient = new HttpClient())
-            using (Stream remoteStream = await httpClient.GetStreamAsync(url))
-            using (MemoryStream htmlMemory = new MemoryStream())
+            // Download HTML content from the URL
+            using (HttpClient client = new HttpClient())
             {
-                await remoteStream.CopyToAsync(htmlMemory);
-                htmlMemory.Position = 0; // reset to beginning for reading
+                HttpResponseMessage response = client.GetAsync(htmlUrl).Result;
+                response.EnsureSuccessStatusCode();
 
-                // Load the HTML into an Aspose.Cells workbook directly from the stream
-                var loadOptions = new HtmlLoadOptions(); // default loading options
-                Workbook workbook = new Workbook(htmlMemory, loadOptions);
+                using (MemoryStream htmlStream = new MemoryStream())
+                {
+                    // Copy response content to a memory stream
+                    response.Content.CopyToAsync(htmlStream).Wait();
+                    htmlStream.Position = 0; // Reset stream position for reading
 
-                // Save the workbook as an Excel file
-                const string outputPath = "ConvertedFromHtml.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                    // Load the HTML into a workbook
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                    using (Workbook workbook = new Workbook(htmlStream, loadOptions))
+                    {
+                        // Save the workbook as an Excel file
+                        workbook.Save(outputPath, SaveFormat.Xlsx);
+                        Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                    }
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

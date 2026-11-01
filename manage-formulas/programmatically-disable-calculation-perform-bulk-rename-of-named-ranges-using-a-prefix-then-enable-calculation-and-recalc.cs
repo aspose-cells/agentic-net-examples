@@ -1,13 +1,12 @@
-// Title: Disable Calculation, Bulk‑Rename All Defined Names with a Prefix, and Recalculate Formulas in an Excel Workbook Using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to suspend automatic calculation, loop through the workbook's NameCollection, create new defined names prefixed with a given string, copy each name's RefersTo, visibility, and comment, delete the original name, then resume calculation and recalculate all formulas. | Show how to safely add a prefix to every named range in an XLSX file with Aspose.Cells while preventing intermediate formula evaluation, and then force a full formula recalculation after the renaming.
-// Common Searches: aspocells c# how to rename all named ranges with a prefix and recalculate formulas | disable automatic calculation while updating defined names in Aspose.Cells | bulk rename Excel defined names using Aspose.Cells .NET and recalc workbook | add prefix to every name in workbook and force formula recalculation Aspose.Cells | C# Aspose.Cells rename NameCollection items without triggering calculation
-// Tags: suspend calculation Aspose.Cells | bulk rename defined names .NET | add prefix to named ranges Aspose.Cells | recalculate formulas after name changes | iterate NameCollection backwards C#
+// Title: Rename all named ranges with a prefix and recalculate formulas in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to prepend a prefix to every named range in an Excel workbook using Aspose.Cells C# | Aspose.Cells example for bulk renaming named ranges and recalculating formulas | C# code to rename Excel named ranges with a custom prefix and trigger full calculation | temporarily suspend automatic calculation while updating named ranges with Aspose.Cells
+// Tags: rename named ranges Aspose.Cells | prepend prefix to Excel named ranges C# | bulk named range rename Aspose.Cells | force formula recalculation Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program loads an XLSX workbook with Aspose.Cells, suspends automatic calculation, iterates the NameCollection in reverse, creates new names prefixed with a specified string while copying RefersTo, visibility, and comment, removes the original names, then calls CalculateFormula to recompute all formulas before saving the updated file.
+// The sample loads an Excel file with Aspose.Cells, iterates through all defined names, adds a specified prefix to each named range, forces a full formula recalculation, and saves the updated workbook.
 class Program
 {
     static void Main()
@@ -17,52 +16,37 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Prefix to add to each defined name
-            const string prefix = "New_";
+            // Prefix to add to each named range
+            string prefix = "New_";
 
-            // Get the collection of defined names
-            NameCollection names = workbook.Worksheets.Names;
+            // Retrieve all named ranges in the workbook
+            NameCollection namedRanges = workbook.Worksheets.Names;
 
-            // Rename each defined name by creating a new one with the prefix
-            // and removing the original.
-            for (int i = names.Count - 1; i >= 0; i--)
+            // Rename each named range by adding the prefix
+            foreach (Name name in namedRanges)
             {
                 try
                 {
-                    // Existing name object
-                    Aspose.Cells.Name oldName = names[i];
-                    // The actual name string is stored in the Text property
-                    string newNameStr = prefix + oldName.Text;
-
-                    // Add a new name and obtain its index
-                    int newIndex = names.Add(newNameStr);
-                    Aspose.Cells.Name newName = names[newIndex];
-
-                    // Copy properties from the old name
-                    newName.RefersTo = oldName.RefersTo;
-                    newName.IsVisible = oldName.IsVisible;
-                    newName.Comment = oldName.Comment;
-
-                    // Remove the old name
-                    names.RemoveAt(i);
+                    string originalName = name.Text;
+                    name.Text = prefix + originalName;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to rename a defined name at index {i}: {ex.Message}");
+                    Console.WriteLine($"Failed to rename range '{name.Text}': {ex.Message}");
                 }
             }
 
-            // Recalculate all formulas
+            // Force a full recalculation of all formulas
             workbook.CalculateFormula();
 
             // Ensure the output directory exists
@@ -74,11 +58,11 @@ class Program
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

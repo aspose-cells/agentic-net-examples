@@ -1,50 +1,51 @@
-// Title: How to set the PDF title metadata from an Excel workbook name using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, extracts the file name without its extension, assigns that value to the workbook's title property, and saves the workbook as a PDF. | Demonstrate how to configure PdfSaveOptions and set the built‑in document title before exporting a Workbook to PDF so the resulting file inherits the original Excel filename as its title.
-// Common Searches: Aspose.Cells C# set PDF document title to Excel file name during conversion | How to copy workbook filename into PDF Title metadata with Aspose.Cells | Saving Excel as PDF with custom Title property using Aspose.Cells .NET | Set built‑in document property title before exporting workbook to PDF in C#
-// Tags: Aspose.Cells set PDF document title | C# set workbook title property | Excel filename to PDF metadata conversion | PdfSaveOptions custom document properties | Extract workbook name for PDF title
+// Title: Set the PDF Title metadata to the Excel workbook name when converting to PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, extracts the file name without extension, assigns it to the workbook's BuiltInDocumentProperties.Title, and saves the workbook as a PDF. | Show how to configure Aspose.Cells PdfSaveOptions to retain built‑in document properties while exporting an Excel workbook to PDF in a .NET project. | Provide a robust C# example that verifies the source Excel file exists, sets the PDF title metadata, and implements exception handling for the conversion process.
+// Common Searches: aspocells c# set pdf title from excel filename during conversion | how to preserve document properties when exporting Excel to PDF with Aspose.Cells | C# example for assigning BuiltInDocumentProperties.Title before saving as PDF | error handling for missing input.xlsx in Aspose.Cells PDF export
+// Tags: aspocells pdf title builtindocumentproperties | excel to pdf conversion metadata c# | pdfsaveoptions preserve document properties aspocells | set pdf document title from workbook name aspocells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+namespace AsposeCellsPdfExport
 {
-    // The example checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, derives the file name without extension, assigns this string to the workbook's built‑in Title property, and then saves the workbook as output.pdf using PdfSaveOptions, resulting in a PDF whose Title metadata matches the original Excel file name.
+    // The program loads 'input.xlsx', extracts its filename without the extension, assigns that value to the workbook's BuiltInDocumentProperties.Title, and saves the workbook as 'output.pdf' using Aspose.Cells, with basic error handling for missing files.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            string excelFilePath = "input.xlsx";
-
-            // Verify that the input Excel file exists
-            if (!File.Exists(excelFilePath))
-            {
-                Console.WriteLine($"Error: Excel file not found at path '{excelFilePath}'.");
-                return;
-            }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
             try
             {
+                // Verify that the input Excel file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
+
                 // Load the original Excel workbook
-                Workbook workbook = new Workbook(excelFilePath);
+                var workbook = new Workbook(inputPath);
 
-                // Derive the title from the workbook file name (without extension)
-                string pdfTitle = Path.GetFileNameWithoutExtension(excelFilePath);
+                // Extract the workbook name without extension to use as PDF title
+                string pdfTitle = Path.GetFileNameWithoutExtension(inputPath);
 
-                // Set PDF title metadata via built‑in document properties
+                // Set the PDF title via built‑in document properties
                 workbook.BuiltInDocumentProperties.Title = pdfTitle;
 
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Configure PDF save options (default options are sufficient here)
+                var pdfOptions = new PdfSaveOptions();
 
-                // Save the workbook as a PDF with the specified options
-                string pdfFilePath = "output.pdf";
-                workbook.Save(pdfFilePath, pdfOptions);
+                // Save the workbook as PDF with the specified title metadata
+                workbook.Save(outputPath, pdfOptions);
 
-                Console.WriteLine($"PDF saved successfully to '{pdfFilePath}'.");
+                Console.WriteLine($"PDF file '{outputPath}' has been created successfully.");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

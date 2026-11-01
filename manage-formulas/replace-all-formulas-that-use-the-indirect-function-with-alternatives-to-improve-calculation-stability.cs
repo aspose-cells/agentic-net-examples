@@ -1,89 +1,96 @@
-// Title: Replace simple INDIRECT formulas with direct cell references in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, scans all worksheets, and substitutes any INDIRECT("A1") or INDIRECT("Sheet1!B2") formulas with the equivalent direct reference. | Write a method that uses a regular expression to locate INDIRECT calls in cell formulas, rewrites them to plain references, and saves the updated workbook to a new path.
-// Common Searches: how to eliminate INDIRECT function from formulas with Aspose.Cells C# | Aspose.Cells replace indirect references in bulk across worksheets | C# code to convert INDIRECT formulas to direct cell addresses in Excel files | improve Excel calculation performance by removing INDIRECT using .NET library | regex based formula cleanup Aspose.Cells example
-// Tags: replace indirect formulas Aspose.Cells | direct cell reference conversion .NET | regex formula transformation Aspose.Cells | bulk worksheet formula editing C# | calculation stability improvement Excel .NET
+// Title: C# example: replace INDIRECT formulas with direct cell references in an Excel workbook using Aspose.Cells
+// Common Searches: how to replace INDIRECT function with direct cell reference in C# using Aspose.Cells | Aspose.Cells C# replace INDIRECT formulas for calculation stability | regex based formula modification in Excel workbooks with Aspose.Cells | load password protected Excel file and edit formulas using Aspose.Cells C# | convert dynamic INDIRECT references to static addresses with Aspose.Cells API
+// Tags: replace indirect formulas Aspose.Cells C# | direct cell reference conversion Aspose.Cells | regex formula editing Aspose.Cells | password protected workbook loading Aspose.Cells | save modified workbook Aspose.Cells | excel calculation stability Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, iterates through each worksheet and used cells, detects formulas containing the INDIRECT function, and uses a regular expression to replace simple INDIRECT("A1") or INDIRECT("Sheet1!B2") calls with the raw cell reference. Modified formulas are written back to the cells, and the workbook is saved to a new file, improving calculation stability.
-class ReplaceIndirectFormulas
+namespace ReplaceIndirectFormulasApp
 {
-    static void Main()
+    // The sample loads an Excel workbook (prompting for a password when required), iterates through all worksheets, detects cells that contain the INDIRECT function, uses a regular expression to replace the INDIRECT call with the actual cell address, updates the formula, and saves the modified workbook to a new file.
+    class ReplaceIndirectFormulas
     {
-        try
+        static void Main()
         {
-            // Input workbook path – adjust as needed
-            string inputPath = @"C:\Path\To\InputWorkbook.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify the input file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = null;
 
-            // Regex to capture simple INDIRECT references like INDIRECT("A1") or INDIRECT("Sheet1!B2")
-            Regex indirectPattern = new Regex(@"INDIRECT\(\s*""([^""]+)""\s*\)", RegexOptions.IgnoreCase);
+            // Attempt to load workbook; if password is required, prompt the user
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                // Simple detection of password protection based on exception message
+                if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine("The workbook is password protected. Please provide a password.");
+                    Console.Write("Password: ");
+                    string pwd = Console.ReadLine();
 
-            // Iterate through all worksheets
+                    try
+                    {
+                        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = pwd };
+                        workbook = new Workbook(inputPath, loadOptions);
+                    }
+                    catch (Exception innerEx)
+                    {
+                        Console.WriteLine($"Failed to load workbook with provided password: {innerEx.Message}");
+                        return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error loading workbook: {ex.Message}");
+                    return;
+                }
+            }
+
+            // Regex to match simple INDIRECT formulas
+            Regex indirectRegex = new Regex(
+                @"INDIRECT\(\s*(?:""(?<addr>[^""]+)""|(?<addr>[A-Za-z]+\d+))\s*\)",
+                RegexOptions.IgnoreCase);
+
+            // Iterate through worksheets and replace INDIRECT formulas
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
-
-                // Iterate over used cells only for better performance
                 foreach (Cell cell in cells)
                 {
-                    // Process cells that contain a formula
-                    if (cell.IsFormula)
+                    if (cell.IsFormula && cell.Formula.IndexOf("INDIRECT", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string formula = cell.Formula;
-
-                        // Quick check for the presence of INDIRECT
-                        if (formula.IndexOf("INDIRECT", StringComparison.OrdinalIgnoreCase) >= 0)
+                        string originalFormula = cell.Formula;
+                        string newFormula = indirectRegex.Replace(originalFormula, m => m.Groups["addr"].Value);
+                        if (!newFormula.Equals(originalFormula, StringComparison.Ordinal))
                         {
-                            // Replace simple INDIRECT calls with direct references
-                            string newFormula = indirectPattern.Replace(formula, match =>
-                            {
-                                // Extract the inner reference (e.g., A1 or Sheet1!B2)
-                                string innerReference = match.Groups[1].Value;
-                                // Return the direct reference without the INDIRECT wrapper
-                                return innerReference;
-                            });
-
-                            // Update the cell only if a change occurred
-                            if (!newFormula.Equals(formula, StringComparison.Ordinal))
-                            {
-                                cell.Formula = newFormula;
-                            }
+                            cell.Formula = newFormula;
                         }
                     }
                 }
             }
 
-            // Output workbook path – adjust as needed
-            string outputPath = @"C:\Path\To\OutputWorkbook.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
         }
     }
 }

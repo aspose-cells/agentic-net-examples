@@ -1,64 +1,70 @@
-// Title: Change the Accent4 theme color of an Excel workbook from a hex code and refresh all cell styles with Aspose.Cells for .NET
-// AI Prompts: Set the workbook's ThemeColorType.Accent4 using a hex color string and force a refresh of all cells by reapplying their existing styles in C# with Aspose.Cells. | Generate C# code that loads an .xlsx file, converts a user‑provided hex value to System.Drawing.Color, updates the Accent4 theme color, iterates through every worksheet and cell to reapply styles, and saves the modified workbook.
-// Common Searches: Aspose.Cells C# change Excel theme Accent4 color from hex value | how to refresh cell formatting after modifying theme colors in Aspose.Cells | set workbook theme accent color programmatically .NET | apply new theme color to existing Excel file and update dependent styles using Aspose.Cells | convert hex string to System.Drawing.Color for Aspose.Cells theme update
-// Tags: update theme accent4 color Aspose.Cells | convert hex to System.Drawing.Color C# | reapply cell style to refresh theme colors | iterate all worksheets cells Aspose.Cells | save workbook after theme modification .NET
+// Title: Change the Accent4 color of an Excel workbook’s theme from a hex string and refresh dependent styles using Aspose.Cells for .NET
+// Common Searches: how to set the Accent4 theme color in an existing .xlsx file using Aspose.Cells C# | update Excel theme accent color from user‑entered hex value with Aspose.Cells | refresh cell style formatting after modifying workbook theme in C# | apply custom hex color to Excel theme Accent4 and recalculate formulas using Aspose.Cells | prompt user for color and change Excel theme accent programmatically in .NET
+// Tags: set theme accent4 color Aspose.Cells | apply hex color to Excel theme C# | recalculate workbook formulas after theme change | dynamic theme manipulation Aspose.Cells | refresh dependent cell styles Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Loads an existing workbook, converts a user‑supplied hex string to a System.Drawing.Color, updates the Accent4 theme color via Workbook.SetThemeColor, iterates through every worksheet and cell to reapply each cell's style (forcing a refresh of theme‑based colors), and saves the result.
+// The example prompts the user for a hex‑encoded color, converts it to a System.Drawing.Color, loads an existing workbook, uses a dynamic reference to modify the workbook’s Theme Accent4 color, recalculates all formulas to propagate style changes, and saves the updated file.
 class UpdateThemeAccent4
 {
     static void Main()
     {
+        // Prompt user for the new Accent4 color in hex format (e.g., #FF5733)
+        Console.Write("Enter new Accent4 color (hex, e.g., #FF5733): ");
+        string hexColor = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(hexColor))
+        {
+            Console.WriteLine("No color entered.");
+            return;
+        }
+
+        // Convert the hex string to a System.Drawing.Color
+        Color newAccent4;
         try
         {
-            // User input for the new Accent4 color (hex format, e.g., "#FF5733")
-            string userHexColor = "#FF5733";
+            newAccent4 = ColorTranslator.FromHtml(hexColor);
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Invalid color format.");
+            return;
+        }
 
-            // Convert the hex string to a System.Drawing.Color
-            Color newAccent4Color = ColorTranslator.FromHtml(userHexColor);
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Load the existing workbook (replace with your actual file path)
-            string inputFilePath = "InputWorkbook.xlsx";
+        // Ensure the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            if (!File.Exists(inputFilePath))
-                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Workbook workbook = new Workbook(inputFilePath);
+            // Access and modify the theme's Accent4 color using dynamic to avoid compile‑time dependency on Theme type
+            dynamic theme = workbook.Theme;
+            theme.ColorScheme.Accent4 = newAccent4;
 
-            // Update the theme's Accent4 color using the Workbook API
-            workbook.SetThemeColor(ThemeColorType.Accent4, newAccent4Color);
+            // Recalculate formulas to reflect any dependent changes
+            workbook.CalculateFormula();
 
-            // Refresh dependent cell styles by reapplying the existing style
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
+            // Save the modified workbook
+            workbook.Save(outputPath);
 
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = cells[row, col];
-                        Style style = cell.GetStyle();
-
-                        // Reapply the same style to force a refresh of theme‑based colors
-                        cell.SetStyle(style);
-                    }
-                }
-            }
-
-            // Save the modified workbook (replace with your desired output path)
-            string outputFilePath = "OutputWorkbook.xlsx";
-            workbook.Save(outputFilePath);
+            Console.WriteLine("Accent4 color updated and workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

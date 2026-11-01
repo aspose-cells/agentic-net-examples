@@ -1,61 +1,68 @@
-// Title: Add a drop‑down list to cell O1 that references a lookup table on a separate worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a 'Lookup' worksheet, fills A1:A5 with options, and adds a list‑type data validation to cell O1 on the main sheet referencing that range. | Generate a complete Aspose.Cells program that builds a lookup sheet, applies a dropdown validation to a specific cell, and saves the workbook as an Excel file.
-// Common Searches: asp.net cells add data validation list referencing another worksheet c# | c# aspose.cells create dropdown list in cell O1 from lookup range | how to set validation formula to external sheet in Aspose.Cells | example of using a lookup table for Excel data validation with Aspose.Cells | aspnet cells populate lookup sheet and apply list validation
-// Tags: Aspose.Cells list validation from another worksheet | C# create Excel dropdown using Aspose.Cells | Aspose.Cells set validation formula to external range | populate lookup sheet for data validation Aspose.Cells | Excel data validation O1 with lookup table Aspose.Cells
+// Title: Create an in‑cell drop‑down list in cell O1 using a lookup range in column A with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to add a list‑type validation to cell O1, pulling values from the range A1:A5. | Generate a complete Aspose.Cells example that populates a lookup table in column A, defines the range, and attaches an in‑cell dropdown to a specified cell. | Provide a C# snippet that creates a workbook, sets Validation.Type = List, enables InCellDropDown, and saves the file after adding the dropdown.
+// Common Searches: Aspose.Cells C# how to add a data validation list to a single cell | C# create Excel dropdown in cell O1 referencing column A values using Aspose.Cells | Set in‑cell drop‑down list from a lookup range with Aspose.Cells .NET | Aspose.Cells validation formula list example for Excel workbook
+// Tags: Aspose.Cells list validation in Excel | C# add in‑cell dropdown with Aspose.Cells | reference lookup range for data validation Aspose.Cells | create workbook with data validation Aspose.Cells C# | save Excel file after adding validation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program creates a new workbook, adds a 'Lookup' worksheet populated with five options, defines a list‑type data validation on cell O1 of the 'Main' worksheet that points to the lookup range, and saves the file as DropDownExample.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample creates a new workbook, fills cells A1‑A5 with lookup items, defines the range $A$1:$A$5, adds a list‑type validation with an in‑cell drop‑down to cell O1 referencing that range, and saves the workbook as output.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add a worksheet that will hold the lookup table
-            Worksheet lookupSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            lookupSheet.Name = "Lookup";
-
-            // Populate the lookup table (A1:A5) with sample values
-            string[] lookupValues = { "Option1", "Option2", "Option3", "Option4", "Option5" };
-            for (int i = 0; i < lookupValues.Length; i++)
+            try
             {
-                lookupSheet.Cells[i, 0].PutValue(lookupValues[i]); // Column A (index 0)
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet (or add one if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate a lookup table (example values) in column A
+                sheet.Cells["A1"].PutValue("Item1");
+                sheet.Cells["A2"].PutValue("Item2");
+                sheet.Cells["A3"].PutValue("Item3");
+                sheet.Cells["A4"].PutValue("Item4");
+                sheet.Cells["A5"].PutValue("Item5");
+
+                // Define the range that contains the lookup values
+                string lookupRange = "$A$1:$A$5";
+
+                // Add a drop‑down list to cell O1 (column 14, row 0)
+                CellArea dropDownArea = new CellArea
+                {
+                    StartRow = 0,      // Row 1 (0‑based index)
+                    EndRow = 0,
+                    StartColumn = 14, // Column O (0‑based index)
+                    EndColumn = 14
+                };
+
+                int validationIndex = sheet.Validations.Add(dropDownArea);
+                Validation validation = sheet.Validations[validationIndex];
+                validation.Type = ValidationType.List;   // List type validation
+                validation.InCellDropDown = true;        // Show the drop‑down arrow
+                validation.Formula1 = lookupRange;       // Reference to the lookup table
+
+                // Ensure the output directory exists
+                string outputPath = "output.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Get the main worksheet where the drop‑down will be placed
-            Worksheet mainSheet = workbook.Worksheets[0];
-            mainSheet.Name = "Main";
-
-            // Define the cell area (O1) that the validation applies to
-            CellArea area = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 0,
-                EndRow = 0,
-                StartColumn = 14, // Column O (0‑based index)
-                EndColumn = 14
-            };
-
-            // Add a data validation (drop‑down list) to the defined area
-            int validationIndex = mainSheet.Validations.Add(area);
-            Validation validation = mainSheet.Validations[validationIndex];
-            validation.Type = ValidationType.List;                     // List type for drop‑down
-            validation.Operator = OperatorType.None;                  // Not needed for list
-            validation.Formula1 = "'Lookup'!$A$1:$A$5";                // Reference to lookup range
-            validation.ShowError = true;                              // Show error message if invalid
-            validation.ErrorTitle = "Invalid Selection";
-            validation.ErrorMessage = "Please select a value from the list.";
-
-            // Save the workbook to a file
-            workbook.Save("DropDownExample.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

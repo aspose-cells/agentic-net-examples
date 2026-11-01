@@ -1,111 +1,106 @@
-// Title: How to ungroup WordArt GroupShape objects in an Excel workbook and edit each shape’s fill color, text, and rotation using Aspose.Cells for .NET
-// AI Prompts: Load an Excel file with Aspose.Cells, locate all GroupShape objects, call Ungroup on each, then iterate the resulting Shape collection to set FillFormat.ForeColor, update the Text property, and assign a RotationAngle before saving. | Using C#, ungroup WordArt shapes in a worksheet, change each shape’s background color to LightBlue, replace its text with "Updated Text", and rotate it 15 degrees with Aspose.Cells.
-// Common Searches: Aspose.Cells C# ungroup WordArt shapes and change fill color | How to modify individual shape properties after ungrouping in Excel with .NET | Set rotation angle for Excel shapes using Aspose.Cells | Iterate through worksheet Shapes collection after Ungroup in C# | Update text of WordArt shapes in an Excel file with Aspose.Cells
-// Tags: ungroup GroupShape Aspose.Cells .NET | modify shape fill color Aspose.Cells | change WordArt text property C# | apply rotation angle to Excel shape | iterate worksheet shapes after ungroup
+// Title: Ungroup WordArt GroupShape and edit fill color, line weight, and rotation of individual shapes with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# ungroup WordArt shapes and change each shape's fill color | set line weight for individual Excel shapes after ungrouping using Aspose.Cells | rotate WordArt shapes programmatically with Aspose.Cells .NET | iterate over worksheet shapes and modify properties with Aspose.Cells in C# | C# code to ungroup grouped shapes in an Excel workbook using Aspose.Cells
+// Tags: Aspose.Cells ungroup GroupShape | modify shape fill color Aspose.Cells | set shape line weight Aspose.Cells | rotate Excel shape Aspose.Cells | process WordArt shapes Aspose.Cells
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, scans the first worksheet for GroupShape objects, calls Ungroup to break them into separate shapes, then loops through all shapes to set a light blue fill color, change the text to "Updated Text", apply a 15‑degree rotation, and finally saves the modified workbook.
-class UngroupWordArtExample
+// The example loads an Excel workbook, iterates through all shapes on the first worksheet, ungroups any GroupShape objects, collects the resulting individual shapes, and then sets each shape's fill color to LightBlue, line weight to 1.5, and rotation angle to 15 degrees before saving the modified workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "GroupedWordArt.xlsx";
-            const string outputFile = "UngroupedWordArt.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input file '{inputFile}' not found.");
-                return;
-            }
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Load the workbook containing the grouped WordArt shapes
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Scan for GroupShape objects and ungroup them
-            for (int i = 0; i < sheet.Shapes.Count; i++)
+            // Ungroup any grouped shapes first
+            for (int i = sheet.Shapes.Count - 1; i >= 0; i--)
             {
                 Shape shape = sheet.Shapes[i];
-
                 if (shape is GroupShape groupShape)
                 {
                     try
                     {
-                        // Ungroup the shapes; inner shapes are added to the worksheet's Shapes collection
+                        // Ungroup adds inner shapes to the worksheet and removes the group shape
                         groupShape.Ungroup();
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to ungroup shape at index {i}: {ex.Message}");
+                        Console.Error.WriteLine($"Failed to ungroup shape at index {i}: {ex.Message}");
                     }
-
-                    // Restart scanning because the collection has changed
-                    i = -1;
                 }
             }
 
-            // Modify each individual shape as needed
+            // Collect all individual shapes for processing
+            List<Shape> individualShapes = new List<Shape>();
             foreach (Shape shape in sheet.Shapes)
             {
-                // Set fill color if the shape supports FillFormat
+                individualShapes.Add(shape);
+            }
+
+            // Modify each shape independently
+            foreach (Shape shp in individualShapes)
+            {
+                // Set fill color if supported
                 try
                 {
-                    if (shape.FillFormat != null)
+                    if (shp.FillFormat != null)
                     {
-                        shape.FillFormat.ForeColor = Color.LightBlue;
+                        shp.FillFormat.ForeColor = Color.LightBlue;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to set fill color for shape: {ex.Message}");
+                    Console.Error.WriteLine($"Failed to set fill color: {ex.Message}");
                 }
 
-                // Update text for shapes that have a Text property
+                // Set line weight
                 try
                 {
-                    if (!string.IsNullOrEmpty(shape.Text))
+                    if (shp.Line != null)
                     {
-                        shape.Text = "Updated Text";
+                        shp.Line.Weight = 1.5f;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to set text for shape: {ex.Message}");
+                    Console.Error.WriteLine($"Failed to set line weight: {ex.Message}");
                 }
 
-                // Set rotation angle (available on the base Shape class)
+                // Rotate each shape by 15 degrees
                 try
                 {
-                    shape.RotationAngle = 15;
+                    shp.RotationAngle = 15;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to set rotation for shape: {ex.Message}");
+                    Console.Error.WriteLine($"Failed to set rotation angle: {ex.Message}");
                 }
             }
 
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved as '{outputFile}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

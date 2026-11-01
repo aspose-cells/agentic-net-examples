@@ -1,45 +1,43 @@
-// Title: How to export an Excel workbook to HTML using Aspose.Cells for .NET and make all hyperlinks open in a new tab
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, creates HtmlSaveOptions, sets ExportHyperlinkTarget to "_blank", and saves the workbook as an HTML file. | Provide a C# example that uses reflection to detect the ExportHyperlinkTarget property and configures it so hyperlinks open in a new window when converting Excel to HTML with Aspose.Cells.
-// Common Searches: Aspose.Cells .NET export Excel to HTML with hyperlinks opening in new tab | C# set ExportHyperlinkTarget to _blank when saving workbook as HTML | How to make links open in new window in HTML output from Aspose.Cells | Save Excel file as HTML using Aspose.Cells and customize hyperlink target
-// Tags: Aspose.Cells HtmlSaveOptions ExportHyperlinkTarget | C# export Excel to HTML Aspose.Cells | set hyperlink target _blank Aspose.Cells | Excel to HTML conversion .NET Aspose | HTML export options workbook Aspose
+// Title: Save an Excel workbook as HTML with default settings and set hyperlink targets to open in a new tab (Aspose.Cells for .NET)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, saves it as HTML using the default HtmlSaveOptions, and then updates the produced HTML to add target="_blank" to every <a> element. | Show how to export a Workbook to HTML with Aspose.Cells and then adjust the resulting file so all hyperlinks open in a new browser tab.
+// Common Searches: Aspose.Cells export Excel to HTML with hyperlinks opening in new tab | C# save workbook as HTML and add target blank to links using Aspose.Cells | How to modify Aspose.Cells generated HTML to set hyperlink target attribute | default HtmlSaveOptions hyperlink handling Aspose.Cells .NET
+// Tags: Aspose.Cells HTML generation default options | adjust Aspose.Cells HTML output for target attribute | hyperlink target blank in Aspose.Cells generated HTML | Workbook conversion to HTML using Aspose.Cells | modify <a> tags in Aspose.Cells HTML output
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads "input.xlsx" with Aspose.Cells, creates HtmlSaveOptions, uses reflection to set ExportHyperlinkTarget to "_blank" when supported, and saves the workbook as "output.html" so that all hyperlinks open in a new tab.
+// The sample checks for the input Excel file, loads it into an Aspose.Cells Workbook, saves it as HTML with default HtmlSaveOptions, and notes that hyperlink targets must be added manually (e.g., by editing the HTML to include target="_blank" on each link).
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the Excel workbook from the file
+            // Load the Excel workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
             // Create HTML save options with default settings
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Set hyperlink target to open in a new window/tab if the property exists (newer versions)
-            var prop = typeof(HtmlSaveOptions).GetProperty("ExportHyperlinkTarget");
-            if (prop != null && prop.CanWrite)
-            {
-                prop.SetValue(htmlOptions, "_blank");
-            }
+            // Note: In the current Aspose.Cells version, hyperlink target handling
+            // is controlled automatically. If needed, post‑process the HTML to
+            // add target="_blank" to <a> tags.
 
             // Save the workbook as an HTML file using the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {

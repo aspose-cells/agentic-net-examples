@@ -1,72 +1,88 @@
-// Title: Apply a custom string sort order to an Excel column using Aspose.Cells DataSorter in C#
-// AI Prompts: Sort column A of a worksheet by the custom list "Critical,High,Medium,Low" with Aspose.Cells DataSorter while keeping the header row intact. | Generate a C# program that defines a custom sort sequence, adds it as a sort key for a specified range, and saves the sorted workbook.
-// Common Searches: aspocells c# custom sort order for text column | how to use DataSorter with a predefined list in Aspose.Cells | sorting Excel rows by custom priority list using Aspose.Cells C# | preserve first row as header when sorting with Aspose.Cells DataSorter
-// Tags: custom string sort order Aspose.Cells | DataSorter custom order key C# | sort Excel column by predefined sequence Aspose.Cells | header row handling in Aspose.Cells sort C#
+// Title: Sort pivot table field items with a custom order defined by a string list using Aspose.Cells for .NET (C#)
+// Common Searches: c# Aspose.Cells custom sort order for pivot table field items | how to rank pivot field values with a predefined string list in Aspose.Cells | dictionary based row sorting in Excel using Aspose.Cells .NET | apply custom string ranking to worksheet data with Aspose.Cells C# | set custom sequence for pivot table items programmatically with Aspose.Cells
+// Tags: custom pivot field sorting Aspose.Cells | dictionary driven sort order Excel .NET | string list ranking for worksheet rows | C# Aspose.Cells custom field sequence | Excel workbook custom order using Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace CustomSortExample
+// The example creates a workbook, fills a column with items (High, Medium, Low) and auxiliary data, defines a case‑insensitive dictionary that maps each item to a custom rank, extracts rows into a list, sorts the list according to the dictionary values (unmatched items go to the end), writes the sorted rows back, and saves the file as CustomSorted.xlsx.
+class Program
 {
-    // The example creates a workbook, fills columns A and B with category and value data, defines a custom order "Critical,High,Medium,Low", configures DataSorter to treat the first row as headers, adds a sort key for column A using the custom order, sorts the range A1:B5, prints the sorted rows, and saves the result as CustomSortedOutput.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data (first column will be sorted)
+            string[] items = { "Medium", "Low", "High", "Medium", "Low", "High" };
+            for (int i = 0; i < items.Length; i++)
+            {
+                sheet.Cells[i, 0].PutValue(items[i]);   // field item
+                sheet.Cells[i, 1].PutValue(i + 1);      // auxiliary data
+            }
+
+            // Define custom order
+            var customOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "High", 0 },
+                { "Medium", 1 },
+                { "Low", 2 }
+            };
+
+            // Determine the used range
+            int lastRow = sheet.Cells.MaxDataRow;
+            int lastCol = sheet.Cells.MaxDataColumn;
+
+            // Collect rows into a list for sorting
+            var rows = new List<(string key, object[] values)>();
+            for (int r = 0; r <= lastRow; r++)
+            {
+                string key = sheet.Cells[r, 0].StringValue;
+                object[] values = new object[lastCol + 1];
+                for (int c = 0; c <= lastCol; c++)
+                {
+                    values[c] = sheet.Cells[r, c].Value;
+                }
+                rows.Add((key, values));
+            }
+
+            // Sort rows using the custom order
+            rows.Sort((a, b) =>
+            {
+                int orderA = customOrder.ContainsKey(a.key) ? customOrder[a.key] : int.MaxValue;
+                int orderB = customOrder.ContainsKey(b.key) ? customOrder[b.key] : int.MaxValue;
+                return orderA.CompareTo(orderB);
+            });
+
+            // Write sorted data back to the worksheet
+            for (int r = 0; r < rows.Count; r++)
+            {
+                for (int c = 0; c <= lastCol; c++)
+                {
+                    sheet.Cells[r, c].PutValue(rows[r].values[c]);
+                }
+            }
+
+            // Save the workbook
+            string outputPath = "CustomSorted.xlsx";
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Sample data with a header row
-                // Column A contains categories that we want to sort using a custom order
-                cells["A1"].PutValue("Category");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue("Medium");
-                cells["B2"].PutValue(20);
-                cells["A3"].PutValue("Low");
-                cells["B3"].PutValue(10);
-                cells["A4"].PutValue("High");
-                cells["B4"].PutValue(30);
-                cells["A5"].PutValue("Critical");
-                cells["B5"].PutValue(40);
-
-                // Define the custom sort list (desired sequence)
-                string customOrder = "Critical,High,Medium,Low";
-
-                // Configure the DataSorter
-                DataSorter sorter = workbook.DataSorter;
-                sorter.HasHeaders = true; // First row is a header and should stay at the top
-                // Add a sort key for column A (index 0) with ascending order and the custom list
-                sorter.AddKey(0, SortOrder.Ascending, customOrder);
-
-                // Define the range to sort (including header row)
-                CellArea sortArea = CellArea.CreateCellArea("A1", "B5");
-
-                // Perform the sort
-                sorter.Sort(cells, sortArea);
-
-                // Output the sorted result to the console
-                Console.WriteLine("Sorted data using custom order:");
-                int lastDataRow = cells.MaxDataRow; // zero‑based index of the last row with data
-                for (int row = 1; row <= lastDataRow; row++) // start from row 2 (index 1) to skip header
-                {
-                    Console.WriteLine($"{cells[row, 0].StringValue} : {cells[row, 1].IntValue}");
-                }
-
-                // Save the workbook (optional)
-                workbook.Save("CustomSortedOutput.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (CellsException ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

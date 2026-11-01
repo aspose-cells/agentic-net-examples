@@ -1,65 +1,63 @@
-// Title: Retrieve and display absolute positions of all shapes on an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate a C# console program that loads an Excel workbook with Aspose.Cells, iterates through Worksheet.Shapes, and prints each shape's Name, Top, Left, Width, and Height in points. | Write a C# method that takes a file path, validates the Excel file, and uses Aspose.Cells to output the absolute coordinates of every shape on the first worksheet. | Create an example that extends shape enumeration to include the shape type (e.g., picture, chart) together with its absolute position using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# get absolute position of shapes in Excel worksheet | How to list shape top left coordinates with Aspose.Cells .NET | C# enumerate all shapes in an Excel file and display their dimensions using Aspose.Cells | Retrieve shape size and location from the first worksheet using Aspose.Cells library | Console application to print shape positions from Excel using Aspose.Cells for .NET
-// Tags: Aspose.Cells retrieve shape coordinates | C# enumerate worksheet shapes | Aspose.Cells shape absolute position | Excel shape dimensions Aspose.Cells | Console output shape positions .NET
+// Title: How to retrieve and display absolute positions of all shapes on an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# get shape top and left coordinates from worksheet | list all shapes with their dimensions in an Excel file using Aspose.Cells | retrieve shape positions and sizes for each shape in a workbook with Aspose.Cells | C# code to enumerate worksheet shapes and output their absolute locations | display shape size and location for every shape in an Excel sheet using Aspose.Cells
+// Tags: Aspose.Cells shape coordinate extraction | enumerate worksheet shapes .NET | retrieve shape dimensions Aspose.Cells | Excel shape position analysis C# | list shape properties Aspose.Cells workbook
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Loads a workbook, iterates through the Shapes collection of the first worksheet, and writes each shape's Name, Top, Left, Width, and Height (in points) to the console.
-public class ShapePositionAnalyzer
+namespace Example
 {
-    // Retrieves and displays absolute positions of all shapes on the first worksheet
-    public static void DisplayShapePositions(string workbookPath)
+    // The example verifies the workbook file exists, loads it with Aspose.Cells, accesses the first worksheet, iterates through the worksheet's Shapes collection, and writes each shape's Name, Type, Top, Left, Height, and Width (in points) to the console, with error handling for robustness.
+    public class ShapePositionAnalyzer
     {
-        if (!File.Exists(workbookPath))
+        public static void DisplayShapePositions(string workbookPath)
         {
-            Console.WriteLine($"Error: File not found - {workbookPath}");
-            return;
-        }
-
-        try
-        {
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the first worksheet (change index or name as needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Iterate through each shape in the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            // Verify that the file exists before attempting to load it
+            if (!File.Exists(workbookPath))
             {
-                // Absolute position values (in points)
-                double top = shape.Top;      // distance from the top edge of the worksheet
-                double left = shape.Left;    // distance from the left edge of the worksheet
-                double width = shape.Width;
-                double height = shape.Height;
-
-                // Output shape details
-                Console.WriteLine($"Shape Name: {shape.Name}");
-                Console.WriteLine($"  Top: {top} pt, Left: {left} pt");
-                Console.WriteLine($"  Width: {width} pt, Height: {height} pt");
-                Console.WriteLine();
+                Console.WriteLine($"File not found: {workbookPath}");
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Access the first worksheet (change index or name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    // Output shape details to the console
+                    Console.WriteLine($"Shape Name : {shape.Name}");
+                    Console.WriteLine($"  Type   : {shape.Type}");
+                    Console.WriteLine($"  Top    : {shape.Top} pt");
+                    Console.WriteLine($"  Left   : {shape.Left} pt");
+                    Console.WriteLine($"  Height : {shape.Height} pt");
+                    Console.WriteLine($"  Width  : {shape.Width} pt");
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
     }
 
-    // Example entry point
-    public static void Main(string[] args)
+    class Program
     {
-        if (args.Length == 0)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Usage: ShapePositionAnalyzer <excel-file-path>");
-            return;
-        }
+            // Accept workbook path from command‑line arguments or use a default placeholder
+            string workbookPath = args.Length > 0 ? args[0] : "sample.xlsx";
 
-        string filePath = args[0];
-        DisplayShapePositions(filePath);
+            ShapePositionAnalyzer.DisplayShapePositions(workbookPath);
+        }
     }
 }

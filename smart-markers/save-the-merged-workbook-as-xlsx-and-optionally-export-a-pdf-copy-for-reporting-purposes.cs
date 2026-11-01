@@ -1,35 +1,36 @@
-// Title: Combine two Excel workbooks and export the merged file as XLSX and PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to merge two existing Excel workbooks and then save the combined workbook in both XLSX and PDF formats. | Generate a .NET example that demonstrates merging two workbooks and subsequently saving the result as an XLSX file and a PDF file using Aspose.Cells.
-// Common Searches: c# Aspose.Cells merge two workbooks and save as xlsx | how to export a combined Excel file to pdf with Aspose.Cells | Aspose.Cells save merged workbook in both xlsx and pdf formats | combine multiple Excel files into one using Aspose.Cells .NET | dual format export of merged workbook Aspose.Cells c#
-// Tags: Workbook.Combine method C# | save merged workbook as xlsx Aspose.Cells | export merged workbook to pdf Aspose.Cells | dual-format workbook export Aspose.Cells | combine Excel workbooks Aspose.Cells .NET
+// Title: Save a merged workbook as XLSX and optionally generate a PDF report with Aspose.Cells for .NET
+// Common Searches: how to save a combined workbook to xlsx with Aspose.Cells in C# | conditional PDF generation from an Aspose.Cells workbook in .NET | export merged spreadsheet to pdf only when needed using Aspose.Cells | Aspose.Cells C# example for creating a PDF copy of an existing workbook | save workbook in both xlsx and pdf formats with Aspose.Cells
+// Tags: Aspose.Cells generate xlsx from combined workbook | Aspose.Cells optional pdf output | Aspose.Cells SaveFormat Xlsx Pdf example | C# export workbook to pdf using Aspose.Cells | smart markers workbook export workflow
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates two separate workbooks, adds sample data, merges the second workbook into the first using Aspose.Cells, and then saves the combined workbook as both MergedWorkbook.xlsx and MergedWorkbook.pdf.
-class SaveMergedWorkbook
+// Demonstrates obtaining a merged Workbook object, saving it as an XLSX file, and, based on a boolean flag, optionally exporting the same workbook to PDF for reporting purposes using Aspose.Cells for .NET.
+class WorkbookExporter
 {
     static void Main()
     {
-        // Create the first workbook and add sample data
-        Workbook firstWorkbook = new Workbook();
-        Worksheet firstSheet = firstWorkbook.Worksheets[0];
-        firstSheet.Name = "FirstSheet";
-        firstSheet.Cells["A1"].PutValue("Data from the first workbook");
+        // Assume the merged workbook is already created and populated
+        Workbook workbook = GetMergedWorkbook();
 
-        // Create the second workbook and add sample data
-        Workbook secondWorkbook = new Workbook();
-        Worksheet secondSheet = secondWorkbook.Worksheets[0];
-        secondSheet.Name = "SecondSheet";
-        secondSheet.Cells["A1"].PutValue("Data from the second workbook");
+        // Save the workbook as XLSX
+        workbook.Save("MergedWorkbook.xlsx", SaveFormat.Xlsx);
 
-        // Merge the second workbook into the first one
-        firstWorkbook.Combine(secondWorkbook);
+        // Optionally export a PDF copy for reporting purposes
+        bool exportPdf = true; // Set to false if PDF export is not needed
+        if (exportPdf)
+        {
+            workbook.Save("MergedWorkbook.pdf", SaveFormat.Pdf);
+        }
+    }
 
-        // Save the merged workbook as XLSX
-        firstWorkbook.Save("MergedWorkbook.xlsx", SaveFormat.Xlsx);
-
-        // Optionally, also save a PDF copy for reporting
-        firstWorkbook.Save("MergedWorkbook.pdf", SaveFormat.Pdf);
+    // Placeholder method to obtain the merged workbook.
+    // Replace with actual logic that creates or loads the merged workbook.
+    static Workbook GetMergedWorkbook()
+    {
+        // Example: create a new workbook (replace with real merged workbook)
+        Workbook wb = new Workbook();
+        // ... populate workbook ...
+        return wb;
     }
 }

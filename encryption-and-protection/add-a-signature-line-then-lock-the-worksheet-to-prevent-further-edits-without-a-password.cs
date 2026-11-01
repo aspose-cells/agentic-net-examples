@@ -1,57 +1,53 @@
-// Title: Add a signature line shape to cell B2 and apply password protection to the first worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a SignatureLine shape at row 2, column 2, set its width to 200 points and height to 50 points, then protect the worksheet with the password "myPassword" using Aspose.Cells in C#. | Create a signature line object, place it on the worksheet at B2, resize it, enable full worksheet protection with a password, and save the workbook. | Load an existing Excel file, add a signature line shape to cell B2, adjust its dimensions, lock the sheet with a password, and write the result to a new file using Aspose.Cells for .NET.
-// Common Searches: how to insert a signature line at a specific cell with Aspose.Cells C# | Aspose.Cells protect worksheet after adding a shape with password | set signature line dimensions in Excel using Aspose.Cells .NET | C# code to add a signature line and lock the sheet in Aspose.Cells | Aspose.Cells example for adding a signature line and applying worksheet protection
-// Tags: signature line insertion Aspose.Cells | shape dimension setting Aspose.Cells | worksheet password protection Aspose.Cells | protect Excel sheet C# Aspose.Cells | add signature line to B2 cell Aspose.Cells
+// Title: Create a signature line placeholder shape and password‑protect an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: how to insert a signature line shape in an Excel file with Aspose.Cells C# | Aspose.Cells C# protect worksheet with password example | add rectangle shape as placeholder and lock sheet using Aspose.Cells | save a password‑protected workbook with Aspose.Cells .NET | C# code to create signature line and protect Excel sheet
+// Tags: add signature line shape Aspose.Cells | worksheet password protection Aspose.Cells | create rectangle shape in Excel C# | save protected Excel workbook Aspose.Cells | protect worksheet with ProtectionType.All C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an existing workbook, adds a SignatureLine shape at cell B2 with a width of 200 points and height of 50 points, applies full worksheet protection using the password "myPassword", and saves the modified file.
+// The example creates a new workbook, adds a rectangular shape labeled as a signature line placeholder on the first worksheet, applies full protection with a specified password, ensures the output directory exists, and saves the file as SignedAndProtected.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Add a placeholder shape (rectangle) to simulate a signature line
+            // Parameters: type, upper left row, upper left column, lower right row, lower right column, height (pixels), width (pixels)
+            Shape placeholder = worksheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                1, // upper left row (zero‑based)
+                1, // upper left column
+                2, // lower right row
+                2, // lower right column
+                30, // height in pixels
+                200 // width in pixels
+            );
+            placeholder.Text = "Signature Line Placeholder";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Protect the worksheet with a password
+            worksheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
 
-            // Create a SignatureLine object with desired size
-            SignatureLine signatureLine = new SignatureLine();
-            // The size is set on the returned Shape after adding to the sheet
-            // Add the signature line shape at row 2, column 2 (zero‑based)
-            Shape shape = sheet.Shapes.AddSignatureLine(1, 1, signatureLine);
-            shape.Width = 200;   // width in points
-            shape.Height = 50;   // height in points
+            // Define output path and ensure the directory exists
+            string outputPath = "SignedAndProtected.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
 
-            // Protect the worksheet with a password (old password is empty)
-            sheet.Protect(ProtectionType.All, "myPassword", string.Empty);
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the modified workbook
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

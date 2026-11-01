@@ -1,15 +1,14 @@
-// Title: Export a Progress Bar chart from an Excel workbook to a JPEG image with a white background using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file, selects the first chart (assumed to be a progress bar), and saves it as a JPEG image with a solid white background using Aspose.Cells. | Show how to configure ImageOrPrintOptions in Aspose.Cells to set the JPEG format and a white background before exporting a chart. | Include logic that creates the target directory if it does not exist and handles exceptions while exporting the chart image.
-// Common Searches: Aspose.Cells export chart to JPEG with white background C# | How to save Excel progress bar chart as JPEG for email attachment .NET | ImageOrPrintOptions set background color when exporting chart Aspose.Cells | Create output folder automatically when exporting chart image using Aspose.Cells | C# code to convert first worksheet chart to JPEG using Aspose.Cells
-// Tags: export chart to jpeg Aspose.Cells | chart image white background .NET | progress bar chart jpeg conversion | ImageOrPrintOptions background color setting | auto create output directory C#
+// Title: Export a Progress Bar chart to a JPEG file with a white background using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells export chart as JPEG with white background for email | How to save a progress bar chart from an Excel workbook as a JPEG image using Aspose.Cells | Aspose.Cells chart.ToImage JPEG white background example in .NET | Generate JPEG image of a worksheet chart for email attachment with Aspose.Cells | Export first worksheet chart to JPEG file and set background color using Aspose.Cells C#
+// Tags: Aspose.Cells chart to JPEG conversion | progress bar chart image export .NET | chart image white background Aspose.Cells | C# export Excel chart as JPEG file | email attachment chart image generation
 
 using System;
+using System.Drawing.Imaging;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-// The example loads a workbook, verifies the file exists, retrieves the first worksheet and its first chart (assumed to be a progress bar), configures ImageOrPrintOptions to produce a JPEG image with a solid white background, ensures the output directory is created, and exports the chart to a JPEG file while handling potential errors.
+// The sample loads a workbook, selects the first chart on the first worksheet, converts the chart to a JPEG image with a white background using Chart.ToImage, and writes the image to a specified file path, handling missing files, conversion errors, and write failures.
 class ExportProgressBarChart
 {
     static void Main()
@@ -17,54 +16,67 @@ class ExportProgressBarChart
         try
         {
             // Path to the source workbook
-            string workbookPath = "ProgressBar.xlsx";
+            string workbookPath = @"C:\Charts\ProgressBarChart.xlsx";
 
-            // Verify the workbook file exists
+            // Verify that the workbook file exists to avoid FileNotFoundException
             if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Workbook file not found: {workbookPath}");
+                Console.WriteLine($"Workbook not found at path: {workbookPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one chart
-            if (worksheet.Charts.Count == 0)
+            // Load the workbook that contains the progress bar chart
+            using (Workbook workbook = new Workbook(workbookPath))
             {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
+                // Assume the progress bar chart is the first chart on the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the first worksheet.");
+                    return;
+                }
+
+                Chart chart = sheet.Charts[0];
+
+                // Export the chart as a JPEG image
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    try
+                    {
+                        // Save the chart image to the memory stream in JPEG format
+                        chart.ToImage(ms, ImageFormat.Jpeg);
+                    }
+                    catch (Exception imgEx)
+                    {
+                        Console.WriteLine($"Failed to convert chart to image: {imgEx.Message}");
+                        return;
+                    }
+
+                    // Write the JPEG bytes to a file
+                    string outputPath = @"C:\Charts\ProgressBarChart.jpg";
+
+                    // Ensure the output directory exists
+                    string? outputDir = Path.GetDirectoryName(outputPath);
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    try
+                    {
+                        File.WriteAllBytes(outputPath, ms.ToArray());
+                        Console.WriteLine($"Chart exported successfully to: {outputPath}");
+                    }
+                    catch (Exception writeEx)
+                    {
+                        Console.WriteLine($"Failed to write image file: {writeEx.Message}");
+                    }
+                }
             }
-
-            // Get the first chart (assumed to be the progress bar chart)
-            Chart progressBarChart = worksheet.Charts[0];
-
-            // Configure image export options (default format is PNG; JPEG can be set if supported)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
-
-            // Uncomment the following line if the ImageFormat property is available in your Aspose.Cells version
-            // imgOptions.ImageFormat = Aspose.Cells.Rendering.ImageFormat.Jpeg;
-
-            // Export the chart directly to a JPEG file (or default format if ImageFormat not set)
-            string outputPath = "ProgressBar.jpg";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Export the chart
-            progressBarChart.ToImage(outputPath, imgOptions);
-
-            Console.WriteLine($"Chart exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

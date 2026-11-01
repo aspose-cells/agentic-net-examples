@@ -1,15 +1,15 @@
-// Title: Add a new data series to an existing timeline chart, insert a worksheet comment, and export the workbook as a PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, append a new NSeries to the first timeline chart using the ranges A2:A10 and B2:B10, add a comment at cell C12, and save the result as a PDF with Aspose.Cells in C#. | Programmatically update a timeline chart by adding a series, place a blue‑styled comment near the chart, and generate a PDF output using Aspose.Cells for .NET.
-// Common Searches: C# Aspose.Cells add series to existing chart and save as PDF | How to insert a comment near a chart in an Excel file using Aspose.Cells .NET | Update timeline chart data range programmatically with Aspose.Cells | Export Excel workbook with chart and comments to PDF using Aspose.Cells for .NET | Aspose.Cells add new NSeries to chart from specific cell ranges
-// Tags: add NSeries to timeline chart Aspose.Cells | export workbook to PDF with Aspose.Cells | insert worksheet comment Aspose.Cells C# | update chart data range Aspose.Cells | save Excel as PDF including annotations Aspose.Cells
+// Title: Add a new series to an existing line chart in an Excel workbook and export it as a PDF with a textbox annotation using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add additional series to an existing line chart and save as PDF | How to insert a new data series into a chart in an Excel file with Aspose.Cells .NET | Export updated Excel chart with textbox annotation to PDF using Aspose.Cells | C# code to add column E as a series to a line chart and generate PDF with Aspose.Cells | Add textbox note to chart after updating series in Aspose.Cells workbook
+// Tags: add data series to line chart Aspose.Cells | export updated chart to PDF Aspose.Cells | textbox annotation on worksheet Aspose.Cells | use string range formula for chart series Aspose.Cells | programmatically modify Excel chart C# Aspose.Cells
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
+using Aspose.Cells.Drawing;
 
-// The C# program loads Timeline.xlsx, adds a new series to the first chart using ranges A2:A10 (categories) and B2:B10 (values), creates a blue comment at cell C12, and saves the updated workbook as Timeline_Updated.pdf in PDF format.
+// The example loads an existing workbook (or creates a sample one), ensures a line chart exists, adds a new series from column E using a string range formula, inserts a textbox annotation, recalculates formulas, and saves the workbook as a PDF file.
 class Program
 {
     static void Main()
@@ -17,63 +17,120 @@ class Program
         try
         {
             const string inputFile = "Timeline.xlsx";
-            const string outputFile = "Timeline_Updated.pdf";
+            const string outputFile = "TimelineUpdated.pdf";
 
-            // Verify that the source workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputFile))
+            // Load existing workbook or create a new one if the file is missing
+            Workbook workbook;
+            Worksheet sheet;
+
+            if (File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
-                return;
+                workbook = new Workbook(inputFile);
+                sheet = workbook.Worksheets[0];
+            }
+            else
+            {
+                workbook = new Workbook();
+                sheet = workbook.Worksheets[0];
+
+                // Populate sample data (A1:D5) for demonstration
+                sheet.Cells["A1"].PutValue("Date");
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["D1"].PutValue("Series3");
+                for (int i = 2; i <= 5; i++)
+                {
+                    sheet.Cells[i - 1, 0].PutValue(DateTime.Today.AddDays(i - 2));
+                    sheet.Cells[i - 1, 1].PutValue(i * 10);
+                    sheet.Cells[i - 1, 2].PutValue(i * 15);
+                    sheet.Cells[i - 1, 3].PutValue(i * 20);
+                }
+
+                // Add a simple line chart as a placeholder
+                int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
+                // Use a string formula for the series range (B2:B5)
+                chart.NSeries.Add("B2:B5", true);
+                chart.NSeries[0].Name = sheet.Cells[0, 1].StringValue;
+                chart.Title.Text = "Sample Chart";
+
+                // Save the template for future runs
+                workbook.Save(inputFile);
             }
 
-            // Load the existing workbook that contains the timeline chart.
-            Workbook workbook = new Workbook(inputFile);
-
-            // Get the first worksheet (adjust the index if necessary).
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Assume the timeline chart is the first chart on the sheet.
-            Chart timelineChart = sheet.Charts[0];
-
-            // Define the data ranges for the new series.
-            string categoryRange = "A2:A10"; // X‑axis (categories)
-            string valueRange = "B2:B10";    // Y‑axis (values)
-
-            // Add the new series to the chart.
-            // Combine category and value ranges in a single string.
-            int newSeriesIndex = timelineChart.NSeries.Add($"{categoryRange},{valueRange}", true);
-            timelineChart.NSeries[newSeriesIndex].Name = "New Series";
-
-            // -----------------------------------------------------------------
-            // Add an annotation (comment) to the worksheet near the chart.
-            // -----------------------------------------------------------------
-            try
+            // Ensure there is at least one chart; create one if missing
+            Chart timeline;
+            if (sheet.Charts.Count > 0)
             {
-                // Add a comment at cell C12 – change the address as needed.
-                int commentIndex = sheet.Comments.Add("C12");
-                Comment newComment = sheet.Comments[commentIndex];
-                newComment.Note = "Added new series to timeline.";
-                newComment.Author = "Automation";
-
-                // Optional formatting for the comment text.
-                newComment.Font.Color = Color.Blue;
-                newComment.Font.Size = 10;
+                timeline = sheet.Charts[0];
             }
-            catch (Exception commentEx)
+            else
             {
-                Console.WriteLine($"Warning: Unable to add comment. {commentEx.Message}");
+                int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                timeline = sheet.Charts[chartIdx];
+                timeline.Title.Text = "Generated Chart";
             }
 
-            // -----------------------------------------------------------------
-            // Save the updated workbook as a PDF, which will include the modified chart and the comment.
-            // -----------------------------------------------------------------
+            // Use a supported chart type (Timeline is not available)
+            if (timeline.Type != ChartType.Line)
+            {
+                timeline.Type = ChartType.Line;
+            }
+
+            // Determine data range (excluding header row)
+            int firstDataRow = 1; // zero‑based index (row 2 in Excel)
+            int lastDataRow = sheet.Cells.MaxDataRow;
+
+            // Column E (index 4) will hold the new series values
+            int newSeriesColumnIndex = 4;
+
+            // Ensure column E has values; if not, add placeholder values
+            if (lastDataRow < firstDataRow)
+            {
+                lastDataRow = firstDataRow;
+            }
+            for (int r = firstDataRow; r <= lastDataRow; r++)
+            {
+                if (sheet.Cells[r, newSeriesColumnIndex].Value == null)
+                {
+                    sheet.Cells[r, newSeriesColumnIndex].PutValue((r + 1) * 5);
+                }
+            }
+
+            // Add the new series to the chart using a string formula (e.g., E2:E5)
+            int seriesCount = timeline.NSeries.Count;
+            string newSeriesFormula = $"E{firstDataRow + 1}:E{lastDataRow + 1}";
+            timeline.NSeries.Add(newSeriesFormula, true);
+            timeline.NSeries[seriesCount].Name = sheet.Cells[0, newSeriesColumnIndex].StringValue;
+
+            // Add a textbox annotation indicating the update
+            Shape annotation = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "New series added",
+                "Arial",
+                12,
+                false,
+                false,
+                100,   // left (points)
+                100,   // top (points)
+                200,   // width (points)
+                30,    // height (points)
+                0,     // text direction
+                0);    // text alignment
+
+            // Optional styling (commented out if not supported in current version)
+            //annotation.Fill.ForeColor = Color.Yellow;
+            //annotation.Line.ForeColor = Color.Black;
+
+            // Recalculate formulas if any
+            workbook.CalculateFormula();
+
+            // Save the updated workbook as PDF
             workbook.Save(outputFile, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved successfully as '{outputFile}'.");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for troubleshooting.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

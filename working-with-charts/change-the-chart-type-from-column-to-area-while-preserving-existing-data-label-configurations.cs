@@ -1,53 +1,97 @@
-// Title: Change a column chart to an area chart while keeping existing data label settings in Aspose.Cells for .NET
-// AI Prompts: Set Chart.Type from ChartType.Column to ChartType.Area and retain all DataLabels properties such as ShowValue, ShowCategoryName, ShapeType, and custom formatting. | Programmatically switch an Aspose.Cells chart to an area chart without resetting the configured data label colors, shape, and visibility.
-// Common Searches: Aspose.Cells C# change chart type column to area preserve data labels | keep data label formatting when converting chart type in Aspose.Cells | how to retain custom data label shape after changing chart type Aspose.Cells | switch chart from column to area without losing label settings .NET
-// Tags: Aspose.Cells chart type conversion | preserve data label settings Aspose.Cells | C# change chart to area chart | Aspose.Cells data label formatting | chart type change without resetting labels
+// Title: Convert a column chart to an area chart while preserving series data label settings using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, records each series' data label properties, switches the first chart's type to Area, and reapplies the saved label settings before saving. | Provide an Aspose.Cells script that changes a column chart to an area chart without losing any data label formatting for all series.
+// Common Searches: Aspose.Cells change chart type from column to area without losing data label formatting | C# preserve series data labels when converting Excel chart type | how to keep data label settings after switching chart type in Aspose.Cells | convert first worksheet chart to area chart while retaining label options using .NET
+// Tags: Aspose.Cells chart type conversion area | preserve series data labels Aspose.Cells | C# change Excel chart from column to area | data label settings retention .NET Excel chart | modify chart type programmatically Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, configures data labels (value, category name, rectangular shape, dark blue background, custom formatting), then changes the chart type to Area while preserving those label settings, and saves the file as ChartColumnToArea.xlsx.
-class ChangeChartTypeExample
+// The example loads an existing workbook, captures each series' data label configuration, changes the first chart's type to Area, restores the saved label settings, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Add a column chart (initial type)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Access the first worksheet (adjust index as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure data labels for the first series
-        Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = true;                     // Show values
-        series.DataLabels.ShowCategoryName = true;              // Show category names
-        series.DataLabels.ShapeType = DataLabelShapeType.Rect;  // Rectangular label shape
-        series.DataLabels.Area.ForegroundColor = Color.DarkBlue;
-        series.DataLabels.Area.Formatting = FormattingType.Custom;
+            // Ensure there is at least one chart on the sheet
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the worksheet.");
+                return;
+            }
 
-        // Change the chart type to Area while preserving the data label settings
-        chart.Type = ChartType.Area;
+            Chart chart = sheet.Charts[0];
 
-        // Save the workbook
-        workbook.Save("ChartColumnToArea.xlsx", SaveFormat.Xlsx);
+            // Preserve series‑level data label configurations
+            var seriesLabelConfigs = new List<SeriesLabelConfig>();
+            foreach (Series series in chart.NSeries)
+            {
+                SeriesLabelConfig cfg = new SeriesLabelConfig
+                {
+                    ShowValue = series.DataLabels.ShowValue,
+                    ShowCategoryName = series.DataLabels.ShowCategoryName,
+                    ShowSeriesName = series.DataLabels.ShowSeriesName,
+                    ShowPercentage = series.DataLabels.ShowPercentage,
+                    ShowBubbleSize = series.DataLabels.ShowBubbleSize,
+                    NumberFormat = series.DataLabels.NumberFormat
+                };
+                seriesLabelConfigs.Add(cfg);
+            }
+
+            // Change the chart type to Area
+            chart.Type = ChartType.Area;
+
+            // Restore series‑level data label configurations
+            for (int i = 0; i < chart.NSeries.Count; i++)
+            {
+                Series series = chart.NSeries[i];
+                SeriesLabelConfig cfg = seriesLabelConfigs[i];
+
+                series.DataLabels.ShowValue = cfg.ShowValue;
+                series.DataLabels.ShowCategoryName = cfg.ShowCategoryName;
+                series.DataLabels.ShowSeriesName = cfg.ShowSeriesName;
+                series.DataLabels.ShowPercentage = cfg.ShowPercentage;
+                series.DataLabels.ShowBubbleSize = cfg.ShowBubbleSize;
+                series.DataLabels.NumberFormat = cfg.NumberFormat;
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper class to store a series' data label configuration
+    private class SeriesLabelConfig
+    {
+        public bool ShowValue { get; set; }
+        public bool ShowCategoryName { get; set; }
+        public bool ShowSeriesName { get; set; }
+        public bool ShowPercentage { get; set; }
+        public bool ShowBubbleSize { get; set; }
+        public string NumberFormat { get; set; } = string.Empty;
     }
 }

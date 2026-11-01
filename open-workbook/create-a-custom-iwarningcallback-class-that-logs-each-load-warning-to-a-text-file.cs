@@ -1,107 +1,84 @@
-// Title: Create a custom IWarningCallback in Aspose.Cells for .NET to log workbook load warnings to a text file
-// AI Prompts: Write a C# class that implements Aspose.Cells.IWarningCallback and appends each warning with a timestamp to a given log file. | Show how to attach the custom warning callback to a Workbook instance before loading an Excel file using Aspose.Cells for .NET. | Enhance the callback to record the warning type, description, and optional stack trace in each log entry.
-// Common Searches: asp.net log warnings from Aspose.Cells workbook loading to a file | example of IWarningCallback usage with Aspose.Cells C# | how to set warning callback on Workbook in Aspose.Cells 2023 version | save Aspose.Cells load warnings to custom log file
-// Tags: Aspose.Cells IWarningCallback implementation | log workbook warnings to text file | set warning callback for Excel loading | custom warning logger C# Aspose.Cells | timestamped warning entries Aspose.Cells
+// Title: Log workbook load warnings to a text file with a custom IWarningCallback in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load options warningcallback write warnings to log file | how to capture Excel load warnings using IWarningCallback in .NET | save Aspose.Cells workbook load warnings to a custom log file | implement IWarningCallback to log warningInfo details during workbook load | C# example of logging Aspose.Cells load warnings with timestamp
+// Tags: custom IWarningCallback for Aspose.Cells | logging workbook load warnings to file | Aspose.Cells LoadOptions warning callback | C# Aspose.Cells warning logging example | Excel import warning handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsWarningLogger
+// This example demonstrates creating a FileWarningCallback class that implements Aspose.Cells.IWarningCallback, ensures the log directory exists, and appends each warning (UTC timestamp, type, description) to a specified text file. The callback is assigned to LoadOptions.WarningCallback, enabling automatic logging of any load warnings when a Workbook is opened, after which the workbook can be processed or saved.
+public class FileWarningCallback : IWarningCallback
 {
-    // Custom warning callback that logs each warning to a text file.
-    // Provides a FileWarningCallback class that implements IWarningCallback, writing each workbook load warning with timestamp, type, and description to a specified log file, and demonstrates attaching the callback to a Workbook before loading and saving an Excel file.
-    public class FileWarningCallback : IWarningCallback
+    private readonly string _logFilePath;
+
+    public FileWarningCallback(string logFilePath)
     {
-        private readonly string _logFilePath;
+        _logFilePath = logFilePath;
 
-        public FileWarningCallback(string logFilePath)
+        // Ensure the directory for the log file exists
+        string directory = Path.GetDirectoryName(_logFilePath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
         {
-            _logFilePath = logFilePath ?? throw new ArgumentNullException(nameof(logFilePath));
-
-            // Ensure the directory exists.
-            string? directory = Path.GetDirectoryName(_logFilePath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-        }
-
-        // Implementation of IWarningCallback.Warning.
-        public void Warning(WarningInfo warningInfo)
-        {
-            // Build a readable warning message.
-            string message = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
-                             $"Warning Type: {warningInfo.Type}, " +
-                             $"Description: {warningInfo.Description}";
-
-            // Append the warning to the log file.
-            try
-            {
-                File.AppendAllText(_logFilePath, message + Environment.NewLine);
-            }
-            catch (Exception ex)
-            {
-                // If logging fails, write to console as a fallback.
-                Console.Error.WriteLine($"Failed to write warning to log file: {ex.Message}");
-            }
+            Directory.CreateDirectory(directory);
         }
     }
 
-    class Program
+    // Implementation required by IWarningCallback
+    public void Warning(WarningInfo warningInfo)
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the Excel file to load.
-            string excelPath = "input.xlsx";
+            // Build a log entry with timestamp, warning type and description
+            string logEntry = $"{DateTime.UtcNow:O} | Type: {warningInfo.WarningType} | Description: {warningInfo.Description}";
 
-            // Path to the warning log file.
-            string logPath = "warnings.log";
+            // Append the entry to the log file
+            File.AppendAllText(_logFilePath, logEntry + Environment.NewLine);
+        }
+        catch (Exception ex)
+        {
+            // If logging fails, write to console (avoid throwing from callback)
+            Console.WriteLine($"Failed to log warning: {ex.Message}");
+        }
+    }
+}
 
-            // Verify that the input file exists to avoid FileNotFoundException.
-            if (!File.Exists(excelPath))
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            // Path to the Excel file to be loaded
+            string excelFilePath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelFilePath))
             {
-                Console.Error.WriteLine($"Input file not found: {excelPath}");
+                Console.WriteLine($"Error: The file '{excelFilePath}' does not exist.");
                 return;
             }
 
-            Workbook workbook;
+            // Path where warnings will be logged
+            string warningLogPath = "warnings.log";
 
-            // Load the workbook.
-            try
+            // Set up load options and assign the custom warning callback
+            LoadOptions loadOptions = new LoadOptions
             {
-                workbook = new Workbook(excelPath);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
-            }
+                WarningCallback = new FileWarningCallback(warningLogPath)
+            };
 
-            // Set warning callback if the API supports it.
-            try
-            {
-                // In newer versions of Aspose.Cells the warning callback can be set via the Workbook's
-                // SetWarningCallback method. If the method is unavailable, this block will be skipped.
-                // Uncomment the line below if your version provides SetWarningCallback.
-                // workbook.SetWarningCallback(new FileWarningCallback(logPath));
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error setting warning callback: {ex.Message}");
-            }
+            // Load the workbook; any warnings during loading will be logged
+            Workbook workbook = new Workbook(excelFilePath, loadOptions);
 
-            // (Optional) Perform any operations on the workbook here.
-
-            // Save the workbook to a new file (warnings during save will also be logged if callback is set).
-            try
-            {
-                workbook.Save("output.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            // Example: save the workbook to a new file
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

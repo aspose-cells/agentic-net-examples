@@ -1,61 +1,111 @@
-// Title: Create Excel subtotals with summary rows positioned at the bottom of each category group using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that groups rows by a column, calculates a SUM subtotal on another column, and inserts the subtotal rows after each group (summary below data). | Show how to retrieve the SubtotalSetting after applying subtotals and display its SummaryBelowData property to verify bottom placement.
-// Common Searches: how to add subtotal rows below each group in an Excel file using Aspose.Cells C# | Aspose.Cells C# subtotal summary position bottom example | group data by column and insert sum subtotal at the end of each group with Aspose.Cells for .NET
-// Tags: Aspose.Cells subtotal bottom placement C# | C# apply sum subtotal by column Aspose.Cells | Excel worksheet group subtotals Aspose.Cells | retrieve SubtotalSetting Aspose.Cells C#
+// Title: Add bottom‑positioned subtotal rows for each category group in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a subtotal row after each category group using Aspose.Cells in C# | C# Aspose.Cells insert summary rows at the bottom of each group | calculate group totals and insert rows without affecting other rows with Aspose.Cells | Aspose.Cells set summaryPosition to bottom for grouped data | manual subtotal implementation example with Aspose.Cells for .NET
+// Tags: Aspose.Cells group subtotal calculation | C# insert rows without shifting data Aspose.Cells | Excel bottom summary position Aspose.Cells | manual subtotal implementation Aspose.Cells | Aspose.Cells aggregate column values by group
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The example creates a workbook, fills it with Category, Item, and Amount data, defines the range A1:C5, and uses Cells.Subtotal to group rows by the Category column, apply a SUM subtotal on the Amount column, and place the summary rows below each group. It then retrieves the SubtotalSetting to confirm the SummaryBelowData flag is true and saves the file as SubtotalBottomDemo.xlsx.
-public class SubtotalBottomDemo
+// The example loads or creates an Excel workbook, groups rows by the Category column, computes the sum of the Amount column for each group, and inserts a subtotal row directly after each group at the bottom using Aspose.Cells for .NET before saving the file.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Add header row
-        cells["A1"].PutValue("Category");
-        cells["B1"].PutValue("Item");
-        cells["C1"].PutValue("Amount");
-
-        // Sample data
-        object[,] data = new object[,]
+        try
         {
-            { "North", "Widget", 5000 },
-            { "North", "Gadget", 3000 },
-            { "South", "Widget", 6000 },
-            { "South", "Gadget", 4000 },
-            { "West",  "Widget", 4500 }
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate data starting from row 2 (zero‑based index 1)
-        for (int i = 0; i < data.GetLength(0); i++)
-        {
-            cells[i + 1, 0].PutValue(data[i, 0]);
-            cells[i + 1, 1].PutValue(data[i, 1]);
-            cells[i + 1, 2].PutValue(data[i, 2]);
+            Workbook workbook;
+
+            // Load existing workbook or create a new one if the file is missing
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                // Sample data to demonstrate subtotal functionality
+                ws.Cells["A1"].PutValue("Category");
+                ws.Cells["B1"].PutValue("Item");
+                ws.Cells["C1"].PutValue("Amount");
+                ws.Cells["A2"].PutValue("A");
+                ws.Cells["B2"].PutValue("Item1");
+                ws.Cells["C2"].PutValue(10);
+                ws.Cells["A3"].PutValue("A");
+                ws.Cells["B3"].PutValue("Item2");
+                ws.Cells["C3"].PutValue(20);
+                ws.Cells["A4"].PutValue("B");
+                ws.Cells["B4"].PutValue("Item3");
+                ws.Cells["C4"].PutValue(15);
+                ws.Cells["A5"].PutValue("B");
+                ws.Cells["B5"].PutValue("Item4");
+                ws.Cells["C5"].PutValue(25);
+            }
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine the data range (including header row)
+            int startRow = 0;          // zero‑based first row (header)
+            int startColumn = 0;       // zero‑based first column (A)
+            int lastDataRow = sheet.Cells.MaxDataRow;
+            int lastDataColumn = sheet.Cells.MaxDataColumn;
+
+            // Manual subtotal implementation (group by column A, sum column C)
+            var subtotals = new List<(int RowIndex, double Sum)>();
+            string previousCategory = null;
+            double groupSum = 0;
+
+            // Iterate through data rows (skip header)
+            for (int row = startRow + 1; row <= lastDataRow; row++)
+            {
+                string category = sheet.Cells[row, startColumn].StringValue;
+                double amount = sheet.Cells[row, startColumn + 2].DoubleValue; // column C
+
+                if (previousCategory == null)
+                {
+                    previousCategory = category;
+                }
+
+                if (category != previousCategory)
+                {
+                    // End of previous group – store subtotal position
+                    subtotals.Add((row - 1, groupSum));
+                    // Reset for new group
+                    previousCategory = category;
+                    groupSum = 0;
+                }
+
+                groupSum += amount;
+            }
+
+            // Add subtotal for the final group
+            if (previousCategory != null)
+            {
+                subtotals.Add((lastDataRow, groupSum));
+            }
+
+            // Insert subtotal rows from bottom to top to avoid index shifting
+            for (int i = subtotals.Count - 1; i >= 0; i--)
+            {
+                int insertAfter = subtotals[i].RowIndex;
+                double sum = subtotals[i].Sum;
+
+                sheet.Cells.InsertRows(insertAfter + 1, 1);
+                sheet.Cells[insertAfter + 1, startColumn + 1].PutValue("Subtotal"); // column B
+                sheet.Cells[insertAfter + 1, startColumn + 2].PutValue(sum);      // column C
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Define the cell area that includes the header and data (A1:C5)
-        CellArea area = CellArea.CreateCellArea("A1", "C5");
-
-        // Apply subtotals:
-        // - Group by column 0 (Category)
-        // - Use SUM function
-        // - Subtotal on column 2 (Amount)
-        // - Do not replace existing subtotals
-        // - No page breaks between groups
-        // - Summary rows placed below data (bottom)
-        cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 }, false, false, true);
-
-        // Retrieve and display the subtotal setting to confirm the summary position
-        SubtotalSetting setting = cells.RetrieveSubtotalSetting(area);
-        Console.WriteLine("SummaryBelowData (bottom): " + setting.SummaryBelowData);
-
-        // Save the workbook
-        workbook.Save("SubtotalBottomDemo.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

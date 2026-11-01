@@ -1,28 +1,52 @@
-// Title: Generate a PDF with evaluated Excel formulas as static values using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, forces all formulas to be evaluated, and saves the workbook as a PDF with the calculated results displayed as static text using Aspose.Cells. | Show how to configure Aspose.Cells PdfSaveOptions to fit all columns on a single page per sheet while preserving the evaluated formula values in the exported PDF. | Demonstrate the correct order of calling Workbook.CalculateFormula followed by Workbook.Save with PdfSaveOptions to ensure formulas are converted to values in the resulting PDF.
-// Common Searches: asp.net how to export Excel to PDF with formulas evaluated using Aspose.Cells | c# convert Excel formulas to static values before saving as PDF | Aspose.Cells PdfSaveOptions fit columns on one page per sheet example | force calculation of all formulas in workbook prior to PDF conversion Aspose.Cells
-// Tags: calculate formulas Aspose.Cells Workbook | export workbook to PDF Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet | static values in PDF Aspose.Cells | C# evaluate Excel formulas before PDF export
+// Title: Convert Excel formulas to static values when exporting to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: how to export an .xlsx to PDF with calculated formula results using Aspose.Cells C# | Aspose.Cells C# generate PDF that shows formula values instead of formulas | C# save Excel workbook as PDF with formulas evaluated to static numbers | force formula calculation before PDF conversion with Aspose.Cells .NET | use PdfSaveOptions to keep calculated values when converting Excel to PDF
+// Tags: calculate formulas before PDF export Aspose.Cells | PdfSaveOptions static values Excel to PDF | Workbook.CalculateFormula method C# | AllColumnsInOnePagePerSheet PDF layout Aspose.Cells | export Excel workbook as PDF with evaluated formulas
 
+using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// // Loads an Excel workbook, forces calculation of every formula, sets PDF options to fit all columns on one page per sheet, and saves the workbook as a PDF that displays the evaluated results as static values.
-class Program
+namespace AsposeCellsPdfExport
 {
-    static void Main()
+    // The example loads an Excel file with Aspose.Cells, ensures all formulas are evaluated using Workbook.CalculateFormula(), configures PdfSaveOptions (e.g., AllColumnsInOnePagePerSheet), and saves the workbook as a PDF where the cells contain the calculated static values instead of the original formulas.
+    class Program
     {
-        // Load the source Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main(string[] args)
+        {
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
 
-        // Force calculation of all formulas so that static values are stored
-        workbook.CalculateFormula();
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Configure PDF save options (default behavior already writes calculated values)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        // Example option: fit all columns on one page per sheet (optional)
-        pdfOptions.AllColumnsInOnePagePerSheet = true;
+                // Load the Excel workbook
+                var workbook = new Workbook(inputPath);
 
-        // Save the workbook as a PDF; the PDF will display the calculated results
-        workbook.Save("output.pdf", pdfOptions);
+                // Ensure all formulas are calculated before exporting
+                workbook.CalculateFormula();
+
+                // Configure PDF save options (optional settings can be added as needed)
+                var pdfOptions = new PdfSaveOptions
+                {
+                    // Example: fit all columns on one page per sheet (adjust as required)
+                    AllColumnsInOnePagePerSheet = true
+                };
+
+                // Save the workbook as a PDF; the PDF will contain the calculated (static) values
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

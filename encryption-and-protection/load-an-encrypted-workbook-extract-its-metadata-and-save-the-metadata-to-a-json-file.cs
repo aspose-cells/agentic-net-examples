@@ -1,7 +1,6 @@
-// Title: Read a password‑protected Excel workbook, extract built‑in and custom document properties, and export them to a formatted JSON file using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells LoadOptions with a password to open a protected Excel workbook, retrieve all built‑in and custom document properties from the Workbook object, and serialize the collected data to an indented JSON string. | Write C# code that checks for the source file, creates the output directory if needed, and saves the extracted Excel metadata as a pretty‑printed JSON file at a given path.
-// Common Searches: how to extract document properties from a password protected Excel file using Aspose.Cells in C# | Aspose.Cells load encrypted workbook and read custom properties | save Excel workbook metadata to JSON with .NET | C# code to open encrypted .xlsx with password and export metadata | retrieve built‑in document properties from a protected workbook using Aspose.Cells
-// Tags: Aspose.Cells load encrypted workbook password | extract built-in document properties Aspose.Cells | read custom document properties Excel .NET | serialize workbook metadata to JSON C# | ensure output directory exists before writing JSON
+// Title: Extract metadata from a password‑protected Excel workbook and save it as JSON using Aspose.Cells for .NET
+// Common Searches: how to read built‑in and custom properties from an encrypted .xlsx with Aspose.Cells C# | Aspose.Cells load password protected workbook and export document properties to JSON | C# code to extract Excel metadata from a workbook secured with a password | using LoadOptions to open encrypted Excel file and get its properties in .NET | serialize Aspose.Cells workbook document properties to a JSON file
+// Tags: load encrypted workbook Aspose.Cells C# | extract built‑in document properties Aspose.Cells | export custom Excel properties to JSON | Aspose.Cells LoadOptions password protection | serialize workbook metadata JSON .NET
 
 using System;
 using System.Collections.Generic;
@@ -9,79 +8,72 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-namespace WorkbookMetadataExtractor
+// The example verifies the encrypted Excel file, opens it with LoadOptions and the supplied password, gathers both built‑in and custom document properties into a dictionary, serializes the data to an indented JSON string, and writes the output to a file, handling any errors that may occur.
+class Program
 {
-    // The example verifies the encrypted Excel file exists, loads it with the supplied password via LoadOptions, gathers both built‑in and custom document properties from the Workbook, serializes the metadata into an indented JSON string, creates the output folder if necessary, and writes the JSON to the specified file path.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the encrypted workbook and its password
+        string workbookPath = "encrypted.xlsx";
+        string password = "yourPassword";
+
+        // Verify that the workbook file exists before attempting to load it
+        if (!File.Exists(workbookPath))
         {
-            // Path to the encrypted Excel file
-            string inputPath = @"C:\Data\EncryptedWorkbook.xlsx";
+            Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
+            return;
+        }
 
-            // Password for the encrypted workbook
-            string password = "YourPassword";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+        try
+        {
+            // Load the encrypted workbook using LoadOptions with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                Password = password
+            };
+            Workbook workbook = new Workbook(workbookPath, loadOptions);
 
-            try
+            // Prepare a dictionary to hold metadata
+            var metadata = new Dictionary<string, object>();
+
+            // Extract built‑in document properties
+            var builtInProps = workbook.BuiltInDocumentProperties;
+            metadata["BuiltInProperties"] = new Dictionary<string, object>
             {
-                // Load the workbook with the password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    Password = password
-                };
-                Workbook workbook = new Workbook(inputPath, loadOptions);
+                { "Author", builtInProps.Author },
+                { "Title", builtInProps.Title },
+                { "Subject", builtInProps.Subject },
+                { "Keywords", builtInProps.Keywords },
+                { "Comments", builtInProps.Comments },
+                { "CreatedTime", builtInProps.CreatedTime },
+                // Use LastSavedTime instead of the non‑existent LastModifiedTime
+                { "LastSavedTime", builtInProps.LastSavedTime },
+                { "Category", builtInProps.Category },
+                { "Manager", builtInProps.Manager },
+                { "Company", builtInProps.Company }
+            };
 
-                // Prepare a dictionary to hold metadata
-                var metadata = new Dictionary<string, object>();
-
-                // Extract built‑in document properties via Workbook.BuiltInDocumentProperties
-                var props = workbook.BuiltInDocumentProperties;
-                metadata["Author"] = props.Author;
-                metadata["Title"] = props.Title;
-                metadata["Subject"] = props.Subject;
-                metadata["Keywords"] = props.Keywords;
-                metadata["Comments"] = props.Comments;
-                metadata["CreatedTime"] = props.CreatedTime;
-                metadata["LastModifiedTime"] = props.LastSavedTime;
-                metadata["Company"] = props.Company;
-
-                // Extract custom document properties
-                var customDict = new Dictionary<string, object>();
-                foreach (var prop in workbook.CustomDocumentProperties)
-                {
-                    customDict[prop.Name] = prop.Value;
-                }
-                metadata["CustomProperties"] = customDict;
-
-                // Serialize metadata to JSON
-                string jsonOutput = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
-
-                // Path to the output JSON file
-                string outputPath = @"C:\Data\WorkbookMetadata.json";
-
-                // Ensure the output directory exists
-                string? outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save JSON to file
-                File.WriteAllText(outputPath, jsonOutput);
-
-                Console.WriteLine("Metadata extracted and saved to JSON successfully.");
-            }
-            catch (Exception ex)
+            // Extract custom document properties, if any
+            var customProps = workbook.CustomDocumentProperties;
+            var customDict = new Dictionary<string, object>();
+            foreach (var prop in customProps) // Use var to avoid type resolution issues
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                customDict[prop.Name] = prop.Value;
             }
+            metadata["CustomProperties"] = customDict;
+
+            // Serialize metadata to JSON with indentation for readability
+            string json = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
+
+            // Save the JSON to a file
+            string jsonPath = "metadata.json";
+            File.WriteAllText(jsonPath, json);
+
+            Console.WriteLine($"Metadata extracted and saved to '{jsonPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

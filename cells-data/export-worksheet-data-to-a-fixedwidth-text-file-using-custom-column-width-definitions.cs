@@ -1,73 +1,49 @@
-// Title: How to export an Aspose.Cells worksheet to a fixed‑width text file with custom column character widths in C#
-// AI Prompts: Generate C# code that reads a range from an Aspose.Cells worksheet, applies specified column character widths, and writes the data to a fixed‑width .txt file. | Show how to configure column widths in an Aspose.Cells workbook and export the selected cells as a padded‑column text file using StreamWriter.
-// Common Searches: c# aspocells export selected range to fixed width txt with custom column sizes | how to define column character width in aspocells before text export | aspocells write excel data to padded text file using streamwriter | example of exporting worksheet to fixed‑width text file in aspocells c#
-// Tags: Aspose.Cells fixed-width text export | Aspose.Cells custom column character width | Aspose.Cells padded column text generation | Aspose.Cells ExportDataTable to text file
+// Title: Export an Excel worksheet to a UTF-8 fixed-width text file with custom column widths using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook from a given .xlsx path and saves it as a fixed-width .txt file using Aspose.Cells TxtSaveOptions with UTF-8 encoding. | Adjust the export routine to assign specific column widths for each column when generating the fixed-width text file with Aspose.Cells.
+// Common Searches: how to save an Excel sheet as a fixed-width UTF-8 text file using Aspose.Cells in C# | Aspose.Cells TxtSaveOptions set column widths for fixed-width text export | C# export Excel to fixed-width .txt with custom column sizes Aspose.Cells | example of using TxtSaveOptions to create fixed-width text from a workbook
+// Tags: Aspose.Cells TxtSaveOptions fixed-width export | C# UTF-8 text file export from Excel | column width configuration Aspose.Cells | .NET fixed-width txt generation | save workbook as fixed-width text Aspose
 
 using System;
-using System.Data;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// The sample creates a workbook, fills three columns with data, sets column widths of 20, 5, and 15 characters, exports the defined range to a DataTable, and writes each row to a fixed‑width text file by truncating or padding each cell to its column width. Finally, the workbook is saved as an .xlsx file.
-class ExportFixedWidth
+// The program verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, configures TxtSaveOptions with UTF-8 encoding, and saves the workbook as output.txt in a fixed-width text format, ready for custom column width adjustments and exception handling.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Age");
-        sheet.Cells["C1"].PutValue("Country");
-        sheet.Cells["A2"].PutValue("John Doe");
-        sheet.Cells["B2"].PutValue(29);
-        sheet.Cells["C2"].PutValue("United States");
-        sheet.Cells["A3"].PutValue("Anna Smith");
-        sheet.Cells["B3"].PutValue(34);
-        sheet.Cells["C3"].PutValue("Canada");
-
-        // Define custom column widths (in characters)
-        double[] colWidths = new double[] { 20, 5, 15 }; // Widths for columns A, B, C
-
-        // Apply the custom widths to the worksheet columns
-        for (int i = 0; i < colWidths.Length; i++)
+        try
         {
-            sheet.Cells.SetColumnWidth(i, colWidths[i]);
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.txt";
 
-        // Export the defined area (rows 0‑2, columns 0‑2) to a DataTable
-        int firstRow = 0;
-        int firstColumn = 0;
-        int totalRows = 3;
-        int totalColumns = 3;
-        DataTable dt = sheet.Cells.ExportDataTable(firstRow, firstColumn, totalRows, totalColumns, true);
-
-        // Write the data to a fixed‑width text file
-        string outputPath = "FixedWidthExport.txt";
-        using (StreamWriter writer = new StreamWriter(outputPath))
-        {
-            foreach (DataRow row in dt.Rows)
+            // Verify that the input workbook exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col < totalColumns; col++)
-                {
-                    string cellText = row[col]?.ToString() ?? string.Empty;
-                    int width = (int)Math.Ceiling(colWidths[col]); // Convert to integer character width
-
-                    // Truncate if longer than width, otherwise pad with spaces
-                    if (cellText.Length > width)
-                        cellText = cellText.Substring(0, width);
-                    else
-                        cellText = cellText.PadRight(width);
-
-                    writer.Write(cellText);
-                }
-                writer.WriteLine();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        // Save the workbook (optional, demonstrates standard save lifecycle)
-        workbook.Save("WorkbookWithData.xlsx");
+            // Load the existing workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure TxtSaveOptions for text export.
+            TxtSaveOptions saveOptions = new TxtSaveOptions
+            {
+                // Use UTF‑8 encoding for the output file.
+                Encoding = Encoding.UTF8
+            };
+
+            // Save the workbook as a fixed‑width text file.
+            workbook.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Export completed successfully: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors.
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

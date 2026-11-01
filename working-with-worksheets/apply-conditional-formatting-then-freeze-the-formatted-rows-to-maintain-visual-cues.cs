@@ -1,13 +1,12 @@
-// Title: Add red background conditional formatting for values > 50 in column A and freeze the first ten rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that sets a red fill for cells in column A whose numeric value exceeds 50, then locks rows 1‑10 with FreezePanes. | Create an Aspose.Cells example that defines a cell‑value based style rule for A1:A10 and freezes the worksheet pane so the formatted rows stay visible.
-// Common Searches: Aspose.Cells how to apply a red background conditional format to a column based on value threshold | C# freeze top ten rows after adding conditional formatting with Aspose.Cells | example of using ConditionalFormattings and FreezePanes together in Aspose.Cells .NET
-// Tags: format rule red background Aspose.Cells C# | pane freezing top ten rows Aspose.Cells | cell value greater than 50 style condition Aspose.Cells | format collection usage with pane freezing Aspose.Cells | Aspose.Cells workbook visual cue preservation
+// Title: Apply conditional formatting to a column and freeze top rows in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# apply conditional formatting to column based on value and freeze first rows | C# code to highlight cells greater than 50 with yellow background using Aspose.Cells | Freeze panes after setting conditional formatting in an Aspose.Cells workbook | Create Excel file with conditional formatting and frozen header rows using Aspose.Cells .NET | Aspose.Cells example for conditional formatting and FreezePanes method in C#
+// Tags: conditional formatting column C Aspose.Cells | freeze first rows Aspose.Cells .NET | yellow background style conditional formatting Aspose.Cells | apply cell value greater than 50 rule Aspose.Cells | Aspose.Cells workbook creation with formatting
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 using System.Drawing;
 
-// The program creates a workbook, fills column A with numbers, adds a conditional formatting rule that colors cells with values greater than 50 red, freezes the first ten rows to keep the visual cues visible, and saves the file as ConditionalFormattingAndFreeze.xlsx.
+// The sample creates a workbook, populates ten rows of data, adds a conditional formatting rule that colors cells in column C yellow when their value exceeds 50, freezes the first five rows while keeping columns scrollable, and saves the file as ConditionalFormattingAndFreeze.xlsx.
 class Program
 {
     static void Main()
@@ -20,41 +19,54 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data in column A (rows 1-10)
+            // Populate sample data (10 rows, 3 columns)
             for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[i, 0].PutValue(i * 10); // A1:A10
+                sheet.Cells[i, 0].PutValue($"Item {i + 1}");
+                sheet.Cells[i, 1].PutValue(i * 10);
+                sheet.Cells[i, 2].PutValue(i * 15); // Values for conditional formatting
             }
 
-            // Define the range for conditional formatting (A1:A10)
+            // Apply conditional formatting to column C (index 2) for values > 50
+            int firstRow = 0;
+            int lastRow = 9;
+            int col = 2;
+
+            // Define the range to which the formatting will be applied
             CellArea area = new CellArea
             {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = 9,
-                EndColumn = 0
+                StartRow = firstRow,
+                EndRow = lastRow,
+                StartColumn = col,
+                EndColumn = col
             };
 
-            // Add a conditional formatting rule: highlight cells > 50 with red background
+            // Add a new conditional formatting collection
             int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
-            cfCollection.AddArea(area);
-            int conditionIndex = cfCollection.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-            FormatCondition condition = cfCollection[conditionIndex];
-            condition.Style = workbook.CreateStyle();
-            condition.Style.ForegroundColor = Color.Red;
-            condition.Style.Pattern = BackgroundType.Solid;
+            var cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(area);
 
-            // Freeze rows 1‑10 (freeze panes above row 11)
-            // Parameters: row, column, totalRows, totalColumns
-            sheet.FreezePanes(11, 0, 10, 0);
+            // Add a condition: cell value greater than 50
+            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+
+            // Define the style for the condition (yellow background)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Yellow;
+            style.Pattern = BackgroundType.Solid;
+            cf[conditionIndex].Style = style;
+
+            // Freeze the first 5 rows (no columns) while keeping the rest of the sheet scrollable
+            int freezeRows = 5;
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(freezeRows, 0, totalRows, totalColumns);
 
             // Save the workbook
             workbook.Save("ConditionalFormattingAndFreeze.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

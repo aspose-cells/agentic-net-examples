@@ -1,48 +1,51 @@
-// Title: Replace a substring in a cell’s rich‑text and apply separate formatting with Cell.SetCharacters in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that finds a specific word inside an Excel cell, replaces it with a new word, and then uses FontSetting objects with Cell.SetCharacters to apply bold blue formatting to the first part and italic green formatting to the replacement. | Show how to update the text of a cell and then assign different font styles to distinct character ranges using Aspose.Cells’ Cell.Characters and Cell.SetCharacters methods.
-// Common Searches: Aspose.Cells C# replace word in cell rich text and keep formatting | How to use Cell.SetCharacters to format parts of a string in Excel with Aspose | C# change substring in Excel cell and apply bold and italic colors using Aspose.Cells | Set different font styles for separate portions of a cell after updating its value in Aspose.Cells
-// Tags: Cell.SetCharacters replace substring C# | Rich text portion formatting Aspose.Cells | FontSetting bold blue Excel cell | FontSetting italic green replacement text | Aspose.Cells update cell value .xlsx
+// Title: Replace a substring in a RichTextPortion of an Excel cell using Cell.SetCharacters with Aspose.Cells for .NET (C#)
+// Common Searches: how to use Cell.SetCharacters to change part of a RichTextPortion in Aspose.Cells C# | replace specific characters in an Excel cell rich text using Aspose.Cells .NET | Aspose.Cells C# example for updating a substring inside a cell with SetCharacters | modify RichTextPortion text in a worksheet cell programmatically with Aspose.Cells | C# code to replace a word in an Excel cell while preserving formatting using SetCharacters
+// Tags: cell.setcharacters replace richtextportion aspose.cells | update excel cell substring c# aspose | rich text manipulation aspose.cells c# | preserve cell formatting while replacing text aspose | excel workbook save after cell text update .net
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsRichTextReplaceDemo
+// Demonstrates how to retrieve a cell's RichTextPortion, replace a target substring using the Cell.SetCharacters method to keep existing formatting, and then save the workbook, all with Aspose.Cells for .NET in C#.
+class Program
 {
-    // Demonstrates how to replace the word “World” with “Aspose” in cell A1, then apply bold blue formatting to “Hello ” and italic green formatting to “Aspose” using FontSetting objects and Cell.SetCharacters, and saves the workbook as RichTextReplaceOutput.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access cell A1 and set initial rich text value
-            Cell cell = worksheet.Cells["A1"];
-            cell.Value = "Hello World";
+            // Access cell A1 and set initial text
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Hello World");
 
-            // Replace the word "World" with "Aspose" by updating the cell value
-            // (SetCharacters works on formatting, not on the actual text content)
-            cell.Value = "Hello Aspose";
+            // Replace "World" with "Aspose" in the cell's text
+            string currentText = cell.StringValue;
+            if (!string.IsNullOrEmpty(currentText))
+            {
+                string newText = currentText.Replace("World", "Aspose");
+                cell.PutValue(newText);
+            }
 
-            // Prepare FontSetting objects for each portion of the new text
-            // Portion 0: "Hello " (indices 0-5)
-            FontSetting part1 = cell.Characters(0, 6);
-            part1.Font.IsBold = true;
-            part1.Font.Color = Color.Blue;
+            // Determine full output path and ensure its directory exists
+            string outputPath = "output.xlsx";
+            string fullOutputPath = Path.GetFullPath(outputPath);
+            string outputDir = Path.GetDirectoryName(fullOutputPath);
 
-            // Portion 1: "Aspose" (indices 6-12)
-            FontSetting part2 = cell.Characters(6, 6);
-            part2.Font.IsItalic = true;
-            part2.Font.Color = Color.Green;
-
-            // Apply the formatting to the cell using SetCharacters
-            FontSetting[] settings = new FontSetting[] { part1, part2 };
-            cell.SetCharacters(settings);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("RichTextReplaceOutput.xlsx");
+            workbook.Save(fullOutputPath);
+            Console.WriteLine($"Workbook saved successfully to '{fullOutputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

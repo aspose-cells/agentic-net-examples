@@ -1,51 +1,84 @@
-// Title: Add a slicer linked to a table column and position it in the top‑right corner of the worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a slicer that is bound to the first column of a ListObject and place it at row 0, column 5 (top‑right area) with Aspose.Cells. | Set the slicer's Placement property to MoveAndSize and then adjust its HeightPixel to 150 and WidthPixel to 120.
-// Common Searches: Aspose.Cells C# add slicer to ListObject column | C# set slicer placement to top right of Excel sheet using Aspose.Cells | How to use MoveAndSize placement type for a slicer in Aspose.Cells | Resize slicer height and width in pixels with Aspose.Cells C# | Save workbook with slicer positioned in top‑right corner Aspose.Cells
-// Tags: Aspose.Cells add slicer to ListObject column | Aspose.Cells set slicer placement top right | Aspose.Cells slicer MoveAndSize placement | Aspose.Cells resize slicer pixels | Aspose.Cells create workbook with slicer
+// Title: How to add a slicer linked to a table column and position it in the top‑right corner using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a ListObject table, builds a pivot table, adds a slicer for the first column, and moves the slicer to the top‑right cell of the worksheet. | Show how to set the slicer’s row and column indices so it appears at cell H1 while staying linked to the pivot table column. | Provide a complete example that includes error handling and saves the workbook with the slicer positioned at the top‑right corner.
+// Common Searches: Aspose.Cells C# add slicer to pivot table and set its location | C# Aspose.Cells place slicer at top right of worksheet | How to link a slicer to a ListObject column using Aspose.Cells for .NET | Aspose.Cells example for slicer placement coordinates | Create pivot table with slicer in Aspose.Cells C# tutorial
+// Tags: aspocells slicer linked to listobject | aspocells slicer top‑right placement | aspocells pivot table slicer creation | c# aspocells table slicer example | aspocells workbook slicer positioning
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Pivot;
+using Aspose.Cells.Slicers; // For slicer support
 
-// Demonstrates creating a workbook, defining a table (ListObject), adding a slicer linked to the first column, positioning it at row 0 column 5 (top‑right corner), setting Placement to MoveAndSize, adjusting its height to 150 px and width to 120 px, and saving the file as SlicerTopRight.xlsx.
-class SlicerTopRightDemo
+// Demonstrates creating a workbook, adding a ListObject table, generating a pivot table, inserting a slicer linked to the first column, setting its size, moving it to the worksheet’s top‑right corner, and saving the file as SlicerExample.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-        // Populate sample data for a table (two columns)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B4"].PutValue(30);
+            // Populate sample data
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Value");
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(10);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(20);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(30);
 
-        // Add a ListObject (table) covering the data range
-        int tableIndex = sheet.ListObjects.Add("A1", "B4", true);
-        ListObject table = sheet.ListObjects[tableIndex];
+            // Define the range of the table (including header row)
+            int firstRow = 0;      // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 5;     // header + 4 data rows (extra row is harmless)
+            int totalColumns = 2;
 
-        // Add a slicer linked to the first column of the table.
-        // Place it at row 0, column 5 (top‑right area of the sheet).
-        SlicerCollection slicers = sheet.Slicers;
-        int slicerIdx = slicers.Add(table, table.ListColumns[0], 0, 5);
-        Slicer slicer = slicers[slicerIdx];
+            // Add a ListObject (table) to the worksheet
+            int tableIdx = dataSheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = dataSheet.ListObjects[tableIdx];
+            table.DisplayName = "MyTable";
 
-        // Set the placement type (how the slicer moves/resizes with cells)
-        slicer.Placement = PlacementType.MoveAndSize; // top‑right corner placement
+            // Add a new worksheet for the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-        // Optionally adjust size
-        slicer.HeightPixel = 150;
-        slicer.WidthPixel = 120;
+            // Create a pivot table based on the ListObject.
+            // The Add method returns the index of the new pivot table.
+            int pivotIdx = pivotSheet.PivotTables.Add("MyTable", "A1", "PivotTable1");
+            PivotTable pivot = pivotSheet.PivotTables[pivotIdx];
 
-        // Save the workbook
-        workbook.Save("SlicerTopRight.xlsx");
+            // Add the first column ("Category") as a row field so the slicer can reference it
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);
+
+            // Add a slicer linked to the first column of the pivot table
+            // Parameters: pivot table object, column index (0‑based), top row, left column for placement
+            int slicerIdx = pivotSheet.Slicers.Add(pivot, 0, 0, 0);
+            Slicer slicer = pivotSheet.Slicers[slicerIdx];
+
+            // Optional: set size of the slicer (in points)
+            slicer.Width = 120;
+            slicer.Height = 200;
+
+            // Save the workbook
+            string outputPath = "SlicerExample.xlsx";
+
+            // Ensure the directory exists to avoid FileNotFoundException
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

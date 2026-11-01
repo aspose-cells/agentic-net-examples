@@ -1,77 +1,76 @@
-// Title: Add a rectangle shape linked to a circular‑reference cell and gracefully handle the calculation error using Aspose.Cells for .NET
-// AI Prompts: Insert a rectangle shape on the first worksheet, associate it with cell A1 that contains a circular reference, and wrap the CalculateFormula call in a try‑catch to capture any exception. | If the formula calculation fails, write a custom error message into the circular‑reference cell and then save the workbook to a chosen file path.
-// Common Searches: Aspose.Cells how to catch circular reference exception during workbook calculation | C# add rectangle shape to worksheet and link it to a cell using Aspose.Cells | FreeFloating shape placement parameters in Aspose.Cells .NET example | Replace circular reference formula with error text after calculation failure Aspose.Cells | Save Excel file after handling formula errors with Aspose.Cells
-// Tags: add rectangle shape worksheet Aspose.Cells | circular reference formula error handling Aspose.Cells | freefloating shape placement Aspose.Cells .NET | link shape to cell Aspose.Cells | save workbook after formula exception Aspose.Cells
+// Title: Add a rectangle shape to a worksheet, create a circular reference in a cell, and handle the calculation error with Aspose.Cells for .NET (C#)
+// Common Searches: how to add a rectangle shape to an Aspose.Cells worksheet in C# | handling circular reference errors during workbook.CalculateFormula in Aspose.Cells | saving an Aspose.Cells workbook to a dynamic folder path in C# | positioning a shape without SetLinkToCell using Aspose.Cells C# | catching formula calculation exceptions for circular references in Aspose.Cells
+// Tags: add drawing shape Aspose.Cells C# | circular reference handling Aspose.Cells | formula calculation exception handling Aspose.Cells | shape positioning alternative method Aspose.Cells | save workbook with folder creation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, sets a circular reference formula in cell A1, adds a rectangle shape positioned at row 1 column 0, attempts to calculate all formulas, catches the resulting exception, writes a custom error message into the cell, and saves the workbook as CircularReferenceDemo.xlsx.
+// The example creates a new Workbook, inserts a rectangle drawing shape onto the first worksheet, introduces a circular reference in cell A1, attempts to calculate formulas inside a nested try‑catch to capture the generic exception thrown for circular references, ensures the output directory exists, and saves the workbook while handling any I/O errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-
-            // Set a circular reference formula in cell A1 (e.g., =A1+1)
-            Cell circularCell = sheet.Cells["A1"];
-            circularCell.Formula = "=A1+1";
 
             // Add a rectangle shape to the worksheet
             // Parameters: shape type, upper left row, upper left column, top, left, height, width
-            Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                1,   // upper left row
-                0,   // upper left column
-                0,   // top (in points)
-                100, // left (in points)
-                50,  // height (in points)
-                100  // width (in points)
-            );
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
 
-            // Configure shape properties
-            shape.Name = "CircularReferenceShape";
-            shape.Placement = PlacementType.FreeFloating;
+            // NOTE: The SetLinkToCell method is not available in the current Aspose.Cells version.
+            // If linking a shape to a cell is required, use alternative positioning methods.
+            // shape.SetLinkToCell("A1", 0, 0); // Removed to avoid compilation error
 
-            // Note: SetPosition is not available in this version of Aspose.Cells.
-            // The shape is already positioned by the AddShape parameters.
+            // Introduce a circular reference in cell A1 (e.g., =A1+1)
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.Formula = "=A1+1";
 
-            // Attempt to calculate formulas and handle any errors gracefully
+            // Attempt to calculate formulas and handle circular reference errors gracefully
             try
             {
                 workbook.CalculateFormula();
+                Console.WriteLine("Formula calculation completed successfully.");
             }
             catch (Exception ex)
             {
-                // Aspose.Cells may throw a generic exception for circular references
-                Console.WriteLine("Formula calculation error: " + ex.Message);
-                circularCell.PutValue("Error: Circular Ref");
+                // Aspose.Cells throws a generic exception for circular references.
+                // Handle it by informing the user without crashing the application.
+                Console.WriteLine("An error occurred during formula calculation:");
+                Console.WriteLine(ex.Message);
             }
 
-            // Save the workbook to a file
-            string outputPath = "CircularReferenceDemo.xlsx";
+            // Define output file path
+            string outputPath = "ShapeWithCircularReference.xlsx";
+
+            // Ensure the directory exists before saving (handle case where outputPath has no directory)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file with error handling
             try
             {
                 workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved successfully to " + Path.GetFullPath(outputPath));
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to save workbook: " + ex.Message);
+                Console.WriteLine("Failed to save the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            // General exception handling for unexpected errors
-            Console.WriteLine("An error occurred: " + e.Message);
+            // Catch any unexpected errors
+            Console.WriteLine("Unexpected error:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

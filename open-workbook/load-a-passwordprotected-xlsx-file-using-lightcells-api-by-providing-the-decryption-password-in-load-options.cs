@@ -1,54 +1,71 @@
-// Title: Decrypt a password‑protected XLSX file with Aspose.Cells LightCells API in C#
-// AI Prompts: Generate C# code that loads a password‑protected XLSX workbook using Aspose.Cells LightCells API by setting the Password property in LoadOptions, then saves it as an unencrypted file. | Write a C# snippet that verifies the existence of a protected Excel file, opens it with LoadOptions containing the decryption password, and writes the decrypted workbook to a new location. | Create robust C# error handling for opening an encrypted workbook with Aspose.Cells LightCells API and exporting it without password protection.
-// Common Searches: c# aspose.cells load encrypted xlsx with password | how to remove password from excel file using aspose cells lightcells | load protected workbook using loadoptions password property aspose.cells | decrypt xlsx file programmatically aspose.cells c# example | aspose.cells lightcells api open password protected workbook
-// Tags: Aspose.Cells LightCells open encrypted workbook | C# LoadOptions set password | Excel workbook decryption Aspose.Cells | unprotected workbook save Aspose.Cells | handling protected Excel files LightCells
+// Title: Opening a password‑protected XLSX workbook with Aspose.Cells LightCells API in C# using LoadOptions.Password
+// Common Searches: C# Aspose.Cells LightCells load password protected xlsx with LoadOptions | Load encrypted Excel workbook using Aspose.Cells LightCells API and password | Read protected XLSX file without user prompt using Aspose.Cells LoadOptions.Password | How to decrypt an XLSX file with Aspose.Cells LightCells in .NET | Open password protected Excel file and save unprotected copy using Aspose.Cells C#
+// Tags: Aspose.Cells LightCells load password protected XLSX | LoadOptions.Password for encrypted Excel files | C# read protected workbook with LightCells | Decrypt XLSX using Aspose.Cells LoadOptions | Save unprotected copy after loading encrypted workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace DecryptWorkbook
+// The example demonstrates how to open a password‑protected XLSX file with Aspose.Cells LightCells API in C#. It creates a LoadOptions object with the decryption password, loads the workbook, iterates through used cells to display their values, and optionally saves an unprotected copy, handling errors gracefully.
+class Program
 {
-    // // This program checks for a password‑protected XLSX file, loads it with the specified decryption password via LoadOptions (LightCells API), and saves the workbook as an unencrypted XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Path to the password‑protected XLSX file
             string inputPath = "protected.xlsx";
 
-            // Path where the decrypted workbook will be saved
-            string outputPath = "decrypted.xlsx";
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
             // Decryption password
             string password = "myPassword";
 
-            try
+            // Load the workbook with the password
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
             {
-                // Ensure the input file exists
-                if (!File.Exists(inputPath))
+                Console.WriteLine("The workbook contains no worksheets.");
+                return;
+            }
+
+            // Get the first worksheet
+            var worksheet = workbook.Worksheets[0];
+            var cells = worksheet.Cells;
+
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Iterate through used cells and display their values
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    var cell = cells[row, col];
+                    if (cell != null && cell.Value != null)
+                    {
+                        Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
+                    }
                 }
-
-                // Configure load options with the password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    Password = password
-                };
-
-                // Load the protected workbook using the password
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook (now decrypted) to a new file
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Decrypted workbook saved to: {outputPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook to a new file (optional)
+            string outputPath = "unprotected.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

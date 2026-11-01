@@ -1,31 +1,72 @@
-// Title: Apply a SORT dynamic array formula to column E on every worksheet in an Aspose.Cells workbook (C#)
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, loops through all worksheets, writes the formula '=SORT(A1:D10)' into cell E1 of each sheet, and saves the result. | Create a C# snippet using Aspose.Cells to add a spill‑range SORT formula starting at E1 on every worksheet of a workbook and persist the changes.
-// Common Searches: aspocells c# set the same SORT formula on all worksheets | how to assign a dynamic array formula to column E for every sheet using Aspose.Cells | iterate through worksheets and apply spill formula in C# Aspose.Cells | bulk insert SORT(A1:D10) formula across multiple worksheets Aspose.Cells | c# aspocells apply array formula to each worksheet column E
-// Tags: set dynamic array formula Aspose.Cells C# | process each worksheet assign formula | spill SORT formula column E | bulk formula insertion workbook | load save workbook with formulas | apply same formula across sheets
+// Title: Set a SORT dynamic array formula in column E of every worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply the same formula to all worksheets in a workbook | How to assign a dynamic array SORT formula to cell E1 across multiple sheets with Aspose.Cells | Iterate through Excel worksheets and set a formula programmatically in C# | Bulk insert a SORT(A1:D100) formula into column E using Aspose.Cells .NET | Set a formula for each sheet in an existing workbook with Aspose.Cells
+// Tags: Aspose.Cells bulk formula assignment | C# iterate workbook worksheets | apply SORT function to Excel column via Aspose | set cell E1 formula across multiple sheets | dynamic array support in Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example loads an Excel workbook with Aspose.Cells, defines the dynamic array formula "=SORT(A1:D10)", iterates over every worksheet, places that formula in cell E1 (which spills automatically into column E), and saves the modified workbook as a new file.
+// The example loads an existing workbook (or creates one with sample data), defines the dynamic array formula "=SORT(A1:D100)", loops through all worksheets, writes that formula to cell E1 on each sheet, and saves the workbook, handling load, formula, and save errors.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        Workbook workbook = null;
 
-        // Define the dynamic array formula (example: sort range A1:D10)
-        string dynamicArrayFormula = "=SORT(A1:D10)";
-
-        // Iterate over every worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Load existing workbook if it exists; otherwise create a new one with sample data.
+        if (File.Exists(inputPath))
         {
-            // Apply the dynamic array formula to the first cell of column E (E1)
-            // The result will automatically spill into the required rows/columns
-            sheet.Cells["E1"].Formula = dynamicArrayFormula;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Error loading workbook '{inputPath}': {ex.Message}");
+                return;
+            }
+        }
+        else
+        {
+            // Create a new workbook and populate A1:D100 with sample values.
+            workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            for (int row = 0; row < 100; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    sheet.Cells[row, col].PutValue(row * 4 + col + 1);
+                }
+            }
         }
 
-        // Save the workbook with the applied formulas
-        workbook.Save("output.xlsx");
+        // Define the dynamic array formula to apply.
+        string dynamicArrayFormula = "=SORT(A1:D100)";
+
+        // Apply the formula to each worksheet.
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            try
+            {
+                sheet.Cells["E1"].Formula = dynamicArrayFormula;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to set formula on sheet '{sheet.Name}': {ex.Message}");
+            }
+        }
+
+        // Save the workbook.
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
+        }
     }
 }

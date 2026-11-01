@@ -1,75 +1,73 @@
-// Title: Check that Worksheet TabId values remain unchanged after saving and reloading an XLSX workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that records each worksheet's TabId, saves the workbook to a MemoryStream in XLSX format, reloads it, and verifies the TabId values are identical. | Show how to compare two List<int> of Worksheet.TabId before and after a workbook round‑trip with Aspose.Cells.
-// Common Searches: how to ensure worksheet TabId stays the same after Aspose.Cells workbook save and load in C# | Aspose.Cells .NET compare TabId values before and after workbook serialization | preserve worksheet tab order when saving Excel file with Aspose.Cells | C# verify worksheet TabId consistency after round‑trip XLSX using Aspose.Cells
-// Tags: worksheet TabId verification after XLSX roundtrip | Aspose.Cells workbook serialization to MemoryStream | compare Worksheet.TabId collections in C# | preserve Excel tab identifiers with Aspose.Cells | validate worksheet order after workbook reload
+// Title: Check that worksheet TabId values stay the same after saving and reloading a workbook using Aspose.Cells for .NET
+// AI Prompts: Generate a C# routine that records each Worksheet.TabId, saves the workbook to a MemoryStream in XLSX format, reloads it, and reports any TabId mismatches. | Create an NUnit/xUnit test that asserts all Worksheet.TabId values are identical before and after workbook serialization with Aspose.Cells.
+// Common Searches: Aspose.Cells how to verify worksheet TabId remains unchanged after saving | C# compare Excel sheet TabId values before and after workbook serialization | ensure tab identifier persistence when loading a workbook from a memory stream in Aspose.Cells | detect TabId mismatches in reloaded worksheets using Aspose.Cells .NET
+// Tags: worksheet TabId persistence after save | Aspose.Cells workbook round‑trip TabId verification | C# compare worksheet TabId pre‑save post‑load | Excel sheet identifier consistency with Aspose.Cells | memory stream serialization TabId check
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The program creates a workbook with multiple worksheets, captures each worksheet's TabId, saves the workbook to a MemoryStream as XLSX, reloads it, captures the TabId values again, and compares the two sets to confirm that TabId values remain consistent across the serialization round‑trip.
-class Program
+// The example records each worksheet's TabId, saves the workbook to a MemoryStream as XLSX, reloads it, captures the TabIds again, and outputs any differences to confirm that TabId values are preserved across serialization.
+class TabIdConsistencyCheck
 {
     static void Main()
     {
-        try
+        // Create a new workbook and add some worksheets
+        Workbook originalWorkbook = new Workbook(); // create rule
+        originalWorkbook.Worksheets.Add("First");
+        originalWorkbook.Worksheets.Add("Second");
+        originalWorkbook.Worksheets.Add("Third");
+
+        // Capture TabId values before serialization
+        Dictionary<string, int> beforeIds = new Dictionary<string, int>();
+        foreach (Worksheet ws in originalWorkbook.Worksheets)
         {
-            // ---------- Create workbook ----------
-            var workbook = new Workbook();
+            beforeIds[ws.Name] = ws.TabId;
+        }
 
-            // Rename the default worksheet to avoid name conflict
-            workbook.Worksheets[0].Name = "Sheet0";
+        // Serialize the workbook to a memory stream
+        using (MemoryStream ms = new MemoryStream())
+        {
+            originalWorkbook.Save(ms, SaveFormat.Xlsx); // save rule
+            ms.Position = 0; // reset stream position for loading
 
-            // Add additional worksheets with unique names
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
+            // Load the workbook back from the stream
+            Workbook loadedWorkbook = new Workbook(ms); // load rule
 
-            // Capture TabId values before serialization
-            var originalTabIds = new List<int>();
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Capture TabId values after deserialization
+            Dictionary<string, int> afterIds = new Dictionary<string, int>();
+            foreach (Worksheet ws in loadedWorkbook.Worksheets)
             {
-                originalTabIds.Add(ws.TabId);
+                afterIds[ws.Name] = ws.TabId;
             }
 
-            // ---------- Serialize workbook ----------
-            using (var ms = new MemoryStream())
+            // Compare TabId values
+            bool allMatch = true;
+            foreach (var kvp in beforeIds)
             {
-                // Save to memory stream (serialization)
-                workbook.Save(ms, SaveFormat.Xlsx);
-                ms.Position = 0; // reset stream for reading
-
-                // ---------- Load workbook ----------
-                var loadedWorkbook = new Workbook(ms);
-
-                // Capture TabId values after deserialization
-                var loadedTabIds = new List<int>();
-                foreach (Worksheet ws in loadedWorkbook.Worksheets)
+                string sheetName = kvp.Key;
+                int beforeId = kvp.Value;
+                int afterId;
+                if (afterIds.TryGetValue(sheetName, out afterId))
                 {
-                    loadedTabIds.Add(ws.TabId);
-                }
-
-                // ---------- Compare TabId values ----------
-                bool isConsistent = originalTabIds.Count == loadedTabIds.Count;
-                if (isConsistent)
-                {
-                    for (int i = 0; i < originalTabIds.Count; i++)
+                    if (beforeId != afterId)
                     {
-                        if (originalTabIds[i] != loadedTabIds[i])
-                        {
-                            isConsistent = false;
-                            break;
-                        }
+                        allMatch = false;
+                        Console.WriteLine($"TabId mismatch on sheet '{sheetName}': before={beforeId}, after={afterId}");
                     }
                 }
-
-                Console.WriteLine("TabId consistency after serialization: " + isConsistent);
+                else
+                {
+                    allMatch = false;
+                    Console.WriteLine($"Sheet '{sheetName}' not found after loading.");
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+
+            if (allMatch)
+            {
+                Console.WriteLine("All TabId values are consistent before and after serialization.");
+            }
         }
     }
 }

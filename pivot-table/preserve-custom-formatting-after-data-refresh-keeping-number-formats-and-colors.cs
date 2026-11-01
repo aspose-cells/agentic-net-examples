@@ -1,58 +1,109 @@
-// Title: Refresh Pivot Table Data in an Excel Workbook While Keeping Custom Number Formats and Cell Colors Using Aspose.Cells for .NET
-// AI Prompts: Load an existing workbook, recalculate its formulas (or refresh data connections if supported), and save it so that custom number formats and cell background colors stay unchanged. | Import a DataTable into a worksheet and then recalculate formulas, ensuring that all pre‑existing cell styles are preserved with Aspose.Cells. | Implement a fallback that calls Workbook.CalculateFormula when RefreshAllDataConnections is unavailable, guaranteeing that formatting is not altered.
-// Common Searches: Aspose.Cells keep cell background color after refreshing pivot table data | preserve custom number format when recalculating formulas in .NET Excel workbook | how to refresh data connections without losing formatting using Aspose.Cells | import DataTable into existing worksheet without changing existing styles Aspose.Cells | refresh pivot table programmatically while retaining number formats Aspose.Cells .NET
-// Tags: refresh data connections Aspose.Cells .NET | preserve custom number formats Excel Aspose.Cells | retain cell colors after workbook recalculation | import DataTable without overwriting styles Aspose.Cells | pivot table refresh preserving formatting Aspose.Cells
+// Title: Refresh Excel worksheet data while keeping number formats and cell colors with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# preserve cell formatting when updating worksheet data | keep number format and background color after importing DataTable into Excel with Aspose.Cells | refresh Excel data programmatically without losing custom cell styles using Aspose.Cells .NET
+// Tags: capture and restore cell style Aspose.Cells | import DataTable without losing formatting Aspose.Cells | retain numeric display format during worksheet refresh Aspose.Cells | preserve cell fill color when updating Excel Aspose.Cells | reapply original cell styles after data import Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.Data;
 using System.IO;
 
-// The example loads an Excel workbook, optionally refreshes external data connections or recalculates formulas, and saves the file, ensuring that custom number formats and cell colors remain intact.
+// The example loads an existing workbook (or creates one), captures each cell's current Style, imports refreshed DataTable values into the same range without altering formatting, then reapplies the saved styles to retain number formats and cell colors before saving the workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "Input.xlsx";
-        const string outputPath = "Output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook (preserves all existing formatting).
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // NOTE: In some Aspose.Cells versions the method RefreshAllDataConnections
-            // is not available. If you need to refresh external data sources, use the
-            // appropriate API for your version. Here we simply recalculate formulas
-            // as a safe fallback that does not affect cell styles.
-            workbook.CalculateFormula();
+            // Load existing workbook if it exists; otherwise create a new one.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                // Add a default worksheet.
+                workbook.Worksheets.Add("Sheet1");
+            }
 
-            // Example of importing data while preserving formatting (uncomment and adapt as needed).
-            // DataTable dt = GetDataFromSource();
-            // Worksheet sheet = workbook.Worksheets[0];
-            // sheet.Cells.ImportDataTable(dt, true, "A2", true);
+            // Obtain refreshed data from an external source.
+            DataTable refreshedData = GetRefreshedData();
 
-            // Save the workbook; all custom number formats and cell colors remain intact.
+            // Target worksheet (first sheet in this example).
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define where the data starts (row 0, column 0 in this example).
+            int startRow = 0;
+            int startColumn = 0;
+
+            int rows = refreshedData.Rows.Count;
+            int cols = refreshedData.Columns.Count;
+
+            // ------------------------------------------------------------
+            // Preserve formatting: capture the current style of each cell.
+            // ------------------------------------------------------------
+            Style[,] originalStyles = new Style[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Cell cell = sheet.Cells[startRow + i, startColumn + j];
+                    originalStyles[i, j] = cell.GetStyle();
+                }
+            }
+
+            // ------------------------------------------------------------
+            // Refresh data: import new values without affecting formatting.
+            // ------------------------------------------------------------
+            // Aspose.Cells may not have ImportDataTable in some versions, so we fill manually.
+            for (int i = 0; i < rows; i++)
+            {
+                DataRow dr = refreshedData.Rows[i];
+                for (int j = 0; j < cols; j++)
+                {
+                    Cell cell = sheet.Cells[startRow + i, startColumn + j];
+                    cell.PutValue(dr[j]);
+                }
+            }
+
+            // ------------------------------------------------------------
+            // Reapply the captured styles to keep number formats and colors.
+            // ------------------------------------------------------------
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Cell cell = sheet.Cells[startRow + i, startColumn + j];
+                    cell.SetStyle(originalStyles[i, j]);
+                }
+            }
+
+            // Save the workbook with refreshed data while preserving formatting.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Placeholder for custom data retrieval logic.
-    // static DataTable GetDataFromSource()
-    // {
-    //     // Implement data fetching and return a populated DataTable.
-    // }
+    // Mock method that simulates obtaining refreshed data.
+    static DataTable GetRefreshedData()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Item", typeof(string));
+        dt.Columns.Add("Quantity", typeof(int));
+        dt.Columns.Add("Price", typeof(double));
+
+        dt.Rows.Add("Apple", 150, 0.55);
+        dt.Rows.Add("Banana", 95, 0.30);
+        dt.Rows.Add("Cherry", 70, 1.20);
+
+        return dt;
+    }
 }

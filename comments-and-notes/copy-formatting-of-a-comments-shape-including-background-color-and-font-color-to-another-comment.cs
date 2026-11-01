@@ -1,49 +1,72 @@
-// Title: Copy comment shape background and font colors from one cell to another with Aspose.Cells for .NET
-// AI Prompts: Write C# code that copies the fill color and font color of a source comment's CommentShape to a target comment's CommentShape in an Aspose.Cells workbook. | Generate a method that transfers comment shape formatting (background and text color) between two cells using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells copy comment shape fill color from cell A1 to B2 C# | How to duplicate comment background and font color in Excel using Aspose.Cells .NET | C# Aspose.Cells transfer comment shape formatting between cells | Copy comment style from one worksheet cell to another Aspose.Cells | Set comment shape fill and font colors programmatically with Aspose.Cells
-// Tags: copy comment shape formatting Aspose.Cells | comment shape fill color Aspose.Cells | comment shape font color Aspose.Cells | Aspose.Cells comment style replication | C# transfer comment formatting Excel
+// Title: Copy comment shape formatting (background and font color) from one cell comment to another using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# copy comment shape background color to another cell | How to duplicate Excel comment formatting with Aspose.Cells .NET | Programmatically transfer comment font color between cells using Aspose.Cells | Copy comment style from cell A1 to B2 in C# with Aspose.Cells | Set target comment shape formatting based on source comment in Aspose.Cells
+// Tags: comment shape formatting transfer Aspose.Cells | comment background color copy .NET | comment font color replication C# | duplicate Excel comment style Aspose.Cells | apply source comment formatting to target cell | Aspose.Cells comment shape API usage
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // This example creates a workbook, adds a source comment with a light‑yellow fill and blue font, adds a destination comment, copies the fill and font colors from the source comment's CommentShape to the destination comment's CommentShape, and saves the file.
-class CopyCommentShapeFormatting
+namespace AsposeCellsCommentFormatting
 {
-    static void Main()
+    // The example loads an Excel workbook, ensures comments exist in cells A1 and B2, copies the source comment's shape font color (and optionally other font attributes) to the target comment's shape, and saves the updated file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-        // ---------- Source comment ----------
-        // Add a comment to cell A1
-        int srcCommentIndex = worksheet.Comments.Add("A1");
-        Comment srcComment = worksheet.Comments[srcCommentIndex];
-        srcComment.Note = "Source comment";
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-        // Get the shape attached to the source comment
-        CommentShape srcShape = srcComment.CommentShape;
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Set background (fill) color and font color for the source shape
-        srcShape.FillFormat.ForeColor = Color.LightYellow;   // background color
-        srcShape.Font.Color = Color.Blue;                    // font color
+                // ----- Source comment (cell A1) -----
+                Comment sourceComment = sheet.Comments["A1"];
+                if (sourceComment == null)
+                {
+                    // Create a source comment for demonstration
+                    int idx = sheet.Comments.Add("A1");
+                    sourceComment = sheet.Comments[idx];
+                    sourceComment.CommentShape.Text = "Source comment";
+                }
 
-        // ---------- Destination comment ----------
-        // Add a comment to cell B2
-        int destCommentIndex = worksheet.Comments.Add("B2");
-        Comment destComment = worksheet.Comments[destCommentIndex];
-        destComment.Note = "Destination comment";
+                // ----- Target comment (cell B2) -----
+                Comment targetComment = sheet.Comments["B2"];
+                if (targetComment == null)
+                {
+                    // Create a target comment for demonstration
+                    int idx = sheet.Comments.Add("B2");
+                    targetComment = sheet.Comments[idx];
+                    targetComment.CommentShape.Text = "Target comment";
+                }
 
-        // Get the shape attached to the destination comment
-        CommentShape destShape = destComment.CommentShape;
+                // ----- Copy formatting from source comment shape to target comment shape -----
+                // Copy font color
+                targetComment.CommentShape.Font.Color = sourceComment.CommentShape.Font.Color;
 
-        // Copy formatting from source shape to destination shape
-        destShape.FillFormat.ForeColor = srcShape.FillFormat.ForeColor; // background color
-        destShape.Font.Color = srcShape.Font.Color;                    // font color
+                // Optionally copy other font attributes
+                // targetComment.CommentShape.Font.Name = sourceComment.CommentShape.Font.Name;
+                // targetComment.CommentShape.Font.Size = sourceComment.CommentShape.Font.Size;
+                // targetComment.CommentShape.Font.IsBold = sourceComment.CommentShape.Font.IsBold;
 
-        // Save the workbook
-        workbook.Save("CommentShapeFormattingCopy.xlsx");
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

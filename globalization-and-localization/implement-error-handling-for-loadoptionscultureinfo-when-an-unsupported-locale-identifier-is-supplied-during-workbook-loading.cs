@@ -1,58 +1,45 @@
-// Title: Handle unsupported locale identifiers when assigning LoadOptions.CultureInfo during Excel workbook loading with Aspose.Cells in C#
-// AI Prompts: Write a C# method that loads an Excel file with Aspose.Cells, takes a locale string, and automatically falls back to InvariantCulture if the locale is not recognized. | Show how to catch CultureNotFoundException when setting LoadOptions.CultureInfo and log a warning before opening the workbook. | Generate code that validates a locale identifier before applying it to LoadOptions.CultureInfo and supplies a default culture for invalid values.
-// Common Searches: Aspose.Cells C# load workbook with CultureInfo fallback for invalid locale | How to catch CultureNotFoundException in LoadOptions when loading an Excel file | Validate locale string before assigning to LoadOptions.CultureInfo in .NET | Set default culture for unsupported locale identifiers in Aspose.Cells load options
-// Tags: Aspose.Cells LoadOptions CultureInfo fallback | C# CultureNotFoundException handling workbook loading | invalid locale identifier validation Aspose.Cells | Excel workbook loading with culture settings .NET | fallback to InvariantCulture Aspose.Cells
+// Title: Handle unsupported locale identifiers with LoadOptions.CultureInfo and fallback to InvariantCulture in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells LoadOptions CultureInfo invalid locale handling in C# | fallback to InvariantCulture when loading Excel workbook with unsupported culture | catch CultureNotFoundException while setting LoadOptions.CultureInfo Aspose.Cells | set default culture for workbook loading in Aspose.Cells .NET | how to provide safe locale for Aspose.Cells workbook load options
+// Tags: LoadOptions CultureInfo fallback | unsupported locale handling Aspose.Cells | CultureNotFoundException Aspose.Cells .NET | InvariantCulture workbook loading | globalization settings Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.Globalization;
+using Aspose.Cells;
 
-// The example demonstrates loading an Excel workbook with Aspose.Cells while assigning a CultureInfo based on a user‑provided locale string. It catches CultureNotFoundException for unsupported locales, logs the issue, and falls back to CultureInfo.InvariantCulture before saving the workbook.
-class Program
+// Demonstrates assigning a user‑supplied locale to LoadOptions.CultureInfo, catching CultureNotFoundException for unsupported identifiers, switching to CultureInfo.InvariantCulture, and then loading and saving the workbook with the safe culture settings.
+class WorkbookLoader
 {
     static void Main()
     {
-        // Input and output file paths
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        // Path to the Excel file to be loaded
+        string inputPath = "Sample.xlsx";
 
-        // Example locale identifier (replace with actual value)
-        string localeId = "invalid-locale";
+        // Locale identifier supplied by the user or external source
+        string localeIdentifier = "invalid-locale"; // Example of an unsupported locale
 
-        // Load workbook with culture handling
-        Workbook workbook = LoadWorkbookWithCulture(inputPath, localeId);
-
-        // Perform any workbook operations here...
-
-        // Save the workbook (using the standard save rule)
-        workbook.Save(outputPath);
-    }
-
-    /// <param name="path">Path to the workbook file.</param>
-    /// <param name="localeId">Locale identifier (e.g., "en-US", "fr-FR").</param>
-    /// <returns>Loaded Workbook instance.</returns>
-    static Workbook LoadWorkbookWithCulture(string path, string localeId)
-    {
-        // Create LoadOptions (using the create rule)
+        // Prepare LoadOptions with culture handling
         LoadOptions loadOptions = new LoadOptions();
 
         try
         {
-            // Attempt to set the specified culture (using the rule for setting CultureInfo)
-            loadOptions.CultureInfo = new CultureInfo(localeId);
+            // Attempt to assign the requested culture
+            loadOptions.CultureInfo = new CultureInfo(localeIdentifier);
         }
-        catch (CultureNotFoundException ex)
+        catch (CultureNotFoundException)
         {
-            // Handle unsupported locale identifier
-            Console.WriteLine($"Locale '{localeId}' is not supported. Falling back to InvariantCulture.");
-            Console.WriteLine($"Error details: {ex.Message}");
-
-            // Fallback to a safe default culture
+            // The supplied locale identifier is not supported.
+            // Fallback to InvariantCulture (or any default you prefer)
+            Console.WriteLine($"Locale '{localeIdentifier}' is not supported. Using InvariantCulture instead.");
             loadOptions.CultureInfo = CultureInfo.InvariantCulture;
         }
 
-        // Load the workbook with the configured LoadOptions (using the load rule)
-        Workbook workbook = new Workbook(path, loadOptions);
-        return workbook;
+        // Load the workbook using the configured LoadOptions
+        Workbook workbook = new Workbook(inputPath, loadOptions);
+
+        // (Optional) Perform any workbook operations here
+
+        // Save the workbook to verify successful loading
+        string outputPath = "LoadedOutput.xlsx";
+        workbook.Save(outputPath);
     }
 }

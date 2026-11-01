@@ -1,14 +1,13 @@
-// Title: Export all XML maps from an Excel workbook to separate XML files using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a C# console application that opens a specified .xlsx file with Aspose.Cells, enumerates every XmlMap in the workbook, and writes each map to its own .xml file in a designated output folder. | Provide .NET code that uses reflection to obtain the Workbook.XmlMaps collection for compatibility with different Aspose.Cells versions, then calls Workbook.ExportXml for each map name. | Create a snippet that creates an output directory, logs the success or failure of exporting each XML map, and handles missing input file or absent XmlMaps gracefully.
-// Common Searches: how to loop through XmlMaps in a workbook with Aspose.Cells C# | export each XML map to a separate file using Aspose.Cells .NET | using reflection to access XmlMaps property in older Aspose.Cells versions | save Excel XML maps as individual .xml files programmatically | Aspose.Cells ExportXml example for multiple maps
-// Tags: export xml maps Aspose.Cells C# | iterate workbook XmlMaps collection | Workbook.ExportXml per map | reflection fallback for Aspose.Cells XmlMaps | create output folder for exported xml
+// Title: Export all XML maps from an Excel workbook to individual XML files using Aspose.Cells for .NET
+// Common Searches: C# loop through XmlMaps collection in Aspose.Cells and export each map as XML | How to export multiple XML maps from an .xlsx workbook with Aspose.Cells .NET | Using reflection to retrieve XmlMaps property when not directly exposed in Aspose.Cells | Save each XML map to a separate file using Workbook.ExportXml in C# | Example of iterating over workbook XML maps and writing them to disk with Aspose.Cells
+// Tags: Aspose.Cells ExportXml multiple maps | iterate XmlMaps collection C# | export workbook XML maps to files | reflection access XmlMaps Aspose.Cells | save each XML map as separate file
 
 using Aspose.Cells;
 using System;
+using System.Collections;
 using System.IO;
-using System.Reflection;
 
-// The sample loads an input.xlsx workbook, verifies the presence of the XmlMaps collection via reflection, creates an 'XmlMapsOutput' directory, iterates each XML map, and calls Workbook.ExportXml to write each map to a separate .xml file while logging successes and handling errors.
+// The sample loads an Excel workbook, creates an output folder, uses reflection to obtain the XmlMaps collection, iterates through each map, retrieves its name, and calls Workbook.ExportXml to write each map to a distinct XML file, handling missing files and runtime errors.
 class ExportXmlMaps
 {
     static void Main()
@@ -17,10 +16,10 @@ class ExportXmlMaps
         {
             const string inputPath = "input.xlsx";
 
-            // Verify that the input workbook exists before loading
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
@@ -28,51 +27,51 @@ class ExportXmlMaps
             Workbook workbook = new Workbook(inputPath);
 
             // Ensure the output directory exists
-            string outputDir = "XmlMapsOutput";
+            string outputDir = "ExportedXml";
             Directory.CreateDirectory(outputDir);
 
-            // Use reflection to obtain the XmlMaps collection (covers API variations)
-            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps", BindingFlags.Public | BindingFlags.Instance);
+            // Use reflection to obtain the XmlMaps collection (avoids compile‑time dependency on the property)
+            var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
             if (xmlMapsProp == null)
             {
-                Console.WriteLine("The loaded Aspose.Cells version does not expose XmlMaps.");
+                Console.WriteLine("The workbook does not support XML maps in the current Aspose.Cells version.");
                 return;
             }
 
-            var xmlMaps = xmlMapsProp.GetValue(workbook) as System.Collections.IEnumerable;
-            if (xmlMaps == null)
+            var xmlMapsObj = xmlMapsProp.GetValue(workbook) as IEnumerable;
+            if (xmlMapsObj == null)
             {
                 Console.WriteLine("No XML maps found in the workbook.");
                 return;
             }
 
             // Iterate through each XML map and export it
-            foreach (object mapObj in xmlMaps)
+            foreach (var mapObj in xmlMapsObj)
             {
-                // Use reflection to read the map's Name property
-                PropertyInfo nameProp = mapObj.GetType().GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                if (nameProp == null) continue;
-
-                string mapName = nameProp.GetValue(mapObj) as string;
-                if (string.IsNullOrEmpty(mapName)) continue;
-
-                string outputPath = Path.Combine(outputDir, mapName + ".xml");
-
                 try
                 {
+                    var nameProp = mapObj.GetType().GetProperty("Name");
+                    string mapName = nameProp?.GetValue(mapObj) as string;
+
+                    if (string.IsNullOrEmpty(mapName))
+                        continue;
+
+                    string xmlPath = Path.Combine(outputDir, mapName + ".xml");
+
                     // Export the XML map to the specified file
-                    workbook.ExportXml(mapName, outputPath);
-                    Console.WriteLine($"Exported XML map '{mapName}' to '{outputPath}'.");
+                    workbook.ExportXml(mapName, xmlPath);
+                    Console.WriteLine($"Exported XML map '{mapName}' to '{xmlPath}'.");
                 }
-                catch (Exception ex)
+                catch (Exception exMap)
                 {
-                    Console.WriteLine($"Failed to export map '{mapName}': {ex.Message}");
+                    Console.WriteLine($"Failed to export an XML map: {exMap.Message}");
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

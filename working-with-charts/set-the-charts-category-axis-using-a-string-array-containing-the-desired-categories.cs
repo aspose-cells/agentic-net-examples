@@ -1,50 +1,67 @@
-// Title: How to assign custom string categories to a column chart’s category axis using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells and sets the CategoryData property from a string[] of labels. | Transform a string array into the Aspose.Cells category data syntax (e.g., {"Label1","Label2"}) and apply it to a chart’s category axis. | Demonstrate programmatic assignment of custom category labels to a chart series in a .NET workbook using Aspose.Cells.
-// Common Searches: aspnet set chart category axis labels from string array aspose.cells | c# aspose.cells column chart custom category labels example | how to format CategoryData property with string array in Aspose.Cells | assigning custom categories to chart series programmatically using Aspose.Cells .NET
-// Tags: Aspose.Cells set chart CategoryData from string array | C# column chart custom category axis Aspose.Cells | CategoryData syntax for string labels .NET | programmatic chart label assignment Aspose.Cells | Aspose.Cells chart series category customization
+// Title: Create a column chart with Aspose.Cells in C# and assign X‑axis categories from a string array
+// AI Prompts: Write C# code that writes month names to a worksheet column and links that range to the chart's CategoryData property using Aspose.Cells. | Generate an Excel file with a column chart where the horizontal axis displays custom labels taken from a string array, employing Aspose.Cells APIs. | Demonstrate how to bind a string array to the category axis of an Aspose.Cells chart and save the workbook programmatically.
+// Common Searches: aspocells c# set chart X axis labels from string array | how to bind custom category labels to a column chart using Aspose.Cells | C# Aspose.Cells NSeries.CategoryData example with month names | create Excel chart with custom X axis categories in C#
+// Tags: Aspose.Cells set chart category axis | C# bind string array to chart CategoryData | column chart custom X axis labels Aspose.Cells | write category strings to worksheet for chart | save workbook with labeled chart Aspose.Cells
 
-using System;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsCategoryAxisExample
+// The program creates a new workbook, writes numeric values to column A and month strings to column B, adds a column chart, links the data series to A1:A3, sets the category axis labels to B1:B3 via NSeries.CategoryData, and saves the file as ChartWithCategories.xlsx.
+class Program
 {
-    // The example creates a new workbook, adds numeric data, inserts a column chart, converts a C# string array into the CategoryData format required by Aspose.Cells, assigns it to the chart's category axis, and saves the workbook as ChartWithStringCategories.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample numeric data for the chart series (required for the chart to have values)
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            // Sample numeric data for the chart
+            double[] values = new double[] { 10, 20, 30 };
+            for (int i = 0; i < values.Length; i++)
+            {
+                // Write values to column A (cells A1, A2, A3)
+                sheet.Cells[i, 0].PutValue(values[i]);
+            }
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            // Desired category labels for the X (category) axis
+            string[] categories = new string[] { "Jan", "Feb", "Mar" };
+            for (int i = 0; i < categories.Length; i++)
+            {
+                // Write categories to column B (cells B1, B2, B3)
+                sheet.Cells[i, 1].PutValue(categories[i]);
+            }
+
+            // Add a column chart to the worksheet (rows 5-15, columns 0-5)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series (values only, categories will be set separately)
-            chart.NSeries.Add("B2:B4", true);
+            // Add a series that uses the numeric data range
+            chart.NSeries.Add("A1:A3", true);
 
-            // Define the desired categories as a string array
-            string[] categories = new string[] { "Alpha", "Beta", "Gamma" };
+            // Set the category axis labels using the range that contains the categories
+            chart.NSeries.CategoryData = "B1:B3";
 
-            // Convert the string array to the format accepted by CategoryData (e.g., {"Alpha","Beta","Gamma"})
-            string categoryData = "{" + string.Join(",", categories.Select(c => $"\"{c}\"")) + "}";
+            // Define output file path
+            string outputPath = "ChartWithCategories.xlsx";
 
-            // Assign the category axis using the prepared string sequence
-            chart.NSeries.CategoryData = categoryData;
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Optional: verify the assigned CategoryData (output to console)
-            Console.WriteLine("Assigned CategoryData: " + chart.NSeries.CategoryData);
-
-            // Save the workbook to a file
-            workbook.Save("ChartWithStringCategories.xlsx");
+            // Save the workbook with the chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

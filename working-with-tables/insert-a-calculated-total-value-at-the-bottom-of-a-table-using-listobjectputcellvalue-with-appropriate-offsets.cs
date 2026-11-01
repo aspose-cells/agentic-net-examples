@@ -1,88 +1,75 @@
-// Title: Add a calculated total row below an Aspose.Cells ListObject table using PutCellValue in C#
-// AI Prompts: Generate C# code that appends a "Total" label and a SUM formula for a specific column after an Aspose.Cells ListObject, using PutCellValue with row and column offsets. | Show how to compute and insert a column total in an Excel table created with Aspose.Cells, then trigger workbook.CalculateFormula to display the result.
-// Common Searches: how to append a total row after a ListObject in Aspose.Cells C# | using PutCellValue to write a SUM formula below an Excel table with Aspose.Cells | calculate column sum for a ListObject table programmatically in C# | force formula evaluation after inserting totals in Aspose.Cells workbook | determine row offset for total row in Aspose.Cells ListObject
-// Tags: Aspose.Cells ListObject PutCellValue | add total row to Excel table | write SUM formula with Aspose.Cells | row offset calculation for ListObject | force formula calculation C# workbook | C# Excel table total automation
+// Title: Add a calculated total row to the bottom of an Excel ListObject using ListObject.PutCellValue in Aspose.Cells for .NET (C#)
+// Common Searches: how to insert a sum row at the end of a ListObject table with Aspose.Cells C# | using ListObject.PutCellValue to write a total value in an Excel table via Aspose.Cells | calculate column total and add a footer row in a .NET Excel workbook with Aspose.Cells | C# code to add a summary row to an Excel table created by Aspose.Cells | Aspose.Cells ListObject add total row programmatically in C#
+// Tags: listobject putcellvalue add total row | aspose.cells calculate column sum c# | excel table footer insertion aspnet | c# insert summary row into listobject | aspose.cells datarange total calculation
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using System;
 
-// The example creates a workbook, defines a ListObject named SalesTable with sample data, calculates the correct row and column offsets, uses ListObject.PutCellValue to write a "Total" label and a SUM formula for the Quantity column, forces formula evaluation, and saves the result as TableWithTotal.xlsx.
+// The example creates a workbook, defines a ListObject covering A1:B5, computes the sum of the 'Amount' column, and uses ListObject.PutCellValue with row and column offsets to place the total value and a "Total" label directly below the data rows before saving the file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "Data";
 
-            // Sample data for the table (header + 3 rows)
-            object[,] data = new object[,]
-            {
-                { "Item", "Quantity", "Price" },
-                { "Apple", "10", "0.5" },
-                { "Banana", "5", "0.3" },
-                { "Orange", "8", "0.4" }
-            };
+            // Populate sample data (header + 4 rows)
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A5"].PutValue("D");
+            sheet.Cells["B5"].PutValue(40);
 
-            // Populate the worksheet starting at cell A1 (manual import to avoid missing API)
-            int rows = data.GetLength(0);
-            int cols = data.GetLength(1);
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    sheet.Cells[r, c].PutValue(data[r, c]);
-                }
-            }
+            // Define the range for the table (A1:B5)
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 5;         // header + 4 data rows
+            int totalColumns = 2;      // two columns (Item, Amount)
 
-            // Define the range that will become the ListObject (table)
-            int firstRow = 0;
-            int firstCol = 0;
-            int lastRow = rows - 1;   // includes header row
-            int lastCol = cols - 1;
-
-            // Add a ListObject covering the data range (including header)
-            int listObjectIndex = sheet.ListObjects.Add(firstRow, firstCol, lastRow, lastCol, true);
+            // Add the ListObject (table) and obtain a reference
+            int listObjectIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
             ListObject table = sheet.ListObjects[listObjectIndex];
             table.DisplayName = "SalesTable";
 
-            // ------------------------------------------------------------
-            // Insert a calculated total row below the table using PutCellValue
-            // ------------------------------------------------------------
+            // Calculate the sum of the Amount column (second column in the table)
+            double total = 0;
+            for (int r = 0; r < table.DataRange.RowCount; r++)
+            {
+                // Column offset 1 corresponds to the "Amount" column
+                total += sheet.Cells[
+                    table.DataRange.FirstRow + r,
+                    table.DataRange.FirstColumn + 1].DoubleValue;
+            }
 
-            // Row offset: one row after the last data row of the table
-            int totalRow = table.DataRange.FirstRow + table.DataRange.RowCount + 1; // +1 for the total row
-            int totalColLabel = table.DataRange.FirstColumn;               // column A for the "Total" label
-            int totalColValue = table.DataRange.FirstColumn + 1;           // column B for the summed quantity
-
-            // Write the "Total" label
-            table.PutCellValue(totalRow, totalColLabel, "Total");
-
-            // Build the SUM formula for the Quantity column (column B)
-            int quantityColIndex = table.DataRange.FirstColumn + 1;
-
-            // Address of first quantity cell (row after header)
-            string startAddress = CellsHelper.CellIndexToName(table.DataRange.FirstRow + 1, quantityColIndex);
-            // Address of last quantity cell (last data row)
-            string endAddress = CellsHelper.CellIndexToName(table.DataRange.FirstRow + table.DataRange.RowCount, quantityColIndex);
-            string sumFormula = $"=SUM({startAddress}:{endAddress})";
-
-            // Write the formula into the total value cell
-            table.PutCellValue(totalRow, totalColValue, sumFormula);
-
-            // Force calculation so the total appears immediately
-            workbook.CalculateFormula();
+            // Insert the total value at the bottom of the table
+            int offsetRow = table.DataRange.RowCount; // after last data row
+            int amountColumnOffset = 1;               // same column as Amount
+            table.PutCellValue(offsetRow, amountColumnOffset, total);
+            table.PutCellValue(offsetRow, 0, "Total"); // label in first column
 
             // Save the workbook
-            workbook.Save("TableWithTotal.xlsx");
+            string outputPath = "Output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

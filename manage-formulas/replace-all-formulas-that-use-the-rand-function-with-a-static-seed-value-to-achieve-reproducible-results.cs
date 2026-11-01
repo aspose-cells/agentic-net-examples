@@ -1,48 +1,74 @@
-// Title: How to replace RAND() formulas with a fixed seed value in an Excel file using Aspose.Cells for .NET
-// AI Prompts: Scan all worksheets in a workbook and substitute any RAND() formula with a predefined constant using Aspose.Cells C#. | Replace volatile RAND() functions with a static numeric seed to make random results reproducible in an Excel file via Aspose.Cells. | Programmatically convert cells containing RAND() to a fixed value and save the updated workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells replace RAND() with constant value in C# | make Excel RAND function deterministic using Aspose.Cells .NET | C# code to iterate over cells and change volatile formulas to static numbers | how to set a fixed value for random numbers in an Excel workbook with Aspose.Cells | convert RAND() formulas to fixed numbers across all sheets Aspose.Cells
-// Tags: substitute RAND() with constant Aspose.Cells | static seed for Excel random function | iterate worksheets cells Aspose.Cells C# | convert volatile formulas to constants Aspose.Cells | deterministic random numbers Excel .NET
+// Title: Replace RAND formulas with a seeded static value in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells replace volatile RAND formula with a constant value | How to make Excel RAND reproducible with a seeded random generator in Aspose.Cells | Iterate all worksheets and cells to convert RAND() to a fixed number using Aspose.Cells | Set a static seed for RAND() function in an Excel file with Aspose.Cells .NET | Replace random formulas with deterministic values in a workbook via Aspose.Cells
+// Tags: replace RAND formula with static value Aspose.Cells | seeded random generator Excel .NET | iterate worksheets cells Aspose.Cells C# | convert volatile Excel formulas to constants | reproducible RAND function Aspose.Cells | fallback workbook creation Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// // Loads an Excel workbook, walks through every worksheet and cell, replaces each RAND() formula with a predefined static seed (e.g., 0.5), and saves the modified file to a new location.
+// The example loads an existing Excel file (or creates a new one), initializes a seeded Random instance, walks through every worksheet and cell, detects formulas containing RAND, replaces each with a deterministic double from the seeded generator, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Define a static seed value to replace RAND() formulas
-        double staticSeed = 0.5; // you can set any reproducible value here
+        Workbook workbook = null;
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Get the used range of cells in the current worksheet
-            Cells cells = sheet.Cells;
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
-
-            // Loop through each cell in the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxColumn; col++)
+                try
                 {
-                    Cell cell = cells[row, col];
+                    workbook = new Workbook(inputPath);
+                }
+                catch (CellsException ex)
+                {
+                    // If the file is password‑protected or corrupted, fall back to a new workbook.
+                    Console.WriteLine($"Warning: Unable to load '{inputPath}'. Reason: {ex.Message}");
+                    workbook = new Workbook();
+                }
+            }
+            else
+            {
+                // No input file – create a fresh workbook with a sample RAND formula.
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Sample";
+                ws.Cells["A1"].Formula = "=RAND()";
+            }
 
-                    // Check if the cell contains a formula that uses RAND()
+            // Seeded random generator for reproducible results.
+            Random seededRandom = new Random(12345);
+
+            // Iterate through all worksheets.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                // Iterate through all cells in the worksheet.
+                foreach (Cell cell in cells)
+                {
+                    // Process only cells that contain a RAND formula.
                     if (cell.IsFormula && cell.Formula.IndexOf("RAND", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        // Replace the RAND() formula with the static seed value
-                        cell.PutValue(staticSeed);
+                        double staticValue = seededRandom.NextDouble();
+                        cell.PutValue(staticValue); // Replace formula with static value.
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // General exception handling to prevent crashes.
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

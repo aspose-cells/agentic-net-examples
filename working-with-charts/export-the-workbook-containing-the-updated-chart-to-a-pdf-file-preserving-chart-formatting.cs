@@ -1,58 +1,55 @@
-// Title: Export a workbook with a formatted column chart to PDF while preserving chart layout using Aspose.Cells in C#
-// AI Prompts: Write C# code that creates a new workbook, inserts a column chart with a title, sets PdfSaveOptions (RefreshChartCache = true and ExportDocumentStructure = true), and saves the workbook as a PDF file. | Show how to use Aspose.Cells PdfSaveOptions to retain chart formatting when converting an Excel workbook containing charts to PDF in C#.
-// Common Searches: Aspose.Cells C# export Excel workbook with chart to PDF preserving chart formatting | How to keep column chart layout when saving workbook as PDF using Aspose.Cells | PdfSaveOptions RefreshChartCache true example in C# | ExportDocumentStructure option for PDF conversion with charts Aspose.Cells | C# code to save workbook with chart to PDF using Aspose.Cells
-// Tags: Aspose.Cells PDF export with chart formatting | PdfSaveOptions RefreshChartCache C# | ExportDocumentStructure option Aspose.Cells | column chart PDF conversion Aspose.Cells | C# workbook to PDF preserving charts
+// Title: Convert an Excel workbook with an updated chart to PDF while preserving chart formatting using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a .xlsx file, optionally changes the first chart's title, and saves the workbook as a PDF with chart formatting intact using Aspose.Cells. | Show how to verify the source Excel file exists and implement exception handling when converting a workbook that contains charts to PDF in C# with Aspose.Cells. | Provide the minimal Aspose.Cells API calls needed to export an entire workbook, including embedded charts, to a PDF file.
+// Common Searches: how to export an Excel file with charts to PDF using Aspose.Cells C# | preserve chart appearance when converting XLSX to PDF in .NET | Aspose.Cells C# example for saving workbook as PDF with chart formatting | convert workbook to PDF and keep chart title formatting Aspose.Cells | C# code to check file existence before Aspose.Cells PDF export
+// Tags: Aspose.Cells workbook.Save PDF with charts | preserve chart formatting Aspose.Cells C# | check Excel file existence Aspose.Cells | exception handling Aspose.Cells PDF conversion | update chart title before PDF export Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Saving;
+using System;
+using System.IO;
 
-namespace AsposeCellsExportWorkbookToPdf
+// The sample checks for 'input.xlsx', loads it into an Aspose.Cells Workbook, optionally updates the first chart's title, and then saves the entire workbook as 'output.pdf' using SaveFormat.Pdf, which automatically retains chart formatting while handling missing files and runtime exceptions.
+class Program
 {
-    // The program creates a new workbook, adds sample data, inserts a column chart with a title, configures PdfSaveOptions to refresh the chart cache and retain document structure, and saves the workbook as 'WorkbookWithChart.pdf', preserving the chart's appearance in the PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Fruits");
-            worksheet.Cells["A3"].PutValue("Vegetables");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(50);
-            worksheet.Cells["B3"].PutValue(30);
-
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
-
-            // Optional: Apply some formatting to the chart (e.g., title)
-            chart.Title.Text = "Sample Chart";
-
-            // Create PDF save options to preserve chart formatting
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Refresh chart cache ensures the latest data and formatting are used
-                RefreshChartCache = true,
-                // ExportDocumentStructure retains the structure of the document
-                ExportDocumentStructure = true
-            };
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Save the entire workbook (including the chart) to a PDF file
-            workbook.Save("WorkbookWithChart.pdf", pdfSaveOptions);
+            // Load the workbook that contains the chart
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine("Workbook exported to PDF successfully.");
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Access the first chart on the worksheet (adjust index if needed)
+            if (sheet.Charts.Count > 0)
+            {
+                Chart chart = sheet.Charts[0];
+
+                // Example of updating the chart (optional)
+                // chart.Title.Text = "Updated Chart Title";
+                // chart.Title.IsVisible = true;
+            }
+
+            // Export the entire workbook, including the chart, to a PDF file
+            // The chart formatting is preserved automatically by Aspose.Cells
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

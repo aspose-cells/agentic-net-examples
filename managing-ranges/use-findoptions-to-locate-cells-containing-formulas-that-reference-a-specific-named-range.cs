@@ -1,61 +1,66 @@
-// Title: Find cells whose formulas reference a specific named range using Aspose.Cells FindOptions in C#
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, configures FindOptions to search within formulas, and prints the addresses of all cells that contain a given named range. | Demonstrate how to loop through every formula cell that references a particular named range by using FindOptions with LookInType.Formulas and LookAtType.Contains. | Create a reusable method that accepts a workbook path and a named range, and returns a list of cell addresses where the range is referenced in formulas.
-// Common Searches: asp.net find cells that reference a named range using aspose.cells FindOptions | c# search Excel formulas for a specific named range with Aspose.Cells | how to locate all formula cells containing a particular named range in a workbook using Aspose | using FindOptions to detect named range references in Excel formulas C#
-// Tags: FindOptions search formulas Aspose.Cells | locate formula cells referencing named range C# | search Excel formulas for specific text Aspose | iterate cells with named range reference Aspose.Cells | lookup named range in formula cells using FindOptions
+// Title: Find Excel cells whose formulas reference a specific named range using Aspose.Cells for .NET (C#)
+// Common Searches: c# Aspose.Cells find cells with formulas that reference a named range | how to locate formulas that use a particular named range in an .xlsx file with Aspose.Cells | retrieve cell addresses of formulas containing MyNamedRange using Aspose.Cells API | scan worksheet for named range references in formulas with Aspose.Cells .NET | list all cells referencing a specific named range in Excel using C# Aspose.Cells
+// Tags: Aspose.Cells find formula references | C# search formulas by named range | Excel .xlsx named range usage detection | iterate worksheet cells Aspose.Cells | collect cell addresses with specific formula text
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace FindFormulaReferencesApp
 {
-    // The example loads an Excel file, sets FindOptions to look only in formulas with a Contains match, and iterates through every cell whose formula references the specified named range, outputting each cell's address. Optional saving of the workbook is shown.
-    class Program
+    // The example loads an .xlsx workbook with Aspose.Cells, iterates over all used cells in the first worksheet, checks each cell's formula for the target named range (case‑insensitive), gathers matching cells, prints their addresses and formulas, and optionally saves the workbook.
+    class FindFormulaReferences
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            const string inputPath = "Input.xlsx";
-            const string namedRange = "MyNamedRange";
-
             try
             {
-                // Ensure the input workbook exists
+                const string inputPath = "input.xlsx";
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: File '{inputPath}' not found.");
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
                     return;
                 }
 
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (adjust index if needed)
                 Worksheet worksheet = workbook.Worksheets[0];
+                const string namedRange = "MyNamedRange";
 
-                // Configure FindOptions to search within formulas and look for the named range text
-                FindOptions findOptions = new FindOptions
+                List<Cell> cellsWithReference = new List<Cell>();
+
+                // Scan used cells for formulas containing the named range
+                int maxRow = worksheet.Cells.MaxDataRow;
+                int maxColumn = worksheet.Cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    LookInType = LookInType.Formulas,      // Search only in formulas
-                    LookAtType = LookAtType.Contains       // Match if the formula contains the text
-                };
-
-                // Find the first cell that contains the named range in its formula
-                Cell cell = worksheet.Cells.Find(namedRange, null, findOptions);
-
-                // Iterate through all matching cells
-                while (cell != null)
-                {
-                    Console.WriteLine($"Cell {cell.Name} contains a formula referencing '{namedRange}'.");
-                    // Find the next occurrence after the current cell
-                    cell = worksheet.Cells.Find(namedRange, cell, findOptions);
+                    for (int col = 0; col <= maxColumn; col++)
+                    {
+                        Cell cell = worksheet.Cells[row, col];
+                        if (cell.IsFormula && cell.Formula != null &&
+                            cell.Formula.IndexOf(namedRange, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            cellsWithReference.Add(cell);
+                        }
+                    }
                 }
 
-                // (Optional) Save the workbook if any modifications were made
-                // workbook.Save("Output.xlsx");
+                // Output addresses and formulas of found cells
+                foreach (Cell cell in cellsWithReference)
+                {
+                    Console.WriteLine($"Cell {cell.Name} contains formula: {cell.Formula}");
+                }
+
+                // Save the workbook (optional)
+                const string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

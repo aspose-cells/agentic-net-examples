@@ -1,92 +1,123 @@
-// Title: Measure memory consumption of Automatic vs AutomaticExceptTable calculation modes in Aspose.Cells for .NET with a 100k‑row workbook
-// AI Prompts: Create a C# console program that builds a 100,000‑row, 10‑column worksheet, assigns simple numeric formulas, forces garbage collection, and records memory usage before and after setting FormulaSettings.CalculationMode to Automatic. | Write code to switch the workbook's FormulaSettings.CalculationMode to AutomaticExceptTable, recalculate formulas, trigger GC, and capture the memory delta for comparison with the Automatic mode. | Generate console output that shows memory in megabytes for workbook population, Automatic mode, AutomaticExceptTable mode, and the differences between them, then save the workbook as an XLSX file.
-// Common Searches: aspnet memory profiling Aspose.Cells Automatic calculation mode | compare memory usage of Automatic and AutomaticExceptTable modes in Aspose.Cells | how much memory does Aspose.Cells use when calculating formulas in large Excel files | C# benchmark Aspose.Cells formula calculation memory consumption | measure .NET GC impact after workbook.CalculateFormula with Aspose.Cells
-// Tags: automatic calculation mode memory profiling Aspose.Cells | automaticexcepttable mode memory benchmark Aspose.Cells | large workbook formula evaluation memory .NET | Aspose.Cells formula settings performance comparison | C# garbage collection memory measurement workbook
+// Title: Compare memory usage of Automatic and AutomaticExceptTables load modes for large XLSX workbooks with Aspose.Cells for .NET
+// Common Searches: how to benchmark Aspose.Cells MemorySetting Automatic versus AutomaticExceptTables in C# | measure memory consumption when loading a 50,000 row Excel file with Aspose.Cells LoadOptions | C# code to compare memory usage of different LoadOptions.MemorySetting values | profile .NET memory while loading large XLSX workbooks using Aspose.Cells | performance test for Aspose.Cells workbook loading memory impact
+// Tags: Aspose.Cells LoadOptions MemorySetting comparison | automatic memory setting for large XLSX load | automaticexcepttables load mode memory usage | large workbook memory profiling .NET | benchmark Aspose.Cells workbook loading performance
 
 using System;
-using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryComparison
+// The sample creates a 50,000‑row by 50‑column XLSX workbook, saves it to a temporary file, then loads the file twice using Aspose.Cells LoadOptions with the MemorySetting property set to "Automatic" and "AutomaticExceptTables" (applied via reflection). It records GC memory before and after each load, computes the memory delta, outputs the usage in megabytes, and finally deletes the temporary workbook.
+class MemoryComparison
 {
-    // // Builds a 100,000‑row worksheet with simple formulas, records memory after population, switches FormulaSettings.CalculationMode to Automatic and AutomaticExceptTable, recalculates, forces GC, logs memory increases for each mode, and saves the workbook as LargeWorkbookMemoryComparison.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path for the temporary large workbook
+        string filePath = Path.Combine(Path.GetTempPath(), "LargeWorkbook.xlsx");
+
+        // Create a large workbook with sample data
+        CreateLargeWorkbook(filePath);
+
+        // Measure memory consumption when loading with Automatic mode (if supported)
+        long memoryAuto = MeasureMemoryLoad(filePath, "Auto");
+        Console.WriteLine($"Memory used with Automatic mode: {memoryAuto / 1024.0 / 1024.0:F2} MB");
+
+        // Measure memory consumption when loading with AutomaticExceptTables mode (if supported)
+        long memoryAutoExceptTables = MeasureMemoryLoad(filePath, "AutoExceptTables");
+        Console.WriteLine($"Memory used with AutomaticExceptTables mode: {memoryAutoExceptTables / 1024.0 / 1024.0:F2} MB");
+
+        // Clean up the temporary file
+        try
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to delete temporary file: {ex.Message}");
+        }
+    }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+    // Creates a workbook with a large number of rows and columns filled with data
+    static void CreateLargeWorkbook(string path)
+    {
+        const int totalRows = 50000;
+        const int totalColumns = 50;
 
-            // Define size of a large dataset
-            const int totalRows = 100_000;   // 100k rows
-            const int totalCols = 10;        // 10 columns
+        var wb = new Workbook();
+        var ws = wb.Worksheets[0];
 
-            // Fill the worksheet with sample data
-            for (int row = 0; row < totalRows; row++)
+        // Populate cells with sample numeric data
+        for (int row = 0; row < totalRows; row++)
+        {
+            for (int col = 0; col < totalColumns; col++)
             {
-                for (int col = 0; col < totalCols; col++)
+                ws.Cells[row, col].PutValue(row * col);
+            }
+        }
+
+        // Save the workbook to the specified path
+        wb.Save(path);
+        wb.Dispose();
+    }
+
+    // Loads the workbook using the specified memory setting name (if supported) and returns the memory delta
+    static long MeasureMemoryLoad(string path, string settingName)
+    {
+        if (!File.Exists(path))
+        {
+            Console.WriteLine($"File not found: {path}");
+            return 0;
+        }
+
+        // Force garbage collection before measurement
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Record memory usage before loading
+        long beforeLoad = GC.GetTotalMemory(true);
+
+        // Prepare load options
+        var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+        // Attempt to set the MemorySetting property via reflection (if the enum/value exists)
+        try
+        {
+            var prop = typeof(LoadOptions).GetProperty("MemorySetting");
+            if (prop != null && prop.PropertyType.IsEnum)
+            {
+                var enumType = prop.PropertyType;
+                if (Enum.IsDefined(enumType, settingName))
                 {
-                    // Simple numeric formula to involve calculation engine
-                    cells[row, col].Formula = $"={row}+{col}";
+                    var enumValue = Enum.Parse(enumType, settingName, ignoreCase: true);
+                    prop.SetValue(loadOptions, enumValue);
                 }
             }
-
-            // Force a full garbage collection before measurement
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            // Measure memory after workbook creation and data population
-            long memoryAfterPopulation = GC.GetTotalMemory(true);
-            Console.WriteLine($"Memory after populating workbook: {memoryAfterPopulation / (1024 * 1024)} MB");
-
-            // -----------------------------------------------------------------
-            // Scenario 1: Automatic calculation mode
-            // -----------------------------------------------------------------
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-            // Optionally trigger calculation (Aspose.Cells does not respect the mode,
-            // but we include it to keep the scenario realistic)
-            workbook.CalculateFormula();
-
-            // Measure memory after setting Automatic mode and calculation
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            long memoryAfterAutomatic = GC.GetTotalMemory(true);
-            Console.WriteLine($"Memory after Automatic mode: {memoryAfterAutomatic / (1024 * 1024)} MB");
-
-            // -----------------------------------------------------------------
-            // Scenario 2: AutomaticExceptTable calculation mode
-            // -----------------------------------------------------------------
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
-
-            // Re‑calculate formulas to reflect the new mode
-            workbook.CalculateFormula();
-
-            // Measure memory after setting AutomaticExceptTable mode and calculation
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            long memoryAfterAutomaticExceptTable = GC.GetTotalMemory(true);
-            Console.WriteLine($"Memory after AutomaticExceptTable mode: {memoryAfterAutomaticExceptTable / (1024 * 1024)} MB");
-
-            // -----------------------------------------------------------------
-            // Output the differences
-            // -----------------------------------------------------------------
-            long diffAutomatic = memoryAfterAutomatic - memoryAfterPopulation;
-            long diffExceptTable = memoryAfterAutomaticExceptTable - memoryAfterPopulation;
-
-            Console.WriteLine($"Memory increase (Automatic): {diffAutomatic / (1024 * 1024)} MB");
-            Console.WriteLine($"Memory increase (AutomaticExceptTable): {diffExceptTable / (1024 * 1024)} MB");
-
-            // Save the workbook to verify that saving works (save rule)
-            workbook.Save("LargeWorkbookMemoryComparison.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved as LargeWorkbookMemoryComparison.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unable to apply memory setting '{settingName}': {ex.Message}");
+        }
+
+        // Load the workbook
+        Workbook wb = null;
+        try
+        {
+            wb = new Workbook(path, loadOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return 0;
+        }
+
+        // Record memory usage after loading
+        long afterLoad = GC.GetTotalMemory(true);
+
+        // Dispose the workbook to release resources
+        wb.Dispose();
+
+        // Return the difference in bytes
+        return afterLoad - beforeLoad;
     }
 }

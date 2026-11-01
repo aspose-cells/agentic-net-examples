@@ -1,43 +1,43 @@
-// Title: How to hide the totals row of the first Excel table (ListObject) with Aspose.Cells for .NET
-// AI Prompts: Load an existing workbook, retrieve the first ListObject on the first worksheet, assign false to its ShowTotals property, and save the updated file. | Programmatically deactivate the totals row for an Excel table by using Aspose.Cells in a C# application. | Update a .xlsx file so that the first table no longer displays a totals row, then write the changes to a new workbook.
-// Common Searches: Aspose.Cells C# remove totals row from ListObject | Change ShowTotals setting for first ListObject using Aspose.Cells | Remove table totals row from worksheet with Aspose.Cells API | Turn off totals row when saving Excel file in C#
-// Tags: Aspose.Cells hide table totals row | C# ListObject ShowTotals configuration | Excel table totals row removal Aspose | modify ListObject properties Aspose.Cells | disable totals row workbook C#
+// Title: Hide the totals row of an Excel table using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, accesses the first ListObject in the first worksheet, sets its ShowTotals property to false, and saves the updated file. | Show how to programmatically disable the totals row of an Excel table in a .NET application by using the Aspose.Cells ListObject API.
+// Common Searches: C# Aspose.Cells hide totals row in Excel table | How to set ShowTotals false for a ListObject with Aspose.Cells | Remove totals row from Excel worksheet programmatically using Aspose.Cells .NET | Aspose.Cells disable table totals row without affecting data | Set ShowTotals property to false for first table in workbook Aspose.Cells
+// Tags: Aspose.Cells ListObject ShowTotals false | C# disable Excel table totals row | Aspose.Cells modify table display options | Excel table totals row removal .NET | Aspose.Cells suppress table totals row
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// The example loads an existing Excel workbook, checks for tables on the first worksheet, sets the ShowTotals property of the first ListObject to false to hide its totals row, and saves the modified workbook to a new file.
+// The example loads Input.xlsx, checks for a ListObject in the first worksheet, sets its ShowTotals property to false to hide the totals row, and saves the result as Output.xlsx, handling missing files and runtime errors.
 class Program
 {
     static void Main()
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
         try
         {
-            // Verify input file exists
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Check if the worksheet contains any tables (ListObjects)
+            // Ensure the worksheet contains at least one table (ListObject)
             if (sheet.ListObjects.Count > 0)
             {
-                // Access the first table
+                // Get the first table in the worksheet
                 ListObject table = sheet.ListObjects[0];
 
-                // Hide the totals row
+                // Disable the display of the totals row
                 table.ShowTotals = false;
             }
             else
@@ -47,11 +47,12 @@ class Program
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

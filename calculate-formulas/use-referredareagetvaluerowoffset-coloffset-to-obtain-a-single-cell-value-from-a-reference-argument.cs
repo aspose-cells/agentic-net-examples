@@ -1,79 +1,57 @@
-// Title: How to read a single cell value from a formula's precedent range using ReferredArea.GetValue in Aspose.Cells for .NET
-// AI Prompts: Write C# code that obtains the first ReferredArea of a formula cell and calls ReferredArea.GetValue(rowOffset, colOffset) to fetch the value of a specific referenced cell. | Demonstrate iterating over row and column offsets within a ReferredArea to extract values from any cell in the range referenced by a SUM formula.
-// Common Searches: Aspose.Cells C# get value from referenced range of a formula | How to use ReferredArea.GetValue to read a cell at a given offset in .NET | Retrieve precedent cell values from a SUM formula using Aspose.Cells API | Example of GetPrecedents and GetValue methods in Aspose.Cells for C#
-// Tags: ReferredArea.GetValue offset extraction | GetPrecedents retrieve formula precedents Aspose.Cells | Aspose.Cells read specific cell from range | C# Aspose.Cells formula precedent value | Aspose.Cells workbook calculation and cell access
+// Title: How to read the first cell of a named range using ReferredArea.GetValue in Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells ReferredArea.GetValue example for named range | Get top-left cell value from a global named range in Excel using Aspose.Cells | How to retrieve a single cell value from a named range with Aspose.Cells .NET | Aspose.Cells read value of first cell in named range C# code sample | Using ReferredArea.GetValue to access a cell in a named range with Aspose.Cells
+// Tags: ReferredArea.GetValue C# Aspose.Cells | named range first cell extraction | global named range value retrieval | Aspose.Cells workbook load and save | Excel cell value access Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, obtains a global named range called "MyRange", uses ReferredArea.GetValue to read the top‑left cell value, prints it to the console, and saves the workbook to a new file.
+class Program
 {
-    // The example creates a workbook, places numbers in cells A1:B2, assigns a SUM(A1:B2) formula to C1, forces formula calculation, obtains the formula's precedent range via GetPrecedents, and uses ReferredArea.GetValue with zero‑based row and column offsets to read the values at A1 and B2, printing them before saving the workbook.
-    public class ReferredAreaGetValueDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string rangeName = "MyRange";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Run();
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the named range (global scope)
+            Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName(rangeName);
+            if (range == null)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Named range '{rangeName}' not found.");
+                return;
             }
+
+            // Get the value from the top‑left cell of the range
+            object value = range[0, 0].Value;
+            Console.WriteLine("Value from referenced cell: " + (value ?? "null"));
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (if any modifications were made)
+            workbook.Save(outputPath);
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Put some values in cells that will be referenced
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["B1"].PutValue(30);
-                sheet.Cells["B2"].PutValue(40);
-
-                // Create a formula that references the range A1:B2
-                Cell formulaCell = sheet.Cells["C1"];
-                formulaCell.Formula = "=SUM(A1:B2)";
-
-                // Ensure all formulas are calculated so that precedents are resolved
-                workbook.CalculateFormula();
-
-                // Get the collection of referred areas (precedents) for the formula cell
-                ReferredAreaCollection precedents = formulaCell.GetPrecedents();
-
-                if (precedents != null && precedents.Count > 0)
-                {
-                    // Take the first referred area (in this case the range A1:B2)
-                    ReferredArea area = precedents[0];
-
-                    // Obtain a single cell value from the area using row and column offsets
-                    // Offsets are zero‑based from the top‑left cell of the area.
-                    // Example: (0,0) -> A1, (0,1) -> B1, (1,0) -> A2, (1,1) -> B2
-                    object valueAtA1 = area.GetValue(0, 0);
-                    object valueAtB2 = area.GetValue(1, 1);
-
-                    Console.WriteLine($"Value at area offset (0,0) [{CellsHelper.CellIndexToName(area.StartRow, area.StartColumn)}]: {valueAtA1}");
-                    Console.WriteLine($"Value at area offset (1,1) [{CellsHelper.CellIndexToName(area.EndRow, area.EndColumn)}]: {valueAtB2}");
-                }
-                else
-                {
-                    Console.WriteLine("No precedents found for the formula cell.");
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle compliance)
-                workbook.Save("ReferredAreaGetValueDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Runtime exception: {ex.Message}");
-                throw;
-            }
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

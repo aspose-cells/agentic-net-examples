@@ -1,67 +1,79 @@
-// Title: Omit unused named styles from HTML output when saving a workbook with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a workbook, defines both a used and an unused style, applies only the used style, saves the workbook to HTML with HtmlSaveOptions.ExcludeUnusedStyles set to true, and verifies that the unused style's CSS is not present. | Show how to read the generated HTML file in C# and programmatically check for specific color definitions to confirm that only the applied style was exported. | Enhance the example with robust error handling and console messages that indicate whether each style was included or omitted in the HTML output.
-// Common Searches: Aspose.Cells HTMLSaveOptions ExcludeUnusedStyles C# example | How to prevent unused Excel styles from being written to HTML with Aspose.Cells | Check if Aspose.Cells removes redundant CSS when exporting to HTML | C# code to verify that only applied cell styles appear in exported HTML | Exclude unused named styles from HTML using Aspose.Cells for .NET
-// Tags: Aspose.Cells HtmlSaveOptions exclude unused styles | C# export workbook to HTML without redundant CSS | verify used cell style in Aspose.Cells HTML output | remove unused named styles Aspose.Cells HTML export | HTML export style omission Aspose.Cells .NET
+// Title: How to exclude unused named styles from HTML output using Aspose.Cells HtmlSaveOptions.ExcludeUnusedStyles in C#
+// Common Searches: C# Aspose.Cells save workbook to HTML without unused styles | example of HtmlSaveOptions.ExcludeUnusedStyles property in .NET | verify that red italic style is omitted from generated HTML with Aspose.Cells | how to filter out unused named styles when exporting Excel to HTML in C# | Aspose.Cells HTML export style cleanup using ExcludeUnusedStyles option
+// Tags: Aspose.Cells HTML export omit redundant styles | HtmlSaveOptions ExcludeUnusedStyles usage in .NET | named style removal Aspose.Cells | HTML CSS cleanup with Aspose.Cells | C# test for omitted styles in HTML output | Excel to HTML style pruning Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.Drawing;
 using System.IO;
+using System.Drawing;
+using Aspose.Cells;
 
-// The program creates a workbook, defines a red unused style and a blue used style, applies the used style to cell A1, saves the workbook as HTML with ExcludeUnusedStyles enabled, then reads the HTML file to confirm that the CSS for the unused red style is absent while the CSS for the used blue style is present.
+// The sample creates a workbook, defines a used blue‑bold style and an unused red‑italic style, applies the used style to cell A1, and saves the workbook as HTML with HtmlSaveOptions.ExcludeUnusedStyles set to true. It then reads the generated HTML, confirms that the styled text appears while the CSS for the unused red style is absent, and prints verification results.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define an unused style (red font)
-            Style unusedStyle = workbook.CreateStyle();
-            unusedStyle.Font.Color = Color.Red;
-
-            // Define a used style (blue font)
+            // Create a style that will be used
             Style usedStyle = workbook.CreateStyle();
             usedStyle.Font.Color = Color.Blue;
+            usedStyle.Font.IsBold = true;
 
-            // Apply the used style to cell A1
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["A1"].SetStyle(usedStyle);
+            // Create a style that will NOT be used
+            Style unusedStyle = workbook.CreateStyle();
+            unusedStyle.Font.Color = Color.Red;
+            unusedStyle.Font.IsItalic = true;
 
-            // Set HTML save options to exclude unused styles
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Apply the used style to a cell
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Styled Text");
+            cell.SetStyle(usedStyle);
+
+            // Prepare HTML save options with ExcludeUnusedStyles enabled
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                ExcludeUnusedStyles = true
+                ExcludeUnusedStyles = true // Omit unused styles
             };
 
-            string htmlFile = "output.html";
+            // Define output HTML file path
+            string htmlPath = "output.html";
 
-            // Save workbook as HTML using the options
-            workbook.Save(htmlFile, htmlOptions);
+            // Save the workbook as HTML
+            workbook.Save(htmlPath, saveOptions);
 
-            // Verify that the unused style is omitted from the HTML output
-            if (File.Exists(htmlFile))
+            // Ensure the file was created before reading
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException("HTML output file was not created.", htmlPath);
+
+            // Read the generated HTML content
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // Verify that the styled text is present
+            bool textPresent = htmlContent.Contains("Styled Text");
+            // Verify that the unused style's color (red) does not appear
+            bool unusedStylePresent = htmlContent.Contains("color:#FF0000"); // red color CSS
+
+            // Output verification results
+            Console.WriteLine("Styled text present in HTML: " + textPresent);
+            Console.WriteLine("Unused style (red color) present in HTML: " + unusedStylePresent);
+
+            // Simple assertion
+            if (textPresent && !unusedStylePresent)
             {
-                string htmlContent = File.ReadAllText(htmlFile);
-
-                // Look for CSS color definitions corresponding to the styles
-                bool unusedStyleFound = htmlContent.Contains("color:#ff0000") || htmlContent.Contains("color:red");
-                bool usedStyleFound = htmlContent.Contains("color:#0000ff") || htmlContent.Contains("color:blue");
-
-                Console.WriteLine($"Unused style present in HTML: {unusedStyleFound}");
-                Console.WriteLine($"Used style present in HTML: {usedStyleFound}");
+                Console.WriteLine("Verification succeeded: Unused styles are omitted.");
             }
             else
             {
-                Console.WriteLine($"HTML file '{htmlFile}' was not created.");
+                Console.WriteLine("Verification failed: Unexpected style presence.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

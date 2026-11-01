@@ -1,57 +1,69 @@
-// Title: How to exclude short‑text cells from tooltip (title) attributes when saving a workbook to HTML with Aspose.Cells AddTooltipText enabled (C#)
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML with AddTooltipText=true, then parses the resulting HTML and removes the title attribute from <td> elements whose text length is below a given threshold. | Show a C# example that uses HtmlAgilityPack (or Regex) to post‑process Aspose.Cells HTML output and strip tooltip attributes from cells containing short strings. | Provide a C# routine that implements a custom post‑save step to filter out tooltip text for cells shorter than N characters after Aspose.Cells HTML export.
-// Common Searches: Aspose.Cells HTML export skip tooltip for cells with less than 5 characters | remove title attribute from short cell values in Aspose.Cells generated HTML | C# post‑process Aspose.Cells HTML to delete tooltips on brief text | conditional AddTooltipText based on cell content length Aspose.Cells | how to filter tooltip text when saving workbook to HTML using Aspose.Cells
-// Tags: Aspose.Cells HTML tooltip suppression | conditional AddTooltipText handling | post‑process Aspose.Cells HTML output | remove short‑text title attribute C# | filter cell tooltip by length Aspose.Cells
+// Title: Remove tooltip attributes from short‑text cells after exporting Excel to HTML with AddTooltipText enabled using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook, saves it to HTML with HtmlSaveOptions.AddTooltipText = true, then post‑processes the HTML to delete the title attribute from <td> elements whose displayed text length is below a specified threshold. | Write a C# regular expression that matches <td> tags containing a title attribute and returns the tag without the title when the inner cell text is shorter than five characters. | Adapt the HTML post‑processing step to preserve tooltip attributes for cells that contain line breaks or HTML markup while still removing them from plain short‑text cells.
+// Common Searches: aspocells c# remove tooltip attribute from short cells in html export | how to filter AddTooltipText output for cells with less than 5 characters | regex to delete title attribute from generated html table cells aspocells | post processing html saved from excel to drop tooltips on short text cells
+// Tags: Aspose.Cells HTML tooltip removal | C# regex strip title attribute from td | AddTooltipText short text filtering | post‑process generated HTML from Excel | Excel to HTML tooltip suppression .NET
 
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-// The example creates a workbook, fills cells with short and long strings, enables AddTooltipText in HtmlSaveOptions, and saves to HTML. Because the CustomCellHtmlAttributes event is unavailable, tooltips are added to all cells. Selective removal of tooltip attributes for short‑text cells must be performed via post‑processing of the generated HTML.
-class TooltipFilterExample
+// The example loads an Excel workbook, saves it as HTML with AddTooltipText turned on, then reads the resulting file and uses a regular expression to remove the title attribute from <td> elements whose inner text length is less than a defined threshold, writing the cleaned HTML back to disk.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+            const int shortTextThreshold = 5;
 
-            // Populate some cells with short and long text
-            sheet.Cells["A1"].PutValue("Hi");                                 // short text
-            sheet.Cells["A2"].PutValue("Hello, World!");                      // long text
-            sheet.Cells["A3"].PutValue("Short");                              // short text
-            sheet.Cells["A4"].PutValue("This is a longer sentence.");        // long text
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options with tooltip generation enabled
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Enable tooltip text generation (adds title attribute with cell value)
-                AddTooltipText = true
+                AddTooltipText = true // Enable tooltip attributes
             };
 
-            // NOTE: CustomCellHtmlAttributes event is not available in this version of Aspose.Cells.
-            // The tooltip will be added for all cells. Adjustments can be made by post‑processing the HTML if needed.
+            // Save the workbook as HTML
+            workbook.Save(outputPath, htmlOptions);
 
-            // Determine output file path
-            string outputPath = "output.html";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Post‑process the generated HTML to remove tooltips from short‑text cells
+            if (File.Exists(outputPath))
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                string htmlContent = File.ReadAllText(outputPath);
 
-            // Save the workbook to an HTML file with the configured options
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+                // Regex to find <td> elements with a title attribute
+                string pattern = @"<td(?<attrs>[^>]*?)\s+title=""(?<title>[^""]*)""(?<rest>[^>]*?)>(?<inner>.*?)</td>";
+                htmlContent = Regex.Replace(htmlContent, pattern, match =>
+                {
+                    string innerText = match.Groups["inner"].Value;
+                    // If the cell text is shorter than the threshold, remove the title attribute
+                    if (innerText.Length < shortTextThreshold)
+                    {
+                        // Rebuild the <td> tag without the title attribute
+                        string attrs = match.Groups["attrs"].Value;
+                        string rest = match.Groups["rest"].Value;
+                        return $"<td{attrs}{rest}>{innerText}</td>";
+                    }
+                    // Keep the original <td> element unchanged
+                    return match.Value;
+                }, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+                File.WriteAllText(outputPath, htmlContent);
+            }
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

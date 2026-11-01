@@ -1,14 +1,14 @@
-// Title: Batch convert Excel workbooks to PDF with a shared first‑worksheet background image using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads several .xlsx files, sets a PNG as the background of the first sheet in each workbook, and converts them to PDF with Aspose.Cells. | Refactor the example to read the background image once into a byte array and reuse that byte array for all workbook conversions, reducing file I/O. | Add robust error handling that skips missing Excel files, logs each conversion result, and continues processing the remaining workbooks.
-// Common Searches: Aspose.Cells set identical background picture on first worksheet for multiple Excel files before PDF conversion | C# batch convert Excel to PDF while reusing a single image stream for worksheet backgrounds | How to skip non‑existent Excel files during bulk PDF export with Aspose.Cells | Optimize image loading when applying background to many workbooks in Aspose.Cells
-// Tags: batch workbook to PDF Aspose.Cells | worksheet background from byte array | reuse single image stream for multiple workbooks | first sheet background image C# | handle missing Excel files during conversion
+// Title: Add a shared background image to the first worksheet of multiple Excel workbooks and export each workbook to PDF with Aspose.Cells for .NET
+// Common Searches: how to apply the same background PNG to the first sheet of several Excel files using Aspose.Cells in C# | batch add a picture to the first worksheet of multiple workbooks and convert them to PDF with Aspose.Cells | using MemoryStream to set a free‑floating background image on worksheets in Aspose.Cells C# | process a list of Excel files, add a background image, and save as PDF programmatically with Aspose.Cells | C# code to load a PNG once and reuse it as worksheet background for many workbooks before PDF export
+// Tags: add background image to first worksheet Aspose.Cells | handle several Excel files C# Aspose.Cells | export workbook as PDF Aspose.Cells | picture placement freefloating Aspose.Cells | reuse image data with MemoryStream Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The program iterates over a list of Excel file paths, loads a PNG background image once, assigns it to the first worksheet of each workbook, and saves each workbook as a PDF, while gracefully handling missing files and reporting conversion outcomes.
+// The program iterates over a collection of Excel files, loads a PNG image once into a byte array, inserts it as a free‑floating picture anchored at cell A1 of each workbook's first worksheet via a MemoryStream, and then saves each workbook as a PDF.
 class Program
 {
     static void Main()
@@ -16,59 +16,72 @@ class Program
         // List of workbook files to process
         var workbookPaths = new List<string>
         {
-            "input1.xlsx",
-            "input2.xlsx",
-            // add additional workbook file paths here
+            "Workbook1.xlsx",
+            "Workbook2.xlsx"
+            // add additional workbook file names here
         };
 
         // Path to the background image file
-        const string backgroundImagePath = "background.png";
+        const string backgroundImageFile = "Background.png";
 
+        // Verify that the background image exists
+        if (!File.Exists(backgroundImageFile))
+        {
+            Console.WriteLine($"Background image file not found: {backgroundImageFile}");
+            return;
+        }
+
+        // Load image data once
+        byte[] imageData;
         try
         {
-            // Verify that the background image exists
-            if (!File.Exists(backgroundImagePath))
-                throw new FileNotFoundException("Background image file not found.", backgroundImagePath);
-
-            // Load the background image into a byte array once for reuse
-            byte[] imageBytes = File.ReadAllBytes(backgroundImagePath);
-
-            foreach (string wbPath in workbookPaths)
-            {
-                // Verify that the workbook file exists
-                if (!File.Exists(wbPath))
-                {
-                    Console.WriteLine($"Workbook file not found: {wbPath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook
-                    var workbook = new Workbook(wbPath);
-
-                    // Access the first worksheet
-                    Worksheet firstSheet = workbook.Worksheets[0];
-
-                    // Apply the background image (expects a byte array)
-                    firstSheet.BackgroundImage = imageBytes;
-
-                    // Determine output PDF path
-                    string pdfPath = Path.ChangeExtension(wbPath, ".pdf");
-
-                    // Save as PDF
-                    workbook.Save(pdfPath, SaveFormat.Pdf);
-                    Console.WriteLine($"Converted '{wbPath}' to PDF successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing workbook '{wbPath}': {ex.Message}");
-                }
-            }
+            imageData = File.ReadAllBytes(backgroundImageFile);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Fatal error: {ex.Message}");
+            Console.WriteLine($"Failed to read background image: {ex.Message}");
+            return;
+        }
+
+        foreach (string wbPath in workbookPaths)
+        {
+            // Verify workbook file exists
+            if (!File.Exists(wbPath))
+            {
+                Console.WriteLine($"Workbook file not found: {wbPath}");
+                continue;
+            }
+
+            try
+            {
+                // Load the workbook
+                var workbook = new Workbook(wbPath);
+
+                // Access the first worksheet
+                var firstSheet = workbook.Worksheets[0];
+
+                // Add the background image as a picture anchored at cell A1
+                using (var ms = new MemoryStream(imageData))
+                {
+                    int pictureIndex = firstSheet.Pictures.Add(0, 0, ms);
+                    Picture picture = firstSheet.Pictures[pictureIndex];
+
+                    // Set the picture to free-floating so it behaves like a background
+                    picture.Placement = PlacementType.FreeFloating;
+                }
+
+                // Define the output PDF file name (same name, .pdf extension)
+                string pdfPath = Path.ChangeExtension(wbPath, ".pdf");
+
+                // Export the workbook to PDF
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+
+                Console.WriteLine($"Processed '{wbPath}' -> '{pdfPath}'");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{wbPath}': {ex.Message}");
+            }
         }
     }
 }

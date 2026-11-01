@@ -1,42 +1,42 @@
-// Title: Insert a column at index 5, copy left column formatting, and export the sheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Insert a new column at zero‑based index 4 in the first worksheet, duplicate the formatting from column D to the new column, and generate a PDF file with Aspose.Cells. | Add a column after the fourth column, copy only the style attributes from the preceding column, then convert the modified workbook to PDF using the Aspose.Cells ConversionUtility.
-// Common Searches: how to insert a column at a specific position and copy its format using Aspose.Cells C# | Aspose.Cells C# copy column formatting without values before PDF conversion | insert column index 4 and preserve styles then export to PDF with Aspose.Cells | C# Aspose.Cells convert modified Excel workbook to PDF after column insertion
-// Tags: insert column Aspose.Cells C# | copy column style Aspose.Cells | excel to pdf conversion Aspose.Cells .NET | preserve cell styles Aspose.Cells | column insertion index zero based Aspose.Cells
+// Title: Insert a column at position five, copy the previous column’s formatting, and export the workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Add a new column at zero‑based index 4 in an existing workbook, duplicate the style from column D for every used row, and save the result as a PDF with Aspose.Cells in C#. | Using Aspose.Cells for .NET, insert a column after the fourth column, copy the formatting from the adjacent column across all rows, then convert the worksheet to a PDF file.
+// Common Searches: Aspose.Cells C# insert column at specific index while preserving formatting | How to copy column style when adding a new column with Aspose.Cells .NET | Export Excel workbook to PDF after inserting a column using Aspose.Cells | C# Aspose.Cells keep cell styles after column insertion | Insert column at position 5 and generate PDF with Aspose.Cells
+// Tags: insert column Aspose.Cells C# | copy column formatting Aspose.Cells | export workbook to PDF Aspose.Cells | preserve Excel styles Aspose.Cells | column insertion style cloning Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// The example loads an existing Excel file, inserts a new column at zero‑based index 4, copies only the formatting from the adjacent column, saves the updated workbook, and then converts it to a PDF using Aspose.Cells' ConversionUtility.
+// Loads input.xlsx, inserts a new column at position five, copies formatting from the preceding column for all populated rows, and saves the modified workbook as output.pdf.
 class Program
 {
     static void Main()
     {
-        // Paths – adjust as needed
-        string inputFile = "input.xlsx";          // existing spreadsheet
-        string modifiedFile = "modified.xlsx";    // temporary file after column insertion
-        string outputPdf = "output.pdf";          // final PDF file
+        // Load the existing spreadsheet
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-        // Load the existing workbook
-        Workbook workbook = new Workbook(inputFile);
-
-        // Work with the first worksheet (index 0)
+        // Get the first worksheet (adjust index if needed)
         Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
         // Insert a new column at position five (zero‑based index 4)
-        sheet.Cells.InsertColumn(4);
+        cells.InsertColumn(4);
 
-        // Copy formatting from the column to the left (index 3) to the newly inserted column (index 4)
-        PasteOptions pasteOptions = new PasteOptions
+        // Determine the last used row to limit the formatting copy loop
+        int lastRow = cells.MaxDataRow;
+
+        // Copy formatting from the column before the inserted one (column index 3)
+        for (int row = 0; row <= lastRow; row++)
         {
-            PasteType = PasteType.Formats   // copy only formats, not values
-        };
-        sheet.Cells.CopyColumns(sheet.Cells, 3, 4, 1, pasteOptions);
+            // Get the style from the source cell
+            Style sourceStyle = cells[row, 3].GetStyle();
 
-        // Save the modified workbook to a temporary file
-        workbook.Save(modifiedFile);
+            // Apply the style to the newly inserted column cell
+            cells[row, 4].SetStyle(sourceStyle);
+        }
 
-        // Convert the modified workbook to PDF using the provided conversion utility
-        ConversionUtility.Convert(modifiedFile, outputPdf);
+        // Export the modified workbook to PDF
+        string outputPath = "output.pdf";
+        workbook.Save(outputPath, SaveFormat.Pdf);
     }
 }

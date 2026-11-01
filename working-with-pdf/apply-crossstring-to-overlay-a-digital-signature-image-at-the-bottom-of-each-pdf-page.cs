@@ -1,78 +1,69 @@
-// Title: Add a centered signature PNG to the bottom of every worksheet and export as PDF using Aspose.Cells for .NET
-// AI Prompts: Insert a free‑floating picture of the signature PNG at the bottom centre of each worksheet before calling Workbook.Save with SaveFormat.Pdf. | Convert the signature dimensions from points to pixels (assuming 96 DPI) and compute the horizontal offset needed to centre the image on the page width. | Check whether the target folder exists, create it if necessary, and then save the signed workbook as a PDF file.
-// Common Searches: how to overlay a signature image on each page when converting Excel to PDF with Aspose.Cells C# | center a PNG at the bottom margin of PDF pages generated from a workbook using Aspose.Cells | Aspose.Cells free floating picture placement for digital signatures in PDF export | calculate pixel size from points for image placement in Aspose.Cells PDF conversion | ensure output directory exists before saving PDF with Aspose.Cells .NET
-// Tags: add freefloating picture to worksheet Aspose.Cells | center signature image PDF export C# | convert points to pixels Aspose.Cells | create output directory before saving PDF .NET | digital signature overlay PDF Aspose.Cells
+// Title: Add a PNG digital signature to the bottom of each worksheet and export to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that inserts a PNG signature at the last used row of every worksheet, sets its dimensions, and saves the workbook as a PDF with Aspose.Cells. | Create a reusable C# method that adds a scaled signature picture to each sheet's footer area before converting the workbook to PDF using Aspose.Cells. | Adjust the example to position the signature image in the PDF page footer by configuring picture placement and worksheet margins with Aspose.Cells.
+// Common Searches: how to add a digital signature image to each page when converting Excel to PDF with Aspose.Cells C# | C# Aspose.Cells place picture at bottom of worksheet before PDF export | scale PNG signature to points and embed in PDF using Aspose.Cells .NET | move and size picture placement Aspose.Cells for PDF generation
+// Tags: add signature image Aspose.Cells PDF export | insert picture bottom row worksheet C# | scale PNG to points Aspose.Cells | picture placement MoveAndSize Aspose.Cells | automate digital signature overlay PDF Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, adds a centered signature PNG as a free‑floating picture at the bottom of each worksheet, and saves the result as a PDF, creating the output folder if needed.
-class PdfSignatureOverlay
+// The sample checks for the Excel workbook and PNG signature files, loads the workbook, calculates the signature size, inserts the image at the first column of the last used row on each worksheet with MoveAndSize placement, and then saves the workbook as a PDF.
+class Program
 {
     static void Main()
     {
-        // Paths
-        string excelPath = @"C:\Docs\source.xlsx";
-        string signatureImagePath = @"C:\Images\signature.png";
-        string outputPdfPath = @"C:\Docs\source_signed.pdf";
-
         try
         {
-            // Verify required files exist
+            // Paths
+            string excelPath = "input.xlsx";
+            string signatureImagePath = "signature.png";
+            string outputPdfPath = "output_signed.pdf";
+
+            // Verify input files exist
             if (!File.Exists(excelPath))
-                throw new FileNotFoundException("Source Excel file not found.", excelPath);
+                throw new FileNotFoundException($"Excel file not found: {excelPath}");
             if (!File.Exists(signatureImagePath))
-                throw new FileNotFoundException("Signature image file not found.", signatureImagePath);
+                throw new FileNotFoundException($"Signature image not found: {signatureImagePath}");
 
             // Load workbook
             Workbook workbook = new Workbook(excelPath);
 
-            // Signature size and margins (points)
-            const float signatureWidthPt = 150f;
-            const float signatureHeightPt = 50f;
-            const float bottomMarginPt = 20f;
+            // Define signature size (points; 1 point = 1/72 inch)
+            const double sigWidthPoints = 150;
+            const double sigHeightPoints = 50;
 
-            // Convert points to pixels (96 DPI assumed)
-            const float factor = 96f / 72f; // 1 point = 1/72 inch, 1 pixel = 1/96 inch
-            int signatureWidthPx = (int)(signatureWidthPt * factor);
-            int signatureHeightPx = (int)(signatureHeightPt * factor);
-            int bottomMarginPx = (int)(bottomMarginPt * factor);
+            // Convert points to pixels (approx. 96 DPI)
+            int sigWidthPixels = (int)(sigWidthPoints * 96 / 72);
+            int sigHeightPixels = (int)(sigHeightPoints * 96 / 72);
 
-            // Add signature to each worksheet
+            // Add signature image to each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Add picture (free‑floating)
-                int pictureIndex = sheet.Pictures.Add(0, 0, signatureImagePath);
-                Picture picture = sheet.Pictures[pictureIndex];
-                picture.Placement = PlacementType.FreeFloating;
+                // Determine the bottom row of the used range
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                int bottomRow = usedRange != null
+                    ? usedRange.FirstRow + usedRange.RowCount
+                    : 0; // if sheet is empty, start at first row
 
-                // Set size
-                picture.Width = signatureWidthPx;
-                picture.Height = signatureHeightPx;
+                // Add picture at the first column of the bottom row
+                int picIndex = sheet.Pictures.Add(bottomRow, 0, signatureImagePath);
+                Picture pic = sheet.Pictures[picIndex];
 
-                // Calculate horizontal offset to centre the picture
-                double pageWidthPt = sheet.PageSetup.PaperWidth; // points
-                int pageWidthPx = (int)(pageWidthPt * factor);
-                int xOffsetPx = (int)((pageWidthPx - signatureWidthPx) / 2.0);
+                // Set size (pixels)
+                pic.Width = sigWidthPixels;
+                pic.Height = sigHeightPixels;
 
-                // Position picture at bottom centre
-                picture.Left = xOffsetPx;
-                picture.Top = bottomMarginPx;
+                // Ensure the picture moves and resizes with cells
+                pic.Placement = PlacementType.MoveAndSize;
             }
-
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPdfPath) ?? Directory.GetCurrentDirectory();
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
 
             // Save as PDF
             workbook.Save(outputPdfPath, SaveFormat.Pdf);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,25 +1,25 @@
-// Title: Set a worksheet's page orientation to landscape with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that changes the PageSetup.Orientation of a worksheet to Landscape before saving the workbook using Aspose.Cells. | Generate a minimal Aspose.Cells example that creates a workbook, sets the first sheet to landscape orientation, and saves it as an .xlsx file.
-// Common Searches: Aspose.Cells C# how to change worksheet orientation to landscape | set Excel sheet page orientation to landscape using Aspose.Cells .NET | C# example for PageSetup orientation landscape in Aspose.Cells | save workbook with landscape page layout Aspose.Cells API | modify page setup orientation of first worksheet Aspose.Cells C#
-// Tags: Aspose.Cells configure worksheet orientation | C# landscape PageSetup Aspose.Cells | Excel workbook save with landscape orientation .NET | PageSetup orientation property Aspose.Cells | worksheet landscape mode C# Aspose
+// Title: How to set an Excel worksheet's page orientation to landscape using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to change the first worksheet's PageSetup orientation to Landscape and then saves the workbook. | Show the steps to configure a worksheet's print orientation to landscape in a .NET application with Aspose.Cells. | Generate a minimal Aspose.Cells example that sets a worksheet's page layout to landscape before exporting to an XLSX file.
+// Common Searches: asp.net set worksheet page orientation to landscape with Aspose.Cells | c# Aspose.Cells change page setup orientation to landscape for existing workbook | how to print an Excel sheet in landscape mode using Aspose.Cells .NET | programmatically set worksheet print orientation to landscape in C# Aspose.Cells
+// Tags: Aspose.Cells page orientation landscape | C# worksheet PageSetup orientation Aspose.Cells | Excel workbook landscape printing .NET | Aspose.Cells set worksheet print layout
 
 using Aspose.Cells;
 
-// Creates a new workbook, accesses the first worksheet, sets its PageSetup.Orientation to Landscape, and saves the file as output.xlsx using Aspose.Cells for .NET.
+// Creates a new workbook (or loads one), accesses the first worksheet, sets its PageSetup.Orientation to Landscape, and saves the file as Result.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // {CreateWorkbook}
 
-        // Access the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the page orientation of the worksheet to landscape
-        worksheet.PageSetup.Orientation = PageOrientationType.Landscape;
+        // Set the page orientation to landscape for better wide data presentation
+        sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-        // Save the workbook to a file
-        workbook.Save("output.xlsx");
+        // Save the workbook
+        workbook.Save("Result.xlsx"); // {SaveWorkbook}
     }
 }

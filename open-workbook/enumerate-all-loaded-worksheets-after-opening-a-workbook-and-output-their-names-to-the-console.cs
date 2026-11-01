@@ -1,24 +1,54 @@
-// Title: List all worksheet names from an Excel file using Aspose.Cells for .NET (C#) and print to console
-// AI Prompts: Write a C# console program that opens a .xlsx workbook with Aspose.Cells and prints each worksheet's Name property. | Create a reusable C# method that takes a file path, loads the workbook via Aspose.Cells, and returns a list of worksheet titles. | Show how to loop through the Workbook.Worksheets collection in Aspose.Cells for .NET and output each sheet name to standard output.
-// Common Searches: asp.net console app list worksheet names from Excel using Aspose.Cells | c# code to read all sheet titles from an .xlsx file with Aspose.Cells library | how to enumerate worksheets in a workbook and display their names in C#
-// Tags: Aspose.Cells enumerate workbook worksheets | C# console output Excel sheet names | Aspose.Cells open Excel file | Aspose.Cells worksheet collection traversal | retrieve worksheet Name property
+// Title: List all worksheet names from an opened Excel file and write them to the console using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells read worksheet names from an existing workbook | How to print Excel sheet names to console with Aspose.Cells .NET | Iterate over worksheets in a loaded workbook using Aspose.Cells C# example | Handle password protected workbook while enumerating sheets with Aspose.Cells | Aspose.Cells get worksheet collection and display names in a console application
+// Tags: enumerate worksheet names Aspose.Cells | iterate workbook worksheets .NET | print Excel sheet names console C# | load workbook and list sheets Aspose.Cells | password protected workbook exception Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Loads 'input.xlsx' with Aspose.Cells, iterates over workbook.Worksheets, and writes each worksheet's Name to the console.
+// The sample verifies that the file "input.xlsx" exists, loads it into an Aspose.Cells Workbook, iterates through the Workbook.Worksheets collection, and writes each Worksheet.Name to the console. It includes specific handling for password‑protected workbooks via CellsException and a generic catch for other runtime errors.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the Excel file to be opened
+        string filePath = "input.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Output the name of each worksheet to the console
-            Console.WriteLine(sheet.Name);
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Output the name of each worksheet to the console
+                Console.WriteLine(sheet.Name);
+            }
+        }
+        catch (CellsException ex)
+        {
+            // Specific handling for password‑protected workbooks
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password to open it.");
+            }
+            else
+            {
+                Console.WriteLine($"CellsException: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // General exception handling for any other runtime errors
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

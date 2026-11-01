@@ -1,68 +1,56 @@
-// Title: Add a hyperlink to an embedded OLE object that opens the source file in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a Word document as an OLE object at cell B2 and set its Hyperlink.Address to the original file path with Aspose.Cells in C#. | Create an Excel workbook, embed any file as an OLE object, attach a clickable hyperlink that opens the source file, and save the workbook using Aspose.Cells for .NET. | Generate code that adds an OLE shape to a worksheet, assigns a file‑system hyperlink to the shape, and verifies the workbook saves correctly.
-// Common Searches: Aspose.Cells C# add hyperlink to OLE shape in Excel | how to make OLE object open original document when clicked using Aspose.Cells | set Hyperlink.Address for OleObject in Aspose.Cells .NET example | embed Word file as OLE object with file link in Excel workbook using Aspose.Cells | C# Aspose.Cells save workbook with hyperlinked OLE object
-// Tags: OleObject hyperlink Aspose.Cells | embed Word as OLE shape C# | Hyperlink.Address property usage | save workbook with OLE link | Excel OLE object file reference
+// Title: Generate an Excel file with an embedded PDF OLE object that opens the original PDF via a file hyperlink using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a PDF file, inserts it as an OLE object into cell B2 of a new workbook, sets the OleObject.Hyperlink.Address to a file:// URL of the PDF, and saves the workbook. | Show how to adjust the width and height of an OLE object after embedding a PDF and assign a hyperlink that points to the source document using Aspose.Cells. | Demonstrate error handling for missing source files when adding a PDF OLE object with a hyperlink in an Aspose.Cells worksheet.
+// Common Searches: aspnet embed pdf as ole object in excel and link to original file | c# aspose.cells add hyperlink to oleobject pointing to local file | how to set file:// hyperlink for embedded pdf in excel using aspose cells | save workbook with pdf ole object and clickable link c# | aspose.cells oleobject hyperlink address property example
+// Tags: Aspose.Cells embed PDF OLE object | OleObject hyperlink file URL | C# set OleObject.Hyperlink.Address | Excel OLE object size adjustment Aspose | handle missing source file Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, embeds a Word document as an OLE object at cell B2, assigns the source file path as a hyperlink to the OLE shape, and saves the workbook as HyperlinkedOle.xlsx.
+// The program creates a new workbook, embeds a PDF file as an OLE object in cell B2, assigns a file:// hyperlink that opens the original PDF, optionally resizes the object, handles missing source files, and saves the workbook to the specified location.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Path to the source PDF file
+            string sourceFilePath = @"C:\Files\Document.pdf";
+            if (!File.Exists(sourceFilePath))
+                throw new FileNotFoundException("Source file not found.", sourceFilePath);
 
-            // Get the first worksheet
+            // Path for the output workbook
+            string outputPath = @"C:\Output\WorkbookWithOleHyperlink.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Path to the source file that will be embedded as an OLE object
-            string sourceFilePath = @"C:\Temp\Sample.docx";
-
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourceFilePath))
-            {
-                Console.WriteLine($"Source file not found: {sourceFilePath}");
-                return;
-            }
-
-            // Read the source file into a byte array (required by AddOleObject overload)
+            // Read the source file into a byte array (required by OleObjects.Add)
             byte[] oleData = File.ReadAllBytes(sourceFilePath);
 
-            // Insert the OLE object at cell B2 (row index 1, column index 1)
-            // Provide row/column offsets (0) and size in points
-            OleObject oleObject = sheet.Shapes.AddOleObject(
-                1,          // upperLeftRow
-                1,          // upperLeftColumn
-                0,          // upperLeftRowOffset
-                0,          // upperLeftColumnOffset
-                100,        // height
-                200,        // width
-                oleData);   // OLE data
+            // Add the OLE object (PDF) to cell B2 (row 1, column 1) with initial size
+            // Add returns the index of the newly added object
+            int oleIndex = sheet.OleObjects.Add(1, 1, 150, 200, oleData);
+            OleObject ole = sheet.OleObjects[oleIndex];
 
-            // Add a hyperlink to the OLE object that opens the original source file
-            oleObject.Hyperlink.Address = sourceFilePath;
+            // Assign a hyperlink that points to the original file
+            ole.Hyperlink.Address = $"file:///{sourceFilePath.Replace("\\", "/")}";
 
-            // Ensure the output directory exists
-            string outputPath = @"C:\Temp\HyperlinkedOle.xlsx";
-            string? outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Optionally adjust the size of the OLE object (in points)
+            ole.Width = 200;
+            ole.Height = 150;
 
             // Save the workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

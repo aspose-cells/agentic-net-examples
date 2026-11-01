@@ -1,54 +1,41 @@
-// Title: Validate that a cell’s solid fill foreground color matches the assigned RGB value using Aspose.Cells for .NET
-// AI Prompts: Create a workbook, apply a solid red fill to cell A1 via a style, read the cell’s style back, and assert that the ForegroundColor equals Color.Red. | Adapt the sample to use the Accent1 theme color instead of a direct RGB value, then change the workbook’s theme and confirm the cell updates automatically. | Loop through a range of cells, assign each a different solid fill color, and programmatically verify that each cell’s ForegroundColor property matches the expected color.
-// Common Searches: Aspose.Cells C# how to verify cell background color after applying a style | read ForegroundColor of a styled Excel cell using Aspose.Cells .NET | check if Excel cell updates when theme accent color changes with Aspose.Cells | C# code to assert solid fill color of a specific cell in a generated workbook
-// Tags: solid fill foreground color verification Aspose.Cells | retrieve cell style ForegroundColor C# | theme accent propagation validation Aspose.Cells | assert cell background color .NET Excel library | programmatic style comparison Aspose.Cells workbook
+// Title: Apply a solid fill style to a cell and verify its foreground color using Aspose.Cells for .NET
+// Common Searches: how to apply a solid fill color to a specific cell with Aspose.Cells in C# | retrieve and check the foreground color of a styled cell using Aspose.Cells .NET | Aspose.Cells example for setting and reading back a custom cell background color | C# code to validate that a cell style color was applied correctly with Aspose.Cells | read cell style properties after applying solid fill in Aspose.Cells workbook
+// Tags: apply solid fill style Aspose.Cells C# | read cell foreground color Aspose.Cells | validate custom cell background color .NET | Aspose.Cells cell style verification | programmatic cell color extraction Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a new workbook, applies a solid red fill to cell A1 using a style, reads back the cell’s style to confirm the ForegroundColor matches Color.Red, prints the validation result, and saves the file as ThemeAccentValidation.xlsx.
-class ThemeAccentValidation
+// The sample creates a workbook, defines a style with a Lime foreground color and solid fill, applies the style to cell A1, then retrieves the cell's style to read back the effective foreground color and prints it.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Set cell A1 to a solid fill with a specific color (Red)
-            Cell cell = sheet.Cells["A1"];
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Red;          // Directly set the color
-            style.Pattern = BackgroundType.Solid;       // Solid fill
+            // Define a style with a solid fill and a specific foreground color
+            Style style = wb.CreateStyle();
+            style.ForegroundColor = Color.Lime;          // Set desired color directly
+            style.Pattern = BackgroundType.Solid;        // Apply solid fill to make the color visible
+
+            // Apply the style to cell A1
+            Cell cell = ws.Cells["A1"];
             cell.SetStyle(style);
 
-            // Retrieve the cell's style after setting the color
-            Style updatedStyle = cell.GetStyle();
+            // Retrieve the cell's style to verify the applied color
+            Style appliedStyle = cell.GetStyle();
+            Color effectiveColor = appliedStyle.ForegroundColor;
 
-            // The ForegroundColor property reflects the actual color set
-            Color actualColor = updatedStyle.ForegroundColor;
-
-            // Validate that the cell reflects the expected color (Red)
-            if (actualColor.ToArgb() == Color.Red.ToArgb())
-            {
-                Console.WriteLine("Validation passed: Cell reflects the expected color.");
-            }
-            else
-            {
-                Console.WriteLine("Validation failed: Cell does not reflect the expected color.");
-            }
-
-            // Save the workbook (optional) – ensure the directory exists
-            string outputPath = "ThemeAccentValidation.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Output validation results
+            Console.WriteLine("Cell A1 foreground color: " + effectiveColor);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

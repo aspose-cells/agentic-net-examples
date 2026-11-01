@@ -1,30 +1,28 @@
-// Title: Create a dynamic ListObject (Excel table) from the worksheet's used range that auto‑expands when new rows are added using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that determines the worksheet's used range, creates a ListObject over that range, applies a table style, and ensures the table grows automatically as rows are appended. | Show how to save the workbook after adding a dynamically sized ListObject and verify that the table expands without an explicit AutoExpand setting.
-// Common Searches: aspnet create Excel table from used range that expands automatically Aspose.Cells | c# Aspose.Cells ListObject auto expand when adding rows | how to make an Excel table dynamic with Aspose.Cells .NET | Aspose.Cells add styled ListObject based on MaxDataRow MaxDataColumn | save workbook after creating dynamic table Aspose.Cells C#
-// Tags: create ListObject from used range Aspose.Cells | dynamic Excel table without AutoExpand property | apply TableStyleMedium9 to ListObject | save workbook as .xlsx using Aspose.Cells | calculate used range with MaxDataRow MaxDataColumn
+// Title: Create a dynamic Excel table (ListObject) from a named range and auto‑expand it when rows are added using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# create ListObject from named range using OFFSET | How to make an Excel table automatically grow when new rows are added with Aspose.Cells | Resize Aspose.Cells ListObject to include newly added data rows | Define a dynamic named range with COUNTA and OFFSET in Aspose.Cells .NET | Refresh formulas and expand table range after appending rows in Aspose.Cells
+// Tags: create ListObject from named range Aspose.Cells | dynamic OFFSET named range Aspose.Cells | auto‑expand Excel table after inserting rows C# | resize ListObject to updated range Aspose.Cells | recalculate formulas for dynamic range Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using System;
-using System.IO;
+using AsposeRange = Aspose.Cells.Range;
 
-// The program creates a new workbook, writes header and sample data, computes the used range, adds a styled ListObject (Excel table) over that range, and saves the file; the table automatically expands when additional rows are inserted within the worksheet.
+// The example builds a workbook, fills it with sample data, defines a dynamic named range using an OFFSET/CounTA formula, creates a ListObject (Excel table) sized to that range, adds a new data row, recalculates formulas so the named range expands, resizes the ListObject to the expanded range, and saves the file as ListObjectDynamic.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook.
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0]; // Default name is "Sheet1"
 
-            // Populate header row
+            // ---------- Fill sample data (header + 3 rows) ----------
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
             sheet.Cells["C1"].PutValue("Score");
 
-            // Populate sample data
             sheet.Cells["A2"].PutValue(1);
             sheet.Cells["B2"].PutValue("Alice");
             sheet.Cells["C2"].PutValue(85);
@@ -33,40 +31,56 @@ class Program
             sheet.Cells["B3"].PutValue("Bob");
             sheet.Cells["C3"].PutValue(90);
 
-            // Determine the used range (including header)
-            int firstRow = 0;               // zero‑based index for row 1
-            int firstColumn = 0;            // zero‑based index for column A
-            int totalRows = sheet.Cells.MaxDataRow + 1;
-            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
 
-            // Add a ListObject (Excel table) based on the current range
-            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows - 1, totalColumns - 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // ---------- Define a dynamic named range ----------
+            // Formula: =OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),3)
+            string dynamicRangeFormula = "=OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),3)";
+            int nameIndex = workbook.Worksheets.Names.Add("MyTableRange");
+            workbook.Worksheets.Names[nameIndex].RefersTo = dynamicRangeFormula;
 
-            // Set table name and style
-            table.DisplayName = "DynamicTable";
+            // ---------- Create a ListObject (Excel Table) ----------
+            int listObjectIndex = sheet.ListObjects.Add(0, 0, 0, 0, true);
+            ListObject table = sheet.ListObjects[listObjectIndex];
+
+            // Resize the table to the current dynamic range.
+            AsposeRange initialRange = workbook.Worksheets.GetRangeByName("MyTableRange");
+            table.Resize(initialRange.FirstRow, initialRange.FirstColumn,
+                         initialRange.RowCount, initialRange.ColumnCount, true);
+
+            // Apply a built‑in table style.
             table.TableStyleType = TableStyleType.TableStyleMedium9;
 
-            // Note: Aspose.Cells does not provide an AutoExpand property.
-            // The table will expand automatically when new rows are added within the worksheet range.
+            // ---------- Add a new row of data ----------
+            int newRowIndex = sheet.Cells.MaxDataRow + 1; // Position after existing data
+            sheet.Cells[newRowIndex, 0].PutValue(4);      // ID
+            sheet.Cells[newRowIndex, 1].PutValue("Diana"); // Name
+            sheet.Cells[newRowIndex, 2].PutValue(92);    // Score
 
-            // Define output file path
-            string outputPath = "DynamicListObject.xlsx";
+            // Re‑calculate formulas so the dynamic named range expands.
+            workbook.CalculateFormula();
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Refresh the table range to include the newly added row.
+            AsposeRange expandedRange = workbook.Worksheets.GetRangeByName("MyTableRange");
+            table.Resize(expandedRange.FirstRow, expandedRange.FirstColumn,
+                         expandedRange.RowCount, expandedRange.ColumnCount, true);
+
+            // ---------- Save the workbook ----------
+            try
             {
-                Directory.CreateDirectory(outputDir);
+                workbook.Save("ListObjectDynamic.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

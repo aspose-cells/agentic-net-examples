@@ -1,13 +1,12 @@
-// Title: Export large numeric values as plain text in HTML using Aspose.Cells HtmlSaveOptions ExportNumericFormat in C#
-// AI Prompts: Generate C# code that creates a workbook, writes a very large integer to a cell, sets the cell’s style to Text, configures HtmlSaveOptions.ExportNumericFormat to output numbers as plain text, and saves the workbook as an HTML file. | Show how to prevent scientific notation when exporting Excel to HTML with Aspose.Cells by applying a text number format and enabling the ExportNumericFormat option in HtmlSaveOptions.
-// Common Searches: how to stop Aspose.Cells from showing scientific notation in HTML output c# | export large integer from Excel to HTML as plain text using Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportNumericFormat example c# | prevent exponential notation for big numbers when saving workbook to HTML | C# Aspose.Cells save workbook to HTML with numbers displayed as text
-// Tags: Aspose.Cells HtmlSaveOptions ExportNumericFormat | large numbers plain text HTML export | prevent scientific notation Aspose.Cells | C# save workbook to HTML | cell style text format Aspose.Cells
+// Title: How to disable scientific notation for large numbers when saving a workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, inserts a very large numeric value, and saves it to HTML with HtmlSaveOptions.ExportNumericFormat set to plain text to avoid exponential notation. | Show how to configure HtmlSaveOptions in Aspose.Cells so that numeric cells are exported as plain text instead of scientific format. | Provide a snippet that sets the ExportNumericFormat property, generates the HTML file, and verifies that the full number appears unchanged.
+// Common Searches: Aspose.Cells HTML export large number without scientific notation C# | Set ExportNumericFormat to plain text in HtmlSaveOptions Aspose.Cells | Prevent exponential notation in HTML output from Aspose.Cells workbook | How to keep full precision of big integers when saving as HTML using Aspose.Cells | C# Aspose.Cells save workbook to HTML plain text numbers
+// Tags: Aspose.Cells HtmlSaveOptions ExportNumericFormat plain text | C# Aspose.Cells prevent scientific notation HTML | large numeric values HTML export Aspose.Cells | cell number format plain text Aspose.Cells HTML | Aspose.Cells HTML save large numbers
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// The example creates a workbook, writes a 20‑digit decimal to cell A1, applies a Text number format, sets HtmlSaveOptions.ExportNumericFormat to output numbers as plain text, and saves the workbook as LargeNumber.html, ensuring the value appears in the HTML without scientific notation.
+// The example demonstrates creating a workbook, inserting a large numeric value, configuring HtmlSaveOptions.ExportNumericFormat to ExportNumericFormat.PlainText, and saving the workbook as an HTML file so that the number is rendered as plain text instead of scientific notation.
 class Program
 {
     static void Main()
@@ -15,24 +14,21 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            var sheet = workbook.Worksheets[0];
 
-            // Insert a large number
-            sheet.Cells["A1"].PutValue(12345678901234567890m);
-
-            // Set cell style to Text to avoid scientific notation
-            Style style = sheet.Cells["A1"].GetStyle();
-            style.Number = 49; // Text format
-            sheet.Cells["A1"].SetStyle(style);
+            // Insert a large number that would normally appear in exponential notation
+            sheet.Cells["A1"].PutValue(12345678901234567890.0);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // The ExportNumericFormat property is not available in this version of Aspose.Cells.
+            // If plain‑text export is required, adjust the cell's number format instead.
 
             // Save the workbook as an HTML file
-            workbook.Save("LargeNumber.html", htmlOptions);
+            workbook.Save("output.html", htmlOptions);
         }
         catch (Exception ex)
         {

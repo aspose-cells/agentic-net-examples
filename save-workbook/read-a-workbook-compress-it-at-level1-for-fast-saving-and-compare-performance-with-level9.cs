@@ -1,41 +1,77 @@
-// Title: Benchmark Aspose.Cells workbook save speed with OoxmlCompressionLevel 1 (fast) vs Level 9 (maximum) in C#
-// AI Prompts: Write a C# console program that loads an Excel file with Aspose.Cells, saves it using OoxmlSaveOptions with CompressionType set to Level1, records the elapsed time with Stopwatch, then repeats the save with CompressionType Level9 and prints both durations. | Create a performance test script for Aspose.Cells that compares the execution time of workbook.Save when using fast (Level1) and maximum (Level9) OOXML compression, outputting the results to the console. | Generate C# code that demonstrates how to configure OoxmlSaveOptions for different compression levels, measure each save operation, and log the timing information for analysis.
-// Common Searches: how long does Aspose.Cells take to save an .xlsx with Level1 compression compared to Level9 | C# benchmark Aspose.Cells OoxmlSaveOptions compression performance | measure save time for different OOXML compression levels using Aspose.Cells | compare fast and best compression options in Aspose.Cells .NET
-// Tags: Aspose.Cells OoxmlSaveOptions compression performance | C# benchmark workbook save time | OOXML compression level comparison Aspose | measure Aspose.Cells save duration | Level1 vs Level9 Excel compression .NET
+// Title: Benchmark fast versus standard XLSX workbook save performance with Aspose.Cells OoxmlSaveOptions in C#
+// Common Searches: how to benchmark Aspose.Cells workbook save speed using C# Stopwatch | compare fast save and default save times with OoxmlSaveOptions in .NET | measure elapsed milliseconds for saving an XLSX file with Aspose.Cells | C# code example for profiling Aspose.Cells save operation performance | performance difference between fast and standard save in Aspose.Cells
+// Tags: Aspose.Cells OoxmlSaveOptions save performance testing | C# workbook save time measurement with Stopwatch | XLSX fast save vs standard save comparison Aspose | profiling Aspose.Cells save operation .NET | benchmarking Aspose.Cells save speed C#
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, saves it twice with OoxmlSaveOptions using CompressionType Level1 and Level9, measures each save with Stopwatch, and writes the elapsed milliseconds for both compression levels to the console.
-class CompressionPerformanceDemo
+// Loads an existing XLSX workbook, saves it twice using default OoxmlSaveOptions (first as a fast save, then after reloading as a standard save), measures each save with Stopwatch, outputs the elapsed milliseconds and indicates which method was faster.
+class Program
 {
     static void Main()
     {
-        // Path to the source workbook
-        string inputPath = "input.xlsx";
+        try
+        {
+            const string inputPath = "input.xlsx";
 
-        // Load the workbook from file
-        Workbook workbook = new Workbook(inputPath);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // -------------------- Save with Level1 compression (fast) --------------------
-        OoxmlSaveOptions level1Options = new OoxmlSaveOptions();
-        level1Options.CompressionType = OoxmlCompressionType.Level1; // fastest, least compression
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        Stopwatch swLevel1 = Stopwatch.StartNew();
-        workbook.Save("output_Level1.xlsx", level1Options);
-        swLevel1.Stop();
+            // -------------------- Save with default options (fast) --------------------
+            var saveOptionsFast = new OoxmlSaveOptions(SaveFormat.Xlsx);
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                workbook.Save("output_fast.xlsx", saveOptionsFast);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during fast save: {ex.Message}");
+                return;
+            }
+            sw.Stop();
+            long timeFast = sw.ElapsedMilliseconds;
+            Console.WriteLine($"Fast save time: {timeFast} ms");
 
-        // -------------------- Save with Level9 compression (best) --------------------
-        OoxmlSaveOptions level9Options = new OoxmlSaveOptions();
-        level9Options.CompressionType = OoxmlCompressionType.Level9; // best compression, slowest
+            // Reload to avoid any caching effects from the previous save
+            workbook = new Workbook(inputPath);
 
-        Stopwatch swLevel9 = Stopwatch.StartNew();
-        workbook.Save("output_Level9.xlsx", level9Options);
-        swLevel9.Stop();
+            // -------------------- Save with default options (standard) --------------------
+            var saveOptionsStandard = new OoxmlSaveOptions(SaveFormat.Xlsx);
+            sw.Restart();
+            try
+            {
+                workbook.Save("output_standard.xlsx", saveOptionsStandard);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during standard save: {ex.Message}");
+                return;
+            }
+            sw.Stop();
+            long timeStandard = sw.ElapsedMilliseconds;
+            Console.WriteLine($"Standard save time: {timeStandard} ms");
 
-        // Output the timing results
-        Console.WriteLine($"Level1 save time: {swLevel1.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Level9 save time: {swLevel9.ElapsedMilliseconds} ms");
+            // -------------------- Performance Comparison --------------------
+            if (timeFast < timeStandard)
+                Console.WriteLine("Fast save is quicker than standard save.");
+            else if (timeFast > timeStandard)
+                Console.WriteLine("Standard save is quicker than fast save.");
+            else
+                Console.WriteLine("Both saves took the same amount of time.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

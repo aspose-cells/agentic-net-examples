@@ -1,52 +1,60 @@
-// Title: How to save an Excel workbook to HTML with Aspose.Cells for .NET while forcing numeric cells to appear as plain text instead of scientific notation
-// AI Prompts: Enable the numeric‑as‑string mode on HtmlSaveOptions before calling Workbook.Save to produce HTML with numbers shown as plain text. | Update the C# example to create HtmlSaveOptions, turn on the option that writes numeric values as strings, and then save the workbook to an .html file. | Show the steps for using Aspose.Cells HtmlSaveOptions to suppress scientific notation for numeric cells during HTML export in a .NET application.
-// Common Searches: Aspose.Cells C# export Excel to HTML without scientific notation | HtmlSaveOptions ExportNumericAsString usage example | how to keep numbers as plain text when converting Excel to HTML with Aspose.Cells | prevent scientific notation in HTML output from Aspose.Cells .NET | save workbook as HTML with numeric values displayed as text Aspose.Cells
-// Tags: HtmlSaveOptions ExportNumericAsString | Aspose.Cells HTML numeric formatting | C# export Excel to HTML plain text numbers | disable scientific notation Aspose.Cells | save workbook as HTML without number formatting
+// Title: Export numeric cells as plain text (no scientific notation) in HTML with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# save workbook to HTML without scientific notation | how to force plain number format when exporting Excel to HTML using Aspose.Cells | set custom number format for cells before HTML export in Aspose.Cells .NET | prevent scientific notation in HTML output from Aspose.Cells workbook | HtmlSaveOptions to keep numbers as plain text in Aspose.Cells
+// Tags: HTML export plain numeric format Aspose.Cells | disable scientific notation HtmlSaveOptions | custom cell number format Aspose.Cells C# | non‑scientific number rendering HTML Aspose.Cells | Aspose.Cells numeric formatting for HTML output
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// The example demonstrates loading an Excel workbook, configuring HtmlSaveOptions to turn on the ExportNumericAsString flag, and saving the workbook as HTML so that numeric cells are written as plain text rather than using scientific notation.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, applies custom number formats ("0" for integers and "0.##############" for decimals) to cells, configures HtmlSaveOptions, and saves the file as HTML so that numeric values appear as plain text instead of scientific notation.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the source workbook exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
+                // Create a new workbook
+                var workbook = new Workbook();
+
+                // Access the first worksheet
+                var sheet = workbook.Worksheets[0];
+
+                // Put some numeric values that would normally be shown in scientific notation
+                sheet.Cells["A1"].PutValue(123456789);
+                sheet.Cells["A2"].PutValue(0.00000123);
+
+                // Apply a custom number format that forces plain (non‑scientific) representation
+                // For large integers use "0", for small decimals use a format with enough placeholders
+                var styleA1 = sheet.Cells["A1"].GetStyle();
+                styleA1.Custom = "0";
+                sheet.Cells["A1"].SetStyle(styleA1);
+
+                var styleA2 = sheet.Cells["A2"].GetStyle();
+                styleA2.Custom = "0.##############";
+                sheet.Cells["A2"].SetStyle(styleA2);
+
+                // Configure HTML save options (default options are sufficient for plain text)
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+                // Ensure the output directory exists
+                string outputPath = "ExportPlainText.html";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to HTML using the configured options
+                workbook.Save(outputPath, htmlOptions);
+
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
             }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: ExportNumericAsString is not available in this version of Aspose.Cells.
-            // Numeric values will be saved using the default formatting.
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-
-            // Save the workbook to HTML using the configured options
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

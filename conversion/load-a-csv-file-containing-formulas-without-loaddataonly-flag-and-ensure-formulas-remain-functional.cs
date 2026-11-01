@@ -1,38 +1,42 @@
-// Title: Import CSV with embedded Excel formulas using Aspose.Cells for .NET and keep them functional
-// AI Prompts: Configure TxtLoadOptions.HasFormula = true so that cells beginning with '=' in a CSV are treated as Excel formulas during import. | After importing the CSV data, invoke Workbook.CalculateFormula() to evaluate all formulas before saving the workbook. | Set TxtLoadOptions.Separator and ConvertNumericData as required while preserving formulas when converting CSV to XLSX.
-// Common Searches: Aspose.Cells C# load CSV with formulas without LoadDataOnly flag | How to keep '=SUM' formulas active when importing CSV into Aspose.Cells workbook | Enable formula detection for CSV to XLSX conversion using Aspose.Cells .NET | Preserve Excel formulas during CSV import with TxtLoadOptions in Aspose.Cells | Calculate imported CSV formulas before saving as XLSX in Aspose.Cells
-// Tags: Csv import with formula detection Aspose.Cells | TxtLoadOptions.HasFormula property | ImportCSV method preserving formulas | Workbook.CalculateFormula after CSV import | CSV to XLSX conversion preserving Excel formulas
+// Title: Load a CSV file with embedded formulas using Aspose.Cells for .NET and keep the formulas functional when saving to XLSX
+// Common Searches: c# load csv file that contains Excel formulas with Aspose.Cells | preserve and recalculate formulas after converting CSV to XLSX using Aspose.Cells | how to use LoadOptions for CSV import without LoadDataOnly in Aspose.Cells | Aspose.Cells calculate formulas after importing a CSV workbook | convert CSV to XLSX while keeping formulas intact in .NET
+// Tags: load CSV with formulas Aspose.Cells | CSV to XLSX conversion with active formulas | Workbook.CalculateFormula after CSV import | LoadOptions CSV without LoadDataOnly flag | Aspose.Cells formula recalculation workflow | saving workbook as XLSX with active formulas
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsCsvFormulaDemo
+// The example verifies the input CSV file, loads it into an Aspose.Cells Workbook using LoadOptions set to CSV (without the LoadDataOnly flag), triggers formula recalculation with CalculateFormula, and then saves the workbook as an XLSX file, ensuring that any embedded formulas remain functional.
+class Program
 {
-    // The example demonstrates loading a CSV that contains formula strings, enabling TxtLoadOptions.HasFormula to treat leading '=' as formulas, importing the data into a new workbook, recalculating all formulas, and saving the result as an XLSX file while keeping the formulas functional.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the CSV file that contains formulas (e.g., cells with values like "=SUM(A1:A3)")
-            string csvPath = "input.csv";
+            string inputPath = "input.csv";
+            string outputPath = "output.xlsx";
 
-            // Create TxtLoadOptions and enable formula detection.
-            TxtLoadOptions txtOptions = new TxtLoadOptions();
-            txtOptions.HasFormula = true;          // Treat text starting with '=' as a formula.
-            txtOptions.Separator = ',';            // Define the CSV delimiter.
-            txtOptions.ConvertNumericData = true;  // Convert numeric strings to numbers.
+            // Verify that the input CSV file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Create an empty workbook.
-            Workbook workbook = new Workbook();
+            // Load the CSV file with CSV load format
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Import the CSV data into the first worksheet starting at cell A1 (row 0, column 0).
-            workbook.Worksheets[0].Cells.ImportCSV(csvPath, txtOptions, 0, 0);
-
-            // Calculate all formulas that were imported.
+            // Recalculate any formulas present
             workbook.CalculateFormula();
 
-            // Save the workbook to an Excel file; formulas will be functional.
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook as XLSX, preserving formulas
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

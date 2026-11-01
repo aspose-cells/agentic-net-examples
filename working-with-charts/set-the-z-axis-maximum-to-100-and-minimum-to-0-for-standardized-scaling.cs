@@ -1,71 +1,73 @@
-// Title: Set a fixed Z‑axis range of 0 to 100 for a 3‑D column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a workbook, add sample data, create a 3‑D column chart, and set its Z‑axis minimum to 0 and maximum to 100 with Aspose.Cells in C#. | Write C# code that builds a 3‑D column chart from a data range and configures the value axis to a static 0‑100 scale using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set Z axis minimum value for 3D column chart | How to fix the value axis range of a 3D chart to 0‑100 in Aspose.Cells | C# example for disabling automatic axis scaling in Aspose.Cells chart | Standardize Z‑axis scaling for 3‑D column chart with Aspose.Cells .NET
-// Tags: Aspose.Cells set Z axis range | 3D column chart value axis scaling C# | disable automatic axis limits Aspose.Cells | chart value axis min max .NET | Aspose.Cells chart scaling example
+// Title: Set manual Z‑axis minimum and maximum (0‑100) for a 3‑D clustered column chart using Aspose.Cells in C#
+// AI Prompts: Create a 3‑D clustered column chart in an Excel workbook and fix its Z‑axis range to 0‑100 with Aspose.Cells for .NET. | Programmatically disable automatic scaling and assign specific min and max values to the series axis of a 3‑D chart using C#. | Generate an Excel file containing sample data and a 3‑D column chart whose Z‑axis limits are explicitly set to 0 and 100.
+// Common Searches: Aspose.Cells C# set fixed Z axis range for 3D column chart | how to disable automatic scaling of series axis in Aspose.Cells | manual min max values for Excel 3D chart axis using .NET | C# example for setting Z‑axis limits in Aspose.Cells chart | standardize Z axis scaling in 3‑D clustered column chart Aspose
+// Tags: Aspose.Cells series axis manual scaling | 3D column chart Z axis limits C# | set chart series axis min max Aspose.Cells | Excel 3D chart axis range .NET | disable automatic chart axis scaling Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;   // Required for Chart, ChartType, Axis
+using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The program creates a new workbook, adds sample data, inserts a 3‑D clustered column chart, and manually sets the Z‑axis (Series axis) minimum to 0 and maximum to 100 before saving the workbook as ChartWithZAxisScaling.xlsx.
+class Program
 {
-    // The example creates a new workbook, inserts sample data, adds a 3‑D column chart, disables automatic scaling, and explicitly sets the chart's Z‑axis (value axis) minimum to 0 and maximum to 100 before saving the file as ChartWithStandardizedZAxis.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series1");
+            sheet.Cells["C1"].PutValue("Series2");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["C2"].PutValue(40);
+            sheet.Cells["C3"].PutValue(50);
+            sheet.Cells["C4"].PutValue(60);
+
+            // Add a 3‑D clustered column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column3DClustered, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:C4", true);
+
+            // Access the Series (Z) axis and set manual scaling
+            Axis seriesAxis = chart.SeriesAxis;
+            if (seriesAxis != null)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(55);
-                worksheet.Cells["B4"].PutValue(90);
-
-                // Add a 3‑D column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Configure the value (Z) axis scaling
-                Axis valueAxis = chart.ValueAxis;
-                valueAxis.IsAutomaticMinValue = false; // Disable automatic minimum
-                valueAxis.IsAutomaticMaxValue = false; // Disable automatic maximum
-                valueAxis.MinValue = 0;                // Set minimum to 0
-                valueAxis.MaxValue = 100;              // Set maximum to 100
-
-                // Define output file path
-                string outputPath = "ChartWithStandardizedZAxis.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                seriesAxis.IsAutomaticMaxValue = false; // disable automatic max
+                seriesAxis.IsAutomaticMinValue = false; // disable automatic min
+                seriesAxis.MaxValue = 100;               // set maximum to 100
+                seriesAxis.MinValue = 0;                 // set minimum to 0
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputPath = "ChartWithZAxisScaling.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine("An error occurred while creating the chart workbook:");
-                Console.WriteLine(ex.Message);
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook with the chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

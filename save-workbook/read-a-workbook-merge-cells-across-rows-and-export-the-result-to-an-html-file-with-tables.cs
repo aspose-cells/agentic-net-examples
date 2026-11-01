@@ -1,48 +1,62 @@
-// Title: Merge cells across rows in an Excel worksheet and save as HTML using Aspose.Cells for .NET
-// AI Prompts: Load an Excel file, merge the range A1:B3 on the first worksheet, and export the sheet to an HTML file with the default HtmlSaveOptions in C#. | Set HtmlSaveOptions to include all worksheet data and preserve merged cells, then save the workbook as HTML using Aspose.Cells.
-// Common Searches: c# aspnet merge cells A1:B3 and export worksheet to html using Aspose.Cells | how to configure HtmlSaveOptions to export merged cells to HTML in Aspose.Cells .NET | Aspose.Cells example for merging a range of cells and saving as an HTML file | export Excel workbook with merged rows to HTML with all data using C# | Aspose.Cells merge cells across rows then convert workbook to HTML
-// Tags: merge cells Aspose.Cells C# | HtmlSaveOptions ExportDataOptions All | Aspose.Cells HTML export of merged cells | C# load workbook save as HTML | merged range conversion to HTML Aspose.Cells
+// Title: Merge cells A1:C3 in an Excel workbook and export the active worksheet to HTML with grid lines using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with Aspose.Cells, merge the range A1:C3 on the first worksheet, and save only that worksheet as an HTML file that retains grid lines. | In C#, configure HtmlSaveOptions to export the active sheet with grid lines after merging a multi‑row cell range, then write the result to a .html file.
+// Common Searches: Aspose.Cells C# merge a range and save as HTML with grid lines | how to export only the active worksheet to HTML using Aspose.Cells | C# example for merging cells A1 to C3 and converting Excel to HTML | HtmlSaveOptions ExportGridLines true Aspose.Cells | save merged Excel cells to HTML file with Aspose.Cells .NET
+// Tags: merge cells Aspose.Cells | HtmlSaveOptions export grid lines | export active worksheet to HTML Aspose.Cells | convert Excel range to HTML C# | Aspose.Cells workbook to HTML example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace MergeAndExportToHtml
+// The program loads a workbook from a .xlsx file, merges the cell range A1:C3 on the first worksheet, ensures the output directory exists, configures HtmlSaveOptions to export only the active worksheet with grid lines, and saves the result as an HTML file.
+class Program
 {
-    // The program loads input.xlsx, merges the A1:B3 range on the first worksheet, configures HtmlSaveOptions to export all data while preserving merged cells, and saves the result as output.html.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for input workbook and output HTML
+        string inputPath = @"C:\Data\SourceWorkbook.xlsx";
+        string outputPath = @"C:\Data\Result.html";
+
+        // Verify that the source file exists
+        if (!File.Exists(inputPath))
         {
-            // Path to the source Excel file
-            string inputFile = "input.xlsx";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(inputFile);
+        try
+        {
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells across rows.
-            // This merges the range A1:B3 (zero‑based indices: row 0, column 0, spanning 3 rows and 2 columns)
-            worksheet.Cells.Merge(0, 0, 3, 2);
+            // Merge cells from A1 to C3 (rows 0‑2, columns 0‑2)
+            sheet.Cells.Merge(0, 0, 3, 3);
 
-            // Configure HTML save options.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Merge contiguous empty TD elements (default behavior)
-                MergeEmptyTdType = MergeEmptyTdType.Default,
+                Directory.CreateDirectory(outputDir);
+            }
 
-                // Export the entire worksheet data (including headings)
-                ExportDataOptions = HtmlExportDataOptions.All
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = true, // Export only the active sheet
+                ExportGridLines = true             // Preserve grid lines
+                // CssStyleSheetType property removed for compatibility with current API version
             };
 
-            // Path for the resulting HTML file
-            string outputFile = "output.html";
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, saveOptions);
 
-            // Save the workbook as an HTML file using the specified options
-            workbook.Save(outputFile, htmlOptions);
-
-            Console.WriteLine($"Workbook merged and exported to HTML: {outputFile}");
+            Console.WriteLine("Workbook processed and saved as HTML successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

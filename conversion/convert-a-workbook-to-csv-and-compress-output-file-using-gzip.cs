@@ -1,14 +1,13 @@
 // Title: Convert an Excel workbook to a gzipped CSV file using Aspose.Cells in C#
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, saves it as CSV to a MemoryStream using TxtSaveOptions, and writes the stream to a .gz file with GZipStream. | Show how to configure delimiter and encoding for CSV export in Aspose.Cells before compressing the output with GZipStream. | Provide a .NET console example that converts a workbook to CSV, streams the result, and creates a gzip‑compressed CSV file.
-// Common Searches: aspnet convert excel to csv and gzip using aspose.cells | c# save workbook as csv to memory stream then compress with gzipstream | how to use TxtSaveOptions for csv export before gzip compression in .net | generate gzipped csv from xlsx with aspose.cells library | compress csv output from aspose.cells workbook with gzip in C# console app
-// Tags: Aspose.Cells CSV export | GZipStream compression of CSV | TxtSaveOptions CSV configuration | MemoryStream to GZipStream .NET | gzipped CSV generation from Excel
+// Common Searches: Aspose.Cells C# export first worksheet to CSV and gzip the file | How to save an .xlsx as .csv.gz with Aspose.Cells and .NET GZipStream | C# code to convert Excel to compressed CSV using TxtSaveOptions | Create a gzipped CSV from Excel workbook with Aspose.Cells in .NET
+// Tags: Aspose.Cells CSV export TxtSaveOptions | GZipStream compress CSV in C# | Excel to gzipped CSV conversion using Aspose.Cells | temporary CSV file cleanup after compression | SaveFormat.CSV usage with Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
 using System.IO.Compression;
+using Aspose.Cells;
 
-// // Loads an Excel workbook via Aspose.Cells, saves it as CSV into a MemoryStream using TxtSaveOptions, then compresses the CSV data into a .gz file with GZipStream.
+// The example loads an Excel workbook, saves the first worksheet as a CSV file using TxtSaveOptions, compresses the CSV into a GZIP archive with GZipStream, and then deletes the intermediate CSV file.
 class Program
 {
     static void Main(string[] args)
@@ -16,30 +15,29 @@ class Program
         // Path to the source Excel workbook
         string inputPath = "input.xlsx";
 
-        // Path for the compressed CSV output
-        string outputPath = "output.csv.gz";
+        // Path for the intermediate CSV file
+        string csvPath = "output.csv";
 
-        // Load the workbook from the file system
+        // Path for the final GZIP-compressed CSV
+        string gzipPath = "output.csv.gz";
+
+        // Load the workbook from the Excel file
         Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as CSV into a memory stream
-        using (MemoryStream csvStream = new MemoryStream())
+        // Save the first worksheet as CSV
+        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV);
+        // (Optional) configure CSV options here, e.g., csvOptions.Encoding = Encoding.UTF8;
+        workbook.Save(csvPath, csvOptions);
+
+        // Compress the CSV file into a GZIP archive
+        using (FileStream csvFile = new FileStream(csvPath, FileMode.Open, FileAccess.Read))
+        using (FileStream gzipFile = new FileStream(gzipPath, FileMode.Create, FileAccess.Write))
+        using (GZipStream gzipStream = new GZipStream(gzipFile, CompressionMode.Compress))
         {
-            // Configure CSV save options if needed (e.g., delimiter, encoding)
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV);
-            workbook.Save(csvStream, csvOptions);
-
-            // Reset stream position to the beginning before reading
-            csvStream.Position = 0;
-
-            // Create the output file and compress the CSV data using GZIP
-            using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-            using (GZipStream gzipStream = new GZipStream(fileStream, CompressionMode.Compress))
-            {
-                csvStream.CopyTo(gzipStream);
-            }
+            csvFile.CopyTo(gzipStream);
         }
 
-        Console.WriteLine("Workbook successfully converted to CSV and compressed as GZIP.");
+        // Clean up the temporary CSV file
+        File.Delete(csvPath);
     }
 }

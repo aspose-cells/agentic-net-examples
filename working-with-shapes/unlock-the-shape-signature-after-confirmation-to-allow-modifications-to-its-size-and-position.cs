@@ -1,78 +1,77 @@
-// Title: Unlock the 'Signature' shape in an Excel workbook and resize it with Aspose.Cells for .NET
-// AI Prompts: Write C# code that searches a worksheet for a shape named "Signature", asks the user to confirm, sets IsLocked = false, and updates its Width, Height, Left, and Top properties using Aspose.Cells. | Generate a console application that loads an Excel file, locates a locked shape, unlocks it, resizes it to given dimensions, and saves the modified workbook with Aspose.Cells for .NET. | Provide a step‑by‑step script that prompts the user before unlocking a shape and then programmatically changes the shape's size and position in a workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells how to unlock a specific shape in C# | C# resize Excel shape after unlocking with Aspose.Cells | programmatically change position of a named shape in an Excel workbook using Aspose.Cells | prompt user before modifying locked shape Aspose.Cells .NET
-// Tags: unlock Aspose.Cells shape programmatically | resize shape dimensions Aspose.Cells C# | set shape position Aspose.Cells workbook | prompt user before shape modification .NET | find shape by name Aspose.Cells
+// Title: Unlock the 'Signature' shape and set it to free‑floating placement in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an XLSX workbook, locates the shape named "Signature" on the first worksheet, disables its lock, changes its placement to free‑floating, and saves the result with Aspose.Cells. | Generate a program using Aspose.Cells that searches for a named shape, sets IsLocked = false, sets Placement = FreeFloating, and writes the updated file in C#. | Create a C# example that unlocks the "Signature" shape, allows it to be resized and moved freely, and persists the changes to a new Excel file.
+// Common Searches: Aspose.Cells C# unlock shape named Signature and change placement | set shape to free floating placement using Aspose.Cells .NET | how to modify IsLocked property of a shape in an Excel workbook with Aspose.Cells | C# code to find and edit a specific shape in an XLSX file using Aspose.Cells | unlock and reposition Excel shape programmatically with Aspose.Cells
+// Tags: disable shape lock Aspose.Cells C# | apply freefloating placement Aspose.Cells | locate shape by name Aspose.Cells worksheet | edit shape properties Excel Aspose.Cells | allow shape resizing after unlocking Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads input.xlsx, finds the shape named "Signature" on the first worksheet, prompts the user for confirmation, unlocks the shape by setting IsLocked to false, changes its Width, Height, Left, and Top values, and saves the updated workbook as output.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads 'input.xlsx', searches the first worksheet for a shape called "Signature", sets its IsLocked property to false, changes its Placement to FreeFloating, and saves the modified workbook as 'output.xlsx', with error handling for missing files and exceptions.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Locate the shape named "Signature"
-            Shape signatureShape = null;
-            foreach (Shape shape in sheet.Shapes)
+            try
             {
-                if (shape.Name == "Signature")
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Locate the shape named "Signature"
+                int signatureIndex = -1;
+                for (int i = 0; i < worksheet.Shapes.Count; i++)
                 {
-                    signatureShape = shape;
-                    break;
+                    if (worksheet.Shapes[i].Name == "Signature")
+                    {
+                        signatureIndex = i;
+                        break;
+                    }
                 }
-            }
 
-            if (signatureShape == null)
+                // If the shape exists, unlock it and allow free movement
+                if (signatureIndex != -1)
+                {
+                    Shape signatureShape = worksheet.Shapes[signatureIndex];
+
+                    // Unlock the shape so it can be edited
+                    signatureShape.IsLocked = false;
+
+                    // Allow the shape to be moved freely
+                    signatureShape.Placement = PlacementType.FreeFloating;
+
+                    // Note: Aspose.Cells Shape does not expose a LockAspectRatio property.
+                    // The shape can be resized after unlocking; no additional code is required.
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Shape named \"Signature\" was not found.");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Signature shape not found.");
-                return;
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Ask the user for confirmation before unlocking
-            Console.Write("Unlock the signature shape to allow size/position changes? (y/n): ");
-            string answer = Console.ReadLine();
-            if (!string.Equals(answer, "y", StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("Operation cancelled by user.");
-                return;
-            }
-
-            // Unlock the shape (Aspose.Cells does not expose a LockAspectRatio property)
-            signatureShape.IsLocked = false;
-
-            // Example modifications – adjust as needed (values are in points)
-            signatureShape.Width = 200;
-            signatureShape.Height = 100;
-            signatureShape.Left = 50;
-            signatureShape.Top = 30;
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,96 +1,94 @@
-// Title: How to clone a TextBox shape, update its placeholder text, and place it in a new worksheet row with Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells for C# to duplicate a TextBox named "TemplateBox", set its Text property to a custom placeholder, and add the cloned shape to the row after the last data row. | Write C# code that loads an Excel workbook, finds a TextBox shape, clones it with AddCopy, changes the cloned TextBox's text, and saves the workbook.
-// Common Searches: Aspose.Cells C# clone TextBox shape and change its text | AddCopy shape to specific row in Excel using Aspose.Cells | Copy a TextBox from a template worksheet and insert into new row with Aspose.Cells | How to update placeholder text of a cloned TextBox in Aspose.Cells | C# Aspose.Cells find shape by name and duplicate it
-// Tags: clone textbox shape Aspose.Cells C# | addcopy shape to worksheet row | update textbox placeholder Aspose.Cells | find shape by name Aspose.Cells | duplicate template shape Excel C#
+// Title: Clone a TextBox shape, change its placeholder text, and insert the copy into a new row using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells clone a TextBox shape and set new placeholder text | Add a copied TextBox to the next empty row in an Excel worksheet with Aspose.Cells | How to use Shape.AddCopy to duplicate a TextBox and reposition it in a sheet using .NET | Aspose.Cells example for duplicating a TextBox and moving it to a new row | Update placeholder text of a cloned TextBox shape in C#
+// Tags: duplicate TextBox shape using Aspose.Cells | set TextBox placeholder text C# | insert copied shape into next data row | Shape.AddCopy method example | reposition TextBox in Excel worksheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, locates a TextBox named "TemplateBox", clones it to a row after the existing data using AddCopy, updates the cloned TextBox's placeholder text, and saves the result, with comprehensive error handling for missing files and shape operations.
+// The example loads an Excel workbook, finds a TextBox named "TemplateTextBox", clones it with Shape.AddCopy, updates the cloned TextBox's placeholder text, moves the clone to the row after the last used row while preserving the column, and saves the result to a new file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string templatePath = "Template.xlsx";
-            const string resultPath = "Result.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Template file \"{templatePath}\" not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook
-            var workbook = new Workbook(templatePath);
-            var sheet = workbook.Worksheets[0];
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Locate the template TextBox (assumed name "TemplateBox")
-            Shape templateShape = null;
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Locate the template TextBox shape by its name.
+            TextBox? templateTextBox = null;
             foreach (Shape shape in sheet.Shapes)
             {
-                if (shape is TextBox tb && tb.Name == "TemplateBox")
+                if (shape is TextBox tb && tb.Name == "TemplateTextBox")
                 {
-                    templateShape = tb; // store as Shape to access position properties
+                    templateTextBox = tb;
                     break;
                 }
             }
 
-            if (templateShape == null)
+            if (templateTextBox == null)
             {
-                Console.WriteLine("Template TextBox \"TemplateBox\" not found.");
+                Console.WriteLine("Template TextBox not found.");
                 return;
             }
 
-            // Determine the row where the new TextBox will be placed
-            int targetRow = sheet.Cells.MaxDataRow + 2; // one row after existing data
+            // Determine the row where the new TextBox will be placed (after the last used row).
+            int newRow = sheet.Cells.MaxDataRow + 1;
 
-            // Clone the template TextBox onto the worksheet using AddCopy with offsets
+            // Clone the template TextBox using the correct AddCopy overload.
             Shape clonedShape;
             try
             {
                 clonedShape = sheet.Shapes.AddCopy(
-                    templateShape,
-                    targetRow,
-                    templateShape.UpperLeftColumn,
-                    0, // UpperLeftRowOffset (not required for this example)
-                    0  // UpperLeftColumnOffset (not required for this example)
-                );
+                    templateTextBox,
+                    templateTextBox.UpperLeftRow,
+                    templateTextBox.UpperLeftColumn,
+                    templateTextBox.Height,
+                    templateTextBox.Width);
             }
-            catch (Exception copyEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to clone shape: {copyEx.Message}");
+                Console.WriteLine($"Error cloning TextBox: {ex.Message}");
                 return;
             }
 
-            // Cast the cloned shape back to TextBox and update its text
-            if (clonedShape is TextBox newBox)
+            // Cast the cloned shape back to TextBox.
+            TextBox? newTextBox = clonedShape as TextBox;
+            if (newTextBox == null)
             {
-                newBox.Text = "Updated placeholder text";
-            }
-            else
-            {
-                Console.WriteLine("Cloned shape is not a TextBox.");
+                Console.WriteLine("Failed to cast cloned shape to TextBox.");
                 return;
             }
 
-            // Save the modified workbook
-            try
-            {
-                workbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved to \"{resultPath}\".");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Update the placeholder text of the cloned TextBox.
+            newTextBox.Text = "Your new placeholder text";
+
+            // Position the new TextBox in the desired row while keeping the original column.
+            newTextBox.UpperLeftRow = newRow;
+            newTextBox.UpperLeftColumn = templateTextBox.UpperLeftColumn;
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors to prevent the application from crashing.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

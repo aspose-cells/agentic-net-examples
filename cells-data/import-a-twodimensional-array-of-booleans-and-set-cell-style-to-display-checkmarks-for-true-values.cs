@@ -1,49 +1,50 @@
-// Title: Import a 2‑D boolean array into an Aspose.Cells worksheet and render true values as checkboxes
-// AI Prompts: Write C# code that imports a two‑dimensional boolean array into a worksheet and enables the built‑in checkbox visual for cells containing true using Aspose.Cells. | Generate a program that reads a bool matrix, places it into Excel via Aspose.Cells, and marks each true entry with a checked box.
-// Common Searches: Aspose.Cells how to show check boxes for true values from a boolean array | C# import 2D bool array into Excel and enable checkbox style with Aspose.Cells | set IsCheckBoxStyle on imported cells Aspose.Cells example | display check marks for true booleans in Excel using Aspose.Cells
-// Tags: import boolean 2d array Aspose.Cells | set cell IsCheckBoxStyle C# | display check mark for true values Excel | boolean matrix to checkbox style | Aspose.Cells checkbox rendering
+// Title: Write a 2D bool[,] array to an Excel worksheet and display checkmarks for true values using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates over a bool[,] matrix, writes a checkmark character to cells with true values, and leaves false cells blank using Aspose.Cells. | Create a Wingdings 2 style in Aspose.Cells and apply it only to cells that represent true entries from a boolean array. | Save the populated workbook as an .xlsx file after inserting checkmark symbols for true values.
+// Common Searches: Aspose.Cells C# write boolean matrix to Excel with checkmark symbols | How to display a checkmark for true values in an Excel file using Aspose.Cells | Create custom cell style with Wingdings 2 font in Aspose.Cells .NET | Import two dimensional bool array into worksheet using Aspose.Cells | Set cell value to 'P' for checkmark in Aspose.Cells example
+// Tags: Aspose.Cells write boolean array to worksheet | Wingdings 2 checkmark style Aspose.Cells | C# bool[,] to Excel with custom font | apply custom style to true cells Aspose.Cells | export boolean matrix as checkmarks .xlsx
 
-using System;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace AsposeCellsBooleanCheckboxDemo
+// Sample two‑dimensional boolean array
+bool[,] boolArray = new bool[,]
 {
-    // // Creates a workbook, imports a 2‑D object array of booleans starting at A1, iterates over each cell to set IsCheckBoxStyle = true so true values appear as check marks, and saves the file as BooleanCheckBox.xlsx.
-    class Program
+    { true, false, true },
+    { false, true, false },
+    { true, true, false }
+};
+
+// Create a new workbook (Aspose.Cells)
+Workbook workbook = new Workbook();
+Worksheet sheet = workbook.Worksheets[0];
+
+// Create a style that uses a font capable of displaying a checkmark (Wingdings 2)
+Style checkStyle = workbook.CreateStyle();
+checkStyle.Font.Name = "Wingdings 2";
+checkStyle.Font.Size = 12;
+checkStyle.Font.Color = Color.Black;
+checkStyle.HorizontalAlignment = TextAlignmentType.Center;
+checkStyle.VerticalAlignment = TextAlignmentType.Center;
+
+// Iterate over the boolean array and write values to cells
+for (int row = 0; row < boolArray.GetLength(0); row++)
+{
+    for (int col = 0; col < boolArray.GetLength(1); col++)
     {
-        static void Main()
+        Cell cell = sheet.Cells[row, col];
+
+        if (boolArray[row, col])
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Define a two‑dimensional array of booleans (as objects)
-            object[,] boolData = new object[,]
-            {
-                { true, false, true },
-                { false, true, false },
-                { true, true, false }
-            };
-
-            // Import the 2‑D array starting at cell A1 (row 0, column 0)
-            cells.ImportTwoDimensionArray(boolData, 0, 0);
-
-            // Apply checkbox style to each imported cell
-            int rows = boolData.GetLength(0);
-            int cols = boolData.GetLength(1);
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    Cell cell = cells[r, c];
-                    cell.IsCheckBoxStyle = true;   // display as a check box
-                    // The boolean value is already in the cell; true shows a check mark
-                }
-            }
-
-            // Save the workbook
-            workbook.Save("BooleanCheckBox.xlsx");
+            // In Wingdings 2 the character 'P' renders as a checkmark
+            cell.PutValue("P");
+            cell.SetStyle(checkStyle);
+        }
+        else
+        {
+            cell.PutValue(string.Empty);
         }
     }
 }
+
+// Save the workbook to a file
+workbook.Save("BooleanCheckmarks.xlsx");

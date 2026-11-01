@@ -1,47 +1,45 @@
-// Title: Unmerge cells C6:E7, recalculate all formulas, and save the workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to open an Excel file, unmerge the range C6:E7, recalculate every formula, and save the result to a new file. | Show how to combine Aspose.Cells Range.UnMerge and Workbook.CalculateFormula methods in a .NET application. | Provide a C# example that loads a workbook, removes a merged region, forces formula evaluation, and writes the updated workbook back to disk.
-// Common Searches: Aspose.Cells C# unmerge merged cells C6:E7 and recalculate formulas before saving | How to programmatically unmerge a specific range and refresh formulas with Aspose.Cells for .NET | Recalculate workbook formulas after unmerging cells using Aspose.Cells in C# | Save Excel file after unmerging cells with Aspose.Cells .NET API
-// Tags: Aspose.Cells unmerge range C6:E7 | Aspose.Cells recalculate formulas | Aspose.Cells save modified workbook | Aspose.Cells Range.UnMerge example | Aspose.Cells Workbook.CalculateFormula usage
+// Title: How to unmerge the cell range C6:E7, recalculate all formulas, and save the workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to unmerge cells C6 to E7 with Aspose.Cells and recalculate workbook formulas | Aspose.Cells .NET example for removing a merged range and updating formulas before saving | Programmatically split a specific Excel range and force formula calculation using Aspose.Cells in C# | How to use Aspose.Cells to unmerge cells C6:E7 and recalc all formulas | Save an Excel file after unmerging cells and recalculating formulas with Aspose.Cells for .NET
+// Tags: Aspose.Cells unmerge range C# | Aspose.Cells calculate formulas .NET | Aspose.Cells create range and unmerge | Aspose.Cells save workbook after unmerge | Aspose.Cells modify merged cells programmatically
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The sample loads an existing Excel workbook, accesses the first worksheet, creates a Range object for cells C6:E7, calls UnMerge to split the merged cells, triggers a full formula recalculation with CalculateFormula, and saves the updated workbook to a new file, handling any errors that may occur.
+// The example loads an Excel workbook (creating a blank file if missing), accesses the first worksheet, defines the range C6:E7, unmerges that range, recalculates all workbook formulas, and saves the updated file to a new location.
 class Program
 {
     static void Main()
     {
-        // Define input and output file paths
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         try
         {
-            // Verify that the input file exists
+            // Ensure the input file exists; create a blank workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                var tempWb = new Workbook();
+                tempWb.Save(inputPath);
             }
 
-            // Load the workbook from the specified file
+            // Load the workbook from the input file.
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
+            // Get the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Unmerge the previously merged range C6:E7 using a Range object
-            AsposeRange mergedRange = sheet.Cells.CreateRange("C6:E7");
-            mergedRange.UnMerge();
+            // Unmerge the previously merged range C6:E7.
+            // startRow = 5 (row 6), startColumn = 2 (column C)
+            // totalRows = 2 (rows 6‑7), totalColumns = 3 (columns C‑E)
+            var range = sheet.Cells.CreateRange(5, 2, 2, 3);
+            range.UnMerge();
 
-            // Recalculate all formulas in the workbook
+            // Recalculate all formulas in the workbook.
             workbook.CalculateFormula();
 
-            // Save the modified workbook to the output file
+            // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

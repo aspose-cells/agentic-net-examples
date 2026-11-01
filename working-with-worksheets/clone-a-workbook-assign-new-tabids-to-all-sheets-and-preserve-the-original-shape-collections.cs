@@ -1,51 +1,54 @@
-// Title: How to clone an Excel workbook, assign new TabId values to every worksheet, and keep shape collections intact with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to deep‑clone a workbook, set each worksheet's TabId to a sequential number starting at 1000, and save the result without losing any shape objects. | Write a program that loads an existing .xlsx file, calls Workbook.Copy to duplicate it, updates the TabId of all worksheets in the copy, and writes the cloned file while preserving all embedded shapes.
-// Common Searches: how to copy a workbook and change worksheet tab ids with Aspose.Cells | preserve shapes when cloning an Excel file using Aspose.Cells .NET | assign new TabId to each worksheet after workbook copy | Aspose.Cells example for cloning workbook and updating TabId
-// Tags: Workbook.Copy method for deep workbook duplication | modify Worksheet.TabId after workbook cloning | maintain shape objects while copying Excel workbook | sequential TabId assignment to worksheets .NET | duplicate Excel workbook with updated TabIds using Aspose.Cells
+// Title: Clone an Excel workbook using Aspose.Cells .NET, assign new random TabIds to all worksheets, and preserve shape collections
+// AI Prompts: Generate C# code that clones an existing .xlsx file with Aspose.Cells, assigns a random TabId to every worksheet in the clone, and saves the result while keeping all shapes intact. | Show how to copy a workbook via a MemoryStream in Aspose.Cells, modify the TabId property of each worksheet, and ensure shape objects are preserved.
+// Common Searches: Aspose.Cells clone workbook and change worksheet TabId C# | preserve shapes when copying Excel file with Aspose.Cells .NET | assign unique TabId to worksheets after cloning workbook using Aspose.Cells | how to use MemoryStream to duplicate an Excel workbook in C# Aspose.Cells | retain shape objects while cloning workbook Aspose.Cells
+// Tags: Aspose.Cells clone workbook via MemoryStream | assign random TabId to each worksheet Aspose.Cells | keep shape collections when duplicating Excel file | modify sheet TabId after workbook copy | C# generate unique TabId values for Excel sheets
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Loads 'original.xlsx', creates a deep copy via Workbook.Copy, assigns new TabId values starting at 1000 to every worksheet in the cloned workbook, and saves it as 'cloned.xlsx' while preserving all existing shape collections.
-class Program
+// The example checks for the source file, loads it into a Workbook, clones it by saving to a MemoryStream and reloading, assigns a random integer TabId to each worksheet in the cloned workbook, and saves the cloned workbook as a new file while retaining the original shape collections.
+class WorkbookCloneExample
 {
     static void Main()
     {
         try
         {
-            const string sourcePath = "original.xlsx";
-            const string destPath = "cloned.xlsx";
+            const string originalPath = "OriginalWorkbook.xlsx";
+            const string clonedPath = "ClonedWorkbook.xlsx";
 
-            // Verify that the source workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(sourcePath))
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(originalPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Source file not found: {originalPath}");
                 return;
             }
 
-            // Load the original workbook.
-            Workbook originalWorkbook = new Workbook(sourcePath);
+            // Load the original workbook
+            Workbook originalWb = new Workbook(originalPath);
 
-            // Create a new workbook and copy the contents of the original workbook.
-            Workbook clonedWorkbook = new Workbook();
-            clonedWorkbook.Copy(originalWorkbook);
-
-            // Assign new, unique TabIds to every worksheet in the cloned workbook.
-            int nextTabId = 1000;
-            foreach (Worksheet sheet in clonedWorkbook.Worksheets)
+            // Clone the workbook by saving to a memory stream and reloading
+            using (MemoryStream ms = new MemoryStream())
             {
-                sheet.TabId = nextTabId++;
-            }
+                originalWb.Save(ms, SaveFormat.Xlsx);
+                ms.Position = 0;
+                Workbook clonedWb = new Workbook(ms);
 
-            // Save the cloned workbook.
-            clonedWorkbook.Save(destPath);
-            Console.WriteLine($"Cloned workbook saved to: {destPath}");
+                // Assign new TabIds (int) to all worksheets in the cloned workbook
+                Random rnd = new Random();
+                foreach (Worksheet sheet in clonedWb.Worksheets)
+                {
+                    sheet.TabId = rnd.Next(1, int.MaxValue);
+                }
+
+                // Save the cloned workbook
+                clonedWb.Save(clonedPath);
+                Console.WriteLine($"Cloned workbook saved to: {clonedPath}");
+            }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors.
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,56 @@
-// Title: Generate HTML from Excel with Aspose.Cells using HtmlCrossType.FitToCell and AddTooltipText to display full cell content on hover
-// AI Prompts: Create C# code that builds a workbook, inserts a long text into a cell, sets HtmlSaveOptions.HtmlCrossType to FitToCell, enables AddTooltipText, and saves the file as HTML so the complete text appears as a tooltip when the user hovers over the cell. | Update an existing Aspose.Cells example to eliminate text overflow by applying the FitToCell cross‑type and turning on the AddTooltipText flag for comments, then export the worksheet to an HTML file.
-// Common Searches: Aspose.Cells HtmlCrossType FitToCell with AddTooltipText example C# | how to prevent cell text overflow in HTML export using Aspose.Cells | display full cell value on mouse hover in Aspose.Cells generated HTML | C# save workbook as HTML tooltip for long cell content Aspose.Cells
-// Tags: Aspose.Cells HtmlCrossType FitToCell | Aspose.Cells AddTooltipText option | C# export Excel to HTML tooltip | prevent cell overflow Aspose.Cells HTML | cell comment tooltip Aspose.Cells
+// Title: How to export an Aspose.Cells workbook to HTML using HtmlCrossType.FitToCell and AddTooltipText to show full cell text on hover
+// AI Prompts: Write C# code that creates a workbook, inserts a long string into a cell, and saves it as HTML with HtmlSaveOptions set to use HtmlCrossType.FitToCell and to include hover text for each cell. | Update an existing Aspose.Cells example to apply HtmlCrossType.FitToCell in the HTML save options while keeping the hover feature active for overflowing cell content.
+// Common Searches: Aspose.Cells export to HTML with tooltip for long cell values | C# HtmlSaveOptions HtmlCrossType.FitToCell example | prevent text overflow in Aspose.Cells HTML output | add hover tooltip to cells when saving workbook as HTML using Aspose.Cells
+// Tags: HTML cell fitting option Aspose.Cells | AddTooltipText HTML export | cell text overflow handling Aspose.Cells | tooltip for long cell values C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program creates a workbook, writes a lengthy string into cell A1, adds a comment containing the same text, configures HtmlSaveOptions with HtmlCrossType.FitToCell and AddTooltipText enabled, and saves the worksheet as an HTML file where the full content is shown as a tooltip on hover, avoiding overflow.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, writes a lengthy string to cell B2, configures HtmlSaveOptions with HtmlCrossType.FitToCell and AddTooltipText enabled, and saves the workbook as an HTML file so the full text appears as a tooltip on hover, preventing overflow.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            var workbook = new Workbook();
-
-            // Get the first worksheet
-            var sheet = workbook.Worksheets[0];
-
-            // Put a long text into cell A1
-            var cell = sheet.Cells["A1"];
-            cell.PutValue("This is a very long text that would normally overflow the cell boundaries.");
-
-            // Add a comment (tooltip) containing the full text so it appears on hover in HTML
-            // First add a comment to the cell, then set its author and note
-            int commentIndex = sheet.Comments.Add("A1");
-            var comment = sheet.Comments[commentIndex];
-            comment.Author = "Author";
-            comment.Note = cell.StringValue;
-
-            // Optionally set column width to demonstrate fitting
-            sheet.Cells.SetColumnWidth(0, 15);
-
-            // Configure HTML save options
-            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-
-            // Determine output path
-            string outputPath = "output.html";
-
-            // Ensure the output directory exists (if a directory is specified)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook
+                var workbook = new Workbook();
 
-            // Save the workbook as HTML
-            workbook.Save(outputPath, htmlOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Access the first worksheet
+                var sheet = workbook.Worksheets[0];
+
+                // Put a long text into a cell to demonstrate overflow handling
+                sheet.Cells["B2"].PutValue("This is a very long piece of text that would normally overflow the cell boundaries when exported to HTML.");
+
+                // Configure HTML save options
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    // Add the full cell text as a tooltip (hover text) to avoid overflow loss
+                    AddTooltipText = true
+                };
+
+                // Define output file path
+                string outputPath = "Output.html";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as HTML using the configured options
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while processing the workbook:");
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

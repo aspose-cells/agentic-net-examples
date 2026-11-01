@@ -1,53 +1,54 @@
-// Title: Rotate a chart legend 90° in Aspose.Cells for .NET without changing its transparent entry fill
-// AI Prompts: Create C# code with Aspose.Cells that sets Chart.Legend.RotationAngle to 90 degrees while leaving the legend entry fill transparency untouched. | Generate a .NET example that adds a column chart, rotates its legend by ninety degrees, and ensures the legend entries remain transparent.
-// Common Searches: Aspose.Cells C# rotate chart legend 90 degrees | keep legend entry fill transparent when rotating legend Aspose.Cells | set legend rotation angle without affecting fill transparency .NET | example of chart legend rotation in Aspose.Cells for .NET
-// Tags: chart legend rotation Aspose.Cells | preserve legend entry fill transparency .NET | set legend rotation angle C# | column chart legend customization Aspose.Cells | transparent legend fill Aspose.Cells
+// Title: Set chart legend to the right side while keeping its entry fill transparent using Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, add a column chart, and move the legend to the right side without altering the default transparent fill of legend entries with Aspose.Cells in C#. | Generate an Excel file containing a column chart where the legend is positioned on the right and the legend entries retain their transparent background, then save the file using the Aspose.Cells Chart and Legend APIs. | Modify an existing chart's legend to the right side while preserving any existing fill transparency settings, employing Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set chart legend position to right side | preserve legend entry fill transparency when changing legend location Aspose.Cells | how to keep legend background transparent in Aspose.Cells chart | move chart legend without affecting fill properties using Aspose.Cells .NET | Aspose.Cells chart legend placement examples C#
+// Tags: Aspose.Cells chart legend positioning | C# set legend right side | preserve legend fill transparency | column chart legend configuration .NET | Excel chart legend placement Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds a column chart, sets the legend's RotationAngle to 90 degrees, and saves the file, keeping the legend entry fill transparent.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a column chart, set the legend position to the right side, and keep the legend entries' fill transparency unchanged before saving the file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule)
-            var workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a sample chart (using Column chart type)
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            var chart = sheet.Charts[chartIdx];
+                // Add a column chart to the worksheet (from row 5, column 0 to row 20, column 10)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
+                // The Legend class does not have an Angle property; remove or replace with a valid setting if needed
+                // Example: set legend position to the right side
+                chart.Legend.Position = LegendPositionType.Right;
 
-            // Set data series and categories
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
+                // Determine output path
+                string outputPath = "output.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
 
-            // Set legend rotation angle to ninety degrees
-            chart.Legend.RotationAngle = 90;
+                // Ensure the output directory exists (skip if directory is null or empty)
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Save the workbook (lifecycle rule)
-            string outputPath = "LegendRotation.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,33 +1,26 @@
-// Title: Delete the 8th row from an Excel workbook and export it as PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, removes row index 7 from the first worksheet, and saves the result as a PDF. | Show how to use Aspose.Cells Cells.DeleteRow and Workbook.Save with SaveFormat.Pdf to delete a specific row and convert the workbook to PDF. | Generate a .NET example that deletes the eighth row in an Excel sheet and then creates a PDF version of the modified workbook.
-// Common Searches: Aspose.Cells C# delete row 8 then save as PDF | How to remove a specific row from an Excel file and export to PDF using Aspose.Cells | C# example for deleting a row in a worksheet before PDF conversion with Aspose.Cells | Delete row index 7 in first sheet Aspose.Cells and generate PDF output | Remove eighth row from Excel and convert to PDF using .NET Aspose.Cells
-// Tags: Cells.DeleteRow Aspose.Cells | Aspose.Cells SaveFormat.Pdf conversion | delete row before PDF export Aspose.Cells | C# Excel row removal Aspose.Cells | Excel to PDF after row deletion .NET
+// Title: Delete row 8 from an Excel worksheet and export the workbook to PDF using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, removes the eighth row, and saves the workbook as a PDF document. | Show the steps to use Aspose.Cells to delete a specific row in a worksheet and then perform a PDF conversion in a .NET application.
+// Common Searches: asp.net aspose.cells delete row 8 from excel and convert to pdf | c# remove specific row from xlsx before pdf export using aspose.cells | how to delete a row in an Excel file with Aspose.Cells and save as PDF | aspose.cells delete rows worksheet then export to pdf c# example | remove eighth row from workbook and generate pdf with aspose.cells
+// Tags: Aspose.Cells worksheet row deletion | Aspose.Cells PDF export | C# Excel row removal | Convert edited Excel to PDF with Aspose.Cells | Aspose.Cells delete rows API
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// The sample loads 'input.xlsx' with Aspose.Cells, accesses the first worksheet, deletes the eighth row (zero‑based index 7) using DeleteRows, and then saves the modified workbook as 'output.pdf' in PDF format.
+class Program
 {
-    // // Loads 'input.xlsx', deletes the 8th row (zero‑based index 7) from the first worksheet, and saves the modified workbook as 'output.pdf' using Aspose.Cells for .NET.
-    class DeleteRowAndConvertToPdf
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source Excel file
-            string sourcePath = "input.xlsx";
+        // Load the existing Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook from the file (load rule)
-            Workbook workbook = new Workbook(sourcePath);
+        // Access the first worksheet (you can change the index or name as needed)
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Delete the 8th row (zero‑based index 7) in the first worksheet
-            // DeleteRow method is part of the Cells class (feature rule)
-            workbook.Worksheets[0].Cells.DeleteRow(7);
+        // Delete row 8 (zero‑based index is 7) and remove 1 row
+        sheet.Cells.DeleteRows(7, 1);
 
-            // Save the modified workbook as PDF (save rule with SaveFormat.Pdf)
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"Row 8 deleted and workbook saved as PDF to '{pdfPath}'.");
-        }
+        // Save the updated workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

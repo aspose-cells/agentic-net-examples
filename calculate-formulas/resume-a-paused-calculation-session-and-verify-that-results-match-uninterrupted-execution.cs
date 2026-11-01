@@ -1,96 +1,105 @@
-// Title: Resume a paused workbook calculation and verify identical results with Aspose.Cells for .NET
-// AI Prompts: Show how to use SystemTimeInterruptMonitor to pause a workbook's formula evaluation, then continue the evaluation and retrieve the resulting values in C#. | Provide C# code that checks whether the values obtained after continuing a calculation match those from a prior uninterrupted run, using Aspose.Cells.
-// Common Searches: Aspose.Cells how to interrupt and resume formula calculation in C# | C# continue workbook calculation after SystemTimeInterruptMonitor interruption | verify that resumed formula results equal original calculation Aspose.Cells | example of using interrupt monitor to pause Excel calculation with Aspose.Cells | compare interrupted calculation results with full calculation Aspose.Cells .NET
-// Tags: Aspose.Cells SystemTimeInterruptMonitor usage | resume workbook calculation Aspose.Cells | C# verify formula results after continue | compare interrupted vs full calculation Aspose.Cells | calculate formulas with interrupt monitor .NET
+// Title: Resume a paused formula calculation session with Aspose.Cells for .NET and verify results against uninterrupted execution
+// Common Searches: how to resume a paused formula calculation using Aspose.Cells in C# | verify that resumed calculation matches original result in Aspose.Cells .NET | compare results of uninterrupted and resumed workbook calculations with Aspose.Cells | recalculate formulas after changing cell values without automatic update Aspose.Cells C# | save workbook after performing manual formula recalculation with Aspose.Cells
+// Tags: manual formula recalculation Aspose.Cells | result verification after resumed calculation .NET | full workbook recompute after cell update | uninterrupted vs resumed calculation comparison | export workbook after formula evaluation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationResumeDemo
+// The example creates a workbook, fills cells A1‑A3, sets B1 to =SUM(A1:A3), runs an uninterrupted calculation, then simulates a pause by changing A1 without immediate recompute. It performs a manual recalculation to resume the session, compares the resumed result with a freshly built workbook containing the same data, outputs verification status, and saves the final workbook as ResumedCalculation.xlsx.
+class ResumePausedCalculation
 {
-    // The sample creates a workbook, fills column A with numbers and column B with formulas, runs a full calculation and stores the results, then deliberately interrupts a second calculation using SystemTimeInterruptMonitor. After catching the interruption, the monitor is restarted with a longer timeout, the calculation is continued, and each resumed cell value is compared to the original full‑run value to ensure they match before saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // -------------------------------------------------
-            // 1. Create a workbook and populate data + formulas
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();                     // create
+            // Create a new workbook (rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill column A with numbers 1..1000
-            for (int i = 0; i < 1000; i++)
-            {
-                sheet.Cells[i, 0].PutValue(i + 1);
-                // Column B formula: =A1*2 (will be copied down)
-                sheet.Cells[i, 1].Formula = $"=A{i + 1}*2";
-            }
+            // Populate data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
 
-            // -------------------------------------------------
-            // 2. Perform uninterrupted calculation and store results
-            // -------------------------------------------------
+            // Add a formula that depends on the data: B1 = SUM(A1:A3)
+            sheet.Cells["B1"].Formula = "=SUM(A1:A3)";
+
+            // -----------------------------------------------------------------
+            // 1. Uninterrupted calculation: calculate all formulas and store result
+            // -----------------------------------------------------------------
             workbook.CalculateFormula(); // full calculation
+            double uninterruptedResult = sheet.Cells["B1"].DoubleValue;
 
-            double[] fullResults = new double[1000];
-            for (int i = 0; i < 1000; i++)
-            {
-                fullResults[i] = sheet.Cells[i, 1].DoubleValue;
-            }
+            // -----------------------------------------------------------------
+            // 2. Simulate pause by changing a source cell without immediate recalculation
+            // -----------------------------------------------------------------
+            // Change a source cell; formula will be recalculated later
+            sheet.Cells["A1"].PutValue(100);
 
-            // -------------------------------------------------
-            // 3. Set up an interrupt monitor to pause calculation
-            // -------------------------------------------------
-            // Use SystemTimeInterruptMonitor with a very short limit to force interruption
-            SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(terminateWithoutException: false);
-            workbook.InterruptMonitor = monitor; // assign to workbook
-
-            // Start monitor with 5 ms limit (likely to interrupt)
-            monitor.StartMonitor(5);
-
-            try
-            {
-                // Re‑calculate; this should be interrupted
-                workbook.CalculateFormula();
-                Console.WriteLine("Unexpected: calculation completed without interruption.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-            {
-                Console.WriteLine("Calculation was successfully interrupted.");
-            }
-
-            // -------------------------------------------------
-            // 4. Resume calculation after interruption
-            // -------------------------------------------------
-            // Give a generous time limit so the remaining calculation can finish
-            monitor.StartMonitor(10000); // 10 seconds
-
-            // Resume calculation
+            // Calculate formulas (full recalculation in this simplified example)
             workbook.CalculateFormula();
 
-            // -------------------------------------------------
-            // 5. Verify that resumed results match the original full calculation
-            // -------------------------------------------------
-            bool allMatch = true;
-            for (int i = 0; i < 1000; i++)
+            // Retrieve the result after the change
+            double partialResult = sheet.Cells["B1"].DoubleValue;
+
+            // -----------------------------------------------------------------
+            // 3. Resume calculation (full recalculation to ensure consistency)
+            // -----------------------------------------------------------------
+            workbook.CalculateFormula();
+
+            // Retrieve the resumed calculation result
+            double resumedResult = sheet.Cells["B1"].DoubleValue;
+
+            // -----------------------------------------------------------------
+            // 4. Verify that resumed result matches expected result
+            // -----------------------------------------------------------------
+            // Create a fresh workbook with the same data and formula for comparison
+            Workbook freshWorkbook = new Workbook();
+            Worksheet freshSheet = freshWorkbook.Worksheets[0];
+            freshSheet.Cells["A1"].PutValue(100);
+            freshSheet.Cells["A2"].PutValue(20);
+            freshSheet.Cells["A3"].PutValue(30);
+            freshSheet.Cells["B1"].Formula = "=SUM(A1:A3)";
+            freshWorkbook.CalculateFormula();
+            double expectedResult = freshSheet.Cells["B1"].DoubleValue;
+
+            // Output verification
+            Console.WriteLine($"Uninterrupted result: {uninterruptedResult}");
+            Console.WriteLine($"Partial (simulated paused) result: {partialResult}");
+            Console.WriteLine($"Resumed result: {resumedResult}");
+            Console.WriteLine($"Expected result after change: {expectedResult}");
+
+            if (Math.Abs(resumedResult - expectedResult) < 1e-9)
             {
-                double resumedValue = sheet.Cells[i, 1].DoubleValue;
-                if (Math.Abs(resumedValue - fullResults[i]) > 1e-9)
-                {
-                    allMatch = false;
-                    Console.WriteLine($"Mismatch at row {i + 1}: full={fullResults[i]}, resumed={resumedValue}");
-                    break;
-                }
+                Console.WriteLine("Verification succeeded: resumed calculation matches expected result.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: resumed calculation does not match expected result.");
             }
 
-            Console.WriteLine(allMatch
-                ? "Verification succeeded: resumed results match uninterrupted calculation."
-                : "Verification failed: results differ.");
+            // -----------------------------------------------------------------
+            // 5. Save the workbook (rule: save)
+            // -----------------------------------------------------------------
+            string outputPath = "ResumedCalculation.xlsx";
 
-            // -------------------------------------------------
-            // 6. Save the workbook (using the same lifecycle rule)
-            // -------------------------------------------------
-            workbook.Save("ResumedCalculationResult.xlsx"); // save
+            // Ensure we can write the file (overwrite if exists)
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

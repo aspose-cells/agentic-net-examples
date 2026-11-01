@@ -1,83 +1,68 @@
-// Title: Hide a chart legend in Aspose.Cells when more than five series are present (C#)
-// AI Prompts: Generate C# code using Aspose.Cells that creates a column chart and automatically disables the legend if the chart contains more than five data series. | Demonstrate how to check the NSeries.Count of an Aspose.Cells chart and set the ShowLegend property conditionally in a .NET application.
-// Common Searches: Aspose.Cells C# hide chart legend if series count exceeds five | How to conditionally display Excel chart legend with Aspose.Cells .NET | Set ShowLegend based on number of series in Aspose.Cells chart | C# Aspose.Cells column chart legend auto hide for many series
-// Tags: conditional legend visibility Aspose.Cells | chart legend hide based on series count | Aspose.Cells NSeries count check | C# dynamic Excel chart legend | column chart auto hide legend Aspose.Cells
+// Title: Hide chart legends in Excel files with Aspose.Cells for .NET when a chart contains more than five series
+// AI Prompts: Write C# code using Aspose.Cells to iterate all worksheets and set ShowLegend = false for charts where NSeries.Count > 5. | Update an existing Aspose.Cells workbook processing routine to conditionally suppress chart legends based on the number of data series. | Add robust error handling while automatically hiding legends for charts with more than five series in a .NET application.
+// Common Searches: aspnet hide excel chart legend if more than five series Aspose.Cells | c# Aspose.Cells hide legend for charts with many series | how to programmatically disable chart legend in Excel using Aspose.Cells .NET | iterate worksheets and charts to turn off legend when series count exceeds 5 in C#
+// Tags: chart legend suppression Aspose.Cells | conditional legend visibility Excel .NET | NSeries count based formatting Aspose.Cells | iterate worksheets charts Aspose.Cells | hide Excel chart legend C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// // Loads an existing workbook, iterates each worksheet and its charts, hides the legend when a chart has more than five series, and saves the updated workbook.
+class Program
 {
-    // The example creates a workbook with six data series, adds a column chart, and uses the NSeries.Count property to set ShowLegend to false when more than five series exist, then saves the file.
-    public class ConditionalLegendDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate sample data with six series (more than five)
-                // Category column
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Q1");
-                sheet.Cells["A3"].PutValue("Q2");
-                sheet.Cells["A4"].PutValue("Q3");
-                sheet.Cells["A5"].PutValue("Q4");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Six series columns (B to G)
-                string[] seriesHeaders = { "Series1", "Series2", "Series3", "Series4", "Series5", "Series6" };
-                Random rnd = new Random();
-                for (int col = 1; col <= seriesHeaders.Length; col++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts in the worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    // Header
-                    sheet.Cells[0, col].PutValue(seriesHeaders[col - 1]);
-                    // Random values for each category
-                    for (int row = 1; row <= 4; row++)
+                    try
                     {
-                        sheet.Cells[row, col].PutValue(rnd.Next(10, 100));
+                        // Hide legend if the chart has more than five series
+                        if (chart.NSeries.Count > 5)
+                        {
+                            chart.ShowLegend = false;
+                        }
+                    }
+                    catch (Exception exChart)
+                    {
+                        Console.WriteLine($"Error processing chart on sheet '{sheet.Name}': {exChart.Message}");
                     }
                 }
+            }
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the category (X) data
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // Add each series to the chart
-                for (int col = 1; col <= seriesHeaders.Length; col++)
-                {
-                    // Data range for the current series (e.g., B2:B5, C2:C5, ...)
-                    string dataRange = CellsHelper.CellIndexToName(0, col) + "2:" + CellsHelper.CellIndexToName(0, col) + "5";
-                    chart.NSeries.Add(dataRange, true);
-                }
-
-                // Hide the legend if the number of series exceeds five
-                chart.ShowLegend = chart.NSeries.Count <= 5;
-
-                // Save the workbook
-                string outputPath = "ConditionalChartLegend.xlsx";
+            // Save the modified workbook
+            try
+            {
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            catch (Exception ex)
+            catch (Exception exSave)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {exSave.Message}");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ConditionalLegendDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

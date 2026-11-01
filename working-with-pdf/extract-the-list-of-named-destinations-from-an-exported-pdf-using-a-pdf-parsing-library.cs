@@ -1,48 +1,75 @@
-// Title: Extract all named ranges from an Excel .xlsx workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, iterates through Workbook.Worksheets.Names, and prints each named range. | Show a try‑catch example that loads a workbook, gathers the Text property of every Name object into a list, and outputs the list to the console. | Demonstrate how to verify the existence of an Excel file before extracting its defined names with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# how to list all defined names in an Excel file | C# retrieve named ranges from .xlsx using Aspose.Cells library | example code to enumerate workbook named ranges with Aspose.Cells .NET | read Excel named ranges programmatically in C# Aspose.Cells | list workbook names collection Aspose.Cells C# tutorial
-// Tags: Aspose.Cells enumerate named ranges | C# extract Excel defined names | list workbook names Aspose.Cells | read .xlsx named ranges .NET | Aspose.Cells named range extraction
+// Title: How to list all named ranges in an Excel workbook and get the first cell address using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, accesses workbook.Worksheets.Names, and prints each named range's name, RefersTo formula, and the first cell address. | Create a C# helper method that parses a RefersTo string (e.g., "=Sheet1!$A$1:$B$2") and returns the first cell reference, then use it while enumerating named ranges in an Aspose.Cells workbook.
+// Common Searches: aspacells c# list named ranges and retrieve first cell address | extract first cell from named range RefersTo using Aspose.Cells | iterate workbook named collections Aspose.Cells .NET example
+// Tags: Aspose.Cells enumerate named ranges | C# extract first cell from RefersTo | Aspose.Cells workbook named collections | read Excel named ranges Aspose.Cells | parse RefersTo formula C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an existing .xlsx workbook with Aspose.Cells, checks that the file exists, iterates through the Workbook.Worksheets.Names collection, collects each Name's Text into a list, and writes the defined (named) ranges to the console while handling errors gracefully.
+// The sample loads an Excel workbook with Aspose.Cells, accesses the NameCollection via workbook.Worksheets.Names, iterates each Name object to obtain its Text (the range name) and RefersTo formula, uses a helper method to extract the first cell address from the RefersTo string, and writes these details to the console.
 class Program
 {
     static void Main()
     {
+        string filePath = "exported.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
         try
         {
-            string filePath = "input.xlsx";
-
-            // Ensure the input workbook exists
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(filePath);
 
-            // Collect defined (named) ranges from the workbook
-            List<string> definedNames = new List<string>();
-            foreach (Name name in workbook.Worksheets.Names)
-            {
-                definedNames.Add(name.Text);
-            }
+            // Access the collection of named ranges
+            NameCollection namedRanges = workbook.Worksheets.Names;
 
-            // Output the extracted defined names
-            foreach (string name in definedNames)
+            // Iterate through each named range and output its details
+            foreach (Name range in namedRanges)
             {
-                Console.WriteLine(name);
+                // Named range name
+                string name = range.Text;
+
+                // The reference formula (e.g., =Sheet1!$A$1:$B$2)
+                string refersTo = range.RefersTo;
+
+                // Extract the first cell address from the reference
+                string firstCell = GetFirstCellAddress(refersTo);
+
+                Console.WriteLine($"Name: {name}, RefersTo: {refersTo}, FirstCell: {firstCell}");
             }
         }
         catch (Exception ex)
         {
+            // Runtime safety: capture and display any errors
             Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Helper method to extract the first cell address from a RefersTo string
+    private static string GetFirstCellAddress(string refersTo)
+    {
+        if (string.IsNullOrEmpty(refersTo))
+            return string.Empty;
+
+        // Remove leading '=' if present
+        string cleaned = refersTo.TrimStart('=');
+
+        // Separate sheet name if present
+        int exclPos = cleaned.IndexOf('!');
+        if (exclPos >= 0)
+            cleaned = cleaned.Substring(exclPos + 1);
+
+        // Get the first cell before any range delimiter ':'
+        int colonPos = cleaned.IndexOf(':');
+        if (colonPos >= 0)
+            cleaned = cleaned.Substring(0, colonPos);
+
+        return cleaned;
     }
 }

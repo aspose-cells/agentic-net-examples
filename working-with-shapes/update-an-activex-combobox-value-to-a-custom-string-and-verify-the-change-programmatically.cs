@@ -1,75 +1,96 @@
-// Title: Update an ActiveX ComboBox text in an Excel worksheet with Aspose.Cells for .NET and verify the change
-// AI Prompts: Find the first ComboBox shape in the first worksheet, assign a custom string to its Text property, and save the workbook. | Read back the ComboBox.Text after setting it and output a success or failure message based on the comparison.
-// Common Searches: how to set ActiveX ComboBox text using Aspose.Cells in C# | Aspose.Cells verify ComboBox value after modification | C# example for updating Excel form control ComboBox with custom string | retrieve and compare ComboBox.Text property in Aspose.Cells workbook | save Excel file after changing ActiveX ComboBox content with Aspose.Cells
-// Tags: Aspose.Cells set ActiveX ComboBox Text | C# verify ComboBox value in Excel workbook | iterate worksheet shapes to locate ComboBox | save workbook after modifying form control | load workbook and update ComboBox content
+// Title: Set and verify a custom string for an ActiveX ComboBox in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that finds an ActiveX ComboBox named 'ComboBox1' on a worksheet, assigns a custom string to its Value property via OleObject, confirms the assignment, and saves the workbook. | Show how to use the dynamic keyword to access the OleFormat and underlying COM object of an OleObject for modifying an ActiveX ComboBox text in Aspose.Cells. | Adapt the sample so the new ComboBox value is read from a specific cell (e.g., A1) before updating the control.
+// Common Searches: aspocells set activeX combobox value c# example | c# update oleobject combobox text in excel workbook | verify activeX control value after modification using Aspose.Cells | dynamic OleFormat access for ActiveX controls in Aspose.Cells .NET | save workbook after changing ActiveX ComboBox with Aspose.Cells
+// Tags: Aspose.Cells ActiveX ComboBox value assignment | C# dynamic OleObject manipulation | Excel ActiveX control update via OleFormat | programmatic verification of ComboBox text | saving workbook after ActiveX modification
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The sample loads 'ComboBoxDemo.xlsx', locates the first ActiveX ComboBox shape on the first worksheet, sets its Text property to 'MyCustomString', confirms the update succeeded, and saves the modified file as 'ComboBoxDemo_Updated.xlsx'.
+// The code loads an existing Excel file, locates an ActiveX ComboBox named 'ComboBox1' through the worksheet's OleObjects collection, uses dynamic casting to reach the OleFormat and underlying COM object, sets its Value to a custom string, verifies the assignment by comparing the returned value, and finally saves the workbook to a new file.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "ComboBoxDemo.xlsx";
-        const string outputFile = "ComboBoxDemo_Updated.xlsx";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Input file '{inputFile}' not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook that contains a ComboBox form control
-            Workbook workbook = new Workbook(inputFile);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Get the first worksheet (adjust index if needed)
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook that contains the ActiveX ComboBox
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index or name as needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Locate the ComboBox shape
-            ComboBox comboBox = null;
-            foreach (Shape shape in sheet.Shapes)
+            // Locate the ActiveX ComboBox by its name using the OleObjects collection
+            OleObject oleObject = null;
+            foreach (OleObject obj in sheet.OleObjects)
             {
-                if (shape is ComboBox cb)
+                if (obj.Name == "ComboBox1")
                 {
-                    comboBox = cb;
+                    oleObject = obj;
                     break;
                 }
             }
 
-            if (comboBox == null)
+            if (oleObject != null)
             {
-                Console.WriteLine("ComboBox not found.");
-                return;
-            }
+                const string customText = "My Custom String";
 
-            // Set the ComboBox to a custom string value
-            string customValue = "MyCustomString";
-            comboBox.Text = customValue; // Update displayed text/value
+                try
+                {
+                    // Use dynamic to access OleFormat and the underlying COM object
+                    dynamic dynOleObject = oleObject;
+                    dynamic oleFormat = dynOleObject.OleFormat;   // runtime member access
+                    dynamic comObj = oleFormat.Object;            // underlying ActiveX object
 
-            // Verify that the value was updated
-            string currentValue = comboBox.Text;
-            if (!string.IsNullOrEmpty(currentValue) && currentValue == customValue)
-            {
-                Console.WriteLine("ComboBox value successfully updated to: " + currentValue);
+                    // Set the ComboBox value
+                    comObj.Value = customText;
+
+                    // Verify that the value was set correctly
+                    string currentValue = comObj.Value?.ToString();
+                    if (currentValue == customText)
+                    {
+                        Console.WriteLine("ComboBox value updated successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("ComboBox value update failed.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while updating ComboBox value: {ex.Message}");
+                }
             }
             else
             {
-                Console.WriteLine("Failed to update ComboBox value.");
+                Console.WriteLine("ActiveX ComboBox named 'ComboBox1' was not found.");
             }
 
             // Save the workbook with the updated ComboBox value
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved as '{outputFile}'.");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while saving workbook: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

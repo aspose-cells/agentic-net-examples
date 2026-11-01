@@ -1,7 +1,6 @@
-// Title: Move the 'Watermark' shape to the back layer in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel file with Aspose.Cells, locate the shape named 'Watermark' on a worksheet, and set its ZOrderPosition to 0 so it appears behind the cells. | Write C# code that changes the Z-order of any named shape in a worksheet to the back layer using the Shape.ZOrderPosition property of Aspose.Cells. | Update an existing Aspose.Cells workbook to reposition a watermark shape behind all other objects by adjusting its ZOrderPosition.
-// Common Searches: Aspose.Cells C# how to send a shape to the back of the worksheet | set ZOrderPosition of a watermark shape in Excel using Aspose.Cells .NET | move named shape behind cells in an Excel file with Aspose.Cells API | C# Aspose.Cells change shape layering order | place watermark shape behind data in Excel workbook programmatically
-// Tags: shape ZOrderPosition Aspose.Cells | move watermark to back layer C# | adjust Excel shape layering .NET | retrieve named shape worksheet Aspose.Cells | set shape order behind cells
+// Title: How to send a named "Watermark" shape to the back layer in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# move a shape behind worksheet cells | set ZOrderPosition of a named shape in Aspose.Cells workbook | place watermark shape at the back of an Excel sheet with Aspose.Cells | change shape layering order in Aspose.Cells .NET example
+// Tags: Aspose.Cells set shape Z-order | C# move Excel shape to back layer | adjust watermark shape layering Aspose.Cells | shape ZOrderPosition property usage | send named shape behind cells Aspose.Cells
 
 using System;
 using System.IO;
@@ -10,7 +9,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads an Excel workbook, finds the shape named "Watermark" on the first worksheet, sets its ZOrderPosition to 0 to place it behind all cells, and saves the modified file.
+    // The example loads an existing Excel file, retrieves the shape named "Watermark" from the first worksheet, sets its ZOrderPosition to 0 to move it to the back layer so the underlying cells stay visible, and saves the modified workbook, with error handling for missing files and shape lookup.
     class Program
     {
         static void Main(string[] args)
@@ -20,7 +19,7 @@ namespace AsposeCellsExample
 
             try
             {
-                // Verify that the input file exists
+                // Verify input file exists
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
@@ -31,16 +30,32 @@ namespace AsposeCellsExample
                 Workbook workbook = new Workbook(inputPath);
 
                 // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Retrieve the shape named "Watermark"
-                Shape watermarkShape = worksheet.Shapes["Watermark"];
-
-                // If the shape exists, move it to the back layer by setting its Z-order position
-                if (watermarkShape != null)
+                Shape watermark = sheet.Shapes["Watermark"];
+                if (watermark == null)
                 {
-                    // Lower ZOrderPosition values are rendered behind higher values
-                    watermarkShape.ZOrderPosition = 0;
+                    Console.WriteLine("Shape 'Watermark' not found.");
+                }
+                else
+                {
+                    try
+                    {
+                        // Move the shape to the back layer by setting its Z-order position to the minimum
+                        watermark.ZOrderPosition = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to adjust shape order: {ex.Message}");
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
                 }
 
                 // Save the modified workbook

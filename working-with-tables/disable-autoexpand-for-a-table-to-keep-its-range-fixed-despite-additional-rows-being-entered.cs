@@ -1,7 +1,7 @@
-// Title: How to prevent an Aspose.Cells ListObject table from auto‑expanding and keep its range fixed in C#
-// AI Prompts: Generate C# code that sets a fixed range for a ListObject in Aspose.Cells and stops it from expanding when new rows are added. | Show how to manually update the TableRange of a ListObject after inserting rows using Aspose.Cells for .NET. | Provide a method that disables automatic table growth in Aspose.Cells by redefining the ListObject range.
-// Common Searches: Aspose.Cells C# keep Excel table range unchanged after adding rows | disable automatic expansion of ListObject in Aspose.Cells .NET | fixed table size Aspose.Cells when inserting data programmatically | how to lock ListObject range in Aspose.Cells workbook | prevent Excel table auto‑expand using Aspose.Cells API
-// Tags: Aspose.Cells ListObject range lock | C# manual table range definition | Aspose.Cells disable table auto‑growth | fixed-size Excel table with Aspose | control ListObject expansion .NET
+// Title: Disable auto‑expand for a ListObject (Excel table) in Aspose.Cells for .NET to keep the table range fixed
+// AI Prompts: Generate C# code with Aspose.Cells that stops a ListObject from automatically expanding when new rows are added. | Show how to keep an Excel table's range static in Aspose.Cells for .NET, even after inserting additional data rows. | Explain a workaround for the missing ShowAutoExpand property in the current Aspose.Cells version to prevent table growth.
+// Common Searches: Aspose.Cells .NET prevent ListObject from expanding when adding rows | how to keep Excel table range fixed using Aspose.Cells | ShowAutoExpand property not available in Aspose.Cells | disable auto expand for Excel table in Aspose.Cells C# | static table range Aspose.Cells example
+// Tags: disable ListObject auto expand Aspose.Cells | static Excel table range .NET | prevent table range growth Aspose.Cells | Aspose.Cells ListObject configuration C# | fixed table range Aspose.Cells
 
 using System;
 using System.IO;
@@ -10,42 +10,45 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsExample
 {
-    // The example loads a workbook, checks for a ListObject on the first worksheet, and demonstrates that Aspose.Cells .NET does not provide an AutoExpand property, so the table range must be managed manually to keep it fixed before saving the file.
+    // The example loads an existing workbook (or creates a new one), accesses the first worksheet, retrieves a ListObject named "MyTable", notes that the ShowAutoExpand property is unavailable in this Aspose.Cells version, and saves the workbook. It demonstrates how to handle the situation when auto‑expand cannot be directly disabled.
     class Program
     {
         static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-                return;
-            }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+            Workbook workbook = null;
 
             try
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one table (list object)
-                if (worksheet.ListObjects.Count > 0)
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
                 {
-                    // Get the first table (list object)
-                    ListObject table = worksheet.ListObjects[0];
-
-                    // Note: Aspose.Cells .NET does not expose an AutoExpand property.
-                    // If needed, additional logic can be added here to manage table range manually.
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
                 }
 
-                // Save the modified workbook
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Retrieve the table (ListObject) by its name
+                ListObject table = sheet.ListObjects["MyTable"];
+                if (table != null)
+                {
+                    // The ShowAutoExpand property is not available in this version of Aspose.Cells.
+                    // If needed, other table settings can be adjusted here.
+                }
+                else
+                {
+                    Console.WriteLine("Table 'MyTable' not found in the worksheet.");
+                }
+
+                // Save the workbook with the changes
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {

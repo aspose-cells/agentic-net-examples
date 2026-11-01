@@ -1,79 +1,72 @@
-// Title: Use dot‑notation smart markers to bind a nested Employee‑Address object hierarchy in Aspose.Cells for .NET
-// AI Prompts: Create a new Workbook, insert smart markers '&=$Employee.Name', '&=$Employee.Age', '&=$Employee.Address.Street', '&=$Employee.Address.City', '&=$Employee.Address.Zip', bind an Employee instance (including its Address) with WorkbookDesigner.SetDataSource, call WorkbookDesigner.Process, and save the workbook as an .xlsx file. | Show how to populate an Excel template from a hierarchical object (Employee containing Address) by adding dot‑notation smart markers, assigning the object as the data source, processing the markers with WorkbookDesigner, and exporting the result.
-// Common Searches: asp.net how to bind nested object to Excel using Aspose.Cells smart markers | dot notation syntax for accessing child properties in Aspose.Cells smart markers | populate employee address fields in Excel with Aspose.Cells WorkbookDesigner C# | example of using &=$Employee.Address.City smart marker in Aspose.Cells | generate Excel file from hierarchical POCO with Aspose.Cells smart markers
-// Tags: Aspose.Cells smart markers hierarchical syntax | bind nested object hierarchy to Excel | employee address smart marker example | C# populate hierarchical data in Excel | process smart markers with nested objects
+// Title: Bind a list of Employee objects with nested Address properties to Excel smart markers using WorkbookDesigner and dot notation (C#)
+// Common Searches: c# bind list of objects with nested properties to Aspose.Cells smart markers | how to use dot notation in Aspose.Cells smart markers for address fields | populate Excel template with employee address hierarchy using WorkbookDesigner | example of setting data source for complex object hierarchy in Aspose.Cells | binding nested objects to smart markers in .NET Excel automation
+// Tags: WorkbookDesigner data source binding for nested objects | Aspose.Cells smart markers nested property access | Excel template population from C# object hierarchy | address property binding via dot notation in smart markers | complex type integration with Aspose.Cells smart markers
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerNestedExample
+// The example loads an Excel workbook containing smart markers such as {Employee.Name} and {Employee.Address.Street}, creates a List<Employee> where each Employee has a nested Address object, binds the collection to the "Employee" smart marker using WorkbookDesigner.SetDataSource, processes the markers (dot notation navigates the nested Address properties), and saves the populated workbook.
+public class Address
 {
-    // Simple POCO classes representing a nested object hierarchy
-    // The sample creates a workbook, places smart markers that reference Employee.Name, Employee.Age, and the nested Address properties using dot notation, binds an Employee object (with an Address) as the data source via WorkbookDesigner, processes the markers, and saves the populated spreadsheet as EmployeeNestedSmartMarkers.xlsx.
-    public class Employee
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public Address Address { get; set; }
-    }
+    public string Street { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+}
 
-    public class Address
-    {
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string Zip { get; set; }
-    }
+public class Employee
+{
+    public string Name { get; set; } = string.Empty;
+    public Address Address { get; set; } = new Address();
+}
 
-    public class Program
+public class Program
+{
+    public static void Main()
     {
-        public static void Main()
+        try
         {
-            // -----------------------------------------------------------------
-            // 1. Create a new workbook and add smart markers using dot notation
-            // -----------------------------------------------------------------
-            Workbook workbook = new Workbook();                     // create a new workbook
-            Worksheet sheet = workbook.Worksheets[0];               // get the first worksheet
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
 
-            // Place smart markers in cells. The dot notation accesses nested properties.
-            sheet.Cells["A1"].PutValue("&=$Employee.Name");          // employee name
-            sheet.Cells["A2"].PutValue("&=$Employee.Age");           // employee age
-            sheet.Cells["A3"].PutValue("&=$Employee.Address.Street"); // street
-            sheet.Cells["A4"].PutValue("&=$Employee.Address.City");   // city
-            sheet.Cells["A5"].PutValue("&=$Employee.Address.Zip");    // zip code
+            // Ensure the template file exists before loading
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Template file not found: {templatePath}");
 
-            // -----------------------------------------------------------------
-            // 2. Prepare the nested data source
-            // -----------------------------------------------------------------
-            Employee emp = new Employee
+            // Load the workbook that contains smart markers like {Employee.Name}, {Employee.Address.Street}, {Employee.Address.City}
+            Workbook workbook = new Workbook(templatePath);
+
+            // Prepare a collection of employees with nested address objects
+            List<Employee> employees = new List<Employee>
             {
-                Name = "John Doe",
-                Age = 35,
-                Address = new Address
+                new Employee
                 {
-                    Street = "123 Main St",
-                    City = "Metropolis",
-                    Zip = "12345"
+                    Name = "John Doe",
+                    Address = new Address { Street = "123 Main St", City = "Seattle" }
+                },
+                new Employee
+                {
+                    Name = "Jane Smith",
+                    Address = new Address { Street = "456 Oak Ave", City = "Portland" }
                 }
             };
 
-            // -----------------------------------------------------------------
-            // 3. Bind the data source to the workbook designer and process markers
-            // -----------------------------------------------------------------
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
+            // Bind the collection to the smart marker name "Employee" using WorkbookDesigner
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource("Employee", employees);
+            designer.Process(); // Process smart markers; dot notation navigates nested Address object
 
-            // Bind the root object with the name "Employee"
-            designer.SetDataSource("Employee", emp);
-
-            // Process all smart markers in the workbook
-            designer.Process();
-
-            // -----------------------------------------------------------------
-            // 4. Save the result
-            // -----------------------------------------------------------------
-            workbook.Save("EmployeeNestedSmartMarkers.xlsx");
+            // Save the populated workbook
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.Error.WriteLine($"File error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

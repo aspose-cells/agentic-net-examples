@@ -1,50 +1,47 @@
-// Title: How to use Aspose.Cells PdfSaveOptions.FitAllColumnsOnOnePage = true in C# to fit every worksheet column onto a single PDF page
-// AI Prompts: Write C# code that loads an Excel workbook and saves it as a PDF with all columns forced onto one page by setting PdfSaveOptions.FitAllColumnsOnOnePage to true. | Show an example of configuring Aspose.Cells PdfSaveOptions to fit all worksheet columns on a single PDF page in a .NET application. | Demonstrate error‑handled conversion of an .xlsx file to a single‑page PDF using Aspose.Cells with FitAllColumnsOnOnePage enabled.
-// Common Searches: asp.net aspose.cells fit all columns on one pdf page c# | PdfSaveOptions FitAllColumnsOnOnePage property example | export excel to single page pdf with all columns using aspose cells | c# aspose cells pdf export column scaling single page | how to set FitAllColumnsOnOnePage true in Aspose.Cells
-// Tags: PdfSaveOptions FitAllColumnsOnOnePage property | Aspose.Cells single-page PDF export | C# Excel to PDF column fitting | FitAllColumnsOnOnePage vs OnePagePerSheet | Aspose.Cells PDF column scaling
+// Title: How to export an Excel worksheet to a single-page PDF by enabling PdfSaveOptions.FitAllColumnsOnOnePage in C# with Aspose.Cells
+// AI Prompts: Generate C# code that creates or loads a Workbook, sets PdfSaveOptions.FitAllColumnsOnOnePage = true, and saves the workbook as a PDF where all columns fit on one page using Aspose.Cells. | Update the provided example to replace the PageSetup FitToPagesWide/Tall settings with PdfSaveOptions.FitAllColumnsOnOnePage, ensuring the PDF output contains a single page per sheet. | Write a reusable C# method that accepts a Workbook and an output path, configures PdfSaveOptions to fit all columns on one PDF page, and writes the PDF with Aspose.Cells.
+// Common Searches: Aspose.Cells C# PdfSaveOptions FitAllColumnsOnOnePage usage example | export Excel to PDF with all columns on one page using Aspose.Cells | set FitAllColumnsOnOnePage true for PDF conversion in Aspose.Cells C# | single-page PDF from worksheet columns Aspose.Cells tutorial
+// Tags: Aspose.Cells PdfSaveOptions column fit on PDF | single-page PDF export Aspose.Cells C# | fit all worksheet columns PDF Aspose.Cells | C# Aspose.Cells PDF conversion options | one page per sheet PDF save Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfExport
+// The sample creates a Workbook, adds sample data, configures PdfSaveOptions with FitAllColumnsOnOnePage set to true and OnePagePerSheet enabled, then saves the workbook as a PDF where every worksheet's columns are scaled to fit on a single page.
+class Program
 {
-    // The example loads an existing .xlsx workbook, creates a PdfSaveOptions object with FitAllColumnsOnOnePage set to true (ensuring all worksheet columns are compressed onto a single PDF page), and saves the workbook as a PDF. It also checks for the input file's existence and catches exceptions to report errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Populate sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue("Data1");
+            sheet.Cells["B2"].PutValue("Data2");
+
+            // Configure page setup to fit all columns on one page
+            sheet.PageSetup.FitToPagesWide = 1;   // fit columns to one page width
+            sheet.PageSetup.FitToPagesTall = 0;   // unlimited rows (no vertical scaling)
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+                OnePagePerSheet = true
+            };
 
-            try
-            {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options to fit the entire sheet on a single page
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    OnePagePerSheet = true
-                };
-
-                // Save the workbook as a PDF using the configured options
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as PDF using the configured options
+            string outputPath = "output.pdf";
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

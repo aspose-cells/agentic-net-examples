@@ -1,51 +1,54 @@
-// Title: Add purpose and business‑rule comments to Excel named ranges using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that loops through all workbook named ranges and sets a descriptive comment based on each range's name. | Show how to assign business‑rule text to specific named ranges (e.g., SalesData, RegionList, QuarterlyTargets) using the Name.Comment property in Aspose.Cells. | Provide an example that saves the modified workbook after adding comments to named ranges with Aspose.Cells for .NET.
-// Common Searches: how to add comments to named ranges in an Excel file using Aspose.Cells C# | Aspose.Cells set Name.Comment property for specific named ranges | C# iterate workbook.Names and annotate each range with business rules | programmatically document Excel named ranges with purpose text using Aspose.Cells | save workbook after updating named range comments with Aspose.Cells .NET
-// Tags: Aspose.Cells set named range comment | C# annotate Excel named ranges | Aspose.Cells add business rule notes to named ranges | Excel named range documentation with Aspose.Cells | update Name.Comment property Aspose.Cells .NET
+// Title: Add purpose and business‑rule comments to every named range in an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add comment to each named range in an existing workbook | How to programmatically document Excel named ranges using Aspose.Cells | Set purpose and business rule metadata for named ranges with Aspose.Cells .NET | Iterate through workbook.Worksheets.Names and assign comments in C# | Aspose.Cells example for annotating named ranges with custom text | Add descriptive comments to Excel named ranges via Aspose.Cells API
+// Tags: Aspose.Cells add named range comment C# | C# annotate Excel named ranges with Aspose.Cells | Aspose.Cells set Name.Comment property | Excel named range metadata automation Aspose.Cells | Aspose.Cells workbook named range documentation | C# programmatic Excel named range annotation
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The program loads an existing workbook, iterates through all defined names, assigns purpose‑specific comments (including business rules) to known ranges such as SalesData, RegionList, and QuarterlyTargets, applies a generic comment to others, and saves the updated file.
+// The C# sample loads an Excel workbook (creating a new file if missing), loops through all defined named ranges via workbook.Worksheets.Names, assigns a formatted comment that describes each range's purpose and associated business rules using the Name.Comment property, and saves the updated workbook with Aspose.Cells.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all defined names (named ranges) in the workbook
-        foreach (Name namedRange in workbook.Worksheets.Names)
+        try
         {
-            // Add a descriptive comment based on the name of the range
-            switch (namedRange.Text)
+            // Load the workbook (creates a new one if the file does not exist)
+            Workbook workbook = LoadWorkbook("input.xlsx");
+
+            // Iterate through all named ranges and add descriptive comments
+            foreach (Name namedRange in workbook.Worksheets.Names)
             {
-                case "SalesData":
-                    // This range contains raw sales figures for the current fiscal year.
-                    // Business rule: Values must be non‑negative and formatted as currency.
-                    namedRange.Comment = "Contains raw sales figures for the current fiscal year. Values must be non-negative and formatted as currency.";
-                    break;
-
-                case "RegionList":
-                    // List of valid sales regions.
-                    // Business rule: Used for data validation in drop‑down lists.
-                    namedRange.Comment = "List of valid sales regions. Used for data validation in drop-down lists.";
-                    break;
-
-                case "QuarterlyTargets":
-                    // Target values for each quarter.
-                    // Business rule: Targets cannot be lower than last year's corresponding quarter.
-                    namedRange.Comment = "Target values for each quarter. Targets cannot be lower than last year's corresponding quarter.";
-                    break;
-
-                default:
-                    // Generic comment for any other named range.
-                    namedRange.Comment = "Named range for internal calculations.";
-                    break;
+                // Example comment: describe the purpose of the range and any business rules
+                namedRange.Comment = $"Purpose: {namedRange.Text} is used for ...; Business Rules: ...";
             }
-        }
 
-        // Save the workbook with the added comments
-        workbook.Save("output.xlsx");
+            // Save the workbook
+            SaveWorkbook(workbook, "output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Loads a workbook from the specified path; creates a new workbook if the file is missing
+    private static Workbook LoadWorkbook(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            return new Workbook(filePath);
+        }
+        else
+        {
+            // Return an empty workbook as a fallback
+            return new Workbook();
+        }
+    }
+
+    // Saves the workbook to the specified path in XLSX format
+    private static void SaveWorkbook(Workbook workbook, string filePath)
+    {
+        workbook.Save(filePath, SaveFormat.Xlsx);
     }
 }

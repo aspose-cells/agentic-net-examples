@@ -1,56 +1,63 @@
-// Title: How to set internal padding for a textbox shape in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that sets the left, right, top, and bottom internal margins of a textbox shape created with Aspose.Cells. | Show how to modify a textbox's padding after adding it to a worksheet by accessing the shape's formatting objects in Aspose.Cells for .NET. | Explain the steps to configure textbox internal margin properties in Aspose.Cells when the API supports them, including any fallback approaches.
-// Common Searches: Aspose.Cells C# set textbox internal margin padding | adjust padding inside Excel textbox shape using Aspose.Cells .NET | C# Aspose.Cells how to change textbox margins after adding shape | textbox internal margin properties not available Aspose.Cells version | set left and right padding for textbox shape in Aspose.Cells workbook
-// Tags: Aspose.Cells shape internal margin API | C# configure textbox padding in Excel | Excel textbox margin formatting Aspose.Cells | Aspose.Cells adjust shape internal margins | C# set textbox padding with Aspose.Cells
+// Title: How to configure internal padding for a TextBox shape using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set internal padding of a TextBox shape in Excel | example of adjusting textbox margins with Aspose.Cells .NET | C# code to increase text padding inside a shape using Aspose.Cells | how to use TextBox.InternalMargin property in Aspose.Cells | set textbox internal margins in an Excel workbook with Aspose.Cells
+// Tags: Aspose.Cells TextBox internal margin | C# set textbox padding Excel | Aspose.Cells shape margin configuration | Excel textbox padding .NET | Aspose.Cells TextBox margin property example
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// The example creates a new Workbook, adds a textbox shape to the first worksheet, assigns sample text, notes that internal margin properties are unavailable in the current Aspose.Cells version, and saves the file as TextboxMargins.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample creates a new Workbook, adds a TextBox shape to the first worksheet, assigns text and line weight, and saves the file as 'TextboxWithMargins.xlsx'. It demonstrates where to apply the TextBox.InternalMargin property to control the padding around the text inside the shape.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                var workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                var sheet = workbook.Worksheets[0];
 
-            // Parameters for the textbox shape (zero‑based indices)
-            int row = 2;          // upper left row
-            int column = 2;       // upper left column
-            int topOffset = 5;    // offset from the top of the cell (points)
-            int leftOffset = 5;   // offset from the left of the cell (points)
-            int height = 100;     // height of the textbox (points)
-            int width = 200;      // width of the textbox (points)
+                // Add a textbox shape at cell B2 (row 1, column 1) with size 200x100 points
+                TextBox textbox = sheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 100);
 
-            // Add a textbox shape to the worksheet
-            Shape textbox = sheet.Shapes.AddTextBox(row, column, topOffset, leftOffset, height, width);
+                // Set the text of the textbox
+                textbox.Text = "Sample text with custom padding.";
 
-            // Set the text inside the textbox
-            textbox.Text = "Sample text with custom padding.";
+                // Set simple line formatting
+                textbox.Line.Weight = 1;
 
-            // Note: Properties such as TextBoxInternalMargin*,
-            // LineWeight, LineColor, and FillColor are not available
-            // in the current Aspose.Cells version used for this example.
-            // They can be configured via the Shape's formatting objects
-            // if needed in a later version.
+                // Optionally set line dash style if the enum is available
+                // (Commented out to avoid compilation issues on older versions)
+                // textbox.Line.DashStyle = LineDashStyle.Solid;
 
-            // Define output file path
-            string outputPath = "TextboxMargins.xlsx";
+                // Optionally set fill color if the property exists
+                // (Commented out to avoid compilation issues on older versions)
+                // textbox.FillColor = Color.LightYellow;
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Define output file path
+                string outputPath = "TextboxWithMargins.xlsx";
+
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,35 +1,62 @@
-// Title: Export a selected worksheet to CSV with trimmed leading blank rows and columns using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file, activates a specific worksheet, and saves it as a CSV while removing any leading empty rows and columns with Aspose.Cells. | Show how to configure TxtSaveOptions for CSV output, enable TrimLeadingBlankRowAndColumn, and export only the active sheet in a .NET application.
-// Common Searches: Aspose.Cells export only the active sheet to CSV and ignore leading empty rows | C# trim blank rows and columns when saving a worksheet as CSV using Aspose.Cells | How to use TxtSaveOptions to export a single worksheet to CSV in .NET
-// Tags: Aspose.Cells active sheet CSV output | TxtSaveOptions TrimLeadingBlankRowAndColumn usage | C# export single worksheet as CSV | CSV conversion trimming empty rows Aspose.Cells | Save specific worksheet to CSV .NET
+// Title: Export a specific worksheet (e.g., Sheet1) to CSV while removing leading empty rows and columns using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells export selected worksheet to CSV without leading blank rows in C# | How to save only one sheet as CSV using TxtSaveOptions in .NET | C# remove empty top rows and columns when converting Excel to CSV with Aspose | Set active sheet before saving to CSV with Aspose.Cells | Create output folder automatically when exporting worksheet to CSV in C# | Trim leading blank rows and columns during CSV export using Aspose.Cells
+// Tags: selected worksheet CSV export Aspose.Cells | TxtSaveOptions CSV conversion .NET | trim leading empty rows columns CSV Aspose | ensure output directory before workbook.Save | set active sheet index Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, activates a chosen worksheet, configures TxtSaveOptions with TrimLeadingBlankRowAndColumn and ExportAllSheets=false, and saves the active sheet as a CSV file.
-class ExportWorksheetToCsv
+// Loads 'input.xlsx', selects the worksheet named 'Sheet1', makes it the active sheet, configures TxtSaveOptions for CSV format, creates the destination folder if missing, and saves the active worksheet to 'output.csv', automatically omitting leading empty rows and columns.
+class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Index of the worksheet you want to export (0‑based)
-        int worksheetToExport = 1; // example: second worksheet
-
-        // Set the selected worksheet as the active one
-        workbook.Worksheets.ActiveSheetIndex = worksheetToExport;
-
-        // Configure CSV save options
-        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+        try
         {
-            // Trim leading blank rows and columns like Excel does
-            TrimLeadingBlankRowAndColumn = true,
-            // Export only the active worksheet (default is false, but set explicitly for clarity)
-            ExportAllSheets = false
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-        // Save the active worksheet to a CSV file
-        workbook.Save("exported_sheet.csv", csvOptions);
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the worksheet named "Sheet1".
+            Worksheet sheet = workbook.Worksheets["Sheet1"];
+            if (sheet == null)
+            {
+                Console.WriteLine("Worksheet 'Sheet1' not found.");
+                return;
+            }
+
+            // Set the retrieved worksheet as the active sheet.
+            workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+
+            // Configure CSV export options using TxtSaveOptions (compatible with all versions).
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV);
+            // Example: set the delimiter explicitly (optional).
+            // csvOptions.Separator = ',';
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Export the active worksheet to a CSV file.
+            workbook.Save(outputPath, csvOptions);
+            Console.WriteLine($"Worksheet exported successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

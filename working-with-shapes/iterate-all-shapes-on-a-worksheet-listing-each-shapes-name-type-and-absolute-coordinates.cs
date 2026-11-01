@@ -1,54 +1,67 @@
-// Title: Iterate through all shapes in an Excel worksheet and output each shape’s name, type, and absolute coordinates with Aspose.Cells for C#
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, loops over worksheet.Shapes, and prints each shape’s Name, Type, Left, Top, Width, and Height. | Create a reusable method that accepts a Worksheet object and returns a list of objects containing shape metadata (name, type, left, top, width, height) using Aspose.Cells. | Generate a script that extracts shape information from a workbook and writes the results to a CSV file, including Z‑order index along with coordinates.
-// Common Searches: aspocells c# enumerate shapes on a worksheet and get their positions | how to read shape left and top values from an Excel file using Aspose.Cells .NET | retrieve shape type and name from a .xlsx workbook with Aspose.Cells in C# | list all drawing objects coordinates in Excel using Aspose.Cells API
-// Tags: enumerate worksheet shapes Aspose.Cells C# | extract shape coordinates Excel Aspose.Cells | retrieve shape type and name Aspose.Cells | list shape bounds in .xlsx using C# | Aspose.Cells shape metadata extraction
+// Title: C# example: enumerate all shapes in an Excel worksheet with Aspose.Cells and obtain each shape's name, type and absolute coordinates
+// Common Searches: how to enumerate shapes in an Excel file using Aspose.Cells C# | retrieve shape name and position from a worksheet with Aspose.Cells | list all drawing objects coordinates Aspose.Cells C# example | Aspose.Cells get shape dimensions (left, top, width, height) in C# | C# code to iterate worksheet shapes and output their properties
+// Tags: worksheet shape listing Aspose.Cells C# | shape absolute coordinates Aspose.Cells | extract shape type and dimensions Excel C# | Aspose.Cells shape enumeration sample | drawing objects position retrieval Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook with Aspose.Cells, accesses the first worksheet, iterates over every Shape object, and prints each shape’s name, type, and absolute position (left, top, width, height) to the console, handling missing files and runtime errors.
+// The sample loads an existing Excel workbook, accesses a worksheet, iterates through every Shape object on that sheet, and prints each shape's Name, Type, Left, Top, Width, and Height values before optionally saving the workbook.
 class Program
 {
     static void Main()
     {
-        string filePath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(filePath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (change index as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Iterate through all shapes on the worksheet
-            foreach (Shape shape in worksheet.Shapes)
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Retrieve shape properties
+                // Shape name
                 string name = shape.Name;
-                string type = shape.Type.ToString();
-                double left = shape.Left;
-                double top = shape.Top;
-                double width = shape.Width;
-                double height = shape.Height;
 
-                // Output shape information
+                // Shape type (enum value)
+                string type = shape.Type.ToString();
+
+                // Absolute coordinates (points)
+                double left = shape.Left;   // X position of upper‑left corner
+                double top = shape.Top;     // Y position of upper‑left corner
+                double width = shape.Width; // Width of the shape
+                double height = shape.Height; // Height of the shape
+
                 Console.WriteLine($"Name: {name}, Type: {type}, Left: {left}, Top: {top}, Width: {width}, Height: {height}");
             }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (optional, unchanged)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

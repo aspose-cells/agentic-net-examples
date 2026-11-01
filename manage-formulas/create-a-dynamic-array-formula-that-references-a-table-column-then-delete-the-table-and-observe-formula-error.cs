@@ -1,79 +1,75 @@
-// Title: Generate a UNIQUE dynamic array formula referencing a ListObject column, delete the table, and detect the resulting #REF! error with Aspose.Cells for .NET
-// AI Prompts: Create a workbook, add a ListObject named MyTable over A1:A5, set B1 formula to =UNIQUE(MyTable[Fruit]), calculate, then remove the ListObject and return the error value from B1. | Using Aspose.Cells in C#, insert a dynamic array formula that extracts distinct values from a table column, delete the table, recalculate the workbook, and output the #REF! error produced.
-// Common Searches: Aspose.Cells how to get #REF error after deleting a table used in a UNIQUE formula | C# dynamic array formula referencing ListObject column then removing the table | calculate formulas after removing ListObject in Aspose.Cells .NET | retrieve distinct values from a table column with UNIQUE function in Aspose.Cells
-// Tags: dynamic array formula UNIQUE Aspose.Cells | ListObject column reference formula C# | detect #REF error after table deletion Aspose.Cells | calculate workbook after ListObject removal .NET | distinct values from spreadsheet table column using UNIQUE
+// Title: Create a dynamic array formula that references a ListObject column and capture the #REF! error after deleting the table using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set a dynamic array formula to spill a table column values | C# Aspose.Cells detect #REF! error when a ListObject is removed | How to reference a ListObject column in a formula with Aspose.Cells .NET | Spill array formula from a table and handle error after table deletion in Aspose.Cells | Aspose.Cells calculate formulas after removing a ListObject programmatically
+// Tags: dynamic array formula ListObject Aspose.Cells | reference ListObject column in C# formula | handle #REF! after table deletion Aspose.Cells | spill table column values using Aspose.Cells | recalculate workbook after ListObject removal C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The example creates a workbook, defines a ListObject named MyTable over cells A1:A5, places a UNIQUE dynamic array formula =UNIQUE(MyTable[Fruit]) in B1, calculates and prints the distinct fruit values, then removes the table, recalculates, and displays the #REF! error that appears in B1 before saving the file.
-class DynamicArrayFormulaDemo
+// The example creates a workbook, adds a single‑column ListObject named MyTable, assigns the dynamic array formula "=MyTable[Value]" to cell C1, forces calculation to spill the column values, prints the spilled data, removes the table, recalculates the workbook, and then checks cell C1 for a #REF! error, outputting the result.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Populate data for the table in column A (A1:A5)
-            string[] data = { "Apple", "Banana", "Apple", "Cherry", "Banana" };
-            for (int i = 0; i < data.Length; i++)
-            {
-                sheet.Cells[i, 0].PutValue(data[i]); // Column A
-            }
+            // Populate data for the table (A1 header, A2:A6 values)
+            ws.Cells["A1"].PutValue("Value");
+            ws.Cells["A2"].PutValue(10);
+            ws.Cells["A3"].PutValue(20);
+            ws.Cells["A4"].PutValue(30);
+            ws.Cells["A5"].PutValue(40);
+            ws.Cells["A6"].PutValue(50);
 
-            // Create a table (ListObject) covering A1:A5 and name it "MyTable"
-            int firstRow = 0, firstCol = 0, totalRows = data.Length, totalCols = 1;
-            int tableIndex = sheet.ListObjects.Add(firstRow, firstCol, firstRow + totalRows, firstCol + totalCols, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Add a ListObject (table) covering A1:A6 and name it "MyTable"
+            int firstRow = 0;   // zero‑based index for row 1
+            int firstCol = 0;   // zero‑based index for column A
+            int totalRows = 6;  // rows 1‑6
+            int totalCols = 1;  // single column
+            int tableIndex = ws.ListObjects.Add(firstRow, firstCol,
+                                                firstRow + totalRows - 1,
+                                                firstCol + totalCols - 1, true);
+            ListObject table = ws.ListObjects[tableIndex];
+            // Use DisplayName to set the table name
             table.DisplayName = "MyTable";
-            table.ShowHeaderRow = true; // First row as header
 
-            // Set header name for the column
-            sheet.Cells[firstRow, firstCol].PutValue("Fruit");
+            // Set a dynamic array formula that references the table column.
+            // The formula will spill the entire column values into adjacent cells.
+            ws.Cells["C1"].Formula = "=MyTable[Value]";
 
-            // Insert a dynamic array formula in B1 that references the table column
-            // Using UNIQUE to return distinct values from the table column
-            Cell formulaCell = sheet.Cells[0, 1]; // Cell B1
-            formulaCell.Formula = "=UNIQUE(MyTable[Fruit])";
+            // Force calculation so the array spills
+            wb.CalculateFormula();
 
-            // Calculate formulas to populate the result
-            workbook.CalculateFormula();
-
-            // Output the results before deleting the table
-            Console.WriteLine("Results before deleting the table:");
-            int resultRow = 0;
-            while (!string.IsNullOrEmpty(sheet.Cells[resultRow, 1].StringValue))
+            // Display spilled values before deleting the table
+            Console.WriteLine("Spilled values before deleting the table:");
+            for (int i = 0; i < 5; i++) // 5 data rows
             {
-                Console.WriteLine($"B{resultRow + 1}: {sheet.Cells[resultRow, 1].StringValue}");
-                resultRow++;
+                Console.WriteLine(ws.Cells[i, 2].StringValue); // Column C (index 2)
             }
 
-            // Delete the table (ListObject)
-            sheet.ListObjects.RemoveAt(0);
+            // Delete the table
+            ws.ListObjects.RemoveAt(0);
 
             // Recalculate formulas after table deletion
-            workbook.CalculateFormula();
+            wb.CalculateFormula();
 
-            // Check the formula cell for error after deletion
-            Cell errorCell = sheet.Cells[0, 1]; // B1
-            string errorValue = errorCell.StringValue;
-            if (errorValue.StartsWith("#"))
+            // Check the result of the formula cell (C1) for error
+            Cell formulaCell = ws.Cells["C1"];
+            if (formulaCell.Type == CellValueType.IsError)
             {
-                Console.WriteLine("\nAfter deleting the table, the formula results in an error:");
-                Console.WriteLine($"Error in B1: {errorValue}"); // Expected #REF!
+                Console.WriteLine($"Formula error after table deletion: {formulaCell.StringValue}");
             }
             else
             {
-                Console.WriteLine("\nAfter deleting the table, the formula did not produce an error (unexpected).");
-                Console.WriteLine($"B1 value: {errorValue}");
+                Console.WriteLine("Formula did not produce an error after table deletion.");
             }
 
-            // Save the workbook to a file (optional)
-            workbook.Save("DynamicArrayFormulaDemo.xlsx");
+            // Optional: Save the workbook to verify manually (can be omitted)
+            // wb.Save("DynamicArrayFormulaDemo.xlsx");
         }
         catch (Exception ex)
         {

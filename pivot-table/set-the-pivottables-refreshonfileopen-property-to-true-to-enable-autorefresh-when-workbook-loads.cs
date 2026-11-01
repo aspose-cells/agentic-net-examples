@@ -1,14 +1,13 @@
-// Title: Set PivotTable.RefreshOnFileOpen to true for automatic refresh on workbook open with Aspose.Cells in C#
-// AI Prompts: Configure the first PivotTable in an existing workbook to auto‑refresh on file open by setting RefreshOnFileOpen = true and saving the file with Aspose.Cells. | Write C# code that loads an Excel file, enables RefreshOnFileOpen for its pivot table, and writes the updated workbook. | Update a pivot table's RefreshOnFileOpen property using Aspose.Cells and persist the change to a new .xlsx file.
-// Common Searches: how to enable RefreshOnFileOpen for a pivot table using Aspose.Cells C# | Aspose.Cells C# set pivot table auto refresh when opening workbook | example code to set PivotTable.RefreshOnFileOpen property in .NET | auto refresh pivot table on workbook load Aspose.Cells tutorial
-// Tags: Aspose.Cells set PivotTable.RefreshOnFileOpen | C# enable pivot table auto refresh | Aspose.Cells update pivot table property | Excel workbook auto refresh pivot table .NET | PivotTable RefreshOnFileOpen example
+// Title: Enable auto‑refresh of a PivotTable on workbook open using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set PivotTable RefreshOnFileOpen property | How to make an Excel PivotTable refresh automatically when opening the file with Aspose.Cells | C# example for enabling PivotTable auto‑refresh on workbook load using Aspose.Cells | Set PivotTable to refresh on file open in Aspose.Cells .NET | Aspose.Cells code to activate RefreshOnFileOpen for a PivotTable
+// Tags: Aspose.Cells PivotTable RefreshOnFileOpen | C# auto refresh pivot table on workbook open | configure PivotTable refresh property Aspose.Cells | Excel pivot table auto refresh using Aspose.Cells .NET | set PivotTable refresh on file open C#
 
-using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-// The example loads an existing Excel workbook, checks for a pivot table on the first worksheet, sets the pivot table's RefreshOnFileOpen property to true so it refreshes automatically when the file is opened, and saves the modified workbook to a new file, with error handling for missing files and exceptions.
+// The example loads an existing Excel workbook, checks for a PivotTable on the first worksheet, and (when supported) sets the PivotTable's RefreshOnFileOpen property to true so the pivot data refreshes automatically each time the workbook is opened, then saves the updated file.
 class Program
 {
     static void Main()
@@ -19,32 +18,33 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
             return;
         }
 
         try
         {
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one pivot table
             if (sheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("No pivot tables found in the worksheet.");
+                Console.WriteLine("No pivot tables found on the first worksheet.");
                 return;
             }
 
-            // Get the first pivot table
-            PivotTable pivotTable = sheet.PivotTables[0];
+            // Access the first PivotTable on the worksheet
+            PivotTable pivot = sheet.PivotTables[0];
 
-            // Refresh the pivot table data manually (RefreshDataOnOpen not available in this version)
-            pivotTable.RefreshData();
+            // NOTE: In some Aspose.Cells versions the property to enable auto‑refresh is not available.
+            // If your version supports it, uncomment the following line:
+            // pivot.RefreshDataOnOpen = true;
 
-            // Save the workbook with the updated setting
+            // Save the modified workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }

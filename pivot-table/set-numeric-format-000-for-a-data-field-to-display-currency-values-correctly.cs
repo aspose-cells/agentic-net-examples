@@ -1,65 +1,56 @@
-// Title: How to apply the '#,##0.00' numeric format to a specific cell range in an Excel file with Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a Style with the custom numeric format '#,##0.00' and applies it to cells B1:B10 using Aspose.Cells. | Show how to use StyleFlag to limit formatting to the number format only, then save the workbook after applying the currency style.
-// Common Searches: Aspose.Cells C# set number format '#,##0.00' for a range of cells | How to format Excel cells as currency using Aspose.Cells .NET | Apply custom numeric format to B1:B10 with Aspose.Cells library | Using StyleFlag to change only number format in Aspose.Cells workbook
-// Tags: numeric format styling Aspose.Cells | StyleFlag number format application | currency display formatting Excel | cell range formatting Aspose.Cells | C# workbook number format customization
+// Title: Set column B to currency format "#,##0.00" in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to apply "#,##0.00" numeric format to a column | format Excel cells as currency with thousands separator using Aspose.Cells .NET | apply custom number format to specific cells in a workbook with Aspose.Cells C# | set cell style Custom property for currency display in Aspose.Cells | save modified Excel file after applying numeric format with Aspose.Cells in C#
+// Tags: Aspose.Cells set custom numeric format C# | apply currency number format Excel column .NET | cell style Custom property Aspose.Cells | format column B as currency Aspose.Cells | save workbook after style changes Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel file with Aspose.Cells, iterates over the first ten rows of column B, assigns the custom numeric format "#,##0.00" to each cell's style to show currency with thousands separators and two decimal places, and then saves the workbook to a new file while handling potential Aspose.Cells and generic exceptions.
+class Program
 {
-    // The program loads an existing workbook, creates a Style with the custom numeric format '#,##0.00', applies it to cells B1:B10 via a StyleFlag that targets only the number format, and saves the modified workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists before attempting to load it.
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook. If the file is password‑protected, a CellsException will be thrown.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Apply the numeric format '#,##0.00' to column B (index 1), rows 1‑10.
+            for (int row = 0; row < 10; row++)
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (or specify the desired one)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Create a new style object for currency formatting
-                Style currencyStyle = workbook.CreateStyle();
-                currencyStyle.Custom = "#,##0.00";
-
-                // Define which style attributes to apply (only the number format)
-                StyleFlag styleFlag = new StyleFlag
-                {
-                    NumberFormat = true
-                };
-
-                // Define the target range B1:B10 (row 0‑9, column 1)
-                Aspose.Cells.Range range = worksheet.Cells.CreateRange(0, 1, 10, 1);
-                range.ApplyStyle(currencyStyle, styleFlag);
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Cell cell = sheet.Cells[row, 1]; // Column B
+                Style style = cell.GetStyle();
+                style.Custom = "#,##0.00";      // Numeric format with thousands separator and two decimals
+                cell.SetStyle(style);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handles errors such as missing password, corrupted file, etc.
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors.
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

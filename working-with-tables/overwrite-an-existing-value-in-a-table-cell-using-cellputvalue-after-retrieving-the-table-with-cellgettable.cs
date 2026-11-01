@@ -1,33 +1,59 @@
-// Title: Overwrite a cell value in an Excel ListObject table using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells C# to locate a ListObject via Cell.GetTable and replace a specific data cell with a new string using the PutValue method. | Write C# code that retrieves the table containing cell B2, determines the first data row, and updates the value in the second column of that row. | Show how to modify an Excel workbook by changing a table cell value and then saving the file with Aspose.Cells.
-// Common Searches: asp.net c# how to update a value in an Excel ListObject table using Aspose.Cells | asp.net example of modifying a table cell with Aspose.Cells and saving the workbook | replace data in first data row second column of an Excel table programmatically | c# code to get the table that contains a specific cell and change its content | asp.net modify Excel table cell and persist changes with Aspose.Cells
-// Tags: Aspose.Cells GetTable API | Aspose.Cells PutValue method | modify ListObject cell C# | update Excel table cell Aspose | overwrite Excel table data .NET
+// Title: Overwrite a cell value in an Excel ListObject table using Cell.PutValue after retrieving it with Cell.GetTable (C# Aspose.Cells)
+// AI Prompts: Retrieve the ListObject that contains a specific cell via Cell.GetTable, then assign a new value to the desired data cell using Cell.PutValue and save the workbook. | Change the value of the second row, second column inside a table's DataRange by accessing the ListObject and invoking PutValue on the target cell. | Programmatically update any cell within an Aspose.Cells table: locate the table with GetTable, modify the cell with PutValue, and write the changes to a new file.
+// Common Searches: Aspose.Cells C# how to update a value in a ListObject table cell | using Cell.GetTable to modify a specific cell in an Excel table with Aspose | C# replace data in a table row using Aspose.Cells PutValue method | change cell value inside Excel table programmatically with Aspose.Cells .NET | retrieve table from cell A2 and edit its contents Aspose.Cells
+// Tags: Cell.GetTable obtain ListObject | Cell.PutValue modify table cell | Aspose.Cells update ListObject data | C# edit Excel table cell | Aspose.Cells overwrite table entry
 
-// Load an existing workbook
-var workbook = new Aspose.Cells.Workbook("input.xlsx");
+using System;
+using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// Access the first worksheet (adjust index or name as needed)
-var worksheet = workbook.Worksheets[0];
-
-// Get a cell that belongs to the target table (e.g., cell B2)
-var cell = worksheet.Cells["B2"];
-
-// Retrieve the table (ListObject) that contains this cell
-var table = cell.GetTable();
-
-if (table != null)
+// The example creates a simple workbook with a table if it does not exist, loads the file, uses Cell.GetTable to get the ListObject containing cell A2, updates the value of the second data row and column to "New Value" with Cell.PutValue, and saves the modified workbook as output.xlsx.
+class Program
 {
-    // Determine the first data row and column of the table
-    int dataStartRow = table.DataRange.FirstRow;
-    int dataStartColumn = table.DataRange.FirstColumn;
+    static void Main()
+    {
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-    // Example: overwrite the value in the first data row, second column of the table
-    // Adjust offsets as required for the specific cell you want to modify
-    var targetCell = worksheet.Cells[dataStartRow, dataStartColumn + 1];
+            // Ensure the input file exists; create a simple workbook if it doesn't.
+            if (!File.Exists(inputPath))
+            {
+                Workbook tempWb = new Workbook();
+                Worksheet tempWs = tempWb.Worksheets[0];
+                tempWs.Cells["A1"].PutValue("Header1");
+                tempWs.Cells["B1"].PutValue("Header2");
+                tempWs.Cells["A2"].PutValue("Old Value1");
+                tempWs.Cells["B2"].PutValue("Old Value2");
+                // Create a table covering A1:B2 (hasHeaders = true)
+                tempWs.ListObjects.Add(0, 0, 2, 2, true);
+                tempWb.Save(inputPath);
+            }
 
-    // Overwrite the existing value
-    targetCell.PutValue("New Value");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the table that contains cell A2
+            ListObject table = sheet.Cells["A2"].GetTable();
+
+            if (table != null)
+            {
+                // Access a specific cell inside the table (row 2, column 2 of the data range)
+                Cell targetCell = table.DataRange[1, 1];
+                targetCell.PutValue("New Value");
+            }
+
+            // Save the workbook with the updated value
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 }
-
-// Save the modified workbook
-workbook.Save("output.xlsx");

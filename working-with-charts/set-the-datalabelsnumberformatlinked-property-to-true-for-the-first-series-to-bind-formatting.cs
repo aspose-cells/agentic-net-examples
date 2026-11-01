@@ -1,55 +1,66 @@
-// Title: How to link data label number format to source cells for the first series in an Aspose.Cells column chart (C#)
-// AI Prompts: Write C# code that creates a workbook, adds a column chart, enables data labels for the first series, sets DataLabels.NumberFormatLinked = true, and saves the file. | Show an example of binding a chart series' data label number format to a range of formatted cells using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells set DataLabels.NumberFormatLinked for first series in C# | link chart data label formatting to worksheet cells Aspose.Cells .NET | C# Aspose.Cells column chart data labels use source cell number format | how to bind data label number format to cells in Aspose.Cells chart
-// Tags: Aspose.Cells chart data label formatting binding | C# enable number format linking for chart series | Aspose.Cells column chart series data label settings | link data label number format to source range Aspose.Cells
+// Title: How to bind data label number format to the first chart series using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that loads an Excel workbook with Aspose.Cells, retrieves the first chart, and sets series[0].DataLabels.NumberFormatLinked = true. | Generate code to enable linked number formatting for data labels of the first series in a chart using Aspose.Cells for .NET. | Create a snippet that opens an existing .xlsx file, finds the first chart series, turns on DataLabels.NumberFormatLinked, and saves the changes.
+// Common Searches: Aspose.Cells set DataLabels.NumberFormatLinked for chart series in C# | How to bind data label formatting to series number format in Excel using Aspose.Cells | C# example linking chart series number format to data labels with Aspose.Cells | Enable linked number format for data labels of the initial chart series in .NET
+// Tags: Aspose.Cells chart series DataLabels.NumberFormatLinked | bind data label number format to series Aspose.Cells C# | first chart series data label formatting .NET | link chart data labels to series number format Aspose | modify Excel chart data labels Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDemo
+// The program loads an existing Excel workbook, accesses the first worksheet and its first chart, sets the DataLabels.NumberFormatLinked property of the chart's first series to true (binding data label formatting to the series number format), and saves the workbook to a new file.
+class Program
 {
-    // Demonstrates creating a workbook, adding a column chart, populating sample data, enabling data labels, linking them to formatted cells, setting DataLabels.NumberFormatLinked = true for the first series, and saving the workbook as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(200);
-            // Formatted values in another column (optional for linking)
-            sheet.Cells["C1"].PutValue("Formatted Value");
-            sheet.Cells["C2"].PutValue("100 units");
-            sheet.Cells["C3"].PutValue("200 units");
+        try
+        {
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Get the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-            // Define the data range for the series and categories
-            chart.NSeries.Add("B2:B3", true);          // Values
-            chart.NSeries.CategoryData = "A2:A3";      // Categories
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-            // Access the first series
-            Series firstSeries = chart.NSeries[0];
+            // Get the first chart on the worksheet
+            var chart = worksheet.Charts[0];
 
-            // Enable data labels and link them to the formatted cells (optional)
-            firstSeries.DataLabels.ShowValue = true;
-            firstSeries.DataLabels.LinkedSource = "C2:C3";
+            // Ensure the chart has at least one series
+            if (chart.NSeries.Count == 0)
+            {
+                Console.WriteLine("The chart does not contain any series.");
+                return;
+            }
 
-            // Bind the number format of the data labels to the source cells
-            firstSeries.DataLabels.NumberFormatLinked = true;
+            // Get the first series of the chart
+            var series = chart.NSeries[0];
 
-            // Save the workbook to an XLSX file
-            workbook.Save("DataLabelsNumberFormatLinkedDemo.xlsx");
+            // Bind the data label formatting to the series number format
+            series.DataLabels.NumberFormatLinked = true;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

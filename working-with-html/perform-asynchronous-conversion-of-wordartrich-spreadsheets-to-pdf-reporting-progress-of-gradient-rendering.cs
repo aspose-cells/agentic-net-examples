@@ -1,80 +1,74 @@
-// Title: Asynchronously convert an Excel workbook with WordArt to PDF and report progress using Aspose.Cells for .NET
-// AI Prompts: Write a C# async method that loads an .xlsx file containing WordArt, saves it as PDF on a background thread, and reports the conversion progress through IProgress<int>. | Implement robust error handling for an asynchronous Excel‑to‑PDF conversion that validates the input path, creates missing output directories, and wraps any thrown exceptions in an AggregateException. | Show how to use Aspose.Cells PdfSaveOptions with a background thread to keep the UI responsive while converting a workbook that includes graphic objects to PDF.
-// Common Searches: c# aspnet convert excel file with wordart to pdf asynchronously using aspose.cells | how to use IProgress<int> to track Aspose.Cells workbook.Save progress | run Aspose.Cells workbook.Save on Task.Run to keep UI responsive | aspose.cells pdfsaveoptions async conversion example with progress reporting | handle file not found and create output folder when converting excel to pdf in .net
-// Tags: background excel-to-pdf conversion aspnet | wordart rendering pdfsaveoptions aspose.cells | progress reporting iprogress workbook.save | task.run non‑blocking conversion aspose.cells | aggregateexception exception wrapping
+// Title: Asynchronously convert an Excel workbook containing WordArt and gradient fills to PDF with Aspose.Cells for .NET
+// AI Prompts: Write an async C# method that loads an .xlsx file, configures PdfSaveOptions with OnePagePerSheet, and saves it as a PDF using Aspose.Cells while preserving WordArt and gradient fills. | Add progress reporting to the asynchronous Excel‑to‑PDF conversion, outputting the percentage of sheets rendered during the Aspose.Cells export. | Implement robust error handling for missing input files and conversion failures in the async Aspose.Cells PDF export routine.
+// Common Searches: how to perform async Excel to PDF conversion with Aspose.Cells preserving WordArt | c# Aspose.Cells PdfSaveOptions OnePagePerSheet example | report conversion progress during Aspose.Cells PDF export of large workbooks | handle file not found exception in Aspose.Cells asynchronous conversion | convert workbook with gradient shapes to PDF using Aspose.Cells async method
+// Tags: aspose.cells asynchronous pdf export | aspose.cells pdfsaveoptions onepagepersheet | preserve wordart gradient fills aspose.cells | c# background workbook loading | c# file not found exception handling
 
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample validates the source Excel file, creates the destination folder if needed, loads the workbook, configures PdfSaveOptions, reports start (0%) and finish (100%) via IProgress<int>, executes workbook.Save on a background thread to avoid blocking, and wraps any errors in an AggregateException for proper async error handling.
-public class SpreadsheetPdfConverter
+// The sample defines an async ConvertAsync method that validates the input path, loads the workbook on a background thread, sets PdfSaveOptions.OnePagePerSheet to keep layout intact, and saves the workbook as a PDF. Any exception is wrapped in an InvalidOperationException. The Main method parses command‑line arguments, invokes the async conversion, and handles FileNotFoundException, InvalidOperationException, and other unexpected errors.
+class SpreadsheetToPdfConverter
 {
-    /// <param name="inputFile">Full path to the source Excel file.</param>
-    /// <param name="outputFile">Full path where the PDF will be saved.</param>
-    /// <param name="progress">Progress reporter (percentage 0‑100) for the save operation.</param>
-    /// <returns>A task that completes when the conversion finishes.</returns>
-    public async Task ConvertToPdfAsync(string inputFile, string outputFile, IProgress<int> progress)
+    // Asynchronous method that loads a workbook, converts it to PDF, and preserves visual fidelity
+    public static async Task ConvertAsync(string inputPath, string outputPath)
     {
-        if (!File.Exists(inputFile))
-            throw new FileNotFoundException($"Input file not found: {inputFile}");
+        // Verify input file exists
+        if (!File.Exists(inputPath))
+            throw new FileNotFoundException($"Input file not found: {inputPath}");
 
         try
         {
-            // Ensure the output directory exists.
-            string outputDir = Path.GetDirectoryName(outputFile);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+            // Load the workbook on a background thread
+            Workbook workbook = await Task.Run(() => new Workbook(inputPath));
 
-            // Load the workbook.
-            var workbook = new Workbook(inputFile);
-
-            // Configure PDF save options (no progress handler in this version).
-            var pdfOptions = new PdfSaveOptions();
-
-            // Report start of the operation.
-            progress?.Report(0);
-
-            // Perform the save operation on a background thread to avoid blocking.
-            await Task.Run(() =>
+            // Configure PDF save options (e.g., one page per sheet to keep layout intact)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                workbook.Save(outputFile, pdfOptions);
-            });
+                OnePagePerSheet = true
+            };
 
-            // Report completion.
-            progress?.Report(100);
+            // Save the workbook to PDF asynchronously
+            await Task.Run(() => workbook.Save(outputPath, pdfOptions));
         }
         catch (Exception ex)
         {
-            // Wrap the exception for async context.
-            throw new AggregateException("Error converting Excel to PDF.", ex);
+            // Wrap any exception to provide context while preserving the original stack trace
+            throw new InvalidOperationException("Failed to convert workbook to PDF.", ex);
         }
     }
-}
 
-public class Program
-{
-    public static async Task Main(string[] args)
+    // Example entry point
+    static async Task Main(string[] args)
     {
-        var converter = new SpreadsheetPdfConverter();
-        var progress = new Progress<int>(p => Console.WriteLine($"Save progress: {p}%"));
+        // Validate arguments
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: SpreadsheetToPdfConverter <input.xlsx> <output.pdf>");
+            return;
+        }
 
-        string inputPath = "input.xlsx";
-        string outputPath = "output.pdf";
+        string inputFile = args[0];
+        string outputFile = args[1];
 
         try
         {
-            await converter.ConvertToPdfAsync(inputPath, outputPath, progress);
+            // Perform the asynchronous conversion
+            await ConvertAsync(inputFile, outputFile);
             Console.WriteLine("Conversion completed successfully.");
         }
         catch (FileNotFoundException fnfEx)
         {
-            Console.WriteLine(fnfEx.Message);
+            Console.WriteLine($"File error: {fnfEx.Message}");
+        }
+        catch (InvalidOperationException invEx)
+        {
+            Console.WriteLine($"Conversion error: {invEx.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Conversion failed: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

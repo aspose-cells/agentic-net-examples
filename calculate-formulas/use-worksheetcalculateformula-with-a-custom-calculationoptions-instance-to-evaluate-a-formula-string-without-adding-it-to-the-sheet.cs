@@ -1,45 +1,35 @@
-// Title: Use Worksheet.CalculateFormula with a custom CalculationOptions to evaluate an Excel formula string without inserting it into the worksheet (C#)
-// AI Prompts: Write C# code that creates a Workbook, sets a cell value, configures CalculationOptions to ignore errors, and calls the appropriate method to compute a formula string directly. | Show how to evaluate an Excel formula on the fly using Aspose.Cells by passing a formula and a CalculationOptions instance to the calculation API.
-// Common Searches: asp.net evaluate Excel formula string using Aspose.Cells without adding to worksheet | how to apply CalculationOptions when calling Worksheet.CalculateFormula in C# | ignore errors during formula calculation with Aspose.Cells CalculationOptions example | run ad‑hoc formula evaluation in Aspose.Cells C# code sample
-// Tags: custom CalculationOptions for formula evaluation | ad‑hoc formula evaluation Aspose.Cells | ignore errors during Aspose.Cells calculation | process Excel formula string in C# | calculate formula without worksheet insertion
+// Title: Use Worksheet.CalculateFormula with custom CalculationOptions to evaluate an Excel formula string in C# (Aspose.Cells)
+// Common Searches: how to evaluate an Excel formula string without writing it to a cell using Aspose.Cells C# | C# Aspose.Cells Worksheet.CalculateFormula with custom CalculationOptions example | evaluate SUM(1,2,3) using Aspose.Cells calculation options ignore errors | run a formula programmatically in Aspose.Cells without adding it to the worksheet | set CalculationOptions.IgnoreError while calculating a formula with Aspose.Cells
+// Tags: custom CalculationOptions for Worksheet.CalculateFormula | programmatic Excel formula evaluation in Aspose.Cells | ignore errors during formula calculation Aspose.Cells | evaluate formula without inserting into worksheet | C# Aspose.Cells SUM function calculation
 
 using Aspose.Cells;
 using System;
 
-// The example creates a new Workbook, writes a value to cell A1, sets CalculationOptions to ignore errors, and uses Worksheet.CalculateFormula to evaluate the formula "=SUM(1,2,3)*A1" directly, outputting the result without adding the formula to the worksheet.
+// The example creates an in‑memory workbook, obtains the first worksheet, defines a formula string (SUM(1,2,3)), configures a CalculationOptions object (e.g., IgnoreError = true), and calls Worksheet.CalculateFormula with the formula and options to compute the result without placing the formula in a cell, then prints the evaluated value.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook in memory
+        Workbook workbook = new Workbook();
 
-            // Set up calculation options
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                // Ignore errors during calculation
-                IgnoreError = true
-            };
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Example: put a value in a cell that the formula will reference
-            sheet.Cells["A1"].PutValue(10);
+        // Formula to evaluate (does not need to be placed in a cell)
+        string formula = "SUM(1, 2, 3)";
 
-            // Formula string to evaluate (note the leading '=')
-            string formula = "=SUM(1, 2, 3) * A1";
+        // Create custom calculation options
+        CalculationOptions calcOptions = new CalculationOptions();
+        // Example option: ignore errors during calculation
+        calcOptions.IgnoreError = true;
+        // Additional options can be set here as needed, e.g.,
+        // calcOptions.EnableIterativeCalculation = true;
 
-            // Evaluate the formula without adding it to the worksheet
-            object result = sheet.CalculateFormula(formula, calcOptions);
+        // Evaluate the formula using the worksheet's CalculateFormula method
+        object result = sheet.CalculateFormula(formula, calcOptions);
 
-            // Display the result
-            Console.WriteLine("Result: " + result);
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
+        // Display the result
+        Console.WriteLine($"Result of formula '{formula}' is: {result}");
     }
 }

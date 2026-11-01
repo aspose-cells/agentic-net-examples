@@ -1,31 +1,28 @@
-// Title: Save a workbook as StarOffice Calc (.sxc) with Aspose.Cells using OdsSaveOptions in C#
-// AI Prompts: Write C# code that creates a new Workbook, configures OdsSaveOptions with SaveFormat.Sxc and LibreOffice generator, and writes the file to disk as a .sxc document. | Demonstrate how to export an Aspose.Cells workbook to the StarOffice Calc format by setting the appropriate OdsSaveOptions in a .NET application.
-// Common Searches: aspocells c# export workbook to sxc file | odsSaveOptions SaveFormat.Sxc example code | how to set LibreOffice generator for sxc output using Aspose.Cells | convert Excel workbook to StarOffice Calc (.sxc) in .NET | saving spreadsheet as OpenDocument SXC with Aspose.Cells
-// Tags: Aspose.Cells OdsSaveOptions SaveFormat.Sxc | C# generate SXC file with Aspose.Cells | LibreOffice generator type for SXC output | OpenDocument spreadsheet compatibility Aspose | convert Excel to .sxc using Aspose.Cells
+// Title: How to export an Excel workbook to SXC (OpenDocument Spreadsheet) using OdsSaveOptions in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# example for saving a workbook as .sxc | using OdsSaveOptions to export Excel to OpenDocument Spreadsheet format | programmatically create SXC file with Aspose.Cells .NET API | convert Excel workbook to SXC with SaveFormat.SXC in C# | save workbook as OpenDocument Spreadsheet using Aspose.Cells OdsSaveOptions | C# code to generate .sxc file from Aspose.Cells workbook
+// Tags: OdsSaveOptions SaveFormat.SXC export | Aspose.Cells OpenDocument Spreadsheet generation | C# Excel to SXC conversion | Aspose.Cells .NET create .sxc file | Export workbook to SXC with Aspose.Cells | OpenDocument Spreadsheet output using Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// // This example creates a new Workbook, adds sample data, configures OdsSaveOptions with SaveFormat.Sxc and LibreOffice generator type, and saves the workbook as output.sxc.
-class SaveAsSxc
+// The sample creates a Workbook, adds data, configures OdsSaveOptions with SaveFormat.SXC, and saves the file as "output.sxc", providing OpenDocument Spreadsheet compatibility via Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (or load an existing one)
         Workbook workbook = new Workbook();
 
         // Add some sample data to the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["B1"].PutValue("World");
+        sheet.Cells["A1"].PutValue("Sample");
+        sheet.Cells["B1"].PutValue(123);
+        sheet.Cells["A2"].PutValue(DateTime.Now);
 
-        // Create OdsSaveOptions specifying the SXC format
-        OdsSaveOptions saveOptions = new OdsSaveOptions(SaveFormat.Sxc);
-        // Set the generator type for better OpenDocument compatibility
-        saveOptions.GeneratorType = OdsGeneratorType.LibreOffice;
+        // Configure ODS save options to output SXC (OpenDocument Spreadsheet) format
+        OdsSaveOptions saveOptions = new OdsSaveOptions(SaveFormat.SXC);
 
-        // Save the workbook as StarOffice Calc Spreadsheet (.sxc)
+        // Save the workbook as SXC using the specified options
         workbook.Save("output.sxc", saveOptions);
     }
 }

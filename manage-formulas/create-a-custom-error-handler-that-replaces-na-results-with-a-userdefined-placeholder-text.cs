@@ -1,58 +1,75 @@
-// Title: How to replace #N/A errors with a custom placeholder in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to calculate formulas, detect cells returning #N/A errors, and substitute them with a user‑specified string before saving the workbook. | Show an example of implementing a custom error handler in Aspose.Cells that checks CellValueType.IsError and writes a placeholder like "Not Available" to the cell.
-// Common Searches: Aspose.Cells C# replace #N/A error with custom text after formula calculation | How to handle NA() error in Excel using Aspose.Cells .NET | Set placeholder for Excel error values when saving workbook with Aspose.Cells | Detect and replace error cells in Aspose.Cells before export
-// Tags: custom placeholder for Excel error values Aspose.Cells | CellValueType.IsError usage Aspose.Cells | error value substitution in Aspose.Cells workbook | Aspose.Cells handling NA() function error | save workbook after error value replacement Aspose.Cells
+// Title: Replace #N/A error values with a custom placeholder in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# replace #N/A error cells with custom text | How to change Excel #N/A results to a user defined string using Aspose.Cells | Iterate through worksheet cells to handle error values in Aspose.Cells .NET | Custom error handler for NA() formula results in a C# Aspose.Cells workbook | Replace all error type cells in an Excel file with placeholder text via Aspose.Cells API
+// Tags: Aspose.Cells error cell replacement technique | custom placeholder for NA errors in Excel | worksheet cell iteration for error detection C# | set cell value for error type using Aspose.Cells | handle #N/A results with user defined text .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsErrorHandlerExample
+// Demonstrates creating a workbook, generating a #N/A error with the NA() formula, recalculating, then scanning all cells in the first worksheet and replacing any error cells with a developer‑specified placeholder string before saving the file.
+class Program
 {
-    // The example creates a workbook, inserts a NA() formula that produces a #N/A error, recalculates the sheet, checks if the result cell is an error, replaces the error with the string "Not Available", and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Example data: a formula that generates #N/A
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(0);
+            sheet.Cells["A2"].Formula = "=NA()";
+
+            // Recalculate formulas so the error appears
+            workbook.CalculateFormula();
+
+            // Replace #N/A errors with custom text
+            ReplaceNAErrors(sheet, "Data not available");
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet.
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Insert a formula that generates the #N/A error.
-                sheet.Cells["A1"].Formula = "NA()";
-
-                // Recalculate formulas.
-                workbook.CalculateFormula();
-
-                // After calculation, replace any #N/A errors (or any error) with a placeholder.
-                Cell targetCell = sheet.Cells["A1"];
-                if (targetCell.Type == CellValueType.IsError)
-                {
-                    targetCell.PutValue("Not Available");
-                }
-
-                // Define output file path.
-                string outputPath = "Output.xlsx";
-
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Replaces all error cells (including #N/A) in the given worksheet with the specified replacement text
+    private static void ReplaceNAErrors(Worksheet sheet, string replacement)
+    {
+        try
+        {
+            Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    Cell cell = cells[row, col];
+                    if (cell.Type == CellValueType.IsError)
+                    {
+                        cell.PutValue(replacement);
+                    }
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while replacing NA errors: {ex.Message}");
         }
     }
 }

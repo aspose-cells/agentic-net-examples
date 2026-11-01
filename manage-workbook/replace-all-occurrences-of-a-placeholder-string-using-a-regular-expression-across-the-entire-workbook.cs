@@ -1,77 +1,104 @@
-// Title: Replace a {{PLACEHOLDER}} token with a specific value in every cell of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, scans all worksheets' used ranges, and uses a case‑insensitive regular expression to replace every occurrence of {{PLACEHOLDER}} with a given string, then saves the workbook. | Create a reusable C# method that takes a workbook path, a regex pattern, and replacement text, iterates through all string cells across all sheets via Aspose.Cells, applies the regex replace, and writes the updated file.
-// Common Searches: aspocells c# replace placeholder token in all worksheets | how to perform regex find and replace across an entire Excel workbook with Aspose.Cells | bulk replace {{PLACEHOLDER}} in Excel using Aspose.Cells .NET | iterate used range cells and replace text with regex Aspose.Cells C# | case‑insensitive placeholder substitution in Excel file via Aspose.Cells
-// Tags: regex find replace Aspose.Cells workbook | bulk cell text substitution .NET | replace placeholder in Excel using Aspose.Cells | case-insensitive text replace Aspose.Cells C# | iterate worksheets used range Aspose.Cells
+// Title: Replace placeholder text throughout an entire Excel workbook using a regular expression with Aspose.Cells for .NET (C#)
+// Common Searches: how to use Aspose.Cells C# to replace a placeholder string in all worksheets | regex find and replace across an entire Excel file with Aspose.Cells | bulk replace {PLACEHOLDER} in every cell using Aspose.Cells .NET | iterate through all cells in a workbook and update string values with Aspose.Cells | Aspose.Cells C# replace text in password‑protected workbook using regex
+// Tags: regex replace placeholder in Aspose.Cells workbook | bulk cell text replacement Aspose.Cells .NET | iterate worksheets update string cells Aspose.Cells | search and replace across Excel workbook using Aspose.Cells | replace placeholder across all worksheets C# | Aspose.Cells workbook text substitution with regular expression
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Aspose.Cells;
 
-// The example loads an input.xlsx workbook with Aspose.Cells, defines a case‑insensitive regex for the {{PLACEHOLDER}} token, walks through each worksheet's used range, replaces matching string cells with the specified value, and saves the result as output.xlsx while handling missing files and runtime errors.
-class ReplacePlaceholderInWorkbook
+// The example loads an Excel file (creating a sample workbook if the file is missing), iterates over every worksheet and cell, applies a regular expression to replace all occurrences of the placeholder "{PLACEHOLDER}" with "ActualValue" in string cells, and saves the modified workbook. It also demonstrates handling password‑protected files and load/save errors using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException.
+            // Ensure the input file exists; if not, create a simple workbook for demonstration.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
+                workbook = CreateSampleWorkbook();
+                workbook.Save(inputPath);
             }
-
-            // Load the workbook from the specified file.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Regular expression to match the placeholder {{PLACEHOLDER}} (case‑insensitive).
-            string pattern = @"\{\{PLACEHOLDER\}\}";
-            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-
-            // Replacement text.
-            const string replacement = "ActualValue";
-
-            // Iterate through all worksheets.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            else
             {
-                // Get the used range of the worksheet.
-                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                // Load the workbook; if it is password‑protected, an exception will be caught below.
+                workbook = new Workbook(inputPath);
+            }
+        }
+        catch (CellsException ex)
+        {
+            // Aspose.Cells throws CellsException for password‑protected files.
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine($"The workbook \"{inputPath}\" is password protected. Unable to load it.");
+            }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-                // Loop through each cell within the used range.
-                for (int row = usedRange.FirstRow; row <= usedRange.FirstRow + usedRange.RowCount - 1; row++)
+        // Define the regular expression pattern to match the placeholder (e.g., "{PLACEHOLDER}")
+        string pattern = @"\{PLACEHOLDER\}";
+        string replacement = "ActualValue";
+        Regex regex = new Regex(pattern);
+
+        // Iterate through all worksheets and replace placeholder text in string cells
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    for (int col = usedRange.FirstColumn; col <= usedRange.FirstColumn + usedRange.ColumnCount - 1; col++)
+                    Cell cell = cells[row, col];
+                    if (cell.Type == CellValueType.IsString)
                     {
-                        Cell cell = sheet.Cells[row, col];
-
-                        // Process only string cells.
-                        if (cell.Type == CellValueType.IsString)
+                        string original = cell.StringValue;
+                        string replaced = regex.Replace(original, replacement);
+                        if (!original.Equals(replaced))
                         {
-                            string originalText = cell.StringValue;
-                            string newText = regex.Replace(originalText, replacement);
-
-                            // Update the cell only if the text has changed.
-                            if (!originalText.Equals(newText))
-                            {
-                                cell.PutValue(newText);
-                            }
+                            cell.PutValue(replaced);
                         }
                     }
                 }
             }
+        }
 
-            // Save the modified workbook.
+        try
+        {
+            // Save the modified workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
+    }
+
+    // Creates a simple workbook with a placeholder for demonstration purposes.
+    private static Workbook CreateSampleWorkbook()
+    {
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        ws.Cells["A1"].PutValue("This is a {PLACEHOLDER} example.");
+        ws.Cells["B2"].PutValue("{PLACEHOLDER} appears again.");
+        return wb;
     }
 }

@@ -1,29 +1,33 @@
-// Title: How to trim leading and trailing spaces from string cells in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# routine that loads an .xlsx workbook with Aspose.Cells, walks through every used cell, removes surrounding spaces from string values, and writes the cleaned file. | Create a helper method that takes source and destination paths, strips leading and trailing blanks from all text cells in the workbook, and returns the saved file location. | Adjust the sample loop so it only writes back cells whose trimmed text differs from the original, using Aspose.Cells APIs.
-// Common Searches: Aspose.Cells C# remove extra spaces from all string cells in an Excel file | C# code to strip whitespace in Excel worksheet using Aspose.Cells library | How to clean up leading and trailing spaces in Excel cells programmatically with Aspose.Cells | Iterate used range and clean cell text in .NET Aspose.Cells example
-// Tags: trim whitespace Aspose.Cells C# | remove leading and trailing spaces Excel .NET | iterate used range cells Aspose.Cells | string cell cleanup Aspose.Cells | save modified workbook Aspose.Cells
+// Title: Trim leading and trailing whitespace from every string cell in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# function that loads an .xlsx file with Aspose.Cells, walks through each worksheet's data range, trims whitespace from string cells, and saves the cleaned workbook to a new file. | Generate reusable C# code that accepts input and output paths, uses Aspose.Cells to eliminate leading and trailing spaces from all string values, and updates a cell only when the trimmed text differs from the original. | Create a C# snippet demonstrating how to identify string cells, apply String.Trim(), and write the trimmed value back using the Cell.PutValue method in Aspose.Cells.
+// Common Searches: aspacells c# remove whitespace from excel cells | how to trim spaces in string cells using Aspose.Cells .NET | loop through worksheet data range and clean string values Aspose.Cells C# example | export cleaned Excel file with Aspose.Cells after removing extra spaces | c# program to trim leading and trailing spaces in Excel file using Aspose
+// Tags: Aspose.Cells cell value trimming | Excel workbook string sanitization Aspose.Cells | Selective cell update Aspose.Cells | .NET Excel batch cell processing | Aspose.Cells string cleanup
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace TrimCellWhitespace
+// // Loads an Excel workbook with Aspose.Cells, iterates over every worksheet's used range, trims leading and trailing whitespace from cells containing strings, writes back only when the value changes, and saves the result to a new .xlsx file.
+class Program
 {
-    // The program loads an Excel workbook with Aspose.Cells, iterates over the used range, trims leading and trailing spaces from each string cell, updates only cells whose values changed, and saves the cleaned workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Get the cells collection of the current worksheet
+            Cells cells = sheet.Cells;
 
-            // Get the first worksheet (or iterate through all worksheets if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Determine the used range (last row and column with data)
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
 
-            // Iterate over the used range of cells
-            for (int row = 0; row <= cells.MaxDataRow; row++)
+            // Loop through all cells in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                for (int col = 0; col <= cells.MaxDataColumn; col++)
+                for (int col = 0; col <= maxColumn; col++)
                 {
                     Cell cell = cells[row, col];
 
@@ -31,6 +35,8 @@ namespace TrimCellWhitespace
                     if (cell.Type == CellValueType.IsString)
                     {
                         string original = cell.StringValue;
+
+                        // Trim leading and trailing whitespace
                         string trimmed = original.Trim();
 
                         // Update the cell only if trimming changed the value
@@ -41,9 +47,9 @@ namespace TrimCellWhitespace
                     }
                 }
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

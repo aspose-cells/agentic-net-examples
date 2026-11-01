@@ -1,90 +1,81 @@
-// Title: Insert a multi‑series line chart for quarterly product sales into an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a line chart showing quarterly sales for several products on the same worksheet, including setting the X‑axis categories and series names. | Demonstrate how to add a line chart, configure its title, assign category data, add multiple data series, and save the workbook as an .xlsx file using Aspose.Cells in C#.
-// Common Searches: how to add a line chart with multiple data series in Aspose.Cells C# | Aspose.Cells create quarterly sales line graph for several products | C# Aspose.Cells set category axis range for line chart | save Excel workbook with line chart using Aspose.Cells .NET | Aspose.Cells line chart marker customization C# example
-// Tags: Aspose.Cells add line chart multiple series | Aspose.Cells set chart category data range | Aspose.Cells configure line chart title | Aspose.Cells save workbook with chart xlsx | Aspose.Cells line chart marker type C#
+// Title: Create a multi‑series line chart for quarterly product sales in an Aspose.Cells worksheet (C#)
+// Common Searches: how to create a line chart with multiple series in Aspose.Cells using C# | Aspose.Cells C# example adding quarterly sales data to a line chart | setting category axis labels from a cell range in an Aspose.Cells line chart | populate worksheet with sales figures and generate a line chart programmatically using Aspose.Cells | Aspose.Cells NSeries.Add using cell range reference C#
+// Tags: Aspose.Cells add line chart programmatically | C# define chart series from cell range | Aspose.Cells set X axis categories from worksheet | populate Excel worksheet with quarterly sales data | save workbook as Excel file using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The sample creates a new workbook, writes quarter labels and sales numbers for three products into cells A1:D5, adds a Line chart covering rows 6‑20, sets the chart title, adds three series referencing the product columns via cell ranges, assigns the quarter column as the X‑axis category labels, customizes each series name, and saves the file as 'QuarterlySalesLineChart.xlsx'.
+class LineChartExample
 {
-    // The example creates a new workbook, populates it with quarterly sales data for three products, adds a line chart that uses the quarter column as the X‑axis and each product column as a separate series, sets a chart title, optionally configures markers, and saves the file as QuarterlySalesLineChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample sales data
+            // Header row
+            cells["A1"].PutValue("Quarter");
+            cells["B1"].PutValue("Product A");
+            cells["C1"].PutValue("Product B");
+            cells["D1"].PutValue("Product C");
+
+            // Data rows
+            string[] quarters = { "Q1", "Q2", "Q3", "Q4" };
+            double[,] sales = {
+                { 12000, 15000, 13000 },
+                { 14000, 16000, 15500 },
+                { 13000, 17000, 16500 },
+                { 15000, 18000, 17500 }
+            };
+
+            for (int i = 0; i < quarters.Length; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Fill sample sales data (quarters vs products)
-                sheet.Cells["A1"].PutValue("Quarter");
-                sheet.Cells["B1"].PutValue("Product A");
-                sheet.Cells["C1"].PutValue("Product B");
-                sheet.Cells["D1"].PutValue("Product C");
-
-                // Quarter labels
-                sheet.Cells["A2"].PutValue("Q1");
-                sheet.Cells["A3"].PutValue("Q2");
-                sheet.Cells["A4"].PutValue("Q3");
-                sheet.Cells["A5"].PutValue("Q4");
-
-                // Sales figures
-                sheet.Cells["B2"].PutValue(12000);
-                sheet.Cells["B3"].PutValue(15000);
-                sheet.Cells["B4"].PutValue(13000);
-                sheet.Cells["B5"].PutValue(17000);
-
-                sheet.Cells["C2"].PutValue(10000);
-                sheet.Cells["C3"].PutValue(14000);
-                sheet.Cells["C4"].PutValue(11000);
-                sheet.Cells["C5"].PutValue(16000);
-
-                sheet.Cells["D2"].PutValue(9000);
-                sheet.Cells["D3"].PutValue(12000);
-                sheet.Cells["D4"].PutValue(11500);
-                sheet.Cells["D5"].PutValue(15000);
-
-                // Add a line chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 0, 25, 10);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set chart title
-                chart.Title.Text = "Quarterly Sales Comparison";
-
-                // Set category (X‑axis) data
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // Add series for each product
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries[0].Name = "Product A";
-
-                chart.NSeries.Add("C2:C5", true);
-                chart.NSeries[1].Name = "Product B";
-
-                chart.NSeries.Add("D2:D5", true);
-                chart.NSeries[2].Name = "Product C";
-
-                // Optional: format chart markers (if supported by the library version)
-                // Uncomment the following lines if Marker.Type is available in your Aspose.Cells version.
-                // chart.NSeries[0].Marker.Type = MarkerType.Circle;
-                // chart.NSeries[1].Marker.Type = MarkerType.Circle;
-                // chart.NSeries[2].Marker.Type = MarkerType.Circle;
-
-                // Save the workbook
-                string outputPath = "QuarterlySalesLineChart.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                cells[i + 1, 0].PutValue(quarters[i]);               // Column A: Quarter
+                cells[i + 1, 1].PutValue(sales[i, 0]);               // Column B: Product A
+                cells[i + 1, 2].PutValue(sales[i, 1]);               // Column C: Product B
+                cells[i + 1, 3].PutValue(sales[i, 2]);               // Column D: Product C
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Add a line chart to the worksheet
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 6, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set chart title
+            chart.Title.Text = "Quarterly Sales Comparison";
+
+            // Define the data range for categories (quarters)
+            int firstDataRow = 1; // Row index of first data row (excluding header)
+            int lastDataRow = firstDataRow + quarters.Length - 1;
+            int categoryColumn = 0; // Column A
+
+            // Add series for each product using the range address (RefersTo)
+            chart.NSeries.Add(sheet.Cells.CreateRange(firstDataRow, 1, quarters.Length, 1).RefersTo, true); // Product A
+            chart.NSeries.Add(sheet.Cells.CreateRange(firstDataRow, 2, quarters.Length, 1).RefersTo, true); // Product B
+            chart.NSeries.Add(sheet.Cells.CreateRange(firstDataRow, 3, quarters.Length, 1).RefersTo, true); // Product C
+
+            // Set the category (X) axis labels to the quarters
+            chart.NSeries.CategoryData = sheet.Cells.CreateRange(firstDataRow, categoryColumn, quarters.Length, 1).RefersTo;
+
+            // Optional: Customize series names
+            chart.NSeries[0].Name = "Product A";
+            chart.NSeries[1].Name = "Product B";
+            chart.NSeries[2].Name = "Product C";
+
+            // Save the workbook to a file
+            workbook.Save("QuarterlySalesLineChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

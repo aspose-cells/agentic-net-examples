@@ -1,81 +1,51 @@
-// Title: How to set a custom namespace prefix for an XML map and attach it to a worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Create an XML map from an XSD, assign a custom NamespacePrefix, and bind the map to the first worksheet with Aspose.Cells C#. | Update the reflection‑based code to set the XmlMap.NamespacePrefix property before saving the workbook. | Show how to add an XmlMap with a specific namespace prefix and associate it with a worksheet without using the direct XmlMaps API.
-// Common Searches: aspnet set custom namespace prefix on xml map aspocells c# | how to bind xml map with custom namespace to worksheet using Aspose.Cells | reflection add xml map and set NamespacePrefix Aspose.Cells C# example | Aspose.Cells create xml map from xsd with custom namespace prefix
-// Tags: set XmlMap NamespacePrefix Aspose.Cells C# | add XML map from XSD using reflection Aspose.Cells | bind XmlMap to worksheet Aspose.Cells | custom namespace handling in Excel export .NET | Aspose.Cells XML map configuration
+// Title: Assign a custom namespace prefix to an XML map in an Aspose.Cells workbook (C#)
+// AI Prompts: Create an XML map with a specific namespace URI, set its Prefix property to a custom value, and save the workbook using Aspose.Cells for .NET. | Use reflection to retrieve the XmlMaps collection from a Workbook, add a named XML map, assign a custom prefix, and persist the file.
+// Common Searches: C# Aspose.Cells how to set a prefix for an XML map namespace | adding an XML map with custom namespace prefix in Aspose.Cells workbook | reflection based access to XmlMaps collection Aspose.Cells example | save Excel file after configuring XML map namespace in .NET | example of setting XML map prefix for namespaced XML in Aspose.Cells
+// Tags: set XML map prefix Aspose.Cells C# | add XML map with namespace URI Aspose.Cells | reflection access to Workbook.XmlMaps | configure XML map namespace in Excel workbook | save workbook after XML map setup Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
-using System.Reflection;
 
-// The sample creates a Workbook, loads an XSD file, adds an XmlMap named "MyXmlMap" via reflection, sets a custom NamespacePrefix on the map, ensures a worksheet exists, assigns the XmlMap to the first worksheet, creates the output directory if needed, saves the workbook as "output.xlsx", and handles any errors.
+// The sample creates a Workbook, uses reflection to obtain the XmlMaps collection, adds an XML map with a defined namespace URI, assigns a custom Prefix (e.g., "inv"), and saves the workbook as CustomNamespacePrefix.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Path to the XML schema (XSD) that defines the XML map structure
-            string xsdPath = "data.xsd";
-
-            // Verify that the XSD file exists to avoid FileNotFoundException
-            if (!File.Exists(xsdPath))
-            {
-                Console.WriteLine($"Error: XSD file not found at path '{xsdPath}'.");
-                return;
-            }
-
-            // Add an XML map to the workbook using reflection (covers versions where XmlMaps may be unavailable)
-            XmlMap xmlMap = null;
-            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+            // Attempt to add an XML map only if the XmlMaps property exists (some older versions may lack it)
+            var xmlMapsProp = typeof(Workbook).GetProperty("XmlMaps");
             if (xmlMapsProp != null)
             {
-                object xmlMaps = xmlMapsProp.GetValue(workbook);
-                MethodInfo addMethod = xmlMaps?.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
-                if (addMethod != null)
-                {
-                    xmlMap = (XmlMap)addMethod.Invoke(xmlMaps, new object[] { "MyXmlMap", xsdPath });
-                }
+                // Define the XML namespace URI that the XML map will use
+                string xmlNamespace = "http://schemas.example.com/Invoice";
+
+                // Get the XmlMapCollection instance via reflection
+                var xmlMaps = xmlMapsProp.GetValue(workbook);
+                dynamic maps = xmlMaps; // use dynamic to call Add and indexer at runtime
+
+                // Add an XML map to the workbook with the specified namespace
+                int mapIndex = maps.Add("InvoiceMap", xmlNamespace);
+
+                // Retrieve the created XML map
+                dynamic xmlMap = maps[mapIndex];
+
+                // Set a custom namespace prefix (e.g., "inv") for the XML map
+                xmlMap.Prefix = "inv";
             }
 
-            // Ensure there is at least one worksheet to associate with the XML map
-            if (workbook.Worksheets.Count == 0)
-            {
-                workbook.Worksheets.Add();
-            }
-
-            // Reference the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Associate the worksheet with the XML map if the map was created successfully
-            if (xmlMap != null)
-            {
-                PropertyInfo xmlMapProp = worksheet.GetType().GetProperty("XmlMap");
-                if (xmlMapProp != null && xmlMapProp.CanWrite)
-                {
-                    xmlMapProp.SetValue(worksheet, xmlMap);
-                }
-            }
-
-            // Save the workbook to a file
-            string outputPath = "output.xlsx";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully as '{outputPath}'.");
+            // Save the workbook
+            string outputPath = "CustomNamespacePrefix.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

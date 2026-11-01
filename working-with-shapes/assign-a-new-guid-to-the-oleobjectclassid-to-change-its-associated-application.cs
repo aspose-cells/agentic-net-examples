@@ -1,53 +1,50 @@
-// Title: Assign a new GUID to an OleObject's Name property in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, retrieves the first OleObject on the first worksheet, sets its Name to a newly generated GUID, and saves the workbook. | Show how to programmatically replace the identifier of an embedded OLE object in Excel by assigning a fresh GUID to the OleObject.Name using the Aspose.Cells .NET API.
-// Common Searches: how to set a new GUID for an OleObject name with Aspose.Cells C# | Aspose.Cells change OleObject identifier in an Excel file | C# generate GUID and assign to embedded OLE object using Aspose.Cells | update OleObject Name property programmatically in .NET workbook
-// Tags: Aspose.Cells set OleObject Name GUID | C# update OleObject identifier Aspose.Cells | modify embedded OLE object name .NET | generate GUID for Excel OLE object Aspose.Cells | change OleObject application reference via GUID
+// Title: How to assign a new GUID to OleObject.ClassId in Aspose.Cells for .NET to change the linked application
+// AI Prompts: Generate C# code that creates an OLE placeholder in a worksheet using Aspose.Cells, generates a GUID, and sets the OleObject.ClassId property to that GUID before saving the workbook. | Show how to retrieve an existing OleObject from an Aspose.Cells workbook and assign a custom GUID to its ClassId property to redirect the OLE object to a different application.
+// Common Searches: Aspose.Cells C# set custom GUID for OleObject ClassId to change application association | How to change the linked application of an OLE object in an Excel file using Aspose.Cells .NET | Assigning a new ClassId to an OleObject in an Aspose.Cells workbook example
+// Tags: Aspose.Cells set OleObject ClassId GUID | C# assign custom GUID to OLE object | modify OLE object application link Aspose.Cells | OleObject ClassId property .NET | Excel OLE placeholder Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an existing Excel workbook, checks for at least one OleObject on the first worksheet, assigns a newly generated GUID string to the OleObject's Name property, and saves the modified file.
+// This example demonstrates creating a workbook with Aspose.Cells, adding an empty OLE object, and shows where to generate and assign a new GUID to the OleObject.ClassId property so the OLE object points to a different application before saving the file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet (adjust index if needed)
+            // Create a new workbook and get the first worksheet.
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one OleObject on the sheet
-            if (sheet.OleObjects.Count > 0)
-            {
-                // Access the first OleObject
-                OleObject ole = sheet.OleObjects[0];
+            // Add an empty OLE object. The Add method expects a byte array for the OLE data.
+            // An empty byte array creates a placeholder object.
+            byte[] emptyOleData = new byte[0];
+            int oleIndex = sheet.OleObjects.Add(1, 1, 100, 100, emptyOleData);
 
-                // Assign a new GUID (as string) to the object's name as an example modification
-                ole.Name = Guid.NewGuid().ToString();
+            // Retrieve the newly added OLE object.
+            OleObject oleObject = sheet.OleObjects[oleIndex];
+
+            // Optional: set a display name.
+            // oleObject.Name = "MyOleObject";
+
+            // Determine output path and ensure its directory exists.
+            string outputPath = "Output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the modified workbook
+            // Save the workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

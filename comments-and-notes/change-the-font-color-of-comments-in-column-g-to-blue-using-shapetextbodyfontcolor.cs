@@ -1,51 +1,65 @@
-// Title: Set the font color of Excel comments in column G to blue using Aspose.Cells Shape.TextBody in C#
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, finds all comments in column G, and changes their text color to blue via the comment's Shape.TextBody Font settings. | Write a .NET method that iterates over a worksheet's CommentCollection, filters comments located in column G, and applies Color.Blue to each FontSetting inside the comment's TextBody. | Create a script that loads an existing workbook, updates the font color of comment shapes in column G to blue using Aspose.Cells, and saves the modified file.
-// Common Searches: Aspose.Cells C# change comment text color for specific column | How to set comment font color to blue in Excel using Aspose.Cells .NET | Iterate comments in column G and modify shape text color with Aspose.Cells | C# code to update comment shape color in an existing workbook using Aspose.Cells
-// Tags: Aspose.Cells comment visual formatting | C# adjust comment font hue | Shape.TextBody Font.Color usage | Excel column G comment update | Aspose.Cells modify comment appearance
+// Title: Set the font color of Excel comments in column G to blue using Aspose.Cells Shape.Font in C#
+// Common Searches: C# Aspose.Cells change comment text color to blue for a specific column | How to modify Excel comment font color in column G using Shape.Font with Aspose.Cells | Programmatically set blue font for comments in column G using Aspose.Cells .NET | Aspose.Cells iterate comments and apply font color change in C# | Set comment shape font color in Excel file with Aspose.Cells C# example
+// Tags: Aspose.Cells comment shape font color C# | Shape.Font.Color usage Aspose.Cells | Excel comment formatting Aspose.Cells | C# iterate worksheet comments Aspose.Cells | apply font color to comment shape
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using Aspose.Cells.Drawing;   // Required for Shape classes
 
-// The program loads an Excel workbook, scans the first worksheet for comments located in column G, accesses each comment's Shape.TextBody, sets the Font.Color of all FontSetting objects to blue, and saves the workbook.
-class ChangeCommentFontColor
+// The C# program loads an Excel workbook, loops through all comments on the first worksheet, and for each comment located in column G (index 6) it sets the comment shape's font color to blue via the Shape.Font.Color property, then saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet (adjust if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Get the collection of comments on the worksheet
-        CommentCollection comments = worksheet.Comments;
-
-        // Iterate through all comments
-        for (int i = 0; i < comments.Count; i++)
+        try
         {
-            Comment comment = comments[i];
-
-            // Check if the comment is in column G (zero‑based index 6)
-            if (comment.Column == 6)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Get the shape associated with the comment
-                Shape commentShape = comment.CommentShape;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Access the TextBody collection of the shape
-                FontSettingCollection textBody = commentShape.TextBody;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Apply blue color to all font settings within the TextBody
-                foreach (FontSetting fontSetting in textBody)
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Column G has zero‑based index 6
+            const int targetColumn = 6;
+
+            // Iterate through all comments in the worksheet
+            foreach (Comment comment in sheet.Comments)
+            {
+                // Process only comments that are in column G
+                if (comment.Column == targetColumn && comment.CommentShape != null)
                 {
-                    fontSetting.Font.Color = Color.Blue;
+                    // Change the font color of the entire comment text to blue
+                    comment.CommentShape.Font.Color = Color.Blue;
                 }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

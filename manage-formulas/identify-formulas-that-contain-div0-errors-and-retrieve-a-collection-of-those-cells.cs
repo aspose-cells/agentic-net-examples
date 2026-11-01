@@ -1,85 +1,89 @@
-// Title: Find and list all #DIV/0! error cells in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, forces a full formula recalculation, and returns a List<Cell> containing every cell whose value is the #DIV/0! error. | Extend the previous example to apply a red background style to each #DIV/0! cell while still outputting their addresses and worksheet names.
-// Common Searches: aspocells c# find cells containing #DIV/0! error | how to list division by zero error cells in Excel using Aspose.Cells .NET | enumerate formula error values in a workbook with Aspose.Cells | retrieve addresses of #DIV/0! cells from used range Aspose.Cells C# | scan worksheets for Excel error values with Aspose.Cells
-// Tags: detect #DIV/0! errors Aspose.Cells | collect cells with division by zero error .NET | enumerate formula error cells Excel Aspose | scan worksheets used range for error values | highlight #DIV/0! cells Aspose.Cells
+// Title: Locate #DIV/0! formula errors in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# find cells that return #DIV/0! error | C# iterate worksheets to collect division by zero formula errors using Aspose.Cells | Get list of cell addresses with #DIV/0! result in an Excel file with Aspose.Cells .NET
+// Tags: Aspose.Cells detect division by zero error | C# collect formula error cells | Aspose.Cells iterate used range | Excel #DIV/0! error extraction .NET | list error cell addresses Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
 
-// The code loads a workbook, recalculates all formulas, iterates each worksheet's used range, gathers cells whose value equals "#DIV/0!", and prints their addresses together with the worksheet name. Optional styling can be added to highlight those cells.
-class DivZeroFinder
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an Excel file with Aspose.Cells, walks through each worksheet's used range, checks each formula cell for a #DIV/0! error by verifying Cell.Type is IsError and StringValue equals "#DIV/0!", adds matching cells to a list, and prints the worksheet name and cell address for every division‑by‑zero error found.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            Workbook workbook;
-            try
-            {
-                // Load the workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception loadEx)
-            {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
-            }
-
-            // Calculate all formulas so error values are up‑to‑date
-            try
-            {
-                workbook.CalculateFormula();
-            }
-            catch (Exception calcEx)
-            {
-                Console.WriteLine($"Formula calculation error: {calcEx.Message}");
-            }
-
-            // List to hold cells that contain #DIV/0! errors
-            List<Cell> divZeroCells = new List<Cell>();
-
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Get the used range of the worksheet
-                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-
-                // Iterate through each cell in the used range
-                foreach (Cell cell in usedRange)
-                {
-                    // Check if the cell contains an error value and if it is #DIV/0!
-                    if (cell.Type == CellValueType.IsError && cell.StringValue == "#DIV/0!")
-                    {
-                        divZeroCells.Add(cell);
-                    }
-                }
-            }
-
-            // Output the addresses of the cells with #DIV/0! errors
-            Console.WriteLine("Cells containing #DIV/0! errors:");
-            foreach (Cell errCell in divZeroCells)
-            {
-                Console.WriteLine($"{errCell.Name} (Worksheet: {errCell.Worksheet.Name})");
-            }
-
-            // (Optional) Save the workbook if you made any changes
-            // workbook.Save("output.xlsx");
+            // Load the workbook
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
         }
+
+        // Collection to store cells that contain #DIV/0! errors
+        List<Cell> divZeroCells = new List<Cell>();
+
+        try
+        {
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Determine the used range of the worksheet
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Loop through each cell in the used range
+                for (int row = startRow; row <= endRow; row++)
+                {
+                    for (int col = startCol; col <= endCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Process only cells that contain a formula
+                        if (cell.IsFormula)
+                        {
+                            // Check if the formula result is a #DIV/0! error
+                            if (cell.Type == CellValueType.IsError && cell.StringValue == "#DIV/0!")
+                            {
+                                divZeroCells.Add(cell);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            return;
+        }
+
+        // Output the addresses of cells with #DIV/0! errors
+        foreach (Cell errCell in divZeroCells)
+        {
+            Console.WriteLine($"Sheet: {errCell.Worksheet.Name}, Cell: {errCell.Name}");
+        }
+
+        // If you need to save any changes, uncomment the line below
+        // workbook.Save("output.xlsx");
     }
 }

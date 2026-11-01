@@ -1,28 +1,59 @@
-// Title: Refresh all pivot tables in an XLSX workbook after disabling pivot cache parsing with Aspose.Cells for .NET
-// AI Prompts: Open an XLSX file using Aspose.Cells LoadOptions with ParsingPivotCachedRecords set to false, refresh every pivot table, and save the result. | Load a workbook without parsing pivot cached records, invoke the RefreshPivotTables method programmatically, and export the updated file using C#.
-// Common Searches: Aspose.Cells how to disable pivot cache parsing and refresh pivots in C# | load xlsx without pivot cached records then refresh pivot tables using .NET | refresh all pivot tables after opening workbook with ParsingPivotCachedRecords false | C# Aspose.Cells load workbook with custom LoadOptions and update pivot tables
-// Tags: disable pivot cache parsing Aspose.Cells | update pivot tables after workbook load Aspose.Cells | LoadOptions ParsingPivotCachedRecords false example | load workbook with custom LoadOptions Aspose.Cells | Aspose.Cells C# programmatic pivot update
+// Title: How to refresh all pivot tables after loading an Excel workbook with ParsingPivotCachedRecords set to false using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells load Excel file without parsing pivot cache and refresh pivot tables C# | C# disable ParsingPivotCachedRecords and recalculate pivot tables after workbook load | Refresh all pivot tables programmatically after opening workbook with Aspose.Cells LoadOptions | Skip cached pivot records when loading Excel with Aspose.Cells and update pivot data | Use LoadOptions.ParsingPivotCachedRecords false to refresh pivot tables in .NET
+// Tags: load workbook with ParsingPivotCachedRecords Aspose.Cells | refresh pivot tables programmatically C# | pivot table calculate data Aspose.Cells | skip pivot cache load options .NET | iterate worksheets pivot tables Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Ensure PivotTable type is available
 
-// // Load an XLSX workbook with pivot cache parsing turned off, refresh all pivot tables, and save the updated file using Aspose.Cells for .NET.
+// The example demonstrates loading an Excel workbook using Aspose.Cells with LoadOptions.ParsingPivotCachedRecords set to false, iterating through each worksheet to refresh and recalculate all pivot tables, and then saving the updated workbook. It includes input file validation and exception handling.
 class Program
 {
     static void Main()
     {
-        // Create load options and disable parsing of pivot cached records
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.ParsingPivotCachedRecords = false;
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Load the workbook with the specified options
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Refresh all pivot tables in the workbook
-        workbook.Worksheets.RefreshPivotTables();
+            // Configure load options to skip parsing cached pivot records
+            LoadOptions loadOptions = new LoadOptions
+            {
+                ParsingPivotCachedRecords = false
+            };
 
-        // Save the updated workbook
-        workbook.Save("output.xlsx");
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Iterate through all worksheets and refresh each pivot table
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pivotTable in sheet.PivotTables)
+                {
+                    // Refresh the data source of the pivot table
+                    pivotTable.RefreshData();
+
+                    // Recalculate the pivot table after data refresh
+                    pivotTable.CalculateData();
+                }
+            }
+
+            // Save the workbook after refreshing pivot tables
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

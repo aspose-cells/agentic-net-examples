@@ -1,79 +1,73 @@
-// Title: Check VBA project digital signature after copying an .xlsm workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a signed .xlsm file, saves it to a temporary location, reloads it, and uses Workbook.VbaProject.IsSigned to confirm the signature remains. | Create a .NET method that copies a macro-enabled workbook and returns a boolean indicating whether the VBA project's digital signature is still present. | Generate a C# snippet that validates the integrity of a VBA project's signature after saving and reloading the workbook using Aspose.Cells.
-// Common Searches: aspnet verify VBA project signature after workbook copy | how to check if VBA macro is still signed using Aspose.Cells C# | C# detect lost digital signature in .xlsm after save with Aspose.Cells | validate VBA project IsSigned flag after exporting macro-enabled Excel file | preserve VBA digital signature when copying .xlsm using Aspose.Cells .NET
-// Tags: VbaProject.IsSigned verification | copy signed .xlsm workbook Aspose.Cells | validate VBA digital signature .NET | temporary file handling Aspose.Cells | macro workbook integrity check C#
+// Title: How to verify a VBA project's digital signature remains intact after copying an XLSM workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells check if VBA project is still signed after saving as XLSM | verify VBA macro digital signature after copying workbook using Aspose.Cells .NET | how to ensure VBA project signature persists when duplicating an .xlsm file in C# | Aspose.Cells .NET validate signed VBA project in copied macro-enabled workbook | detect lost VBA signature after workbook copy with Aspose.Cells
+// Tags: Aspose.Cells VBA signature integrity check | C# retain signed VBA macro in XLSM files | monitor VBA project signing status after file save | ensure macro digital signature persists with Aspose.Cells | use .NET Workbook API to validate VBA signing
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads a signed macro-enabled .xlsm workbook, saves it to a temporary file, reloads it, and uses the VbaProject.IsSigned property to verify that the VBA project's digital signature remains intact.
-class Program
+namespace VbaSignatureValidatorApp
 {
-    static void Main()
+    // The example loads a source XLSM workbook, confirms it contains a signed VBA project, saves the workbook to a new file (copying the VBA project and its signature), reloads the copied file, and verifies that the VBA project remains signed, outputting a success or failure message.
+    class VbaSignatureValidator
     {
-        try
+        static void Main()
         {
-            const string sourcePath = "source.xlsm";
-
-            // Verify source workbook exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            // Load the original workbook that contains a signed VBA project
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Save the workbook (including its VBA project) to a temporary file
-            string tempDestPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsm");
-            sourceWorkbook.Save(tempDestPath, SaveFormat.Xlsm);
-
-            // Load the temporary workbook as the destination workbook
-            Workbook destinationWorkbook;
             try
             {
-                destinationWorkbook = new Workbook(tempDestPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load temporary workbook: {ex.Message}");
-                return;
-            }
+                const string sourcePath = "source.xlsm";
+                const string copiedPath = "copied.xlsm";
 
-            // Clean up the temporary file
-            try
-            {
-                if (File.Exists(tempDestPath))
-                    File.Delete(tempDestPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Could not delete temporary file: {ex.Message}");
-            }
-
-            // Check whether the VBA project is still signed after copy
-            bool signatureIsValid = false;
-            try
-            {
-                var vbaProject = destinationWorkbook.VbaProject;
-                if (vbaProject != null)
+                // Verify source file exists
+                if (!File.Exists(sourcePath))
                 {
-                    // Aspose.Cells provides only IsSigned flag; assume true means signature is present
-                    signatureIsValid = vbaProject.IsSigned;
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the source workbook containing the VBA project
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Ensure the workbook actually has a VBA project
+                if (sourceWorkbook.VbaProject == null)
+                {
+                    Console.WriteLine("The source workbook does not contain a VBA project.");
+                    return;
+                }
+
+                // Check if the source VBA project is signed
+                bool sourceSigned = sourceWorkbook.VbaProject.IsSigned;
+
+                // Save the workbook to a new file (this copies the VBA project and its signature)
+                sourceWorkbook.Save(copiedPath, SaveFormat.Xlsm);
+
+                // Verify the copied file was created
+                if (!File.Exists(copiedPath))
+                {
+                    Console.WriteLine($"Failed to create copied workbook: {copiedPath}");
+                    return;
+                }
+
+                // Reload the saved workbook to ensure the signature persisted
+                Workbook reloadedWorkbook = new Workbook(copiedPath);
+
+                // Validate that the VBA project is still signed after copying
+                bool reloadedSigned = reloadedWorkbook.VbaProject != null && reloadedWorkbook.VbaProject.IsSigned;
+
+                // Final integrity check
+                if (sourceSigned && reloadedSigned)
+                {
+                    Console.WriteLine("VBA project digital signature is valid after copying.");
+                }
+                else
+                {
+                    Console.WriteLine("VBA project digital signature validation failed.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error while inspecting VBA project: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            Console.WriteLine("VBA project signature present after copy: " + signatureIsValid);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

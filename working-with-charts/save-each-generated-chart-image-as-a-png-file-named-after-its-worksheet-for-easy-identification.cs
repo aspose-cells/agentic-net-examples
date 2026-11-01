@@ -1,55 +1,57 @@
-// Title: Save each chart in an Excel workbook as a PNG file named with its worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, iterates over every worksheet and its charts, and writes each chart to a PNG file whose name combines the worksheet name and chart sequence number. | Show how to call Aspose.Cells' Chart.ToImage method in a .NET console app to export charts to PNG images while applying a custom filename pattern based on the parent worksheet.
-// Common Searches: Aspose.Cells export chart to PNG with worksheet name in filename C# | How to loop through worksheets and save each chart as a separate image using Aspose.Cells | C# batch export Excel charts to PNG files Aspose.Cells example | Save Excel chart images with sheet-specific filenames using Aspose.Cells .NET | Chart.ToImage custom file naming pattern Aspose.Cells
-// Tags: export charts to PNG with Aspose.Cells | chart.ToImage filename customization | iterate worksheets save chart images C# | batch chart image extraction Aspose.Cells | worksheet-based chart file naming .NET
+// Title: Export Excel worksheet charts to PNG files named after each worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, loops through each worksheet, and saves every chart as a PNG file whose name is derived from the worksheet title, adding an index when a sheet has more than one chart. | Show a robust C# example that checks for the source .xlsx file, catches errors, and uses Aspose.Cells to generate PNG images for all charts while creating unique filenames per worksheet.
+// Common Searches: C# Aspose.Cells save each chart from an Excel file as a separate PNG using worksheet names | How to export multiple charts on one sheet to PNG with distinct filenames in .NET | Aspose.Cells generate PNG images for all charts in a workbook programmatically | Create unique image files for Excel charts based on sheet name in C# | Iterate over worksheets and export charts to PNG with Aspose.Cells example
+// Tags: Aspose.Cells export chart to PNG | chart image naming by worksheet | C# iterate workbook charts | multiple chart PNG export Aspose.Cells | dynamic filename generation for Excel chart images
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace ChartImageExporterApp
+// The sample verifies that 'input.xlsx' exists, loads it with Aspose.Cells, iterates through every worksheet and each chart on those sheets, and uses Chart.ToImage to export each chart as a PNG file named after its worksheet (appending an index when a sheet contains several charts). It logs each export and handles exceptions gracefully.
+class Program
 {
-    // The program loads an Excel workbook, walks through each worksheet and its charts, and saves every chart as a PNG file whose name includes the worksheet name and chart index.
-    class ChartImageExporter
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int chartIndex = 0; // counter for multiple charts on the same sheet
+
+                // Iterate through all charts on the current worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+                    // Build the PNG file name using the worksheet name (and index if needed)
+                    string fileName = chartIndex == 0
+                        ? $"{sheet.Name}.png"
+                        : $"{sheet.Name}_{chartIndex}.png";
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                    // Export the chart to a PNG image
+                    chart.ToImage(fileName);
 
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Iterate through all charts on the current worksheet
-                    for (int i = 0; i < sheet.Charts.Count; i++)
-                    {
-                        Chart chart = sheet.Charts[i];
-
-                        // Build a file name using the worksheet name and chart index
-                        string fileName = $"{sheet.Name}_Chart{i + 1}.png";
-
-                        // Save the chart as a PNG image (default format)
-                        chart.ToImage(fileName);
-                        Console.WriteLine($"Chart saved: {fileName}");
-                    }
+                    Console.WriteLine($"Chart exported to '{fileName}'.");
+                    chartIndex++;
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,129 +1,117 @@
-// Title: Extract Excel shape text, font, and fill properties to JSON with Aspose.Cells in C#
-// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells, iterates every worksheet and its ShapeCollection, and writes each shape's name, type, text, font attributes (name, size, bold, color) and fill type into a JSON file. | Update the shape export example to also capture each shape's Top, Left, Width, and Height properties and include them in the JSON output using Aspose.Cells.
-// Common Searches: how to read shape text and font details from an Excel workbook using Aspose.Cells C# | Aspose.Cells C# export shape fill type and color to JSON | C# iterate worksheet shapes and serialize their properties with System.Text.Json | extract shape metadata name type position from Excel file using Aspose.Cells | save Excel shape information as JSON file in .NET
-// Tags: Aspose.Cells extract shape properties to JSON | C# serialize Excel shape metadata | Aspose.Cells shape text and font extraction | export shape fill type Aspose.Cells | read shape position and size Aspose.Cells
+// Title: Generate a JSON report of Excel shape dimensions, texture fill status, and text formatting using Aspose.Cells for .NET
+// Common Searches: C# extract shape geometry and fill type from an Excel workbook with Aspose.Cells | how to serialize Aspose.Cells shape properties to JSON in .NET | retrieve text content and font details of Excel shapes using Aspose.Cells API | export texture fill information of shapes in an .xlsx file via Aspose.Cells | list all shapes on each worksheet and output their attributes to a JSON file in C#
+// Tags: Aspose.Cells shape geometry extraction .NET | Excel shape texture fill detection using Aspose.Cells | Aspose.Cells retrieve shape text and font attributes | C# serialize shape collection to JSON file | iterate worksheet shapes with Aspose.Cells API
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace ShapePropertiesExport
+// The example loads an Excel workbook with Aspose.Cells, iterates through each worksheet's ShapeCollection, captures each shape's position, size, texture‑fill status, and any embedded text with its font properties, aggregates this data into a list of objects, and writes the list as a formatted JSON file for external reporting.
+class ShapeReportGenerator
 {
-    // Class representing the properties we want to export for each shape
-    // The example loads an Excel workbook with Aspose.Cells, loops through each worksheet and its ShapeCollection, gathers shape name, type, text, font details (name, size, bold, color) and fill type into a ShapeInfo object, then serializes the list to an indented JSON file named 'shape_properties.json'.
-    public class ShapeInfo
+    static void Main()
     {
-        public string? WorksheetName { get; set; }
-        public string? ShapeName { get; set; }
-        public string? ShapeType { get; set; }
-
-        // Text related properties (if applicable)
-        public string? Text { get; set; }
-        public string? FontName { get; set; }
-        public double? FontSize { get; set; }
-        public bool? FontBold { get; set; }
-        public string? FontColor { get; set; }
-
-        // Fill/texture related properties (if applicable)
-        public string? FillType { get; set; }
-        public string? FillForeColor { get; set; }
-        public string? FillBackColor { get; set; }
-        public string? FillTextureImagePath { get; set; }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "ShapeReport.json";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Path to the Excel file to be processed
-                string inputPath = "input.xlsx";
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // List to hold shape information for all worksheets
+            var shapeReport = new List<object>();
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                ShapeCollection shapes = sheet.Shapes;
+
+                // Process each shape on the worksheet
+                foreach (Shape shape in shapes)
                 {
-                    Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // List to hold shape information from all worksheets
-                List<ShapeInfo> shapesInfo = new List<ShapeInfo>();
-
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Access the collection of shapes on the current worksheet
-                    ShapeCollection shapes = sheet.Shapes;
-
-                    // Iterate through each shape
-                    foreach (Shape shape in shapes)
+                    try
                     {
-                        ShapeInfo info = new ShapeInfo
+                        // Basic shape information
+                        var shapeInfo = new Dictionary<string, object>
                         {
-                            WorksheetName = sheet.Name,
-                            ShapeName = shape.Name,
-                            ShapeType = shape.Type.ToString()
+                            { "Worksheet", sheet.Name },
+                            { "Name", shape.Name },
+                            { "Type", shape.Type.ToString() },
+                            { "Top", shape.Top },
+                            { "Left", shape.Left },
+                            { "Width", shape.Width },
+                            { "Height", shape.Height }
                         };
 
-                        // ----- Text settings (if the shape supports text) -----
+                        // Fill (texture) information
+                        FillFormat fill = shape.Fill;
+                        if (fill != null && fill.FillType == FillType.Texture)
+                        {
+                            // Texture image extraction is optional; Aspose.Cells may not expose the image directly
+                            shapeInfo.Add("TextureFill", new Dictionary<string, object>
+                            {
+                                { "Enabled", true },
+                                { "ImageBase64", null } // Placeholder when image data is unavailable
+                            });
+                        }
+                        else
+                        {
+                            shapeInfo.Add("TextureFill", new Dictionary<string, object>
+                            {
+                                { "Enabled", false }
+                            });
+                        }
+
+                        // Text and text formatting (if the shape contains text)
                         if (!string.IsNullOrEmpty(shape.Text))
                         {
-                            info.Text = shape.Text;
-
-                            // Font information is available via the Font property
-                            Font? font = shape.Font;
-                            if (font != null)
+                            Font font = shape.Font;
+                            shapeInfo.Add("Text", shape.Text);
+                            shapeInfo.Add("TextFormatting", new Dictionary<string, object>
                             {
-                                info.FontName = font.Name;
-                                info.FontSize = font.Size;
-                                info.FontBold = font.IsBold;
-                                // Convert the font color to a hex string for readability
-                                info.FontColor = $"#{font.Color.R:X2}{font.Color.G:X2}{font.Color.B:X2}";
-                            }
+                                { "FontName", font?.Name },
+                                { "FontSize", font?.Size },
+                                { "Bold", font?.IsBold ?? false },
+                                { "Italic", font?.IsItalic ?? false },
+                                { "Underline", font?.Underline.ToString() },
+                                { "Color", font != null ? font.Color.ToArgb() : (int?)null }
+                            });
                         }
 
-                        // ----- Fill settings (if the shape supports fill) -----
-                        FillFormat? fill = shape.Fill;
-                        if (fill != null)
-                        {
-                            info.FillType = fill.FillType.ToString();
-
-                            // Note: ForeColor, BackColor, and TextureImage properties are not available
-                            // in the current Aspose.Cells version used. If needed, they can be accessed
-                            // via alternative APIs in future updates.
-                        }
-
-                        shapesInfo.Add(info);
+                        // Add the collected information to the report list
+                        shapeReport.Add(shapeInfo);
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        Console.WriteLine($"Warning: Failed to process shape \"{shape.Name}\" on sheet \"{sheet.Name}\": {shapeEx.Message}");
                     }
                 }
-
-                // Serialize the collected shape information to JSON using System.Text.Json
-                var jsonOptions = new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-                };
-                string jsonOutput = JsonSerializer.Serialize(shapesInfo, jsonOptions);
-
-                // Write JSON to a file
-                string outputPath = "shape_properties.json";
-                File.WriteAllText(outputPath, jsonOutput);
-
-                Console.WriteLine($"Shape properties have been exported to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Serialize the report to JSON (using System.Text.Json)
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonReport = JsonSerializer.Serialize(shapeReport, jsonOptions);
+
+            // Write JSON to file
+            File.WriteAllText(outputPath, jsonReport);
+
+            Console.WriteLine("Shape report generated successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

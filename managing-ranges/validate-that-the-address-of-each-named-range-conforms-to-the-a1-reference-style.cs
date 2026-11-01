@@ -1,96 +1,62 @@
-// Title: Check that each named range’s RefersTo address conforms to A1 notation using Aspose.Cells for .NET
-// AI Prompts: Loop through workbook.Worksheets.Names and use CellArea.CreateCellArea to determine if each named range’s RefersTo string is a valid A1 reference. | Refactor the sample to throw a custom InvalidNamedRangeException when a RefersTo address does not meet A1 validation criteria. | Extend the validation logic to recognize and verify R1C1‑style references in named ranges in addition to A1 notation.
-// Common Searches: how to programmatically validate named range addresses in Excel with Aspose.Cells C# | C# Aspose.Cells verify that RefersTo strings follow A1 reference format | detect invalid named ranges when loading a workbook using Aspose.Cells for .NET | sample code to check A1 notation of defined names in an Excel file with Aspose.Cells
-// Tags: named range A1 validation Aspose.Cells | CellArea.CreateCellArea address check | RefersTo property format verification .NET | iterate defined names workbook Aspose.Cells | Excel range string normalization C#
+// Title: Check that all named ranges in an Excel workbook use A1 reference style with Aspose.Cells for .NET
+// Common Searches: how to ensure named ranges use A1 notation in Aspose.Cells C# | C# code to detect R1C1 references in Excel named ranges using Aspose.Cells | list named ranges and validate their address format with Aspose.Cells for .NET | validate Excel named range addresses are not R1C1 style in a .NET application | Aspose.Cells verify A1 reference style for workbook names
+// Tags: A1 reference style check for named ranges Aspose.Cells | R1C1 pattern detection in Excel names C# | enumerate workbook defined names Aspose.Cells | regex based Excel address validation .NET | named range address verification Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-// The example loads an Excel workbook, iterates over all defined names, extracts each name’s RefersTo address, normalizes it, and uses CellArea.CreateCellArea to confirm the address follows A1 notation, reporting valid or invalid results before saving the workbook.
+// The example loads an Excel workbook with Aspose.Cells, iterates through all defined names, uses a regular expression to identify R1C1‑style references, flags each named range as valid when its RefersTo string does not match the pattern (i.e., it follows A1 notation), outputs the results, and saves the workbook.
 class NamedRangeValidator
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the input file exists
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
             return;
         }
 
-        Workbook workbook;
+        Workbook workbook = null;
         try
         {
-            // Load the existing workbook
+            // Load the workbook (no password)
             workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
             return;
         }
 
-        // Iterate through all defined names (named ranges) in the workbook
+        // Regex to detect R1C1 style references (e.g., R1C1, R[1]C[1])
+        Regex r1c1Pattern = new Regex(@"R(\[?-?\d+\]?|)\s*C(\[?-?\d+\]?|)", RegexOptions.IgnoreCase);
+
+        // Iterate through all named ranges in the workbook
         foreach (Name namedRange in workbook.Worksheets.Names)
         {
-            // The RefersTo property contains the address, e.g. "=Sheet1!$A$1:$B$5"
-            string refersTo = namedRange.RefersTo;
+            string refersTo = namedRange.RefersTo; // Example: Sheet1!$A$1:$B$2
 
-            // Remove the leading '=' if present
-            if (!string.IsNullOrEmpty(refersTo) && refersTo.StartsWith("="))
-                refersTo = refersTo.Substring(1);
+            // Determine if the address conforms to A1 style (i.e., does NOT match R1C1 pattern)
+            bool isA1Style = !r1c1Pattern.IsMatch(refersTo);
 
-            // Extract the range part (ignore sheet name if present)
-            string rangePart = refersTo;
-            int exclIndex = refersTo.IndexOf('!');
-            if (exclIndex >= 0 && exclIndex < refersTo.Length - 1)
-                rangePart = refersTo.Substring(exclIndex + 1);
-
-            // Remove absolute reference symbols ('$') to simplify validation
-            rangePart = rangePart.Replace("$", "");
-
-            // Validate the range using CellArea.CreateCellArea (throws if invalid)
-            bool isValid = true;
-            try
-            {
-                // Split start and end cells; if only one cell is present, use it for both
-                string startCell, endCell;
-                int colonIdx = rangePart.IndexOf(':');
-                if (colonIdx >= 0)
-                {
-                    startCell = rangePart.Substring(0, colonIdx);
-                    endCell = rangePart.Substring(colonIdx + 1);
-                }
-                else
-                {
-                    startCell = endCell = rangePart;
-                }
-
-                // This will throw if the address is not a valid A1 style reference
-                CellArea.CreateCellArea(startCell, endCell);
-            }
-            catch
-            {
-                isValid = false;
-            }
-
-            // Output validation result
-            Console.WriteLine($"{namedRange.Text}: {(isValid ? "Valid" : "Invalid")} A1 address");
+            Console.WriteLine($"Named range '{namedRange.Text}' refers to '{refersTo}' -> {(isA1Style ? "Valid A1" : "Invalid (R1C1)")}.");
         }
 
-        // Save the workbook after processing
         try
         {
+            // Save the workbook (optional, if modifications were made)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

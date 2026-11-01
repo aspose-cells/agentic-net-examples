@@ -1,58 +1,80 @@
-// Title: Create a timeline‑style line chart with percentage data labels, customize label font size, and save it as a PNG image using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that builds a line chart from a date column and a numeric column, enables both value and percentage data labels, formats the labels as percentages, sets the label font size to 12 points, and exports the chart to a PNG file. | Modify the chart to display data labels with a custom number format like '0.0%' and change the label font color to red while keeping the PNG export unchanged. | Add a second series to the timeline chart, turn on data labels for both series, and generate separate PNG files for each series using Aspose.Cells.
-// Common Searches: how to show percentage data labels on a line chart with Aspose.Cells C# | set font size for chart data labels in Aspose.Cells .NET | export Aspose.Cells chart as PNG image from a workbook | create timeline chart using line series in Aspose.Cells | format chart data labels as percentages in Aspose.Cells
-// Tags: line chart label percentage formatting Aspose.Cells | save chart to PNG file Aspose.Cells .NET | chart data label font size adjustment C# | timeline chart built with line series Aspose.Cells | custom number format for chart labels Aspose.Cells | multiple series handling in Aspose.Cells chart
+// Title: Generate a timeline line chart with percentage data labels, custom font size, and export it as PNG using Aspose.Cells for .NET
+// AI Prompts: Create a line chart that uses dates on the X‑axis, display each point as a percentage label with a 12‑point font, and save the chart as a PNG image using Aspose.Cells in C#. | Add a timeline chart to a workbook, enable percentage data labels, adjust the label font size, and render the chart to a PNG file with Aspose.Cells for .NET.
+// Common Searches: how to show percentage data labels on a line chart with Aspose.Cells C# | set custom font size for chart data labels in Aspose.Cells .NET | export Aspose.Cells chart as PNG image | create timeline chart from date column using Aspose.Cells
+// Tags: line chart data labels percentage Aspose.Cells | custom data label font size C# Aspose.Cells | export chart to PNG Aspose.Cells .NET | timeline chart from dates Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, fills it with dates and values, adds a line chart as a timeline substitute, enables value and percentage data labels formatted as percentages, sets the label font size to 12 points, and saves the chart as a PNG image.
+// The example builds a workbook, fills it with date and value data, creates a line chart used as a timeline, enables percentage data labels with a 12‑point font, formats the labels as percentages, and saves the rendered chart as a PNG image.
 class TimelineChartExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet.
+            // Create a new workbook.
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data: dates in column A and values in column B.
+            // Populate sample data for the timeline.
+            // Column A: Dates (categories)
+            // Column B: Values
             sheet.Cells["A1"].PutValue("Date");
             sheet.Cells["B1"].PutValue("Value");
-            DateTime startDate = new DateTime(2023, 1, 1);
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[i + 1, 0].PutValue(startDate.AddMonths(i));
-                sheet.Cells[i + 1, 1].PutValue((i + 1) * 10); // arbitrary values
-            }
+            sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 1));
+            sheet.Cells["B3"].PutValue(45);
+            sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 1));
+            sheet.Cells["B4"].PutValue(25);
+            sheet.Cells["A5"].PutValue(new DateTime(2023, 4, 1));
+            sheet.Cells["B5"].PutValue(60);
 
-            // Add a Line chart (rows 6‑20, columns 0‑10) as a substitute for Timeline.
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            // Add a Line chart (used as a timeline representation).
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column.
+            int upperLeftRow = 7;
+            int upperLeftColumn = 0;
+            int lowerRightRow = 25;
+            int lowerRightColumn = 10;
+
+            // Add returns the index of the newly created chart.
+            int chartIndex = sheet.Charts.Add(ChartType.Line, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data series (values) and categories (dates).
-            chart.NSeries.Add("B2:B6", true);
-            chart.NSeries.CategoryData = "A2:A6";
+            // Set the data source for the chart.
+            // Category (X) values are in column A, series (Y) values are in column B.
+            chart.NSeries.Add("B2:B5", false);
+            chart.NSeries[0].XValues = "A2:A5";
 
-            // Enable data labels for the series.
-            // The HasDataLabel property may not be available in some versions; setting label options directly works.
-            chart.NSeries[0].DataLabels.ShowValue = true;          // Show the value.
-            chart.NSeries[0].DataLabels.ShowPercentage = true;    // Show percentage.
-
-            // Format the data label to display as a percentage.
-            chart.NSeries[0].DataLabels.NumberFormat = "0%";
+            // Show percentages on data labels.
+            chart.NSeries[0].DataLabels.ShowPercentage = true;
 
             // Adjust the font size of the data labels.
-            chart.NSeries[0].DataLabels.Font.Size = 12; // Desired font size.
+            chart.NSeries[0].DataLabels.Font.Size = 12; // Desired font size (e.g., 12 points).
 
-            // Save the workbook as a PNG image.
-            workbook.Save("TimelineChart.png", SaveFormat.Png);
+            // Optionally, set the number format for percentages.
+            chart.NSeries[0].DataLabels.NumberFormat = "0%";
+
+            // Determine output file path.
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "timeline.png");
+
+            // Ensure the directory exists.
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            Directory.CreateDirectory(outputDir ?? Directory.GetCurrentDirectory());
+
+            // Save the workbook as a PNG image (the chart will be rendered to the image).
+            workbook.Save(outputPath, SaveFormat.Png);
+            Console.WriteLine($"Timeline chart saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred while creating the timeline chart:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

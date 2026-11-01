@@ -1,14 +1,14 @@
-// Title: Log initialized cell count per worksheet and highlight sheets that exceed a specified threshold with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that opens an Excel file, iterates through each worksheet, counts non‑empty cells, writes the count to the console, and if the count is greater than a given threshold, sets the worksheet tab color to red and fills the used range with a light‑yellow background. | Modify the existing Aspose.Cells program to read the cell‑count threshold from a command‑line argument, allow the highlight color and background style to be configured, and ensure the cell count is logged for every sheet.
-// Common Searches: Aspose.Cells count non‑empty cells per worksheet in C# | C# highlight Excel worksheet tab when cell count exceeds limit using Aspose.Cells | apply background style to used range based on cell count Aspose.Cells | log worksheet initialized cell numbers and save modified workbook .NET | set worksheet tab color programmatically with Aspose.Cells after counting cells
-// Tags: count initialized cells per worksheet Aspose.Cells | highlight worksheets exceeding cell count threshold | apply tab color and background style Aspose.Cells | log worksheet cell counts .NET | use MaxDisplayRange to style used range Aspose.Cells | configure cell count threshold command line C#
+// Title: Count initialized cells per worksheet, log the totals, and highlight worksheets exceeding a threshold with Aspose.Cells for .NET
+// Common Searches: how to count non‑empty cells in each worksheet using Aspose.Cells C# | Aspose.Cells C# highlight worksheet tab when cell count exceeds limit | log worksheet initialized cell count and apply style with Aspose.Cells | set background color for cells that exceed a threshold in Aspose.Cells .NET | determine used range cell count per sheet Aspose.Cells C#
+// Tags: worksheet initialized cell counting Aspose.Cells | conditional tab coloring by cell total Aspose.Cells | apply yellow background to populated cells Aspose.Cells | cell count threshold formatting Aspose.Cells .NET | log worksheet cell metrics Aspose.Cells C#
 
-using Aspose.Cells;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, counts non‑empty cells in each worksheet, logs the counts, and for any sheet whose initialized cell count exceeds a defined threshold, it colors the tab red and applies a light‑yellow background to the used range before saving the file.
+// The example loads an Excel workbook with Aspose.Cells, iterates each worksheet to gather all non‑empty cells within the used range, logs the number of initialized cells, and if that number exceeds a defined threshold (e.g., 1000) it changes the worksheet tab color to red and applies a yellow solid background style to every populated cell before saving the modified file.
 class Program
 {
     static void Main()
@@ -18,71 +18,85 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Define the threshold for initialized cells
+            // Threshold for initialized cells per worksheet
             int threshold = 1000;
 
-            // Iterate through each worksheet
+            // Process each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Count initialized (non‑empty) cells
-                int initializedCount = 0;
-                foreach (Cell cell in sheet.Cells)
+                try
                 {
-                    if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                    // Collect all non‑empty cells within the used range
+                    List<Cell> nonEmptyCells = new List<Cell>();
+                    int maxRow = sheet.Cells.MaxDataRow;
+                    int maxCol = sheet.Cells.MaxDataColumn;
+
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        initializedCount++;
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
+                            // Determine if the cell contains a value
+                            if (cell.Value != null && !(cell.Value is string str && string.IsNullOrEmpty(str)))
+                            {
+                                nonEmptyCells.Add(cell);
+                            }
+                        }
+                    }
+
+                    int initializedCellCount = nonEmptyCells.Count;
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" has {initializedCellCount} initialized cells.");
+
+                    // Highlight if count exceeds threshold
+                    if (initializedCellCount > threshold)
+                    {
+                        // Set worksheet tab color to red
+                        sheet.TabColor = Color.Red;
+
+                        // Prepare highlight style
+                        Style highlightStyle = workbook.CreateStyle();
+                        highlightStyle.ForegroundColor = Color.Yellow;
+                        highlightStyle.Pattern = BackgroundType.Solid;
+
+                        // Apply highlight to each non‑empty cell
+                        foreach (Cell cell in nonEmptyCells)
+                        {
+                            Style existingStyle = cell.GetStyle();
+                            existingStyle.ForegroundColor = highlightStyle.ForegroundColor;
+                            existingStyle.Pattern = highlightStyle.Pattern;
+                            cell.SetStyle(existingStyle);
+                        }
                     }
                 }
-
-                // Log the count
-                Console.WriteLine($"Worksheet '{sheet.Name}' has {initializedCount} initialized cells.");
-
-                // Highlight worksheets exceeding the threshold
-                if (initializedCount > threshold)
+                catch (Exception ex)
                 {
-                    // Set the worksheet tab color to red
-                    sheet.TabColor = Color.Red;
-
-                    // Create a style for highlighting
-                    Style highlightStyle = workbook.CreateStyle();
-                    highlightStyle.ForegroundColor = Color.LightYellow;
-                    highlightStyle.Pattern = BackgroundType.Solid;
-
-                    StyleFlag flag = new StyleFlag
-                    {
-                        CellShading = true
-                    };
-
-                    try
-                    {
-                        // Apply the style to the used range
-                        Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-                        usedRange.ApplyStyle(highlightStyle, flag);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to apply style on sheet '{sheet.Name}': {ex.Message}");
-                    }
+                    Console.WriteLine($"Error processing worksheet \"{sheet.Name}\": {ex.Message}");
                 }
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

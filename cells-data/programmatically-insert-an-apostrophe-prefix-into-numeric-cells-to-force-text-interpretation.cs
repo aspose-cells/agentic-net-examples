@@ -1,51 +1,49 @@
-// Title: Add an apostrophe prefix to numeric cells to store them as text using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loops through a worksheet and enables the QuotePrefix flag on each numeric cell to force text storage. | Create a reusable style with QuotePrefix set to true and apply it via StyleFlag to numeric cells in an Aspose.Cells workbook. | Write a C# program that saves an Excel file where numbers appear with a leading single quote by using Aspose.Cells SetStyle method.
-// Common Searches: Aspose.Cells C# how to add a leading single quote to numeric cells | set QuotePrefix on cells programmatically with Aspose.Cells .NET | convert numbers to text in Excel using Aspose.Cells style flag | force Excel numeric values to be treated as text in C# Aspose.Cells
-// Tags: Aspose.Cells QuotePrefix style flag C# | C# Aspose.Cells numeric cell as text | Apply StyleFlag QuotePrefix Aspose.Cells | Excel apostrophe prefix using Aspose.Cells .NET | SetStyle for numeric cells Aspose.Cells
+// Title: Add a leading apostrophe to numeric cells to force text format using Aspose.Cells for .NET
+// Common Searches: how to force Excel numeric cells to be treated as text with Aspose.Cells C# | add apostrophe prefix to numbers in a workbook using Aspose.Cells .NET API | convert all numeric values to text in an Excel file programmatically with Aspose.Cells | iterate through worksheets and change cell type to text in C# Aspose.Cells | save workbook after prefixing numbers with an apostrophe in Aspose.Cells
+// Tags: add leading apostrophe to cells Aspose.Cells | numeric cells text conversion Excel .NET | force text interpretation for numbers Aspose.Cells | worksheet iteration and cell update C# | save modified workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsQuotePrefixDemo
+// The example loads an existing workbook, walks through each worksheet and its used range, detects numeric cells, prefixes each value with an apostrophe to make Excel treat it as text, writes the updated value back, and saves the workbook to a new file.
+class Program
 {
-    // The example creates a workbook, writes numeric values to cells, iterates over all cells, and for each numeric cell creates a style with QuotePrefix enabled. It then applies the style using a StyleFlag and saves the file, resulting in numbers stored as text with a leading apostrophe.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the cells collection of the current worksheet
             Cells cells = sheet.Cells;
 
-            // Populate some numeric values
-            cells["A1"].PutValue(12345);
-            cells["A2"].PutValue(67890);
-            cells["B1"].PutValue(3.14159);
-            cells["B2"].PutValue(2.71828);
+            // Determine the used range boundaries
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-            // Apply QuotePrefix style to each numeric cell to force text interpretation
-            // The style flag enables the QuotePrefix property for the style being applied
-            foreach (Cell cell in cells)
+            // Loop through each cell in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Check if the cell currently holds a numeric value
-                if (cell.Type == CellValueType.IsNumeric)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    // Create a new style based on the workbook's style collection
-                    Style style = workbook.CreateStyle();
-                    style.QuotePrefix = true; // Mark that the cell should start with a single quote
+                    Cell cell = cells[row, col];
 
-                    // Create a style flag and enable the QuotePrefix flag
-                    StyleFlag flag = new StyleFlag();
-                    flag.QuotePrefix = true;
+                    // If the cell contains a numeric value, prefix it with an apostrophe
+                    if (cell.Type == CellValueType.IsNumeric)
+                    {
+                        // Convert the numeric value to string and add the apostrophe
+                        string textValue = "'" + cell.Value.ToString();
 
-                    // Apply the style with the flag (SetStyle, not ApplyStyle)
-                    cell.SetStyle(style, flag);
+                        // Set the cell's value as text
+                        cell.PutValue(textValue);
+                    }
                 }
             }
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("NumericCellsWithApostrophePrefix.xlsx");
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

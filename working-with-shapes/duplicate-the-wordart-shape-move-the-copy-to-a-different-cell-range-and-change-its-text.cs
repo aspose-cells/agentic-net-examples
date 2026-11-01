@@ -1,101 +1,101 @@
-// Title: Copy a WordArt (TextEffect) shape, place it in a new cell range, and change its text using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to duplicate the first TextEffect shape, position the copy at row 6 column C while keeping its original dimensions, and set the copied shape’s Text to a new string. | Show how to use the AddCopy overload to copy a WordArt shape to a target cell range and then update its Text property in a .NET workbook.
-// Common Searches: Aspose.Cells C# copy WordArt shape to specific cells | How to duplicate a TextEffect shape and change its text in Aspose.Cells | Move copied WordArt to cell C6 while preserving size using Aspose.Cells .NET | Shapes.AddCopy example for WordArt in Aspose.Cells C# | Change text of a duplicated shape in an Excel file with Aspose.Cells
-// Tags: Aspose.Cells copy WordArt shape C# | Shapes.AddCopy method Aspose.Cells | set Text property TextEffect shape | copy shape while keeping size Aspose.Cells | move shape to cell range Aspose.Cells
+// Title: How to duplicate a WordArt (TextEffect) shape, reposition it to a specific cell range, and modify its text using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that finds the first WordArt (TextEffect) shape in a worksheet, clones it, places the clone at cell B5, and sets its text to "Updated WordArt Text" using Aspose.Cells. | Write a method that copies a TextEffect shape, preserves its font, size, color, and dimensions, inserts the copy at a given row and column, and updates the caption in an Aspose.Cells workbook. | Create a reusable function in C# that accepts a source WordArt shape, target cell address, and new text, then duplicates the shape with original formatting and saves the workbook.
+// Common Searches: aspnet aspose.cells duplicate wordart shape and move to cell B5 | c# copy text effect shape in Excel and change its text using Aspose | how to clone a WordArt object and reposition it in an Aspose.Cells worksheet | programmatically update WordArt caption in a .xlsx file with Aspose.Cells for .NET
+// Tags: duplicate wordart shape aspose.cells c# | move texteffect shape to cell aspose.cells | update wordart text aspose.cells | clone shape preserving formatting aspose.cells | add wordart shape by cell coordinates c#
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWordArtExample
+// The example loads or creates an Excel workbook, locates the first WordArt (TextEffect) shape, captures its formatting, adds a new TextEffect shape at cell B5 with the same appearance, changes its text to "Updated WordArt Text", and saves the workbook.
+class Program
 {
-    // The example creates or loads a workbook, copies the first WordArt (TextEffect) shape to cell C6 using Shapes.AddCopy while preserving its dimensions, updates the copied shape's Text, and saves the result to output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            try
+            // Load existing workbook or create a new one if the file is missing.
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                // Ensure the input file exists; if not, create a simple workbook with a WordArt shape.
-                if (!File.Exists(inputPath))
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+            }
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Find the first WordArt (TextEffect) shape.
+            Shape originalWordArt = null;
+            foreach (Shape shape in sheet.Shapes)
+            {
+                // WordArt shapes have a non‑null TextEffect property.
+                if (shape.TextEffect != null)
                 {
-                    var newWb = new Workbook();
-                    var newWs = newWb.Worksheets[0];
-
-                    // Add a WordArt shape (TextEffect) as the original shape.
-                    // Parameters: preset, text, font name, font size, bold, italic,
-                    // upper left row, upper left column, lower right row, lower right column, height, width
-                    newWs.Shapes.AddTextEffect(
-                        MsoPresetTextEffect.TextEffect1,
-                        "Original WordArt",
-                        "Arial",
-                        24,
-                        false,
-                        false,
-                        0,
-                        0,
-                        0,
-                        0,
-                        200,
-                        50);
-
-                    newWb.Save(inputPath);
+                    originalWordArt = shape;
+                    break;
                 }
+            }
 
-                // Load the existing workbook.
-                var workbook = new Workbook(inputPath);
-                var worksheet = workbook.Worksheets[0];
-
-                // Verify that there is at least one shape.
-                if (worksheet.Shapes.Count == 0)
-                {
-                    Console.WriteLine("No shapes found in the worksheet.");
-                    return;
-                }
-
-                Shape originalWordArt = worksheet.Shapes[0];
-
-                // Target cell for the copy (e.g., cell C6).
-                int targetRow = 5;    // zero‑based index (row 6)
-                int targetColumn = 2; // zero‑based index (column C)
-
-                // Calculate the lower‑right cell to preserve the original shape size.
-                int rowSpan = originalWordArt.LowerRightRow - originalWordArt.UpperLeftRow;
-                int colSpan = originalWordArt.LowerRightColumn - originalWordArt.UpperLeftColumn;
-                int targetLowerRightRow = targetRow + rowSpan;
-                int targetLowerRightColumn = targetColumn + colSpan;
-
-                // Duplicate the WordArt shape to the specified location.
-                // AddCopy overload: (sourceShape, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn)
-                Shape copiedWordArt = worksheet.Shapes.AddCopy(
-                    originalWordArt,
-                    targetRow,
-                    targetColumn,
-                    targetLowerRightRow,
-                    targetLowerRightColumn);
-
-                // Change the text of the duplicated WordArt.
-                copiedWordArt.Text = "New WordArt Text";
-
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook with the changes.
+            if (originalWordArt == null)
+            {
+                Console.WriteLine("No WordArt shape found in the worksheet.");
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Capture formatting from the original WordArt.
+            string originalFontName = originalWordArt.Font.Name;
+            int originalFontSize = (int)originalWordArt.Font.Size;
+            bool isBold = originalWordArt.Font.IsBold;
+            bool isItalic = originalWordArt.Font.IsItalic;
+            Color originalFontColor = originalWordArt.Font.Color;
+            double originalWidth = originalWordArt.Width;
+            double originalHeight = originalWordArt.Height;
+
+            // Target cell for the duplicated WordArt (e.g., B5).
+            int targetRow = 4;    // zero‑based index (5th row)
+            int targetColumn = 1; // zero‑based index (column B)
+
+            // Add a new WordArt shape using a common preset.
+            Shape duplicatedWordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1, // preset
+                "Placeholder Text",              // temporary text
+                originalFontName,
+                originalFontSize,
+                isBold,
+                isItalic,
+                targetRow,
+                targetColumn,
+                targetRow,
+                targetColumn,
+                0,
+                0);
+
+            // Apply original formatting.
+            duplicatedWordArt.Font.Color = originalFontColor;
+            duplicatedWordArt.Width = (int)originalWidth;
+            duplicatedWordArt.Height = (int)originalHeight;
+
+            // Update the text as required.
+            duplicatedWordArt.Text = "Updated WordArt Text";
+
+            // Save the workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

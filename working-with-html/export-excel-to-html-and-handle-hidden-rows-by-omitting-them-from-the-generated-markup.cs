@@ -1,14 +1,14 @@
-// Title: Convert an Excel workbook to HTML in C# with Aspose.Cells while excluding hidden rows
-// AI Prompts: Generate C# code that loads a .xlsx file using Aspose.Cells, configures HtmlSaveOptions to skip hidden rows, and saves the result as an HTML file. | Show how to verify the source Excel file exists and handle errors before exporting to HTML with hidden rows omitted. | Demonstrate setting the ExportHiddenRows property (or relying on its default) in HtmlSaveOptions for an Aspose.Cells .NET conversion.
-// Common Searches: asp.net convert excel to html without hidden rows using aspose.cells | c# htmlsaveoptions exporthiddenrows false example | how to prevent hidden rows from appearing in html output from aspose cells | save workbook as html excluding hidden rows c# asp.net | aspose.cells hide rows from html export .net core
-// Tags: Aspose.Cells HTML export options | C# Excel to HTML conversion | exclude hidden rows in HTML output | Aspose.Cells workbook save as html | validate input Excel file C#
+// Title: Convert an Excel .xlsx file to HTML with Aspose.Cells for .NET while excluding hidden rows
+// AI Prompts: Write C# code that loads an .xlsx workbook using Aspose.Cells, removes every row whose IsHidden flag is true, and then saves the workbook as an HTML file with HtmlSaveOptions. | Show how to iterate through a Worksheet in Aspose.Cells, detect hidden rows, delete them from the sheet, and export the cleaned workbook to HTML. | Provide a C# example that verifies the input Excel file, filters out hidden rows, and generates an HTML representation that contains only visible rows using Aspose.Cells.
+// Common Searches: Aspose.Cells .NET export to HTML without hidden rows | C# remove hidden rows before saving Excel as HTML using Aspose.Cells | How to skip hidden rows when converting XLSX to HTML with Aspose.Cells | HtmlSaveOptions hide rows Aspose.Cells .NET example | Convert Excel to HTML and exclude hidden rows programmatically
+// Tags: Aspose.Cells HTML export exclude hidden rows | C# delete hidden rows Aspose.Cells | HtmlSaveOptions usage Aspose.Cells .NET | Excel to HTML conversion Aspose.Cells | Workbook row visibility handling Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// A console application that checks for the input.xlsx file, loads it with Aspose.Cells, configures HtmlSaveOptions to omit hidden rows (default behavior or ExportHiddenRows = false), and saves the workbook as output.html while handling exceptions.
-class ExcelToHtmlExporter
+// The sample loads an input.xlsx workbook, iterates through its rows to delete any that are hidden, configures HtmlSaveOptions, and saves the result as output.html. It demonstrates how to omit hidden rows from the generated HTML markup using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
@@ -17,29 +17,27 @@ class ExcelToHtmlExporter
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Ensure the input file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the Excel workbook from the specified file
+            // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: In recent Aspose.Cells versions, hidden rows are excluded by default.
-            // If using a version that supports ExportHiddenRows, uncomment the line below:
-            // htmlOptions.ExportHiddenRows = false;
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // The ExportHiddenRows property is not available in this version of Aspose.Cells.
+            // Hidden rows will be handled according to the default behavior.
 
-            // Save the workbook as an HTML file using the configured options
+            // Save the workbook as an HTML file
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display an error message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

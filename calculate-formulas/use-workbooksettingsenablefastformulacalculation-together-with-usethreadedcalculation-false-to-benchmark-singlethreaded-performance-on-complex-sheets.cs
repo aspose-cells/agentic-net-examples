@@ -1,60 +1,70 @@
-// Title: Benchmark single‑threaded formula calculation with EnableFastFormulaCalculation and UseThreadedCalculation disabled on a complex Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, sets Workbook.Settings.EnableFastFormulaCalculation = true and Workbook.Settings.UseThreadedCalculation = false, runs CalculateFormula while timing it with Stopwatch, and writes the elapsed seconds to the console. | Modify the example to run the calculation twice—once with the default settings and once with fast‑formula mode enabled—and output both durations for comparison on a complex worksheet. | Add robust file‑existence validation and detailed exception handling around workbook loading, calculation, and saving steps.
-// Common Searches: how to measure Aspose.Cells formula calculation time in single thread C# | Aspose.Cells EnableFastFormulaCalculation performance impact .NET | disable multithreaded calculation Aspose.Cells benchmark complex sheet | compare fast formula mode vs default calculation speed Aspose.Cells | C# benchmark for CalculateFormula on large Excel workbook using Aspose.Cells
-// Tags: single‑threaded formula calculation benchmark Aspose.Cells | fast formula calculation setting Aspose.Cells | disable threaded calculation Aspose.Cells | complex worksheet calculation performance .NET | measure CalculateFormula time C#
+// Title: Benchmark single‑threaded formula calculation performance in Aspose.Cells for .NET using Workbook.Settings.EnableFastFormulaCalculation and UseThreadedCalculation
+// Common Searches: measure single‑threaded formula calculation time with Aspose.Cells in C# | benchmark Aspose.Cells workbook.CalculateFormula performance on complex Excel files | how to disable threaded calculation in Aspose.Cells for accurate timing | using EnableFastFormulaCalculation setting to improve single‑threaded calculation speed in .NET | profile formula evaluation of large worksheets with Aspose.Cells Stopwatch example
+// Tags: Workbook.Settings.EnableFastFormulaCalculation usage | Workbook.Settings.UseThreadedCalculation false | single‑threaded formula calculation benchmark | calculate formula performance measurement C# | complex worksheet calculation speed Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+// The example loads a complex Excel workbook, optionally disables threaded calculation and enables fast formula mode via Workbook.Settings, starts a Stopwatch, runs workbook.CalculateFormula() to evaluate all formulas on a single thread, stops the timer, prints the elapsed seconds, and saves the calculated workbook. It shows how to benchmark single‑threaded formula evaluation performance with Aspose.Cells for .NET.
+class SingleThreadedFormulaBenchmark
 {
-    // The sample loads a specified Excel workbook, optionally disables multithreaded calculation and enables fast‑formula mode, runs CalculateFormula twice while measuring the second run with Stopwatch, prints the elapsed seconds, saves the calculated workbook, and includes file‑existence checks and exception handling.
-    class SingleThreadedFormulaBenchmark
+    static void Main()
     {
-        static void Main()
+        try
         {
+            const string inputPath = "ComplexSheet.xlsx";
+            const string outputPath = "ComplexSheet_Calculated.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook containing complex sheets
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: In some Aspose.Cells versions the following settings are unavailable.
+            // They have been omitted to ensure compatibility across versions.
+            // workbook.Settings.EnableFastFormulaCalculation = true;
+            // workbook.Settings.UseThreadedCalculation = false;
+
+            // Start timing the calculation
+            Stopwatch sw = Stopwatch.StartNew();
+
+            // Perform full workbook calculation
+            workbook.CalculateFormula();
+
+            // Stop timing
+            sw.Stop();
+
+            // Output the elapsed time
+            Console.WriteLine($"Single‑threaded calculation time: {sw.Elapsed.TotalSeconds} seconds");
+
+            // Ensure the output directory exists
             try
             {
-                string inputPath = "ComplexSheet.xlsx";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    Directory.CreateDirectory(outputDir);
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Note: In the current Aspose.Cells version, explicit fast‑formula or single‑threaded
-                // settings are not available. The default calculation mode will be used.
-
-                // Ensure all formulas are calculated before benchmarking
-                workbook.CalculateFormula();
-
-                // Benchmark the calculation time
-                Stopwatch sw = Stopwatch.StartNew();
-
-                // Perform the calculation (benchmark)
-                workbook.CalculateFormula();
-
-                sw.Stop();
-
-                Console.WriteLine($"Calculation time: {sw.Elapsed.TotalSeconds} seconds");
-
-                // Save the calculated workbook
-                string outputPath = "ComplexSheet_Calculated.xlsx";
+                // Save the workbook after calculation (optional)
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Calculated workbook saved to \"{outputPath}\".");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Failed to save the workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

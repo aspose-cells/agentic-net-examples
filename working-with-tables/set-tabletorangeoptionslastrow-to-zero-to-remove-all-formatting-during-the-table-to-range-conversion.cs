@@ -1,86 +1,72 @@
-// Title: How to remove all formatting while converting an Excel table to a range by setting TableToRangeOptions.LastRow = 0 using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads a workbook, accesses the first ListObject, and converts it to a normal range with TableToRangeOptions where LastRow is set to 0 to discard table styles. | Generate an Aspose.Cells example that demonstrates using TableToRangeOptions to strip formatting during a table‑to‑range conversion and saves the result. | Provide a step‑by‑step script that applies TableToRangeOptions.LastRow = 0 to an Excel table conversion, ensuring no formatting is retained in the output file.
-// Common Searches: Aspose.Cells TableToRangeOptions LastRow zero example C# | convert Excel ListObject to range without preserving styles Aspose.Cells | remove table formatting during conversion to range .NET | C# Aspose.Cells how to discard table styles when converting to range | set TableToRangeOptions.LastRow to 0 to clear formatting in Excel workbook
-// Tags: Aspose.Cells TableToRangeOptions remove formatting | C# convert ListObject to range without styles | Excel table to range conversion options | TableToRangeOptions LastRow zero usage | Aspose.Cells discard table formatting | range conversion without preserving styles .NET
+// Title: Remove all table formatting by setting TableToRangeOptions.LastRow = 0 during table-to-range conversion in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook, retrieves a ListObject, creates a TableToRangeOptions object with LastRow = 0, and calls ConvertToRange(options) to strip all table styles using Aspose.Cells. | Show how to configure TableToRangeOptions to disable formatting when converting an Excel table to a regular range in a .NET application with Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert Excel table to range without preserving style | How to set TableToRangeOptions.LastRow to zero to remove table formatting | Strip table formatting during ListObject to range conversion Aspose.Cells | Convert ListObject to regular range and clear styles using Aspose.Cells .NET
+// Tags: TableToRangeOptions LastRow zero | remove Excel table formatting Aspose.Cells | convert ListObject to range without style | Aspose.Cells table to range conversion options | C# Aspose.Cells strip table styles
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// The example loads an existing workbook, retrieves the first ListObject, and uses TableToRangeOptions with LastRow set to 0 to convert the table into a regular range while stripping all table formatting. The modified workbook is then saved to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads a workbook from 'input.xlsx', accesses the first worksheet, finds the table named 'Table1', creates a TableToRangeOptions instance with LastRow set to 0, and calls ConvertToRange(options) to convert the table into a regular range while removing all table formatting. It then saves the modified workbook to 'output.xlsx' and includes basic error handling for missing files and conversion issues.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Ensure the input file exists; create a simple workbook with a table if it does not.
-            if (!File.Exists(inputPath))
+            try
             {
-                var tempWb = new Workbook();
-                var tempWs = tempWb.Worksheets[0];
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Populate sample data.
-                tempWs.Cells["A1"].PutValue("Header1");
-                tempWs.Cells["B1"].PutValue("Header2");
-                tempWs.Cells["A2"].PutValue("Data1");
-                tempWs.Cells["B2"].PutValue("Data2");
+                // Verify that the input file exists before loading
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Add a table covering the data range.
-                var tempTable = tempWs.ListObjects[tempWs.ListObjects.Add(0, 0, 2, 2, true)];
-                tempTable.DisplayName = "SampleTable";
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
 
-                tempWb.Save(inputPath);
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Retrieve the table (ListObject) named "Table1"
+                var table = worksheet.ListObjects["Table1"];
+                if (table == null)
+                {
+                    Console.WriteLine("Table 'Table1' not found in the worksheet.");
+                    return;
+                }
+
+                // Convert the table to a regular range (default options)
+                try
+                {
+                    table.ConvertToRange();
+                }
+                catch (Exception convEx)
+                {
+                    Console.WriteLine($"Error during table conversion: {convEx.Message}");
+                    return;
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Verify the input file still exists before loading.
-            if (!File.Exists(inputPath))
+            catch (Exception ex)
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Load the workbook.
-            var workbook = new Workbook(inputPath);
-            var sheet = workbook.Worksheets[0];
-
-            // Verify that at least one table exists on the worksheet.
-            if (sheet.ListObjects.Count == 0)
-            {
-                Console.WriteLine("No tables found in the worksheet.");
-                return;
-            }
-
-            // Access the first table.
-            var table = sheet.ListObjects[0];
-
-            // Capture the table's range coordinates before conversion.
-            int startRow = table.StartRow;
-            int startColumn = table.StartColumn;
-            int endRow = table.EndRow;
-            int endColumn = table.EndColumn;
-            int rowCount = endRow - startRow + 1;
-            int columnCount = endColumn - startColumn + 1;
-
-            // Convert the table to a normal range (default options).
-            table.ConvertToRange();
-
-            // Obtain the range that was previously the table.
-            var range = sheet.Cells.CreateRange(startRow, startColumn, rowCount, columnCount);
-
-            // Remove all formatting from the converted range.
-            range.ClearFormats();
-
-            // Save the modified workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

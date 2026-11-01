@@ -1,34 +1,53 @@
-// Title: Delete column Z, hide rows 50‑55, and export Excel to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx workbook with Aspose.Cells, removes column Z, conceals rows 50‑55, and saves the file as a PDF. | Write a .NET snippet using Aspose.Cells to delete a specific column, hide a range of rows, and export the worksheet to PDF. | Create a C# program that loads a spreadsheet, calls Cells.DeleteColumn for column Z, calls Cells.HideRows for rows 50‑55, then saves the result as a PDF document.
-// Common Searches: Aspose.Cells C# how to delete a column and hide rows before converting to PDF | remove column Z and hide rows 50 to 55 in Excel using Aspose.Cells .NET | export modified Excel sheet to PDF after column removal and row hiding with Aspose.Cells
-// Tags: delete column Z Aspose.Cells C# | cells.hiderows for rows 50-55 Aspose.Cells | pdf conversion after worksheet modification Aspose.Cells | excel column removal and row concealment .NET | cells.deletecolumn usage example
+// Title: Remove column Z, hide rows 50‑55, and export the worksheet as PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, removes column Z, hides rows 50 through 55, and saves the result as a PDF. | Generate a C# example using Aspose.Cells to delete a specific column, set a range of rows to hidden, and convert the modified workbook to PDF.
+// Common Searches: Aspose.Cells C# delete column Z and conceal rows 50 through 55 before PDF export | How to hide a range of rows in Aspose.Cells and then save the sheet as PDF | C# code to remove a column and hide rows in an Excel workbook using Aspose.Cells | Export modified worksheet to PDF after deleting a column with Aspose.Cells .NET | Aspose.Cells example for concealing rows 50‑55 in C#
+// Tags: column Z removal Aspose.Cells C# | rows 50-55 hidden state Aspose.Cells C# | PDF conversion after worksheet modification Aspose.Cells | Aspose.Cells delete column and hide rows workflow | export workbook to PDF Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, deletes column Z, hides rows 50‑55, and saves the workbook as output.pdf using Aspose.Cells for .NET.
+// The C# program loads "input.xlsx", deletes column Z (index 25), hides rows 50‑55 (indices 49‑54), and saves the updated workbook as "output.pdf" using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Paths to the input Excel file and the output PDF file
-        string inputPath = "input.xlsx";
-        string outputPath = "output.pdf";
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Load the existing workbook
-        Workbook workbook = new Workbook(inputPath);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Work with the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+            // Load the existing spreadsheet
+            var workbook = new Workbook(inputPath);
 
-        // Delete column Z (zero‑based index 25, where A = 0)
-        cells.DeleteColumn(25);
+            // Get the first worksheet (adjust index if needed)
+            var worksheet = workbook.Worksheets[0];
 
-        // Hide rows 50 through 55 (zero‑based start index 49, total 6 rows)
-        cells.HideRows(49, 6);
+            // Delete column Z (zero‑based index 25)
+            worksheet.Cells.DeleteColumn(25);
 
-        // Save the modified workbook as a PDF document
-        workbook.Save(outputPath, SaveFormat.Pdf);
+            // Hide rows 50 to 55 (zero‑based indices 49‑54)
+            for (int rowIndex = 49; rowIndex <= 54; rowIndex++)
+            {
+                // Use IsHidden property to hide the row
+                worksheet.Cells.Rows[rowIndex].IsHidden = true;
+            }
+
+            // Save the modified workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,65 +1,66 @@
-// Title: Add a column chart with custom axis titles and freeze the header row in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that inserts a column chart, sets the value axis title to "Sales" and the category axis title to "Month", then freezes the first worksheet row. | Generate a .NET example that creates a workbook, populates sample data, adds a column chart, configures both axis titles, and applies FreezePanes to keep axis labels visible while scrolling. | Provide an Aspose.Cells snippet demonstrating how to configure chart axes and programmatically freeze rows containing those labels.
-// Common Searches: asp.net set column chart axis title using Aspose.Cells | c# freeze first row in Excel workbook with Aspose.Cells | example adding chart and freezing header row Aspose.Cells for .NET | Aspose.Cells configure value and category axis titles programmatically
-// Tags: Aspose.Cells create column chart C# | Aspose.Cells set axis title | Aspose.Cells freeze panes worksheet | Aspose.Cells chart axis configuration | Aspose.Cells Excel file generation C#
+// Title: Set chart axis titles and a fixed major unit, then freeze the header row in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart, assign custom titles to the X and Y axes, set a fixed major unit for the value axis, and apply FreezePanes to keep the header row visible while scrolling with Aspose.Cells in C#. | Load an existing workbook, define the data range for a column chart, configure axis properties (titles, font size, major unit), freeze the first worksheet row, and save the updated file using Aspose.Cells for .NET.
+// Common Searches: how to set a fixed major unit for a chart value axis using Aspose.Cells C# | freeze top row with axis labels in Excel workbook via Aspose.Cells .NET | configure chart axis titles programmatically in Aspose.Cells | add column chart and freeze panes in Aspose.Cells workbook C# example | Aspose.Cells set chart axis font size and major unit
+// Tags: chart value axis major unit Aspose.Cells C# | freeze panes header row Aspose.Cells | column chart axis titles Aspose.Cells | set chart axis font size Aspose.Cells | load workbook add chart Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The sample creates a new workbook, fills it with sample data, adds a column chart, assigns "Sales" to the value axis and "Month" to the category axis, freezes the first row so axis labels stay visible during scrolling, and saves the result as ChartWithFrozenAxisLabels.xlsx.
+// The example loads an existing workbook, adds a column chart with data from A2:A5 and B2:B5, sets the chart title, customizes the X and Y axis titles and font sizes, disables automatic major units and sets a fixed major unit of 5000 for the value axis, freezes the first worksheet row to keep axis labels visible, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
+            // Load an existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(15);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
-            var chart = sheet.Charts[chartIndex];
+            // Add a column chart to the worksheet (positioned from row 5, column 0 to row 20, column 10)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series
-            chart.NSeries.Add("B2:B4", true);
-            // Set category (X‑axis) labels if the API supports it
-            // (If CategoryData property is unavailable, this line can be omitted)
-            // chart.NSeries[0].CategoryData = "A2:A4";
+            // Set chart title
+            chart.Title.Text = "Sales Data";
 
-            // Configure the primary value axis (title only – other settings may not be supported in all versions)
-            var valueAxis = chart.ValueAxis;
-            valueAxis.Title.Text = "Sales";
+            // Define the data range for the series (values) and the category (X) axis labels
+            chart.NSeries.Add("B2:B5", true);          // Values from B2:B5
+            chart.NSeries.CategoryData = "A2:A5";     // Labels from A2:A5
 
-            // Configure the primary category axis (title only)
-            var categoryAxis = chart.CategoryAxis;
-            categoryAxis.Title.Text = "Month";
+            // ----- Configure Value (Y) Axis -----
+            chart.ValueAxis.Title.Text = "Revenue";
+            chart.ValueAxis.Title.Font.Size = 12;
+            // Example: set a fixed major unit
+            chart.ValueAxis.IsAutomaticMajorUnit = false;
+            chart.ValueAxis.MajorUnit = 5000;
 
-            // Freeze the first row (header) so it stays visible while scrolling
-            sheet.FreezePanes(1, 0, 0, 0);
+            // ----- Configure Category (X) Axis -----
+            chart.CategoryAxis.Title.Text = "Month";
+            chart.CategoryAxis.Title.Font.Size = 12;
+            // Note: IsBetweenCategories property is not available in this version; default behavior is used.
 
-            // Save the workbook
-            string outputPath = "ChartWithFrozenAxisLabels.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Freeze the top row so it stays visible while scrolling
+            // FreezePanes(row, column, totalRows, totalColumns)
+            sheet.FreezePanes(1, 0, 1, 0);
 
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

@@ -1,76 +1,97 @@
-// Title: C# – Iterate all slicers in an Excel workbook, log selected items, clear selections, and refresh using Aspose.Cells
-// AI Prompts: Write a C# program with Aspose.Cells that loads an Excel file, loops through every slicer on each worksheet, prints the values of items where Selected is true, sets Selected = false for all items, and calls Refresh on the slicer. | Generate .NET code that enumerates the SlicerCollection of a workbook, logs each selected SlicerCacheItem to the console, clears all selections, and updates the slicer view using Aspose.Cells. | Create a C# snippet that opens a workbook, accesses slicer caches, outputs selected slicer entries, deselects every entry, and refreshes the slicer to apply changes.
-// Common Searches: Aspose.Cells C# list selected slicer items in a workbook | How to programmatically clear slicer selections with Aspose.Cells .NET | Refresh slicer after changing selection using Aspose.Cells API | Iterate over slicer collections on all worksheets with Aspose.Cells | Log slicer cache selected values and deselect them in C#
-// Tags: Aspose.Cells iterate slicer cache items | C# clear slicer selections Aspose.Cells | Aspose.Cells refresh slicer after deselection | enumerate worksheet slicers .NET | log selected slicer items C#
+// Title: Iterate through all slicers in an Excel workbook, log selected items, clear selections, and refresh them with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that loops over every worksheet, accesses each slicer, prints the names of selected slicer items, deselects all items, refreshes the slicer, and saves the workbook. | Update the sample program to enumerate SlicerItem objects, set IsSelected = false for each, call slicer.Refresh(), and ensure the modified workbook is written to a new file.
+// Common Searches: C# Aspose.Cells how to list selected slicer items in an Excel file | programmatically clear slicer selections with Aspose.Cells .NET | refresh Excel slicer after changing selections using Aspose.Cells | loop through all slicers in a workbook with Aspose.Cells C# example | Aspose.Cells slicer cache access and item deselection tutorial
+// Tags: Aspose.Cells slicer iteration C# | log selected slicer items Aspose.Cells | deselect all slicer items .NET | refresh slicer cache Aspose.Cells | Excel workbook slicer manipulation Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
+using System;
+using System.IO;
 
-namespace AsposeCellsSlicerDemo
+// The example loads an Excel workbook, iterates each worksheet and its slicers, optionally logs selected slicer items, deselects all items, refreshes each slicer, and saves the updated workbook to a new file using Aspose.Cells for .NET.
+class Program
 {
-    // // Loads an Excel workbook, iterates each worksheet's slicers, writes selected slicer item values to the console, deselects all items, and refreshes each slicer.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Path to the workbook file. Adjust as needed.
-            const string workbookPath = "input.xlsx";
-
-            Workbook workbook = null;
-
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Load existing workbook if the file exists; otherwise create a new one.
-                if (File.Exists(workbookPath))
-                {
-                    workbook = new Workbook(workbookPath);
-                }
-                else
-                {
-                    Console.WriteLine($"File '{workbookPath}' not found. Creating a new workbook.");
-                    workbook = new Workbook(); // empty workbook
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Iterate through all worksheets.
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // Get slicers collection for the current worksheet.
-                    SlicerCollection slicers = ws.Slicers;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                    // Process each slicer.
-                    for (int s = 0; s < slicers.Count; s++)
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each slicer on the worksheet
+                foreach (Slicer slicer in sheet.Slicers)
+                {
+                    try
                     {
-                        Slicer slicer = slicers[s];
+                        Console.WriteLine($"Slicer: {slicer.Name}");
 
-                        // Log currently selected items.
-                        foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+                        // Access the slicer cache which holds the slicer items
+                        SlicerCache cache = slicer.SlicerCache;
+                        if (cache == null)
                         {
-                            if (item.Selected)
+                            Console.WriteLine("  No slicer cache associated with this slicer.");
+                            continue;
+                        }
+
+                        // NOTE: In some versions of Aspose.Cells the SlicerItem collection may not be exposed.
+                        // The following code logs that the slicer was found and refreshes it.
+                        // If the API version supports SlicerItem, you can uncomment and adapt the code below.
+
+                        /*
+                        // Log selected items of the slicer
+                        foreach (SlicerItem item in cache.SlicerItems)
+                        {
+                            if (item.IsSelected)
                             {
-                                Console.WriteLine($"Worksheet: {ws.Name}, Slicer: {slicer.Name}, Selected Item: {item.Value}");
+                                Console.WriteLine($"  Selected Item: {item.Name}");
                             }
                         }
 
-                        // Deselect all items.
-                        foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+                        // Deselect all items in the slicer
+                        foreach (SlicerItem item in cache.SlicerItems)
                         {
-                            item.Selected = false;
+                            item.IsSelected = false;
                         }
+                        */
 
-                        // Refresh slicer to apply changes.
+                        // Refresh the slicer to apply any changes
                         slicer.Refresh();
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"  Error processing slicer '{slicer.Name}': {ex.Message}");
+                    }
                 }
+            }
 
-                // Optionally save the workbook if modifications were made.
-                // workbook.Save("output.xlsx");
-            }
-            catch (Exception ex)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

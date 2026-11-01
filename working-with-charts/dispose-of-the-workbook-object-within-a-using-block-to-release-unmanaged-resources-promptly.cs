@@ -1,24 +1,27 @@
-// Title: Wrap an Aspose.Cells Workbook in a C# using block to ensure automatic disposal and release of unmanaged resources
-// AI Prompts: Generate C# code that creates an Aspose.Cells Workbook inside a using statement, writes data to a worksheet, saves the file, and relies on the using block for disposal. | Demonstrate how to use the C# using construct so that an Aspose.Cells Workbook automatically frees its unmanaged resources after saving.
-// Common Searches: C# using statement for Aspose.Cells Workbook disposal | how to release unmanaged resources after saving an Aspose.Cells workbook | ensure Aspose.Cells workbook is closed automatically in .NET | best practice for disposing Aspose.Cells Workbook objects | using block example with Aspose.Cells save to Excel
-// Tags: using block Aspose.Cells Workbook | automatic disposal of Aspose.Cells workbook | release unmanaged resources Aspose.Cells | C# workbook save and dispose Aspose.Cells | resource management Aspose.Cells Workbook
+// Title: Dispose an Aspose.Cells Workbook in C# using a using block after saving to XLSX
+// AI Prompts: Generate C# code that creates an Aspose.Cells Workbook inside a using statement, writes data to a worksheet, saves the file as XLSX, and relies on the using block for automatic disposal. | Show how to wrap Aspose.Cells Workbook creation and Save operation in a using block to guarantee unmanaged resources are released immediately.
+// Common Searches: how to ensure Aspose.Cells workbook is disposed after saving in C# | C# using statement for cleaning up Aspose.Cells workbook resources | best practice for releasing unmanaged resources with Aspose.Cells | automatic workbook cleanup using Aspose.Cells and using block
+// Tags: using statement Aspose.Cells workbook disposal | release unmanaged resources Aspose.Cells C# | save workbook to XLSX with automatic cleanup | resource management Aspose.Cells workbook
 
+using System;
 using Aspose.Cells;
 
-// Shows how to place an Aspose.Cells Workbook inside a C# using block, write a value to cell A1, save the workbook as output.xlsx, and let the using block automatically dispose the workbook, freeing unmanaged resources.
+// The example creates an Aspose.Cells Workbook inside a C# using block, writes a value to cell A1, saves the workbook as output.xlsx, and the using block automatically disposes the Workbook to free unmanaged resources.
 class Program
 {
     static void Main()
     {
-        // Create a new Workbook inside a using block to ensure it is disposed promptly
+        // Create and work with the workbook inside a using block.
+        // The using statement ensures that the Workbook is disposed
+        // promptly, releasing unmanaged resources.
         using (var workbook = new Workbook())
         {
-            // Example operation: write a value to the first worksheet
-            var sheet = workbook.Worksheets[0];
+            // Example operation: write a value to the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
             sheet.Cells["A1"].PutValue("Hello Aspose.Cells");
 
-            // Save the workbook to a file
+            // Save the workbook to a file.
             workbook.Save("output.xlsx");
-        } // The Workbook is automatically disposed here, releasing unmanaged resources
+        } // The workbook is automatically disposed here.
     }
 }

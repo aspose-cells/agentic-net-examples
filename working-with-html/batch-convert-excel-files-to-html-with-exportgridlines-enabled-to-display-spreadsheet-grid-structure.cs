@@ -1,7 +1,7 @@
-// Title: Batch convert multiple Excel (.xls/.xlsx) files to HTML with grid lines using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that scans a directory, loads each .xls or .xlsx workbook with Aspose.Cells, and saves it as an HTML file with grid lines enabled via HtmlSaveOptions.ExportGridLines. | Add robust error handling to skip non‑Excel files, create the output folder if it does not exist, and log success or failure for each conversion. | Generate output HTML filenames that mirror the source workbook names and place all results in a separate output directory.
-// Common Searches: c# aspocells batch convert folder of xls and xlsx to html with grid lines | how to export Excel grid lines to HTML using Aspose.Cells in .NET | save multiple workbooks as HTML with ExportGridLines true Aspose.Cells C# | console app to convert all Excel files in a directory to HTML Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportGridLines example for batch processing
-// Tags: Aspose.Cells batch Excel to HTML conversion | HtmlSaveOptions ExportGridLines | C# console folder processing Aspose.Cells | convert .xls .xlsx to HTML with grid lines | automated Excel to HTML export .NET
+// Title: Convert a folder of Excel .xls and .xlsx files to HTML with grid lines using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through a directory, loads each .xls or .xlsx workbook with Aspose.Cells, and saves it as an HTML file with ExportGridLines enabled and images embedded as base64. | Adapt the batch converter to create a dedicated subfolder for each workbook's HTML output while keeping the original file names. | Add robust error handling that logs the full file path and exception details for any conversion failure and then continues processing the remaining files.
+// Common Searches: how to batch convert excel files to html with grid lines using aspose.cells c# | c# aspnet convert multiple .xlsx files to html preserving cell borders | aspnet core process all excel workbooks in a folder and export to html with exportgridlines | save excel workbook as html with embedded images base64 asp.net cells library
+// Tags: Aspose.Cells HtmlSaveOptions ExportGridLines | batch conversion of .xls and .xlsx to HTML C# | embed images as base64 during Excel to HTML export | export all worksheets to HTML using Aspose.Cells | process workbooks in a folder with Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,13 +9,14 @@ using Aspose.Cells;
 
 namespace ExcelToHtmlBatch
 {
-    // A C# console utility iterates over every .xls and .xlsx file in a specified input folder, loads each workbook with Aspose.Cells, and saves it as an HTML document using HtmlSaveOptions with ExportGridLines set to true. The program creates the output directory if needed, skips non‑Excel files, and logs conversion results, producing HTML files that retain the original spreadsheet grid structure.
+    // // This C# console application scans a specified input directory for .xls and .xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file in an output directory. HtmlSaveOptions are set with ExportGridLines = true, ExportImagesAsBase64 = true, and ExportActiveWorksheetOnly = false to display grid lines, embed images, and export all worksheets.
     class Program
     {
         static void Main(string[] args)
         {
             // Folder containing the source Excel files
             string sourceFolder = @"C:\InputExcelFiles";
+
             // Folder where the HTML files will be saved
             string outputFolder = @"C:\OutputHtmlFiles";
 
@@ -50,12 +51,14 @@ namespace ExcelToHtmlBatch
                     Workbook workbook = new Workbook(filePath);
 
                     // Configure HTML save options to export grid lines
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
                     {
-                        ExportGridLines = true // Enable grid lines in the output HTML
+                        ExportGridLines = true,          // Show spreadsheet grid lines in HTML
+                        ExportImagesAsBase64 = true,    // Embed images directly
+                        ExportActiveWorksheetOnly = false // Export all worksheets
                     };
 
-                    // Determine output HTML file name
+                    // Build the output HTML file path
                     string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
                     string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
 

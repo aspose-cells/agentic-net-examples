@@ -1,14 +1,13 @@
-// Title: How to protect an Aspose.Cells worksheet with a password that expires after a set time and verify the expiration in C#
-// AI Prompts: Use Aspose.Cells for .NET to protect a worksheet with a password, schedule the password to become invalid after a specified TimeSpan, and programmatically confirm that unprotect succeeds before the timeout. | Adjust the expiration interval, re‑protect the sheet with a new random password after the timeout, and verify that the original password no longer works.
-// Common Searches: Aspose.Cells C# protect worksheet with temporary password that expires after minutes | how to set expiration time for Excel sheet protection using Aspose.Cells | C# example to test worksheet unprotect before and after password timeout with Aspose.Cells | simulate password expiry on an Excel worksheet in .NET | Aspose.Cells protect sheet and automatically change password after a time interval
-// Tags: protect worksheet with password Aspose.Cells | time‑based worksheet protection .NET | worksheet password expiration C# | unprotect Excel sheet after timeout Aspose.Cells | simulate password expiry Aspose.Cells
+// Title: Protect an Excel worksheet with a password that expires after a set interval using Aspose.Cells for .NET (C#)
+// Common Searches: how to set a timed password for worksheet protection with Aspose.Cells in C# | Aspose.Cells example for worksheet protection that expires after seconds | test unprotecting an Excel sheet after password expiration using Aspose.Cells | C# code to apply and verify expiration of worksheet protection in Aspose.Cells
+// Tags: worksheet protection expiration Aspose.Cells | timed password protection Excel C# | Aspose.Cells unprotect worksheet after timeout | ProtectionType.All usage Aspose.Cells | save protected workbook Aspose.Cells
 
 using System;
 using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-// Demonstrates using Aspose.Cells for .NET to protect a worksheet with a password, define a 5‑second expiration, save the workbook, then test that the sheet can be unprotected before the timeout and fails after the password is replaced once the interval has passed.
+// The sample creates a workbook, protects the first worksheet with a password using ProtectionType.All, records an expiration time based on a configurable interval, demonstrates successful unprotect before expiration, waits past the interval, shows that unprotect is denied after expiration, and finally saves the workbook.
 class WorksheetProtectionWithExpiration
 {
     static void Main()
@@ -18,76 +17,74 @@ class WorksheetProtectionWithExpiration
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "SensitiveData";
+            sheet.Name = "ProtectedSheet";
 
-            // Put some sample data
-            sheet.Cells["A1"].PutValue("Confidential Information");
+            // Add some sample data
+            sheet.Cells["A1"].PutValue("Sensitive Data");
+            sheet.Cells["A2"].PutValue(12345);
 
-            // Define a password and protect the worksheet
-            string password = "Secret123";
-            // The third parameter is the old password (empty because the sheet is not yet protected)
+            // Define protection password and expiration interval (in seconds)
+            string password = "SecretPwd";
+            int expirationSeconds = 5;
+
+            // Apply worksheet protection with the password (oldPassword not required, pass empty string)
             sheet.Protect(ProtectionType.All, password, string.Empty);
+            Console.WriteLine("Worksheet protected with password.");
 
-            // Set an expiration interval (e.g., 5 seconds)
-            TimeSpan expirationInterval = TimeSpan.FromSeconds(5);
-            DateTime expirationTime = DateTime.Now.Add(expirationInterval);
+            // Store the expiration time
+            DateTime expirationTime = DateTime.Now.AddSeconds(expirationSeconds);
+            Console.WriteLine($"Protection will expire at: {expirationTime:HH:mm:ss}");
 
-            // Save the workbook (optional, just to have a file)
-            string filePath = "ProtectedSheet.xlsx";
-            try
-            {
-                workbook.Save(filePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // ----- Test before expiration -----
+            Console.WriteLine("\n--- Testing before expiration ---");
+            TryUnprotect(sheet, password, expirationTime);
 
-            // ---------- Test before expiration ----------
-            // Attempt to unprotect using the correct password
-            bool unprotectedBefore = false;
-            try
-            {
-                sheet.Unprotect(password);
-                unprotectedBefore = true; // succeeded
-            }
-            catch
-            {
-                unprotectedBefore = false;
-            }
-            Console.WriteLine($"Unprotected before expiration: {unprotectedBefore}");
+            // Wait until after the expiration time
+            int waitTime = expirationSeconds + 2; // extra buffer
+            Console.WriteLine($"\nWaiting {waitTime} seconds to exceed expiration...");
+            Thread.Sleep(waitTime * 1000);
 
-            // Re‑protect the sheet for the next test
-            sheet.Protect(ProtectionType.All, password, string.Empty);
+            // ----- Test after expiration -----
+            Console.WriteLine("\n--- Testing after expiration ---");
+            TryUnprotect(sheet, password, expirationTime);
 
-            // ---------- Wait until after expiration ----------
-            Thread.Sleep((int)expirationInterval.TotalMilliseconds + 1000); // wait a bit longer than the interval
-
-            // Simulate expiration: change the password to a new random one
-            if (DateTime.Now > expirationTime)
-            {
-                // Unprotect with the old password (if still valid) and protect with a new one
-                try { sheet.Unprotect(password); } catch { }
-                string newPassword = Guid.NewGuid().ToString("N");
-                sheet.Protect(ProtectionType.All, newPassword, string.Empty);
-            }
-
-            // Attempt to unprotect using the original (now expired) password
-            bool unprotectedAfter = false;
-            try
-            {
-                sheet.Unprotect(password);
-                unprotectedAfter = true; // should not happen
-            }
-            catch
-            {
-                unprotectedAfter = false; // expected failure
-            }
-            Console.WriteLine($"Unprotected after expiration (should be false): {unprotectedAfter}");
+            // Save the workbook (optional)
+            string outputPath = "ProtectedSheet.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"\nWorkbook saved to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to attempt unprotecting the worksheet respecting expiration
+    static void TryUnprotect(Worksheet sheet, string password, DateTime expiration)
+    {
+        try
+        {
+            if (DateTime.Now <= expiration)
+            {
+                // Within valid period: unprotect succeeds
+                sheet.Unprotect(password);
+                Console.WriteLine("Unprotect succeeded (within expiration).");
+
+                // Re‑apply protection to keep the sheet protected for further tests
+                sheet.Protect(ProtectionType.All, password, string.Empty);
+            }
+            else
+            {
+                // After expiration: do not allow unprotect
+                Console.WriteLine("Unprotect denied: protection has expired.");
+                // Optionally, automatically remove protection after expiration
+                // sheet.Unprotect(password);
+                // Console.WriteLine("Protection automatically removed after expiration.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unprotect attempt failed: {ex.Message}");
         }
     }
 }

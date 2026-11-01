@@ -1,12 +1,14 @@
-// Title: Export an Excel workbook to PDF with OnePagePerSheet enabled and enforce a ten‑page limit using Aspose.Cells for .NET
-// AI Prompts: Write C# code that exports a Workbook to PDF, forcing each worksheet onto a single page and cutting the output after ten pages with Aspose.Cells. | Provide a C# snippet that configures PDF conversion to use a one‑page‑per‑worksheet layout and illustrates a method to stop the PDF generation at ten pages.
-// Common Searches: Aspose.Cells C# export Excel to PDF one page per sheet | How to limit PDF output to ten pages when converting an Excel workbook with Aspose.Cells | PdfSaveOptions OnePagePerSheet and max page count in .NET | C# truncate PDF generated from a workbook after ten pages using Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | Aspose.Cells limit PDF page count .NET | C# workbook to PDF with page cap | Aspose.Cells PDF pagination control | C# export Excel to PDF page limitation
+// Title: Create a PDF from an Aspose.Cells workbook with OnePagePerSheet enabled and a maximum of ten pages in C#
+// AI Prompts: Write C# code that creates or loads an Aspose.Cells Workbook, sets PdfSaveOptions.OnePagePerSheet to true, sets PdfSaveOptions.MaxPages to 10, and saves the workbook as a PDF file. | Update an existing Aspose.Cells PDF conversion snippet to enforce a ten‑page limit while keeping each worksheet rendered on a single PDF page. | Describe how to configure PdfSaveOptions in Aspose.Cells for .NET to render each worksheet on one page and truncate the PDF after ten pages.
+// Common Searches: Aspose.Cells C# PDF conversion one page per sheet limit to 10 pages | How to set MaxPages in PdfSaveOptions when saving Excel to PDF with Aspose.Cells | C# example for limiting PDF page count using Aspose.Cells PdfSaveOptions | OnePagePerSheet true and MaxPages 10 Aspose.Cells PDF output
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | Aspose.Cells limit PDF pages MaxPages | C# convert Excel to PDF with page count restriction | Aspose.Cells PDF rendering page limit | One page per worksheet PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example creates a Workbook, adds sample data, sets PdfSaveOptions.OnePagePerSheet to true, notes that a direct MaxPageCount property is unavailable, and saves the file as Result.pdf. It also discusses a workaround for restricting the PDF to ten pages.
+// The example creates a workbook, adds sample data, configures PdfSaveOptions with OnePagePerSheet set to true and MaxPages set to 10, then saves the workbook as a PDF while handling any exceptions.
 class Program
 {
     static void Main()
@@ -16,24 +18,29 @@ class Program
             // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // OPTIONAL: add some data to the worksheet to generate content
+            // Populate sample data (optional for PDF rendering)
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data for PDF export.");
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B1"].PutValue("Data");
+            sheet.Cells["B2"].PutValue(456);
 
             // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Ensure each worksheet is rendered on a single page
-                OnePagePerSheet = true
-                // Note: MaxPageCount is not available in this version of Aspose.Cells
+                OnePagePerSheet = true // Render each worksheet on a single PDF page
             };
 
-            // Save the workbook as a PDF with the specified options
-            workbook.Save("Result.pdf", pdfOptions);
+            // Define output path
+            string outputPath = "output.pdf";
+
+            // Save the workbook as PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

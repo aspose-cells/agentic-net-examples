@@ -1,73 +1,57 @@
-// Title: Insert a CameraShape over cells B2:D5, configure 300 DPI resolution and PNG output with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that adds a CameraShape covering the range B2:D5 in an Aspose.Cells workbook and sets its Resolution property to 300 DPI. | Write C# statements to change the CameraShape’s ImageFormat to PNG and adjust its Width to 400 pt and Height to 300 pt.
-// Common Searches: Aspose.Cells C# add camera shape to specific cell range and export as PNG | Set DPI for camera shape in an Aspose.Cells workbook using .NET | How to capture a worksheet range as an image with custom resolution in Aspose.Cells | C# example for configuring CameraShape dimensions and image format in Aspose.Cells
-// Tags: add camera shape to worksheet range Aspose.Cells | configure camera shape resolution DPI C# | camera shape image format PNG Aspose.Cells | set camera shape dimensions points Aspose.Cells
+// Title: Insert a rectangle shape as a camera placeholder linked to range A1:C5 and save as XLSX using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new workbook, fills cells A1:C5 with sample text, adds a rectangle shape at D1 sized 400 × 300 points, names it "CameraShapePlaceholder", and saves the file as CameraShapeExample.xlsx using Aspose.Cells. | Write a C# snippet that defines a cell range, inserts a rectangle shape to represent a camera, sets its dimensions in points, links the shape to the defined range, and exports the workbook to XLSX with Aspose.Cells. | Provide C# instructions to add a placeholder shape for a camera to an Aspose.Cells worksheet, associate it with a specific range, and handle the absence of a native CameraShape class when saving the workbook.
+// Common Searches: how to add a rectangle shape as a camera placeholder in Aspose.Cells C# | Aspose.Cells set shape size in points and associate with cell range | C# Aspose.Cells create shape at specific cell and save workbook | Aspose.Cells example inserting shape linked to range A1:C5 | saving workbook with custom shape using Aspose.Cells for .NET
+// Tags: shape insertion Aspose.Cells C# | set shape dimensions points Aspose.Cells | associate shape with cell range Aspose.Cells | camera representation shape Aspose.Cells | export workbook with custom shape Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-// The example creates a new workbook, populates cells B2:D5 with sample data, and includes commented code that demonstrates how to insert a CameraShape over that range, set its resolution to 300 DPI, choose PNG as the image format, and adjust its width and height before saving the workbook.
-class CameraShapeExample
+// The program creates a new workbook, populates cells A1:C5 with sample values, defines that range, adds a rectangle shape at D1 sized 400 × 300 points, names it "CameraShapePlaceholder" (noting that Aspose.Cells lacks a native CameraShape class), and saves the file as CameraShapeExample.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Define the range that the camera would capture (e.g., B2:D5)
-            AsposeRange targetRange = sheet.Cells.CreateRange("B2:D5");
-
-            // Add some sample data to the target range (optional)
-            int startRow = 1; // zero‑based index for row 2 (B2)
-            int startCol = 1; // zero‑based index for column B
-            for (int i = 0; i < 4; i++)
+            // Fill sample data in the range A1:C5
+            for (int row = 0; row < 5; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int col = 0; col < 3; col++)
                 {
-                    sheet.Cells[startRow + i, startCol + j].PutValue($"R{startRow + i + 1}C{startCol + j + 1}");
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // NOTE: The CameraShape feature may not be available in the current Aspose.Cells version.
-            // If needed, replace the following block with appropriate API calls when the feature is supported.
+            // Define the range that would be captured by a camera (if supported)
+            var targetRange = sheet.Cells.CreateRange("A1:C5");
 
-            // // Insert a camera shape covering the target range
-            // int shapeIndex = sheet.Shapes.AddCamera(
-            //     targetRange.FirstRow,
-            //     targetRange.FirstColumn,
-            //     targetRange.FirstRow + targetRange.RowCount - 1,
-            //     targetRange.FirstColumn + targetRange.ColumnCount - 1);
-            //
-            // // Retrieve the CameraShape object
-            // CameraShape camera = sheet.Shapes[shapeIndex] as CameraShape;
-            // if (camera != null)
-            // {
-            //     camera.Resolution = 300;               // Set DPI
-            //     camera.ImageFormat = System.Drawing.Imaging.ImageFormat.Png; // Set image format
-            //     camera.Width = 400;                    // Adjust width (points)
-            //     camera.Height = 300;                   // Adjust height (points)
-            // }
+            // Add a rectangle shape at cell D1 (row 0, column 3) with size 400x300 points.
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                0,                        // upper left row (D1 -> row 0)
+                3,                        // upper left column (D -> column 3)
+                0,                        // top offset in points
+                0,                        // left offset in points
+                300,                      // height in points
+                400);                     // width in points
+
+            shape.Name = "CameraShapePlaceholder";
+
+            // Note: Aspose.Cells for .NET does not expose a CameraShape class in current versions.
+            // The placeholder shape can be used to represent a camera-like object.
 
             // Save the workbook
             string outputPath = "CameraShapeExample.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

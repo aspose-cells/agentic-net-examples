@@ -1,87 +1,62 @@
-// Title: Collapse all column field items in an Aspose.Cells pivot table after refreshing data (C#)
-// AI Prompts: Generate C# code that creates a pivot table with row and column fields, refreshes its data source, and collapses every column field item using Aspose.Cells. | Show how to use PivotField.PivotItems.HideAllDetail(true) to hide column details after calling PivotTable.RefreshData in a .NET workbook. | Provide a method that builds sample data, adds a pivot table, refreshes it, collapses the column area, and saves the workbook as an .xlsx file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# collapse column items after pivot refresh | How to hide column field details in a pivot table using Aspose.Cells for .NET | Programmatically collapse pivot table column area after RefreshData in C# | Aspose.Cells example to summarize pivot report by collapsing column fields | C# code to refresh pivot cache and collapse all column items with Aspose.Cells
-// Tags: pivot column collapse using Aspose.Cells | refresh pivot cache programmatically C# | hide column field details Aspose.Cells | generate summarized pivot report .xlsx | Aspose.Cells column area collapse after refresh
+// Title: Refresh all pivot tables and hide every column field item in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file, refreshes each pivot table, marks all items in the column fields as hidden, and saves the result to a new workbook with Aspose.Cells. | Generate a C# program that iterates through all worksheets, calls RefreshData on every pivot table, collapses (hides) all column‑area items, and writes the updated file using Aspose.Cells.
+// Common Searches: aspocells c# collapse all column items in pivot table after refresh | programmatically hide pivot column field items in .xlsx using Aspose.Cells | refresh pivot tables and set column items hidden in C# Aspose.Cells example | how to collapse column area of pivot tables in an Excel workbook with Aspose.Cells for .NET | C# code to hide all column field items in every pivot table of a workbook
+// Tags: Aspose.Cells refresh pivot data C# | collapse pivot column items Aspose.Cells | hide pivot column field items .xlsx | iterate worksheets pivot tables Aspose.Cells | save modified workbook Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The program loads Report.xlsx, refreshes each pivot table, hides all items in the column fields, and saves the modified workbook as Report_Collapsed.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates creating a workbook, adding sample data, building a pivot table, refreshing its cache, collapsing all column field items, and saving the result as CollapsedColumnItems.xlsx using Aspose.Cells for .NET.
-    public class CollapseColumnItemsAfterRefresh
+    static void Main()
     {
-        public static void Run()
+        const string inputFile = "Report.xlsx";
+        const string outputFile = "Report_Collapsed.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                // Columns: Category, SubCategory, Sales
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("SubCategory");
-                sheet.Cells["C1"].PutValue("Sales");
-
-                sheet.Cells["A2"].PutValue("Electronics");
-                sheet.Cells["B2"].PutValue("Laptop");
-                sheet.Cells["C2"].PutValue(1200);
-
-                sheet.Cells["A3"].PutValue("Electronics");
-                sheet.Cells["B3"].PutValue("Phone");
-                sheet.Cells["C3"].PutValue(800);
-
-                sheet.Cells["A4"].PutValue("Furniture");
-                sheet.Cells["B4"].PutValue("Chair");
-                sheet.Cells["C4"].PutValue(150);
-
-                sheet.Cells["A5"].PutValue("Furniture");
-                sheet.Cells["B5"].PutValue("Table");
-                sheet.Cells["C5"].PutValue(300);
-
-                // Add a pivot table to a new worksheet
-                Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-                int pivotIndex = pivotSheet.PivotTables.Add("=Sheet1!A1:C5", "E3", "SalesPivot");
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");          // Row field
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");   // Column field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");           // Data field (sum)
-
-                // Enable drill‑down buttons so collapse/expand UI is visible
-                pivotTable.ShowDrill = true;
-
-                // Refresh the pivot cache and recalculate the pivot table
-                pivotTable.RefreshData();   // Correct API to refresh data source
-                pivotTable.CalculateData();
-
-                // Collapse all items in the column area
-                foreach (PivotField columnField in pivotTable.ColumnFields)
-                {
-                    // Pass true to hide details (collapse)
-                    columnField.PivotItems.HideAllDetail(true);
-                }
-
-                // Save the workbook
-                workbook.Save("CollapsedColumnItems.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file '{inputFile}' not found.");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            CollapseColumnItemsAfterRefresh.Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each pivot table on the worksheet
+                foreach (PivotTable pivot in sheet.PivotTables)
+                {
+                    // Refresh the pivot table data
+                    pivot.RefreshData();
+
+                    // Collapse (hide) all items in the column area
+                    foreach (PivotField colField in pivot.ColumnFields)
+                    {
+                        foreach (PivotItem item in colField.PivotItems)
+                        {
+                            // Hide the item to achieve a collapsed view
+                            item.IsHidden = true;
+                        }
+                    }
+                }
+            }
+
+            // Save the workbook with collapsed column items
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved as '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

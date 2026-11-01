@@ -1,41 +1,28 @@
-// Title: How to set a fixed column width and auto‑fit another column in an Aspose.Cells .NET workbook (C#)
-// AI Prompts: Write C# code that creates a new workbook, adds short text to column A and long text to column B, sets column A to 15 characters with the SetColumnWidth method, and then applies AutoFitColumn to column B before saving as an .xlsx file. | Show a side‑by‑side comparison of a manually defined column width versus an automatically adjusted column by using SetColumnWidth for one column and AutoFitColumn for the adjacent column in Aspose.Cells.
-// Common Searches: Aspose.Cells C# specify column width in characters | C# adjust column width automatically from cell values using Aspose.Cells | example of manual column width versus auto‑adjusted column in .NET Excel library | how to compare SetColumnWidth and AutoFitColumn results in an Aspose.Cells worksheet
-// Tags: SetColumnWidth method Aspose.Cells C# | AutoFitColumn usage Aspose.Cells .xlsx | manual vs auto column sizing Aspose.Cells | column width comparison workbook Aspose.Cells | programmatic column sizing .NET Excel
+// Title: Set a fixed width for column A and auto‑fit column B using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# program that builds a new workbook, assigns a width of 20 characters to column A, automatically adjusts column B to its content, and writes the result to ColumnWidthComparison.xlsx using Aspose.Cells. | Write C# code with Aspose.Cells that demonstrates applying a fixed column width to one column and then invoking the auto‑fit routine on the neighboring column before saving.
+// Common Searches: asp.net aspose.cells set column width to specific number of characters | how to auto adjust column width after setting custom width in Aspose.Cells C# | c# example of comparing fixed column width with auto‑fit in Aspose.Cells | Aspose.Cells column width vs auto‑fit behavior demonstration
+// Tags: specific column width Aspose.Cells C# | auto‑fit column Aspose.Cells C# | column width comparison Aspose.Cells | C# worksheet column sizing Aspose.Cells | Aspose.Cells column width manipulation example
 
-using System;
 using Aspose.Cells;
 
-namespace ColumnWidthDemo
+// Demonstrates creating a workbook, setting column A to a 20‑character width, auto‑fitting column B based on its content, and saving the file as ColumnWidthComparison.xlsx.
+class Program
 {
-    // The program creates a workbook, writes short strings to column A and long strings to column B, sets column A width to 15 characters with SetColumnWidth, auto‑fits column B with AutoFitColumn, and saves the file as ColumnWidthComparison.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Populate column A with short text
-            cells["A1"].PutValue("Short");
-            cells["A2"].PutValue("Data");
-            cells["A3"].PutValue("Info");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate column B with longer text that will require auto‑fit
-            cells["B1"].PutValue("This is a much longer piece of text that should cause the column to expand when auto‑fit is applied.");
-            cells["B2"].PutValue("Another lengthy entry to demonstrate the effect of AutoFitColumn.");
-            cells["B3"].PutValue("Yet another long string for testing purposes.");
+        // Set a specific width (in characters) for column A (index 0)
+        sheet.Cells.SetColumnWidth(0, 20); // 20 characters wide
 
-            // Set a fixed width for column A (index 0) – 15 characters
-            cells.SetColumnWidth(0, 15.0);
+        // Auto‑fit column B (index 1) based on its content
+        sheet.AutoFitColumn(1);
 
-            // Auto‑fit column B (index 1) based on its content
-            sheet.AutoFitColumn(1);
-
-            // Save the workbook
-            workbook.Save("ColumnWidthComparison.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("ColumnWidthComparison.xlsx");
     }
 }

@@ -1,13 +1,12 @@
-// Title: Export an Excel workbook containing hidden rows to PDF with gridlines using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets PageSetup.PrintGridlines = true for every worksheet, and saves the workbook as a PDF while ensuring hidden rows do not affect the displayed gridlines. | Create a reusable C# method named ExportToPdfWithGridlines that accepts input and output paths, checks file existence, configures PdfSaveOptions, and performs the hidden‑row‑aware PDF conversion with Aspose.Cells. | Adapt the given Aspose.Cells example to add error handling for missing files and to explicitly enable gridline printing in the PDF output without altering the original worksheet formatting.
-// Common Searches: Aspose.Cells hide rows but keep gridlines when converting to PDF | How to print gridlines for all worksheets in a .NET Excel to PDF conversion | C# PDF export from Excel ignoring hidden rows using Aspose.Cells | Enable PrintGridlines in Aspose.Cells before saving workbook as PDF | Validate input Excel file existence before Aspose.Cells PDF conversion
-// Tags: Aspose.Cells PDF export with gridlines | hidden rows excluded from gridline rendering | PageSetup.PrintGridlines setting | C# PdfSaveOptions for Excel conversion | input file validation for Aspose.Cells workflow | apply settings to all worksheets
+// Title: Export an Excel worksheet to PDF with gridlines visible while hidden rows remain excluded using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells export PDF with gridlines but ignore hidden rows | How to keep hidden rows hidden when saving Excel as PDF with gridlines in .NET | Enable PrintGridlines and hide rows during PDF conversion using Aspose.Cells | Aspose.Cells PDF export preserving worksheet gridlines without showing hidden rows | Export Excel to PDF with visible gridlines and hidden rows excluded in C#
+// Tags: Aspose.Cells PDF export with gridlines | PrintGridlines property C# | exclude hidden rows during PDF conversion | Excel to PDF gridline rendering Aspose.Cells | worksheet IsGridlinesVisible Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program verifies that the source XLSX file exists, loads it into an Aspose.Cells Workbook, iterates through each worksheet to enable PageSetup.PrintGridlines, configures default PdfSaveOptions, and saves the workbook as a PDF where hidden rows do not interfere with gridline rendering.
+// The sample loads an existing Excel file, sets both IsGridlinesVisible and PageSetup.PrintGridlines to true, and saves the workbook as a PDF. Aspose.Cells automatically omits hidden rows while rendering gridlines, producing a PDF where gridlines are visible but hidden rows do not affect the layout.
 class Program
 {
     static void Main()
@@ -17,28 +16,27 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Verify that the input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
                 return;
             }
 
-            // Load the workbook that contains hidden rows
+            // Load the workbook that contains hidden rows/columns
             Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure hidden rows do not affect gridline rendering
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.PageSetup.PrintGridlines = true;
-            }
+            // Enable gridlines for export (both view and when saving to PDF/Image)
+            sheet.IsGridlinesVisible = true;          // shows gridlines in the UI
+            sheet.PageSetup.PrintGridlines = true;    // includes gridlines in exported files
 
-            // Configure PDF save options (gridlines are already enabled via PageSetup)
-            PdfSaveOptions saveOptions = new PdfSaveOptions();
+            // Aspose.Cells automatically respects hidden rows and columns when exporting.
+            // No need to modify visibility flags; the hidden state (IsHidden) is sufficient.
 
-            // Save the workbook as PDF
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Save the workbook as PDF with gridlines exported and hidden rows/columns ignored
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

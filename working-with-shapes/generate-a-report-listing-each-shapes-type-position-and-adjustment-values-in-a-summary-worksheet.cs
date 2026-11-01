@@ -1,110 +1,114 @@
-// Title: Create a summary worksheet that lists each shape’s type, coordinates, size, and adjustment values in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# console application that opens an existing .xlsx workbook with Aspose.Cells, adds a new worksheet called "Summary", and records for every shape on each non‑summary sheet its name, type, top, left, width, height, and any adjustment values. | Enhance the shape‑reporting code to safely handle shapes without a name, exclude the summary sheet from the iteration, and log any shape‑processing errors without terminating the program. | After populating the summary data, apply AutoFit to all columns and save the modified workbook to a separate output file while preserving the original workbook.
-// Common Searches: Aspose.Cells C# list all shapes in a workbook with their position and size | How to export shape type and coordinates to a new worksheet using Aspose.Cells .NET | C# generate shape report including adjustment values in Excel with Aspose.Cells | Skip a specific worksheet while iterating shapes in Aspose.Cells | AutoFit columns after writing data with Aspose.Cells C#
-// Tags: Aspose.Cells extract shape properties C# | generate shape summary worksheet Aspose.Cells | list shape coordinates Aspose.Cells .NET | export shape adjustments Aspose.Cells | auto‑fit columns Aspose.Cells workbook
+// Title: Generate a summary worksheet that lists each shape’s type, coordinates, size, and adjustment values using Aspose.Cells for .NET
+// AI Prompts: Create C# code with Aspose.Cells that scans every worksheet, extracts each shape’s name, type, left, top, width, height, and any adjustment values, and writes the data to a new sheet named "Summary". | Extend the shape‑report program to also retrieve each shape’s rotation angle and add it as an extra column in the summary worksheet. | Add comprehensive error handling and logging to the shape extraction loop to record shapes missing adjustment data or throwing exceptions, and write the log to a text file.
+// Common Searches: Aspose.Cells C# how to list all shapes with their positions and sizes in an Excel workbook | C# extract shape adjustment values from Excel using Aspose.Cells | Create a summary sheet of shape properties (type, left, top, width, height) with Aspose.Cells | Iterate through worksheets and shapes in Aspose.Cells to generate a shape report | Reflection to access shape adjustments in Aspose.Cells for .NET
+// Tags: Aspose.Cells shape property extraction | C# export shape dimensions to Excel | Aspose.Cells reflection for shape adjustments | Excel shape summary worksheet generation | capture shape rotation Aspose.Cells | robust shape extraction error handling
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeReportGenerator
+// The program loads an existing workbook (or creates a new one), adds a "Summary" worksheet, iterates through all other worksheets and their shapes, collects each shape's name, type, left, top, width, height, and any adjustment values via reflection, writes these details into the summary sheet, and saves the workbook.
+class ShapeReportGenerator
 {
-    // The program loads an existing workbook, adds a 'Summary' sheet, iterates all other worksheets, extracts each shape’s name, type, top, left, width, height (adjustments left blank), writes these details to the summary sheet, auto‑fits columns for readability, and saves the result to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Load the source workbook; create a new one if the file does not exist
+            Workbook workbook;
+            const string inputPath = "input.xlsx";
+            if (File.Exists(inputPath))
             {
-                // Define input and output file paths
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a workbook with a default sheet
+                workbook.Worksheets[0].Name = "Sheet1";
+            }
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // Add a new worksheet for the summary report
+            int summaryIndex = workbook.Worksheets.Add();
+            Worksheet summarySheet = workbook.Worksheets[summaryIndex];
+            summarySheet.Name = "Summary";
+
+            // Write header row
+            summarySheet.Cells["A1"].PutValue("Worksheet");
+            summarySheet.Cells["B1"].PutValue("Shape Name");
+            summarySheet.Cells["C1"].PutValue("Shape Type");
+            summarySheet.Cells["D1"].PutValue("Left");
+            summarySheet.Cells["E1"].PutValue("Top");
+            summarySheet.Cells["F1"].PutValue("Width");
+            summarySheet.Cells["G1"].PutValue("Height");
+            summarySheet.Cells["H1"].PutValue("Adjustments");
+
+            int currentRow = 1; // Start writing data from the second row (zero‑based index)
+
+            // Iterate through all worksheets except the summary sheet
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                Worksheet ws = workbook.Worksheets[i];
+                if (ws.Name == "Summary")
+                    continue; // Skip the summary sheet itself
+
+                // Iterate through all shapes in the current worksheet
+                foreach (Shape shape in ws.Shapes)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Add a new worksheet for the summary report
-                Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
-                summarySheet.Name = "Summary";
-
-                // Write header row
-                Cells cells = summarySheet.Cells;
-                cells[0, 0].PutValue("Worksheet");
-                cells[0, 1].PutValue("Shape Name");
-                cells[0, 2].PutValue("Shape Type");
-                cells[0, 3].PutValue("Top");
-                cells[0, 4].PutValue("Left");
-                cells[0, 5].PutValue("Width");
-                cells[0, 6].PutValue("Height");
-                cells[0, 7].PutValue("Adjustments");
-
-                int currentRow = 1; // Start after header
-
-                // Iterate through all worksheets and their shapes
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // Skip the summary sheet itself to avoid self‑reference
-                    if (ws.Name == summarySheet.Name) continue;
-
-                    foreach (Shape shape in ws.Shapes)
+                    try
                     {
-                        try
+                        // Collect adjustment values (if any) into a comma‑separated string
+                        string adjustments = string.Empty;
+                        // The Adjustments property may not be available in older versions;
+                        // if it exists, gather its values.
+                        var adjustmentsProp = shape.GetType().GetProperty("Adjustments");
+                        if (adjustmentsProp != null)
                         {
-                            // Shape name (if not set, use empty string)
-                            string shapeName = string.IsNullOrEmpty(shape.Name) ? "" : shape.Name;
-
-                            // Shape type as string
-                            string shapeType = shape.Type.ToString();
-
-                            // Position and size
-                            double top = shape.Top;
-                            double left = shape.Left;
-                            double width = shape.Width;
-                            double height = shape.Height;
-
-                            // Adjustments are not directly exposed in Aspose.Cells Shape;
-                            // leave empty or implement custom logic if needed.
-                            string adjustments = "";
-
-                            // Write data to the summary sheet
-                            cells[currentRow, 0].PutValue(ws.Name);
-                            cells[currentRow, 1].PutValue(shapeName);
-                            cells[currentRow, 2].PutValue(shapeType);
-                            cells[currentRow, 3].PutValue(top);
-                            cells[currentRow, 4].PutValue(left);
-                            cells[currentRow, 5].PutValue(width);
-                            cells[currentRow, 6].PutValue(height);
-                            cells[currentRow, 7].PutValue(adjustments);
-
-                            currentRow++;
+                            var adjustmentsObj = adjustmentsProp.GetValue(shape);
+                            if (adjustmentsObj != null)
+                            {
+                                var countProp = adjustmentsObj.GetType().GetProperty("Count");
+                                var indexer = adjustmentsObj.GetType().GetProperty("Item");
+                                int count = (int)countProp.GetValue(adjustmentsObj);
+                                var sb = new StringBuilder();
+                                for (int adjIndex = 0; adjIndex < count; adjIndex++)
+                                {
+                                    double value = (double)indexer.GetValue(adjustmentsObj, new object[] { adjIndex });
+                                    if (sb.Length > 0) sb.Append(", ");
+                                    sb.Append(value);
+                                }
+                                adjustments = sb.ToString();
+                            }
                         }
-                        catch (Exception shapeEx)
-                        {
-                            Console.WriteLine($"Error processing shape in worksheet '{ws.Name}': {shapeEx.Message}");
-                        }
+
+                        // Write shape information to the summary sheet
+                        summarySheet.Cells[currentRow, 0].PutValue(ws.Name);                         // Worksheet
+                        summarySheet.Cells[currentRow, 1].PutValue(shape.Name);                     // Shape Name
+                        summarySheet.Cells[currentRow, 2].PutValue(shape.Type.ToString());          // Shape Type
+                        summarySheet.Cells[currentRow, 3].PutValue(shape.Left);                     // Left
+                        summarySheet.Cells[currentRow, 4].PutValue(shape.Top);                      // Top
+                        summarySheet.Cells[currentRow, 5].PutValue(shape.Width);                    // Width
+                        summarySheet.Cells[currentRow, 6].PutValue(shape.Height);                   // Height
+                        summarySheet.Cells[currentRow, 7].PutValue(adjustments);                    // Adjustments
+
+                        currentRow++;
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        Console.WriteLine($"Error processing shape '{shape.Name}' in worksheet '{ws.Name}': {shapeEx.Message}");
                     }
                 }
-
-                // Auto‑fit columns for better readability
-                summarySheet.AutoFitColumns();
-
-                // Save the workbook with the new summary sheet
-                workbook.Save(outputPath);
-                Console.WriteLine($"Summary report saved to {outputPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook with the new summary worksheet
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Summary report saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

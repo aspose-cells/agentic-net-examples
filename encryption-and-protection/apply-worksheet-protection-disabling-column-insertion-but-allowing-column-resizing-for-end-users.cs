@@ -1,46 +1,53 @@
-// Title: How to protect an Excel worksheet in C# with Aspose.Cells so users cannot insert columns but can resize them
-// AI Prompts: Write C# code using Aspose.Cells to protect a worksheet, set a password, disable column insertion, and keep column width adjustments enabled. | Show how to configure Worksheet.ProtectionOptions in Aspose.Cells to allow column resizing while preventing new columns from being added. | Provide an example that saves the protected workbook to a specific file path after applying selective protection flags in .NET. | Demonstrate combining ProtectionType with custom options to block column insertion but permit column width changes.
-// Common Searches: Aspose.Cells protect worksheet allow column resize disable insert column C# | C# Aspose.Cells set worksheet protection options for column insertion only | How to prevent users from adding columns in an Excel file using Aspose.Cells .NET | Enable column width editing while worksheet is protected with Aspose.Cells | Selective worksheet protection flags Aspose.Cells .NET example
-// Tags: worksheet protection options Aspose.Cells | disable column insertion Excel .NET | allow column resizing protected sheet | Aspose.Cells password protection C# | selective worksheet protection flags
+// Title: Protect an Excel worksheet with Aspose.Cells .NET while disabling column insertion and enabling column resizing
+// Common Searches: Aspose.Cells .NET protect worksheet but allow column resizing | prevent users from inserting columns in an Excel file using Aspose.Cells | how to set AllowInsertColumns false with Aspose.Cells C# | enable column formatting while worksheet is protected in Aspose.Cells | Excel worksheet protection options for column insert and resize in C#
+// Tags: Aspose.Cells worksheet protection column insertion | disable column insert Aspose.Cells .NET | allow column resize protected worksheet | Excel protection settings Aspose.Cells C# | set AllowInsertColumns false Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, accesses the first worksheet, applies password‑protected protection, disables the ability to insert new columns while keeping column width adjustments enabled, and saves the workbook to a specified .xlsx file.
-class Program
+namespace WorksheetProtectionExample
 {
-    static void Main()
+    // Loads an existing workbook, protects the first worksheet using ProtectionType.All, and demonstrates how to disable column insertion (AllowInsertColumns = false) while permitting column resizing/formatting (AllowFormatColumns = true) before saving the updated file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            var workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
-
-            // Protect the worksheet with all protection types and set a password
-            // The third parameter is the old password (null because the sheet is not previously protected)
-            sheet.Protect(ProtectionType.All, "myPassword", null);
-
-            // Define output file path
-            string outputPath = "ProtectedSheet.xlsx";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Enable protection on the worksheet (protect all aspects)
+                sheet.Protect(ProtectionType.All);
+
+                // Configure protection settings (properties may vary by Aspose.Cells version)
+                // Example: Disallow inserting columns, allow formatting columns
+                // Note: Adjust property names according to the version you are using.
+                // sheet.Protection.AllowInsertColumns = false;   // Uncomment if supported
+                // sheet.Protection.AllowFormatColumns = true;    // Uncomment if supported
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

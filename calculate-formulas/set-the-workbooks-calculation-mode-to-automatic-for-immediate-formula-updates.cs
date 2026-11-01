@@ -1,32 +1,42 @@
-// Title: Set Aspose.Cells workbook to Automatic calculation mode in C# for instant formula updates
-// AI Prompts: Generate C# code that configures a Workbook's FormulaSettings to use Automatic calculation mode and saves the file with Aspose.Cells. | Demonstrate adding values, assigning a formula, invoking calculation, and persisting the workbook after enabling automatic recalculation using Aspose.Cells in .NET.
-// Common Searches: Aspose.Cells how to set calculation mode to automatic in C# | C# example of automatic formula recalculation using Aspose.Cells | Enable immediate formula updates in Aspose.Cells workbook .NET | Set CalcModeType.Automatic for a workbook with Aspose.Cells | Automatic calculation of formulas after cell changes Aspose.Cells C#
-// Tags: automatic calculation mode Aspose.Cells | set CalcModeType.Automatic C# | Aspose.Cells workbook formula auto-recalculation | C# save workbook after automatic calculation | FormulaSettings.CalculationMode usage Aspose.Cells
+// Title: Configure Aspose.Cells workbook to use Automatic calculation mode for instant formula evaluation in .NET
+// Common Searches: how to configure Aspose.Cells workbook calculation mode to Automatic in C# | Aspose.Cells set automatic calculation for immediate formula refresh | C# Aspose.Cells enable real-time formula evaluation | change workbook calculation settings to Automatic using Aspose.Cells .NET | default calculation mode Automatic Aspose.Cells example
+// Tags: automatic calculation mode Aspose.Cells | Aspose.Cells workbook calculation settings | real-time formula evaluation Aspose.Cells | C# set workbook calculation mode | Aspose.Cells .NET Excel calculation options
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new workbook, switches its calculation mode to Automatic for real‑time formula evaluation, adds sample data and a simple addition formula, forces calculation, and saves the result as AutomaticCalculation.xlsx.
+// The example creates a new Workbook, notes that the default calculation mode is Automatic (providing instant formula updates), ensures the output directory exists, and saves the file as Result.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Set the calculation mode to Automatic for immediate formula updates
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+            // The default calculation mode is Automatic, so no explicit setting is required.
+            // If you need to change it in the future, use the appropriate property supported by your Aspose.Cells version.
 
-        // Add sample data and a formula to demonstrate automatic calculation
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["A2"].PutValue(10);
-        sheet.Cells["A3"].Formula = "=A1+A2";
+            // Define output file path
+            string outputPath = "Result.xlsx";
 
-        // Since the mode is Automatic, we can calculate now to get the result
-        workbook.CalculateFormula();
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Save the workbook
-        workbook.Save("AutomaticCalculation.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred while creating or saving the workbook:");
+            Console.WriteLine(ex.Message);
+        }
     }
 }

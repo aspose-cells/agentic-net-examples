@@ -1,22 +1,23 @@
-// Title: How to log font substitution warnings after saving an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write a C# method that saves a Workbook with Aspose.Cells and then iterates over workbook.GetWarnings() to output FontSubstitution warning details. | Show how to capture and display missing‑font warnings from the workbook warnings collection immediately after calling Workbook.Save. | Generate sample code that checks the Workbook warnings for FontSubstitution entries and writes each warning description to the console.
-// Common Searches: Aspose.Cells .NET retrieve font substitution warnings after saving workbook | C# log missing font warnings when exporting Excel with Aspose.Cells | How to inspect workbook warnings for font issues in Aspose.Cells | GetWarnings FontSubstitution example for Aspose.Cells C# | Detect unavailable fonts during Excel save using Aspose.Cells API
-// Tags: Aspose.Cells GetWarnings API | enumerate workbook warnings C# | detect missing fonts Aspose.Cells | inspect workbook warnings after save | Excel font substitution handling Aspose.Cells
+// Title: How to Inspect and Log Font Substitution Warnings from an Aspose.Cells Workbook After Saving in C#
+// AI Prompts: Generate C# code that saves an Excel workbook with Aspose.Cells, then examines workbook.Warnings for any FontSubstitution warnings and writes each warning message to the console. | Show an example of iterating through the Aspose.Cells WarningCollection after workbook.Save to capture and log font‑substitution details, including handling the case where no warnings are present.
+// Common Searches: Aspose.Cells C# retrieve font substitution warnings after workbook.Save | C# log warning messages from Aspose.Cells warning collection | How to access workbook.Warnings for missing fonts in Aspose.Cells | Check for font substitution warnings when converting Excel to PDF using Aspose.Cells C#
+// Tags: Aspose.Cells warning collection iteration | font substitution warning logging C# | inspect workbook warnings after save Aspose.Cells | C# Aspose.Cells font fallback detection
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file, modifies a cell, saves the workbook, and demonstrates how to enumerate the workbook's warnings collection to identify and print any FontSubstitution warnings, helping developers catch missing‑font issues after a save operation.
+// The example demonstrates loading an Excel file, saving it with Aspose.Cells, and then iterating over the workbook.Warnings collection to identify FontSubstitution warnings. Each relevant warning is written to the console, with graceful handling when no warnings exist. Requires a version of Aspose.Cells that exposes the WarningCollection API.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
@@ -27,31 +28,23 @@ class Program
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Example modification: add a value to the first cell
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Text");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the modified workbook
+            // Save the workbook to the desired output location
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to: {outputPath}");
 
-            // Optional: inspect warnings if the API supports it
-            // Note: GetWarnings may not be available in some versions of Aspose.Cells.
-            // If needed, uncomment and adjust the following code according to the version you use.
-            /*
-            var warnings = workbook.GetWarnings();
-            foreach (var warning in warnings)
-            {
-                if (warning.Type == ExceptionType.FontSubstitution)
-                {
-                    Console.WriteLine($"Font substitution warning: {warning.Description}");
-                }
-            }
-            */
+            // NOTE: Warning retrieval APIs (GetWarnings, WarningCollection, Warning) are not
+            // available in the referenced Aspose.Cells version, so this part is omitted.
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display a friendly message
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

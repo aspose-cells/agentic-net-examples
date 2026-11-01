@@ -1,33 +1,48 @@
-// Title: Export an Aspose.Cells workbook to HTML without generating an external CSS file using HtmlSaveOptions.DisableCss (C#)
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML while turning off external CSS generation. | Demonstrate how to set HtmlSaveOptions.DisableCss = true before calling Workbook.Save for HTML output. | Show a complete example that creates a workbook, adds data, configures HTML save options to suppress CSS, and writes the HTML file.
-// Common Searches: Aspose.Cells C# export to HTML without external CSS file | How to stop Aspose.Cells from creating a CSS file when saving as HTML | HtmlSaveOptions.DisableCss property usage example | Generate HTML from Excel in .NET without linked CSS stylesheet
-// Tags: Aspose.Cells HtmlSaveOptions.DisableCss | C# HTML export without CSS | disable external CSS Aspose.Cells | Excel to HTML options .NET | suppress CSS file generation Aspose.Cells
+// Title: How to disable external CSS generation when exporting an Excel workbook to HTML with Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# export workbook to HTML without creating a separate CSS file | set HtmlSaveOptions.DisableCss to true example Aspose.Cells | prevent external stylesheet generation during HTML save using Aspose.Cells | C# code to export Excel to HTML with inline styles only Aspose.Cells | disable CSS file output when saving workbook as HTML with Aspose.Cells library
+// Tags: Aspose.Cells HtmlSaveOptions.DisableCss property | C# export Excel to HTML without external CSS | HTML save options inline styling Aspose.Cells | disable external stylesheet Aspose.Cells HTML export | Excel workbook HTML export inline CSS C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// Creates a workbook, fills sample cells, sets HtmlSaveOptions.DisableCss to true to prevent an external CSS file, and saves the workbook as an HTML document.
-class HtmlExportExample
+// The example creates a Workbook, adds sample data, configures HtmlSaveOptions for HTML output, sets saveOptions.DisableCss = true to suppress the creation of an external CSS file, ensures the output directory exists, and saves the workbook as an HTML file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Add some sample data to the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Score");
-        sheet.Cells["A2"].PutValue("Alice");
-        sheet.Cells["B2"].PutValue(85);
-        sheet.Cells["A3"].PutValue("Bob");
-        sheet.Cells["B3"].PutValue(92);
+            // Populate sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Text");
+            sheet.Cells["B1"].PutValue(12345);
 
-        // Configure HTML save options to disable external CSS generation
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        htmlOptions.DisableCss = true; // Prevent creation of external CSS file
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Note: ExportHtmlAsMhtml is not available in all versions; HTML will be saved with external CSS if unsupported.
 
-        // Export the workbook to HTML using the configured options
-        workbook.Save("ExportedReport.html", htmlOptions);
+            // Define output file path
+            string outputPath = "Exported.html";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as HTML
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

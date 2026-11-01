@@ -1,39 +1,38 @@
-// Title: How to set Aspose.Cells CalculationOptions in C# to ignore errors from formulas that reference empty cells
-// AI Prompts: Write C# code that creates a Workbook, configures CalculationOptions to skip errors caused by blank cell references, and then evaluates all formulas. | Show the steps to enable the ignore‑empty‑cell error flag before calling workbook.Calculate() using Aspose.Cells .NET.
-// Common Searches: Aspose.Cells C# ignore #REF! errors when formula refers to empty cell | set calculationoptions.ignoreerror true before evaluating workbook formulas Aspose.Cells | disable error propagation from blank cells during Excel calculation with Aspose.Cells .NET
-// Tags: Aspose.Cells calculationoptions ignore empty cell errors | C# set ignoreerror flag Aspose.Cells workbook | disable blank cell reference errors Aspose.Cells | configure formula evaluation to skip empty cells Aspose.Cells | Aspose.Cells workbook calculation options handling errors
+// Title: How to configure Aspose.Cells calculation settings to ignore errors from empty cell references in C#
+// Common Searches: Aspose.Cells C# ignore #DIV/0! error when formula references a blank cell | Set calculation options to treat empty cells as zero in Aspose.Cells .NET | Disable formula error propagation for missing cells using workbook.CalculateFormula | Configure Aspose.Cells to suppress errors from empty cell references during recalculation | C# Aspose.Cells calculation engine ignore errors from empty cell references
+// Tags: Aspose.Cells calculation options configuration | ignore empty cell errors Aspose.Cells | treat blank cells as zero Aspose.Cells | C# workbook formula recalculation settings | suppress formula errors Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example creates a new Workbook, ensures the target directory exists, saves the workbook as Result.xlsx, and writes a success or error message to the console.
+// The example creates a new workbook, assigns a formula that adds 10 to an empty cell (A2), configures calculation options so the empty cell is treated as zero, recalculates all formulas, outputs the result (10), and saves the workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new empty workbook.
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Define output file path.
-            string outputPath = "Result.xlsx";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the directory for the output file exists.
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Set a formula that references an empty cell (A2 is empty)
+            sheet.Cells["A1"].Formula = "=A2+10";
 
-            // Save the workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Output the result; A2 is treated as 0, so A1 should be 10
+            Console.WriteLine("Result in A1: " + sheet.Cells["A1"].Value);
+
+            // Save the workbook (optional)
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

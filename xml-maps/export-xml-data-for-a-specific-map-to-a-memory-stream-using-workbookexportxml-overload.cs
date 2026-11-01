@@ -1,69 +1,64 @@
-// Title: Export the first map chart from an Excel workbook to an XML file using the Workbook.ExportXml overload in Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a workbook, finds the first map chart on the first worksheet, and uses Workbook.ExportXml to write the chart's XML to a temporary file, then reads the file into a string and removes it. | Show how to add error handling for missing workbook files, absent worksheets, or no map charts when exporting map XML with Aspose.Cells.
-// Common Searches: Aspose.Cells export map chart XML to file example | C# Workbook.ExportXml overload for map charts | How to get XML of a specific map chart from Excel using Aspose.Cells | Export chart of type Map to XML with Aspose.Cells .NET
-// Tags: export map chart to XML Aspose.Cells | Workbook.ExportXml overload usage | temporary XML file handling C# | read exported XML content Aspose.Cells | locate first map chart worksheet Aspose.Cells
+// Title: Export a named XML map from an Excel workbook to a MemoryStream with Aspose.Cells (C#)
+// AI Prompts: Write C# code that loads an .xlsx file, uses Workbook.ExportXml to export a specific XML map directly into a MemoryStream. | Show how to retrieve a named XML map from a workbook and return its XML content as a byte array using Aspose.Cells. | Provide a C# example that exports an XML map to a temporary file, copies it into a MemoryStream, and then deletes the temporary file.
+// Common Searches: Aspose.Cells export specific XML map to stream in C# | How to get XML map bytes from an Excel file using Aspose.Cells | C# code for exporting a named XML map without saving a file | Workbook.ExportXml overload for named map to MemoryStream | Read exported XML map from temporary file using Aspose.Cells
+// Tags: export named XML map to MemoryStream Aspose.Cells | Workbook.ExportXml overload for specific map | load workbook and extract XML map C# | temporary file handling after ExportXml | convert exported XML map to byte array Aspose.Cells | read XML map content from MemoryStream C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// // Loads a workbook, searches the first worksheet for a map chart, exports that chart's XML to a temporary file via Workbook.ExportXml, reads the XML into a string, outputs it, and finally deletes the temporary file.
+// The program loads an Excel workbook, uses Workbook.ExportXml to export a specified XML map to a temporary file, copies the file into a MemoryStream, optionally converts it to a byte array, displays the XML, and finally removes the temporary file.
 class ExportMapToXml
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
+            // Path to the input workbook.
+            string inputPath = "input.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException.
+            // Verify that the input file exists.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook that contains at least one map chart.
-            using (Workbook workbook = new Workbook(inputPath))
+            // Load the workbook containing the map definition.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Name of the map to export (must exist in the workbook).
+            string mapName = "MyMap";
+
+            // Temporary file to store the exported XML.
+            string tempXmlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xml");
+
+            try
             {
-                // Ensure the workbook has at least one worksheet.
-                if (workbook.Worksheets.Count == 0)
-                {
-                    Console.WriteLine("Error: The workbook does not contain any worksheets.");
-                    return;
-                }
-
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Find the first map chart in the worksheet.
-                Chart mapChart = null;
-                foreach (Chart chart in sheet.Charts)
-                {
-                    if (chart.Type == ChartType.Map)
-                    {
-                        mapChart = chart;
-                        break;
-                    }
-                }
-
-                if (mapChart == null)
-                {
-                    Console.WriteLine("Error: No map charts found in the first worksheet.");
-                    return;
-                }
-
-                // Use the map chart's name for export.
-                string mapName = mapChart.Name;
-
-                // Export the map to a temporary XML file.
-                string tempXmlPath = Path.Combine(Path.GetTempPath(), $"ExportedMap_{Guid.NewGuid()}.xml");
+                // Export the specified map to the temporary XML file.
                 workbook.ExportXml(tempXmlPath, mapName);
 
-                // Read and display the exported XML content.
-                string xmlContent = File.ReadAllText(tempXmlPath);
-                Console.WriteLine(xmlContent);
+                // Read the exported XML into a memory stream.
+                using (FileStream fileStream = new FileStream(tempXmlPath, FileMode.Open, FileAccess.Read))
+                using (MemoryStream xmlStream = new MemoryStream())
+                {
+                    fileStream.CopyTo(xmlStream);
+                    xmlStream.Position = 0;
 
+                    // Optional: display the XML content.
+                    using (StreamReader reader = new StreamReader(xmlStream))
+                    {
+                        string xmlContent = reader.ReadToEnd();
+                        Console.WriteLine("Exported XML:");
+                        Console.WriteLine(xmlContent);
+                    }
+
+                    // If raw bytes are needed:
+                    // byte[] xmlBytes = xmlStream.ToArray();
+                }
+            }
+            finally
+            {
                 // Clean up the temporary file.
                 if (File.Exists(tempXmlPath))
                 {
@@ -73,7 +68,7 @@ class ExportMapToXml
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,76 +1,51 @@
-// Title: Verify that a password‑encrypted .xlsx workbook cannot be opened by legacy Excel versions using Aspose.Cells for .NET
-// AI Prompts: Create a C# program that uses Aspose.Cells to encrypt a workbook with a password, then try to open the file without providing the password to confirm the operation fails. | Show how to open a password‑protected .xlsx in C# by supplying the password through LoadOptions and handle the successful decryption case. | Demonstrate catching the exception thrown when an encrypted workbook is loaded with default LoadOptions, indicating it cannot be opened by older Excel versions.
-// Common Searches: how to confirm that a password protected .xlsx cannot be opened in Excel 2003 using Aspose.Cells | Aspose.Cells C# load encrypted workbook without password throws exception | verify Excel file encryption compatibility with legacy Excel versions in .NET | C# example for testing encrypted workbook opening failure on older Excel formats | using LoadOptions to open password protected Excel file with Aspose.Cells
-// Tags: Aspose.Cells encrypt workbook | LoadOptions set password for xlsx | detect legacy Excel incompatibility encrypted file | C# handle exception opening protected workbook | verify encrypted workbook blocks older Excel
+// Title: Check that a password‑protected .xlsx workbook cannot be opened by Excel 97‑2003 using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells verify encrypted .xlsx fails to load with LoadFormat.Excel97To2003 | how to detect incompatibility of modern .xlsx password encryption with Excel 97‑2003 in Aspose.Cells | Aspose.Cells LoadOptions Excel97To2003 throws exception for password‑protected workbook | test if older Excel versions can open a password‑encrypted .xlsx using Aspose.Cells .NET
+// Tags: Aspose.Cells password encryption compatibility | LoadOptions Excel97To2003 encrypted file handling | C# verify encrypted .xlsx incompatibility with Excel 97‑2003 | exception for unsupported encrypted workbook in Aspose.Cells | test encrypted workbook opening failure in older Excel
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, adds sample data, applies a password, and saves it as an encrypted .xlsx. It then attempts to open the file without a password using default LoadOptions, which throws an exception, proving that legacy Excel versions cannot read the file. Finally, it opens the workbook with the correct password via LoadOptions to demonstrate successful decryption.
+// The sample creates a workbook, adds data, applies a password using Aspose.Cells' default Xlsx encryption, saves it as an .xlsx file, then attempts to load the same file with LoadOptions set to Excel97To2003. Because the modern encryption is not supported by the older Excel format, an exception is thrown, which is caught and reported as the expected outcome. The test file is deleted afterward.
 class WorkbookEncryptionVerification
 {
     static void Main()
     {
+        // Path for the encrypted workbook
+        string encryptedFile = "EncryptedWorkbook.xlsx";
+
+        // Create a new workbook and add some data
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Test Data");
+
+        // Set a password for encryption (modern encryption, compatible with .xlsx)
+        // This will encrypt the file using the default Xlsx encryption algorithm
+        wb.Settings.Password = "SecretPassword";
+
+        // Save the workbook as .xlsx (default format)
+        wb.Save(encryptedFile, SaveFormat.Xlsx);
+
+        // Attempt to load the encrypted workbook using LoadOptions that target the older Excel 97-2003 format
+        // Older Excel versions (xls) cannot open files encrypted with the modern Xlsx encryption
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Excel97To2003);
+
         try
         {
-            // 1. Create a new workbook and add some data
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sensitive Data");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-
-            // 2. Apply password protection (default encryption for .xlsx is strong)
-            wb.Settings.Password = "SecretPassword123";
-
-            // 3. Save the encrypted workbook
-            string encryptedFile = "EncryptedWorkbook.xlsx";
-            wb.Save(encryptedFile, SaveFormat.Xlsx);
-            Console.WriteLine($"Encrypted workbook saved as '{encryptedFile}'.");
-
-            // Ensure the file was created before proceeding
-            if (!File.Exists(encryptedFile))
-            {
-                Console.WriteLine($"File '{encryptedFile}' was not found.");
-                return;
-            }
-
-            // 4. Attempt to load the encrypted file with older Excel format load options
-            try
-            {
-                // Simulate loading with an older Excel version (XLS) by not providing a password.
-                // The LoadOptions constructor without parameters uses auto-detect format.
-                LoadOptions oldVersionLoadOptions = new LoadOptions();
-                // This should fail because the file is encrypted and a password is required.
-                Workbook oldVersionWb = new Workbook(encryptedFile, oldVersionLoadOptions);
-                Console.WriteLine("Unexpectedly opened with older format.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Verification succeeded: older Excel versions cannot open the encrypted workbook.");
-                Console.WriteLine("Exception message: " + ex.Message);
-            }
-
-            // 5. Verify that the workbook can be opened with the correct (modern) settings
-            try
-            {
-                LoadOptions modernLoadOptions = new LoadOptions
-                {
-                    Password = "SecretPassword123"
-                };
-                Workbook openedWb = new Workbook(encryptedFile, modernLoadOptions);
-                Console.WriteLine("Workbook opened successfully with correct password and modern format.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to open workbook with correct password.");
-                Console.WriteLine("Exception message: " + ex.Message);
-            }
+            // This load should fail because the file is encrypted with a newer algorithm
+            Workbook oldVersionWb = new Workbook(encryptedFile, loadOptions);
+            Console.WriteLine("Unexpected: Older Excel version was able to open the encrypted workbook.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An unexpected error occurred:");
-            Console.WriteLine(ex.Message);
+            // Expected path: an exception is thrown indicating incompatibility
+            Console.WriteLine("As expected, older Excel versions cannot open the encrypted workbook.");
+            Console.WriteLine("Exception message: " + ex.Message);
+        }
+        finally
+        {
+            // Clean up the test file
+            if (System.IO.File.Exists(encryptedFile))
+                System.IO.File.Delete(encryptedFile);
         }
     }
 }

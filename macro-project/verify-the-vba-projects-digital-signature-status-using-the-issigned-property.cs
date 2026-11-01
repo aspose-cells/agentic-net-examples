@@ -1,31 +1,52 @@
-// Title: Check if an Excel workbook's VBA project is digitally signed using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, confirms a VBA project exists, and returns the VbaProject.IsSigned value. | Show how to safely access the IsSigned property after verifying the VBA project presence and output the signature status to the console.
-// Common Searches: how to use Aspose.Cells to determine if a VBA macro is signed in C# | C# Aspose.Cells check VbaProject.IsSigned property before reading | detect digital signature of Excel VBA project with Aspose.Cells .NET
-// Tags: Aspose.Cells check VBA digital signature | C# VbaProject.IsSigned usage | detect signed VBA macro in Excel workbook | validate VBA project presence with Aspose.Cells | read VBA signature status from .xlsx
+// Title: Check if an Excel workbook's VBA project is digitally signed using Aspose.Cells for .NET (IsSigned property)
+// Common Searches: C# Aspose.Cells how to determine if a VBA project is signed in an .xlsx file | using Aspose.Cells .NET to read VBA digital signature status from an Excel workbook | sample code for checking VBA project IsSigned property with Aspose.Cells | detect signed macro in Excel using Aspose.Cells LoadOptions C# | verify VBA project digital signature presence in workbook with Aspose.Cells
+// Tags: Aspose.Cells VBA digital signature check | C# IsSigned property Excel macro | load workbook inspect VBA signature Aspose | detect signed VBA project .NET | handle missing VBA project Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// C# example that loads an Excel file using Aspose.Cells, verifies a VBA project is present, reads its IsSigned property, and prints whether the VBA project is digitally signed.
+// The example loads an Excel workbook with Aspose.Cells, checks for the presence of a VBA project, and uses the VbaProject.IsSigned property to report whether the VBA project is digitally signed, while handling missing files and exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Check if the workbook contains a VBA project
-        if (workbook.VbaProject != null)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Use the IsSigned property to determine digital signature status
-            bool isSigned = workbook.VbaProject.IsSigned;
-
-            // Output the result
-            Console.WriteLine("VBA project signed: " + isSigned);
+            Console.WriteLine($"File not found: {inputPath}");
+            return;
         }
-        else
+
+        try
         {
-            Console.WriteLine("The workbook does not contain a VBA project.");
+            // Load the workbook (no password supplied)
+            var loadOptions = new LoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Check if the workbook contains a VBA project
+            if (workbook.VbaProject != null)
+            {
+                // Verify if the VBA project has a digital signature
+                bool isSigned = workbook.VbaProject.IsSigned;
+                Console.WriteLine("VBA project signed: " + isSigned);
+            }
+            else
+            {
+                Console.WriteLine("The workbook does not contain a VBA project.");
+            }
+        }
+        catch (CellsException ex)
+        {
+            // Handles Aspose.Cells specific errors (e.g., password protected files)
+            Console.WriteLine("Aspose.Cells error: " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

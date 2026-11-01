@@ -1,44 +1,43 @@
-// Title: Convert an HTML workbook to PDF with vector‑graphics chart rendering using Aspose.Cells for C#
-// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, sets PdfSaveOptions.VectorGraphics = true, and saves the workbook as a PDF. | Explain how to configure PdfSaveOptions in Aspose.Cells to preserve chart scalability by enabling vector graphics during HTML‑to‑PDF conversion.
-// Common Searches: Aspose.Cells C# convert HTML file to PDF with vector charts | How to keep charts scalable when saving HTML workbook as PDF using Aspose.Cells | How to enable vector graphics for charts when saving PDF with Aspose.Cells | C# code for HTML to PDF conversion preserving chart quality with Aspose.Cells
-// Tags: Aspose.Cells HTML-to-PDF workflow | Aspose.Cells PDF vector graphics option | C# scalable chart rendering in PDF | HTML workbook conversion to PDF using Aspose.Cells | vector graphics charts PDF Aspose.Cells
+// Title: Convert HTML to PDF with scalable vector‑graphics charts using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions to render charts as vector graphics, and saves the result as a PDF. | Show how to verify the input HTML file exists, set PdfSaveOptions.VectorGraphics = true, and produce a high‑resolution PDF with scalable charts. | Provide a console‑application snippet that demonstrates converting HTML to PDF while preserving chart quality by enabling vector graphics in Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert HTML file to PDF with vector graphics for charts | How to enable PdfSaveOptions.VectorGraphics when saving PDF from HTML in Aspose.Cells | Scalable chart rendering in PDF using Aspose.Cells .NET | Convert HTML to PDF preserving Excel chart quality with Aspose.Cells | PdfSaveOptions vector graphics option example for HTML to PDF conversion
+// Tags: Aspose.Cells PDFSaveOptions VectorGraphics | HTML to PDF conversion Aspose.Cells | C# render charts as vector graphics PDF | Workbook.Save with vector graphics option | scalable chart rendering PDF Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// Demonstrates loading an HTML file into an Aspose.Cells Workbook, enabling the VectorGraphics option in PdfSaveOptions to render charts as scalable vectors, and saving the workbook as a PDF while handling missing files and exceptions.
+// The program checks that input.html exists, loads it into an Aspose.Cells Workbook, enables PdfSaveOptions.VectorGraphics to render charts as vector graphics, and saves the workbook as output.pdf while handling any exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.html";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input HTML file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-            return;
-        }
-
         try
         {
-            // Load the HTML file into an Aspose.Cells workbook
+            const string inputPath = "input.html";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input HTML file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the HTML file into a Workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (default options are sufficient for basic conversion)
+            // Configure PDF save options (charts will be rendered with default settings)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as a PDF using the configured options
+            // Save the workbook as a PDF file
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

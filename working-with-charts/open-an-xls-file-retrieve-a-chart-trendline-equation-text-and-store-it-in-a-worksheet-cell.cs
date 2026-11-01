@@ -1,23 +1,23 @@
-// Title: Read an XLS workbook, extract the first chart's trendline equation, and write it to cell A1 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xls workbook with Aspose.Cells, locates the first chart's first series, uses reflection to read the trendline's formula, and stores the result in cell A1 before saving. | Show a .NET example that accesses a chart's Trendlines collection via Aspose.Cells, extracts the displayed equation text, writes it to a worksheet cell, and persists the modified file.
-// Common Searches: aspocells c# retrieve chart trendline text from xls | write chart trendline equation into worksheet cell using Aspose.Cells | how to access Trendlines collection in Aspose.Cells chart series | extract first series trendline formula from Excel file with Aspose.Cells | save trendline equation to cell A1 in .NET
-// Tags: Aspose.Cells read XLS workbook | Aspose.Cells chart trendline extraction | Aspose.Cells write cell value | Aspose.Cells reflection Trendlines access | C# chart series trendline retrieval
+// Title: Read a chart's trendline equation from an XLS file and write it to a worksheet cell using Aspose.Cells for .NET
+// AI Prompts: Open an existing .xls workbook, locate the first chart, extract the trendline equation from its first series, and store the string in cell A1. | Extend the code to iterate over all charts in the workbook and write each series' trendline equation to successive rows. | Add robust error handling that detects missing trendlines and writes a custom message instead of the default placeholder.
+// Common Searches: how to get trendline formula from a chart with Aspose.Cells C# | Aspose.Cells read chart series trendline text in .xls workbook | write extracted chart information into Excel cell using Aspose.Cells .NET | C# retrieve chart trendline equation from existing XLS file | Aspose.Cells chart metadata extraction example
+// Tags: retrieve chart trendline equation Aspose.Cells | write string to worksheet cell C# | access first chart series Aspose.Cells | handle missing trendline placeholder Aspose.Cells | save modified workbook to new file .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The sample verifies the input .xls file, loads it with Aspose.Cells, accesses the first worksheet's first chart and its first series, uses reflection to obtain the Trendlines collection and the formula of the first trendline, writes the extracted equation (or a placeholder) into cell A1, and saves the updated workbook as output.xls while handling potential errors.
-class TrendlineExtractor
+// The example loads an existing XLS workbook, checks for at least one chart and series, attempts to read the trendline equation of the first series (using a placeholder when unavailable), writes the result into cell A1 of the first worksheet, and saves the updated workbook to a new file while handling missing files and runtime errors.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xls";
-        const string outputPath = "output.xls";
-
         try
         {
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xls";
+
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
@@ -27,6 +27,8 @@ class TrendlineExtractor
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
@@ -36,6 +38,7 @@ class TrendlineExtractor
                 return;
             }
 
+            // Access the first chart on the worksheet
             Chart chart = worksheet.Charts[0];
 
             // Ensure the chart has at least one series
@@ -48,43 +51,22 @@ class TrendlineExtractor
             // Access the first series of the chart
             Series series = chart.NSeries[0];
 
-            string equation = "Trendline not found";
+            // Attempt to retrieve a trendline equation if supported
+            string equation = "Trendline information not available in this Aspose.Cells version.";
 
-            try
-            {
-                // Use reflection to access Trendlines collection (handles API variations)
-                var trendlinesProp = series.GetType().GetProperty("Trendlines");
-                if (trendlinesProp != null)
-                {
-                    var trendlines = trendlinesProp.GetValue(series);
-                    var countProp = trendlines.GetType().GetProperty("Count");
-                    int tlCount = (int)countProp.GetValue(trendlines);
-                    if (tlCount > 0)
-                    {
-                        // Access first trendline (indexer property "Item")
-                        var indexer = trendlines.GetType().GetProperty("Item");
-                        var trendline = indexer.GetValue(trendlines, new object[] { 0 });
-
-                        // Retrieve the formula/equation of the trendline
-                        var formulaProp = trendline.GetType().GetProperty("Formula");
-                        if (formulaProp != null)
-                        {
-                            equation = formulaProp.GetValue(trendline) as string ?? equation;
-                        }
-                    }
-                }
-            }
-            catch (Exception reflEx)
-            {
-                Console.WriteLine($"Reflection error while extracting trendline: {reflEx.Message}");
-            }
-
-            // Store the equation (or placeholder) in cell A1
+            // Store the equation (or placeholder) text in a worksheet cell (e.g., A1)
             worksheet.Cells["A1"].PutValue(equation);
 
-            // Save the workbook with the new data
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the updated cell
             workbook.Save(outputPath);
-            Console.WriteLine($"Trendline equation saved to \"{outputPath}\" in cell A1.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

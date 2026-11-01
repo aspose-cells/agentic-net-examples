@@ -1,75 +1,71 @@
-// Title: Load an Excel workbook, add a new worksheet, and create a pivot table with a dynamic source range using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, creates a new sheet called 'PivotTable', and builds a pivot table at A1 using the worksheet's MaxDisplayRange as the data source. | Demonstrate how to programmatically assign the first column as a row field and the second column as a data field in an Aspose.Cells pivot table created from a dynamic source range. | Provide a full .NET example that writes the modified workbook to disk after adding the pivot table, including proper exception handling.
-// Common Searches: asp.net aspose.cells create pivot table on separate worksheet from existing workbook | c# use MaxDisplayRange to define pivot table source in Aspose.Cells | how to add row and value fields to a pivot table with Aspose.Cells API | example of saving workbook after inserting pivot table using Aspose.Cells C# | determine used range for pivot table source programmatically Aspose.Cells
-// Tags: Aspose.Cells dynamic pivot table source range | C# add new worksheet for pivot table Aspose.Cells | configure row and data fields in Aspose.Cells pivot | save workbook with inserted pivot Aspose.Cells | use MaxDisplayRange for pivot data source C#
+// Title: Create a Pivot Table on a New Worksheet and Define Its Source Data Range with Aspose.Cells for .NET (C#)
+// Common Searches: how to programmatically add a pivot table to a new worksheet using Aspose.Cells C# | setting the source data address for a pivot table in Aspose.Cells .NET | Aspose.Cells example for creating a pivot table from an existing sheet range | C# code to generate a pivot table on a separate sheet with custom data range | Aspose.Cells pivot table creation with dynamic source range
+// Tags: create pivot table Aspose.Cells C# | define pivot source range Aspose.Cells | add worksheet for pivot Aspose.Cells | pivot table data address C# | Aspose.Cells pivot table from existing sheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable class
 
-namespace AsposeCellsPivotExample
+// The sample loads an existing Excel workbook, adds a new worksheet named "PivotSheet", builds a source data address from the first worksheet using specified row and column counts, creates a pivot table called "MyPivot" at cell A1 on the new sheet with that address, optionally configures fields, ensures the output directory exists, and saves the modified workbook to a new file while handling exceptions.
+class Program
 {
-    // The example loads an existing Excel file (or creates one with sample data), identifies the used range via MaxDisplayRange, adds a new worksheet named 'PivotTable', creates a pivot table at cell A1 using that range, assigns the first column as a row field and the second as a data field, and saves the workbook with the new pivot table.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "InputData.xlsx";
-                Workbook workbook;
-
-                // Load existing workbook if it exists; otherwise create a new one with sample data
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                    Worksheet ws = workbook.Worksheets[0];
-                    ws.Name = "SourceData";
-
-                    // Sample data
-                    ws.Cells["A1"].PutValue("Category");
-                    ws.Cells["B1"].PutValue("Amount");
-                    ws.Cells["A2"].PutValue("A");
-                    ws.Cells["B2"].PutValue(100);
-                    ws.Cells["A3"].PutValue("B");
-                    ws.Cells["B3"].PutValue(200);
-                }
-
-                // Ensure the source worksheet is correctly named
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "SourceData";
-
-                // Determine the used range of the source data
-                Aspose.Cells.Range sourceRange = sourceSheet.Cells.MaxDisplayRange;
-                string sourceData = $"={sourceSheet.Name}!{sourceRange.Address}";
-
-                // Add a new worksheet to host the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
-
-                // Create the pivot table at cell A1
-                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "MyPivotTable");
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Configure pivot fields if columns are available
-                if (sourceRange.ColumnCount > 0)
-                    pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-                if (sourceRange.ColumnCount > 1)
-                    pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
-
-                // Save the workbook with the new pivot table
-                string outputPath = "OutputWithPivot.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Add a worksheet for the pivot table
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "PivotSheet";
+
+            // Define source data range (adjust as needed)
+            Worksheet dataSheet = workbook.Worksheets[0]; // assume first sheet holds data
+            int firstRow = 0;          // A1 row index
+            int firstColumn = 0;       // A1 column index
+            int totalRows = 100;       // number of rows
+            int totalColumns = 4;      // number of columns
+
+            string startCell = CellsHelper.CellIndexToName(firstRow, firstColumn);
+            string endCell = CellsHelper.CellIndexToName(firstRow + totalRows - 1, firstColumn + totalColumns - 1);
+            string sourceData = $"{dataSheet.Name}!{startCell}:{endCell}";
+
+            // Create pivot table at A1 on the new sheet
+            int pivotTableIndex = pivotSheet.PivotTables.Add("MyPivot", "A1", sourceData);
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
+
+            // Optional: configure pivot fields
+            // pivotTable.RowFields.Add(0);
+            // pivotTable.ColumnFields.Add(1);
+            // pivotTable.DataFields.Add(2);
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

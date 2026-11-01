@@ -1,65 +1,77 @@
-// Title: How to get the count of frozen header columns in an Excel worksheet with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells and returns the number of frozen columns in the first worksheet, handling both View.FreezePanesColumn and ViewOptions.FreezePanesColumn. | Create a reusable method that accepts a Worksheet object and returns the frozen column count, including a fallback for older Aspose.Cells versions where the View property is unavailable. | Extend the example to also display the frozen row count together with the frozen column count using Aspose.Cells.
-// Common Searches: aspnet get frozen column count from Excel using Aspose.Cells | c# read freeze panes column property Aspose.Cells version compatibility | how to determine number of frozen header columns in a worksheet with Aspose.Cells | retrieve freeze panes settings rows and columns from Excel file using Aspose.Cells .NET | fallback to ViewOptions when View property missing in Aspose.Cells
-// Tags: Aspose.Cells FreezePanesColumn retrieval | C# fallback ViewOptions FreezePanesColumn | Excel worksheet frozen columns count | Aspose.Cells version compatibility freeze panes | read frozen rows and columns Aspose.Cells
+// Title: Get the count of frozen header columns in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to read number of frozen columns in a worksheet | retrieve frozen pane column split value with Aspose.Cells .NET | using reflection to access FreezePanes.ColumnSplit in older Aspose.Cells versions | determine how many columns are frozen in an Excel file using Aspose.Cells | Aspose.Cells get frozen header columns count programmatically
+// Tags: Aspose.Cells frozen column count retrieval | Worksheet FreezePanes ColumnSplit access | C# reflection for legacy Aspose.Cells API | Excel frozen header columns detection | programmatic frozen panes query Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Microsoft.CSharp.RuntimeBinder;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook, accesses the first worksheet, and uses reflection to safely read the ColumnSplit value from the worksheet's FreezePanes property (when available) to determine the number of frozen header columns, then outputs the count and optionally saves the workbook.
+class Program
 {
-    // // Loads an Excel workbook, accesses the first worksheet, and reads the number of frozen header columns via View.FreezePanesColumn with a fallback to ViewOptions.FreezePanesColumn for older Aspose.Cells versions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            string inputPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists before attempting to load it.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
+            // Load the workbook from the input file.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet in the workbook.
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            int frozenHeaderColumns = 0;
+
+            // Attempt to retrieve the number of frozen columns.
+            // In newer Aspose.Cells versions this can be obtained via worksheet.FreezePanes.ColumnSplit.
+            // For compatibility with older versions where FreezePanes is a method, default to 0.
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Use dynamic to access view properties (covers different Aspose.Cells versions)
-                dynamic wsDynamic = worksheet;
-                int frozenHeaderColumns = 0;
-
-                try
+                // The FreezePanes property may not be available in older library versions.
+                // Use reflection to safely access ColumnSplit if it exists.
+                var freezePanesProp = typeof(Worksheet).GetProperty("FreezePanes");
+                if (freezePanesProp != null)
                 {
-                    frozenHeaderColumns = (int)wsDynamic.View.FreezePanesColumn;
-                }
-                catch (RuntimeBinderException)
-                {
-                    // Fallback for versions where the View property is unavailable
-                    try
+                    var freezePanesObj = freezePanesProp.GetValue(worksheet);
+                    var columnSplitProp = freezePanesObj?.GetType().GetProperty("ColumnSplit");
+                    if (columnSplitProp != null)
                     {
-                        frozenHeaderColumns = (int)wsDynamic.ViewOptions.FreezePanesColumn;
-                    }
-                    catch
-                    {
-                        // If neither property exists, default to 0
-                        frozenHeaderColumns = 0;
+                        frozenHeaderColumns = (int)columnSplitProp.GetValue(freezePanesObj);
                     }
                 }
-
-                Console.WriteLine($"Number of frozen header columns: {frozenHeaderColumns}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine($"Warning: Unable to determine frozen columns. {ex.Message}");
             }
+
+            // Output the result.
+            Console.WriteLine($"Number of frozen header columns: {frozenHeaderColumns}");
+
+            // Save the workbook (optional, only if modifications are made).
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

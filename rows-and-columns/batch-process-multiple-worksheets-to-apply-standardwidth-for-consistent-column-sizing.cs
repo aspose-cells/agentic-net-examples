@@ -1,39 +1,50 @@
-// Title: Batch set a standard column width for every worksheet in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates all worksheets, sets each sheet's Cells.StandardWidth to a specified value, and saves the workbook. | Show how to apply a uniform default column width to every worksheet in a workbook programmatically with Aspose.Cells for .NET. | Create a console application that reads a workbook, assigns a consistent column width (e.g., 18.25 characters) to all sheets, and writes the updated file.
-// Common Searches: how to set default column width for all sheets using Aspose.Cells C# | batch update column width across multiple worksheets Aspose.Cells .NET example | C# loop through workbook worksheets and apply StandardWidth property
-// Tags: set StandardWidth across worksheets | batch column width adjustment Aspose.Cells | uniform column sizing Excel .NET | apply default column width workbook | iterate worksheets Aspose.Cells C#
+// Title: Apply a consistent column width to all worksheets in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, sets Cells.StandardWidth to 15 for every worksheet, and saves the result to a new file. | Show how to loop through workbook.Worksheets and assign a uniform column width using the Cells.StandardWidth property in Aspose.Cells. | Create a console application that validates the input file, applies a standard column width across all sheets, and handles any exceptions.
+// Common Searches: Aspose.Cells C# set same column width for all sheets in a workbook | How to use Cells.StandardWidth to standardize column width across multiple worksheets | Batch update column width in Excel file with Aspose.Cells .NET | C# example for applying default column width to every worksheet using Aspose.Cells
+// Tags: Aspose.Cells set Cells.StandardWidth | uniform column width across worksheets | batch column width adjustment .NET | Excel workbook column sizing with Aspose | C# apply standard column width
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsBatchStandardWidth
+// The example loads an existing workbook (input.xlsx), iterates through each worksheet, sets the default column width to 15 characters via Cells.StandardWidth, and saves the modified file as output.xlsx, including input‑file validation and exception handling.
+class Program
 {
-    // // Loads an existing Excel workbook, sets the default column width to 18.25 characters for every worksheet via the Cells.StandardWidth property, and saves the modified file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Path to the source workbook (replace with actual file path)
-            string inputPath = "input.xlsx";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Path to the destination workbook
-            string outputPath = "output.xlsx";
-
-            // Create a Workbook object and load the existing file
+            // Load the workbook from the existing file
             Workbook workbook = new Workbook(inputPath);
 
             // Desired standard column width (in characters)
-            double standardWidth = 18.25;
+            double standardWidth = 15.0;
 
             // Apply the standard width to every worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Set the default column width for the current worksheet
+                // Use Cells.StandardWidth to set the default column width
                 sheet.Cells.StandardWidth = standardWidth;
             }
 
-            // Save the modified workbook
+            // Save the updated workbook to a new file
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

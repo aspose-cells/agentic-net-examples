@@ -1,51 +1,49 @@
-// Title: Import XML spreadsheet from a MemoryStream into an Aspose.Cells Workbook while preserving linked cells (C#)
-// AI Prompts: Generate C# code that creates a MemoryStream from an XML string and uses Aspose.Cells Workbook.ImportXml overload to load the data with linked cells intact. | Show how to load an XML spreadsheet via a stream into a Workbook, then save it as an XLSX file using Aspose.Cells in C#. | Provide a step‑by‑step example of preserving cell links when importing XML data from a stream into an Aspose.Cells workbook.
-// Common Searches: aspose.cells importxml from memorystream c# preserving linked cells | c# load xml spreadsheet into workbook using stream with aspose.cells | how to convert xml spreadsheet to xlsx while keeping cell links in c# | example of Workbook.ImportXml overload with MemoryStream in Aspose.Cells | import xml data into Aspose.Cells workbook from a stream c# tutorial
-// Tags: importxml overload memorystream c# | aspose.cells load xml spreadsheet | preserve linked cells aspose.cells | convert xml to xlsx using aspose.cells | c# memorystream xml workbook import
+// Title: Import XML from a MemoryStream into an Aspose.Cells workbook and save as XLSX using C#
+// Common Searches: C# load XML spreadsheet data from a MemoryStream into Aspose.Cells workbook | How to use LoadOptions with XML format to import data from a stream in Aspose.Cells .NET | Saving a workbook created from XML stream as XLSX with Aspose.Cells | Import XML with linked cells into Aspose.Cells using a byte array stream | Aspose.Cells import XML from MemoryStream without saving intermediate file
+// Tags: load XML into Aspose.Cells workbook from MemoryStream | Aspose.Cells LoadOptions XML format stream import | save Aspose.Cells workbook as XLSX after XML import | import spreadsheet XML with linked cells C# | stream-based XML to workbook conversion Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Text;
 
-// The example creates an XML spreadsheet string, writes it into a MemoryStream, uses Aspose.Cells Workbook.ImportXml (or the stream constructor) to load the XML while keeping linked cells, and then saves the workbook as an XLSX file.
+// The example converts an XML string to a UTF‑8 MemoryStream, uses LoadOptions set to XML format to load the stream into an Aspose.Cells Workbook, and then saves the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Sample XML content to be imported
-            string xmlContent = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            // Example XML content that will be imported.
+            string xmlContent = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Workbook xmlns:ss=""urn:schemas-microsoft-com:office:spreadsheet"">
   <Worksheet ss:Name=""Sheet1"">
     <Table>
       <Row>
-        <Cell><Data ss:Type=""String"">Name</Data></Cell>
-        <Cell><Data ss:Type=""String"">Age</Data></Cell>
+        <Cell><Data ss:Type=""String"">Product</Data></Cell>
+        <Cell><Data ss:Type=""Number"">Price</Data></Cell>
       </Row>
       <Row>
-        <Cell><Data ss:Type=""String"">John</Data></Cell>
-        <Cell><Data ss:Type=""Number"">30</Data></Cell>
+        <Cell><Data ss:Type=""String"">Apple</Data></Cell>
+        <Cell><Data ss:Type=""Number"">1.2</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type=""String"">Banana</Data></Cell>
+        <Cell><Data ss:Type=""Number"">0.8</Data></Cell>
       </Row>
     </Table>
   </Worksheet>
 </Workbook>";
 
-            // Convert the XML string into a memory stream
-            using (MemoryStream xmlStream = new MemoryStream())
+            // Convert the XML string to a memory stream.
+            using (MemoryStream xmlStream = new MemoryStream(Encoding.UTF8.GetBytes(xmlContent)))
             {
-                using (StreamWriter writer = new StreamWriter(xmlStream))
-                {
-                    writer.Write(xmlContent);
-                    writer.Flush();
-                    xmlStream.Position = 0; // Reset stream position for reading
-                }
+                // Load the XML data into a workbook using LoadOptions for XML format.
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
+                Workbook workbook = new Workbook(xmlStream, loadOptions);
 
-                // Load the workbook from the XML stream
-                Workbook workbook = new Workbook(xmlStream);
-
-                // Save the workbook to a file
-                string outputPath = "ImportedFromXml.xlsx";
+                // Save the workbook to an XLSX file.
+                string outputPath = "ImportedWithLinks.xlsx";
                 workbook.Save(outputPath, SaveFormat.Xlsx);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }

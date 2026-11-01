@@ -1,66 +1,72 @@
-// Title: Read a shape’s absolute position, add a random offset, and update its location in an Excel file using Aspose.Cells for .NET
-// AI Prompts: Get the Top and Left values of the first shape on a worksheet, calculate a random shift between -20 and 20 points, and assign the new coordinates to the shape. | Loop through all shapes on a worksheet, apply a random shift within a defined range to each shape’s Top and Left properties, and save the workbook. | Change the shift range to -50 to +50 points, update the shape positions accordingly, and write the result to a new Excel file.
-// Common Searches: Aspose.Cells .NET get shape absolute position in points | C# move Excel shape by random offset using Aspose.Cells | How to change shape Top and Left properties programmatically with Aspose.Cells | Apply random displacement to multiple shapes in a worksheet Aspose.Cells | Save workbook after repositioning shapes Aspose.Cells C#
-// Tags: Aspose.Cells retrieve shape coordinates | Aspose.Cells set shape top left | Aspose.Cells random shape displacement | Aspose.Cells move shapes worksheet | Aspose.Cells update shape position C# | Aspose.Cells save workbook after repositioning
+// Title: Read a shape's absolute position, add a random offset, and reposition it in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook with Aspose.Cells, reads the Top and Left properties of the first shape on the first worksheet, adds a random offset between -20 and +20 points to each coordinate, updates the shape's position, and saves the workbook. | Generate a C# example that checks for shapes on a worksheet, retrieves their absolute coordinates, applies a random displacement, and persists the modified workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# move shape by random offset | Get shape top left coordinates in Excel using Aspose.Cells .NET | Programmatically change shape location in an existing .xlsx file with Aspose.Cells | How to apply random displacement to Excel drawing objects in C# | Update shape position based on current coordinates Aspose.Cells example
+// Tags: Aspose.Cells shape reposition C# | retrieve shape absolute coordinates Aspose.Cells | random displacement for shape coordinates | modify shape Top Left properties .NET | Excel workbook shape movement Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, reads the Top and Left values of the first shape on the first worksheet, adds a random offset between –20 and +20 points, updates the shape’s position, and saves the modified workbook.
-class Program
+// The example loads an existing .xlsx file, accesses the first worksheet, reads the Top and Left values of the first shape, adds a random offset between -20 and +20 points to each coordinate, updates the shape's position, and saves the workbook as a new file.
+class ShapePositionUpdater
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape
-            if (worksheet.Shapes.Count == 0)
+            // Ensure the worksheet contains at least one shape
+            if (sheet.Shapes.Count == 0)
             {
-                Console.WriteLine("No shapes found in the worksheet.");
+                Console.WriteLine("No shapes found on the worksheet.");
                 return;
             }
 
-            // Retrieve the first shape
-            Shape shape = worksheet.Shapes[0];
+            // Get the first shape (change index for a specific shape)
+            Shape shape = sheet.Shapes[0];
 
-            // Current absolute position (points)
+            // Retrieve the shape's current absolute position (in points)
+            // Top and Left are integer values
             int currentTop = shape.Top;
             int currentLeft = shape.Left;
 
-            // Random offset between -20 and +20 points
+            // Generate random integer offsets between -20 and +20 points
             Random rnd = new Random();
-            int offsetTop = (int)(rnd.NextDouble() * 40 - 20);
-            int offsetLeft = (int)(rnd.NextDouble() * 40 - 20);
+            int offsetTop = rnd.Next(-20, 21);   // inclusive lower bound, exclusive upper bound
+            int offsetLeft = rnd.Next(-20, 21);
 
-            // Apply the random offset
-            shape.Top = currentTop + offsetTop;
-            shape.Left = currentLeft + offsetLeft;
+            // Apply the offsets to obtain the new position
+            int newTop = currentTop + offsetTop;
+            int newLeft = currentLeft + offsetLeft;
+
+            // Update the shape's location
+            shape.Top = newTop;
+            shape.Left = newLeft;
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

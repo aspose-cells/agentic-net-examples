@@ -1,42 +1,30 @@
-// Title: Convert HTML to PDF with clickable hyperlinks using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an HTML file into an Aspose.Cells Workbook via HtmlLoadOptions and saves it as a PDF, preserving all hyperlinks as active links. | Demonstrate how to configure the worksheet PageSetup in Aspose.Cells so the HTML content fits the width of a single PDF page before exporting. | Create a console‑application template that validates two command‑line arguments (input HTML path and output PDF path) and performs the conversion with Aspose.Cells.
-// Common Searches: asp.net convert html to pdf preserving hyperlinks using aspose.cells c# | c# aspose.cells html to pdf conversion with active links | fit html content to one page when exporting to pdf with aspose.cells | command line html to pdf tool with clickable links in .net
-// Tags: Aspose.Cells HTML to PDF conversion with hyperlinks | preserve clickable links in PDF using Aspose.Cells | worksheet PageSetup fit to page Aspose.Cells | HtmlLoadOptions workbook loading Aspose.Cells | C# console HTML to PDF utility Aspose.Cells
+// Title: Convert an HTML file to a PDF with active hyperlinks using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an HTML document into an Aspose.Cells Workbook with LoadOptions set to LoadFormat.Html and saves it as a PDF preserving clickable hyperlinks. | Show how to configure Aspose.Cells to retain anchor‑tag links when exporting an HTML workbook to PDF in a .NET application. | Provide a minimal example that converts input.html to output.pdf using Aspose.Cells, ensuring all hyperlinks remain functional in the generated PDF.
+// Common Searches: Aspose.Cells C# convert HTML to PDF while keeping hyperlinks clickable | how to preserve anchor tags when exporting HTML to PDF with Aspose.Cells .NET | sample code for loading HTML into Workbook and saving as PDF with active links in C#
+// Tags: load HTML into Aspose.Cells Workbook | save workbook as PDF with hyperlinks | LoadOptions LoadFormat.Html usage | HTML to PDF conversion Aspose.Cells .NET | clickable hyperlink retention in PDF export
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// A C# console application that accepts an input HTML file and an output PDF file, loads the HTML into an Aspose.Cells Workbook using HtmlLoadOptions, optionally sets each worksheet to fit the width of one page, and saves the workbook as a PDF while keeping all original hyperlinks clickable.
+// Loads an HTML file into an Aspose.Cells Workbook using LoadOptions (LoadFormat.Html) and saves it as a PDF, preserving all hyperlinks as clickable links in the output document.
 class HtmlToPdfConverter
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Validate arguments: first is input HTML file path, second is output PDF file path
-        if (args.Length != 2)
-        {
-            Console.WriteLine("Usage: HtmlToPdfConverter <input.html> <output.pdf>");
-            return;
-        }
+        // Path to the source HTML file
+        string htmlPath = "input.html";
 
-        string htmlPath = args[0];
-        string pdfPath = args[1];
+        // Path for the resulting PDF file
+        string pdfPath = "output.pdf";
 
         // Load the HTML file into a Workbook.
-        // Aspose.Cells can parse HTML and create worksheets with the same layout.
-        Workbook workbook = new Workbook(htmlPath, new HtmlLoadOptions());
-
-        // Optional: adjust page setup if needed (e.g., fit to one page)
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            sheet.PageSetup.FitToPagesWide = 1;
-            sheet.PageSetup.FitToPagesTall = 0; // unlimited height
-        }
+        // LoadOptions with LoadFormat.Html tells Aspose.Cells to interpret the file as HTML.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+        Workbook workbook = new Workbook(htmlPath, loadOptions);
 
         // Save the workbook as PDF.
-        // Hyperlinks present in the HTML are converted to cell hyperlinks and are preserved in the PDF.
+        // Hyperlinks present in the HTML are converted to cell hyperlinks
+        // and are retained as clickable links in the generated PDF.
         workbook.Save(pdfPath, SaveFormat.Pdf);
-
-        Console.WriteLine($"HTML file '{htmlPath}' has been successfully converted to PDF '{pdfPath}'.");
     }
 }

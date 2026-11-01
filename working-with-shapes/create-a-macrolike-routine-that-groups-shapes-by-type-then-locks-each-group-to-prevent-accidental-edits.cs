@@ -1,109 +1,90 @@
-// Title: Group and lock Excel shapes by type using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that iterates every worksheet, gathers shapes by their Shape.Type, creates a group for each type that contains more than one shape, and sets the group's IsLocked property to true. | Update an existing Aspose.Cells workbook routine to add a method that groups shapes of the same type on a worksheet and locks the resulting group to prevent accidental modifications.
-// Common Searches: Aspose.Cells C# group shapes of same type on a worksheet | lock grouped shapes in an Excel file using Aspose.Cells | prevent editing of shape groups with Aspose.Cells for .NET | example code to create shape groups and set IsLocked in Aspose.Cells | how to automatically lock shape groups in an Excel workbook via C#
-// Tags: Aspose.Cells shape grouping C# | lock shape groups Aspose.Cells | group shapes by type .NET | prevent shape editing Aspose.Cells | Excel shape lock example
+// Title: C# Aspose.Cells example: Group Excel shapes by type and lock the groups to prevent editing
+// Common Searches: how to programmatically group shapes of the same type in an Excel file using Aspose.Cells for .NET | Aspose.Cells C# lock shape groups to avoid accidental changes | using reflection to invoke AddGroup on worksheet shapes with Aspose.Cells | C# code to lock multiple Excel shapes after grouping them by type | prevent editing of grouped shapes in a workbook with Aspose.Cells
+// Tags: group shapes by type Aspose.Cells | lock shape groups Excel .NET | AddGroup method reflection Aspose.Cells | prevent accidental shape edits C# | shape collection processing Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeGrouping
+// The sample loads an Excel workbook, iterates each worksheet, groups shapes that share the same Type, uses reflection to call the AddGroup method (when available) to create a shape group, adds the matching shapes to the group, locks the group and assigns a name, falls back to locking each shape individually if grouping is unsupported, and finally saves the modified workbook.
+class ShapeGroupingAndLocking
 {
-    // // Loads an Excel workbook, iterates each worksheet, groups shapes that share the same Shape.Type into a single group, locks each group to avoid accidental edits, and saves the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            Workbook workbook;
-
-            // Load workbook safely; create a new one if the input file does not exist
-            try
+            if (!File.Exists(inputPath))
             {
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Process each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                try
+                // Group shapes by their type name
+                Dictionary<string, List<Shape>> shapesByType = new Dictionary<string, List<Shape>>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    GroupAndLockShapesByType(sheet);
+                    string typeKey = shape.Type.ToString();
+                    if (!shapesByType.ContainsKey(typeKey))
+                        shapesByType[typeKey] = new List<Shape>();
+                    shapesByType[typeKey].Add(shape);
                 }
-                catch (Exception ex)
+
+                // For each type that has more than one shape, attempt to create a group
+                foreach (var entry in shapesByType)
                 {
-                    Console.WriteLine($"Error processing sheet \"{sheet.Name}\": {ex.Message}");
+                    List<Shape> shapeList = entry.Value;
+                    if (shapeList.Count < 2)
+                        continue; // No need to group a single shape
+
+                    // Try to locate the AddGroup method via reflection (covers different API versions)
+                    MethodInfo addGroupMethod = sheet.Shapes.GetType().GetMethod("AddGroup", BindingFlags.Instance | BindingFlags.Public);
+                    if (addGroupMethod != null)
+                    {
+                        // Create the group shape
+                        object groupObj = addGroupMethod.Invoke(sheet.Shapes, null);
+                        dynamic group = groupObj; // Use dynamic to avoid compile‑time type dependency
+
+                        // Add each shape to the group
+                        foreach (Shape s in shapeList)
+                        {
+                            group.Add(s);
+                        }
+
+                        // Lock the group and assign a name
+                        group.IsLocked = true;
+                        group.Name = $"Group_{entry.Key}";
+                    }
+                    else
+                    {
+                        // Fallback: lock each shape individually if grouping is unavailable
+                        foreach (Shape s in shapeList)
+                        {
+                            s.IsLocked = true;
+                        }
+                    }
                 }
             }
 
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        /// <param name="sheet">The worksheet to process.</param>
-        private static void GroupAndLockShapesByType(Worksheet sheet)
+        catch (Exception ex)
         {
-            // Collect shapes by their numeric type identifier
-            var shapesByType = new Dictionary<int, List<Shape>>();
-
-            foreach (Shape shape in sheet.Shapes)
-            {
-                int typeKey = (int)shape.Type;
-
-                if (!shapesByType.ContainsKey(typeKey))
-                {
-                    shapesByType[typeKey] = new List<Shape>();
-                }
-
-                shapesByType[typeKey].Add(shape);
-            }
-
-            // For each type with more than one shape, create a group and lock it
-            foreach (KeyValuePair<int, List<Shape>> entry in shapesByType)
-            {
-                List<Shape> shapeList = entry.Value;
-
-                if (shapeList.Count > 1)
-                {
-                    try
-                    {
-                        // Group the shapes; the Group method returns a new Shape representing the group
-                        Shape groupShape = sheet.Shapes.Group(shapeList.ToArray());
-
-                        // Lock the group to prevent accidental edits
-                        groupShape.IsLocked = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to group shapes of type {entry.Key}: {ex.Message}");
-                    }
-                }
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

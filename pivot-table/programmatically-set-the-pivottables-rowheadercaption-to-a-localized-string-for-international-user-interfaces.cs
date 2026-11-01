@@ -1,58 +1,106 @@
-// Title: How to set a localized RowHeaderCaption and row label text for an Aspose.Cells PivotTable in C#
-// AI Prompts: Generate C# code using Aspose.Cells that creates a workbook, adds a pivot table, and assigns a French string to the PivotTable.RowHeaderCaption property. | Show how to apply SettablePivotGlobalizationSettings in Aspose.Cells to replace the default "Row Labels" caption with a custom localized label before saving the workbook.
-// Common Searches: aspnet c# set pivot table row header caption to French using Aspose.Cells | localize "Row Labels" text in Aspose.Cells pivot tables with SettablePivotGlobalizationSettings | Aspose.Cells example for customizing pivot table row header caption for international users | how to change pivot table row header caption programmatically in C# Aspose.Cells | apply globalization settings to pivot tables in Aspose.Cells workbook
-// Tags: Aspose.Cells pivot table header text localization | SettablePivotGlobalizationSettings row labels translation | C# customize Aspose.Cells pivot table captions | Excel workbook internationalization with Aspose.Cells | Aspose.Cells save workbook with localized pivot labels
+// Title: How to set a PivotTable RowHeaderCaption to a localized string using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set pivot table row header caption to Chinese | change RowHeaderCaption of an Excel PivotTable with Aspose.Cells | localize pivot table row header text in .NET using Aspose.Cells | programmatically update PivotTable row header caption in C# | Aspose.Cells example for customizing PivotTable captions for international users
+// Tags: Aspose.Cells PivotTable RowHeaderCaption property | C# Excel pivot table caption localization | custom row header caption Aspose.Cells | international Excel pivot table captions .NET | modify pivot table header text programmatically
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Settings;
+using System;
+using System.IO;
 
-// The example creates a workbook with sample data, adds a pivot table, sets the RowHeaderCaption to a French label, uses SettablePivotGlobalizationSettings to replace the default "Row Labels" text with a localized version, and saves the file as PivotRowHeaderLocalized.xlsx.
+// The sample loads or creates a workbook, obtains or adds a PivotTable on the first worksheet, assigns a Chinese string to the PivotTable's RowHeaderCaption property, and saves the result, demonstrating how to localize pivot table row headers with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add a data worksheet
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Populate sample data for the pivot table
-        var cells = dataSheet.Cells;
-        cells["A1"].PutValue("Country");
-        cells["B1"].PutValue("Sales");
-        cells["A2"].PutValue("France");
-        cells["B2"].PutValue(150);
-        cells["A3"].PutValue("Germany");
-        cells["B3"].PutValue(200);
+            // Load existing workbook or create a sample one if the file is missing
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = CreateSampleWorkbook();
+                workbook.Save(inputPath);
+            }
 
-        // Add a separate worksheet that will contain the pivot table
-        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Create the pivot table (source range is the data worksheet)
-        int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:B3", "A3", "SalesPivot");
-        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Retrieve or create a PivotTable
+            PivotTable pivotTable;
+            if (worksheet.PivotTables.Count > 0)
+            {
+                pivotTable = worksheet.PivotTables[0];
+            }
+            else
+            {
+                // Define source data range (A1:C5) for the new PivotTable
+                string sourceData = "A1:C5";
+                string destinationCell = "E1";
+                string pivotName = "PivotTable1";
 
-        // Set the RowHeaderCaption to a localized string (e.g., French)
-        pivotTable.RowHeaderCaption = "Pays"; // "Country" in French
+                // Add a new PivotTable and obtain its index
+                int pivotIndex = worksheet.PivotTables.Add(sourceData, destinationCell, pivotName);
+                pivotTable = worksheet.PivotTables[pivotIndex];
 
-        // Configure the pivot fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Country");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Example: add fields to the PivotTable using PivotField objects
+                // Retrieve fields from the source data
+                PivotField categoryField = pivotTable.RowFields[0];
+                PivotField subCategoryField = pivotTable.ColumnFields[0];
+                PivotField amountField = pivotTable.DataFields[0];
 
-        // OPTIONAL: Use SettablePivotGlobalizationSettings to localize the generic "Row Labels" text
-        SettablePivotGlobalizationSettings pivotGlobalization = new SettablePivotGlobalizationSettings();
-        pivotGlobalization.SetTextOfRowLabels("Étiquettes de ligne"); // localized label
+                // Add fields to respective collections
+                pivotTable.RowFields.Add(categoryField);      // Category
+                pivotTable.ColumnFields.Add(subCategoryField); // SubCategory
+                pivotTable.DataFields.Add(amountField);       // Amount
+            }
 
-        // Wrap the pivot globalization settings into a SettableGlobalizationSettings instance
-        SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
-        globalization.PivotSettings = pivotGlobalization;
+            // Set the RowHeaderCaption to a localized string (Chinese example)
+            string localizedCaption = "行标题";
+            pivotTable.RowHeaderCaption = localizedCaption;
 
-        // Apply the globalization settings to the workbook
-        workbook.Settings.GlobalizationSettings = globalization;
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
-        // Save the workbook
-        workbook.Save("PivotRowHeaderLocalized.xlsx", SaveFormat.Xlsx);
+    // Creates a simple workbook with sample data for PivotTable creation
+    private static Workbook CreateSampleWorkbook()
+    {
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["B1"].PutValue("SubCategory");
+        ws.Cells["C1"].PutValue("Amount");
+
+        ws.Cells["A2"].PutValue("Food");
+        ws.Cells["B2"].PutValue("Fruit");
+        ws.Cells["C2"].PutValue(120);
+
+        ws.Cells["A3"].PutValue("Food");
+        ws.Cells["B3"].PutValue("Vegetable");
+        ws.Cells["C3"].PutValue(80);
+
+        ws.Cells["A4"].PutValue("Beverage");
+        ws.Cells["B4"].PutValue("Tea");
+        ws.Cells["C4"].PutValue(50);
+
+        ws.Cells["A5"].PutValue("Beverage");
+        ws.Cells["B5"].PutValue("Coffee");
+        ws.Cells["C5"].PutValue(70);
+
+        return wb;
     }
 }

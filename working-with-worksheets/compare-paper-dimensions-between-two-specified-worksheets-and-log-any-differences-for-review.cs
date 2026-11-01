@@ -1,63 +1,94 @@
-// Title: Compare paper size, orientation, and margins of two worksheets with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that loads an Excel workbook, selects two worksheets by name, and prints any differences in their PageSetup properties such as PaperSize, Orientation, TopMargin, BottomMargin, LeftMargin, and RightMargin. | Create a reusable C# method that accepts two Worksheet objects and returns a collection of mismatched PageSetup settings—including paper size, orientation, and margins—so the caller can handle the results as needed. | Extend the comparison to also evaluate header and footer text, then generate a formatted console report that lists all PageSetup discrepancies between the two worksheets.
-// Common Searches: aspnet compare worksheet page layout properties Aspose.Cells | c# detect paper size differences between two Excel sheets using Aspose | how to find margin mismatches in Excel worksheets with Aspose.Cells .NET | retrieve orientation setting from a worksheet with Aspose.Cells C# | log page layout discrepancies between two worksheets in a console application
-// Tags: worksheet page layout comparison Aspose.Cells | paper size mismatch detection .NET | margin variance analysis C# | page orientation discrepancy check Aspose | console report of worksheet layout differences
+// Title: Identify and log differences in paper size, orientation, and margins between two Excel worksheets using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, reads the PageSetup of two specified worksheets, and records any mismatches in PaperSize, Orientation, and all margin values. | Create a reusable method that compares two double margin values with a configurable tolerance and adds a descriptive message to a differences collection.
+// Common Searches: how to compare page setup properties of two sheets with Aspose.Cells C# | C# program to find differences in paper size and margins between Excel worksheets | log worksheet layout discrepancies using Aspose.Cells .NET API | detect orientation mismatch between Excel sheets in C# | compare top and bottom margins of two worksheets with tolerance Aspose.Cells
+// Tags: worksheet page setup comparison Aspose.Cells | paper size mismatch detection C# | margin tolerance evaluation Excel | orientation difference logging .NET | compare sheet layout properties Aspose
 
 using Aspose.Cells;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The program loads an Excel workbook, accesses two worksheets by name, retrieves their PageSetup objects, and compares PaperSize, Orientation, and each margin (Top, Bottom, Left, Right). Any differences are written to the console with a small tolerance for margin values.
+// The example loads an Excel workbook, accesses two worksheets, and compares their PageSetup settings—including PaperSize, Orientation, and all margin values—using a small tolerance for margins. Any differences are collected, printed to the console, and the workbook can be saved.
 class Program
 {
     static void Main()
     {
-        // Load the workbook containing the worksheets to compare
-        var workbook = new Workbook("input.xlsx");
-
-        // Names of the worksheets to compare
-        string firstSheetName = "Sheet1";
-        string secondSheetName = "Sheet2";
-
-        // Retrieve the worksheets
-        var firstSheet = workbook.Worksheets[firstSheetName];
-        var secondSheet = workbook.Worksheets[secondSheetName];
-
-        if (firstSheet == null || secondSheet == null)
+        try
         {
-            Console.WriteLine("One or both specified worksheets were not found.");
-            return;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook from the file
+            var workbook = new Workbook(inputPath);
+
+            // Retrieve worksheets by name; ensure they exist
+            var sheet1 = workbook.Worksheets["Sheet1"];
+            var sheet2 = workbook.Worksheets["Sheet2"];
+
+            if (sheet1 == null || sheet2 == null)
+            {
+                Console.WriteLine("One or both worksheets (Sheet1, Sheet2) were not found in the workbook.");
+                return;
+            }
+
+            // List to hold any differences found
+            var differences = new List<string>();
+
+            // Compare PaperSize
+            if (sheet1.PageSetup.PaperSize != sheet2.PageSetup.PaperSize)
+            {
+                differences.Add($"PaperSize differs: Sheet1={sheet1.PageSetup.PaperSize}, Sheet2={sheet2.PageSetup.PaperSize}");
+            }
+
+            // Compare Orientation
+            if (sheet1.PageSetup.Orientation != sheet2.PageSetup.Orientation)
+            {
+                differences.Add($"Orientation differs: Sheet1={sheet1.PageSetup.Orientation}, Sheet2={sheet2.PageSetup.Orientation}");
+            }
+
+            // Compare margins (values are in points)
+            CompareMargin("TopMargin", sheet1.PageSetup.TopMargin, sheet2.PageSetup.TopMargin, differences);
+            CompareMargin("BottomMargin", sheet1.PageSetup.BottomMargin, sheet2.PageSetup.BottomMargin, differences);
+            CompareMargin("LeftMargin", sheet1.PageSetup.LeftMargin, sheet2.PageSetup.LeftMargin, differences);
+            CompareMargin("RightMargin", sheet1.PageSetup.RightMargin, sheet2.PageSetup.RightMargin, differences);
+
+            // Output the results
+            if (differences.Count == 0)
+            {
+                Console.WriteLine("No differences in paper dimensions were found.");
+            }
+            else
+            {
+                Console.WriteLine("Differences found:");
+                foreach (var diff in differences)
+                {
+                    Console.WriteLine(diff);
+                }
+            }
+
+            // Save the workbook (optional, if modifications were made)
+            workbook.Save(outputPath);
         }
-
-        // Access the PageSetup objects which hold paper dimensions
-        var firstPageSetup = firstSheet.PageSetup;
-        var secondPageSetup = secondSheet.PageSetup;
-
-        // Compare PaperSize
-        if (firstPageSetup.PaperSize != secondPageSetup.PaperSize)
+        catch (Exception ex)
         {
-            Console.WriteLine($"PaperSize differs: {firstSheetName} = {firstPageSetup.PaperSize}, {secondSheetName} = {secondPageSetup.PaperSize}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Compare Orientation
-        if (firstPageSetup.Orientation != secondPageSetup.Orientation)
-        {
-            Console.WriteLine($"Orientation differs: {firstSheetName} = {firstPageSetup.Orientation}, {secondSheetName} = {secondPageSetup.Orientation}");
-        }
-
-        // Compare margins (values are in points)
-        CompareMargin("TopMargin", firstPageSetup.TopMargin, secondPageSetup.TopMargin, firstSheetName, secondSheetName);
-        CompareMargin("BottomMargin", firstPageSetup.BottomMargin, secondPageSetup.BottomMargin, firstSheetName, secondSheetName);
-        CompareMargin("LeftMargin", firstPageSetup.LeftMargin, secondPageSetup.LeftMargin, firstSheetName, secondSheetName);
-        CompareMargin("RightMargin", firstPageSetup.RightMargin, secondPageSetup.RightMargin, firstSheetName, secondSheetName);
     }
 
-    // Helper method to compare individual margin values with a small tolerance
-    static void CompareMargin(string marginName, double firstValue, double secondValue, string firstSheet, string secondSheet)
+    // Helper method to compare margin values with a tolerance
+    static void CompareMargin(string marginName, double value1, double value2, List<string> diffs)
     {
-        const double tolerance = 0.001; // points tolerance
-        if (Math.Abs(firstValue - secondValue) > tolerance)
+        const double tolerance = 0.01; // points tolerance
+        if (Math.Abs(value1 - value2) > tolerance)
         {
-            Console.WriteLine($"{marginName} differs: {firstSheet} = {firstValue}, {secondSheet} = {secondValue}");
+            diffs.Add($"{marginName} differs: Sheet1={value1}, Sheet2={value2}");
         }
     }
 }

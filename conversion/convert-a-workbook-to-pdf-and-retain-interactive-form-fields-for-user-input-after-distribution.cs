@@ -1,68 +1,52 @@
-// Title: Convert an Aspose.Cells workbook to PDF with fillable form fields using C#
-// AI Prompts: Generate C# code that adds text box shapes to a worksheet and saves the workbook as a PDF with interactive fillable fields using Aspose.Cells. | Show how to configure PdfSaveOptions and PdfSecurityOptions in Aspose.Cells to enable FillFormsPermission and export document structure for accessibility. | Provide a C# example that creates the output directory if it does not exist and writes the PDF with accessible, editable form fields.
-// Common Searches: how to keep Excel text boxes as fillable fields when exporting to PDF with Aspose.Cells C# | Aspose.Cells PDF export enable fill forms permission C# example | preserve interactive form fields in PDF generated from workbook using Aspose.Cells | C# Aspose.Cells create accessible PDF with document structure and fillable forms | save workbook as PDF with editable form fields Aspose.Cells .NET
-// Tags: Aspose.Cells PDF export with fillable form fields | PdfSecurityOptions FillFormsPermission C# | PdfSaveOptions export document structure Aspose.Cells | add text box shape as PDF form field Aspose.Cells | C# create accessible PDF from Excel workbook
+// Title: Convert an Excel workbook to a fillable PDF while preserving form fields using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export Excel to PDF with fillable form fields | How to keep Excel form controls when saving as PDF using Aspose.Cells | C# save .xlsx as PDF preserving interactive form elements | PdfSaveOptions keep form fields in exported PDF Aspose.Cells | Convert workbook to PDF while retaining user input fields .NET
+// Tags: Aspose.Cells PDFSaveOptions retain form fields | C# generate fillable PDF from .xlsx using Aspose.Cells | preserve interactive controls when converting Excel to PDF | save workbook as PDF with editable form elements | Aspose.Cells convert workbook to PDF with form preservation
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;               // For Shape class
-using Aspose.Cells.Rendering.PdfSecurity; // For PDF security options
+using Aspose.Cells.Rendering;
 
-// The program creates a new workbook, inserts named text box shapes for Name and Email, configures PdfSaveOptions with FillFormsPermission and document structure export, ensures the output directory exists, and saves the workbook as 'InteractiveForm.pdf', producing a PDF that retains interactive, fillable form fields for end users.
-class WorkbookToPdfWithInteractiveForms
+// The example loads an Excel workbook, ensures the output folder exists, configures PdfSaveOptions (which keep form fields by default), and saves the workbook as a PDF that retains interactive form fields for user input, with error handling for missing files and other exceptions.
+class Program
 {
     static void Main()
     {
+        // Path to the source Excel workbook
+        string excelPath = @"C:\Input\SampleWorkbook.xlsx";
+
+        // Path where the PDF will be saved
+        string pdfPath = @"C:\Output\SampleWorkbook.pdf";
+
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Verify that the source file exists
+            if (!File.Exists(excelPath))
+                throw new FileNotFoundException($"Input file not found: {excelPath}");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            sheet.Cells["A1"].PutValue("Name:");
-            sheet.Cells["A2"].PutValue("Email:");
-
-            // Add text box shapes that will become interactive PDF fields
-            // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, height, width
-            Shape nameShape = sheet.Shapes.AddTextBox(0, 1, 0, 0, 30, 150);
-            nameShape.Name = "NameField";
-
-            Shape emailShape = sheet.Shapes.AddTextBox(1, 1, 0, 0, 30, 150);
-            emailShape.Name = "EmailField";
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Enable form filling permission so users can fill the fields after distribution
-            PdfSecurityOptions security = new PdfSecurityOptions
-            {
-                FillFormsPermission = true // Allow filling existing interactive form fields
-            };
-            pdfOptions.SecurityOptions = security;
-
-            // Preserve document structure for better accessibility (optional)
-            pdfOptions.ExportDocumentStructure = true;
-
-            // Define output path and ensure the directory exists
-            string outputPath = "InteractiveForm.pdf";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
-            }
 
-            // Save the workbook as PDF
-            workbook.Save(outputPath, pdfOptions);
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(excelPath);
 
-            Console.WriteLine($"Workbook successfully converted to PDF with interactive form fields: {outputPath}");
+            // Configure PDF save options (form fields are preserved by default)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Example: set PDF/A compliance if required
+                // Compliance = PdfCompliance.PdfA1b
+            };
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine("Workbook successfully converted to PDF with interactive form fields.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

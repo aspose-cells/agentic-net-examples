@@ -1,34 +1,36 @@
-// Title: Add an author‑attributed comment to a cell and make it appear on selection using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a comment into cell A1, assign "John Doe" as the author, set the comment to be visible when the cell is selected, and save the workbook with Aspose.Cells in C#. | Update existing Aspose.Cells code to attach author information to a cell comment and enable automatic display of the comment when the cell gains focus.
-// Common Searches: Aspose.Cells C# add comment with author and show on cell click | how to make Excel comment visible on selection using Aspose.Cells .NET | set comment author property in Aspose.Cells workbook C# example | display cell comment automatically when selected Aspose.Cells | C# Aspose.Cells comment.IsVisible true usage
-// Tags: add cell comment with author Aspose.Cells | comment visibility on selection .NET | Aspose.Cells comment author property | display Excel comment automatically C# | set comment.IsVisible Aspose.Cells
+// Title: Add an author‑attributed comment to a cell and show it on selection with Aspose.Cells for .NET (C#)
+// Common Searches: how to add a comment with author to a specific cell using Aspose.Cells C# | make cell comment visible only when the cell is selected in Aspose.Cells for .NET | set comment author and show comment on cell selection programmatically Aspose.Cells | Aspose.Cells example for displaying comment on cell click C#
+// Tags: Aspose.Cells cell comment author attribute | comment.IsVisible property Aspose.Cells C# | display comment on cell selection Aspose.Cells | programmatic workbook comment creation Aspose.Cells | C# add comment to worksheet cell Aspose.Cells
 
 using Aspose.Cells;
 
-// Creates a new workbook, writes "Sample Data" to cell A1, adds a comment authored by "John Doe", configures the comment to be visible when the cell is selected, and saves the file as CommentExample.xlsx using Aspose.Cells for .NET.
+// Creates a new workbook, adds a comment authored by "John Doe" to cell A1, sets the comment to be visible when the cell is selected, and saves the file as CommentWithAuthor.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Put a value in cell A1
+        // Put a value in cell A1 (optional, just to have something in the cell)
         Cell cell = sheet.Cells["A1"];
         cell.PutValue("Sample Data");
 
         // Add a comment to cell A1
-        // The comment includes author information and will be displayed when the cell is selected
         int commentIndex = sheet.Comments.Add("A1");
         Comment comment = sheet.Comments[commentIndex];
+
+        // Set the comment text and author information
         comment.Note = "This is a comment with author information.";
         comment.Author = "John Doe";
-        comment.IsVisible = true; // Show comment when the cell is selected
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("CommentExample.xlsx");
+        // Make the comment visible when the cell is selected
+        comment.IsVisible = true;
+
+        // Save the workbook to a file
+        workbook.Save("CommentWithAuthor.xlsx");
     }
 }

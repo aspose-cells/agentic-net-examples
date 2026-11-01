@@ -1,50 +1,54 @@
-// Title: How to list the names of SmartArt shapes in every worksheet of an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook and prints each worksheet's SmartArt shape names. | Create a method that returns a Dictionary<string, List<string>> mapping worksheet names to their SmartArt shape names using Aspose.Cells. | Modify the example to also output the SmartArt layout type (e.g., Hierarchy, Process) for each identified shape.
-// Common Searches: aspnet list smartart objects in an excel workbook using aspose.cells | c# enumerate smartart items in each worksheet of an xlsx file | how to retrieve smartart layout type with aspose.cells .net | get smartart shape properties from excel file using aspose.cells c# | iterate over worksheet shapes and filter smartart with aspose.cells
-// Tags: aspocells enumerate smartart shapes | c# extract smartart identifiers | aspocells get smartart layout type | excel worksheet shape iteration .net | smartart shape detection using aspose.cells
+// Title: How to find and list SmartArt shape names in each worksheet using Aspose.Cells for .NET
+// Common Searches: C# code to enumerate SmartArt shapes in an Excel worksheet with Aspose.Cells | retrieve SmartArt object names from a workbook using Aspose.Cells .NET | list all SmartArt shapes across worksheets in an .xlsx file via Aspose.Cells | Aspose.Cells check if shape is SmartArt and get its name in C# | iterate through ShapeCollection to find SmartArt in Excel using Aspose.Cells
+// Tags: Aspose.Cells SmartArt shape enumeration | IsSmartArt property usage | ShapeCollection iteration for SmartArt | extract SmartArt name in .NET | Excel workbook SmartArt identification
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The program loads an Excel workbook, iterates through each worksheet and its Shapes collection, checks the IsSmartArt flag, and writes the worksheet name together with each SmartArt shape's Name (and optionally its layout type) to the console, while handling missing files and runtime exceptions.
+// The example loads an Excel workbook, loops through each worksheet, iterates the ShapeCollection, uses the IsSmartArt flag to detect SmartArt objects, and writes each SmartArt shape's Name together with its worksheet name to the console. The workbook is then saved unchanged.
 class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook from the specified file
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through each worksheet in the workbook
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each shape on the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                // Get the collection of shapes on the worksheet
+                ShapeCollection shapes = sheet.Shapes;
+
+                // Examine each shape for SmartArt
+                foreach (Shape shape in shapes)
                 {
-                    // Identify SmartArt shapes
                     if (shape.IsSmartArt)
                     {
-                        // Output the SmartArt shape's name and its worksheet
                         Console.WriteLine($"Worksheet: {sheet.Name}, SmartArt Name: {shape.Name}");
                     }
                 }
             }
+
+            // Save the workbook (optional if no changes are made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

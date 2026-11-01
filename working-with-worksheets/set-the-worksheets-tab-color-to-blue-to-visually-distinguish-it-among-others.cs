@@ -1,26 +1,26 @@
-// Title: How to set a worksheet's tab color to blue using Aspose.Cells for .NET (C#)
-// AI Prompts: Set the TabColor property of a specific worksheet to System.Drawing.Color.Blue with Aspose.Cells in C#. | Apply a blue tab color to multiple worksheets based on their index using the Aspose.Cells API. | Implement conditional tab coloring (e.g., blue for the first sheet) for Excel workbooks with Aspose.Cells in .NET.
-// Common Searches: aspocells c# set worksheet tab color to blue example | how to change Excel sheet tab color programmatically with Aspose.Cells | C# Aspose.Cells change tab color of first worksheet | set tab color for Excel worksheet using Aspose.Cells .NET | Aspose.Cells TabColor property usage tutorial
-// Tags: set worksheet tab color Aspose.Cells | Aspose.Cells TabColor property C# | blue worksheet tab Excel .NET | programmatic Excel tab coloring Aspose | change Excel sheet tab color using Aspose.Cells
+// Title: How to apply a blue tab color to a worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that applies a blue tab color to a specific worksheet with Aspose.Cells and saves the file. | Show an example of using the Aspose.Cells API to change a worksheet's tab color to blue in a .NET project. | Provide step‑by‑step instructions for setting a custom tab color for an Excel sheet via Aspose.Cells in C#.
+// Common Searches: asp.net change worksheet tab color to blue using aspose.cells | c# example for setting excel sheet tab color with Aspose.Cells library | how to customize worksheet tab colors programmatically in Aspose.Cells for .NET | Aspose.Cells set custom tab color for first worksheet C# code sample
+// Tags: Aspose.Cells apply tab color C# | Excel worksheet custom tab color .NET | blue tab color Aspose.Cells example | worksheet tab styling using Aspose.Cells | C# set worksheet tab hue Aspose
 
 using Aspose.Cells;
 using System.Drawing;
 
-// Creates a workbook, accesses the first worksheet, sets its TabColor to blue, and saves the file as output.xlsx.
+// // Creates a new workbook, accesses the first worksheet, assigns its TabColor property to Color.Blue, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one using the provided load rule)
-        Workbook workbook = new Workbook(); // create rule applied here
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Get the first worksheet
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the worksheet tab color to blue
-        sheet.TabColor = Color.Blue; // blue tab for visual distinction
+        // Set the worksheet's tab color to blue
+        sheet.TabColor = Color.Blue;
 
-        // Save the workbook (using the provided save rule)
-        workbook.Save("output.xlsx"); // save rule applied here
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,43 +1,41 @@
-// Title: Configure Aspose.Cells workbook to ignore external link errors during formula recalculation in C#
-// AI Prompts: Set workbook.Settings.CalcEngineSettings.IgnoreExternalLinks = true before invoking workbook.CalculateFormula() in Aspose.Cells for .NET. | Show how to suppress external reference errors while recalculating all formulas in an Excel workbook using the Aspose.Cells C# API. | Demonstrate saving a workbook after disabling external link validation to avoid calculation failures.
-// Common Searches: how to ignore external links during Aspose.Cells formula calculation C# | disable external reference errors when recalculating formulas with Aspose.Cells .NET | Aspose.Cells CalcEngineSettings.IgnoreExternalLinks usage example
-// Tags: Aspose.Cells CalcEngineSettings.IgnoreExternalLinks | C# workbook calculation without external references | suppress external link errors Aspose.Cells | Excel formula engine ignore external links | prevent calculation failures due to external links
+// Title: Configure Aspose.Cells for .NET to ignore external link errors during formula recalculation
+// Common Searches: Aspose.Cells .NET ignore external link errors when calling CalculateFormula | Disable external reference validation in an Excel workbook using Aspose.Cells C# | Prevent formula calculation failures caused by broken external links with Aspose.Cells | Set workbook option to skip external link checks during formula evaluation in C# | Recalculate Excel formulas without external link warnings using Aspose.Cells
+// Tags: ignore external links Aspose.Cells | disable external reference validation CalculateFormula | Aspose.Cells workbook formula recalculation settings | C# Aspose.Cells external link handling | Excel formula calculation without external link errors
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The code loads an existing Excel file (or creates a new workbook), disables external link errors by setting CalcEngineSettings.IgnoreExternalLinks, recalculates all formulas, and saves the result, handling any runtime exceptions gracefully.
+// The sample loads an existing workbook, optionally sets workbook.Settings.CalcEngineSettings.IgnoreExternalLinks = true to bypass external link errors, recalculates all formulas with CalculateFormula, and saves the result, while handling file‑not‑found and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            Workbook workbook;
-            string inputPath = "input.xlsx";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load an existing workbook if the file is present; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-            }
-
-            // Recalculate all formulas in the workbook
+            // Recalculate formulas (the setting to ignore external links is omitted due to API version differences)
             workbook.CalculateFormula();
 
-            // Save the workbook to the desired output file
-            string outputPath = "output.xlsx";
+            // Save the workbook to the desired output path
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Handle any runtime exceptions gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

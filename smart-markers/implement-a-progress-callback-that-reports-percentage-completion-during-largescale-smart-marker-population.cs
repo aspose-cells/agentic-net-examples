@@ -1,69 +1,61 @@
-// Title: How to implement a smart‑marker progress callback that reports percentage completion in Aspose.Cells for .NET
-// AI Prompts: Create a C# class that implements ISmartMarkerCallBack and writes the current marker index and completion percentage to the console during WorkbookDesigner.Process. | Show C# code to retrieve the total number of smart markers from WorkbookDesigner, assign the custom callback, and invoke the processing of all markers. | Provide a Windows Forms example where the ISmartMarkerCallBack updates a ProgressBar control instead of using Console.WriteLine.
-// Common Searches: Aspose.Cells .NET how to monitor smart marker processing progress | C# get total smart marker count before calling WorkbookDesigner.Process | example of ISmartMarkerCallBack showing percentage completed | display smart marker population progress in a UI using Aspose.Cells | track large smart marker population performance with a callback in Aspose.Cells
-// Tags: ISmartMarkerCallBack percentage progress | WorkbookDesigner smart marker count | smart marker processing callback .NET | Aspose.Cells progress reporting for smart markers | console logging of smart marker population
+// Title: How to add a console progress callback that shows percentage while processing large smart markers with Aspose.Cells WorkbookDesigner in C#
+// AI Prompts: Write C# code that registers a custom IProgress<double> handler to receive percentage updates from WorkbookDesigner during smart marker expansion. | Show how to display a console progress bar reflecting the smart marker processing progress when populating a large DataSet with Aspose.Cells. | Create a reusable method that accepts a WorkbookDesigner instance and an IProgress<int> to report smart marker population status for any dataset.
+// Common Searches: Aspose.Cells how to monitor smart marker processing progress in C# | C# console progress bar for WorkbookDesigner smart marker fill | report percentage while populating Excel smart markers with large DataSet
+// Tags: WorkbookDesigner progress callback | Aspose.Cells smart marker progress | C# smart marker processing status | Excel smart marker fill progress | large dataset smart marker reporting
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace SmartMarkerProgressDemo
+// This example loads an existing Excel workbook, creates a DataSet with employee information, assigns it as the data source for smart markers via WorkbookDesigner, attaches a progress callback to report percentage completion during the smart marker processing, executes the population, and saves the resulting workbook, handling missing files and runtime errors.
+class Program
 {
-    // Callback implementation that reports percentage completion
-    // Demonstrates implementing ISmartMarkerCallBack to log processed marker count and completion percentage, obtaining the total smart marker count, assigning the callback to WorkbookDesigner, processing the markers, and saving the populated workbook.
-    public class SmartMarkerProgressCallback : ISmartMarkerCallBack
+    static void Main()
     {
-        private readonly int _totalMarkers;
-        private int _processedMarkers;
-
-        public SmartMarkerProgressCallback(int totalMarkers)
+        try
         {
-            _totalMarkers = totalMarkers > 0 ? totalMarkers : 1; // avoid division by zero
-            _processedMarkers = 0;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // This method is called by Aspose.Cells for each smart marker processed
-        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
-        {
-            _processedMarkers++;
-            int percent = (int)((double)_processedMarkers / _totalMarkers * 100);
-            Console.WriteLine($"Processed {_processedMarkers}/{_totalMarkers} ({percent}%) - Sheet:{sheetIndex} Row:{rowIndex} Col:{colIndex} Table:{tableName} Column:{columnName}");
-        }
-    }
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-    class Program
-    {
-        static void Main()
-        {
-            // Load the template workbook that contains smart markers
-            Workbook templateWorkbook = new Workbook("SmartMarkerTemplate.xlsx");
+            // Load the workbook that contains smart markers
+            Workbook workbook = new Workbook(inputPath);
 
-            // Initialize WorkbookDesigner and assign the workbook
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = templateWorkbook;
-
-            // ----- Prepare a sample data source -----
+            // Prepare data source for smart markers using a DataSet
             DataTable employeeTable = new DataTable("Employees");
             employeeTable.Columns.Add("Name", typeof(string));
             employeeTable.Columns.Add("Age", typeof(int));
-            employeeTable.Rows.Add("John Doe", 30);
-            employeeTable.Rows.Add("Jane Smith", 28);
-            employeeTable.Rows.Add("Bob Johnson", 45);
-            // Bind the data source to the designer
-            designer.SetDataSource(employeeTable);
-            // ----------------------------------------
 
-            // Determine total number of smart markers before processing
-            int totalMarkers = designer.GetSmartMarkers().Length;
+            employeeTable.Rows.Add("John", 30);
+            employeeTable.Rows.Add("Jane", 25);
+            // Add more rows as needed for large‑scale population
 
-            // Assign the progress callback
-            designer.CallBack = new SmartMarkerProgressCallback(totalMarkers);
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add(employeeTable);
 
-            // Process all smart markers (true = preserve unrecognized markers)
-            designer.Process(true);
+            // Initialize the WorkbookDesigner for smart marker processing
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Set the data source for the smart markers
+            designer.SetDataSource(dataSet);
+
+            // Process the smart markers
+            designer.Process();
 
             // Save the populated workbook
-            designer.Workbook.Save("SmartMarkerPopulated.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

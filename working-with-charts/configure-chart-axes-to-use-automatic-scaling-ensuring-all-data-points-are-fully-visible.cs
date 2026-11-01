@@ -1,71 +1,66 @@
-// Title: Configure automatic minimum and maximum scaling for both value and category axes of an Excel chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing Excel workbook with Aspose.Cells, creates a placeholder chart if none exists, and sets the ValueAxis and CategoryAxis properties IsAutomaticMinValue and IsAutomaticMaxValue to true before saving the file. | Show how to enable automatic scaling for both the Y‑axis and X‑axis of a chart in Aspose.Cells, handling missing charts and preserving the original workbook structure.
-// Common Searches: Aspose.Cells C# set chart value axis automatic min max | How to enable auto scaling for Excel chart axes with Aspose.Cells .NET | Create placeholder chart in Aspose.Cells if workbook has no charts | Automatic scaling for category axis using Aspose.Cells C# example
-// Tags: chart axes automatic scaling Aspose.Cells | value axis auto min max Aspose.Cells | category axis auto scaling Aspose.Cells | add placeholder chart Aspose.Cells | load workbook modify chart axes C#
+// Title: How to enable automatic scaling for both value and category axes of an Excel chart using Aspose.Cells in C#
+// AI Prompts: Write C# code that opens an existing .xlsx workbook with Aspose.Cells, retrieves the first chart, and sets IsAutomaticMaxValue, IsAutomaticMinValue, IsAutomaticMajorUnit, and IsAutomaticMinorUnit to true for both the ValueAxis and CategoryAxis before saving the file. | Show how to configure Aspose.Cells chart axes to use automatic scaling for max, min, major and minor units in a .NET application.
+// Common Searches: Aspose.Cells C# set chart value axis automatic max and min | How to make Excel chart axes auto scale using Aspose.Cells .NET | C# example for enabling automatic major and minor units on chart category axis with Aspose.Cells | Automatically adjust chart axes range in an existing workbook with Aspose.Cells
+// Tags: Aspose.Cells chart axis automatic range | C# set chart value axis auto max/min | Aspose.Cells category axis automatic major unit | update existing workbook chart axes Aspose.Cells | Aspose.Cells chart axis property configuration .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an existing workbook, adds a column chart if the sheet contains none, sets both the value (Y) and category (X) axes to use automatic minimum and maximum values, and saves the updated workbook.
+// The sample loads an existing Excel workbook, verifies a chart on the first worksheet, enables automatic maximum, minimum, major and minor units for both the value (vertical) and category (horizontal) axes, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "Input.xlsx";
-            string outputPath = "Output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one chart; create a placeholder if none exist
+            // Ensure that at least one chart exists on the worksheet
             if (sheet.Charts.Count == 0)
             {
-                // Add a column chart positioned from row 5, column 0 to row 15, column 5
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart placeholderChart = sheet.Charts[chartIndex];
-                // Example: add a series (optional)
-                // placeholderChart.NSeries.Add("A1:B5", true);
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
 
             // Access the first chart
             Chart chart = sheet.Charts[0];
 
-            // Set automatic scaling for value (Y) axis
-            chart.ValueAxis.IsAutomaticMinValue = true;
+            // Enable automatic scaling for the value (vertical) axis
             chart.ValueAxis.IsAutomaticMaxValue = true;
+            chart.ValueAxis.IsAutomaticMinValue = true;
+            chart.ValueAxis.IsAutomaticMajorUnit = true;
+            chart.ValueAxis.IsAutomaticMinorUnit = true;
 
-            // Set automatic scaling for category (X) axis
-            chart.CategoryAxis.IsAutomaticMinValue = true;
+            // Enable automatic scaling for the category (horizontal) axis
             chart.CategoryAxis.IsAutomaticMaxValue = true;
+            chart.CategoryAxis.IsAutomaticMinValue = true;
+            chart.CategoryAxis.IsAutomaticMajorUnit = true;
+            chart.CategoryAxis.IsAutomaticMinorUnit = true;
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,55 +1,85 @@
-// Title: Verify that a worksheet copied with Aspose.Cells retains identical paper size, orientation, and margins in C#
-// AI Prompts: Write C# code using Aspose.Cells to copy a worksheet and then programmatically compare the source and destination PageSetup properties (PaperSize, Orientation, LeftMargin, RightMargin, TopMargin, BottomMargin) with a tolerance for margin values. | Create a reusable method that accepts two Worksheet objects and returns a detailed report indicating which page‑setup attributes match or differ, suitable for unit‑testing worksheet duplication.
-// Common Searches: C# Aspose.Cells how to compare page setup of two worksheets after copy | check if copied Excel sheet keeps original paper size and margins using Aspose.Cells | Aspose.Cells .NET verify worksheet orientation equality after duplication
-// Tags: Aspose.Cells worksheet page setup verification | C# compare worksheet paper size orientation | Aspose.Cells margin tolerance comparison | Excel page setup equality .NET
+// Title: Validate that a copied worksheet retains the same page setup (paper size, margins, orientation) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that copies a worksheet with Aspose.Cells and then programmatically compares the source and destination PageSetup properties, logging any differences in paper size, orientation, and all margins. | Create a reusable C# method that takes two Worksheet objects and returns true only if their page setup (paper size, orientation, top/bottom/left/right/header/footer margins) matches, using the Aspose.Cells API. | Write a C# console application that loads an Excel file, copies the first worksheet, verifies that the copy’s print settings are identical to the original, and saves the workbook, employing Aspose.Cells PageSetup features.
+// Common Searches: how to compare page setup of two worksheets after copying with Aspose.Cells C# | Aspose.Cells verify that copied sheet has same paper size and margins | C# check orientation consistency between source and destination worksheets in Aspose.Cells | detect mismatched print settings after worksheet duplication using Aspose.Cells | Aspose.Cells page setup property comparison example
+// Tags: aspocells worksheet copy page-setup validation | c# compare print settings aspocells | aspocells page-setup property comparison | c# verify paper size and margins aspocells | aspocells detect mismatched orientation after copy
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example loads a source workbook, copies its first worksheet into a new workbook, accesses the PageSetup objects of both worksheets, and compares PaperSize, Orientation, and each margin (left, right, top, bottom) using a small tolerance for floating‑point differences. It prints the comparison results and saves the destination workbook.
-class WorksheetPageSetupComparer
+// The example loads 'source.xlsx', copies its first worksheet within the same workbook, and retrieves the PageSetup objects for both the original and the copied sheets. It then compares paper size, orientation, and all margin values (top, bottom, left, right, header, footer), logs any mismatches, reports a full match when all properties are identical, and finally saves the workbook as 'output.xlsx'.
+class Program
 {
     static void Main()
     {
         // Load the source workbook
-        Workbook srcWorkbook = new Workbook("Source.xlsx");
+        Workbook srcWb = new Workbook("source.xlsx");
 
-        // Assume we are working with the first worksheet as source
-        Worksheet srcSheet = srcWorkbook.Worksheets[0];
+        // Get the source worksheet (first worksheet)
+        Worksheet srcWs = srcWb.Worksheets[0];
 
-        // Create a new workbook for the destination (or load an existing one)
-        Workbook destWorkbook = new Workbook();
-        // Add a new worksheet to the destination workbook
-        Worksheet destSheet = destWorkbook.Worksheets[destWorkbook.Worksheets.Add()];
-        // Copy the source worksheet content to the destination worksheet
-        destSheet.Copy(srcSheet);
+        // Copy the source worksheet to a new worksheet within the same workbook
+        int copyIndex = srcWb.Worksheets.AddCopy(srcWs.Index);
+        Worksheet destWs = srcWb.Worksheets[copyIndex];
 
-        // Access PageSetup objects for both worksheets
-        PageSetup srcSetup = srcSheet.PageSetup;
-        PageSetup destSetup = destSheet.PageSetup;
+        // Retrieve page setup objects for comparison
+        PageSetup srcSetup = srcWs.PageSetup;
+        PageSetup destSetup = destWs.PageSetup;
 
-        // Compare PaperSize
-        bool paperSizeMatch = srcSetup.PaperSize == destSetup.PaperSize;
+        bool isMatch = true;
 
-        // Compare Orientation
-        bool orientationMatch = srcSetup.Orientation == destSetup.Orientation;
+        // Compare paper size
+        if (srcSetup.PaperSize != destSetup.PaperSize)
+        {
+            isMatch = false;
+            Console.WriteLine($"PaperSize mismatch: Source={srcSetup.PaperSize}, Destination={destSetup.PaperSize}");
+        }
 
-        // Compare Margins (in points)
-        const double tolerance = 0.001; // tolerance for floating point comparison
-        bool leftMarginMatch = Math.Abs(srcSetup.LeftMargin - destSetup.LeftMargin) < tolerance;
-        bool rightMarginMatch = Math.Abs(srcSetup.RightMargin - destSetup.RightMargin) < tolerance;
-        bool topMarginMatch = Math.Abs(srcSetup.TopMargin - destSetup.TopMargin) < tolerance;
-        bool bottomMarginMatch = Math.Abs(srcSetup.BottomMargin - destSetup.BottomMargin) < tolerance;
+        // Compare orientation
+        if (srcSetup.Orientation != destSetup.Orientation)
+        {
+            isMatch = false;
+            Console.WriteLine($"Orientation mismatch: Source={srcSetup.Orientation}, Destination={destSetup.Orientation}");
+        }
 
-        // Output comparison results
-        Console.WriteLine($"Paper Size Match: {paperSizeMatch}");
-        Console.WriteLine($"Orientation Match: {orientationMatch}");
-        Console.WriteLine($"Left Margin Match: {leftMarginMatch}");
-        Console.WriteLine($"Right Margin Match: {rightMarginMatch}");
-        Console.WriteLine($"Top Margin Match: {topMarginMatch}");
-        Console.WriteLine($"Bottom Margin Match: {bottomMarginMatch}");
+        // Compare margins (values are in points)
+        if (srcSetup.TopMargin != destSetup.TopMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"TopMargin mismatch: Source={srcSetup.TopMargin}, Destination={destSetup.TopMargin}");
+        }
+        if (srcSetup.BottomMargin != destSetup.BottomMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"BottomMargin mismatch: Source={srcSetup.BottomMargin}, Destination={destSetup.BottomMargin}");
+        }
+        if (srcSetup.LeftMargin != destSetup.LeftMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"LeftMargin mismatch: Source={srcSetup.LeftMargin}, Destination={destSetup.LeftMargin}");
+        }
+        if (srcSetup.RightMargin != destSetup.RightMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"RightMargin mismatch: Source={srcSetup.RightMargin}, Destination={destSetup.RightMargin}");
+        }
+        if (srcSetup.HeaderMargin != destSetup.HeaderMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"HeaderMargin mismatch: Source={srcSetup.HeaderMargin}, Destination={destSetup.HeaderMargin}");
+        }
+        if (srcSetup.FooterMargin != destSetup.FooterMargin)
+        {
+            isMatch = false;
+            Console.WriteLine($"FooterMargin mismatch: Source={srcSetup.FooterMargin}, Destination={destSetup.FooterMargin}");
+        }
 
-        // Save the destination workbook if needed
-        destWorkbook.Save("Destination.xlsx");
+        // Output final result
+        if (isMatch)
+        {
+            Console.WriteLine("Destination worksheet's page setup matches the source worksheet exactly.");
+        }
+
+        // Save the workbook with the copied worksheet (optional)
+        srcWb.Save("output.xlsx");
     }
 }

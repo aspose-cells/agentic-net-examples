@@ -1,58 +1,87 @@
-// Title: Convert a named Excel table to a regular range and retain only the first ten rows with Aspose.Cells for .NET
-// AI Prompts: Load the workbook 'input.xlsx' using Aspose.Cells, locate the ListObject named 'MyTable', invoke ConvertToRange to turn it into a plain range while keeping its visual style, then delete every row after the tenth data row and save the result as 'output.xlsx'. | In C#, use Aspose.Cells to transform a specific worksheet table into a cell range, preserve the original formatting, truncate the range to the first ten rows, and write the modified workbook.
-// Common Searches: Aspose.Cells C# convert ListObject MyTable to range and keep first 10 rows | How to delete rows after converting an Excel table to range with Aspose.Cells .NET | Preserve cell formatting when converting a named table to range using Aspose.Cells | Limit rows of a converted Excel table to ten rows in C# Aspose.Cells example
-// Tags: convert ListObject to range Aspose.Cells | retain formatting during table conversion .NET | remove rows beyond row ten Aspose.Cells | load workbook modify table rows C# | Aspose.Cells keep first ten rows table
+// Title: Convert an Excel ListObject to a regular range while preserving formatting for the first ten rows using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# convert ListObject to range keep first 10 rows formatting | how to retain cell styles for the first ten rows after ConvertToRange in Aspose.Cells | C# Aspose.Cells example clearing formatting beyond a specific row in a converted table | convert Excel table to range while preserving header formatting with Aspose.Cells .NET | Aspose.Cells remove styles after row 10 in a ListObject conversion
+// Tags: ListObject to range conversion Aspose.Cells | retain first ten rows formatting Aspose.Cells | remove styles after row ten Aspose.Cells | Excel table conversion C# Aspose.Cells | partial formatting preservation .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The code loads 'input.xlsx', finds the ListObject called 'MyTable', converts it to a regular range while preserving its formatting, deletes any rows beyond the 10th data row, and saves the updated workbook as 'output.xlsx'.
+// The example loads an Excel workbook (or creates one), accesses a ListObject named "Table1", converts it to a normal range with ConvertToRange(), clears cell styles for rows beyond the tenth row while keeping the original formatting for the first ten rows, and saves the result.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
+            Workbook workbook;
+
+            // Load existing workbook or create a sample one if the file is missing
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+
+                // Sample data for the table
+                ws.Cells["A1"].PutValue("Header1");
+                ws.Cells["B1"].PutValue("Header2");
+                for (int i = 0; i < 20; i++)
+                {
+                    ws.Cells[i + 1, 0].PutValue($"R{i + 1}C1");
+                    ws.Cells[i + 1, 1].PutValue($"R{i + 1}C2");
+                }
+
+                // Add a ListObject (table) named "Table1"
+                int tableIndex = ws.ListObjects.Add(0, 0, 20, 1, true);
+                ListObject table = ws.ListObjects[tableIndex];
+                table.DisplayName = "Table1";
+
+                // Save the generated input file for reference
+                workbook.Save(inputPath);
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the table (ListObject) by name
-            ListObject table = worksheet.ListObjects["MyTable"];
-            if (table == null)
+            // Retrieve the table by name
+            ListObject tableObj = worksheet.ListObjects["Table1"];
+            if (tableObj == null)
             {
-                Console.WriteLine("Table 'MyTable' not found.");
+                Console.WriteLine("Table 'Table1' not found.");
                 return;
             }
 
-            // Store table boundaries before conversion
-            int startRow = table.StartRow;
-            int totalRows = table.DataRange.RowCount; // correct way to get row count
+            // Preserve formatting information before converting to a normal range
+            int startRow = tableObj.StartRow;
+            int startColumn = tableObj.StartColumn;
+            int endRow = tableObj.EndRow;
+            int endColumn = tableObj.EndColumn;
 
-            // Convert the table to a regular range while preserving formatting
-            table.ConvertToRange();
+            // Convert the table to a normal range while keeping values and formatting
+            tableObj.ConvertToRange();
 
-            // Delete rows beyond the 10th row (preserve rows 0‑9)
-            int rowsToKeep = 10;
-            if (totalRows > rowsToKeep)
+            // Keep formatting only for the first 10 rows of the original table
+            int formattingEndRow = startRow + 9; // 10th row (0‑based)
+
+            // Create a default (no) style
+            Style defaultStyle = workbook.CreateStyle();
+
+            // Clear formatting for rows beyond the 10th row within the former table area
+            for (int r = formattingEndRow + 1; r <= endRow; r++)
             {
-                int rowsToDelete = totalRows - rowsToKeep;
-                worksheet.Cells.DeleteRows(startRow + rowsToKeep, rowsToDelete, true);
+                for (int c = startColumn; c <= endColumn; c++)
+                {
+                    worksheet.Cells[r, c].SetStyle(defaultStyle);
+                }
             }
 
             // Save the modified workbook
-            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }

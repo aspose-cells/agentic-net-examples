@@ -1,14 +1,12 @@
-// Title: How to log timestamp and worksheet name each time a WordArt shape is added with Aspose.Cells for .NET
-// AI Prompts: Create a C# method that appends a log entry containing the current date‑time and the worksheet name whenever worksheet.Shapes.AddWordArt is invoked. | Update the Aspose.Cells example to write a timestamped record to a text file each time a WordArt object is inserted into a workbook. | Add error‑handled logging around WordArt shape creation in a .NET Excel workbook using Aspose.Cells.
-// Common Searches: aspocells c# log when adding wordart shape to worksheet | record timestamp for each shape insertion in Aspose.Cells workbook | write log file for WordArt addition using Aspose.Cells .NET | how to track Excel shape creation events with Aspose.Cells in C#
-// Tags: Aspose.Cells WordArt addition logging | timestamp shape creation log .NET | C# write worksheet activity to text file | Excel shape insertion event logging | error-handled logging for Aspose.Cells shapes
+// Title: How to log worksheet name and timestamp each time a WordArt shape is added with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells log each AddWordArt call with worksheet name and datetime | record shape addition events to a text file using Aspose.Cells .NET | append timestamped log entries when inserting WordArt into Excel workbook in C# | track worksheet name for every WordArt shape created with Aspose.Cells | write custom log for WordArt shape creation Aspose.Cells C# example
+// Tags: AddWordArt logging Aspose.Cells | timestamped shape addition .NET | worksheet name log file C# | Aspose.Cells shape event tracking | Excel WordArt audit log
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a WordArt shape to the first worksheet, and logs the current timestamp along with the worksheet name to a text file each time the shape is added. It includes error handling for shape addition, logging, and workbook saving.
+// The example creates a workbook, adds a WordArt shape to a worksheet, and appends a log entry containing the current date‑time and the worksheet name to a text file each time the shape is added, then saves the workbook.
 class Program
 {
     static void Main()
@@ -22,67 +20,40 @@ class Program
             Worksheet worksheet = workbook.Worksheets[0];
             worksheet.Name = "Sheet1";
 
-            try
-            {
-                // Add a WordArt shape to the worksheet
-                // style = 0 (Style1)
-                Shape wordArt = worksheet.Shapes.AddWordArt(
-                    0,                     // style (0 = Style1)
-                    "Sample WordArt",      // text
-                    0,                     // upper left row
-                    0,                     // upper left column
-                    0,                     // top offset (pixels)
-                    0,                     // left offset (pixels)
-                    50,                    // height (pixels)
-                    200                    // width (pixels)
-                );
+            // Add a WordArt shape and log the action
+            AddWordArt(worksheet, "Sample WordArt");
 
-                // Log the addition of the WordArt shape
-                LogWordArtAddition(worksheet.Name);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to add WordArt: {ex.Message}");
-            }
-
-            // Prepare output path
+            // Save the workbook to a file
             string outputPath = "Output.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            try
-            {
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    // Logs the timestamp and worksheet name each time a WordArt shape is added
-    static void LogWordArtAddition(string worksheetName)
+    // Adds a WordArt shape to the specified worksheet and logs the timestamp and worksheet name
+    static void AddWordArt(Worksheet worksheet, string text)
     {
         try
         {
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - WordArt added to worksheet: {worksheetName}";
-            // Append the log entry to a text file
-            File.AppendAllText("WordArtLog.txt", logEntry + Environment.NewLine);
+            // Add WordArt shape (type 0 = WordArt style 1)
+            // Signature: AddWordArt(int shapeType, string text, int upperLeftRow, int upperLeftColumn,
+            //                         int top, int left, int height, int width)
+            worksheet.Shapes.AddWordArt(0, text, 0, 0, 0, 0, 200, 50);
+
+            // Prepare log entry with current timestamp and worksheet name
+            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\tWorksheet: {worksheet.Name}";
+
+            // Append the log entry to a log file
+            string logPath = "WordArtLog.txt";
+            File.AppendAllText(logPath, logEntry + Environment.NewLine);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Logging failed: {ex.Message}");
+            Console.Error.WriteLine($"Failed to add WordArt: {ex.Message}");
         }
     }
 }

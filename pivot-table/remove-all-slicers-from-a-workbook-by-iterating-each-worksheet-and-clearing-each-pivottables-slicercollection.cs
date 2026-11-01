@@ -1,29 +1,49 @@
-// Title: Delete all slicers from an Excel workbook using Aspose.Cells in C#
-// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, loops through every worksheet, clears each slicer collection, and saves the modified workbook. | Show how to use the Worksheet.Slicers.Clear method in Aspose.Cells to programmatically remove slicers linked to pivot tables across a workbook. | Provide a step‑by‑step Aspose.Cells example that deletes all slicers from a workbook and writes the result to a new file.
-// Common Searches: asp.net aspose.cells remove slicers from all worksheets in an Excel file | c# clear slicer collection for each sheet using Aspose.Cells | how to delete pivot table slicers programmatically with Aspose.Cells .NET | iterate through workbook worksheets to remove slicers Aspose.Cells | save workbook after removing slicers Aspose.Cells C#
-// Tags: Aspose.Cells slicer collection clear | delete all slicers workbook Aspose.Cells | worksheet level slicer removal Aspose.Cells | pivot table slicer cleanup Aspose.Cells | C# Aspose.Cells remove slicers
+// Title: How to delete every slicer in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to remove all slicers from an Excel file with Aspose.Cells | Aspose.Cells iterate worksheets and clear slicer collections | Programmatically delete slicers from pivot tables in .xlsx using Aspose.Cells | Remove slicers from workbook before saving with Aspose.Cells .NET | How to clear worksheet slicers in Aspose.Cells C# example
+// Tags: Aspose.Cells clear slicer collection | remove slicers from Excel workbook C# | iterate worksheets delete slicers Aspose | slicer removal Aspose.Cells .NET | Excel slicer cleanup using Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
+using System;
+using System.IO;
 
-// // Loads an .xlsx workbook, iterates each worksheet, calls sheet.Slicers.Clear() to delete all slicers, and saves the workbook to a new file.
+// The sample loads an existing Excel workbook, checks the input file, iterates through each worksheet, clears any slicers via the worksheet's Slicers collection, and saves the modified workbook, handling exceptions throughout.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your source file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Clear all slicers associated with the current worksheet
-            // This removes slicers linked to any PivotTable on the sheet
-            sheet.Slicers.Clear();
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the modified workbook to a new file (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets and remove their slicers
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Clear all slicers on the current worksheet
+                if (sheet.Slicers.Count > 0)
+                {
+                    sheet.Slicers.Clear();
+                }
+            }
+
+            // Save the workbook after slicers have been removed
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,7 +1,6 @@
-// Title: Apply a custom number format to column C while skipping the first two rows with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a workbook, creates a range for column C starting at row 3, and applies the custom number format '#,##0.00;[Red]-#,##0.00' using Aspose.Cells. | Provide a reusable method that takes a worksheet, column index, start‑row offset, and format string, then creates the appropriate range and applies the style with Aspose.Cells. | Show how to modify the example to format column D instead of C and use a different custom format while keeping the two‑row offset.
-// Common Searches: Aspose.Cells how to format a whole column with a custom number format after skipping header rows | C# create a range with offset rows and apply StyleFlag.All in Aspose.Cells | Apply red negative number formatting to column C using Aspose.Cells .NET | Set custom numeric format for dynamic range based on last data row Aspose.Cells | Skip first two rows when applying number format to Excel column with Aspose.Cells
-// Tags: apply custom number format Aspose.Cells | create range with start row offset Aspose.Cells | format column C Aspose.Cells .NET | use StyleFlag.All Aspose.Cells | skip header rows number formatting Aspose.Cells
+// Title: Apply a custom number format to column C starting from row 3 with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply custom number format to column C after skipping first two rows | CreateRange offset by two rows and set number format in Aspose.Cells .NET | Set Excel column C number format beginning at row 3 using Aspose.Cells API | Apply style with custom number format to a column range in Aspose.Cells C# example | How to format cells in column C from row 3 onward with Aspose.Cells for .NET
+// Tags: custom number format style Aspose.Cells | CreateRange with row offset Aspose.Cells | StyleFlag NumberFormat property Aspose.Cells | format column C Excel using Aspose.Cells | skip initial rows apply style Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,7 +8,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // Loads an existing workbook, creates a range covering column C from row 3 to the last data row, applies a custom number format '#,##0.00;[Red]-#,##0.00' using a style with StyleFlag.All, and saves the modified file.
+    // The example loads an existing workbook, calculates the last used row, creates a range that covers column C starting at the third row (offset by two rows), defines a style with the custom number format "#,##0.00", applies the style to the range using a StyleFlag that targets only the number format, and saves the updated workbook.
     class Program
     {
         static void Main(string[] args)
@@ -19,50 +18,56 @@ namespace AsposeCellsExample
 
             try
             {
-                // Verify that the input workbook exists
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
                     return;
                 }
 
                 // Load the existing workbook
-                var workbook = new Workbook(inputPath);
+                Workbook workbook = new Workbook(inputPath);
 
                 // Access the first worksheet
-                var worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Determine the last row that contains data
-                int lastDataRow = worksheet.Cells.MaxDataRow;
+                // Determine the last used row in the sheet
+                int lastRow = sheet.Cells.MaxDataRow;
 
-                // Define the offset (skip the first two rows)
-                int startRow = 2;               // Zero‑based index: row 3 in Excel
-                int startColumn = 2;            // Column C (zero‑based)
-
-                // Calculate how many rows to include in the range
-                int totalRows = (lastDataRow >= startRow) ? (lastDataRow - startRow + 1) : 0;
-
-                // Apply the custom number format only if there are rows to format
-                if (totalRows > 0)
+                // Ensure there are rows beyond the offset row (row index 2)
+                int startRow = 2; // zero‑based index (third row)
+                int totalRows = Math.Max(0, lastRow - startRow + 1);
+                if (totalRows == 0)
                 {
-                    // Create a range that covers column C from the offset row to the last data row
-                    var range = worksheet.Cells.CreateRange(startRow, startColumn, totalRows, 1);
-
-                    // Create a style with the desired custom number format
-                    var style = workbook.CreateStyle();
-                    style.Custom = "#,##0.00;[Red]-#,##0.00";   // Example custom format
-
-                    // Apply the style to the range (apply all style attributes)
-                    var flag = new StyleFlag { All = true };
-                    range.ApplyStyle(style, flag);
+                    Console.WriteLine("No data rows found after the specified offset.");
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                    return;
                 }
+
+                // Create a range that represents column C (index 2) offset by two rows
+                Aspose.Cells.Range offsetRange = sheet.Cells.CreateRange(startRow, 2, totalRows, 1);
+
+                // Create a style with a custom number format
+                Style customStyle = workbook.CreateStyle();
+                customStyle.Custom = "#,##0.00";
+
+                // Define which style attributes to apply (only number format)
+                StyleFlag flag = new StyleFlag
+                {
+                    NumberFormat = true
+                };
+
+                // Apply the custom style to the offset range
+                offsetRange.ApplyStyle(customStyle, flag);
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

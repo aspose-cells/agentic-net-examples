@@ -1,67 +1,72 @@
-// Title: Apply a structured reference formula to compute total price after merging a DataTable with smart markers using Aspose.Cells for .NET
-// AI Prompts: Write C# code that merges a DataTable into an Excel worksheet with smart markers and then adds a Total column that multiplies Quantity and UnitPrice using a structured reference formula. | Show how to assign a formula to a ListObject column after WorkbookDesigner.Process() so each row calculates its total price in Aspose.Cells. | Demonstrate recalculating all formulas and saving the workbook after inserting a calculated Total column into a smart‑marker generated table.
-// Common Searches: asp.net calculate total column with smart markers after workbookdesigner merge | how to set ListColumn.Formula for a listobject created by smart markers in Aspose.Cells | add calculated total field to Excel table generated from a DataTable using Aspose.Cells C# | apply structured reference formula to expanded smart‑marker table in .NET | merge datatable into Excel and compute row total with Aspose.Cells workbookdesigner
-// Tags: smart markers listobject column formula | structured reference total calculation Aspose.Cells | WorkbookDesigner merge datatable with calculated column | C# Aspose.Cells set ListColumn formula | excel total price calculation using Aspose.Cells
+// Title: Calculate total price with a multiplication formula in a merged title row using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set formula for total price column after merging header row | multiply quantity by unit price in Excel using Aspose.Cells .NET | apply formula to merged cells in an Aspose.Cells workbook C# example | how to recalculate formulas after adding a multiplication formula with Aspose.Cells | create sales report with merged title and calculated total price using Aspose.Cells
+// Tags: multiplication formula in Aspose.Cells C# | merged title row Excel Aspose.Cells | derived column calculation Aspose.Cells | formula recalculation workbook Aspose.Cells | export workbook to xlsx Aspose.Cells
 
 using System;
-using System.Data;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-// The example creates a DataTable of products, defines a worksheet template with smart markers, merges the data via WorkbookDesigner, assigns a structured reference formula ([@Quantity]*[@UnitPrice]) to the Total column of the resulting ListObject, recalculates all formulas, and saves the workbook as MergedWithTotal.xlsx.
+// Creates a new workbook, adds headers and sample data, merges the first row for a title, assigns a multiplication formula (Quantity * Unit Price) to the Total Price column, recalculates formulas, and saves the file as SalesReport.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // ---------- Create data source ----------
-            DataTable dt = new DataTable("Products");
-            dt.Columns.Add("Product", typeof(string));
-            dt.Columns.Add("Quantity", typeof(int));
-            dt.Columns.Add("UnitPrice", typeof(double));
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            dt.Rows.Add("Apple", 5, 1.2);
-            dt.Rows.Add("Banana", 3, 0.8);
-            dt.Rows.Add("Cherry", 10, 0.5);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // ---------- Create a workbook template ----------
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // Add headers
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["C1"].PutValue("Unit Price");
+            sheet.Cells["D1"].PutValue("Total Price");
 
-            // Smart markers for merging data
-            ws.Cells["A1"].PutValue("&=$Product");
-            ws.Cells["B1"].PutValue("&=$Quantity");
-            ws.Cells["C1"].PutValue("&=$UnitPrice");
-            ws.Cells["D1"].PutValue("Total"); // header for total column
+            // Sample data
+            sheet.Cells["A2"].PutValue("Widget");
+            sheet.Cells["B2"].PutValue(5);          // Quantity
+            sheet.Cells["C2"].PutValue(12.99);      // Unit Price
 
-            // Define a table that will expand when data is merged
-            int tableIdx = ws.ListObjects.Add("A1", "D1", true);
-            ListObject table = ws.ListObjects[tableIdx];
-            // Header row is shown by default; explicit setting not required
+            sheet.Cells["A3"].PutValue("Gadget");
+            sheet.Cells["B3"].PutValue(3);
+            sheet.Cells["C3"].PutValue(7.5);
 
-            // ---------- Merge data using WorkbookDesigner ----------
-            WorkbookDesigner designer = new WorkbookDesigner(wb);
-            designer.SetDataSource(dt);
-            designer.Process();
+            // Merge cells for a title (optional demonstration)
+            sheet.Cells.Merge(0, 0, 1, 4); // Merge A1:D1 for a title row
+            sheet.Cells["A1"].PutValue("Sales Report");
 
-            // ---------- Apply formula to calculate total price ----------
-            // The Total column is the fourth column (index 3) in the table
-            ListColumn totalColumn = table.ListColumns[3];
-            // Structured reference formula: multiply Quantity and UnitPrice for each row
-            totalColumn.Formula = "=[@Quantity]*[@UnitPrice]";
+            // Center align the title using Style object
+            Style titleStyle = workbook.CreateStyle();
+            titleStyle.HorizontalAlignment = TextAlignmentType.Center;
+            sheet.Cells["A1"].SetStyle(titleStyle);
 
-            // ---------- Calculate all formulas ----------
-            wb.CalculateFormula();
+            // Apply formulas to calculate Total Price = Quantity * Unit Price
+            sheet.Cells["D2"].Formula = "B2*C2";
+            sheet.Cells["D3"].Formula = "B3*C3";
 
-            // ---------- Save the workbook ----------
-            string outputPath = "MergedWithTotal.xlsx";
-            wb.Save(outputPath);
+            // Recalculate the workbook to evaluate formulas
+            workbook.CalculateFormula();
+
+            // Define output file path
+            string outputPath = "SalesReport.xlsx";
+
+            // Ensure the directory exists (in case a relative path is used)
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

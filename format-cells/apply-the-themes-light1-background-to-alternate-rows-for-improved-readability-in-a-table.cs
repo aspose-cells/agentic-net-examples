@@ -1,14 +1,14 @@
-// Title: How to shade alternate rows with the Light1 theme color in an Excel table using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to fill every other row of a given range with the Light1 theme background while preserving existing formatting. | Demonstrate how to merge a solid Light1 fill style into the current style of cells in alternating rows of a worksheet using Aspose.Cells.
-// Common Searches: asp.net apply Light1 theme to alternate rows in Excel with Aspose.Cells | c# banded rows using Excel theme colors via Aspose.Cells | how to set every second row background to Light1 in an Aspose.Cells workbook | Aspose.Cells merge new fill style with existing cell style for row banding
-// Tags: Aspose.Cells apply theme color to rows | C# alternate row shading Aspose.Cells | Excel Light1 fill style Aspose.Cells | merge cell style with existing formatting Aspose.Cells | banded rows using Aspose.Cells .NET
+// Title: How to apply a Light Gray background to every other row in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells example to shade alternate rows with a light gray fill | apply alternating row background color in Excel using Aspose.Cells .NET API | how to use StyleFlag and Range to format every second row in a workbook with Aspose.Cells | set solid light gray background for odd rows in an Excel file with Aspose.Cells C# | Aspose.Cells .NET code to improve table readability by coloring alternate rows
+// Tags: alternating row background Aspose.Cells .NET | solid light gray style Aspose.Cells | apply style to range Aspose.Cells C# | StyleFlag usage for row formatting | Excel table readability formatting Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The program loads an existing workbook, defines a rectangular range (A1:D10), creates a solid LightGray fill style as a fallback, iterates through the rows, and for every second row merges this fill with each cell's current style before saving the modified workbook.
+// The sample loads (or creates) an Excel workbook, defines a solid light‑gray style, and iterates through the used rows, applying the style to every second row via a Range and a StyleFlag, then saves the updated file.
 class Program
 {
     static void Main()
@@ -18,58 +18,47 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Cells["A1"].PutValue("Sample Data");
+                tempWb.Save(inputPath);
             }
 
-            // Load the existing workbook
+            // Load the workbook.
             Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the table range (example: A1:D10)
-            int startRow = 0;      // Row 1 (zero‑based)
-            int endRow = 9;        // Row 10
-            int startColumn = 0;   // Column A
-            int endColumn = 3;     // Column D
+            // Create a style with a solid light gray background.
+            Style lightStyle = workbook.CreateStyle();
+            lightStyle.ForegroundColor = Color.LightGray; // concrete color
+            lightStyle.Pattern = BackgroundType.Solid;    // solid fill
 
-            // Use a fallback color (LightGray) for alternate rows
-            Color alternateColor = Color.LightGray;
+            // Apply all style attributes.
+            StyleFlag flag = new StyleFlag { All = true };
 
-            // Create a style that uses the fallback color as a solid background
-            Style altStyle = workbook.CreateStyle();
-            altStyle.ForegroundColor = alternateColor;
-            altStyle.Pattern = BackgroundType.Solid;
+            // Determine the used range of the sheet.
+            int maxRow = sheet.Cells.MaxDataRow;          // zero‑based index of last used row
+            int maxColumn = sheet.Cells.MaxDataColumn;    // zero‑based index of last used column
 
-            // Apply the style to alternate rows (e.g., rows 2,4,6,…)
-            for (int row = startRow; row <= endRow; row++)
+            // Apply the background to every alternate row (e.g., rows 0,2,4,…).
+            for (int row = 0; row <= maxRow; row += 2)
             {
-                // Apply to every second row starting with the second row in the range
-                if ((row - startRow) % 2 == 1)
-                {
-                    for (int col = startColumn; col <= endColumn; col++)
-                    {
-                        Cell cell = sheet.Cells[row, col];
-                        // Preserve other style attributes by merging with the existing style
-                        Style current = cell.GetStyle();
-                        current.ForegroundColor = altStyle.ForegroundColor;
-                        current.Pattern = altStyle.Pattern;
-                        cell.SetStyle(current);
-                    }
-                }
+                // Create a range that spans the entire row within the used columns.
+                AsposeRange rowRange = sheet.Cells.CreateRange(row, 0, 1, maxColumn + 1);
+                // Apply the style to the range.
+                rowRange.ApplyStyle(lightStyle, flag);
             }
 
-            // Save the modified workbook
+            // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

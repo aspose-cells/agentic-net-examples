@@ -1,52 +1,56 @@
-// Title: Insert columns before the header row and refresh freeze panes in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert two new columns at the very left of a worksheet and adjust the FreezePanes call to freeze the newly added columns with Aspose.Cells in C#. | Recalculate the freeze column index after inserting columns and apply the four‑parameter FreezePanes method while preserving any existing frozen rows. | Programmatically add columns before the header and update the frozen pane settings in an existing .xlsx file using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells insert columns at index 0 and keep freeze panes | C# update frozen columns after inserting new columns in Excel workbook | How to recalculate freeze pane column index with Aspose.Cells after column insertion | Preserve freeze panes when adding columns before header using Aspose.Cells for .NET
-// Tags: insert columns before header Aspose.Cells C# | reapply FreezePanes after column insertion Aspose.Cells | adjust freeze pane column index .NET Excel | modify worksheet layout programmatically Aspose.Cells | update frozen columns in .xlsx using Aspose.Cells
+// Title: Insert columns before the header row and recalculate the freeze pane column index using Aspose.Cells for .NET
+// AI Prompts: Add a specified number of columns at index 0 of the first worksheet and then call FreezePanes to lock those columns with Aspose.Cells. | Determine the correct column index for FreezePanes after the column insertion and apply the freeze pane based on that calculated index. | Write the modified workbook to a new file after updating the column layout and reapplying the freeze pane.
+// Common Searches: how to add columns at the beginning of a worksheet and preserve freeze panes with Aspose.Cells C# | recalculate freeze pane column index after inserting columns in an Excel file using Aspose.Cells .NET | Aspose.Cells example for inserting columns before header and setting FreezePanes on new columns
+// Tags: insert columns before header Aspose.Cells | reapply FreezePanes after column insertion .NET | calculate freeze column index Aspose.Cells | modify worksheet layout C# Aspose.Cells | freeze newly added columns Excel Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook, inserts two columns at the beginning of the first worksheet, recalculates the freeze pane to include the new columns, and saves the updated file.
+// The program loads an existing Excel workbook, inserts two columns at the very left of the first worksheet, recomputes the column index to freeze, reapplies FreezePanes to lock the newly added columns, and saves the result to a new file.
 class Program
 {
     static void Main()
     {
+        // Paths for input and output files
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Number of new columns to insert before the header column
-            int columnsToInsert = 2;
+            // Number of new columns to insert before the header
+            int insertCount = 2; // adjust as required
 
-            // Insert the columns at index 0 (before the existing header column)
-            sheet.Cells.InsertColumns(0, columnsToInsert);
+            // Insert new columns at the very beginning (column index 0)
+            sheet.Cells.InsertColumns(0, insertCount);
 
-            // Reapply freeze panes: keep any existing frozen rows (assumed 0) and freeze the new columns
-            // Use the overload with four parameters: row, column, totalRows, totalColumns
-            sheet.FreezePanes(0, columnsToInsert, 0, columnsToInsert);
+            // Reapply freeze panes.
+            // Freeze the first 'insertCount' columns (row = 0, column = insertCount).
+            // The last two parameters (freezableRows, freezableColumns) are set to 0
+            // because we only want to freeze columns, not rows.
+            sheet.FreezePanes(0, insertCount, 0, 0);
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors (e.g., loading, saving, processing)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

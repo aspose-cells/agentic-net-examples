@@ -1,51 +1,51 @@
-// Title: Retrieve the 'SalesData' named range and iterate its cells using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook, obtains the Range object for the named range "SalesData" with Aspose.Cells, and prints each cell's address and value. | Show how to verify a named range exists in a workbook and then loop through all its cells using Aspose.Cells in a .NET console application.
-// Common Searches: aspocells c# get range object for named range salesdata | c# iterate over cells in a named range using Aspose.Cells | how to read values from a named range in an Excel file with Aspose.Cells .NET | aspocells check if named range exists before iterating cells | retrieve named range and print cell addresses with Aspose.Cells C#
-// Tags: Aspose.Cells get named range | Aspose.Cells iterate cells in range | Aspose.Cells retrieve Range object | Aspose.Cells read named range values | Aspose.Cells .NET workbook named range
+// Title: How to retrieve a named range and loop through its cells using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# get range by name and read each cell | C# iterate over cells in a named range using Aspose.Cells | example code for retrieving named range SalesData with Aspose.Cells | how to loop through cells of a named range in an Excel workbook with Aspose.Cells for .NET | Aspose.Cells GetRangeByName returns null handling in C#
+// Tags: Aspose.Cells GetRangeByName C# | named range iteration Aspose.Cells | read cell values from named range .NET | Excel workbook named range handling Aspose.Cells | enumerate cells in Excel range C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads "input.xlsx", confirms the presence of the named range "SalesData", obtains its Range object via workbook.Worksheets.Names, and iterates through each cell, outputting the cell name and its value to the console, with error handling for missing files or ranges.
+// The sample loads an Excel file with Aspose.Cells, obtains the range defined by the named range "SalesData" using GetRangeByName, checks for its existence, then iterates over each Cell in the range, printing the cell address and its value. It includes basic file‑existence validation, exception handling, and an optional save step.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
+
         try
         {
-            string filePath = "input.xlsx";
-
-            // Ensure the input file exists before loading
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
             // Load the workbook
-            Workbook workbook = new Workbook(filePath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the named range "SalesData"
-            Name salesRangeName = workbook.Worksheets.Names["SalesData"];
-            if (salesRangeName == null)
+            // Retrieve the range associated with the named range "SalesData"
+            Aspose.Cells.Range salesRange = workbook.Worksheets.GetRangeByName("SalesData");
+            if (salesRange == null)
             {
                 Console.WriteLine("Named range 'SalesData' not found.");
                 return;
             }
 
-            // Get the Range object that the name refers to
-            Aspose.Cells.Range salesRange = salesRangeName.GetRange();
-
-            // Iterate through each cell in the range
+            // Iterate through each cell in the range and output its address and value
             foreach (Cell cell in salesRange)
             {
-                Console.WriteLine($"{cell.Name}: {cell.Value}");
+                Console.WriteLine($"Cell {cell.Name}: {cell.Value}");
             }
+
+            // (Optional) Save the workbook if any modifications were made
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

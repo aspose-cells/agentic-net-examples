@@ -1,45 +1,70 @@
-// Title: Remove blank columns from an Excel worksheet and save the cleaned sheet as a PDF with Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx file, delete every empty column in the first worksheet, and export the result to a single‑page PDF using Aspose.Cells in C#. | Trim the worksheet by removing all blank columns, then set the PDF options so each sheet is rendered on one page, and save the workbook as PDF with Aspose.Cells. | Clean up an Excel sheet programmatically, eliminate any columns without data, and convert the cleaned workbook to a one‑page‑per‑sheet PDF via Aspose.Cells.
-// Common Searches: C# Aspose.Cells delete empty columns before PDF conversion | How to remove blank columns from an Excel file and export to PDF using .NET | Aspose.Cells remove empty columns example with PDF conversion | Generate a one‑page PDF from an Excel worksheet after trimming blank columns in C# | Remove all blank columns in first worksheet and save as PDF Aspose.Cells
-// Tags: DeleteBlankColumns Aspose.Cells | PdfSaveOptions OnePagePerSheet C# | blank column removal Excel Aspose.Cells | Excel to PDF conversion after column cleanup | trim worksheet before PDF export Aspose.Cells
+// Title: How to delete all blank columns from an Excel worksheet and export the cleaned sheet to PDF using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx workbook with Aspose.Cells, scan columns from the last to the first, delete any column whose cells are all Null, and then generate a PDF file. | In C#, use Aspose.Cells to find completely empty columns in the first worksheet, remove them safely, and export the resulting sheet as a PDF.
+// Common Searches: C# Aspose.Cells remove columns that have only empty cells before PDF conversion | How to clean an Excel sheet by deleting empty columns using Aspose.Cells .NET | Export a trimmed worksheet to PDF after removing blank columns with Aspose.Cells | Iterate Excel columns backwards to safely delete empty columns in C# Aspose.Cells
+// Tags: delete empty columns Aspose.Cells C# | export worksheet to PDF Aspose.Cells | reverse column iteration Aspose.Cells | blank column cleanup Excel .NET | save workbook as PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTrimAndExportPdf
+// The program loads "input.xlsx", scans each column from right to left, deletes columns that contain only null cells, and saves the resulting worksheet as "output.pdf" using Aspose.Cells.
+class Program
 {
-    // Loads an Excel workbook, deletes all blank columns from the first worksheet using Aspose.Cells, then saves the trimmed workbook as a single‑page PDF with appropriate PdfSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Input Excel file path
-            string inputFile = "input.xlsx";
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Output PDF file path
-            string outputFile = "trimmed.pdf";
+        try
+        {
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load the workbook from the existing Excel file
-            Workbook workbook = new Workbook(inputFile);
+            // Get the first worksheet (adjust the index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Access the first worksheet (you can change the index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Determine the maximum used row to limit the scan
+            int maxRow = cells.MaxDataRow;
 
-            // Delete all blank columns in the worksheet
-            worksheet.Cells.DeleteBlankColumns();
-
-            // Create PDF save options (optional configuration)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Iterate columns from right to left to safely delete blank columns
+            for (int col = cells.MaxDataColumn; col >= 0; col--)
             {
-                // Ensure each sheet is saved on a single page (adjust as required)
-                OnePagePerSheet = true
-            };
+                bool isBlankColumn = true;
 
-            // Save the trimmed workbook as a PDF file
-            workbook.Save(outputFile, pdfOptions);
+                // Check each cell in the column up to the last used row
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    // A cell is considered blank if its type is Null
+                    if (cells[row, col].Type != CellValueType.IsNull)
+                    {
+                        isBlankColumn = false;
+                        break;
+                    }
+                }
 
-            Console.WriteLine($"Workbook processed and saved to PDF: {outputFile}");
+                // Delete the column if it is completely blank
+                if (isBlankColumn)
+                {
+                    cells.DeleteColumn(col);
+                }
+            }
+
+            // Save the trimmed worksheet as a PDF document
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Successfully saved PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

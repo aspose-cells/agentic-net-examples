@@ -1,84 +1,112 @@
-// Title: Record each Excel workbook encryption toggle in a log file while using Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that opens an .xlsx file with Aspose.Cells, checks Workbook.Settings.IsEncrypted, flips the encryption state by setting or clearing the password, saves the workbook, and appends a timestamped message to a specified log file. | Enhance existing Aspose.Cells code to capture both successful encryption toggles and exception details, ensuring the log file is created if missing and each entry includes the operation time and file name.
-// Common Searches: asp.net toggle password protection on an Excel workbook using Aspose.Cells | c# log encryption status change of an .xlsx file with Aspose.Cells | how to programmatically enable or disable workbook encryption and write an audit log in .NET | aspose.cells save encrypted workbook and append operation log entry | detect Workbook.Settings.IsEncrypted and change password in C# console app
-// Tags: toggle workbook encryption Aspose.Cells | audit log encryption changes C# | save encrypted Excel file Aspose.Cells | append timestamped entry to text log C# | modify Workbook.Settings.IsEncrypted programmatically
+// Title: Batch toggle Excel workbook encryption and log each change with Aspose.Cells for .NET
+// Common Searches: how to programmatically enable or disable password protection on multiple .xlsx files using Aspose.Cells in C# | c# code to toggle encryption of Excel workbooks and write a timestamped log entry | process a folder of Excel files, change encryption status and record actions with Aspose.Cells | Aspose.Cells load encrypted workbook with known password and remove protection | log encryption enable/disable events for Excel files in a .NET application
+// Tags: batch change Excel password protection Aspose.Cells | Aspose.Cells load encrypted workbook with password | Aspose.Cells remove workbook password | Aspose.Cells save workbook with password | C# log workbook encryption actions
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookEncryptionToggle
+// The example scans a directory for .xlsx files, attempts to open each workbook using a known password, detects whether it is currently encrypted, toggles the password protection (adds or removes the password), saves the modified workbook to an output folder, and appends a UTC timestamped entry to a log file indicating whether encryption was enabled or disabled, while handling missing files and load/save errors.
+class WorkbookEncryptionProcessor
 {
-    // // C# console program that loads Sample.xlsx with Aspose.Cells, checks Workbook.Settings.IsEncrypted, flips the encryption by setting or clearing the password, saves the result as Sample_Toggled.xlsx, and writes a timestamped line to EncryptionToggleLog.txt for each toggle or error.
-    class Program
+    static void Main(string[] args)
     {
-        // Path to the workbook file
-        private const string InputFilePath = @"C:\Data\Sample.xlsx";
-        private const string OutputFilePath = @"C:\Data\Sample_Toggled.xlsx";
+        try
+        {
+            // Folder containing workbooks to process
+            string inputFolder = @"C:\Input";
+            // Folder where processed workbooks will be saved
+            string outputFolder = @"C:\Output";
+            // Path to the log file
+            string logFile = Path.Combine(outputFolder, "encryption_log.txt");
 
-        // Log file path
-        private const string LogFilePath = @"C:\Data\EncryptionToggleLog.txt";
+            // Ensure output folder exists
+            Directory.CreateDirectory(outputFolder);
 
-        static void Main()
+            // Process each .xlsx file in the input folder
+            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            {
+                ToggleEncryptionAndLog(filePath, outputFolder, logFile);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    static void ToggleEncryptionAndLog(string inputPath, string outputFolder, string logPath)
+    {
+        // Verify the input file exists
+        if (!File.Exists(inputPath))
+        {
+            File.AppendAllText(logPath,
+                $"{DateTime.UtcNow:u} | File not found: {inputPath}{Environment.NewLine}");
+            return;
+        }
+
+        const string knownPassword = "Secret123";
+        Workbook workbook = null;
+        bool wasEncrypted = false;
+
+        try
+        {
+            // Attempt to load assuming the file is encrypted with the known password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = knownPassword
+            };
+            workbook = new Workbook(inputPath, loadOptions);
+            wasEncrypted = true;
+        }
+        catch (Exception)
         {
             try
             {
-                // Verify input file exists
-                if (!File.Exists(InputFilePath))
-                {
-                    Console.Error.WriteLine($"Input file not found: {InputFilePath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(InputFilePath);
-
-                // Determine current encryption status (read‑only)
-                bool isEncrypted = workbook.Settings.IsEncrypted;
-
-                // Toggle encryption status
-                if (isEncrypted)
-                {
-                    // Remove encryption by clearing the password
-                    workbook.Settings.Password = string.Empty;
-                    Log($"[{DateTime.Now}] Encryption disabled for workbook '{Path.GetFileName(InputFilePath)}'.");
-                }
-                else
-                {
-                    // Apply encryption with a password
-                    workbook.Settings.Password = "StrongPassword123!";
-                    Log($"[{DateTime.Now}] Encryption enabled for workbook '{Path.GetFileName(InputFilePath)}' with password.");
-                }
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(OutputFilePath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook (preserving the new encryption setting)
-                workbook.Save(OutputFilePath);
+                // Load without a password (assumes the file is not encrypted)
+                workbook = new Workbook(inputPath);
+                wasEncrypted = false;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-                Log($"[{DateTime.Now}] Error: {ex.Message}");
+                // Log load failure and exit
+                string fileName = Path.GetFileName(inputPath);
+                string errorEntry = $"{DateTime.UtcNow:u} | File: {fileName} | Load Error: {ex.Message}";
+                File.AppendAllText(logPath, errorEntry + Environment.NewLine);
+                return;
             }
         }
 
-        // Simple logger that appends messages to a text file
-        private static void Log(string message)
+        try
         {
-            try
+            // Toggle encryption status
+            if (wasEncrypted)
             {
-                File.AppendAllText(LogFilePath, message + Environment.NewLine);
+                // Remove encryption
+                workbook.Settings.Password = null;
             }
-            catch (Exception ex)
+            else
             {
-                // In a real scenario, handle logging failures appropriately
-                Console.Error.WriteLine($"Logging failed: {ex.Message}");
+                // Enable encryption with the predefined password
+                workbook.Settings.Password = knownPassword;
             }
+
+            // Save the workbook to the output folder with the same file name
+            string fileName = Path.GetFileName(inputPath);
+            string outputPath = Path.Combine(outputFolder, fileName);
+            workbook.Save(outputPath);
+
+            // Log the action
+            string action = wasEncrypted ? "Disabled" : "Enabled";
+            string logEntry = $"{DateTime.UtcNow:u} | File: {fileName} | Encryption {action}";
+            File.AppendAllText(logPath, logEntry + Environment.NewLine);
+        }
+        catch (Exception ex)
+        {
+            // Log any errors that occur during processing
+            string fileName = Path.GetFileName(inputPath);
+            string errorEntry = $"{DateTime.UtcNow:u} | File: {fileName} | Error: {ex.Message}";
+            File.AppendAllText(logPath, errorEntry + Environment.NewLine);
         }
     }
 }

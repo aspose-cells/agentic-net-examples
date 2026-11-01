@@ -1,49 +1,35 @@
-// Title: Add external URL and internal anchor hyperlinks to cells while using Aspose.Cells LightCellsDataProvider in C#
-// AI Prompts: Generate C# code that writes data with Aspose.Cells LightCellsDataProvider and attaches an external hyperlink to cell B2 with custom display text. | Show how to create an internal anchor hyperlink (e.g., #D5) in cell C3 during worksheet population using LightCellsDataProvider in Aspose.Cells. | Provide a complete example that saves an Excel workbook containing both external and internal hyperlinks using the Aspose.Cells API.
-// Common Searches: asp.net core add external hyperlink to Excel cell using Aspose.Cells LightCellsDataProvider | c# create internal anchor link in Excel workbook with Aspose.Cells | how to set hyperlink display text in Aspose.Cells generated spreadsheet | populate worksheet with LightCellsDataProvider and add hyperlinks example | save Excel file with mixed external and internal hyperlinks Aspose.Cells C#
-// Tags: add external hyperlink Aspose.Cells C# | create internal anchor hyperlink Aspose.Cells | populate worksheet using LightCellsDataProvider | set hyperlink display text Aspose.Cells | save workbook with hyperlinks Aspose.Cells
+// Title: Add a clickable hyperlink to a cell while creating an Excel workbook with Aspose.Cells in C#
+// Common Searches: how to add a hyperlink to a specific cell using Aspose.Cells C# | Aspose.Cells C# example for inserting clickable links in Excel | C# code to create Excel file with hyperlink pointing to external URL using Aspose.Cells | Aspose.Cells Hyperlinks.Add method usage in C# | generate Excel workbook with navigation link in cell A1 using Aspose.Cells
+// Tags: Aspose.Cells add cell hyperlink C# | C# create Excel hyperlink Aspose.Cells | Aspose.Cells Hyperlinks.Add usage | generate clickable Excel link Aspose.Cells | Excel workbook hyperlink insertion C#
 
 using System;
 using Aspose.Cells;
 
 namespace LightCellsHyperlinkExample
 {
-    // Creates a new workbook, fills a 10x5 range with sample data, adds an external hyperlink to B2 and an internal anchor hyperlink to C3 with custom display text, and saves the file as LightCellsWithHyperlinks.xlsx using Aspose.Cells.
+    // The sample creates a new Workbook, writes display text "Google" to cell A1 and the URL to B1, adds a hyperlink to A1 that points to the URL using the Hyperlinks.Add method, and saves the file as LightCellsWithHyperlink.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the size of the data range
-                int totalRows = 10;
-                int totalCols = 5;
+                // Write display text in A1 and URL in B1
+                sheet.Cells["A1"].PutValue("Google");
+                sheet.Cells["B1"].PutValue("https://www.google.com");
 
-                // Fill the worksheet with sample data
-                for (int row = 0; row < totalRows; row++)
-                {
-                    for (int col = 0; col < totalCols; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"Row{row + 1}Col{col + 1}");
-                    }
-                }
-
-                // Add an external hyperlink to cell B2 (row 1, column 1)
-                int extLinkIndex = sheet.Hyperlinks.Add(1, 1, 1, 1, "https://www.example.com");
-                Hyperlink extLink = sheet.Hyperlinks[extLinkIndex];
-                extLink.TextToDisplay = "Example Site";
-
-                // Add an internal hyperlink (anchor) to cell C3 (row 2, column 2)
-                int intLinkIndex = sheet.Hyperlinks.Add(2, 2, 1, 1, "#D5");
-                Hyperlink intLink = sheet.Hyperlinks[intLinkIndex];
-                intLink.TextToDisplay = "Go to D5";
+                // Add a hyperlink to cell A1 that points to the URL in B1
+                // Overload: Add(firstRow, firstColumn, firstRow2, firstColumn2, hyperlinkAddress)
+                sheet.Hyperlinks.Add(0, 0, 0, 0, "https://www.google.com");
 
                 // Save the workbook
-                string outputPath = "LightCellsWithHyperlinks.xlsx";
+                string outputPath = "LightCellsWithHyperlink.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }

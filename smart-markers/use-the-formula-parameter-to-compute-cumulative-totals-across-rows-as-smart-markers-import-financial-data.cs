@@ -1,70 +1,64 @@
-// Title: Create a cumulative sum column with Aspose.Cells smart markers and a repeated SUM formula in C#
-// AI Prompts: Generate C# code that loads a DataTable into a workbook using Aspose.Cells smart markers and adds a cumulative sum column with a repeated SUM formula. | Illustrate how to enable the WorkbookDesigner.RepeatFormulasWithSubtotal property so the formula propagates to each inserted row. | Provide the sequence to recalculate all formulas after processing smart markers and export the result to an .xlsx file in C#.
-// Common Searches: C# Aspose.Cells example for creating a running total column with smart markers | How to use RepeatFormulasWithSubtotal in WorkbookDesigner to repeat formulas per row | Calculate cumulative sums in Excel using smart markers and SUM formula in .NET
-// Tags: smart markers cumulative total calculation | WorkbookDesigner repeat formulas flag | Aspose.Cells import DataTable C# | post‑processing formula evaluation with Aspose.Cells | C# Excel cumulative total column generation
+// Title: Generate a running cumulative total column with the Formula parameter in Aspose.Cells smart markers (C#)
+// AI Prompts: Create an Excel workbook in C# that uses smart markers to insert Date, Description, Amount and a Formula smart marker that calculates a running aggregate for the Amount column. | Modify the smart marker formula to compute aggregate totals for a different column or start row, and update the WorkbookDesigner data source accordingly. | Add category grouping to the data and generate separate subtotal columns per category using smart markers and the Formula parameter.
+// Common Searches: how to calculate running total with Aspose.Cells smart markers C# | Aspose.Cells Formula parameter cumulative sum example | C# smart markers SUM(C$2:C{Row}) for financial data | using WorkbookDesigner to create cumulative total column in Excel | smart markers cumulative total per row Aspose.Cells tutorial
+// Tags: Formula syntax SUM range implementation | data source binding Aspose.Cells | C# Excel export cumulative calculation | financial data import Aspose.Cells example | Aspose.Cells progressive sum via formula parameter
 
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-// The sample creates a workbook, defines headers and a template row with smart markers, sets a SUM formula for a cumulative total column, loads financial data from a DataTable, processes the smart markers with WorkbookDesigner while repeating the formula for each generated row, recalculates all formulas, and saves the workbook as an Excel file.
-class CumulativeTotalsSmartMarkers
+// The example creates a new workbook, adds headers, places smart markers for Date, Description, Amount, and a Formula marker that computes a cumulative sum of the Amount column, binds a DataTable as the data source, processes the markers with WorkbookDesigner, and saves the result as CumulativeTotals.xlsx.
+class CumulativeTotalsSmartMarker
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (template) and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Name = "FinancialData";
 
-            // Header row
-            cells[0, 0].PutValue("Date");
-            cells[0, 1].PutValue("Description");
-            cells[0, 2].PutValue("Amount");
-            cells[0, 3].PutValue("Cumulative Total");
+            // Set up headers in the first row
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["B1"].PutValue("Description");
+            sheet.Cells["C1"].PutValue("Amount");
+            sheet.Cells["D1"].PutValue("Cumulative Total");
 
-            // Template row with smart markers for data import
-            cells[1, 0].PutValue("&=$Date");
-            cells[1, 1].PutValue("&=$Description");
-            cells[1, 2].PutValue("&=$Amount");
+            // Insert smart markers in the second row.
+            // & =Data.Date &      -> inserts the Date value from the data source.
+            // & =Data.Description & -> inserts the Description.
+            // & =Data.Amount &    -> inserts the Amount.
+            // &Formula=SUM(C$2:C{Row})& -> computes cumulative sum of Amount column up to the current row.
+            sheet.Cells["A2"].PutValue("&=Data.Date&");
+            sheet.Cells["B2"].PutValue("&=Data.Description&");
+            sheet.Cells["C2"].PutValue("&=Data.Amount&");
+            sheet.Cells["D2"].PutValue("&Formula=SUM(C$2:C{Row})&");
 
-            // Set the cumulative total formula in the first data row.
-            // The formula will be repeated for each generated row.
-            cells[1, 3].SetFormula("=SUM($C$2:C2)", null);
-
-            // Prepare sample financial data in a DataTable
-            DataTable dt = new DataTable("FinancialData");
+            // Prepare the data source (DataTable) with financial records
+            DataTable dt = new DataTable("Data");
             dt.Columns.Add("Date", typeof(DateTime));
             dt.Columns.Add("Description", typeof(string));
             dt.Columns.Add("Amount", typeof(double));
 
-            dt.Rows.Add(new DateTime(2023, 1, 1), "Revenue", 1500.0);
-            dt.Rows.Add(new DateTime(2023, 1, 2), "Expense", -300.0);
-            dt.Rows.Add(new DateTime(2023, 1, 3), "Revenue", 1200.0);
-            dt.Rows.Add(new DateTime(2023, 1, 4), "Expense", -500.0);
-            dt.Rows.Add(new DateTime(2023, 1, 5), "Revenue", 800.0);
+            // Sample data rows
+            dt.Rows.Add(new DateTime(2023, 1, 1), "Opening Balance", 1000.00);
+            dt.Rows.Add(new DateTime(2023, 1, 5), "Revenue", 2500.00);
+            dt.Rows.Add(new DateTime(2023, 1, 10), "Expense", -800.00);
+            dt.Rows.Add(new DateTime(2023, 1, 15), "Revenue", 1200.00);
+            dt.Rows.Add(new DateTime(2023, 1, 20), "Expense", -500.00);
 
-            // Process smart markers using WorkbookDesigner (lifecycle: load & process)
+            // Use WorkbookDesigner to process smart markers
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            // Ensure the formula in the cumulative column repeats for each generated row
-            designer.RepeatFormulasWithSubtotal = true;
             designer.SetDataSource(dt);
-            designer.Process();
+            designer.Process(); // Populate smart markers with data
 
-            // Calculate all formulas after data insertion
-            workbook.CalculateFormula();
-
-            // Save the result (lifecycle: save)
-            string outputPath = "CumulativeTotalsSmartMarkers.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the resulting workbook
+            workbook.Save("CumulativeTotals.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

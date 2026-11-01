@@ -1,14 +1,14 @@
-// Title: Apply FreezePanes to the first row only on worksheets whose names start with "Report" using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates through all worksheets and freezes the top row only when the sheet name begins with "Report". | Modify an existing Aspose.Cells workbook routine to add conditional FreezePanes logic based on a worksheet name prefix and then save the file. | Create a C# method that creates the output directory if missing before saving a workbook after applying conditional freeze panes with Aspose.Cells.
-// Common Searches: Aspose.Cells C# freeze first row only on sheets that start with a specific prefix | How to conditionally apply FreezePanes in a .NET workbook based on worksheet name | C# example for freezing panes on Excel worksheets named "Report*" using Aspose.Cells | Save Aspose.Cells workbook to a folder that may not exist, creating the directory automatically
-// Tags: conditional FreezePanes based on worksheet name Aspose.Cells | freeze top row Excel sheet Aspose.Cells C# | iterate worksheets and apply FreezePanes Aspose.Cells | ensure output directory exists before saving workbook C# | load or create workbook with Aspose.Cells .NET
+// Title: Freeze the first row on Excel worksheets whose names start with “Report” using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, loops through all worksheets, and calls Worksheet.FreezePanes to freeze the top row only when the sheet name begins with "Report". | Show how to perform a case‑insensitive check on a worksheet's Name property and apply FreezePanes conditionally in Aspose.Cells for .NET. | Provide a complete example that verifies the input file, applies selective row freezing, and saves the updated workbook.
+// Common Searches: asp.net freeze first row only on sheets starting with report | aspocells conditional FreezePanes based on worksheet name | c# iterate worksheets and apply freeze panes if name starts with Report | how to freeze panes selectively in an Excel workbook using Aspose.Cells | apply FreezePanes to specific worksheets in .NET
+// Tags: conditional Worksheet.FreezePanes Aspose.Cells | freeze top row on sheets with Report prefix | C# iterate workbook worksheets Aspose.Cells | selective freeze panes Excel .NET | Aspose.Cells load and save workbook example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads (or creates) a workbook, iterates through its worksheets, freezes the first row on any sheet whose name begins with "Report", ensures the output folder exists, and saves the workbook to output.xlsx.
-class Program
+// The sample loads input.xlsx, checks each worksheet, and uses Worksheet.FreezePanes(1,0,1,0) to freeze the first row only on sheets whose names start with "Report", then saves the modified workbook to output.xlsx.
+class ConditionalFreezeExample
 {
     static void Main()
     {
@@ -17,41 +17,35 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Load existing workbook or create a new one if the file is missing
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a default workbook with one worksheet
-                workbook.Worksheets[0].Name = "Report1"; // sample sheet name to trigger freezing
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Apply freeze panes to worksheets whose name starts with "Report"
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
+                // Apply freeze only when the worksheet name starts with "Report"
                 if (sheet.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Freeze the first row (row index 1, column index 0), freezing 1 row and 0 columns
+                    // Freeze the first row (row index is zero‑based)
+                    // Parameters: top‑left cell of scrollable area (row, column) and number of rows/columns to freeze
                     sheet.FreezePanes(1, 0, 1, 0);
                 }
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

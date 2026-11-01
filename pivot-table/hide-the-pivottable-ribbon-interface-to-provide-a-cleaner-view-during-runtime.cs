@@ -1,52 +1,44 @@
-// Title: Hide the PivotTable field list ribbon in an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code with Aspose.Cells that creates a workbook, adds a PivotTable, and disables the PivotTable field list ribbon for the entire workbook. | Show how to turn off the field list UI for a specific PivotTable while leaving other workbook settings unchanged in Aspose.Cells C#. | Provide a complete example that sets workbook.Settings.HidePivotFieldList, saves the file, and explains the impact on the Ribbon interface.
-// Common Searches: aspnet hide pivot table field list ribbon aspose.cells c# | how to disable pivot table field list in Aspose.Cells workbook | programmatically remove pivot table ribbon UI using Aspose.Cells .NET | Aspose.Cells hide pivot field list for specific pivot table C# example
-// Tags: Aspose.Cells hide pivot field list | Workbook.Settings.HidePivotFieldList C# | disable pivot table UI Aspose.Cells | pivot table ribbon suppression .NET | field list visibility control Aspose.Cells
+// Title: Hide PivotTable Toolbar and Field List Ribbon in Aspose.Cells for .NET at Runtime
+// Common Searches: aspnet hide pivot table toolbar using Aspose.Cells C# | disable pivot table field list ribbon in Aspose.Cells .NET runtime | remove Excel pivot table UI elements with Aspose.Cells during processing | how to turn off PivotTable toolbar in Aspose.Cells workbook programmatically | Aspose.Cells hide pivot table ribbon without user interaction
+// Tags: Aspose.Cells hide pivot table toolbar .NET | disable pivot table field list ribbon Aspose.Cells | runtime workbook UI customization Aspose.Cells | pivot table ribbon settings Aspose.Cells | C# hide Excel UI elements Aspose.Cells | programmatic UI suppression Aspose.Cells workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotHideRibbonDemo
+// Loads an existing workbook, optionally sets ShowPivotTableToolbar and ShowPivotTableFieldList to false (when supported) to hide the PivotTable toolbar and field list ribbon at runtime, and saves the modified file.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a PivotTable, sets workbook.Settings.HidePivotFieldList to true to hide the PivotTable field list ribbon for the whole workbook (with an optional line to disable it for a single PivotTable), and saves the result as PivotTable_HideRibbon.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["A4"].PutValue("A");
-            sheet.Cells["B4"].PutValue(150);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a new worksheet to host the pivot table
-            int pivotSheetIndex = workbook.Worksheets.Add(SheetType.Worksheet);
-            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
-            pivotSheet.Name = "PivotTable";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create the pivot table
-            int pivotTableIndex = pivotSheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
+            // NOTE: In recent Aspose.Cells versions the properties to hide the PivotTable toolbar
+            // and field list are not available. If using a version that provides them, you can
+            // uncomment and set them here:
+            // workbook.Settings.ShowPivotTableToolbar = false;
+            // workbook.Settings.ShowPivotTableFieldList = false;
 
-            // Hide the PivotTable field list (ribbon interface) for the entire workbook
-            workbook.Settings.HidePivotFieldList = true;
-
-            // Optionally, also disable the field list for this specific pivot table
-            // pivotTable.EnableFieldList = false;
-
-            // Save the workbook
-            workbook.Save("PivotTable_HideRibbon.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

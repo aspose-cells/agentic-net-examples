@@ -1,70 +1,66 @@
-// Title: How to apply conditional formatting in Aspose.Cells for .NET to highlight cells with values greater than a specified threshold
-// AI Prompts: Generate C# code using Aspose.Cells that adds a conditional formatting rule to color cells yellow when their numeric value exceeds 50 in the range A1:E10. | Write a method that creates a solid yellow background style and attaches it to a greater‑than condition for a defined CellArea with Aspose.Cells. | Provide a script that saves an Excel workbook after applying a cell‑value based conditional formatting rule with a custom threshold using Aspose.Cells.
-// Common Searches: Aspose.Cells C# conditional formatting cells greater than 50 example | How to set background color for cells exceeding a value using Aspose.Cells .NET | Apply conditional formatting to range A1:E10 in an Aspose.Cells workbook | Saving Excel file after adding conditional formatting with Aspose.Cells C#
-// Tags: Aspose.Cells conditional formatting cell value greater than | C# Aspose.Cells apply conditional formatting range | Aspose.Cells set solid background style | Aspose.Cells save workbook after formatting | Excel conditional formatting threshold Aspose.Cells
+// Title: Apply conditional formatting with Aspose.Cells for .NET to highlight cells whose values exceed a specified threshold
+// Common Searches: Aspose.Cells C# add conditional formatting rule for values greater than a limit | how to highlight Excel cells over 100 using Aspose.Cells .NET API | programmatically set background color for cells above a threshold with Aspose.Cells | conditional formatting cell value greater than threshold example in C# | Aspose.Cells conditional formatting for numeric ranges in a worksheet
+// Tags: conditional formatting greater-than rule Aspose.Cells | apply style to high-value cells Aspose.Cells .NET | highlight numeric cells exceeding threshold Excel | set cell background color based on value C# | programmatic conditional formatting Excel Aspose
 
 using System;
 using System.IO;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-// The program creates a new workbook, fills cells with sample numeric data, defines the range A1:E10, adds a conditional formatting rule that highlights cells with values greater than 50 using a solid yellow background, and saves the file as ConditionalFormatting.xlsx.
-class Program
+// The example loads an existing workbook (or creates a new one), defines the range A1:D10 on the first worksheet, adds a conditional formatting rule that marks cells with values greater than 100 using a light coral solid background, and saves the modified file as output.xlsx.
+class ConditionalFormattingExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Define the threshold value
+            double threshold = 100.0;
+
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Load an existing workbook if it exists; otherwise create a new one
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Ensure the workbook has at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+                workbook.Worksheets.Add();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data (optional)
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    sheet.Cells[i, j].PutValue(i * 10 + j);
-                }
-            }
-
-            // Define the range to apply conditional formatting (A1:E10)
+            // Define the range to which the conditional formatting will be applied (A1:D10)
             CellArea area = new CellArea
             {
                 StartRow = 0,
-                StartColumn = 0,
                 EndRow = 9,
-                EndColumn = 4
+                StartColumn = 0,
+                EndColumn = 3
             };
 
-            // Add a new conditional formatting rule collection
+            // Add a new conditional formatting collection to the worksheet
             int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
-            cf.AddArea(area);
+            FormatConditionCollection conditions = sheet.ConditionalFormattings[cfIndex];
+            conditions.AddArea(area);
 
-            // Add condition: cell value > 50
-            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-            var condition = cf[conditionIndex];
+            // Create a condition: cell value greater than the threshold
+            int conditionIndex = conditions.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                threshold.ToString(),
+                null);
+            FormatCondition condition = conditions[conditionIndex];
 
-            // Create a style for highlighting
+            // Define the style to apply when the condition is met (light coral background)
             Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Yellow;
+            style.ForegroundColor = Color.LightCoral;
             style.Pattern = BackgroundType.Solid;
             condition.Style = style;
 
-            // Determine output file path
-            string outputPath = "ConditionalFormatting.xlsx";
-
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,50 +1,81 @@
-// Title: Combine multiple Excel workbooks into a single XLSX file using Aspose.Cells Workbook.Combine in C#
-// AI Prompts: Write C# code that creates a destination Workbook, loads two existing Excel files, merges them with Workbook.Combine, and saves the result as CombinedWorkbook.xlsx. | Show how to wrap Workbook.Combine calls in try‑catch blocks to handle errors while merging several workbooks and ensure the final file is saved in XLSX format. | Modify the example to accept an array of file paths at runtime and combine all referenced workbooks into one using Aspose.Cells Workbook.Combine.
-// Common Searches: Aspose.Cells C# how to merge three workbooks into one XLSX | using Workbook.Combine to concatenate Excel files with moderate size | C# example for combining in-memory workbooks with Aspose.Cells | merge multiple Excel workbooks programmatically with Aspose.Cells Workbook.Combine | error handling when combining workbooks using Aspose.Cells C#
-// Tags: Aspose.Cells Workbook.Combine for XLSX output | C# programmatic Excel workbook merging | merge in-memory workbooks with Aspose.Cells | combine multiple workbooks without exceeding memory limits | save merged workbook as XLSX format
+// Title: Merge several Excel workbooks into a single .xlsx file using Aspose.Cells Workbook.Combine in C#
+// AI Prompts: Generate a C# console program that reads an array of .xlsx file paths, verifies each file exists, loads the available workbooks with Aspose.Cells, merges them using Workbook.Combine, and saves the result as Combined.xlsx. | Create a C# snippet that shows how to combine multiple Excel workbooks with Aspose.Cells while gracefully skipping missing files and writing the merged workbook to an Xlsx document.
+// Common Searches: c# Aspose.Cells combine multiple workbooks into one file | how to skip missing Excel files when merging with Aspose.Cells | combine three .xlsx files using Aspose.Cells Workbook.Combine | sample code for merging Excel workbooks in C# with Aspose.Cells | Aspose.Cells merge workbooks moderate file size
+// Tags: Aspose.Cells Workbook.Combine for merging workbooks | C# merge multiple Excel files using Aspose.Cells | handle absent source files during workbook combine | output combined workbook as Xlsx format | moderate size workbook consolidation in C#
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The program checks each specified .xlsx path, loads existing workbooks with Aspose.Cells, uses the first workbook as the base and merges subsequent ones via Workbook.Combine, skips files that are not found, and saves the consolidated workbook as Combined.xlsx.
+class Program
 {
-    // The sample creates a destination workbook, adds two additional workbooks in memory, merges them using Workbook.Combine, and saves the combined result as CombinedWorkbook.xlsx.
-    public class WorkbookCombineDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            try
+            // Paths of the workbooks to be merged
+            string[] sourceFiles = { "Book1.xlsx", "Book2.xlsx", "Book3.xlsx" };
+
+            // Verify that at least one source file exists
+            bool anyFileExists = false;
+            foreach (string path in sourceFiles)
             {
-                Run();
+                if (File.Exists(path))
+                {
+                    anyFileExists = true;
+                    break;
+                }
             }
-            catch (Exception ex)
+
+            if (!anyFileExists)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No source files were found. Operation aborted.");
+                return;
             }
+
+            Workbook combinedWorkbook = null;
+            bool isFirst = true;
+
+            // Load each existing workbook and combine them
+            foreach (string filePath in sourceFiles)
+            {
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found and will be skipped: {filePath}");
+                    continue;
+                }
+
+                Workbook wb = new Workbook(filePath);
+
+                if (isFirst)
+                {
+                    // Use the first workbook as the base
+                    combinedWorkbook = wb;
+                    isFirst = false;
+                }
+                else
+                {
+                    // Merge subsequent workbooks into the base workbook
+                    combinedWorkbook.Combine(wb);
+                }
+            }
+
+            // If no workbook was loaded, create an empty one
+            if (combinedWorkbook == null)
+            {
+                combinedWorkbook = new Workbook();
+            }
+
+            // Save the combined workbook to a new file
+            string outputPath = "Combined.xlsx";
+            combinedWorkbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Combined workbook saved to: {outputPath}");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create the first workbook (will become the destination)
-            Workbook combinedWorkbook = new Workbook(FileFormatType.Xlsx);
-            combinedWorkbook.Worksheets[0].Cells["A1"].PutValue("Workbook 1");
-
-            // Create additional workbooks to be merged
-            Workbook wb2 = new Workbook();
-            wb2.Worksheets[0].Cells["A1"].PutValue("Workbook 2");
-
-            Workbook wb3 = new Workbook();
-            wb3.Worksheets[0].Cells["A1"].PutValue("Workbook 3");
-
-            // Merge the second workbook into the combined workbook
-            combinedWorkbook.Combine(wb2);
-
-            // Merge the third workbook into the combined workbook
-            combinedWorkbook.Combine(wb3);
-
-            // Save the final merged workbook
-            combinedWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Handle unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

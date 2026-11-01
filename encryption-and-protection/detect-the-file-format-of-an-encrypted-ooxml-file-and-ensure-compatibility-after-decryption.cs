@@ -1,80 +1,57 @@
-// Title: Detect and preserve the original format of an encrypted OOXML workbook when decrypting with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells LoadOptions with a password to open an encrypted .xlsx/.xlsm/.xlsb file, read its Workbook.FileFormat property, and save the decrypted workbook using the matching SaveFormat. | Write C# code that verifies an encrypted Excel file exists, decrypts it via Aspose.Cells, determines whether it is Xlsx, Xlsm, or Xlsb, and writes the decrypted copy in the same format.
-// Common Searches: how to determine original Excel format of a password protected file using Aspose.Cells | save decrypted workbook in the same format as the encrypted file Aspose.Cells .NET | detect FileFormatType of an encrypted .xlsm file with Aspose.Cells | Aspose.Cells load encrypted OOXML workbook and preserve file type on save | C# decrypt password protected Excel and keep original format
-// Tags: detect workbook file format Aspose.Cells | preserve original Excel format after decryption | load password‑protected OOXML workbook C# | map FileFormatType to SaveFormat Aspose.Cells | decrypt encrypted Excel file Aspose.Cells .NET
+// Title: Detect the format of an encrypted OOXML workbook and save it as an unencrypted XLSX using Aspose.Cells for .NET
+// Common Searches: how to open an encrypted .xlsx and get its FileFormat using Aspose.Cells in C# | save a decrypted Excel workbook as an unencrypted XLSX with Aspose.Cells | detect workbook format after loading a password‑protected file in .NET | convert a non‑XLSX workbook to XLSX for compatibility using Aspose.Cells | remove password protection and preserve format when saving Excel with Aspose.Cells
+// Tags: LoadOptions password Aspose.Cells | FileFormatType retrieval Aspose.Cells | XLSX conversion for workbook Aspose.Cells | Export decrypted workbook to XLSX Aspose.Cells | Encrypted Excel format identification Aspose.Cells | Compatibility conversion after decryption Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks that the encrypted Excel file exists, loads it with a password using Aspose.Cells LoadOptions, reads the Workbook.FileFormat property to identify the original OOXML format (Xlsx, Xlsm, or Xlsb), maps this to the appropriate SaveFormat, and saves the decrypted workbook while preserving the original file type.
+// The example loads an encrypted OOXML workbook with a password via LoadOptions, determines its FileFormatType, and then saves the workbook as an unencrypted XLSX, converting to XLSX if the original format differs to ensure compatibility.
 class Program
 {
     static void Main()
     {
+        // Path to the encrypted OOXML file and its password
+        string encryptedFilePath = "encrypted.xlsx";
+        string password = "yourPassword";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(encryptedFilePath))
+        {
+            Console.WriteLine($"Input file not found: {encryptedFilePath}");
+            return;
+        }
+
         try
         {
-            // Path to the encrypted OOXML file
-            string encryptedFilePath = "encrypted.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(encryptedFilePath))
-            {
-                Console.WriteLine($"Error: The file \"{encryptedFilePath}\" was not found.");
-                return;
-            }
-
-            // Password used to encrypt the file
-            string password = "yourPassword";
-
-            // Load the encrypted workbook using LoadOptions with the password.
-            LoadOptions loadOptions = new LoadOptions
+            // Load the encrypted workbook using LoadOptions with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = password
             };
-
-            // Load the workbook (decryption happens internally).
             Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
-            // Detect the file format of the loaded workbook.
-            FileFormatType detectedFormat = workbook.FileFormat;
-            Console.WriteLine($"Detected workbook format: {detectedFormat}");
+            // Get the detected file format type of the loaded workbook
+            FileFormatType fileFormat = workbook.FileFormat;
+            Console.WriteLine($"Detected format: {fileFormat}");
 
-            // Choose a matching SaveFormat based on the detected FileFormatType.
-            SaveFormat saveFormat;
-            switch (detectedFormat)
+            // Ensure compatibility: if the format is not XLSX, convert to XLSX
+            SaveFormat targetFormat = SaveFormat.Xlsx;
+            if (fileFormat != FileFormatType.Xlsx)
             {
-                case FileFormatType.Xlsx:
-                    saveFormat = SaveFormat.Xlsx;
-                    break;
-                case FileFormatType.Xlsm:
-                    saveFormat = SaveFormat.Xlsm;
-                    break;
-                case FileFormatType.Xlsb:
-                    saveFormat = SaveFormat.Xlsb;
-                    break;
-                default:
-                    // Fallback to XLSX if the format is unexpected.
-                    saveFormat = SaveFormat.Xlsx;
-                    break;
+                // Convert by saving to XLSX format
+                workbook.Save("converted.xlsx", targetFormat);
+                Console.WriteLine("File converted to XLSX for compatibility.");
             }
-
-            // Save the decrypted workbook using the same format.
-            string decryptedFilePath = "decrypted.xlsx";
-
-            try
+            else
             {
-                workbook.Save(decryptedFilePath, saveFormat);
-                Console.WriteLine($"Decrypted workbook saved to: {decryptedFilePath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                // Save the decrypted workbook without a password to preserve compatibility
+                workbook.Save("decrypted.xlsx", targetFormat);
+                Console.WriteLine("Decrypted file saved as XLSX.");
             }
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

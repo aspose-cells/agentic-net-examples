@@ -1,39 +1,40 @@
-// Title: Set Aspose.Cells workbook to Automatic calculation mode and evaluate a single cell formula in C#
-// AI Prompts: Write C# code that switches the workbook's calculation engine to Automatic, assigns a formula to a target cell, and calls the EvaluateFormula method to obtain the cell's computed value. | Show how to retrieve the result of cell A1 without triggering a full workbook recalculation by using Aspose.Cells' EvaluateFormula functionality in a .NET application.
-// Common Searches: Aspose.Cells C# set calculation mode to Automatic and get result of one cell formula | How to evaluate a specific Excel cell formula with Aspose.Cells without recalculating the whole workbook | C# example using Aspose.Cells EvaluateFormula to read the calculated value from cell A1
-// Tags: automatic calculation mode Aspose.Cells C# | single cell formula evaluation Aspose.Cells | Aspose.Cells EvaluateFormula method | retrieve calculated cell value Aspose.Cells | set workbook calculation mode C#
+// Title: Set workbook calculation mode to Automatic and retrieve a single cell formula result with Aspose.Cells for .NET (C#)
+// Common Searches: how to enable automatic calculation mode in Aspose.Cells C# | get result of a formula in a specific Excel cell using Aspose.Cells .NET | read evaluated value from cell after calling CalculateFormula in C# | programmatically calculate workbook formulas with Aspose.Cells | example of setting calculation mode and retrieving cell value in Aspose.Cells
+// Tags: automatic calculation mode Aspose.Cells | calculate workbook formulas .NET | retrieve evaluated cell value C# | set calculation mode programmatically Aspose.Cells | read cell value after formula evaluation Aspose.Cells
 
 using Aspose.Cells;
 using System;
 
-// Creates a workbook, places the formula "=5+3" in cell A1, ensures the calculation engine runs in Automatic mode, evaluates the formula with EvaluateFormula, and outputs the computed result.
+// The sample creates a new Workbook (default Automatic calculation mode), writes a SUM formula to cell A1, triggers full workbook calculation with CalculateFormula, reads the evaluated result from the cell's Value property, and outputs the result to the console, all wrapped in exception handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a formula in cell A1
-            sheet.Cells["A1"].Formula = "=5+3";
+            // Put a formula in cell A1 (example: sum of numbers)
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.Formula = "=SUM(10,20,30)";
 
-            // Calculate all formulas in the workbook (default mode is Automatic)
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Retrieve the calculated value from the cell
-            object result = sheet.Cells["A1"].Value;
+            // Retrieve the evaluated result from the cell
+            object result = targetCell.Value;
 
-            // Display the result
-            Console.WriteLine($"Result of {sheet.Cells["A1"].Formula} is {result}");
+            // Output the evaluated result
+            Console.WriteLine($"Result of formula in A1: {result}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

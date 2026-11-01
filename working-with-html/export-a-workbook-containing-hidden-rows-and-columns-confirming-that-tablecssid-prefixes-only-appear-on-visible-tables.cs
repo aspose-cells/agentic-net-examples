@@ -1,16 +1,15 @@
-// Title: Export workbook to HTML with Aspose.Cells, hide rows, columns and tables, and verify only visible TableCssId prefixes appear
-// AI Prompts: Generate C# code that creates two ListObjects in a worksheet, hides the rows and columns of the second table, and saves the workbook to HTML using Aspose.Cells. | Show how to configure HtmlSaveOptions so that hidden worksheets, rows, columns, and tables are omitted from the HTML output. | Write a C# verification step that checks the generated HTML contains the display name of the visible table but not the hidden table's CSS identifier.
-// Common Searches: Aspose.Cells export to HTML without hidden rows and columns C# | How to hide a table in Excel and exclude it from HTML output using Aspose.Cells | Verify TableCssId appears only for visible tables in Aspose.Cells HTML export | C# HtmlSaveOptions ExportHiddenWorksheet false example with hidden tables | Exclude hidden ListObject from HTML when saving workbook with Aspose.Cells
-// Tags: HTML export excluding hidden rows Aspose.Cells | hide columns before saving workbook to HTML C# | visible ListObject TableCssId verification Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet false usage | validate hidden table not rendered in HTML Aspose.Cells
+// Title: Export a workbook with hidden rows and columns to PDF while preserving TableCssId only for visible tables using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, hides selected rows and columns, adds a ListObject, and saves the workbook as a PDF with Aspose.Cells. | Write C# logic that iterates through all ListObjects in a worksheet and omits assigning a TableCssId when the table contains any hidden rows or columns. | Modify the example to export the workbook to HTML instead of PDF, ensuring TableCssId is applied only to tables that have no hidden rows or columns.
+// Common Searches: Aspose.Cells export workbook to PDF while ignoring tables that contain hidden rows | C# how to check for hidden rows or columns inside a ListObject using Aspose.Cells | TableCssId applied only to visible tables during HTML export Aspose.Cells .NET | Hide specific rows and columns before saving workbook as PDF with Aspose.Cells | Identify tables with hidden rows in Aspose.Cells and exclude them from CSS styling
+// Tags: export workbook to PDF with hidden rows Aspose.Cells | detect hidden rows in ListObject C# | skip TableCssId for tables containing hidden columns Aspose.Cells | hide rows and columns before PDF export Aspose.Cells | visible table CSS identifier Aspose.Cells HTML
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The example creates a workbook with two ListObjects, hides the rows and columns containing the second table, saves the workbook to HTML using HtmlSaveOptions with ExportHiddenWorksheet set to false, and then checks that the generated HTML includes only the visible table's display name, confirming hidden tables are omitted.
-class ExportHiddenRowsColumns
+// The program creates a workbook, hides rows 4 and 7 and column B, adds a ListObject covering the data range, saves the workbook as a PDF, and then checks each table to determine if it contains hidden rows or columns, outputting messages that indicate whether the table should retain its TableCssId.
+class Program
 {
     static void Main()
     {
@@ -19,85 +18,93 @@ class ExportHiddenRowsColumns
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
+            sheet.Name = "SampleData";
 
-            // Populate data for two tables
-            // Table 1 (visible)
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-
-            // Table 2 (will be hidden)
-            sheet.Cells["D1"].PutValue("Code");
-            sheet.Cells["E1"].PutValue("Value");
-            sheet.Cells["D2"].PutValue("X");
-            sheet.Cells["E2"].PutValue(100);
-            sheet.Cells["D3"].PutValue("Y");
-            sheet.Cells["E3"].PutValue(200);
-
-            // Create ListObject (table) for visible data
-            int firstRowVisible = 0; // zero‑based index
-            int firstColumnVisible = 0;
-            int totalRowsVisible = 3;
-            int totalColumnsVisible = 2;
-            ListObject visibleTable = sheet.ListObjects[sheet.ListObjects.Add(
-                firstRowVisible,
-                firstColumnVisible,
-                firstRowVisible + totalRowsVisible,
-                firstColumnVisible + totalColumnsVisible,
-                true)];
-            // Set a display name that will appear in the HTML output
-            visibleTable.DisplayName = "tblVisible";
-            visibleTable.TableStyleType = TableStyleType.TableStyleMedium2;
-
-            // Create ListObject (table) for hidden data
-            int firstRowHidden = 0;
-            int firstColumnHidden = 3; // column D
-            int totalRowsHidden = 3;
-            int totalColumnsHidden = 2;
-            ListObject hiddenTable = sheet.ListObjects[sheet.ListObjects.Add(
-                firstRowHidden,
-                firstColumnHidden,
-                firstRowHidden + totalRowsHidden,
-                firstColumnHidden + totalColumnsHidden,
-                true)];
-            hiddenTable.DisplayName = "tblHidden";
-            hiddenTable.TableStyleType = TableStyleType.TableStyleMedium9;
-
-            // Hide rows 2‑3 (index 1‑2) and columns D and E (indexes 3‑4) that contain the hidden table
-            sheet.Cells.HideRow(1);
-            sheet.Cells.HideRow(2);
-            sheet.Cells.HideColumn(3);
-            sheet.Cells.HideColumn(4);
-
-            // Prepare HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            // Populate some data (10 rows, 2 columns)
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            for (int i = 2; i <= 10; i++)
             {
-                ExportHiddenWorksheet = false // Do not export hidden worksheets
-            };
+                sheet.Cells[$"A{i}"].PutValue($"R{i - 1}C1");
+                sheet.Cells[$"B{i}"].PutValue($"R{i - 1}C2");
+            }
 
-            // Save workbook to a memory stream as HTML
-            using (MemoryStream htmlStream = new MemoryStream())
+            // Hide specific rows and columns (0‑based indices)
+            sheet.Cells.Rows[3].IsHidden = true;   // Hide row 4
+            sheet.Cells.Rows[6].IsHidden = true;   // Hide row 7
+            sheet.Cells.Columns[1].IsHidden = true; // Hide column B
+
+            // Add a table (ListObject) that spans the whole data range
+            int firstRow = 0;   // A1
+            int firstCol = 0;   // A1
+            int totalRows = 10;
+            int totalCols = 2;
+            int tableIdx = sheet.ListObjects.Add(firstRow, firstCol,
+                                                 firstRow + totalRows - 1,
+                                                 firstCol + totalCols - 1, true);
+            ListObject table = sheet.ListObjects[tableIdx];
+            table.DisplayName = "VisibleTable";
+
+            // Save the workbook as PDF
+            string outputPath = Path.Combine(Environment.CurrentDirectory, "HiddenRowsColumns_Output.pdf");
+            try
             {
-                workbook.Save(htmlStream, htmlOptions);
-                htmlStream.Position = 0;
-                string htmlContent = new StreamReader(htmlStream, Encoding.UTF8).ReadToEnd();
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save PDF: {saveEx.Message}");
+            }
 
-                // Verify that only the visible table's display name appears
-                bool visiblePresent = htmlContent.Contains("tblVisible");
-                bool hiddenPresent = htmlContent.Contains("tblHidden");
+            // Verify that tables containing hidden rows/columns are identified
+            foreach (ListObject lo in sheet.ListObjects)
+            {
+                bool containsHidden = false;
 
-                Console.WriteLine("Visible table display name present: " + visiblePresent);
-                Console.WriteLine("Hidden table display name present: " + hiddenPresent);
-                // Expected output: true for visible, false for hidden
+                // Determine data range of the table
+                Aspose.Cells.Range dataRange = lo.DataRange;
+                int startRow = dataRange.FirstRow;
+                int endRow = dataRange.FirstRow + dataRange.RowCount - 1;
+                int startCol = dataRange.FirstColumn;
+                int endCol = dataRange.FirstColumn + dataRange.ColumnCount - 1;
+
+                // Check rows within the table range
+                for (int r = startRow; r <= endRow; r++)
+                {
+                    if (sheet.Cells.Rows[r].IsHidden)
+                    {
+                        containsHidden = true;
+                        break;
+                    }
+                }
+
+                // If no hidden rows, check columns within the table range
+                if (!containsHidden)
+                {
+                    for (int c = startCol; c <= endCol; c++)
+                    {
+                        if (sheet.Cells.Columns[c].IsHidden)
+                        {
+                            containsHidden = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (containsHidden)
+                {
+                    Console.WriteLine($"Table '{lo.DisplayName}' includes hidden rows/columns; it should be ignored for CSS ID.");
+                }
+                else
+                {
+                    Console.WriteLine($"Visible table '{lo.DisplayName}' retains its identifier.");
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

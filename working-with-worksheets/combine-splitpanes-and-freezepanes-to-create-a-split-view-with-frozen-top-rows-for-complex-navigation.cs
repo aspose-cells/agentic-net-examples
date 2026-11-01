@@ -1,13 +1,13 @@
-// Title: Create a split view with frozen top rows using Aspose.Cells SplitPanes and FreezePanes in C#
-// AI Prompts: Write C# code that inserts a vertical split pane at row 2, freezes the first two rows of a worksheet with Aspose.Cells, and saves the file as an .xlsx workbook. | Show how to fill a worksheet with sample data, apply FreezePanes to lock header rows, and set a split pane for independent scrolling using Aspose.Cells for .NET. | Demonstrate combining the SplitPanes and FreezePanes methods to produce a split view with frozen header rows and export the result to Excel.
-// Common Searches: Aspose.Cells C# split pane and freeze top rows example | How to freeze header rows while using split panes in Aspose.Cells .NET | C# code to create a split view with frozen rows in an Excel workbook using Aspose.Cells | Set vertical split and freeze first two rows with Aspose.Cells for .NET
-// Tags: Aspose.Cells FreezePanes SplitPanes C# | split pane frozen header rows .NET | Excel workbook split view Aspose.Cells | populate worksheet sample data Aspose.Cells | save workbook as xlsx Aspose.Cells
+// Title: Combine SplitPanes and FreezePanes in Aspose.Cells for .NET to create a split view with frozen top rows
+// AI Prompts: Generate C# code that uses Aspose.Cells to add a vertical split pane at a specific column, freeze the first two rows, and save the workbook as an .xlsx file. | Describe the steps for applying both SplitPanes and FreezePanes methods together in Aspose.Cells so that header rows stay visible while a split navigation pane is available.
+// Common Searches: asp.net aspose.cells how to split pane and freeze top rows in Excel | c# create split view with frozen header rows using Aspose.Cells | example of FreezePanes combined with SplitPanes in Aspose.Cells .NET | set vertical split column and freeze first two rows Aspose.Cells C# tutorial
+// Tags: Aspose.Cells SplitPanes API | Aspose.Cells FreezePanes usage | C# split pane with frozen rows Excel | Excel split view frozen header Aspose | Workbook navigation split pane .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, populates 100 rows by 20 columns with sample data, applies a vertical split pane and freezes the top two rows, then saves the file as SplitFreezeExample.xlsx.
+// The sample creates a new Workbook, fills a 100‑row by 20‑column worksheet with data, applies FreezePanes(2,0,0,0) to lock the top two rows, adds a vertical split pane for navigation, and saves the file as SplitAndFreeze.xlsx.
 class Program
 {
     static void Main()
@@ -17,9 +17,8 @@ class Program
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
 
-            // Populate the worksheet with sample data
+            // Fill the worksheet with sample data for navigation testing
             for (int row = 0; row < 100; row++)
             {
                 for (int col = 0; col < 20; col++)
@@ -28,25 +27,21 @@ class Program
                 }
             }
 
-            // Freeze the top 2 rows in the upper pane
-            // Parameters: first unfrozen row, first unfrozen column, left column, top row
+            // ---------- FreezePanes ----------
+            // Freeze the top two rows so they remain visible while scrolling vertically.
+            // The overload with four parameters is used for compatibility with newer API versions.
             sheet.FreezePanes(2, 0, 0, 0);
 
-            // Determine output path and ensure the directory exists
-            string outputPath = "SplitFreezeExample.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Define output file path
+            string outputPath = "SplitAndFreeze.xlsx";
 
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

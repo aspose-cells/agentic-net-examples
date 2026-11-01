@@ -1,62 +1,54 @@
-// Title: Delete rows for multiple non‑contiguous ranges in a worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that removes all rows intersecting the ranges A1:B2 and D4:E5 in a worksheet with Aspose.Cells, ensuring row indices remain correct. | Rewrite the example so the two separate ranges are merged into a single operation for row deletion using Aspose.Cells.
-// Common Searches: C# Aspose.Cells how to delete rows from multiple separate ranges | Aspose.Cells remove non‑adjacent cell blocks without manual index handling | Delete rows for A1:B2 and D4:E5 in one call using Aspose.Cells .NET | Aspose.Cells example of deleting rows defined by several ranges
-// Tags: Aspose.Cells UnionRange row deletion | Aspose.Cells delete noncontiguous ranges .NET | Aspose.Cells prevent index shift when deleting rows | Aspose.Cells multiple range removal example | Aspose.Cells workbook save after row deletion
+// Title: Delete multiple non‑contiguous row ranges in a worksheet with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# delete rows from several non‑adjacent ranges | How to remove separate row blocks in an Excel file using Aspose.Cells .NET | C# example for deleting rows A1:B2 and D4:E5 with Aspose.Cells | Delete non‑contiguous rows in an Excel workbook via Aspose.Cells API | Aspose.Cells DeleteRows for multiple row intervals without shifting data
+// Tags: Aspose.Cells DeleteRows non‑contiguous ranges | C# delete multiple row blocks Excel | Aspose.Cells delete rows by index range | Excel row removal descending order Aspose.Cells | Aspose.Cells .NET remove separate row intervals
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The program creates a new workbook, populates two separate blocks (A1:B2 and D4:E5), builds Range objects for each block, collects all row indices covered by both ranges, deletes those rows in descending order to avoid index shifting, and saves the workbook as DeletedRanges.xlsx.
-class DeleteNonContiguousRanges
+namespace DeleteNonContiguousRangesApp
 {
-    static void Main()
+    // The example creates a workbook, writes sample data to cells A1:B2 and D4:E5, then deletes the two non‑contiguous row blocks by calling DeleteRows first for rows 3‑4 and then for rows 0‑1 to keep indices correct, and finally saves the file as DeletedNonContiguousRanges.xlsx.
+    class DeleteNonContiguousRanges
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data in the ranges that will be deleted
-            cells["A1"].PutValue("Data A1");
-            cells["A2"].PutValue("Data A2");
-            cells["B1"].PutValue("Data B1");
-            cells["B2"].PutValue("Data B2");
-            cells["D4"].PutValue("Data D4");
-            cells["D5"].PutValue("Data D5");
-            cells["E4"].PutValue("Data E4");
-            cells["E5"].PutValue("Data E5");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Create two separate ranges
-            AsposeRange range1 = cells.CreateRange("A1:B2");
-            AsposeRange range2 = cells.CreateRange("D4:E5");
+                // Populate sample data (optional, just for demonstration)
+                sheet.Cells["A1"].PutValue("R1C1");
+                sheet.Cells["B1"].PutValue("R1C2");
+                sheet.Cells["A2"].PutValue("R2C1");
+                sheet.Cells["B2"].PutValue("R2C2");
+                sheet.Cells["D4"].PutValue("R4C4");
+                sheet.Cells["E4"].PutValue("R4C5");
+                sheet.Cells["D5"].PutValue("R5C4");
+                sheet.Cells["E5"].PutValue("R5C5");
 
-            // Collect all row indices that intersect the two ranges
-            var rowsToDelete = new List<int>();
+                // Delete rows belonging to the two non‑contiguous ranges:
+                // Range A1:B2 corresponds to rows 0‑1
+                // Range D4:E5 corresponds to rows 3‑4 (0‑based)
+                // Delete in descending order to keep indices correct
+                sheet.Cells.DeleteRows(3, 2); // Deletes rows 3 and 4 (original D4:E5)
+                sheet.Cells.DeleteRows(0, 2); // Deletes rows 0 and 1 (original A1:B2)
 
-            for (int r = range1.FirstRow; r < range1.FirstRow + range1.RowCount; r++)
-                rowsToDelete.Add(r);
+                // Define output file path
+                string outputPath = "DeletedNonContiguousRanges.xlsx";
 
-            for (int r = range2.FirstRow; r < range2.FirstRow + range2.RowCount; r++)
-                rowsToDelete.Add(r);
-
-            // Delete rows from bottom to top to avoid index shifting
-            foreach (int rowIndex in rowsToDelete.Distinct().OrderByDescending(i => i))
-                cells.DeleteRow(rowIndex);
-
-            // Save the workbook
-            string outputPath = "DeletedRanges.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

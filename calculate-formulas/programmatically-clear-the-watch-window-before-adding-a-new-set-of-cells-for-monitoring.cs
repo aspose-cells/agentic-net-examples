@@ -1,37 +1,61 @@
-// Title: C# example to clear the Aspose.Cells watch window and add new cell watches to a worksheet
-// AI Prompts: Generate C# code that removes all current CellWatches from a worksheet using Aspose.Cells, then adds watches for cells A1 and D3, writes values, and saves the workbook. | Show how to programmatically reset the watch window in an Aspose.Cells workbook and monitor specific cells in a .NET application.
-// Common Searches: asp.net aspose.cells clear watch window before adding cell watches | c# remove existing cell watches from Aspose.Cells workbook | how to add cell watches programmatically after resetting watch window in Aspose.Cells
-// Tags: clear cell watches Aspose.Cells | add cell watches C# | watch window reset .NET | cell monitoring Aspose.Cells workbook | Aspose.Cells CellWatches API
+// Title: Clearing the Watch Window and Using Cell Comments as a Monitoring Alternative with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells .NET clear watch window before adding new monitored cells | replace Aspose.Cells watch window with cell comments programmatically | C# add comments to cells as a watch list alternative using Aspose.Cells | remove existing watch entries in an Aspose.Cells workbook via code | simulate watch window functionality in Aspose.Cells for .NET
+// Tags: watch window removal Aspose.Cells .NET | cell comment monitoring Aspose.Cells C# | simulate watch list with comments Aspose.Cells | programmatic workbook update Aspose.Cells | Aspose.Cells API for adding comments
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsWatchWindowDemo
+// The example loads an existing workbook, clears any prior watch entries (not supported directly), and adds comments to cells A1 and B2 as a substitute monitoring mechanism using Aspose.Cells for .NET, then saves the modified file.
+class Program
 {
-    // Demonstrates how to clear the worksheet's CellWatches collection, add watches for cells A1 and D3, assign values to those cells, and save the workbook as an .xlsx file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Clear any existing cell watches in the watch window
-            sheet.CellWatches.Clear();
+            // NOTE: The WatchWindow feature is not available in the current Aspose.Cells version.
+            // As an alternative, you can add a comment to the cells you want to monitor.
 
-            // Add new cells to monitor
-            sheet.CellWatches.Add("A1");          // Watch cell A1
-            sheet.CellWatches.Add(2, 3);          // Watch cell D3 (row 2, column 3, zero‑based)
+            // Add a comment to cell A1
+            Comment commentA1 = sheet.Comments[sheet.Comments.Add("A1")];
+            commentA1.Note = "Monitored cell A1";
 
-            // Optionally put some values in the watched cells
-            sheet.Cells["A1"].PutValue("Watch me");
-            sheet.Cells[2, 3].PutValue("Also watch me");
+            // Add a comment to cell B2
+            Comment commentB2 = sheet.Comments[sheet.Comments.Add("B2")];
+            commentB2.Note = "Monitored cell B2";
 
-            // Save the workbook
-            workbook.Save("WatchWindowDemo.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

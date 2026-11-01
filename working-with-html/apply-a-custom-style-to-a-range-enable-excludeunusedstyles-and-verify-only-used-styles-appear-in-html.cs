@@ -1,14 +1,14 @@
-// Title: Apply a user‑defined cell style to a specific range and export to HTML while excluding unused styles with Aspose.Cells for .NET
-// AI Prompts: Create a new Workbook, define a user‑defined style named MyCustomStyle, apply it to cells A1:B3 using a StyleFlag with All=true, enable exclusion of unused styles, and save the workbook as an HTML file. | Read the generated HTML file and test whether the identifier MyCustomStyle appears, confirming that only the applied style was embedded.
-// Common Searches: Aspose.Cells C# apply style to a cell range and export to HTML | exclude unused CSS classes when saving Excel as HTML with Aspose.Cells | check that only used styles are written to HTML output in Aspose.Cells | optimize HTML export size by removing unused styles Aspose.Cells .NET | how to verify style inclusion in Aspose.Cells generated HTML
-// Tags: apply user-defined style range Aspose.Cells | HTML export exclude unused styles .NET | apply all formatting to range Aspose.Cells | verify style presence in generated HTML | user-defined cell style Aspose.Cells C#
+// Title: Apply a custom cell style to a range and export workbook to HTML with only used styles using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells apply custom style to A1:C3 and save as HTML | How to exclude unused styles when exporting a workbook to HTML with Aspose.Cells | Verify generated CSS class selectors in HTML output from Aspose.Cells | Aspose.Cells HTML export include only used style definitions | Create and apply a light‑green background style to a range in Aspose.Cells C#
+// Tags: apply custom style range Aspose.Cells C# | export workbook to HTML exclude unused styles | verify CSS class count Aspose.Cells HTML | custom background color style Aspose.Cells | StyleFlag All property Aspose.Cells
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a workbook, defines a custom style with a light‑green background and bold dark‑green font, applies it to the range A1:B3, saves the workbook as an HTML file while excluding unused styles, and then reads the HTML to confirm that the custom style name is present, demonstrating that only used styles are included in the output.
+// The example creates a workbook, defines a custom style with a light‑green background and bold red font, applies it to cells A1:C3, saves the workbook as HTML, extracts the generated <style> block, counts the CSS class selectors, and confirms the custom background appears, demonstrating that only used styles are included in the HTML output.
 class Program
 {
     static void Main()
@@ -18,44 +18,63 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some cells with data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.2);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.8);
-
-            // Create a custom style
+            // Define a custom style (light green background with bold red font)
             Style customStyle = workbook.CreateStyle();
-            customStyle.Name = "MyCustomStyle";                 // Give the style a recognizable name
-            customStyle.ForegroundColor = Color.LightGreen;    // Background color
-            customStyle.Pattern = BackgroundType.Solid;        // Apply background
-            customStyle.Font.Color = Color.DarkGreen;          // Font color
-            customStyle.Font.IsBold = true;                    // Bold font
+            customStyle.ForegroundColor = Color.LightGreen;
+            customStyle.Pattern = BackgroundType.Solid;
+            customStyle.Font.Color = Color.Red;
+            customStyle.Font.IsBold = true;
 
-            // Apply the custom style to a specific range (A1:B3)
-            StyleFlag flag = new StyleFlag { All = true };
-            Aspose.Cells.Range targetRange = sheet.Cells.CreateRange("A1:B3");
-            targetRange.ApplyStyle(customStyle, flag);
+            // Apply the custom style to a specific range (A1:C3)
+            // CreateRange overload expects integer indices: firstRow, firstColumn, totalRows, totalColumns
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(0, 0, 3, 3);
+            range.ApplyStyle(customStyle, new StyleFlag { All = true });
 
             // Save the workbook as HTML
-            string htmlFile = "StyledOutput.html";
-            workbook.Save(htmlFile, SaveFormat.Html);
+            string htmlPath = Path.Combine(Directory.GetCurrentDirectory(), "output.html");
+            workbook.Save(htmlPath, SaveFormat.Html);
 
-            // Verify that only used styles appear in the generated HTML
-            if (File.Exists(htmlFile))
+            // ---- Verification ----
+            // Load the generated HTML
+            if (!File.Exists(htmlPath))
             {
-                string htmlContent = File.ReadAllText(htmlFile);
-                bool customStyleFound = htmlContent.Contains("MyCustomStyle");
-                Console.WriteLine($"Custom style present in HTML: {customStyleFound}");
+                Console.WriteLine($"HTML file not found: {htmlPath}");
+                return;
+            }
+
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // Extract the CSS block generated by Aspose.Cells
+            var styleBlockMatch = Regex.Match(htmlContent, @"<style[^>]*>(.*?)</style>", RegexOptions.Singleline);
+            if (!styleBlockMatch.Success)
+            {
+                Console.WriteLine("No <style> block found in the HTML.");
+                return;
+            }
+
+            string cssContent = styleBlockMatch.Groups[1].Value;
+
+            // Count the number of generated style classes (e.g., .a0, .a1, ...)
+            var classMatches = Regex.Matches(cssContent, @"\.a\d+");
+            int usedStyleCount = classMatches.Count;
+
+            Console.WriteLine($"Number of style classes in HTML: {usedStyleCount}");
+
+            // Verify that the custom style (light green background) appears in the CSS
+            bool hasCustomBackground = cssContent.Contains("background-color:#90EE90"); // LightGreen hex
+            Console.WriteLine($"Custom background color present: {hasCustomBackground}");
+
+            // Simple assertion
+            if (usedStyleCount <= 2 && hasCustomBackground)
+            {
+                Console.WriteLine("Verification passed: only used styles are present in the HTML.");
             }
             else
             {
-                Console.WriteLine($"Failed to generate HTML file: {htmlFile}");
+                Console.WriteLine("Verification failed: unexpected styles found.");
             }
         }
         catch (Exception ex)

@@ -1,40 +1,53 @@
-// Title: Extract graphic page background from an ODS workbook and save it as a PNG file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an ODS file with Aspose.Cells, accesses the first worksheet's ODSPageBackground, verifies the background type is Graphic, and saves the embedded image bytes to a PNG file. | Show how to check for a graphic ODSPageBackground in a workbook and export the background image to disk as PNG using the Aspose.Cells .NET API.
-// Common Searches: C# Aspose.Cells extract ODS worksheet page background image to PNG | How to retrieve embedded graphic background from an ODS file using Aspose.Cells .NET | Save ODS page background as PNG with Aspose.Cells in a console application | Aspose.Cells OdsPageBackgroundType Graphic example for extracting background image | Extract ODS file background picture and write to file using Aspose.Cells for .NET
-// Tags: extract ODS page background graphic Aspose.Cells | save ODS background image as PNG C# | OdsPageBackground graphic data extraction .NET | Aspose.Cells export embedded ODS background | write ODS worksheet background to file
+// Title: Extract a worksheet background image from an ODS file and save it as PNG using Aspose.Cells for .NET
+// Common Searches: C# extract background image from OpenDocument Spreadsheet with Aspose.Cells | How to save ODS worksheet background as a PNG file in .NET | Retrieve worksheet background stream from an .ods file using Aspose.Cells API | Aspose.Cells get background image bytes from ODS worksheet | Convert ODS sheet background to PNG programmatically in C#
+// Tags: Aspose.Cells ODS worksheet background extraction | save worksheet background as PNG .NET | background image bytes from OpenDocument spreadsheet | C# extract ODS sheet background image | export ODS background to PNG using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// The example loads an ODS workbook with Aspose.Cells, accesses the first worksheet's ODSPageBackground, confirms it is a graphic type, and writes the embedded PNG bytes to a specified output file.
-class ExtractOdsBackground
+// The example loads an ODS workbook with Aspose.Cells, accesses a worksheet, reads its BackgroundImage byte array, and writes the bytes directly to a PNG file, handling missing files and absent background images.
+class Program
 {
     static void Main()
     {
-        // Path to the source ODS file
-        string odsFilePath = "input.ods";
+        const string inputPath = "input.ods";
+        const string outputPath = "background.png";
 
-        // Path where the extracted PNG will be saved
-        string pngOutputPath = "background.png";
-
-        // Load the ODS workbook
-        Workbook workbook = new Workbook(odsFilePath);
-
-        // Get the ODS page background of the first worksheet
-        OdsPageBackground background = workbook.Worksheets[0].PageSetup.ODSPageBackground;
-
-        // Check that the background is of graphic type and contains data
-        if (background.Type == OdsPageBackgroundType.Graphic && background.GraphicData != null && background.GraphicData.Length > 0)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Write the graphic data (assumed to be PNG) to the output file
-            File.WriteAllBytes(pngOutputPath, background.GraphicData);
-            Console.WriteLine($"Graphic background extracted successfully to: {pngOutputPath}");
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
-        else
+
+        try
         {
-            Console.WriteLine("The ODS file does not contain a graphic background.");
+            // Load the ODS workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (or any specific worksheet)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Retrieve the background image bytes of the worksheet
+            byte[] backgroundBytes = worksheet.BackgroundImage;
+
+            // Ensure there is a background image present
+            if (backgroundBytes != null && backgroundBytes.Length > 0)
+            {
+                // Save the raw image bytes directly to a PNG file
+                File.WriteAllBytes(outputPath, backgroundBytes);
+                Console.WriteLine($"Background image saved to \"{outputPath}\".");
+            }
+            else
+            {
+                Console.WriteLine("No background image found in the worksheet.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

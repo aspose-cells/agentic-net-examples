@@ -1,59 +1,36 @@
-// Title: Save an Aspose.Cells workbook to XLSX with all cell formatting retained using C#
-// AI Prompts: Write C# code that loads or creates a workbook, applies a red bold font with yellow background to the range A1:B2, and saves it as an XLSX file while preserving the applied styles. | Show how to use Aspose.Cells SaveFormat.Xlsx to export a workbook and keep cell shading and font attributes intact.
-// Common Searches: Aspose.Cells C# save workbook to xlsx without losing cell styles | preserve cell background color and font when exporting Excel with Aspose.Cells | how to keep formatting of range A1:B2 after saving workbook using Aspose.Cells in C#
-// Tags: Aspose.Cells workbook.Save preserving styles | SaveFormat.Xlsx retain cell formatting | apply style to range A1:B2 Aspose.Cells | C# export Excel with font and background preservation | Aspose.Cells keep cell shading on save
+// Title: Save a workbook with cell styles to XLSX using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells save workbook to XLSX while keeping bold font and background color | How to export a formatted Excel file with Aspose.Cells .NET | Preserve cell formatting when saving an XLSX file using Aspose.Cells in C# | Aspose.Cells .NET write workbook to XLSX with style retention | Save Excel workbook with custom cell style using Aspose.Cells API
+// Tags: Aspose.Cells save workbook to XLSX with styles | C# retain cell formatting in XLSX output | export formatted Excel file using Aspose.Cells .NET | preserve cell style when writing XLSX with Aspose | apply bold font and background color before saving workbook
 
 using Aspose.Cells;
-using System;
 using System.Drawing;
-using System.IO;
 
-// Loads an existing workbook or creates a new one, applies a red bold font with yellow background to cells A1:B2, and saves the file as XLSX using Aspose.Cells, ensuring all formatting is retained.
+// The example creates a new Workbook, applies a bold font and yellow solid background to cell A1, and then saves the file as "output.xlsx" using SaveFormat.Xlsx, ensuring all cell formatting is retained.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-            Workbook workbook;
+        // Example of applying formatting to demonstrate retention
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Load existing workbook if it exists; otherwise create a new one.
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a default workbook with one worksheet
-            }
+        // Put a value in cell A1
+        Cell cell = cells["A1"];
+        cell.PutValue("Formatted Text");
 
-            // OPTIONAL: Apply some formatting to demonstrate that formatting is retained
-            Worksheet sheet = workbook.Worksheets[0];
-            Style style = workbook.CreateStyle();
-            style.Font.Color = Color.Red;
-            style.Font.IsBold = true;
-            style.ForegroundColor = Color.Yellow;
-            style.Pattern = BackgroundType.Solid;
+        // Create a style with bold font and yellow background
+        Style style = cell.GetStyle();
+        style.Font.IsBold = true;
+        style.ForegroundColor = Color.Yellow;
+        style.Pattern = BackgroundType.Solid;
 
-            // Apply the style to a range (A1:B2)
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1", "B2");
-            StyleFlag flag = new StyleFlag
-            {
-                Font = true,
-                CellShading = true
-            };
-            range.ApplyStyle(style, flag);
+        // Apply the style to the cell
+        cell.SetStyle(style);
 
-            // Save the workbook to an XLSX file, preserving all applied formatting
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook to an XLSX file, preserving all formatting
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

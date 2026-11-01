@@ -1,51 +1,75 @@
-// Title: Highlight cells containing the word “error” (case‑insensitive) with an orange background using Aspose.Cells for .NET (C#)
-// AI Prompts: Find all cells whose value contains the substring "error" without case sensitivity and set an orange solid fill style using Aspose.Cells in C#. | Configure FindOptions for a case‑insensitive, contains search and apply a custom orange Style to each matching cell in a worksheet.
-// Common Searches: aspocells c# find cells containing text case insensitive | how to highlight cells with specific word in Excel using Aspose.Cells | apply orange background to cells that contain 'error' in C# Aspose.Cells | using FindOptions LookAt Contains to style matching cells in Aspose.Cells
-// Tags: Aspose.Cells case-insensitive FindOptions | orange cell background style Aspose.Cells | highlight cells containing substring Aspose.Cells | C# Excel cell search and style Aspose.Cells
+// Title: Highlight all cells containing the word “error” (case‑insensitive) with an orange fill using Aspose.Cells for .NET
+// AI Prompts: Search a worksheet for the text "error" without case sensitivity and set the cell background to orange using Aspose.Cells in C#. | Create a reusable method that takes a keyword and a color, finds every matching cell in an Excel file with Aspose.Cells, and applies the specified fill. | Extend the example to iterate through all worksheets in a workbook, highlighting case‑insensitive occurrences of a given term with a custom color.
+// Common Searches: aspnet find cells containing a specific word case insensitive and change background color | c# aspose.cells highlight cells that contain 'error' orange | how to use FindOptions LookAtType.Contains to color matching cells in Excel with Aspose | search and format cells by text value using Aspose.Cells for .NET | apply conditional formatting programmatically with Aspose.Cells based on cell text
+// Tags: Aspose.Cells FindOptions case‑insensitive text lookup | orange cell fill for matched keywords Aspose.Cells | programmatic highlighting of Excel cells by content C# | search and style .xlsx cells using Aspose.Cells API | bulk cell formatting based on keyword Aspose.Cells .NET
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// Creates or loads a workbook, configures a case‑insensitive FindOptions with LookAt.Contains, iterates through all cells that contain the word "error", applies an orange solid fill style, and saves the result as HighlightedErrors.xlsx.
-class HighlightErrorCells
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads "input.xlsx", performs a case‑insensitive search for the word "error" in the first worksheet, applies an orange background to each matching cell, and saves the result as "output.xlsx".
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Sample data – this section can be removed when using a real workbook
-        worksheet.Cells["A1"].PutValue("No error here");
-        worksheet.Cells["A2"].PutValue("Error occurred");
-        worksheet.Cells["A3"].PutValue("Another ERROR found");
-        worksheet.Cells["A4"].PutValue("All good");
-
-        // Configure find options: case‑insensitive, search cell values, match if contains the text
-        FindOptions findOptions = new FindOptions
+        static void Main(string[] args)
         {
-            CaseSensitive = false,
-            LookInType = LookInType.Values,
-            LookAtType = LookAtType.Contains
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Create a style with orange background
-        Style orangeStyle = workbook.CreateStyle();
-        orangeStyle.ForegroundColor = Color.Orange;
-        orangeStyle.Pattern = BackgroundType.Solid;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Iterate through all cells that contain the word "error" (ignoring case) and apply the style
-        Cell previousCell = null;
-        Cell foundCell = worksheet.Cells.Find("error", previousCell, findOptions);
-        while (foundCell != null)
-        {
-            foundCell.SetStyle(orangeStyle);
-            previousCell = foundCell;
-            foundCell = worksheet.Cells.Find("error", previousCell, findOptions);
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Configure find options: search values, contain the word, ignore case
+                FindOptions findOptions = new FindOptions
+                {
+                    LookInType = LookInType.Values,
+                    LookAtType = LookAtType.Contains,
+                    CaseSensitive = false
+                };
+
+                // Find the first cell containing the word "error"
+                Cell cell = sheet.Cells.Find("error", null, findOptions);
+
+                // Loop through all matching cells
+                while (cell != null)
+                {
+                    // Get the current style of the cell
+                    Style style = cell.GetStyle();
+
+                    // Set the fill color to orange
+                    style.ForegroundColor = Color.Orange;
+                    style.Pattern = BackgroundType.Solid;
+
+                    // Apply the updated style back to the cell
+                    cell.SetStyle(style);
+
+                    // Find the next matching cell (continue search after the current cell)
+                    cell = sheet.Cells.Find("error", cell, findOptions);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Save the modified workbook
-        workbook.Save("HighlightedErrors.xlsx");
     }
 }

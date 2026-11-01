@@ -1,14 +1,14 @@
-// Title: How to link a rectangle shape to a DATEVALUE cell and display the formatted date using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a rectangle shape, assign its Text property a formula that points to a DATEVALUE cell, and make the shape display the cell’s formatted date with Aspose.Cells in C#. | Apply a built‑in date style to a worksheet cell, bind a shape’s text to that cell via a formula, and set the shape’s placement to MoveAndSize in a .NET workbook.
-// Common Searches: Aspose.Cells C# shape text bound to a DATEVALUE cell | display formatted date inside a rectangle shape using Aspose.Cells | set shape placement to MoveAndSize after linking to a date cell in Aspose.Cells | apply built‑in date format to a cell and reference it from a shape in C#
-// Tags: shape text formula reference Aspose.Cells | rectangle shape DATEVALUE linking C# | apply built‑in date format to cell Aspose.Cells | shape placement MoveAndSize Aspose.Cells | Aspose.Cells C# date cell formatting
+// Title: Link a textbox shape to a DATEVALUE formula cell and display the formatted date using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# link textbox shape to a cell with DATEVALUE formula | display formatted date in a linked shape textbox in Excel using Aspose.Cells | center text of a shape that references a date formula cell with Aspose.Cells | set built‑in date number format for a cell and bind it to a shape in C# | save workbook with shape text bound to DATEVALUE cell using Aspose.Cells
+// Tags: textbox shape cell binding Aspose.Cells C# | DATEVALUE formula cell formatting Aspose.Cells | centered shape text reference date cell | apply built‑in date number format Aspose.Cells | save workbook with linked shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, writes a DATEVALUE formula in cell A1, applies a built‑in date format, adds a rectangle shape, links the shape's text to the cell using a formula, configures the shape to move and size with the cell, and saves the file as LinkedShapeDate.xlsx.
-class LinkShapeToDateCell
+// The example creates a workbook, writes a DATEVALUE formula to cell B1, applies a built‑in date format, adds a textbox shape, links the shape's text to the formatted date cell, centers the text, and saves the file as LinkedShapeDate.xlsx.
+class Program
 {
     static void Main()
     {
@@ -20,31 +20,33 @@ class LinkShapeToDateCell
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a DATEVALUE formula in cell A1
-            Cell dateCell = sheet.Cells["A1"];
-            dateCell.Formula = @"=DATEVALUE(""2023-09-19"")";
+            // Set a DATEVALUE formula in cell B1
+            Cell dateCell = sheet.Cells["B1"];
+            dateCell.Formula = "DATEVALUE(\"2023-09-01\")";
 
-            // Apply a date format to the cell so the displayed value is formatted
+            // Apply a date format to the cell so it displays as a formatted date
             Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14; // Built‑in date format (e.g., mm/dd/yyyy)
+            dateStyle.Number = 14; // Built‑in date format (mm-dd-yy)
             dateCell.SetStyle(dateStyle);
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 0, 0, 0, 60, 200);
+            // Add a textbox shape to the worksheet
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            TextBox shape = sheet.Shapes.AddTextBox(2, 2, 0, 0, 100, 200);
 
-            // Link the shape's text to the cell A1 using a formula
-            shape.Text = "=A1";
+            // Link the shape's text to the cell containing the DATEVALUE formula
+            shape.Text = "=B1";
 
-            // Ensure the shape moves and sizes with the cell (optional)
-            shape.Placement = PlacementType.MoveAndSize;
+            // Align the shape's text to the center
+            shape.TextHorizontalAlignment = TextAlignmentType.Center;
 
             // Save the workbook
-            workbook.Save("LinkedShapeDate.xlsx");
+            string outputPath = "LinkedShapeDate.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

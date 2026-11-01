@@ -1,99 +1,106 @@
-// Title: How to enumerate all cells in an Aspose.Cells worksheet and count empty, string, numeric, date, boolean, and formula cells in C#
-// AI Prompts: Generate C# code using Aspose.Cells that loops through every instantiated cell in a worksheet and returns a dictionary with counts for empty, string, numeric, date, boolean, and formula cells. | Extend the cell‑type counting loop to calculate the percentage of each type relative to the total cell count and display the results.
-// Common Searches: Aspose.Cells C# count empty cells and different data types in a worksheet | C# enumerate worksheet cells with Aspose.Cells and get statistics per cell type | How to get number of formula cells using Aspose.Cells .NET | Aspose.Cells get count of string numeric date boolean cells in Excel file | C# Aspose.Cells iterate over cells and differentiate null and empty string
-// Tags: enumerate worksheet cells Aspose.Cells C# | count cell types Aspose.Cells | empty cell detection Aspose.Cells | formula cell counting Aspose.Cells | cell type statistics Aspose.Cells XLSX
+// Title: How to count empty cells and report filled cell types across an entire worksheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells count empty cells and list cell value types in a worksheet | enumerate all cells in an Excel file with Aspose.Cells and get statistics for each CellValueType | Aspose.Cells .NET get empty cell count and distribution of data types in used range | how to summarize filled cell types by CellValueType while iterating worksheet cells in C# | determine total, empty and typed cell counts in an XLSX using Aspose.Cells API
+// Tags: Aspose.Cells empty cell tally .NET | CellValueType frequency analysis Aspose.Cells | worksheet used range iteration Aspose.Cells | Excel cell data summary C# | Aspose.Cells cell enumeration overview
 
-using System;
-using System.Collections;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The example creates a workbook, adds sample data of various types (string, numeric, date, boolean, null, empty string, formula), iterates over all instantiated cells with Aspose.Cells, counts total, empty, string, numeric, date, boolean, and formula cells, outputs the counts, and saves the file as CellSummary.xlsx.
-class EmptyFilledCellSummary
+// The example loads an XLSX workbook with Aspose.Cells, iterates each worksheet, determines the used range via MaxDataRow/MaxDataColumn, and walks every cell in that range. It counts total cells, increments a counter for cells whose Type is IsNull (empty), and aggregates non‑empty cells by their CellValueType in a dictionary. After processing a sheet it prints the worksheet name, total cells examined, empty cell count, and the count for each filled cell type, then saves the workbook.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Add sample data with different types and some empty cells
-            cells["A1"].PutValue("Hello");               // string
-            cells["B1"].PutValue(123);                   // numeric
-            cells["C1"].PutValue(DateTime.Now);          // date
-            cells["D1"].PutValue(true);                  // boolean
-            cells["E1"].PutValue(null);                  // empty (null)
-            cells["F1"].PutValue(string.Empty);          // empty (empty string)
-            cells["G1"].Formula = "=SUM(B1)";            // formula
-
-            // Counters for summary
-            long totalCells = 0;
-            long emptyCells = 0;
-            long stringCells = 0;
-            long numericCells = 0;
-            long dateCells = 0;
-            long booleanCells = 0;
-            long formulaCells = 0;
-
-            // Enumerate all instantiated cells in the worksheet
-            IEnumerator enumerator = cells.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                Cell cell = (Cell)enumerator.Current;
-                totalCells++;
-
-                // Determine if the cell is empty (null or CellValueType.IsNull)
-                if (cell.Type == CellValueType.IsNull ||
-                    cell.Value == null ||
-                    (cell.Value is string s && string.IsNullOrEmpty(s)))
-                {
-                    emptyCells++;
-                    continue;
-                }
-
-                // Count based on cell content type
-                if (cell.IsFormula)
-                {
-                    formulaCells++;
-                }
-                else if (cell.Value is string)
-                {
-                    stringCells++;
-                }
-                else if (cell.Value is double ||
-                         cell.Value is int ||
-                         cell.Value is decimal ||
-                         cell.Value is float)
-                {
-                    numericCells++;
-                }
-                else if (cell.Value is DateTime)
-                {
-                    dateCells++;
-                }
-                else if (cell.Value is bool)
-                {
-                    booleanCells++;
-                }
-            }
-
-            // Output the summary
-            Console.WriteLine($"Total instantiated cells: {totalCells}");
-            Console.WriteLine($"Empty cells: {emptyCells}");
-            Console.WriteLine($"String cells: {stringCells}");
-            Console.WriteLine($"Numeric cells: {numericCells}");
-            Console.WriteLine($"Date cells: {dateCells}");
-            Console.WriteLine($"Boolean cells: {booleanCells}");
-            Console.WriteLine($"Formula cells: {formulaCells}");
-
-            // Save the workbook
-            workbook.Save("CellSummary.xlsx", SaveFormat.Xlsx);
+            // Load the workbook
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int totalCells = 0;
+                int emptyCells = 0;
+                var filledByType = new Dictionary<CellValueType, int>();
+
+                // Determine used range; MaxDataRow/Column are -1 for empty sheets
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+
+                if (maxRow < 0 || maxCol < 0)
+                {
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" contains no data.");
+                    continue;
+                }
+
+                // Enumerate cells within the used range
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+                        totalCells++;
+
+                        // In Aspose.Cells, a cell is considered empty when its type is IsNull
+                        if (cell.Type == CellValueType.IsNull)
+                        {
+                            emptyCells++;
+                        }
+                        else
+                        {
+                            CellValueType type = cell.Type;
+                            if (!filledByType.ContainsKey(type))
+                                filledByType[type] = 0;
+                            filledByType[type]++;
+                        }
+                    }
+                }
+
+                // Output summary for the worksheet
+                Console.WriteLine($"Worksheet: {sheet.Name}");
+                Console.WriteLine($"Total cells examined: {totalCells}");
+                Console.WriteLine($"Empty cells: {emptyCells}");
+                foreach (var kvp in filledByType)
+                {
+                    Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+                }
+                Console.WriteLine();
+            }
+
+            // Save workbook (no modifications made, but required by lifecycle rules)
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred during processing: {ex.Message}");
         }
     }
 }

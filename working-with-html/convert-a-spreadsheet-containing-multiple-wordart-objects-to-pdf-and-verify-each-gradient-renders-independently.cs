@@ -1,35 +1,34 @@
-// Title: Convert Excel workbook with multiple WordArt gradient shapes to PDF and validate each gradient renders correctly using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, iterates through all worksheets, identifies WordArt shapes, checks whether each shape's FillFormat is a gradient, logs the worksheet name and shape index with gradient status, and saves the workbook as a PDF using Aspose.Cells. | Update the conversion script to throw an exception if any WordArt shape does not use a gradient fill before the workbook is exported to PDF.
-// Common Searches: Aspose.Cells C# export WordArt with gradient fill to PDF | How to detect gradient fill on WordArt shapes in an Excel file using Aspose.Cells | Validate individual WordArt gradient rendering after saving workbook as PDF in .NET | Iterate over ShapeCollection to find WordArt objects with Aspose.Cells
-// Tags: Aspose.Cells detect WordArt gradient fill | convert Excel WordArt shapes to PDF .NET | enumerate ShapeCollection for WordArt Aspose | check FillFormat type C# Aspose.Cells | preserve gradient rendering in PDF export
+// Title: Export an Excel workbook with WordArt objects to PDF while enumerating and logging each WordArt gradient fill using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, walks through every worksheet, finds WordArt shapes, prints each gradient stop position, and saves the whole workbook as a single PDF. | Adapt the example to generate a separate PDF for each worksheet that contains at least one WordArt shape with a gradient fill, ensuring the gradients remain visible. | Add robust exception handling that reports missing input files, shape‑processing errors, and PDF‑saving failures with detailed diagnostic messages.
+// Common Searches: how to export Excel WordArt gradients to PDF using Aspose.Cells C# | enumerate WordArt shapes and read gradient stops in a .xlsx with Aspose.Cells | verify that WordArt gradient fills are preserved after converting to PDF in .NET | C# Aspose.Cells save each worksheet containing WordArt as separate PDF files | debug gradient fill information for WordArt objects in an Excel workbook
+// Tags: Aspose.Cells WordArt gradient inspection | C# shape collection gradient stops Aspose | PDF generation preserving Excel shape fills | worksheet-specific PDF output Aspose.Cells | gradient fill verification Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, scans each worksheet's ShapeCollection for WordArt objects, determines if each WordArt uses a gradient fill, logs the worksheet name, shape index, and gradient status, and finally saves the workbook as a PDF, ensuring that gradient fills are rendered correctly.
-class WordArtGradientPdfConverter
+// The sample loads an Excel file with Aspose.Cells, iterates through all worksheets and their shape collections, identifies WordArt objects, logs gradient fill details such as stop count and positions, and finally saves the workbook as a PDF while handling file‑access and shape‑processing errors.
+class Program
 {
     static void Main()
     {
-        // Paths for input Excel and output PDF
-        string excelPath = "input.xlsx";
-        string pdfPath = "output.pdf";
+        string inputPath = "InputWithWordArt.xlsx";
+        string outputPath = "OutputWithWordArt.pdf";
 
         try
         {
-            // Verify that the input file exists
-            if (!File.Exists(excelPath))
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file not found at '{excelPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(excelPath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through worksheets and inspect WordArt shapes
+            // Iterate through worksheets and their shapes
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 ShapeCollection shapes = sheet.Shapes;
@@ -38,45 +37,61 @@ class WordArtGradientPdfConverter
                 {
                     Shape shape = shapes[i];
 
-                    // WordArt objects can be identified via IsWordArt property
+                    // Process only WordArt shapes
                     if (shape.IsWordArt)
                     {
-                        // Use the Fill property (FillFormat)
-                        FillFormat fill = shape.Fill;
-
-                        // Determine if the fill is a gradient
-                        bool isGradient = fill.FillType == FillType.Gradient;
-
-                        Console.WriteLine($"Worksheet: {sheet.Name}, WordArt Index: {i}");
-                        Console.WriteLine($"  Gradient Fill: {isGradient}");
-
-                        if (isGradient)
+                        try
                         {
-                            // Gradient fill detected; additional validation can be added here if needed
-                            Console.WriteLine("  Gradient configuration appears valid.");
+                            // Get the fill format of the shape
+                            FillFormat fill = shape.Fill;
+
+                            // Check if the fill is a gradient
+                            if (fill.FillType == FillType.Gradient && fill.GradientFill != null)
+                            {
+                                Console.WriteLine($"Worksheet: {sheet.Name}, WordArt Index: {i}");
+                                Console.WriteLine($"  Gradient Stops Count: {fill.GradientFill.GradientStops.Count}");
+
+                                // List each gradient stop (color property omitted due to API version differences)
+                                for (int j = 0; j < fill.GradientFill.GradientStops.Count; j++)
+                                {
+                                    GradientStop stop = fill.GradientFill.GradientStops[j];
+                                    Console.WriteLine($"    Stop {j}: Position={stop.Position}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Worksheet: {sheet.Name}, WordArt Index: {i} does NOT have a gradient fill.");
+                            }
                         }
-                        else
+                        catch (Exception exShape)
                         {
-                            Console.WriteLine("  Warning: WordArt does not use a gradient fill.");
+                            Console.WriteLine($"Error processing shape at index {i} on sheet {sheet.Name}: {exShape.Message}");
                         }
                     }
                 }
             }
 
-            // Save the workbook as PDF; WordArt gradients will be rendered in the PDF
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as PDF
             try
             {
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-                Console.WriteLine($"Conversion completed. PDF saved to: {pdfPath}");
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            catch (Exception saveEx)
+            catch (Exception exSave)
             {
-                Console.WriteLine($"Error saving PDF: {saveEx.Message}");
+                Console.WriteLine($"Error saving PDF: {exSave.Message}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

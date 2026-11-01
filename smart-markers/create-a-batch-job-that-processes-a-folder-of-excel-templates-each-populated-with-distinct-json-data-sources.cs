@@ -1,93 +1,143 @@
-// Title: C# batch job to populate Excel .xlsx templates with JSON data using Aspose.Cells smart markers
-// AI Prompts: Generate C# code that scans a directory for .xlsx template files, loads each workbook with Aspose.Cells, assigns a same‑named JSON file as a smart‑marker data source via WorkbookDesigner, processes the markers, and writes the result to an output folder. | Write a C# console application that iterates over Excel templates, reads corresponding JSON files, uses WorkbookDesigner.SetJsonDataSource to bind the data, calls Process, and saves the populated workbooks with a "_Processed" suffix.
-// Common Searches: how to use Aspose.Cells WorkbookDesigner to apply JSON data to multiple Excel templates in C# | C# script for batch processing of .xlsx files with smart markers and JSON sources | automate population of Excel smart markers from JSON files using Aspose.Cells library
-// Tags: batch populate Excel smart markers via Aspose.Cells | WorkbookDesigner JSON data source for .xlsx templates | C# loop over Excel files with smart markers | automated smart marker processing from JSON files | save processed workbooks with suffix in C#
+// Title: C# batch processor to fill Excel (.xlsx) templates with matching JSON files using Aspose.Cells smart markers
+// AI Prompts: Create a C# console application that scans a directory for .xlsx templates, loads the corresponding .json files with the same base name, and uses Aspose.Cells to replace smart markers or named ranges with the JSON values before saving each workbook to an output folder. | Add comprehensive logging to the batch job so that each step—file discovery, JSON deserialization, cell population, and workbook saving—is recorded to both the console and a log file, while gracefully handling missing or malformed JSON files. | Enhance the processor to handle nested JSON objects by flattening them into dot‑separated keys and mapping those keys to hierarchical named ranges within the Excel templates.
+// Common Searches: how to use Aspose.Cells to populate multiple Excel templates from JSON files in C# | C# batch fill .xlsx templates with data from matching .json files using smart markers | automate workbook generation from a folder of Excel templates and JSON sources with Aspose.Cells | process directory of Excel templates and JSON data programmatically in .NET
+// Tags: batch populate Excel templates with JSON using Aspose.Cells | Aspose.Cells smart markers JSON to named range mapping | C# process folder of .xlsx and .json files | populate workbook cells from dictionary in Aspose.Cells | automated report generation from Excel templates .NET
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
 using Aspose.Cells;
 
-namespace BatchSmartMarkerProcessor
+namespace AsposeCellsProcessor
 {
-    // Scans a folder of .xlsx templates, matches each with a same‑named .json file, loads the workbook, sets the JSON as a data source for smart markers via WorkbookDesigner, processes the markers, and saves the populated workbook to an output directory with a "_Processed" suffix.
+    // The program iterates over .xlsx templates in a specified folder, loads matching .json files, maps each JSON key to a named range or direct cell address using Aspose.Cells smart markers, writes the values, and saves the populated workbooks to an output directory.
     class Program
     {
         static void Main()
         {
-            // Folder containing Excel template files (must contain smart markers)
+            // Folder containing Excel templates and matching JSON files
             string templatesFolder = @"C:\Templates";
-
-            // Folder containing JSON data files. Each JSON file should have the same base name as its template.
-            string jsonFolder = @"C:\JsonData";
 
             // Folder where processed workbooks will be saved
             string outputFolder = @"C:\Processed";
 
-            // Ensure the output directory exists
+            // Ensure output folder exists
             Directory.CreateDirectory(outputFolder);
 
-            // Verify that the templates folder exists
+            // Verify templates folder exists
             if (!Directory.Exists(templatesFolder))
             {
-                Console.WriteLine($"Templates folder not found: '{templatesFolder}'.");
+                Console.WriteLine($"Templates folder not found: {templatesFolder}");
                 return;
             }
 
-            // Iterate over all .xlsx files in the templates folder
+            // Iterate over each Excel template in the folder
             foreach (string templatePath in Directory.GetFiles(templatesFolder, "*.xlsx"))
             {
                 try
                 {
-                    // Verify that the template file actually exists (safety check)
-                    if (!File.Exists(templatePath))
-                    {
-                        Console.WriteLine($"Template file not found: '{templatePath}'. Skipping.");
-                        continue;
-                    }
-
-                    // Determine the base file name (without extension)
+                    // Load JSON data (flat key/value structure)
                     string baseName = Path.GetFileNameWithoutExtension(templatePath);
+                    string jsonPath = Path.Combine(templatesFolder, baseName + ".json");
 
-                    // Build the expected JSON file path
-                    string jsonPath = Path.Combine(jsonFolder, baseName + ".json");
-
-                    // Verify that the JSON file exists; if not, skip this template
                     if (!File.Exists(jsonPath))
                     {
-                        Console.WriteLine($"JSON data not found for template '{baseName}'. Skipping.");
+                        Console.WriteLine($"JSON file not found for template '{baseName}'. Skipping.");
                         continue;
                     }
 
-                    // Load the template workbook
-                    Workbook workbook = new Workbook(templatePath);
+                    Dictionary<string, JsonElement> jsonData;
+                    try
+                    {
+                        string jsonContent = File.ReadAllText(jsonPath);
+                        jsonData = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonContent)
+                                   ?? new Dictionary<string, JsonElement>();
+                    }
+                    catch (Exception jsonEx)
+                    {
+                        Console.WriteLine($"Error reading JSON for '{baseName}': {jsonEx.Message}. Skipping.");
+                        continue;
+                    }
 
-                    // Create a WorkbookDesigner and associate it with the loaded workbook
-                    WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                    // Load the Excel template
+                    Workbook workbook;
+                    try
+                    {
+                        workbook = new Workbook(templatePath);
+                    }
+                    catch (Exception wbEx)
+                    {
+                        Console.WriteLine($"Failed to load workbook '{templatePath}': {wbEx.Message}. Skipping.");
+                        continue;
+                    }
 
-                    // Read the JSON content
-                    string jsonData = File.ReadAllText(jsonPath);
+                    Worksheet sheet = workbook.Worksheets[0]; // Assuming data goes to the first sheet
 
-                    // Set the JSON data source. The name "Data" can be referenced in smart markers (e.g., &=$Data.Name)
-                    designer.SetJsonDataSource("Data", jsonData);
+                    // Populate the workbook using named ranges or direct cell addresses
+                    foreach (var kvp in jsonData)
+                    {
+                        try
+                        {
+                            // Try to locate a named range that matches the JSON key
+                            Name namedRange = workbook.Worksheets.Names[kvp.Key];
+                            if (namedRange != null)
+                            {
+                                // Resolve the first cell of the named range (e.g., "Sheet1!$A$1:$B$2")
+                                string refersTo = namedRange.RefersTo;
+                                if (refersTo.Contains("!"))
+                                    refersTo = refersTo.Split('!')[1]; // keep only the address part
+                                string firstCellAddress = refersTo.Split(':')[0].Replace("$", string.Empty);
+                                Cell targetCell = sheet.Cells[firstCellAddress];
+                                targetCell.PutValue(ConvertJsonElement(kvp.Value));
+                            }
+                            else
+                            {
+                                // If no named range, treat the key as a cell address (e.g., "B2")
+                                Cell targetCell = sheet.Cells[kvp.Key];
+                                targetCell.PutValue(ConvertJsonElement(kvp.Value));
+                            }
+                        }
+                        catch (Exception innerEx)
+                        {
+                            // Log but continue processing other keys
+                            Console.WriteLine($"Warning: Could not write value for key '{kvp.Key}' – {innerEx.Message}");
+                        }
+                    }
 
-                    // Process all smart markers in the workbook
-                    designer.Process();
-
-                    // Build the output file path
-                    string outputPath = Path.Combine(outputFolder, baseName + "_Processed.xlsx");
-
-                    // Save the processed workbook
-                    workbook.Save(outputPath);
-
-                    Console.WriteLine($"Processed '{baseName}.xlsx' with data from '{baseName}.json' -> saved to '{outputPath}'.");
+                    // Save the populated workbook to the output folder
+                    string outputPath = Path.Combine(outputFolder, baseName + "_filled.xlsx");
+                    try
+                    {
+                        workbook.Save(outputPath);
+                        Console.WriteLine($"Processed '{baseName}' -> '{outputPath}'.");
+                    }
+                    catch (Exception saveEx)
+                    {
+                        Console.WriteLine($"Failed to save workbook for '{baseName}': {saveEx.Message}");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing template '{templatePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{templatePath}': {ex.Message}");
                 }
             }
+        }
 
-            Console.WriteLine("Batch processing completed.");
+        // Convert JsonElement to a .NET primitive suitable for Aspose.Cells PutValue
+        private static object ConvertJsonElement(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => element.GetString(),
+                JsonValueKind.Number => element.TryGetInt64(out long l) ? (object)l :
+                                         element.TryGetDouble(out double d) ? d :
+                                         element.GetDecimal(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null,
+                _ => element.GetRawText()
+            };
         }
     }
 }

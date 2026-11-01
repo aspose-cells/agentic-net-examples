@@ -1,61 +1,70 @@
-// Title: Convert culture‑specific numeric strings to numbers in an Aspose.Cells workbook (C#)
-// AI Prompts: Configure a workbook's NumberDecimalSeparator and NumberGroupSeparator, then invoke ConvertStringToNumericValue to turn locale‑formatted strings into numeric cells. | Write European‑style numbers such as "1,23" or "12.345,67" into a worksheet range and automatically parse them to double values using Aspose.Cells. | Demonstrate how to keep non‑numeric text unchanged while converting only parsable strings to numeric values in an Aspose.Cells sheet.
-// Common Searches: Aspose.Cells C# convert comma decimal strings to numeric values in Excel | How to set custom decimal and group separators for a workbook in Aspose.Cells | ConvertStringToNumericValue usage with European number formats in .NET | Parsing locale‑specific numeric strings in Aspose.Cells worksheet | Preserve text cells when converting strings to numbers with Aspose.Cells
-// Tags: custom decimal separator conversion Aspose.Cells | culture‑aware numeric parsing in Excel workbook | string to numeric conversion with culture settings | preserve text cells during numeric conversion | Aspose.Cells number format handling C#
+// Title: Convert string cells containing French‑formatted numbers to numeric values in a defined Excel range using Aspose.Cells for .NET
+// AI Prompts: Load an existing workbook, iterate through cells A1:C10, parse each string with CultureInfo("fr-FR") as a double, and replace the cell value using Aspose.Cells. | Transform all string cells that represent numbers with a comma decimal separator into numeric cell types within a specified range, then save the workbook.
+// Common Searches: Aspose.Cells how to convert comma‑separated numeric strings to numbers in a range | C# parse French formatted numbers in Excel cells using Aspose.Cells | Replace string values with doubles in specific cells with Aspose.Cells .NET | Convert string cells to numeric type based on CultureInfo in Aspose.Cells | Save workbook after changing cell types from string to number Aspose.Cells
+// Tags: parse culture‑specific numeric strings Aspose.Cells | replace string cell values with numbers Aspose.Cells | range cell type conversion Excel .NET | French decimal separator parsing Aspose.Cells | save workbook after cell value conversion Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Globalization;
+using System.IO;
 
-namespace AsposeCellsExamples
+// // Loads input.xlsx, iterates over cells A1:C10, parses each string using French culture (comma as decimal separator), replaces the string with a double value, and saves the result to output.xlsx using Aspose.Cells.
+class Program
 {
-    // The example creates a Workbook, sets the decimal separator to ',' and the group separator to '.', writes several strings using those separators into cells A1‑A4, calls ConvertStringToNumericValue to convert parsable strings into numeric values, prints the results, and saves the workbook as ConvertedNumbers.xlsx.
-    public class ConvertNumericStringsWithCultureDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook wb = new Workbook();
-
-                // Set culture‑specific separators (comma as decimal, dot as group)
-                wb.Settings.NumberDecimalSeparator = ',';
-                wb.Settings.NumberGroupSeparator = '.';
-
-                // Get the cells collection of the first worksheet
-                Cells cells = wb.Worksheets[0].Cells;
-
-                // Populate cells with numeric strings that use the specified separators
-                cells["A1"].PutValue("1,23");          // 1.23
-                cells["A2"].PutValue("4,567");         // 4.567
-                cells["A3"].PutValue("12.345,67");     // 12,345.67
-                cells["A4"].PutValue("Not a number"); // stays as string
-
-                // Convert strings that can be parsed to numeric values
-                cells.ConvertStringToNumericValue();
-
-                // Output the converted values
-                Console.WriteLine("A1 numeric: " + cells["A1"].DoubleValue);
-                Console.WriteLine("A2 numeric: " + cells["A2"].DoubleValue);
-                Console.WriteLine("A3 numeric: " + cells["A3"].DoubleValue);
-                Console.WriteLine("A4 remains string: " + cells["A4"].StringValue);
-
-                // Save the workbook (optional)
-                wb.Save("ConvertedNumbers.xlsx");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load an existing workbook (load rule)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the address of the range that contains numeric strings
+            string rangeAddress = "A1:C10";
+
+            // Create a Range object for the specified address (use fully qualified name to avoid ambiguity)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(rangeAddress);
+
+            // CultureInfo that defines the decimal separator (e.g., French uses comma)
+            CultureInfo culture = new CultureInfo("fr-FR");
+
+            // Iterate through each cell in the range
+            foreach (Cell cell in range)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Process only cells that currently hold string values
+                if (cell.Type == CellValueType.IsString)
+                {
+                    string text = cell.StringValue.Trim();
+
+                    // Attempt to parse the string using the specified culture
+                    if (double.TryParse(text, NumberStyles.Any, culture, out double numericValue))
+                    {
+                        // Replace the string with the parsed numeric value
+                        cell.PutValue(numericValue);
+                    }
+                }
             }
+
+            // Save the modified workbook (save rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ConvertNumericStringsWithCultureDemo.Run();
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,91 +1,74 @@
-// Title: How to process smart markers, unlock specific cells, and protect an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads a workbook containing smart markers, fills it using WorkbookDesigner, unlocks a given cell range, and then applies worksheet protection with a password using Aspose.Cells. | Show the steps to create an unlocked style, assign it to a range after smart marker processing, and protect the sheet so only those cells remain editable.
-// Common Searches: Aspose.Cells C# unlock cells before protecting worksheet after smart marker processing | How to keep certain Excel cells editable when protecting a sheet with Aspose.Cells | Protect Excel sheet with password while allowing B2:B3 range to be edited using Aspose.Cells | Smart markers processing then worksheet protection example in C# | Set IsLocked false for cells after WorkbookDesigner.Process in Aspose.Cells
-// Tags: process smart markers Aspose.Cells C# | make cells editable before sheet protection Aspose.Cells | apply unlocked style to range Aspose.Cells | protect worksheet with password Aspose.Cells | WorkbookDesigner data source example Aspose.Cells
+// Title: Protect an Excel worksheet after processing smart markers while keeping specific cells unlocked using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads a workbook, processes smart markers with WorkbookDesigner, unlocks a specified cell range, and then applies full worksheet protection while preserving the unlocked cells. | Show how to apply an unlocked style to a range and configure worksheet protection options (allow selecting locked and unlocked cells) after smart marker processing with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells protect worksheet after smart marker processing C# example | unlock cells B2:B10 before protecting sheet with Aspose.Cells | keep certain cells editable when protecting Excel sheet using Aspose.Cells .NET | WorkbookDesigner smart markers unlock range then protect worksheet
+// Tags: Aspose.Cells worksheet protection with unlocked cells | smart markers processing unlock range C# | WorkbookDesigner apply style flag locked property | Excel sheet protect allow selecting unlocked cells Aspose | C# unlock cell range before worksheet protection Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// This C# example loads a template workbook containing smart markers, populates them with a List<Person> via WorkbookDesigner, unlocks the B2:B3 cells by applying an unlocked style, protects the first worksheet with a password, and saves the resulting protected file.
-public class SmartMarkerProtectionExample
+// The sample loads Input.xlsx, creates a DataSet with employee data, processes smart markers via WorkbookDesigner, unlocks cells B2:B10, protects the first worksheet with all protection types while allowing selection of both locked and unlocked cells, and saves the result to Output.xlsx.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            const string templatePath = "TemplateWithSmartMarkers.xlsx";
-            const string resultPath = "ResultProtected.xlsx";
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Verify that the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load a workbook that contains smart markers
-            Workbook workbook = new Workbook(templatePath);
+            // Load the workbook that contains smart markers
+            var workbook = new Workbook(inputPath);
 
-            // Prepare a simple data source for the smart markers
-            List<Person> persons = new List<Person>
-            {
-                new Person { Name = "John Doe", Age = 30 },
-                new Person { Name = "Jane Smith", Age = 28 }
-            };
+            // Prepare a DataSet as the data source for the smart markers
+            var dataSet = new DataSet();
 
-            // Initialize the WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Persons", persons);
+            var employeeTable = new DataTable("Employees");
+            employeeTable.Columns.Add("Name", typeof(string));
+            employeeTable.Columns.Add("Age", typeof(int));
 
-            // Process all smart markers in the workbook
+            employeeTable.Rows.Add("John", 30);
+            employeeTable.Rows.Add("Jane", 25);
+
+            dataSet.Tables.Add(employeeTable);
+
+            // Process the smart markers using the data source
+            var designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dataSet);
             designer.Process();
 
-            // Unlock the cells that should remain editable after protection
-            // Example: unlock the range B2:B3 (where ages will be placed)
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-            AsposeRange editableRange = cells.CreateRange("B2:B3");
+            // Unlock cells that should remain editable by users
+            var sheet = workbook.Worksheets[0];
+            var cells = sheet.Cells;
 
-            // Create a style with IsLocked = false
-            Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;
+            // Example: unlock the range B2:B10 (adjust as needed)
+            var unlockedRange = cells.CreateRange("B2:B10");
+            var unlockedStyle = workbook.CreateStyle();
+            unlockedStyle.IsLocked = false; // mark cells as unlocked
+            var styleFlag = new StyleFlag { Locked = true }; // apply only the lock flag
+            unlockedRange.ApplyStyle(unlockedStyle, styleFlag);
 
-            // Apply the unlocked style to each cell in the range
-            int firstRow = editableRange.FirstRow;
-            int firstColumn = editableRange.FirstColumn;
-            int rowCount = editableRange.RowCount;
-            int columnCount = editableRange.ColumnCount;
+            // Protect the worksheet while keeping unlocked cells editable
+            sheet.Protect(ProtectionType.All);
+            sheet.Protection.AllowSelectingLockedCell = true;
+            sheet.Protection.AllowSelectingUnlockedCell = true;
 
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    Cell cell = cells[firstRow + i, firstColumn + j];
-                    cell.SetStyle(unlockedStyle);
-                }
-            }
-
-            // Protect the worksheet; only unlocked cells can be edited by end users
-            // Provide an empty oldPassword as required by the API overload
-            sheet.Protect(ProtectionType.All, "pwd123", string.Empty);
-
-            // Save the processed and protected workbook
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+            // Save the resulting workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    // Simple POCO class used as a data source for smart markers
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
     }
 }

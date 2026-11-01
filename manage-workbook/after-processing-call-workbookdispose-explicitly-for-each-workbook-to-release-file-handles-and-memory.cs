@@ -1,50 +1,34 @@
-// Title: How to explicitly dispose Aspose.Cells Workbook objects in C# to release file handles and free memory
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, updates a specific cell, saves the workbook, and guarantees Workbook.Dispose is called in a finally block. | Create a reusable C# method for processing multiple workbooks that writes values, saves each file, and ensures each Workbook instance is disposed even when exceptions occur.
-// Common Searches: C# Aspose.Cells how to release file lock after saving workbook | ensure Workbook.Dispose is called when using Aspose.Cells in a loop | best practice for disposing Aspose.Cells Workbook objects in .NET | avoid Excel file handle leak with Aspose.Cells workbook | using try‑finally to call Workbook.Dispose in Aspose.Cells C#
-// Tags: Aspose.Cells workbook disposal C# | release Excel file handles Aspose.Cells | workbook lifecycle management Aspose.Cells | explicit Workbook.Dispose usage | memory cleanup after saving Aspose.Cells workbook
+// Title: How to explicitly dispose an Aspose.Cells Workbook in C# to free file handles and memory
+// Common Searches: how to call Workbook.Dispose after saving an Excel file with Aspose.Cells in C# | C# Aspose.Cells release file lock after workbook.Save | prevent memory usage growth when generating multiple workbooks with Aspose.Cells | best practice for disposing Aspose.Cells Workbook objects in .NET applications | why does Excel file remain locked after using Aspose.Cells Save method
+// Tags: Aspose.Cells workbook disposal pattern | prevent memory leaks Aspose.Cells .NET | explicit Workbook.Dispose usage | clean up Aspose.Cells resources | manage Excel file handles with Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// // This program processes two Excel files with Aspose.Cells, writes values to specified cells, saves each workbook, and explicitly calls Workbook.Dispose to release file handles and free memory.
+// The example creates an Aspose.Cells Workbook, fills a worksheet with sample data, saves it as Output.xlsx, and then calls workbook.Dispose() to explicitly release file handles and memory, ensuring no lingering locks or memory leaks.
 class Program
 {
     static void Main()
     {
-        // Process first workbook
-        ProcessWorkbook("Input1.xlsx", "Output1.xlsx", "A1", "Hello World");
-        // Process second workbook
-        ProcessWorkbook("Input2.xlsx", "Output2.xlsx", "B2", 12345);
-    }
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-    static void ProcessWorkbook(string inputPath, string outputPath, string cellName, object value)
-    {
-        try
-        {
-            Workbook workbook;
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "SampleData";
 
-            // Load existing workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-            }
+        // Add some data to cells
+        sheet.Cells["A1"].PutValue("Name");
+        sheet.Cells["B1"].PutValue("Score");
+        sheet.Cells["A2"].PutValue("Alice");
+        sheet.Cells["B2"].PutValue(85);
+        sheet.Cells["A3"].PutValue("Bob");
+        sheet.Cells["B3"].PutValue(92);
 
-            // Write the value to the specified cell in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells[cellName].PutValue(value);
+        // Save the workbook to a file
+        workbook.Save("Output.xlsx");
 
-            // Save the workbook to the output file
-            workbook.Save(outputPath);
-            workbook.Dispose();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
-        }
+        // Explicitly release resources
+        workbook.Dispose();
     }
 }

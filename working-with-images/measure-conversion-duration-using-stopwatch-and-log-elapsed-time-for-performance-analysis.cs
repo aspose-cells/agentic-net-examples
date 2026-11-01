@@ -1,37 +1,39 @@
-// Title: How to measure Excel to PDF conversion time with Aspose.Cells and Stopwatch in C#
-// AI Prompts: Write C# code that uses System.Diagnostics.Stopwatch to time the Aspose.Cells workbook.Save call when exporting an .xlsx file to PDF and prints the elapsed milliseconds. | Show a performance benchmark for the PDF export operation of Aspose.Cells, including start/stop of Stopwatch around workbook.Save. | Create a snippet that loads an Excel workbook, converts it to PDF, and logs the conversion duration using Stopwatch.
-// Common Searches: measure Aspose.Cells Excel to PDF conversion duration in C# | C# Stopwatch logging for Aspose.Cells PDF export performance | benchmark workbook.Save time when converting .xlsx to PDF with Aspose.Cells
-// Tags: Aspose.Cells PDF export timing | Stopwatch workbook.Save performance | Excel to PDF conversion benchmark | measure Aspose.Cells conversion latency | C# performance logging Aspose.Cells
+// Title: Measure Excel-to-PDF conversion time using Stopwatch with Aspose.Cells in C#
+// AI Prompts: Write C# code that uses System.Diagnostics.Stopwatch to time the Workbook constructor and the Save method when converting an .xlsx file to PDF with Aspose.Cells. | Show how to output the elapsed milliseconds for loading and saving operations separately in a console application. | Add logic to calculate and display the total conversion duration by summing the load and save timings.
+// Common Searches: how to profile Aspose.Cells Excel to PDF conversion speed in .NET | C# example measuring load time of Workbook with Stopwatch | log milliseconds for Aspose.Cells SaveFormat.Pdf operation | benchmark Excel workbook conversion to PDF using Aspose.Cells and Stopwatch
+// Tags: Aspose.Cells workbook loading time measurement | Stopwatch timing for Aspose.Cells PDF export | performance profiling of Excel to PDF conversion .NET | measure save operation latency with Aspose.Cells | benchmark Aspose.Cells conversion duration
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// // Loads an Excel workbook with Aspose.Cells, converts it to PDF, measures the conversion time using System.Diagnostics.Stopwatch, and writes the elapsed milliseconds to the console.
-class ConversionPerformance
+// Demonstrates using System.Diagnostics.Stopwatch to capture and log the milliseconds required to load an Excel workbook and to save it as a PDF with Aspose.Cells in a C# console app.
+class Program
 {
     static void Main()
     {
         // Path to the source Excel file and the output PDF file
-        string sourcePath = "input.xlsx";
-        string outputPath = "output.pdf";
+        string sourcePath = @"C:\Data\Sample.xlsx";
+        string outputPath = @"C:\Data\Sample.pdf";
 
-        // Initialize a Stopwatch to measure the conversion duration
-        Stopwatch stopwatch = new Stopwatch();
+        // Initialize a Stopwatch to measure conversion time
+        Stopwatch sw = new Stopwatch();
 
-        // Load the workbook (Aspose.Cells create/load rule is not provided, so using standard API)
+        // Load the workbook (creation/loading rule is applied here)
+        sw.Start(); // Start timing before loading
         Workbook workbook = new Workbook(sourcePath);
+        sw.Stop(); // Stop timing after loading
+        Console.WriteLine($"Workbook loaded in {sw.ElapsedMilliseconds} ms.");
 
-        // Start timing the conversion process
-        stopwatch.Start();
-
-        // Convert the workbook to PDF and save the result
+        // Reset and start timing for the conversion (save) operation
+        sw.Reset();
+        sw.Start(); // Start timing before saving
+        // Save the workbook as PDF (saving rule is applied here)
         workbook.Save(outputPath, SaveFormat.Pdf);
+        sw.Stop(); // Stop timing after saving
+        Console.WriteLine($"Workbook converted to PDF in {sw.ElapsedMilliseconds} ms.");
 
-        // Stop timing after the conversion is complete
-        stopwatch.Stop();
-
-        // Log the elapsed time
-        Console.WriteLine($"Conversion completed in {stopwatch.Elapsed.TotalMilliseconds} ms.");
+        // Total elapsed time for the whole process (optional)
+        // Note: If you need the combined time, you can sum the two intervals or measure once around both operations.
     }
 }

@@ -1,68 +1,60 @@
-// Title: How to edit the text of an existing cell comment in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Update the Note property of the comment attached to cell B2 and save the workbook as a new file with Aspose.Cells. | Replace the content of a specific worksheet comment in C# without creating a new comment object using the Aspose.Cells API.
-// Common Searches: aspocells change comment text in a specific cell c# example | c# update existing comment note in excel workbook using Aspose.Cells | modify worksheet comment programmatically aspocells .net | save workbook after editing cell comment aspocells c#
-// Tags: Aspose.Cells edit comment Note property | C# update worksheet comment text | Aspose.Cells save workbook after comment change | Excel comment editing with Aspose.Cells .NET | cell B2 comment update Aspose.Cells
+// Title: How to update the text of a specific threaded comment in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells change existing comment text in Excel worksheet | update comment note property in Aspose.Cells workbook programmatically | modify threaded comment at a given index using Aspose.Cells .NET | set new text for an Excel comment with Aspose.Cells API | replace comment content in the first worksheet using Aspose.Cells C#
+// Tags: Aspose.Cells update comment text C# | modify Excel comment note property | set threaded comment content Aspose.Cells | change worksheet comment programmatically | Aspose.Cells comment editing example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample loads an existing Excel file, accesses cell B2 on the first worksheet, checks for a comment, updates its Note to a new string, ensures the output directory exists, and saves the modified workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an Excel file with Aspose.Cells, accesses the first worksheet, checks for a comment at a specified index, updates the comment's Note property with new text, and saves the workbook to a new file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Paths for input and output files
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Index of the comment to update (adjust as needed)
+            int commentIndex = 0;
+
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Load the existing workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (or specify by name)
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Resolve cell B2 to row/column indices
-            Cell targetCell = sheet.Cells["B2"];
-            int row = targetCell.Row;
-            int column = targetCell.Column;
+                // Ensure the requested comment exists
+                if (worksheet.Comments == null || worksheet.Comments.Count <= commentIndex)
+                {
+                    Console.WriteLine($"Comment at index {commentIndex} does not exist.");
+                    return;
+                }
 
-            // Retrieve a regular comment for cell B2 using the Comments collection
-            Comment comment = sheet.Comments[row, column];
-
-            if (comment != null)
-            {
-                // Edit the comment text
+                // Retrieve the comment and update its text
+                Comment comment = worksheet.Comments[commentIndex];
                 comment.Note = "This is the updated comment text.";
-            }
-            else
-            {
-                Console.WriteLine("No comment found in cell B2.");
-            }
 
-            // Ensure the output directory exists
-            string? outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Save the workbook with the modified comment (lifecycle rule: save)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

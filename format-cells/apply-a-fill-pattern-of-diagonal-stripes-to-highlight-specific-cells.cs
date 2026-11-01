@@ -1,51 +1,45 @@
-// Title: How to apply a diagonal stripe fill pattern to a range of cells with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a C# program that builds a style with a diagonal stripe fill, sets the foreground to Yellow and the background to LightGray, and applies it to cells A1 through B2 in a new workbook. | Generate an Excel file named DiagonalStripeHighlight.xlsx where the specified range is highlighted with yellow diagonal stripes over a light‑gray base using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# apply pattern fill to a range of cells | how to use BackgroundType enumeration for cell styling in Aspose.Cells | set foreground and background colors in Aspose.Cells style object | C# example highlighting cells with custom fill pattern in Excel | apply style to cells A1 to B2 using Aspose.Cells .NET
-// Tags: stripe pattern fill Aspose.Cells C# | set cell style background pattern .NET | cell style color settings Aspose.Cells | apply style to cell range Aspose.Cells | BackgroundType enumeration Aspose.Cells example
+// Title: How to apply a diagonal stripe fill pattern to a cell range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set diagonal stripe background for a range of cells | Create custom cell shading with diagonal stripes using Aspose.Cells .NET | Apply style with BackgroundType.DiagonalStripe to specific cells in a workbook | Highlight B2:D4 with diagonal stripe fill pattern in C# Aspose.Cells | Using StyleFlag to apply only cell shading in Aspose.Cells
+// Tags: diagonal stripe fill pattern Aspose.Cells | apply style to cell range C# | BackgroundType.DiagonalStripe usage | StyleFlag cell shading Aspose.Cells | custom cell highlighting .NET
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Creates a new workbook, defines a style with a diagonal stripe fill (yellow stripes on a light‑gray background), applies the style to cells A1‑B2, and saves the file as DiagonalStripeHighlight.xlsx.
-class DiagonalStripeFillExample
+// The example creates a workbook, defines a style with a diagonal stripe fill pattern (light blue foreground on white background), selects the B2:D4 range, applies the style to that range using a StyleFlag that enables only cell shading, and saves the file as DiagonalStripes.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Example: Fill cells A1 to B2 with diagonal stripe pattern
-        // Define the range
-        CellArea range = CellArea.CreateCellArea("A1", "B2");
-
-        // Create a style object
-        Style stripeStyle = workbook.CreateStyle();
-
-        // Set the fill pattern to diagonal stripes
-        stripeStyle.Pattern = BackgroundType.DiagonalStripe;
-
-        // Define foreground (stripe) and background colors
-        stripeStyle.ForegroundColor = Color.Yellow;      // Stripe color
-        stripeStyle.BackgroundColor = Color.LightGray;   // Base cell color
-
-        // Apply the style to each cell in the range
-        for (int row = range.StartRow; row <= range.EndRow; row++)
+        try
         {
-            for (int col = range.StartColumn; col <= range.EndColumn; col++)
-            {
-                // Get the cell (creates it if it doesn't exist)
-                Cell cell = sheet.Cells[row, col];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Apply the style
-                cell.SetStyle(stripeStyle);
-            }
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create a style with diagonal stripe fill pattern
+            Style diagonalStyle = workbook.CreateStyle();
+            diagonalStyle.Pattern = BackgroundType.DiagonalStripe;   // set fill pattern
+            diagonalStyle.ForegroundColor = Color.LightBlue;        // stripe color
+            diagonalStyle.BackgroundColor = Color.White;            // base color
+
+            // Define which cells to highlight (e.g., B2:D4)
+            AsposeRange targetRange = sheet.Cells.CreateRange("B2", "D4");
+
+            // Apply the style to the range (only cell shading)
+            StyleFlag flag = new StyleFlag();
+            flag.CellShading = true;
+            targetRange.ApplyStyle(diagonalStyle, flag);
+
+            // Save the workbook
+            workbook.Save("DiagonalStripes.xlsx");
         }
-
-        // Save the workbook to a file
-        workbook.Save("DiagonalStripeHighlight.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

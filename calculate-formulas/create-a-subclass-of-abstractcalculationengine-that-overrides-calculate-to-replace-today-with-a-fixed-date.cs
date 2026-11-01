@@ -1,26 +1,47 @@
-// Title: Implement a C# Aspose.Cells custom calculation engine that forces TODAY() to return a fixed date (2020‑01‑01)
-// AI Prompts: Create a C# class inheriting AbstractCalculationEngine and override Calculate to assign new DateTime(2020,1,1) when the function name is TODAY. | Demonstrate how to set CalculationOptions.CustomEngine to the custom engine and invoke Workbook.CalculateFormula so that all TODAY() calls use the fixed date. | Write code that reads the value of a cell containing =TODAY(), prints the result, and saves the workbook to a file after using the custom engine.
-// Common Searches: how to override TODAY() function in Aspose.Cells C# custom calculation engine | Aspose.Cells C# replace dynamic TODAY() with static date during formula evaluation | using AbstractCalculationEngine to return a constant date for TODAY in an Excel workbook | C# Aspose.Cells calculate formulas with a custom engine that fixes the TODAY value | save workbook after applying custom calculation engine for TODAY in Aspose.Cells
-// Tags: Aspose.Cells custom AbstractCalculationEngine | override TODAY function Aspose.Cells | fixed date substitution Excel formula C# | CalculationOptions.CustomEngine usage | Workbook.CalculateFormula with custom engine
+// Title: Subclass Aspose.Cells AbstractCalculationEngine in C# to override Calculate and replace TODAY() with a fixed DATE literal
+// Common Searches: C# Aspose.Cells replace TODAY() function with a specific date in workbook formulas | How to override Calculate in an Aspose.Cells custom calculation engine for fixed TODAY() value | Example of subclassing AbstractCalculationEngine to substitute TODAY() with DATE literal | Set a constant date for TODAY() before recalculating formulas using Aspose.Cells | Aspose.Cells custom engine to replace TODAY() with DATE(2023,1,1) in Excel files
+// Tags: Aspose.Cells custom calculation engine | override Calculate method Aspose.Cells | replace TODAY function with DATE literal | fixed date substitution Excel formulas C# | recalculate workbook formulas after date replacement
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomEngineDemo
+namespace AsposeCellsCustomEngine
 {
-    // Custom engine that replaces TODAY() with a fixed date (2020-01-01)
-    // The example defines a FixedTodayEngine class that inherits AbstractCalculationEngine and overrides Calculate to set TODAY() to 2020‑01‑01. It configures CalculationOptions.CustomEngine with this engine, runs Workbook.CalculateFormula, prints the evaluated value from cell A1, and saves the workbook as FixedToday.xlsx.
-    public class FixedTodayEngine : AbstractCalculationEngine
+    // Helper class to replace TODAY() with a fixed date in all formulas.
+    // The example shows how to create a subclass of Aspose.Cells.AbstractCalculationEngine that overrides the Calculate method. It scans each cell, replaces any case‑insensitive TODAY() occurrences with a DATE(year,month,day) literal based on a supplied fixed DateTime, recalculates all formulas, and saves the updated workbook.
+    public static class FixedDateHelper
     {
-        public override void Calculate(CalculationData data)
+        // Replaces TODAY() occurrences with a DATE literal based on the provided fixed date.
+        public static void ApplyFixedDate(Workbook workbook, DateTime fixedDate)
         {
-            // Check if the function being calculated is TODAY
-            if (data.FunctionName.Equals("TODAY", StringComparison.OrdinalIgnoreCase))
+            if (workbook == null) throw new ArgumentNullException(nameof(workbook));
+
+            string dateLiteral = $"DATE({fixedDate.Year},{fixedDate.Month},{fixedDate.Day})";
+
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Set the calculated value to the fixed date
-                data.CalculatedValue = new DateTime(2020, 1, 1);
+                Cells cells = sheet.Cells;
+                foreach (Cell cell in cells)
+                {
+                    try
+                    {
+                        string formula = cell.Formula;
+                        if (!string.IsNullOrEmpty(formula) &&
+                            formula.IndexOf("TODAY()", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            // Replace all case‑insensitive occurrences of TODAY().
+                            string newFormula = formula.Replace("TODAY()", dateLiteral, StringComparison.OrdinalIgnoreCase);
+                            cell.Formula = newFormula;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log per‑cell errors without stopping the whole process.
+                        Console.WriteLine($"Error processing cell {cell.Name}: {ex.Message}");
+                    }
+                }
             }
-            // For all other functions, do nothing and let the default engine handle them
         }
     }
 
@@ -28,27 +49,36 @@ namespace AsposeCellsCustomEngineDemo
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Set a formula that uses TODAY()
-            sheet.Cells["A1"].Formula = "=TODAY()";
-
-            // Configure calculation options to use the custom engine
-            CalculationOptions options = new CalculationOptions
+            // Verify that the input file exists to prevent FileNotFoundException.
+            if (!File.Exists(inputPath))
             {
-                CustomEngine = new FixedTodayEngine()
-            };
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Calculate formulas with the custom engine
-            workbook.CalculateFormula(options);
+            try
+            {
+                // Load the existing workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-            // Output the result of the TODAY() formula
-            Console.WriteLine("A1 value (fixed TODAY): " + sheet.Cells["A1"].Value);
+                // Apply the fixed‑date substitution (e.g., 2023‑01‑01).
+                FixedDateHelper.ApplyFixedDate(workbook, new DateTime(2023, 1, 1));
 
-            // Save the workbook
-            workbook.Save("FixedToday.xlsx");
+                // Recalculate all formulas after the substitution.
+                workbook.CalculateFormula();
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors during processing.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

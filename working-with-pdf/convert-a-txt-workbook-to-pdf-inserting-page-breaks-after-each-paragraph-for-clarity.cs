@@ -1,74 +1,62 @@
-// Title: Convert a TXT file to PDF with paragraph‑level page breaks using Aspose.Cells in C#
-// AI Prompts: Write C# code that reads a .txt file into an Aspose.Cells workbook with TxtLoadOptions, identifies paragraphs separated by empty rows, inserts a horizontal page break after each paragraph, and saves the workbook as a PDF. | Show how to programmatically add horizontal page breaks in an Aspose.Cells worksheet based on consecutive non‑empty rows that form a paragraph. | Demonstrate robust error handling for missing input files and unexpected exceptions when converting a text workbook to PDF with Aspose.Cells.
-// Common Searches: asp.net how to add page breaks after each paragraph when converting a text file to PDF with Aspose.Cells | c# detect paragraph boundaries in a worksheet loaded from a .txt file using Aspose.Cells | save workbook as PDF with horizontal page breaks based on empty rows Aspose.Cells | convert txt to pdf preserving paragraph spacing Aspose.Cells C# example
-// Tags: Aspose.Cells TxtLoadOptions paragraph detection | C# insert horizontal page breaks Aspose.Cells | convert text workbook to PDF Aspose.Cells | page break insertion based on empty rows | error handling file not found Aspose.Cells
+// Title: Convert a TXT file to PDF with a page break after each line using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads a .txt file, writes each line into separate rows of an Aspose.Cells worksheet, inserts a horizontal page break after each row, and saves the workbook as a PDF. | Show how to add page breaks between rows when exporting a text‑based worksheet to PDF with Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# add horizontal page break after each row when saving workbook as PDF | How to convert a plain text file to PDF with line‑by‑line page breaks using Aspose.Cells | C# example for reading a .txt file into a worksheet and inserting page breaks before PDF export | Save text workbook as PDF with page breaks per paragraph Aspose.Cells .NET
+// Tags: Aspose.Cells insert horizontal page breaks | C# convert txt to PDF with Aspose.Cells | Aspose.Cells workbook to PDF with page breaks | read text file into worksheet Aspose.Cells | save worksheet as PDF Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The sample checks for the existence of input.txt, loads it into a Workbook using TxtLoadOptions (each line becomes a row), scans rows to locate paragraph blocks separated by blank rows, adds a horizontal page break after each block, and saves the workbook as output.pdf while handling possible errors.
+// The program reads a .txt file, writes each line into successive rows of a new Aspose.Cells workbook, adds a horizontal page break after every populated row, ensures the output folder exists, and then saves the workbook as a PDF document.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.txt";
+        const string outputPath = "output.pdf";
+
         try
         {
-            const string inputPath = "input.txt";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input TXT file exists to avoid FileNotFoundException.
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the TXT file into a workbook. Each line becomes a separate row.
-            var loadOptions = new TxtLoadOptions();
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Read all lines from the text file; each line will become a row in the worksheet
+            string[] lines = File.ReadAllLines(inputPath);
 
-            // Work with the first worksheet.
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the last row that contains data.
-            int lastDataRow = sheet.Cells.MaxDataRow;
-
-            // Insert a horizontal page break after each paragraph.
-            // A paragraph is defined as a consecutive block of non‑empty rows.
-            int currentRow = 0;
-            while (currentRow <= lastDataRow)
+            // Populate the worksheet with the text lines
+            for (int i = 0; i < lines.Length; i++)
             {
-                // Skip any leading empty rows.
-                if (string.IsNullOrWhiteSpace(sheet.Cells[currentRow, 0].StringValue))
-                {
-                    currentRow++;
-                    continue;
-                }
-
-                // Find the last row of the current paragraph.
-                int paragraphEndRow = currentRow;
-                while (paragraphEndRow + 1 <= lastDataRow &&
-                       !string.IsNullOrWhiteSpace(sheet.Cells[paragraphEndRow + 1, 0].StringValue))
-                {
-                    paragraphEndRow++;
-                }
-
-                // Add a page break before the row that follows the paragraph.
-                // HorizontalPageBreaks.Add inserts a break before the specified row index.
-                sheet.HorizontalPageBreaks.Add(paragraphEndRow + 1);
-
-                // Move to the row after the paragraph (which may be empty).
-                currentRow = paragraphEndRow + 1;
+                sheet.Cells[i, 0].PutValue(lines[i]);
             }
 
-            // Save the workbook as a PDF file.
+            // Insert a horizontal page break after each populated row
+            // (row index is zero‑based, so we add a break at row+1)
+            for (int row = 0; row < lines.Length; row++)
+            {
+                sheet.HorizontalPageBreaks.Add(row + 1);
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF file
             workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
+            Console.WriteLine($"PDF successfully created at \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

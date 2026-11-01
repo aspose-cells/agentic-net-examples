@@ -1,36 +1,27 @@
-// Title: Delete rows 10‑15 from an Excel worksheet and export the cleaned sheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Remove rows 10 through 15 from the first worksheet of an Excel file and save the cleaned sheet as a PDF with Aspose.Cells in C#. | Load an .xlsx workbook, delete a specific range of rows, and generate a PDF output using Aspose.Cells for .NET.
-// Common Searches: how to delete specific rows in Excel using Aspose.Cells C# | export modified worksheet to PDF with Aspose.Cells .NET | remove rows 10-15 and save as PDF Aspose.Cells example
-// Tags: Aspose.Cells delete rows range | Aspose.Cells export worksheet to PDF | C# remove specific rows Excel | Aspose.Cells PDF conversion after row deletion
+// Title: Delete rows 10‑15 from an Excel worksheet and export the cleaned sheet to PDF with Aspose.Cells in C#
+// AI Prompts: Load an .xlsx workbook, delete a six‑row block beginning at row 10, and save the result as a PDF with Aspose.Cells in C#. | Write C# code that calls Cells.DeleteRows to eliminate a specific row range and then exports the worksheet to PDF. | Create a script that opens an Excel file, removes a contiguous set of rows from the first sheet, and converts the modified workbook to PDF using Aspose.Cells.
+// Common Searches: Aspose.Cells C# delete rows 10 to 15 then save as PDF | How to remove a specific row range from an Excel file before PDF conversion using Aspose.Cells | C# example for deleting rows in a worksheet and exporting to PDF with Aspose.Cells | Delete rows 9‑14 zero based Aspose.Cells and generate PDF output
+// Tags: Aspose.Cells DeleteRows method C# | Excel worksheet row removal Aspose.Cells | SaveFormat.Pdf export Aspose.Cells | C# workbook modification and PDF generation | Aspose.Cells row range deletion example
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // for PdfSaveOptions if needed
 
-// // This program loads "input.xlsx", deletes rows 10‑15 (zero‑based index 9, count 6) from the first worksheet, and saves the cleaned worksheet as "cleaned_output.pdf" using Aspose.Cells.
+// The C# program loads 'input.xlsx' with Aspose.Cells, removes rows 10‑15 (zero‑based index 9, total 6 rows) from the first worksheet, and saves the updated workbook as 'output.pdf' using the SaveFormat.Pdf option.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string inputFile = "input.xlsx";
+        // Load the existing Excel file
+        var workbook = new Workbook("input.xlsx");
 
-        // Path for the resulting PDF file
-        string outputFile = "cleaned_output.pdf";
-
-        // Load the workbook from the existing file
-        Workbook workbook = new Workbook(inputFile);
-
-        // Access the first worksheet (you can change the index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet (index 0)
+        var worksheet = workbook.Worksheets[0];
 
         // Delete rows 10 through 15.
         // Aspose.Cells uses zero‑based indexing, so row 10 is index 9.
-        // Total rows to delete = 6 (10,11,12,13,14,15).
+        // DeleteRows(startRow, totalRows) where totalRows = 6 (rows 10‑15 inclusive).
         worksheet.Cells.DeleteRows(9, 6);
 
-        // Save the modified workbook as a PDF.
-        // No special PDF options are required for this simple case.
-        workbook.Save(outputFile, SaveFormat.Pdf);
+        // Save the cleaned worksheet as a PDF document
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

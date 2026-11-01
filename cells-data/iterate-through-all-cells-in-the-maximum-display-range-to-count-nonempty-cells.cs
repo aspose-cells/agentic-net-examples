@@ -1,58 +1,48 @@
-// Title: How to count non‑empty cells in a worksheet’s MaxDisplayRange using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that retrieves a worksheet's MaxDisplayRange and tallies cells whose Cell.Value is not null. | Show a robust snippet that first verifies the MaxDisplayRange is not null, then iterates through it and prints the number of populated cells. | Provide a complete Aspose.Cells example that adds sample data, performs the non‑empty cell count in the maximum display range, and saves the workbook.
-// Common Searches: Aspose.Cells C# count cells with values in MaxDisplayRange | how to handle null MaxDisplayRange when counting cells in Aspose.Cells | iterate over all cells in worksheet maximum display range using Aspose.Cells .NET | C# example for counting non‑empty cells in an Excel workbook with Aspose.Cells
-// Tags: filled cell count Aspose.Cells | maxdisplayrange traversal C# | maxdisplayrange existence check Aspose.Cells | cell value presence check Aspose.Cells | workbook save after analysis Aspose.Cells
+// Title: Count non‑empty cells within the MaxDisplayRange of an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, retrieves the worksheet's MaxDisplayRange, iterates every cell, and returns the total number of cells that contain any value. | Enhance the iteration to treat cells that contain formulas with a non‑empty evaluated result as non‑empty and include them in the count. | Add logic to place the computed non‑empty cell count into a target cell (e.g., A1) and save the workbook as a new file.
+// Common Searches: asp.net count cells with data in maxdisplayrange using Aspose.Cells | how to get number of populated cells in an Excel sheet with Aspose.Cells C# | c# iterate over worksheet MaxDisplayRange and count non‑blank cells | store result of cell count in another cell and save workbook Aspose.Cells
+// Tags: maxdisplayrange cell iteration aspose.cells | count non‑empty cells c# aspose.cells | write calculation result to worksheet cell aspose | save modified workbook aspose.cells c# | excel data presence detection aspose.cells
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-// The program creates a workbook, inserts sample data, obtains the worksheet's MaxDisplayRange, iterates through each cell counting those with a non‑null Value, outputs the count, and saves the workbook.
+// The program loads an Excel workbook, accesses the first worksheet, obtains its MaxDisplayRange, loops through each cell in that range, increments a counter for cells whose Value is not null and whose StringValue is not empty, writes the final count to cell A1, and saves the updated workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        try
+        // Load workbook (using provided rule)
+        var workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
+        var sheet = workbook.Worksheets[0];
+
+        // Get the maximum display range of the worksheet
+        var range = sheet.Cells.MaxDisplayRange;
+
+        int nonEmptyCount = 0;
+
+        // Iterate through all rows in the range
+        for (int row = range.FirstRow; row <= range.FirstRow + range.RowCount - 1; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Sample data (you can replace or remove this part)
-            cells["A1"].PutValue("Header");
-            cells["B2"].PutValue(123);
-            cells["C3"].PutValue("Sample text");
-
-            // Obtain the maximum display range (covers data, merged cells, shapes)
-            AsposeRange maxDisplayRange = cells.MaxDisplayRange;
-
-            // If the worksheet is empty, MaxDisplayRange will be null
-            if (maxDisplayRange == null)
+            // Iterate through all columns in the range
+            for (int col = range.FirstColumn; col <= range.FirstColumn + range.ColumnCount - 1; col++)
             {
-                Console.WriteLine("The worksheet contains no data.");
-                return;
-            }
+                var cell = sheet.Cells[row, col];
 
-            int nonEmptyCellCount = 0;
-
-            // Iterate through each cell in the range and count cells that have a value
-            foreach (Cell cell in maxDisplayRange)
-            {
-                if (cell.Value != null)
+                // Count the cell if it is not empty
+                if (cell.Value != null && !string.IsNullOrEmpty(cell.StringValue))
                 {
-                    nonEmptyCellCount++;
+                    nonEmptyCount++;
                 }
             }
-
-            Console.WriteLine($"Non‑empty cells in MaxDisplayRange: {nonEmptyCellCount}");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("NonEmptyCellCountDemo.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+
+        // Output the count to the console
+        Console.WriteLine("Non‑empty cells count: " + nonEmptyCount);
+
+        // Optionally store the result in a cell and save the workbook (using provided rule)
+        sheet.Cells["A1"].PutValue(nonEmptyCount);
+        workbook.Save("output.xlsx");
     }
 }

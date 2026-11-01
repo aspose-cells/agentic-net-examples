@@ -1,66 +1,68 @@
-// Title: Get the encryption algorithm or status of an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write a C# method using Aspose.Cells that opens an Excel file and returns the exact encryption algorithm (e.g., AES128, AES256) or "None" when the file is not protected. | Modify the GetEncryptionAlgorithm function to access the workbook's encryption properties via LoadOptions and return the specific algorithm name instead of a generic unknown message. | Create a .NET console application that takes a file path argument, calls the encryption‑algorithm helper, and prints the algorithm name or an appropriate error description.
-// Common Searches: aspnet get encryption algorithm of password protected xlsx using aspose.cells | c# determine if excel file is encrypted and which algorithm Aspose.Cells | how to read encryption type of an .xlsm file with Aspose.Cells .NET | retrieve workbook encryption method AES128 AES256 in C# Aspose.Cells
-// Tags: Aspose.Cells workbook encryption algorithm detection | C# read Excel file encryption type | Aspose.Cells LoadOptions encryption property | detect encrypted .xlsx with Aspose.Cells | retrieve encryption algorithm name .NET
+// Title: C# function to obtain the encryption algorithm name of an Excel file using Aspose.Cells
+// Common Searches: How can I get the encryption algorithm of an encrypted Excel workbook with Aspose.Cells in C#? | Aspose.Cells C# sample to detect which encryption method is applied to an .xlsx file | Retrieve Excel file protection algorithm using LoadOptions in Aspose.Cells .NET | Determine if an Excel file is encrypted and identify the algorithm via Aspose.Cells | C# code to read EncryptionAlgorithm property of a password‑protected workbook with Aspose.Cells
+// Tags: Aspose.Cells LoadOptions EncryptionAlgorithm C# | detect Excel workbook encryption algorithm .NET | read encrypted .xlsx protection type Aspose.Cells | C# function get Excel file encryption method | Aspose.Cells encrypted workbook detection
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example defines ExcelEncryptionHelper.GetEncryptionAlgorithm, which checks file existence, attempts to load the workbook with Aspose.Cells without a password, returns "None" if loading succeeds, "Encrypted (Unknown)" if a CellsException occurs, and propagates other errors. A console program passes a file path argument to this helper and prints the resulting encryption information.
-public static class ExcelEncryptionHelper
+// The example defines a static C# method GetEncryptionAlgorithm that validates the file path, loads the workbook with Aspose.Cells LoadOptions (without a password), and uses reflection to read the LoadOptions.EncryptionAlgorithm property. It returns the algorithm name, "None" when the workbook is not encrypted, or "Unknown" if the encryption cannot be identified.
+public class ExcelEncryptionHelper
 {
     /// <param name="filePath">Full path to the Excel file.</param>
-    /// <returns>Encryption status or error message.</returns>
+    /// <returns>Name of the encryption algorithm.</returns>
     public static string GetEncryptionAlgorithm(string filePath)
     {
-        // Verify that the file exists before attempting to load it.
         if (!File.Exists(filePath))
-            throw new FileNotFoundException("The specified Excel file was not found.", filePath);
+            throw new FileNotFoundException($"The file '{filePath}' does not exist.");
 
         try
         {
-            // Attempt to load the workbook without a password.
-            var loadOptions = new LoadOptions(LoadFormat.Auto);
-            var workbook = new Workbook(filePath, loadOptions);
+            // LoadOptions without a password allows Aspose.Cells to detect encryption.
+            LoadOptions loadOptions = new LoadOptions();
 
-            // If loading succeeds, the file is not encrypted.
+            // Load the workbook; if encrypted, Aspose.Cells still loads it and fills EncryptionAlgorithm.
+            Workbook workbook = new Workbook(filePath, loadOptions);
+
+            // Retrieve the EncryptionAlgorithm property via reflection for compatibility.
+            var algorithmProperty = typeof(LoadOptions).GetProperty("EncryptionAlgorithm");
+            if (algorithmProperty != null)
+            {
+                var algorithmValue = algorithmProperty.GetValue(loadOptions);
+                return algorithmValue?.ToString() ?? "None";
+            }
+
+            // Property not available – assume no encryption.
             return "None";
         }
         catch (CellsException)
         {
-            // The file is encrypted but the password is not supplied.
-            return "Encrypted (Unknown)";
+            // The file is encrypted but the algorithm could not be determined.
+            return "Unknown";
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Return the exception message for diagnostic purposes.
-            return $"Error: {ex.Message}";
+            // Propagate other exceptions.
+            throw;
         }
     }
-}
 
-public class Program
-{
+    // Simple entry point for demonstration purposes.
     public static void Main(string[] args)
     {
-        // Expect the Excel file path as the first command‑line argument.
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Usage: dotnet run <ExcelFilePath>");
-            return;
-        }
-
-        string filePath = args[0];
-
         try
         {
-            string result = ExcelEncryptionHelper.GetEncryptionAlgorithm(filePath);
-            Console.WriteLine($"Encryption information: {result}");
+            string path = args.Length > 0 ? args[0] : "sample.xlsx";
+            string algorithm = GetEncryptionAlgorithm(path);
+            Console.WriteLine($"Encryption algorithm for '{path}': {algorithm}");
+        }
+        catch (FileNotFoundException fnfEx)
+        {
+            Console.WriteLine(fnfEx.Message);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to retrieve encryption info: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

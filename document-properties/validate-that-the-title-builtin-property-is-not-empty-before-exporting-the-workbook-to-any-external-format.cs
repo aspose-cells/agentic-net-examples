@@ -1,36 +1,48 @@
-// Title: Ensure the Title built-in document property is set before exporting an Aspose.Cells workbook to PDF in C#
-// AI Prompts: Verify that workbook.BuiltInDocumentProperties.Title contains a non-empty string and raise an InvalidOperationException if it does not, then save the workbook as PDF. | Add a pre-export check for the Title built-in property in an Aspose.Cells workbook and handle missing titles gracefully in C#. | Create a helper method that validates the Title document property and calls Workbook.Save with SaveFormat.Pdf only when the validation passes.
-// Common Searches: c# Aspose.Cells how to check Title built-in property before saving to PDF | throw error when Excel workbook title property is empty using Aspose.Cells | validate document properties in Aspose.Cells before export | ensure non-empty Title property in Aspose.Cells workbook C# example
-// Tags: title property check Aspose.Cells | pre-export document property validation C# | InvalidOperationException for missing title Aspose.Cells | save workbook as PDF after property verification | Aspose.Cells built-in document property handling
+// Title: Check and set the Title built‑in document property before exporting an Aspose.Cells workbook to PDF (C#)
+// Common Searches: how to set a default Title property in Aspose.Cells before saving to PDF in C# | Aspose.Cells C# verify built‑in document properties are not empty prior to export | prevent empty Title built‑in property when converting Excel to PDF with Aspose.Cells | C# code to check and assign workbook Title property using Aspose.Cells | Aspose.Cells save workbook as PDF after ensuring required document properties
+// Tags: check built-in document properties Aspose.Cells C# | set default workbook title Aspose.Cells PDF export | validate Title property before SaveFormat.Pdf | Aspose.Cells document property handling C# | export Excel to PDF with property validation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, sets the Title built-in document property, validates that the Title is not empty, and saves the workbook as a PDF, throwing an InvalidOperationException if the Title is missing.
+// Loads or creates a workbook, ensures the built‑in Title property has a non‑empty value (assigning a default if needed), and then saves the workbook as a PDF using Aspose.Cells.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Set the Title built‑in property to satisfy validation
-            workbook.BuiltInDocumentProperties.Title = "Sample Report";
+            Workbook workbook;
 
-            // Validate that the Title built‑in property is not empty
-            if (string.IsNullOrWhiteSpace(workbook.BuiltInDocumentProperties.Title))
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                throw new InvalidOperationException("The Title built‑in property must not be empty before exporting.");
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
             }
 
-            // Export the workbook to PDF
-            workbook.Save("ExportedReport.pdf", SaveFormat.Pdf);
+            // Ensure the Title built‑in property is set.
+            var titleProp = workbook.BuiltInDocumentProperties["Title"];
+            if (titleProp != null && string.IsNullOrWhiteSpace(titleProp.Value?.ToString()))
+            {
+                titleProp.Value = "Untitled Workbook";
+            }
+
+            // Export to PDF.
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

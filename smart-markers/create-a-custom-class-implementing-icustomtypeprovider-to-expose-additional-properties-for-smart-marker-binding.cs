@@ -1,66 +1,58 @@
-// Title: Implement a custom ICustomTypeProvider class to expose computed properties for Aspose.Cells smart markers in C#
-// AI Prompts: Write a C# class that implements ICustomTypeProvider and adds a FullName property to the Person type for use with Aspose.Cells smart markers. | Show how to register the custom type provider with WorkbookDesigner, bind a List<Person> collection, and process smart markers that reference the new property. | Provide a complete example that creates a workbook, inserts a smart marker using the FullName property, processes the data source, and saves the resulting Excel file.
-// Common Searches: C# ICustomTypeProvider example for Aspose.Cells smart markers | how to bind a computed property to a smart marker using WorkbookDesigner | expose additional fields for smart marker binding with a custom type provider | Aspose.Cells smart marker custom object with FullName property | using a custom type provider to extend data source for Excel smart markers
-// Tags: ICustomTypeProvider implementation Aspose.Cells | FullName property exposure for smart markers | WorkbookDesigner bind custom object collection | C# smart marker data source extension | Aspose.Cells computed property integration
+// Title: Create a custom ICustomTypeProvider in C# to expose computed Person properties for Aspose.Cells smart markers
+// Common Searches: how to bind computed properties like FullName to Aspose.Cells smart markers using ICustomTypeProvider | C# example of custom type provider for smart markers with Aspose.Cells WorkbookDesigner | expose additional fields from a .NET class to smart markers in an Excel file using Aspose.Cells | use ICustomTypeProvider to make calculated properties available in Aspose.Cells smart marker templates | Aspose.Cells smart marker custom type provider tutorial for .NET developers
+// Tags: custom ICustomTypeProvider for Aspose.Cells smart markers | binding computed properties to smart markers C# | WorkbookDesigner data source with custom type provider | expose FullName and AgeInMonths in Excel using Aspose.Cells | smart marker template with additional class fields
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates creating a workbook, inserting a smart marker that references a computed FullName property, implementing a custom ICustomTypeProvider to expose that property, binding a List<Person> collection named "Employees" to WorkbookDesigner, processing the smart markers, and saving the output Excel file.
+// The sample defines a Person class with computed FullName and AgeInMonths properties, inserts smart marker cells referencing those properties, sets a List<Person> as the data source via WorkbookDesigner, processes the markers using a custom ICustomTypeProvider, and saves the populated workbook as output.xlsx.
 public class Person
 {
-    // Regular properties
-    public string Name { get; set; } = string.Empty;
-    public int Age { get; set; }
+    // Nullable strings to satisfy non‑nullable warnings.
+    public string? FirstName { get; set; }
+    public string? LastName  { get; set; }
+    public int Age          { get; set; }
 
-    // Computed property exposed for Smart Marker binding
-    public string FullName => $"{Name} (Age: {Age})";
+    // Computed property: full name.
+    public string FullName => $"{FirstName} {LastName}";
+
+    // Computed property: age in months.
+    public int AgeInMonths => Age * 12;
 }
 
-public class SmartMarkerDemo
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook.
             Workbook workbook = new Workbook();
+
+            // Insert sample smart marker cells (optional, for demonstration).
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("&=Persons.FullName");
+            sheet.Cells["A2"].PutValue("&=Persons.AgeInMonths");
 
-            // Insert a Smart Marker that references the computed property "FullName"
-            // Use the collection name "Employees" in the marker expression
-            sheet.Cells["A1"].PutValue("Employee: <#=Employees.FullName#>");
-
-            // Prepare data source: a list of Person objects
-            List<Person> employees = new List<Person>
+            // Prepare a data source.
+            var persons = new List<Person>
             {
-                new Person { Name = "Alice Johnson", Age = 28 },
-                new Person { Name = "Bob Smith", Age = 35 }
+                new Person { FirstName = "John",  LastName = "Doe",   Age = 30 },
+                new Person { FirstName = "Jane",  LastName = "Smith", Age = 25 }
             };
 
-            // Process the workbook with the data source using WorkbookDesigner
+            // Use WorkbookDesigner to process smart markers.
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            // Bind the collection with the name used in the Smart Marker
-            designer.SetDataSource("Employees", employees);
-            designer.Process();
+            designer.SetDataSource("Persons", persons);
+            designer.Process(); // Replaces smart markers with data.
 
-            // Define output path and ensure the directory exists
-            string outputPath = "SmartMarkerResult.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the result
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the resulting workbook.
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

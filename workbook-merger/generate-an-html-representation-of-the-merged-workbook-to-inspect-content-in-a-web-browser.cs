@@ -1,7 +1,7 @@
-// Title: Generate a single HTML page with embedded Base64 images from a merged Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a merged .xlsx workbook, configures HtmlSaveOptions to include all worksheets, enable presentation mode, embed images as Base64, and saves the result as one HTML file using Aspose.Cells. | Show how to verify a workbook file exists, set HtmlSaveOptions.ShowAllSheets, SaveAsSingleFile, PresentationPreference, and ExportImagesAsBase64, then export the workbook to HTML in C#.
-// Common Searches: C# Aspose.Cells export merged workbook to single HTML with embedded images | How to save all sheets of an Excel file as one HTML page using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions ShowAllSheets and ExportImagesAsBase64 example | Convert merged.xlsx to HTML with base64‑encoded pictures in C#
-// Tags: Aspose.Cells HtmlSaveOptions ShowAllSheets | export Excel workbook to single HTML file C# | embed Excel images as Base64 Aspose.Cells | presentation‑friendly HTML export Aspose.Cells | merged workbook HTML conversion .NET
+// Title: Generate an HTML view of a merged Excel workbook with grid lines and Base64‑embedded images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a merged .xlsx workbook with Aspose.Cells, sets HtmlSaveOptions to export grid lines and embed images as Base64, and saves the result as an .html file. | Create a .NET snippet that verifies the input file exists, opens it with Aspose.Cells, configures ExportGridLines = true and ExportImagesAsBase64 = true, then writes the HTML output to a target path.
+// Common Searches: asp.net convert merged workbook.xlsx to html with grid lines using Aspose.Cells | how to export Excel file as html with embedded images base64 in C# | Aspose.Cells HtmlSaveOptions ExportGridLines true example | save merged Excel workbook as web‑ready HTML C# Aspose | C# code to generate HTML preview of an Excel workbook with images embedded
+// Tags: Aspose.Cells HtmlSaveOptions ExportGridLines | Aspose.Cells ExportImagesAsBase64 | C# export Excel to HTML | merged workbook HTML preview Aspose.Cells | grid lines in HTML output Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,47 +9,43 @@ using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // The program checks for the presence of 'merged.xlsx', loads it with Aspose.Cells, configures HtmlSaveOptions to show all sheets, save as a single file, enable presentation mode, and embed images as Base64, then saves the output as 'merged_workbook.html' and prints the full path.
+    // The program checks for a mergedWorkbook.xlsx file, loads it with Aspose.Cells, configures HtmlSaveOptions to include grid lines and embed images as Base64 strings, and saves the workbook as mergedWorkbook.html while handling errors gracefully.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Path to the source Excel file (merged workbook)
+            string inputPath = "mergedWorkbook.xlsx";
+
+            // Path where the HTML representation will be saved
+            string outputPath = "mergedWorkbook.html";
+
             try
             {
-                // Path to the source workbook
-                string workbookPath = "merged.xlsx";
-
-                // Verify that the workbook file exists before attempting to load it
-                if (!File.Exists(workbookPath))
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: Workbook file not found at '{Path.GetFullPath(workbookPath)}'.");
+                    Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
                     return;
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                // Load the workbook from the file system
+                Workbook workbook = new Workbook(inputPath);
 
                 // Configure HTML save options
                 HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    // Export all worksheets into a single HTML file
-                    ShowAllSheets = true,
-                    SaveAsSingleFile = true,
+                    // Export grid lines
+                    ExportGridLines = true,
 
-                    // Make the HTML more presentation‑friendly
-                    PresentationPreference = true,
-
-                    // Embed images as Base64 to keep everything in one file
+                    // Embed images as base64 strings (true) or save them as separate files (false)
                     ExportImagesAsBase64 = true
                 };
 
-                // Output HTML file path
-                string htmlPath = "merged_workbook.html";
+                // Save the workbook as an HTML file using the specified options
+                workbook.Save(outputPath, htmlOptions);
 
-                // Save the workbook as HTML
-                workbook.Save(htmlPath, htmlOptions);
-
-                Console.WriteLine($"Workbook has been exported to HTML: {Path.GetFullPath(htmlPath)}");
+                Console.WriteLine($"HTML representation saved to: {outputPath}");
             }
             catch (Exception ex)
             {

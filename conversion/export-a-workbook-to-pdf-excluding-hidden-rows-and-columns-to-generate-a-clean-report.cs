@@ -1,50 +1,44 @@
-// Title: Export an Aspose.Cells workbook to PDF in C# while excluding hidden rows and columns for a clean report
-// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as a PDF, automatically skipping any concealed rows and columns. | Show how to configure PdfSaveOptions in Aspose.Cells so that hidden worksheet elements are not rendered in the exported PDF. | Provide a complete example that hides specific rows and columns, then creates a PDF report without those hidden cells.
-// Common Searches: Aspose.Cells C# export to PDF without hidden rows | How to ignore hidden columns when converting Excel to PDF with Aspose.Cells | C# PdfSaveOptions to exclude hidden worksheet elements in PDF conversion | Generate clean PDF report from Excel workbook while omitting hidden cells using Aspose.Cells | Aspose.Cells ignore blank pages and hidden rows during PDF export C#
-// Tags: Aspose.Cells PDF export invisible rows | C# hide worksheet columns before PDF conversion | PdfSaveOptions ignore non‑visible elements | clean PDF report from Excel workbook | Aspose.Cells exclude concealed cells PDF
+// Title: Export an Excel workbook to PDF while excluding hidden rows and columns using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export Excel to PDF ignoring hidden rows and columns | How to generate a clean PDF report from an XLSX file with Aspose.Cells | C# PdfSaveOptions to omit hidden rows during Excel to PDF conversion | Save workbook as PDF without hidden columns using Aspose.Cells .NET | Exclude hidden rows and columns when converting Excel to PDF in C#
+// Tags: Aspose.Cells PdfSaveOptions hide rows and columns | C# Excel workbook PDF export without hidden elements | Aspose.Cells clean PDF generation from XLSX | exclude hidden rows PDF conversion Aspose.Cells | hidden columns omitted in PDF save Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExport
+// The example loads an existing XLSX file with Aspose.Cells, configures PdfSaveOptions (noting that recent versions automatically exclude hidden rows and columns), and saves the workbook as a PDF, producing a clean report while handling file‑not‑found and other runtime exceptions.
+class Program
 {
-    // The program creates a new workbook, populates sample data, hides row 2 and column B, configures PdfSaveOptions (including IgnoringBlank pages), and saves the file as CleanReport.pdf where the concealed rows and columns are omitted from the generated PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["C1"].PutValue("Header3");
-            sheet.Cells["A2"].PutValue("Data1");
-            sheet.Cells["B2"].PutValue("Data2");
-            sheet.Cells["C2"].PutValue("Data3");
-            sheet.Cells["A3"].PutValue("Data4");
-            sheet.Cells["B3"].PutValue("Data5");
-            sheet.Cells["C3"].PutValue("Data6");
-
-            // Hide row 2 (index 1) and column B (index 1)
-            sheet.Cells.HideRow(1);
-            sheet.Cells.HideColumn(1);
-
-            // Set PDF save options (optional: ignore blank pages)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                PrintingPageType = PrintingPageType.IgnoreBlank,
-                // Hidden rows/columns are not rendered by default, no extra flag needed
-                // Additional options can be set here if required
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Save the workbook to PDF; hidden rows/columns will be excluded
-            workbook.Save("CleanReport.pdf", pdfOptions);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // In newer Aspose.Cells versions hidden rows/columns are excluded by default.
+            // If the property becomes available, it can be set as:
+            // pdfOptions.HiddenRowsAndColumns = true;
+
+            // Export the workbook to PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

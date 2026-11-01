@@ -1,52 +1,58 @@
-// Title: How to export an Excel column chart to a high‑resolution EMF image using Aspose.Cells for C#
-// AI Prompts: Generate C# code that creates a column chart from worksheet data and saves it as a 300 DPI EMF file with Aspose.Cells. | Show how to configure ImageOrPrintOptions to use ImageType.Emf and EmfRenderSetting.EmfOnly for chart‑only EMF export. | Adapt the example to export a line chart at 600 DPI in EMF format using Aspose.Cells.
-// Common Searches: Aspose.Cells C# export chart as EMF with custom DPI | Create high resolution EMF image from Excel chart using Aspose.Cells | How to set EmfRenderSetting to EmfOnly in Aspose.Cells chart export | Export column chart to EMF file for Windows printing with Aspose.Cells
-// Tags: chart export to EMF Aspose.Cells C# | ImageOrPrintOptions EMF DPI configuration | EmfRenderSetting.EmfOnly usage | high‑resolution chart image generation | column chart EMF output example
+// Title: Export an Excel chart to a high‑resolution EMF image using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export chart as EMF with 300 DPI | How to save an Excel chart to a vector EMF file in .NET | Set ImageOrPrintOptions DPI for chart export using Aspose.Cells | Export first worksheet chart to EMF for printing with Aspose.Cells | C# code to convert Excel chart to high‑resolution EMF image
+// Tags: chart export EMF Aspose.Cells | high‑resolution chart DPI Aspose.Cells | ImageOrPrintOptions DPI configuration | Chart.ToImage EMF output | vector chart export .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// The sample creates a workbook, fills cells with fruit sales data, adds a column chart, configures ImageOrPrintOptions for 300 DPI EMF output using EmfRenderSetting.EmfOnly, and saves the chart as 'FruitSales.emf' for high‑resolution Windows printing.
+// The example loads an Excel workbook, retrieves the first worksheet and its first chart, configures ImageOrPrintOptions with 300 dpi horizontal and vertical resolution and OnePagePerSheet enabled, then exports the chart to an EMF file using Chart.ToImage, while handling missing files and exceptions.
 class ExportChartToEmf
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "InputWorkbook.xlsx";
+        const string outputPath = "ExportedChart.emf";
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["A4"].PutValue("Cherry");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(120);
-        worksheet.Cells["B3"].PutValue(80);
-        worksheet.Cells["B4"].PutValue(150);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);               // Values
-        chart.NSeries.CategoryData = "A2:A4";           // Categories
-        chart.Title.Text = "Fruit Sales";
-
-        // Configure image options for high‑resolution EMF output
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            ImageType = ImageType.Emf,                  // Export as EMF
-            HorizontalResolution = 300,                 // 300 DPI horizontal
-            VerticalResolution = 300,                   // 300 DPI vertical
-            EmfRenderSetting = EmfRenderSetting.EmfOnly // Render EMF records only
-        };
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Export the chart to an EMF file
-        chart.ToImage("FruitSales.emf", options);
+        try
+        {
+            // Load the workbook that contains the chart
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine("Chart exported to EMF successfully.");
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get the first chart on the worksheet (adjust index as needed)
+            Chart chart = worksheet.Charts[0];
+
+            // Configure image options for EMF export
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Increase resolution for high‑quality printing (e.g., 300 DPI)
+                HorizontalResolution = 300,
+                VerticalResolution = 300,
+
+                // Ensure the whole chart fits into a single page
+                OnePagePerSheet = true
+                // Note: ImageFormat is inferred from the file extension (.emf)
+            };
+
+            // Export the chart to an EMF file
+            chart.ToImage(outputPath, imgOptions);
+            Console.WriteLine($"Chart exported successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

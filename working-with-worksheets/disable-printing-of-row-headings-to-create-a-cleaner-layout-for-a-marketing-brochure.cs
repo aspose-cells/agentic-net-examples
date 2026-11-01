@@ -1,25 +1,25 @@
-// Title: Hide row and column headings in printed Excel worksheets using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads an existing .xlsx workbook, sets the worksheet's PageSetup.PrintHeadings to false, and saves the modified file. | Show how to configure the PageSetup of a specific worksheet in Aspose.Cells to prevent row and column headings from appearing in the print output. | Provide a step‑by‑step example that removes Excel print headings to create a cleaner layout for a marketing brochure using Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# hide row headings in printed Excel file | disable column and row headings in Excel print preview using Aspose.Cells | how to turn off PrintHeadings property for a worksheet in Aspose.Cells .NET | remove Excel print headings for brochure layout C# Aspose.Cells | Aspose.Cells page setup hide headings when exporting to PDF
-// Tags: Aspose.Cells worksheet PageSetup PrintHeadings | C# hide Excel print headings | disable print headings Aspose.Cells | Excel brochure layout printing settings | Aspose.Cells .xlsx print configuration
+// Title: Turn off row and column headings when printing an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, disables printing of row and column headings, and saves it as an XLSX file. | Show how to configure PageSetup.PrintHeadings to false in Aspose.Cells to produce a clean printed layout. | Provide a minimal example that loads or creates a worksheet, turns off print headings, and saves the result for a marketing brochure.
+// Common Searches: asp.net aspose.cells hide row headings in printed Excel sheet | c# disable column headings in page setup using Aspose.Cells | remove print headings from worksheet Aspose.Cells example | how to suppress Excel print headings with Aspose.Cells C#
+// Tags: Aspose.Cells PageSetup.PrintHeadings false | disable print headings Excel .NET | clean worksheet layout for brochure Aspose.Cells | save workbook as XLSX without headings | printing settings worksheet Aspose.Cells
 
 using Aspose.Cells;
 
-// // Loads an Excel workbook, disables printing of row and column headings on the first worksheet via PageSetup.PrintHeadings, and saves the updated workbook.
+// Creates or loads a workbook, accesses the first worksheet, sets PageSetup.PrintHeadings to false to omit row and column headings in printed output, and saves the file as MarketingBrochure.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        var workbook = new Workbook("input.xlsx");
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-        // Get the first worksheet (or specify the desired index/name)
-        var worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Disable printing of row and column headings for a cleaner layout
-        worksheet.PageSetup.PrintHeadings = false;
+        sheet.PageSetup.PrintHeadings = false;
 
-        // Save the workbook with the updated setting (replace with your desired output path)
-        workbook.Save("output.xlsx");
+        // Save the modified workbook
+        workbook.Save("MarketingBrochure.xlsx", SaveFormat.Xlsx);
     }
 }

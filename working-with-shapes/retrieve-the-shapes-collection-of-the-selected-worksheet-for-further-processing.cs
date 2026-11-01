@@ -1,33 +1,50 @@
-// Title: Retrieve the Shapes collection from the active worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells to obtain the Shapes collection of the workbook's currently active worksheet. | Iterate over each Shape in the active sheet and output its Name and Type using C#. | Save the workbook after processing the shape collection if any changes are required.
-// Common Searches: C# Aspose.Cells get shapes from the selected worksheet | How to list all drawing objects on the active sheet using Aspose.Cells | Retrieve shape names and types from the current worksheet in Aspose.Cells .NET | Example code for enumerating worksheet shapes with Aspose.Cells C#
-// Tags: retrieve shapes collection Aspose.Cells .NET | enumerate worksheet drawing objects C# | active sheet shape enumeration Aspose.Cells | access shape properties worksheet Aspose.Cells | process worksheet shapes C# example
+// Title: How to retrieve the Shapes collection from the active worksheet in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# source that loads an Excel file with Aspose.Cells, accesses the selected sheet, and returns the sheet's Shapes collection. | Provide a C# loop that walks through each Shape in the active worksheet's Shapes collection and writes the shape's Name and Type to the console. | Show C# code that extracts only picture-type shapes from the active sheet's Shapes collection and prints their dimensions.
+// Common Searches: Aspose.Cells C# retrieve shapes from the selected worksheet | list all shape names and types in an Excel file using Aspose.Cells | filter picture shapes on the active sheet with Aspose.Cells .NET | example code to iterate worksheet shapes Aspose.Cells C#
+// Tags: Aspose.Cells active sheet shape enumeration | C# extract Excel shape objects | Aspose.Cells picture shape filter | list shape metadata .NET
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, accesses the active worksheet, retrieves its Shapes collection, iterates through each shape to display its name and type, and optionally saves the workbook after any modifications.
+// The example loads an Excel workbook, obtains the currently selected worksheet, accesses its Shapes collection, and iterates through each shape, outputting the shape's name and type while handling missing files and unexpected errors.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Get the currently selected (active) worksheet
-        Worksheet worksheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
-
-        // Retrieve the Shapes collection of the selected worksheet
-        ShapeCollection shapes = worksheet.Shapes;
-
-        // Example processing: iterate through each shape
-        foreach (Shape shape in shapes)
+        try
         {
-            // Output basic information about the shape
-            System.Console.WriteLine($"Shape Name: {shape.Name}, Type: {shape.Type}");
-        }
+            const string inputPath = "input.xlsx";
 
-        // Save the workbook if any modifications were made (optional)
-        workbook.Save("output.xlsx");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the currently selected (active) worksheet
+            Worksheet selectedSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
+
+            // Retrieve the Shapes collection of the selected worksheet
+            ShapeCollection shapes = selectedSheet.Shapes;
+
+            // Example: iterate through shapes (placeholder for further processing)
+            foreach (Shape shape in shapes)
+            {
+                // Process each shape as needed
+                // For demonstration, output the shape name and type
+                Console.WriteLine($"Shape name: {shape.Name}, Type: {shape.Type}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

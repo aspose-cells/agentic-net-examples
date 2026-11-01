@@ -1,13 +1,13 @@
-// Title: Add a percentage sign to pie chart data labels with a custom number format using Aspose.Cells for .NET
-// AI Prompts: Create a pie chart in Aspose.Cells and configure its data labels to display each value followed by a % sign. | Apply a custom number format to chart data labels in C# so the labels appear as percentages. | Generate an Excel workbook with a pie chart where the data label formatter appends a percent symbol to every label.
-// Common Searches: how to show percent sign on pie chart data labels in Aspose.Cells C# | Aspose.Cells custom number format for chart labels .NET | C# example adding % to pie chart labels using Aspose.Cells | format pie chart data labels as percentages in Excel with Aspose.Cells | Aspose.Cells chart data label formatter percentage sign
-// Tags: pie chart data label number format Aspose.Cells | custom percentage label formatter .NET | Aspose.Cells chart data label formatting | Excel pie chart label percent sign C# | Aspose.Cells set data label format
+// Title: Add percentage sign to pie chart data labels using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a pie chart, turns on data labels, and formats them to show values as percentages. | Demonstrate how to assign the number format "0%" to chart series data labels in an Aspose.Cells workbook using .NET. | Provide a full example that builds sample data, adds a pie chart, enables label display, and applies a percentage format to each label in C#.
+// Common Searches: aspocells c# format pie chart labels as percent | set data label number format to 0% in Aspose.Cells chart | display pie slice values with % using Aspose.Cells .NET | how to show percentages on Excel pie chart labels with Aspose.Cells
+// Tags: Aspose.Cells pie chart label formatting | C# Excel chart label number format | Aspose.Cells data label customization | percentage display on pie chart labels | Aspose.Cells workbook chart settings
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
 
-// The example creates a new workbook, fills it with category and value data, adds a pie chart, links the series and category ranges, enables data labels, applies the number format "0%" to append a percentage sign to each label, and saves the file as PieChartWithCustomLabels.xlsx.
+// The example creates a workbook, adds sample data, inserts a pie chart, enables data labels, applies the "0%" number format so each slice shows its value with a trailing percent sign, and saves the file as an Excel workbook.
 class Program
 {
     static void Main()
@@ -15,39 +15,43 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook wb = new Workbook();
+            Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet ws = wb.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pie chart
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["B1"].PutValue("Value");
-            ws.Cells["A2"].PutValue("A");
-            ws.Cells["B2"].PutValue(30);
-            ws.Cells["A3"].PutValue("B");
-            ws.Cells["B3"].PutValue(70);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["B3"].PutValue(45);
+            sheet.Cells["B4"].PutValue(25);
 
             // Add a pie chart to the worksheet
-            int chartIdx = ws.Charts.Add(ChartType.Pie, 5, 0, 20, 10);
-            Chart chart = ws.Charts[chartIdx];
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 7);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the series data range (values)
-            chart.NSeries.Add("B2:B3", true);
+            // Set the data source for the chart series (values)
+            chart.NSeries.Add("B2:B4", true);
 
-            // Set the category (label) data range for the series
-            // Use XValues for compatibility across Aspose.Cells versions
-            chart.NSeries[0].XValues = "A2:A3";
+            // (Optional) Set category labels for the pie slices.
+            // For pie charts, category data can be omitted; Excel will use the first column by default.
+            // If needed, you can uncomment the line below and ensure your Aspose.Cells version supports it.
+            // chart.NSeries[0].CategoryData = "A2:A4";
 
-            // Enable data labels to show the values
+            // Show data labels on the pie slices
             chart.NSeries[0].DataLabels.ShowValue = true;
 
             // Apply a custom number format that appends a percentage sign
             chart.NSeries[0].DataLabels.NumberFormat = "0%";
 
-            // Save the workbook with the chart
+            // Save the workbook to a file
             string outputPath = "PieChartWithCustomLabels.xlsx";
-            wb.Save(outputPath);
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)

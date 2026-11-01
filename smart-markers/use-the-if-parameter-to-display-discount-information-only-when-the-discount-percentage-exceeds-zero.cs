@@ -1,73 +1,58 @@
-// Title: Apply an IF formula with Aspose.Cells in C# to show discount amount only when the discount percentage is greater than zero
-// AI Prompts: Write C# code using Aspose.Cells that inserts an IF formula to compute the discount amount only if the discount percentage cell is greater than zero, otherwise leaving the cell empty. | Create an Aspose.Cells workbook, format column B as a percentage and column C as currency, and add a conditional formula that returns an empty string when the discount percent is zero or negative.
-// Common Searches: how to use Aspose.Cells C# IF function to hide zero discount values | Aspose.Cells C# calculate discount amount with conditional formula | format percentage column and currency column in Aspose.Cells workbook | set empty string result for IF formula in Aspose.Cells generated Excel | apply conditional discount calculation in Excel using Aspose.Cells C#
-// Tags: Aspose.Cells IF formula conditional calculation | C# Aspose.Cells percentage column formatting | C# Aspose.Cells currency cell styling | Aspose.Cells generate Excel with discount logic | Aspose.Cells conditional display of values
+// Title: How to use Aspose.Cells for .NET to conditionally display discount text with an IF formula when the percentage is greater than zero
+// AI Prompts: Generate C# code that creates an Excel workbook, writes discount values as percentages in column B, and inserts an IF formula in column C that outputs "Discount: xx%" only for rows where the percentage exceeds zero, using Aspose.Cells. | Write a C# example that applies a percentage number format to cells, builds a row‑specific IF formula referencing each B‑cell, and saves the file as DiscountInfo.xlsx with Aspose.Cells.
+// Common Searches: Aspose.Cells C# conditional IF formula to show text only for non‑zero percentages | Create Excel file with discount column and conditional discount label using Aspose.Cells | How to format cells as percentages and add IF text in Aspose.Cells .NET | Saving workbook with conditional discount messages in Aspose.Cells | Using CellsHelper.CellIndexToName with IF formula in Aspose.Cells C#
+// Tags: Aspose.Cells conditional IF formula | percentage number format Aspose.Cells | write discount percentages Aspose.Cells | dynamic cell address formula Aspose.Cells | save workbook as .xlsx Aspose.Cells | C# Aspose.Cells smart markers example
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample creates a new workbook, writes discount percentages as fractional values formatted as percentages in column B, adds an IF formula in column C that displays "Discount: xx%" only when the corresponding percentage is greater than zero, and saves the result as DiscountInfo.xlsx.
+class DiscountDisplay
 {
-    // The example creates a new workbook, adds headers for original price, discount %, and discount amount, inserts sample data, applies an IF formula in cell C2 that calculates A2*B2 only when B2>0 (otherwise returns an empty string), formats column B as a percentage and column C as currency, recalculates formulas, and saves the file as DiscountIfDemo.xlsx.
-    public class DiscountIfDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Example discount percentages (some zero, some non‑zero)
+            double[] discounts = { 0.0, 5.5, 0.0, 12.75, 0.0 };
+
+            // Prepare a style for percentage formatting (Number format index 10)
+            Style percentStyle = workbook.CreateStyle();
+            percentStyle.Number = 10; // Percentage format
+
+            // Populate column B with discount percentages (as fractions) and apply style
+            for (int i = 0; i < discounts.Length; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Header row
-                sheet.Cells["A1"].PutValue("Original Price");
-                sheet.Cells["B1"].PutValue("Discount %");
-                sheet.Cells["C1"].PutValue("Discount Amount");
-
-                // Sample data
-                sheet.Cells["A2"].PutValue(100);      // $100
-                sheet.Cells["B2"].PutValue(0.15);     // 15% discount
-
-                // IF formula: calculate discount amount only when discount > 0
-                sheet.Cells["C2"].Formula = "=IF(B2>0, A2*B2, \"\")";
-
-                // Format column B as percentage
-                Style percentStyle = workbook.CreateStyle();
-                percentStyle.Number = 10; // Built‑in percentage format
-                sheet.Cells["B2"].SetStyle(percentStyle);
-
-                // Format column C as currency
-                Style currencyStyle = workbook.CreateStyle();
-                currencyStyle.Number = 164; // Built‑in currency format with two decimals
-                sheet.Cells["C2"].SetStyle(currencyStyle);
-
-                // Recalculate formulas
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                string outputPath = "DiscountIfDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Store as fraction (e.g., 0.055 for 5.5%)
+                sheet.Cells[i, 1].PutValue(discounts[i] / 100);
+                sheet.Cells[i, 1].SetStyle(percentStyle);
             }
-            catch (Exception ex)
+
+            // Column C will display discount information only when the percentage > 0
+            for (int i = 0; i < discounts.Length; i++)
             {
-                Console.WriteLine($"Error during DiscountIfDemo execution: {ex.Message}");
+                // Build the IF formula: if B cell > 0 then show text, else empty string
+                string bAddress = CellsHelper.CellIndexToName(i, 1); // e.g., B1, B2...
+                string formula = $"IF({bAddress}>0, \"Discount: \" & TEXT({bAddress},\"0.00%\"), \"\")";
+                sheet.Cells[i, 2].Formula = formula;
             }
+
+            // Define output file path
+            string outputPath = "DiscountInfo.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                DiscountIfDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            Console.WriteLine("An error occurred while creating the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

@@ -1,61 +1,50 @@
-// Title: Programmatically reset worksheet print area after inserting rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a specified number of rows into a worksheet, compute the new used range, and assign a dynamically built address to PageSetup.PrintArea with Aspose.Cells in C#. | Load an existing Excel file (or create a new workbook), add rows after the current data block, derive the last row and column via MaxDataRow/MaxDataColumn, set the print‑area string, and save the workbook.
-// Common Searches: Aspose.Cells C# update print area after adding rows to a worksheet | reset Excel print area programmatically with Aspose.Cells .NET | how to set dynamic print area based on MaxDataRow in Aspose.Cells | C# Aspose.Cells insert rows and adjust page setup print area | change print area range after expanding data in an Aspose.Cells workbook
-// Tags: dynamic print area Aspose.Cells | worksheet row insertion C# | reset print area after data expansion .NET | PageSetup.PrintArea assignment Aspose.Cells | save workbook after print area update
+// Title: Resetting the worksheet print area after adding rows using Aspose.Cells for .NET
+// AI Prompts: Write C# code that inserts a given number of rows into a worksheet, removes the current print area, and defines a new print area that spans the entire used range using Aspose.Cells. | Demonstrate how to compute the updated used range after adding rows and set it as the worksheet's print area with the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# update print area after adding rows | Programmatically set Excel print area to used range with Aspose.Cells | How to recalculate print area after inserting rows in .NET Excel file | Remove old print area and apply new one using Aspose.Cells API
+// Tags: Aspose.Cells reset print area C# | insert rows adjust print area .NET | used range calculation Aspose.Cells | clear and set worksheet print area programmatically | Excel print area after data changes Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook, inserts five rows after the last data row, optionally writes sample values, clears any existing print area, computes the new used range, sets the print area to that range, and saves the updated workbook.
+class Program
 {
-    // The example loads (or creates) an Excel workbook, accesses the first worksheet, inserts five rows after the existing data, recalculates the last used row and column, builds a new A1:... address, assigns it to worksheet.PageSetup.PrintArea, and saves the result to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the first worksheet (modify as needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Determine the last row with data
+        int lastDataRow = sheet.Cells.MaxDataRow;
+
+        // Insert new rows after the existing data (example: 5 rows)
+        sheet.Cells.InsertRows(lastDataRow + 1, 5);
+
+        // Optionally populate the new rows with sample data
+        for (int i = 0; i < 5; i++)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            try
-            {
-                // Ensure the input file exists; if not, create an empty workbook.
-                Workbook workbook;
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-
-                // Access the first worksheet (modify as needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Example modification: insert 5 new rows after the current data range
-                int rowsToAdd = 5;
-                int insertPosition = worksheet.Cells.MaxDataRow + 1; // position after last used row
-                worksheet.Cells.InsertRows(insertPosition, rowsToAdd);
-
-                // Re‑calculate the new data bounds
-                int lastRow = worksheet.Cells.MaxDataRow;               // zero‑based index
-                int lastColumn = worksheet.Cells.MaxDataColumn;         // zero‑based index
-
-                // Build the address of the new print area (e.g., A1:D20)
-                string startCell = "A1";
-                string endCell = CellsHelper.ColumnIndexToName(lastColumn) + (lastRow + 1).ToString(); // rows are 1‑based in addresses
-                worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            sheet.Cells[lastDataRow + 1 + i, 0].PutValue($"New Data {i + 1}");
         }
+
+        // ----- Reset the print area -----
+        // Clear any existing print area
+        sheet.PageSetup.PrintArea = "";
+
+        // Calculate the new used range
+        int firstRow = sheet.Cells.MinRow;
+        int firstCol = sheet.Cells.MinColumn;
+        int lastRow = sheet.Cells.MaxDataRow;
+        int lastCol = sheet.Cells.MaxDataColumn;
+
+        // Build the address string for the new print area (e.g., A1:D20)
+        string newPrintArea = CellArea.CreateCellArea(firstRow, firstCol, lastRow, lastCol).ToString();
+
+        // Apply the new print area
+        sheet.PageSetup.PrintArea = newPrintArea;
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

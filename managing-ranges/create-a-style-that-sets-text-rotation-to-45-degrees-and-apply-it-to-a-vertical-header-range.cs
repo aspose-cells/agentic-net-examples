@@ -1,50 +1,47 @@
-// Title: Create a 45‑degree text rotation style and apply it to a vertical header range (A1:A10) using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a Style with RotationAngle = 45 and applies it to the range A1:A10 in an Aspose.Cells workbook. | Demonstrate how to set StyleFlag.All to true so that all style attributes, including rotation, are applied to a column range with Aspose.Cells. | Provide a complete example that saves the workbook after styling the vertical header with a 45‑degree rotated text style.
-// Common Searches: Aspose.Cells C# set text rotation for a column header | apply custom style with rotation angle to range A1:A10 Aspose.Cells | rotate header text 45 degrees using Aspose.Cells .NET API | how to use StyleFlag to apply full style to a range in Aspose.Cells
-// Tags: Aspose.Cells style rotation angle | apply style to range Aspose.Cells | StyleFlag all attributes Aspose.Cells | vertical header formatting Aspose.Cells | C# Aspose.Cells rotated header
+// Title: Create a 45-degree rotated text style and apply it to a vertical header range with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set cell text rotation to 45 degrees | How to apply a custom style to a range of cells in Aspose.Cells .NET | Create a rotated header column in Excel using Aspose.Cells for C# | Apply StyleFlag.All when formatting a range with Aspose.Cells | Set vertical header formatting with rotation in Aspose.Cells C#
+// Tags: Style.RotationAngle Aspose.Cells | StyleFlag.All property Aspose.Cells | ApplyStyle method range Aspose.Cells | vertical header range formatting Aspose.Cells | rotated text style Excel .NET | C# Aspose.Cells style rotation
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// Shows how to create a Style with a 45‑degree RotationAngle, use StyleFlag.All to copy all style properties, apply the style to the vertical header range A1:A10, and save the workbook as RotatedHeader.xlsx with Aspose.Cells for .NET.
+// The example creates a Workbook, defines a Style with a 45-degree RotationAngle, enables all style attributes via StyleFlag.All, creates a vertical header range (A1:A5), applies the rotated style to that range, populates the header cells, and saves the file as RotatedHeader.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style object
+            // Create a style and set text rotation to 45 degrees
             Style rotatedStyle = workbook.CreateStyle();
+            rotatedStyle.RotationAngle = 45; // rotation in degrees
 
-            // Set text rotation to 45 degrees (use RotationAngle property)
-            rotatedStyle.RotationAngle = 45;
+            // Define a style flag to apply the rotation attribute (apply all to be safe)
+            StyleFlag flag = new StyleFlag();
+            flag.All = true; // apply all style attributes, including rotation
 
-            // Apply all style attributes
-            StyleFlag flag = new StyleFlag { All = true };
-
-            // Define the vertical header range (e.g., A1:A10)
-            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange("A1:A10");
+            // Define the vertical header range (e.g., cells A1 to A5)
+            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange("A1:A5");
 
             // Apply the rotated style to the header range
             headerRange.ApplyStyle(rotatedStyle, flag);
 
-            // Determine output file path
-            string outputPath = "RotatedHeader.xlsx";
+            // Populate the header cells with sample text
+            for (int i = 0; i < 5; i++)
+            {
+                sheet.Cells[i, 0].PutValue($"Header {i + 1}");
+            }
 
             // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("RotatedHeader.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

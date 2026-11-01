@@ -1,64 +1,62 @@
-// Title: How to Detect and Log Circular References in Excel Formulas Using Aspose.Cells C# Calculation Monitor
-// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor and writes each cell address involved in a circular reference to the console. | Configure CalculationOptions with the custom monitor and enable recursive calculation to capture circular formula loops during workbook.CalculateFormula. | Adjust the monitor to abort the calculation by returning false when a circular reference is encountered.
-// Common Searches: Aspose.Cells C# example for detecting circular references during formula calculation | log cells that cause circular reference error using Aspose.Cells calculation monitor | how to use AbstractCalculationMonitor to handle circular formulas in a workbook | C# workbook.CalculateFormula circular reference detection Aspose.Cells
-// Tags: Aspose.Cells custom calculation monitor | circular reference detection Aspose.Cells | log offending cells C# Aspose.Cells | recursive formula calculation Aspose.Cells | Excel workbook circular formula handling
+// Title: Detect Circular References and Log Affected Cell Addresses When Calculating Formulas with Aspose.Cells for .NET
+// Common Searches: how to catch circular reference errors while using Workbook.CalculateFormula in C# | log the cell addresses that cause circular reference exceptions in Aspose.Cells | detect circular references in Excel formulas with Aspose.Cells .NET API | handle formula calculation errors and retrieve offending cells using Aspose.Cells | Aspose.Cells calculate formula circular reference detection example C#
+// Tags: Workbook.CalculateFormula exception handling | Aspose.Cells circular reference detection | log cell addresses for formula errors C# | Excel formula evaluation error logging Aspose | handle circular reference errors Aspose.Cells
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-namespace CircularReferenceDetectionDemo
+// The example loads an Excel workbook, runs Workbook.CalculateFormula to evaluate all formulas, catches any exceptions thrown due to circular references, writes the exception message (including the offending cell addresses) to the console, and then saves the workbook.
+class Program
 {
-    // Custom monitor to capture circular reference information
-    // Demonstrates a custom CircularReferenceMonitor derived from AbstractCalculationMonitor that logs the addresses of cells participating in a circular reference (e.g., A1↔B1) during workbook.CalculateFormula, with CalculationOptions configured for recursive evaluation and optional continuation or abort behavior.
-    public class CircularReferenceMonitor : AbstractCalculationMonitor
+    static void Main()
     {
-        // This method is called when the calculation engine detects a circular reference
-        public override bool OnCircular(IEnumerator circularCellsData)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine("Circular reference detected! Offending cells:");
-
-            // Iterate through the cells involved in the circular reference
-            while (circularCellsData.MoveNext())
-            {
-                // The enumerated object represents a cell participating in the circular loop.
-                // Its ToString() implementation provides a readable address (e.g., "Sheet1!A1").
-                Console.WriteLine($" - {circularCellsData.Current}");
-            }
-
-            // Return true to let the engine continue processing (or false to stop).
-            // Here we allow the engine to continue with default handling.
-            return true;
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main()
+        Workbook workbook;
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Load the existing workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load workbook:");
+            Console.WriteLine(ex.Message);
+            return;
+        }
 
-            // Set up a simple circular reference scenario:
-            // A1 depends on B1, and B1 depends on A1
-            cells["A1"].Formula = "=B1";
-            cells["B1"].Formula = "=A1";
+        try
+        {
+            // Evaluate all formulas in the workbook.
+            // If a circular reference exists, Aspose.Cells will throw an exception.
+            workbook.CalculateFormula();
+        }
+        catch (Exception ex)
+        {
+            // Handle any calculation errors, including circular references
+            Console.WriteLine("Error during formula calculation:");
+            Console.WriteLine(ex.Message);
+        }
 
-            // Configure calculation options with the custom monitor
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                CalculationMonitor = new CircularReferenceMonitor(),
-                // Optional: you can control recursion or iterative calculation here
-                Recursive = true
-            };
-
-            // Perform formula calculation; the monitor will be invoked automatically
-            workbook.CalculateFormula(calcOptions);
-
-            // Save the workbook (optional, just to demonstrate lifecycle compliance)
-            workbook.Save("CircularReferenceDemo.xlsx");
+        try
+        {
+            // Save the workbook after evaluation (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to save workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

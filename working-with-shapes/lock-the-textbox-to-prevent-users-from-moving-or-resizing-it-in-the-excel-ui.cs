@@ -1,55 +1,41 @@
-// Title: Lock a TextBox shape to prevent moving or resizing in an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a TextBox shape on a worksheet, set its IsLocked property to true, protect the sheet, and save the workbook using Aspose.Cells in C#. | Create a new workbook, add a locked TextBox that cannot be moved or resized in the Excel UI, and export the file with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# lock textbox shape so users cannot move it | prevent resizing of Excel TextBox with Aspose.Cells API | how to use IsLocked property on a shape in Aspose.Cells | protect worksheet to enforce shape lock using Aspose.Cells .NET | example code for locking a TextBox in an Excel file with Aspose.Cells
-// Tags: Aspose.Cells lock textbox shape | C# Aspose.Cells IsLocked property | worksheet protection Aspose.Cells | add textbox Aspose.Cells C# | prevent shape resizing Excel Aspose
+// Title: How to lock a TextBox shape in an Excel worksheet to prevent moving or resizing using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a workbook, insert a TextBox at a given cell, set IsLocked = true, and save the file with Aspose.Cells in C#. | Generate an Excel file where the TextBox shape is locked and set to FreeFloating so users cannot adjust its size or position, using the Aspose.Cells .NET API. | Write C# code that adds a TextBox to a worksheet, disables moving and resizing by locking the shape, and keeps it independent of cell changes with Aspose.Cells.
+// Common Searches: Aspose.Cells C# example to prevent textbox movement in Excel UI | how to disable resizing of a shape in Excel using Aspose.Cells .NET | set shape IsLocked property in Aspose.Cells workbook C# | make textbox shape non-editable in Excel with Aspose.Cells | Aspose.Cells lock shape placement FreeFloating C# tutorial
+// Tags: Aspose.Cells IsLocked property for shapes | C# Aspose.Cells textbox shape protection | FreeFloating placement for Aspose.Cells shapes | Excel shape immovable using Aspose.Cells | Aspose.Cells workbook shape lock example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a TextBox shape to the first worksheet, sets its text, locks the shape with IsLocked = true, protects the worksheet so the lock is enforced, and saves the file as LockedTextbox.xlsx.
-class Program
+// The example creates a new workbook, adds a TextBox shape at a specified location, assigns text, locks the shape by setting IsLocked to true, optionally sets its placement to FreeFloating, and saves the workbook as LockedTextbox.xlsx.
+class LockTextboxExample
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load an existing workbook or create a new one
+        Workbook workbook = new Workbook(); // creates a new workbook
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Add a textbox shape to the worksheet
+        // Parameters: upper left row, upper left column, top offset, left offset, height, width
+        int upperLeftRow = 2;
+        int upperLeftColumn = 2;
+        int top = 5;
+        int left = 5;
+        int height = 50;
+        int width = 150;
 
-            // Define the position of the textbox (zero‑based rows and columns)
-            int upperRow = 1;      // B2 row
-            int upperColumn = 1;   // B2 column
-            int lowerRow = 4;      // Row where the textbox ends
-            int lowerColumn = 3;   // Column where the textbox ends
+        // Create the textbox shape
+        TextBox textbox = sheet.Shapes.AddTextBox(upperLeftRow, upperLeftColumn, top, left, height, width);
+        textbox.Text = "Locked TextBox";
 
-            // Define size of the textbox in pixels (width, height)
-            int width = 200;
-            int height = 80;
+        // Lock the textbox to prevent moving or resizing in the Excel UI
+        textbox.IsLocked = true;
 
-            // Add a textbox shape to the worksheet (6‑parameter overload)
-            TextBox textBox = worksheet.Shapes.AddTextBox(upperRow, upperColumn, lowerRow, lowerColumn, width, height);
+        // Optionally, set the shape's placement to FreeFloating (default) to keep it independent of cells
+        textbox.Placement = PlacementType.FreeFloating;
 
-            // Set the displayed text
-            textBox.Text = "Locked TextBox";
-
-            // Lock the textbox to prevent moving or resizing in the Excel UI
-            textBox.IsLocked = true;
-
-            // Protect the worksheet so that the lock takes effect
-            worksheet.Protect(ProtectionType.All);
-
-            // Save the workbook
-            string outputPath = "LockedTextbox.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook to a file
+        workbook.Save("LockedTextbox.xlsx");
     }
 }

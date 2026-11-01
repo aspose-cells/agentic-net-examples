@@ -1,32 +1,80 @@
-// Title: Generate a landscape-oriented PDF from a wide Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets each worksheet's PageSetup.Orientation to Landscape, configures FitToPagesWide = 1 and FitToPagesTall = 0, and saves the workbook as a PDF. | Show how to programmatically export a multi‑column Excel sheet to a single‑page‑wide landscape PDF using Aspose.Cells PageSetup settings in a .NET application.
-// Common Searches: Aspose.Cells C# export wide Excel sheet to landscape PDF with fit to width | How to set page orientation to landscape when converting Excel to PDF using Aspose.Cells .NET | C# Aspose.Cells fit worksheet to one PDF page width landscape | Convert Excel workbook to PDF landscape orientation without cutting columns Aspose.Cells | Save Excel as PDF landscape and keep all columns visible Aspose.Cells C#
-// Tags: Aspose.Cells PDF landscape export | PageSetup orientation landscape Aspose.Cells | FitToPagesWide single page PDF Aspose.Cells | C# convert wide Excel to PDF | Excel to PDF fit width landscape
+// Title: Generate a landscape-oriented PDF from a wide Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets the first worksheet's PageSetup.Orientation to Landscape, configures FitToPagesWide = 1, and saves the workbook as a PDF/A‑1b compliant document with Aspose.Cells. | Create a C# example that builds a sample workbook with many columns, applies landscape page orientation, fits the sheet width to a single PDF page, and uses PdfSaveOptions to produce the PDF. | Show how to verify the output folder exists, handle exceptions, and convert a wide Excel sheet to a landscape PDF while preserving PDF/A‑1b compliance in Aspose.Cells.
+// Common Searches: aspnet convert wide excel sheet to landscape pdf using aspose.cells | c# set page orientation landscape and fit to one page wide when saving excel as pdf | how to generate pdf/a-1b from excel workbook with landscape layout in .net | aspose.cells fit worksheet width to single pdf page landscape orientation | sample code for exporting wide excel worksheet to landscape pdf in c#
+// Tags: Aspose.Cells PDF export landscape orientation | fit worksheet width to one PDF page | C# Aspose.Cells PdfSaveOptions PDF/A-1b | convert wide Excel sheet to PDF | page setup orientation landscape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// // Loads input.xlsx, sets each worksheet to landscape orientation, fits width to one PDF page (FitToPagesWide = 1, FitToPagesTall = 0), and saves as output.pdf.
-class Program
+// The program checks for an input Excel file (creating a sample wide worksheet if missing), loads it with Aspose.Cells, sets the first worksheet's page orientation to Landscape, configures the page setup to fit the sheet width to a single PDF page while allowing multiple pages in height, applies PdfSaveOptions with PDF/A‑1b compliance, ensures the output directory exists, and saves the workbook as a landscape‑oriented PDF.
+class ExcelToLandscapePdf
 {
     static void Main()
     {
-        // Load the Excel workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for input Excel and output PDF
+        string excelPath = @"C:\Input\WideSheet.xlsx";
+        string pdfPath = @"C:\Output\WideSheet_Landscape.pdf";
 
-        // Configure each worksheet to use landscape orientation
-        // This improves readability for wide sheets when exported to PDF
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Set page orientation to landscape
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(excelPath))
+            {
+                // Create directory if needed
+                Directory.CreateDirectory(Path.GetDirectoryName(excelPath));
+
+                // Generate a sample workbook with wide data
+                Workbook sampleWb = new Workbook();
+                Worksheet ws = sampleWb.Worksheets[0];
+                ws.Name = "WideData";
+
+                // Populate many columns to simulate a wide sheet
+                for (int col = 0; col < 30; col++)
+                {
+                    ws.Cells[0, col].PutValue($"Header {col + 1}");
+                    for (int row = 1; row <= 20; row++)
+                    {
+                        ws.Cells[row, col].PutValue($"R{row}C{col + 1}");
+                    }
+                }
+
+                // Save the sample workbook
+                sampleWb.Save(excelPath);
+            }
+
+            // Load the workbook from the Excel file
+            Workbook workbook = new Workbook(excelPath);
+
+            // Work with the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set page orientation to Landscape for wide sheets
             sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-            // Optional: fit the sheet width to a single PDF page while allowing unlimited length
-            sheet.PageSetup.FitToPagesWide = 1;   // fit to one page wide
-            sheet.PageSetup.FitToPagesTall = 0;   // no restriction on page height
-        }
+            // Fit to one page wide; height can span multiple pages
+            sheet.PageSetup.FitToPagesWide = 1;
+            sheet.PageSetup.FitToPagesTall = 0;
 
-        // Save the workbook as a PDF file; the orientation settings are applied automatically
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = false,               // Keep default paging per sheet
+                Compliance = PdfCompliance.PdfA1b      // Preserve layout compliance
+            };
+
+            // Ensure output directory exists
+            Directory.CreateDirectory(Path.GetDirectoryName(pdfPath));
+
+            // Save the workbook as a PDF
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine("PDF generated successfully in landscape orientation.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

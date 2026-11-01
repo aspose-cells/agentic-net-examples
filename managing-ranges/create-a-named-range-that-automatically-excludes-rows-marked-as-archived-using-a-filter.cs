@@ -1,68 +1,56 @@
-// Title: How to create a dynamic named range in Aspose.Cells (C#) that automatically skips rows where Status = "Archived"
-// AI Prompts: Generate C# code with Aspose.Cells that defines a workbook‑level named range using an OFFSET/COUNTIF formula to include only rows whose Status column is not "Archived". | Show how to add a named range called ActiveData that updates automatically when rows are added or removed, excluding archived entries, via the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# create named range that excludes rows with value 'Archived' in a column | dynamic Excel named range using OFFSET and COUNTIF with Aspose.Cells .NET | filter out archived rows when defining a named range in an Aspose.Cells workbook | C# Aspose.Cells example for conditional named range based on status column
-// Tags: Aspose.Cells OFFSET formula | exclude archived rows Aspose.Cells | COUNTIF based named range C# | Excel workbook conditional named range | filter rows in named range .NET
+// Title: Define a dynamic named range that filters out rows with Status = "Archived" using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# create named range that excludes rows where Status equals Archived | How to apply the Excel FILTER formula in Aspose.Cells to build a dynamic named range | C# example for defining a named range based on a column condition with Aspose.Cells | Generate a named range that only includes active records in a workbook using Aspose.Cells | Use Excel 365 FILTER function in Aspose.Cells to hide archived rows
+// Tags: dynamic named range using FILTER Aspose.Cells | conditional named range based on Status column C# | Aspose.Cells example for Excel 365 FILTER function | C# create named range that omits archived records | Excel workbook named range with column criteria Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, fills it with sample data containing ID, Name, and Status columns, then defines a dynamic named range called "ActiveData" using an OFFSET formula that subtracts rows marked as "Archived" via COUNTIF, and finally saves the file as an .xlsx workbook.
+// The sample creates a workbook, adds sample data with an ID, Status, Name, and Amount columns, and then defines a dynamic named range called "ActiveData". The range uses the Excel FILTER function to return only rows where the Status column is not "Archived". The named range is added to the workbook's name collection and saved as "NamedRange_ExcludeArchived.xlsx".
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Add header row
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Status");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Data";
 
-            // Sample data (including rows marked as "Archived")
-            object[,] sampleData = new object[,]
-            {
-                { 1, "Alice",   "Active"   },
-                { 2, "Bob",     "Archived" },
-                { 3, "Charlie", "Active"   },
-                { 4, "Diana",   "Archived" },
-                { 5, "Eve",     "Active"   }
-            };
+        // Populate sample data (Header + rows)
+        // Columns: ID, Status, Name, Amount
+        sheet.Cells["A1"].PutValue("ID");
+        sheet.Cells["B1"].PutValue("Status");
+        sheet.Cells["C1"].PutValue("Name");
+        sheet.Cells["D1"].PutValue("Amount");
 
-            // Import the data starting at cell A2 (row index 1, column index 0)
-            // Aspose.Cells provides ImportArray2D, but to ensure compatibility we fill manually.
-            int rows = sampleData.GetLength(0);
-            int cols = sampleData.GetLength(1);
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    sheet.Cells[r + 1, c].PutValue(sampleData[r, c]);
-                }
-            }
+        // Sample rows
+        sheet.Cells["A2"].PutValue(1);
+        sheet.Cells["B2"].PutValue("Active");
+        sheet.Cells["C2"].PutValue("Alice");
+        sheet.Cells["D2"].PutValue(100);
 
-            // Create a dynamic named range "ActiveData" that excludes rows where Status = "Archived"
-            string formula = "=OFFSET(Data!$A$2,0,0,COUNTA(Data!$A:$A)-COUNTIF(Data!$C:$C,\"Archived\"),3)";
+        sheet.Cells["A3"].PutValue(2);
+        sheet.Cells["B3"].PutValue("Archived");
+        sheet.Cells["C3"].PutValue("Bob");
+        sheet.Cells["D3"].PutValue(200);
 
-            // Add the named range to the workbook
-            int nameIndex = workbook.Worksheets.Names.Add("ActiveData");
-            workbook.Worksheets.Names[nameIndex].RefersTo = formula;
+        sheet.Cells["A4"].PutValue(3);
+        sheet.Cells["B4"].PutValue("Active");
+        sheet.Cells["C4"].PutValue("Charlie");
+        sheet.Cells["D4"].PutValue(150);
 
-            // Define output file path
-            string outputPath = "NamedRange_ExcludeArchived.xlsx";
+        // Define a dynamic named range "ActiveData" that excludes rows where Status = "Archived"
+        // Using the FILTER function (available in Excel 365+). The range A2:D4 is the data area.
+        // The condition B2:B4<>"Archived" filters out archived rows.
+        string formula = "=FILTER(Data!$A$2:$D$4, Data!$B$2:$B$4<>\"Archived\")";
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Add the named range to the workbook
+        int nameIndex = workbook.Worksheets.Names.Add("ActiveData");
+        Name activeName = workbook.Worksheets.Names[nameIndex];
+        activeName.RefersTo = formula;
+
+        // Save the workbook
+        workbook.Save("NamedRange_ExcludeArchived.xlsx");
     }
 }

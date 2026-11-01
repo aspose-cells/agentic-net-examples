@@ -1,14 +1,24 @@
-// Title: Export each worksheet to its own CSS file when saving an Excel workbook as HTML using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file and saves it as HTML, creating a separate CSS file for every worksheet with Aspose.Cells HtmlSaveOptions. | Show how to enable the ExportWorksheetCSSSeparately property in HtmlSaveOptions to produce per‑sheet stylesheet files in a .NET application. | Adapt an existing Aspose.Cells HTML export routine so that each worksheet generates its own CSS file instead of a single combined stylesheet.
-// Common Searches: Aspose.Cells how to create separate CSS files for each worksheet when converting Excel to HTML in C# | C# HtmlSaveOptions ExportWorksheetCSSSeparately example code | Save Excel workbook as HTML with per‑sheet stylesheet using Aspose.Cells .NET | Generate distinct CSS per worksheet during Excel to HTML conversion with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions ExportWorksheetCSSSeparately | C# Excel to HTML per worksheet CSS | separate stylesheet generation Aspose.Cells | HTML export distinct CSS per sheet | Aspose.Cells workbook save as HTML individual CSS files
+// Title: Create a separate CSS stylesheet for each worksheet when converting an Excel file to HTML with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export each worksheet to its own CSS file when saving as HTML | how to generate individual stylesheet per sheet using HtmlSaveOptions in .NET | set ExportWorksheetCSSSeparately to true for Excel to HTML conversion Aspose.Cells | separate CSS files per worksheet Aspose.Cells HTMLSaveOptions example | C# convert XLSX to HTML with distinct CSS per worksheet using Aspose
+// Tags: HtmlSaveOptions separate stylesheet per sheet | Aspose.Cells per-worksheet CSS export | Excel workbook HTML conversion with distinct CSS files | C# generate individual CSS files from worksheets | Aspose.Cells HTML export stylesheet separation
 
-// Load an existing workbook
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
+using Aspose.Cells;
 
-// Configure HTML save options to export a separate CSS file for each worksheet
-Aspose.Cells.HtmlSaveOptions htmlOptions = new Aspose.Cells.HtmlSaveOptions();
-htmlOptions.ExportWorksheetCSSSeparately = true;
+// The sample loads an Excel workbook, enables HtmlSaveOptions.ExportWorksheetCSSSeparately, and saves the file as HTML, causing Aspose.Cells to produce a separate CSS file for each worksheet.
+class Program
+{
+    static void Main()
+    {
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-// Save the workbook as HTML using the configured options
-workbook.Save("output.html", htmlOptions);
+        // Create HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+        // Set to export a separate CSS file for each worksheet
+        htmlOptions.ExportWorksheetCSSSeparately = true;
+
+        // Save the workbook to HTML; separate CSS files will be generated per worksheet
+        workbook.Save("output.html", htmlOptions);
+    }
+}

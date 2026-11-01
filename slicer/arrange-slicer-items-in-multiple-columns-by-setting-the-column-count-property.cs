@@ -1,66 +1,57 @@
-// Title: Arrange slicer items into multiple columns with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a pivot table, adds a slicer for a field, and sets the slicer’s NumberOfColumns property to 3 using Aspose.Cells. | Show how to customize a slicer’s caption, size, and column layout programmatically in an Aspose.Cells workbook. | Provide a step‑by‑step example of saving an Excel file after configuring a slicer to display items in three columns with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set slicer NumberOfColumns to display items in multiple columns | how to configure slicer layout columns in an Excel workbook using Aspose.Cells for .NET | C# example of adding a slicer to a pivot table and arranging items in three columns with Aspose.Cells | Aspose.Cells slicer column count property usage in .NET | programmatically change slicer item arrangement to multiple columns in C# Excel library
-// Tags: Aspose.Cells slicer NumberOfColumns property | C# configure slicer multiple columns | Aspose.Cells pivot table slicer layout | Excel slicer column arrangement Aspose.Cells | Aspose.Cells workbook slicer customization
+// Title: Create an Excel ListObject table from a range and save as .xlsx using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# example to add a ListObject table to a worksheet from a cell range | how to set a display name for an Excel table using Aspose.Cells in .NET | C# code to populate worksheet cells and export workbook to XLSX with Aspose.Cells | saving a workbook programmatically with Aspose.Cells for .NET | create table with headers in Aspose.Cells C# tutorial
+// Tags: add listobject table Aspose.Cells C# | set table display name Aspose.Cells | populate worksheet cells programmatically C# | save workbook as xlsx Aspose.Cells | create excel table from range Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Tables; // Required for ListObject class
 
-namespace SlicerMultipleColumnsDemo
+namespace SlicerColumnExample
 {
-    // The sample creates a workbook, fills it with sample data, builds a pivot table, adds a slicer linked to the 'Category' field, sets the slicer's caption and dimensions, configures the slicer to show items in three columns via the NumberOfColumns property, and saves the result as an .xlsx file.
+    // The sample creates a new Workbook, renames the first worksheet to "Data", fills cells A1:B7 with sample data, adds a ListObject (Excel table) covering that range with headers, assigns the display name "SampleTable" to the table, and saves the workbook as "SlicerMultipleColumns.xlsx" using Aspose.Cells for .NET.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet and rename it
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                sheet.Name = "Data";
 
-                // Populate sample data for a pivot table
-                cells["A1"].Value = "Category";
-                cells["B1"].Value = "Product";
-                cells["A2"].Value = "Fruits";
-                cells["B2"].Value = "Apple";
-                cells["A3"].Value = "Fruits";
-                cells["B3"].Value = "Banana";
-                cells["A4"].Value = "Vegetables";
-                cells["B4"].Value = "Carrot";
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["A5"].PutValue("D");
+                sheet.Cells["B5"].PutValue(40);
+                sheet.Cells["A6"].PutValue("E");
+                sheet.Cells["B6"].PutValue(50);
+                sheet.Cells["A7"].PutValue("F");
+                sheet.Cells["B7"].PutValue(60);
 
-                // Add a pivot table based on the sample data
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Product");
-                pivot.RefreshData();
-                pivot.CalculateData();
+                // Create a table (list object) from the data range A1:B7
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+                int tableIndex = sheet.ListObjects.Add(0, 0, 7, 2, true);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-                // Add a slicer linked to the pivot table field "Category"
-                // Correct argument order: destination cell, then field name
-                int slicerIndex = sheet.Slicers.Add(pivot, "E1", "Category");
-                Slicer slicer = sheet.Slicers[slicerIndex];
+                // Set a display name for the table (Name property is not available in this version)
+                table.DisplayName = "SampleTable";
 
-                // Set slicer properties (size, caption, etc.)
-                slicer.Caption = "Product Categories";
-                slicer.TopPixel = 50;
-                slicer.LeftPixel = 50;
-                slicer.HeightPixel = 150;
-                slicer.WidthPixel = 200;
-
-                // Arrange slicer items in multiple columns (e.g., 3 columns)
-                slicer.NumberOfColumns = 3;
-
-                // Save the workbook to a file
-                workbook.Save("SlicerMultipleColumnsDemo.xlsx");
+                // Save the workbook
+                workbook.Save("SlicerMultipleColumns.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

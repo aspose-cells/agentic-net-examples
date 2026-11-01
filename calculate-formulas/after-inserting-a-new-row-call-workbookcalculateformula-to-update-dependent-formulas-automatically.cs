@@ -1,40 +1,62 @@
-// Title: Insert a row in an Aspose.Cells worksheet and automatically recalculate dependent formulas using Workbook.CalculateFormula (C#)
-// AI Prompts: Insert a new row at a specific index in an Aspose.Cells worksheet, add data to the inserted cells, and invoke Workbook.CalculateFormula to refresh all formulas. | Show how to update a SUM formula after shifting rows by inserting a row and calling the calculation engine in C#. | Provide complete C# code that inserts a row, modifies cell values, recalculates formulas, and saves the workbook with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# insert row and recalculate formulas example | How to refresh SUM formula after adding a row with Aspose.Cells | Workbook.CalculateFormula after row insertion in .NET | Update dependent formulas automatically when inserting rows using Aspose.Cells | C# code to insert row and trigger formula recalculation in Excel file
-// Tags: add new row Aspose.Cells C# | Workbook.CalculateFormula recalculate | refresh dependent formulas Aspose.Cells | update SUM after row insertion | save workbook after calculation Aspose.Cells
+// Title: Insert a row and automatically recalculate dependent formulas in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells insert row and refresh formulas | How to trigger formula recalculation after adding rows in Aspose.Cells | Aspose.Cells Workbook.CalculateFormula example after row insertion | Update dependent formulas automatically when inserting rows with Aspose.Cells | Recalculate all workbook formulas after inserting a new row in .NET
+// Tags: insert rows Aspose.Cells C# | calculate all formulas Aspose.Cells | recalculate formulas for entire workbook Aspose.Cells | auto update dependent formulas Aspose.Cells | Excel row insertion formula refresh .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a workbook, fills cells A1‑A3, sets B1 to =SUM(A1:A3), inserts a row at index 1, adds a value to the new A2, calls Workbook.CalculateFormula to update the SUM, prints the refreshed B1 value, and saves the file as InsertedRow.xlsx.
-class InsertRowAndRecalculate
+// The sample loads an existing Excel file or creates a new workbook, ensures a worksheet exists, inserts a row at a specified index, calls Workbook.CalculateFormula to refresh all formulas affected by the insertion, and saves the updated file, handling missing files and password‑protected workbooks gracefully.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Initial data
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue(30);
-        // Formula that sums the three values
-        cells["B1"].Formula = "=SUM(A1:A3)";
+        Workbook workbook = null;
 
-        // Insert a new row at index 1 (between A1 and A2)
-        cells.InsertRow(1);
-        // Add a value to the newly inserted row
-        cells["A2"].PutValue(15); // original A2 and A3 shift down
+        try
+        {
+            // Load existing workbook if it exists and is not password‑protected
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (CellsException ex) when (ex.Message.Contains("Please provide password"))
+                {
+                    // Password required – create a new workbook instead
+                    workbook = new Workbook();
+                }
+            }
+            else
+            {
+                // Input file not found – start with a new workbook
+                workbook = new Workbook();
+            }
 
-        // Recalculate formulas after the insertion
-        workbook.CalculateFormula();
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+                workbook.Worksheets.Add();
 
-        // Display the updated result of the formula
-        Console.WriteLine("B1 after recalculation: " + cells["B1"].Value);
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook (optional)
-        workbook.Save("InsertedRow.xlsx");
+            // Insert a new row at the desired index (zero‑based)
+            int insertRowIndex = 5;   // adjust as needed
+            int numberOfRows = 1;     // number of rows to insert
+            sheet.Cells.InsertRows(insertRowIndex, numberOfRows);
+
+            // Recalculate all formulas after row insertion
+            workbook.CalculateFormula();
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

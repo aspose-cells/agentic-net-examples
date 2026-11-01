@@ -1,46 +1,47 @@
-// Title: How to export an Excel workbook to HTML with both gridlines and cell comments using Aspose.Cells for .NET (including version check)
-// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions.ExportGridLines to true, checks if the ExportComments property exists, enables it when available, and saves the workbook as HTML. | Show how to perform a runtime version check for Aspose.Cells and conditionally apply HtmlSaveOptions.ExportComments while always exporting gridlines. | Create a complete example that validates the input file, configures HtmlSaveOptions for gridlines and optional comments, and writes the HTML output with proper error handling.
-// Common Searches: Aspose.Cells .NET export Excel to HTML with gridlines and comments | Enable cell comments in HTML output using Aspose.Cells version check | C# HtmlSaveOptions ExportGridLines and ExportComments together | How to include Excel comments when saving as HTML with Aspose.Cells | Save workbook as HTML with gridlines and comments in Aspose.Cells for .NET
-// Tags: HtmlSaveOptions ExportGridLines .NET | Aspose.Cells ExportComments property | Excel to HTML with gridlines C# | Conditional HtmlSaveOptions settings based on version | Saving workbook as HTML including comments Aspose
+// Title: Export an Excel workbook to HTML with gridlines and cell comments using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export Excel to HTML with gridlines and comments | Enable gridlines in HtmlSaveOptions while keeping cell comments in HTML output | How to configure HtmlSaveOptions ExportGridLines true and include comments | Export Excel workbook to HTML preserving comments and gridlines with Aspose.Cells .NET | C# HtmlSaveOptions settings for gridlines and cell comment visibility
+// Tags: HtmlSaveOptions ExportGridLines true | Aspose.Cells HTML export cell comments | C# Excel to HTML with gridlines | Aspose.Cells .NET HtmlSaveOptions configuration | preserve Excel comments in HTML output
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies the input Excel file, loads it into a Workbook, creates HtmlSaveOptions with ExportGridLines enabled, checks at runtime whether the ExportComments property is supported and enables it if possible, then saves the workbook as an HTML file while handling errors gracefully.
-class Program
+// The example loads an existing Excel file, sets HtmlSaveOptions.ExportGridLines to true (comments are exported by default), and saves the workbook as an HTML file, demonstrating how to produce HTML that shows both gridlines and cell comments while handling missing files and runtime errors.
+class HtmlExportWithGridlinesAndComments
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the workbook from the specified file
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Create HTML save options with gridlines enabled
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
+                // Export gridlines
                 ExportGridLines = true
-                // ExportComments property is not available in this version of Aspose.Cells
+                // Note: Exporting of cell comments is enabled by default in recent versions.
+                // If a specific property exists (e.g., ExportComments), it can be set here.
             };
 
-            // Save the workbook as an HTML file using the defined options
+            // Save the workbook as HTML with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Handle any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

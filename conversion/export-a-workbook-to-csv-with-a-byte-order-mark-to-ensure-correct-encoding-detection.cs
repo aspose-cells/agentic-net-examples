@@ -1,36 +1,46 @@
-// Title: Save an Aspose.Cells workbook as a UTF-8 CSV file with a Byte Order Mark (BOM) in C#
-// AI Prompts: Write C# code that creates a workbook, populates cells, and uses TxtSaveOptions to export it to a UTF-8 CSV file that includes a BOM. | Show how to set TxtSaveOptions.Encoding to Encoding.UTF8 so Aspose.Cells writes a Byte Order Mark when saving a CSV file. | Provide a complete example that saves a workbook to "output_with_bom.csv" using the correct save options for BOM in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# export to CSV with UTF-8 BOM for Excel compatibility | How to force a Byte Order Mark when saving CSV using Aspose.Cells .NET | TxtSaveOptions SaveFormat.Csv encoding BOM example in C# | C# code to generate CSV from workbook with UTF-8 BOM using Aspose.Cells
-// Tags: Aspose.Cells TxtSaveOptions CSV BOM | C# export workbook to UTF-8 CSV Aspose.Cells | CSV export with Byte Order Mark Aspose.Cells .NET | SaveFormat.Csv encoding UTF8 Aspose.Cells
+// Title: Save an Aspose.Cells workbook as a UTF-8 CSV file with a Byte Order Mark in C#
+// Common Searches: how to export a workbook to CSV with UTF-8 BOM using Aspose.Cells in C# | Aspose.Cells C# save worksheet as CSV with byte order mark | set UTF8Encoding(true) for CSV output in Aspose.Cells .NET | C# TxtSaveOptions CSV encoding with BOM Aspose.Cells example | write CSV file with BOM from Aspose.Cells workbook C#
+// Tags: Aspose.Cells CSV export BOM | TxtSaveOptions CSV UTF-8 encoding | C# workbook to CSV with Byte Order Mark | UTF8Encoding true Aspose.Cells CSV | export workbook as CSV with BOM
 
+using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvBomDemo
+// The example creates a Workbook, fills it with sample data, configures TxtSaveOptions to use UTF8Encoding(true) so a Byte Order Mark is written, and saves the workbook as a CSV file named 'output.csv', handling any exceptions.
+class Program
 {
-    // // Creates a workbook, fills sample data, configures TxtSaveOptions with Encoding = Encoding.UTF8 (which writes a Byte Order Mark), and saves the workbook as "output_with_bom.csv" in CSV format.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data
+            // Populate the first worksheet with sample data
+            Worksheet sheet = workbook.Worksheets[0];
             sheet.Cells["A1"].PutValue("Name");
             sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John");
+            sheet.Cells["A2"].PutValue("Alice");
             sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Jane");
+            sheet.Cells["A3"].PutValue("Bob");
             sheet.Cells["B3"].PutValue(25);
 
-            // Configure CSV save options with UTF-8 encoding (includes BOM)
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
-            csvOptions.Encoding = Encoding.UTF8; // ensures a Byte Order Mark is written
+            // Set CSV save options to use UTF-8 encoding with a Byte Order Mark (BOM)
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV);
+            csvOptions.Encoding = new UTF8Encoding(true); // 'true' ensures the BOM is written
 
-            // Save the workbook as CSV with the specified options
-            workbook.Save("output_with_bom.csv", csvOptions);
+            // Define output file path
+            string outputPath = "output.csv";
+
+            // Export the workbook to a CSV file with the specified options
+            workbook.Save(outputPath, csvOptions);
+
+            Console.WriteLine($"Workbook successfully saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

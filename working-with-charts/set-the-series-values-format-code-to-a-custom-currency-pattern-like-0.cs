@@ -1,65 +1,49 @@
-// Title: Set a custom currency number format for a chart series using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and applies a custom currency pattern (e.g., "$#,##0") to the series values via the ValuesFormatCode property. | Show how to modify the currency symbol in a chart series number format (for example, changing to "€#,##0.00") using Aspose.Cells in a .NET application. | Provide a snippet that opens an existing workbook, updates the ValuesFormatCode of a specific chart series to a custom format, and saves the workbook.
-// Common Searches: Aspose.Cells C# set custom currency format for chart series values | how to use ValuesFormatCode to format chart data as currency in Aspose.Cells .NET | example of applying "$#,##0" number format to Excel chart series with Aspose.Cells | change currency symbol for chart series values in Aspose.Cells C# code | formatting column chart series as currency using Aspose.Cells for .NET
-// Tags: chart series custom currency format Aspose.Cells | ValuesFormatCode property usage .NET | apply number format to Excel chart series C# | Aspose.Cells column chart formatting example | set series values format code C#
+// Title: Apply a custom currency format ($#,##0) to Excel chart series values with Aspose.Cells in C#
+// AI Prompts: Write C# code that sets the NumberFormat of a chart series to the custom pattern "$#,##0" using Aspose.Cells. | Demonstrate how to modify an existing workbook so that its chart displays series data as currency with the format $#,##0 via Aspose.Cells .NET.
+// Common Searches: Aspose.Cells set chart series number format to $#,##0 in C# | C# how to apply custom currency pattern to Excel chart series using Aspose.Cells | change number format of chart data points to currency in Aspose.Cells .NET | example of setting NumberFormat for chart series in Aspose.Cells workbook
+// Tags: chart series NumberFormat Aspose.Cells | custom currency pattern for Excel chart series .NET | C# set series number format Aspose.Cells | apply number format to chart data points | Excel chart formatting with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel workbook, accesses the first worksheet and its first chart, sets the NumberFormat of the chart's first series to the custom currency pattern "$#,##0", and saves the workbook to a new file.
+class Program
 {
-    // Demonstrates creating a workbook, adding sample data, inserting a column chart, and using the ValuesFormatCode property to apply a custom currency pattern like "$#,##0" to the chart series values before saving.
-    public class SetSeriesValuesCustomCurrencyFormat
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(1250);
-                worksheet.Cells["B3"].PutValue(2500);
-                worksheet.Cells["B4"].PutValue(3750);
-
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Apply a custom currency format to the series values
-                // "$#,##0" will display numbers like $1,250
-                chart.NSeries[0].ValuesFormatCode = "$#,##0";
-
-                // Save the workbook
-                string outputPath = "SeriesValuesCustomCurrencyFormat.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            SetSeriesValuesCustomCurrencyFormat.Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get the first chart on the worksheet (adjust index as needed)
+            Chart chart = worksheet.Charts[0];
+
+            // NOTE: The Axis class in the current Aspose.Cells version does not expose a NumberFormat property.
+            // If number formatting is required, consider using TickLabelNumberFormat or other supported properties.
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

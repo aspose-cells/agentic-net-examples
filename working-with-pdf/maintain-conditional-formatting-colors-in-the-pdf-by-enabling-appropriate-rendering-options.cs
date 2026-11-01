@@ -1,45 +1,43 @@
-// Title: Enable RenderConditionalFormatting to Keep Conditional Formatting Colors When Converting Excel to PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a C# example that detects whether the PdfSaveOptions.RenderConditionalFormatting property is available in the current Aspose.Cells version and sets it to true before saving the workbook as a PDF. | Write a C# program that loads an .xlsx file, configures PdfSaveOptions to retain conditional formatting colors, and exports the workbook to a PDF file while handling missing input files gracefully.
-// Common Searches: asp.net aspose.cells preserve conditional formatting colors during pdf export | c# pdfsaveoptions renderconditionalformatting property usage example | excel to pdf conversion losing conditional formatting colors aspose cells | how to check for RenderConditionalFormatting support in Aspose.Cells C# | enable conditional formatting rendering when saving workbook as PDF with Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions conditional formatting rendering | C# Excel to PDF conversion preserving colors | RenderConditionalFormatting property Aspose.Cells | PDF export options for conditional formatting in .NET | retain conditional formatting colors in PDF output
+// Title: Convert an Excel workbook to PDF in C# while preserving conditional formatting colors using Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF, ensuring that conditional formatting colors appear in the PDF. | Show how to configure PdfSaveOptions in Aspose.Cells to retain visual styling from conditional rules during PDF export.
+// Common Searches: Aspose.Cells .NET keep conditional formatting when exporting Excel to PDF | C# PDF export from workbook preserving color rules | PdfSaveOptions disable color loss for conditional formatting Aspose | How to retain Excel conditional formatting in generated PDF using Aspose.Cells
+// Tags: Aspose.Cells PDF export with conditional styling | C# workbook to PDF preserving cell styles | PdfSaveOptions keep visual rules | export Excel to PDF maintaining formatting | conditional formatting rendering in PDF via Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The sample verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally enables the RenderConditionalFormatting flag when supported, and saves the workbook as a PDF, providing error handling for missing files and runtime exceptions.
+// The example verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (which renders conditional formatting by default), and saves the workbook as output.pdf, with exception handling for any errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.pdf";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
             // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputFile);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options
+            // Configure PDF save options (conditional formatting is rendered by default)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // If the used Aspose.Cells version supports it, preserve conditional formatting colors
-            // pdfOptions.RenderConditionalFormatting = true; // Uncomment if the property exists
-
-            // Save the workbook as PDF
-            workbook.Save(outputFile, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputFile}'.");
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

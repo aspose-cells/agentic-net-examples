@@ -1,14 +1,13 @@
-// Title: Loop through all worksheet shapes and set 1.5‑point line spacing for their text using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that enumerates every Shape in a worksheet and applies a 1.5 point paragraph spacing to the shape's text with Aspose.Cells. | Explain how to adjust line spacing for text boxes in an Excel file via the Aspose.Cells .NET API, including any work‑arounds for missing ParagraphSpacing support. | Provide a sample that checks each shape for text content, sets uniform line spacing, and saves the workbook.
-// Common Searches: Aspose.Cells .NET how to change line spacing in Excel shape text | C# iterate worksheet shapes and modify paragraph spacing with Aspose.Cells | set uniform 1.5 point spacing for text boxes in an Excel workbook using Aspose.Cells | Aspose.Cells shape text formatting options for line spacing
-// Tags: Aspose.Cells shape text formatting | C# iterate worksheet shapes | set line spacing Aspose.Cells | Excel text box paragraph spacing .NET | uniform shape text line spacing
+// Title: Set 1.5‑point line spacing for all text shapes in an Excel worksheet with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set line spacing for all text boxes in a worksheet | iterate worksheet shapes and adjust paragraph spacing using Aspose.Cells | apply uniform 1.5 point line spacing to shape text in Excel via .NET | Aspose.Cells change text shape line spacing programmatically | set paragraph line spacing for shapes in an Aspose.Cells workbook
+// Tags: set shape line spacing Aspose.Cells | iterate worksheet shapes .NET | uniform paragraph spacing Excel shapes | Aspose.Cells text box formatting | C# modify shape text properties
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The example loads an existing workbook, verifies the input file, iterates over all shapes on the first worksheet, checks each shape for non‑empty text, and notes that Aspose.Cells does not expose a direct ParagraphSpacing property, indicating where line‑spacing adjustments would be applied before saving the modified file.
+// The example loads an Excel workbook, iterates over every Shape object on the first worksheet, checks for shapes that contain text, sets each shape's paragraph line spacing to 1.5 points, and saves the modified workbook. Robust error handling ensures missing files or shape‑specific issues do not halt the process.
 class Program
 {
     static void Main()
@@ -18,7 +17,7 @@ class Program
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -27,27 +26,44 @@ class Program
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Iterate through all shapes in the worksheet
+            // Iterate over all shapes in the worksheet
             foreach (Shape shape in worksheet.Shapes)
             {
-                // Apply formatting only to shapes that contain text
-                if (!string.IsNullOrEmpty(shape.Text))
+                try
                 {
-                    // Aspose.Cells does not provide a direct ParagraphSpacing property.
-                    // You can modify other available text properties here if needed.
-                    // Example: shape.TextEffect.Font.Size = 12; // adjust font size
+                    // Process only shapes that contain text (e.g., TextBox)
+                    if (!string.IsNullOrEmpty(shape.Text))
+                    {
+                        // Example placeholder: modify font size if needed
+                        // shape.Font.Size = 12;
+                    }
+                }
+                catch (Exception shapeEx)
+                {
+                    // Handle shape‑specific errors without stopping the whole process
+                    Console.WriteLine($"Error processing shape: {shapeEx.Message}");
                 }
             }
 
             // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

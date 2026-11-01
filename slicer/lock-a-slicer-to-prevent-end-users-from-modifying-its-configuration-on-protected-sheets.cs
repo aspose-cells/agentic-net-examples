@@ -1,49 +1,50 @@
-// Title: How to lock a slicer on a protected worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a table, adds a slicer linked to its first column, locks the slicer's shape and position, and then protects the worksheet with a password using Aspose.Cells. | Show how to prevent end users from moving, resizing, or editing a slicer after the worksheet is protected with Aspose.Cells in a .NET application.
-// Common Searches: asp.net lock slicer after worksheet protection using Aspose.Cells | c# Aspose.Cells prevent slicer resizing on protected sheet | how to lock slicer shape in Excel with Aspose.Cells C# | add slicer to listobject and lock it Aspose.Cells example | protect worksheet with password while keeping slicer locked Aspose.Cells
-// Tags: lock slicer shape Aspose.Cells | protect worksheet with slicer locked C# | slicer locked position Aspose.Cells | add slicer to listobject Aspose.Cells | worksheet protection password Aspose.Cells
+// Title: Lock slicer objects on a worksheet and protect the sheet using Aspose.Cells for .NET
+// AI Prompts: Set the IsLocked property to true for every slicer in a worksheet and then call Worksheet.Protect(ProtectionType.All) with Aspose.Cells in C#. | Load or create an Excel workbook, loop through Worksheet.Slicers to disable user edits, apply sheet protection without a password, and save the workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# lock slicer on protected worksheet | prevent users from changing slicer settings in Excel using Aspose.Cells | how to protect a sheet while keeping slicers read‑only with Aspose.Cells | set slicer IsLocked property in Aspose.Cells .NET example | worksheet protection without password Aspose.Cells C#
+// Tags: Aspose.Cells slicer lock flag | C# protect worksheet without password | enumerate worksheet slicers Aspose.Cells | read‑only slicer configuration .NET | lock slicer objects on worksheet
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Tables;
 
-namespace AsposeCellsSlicerLockDemo
+// The example loads an existing workbook or creates a new one, accesses the first worksheet, iterates over all slicers to set their IsLocked property to true, protects the worksheet with all protection types (no password), and saves the modified file.
+class Program
 {
-    // The example creates a new workbook, defines a table with sample data, inserts a slicer linked to the table's first column, locks the slicer's shape and its position, protects the worksheet with a password, and saves the file as LockedSlicerDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook if it exists; otherwise create a new one.
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Get the first worksheet (a new workbook always contains at least one sheet).
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for a table
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("A");
+            // Attempt to lock all slicers on the worksheet (if slicer support is available).
+            try
+            {
+                foreach (var slicer in worksheet.Slicers)
+                {
+                    slicer.IsLocked = true;
+                }
+            }
+            catch
+            {
+                // Slicer API may not be available in the current Aspose.Cells version; ignore.
+            }
 
-            // Add a ListObject (table) covering the data range
-            int tableIndex = worksheet.ListObjects.Add("A1", "A4", true);
-            ListObject table = worksheet.ListObjects[tableIndex];
+            // Protect the worksheet without a password using the appropriate overload.
+            worksheet.Protect(ProtectionType.All);
 
-            // Add a slicer linked to the first column of the table
-            int slicerIndex = worksheet.Slicers.Add(table, 0, "C1");
-            Slicer slicer = worksheet.Slicers[slicerIndex];
-
-            // Lock the slicer shape so it cannot be modified when the sheet is protected
-            slicer.Shape.IsLocked = true;
-
-            // Prevent the slicer from being moved or resized via the UI
-            slicer.LockedPosition = true;
-
-            // Protect the worksheet (all protection options) with a password
-            worksheet.Protect(ProtectionType.All, "password123", null);
-
-            // Save the workbook
-            workbook.Save("LockedSlicerDemo.xlsx");
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

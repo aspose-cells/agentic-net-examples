@@ -1,45 +1,47 @@
-// Title: Use Aspose.Cells Cell.Calculate to evaluate only one cell’s formula in C#
-// AI Prompts: Invoke Cell.Calculate with a CalculationOptions object to compute the SUM formula in B1 while leaving the rest of the workbook untouched. | Retrieve the numeric result of a cell‑level formula after calling Cell.Calculate on a specific cell in an Aspose.Cells workbook. | Show how to perform a partial calculation in Aspose.Cells by evaluating a single worksheet cell without triggering a full workbook recalc.
-// Common Searches: asp.net evaluate single cell formula with Aspose.Cells Cell.Calculate | c# calculate only one Excel cell using Aspose.Cells API | how to avoid full workbook recalculation when evaluating a formula in Aspose.Cells | example of Cell.Calculate for a SUM range in C# | partial calculation of Excel sheet using Aspose.Cells Cell.Calculate
-// Tags: cell.calculate single cell evaluation asp.net | partial workbook calculation aspose.cells | calculationoptions usage c# | evaluate sum formula aspose.cells | cell-level formula computation aspose.cells
+// Title: Evaluate a single cell formula with Cell.Calculate and CalculationOptions in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# calculate only one cell formula without full workbook recompute | How to use Cell.Calculate with CalculationOptions to evaluate a SUM formula in .NET | Partial formula evaluation example using Aspose.Cells C# | Retrieve result of a specific Excel cell formula with Aspose.Cells API | C# code to compute an Excel cell formula independently using Aspose.Cells
+// Tags: Cell.Calculate partial workbook evaluation | Aspose.Cells single cell formula calculation | CalculationOptions evaluate specific Excel cell | C# evaluate SUM formula Aspose.Cells | independent cell formula computation .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCellCalculateDemo
+namespace AsposeCellsFormulaEvaluation
 {
-    // Demonstrates creating a workbook, inserting numeric values, assigning a SUM formula to B1, and using Cell.Calculate with CalculationOptions to evaluate only that cell while other cells remain unchanged.
+    // The example creates a workbook, assigns a SUM formula to cell A1, populates cells B1‑B3 with values, and then uses Cell.Calculate with a CalculationOptions object to evaluate only that cell. The computed result is read from the cell's Value property without triggering a full workbook calculation.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate some data that will be used by the formula
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a formula in cell B1 that references the above values
-            Cell targetCell = cells["B1"];
-            targetCell.Formula = "=SUM(A1:A3)";
+                // Set a formula in cell A1 (e.g., sum of B1:B3)
+                Cell formulaCell = sheet.Cells["A1"];
+                formulaCell.Formula = "=SUM(B1:B3)";
 
-            // At this point the formula has not been evaluated yet
-            Console.WriteLine("Before calculation, B1 value: " + targetCell.Value); // Expected to be null
+                // Populate the referenced cells with sample data
+                sheet.Cells["B1"].PutValue(10);
+                sheet.Cells["B2"].PutValue(20);
+                sheet.Cells["B3"].PutValue(30);
 
-            // Calculate only this cell's formula using Cell.Calculate
-            targetCell.Calculate(new CalculationOptions());
+                // Calculate only the formula cell using CalculationOptions
+                CalculationOptions calcOptions = new CalculationOptions();
+                formulaCell.Calculate(calcOptions);
 
-            // After calculation the cell now holds the result of the formula
-            Console.WriteLine("After calculation, B1 value: " + targetCell.Value); // Expected 60
+                // Retrieve the calculated result
+                object result = formulaCell.Value;
 
-            // Demonstrate that other cells remain unchanged (no full workbook calculation)
-            Console.WriteLine("A1 value (unchanged): " + cells["A1"].Value);
-            Console.WriteLine("A2 value (unchanged): " + cells["A2"].Value);
-            Console.WriteLine("A3 value (unchanged): " + cells["A3"].Value);
+                Console.WriteLine($"The result of the formula in A1 is: {result}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

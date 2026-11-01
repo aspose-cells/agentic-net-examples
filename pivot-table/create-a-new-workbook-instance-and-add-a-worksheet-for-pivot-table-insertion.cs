@@ -1,36 +1,43 @@
-// Title: Create a new Aspose.Cells workbook, add a "PivotData" worksheet, populate sample category/amount data, and save as XLSX using C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to instantiate a Workbook, add a worksheet named "PivotData", write the headers "Category" and "Amount", fill a few rows with sample values, and save the file as "PivotWorkbook.xlsx". | Show how to prepare a source sheet for a pivot table in Aspose.Cells by creating a workbook, adding a worksheet, inserting sample data rows, and persisting the workbook in XLSX format.
-// Common Searches: how to add a worksheet named PivotData in Aspose.Cells C# | Aspose.Cells create workbook and fill sample data for pivot table | C# example of initializing source sheet for a pivot table using Aspose.Cells | save Aspose.Cells workbook as XLSX after adding data sheet
-// Tags: create workbook Aspose.Cells C# | add worksheet PivotData Aspose.Cells | populate sample data Aspose.Cells | save workbook as XLSX Aspose.Cells
+// Title: Create a new Aspose.Cells Workbook and add a "PivotData" worksheet for pivot tables in C#
+// Common Searches: how to add a worksheet named PivotData to a new Aspose.Cells workbook in C# | C# Aspose.Cells example to create a workbook and retrieve the index of a newly added worksheet | save an Aspose.Cells workbook to a specific folder after creating the output directory | prepare a worksheet for pivot table data using Aspose.Cells in a .NET application
+// Tags: Aspose.Cells create workbook C# | Aspose.Cells add pivot data worksheet | Aspose.Cells get worksheet index | Aspose.Cells save workbook as XLSX | Aspose.Cells ensure output directory exists
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace PivotTableSetup
+// The sample demonstrates how to instantiate a new Aspose.Cells Workbook, add a worksheet called "PivotData" to hold pivot‑table source data, obtain the worksheet's index, ensure the target directory exists, and save the workbook as an XLSX file.
+class Program
 {
-    // // This program creates a new Aspose.Cells Workbook, adds a worksheet called "PivotData", writes sample category and amount rows, and saves the workbook as PivotWorkbook.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook instance
             Workbook workbook = new Workbook();
 
-            // Add a new worksheet that will hold the source data for the pivot table
-            Worksheet dataSheet = workbook.Worksheets.Add("PivotData");
+            // Add a worksheet that will hold the data for the pivot table
+            Worksheet pivotWorksheet = workbook.Worksheets.Add("PivotData");
 
-            // (Optional) Add some sample data to the worksheet
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
-            dataSheet.Cells["A2"].PutValue("Food");
-            dataSheet.Cells["B2"].PutValue(120);
-            dataSheet.Cells["A3"].PutValue("Travel");
-            dataSheet.Cells["B3"].PutValue(300);
-            dataSheet.Cells["A4"].PutValue("Supplies");
-            dataSheet.Cells["B4"].PutValue(150);
+            // (Optional) Get the index of the newly added worksheet
+            int sheetIndex = workbook.Worksheets.IndexOf(pivotWorksheet);
 
-            // Save the workbook (optional, demonstrates that the workbook is valid)
-            workbook.Save("PivotWorkbook.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to verify creation
+            string outputPath = "PivotWorkbook.xlsx";
+
+            // Ensure the directory exists before saving
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'. Worksheet index: {sheetIndex}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

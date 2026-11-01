@@ -1,69 +1,82 @@
-// Title: Programmatically make a hidden column field visible in an Aspose.Cells PivotTable with C#
-// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, accesses the first PivotTable, checks for column fields, and sets the first column field's IsHidden property to false before saving the file. | Create a C# snippet that safely verifies the existence of column fields in a PivotTable and unhides a specified field with Aspose.Cells, handling cases where no column fields are present. | Write a C# example that toggles the visibility of a PivotTable column field in Aspose.Cells, demonstrating how to read, modify, and persist the workbook.
-// Common Searches: aspocells c# how to show hidden column field in pivot table | unhide pivot column field programmatically using Aspose.Cells .NET | set PivotField IsHidden false in C# Aspose.Cells example | check for column fields before changing visibility in Aspose.Cells PivotTable
-// Tags: Aspose.Cells PivotField IsHidden property | C# unhide pivot column field | modify pivot table column visibility Aspose | Aspose.Cells hide/show pivot fields | Excel workbook pivot table column field visibility C#
+// Title: Unhide a hidden column field in an Excel PivotTable using Aspose.Cells for C#
+// Common Searches: C# how to unhide a pivot table column field using Aspose.Cells | Aspose.Cells example for setting PivotField IsHidden to false | programmatically show hidden column field in Excel pivot table with C# | toggle visibility of a pivot column field by name in Aspose.Cells | unhide pivot column field by index using Aspose.Cells C# code
+// Tags: Aspose.Cells PivotField IsHidden property | C# set pivot column field visibility | Excel pivot table column field visibility control | dynamic field visibility handling Aspose.Cells | programmatic pivot table field visibility C#
 
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using System;
 using System.IO;
 
-// Loads an Excel workbook, accesses the first worksheet's first PivotTable, verifies that column fields exist, clears the IsHidden flag on the first column field (when supported), and saves the modified workbook to a new file.
+// The sample loads an existing workbook, checks for a PivotTable on the first worksheet, locates a column field by name (or index), uses a dynamic cast to set its IsHidden property to false (with version‑specific fallback), and saves the workbook with the previously hidden column field now visible.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook containing the PivotTable
+            // Load the existing workbook that contains the PivotTable
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (adjust index if needed)
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet has at least one PivotTable
+            // Ensure a PivotTable exists on the worksheet
             if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("No PivotTables found in the worksheet.");
+                Console.WriteLine("No PivotTable found on the first worksheet.");
                 return;
             }
 
-            // Access the first PivotTable
             PivotTable pivotTable = worksheet.PivotTables[0];
+            PivotFieldCollection columnFields = pivotTable.ColumnFields;
 
-            // Make the first column field visible, if any exist
-            if (pivotTable.ColumnFields.Count > 0)
+            // Example 1: Show a hidden column field by its name
+            string hiddenFieldName = "FieldName"; // replace with the actual field name
+            foreach (PivotField field in columnFields)
             {
-                PivotField columnField = pivotTable.ColumnFields[0];
-                // In newer Aspose.Cells versions the visibility is controlled via IsHidden.
-                // Uncomment the following line if the property is available in your version.
-                // columnField.IsHidden = false;
+                if (field.Name == hiddenFieldName)
+                {
+                    try
+                    {
+                        // Use dynamic to access IsHidden property (available in newer versions)
+                        dynamic dynField = field;
+                        dynField.IsHidden = false;
+                    }
+                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+                    {
+                        // Property not available in this version; alternative handling can be added here
+                        Console.WriteLine($"Unable to set visibility for field \"{hiddenFieldName}\" – IsHidden property not supported.");
+                    }
+                    break;
+                }
             }
 
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Example 2: If you know the index of the hidden column field, you can set it directly
+            // int hiddenFieldIndex = 0; // replace with the correct zero‑based index
+            // try
+            // {
+            //     dynamic dynField = columnFields[hiddenFieldIndex];
+            //     dynField.IsHidden = false;
+            // }
+            // catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException) { }
 
-            // Save the modified workbook
+            // Save the updated workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

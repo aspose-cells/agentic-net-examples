@@ -1,94 +1,129 @@
-// Title: Import multiple DataTables into separate worksheets and generate a summary sheet that aggregates total Amount values with Aspose.Cells for .NET
-// AI Prompts: Import two DataTable objects into distinct worksheets, display column headers, and add a summary worksheet that uses SUM formulas to calculate each sheet's total Amount. | Create a workbook, auto‑fit all columns after importing the tables, and save the file as an XLSX document using Aspose.Cells. | Configure ImportTableOptions to show field names and insert rows when importing DataTables into worksheets.
-// Common Searches: how to import a DataTable into a specific worksheet with headers using Aspose.Cells C# | asp.net create summary worksheet that sums a column from multiple sheets in Aspose.Cells | set SUM formula for a column across worksheets with Aspose.Cells API
-// Tags: ImportTableOptions show field names Aspose.Cells | DataTable to worksheet import Aspose.Cells C# | summary worksheet SUM formula across sheets Aspose.Cells | auto fit columns after data import Aspose.Cells | save workbook as XLSX Aspose.Cells
+// Title: Import several CSV files into separate worksheets and create a summary sheet that totals column B using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads a list of CSV file paths, adds each as a new worksheet in an Aspose.Cells workbook, and writes a "Summary" worksheet that lists each sheet name with the sum of numeric values from column B. | Adjust the aggregation loop to compute the average of column B instead of the sum and update the summary worksheet to display the averages.
+// Common Searches: how to load multiple CSV files into separate worksheets with Aspose.Cells C# | Aspose.Cells create summary worksheet that shows totals per sheet | sum values from column B across worksheets using Aspose.Cells .NET | remove default Sheet1 when adding new worksheets in Aspose.Cells | auto fit columns after writing data in Aspose.Cells workbook
+// Tags: import csv files as individual worksheets Aspose.Cells | calculate per‑sheet column B sum Aspose.Cells | add summary sheet with aggregated results .NET | delete default empty worksheet Aspose.Cells | auto‑fit columns after data write Aspose.Cells
 
 using System;
-using System.Data;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsImportAndSummarize
+namespace AsposeCellsAggregation
 {
-    // The program creates a new workbook, imports two DataTable objects into separate worksheets with column headers, adds a summary worksheet that uses SUM formulas to total the Amount column from each sheet, auto‑fits the columns for readability, and saves the workbook as ImportedAndSummarized.xlsx.
+    // The program creates a new workbook, imports each specified CSV file into its own worksheet, removes the default empty sheet, adds a "Summary" worksheet, and writes the sum of numeric values from column B of each imported sheet into the summary.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // ---------- Import first table ----------
-            // Prepare sample DataTable
-            DataTable table1 = new DataTable("Sales_Q1");
-            table1.Columns.Add("Product", typeof(string));
-            table1.Columns.Add("Quantity", typeof(int));
-            table1.Columns.Add("Amount", typeof(double));
-
-            // Add rows
-            table1.Rows.Add("Apple", 120, 1500.0);
-            table1.Rows.Add("Banana", 80, 800.0);
-            table1.Rows.Add("Cherry", 50, 1250.0);
-
-            // Set import options (show column headers)
-            ImportTableOptions options1 = new ImportTableOptions
+            try
             {
-                IsFieldNameShown = true,
-                InsertRows = true
-            };
+                // ---------- Create a new workbook ----------
+                var workbook = new Workbook(); // create workbook (rule)
 
-            // Import into the first worksheet starting at cell A1 (row 0, column 0)
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Q1";
-            sheet1.Cells.ImportData(table1, 0, 0, options1);
+                // List of CSV files to import
+                var csvFiles = new List<string>
+                {
+                    "Data1.csv",
+                    "Data2.csv",
+                    "Data3.csv"
+                };
 
-            // ---------- Import second table ----------
-            // Create a new worksheet for the second table
-            int sheet2Index = workbook.Worksheets.Add();
-            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
-            sheet2.Name = "Q2";
+                // Keep track of imported sheet names
+                var importedSheetNames = new List<string>();
 
-            DataTable table2 = new DataTable("Sales_Q2");
-            table2.Columns.Add("Product", typeof(string));
-            table2.Columns.Add("Quantity", typeof(int));
-            table2.Columns.Add("Amount", typeof(double));
+                // Import each CSV file into its own worksheet
+                foreach (var csvFile in csvFiles)
+                {
+                    // Verify that the CSV file exists
+                    if (!File.Exists(csvFile))
+                    {
+                        Console.WriteLine($"Warning: File \"{csvFile}\" not found. Skipping.");
+                        continue;
+                    }
 
-            table2.Rows.Add("Apple", 100, 1300.0);
-            table2.Rows.Add("Banana", 90, 950.0);
-            table2.Rows.Add("Cherry", 70, 1400.0);
+                    try
+                    {
+                        // Load CSV into a temporary workbook
+                        var loadOptions = new LoadOptions(LoadFormat.Csv);
+                        var tempWb = new Workbook(csvFile, loadOptions); // load (rule)
 
-            ImportTableOptions options2 = new ImportTableOptions
+                        // Get the first worksheet from the temporary workbook
+                        var sourceSheet = tempWb.Worksheets[0];
+
+                        // Rename the worksheet to match the source file (without extension)
+                        var sheetName = Path.GetFileNameWithoutExtension(csvFile);
+                        sourceSheet.Name = sheetName;
+
+                        // Copy the worksheet into the main workbook using its name
+                        workbook.Worksheets.AddCopy(sourceSheet.Name);
+                        importedSheetNames.Add(sheetName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing \"{csvFile}\": {ex.Message}");
+                    }
+                }
+
+                // Remove the default empty sheet created with the workbook (if it exists)
+                if (workbook.Worksheets.Count > 0 &&
+                    workbook.Worksheets[0].Cells.MaxDataRow == -1 &&
+                    workbook.Worksheets[0].Name == "Sheet1")
+                {
+                    workbook.Worksheets.RemoveAt(0);
+                }
+
+                // ---------- Create Summary Sheet ----------
+                var summarySheet = workbook.Worksheets.Add("Summary");
+
+                // Write headers
+                summarySheet.Cells["A1"].PutValue("Table");
+                summarySheet.Cells["B1"].PutValue("Total");
+
+                int summaryRow = 1; // zero‑based index (row 2 in Excel)
+
+                // Aggregate totals from each imported sheet
+                foreach (var sheetName in importedSheetNames)
+                {
+                    var sheet = workbook.Worksheets[sheetName];
+
+                    // Assume the numeric column is the second column (B)
+                    int numericColumnIndex = 1; // zero‑based index for column B
+
+                    // Find the last row with data in the sheet
+                    int lastDataRow = sheet.Cells.MaxDataRow;
+
+                    double total = 0.0;
+
+                    // Sum values from row 2 (skip header) to the last data row
+                    for (int row = 1; row <= lastDataRow; row++)
+                    {
+                        var cell = sheet.Cells[row, numericColumnIndex];
+                        if (cell.Type == CellValueType.IsNumeric)
+                        {
+                            total += cell.DoubleValue;
+                        }
+                    }
+
+                    // Write the table name and its total into the summary sheet
+                    summarySheet.Cells[summaryRow, 0].PutValue(sheetName); // Column A
+                    summarySheet.Cells[summaryRow, 1].PutValue(total);    // Column B
+
+                    summaryRow++;
+                }
+
+                // Auto‑fit columns for better readability
+                summarySheet.AutoFitColumns();
+
+                // ---------- Save the workbook ----------
+                string outputPath = "AggregatedReport.xlsx";
+                workbook.Save(outputPath); // save (rule)
+
+                Console.WriteLine($"Aggregation complete. File saved as {outputPath}");
+            }
+            catch (Exception ex)
             {
-                IsFieldNameShown = true,
-                InsertRows = true
-            };
-
-            // Import into the second worksheet starting at cell A1
-            sheet2.Cells.ImportData(table2, 0, 0, options2);
-
-            // ---------- Create summary sheet ----------
-            int summaryIndex = workbook.Worksheets.Add();
-            Worksheet summarySheet = workbook.Worksheets[summaryIndex];
-            summarySheet.Name = "Summary";
-
-            // Header row
-            summarySheet.Cells["A1"].PutValue("Source Sheet");
-            summarySheet.Cells["B1"].PutValue("Total Amount");
-
-            // Row for first table total
-            summarySheet.Cells["A2"].PutValue(sheet1.Name);
-            // Formula to sum the "Amount" column of Q1 (excluding header)
-            // Assuming "Amount" is column C (index 2) and data starts at row 2 (index 1)
-            summarySheet.Cells["B2"].Formula = $"SUM('{sheet1.Name}'!C2:C{table1.Rows.Count + 1})";
-
-            // Row for second table total
-            summarySheet.Cells["A3"].PutValue(sheet2.Name);
-            summarySheet.Cells["B3"].Formula = $"SUM('{sheet2.Name}'!C2:C{table2.Rows.Count + 1})";
-
-            // Auto‑fit columns for better readability
-            summarySheet.AutoFitColumns();
-
-            // Save the workbook
-            workbook.Save("ImportedAndSummarized.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

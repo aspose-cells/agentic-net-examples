@@ -1,27 +1,70 @@
-// Title: List all named ranges in an Excel workbook and print their addresses with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that loads an .xlsx file and prints each defined name together with its RefersTo address to the console. | Generate a console application that iterates over workbook.Worksheets.Names and displays the name, worksheet, and range address for every named range. | Create a C# snippet that enumerates all named ranges in a workbook and outputs the name, sheet reference, and address in a formatted line.
-// Common Searches: Aspose.Cells C# list all defined names in an Excel file | how to retrieve RefersTo address of named ranges using Aspose.Cells .NET | C# console output of Excel named range addresses with Aspose.Cells | enumerate workbook named ranges programmatically Aspose.Cells
-// Tags: Aspose.Cells enumerate named ranges | C# list defined names RefersTo | output named range addresses console | workbook.Worksheets.Names iteration | retrieve Excel named range addresses .NET
+// Title: How to list all named ranges in an Excel workbook and print their addresses using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells list all defined names in an Excel file | retrieve named range addresses from a workbook with Aspose.Cells .NET | enumerate workbook named ranges and display RefersTo values in console | Aspose.Cells .NET get named range address programmatically | list named ranges in password protected Excel using Aspose.Cells C#
+// Tags: Aspose.Cells list defined names | C# enumerate named ranges | Aspose.Cells get RefersTo address | Excel workbook named range extraction .NET | handle password protected workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, iterates through workbook.Worksheets.Names, and writes each named range's name and RefersTo address to the console.
+// The example loads an Excel workbook (including optional password handling), iterates through Workbook.Worksheets.Names, and writes each named range's name and its RefersTo address (e.g., =Sheet1!$A$1:$B$5) to the console, with robust error handling for file access and processing.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Iterate through all defined names (named ranges) in the workbook
-        foreach (Name namedRange in workbook.Worksheets.Names)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // The RefersTo property contains the address of the range (e.g., =Sheet1!$A$1:$B$2)
-            string address = namedRange.RefersTo;
+            Console.WriteLine($"Error: File not found – \"{inputPath}\"");
+            return;
+        }
 
-            // Output the name and its address to the console
-            Console.WriteLine($"{namedRange.Text}: {address}");
+        Workbook workbook = null;
+        LoadOptions loadOptions = new LoadOptions();
+
+        try
+        {
+            // Attempt to load the workbook without a password
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (CellsException ex) when (ex.Message.Contains("password", StringComparison.OrdinalIgnoreCase))
+        {
+            // Workbook is password‑protected; request password from the user
+            Console.Write("The workbook is password protected. Enter password: ");
+            string password = Console.ReadLine() ?? string.Empty;
+
+            loadOptions.Password = password;
+
+            try
+            {
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception innerEx)
+            {
+                Console.WriteLine($"Failed to open workbook with provided password: {innerEx.Message}");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through all defined names (named ranges) in the workbook
+            foreach (Name namedRange in workbook.Worksheets.Names)
+            {
+                // The RefersTo property contains the address the name points to (e.g., =Sheet1!$A$1:$B$5)
+                string address = namedRange.RefersTo;
+                Console.WriteLine($"{namedRange.Text}: {address}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while processing named ranges: {ex.Message}");
         }
     }
 }

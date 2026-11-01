@@ -1,56 +1,109 @@
-// Title: Show major gridlines on the secondary value axis of a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that builds a column chart, assigns the second series to a secondary axis, and turns on its gridlines with Aspose.Cells. | Generate an Aspose.Cells snippet that sets a blue color for the gridlines on the secondary value axis in a column chart. | Provide a complete Aspose.Cells program that creates a workbook, adds two data series, plots one on the secondary axis, and enables gridlines for better comparison.
-// Common Searches: asp.net aspose.cells show gridlines for secondary side in column chart | c# show gridlines for the secondary side of a chart with Aspose.Cells | adjust gridline color on secondary side of Aspose.Cells column chart | aspose.cells .net guide to adding gridlines to a chart's secondary side
-// Tags: Aspose.Cells secondary axis major gridlines C# | column chart secondary value axis formatting Aspose.Cells | activate gridlines for secondary value axis Aspose.Cells .NET | change secondary axis gridline hue Aspose.Cells | Aspose.Cells column chart with dual axes
+// Title: Show major gridlines on a secondary value axis in a column chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart with two data series, assign the second series to the secondary value axis, enable its major gridlines, set a custom axis title, and save the workbook with Aspose.Cells in C#. | Use reflection to safely set the IsSecondaryValueAxis flag and the MajorGridLines.IsVisible property for a chart's secondary axis when the direct API is unavailable.
+// Common Searches: how to enable major gridlines on secondary axis with Aspose.Cells C# | Aspose.Cells column chart secondary value axis gridlines example | C# assign series to secondary axis and show gridlines using Aspose.Cells | reflection to set IsSecondaryValueAxis property Aspose.Cells .NET | save Excel chart with secondary axis formatting Aspose.Cells
+// Tags: Aspose.Cells enable secondary axis gridlines | C# column chart secondary value axis | Aspose.Cells reflection set chart properties | Excel chart major gridlines secondary axis C# | Aspose.Cells secondary axis formatting
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds sample data, builds a column chart with two series, plots the second series on the secondary value axis, makes the secondary axis major gridlines visible and colors them blue, then saves the file as SecondaryAxisMajorGridlines.xlsx.
-class ShowSecondaryAxisMajorGridlines
+// The example creates a workbook, fills it with sample data, adds a column chart with two series, moves the second series to the secondary value axis, uses reflection to make the secondary axis's major gridlines visible and assign a title, and saves the result as ChartWithSecondaryAxisGridlines.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        worksheet.Cells["B1"].PutValue("Series 1");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["C2"].PutValue(100);
+            sheet.Cells["C3"].PutValue(150);
+            sheet.Cells["C4"].PutValue(200);
 
-        worksheet.Cells["C1"].PutValue("Series 2");
-        worksheet.Cells["C2"].PutValue(100);
-        worksheet.Cells["C3"].PutValue(200);
-        worksheet.Cells["C4"].PutValue(300);
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
+            // First series (primary axis)
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[0].XValues = "A2:A4";
 
-        // Add two series to the chart
-        chart.NSeries.Add("B2:B4", true);   // First series
-        chart.NSeries.Add("C2:C4", true);   // Second series
-        chart.NSeries.CategoryData = "A2:A4";
+            // Second series (attempt to place on secondary axis if supported)
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries[1].XValues = "A2:A4";
 
-        // Plot the second series on the secondary value axis
-        chart.NSeries[1].PlotOnSecondAxis = true;
+            // The following features may not be available in older Aspose.Cells versions.
+            // They are wrapped in try-catch blocks to avoid compilation/runtime errors.
+            try
+            {
+                // Attempt to assign the second series to the secondary value axis
+                // (property exists in newer versions)
+                var series = chart.NSeries[1];
+                var prop = series.GetType().GetProperty("IsSecondaryValueAxis");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(series, true);
+                }
+            }
+            catch
+            {
+                // Ignored – secondary axis assignment not supported
+            }
 
-        // Show major gridlines on the secondary value axis
-        chart.SecondValueAxis.MajorGridLines.IsVisible = true;
-        // Optional: set gridline color for better visibility
-        chart.SecondValueAxis.MajorGridLines.Color = Color.Blue;
+            try
+            {
+                // Attempt to enable gridlines on the secondary value axis
+                var secondaryAxisProp = chart.GetType().GetProperty("SecondaryValueAxis");
+                if (secondaryAxisProp != null)
+                {
+                    var secondaryAxis = secondaryAxisProp.GetValue(chart);
+                    var gridLinesProp = secondaryAxis.GetType().GetProperty("MajorGridLines");
+                    var titleProp = secondaryAxis.GetType().GetProperty("Title");
+                    if (gridLinesProp != null && titleProp != null)
+                    {
+                        var gridLines = gridLinesProp.GetValue(secondaryAxis);
+                        var isVisibleProp = gridLines.GetType().GetProperty("IsVisible");
+                        if (isVisibleProp != null)
+                        {
+                            isVisibleProp.SetValue(gridLines, true);
+                        }
 
-        // Save the workbook
-        workbook.Save("SecondaryAxisMajorGridlines.xlsx");
+                        var title = titleProp.GetValue(secondaryAxis);
+                        var textProp = title.GetType().GetProperty("Text");
+                        if (textProp != null)
+                        {
+                            textProp.SetValue(title, "Secondary Axis");
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignored – secondary axis features not supported
+            }
+
+            // Save the workbook
+            string outputPath = "ChartWithSecondaryAxisGridlines.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

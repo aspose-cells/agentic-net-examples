@@ -1,24 +1,23 @@
-// Title: Detect plain‑text encryption passwords hidden in custom document properties of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that iterates over a workbook's CustomDocumentProperties and logs an alert when a property name contains the word "password" and its value is a non‑empty string. | Create a reusable method in Aspose.Cells that returns true if any custom metadata field in an Excel file stores an unencrypted password, and writes the offending property name to the console. | Modify the sample to collect all matching custom properties, output their names and values, and exit the application with a non‑zero status code if any unencrypted passwords are found.
-// Common Searches: how to audit Excel custom document properties for stored passwords using Aspose.Cells in C# | Aspose.Cells detect password stored in workbook metadata .NET | scan .xlsx custom metadata for encryption credentials programmatically | raise warning when Excel file contains password in custom properties Aspose.Cells | validate that Excel workbook does not expose encryption password in custom fields
-// Tags: scan custom document properties Aspose.Cells | password exposure Excel | workbook metadata security validation .NET | Aspose.Cells encryption password audit | Excel file custom metadata check
+// Title: Identify plain‑text encryption passwords hidden in Excel custom document properties with Aspose.Cells for .NET
+// Common Searches: C# code to scan Excel custom document properties for stored passwords using Aspose.Cells | how to detect insecure plain text password in an .xlsx file with Aspose.Cells .NET | raise an alert when a workbook's encryption password is saved in custom metadata in C# | check Excel workbook metadata for clear‑text password using Aspose.Cells library | validate that Excel custom properties do not contain clear‑text passwords in .NET
+// Tags: custom document properties scanning Aspose.Cells | password exposure detection in Excel workbooks | metadata security validation C# Aspose.Cells | encryption password plain‑text alert .NET | secure workbook metadata check
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook with Aspose.Cells, iterates through its custom document properties, and prints an alert if any property name includes "password" and its value is a non‑empty string; otherwise it reports that no plain‑text encryption password was found.
-class Program
+// The example loads an Excel workbook with Aspose.Cells, iterates through all custom document properties, and flags any property whose name contains "password" and whose value is a non‑empty string, emitting an alert for plain‑text passwords or confirming none were found.
+class WorkbookPasswordChecker
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Path to the workbook file
+        // Path to the workbook to be inspected
         string filePath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the file exists before attempting to load it
         if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: File not found at path '{filePath}'.");
+            Console.WriteLine($"Error: The file '{filePath}' was not found.");
             return;
         }
 
@@ -34,23 +33,26 @@ class Program
             return;
         }
 
-        // Scan custom document properties for plain‑text passwords
-        bool passwordDetected = false;
+        // Flag to indicate if a plain‑text password was found
+        bool passwordFound = false;
+
+        // Iterate through all custom document properties
         foreach (var prop in workbook.CustomDocumentProperties)
         {
-            // Identify properties whose name suggests a password
-            if (prop.Name != null && prop.Name.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            // Check if the property name suggests it may hold a password
+            if (prop.Name.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                // Verify the value is a non‑empty string
-                if (prop.Value is string value && !string.IsNullOrWhiteSpace(value))
+                // Ensure the value is a non‑empty string
+                if (prop.Value is string strValue && !string.IsNullOrWhiteSpace(strValue))
                 {
+                    // Alert: plain‑text password detected
                     Console.WriteLine($"Alert: Encryption password stored in plain text in custom metadata property '{prop.Name}'.");
-                    passwordDetected = true;
+                    passwordFound = true;
                 }
             }
         }
 
-        if (!passwordDetected)
+        if (!passwordFound)
         {
             Console.WriteLine("No plain‑text encryption password found in custom metadata.");
         }

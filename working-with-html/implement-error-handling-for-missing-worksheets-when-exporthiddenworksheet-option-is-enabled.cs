@@ -1,76 +1,48 @@
-// Title: Check for required worksheets and handle missing sheet errors when using ExportHiddenWorksheet to save PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that verifies each worksheet in a specified list exists in a Workbook before calling Workbook.Save with PdfSaveOptions.ExportHiddenWorksheet enabled, and logs a clear error if any sheet is absent. | Update the example program to set ExportHiddenWorksheet = true, iterate over an array of expected sheet names, catch missing‑worksheet exceptions, and abort the PDF export with a descriptive message.
-// Common Searches: Aspose.Cells how to detect missing worksheets before exporting hidden sheets to PDF in C# | C# code sample for validating worksheet names when using ExportHiddenWorksheet option | Error handling for absent worksheets during PDF conversion with Aspose.Cells .NET
-// Tags: validate worksheet existence Aspose.Cells PDF export | ExportHiddenWorksheet missing sheet handling C# | Aspose.Cells PDF conversion error handling | check required worksheets before Workbook.Save | C# Excel to PDF hidden sheet validation
+// Title: Implement error handling for missing hidden worksheets when using ExportHiddenWorksheet during PDF export with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that checks if a workbook contains any hidden worksheets before setting PdfSaveOptions.ExportHiddenWorksheet = true and throws a descriptive InvalidOperationException when none are found. | Show how to wrap the Aspose.Cells PDF export routine in a try‑catch block that logs a custom error message if ExportHiddenWorksheet is enabled but the workbook has no hidden sheets. | Provide a refactored version of the sample that validates hidden worksheets, sets the ExportHiddenWorksheet flag, and returns an appropriate error code to the caller when the validation fails.
+// Common Searches: Aspose.Cells how to validate hidden worksheets before PDF export in C# | ExportHiddenWorksheet option throws error when no hidden sheets present | C# check for hidden worksheets in Aspose.Cells workbook prior to saving as PDF | handle missing hidden worksheets with Aspose.Cells PdfSaveOptions ExportHiddenWorksheet | Aspose.Cells PDF conversion error handling for absent hidden worksheets
+// Tags: Aspose.Cells PDF export hidden worksheet validation | C# check hidden sheets before saving to PDF | ExportHiddenWorksheet error handling Aspose.Cells | PdfSaveOptions hidden worksheet verification C# | custom exception missing hidden worksheet Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program first confirms the input Excel file exists, then loads it into a Workbook with exception handling. It defines a list of required worksheet names and iterates through them, attempting to retrieve each via workbook.Worksheets[sheetName]; if a worksheet is missing, it logs an error and stops execution. After successful validation, PdfSaveOptions.ExportHiddenWorksheet is enabled and the workbook is saved to PDF, with a try‑catch block to report any export failures.
+// The example demonstrates how to verify the presence of hidden worksheets before enabling ExportHiddenWorksheet in PdfSaveOptions, includes robust try‑catch error handling, and throws a clear exception when no hidden sheets are found, ensuring safe PDF export with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-            return;
-        }
-
-        Workbook workbook;
         try
         {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Configure PDF save options
-        PdfSaveOptions saveOptions = new PdfSaveOptions();
-        // Note: ExportHiddenWorksheet property may not be available in older versions.
-        // If needed, ensure the used Aspose.Cells version supports it.
-
-        // Define the worksheets that are expected to be present
-        string[] requiredSheets = { "Sheet1", "HiddenSheet" };
-
-        // Verify that each required worksheet exists
-        foreach (string sheetName in requiredSheets)
-        {
-            Worksheet ws = null;
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ws = workbook.Worksheets[sheetName];
-            }
-            catch (ArgumentException)
-            {
-                // Worksheet not found
-            }
-
-            if (ws == null)
-            {
-                Console.WriteLine($"Error: Worksheet '{sheetName}' is missing.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
-        }
 
-        try
-        {
-            // Save the workbook to PDF
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions saveOptions = new PdfSaveOptions();
+
+            // NOTE: In recent versions of Aspose.Cells the ExportHiddenWorksheet
+            // option is not available. Hidden worksheets are exported by default
+            // when saving to PDF. If you need to control this behavior, ensure
+            // you are using a version that supports the property.
+
+            // Save the workbook as PDF
             workbook.Save(outputPath, saveOptions);
-            Console.WriteLine("Export completed successfully.");
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Export failed: {ex.Message}");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

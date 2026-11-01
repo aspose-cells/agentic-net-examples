@@ -1,98 +1,78 @@
-// Title: C# example: hierarchical month‑and‑year grouping in an Aspose.Cells pivot table
-// AI Prompts: Write C# code that builds a workbook, adds a pivot table, and nests month and year groups on a Date field using Aspose.Cells. | Show how to invoke PivotField.GroupBy with an array of PivotGroupByType to create a two‑level date hierarchy in a pivot table. | Adapt the sample to group dates by quarters and years instead of months and years in an Aspose.Cells pivot table.
-// Common Searches: aspocells c# pivot table group date by month then year | how to create hierarchical date grouping in Aspose.Cells pivot | C# example of PivotField.GroupBy multiple levels | Aspose.Cells pivot table month year hierarchy code | group dates by quarters and years in Aspose.Cells pivot table
-// Tags: Aspose.Cells pivot hierarchical grouping | C# PivotField.GroupBy nested groups | date field month year hierarchy Aspose.Cells | pivot table grouping by months and years .NET | Aspose.Cells create date hierarchy in pivot
+// Title: Generate a hierarchical Excel report with nested Group smart markers for Region and Product aggregation using Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that builds an Excel workbook, adds a data sheet, and uses Aspose.Cells WorkbookDesigner with {Group:Region} and {Group:Product} smart markers to produce a two‑level grouped report showing total sales per product. | Modify the smart‑marker layout to include a third grouping level (e.g., Year) and calculate the average sales for each year while keeping the existing Region‑Product hierarchy. | Replace the {Sum:Sales} aggregation with {Count:Sales} in the smart‑marker expression and adjust the report to display the number of sales entries for each product within each region.
+// Common Searches: how to use nested Group smart markers in Aspose.Cells C# to group by region and product | Aspose.Cells WorkbookDesigner two level grouping with sum aggregation example | C# generate hierarchical Excel report with smart markers grouping and aggregation | Aspose.Cells smart marker expression for grouping and summing sales data | nested grouping smart markers Aspose.Cells .NET tutorial
+// Tags: nested group smart markers Aspose.Cells | C# hierarchical Excel grouping with smart markers | sum aggregation smart marker expression | region product grouping report Aspose.Cells | two‑level grouping using smart markers
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsHierarchicalGrouping
+// The sample creates a workbook, populates a data sheet with Region, Product, and Sales columns, and defines a report sheet that uses {Group:Region}, a nested {Group:Product}, and {Sum:Sales} smart markers. WorkbookDesigner processes the markers with the provided data source, generating a hierarchical report saved as HierarchicalGrouping.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, populating date and sales data, adding a pivot table, and applying hierarchical grouping on the Date field by nesting months and years using PivotField.GroupBy in Aspose.Cells for .NET, then refreshing and saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook and add a data worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-            // ------------------------------------------------------------
-            // Populate sample data with two columns: Date and Sales
-            // ------------------------------------------------------------
-            // Header row
-            sheet.Cells["A1"].Value = "Date";
-            sheet.Cells["B1"].Value = "Sales";
+            // Populate sample data (Region, Product, Sales)
+            Cells cells = dataSheet.Cells;
+            cells["A1"].PutValue("Region");
+            cells["B1"].PutValue("Product");
+            cells["C1"].PutValue("Sales");
 
-            // Sample dates spanning several months and years
-            DateTime[] dates = new DateTime[]
+            var sampleData = new List<object>
             {
-                new DateTime(2022, 1, 15),
-                new DateTime(2022, 2, 20),
-                new DateTime(2022, 3, 10),
-                new DateTime(2023, 1, 5),
-                new DateTime(2023, 2, 25),
-                new DateTime(2023, 3, 30),
-                new DateTime(2024, 1, 12),
-                new DateTime(2024, 2, 18)
+                new { Region = "North", Product = "A", Sales = 100 },
+                new { Region = "North", Product = "B", Sales = 150 },
+                new { Region = "South", Product = "A", Sales = 200 },
+                new { Region = "South", Product = "B", Sales = 250 },
+                new { Region = "North", Product = "A", Sales = 120 },
+                new { Region = "South", Product = "A", Sales = 180 }
             };
 
-            // Corresponding sales values
-            double[] sales = new double[] { 1200, 1500, 1100, 2000, 2300, 2100, 2500, 2700 };
-
-            // Fill the worksheet with data
-            for (int i = 0; i < dates.Length; i++)
+            for (int i = 0; i < sampleData.Count; i++)
             {
-                sheet.Cells[i + 2, 0].Value = dates[i];
-                sheet.Cells[i + 2, 1].Value = sales[i];
+                dynamic row = sampleData[i];
+                cells[i + 2, 0].PutValue(row.Region);
+                cells[i + 2, 1].PutValue(row.Product);
+                cells[i + 2, 2].PutValue(row.Sales);
             }
 
-            // ------------------------------------------------------------
-            // Create a pivot table based on the data range
-            // ------------------------------------------------------------
-            // Data range: A1:B9 (including header)
-            int pivotIndex = sheet.PivotTables.Add("A1:B9", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add a worksheet that will contain the smart‑marker report
+            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            reportSheet.Name = "Report";
 
-            // Add the Date field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
+            // Header row for the report
+            reportSheet.Cells["A1"].PutValue("Region");
+            reportSheet.Cells["B1"].PutValue("Product");
+            reportSheet.Cells["C1"].PutValue("Total Sales");
 
-            // Add the Sales field to the data area (sum aggregation)
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // ---- Smart marker layout ----
+            // Row 2: first level group (Region)
+            reportSheet.Cells["A2"].PutValue("{Group:Region}");
+            // Row 3: second level group (Product) under the current Region
+            reportSheet.Cells["A3"].PutValue("{Group:Product}");
+            // Row 3 column C: aggregated sum of Sales for the current Product
+            reportSheet.Cells["C3"].PutValue("{Sum:Sales}");
+            // --------------------------------
 
-            // ------------------------------------------------------------
-            // Hierarchical grouping: nest Months and Years for the Date field
-            // ------------------------------------------------------------
-            // Retrieve the Date pivot field (first row field)
-            PivotField dateField = pivotTable.RowFields[0];
+            // Process the smart markers using WorkbookDesigner
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Provide the data source with a name that matches the root object used in the markers
+            designer.SetDataSource("Data", sampleData);
+            designer.Process();
 
-            // Define grouping range (auto-detect start/end can be set to false)
-            DateTime startDate = new DateTime(2022, 1, 1);
-            DateTime endDate   = new DateTime(2024, 12, 31);
-
-            // Specify multiple group types – first by Months, then by Years
-            PivotGroupByType[] groupTypes = new PivotGroupByType[]
-            {
-                PivotGroupByType.Months,
-                PivotGroupByType.Years
-            };
-
-            // Apply hierarchical grouping with an interval of 1 (default)
-            // The last parameter (false) indicates that only the first group type
-            // creates a new field; subsequent types are nested under it.
-            dateField.GroupBy(startDate, endDate, groupTypes, 1, false);
-
-            // ------------------------------------------------------------
-            // Refresh the pivot table to reflect grouping changes
-            // ------------------------------------------------------------
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // ------------------------------------------------------------
-            // Save the workbook
-            // ------------------------------------------------------------
-            workbook.Save("HierarchicalGroupingPivot.xlsx");
+            // Save the resulting workbook
+            workbook.Save("HierarchicalGrouping.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

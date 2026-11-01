@@ -1,36 +1,53 @@
-// Title: Logging .NET memory consumption before and after converting an Excel workbook to TIFF using Aspose.Cells (C#)
-// AI Prompts: Write a C# console program that uses GC.GetTotalMemory to record memory usage before loading a workbook, after loading, and after saving it as a TIFF with Aspose.Cells. | Show how to measure and output the managed heap size at each stage of an Excel‑to‑TIFF conversion using Aspose.Cells SaveFormat.Tiff. | Create a snippet that logs memory consumption surrounding the Workbook.Save call for TIFF export in a .NET application.
-// Common Searches: C# how to measure memory usage when converting Excel to TIFF with Aspose.Cells | Aspose.Cells .NET memory profiling during workbook.Save to TIFF | track .NET heap size before and after Excel to image conversion | log GC.GetTotalMemory around Aspose.Cells TIFF export in C# console app
-// Tags: Aspose.Cells workbook.Save TIFF memory profiling | GC.GetTotalMemory memory logging in C# | Excel to TIFF conversion resource usage tracking | measure .NET heap size during image export | log managed memory consumption Aspose.Cells
+// Title: Measure and log process memory before and after converting an Excel workbook to multi‑page TIFF with Aspose.Cells in C#
+// AI Prompts: Write C# code that captures the current process's private memory size, forces garbage collection, loads an .xlsx file using Aspose.Cells, saves it as a multi‑page TIFF, and prints the memory usage before and after the conversion. | Create a C# snippet that benchmarks memory consumption of Aspose.Cells when exporting a workbook to TIFF, including explicit GC calls and calculating the memory delta.
+// Common Searches: how to check memory usage in C# when saving Excel as TIFF with Aspose.Cells | C# profiling private memory before and after Aspose.Cells TIFF export | measure process memory impact of converting .xlsx to .tiff using Aspose.Cells | log memory consumption of Aspose.Cells workbook.Save to TIFF in .NET
+// Tags: Aspose.Cells TIFF export memory usage | C# process private memory measurement | force garbage collection for accurate memory reading | Excel workbook to multi-page TIFF performance | log memory delta after Aspose.Cells conversion
 
 using System;
+using System.Diagnostics;
 using Aspose.Cells;
 
-// // Demonstrates loading an Excel file with Aspose.Cells, converting it to a TIFF image, and logging managed heap memory before loading, after loading, and after saving using GC.GetTotalMemory.
+// // This example measures the private memory of the current process before and after loading an Excel workbook and saving it as a multi‑page TIFF with Aspose.Cells, using forced garbage collection to obtain accurate readings and outputting the memory delta.
 class Program
 {
     static void Main()
     {
-        // Paths for the source Excel file and the resulting TIFF file
-        string excelPath = "input.xlsx";
-        string tiffPath = "output.tiff";
+        // Paths (adjust as needed)
+        string inputFile = "input.xlsx";
+        string outputFile = "output.tiff";
 
-        // Log memory usage before loading the workbook
-        long memoryBeforeLoad = GC.GetTotalMemory(true);
-        Console.WriteLine($"Memory before loading workbook: {memoryBeforeLoad / 1024} KB");
+        // Ensure Aspose.Cells license is set if you have one
+        // License license = new License();
+        // license.SetLicense("Aspose.Cells.NET.lic");
 
-        // Load the Excel workbook
-        Workbook workbook = new Workbook(excelPath);
+        // Get current process for memory measurement
+        Process proc = Process.GetCurrentProcess();
 
-        // Log memory usage after loading the workbook
-        long memoryAfterLoad = GC.GetTotalMemory(true);
-        Console.WriteLine($"Memory after loading workbook: {memoryAfterLoad / 1024} KB");
+        // Force garbage collection before measurement
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
-        // Convert the workbook to TIFF format and save
-        workbook.Save(tiffPath, SaveFormat.Tiff);
+        // Memory before conversion (in MB)
+        long memoryBefore = proc.PrivateMemorySize64 / (1024 * 1024);
+        Console.WriteLine($"Memory before TIFF conversion: {memoryBefore} MB");
 
-        // Log memory usage after TIFF conversion
-        long memoryAfterSave = GC.GetTotalMemory(true);
-        Console.WriteLine($"Memory after TIFF conversion: {memoryAfterSave / 1024} KB");
+        // Load the workbook
+        Workbook workbook = new Workbook(inputFile);
+
+        // Save as TIFF (each worksheet will be saved as a separate page)
+        workbook.Save(outputFile, SaveFormat.Tiff);
+
+        // Force garbage collection again before second measurement
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Memory after conversion (in MB)
+        long memoryAfter = proc.PrivateMemorySize64 / (1024 * 1024);
+        Console.WriteLine($"Memory after TIFF conversion: {memoryAfter} MB");
+
+        // Optional: display the difference
+        Console.WriteLine($"Memory change: {memoryAfter - memoryBefore} MB");
     }
 }

@@ -1,35 +1,59 @@
-// Title: Export an Excel workbook to HTML with locale‑specific number formatting using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, assigns Workbook.Settings.CultureInfo to a target locale (e.g., fr-FR), and saves the workbook as HTML with Aspose.Cells. | Demonstrate how to apply a built‑in numeric style that automatically follows the workbook’s culture before performing an HTML export in Aspose.Cells. | Explain the effect of changing the workbook’s CultureInfo on decimal and thousand separators in the HTML output produced by Aspose.Cells.
-// Common Searches: how to export Excel to HTML with French number format using Aspose.Cells C# | Aspose.Cells set workbook culture before HTML conversion | C# locale specific decimal separator in HTML output from Excel | save workbook as HTML respecting regional settings Aspose.Cells | apply number format based on culture when converting Excel to HTML
-// Tags: Aspose.Cells HTML export with culture settings | Workbook.Settings.CultureInfo number formatting | C# locale-aware Excel to HTML conversion | apply built-in numeric style Aspose.Cells | regional decimal separator HTML output
+// Title: Export Excel to HTML with German locale number formatting using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets Workbook.Settings.CultureInfo to a specified locale (e.g., de-DE), applies a custom numeric format to a defined cell range, and saves the workbook as HTML with images embedded as Base64 using Aspose.Cells. | Adapt the example to export only the active worksheet to HTML while keeping the workbook's culture‑specific number separators and embedding images as Base64. | Create a reusable C# method ExportToHtml(inputPath, outputPath, cultureCode, numberFormat) that applies the given culture and numeric format to the workbook and writes an HTML file using Aspose.Cells HtmlSaveOptions.
+// Common Searches: how to export Excel to HTML with German number formatting using Aspose.Cells .NET | Aspose.Cells set workbook culture info before HTML conversion C# | apply custom numeric format to a range and export to HTML with embedded images Aspose.Cells | export entire workbook to HTML preserving locale specific separators Aspose.Cells | C# Aspose.Cells HtmlSaveOptions culture-specific formatting example
+// Tags: Aspose.Cells HTML export with culture-specific formatting | C# set workbook CultureInfo Aspose.Cells | custom numeric format range Aspose.Cells | embed images Base64 HTML Aspose.Cells | German locale number separators Aspose.Cells
 
 using System;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Loads an Excel file, sets Workbook.Settings.CultureInfo to a specific locale (e.g., fr-FR) so numeric formats use locale‑appropriate separators, and saves the workbook as an HTML file using Aspose.Cells.
-class ExportExcelToHtmlWithLocale
+// // Loads InputWorkbook.xlsx, sets workbook culture to German (de-DE), applies custom number format "#,##0.00" to cells A1:A10, and saves the workbook as OutputWorkbook.html with images embedded as Base64 via HtmlSaveOptions.
+class Program
 {
     static void Main()
     {
-        // Load the existing Excel workbook
-        // Replace "input.xlsx" with the path to your source Excel file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook.html";
 
-        // Set the workbook's culture to the desired locale (e.g., French - France)
-        // This influences number formatting (decimal separators, thousand separators, etc.)
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Optionally, ensure that cells use the built‑in number formats that respect the culture.
-        // For example, apply a number format to a column if needed:
-        // Worksheet sheet = workbook.Worksheets[0];
-        // Style style = workbook.CreateStyle();
-        // style.Number = 2; // Number format with two decimal places
-        // StyleFlag flag = new StyleFlag { NumberFormat = true };
-        // sheet.Cells["A1:A10"].ApplyStyle(style, flag);
+            // Load the existing Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Export the workbook to HTML
-        // Replace "output.html" with the desired output path
-        workbook.Save("output.html", SaveFormat.Html);
+            // Set the workbook culture to the desired locale (e.g., German - Germany)
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+            // Apply a custom number format to the range A1:A10 on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Style style = workbook.CreateStyle();
+            style.Custom = "#,##0.00"; // Separator follows the workbook culture
+            StyleFlag flag = new StyleFlag { NumberFormat = true };
+            sheet.Cells.CreateRange("A1:A10").ApplyStyle(style, flag);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = false,   // Export the whole workbook
+                ExportImagesAsBase64 = true          // Embed images as Base64 strings
+                // Note: ExportCultureInfo and ExportEmbeddedCss are not available in the current API version
+            };
+
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

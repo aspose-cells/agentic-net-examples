@@ -1,84 +1,103 @@
-// Title: Retrieve a dictionary of external connection names and command texts from an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that takes a workbook file path, loads the file with Aspose.Cells, iterates its DataConnections collection, and returns a Dictionary<string,string> mapping each connection's Name to its Command text. | Create a reusable helper that checks the existence of the Excel file, catches loading errors, and extracts external connection command queries from the workbook using Aspose.Cells.
-// Common Searches: asp.net how to list external data connections and their SQL queries from an .xlsx with Aspose.Cells | c# retrieve DataConnections command text from Excel workbook using Aspose.Cells | method to map connection names to command strings in an Aspose.Cells workbook | extract external connection command from Excel file programmatically in .NET
-// Tags: Aspose.Cells external connections extraction | C# map connection name to command | DataConnections collection iteration .NET | Excel workbook path validation Aspose.Cells | handle missing workbook file .NET
+// Title: Get a dictionary of Excel workbook connection names and their command texts with Aspose.Cells in C#
+// AI Prompts: Write a C# method that accepts a file path, loads the workbook with Aspose.Cells, and returns a Dictionary<string,string> where each key is a connection name and each value is its CommandText. | Create a helper that receives an Aspose.Cells Workbook object, uses reflection to iterate over WorkbookConnections, and populates a case‑insensitive dictionary with connection.Name and connection.Command.
+// Common Searches: c# aspocells retrieve workbook connection commandtext dictionary | how to list data connections in an .xlsx using Aspose.Cells | extract connection names from Excel file with Aspose.Cells .NET | reflection to access WorkbookConnections property in Aspose.Cells | get connection command strings from Excel workbook programmatically
+// Tags: Aspose.Cells workbook connections dictionary | C# extract Excel data connection command text | reflection enumerate WorkbookConnections Aspose.Cells | load Excel file and retrieve connection names .NET | case-insensitive dictionary of connection command texts
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-// The example defines a static GetConnectionCommands method that validates the workbook path, loads the Excel file in read‑only mode with Aspose.Cells, accesses its DataConnections collection, and builds a Dictionary where each key is the external connection name and each value is the associated Command text, while providing robust exception handling. A sample Program demonstrates invoking the helper and printing the results.
-public static class ConnectionHelper
+namespace AsposeCellsDemo
 {
-    /// <param name="filePath">Path to the workbook file.</param>
-    /// <returns>Dictionary of connection names and their Command texts.</returns>
-    public static Dictionary<string, string> GetConnectionCommands(string filePath)
+    // Provides two static helper methods—one that loads an Excel file by path and another that works with an existing Workbook—to return a case‑insensitive Dictionary mapping each workbook connection’s Name to its Command text, using reflection for version‑agnostic access to WorkbookConnections.
+    public static class AsposeCellsHelper
     {
-        // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException($"Workbook file not found: {filePath}");
-
-        var connectionCommands = new Dictionary<string, string>();
-
-        try
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <returns>Dictionary of connection names and their command texts.</returns>
+        public static Dictionary<string, string> GetConnectionCommandTexts(string filePath)
         {
-            // Load the workbook (read‑only operation)
-            Workbook workbook = new Workbook(filePath);
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("File path must be provided.", nameof(filePath));
 
-            // Access the collection of external connections
-            ExternalConnectionCollection connections = workbook.DataConnections;
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Excel file not found.", filePath);
 
-            // Iterate through each connection and capture its Name and Command
-            foreach (ExternalConnection conn in connections)
+            try
             {
-                string commandText = conn.Command ?? string.Empty;
-                string connectionName = conn.Name ?? string.Empty;
-
-                // Add to dictionary (overwrite if name already exists)
-                connectionCommands[connectionName] = commandText;
+                // Load the workbook from the specified file.
+                Workbook workbook = new Workbook(filePath);
+                return GetConnectionCommandTexts(workbook);
+            }
+            catch (Exception ex)
+            {
+                // Wrap any loading errors.
+                throw new InvalidOperationException("Failed to load workbook.", ex);
             }
         }
-        catch (Exception ex)
-        {
-            // Wrap any exception with a more descriptive message
-            throw new InvalidOperationException("Failed to retrieve connection commands from the workbook.", ex);
-        }
 
-        return connectionCommands;
+        /// <param name="workbook">An already loaded Aspose.Cells Workbook.</param>
+        /// <returns>Dictionary of connection names and their command texts.</returns>
+        public static Dictionary<string, string> GetConnectionCommandTexts(Workbook workbook)
+        {
+            if (workbook == null) throw new ArgumentNullException(nameof(workbook));
+
+            var connectionInfo = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                // Use reflection to stay compatible with different Aspose.Cells versions.
+                var connectionsProp = workbook.GetType().GetProperty("WorkbookConnections");
+                if (connectionsProp == null) return connectionInfo; // No connections support.
+
+                var connections = connectionsProp.GetValue(workbook) as IEnumerable;
+                if (connections == null) return connectionInfo;
+
+                foreach (var conn in connections)
+                {
+                    if (conn == null) continue;
+
+                    var nameProp = conn.GetType().GetProperty("Name");
+                    var commandProp = conn.GetType().GetProperty("Command");
+
+                    string name = nameProp?.GetValue(conn) as string ?? string.Empty;
+                    string command = commandProp?.GetValue(conn) as string ?? string.Empty;
+
+                    connectionInfo[name] = command;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle reflection errors if needed.
+                throw new InvalidOperationException("Failed to retrieve workbook connections.", ex);
+            }
+
+            return connectionInfo;
+        }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    class Program
     {
-        // Expect the workbook path as the first argument
-        if (args.Length == 0)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Usage: <program> <workbook_path>");
-            return;
-        }
-
-        string workbookPath = args[0];
-
-        try
-        {
-            var connections = ConnectionHelper.GetConnectionCommands(workbookPath);
-            Console.WriteLine("External Connections:");
-            foreach (var kvp in connections)
+            try
             {
-                Console.WriteLine($"Name: {kvp.Key}, Command: {kvp.Value}");
+                // Use first argument as file path or fallback to a default name.
+                string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+
+                var connections = AsposeCellsHelper.GetConnectionCommandTexts(filePath);
+
+                Console.WriteLine($"Connections found in '{filePath}':");
+                foreach (var kvp in connections)
+                {
+                    Console.WriteLine($"Name: {kvp.Key}, CommandText: {kvp.Value}");
+                }
             }
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.WriteLine(fnfEx.Message);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

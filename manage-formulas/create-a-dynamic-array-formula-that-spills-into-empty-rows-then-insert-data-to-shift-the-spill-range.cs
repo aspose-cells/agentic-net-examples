@@ -1,38 +1,37 @@
-// Title: Insert a row to shift a SEQUENCE dynamic array spill and recalculate formulas using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that writes a =SEQUENCE(5) formula in A1, saves the workbook, inserts a new row at position 2, recalculates, and saves the modified file. | Show how to preserve a spilled dynamic array when inserting rows in an Excel worksheet using Aspose.Cells, including updating the spill range after recalculation. | Provide a C# example that adds custom data to an inserted row while keeping the SEQUENCE array formula intact and correctly shifted.
-// Common Searches: how to shift a spilled SEQUENCE array after inserting rows with Aspose.Cells .NET | C# Aspose.Cells insert row and keep dynamic array spill range updated | recalculate dynamic array formulas after row insertion using Aspose.Cells
-// Tags: Aspose.Cells insert rows dynamic array spill | C# SEQUENCE function spill handling | recalculate formulas after row insertion Aspose.Cells | save workbook after shifting dynamic array | dynamic array spill range management .NET
+// Title: Create a spilling SEQUENCE dynamic array formula and shift its range by inserting rows with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells create a SEQUENCE formula that spills into a vertical range | how to move a spilled dynamic array down by inserting rows using Aspose.Cells | recalculate formulas after inserting rows in an Aspose.Cells workbook | save workbook before and after shifting a spilled array formula with Aspose.Cells
+// Tags: Aspose.Cells set SEQUENCE dynamic array formula | insert rows to shift spilled array range Aspose.Cells | recalculate formulas after row insertion C# | save workbook with updated spill Aspose.Cells | dynamic array spill handling Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// // This program creates a new workbook, places a =SEQUENCE(5) formula in cell A1 (spilling to A1:A5), saves the file, inserts a row at Excel row 2 to move the spill to A2:A6, adds a custom value in the inserted row, recalculates formulas to update the spill range, and saves the updated workbook.
+// The example demonstrates how to use Aspose.Cells for .NET to set a SEQUENCE formula in cell A1 that spills into a vertical range, calculate and save the initial workbook, insert a row to shift the spilled range down, add data to the inserted row, recalculate the formulas, and save the workbook with the updated spill range.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Place a dynamic array formula in A1 that spills into 5 rows (A1:A5)
-        // The SEQUENCE function generates a vertical array of numbers 1 to 5
-        sheet.Cells["A1"].Formula = "=SEQUENCE(5)";
+        // Set a dynamic array formula in A1 that spills 5 rows (A1:A5)
+        // SEQUENCE generates a vertical array of numbers 1 to 5
+        sheet.Cells["A1"].Formula = "=SEQUENCE(5,1,1,1)";
 
-        // Evaluate the formula so the spill range is populated
+        // Calculate the formula so the spill range is populated
         workbook.CalculateFormula();
 
-        // Save the workbook with the initial spill range
+        // Save the workbook with the initial spill
         workbook.Save("DynamicArraySpill.xlsx");
 
-        // Insert a new row at index 1 (Excel row 2) to shift the spill range down
-        // This will cause the spilled values to move down one row (A2:A6)
-        sheet.Cells.InsertRows(1, 1);
+        // Insert a new row at row 2 (index 1) to shift the spill range down
+        // This will move the original spill from A1:A5 to A2:A6
+        sheet.Cells.InsertRows(1, 1); // Insert one row above the original A2
 
-        // Optionally add some data in the newly inserted row
+        // Add some data in the inserted row to illustrate the shift
         sheet.Cells["A2"].PutValue("Inserted Row");
 
-        // Recalculate formulas after the row insertion to update the spill range
+        // Recalculate formulas after the row insertion
         workbook.CalculateFormula();
 
         // Save the workbook after shifting the spill range

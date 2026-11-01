@@ -1,69 +1,51 @@
-// Title: Add bold 12‑point X‑axis and Y‑axis titles to an existing Excel chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to set the CategoryAxis.Title text, make it bold, and set the font size to 12 points for a chart in a workbook. | Update the first chart on the first worksheet to add formatted X and Y axis titles (bold, 12‑pt) and save the workbook with Aspose.Cells for .NET.
-// Common Searches: how to set bold 12 point font for chart axis titles in Aspose.Cells C# | Aspose.Cells C# add X axis title to existing chart | change value axis title font size Aspose.Cells .NET | programmatically format Excel chart axis titles using Aspose.Cells | C# Aspose.Cells set category axis title text and style
-// Tags: Aspose.Cells chart axis title formatting | set category axis title font Aspose.Cells | apply bold font to Excel chart axis Aspose.Cells | modify chart axis titles .NET | C# Aspose.Cells update existing chart
+// Title: How to apply bold 12‑point titles to X‑ and Y‑axes of a column chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart in a new workbook and set the X‑axis title to "Months" and the Y‑axis title to "Sales" using bold 12‑point font with Aspose.Cells in C#. | Use Aspose.Cells to format chart axis titles by enabling bold style and specifying a 12‑point font size for both category and value axes. | Generate an Excel file that contains a column chart whose axis titles are programmatically styled with bold 12‑point text via the Aspose.Cells API.
+// Common Searches: C# Aspose.Cells set 12‑point bold text for chart X and Y axis titles | How to add and format axis titles in a column chart using Aspose.Cells for .NET | Aspose.Cells chart axis title styling example in C# | Programmatically set category and value axis titles with font size in Aspose.Cells workbook
+// Tags: Aspose.Cells chart axis title font styling | C# column chart axis title bold | Aspose.Cells set axis title size 12 | Excel workbook chart axis title formatting | Aspose.Cells add X and Y axis titles
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an existing Excel workbook, accesses the first chart, assigns custom text to the X (category) and Y (value) axes, applies bold 12‑point formatting to both titles, and saves the modified file.
+// The example creates a workbook, fills it with sample data, adds a column chart, assigns category and value ranges, sets the X‑axis title to "Months" and the Y‑axis title to "Sales" with bold 12‑point fonts, and saves the file as ChartWithAxisTitles.xlsx.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        try
-        {
-            // Verify that the input file exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["A2"].PutValue("Jan");
+        sheet.Cells["A3"].PutValue("Feb");
+        sheet.Cells["A4"].PutValue("Mar");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-            // Ensure there is at least one worksheet
-            if (workbook.Worksheets.Count == 0)
-            {
-                Console.WriteLine("The workbook does not contain any worksheets.");
-                return;
-            }
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+        Chart chart = sheet.Charts[chartIndex];
 
-            Worksheet sheet = workbook.Worksheets[0];
+        // Set the data range for the chart series
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-            // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the first worksheet.");
-                return;
-            }
+        // Configure X‑axis (category axis) title
+        chart.CategoryAxis.Title.Text = "Months";
+        chart.CategoryAxis.Title.Font.IsBold = true;
+        chart.CategoryAxis.Title.Font.Size = 12;
 
-            Chart chart = sheet.Charts[0];
+        // Configure Y‑axis (value axis) title
+        chart.ValueAxis.Title.Text = "Sales";
+        chart.ValueAxis.Title.Font.IsBold = true;
+        chart.ValueAxis.Title.Font.Size = 12;
 
-            // ----- X Axis (Category Axis) Title -----
-            chart.CategoryAxis.Title.Text = "X Axis Title";
-            chart.CategoryAxis.Title.Font.IsBold = true;
-            chart.CategoryAxis.Title.Font.Size = 12;
-
-            // ----- Y Axis (Value Axis) Title -----
-            chart.ValueAxis.Title.Text = "Y Axis Title";
-            chart.ValueAxis.Title.Font.IsBold = true;
-            chart.ValueAxis.Title.Font.Size = 12;
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook to a file
+        workbook.Save("ChartWithAxisTitles.xlsx");
     }
 }

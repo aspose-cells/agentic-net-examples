@@ -1,35 +1,59 @@
-// Title: Load an Excel workbook from a FileStream, change cell values, recalculate all formulas, and save as a new XLSX with Aspose.Cells for .NET
-// AI Prompts: Read an existing XLSX file via FileStream, set cell A1 to 10, assign a formula to B1 that multiplies A1 by 2, invoke Workbook.CalculateFormula to update all dependent cells, and write the workbook to output.xlsx using Aspose.Cells in C#. | Using Aspose.Cells for .NET, open a workbook from a stream, modify cell contents and formulas, trigger full workbook recalculation, then save the updated file in XLSX format.
-// Common Searches: Aspose.Cells C# load workbook from FileStream and recalculate formulas | How to update cell values and formulas then save workbook with Aspose.Cells | Programmatically trigger full formula calculation after editing cells in Aspose.Cells | Saving modified Excel file to a new location after calling Workbook.CalculateFormula in .NET
-// Tags: load workbook from filestream Aspose.Cells | set cell value and formula C# | recalculate all formulas Workbook.CalculateFormula | save workbook as xlsx Aspose.Cells | modify worksheet cells programmatically
+// Title: Load an Excel workbook from a FileStream, edit cells, set a SUM formula, and recalculate all formulas with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load workbook from FileStream and recalculate formulas after editing cells | How to modify cell values and set a SUM formula using Aspose.Cells before saving | Recalculate all formulas in an Excel file after updating data with Aspose.Cells .NET | Save an Aspose.Cells workbook to a new file stream after changing cells | Create a blank workbook when the source file is missing and process it with Aspose.Cells
+// Tags: load workbook via filestream Aspose.Cells | edit cells and assign formula Aspose.Cells C# | Workbook.CalculateFormula method usage | save workbook to output stream Aspose.Cells | initialize workbook if source file absent Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example opens input.xlsx via FileStream, loads it into a Workbook, sets A1 to 10, assigns B1 a formula '=A1*2', recalculates all formulas with Workbook.CalculateFormula, and saves the result as output.xlsx.
+// The example checks for an input.xlsx file, creates a blank workbook if it doesn't exist, loads the workbook from a FileStream, updates cells A1 and B2, assigns a SUM formula to C3, recalculates all formulas with Workbook.CalculateFormula, and saves the result to output.xlsx using another FileStream.
 class Program
 {
     static void Main()
     {
-        // Open an existing Excel file as a stream
-        using (FileStream fileStream = new FileStream("input.xlsx", FileMode.Open, FileAccess.Read))
+        try
         {
-            // Load the workbook from the stream (Workbook(Stream) constructor)
-            Workbook workbook = new Workbook(fileStream);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Ensure the input file exists; create a blank workbook if it does not.
+            if (!File.Exists(inputPath))
+            {
+                var tempWb = new Workbook();
+                tempWb.Save(inputPath, SaveFormat.Xlsx);
+            }
 
-            // Modify some cells
-            sheet.Cells["A1"].PutValue(10);          // Set a numeric value
-            sheet.Cells["B1"].Formula = "=A1*2";     // Set a formula that depends on A1
+            // Load workbook from a file stream
+            using (FileStream inputStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+            {
+                // Create Workbook instance from the stream
+                Workbook workbook = new Workbook(inputStream);
 
-            // Recalculate all formulas in the workbook
-            workbook.CalculateFormula();
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the updated workbook to a new file
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+                // Modify some cells
+                sheet.Cells["A1"].PutValue("Hello World");   // Text value
+                sheet.Cells["B2"].PutValue(12345);           // Numeric value
+
+                // Set a formula (use the Formula property for compatibility)
+                sheet.Cells["C3"].Formula = "=SUM(B2:B10)";
+
+                // Recalculate all formulas in the workbook
+                workbook.CalculateFormula();
+
+                // Save the modified workbook to a new file stream
+                using (FileStream outputStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                {
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
+                }
+            }
+
+            Console.WriteLine("Workbook processed and saved to '{0}'.", outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

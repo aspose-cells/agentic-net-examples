@@ -1,36 +1,52 @@
-// Title: Load an Excel workbook, select a specific worksheet, and insert a rectangle shape using Aspose.Cells for .NET
-// AI Prompts: Load a workbook from a file path, choose a worksheet by its name, add a rectangle shape at row 1 column 0 with width 100 px and height 50 px, then save the workbook. | Change the code to select the first worksheet by index and insert an ellipse shape instead of a rectangle while keeping the same dimensions. | Write a reusable method that takes a file path, worksheet identifier (name or index), shape type, and size parameters, adds the shape to the specified sheet, and returns the updated workbook.
-// Common Searches: Aspose.Cells C# load workbook and add shape to a specific sheet | select worksheet by name before inserting drawing with Aspose.Cells .NET | add rectangle shape to Excel sheet using Aspose.Cells drawing API example | how to change shape type to ellipse when adding to a worksheet with Aspose.Cells | save modified workbook after adding shapes using Aspose.Cells C#
-// Tags: load workbook select worksheet Aspose.Cells | add rectangle shape to Excel sheet C# | worksheet shape insertion using Aspose.Cells drawing API | select worksheet by name before shape operation | Aspose.Cells shape type parameter example
+// Title: Load an Excel workbook, select a worksheet, and add a free‑floating rectangle shape with text using Aspose.Cells for .NET
+// AI Prompts: Read an existing Excel file, choose a worksheet by name or index, insert a rectangle shape at row 2 column 1 with width 50 and height 100, set its placement to FreeFloating, assign the text "Sample Shape", and save the result to a new file. | Before opening the workbook, verify that the source Excel file exists, handle any exceptions that may occur, and ensure the modified workbook is saved after the shape is added.
+// Common Searches: Aspose.Cells C# how to add a rectangle shape to a specific worksheet after loading the workbook | C# code to verify Excel file exists before using Aspose.Cells to modify it | Insert free‑floating shape with text into Excel using Aspose.Cells .NET API | Select worksheet by name in Aspose.Cells before drawing shapes
+// Tags: load workbook select worksheet Aspose.Cells | shape creation Aspose.Cells | freefloating placement Aspose.Cells | excel file existence check C# | save workbook after modifications Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads 'input.xlsx' into a Workbook, selects the worksheet named 'Sheet1', adds a rectangle shape with specified pixel dimensions to that sheet, and saves the result as 'output.xlsx' using Aspose.Cells for .NET.
+// Loads 'input.xlsx', selects 'Sheet1', adds a free‑floating rectangle shape containing the text "Sample Shape", and saves the updated file as 'output.xlsx' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Select the target worksheet (by name or index)
-        Worksheet worksheet = workbook.Worksheets["Sheet1"]; // replace with your sheet name
-        // Worksheet worksheet = workbook.Worksheets[0]; // alternative: select by index
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Example shape operation: add a rectangle shape to the selected worksheet
-        Shape rectangle = worksheet.Shapes.AddShape(
-            MsoDrawingType.Rectangle, // shape type
-            1,   // upper left row
-            0,   // upper left column
-            1,   // top offset in pixels
-            0,   // left offset in pixels
-            100, // width in pixels
-            50   // height in pixels
-        );
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Select the target worksheet (by name or index)
+            Worksheet worksheet = workbook.Worksheets["Sheet1"]; // or workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape rectangle = worksheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // correct enum for shape type
+                2, 1, 0, 0, 100, 50);
+            rectangle.Placement = PlacementType.FreeFloating;
+            rectangle.Text = "Sample Shape";
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

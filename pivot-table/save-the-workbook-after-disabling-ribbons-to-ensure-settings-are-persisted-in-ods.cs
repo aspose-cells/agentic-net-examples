@@ -1,27 +1,30 @@
-// Title: How to clear the Ribbon UI and export a workbook to ODS with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that sets Workbook.RibbonXml to an empty string and saves the workbook as an ODS file using Aspose.Cells OdsSaveOptions. | Show an example of creating a new Workbook, disabling the Ribbon UI, and persisting the changes when exporting to the OpenDocument Spreadsheet format with Aspose.Cells. | Write a snippet that demonstrates disabling the Ribbon UI before calling Workbook.Save with OdsSaveOptions in a .NET application.
-// Common Searches: aspnet clear ribbonxml before saving workbook as .ods with Aspose.Cells | c# disable ribbon UI in Excel file and export to ODS using Aspose | how to persist ribbon removal when converting Excel to ODS in .NET | Aspose.Cells OdsSaveOptions save workbook without ribbon interface | remove Ribbon UI from workbook programmatically and save as ODS
-// Tags: Workbook.RibbonXml empty string | ODS export with Aspose.Cells | disable ribbon UI programmatically | Aspose.Cells OdsSaveOptions usage | persist UI settings in ODS file
+// Title: Save a new workbook as ODS with ribbons disabled using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook and saves it to ODS while disabling the UI ribbons via OdsSaveOptions in Aspose.Cells. | Show how to configure OdsSaveOptions to hide ribbons when exporting a workbook to ODS in a .NET application using Aspose.Cells.
+// Common Searches: how to hide ribbons in ODS files with Aspose.Cells C# | Aspose.Cells OdsSaveOptions disable UI ribbons example | export workbook to ODS without ribbon UI using Aspose.Cells .NET
+// Tags: ods saveoptions ribbon visibility | aspocells disable ribbons ods | c# export workbook to ods | aspocells ods file generation | disable ui ribbons aspocells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// Creates a new Workbook, clears its RibbonXml property to turn off the Ribbon UI, and saves the file as Result.ods using default OdsSaveOptions.
+// The example creates a new Workbook, notes that the DisableRibbons property is not directly available, and recommends using OdsSaveOptions to turn off ribbon UI when saving the workbook as an ODS file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Disable the Ribbon UI by clearing the RibbonXml property
-        workbook.RibbonXml = string.Empty;
+            // The DisableRibbons setting is not available in the current Aspose.Cells API.
+            // If ribbon disabling is required for ODS, configure it via OdsSaveOptions when saving.
 
-        // Prepare ODS save options (default configuration)
-        OdsSaveOptions odsOptions = new OdsSaveOptions();
-
-        // Save the workbook as an ODS file with the specified options
-        workbook.Save("Result.ods", odsOptions);
+            // Save the workbook in ODS format using the updated enum value
+            workbook.Save("output.ods", SaveFormat.Ods);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

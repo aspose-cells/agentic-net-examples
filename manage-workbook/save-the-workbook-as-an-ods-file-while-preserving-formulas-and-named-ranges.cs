@@ -1,41 +1,43 @@
-// Title: Convert an Excel .xlsx workbook to OpenDocument Spreadsheet (.ods) in C# while retaining formulas and named ranges using Aspose.Cells
-// AI Prompts: Generate C# code that loads an existing .xlsx file with Aspose.Cells, configures OdsSaveOptions to keep formulas and named ranges, and saves it as a .ods file. | Show how to verify that formulas and named ranges remain intact after converting an Excel workbook to ODS using Aspose.Cells in a .NET application.
-// Common Searches: Aspose.Cells C# export to ODS retaining calculations | keep defined names when converting Excel to OpenDocument format in .NET | C# OdsSaveOptions save workbook as .ods without losing spreadsheet logic | how to convert .xlsx to .ods with Aspose.Cells preserving cell references | export Excel workbook to ODS while maintaining all formulas in C#
-// Tags: C# OdsSaveOptions retain spreadsheet logic | Aspose.Cells ODS export with defined names | Excel to OpenDocument conversion using Aspose.Cells | save workbook as .ods preserving calculations | load .xlsx and export .ods Aspose.Cells
+// Title: Convert an Excel workbook to ODS format while preserving formulas and named ranges with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to save XLSX as ODS keeping formulas | preserve named ranges when converting Excel to OpenDocument Spreadsheet using Aspose.Cells | OdsSaveOptions example for retaining formulas in .NET | export workbook to .ods file with formula support in C# | Aspose.Cells convert Excel to ODS without losing named ranges
+// Tags: xlsx to ods conversion with formula retention | named range preservation Aspose.Cells | OdsSaveOptions usage C# | export workbook to OpenDocument Spreadsheet | Aspose.Cells ODS format support | preserve formulas during ODS export
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks for an input.xlsx file, loads it into an Aspose.Cells Workbook, creates default OdsSaveOptions (which automatically keep formulas and named ranges), and saves the workbook as output.ods, handling any exceptions that may occur.
+// The sample loads an existing XLSX workbook, creates an OdsSaveOptions object (which by default keeps formulas and named ranges), and saves the workbook as an ODS file using Aspose.Cells for .NET, with error handling for missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        // Define input and output file paths
+        string inputPath = @"C:\Path\To\Your\InputFile.xlsx";
+        string outputPath = @"C:\Path\To\Your\OutputFile.ods";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.ods";
-
-            // Ensure the source file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the existing workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // ODS save options (default behavior preserves formulas and named ranges)
-            var odsOptions = new OdsSaveOptions();
+            // ODS save options – default behavior preserves formulas and named ranges
+            OdsSaveOptions odsOptions = new OdsSaveOptions();
 
-            // Save the workbook as ODS
+            // Save the workbook as an ODS file
             workbook.Save(outputPath, odsOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+
+            Console.WriteLine($"Workbook successfully saved to: {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

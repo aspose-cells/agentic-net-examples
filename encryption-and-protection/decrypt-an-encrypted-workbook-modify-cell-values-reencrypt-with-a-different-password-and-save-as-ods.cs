@@ -1,64 +1,64 @@
-// Title: Decrypt an encrypted XLSX workbook, change cell A1, re‑encrypt with a new password, and export to ODS using Aspose.Cells for .NET
-// AI Prompts: Load a password‑protected XLSX file with the original password, set cell A1 to "Hello World", assign a new workbook password, and save the file as ODS using Aspose.Cells in C#. | Open an encrypted Excel workbook via LoadOptions, update a specific cell, change the workbook's encryption password, and export the result to OpenDocument Spreadsheet format with Aspose.Cells for .NET.
-// Common Searches: How to open an encrypted XLSX in C# with Aspose.Cells and change its password | Aspose.Cells example for modifying a cell in a password‑protected workbook and saving as ODS | Re‑encrypt Excel file with a new password and convert to ODS using Aspose.Cells .NET | LoadOptions password property usage for encrypted Excel files in Aspose.Cells
-// Tags: load encrypted xlsx with LoadOptions Aspose.Cells | modify cell value in workbook C# | set new workbook password Aspose.Cells | save workbook as ods format | re‑encrypt Excel file using Aspose.Cells
+// Title: Decrypt a password‑protected XLSX workbook, edit cell values, re‑encrypt with a new password, and save as ODS using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells load encrypted XLSX with password and modify cells | how to change workbook password and export to ODS with Aspose.Cells .NET | decrypt Excel file, update A1 and B2, re‑encrypt and save as ODS in C# | Aspose.Cells example for opening protected workbook and saving with new password | programmatically edit cells in a password‑protected Excel file and convert to ODS
+// Tags: encrypted xlsx loading Aspose.Cells | cell value update Aspose.Cells C# | workbook password change Aspose.Cells | ods saving Aspose.Cells .NET | excel to ods conversion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample checks for the encrypted XLSX file, opens it with the original password via LoadOptions, updates cells A1 and B2, assigns a new password to the workbook, and saves the result as an ODS file, handling Aspose.Cells‑specific and generic exceptions.
+class Program
 {
-    // Demonstrates loading an encrypted XLSX workbook with the original password, updating cell A1, applying a new password, and saving the workbook as an ODS file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the encrypted source workbook
+        string sourcePath = "encrypted_input.xlsx";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            // Paths and passwords
-            string inputFile = @"C:\Temp\EncryptedWorkbook.xlsx";
-            string outputFile = @"C:\Temp\ReEncryptedWorkbook.ods";
-            string oldPassword = "oldPassword123";
-            string newPassword = "newPassword456";
+            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            return;
+        }
 
-            try
+        // Password used to open the existing encrypted workbook
+        string oldPassword = "oldPassword";
+
+        // Password to be applied to the workbook after modification
+        string newPassword = "newPassword";
+
+        try
+        {
+            // Load the encrypted workbook using LoadOptions with the old password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                // Verify input file exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
+                Password = oldPassword
+            };
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-                // Load the encrypted workbook using the old password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    Password = oldPassword
-                };
-                Workbook workbook = new Workbook(inputFile, loadOptions);
+            // ----- Modify cell values -----
+            // Example: set A1 to "Hello", B2 to 123
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["B2"].PutValue(123);
 
-                // Example modification: set A1 to "Hello World"
-                Worksheet sheet = workbook.Worksheets[0];
-                Cell cell = sheet.Cells["A1"];
-                cell.PutValue("Hello World");
+            // ----- Re‑encrypt with a new password -----
+            // Set the password that will be required to open the saved file
+            workbook.Settings.Password = newPassword;
 
-                // Apply new password (encryption algorithm property not available in this version)
-                workbook.Settings.Password = newPassword;
+            // Save the workbook as ODS (OpenDocument Spreadsheet) with the new password
+            string outputPath = "modified_output.ods";
+            workbook.Save(outputPath, SaveFormat.ODS);
 
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputFile);
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save as ODS (use the non‑obsolete enum value)
-                workbook.Save(outputFile, SaveFormat.Ods);
-                Console.WriteLine($"Workbook saved to {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine("Workbook decrypted, modified, re‑encrypted, and saved as ODS successfully.");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

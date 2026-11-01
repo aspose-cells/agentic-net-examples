@@ -1,26 +1,63 @@
-// Title: How to unprotect a specific worksheet in a password‑protected XLSX file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens a password‑protected .xlsx workbook with Aspose.Cells, calls Worksheet.Unprotect with the known password, and saves the result as an unprotected file. | Show how to select a worksheet by name or index and remove its protection using Aspose.Cells' Unprotect method in a .NET application.
-// Common Searches: aspnet unprotect worksheet with known password using Aspose.Cells | c# remove sheet protection from protected.xlsx using Aspose.Cells library | example code to unprotect a single sheet in an Excel workbook with Aspose.Cells for .NET | how to load a protected Excel file and save it without sheet password in C#
-// Tags: Aspose.Cells worksheet unprotect C# | remove Excel sheet password programmatically | load protected XLSX save unprotected Aspose.Cells | C# unprotect specific worksheet Aspose.Cells
+// Title: C# example: Unprotect a password‑protected worksheet in an XLSX workbook using Aspose.Cells
+// Common Searches: how to remove worksheet password in an XLSX file with Aspose.Cells C# | Aspose.Cells .NET code to unprotect a specific sheet after loading a protected workbook | load an Excel workbook with a workbook password and then unprotect a sheet using Aspose.Cells | C# example for worksheet.Unprotect method in Aspose.Cells | unprotect a locked Excel worksheet without losing workbook data using Aspose.Cells
+// Tags: Aspose.Cells worksheet unprotect C# | remove Excel sheet password Aspose.Cells | load password‑protected XLSX with LoadOptions Aspose.Cells | unprotect specific worksheet by name Aspose.Cells | C# Aspose.Cells worksheet protection removal | Aspose.Cells workbook and sheet password handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads a password‑protected XLSX workbook, removes protection from a chosen worksheet using the supplied password via Worksheet.Unprotect, and saves the workbook as an unprotected file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an XLSX workbook (optionally using a workbook password via LoadOptions), accesses a target worksheet by name or index, calls Worksheet.Unprotect with the worksheet password, and saves the unprotected workbook to a new file.
+    class Program
     {
-        // Load the protected workbook from file
-        Workbook workbook = new Workbook("protected.xlsx");
+        static void Main()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string workbookPassword = "";      // Set workbook password if needed
+            const string worksheetPassword = "YourPassword"; // Worksheet password
 
-        // Get the worksheet you want to unprotect (by name or index)
-        Worksheet sheet = workbook.Worksheets["Sheet1"]; // replace with actual sheet name or use Worksheets[0]
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Unprotect the worksheet using the known password
-        sheet.Unprotect("YourPasswordHere"); // replace with the correct password
+                // Load workbook with password (if any)
+                LoadOptions loadOptions = new LoadOptions();
+                if (!string.IsNullOrEmpty(workbookPassword))
+                {
+                    loadOptions.Password = workbookPassword;
+                }
 
-        // Save the workbook with the worksheet now unprotected
-        workbook.Save("unprotected.xlsx");
+                Workbook workbook = new Workbook(inputPath, loadOptions);
+
+                // Access the target worksheet (by name or fallback to first sheet)
+                Worksheet worksheet = workbook.Worksheets["Sheet1"];
+                if (worksheet == null)
+                {
+                    worksheet = workbook.Worksheets[0];
+                }
+
+                // Unprotect the worksheet
+                worksheet.Unprotect(worksheetPassword);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
     }
 }

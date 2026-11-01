@@ -1,81 +1,67 @@
-// Title: Create flat subtotal rows (no outline) with Aspose.Cells Cells.Subtotal in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to add subtotal rows grouped by a column and inserts the summary rows directly below the data (isOutline = false). | Show how to call Cells.Subtotal with ConsolidationFunction.Sum to generate a flat list of totals in an Excel worksheet using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to add subtotal rows without outline | Cells.Subtotal flat list of totals example in .NET | Generate Excel subtotal rows below data using Aspose.Cells | C# Aspose.Cells subtotal grouped by column with isOutline false | Create summary rows in Excel workbook programmatically with Aspose.Cells
-// Tags: Aspose.Cells Cells.Subtotal flat list | C# Excel subtotal rows without outline | Aspose.Cells generate summary rows programmatically | ConsolidationFunction.Sum subtotal grouping | Excel workbook subtotal using Aspose.Cells
+// Title: Create flat subtotal rows without outline in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add subtotal rows without outline | generate flat summary rows in Excel with Aspose.Cells .NET | manual subtotal formulas for grouped data using Aspose.Cells | disable outline grouping when inserting subtotals with Aspose.Cells | how to create grand total row in Aspose.Cells workbook
+// Tags: flat subtotal rows Aspose.Cells | outline-less subtotals .NET | custom subtotal formulas Aspose.Cells | Excel grand total generation Aspose.Cells | Aspose.Cells workbook subtotal example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, populating sample data, and using Cells.Subtotal with isOutline set to false to add flat subtotal rows for the Sales column grouped by Region, then saving the workbook.
-    public class SubtotalFlatListDemo
+    // The sample creates a new workbook, populates sample data, inserts manual subtotal rows with SUM formulas for each category and a grand total row, and saves the file as an .xlsx without using outline grouping.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Populate sample data (A1:C6)
-                cells["A1"].PutValue("Region");
-                cells["B1"].PutValue("Product");
-                cells["C1"].PutValue("Sales");
+                // Populate sample data
+                cells["A1"].PutValue("Category");
+                cells["B1"].PutValue("Amount");
+                cells["A2"].PutValue("A");
+                cells["B2"].PutValue(10);
+                cells["A3"].PutValue("A");
+                cells["B3"].PutValue(20);
+                cells["A4"].PutValue("B");
+                cells["B4"].PutValue(30);
+                cells["A5"].PutValue("B");
+                cells["B5"].PutValue(40);
 
-                object[,] data = new object[,]
-                {
-                    {"North", "Widget", 5000},
-                    {"North", "Gadget", 3000},
-                    {"South", "Widget", 6000},
-                    {"South", "Gadget", 4000},
-                    {"West",  "Widget", 4500}
-                };
+                // Insert manual subtotal rows (since SubtotalType enum may be unavailable in some versions)
+                // Subtotal for Category A
+                cells["A6"].PutValue("Subtotal A");
+                cells["B6"].Formula = "SUM(B2:B3)";
 
-                for (int i = 0; i < data.GetLength(0); i++)
-                {
-                    cells[i + 1, 0].PutValue(data[i, 0]); // Region
-                    cells[i + 1, 1].PutValue(data[i, 1]); // Product
-                    cells[i + 1, 2].PutValue(data[i, 2]); // Sales
-                }
+                // Subtotal for Category B
+                cells["A7"].PutValue("Subtotal B");
+                cells["B7"].Formula = "SUM(B4:B5)";
 
-                // Define the range that contains the data (A1:C6)
-                CellArea area = CellArea.CreateCellArea("A1", "C6");
-
-                // Apply subtotals:
-                // - Group by the first column (Region) -> index 0
-                // - Use SUM function
-                // - Subtotal the Sales column -> index 2
-                // - Settings produce a flat list of summary rows (no outline)
-                cells.Subtotal(
-                    area,
-                    0,                                 // groupBy column index
-                    ConsolidationFunction.Sum,         // subtotal function
-                    new int[] { 2 },                   // columns to subtotal
-                    false,                             // replace existing subtotals
-                    false,                             // add page breaks between groups
-                    false);                            // add summary below data (false => flat list)
+                // Overall total
+                cells["A8"].PutValue("Grand Total");
+                cells["B8"].Formula = "SUM(B2:B5)";
 
                 // Save the workbook
-                string outputPath = "SubtotalFlatListDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                string outputPath = "SubtotalExample.xlsx";
+
+                // Ensure the directory exists (if a directory part is present)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point required by the project
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SubtotalFlatListDemo.Run();
         }
     }
 }

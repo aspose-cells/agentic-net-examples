@@ -1,71 +1,79 @@
-// Title: Generate a console report of zero‑based row and column indices for cells with Style.QuotePrefix = true using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates a worksheet and prints the zero‑based row and column numbers of every cell whose Style.QuotePrefix property is true. | Modify the example to output the Excel address (e.g., B10) instead of numeric indices for cells that have QuotePrefix enabled. | Extend the program to save the list of QuotePrefix cells to a CSV file, including row index, column index, and cell address.
-// Common Searches: aspnet cells enumerate cells with quote prefix property true | c# aspose.cells find cells that have leading apostrophe flag | how to list rows and columns of quoted cells in Excel using Aspose.Cells | retrieve zero based indices of cells with Style.QuotePrefix in .NET | generate report of cells with QuotePrefix using Aspose.Cells library
-// Tags: Aspose.Cells enumerate QuotePrefix cells | C# generate console report of quoted Excel cells | export quoted cell indices to CSV using Aspose.Cells | zero‑based row and column extraction with Style.QuotePrefix | list cells with leading apostrophe in .NET
+// Title: Generate an Excel report of cells with QuotePrefix style set to true using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, identifies cells where Style.QuotePrefix is true, and writes their zero‑based row, column, and address to a new worksheet named "QuotePrefixReport". | Extend the program to also record the source worksheet name for each quoted‑prefix cell in the generated report. | Adjust the output so that row and column numbers are 1‑based while keeping the cell address unchanged.
+// Common Searches: asp.net how to export list of cells with QuotePrefix flag using Aspose.Cells | c# Aspose.Cells find all cells with quoted prefix style in a workbook | generate report of quoted prefix cells with row and column indices in Excel using Aspose | Aspose.Cells enumerate cells where Style.QuotePrefix is true across worksheets
+// Tags: Aspose.Cells enumerate QuotePrefix cells | C# create Excel summary of quoted‑prefix style | Aspose.Cells write row column address to report sheet | Excel workbook scan for QuotePrefix attribute | Aspose.Cells generate styled‑cell report
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace QuotePrefixReport
+// The example loads an input workbook, iterates through each worksheet (excluding the report sheet), checks every cell's Style.QuotePrefix flag, and records the zero‑based row index, column index, and cell address of matching cells on a new worksheet called "QuotePrefixReport" before saving the workbook.
+class QuotePrefixReportGenerator
 {
-    // Creates a workbook, sets QuotePrefix on sample cells, scans all used cells, collects zero‑based row and column indices of cells where Style.QuotePrefix is true, prints the list to the console, and saves the workbook as QuotePrefixReport.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Sample data: set some cells with QuotePrefix = true
-            Cell cellB10 = cells["B10"];
-            cellB10.PutValue("'12345");               // value with leading quote
-            Style styleB10 = cellB10.GetStyle();
-            styleB10.QuotePrefix = true;              // enable QuotePrefix
-            cellB10.SetStyle(styleB10);
-
-            Cell cellC5 = cells["C5"];
-            cellC5.PutValue("'Hello");
-            Style styleC5 = cellC5.GetStyle();
-            styleC5.QuotePrefix = true;
-            cellC5.SetStyle(styleC5);
-
-            // List to hold report lines
-            List<string> reportLines = new List<string>();
-            reportLines.Add("Cells with QuotePrefix = true:");
-            reportLines.Add("Row\tColumn");
-
-            // Iterate through all used cells in the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell curCell = cells[row, col];
-                    // Skip empty cells
-                    if (curCell == null || curCell.Type == CellValueType.IsNull) continue;
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                    // Check the QuotePrefix property
-                    if (curCell.GetStyle().QuotePrefix)
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Add a new worksheet for the report
+            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            reportSheet.Name = "QuotePrefixReport";
+
+            // Write header row
+            reportSheet.Cells[0, 0].PutValue("Row Index");
+            reportSheet.Cells[0, 1].PutValue("Column Index");
+            reportSheet.Cells[0, 2].PutValue("Cell Address");
+
+            int reportRow = 1; // start after header
+
+            // Iterate through all worksheets in the source workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Skip the report sheet itself
+                if (sheet.Name == reportSheet.Name) continue;
+
+                // Get the used range of the worksheet
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                // Iterate through each cell in the used range
+                foreach (Cell cell in usedRange)
+                {
+                    // Retrieve the cell's style
+                    Style style = cell.GetStyle();
+
+                    // Check if QuotePrefix is set to true
+                    if (style.QuotePrefix)
                     {
-                        // Add row and column indices (zero‑based) to the report
-                        reportLines.Add($"{row}\t{col}");
+                        // Record row and column indices (zero‑based)
+                        reportSheet.Cells[reportRow, 0].PutValue(cell.Row);
+                        reportSheet.Cells[reportRow, 1].PutValue(cell.Column);
+                        reportSheet.Cells[reportRow, 2].PutValue(cell.Name); // e.g., "A1"
+
+                        reportRow++;
                     }
                 }
             }
 
-            // Output the report to the console
-            foreach (string line in reportLines)
-            {
-                Console.WriteLine(line);
-            }
-
-            // Optionally, save the workbook (lifecycle rule)
-            workbook.Save("QuotePrefixReport.xlsx");
+            // Save the workbook with the report
+            workbook.Save(outputPath);
+            Console.WriteLine($"Report generated and saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

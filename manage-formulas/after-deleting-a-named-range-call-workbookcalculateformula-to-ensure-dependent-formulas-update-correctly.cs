@@ -1,14 +1,12 @@
-// Title: How to delete a named range and recalculate dependent formulas in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that checks if a named range exists in a workbook, removes it, calls Workbook.CalculateFormula, and saves the file using Aspose.Cells. | Show a step‑by‑step example of loading an .xlsx file, deleting a specific named range, triggering full formula recalculation, and writing the result with Aspose.Cells in a .NET console application. | Provide a minimal Aspose.Cells snippet that removes a range named "MyRange" and ensures all formulas referencing that range are updated by invoking CalculateFormula.
-// Common Searches: aspnet remove named range from Excel file and recalculate formulas | c# Aspose.Cells delete named range then update dependent cells | how to force formula recalculation after deleting a named range in Aspose.Cells | sample code for Workbook.CalculateFormula after range removal | checking existence of a named range before deletion using Aspose.Cells
-// Tags: delete named range Aspose.Cells C# | Workbook.CalculateFormula after range removal | named range existence check Aspose.Cells | recalculate dependent formulas .NET Excel library | Aspose.Cells remove range and update formulas
+// Title: How to delete a named range and refresh dependent formulas in an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# delete a defined name and recalculate workbook formulas | remove named range from Excel using Aspose.Cells and update dependent cells | call workbook.CalculateFormula after removing a named range in .NET | C# code to delete Excel named range and refresh formulas with Aspose.Cells | Aspose.Cells example for deleting a name and recalculating formulas
+// Tags: Aspose.Cells delete named range C# | Workbook.CalculateFormula usage .NET | update dependent formulas after name removal | Excel named range removal Aspose.Cells | recalculate formulas after name deletion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an existing .xlsx workbook, verifies whether a named range called "MyRange" exists, removes that range from the workbook's Names collection, invokes Workbook.CalculateFormula to refresh any formulas that depended on the deleted range, and saves the updated workbook to a new file.
+// The example loads an existing Excel file, checks for a named range called "MyRange", removes it from the workbook's NameCollection if present, invokes workbook.CalculateFormula to update all formulas that referenced the deleted range, and saves the modified workbook. It includes basic file existence checks and exception handling.
 class Program
 {
     static void Main()
@@ -17,48 +15,42 @@ class Program
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
-            const string rangeName = "MyRange";
+            const string rangeNameToDelete = "MyRange";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook from the input file
-            var workbook = new Workbook(inputPath);
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the collection of named ranges
-            var names = workbook.Worksheets.Names;
-            var name = names[rangeName];
+            // Access the collection of defined names (named ranges) in the workbook
+            NameCollection namedRanges = workbook.Worksheets.Names;
 
-            if (name != null)
+            // Check if the named range exists and remove it
+            if (namedRanges[rangeNameToDelete] != null)
             {
-                // Retrieve the actual Range object using the name
-                AsposeRange namedRange = workbook.Worksheets.GetRangeByName(rangeName);
-                // (namedRange can be used here if further processing is needed)
-
-                // Remove the named range from the workbook
-                names.Remove(rangeName);
-                Console.WriteLine($"Named range \"{rangeName}\" removed.");
+                namedRanges.Remove(rangeNameToDelete);
+                Console.WriteLine($"Named range '{rangeNameToDelete}' removed.");
             }
             else
             {
-                Console.WriteLine($"Named range \"{rangeName}\" does not exist.");
+                Console.WriteLine($"Named range '{rangeNameToDelete}' not found.");
             }
 
-            // Recalculate all formulas so that dependent cells are updated
+            // Recalculate all formulas to update dependent cells
             workbook.CalculateFormula();
 
-            // Save the modified workbook to the output file
+            // Save the updated workbook to a new file
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

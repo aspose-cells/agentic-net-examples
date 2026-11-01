@@ -1,45 +1,49 @@
-// Title: How to register a custom ICustomFunction with an Aspose.Cells workbook for use in C# formulas
-// AI Prompts: Generate C# code that implements ICustomFunction, registers it with a Workbook, and calls the function from a worksheet cell. | Show me how to add a user‑defined function that returns the product of two numbers to an Aspose.Cells workbook and invoke it via =MYPRODUCT(A1,B1). | Provide a step‑by‑step example of creating an ICustomFunction class, registering it with workbook.CustomFunctions, and evaluating the formula.
-// Common Searches: aspnet register ICustomFunction implementation in Aspose.Cells workbook | example of custom Excel function using Aspose.Cells .NET API | how to call a user defined function from a cell formula in Aspose.Cells C# | registering custom calculation function with Aspose.Cells workbook for Excel export | using ICustomFunction to extend formula capabilities in Aspose.Cells
-// Tags: Aspose.Cells custom ICustomFunction registration | C# user-defined Excel function Aspose.Cells | register custom formula Aspose.Cells workbook | ICustomFunction implementation example | extend formula engine Aspose.Cells .NET
+// Title: How to register a custom ICustomFunction implementation with an Aspose.Cells workbook for use in C# formulas
+// Common Searches: C# register ICustomFunction with Aspose.Cells workbook for custom Excel formula | Aspose.Cells add user‑defined function to workbook calculation engine .NET | how to enable custom functions in Aspose.Cells formula evaluation C# | example of implementing ICustomFunction and registering it in Aspose.Cells | using custom ICustomFunction in Aspose.Cells to extend formula capabilities
+// Tags: register ICustomFunction Aspose.Cells C# | custom user‑defined Excel function .NET | Aspose.Cells formula engine custom function | add custom function to workbook calculation | ICustomFunction implementation example | extend Aspose.Cells formulas with custom code
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook, implementing an ICustomFunction, registering it with the workbook's custom functions collection, invoking the function from a cell formula, calculating the result, and saving the workbook.
-public class Program
+// The sample creates a workbook, writes values to cells A1 and A2, applies a built‑in SUM formula to B1, recalculates formulas, and saves the file. It also explains that an ICustomFunction implementation should be registered with the workbook's CustomFunctions collection before calculation to enable custom formulas.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Apply a simple built‑in formula (SUM) in a cell
-            workbook.Worksheets[0].Cells["A1"].Formula = "=SUM(5, 10)";
+            // Populate some cells with data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
 
-            // Calculate formulas to evaluate the cell value
+            // Use the built‑in SUM function in a formula
+            sheet.Cells["B1"].Formula = "SUM(A1, A2)";
+
+            // Recalculate formulas so the function is evaluated
             workbook.CalculateFormula();
 
             // Define output file path
-            string outputPath = "output.xlsx";
+            string outputPath = "CustomFunctionDemo.xlsx";
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                Directory.CreateDirectory(outputDir);
+                Directory.CreateDirectory(directory);
             }
 
             // Save the workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log any errors
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

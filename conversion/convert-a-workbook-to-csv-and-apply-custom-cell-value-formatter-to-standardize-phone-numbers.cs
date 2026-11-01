@@ -1,58 +1,82 @@
-// Title: Convert an Excel workbook to CSV and standardize 10‑digit phone numbers using Aspose.Cells for .NET
-// AI Prompts: Iterate through every cell, replace any 10‑digit string with the pattern (XXX) XXX‑XXXX, then save the workbook as CSV via Aspose.Cells in C#. | Strip non‑numeric characters from string cells, format detected phone numbers, and export the updated worksheet to a CSV file using Aspose.Cells.
-// Common Searches: Aspose.Cells C# normalize phone number display when converting Excel to CSV | How to apply a custom cell formatter for phone numbers during Excel to CSV conversion with Aspose.Cells | C# iterate Excel cells and reformat ten‑digit numbers using Aspose.Cells before saving as CSV | Save an .xlsx workbook as CSV after standardizing phone number format with Aspose.Cells .NET
-// Tags: Aspose.Cells phone number normalization | Excel to CSV conversion Aspose.Cells | custom cell formatter Aspose.Cells | regex phone number transformation Aspose.Cells | SaveFormat.Csv Aspose.Cells example
+// Title: Convert an Excel workbook to CSV while normalizing phone numbers using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export worksheet to CSV with custom cell formatting | How to reformat phone numbers in Excel before saving as CSV using Aspose.Cells | C# regex replace phone number patterns in workbook cells with Aspose.Cells | Save Excel file as CSV after standardizing US phone numbers in .NET | Iterate over worksheet cells to apply phone number format then convert to CSV with Aspose.Cells
+// Tags: Aspose.Cells CSV export with custom cell formatter | C# regex phone number formatting in Excel worksheets | Iterate over worksheet cells to modify values Aspose.Cells | Excel to CSV conversion with data cleanup using .NET | Standardize US phone numbers during workbook export
 
 using System;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsPhoneNumberFormatter
+// The example loads an .xlsx workbook with Aspose.Cells, scans all used cells, uses a regular expression to detect US‑style phone numbers, rewrites them to the (123) 456‑7890 format, and then saves the modified workbook as a CSV file.
+class WorkbookToCsvWithPhoneFormatter
 {
-    // The sample loads an Excel workbook, scans each cell for 10‑digit strings, rewrites them into the (XXX) XXX‑XXXX format, and then saves the modified workbook as a CSV file using Aspose.Cells for .NET.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Define input and output file paths
+        string inputFile = @"C:\Input\Workbook.xlsx";
+        string outputFile = @"C:\Output\Workbook.csv";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputFile))
         {
-            // Path to the source Excel workbook
-            string sourcePath = "input.xlsx";
+            Console.WriteLine($"Input file not found: {inputFile}");
+            return;
+        }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(sourcePath);
+        // Ensure the output directory exists
+        string outputDir = Path.GetDirectoryName(outputFile);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
 
-            // Get the first worksheet (adjust if needed)
+        try
+        {
+            // Load the workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputFile);
+
+            // Get the first worksheet (adjust index as needed)
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Define a simple phone number formatter:
-            // This example removes all non‑digit characters and formats as (XXX) XXX‑XXXX
-            for (int row = 0; row <= cells.MaxDataRow; row++)
+            // Regex to detect various phone number formats
+            Regex phoneRegex = new Regex(@"\b(?:\+?1[-.\s]?)?(\(?\d{3}\)?)[-.\s]?(\d{3})[-.\s]?(\d{4})\b");
+
+            // Determine the used range of cells
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            // Iterate through all used cells
+            for (int row = 0; row <= maxRow; row++)
             {
-                for (int col = 0; col <= cells.MaxDataColumn; col++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.Type == CellValueType.IsString)
-                    {
-                        string text = cell.StringValue.Trim();
+                    Cell cell = sheet.Cells[row, col];
 
-                        // Basic check: if the string contains at least 10 digits, treat it as a phone number
-                        string digitsOnly = System.Text.RegularExpressions.Regex.Replace(text, @"\D", "");
-                        if (digitsOnly.Length == 10)
+                    // Process only non‑empty string cells that look like phone numbers
+                    if (cell.Type == CellValueType.IsString && !string.IsNullOrEmpty(cell.StringValue))
+                    {
+                        string original = cell.StringValue;
+                        Match match = phoneRegex.Match(original);
+                        if (match.Success)
                         {
-                            // Format as (XXX) XXX‑XXXX
-                            string formatted = $"({digitsOnly.Substring(0, 3)}) {digitsOnly.Substring(3, 3)}-{digitsOnly.Substring(6, 4)}";
-                            cell.PutValue(formatted);
+                            // Standardize to format: (123) 456-7890
+                            string standardized = $"({match.Groups[1].Value.Trim('(', ')')}) {match.Groups[2].Value}-{match.Groups[3].Value}";
+                            cell.PutValue(standardized);
                         }
                     }
                 }
             }
 
-            // Save the workbook as CSV using the provided Save rule
-            string csvPath = "output.csv";
-            workbook.Save(csvPath, SaveFormat.Csv);
+            // Save the workbook as CSV (lifecycle rule: save)
+            // Using SaveFormat.Csv; default options are sufficient for most scenarios.
+            workbook.Save(outputFile, SaveFormat.Csv);
 
-            // Alternatively, demonstrate the ConversionUtility method for conversion
-            // ConversionUtility.Convert(sourcePath, csvPath);
+            Console.WriteLine($"Workbook successfully saved to CSV: {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

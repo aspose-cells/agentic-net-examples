@@ -1,70 +1,64 @@
-// Title: Convert CSV to XLSX and apply whole-number (1-100) validation to column B using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells to read a CSV file, convert it to an XLSX workbook, and then define a validation rule that only permits whole numbers from 1 to 100 in column B. | Create a validation entry for column B of the generated Excel file that enforces a numeric range without showing a dropdown, using the ValidationCollection API in C#. | Persist the workbook after adding the data‑validation rule so the CSV‑to‑XLSX conversion includes the required constraints.
-// Common Searches: aspnet convert csv to xlsx and apply validation to column B | c# aspose.cells restrict column B values to 1-100 after csv import | how to enforce whole number limits in an Excel sheet generated from CSV using Aspose.Cells | add numeric constraint to a column in a workbook created from CSV with Aspose.Cells .NET
-// Tags: csv to xlsx conversion aspose.cells | range validation aspose.cells | validationcollection usage c# | column b data validation aspose.cells | save workbook with validation aspose.cells
+// Title: Convert a CSV file to XLSX and apply a list‑type data validation dropdown to a column using Aspose.Cells for .NET
+// Common Searches: C# how to convert CSV to XLSX and add a drop‑down list validation with Aspose.Cells | Aspose.Cells example for adding list validation to a specific range after loading a CSV | Create data validation list in Excel column after CSV import using Aspose.Cells .NET | Set in‑cell dropdown values for B2:B100 in a workbook generated from CSV with Aspose.Cells | Aspose.Cells C# code to load CSV, define validation range, and save as XLSX
+// Tags: CSV to XLSX conversion using Aspose.Cells | add list validation to Excel column with Aspose.Cells | in‑cell dropdown list validation C# | define validation range B2:B100 Aspose.Cells | save workbook as XLSX Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsDataValidationExample
+// The sample loads a CSV file into an Aspose.Cells Workbook, creates a validation area (B2:B100), adds a list‑type data validation with the values "Apple,Banana,Cherry", configures dropdown and error settings, and saves the result as an XLSX file.
+class CsvToXlsxWithValidation
 {
-    // The example converts input.csv to output.xlsx with ConversionUtility, loads the workbook, defines a validation area covering all rows in column B starting at row 2, adds a whole-number validation (1‑100) with custom input and error messages, and saves the workbook, ensuring the CSV‑to‑XLSX conversion includes the required data‑validation rule.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Paths for source CSV and destination XLSX files
-            string csvFile = "input.csv";
-            string xlsxFile = "output.xlsx";
+            const string inputPath = "input.csv";
+            const string outputPath = "output.xlsx";
+            const string validationRange = "B2:B100";
 
-            // -------------------------------------------------
-            // 1. Convert CSV to XLSX using the provided utility
-            // -------------------------------------------------
-            ConversionUtility.Convert(csvFile, xlsxFile);
+            // Verify that the input CSV file exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // -------------------------------------------------
-            // 2. Load the newly created workbook
-            // -------------------------------------------------
-            Workbook workbook = new Workbook(xlsxFile);
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Load the CSV file into a workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // -------------------------------------------------
-            // 3. Add a data validation rule to restrict values
-            //    in column B (index 1) to whole numbers between 1 and 100
-            // -------------------------------------------------
-            ValidationCollection validations = worksheet.Validations;
+            // Get the first worksheet (the CSV data is placed here)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range for the validation (all rows in column B, starting from row 2)
-            CellArea area = new CellArea
-            {
-                StartRow = 1,          // Row index 1 (second row, assuming first row is header)
-                EndRow = worksheet.Cells.MaxDataRow, // Use the last used row; alternatively use 1048575 for full column
-                StartColumn = 1,       // Column B (zero‑based index)
-                EndColumn = 1
-            };
+            // Prepare the validation area (e.g., "B2:B100")
+            string[] rangeParts = validationRange.Split(':');
+            if (rangeParts.Length != 2)
+                throw new ArgumentException("Invalid validation range format.");
 
-            // Add the validation to the worksheet
-            int validationIndex = validations.Add(area);
-            Validation validation = validations[validationIndex];
+            CellArea area = CellArea.CreateCellArea(rangeParts[0], rangeParts[1]);
 
-            // Configure the validation properties
-            validation.Type = ValidationType.WholeNumber;
-            validation.Operator = OperatorType.Between;
-            validation.Formula1 = "1";   // Minimum allowed value
-            validation.Formula2 = "100"; // Maximum allowed value
-            validation.ShowInput = true;
-            validation.ShowError = true;
-            validation.InputMessage = "Please enter a whole number between 1 and 100.";
-            validation.ErrorMessage = "Invalid entry. Value must be a whole number between 1 and 100.";
-            validation.InCellDropDown = false; // No dropdown needed for numeric range
+            // Add a new data validation rule to the worksheet using the area
+            ValidationCollection validations = sheet.Validations;
+            int index = validations.Add(area);
+            Validation validation = validations[index];
 
-            // -------------------------------------------------
-            // 4. Save the workbook with the validation applied
-            // -------------------------------------------------
-            workbook.Save(xlsxFile, SaveFormat.Xlsx);
+            // Set the validation type to a list (restrict values to a predefined list)
+            validation.Type = ValidationType.List;
 
-            Console.WriteLine("CSV converted to XLSX and data validation added successfully.");
+            // Provide the list of allowed values (comma‑separated, enclosed in double quotes)
+            validation.Formula1 = "\"Apple,Banana,Cherry\"";
+
+            // Optional settings
+            validation.IgnoreBlank = true;          // Allow blank cells
+            validation.InCellDropDown = true;       // Show drop‑down arrow in cells
+            validation.ShowError = true;            // Show error message when invalid data is entered
+            validation.ErrorTitle = "Invalid Entry";
+            validation.ErrorMessage = "Please select a value from the list.";
+
+            // Save the workbook as an XLSX file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

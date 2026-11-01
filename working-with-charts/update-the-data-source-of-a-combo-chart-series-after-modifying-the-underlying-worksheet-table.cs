@@ -1,15 +1,14 @@
-// Title: How to refresh the data source of a combo chart after expanding a ListObject table using Aspose.Cells for .NET
-// AI Prompts: Write C# code that adds a new row to a ListObject, resizes the table, and updates the XValues and Values of each series in the first combo chart to reference the expanded range with Aspose.Cells. | Generate a method that iterates through all series of a combo chart and sets their data ranges based on a resized worksheet table using the Aspose.Cells API. | Create a routine that programmatically synchronizes a combo chart’s series with a dynamically growing Excel table, handling table resize and chart series range updates in C#.
-// Common Searches: aspnet update combo chart series after adding rows to a ListObject table | c# Aspose.Cells refresh chart data range when table size changes | how to programmatically adjust XValues for combo chart in Aspose.Cells | expand Excel table and keep combo chart linked using Aspose.Cells for .NET | dynamic chart source update with Aspose.Cells ListObject resize
-// Tags: combo chart series range update Aspose.Cells | resize ListObject table C# | chart data source synchronization Aspose.Cells | dynamic Excel chart range Aspose.Cells | programmatic chart refresh after table expansion
+// Title: How to update a combo chart’s data source after expanding a ListObject table using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# update combo chart series after adding a row to a ListObject | Refresh chart data range to structured table reference in .NET workbook | Resize Excel table and keep combo chart linked with Aspose.Cells | Set XValues and Values of chart series to table columns using Aspose.Cells C# | Programmatically expand a worksheet table and adjust chart source in C#
+// Tags: Aspose.Cells combo chart series data source | ListObject table resize with chart linkage | structured reference XValues Values C# | expand worksheet table adjust chart Aspose | refresh chart after adding table row .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Tables;
+using Aspose.Cells.Charts;
 
-// The example loads an existing workbook, adds a new row to a ListObject named "SalesTable", expands the table to include the new row, then loops through each series of the first combo chart on the worksheet, rebuilding the X‑axis and Y‑axis range strings to point to the enlarged table, and finally saves the updated workbook.
+// The example loads an existing workbook, locates the "SalesData" ListObject, inserts a new row of data, resizes the table to include the new row, and then updates each series of the first combo chart to use structured references ("=SalesData[Product]" for XValues and "=SalesData[Amount]" for Values) before saving the workbook.
 class Program
 {
     static void Main()
@@ -22,38 +21,36 @@ class Program
             // Verify that the input workbook exists.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the existing workbook.
+            // Load the workbook.
             Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the worksheet that contains the table and the combo chart.
-            Worksheet sheet = workbook.Worksheets["Data"]; // adjust sheet name as needed
-            if (sheet == null)
-            {
-                Console.WriteLine("Error: Worksheet 'Data' not found.");
-                return;
-            }
-
-            // Retrieve the table (ListObject) by its name.
-            ListObject table = sheet.ListObjects["SalesTable"]; // adjust table name as needed
+            // -------------------------------------------------
+            // Modify the underlying worksheet table
+            // -------------------------------------------------
+            // Assume the table is named "SalesData".
+            ListObject table = sheet.ListObjects["SalesData"];
             if (table == null)
             {
-                Console.WriteLine("Error: Table 'SalesTable' not found.");
+                Console.WriteLine("Table \"SalesData\" not found in the worksheet.");
                 return;
             }
 
-            // -------------------- Modify the underlying table --------------------
-            // Example: add a new data row to the table.
-            int newRowIndex = table.DataRange.FirstRow + table.DataRange.RowCount; // first empty row after current data
-            sheet.Cells[newRowIndex, table.DataRange.FirstColumn].PutValue(DateTime.Today); // Date column (assumed first column)
-            sheet.Cells[newRowIndex, table.DataRange.FirstColumn + 1].PutValue(1500);        // Sales column
-            sheet.Cells[newRowIndex, table.DataRange.FirstColumn + 2].PutValue(300);         // Quantity column
+            // Determine the first empty row after the current table data.
+            int firstDataRow = table.DataRange.FirstRow;
+            int dataRowCount = table.DataRange.RowCount;
+            int newRowIndex = firstDataRow + dataRowCount; // zero‑based index
 
-            // Expand the table to include the newly added row.
-            // The last parameter indicates whether the table has headers (true for typical tables).
+            // Insert new data (example values).
+            sheet.Cells[newRowIndex, 0].PutValue("New Product"); // Column A – Product
+            sheet.Cells[newRowIndex, 1].PutValue(120);          // Column B – Quantity
+            sheet.Cells[newRowIndex, 2].PutValue(2500);         // Column C – Amount
+
+            // Expand the table to include the newly added row (hasHeaders = true).
             table.Resize(
                 table.DataRange.FirstRow,
                 table.DataRange.FirstColumn,
@@ -61,8 +58,9 @@ class Program
                 table.DataRange.ColumnCount,
                 true);
 
-            // -------------------- Update the combo chart series --------------------
-            // Assume the combo chart is the first chart on the worksheet.
+            // -------------------------------------------------
+            // Update the data source of the combo chart series
+            // -------------------------------------------------
             if (sheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found on the worksheet.");
@@ -71,34 +69,22 @@ class Program
 
             Chart comboChart = sheet.Charts[0];
 
-            // Update each series to point to the expanded table range.
-            for (int i = 0; i < comboChart.NSeries.Count; i++)
+            // Update each series to reference the table columns.
+            foreach (Series series in comboChart.NSeries)
             {
-                Series series = comboChart.NSeries[i];
-
-                // Determine which data column this series uses.
-                // Here we map series index 0 -> column B, 1 -> column C, etc.
-                int dataColumnIndex = table.DataRange.FirstColumn + 1 + i; // offset by 1 to skip the X‑axis column
-
-                string sheetName = sheet.Name;
-
-                // X‑axis range (e.g., Data!A2:A6)
-                string xRange = $"{sheetName}!{CellsHelper.ColumnIndexToName(table.DataRange.FirstColumn)}{table.DataRange.FirstRow + 1}:{CellsHelper.ColumnIndexToName(table.DataRange.FirstColumn)}{table.DataRange.FirstRow + table.DataRange.RowCount}";
-
-                // Y‑axis range for this series (e.g., Data!B2:B6)
-                string yRange = $"{sheetName}!{CellsHelper.ColumnIndexToName(dataColumnIndex)}{table.DataRange.FirstRow + 1}:{CellsHelper.ColumnIndexToName(dataColumnIndex)}{table.DataRange.FirstRow + table.DataRange.RowCount}";
-
-                // Apply the new ranges to the series.
-                series.XValues = xRange;
-                series.Values = yRange;
+                // Category (X‑axis) uses the "Product" column.
+                series.XValues = "=SalesData[Product]";
+                // Values (Y‑axis) uses the "Amount" column.
+                series.Values = "=SalesData[Amount]";
             }
 
-            // Save the workbook with the updated chart.
+            // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle unexpected errors.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

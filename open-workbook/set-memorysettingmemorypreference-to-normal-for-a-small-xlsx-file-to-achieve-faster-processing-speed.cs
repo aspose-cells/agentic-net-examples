@@ -1,41 +1,45 @@
-// Title: Set MemorySetting.MemoryPreference to Normal in Aspose.Cells for .NET when opening a small XLSX workbook to boost performance
-// AI Prompts: Generate C# code that sets MemorySetting.MemoryPreference to Normal before opening an XLSX workbook with Aspose.Cells. | Show how to create a LoadOptions object with a Normal memory preference and use it to load a workbook in Aspose.Cells. | Provide a full example that applies a Normal memory setting, modifies the workbook, and saves it using Aspose.Cells.
-// Common Searches: c# aspocells set memorypreference normal for faster load | how to use LoadOptions to improve Aspose.Cells workbook speed | increase loading speed of small Excel files with Aspose.Cells | configure Aspose.Cells memory settings in .NET application
-// Tags: Aspose.Cells MemoryPreference Normal | LoadOptions memory configuration | C# workbook load performance | small XLSX memory optimization | Aspose.Cells memory tuning
+// Title: Set MemorySetting to Normal for faster processing of a small XLSX workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set workbook memory setting to Normal for small Excel files | How to improve load speed of a small XLSX using Aspose.Cells memory preference | Configure MemorySetting.Normal in Aspose.Cells .NET to speed up workbook processing | Best memory setting for small Excel workbook in Aspose.Cells C# | Increase performance when opening small XLSX files with Aspose.Cells
+// Tags: MemorySetting.Normal Aspose.Cells .NET | fast workbook load small XLSX Aspose.Cells | configure workbook memory preference C# | optimize small Excel file processing Aspose.Cells | Aspose.Cells memory configuration for performance
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a LoadOptions instance, sets MemorySetting.MemoryPreference to Normal, loads a small XLSX workbook with those options, optionally modifies the workbook, and saves it, demonstrating faster processing for small Excel files.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads a small input.xlsx file into an Aspose.Cells Workbook, sets Settings.MemorySetting to Normal to accelerate processing, saves the workbook to output.xlsx, and includes basic error handling.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to prevent FileNotFoundException.
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing XLSX file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Set memory preference to Normal for faster processing on small files
+                workbook.Settings.MemorySetting = MemorySetting.Normal;
+
+                // Save the workbook (overwrites or creates a new file)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputPath);
-
-            // (Optional) Perform any required operations on the workbook here.
-
-            // Save the workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

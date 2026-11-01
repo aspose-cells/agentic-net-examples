@@ -1,76 +1,50 @@
-// Title: Use Aspose.Cells C# conditional smart markers to display rows only when a numeric column exceeds a specified threshold
-// AI Prompts: Create a C# program that builds an Aspose.Cells workbook, defines a smart‑marker block, and uses the &IF($Value>limit) construct to add rows only when the numeric field exceeds the limit. | Demonstrate how to bind a List<Item> to WorkbookDesigner and apply a conditional smart marker that suppresses rows where the Value property is less than or equal to a given threshold.
-// Common Searches: aspnet aspocells how to hide rows with &IF smart marker based on column value | c# example of conditional smart marker that only prints rows where numeric column > 50 | using Aspose.Cells WorkbookDesigner to generate rows conditionally from a collection | smart marker syntax &IF($Amount>threshold) for Excel export in C# | filtering Excel rows with Aspose.Cells smart markers and numeric thresholds
-// Tags: Aspose.Cells &IF smart marker | WorkbookDesigner data binding | smart marker conditional expression | Excel row filtering by numeric value | C# range smart marker definition
+// Title: Use Aspose.Cells C# smart markers with {if} condition to show rows only when a numeric column exceeds a threshold
+// AI Prompts: Write C# code that creates an Excel workbook with Aspose.Cells, inserts a smart‑marker row using the {if} syntax to display the row only when the Amount column is greater than a specified value, and binds a DataTable as the data source. | Show how to configure WorkbookDesigner in C# to apply conditional smart markers for numeric comparisons, including setting up the marker tags and processing the workbook.
+// Common Searches: aspocells c# conditional smart marker row based on amount value | how to hide Excel rows with Aspose.Cells smart markers when a column is below a threshold | using {if} smart marker syntax in Aspose.Cells to filter rows by numeric column | c# example of WorkbookDesigner processing smart markers with numeric condition
+// Tags: Aspose.Cells conditional smart marker | WorkbookDesigner conditional row | Excel row visibility numeric threshold | smart marker numeric comparison C#
 
 using System;
-using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsConditionalSmartMarkerDemo
+// The example creates a workbook, adds header cells, and places a smart‑marker row that uses the {if Amount > 500}{endif} syntax so rows appear only when the Amount exceeds 500. A DataTable supplies sample data, WorkbookDesigner binds the data source, processes the conditional markers, and the result is saved as an Excel file.
+class ConditionalSmartMarkerExample
 {
-    // Simple data class
-    // The example creates a new workbook, defines a smart‑marker range, inserts an &IF($Value>50) condition to include rows only when the Value exceeds 50, binds a List<Item> to WorkbookDesigner, processes the markers so qualifying rows are generated, and saves the result as an Excel file.
-    public class Item
+    static void Main()
     {
-        public string Name { get; set; } = string.Empty;
-        public double Value { get; set; }
-    }
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-    public class Program
-    {
-        public static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Set up header row
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Amount");
 
-                // Set up column headers
-                sheet.Cells["A1"].PutValue("Item");
-                sheet.Cells["B1"].PutValue("Value");
+        // Insert smart marker row with conditional syntax.
+        // The row will be displayed only when the Amount value exceeds the threshold (e.g., 500).
+        // {if Amount > 500} starts the condition, {endif} ends it.
+        // Place the start tag in the first cell and the end tag in the last cell of the same row.
+        sheet.Cells["A2"].PutValue("{if Amount > 500}{Product}");
+        sheet.Cells["B2"].PutValue("{Amount}{endif}");
 
-                // Define the smart marker range (the row that will be repeated)
-                // The range name "_CellsSmartMarkers" tells the designer to treat it as a smart marker block
-                Aspose.Cells.Range smartRange = sheet.Cells.CreateRange("A2:B2");
-                smartRange.Name = "_CellsSmartMarkers";
+        // Prepare data source
+        DataTable dt = new DataTable("Data");
+        dt.Columns.Add("Product", typeof(string));
+        dt.Columns.Add("Amount", typeof(double));
 
-                // Insert conditional smart markers.
-                // The row will be populated only when the numeric column "Value" exceeds the threshold (e.g., 50).
-                // &IF($Value>50) starts the condition, &ENDIF ends it.
-                sheet.Cells["A2"].PutValue("&IF($Value>50)&=$Name");
-                sheet.Cells["B2"].PutValue("&=$Value&ENDIF");
+        // Sample data
+        dt.Rows.Add("Apple", 300);   // Below threshold – row will be hidden
+        dt.Rows.Add("Banana", 750);  // Above threshold – row will be shown
+        dt.Rows.Add("Cherry", 1200); // Above threshold – row will be shown
+        dt.Rows.Add("Date", 150);    // Below threshold – row will be hidden
 
-                // Prepare sample data
-                List<Item> items = new List<Item>
-                {
-                    new Item { Name = "Alpha",   Value = 30 }, // Will be hidden (30 <= 50)
-                    new Item { Name = "Beta",    Value = 75 }, // Will be shown
-                    new Item { Name = "Gamma",   Value = 55 }, // Will be shown
-                    new Item { Name = "Delta",   Value = 20 }  // Will be hidden
-                };
+        // Apply the data source to the workbook using WorkbookDesigner
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource(dt);
+        designer.Process(); // Process smart markers
 
-                // Set up the workbook designer and bind the data source
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                    // LineByLine is obsolete; not required when using range smart markers
-                };
-                designer.SetDataSource("Items", items);
-
-                // Process the smart markers (the range will be expanded only for rows meeting the condition)
-                designer.Process();
-
-                // Save the result
-                string outputPath = "ConditionalSmartMarkerOutput.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the result
+        workbook.Save("ConditionalSmartMarkerOutput.xlsx");
     }
 }

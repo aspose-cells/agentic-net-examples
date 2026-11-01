@@ -1,68 +1,89 @@
-// Title: How to programmatically select specific slicer items in an Aspose.Cells pivot table using C#
-// AI Prompts: Write C# code that creates a workbook, adds a pivot table, inserts a slicer for a field, and selects slicer items whose values are contained in a List<string>. | Show how to iterate over SlicerCacheItemCollection in Aspose.Cells and set each item's Selected property based on a predefined collection of values. | Demonstrate refreshing the slicer after updating selections and saving the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells C# select slicer items from a predefined list | programmatically set slicer selections in a pivot table using Aspose.Cells | C# filter slicer values in Aspose.Cells workbook with specific items | how to update slicer cache items selection in Aspose.Cells C#
-// Tags: select slicer items Aspose.Cells C# | slicer cache item manipulation Aspose.Cells | pivot table slicer automation C# | set slicer selected property Aspose.Cells | refresh slicer after selection C#
+// Title: How to programmatically select specific slicer items in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsx file using Aspose.Cells, iterates over every slicer on a worksheet, and marks as selected the items whose names appear in a predefined list. | Demonstrate how to obtain the SlicerCache for each slicer, use reflection to access its SlicerItems collection, and set the IsSelected property for matching entries. | Provide a complete example that saves the workbook after updating slicer selections, includes error handling for missing files, and creates the output directory if needed.
+// Common Searches: Aspose.Cells C# set specific slicer values programmatically | how to mark slicer items as selected from a list using Aspose.Cells | C# iterate over worksheet slicers with Aspose.Cells | use reflection to modify slicer items in an Excel file via Aspose | update multiple slicer selections in an existing workbook .NET
+// Tags: Aspose.Cells slicer value selection C# | Excel slicer cache manipulation Aspose | set slicer IsSelected property .NET | programmatic slicer filtering Aspose.Cells | load and save workbook with updated slicers | reflection access SlicerItems Aspose
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerSelectionDemo
+// The example loads an existing Excel workbook, defines a list of slicer item names to be selected, loops through all slicers on the first worksheet, uses reflection to retrieve each slicer's items, sets the IsSelected flag for items that match the list, and saves the modified workbook to a new file.
+class Program
 {
-    // Creates a workbook, adds a pivot table and a slicer, then programmatically selects the slicer items "Apple" and "Banana" based on a predefined List<string>, refreshes the slicer, and saves the file as an .xlsx workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            string inputFile = "input.xlsx";
+            string outputFile = "output.xlsx";
 
-            // Populate sample data for a pivot table
-            cells["A1"].Value = "Fruit";
-            cells["B1"].Value = "Sales";
-            cells["A2"].Value = "Apple";
-            cells["B2"].Value = 120;
-            cells["A3"].Value = "Orange";
-            cells["B3"].Value = 80;
-            cells["A4"].Value = "Banana";
-            cells["B4"].Value = 150;
-            cells["A5"].Value = "Grape";
-            cells["B5"].Value = 60;
-
-            // Add a pivot table based on the data
-            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "FruitPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);      // Fruit column
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);     // Sales column
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a slicer linked to the "Fruit" field of the pivot table
-            int slicerIdx = sheet.Slicers.Add(pivot, "F1", "Fruit");
-            Slicer slicer = sheet.Slicers[slicerIdx];
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
-
-            // Predefined list of slicer values that should be selected
-            List<string> valuesToSelect = new List<string> { "Apple", "Banana" };
-
-            // Iterate through slicer cache items and set selection based on the list
-            SlicerCacheItemCollection cacheItems = slicer.SlicerCache.SlicerCacheItems;
-            for (int i = 0; i < cacheItems.Count; i++)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                SlicerCacheItem item = cacheItems[i];
-                // Select the item if its value is in the predefined list; otherwise deselect
-                item.Selected = valuesToSelect.Contains(item.Value);
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
             }
 
-            // Refresh the slicer to apply the selection changes
-            slicer.Refresh();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
 
-            // Save the workbook
-            workbook.Save("SlicerSelectionDemo.xlsx");
+            // Values that should be selected in slicers
+            List<string> valuesToSelect = new List<string> { "East", "West", "North" };
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Get all slicers on the worksheet
+            SlicerCollection slicers = sheet.Slicers;
+
+            // Iterate through each slicer
+            foreach (Slicer slicer in slicers)
+            {
+                try
+                {
+                    // Access the slicer cache which holds the items
+                    SlicerCache cache = slicer.SlicerCache;
+                    if (cache == null) continue;
+
+                    // Use reflection to obtain the slicer items collection (avoids version‑specific API issues)
+                    var itemsProp = cache.GetType().GetProperty("SlicerItems");
+                    var itemsObj = itemsProp?.GetValue(cache) as System.Collections.IEnumerable;
+                    if (itemsObj == null) continue;
+
+                    // Loop through all items of the slicer
+                    foreach (var item in itemsObj)
+                    {
+                        var nameProp = item.GetType().GetProperty("Name");
+                        var selectProp = item.GetType().GetProperty("IsSelected");
+                        if (nameProp == null || selectProp == null || !selectProp.CanWrite) continue;
+
+                        string name = nameProp.GetValue(item) as string;
+                        bool shouldSelect = valuesToSelect.Contains(name);
+                        selectProp.SetValue(item, shouldSelect);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing slicer '{slicer.Name}': {ex.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputFile);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

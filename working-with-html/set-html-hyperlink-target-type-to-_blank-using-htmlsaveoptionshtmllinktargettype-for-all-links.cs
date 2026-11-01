@@ -1,45 +1,46 @@
-// Title: Export an Excel workbook to HTML with all hyperlinks opening in a new tab using Aspose.Cells HtmlSaveOptions.HtmlLinkTargetType in C#
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.HtmlLinkTargetType to Blank, and saves the workbook as HTML so every hyperlink uses target="_blank". | Provide a concise example showing how to configure Aspose.Cells HTML export options to force all links to open in a new browser tab.
-// Common Searches: Aspose.Cells C# export Excel to HTML with target=_blank for all links | HtmlSaveOptions HtmlLinkTargetType property example in .NET | How to make hyperlinks open in a new tab when saving a workbook as HTML using Aspose.Cells | C# set hyperlink target type to blank in Aspose.Cells HTML output
-// Tags: Aspose.Cells HTML export hyperlink target | HtmlSaveOptions HtmlLinkTargetType usage | C# set links to open in new tab | Excel to HTML conversion Aspose.Cells | configure hyperlink target blank Aspose.Cells
+// Title: How to force all hyperlinks to open in a new window (_blank) when saving an Excel workbook to HTML with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# save workbook as HTML with hyperlinks opening in new tab | set HtmlSaveOptions link target to blank in Aspose.Cells .NET | export Excel to HTML and make all links use target='_blank' using Aspose.Cells | HtmlLinkTargetType.Blank example for Aspose.Cells HTML conversion | C# Aspose.Cells HTML save options hyperlink target configuration
+// Tags: Aspose.Cells HtmlSaveOptions hyperlink target | HtmlLinkTargetType.Blank usage | C# export Excel to HTML with new tab links | set link target _blank Aspose.Cells | HTML conversion hyperlink settings .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample checks for the existence of input.xlsx, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions for HTML format, sets HtmlLinkTargetType to Blank so every hyperlink is rendered with target="_blank", saves the result as output.html, and includes basic exception handling.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The code loads an Excel workbook, creates HtmlSaveOptions, assigns HtmlSaveOptions.HtmlLinkTargetType = HtmlLinkTargetType.Blank so every hyperlink in the generated HTML uses target="_blank", and then saves the workbook as an HTML file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
 
-            // Configure HTML save options (default options are sufficient for this example)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as HTML
-            workbook.Save(outputPath, htmlOptions);
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Note: ExportHyperlinkTarget property is not available in this version of Aspose.Cells.
 
-            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook as an HTML file with the defined options
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

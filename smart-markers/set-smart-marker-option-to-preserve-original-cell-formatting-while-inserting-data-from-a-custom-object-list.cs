@@ -1,81 +1,75 @@
-// Title: Preserving original cell formatting while populating smart markers from a List<T> in Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses WorkbookDesigner to fill smart markers from a List<Person> and keeps the existing cell styles unchanged. | Show how to enable the PreserveCellFormatting flag in Aspose.Cells when processing smart markers. | Convert a List<T> to a DataTable, add it to a DataSet, and demonstrate that formatting is retained after Designer.Process().
-// Common Searches: Aspose.Cells keep cell styles when using smart markers with a List data source | C# example for keeping cell styles while processing smart markers in Excel | WorkbookDesigner PreserveCellFormatting property usage | How to retain original formatting after populating smart markers from a DataSet in Aspose.Cells | Smart markers formatting retention Aspose.Cells .NET tutorial
-// Tags: WorkbookDesigner retain original styles | smart markers populate from List<Person> | Aspose.Cells PreserveCellFormatting flag | convert List to DataTable for smart markers | C# Aspose.Cells formatting retention example
+// Title: Preserve original cell formatting while populating smart markers from a List<Person> in Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel template, binds a List<Person> as a DataSet to WorkbookDesigner, processes smart markers, and ensures the existing cell styles remain unchanged. | Show how to use Aspose.Cells WorkbookDesigner to fill smart markers from a custom object collection without losing the template's formatting. | Demonstrate setting up smart marker processing in C# so that the output workbook keeps the original formatting of the template cells.
+// Common Searches: Aspose.Cells keep cell styles when using smart markers with a List<T> | C# WorkbookDesigner preserve formatting while inserting data from custom objects | How to prevent formatting loss during smart marker processing in Aspose.Cells .NET | Smart markers retain template formatting after processing in Aspose.Cells
+// Tags: WorkbookDesigner preserve cell formatting | smart markers custom object data source | Aspose.Cells template style retention | populate smart markers from List<Person> | C# Aspose.Cells formatting preservation
 
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads a template workbook, converts a List<Person> into a DataSet, assigns it to WorkbookDesigner, processes smart markers (which by default retains the original cell formatting), and saves the populated workbook as a new file.
+class Program
 {
-    // Custom class to hold data
-    // The example creates a workbook, defines smart markers that reference a DataSet table named 'People', converts a List<Person> into a DataTable, adds it to a DataSet, and uses WorkbookDesigner to process the smart markers while preserving the original cell formatting. The resulting file is saved as SmartMarkerPreserveFormatting.xlsx.
-    public class Person
+    static void Main()
     {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
+
+            // Ensure the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
             {
-                // Create a new workbook
-                var workbook = new Workbook();
-
-                // Access the first worksheet
-                var sheet = workbook.Worksheets[0];
-
-                // Set up smart markers in the worksheet
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
-                // Smart markers reference the DataSet table name "People"
-                sheet.Cells["A2"].PutValue("&=People.Name");
-                sheet.Cells["B2"].PutValue("&=People.Age");
-
-                // Prepare data source
-                var people = new List<Person>
-                {
-                    new Person { Name = "John", Age = 30 },
-                    new Person { Name = "Jane", Age = 25 },
-                    new Person { Name = "Bob",  Age = 40 }
-                };
-
-                // Convert the list to a DataTable and add it to a DataSet
-                var dataTable = new DataTable("People");
-                dataTable.Columns.Add("Name", typeof(string));
-                dataTable.Columns.Add("Age", typeof(int));
-
-                foreach (var p in people)
-                {
-                    dataTable.Rows.Add(p.Name, p.Age);
-                }
-
-                var dataSet = new DataSet();
-                dataSet.Tables.Add(dataTable);
-
-                // Use WorkbookDesigner to process smart markers
-                var designer = new WorkbookDesigner(workbook);
-                // Preserve original formatting (available in newer versions via Options)
-                // If Options property is unavailable, default behavior preserves formatting.
-                // designer.Options.PreserveCellFormatting = true;
-
-                designer.SetDataSource(dataSet);
-                designer.Process(); // Populate data into the worksheet
-
-                // Save the workbook
-                string outputPath = "SmartMarkerPreserveFormatting.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the template workbook (preserves original formatting in the template)
+            Workbook workbook = new Workbook(templatePath);
+
+            // Prepare a custom object list as the data source
+            List<Person> data = new List<Person>
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                new Person { Name = "John", Age = 30 },
+                new Person { Name = "Jane", Age = 25 },
+                new Person { Name = "Bob",  Age = 40 }
+            };
+
+            // Convert the list to a DataSet because WorkbookDesigner expects a DataSet
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable("Persons");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Age", typeof(int));
+
+            foreach (var person in data)
+            {
+                dt.Rows.Add(person.Name, person.Age);
             }
+
+            ds.Tables.Add(dt);
+
+            // Use WorkbookDesigner for processing smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(ds);
+            // PreserveCellFormatting option is not required; default behavior keeps formatting
+            designer.Process(); // Process the smart markers
+
+            // Save the workbook with the inserted data
+            workbook.Save(resultPath);
+            Console.WriteLine($"Result saved to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
+}
+
+// Custom data class used as the data source for smart markers
+public class Person
+{
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; }
 }

@@ -1,22 +1,23 @@
-// Title: Export an Excel workbook to responsive HTML without hidden worksheets using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook and saves it as HTML while omitting hidden worksheets and enabling scalable column widths with Aspose.Cells. | Show how to set up Aspose.Cells HtmlSaveOptions to produce responsive HTML output and exclude hidden sheets in a .NET application.
-// Common Searches: Aspose.Cells C# export to HTML exclude hidden worksheets | How to make column widths responsive when saving Excel as HTML with Aspose.Cells | HtmlSaveOptions WidthScalable true example in .NET | Generate HTML from an Excel file without hidden sheets using Aspose.Cells | Responsive HTML output from Excel workbook Aspose.Cells .NET
-// Tags: HtmlSaveOptions ExportHiddenWorksheet false | WidthScalable true responsive columns Aspose.Cells | C# export Excel to HTML Aspose.Cells | omit hidden worksheets HTML export Aspose.Cells | responsive column sizing Aspose.Cells HTML
+// Title: Export Excel to responsive HTML without hidden worksheets using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as HTML while excluding hidden worksheets and enabling column widths to scale responsively with Aspose.Cells. | Create a reusable C# method that takes source and destination paths and applies HtmlSaveOptions.ExportHiddenWorksheet = false and HtmlSaveOptions.WidthScalable = true for HTML conversion. | Show how to adjust existing Aspose.Cells HTML export settings to disable hidden sheet output and activate responsive column scaling for web‑friendly pages.
+// Common Searches: Aspose.Cells C# prevent hidden worksheets from appearing in HTML export | Enable responsive column widths when saving Excel as HTML with Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet false example in .NET | How to use WidthScalable property for mobile‑friendly HTML output from Aspose.Cells | Convert XLSX to responsive HTML using Aspose.Cells settings
+// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | Aspose.Cells WidthScalable responsive HTML | C# export Excel to HTML without hidden sheets | responsive column scaling Aspose.Cells | HTML conversion of XLSX with Aspose.Cells
 
 using Aspose.Cells;
+using System;
 
-// Loads an Excel workbook, configures HtmlSaveOptions to skip hidden worksheets and enable scalable column widths, then saves the file as responsive HTML using Aspose.Cells for .NET.
+// // Load an Excel workbook, configure HtmlSaveOptions to skip hidden worksheets and enable scalable column widths, then save the file as responsive HTML.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Set up HTML export options
+        // Set up HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        htmlOptions.ExportHiddenWorksheet = false; // Do not include hidden worksheets in the output
-        htmlOptions.WidthScalable = true;          // Make column widths responsive for different screen sizes
+        htmlOptions.ExportHiddenWorksheet = false; // Do not export hidden worksheets
+        htmlOptions.WidthScalable = true; // Enable responsive column widths for HTML
 
         // Export the workbook to HTML using the configured options
         workbook.Save("output.html", htmlOptions);

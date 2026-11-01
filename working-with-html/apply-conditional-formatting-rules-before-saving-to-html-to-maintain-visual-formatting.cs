@@ -1,65 +1,79 @@
-// Title: Add red background conditional formatting for values greater than 50 and export the worksheet to HTML with Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, fills column A with numbers, applies a conditional formatting rule that colors cells red when the value exceeds 50, and saves the workbook as an HTML file while preserving the formatting using Aspose.Cells. | Generate a C# example showing how to define a cell‑value based conditional format (greater than 50) with a solid red background for range A1:A10 and then convert the sheet to HTML via Aspose.Cells.
-// Common Searches: Aspose.Cells preserve conditional formatting when converting Excel to HTML in C# | C# example conditional formatting red background export to HTML using Aspose.Cells | how to apply cell value based conditional formatting before saving as HTML with Aspose.Cells .NET | export workbook to HTML with conditional rules applied in Aspose.Cells
-// Tags: conditional formatting >50 red background Aspose.Cells | export workbook to HTML preserving formatting Aspose.Cells C# | apply cell‑value conditional style range A1:A10 Aspose.Cells | Aspose.Cells HTML conversion with conditional rules | C# conditional formatting before HTML save Aspose.Cells
+// Title: Apply red background conditional formatting to cells A1:A20 and export the workbook as HTML using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply conditional formatting to a specific range before saving as HTML | How to set a red background for cells with values greater than 100 using Aspose.Cells and generate HTML output | C# example adding a cell value > 100 conditional format and preserving it in HTML export with Aspose.Cells | Export Excel to HTML while retaining conditional formatting using Aspose.Cells for .NET | Aspose.Cells conditional formatting range A1:A20 red fill HTML conversion sample
+// Tags: conditional formatting range Aspose.Cells | red background style Aspose.Cells | HTML export preserving conditional formatting Aspose.Cells | cell value greater than 100 format Aspose.Cells | C# workbook to HTML Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
 using System.Drawing;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates creating a workbook, populating column A with numeric data, adding a conditional formatting rule that applies a solid red background to cells with values greater than 50, and saving the worksheet as an HTML file while retaining the formatting using Aspose.Cells for .NET.
-class Program
+namespace ConditionalFormattingToHtml
 {
-    static void Main()
+    // The program loads an existing XLSX file, creates a conditional formatting rule for the range A1:A20 that highlights cells with values greater than 100 using a solid red background, and then saves the workbook as an HTML file while retaining the visual formatting.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data in column A (A1:A10)
-            for (int i = 0; i < 10; i++)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range to which the formatting will apply (A1:A10)
-            CellArea area = new CellArea
+            try
             {
-                StartRow = 0,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            cfCollection.AddArea(area);
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Create a condition: cell value greater than 50
-            int conditionIndex = cfCollection.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "50",
-                null);
-            FormatCondition condition = cfCollection[conditionIndex];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the style to apply when the condition is met (red background)
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Red;
-            style.Pattern = BackgroundType.Solid;
-            condition.Style = style;
+                // Define the range for conditional formatting (A1:A20)
+                int firstRow = 0;      // zero‑based index
+                int firstColumn = 0;   // zero‑based index
+                int totalRows = 20;
+                int totalColumns = 1;
+                AsposeRange range = sheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
 
-            // Save the workbook as HTML (lifecycle: save)
-            workbook.Save("ConditionalFormattingOutput.html", SaveFormat.Html);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Add a new conditional formatting collection to the worksheet
+                int cfIndex = sheet.ConditionalFormattings.Add();
+                FormatConditionCollection collection = sheet.ConditionalFormattings[cfIndex];
+
+                // Convert Range to CellArea (required by AddArea)
+                CellArea area = new CellArea
+                {
+                    StartRow = firstRow,
+                    StartColumn = firstColumn,
+                    EndRow = firstRow + totalRows - 1,
+                    EndColumn = firstColumn + totalColumns - 1
+                };
+                collection.AddArea(area);
+
+                // Create a condition: Cell Value > 100
+                FormatCondition condition = collection[collection.Count - 1];
+                condition.Type = FormatConditionType.CellValue;
+                condition.Operator = OperatorType.GreaterThan;
+                condition.Formula1 = "100";
+
+                // Define the formatting style (red background)
+                Style style = workbook.CreateStyle();
+                style.ForegroundColor = Color.Red;
+                style.Pattern = BackgroundType.Solid;
+                condition.Style = style;
+
+                // Save the workbook as HTML, preserving conditional formatting appearance
+                workbook.Save(outputPath, SaveFormat.Html);
+                Console.WriteLine($"Workbook saved as HTML to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

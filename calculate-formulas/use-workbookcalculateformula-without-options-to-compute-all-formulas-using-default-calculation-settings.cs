@@ -1,55 +1,55 @@
-// Title: Calculate all worksheet formulas with default settings using Aspose.Cells Workbook.CalculateFormula in C#
-// AI Prompts: Create a new Workbook, assign values and formulas to cells, then call Workbook.CalculateFormula() without parameters to compute every dependent formula. | After the default calculation, read the integer results from cells A1, B1, and C1 and write them to the console. | Optionally persist the workbook to an .xlsx file once the formulas have been evaluated.
-// Common Searches: Aspose.Cells C# how to recalculate all formulas in a workbook | Workbook.CalculateFormula default behavior example | evaluate dependent cell formulas with Aspose.Cells without custom settings | C# code to calculate Excel formulas using Aspose.Cells and save the file | default formula calculation in Aspose.Cells workbook
-// Tags: calculate formulas Aspose.Cells C# | Workbook.CalculateFormula default settings | evaluate dependent formulas Aspose.Cells | save workbook after calculation Aspose.Cells | default Excel formula evaluation Aspose.Cells
+// Title: Recalculate all formulas in an Excel workbook using Aspose.Cells Workbook.CalculateFormula (C#)
+// Common Searches: C# Aspose.Cells calculate all formulas in a workbook without options | How to recalculate Excel formulas after loading a file with Aspose.Cells .NET | Default formula evaluation example using Workbook.CalculateFormula in Aspose.Cells | Run full workbook calculation after modifying cells with Aspose.Cells C# | Aspose.Cells recalculate formulas and save the workbook programmatically
+// Tags: Workbook.CalculateFormula default calculation | Aspose.Cells formula recalculation C# | Excel workbook full calculation Aspose | load and save workbook Aspose.Cells | C# evaluate Excel formulas Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel file (or creates a new workbook), calls Workbook.CalculateFormula() to evaluate every formula using Aspose.Cells' default calculation engine, and then saves the workbook, handling CellsException, IOException, and generic errors.
+class Program
 {
-    // The example creates a workbook, sets a static value and two dependent formulas, runs Workbook.CalculateFormula() with default settings to compute all formulas, prints the results, and saves the workbook as CalculatedWorkbook.xlsx.
-    public class WorkbookCalculateFormulaDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Load existing workbook if the file exists; otherwise create a new workbook.
+            if (File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet's cells
-                Cells cells = workbook.Worksheets[0].Cells;
-
-                // Set initial values and formulas
-                cells["A1"].PutValue(5);               // Plain value
-                cells["B1"].Formula = "=A1*2";         // Depends on A1
-                cells["C1"].Formula = "=B1+10";        // Depends on B1
-
-                // Calculate all formulas using default calculation settings
-                workbook.CalculateFormula();
-
-                // Output the calculated results
-                Console.WriteLine("A1 value: " + cells["A1"].IntValue);
-                Console.WriteLine("B1 value: " + cells["B1"].IntValue);
-                Console.WriteLine("C1 value: " + cells["C1"].IntValue);
-
-                // Save the workbook (optional)
-                workbook.Save("CalculatedWorkbook.xlsx");
+                // If the workbook is password protected, provide the password via LoadOptions.
+                // Here we assume no password; adjust LoadOptions.Password if needed.
+                var loadOptions = new LoadOptions();
+                workbook = new Workbook(inputPath, loadOptions);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Create a new workbook with a default worksheet.
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
             }
+
+            // Calculate all formulas using default calculation settings.
+            workbook.CalculateFormula();
+
+            // Save the workbook after calculation.
+            workbook.Save(outputPath);
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (CellsException ex)
         {
-            WorkbookCalculateFormulaDemo.Run();
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"IO error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

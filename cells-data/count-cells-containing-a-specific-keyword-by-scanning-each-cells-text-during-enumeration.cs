@@ -1,61 +1,77 @@
-// Title: Count how many worksheet cells contain a specific keyword using Aspose.Cells enumeration in C#
-// AI Prompts: Generate C# code that opens a workbook, enumerates every cell with Aspose.Cells, and returns the count of cells whose text includes a supplied keyword. | Adapt the enumeration loop to perform a case‑insensitive keyword search and optionally capture the addresses of matching cells.
-// Common Searches: how to count cells containing a word with Aspose.Cells in C# | Aspose.Cells enumerate worksheet cells and find substring | C# count cells that include "Apple" using Aspose.Cells | search for keyword in Excel cells with Aspose.Cells enumeration | case‑insensitive keyword count in an Aspose.Cells worksheet
-// Tags: enumerate cells Aspose.Cells C# | keyword search in Excel worksheet Aspose.Cells | count matching cells Aspose.Cells | cell string value contains check C# | case‑sensitive keyword count Aspose.Cells
+// Title: Count cells that contain a specific keyword in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells count cells that contain a given word in an Excel file | How to enumerate all worksheets and find keyword occurrences with Aspose.Cells | Case‑insensitive search for a string across all cells in a .xlsx using Aspose.Cells | Get total number of cells matching a text pattern in a workbook with Aspose.Cells .NET | Scan used range of Excel sheets for a specific keyword using Aspose.Cells API
+// Tags: keyword search in Excel cells Aspose.Cells | count matching cells .NET Aspose.Cells | enumerate used range cells Aspose.Cells | case‑insensitive text match Excel C# | scan worksheet cells for specific string Aspose.Cells
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsKeywordCount
+// Loads an Excel workbook with Aspose.Cells, iterates through each worksheet's used range, checks each non‑empty cell's displayed text for a case‑insensitive occurrence of a given keyword, increments a counter for each match, and outputs the total number of cells containing the keyword while handling missing files and runtime exceptions.
+class Program
 {
-    // The example creates a workbook, fills several cells with sample text, then uses Aspose.Cells' cell enumerator to walk through all instantiated cells. For each cell it checks whether the StringValue contains the target keyword (case‑sensitive) and increments a counter. The final count is printed and the workbook is saved as KeywordCountDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the Excel file to be processed
+        string filePath = "input.xlsx";
+
+        // Keyword to search for within cell texts
+        string keyword = "target";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            worksheet.Cells["A1"].PutValue("Apple");
-            worksheet.Cells["B1"].PutValue("Banana");
-            worksheet.Cells["A2"].PutValue("Green Apple");
-            worksheet.Cells["B2"].PutValue("Orange");
-            worksheet.Cells["C3"].PutValue("Pineapple");
-            worksheet.Cells["D4"].PutValue("Apple Pie");
-
-            // Keyword to search for
-            string keyword = "Apple";
-
-            // Counter for cells containing the keyword
-            int keywordCount = 0;
-
-            // Get the cells enumerator for the worksheet
-            IEnumerator cellEnumerator = worksheet.Cells.GetEnumerator();
-
-            // Iterate through all instantiated cells
-            while (cellEnumerator.MoveNext())
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
             {
-                Cell cell = (Cell)cellEnumerator.Current;
+                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+                return;
+            }
 
-                // Ensure the cell has a string representation
-                if (cell != null && cell.StringValue != null)
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
+
+            int matchingCellCount = 0;
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Access the cells collection of the current worksheet
+                Cells cells = sheet.Cells;
+
+                // Determine the used range to limit enumeration
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
+
+                // Scan each cell within the used range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Check if the cell's text contains the keyword (case‑sensitive)
-                    if (cell.StringValue.Contains(keyword))
+                    for (int col = 0; col <= maxColumn; col++)
                     {
-                        keywordCount++;
+                        Cell cell = cells[row, col];
+
+                        // Skip cells with no value
+                        if (cell.Type == CellValueType.IsNull)
+                            continue;
+
+                        // Retrieve the cell's displayed text
+                        string cellText = cell.StringValue;
+
+                        // Check if the cell text contains the keyword (case‑insensitive)
+                        if (!string.IsNullOrEmpty(cellText) &&
+                            cellText.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            matchingCellCount++;
+                        }
                     }
                 }
             }
 
-            // Output the result
-            Console.WriteLine($"Number of cells containing \"{keyword}\": {keywordCount}");
-
-            // Save the workbook (optional, just to demonstrate lifecycle compliance)
-            workbook.Save("KeywordCountDemo.xlsx");
+            // Output the total count of cells containing the keyword
+            Console.WriteLine($"Number of cells containing \"{keyword}\": {matchingCellCount}");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors without crashing the application
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

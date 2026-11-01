@@ -1,72 +1,77 @@
-// Title: Use Aspose.Cells LightCells in C# to stream an .xlsx workbook, filter rows where column C equals "Active", and write the matching rows to a new worksheet
-// AI Prompts: Generate C# code that uses Aspose.Cells LightCells to open an .xlsx file, read each row, keep rows with the value "Active" in column C, and write those rows to a newly created worksheet. | Show how to implement a LightCells streaming loop that copies rows meeting a column‑C condition to a destination sheet and saves the workbook. | Provide an example of filtering an Excel file by column C using Aspose.Cells LightCells, including error handling for missing files and saving the filtered result.
-// Common Searches: asp.net filter excel rows by column C value using Aspose.Cells LightCells | c# stream large xlsx and extract rows where column C is Active | how to copy rows with specific status to a new sheet with Aspose.Cells LightCells | lightcells example filtering rows based on cell text | asp.net core read excel row by row and write matching rows to another worksheet
-// Tags: Aspose.Cells LightCells row filtering | filter rows by column value using LightCells | copy matching rows to new worksheet Aspose.Cells | stream large Excel file C# LightCells | Excel column C Active filter Aspose.Cells
+// Title: C# example: filter rows with "Active" in column C and write them to a new worksheet using Aspose.Cells
+// Common Searches: aspocells c# filter rows where column C equals active | copy rows with specific cell value to new sheet using Aspose.Cells in .NET | how to create a filtered workbook based on column value with Aspose.Cells C# | iterate Excel rows and export matching rows to separate file using Aspose.Cells | c# Aspose.Cells save rows that meet condition to another workbook
+// Tags: filter rows by column value Aspose.Cells C# | copy matching rows to new worksheet Aspose.Cells | export filtered data to separate Excel file .NET | row iteration and conditional copy Aspose.Cells | case‑insensitive string comparison Excel column C C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an input.xlsx workbook, streams each row with LightCells, checks column C for the text "Active", copies matching rows to a newly added worksheet named "Filtered", and saves the result as output.xlsx, with file‑existence validation and exception handling.
+// The sample loads an input.xlsx workbook, iterates through each row of the first worksheet, checks if the value in column C (zero‑based index 2) equals "Active" (case‑insensitive), copies the entire matching row to a new worksheet named "Filtered" in a separate workbook, and saves the result as output.xlsx, handling missing files and creating output directories as needed.
 class FilterRowsWithLightCells
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+                return;
+            }
+
             // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook srcWorkbook = new Workbook(inputPath);
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
-            // Get the source worksheet (first sheet in this example)
-            Worksheet sourceSheet = workbook.Worksheets[0];
+            // Create a new workbook for the filtered result
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
+            destSheet.Name = "Filtered";
 
-            // Add a new worksheet to hold the filtered rows
-            Worksheet destSheet = workbook.Worksheets.Add("Filtered");
-
-            // Index for the next row to write in the destination sheet
             int destRowIndex = 0;
 
-            // Determine the range of rows and columns that contain data
-            int maxRow = sourceSheet.Cells.MaxDataRow;
-            int maxCol = sourceSheet.Cells.MaxDataColumn;
+            // Determine the used range in the source sheet
+            int maxRow = srcSheet.Cells.MaxDataRow;
+            int maxCol = srcSheet.Cells.MaxDataColumn;
 
             // Iterate through each row in the source sheet
             for (int row = 0; row <= maxRow; row++)
             {
-                // Read the value from column C (zero‑based index = 2)
-                Cell statusCell = sourceSheet.Cells[row, 2];
-                if (statusCell == null) continue;
+                // Column C is the third column (zero‑based index = 2)
+                string colCValue = srcSheet.Cells[row, 2].StringValue;
 
-                string status = statusCell.StringValue;
-                if (string.Equals(status, "Active", StringComparison.OrdinalIgnoreCase))
+                // Check if the value equals "Active"
+                if (string.Equals(colCValue, "Active", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Copy the entire row to the destination sheet
+                    // Copy all cells from the current source row to the destination row
                     for (int col = 0; col <= maxCol; col++)
                     {
-                        Cell srcCell = sourceSheet.Cells[row, col];
-                        Cell destCell = destSheet.Cells[destRowIndex, col];
-                        destCell.PutValue(srcCell?.Value);
+                        var srcCell = srcSheet.Cells[row, col];
+                        destSheet.Cells[destRowIndex, col].PutValue(srcCell.Value);
                     }
+
                     destRowIndex++;
                 }
             }
 
-            // Save the workbook with the filtered data
-            workbook.Save(outputPath);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the filtered workbook
+            destWorkbook.Save(outputPath);
             Console.WriteLine($"Filtered workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

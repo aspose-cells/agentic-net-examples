@@ -1,7 +1,6 @@
 // Title: Determine Excel workbook encryption status (Encrypted, Unencrypted, Unknown) with Aspose.Cells in C#
-// AI Prompts: Implement a C# method that uses Aspose.Cells LoadOptions to open an Excel file and returns an EncryptionStatus enum based on whether a password‑required exception occurs. | Create NUnit tests for EncryptionHelper.GetEncryptionStatus covering encrypted, unencrypted, missing, and corrupted workbook scenarios. | Add logging to GetEncryptionStatus to capture the cause of an Unknown result while preserving the existing enum return values.
-// Common Searches: Aspose.Cells C# check if an .xlsx file is password protected without providing a password | How to programmatically detect encrypted Excel workbook using Aspose.Cells LoadOptions | C# get encryption state of Excel file (encrypted, unencrypted, unknown) with Aspose.Cells | Determine if an Excel workbook requires a password before opening in .NET
-// Tags: Aspose.Cells detect workbook encryption | C# load Excel file without password | EncryptionStatus enum Aspose.Cells | LoadOptions Auto format password exception handling | CellsException password error detection
+// Common Searches: C# Aspose.Cells check if an Excel file is password protected without opening it | How to return an enumeration for workbook encryption state using Aspose.Cells | Detect encrypted Excel workbook in .NET using LoadOptions and exception handling | Get encryption status of .xlsx file with Aspose.Cells API | Identify unknown workbook protection errors in C# Aspose.Cells
+// Tags: Aspose.Cells workbook encryption detection | C# Excel encryption status enumeration | LoadOptions password handling Aspose.Cells | CellsException password required detection | Determine encrypted vs unencrypted Excel file
 
 using System;
 using System.IO;
@@ -17,44 +16,42 @@ namespace WorkbookEncryptionChecker
         Unknown
     }
 
-    // Provides an EncryptionStatus enum and a static EncryptionHelper.GetEncryptionStatus method that attempts to load an Excel workbook with Aspose.Cells. A successful load returns Unencrypted, a password‑related CellsException returns Encrypted, and any other failure returns Unknown.
+    // The GetEncryptionStatus method validates the file path, attempts to load the workbook with default LoadOptions, returns Unencrypted on successful load, catches a CellsException containing "password" to indicate Encrypted, and returns Unknown for any other exception or unsupported format.
     public static class EncryptionHelper
     {
         /// <param name="filePath">Full path to the workbook file.</param>
         /// <returns>EncryptionStatus value indicating Encrypted, Unencrypted, or Unknown.</returns>
         public static EncryptionStatus GetEncryptionStatus(string filePath)
         {
-            // Verify that the file exists before attempting to load it
-            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-                return EncryptionStatus.Unknown;
+            // Ensure the file exists before attempting to load it.
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"File not found: {filePath}");
 
             try
             {
-                // Load the workbook without providing a password.
-                // If the file is encrypted and a password is required, an exception will be thrown.
-                var loadOptions = new LoadOptions(LoadFormat.Auto);
+                // Attempt to load the workbook without a password.
+                var loadOptions = new LoadOptions(); // default options, no password
                 var workbook = new Workbook(filePath, loadOptions);
 
-                // If loading succeeded, the workbook is not password‑protected.
-                // Aspose.Cells versions prior to 23.9 do not expose an IsEncrypted property,
-                // so we treat a successful load as unencrypted.
+                // Loading succeeded, so the workbook is not encrypted.
                 return EncryptionStatus.Unencrypted;
             }
             catch (CellsException ex)
             {
-                // Detect password‑required errors via the exception message.
-                if (!string.IsNullOrEmpty(ex.Message) &&
+                // Aspose.Cells throws a CellsException when a password is required.
+                // Detect this via the exception message.
+                if (ex.Message != null &&
                     ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     return EncryptionStatus.Encrypted;
                 }
 
-                // Any other CellsException means the status cannot be determined reliably.
+                // Any other CellsException is treated as unknown status.
                 return EncryptionStatus.Unknown;
             }
             catch (Exception)
             {
-                // Non‑Aspose.Cells exceptions (e.g., I/O errors) result in an Unknown status.
+                // Non‑Aspose.Cells exceptions (e.g., invalid format) result in Unknown.
                 return EncryptionStatus.Unknown;
             }
         }
@@ -64,12 +61,31 @@ namespace WorkbookEncryptionChecker
     {
         static void Main(string[] args)
         {
-            // Example usage: provide the workbook path as a command‑line argument or use a default.
-            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+            try
+            {
+                string filePath;
 
-            EncryptionStatus status = EncryptionHelper.GetEncryptionStatus(filePath);
-            Console.WriteLine($"File: {filePath}");
-            Console.WriteLine($"Encryption status: {status}");
+                if (args.Length > 0)
+                {
+                    filePath = args[0];
+                }
+                else
+                {
+                    Console.Write("Enter workbook file path: ");
+                    filePath = Console.ReadLine();
+                }
+
+                var status = EncryptionHelper.GetEncryptionStatus(filePath);
+                Console.WriteLine($"Encryption status: {status}");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine(fnfEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

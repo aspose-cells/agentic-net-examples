@@ -1,23 +1,22 @@
-// Title: Set a custom print area (A1:M50) on the first worksheet using Aspose.Cells in C#
-// AI Prompts: Generate C# code that assigns the PageSetup.PrintArea property to "A1:M50" for a worksheet and saves the workbook. | Show how to limit the printable region of an Excel sheet to cells A1 through M50 with Aspose.Cells. | Provide a step‑by‑step example that creates a new workbook, defines a print range, and writes the file to disk.
-// Common Searches: Aspose.Cells C# how to define a print area for a worksheet | set printable range A1:M50 using Aspose.Cells .NET API | programmatically limit Excel print output to specific cells in C# | configure PageSetup.PrintArea in Aspose.Cells example
-// Tags: Aspose.Cells printable region setup | C# PageSetup.PrintArea property | Excel worksheet printable range definition | save workbook after configuring print area
+// Title: Set a custom print area A1:M50 on a worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, accesses the first worksheet, and assigns the PageSetup.PrintArea property to "A1:M50" before saving. | Show how to limit the printable range of an Excel sheet to cells A1 through M50 with the Aspose.Cells .NET API. | Generate a snippet that configures the print area for a worksheet and saves the file as an .xlsx using Aspose.Cells in C#.
+// Common Searches: aspnet set print area A1:M50 using Aspose.Cells | how to define printable range in Aspose.Cells C# example | Aspose.Cells PageSetup.PrintArea property usage for specific cell range | C# code to limit Excel print area to A1:M50 with Aspose.Cells | example of setting print area in Aspose.Cells workbook
+// Tags: Aspose.Cells PageSetup.PrintArea property | C# worksheet print area definition | Excel .xlsx printable range configuration | limit sheet printing Aspose.Cells | set printable area A1:M50 .NET
 
-using System;
 using Aspose.Cells;
 
-// Creates a new workbook, accesses the first worksheet, sets the printable area to cells A1‑M50 via PageSetup.PrintArea, and saves the file as PrintAreaExample.xlsx.
+// // This program creates a new workbook, accesses the first worksheet, sets the print area to cells A1 through M50 via PageSetup.PrintArea, and saves the file as PrintAreaExample.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (empty Excel file)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet (index 0)
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the print area to cover cells A1 through M50
+        // Define the print area covering cells A1 through M50
         sheet.PageSetup.PrintArea = "A1:M50";
 
         // Save the workbook to a file

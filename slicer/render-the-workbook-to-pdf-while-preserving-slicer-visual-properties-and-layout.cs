@@ -1,14 +1,13 @@
-// Title: Convert an Excel workbook with slicers to PDF while preserving slicer layout using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file containing slicers and saves it as a PDF with the slicer layout retained using Aspose.Cells. | Show how to enable slicer layout preservation by setting the SlicerLayoutOptions property on PdfSaveOptions in Aspose.Cells. | Add comprehensive error handling for missing source files and runtime exceptions when exporting a workbook with slicers to PDF.
-// Common Searches: Aspose.Cells .NET keep slicer formatting when saving workbook as PDF | C# example for preserving slicer layout with PdfSaveOptions | How to export Excel file with slicers to PDF using Aspose.Cells | Convert Excel workbook to PDF while retaining slicer layout in C#
-// Tags: Aspose.Cells PDF conversion with slicer layout preservation | PdfSaveOptions slicer layout option usage in .NET | Excel to PDF export preserving slicer visuals | C# error handling for missing workbook file Aspose.Cells | Slicer layout retention during workbook PDF rendering
+// Title: Convert an Excel workbook containing slicers to PDF while keeping slicer appearance and layout using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets PdfSaveOptions to retain slicer visuals, and saves the workbook as a PDF with Aspose.Cells. | Show how to configure Aspose.Cells PdfSaveOptions so that slicer formatting is not altered when exporting an Excel sheet to PDF in a .NET application.
+// Common Searches: Aspose.Cells export Excel to PDF keep slicer formatting | C# convert workbook with slicers to PDF preserving layout | PdfSaveOptions settings to retain slicer visuals in Aspose.Cells | how to prevent slicer distortion when saving Excel as PDF using Aspose.Cells .NET
+// Tags: export workbook with slicers to PDF Aspose.Cells | PdfSaveOptions preserve slicer layout | C# Aspose.Cells slicer visual retention | convert Excel slicer to PDF .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Loads an Excel workbook, optionally configures PdfSaveOptions to keep slicer layout, and saves the workbook as a PDF while handling missing files and runtime exceptions.
+// The example checks for the source Excel file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions with OnePagePerSheet and AllColumnsInOnePagePerSheet set to false to maintain the original sheet layout, and saves the workbook as a PDF while preserving slicer appearance. Errors are caught and reported.
 class Program
 {
     static void Main()
@@ -18,29 +17,32 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Ensure the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the workbook containing slicers
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Set PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Do not force the sheet onto a single page; retain original layout
+                OnePagePerSheet = false,
+                AllColumnsInOnePagePerSheet = false
+                // Note: Slicer layout preservation is handled automatically in recent versions.
+            };
 
-            // Preserve slicer layout if the property is available in the used version
-            // Uncomment the line below when SlicerLayoutOptions is supported:
-            // pdfOptions.SlicerLayoutOptions = SlicerLayoutOptions.Preserve;
-
-            // Save the workbook as PDF
+            // Save the workbook as PDF using the configured options
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

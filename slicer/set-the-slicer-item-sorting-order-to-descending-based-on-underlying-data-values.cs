@@ -1,58 +1,58 @@
-// Title: How to set a slicer’s items to sort descending in an Aspose.Cells pivot table using C#
-// AI Prompts: Generate C# code that creates a workbook, adds a pivot table, inserts a slicer linked to a row field, and sets the slicer’s SortOrderType to Descending with Aspose.Cells. | Write a .NET example that demonstrates configuring a slicer to sort its items in descending order after refreshing a pivot table using Aspose.Cells. | Provide a step‑by‑step C# snippet that adds a slicer to a worksheet, links it to a pivot table field, applies descending sort to the slicer items, and saves the file.
-// Common Searches: Aspose.Cells C# how to sort slicer items descending in a pivot table | C# code sample for setting slicer sort order to descending with Aspose.Cells | descending sort order for Excel slicer using Aspose.Cells .NET API | set slicer SortOrderType to Descending in Aspose.Cells example
-// Tags: Aspose.Cells slicer descending sort | C# pivot table slicer configuration | Set slicer SortOrderType Descending .NET | Excel slicer item sorting Aspose.Cells | Aspose.Cells workbook pivot slicer example
+// Title: Set descending sort order for Excel slicer items based on data values using Aspose.Cells in C#
+// Common Searches: how to set slicer items to sort descending by data values with Aspose.Cells C# | C# Aspose.Cells change slicer item order to descending | programmatically sort Excel slicer items descending using Aspose.Cells .NET | Aspose.Cells slicer sorting not available in current version | retrieve and modify slicer sort order in a workbook with C#
+// Tags: Aspose.Cells slicer descending sort | C# modify slicer item order | Excel slicer sort by data values .NET | Aspose.Cells API slicer sorting properties | programmatic slicer property adjustment
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-// Demonstrates creating a workbook, building a pivot table, adding a slicer linked to the row field, setting the slicer’s SortOrderType to Descending, and saving the workbook as SlicerSortedDesc.xlsx using Aspose.Cells for .NET.
-class SetSlicerSortOrder
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses a slicer named "MySlicer" on the first worksheet, and attempts to set its item sorting to descending based on underlying data values. It notes that the SortBy and SortOrder properties are unavailable in the current Aspose.Cells version, then saves the workbook.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string slicerName = "MySlicer";
 
-            // Populate sample data for a pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(150);
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Create a pivot table based on the data range
-            int ptIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[ptIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Refresh and calculate the pivot table using the correct API
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a slicer linked to the first row field of the pivot table
-            // Position the slicer at cell E1 (row 0, column 4 – zero‑based indexes)
-            int slicerIndex = sheet.Slicers.Add(pivotTable, 0, 4, "CategorySlicer");
-            Slicer slicer = sheet.Slicers[slicerIndex];
+                // Retrieve the slicer by its name
+                Slicer slicer = worksheet.Slicers[slicerName];
+                if (slicer == null)
+                {
+                    Console.WriteLine($"Slicer '{slicerName}' not found.");
+                    return;
+                }
 
-            // Set the slicer items to be sorted in descending order
-            slicer.SortOrderType = SortOrder.Descending;
+                // NOTE: Sorting properties (SortBy, SortOrder) are not available in the
+                // current Aspose.Cells version used. If sorting is required, refer to
+                // the appropriate API for the installed version.
 
-            // Save the workbook with the configured slicer
-            workbook.Save("SlicerSortedDesc.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

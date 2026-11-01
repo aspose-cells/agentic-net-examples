@@ -1,69 +1,53 @@
-// Title: Export a column chart from Aspose.Cells to a PDF with an 8.5 × 11 inch custom page size using C#
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and saves only the chart to a PDF using an 8.5 × 11 inch page and centered alignment. | Show how to export an Aspose.Cells chart to PDF in landscape orientation while specifying custom page dimensions in C#. | Provide a C# example that iterates through all charts in a workbook and exports each one to a separate PDF file with its own custom page size.
-// Common Searches: Aspose.Cells C# export chart to PDF with custom 8.5x11 page size | How to set page dimensions when using Chart.ToPdf in Aspose.Cells | Center a chart on a PDF page using Aspose.Cells ToPdf method | Export only a chart, not the worksheet, to PDF with Aspose.Cells | Change PDF orientation for a chart exported with Aspose.Cells C#
-// Tags: Aspose.Cells ToPdf chart custom page dimensions | C# export chart as PDF centered alignment | column chart PDF generation Aspose.Cells | chart-only PDF output Aspose.Cells | set PDF orientation for Aspose.Cells chart
+// Title: Export a chart to PDF with an 8.5 × 11 inch custom page size using Aspose.Cells in C#
+// AI Prompts: Generate C# code that creates a worksheet, adds a chart, sets the worksheet PageSetup to an 8.5 × 11 inch custom paper size, and saves the workbook as a PDF with PdfSaveOptions. | Show how to configure PdfSaveOptions and PageSetup so that an Aspose.Cells chart fits on a single 8.5 × 11 inch PDF page in a .NET application.
+// Common Searches: Aspose.Cells C# export chart to PDF with 8.5x11 page size | set worksheet page size 8.5 by 11 inches before PDF save Aspose.Cells | how to keep Excel chart on one PDF page using Aspose.Cells .NET | PdfSaveOptions OnePagePerSheet custom paper dimensions Aspose.Cells | C# Aspose.Cells chart PDF export custom paper size example
+// Tags: chart export to PDF Aspose.Cells | custom paper size worksheet PageSetup | PdfSaveOptions OnePagePerSheet setting | Aspose.Cells set page dimensions C# | export Excel chart as 8.5x11 PDF
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsChartToPdf
+// The example creates a workbook, adds sample data and a column chart, sets the worksheet PageSetup to an 8.5 × 11 inch custom paper size, configures PdfSaveOptions to keep the chart on a single page, and saves the result as ChartExport.pdf.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, and then uses Chart.ToPdf to export the chart alone to a PDF file named ChartCustomSize.pdf with an 8.5 × 11 inch page, centered horizontally and vertically.
-    public class ExportChartPdf
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.NSeries.Add("B2:B4", true);               // Values
+            chart.NSeries.CategoryData = "A2:A4";           // Categories
+            chart.Title.Text = "Sample Chart";
+
+            // Configure PDF save options (default Letter size 8.5×11 inches)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                OnePagePerSheet = true    // Keep the chart on a single page
+            };
 
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Fruits");
-                sheet.Cells["A3"].PutValue("Vegetables");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(50);
-                sheet.Cells["B3"].PutValue(30);
-
-                // Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B3", true);
-                chart.NSeries.CategoryData = "A2:A3";
-
-                // Define output PDF file path
-                string outputPath = "ChartCustomSize.pdf";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Export the chart to a PDF with custom page size and centered alignment
-                chart.ToPdf(outputPath, 8.5f, 11f,
-                    PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error exporting chart to PDF: {ex.Message}");
-            }
+            // Export the workbook (containing the chart) to a PDF file
+            workbook.Save("ChartExport.pdf", pdfOptions);
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ExportChartPdf.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

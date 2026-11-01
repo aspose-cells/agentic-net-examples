@@ -1,39 +1,21 @@
-// Title: Set the first worksheet row as a repeated print title on each printed page using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds header values to row 1, fills sample data, sets PageSetup.PrintTitleRows to "$1:$1", and saves the file as an .xlsx document. | Generate a .NET program that configures a worksheet's page setup to repeat the top row on every printed page by using the PrintTitleRows property of Aspose.Cells. | Provide a concise C# snippet demonstrating how to apply repeat‑row print titles in Aspose.Cells and export the workbook.
-// Common Searches: Aspose.Cells C# how to repeat header row on each printed page | Set PrintTitleRows property in Aspose.Cells .NET example | Repeat first row as print titles in Excel using Aspose.Cells API | C# code to configure page setup for repeating rows with Aspose.Cells | Aspose.Cells print titles for large worksheets
-// Tags: Aspose.Cells PageSetup PrintTitleRows | C# repeat header row on printed Excel pages | Aspose.Cells set print titles for worksheet | Excel repeat rows per page Aspose.Cells .NET | Aspose.Cells workbook page setup configuration | C# Aspose.Cells print title rows example
+// Title: How to repeat the first worksheet row as a print title on every printed page using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets PageSetup.PrintTitleRows to "$1:$1" so the first row repeats on each printed page in an Aspose.Cells workbook. | Provide an example that also configures PageSetup.PrintTitleColumns to repeat the first column together with the header row. | Show how to save the workbook after applying print title settings with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# repeat header row on each printed page | set print title rows in Aspose.Cells workbook .NET | how to make first row print on every page using Aspose.Cells | Aspose.Cells page setup repeat first column and row when printing | C# Aspose.Cells print title rows syntax
+// Tags: Aspose.Cells PageSetup.PrintTitleRows | repeat header row Aspose.Cells | print title rows Excel .NET | Aspose.Cells repeat first column print | C# workbook save Aspose.Cells example
 
-using Aspose.Cells;
-using System;
+// Create a new workbook (or load an existing one)
+// Assuming a create rule exists for workbook initialization
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// The program creates a new workbook, writes column headings in the first row, populates rows 2‑100 with sample data, configures PageSetup.PrintTitleRows to "$1:$1" so the first row repeats on every printed page, and saves the workbook as PrintTitlesExample.xlsx.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+// Access the first worksheet (or any target worksheet)
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+// Set the print title to repeat the first row on every printed page
+// This makes row 1 act as a column heading on each page
+sheet.PageSetup.PrintTitleRows = "$1:$1";
 
-        // Sample data: column headings in the first row
-        sheet.Cells["A1"].PutValue("Header1");
-        sheet.Cells["B1"].PutValue("Header2");
-        sheet.Cells["C1"].PutValue("Header3");
+// (Optional) If you also want to repeat the first column, you could set:
+// sheet.PageSetup.PrintTitleColumns = "$A:$A";
 
-        // Fill some rows with data (optional)
-        for (int i = 2; i <= 100; i++)
-        {
-            sheet.Cells[$"A{i}"].PutValue($"Row{i - 1}Col1");
-            sheet.Cells[$"B{i}"].PutValue($"Row{i - 1}Col2");
-            sheet.Cells[$"C{i}"].PutValue($"Row{i - 1}Col3");
-        }
-
-        // Set print titles to repeat the first row on each printed page
-        sheet.PageSetup.PrintTitleRows = "$1:$1";
-
-        // Save the workbook
-        workbook.Save("PrintTitlesExample.xlsx", SaveFormat.Xlsx);
-    }
-}
+// Save the workbook (using the provided save rule)
+workbook.Save("PrintTitlesExample.xlsx");

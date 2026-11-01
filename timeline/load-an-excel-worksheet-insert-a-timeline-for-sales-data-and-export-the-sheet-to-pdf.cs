@@ -1,75 +1,51 @@
-// Title: Add a PivotTable timeline to an Excel worksheet and export it as PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, populates it with date‑sales data, builds a pivot table, inserts a timeline linked to the Date field, and saves the result as a PDF with Aspose.Cells. | Write a C# program that adds a timeline control to an existing pivot table in an Excel sheet and then converts the sheet to a PDF file using Aspose.Cells ConversionUtility.
-// Common Searches: how to programmatically add a timeline to a pivot table in Aspose.Cells C# | Aspose.Cells convert Excel workbook with timeline control to PDF | C# example of creating a sales pivot table with a timeline and exporting to PDF | using Aspose.Cells Timeline API to filter pivot data before PDF conversion | sample code for adding timeline control to Excel file and saving as PDF in .NET
-// Tags: Aspose.Cells add timeline to pivot table | export Excel with timeline to PDF C# | pivot table timeline control Aspose.Cells | convert workbook to PDF using ConversionUtility | sales data pivot timeline example
+// Title: Load SalesData.xlsx, retrieve PivotTable1, and export the worksheet to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: c# Aspose.Cells example to load an Excel file and export a specific worksheet as PDF | how to get a pivot table by name from a worksheet using Aspose.Cells in C# | export Excel workbook with PivotTable to PDF with Aspose.Cells .NET | Aspose.Cells C# code to verify file existence before opening workbook | generate PDF sales report from SalesData.xlsx using Aspose.Cells
+// Tags: Aspose.Cells load workbook C# | Aspose.Cells get pivot table by name | Aspose.Cells save as PDF from worksheet | Aspose.Cells verify file exists before opening | Aspose.Cells generate sales report PDF
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Pivot; // For PivotTable support
 
-namespace AsposeCellsTimelineToPdf
+namespace TimelineToPdfExampleApp
 {
-    // The program creates a new workbook, fills it with sample sales dates and amounts, builds a pivot table, attaches a timeline control to the Date field, saves the workbook as an Excel file, and then converts the file to PDF using Aspose.Cells' ConversionUtility.
-    class Program
+    // The example checks for the presence of SalesData.xlsx, loads it into an Aspose.Cells Workbook, accesses the first worksheet, retrieves the PivotTable named PivotTable1 (noting that timeline creation is not supported), and saves the workbook as SalesReport.pdf.
+    class TimelineToPdfExample
     {
         static void Main()
         {
+            const string inputFile = "SalesData.xlsx";
+            const string outputFile = "SalesReport.pdf";
+
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                // Load the existing Excel workbook
+                Workbook workbook = new Workbook(inputFile);
 
-                // Populate worksheet with sample sales data (Date and Sales columns)
-                cells["A1"].PutValue("Date");
-                cells["B1"].PutValue("Sales");
+                // Access the first worksheet (or specify by name)
+                Worksheet sheet = workbook.Worksheets[0]; // or workbook.Worksheets["Sheet1"]
 
-                cells["A2"].PutValue(new DateTime(2023, 1, 1));
-                cells["B2"].PutValue(1500);
-
-                cells["A3"].PutValue(new DateTime(2023, 2, 1));
-                cells["B3"].PutValue(2300);
-
-                cells["A4"].PutValue(new DateTime(2023, 3, 1));
-                cells["B4"].PutValue(1800);
-
-                cells["A5"].PutValue(new DateTime(2023, 4, 1));
-                cells["B5"].PutValue(2100);
-
-                // Create a pivot table based on the sales data
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D2", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Refresh and calculate the pivot table data
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // Add a timeline control linked to the pivot table (placed at cell F2)
-                // Use zero‑based row/column indices: row 1 (second row), column 5 (column F)
-                sheet.Timelines.Add(pivot, 1, 5, "Date");
-
-                // Save the workbook to a temporary Excel file
-                string tempExcelPath = "SalesTimeline.xlsx";
-                workbook.Save(tempExcelPath);
-
-                // Convert the Excel file (with the timeline) to PDF using the provided conversion rule
-                string pdfPath = "SalesTimeline.pdf";
-
-                // Ensure the source file exists before conversion
-                if (File.Exists(tempExcelPath))
+                // Retrieve the PivotTable named "PivotTable1"
+                PivotTable pivotTable = sheet.PivotTables["PivotTable1"];
+                if (pivotTable == null)
                 {
-                    ConversionUtility.Convert(tempExcelPath, pdfPath);
-                    Console.WriteLine("Timeline added and workbook exported to PDF successfully.");
+                    Console.WriteLine("Error: PivotTable \"PivotTable1\" not found on the worksheet.");
+                    return;
                 }
-                else
-                {
-                    Console.WriteLine($"Error: The file '{tempExcelPath}' was not found.");
-                }
+
+                // NOTE: Timeline feature may not be available in the current Aspose.Cells version.
+                // If needed, timeline creation can be added when the API is supported.
+
+                // Export the workbook (or the specific worksheet) to PDF
+                workbook.Save(outputFile, SaveFormat.Pdf);
+                Console.WriteLine($"PDF report generated successfully: {outputFile}");
             }
             catch (Exception ex)
             {

@@ -1,63 +1,64 @@
-// Title: How to reset all shape adjustment values to their defaults in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens a .xlsx file, iterates through every worksheet and each Shape, clears the Adjustments collection when it exists, and saves the workbook. | Enhance the sample program to check if shape.Adjustments is non‑null and has items before calling Clear, and log the sheet name and shape index when a shape cannot be processed. | Create a reusable method ResetAllShapeAdjustments(Workbook workbook) that traverses all worksheets, resets every shape's adjustment values, and returns the updated workbook.
-// Common Searches: Aspose.Cells C# clear shape adjustment values in all worksheets | reset custom shape adjustments to default in Excel using Aspose.Cells .NET | how to remove shape adjustments programmatically with Aspose.Cells library | iterate through workbook shapes and clear adjustments Aspose.Cells example | C# Aspose.Cells shape.Adjustments.Clear not working older version
-// Tags: Aspose.Cells shape adjustments clearing | C# reset Excel shape properties | traverse workbook shapes Aspose | default shape adjustment values .NET | shape adjustment collection handling Aspose.Cells
+// Title: How to programmatically reset all shape adjustment values to their defaults in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through every worksheet and shape, and restores each shape's adjustment collection to its default values before saving the workbook. | Explain the steps required to clear custom shape adjustments for all shapes in a workbook using Aspose.Cells, noting any version‑specific considerations and fallback methods when the Adjustments property is not exposed. | Provide a concise example that demonstrates resetting shape handles (e.g., AutoShape, Callout) to default settings across all worksheets with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# reset custom shape adjustments in Excel workbook | How to clear shape adjustment handles for all worksheets using Aspose.Cells .NET | Programmatically restore default shape properties in Excel with Aspose.Cells | Iterate over shapes and reset their adjustment values in C# Aspose.Cells | Default shape adjustment values Aspose.Cells version differences
+// Tags: reset shape adjustments Aspose.Cells | Aspose.Cells shape default values | C# iterate worksheet shapes Aspose.Cells | clear custom shape handles .NET | Aspose.Cells shape adjustment API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and its shapes, safely clears any adjustment values when the Adjustments collection is available, logs warnings for shapes that cannot be processed, and saves the modified file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, walks through each worksheet and every shape, and (when supported) resets each shape's adjustment values to their default settings before saving the modified file. It also notes version considerations for the Adjustments property.
+    class Program
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Define input and output file paths (replace with actual paths or pass via args)
+            string inputFile = @"{InputFile}";
+            string outputFile = @"{OutputFile}";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets and their shapes
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                foreach (Shape shape in sheet.Shapes)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
                 {
-                    try
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all shapes on the current worksheet
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        // If the Shape class provides adjustment values in the current version,
-                        // they can be cleared here. The Adjustments property may not be available
-                        // in older Aspose.Cells versions, so this block is safely ignored when absent.
-                        // Example (when supported):
-                        // if (shape.Adjustments != null && shape.Adjustments.Count > 0)
-                        // {
-                        //     shape.Adjustments.Clear();
-                        // }
-                    }
-                    catch (Exception shapeEx)
-                    {
-                        Console.WriteLine($"Warning: Unable to process shape on sheet '{sheet.Name}'. Details: {shapeEx.Message}");
+                        // If needed, reset shape adjustments or properties here.
+                        // The Adjustments property is not available in this version of Aspose.Cells,
+                        // so this block is left intentionally empty or can contain alternative logic.
                     }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

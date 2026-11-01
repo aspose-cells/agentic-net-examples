@@ -1,64 +1,26 @@
-// Title: Insert a row at index 15 in an Excel worksheet with Aspose.Cells for .NET and export the workbook to PDF
-// AI Prompts: Load a .xlsx file with Aspose.Cells, insert a new row at row index 15 in the first worksheet, save the workbook, and convert it to a PDF using ConversionUtility. | Using Aspose.Cells for .NET, add a blank row at the 16th row of a worksheet and generate a PDF from the modified workbook.
-// Common Searches: Aspose.Cells C# insert row at specific index and save as PDF | How to add a blank row at row 15 in Excel using Aspose.Cells .NET | Convert modified Excel workbook to PDF with Aspose.Cells ConversionUtility | C# example for inserting a row in worksheet and exporting to PDF using Aspose.Cells
-// Tags: insert row Aspose.Cells API | Excel row insertion Aspose.Cells C# | workbook to PDF conversion Aspose.Cells | ConversionUtility PDF export Aspose.Cells | modify worksheet and generate PDF Aspose.Cells
+// Title: Insert a row at index 15 in an Excel worksheet and export the workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Add a single row before Excel row 16 in the first worksheet of input.xlsx and generate a PDF file named output.pdf using Aspose.Cells in C#. | Modify the code to insert three consecutive rows starting at index 15, then convert the updated workbook to PDF.
+// Common Searches: Aspose.Cells C# insert row at index 15 before converting to PDF | How to add a row to an Excel file and save as PDF using Aspose.Cells .NET | Insert rows in a worksheet with Aspose.Cells and export the result to PDF | C# code to load Excel, insert row at position 15, and save as PDF with Aspose.Cells
+// Tags: add worksheet row Aspose.Cells C# | excel to pdf conversion Aspose.Cells | worksheet row insertion before pdf export | Aspose.Cells zero based row index | save workbook as pdf Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
 
-// Loads source.xlsx (creates a simple workbook if missing), inserts a blank row at index 15 in the first worksheet, saves the modified workbook, converts it to result.pdf using Aspose.Cells ConversionUtility, and deletes the temporary Excel file.
-class InsertRowAndConvertToPdf
+// The program loads input.xlsx with Aspose.Cells, inserts a row at zero‑based index 15 in the first worksheet, and saves the modified workbook as output.pdf.
+class Program
 {
     static void Main()
     {
-        // Define file paths
-        string sourceExcelPath = @"C:\Input\source.xlsx";
-        string modifiedExcelPath = @"C:\Input\source_modified.xlsx";
-        string outputPdfPath = @"C:\Output\result.pdf";
+        // Load the existing Excel file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        try
-        {
-            // Ensure the source file exists; create a simple workbook if it does not
-            if (!File.Exists(sourceExcelPath))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(sourceExcelPath));
-                Workbook tempWb = new Workbook();
-                Worksheet tempWs = tempWb.Worksheets[0];
-                tempWs.Name = "Sheet1";
-                tempWs.Cells["A1"].PutValue("Sample Data");
-                tempWb.Save(sourceExcelPath);
-            }
+        // Get the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(sourceExcelPath);
+        // Insert a new row at index 15 (zero‑based, inserts before the 16th row in Excel)
+        sheet.Cells.InsertRows(15, 1);
 
-            // Insert a new row at index 15 (16th row)
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells.InsertRow(15);
-
-            // Ensure the directory for the modified file exists
-            Directory.CreateDirectory(Path.GetDirectoryName(modifiedExcelPath));
-            // Save the modified workbook
-            workbook.Save(modifiedExcelPath);
-
-            // Ensure the directory for the PDF output exists
-            Directory.CreateDirectory(Path.GetDirectoryName(outputPdfPath));
-            // Convert the modified workbook to PDF
-            ConversionUtility.Convert(modifiedExcelPath, outputPdfPath);
-
-            // Clean up the temporary modified Excel file
-            if (File.Exists(modifiedExcelPath))
-            {
-                File.Delete(modifiedExcelPath);
-            }
-
-            Console.WriteLine("Row inserted and PDF generated successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

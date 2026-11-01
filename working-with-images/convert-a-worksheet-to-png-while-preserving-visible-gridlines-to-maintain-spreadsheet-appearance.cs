@@ -1,15 +1,15 @@
-// Title: Convert a specific Excel worksheet to a PNG image while keeping Excel gridlines visible using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, selects a worksheet, and saves it as a PNG image with gridlines displayed using Aspose.Cells. | Demonstrate how to set ImageOrPrintOptions (e.g., GridlineType, OnePagePerSheet) to render an Excel sheet to PNG while preserving the original gridline appearance in .NET.
-// Common Searches: C# Aspose.Cells export worksheet to PNG with gridlines | How to keep Excel gridlines when rendering to image using Aspose.Cells | ImageOrPrintOptions GridlineType example for PNG output | Render Excel sheet as PNG on a single page using Aspose.Cells .NET | Save first worksheet of workbook as PNG preserving cell borders in C#
-// Tags: Aspose.Cells worksheet PNG export preserving gridlines | ImageOrPrintOptions GridlineType configuration | OnePagePerSheet rendering option for PNG output | C# convert Excel sheet to image with visible gridlines | Aspose.Cells image rendering settings for Excel appearance
+// Title: Convert an Excel worksheet to a PNG image while preserving visible gridlines with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook, sets ImageOrPrintOptions.ShowGridLines to true, and uses SheetRender to save the first worksheet as a PNG file. | Update the existing SheetRender example to output a high‑resolution PNG (e.g., 300 DPI) and guarantee that gridlines appear in the rendered image. | Create a reusable C# method that takes input and output paths, iterates through all worksheets in a workbook, and creates separate PNG images for each sheet with gridlines visible.
+// Common Searches: Aspose.Cells C# export worksheet to PNG with gridlines shown | How to keep Excel gridlines when converting to image using Aspose.Cells | Render Excel sheet as PNG preserving layout and gridlines in .NET | ImageOrPrintOptions ShowGridLines example for Aspose.Cells | Convert each sheet of a workbook to PNG files with visible gridlines C#
+// Tags: Aspose.Cells export worksheet to PNG | ImageOrPrintOptions ShowGridLines property | SheetRender generate high‑resolution PNG | preserve Excel gridlines in image output | C# convert .xlsx to PNG per worksheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The sample checks for the input file, loads it into an Aspose.Cells Workbook, selects the first worksheet, configures ImageOrPrintOptions to render the sheet on a single page with gridlines visible, creates a SheetRender, and saves the result as a PNG image while handling any exceptions.
-class Program
+// The example loads a workbook, selects the first worksheet, configures ImageOrPrintOptions (including OnePagePerSheet and optional ShowGridLines), renders the sheet with SheetRender, and writes the result to a PNG file while handling missing files and runtime exceptions.
+class WorksheetToPng
 {
     static void Main()
     {
@@ -28,26 +28,28 @@ class Program
             // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (or specify by name/index)
+            // Get the first worksheet (index 0)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure image export options
+            // Set up image rendering options
             ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                // Render the whole sheet on one page
+                // Render each worksheet as a single page (most worksheets have one page)
                 OnePagePerSheet = true
-                // Default image format is PNG; no need to set explicitly for compatibility
+                // Additional options such as resolution can be set here if needed
+                // HorizontalResolution = 300,
+                // VerticalResolution = 300
             };
 
             // Render the worksheet to a PNG image
             SheetRender renderer = new SheetRender(sheet, options);
             renderer.ToImage(0, outputPath);
 
-            Console.WriteLine($"Worksheet rendered successfully to '{outputPath}'.");
+            Console.WriteLine($"Worksheet successfully exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

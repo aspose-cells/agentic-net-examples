@@ -1,84 +1,65 @@
-// Title: Batch convert a directory of .xls and .xlsx files to single-page-per-sheet PDFs with Aspose.Cells for .NET
-// AI Prompts: Generate a C# console program that scans a specified folder for .xls and .xlsx files, loads each workbook with Aspose.Cells, and saves it as a PDF using PdfSaveOptions with OnePagePerSheet enabled. | Show how to configure PdfSaveOptions in Aspose.Cells to enforce one PDF page per worksheet when exporting multiple Excel workbooks in a batch process. | Write code that creates input and output directories, iterates over Excel files, converts each to PDF, and logs success or error messages for every file.
-// Common Searches: asp.net batch convert excel files to pdf one page per sheet aspose.cells | c# script to convert all .xlsx files in a folder to pdf using aspose cells | how to set OnePagePerSheet option when exporting Excel to PDF in .NET | automate conversion of multiple workbooks to pdf with aspose.cells console app
-// Tags: batch excel to pdf conversion aspose.cells | onepagepersheet pdfsaveoptions .net | c# folder processing aspose.cells | excel workbook pdf export aspose.cells | automated pdf generation from excel files
+// Title: Convert all Excel files in a folder to PDF with one page per sheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells batch convert Excel files in a directory to PDF with one page per sheet | How to export multiple .xlsx workbooks to PDF using Aspose.Cells while preserving sheet pagination | Aspose.Cells PdfSaveOptions OnePagePerSheet example for processing a folder of workbooks in .NET | Automate conversion of .xls, .xlsx, .xlsm, and .xlsb files to PDF in C# | Save each worksheet as a separate PDF page using Aspose.Cells C#
+// Tags: batch Excel to PDF conversion Aspose.Cells | PdfSaveOptions pagination control | folder enumeration of Excel workbooks C# | convert .xls .xlsx .xlsm .xlsb to PDF | non‑recursive directory scan C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The C# console application scans an input directory for .xls and .xlsx workbooks, creates PdfSaveOptions with OnePagePerSheet set to true, and saves each workbook as a PDF in an output folder. It ensures the output folders exist, skips non‑Excel files, logs conversion results, and continues processing even if individual files cause errors.
-class ExcelToPdfConverter
+namespace ExcelToPdfBatch
 {
-    static void Main(string[] args)
+    // The program scans a specified input folder for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, and saves it as a PDF in an output folder using PdfSaveOptions configured with OnePagePerSheet = true, ensuring each worksheet appears on a single PDF page.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Input folder containing Excel workbooks
-            string inputFolder = @"C:\InputExcelFiles";
-            // Output folder for generated PDFs
+            // Define source folder containing Excel files and destination folder for PDFs
+            string sourceFolder = @"C:\InputExcelFiles";
             string outputFolder = @"C:\OutputPdfFiles";
-
-            // Verify input folder exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder not found: {inputFolder}");
-                Console.WriteLine("Please create the folder and add Excel files before running the program.");
-                return;
-            }
 
             // Ensure the output directory exists
             if (!Directory.Exists(outputFolder))
-            {
                 Directory.CreateDirectory(outputFolder);
+
+            // Perform the conversion
+            ConvertFolderToPdf(sourceFolder, outputFolder);
+
+            Console.WriteLine("Conversion completed.");
+        }
+
+        /// <param name="sourceFolder">Folder containing Excel files.</param>
+        /// <param name="outputFolder">Folder where PDF files will be saved.</param>
+        static void ConvertFolderToPdf(string sourceFolder, string outputFolder)
+        {
+            // Define supported Excel extensions
+            string[] extensions = new[] { "*.xls", "*.xlsx", "*.xlsm", "*.xlsb" };
+
+            // Gather all Excel files from the source folder (non‑recursive)
+            var excelFiles = new System.Collections.Generic.List<string>();
+            foreach (var ext in extensions)
+            {
+                excelFiles.AddRange(Directory.GetFiles(sourceFolder, ext, SearchOption.TopDirectoryOnly));
             }
 
-            // Define PDF save options with OnePagePerSheet enabled
+            // Configure PDF save options to force one page per sheet
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
                 OnePagePerSheet = true
             };
 
-            // Process each Excel file in the input folder (supports .xls and .xlsx)
-            foreach (string excelFilePath in Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
+            // Process each Excel file
+            foreach (string excelPath in excelFiles)
             {
-                string extension = Path.GetExtension(excelFilePath).ToLowerInvariant();
-                if (extension != ".xls" && extension != ".xlsx")
-                    continue; // Skip non-Excel files
+                // Load the workbook using Aspose.Cells
+                Workbook workbook = new Workbook(excelPath);
 
-                // Verify the file exists before attempting to load
-                if (!File.Exists(excelFilePath))
-                {
-                    Console.WriteLine($"File not found: {excelFilePath}");
-                    continue;
-                }
+                // Build the output PDF file name (same base name, .pdf extension)
+                string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
+                string pdfPath = Path.Combine(outputFolder, pdfFileName);
 
-                try
-                {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(excelFilePath);
-
-                    // Determine the output PDF file name
-                    string pdfFileName = Path.GetFileNameWithoutExtension(excelFilePath) + ".pdf";
-                    string pdfFilePath = Path.Combine(outputFolder, pdfFileName);
-
-                    // Save the workbook as PDF with the specified options
-                    workbook.Save(pdfFilePath, pdfOptions);
-                    Console.WriteLine($"Converted: {excelFilePath} -> {pdfFilePath}");
-                }
-                catch (Exception ex)
-                {
-                    // Log any errors but continue processing other files
-                    Console.WriteLine($"Error processing '{excelFilePath}': {ex.Message}");
-                }
+                // Save the workbook as PDF with the specified options
+                workbook.Save(pdfPath, pdfOptions);
             }
-
-            Console.WriteLine("Conversion completed.");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors
-            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

@@ -1,83 +1,55 @@
-// Title: How to cast a worksheet Shape to GroupShape and verify its type using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loops through all shapes on the first worksheet, uses the 'as' operator to cast each to GroupShape, and writes a confirmation message when the cast succeeds. | Show a safe way to identify a GroupShape among worksheet shapes and access its properties with Aspose.Cells in a .NET project. | Provide a C# example that loads an Excel file, checks for the presence of a GroupShape, casts it, performs a simple manipulation, and then saves the workbook.
-// Common Searches: Aspose.Cells C# find and cast GroupShape from worksheet shapes | how to check if a shape is a GroupShape in Aspose.Cells .NET | C# code to iterate Excel shapes and identify group shapes using Aspose.Cells
-// Tags: group shape casting Aspose.Cells C# | identify groupshape in worksheet Aspose.Cells | shape type verification Aspose.Cells .NET | iterate worksheet shapes Aspose.Cells | group shape manipulation example Aspose.Cells
+// Title: How to cast a worksheet Shape to GroupShape and verify its type using Aspose.Cells for .NET (C#)
+// Common Searches: C# cast worksheet shape to GroupShape with Aspose.Cells | check if a shape is a GroupShape in Aspose.Cells .NET | determine shape type at runtime using Aspose.Cells API | using the 'as' operator to convert Shape to GroupShape in C# | verify GroupShape after adding an AutoShape to a workbook
+// Tags: shape to groupshape casting Aspose.Cells | runtime shape type checking Aspose.Cells | groupshape detection in worksheet C# | aspnet cells shape hierarchy verification | as operator shape conversion Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsGroupShapeDemo
+// The example creates a new Workbook, adds a rectangle AutoShape to the first worksheet, attempts to cast the Shape to a GroupShape using the C# 'as' operator, and then checks whether the cast succeeded by testing for null, outputting the result accordingly.
+class Program
 {
-    // The sample loads an Excel workbook, ensures the first worksheet contains shapes, iterates through them to locate a GroupShape, casts the shape using the 'as' operator, confirms the cast succeeded, optionally manipulates the group, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle AutoShape to the worksheet.
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape shape = sheet.Shapes.AddAutoShape(
+                AutoShapeType.Rectangle, // shape type
+                0,   // upper left row
+                0,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                200, // height (pixels)
+                200  // width (pixels)
+            );
+
+            // Attempt to cast the shape to GroupShape
+            GroupShape? groupShape = shape as GroupShape;
+
+            // Verify whether the cast succeeded
+            if (groupShape != null)
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (ensure at least one worksheet exists)
-                if (workbook.Worksheets.Count == 0)
-                {
-                    Console.WriteLine("The workbook does not contain any worksheets.");
-                    return;
-                }
-
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one shape
-                if (worksheet.Shapes.Count == 0)
-                {
-                    Console.WriteLine("No shapes were found on the first worksheet.");
-                    return;
-                }
-
-                // Attempt to find a GroupShape among the shapes
-                GroupShape groupShape = null;
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    groupShape = shape as GroupShape;
-                    if (groupShape != null)
-                    {
-                        break; // Found a GroupShape, exit loop
-                    }
-                }
-
-                if (groupShape != null)
-                {
-                    // The shape is a GroupShape – you can now work with groupShape
-                    Console.WriteLine("The shape has been successfully cast to GroupShape.");
-                    // Example: you could manipulate the groupShape here
-                }
-                else
-                {
-                    // No GroupShape found – handle as needed
-                    Console.WriteLine("No GroupShape was found among the shapes on the worksheet.");
-                }
-
-                // Save the workbook if any modifications were made (optional)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine("The object is successfully cast to GroupShape.");
             }
-            catch (Exception ex)
+            else
             {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("The object is NOT a GroupShape.");
             }
+
+            // (Optional) Save the workbook if needed – follows lifecycle rule
+            // workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

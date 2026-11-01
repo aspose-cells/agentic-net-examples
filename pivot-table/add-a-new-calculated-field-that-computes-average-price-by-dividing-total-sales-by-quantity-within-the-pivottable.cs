@@ -1,54 +1,56 @@
-// Title: Create a PivotTable with an Average Price calculated field (Sales ÷ Quantity) using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that builds a PivotTable with Aspose.Cells, adds Sales and Quantity as data fields, and defines a calculated field named AveragePrice using the formula =Sales/Quantity. | Demonstrate how to refresh the PivotTable cache and recalculate its data after inserting a custom calculated field in Aspose.Cells.
-// Common Searches: how to define a calculated field in an Aspose.Cells PivotTable C# | Aspose.Cells example for average price = sales / quantity in pivot | C# code to add custom formula to PivotTable using Aspose.Cells library | refresh pivot data after adding calculated field Aspose.Cells .NET | create pivot table with sales and quantity fields and compute average price Aspose.Cells
-// Tags: add calculated field to Aspose.Cells PivotTable | average price calculation in Aspose.Cells pivot | refresh pivot data Aspose.Cells C# | Aspose.Cells PivotTable custom formula | C# Aspose.Cells sales quantity pivot example
+// Title: Add an Average Price calculated field to an Excel PivotTable using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add a calculated field to an existing pivot table | Create an average price field in an Excel pivot table with Aspose.Cells | Use AddCalculatedField method to divide Total Sales by Quantity in .NET | How to define custom calculations in a PivotTable using Aspose.Cells library | C# example for adding a custom calculated field to a workbook pivot
+// Tags: Aspose.Cells AddCalculatedField pivot table | C# average price calculated field Excel | custom pivot table calculation Aspose.Cells | divide total sales quantity calculated field | Excel pivot table custom formula .NET
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The sample creates a workbook, populates it with product, sales, and quantity data, builds a PivotTable on that range, adds Sales and Quantity as data fields, inserts a calculated field named AveragePrice using the formula =Sales/Quantity, refreshes and calculates the pivot data, and saves the workbook as an XLSX file.
+// The sample loads an existing workbook, accesses the first worksheet, retrieves the pivot table named "PivotTable1", defines a formula that divides the 'Total Sales' field by the 'Quantity' field, adds a new calculated field called "AveragePrice" using the AddCalculatedField method, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data: Product, Sales, Quantity
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["C1"].PutValue("Quantity");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(200);
-        sheet.Cells["C2"].PutValue(10);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["C3"].PutValue(5);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        sheet.Cells["A4"].PutValue("Orange");
-        sheet.Cells["B4"].PutValue(300);
-        sheet.Cells["C4"].PutValue(15);
+            // Retrieve the pivot table by its name (ensure the name matches the workbook)
+            PivotTable pivotTable = worksheet.PivotTables["PivotTable1"];
+            if (pivotTable == null)
+            {
+                Console.WriteLine("Pivot table 'PivotTable1' not found.");
+                return;
+            }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Define the formula for the calculated field: Total Sales divided by Quantity
+            string formula = "='Total Sales'/'Quantity'";
 
-        // Configure pivot fields
-        pivot.AddFieldToArea(PivotFieldType.Row, "Product");      // Row field
-        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");      // Data field
-        pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");   // Data field
+            // Add the calculated field named "AveragePrice" to the pivot table
+            pivotTable.AddCalculatedField("AveragePrice", formula);
 
-        // Add a calculated field that computes average price = Sales / Quantity
-        pivot.AddCalculatedField("AveragePrice", "=Sales/Quantity", true);
-
-        // Refresh the pivot cache and calculate the pivot data
-        pivot.RefreshData();
-        pivot.CalculateData();
-
-        // Save the workbook with the pivot table and calculated field
-        workbook.Save("PivotTableWithAveragePrice.xlsx");
+            // Save the workbook with the new calculated field
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

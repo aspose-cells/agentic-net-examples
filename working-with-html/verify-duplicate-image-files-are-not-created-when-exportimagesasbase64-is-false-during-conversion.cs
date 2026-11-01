@@ -1,67 +1,105 @@
-// Title: Verify that HTML export with ExportImagesAsBase64=false does not generate duplicate image files using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook, saves it to HTML with ExportImagesAsBase64 set to false, and then scans the exported image folder to detect duplicate images by comparing SHA‑256 hashes. | Create a method that computes a hash for each image file produced by Aspose.Cells during HTML conversion and throws an exception when two files share the same hash value. | Show how to programmatically locate the default image subfolder created by Aspose.Cells when saving to HTML and verify that each exported image is unique.
-// Common Searches: Aspose.Cells export to HTML without base64 images duplicate file detection | C# verify unique image files after saving workbook as HTML using Aspose.Cells | how to prevent duplicate image files when ExportImagesAsBase64 is false in Aspose.Cells | check for identical exported images in Aspose.Cells HTML conversion .NET
-// Tags: HTML export separate image files Aspose.Cells | ExportImagesAsBase64 false handling | duplicate image detection C# | SHA256 hash comparison for images .NET | Aspose.Cells generated image folder pattern
+// Title: Check for duplicate image files after converting an Excel workbook to HTML with ExportImagesAsBase64 disabled using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook, save it as HTML with HtmlSaveOptions.ExportImagesAsBase64 = false, then enumerate the generated image folder and compute MD5 hashes to flag any duplicate images. | Write a C# routine that scans the <workbook>_files directory produced by Aspose.Cells HTML export, compares each file's hash, and logs the names of duplicate image files. | Adjust HtmlSaveOptions to ensure images are saved as separate files, run the conversion, and verify that no identical image files exist in the output folder.
+// Common Searches: how to detect duplicate images after exporting Excel to HTML with Aspose.Cells .NET | Aspose.Cells HTML export ExportImagesAsBase64 false duplicate image files check | C# verify that Aspose.Cells does not create duplicate image files during HTML conversion | compare MD5 hashes of images extracted by Aspose.Cells HTML save options
+// Tags: htmlsaveoptions exportimagesasbase64 false | aspocells duplicate image detection html export | excel to html image extraction .net | md5 hash comparison for image files c# | validate extracted image folder aspocells
 
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The sample loads an Excel workbook, saves it as HTML with ExportImagesAsBase64 disabled so images are written to a separate folder, then iterates over the folder, computes SHA‑256 hashes for each image, and raises an error if any two images share the same hash, confirming that no duplicate image files were created.
-class VerifyNoDuplicateImages
+// The example loads an Excel workbook, saves it as HTML with ExportImagesAsBase64 disabled, then scans the resulting <html>_files directory, computes MD5 hashes for each extracted image, and reports whether any duplicate image files were created.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Verify that the input workbook exists
-            string inputPath = Path.Combine(Directory.GetCurrentDirectory(), "Input.xlsx");
+            // Verify input workbook exists
+            string inputPath = "input.xlsx";
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException("Input workbook not found.", inputPath);
-
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Prepare HTML save options with ExportImagesAsBase64 set to false
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-            saveOptions.ExportImagesAsBase64 = false; // Images will be saved as separate files
-
-            // Determine the folder where Aspose.Cells will export images (default naming convention)
-            string htmlPath = Path.Combine(Directory.GetCurrentDirectory(), "Output.html");
-            string imageFolder = Path.Combine(
-                Path.GetDirectoryName(htmlPath) ?? string.Empty,
-                Path.GetFileNameWithoutExtension(htmlPath) + "_files");
-
-            // Ensure the image folder exists (Aspose.Cells will create it if needed)
-            Directory.CreateDirectory(imageFolder);
-
-            // Save the workbook to HTML (images will be exported to the folder)
-            workbook.Save(htmlPath, saveOptions);
-
-            // Verify that no duplicate image files were created
-            // Duplicate is defined as files having identical content (hash)
-            var hashSet = new HashSet<string>();
-            foreach (string filePath in Directory.GetFiles(imageFolder))
             {
-                // Compute SHA256 hash of the file content
-                using (FileStream stream = File.OpenRead(filePath))
-                using (SHA256 sha = SHA256.Create())
-                {
-                    byte[] hashBytes = sha.ComputeHash(stream);
-                    string hashString = BitConverter.ToString(hashBytes).Replace("-", "");
-
-                    // If the hash already exists, a duplicate image file was created
-                    if (!hashSet.Add(hashString))
-                    {
-                        throw new InvalidOperationException(
-                            $"Duplicate image detected: {Path.GetFileName(filePath)} has the same content as another exported image.");
-                    }
-                }
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
 
-            Console.WriteLine("Verification completed: No duplicate image files were created.");
+            // Load the source workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // Configure HTML save options (export images as separate files)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportImagesAsBase64 = false
+            };
+
+            // Prepare output paths
+            string htmlOutputPath = Path.Combine("output", "output.html");
+            string htmlDir = Path.GetDirectoryName(htmlOutputPath);
+            if (!string.IsNullOrEmpty(htmlDir))
+                Directory.CreateDirectory(htmlDir);
+
+            // Save the workbook as HTML
+            try
+            {
+                workbook.Save(htmlOutputPath, saveOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save HTML: {ex.Message}");
+                return;
+            }
+
+            // Determine the folder where Aspose.Cells extracts images (default: <htmlFileName>_files)
+            string imageFolder = Path.Combine(
+                htmlDir ?? string.Empty,
+                Path.GetFileNameWithoutExtension(htmlOutputPath) + "_files");
+
+            // Verify that duplicate image files were not created
+            if (Directory.Exists(imageFolder))
+            {
+                string[] imageFiles = Directory.GetFiles(imageFolder);
+                var hashSet = new HashSet<string>();
+                bool duplicateFound = false;
+
+                foreach (string filePath in imageFiles)
+                {
+                    try
+                    {
+                        using (FileStream stream = File.OpenRead(filePath))
+                        using (MD5 md5 = MD5.Create())
+                        {
+                            string hash = BitConverter.ToString(md5.ComputeHash(stream));
+                            if (!hashSet.Add(hash))
+                            {
+                                duplicateFound = true;
+                                Console.WriteLine($"Duplicate image detected: {Path.GetFileName(filePath)}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing image '{filePath}': {ex.Message}");
+                    }
+                }
+
+                if (!duplicateFound)
+                    Console.WriteLine("No duplicate image files were created.");
+            }
+            else
+            {
+                Console.WriteLine("Image folder not found; no images to verify.");
+            }
         }
         catch (Exception ex)
         {

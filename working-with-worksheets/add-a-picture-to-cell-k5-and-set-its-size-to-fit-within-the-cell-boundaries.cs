@@ -1,56 +1,72 @@
-// Title: Insert an image into cell K5 and automatically resize it to fit the cell using Aspose.Cells for .NET
-// AI Prompts: Add a PNG picture to worksheet cell K5 and set its Width and Height to the cell's pixel dimensions with Aspose.Cells in C#. | Retrieve the pixel width of column K and the pixel height of row 5, then apply those values to a Picture object so the image fills the cell. | Programmatically place an image in a specific Excel cell and scale it to the cell boundaries using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# insert image into specific cell and fit to cell size | Resize picture to match Excel cell dimensions using Aspose.Cells .NET | Get column width in pixels Aspose.Cells and set picture size | How to add a PNG to cell K5 and auto‑scale it with Aspose.Cells | Fit an image inside an Excel cell programmatically with Aspose.Cells
-// Tags: Aspose.Cells add image to specific cell | Aspose.Cells resize picture to cell size | Aspose.Cells get column width in pixels | Aspose.Cells get row height in pixels | C# scale image to fit Excel cell | Aspose.Cells picture width height properties
+// Title: Insert a PNG image into cell K5 and automatically resize it to fit the cell using Aspose.Cells for .NET
+// Common Searches: c# insert PNG image into Excel cell K5 with Aspose.Cells | resize picture to match Excel cell dimensions using Aspose.Cells .NET | set picture placement to MoveAndSize so it moves with the cell in Aspose.Cells | get pixel width and height of a worksheet cell for image scaling in C# | anchor an image to a specific cell and fit it inside the cell boundaries Aspose.Cells
+// Tags: add picture to specific worksheet cell Aspose.Cells | scale image to cell pixel size .NET | picture placement MoveAndSize Aspose.Cells example | retrieve column width pixel Aspose.Cells API | anchor PNG to cell K5 C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook, verifies the presence of the input Excel file and PNG image, inserts the image into cell K5, obtains the cell's pixel width and height, resizes the picture to those dimensions, and saves the result, handling any errors that may occur.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, calculates the pixel width and height of cell K5, adds a PNG picture anchored to that cell, resizes the picture to exactly fill the cell, sets its placement to MoveAndSize so it moves and scales with the cell, and saves the workbook as Result.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string imagePath = "image.png";
-            const string outputPath = "output.xlsx";
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Verify required files exist to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
-            if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file not found: {imagePath}");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
+                // Define the target cell K5 (zero‑based indices)
+                int targetRow = 4;      // Row 5
+                int targetColumn = 10; // Column K
 
-            // Target cell K5 (zero‑based indices: row 4, column 10)
-            int targetRow = 4;
-            int targetColumn = 10;
+                // Get the pixel dimensions of the target cell
+                double cellWidthPx = sheet.Cells.GetColumnWidthPixel(targetColumn);
+                double cellHeightPx = sheet.Cells.GetRowHeightPixel(targetRow);
 
-            // Add the picture to the worksheet at the target cell
-            int pictureIndex = sheet.Pictures.Add(targetRow, targetColumn, imagePath);
-            Picture picture = sheet.Pictures[pictureIndex];
+                // Path to the image file
+                string imagePath = @"C:\Images\MyPicture.png";
 
-            // Retrieve the cell's width and height in pixels
-            double cellWidth = sheet.Cells.GetColumnWidthPixel(targetColumn);
-            double cellHeight = sheet.Cells.GetRowHeightPixel(targetRow);
+                if (File.Exists(imagePath))
+                {
+                    // Add the picture anchored to K5
+                    int pictureIdx = sheet.Pictures.Add(targetRow, targetColumn, imagePath);
+                    Picture picture = sheet.Pictures[pictureIdx];
 
-            // Resize the picture to fit within the cell boundaries
-            picture.Width = (int)cellWidth;
-            picture.Height = (int)cellHeight;
+                    // Resize the picture to fit exactly within the cell boundaries
+                    picture.Width = (int)cellWidthPx;
+                    picture.Height = (int)cellHeightPx;
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                    // Ensure the picture moves and resizes with the cell
+                    picture.Placement = PlacementType.MoveAndSize;
+                }
+                else
+                {
+                    Console.WriteLine($"Image file not found: {imagePath}");
+                }
+
+                // Ensure the output directory exists
+                string outputPath = @"C:\Output\Result.xlsx";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

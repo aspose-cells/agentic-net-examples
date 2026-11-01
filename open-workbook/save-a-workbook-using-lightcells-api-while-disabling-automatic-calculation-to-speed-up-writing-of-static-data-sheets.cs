@@ -1,13 +1,12 @@
-// Title: Save a static Excel workbook with Aspose.Cells LightCells API and disable automatic calculation to improve write performance (C#)
-// AI Prompts: Write C# code that fills a worksheet with static values, turns off automatic formula calculation, and saves the file using Aspose.Cells LightCells API. | Demonstrate how to disable workbook recalculation before calling Save with LightCells to speed up exporting large static data sheets in .NET.
-// Common Searches: how to disable automatic calculation when using Aspose.Cells LightCells in C# | save large static Excel file faster with LightCells API .NET | Aspose.Cells turn off formula recalculation before workbook.Save | C# LightCells write static data sheet without triggering calculation | performance optimization for Excel export using Aspose.Cells LightCells
-// Tags: disable automatic calculation Aspose.Cells LightCells | LightCells API save static Excel workbook | write static data sheet C# Aspose.Cells | Excel export performance optimization .NET | turn off formula recalculation Aspose.Cells
+// Title: C# example: Save an Excel workbook with LightCells API while disabling automatic calculation for faster static sheet creation using Aspose.Cells
+// Common Searches: how to save an Excel file with LightCells API in C# without triggering formula recalculation | disable automatic calculation when writing static data with Aspose.Cells LightCells in .NET | Aspose.Cells LightCells performance tip: turn off calc mode before saving workbook | C# code to create a workbook, set manual calculation mode, and save using LightCells | fast Excel generation using LightCells API and manual calculation mode in Aspose.Cells
+// Tags: LightCells API workbook saving C# | manual calc mode workaround Aspose.Cells | static sheet performance Aspose.Cells .NET | Excel file output without recalculation | optimize LightCells write speed
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, populates the first worksheet with 500 rows of static text values, disables automatic formula calculation, and saves the workbook as 'StaticDataWorkbook.xlsx', ensuring the output directory exists and handling any exceptions.
+// The sample creates a new Workbook, optionally switches the calculation mode to manual, writes a header and a data row, ensures the target directory exists, and saves the file as output.xlsx using the LightCells API, demonstrating how to avoid automatic recalculation for faster static sheet generation.
 class Program
 {
     static void Main()
@@ -17,31 +16,34 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet where data will be written
+            // Disable automatic calculation if supported (optional)
+            // workbook.Settings.CalcMode = CalcMode.Manual; // Uncomment if CalcMode is available in your Aspose.Cells version
+
+            // Get reference to the first worksheet and rename it
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-            // Fill 500 rows and 5 columns with sample values
-            for (int row = 0; row < 500; row++)
-            {
-                for (int col = 0; col < 5; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
-                }
-            }
+            // Write header row
+            sheet.Cells[0, 0].PutValue("Header1");
+            sheet.Cells[0, 1].PutValue("Header2");
 
-            // Define output file path
-            string outputPath = "StaticDataWorkbook.xlsx";
+            // Write a data row
+            sheet.Cells[1, 0].PutValue(123);
+            sheet.Cells[1, 1].PutValue(456);
 
-            // Ensure the directory exists
+            // Define output path
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists (if any)
             string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

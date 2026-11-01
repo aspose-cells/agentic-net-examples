@@ -1,49 +1,73 @@
-// Title: How to batch convert XLSX files to PDF with Aspose.Cells ConversionUtility in C#
-// AI Prompts: Write a C# console application that scans a given folder for *.xlsx files and uses Aspose.Cells ConversionUtility.Convert to create matching PDF files in a separate output directory. | Add try‑catch handling around each conversion call so that any failed file logs its exception but the loop continues processing the remaining workbooks. | Extend the program to traverse subfolders recursively and preserve the original folder hierarchy when saving the generated PDF files.
-// Common Searches: c# batch convert all excel .xlsx files in a directory to pdf using aspose.cells | aspocells ConversionUtility convert multiple spreadsheets to pdf automatically | how to handle errors during bulk xlsx to pdf conversion in a C# console app
-// Tags: batch xlsx to pdf conversion with Aspose.Cells | Aspose.Cells ConversionUtility for Excel to PDF | C# directory traversal for spreadsheet conversion | error handling in bulk Excel PDF export | recursive folder processing for Aspose.Cells conversion
+// Title: Batch convert a folder of XLSX workbooks to PDF files with Aspose.Cells in C#
+// Common Searches: asp.net batch convert xlsx files to pdf using Aspose.Cells | c# code to convert all Excel workbooks in a directory to PDF | how to save multiple .xlsx as PDF programmatically with Aspose.Cells | bulk Excel to PDF conversion example in .NET | process folder of Excel files to PDF with error handling C#
+// Tags: Aspose.Cells XLSX to PDF batch conversion | C# bulk Excel workbook PDF export | SaveFormat.Pdf workbook saving .NET | directory based Excel to PDF automation | exception handling Aspose.Cells bulk conversion | create output folder for PDF results C#
 
 using System;
 using System.IO;
-using Aspose.Cells.Utility;
+using Aspose.Cells;
 
-namespace AsposeCellsBatchConversion
+namespace BatchConversion
 {
-    // // C# console program that iterates over .xlsx files in a specified input folder, converts each workbook to PDF using Aspose.Cells ConversionUtility, saves the PDFs to an output folder, and logs conversion errors without halting the batch process.
-    public class BatchXlsxToPdfConverter
+    // The sample iterates through every .xlsx file in a specified input directory, loads each workbook with Aspose.Cells, and saves it as a PDF in a designated output folder, creating the folder if needed and logging success or error messages for each file.
+    class BatchXlsxToPdfConverter
     {
-        // Entry point
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Define the folder containing the source XLSX files
+            // Define input and output directories.
             string inputFolder = @"C:\InputXlsx";
-
-            // Define the folder where the PDF files will be saved
             string outputFolder = @"C:\OutputPdf";
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
+            // Verify input directory exists.
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
+            }
 
-            // Get all .xlsx files in the input folder (non‑recursive)
-            string[] xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+            // Ensure the output directory exists.
+            if (!Directory.Exists(outputFolder))
+            {
+                Directory.CreateDirectory(outputFolder);
+            }
 
-            foreach (string sourcePath in xlsxFiles)
+            string[] xlsxFiles;
+            try
+            {
+                // Retrieve all .xlsx files from the input folder.
+                xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error accessing input folder: {ex.Message}");
+                return;
+            }
+
+            foreach (string xlsxPath in xlsxFiles)
             {
                 try
                 {
-                    // Build the destination PDF file path
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                    string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
+                    // Confirm the file exists before loading.
+                    if (!File.Exists(xlsxPath))
+                    {
+                        Console.WriteLine($"File not found: {xlsxPath}");
+                        continue;
+                    }
 
-                    // Convert the Excel file to PDF using Aspose.Cells ConversionUtility
-                    ConversionUtility.Convert(sourcePath, destPath);
+                    // Load the XLSX workbook.
+                    Workbook workbook = new Workbook(xlsxPath);
 
-                    Console.WriteLine($"Converted: {sourcePath} -> {destPath}");
+                    // Construct the output PDF file path.
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
+                    string pdfPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
+
+                    // Save the workbook as PDF.
+                    workbook.Save(pdfPath, SaveFormat.Pdf);
+
+                    Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} -> {fileNameWithoutExt}.pdf");
                 }
                 catch (Exception ex)
                 {
-                    // Log any conversion errors but continue processing remaining files
-                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
+                    Console.WriteLine($"Error converting file '{xlsxPath}': {ex.Message}");
                 }
             }
 

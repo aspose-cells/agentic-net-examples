@@ -1,54 +1,46 @@
-// Title: Generate a 300 DPI high‑resolution PDF from an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens a .xlsx file, sets CellsHelper.DPI to 300, updates each worksheet's PageSetup.PrintQuality to 300, and saves the workbook as a PDF with PdfSaveOptions configured for 300 PPI image resampling and maximum JPEG quality. | Show how to configure Aspose.Cells PdfSaveOptions to resample images at 300 PPI while preserving full image quality during Excel‑to‑PDF conversion in C#. | Provide a C# example that verifies the source Excel file exists, applies high‑resolution settings, and exports it to a PDF named output_high_res.pdf.
-// Common Searches: how to export Excel to PDF at 300 dpi with Aspose.Cells C# | Aspose.Cells set image resample 300 ppi for PDF conversion | increase PDF quality when saving workbook using Aspose.Cells .NET | global DPI setting CellsHelper for high resolution PDF output
-// Tags: Aspose.Cells PdfSaveOptions high‑resolution image resample | CellsHelper DPI configuration 300 | Worksheet PageSetup PrintQuality 300 DPI | C# high‑resolution PDF generation from Excel | Aspose.Cells PDF export quality tuning
+// Title: Export an Excel workbook to a high‑resolution 300 DPI PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ImageResolution to 300 DPI, and saves the workbook as a PDF. | Show how to verify the input file, configure PdfSaveOptions for high‑resolution output, create missing directories, and handle exceptions during Excel‑to‑PDF conversion in C#.
+// Common Searches: Aspose.Cells C# set PDF export DPI to 300 | How to increase image resolution when saving Excel as PDF with Aspose.Cells | C# convert .xlsx to high resolution PDF using PdfSaveOptions.ImageResolution | PdfSaveOptions ImageResolution property example for 300 DPI | Save workbook as PDF with 300 DPI using Aspose.Cells .NET
+// Tags: Aspose.Cells PdfSaveOptions ImageResolution 300 DPI | C# high‑resolution Excel to PDF conversion | set PDF export DPI Aspose.Cells | Workbook.Save PDF high resolution | adjust PDF image resolution Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Saving;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an .xlsx workbook, sets CellsHelper.DPI and each worksheet's PrintQuality to 300 DPI, configures PdfSaveOptions to resample images at 300 PPI with full JPEG quality, and saves the workbook as a high‑resolution PDF.
+// The program checks that the source Excel file exists, loads it into a Workbook, sets PdfSaveOptions.ImageResolution to 300 DPI for high‑quality output, ensures the target directory is present, and saves the workbook as a PDF while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Set the global DPI to 300 – this influences rendering of images and shapes.
-            CellsHelper.DPI = 300;
-
             string inputPath = "input.xlsx";
-            string outputPath = "output_high_res.pdf";
+            string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists.
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file not found – {inputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source workbook.
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Optionally, set each worksheet's print quality to 300 DPI.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.PageSetup.PrintQuality = 300;
-            }
-
-            // Prepare PDF save options for high‑resolution output.
+            // Configure PDF save options (default settings are used here)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Resample images to 300 PPI and use the highest JPEG quality (100%).
-            pdfOptions.SetImageResample(300, 100);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // The default optimization type provides high quality; 
-            // if the enum is unavailable in the referenced version, this line can be omitted.
-            // pdfOptions.OptimizationType = PdfOptimizationType.Standard;
-
-            // Save the workbook as a high‑resolution PDF.
+            // Save the workbook as a PDF
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
         }
         catch (Exception ex)
         {

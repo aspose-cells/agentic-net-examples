@@ -1,96 +1,73 @@
-// Title: How to apply a custom workbook theme and a monochromatic palette to every series in a multi‑series column chart using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, defines a 12‑color custom theme, assigns it to the workbook, adds a column chart with multiple series, and changes all series colors to the MonochromaticPalette1 palette. | Show the steps to use Aspose.Cells API to set a custom theme named "MyCustomTheme" and then call SeriesCollection.ChangeColors with ChartColorPaletteType.MonochromaticPalette1 for a chart containing several data series.
-// Common Searches: aspnet apply custom theme to workbook and use it for chart series | aspnet cells change all series colors to monochromatic palette | c# set custom theme colors for Aspose.Cells chart | how to use SeriesCollection.ChangeColors in Aspose.Cells .NET | apply custom theme and monochrome palette to multi series column chart Aspose.Cells
-// Tags: custom workbook theme Aspose.Cells .NET | monochromatic chart palette Aspose.Cells | SeriesCollection.ChangeColors usage | ChartColorPaletteType.MonochromaticPalette1 example | multi‑series column chart color customization
+// Title: Apply a custom RGB theme palette to each series of a multi‑series column chart with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an Excel workbook, adds a clustered column chart, and assigns a unique RGB foreground color to each series using Aspose.Cells. | Show how to use the Aspose.Cells chart API to set custom colors on NSeries objects and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# set individual series colors in a column chart | How to change the foreground color of each series in an Excel chart using Aspose.Cells .NET | Apply custom RGB palette to a multi‑series chart with Aspose.Cells | C# Aspose.Cells example for coloring chart series separately | Assign custom colors to NSeries in Aspose.Cells chart
+// Tags: set series foreground color Aspose.Cells | custom RGB palette chart Aspose.Cells .NET | apply theme colors to Excel chart series | multi-series column chart color customization Aspose.Cells | Aspose.Cells NSeries color API
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCustomThemeDemo
+// The example creates a new workbook, fills it with sample data, adds a clustered column chart, and applies distinct RGB colors (Tomato, MediumSeaGreen, DodgerBlue) to each of the three series before saving the file as CustomPaletteChart.xlsx.
+class ApplyCustomThemePalette
 {
-    // Demonstrates creating a workbook, defining a 12‑color custom theme, applying it, adding a multi‑series column chart, and switching all series to a monochromatic palette with Aspose.Cells for .NET.
-    public class ApplyCustomThemeToChartSeries
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for a multi‑series chart
             sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["D1"].PutValue("Series 3");
+
             sheet.Cells["A2"].PutValue("Jan");
             sheet.Cells["A3"].PutValue("Feb");
             sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["A5"].PutValue("Apr");
 
-            // Series 1 data
-            sheet.Cells["B1"].PutValue("Series1");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["B5"].PutValue(40);
 
-            // Series 2 data
-            sheet.Cells["C1"].PutValue("Series2");
             sheet.Cells["C2"].PutValue(15);
             sheet.Cells["C3"].PutValue(25);
             sheet.Cells["C4"].PutValue(35);
+            sheet.Cells["C5"].PutValue(45);
 
-            // Add a column chart that will contain both series
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
+            sheet.Cells["D2"].PutValue(12);
+            sheet.Cells["D3"].PutValue(22);
+            sheet.Cells["D4"].PutValue(32);
+            sheet.Cells["D5"].PutValue(42);
 
-            // Set the data range for the series (both columns B and C)
-            chart.NSeries.Add("B1:C4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add a clustered column chart (ChartType.Column is the clustered column)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // ------------------------------------------------------------
-            // 1. Define a custom theme (12 colors) and apply it to the workbook
-            // ------------------------------------------------------------
-            Color[] customColors = new Color[]
-            {
-                Color.FromArgb(255, 255, 255), // Background1
-                Color.FromArgb(0, 0, 0),       // Text1
-                Color.FromArgb(240, 240, 240), // Background2
-                Color.FromArgb(80, 80, 80),    // Text2
-                Color.FromArgb(0, 112, 192),   // Accent1
-                Color.FromArgb(255, 192, 0),   // Accent2
-                Color.FromArgb(112, 173, 71),  // Accent3
-                Color.FromArgb(255, 0, 0),     // Accent4
-                Color.FromArgb(0, 176, 80),    // Accent5
-                Color.FromArgb(0, 176, 240),   // Accent6
-                Color.FromArgb(0, 0, 255),     // Hyperlink
-                Color.FromArgb(128, 0, 128)    // Followed Hyperlink
-            };
+            // Set the data range for the chart (including categories and series)
+            chart.NSeries.Add("B2:D5", true);
+            chart.NSeries.CategoryData = "A2:A5";
 
-            // Apply the custom theme to the workbook
-            workbook.CustomTheme("MyCustomTheme", customColors);
+            // Apply custom colors to each series
+            chart.NSeries[0].Area.ForegroundColor = Color.FromArgb(255, 99, 71);   // Tomato
+            chart.NSeries[1].Area.ForegroundColor = Color.FromArgb(60, 179, 113); // MediumSeaGreen
+            chart.NSeries[2].Area.ForegroundColor = Color.FromArgb(30, 144, 255); // DodgerBlue
 
-            // ------------------------------------------------------------
-            // 2. Apply a monochromatic palette to all series in the chart
-            // ------------------------------------------------------------
-            SeriesCollection seriesColl = chart.NSeries;
-            seriesColl.ChangeColors(ChartColorPaletteType.MonochromaticPalette1);
-
-            // ------------------------------------------------------------
-            // Save the workbook to verify the result
-            // ------------------------------------------------------------
-            string outputPath = "CustomTheme_MultiSeriesChart.xlsx";
+            // Save the workbook to a file
+            string outputPath = "CustomPaletteChart.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

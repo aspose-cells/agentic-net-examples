@@ -1,7 +1,7 @@
-// Title: How to export an Aspose.Cells Workbook as a multi‑page TIFF into a MemoryStream and then save it to a file in C#
-// AI Prompts: Write C# code that loads or creates an Aspose.Cells Workbook and saves it directly to a MemoryStream using SaveFormat.Tiff. | Show how to reset the MemoryStream position and copy its contents to a FileStream to create a .tiff file on disk. | Include robust try‑catch blocks for the workbook‑to‑TIFF conversion and file‑writing steps.
-// Common Searches: c# export Aspose.Cells workbook to multi page TIFF in memory stream | aspose.cells save workbook as TIFF without intermediate file | how to write TIFF MemoryStream to file using C# | example of SaveFormat.Tiff with Aspose.Cells and MemoryStream
-// Tags: export workbook to multi‑page TIFF Aspose.Cells | save Aspose.Cells workbook as TIFF in memory stream | write TIFF MemoryStream to file C#
+// Title: Save an Aspose.Cells Workbook as a TIFF image into a MemoryStream and write it to a file using C#
+// AI Prompts: Write C# code that creates an Aspose.Cells Workbook, adds sample data, and saves it directly to a MemoryStream in TIFF format. | Demonstrate how to reset the MemoryStream position and copy its contents to a FileStream to generate a .tiff file on disk. | Add comprehensive try‑catch blocks that log any conversion errors while using Aspose.Cells SaveFormat.Tiff.
+// Common Searches: aspnet convert excel workbook to tiff using memory stream | c# Aspose.Cells save workbook as tiff without writing to disk first | how to export Aspose.Cells worksheet to tiff image in memory | write tiff stream from Aspose.Cells to file in C# | sample code for Aspose.Cells SaveFormat.Tiff with MemoryStream
+// Tags: Aspose.Cells SaveFormat.Tiff to MemoryStream | C# workbook to TIFF conversion | memory stream TIFF output Aspose.Cells | copy TIFF MemoryStream to FileStream | error handling Aspose.Cells image export
 
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example creates or loads an Aspose.Cells Workbook, adds sample data, and uses workbook.Save with SaveFormat.Tiff to write a multi‑page TIFF directly into a MemoryStream. After resetting the stream position, the code copies the stream to a FileStream, creating an output.tiff file, while handling errors with try‑catch blocks.
+    // The sample creates a new Workbook, inserts sample values, and saves it directly to a MemoryStream in TIFF format using Aspose.Cells. After resetting the stream position, the TIFF data is copied to a FileStream, creating an output.tiff file. The code includes directory creation and robust error handling for the conversion process.
     public class WorkbookToTiffConverter
     {
         public MemoryStream ConvertToTiff()
@@ -27,25 +27,26 @@ namespace AsposeCellsExample
                 // Prepare a memory stream to hold the TIFF output
                 MemoryStream tiffStream = new MemoryStream();
 
-                // Save the workbook as a multi‑page TIFF into the memory stream
+                // Save the workbook directly to TIFF format into the memory stream
                 workbook.Save(tiffStream, SaveFormat.Tiff);
 
-                // Reset the stream position for further processing
+                // Reset the stream position to the beginning for further processing
                 tiffStream.Position = 0;
 
+                // Return the memory stream containing the TIFF image
                 return tiffStream;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error during TIFF conversion: {ex.Message}");
+                Console.Error.WriteLine($"Error during conversion: {ex.Message}");
                 throw;
             }
         }
     }
 
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main()
         {
             try
             {
@@ -53,11 +54,11 @@ namespace AsposeCellsExample
                 using (MemoryStream tiffStream = converter.ConvertToTiff())
                 {
                     // Define output file path
-                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output.tiff");
+                    string outputPath = "output.tiff";
 
                     // Ensure the directory exists
-                    string? directory = Path.GetDirectoryName(outputPath);
-                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                    if (!Directory.Exists(directory))
                     {
                         Directory.CreateDirectory(directory);
                     }
@@ -68,7 +69,7 @@ namespace AsposeCellsExample
                         tiffStream.CopyTo(fileStream);
                     }
 
-                    Console.WriteLine($"TIFF file successfully saved to: {outputPath}");
+                    Console.WriteLine($"TIFF file successfully saved to: {Path.GetFullPath(outputPath)}");
                 }
             }
             catch (Exception ex)

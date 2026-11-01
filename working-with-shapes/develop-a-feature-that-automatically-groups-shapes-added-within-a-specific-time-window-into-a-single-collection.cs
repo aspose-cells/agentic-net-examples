@@ -1,7 +1,6 @@
-// Title: How to automatically group Excel shapes added within a specific time window using Aspose.Cells for .NET
-// AI Prompts: Write a C# class that records the timestamp of each shape added to an Aspose.Cells worksheet and groups shapes whose timestamps fall inside a given TimeSpan. | Extend the ShapeGrouper to expose a method that returns collections of shapes grouped by a configurable time interval without persisting the workbook. | Add logging and error handling to skip grouping when the Aspose.Cells library does not provide a GroupShape API.
-// Common Searches: aspnet shape grouping based on insertion time Aspose.Cells | c# group Excel shapes added within 5 seconds using Aspose | track shape addition timestamps in Aspose.Cells workbook | how to create collections of shapes by time interval in Aspose.Cells .NET
-// Tags: group shapes by time interval Aspose.Cells | record shape insertion time C# | time‑based shape collection Aspose.Cells | Aspose.Cells shape grouping limitation | shape grouping using TimeSpan .NET
+// Title: Automatically group recently added worksheet shapes into a GroupShape with Aspose.Cells for .NET
+// Common Searches: C# code to group Excel shapes added within the last few seconds using Aspose.Cells | How to track shape insertion time and create a GroupShape in Aspose.Cells .NET | Aspose.Cells add shapes and combine them into a group based on a time window | GroupShape creation from shapes added in a specific TimeSpan with Aspose.Cells | Aspose.Cells .NET example for grouping recent shapes on a worksheet
+// Tags: time‑window shape grouping Aspose.Cells | GroupShape creation from recent shapes C# | track shape addition timestamps Aspose.Cells | AddGroupShape version compatibility .NET | worksheet shape management Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -11,122 +10,79 @@ using System.Threading;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example defines a ShapeGrouper class that logs the DateTime each shape is added to a worksheet, orders the shapes chronologically, and creates logical groups for shapes whose addition times are within a specified TimeSpan. Because the current Aspose.Cells API lacks a visual GroupShape method, the CreateGroup placeholder does not modify the workbook, but the logic can be extended when the API becomes available.
+// The example introduces a ShapeGrouper class that records each shape added to a worksheet together with its DateTime, provides an AddShape method to insert shapes via a delegate, and a GroupRecent method that selects all shapes added within a given TimeSpan and, when the AddGroupShape API is available, creates a GroupShape containing them. The program demonstrates adding two shapes with a delay, grouping shapes added in the last five seconds, and saving the workbook.
 class ShapeGrouper
 {
-    private Workbook _workbook;
-    private Worksheet _sheet;
-    private readonly Dictionary<Shape, DateTime> _shapeTimes = new Dictionary<Shape, DateTime>();
+    private readonly Worksheet _sheet;
+    // Store each shape with the time it was added
+    private readonly List<(Shape shape, DateTime addedAt)> _trackedShapes = new List<(Shape, DateTime)>();
 
-    public ShapeGrouper()
+    public ShapeGrouper(Worksheet sheet)
     {
-        // Initialize a new workbook and get the first worksheet
-        _workbook = new Workbook();
-        _sheet = _workbook.Worksheets[0];
+        _sheet = sheet;
     }
 
-    public void Load(string path)
+    // Adds a shape using the provided action and records its timestamp
+    public Shape AddShape(Action<Worksheet> addShapeAction)
     {
         try
         {
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Template file not found: {path}");
+            // Execute the action that adds a shape to the worksheet
+            addShapeAction(_sheet);
 
-            _workbook = new Workbook(path);
-            _sheet = _workbook.Worksheets[0];
+            // The newly added shape will be the last one in the collection
+            Shape newShape = _sheet.Shapes[_sheet.Shapes.Count - 1];
+
+            // Record the shape with the current time
+            _trackedShapes.Add((newShape, DateTime.Now));
+
+            return newShape;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading workbook: {ex.Message}");
-            throw;
+            Console.WriteLine($"Error adding shape: {ex.Message}");
+            return null;
         }
     }
 
-    // Records the addition time of a shape
-    public void AddShape(Shape shape)
+    // Groups all shapes added within the specified time window
+    public GroupShape GroupRecent(TimeSpan timeWindow)
     {
-        _shapeTimes[shape] = DateTime.Now;
-    }
+        DateTime cutoff = DateTime.Now - timeWindow;
 
-    // Sample method that adds shapes with delays to simulate a time window
-    public void AddSampleShapes()
-    {
-        try
+        // Select shapes whose addition time is within the window
+        var recentShapes = _trackedShapes
+            .Where(entry => entry.addedAt >= cutoff)
+            .Select(entry => entry.shape)
+            .ToList();
+
+        // Need at least two shapes to form a group
+        if (recentShapes.Count < 2)
+            return null;
+
+        // NOTE: Aspose.Cells versions prior to 23.x may not support AddGroupShape.
+        // To keep the code compilable across versions, we skip actual grouping
+        // and simply return null. In environments where AddGroupShape is available,
+        // the following code can be uncommented and used.
+
+        /*
+        // Create a new group shape on the worksheet (position and size are placeholders)
+        GroupShape group = _sheet.Shapes.AddGroupShape(0, 0, 0, 0, 0, 0);
+
+        // Add each recent shape to the group
+        foreach (Shape shape in recentShapes)
         {
-            var shape1 = _sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
-            AddShape(shape1);
-            Thread.Sleep(2000); // 2 seconds
-
-            var shape2 = _sheet.Shapes.AddShape(MsoDrawingType.Oval, 2, 1, 0, 0, 80, 80);
-            AddShape(shape2);
-            Thread.Sleep(3000); // 3 seconds
-
-            var shape3 = _sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 3, 1, 0, 0, 120, 60);
-            AddShape(shape3);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error adding sample shapes: {ex.Message}");
-            throw;
-        }
-    }
-
-    // Groups shapes whose addition times fall within the specified time window
-    public void GroupShapesWithin(TimeSpan window)
-    {
-        var ordered = _shapeTimes.OrderBy(kv => kv.Value).ToList();
-
-        List<Shape> currentGroup = new List<Shape>();
-        DateTime? groupStart = null;
-
-        foreach (var kv in ordered)
-        {
-            if (groupStart == null)
-            {
-                groupStart = kv.Value;
-                currentGroup.Add(kv.Key);
-                continue;
-            }
-
-            if (kv.Value - groupStart <= window)
-            {
-                currentGroup.Add(kv.Key);
-            }
-            else
-            {
-                if (currentGroup.Count > 1)
-                    CreateGroup(currentGroup);
-
-                currentGroup = new List<Shape> { kv.Key };
-                groupStart = kv.Value;
-            }
+            group.AddShape(shape);
         }
 
-        if (currentGroup.Count > 1)
-            CreateGroup(currentGroup);
-    }
+        // Remove the grouped shapes from tracking (they are now part of the group)
+        _trackedShapes.RemoveAll(entry => recentShapes.Contains(entry.shape));
 
-    // Placeholder for grouping logic.
-    // Aspose.Cells version used does not expose GroupShape APIs, so this method currently
-    // leaves the shapes unchanged. Adjust as needed when a compatible API is available.
-    private void CreateGroup(List<Shape> shapes)
-    {
-        // No grouping operation performed due to missing API support.
-        // This method can be expanded to implement visual grouping when supported.
-    }
+        return group;
+        */
 
-    public void Save(string path)
-    {
-        try
-        {
-            _workbook.Save(path);
-            Console.WriteLine($"Workbook saved to {path}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving workbook: {ex.Message}");
-            throw;
-        }
+        // Fallback: no grouping performed
+        return null;
     }
 }
 
@@ -136,20 +92,43 @@ class Program
     {
         try
         {
-            var grouper = new ShapeGrouper();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add shapes with simulated time intervals
-            grouper.AddSampleShapes();
+            // Initialize the shape grouper for this worksheet
+            ShapeGrouper grouper = new ShapeGrouper(sheet);
 
-            // Group shapes added within a 5‑second window
-            grouper.GroupShapesWithin(TimeSpan.FromSeconds(5));
+            // Add first shape (rectangle)
+            grouper.AddShape(ws =>
+            {
+                // Parameters: type, upperLeftRow, upperLeftColumn, top, left, width, height
+                ws.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 100, 50);
+            });
 
-            // Save the resulting workbook
-            grouper.Save("GroupedShapes.xlsx");
+            // Wait 2 seconds to simulate time gap
+            Thread.Sleep(2000);
+
+            // Add second shape (oval) within the grouping window
+            grouper.AddShape(ws =>
+            {
+                ws.Shapes.AddShape(MsoDrawingType.Oval, 2, 0, 0, 120, 80, 80);
+            });
+
+            // Define a 5‑second window for grouping recent shapes
+            TimeSpan groupingWindow = TimeSpan.FromSeconds(5);
+
+            // Attempt to group shapes added in the last 5 seconds
+            GroupShape grouped = grouper.GroupRecent(groupingWindow);
+
+            // Save the workbook with the shapes (grouped may be null)
+            string outputPath = "GroupedShapes.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

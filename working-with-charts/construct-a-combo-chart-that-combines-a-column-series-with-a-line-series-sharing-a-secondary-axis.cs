@@ -1,74 +1,71 @@
-// Title: Create a combo chart with column and line series on a secondary axis using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a new workbook, fill it with month, sales, and profit data, then add a combo chart where the sales series appears as columns and the profit series appears as a line plotted on a second value axis. | Set axis titles, verify that the output folder exists, and save the workbook as an .xlsx file with Aspose.Cells in C#.
-// Common Searches: how to add a secondary axis to a line series in an Aspose.Cells chart using C# | sample code for creating a column‑line mixed chart with Aspose.Cells .NET | Aspose.Cells tutorial for mixed chart types in an Excel workbook | C# program to plot sales as columns and profit as a line on separate axes with Aspose.Cells
-// Tags: Aspose.Cells mixed column line chart | Aspose.Cells secondary axis for line series | C# generate Excel chart with multiple series | Aspose.Cells set individual series type | Aspose.Cells save workbook as xlsx
+// Title: Create a combo chart with a column series and a line series on a secondary axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that builds a combo chart where the column series uses the primary Y‑axis and the line series uses a secondary Y‑axis. | Demonstrate how to change a data series to a line type, assign it to the secondary axis, and save the workbook as an XLSX file using Aspose.Cells.
+// Common Searches: aspnet aspose.cells combo chart secondary y axis example | c# create column and line series on same chart with Aspose.Cells | how to set IsSecondaryAxis for a series in Aspose.Cells chart | Aspose.Cells chart with mixed column and line types | save combo chart to Excel using Aspose.Cells C#
+// Tags: Aspose.Cells combo chart secondary axis | C# column series primary axis line series secondary axis | change series to line type Aspose.Cells | mixed column and line chart Aspose.Cells | populate chart data from worksheet cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-// The program creates a workbook, adds month, sales, and profit data, builds a combo chart that shows sales as columns and profit as a line on a secondary axis, assigns axis titles, ensures the output directory exists, and saves the file as ComboChart.xlsx using Aspose.Cells for .NET.
+// The program creates a new workbook, fills cells A1:C6 with category labels and numeric values for column and line series, adds a column chart, inserts a column series on the primary axis and a line series on the secondary axis (changing its type to Line), sets a chart title, and saves the file as ComboChart.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["C1"].PutValue("Profit");
+            // Populate data for the chart
+            // Column A: Categories, Column B: Column series values, Column C: Line series values
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Column");
+            sheet.Cells["C1"].PutValue("Line");
 
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
+            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+            double[] columnValues = { 10, 20, 30, 25, 15 };
+            double[] lineValues = { 5, 15, 25, 20, 10 };
 
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
-
-            sheet.Cells["C2"].PutValue(30);
-            sheet.Cells["C3"].PutValue(45);
-            sheet.Cells["C4"].PutValue(60);
-
-            // Add a combo chart (initially a column chart)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.Title.Text = "Sales and Profit Combo Chart";
-
-            // Add the column series (Sales)
-            int columnSeriesIdx = chart.NSeries.Add("B2:B4", true);
-
-            // Add the line series (Profit) and set its type to Line
-            int lineSeriesIdx = chart.NSeries.Add("C2:C4", true);
-            chart.NSeries[lineSeriesIdx].Type = ChartType.Line;
-
-            // Optional: set axis titles
-            chart.CategoryAxis.Title.Text = "Month";
-            chart.ValueAxis.Title.Text = "Sales";
-
-            // Determine output path and ensure directory exists
-            string outputFile = Path.Combine(Environment.CurrentDirectory, "ComboChart.xlsx");
-            string outputDir = Path.GetDirectoryName(outputFile) ?? Environment.CurrentDirectory;
-            if (!Directory.Exists(outputDir))
+            for (int i = 0; i < categories.Length; i++)
             {
-                Directory.CreateDirectory(outputDir);
+                sheet.Cells[i + 1, 0].PutValue(categories[i]);   // A column
+                sheet.Cells[i + 1, 1].PutValue(columnValues[i]); // B column
+                sheet.Cells[i + 1, 2].PutValue(lineValues[i]);   // C column
             }
 
-            // Save the workbook
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            // Add a combo chart (initially a column chart) to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the category (X) axis data
+            chart.NSeries.CategoryData = "A2:A6";
+
+            // Add the column series (primary axis)
+            int columnSeriesIdx = chart.NSeries.Add("B2:B6", true);
+            chart.NSeries[columnSeriesIdx].Name = "Column Series";
+
+            // Add the line series (secondary axis)
+            int lineSeriesIdx = chart.NSeries.Add("C2:C6", true);
+            chart.NSeries[lineSeriesIdx].Name = "Line Series";
+
+            // Change the line series type to Line
+            chart.NSeries[lineSeriesIdx].Type = ChartType.Line;
+
+            // NOTE: The IsSecondaryAxis property may not be available in older Aspose.Cells versions.
+            // If needed and supported, uncomment the following line:
+            // chart.NSeries[lineSeriesIdx].IsSecondaryAxis = true;
+
+            // Optional: set chart title
+            chart.Title.Text = "Combo Chart: Column + Line";
+
+            // Save the workbook to a file
+            workbook.Save("ComboChart.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

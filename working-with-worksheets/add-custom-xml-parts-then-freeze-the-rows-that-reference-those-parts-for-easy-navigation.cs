@@ -1,66 +1,76 @@
-// Title: Add custom XML data to an Aspose.Cells worksheet and freeze the header row using C#
-// AI Prompts: Write C# code that uses Aspose.Cells to embed a custom XML string, populate cells with employee information, and freeze the first worksheet row. | Show how to parse an XDocument, write its elements to specific cells, and apply FreezePanes on the header in Aspose.Cells for .NET. | Demonstrate creating a new workbook, adding a custom XML part, filling rows from XML, and saving as an .xlsx file with a frozen header.
-// Common Searches: asp.net how to import employee XML into Excel with Aspose.Cells and keep header visible | c# Aspose.Cells freeze first row after loading data from XDocument | example of adding custom XML part to workbook and freezing panes in Aspose.Cells | populate worksheet from XML string using Aspose.Cells C# and freeze header row | Aspose.Cells FreezePanes usage after writing XML data to cells
-// Tags: custom XML import Aspose.Cells C# | freeze header pane Aspose.Cells FreezePanes | populate worksheet from XDocument Aspose.Cells | save workbook as .xlsx with frozen panes | add custom XML part to Excel using Aspose.Cells
+// Title: Add custom XML parts to an Excel workbook and freeze the rows that reference them using Aspose.Cells for .NET (C#)
+// Common Searches: c# Aspose.Cells add custom XML part and write its ID to a worksheet cell | how to freeze rows up to the last populated row with Aspose.Cells .NET | store GUID identifiers for custom XML parts in Excel using Aspose.Cells | Aspose.Cells freeze panes based on dynamic row count in C# | add multiple custom XML parts to a workbook and navigate with frozen rows
+// Tags: custom xml part insertion Aspose.Cells C# | write part identifier to worksheet cells | freeze panes up to max data row Aspose.Cells | generate GUID for xml part Aspose.Cells | save workbook with custom xml parts .xlsx
 
-using Aspose.Cells;
 using System;
 using System.Text;
-using System.Xml.Linq;
+using Aspose.Cells;
 
-// The program creates a new workbook, parses a hard‑coded XML string of employee records, writes the ID, Name, and Department values into the first worksheet, freezes the header row, and saves the file as CustomXmlWithFrozenHeader.xlsx.
-class Program
+namespace AsposeCellsCustomXmlAndFreeze
 {
-    static void Main()
+    // The example creates a new workbook, inserts several XML strings as custom XML parts, writes a generated GUID for each part into column A, determines the last row containing data, freezes all rows up to that row, and saves the file as an .xlsx workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
-
-            // Sample custom XML content
-            string xmlContent = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<Employees>
-    <Employee>
-        <ID>1</ID>
-        <Name>John Doe</Name>
-        <Department>Finance</Department>
-    </Employee>
-    <Employee>
-        <ID>2</ID>
-        <Name>Jane Smith</Name>
-        <Department>HR</Department>
-    </Employee>
-</Employees>";
-
-            // Write header cells
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Department");
-
-            // Parse XML and import data manually (row index starts at 1 for the second row)
-            XDocument doc = XDocument.Parse(xmlContent);
-            int currentRow = 1; // zero‑based index; row 1 is the second row in the sheet
-
-            foreach (XElement employee in doc.Root.Elements("Employee"))
+            try
             {
-                sheet.Cells[currentRow, 0].PutValue((int)employee.Element("ID"));
-                sheet.Cells[currentRow, 1].PutValue((string)employee.Element("Name"));
-                sheet.Cells[currentRow, 2].PutValue((string)employee.Element("Department"));
-                currentRow++;
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Sample XML strings to be added as custom XML parts
+                string[] xmlParts = new string[]
+                {
+                    "<Customer><Id>1</Id><Name>John Doe</Name></Customer>",
+                    "<Customer><Id>2</Id><Name>Jane Smith</Name></Customer>",
+                    "<Customer><Id>3</Id><Name>Bob Johnson</Name></Customer>"
+                };
+
+                // Add each XML string as a custom XML part and write its identifier into the sheet
+                for (int i = 0; i < xmlParts.Length; i++)
+                {
+                    try
+                    {
+                        // Convert XML string to UTF‑8 byte array as required by the API
+                        byte[] xmlData = Encoding.UTF8.GetBytes(xmlParts[i]);
+
+                        // Add the custom XML part (schemaData is optional, pass null)
+                        int partIndex = workbook.CustomXmlParts.Add(xmlData, null);
+
+                        // Generate an identifier for the part (GUID). 
+                        // If the library version provides CustomXmlPart.Id, you can replace this with that value.
+                        string partId = Guid.NewGuid().ToString();
+
+                        // Write the identifier into column A (zero‑based row index)
+                        cells[i, 0].PutValue(partId);
+                    }
+                    catch (Exception exPart)
+                    {
+                        Console.WriteLine($"Error adding XML part at index {i}: {exPart.Message}");
+                    }
+                }
+
+                // Determine the last row that contains data (zero‑based index)
+                int lastRowWithReference = cells.MaxDataRow;
+
+                // Freeze rows up to the last referenced row.
+                // FreezePanes(row, column, totalRows, totalColumns)
+                // row/column specify the cell just below/right of the frozen pane.
+                sheet.FreezePanes(lastRowWithReference + 1, 0, lastRowWithReference + 1, 0);
+
+                // Save the workbook to a file
+                string outputPath = "CustomXmlAndFreeze.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Freeze the first row (header)
-            sheet.FreezePanes(1, 0, 1, 0);
-
-            // Save the workbook
-            workbook.Save("CustomXmlWithFrozenHeader.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

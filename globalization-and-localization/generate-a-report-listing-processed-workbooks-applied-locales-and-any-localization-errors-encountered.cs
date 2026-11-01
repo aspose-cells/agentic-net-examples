@@ -1,7 +1,6 @@
-// Title: Generate a localization report for multiple Excel workbooks showing applied CultureInfo and any errors using Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that loops through a collection of .xlsx file paths, sets workbook.Settings.CultureInfo to a specified locale, forces formula recalculation, saves each workbook, and creates a new workbook containing a worksheet with columns: Workbook Path, Applied Locale, Localization Error. | Refactor the program to read the list of workbook file paths and the target locale from an external JSON configuration file instead of hard‑coding them. | Adapt the solution so that the summary report is written to a CSV file rather than an Excel workbook, preserving the same three columns.
-// Common Searches: asp.net apply french CultureInfo to Excel workbooks using Aspose.Cells | c# batch set locale on multiple .xlsx files and log errors | how to create a processing summary worksheet with Aspose.Cells in a console app | generate localization error report for Excel files in .NET | export Aspose.Cells summary report to CSV instead of XLSX
-// Tags: apply CultureInfo to Aspose.Cells workbook | batch locale conversion for .xlsx files | capture localization exceptions in Aspose.Cells | generate Excel summary report with Aspose.Cells | export Aspose.Cells worksheet to CSV
+// Title: Generate a localization report for multiple Excel workbooks with applied CultureInfo and error logging using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply French locale to Excel workbooks and log errors | create a summary workbook of processed files with culture info using Aspose.Cells | C# generate Excel report of workbook processing results and localization exceptions | save workbook after setting Settings.CultureInfo with Aspose.Cells .NET | capture and record localization errors when updating Excel file culture in C#
+// Tags: Aspose.Cells workbook cultureinfo assignment | C# Excel localization report generation | Aspose.Cells error handling for culture settings | Excel file processing summary with Aspose.Cells | Aspose.Cells save report workbook
 
 using System;
 using System.Collections.Generic;
@@ -9,95 +8,70 @@ using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizationReport
+// The example loads each Excel file from a list, assigns a target CultureInfo (e.g., fr-FR) to the workbook via Settings.CultureInfo, saves the workbook, and captures any exception. It records the workbook name, applied locale, and error message, then creates a new workbook, writes a header (Workbook, Applied Locale, Error) and populates rows with the collected data, finally saving the report as LocalizationReport.xlsx.
+class Program
 {
-    // Holds information about each processed workbook
-    // The sample iterates over a predefined list of Excel file paths, loads each workbook with Aspose.Cells, assigns a target locale (e.g., fr-FR) to workbook.Settings.CultureInfo, recalculates formulas, saves the workbook, and records any exception message. After processing, it creates a new workbook, adds a worksheet named "Localization Report", writes a header row and one row per file containing the workbook path, applied locale, and any error, auto‑fits the columns, and saves the report to a specified location. The console outputs the path of the generated report.
-    class WorkbookProcessInfo
+    static void Main()
     {
-        public string WorkbookPath { get; set; }
-        public string AppliedLocale { get; set; }
-        public string LocalizationError { get; set; }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        // List of workbook file paths to process
+        var workbookFiles = new List<string>
         {
-            // List of workbook file paths to process
-            List<string> workbookFiles = new List<string>
+            "Book1.xlsx",
+            "Book2.xlsx"
+            // Add additional workbook paths as needed
+        };
+
+        // Desired locale to apply to each workbook
+        var targetLocale = new CultureInfo("fr-FR");
+
+        // Collection to hold report entries
+        var reportEntries = new List<(string WorkbookName, string Locale, string ErrorMessage)>();
+
+        foreach (var filePath in workbookFiles)
+        {
+            string error = string.Empty;
+
+            try
             {
-                @"C:\Workbooks\Sample1.xlsx",
-                @"C:\Workbooks\Sample2.xlsx",
-                // Add more workbook paths as needed
-            };
+                // Load workbook (use provided load rule)
+                var wb = new Workbook(filePath);
 
-            // Desired locale to apply (example: French - France)
-            string targetLocale = "fr-FR";
+                // Apply locale (use provided create rule by setting property)
+                wb.Settings.CultureInfo = targetLocale;
 
-            // Collection to store processing results
-            List<WorkbookProcessInfo> results = new List<WorkbookProcessInfo>();
-
-            foreach (string filePath in workbookFiles)
+                // Save workbook after applying locale (use provided save rule)
+                wb.Save(filePath);
+            }
+            catch (Exception ex)
             {
-                var info = new WorkbookProcessInfo
-                {
-                    WorkbookPath = filePath,
-                    AppliedLocale = targetLocale,
-                    LocalizationError = string.Empty
-                };
-
-                try
-                {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Apply the locale to the workbook settings
-                    workbook.Settings.CultureInfo = new CultureInfo(targetLocale);
-
-                    // Optionally, you can force a recalculation to ensure locale‑dependent formulas are updated
-                    workbook.CalculateFormula();
-
-                    // Save the workbook back (overwrites original; adjust as needed)
-                    workbook.Save(filePath);
-                }
-                catch (Exception ex)
-                {
-                    // Capture any localization related errors
-                    info.LocalizationError = ex.Message;
-                }
-
-                results.Add(info);
+                // Capture any localization errors
+                error = ex.Message;
             }
 
-            // Create a new workbook for the report
-            Workbook reportWorkbook = new Workbook();
-            Worksheet sheet = reportWorkbook.Worksheets[0];
-            sheet.Name = "Localization Report";
-
-            // Write header row
-            sheet.Cells[0, 0].PutValue("Workbook Path");
-            sheet.Cells[0, 1].PutValue("Applied Locale");
-            sheet.Cells[0, 2].PutValue("Localization Error");
-
-            // Populate report rows
-            for (int i = 0; i < results.Count; i++)
-            {
-                var r = results[i];
-                int row = i + 1; // start after header
-                sheet.Cells[row, 0].PutValue(r.WorkbookPath);
-                sheet.Cells[row, 1].PutValue(r.AppliedLocale);
-                sheet.Cells[row, 2].PutValue(r.LocalizationError);
-            }
-
-            // Auto‑fit columns for better readability
-            sheet.AutoFitColumns();
-
-            // Save the report workbook
-            string reportPath = @"C:\Workbooks\LocalizationReport.xlsx";
-            reportWorkbook.Save(reportPath);
-
-            Console.WriteLine($"Localization report generated at: {reportPath}");
+            // Record the result for the report
+            reportEntries.Add((Path.GetFileName(filePath), targetLocale.Name, error));
         }
+
+        // Create a new workbook for the report (use provided create rule)
+        var reportWb = new Workbook();
+        var sheet = reportWb.Worksheets[0];
+        sheet.Name = "Localization Report";
+
+        // Write header row
+        sheet.Cells["A1"].PutValue("Workbook");
+        sheet.Cells["B1"].PutValue("Applied Locale");
+        sheet.Cells["C1"].PutValue("Error");
+
+        // Populate report rows
+        for (int i = 0; i < reportEntries.Count; i++)
+        {
+            int rowIndex = i + 2; // Data starts at row 2
+            sheet.Cells[$"A{rowIndex}"].PutValue(reportEntries[i].WorkbookName);
+            sheet.Cells[$"B{rowIndex}"].PutValue(reportEntries[i].Locale);
+            sheet.Cells[$"C{rowIndex}"].PutValue(reportEntries[i].ErrorMessage);
+        }
+
+        // Save the report workbook (use provided save rule)
+        reportWb.Save("LocalizationReport.xlsx");
     }
 }

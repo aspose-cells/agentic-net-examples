@@ -1,7 +1,6 @@
-// Title: Create a C# Aspose.Cells test suite that verifies date parsing accuracy for multiple CultureInfo locales
-// AI Prompts: Generate an in‑memory XLSX workbook containing a specific date string, load it with Aspose.Cells using LoadOptions.CultureInfo for a given locale, and assert that the cell is recognized as a DateTime matching the expected value. | Implement a parameterized NUnit test that iterates over a collection of culture/date‑string pairs, creates the workbook, loads it with the appropriate CultureInfo, and logs pass/fail results for each case. | Extend the suite to handle custom date formats by configuring LoadOptions.NumberFormat and provide detailed diagnostic output when a parsing mismatch occurs.
-// Common Searches: how to test date parsing with different cultures using Aspose.Cells in C# | Aspose.Cells LoadOptions CultureInfo example for Excel date conversion | C# unit test for Excel workbook date localization with Aspose.Cells | verify that Aspose.Cells interprets date strings correctly for en-GB and de-DE | load Excel file with specific locale to parse dates in Aspose.Cells .NET
-// Tags: Aspose.Cells culture-aware workbook loading | Excel date string parsing validation with Aspose.Cells | C# in‑memory XLSX generation for localization testing | unit test for multi‑locale date conversion in .NET | LoadOptions.CultureInfo usage for Excel date handling
+// Title: C# Aspose.Cells test suite that validates Excel date parsing for multiple CultureInfo locales
+// Common Searches: how to unit test Aspose.Cells date parsing with different CultureInfo settings in C# | load Excel workbook with specific CultureInfo using Aspose.Cells LoadOptions | verify that Aspose.Cells correctly parses localized date strings in XLSX files | C# example for testing date string conversion across en-US, fr-FR, de-DE cultures with Aspose.Cells | Aspose.Cells culture-aware date parsing validation in automated tests
+// Tags: Aspose.Cells LoadOptions CultureInfo date parsing | C# in‑memory workbook date string test | Excel localized date format verification Aspose.Cells | unit testing Excel date handling with multiple locales | culture‑specific date parsing validation Aspose.Cells
 
 using System;
 using System.Globalization;
@@ -10,11 +9,11 @@ using Aspose.Cells;
 
 namespace AsposeCellsCultureTests
 {
-    // The example creates in‑memory XLSX workbooks with a single date string cell, loads each workbook using Aspose.Cells LoadOptions configured with a specific CultureInfo, checks that the cell type is DateTime, compares the parsed date to the expected value, and reports pass/fail results for several locales.
-    public class DateParsingTests
+    // The example creates in‑memory XLSX workbooks containing a date string formatted for each specified CultureInfo, loads each workbook with LoadOptions.CultureInfo set to the same locale, and asserts that Aspose.Cells interprets the cell as a DateTime with the expected date component, enabling automated verification of culture‑aware date parsing.
+    class Program
     {
-        // Creates a workbook with a single cell (A1) containing the supplied date string.
-        private MemoryStream CreateWorkbookWithDateString(string dateString)
+        // Helper: creates a workbook with a date string in cell A1 and returns the stream.
+        private static MemoryStream CreateWorkbookWithDateString(string dateString)
         {
             var wb = new Workbook();
             var ws = wb.Worksheets[0];
@@ -25,79 +24,67 @@ namespace AsposeCellsCultureTests
             return stream;
         }
 
-        // Loads the workbook using the specified culture and verifies the parsed DateTime.
-        private void VerifyDateParsing(string cultureName, string dateString, DateTime expectedDate)
+        static void Main()
         {
             try
             {
-                using (MemoryStream stream = CreateWorkbookWithDateString(dateString))
+                // Date to be written and later verified.
+                DateTime originalDate = new DateTime(2023, 5, 17, 14, 30, 0);
+
+                // Cultures to test.
+                string[] cultureNames = { "en-US", "fr-FR", "de-DE", "ja-JP", "es-ES" };
+
+                foreach (string cultureName in cultureNames)
                 {
-                    // Configure load options with the target culture.
-                    var loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                    try
                     {
-                        CultureInfo = new CultureInfo(cultureName)
-                    };
+                        CultureInfo culture = new CultureInfo(cultureName);
 
-                    // Load workbook using the culture-aware options.
-                    var wb = new Workbook(stream, loadOptions);
-                    var ws = wb.Worksheets[0];
-                    var cell = ws.Cells["A1"];
+                        // Format the date according to the current culture (short date pattern).
+                        string dateString = originalDate.ToString(culture);
 
-                    // Ensure the cell was interpreted as a DateTime.
-                    if (cell.Type != CellValueType.IsDateTime)
-                    {
-                        Console.WriteLine($"[FAIL] Culture {cultureName}: Cell type is not DateTime (actual: {cell.Type}).");
-                        return;
+                        // Create workbook containing the formatted date string.
+                        using (MemoryStream stream = CreateWorkbookWithDateString(dateString))
+                        {
+                            // LoadOptions with the same culture for parsing.
+                            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                            {
+                                CultureInfo = culture
+                            };
+
+                            // Load the workbook.
+                            Workbook loadedWb = new Workbook(stream, loadOptions);
+                            Cell loadedCell = loadedWb.Worksheets[0].Cells["A1"];
+
+                            // Verify that Aspose.Cells parsed the string into a DateTime.
+                            if (loadedCell.Type != CellValueType.IsDateTime)
+                            {
+                                Console.WriteLine($"[FAIL] Cell type is not DateTime for culture {cultureName}.");
+                                continue;
+                            }
+
+                            DateTime parsedDate = loadedCell.DateTimeValue;
+
+                            // Compare only the date part (time may be lost depending on format).
+                            if (originalDate.Date != parsedDate.Date)
+                            {
+                                Console.WriteLine($"[FAIL] Parsed date does not match for culture {cultureName}.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[PASS] Culture {cultureName}: parsed date matches.");
+                            }
+                        }
                     }
-
-                    // Compare the parsed date with the expected value (ignoring time component).
-                    DateTime actualDate = cell.DateTimeValue.Date;
-                    if (actualDate != expectedDate.Date)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"[FAIL] Culture {cultureName}: Expected {expectedDate:yyyy-MM-dd}, got {actualDate:yyyy-MM-dd}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"[PASS] Culture {cultureName}: Parsed correctly as {actualDate:yyyy-MM-dd}.");
+                        Console.WriteLine($"[ERROR] Exception for culture {cultureName}: {ex.Message}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Culture {cultureName}: {ex.Message}");
-            }
-        }
-
-        // Executes all test cases.
-        public void RunAllTests()
-        {
-            var testCases = new[]
-            {
-                new { Culture = "en-US", DateStr = "12/31/2023", Year = 2023, Month = 12, Day = 31 },
-                new { Culture = "en-GB", DateStr = "31/12/2023", Year = 2023, Month = 12, Day = 31 },
-                new { Culture = "fr-FR", DateStr = "31/12/2023", Year = 2023, Month = 12, Day = 31 },
-                new { Culture = "de-DE", DateStr = "31.12.2023", Year = 2023, Month = 12, Day = 31 },
-                new { Culture = "ja-JP", DateStr = "2023/12/31", Year = 2023, Month = 12, Day = 31 }
-            };
-
-            foreach (var tc in testCases)
-            {
-                DateTime expected = new DateTime(tc.Year, tc.Month, tc.Day);
-                VerifyDateParsing(tc.Culture, tc.DateStr, expected);
-            }
-        }
-
-        // Entry point.
-        public static void Main(string[] args)
-        {
-            try
-            {
-                var tester = new DateParsingTests();
-                tester.RunAllTests();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

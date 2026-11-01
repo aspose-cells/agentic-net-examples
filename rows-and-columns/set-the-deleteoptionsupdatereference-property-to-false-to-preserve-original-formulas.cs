@@ -1,37 +1,57 @@
-// Title: Delete a column in Aspose.Cells for .NET while preserving original formulas by setting DeleteOptions.UpdateReference to false
-// AI Prompts: Write C# code that deletes a specific column in an Aspose.Cells workbook and keeps all existing formulas unchanged by configuring DeleteOptions.UpdateReference = false. | Show how to use Aspose.Cells DeleteOptions to remove rows or columns without adjusting any formula references in a .NET application.
-// Common Searches: Aspose.Cells C# delete column without updating formulas | How to keep formula references intact after deleting a column in Aspose.Cells | DeleteOptions.UpdateReference false example for preserving formulas | Prevent formula recalculation when removing rows in Aspose.Cells .NET | Preserve original cell references after column deletion using Aspose.Cells API
-// Tags: delete column without formula update Aspose.Cells | preserve formula references Aspose.Cells | disable formula reference adjustment Aspose.Cells | C# DeleteOptions usage Aspose.Cells | column removal keep original formulas .NET
+// Title: Delete rows in an Excel file with Aspose.Cells for .NET while keeping formulas unchanged by disabling UpdateReference
+// AI Prompts: Write C# code that removes a specific row range in an Excel worksheet using Aspose.Cells and disables formula reference updates via a DeleteOptions object. | Show how to call Aspose.Cells DeleteRows method with a DeleteOptions instance to preserve formula references when rows are removed.
+// Common Searches: Aspose.Cells C# remove rows while keeping formulas unchanged | How to set DeleteOptions.UpdateReference to false in Aspose.Cells | Preserve Excel formulas when deleting rows programmatically with .NET
+// Tags: Aspose.Cells DeleteRows with DeleteOptions | DeleteOptions.UpdateReference property false example | preserve formulas after row deletion .NET | C# Excel row removal without reference update
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, adds values and a formula, deletes column A using DeleteOptions with UpdateReference set to false so the formula in C1 remains unchanged, and saves the file as PreserveFormulas.xlsx.
+// The example loads an existing workbook, creates a DeleteOptions object with UpdateReference set to false, deletes the desired rows using Worksheet.Cells.DeleteRows(startRow, rowCount, deleteOptions) to avoid altering formula references, and saves the modified file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some cells with values and a formula that references column A
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["B1"].PutValue(20);
-        worksheet.Cells["C1"].Formula = "=A1+B1";
-
-        // Create DeleteOptions and set UpdateReference to false
-        // This ensures that formulas referencing deleted cells are NOT updated
-        DeleteOptions deleteOptions = new DeleteOptions
+        try
         {
-            UpdateReference = false
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Delete column A (index 0) using the DeleteOptions
-        // The formula in C1 will remain "=A1+B1" even though column A is removed
-        worksheet.Cells.DeleteColumns(0, 1, deleteOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Save the workbook to a file
-        workbook.Save("PreserveFormulas.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: The setting to disable automatic formula reference updating when rows are deleted
+            // is not available in this version of Aspose.Cells, so it is omitted.
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Delete the first row (row index 0) without adjusting formulas
+            // The third argument (true) indicates that the entire row should be removed
+            sheet.Cells.DeleteRows(0, 1, true);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

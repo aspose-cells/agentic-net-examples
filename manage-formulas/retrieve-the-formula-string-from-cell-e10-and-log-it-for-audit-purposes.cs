@@ -1,29 +1,52 @@
-// Title: How to retrieve and log the formula from cell E10 in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, reads the Formula property of cell E10, and writes the result to the console. | Show a snippet that extracts the formula string from a specific worksheet cell and logs it for audit tracking using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# get formula text from a specific cell for audit logging | How to read the formula of cell E10 in an Excel file using Aspose.Cells .NET | Example code to output Excel cell formula to console with Aspose.Cells | Retrieve and print formula string from worksheet cell using Aspose.Cells library
-// Tags: Aspose.Cells read cell formula .NET | extract formula string from Excel cell | audit Excel formulas with Aspose.Cells | log cell formula to console C# | retrieve Formula property Aspose.Cells
+// Title: Read and log the formula from cell E10 in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells get formula string from a specific cell | How to extract and print Excel cell formula with Aspose.Cells .NET | Logging cell formulas for audit using Aspose.Cells in C# | Retrieve formula of E10 using Aspose.Cells API | Read Excel formula from cell E10 without opening Excel
+// Tags: Aspose.Cells read formula property C# | read Excel formula via Aspose.Cells API | log worksheet formula for compliance | retrieve formula from designated cell Aspose.Cells | output cell formula to console C#
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// Loads an .xlsx workbook, accesses cell E10 on the first worksheet, reads its Formula property, and writes the formula string to the console for auditing.
+// The example verifies the input.xlsx file, loads it with Aspose.Cells, accesses the first worksheet, reads the Formula property of cell E10, and writes the formula text to the console while handling CellsException and generic errors.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with actual file path)
-        var workbook = new Workbook("input.xlsx");
+        const string filePath = "input.xlsx";
 
-        // Access the first worksheet (or specify the worksheet name)
-        var worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-        // Retrieve cell E10
-        var cell = worksheet.Cells["E10"];
+            // Load the workbook (no password). If the file is password‑protected,
+            // a CellsException will be thrown and handled below.
+            var workbook = new Workbook(filePath);
 
-        // Get the formula string from the cell
-        string formula = cell.Formula;
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-        // Log the formula for audit purposes
-        Console.WriteLine($"Formula in E10: {formula}");
+            // Retrieve cell E10
+            var cell = worksheet.Cells["E10"];
+
+            // Get the formula string from the cell
+            string formula = cell.Formula;
+
+            // Log the formula for audit purposes
+            Console.WriteLine($"Formula in E10: {formula}");
+        }
+        catch (CellsException ex)
+        {
+            // Handle password‑protected or other Cells-specific errors
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any other unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

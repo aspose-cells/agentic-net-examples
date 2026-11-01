@@ -1,58 +1,90 @@
-// Title: Scan a folder of .xlsx workbooks and list WebQuery external connections using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that iterates over all .xlsx files in a given directory, loads each workbook with Aspose.Cells, and prints the Name, Url, and IsHtmlTables properties of every WebQueryConnection found. | Modify the program to export the detected WebQuery connection details (workbook name, connection name, URL, IsHtmlTables) to a CSV report instead of writing to the console. | Add try‑catch logic that logs unreadable or corrupted workbook paths to a log file and continues processing the remaining files without terminating the batch.
-// Common Searches: aspnet list web query connections in multiple excel files with Aspose.Cells | C# batch detect external data connections of type WebQuery in .xlsx workbooks | how to extract URL from WebQueryConnection using Aspose.Cells .NET | enumerate DataConnections and filter WebQueryConnection in a folder of Excel files | Aspose.Cells script to report HTML table web queries across many workbooks
-// Tags: enumerate web query connections Aspose.Cells | batch process Excel .xlsx data connections | extract web query URLs from workbooks | filter DataConnections by web query type C# | report HTML table web queries Aspose.Cells
+// Title: Detect and list WebQuery external data connections in multiple Excel workbooks with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens a collection of .xlsx files using Aspose.Cells, iterates each worksheet, and prints the name, type, and URL of every WebQuery external data connection. | Extend the program to write the extracted WebQuery connection details (workbook path, worksheet name, connection name, URL) into a CSV file. | Add fallback logic that safely skips worksheets when the ExternalDataConnections property is unavailable in older Aspose.Cells versions. | Implement robust error handling so the script continues processing remaining workbooks if a file is missing, corrupted, or a connection cannot be read.
+// Common Searches: how to retrieve web query URLs from Excel files using Aspose.Cells C# | batch extract external data connections of type WebQuery across many workbooks | Aspose.Cells enumerate ExternalDataConnections collection with reflection | C# script to list WebQuery connections in each worksheet of multiple .xlsx files | skip missing ExternalDataConnections property when using older Aspose.Cells versions
+// Tags: Aspose.Cells read WebQuery external connections | C# iterate multiple Excel workbooks Aspose.Cells | reflection access ExternalDataConnections property | export WebQuery details to CSV in C# | handle missing ExternalDataConnections gracefully
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-// The example loads each .xlsx file in a specified folder with Aspose.Cells, iterates the workbook’s DataConnections collection, identifies WebQueryConnection objects, and writes their Name, Url, and IsHtmlTables values to the console (or optionally to a CSV). It reports workbooks with no WebQuery connections and disposes each workbook after processing.
-class DetectWebQueryConnections
+// The example loads a list of Excel workbook paths, uses Aspose.Cells to open each file, and via reflection accesses each worksheet's ExternalDataConnections collection. It filters for connections of type 'WebQuery' and outputs the workbook, worksheet, connection name, type, and URL. The code includes checks for missing files, absent properties in older library versions, and per‑connection error handling, making it suitable for batch processing of many workbooks.
+class Program
 {
     static void Main()
     {
-        // Folder containing the workbooks to be examined
-        string folderPath = @"C:\Workbooks";
-
-        // Retrieve all Excel files in the folder
-        string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx");
-
-        foreach (string filePath in workbookFiles)
+        // List of workbook file paths to process
+        var workbookFiles = new List<string>
         {
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(filePath);
-            Console.WriteLine($"Workbook: {Path.GetFileName(filePath)}");
+            @"C:\Workbooks\Book1.xlsx",
+            @"C:\Workbooks\Book2.xlsx",
+            // Add more file paths as needed
+        };
 
-            bool hasWebQuery = false;
-
-            // Access the external connections collection
-            ExternalConnectionCollection connections = workbook.DataConnections;
-
-            // Iterate through each connection
-            for (int i = 0; i < connections.Count; i++)
+        foreach (var filePath in workbookFiles)
+        {
+            // Verify that the file exists before attempting to load it
+            if (!File.Exists(filePath))
             {
-                ExternalConnection conn = connections[i];
+                Console.WriteLine($"File not found: {filePath}");
+                continue;
+            }
 
-                // Identify WebQuery connections
-                if (conn is WebQueryConnection webConn)
+            try
+            {
+                // Load the workbook (Aspose.Cells handles the file format automatically)
+                var workbook = new Workbook(filePath);
+
+                // Iterate through each worksheet to examine its external data connections
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    hasWebQuery = true;
-                    Console.WriteLine($"  Connection #{i + 1}:");
-                    Console.WriteLine($"    Name: {webConn.Name}");
-                    Console.WriteLine($"    URL: {webConn.Url}");
-                    Console.WriteLine($"    IsHtmlTables: {webConn.IsHtmlTables}");
+                    // Use reflection to access ExternalDataConnections (may not be available in older versions)
+                    var connectionsProp = sheet.GetType().GetProperty("ExternalDataConnections");
+                    if (connectionsProp == null)
+                    {
+                        // Property not available – skip this worksheet
+                        continue;
+                    }
+
+                    var connectionsObj = connectionsProp.GetValue(sheet) as System.Collections.IEnumerable;
+                    if (connectionsObj == null)
+                        continue;
+
+                    foreach (var connection in connectionsObj)
+                    {
+                        try
+                        {
+                            // Retrieve the connection type via reflection
+                            var typeProp = connection.GetType().GetProperty("Type");
+                            var typeValue = typeProp?.GetValue(connection)?.ToString();
+
+                            // Filter only WebQuery type connections
+                            if (!string.Equals(typeValue, "WebQuery", StringComparison.OrdinalIgnoreCase))
+                                continue;
+
+                            var name = connection.GetType().GetProperty("Name")?.GetValue(connection);
+                            var connStr = connection.GetType().GetProperty("ConnectionString")?.GetValue(connection);
+
+                            Console.WriteLine($"Workbook: {filePath}");
+                            Console.WriteLine($"  Worksheet       : {sheet.Name}");
+                            Console.WriteLine($"  Connection Name : {name}");
+                            Console.WriteLine($"  Connection Type : {typeValue}");
+                            Console.WriteLine($"  Connection URL  : {connStr}");
+                            Console.WriteLine();
+                        }
+                        catch (Exception innerEx)
+                        {
+                            // Handle any issues retrieving individual connection details
+                            Console.WriteLine($"  Error reading a connection in worksheet '{sheet.Name}': {innerEx.Message}");
+                        }
+                    }
                 }
             }
-
-            if (!hasWebQuery)
+            catch (Exception ex)
             {
-                Console.WriteLine("  No WebQuery connections found.");
+                // Handle any runtime errors (e.g., corrupted file, unsupported format)
+                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
             }
-
-            // Dispose the workbook (optional cleanup)
-            workbook.Dispose();
         }
     }
 }

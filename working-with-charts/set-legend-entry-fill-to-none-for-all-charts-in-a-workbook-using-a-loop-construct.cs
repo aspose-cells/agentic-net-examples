@@ -1,77 +1,67 @@
-// Title: Set legend entry text to no fill for all charts in an Aspose.Cells workbook using C#
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate over every worksheet and chart, setting each LegendEntry.IsTextNoFill property to true. | Generate a C# example that creates a workbook with multiple charts and disables the fill of legend text for all charts via a nested foreach loop. | Provide a C# snippet that loops through a workbook's Chart collection and applies LegendEntry.IsTextNoFill = true to remove legend background.
-// Common Searches: Aspose.Cells C# remove legend fill from all charts in a workbook | C# loop through charts and set LegendEntry IsTextNoFill property Aspose.Cells | how to disable legend text fill for multiple charts using Aspose.Cells API | iterate over worksheet charts to clear legend background in .NET | set legend entry no fill for column and line charts Aspose.Cells example
-// Tags: Aspose.Cells legend entry no fill C# | iterate workbook charts Aspose.Cells | set IsTextNoFill property Aspose.Cells | disable legend text fill .NET Excel | chart legend customization Aspose.Cells
+// Title: Set chart legend entries to transparent fill for every chart in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through all worksheets and charts in a workbook and sets each chart legend entry's fill to transparent using Aspose.Cells. | Write a C# example that clears the fill of every legend entry in all charts of an Excel file with Aspose.Cells. | Create a C# program that iterates over a workbook's charts and removes the legend entry fill (transparent) for each chart using Aspose.Cells.
+// Common Searches: aspnet c# how to make chart legend entries transparent in all worksheets with Aspose.Cells | batch remove legend entry background from every chart in an Excel file using Aspose.Cells | loop through charts in a workbook and set legend entry fill to none Aspose.Cells C# | clear chart legend colors for all charts in a workbook programmatically Aspose.Cells | set legend entry font color transparent for all charts in Excel using Aspose.Cells .NET
+// Tags: remove chart legend fill Aspose.Cells | iterate all worksheets charts Aspose.Cells C# | clear legend entry colors Aspose.Cells | batch update chart legends Aspose.Cells | transparent legend entry font Aspose.Cells
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsLegendEntryNoFillDemo
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, adds sample data, inserts a column and a line chart, then uses nested foreach loops to traverse every worksheet and each chart. For each chart it accesses the LegendEntries collection and sets the IsTextNoFill property to true, removing the fill from legend text across all charts before saving the file as an XLSX.
+    // The program loads an Excel workbook, iterates through each worksheet and each chart, accesses the chart legend, sets every legend entry’s font color to transparent (removing any fill), and saves the modified workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for charts
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
-
-            // Add first chart
-            int chartIdx1 = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart1 = sheet.Charts[chartIdx1];
-            chart1.NSeries.Add("B2:B4", true);
-            chart1.NSeries.Add("C2:C4", true);
-            chart1.NSeries.CategoryData = "A2:A4";
-
-            // Add second chart
-            int chartIdx2 = sheet.Charts.Add(ChartType.Line, 16, 0, 26, 5);
-            Chart chart2 = sheet.Charts[chartIdx2];
-            chart2.NSeries.Add("B2:B4", true);
-            chart2.NSeries.Add("C2:C4", true);
-            chart2.NSeries.CategoryData = "A2:A4";
-
-            // Loop through all worksheets and their charts
-            foreach (Worksheet ws in workbook.Worksheets)
+            try
             {
-                foreach (Chart ch in ws.Charts)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Get the collection of legend entries for the current chart
-                    LegendEntryCollection legendEntries = ch.Legend.LegendEntries;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                    // Some chart types (e.g., surface) may return null
-                    if (legendEntries != null)
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all charts in the worksheet
+                    foreach (Chart chart in sheet.Charts)
                     {
-                        // Set IsTextNoFill = true for each legend entry (no fill for the text)
-                        for (int i = 0; i < legendEntries.Count; i++)
+                        // Access the legend of the chart
+                        Legend legend = chart.Legend;
+
+                        // Ensure the legend object is present
+                        if (legend != null)
                         {
-                            legendEntries[i].IsTextNoFill = true;
+                            // Iterate through each legend entry
+                            foreach (LegendEntry entry in legend.LegendEntries)
+                            {
+                                // Set the legend entry's font color to transparent (effectively no fill)
+                                entry.Font.Color = Color.Transparent;
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the workbook
-            workbook.Save("LegendEntryNoFillDemo.xlsx", SaveFormat.Xlsx);
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

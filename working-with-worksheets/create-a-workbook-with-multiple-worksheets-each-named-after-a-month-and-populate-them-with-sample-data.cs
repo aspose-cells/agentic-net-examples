@@ -1,23 +1,19 @@
-// Title: Generate an Excel workbook with twelve month‑named worksheets and identical sample tables using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to create a new workbook, clear the default sheet, add worksheets named January through December, insert a header row (Item, Quantity, Price) and three sample data rows into each sheet, then export the file as an .xlsx workbook. | Demonstrate how to iterate over an array of month names in C# with Aspose.Cells to programmatically add and name worksheets, fill each with the same data table, and save the workbook.
-// Common Searches: Aspose.Cells C# create workbook with worksheets for each month | add multiple sheets named January February Aspose.Cells .NET | populate identical tables across many worksheets using Aspose.Cells | remove default sheet and add custom worksheets in Aspose.Cells C# | save Excel file with month tabs using Aspose.Cells for .NET
-// Tags: add month worksheets Aspose.Cells | write header and sample rows Aspose.Cells | clear initial worksheet Aspose.Cells | export to .xlsx using Aspose.Cells | duplicate sample data across sheets Aspose.Cells
+// Title: Generate an Excel workbook with twelve month‑named worksheets and fill each sheet with sample data using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells create workbook with worksheets for each month | populate multiple Excel sheets with the same 2D array using Aspose.Cells | apply bold gray header style to worksheet rows in Aspose.Cells .NET | auto‑fit columns on every worksheet programmatically with Aspose.Cells | save Aspose.Cells workbook as .xlsx file in C#
+// Tags: create month worksheets Aspose.Cells | fill worksheets from 2d string array C# | header row bold gray style Aspose.Cells | auto fit columns each sheet Aspose.Cells | save workbook as xlsx C#
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// The example creates a new workbook, clears the default sheet, adds twelve worksheets named after each month, writes a header and three rows of sample item data to every sheet, and saves the result as MonthsWorkbook.xlsx.
+// The example creates a new Workbook, adds twelve worksheets named January through December, populates each with a predefined 2‑D string array of sample items, applies a bold light‑gray header style, auto‑fits all columns, and saves the file as MonthsData.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Remove the default worksheet that comes with a new workbook
-        workbook.Worksheets.Clear();
-
-        // Array of month names to be used as worksheet names
+        // Define month names
         string[] months = new string[]
         {
             "January", "February", "March", "April", "May", "June",
@@ -25,33 +21,46 @@ class Program
         };
 
         // Sample data to populate each worksheet
-        string[] items = { "Item A", "Item B", "Item C" };
-        int[] quantities = { 10, 20, 30 };
-        double[] prices = { 1.5, 2.0, 3.5 };
-
-        // Loop through each month, create a worksheet, name it, and fill with sample data
-        for (int i = 0; i < months.Length; i++)
+        string[,] sampleData = new string[,]
         {
-            // Add a new worksheet and get its reference
-            Worksheet sheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            sheet.Name = months[i];
+            { "Item", "Quantity", "Price" },
+            { "Apples", "120", "0.50" },
+            { "Bananas", "80", "0.30" },
+            { "Oranges", "150", "0.45" }
+        };
 
-            // Write header row
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["C1"].PutValue("Price");
+        // Loop through each month, create a worksheet, and fill it with sample data
+        foreach (string month in months)
+        {
+            // Add a new worksheet with the month name
+            Worksheet sheet = workbook.Worksheets.Add(month);
 
-            // Populate sample rows starting from row 2
-            for (int row = 0; row < items.Length; row++)
+            // Populate the worksheet with the sample data
+            for (int row = 0; row < sampleData.GetLength(0); row++)
             {
-                int excelRow = row + 2; // Excel rows are 1-indexed
-                sheet.Cells[excelRow - 1, 0].PutValue(items[row]);      // Column A
-                sheet.Cells[excelRow - 1, 1].PutValue(quantities[row]); // Column B
-                sheet.Cells[excelRow - 1, 2].PutValue(prices[row]);     // Column C
+                for (int col = 0; col < sampleData.GetLength(1); col++)
+                {
+                    sheet.Cells[row, col].PutValue(sampleData[row, col]);
+                }
             }
+
+            // Optionally, apply a simple style to the header row
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
+            headerStyle.Pattern = BackgroundType.Solid;
+
+            // Apply the style to the first row (header)
+            for (int col = 0; col < sampleData.GetLength(1); col++)
+            {
+                sheet.Cells[0, col].SetStyle(headerStyle);
+            }
+
+            // Auto-fit columns for better appearance
+            sheet.AutoFitColumns();
         }
 
         // Save the workbook to a file
-        workbook.Save("MonthsWorkbook.xlsx");
+        workbook.Save("MonthsData.xlsx");
     }
 }

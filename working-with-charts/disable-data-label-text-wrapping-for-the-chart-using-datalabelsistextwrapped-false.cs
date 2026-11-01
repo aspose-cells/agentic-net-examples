@@ -1,47 +1,64 @@
-// Title: How to disable text wrapping for data labels in an Aspose.Cells column chart using C#
-// AI Prompts: Write C# code that creates a column chart with Aspose.Cells, shows data label values, and sets DataLabels.IsTextWrapped to false. | Demonstrate how to access a chart series' DataLabels object and turn off text wrapping in Aspose.Cells for .NET. | Provide a complete example that saves the workbook after disabling data label text wrapping in an Excel chart.
-// Common Searches: Aspose.Cells C# chart data label wrap off | Set DataLabels.IsTextWrapped false in Aspose.Cells column chart | Disable text wrapping for Excel chart data labels using Aspose.Cells .NET | How to prevent data label text from wrapping in Aspose.Cells charts | C# Aspose.Cells example for chart data label formatting
-// Tags: Aspose.Cells chart data label no wrap | C# DataLabels.IsTextWrapped usage | column chart data label formatting Aspose.Cells | Excel chart data label text wrap control | Aspose.Cells disable data label wrapping
+// Title: Disable data label text wrapping in an Excel chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook, finds the first chart's first series, sets its DataLabels.IsTextWrapped property to false, and saves the file. | Show a concise example that disables text wrapping for chart data labels using Aspose.Cells for .NET, including basic checks for file existence and chart presence.
+// Common Searches: aspnet cells set chart data label no wrap c# | c# aspose.cells disable text wrapping for Excel chart labels | how to turn off data label wrapping in an Excel chart using Aspose.Cells | example of DataLabels.IsTextWrapped false in Aspose.Cells C#
+// Tags: Aspose.Cells chart data label no wrap | DataLabels.IsTextWrapped false C# | Excel chart label wrapping Aspose.Cells | modify chart series data labels .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds sample data, inserts a column chart, enables data labels, disables their text wrapping with DataLabels.IsTextWrapped = false, and saves the file as ChartDataLabels_NoWrap.xlsx.
+// Loads an existing Excel workbook, accesses the first worksheet and its first chart, disables text wrapping for the data labels of the first series via DataLabels.IsTextWrapped = false, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                return;
+            }
 
-        // Insert a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
+            // Load the existing workbook that contains a chart
+            Workbook workbook = new Workbook(inputPath);
 
-        // Define the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the data labels of the first series and enable them
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowValue = true;
+            // Ensure the worksheet has at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
 
-        // Disable text wrapping for the data labels
-        dataLabels.IsTextWrapped = false;
+            // Access the first chart on the worksheet (adjust index if needed)
+            Chart chart = worksheet.Charts[0];
 
-        // Save the workbook to a file
-        workbook.Save("ChartDataLabels_NoWrap.xlsx");
+            // Ensure the chart has at least one series to access data labels
+            if (chart.NSeries.Count == 0)
+            {
+                Console.WriteLine("The chart does not contain any series.");
+                return;
+            }
+
+            // Disable text wrapping for the first series' data labels
+            chart.NSeries[0].DataLabels.IsTextWrapped = false;
+
+            // Save the modified workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

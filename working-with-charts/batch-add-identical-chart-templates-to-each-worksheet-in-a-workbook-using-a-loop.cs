@@ -1,87 +1,77 @@
-// Title: How to add the same .crtx chart template to every worksheet in an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code that loops through all worksheets in a Workbook and inserts a chart using a .crtx template, falling back to a default column chart when the template file is absent. | Demonstrate loading a chart template into a byte array and applying it to each worksheet while setting a common data range and chart title with Aspose.Cells for .NET.
-// Common Searches: how to programmatically add a .crtx chart to every worksheet using Aspose.Cells in C# | loop over worksheets and create column charts with a shared data range in Aspose.Cells .NET | Aspose.Cells fallback to default chart when chart template file is missing | set chart title and position for multiple sheets in a workbook with Aspose.Cells
-// Tags: apply .crtx chart template Aspose.Cells C# | add chart to each worksheet Aspose.Cells | iterate worksheets chart insertion Aspose.Cells .NET | set chart data range programmatically Aspose.Cells | fallback default column chart Aspose.Cells
+// Title: Add an identical column chart to each worksheet in an Aspose.Cells workbook using C#
+// AI Prompts: Generate C# code that iterates over all worksheets in a Workbook and inserts a column chart using the same data range on each sheet. | Demonstrate how to reuse a chart template for every worksheet in an Aspose.Cells workbook using a foreach loop. | Write a C# snippet that creates sample data, adds a column chart, and saves the workbook with charts on all sheets.
+// Common Searches: C# Aspose.Cells add column chart to each sheet in a workbook | Loop through worksheets and insert identical chart using Aspose.Cells .NET | Apply same chart template to multiple worksheets Aspose.Cells example | Batch create charts on all worksheets with Aspose.Cells C#
+// Tags: batch chart insertion across worksheets Aspose.Cells | column chart template application C# | worksheet iteration for chart creation Aspose.Cells | sample data population for Excel chart Aspose.Cells | export workbook with charts Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook with three worksheets, fills each with sample data, attempts to load a .crtx chart template, and then iterates over every worksheet to add a chart. If the template is available, it is applied; otherwise a default column chart is created. Each chart uses the same data range (A1:B6), receives a common title, and is positioned consistently before the workbook is saved as WorkbookWithCharts.xlsx.
+// The example creates a workbook, adds several worksheets, populates each with sample category/value data, and within a foreach loop adds an identical column chart titled "Sample Column Chart" using the range B2:B6 on every sheet. The workbook is then saved as WorkbookWithCharts.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (contains a default worksheet)
+            // Create a new workbook (contains a default sheet)
             Workbook workbook = new Workbook();
 
-            // Rename the default worksheet to "Sheet1"
-            Worksheet defaultSheet = workbook.Worksheets[0];
-            defaultSheet.Name = "Sheet1";
-
-            // Add additional worksheets
+            // Add additional worksheets for demonstration
+            workbook.Worksheets.Add("Sheet1");
             workbook.Worksheets.Add("Sheet2");
             workbook.Worksheets.Add("Sheet3");
 
-            // Populate each worksheet with identical sample data
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Loop through each worksheet and add identical chart template
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                ws.Cells["A1"].PutValue("Category");
-                ws.Cells["B1"].PutValue("Value");
-                for (int i = 1; i <= 5; i++)
-                {
-                    ws.Cells[$"A{i + 1}"].PutValue($"Item {i}");
-                    ws.Cells[$"B{i + 1}"].PutValue(i * 10);
-                }
-            }
+                Cells cells = sheet.Cells;
 
-            // Load a chart template (.crtx) into a byte array if the file exists
-            byte[] templateData = null;
-            const string templatePath = "ChartTemplate.crtx";
-            if (File.Exists(templatePath))
-            {
-                templateData = File.ReadAllBytes(templatePath);
-            }
-            else
-            {
-                Console.WriteLine($"Template file '{templatePath}' not found. Charts will be created without a template.");
-            }
+                // ----- Populate sample data (Category / Value) -----
+                cells["A1"].PutValue("Category");
+                cells["B1"].PutValue("Value");
 
-            // Loop through each worksheet and add a chart (using template if available)
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                // Define the data range that the chart will use
-                string dataRange = "A1:B6";
+                string[] categories = { "A", "B", "C", "D", "E" };
+                double[] values = { 10, 20, 30, 25, 15 };
 
-                int chartIdx;
-                if (templateData != null)
+                for (int i = 0; i < categories.Length; i++)
                 {
-                    // Add a chart with the preset template
-                    // Parameters: template bytes, data range, isVertical, topRow, leftColumn, bottomRow, rightColumn
-                    chartIdx = ws.Charts.Add(templateData, dataRange, true, 5, 0, 20, 8);
-                }
-                else
-                {
-                    // Add a default chart without a template
-                    chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                    // Set data range; true indicates vertical orientation
-                    ws.Charts[chartIdx].SetChartDataRange(dataRange, true);
+                    cells[i + 2, 0].PutValue(categories[i]); // Column A (Category)
+                    cells[i + 2, 1].PutValue(values[i]);    // Column B (Value)
                 }
 
-                Chart chart = ws.Charts[chartIdx];
-                chart.Title.Text = "Template Chart";
+                // ----- Add a Column chart -----
+                // Parameters: ChartType, upper-left row, upper-left column, lower-right row, lower-right column
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIdx];
+
+                // Set chart title
+                chart.Title.Text = "Sample Column Chart";
+
+                // Add series with values range; category data is optional for this demo
+                int seriesIdx = chart.NSeries.Add("B2:B6", true);
+                // Optional: name the series
+                chart.NSeries[seriesIdx].Name = "Values";
             }
 
-            // Save the workbook with the added charts
-            workbook.Save("WorkbookWithCharts.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved successfully.");
+            // Define output file path
+            string outputPath = "WorkbookWithCharts.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with charts
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

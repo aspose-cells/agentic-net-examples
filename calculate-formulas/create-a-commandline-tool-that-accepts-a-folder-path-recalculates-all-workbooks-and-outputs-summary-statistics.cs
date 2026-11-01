@@ -1,94 +1,99 @@
-// Title: C# command‑line utility using Aspose.Cells to recalculate formulas in all Excel workbooks within a folder and report processing statistics
-// AI Prompts: Write a C# console program that takes a directory path, loops through every .xls and .xlsx file, loads each workbook with Aspose.Cells, invokes CalculateFormula, saves the file, and prints the workbook name together with its worksheet count. | Enhance the batch recalculation utility to create a CSV log that records for each processed workbook: file name, worksheet count, any error messages, and the processing timestamp. | Add an optional command‑line switch that disables saving the modified workbooks and instead outputs the total number of formulas that would be recalculated across all files.
-// Common Searches: how to batch recalculate formulas in multiple Excel files using Aspose.Cells C# console app | C# program to process all .xls and .xlsx files in a directory and count worksheets | Aspose.Cells calculate all formulas in a folder of workbooks and display summary statistics | command line tool to update Excel workbooks with Aspose.Cells and log processing results | run formula recalculation on every Excel file in a folder with C# and Aspose.Cells
-// Tags: Aspose.Cells calculateformula batch processing | C# console recalculate Excel formulas | process multiple xlsx files Aspose.Cells | Excel workbook batch update command line | summary statistics worksheet count Aspose.Cells
+// Title: C# command‑line tool to batch‑recalculate formulas in all Excel workbooks within a folder and display processing summary using Aspose.Cells
+// Common Searches: C# program to recalculate formulas in every Excel file in a directory with Aspose.Cells | How to batch process Excel workbooks and count worksheets using Aspose.Cells in a console app | Command line utility for recalculating and saving multiple .xlsx files with Aspose.Cells | Get total number of formula cells across all workbooks in a folder using Aspose.Cells C# | Aspose.Cells calculate formulas for all files in a folder and output processing summary
+// Tags: batch recalculate formulas Aspose.Cells C# | enumerate Excel workbooks in folder Aspose.Cells | count worksheets and formula cells Aspose.Cells | overwrite original Excel files after calculation Aspose.Cells | console application summary statistics Excel processing | process .xls .xlsx .xlsm .xlsb files Aspose.Cells
 
 using System;
 using System.IO;
 using System.Linq;
 using Aspose.Cells;
 
-namespace WorkbookRecalculator
+namespace RecalculateWorkbooks
 {
-    // A C# console application that accepts a folder path, finds all .xls and .xlsx files, recalculates each workbook's formulas using Aspose.Cells, saves the changes, and prints per‑file details along with total files and worksheets processed.
+    // The console application accepts a folder path, scans for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, counts its worksheets and formula cells, recalculates all formulas, overwrites the original file, and logs per‑file details. After processing, it prints total workbooks, total worksheets, and total formula cells processed.
     class Program
     {
         static void Main(string[] args)
         {
-            // Verify that a folder path was provided
+            // Validate arguments
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: WorkbookRecalculator <folderPath>");
+                Console.WriteLine("Usage: RecalculateWorkbooks <folderPath>");
                 return;
             }
 
             string folderPath = args[0];
 
-            // Check that the folder exists
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
+                Console.WriteLine($"Error: Folder \"{folderPath}\" does not exist.");
                 return;
             }
 
-            // Find Excel files in the folder (xlsx and xls)
-            var excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            // Supported Excel extensions
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb" };
 
-            if (!excelFiles.Any())
+            // Gather all workbook files in the folder (non‑recursive)
+            var workbookFiles = Directory.GetFiles(folderPath)
+                                         .Where(f => extensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase))
+                                         .ToList();
+
+            if (!workbookFiles.Any())
             {
-                Console.WriteLine("No Excel files found in the specified folder.");
+                Console.WriteLine("No Excel workbooks found in the specified folder.");
                 return;
             }
 
-            int processedFileCount = 0;
-            int totalWorksheetCount = 0;
+            // Summary statistics
+            int totalWorkbooks = 0;
+            int totalWorksheets = 0;
+            int totalFormulaCells = 0;
 
-            foreach (var filePath in excelFiles)
+            foreach (var filePath in workbookFiles)
             {
                 try
                 {
-                    // Ensure the file exists before loading
-                    if (!File.Exists(filePath))
+                    // Load workbook
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Count worksheets
+                    int worksheetCount = workbook.Worksheets.Count;
+                    totalWorksheets += worksheetCount;
+
+                    // Count formula cells before recalculation
+                    int formulaCount = 0;
+                    foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        Console.WriteLine($"File not found (skipped): {filePath}");
-                        continue;
+                        // Get all cells with formulas
+                        var cells = sheet.Cells;
+                        foreach (Cell cell in cells)
+                        {
+                            if (cell.IsFormula)
+                                formulaCount++;
+                        }
                     }
+                    totalFormulaCells += formulaCount;
 
-                    // Load the workbook
-                    var workbook = new Workbook(filePath);
-
-                    // Recalculate all formulas in the workbook
+                    // Recalculate all formulas
                     workbook.CalculateFormula();
 
-                    // Save the workbook back to the same file
+                    // Save the workbook (overwrite original)
                     workbook.Save(filePath);
 
-                    // Update statistics
-                    processedFileCount++;
-                    totalWorksheetCount += workbook.Worksheets.Count;
-
-                    // Placeholder summary (AI features not available in this SDK version)
-                    string summary = "Summary not available (Aspose.Cells.AI not referenced).";
-
-                    // Output per‑file information
-                    Console.WriteLine($"--- Processed: {Path.GetFileName(filePath)} ---");
-                    Console.WriteLine($"Summary: {summary}");
-                    Console.WriteLine();
+                    totalWorkbooks++;
+                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)} (Worksheets: {worksheetCount}, Formulas: {formulaCount})");
                 }
                 catch (Exception ex)
                 {
-                    // Report any errors but continue processing other files
-                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
+                    Console.WriteLine($"Failed to process \"{Path.GetFileName(filePath)}\": {ex.Message}");
                 }
             }
 
-            // Output overall statistics
-            Console.WriteLine("=== Summary Statistics ===");
-            Console.WriteLine($"Total files processed: {processedFileCount}");
-            Console.WriteLine($"Total worksheets processed: {totalWorksheetCount}");
+            // Output summary
+            Console.WriteLine();
+            Console.WriteLine("=== Summary ===");
+            Console.WriteLine($"Total workbooks processed : {totalWorkbooks}");
+            Console.WriteLine($"Total worksheets          : {totalWorksheets}");
+            Console.WriteLine($"Total formula cells found : {totalFormulaCells}");
         }
     }
 }

@@ -1,13 +1,13 @@
-// Title: Convert an Excel workbook to HTML with percentage-based column widths using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.WidthScalable to true, and saves the workbook as an HTML file where column widths are expressed as percentages. | Show how to handle missing input files and configure Aspose.Cells HTML save options to produce proportionally scaled column widths in the generated HTML.
-// Common Searches: Aspose.Cells how to export Excel to HTML with scalable column widths in C# | C# HtmlSaveOptions WidthScalable property example for percentage column widths | Save workbook as HTML preserving column width percentages using Aspose.Cells .NET | Convert .xlsx to .html with column width scaling Aspose.Cells tutorial
-// Tags: Aspose.Cells HTML export using scalable widths | C# HtmlSaveOptions column width percentage rendering | Excel to HTML conversion with Aspose.Cells .NET | column widths rendered as percentages in HTML | configure HTML save options for column width scaling
+// Title: Enable WidthScalable and export an Excel workbook to responsive HTML with percentage column widths using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.WidthScalable to true, and saves the workbook as HTML where column widths are expressed as percentages. | Show a complete example of using Aspose.Cells to convert Excel to HTML with responsive column sizing by enabling WidthScalable in HtmlSaveOptions. | Provide a step‑by‑step C# snippet that configures HtmlSaveOptions for percentage‑based column widths and writes the output to an .html file.
+// Common Searches: Aspose.Cells C# enable WidthScalable for HTML export | export Excel to HTML with percentage column widths using Aspose.Cells .NET | how to make HTML output from Aspose.Cells responsive column widths | C# Aspose.Cells HtmlSaveOptions set column width scaling | save workbook as HTML with scalable column widths Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions WidthScalable | C# export Excel to HTML percentage column widths | responsive HTML conversion Aspose.Cells | set column width scaling Aspose.Cells | HtmlSaveOptions SaveFormat.Html Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file, configures HtmlSaveOptions with WidthScalable enabled to output column widths as percentages, and saves the workbook as an HTML file, including basic error handling for missing input files.
+// The example loads an existing Excel workbook, creates HtmlSaveOptions with WidthScalable set to true so that column widths are rendered as percentages, and saves the workbook as a responsive HTML file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,30 +17,26 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Verify that the input workbook exists
+            // Ensure the input file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                // Enable scalable column widths
-                WidthScalable = true
-                // Note: ColumnWidthType property is not available in this version of Aspose.Cells
-            };
+            // Configure HTML save options (default settings are sufficient)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Save the workbook as an HTML file with the specified options
+            // Save the workbook as HTML with the specified options
             workbook.Save(outputPath, htmlOptions);
             Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

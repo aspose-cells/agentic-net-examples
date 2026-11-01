@@ -1,74 +1,94 @@
-// Title: Add Max subtotals to column C with group summary rows placed after each category using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that groups rows by the first column and adds a row after each group showing the highest value from column C using Aspose.Cells. | Show how to invoke the subtotal method with the max consolidation function, keep existing data, and suppress page breaks while placing summary rows below each category.
-// Common Searches: Aspose.Cells example for inserting a row with the highest value per category in C# | How to calculate maximums per group without page breaks using Aspose.Cells subtotal feature in .NET | C# code to generate an Excel file with subtotal rows placed after each group using Aspose.Cells | Create a grouped Excel report with max values per group using Aspose.Cells for .NET
-// Tags: max value subtotal Aspose.Cells | grouped summary rows below each category | suppress page breaks in subtotal operation | subtotal on column C using max consolidation | excel workbook generation C# Aspose.Cells
+// Title: Insert MAX subtotal rows after each group in column A, summarizing column C with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to detect changes in column A and insert a row after each group that contains a MAX formula for the corresponding range in column C. | Modify the provided Aspose.Cells example to place the subtotal row before each group while still calculating the MAX of column C for that group. | Adapt the solution to compute SUM instead of MAX for column C subtotals, keeping the same group‑by‑column‑A logic.
+// Common Searches: aspocells c# add max subtotal after each category in excel column a | how to insert subtotal rows based on group changes using Aspose.Cells .NET | c# generate dynamic max formula for column C groups with Aspose.Cells | aspocells insert rows programmatically after grouping column values | excel subtotal max per group using Aspose.Cells C# example
+// Tags: Aspose.Cells aggregate row creation | aggregate calculation with Aspose.Cells | C# detect column value changes in Excel | dynamic range address generation .NET | Excel workbook grouping automation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalExample
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, fills it with sample data containing a Category column, then uses Aspose.Cells to add a subtotal row that shows the maximum value from column C for each category. The summary rows are inserted directly below each group, page breaks are disabled, and the workbook is saved as an Excel file.
+    // The C# program loads an Excel workbook, scans column A for group transitions, and inserts a new row after each group containing a MAX formula that aggregates the values in column C for that group. It also adds a final subtotal for the last group and saves the updated workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate sample data
-            // Header row
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Item");
-            cells["C1"].PutValue("Value");
-
-            // Data rows
-            object[,] data = new object[,]
+            try
             {
-                { "Group1", "A", 10 },
-                { "Group1", "B", 20 },
-                { "Group1", "C", 15 },
-                { "Group2", "A", 30 },
-                { "Group2", "B", 25 },
-                { "Group2", "C", 35 }
-            };
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            for (int r = 0; r < data.GetLength(0); r++)
-            {
-                for (int c = 0; c < data.GetLength(1); c++)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    cells[r + 1, c].PutValue(data[r, c]);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet
+                Worksheet ws = workbook.Worksheets[0];
+
+                // Column indices (0‑based): A = 0 (group), C = 2 (values)
+                int groupCol = 0;
+                int valueCol = 2;
+
+                // Determine the used range
+                int firstDataRow = ws.Cells.MinDataRow;
+                int lastDataRow = ws.Cells.MaxDataRow;
+
+                // Initialize tracking for the first group
+                int groupStartRow = firstDataRow;
+                string currentGroup = ws.Cells[groupStartRow, groupCol].StringValue;
+
+                // Iterate through rows to detect group changes
+                for (int row = firstDataRow; row <= lastDataRow; row++)
+                {
+                    string cellValue = ws.Cells[row, groupCol].StringValue;
+
+                    // When the group value changes, insert a subtotal row for the previous group
+                    if (cellValue != currentGroup)
+                    {
+                        int insertPos = row;
+
+                        // Insert a new row for the subtotal
+                        ws.Cells.InsertRows(insertPos, 1);
+                        ws.Cells[insertPos, groupCol].PutValue($"{currentGroup} Max");
+
+                        // Build the address range for the MAX formula (C column of the group)
+                        string startAddr = ws.Cells[groupStartRow, valueCol].Name;
+                        string endAddr = ws.Cells[row - 1, valueCol].Name;
+                        ws.Cells[insertPos, valueCol].Formula = $"MAX({startAddr}:{endAddr})";
+
+                        // Update tracking variables for the new group
+                        currentGroup = cellValue;
+                        groupStartRow = row + 1; // +1 because we just inserted a row
+
+                        // Adjust loop counters because the sheet grew by one row
+                        lastDataRow++;
+                        row++; // skip the newly inserted subtotal row
+                    }
+                }
+
+                // After the loop, handle the final group
+                int finalInsertPos = lastDataRow + 1;
+                ws.Cells.InsertRows(finalInsertPos, 1);
+                ws.Cells[finalInsertPos, groupCol].PutValue($"{currentGroup} Max");
+                string startAddrFinal = ws.Cells[groupStartRow, valueCol].Name;
+                string endAddrFinal = ws.Cells[lastDataRow, valueCol].Name;
+                ws.Cells[finalInsertPos, valueCol].Formula = $"MAX({startAddrFinal}:{endAddrFinal})";
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Define the range that contains the data (including header)
-            // A1:C7  -> rows 0-6, columns 0-2
-            CellArea area = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = data.GetLength(0), // includes header row
-                EndColumn = 2
-            };
-
-            // Add subtotals:
-            // - Group by first column (Category) -> index 0
-            // - Use Max function on column C (index 2)
-            // - Do not replace existing subtotals, no page breaks, summary rows below data
-            cells.Subtotal(
-                area,
-                0,                                 // groupBy column index
-                ConsolidationFunction.Max,         // Max function
-                new int[] { 2 },                   // subtotal on column C
-                false,                             // replace existing subtotals
-                false,                             // page breaks between groups
-                true                               // summary rows placed below each group
-            );
-
-            // Save the workbook
-            workbook.Save("Subtotal_Max_ColumnC_AfterEachGroup.xlsx");
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

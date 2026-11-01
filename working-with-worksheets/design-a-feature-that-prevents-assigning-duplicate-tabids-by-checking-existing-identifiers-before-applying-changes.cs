@@ -1,87 +1,145 @@
-// Title: Assign a unique TabId to an Excel worksheet with Aspose.Cells for .NET while checking existing TabIds
-// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, scans every worksheet for a custom property named "TabId", and adds or updates that property on a target sheet only if the value is not already present. | Create a method that validates a new TabId against all existing TabId custom properties in the workbook before saving, throwing a clear exception when a duplicate is found. | Write error‑handling logic for assigning a TabId that distinguishes between missing files, nonexistent worksheets, and duplicate TabId scenarios.
-// Common Searches: c# aspocells check if TabId already exists before assigning to worksheet | how to enforce unique custom property values across worksheets in Aspose.Cells | prevent duplicate TabId error when updating Excel sheet with Aspose.Cells .NET | sample code to validate unique TabId in Excel workbook using Aspose.Cells
-// Tags: Aspose.Cells TabId assignment | C# Excel custom property uniqueness | prevent duplicate worksheet identifiers .NET | validate TabId across worksheets Aspose | Excel workbook custom property management
+// Title: Prevent assigning duplicate TabId custom properties to worksheets using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that adds a TabId custom property to a worksheet only after confirming the value does not exist on any other sheet in the workbook with Aspose.Cells. | Refactor the TryAssignTabId method to throw an InvalidOperationException when a duplicate TabId is detected instead of returning a Boolean flag. | Create a utility that scans all worksheets in a workbook and returns a list of the current TabId custom property values.
+// Common Searches: aspnet aspose.cells check for existing TabId before assigning to worksheet | c# ensure unique TabId across all worksheets in an Excel file | how to validate custom property uniqueness in Aspose.Cells workbook | prevent duplicate sheet identifiers when using Aspose.Cells for .NET
+// Tags: worksheet tabid uniqueness Aspose.Cells | custom property duplicate check C# | assign tabid to worksheet Aspose.Cells | sheet identifier duplication guard .NET | validate worksheet custom property uniqueness
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-// This example demonstrates using Aspose.Cells for .NET to load an Excel workbook, collect all existing "TabId" custom property values from each worksheet, verify that a new TabId is unique, and then add or update the "TabId" property on a specified sheet before saving, with detailed exception handling for missing files, duplicate IDs, and absent worksheets.
-class TabIdManager
+namespace AsposeCellsTabIdManager
 {
-    // Assigns a unique TabId to a worksheet. Throws if the TabId already exists.
-    public static void AssignTabId(string workbookPath, string sheetName, string newTabId)
+    // The TabIdHelper class loads a workbook, provides TryAssignTabId which gathers existing "TabId" custom properties from all worksheets, rejects duplicates, assigns the new TabId when unique, and includes demo and save methods.
+    public class TabIdHelper
     {
-        // Ensure the workbook file exists to avoid FileNotFoundException
-        if (!File.Exists(workbookPath))
-            throw new FileNotFoundException("Workbook file not found.", workbookPath);
+        private readonly Workbook _workbook;
 
-        try
+        // Load an existing workbook (lifecycle rule: load)
+        public TabIdHelper(string filePath)
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"Input workbook not found: {filePath}");
 
-            // Gather all existing TabIds from custom properties of each worksheet
-            HashSet<string> existingIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (Worksheet ws in workbook.Worksheets)
+            try
             {
-                // Retrieve the custom property "TabId" if it exists
-                var prop = ws.CustomProperties["TabId"];
-                if (prop != null && prop.Value != null)
-                {
-                    existingIds.Add(prop.Value.ToString());
-                }
+                _workbook = new Workbook(filePath);
             }
-
-            // Verify that the new TabId is not already used
-            if (existingIds.Contains(newTabId))
-                throw new InvalidOperationException($"The TabId '{newTabId}' is already assigned to another worksheet.");
-
-            // Locate the target worksheet
-            Worksheet targetSheet = workbook.Worksheets[sheetName];
-            if (targetSheet == null)
-                throw new ArgumentException($"Worksheet '{sheetName}' does not exist in the workbook.");
-
-            // Assign the new TabId as a custom property (adds or updates)
-            var existingProp = targetSheet.CustomProperties["TabId"];
-            if (existingProp != null)
+            catch (Exception ex)
             {
-                // Update existing property value
-                existingProp.Value = newTabId;
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                throw;
             }
-            else
-            {
-                // Add new custom property
-                targetSheet.CustomProperties.Add("TabId", newTabId);
-            }
-
-            // Save the workbook
-            workbook.Save(workbookPath);
         }
-        catch (Exception ex)
+
+        // Create a new workbook (lifecycle rule: create) - optional helper
+        public TabIdHelper()
         {
-            // Wrap with additional context
-            throw new ApplicationException("Failed to assign TabId.", ex);
+            _workbook = new Workbook();
+        }
+
+        // Retrieves the TabId stored in a worksheet's custom property "TabId"
+        private string GetTabId(Worksheet sheet)
+        {
+            var prop = sheet.CustomProperties.FirstOrDefault(p => p.Name == "TabId");
+            return prop?.Value?.ToString();
+        }
+
+        // Assigns a TabId to a worksheet after ensuring it is not already used
+        public bool TryAssignTabId(string sheetName, string newTabId)
+        {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(sheetName) || string.IsNullOrWhiteSpace(newTabId))
+                throw new ArgumentException("Sheet name and TabId must be non‑empty.");
+
+            // Find the target worksheet
+            Worksheet targetSheet = _workbook.Worksheets[sheetName];
+            if (targetSheet == null)
+                throw new ArgumentException($"Worksheet '{sheetName}' does not exist.");
+
+            // Collect all existing TabIds (excluding the target sheet itself)
+            var existingIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Worksheet ws in _workbook.Worksheets)
+            {
+                if (ws == targetSheet) continue; // skip the sheet we are updating
+                string id = GetTabId(ws);
+                if (!string.IsNullOrEmpty(id))
+                    existingIds.Add(id);
+            }
+
+            // Check for duplicate
+            if (existingIds.Contains(newTabId))
+                return false; // Duplicate found – do not assign
+
+            // No duplicate – assign the TabId (store as a custom property)
+            var existingProp = targetSheet.CustomProperties.FirstOrDefault(p => p.Name == "TabId");
+            if (existingProp != null)
+                existingProp.Value = newTabId;
+            else
+                targetSheet.CustomProperties.Add("TabId", newTabId);
+
+            return true;
+        }
+
+        // Example method to demonstrate usage
+        public void Demo()
+        {
+            try
+            {
+                // Attempt to set TabId for "Sheet1"
+                bool success = TryAssignTabId("Sheet1", "TAB_001");
+                Console.WriteLine(success
+                    ? "TabId assigned successfully."
+                    : "Duplicate TabId detected – assignment aborted.");
+
+                // Attempt to set a duplicate TabId for another sheet
+                success = TryAssignTabId("Sheet2", "TAB_001");
+                Console.WriteLine(success
+                    ? "TabId assigned successfully."
+                    : "Duplicate TabId detected – assignment aborted.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Demo error: {ex.Message}");
+            }
+        }
+
+        // Save the workbook (lifecycle rule: save)
+        public void Save(string outputPath)
+        {
+            try
+            {
+                _workbook.Save(outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                throw;
+            }
         }
     }
 
-    // Example usage
-    static void Main()
+    // Sample program entry point
+    class Program
     {
-        string filePath = @"C:\Temp\Sample.xlsx";
-        string sheet = "Sheet1";
-        string newId = "Tab123";
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Load an existing workbook
+                var helper = new TabIdHelper("InputWorkbook.xlsx");
 
-        try
-        {
-            AssignTabId(filePath, sheet, newId);
-            Console.WriteLine($"TabId '{newId}' assigned to worksheet '{sheet}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Run demo to show duplicate checking
+                helper.Demo();
+
+                // Save changes
+                helper.Save("OutputWorkbook.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

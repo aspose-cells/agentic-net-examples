@@ -1,24 +1,24 @@
-// Title: Bulk import a 2‑D array into an Excel worksheet and force formula recalculation with Aspose.Cells for .NET
-// AI Prompts: Generate C# using Aspose.Cells that opens input.xlsx, sets calculation mode to manual, imports a 1000‑row by 10‑column object[,] into cell A1 of the first worksheet, switches calculation back to automatic, forces a full formula recalculation, and saves to output.xlsx. | Provide a C# snippet that checks for the existence of an Excel file, loads it with Aspose.Cells, temporarily disables formula evaluation, bulk‑loads data via ImportTwoDimensionArray, then re‑enables calculation and calls CalculateFormula before saving. | Create example code in .NET that demonstrates how to import a large two‑dimensional array into a worksheet without triggering intermediate calculations, and then recompute all formulas after the import.
-// Common Searches: Aspose.Cells how to set manual calculation mode before bulk import | ImportTwoDimensionArray without triggering formula recalculation .NET | Recalculate all formulas after loading large data set with Aspose.Cells | C# disable automatic calculation, import data, then enable calculation Aspose.Cells | Best practice for bulk data import and formula evaluation in Aspose.Cells
-// Tags: manual calculation mode Aspose.Cells .NET | ImportTwoDimensionArray bulk data Aspose.Cells | force full formula recalculation Aspose.Cells | load workbook and save after data import Aspose.Cells | disable automatic calculation Aspose.Cells
+// Title: Bulk import a DataTable into an existing Excel workbook and force full formula recalculation using Aspose.Cells for .NET
+// Common Searches: how to write a DataTable to an existing Excel file with Aspose.Cells in C# | Aspose.Cells bulk data import into worksheet without triggering calculation | recalculate all formulas after inserting rows in an Excel workbook using Aspose.Cells | C# load workbook, add DataTable rows, then call CalculateFormula | disable automatic calculation during data import with Aspose.Cells C#
+// Tags: bulk import DataTable to Excel worksheet Aspose.Cells | calculate all formulas workbook.CalculateFormula Aspose.Cells | load existing workbook and write cells C# Aspose.Cells | disable automatic calculation mode Aspose.Cells | save modified workbook Output.xlsx Aspose.Cells
 
 using System;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads input.xlsx, optionally sets the workbook to manual calculation mode, imports a 1000 × 10 object array into the first worksheet at A1 using ImportTwoDimensionArray, restores automatic calculation, forces a full formula evaluation with CalculateFormula, and saves the result to output.xlsx while handling missing files and exceptions.
+// The example loads an existing Input.xlsx workbook, creates a DataTable with product information, writes the column headers and rows to the first worksheet starting at cell A1, forces a full recalculation of all formulas using workbook.CalculateFormula(), and saves the updated file as Output.xlsx, handling errors gracefully.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the input workbook exists
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
             return;
         }
 
@@ -27,27 +27,37 @@ class Program
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (or specify the desired one)
+            // Prepare bulk data (example DataTable)
+            DataTable table = new DataTable();
+            table.Columns.Add("Product", typeof(string));
+            table.Columns.Add("Quantity", typeof(int));
+            table.Columns.Add("Price", typeof(double));
+
+            // Populate the DataTable with sample rows
+            table.Rows.Add("Apple", 120, 0.5);
+            table.Rows.Add("Banana", 80, 0.3);
+            table.Rows.Add("Orange", 150, 0.4);
+
+            // Perform bulk import into the first worksheet starting at cell A1 (row 0, column 0)
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Example bulk data: a 2‑dimensional array of objects
-            int rows = 1000;
-            int cols = 10;
-            object[,] bulkData = new object[rows, cols];
-
-            // Populate the array with sample data (replace with real data as needed)
-            for (int i = 0; i < rows; i++)
+            // Write header
+            for (int col = 0; col < table.Columns.Count; col++)
             {
-                for (int j = 0; j < cols; j++)
+                cells[0, col].PutValue(table.Columns[col].ColumnName);
+            }
+
+            // Write data rows
+            for (int row = 0; row < table.Rows.Count; row++)
+            {
+                for (int col = 0; col < table.Columns.Count; col++)
                 {
-                    bulkData[i, j] = $"R{i + 1}C{j + 1}";
+                    cells[row + 1, col].PutValue(table.Rows[row][col]);
                 }
             }
 
-            // Import the array into the worksheet starting at cell A1 (row 0, column 0)
-            sheet.Cells.ImportTwoDimensionArray(bulkData, 0, 0);
-
-            // Force a full recalculation of all formulas in the workbook
+            // Force a full recalculation of all formulas
             workbook.CalculateFormula();
 
             // Save the modified workbook
@@ -56,7 +66,6 @@ class Program
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

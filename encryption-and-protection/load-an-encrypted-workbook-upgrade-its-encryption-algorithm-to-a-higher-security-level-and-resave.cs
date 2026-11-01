@@ -1,62 +1,50 @@
-// Title: Re‑encrypt a password‑protected XLSX workbook with a stronger AES‑256 password using Aspose.Cells for .NET
-// AI Prompts: Load an existing password‑protected XLSX file with LoadOptions, assign a new password to Workbook.Settings.Password (which applies AES‑256 encryption by default), and save the workbook to a new file. | Open an encrypted Excel workbook using its current password, replace the password to trigger a higher‑strength encryption algorithm, and write the upgraded file back to disk with Aspose.Cells.
-// Common Searches: Aspose.Cells C# load password protected XLSX and change to AES-256 | How to re‑encrypt an existing Excel workbook with a new password using Aspose.Cells | C# upgrade encryption algorithm of an encrypted workbook with Aspose.Cells | Replace old password with new one and apply stronger encryption in Aspose.Cells
-// Tags: aspnet cells load encrypted workbook | aspnet cells change workbook password | aspnet cells aes-256 encryption upgrade | aspnet cells save workbook with new password | excel file re-encrypt aspnet cells
+// Title: Upgrade the encryption algorithm of a password‑protected Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: asp.net load encrypted xlsx and save with stronger encryption using Aspose.Cells | c# upgrade encryption algorithm of a password‑protected Excel workbook with Aspose.Cells | re‑encrypt an existing encrypted workbook to default strong encryption Aspose.Cells .NET | how to change encryption level of an XLSX file in C# with Aspose.Cells | load workbook with password and save to apply new encryption settings Aspose.Cells
+// Tags: load encrypted workbook Aspose.Cells C# | upgrade Excel encryption algorithm Aspose.Cells | save workbook with default strong encryption Aspose.Cells | re‑encrypt XLSX file using Aspose.Cells .NET | change encryption level Aspose.Cells workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+// The example verifies the encrypted Excel file, loads it with the original password via LoadOptions, retains the password in the workbook settings, and saves the workbook. Saving automatically applies Aspose.Cells' default stronger encryption algorithm, effectively upgrading the workbook's protection.
+class Program
 {
-    // The example verifies the presence of an encrypted_input.xlsx file, loads it with the original password via LoadOptions, sets a new password on workbook.Settings.Password (which defaults to AES‑256 encryption), ensures the output directory exists, and saves the upgraded workbook as encrypted_upgraded.xlsx, handling any exceptions that may arise.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Paths to the source and destination workbooks
+            string inputPath = "EncryptedInput.xlsx";
+            string outputPath = "UpgradedEncryptedOutput.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Paths and passwords
-                string inputPath = "encrypted_input.xlsx";
-                string currentPassword = "oldPassword";
-                string newPassword = "newPassword";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the encrypted workbook using the current password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    Password = currentPassword
-                };
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Set new password for the workbook (default AES‑256 encryption)
-                workbook.Settings.Password = newPassword;
-
-                // Prepare output path
-                string outputPath = "encrypted_upgraded.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook with the new password
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook saved with upgraded encryption to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Password used to open the encrypted workbook
+            string password = "oldPassword";
+
+            // Load the encrypted workbook using LoadOptions with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                Password = password
+            };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Preserve the existing password (encryption algorithm will use the default strong algorithm)
+            workbook.Settings.Password = password;
+
+            // Save the workbook; the new encryption settings will be applied
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

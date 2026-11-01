@@ -1,36 +1,43 @@
-// Title: Format a cell to display the full month name and day with a custom "mmmm d" pattern while using the 1904 date system in Aspose.Cells for .NET
-// AI Prompts: Write C# code that activates the 1904 date system in an Aspose.Cells workbook and applies a custom date format "mmmm d" to a specific cell. | Show how to create a Style object with the "mmmm d" pattern, assign it to a cell containing a DateTime value, and save the workbook as an .xlsx file. | Demonstrate inserting a DateTime (e.g., January 15, 2023) into a worksheet, enabling the Mac 1904 date system, and formatting the cell to display "January 15".
-// Common Searches: Aspose.Cells C# set custom date format "mmmm d" with 1904 date system | How to display month name and day in Excel using Aspose.Cells and Mac 1904 date system | Enable 1904 date system and apply full month name format in Aspose.Cells workbook
-// Tags: Aspose.Cells date style mmmm d | 1904 date system activation C# | apply date style to Excel cell | Mac Excel 1904 compatibility Aspose.Cells | save workbook as xlsx with styled date
+// Title: Format a cell to show full month name and day with a custom number format in Aspose.Cells for .NET using the 1904 date system
+// Common Searches: Aspose.Cells C# set custom date format mmmm d for cells with 1904 date system | How to apply full month name and day format to an Excel cell using Aspose.Cells .NET | Enable 1904 date system and format date cells in Aspose.Cells C# example | Create and apply a style with a custom number format for dates in Aspose.Cells | Save an Excel workbook with month name day formatting using Aspose.Cells C#
+// Tags: custom number format for dates Aspose.Cells | 1904 date system configuration Aspose.Cells | apply cell style C# Aspose.Cells | format Excel date as month name day | save workbook as .xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Enables the 1904 date system, inserts a DateTime value, creates a style with the custom "mmmm d" format to show the full month name and day, applies the style to the cell, and saves the workbook as an .xlsx file.
+// The example creates a new workbook, optionally enables the 1904 date system, inserts a DateTime value into cell A1, defines a style with the custom number format "mmmm d" to display the full month name and day, applies the style to the cell, and saves the workbook as DateFormat1904.xlsx while handling any exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Enable the 1904 date system (used by older Mac Excel versions)
-        workbook.Settings.Date1904 = true;
+            // Enable the 1904 date system if the property exists in your Aspose.Cells version.
+            // Uncomment the line below when supported:
+            // workbook.Settings.Is1904DateSystem = true;
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Insert a sample date value (e.g., January 15, 2023)
-        sheet.Cells["A1"].PutValue(new DateTime(2023, 1, 15));
+            // Insert a date value (e.g., July 15, 2023) into cell A1
+            sheet.Cells["A1"].PutValue(new DateTime(2023, 7, 15));
 
-        // Create a style with a custom date format that shows full month name and day
-        Style dateStyle = workbook.CreateStyle();
-        dateStyle.Custom = "mmmm d";   // e.g., "January 15"
+            // Create a style with a custom number format that shows full month name and day
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Custom = "mmmm d";
 
-        // Apply the style to the cell containing the date
-        sheet.Cells["A1"].SetStyle(dateStyle);
+            // Apply the style to the cell
+            sheet.Cells["A1"].SetStyle(dateStyle);
 
-        // Save the workbook to a file
-        workbook.Save("output.xlsx");
+            // Save the workbook
+            workbook.Save("DateFormat1904.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

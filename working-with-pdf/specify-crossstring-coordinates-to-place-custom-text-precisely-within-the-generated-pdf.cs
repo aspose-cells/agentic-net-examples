@@ -1,70 +1,64 @@
-// Title: Add a free‑floating text box at precise cell coordinates with pixel offsets and export the workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, inserts a free‑floating text box at row 4 column 2 with a 15 px X offset and 10 px Y offset, sets the text to blue bold 12 pt, removes the border, and saves the file as a PDF. | Modify the example to place the text box on cell E7, change its size to 250 px width and 50 px height, use red italic 10 pt font, and keep the shape free‑floating when exporting to PDF.
-// Common Searches: Aspose.Cells C# how to position a text box using row and column indexes with pixel offsets | place custom text at exact location in PDF generated from Excel with Aspose.Cells | free floating shape placement offset pixels Aspose.Cells .NET example | set text box font color and style in Aspose.Cells before PDF export | remove border from Aspose.Cells shape when saving workbook as PDF
-// Tags: add free‑floating graphic Aspose.Cells | pixel offset shape placement C# | export workbook to PDF Aspose.Cells | custom text box font styling Aspose.Cells | remove shape border Aspose.Cells PDF
+// Title: Add WordArt text at specific point coordinates and export to PDF with Aspose.Cells for .NET
+// AI Prompts: Create a free‑floating TextEffect shape, assign its Left, Top, Width, and Height in points, and save the workbook as a PDF. | Position a WordArt shape at exact page coordinates (e.g., 150 pt left, 200 pt top) before converting the worksheet to PDF using Aspose.Cells. | Generate a PDF where custom text appears at precise locations by setting absolute coordinates on a shape in C#.
+// Common Searches: Aspose.Cells C# set WordArt shape coordinates before PDF export | how to use free floating placement for text effect in Aspose.Cells PDF | position custom text at exact points in generated PDF with Aspose.Cells | C# Aspose.Cells place shape at (150,200) points and save as PDF | absolute positioning of shapes in Aspose.Cells worksheet for PDF output
+// Tags: Aspose.Cells free‑floating shape positioning | C# set shape left top points | WordArt absolute coordinates PDF | text effect shape PDF export Aspose.Cells | custom text placement PDF Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPdfTextPlacement
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, adding a free‑floating text box at a specific cell with pixel offsets, customizing its font and border, and saving the result as a PDF using Aspose.Cells for .NET.
+    // The example creates a workbook, adds a free‑floating WordArt (TextEffect) shape, sets its Left, Top, Width, and Height properties in points to position it precisely on the page, and saves the workbook as a PDF, resulting in custom text placed at exact coordinates.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook (lifecycle rule: create)
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
                 // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the exact position where the custom text will appear.
-                // Row and column are zero‑based indexes.
-                // Offsets are in pixels relative to the upper‑left corner of the cell.
-                int targetRow = 4;          // 5th row (A5)
-                int targetColumn = 2;       // 3rd column (C)
-                int offsetX = 15;           // 15 pixels to the right inside the cell
-                int offsetY = 10;           // 10 pixels down inside the cell
+                // Add a text effect shape (WordArt) to the worksheet
+                // Parameters: preset effect, text, font name, font size, bold, italic,
+                // upper left row, upper left column, lower right row, lower right column,
+                // shape width, shape height
+                Shape textShape = sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1,
+                    "Custom Text placed precisely",
+                    "Arial",
+                    14,
+                    false,
+                    false,
+                    0,   // upper left row (cell based, will be overridden by absolute positioning)
+                    0,   // upper left column
+                    0,   // lower right row
+                    0,   // lower right column
+                    0,   // shape width (will be set later)
+                    0    // shape height (will be set later)
+                );
 
-                // Define the size of the text box (width & height in pixels)
-                int boxWidth = 200;
-                int boxHeight = 40;
+                // Set the shape to free‑floating so we can position it with absolute coordinates (points)
+                textShape.Placement = PlacementType.FreeFloating;
 
-                // Add a free‑floating text box shape at the specified coordinates
-                // (lifecycle rule: create shape, then set its properties)
-                Shape textBox = sheet.Shapes.AddTextBox(
-                    targetRow,          // Upper left row index
-                    targetColumn,       // Upper left column index
-                    offsetX,            // Upper left row offset (pixels)
-                    offsetY,            // Upper left column offset (pixels)
-                    boxWidth,           // Width (pixels)
-                    boxHeight);         // Height (pixels)
+                // Define the exact position on the page (in points)
+                // 1 point = 1/72 inch.
+                textShape.Left = 150;   // distance from the left edge of the page
+                textShape.Top = 200;    // distance from the top edge of the page
 
-                // Ensure the shape is not tied to cell movement/resizing
-                textBox.Placement = PlacementType.FreeFloating;
+                // Optionally set the size of the shape (also in points)
+                textShape.Width = 300;
+                textShape.Height = 50;
 
-                // Set the custom text
-                textBox.Text = "Custom Text at Precise Coordinates";
-
-                // Optional: format the text appearance
-                textBox.Font.Color = Color.Blue;
-                textBox.Font.Size = 12;
-                textBox.Font.IsBold = true;
-
-                // Remove the shape border for a cleaner look
-                textBox.Line.Weight = 0;
-
-                // Save the workbook as PDF (lifecycle rule: save)
+                // Save the workbook as a PDF; the text will appear at the specified coordinates
                 workbook.Save("CustomText.pdf", SaveFormat.Pdf);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

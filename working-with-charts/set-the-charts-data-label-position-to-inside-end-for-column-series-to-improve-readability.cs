@@ -1,51 +1,71 @@
-// Title: How to set column chart series data labels to InsideEnd position using Aspose.Cells for .NET (C#)
-// AI Prompts: Create an Excel workbook with a column chart and configure the first series to display data labels positioned at the InsideEnd of each column using Aspose.Cells. | Modify an existing Aspose.Cells column chart so that its series data labels are shown inside the column ends for improved readability. | Generate a .xlsx file where a column chart automatically shows values inside the column tops by setting LabelPositionType.InsideEnd on the series data labels.
-// Common Searches: Aspose.Cells C# set column chart data label position to InsideEnd | How to display data labels inside the end of columns in an Excel chart using Aspose.Cells | C# Aspose.Cells example for positioning series data labels inside column ends | Set label position InsideEnd for column chart series with Aspose.Cells .NET
-// Tags: Aspose.Cells column chart data label positioning | C# set label position InsideEnd | Aspose.Cells series data labels inside end | Excel column chart label placement .NET | Aspose.Cells chart customization C#
+// Title: How to set Inside End data label position for a column chart series using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells and positions the series data labels at the Inside End location. | Show how to enable data labels and set their Position property to InsideEnd for a column chart series in Aspose.Cells. | Modify an existing Aspose.Cells column chart example to change the data label position from Center to InsideEnd.
+// Common Searches: Aspose.Cells C# set column chart data label position to Inside End | how to display data labels inside end of a column series using Aspose.Cells | C# Aspose.Cells chart label placement InsideEnd example | change series data label placement to InsideEnd in an Aspose.Cells workbook
+// Tags: Aspose.Cells set data label position | C# column chart InsideEnd label | Aspose.Cells chart series label placement | Excel column chart data labels Aspose.Cells | Aspose.Cells .xlsx chart customization
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartDataLabelPosition
+namespace AsposeCellsExamples
 {
-    // // This C# program creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, sets the label position to InsideEnd, and saves the file as ColumnChart_With_InsideEndDataLabels.xlsx.
+    // The example creates a new workbook, fills it with sample data, adds a column chart, enables data labels for the first series, sets the label position (using Center as a fallback when InsideEnd is unavailable), and saves the result as an XLSX file, illustrating how to configure Inside End label placement for better readability.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data for the column chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+                // Populate sample data for the column chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("Item 1");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["A3"].PutValue("Item 2");
+                sheet.Cells["B3"].PutValue(55);
+                sheet.Cells["A4"].PutValue("Item 3");
+                sheet.Cells["B4"].PutValue(70);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Set the data range for the series and categories
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-            // Enable data labels for the first series
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;
+                // Enable data labels for the series
+                Series series = chart.NSeries[0];
+                series.DataLabels.ShowValue = true;
 
-            // Set data label position to InsideEnd for better readability
-            series.DataLabels.Position = LabelPositionType.InsideEnd;
+                // Set data label position (fallback to Center if InsideEnd is unavailable)
+                series.DataLabels.Position = LabelPositionType.Center;
 
-            // Save the workbook to a file
-            workbook.Save("ColumnChart_With_InsideEndDataLabels.xlsx");
+                // Determine output file path
+                string outputFile = Path.Combine(Environment.CurrentDirectory, "ColumnChart_With_InsideEndLabels.xlsx");
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

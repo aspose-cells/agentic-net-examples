@@ -1,43 +1,42 @@
-// Title: Generate a PDF from an Excel workbook and keep cell comments as PDF annotations with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, validates its existence, and saves it as a PDF where each cell comment becomes a PDF annotation. | Show how to configure PdfSaveOptions in Aspose.Cells to include cell comments when converting a workbook to PDF. | Create a resilient example that catches exceptions during Excel‑to‑PDF conversion and confirms that comments appear as annotations in the resulting PDF.
-// Common Searches: how to export an .xlsx to PDF while preserving cell comments using Aspose.Cells C# | Aspose.Cells PDF conversion keep Excel notes as annotations .NET | PdfSaveOptions include comments when saving workbook to PDF in C# | preserve Excel cell comments in generated PDF with Aspose.Cells library
-// Tags: Aspose.Cells PDF export with comments | C# save workbook as PDF annotations | PdfSaveOptions include cell notes | export Excel comments to PDF using Aspose | convert .xlsx to PDF preserving annotations
+// Title: Convert an Excel workbook to PDF with cell comments retained as PDF annotations using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, verifies the file exists, and saves it as a PDF while automatically converting cell comments into PDF annotations. | Show how to configure PdfSaveOptions in Aspose.Cells to customize the rendering of comment annotations during Excel‑to‑PDF conversion. | Create robust error‑handling for the workbook‑to‑PDF process that logs missing input files and captures exceptions thrown by Aspose.Cells.
+// Common Searches: Aspose.Cells .NET how to keep Excel cell comments when saving as PDF | C# convert .xlsx to PDF preserving comments as annotations | PdfSaveOptions comment handling Aspose.Cells example | Check if Excel file exists before converting to PDF with Aspose.Cells | Export Excel workbook to PDF with comment annotations using Aspose.Cells
+// Tags: Aspose.Cells Excel to PDF conversion with comments | PdfSaveOptions comment annotation settings | C# workbook file existence validation | Export XLSX to PDF preserving annotations | Aspose.Cells error handling during PDF export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for the input Excel file, loads it with Aspose.Cells, and saves it as a PDF using PdfSaveOptions, which automatically embeds cell comments as PDF annotations.
+// // This C# program checks that 'input.xlsx' exists, loads it with Aspose.Cells, and saves it as 'output.pdf' using PdfSaveOptions, which automatically includes cell comments as PDF annotations.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook from the file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (default behavior includes comments as annotations)
+            // Configure PDF save options (comments are preserved by default)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as a PDF file with the specified options
+            // Save the workbook as PDF
             workbook.Save(outputPath, pdfOptions);
-
             Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

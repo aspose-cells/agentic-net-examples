@@ -1,50 +1,59 @@
-// Title: How to export an Excel workbook to PDF with each worksheet on a separate page using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file and saves it as a PDF with one page per worksheet using Aspose.Cells. | Show how to configure PdfSaveOptions for OnePagePerSheet and apply it when calling Workbook.Save in a .NET application.
-// Common Searches: how to save Excel as PDF with one page per sheet using Aspose.Cells .NET | Aspose.Cells PdfSaveOptions OnePagePerSheet example C# | convert .xlsx to .pdf with Aspose.Cells SaveFormat.Pdf | set PDF/A compliance when exporting workbook to PDF using Aspose.Cells
-// Tags: per-sheet pagination option | Aspose.Cells Excel to PDF conversion | C# workbook PDF export | PDF/A level option | separate PDF page per worksheet
+// Title: Save an Excel workbook as a single‑page PDF with Aspose.Cells for .NET using PdfSaveOptions
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures the PDF export so that each worksheet is rendered on a single page, and saves the workbook as a PDF. | Provide a C# example that checks whether the output directory exists (creating it if missing) and applies PDF/A‑1b compliance before calling Workbook.Save to generate a PDF.
+// Common Searches: How to make each sheet fit on a single PDF page using Aspose.Cells in C# | Setting PDF/A‑1b compliance when converting Excel to PDF with Aspose.Cells .NET | C# create missing directory before saving PDF with Aspose.Cells Workbook.Save | PdfSaveOptions example for one‑page‑per‑sheet export in Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | Aspose.Cells export Excel to PDF .NET | PDF/A compliance Aspose.Cells | C# ensure output directory exists Aspose.Cells | Workbook.Save PDF Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program checks for an input.xlsx file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to place each worksheet on its own PDF page (OnePagePerSheet = true), and saves the result as output.pdf while handling any exceptions.
+// The sample loads an Excel file with Aspose.Cells, sets PdfSaveOptions to place each worksheet on a single PDF page (optionally enabling PDF/A‑1b compliance), ensures the output folder exists, and saves the workbook as a PDF.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Define input and output file paths
+            // Path to the source Excel file
             string inputPath = "input.xlsx";
-            string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure PDF export options
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Uncomment the following line if the PdfCompliance enum is available in your Aspose.Cells version
+            // pdfOptions.Compliance = Aspose.Cells.PdfCompliance.PdfA1b;
+
+            // Fit each worksheet on a single page
+            pdfOptions.OnePagePerSheet = true;
+
+            // Path for the output PDF file
+            string outputPath = "output.pdf";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Export each worksheet to a separate page
-                OnePagePerSheet = true
-                // PDF/A compliance can be set here if supported by the library version
-                // Compliance = PdfCompliance.PdfA1b
-            };
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook as PDF using the configured options
-            workbook.Save(outputPath, pdfSaveOptions);
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

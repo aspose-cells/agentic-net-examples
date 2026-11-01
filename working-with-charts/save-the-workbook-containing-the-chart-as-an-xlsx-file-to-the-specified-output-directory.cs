@@ -1,32 +1,59 @@
-// Title: Save an existing workbook that contains a chart as an XLSX file to a specific output folder using Aspose.Cells for .NET
-// AI Prompts: Load a workbook that includes a chart and export it to a given directory as an XLSX file with Aspose.Cells in C#. | Create the destination folder if it does not exist, then save the opened workbook using SaveFormat.Xlsx to the target path. | Write C# code that opens a source Excel file, ensures the output directory is present, and writes the workbook containing charts to that location with Aspose.Cells.
-// Common Searches: Aspose.Cells C# save workbook with chart to custom folder | How to export an Excel file that contains charts to a specific directory using Aspose.Cells | Create output directory before saving workbook as XLSX in .NET | Load existing Excel workbook and save as XLSX with Aspose.Cells SaveFormat.Xlsx
-// Tags: save workbook with chart Aspose.Cells | export Excel to custom directory C# | Aspose.Cells SaveFormat.Xlsx usage | ensure output folder exists C# | load existing workbook Aspose.Cells
+// Title: Save an Aspose.Cells workbook containing a column chart to a chosen directory as an XLSX file using C#
+// AI Prompts: Generate C# code that creates a new workbook, fills sample data, adds a column chart, and saves the file as XLSX to a user‑specified folder with Aspose.Cells. | Adapt the example to insert a line chart, name the output file with the current date, and write it to a configurable path using Aspose.Cells in .NET.
+// Common Searches: asp.net aspocells create column chart and save workbook to custom folder | c# how to export an Excel file with a chart to a specific directory using Aspose.Cells | save workbook with chart as xlsx programmatically Aspose.Cells .NET | specify output path when saving Aspose.Cells workbook containing a chart | example of adding a chart to a worksheet and writing the file to C:\Data folder with Aspose.Cells
+// Tags: create column chart Aspose.Cells C# | save workbook as xlsx Aspose.Cells | specify output directory Aspose.Cells | add chart to worksheet Aspose.Cells | export chart workbook .NET
 
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// // Loads a workbook that already has a chart, creates the target output folder if needed, and saves the workbook as an XLSX file to the specified path using Aspose.Cells.
+// The program builds a new workbook, populates cells A1:B4 with sample data, inserts a column chart based on the values, and saves the workbook as 'ChartWorkbook.xlsx' in the specified output directory.
 class Program
 {
     static void Main()
     {
-        // Specify the output directory where the XLSX file will be saved
-        string outputDirectory = @"C:\Output";
+        try
+        {
+            // Output directory for the generated workbook
+            string outputDir = @"C:\Output";
 
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputDirectory);
+            // Ensure the output directory exists
+            Directory.CreateDirectory(outputDir);
 
-        // Define the full path for the saved workbook
-        string outputPath = Path.Combine(outputDirectory, "ChartWorkbook.xlsx");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Load the workbook that already contains the chart
-        // (Replace the source path with the actual location of your workbook)
-        string sourceWorkbookPath = @"C:\Input\SourceWorkbook.xlsx";
-        Workbook workbook = new Workbook(sourceWorkbookPath);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as an XLSX file to the specified output directory
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true); // Values series
+            // Category data can be set via CategoryData property if available.
+            // If the property is not present in the used version, the chart will use default categories.
+
+            // Build full file path
+            string filePath = Path.Combine(outputDir, "ChartWorkbook.xlsx");
+
+            // Save the workbook
+            workbook.Save(filePath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to: {filePath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

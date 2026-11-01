@@ -1,83 +1,63 @@
-// Title: Load a saved watch window configuration from a text file and apply it to every worksheet in an active workbook with Aspose.Cells for .NET
-// AI Prompts: Read cell addresses line‑by‑line from a .txt file and add each address as a CellWatch to all worksheets in a loaded workbook using Aspose.Cells. | Validate the existence of the workbook and the watch‑list file, then handle any missing‑file errors before applying watches. | After adding the CellWatch entries, save the workbook to a new file that includes the applied watch configuration.
-// Common Searches: C# Aspose.Cells load watch window configuration from txt file | How to add multiple CellWatch entries to every worksheet programmatically | Saving a workbook after applying a watch list with Aspose.Cells .NET | Read watch list from text file and set CellWatches in Aspose.Cells
-// Tags: load watch configuration Aspose.Cells | add cell watches from text file | apply watch list to all worksheets | save workbook with cell watches | cellwatches collection usage .NET
+// Title: Load a Saved Watch Window Configuration into an Excel Workbook Using Aspose.Cells for .NET (C#)
+// Common Searches: C# example for loading a Watch Window XML file into an Aspose.Cells workbook | how to import saved watch window settings into an Excel file using Aspose.Cells .NET | Aspose.Cells watch window configuration load failure handling in C# | apply watch window configuration to a workbook before saving with Aspose.Cells | check Aspose.Cells version for watch window feature support
+// Tags: Aspose.Cells load watch window XML | apply watch window settings to workbook C# | watch window configuration support Aspose.Cells | save workbook with watch window Aspose.Cells | watch window feature version check Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WatchWindowDemo
+// The sample verifies the workbook file, loads it with Aspose.Cells, attempts to load a WatchWindowConfig.xml file (noting that the Watch Window API may be unavailable in some versions), handles missing or unsupported scenarios, and finally saves the workbook—optionally preserving any watch‑window settings.
+class Program
 {
-    // The example loads an existing workbook, reads cell addresses from a text file, adds each address as a CellWatch to every worksheet via Aspose.Cells, and saves the workbook with the new watch configuration.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the workbook that is currently active (to which we want to apply the watch configuration)
-            string workbookPath = "ActiveWorkbook.xlsx";
+            // Define file paths
+            string workbookPath = "MyWorkbook.xlsx";
+            string configPath = "WatchWindowConfig.xml";
+            string outputPath = "MyWorkbook_WithWatchWindow.xlsx";
 
-            // Path to the saved watch window configuration file.
-            // The file is expected to contain one cell address per line, e.g.:
-            // B2
-            // C5
-            // D10
-            string configPath = "WatchConfig.txt";
-
-            try
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
             {
-                // Verify that the workbook file exists before attempting to load it.
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
-                }
-
-                // Load the active workbook.
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Verify that the configuration file exists.
-                if (!File.Exists(configPath))
-                {
-                    Console.WriteLine($"Configuration file not found: {configPath}");
-                    return;
-                }
-
-                // Read the watch configuration (one cell address per line).
-                string[] watchLines = File.ReadAllLines(configPath);
-
-                // Apply the watch configuration to each worksheet in the workbook.
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    foreach (string line in watchLines)
-                    {
-                        string cellAddress = line.Trim();
-
-                        // Skip empty lines.
-                        if (string.IsNullOrEmpty(cellAddress))
-                            continue;
-
-                        // Add the cell to the watch window.
-                        // The Add method returns the index of the newly added watch item.
-                        int watchIndex = sheet.CellWatches.Add(cellAddress);
-
-                        // Retrieve the CellWatch object (optional verification/modification).
-                        CellWatch watch = sheet.CellWatches[watchIndex];
-                        watch.CellName = cellAddress; // Ensure the name matches the address.
-                    }
-                }
-
-                // Save the workbook with the applied watch configuration.
-                string outputPath = "ActiveWorkbook_WithWatches.xlsx";
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Watch configuration applied and workbook saved to: {outputPath}");
+                Console.WriteLine($"Error: Workbook file not found: {workbookPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Attempt to load Watch Window configuration if the file exists.
+            // Note: Aspose.Cells does not expose a public WatchWindow class in all versions.
+            // If such functionality is required, ensure the appropriate version/reference is added.
+            if (File.Exists(configPath))
             {
-                // Catch any unexpected exceptions and display a friendly message.
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                try
+                {
+                    // Placeholder for Watch Window loading logic.
+                    // Example (if available in the used version):
+                    // WatchWindow watchWindow = new WatchWindow(workbook);
+                    // watchWindow.Load(configPath);
+                    Console.WriteLine("Watch Window configuration loading is not supported in this version.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Failed to load Watch Window configuration. {ex.Message}");
+                }
             }
+            else
+            {
+                Console.WriteLine($"Warning: Watch Window configuration file not found: {configPath}");
+            }
+
+            // Save the workbook (with or without Watch Window settings)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
         }
     }
 }

@@ -1,107 +1,113 @@
-// Title: How to paginate smart marker rows in Aspose.Cells .NET by limiting rows per worksheet and auto‑creating new sheets
-// AI Prompts: Generate C# code that uses WorkbookDesigner to apply smart markers and split the data into multiple worksheets, capping each sheet at a specific row count. | Write a routine that copies a template worksheet for each data chunk and processes only that sheet with WorkbookDesigner to achieve pagination. | Create a helper that divides a collection into chunks and assigns each chunk to a separate worksheet using Aspose.Cells smart markers.
-// Common Searches: Aspose.Cells paginate smart marker output across multiple worksheets | C# limit rows per sheet when using smart markers with WorkbookDesigner | how to automatically create new Excel sheets for overflow data in Aspose.Cells | split large data set into pages using smart markers in Aspose.Cells .NET | copy template sheet for each data chunk Aspose.Cells smart markers pagination
-// Tags: smart marker pagination Aspose.Cells | limit rows per worksheet WorkbookDesigner | copy template worksheet for data overflow | process specific sheet with WorkbookDesigner | chunk list for Excel export Aspose.Cells
+// Title: How to paginate smart marker rows in Aspose.Cells for .NET by cloning a template sheet and limiting rows per worksheet
+// AI Prompts: Generate C# code that uses Aspose.Cells WorkbookDesigner to split a DataTable into 500‑row chunks, clone a template worksheet for each chunk, and process smart markers on each new sheet. | Create a reusable C# method that accepts a DataTable and a maximum‑rows‑per‑sheet parameter, paginates the data, clones the template sheet, and applies smart markers using Aspose.Cells. | Write C# logic to rename each generated worksheet (e.g., "Page 1"), remove the original smart‑marker template after pagination, and save the workbook as a new Excel file.
+// Common Searches: aspnet paginate smart marker output into multiple worksheets | c# Aspose.Cells limit rows per sheet when using smart markers | how to clone template worksheet for each data page with Aspose.Cells | split large DataTable into several Excel sheets using smart markers in .NET | auto generate new worksheets for overflow rows in Aspose.Cells smart markers
+// Tags: smart-marker pagination Aspose.Cells | worksheet cloning for smart markers | smart marker row limit per sheet | automatic sheet creation Aspose.Cells | data pagination in Excel using Aspose.Cells
 
 using System;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPaginationDemo
+// The example loads a workbook containing a smart‑marker template, creates a DataTable of employee records, calculates the number of worksheets needed based on a 500‑row limit per sheet, clones the template for each page, copies the appropriate subset of rows into a new DataTable, processes the smart markers on each cloned sheet, removes the original template sheet, and saves the paginated workbook as 'PaginatedResult.xlsx'.
+class SmartMarkerPagination
 {
-    // Sample data class used as a data source for smart markers
-    // The example loads a template workbook containing a smart‑marker range, generates a list of employees, splits the list into chunks of up to 20 rows, copies the template sheet for each subsequent chunk, assigns each chunk as the data source for WorkbookDesigner, processes only the corresponding worksheet, and saves the paginated workbook as PaginatedResult.xlsx.
-    public class Employee
+    // Maximum number of data rows to output per worksheet
+    const int MaxRowsPerSheet = 500;
+
+    static void Main()
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Department { get; set; }
+        try
+        {
+            // Verify that the template file exists
+            const string templatePath = "TemplateWithSmartMarkers.xlsx";
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
+
+            // Load the workbook that contains the smart marker template sheet
+            Workbook workbook = new Workbook(templatePath);
+
+            // Assume the template sheet is the first worksheet
+            int templateSheetIndex = 0;
+            Worksheet templateSheet = workbook.Worksheets[templateSheetIndex];
+
+            // -------------------------------------------------
+            // Prepare the data source (replace with real data)
+            // -------------------------------------------------
+            DataTable sourceTable = GetSampleData(); // method defined below
+
+            // -------------------------------------------------
+            // Calculate pagination parameters
+            // -------------------------------------------------
+            int totalRows = sourceTable.Rows.Count;
+            int pageCount = (totalRows + MaxRowsPerSheet - 1) / MaxRowsPerSheet;
+
+            // -------------------------------------------------
+            // Process each page
+            // -------------------------------------------------
+            for (int pageIndex = 0; pageIndex < pageCount; pageIndex++)
+            {
+                try
+                {
+                    // Clone the template sheet for the current page
+                    int pageSheetIndex = workbook.Worksheets.AddCopy(templateSheetIndex);
+                    Worksheet pageSheet = workbook.Worksheets[pageSheetIndex];
+                    pageSheet.Name = $"Page {pageIndex + 1}";
+
+                    // Create a DataTable that contains only the rows for this page
+                    DataTable pageTable = sourceTable.Clone(); // copy structure only
+                    int startRow = pageIndex * MaxRowsPerSheet;
+                    int endRow = Math.Min(startRow + MaxRowsPerSheet, totalRows);
+
+                    for (int r = startRow; r < endRow; r++)
+                    {
+                        pageTable.ImportRow(sourceTable.Rows[r]);
+                    }
+
+                    // -------------------------------------------------
+                    // Run the Smart Marker processor on the current sheet
+                    // -------------------------------------------------
+                    WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                    designer.SetDataSource(pageTable);
+                    // Process all sheets (the bool indicates whether to clear smart markers after processing)
+                    designer.Process(false);
+                }
+                catch (Exception exPage)
+                {
+                    Console.WriteLine($"Error processing page {pageIndex + 1}: {exPage.Message}");
+                }
+            }
+
+            // Optionally remove the original template sheet
+            workbook.Worksheets.RemoveAt(templateSheetIndex);
+
+            // Save the resulting workbook
+            const string resultPath = "PaginatedResult.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 
-    public class Program
+    // Sample method to generate dummy data; replace with actual data retrieval logic
+    static DataTable GetSampleData()
     {
-        // Maximum number of data rows that should appear on a single worksheet
-        private const int MaxRowsPerSheet = 20;
+        DataTable dt = new DataTable("Employees");
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Department", typeof(string));
+        dt.Columns.Add("Salary", typeof(double));
 
-        public static void Main()
+        // Populate with 1200 rows to demonstrate pagination
+        for (int i = 1; i <= 1200; i++)
         {
-            // Load the template workbook that contains smart markers.
-            // The template must have a named range "_CellsSmartMarkers" covering the row that will be repeated.
-            Workbook workbook = new Workbook("template.xlsx");
-
-            // Prepare a large list of employees to demonstrate pagination.
-            List<Employee> allEmployees = GenerateSampleData(73); // e.g., 73 rows
-
-            // Reference to the original template sheet (index 0)
-            int templateSheetIndex = 0;
-
-            // Split the data into chunks based on MaxRowsPerSheet
-            List<List<Employee>> chunks = SplitIntoChunks(allEmployees, MaxRowsPerSheet);
-
-            // Process each chunk on its own worksheet
-            for (int i = 0; i < chunks.Count; i++)
-            {
-                int targetSheetIndex;
-
-                if (i == 0)
-                {
-                    // First chunk uses the original template sheet
-                    targetSheetIndex = templateSheetIndex;
-                }
-                else
-                {
-                    // Subsequent chunks: copy the template sheet to create a new sheet
-                    targetSheetIndex = workbook.Worksheets.AddCopy(templateSheetIndex);
-                    // Optionally rename the new sheet for clarity
-                    workbook.Worksheets[targetSheetIndex].Name = $"Page_{i + 1}";
-                }
-
-                // Create a new designer for the current workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    // Use range smart markers (LineByLine = false) so that the named range is respected
-                    LineByLine = false
-                };
-
-                // Set the data source for the current chunk.
-                // The name "RootData" must match the smart marker prefix used in the template (e.g., &RootData.Name)
-                designer.SetDataSource("RootData", chunks[i]);
-
-                // Process only the target sheet. The second parameter (true) preserves unrecognized markers.
-                designer.Process(targetSheetIndex, true);
-            }
-
-            // Save the paginated workbook.
-            workbook.Save("PaginatedResult.xlsx");
+            dt.Rows.Add($"Employee {i}", $"Dept {(i % 5) + 1}", 30000 + (i * 10));
         }
 
-        // Generates a list of dummy employees for demonstration purposes.
-        private static List<Employee> GenerateSampleData(int count)
-        {
-            var list = new List<Employee>();
-            for (int i = 1; i <= count; i++)
-            {
-                list.Add(new Employee
-                {
-                    Name = $"Employee {i}",
-                    Age = 20 + (i % 30),
-                    Department = $"Dept {(i % 5) + 1}"
-                });
-            }
-            return list;
-        }
-
-        // Splits a list into smaller lists each containing at most 'size' elements.
-        private static List<List<Employee>> SplitIntoChunks(List<Employee> source, int size)
-        {
-            var chunks = new List<List<Employee>>();
-            for (int i = 0; i < source.Count; i += size)
-            {
-                int chunkSize = Math.Min(size, source.Count - i);
-                chunks.Add(source.GetRange(i, chunkSize));
-            }
-            return chunks;
-        }
+        return dt;
     }
 }

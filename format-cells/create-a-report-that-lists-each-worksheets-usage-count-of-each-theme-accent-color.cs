@@ -1,111 +1,144 @@
-// Title: Create a per‑worksheet theme accent color usage report in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that scans every cell in each worksheet, determines the ThemeColor (Accent1‑Accent6) of the cell’s style, and records the count of each accent in a new summary sheet. | Replace the placeholder logic that increments only Accent1 with proper ThemeColor detection, ensuring cells without a theme color are ignored. | Extend the generated report to include total styled cells per worksheet and compute the percentage of each accent color, adding these columns to the summary sheet. | Add robust error handling to verify the input file exists and to exclude the report worksheet from the counting loop.
-// Common Searches: aspocells c# count theme accent colors in each worksheet | how to generate Excel report of theme accent usage with Aspose.Cells | retrieve cell ThemeColor enum using Aspose.Cells .NET | add summary worksheet with color statistics in Aspose.Cells | calculate percentage of theme accent colors per sheet Aspose.Cells C#
-// Tags: Aspose.Cells count theme accent colors | C# generate Excel color usage report | Aspose.Cells retrieve cell ThemeColor | Excel workbook add summary worksheet .NET | calculate accent color percentages Aspose.Cells
+// Title: Generate a per‑worksheet theme accent color usage report in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells count how many cells use Accent1‑Accent6 theme colors in each worksheet | Create a summary sheet that lists theme accent color frequencies per worksheet with Aspose.Cells | How to iterate over cell styles to collect theme color statistics in an Excel file using Aspose.Cells | Aspose.Cells generate report of font, foreground and background theme accent usage across sheets | Save a new worksheet with theme color usage counts using Aspose.Cells .NET
+// Tags: theme accent color counting with Aspose.Cells | worksheet level theme color statistics | add summary worksheet for accent usage | iterate cell styles for theme colors C# | export accent count report to new sheet | Aspose.Cells theme color analysis Excel
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace ThemeAccentUsageReport
+namespace ThemeColorUsageReport
 {
-    // The sample loads an existing Excel file, adds a new worksheet named "ThemeAccentUsageReport", and iterates through each original worksheet. For every cell it (currently) counts styled cells under Accent1 as a placeholder. The intended logic is to detect each of the six theme accent colors, tally their occurrences, and write the counts (and optionally percentages) to the summary sheet before saving the workbook.
+    // The example loads an input .xlsx file with Aspose.Cells, scans every cell in each worksheet's used range, tallies occurrences of the six theme accent colors (Accent1‑Accent6) found in font, foreground, or background styles, writes the counts to a newly added worksheet named "ThemeColorUsageReport", and saves the workbook to the specified output path.
     class Program
     {
         static void Main(string[] args)
         {
-            // Paths for input and output workbooks
-            string inputPath = "input.xlsx";   // TODO: replace with actual input file path
-            string outputPath = "output.xlsx"; // TODO: replace with desired output file path
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
             try
             {
-                // Verify that the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
+                // Load the source workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Add a new worksheet for the report
-                int reportIndex = workbook.Worksheets.Add();
-                Worksheet reportSheet = workbook.Worksheets[reportIndex];
-                reportSheet.Name = "ThemeAccentUsageReport";
+                // Prepare a list to hold usage data for each worksheet
+                var usageData = new List<WorksheetUsage>();
 
-                // Prepare header row in the report sheet
-                int reportRow = 0;
-                reportSheet.Cells[reportRow, 0].PutValue("Worksheet");
-                for (int i = 1; i <= 6; i++)
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    reportSheet.Cells[reportRow, i].PutValue($"Accent{i}");
-                }
+                    // Initialize counters for the six theme accent colors
+                    int[] accentCounts = new int[6]; // Index 0 => Accent1, 1 => Accent2, ...
 
-                // Iterate through each worksheet (excluding the report sheet)
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    if (ws.Name == reportSheet.Name)
-                        continue; // skip the report sheet itself
+                    // Determine the used range to limit iteration
+                    int maxRow = sheet.Cells.MaxDataRow;
+                    int maxCol = sheet.Cells.MaxDataColumn;
 
-                    // Initialize counters for each accent color (using string keys to avoid ThemeColor enum)
-                    Dictionary<string, int> accentCounts = new Dictionary<string, int>
-                    {
-                        { "Accent1", 0 },
-                        { "Accent2", 0 },
-                        { "Accent3", 0 },
-                        { "Accent4", 0 },
-                        { "Accent5", 0 },
-                        { "Accent6", 0 }
-                    };
-
-                    // Determine the used range of the worksheet
-                    int maxRow = ws.Cells.MaxDataRow;
-                    int maxCol = ws.Cells.MaxDataColumn;
-
-                    // Scan all cells in the used range
+                    // Scan each cell within the used range
                     for (int row = 0; row <= maxRow; row++)
                     {
                         for (int col = 0; col <= maxCol; col++)
                         {
-                            Cell cell = ws.Cells[row, col];
-                            if (cell == null)
-                                continue;
+                            Cell cell = sheet.Cells[row, col];
+                            if (cell == null) continue;
 
-                            // Retrieve the cell's style
                             Style style = cell.GetStyle();
 
-                            // NOTE: The ThemeColor enum is not available in the current Aspose.Cells version.
-                            // As a fallback, we simply count every styled cell under Accent1.
-                            // This placeholder logic can be replaced with proper ThemeColor handling when supported.
-                            if (style != null)
+                            // Check font theme color
+                            if (IsAccentThemeColor(style.Font.ThemeColor, out int accentIndex))
                             {
-                                accentCounts["Accent1"]++;
+                                accentCounts[accentIndex]++;
+                            }
+
+                            // Check foreground (pattern) theme color if set
+                            if (IsAccentThemeColor(style.ForegroundThemeColor, out accentIndex))
+                            {
+                                accentCounts[accentIndex]++;
+                            }
+
+                            // Check background theme color if set
+                            if (IsAccentThemeColor(style.BackgroundThemeColor, out accentIndex))
+                            {
+                                accentCounts[accentIndex]++;
                             }
                         }
                     }
 
-                    // Write the results to the report sheet
-                    reportRow++;
-                    reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                    reportSheet.Cells[reportRow, 1].PutValue(accentCounts["Accent1"]);
-                    reportSheet.Cells[reportRow, 2].PutValue(accentCounts["Accent2"]);
-                    reportSheet.Cells[reportRow, 3].PutValue(accentCounts["Accent3"]);
-                    reportSheet.Cells[reportRow, 4].PutValue(accentCounts["Accent4"]);
-                    reportSheet.Cells[reportRow, 5].PutValue(accentCounts["Accent5"]);
-                    reportSheet.Cells[reportRow, 6].PutValue(accentCounts["Accent6"]);
+                    // Store the results for this worksheet
+                    usageData.Add(new WorksheetUsage
+                    {
+                        WorksheetName = sheet.Name,
+                        AccentCounts = accentCounts
+                    });
+                }
+
+                // Add a new worksheet to hold the report
+                int reportIndex = workbook.Worksheets.Add();
+                Worksheet reportSheet = workbook.Worksheets[reportIndex];
+                reportSheet.Name = "ThemeColorUsageReport";
+
+                // Write header row
+                reportSheet.Cells[0, 0].PutValue("Worksheet");
+                for (int i = 0; i < 6; i++)
+                {
+                    reportSheet.Cells[0, i + 1].PutValue($"Accent{i + 1}");
+                }
+
+                // Write data rows
+                for (int i = 0; i < usageData.Count; i++)
+                {
+                    WorksheetUsage data = usageData[i];
+                    int row = i + 1;
+                    reportSheet.Cells[row, 0].PutValue(data.WorksheetName);
+                    for (int j = 0; j < 6; j++)
+                    {
+                        reportSheet.Cells[row, j + 1].PutValue(data.AccentCounts[j]);
+                    }
                 }
 
                 // Save the workbook with the new report sheet
                 workbook.Save(outputPath);
-                Console.WriteLine($"Report saved to: {outputPath}");
+                Console.WriteLine($"Report saved to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Helper method to determine if a ThemeColor corresponds to an accent color
+        private static bool IsAccentThemeColor(ThemeColor themeColor, out int accentIndex)
+        {
+            accentIndex = -1;
+
+            string name = themeColor.ToString();
+
+            // Theme colors for accents are named "Accent1" through "Accent6"
+            if (name.StartsWith("Accent", StringComparison.OrdinalIgnoreCase))
+            {
+                if (int.TryParse(name.Substring(6), out int num) && num >= 1 && num <= 6)
+                {
+                    accentIndex = num - 1; // zero‑based index
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Simple container for worksheet usage information
+        private class WorksheetUsage
+        {
+            public string WorksheetName { get; set; } = string.Empty;
+            public int[] AccentCounts { get; set; } = new int[6];
         }
     }
 }

@@ -1,58 +1,73 @@
-// Title: Count threaded comment occurrences per author in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a C# function that accepts a Worksheet object and returns a Dictionary<string,int> mapping each threaded comment author to the number of comments they posted, using Aspose.Cells. | Extend the example to also tally top‑level (non‑threaded) comments, combine the totals per author, and display the results sorted by count descending. | Build a reusable utility class that scans all worksheets in a workbook, aggregates threaded comment authors across the entire file, and writes the author‑wise counts to a CSV file.
-// Common Searches: aspocells c# count threaded comments by author in excel workbook | how to aggregate Excel comment authors using Aspose.Cells .NET | C# iterate through worksheet threaded comments and group by author Aspose.Cells | retrieve author statistics from Excel comment threads with Aspose.Cells for .NET
-// Tags: Aspose.Cells threaded comment aggregation | C# author comment count dictionary | worksheet comment iteration Aspose.Cells | Excel comment thread analysis .NET | extract comment authors Aspose.Cells
+// Title: Counting comments per author in an Excel worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells count how many comments each author has in an Excel sheet | retrieve comment author statistics from a workbook using Aspose.Cells | aggregate Excel comment authors with Aspose.Cells comment collection | load Excel file and tally comment authors in .NET
+// Tags: Aspose.Cells comment author counting | C# iterate worksheet CommentCollection | Excel comment aggregation using Aspose.Cells | case-insensitive dictionary for author tally | load workbook and process comments Aspose
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThreadedCommentAuthorCount
+// The example loads an Excel workbook with Aspose.Cells, accesses the first worksheet's CommentCollection, and uses a case‑insensitive dictionary to count how many comments each author has made, then outputs the totals to the console.
+class Program
 {
-    // The sample loads an Excel workbook, iterates through each comment's threaded comments on the first worksheet, counts how many threaded comments each author has made using a case‑insensitive dictionary, prints the per‑author totals, and saves the workbook unchanged.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Get the first worksheet (or iterate through all worksheets as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            // Dictionary to hold author name and comment count
+        try
+        {
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Use regular comments collection (ThreadedComments may not be available in older versions)
+            CommentCollection comments = sheet.Comments;
+
+            // Dictionary to hold author name and comment count (case‑insensitive)
             Dictionary<string, int> authorCommentCount = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-            // Iterate through all comments in the worksheet
-            CommentCollection comments = worksheet.Comments;
-            for (int i = 0; i < comments.Count; i++)
+            // Iterate through all comments
+            foreach (Comment comment in comments)
             {
-                Comment comment = comments[i];
+                string author = comment.Author ?? "Unknown";
 
-                // Get the threaded comments for this comment (if any)
-                ThreadedCommentCollection threadedComments = comment.ThreadedComments;
-                for (int j = 0; j < threadedComments.Count; j++)
-                {
-                    ThreadedComment tc = threadedComments[j];
-                    string authorName = tc.Author?.Name ?? "Unknown";
-
-                    // Increment count for this author
-                    if (authorCommentCount.ContainsKey(authorName))
-                        authorCommentCount[authorName]++;
-                    else
-                        authorCommentCount[authorName] = 1;
-                }
+                if (authorCommentCount.ContainsKey(author))
+                    authorCommentCount[author]++;
+                else
+                    authorCommentCount[author] = 1;
             }
 
-            // Output the results
-            Console.WriteLine("Threaded comment count per author:");
+            // Output the result
+            Console.WriteLine("Comment count per author:");
             foreach (var kvp in authorCommentCount)
             {
                 Console.WriteLine($"{kvp.Key}: {kvp.Value}");
             }
 
-            // Optionally save the workbook (unchanged) to a new file
-            workbook.Save("output.xlsx");
+            // (Optional) Save the workbook if any changes were made
+            // workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the worksheet: {ex.Message}");
         }
     }
 }

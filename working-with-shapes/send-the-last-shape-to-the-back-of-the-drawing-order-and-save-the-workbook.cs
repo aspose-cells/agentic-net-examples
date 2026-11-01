@@ -1,51 +1,66 @@
-// Title: Send the last shape in an Excel worksheet to the back of the Z‑order and save the workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells that loads an Excel file, moves the last shape in the first worksheet to the back of the Z‑order, and saves the result to a new file. | Provide a C# example that checks for shapes on a worksheet, sets the ZOrderPosition of the final shape to 0, and writes the workbook to disk with Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to change ZOrderPosition of a shape in Excel | move last shape to back of drawing order in Aspose.Cells worksheet | C# code to send a shape behind all others using Aspose.Cells | save workbook after reordering shapes with Aspose.Cells .NET
-// Tags: Aspose.Cells set shape ZOrderPosition | C# move Excel shape to back | Aspose.Cells reorder worksheet shapes | save workbook after shape manipulation Aspose.Cells | Excel shape drawing order .NET
+// Title: Move the last shape to the back of the Z-order in an Excel worksheet and save the file with Aspose.Cells for .NET
+// Common Searches: how to move the last shape to the back of the drawing order in an Excel sheet using Aspose.Cells C# | Aspose.Cells example for setting shape ZOrderPosition to the lowest value | C# code to reorder worksheet shapes and save the workbook with Aspose.Cells | change shape Z-order programmatically in an Excel file using Aspose.Cells .NET | move a shape behind other objects in Excel via Aspose.Cells API
+// Tags: Aspose.Cells move shape Z-order | Aspose.Cells reorder worksheet shapes | C# set shape ZOrderPosition Aspose.Cells | Aspose.Cells save workbook after shape manipulation | Excel shape drawing order Aspose.Cells .NET
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// // Loads an existing Excel file (or creates a new workbook), accesses the first worksheet's ShapeCollection, sets the ZOrderPosition of the last shape to 0 to move it behind all other shapes, and saves the workbook as output.xlsx.
+// The example loads an existing Excel workbook, checks for shapes on the first worksheet, retrieves the last shape, sets its ZOrderPosition to 0 to place it behind all other objects, ensures the output directory exists, and then saves the modified workbook, handling any errors that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Load existing workbook or create a new one if the file does not exist.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Check for at least one shape on the sheet
+            if (worksheet.Shapes.Count > 0)
+            {
+                // Get the last shape in the collection
+                Shape lastShape = worksheet.Shapes[worksheet.Shapes.Count - 1];
+
+                try
+                {
+                    // Move the shape to the back of the drawing order by setting Z-order to the lowest value
+                    lastShape.ZOrderPosition = 0;
+                }
+                catch (Exception shapeEx)
+                {
+                    Console.WriteLine($"Failed to change shape Z-order: {shapeEx.Message}");
+                }
             }
             else
             {
-                workbook = new Workbook(); // default workbook with one worksheet
+                Console.WriteLine("No shapes found on the worksheet.");
             }
 
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Get the collection of shapes on the worksheet.
-            ShapeCollection shapes = sheet.Shapes;
-
-            // If there is at least one shape, send the last one to the back by setting its Z-order position.
-            if (shapes.Count > 0)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Shape lastShape = shapes[shapes.Count - 1];
-                // Setting ZOrderPosition to 0 moves the shape behind all others.
-                lastShape.ZOrderPosition = 0;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the modified workbook.
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

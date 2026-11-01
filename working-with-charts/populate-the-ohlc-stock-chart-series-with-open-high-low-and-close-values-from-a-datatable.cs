@@ -1,78 +1,75 @@
-// Title: How to fill an Aspose.Cells StockOpenHighLowClose chart with open, high, low, and close data from a DataTable in C#
-// AI Prompts: Write C# code that writes a DataTable containing Date, Open, High, Low, and Close columns to a worksheet and binds each column to the corresponding series of an Aspose.Cells StockOpenHighLowClose chart. | Show how to calculate dynamic range strings for chart series based on the number of rows in a DataTable and assign them to NSeries in Aspose.Cells. | Demonstrate setting the category (X‑axis) data to the Date column and naming the OHLC series programmatically using Aspose.Cells for .NET.
-// Common Searches: aspnet populate OHLC chart series from DataTable using Aspose.Cells | c# Aspose.Cells StockOpenHighLowClose chart bind to DataTable rows | dynamic range address for Aspose.Cells chart series based on DataTable count | set category data for Aspose.Cells stock chart from date column | save workbook with OHLC chart Aspose.Cells example
-// Tags: Aspose.Cells StockOpenHighLowClose series binding | C# dynamic chart range calculation Aspose.Cells | assign category data Aspose.Cells stock chart | write DataTable to worksheet for charting Aspose.Cells | set series names programmatically Aspose.Cells
+// Title: Create an OHLC (Open‑High‑Low‑Close) stock chart from a DataTable using Aspose.Cells for .NET
+// Common Searches: how to generate an OHLC stock chart from a DataTable with Aspose.Cells in C# | populate open high low close series in a StockOpenHighLowClose chart using Aspose.Cells | add series names to an OHLC chart created with Aspose.Cells .NET | write DataTable data to a worksheet and bind it to a StockOpenHighLowClose chart in C# | Aspose.Cells example for creating a financial OHLC chart from database data
+// Tags: Aspose.Cells create OHLC chart | C# populate StockOpenHighLowClose series | Aspose.Cells bind DataTable to worksheet | Aspose.Cells set chart series names | Excel file generation with Aspose.Cells
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, writes stock data from a DataTable to the first worksheet, builds range strings for Date, Open, High, Low, and Close columns, adds a StockOpenHighLowClose chart, sets the Date range as category data, adds the four OHLC series with the calculated ranges, assigns series names, and saves the file as OHLC_StockChart.xlsx.
-class OhlcChartExample
+// The example creates a new Workbook, writes a DataTable containing Date, Open, High, Low, and Close columns to the first worksheet, adds a StockOpenHighLowClose chart referencing that range, sets the X‑axis to the Date column, adds four series for Open, High, Low, and Close with proper names, and saves the workbook as OHLC_Chart.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Obtain stock data.
-            DataTable stockTable = GetStockDataTable();
+            // Retrieve OHLC data (replace with actual data source as needed)
+            DataTable dt = GetOhlcData();
 
-            // Create a new workbook.
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet.
+            // Access the first worksheet and give it a meaningful name
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "OHLCData";
 
-            // Write headers.
-            for (int col = 0; col < stockTable.Columns.Count; col++)
+            // Write header row
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["B1"].PutValue("Open");
+            sheet.Cells["C1"].PutValue("High");
+            sheet.Cells["D1"].PutValue("Low");
+            sheet.Cells["E1"].PutValue("Close");
+
+            // Populate worksheet with DataTable contents starting at row 2 (zero‑based index)
+            int row = 1; // zero‑based index for the second row
+            foreach (DataRow dr in dt.Rows)
             {
-                sheet.Cells[0, col].PutValue(stockTable.Columns[col].ColumnName);
+                sheet.Cells[row, 0].PutValue(dr["Date"]);
+                sheet.Cells[row, 1].PutValue(dr["Open"]);
+                sheet.Cells[row, 2].PutValue(dr["High"]);
+                sheet.Cells[row, 3].PutValue(dr["Low"]);
+                sheet.Cells[row, 4].PutValue(dr["Close"]);
+                row++;
             }
 
-            // Write data rows.
-            for (int row = 0; row < stockTable.Rows.Count; row++)
-            {
-                for (int col = 0; col < stockTable.Columns.Count; col++)
-                {
-                    sheet.Cells[row + 1, col].PutValue(stockTable.Rows[row][col]);
-                }
-            }
+            // Determine the range of data rows (Excel rows are 1‑based)
+            string firstDataRow = "2";
+            string lastDataRow = row.ToString(); // row already points to the last data row (1‑based)
 
-            // Determine the number of data rows (excluding header).
-            int dataRowCount = stockTable.Rows.Count;
+            // Add a Stock (OHLC) chart below the data table
+            int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 5, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "OHLC Stock Chart";
 
-            // Define the range addresses for each column (including header row).
-            string dateRange  = $"A2:A{dataRowCount + 1}";
-            string openRange  = $"B2:B{dataRowCount + 1}";
-            string highRange  = $"C2:C{dataRowCount + 1}";
-            string lowRange   = $"D2:D{dataRowCount + 1}";
-            string closeRange = $"E2:E{dataRowCount + 1}";
+            // X‑axis (date) range
+            string xRange = $"A{firstDataRow}:A{lastDataRow}";
 
-            // Add an OHLC stock chart to the worksheet.
-            // Position: from row 5, column 0 to row 20, column 10.
-            int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 5, 0, 20, 10);
-            Chart ohlcChart = sheet.Charts[chartIndex];
+            // Add series for Open, High, Low, Close in one call
+            chart.NSeries.Add($"B{firstDataRow}:E{lastDataRow}", true);
+            chart.NSeries.CategoryData = xRange;
 
-            // Set the X‑axis (category) data – dates.
-            ohlcChart.NSeries.CategoryData = dateRange;
+            // Assign series names
+            chart.NSeries[0].Name = "Open";
+            chart.NSeries[1].Name = "High";
+            chart.NSeries[2].Name = "Low";
+            chart.NSeries[3].Name = "Close";
 
-            // Add series for Open, High, Low, and Close values.
-            ohlcChart.NSeries.Add(openRange, true);
-            ohlcChart.NSeries.Add(highRange, true);
-            ohlcChart.NSeries.Add(lowRange, true);
-            ohlcChart.NSeries.Add(closeRange, true);
-
-            // Optionally set series names (taken from the header row).
-            ohlcChart.NSeries[0].Name = "Open";
-            ohlcChart.NSeries[1].Name = "High";
-            ohlcChart.NSeries[2].Name = "Low";
-            ohlcChart.NSeries[3].Name = "Close";
-
-            // Save the workbook to a file.
-            string outputPath = "OHLC_StockChart.xlsx";
+            // Save the workbook with the chart
+            string outputPath = "OHLC_Chart.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
@@ -80,9 +77,8 @@ class OhlcChartExample
         }
     }
 
-    // Mock method to obtain a DataTable with sample stock data.
-    // Replace this with actual data retrieval logic.
-    static DataTable GetStockDataTable()
+    // Example method that creates a sample DataTable with OHLC data
+    static DataTable GetOhlcData()
     {
         DataTable dt = new DataTable();
         dt.Columns.Add("Date", typeof(DateTime));
@@ -91,11 +87,11 @@ class OhlcChartExample
         dt.Columns.Add("Low", typeof(double));
         dt.Columns.Add("Close", typeof(double));
 
-        // Sample rows
-        dt.Rows.Add(new DateTime(2023, 1, 2), 150.0, 155.0, 149.0, 154.0);
-        dt.Rows.Add(new DateTime(2023, 1, 3), 154.0, 158.0, 152.0, 157.0);
-        dt.Rows.Add(new DateTime(2023, 1, 4), 157.0, 160.0, 156.0, 159.0);
-        // Add more rows as needed...
+        // Sample rows – replace with real data retrieval logic
+        dt.Rows.Add(new DateTime(2023, 1, 2), 100.0, 105.0, 95.0, 102.0);
+        dt.Rows.Add(new DateTime(2023, 1, 3), 102.0, 108.0, 101.0, 107.0);
+        dt.Rows.Add(new DateTime(2023, 1, 4), 107.0, 110.0, 106.0, 109.0);
+        dt.Rows.Add(new DateTime(2023, 1, 5), 109.0, 112.0, 108.0, 111.0);
 
         return dt;
     }

@@ -1,57 +1,54 @@
-// Title: Toggle Smart Marker sections with WorkbookDesigner.SetVariable Boolean flag in C# using Aspose.Cells
-// AI Prompts: Write C# code that loads an Excel template, creates a WorkbookDesigner, calls SetVariable("ShowSection", true) to control a Smart Marker block, processes the markers, and saves the workbook. | Show how to replace a DataSet data source with WorkbookDesigner.SetVariable to conditionally display or hide Smart Marker sections based on a Boolean variable in Aspose.Cells. | Provide a step‑by‑step tutorial for using WorkbookDesigner.SetVariable to pass a true/false flag that drives Smart Marker visibility in a .NET Excel report.
-// Common Searches: Aspose.Cells C# setvariable to hide smart marker block | How to conditionally display smart marker sections using WorkbookDesigner.SetVariable | Toggle visibility of Excel smart markers with a boolean variable in .NET | SetVariable method example for smart markers in Aspose.Cells C#
-// Tags: workbookdesigner setvariable boolean | smart marker conditional visibility aspnet cells | c# toggle smart marker section | excel template smart markers setvariable | aspocells setvariable example
+// Title: How to toggle smart‑marker section visibility in an Excel template using WorkbookDesigner.SetVariable (C# Aspose.Cells)
+// AI Prompts: Write C# code that loads an Excel template, calls WorkbookDesigner.SetVariable("ShowSection", true) to control smart‑marker sections, processes the markers, and saves the workbook. | Refactor a smart‑marker example that uses a DataSet so it instead uses WorkbookDesigner.SetVariable to pass a boolean flag for conditional display. | Demonstrate hiding or showing a smart‑marker block in a .xlsx file by setting a true/false variable with WorkbookDesigner.SetVariable before invoking Process.
+// Common Searches: Aspose.Cells C# WorkbookDesigner SetVariable boolean example for smart markers | how to hide a smart marker section in Excel using a flag with Aspose.Cells | toggle visibility of smart marker blocks in .NET workbook designer | setvariable true false smart marker Aspose.Cells tutorial
+// Tags: WorkbookDesigner.SetVariable boolean smart marker | conditional smart marker sections Aspose.Cells | C# toggle smart marker visibility | Excel template smart marker flag | Aspose.Cells smart marker conditional display
 
-using Aspose.Cells;
 using System;
-using System.Data;
 using System.IO;
+using System.Data;
+using Aspose.Cells;
 
-// The example demonstrates loading an Excel template, creating a WorkbookDesigner, using SetVariable to pass a Boolean flag that determines whether a Smart Marker block is shown or hidden, processing the markers, and saving the resulting workbook, with proper error handling.
+// The example loads an Excel workbook containing smart‑marker blocks, uses WorkbookDesigner.SetVariable("ShowSection", true) to pass a boolean flag that the markers evaluate, calls Process to apply the conditional logic, and saves the resulting file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string templatePath = "template.xlsx";
-            const string outputPath = "output.xlsx";
+            const string templatePath = "TemplateWithSmartMarkers.xlsx";
+            const string resultPath = "ResultWithToggledSection.xlsx";
 
-            // Verify that the template file exists to avoid FileNotFoundException
+            // Ensure the template file exists to avoid FileNotFoundException
             if (!File.Exists(templatePath))
-            {
-                Console.WriteLine($"Error: Template file \"{templatePath}\" not found.");
-                return;
-            }
+                throw new FileNotFoundException($"Template file not found: {templatePath}");
 
-            // Load the workbook that contains smart markers
-            Workbook workbook = new Workbook(templatePath);
+            // Load the template workbook that contains smart markers
+            var workbook = new Workbook(templatePath);
 
-            // Create a WorkbookDesigner for processing smart markers
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Initialize the WorkbookDesigner to work with smart markers
+            var designer = new WorkbookDesigner(workbook);
 
-            // Prepare a DataSet as the data source for smart markers
-            DataSet dataSet = new DataSet();
-            DataTable table = new DataTable("Data");
-            table.Columns.Add("ShowSection", typeof(bool));
-            table.Rows.Add(true);
-            dataSet.Tables.Add(table);
+            // Create a DataSet with a DataTable containing the ShowSection variable
+            var dataTable = new DataTable("Data");
+            dataTable.Columns.Add("ShowSection", typeof(bool));
+            dataTable.Rows.Add(true);
 
-            // Assign the data source to the designer
+            var dataSet = new DataSet();
+            dataSet.Tables.Add(dataTable);
+
+            // Provide the data source for smart markers
             designer.SetDataSource(dataSet);
 
-            // Process the smart markers
+            // Process the smart markers – this will evaluate the variable and hide/show sections accordingly
             designer.Process();
 
             // Save the resulting workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            workbook.Save(resultPath);
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any errors that occur during processing
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

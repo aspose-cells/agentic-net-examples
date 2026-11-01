@@ -1,64 +1,58 @@
-// Title: How to profile CPU time while enumerating a 100,000‑row worksheet with Aspose.Cells GetEnumerator in C#
-// AI Prompts: Create a workbook with 100,000 rows, enable AccessCacheOptions.CellsData, iterate through every cell using the Cells enumerator, and return the elapsed CPU time measured by Stopwatch. | Add logging that records both the total processed cell count and the elapsed seconds during large‑worksheet iteration with Aspose.Cells, then suggest where to insert additional performance counters. | Extend the example to capture peak memory usage together with CPU timing while enumerating cells, and output a concise performance summary.
-// Common Searches: c# how to measure CPU time for Aspose.Cells cell enumeration on large worksheets | profiling performance of Cells.GetEnumerator in Aspose.Cells with large Excel files | using AccessCacheOptions.CellsData to speed up iteration over 100k rows in Aspose.Cells | detecting bottlenecks when iterating over millions of cells with Aspose.Cells C#
-// Tags: Aspose.Cells iteration speed | C# Stopwatch profiling Aspose.Cells | AccessCacheOptions.CellsData caching | large worksheet performance optimization | CPU usage measurement Aspose.Cells
+// Title: Measure CPU and wall‑clock time while iterating over every cell in a large Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Add Process.TotalProcessorTime and Stopwatch measurements around a nested cell loop to profile CPU usage in Aspose.Cells. | Write a C# snippet that logs CPU time for each iteration while reading cell values from a large worksheet. | Modify the enumeration code to output both wall‑clock and CPU elapsed times for performance analysis.
+// Common Searches: how to benchmark cell iteration performance with Aspose.Cells in C# | C# measure CPU time while reading all cells from a large Excel file using Aspose.Cells | profile worksheet enumeration speed Aspose.Cells .NET large dataset | detect performance bottleneck in Aspose.Cells cell loop
+// Tags: cpu profiling Aspose.Cells cell enumeration | wall‑clock timing Aspose.Cells worksheet loop | performance measurement Aspose.Cells .NET | used range iteration Aspose.Cells | benchmark reading Excel cells C#
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceProfiling
+// The example loads a workbook, determines the used range, then iterates over every cell while measuring wall‑clock time with Stopwatch and CPU time via Process.TotalProcessorTime, finally printing both elapsed durations to help identify performance bottlenecks.
+class Program
 {
-    // The sample builds a workbook containing 100,000 rows and 10 columns, starts a cell‑data cache, enumerates all instantiated cells with Cells.GetEnumerator while timing the loop using Stopwatch, closes the cache, and prints the number of processed cells along with the elapsed seconds.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("LargeData.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Populate a large worksheet (e.g., 100,000 rows × 10 columns)
-            const int totalRows = 100000;
-            const int totalCols = 10;
-            for (int row = 0; row < totalRows; row++)
+        // Determine the used range
+        int maxRow = cells.MaxDataRow;
+        int maxColumn = cells.MaxDataColumn;
+
+        // Get the current process to measure CPU usage
+        Process currentProcess = Process.GetCurrentProcess();
+
+        // Record CPU time before enumeration
+        TimeSpan cpuStart = currentProcess.TotalProcessorTime;
+        Stopwatch wallClock = Stopwatch.StartNew();
+
+        // Enumerate all cells in the used range
+        for (int row = 0; row <= maxRow; row++)
+        {
+            for (int col = 0; col <= maxColumn; col++)
             {
-                for (int col = 0; col < totalCols; col++)
+                // Example operation: read the cell value
+                object value = cells[row, col].Value;
+
+                // Minimal processing to avoid affecting measurement
+                if (value != null && value is string s && s.Length > 0)
                 {
-                    cells[row, col].PutValue(row * totalCols + col);
+                    // No-op placeholder
                 }
             }
-
-            // Enable cache for cell data access to reduce overhead during enumeration
-            workbook.StartAccessCache(AccessCacheOptions.CellsData);
-
-            // Measure CPU time spent iterating through all instantiated cells
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Use the Cells.GetEnumerator method as documented
-            IEnumerator enumerator = cells.GetEnumerator();
-            long processedCount = 0;
-            while (enumerator.MoveNext())
-            {
-                // Cast to Cell; accessing Value forces a read which is part of the workload
-                Cell cell = (Cell)enumerator.Current;
-                var value = cell.Value; // Simulate processing
-                processedCount++;
-            }
-
-            sw.Stop();
-
-            // Close the cache after the operation
-            workbook.CloseAccessCache(AccessCacheOptions.CellsData);
-
-            // Output profiling results
-            Console.WriteLine($"Processed {processedCount:N0} cells.");
-            Console.WriteLine($"Elapsed time: {sw.Elapsed.TotalSeconds:F2} seconds.");
-
-            // Save the workbook (optional, demonstrates create/save rule usage)
-            workbook.Save("LargeWorksheetProfiled.xlsx");
         }
+
+        // Stop timers
+        wallClock.Stop();
+        TimeSpan cpuEnd = currentProcess.TotalProcessorTime;
+
+        // Calculate elapsed times
+        TimeSpan cpuElapsed = cpuEnd - cpuStart;
+
+        // Output profiling results
+        Console.WriteLine($"Wall‑clock time: {wallClock.Elapsed.TotalSeconds:F2} seconds");
+        Console.WriteLine($"CPU time used: {cpuElapsed.TotalSeconds:F2} seconds");
     }
 }

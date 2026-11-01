@@ -1,14 +1,15 @@
-// Title: How to export Power Query formulas from an Excel workbook to an XML file with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, finds every cell whose formula contains the keyword POWERQUERY, and writes each formula into an XML document. | Update the XML generation so that each <Formula> element also includes the originating cell address (e.g., A1) as an attribute. | Add robust error handling and console logging that reports the number of Power Query formulas found in each worksheet. | Create a reusable method that accepts a workbook path and returns an XDocument containing all Power Query formulas ready for saving.
-// Common Searches: c# Aspose.Cells extract Power Query formulas from Excel workbook | save Power Query M code to XML using Aspose.Cells .NET | list cells containing POWERQUERY formula in .xlsx file | generate XML audit report of Power Query formulas in Excel with C# | how to count Power Query formulas per worksheet using Aspose.Cells
-// Tags: Aspose.Cells export Power Query formulas to XML | C# serialize Power Query M code | Excel workbook Power Query formula extraction | XML audit report for Power Query formulas | cell address inclusion in Power Query XML output | error handling for Power Query extraction Aspose.Cells
+// Title: Export Power Query formulas from an Excel worksheet to XML using Aspose.Cells for .NET compliance auditing
+// AI Prompts: Generate C# code that loads a workbook with Aspose.Cells, accesses the worksheet's PowerQueryFormulaCollection via reflection, and writes each formula's Name, Formula, and IsEnabled attributes into an XML document. | Create a version‑agnostic .NET routine that extracts all Power Query definitions from a worksheet and saves them as <PowerQueryFormula> elements in an XML file for external audit purposes.
+// Common Searches: how to extract Power Query formulas from an Excel file using Aspose.Cells C# | serialize PowerQueryFormulaCollection to XML for compliance reporting | C# reflection example to read Power Query definitions in Aspose.Cells | export Power Query formula name and expression to XML with Aspose.Cells | audit Excel Power Query queries programmatically .NET
+// Tags: Aspose.Cells Power Query XML export | C# PowerQueryFormulaCollection serialization | use reflection to get Power Query collection Aspose.Cells | audit Excel Power Query definitions .NET | XML compliance output for Power Query formulas
 
 using Aspose.Cells;
 using System;
 using System.IO;
 using System.Xml.Linq;
+using System.Collections;
 
-// The program loads an Excel workbook with Aspose.Cells, scans all cells for formulas containing the keyword POWERQUERY, aggregates those formulas (optionally with their cell addresses) into an XDocument, and saves the result as an XML file for auditing purposes.
+// The sample loads an Excel workbook with Aspose.Cells, uses reflection to obtain the worksheet's PowerQueryFormulaCollection, iterates through each PowerQueryFormula extracting Name, Formula, and IsEnabled, builds an XDocument containing <PowerQueryFormula> elements with these attributes, and saves the XML file for external compliance auditing while handling missing APIs and runtime errors gracefully.
 class Program
 {
     static void Main()
@@ -16,51 +17,67 @@ class Program
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputXml = "PowerQueryFormulas.xml";
+            const string outputXmlPath = "PowerQueryFormulas.xml";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException.
+            // Ensure the input workbook exists to avoid FileNotFoundException.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook that contains Power Query formulas.
+            // Load the workbook that may contain Power Query formulas.
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust the index if needed).
+            // Access the first worksheet (adjust index as needed).
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Collect all Power Query formulas from the worksheet.
-            var pqFormulas = new System.Collections.Generic.List<string>();
-            Cells cells = worksheet.Cells;
-            foreach (Cell cell in cells)
+            // Attempt to retrieve the PowerQueryFormulaCollection via reflection
+            // (the API may not be available in older Aspose.Cells versions).
+            var pqCollectionObj = worksheet.GetType()
+                                           .GetProperty("PowerQueryFormulaCollection")
+                                           ?.GetValue(worksheet);
+
+            // Prepare the XML document that will hold the serialized data.
+            XDocument xmlDoc = new XDocument(new XElement("PowerQueryFormulas"));
+
+            if (pqCollectionObj is IEnumerable pqCollection)
             {
-                if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula) &&
-                    cell.Formula.IndexOf("POWERQUERY", StringComparison.OrdinalIgnoreCase) >= 0)
+                // Iterate through each PowerQueryFormula (using reflection to stay version‑agnostic).
+                foreach (var pqFormula in pqCollection)
                 {
-                    pqFormulas.Add(cell.Formula);
+                    var formulaType = pqFormula.GetType();
+
+                    string name = formulaType.GetProperty("Name")?.GetValue(pqFormula) as string ?? string.Empty;
+                    string formula = formulaType.GetProperty("Formula")?.GetValue(pqFormula) as string ?? string.Empty;
+                    bool isEnabled = false;
+                    var isEnabledProp = formulaType.GetProperty("IsEnabled");
+                    if (isEnabledProp != null && isEnabledProp.GetValue(pqFormula) is bool enabled)
+                    {
+                        isEnabled = enabled;
+                    }
+
+                    // Add the formula details to the XML.
+                    XElement formulaElement = new XElement("PowerQueryFormula",
+                        new XAttribute("Name", name),
+                        new XAttribute("Formula", formula),
+                        new XAttribute("IsEnabled", isEnabled));
+
+                    xmlDoc.Root.Add(formulaElement);
                 }
             }
+            else
+            {
+                Console.WriteLine("No Power Query formulas found or the API is unavailable in this Aspose.Cells version.");
+            }
 
-            // Create an XML document to store the collected formulas.
-            XDocument doc = new XDocument(
-                new XElement("PowerQueryFormulas",
-                    new XElement("Count", pqFormulas.Count),
-                    new XElement("Formulas",
-                        new System.Collections.Generic.List<XElement>(
-                            pqFormulas.ConvertAll(f => new XElement("Formula", f))
-                        )
-                    )
-                )
-            );
-
-            // Save the XML document.
-            doc.Save(outputXml);
-            Console.WriteLine($"Power Query formulas have been written to \"{outputXml}\".");
+            // Save the XML document to a file for external auditing.
+            xmlDoc.Save(outputXmlPath);
+            Console.WriteLine($"Power Query formulas exported to '{outputXmlPath}'.");
         }
         catch (Exception ex)
         {
+            // Log unexpected errors without crashing the application.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

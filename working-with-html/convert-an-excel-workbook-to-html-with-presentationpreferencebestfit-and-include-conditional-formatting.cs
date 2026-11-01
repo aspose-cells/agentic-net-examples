@@ -1,46 +1,55 @@
-// Title: Convert an Excel workbook to HTML with PresentationPreference.BestFit and preserve conditional formatting using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.PresentationPreference to BestFit, enables conditional formatting export, and saves the workbook as .html with Aspose.Cells. | Explain how to handle the absence of the ExportConditionalFormatting property in older Aspose.Cells versions while still achieving HTML output that reflects conditional formatting.
-// Common Searches: Aspose.Cells C# convert Excel to HTML with best‑fit layout | How to export conditional formatting when saving workbook as HTML using Aspose.Cells .NET | Set PresentationPreference to BestFit in HtmlSaveOptions Aspose.Cells example | C# code sample for saving .xlsx as .html while keeping conditional formatting with Aspose.Cells | Aspose.Cells HTML conversion preserving cell styles and conditional rules
-// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference BestFit | Aspose.Cells export conditional formatting to HTML | C# convert .xlsx to .html Aspose.Cells | HTML conversion layout optimization Aspose.Cells | handling missing ExportConditionalFormatting Aspose.Cells
+// Title: Convert an Excel workbook to HTML using Aspose.Cells for .NET with HtmlSaveOptions (best‑fit layout note)
+// Common Searches: asp.net convert xlsx file to html using aspose.cells HtmlSaveOptions | c# set PresentationPreference to BestFit for HTML export in Aspose.Cells | include conditional formatting when exporting Excel to HTML with Aspose.Cells | how to handle missing source file before converting Excel to HTML in C# | asp.net core save workbook as html and ensure output directory exists
+// Tags: Aspose.Cells HtmlSaveOptions HTML export | C# Excel to HTML conversion Aspose.Cells | PresentationPreference BestFit Aspose.Cells | conditional formatting limitation HTML export Aspose.Cells | ensure output directory exists C# file conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example loads an existing Excel file, configures HtmlSaveOptions to use PresentationPreference.BestFit, attempts to enable conditional formatting export (or notes the property’s absence in older versions), and saves the workbook as an HTML file, handling errors and confirming successful conversion.
-class Program
+namespace ExcelToHtmlConversion
 {
-    static void Main()
+    // The example loads an Excel workbook, configures HtmlSaveOptions, creates the output folder if needed, and saves the workbook as an HTML file using Aspose.Cells for .NET. It notes that the IncludeConditionalFormatting option is unavailable in this version and demonstrates basic error handling for missing files and conversion failures.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Path to the source Excel file
+            string sourceFile = @"C:\Path\To\YourWorkbook.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Path where the HTML output will be saved
+            string outputFile = @"C:\Path\To\ConvertedWorkbook.html";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFile))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Source file not found: {sourceFile}");
                 return;
             }
 
-            // Load the existing Excel workbook
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(sourceFile);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: ExportConditionalFormatting property is not available in this version of Aspose.Cells.
-            // The workbook will be saved without explicit conditional formatting export.
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Note: IncludeConditionalFormatting property is not available in this version of Aspose.Cells
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully converted to HTML: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as an HTML file using the configured options
+                workbook.Save(outputFile, htmlOptions);
+                Console.WriteLine($"Workbook successfully converted to HTML: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
         }
     }
 }

@@ -1,43 +1,33 @@
-// Title: Configure worksheet PageSetup to A2 (fallback to A4) and retrieve paper width/height in points with Aspose.Cells for .NET
-// AI Prompts: Set the worksheet's PageSetup.PaperSize to PaperSizeType.PaperA4 as a fallback for A2, then print the resulting PaperSize enum value. | Read and display the PageSetup.PaperWidth and PageSetup.PaperHeight properties after setting the paper size, showing the dimensions in points. | Save the workbook after changing the page setup and programmatically confirm that the saved file retains the specified PaperSize setting.
-// Common Searches: Aspose.Cells how to set worksheet paper size to A2 when the size is not supported | retrieve page setup paper width and height in points using Aspose.Cells C# | fallback to A4 for Excel worksheet paper size with Aspose.Cells | verify PaperSize enum after configuring PageSetup in Aspose.Cells .NET
-// Tags: Aspose.Cells set worksheet paper size | PageSetup PaperSize fallback A4 | retrieve worksheet paper dimensions points | verify PaperSize enum Aspose.Cells | save workbook after page setup change
+// Title: How to set a worksheet's page setup to A2 paper size and read its dimensions using Aspose.Cells for .NET
+// AI Prompts: Set the PageSetup.PaperSize of a worksheet to PaperA2 and print the resulting PaperWidth and PaperHeight in points. | Check whether the worksheet's PaperSize property equals PaperA2 and output a boolean confirmation. | Create a new workbook, change the first sheet's page setup to A2, and display the actual page dimensions for verification.
+// Common Searches: Aspose.Cells .NET set worksheet page size to A2 and get width height in points | How to verify paper size A2 after configuring PageSetup in Aspose.Cells | Retrieve paper dimensions of an Excel sheet after setting A2 paper size with Aspose.Cells | C# code to check worksheet PaperSize property equals PaperA2 in Aspose.Cells | Aspose.Cells page setup paper width and height values for A2 size
+// Tags: Aspose.Cells set worksheet paper size A2 | Aspose.Cells get page dimensions in points | verify worksheet PaperSize property .NET | configure PageSetup for A2 size Excel | C# Aspose.Cells page setup API usage
 
 using Aspose.Cells;
 using System;
 
-// The example creates a new Workbook, accesses the first Worksheet, sets its PageSetup.PaperSize to PaperSizeType.PaperA4 (used as a fallback when A2 is unavailable), reads back the PaperSize enum, outputs the PaperWidth and PaperHeight values in points, and saves the workbook to 'output.xlsx' to demonstrate how to configure and verify page‑setup dimensions with Aspose.Cells for .NET.
+// The example creates a new Workbook, accesses the first Worksheet, sets its PageSetup.PaperSize to PaperA2, confirms the setting with a boolean check, and prints the worksheet's PaperWidth and PaperHeight values (in points) for verification.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the page‑setup paper size.
-            // A2 is not available in the current Aspose.Cells version, using A4 as a valid fallback.
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+        // Set the page‑setup paper size to A2
+        sheet.PageSetup.PaperSize = PaperSizeType.PaperA2;
 
-            // Verify the paper size setting
-            PaperSizeType currentSize = sheet.PageSetup.PaperSize;
-            Console.WriteLine($"PaperSize enum value: {currentSize}");
+        // Verify that the paper size was set to A2
+        bool isA2 = sheet.PageSetup.PaperSize == PaperSizeType.PaperA2;
+        Console.WriteLine("Paper size set to A2: " + isA2);
 
-            // Retrieve the physical dimensions (in points) for verification
-            double width = sheet.PageSetup.PaperWidth;
-            double height = sheet.PageSetup.PaperHeight;
-            Console.WriteLine($"Paper dimensions (points): Width = {width}, Height = {height}");
-
-            // Save the workbook (optional, demonstrates usage of save rule)
-            workbook.Save("output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Output the actual dimensions (in points) for additional verification
+        double widthPoints = sheet.PageSetup.PaperWidth;
+        double heightPoints = sheet.PageSetup.PaperHeight;
+        Console.WriteLine($"Paper width (points): {widthPoints}");
+        Console.WriteLine($"Paper height (points): {heightPoints}");
     }
 }

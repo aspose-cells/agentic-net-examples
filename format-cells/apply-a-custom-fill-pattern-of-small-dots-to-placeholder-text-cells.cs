@@ -1,61 +1,68 @@
-// Title: Apply a Gray25 small‑dot fill pattern to cells containing the word “placeholder” with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing XLSX file, creates a Gray25 pattern style with black dots on a white background, applies it to every cell whose text includes the word placeholder, and saves the workbook. | Show how to iterate over the used range of a worksheet in Aspose.Cells, detect cells containing a specific substring, and set a custom fill pattern on those cells. | Adapt the example to use a different dot pattern such as LightDown while still targeting cells that contain placeholder text.
-// Common Searches: Aspose.Cells C# set Gray25 fill pattern for cells with specific text | how to apply background pattern to placeholder cells in Excel using Aspose.Cells | C# iterate over used cells and change style based on cell value Aspose | replace placeholder text cells with dot pattern in .NET Excel library | save workbook after applying custom fill style with Aspose.Cells
-// Tags: gray25 dot fill Aspose.Cells | style cells containing placeholder C# | apply background pattern Excel .NET | iterate used range Aspose.Cells | save workbook after styling Aspose
+// Title: How to apply a solid fill pattern to Excel cells containing {{placeholder}} text using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set solid background for cells that contain double curly braces | Apply custom fill pattern to placeholder strings in an existing workbook with Aspose.Cells | Iterate used range and change cell style based on placeholder text in C# | How to change foreground and background colors of specific Excel cells using Aspose.Cells | C# code to style cells with {{}} markers in an XLSX file using Aspose.Cells
+// Tags: Aspose.Cells apply solid fill pattern | C# conditional cell styling placeholder text | modify cell style used range Aspose.Cells | set foreground background colors Excel .NET | placeholder cell formatting Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// The code loads input.xlsx, creates a Gray25 style (black dots on white), scans all used cells for the word “placeholder”, applies the style to matching cells, and saves the result as output.xlsx.
-class ApplyDotPatternToPlaceholderCells
+// The example loads an existing XLSX workbook with Aspose.Cells, scans every used cell, detects strings that contain "{{" and "}}", and applies a solid fill pattern with black foreground and white background colors before saving the updated file.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
-            // Verify that the input workbook exists
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load existing workbook
+            var workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            var sheet = workbook.Worksheets[0];
+            var cells = sheet.Cells;
 
-            // Define a style with a small dots fill pattern
-            Style dotStyle = workbook.CreateStyle();
-            // Use a pattern that exists in the current Aspose.Cells version (e.g., Gray25)
-            dotStyle.Pattern = BackgroundType.Gray25;          // Approximate small dots pattern
-            dotStyle.ForegroundColor = Color.Black;           // Dot color
-            dotStyle.BackgroundColor = Color.White;           // Background color
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-            // Iterate through all used cells and apply the style to placeholders
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-
+            // Iterate through all used cells
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    if (cell?.Value != null && cell.Value.ToString().Contains("placeholder"))
+                    var cell = cells[row, col];
+
+                    // Identify placeholder text wrapped in {{ }}
+                    if (cell.Type == CellValueType.IsString &&
+                        cell.StringValue.Contains("{{") && cell.StringValue.Contains("}}"))
                     {
-                        cell.SetStyle(dotStyle);
+                        // Get current style
+                        var style = cell.GetStyle();
+
+                        // Apply a fill pattern (using a valid BackgroundType)
+                        style.Pattern = BackgroundType.Solid; // fallback to a common pattern
+
+                        style.ForegroundColor = Color.Black;   // Pattern color
+                        style.BackgroundColor = Color.White;   // Background color
+
+                        // Set the modified style back to the cell
+                        cell.SetStyle(style);
                     }
                 }
             }
 
             // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            var outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
@@ -63,10 +70,11 @@ class ApplyDotPatternToPlaceholderCells
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

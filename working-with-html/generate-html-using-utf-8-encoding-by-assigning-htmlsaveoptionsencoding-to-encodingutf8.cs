@@ -1,52 +1,32 @@
-// Title: Convert an Excel .xlsx file to UTF-8 encoded HTML using Aspose.Cells for .NET
-// AI Prompts: Write a C# program that loads a workbook from a given .xlsx path, sets HtmlSaveOptions.Encoding to UTF-8, and saves it as an HTML file. | Show how to verify the existence of an input Excel file before exporting it to UTF-8 HTML with Aspose.Cells. | Demonstrate using Aspose.Cells HtmlSaveOptions to export only the active worksheet to a UTF-8 encoded HTML document.
-// Common Searches: asp.net how to export Excel to HTML with UTF-8 encoding using Aspose.Cells | c# set HtmlSaveOptions.Encoding to UTF8 when saving workbook as HTML | check file exists before Aspose.Cells workbook.Save to HTML | convert .xlsx to UTF-8 HTML with Aspose.Cells .NET example
-// Tags: Aspose.Cells HtmlSaveOptions UTF-8 encoding | C# export workbook to HTML Aspose.Cells | verify Excel file existence before Aspose.Cells conversion | save active worksheet as HTML Aspose.Cells | UTF-8 HTML output from .xlsx using Aspose.Cells
+// Title: Save an Aspose.Cells workbook as UTF-8 encoded HTML in C#
+// AI Prompts: Write C# code that creates a Workbook, configures HtmlSaveOptions.Encoding to UTF8, and saves the workbook as an HTML file. | Show how to use Aspose.Cells HtmlSaveOptions to generate UTF-8 HTML output from a spreadsheet in a .NET application.
+// Common Searches: Aspose.Cells export workbook to HTML with UTF-8 encoding C# example | how to set HtmlSaveOptions.Encoding to UTF8 in Aspose.Cells .NET | C# generate UTF-8 HTML from Excel using Aspose.Cells HtmlSaveOptions | save Excel file as UTF-8 HTML using Aspose.Cells library
+// Tags: Aspose.Cells HtmlSaveOptions UTF-8 encoding | export workbook to HTML C# Aspose.Cells | set HTML encoding Aspose.Cells .NET | save Excel as UTF-8 HTML using Aspose
 
 using System;
-using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The sample creates a Workbook, adds sample data, configures HtmlSaveOptions with Encoding = Encoding.UTF8, and saves the workbook as a UTF-8 encoded HTML file (output.html) using Aspose.Cells in C#.
+class HtmlExportExample
 {
-    // Loads an .xlsx workbook, checks that the file exists, configures HtmlSaveOptions with Encoding = Encoding.UTF8, and saves the workbook as an HTML file using Aspose.Cells, with basic error handling.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.html";
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // creates a blank workbook
+        // Optionally, you can load an existing workbook:
+        // Workbook workbook = new Workbook("input.xlsx");
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                    return;
-                }
+        // Add some data to the first worksheet for demonstration
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+        sheet.Cells["A2"].PutValue(DateTime.Now);
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+        // Configure HTML save options with UTF-8 encoding
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.Encoding = Encoding.UTF8; // set UTF-8 encoding
 
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    Encoding = Encoding.UTF8
-                    // ExportActiveWorksheetOnly = true,
-                    // ExportGridLines = true
-                };
-
-                // Save the workbook as an HTML file using the specified options
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook as an HTML file using the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

@@ -1,126 +1,114 @@
-// Title: Add cell‑address based alt attributes to images when exporting an Aspose.Cells workbook to HTML using C#
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, saves it as HTML with external image files, and then updates each <img> tag to include an alt attribute that reflects the originating cell address of the chart or picture. | Generate a C# post‑processing routine that reads the HTML file produced by Aspose.Cells, locates all <img> elements, and injects descriptive alt text based on a pre‑collected list of chart and picture identifiers. | Provide a C# example that uses a regular expression to replace <img> tags in an Aspose.Cells HTML export, adding alt attributes that reference the source cell locations.
-// Common Searches: how to set alt text for chart images in Aspose.Cells HTML export C# | C# post‑process Aspose.Cells generated HTML to add image alt attributes | Aspose.Cells save workbook as HTML with accessible image alt tags | retrieve cell address of chart in Aspose.Cells for alt attribute | regex replace img tags in Aspose.Cells HTML output C#
-// Tags: Aspose.Cells HTML export add alt attributes | C# regex modify img tags in Aspose.Cells HTML | chart image accessibility Aspose.Cells | post‑process HTML for Aspose.Cells workbook conversion | external image files Aspose.Cells HtmlSaveOptions
+// Title: Add cell address alt text to images when exporting an Excel worksheet to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, saves the first worksheet as HTML, and inserts an alt attribute containing each picture’s upper‑left cell reference into the corresponding <img> tags. | Create a C# routine that builds a dictionary mapping Aspose.Cells Picture objects to their exported image filenames and uses a regular expression to add or replace alt attributes in the generated HTML for accessibility compliance. | Implement a C# utility that verifies the workbook exists, exports images as external files, reads the resulting HTML, and updates every <img> element with the cell address of the picture as the alt value.
+// Common Searches: how to set alt attribute for images exported by Aspose.Cells HTML save in C# | C# Aspose.Cells map picture to cell address for accessible HTML output | regex replace img tags with cell reference alt text after Aspose.Cells conversion | generate accessible HTML from Excel workbook using Aspose.Cells and add alt text to pictures
+// Tags: Aspose.Cells HTML export with image alt attributes | C# picture-to-cell mapping for Excel images | regex replace img tags for accessibility | add alt text from picture upper‑left cell | export Excel images as external files using Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Rendering;
 
-// The sample program creates a workbook with sample data and a column chart, exports it to HTML with external image files, gathers identifiers for charts and pictures, reads the generated HTML, and uses a regular expression to inject alt attributes into each <img> tag, improving accessibility by linking images to their source cell addresses.
+// The program loads an Excel workbook, creates a dictionary linking each picture’s exported image file name (e.g., image1.png) to the cell address of its upper‑left corner, saves the first worksheet as HTML with external image files, reads the generated HTML, uses a regular expression to locate <img> tags, injects an alt attribute containing the corresponding cell address (removing any existing alt), and writes the modified HTML to a new file for improved accessibility.
 class Program
 {
     static void Main()
     {
         try
         {
-            // -------------------- Create workbook --------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
+            const string inputPath = "input.xlsx";
+            const string htmlPath = "output.html";
+            const string accessibleHtmlPath = "output_accessible.html";
 
-            // Fill sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a chart positioned at row 5, column 0 (cell A6)
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
-            Chart chart = sheet.Charts[chartIdx];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Sample Chart";
-
-            // -------------------- Save as HTML --------------------
-            string outputFolder = "output";
-            Directory.CreateDirectory(outputFolder);
-
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Ensure the input workbook exists.
+            if (!File.Exists(inputPath))
             {
-                ExportImagesAsBase64 = false // Save images as separate files
-                // Image folder options are omitted; images will be saved next to the HTML file
-            };
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            string htmlPath = Path.Combine(outputFolder, "workbook.html");
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Verify there is at least one worksheet.
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Work with the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Map image file name -> cell address where the image is placed.
+            var imageAltMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            int pictureCounter = 0;
+
+            foreach (Picture picture in sheet.Pictures)
+            {
+                pictureCounter++;
+
+                // Cell address of the picture's upper‑left corner.
+                string cellAddress = CellsHelper.CellIndexToName(picture.UpperLeftRow, picture.UpperLeftColumn);
+
+                // Aspose.Cells names exported images as image1.png, image2.png, …
+                string imageFileName = $"image{pictureCounter}.png";
+
+                imageAltMap[imageFileName] = cellAddress;
+            }
+
+            // Save the workbook as HTML (images as external files).
+            var htmlOptions = new HtmlSaveOptions
+            {
+                ExportImagesAsBase64 = false,
+                ExportActiveWorksheetOnly = true
+            };
             workbook.Save(htmlPath, htmlOptions);
 
-            // -------------------- Build alt‑text list --------------------
-            // Collect identifiers for charts and pictures in the order they appear.
-            List<string> altTexts = new List<string>();
-
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify the HTML file was created.
+            if (!File.Exists(htmlPath))
             {
-                // Charts
-                for (int i = 0; i < ws.Charts.Count; i++)
-                {
-                    // Use a simple identifier since direct cell position is not exposed.
-                    altTexts.Add($"Chart_{i + 1}");
-                }
-
-                // Pictures (if any)
-                for (int i = 0; i < ws.Pictures.Count; i++)
-                {
-                    altTexts.Add($"Picture_{i + 1}");
-                }
+                Console.WriteLine($"Failed to generate HTML file \"{htmlPath}\".");
+                return;
             }
 
-            // -------------------- Post‑process HTML --------------------
-            if (File.Exists(htmlPath))
+            // Load the generated HTML.
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // Regex to locate <img> tags and capture the src attribute.
+            string imgPattern = @"<img\s+([^>]*?)src\s*=\s*""([^""]+)""([^>]*?)>";
+            htmlContent = Regex.Replace(htmlContent, imgPattern, match =>
             {
-                string htmlContent;
-                try
+                string beforeSrc = match.Groups[1].Value;
+                string srcValue = match.Groups[2].Value;
+                string afterSrc = match.Groups[3].Value;
+
+                // Extract just the file name from the src (it may contain a path).
+                string fileName = Path.GetFileName(srcValue);
+
+                // Determine the appropriate alt text (cell address) if we have a mapping.
+                string altAttribute = string.Empty;
+                if (imageAltMap.TryGetValue(fileName, out string cellAddr) && !string.IsNullOrEmpty(cellAddr))
                 {
-                    htmlContent = File.ReadAllText(htmlPath);
-                }
-                catch (Exception readEx)
-                {
-                    Console.WriteLine($"Failed to read HTML file: {readEx.Message}");
-                    return;
+                    altAttribute = $" alt=\"{cellAddr}\"";
                 }
 
-                int imgCounter = 0;
+                // Remove any existing alt attribute from the remaining part of the tag.
+                string cleanedAfterSrc = Regex.Replace(afterSrc, @"\s+alt\s*=\s*""[^""]*""", "", RegexOptions.IgnoreCase);
 
-                // Replace each <img ...> tag with an alt attribute containing the identifier.
-                htmlContent = Regex.Replace(
-                    htmlContent,
-                    "<img([^>]*?)src=\"([^\"]+)\"([^>]*?)>",
-                    match =>
-                    {
-                        string beforeSrc = match.Groups[1].Value;
-                        string src = match.Groups[2].Value;
-                        string afterSrc = match.Groups[3].Value;
+                // Reconstruct the <img> tag with the new alt attribute.
+                return $"<img {beforeSrc}src=\"{srcValue}\"{cleanedAfterSrc}{altAttribute}>";
+            }, RegexOptions.IgnoreCase);
 
-                        string alt = imgCounter < altTexts.Count ? altTexts[imgCounter] : "";
-                        imgCounter++;
-
-                        // Preserve any existing attributes and inject alt
-                        return $"<img{beforeSrc}src=\"{src}\" alt=\"{alt}\"{afterSrc}>";
-                    },
-                    RegexOptions.IgnoreCase);
-
-                try
-                {
-                    File.WriteAllText(htmlPath, htmlContent);
-                }
-                catch (Exception writeEx)
-                {
-                    Console.WriteLine($"Failed to write modified HTML file: {writeEx.Message}");
-                }
-            }
+            // Save the modified HTML with accessible alt attributes.
+            File.WriteAllText(accessibleHtmlPath, htmlContent);
+            Console.WriteLine($"Accessible HTML saved to \"{accessibleHtmlPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

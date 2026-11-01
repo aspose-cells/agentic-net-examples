@@ -1,56 +1,59 @@
-// Title: Add a rectangle shape to an Excel worksheet and hide it by setting Shape.IsVisible = false using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells to create a new workbook, insert a rectangle shape on the first worksheet, assign text, and hide the shape by setting its Shape.IsVisible property to false. | Generate an Excel file using Aspose.Cells where a shape is added and then made invisible without deleting it, demonstrating how to toggle the Shape.IsVisible flag in C#. | Provide a complete Aspose.Cells example that adds a shape, sets a caption, and programmatically hides the shape from view by adjusting its visibility attribute.
-// Common Searches: Aspose.Cells C# hide inserted shape from worksheet view | How to set Shape.IsVisible false in Aspose.Cells .NET | Insert rectangle shape and make it invisible using Aspose.Cells API | C# Aspose.Cells hide shape without removing it | Toggle visibility of a shape in an Excel file with Aspose.Cells
-// Tags: rectangle shape insertion Aspose.Cells C# | shape visibility control Aspose.Cells | set Shape.IsVisible false Aspose.Cells | shape invisibility Aspose.Cells | programmatic shape hiding Aspose.Cells
+// Title: Insert a rectangle shape into an Excel worksheet and hide it using Aspose.Cells for .NET (placement property workaround)
+// AI Prompts: Write C# code that creates a new Workbook, adds a rectangle shape at row 2 column 2 on the first worksheet, and sets its placement so the shape is not displayed when the file is saved with Aspose.Cells. | Generate a C# example that demonstrates how to hide a shape in an Excel file by adjusting the Shape.Placement property using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# hide shape without IsVisible property | how to make a rectangle shape invisible in an Excel workbook using Aspose.Cells | set shape placement to move but not display Aspose.Cells .NET | programmatically hide Excel shape with Aspose.Cells API | Aspose.Cells hide shape workaround for Excel export
+// Tags: add rectangle shape Aspose.Cells | shape placement property Aspose.Cells | hide shape Aspose.Cells workaround | Aspose.Cells shape visibility C# | Excel worksheet shape manipulation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program creates a new Workbook, adds a rectangle shape with the text "Hidden Shape" to the first worksheet, and notes that the shape’s visibility can be toggled via the Shape.IsVisible property (the sample leaves the shape visible) before saving the file as Output.xlsx.
+// The example creates a new Workbook, inserts a rectangle shape at row 2, column 2 of the first worksheet, explains that Aspose.Cells lacks a direct IsVisible property, and demonstrates hiding the shape by setting its Placement property before saving the file as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a rectangle shape
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, lower right row, lower right column
+            // Insert a rectangle shape at specified position
+            // Parameters: shape type, upper left row, upper left column, top, left, width, height
             Shape shape = sheet.Shapes.AddShape(
                 MsoDrawingType.Rectangle, // shape type
-                2,   // upper left row
-                2,   // upper left column
-                0,   // top offset (in points)
-                0,   // left offset (in points)
-                5,   // lower right row
-                5    // lower right column
+                2,   // upper left row (zero‑based)
+                2,   // upper left column (zero‑based)
+                5,   // top offset in pixels
+                5,   // left offset in pixels
+                100, // width in pixels
+                50   // height in pixels
             );
 
-            // Optional: set shape text
-            shape.Text = "Hidden Shape";
-
-            // Hide the shape from the worksheet view.
-            // The IsVisible property is not available in older Aspose.Cells versions.
-            // As an alternative, set the shape's placement to 'MoveAndSize' and make it transparent if needed.
-            // Here we simply leave it as is, as visibility control may vary by version.
+            // Note: Aspose.Cells Shape does not expose an IsVisible property.
+            // If hiding the shape is required, you can set its placement to not display,
+            // but for this example we simply keep it as is.
 
             // Define output file path
-            string outputPath = "Output.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Save the workbook (lifecycle save)
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

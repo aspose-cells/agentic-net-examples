@@ -1,38 +1,49 @@
-// Title: Save only the active worksheet as a single‑page MHT file with Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells and exports the current sheet to a one‑page MHTML document. | Show how to configure HtmlSaveOptions so that Aspose.Cells creates a single MHT file containing just the active worksheet.
-// Common Searches: Aspose.Cells C# export active sheet to MHTML as one file | How to generate a single‑page MHT from Excel using Aspose.Cells .NET | C# save only selected worksheet as MHT with Aspose.Cells HtmlSaveOptions
-// Tags: Aspose.Cells HtmlSaveOptions SaveAsSingleFile | C# export active worksheet to MHT | Aspose.Cells single worksheet MHTML conversion | MHT single file generation with Aspose.Cells
+// Title: Generate a single‑worksheet HTML file from an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export only the active sheet to HTML | How to save a specific worksheet as HTML with Aspose.Cells .NET | HtmlSaveOptions ExportActiveWorksheetOnly example in C# | Create single‑sheet HTML output from Excel using Aspose.Cells | Save active worksheet as .html using Aspose.Cells SaveFormat.Html
+// Tags: Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly | C# save active worksheet as HTML using Aspose.Cells | Aspose.Cells SaveFormat.Html single worksheet export | export active sheet only Aspose.Cells .NET | generate single‑sheet HTML from Excel workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsMhtExample
+// The code loads an existing Excel file, activates the first worksheet, configures HtmlSaveOptions with ExportActiveWorksheetOnly set to true, and saves that worksheet as a single‑worksheet HTML file.
+class Program
 {
-    // The example opens 'input.xlsx' with Aspose.Cells, sets HtmlSaveOptions to MHtml, enables SaveAsSingleFile and ExportActiveWorksheetOnly (with optional PresentationPreference), and saves the active sheet as a single‑page MHT file named 'output.mht'.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source workbook (can be any supported Excel format)
-            string sourcePath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Open the workbook using the constructor that accepts a file name
-            Workbook workbook = new Workbook(sourcePath);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Create HtmlSaveOptions for MHTML format
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.MHtml);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure options to generate a single‑worksheet MHT file
-            saveOptions.SaveAsSingleFile = true;               // Save as a single file
-            saveOptions.ExportActiveWorksheetOnly = true;      // Export only the active sheet
-            // Optional: improve visual presentation
-            saveOptions.PresentationPreference = true;
+            // Ensure the first worksheet is the active one
+            workbook.Worksheets.ActiveSheetIndex = 0;
 
-            // Save the workbook as MHTML
-            string outputPath = "output.mht";
+            // Configure HTML save options to export only the active worksheet
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportActiveWorksheetOnly = true
+            };
+
+            // Save the workbook as a single‑worksheet HTML file
             workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook saved as single‑worksheet MHT to: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

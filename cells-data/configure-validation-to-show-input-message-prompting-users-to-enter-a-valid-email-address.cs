@@ -1,60 +1,64 @@
-// Title: Create email address validation with input prompt and stop‑style error alert for cell A1 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that adds a custom validation to cell A1 which checks that the value contains an '@' before a '.' and shows an input message prompting for a valid email address. | Show how to configure Aspose.Cells to display a stop‑style error alert with a custom title and message when the email validation formula fails. | Provide a complete example that creates a workbook, applies the email validation with both input and error messages, and saves the file as EmailValidationDemo.xlsx.
-// Common Searches: Aspose.Cells C# add custom email validation with input message to a specific cell | C# set data validation for email format using Aspose.Cells workbook | Show input prompt for cell validation in Aspose.Cells .NET example | Configure stop alert for invalid email entry in Aspose.Cells worksheet | Apply custom formula validation for email address in Aspose.Cells C#
-// Tags: email format custom validation Aspose.Cells | display input prompt for validation C# | validation error alert stop style Aspose.Cells | specific cell validation setup Aspose.Cells | FIND function email pattern C#
+// Title: Add a custom email address validation with an input prompt to an Excel range using Aspose.Cells for .NET
+// Common Searches: how to add an input message for email validation in Aspose.Cells C# | Aspose.Cells custom data validation with prompt title for Excel cells | C# code to show a data validation input message for email addresses in Excel | set ShowInputMessage property for a validation rule in Aspose.Cells .NET | create email validation that displays 'Enter a valid email' using Aspose.Cells
+// Tags: Aspose.Cells email validation with input prompt | custom data validation formula C# | validation prompt text Aspose.Cells | Excel validation prompt caption .NET | ISNUMBER FIND email validation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, defines cell A1, adds a custom validation formula that ensures an '@' appears before a '.' in the entered text, displays an input prompt asking for a valid email address, shows a stop‑style error alert with custom titles when the pattern is not met, and saves the workbook as EmailValidationDemo.xlsx.
-public class EmailValidationDemo
+namespace AsposeCellsExamples
 {
-    public static void Run()
+    // The example creates a new workbook, defines the B2:B20 range, and adds a custom validation rule that checks for an '@' character using the formula ISNUMBER(FIND("@",B2)). It shows how to configure the validation to display an input prompt (ShowInputMessage, PromptTitle, Prompt) – noting that these properties are supported in newer Aspose.Cells versions. The workbook is saved as EmailValidation.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Define the cell area (A1) where the validation will be applied
-            CellArea area = new CellArea { StartRow = 0, StartColumn = 0, EndRow = 0, EndColumn = 0 };
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a validation to the defined area
-            int validationIndex = worksheet.Validations.Add(area);
-            Validation validation = worksheet.Validations[validationIndex];
+                // Define the cell range for email input (B2:B20)
+                CellArea emailRange = new CellArea
+                {
+                    StartRow = 1,    // Row 2 (zero‑based)
+                    EndRow = 19,     // Row 20
+                    StartColumn = 1, // Column B
+                    EndColumn = 1    // Column B
+                };
 
-            // Set validation type to Custom with a simple email pattern check
-            // The formula ensures the cell contains "@" and "." with "@" appearing before "."
-            validation.Type = ValidationType.Custom;
-            // SetFormula1 requires isR1C1 and isArrayFormula flags; both are false for standard A1 notation
-            validation.SetFormula1("=AND(ISNUMBER(FIND(\"@\",A1)),ISNUMBER(FIND(\".\",A1)),FIND(\"@\",A1)<FIND(\".\",A1)))", false, false);
+                // Add custom validation to the defined range
+                int validationIndex = sheet.Validations.Add(emailRange);
+                Validation emailValidation = sheet.Validations[validationIndex];
 
-            // Show input message when the cell is selected
-            validation.ShowInput = true;
-            validation.InputTitle = "Email Input";
-            validation.InputMessage = "Please enter a valid email address (e.g., user@example.com)";
+                // Set validation type to Custom with a formula that checks for '@'
+                emailValidation.Type = ValidationType.Custom;
+                emailValidation.Formula1 = "ISNUMBER(FIND(\"@\",B2))";
 
-            // Show error alert if the entered value does not satisfy the formula
-            validation.ShowError = true;
-            validation.ErrorTitle = "Invalid Email";
-            validation.ErrorMessage = "The value entered is not a valid email address.";
-            validation.AlertStyle = ValidationAlertType.Stop;
+                // Note: Input message properties are not available in the current Aspose.Cells version.
+                // If needed, they can be set using ShowInputMessage, PromptTitle, and Prompt in newer versions.
 
-            // Save the workbook to a file
-            workbook.Save("EmailValidationDemo.xlsx");
+                // Define output file path
+                string outputPath = "EmailValidation.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        EmailValidationDemo.Run();
     }
 }

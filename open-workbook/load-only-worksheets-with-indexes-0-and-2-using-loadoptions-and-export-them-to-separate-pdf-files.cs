@@ -1,75 +1,61 @@
-// Title: Export worksheets at indexes 0 and 2 to separate PDF files with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, extracts worksheets with indexes 0 and 2 into individual workbooks, and saves each as a separate PDF file. | Create a reusable C# method that takes a source Excel path and an array of worksheet indexes, then uses Aspose.Cells to export each specified sheet to its own PDF document.
-// Common Searches: Aspose.Cells C# export only selected worksheet indexes to PDF | How to save individual Excel sheets as separate PDF files using Aspose.Cells .NET | C# copy a specific worksheet to a new workbook and convert to PDF with Aspose.Cells | Load workbook with limited sheets using Aspose.Cells and generate PDFs per sheet | Export sheet 0 and sheet 2 from Excel to PDF using Aspose.Cells API
-// Tags: export specific worksheets to PDF Aspose.Cells | load workbook with selected sheet indexes C# | copy worksheet to new workbook Aspose.Cells | save worksheet as PDF Aspose.Cells | Aspose.Cells selective sheet export
+// Title: C# – Load worksheets at indexes 0 and 2 with Aspose.Cells LoadOptions and export each to a separate PDF file
+// Common Searches: Aspose.Cells load only selected worksheets by index and convert to PDF in C# | How to export specific Excel sheets (e.g., sheet 0 and sheet 2) to PDF using Aspose.Cells .NET | C# copy a single worksheet to a new workbook and save as PDF with Aspose.Cells | LoadOptions for selective sheet loading from an XLSX file and PDF conversion in .NET
+// Tags: load specific worksheet indexes Aspose.Cells | export worksheet to PDF C# | copy worksheet to new workbook Aspose.Cells | selective sheet loading LoadOptions | single-sheet PDF conversion Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExport
+// The example verifies that the source XLSX file exists, loads it with LoadOptions (Xlsx format), iterates over the worksheet indexes 0 and 2, creates a new workbook containing only the selected sheet, and saves each workbook as a separate PDF (Sheet0.pdf, Sheet2.pdf). It includes range checks for sheet indexes and exception handling.
+class Program
 {
-    // The example checks for the input.xlsx file, loads it with Aspose.Cells, selects worksheets at indexes 0 and 2, copies each into a temporary workbook, and saves each temporary workbook as a separate PDF (Sheet0.pdf, Sheet2.pdf), handling out‑of‑range indexes and runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Input workbook file
-                const string inputFile = "input.xlsx";
+            const string inputFile = "input.xlsx";
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                return;
+            }
+
+            // Load the workbook with LoadOptions (specify the format if needed)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook sourceWorkbook = new Workbook(inputFile, loadOptions);
+
+            // Indexes of worksheets to export
+            int[] sheetIndexes = { 0, 2 };
+
+            foreach (int index in sheetIndexes)
+            {
+                // Ensure the index is within the range of worksheets
+                if (index < 0 || index >= sourceWorkbook.Worksheets.Count)
                 {
-                    Console.WriteLine($"Error: The file '{inputFile}' was not found.");
-                    return;
+                    Console.WriteLine($"Warning: Sheet index {index} is out of range. Skipping.");
+                    continue;
                 }
 
-                // Define which worksheets to export (indexes 0 and 2)
-                int[] sheetsToExport = new int[] { 0, 2 };
+                // Create a new workbook that will contain only the selected sheet
+                Workbook singleSheetWorkbook = new Workbook();
+                // Remove the default empty sheet
+                singleSheetWorkbook.Worksheets.Clear();
 
-                // Load the workbook (all sheets are loaded)
-                Workbook workbook = new Workbook(inputFile);
+                // Copy the desired sheet from the source workbook by name
+                string sheetName = sourceWorkbook.Worksheets[index].Name;
+                singleSheetWorkbook.Worksheets.AddCopy(sheetName);
 
-                // Export each requested worksheet to a separate PDF file
-                foreach (int sheetIndex in sheetsToExport)
-                {
-                    try
-                    {
-                        // Ensure the sheet index is within the actual worksheet count
-                        if (sheetIndex < 0 || sheetIndex >= workbook.Worksheets.Count)
-                        {
-                            Console.WriteLine($"Warning: Sheet index {sheetIndex} is out of range. Skipping.");
-                            continue;
-                        }
-
-                        // Create a temporary workbook containing only the desired sheet
-                        Workbook sheetWorkbook = new Workbook();
-                        sheetWorkbook.Worksheets.Clear();
-
-                        // Copy the specific worksheet by name into the new workbook
-                        string sourceSheetName = workbook.Worksheets[sheetIndex].Name;
-                        sheetWorkbook.Worksheets.AddCopy(sourceSheetName);
-
-                        // Build output PDF file name
-                        string pdfFileName = $"Sheet{sheetIndex}.pdf";
-
-                        // Save the single sheet as a PDF
-                        sheetWorkbook.Save(pdfFileName, SaveFormat.Pdf);
-                        Console.WriteLine($"Saved sheet {sheetIndex} to '{pdfFileName}'.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error exporting sheet {sheetIndex}: {ex.Message}");
-                    }
-                }
+                // Export the single-sheet workbook to a PDF file
+                string pdfFileName = $"Sheet{index}.pdf";
+                singleSheetWorkbook.Save(pdfFileName, SaveFormat.Pdf);
+                Console.WriteLine($"Saved '{pdfFileName}'.");
             }
-            catch (Exception ex)
-            {
-                // Log unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

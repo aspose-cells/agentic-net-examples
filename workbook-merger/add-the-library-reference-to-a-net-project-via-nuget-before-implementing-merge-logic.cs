@@ -1,76 +1,69 @@
-// Title: Add Aspose.Cells via NuGet and merge multiple .xlsx workbooks into a single file using CellsHelper.MergeFiles in C#
-// AI Prompts: Generate C# code that installs the Aspose.Cells NuGet package, creates two sample .xlsx workbooks, and merges them into one workbook using CellsHelper.MergeFiles with a temporary cache file. | Write a .NET console application that checks that source Excel files exist, merges them into a destination workbook via CellsHelper.MergeFiles, and then deletes the source and cache files while handling any exceptions. | Provide a step‑by‑step guide for adding the Aspose.Cells reference through NuGet, configuring a temporary cache for the merge operation, and performing workbook merging with proper error handling in C#.
-// Common Searches: aspnet add Aspose.Cells NuGet package then merge two xlsx files programmatically | c# CellsHelper.MergeFiles example with temporary cache file | how to combine multiple Excel workbooks into one using Aspose.Cells in a console app | merge Excel files and delete source files after merge using Aspose.Cells C#
-// Tags: install Aspose.Cells NuGet package for .NET | cellshelper.mergefiles combine .xlsx workbooks | temporary cache file usage in Aspose.Cells merge | exception handling for workbook merging in C# | cleanup source and cache files after Excel merge
+// Title: Install Aspose.Cells via NuGet and merge two Excel workbooks into one using a C# console application
+// AI Prompts: Show the exact dotnet CLI commands to add the Aspose.Cells NuGet package to a .NET console project, then generate C# code that merges two .xlsx files into a single workbook. | Write a C# console snippet that loads two Excel files with Aspose.Cells, copies every worksheet into a new workbook using Worksheets.AddCopy, and saves the merged result as Merged.xlsx.
+// Common Searches: how to add Aspose.Cells NuGet package and merge Excel files in a C# console app | C# example for merging multiple .xlsx workbooks with Aspose.Cells AddCopy | using Aspose.Cells to combine worksheets from two workbooks into one file
+// Tags: install Aspose.Cells NuGet package | merge Excel workbooks Aspose.Cells C# | copy worksheets between workbooks Aspose.Cells | C# console workbook consolidation | Aspose.Cells workbook merging example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MergeExcelFilesDemo
+// The console application verifies the presence of two source .xlsx files, loads them with Aspose.Cells, creates a new workbook, copies all worksheets from both source workbooks using Worksheets.AddCopy, saves the merged workbook as Merged.xlsx, and handles missing files or runtime errors.
+class WorkbookMerger
 {
-    // This C# console example shows how to add the Aspose.Cells library via NuGet, create two sample .xlsx workbooks, and merge them into a single workbook using CellsHelper.MergeFiles with a temporary cache file. It includes validation of source files, error handling, and cleanup of the original files and cache after the merge.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Paths to the source Excel files
+        string sourcePath1 = "Source1.xlsx";
+        string sourcePath2 = "Source2.xlsx";
+
+        // Path for the merged output file
+        string mergedPath = "Merged.xlsx";
+
+        try
         {
-            // Prepare sample workbooks to be merged
-            string[] sourceFiles = new string[] { "Source1.xlsx", "Source2.xlsx" };
-
-            try
+            // Verify that source files exist
+            if (!File.Exists(sourcePath1))
             {
-                // Create first sample workbook
-                Workbook wb1 = new Workbook();
-                wb1.Worksheets[0].Cells["A1"].PutValue("Data from first file");
-                wb1.Save(sourceFiles[0]);
-
-                // Create second sample workbook
-                Workbook wb2 = new Workbook();
-                wb2.Worksheets[0].Cells["A1"].PutValue("Data from second file");
-                wb2.Save(sourceFiles[1]);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error creating sample workbooks: {ex.Message}");
+                Console.WriteLine($"Error: File not found - {sourcePath1}");
                 return;
             }
 
-            // Define temporary cache file required by CellsHelper.MergeFiles
-            string cacheFile = "mergeCache.tmp";
-
-            // Define destination file for the merged result
-            string destFile = "MergedResult.xlsx";
-
-            try
+            if (!File.Exists(sourcePath2))
             {
-                // Ensure source files exist before merging
-                foreach (var file in sourceFiles)
-                {
-                    if (!File.Exists(file))
-                        throw new FileNotFoundException($"Source file not found: {file}");
-                }
-
-                // Merge the source Excel files into a single workbook
-                CellsHelper.MergeFiles(sourceFiles, cacheFile, destFile);
-
-                Console.WriteLine($"Files merged successfully. Output saved to '{destFile}'.");
+                Console.WriteLine($"Error: File not found - {sourcePath2}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbooks
+            Workbook wb1 = new Workbook(sourcePath1);
+            Workbook wb2 = new Workbook(sourcePath2);
+
+            // Create a new workbook to hold the merged content
+            Workbook mergedWorkbook = new Workbook();
+
+            // Remove the default empty worksheet created by Aspose.Cells
+            mergedWorkbook.Worksheets.Clear();
+
+            // Copy all worksheets from the first workbook into the merged workbook
+            foreach (Worksheet ws in wb1.Worksheets)
             {
-                Console.WriteLine($"Error during merge: {ex.Message}");
+                // AddCopy expects the source worksheet name
+                mergedWorkbook.Worksheets.AddCopy(ws.Name);
             }
-            finally
-            {
-                // Clean up temporary files
-                foreach (var file in sourceFiles)
-                {
-                    if (File.Exists(file))
-                        File.Delete(file);
-                }
 
-                if (File.Exists(cacheFile))
-                    File.Delete(cacheFile);
+            // Copy all worksheets from the second workbook into the merged workbook
+            foreach (Worksheet ws in wb2.Worksheets)
+            {
+                mergedWorkbook.Worksheets.AddCopy(ws.Name);
             }
+
+            // Save the merged workbook to the specified file
+            mergedWorkbook.Save(mergedPath);
+            Console.WriteLine($"Workbooks merged successfully into '{mergedPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

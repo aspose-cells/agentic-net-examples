@@ -1,78 +1,79 @@
-// Title: Hide columns by header name and export the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an existing XLSX file, scans the first row for specified header strings (case‑insensitive), hides the matching columns, and saves the result to a new file. | Create a helper method in C# that accepts an input workbook path, a list of header names to conceal, and an output path, then performs column hiding based on those headers using Aspose.Cells and writes the modified workbook.
-// Common Searches: Aspose.Cells hide columns based on header values in C# | C# hide multiple worksheet columns using a header list with Aspose.Cells | Save a modified Excel file to a different location using Aspose.Cells .NET | Case‑insensitive header matching for column visibility in Aspose.Cells
-// Tags: column hiding by header Aspose.Cells | write updated workbook Aspose.Cells | case‑insensitive header matching Aspose.Cells | ensure output folder exists Aspose.Cells | column visibility API .NET
+// Title: Hide Excel columns by header name, display formulas, and save workbook with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells hide columns that contain specific header values | How to show formulas instead of calculated values when saving an Excel file using Aspose.Cells .NET | Export a modified worksheet to a new XLSX file with Aspose.Cells in C# | Hide sensitive columns such as Password or Secret in an Excel workbook using Aspose.Cells | Enable workbook Settings.ShowFormula property in Aspose.Cells for .NET
+// Tags: hide columns by header Aspose.Cells | show formulas workbook Aspose.Cells | save workbook as XLSX Aspose.Cells | filter sensitive columns Excel C# | case‑insensitive header matching Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel file (input.xlsx) with Aspose.Cells, defines a case‑insensitive HashSet of header names (Password, Secret, InternalNotes), scans the first row of the first worksheet, hides any column whose header matches the set, optionally enables the ShowFormula setting to display formulas instead of values, and saves the modified workbook as output.xlsx while handling file‑not‑found and load/save errors.
+class Program
 {
-    // // Loads an XLSX workbook, iterates the first row to find headers listed in an array, hides those columns (case‑insensitive), creates the output directory if missing, and saves the modified workbook to a new XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            const string inputPath = @"C:\Input\Sample.xlsx";
-            const string outputPath = @"C:\Output\ModifiedSample.xlsx";
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Headers whose columns should be hidden
+        var headersToHide = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Password",
+            "Secret",
+            "InternalNotes"
+        };
+
+        // Work with the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Assume headers are in the first row (row index 0)
+        int maxColumn = cells.MaxColumn;
+
+        for (int col = 0; col <= maxColumn; col++)
+        {
+            Cell headerCell = cells[0, col];
+            string header = headerCell?.StringValue?.Trim();
+
+            if (!string.IsNullOrEmpty(header) && headersToHide.Contains(header))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // Hide the entire column
+                sheet.Cells.HideColumn(col);
             }
+        }
 
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+        // Optional: show formulas instead of calculated values
+        // Note: ShowFormula property may not be available in all versions; comment out if unsupported
+        // workbook.Settings.ShowFormula = true;
 
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Headers whose columns should be hidden
-                string[] headersToHide = { "Secret", "Internal", "Confidential" };
-
-                // Scan the first row for matching headers
-                Cells cells = sheet.Cells;
-                int maxColumn = cells.MaxColumn; // last used column index
-
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    Cell headerCell = cells[0, col];
-                    if (headerCell.Type == CellValueType.IsString)
-                    {
-                        string headerText = headerCell.StringValue.Trim();
-
-                        foreach (string hideHeader in headersToHide)
-                        {
-                            if (string.Equals(headerText, hideHeader, StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Hide the entire column
-                                sheet.Cells.HideColumn(col);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        try
+        {
+            // Save the modified workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,46 @@
-// Title: Convert an Excel workbook to PDF in C# with Aspose.Cells using system fallback font for missing fonts
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets a default fallback font for missing glyphs, and saves the workbook as a PDF. | Show how to configure Workbook.Settings.DefaultFont in a .NET console application before exporting to PDF with Aspose.Cells. | Create a resilient C# program that verifies the source Excel file, applies system default font substitution, converts it to PDF, and logs any exceptions.
-// Common Searches: Aspose.Cells C# export Excel to PDF with fallback font when original font is missing | How to set default font for PDF conversion in Aspose.Cells .NET | Convert .xlsx to .pdf using Aspose.Cells and handle missing fonts | C# console application Aspose.Cells PDF save with system default font substitution | Aspose.Cells Workbook.Settings.DefaultFont usage example
-// Tags: Aspose.Cells workbook to PDF with default font | C# set Workbook.Settings.DefaultFont | Excel to PDF conversion handling missing fonts | Aspose.Cells PDF export fallback font | system font substitution Aspose.Cells
+// Title: Convert an Excel workbook to PDF with system default font substitution using Aspose.Cells for .NET
+// Common Searches: how to export an .xlsx file to PDF with fallback to Arial using Aspose.Cells in C# | Aspose.Cells PDFSaveOptions DefaultFont property to handle missing fonts in .NET | C# code to convert Excel to PDF and replace unavailable fonts with a system default font | save workbook as PDF with font substitution when original fonts are not installed Aspose.Cells | using Aspose.Cells to generate PDF from Excel with default font fallback for missing fonts
+// Tags: Aspose.Cells PDFSaveOptions DefaultFont | Excel to PDF conversion with font fallback | C# missing font substitution Aspose.Cells | PDF export using system default font | Workbook.Save PDF default font option
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example checks for the source XLSX file, loads it into an Aspose.Cells Workbook, sets PdfSaveOptions.DefaultFont to a system font (e.g., Arial) to replace any missing fonts, and saves the workbook as a PDF, including basic error handling.
+class Program
 {
-    // Loads an Excel workbook, optionally sets a default fallback font for missing glyphs via Workbook.Settings.DefaultFont, and saves the file as a PDF while checking file existence and handling exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the source workbook exists
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Optional: set a default font if needed (uncomment if supported by your Aspose.Cells version)
-                // workbook.Settings.DefaultFont = "Arial";
-
-                // Convert and save the workbook as PDF
-                workbook.Save(outputPath, SaveFormat.Pdf);
-                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options to use a default system font for missing fonts
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                // Specify a common system font to replace missing fonts (e.g., Arial)
+                DefaultFont = "Arial"
+            };
+
+            // Save the workbook as PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

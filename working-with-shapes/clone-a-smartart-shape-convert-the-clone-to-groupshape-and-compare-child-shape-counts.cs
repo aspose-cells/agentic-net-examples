@@ -1,22 +1,24 @@
-// Title: Clone a SmartArt shape in an Excel worksheet with Aspose.Cells for .NET and compare shape counts
-// AI Prompts: Write C# code that loads an Excel file, finds the first SmartArt shape on the first worksheet, clones it with AddCopy, and prints the number of shapes before and after the clone using Aspose.Cells. | Show how to check the type of a cloned shape and read its dimensions after duplication with Aspose.Cells for .NET.
-// Common Searches: how to duplicate a SmartArt shape in an Excel file using Aspose.Cells C# | Aspose.Cells AddCopy example for cloning worksheet shapes | count worksheet shapes before and after cloning with Aspose.Cells | retrieve shape collection size in Aspose.Cells after adding a copy
-// Tags: clone smartart shape aspnet cells | addcopy shape duplication aspnet cells | worksheet shape count before after aspnet cells | smartart shape type verification aspnet cells | excel workbook shape cloning aspnet cells
+// Title: Clone a SmartArt shape, cast it to GroupShape, and compare child shape counts with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to duplicate a SmartArt shape on a worksheet, convert the duplicate to a GroupShape, and retrieve its child count via reflection. | Write a .NET program that clones a SmartArt shape, casts the clone to GroupShape, compares the original and cloned group’s child shape numbers, and saves the workbook.
+// Common Searches: Aspose.Cells C# duplicate SmartArt shape and get group child count | clone SmartArt shape to GroupShape and compare child shapes using Aspose.Cells .NET | C# Aspose.Cells GetChildCount for cloned SmartArt shape | AddCopy method clone shape and check child count Aspose.Cells example
+// Tags: Aspose.Cells clone SmartArt shape | GroupShape child count Aspose.Cells | AddCopy shape cloning .NET | reflection GetChildCount GroupShape | compare original and cloned shape child counts
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, selects the first shape on the first worksheet, clones it using the AddCopy method, prints the shape count before and after cloning, and saves the updated file.
+// The example loads an Excel workbook, finds the first shape, clones it with AddCopy, attempts to treat both original and cloned shapes as GroupShape, uses reflection to call GetChildCount when available, prints the child counts and whether they match, and saves the workbook with the cloned shape.
 class SmartArtCloneExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
             // Verify that the input file exists
             if (!File.Exists(inputPath))
@@ -31,37 +33,64 @@ class SmartArtCloneExample
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Retrieve the first shape on the worksheet
-            Shape firstShape = null;
+            // Locate the first shape on the worksheet
+            Shape originalShape = null;
             foreach (Shape shape in sheet.Shapes)
             {
-                firstShape = shape;
+                originalShape = shape;
                 break;
             }
 
-            if (firstShape == null)
+            if (originalShape == null)
             {
                 Console.WriteLine("No shape found on the worksheet.");
                 return;
             }
 
-            // Record shape count before cloning
-            int countBefore = sheet.Shapes.Count;
-
-            // Clone the shape using AddCopy with position and size parameters
+            // Clone the shape using AddCopy (requires position parameters)
             Shape clonedShape = sheet.Shapes.AddCopy(
-                firstShape,
-                firstShape.UpperLeftRow,
-                firstShape.UpperLeftColumn,
-                (int)firstShape.Height,
-                (int)firstShape.Width);
+                originalShape,
+                originalShape.UpperLeftRow,
+                originalShape.UpperLeftColumn,
+                originalShape.LowerRightRow,
+                originalShape.LowerRightColumn);
 
-            // Record shape count after cloning
-            int countAfter = sheet.Shapes.Count;
+            // Determine child shape counts (relevant for GroupShape)
+            int originalChildCount = 0;
+            int clonedChildCount = 0;
 
-            // Output the shape counts before and after cloning
-            Console.WriteLine($"Original shape count: {countBefore}");
-            Console.WriteLine($"Cloned shape count: {countAfter}");
+            if (originalShape is GroupShape originalGroup)
+            {
+                // Use reflection to call GetChildCount if it exists in the current version
+                MethodInfo? getCount = typeof(GroupShape).GetMethod("GetChildCount", BindingFlags.Instance | BindingFlags.Public);
+                if (getCount != null)
+                {
+                    object? result = getCount.Invoke(originalGroup, null);
+                    originalChildCount = result != null ? Convert.ToInt32(result) : 0;
+                }
+            }
+
+            if (clonedShape is GroupShape clonedGroup)
+            {
+                MethodInfo? getCount = typeof(GroupShape).GetMethod("GetChildCount", BindingFlags.Instance | BindingFlags.Public);
+                if (getCount != null)
+                {
+                    object? result = getCount.Invoke(clonedGroup, null);
+                    clonedChildCount = result != null ? Convert.ToInt32(result) : 0;
+                }
+            }
+
+            // Display the results
+            Console.WriteLine($"Original shape child count: {originalChildCount}");
+            Console.WriteLine($"Cloned shape child count: {clonedChildCount}");
+            Console.WriteLine($"Counts are equal: {originalChildCount == clonedChildCount}");
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook with the cloned shape
             workbook.Save(outputPath);

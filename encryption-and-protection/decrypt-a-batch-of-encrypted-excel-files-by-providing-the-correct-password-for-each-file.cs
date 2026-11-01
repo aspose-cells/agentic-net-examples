@@ -1,31 +1,30 @@
-// Title: Batch decrypt multiple password‑protected Excel .xlsx files using Aspose.Cells for .NET
-// AI Prompts: Create a C# console program that loops through a Dictionary<string,string> of encrypted Excel file paths and their passwords, opens each workbook with Aspose.Cells LoadOptions, clears the workbook password, and writes the unprotected file to a target directory. | Enhance the program to catch exceptions per file and write a CSV log containing the source path, decryption result, and error details while continuing the batch processing.
-// Common Searches: asp.net batch decrypt password protected xlsx files using Aspose.Cells | c# load encrypted Excel workbook with password and save without password | how to remove workbook password from multiple Excel files programmatically | process a list of Excel files and passwords to create unprotected copies in C# | aspose.cells decrypt multiple workbooks in a loop
-// Tags: multiple workbook decryption Aspose.Cells | open encrypted Excel file via LoadOptions | clear workbook protection Aspose.Cells | save unprotected xlsx Aspose.Cells | dictionary mapping file paths to passwords C#
+// Title: Decrypt multiple password‑protected Excel .xlsx files in batch with Aspose.Cells for .NET
+// Common Searches: C# code to decrypt a list of password protected Excel files using Aspose.Cells | How to programmatically remove passwords from several .xlsx workbooks with Aspose.Cells .NET | Batch processing encrypted Excel files with different passwords in Aspose.Cells | Load encrypted workbook with password and save unprotected using Aspose.Cells in C# | Automate decryption of multiple Excel files stored in a folder using Aspose.Cells
+// Tags: Aspose.Cells bulk Excel decryption | C# load password protected workbook Aspose.Cells | Aspose.Cells save workbook without password | dictionary driven Excel password mapping C# | automated removal of Excel file protection Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace ExcelDecryption
+namespace ExcelDecryptionBatch
 {
-    // The example iterates over a dictionary of encrypted .xlsx file paths and their passwords, loads each workbook with Aspose.Cells using LoadOptions.Password, clears any workbook password, and saves an unprotected copy to a specified output folder, handling missing files and runtime exceptions.
+    // The example shows how to decrypt a batch of password‑protected Excel .xlsx files using Aspose.Cells for .NET. It stores each encrypted file path together with its password in a C# dictionary, creates an output folder, and iterates through the entries. For each file a LoadOptions object supplies the password, the workbook is loaded, and then saved to the output directory without a password, effectively removing protection. Errors are caught and logged, and a completion message is displayed.
     class Program
     {
         static void Main(string[] args)
         {
-            // Map of encrypted file paths to their passwords
+            // Dictionary mapping encrypted file paths to their passwords
             var filesWithPasswords = new Dictionary<string, string>
             {
                 // Example entries – replace with actual paths and passwords
-                { @"C:\Encrypted\Report1.xlsx", "Password123" },
-                { @"C:\Encrypted\Report2.xlsx", "Secret!@#" },
+                { @"C:\EncryptedFiles\Report1.xlsx", "Password123" },
+                { @"C:\EncryptedFiles\Report2.xlsx", "Secret!@#" },
                 // Add more files as needed
             };
 
-            // Destination folder for decrypted files
-            string outputFolder = @"C:\Decrypted";
+            // Folder where decrypted files will be saved
+            string outputFolder = @"C:\DecryptedFiles";
             Directory.CreateDirectory(outputFolder);
 
             foreach (var kvp in filesWithPasswords)
@@ -33,42 +32,31 @@ namespace ExcelDecryption
                 string encryptedPath = kvp.Key;
                 string password = kvp.Value;
 
-                // Verify source file exists
-                if (!File.Exists(encryptedPath))
-                {
-                    Console.WriteLine($"Source file not found: {encryptedPath}");
-                    continue;
-                }
-
                 try
                 {
-                    // Load the encrypted workbook using the password
+                    // Load the encrypted workbook using the provided password
                     var loadOptions = new LoadOptions(LoadFormat.Xlsx)
                     {
                         Password = password
                     };
-
                     var workbook = new Workbook(encryptedPath, loadOptions);
 
-                    // Remove workbook password (if any)
-                    workbook.Settings.Password = null;
+                    // Determine output file name (same name, different folder)
+                    string fileName = Path.GetFileName(encryptedPath);
+                    string decryptedPath = Path.Combine(outputFolder, fileName);
 
-                    // Build output file path
-                    string fileName = Path.GetFileNameWithoutExtension(encryptedPath);
-                    string decryptedPath = Path.Combine(outputFolder, $"{fileName}_decrypted.xlsx");
-
-                    // Save the workbook without a password
+                    // Save the workbook without a password (decrypted)
                     workbook.Save(decryptedPath, SaveFormat.Xlsx);
 
-                    Console.WriteLine($"Decrypted file saved to: {decryptedPath}");
+                    Console.WriteLine($"Decrypted and saved: {decryptedPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{encryptedPath}': {ex.Message}");
+                    Console.WriteLine($"Failed to decrypt '{encryptedPath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("All files processed.");
+            Console.WriteLine("Batch decryption completed.");
         }
     }
 }

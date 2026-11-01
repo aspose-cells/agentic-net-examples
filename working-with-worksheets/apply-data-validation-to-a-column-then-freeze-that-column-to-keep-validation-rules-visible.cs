@@ -1,65 +1,58 @@
-// Title: Create an Excel file with list‑type data validation in column A and freeze that column using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that adds a list‑based data validation with an in‑cell dropdown to the range A1:A100 and then freezes column A using Aspose.Cells. | Generate a .NET program that configures a validation list, sets a custom error title and message, enables the dropdown arrow, and applies FreezePanes to keep the validation column visible while scrolling.
-// Common Searches: how to add a dropdown list validation to column A with Aspose.Cells C# | Aspose.Cells freeze first column after applying data validation | C# example for list validation and FreezePanes in the same worksheet | apply data validation list and freeze panes together using Aspose.Cells for .NET | Aspose.Cells create workbook with validation dropdown and frozen column
-// Tags: Aspose.Cells list‑type validation dropdown C# | Aspose.Cells FreezePanes column A .NET | Aspose.Cells custom validation error message | Aspose.Cells apply validation to range A1:A100 | Aspose.Cells workbook creation with validation and frozen column
+// Title: Add a list‑type data validation dropdown to column A and freeze the column using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a list validation dropdown to a column in Excel using Aspose.Cells C# | Aspose.Cells C# freeze first column after setting data validation | C# programmatically apply list data validation to A2:A100 and keep it visible while scrolling | using Aspose.Cells to create dropdown list validation and freeze panes in an Excel workbook | example of FreezePanes with data validation in Aspose.Cells for .NET
+// Tags: list validation dropdown Aspose.Cells | freeze first column Aspose.Cells | apply validation to A2:A100 C# | Excel workbook with frozen pane and validation | Aspose.Cells data validation example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program creates a new workbook, adds a list‑type data validation with an in‑cell dropdown to cells A1:A100, configures custom error title and message, freezes column A using FreezePanes, and saves the file as DataValidationAndFreeze.xlsx.
+// The sample creates a new workbook, adds a list‑type data validation with an in‑cell dropdown to cells A2 through A100, sets input and error messages, freezes column A using FreezePanes so the validation stays visible while scrolling, and saves the file as ValidatedAndFrozen.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range for data validation (e.g., column A, rows 1-100)
-            int firstRow = 0;          // Row index is zero‑based (row 1)
-            int lastRow = 99;          // Row 100
-            int columnIndex = 0;       // Column A
+            // Define the range for validation (A2:A100)
+            CellArea validationArea = new CellArea
+            {
+                StartRow = 1,   // Row 2 (0‑based index)
+                EndRow = 99,    // Row 100
+                StartColumn = 0,
+                EndColumn = 0
+            };
 
-            // Build the Excel address for the validation range (e.g., "A1:A100")
-            string startCell = CellsHelper.CellIndexToName(firstRow, columnIndex);
-            string endCell = CellsHelper.CellIndexToName(lastRow, columnIndex);
-
-            // Convert the address strings to a CellArea object required by Add()
-            CellArea validationArea = CellArea.CreateCellArea(startCell, endCell);
-
-            // Add a list‑type validation to the specified range
+            // Add validation for the specified range – Add returns the index of the new validation
             int validationIndex = sheet.Validations.Add(validationArea);
             Validation validation = sheet.Validations[validationIndex];
-            validation.Type = ValidationType.List;                     // List validation
-            validation.Operator = OperatorType.Equal;                  // Required for list type
-            validation.Formula1 = "\"Option1,Option2,Option3\"";       // Comma‑separated list
-            validation.ShowError = true;                               // Show error dialog
+
+            // Set validation type to List with in‑cell dropdown
+            validation.Type = ValidationType.List;
+            validation.InCellDropDown = true;
+            validation.Formula1 = "\"Option1,Option2,Option3\"";
+
+            // Configure input (prompt) message
+            validation.InputMessage = "Select a value from the list.";
+            validation.InputTitle = "Input Required";
+            // ShowInputMessage property is not required; default behavior displays the message
+
+            // Configure error message
+            validation.ErrorMessage = "Please select a valid option.";
             validation.ErrorTitle = "Invalid Input";
-            validation.ErrorMessage = "Please select a value from the list.";
-            validation.InCellDropDown = true;                          // Show dropdown arrow (correct property)
+            validation.ShowError = true;
 
-            // Freeze the first column (column A) so validation rules stay visible while scrolling
-            // Parameters: row, column, rowOffset, columnOffset
-            // Setting column = 1 freezes columns to the left of column B (i.e., column A)
-            sheet.FreezePanes(0, 1, 0, 0);
+            // Freeze the first column (column A) so the validation remains visible while scrolling
+            // Parameters: rowSplit, columnSplit, topRow, leftColumn
+            sheet.FreezePanes(0, 1, 0, 1);
 
-            // Save the workbook to a file
-            string outputPath = "DataValidationAndFreeze.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
+            // Determine output path and save the workbook
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ValidatedAndFrozen.xlsx");
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {

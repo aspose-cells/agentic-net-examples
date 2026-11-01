@@ -1,7 +1,6 @@
-// Title: Implement exponential‑backoff retry for WorkbookDesigner.SetDataSource during smart marker preparation in Aspose.Cells (C#)
-// AI Prompts: Write a reusable helper that invokes WorkbookDesigner.SetDataSource with a configurable maximum retry count and exponential back‑off delays. | Detect transient database exceptions and automatically retry the SetDataSource call until the limit is reached or the operation succeeds. | Integrate the retry helper into a smart‑marker workflow, then process the markers and save the workbook.
-// Common Searches: how to add retry logic to Aspose.Cells WorkbookDesigner SetDataSource | c# exponential backoff for smart marker datasource errors | handling transient database connectivity in Aspose.Cells smart markers | configurable max retry attempts for SetDataSource in Aspose.Cells | retry pattern for Aspose.Cells smart marker data source
-// Tags: aspocells workbookdesigner setdatasource retry | smart markers datasource exponential backoff | c# transient database error handling aspocells | configurable retry attempts aspocells | excel smart marker retry pattern
+// Title: Implement retry logic for WorkbookDesigner.SetDataSource when handling transient database errors in Aspose.Cells smart markers (C#)
+// Common Searches: C# retry pattern for Aspose.Cells WorkbookDesigner SetDataSource transient failures | How to handle database connectivity issues while setting smart marker data source in Aspose.Cells | Aspose.Cells smart markers retry on SetDataSource exception example | Implement exponential backoff for WorkbookDesigner SetDataSource in C# | Retrying SetDataSource call in Aspose.Cells when database query fails
+// Tags: WorkbookDesigner SetDataSource retry | Aspose.Cells smart marker data source handling | C# transient database retry | Excel template processing with retry | smart markers error handling C#
 
 using System;
 using System.Data;
@@ -9,103 +8,100 @@ using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsRetryExample
+// The example loads an Excel template, obtains a DataTable, and uses a custom SetDataSourceWithRetry method that attempts to set the smart‑marker data source via WorkbookDesigner up to three times with a 2‑second pause between attempts. On success it processes the smart markers, recalculates formulas, and saves the result workbook.
+class SmartMarkerProcessor
 {
-    // The example loads a template workbook, creates a DataTable, and uses a RetrySetDataSource helper that calls WorkbookDesigner.SetDataSource with configurable exponential‑backoff retries. After successful data binding, the smart markers are processed and the result workbook is saved.
-    class Program
-    {
-        // Simple configuration holder (replace with your own config source if needed)
-        private static class Config
-        {
-            public static int MaxRetryTimes { get; } = 3;
-        }
+    // Maximum number of retry attempts
+    private const int MaxRetryAttempts = 3;
+    // Delay between retries (in milliseconds)
+    private const int RetryDelay = 2000;
 
-        static void Main()
+    static void Main()
+    {
+        try
         {
+            // Load the template workbook (lifecycle rule)
+            Workbook workbook;
+            const string templatePath = "Template.xlsx";
+
+            if (File.Exists(templatePath))
+            {
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                // If the template is missing, create a new workbook as a fallback
+                Console.WriteLine($"Template file '{templatePath}' not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
+
+            // Prepare the data source (example DataTable)
+            DataTable dt = GetDataFromDatabase();
+
+            // Set the data source with retry logic and process smart markers
+            SetDataSourceWithRetry(workbook, "MyDataSource", dt);
+
+            // Recalculate formulas after processing smart markers
+            workbook.CalculateFormula();
+
+            // Save the result workbook (lifecycle rule)
+            const string resultPath = "Result.xlsx";
             try
             {
-                const string templatePath = "Template.xlsx";
-                const string resultPath = "Result.xlsx";
-
-                // Verify that the template file exists before loading
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                // Load the template workbook
-                Workbook workbook = new Workbook(templatePath);
-
-                // Initialize the WorkbookDesigner with the loaded workbook
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                // Prepare a sample DataTable as the data source
-                DataTable dataTable = new DataTable("Employees");
-                dataTable.Columns.Add("ID", typeof(int));
-                dataTable.Columns.Add("Name", typeof(string));
-                dataTable.Rows.Add(1, "John Doe");
-                dataTable.Rows.Add(2, "Jane Smith");
-
-                // Set the data source with retry logic to handle transient issues
-                RetrySetDataSource(() => designer.SetDataSource(dataTable));
-
-                // Process the smart markers
-                designer.Process();
-
-                // Ensure the directory for the result file exists
-                string resultDir = Path.GetDirectoryName(Path.GetFullPath(resultPath));
-                if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
-                {
-                    Directory.CreateDirectory(resultDir);
-                }
-
-                // Save the processed workbook
                 workbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved successfully to {resultPath}");
+                Console.WriteLine($"Workbook saved to '{resultPath}'.");
             }
             catch (Exception ex)
             {
-                // Log unexpected exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
-
-        // Executes the provided SetDataSource action with retry handling
-        private static void RetrySetDataSource(Action setDataSourceAction)
+        catch (Exception ex)
         {
-            int maxAttempts = Config.MaxRetryTimes > 0 ? Config.MaxRetryTimes : 3;
-            int attempt = 0;
+            // Global exception handling
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
 
-            while (true)
+    // Retrieves data from a database (placeholder for actual DB call)
+    private static DataTable GetDataFromDatabase()
+    {
+        // In a real scenario, replace this with actual DB access code.
+        DataTable table = new DataTable();
+        table.Columns.Add("Id", typeof(int));
+        table.Columns.Add("Name", typeof(string));
+        table.Rows.Add(1, "Alice");
+        table.Rows.Add(2, "Bob");
+        return table;
+    }
+
+    // Sets a smart marker data source with retry on transient connectivity issues
+    private static void SetDataSourceWithRetry(Workbook workbook, string dataSourceName, DataTable data)
+    {
+        int attempt = 0;
+        while (true)
+        {
+            try
             {
-                try
-                {
-                    setDataSourceAction();
-                    break; // Success, exit the loop
-                }
-                catch (Exception ex) when (IsTransient(ex))
-                {
-                    attempt++;
-                    if (attempt >= maxAttempts)
-                    {
-                        // Re‑throw after exceeding max retries
-                        throw;
-                    }
-
-                    // Simple exponential back‑off before retrying
-                    int delayMs = 1000 * attempt;
-                    Thread.Sleep(delayMs);
-                }
+                // Use WorkbookDesigner to work with smart markers
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dataSourceName, data);
+                designer.Process(); // Process smart markers
+                break; // Success
             }
-        }
+            catch (Exception ex)
+            {
+                attempt++;
+                if (attempt >= MaxRetryAttempts)
+                {
+                    // Re‑throw after exceeding max attempts
+                    throw new InvalidOperationException($"Failed to set data source after {MaxRetryAttempts} attempts.", ex);
+                }
 
-        // Determines whether an exception is considered transient.
-        // For this example we treat all exceptions as non‑transient.
-        private static bool IsTransient(Exception ex)
-        {
-            // Extend with specific transient checks if needed.
-            return false;
+                // Log the error and wait before retrying
+                Console.WriteLine($"Error setting data source (attempt {attempt}): {ex.Message}");
+                Thread.Sleep(RetryDelay);
+            }
         }
     }
 }

@@ -1,44 +1,65 @@
-// Title: Unfreeze all worksheet panes in Aspose.Cells for .NET using FreezePanes(0,0)
-// AI Prompts: Write C# code that opens an existing Excel file with Aspose.Cells, calls worksheet.FreezePanes(0, 0) to remove any frozen rows or columns, and saves the changes. | Show how to reset pane freezing on a worksheet by invoking FreezePanes with zero row and column indices in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# unfreeze frozen rows and columns | How to reset pane freezing in an Excel workbook using Aspose.Cells | Remove FreezePanes setting from a worksheet programmatically .NET | Clear all frozen panes in Excel file with Aspose.Cells API | Set FreezePanes to (0,0) to unfreeze panes Aspose.Cells example
-// Tags: unfreeze worksheet panes Aspose.Cells | FreezePanes zero indices .NET | reset Excel pane freezing C# | clear frozen rows columns Aspose.Cells | worksheet.FreezePanes method usage
+// Title: How to unfreeze all panes in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to remove freeze panes from an Excel file with Aspose.Cells | Aspose.Cells unfreeze all worksheet panes programmatically | Call UnfreezePanes method in Aspose.Cells when it may be missing | Use reflection to disable FreezePanes property in older Aspose.Cells versions | Save an Excel workbook after clearing frozen panes with Aspose.Cells .NET
+// Tags: Aspose.Cells UnfreezePanes API C# | Excel worksheet unfreeze panes .NET | fallback reflection FreezePanes property Aspose | programmatic removal of freeze panes Aspose.Cells | reset FreezePanes flag Aspose.Cells
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-// Creates a new workbook, accesses the first worksheet, ensures the output directory exists, and saves the file as UnfrozenPanes.xlsx. The example notes that a newly created workbook has no frozen panes, so no explicit call to FreezePanes(0,0) is required; to unfreeze an existing sheet you would invoke worksheet.FreezePanes(0,0).
+// The example loads an existing Excel workbook, accesses the first worksheet, and attempts to unfreeze all panes. It first invokes the UnfreezePanes method via reflection; if that method is unavailable, it falls back to setting the FreezePanes property to false using reflection, then saves the modified workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // No frozen panes exist in a newly created workbook,
-            // so no explicit unfreeze operation is required.
-
-            // Define output file path
-            string outputPath = "UnfrozenPanes.xlsx";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Save the workbook
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Attempt to unfreeze panes using the appropriate API for the current Aspose.Cells version
+            try
+            {
+                // Prefer the UnfreezePanes method if it exists (newer versions)
+                MethodInfo unfreezeMethod = sheet.GetType().GetMethod("UnfreezePanes", BindingFlags.Instance | BindingFlags.Public);
+                if (unfreezeMethod != null)
+                {
+                    unfreezeMethod.Invoke(sheet, null);
+                }
+                else
+                {
+                    // Fallback: try to set a boolean FreezePanes property via reflection (older versions)
+                    PropertyInfo freezeProp = sheet.GetType().GetProperty("FreezePanes", BindingFlags.Instance | BindingFlags.Public);
+                    if (freezeProp != null && freezeProp.CanWrite)
+                    {
+                        freezeProp.SetValue(sheet, false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log but continue – unfreeze failure should not stop saving
+                Console.WriteLine($"Warning: Unable to unfreeze panes. {ex.Message}");
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

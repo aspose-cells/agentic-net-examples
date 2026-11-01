@@ -1,72 +1,63 @@
-// Title: Check that cell-embedded PNG images survive Workbook.Combine merging in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that embeds a PNG into a worksheet cell, merges another workbook with Workbook.Combine, and validates the image remains. | Show how to load a source workbook containing an embedded image, combine it into a destination workbook, and programmatically verify the EmbeddedImage property. | Provide a step-by-step C# example that creates a temporary workbook with an embedded picture, uses Workbook.Combine, and asserts image retention after saving.
-// Common Searches: Aspose.Cells keep embedded picture in cell after using Workbook.Combine in C# | C# verify embedded image is retained when merging Excel files with Aspose.Cells | How to preserve cell-placed images during workbook combine operation Aspose.Cells .NET | Workbook.Combine does not copy cell EmbeddedImage property Aspose.Cells example | Check EmbeddedImage after combining workbooks using Aspose.Cells API
-// Tags: Workbook.Combine embedded image support | cell EmbeddedImage handling Aspose.Cells | C# merge workbooks while keeping pictures | Aspose.Cells embed PNG in Excel cell | check image presence after combine
+// Title: How to verify that embedded images are preserved when merging two Excel workbooks using Workbook.Combine in Aspose.Cells for .NET
+// AI Prompts: Create two workbooks, add a PNG picture to each worksheet, merge them with Workbook.Combine, then programmatically count the pictures to confirm both images remain. | Write C# code that loads two Excel files containing pictures, combines them via Aspose.Cells, validates that the images are retained, and saves the resulting workbook.
+// Common Searches: Aspose.Cells Workbook.Combine keep pictures in merged file | C# merge Excel workbooks with embedded images using Aspose.Cells | count pictures after combining workbooks Aspose.Cells .NET | verify image retention after Workbook.Combine operation | preserve PNG images when merging Excel workbooks with Aspose.Cells
+// Tags: Workbook.Combine preserve embedded images | Aspose.Cells count pictures after merge | merge Excel workbooks with PNG images .NET | validate image retention in combined workbook | C# Aspose.Cells picture handling during combine
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEmbeddedImageCombineDemo
+// The example creates two workbooks, embeds a PNG image in each, merges the second workbook into the first using Workbook.Combine, iterates through all worksheets to count pictures, confirms that both images are retained, and saves the merged workbook as MergedWorkbook.xlsx.
+class Program
 {
-    // The sample creates a source workbook with a PNG embedded in cell B3, saves it, then merges this workbook into a destination workbook using Workbook.Combine. After saving the combined file, the code reloads it and reads the EmbeddedImage property of cell B3 to confirm the picture was retained, demonstrating that cell-embedded images survive the combine operation.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path for temporary files
-            string sourcePath = "SourceWorkbook.xlsx";
-            string combinedPath = "CombinedWorkbook.xlsx";
+            // Paths to the images (replace with actual paths if needed)
+            string imagePath1 = "image1.png";
+            string imagePath2 = "image2.png";
 
-            // Small 1x1 pixel PNG (base64 encoded)
-            string pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XcZcAAAAASUVORK5CYII=";
-            byte[] imageData = Convert.FromBase64String(pngBase64);
-
-            // ---------- Create source workbook with embedded image ----------
-            Workbook sourceWorkbook = new Workbook(); // create rule
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-
-            // Embed image into cell B3 (place-in-cell picture)
-            sourceSheet.Cells["B3"].EmbeddedImage = imageData;
-
-            // Save source workbook (save rule)
-            sourceWorkbook.Save(sourcePath, SaveFormat.Xlsx);
-            sourceWorkbook.Dispose();
-
-            // ---------- Create destination workbook ----------
-            Workbook destWorkbook = new Workbook(); // create rule
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-            destSheet.Cells["A1"].PutValue("Destination Data");
-
-            // Combine source workbook into destination workbook
-            using (Workbook toCombine = new Workbook(sourcePath)) // load rule
+            // Verify that image files exist before proceeding
+            if (!File.Exists(imagePath1) || !File.Exists(imagePath2))
             {
-                destWorkbook.Combine(toCombine);
+                Console.WriteLine("One or both image files were not found. Please ensure the paths are correct.");
+                return;
             }
 
-            // Save the combined workbook
-            destWorkbook.Save(combinedPath, SaveFormat.Xlsx);
-            destWorkbook.Dispose();
+            // Create the first workbook and embed the first image
+            Workbook wb1 = new Workbook();
+            // Add picture to cell A1 (row 0, column 0) using the file path overload
+            wb1.Worksheets[0].Pictures.Add(0, 0, imagePath1);
 
-            // ---------- Verify that the embedded image is retained ----------
-            Workbook verifyWorkbook = new Workbook(combinedPath); // load rule
-            Worksheet verifySheet = verifyWorkbook.Worksheets[0];
-            byte[] embedded = verifySheet.Cells["B3"].EmbeddedImage;
+            // Create the second workbook and embed the second image
+            Workbook wb2 = new Workbook();
+            wb2.Worksheets[0].Pictures.Add(0, 0, imagePath2);
 
-            if (embedded != null && embedded.Length > 0)
+            // Combine the second workbook into the first workbook
+            wb1.Combine(wb2);
+
+            // Count total pictures after combine
+            int totalPictures = 0;
+            foreach (Worksheet ws in wb1.Worksheets)
             {
-                Console.WriteLine("Embedded image is retained after Combine.");
+                totalPictures += ws.Pictures.Count;
             }
+
+            Console.WriteLine("Total pictures after combine: " + totalPictures);
+            if (totalPictures == 2)
+                Console.WriteLine("Embedded images are retained.");
             else
-            {
-                Console.WriteLine("Embedded image was NOT retained after Combine.");
-            }
+                Console.WriteLine("Embedded images are missing.");
 
-            // Clean up temporary files (optional)
-            // File.Delete(sourcePath);
-            // File.Delete(combinedPath);
-
-            verifyWorkbook.Dispose();
+            // Save the merged workbook
+            string outputPath = "MergedWorkbook.xlsx";
+            wb1.Save(outputPath);
+            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

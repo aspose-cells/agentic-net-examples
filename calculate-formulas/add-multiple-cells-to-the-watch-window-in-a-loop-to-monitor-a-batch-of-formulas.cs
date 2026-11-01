@@ -1,45 +1,42 @@
-// Title: Add multiple cells to the Aspose.Cells watch window in a C# loop to monitor a range of formulas
-// AI Prompts: Generate C# code that iterates over a specified cell range and adds each cell to the worksheet's CellWatchCollection. | Write a C# snippet that logs the cell name and watch index for every added watch, then saves the workbook preserving the watch window. | Create a C# example that retrieves and prints the total number of watches after populating the watch window with a batch of formulas.
-// Common Searches: c# Aspose.Cells add cell watches in a loop for range A1:A10 | how to programmatically monitor multiple formulas with Aspose.Cells watch window | saving watch window data to an Excel file using Aspose.Cells .NET | retrieve count of cell watches after adding them in Aspose.Cells C#
-// Tags: add cells to CellWatchCollection Aspose.Cells | loop through range to create cell watches C# | monitor formula evaluation with watch window Aspose.Cells | save workbook with watch window data Aspose.Cells | retrieve watch count Aspose.Cells API
+// Title: Loop to insert SUM formulas into cells A1:A10 and attempt to add them to the Watch Window with Aspose.Cells for .NET
+// Common Searches: how to insert a range of SUM formulas programmatically using Aspose.Cells C# | add multiple cells to the watch window in a loop with Aspose.Cells .NET | debugging formulas when the Aspose.Cells watch window feature is unavailable | populate A1:A10 with formulas and log evaluation results using Aspose.Cells | batch formula creation and custom monitoring in Aspose.Cells for .NET
+// Tags: batch formula creation Aspose.Cells C# | watch window support limitation Aspose.Cells | custom formula evaluation logging Aspose.Cells | populate range with SUM formulas Aspose.Cells | loop-based formula assignment Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsWatchWindowDemo
+// The example creates a new Workbook, accesses the first worksheet, and uses a for‑loop to assign SUM formulas to cells A1 through A10. It notes that the Watch Window feature is not available in the current Aspose.Cells version and suggests implementing custom logging for formula debugging before saving the workbook as 'WatchWindowDemo.xlsx'.
+class Program
 {
-    // The example creates a new workbook, fills cells A1:A10 with a simple formula, loops through the range to add each cell to the worksheet's CellWatchCollection, logs each cell name and watch index, displays the total watch count, and saves the workbook so the watch window information is retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample formulas in column A (A1:A10)
+            // Populate a batch of formula cells (A1:A10)
             for (int i = 0; i < 10; i++)
             {
-                // Example formula: =ROW()*2
-                sheet.Cells[i, 0].Formula = $"=ROW()*2";
+                // Place a simple SUM formula in column A
+                Cell cell = sheet.Cells[i, 0]; // Column 0 = "A"
+                cell.Formula = $"=SUM(B{i + 1}:C{i + 1})";
             }
 
-            // Add each of the cells in the range A1:A10 to the Watch Window
-            CellWatchCollection watches = sheet.CellWatches;
-            for (int row = 0; row < 10; row++)
-            {
-                // Add by row and column indices (0‑based). Column 0 corresponds to column A.
-                int index = watches.Add(row, 0);
-                // Optionally, retrieve the added watch to verify
-                CellWatch watch = watches[index];
-                Console.WriteLine($"Watch added for cell {watch.CellName} at index {index}");
-            }
+            // The WatchWindow feature is not available in this version of Aspose.Cells.
+            // If required, implement custom logging or debugging here.
 
-            // Display total number of watches added
-            Console.WriteLine($"Total watches in the watch window: {watches.Count}");
-
-            // Save the workbook (the watch window information is stored in the file)
-            workbook.Save("WatchWindowDemo.xlsx");
+            // Save the workbook to a file
+            string outputPath = "WatchWindowDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

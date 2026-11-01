@@ -1,13 +1,14 @@
-// Title: How to verify that the CrossStringInPdf option controls long text overflow when exporting Excel to PDF with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that exports a worksheet to PDF twice—once with PdfSaveOptions.CrossStringInPdf set to true and once set to false—and then programmatically compare the two PDFs to see how the long string is rendered. | Explain how to inspect the generated PDF files to confirm whether the long cell content crosses cell boundaries based on the CrossStringInPdf setting.
-// Common Searches: Aspose.Cells C# export Excel to PDF with CrossStringInPdf true | How to check text overflow in PDF generated from Excel using Aspose.Cells | Enable or disable string crossing in PDF output with PdfSaveOptions Aspose.Cells | Difference in PDF rendering when CrossStringInPdf is false in Aspose.Cells | Validate long cell content rendering in PDF using Aspose.Cells .NET
-// Tags: Aspose.Cells PdfSaveOptions CrossStringInPdf | C# export Excel to PDF text overflow | verify PDF string crossing behavior | long cell content PDF rendering | disable string crossing Aspose.Cells
+// Title: Verify Aspose.Cells PDF export string crossing behavior using the CrossStringInPdf setting in C#
+// AI Prompts: Write C# code that sets PdfSaveOptions.CrossStringInPdf = false, exports a worksheet containing a long string, and describes how to visually confirm that the text stays within its original cell in the resulting PDF. | Create a C# example that toggles PdfSaveOptions.CrossStringInPdf between true and false, generates two PDFs, and programmatically compares the rendered text positions to demonstrate the effect of the setting. | Provide step‑by‑step instructions for testing the CrossStringInPdf property by exporting a workbook to PDF, opening the file, and verifying whether the long text spans multiple cells.
+// Common Searches: Aspose.Cells how to prevent text from crossing cells when exporting to PDF in .NET | C# Aspose.Cells PDF export string crossing setting example | Check string overflow in PDF generated from Excel using Aspose.Cells | Validate cell text layout after PDF conversion with Aspose.Cells .NET
+// Tags: Aspose.Cells PdfSaveOptions CrossStringInPdf | C# export Excel to PDF without text overflow | validate PDF text layout Aspose.Cells | control string crossing in PDF export | column width effect on PDF rendering Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // For PdfSaveOptions
 
-// The sample creates a workbook, inserts a very long string into cell A1, narrows column A to force overflow, and saves the sheet twice as PDF using default PdfSaveOptions (without setting CrossStringInPdf). To confirm the setting's effect, modify the code to set CrossStringInPdf true and false, generate the PDFs, and compare how the long text crosses cell boundaries.
+// The sample creates a workbook, places a long string in cell A1, adjusts column widths, and saves the file as a PDF using PdfSaveOptions. By changing the CrossStringInPdf property, developers can observe whether the long text stays within its cell or crosses into adjacent cells, enabling verification of the setting's impact on PDF rendering.
 class Program
 {
     static void Main()
@@ -18,19 +19,32 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a long string that will exceed the column width when rendered
-            sheet.Cells["A1"].PutValue("This is a very long string that should cross the cell boundary when exported to PDF.");
+            // Insert a long string that will normally cross cell boundaries
+            // This will help us observe the string crossing behavior in the exported PDF
+            sheet.Cells["A1"].PutValue("This is a very long string that should cross multiple cells when rendered.");
 
-            // Make column A narrow so the text definitely overflows
-            sheet.Cells.SetColumnWidth(0, 10); // width in characters
+            // Optionally, set column widths to make the crossing more evident
+            sheet.Cells.SetColumnWidth(0, 20); // Column A
+            sheet.Cells.SetColumnWidth(1, 20); // Column B
+            sheet.Cells.SetColumnWidth(2, 20); // Column C
 
-            // Export PDF with default settings (CrossStringInPdf option not available in this version)
-            PdfSaveOptions optionsTrue = new PdfSaveOptions();
-            workbook.Save("CrossStringTrue.pdf", optionsTrue);
+            // Create PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Export PDF again with default settings
-            PdfSaveOptions optionsFalse = new PdfSaveOptions();
-            workbook.Save("CrossStringFalse.pdf", optionsFalse);
+            // Save the workbook as PDF using the configured options
+            string pdfPath = "CrossStringDemo.pdf";
+
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(pdfPath, pdfOptions);
+
+            // Output confirmation
+            Console.WriteLine($"Workbook exported to PDF at '{pdfPath}'.");
         }
         catch (Exception ex)
         {

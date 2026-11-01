@@ -1,54 +1,56 @@
-// Title: Convert an Excel ListObject to a regular range while preserving formatting and save as ODS using Aspose.Cells for .NET
-// AI Prompts: Locate the first ListObject in a worksheet, call ConvertToRange to keep all formatting, then save the workbook as an ODS file with Aspose.Cells. | Write C# code that checks for a table, converts it to a normal range without losing styles, and exports the result to OpenDocument Spreadsheet format.
-// Common Searches: Aspose.Cells convert Excel table to range preserving formatting .NET | C# save workbook as ODS after removing table definition | How to export a worksheet with converted ListObject to ODS using Aspose.Cells
-// Tags: Aspose.Cells ListObject conversion to regular range | retain cell styles when converting Excel tables | save workbook as OpenDocument Spreadsheet Aspose.Cells | delete Excel table definition via Aspose.Cells
+// Title: Convert an Excel table to a regular range while keeping formatting and save as ODS with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# convert ListObject to range preserving cell styles | How to export an Excel worksheet containing a table to ODS format using Aspose.Cells | C# code to change an Excel table into a normal range before saving as ODS | Preserve table formatting when converting Excel to ODS with Aspose.Cells .NET | Convert first ListObject to range and save workbook as ODS using Aspose.Cells
+// Tags: ListObject conversion to range Aspose.Cells | ODS export with formatting retention | Aspose.Cells save workbook as ODS | Excel table to normal range C# | retain cell styles during ODS conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Loads input.xlsx, checks for a ListObject in the first worksheet, converts the table to a normal range while preserving all formatting, and saves the workbook as output.ods.
+// The example loads an XLSX workbook, checks for a ListObject on the first worksheet, converts the first table to a normal range while preserving its formatting, and then saves the workbook as an ODS file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.ods";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.ods";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (adjust index or name as needed)
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet contains at least one table (ListObject)
+            // Check if the worksheet contains any tables (ListObjects)
             if (sheet.ListObjects.Count > 0)
             {
-                // Retrieve the first table
+                // Get the first table
                 ListObject table = sheet.ListObjects[0];
 
-                // Convert the table to a normal range while preserving all formatting
-                // The method removes the table definition and leaves a regular range
+                // Convert the table to a normal range while preserving formatting
                 table.ConvertToRange();
             }
+            else
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+            }
 
-            // Save the modified workbook in ODS format (use the non‑obsolete enum value)
+            // Save the workbook in ODS format
             workbook.Save(outputPath, SaveFormat.Ods);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved as {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

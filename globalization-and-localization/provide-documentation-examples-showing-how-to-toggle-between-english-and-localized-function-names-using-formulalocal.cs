@@ -1,65 +1,49 @@
-// Title: Toggle Excel formulas between English and localized names using Formula and FormulaLocal in Aspose.Cells for .NET
-// AI Prompts: Write C# code that sets Workbook.Settings.CultureInfo to a specific locale, assigns a formula with FormulaLocal, and then reads the equivalent English formula via the Formula property. | Demonstrate how assigning an English formula string to the FormulaLocal property automatically converts the function name to the workbook’s current language. | Create a sample that switches a formula from English to Portuguese (or another locale) and back, then saves the workbook as an XLSX file.
-// Common Searches: Aspose.Cells how to use FormulaLocal to write Portuguese function names | retrieve English version of a localized Excel formula with Aspose.Cells C# | set workbook culture info for localized formulas in Aspose.Cells .NET | convert SUM formula to SOMA automatically using FormulaLocal Aspose.Cells | toggle between English and localized Excel formulas programmatically
-// Tags: Aspose.Cells FormulaLocal localization | C# set workbook CultureInfo Aspose.Cells | convert Excel function name to locale Aspose.Cells | retrieve English formula from localized cell | automatic formula language conversion Aspose.Cells
+// Title: How to toggle Excel function language between English and French using FormulaLocal and Workbook CultureInfo in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set workbook CultureInfo to French for localized formulas | use FormulaLocal to write French SUM (SOMME) function in a .NET workbook | switch workbook culture back to invariant to use English formulas with FormulaLocal | example of toggling between Formula and FormulaLocal properties in Aspose.Cells | C# code to change Excel function language dynamically with Aspose.Cells
+// Tags: FormulaLocal with workbook CultureInfo | localized Excel functions Aspose.Cells .NET | toggle workbook culture for formulas C# | invariant culture usage FormulaLocal | French SOMME function Aspose.Cells example
 
 using System;
 using System.Globalization;
-using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, sets its culture to Portuguese (Brazil), writes formulas using both English (SUM) and localized (SOMA) names, shows how to read each version via the Formula and FormulaLocal properties, demonstrates that assigning an English formula to FormulaLocal automatically translates it to the locale’s function name, and saves the workbook as an XLSX file.
-class Program
+// The sample creates a workbook, adds numeric data, assigns an English SUM formula via the Formula property, changes the workbook's CultureInfo to French and sets a localized SOMME formula using FormulaLocal, then resets the culture to InvariantCulture and applies an English SUM formula again with FormulaLocal, finally saving the file as FormulaLocalDemo.xlsx.
+class FormulaLocalExample
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook wb = new Workbook();
 
-            // Set the workbook culture to Portuguese (Brazil) to demonstrate localized function names
-            workbook.Settings.CultureInfo = new CultureInfo("pt-BR");
+        // Access the first worksheet
+        Worksheet ws = wb.Worksheets[0];
 
-            Worksheet sheet = workbook.Worksheets[0];
+        // Populate some sample data for the SUM function
+        ws.Cells["B1"].PutValue(10);
+        ws.Cells["B2"].PutValue(20);
+        ws.Cells["B3"].PutValue(30);
+        ws.Cells["B4"].PutValue(40);
+        ws.Cells["B5"].PutValue(50);
 
-            // 1. Use English function name (SUM) – stored in the Formula property
-            sheet.Cells["A1"].Formula = "=SUM(10,20)";
+        // -----------------------------------------------------------------
+        // 1. English function name using the Formula property (always English)
+        // -----------------------------------------------------------------
+        ws.Cells["A1"].Formula = "=SUM(B1:B5)";
 
-            // 2. Use localized function name (SOMA) – stored in the FormulaLocal property
-            // Note: In Portuguese the argument separator is ';'
-            sheet.Cells["A2"].FormulaLocal = "=SOMA(10;20)";
+        // -----------------------------------------------------------------
+        // 2. Localized function name using FormulaLocal
+        //    Set workbook culture to French (fr-FR). In French, SUM is "SOMME".
+        // -----------------------------------------------------------------
+        wb.Settings.CultureInfo = new CultureInfo("fr-FR");
+        ws.Cells["A2"].FormulaLocal = "=SOMME(B1:B5)";
 
-            // 3. Retrieve the English formula from a cell that originally used a localized formula
-            string englishFromLocal = sheet.Cells["A2"].Formula; // Returns "=SUM(10,20)"
+        // -----------------------------------------------------------------
+        // 3. Switch back to English (InvariantCulture) and use FormulaLocal
+        //    FormulaLocal now accepts English function names again.
+        // -----------------------------------------------------------------
+        wb.Settings.CultureInfo = CultureInfo.InvariantCulture;
+        ws.Cells["A3"].FormulaLocal = "=SUM(B1:B5)";
 
-            // 4. Retrieve the localized formula from a cell that originally used an English formula
-            string localFromEnglish = sheet.Cells["A1"].FormulaLocal; // Returns "=SOMA(10;20)" in the current locale
-
-            // 5. Toggle: assign the English formula to a new cell using FormulaLocal
-            // Aspose.Cells automatically converts the function name to the localized version
-            sheet.Cells["A3"].FormulaLocal = englishFromLocal; // Cell A3 will contain "=SOMA(10;20)"
-
-            // 6. Toggle: assign the localized formula to a new cell using Formula (English)
-            // Use the previously obtained English formula to avoid separator issues
-            sheet.Cells["A4"].Formula = englishFromLocal; // Cell A4 will contain "=SUM(10,20)"
-
-            // Define output file path
-            string outputPath = "ToggleFormulaLocal.xlsx";
-
-            // Ensure the directory exists (in case a relative path is used)
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook to a file
+        wb.Save("FormulaLocalDemo.xlsx");
     }
 }

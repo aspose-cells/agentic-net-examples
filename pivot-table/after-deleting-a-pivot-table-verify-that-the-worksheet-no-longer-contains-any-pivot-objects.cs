@@ -1,46 +1,68 @@
-// Title: Delete the first pivot table from an Excel worksheet and verify its removal with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells that removes the first PivotTable from a worksheet, checks that the PivotTables collection is empty, and saves the workbook. | Show how to programmatically delete a PivotTable in a .NET workbook, confirm no PivotTables remain, and output the verification result.
-// Common Searches: C# Aspose.Cells how to remove a pivot table and ensure it is deleted | verify that a worksheet has no pivot tables after removal using Aspose.Cells | Aspose.Cells delete first PivotTable and check PivotTables.Count | remove pivot tables programmatically in .NET and confirm removal | Aspose.Cells sample code for deleting pivot tables and validating cleanup
-// Tags: Aspose.Cells delete pivot table C# | Aspose.Cells verify pivot table count | C# remove first worksheet pivot table | Aspose.Cells check worksheet for remaining pivot tables | Aspose.Cells save workbook after pivot removal
+// Title: Delete all pivot tables from an Excel worksheet and verify their removal with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells remove all pivot tables from a worksheet | How to check if a worksheet still contains pivot tables after deletion using Aspose.Cells | Aspose.Cells .NET verify pivot table collection is empty after removal | Iterate and delete pivot tables in an Excel file with Aspose.Cells C# | Sample code to delete pivot tables and confirm none remain in Aspose.Cells
+// Tags: aspocells delete pivot tables | excel worksheet pivot table removal c# | aspocells verify empty pivot collection | c# loop remove pivot tables aspocells | save workbook after pivot deletion aspocells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an existing Excel file (or creates a new workbook), accesses the first worksheet, removes the first pivot table if present, verifies that the worksheet's PivotTables collection is empty, prints the verification result, and saves the updated workbook.
-class Program
+// The example loads an existing Excel workbook (or creates a new one), ensures a worksheet is present, iteratively removes every pivot table from the first worksheet using a while loop, checks that the PivotTables collection is empty, outputs the verification result, and saves the updated workbook to a new file.
+class PivotTableDeletionCheck
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load workbook if the file exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception ex)
+                {
+                    // If loading fails (e.g., password protected), create a new workbook.
+                    Console.WriteLine($"Failed to load \"{inputPath}\": {ex.Message}");
+                    Console.WriteLine("Creating a new workbook instead.");
+                    workbook = new Workbook();
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-            // Load existing workbook if the file exists; otherwise create a new one.
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+            // Ensure there is at least one worksheet.
+            if (workbook.Worksheets.Count == 0)
+                workbook.Worksheets.Add();
 
             // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Remove the first pivot table if any exist.
-            if (sheet.PivotTables.Count > 0)
+            // Remove all pivot tables from the worksheet.
+            while (sheet.PivotTables.Count > 0)
             {
                 sheet.PivotTables.RemoveAt(0);
             }
 
             // Verify removal.
-            bool noPivotTables = sheet.PivotTables.Count == 0;
-            Console.WriteLine(noPivotTables
-                ? "All pivot tables have been removed."
-                : "Pivot tables still exist on the worksheet.");
+            bool hasPivotTables = sheet.PivotTables.Count > 0;
+            Console.WriteLine("Pivot tables present after deletion: " + hasPivotTables);
 
-            // Save the workbook with changes.
+            // Save the modified workbook.
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,35 +1,37 @@
-// Title: Print the SUM(A1:A2) formula and its calculated value from cell E3 with Aspose.Cells in a C# console app
-// AI Prompts: Set the formula '=SUM(A1:A2)' in worksheet cell E3, invoke workbook.CalculateFormula(), and output both worksheet.Cells["E3"].Formula and worksheet.Cells["E3"].Value to the console. | Assign a SUM range formula to a specific cell, recalculate all formulas in the workbook, and display the formula string alongside its evaluated numeric result using Aspose.Cells for .NET. | Create a new workbook, populate A1 and A2, apply a SUM formula to E3, trigger calculation, and print the formula text and resulting value in a .NET console program.
-// Common Searches: aspocells c# console display cell formula after calculation | how to retrieve evaluated value of a formula cell using Aspose.Cells .NET | example of setting SUM formula in Excel worksheet with Aspose.Cells and printing result | Aspose.Cells calculate and print cell E3 formula and value in console application
-// Tags: Aspose.Cells calculate workbook formulas | C# set SUM formula in worksheet cell | Aspose.Cells output cell formula to console | retrieve evaluated cell value Aspose.Cells | console application display Excel formula result
+// Title: Display the SUM formula and its computed value for cell E3 using Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets the formula "=SUM(A1:B1)" in cell E3 of an Aspose.Cells workbook, forces calculation, and prints the formula string and resulting value to the console. | Create a reusable C# method that takes a worksheet, a cell address, and a formula, applies the formula with Aspose.Cells, recalculates the workbook, and returns both the formula text and its evaluated result. | Adapt the example to log the formula and its evaluated result for any given cell into a JSON file instead of the console, using Aspose.Cells for .NET.
+// Common Searches: how to get the formula string and calculated result of a specific cell with Aspose.Cells in C# | Aspose.Cells C# example printing cell formula and value to console | retrieve evaluated value after setting SUM formula in Aspose.Cells workbook | C# Aspose.Cells calculate formulas and read cell value programmatically
+// Tags: Aspose.Cells set cell formula C# | Aspose.Cells calculate workbook formulas | Aspose.Cells read cell formula text | Aspose.Cells retrieve evaluated cell value | Aspose.Cells console output formula result
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaDemo
+// The program creates a new workbook, writes numbers to A1 and B1, assigns a SUM formula to cell E3, triggers formula recalculation, then reads both the formula text and its computed value from E3 and writes them to the console.
+class Program
 {
-    // Demonstrates creating a workbook, inserting values into A1 and A2, assigning a SUM(A1:A2) formula to cell E3, calculating all formulas, and writing both the formula string and its evaluated value to the console using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells that will be referenced by the formula
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(20);
+        // Sample data for the formula
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["B1"].PutValue(20);
 
-            // Set the formula in cell E3
-            worksheet.Cells["E3"].Formula = "=SUM(A1:A2)";
+        // Set a formula in cell E3 (e.g., sum of A1 and B1)
+        Cell cellE3 = sheet.Cells["E3"];
+        cellE3.Formula = "=SUM(A1:B1)";
 
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-            // Output the formula text and its calculated value
-            Console.WriteLine("Formula in E3: " + worksheet.Cells["E3"].Formula);
-            Console.WriteLine("Calculated value in E3: " + worksheet.Cells["E3"].Value);
-        }
+        // Retrieve the formula text and its calculated value
+        string formula = cellE3.Formula;
+        object calculatedValue = cellE3.Value;
+
+        // Output to console
+        Console.WriteLine($"Formula in E3: {formula}");
+        Console.WriteLine($"Calculated value: {calculatedValue}");
     }
 }

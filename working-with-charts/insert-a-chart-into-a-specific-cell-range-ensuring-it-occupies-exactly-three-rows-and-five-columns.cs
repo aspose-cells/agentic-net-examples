@@ -1,14 +1,14 @@
-// Title: Insert a column chart into a specific cell range (C2:G4) spanning three rows and five columns using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a column chart positioned from cell C2 to G4 with Aspose.Cells. | Show how to calculate upper‑left and lower‑right row/column indices so the chart occupies exactly three rows and five columns. | Demonstrate saving the workbook after adding the chart and ensuring the output directory exists.
-// Common Searches: Aspose.Cells C# place column chart in range C2:G4 | how to set chart position by row and column indices in Aspose.Cells | define chart area size three rows five columns using Aspose.Cells for .NET | C# Aspose.Cells add chart with custom cell range and save workbook
-// Tags: Aspose.Cells add column chart to worksheet | chart positioning using upperLeftRow upperLeftColumn Aspose.Cells | set chart area range C2:G4 Aspose.Cells | save workbook after chart insertion Aspose.Cells | C# Aspose.Cells chart dimensions programmatically
+// Title: How to insert a column chart into a specific cell range (3 rows × 5 columns) using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that adds a column chart spanning cells C2 to G4 and binds it to the data range A2:B6. | Create a workbook, populate sample data, and place a column chart of exactly three rows by five columns at a defined position using the Aspose.Cells chart API. | Write code to specify the top‑left and bottom‑right cell indices for a chart, set its title, and save the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# place chart in cells C2 to G4 | set chart dimensions by row and column indices Aspose.Cells .NET | bind chart series to range A2:B6 using Aspose.Cells | create column chart with specific size 3 rows 5 columns in Excel via Aspose.Cells | Aspose.Cells chart placement using firstRow firstColumn parameters
+// Tags: Aspose.Cells chart placement by cell range | C# Aspose.Cells column chart size rows columns | Aspose.Cells set chart top left bottom right cells | Aspose.Cells bind chart series to data range | Aspose.Cells save workbook with chart
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The program creates a new workbook, fills sample data, calculates the cell coordinates for a chart area covering three rows and five columns (C2:G4), adds a column chart with data from B2:B5, sets a title, ensures the output folder exists, and saves the file as ChartExample.xlsx.
+// The example creates a new workbook, fills sample data, inserts a column chart that occupies cells C2 through G4 (three rows by five columns), links the series to the range A2:B6, sets a chart title, and saves the file as ChartInRange.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -25,45 +25,51 @@ class Program
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["A5"].PutValue("Apr");
             sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Feb");
             sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("Mar");
             sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A5"].PutValue("Apr");
             sheet.Cells["B5"].PutValue(40);
+            sheet.Cells["A6"].PutValue("May");
+            sheet.Cells["B6"].PutValue(50);
 
-            // Define chart position: start at row 1, column 2 (zero‑based) and span 3 rows × 5 columns
-            int upperLeftRow = 1;          // Excel row 2
-            int upperLeftColumn = 2;       // Excel column C
-            int lowerRightRow = upperLeftRow + 2;   // three rows total
-            int lowerRightColumn = upperLeftColumn + 4; // five columns total
+            // Define chart position: top‑left cell C2 to bottom‑right cell G4
+            int firstRow = 1;      // Row index for C2 (zero‑based)
+            int firstColumn = 2;   // Column index for C (zero‑based)
+            int lastRow = firstRow + 3 - 1;      // Row index for row 4
+            int lastColumn = firstColumn + 5 - 1; // Column index for G
 
             // Add a column chart within the defined range
-            int chartIndex = sheet.Charts.Add(ChartType.Column, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, firstRow, firstColumn, lastRow, lastColumn);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the chart series (values from B2:B5, categories from A2:A5)
-            int seriesIndex = chart.NSeries.Add("B2:B5", true);
-            // Note: In recent Aspose.Cells versions, CategoryData is set automatically when the range includes categories.
-            // If needed, you can set it via chart.NSeries[seriesIndex].CategoryData = "A2:A5";
+            // Add series using a range that includes both categories and values (data in columns)
+            chart.NSeries.Add("=Sheet1!$A$2:$B$6", false);
 
-            // Optional: set a title for the chart
+            // Optional: set chart title
             chart.Title.Text = "Sample Column Chart";
 
-            // Determine output file path
-            string outputPath = "ChartExample.xlsx";
+            // Save the workbook
+            string outputPath = "ChartInRange.xlsx";
 
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {

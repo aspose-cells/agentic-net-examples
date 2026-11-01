@@ -1,81 +1,70 @@
-// Title: Convert deprecated SUMIF formulas to SUMIFS throughout an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file using Aspose.Cells, scans every worksheet, detects cells containing the SUMIF function, and rewrites each formula to the equivalent SUMIFS syntax. | Write a .NET routine that applies a regular expression to replace SUMIF(range, criteria) and SUMIF(range, criteria, sum_range) with the proper SUMIFS form in all formula cells of a workbook. | Create a script that iterates over all cells in an Aspose.Cells workbook, transforms deprecated SUMIF usage into SUMIFS, and saves the updated workbook.
-// Common Searches: Aspose.Cells replace SUMIF with SUMIFS in C# | how to update deprecated SUMIF formulas in an Excel file using .NET | bulk convert SUMIF to SUMIFS across all worksheets programmatically | regex formula replacement SUMIF to SUMIFS Aspose.Cells example | C# code to iterate through workbook cells and modify formulas
-// Tags: replace SUMIF with SUMIFS Aspose.Cells | bulk formula transformation .NET | regex formula update Excel C# | iterate worksheets modify formulas Aspose | deprecated Excel function migration Aspose.Cells | update Excel formulas programmatically C#
+// Title: Replace deprecated SUMIF formulas with SUMIFS across all worksheets using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to update Excel workbook formulas from SUMIF to SUMIFS with Aspose.Cells | How to programmatically replace SUMIF with SUMIFS in every sheet using Aspose.Cells .NET | Iterate through all cells in a workbook and modify formulas using Aspose.Cells C# | Using regular expressions to change Excel functions in Aspose.Cells | Bulk formula conversion from SUMIF to SUMIFS in an XLSX file with Aspose.Cells | Aspose.Cells replace deprecated Excel functions in a .NET application
+// Tags: SUMIF to SUMIFS conversion Aspose.Cells | bulk Excel formula replacement .NET | worksheet iteration for formula editing C# | regex based formula modification Aspose.Cells | deprecated Excel function handling .NET
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, iterates through every worksheet and formula cell, uses a regular expression to locate SUMIF calls, rewrites them as equivalent SUMIFS expressions, assigns the new formulas, and saves the modified file.
-class ReplaceSumIfWithSumifs
+namespace WorkbookFormulaUpdater
 {
-    static void Main()
+    // The example loads an Excel workbook (creating a placeholder if missing), iterates through every worksheet and cell, detects formulas containing the SUMIF function, replaces each occurrence with SUMIFS using a case‑insensitive regular expression, and saves the updated workbook while handling Aspose.Cells‑specific and general exceptions.
+    class Program
     {
-        // Load the workbook (use the provided load rule)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Regular expression to find SUMIF functions and capture their arguments
-        Regex sumIfRegex = new Regex(@"SUMIF\(([^()]*)\)", RegexOptions.IgnoreCase);
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // Iterate through all cells that contain formulas
-            foreach (Cell cell in sheet.Cells)
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            try
             {
-                if (!cell.IsFormula) continue;
-
-                string originalFormula = cell.Formula;
-
-                // Replace each SUMIF occurrence with the equivalent SUMIFS
-                string updatedFormula = sumIfRegex.Replace(originalFormula, match =>
+                // Ensure the input file exists; create a placeholder if it does not.
+                if (!File.Exists(inputPath))
                 {
-                    // Split the captured arguments by commas
-                    string argsPart = match.Groups[1].Value;
-                    string[] args = argsPart.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // Trim whitespace from each argument
-                    for (int i = 0; i < args.Length; i++)
-                        args[i] = args[i].Trim();
-
-                    // SUMIF can have 2 or 3 arguments
-                    // SUMIF(range, criteria)               -> SUMIFS(range, range, criteria)
-                    // SUMIF(range, criteria, sum_range)    -> SUMIFS(sum_range, range, criteria)
-                    string sumifsFormula;
-                    if (args.Length == 2)
-                    {
-                        // range, criteria
-                        string range = args[0];
-                        string criteria = args[1];
-                        sumifsFormula = $"SUMIFS({range}, {range}, {criteria})";
-                    }
-                    else if (args.Length == 3)
-                    {
-                        // range, criteria, sum_range
-                        string range = args[0];
-                        string criteria = args[1];
-                        string sumRange = args[2];
-                        sumifsFormula = $"SUMIFS({sumRange}, {range}, {criteria})";
-                    }
-                    else
-                    {
-                        // Unexpected number of arguments; keep original
-                        return match.Value;
-                    }
-
-                    return sumifsFormula;
-                });
-
-                // If the formula changed, assign the new formula back to the cell
-                if (!originalFormula.Equals(updatedFormula, StringComparison.Ordinal))
-                {
-                    cell.Formula = updatedFormula;
+                    Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook as a placeholder.");
+                    var placeholder = new Workbook();
+                    placeholder.Worksheets[0].Name = "Sheet1";
+                    placeholder.Save(inputPath);
                 }
+
+                // Load the workbook (no password required).
+                var loadOptions = new LoadOptions();
+                var workbook = new Workbook(inputPath, loadOptions);
+
+                // Iterate through all worksheets and replace SUMIF with SUMIFS in formulas.
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    foreach (Cell cell in cells)
+                    {
+                        if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula))
+                        {
+                            if (cell.Formula.IndexOf("SUMIF(", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                string newFormula = Regex.Replace(
+                                    cell.Formula,
+                                    @"\bSUMIF\s*\(",
+                                    "SUMIFS(",
+                                    RegexOptions.IgnoreCase);
+                                cell.Formula = newFormula;
+                            }
+                        }
+                    }
+                }
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
-
-        // Save the modified workbook (use the provided save rule)
-        workbook.Save("output.xlsx");
     }
 }

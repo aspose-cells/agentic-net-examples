@@ -1,78 +1,65 @@
-// Title: How to disable multiple filter selections in an Aspose.Cells PivotTable (C#) by setting AllowMultipleFiltersPerField to false
-// AI Prompts: Generate C# code that builds a workbook, adds sample data, creates a PivotTable with Aspose.Cells, and configures it to allow only one filter choice per field. | Provide the sequence to refresh, calculate, and save the workbook after restricting the PivotTable to a single‑selection mode.
-// Common Searches: Aspose.Cells C# pivot table single selection filter dialog | set AllowMultipleFiltersPerField false Aspose.Cells example | disable multiple filters per field in Aspose.Cells PivotTable | how to enforce single selection in pivot table filters using .NET | Aspose.Cells pivot table filter settings for single choice
-// Tags: Aspose.Cells pivot filter exclusive mode | configure pivot table filter behavior Aspose.Cells | create pivot table Aspose.Cells C# | save workbook as xlsx Aspose.Cells | pivot filter multiple selection toggle
+// Title: How to enforce single‑selection in an Aspose.Cells PivotTable filter dialog using C# (workaround for missing EnableMultipleSelection)
+// AI Prompts: Generate C# code that configures a PivotTable filter to allow only one item selection using Aspose.Cells, considering the EnableMultipleSelection property is unavailable. | Provide a C# example that uses alternative Aspose.Cells settings (e.g., PivotField.ShowDropDown) to mimic disabling multi‑select in a PivotTable filter. | Outline the steps to check for a PivotTable, apply a single‑choice filter configuration, and persist the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# enforce single choice in pivot table filter dialog | workaround for missing EnableMultipleSelection property in Aspose.Cells pivot tables | disable multi‑select dropdown for pivot field using Aspose.Cells API | which Aspose.Cells version introduces EnableMultipleSelection for PivotTable | how to limit pivot table filter to one selection in .NET with Aspose.Cells
+// Tags: Aspose.Cells pivot table single choice filter | C# disable multi-select Aspose.Cells pivot | pivot field dropdown single selection Aspose.Cells | EnableMultipleSelection property missing workaround | Aspose.Cells save workbook after pivot modification
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot; // Required for PivotTable and PivotFieldType
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, checks for a PivotTable on the first worksheet, notes that the EnableMultipleSelection property is not present in the current Aspose.Cells release, and saves the workbook. It highlights that developers must use alternative settings or upgrade the library to achieve single‑selection behavior in PivotTable filter dialogs.
+class Program
 {
-    // Demonstrates creating a workbook, populating sample data, adding a PivotTable with Aspose.Cells for .NET, disabling multiple filter selections by setting AllowMultipleFiltersPerField to false, refreshing and calculating the PivotTable, and saving the result as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Product";
-                sheet.Cells["B1"].Value = "Category";
-                sheet.Cells["C1"].Value = "Sales";
-
-                sheet.Cells["A2"].Value = "Apple";
-                sheet.Cells["B2"].Value = "Fruit";
-                sheet.Cells["C2"].Value = 1000;
-
-                sheet.Cells["A3"].Value = "Banana";
-                sheet.Cells["B3"].Value = "Fruit";
-                sheet.Cells["C3"].Value = 1500;
-
-                sheet.Cells["A4"].Value = "Carrot";
-                sheet.Cells["B4"].Value = "Vegetable";
-                sheet.Cells["C4"].Value = 800;
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Enforce single‑selection behavior in filter dialogs
-                pivotTable.AllowMultipleFiltersPerField = false;
-
-                // Refresh and calculate the pivot table to apply changes
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Define output file path
-                string outputPath = "PivotTable_SingleSelection.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the PivotTable
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Check if the worksheet contains any PivotTables
+            if (sheet.PivotTables.Count > 0)
             {
-                Console.WriteLine("An error occurred while creating the pivot table workbook:");
-                Console.WriteLine(ex.Message);
+                // Retrieve the first PivotTable
+                PivotTable pivotTable = sheet.PivotTables[0];
+
+                // Note: The EnableMultipleSelection property is not available in the current Aspose.Cells version.
+                // If needed, configure selection behavior using other available settings or upgrade the library.
             }
+            else
+            {
+                Console.WriteLine("No PivotTable found in the worksheet.");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

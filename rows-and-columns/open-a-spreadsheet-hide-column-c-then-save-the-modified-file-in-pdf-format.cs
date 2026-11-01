@@ -1,32 +1,26 @@
-// Title: Hide column C in an Excel worksheet and save the workbook as a PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing .xlsx file, hide column C in the first worksheet, and generate a PDF output with Aspose.Cells in C#. | Using Aspose.Cells for .NET, conceal a specific column in an Excel workbook and export the modified sheet to PDF.
-// Common Searches: Aspose.Cells C# hide column C before exporting to PDF | how to hide a specific column in Excel and save as PDF using Aspose.Cells | C# code to hide column in worksheet and convert workbook to PDF with Aspose.Cells | export modified Excel sheet to PDF after hiding columns Aspose.Cells .NET | Aspose.Cells hide column then save as PDF example
-// Tags: hide column Aspose.Cells C# | export worksheet to PDF Aspose.Cells | Aspose.Cells column visibility manipulation | PDF conversion after column hide Aspose.Cells | Aspose.Cells hide specific column before PDF save
+// Title: Hide column C in an Excel workbook and save as PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx file, conceal the third column, and export the worksheet to a PDF using Aspose.Cells in C#. | Programmatically hide column C in a workbook and generate a PDF output with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# hide third column before converting to PDF | How to programmatically hide a column in Excel and export to PDF using Aspose.Cells | C# Aspose.Cells hide column and save workbook as PDF file | Hide specific column in Excel file and generate PDF with Aspose.Cells .NET API
+// Tags: Aspose.Cells hide column C | export workbook to PDF Aspose.Cells | Cells.HideColumn method C# | SaveFormat.Pdf conversion Aspose.Cells | modify column visibility before PDF export
 
 using System;
 using Aspose.Cells;
 
-// The example loads input.xlsx, hides column C (index 2) in the first worksheet, and saves the workbook as output.pdf in PDF format using Aspose.Cells for .NET.
-class HideColumnAndSavePdf
+// The example loads 'input.xlsx' with Aspose.Cells, accesses the first worksheet, hides column C (zero‑based index 2) using Cells.HideColumn, and then saves the workbook as 'output.pdf' by specifying SaveFormat.Pdf.
+class Program
 {
     static void Main()
     {
-        // Path to the existing Excel file
-        string inputFile = "input.xlsx";
-
-        // Path for the resulting PDF file
-        string outputFile = "output.pdf";
-
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(inputFile);
+        // Load the existing spreadsheet (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Access the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Hide column C (zero‑based index 2)
-        worksheet.Cells.HideColumn(2);
+        // Hide column C (zero‑based index: 2)
+        sheet.Cells.HideColumn(2);
 
-        // Save the modified workbook as PDF
-        workbook.Save(outputFile, SaveFormat.Pdf);
+        // Save the modified workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

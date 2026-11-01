@@ -1,56 +1,52 @@
-// Title: Update the 'ReportPeriod' named range to reference cells C5:C15 using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, finds the named range 'ReportPeriod', and changes its RefersTo address to C5:C15 on the same worksheet. | Show a .NET example that verifies the input .xlsx file exists, updates an existing named range's address, and saves the modified workbook to a new file. | Demonstrate how to parse the sheet name from a named range's RefersTo string and programmatically assign a new range reference using Aspose.Cells.
-// Common Searches: Aspose.Cells C# update RefersTo for named range in .xlsx | Programmatically set named range to C5:C15 with Aspose.Cells | C# example to modify existing named range sheet reference using Aspose | Changing Excel named range address using Aspose.Cells .NET library
-// Tags: Aspose.Cells modify named range address | C# update RefersTo property Aspose | Aspose.Cells set named range C5:C15 | Excel named range manipulation Aspose.Cells | Aspose.Cells workbook save after range change
+// Title: How to update an existing named range to the cell range C5:C15 using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# change named range address to C5:C15 | Set RefersTo property of a named range with Aspose.Cells .NET | Programmatically update an existing named range in an Excel workbook using Aspose.Cells | Modify named range reference in a workbook with Aspose.Cells for C# | Update named range cells in an Aspose.Cells workbook
+// Tags: Aspose.Cells modify named range reference | Aspose.Cells RefersTo property C# | C# update Excel named range Aspose.Cells | Aspose.Cells workbook named range management | change Excel named range address .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The sample loads input.xlsx, locates the named range 'ReportPeriod', extracts its worksheet name from the current RefersTo string, updates the range to C5:C15 on that sheet, and saves the workbook as output.xlsx while handling missing files and exceptions.
-class UpdateNamedRange
+// The example loads an existing workbook, retrieves the named range "ReportPeriod", updates its RefersTo property to the address $C$5:$C$15 on the first worksheet, and saves the modified file.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
                 return;
             }
 
             // Load the existing workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputFile);
 
-            // Access the named range "ReportPeriod"
-            var namedRange = workbook.Worksheets.Names["ReportPeriod"];
-            if (namedRange != null)
+            // Retrieve the named range "ReportPeriod"
+            Name reportPeriod = workbook.Worksheets.Names["ReportPeriod"];
+            if (reportPeriod != null)
             {
-                // Extract the original worksheet name from the existing RefersTo string
-                // RefersTo format: SheetName!A1:B2
-                string originalRef = namedRange.RefersTo ?? string.Empty;
-                string sheetName = originalRef.Split('!')[0];
+                // Use the first worksheet (or any appropriate worksheet) for the reference
+                Worksheet ws = workbook.Worksheets[0];
 
-                // Update the range to refer to cells C5:C15 on the same worksheet
-                namedRange.RefersTo = $"{sheetName}!C5:C15";
+                // Update the reference to span cells C5:C15 on that worksheet
+                reportPeriod.RefersTo = $"'{ws.Name}'!$C$5:$C$15";
             }
             else
             {
-                Console.WriteLine("Named range 'ReportPeriod' not found.");
+                Console.WriteLine("Named range \"ReportPeriod\" not found.");
             }
 
-            // Save the workbook with the updated named range
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Save the modified workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

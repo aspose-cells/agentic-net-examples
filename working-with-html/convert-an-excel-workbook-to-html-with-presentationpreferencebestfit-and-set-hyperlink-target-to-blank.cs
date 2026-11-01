@@ -1,48 +1,49 @@
-// Title: Export an Excel workbook to HTML using Aspose.Cells C# with PresentationPreference.BestFit and hyperlink target set to _blank
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to use PresentationPreference.BestFit, sets HyperlinkTarget to "_blank", and saves the workbook as an HTML file. | Show how to generate HTML from an Excel workbook in C# so that column widths are automatically adjusted (BestFit) and all hyperlinks open in a new browser tab using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to export Excel to HTML with best fit column widths | set hyperlink target to _blank when saving workbook as HTML using Aspose.Cells | HtmlSaveOptions PresentationPreference BestFit example in C# | C# Aspose.Cells export to HTML with links opening in new tab | save Excel workbook as HTML with auto‑fit layout using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions BestFit layout | Aspose.Cells HyperlinkTarget _blank | C# export Excel to HTML BestFit | Aspose.Cells column auto fit HTML conversion | C# save workbook as HTML with new tab links
+// Title: How to convert an Excel workbook to HTML with best‑fit column widths and _blank hyperlink target using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to BestFit, sets HyperlinkTarget to "_blank", and saves the workbook as an HTML file. | Show a C# example that verifies the source Excel file exists, configures Aspose.Cells HTML export to automatically adjust column widths and open links in a new browser tab, and includes proper exception handling.
+// Common Searches: aspocells c# export excel to html with bestfit column width | set hyperlink target _blank when saving workbook as html using aspocells | htmlsaveoptions presentationpreference bestfit example c# | c# check if excel file exists before converting to html with aspocells | aspocells html export open links in new tab
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference BestFit | Aspose.Cells HyperlinkTarget _blank | C# Excel to HTML conversion with column auto‑fit | C# file existence validation Aspose.Cells | Aspose.Cells HTML export exception handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample checks for the input.xlsx file, loads it into an Aspose.Cells Workbook, optionally sets HtmlSaveOptions.PresentationPreference to BestFit and HyperlinkTarget to "_blank", then saves the workbook as output.html while handling any exceptions.
-class Program
+// Demonstrates loading an .xlsx workbook with Aspose.Cells, configuring HtmlSaveOptions to use PresentationPreference.BestFit for automatic column sizing and HyperlinkTarget="_blank" to open links in a new tab, and saving the result as an HTML file with basic file‑existence checking and error handling.
+class ExcelToHtmlConverter
 {
     static void Main()
     {
+        // Paths for input Excel file and output HTML file
+        string inputFile = "input.xlsx";   // TODO: replace with your source file path
+        string outputFile = "output.html"; // TODO: replace with your desired output file path
+
         try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.html";
-
-            // Verify that the input workbook exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                Console.WriteLine($"Input file not found: {inputFile}");
                 return;
             }
 
-            // Load the Excel workbook
+            // Load the Excel workbook from the file
             Workbook workbook = new Workbook(inputFile);
 
             // Configure HTML save options
-            HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html);
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-            // The following options are available in newer versions of Aspose.Cells.
-            // Uncomment them if your version supports them.
+            // The following optional settings depend on the Aspose.Cells version.
+            // Uncomment if your version supports them.
 
-            // options.PresentationPreference = Aspose.Cells.PresentationPreference.BestFit;
-            // options.HyperlinkTarget = "_blank";
+            // saveOptions.PresentationPreference = PresentationPreference.BestFit; // Adjust column widths automatically
+            // saveOptions.HyperlinkTarget = "_blank"; // Open hyperlinks in a new tab/window
 
-            // Save the workbook as HTML
-            workbook.Save(outputFile, options);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputFile, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to HTML: {outputFile}");
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

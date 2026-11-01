@@ -1,69 +1,96 @@
-// Title: Calculate the percentage of initialized cells that contain formulas in an Aspose.Cells worksheet using C#
-// AI Prompts: Write a C# method that uses Aspose.Cells to return the ratio of formula cells to all initialized (non‑empty) cells in a worksheet. | Update the sample to ignore cells that only have formatting when computing the formula percentage. | Build a console program that loads an Excel file with Aspose.Cells, calls the formula‑percentage method, and prints the result with two decimal places. | Add robust error handling to the GetFormulaCellPercentage function to safely handle worksheets with zero initialized cells.
-// Common Searches: aspnet cells get percentage of cells with formulas in a worksheet | c# aspose.cells calculate formula cell ratio for excel file | how to measure worksheet complexity by counting formula cells using Aspose.Cells | determine formula cell count versus total initialized cells in Aspose.Cells C# | skip empty and formatting‑only cells when computing formula percentage Aspose.Cells
-// Tags: calculate formula cell percentage Aspose.Cells C# | initialized cell count with formulas Aspose.Cells | worksheet complexity metric formula ratio | iterate worksheet cells Aspose.Cells | exclude formatting‑only cells Aspose.Cells
+// Title: Calculate the percentage of initialized cells that contain formulas in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells get percentage of formula cells in a worksheet | how to compute formula density of an Excel sheet with Aspose.Cells | determine proportion of formula cells versus data cells using Aspose.Cells .NET | Aspose.Cells count initialized cells and formula cells in a worksheet | measure spreadsheet complexity by formula cell ratio in C#
+// Tags: calculate formula cell ratio Aspose.Cells | worksheet formula density analysis .NET | count initialized cells Aspose.Cells | used range iteration Aspose.Cells C# | measure spreadsheet formula complexity
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example defines GetFormulaCellPercentage, which iterates through every cell in a given Aspose.Cells Worksheet, counts cells that are initialized (contain a value or a formula), counts how many of those contain formulas, and returns the formula count as a percentage of initialized cells. The Main method loads a workbook, selects the first worksheet, invokes the method, and prints the percentage.
-public class WorksheetAnalysis
+namespace AsposeCellsFormulaComplexity
 {
-    /// <param name="worksheet">The worksheet to analyze.</param>
-    /// <returns>The percentage of formula cells.</returns>
-    public static double GetFormulaCellPercentage(Worksheet worksheet)
+    // The GetFormulaCellPercentage method loads a workbook, selects the specified worksheet, determines its used range via MaxDataRow/MaxDataColumn, iterates through each cell counting initialized cells (non‑null value or formula) and formula cells, then returns the formula‑cell count divided by the initialized‑cell count as a percentage (0‑100). It handles empty sheets, missing files, and invalid worksheet names with appropriate exceptions.
+    public class WorksheetFormulaAnalyzer
     {
-        int totalInitialized = 0;
-        int formulaCount = 0;
-
-        // Iterate through all cells in the worksheet
-        foreach (Cell cell in worksheet.Cells)
+        /// <param name="workbookPath">Full path to the Excel file.</param>
+        /// <param name="worksheetName">Name of the worksheet to analyze.</param>
+        /// <returns>Percentage of initialized cells that are formulas (0‑100). Returns 0 if there are no initialized cells.</returns>
+        public static double GetFormulaCellPercentage(string workbookPath, string worksheetName)
         {
-            // Consider a cell initialized if it has a value or a formula
-            bool hasValue = cell.Value != null;
-            bool hasFormula = !string.IsNullOrEmpty(cell.Formula);
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
 
-            if (!hasValue && !hasFormula)
-                continue; // skip truly empty cells
-
-            totalInitialized++;
-
-            if (hasFormula)
-                formulaCount++;
-        }
-
-        if (totalInitialized == 0)
-            return 0.0;
-
-        return (double)formulaCount / totalInitialized * 100.0;
-    }
-
-    /// <summary>
-    /// Entry point for demonstration.
-    /// </summary>
-    public static void Main()
-    {
-        try
-        {
-            string filePath = "Sample.xlsx";
-
-            if (!File.Exists(filePath))
+            Workbook workbook;
+            try
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
+                // Load the workbook
+                workbook = new Workbook(workbookPath);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to load workbook: {ex.Message}", ex);
             }
 
-            // Load workbook
-            Workbook workbook = new Workbook(filePath);
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the target worksheet
+            Worksheet sheet = workbook.Worksheets[worksheetName];
+            if (sheet == null)
+                throw new ArgumentException($"Worksheet \"{worksheetName}\" not found.");
 
-            double percentage = GetFormulaCellPercentage(sheet);
-            Console.WriteLine($"Formula cell percentage: {percentage:F2}%");
+            // Determine the used range (max row/column with data)
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            // If the sheet is completely empty, return 0
+            if (maxRow < 0 || maxCol < 0)
+                return 0.0;
+
+            int initializedCellCount = 0;
+            int formulaCellCount = 0;
+
+            // Iterate through the used range
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+
+                    // Consider a cell initialized if it contains a formula or a non‑null value
+                    bool isInitialized = cell.IsFormula || cell.Value != null;
+                    if (!isInitialized)
+                        continue;
+
+                    initializedCellCount++;
+
+                    // Count cells that contain a formula
+                    if (cell.IsFormula)
+                        formulaCellCount++;
+                }
+            }
+
+            // Avoid division by zero
+            if (initializedCellCount == 0)
+                return 0.0;
+
+            // Calculate percentage
+            double percentage = (double)formulaCellCount / initializedCellCount * 100.0;
+            return percentage;
         }
-        catch (Exception ex)
+
+        // Example usage
+        public static void Main()
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            try
+            {
+                string filePath = @"C:\Data\Sample.xlsx";
+                string sheetName = "Sheet1";
+
+                double formulaPercentage = GetFormulaCellPercentage(filePath, sheetName);
+                Console.WriteLine($"Formula cells: {formulaPercentage:F2}% of initialized cells in \"{sheetName}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,31 +1,86 @@
-// Title: How to import a vertical array into an Excel sheet and skip every other row with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a Workbook, uses Worksheet.Cells.ImportObjectArray to import a one‑dimensional object array vertically, and sets the skip argument so a blank row is inserted after each value. | Explain the steps for calling ImportObjectArray with the skip parameter to produce alternating populated and empty rows in an Excel file using Aspose.Cells.
-// Common Searches: Aspose.Cells C# import vertical array with blank rows example | ImportObjectArray skip parameter usage .NET | Create Excel file with alternating data rows using Aspose.Cells | Leave an empty row after each record when importing data with Aspose.Cells
-// Tags: ImportObjectArray vertical array Aspose.Cells | skip parameter blank rows Aspose.Cells | populate worksheet alternating rows C# | smart markers row skipping Aspose.Cells
+// Title: Populate an Excel template with Aspose.Cells in C# while skipping every other row (alternating rows)
+// AI Prompts: Generate C# code that loads a .xlsx template with Aspose.Cells, iterates over a list, and writes each item to column A on every second row starting after the header. | Show how to compute the destination row index for alternating rows when populating a worksheet using Aspose.Cells in C#. | Demonstrate creating the output folder if missing and saving the modified workbook to a new file with Aspose.Cells.
+// Common Searches: aspocells c# write data to every other row in existing excel template | how to skip rows when populating worksheet using Aspose.Cells C# | c# aspocells populate list into alternating rows starting after header | aspocells calculate target row index for spaced rows c# example | save modified workbook to new file using Aspose.Cells C#
+// Tags: alternating row insertion aspocells c# | skip rows aspocells c# | target row index calculation aspocells c# | template workbook access aspocells c# | save populated workbook aspocells c#
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating a Workbook, importing a vertical object array into cell A1 with ImportObjectArray using a skip value of 1 to leave a blank row after each entry, and saving the result as SkipRowsDemo.xlsx.
-class SkipRowsDemo
+namespace AsposeCellsSkipRowsExample
 {
-    static void Main()
+    // The example loads an existing .xlsx template (or creates a new workbook), iterates over a list of strings, and writes each entry to column A of the first worksheet with a two‑row gap between entries, starting after the header row. It ensures the output directory exists and saves the populated workbook to a specified path.
+    class Program
     {
-        // Create a new workbook (lifecycle create)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Path to the existing Excel template
+            string templatePath = @"C:\Templates\MyTemplate.xlsx";
 
-        // Sample data to be placed in the worksheet
-        // The array contains six values; they will be written vertically
-        object[] data = new object[] { "Alice", "Bob", "Charlie", "David", "Eve", "Frank" };
+            // Path where the populated workbook will be saved
+            string outputPath = @"C:\Output\PopulatedWorkbook.xlsx";
 
-        // Import the data vertically starting at cell A1 (row 0, column 0)
-        // The 'skip' parameter is set to 1, which means after each value a blank row is left,
-        // effectively omitting every other row in the output.
-        // Parameters: (object[] data, int firstRow, int firstColumn, bool isVertical, int skip)
-        worksheet.Cells.ImportObjectArray(data, 0, 0, true, 1);
+            try
+            {
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Save the workbook (lifecycle save)
-        workbook.Save("SkipRowsDemo.xlsx");
+                Workbook workbook;
+
+                // Load the template if it exists; otherwise create a new workbook
+                if (File.Exists(templatePath))
+                {
+                    workbook = new Workbook(templatePath);
+                }
+                else
+                {
+                    Console.WriteLine($"Template not found at '{templatePath}'. Creating a new workbook.");
+                    workbook = new Workbook(); // creates a workbook with a default worksheet
+                }
+
+                // Get the first worksheet (or specify by name/index)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Starting row index (0‑based). Adjust if the template has headers.
+                int startRow = 1; // e.g., start after header row
+
+                // Sample data to populate
+                List<string> entries = new List<string>
+                {
+                    "Entry A",
+                    "Entry B",
+                    "Entry C",
+                    "Entry D",
+                    "Entry E"
+                };
+
+                // Populate the worksheet, skipping every other row
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    // Calculate the target row: startRow + (i * 2) to skip one row each time
+                    int targetRow = startRow + (i * 2);
+
+                    // Write the entry into column A (index 0)
+                    Cell cell = sheet.Cells[targetRow, 0];
+                    cell.PutValue(entries[i]);
+
+                    // Optionally, you can populate additional columns here
+                    // sheet.Cells[targetRow, 1].PutValue("Additional data");
+                }
+
+                // Save the populated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

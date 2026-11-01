@@ -1,45 +1,33 @@
-// Title: Auto‑fit a column then fine‑tune its width in pixels using SetColumnWidthPixel with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that auto‑fits a worksheet column, reads its pixel width, adds a custom offset, and applies the new width with SetColumnWidthPixel in Aspose.Cells. | Demonstrate how to obtain the column width in pixels after calling AutoFitColumn and then adjust it by a specific number of pixels using the Aspose.Cells API.
-// Common Searches: how to increase column width by exact pixels after autofit in Aspose.Cells C# | Aspose.Cells GetColumnWidthPixel value after AutoFitColumn example | set column width in pixels after auto‑fit using SetColumnWidthPixel Aspose.Cells .NET | add extra spacing to auto‑fitted column Aspose.Cells C# code | fine tune worksheet column width pixel precision Aspose.Cells
-// Tags: auto‑fit column then set width in pixels Aspose.Cells | retrieve column width in pixels after autofit C# | pixel‑based column size adjustment Aspose.Cells | worksheet column spacing control by pixels | exact pixel column width setting Aspose.Cells
+// Title: Auto‑fit a column then set an exact pixel width with SetColumnWidthPixel in Aspose.Cells for .NET (C#)
+// AI Prompts: Auto‑fit column A and then set its width to 200 pixels using Aspose.Cells SetColumnWidthPixel in C#. | Replace an auto‑fitted column width with a precise pixel measurement in a .NET workbook. | Create an Excel file, auto‑fit a column, and fine‑tune the column width to a specific pixel count via Aspose.Cells.
+// Common Searches: how to set column width in pixels after using AutoFitColumn in Aspose.Cells C# | Aspose.Cells .NET precise column width control with SetColumnWidthPixel | C# example for overriding auto‑fit column width with pixel value | adjust column width to exact pixels in generated Excel using Aspose.Cells | set column A width to 200px after auto‑fit Aspose.Cells workbook
+// Tags: auto-fit column then pixel width Aspose.Cells | SetColumnWidthPixel exact sizing | C# Aspose.Cells column width pixel control | override auto-fit with pixel measurement | Excel column width precision .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AutoFitAndFineTuneColumn
+// Shows how to create a workbook, auto‑fit column A, then override its width to a specific pixel value (e.g., 200 px) using SetColumnWidthPixel, and save the file as output.xlsx.
+class Program
 {
-    // The example creates a workbook, fills column A with text of varying lengths, auto‑fits the column, reads the resulting pixel width, adds 20 pixels for extra spacing, sets the adjusted width with SetColumnWidthPixel, verifies the final width, and saves the file as AutoFitAndFineTuneColumn.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Populate sample data in column A (index 0)
-            cells["A1"].PutValue("Short text");
-            cells["A2"].PutValue("This is a much longer piece of text that will require column width adjustment");
-            cells["A3"].PutValue("Another long text entry to demonstrate AutoFitColumn");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Auto-fit column A (index 0) based on its content
-            worksheet.AutoFitColumn(0);
+        // Populate some data in column A
+        sheet.Cells["A1"].PutValue("Header");
+        sheet.Cells["A2"].PutValue("This is a long piece of text that will be auto‑fitted.");
 
-            // Retrieve the width in pixels after auto-fit
-            int widthAfterAutoFit = cells.GetColumnWidthPixel(0);
-            Console.WriteLine($"Column width after AutoFitColumn: {widthAfterAutoFit} pixels");
+        // Auto‑fit column A (index 0)
+        sheet.AutoFitColumn(0);
 
-            // Fine‑tune the width by adding 20 pixels for extra spacing
-            int fineTunedWidth = widthAfterAutoFit + 20;
-            cells.SetColumnWidthPixel(0, fineTunedWidth);
+        // Fine‑tune the width of column A to a precise pixel value (e.g., 200 pixels)
+        sheet.Cells.SetColumnWidthPixel(0, 200);
 
-            // Verify the new width
-            int finalWidth = cells.GetColumnWidthPixel(0);
-            Console.WriteLine($"Column width after fine‑tuning: {finalWidth} pixels");
-
-            // Save the workbook
-            workbook.Save("AutoFitAndFineTuneColumn.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

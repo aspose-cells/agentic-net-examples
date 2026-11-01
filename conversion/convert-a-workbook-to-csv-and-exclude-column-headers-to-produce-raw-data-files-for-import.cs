@@ -1,68 +1,62 @@
-// Title: Convert an Excel workbook to UTF-8 CSV files per worksheet while skipping the header row using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, iterates through each worksheet, and saves each sheet as a separate UTF-8 encoded CSV file, excluding the first row (column headers) from the output. | Show how to configure TxtSaveOptions in Aspose.Cells to export raw data without header rows and apply it when saving multiple worksheets to CSV. | Create a reusable method that accepts a workbook path and an optional flag to omit headers, then generates one CSV per sheet using Aspose.Cells and returns the list of generated file names.
-// Common Searches: aspocells c# export each sheet to csv without header row | how to save excel worksheets as separate csv files raw data asp.net | convert workbook to multiple utf-8 csv files using Aspose.Cells and skip first row | c# Aspose.Cells TxtSaveOptions hide column names when saving to csv | generate raw csv files from excel workbook for data import asp.net
-// Tags: aspocells export worksheet to csv without headers | utf-8 csv generation aspocells c# | multiple csv files per excel sheet aspocells | txtsaveoptions raw data csv aspocells | c# convert workbook to csv raw import | skip first row csv export aspocells
+// Title: Export each worksheet of an Excel workbook to separate CSV files with Aspose.Cells for .NET
+// Common Searches: how to save every sheet of an Excel file as an individual CSV using Aspose.Cells in C# | Aspose.Cells C# export multiple worksheets to separate CSV files without using Excel Interop | C# code to iterate through workbook worksheets and generate CSV files with Aspose.Cells | save each Excel worksheet as a CSV file programmatically with Aspose.Cells .NET library | convert Excel workbook to raw CSV data files using Aspose.Cells C#
+// Tags: Aspose.Cells export worksheet to CSV | C# save Excel sheet as separate CSV file | multiple CSV output per workbook Aspose.Cells | iterate workbook worksheets Aspose.Cells C# | create raw CSV data from Excel using Aspose.Cells | remove default sheet when saving worksheet as CSV Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
-using System.Text;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, iterates over every worksheet, creates a temporary workbook for each sheet, and saves it as a UTF-8 encoded CSV file named after the worksheet while omitting the first row to produce raw data suitable for import.
+// The example loads an Excel workbook with Aspose.Cells, loops through each worksheet, creates a temporary workbook containing only that sheet, removes the default empty sheet, and saves the sheet as a CSV file named after the worksheet. It includes file‑existence checks and per‑sheet error handling.
 class Program
 {
     static void Main()
     {
+        // Path to the source Excel workbook
+        string sourcePath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Path to the source Excel workbook
-            string sourcePath = "input.xlsx";
-
-            // Verify that the source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            // Load the workbook from the file system
+            // Load the workbook
             Workbook workbook = new Workbook(sourcePath);
 
-            // Loop through each worksheet in the workbook
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 try
                 {
-                    // Create a temporary workbook containing only the current worksheet
-                    Workbook sheetWb = new Workbook();
-                    sheetWb.Worksheets.Clear(); // Remove the default sheet
+                    // Create a temporary workbook that contains only the current worksheet
+                    Workbook sheetWorkbook = new Workbook();
 
-                    // Copy the current sheet into the temporary workbook
-                    // Use the overload that accepts arrays of worksheets and names
-                    sheetWb.Worksheets.AddCopy(new Worksheet[] { sheet }, new string[] { sheet.Name });
+                    // Add a copy of the current sheet by name
+                    sheetWorkbook.Worksheets.AddCopy(sheet.Name);
 
-                    // Configure CSV save options using TxtSaveOptions
-                    TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-                    {
-                        Encoding = Encoding.UTF8 // Use UTF-8 encoding for the CSV file
-                    };
+                    // Remove the default empty sheet that is created with a new workbook
+                    sheetWorkbook.Worksheets.RemoveAt(0);
 
-                    // Build the output CSV file name (one file per worksheet)
-                    string csvFileName = $"{sheet.Name}.csv";
+                    // Create an output file name based on the worksheet name
+                    string outputPath = $"{sheet.Name}.csv";
 
-                    // Save the worksheet as a CSV file using the specified options
-                    sheetWb.Save(csvFileName, csvOptions);
-                    Console.WriteLine($"Worksheet '{sheet.Name}' saved as '{csvFileName}'.");
+                    // Save the worksheet as a CSV file (comma delimiter is default)
+                    sheetWorkbook.Save(outputPath, SaveFormat.Csv);
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" saved to \"{outputPath}\".");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to save worksheet '{sheet.Name}': {ex.Message}");
+                    // Handle errors for individual worksheets without stopping the whole process
+                    Console.WriteLine($"Failed to save worksheet \"{sheet.Name}\": {ex.Message}");
                 }
             }
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Catch any unexpected exceptions and display an error message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

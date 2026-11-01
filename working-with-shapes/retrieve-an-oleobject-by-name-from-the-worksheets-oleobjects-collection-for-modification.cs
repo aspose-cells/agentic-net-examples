@@ -1,14 +1,14 @@
-// Title: Retrieve and edit an OLE object by its Name in an Excel worksheet with Aspose.Cells for .NET
-// AI Prompts: Search a worksheet's OleObjects collection for an object whose Name matches a target string, then change its Name, Left, and Top values using Aspose.Cells. | Load a .xlsx workbook, locate the OLE item called 'MyOleObject', rename it, reposition it, and write the updated workbook to a new file.
-// Common Searches: C# Aspose.Cells find OLE object in worksheet by identifier | How to change left and top coordinates of an OLE shape in Excel via Aspose.Cells | Renaming OLE objects in a spreadsheet using Aspose.Cells API | Iterating over worksheet OleObjects to locate a specific OLE item | Saving modified workbook after updating OLE object properties with Aspose.Cells
-// Tags: detect OLE shape within worksheet Aspose.Cells | set OLE object Left Top properties C# | change OLE object name Aspose.Cells | enumerate worksheet OleObjects collection .NET | persist OLE modifications with Aspose.Cells
+// Title: Retrieve and modify an OleObject by its name in an Aspose.Cells worksheet using C#
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, searches the worksheet's OleObjects collection for a specific Name, and changes the object's Width, Height, and IsLocked properties. | Write a reusable function that takes inputPath, outputPath, sheetName, and oleObjectName, then updates the matching OleObject's size and lock state with Aspose.Cells.
+// Common Searches: asp.net find oleobject by name in excel workbook using Aspose.Cells | change width and height of embedded OLE object in C# Aspose.Cells | unlock an OleObject programmatically in an Excel worksheet | Aspose.Cells update properties of specific OleObject on a sheet
+// Tags: retrieve oleobject by name Aspose.Cells | modify oleobject size C# | set oleobject lock state Aspose.Cells | access worksheet oleobjects collection .NET | update embedded oleobject properties Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-// The example loads an existing Excel file, iterates the Sheet1 OleObjects collection to find an OLE object named 'MyOleObject', renames it, adjusts its Left and Top coordinates, and saves the workbook as a new file.
+// // Loads 'input.xlsx', finds the OleObject named 'MyOleObject' on 'Sheet1', sets its Width to 300, Height to 200, unlocks it, and saves the workbook as 'output.xlsx'.
 class Program
 {
     static void Main()
@@ -17,50 +17,64 @@ class Program
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
-            const string targetOleName = "MyOleObject";
+            const string sheetName = "Sheet1";
+            const string oleObjectName = "MyOleObject";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook (lifecycle: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the target worksheet (by name or index)
-            Worksheet worksheet = workbook.Worksheets["Sheet1"]; // or workbook.Worksheets[0]
+            // Access the target worksheet
+            Worksheet worksheet = workbook.Worksheets[sheetName];
+            if (worksheet == null)
+            {
+                Console.WriteLine($"Worksheet '{sheetName}' not found.");
+                return;
+            }
 
-            // Locate the OleObject by its name
-            OleObject oleObject = null;
+            // Locate the OleObject by its Name property
+            OleObject targetOle = null;
             foreach (OleObject obj in worksheet.OleObjects)
             {
-                if (obj.Name.Equals(targetOleName, StringComparison.OrdinalIgnoreCase))
+                if (obj.Name == oleObjectName)
                 {
-                    oleObject = obj;
+                    targetOle = obj;
                     break;
                 }
             }
 
-            if (oleObject == null)
+            // Modify the OleObject if found
+            if (targetOle != null)
             {
-                Console.WriteLine($"OleObject named '{targetOleName}' not found in the worksheet.");
-                return;
+                targetOle.Width = 300;      // set new width
+                targetOle.Height = 200;     // set new height
+                targetOle.IsLocked = false; // unlock the object
+            }
+            else
+            {
+                Console.WriteLine($"OleObject named '{oleObjectName}' not found.");
             }
 
-            // Example modification: change the object's name and position
-            oleObject.Name = "MyOleObject_Renamed";
-            oleObject.Left = 100; // distance from the left edge (in points)
-            oleObject.Top = 50;   // distance from the top edge (in points)
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the modified workbook
+            // Save the workbook (lifecycle: save)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,38 +1,70 @@
-// Title: Enforcing the 255‑character limit for cell values in Excel 2003 compatibility mode with Aspose.Cells for .NET
-// AI Prompts: Provide C# code that checks a cell's text length and truncates it to 255 characters before saving the workbook using Aspose.Cells. | Show how to log a warning and automatically shorten any string longer than 255 characters when writing to a worksheet with Aspose.Cells in compatibility mode. | Generate an Aspose.Cells example that validates cell content length, applies the Excel 2003 255‑character restriction, and saves the file.
-// Common Searches: Aspose.Cells limit cell text to 255 characters for Excel 2003 compatibility | C# truncate Excel cell value exceeding 255 characters using Aspose.Cells | how to enforce Excel 2003 255‑character limit on worksheet cells in .NET | validate and shorten cell string length before saving workbook with Aspose.Cells | warning for cell content longer than 255 characters in Aspose.Cells example
-// Tags: shorten cell content Aspose.Cells .NET | Excel 2003 compatibility cell length validation | cell string length check C# Aspose.Cells | warning log for oversized cell content Aspose.Cells | enforce 255‑character limit worksheet Aspose.Cells
+// Title: Check and enforce the 255‑character string limit in Excel cells with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that iterates through all worksheets and throws an InvalidOperationException when a string cell contains more than 255 characters. | Modify the provided Aspose.Cells example to collect the addresses of cells exceeding 255 characters and write them to a log file instead of raising an exception. | Create a C# routine with Aspose.Cells that truncates any string longer than 255 characters to the maximum allowed length before saving the workbook.
+// Common Searches: asp.net aspose.cells verify cell text length does not exceed 255 characters | how to detect Excel compatibility mode string length violation using Aspose.Cells C# | c# iterate over workbook cells and log cells with text longer than 255 characters Aspose.Cells | throw exception for Excel cell content over 255 characters with Aspose.Cells .NET
+// Tags: validate string cell length Aspose.Cells | enforce 255‑character limit Excel compatibility | scan workbook cells for length overflow C# | exception on long cell content Aspose.Cells | truncate oversized cell text Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Creates a workbook, checks if a string exceeds Excel 2003's 255‑character limit, logs a warning, truncates the text to 255 characters, writes it to cell A1, and saves the file using Aspose.Cells for .NET.
-class VerifyCellLength
+// The sample loads an Excel workbook with Aspose.Cells, walks through each worksheet's used range, checks every string cell for a length greater than 255 characters, and throws an InvalidOperationException identifying the offending cell before saving the file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Target cell
-        Cell cell = worksheet.Cells["A1"];
-
-        // Example string that may exceed the 255‑character limit
-        string longText = new string('x', 260); // 260 characters
-
-        // Verify length when Excel 2003 compatibility (255‑char limit) is considered
-        // If the text is longer than 255 characters, truncate it or handle as needed
-        if (longText.Length > 255)
+        try
         {
-            Console.WriteLine($"Warning: Text length ({longText.Length}) exceeds 255 characters. Truncating to 255.");
-            longText = longText.Substring(0, 255);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: In recent Aspose.Cells versions the compatibility mode property may be unavailable.
+            // The 255‑character limit is enforced manually below, so we omit setting IsCompatibilityMode.
+
+            // Iterate through all worksheets and their used cells
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        if (cell.Type == CellValueType.IsString)
+                        {
+                            string text = cell.StringValue;
+                            if (!string.IsNullOrEmpty(text) && text.Length > 255)
+                            {
+                                // Cell content exceeds the allowed length; handle as needed
+                                throw new InvalidOperationException(
+                                    $"Cell {cell.Name} contains {text.Length} characters, exceeding the 255‑character limit.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook (optional, replace with desired output path)
+            workbook.Save(outputPath);
         }
-
-        // Put the (possibly truncated) value into the cell
-        cell.PutValue(longText);
-
-        // Save the workbook
-        workbook.Save("VerifiedLength.xlsx");
+        catch (Exception ex)
+        {
+            // Log or display the error details
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

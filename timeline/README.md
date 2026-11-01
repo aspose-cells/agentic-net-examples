@@ -4,8 +4,8 @@ description: C# examples for creating, accessing, positioning, styling, connecti
 product: Aspose.Cells for .NET
 category: timeline
 language: C#
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 ---
 
 # Create Excel PivotTable Timelines in C# with Aspose.Cells for .NET

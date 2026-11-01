@@ -1,94 +1,133 @@
-// Title: Export an Aspose.Cells workbook to HTML on a UNC network share using a custom IFilePathProvider with accessibility validation
-// AI Prompts: Implement a class that inherits IFilePathProvider to return a UNC path and assign it to HtmlSaveOptions.FilePathProvider for HTML export. | Add logic to verify that a UNC directory exists and is writable before invoking Workbook.Save with HtmlSaveOptions. | Extend the sample to create additional HTML assets (images, CSS files) on the same network share via the custom file path provider.
-// Common Searches: how to save Aspose.Cells workbook as HTML to a UNC network share in C# | C# check write permission on UNC folder before exporting HTML with Aspose.Cells | custom IFilePathProvider example for Aspose.Cells HTML output | Aspose.Cells HtmlSaveOptions UNC path usage | error handling for inaccessible network share when saving HTML with Aspose.Cells
-// Tags: IFilePathProvider UNC implementation | HtmlSaveOptions network share | Aspose.Cells HTML export to UNC | validate UNC folder write access C# | custom file path provider Aspose.Cells
+// Title: Save Aspose.Cells workbook as HTML to a UNC network share using a custom IFilePathProvider (C#)
+// Common Searches: c# save Aspose.Cells workbook as HTML to a UNC path using IFilePathProvider | how to validate write permissions on a network share before exporting HTML with Aspose.Cells | custom IFilePathProvider implementation for UNC directories in Aspose.Cells | Aspose.Cells HtmlSaveOptions FilePathProvider example for network share | export workbook to HTML with base64 images to a shared folder in C# | Aspose.Cells HTML export to \\server\share folder using custom file path provider
+// Tags: custom IFilePathProvider UNC implementation | Aspose.Cells HTML export to network share | validate UNC write access C# | HtmlSaveOptions FilePathProvider usage | export images as base64 Aspose.Cells | save workbook as HTML on shared folder
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsNetworkShareExample
+// The example implements a NetworkShareFilePathProvider that builds full UNC file paths, ensures directories exist, and verifies write access by creating a temporary file. It then creates a workbook, configures HtmlSaveOptions with ExportImagesAsBase64 and the custom provider, and saves the workbook as HTML directly to a network share (UNC path).
+public class NetworkShareFilePathProvider : IFilePathProvider
 {
-    // Custom file path provider that returns a UNC network share path for HTML files.
-    // The example defines a NetworkShareFilePathProvider that implements IFilePathProvider to prepend a UNC root to HTML file names, checks the UNC directory's existence and write permissions, creates a sample workbook, and saves it as HTML to the network share using HtmlSaveOptions.
-    public class NetworkShareFilePathProvider : IFilePathProvider
+    private readonly string _uncBasePath;
+
+    /// <param name="uncBasePath">The UNC directory where files will be stored.</param>
+    public NetworkShareFilePathProvider(string uncBasePath)
     {
-        private readonly string _networkShareRoot;
+        if (string.IsNullOrWhiteSpace(uncBasePath))
+            throw new ArgumentException("UNC base path cannot be null or empty.", nameof(uncBasePath));
 
-        public NetworkShareFilePathProvider(string networkShareRoot)
-        {
-            // Ensure the root path ends with a backslash.
-            _networkShareRoot = networkShareRoot.EndsWith("\\") ? networkShareRoot : networkShareRoot + "\\";
-        }
+        // Ensure the path ends without a trailing backslash for consistent concatenation.
+        _uncBasePath = uncBasePath.TrimEnd('\\');
 
-        // Called by Aspose.Cells when it needs to resolve a file name.
-        public string GetFilePath(string fileName)
-        {
-            // Combine the UNC root with the requested file name.
-            return Path.Combine(_networkShareRoot, fileName);
-        }
-
-        // Required by IFilePathProvider – return the full path for the given file name.
-        public string GetFullName(string fileName)
-        {
-            return GetFilePath(fileName);
-        }
+        // Validate accessibility of the UNC share.
+        ValidateUncPath();
     }
 
-    class Program
+    /// <param name="fileName">File name with extension supplied by Aspose.Cells.</param>
+    /// <returns>Full UNC file path.</returns>
+    public string GetFullName(string fileName)
     {
-        static void Main()
+        // Combine base UNC path with the supplied file name.
+        string fullPath = Path.Combine(_uncBasePath, fileName);
+
+        // Ensure the target directory exists.
+        string directory = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directory))
         {
-            // UNC path to the network share where HTML files will be stored.
-            string networkSharePath = @"\\MyServer\SharedFolder\AsposeHtmlOutput";
+            Directory.CreateDirectory(directory);
+        }
 
-            // Validate that the UNC path is accessible.
-            if (!Directory.Exists(networkSharePath))
-            {
-                Console.WriteLine($"Error: The network share path '{networkSharePath}' is not accessible.");
-                return;
-            }
+        return fullPath;
+    }
 
-            // Optional: test write permission by creating a temporary file.
-            string testFilePath = Path.Combine(networkSharePath, "write_test.tmp");
-            try
-            {
-                File.WriteAllText(testFilePath, "test");
-                File.Delete(testFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: Write permission denied on '{networkSharePath}'. Details: {ex.Message}");
-                return;
-            }
+    private void ValidateUncPath()
+    {
+        // Attempt to create a temporary file to verify write access.
+        string testFile = Path.Combine(_uncBasePath, "AsposeCellsAccessTest.tmp");
+        try
+        {
+            // Ensure the directory exists.
+            if (!Directory.Exists(_uncBasePath))
+                Directory.CreateDirectory(_uncBasePath);
 
-            // Create a new workbook and add some sample data.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["B3"].PutValue(85);
+            // Write and delete a temporary file.
+            File.WriteAllText(testFile, "test");
+            File.Delete(testFile);
+        }
+        catch (Exception ex)
+        {
+            throw new IOException($"Unable to access UNC path '{_uncBasePath}'.", ex);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            // Define the UNC network share where HTML files will be saved.
+            // Example: \\fileserver\shared\reports
+            string uncPath = @"\\fileserver\shared\reports";
+
+            // Ensure the UNC directory exists before proceeding.
+            if (!Directory.Exists(uncPath))
+                Directory.CreateDirectory(uncPath);
+
+            // Instantiate the custom file path provider.
+            var filePathProvider = new NetworkShareFilePathProvider(uncPath);
+
+            // Create a new workbook and populate it with sample data.
+            var workbook = new Workbook();
+            var cells = workbook.Worksheets[0].Cells;
+            cells["A1"].PutValue("Product");
+            cells["B1"].PutValue("Quantity");
+            cells["A2"].PutValue("Apples");
+            cells["B2"].PutValue(120);
+            cells["A3"].PutValue("Bananas");
+            cells["B3"].PutValue(85);
 
             // Configure HTML save options to use the custom file path provider.
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-            saveOptions.FilePathProvider = new NetworkShareFilePathProvider(networkSharePath);
+            var htmlOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = true,
+                // The provider will be called for each auxiliary file (e.g., images, CSS).
+                FilePathProvider = filePathProvider,
+                // Embed images as base64 to avoid separate image files.
+                ExportImagesAsBase64 = true
+                // Note: ExportCssSeparately is not available in this version of Aspose.Cells.
+            };
 
-            // Define the HTML file name (without path, provider will prepend the UNC root).
-            string htmlFileName = "Report.html";
+            // Define the main HTML file name (including extension).
+            string htmlFileName = "SalesReport.html";
+            string htmlFullPath = Path.Combine(uncPath, htmlFileName);
 
-            // Save the workbook as HTML to the network share.
+            // Save the workbook as HTML to the UNC location.
             try
             {
-                workbook.Save(htmlFileName, saveOptions);
-                Console.WriteLine($"Workbook successfully saved as HTML to UNC path: {Path.Combine(networkSharePath, htmlFileName)}");
+                workbook.Save(htmlFullPath, htmlOptions);
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                Console.WriteLine($"Error during saving HTML: {saveEx.Message}");
+                return;
             }
+
+            // Verify that the main HTML file was created successfully.
+            if (File.Exists(htmlFullPath))
+            {
+                Console.WriteLine($"HTML file successfully saved to UNC path: {htmlFullPath}");
+            }
+            else
+            {
+                Console.WriteLine("Failed to save the HTML file to the UNC location.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

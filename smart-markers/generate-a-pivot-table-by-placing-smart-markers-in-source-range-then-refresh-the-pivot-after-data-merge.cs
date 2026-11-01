@@ -1,74 +1,79 @@
-// Title: Generate a pivot table from smart markers and refresh it after data merge using Aspose.Cells for .NET (C#)
-// AI Prompts: Build a workbook that inserts `${Product}` and `${Sales}` smart‑marker placeholders, fills them from a DataTable, creates a pivot table on the expanded range, refreshes the pivot, and saves the file. | Extend the example to add a second data field (e.g., Quantity) to the pivot table, recalculate the pivot after WorkbookDesigner processes the smart markers, and export the updated workbook. | Demonstrate how to loop through a worksheet's PivotTables collection and invoke Refresh after calling WorkbookDesigner.Process() to merge smart‑marker data.
-// Common Searches: Aspose.Cells C# create pivot table after smart marker processing | how to refresh worksheet pivot tables after WorkbookDesigner merges data | using smart markers to populate pivot table source range in .NET
-// Tags: Aspose.Cells smart markers pivot table generation | C# refresh pivot tables after WorkbookDesigner | dynamic pivot source range with smart markers | WorkbookDesigner process DataTable example | calculate pivot data programmatically Aspose.Cells
+// Title: Create and refresh a pivot table with smart markers from a DataTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to create a pivot table from a DataTable using Aspose.Cells smart markers in C# | refreshing an Aspose.Cells pivot table after adding data programmatically | example of using smart markers to build a pivot table in a .NET workbook | Aspose.Cells C# code to auto‑fit columns after generating a pivot table | populate Excel worksheet from DataTable and generate pivot with smart markers Aspose.Cells
+// Tags: Aspose.Cells create pivot table from DataTable | Aspose.Cells refresh pivot table programmatically | Aspose.Cells smart markers pivot generation | Aspose.Cells auto fit columns after pivot | Aspose.Cells populate worksheet from DataTable
 
 using System;
 using System.Data;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotSmartMarkerDemo
+// The sample creates a new workbook, fills a worksheet with data from a DataTable, defines a source range, adds a pivot table using smart markers, configures row, column, and data fields, refreshes the pivot to reflect the data, auto‑fits columns, and saves the file as PivotTableWithSmartMarkers.xlsx.
+class PivotTableWithSmartMarkers
 {
-    // The sample creates a new workbook, places `${Product}` and `${Sales}` smart‑marker placeholders, populates them from a DataTable via WorkbookDesigner, defines a pivot table on the resulting range, refreshes and calculates the pivot, and saves the workbook as PivotTable_With_SmartMarkers.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // ----- Define headers in the source range -----
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Product");
+            sheet.Cells["C1"].PutValue("Sales");
+
+            // ----- Prepare data source -----
+            DataTable dt = new DataTable("Data");
+            dt.Columns.Add("Category", typeof(string));
+            dt.Columns.Add("Product", typeof(string));
+            dt.Columns.Add("Sales", typeof(double));
+
+            dt.Rows.Add("Beverages", "Tea", 1200);
+            dt.Rows.Add("Beverages", "Coffee", 1500);
+            dt.Rows.Add("Food", "Bread", 800);
+            dt.Rows.Add("Food", "Butter", 600);
+            dt.Rows.Add("Snacks", "Chips", 400);
+            dt.Rows.Add("Snacks", "Nuts", 300);
+
+            // ----- Fill worksheet with data rows -----
+            int rowIndex = 1; // zero‑based index (row 2 in Excel)
+            foreach (DataRow dr in dt.Rows)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet (will hold source data and smart markers)
-                Worksheet dataSheet = workbook.Worksheets[0];
-                Cells cells = dataSheet.Cells;
-
-                // Add headers
-                cells["A1"].PutValue("Product");
-                cells["B1"].PutValue("Sales");
-
-                // Insert smart markers – these will be replaced by actual data during processing
-                cells["A2"].PutValue("${Product}");
-                cells["B2"].PutValue("${Sales}");
-
-                // Create a pivot table that will use the data range after smart marker processing.
-                // Initially point it to the header row; the range will expand automatically.
-                int pivotIndex = dataSheet.PivotTables.Add("A1:B2", "D4", "SalesPivot");
-                PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Prepare sample data for smart marker processing
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Product", typeof(string));
-                dt.Columns.Add("Sales", typeof(double));
-
-                dt.Rows.Add("Apple", 1200);
-                dt.Rows.Add("Banana", 850);
-                dt.Rows.Add("Orange", 430);
-                dt.Rows.Add("Grape", 670);
-
-                // Process smart markers using WorkbookDesigner (correct API)
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource(dt);
-                designer.Process();
-
-                // After data is merged, refresh the pivot table to reflect the new source data
-                dataSheet.RefreshPivotTables();
-
-                // Optionally calculate the pivot data (ensures values are written to cells)
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                string outputPath = "PivotTable_With_SmartMarkers.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                sheet.Cells[rowIndex, 0].PutValue(dr["Category"]);
+                sheet.Cells[rowIndex, 1].PutValue(dr["Product"]);
+                sheet.Cells[rowIndex, 2].PutValue(dr["Sales"]);
+                rowIndex++;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // ----- Create a Pivot Table based on the filled range -----
+            string sourceRange = $"A1:C{dt.Rows.Count + 1}";
+            int pivotRow = 0;      // Row 1 (E1)
+            int pivotColumn = 4;   // Column E (0‑based)
+
+            int pivotIndex = sheet.PivotTables.Add(sourceRange, pivotRow, pivotColumn, "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+            // Configure pivot fields using PivotField objects
+            pivotTable.RowFields.Add(pivotTable.RowFields[0]);      // Category
+            pivotTable.ColumnFields.Add(pivotTable.RowFields[1]);   // Product
+            pivotTable.DataFields.Add(pivotTable.RowFields[2]);     // Sales (defaults to Sum)
+
+            // Refresh pivot table to ensure it reflects the data
+            pivotTable.RefreshData();
+
+            // Auto‑fit columns for better appearance
+            sheet.AutoFitColumns();
+
+            // Save the workbook
+            string outputPath = "PivotTableWithSmartMarkers.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

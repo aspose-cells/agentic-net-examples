@@ -1,14 +1,14 @@
-// Title: Apply a custom RGB color palette to each series of a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Excel workbook, adds a column chart, and assigns specific RGB values to the foreground color of each series with Aspose.Cells. | Show how to programmatically set the ForegroundColor of chart series in Aspose.Cells to customize a column chart's palette. | Provide an example that populates sample data, generates a column chart, and applies red, green, and blue colors to three series before saving the file.
-// Common Searches: Aspose.Cells C# set custom RGB colors for individual chart series | How to change series colors in an Excel column chart using Aspose.Cells .NET | Example of applying a custom color palette to a chart with Aspose.Cells for .NET | Programmatic way to assign different colors to each series in Aspose.Cells chart | Set chart series foreground color Aspose.Cells C# tutorial
-// Tags: set chart series RGB color Aspose.Cells | custom column chart series colors .NET | Aspose.Cells chart series foreground color | apply custom palette to Excel chart C# | programmatic chart series styling Aspose.Cells | color each series in Aspose.Cells column chart
+// Title: Apply a custom RGB color palette to each series of a column chart with Aspose.Cells in C#
+// AI Prompts: Generate C# code that creates a column chart using Aspose.Cells and assigns specific RGB colors to the fill of each series. | Show how to build a Color[] array and iterate over chart.NSeries to set Series.Area.ForegroundColor for custom series colors. | Explain how to programmatically customize the series colors of an Excel chart by setting the foreground color of each series area in Aspose.Cells.
+// Common Searches: Aspose.Cells C# set individual series colors in a column chart using RGB values | custom color palette for Excel chart series with Aspose.Cells .NET | change fill color of each series in an Aspose.Cells generated chart programmatically
+// Tags: set series foreground color Aspose.Cells | custom RGB palette Excel chart .NET | column chart series styling Aspose.Cells C# | apply custom colors to chart NSeries Aspose.Cells | Aspose.Cells chart series fill color
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System.Drawing;
 
-// The program creates a workbook, fills it with sample data, adds a column chart, and assigns red, green, and blue RGB colors to the three series by setting each series' ForegroundColor, then saves the file as CustomPaletteChart.xlsx.
+// The program creates a workbook, fills it with sample data, adds a column chart, defines an array of three RGB colors (red, green, blue), and assigns each color to the corresponding series' area foreground before saving the file as CustomPaletteChart.xlsx.
 class Program
 {
     static void Main()
@@ -22,7 +22,7 @@ class Program
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Series1");
             sheet.Cells["C1"].PutValue("Series2");
             sheet.Cells["D1"].PutValue("Series3");
@@ -44,29 +44,36 @@ class Program
             sheet.Cells["D4"].PutValue(32);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sales Data";
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:D4", true);
+            // Add series for each data column
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries.Add("D2:D4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
             // Define custom RGB colors for each series
-            Color[] seriesColors = new Color[]
+            Color[] customColors = new Color[]
             {
-                Color.FromArgb(255, 0, 0),   // Red for Series1
-                Color.FromArgb(0, 255, 0),   // Green for Series2
-                Color.FromArgb(0, 0, 255)    // Blue for Series3
+                Color.FromArgb(255, 0, 0),   // Red
+                Color.FromArgb(0, 255, 0),   // Green
+                Color.FromArgb(0, 0, 255)    // Blue
             };
 
             // Apply the custom colors to the series
-            for (int i = 0; i < chart.NSeries.Count && i < seriesColors.Length; i++)
+            for (int i = 0; i < chart.NSeries.Count && i < customColors.Length; i++)
             {
-                chart.NSeries[i].Area.ForegroundColor = seriesColors[i];
+                Series series = chart.NSeries[i];
+                // Set custom fill color for the series
+                series.Area.ForegroundColor = customColors[i];
             }
 
             // Save the workbook with the chart
-            workbook.Save("CustomPaletteChart.xlsx");
+            string outputPath = "CustomPaletteChart.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

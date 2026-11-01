@@ -1,39 +1,91 @@
-// Title: Compare PDF file sizes of the same workbook using A5 and A3 printer paper settings with Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that loads an Excel workbook, sets the first worksheet's PageSetup.PaperSize to PaperA5, saves it as a PDF, then changes the PaperSize to PaperA3, saves a second PDF, and prints the byte size of each file. | Update the program to reload or reset the workbook after changing PageSetup so the second PDF reflects the new paper size correctly. | Enhance the code to accept input Excel path and output PDF paths via command‑line arguments and log the size comparison result to a text file.
-// Common Searches: how to change worksheet paper size to A3 when exporting Excel to PDF using Aspose.Cells C# | Aspose.Cells PDF output size difference between A5 and A3 page setups | C# code to compare byte size of PDFs generated from the same workbook with different paper sizes | reload workbook after modifying PageSetup in Aspose.Cells before saving another PDF
-// Tags: Aspose.Cells set worksheet paper size A5 PDF | Aspose.Cells set worksheet paper size A3 PDF | Aspose.Cells compare PDF output size by paper size | C# get PDF file length Aspose.Cells | Aspose.Cells reload workbook after PageSetup change
+// Title: Reload an Excel workbook, set A5 and A3 page sizes, export to PDF, and compare file sizes with Aspose.Cells for .NET
+// Common Searches: how to change worksheet page setup to A3 before saving as PDF using Aspose.Cells C# | compare PDF output file size when using A5 versus A3 paper size in Aspose.Cells | reload the same workbook to apply different page sizes for PDF export in C# | Aspose.Cells generate PDF with custom paper size and retrieve file size in bytes | C# code to set PaperSizeType.PaperA5 for all worksheets and save as PDF
+// Tags: set worksheet page setup paper size Aspose.Cells | export workbook to PDF with custom paper size | reload workbook to reset page settings Aspose.Cells | compare generated PDF file sizes C# | A3 vs A5 PDF generation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel workbook, exports the first worksheet to PDF with A5 paper size, then changes the paper size to A3, exports a second PDF, reads both file sizes, and prints which PDF is larger.
+// The example loads an Excel workbook, sets each worksheet's page setup to PaperA5, saves it as a PDF, then reloads the same workbook, changes the page setup to PaperA3, saves a second PDF, and finally compares the byte sizes of the two PDFs, indicating which one is larger.
 class PdfPaperSizeComparison
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for the source workbook and the output PDFs
+        string workbookPath = "input.xlsx";
+        string pdfA5Path = "output_A5.pdf";
+        string pdfA3Path = "output_A3.pdf";
 
-        // Set printer paper size to A5 and save as PDF
-        workbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperA5;
-        workbook.Save("output_A5.pdf", SaveFormat.Pdf);
+        // Verify that the source workbook exists
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+            return;
+        }
 
-        // Set printer paper size to A3 and save as PDF
-        workbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperA3;
-        workbook.Save("output_A3.pdf", SaveFormat.Pdf);
+        try
+        {
+            // ---------- Generate PDF with A5 paper size ----------
+            // Load the workbook
+            Workbook wbA5 = new Workbook(workbookPath);
+            // Set the default page setup to A5 for all worksheets
+            foreach (Worksheet sheet in wbA5.Worksheets)
+            {
+                sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
+            }
+            // Save as PDF
+            wbA5.Save(pdfA5Path, SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating A5 PDF: {ex.Message}");
+            return;
+        }
 
-        // Get file sizes
-        long sizeA5 = new FileInfo("output_A5.pdf").Length;
-        long sizeA3 = new FileInfo("output_A3.pdf").Length;
+        try
+        {
+            // ---------- Reload workbook and generate PDF with A3 paper size ----------
+            // Reload the same workbook to ensure original settings
+            Workbook wbA3 = new Workbook(workbookPath);
+            // Set the default page setup to A3 for all worksheets
+            foreach (Worksheet sheet in wbA3.Worksheets)
+            {
+                sheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
+            }
+            // Save as PDF
+            wbA3.Save(pdfA3Path, SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error generating A3 PDF: {ex.Message}");
+            return;
+        }
 
-        // Output comparison result
-        Console.WriteLine($"A5 PDF size: {sizeA5} bytes");
-        Console.WriteLine($"A3 PDF size: {sizeA3} bytes");
-        Console.WriteLine(sizeA3 > sizeA5
-            ? "A3 PDF is larger than A5 PDF."
-            : sizeA3 < sizeA5
-                ? "A3 PDF is smaller than A5 PDF."
-                : "A3 PDF and A5 PDF have the same size.");
+        try
+        {
+            // ---------- Compare file sizes ----------
+            long sizeA5 = new FileInfo(pdfA5Path).Length;
+            long sizeA3 = new FileInfo(pdfA3Path).Length;
+
+            Console.WriteLine($"A5 PDF size: {sizeA5} bytes");
+            Console.WriteLine($"A3 PDF size: {sizeA3} bytes");
+
+            if (sizeA3 > sizeA5)
+            {
+                Console.WriteLine("A3 PDF is larger than A5 PDF.");
+            }
+            else if (sizeA3 < sizeA5)
+            {
+                Console.WriteLine("A3 PDF is smaller than A5 PDF.");
+            }
+            else
+            {
+                Console.WriteLine("Both PDFs have the same file size.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error comparing PDF sizes: {ex.Message}");
+        }
     }
 }

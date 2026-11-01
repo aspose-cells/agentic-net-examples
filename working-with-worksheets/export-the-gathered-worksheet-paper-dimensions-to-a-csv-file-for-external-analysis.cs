@@ -1,57 +1,44 @@
 // Title: Export each worksheet's paper size and dimensions to a CSV file with Aspose.Cells for .NET
-// AI Prompts: Write a C# program that iterates over every worksheet in a workbook, reads the PageSetup paper size, width, and height, and writes these values together with the sheet name into a CSV file using Aspose.Cells. | Modify the export utility to accept the input Excel file path and the output CSV path as command‑line arguments, providing default values when they are omitted. | Enhance the CSV output to also record the page orientation (portrait or landscape) for each worksheet alongside the existing paper size and dimensions.
-// Common Searches: how to list paper size and dimensions of all sheets in an Excel workbook using Aspose.Cells C# | C# export Excel worksheet page setup properties to CSV with Aspose.Cells | retrieve worksheet paper width and height in inches via Aspose.Cells API | command line tool for extracting Excel sheet page setup to CSV in .NET
-// Tags: Aspose.Cells page setup CSV generation | C# get worksheet paper dimensions inches | batch export Excel sheet page properties | extract page orientation Aspose.Cells | command line workbook page setup exporter
+// AI Prompts: Generate C# code that opens a workbook, reads the PageSetup PaperSize, PaperWidth, and PaperHeight for every worksheet, and writes the results to a CSV file. | Extend the example to also capture PageSetup orientation and margin values and include them in the CSV export. | Write a reusable method that returns a list of objects containing worksheet name, paper size enum, width, and height, then serialize that list to CSV.
+// Common Searches: Aspose.Cells how to export worksheet page setup dimensions to CSV in C# | C# retrieve paper width and height for each sheet using Aspose.Cells | Export Excel sheet paper size and orientation to a CSV file programmatically | Get page setup properties of all worksheets with Aspose.Cells .NET | Write worksheet layout information (paper size, dimensions) to CSV using Aspose.Cells
+// Tags: export worksheet paper dimensions csv | Aspose.Cells page setup extraction | C# iterate worksheets page setup | retrieve paper size width height inches | worksheet layout metrics to csv
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// // Exports each worksheet's name, paper size enum, and paper width/height in inches to a CSV file using Aspose.Cells.
-class ExportWorksheetPaperDimensions
+// The program loads a workbook, iterates through all worksheets, reads each sheet's PageSetup paper size, width, and height (in inches), and writes the worksheet name along with these dimensions to a CSV file named paper_dimensions.csv.
+class ExportPaperDimensions
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
+        // Load the existing workbook (load rule)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Prepare the CSV output file (replace with desired output path)
-        string csvPath = "WorksheetPaperDimensions.csv";
-        using (StreamWriter writer = new StreamWriter(csvPath))
+        // Create and open the CSV file for writing
+        using (StreamWriter writer = new StreamWriter("paper_dimensions.csv"))
         {
             // Write CSV header
-            writer.WriteLine("WorksheetName,PaperSize,PaperWidthInches,PaperHeightInches");
+            writer.WriteLine("Worksheet,PaperSize,PaperWidthInches,PaperHeightInches");
 
-            // Iterate through each worksheet in the workbook
+            // Iterate through each worksheet to gather paper dimensions
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 // Access the page setup of the worksheet
-                PageSetup pageSetup = sheet.PageSetup;
+                PageSetup setup = sheet.PageSetup;
 
-                // Get paper size enum name
-                string paperSizeName = pageSetup.PaperSize.ToString();
+                // Retrieve paper size as a string
+                string paperSize = setup.PaperSize.ToString();
 
-                // Get paper width and height in inches (if not set, defaults to 0)
-                double paperWidth = pageSetup.PaperWidth;
-                double paperHeight = pageSetup.PaperHeight;
+                // Retrieve paper width and height in inches
+                double width = setup.PaperWidth;
+                double height = setup.PaperHeight;
 
-                // Write a line for the current worksheet
-                writer.WriteLine($"{EscapeCsv(sheet.Name)},{paperSizeName},{paperWidth},{paperHeight}");
+                // Write the collected data as a CSV line
+                writer.WriteLine($"{sheet.Name},{paperSize},{width},{height}");
             }
         }
 
-        Console.WriteLine($"Worksheet paper dimensions have been exported to '{csvPath}'.");
-    }
-
-    // Helper method to escape CSV fields that may contain commas or quotes
-    private static string EscapeCsv(string field)
-    {
-        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
-        {
-            field = field.Replace("\"", "\"\"");
-            return $"\"{field}\"";
-        }
-        return field;
+        // No workbook saving required for this export operation
     }
 }

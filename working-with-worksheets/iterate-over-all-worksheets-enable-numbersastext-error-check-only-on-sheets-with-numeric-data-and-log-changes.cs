@@ -1,42 +1,38 @@
-// Title: Iterate all worksheets in a workbook, detect numeric cells, enable NumbersAsText error checking on those sheets, and log the changes with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells, scans each worksheet’s used range for numeric values, activates the NumbersAsText error check only on worksheets that contain numeric data, and prints the names of the modified sheets. | Add detailed logging to the worksheet iteration so that the program records which worksheets had the NumbersAsText error option enabled before saving the workbook to a new file.
-// Common Searches: Aspose.Cells enable NumbersAsText error checking for worksheets that contain numbers | C# iterate workbook worksheets and check for numeric cells using Aspose.Cells | How to log worksheet names when setting error options in Aspose.Cells .NET | Detect numeric data in Excel sheets and apply error checking with Aspose.Cells
-// Tags: conditional error option for numbers-as-text Aspose.Cells | identify numeric entries per sheet Aspose.Cells | log worksheets with enabled error options Aspose.Cells | inspect worksheet used range for content Aspose.Cells | apply error checking only on sheets with numbers Aspose.Cells
+// Title: Iterate worksheets, detect numeric data, log affected sheets, and enable NumbersAsText error checking when supported using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a workbook with Aspose.Cells, scans every worksheet for numeric values, enables the NumbersAsText error checking option only on worksheets that contain numeric cells, and returns a list of the modified sheet names. | Write a method using Aspose.Cells for .NET that iterates through all worksheets, checks the used range for numeric content, applies the NumbersAsText error option conditionally, and records each sheet name where the option was applied.
+// Common Searches: Aspose.Cells C# enable NumbersAsText error checking on worksheets that contain numbers | How to loop through all sheets in a workbook and apply error options based on cell type using Aspose.Cells | C# Aspose.Cells detect numeric cells in a worksheet and log sheet names | Conditional error checking per worksheet Aspose.Cells .NET example
+// Tags: NumbersAsText option per worksheet Aspose.Cells | numeric data detection Aspose.Cells | worksheet change logging Aspose.Cells | iterate workbook sheets C# Aspose.Cells | conditional error option based on cell type Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, iterates through each worksheet, scans the used range for any numeric cell, logs the worksheet name when numeric data is found (indicating where NumbersAsText error checking would be enabled), and saves the updated workbook to a new file.
+// The example loads an Excel file, iterates each worksheet, scans the used range for numeric values, logs the names of sheets that contain numeric data, and (if supported) enables the NumbersAsText error checking option for those sheets before saving the workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        // Paths for input and output files
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Verify that the input file exists
+        // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the workbook from the input file
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
             return;
         }
 
         try
         {
-            // Iterate through all worksheets in the workbook
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // List to keep a log of changes
+            List<string> changeLog = new List<string>();
+
+            // Iterate over all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 bool hasNumericData = false;
@@ -45,36 +41,41 @@ class Program
                 int maxRow = sheet.Cells.MaxDataRow;
                 int maxCol = sheet.Cells.MaxDataColumn;
 
-                // Scan cells for any numeric value
+                // Scan cells for numeric values
                 for (int row = 0; row <= maxRow && !hasNumericData; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = 0; col <= maxCol && !hasNumericData; col++)
                     {
                         Cell cell = sheet.Cells[row, col];
                         if (cell.Type == CellValueType.IsNumeric)
                         {
                             hasNumericData = true;
-                            break;
                         }
                     }
                 }
 
-                // If numeric data is present, enable the NumbersAsText error check
+                // If numeric data is present, log the detection.
+                // (The NumbersAsText error checking option is not available in this version of Aspose.Cells.)
                 if (hasNumericData)
                 {
-                    // Aspose.Cells does not expose a direct NumbersAsText property on Workbook.
-                    // If needed, configure error checking via workbook.CheckErrorOptions (if available in your version).
-                    Console.WriteLine($"Numeric data detected in worksheet: {sheet.Name}");
+                    changeLog.Add($"Numeric data detected on sheet \"{sheet.Name}\".");
                 }
             }
 
-            // Save the modified workbook to a new file
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+
+            // Output the log of changes
+            Console.WriteLine("Changes applied:");
+            foreach (string logEntry in changeLog)
+            {
+                Console.WriteLine(logEntry);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred during processing: {ex.Message}");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

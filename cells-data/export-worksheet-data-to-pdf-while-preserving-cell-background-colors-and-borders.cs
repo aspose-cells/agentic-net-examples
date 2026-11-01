@@ -1,76 +1,67 @@
-// Title: Export an Excel worksheet to PDF while preserving cell background colors and borders using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, styles a header row with a solid fill and thin borders, applies thin borders to data rows, and saves the worksheet as a PDF using Aspose.Cells PdfSaveOptions to retain the formatting. | Demonstrate how to set up Aspose.Cells PdfSaveOptions (e.g., ExportDocumentStructure) in a .NET application to keep cell styles such as background colors and borders during Excel‑to‑PDF conversion.
-// Common Searches: C# Aspose.Cells export Excel to PDF preserving cell background color and borders | how to keep worksheet formatting when converting to PDF with Aspose.Cells .NET | Aspose.Cells PdfSaveOptions ExportDocumentStructure example for preserving styles | apply style to range and save as PDF using Aspose.Cells in C# | export formatted Excel sheet to PDF with Aspose.Cells without losing borders
-// Tags: Aspose.Cells export worksheet to PDF with formatting | PdfSaveOptions ExportDocumentStructure preserve styles | apply solid fill and borders using StyleFlag Aspose.Cells | C# style range before PDF conversion Aspose.Cells | preserve cell background color PDF export .NET
+// Title: Export an Excel worksheet to PDF while preserving cell background colors and borders with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file, applies a solid light‑blue fill and thin black borders to a specific range, and saves the sheet as a PDF using Aspose.Cells while keeping the visual styling. | Demonstrate how to configure the PdfSaveOptions object in Aspose.Cells so that the generated PDF retains all cell fills, border lines, and layout. | Create a C# routine that loops through all worksheets in a workbook and merges them into one PDF document, ensuring that every cell’s formatting is maintained.
+// Common Searches: Aspose.Cells C# export worksheet to PDF preserving cell colors and borders | How to keep Excel cell formatting when converting to PDF with Aspose.Cells .NET | PdfSaveOptions configuration to retain background fill and borders in PDF output | Export multiple Excel sheets to a single PDF while maintaining styling using Aspose.Cells | C# convert XLSX to PDF with Aspose.Cells keeping grid lines and cell borders
+// Tags: Aspose.Cells PDF export preserving cell styles | background fill retention in PDF conversion | border rendering with PdfSaveOptions | C# combine worksheets into single PDF Aspose.Cells | grid line rendering option Aspose.Cells
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The sample creates a workbook, fills it with data, applies a light‑blue background and thin borders to the header row and thin borders to the data rows, then saves the worksheet as a PDF using PdfSaveOptions with ExportDocumentStructure enabled, ensuring that cell colors and borders are retained in the generated PDF.
-class ExportWorksheetToPdf
+// The program loads input.xlsx, applies a light‑blue solid fill and thin black borders to range A1:C5, then saves the first worksheet as output.pdf using PdfSaveOptions that preserve the original layout, cell background colors, and borders.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Fill some sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.2);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.8);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // ------------------------------
-            // Apply background color and borders to the header row
-            // ------------------------------
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.ForegroundColor = Color.LightBlue;          // background color
-            headerStyle.Pattern = BackgroundType.Solid;            // solid fill
-            headerStyle.Font.IsBold = true;                        // make text bold
+            // Load the workbook containing the worksheet to export
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set thin borders on all sides
-            headerStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            headerStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            headerStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            headerStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Apply the style to the header range A1:B1
-            StyleFlag flag = new StyleFlag { All = true };
-            sheet.Cells.CreateRange("A1:B1").ApplyStyle(headerStyle, flag);
+            // Example: ensure some cells have background colors and borders
+            // (Remove or modify this block if the source file already contains formatting)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = System.Drawing.Color.LightBlue;
+            style.Pattern = BackgroundType.Solid;
+            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Black;
+            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Black;
+            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Black;
+            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Black;
 
-            // ------------------------------
-            // Apply borders to the data rows (optional background)
-            // ------------------------------
-            Style dataStyle = workbook.CreateStyle();
-            dataStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            dataStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            dataStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            dataStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+            // Apply the style to a sample range (A1:C5)
+            Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1:C5");
+            range.ApplyStyle(style, new StyleFlag { All = true });
 
-            sheet.Cells.CreateRange("A2:B3").ApplyStyle(dataStyle, flag);
-
-            // ------------------------------
-            // Configure PDF save options to retain document structure
-            // (background colors and borders are preserved by default)
-            // ------------------------------
+            // Configure PDF save options to preserve cell formatting
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                ExportDocumentStructure = true
+                // Keep the original layout; do not force all columns onto one page
+                AllColumnsInOnePagePerSheet = false
+                // Background colors are preserved by default
+                // Render grid lines if needed (optional)
+                // RenderGridLines = true
             };
 
-            // Define output file path
-            string outputPath = "WorksheetWithFormatting.pdf";
-
-            // Save the worksheet as a PDF file
+            // Export the worksheet to PDF while keeping background colors and borders
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,67 +1,68 @@
-// Title: Import a CSV file into an existing Excel workbook at cell D4 and save the result as XLSX using Aspose.Cells for .NET
-// AI Prompts: Create C# code that opens an existing .xlsx workbook, uses Aspose.Cells Cells.ImportCSV to load a CSV file starting at row 4 column 4 with numeric conversion, and then saves the workbook as a new XLSX file. | Write a .NET example that checks for a CSV file, imports it into the first worksheet at cell D4 using a comma delimiter and the ImportCSV method, and exports the updated workbook to XLSX format with Aspose.Cells.
-// Common Searches: Aspose.Cells C# import CSV into existing workbook starting at D4 | How to load a CSV file into a specific cell range with Aspose.Cells .NET | Save workbook as XLSX after importing CSV data using Aspose.Cells | Import CSV with numeric conversion into Excel using Aspose.Cells C# | Using Cells.ImportCSV to place data at cell D4 in Aspose.Cells
-// Tags: cells.importcsv method start cell d4 | load existing xlsx workbook aspose.cells | export workbook to xlsx aspose.cells | csv numeric conversion aspose.cells | import csv data into worksheet aspose.cells
+// Title: Import CSV data into an existing Excel workbook at cell D4 and save as XLSX using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells import CSV file into existing worksheet starting at D4 | How to load an existing XLSX and insert CSV rows at a specific cell with Aspose.Cells | Aspose.Cells example for reading CSV and writing to cell D4 then saving as XLSX | Insert CSV data into a particular range of an Excel file using Aspose.Cells C# | Save modified workbook after adding CSV content at D4 with Aspose.Cells for .NET
+// Tags: import csv into existing workbook Aspose.Cells | write csv values starting at cell D4 | save workbook as xlsx Aspose.Cells | load existing worksheet and insert csv rows C# | csv to excel conversion using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvImportDemo
+// The C# program loads an existing XLSX workbook, reads a CSV file line by line, writes each CSV field into the worksheet beginning at cell D4, optionally skips a header row, and then saves the updated workbook as a new XLSX file, handling missing files and runtime exceptions.
+class Program
 {
-    // The example loads an existing Excel file (or creates a new one), imports a CSV file into the first worksheet beginning at cell D4 with numeric conversion using a comma delimiter, and saves the modified workbook as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string workbookPath = "ExistingWorkbook.xlsx";
+            const string csvPath = "SourceData.csv";
+            const string resultPath = "ResultWorkbook.xlsx";
+
+            // Verify that required files exist
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"CSV file not found: {csvPath}");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Get the target worksheet (first worksheet in this example)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the start cell (D4 => row index 3, column index 3)
+            int startRow = 3;
+            int startColumn = 3;
+
+            // Read all lines from the CSV file
+            string[] csvLines = File.ReadAllLines(csvPath);
+
+            // Optionally skip header row (uncomment if needed)
+            // bool hasHeader = true;
+            // int dataStartIndex = hasHeader ? 1 : 0;
+
+            int dataStartIndex = 0; // change to 1 if the first row is a header
+
+            // Import CSV data into the worksheet
+            for (int i = dataStartIndex; i < csvLines.Length; i++)
             {
-                // Path to the existing workbook that will receive the CSV data
-                string existingWorkbookPath = "ExistingWorkbook.xlsx";
+                string line = csvLines[i];
+                // Split by comma (basic CSV parsing; adjust if your CSV uses different delimiters or quoting)
+                string[] values = line.Split(',');
 
-                Workbook workbook;
-
-                // Load the existing workbook if it exists; otherwise create a new one
-                if (File.Exists(existingWorkbookPath))
+                for (int j = 0; j < values.Length; j++)
                 {
-                    workbook = new Workbook(existingWorkbookPath);
+                    // Write each value to the corresponding cell
+                    worksheet.Cells[startRow + i - dataStartIndex, startColumn + j].PutValue(values[j]);
                 }
-                else
-                {
-                    workbook = new Workbook();
-                    // Ensure at least one worksheet exists
-                    workbook.Worksheets.Add();
-                }
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Path to the CSV file to be imported
-                string csvFilePath = "DataFile.csv";
-
-                // Verify CSV file existence before importing
-                if (File.Exists(csvFilePath))
-                {
-                    // Import CSV data starting at cell D4 (row index 3, column index 3)
-                    // Using comma as the delimiter and converting numeric strings to numbers
-                    cells.ImportCSV(csvFilePath, ",", true, 3, 3);
-                }
-                else
-                {
-                    Console.WriteLine($"CSV file not found: '{csvFilePath}'. Skipping import.");
-                }
-
-                // Save the modified workbook as XLSX
-                string outputPath = "WorkbookWithCsv.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook as XLSX
+            workbook.Save(resultPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

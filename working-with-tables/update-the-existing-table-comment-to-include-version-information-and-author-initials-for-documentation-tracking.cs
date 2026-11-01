@@ -1,62 +1,70 @@
 // Title: Append version number and author initials to an Excel table comment using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing .xlsx file, retrieves the first ListObject on the first worksheet, and appends a version string and author initials to its Comment property with Aspose.Cells. | Create a C# snippet that checks for an existing table comment, concatenates version and author metadata, updates the ListObject.Comment, and saves the workbook.
-// Common Searches: how to programmatically update a ListObject comment with version info using Aspose.Cells C# | Aspose.Cells add metadata to Excel table comment .NET example | C# append author initials to Excel table comment with Aspose.Cells library | update first table comment in workbook and save using Aspose.Cells for .NET
-// Tags: Aspose.Cells modify ListObject comment | C# add version metadata to Excel table comment | Aspose.Cells update table comment .xlsx | track author initials in Excel table using Aspose.Cells | add version identifier to ListObject comment C#
+// AI Prompts: Generate C# code that loads a workbook with Aspose.Cells, retrieves the first ListObject, and appends a version string and author initials to its Comment property before saving the file. | Refactor an existing Aspose.Cells example to merge any existing table comment with new tracking metadata (version and author) and persist the updated workbook.
+// Common Searches: how to add version info to an Excel table comment with Aspose.Cells C# | Aspose.Cells C# update ListObject comment with author initials | append tracking metadata to Excel table comment programmatically .NET | modify existing table comment without overwriting previous text Aspose.Cells | save workbook after changing Excel table comment using Aspose.Cells
+// Tags: Aspose.Cells update ListObject comment | C# append version metadata to Excel table | Excel table comment tracking with Aspose | save workbook after comment modification Aspose.Cells | add author initials to ListObject comment .NET
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// Loads an existing workbook, accesses the first ListObject on the first worksheet, concatenates version and author initials to the table's Comment, and saves the updated file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an XLSX workbook, checks for a table, builds version and author strings, concatenates them with any existing table comment, updates the ListObject's Comment property, and saves the workbook to a new file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Assume the target table is the first ListObject in the worksheet
-            if (sheet.ListObjects.Count > 0)
+            try
             {
-                ListObject table = sheet.ListObjects[0];
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Retrieve the current comment (if any)
-                string existingComment = table.Comment ?? string.Empty;
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Define version and author information
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one table (ListObject)
+                if (worksheet.ListObjects.Count == 0)
+                {
+                    Console.WriteLine("No tables found in the worksheet.");
+                    return;
+                }
+
+                // Retrieve the first table
+                ListObject table = worksheet.ListObjects[0];
+
+                // Prepare version and author information
                 string versionInfo = "Version: 1.2";
-                string authorInfo = "Author: AB";
+                string authorInitials = "AB";
 
-                // Combine existing comment with new tracking info
-                string newComment = $"{existingComment} {versionInfo}, {authorInfo}".Trim();
+                // Combine existing comment with new tracking information
+                string updatedComment = string.IsNullOrWhiteSpace(table.Comment)
+                    ? $"{versionInfo} {authorInitials}"
+                    : $"{table.Comment} {versionInfo} {authorInitials}";
 
                 // Update the table's comment
-                table.Comment = newComment;
-            }
+                table.Comment = updatedComment.Trim();
 
-            // Save the workbook with the updated comment
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook with the updated comment
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

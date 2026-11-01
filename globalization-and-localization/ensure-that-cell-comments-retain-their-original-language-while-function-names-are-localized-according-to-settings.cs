@@ -1,31 +1,60 @@
-// Title: Keep cell comment language unchanged while localizing Excel formula function names with Aspose.Cells for .NET
-// AI Prompts: Configure Workbook.Settings.CultureInfo to a target locale (e.g., fr-FR) and confirm that formulas show localized function names while comment text remains exactly as entered. | Insert a Japanese comment into a cell, apply French culture for formula localization, and save the workbook ensuring the comment content is not altered.
-// Common Searches: Aspose.Cells preserve multilingual comments when setting CultureInfo for formula localization | C# change workbook culture to French to translate Excel functions without modifying cell comments | retain original language of cell comments after applying localized function names in Aspose.Cells
-// Tags: localize Excel formulas Aspose.Cells CultureInfo | preserve Unicode cell comments Aspose.Cells | set workbook culture for function name translation .NET | multilingual comment retention in saved workbook | French function name localization Aspose.Cells
+// Title: Localize Excel formula function names to French while keeping cell comments unchanged using Aspose.Cells for .NET
+// Common Searches: how to change Excel formula language to French with Aspose.Cells C# without affecting existing comments | preserve original comment text when setting workbook culture in Aspose.Cells | Aspose.Cells C# translate function names based on CultureInfo while retaining comment language | keep cell comments intact while localizing formulas in an Excel file using Aspose.Cells | set workbook Settings.CultureInfo to fr-FR and avoid comment translation in Aspose.Cells
+// Tags: Workbook.Settings.CultureInfo formula localization | retain cell comment content during culture change | French function name translation Aspose.Cells | comment integrity with Excel workbook localization | C# Aspose.Cells preserve comments while localizing formulas
 
-using Aspose.Cells;
+using System;
 using System.Globalization;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads a workbook, sets Workbook.Settings.CultureInfo to French so that formula functions appear in the French language, adds a Japanese comment to a cell that stays unchanged, and saves the file, demonstrating how to localize function names without affecting the original language of cell comments.
+// The example loads an existing workbook, sets Workbook.Settings.CultureInfo to French to automatically translate formula function names, iterates through every cell to reassign each comment's Note property to its original text ensuring comments remain unchanged, and saves the workbook with localized functions while preserving the original comment language.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (load rule)
-        var workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Localize function names by setting the desired culture (e.g., French)
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Example formula – when the workbook is opened, the function name will appear localized
-        var sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].Formula = "=SUM(B1:B5)";
+            // Load the existing workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a comment in its original language (e.g., Japanese). The comment text is stored as‑is.
-        var comment = sheet.Comments[sheet.Comments.Add("B2")];
-        comment.Note = "これはテストコメントです。";
+            // Set the culture for formula translation (e.g., French).
+            // This localizes function names according to the specified culture.
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-        // Save the workbook (save rule)
-        workbook.Save("output.xlsx");
+            // Preserve original comment text (no translation or modification).
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Cell cell in sheet.Cells)
+                {
+                    // In Aspose.Cells, a comment is accessed via the Comment property.
+                    if (cell.Comment != null)
+                    {
+                        // Retrieve the existing comment text.
+                        string originalComment = cell.Comment.Note;
+                        // Reassign to ensure it remains unchanged.
+                        cell.Comment.Note = originalComment;
+                    }
+                }
+            }
+
+            // Save the workbook with localized function names while keeping comments unchanged.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

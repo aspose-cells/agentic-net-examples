@@ -1,65 +1,53 @@
-// Title: Convert an XLSM workbook with macros and Office Add‑Ins to PDF using Aspose.Cells for .NET while preserving custom ribbon UI
-// AI Prompts: Load a macro‑enabled XLSM file with Aspose.Cells, activate macro processing, and save it as a PDF while retaining the workbook’s visual layout. | Configure PdfSaveOptions to apply PDF/A‑1b compliance and disable OnePagePerSheet so each sheet keeps its original dimensions during conversion. | Implement error handling that checks for the source XLSM file, creates the output directory if needed, and catches exceptions during the PDF export.
-// Common Searches: asp.net convert xlsm with custom ribbon to pdf using aspose.cells | how to preserve office add‑ins UI when saving macro enabled workbook to pdf | aspose.cells enable macros before exporting xlsm to pdf | pdfsaveoptions pdf/a‑1b and onepagepersheet settings for xlsm conversion | c# load macro enabled workbook and export to pdf preserving layout
-// Tags: xlsm to pdf conversion with macro support asp.net | aspose.cells enablemacros setting | pdfsaveoptions pdf/a‑1b compliance | preserve custom ribbon UI aspose.cells | onepagepersheet false option
+// Title: Convert an XLSM workbook with Office Add‑Ins to PDF while preserving macro UI elements using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a macro‑enabled XLSM file with Aspose.Cells, sets EnableMacros = true, and saves it as a PDF using PdfSaveOptions that keep the original sheet layout. | Show how to configure PdfSaveOptions in Aspose.Cells to disable OnePagePerSheet and AllColumnsInOnePagePerSheet for XLSM‑to‑PDF conversion. | Write robust error handling that verifies the input XLSM file exists before conversion and logs success or failure messages.
+// Common Searches: Aspose.Cells C# convert macro enabled XLSM to PDF preserving ActiveX controls | How to keep original sheet layout when saving XLSM as PDF with Aspose.Cells | Enable macros on workbook load Aspose.Cells .NET example | PdfSaveOptions OnePagePerSheet false usage in C# | Check file existence before XLSM to PDF conversion Aspose.Cells
+// Tags: XLSM to PDF conversion with macro UI preservation | Aspose.Cells PdfSaveOptions layout configuration | render Office Add‑Ins as static graphics Aspose.Cells | enable macros on workbook load Aspose.Cells | C# file existence validation for Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The program loads a macro‑enabled XLSM workbook, activates macro processing, configures PDF/A‑1b compliance and layout options, and saves the workbook as a PDF while keeping visual elements such as custom ribbons intact.
+// The example checks that the XLSM file exists, loads it with macros enabled, configures PdfSaveOptions to retain the original sheet layout (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false), and saves the workbook as a PDF, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLSM workbook (contains macros and UI add‑ins)
-        string sourceFile = @"C:\Path\To\YourWorkbook.xlsm";
-
-        // Path for the resulting PDF file
-        string pdfFile = @"C:\Path\To\ConvertedWorkbook.pdf";
-
         try
         {
-            // Verify that the source workbook exists
-            if (!File.Exists(sourceFile))
-                throw new FileNotFoundException($"Source file not found: {sourceFile}");
+            const string inputPath = "input.xlsm";
+            const string outputPath = "output.pdf";
 
-            // Ensure the output directory exists
-            string pdfDir = Path.GetDirectoryName(pdfFile);
-            if (!Directory.Exists(pdfDir))
-                Directory.CreateDirectory(pdfDir);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Load the XLSM workbook (macro-enabled). No explicit LoadFormat needed; Aspose.Cells detects it.
-            LoadOptions loadOptions = new LoadOptions();
-            Workbook workbook = new Workbook(sourceFile, loadOptions);
+            // Load the macro‑enabled workbook (XLSM)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Enable macro processing while the workbook is in memory
+            // Preserve macros during load (prevents their removal)
             workbook.Settings.EnableMacros = true;
 
             // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Keep each sheet on its own page range (default behavior)
+                // Keep the original sheet layout (do not force one page per sheet)
                 OnePagePerSheet = false,
-
-                // Do not force all columns onto a single page
-                AllColumnsInOnePagePerSheet = false,
-
-                // Preserve the visual layout as close as possible to Excel
-                Compliance = PdfCompliance.PdfA1b
+                AllColumnsInOnePagePerSheet = false
+                // Note: RenderActiveXControls and RenderFormControls are not available in this version;
+                // the default behavior renders them as static graphics.
             };
 
-            // Save the workbook as PDF; macros themselves are not rendered in PDF,
-            // but any UI elements (e.g., custom ribbons) that affect the visual layout
-            // are retained in the output.
-            workbook.Save(pdfFile, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully converted to PDF: {pdfFile}");
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

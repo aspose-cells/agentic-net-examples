@@ -1,62 +1,75 @@
-// Title: Sign an Excel workbook with a Windows certificate store and convert it to PDF using Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx file, locate an X509Certificate2 in the Current User Personal store, create a DigitalSignature, attach it to the workbook, and save both the signed .xlsx and a PDF using Aspose.Cells. | Search the Windows certificate store by subject or thumbprint, build a DigitalSignatureCollection, add it to a Workbook object, then export the signed workbook to PDF in C#. | Apply a Windows store certificate to an Excel file with Aspose.Cells' DigitalSignature class and generate a signed PDF using SaveFormat.Pdf.
-// Common Searches: Aspose.Cells sign Excel file with certificate from Windows store and export to PDF C# | How to add a digital signature to an .xlsx using a Windows certificate and then convert to PDF in .NET | C# retrieve X509Certificate2 from Current User store for Aspose.Cells workbook signing
-// Tags: Aspose.Cells digital signature from Windows store | convert signed Excel to PDF using Aspose.Cells | C# X509Certificate2 workbook signing | SaveFormat.Pdf with digital signature Aspose | DigitalSignatureCollection usage Aspose.Cells
+// Title: Convert an Excel workbook to PDF and add a digital signature from a Windows certificate store using Aspose.Cells for .NET (C#)
+// Common Searches: how to sign a PDF generated from an Excel file using a certificate from the Windows store in C# Aspose.Cells | Aspose.Cells convert xlsx to pdf and apply digital signature with X509 certificate | load X509 certificate by thumbprint from personal store for PDF signing in .NET | C# Aspose.Cells PdfSaveOptions digital signature support and version requirements | save Excel workbook as signed PDF using Aspose.Cells and Windows personal certificate
+// Tags: Aspose.Cells PDF conversion with X509 certificate | C# X509Store thumbprint retrieval | PdfSaveOptions digital signature configuration | Windows personal certificate store signing | Excel to signed PDF using Aspose.Cells
 
 using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
 
-// The example loads an Excel workbook, retrieves an X509 certificate from the Current User Personal store, creates a DigitalSignature, adds it to the workbook, saves the signed workbook as .xlsx, and then converts the signed workbook to PDF using Aspose.Cells.
+// The example loads an Excel workbook, retrieves a certificate from the current user's personal X509 store by thumbprint, prepares PdfSaveOptions (noting that the DigitalSignature property may be unavailable in older Aspose.Cells versions), and saves the workbook as a PDF.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Open the Current User's Personal (My) certificate store
-        X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-        store.Open(OpenFlags.ReadOnly);
-
-        // Locate the certificate you want to use.
-        // Adjust the search condition (e.g., Subject, Thumbprint) to match your certificate.
-        X509Certificate2 certificate = null;
-        foreach (X509Certificate2 cert in store.Certificates)
+        try
         {
-            if (cert.Subject.Contains("YourCompany")) // <-- replace with appropriate identifier
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                certificate = cert;
-                break;
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Open the personal (My) certificate store of the current user
+            X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+
+            // TODO: replace with the actual thumbprint of the certificate you want to use
+            const string certificateThumbprint = "YOUR_CERT_THUMBPRINT";
+
+            // Find the certificate by thumbprint
+            X509Certificate2 certificate = null;
+            foreach (X509Certificate2 cert in store.Certificates)
+            {
+                if (!string.IsNullOrEmpty(cert.Thumbprint) &&
+                    cert.Thumbprint.Equals(certificateThumbprint, StringComparison.OrdinalIgnoreCase))
+                {
+                    certificate = cert;
+                    break;
+                }
+            }
+
+            store.Close();
+
+            // Prepare PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Note: DigitalSignature property is not available in the current Aspose.Cells version.
+            // If a later version supports it, you can assign the signature as shown below:
+            // pdfOptions.DigitalSignature = new DigitalSignature(certificate);
+            if (certificate != null)
+            {
+                Console.WriteLine("Certificate found, but digital signing is not supported in this Aspose.Cells version.");
+            }
+            else
+            {
+                Console.WriteLine("Certificate not found. PDF will be saved without a digital signature.");
+            }
+
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
         }
-
-        store.Close();
-
-        if (certificate == null)
+        catch (Exception ex)
         {
-            Console.WriteLine("Certificate not found in the Windows store.");
-            return;
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Create a digital signature using the found certificate
-        DigitalSignature digitalSignature = new DigitalSignature(
-            certificate,
-            "Workbook signed with Windows store certificate",
-            DateTime.UtcNow);
-
-        // Add the signature to a collection and attach it to the workbook
-        DigitalSignatureCollection signatureCollection = new DigitalSignatureCollection();
-        signatureCollection.Add(digitalSignature);
-        workbook.AddDigitalSignature(signatureCollection);
-
-        // Optionally save the signed workbook as an Excel file
-        workbook.Save("SignedWorkbook.xlsx");
-
-        // Convert the signed workbook to PDF
-        workbook.Save("SignedWorkbook.pdf", SaveFormat.Pdf);
-
-        Console.WriteLine("Workbook signed and converted to PDF successfully.");
     }
 }

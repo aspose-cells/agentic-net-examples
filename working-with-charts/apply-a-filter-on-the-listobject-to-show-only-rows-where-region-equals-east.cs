@@ -1,64 +1,74 @@
-// Title: Filter a ListObject to display only rows where the Region column equals 'East' using Aspose.Cells in C#
-// AI Prompts: Create a worksheet, add a ListObject covering a data range, enable AutoFilter, and filter the Region column for the value 'East' with Aspose.Cells in C#. | Use the Aspose.Cells ListObject.AutoFilter API to apply a criteria filter on column index 0, refresh the filter, and save the workbook.
-// Common Searches: Aspose.Cells .NET how to filter a ListObject by column value | C# example of using AutoFilter on an Excel table with Aspose.Cells | Show only rows where Region = East in an Aspose.Cells workbook | Apply a criteria filter to a ListObject column using Aspose.Cells API
-// Tags: Aspose.Cells ListObject AutoFilter | filter rows by column value Aspose.Cells | C# apply ListObject criteria filter | Excel table region filter Aspose.Cells | Aspose.Cells workbook table filtering
+// Title: How to filter rows in an Excel ListObject where Region equals "East" using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, finds the first ListObject, and applies an AutoFilter to display only rows where the "Region" column is "East". | Provide a step‑by‑step C# example that uses Aspose.Cells to locate a table column by name, set a filter criterion, and save the filtered workbook.
+// Common Searches: asp.net filter excel table rows where column value is East using Aspose.Cells | c# Aspose.Cells apply AutoFilter to ListObject column Region | how to show only rows with Region = East in an Excel table with Aspose.Cells | filter ListObject by column value in Aspose.Cells .NET example
+// Tags: Aspose.Cells ListObject AutoFilter C# | Excel table column value filter using Aspose.Cells | Region column filter Aspose.Cells | C# hide rows with Aspose.Cells AutoFilter | Aspose.Cells filter criteria East
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// // Loads "input.xlsx", locates the first ListObject, identifies the "Region" column, applies an AutoFilter to show only rows where Region equals "East", and saves the result as "output.xlsx".
+class Program
 {
-    // The example creates a workbook, populates Region and Sales data, defines a ListObject (table) over the range, enables AutoFilter, applies a filter on the Region column to keep only rows with the value "East", refreshes the filter, and saves the file as ListObjectRegionFilterDemo.xlsx.
-    public class ListObjectRegionFilterDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data with a header row
-            // Column A: Region, Column B: Sales
-            worksheet.Cells["A1"].PutValue("Region");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["A2"].PutValue("East");
-            worksheet.Cells["B2"].PutValue(1200);
-            worksheet.Cells["A3"].PutValue("West");
-            worksheet.Cells["B3"].PutValue(950);
-            worksheet.Cells["A4"].PutValue("East");
-            worksheet.Cells["B4"].PutValue(800);
-            worksheet.Cells["A5"].PutValue("North");
-            worksheet.Cells["B5"].PutValue(670);
+            // Ensure the worksheet contains at least one ListObject (table)
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No ListObjects (tables) found in the worksheet.");
+                return;
+            }
 
-            // Add a ListObject (table) that covers the data range (including header)
-            // Parameters: startRow, startColumn, endRow, endColumn, hasHeaders
-            int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-            ListObject listObject = worksheet.ListObjects[tableIndex];
+            // Get the first ListObject
+            ListObject listObject = worksheet.ListObjects[0];
 
-            // Ensure the table has an AutoFilter enabled
-            listObject.HasAutoFilter = true;
+            // Find the column index for the column named "Region"
+            int regionColumnIndex = -1;
+            for (int i = 0; i < listObject.ListColumns.Count; i++)
+            {
+                ListColumn col = listObject.ListColumns[i];
+                if (string.Equals(col.Name, "Region", StringComparison.OrdinalIgnoreCase))
+                {
+                    regionColumnIndex = i;
+                    break;
+                }
+            }
 
-            // Apply filter on the "Region" column (index 0) to show only rows where Region = "East"
-            listObject.AutoFilter.Filter(0, "East");
-            // Refresh the filter to apply the changes
-            listObject.AutoFilter.Refresh();
+            if (regionColumnIndex == -1)
+            {
+                Console.WriteLine("Column 'Region' not found in the table.");
+                return;
+            }
 
-            // Save the workbook
-            workbook.Save("ListObjectRegionFilterDemo.xlsx");
+            // Apply a filter to show only rows where Region equals "East"
+            listObject.AutoFilter.Filter(regionColumnIndex, "East");
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

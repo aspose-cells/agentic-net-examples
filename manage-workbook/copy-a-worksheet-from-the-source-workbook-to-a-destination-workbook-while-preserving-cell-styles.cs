@@ -1,56 +1,52 @@
-// Title: Copy a worksheet from one Excel file to another while preserving all cell styles using Aspose.Cells for .NET
-// AI Prompts: Load source.xlsx with Aspose.Cells, create an empty workbook, remove its default sheet, and copy the first worksheet preserving formatting to destination.xlsx. | Generate C# code that uses Worksheets.AddCopy to duplicate a worksheet by name, ensures the target folder exists, and saves the new workbook while keeping all styles intact.
-// Common Searches: Aspose.Cells C# copy worksheet to new workbook keep formatting | How to preserve cell styles when copying an Excel sheet with Aspose.Cells | Copy first sheet from source.xlsx to destination.xlsx using Aspose.Cells .NET | Remove default worksheet before adding copied sheet Aspose.Cells | Save copied worksheet to a different file path in C# Aspose.Cells
-// Tags: worksheets.addcopy method preserve formatting | remove default worksheet Aspose.Cells | save workbook to specified path C# | verify source file existence Aspose.Cells | create empty workbook Aspose.Cells
+// Title: Copy a worksheet from one Excel workbook to another while preserving cell styles using Aspose.Cells for .NET (C#)
+// Common Searches: how to copy a worksheet from one workbook to another with formatting using Aspose.Cells C# | Aspose.Cells copy worksheet preserving cell styles to a new workbook | C# duplicate Excel sheet and keep cell formatting with Aspose.Cells | using Worksheets.AddCopy to transfer a sheet while retaining styles in .NET | example of moving first worksheet to another file with formatting using Aspose.Cells
+// Tags: Worksheets.AddCopy method preserving formatting | copy worksheet between workbooks Aspose.Cells | duplicate Excel sheet with styles C# | transfer worksheet content and formatting .NET | preserve cell styles during workbook copy Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks that source.xlsx exists, loads it, creates a new workbook without the default sheet, copies the first worksheet by name using Worksheets.AddCopy (which retains all cell styles), ensures the destination directory is present, and saves the result as destination.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads a source Excel file, creates an empty destination workbook, and uses Worksheets.AddCopy to copy the first worksheet—including all cell content and styles—to the new workbook, then saves it.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string sourcePath = "source.xlsx";
-            const string destPath = "destination.xlsx";
-
-            // Verify source file exists
-            if (!File.Exists(sourcePath))
+            try
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
+                string sourcePath = "SourceWorkbook.xlsx";
+                string destinationPath = "DestinationWorkbook.xlsx";
+
+                // Verify source file exists
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Create a new (empty) destination workbook
+                Workbook destinationWorkbook = new Workbook();
+
+                // Get the first worksheet from the source workbook
+                Worksheet sourceWorksheet = sourceWorkbook.Worksheets[0];
+
+                // Copy the worksheet to the destination workbook preserving all content and formatting
+                destinationWorkbook.Worksheets.AddCopy(
+                    new Worksheet[] { sourceWorksheet },
+                    new string[] { sourceWorksheet.Name });
+
+                // Save the destination workbook
+                destinationWorkbook.Save(destinationPath);
+                Console.WriteLine($"Destination workbook saved to: {destinationPath}");
             }
-
-            // Load source workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Create destination workbook and remove default sheet
-            Workbook destinationWorkbook = new Workbook();
-            destinationWorkbook.Worksheets.Clear();
-
-            // Get the first worksheet from source
-            Worksheet sourceWorksheet = sourceWorkbook.Worksheets[0];
-
-            // Copy the worksheet by name to the destination workbook
-            destinationWorkbook.Worksheets.AddCopy(sourceWorksheet.Name);
-
-            // Ensure the destination directory exists
-            string destDirectory = Path.GetDirectoryName(destPath);
-            if (!string.IsNullOrEmpty(destDirectory) && !Directory.Exists(destDirectory))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(destDirectory);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the destination workbook
-            destinationWorkbook.Save(destPath);
-            Console.WriteLine($"Worksheet copied successfully to {destPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

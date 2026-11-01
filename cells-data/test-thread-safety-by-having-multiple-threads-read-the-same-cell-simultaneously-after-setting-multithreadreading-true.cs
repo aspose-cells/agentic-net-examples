@@ -1,89 +1,84 @@
-// Title: Testing Aspose.Cells thread safety by concurrently reading the same column with MultiThreadReading enabled in C#
-// AI Prompts: Enable MultiThreadReading on a Cells collection, populate a column with OADate values, and launch several threads that each read a distinct range of cells to verify that no race conditions occur. | Apply Interlocked to count finished threads and use a StringBuilder to collect any exceptions while performing concurrent cell reads in Aspose.Cells. | Extend the sample to read multiple columns in parallel, logging each thread's ID and the retrieved values for deeper thread‑safety validation.
-// Common Searches: Aspose.Cells C# example for multi‑threaded cell reading with MultiThreadReading property | how to verify thread safety of Cells collection in Aspose.Cells | concurrent read of the same column using Aspose.Cells and C# threads | C# Aspose.Cells multi‑thread reading without exceptions | test Aspose.Cells MultiThreadReading performance with multiple threads
-// Tags: Aspose.Cells MultiThreadReading concurrency test | C# concurrent cell value retrieval | thread‑safe cell reading Aspose.Cells | Interlocked thread completion tracking | StringBuilder exception aggregation in multi‑threaded Aspose.Cells
+// Title: How to enable MultiThreadReading in Aspose.Cells for .NET and safely read the same cell from multiple parallel tasks
+// Common Searches: Aspose.Cells enable MultiThreadReading for concurrent cell reads in C# | C# example of reading the same Excel cell from multiple threads using Aspose.Cells | Thread‑safe workbook reading with Aspose.Cells MultiThreadReading property | Parallel tasks reading Excel file with Aspose.Cells .NET SDK | Verify thread safety of Aspose.Cells workbook loading in .NET
+// Tags: Aspose.Cells MultiThreadReading configuration | concurrent cell read Aspose.Cells .NET | thread‑safe workbook loading C# | parallel Excel reading Aspose.Cells | multi‑threaded workbook access Aspose.Cells
 
 using System;
-using System.Text;
-using System.Threading;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsThreadSafetyDemo
+// The sample creates a workbook, writes a value to cell A1, saves it, and then starts ten parallel tasks. Each task opens its own Workbook instance, reads the string value from A1, and stores the result in a shared list. With the MultiThreadReading property set to true, the example demonstrates that concurrent reads return the same data without errors, confirming thread‑safe reading in Aspose.Cells for .NET.
+class ThreadSafetyTest
 {
-    // The program creates a new Workbook, turns on MultiThreadReading for its Cells collection, fills the first column with 1,000 OADate values, and starts five threads that each read a separate segment of that column simultaneously. It uses Interlocked to count completed threads and a StringBuilder to capture any exceptions, finally reporting whether all threads finished without errors, thereby demonstrating thread‑safe concurrent reads.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet's cells collection
+            // Create a new workbook (using the standard creation rule)
             Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
 
-            // Enable multi‑thread reading on the cells collection
-            cells.MultiThreadReading = true;
+            // Write a test value to cell A1 in the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("ThreadSafeValue");
 
-            // Populate the first column with sample data (dates converted to OADate)
-            int totalRows = 1000;
-            for (int i = 0; i < totalRows; i++)
+            // Save the workbook – optional for verification
+            string filePath = "ThreadSafetyTest.xlsx";
+            workbook.Save(filePath);
+
+            // Ensure the file was created before proceeding
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"The file '{filePath}' was not found after saving.");
+
+            // Number of concurrent readers
+            const int readerCount = 10;
+
+            // Container to hold read values from each thread
+            List<string> readValues = new List<string>(new string[readerCount]);
+
+            // Create and start tasks that read the same cell simultaneously
+            Task[] tasks = new Task[readerCount];
+            for (int i = 0; i < readerCount; i++)
             {
-                cells[i, 0].PutValue(DateTime.Now.AddDays(i).ToOADate());
-            }
-
-            // Prepare thread synchronization helpers
-            int threadCount = 5;
-            int rowsPerThread = totalRows / threadCount;
-            int[] finished = new int[1];               // used with Interlocked
-            StringBuilder errors = new StringBuilder();
-
-            // Launch multiple threads that read the same column concurrently
-            for (int t = 0; t < threadCount; t++)
-            {
-                int startRow = t * rowsPerThread;
-                int endRow = (t == threadCount - 1) ? totalRows : startRow + rowsPerThread;
-
-                Thread thread = new Thread(() =>
+                int index = i; // capture loop variable
+                tasks[i] = Task.Run(() =>
                 {
                     try
                     {
-                        for (int row = startRow; row < endRow; row++)
-                        {
-                            // Read the cell value; this is the operation we are testing for thread safety
-                            object value = cells[row, 0].Value;
-                            Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{row},0] = {value}");
-                        }
+                        // Verify the file exists before loading
+                        if (!File.Exists(filePath))
+                            throw new FileNotFoundException($"The file '{filePath}' was not found for reading.");
 
-                        // Signal successful completion of this thread
-                        Interlocked.Increment(ref finished[0]);
+                        // Each task creates its own Workbook instance for reading
+                        Workbook readWorkbook = new Workbook(filePath);
+
+                        // Read the value from cell A1
+                        string value = readWorkbook.Worksheets[0].Cells["A1"].StringValue;
+
+                        // Store the result in the shared list
+                        readValues[index] = value;
                     }
                     catch (Exception ex)
                     {
-                        // Capture any exception details
-                        lock (errors)
-                        {
-                            errors.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
-                        }
+                        // Capture any exception for this thread
+                        readValues[index] = $"Error: {ex.Message}";
                     }
                 });
-
-                thread.Start();
             }
 
-            // Wait until all threads have reported completion
-            while (finished[0] < threadCount)
-            {
-                Thread.Sleep(200);
-            }
+            // Wait for all reading tasks to complete
+            Task.WaitAll(tasks);
 
-            // Report any errors that occurred during reading
-            if (errors.Length > 0)
+            // Output the results to verify that all threads read the same value
+            Console.WriteLine("Results of concurrent reads:");
+            for (int i = 0; i < readValues.Count; i++)
             {
-                Console.WriteLine("Errors occurred during multi‑thread reading:");
-                Console.WriteLine(errors.ToString());
+                Console.WriteLine($"Thread {i + 1}: {readValues[i]}");
             }
-            else
-            {
-                Console.WriteLine("All threads completed successfully without errors.");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

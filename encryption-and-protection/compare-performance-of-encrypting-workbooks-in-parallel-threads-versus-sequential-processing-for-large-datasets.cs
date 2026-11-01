@@ -1,119 +1,84 @@
-// Title: Performance comparison of sequential vs parallel password encryption for large Excel workbooks using Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates multiple 10,000‑row by 50‑column Excel workbooks, applies a password with Aspose.Cells, saves them, and prints the elapsed time for both a for‑loop and a Parallel.For implementation. | Modify the parallel encryption sample to cap the degree of parallelism to the number of logical processors and calculate the percentage speed‑up over the sequential run. | Add diagnostics to the benchmark that log CPU and memory usage while each workbook is being encrypted in parallel with Aspose.Cells.
-// Common Searches: how fast is Aspose.Cells password protection when using Parallel.For in C# | benchmark sequential versus multi‑threaded Excel file encryption Aspose.Cells .NET | measure encryption time for large Excel workbooks with Aspose.Cells C# example | optimal thread count for encrypting many Excel files with Aspose.Cells
-// Tags: parallel workbook encryption Aspose.Cells .NET | sequential Excel password protection timing | Aspose.Cells encryption performance benchmark | multi‑threaded Excel file saving with password | large dataset workbook encryption C#
+// Title: Benchmark sequential vs parallel encryption of large Excel workbooks using Aspose.Cells for .NET
+// Common Searches: C# how to encrypt many large Excel files concurrently with Aspose.Cells | measure performance of Aspose.Cells password protection for big workbooks | sequential versus parallel encryption speed using Aspose.Cells .NET | benchmark Aspose.Cells workbook encryption on a 100k‑row dataset | parallel processing of Excel file encryption with Aspose.Cells example
+// Tags: parallel workbook encryption Aspose.Cells | sequential Excel password protection Aspose.Cells | Aspose.Cells encryption performance benchmark | large dataset workbook generation C# | Parallel.ForEach Aspose.Cells encryption
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample creates ten Excel workbooks (10,000 rows × 50 columns), encrypts each with a password using Aspose.Cells, and measures the elapsed time for a sequential for‑loop and a Parallel.For approach, deleting files between runs to ensure a fair performance comparison.
+// The sample creates ten Excel workbooks each with 100,000 rows and 10 columns, applies a password, and records the elapsed time for encrypting the files sequentially and then in parallel using Parallel.ForEach, demonstrating the performance impact of concurrent encryption with Aspose.Cells.
 class Program
 {
-    // Number of workbooks to create and encrypt
+    // Number of workbooks to process
     const int WorkbookCount = 10;
-
     // Size of each workbook (rows x columns)
-    const int RowCount = 10000;
-    const int ColumnCount = 50;
-
+    const int RowCount = 100_000;
+    const int ColumnCount = 10;
     // Encryption password
     const string Password = "Secret123";
 
-    // Folder to store generated files
-    static readonly string OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "EncryptedWorkbooks");
-
     static void Main()
     {
-        try
+        // Prepare output directory
+        string outputDir = Path.Combine(Path.GetTempPath(), "AsposeEncryptDemo");
+        Directory.CreateDirectory(outputDir);
+
+        // Generate list of file paths for the workbooks
+        List<string> filePaths = new List<string>();
+        for (int i = 0; i < WorkbookCount; i++)
         {
-            // Ensure output directory exists
-            Directory.CreateDirectory(OutputFolder);
-
-            // Prepare file paths
-            string[] filePaths = new string[WorkbookCount];
-            for (int i = 0; i < WorkbookCount; i++)
-            {
-                filePaths[i] = Path.Combine(OutputFolder, $"Workbook_{i + 1}.xlsx");
-            }
-
-            // ---------- Sequential Encryption ----------
-            Stopwatch swSequential = Stopwatch.StartNew();
-
-            for (int i = 0; i < WorkbookCount; i++)
-            {
-                try
-                {
-                    // Create a workbook with large data
-                    Workbook wb = CreateLargeWorkbook();
-
-                    // Set password for opening the workbook
-                    wb.Settings.Password = Password;
-
-                    // Save encrypted workbook
-                    wb.Save(filePaths[i]);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing workbook {i + 1} sequentially: {ex.Message}");
-                }
-            }
-
-            swSequential.Stop();
-            Console.WriteLine($"Sequential encryption time: {swSequential.ElapsedMilliseconds} ms");
-
-            // ---------- Parallel Encryption ----------
-            // Delete previously saved files to avoid confusion
-            foreach (var path in filePaths)
-            {
-                try
-                {
-                    if (File.Exists(path))
-                        File.Delete(path);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error deleting file '{path}': {ex.Message}");
-                }
-            }
-
-            Stopwatch swParallel = Stopwatch.StartNew();
-
-            Parallel.For(0, WorkbookCount, i =>
-            {
-                try
-                {
-                    // Each thread works with its own workbook instance
-                    Workbook wb = CreateLargeWorkbook();
-
-                    // Set password for opening the workbook
-                    wb.Settings.Password = Password;
-
-                    // Save encrypted workbook
-                    wb.Save(filePaths[i]);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing workbook {i + 1} in parallel: {ex.Message}");
-                }
-            });
-
-            swParallel.Stop();
-            Console.WriteLine($"Parallel encryption time: {swParallel.ElapsedMilliseconds} ms");
+            string filePath = Path.Combine(outputDir, $"Workbook_{i}.xlsx");
+            filePaths.Add(filePath);
         }
-        catch (Exception ex)
+
+        // Sequential encryption
+        Stopwatch swSequential = Stopwatch.StartNew();
+        foreach (string path in filePaths)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Create workbook with large dataset
+            Workbook wb = CreateLargeWorkbook();
+
+            // Apply password protection
+            wb.Settings.Password = Password;
+
+            // Save encrypted workbook
+            wb.Save(path, SaveFormat.Xlsx);
         }
+        swSequential.Stop();
+        Console.WriteLine($"Sequential encryption time: {swSequential.ElapsedMilliseconds} ms");
+
+        // Clean up files before parallel test
+        foreach (string path in filePaths)
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+
+        // Parallel encryption
+        Stopwatch swParallel = Stopwatch.StartNew();
+        Parallel.ForEach(filePaths, path =>
+        {
+            // Create workbook with large dataset
+            Workbook wb = CreateLargeWorkbook();
+
+            // Apply password protection
+            wb.Settings.Password = Password;
+
+            // Save encrypted workbook
+            wb.Save(path, SaveFormat.Xlsx);
+        });
+        swParallel.Stop();
+        Console.WriteLine($"Parallel encryption time: {swParallel.ElapsedMilliseconds} ms");
     }
 
-    // Helper method to create a workbook filled with dummy data
+    // Creates a workbook filled with a large dataset (RowCount x ColumnCount)
     static Workbook CreateLargeWorkbook()
     {
-        Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
         // Populate cells with sample data
@@ -121,10 +86,10 @@ class Program
         {
             for (int col = 0; col < ColumnCount; col++)
             {
-                cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                cells[row, col].PutValue($"R{row}_C{col}");
             }
         }
 
-        return wb;
+        return workbook;
     }
 }

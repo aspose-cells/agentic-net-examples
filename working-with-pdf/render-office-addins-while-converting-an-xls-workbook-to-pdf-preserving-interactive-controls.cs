@@ -1,13 +1,14 @@
-// Title: Convert an XLS workbook to PDF with Office Add‑In rendering using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xls file with Aspose.Cells, checks for the EnableOfficeAddIn property on PdfSaveOptions, sets it if available, and saves the workbook as a PDF. | Show how to implement robust file‑existence validation and exception handling when converting Excel to PDF with Aspose.Cells, including logging of conversion errors. | Demonstrate a version‑safe way to enable Office Add‑In preservation in PDF output, using reflection to set PdfSaveOptions.EnableOfficeAddIn only when the property exists.
-// Common Searches: how to keep Excel Office Add‑Ins when exporting to PDF with Aspose.Cells C# | office add‑in rendering option missing in older Aspose.Cells versions | C# convert .xls to .pdf preserving interactive controls using Aspose.Cells | check for PDF save option before setting office add‑in preservation | handle missing input Excel file during Aspose.Cells PDF conversion
-// Tags: aspocells pdfsaveoptions office add‑in rendering | excel to pdf conversion preserving interactive controls | c# file existence check aspocells | reflection based property setting aspocells | exception handling for aspocells pdf export
+// Title: Convert a legacy XLS workbook to PDF with Aspose.Cells for .NET while attempting to retain Office Add‑In controls (form fields and OLE objects)
+// AI Prompts: Write C# code that loads an .xls file with Aspose.Cells, sets PdfSaveOptions.OnePagePerSheet to false, and saves the workbook as a PDF, including comments about the unavailable PreserveFormFields and PreserveOleObjects options. | Explain how to implement robust file‑existence verification and exception handling around an Aspose.Cells XLS‑to‑PDF conversion in C#. | Describe how to detect that certain PDF save options (e.g., PreserveFormFields) are not supported in the current Aspose.Cells API version and suggest alternative approaches.
+// Common Searches: Aspose.Cells .NET convert .xls to PDF without losing form fields | C# PdfSaveOptions OnePagePerSheet false example | Why is PreserveFormFields missing in Aspose.Cells PDF conversion | Render Office Add‑In controls when saving Excel as PDF using Aspose.Cells | Handle file not found error during Aspose.Cells workbook conversion
+// Tags: Aspose.Cells XLS to PDF conversion | PdfSaveOptions OnePagePerSheet setting | preserve interactive controls Aspose.Cells | C# file existence check Aspose.Cells | exception handling Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The sample verifies that input.xls exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally enables Office Add‑In rendering via the EnableOfficeAddIn property (when available), and saves the workbook as output.pdf while handling any runtime exceptions.
+// The sample verifies that input.xls exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions with OnePagePerSheet set to false, notes that PreserveFormFields and PreserveOleObjects are not available, and saves the workbook as output.pdf while providing comprehensive error handling.
 class Program
 {
     static void Main()
@@ -28,20 +29,20 @@ class Program
             Workbook workbook = new Workbook(inputPath);
 
             // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Keep each worksheet on a separate PDF page if desired
+                OnePagePerSheet = false
+                // Note: PreserveFormFields and PreserveOleObjects are not available in the current API version
+            };
 
-            // Note: In some versions of Aspose.Cells the property to preserve Office Add‑Ins
-            // (EnableOfficeAddIn) may not be available. If it exists, uncomment the line below.
-            // pdfOptions.EnableOfficeAddIn = true;
-
-            // Convert and save the workbook as PDF using the configured options
+            // Save the workbook as PDF
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors (e.g., loading, saving, or conversion issues)
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

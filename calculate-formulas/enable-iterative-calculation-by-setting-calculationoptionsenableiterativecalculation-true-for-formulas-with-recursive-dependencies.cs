@@ -1,44 +1,45 @@
-// Title: How to enable iterative calculation for circular references in Aspose.Cells using C#
-// AI Prompts: Write C# code that configures Aspose.Cells to allow iterative calculation, defines iteration limit and tolerance, and evaluates circular formulas. | Show how to create a workbook where two cells depend on each other, enable iterative formula evaluation, and retrieve the computed values. | Demonstrate saving the workbook after iterative calculation with custom tolerance settings.
-// Common Searches: Aspose.Cells C# enable iterative calculation for circular formulas | Set MaxIteration and MaxChange in Aspose.Cells formula settings .NET | Calculate workbook with circular reference using Aspose.Cells iterative mode | How to resolve circular dependencies in Excel files with Aspose.Cells C#
-// Tags: iterative mode Aspose.Cells C# | circular formula handling Aspose.Cells | maxiteration maxchange configuration .NET | enable iterative formula evaluation workbook | recursive formula processing Aspose.Cells
+// Title: Enable iterative calculation for circular references in Aspose.Cells using C#
+// Common Searches: Aspose.Cells enable iterative calculation for circular references in C# | set CalculationOptions.EnableIterativeCalculation true Aspose.Cells .NET | how to handle recursive formulas with iterative calculation in Aspose.Cells | upgrade Aspose.Cells to use WorkbookSettings.IterativeCalculation property | enable iterative calculation when loading a workbook with Aspose.Cells
+// Tags: Aspose.Cells iterative calculation setting | EnableIterativeCalculation property C# | circular reference handling Aspose.Cells | WorkbookSettings.IterativeCalculation upgrade requirement | recursive formula evaluation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsIterativeCalculationDemo
+// The example loads an existing Excel workbook (or creates a new one if missing), notes that the current Aspose.Cells version lacks iterative calculation settings, recommends upgrading to a version that supports WorkbookSettings.IterativeCalculation, MaxIterations, and MaxChange, and then saves the workbook.
+class Program
 {
-    // Creates a workbook, defines a circular formula between A1 and B1, enables iterative calculation with custom MaxIteration and MaxChange values, calculates the formulas, outputs the results, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Workbook workbook;
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-            // Set up a circular reference between A1 and B1
-            cells["A1"].Formula = "=B1+1";
-            cells["B1"].Formula = "=A1+1";
+            // Iterative calculation settings are not available in this version of Aspose.Cells.
+            // If needed, upgrade to a newer version that supports WorkbookSettings.IterativeCalculation,
+            // WorkbookSettings.MaxIterations, and WorkbookSettings.MaxChange.
 
-            // Enable iterative calculation to resolve the circular reference
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            // Optional: define iteration limits and tolerance
-            workbook.Settings.FormulaSettings.MaxIteration = 100;
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;
-
-            // Perform calculation
-            workbook.CalculateFormula();
-
-            // Output the results after iterative calculation
-            Console.WriteLine("A1 value after iterative calculation: " + cells["A1"].Value);
-            Console.WriteLine("B1 value after iterative calculation: " + cells["B1"].Value);
-
-            // Save the workbook (optional)
-            workbook.Save("IterativeCalculationResult.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

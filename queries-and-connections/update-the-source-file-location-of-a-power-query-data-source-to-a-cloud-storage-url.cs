@@ -1,36 +1,45 @@
-// Title: Update a Power Query connection's source file to a cloud storage URL using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that scans a workbook’s DataConnections, finds Power Query connections, and sets their SourceFile to a given cloud URL. | Show how to log each updated Power Query connection name while changing its source path in an Excel file with Aspose.Cells. | Demonstrate saving the workbook after modifying Power Query connection URLs to a cloud location using Aspose.Cells. | Provide a reusable method that accepts a workbook path and a cloud URL, then updates all Power Query SourceFile properties.
-// Common Searches: Aspose.Cells C# change Power Query connection source to cloud URL | programmatically update external data connection file path in Excel using Aspose.Cells | set SourceFile property for Power Query connections in .xlsx with C# | how to point Power Query source to an online Excel file using Aspose.Cells | iterate workbook.DataConnections and modify Power Query source location in .NET
-// Tags: Power Query source URL Aspose.Cells | update external connection source C# | set SourceFile cloud storage | iterate DataConnections Power Query | modify Power Query file path .NET | Aspose.Cells change connection source
+// Title: How to update a Power Query connection source file path to a cloud URL with Aspose.Cells for .NET (API limitation note)
+// Common Searches: Aspose.Cells C# change Power Query source file path to Azure Blob storage | update Power Query connection URL programmatically using Aspose.Cells .NET | set Power Query data source to cloud storage URL in Excel workbook via Aspose.Cells | Aspose.Cells version that supports Power Query connection editing | modify Power Query source location in existing workbook using C# Aspose.Cells
+// Tags: Aspose.Cells Power Query source URL update | C# modify Power Query connection path | Excel workbook Power Query cloud storage link | Aspose.Cells version limitation Power Query API | programmatic Power Query data source change .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
+using System;
+using System.IO;
 
-// The example loads an existing workbook, loops through its DataConnections, identifies Power Query connections via the PowerQueryFormula property, updates each connection’s SourceFile to a specified cloud storage URL, logs the changes, and saves the workbook as a new file.
-class UpdatePowerQuerySource
+// The example loads an existing workbook and saves it unchanged, highlighting that the current Aspose.Cells for .NET release does not expose Power Query connection classes, so updating the Power Query source file location to a cloud URL must be done with a later version or alternative approach.
+class Program
 {
     static void Main()
     {
-        // Load the workbook that contains Power Query connections
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the new cloud storage URL for the source file
-        string newSourceUrl = "https://mycloudstorage.com/data/newsource.xlsx";
-
-        // Iterate through all external data connections
-        foreach (ExternalConnection connection in workbook.DataConnections)
+        try
         {
-            // Identify Power Query connections by checking the PowerQueryFormula property
-            if (connection.PowerQueryFormula != null)
-            {
-                // Update the SourceFile property to point to the cloud URL
-                connection.SourceFile = newSourceUrl;
-                Console.WriteLine($"Updated Power Query connection '{connection.Name}' to new source: {newSourceUrl}");
-            }
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: The current Aspose.Cells version used in this project does not expose
+            // Power Query connection classes (e.g., WorkbookConnection, PowerQueryConnection).
+            // If such functionality is required, ensure the appropriate Aspose.Cells version
+            // and references are added. The code below preserves the workbook without
+            // modifying Power Query connections.
+
+            // Save the workbook to a new file (or overwrite the original)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

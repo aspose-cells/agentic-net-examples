@@ -1,109 +1,114 @@
-// Title: Extend Gantt chart series ranges after inserting task rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Programmatically expand each series' Values range in an existing Gantt chart after adding new rows with Aspose.Cells in C#. | Recalculate and set the chart formula strings to include inserted rows when updating an Excel workbook via Aspose.Cells.
-// Common Searches: Aspose.Cells C# update chart series range after inserting rows in worksheet | how to extend Gantt chart data range dynamically in .NET Excel file | adjust Excel chart formulas when adding task rows using Aspose.Cells | C# code to modify chart Values formula after row insertion | increase Gantt chart series end row in Aspose.Cells workbook
-// Tags: chart series range extension Aspose.Cells | gantt chart data range update C# | row insertion impact on Excel chart Aspose.Cells | dynamic chart range handling .NET | update chart formulas programmatically
+// Title: How to programmatically extend a Gantt chart data range after inserting task rows using Aspose.Cells for .NET
+// AI Prompts: Insert rows at a specific index in an Excel worksheet and automatically adjust the Values formulas of all series in an existing Gantt chart to include the new rows with Aspose.Cells. | Calculate the worksheet's last data row after row insertion and rebuild each Gantt chart series range based on a given first data row using C# and Aspose.Cells. | Create a command‑line utility that accepts input file, sheet name, insert position, row count, chart index, and first data row, then updates the Gantt chart range and saves the workbook.
+// Common Searches: Aspose.Cells C# update Gantt chart series after adding rows | programmatically change Excel chart data range when inserting rows using Aspose.Cells | C# example to expand Gantt chart range based on MaxDataRow | how to adjust chart series values formula after inserting rows in .NET | command line tool for updating Excel Gantt chart with Aspose.Cells
+// Tags: Aspose.Cells Gantt chart series range update | refresh chart data after worksheet row addition .NET | dynamic chart range using MaxDataRow | command‑line Excel processing with Aspose.Cells | C# modify chart source after worksheet changes
 
 using System;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace GanttChartUpdater
+namespace AsposeCellsGanttUpdate
 {
-    // The example loads a workbook, inserts additional task rows on the 'Tasks' sheet, iterates through each series of the first chart, parses the original Values formula, expands the end row by the number of inserted rows, rebuilds the absolute range string, assigns the new formula to the series, and saves the updated file.
+    // Loads an Excel workbook, inserts task rows at a specified index, determines the new last data row, updates each series' Values formula in the targeted Gantt chart to cover the expanded range, and saves the modified file—all configurable via command‑line arguments.
     class Program
     {
         static void Main(string[] args)
         {
+            // Input parameters – can be passed via command line or use defaults
+            string inputFilePath = args.Length > 0 ? args[0] : "input.xlsx";
+            string outputFilePath = args.Length > 1 ? args[1] : "output.xlsx";
+            string sheetName = args.Length > 2 ? args[2] : "Sheet1";
+            int insertRowIndex = args.Length > 3 ? int.Parse(args[3]) : 1;      // zero‑based index
+            int rowsToInsert = args.Length > 4 ? int.Parse(args[4]) : 1;
+            int chartIndex = args.Length > 5 ? int.Parse(args[5]) : 0;
+            int firstDataRow = args.Length > 6 ? int.Parse(args[6]) : 2;       // first row of data (1‑based)
+
+            // Verify input file exists
+            if (!File.Exists(inputFilePath))
+            {
+                Console.WriteLine($"Input file not found: {inputFilePath}");
+                return;
+            }
+
             try
             {
-                const string inputPath = "GanttChart.xlsx";
-                const string outputPath = "GanttChart_Updated.xlsx";
-
-                // Verify that the source workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
                 // Load the existing workbook
-                var workbook = new Workbook(inputPath);
+                Workbook workbook = new Workbook(inputFilePath);
 
-                // Get the worksheet that contains the Gantt chart data
-                var worksheet = workbook.Worksheets["Tasks"]; // adjust sheet name as needed
+                // Get the worksheet that contains the Gantt chart
+                Worksheet worksheet = workbook.Worksheets[sheetName];
                 if (worksheet == null)
                 {
-                    Console.WriteLine("Worksheet 'Tasks' not found.");
+                    Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
                     return;
                 }
 
-                // Insert additional task rows (e.g., insert 3 rows after row 5)
-                int insertAfterRowIndex = 5;          // zero‑based index of the row after which new rows are added
-                int rowsToInsert = 3;
-                worksheet.Cells.InsertRows(insertAfterRowIndex + 1, rowsToInsert);
+                // Insert new task rows
+                worksheet.Cells.InsertRows(insertRowIndex, rowsToInsert);
 
-                // Retrieve the Gantt chart (assumed to be the first chart on the sheet)
-                if (worksheet.Charts.Count == 0)
+                // Validate chart index
+                if (chartIndex < 0 || chartIndex >= worksheet.Charts.Count)
                 {
-                    Console.WriteLine("No charts found on the worksheet.");
+                    Console.WriteLine($"Chart index {chartIndex} is out of range.");
                     return;
                 }
 
-                var chart = worksheet.Charts[0];
+                // Get the Gantt chart
+                Chart ganttChart = worksheet.Charts[chartIndex];
+                if (ganttChart == null)
+                {
+                    Console.WriteLine("Specified chart could not be retrieved.");
+                    return;
+                }
 
-                // Update each series in the chart to extend its data range to include the newly inserted rows
-                foreach (var series in chart.NSeries)
+                // Determine the new data range boundaries
+                int lastDataRow = worksheet.Cells.MaxDataRow;
+
+                // Update each series in the chart to reference the expanded range
+                foreach (Series series in ganttChart.NSeries)
                 {
                     try
                     {
-                        // Example formula: "=Tasks!$B$2:$B$10"
-                        string originalFormula = series.Values; // use Values property for the data range
+                        // Use Values formula for the series (Gantt charts are typically bar charts)
+                        string formula = series.Values; // e.g., Sheet1!$B$2:$B$5
+                        if (string.IsNullOrEmpty(formula))
+                            continue;
 
-                        // Find the '!' separating sheet name and range
-                        int exclPos = originalFormula.IndexOf('!');
+                        // Extract column letter(s) from the first cell reference
+                        int exclPos = formula.IndexOf('!');
                         if (exclPos < 0)
                             continue; // unexpected format
 
-                        // Extract the range part (e.g., "$B$2:$B$10")
-                        string rangePart = originalFormula.Substring(exclPos + 1).Trim('\'');
+                        string rangePart = formula.Substring(exclPos + 1); // "$B$2:$B$5"
+                        string[] parts = rangePart.Split(':');
+                        if (parts.Length == 0)
+                            continue;
 
-                        // Create a range object from the string
-                        var range = worksheet.Cells.CreateRange(rangePart);
+                        string startRef = parts[0]; // "$B$2"
+                        string columnLetter = new string(startRef.Where(Char.IsLetter).ToArray());
 
-                        // Determine start and end coordinates of the original range
-                        int startRow = range.FirstRow;
-                        int startColumn = range.FirstColumn;
-                        int endRow = startRow + range.RowCount - 1;
-                        int endColumn = startColumn + range.ColumnCount - 1;
-
-                        // Extend the end row by the number of inserted rows
-                        endRow += rowsToInsert;
-
-                        // Build absolute cell names (e.g., $B$2)
-                        string startAbs = $"${CellsHelper.ColumnIndexToName(startColumn)}${startRow + 1}";
-                        string endAbs = $"${CellsHelper.ColumnIndexToName(endColumn)}${endRow + 1}";
-                        string newRange = $"{startAbs}:{endAbs}";
-
-                        // Update the series values formula
-                        series.Values = $"={worksheet.Name}!{newRange}";
+                        // Build the new formula with updated row numbers (no leading '=')
+                        string newFormula = $"{worksheet.Name}!${columnLetter}${firstDataRow}:${columnLetter}${lastDataRow}";
+                        series.Values = newFormula;
                     }
-                    catch (Exception innerEx)
+                    catch (Exception exSeries)
                     {
-                        Console.WriteLine($"Failed to update a series: {innerEx.Message}");
+                        Console.WriteLine($"Failed to update a series: {exSeries.Message}");
                     }
                 }
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputFilePath);
                 if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as {outputPath}");
+                // Save the workbook with the updated chart
+                workbook.Save(outputFilePath);
+                Console.WriteLine($"Workbook saved successfully to {outputFilePath}");
             }
             catch (Exception ex)
             {

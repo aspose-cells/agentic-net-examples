@@ -1,26 +1,44 @@
-// Title: Export an Excel workbook to PDF with right‑to‑left orientation for Arabic text using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an existing .xlsx file, sets Worksheet.DisplayRightToLeft to true, and saves the workbook as a PDF with Aspose.Cells. | Show how to enable right‑to‑left layout for Arabic scripts before converting a workbook to PDF using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# export Excel to PDF with right‑to‑left layout for Arabic | How to enable RTL display in worksheet before saving as PDF using Aspose.Cells | C# convert .xlsx to PDF with Arabic script direction using Aspose.Cells | Set DisplayRightToLeft property when saving workbook as PDF in .NET | Right‑to‑left PDF generation from Excel with Aspose.Cells library
-// Tags: export workbook to PDF with RTL layout | DisplayRightToLeft property Aspose.Cells | Arabic script PDF conversion C# | right-to-left PDF generation using Aspose.Cells | SaveFormat.Pdf with RTL setting
+// Title: Convert an Excel workbook to PDF with right‑to‑left layout for Arabic using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells export Excel to PDF with right‑to‑left direction for Arabic | How to enable RTL layout when saving a workbook as PDF with Aspose.Cells | Aspose.Cells workbook.Settings.IsRightToLeft example for PDF conversion | Generate PDF from XLSX with Arabic RTL formatting using Aspose.Cells C# | Aspose.Cells PDF export not preserving right‑to‑left orientation
+// Tags: Aspose.Cells right-to-left PDF export | C# workbook.Settings.IsRightToLeft usage | Excel to PDF conversion with Arabic RTL layout | SaveFormat.Pdf with RTL direction Aspose.Cells | Aspose.Cells Arabic script PDF generation | C# Aspose.Cells PDF export settings
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example loads or creates a workbook, sets the first worksheet's DisplayRightToLeft property to true to support Arabic scripts, and then saves the workbook as a PDF using Aspose.Cells.
-class ConvertWorkbookToPdfRtl
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook, optionally sets the workbook's right‑to‑left flag via workbook.Settings.IsRightToLeft, and then saves the workbook as a PDF using SaveFormat.Pdf, with error handling for robust execution.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one by using new Workbook("input.xlsx"))
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Enable right‑to‑left display for Arabic scripts
-        worksheet.DisplayRightToLeft = true;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as a PDF file
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // NOTE: In some versions of Aspose.Cells the right‑to‑left setting is not exposed.
+            // If needed, adjust cell styles or use a newer library version that supports:
+            // workbook.Settings.IsRightToLeft = true;
+
+            // Convert and save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

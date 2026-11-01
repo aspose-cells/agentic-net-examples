@@ -1,12 +1,11 @@
-// Title: Merge cells F12:G12, apply a thick border style, and save as a macro‑enabled XLSM workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that merges the range F12:G12, creates a style with thick borders on all sides, applies the style to the merged range, and saves the workbook as an XLSM file. | Demonstrate how to format a merged cell block with uniform thick borders and export the result as a macro‑enabled spreadsheet using Aspose.Cells in a .NET application.
-// Common Searches: how to merge a specific range and add thick borders using Aspose.Cells in C# | saving a workbook as macro enabled XLSM with Aspose.Cells .NET | apply border style to merged cells F12 G12 Aspose.Cells example | C# Aspose.Cells create styled macro enabled spreadsheet
-// Tags: merge cells Aspose.Cells C# | thick border style Aspose.Cells | save workbook as XLSM Aspose.Cells | styled merged range Aspose.Cells .NET | macro enabled workbook generation Aspose.Cells
+// Title: Merge cells F12:G12, apply a thick border style, and save as a macro‑enabled XLSM workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# merge specific cells and set thick borders | How to create a macro‑enabled XLSM file with merged cells using Aspose.Cells | Apply style to a merged range F12:G12 in Aspose.Cells .NET | Saving a workbook as XLSM after formatting merged cells in C# | Set border formatting for merged cells with Aspose.Cells
+// Tags: cell merging with thick borders Aspose.Cells | macro enabled XLSM export Aspose.Cells | range styling merged cells Aspose.Cells | border formatting merged range Aspose.Cells | create workbook merged cells Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// // This program creates a new workbook, merges cells F12:G12 on the first worksheet, applies a thick border style to the merged range, and saves the workbook as a macro‑enabled XLSM file using Aspose.Cells for .NET.
+// The example creates a new workbook, merges cells F12:G12 on the first worksheet, defines a style with thick borders on all sides, applies this style to the merged range, and saves the workbook as a macro‑enabled XLSM file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -19,26 +18,29 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells F12:G12 (row index 11, column index 5)
+            // Merge cells F12:G12 (zero‑based indices: row 11, column 5 to column 6)
             sheet.Cells.Merge(11, 5, 1, 2);
 
             // Create a style with thick borders on all sides
-            Style style = workbook.CreateStyle();
-            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
-            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
-            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
+            Style thickBorderStyle = workbook.CreateStyle();
+            thickBorderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
+            thickBorderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+            thickBorderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+            thickBorderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
 
             // Apply the style to the merged range
             Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("F12:G12");
-            mergedRange.ApplyStyle(style, new StyleFlag() { All = true });
+            StyleFlag flag = new StyleFlag { All = true };
+            mergedRange.ApplyStyle(thickBorderStyle, flag);
 
             // Save the workbook as a macro‑enabled XLSM file
-            workbook.Save("output.xlsm", SaveFormat.Xlsm);
+            string outputPath = "MergedCells.xlsm";
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

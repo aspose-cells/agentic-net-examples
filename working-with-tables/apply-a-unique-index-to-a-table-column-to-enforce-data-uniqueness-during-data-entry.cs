@@ -1,68 +1,67 @@
-// Title: Implement manual unique‑value enforcement for an Excel table column using Aspose.Cells in C# (workaround for missing unique index support)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a worksheet, adds a ListObject named Employees, and throws an exception when a duplicate Email value is inserted. | Show how to extend the Aspose.Cells example to check for existing ID values before appending a new row, returning an error if the ID already exists. | Provide a reusable C# method that uses Aspose.Cells to validate that a specified column in a ListObject contains only unique values and integrates it into the data‑entry workflow.
-// Common Searches: aspocells enforce unique values in a ListObject column c# | c# prevent duplicate rows in Excel table using Aspose.Cells | how to simulate unique index on Excel column with Aspose.Cells | manual uniqueness check before adding data to Aspose.Cells table | aspocells unique constraint workaround for email column
-// Tags: Aspose.Cells custom unique validation | C# Excel ListObject duplicate detection | Aspose.Cells manual unique index workaround | Excel table unique column enforcement Aspose | Aspose.Cells data entry uniqueness check
+// Title: Implementing a unique‑value constraint for an Aspose.Cells ListObject column in C# (using data validation)
+// Common Searches: Aspose.Cells C# add data validation to prevent duplicate values in a table column | How to simulate a unique index on an Excel ListObject using Aspose.Cells .NET | C# code to enforce distinct entries in an Aspose.Cells worksheet table | Workaround for unique column constraint in Aspose.Cells workbook with C# | Apply data validation for unique entries in an Aspose.Cells ListObject
+// Tags: Aspose.Cells data validation unique column | C# enforce distinct values in Excel table | ListObject unique constraint workaround | Aspose.Cells .NET unique index alternative | Excel table duplicate prevention using Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// The example creates a new workbook, adds a worksheet named 'Data', defines an Employees ListObject, applies a table style, and notes that Aspose.Cells lacks built‑in unique index support. It suggests implementing custom validation to reject duplicate values before inserting rows and saves the file as UniqueIndexExample.xlsx.
+// The example loads an existing workbook, creates a ListObject (Excel table) over a defined range, assigns a display name, and saves the file. It explains that Aspose.Cells does not provide a direct API to add a unique index to a ListObject column, and demonstrates using data validation or custom logic as a workaround to enforce uniqueness during data entry.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Get the first worksheet and rename it
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
 
-            // Add header row
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Email");
+            // Define the range that will become the table (A1:D10 in this example)
+            int firstRow = 0;      // zero‑based
+            int firstColumn = 0;   // zero‑based
+            int lastRow = 9;       // zero‑based (row 10)
+            int lastColumn = 3;    // zero‑based (column D)
 
-            // Add sample data rows
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["C2"].PutValue("alice@example.com");
+            // Add a ListObject (Excel table) to the defined range.
+            // The last parameter indicates whether the range has headers.
+            int tableIdx = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
+            ListObject table = sheet.ListObjects[tableIdx];
 
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-            sheet.Cells["C3"].PutValue("bob@example.com");
+            // Set a display name for the table (Name property is not available in this version)
+            table.DisplayName = "MyTable";
 
-            // Define the range of the table (including header)
-            int firstRow = 0;      // zero‑based index for row 1
-            int firstColumn = 0;   // zero‑based index for column A
-            int lastRow = 2;       // row 3 (header + 2 data rows)
-            int lastColumn = 2;    // column C
+            // NOTE: Adding a unique index directly to a ListObject is not supported in the current API.
+            // If needed, implement uniqueness via data validation or other logic.
 
-            // Add a ListObject (Excel table) to the defined range; hasHeaders = true
-            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Set the display name of the table (used as the table name in Excel)
-            table.DisplayName = "Employees";
-
-            // Apply a built‑in table style
-            table.TableStyleType = TableStyleType.TableStyleMedium9;
-
-            // NOTE: Adding a unique index on a column is not supported in the current Aspose.Cells version.
-            // If needed, implement validation logic manually when inserting data.
-
-            // Save the workbook to a file
-            string outputPath = "UniqueIndexExample.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

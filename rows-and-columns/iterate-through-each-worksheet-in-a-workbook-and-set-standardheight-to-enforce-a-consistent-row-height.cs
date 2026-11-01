@@ -1,37 +1,50 @@
-// Title: Set a consistent StandardHeight for every worksheet in an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code with Aspose.Cells that loops through all worksheets in a workbook and assigns a specific StandardHeight value to each sheet. | Show how to define a default row height, apply it to every worksheet, and save the workbook as an XLSX file.
-// Common Searches: Aspose.Cells C# set default row height for all worksheets in a workbook | How to apply the same StandardHeight to multiple sheets using Aspose.Cells | Iterate over workbook worksheets and change row height with Aspose.Cells C# | Saving an Excel file with uniform row height using Aspose.Cells | C# example for setting StandardHeight property on each worksheet
-// Tags: Aspose.Cells set worksheet default row height | C# iterate workbook worksheets StandardHeight | apply uniform row height to multiple Excel sheets Aspose.Cells | save workbook with consistent row height Aspose.Cells | StandardHeight property usage Aspose.Cells C#
+// Title: Set a uniform StandardHeight for every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to loop through all worksheets in a .NET workbook, assign the same Cells.StandardHeight value, and save the updated file. | Programmatically enforce a consistent default row height across an entire Excel file by setting Worksheet.Cells.StandardHeight for each sheet with C#. | Apply a global row height of 15 points to every sheet in an existing workbook using Aspose.Cells and output a new workbook.
+// Common Searches: Aspose.Cells C# set same row height for all worksheets in a workbook | How to change default row height for every sheet using Aspose.Cells .NET | Batch update Excel row height across multiple worksheets with Aspose.Cells | Set Cells.StandardHeight property for each worksheet in C# | Apply uniform row height to an existing Excel file using Aspose.Cells
+// Tags: Worksheet.Cells.StandardHeight property Aspose.Cells | global row height for all sheets .NET | batch set default row height Excel workbook C# | uniform row height across worksheets using Aspose.Cells | standard row height 15 points Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The C# program loads 'input.xlsx', checks its existence, iterates through each worksheet, sets the Cells.StandardHeight to 15 points, saves the modified workbook as 'output.xlsx', and handles any runtime exceptions.
+class Program
 {
-    // The example creates a workbook, adds extra worksheets, sets the StandardHeight of every sheet to a defined value (e.g., 20 points), and saves the file as AllSheetsStandardHeight.xlsx.
-    public class SetStandardRowHeightForAllSheets
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Add additional worksheets to demonstrate iteration over multiple sheets
-            workbook.Worksheets.Add(); // second worksheet
-            workbook.Worksheets.Add(); // third worksheet
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Define the consistent row height (in points) to apply to every worksheet
-            double consistentHeight = 20.0;
+            // Desired standard row height (in points)
+            double standardHeight = 15.0;
 
-            // Iterate through each worksheet in the workbook
+            // Apply the standard height to each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Set the default (standard) row height for the current worksheet
-                sheet.Cells.StandardHeight = consistentHeight;
+                // Set the default row height for the sheet
+                sheet.Cells.StandardHeight = standardHeight;
             }
 
-            // Save the workbook to persist the changes
-            workbook.Save("AllSheetsStandardHeight.xlsx", SaveFormat.Xlsx);
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

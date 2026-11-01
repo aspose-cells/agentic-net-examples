@@ -1,21 +1,21 @@
-// Title: Generate column chart PNG images at 96 dpi, 150 dpi, and 300 dpi with Aspose.Cells in C# for responsive web pages
-// AI Prompts: Create a C# workbook, add sample data, build a column chart, and export it to PNG files at 96, 150, and 300 DPI using Aspose.Cells. | Configure ImageOrPrintOptions to set HorizontalResolution, VerticalResolution, and Transparent properties before calling Chart.ToImage. | Write a loop that iterates over an array of DPI values and saves each chart image with a filename that includes the DPI suffix.
-// Common Searches: Aspose.Cells C# export chart as PNG with custom DPI for mobile and desktop | How to set image resolution when saving Aspose.Cells chart to PNG | Generate high‑resolution chart images for responsive design using Aspose.Cells | C# Aspose.Cells chart ToImage transparent PNG multiple DPI | Responsive web chart images Aspose.Cells multiple resolution export
-// Tags: Aspose.Cells chart export PNG DPI | C# set ImageOrPrintOptions resolution | column chart multiple resolution images | transparent PNG chart rendering Aspose.Cells | responsive design chart image generation
+// Title: Generate high‑resolution PNG images of an Excel chart at multiple DPI scales using Aspose.Cells in C#
+// Common Searches: how to export an Aspose.Cells chart to PNG with different DPI settings in C# | C# code to create 1x, 2x, 3x resolution chart images for responsive web design using Aspose.Cells | Aspose.Cells render chart to transparent PNG with custom horizontal and vertical resolution | save Excel chart as high‑resolution PNG files programmatically with Aspose.Cells | generate multiple DPI‑scaled chart images for retina displays using Aspose.Cells C#
+// Tags: Aspose.Cells chart PNG export with custom DPI | C# generate multi‑resolution chart images | ImageOrPrintOptions horizontalresolution verticalresolution | transparent PNG chart rendering Aspose.Cells | responsive web chart image scaling using DPI factor
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// The example creates a workbook, fills it with sample data, adds a column chart titled "Quarterly Sales", and then exports the chart to three PNG files (chart_96dpi.png, chart_150dpi.png, chart_300dpi.png). Each image is rendered with the specified horizontal and vertical DPI and a transparent background by configuring ImageOrPrintOptions.
-class ChartExportExample
+// The example creates a workbook, fills it with sample data, adds a column chart, and then iterates over DPI factors (1x, 2x, 3x). For each factor it sets ImageOrPrintOptions.HorizontalResolution and VerticalResolution based on a base 96 dpi, enables transparency, renders the chart to a memory stream, and saves a PNG file named like 'Chart_2x.png' in a 'ChartImages' folder. This produces multiple resolution PNGs suitable for responsive or retina web layouts.
+class GenerateChartImages
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook and access the first worksheet
             using (Workbook workbook = new Workbook())
             {
                 Worksheet sheet = workbook.Worksheets[0];
@@ -30,50 +30,66 @@ class ChartExportExample
                 sheet.Cells["B3"].PutValue(150);
                 sheet.Cells["B4"].PutValue(180);
 
-                // Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
                 Chart chart = sheet.Charts[chartIndex];
-                chart.Title.Text = "Quarterly Sales";
-
-                // Set the data range for the chart series
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
+                chart.Title.Text = "Quarterly Sales";
 
-                // Desired DPI settings for responsive images
-                int[] dpiSettings = new int[] { 96, 150, 300 }; // low, medium, high resolution
+                // Define the desired resolution factors (e.g., 1x, 2x, 3x)
+                double[] resolutionFactors = { 1.0, 2.0, 3.0 };
 
-                // Export the chart to PNG files with different resolutions
-                foreach (int dpi in dpiSettings)
+                // Base DPI (dots per inch) for standard resolution
+                const int baseDpi = 96;
+
+                // Output directory
+                string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "ChartImages");
+                Directory.CreateDirectory(outputDir);
+
+                // Generate PNG images at each resolution
+                foreach (double factor in resolutionFactors)
                 {
                     try
                     {
-                        // Configure image options
+                        // Configure image options with the appropriate DPI
                         ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
                         {
-                            // ImageFormat is inferred from file extension; no need to set explicitly
-                            HorizontalResolution = dpi, // Set horizontal DPI
-                            VerticalResolution = dpi,   // Set vertical DPI
-                            Transparent = true          // Enable transparency
+                            // Default format is PNG; no need to set ImageFormat explicitly
+                            HorizontalResolution = (int)(baseDpi * factor),
+                            VerticalResolution = (int)(baseDpi * factor),
+                            Transparent = true
                         };
 
-                        // Build the output file name (e.g., chart_96dpi.png)
-                        string fileName = $"chart_{dpi}dpi.png";
+                        // Render the chart to a memory stream
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            chart.ToImage(ms, imgOptions);
+                            ms.Position = 0;
 
-                        // Render and save the chart image directly to file
-                        chart.ToImage(fileName, imgOptions);
+                            // Build the file name indicating the resolution factor
+                            string fileName = $"Chart_{factor}x.png";
+                            string filePath = Path.Combine(outputDir, fileName);
 
-                        Console.WriteLine($"Saved chart image: {fileName} ({dpi} DPI)");
+                            // Save the PNG file
+                            using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                            {
+                                ms.CopyTo(fileStream);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to export chart at {dpi} DPI: {ex.Message}");
+                        Console.WriteLine($"Failed to generate image for factor {factor}x: {ex.Message}");
                     }
                 }
+
+                Console.WriteLine("Chart images generated successfully.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

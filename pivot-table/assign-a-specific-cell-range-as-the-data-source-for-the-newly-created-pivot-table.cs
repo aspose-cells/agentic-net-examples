@@ -1,84 +1,76 @@
-// Title: How to reassign a pivot table’s data source to a different cell range using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a pivot table from range A1:B5, then switch its data source to C1:D5 and refresh it with Aspose.Cells in C#. | Programmatically change the source range of an existing Aspose.Cells pivot table and recalculate the pivot cache using the ChangeDataSource method. | Demonstrate updating a pivot table’s data source to a new worksheet range and saving the workbook with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# change pivot table source range from A1:B5 to C1:D5 | How to use ChangeDataSource method to update pivot table data source in Aspose.Cells .NET | Refresh pivot cache after changing data source in Aspose.Cells C# example | Assign new data range to existing pivot table using Aspose.Cells for .NET
-// Tags: Aspose.Cells pivot table source update | C# modify pivot table data range | refresh pivot cache Aspose.Cells | Aspose.Cells workbook pivot table example | pivot table data source reassignment .NET
+// Title: Assign a specific cell range as the data source for a newly created pivot table with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a new worksheet, selects the cells A1 through D100 as the pivot table data area, and creates a pivot table at cell A1 using Aspose.Cells. | Create a program that checks for an existing Excel file, generates a sample workbook if missing, loads it, adds a pivot sheet, assigns the pivot table's data area, and saves the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# define pivot table data area A1:D100 | how to set the data range for a pivot table in Aspose.Cells .NET | C# example of creating a pivot table from a specific cell range using Aspose.Cells | add pivot table to worksheet with custom data area Aspose.Cells | Aspose.Cells pivot table source range not whole sheet
+// Tags: Aspose.Cells pivot table data area C# | define pivot table source range Aspose.Cells | add pivot table to new worksheet .NET | create pivot table from specific cells Excel | set pivot table data range using Aspose.Cells API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+// The example checks for an input.xlsx file, creates a simple workbook with sample data if it doesn't exist, loads the workbook, adds a new worksheet named "Pivot", defines the source range "A1:D100" as the pivot table's data area, creates a pivot table at cell A1 called "PivotTable1", and saves the result as output.xlsx.
+class Program
 {
-    // The sample creates a workbook, fills A1:B5 with sample data, adds a pivot table at D3, copies similar data to C1:D5, changes the pivot table's data source to the new range using ChangeDataSource, refreshes and recalculates the pivot, and saves the file as AssignDataSourceDemo.xlsx.
-    public class AssignDataSourceDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-                // Populate sample data in the worksheet (range A1:B5)
+            // Ensure the input file exists; create a simple one if it does not.
+            if (!File.Exists(inputPath))
+            {
+                var sampleWb = new Workbook();
+                var sheet = sampleWb.Worksheets[0];
+                sheet.Name = "Data";
+
+                // Headers
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("A");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("C");
-                sheet.Cells["B5"].PutValue(40);
+                sheet.Cells["B1"].PutValue("Product");
+                sheet.Cells["C1"].PutValue("Quantity");
+                sheet.Cells["D1"].PutValue("Price");
 
-                // Add a pivot table using the initial data range A1:B5
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "MyPivotTable");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Sample data
+                sheet.Cells["A2"].PutValue("Food");
+                sheet.Cells["B2"].PutValue("Apple");
+                sheet.Cells["C2"].PutValue(10);
+                sheet.Cells["D2"].PutValue(0.5);
 
-                // Configure the pivot table (add fields)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
+                sheet.Cells["A3"].PutValue("Food");
+                sheet.Cells["B3"].PutValue("Bread");
+                sheet.Cells["C3"].PutValue(5);
+                sheet.Cells["D3"].PutValue(1.2);
 
-                // Define a new data source range (C1:D5) on the same worksheet
-                // For demonstration, copy the original data to the new range
-                sheet.Cells["C1"].PutValue("Category");
-                sheet.Cells["D1"].PutValue("Value");
-                sheet.Cells["C2"].PutValue("X");
-                sheet.Cells["D2"].PutValue(100);
-                sheet.Cells["C3"].PutValue("Y");
-                sheet.Cells["D3"].PutValue(200);
-                sheet.Cells["C4"].PutValue("X");
-                sheet.Cells["D4"].PutValue(300);
-                sheet.Cells["C5"].PutValue("Z");
-                sheet.Cells["D5"].PutValue(400);
-
-                // Change the pivot table's data source to the new range C1:D5
-                string[] newDataSource = new string[] { "C1:D5" };
-                pivotTable.ChangeDataSource(newDataSource);
-
-                // Refresh the pivot cache and recalculate the pivot table to reflect the new source
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                string outputPath = "AssignDataSourceDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                sampleWb.Save(inputPath);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook.
+            var workbook = new Workbook(inputPath);
+
+            // Get the worksheet named "Data".
+            var dataSheet = workbook.Worksheets["Data"];
+            if (dataSheet == null)
+                throw new Exception("Worksheet 'Data' not found.");
+
+            // Add a new worksheet for the pivot table.
+            var pivotSheet = workbook.Worksheets.Add("Pivot");
+
+            // Define the source range for the pivot table.
+            string sourceRange = "A1:D100";
+
+            // Create the pivot table at cell A1 (row 0, column 0).
+            var pivotTable = pivotSheet.PivotTables.Add(sourceRange, 0, 0, "PivotTable1");
+
+            // (Optional) Configure pivot fields here if needed.
+
+            // Save the workbook with the new pivot table.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Pivot table created and saved to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AssignDataSourceDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

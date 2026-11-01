@@ -1,35 +1,35 @@
-// Title: Read the evaluated value of a specific cell after recalculating formulas with Aspose.Cells for .NET (C#)
-// AI Prompts: Recalculate all formulas in an Excel workbook and return the value of cell A1 using Aspose.Cells in C#. | Retrieve the computed result of any cell after invoking Workbook.CalculateFormula with Aspose.Cells for .NET. | Load a workbook, trigger formula calculation, and read the evaluated Cell.Value without opening Excel.
-// Common Searches: Aspose.Cells C# read cell value after Workbook.CalculateFormula | How to get evaluated result of an Excel formula using Aspose.Cells for .NET | Retrieve calculated value of cell A1 after recalculating workbook with Aspose.Cells | C# Aspose.Cells get formula evaluation result programmatically
-// Tags: calculate workbook formulas Aspose.Cells | read evaluated cell value C# | access Cell.Value after CalculateFormula | retrieve formula result Aspose.Cells .NET | load and recalculate Excel workbook C#
+// Title: How to read a cell's calculated value after using Workbook.CalculateFormula with Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# get value of a formula cell after workbook.CalculateFormula | read calculated result from B1 after setting formula =A1+A2 using Aspose.Cells | C# example for retrieving Excel formula output with Aspose.Cells API | how to access cell.Value after recalculating formulas in Aspose.Cells workbook | Aspose.Cells calculate all formulas then read result programmatically C#
+// Tags: Aspose.Cells calculate formula C# | retrieve cell value after Workbook.CalculateFormula | read formula result from worksheet Aspose.Cells | C# Excel formula evaluation example | Workbook.CalculateFormula usage Aspose.Cells
 
 using Aspose.Cells;
 using System;
 
-// Loads an Excel workbook, recalculates all formulas with Workbook.CalculateFormula, reads the evaluated value of a specified cell via Cell.Value, outputs the result, and optionally saves the workbook.
-public class FormulaEvaluator
+// The sample creates a Workbook, writes numbers to A1 and A2, assigns the formula "=A1+A2" to B1, calls Workbook.CalculateFormula to evaluate all formulas, then reads the computed result via B1.Value and prints it.
+class FormulaEvaluation
 {
-    public static void Main()
+    static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate cells with sample data
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+
+        // Set a formula in B1 that adds A1 and A2
+        sheet.Cells["B1"].Formula = "=A1+A2";
 
         // Recalculate all formulas in the workbook
         workbook.CalculateFormula();
 
-        // Get the first worksheet (or specify by name/index)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Retrieve the calculated value from B1
+        object result = sheet.Cells["B1"].Value;
 
-        // Access the cell you want to check (e.g., A1)
-        Cell cell = worksheet.Cells["A1"]; // change address as needed
-
-        // Read the calculated value after formula evaluation
-        object calculatedValue = cell.Value;
-
-        // Output the result to the console
-        Console.WriteLine($"Calculated value of {cell.Name}: {calculatedValue}");
-
-        // Optionally save the workbook after calculation
-        workbook.Save("output.xlsx");
+        // Display the result
+        Console.WriteLine($"Calculated value in B1: {result}");
     }
 }

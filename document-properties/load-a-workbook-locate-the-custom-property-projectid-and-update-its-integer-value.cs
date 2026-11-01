@@ -1,57 +1,36 @@
-// Title: Update or add the integer custom document property "ProjectId" in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, checks for a custom property named ProjectId, assigns a new integer value, and saves the workbook. | Write a .NET snippet that adds a ProjectId integer custom document property to an Excel file when it is missing, otherwise updates its value, using Aspose.Cells.
-// Common Searches: asp.net aspose.cells change integer custom property in existing Excel file | c# update ProjectId custom document property in workbook | add missing custom property to Excel workbook programmatically Aspose.Cells | how to set custom document property value with Aspose.Cells .NET | modify custom properties of an .xlsx using Aspose.Cells C#
-// Tags: update custom document property Aspose.Cells | add integer custom property C# Excel | ProjectId custom property Aspose.Cells | modify workbook custom properties .NET | set custom document property value Excel
+// Title: How to update or add an integer custom property (ProjectId) in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# update existing custom document property value in Excel | Add integer custom property to Excel file with Aspose.Cells .NET | Set ProjectId custom property programmatically in a workbook using Aspose.Cells | Check and create missing custom document property in Excel via C# Aspose.Cells | Modify custom document properties of .xlsx using Aspose.Cells API
+// Tags: update custom document property Aspose.Cells | add integer custom property Excel .NET | custom property index lookup Aspose.Cells | modify workbook custom properties C# | Aspose.Cells custom property handling
 
 using Aspose.Cells;
 using System;
-using System.IO;
 
-// The example loads an Excel workbook (input.xlsx) with Aspose.Cells, accesses its CustomDocumentProperties collection, updates the integer value of the "ProjectId" property to 12345 (or adds it if missing), and saves the result as output.xlsx, handling missing files and exceptions.
+// The example loads an Excel workbook, accesses its CustomDocumentProperties collection, searches for a property named "ProjectId", updates its integer value to 12345 if it exists, or adds the property with that value if it does not, and then saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        try
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the collection of custom document properties
+        var customProps = workbook.CustomDocumentProperties;
+
+        // Try to find the index of the property named "ProjectId"
+        int propIndex = customProps.IndexOf("ProjectId");
+
+        if (propIndex != -1)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the workbook from the input file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the collection of custom document properties
-            var customProps = workbook.CustomDocumentProperties;
-
-            // Attempt to retrieve the "ProjectId" property
-            var projectIdProp = customProps["ProjectId"];
-
-            if (projectIdProp != null)
-            {
-                // Update the existing property's integer value
-                projectIdProp.Value = 12345;
-            }
-            else
-            {
-                // Add the property if it does not exist
-                customProps.Add("ProjectId", 12345);
-            }
-
-            // Save the modified workbook to the output file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Property exists – update its integer value
+            customProps[propIndex].Value = 12345; // set the new integer value here
         }
-        catch (Exception ex)
+        else
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Property does not exist – optionally add it with the desired value
+            customProps.Add("ProjectId", 12345);
         }
+
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

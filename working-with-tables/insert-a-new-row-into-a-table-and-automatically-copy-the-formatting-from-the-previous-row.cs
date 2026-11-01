@@ -1,11 +1,11 @@
-// Title: Insert a new row in an Excel worksheet and copy the previous row’s formatting with Aspose.Cells for .NET (C#)
-// AI Prompts: Add a row after a specific index and duplicate the style of the preceding row using Aspose.Cells in C#. | Copy only the formatting (fonts, borders, fills) from an existing row to a newly inserted row while leaving cell values empty with Aspose.Cells.
-// Common Searches: Aspose.Cells C# insert row after row 5 and keep original formatting | How to copy row style without values when adding a new row in Excel using Aspose.Cells | C# code to insert a row and apply previous row’s formatting in an .xlsx file with Aspose.Cells
-// Tags: insert row with Aspose.Cells C# | copy row formatting Aspose.Cells | preserve Excel row style on insertion | Aspose.Cells worksheet row formatting
+// Title: Insert a row into an Excel table and copy the previous row’s formatting with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# insert a row after a specific row while preserving the table's formatting | Copy formatting from the previous row to a newly added row with Aspose.Cells | Add a row to an Excel table programmatically and retain its style using Aspose.Cells .NET | How to duplicate the style of a preceding row when inserting rows via Aspose.Cells | Maintain Excel table row formatting when inserting rows through Aspose.Cells API
+// Tags: Aspose.Cells row insertion preserving style | C# replicate Excel row formatting using Aspose.Cells | keep table formatting after adding rows Aspose.Cells | insert row at index Aspose.Cells .NET API | apply previous row style to new row Aspose.Cells
 
 using Aspose.Cells;
+using System;
 
-// Loads input.xlsx, inserts a new row after row 5, copies the style from the preceding row across all used columns, and saves the workbook as output.xlsx.
+// The example loads an existing workbook, defines the table range, inserts a new row after a specified index, copies the style from each cell of the preceding row across the table columns to the newly inserted cells, and saves the updated workbook.
 class Program
 {
     static void Main()
@@ -14,28 +14,27 @@ class Program
         Workbook workbook = new Workbook("input.xlsx");
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Row after which the new row will be inserted (zero‑based index)
-        int insertAfterRow = 5;
+        // Define the table boundaries (example: A1:D10)
+        int tableStartRow = 0;          // Row 1 (zero‑based)
+        int tableEndRow = 9;            // Row 10
+        int tableStartColumn = 0;       // Column A
+        int tableEndColumn = 3;         // Column D
+
+        // Row after which the new row will be inserted (e.g., after row 5)
+        int insertAfterRow = 4;         // Row 5 (zero‑based)
         int newRowIndex = insertAfterRow + 1;
 
-        // Insert a single row at the desired position and shift existing rows down
-        sheet.Cells.InsertRows(newRowIndex, 1, true);
+        // Insert a new row at the calculated position
+        sheet.Cells.InsertRows(newRowIndex, 1);
 
-        // Determine the last used column to know how many cells to copy
-        int maxColumn = sheet.Cells.MaxColumn;
-
-        // Copy formatting from the previous row to the newly inserted row
-        for (int col = 0; col <= maxColumn; col++)
+        // Copy formatting from the previous row (insertAfterRow) to the new row
+        for (int col = tableStartColumn; col <= tableEndColumn; col++)
         {
-            Cell sourceCell = sheet.Cells[insertAfterRow, col];
-            Cell targetCell = sheet.Cells[newRowIndex, col];
+            // Retrieve the style of the source cell
+            Style sourceStyle = sheet.Cells[insertAfterRow, col].GetStyle();
 
-            // Transfer the style (font, borders, fill, etc.)
-            targetCell.SetStyle(sourceCell.GetStyle());
-
-            // If you want the new row to be empty, do NOT copy the value.
-            // To copy the value as well, uncomment the following line:
-            // targetCell.PutValue(sourceCell.Value);
+            // Apply the retrieved style to the newly inserted cell
+            sheet.Cells[newRowIndex, col].SetStyle(sourceStyle);
         }
 
         // Save the modified workbook

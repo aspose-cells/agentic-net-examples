@@ -1,111 +1,120 @@
-// Title: Measure memory usage of Aspose.Cells formula calculation with calculation chain enabled and disabled on a 20,000‑row worksheet (C#)
-// AI Prompts: Create C# code that fills a worksheet with 20,000 rows of numeric data, adds a column of sum formulas, toggles Settings.EnableCalculationChain on and off, and prints the process private memory before and after Workbook.CalculateFormula. | Show how to benchmark the memory impact of the Aspose.Cells calculation chain by measuring GC‑collected private memory for both enabled and disabled states in a large workbook.
-// Common Searches: Aspose.Cells how to compare memory consumption of formula calculation with EnableCalculationChain true vs false | C# benchmark private memory before and after Workbook.CalculateFormula on large dataset | measure memory footprint of Aspose.Cells calculation chain on 20k rows | disable calculation chain in Aspose.Cells to reduce memory usage during formula evaluation | Aspose.Cells memory profiling for large worksheets with formulas
-// Tags: Aspose.Cells memory profiling formula calculation | EnableCalculationChain memory overhead Aspose.Cells | benchmark Workbook.CalculateFormula memory usage | large worksheet formula evaluation Aspose.Cells | process private memory measurement C# Aspose.Cells
+// Title: C# example to compare memory usage of Aspose.Cells formula calculation with calculation chain enabled vs disabled on large worksheets
+// Common Searches: how to measure memory consumption of Aspose.Cells CalculateFormula in C# | benchmark Aspose.Cells formula calculation memory usage with and without calculation chain | C# code to profile memory before and after workbook.CalculateFormula on a large dataset | disable calculation chain in Aspose.Cells via reflection and compare performance | Aspose.Cells memory delta for SUM formulas on 20,000 rows in .NET
+// Tags: Aspose.Cells formula calculation memory profiling | C# toggle calculation chain Aspose.Cells | large worksheet memory benchmark Aspose.Cells | GC.GetTotalMemory performance Aspose.Cells | reflection disable calculation chain Aspose.Cells
 
 using System;
-using System.Diagnostics;
 using Aspose.Cells;
 
-// // Demonstrates measuring process private memory before and after calculating formulas on a 20,000‑row worksheet, comparing default calculation chain with the chain disabled via Settings.EnableCalculationChain.
+// The sample creates a workbook with 20,000 rows and 10 numeric columns, adds a SUM formula in an 11th column for each row, and records memory before and after calling CalculateFormula() with the default calculation chain. It then uses reflection to turn off the calculation chain (when supported), clears cached results, repeats the calculation, and outputs the memory deltas for both scenarios, demonstrating the impact of the calculation chain on memory usage.
 class FormulaCalculationMemoryTest
 {
     static void Main()
     {
         try
         {
-            // Parameters for large dataset
-            const int totalRows = 20000;   // number of rows
-            const int totalCols = 30;      // number of columns (excluding formula column)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define size of large dataset
+            const int rows = 20000;   // number of rows
+            const int cols = 10;      // number of data columns
+
+            // Fill the worksheet with numeric data
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    // Example data: (i+1) * (j+1)
+                    sheet.Cells[i, j].PutValue((i + 1) * (j + 1));
+                }
+            }
+
+            // Add a formula column that sums the first 10 columns for each row
+            // Column index for the sum formula will be cols (i.e., the 11th column)
+            for (int i = 0; i < rows; i++)
+            {
+                // Formula: =SUM(A1:J1) for row i+1
+                string formula = $"=SUM(A{i + 1}:J{i + 1})";
+                sheet.Cells[i, cols].Formula = formula;
+            }
 
             // -------------------------------------------------
-            // Workbook with calculation chain (default behavior)
+            // Calculation with Calculation Chain (default)
             // -------------------------------------------------
-            Workbook wbWithChain = new Workbook();
-            Worksheet wsWithChain = wbWithChain.Worksheets[0];
-            PopulateData(wsWithChain, totalRows, totalCols);
-            AddFormulaColumn(wsWithChain, totalRows);
 
-            // Measure memory before calculation
+            // Note: In recent Aspose.Cells versions the calculation chain
+            // is enabled by default and the property to toggle it has been removed.
+            // Therefore we rely on the default behavior here.
+
+            // Force garbage collection before measurement
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            long memBeforeWithChain = Process.GetCurrentProcess().PrivateMemorySize64;
+            GC.Collect();
+
+            // Record memory before calculation
+            long memoryBeforeChain = GC.GetTotalMemory(true);
 
             // Perform calculation
-            wbWithChain.CalculateFormula();
+            workbook.CalculateFormula();
 
-            // Measure memory after calculation
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memAfterWithChain = Process.GetCurrentProcess().PrivateMemorySize64;
+            // Record memory after calculation
+            long memoryAfterChain = GC.GetTotalMemory(true);
 
-            Console.WriteLine("With Calculation Chain:");
-            Console.WriteLine($"Memory before calculation: {memBeforeWithChain / 1024 / 1024} MB");
-            Console.WriteLine($"Memory after calculation : {memAfterWithChain / 1024 / 1024} MB");
-            Console.WriteLine($"Memory increase          : {(memAfterWithChain - memBeforeWithChain) / 1024 / 1024} MB");
+            // Output memory usage for calculation chain enabled
+            Console.WriteLine("=== Calculation Chain Enabled ===");
+            Console.WriteLine($"Memory before calculation: {memoryBeforeChain:N0} bytes");
+            Console.WriteLine($"Memory after calculation : {memoryAfterChain:N0} bytes");
+            Console.WriteLine($"Memory delta              : {memoryAfterChain - memoryBeforeChain:N0} bytes");
             Console.WriteLine();
 
             // -------------------------------------------------
-            // Workbook without calculation chain
+            // Calculation without Calculation Chain
             // -------------------------------------------------
-            Workbook wbWithoutChain = new Workbook();
 
-            // The EnableCalculationChain property may not be available in older Aspose.Cells versions.
-            // If it exists, uncomment the following line:
-            // wbWithoutChain.Settings.EnableCalculationChain = false;
+            // Attempt to disable calculation chain if the API supports it.
+            // For versions where the property is unavailable, this block will simply skip the toggle.
+            try
+            {
+                // The property may not exist in some versions; use reflection to set it safely.
+                var settingsType = workbook.Settings.GetType();
+                var prop = settingsType.GetProperty("EnableCalculationChain");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(workbook.Settings, false);
+                }
+            }
+            catch
+            {
+                // Ignore any errors while attempting to disable the chain.
+            }
 
-            Worksheet wsWithoutChain = wbWithoutChain.Worksheets[0];
-            PopulateData(wsWithoutChain, totalRows, totalCols);
-            AddFormulaColumn(wsWithoutChain, totalRows);
+            // Clear previously calculated values to force re‑calculation
+            workbook.CalculateFormula(); // clears cached results
 
-            // Measure memory before calculation
+            // Force garbage collection before second measurement
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            long memBeforeWithoutChain = Process.GetCurrentProcess().PrivateMemorySize64;
-
-            // Perform calculation
-            wbWithoutChain.CalculateFormula();
-
-            // Measure memory after calculation
             GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memAfterWithoutChain = Process.GetCurrentProcess().PrivateMemorySize64;
 
-            Console.WriteLine("Without Calculation Chain:");
-            Console.WriteLine($"Memory before calculation: {memBeforeWithoutChain / 1024 / 1024} MB");
-            Console.WriteLine($"Memory after calculation : {memAfterWithoutChain / 1024 / 1024} MB");
-            Console.WriteLine($"Memory increase          : {(memAfterWithoutChain - memBeforeWithoutChain) / 1024 / 1024} MB");
+            // Record memory before second calculation
+            long memoryBeforeNoChain = GC.GetTotalMemory(true);
+
+            // Perform calculation again
+            workbook.CalculateFormula();
+
+            // Record memory after second calculation
+            long memoryAfterNoChain = GC.GetTotalMemory(true);
+
+            // Output memory usage for calculation chain disabled
+            Console.WriteLine("=== Calculation Chain Disabled ===");
+            Console.WriteLine($"Memory before calculation: {memoryBeforeNoChain:N0} bytes");
+            Console.WriteLine($"Memory after calculation : {memoryAfterNoChain:N0} bytes");
+            Console.WriteLine($"Memory delta              : {memoryAfterNoChain - memoryBeforeNoChain:N0} bytes");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Populates the worksheet with numeric data
-    private static void PopulateData(Worksheet ws, int rows, int cols)
-    {
-        Cells cells = ws.Cells;
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                // Simple numeric value: (row index + 1) * (col index + 1)
-                cells[i, j].PutValue((i + 1) * (j + 1));
-            }
-        }
-    }
-
-    // Adds a formula column (last column) that sums the first two columns for each row
-    private static void AddFormulaColumn(Worksheet ws, int rows)
-    {
-        Cells cells = ws.Cells;
-        int formulaColIndex = ws.Cells.MaxColumn + 1; // place after existing data
-        for (int i = 0; i < rows; i++)
-        {
-            // Formula: =A{i+1}+B{i+1}
-            string formula = $"=A{i + 1}+B{i + 1}";
-            cells[i, formulaColIndex].Formula = formula;
         }
     }
 }

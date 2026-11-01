@@ -1,46 +1,52 @@
-// Title: Create a WordArt (TextEffect) shape with Comic Sans MS font and 48‑point size in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Insert a TextEffect shape into a worksheet, then set its FontName to "Comic Sans MS" and FontSize to 48 points with Aspose.Cells. | Generate a WordArt shape in an Excel file and programmatically customize its font family and size using C# and Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to create WordArt shape with specific font | set custom font family for TextEffect shape in Aspose.Cells .NET | change font size of WordArt (TextEffect) in Excel using Aspose.Cells | example code for adding WordArt with Comic Sans MS in Aspose.Cells
-// Tags: add TextEffect shape Aspose.Cells | set WordArt font family C# | configure WordArt font size Aspose.Cells | customize WordArt shape Excel .NET
+// Title: Add a WordArt shape with Comic Sans MS font and 48‑point size to an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that inserts a WordArt object into the first worksheet, sets its font to 'Comic Sans MS', and applies a 48‑point size using Aspose.Cells. | Show how to configure the Font.Name and Font.Size properties of a WordArt shape after adding it with AddWordArt in Aspose.Cells. | Demonstrate saving an Excel file after customizing a WordArt shape's font family and point size with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to set WordArt font name and size in Excel workbook | example code for adding WordArt with custom font using Aspose.Cells .NET | change WordArt font to Comic Sans MS and set 48 point size with Aspose.Cells
+// Tags: add-wordart shape aspocells | customize-wordart font family c# | set-wordart font size 48 points | aspocells shape font properties | save-excel workbook aspocells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The program creates a new workbook, adds a WordArt (TextEffect) shape to the first worksheet, changes its font to Comic Sans MS, sets the font size to 48 points, and saves the workbook as WordArtExample.xlsx.
+// // Creates a new workbook, inserts a WordArt shape with Comic Sans MS font at 48‑point size, and saves it as WordArtExample.xlsx using Aspose.Cells.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        var workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        var sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape (TextEffect) to the worksheet
-        // Parameters: preset effect, text, initial font name, initial font size, bold, italic,
-        // upper left row, upper left column, top, left, width, height
-        var shape = sheet.Shapes.AddTextEffect(
-            MsoPresetTextEffect.TextEffect1,
-            "Sample WordArt",
-            "Calibri",          // initial font (will be changed)
-            48,                 // initial size (will be set again)
-            false,
-            false,
-            5,                  // row
-            5,                  // column
-            0,                  // top offset
-            0,                  // left offset
-            400,                // width
-            100);               // height
+            // Add a WordArt shape with sample text
+            // Parameters: style, text, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape wordArt = sheet.Shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle1,
+                "Sample WordArt",
+                1,    // upper left row (zero‑based)
+                0,    // upper left column
+                5,    // top offset (pixels)
+                5,    // left offset (pixels)
+                200,  // height (pixels)
+                400); // width (pixels)
 
-        // Assign a custom font family
-        shape.TextEffect.FontName = "Comic Sans MS";
+            // Assign a custom font family to the WordArt
+            wordArt.Font.Name = "Comic Sans MS";
 
-        // Set the font size to forty‑eight points
-        shape.TextEffect.FontSize = 48;
+            // Set the font size to 48 points
+            wordArt.Font.Size = 48;
 
-        // Save the workbook
-        workbook.Save("WordArtExample.xlsx");
+            // Save the workbook to a file
+            string outputPath = "WordArtExample.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

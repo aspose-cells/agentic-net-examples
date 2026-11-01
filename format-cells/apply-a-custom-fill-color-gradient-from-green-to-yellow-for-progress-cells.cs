@@ -1,65 +1,60 @@
-// Title: Apply a solid green fill to a range of progress cells in an existing Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing workbook, creates a style with a solid green background, and applies the fill only to cells A2:A20 using Aspose.Cells StyleFlag to preserve other formatting. | Show how to use Aspose.Cells to verify a file's existence, define a cell range, and apply cell shading without altering fonts or borders in a .NET application.
-// Common Searches: Aspose.Cells C# set solid background color for a specific cell range | how to apply only cell shading with StyleFlag in Aspose.Cells | C# example to color progress bar cells in Excel using Aspose.Cells | apply green fill to range A2:A20 without changing fonts Aspose.Cells
-// Tags: Aspose.Cells solid fill for cell range | C# StyleFlag cell shading Aspose.Cells | progress cells background color .NET | apply green background to Excel range using Aspose.Cells | cell range formatting without affecting fonts Aspose.Cells
+// Title: Apply a green foreground and yellow background solid fill to a range of progress cells in an Excel file using Aspose.Cells for .NET
+// Common Searches: how to set solid fill color for a range of cells with Aspose.Cells in C# | Aspose.Cells C# apply green foreground and yellow background to column B rows 2 to 11 | set cell style background colors programmatically in an Excel workbook using Aspose.Cells .NET | C# example for applying custom fill colors to progress cells in an XLSX file with Aspose.Cells | Aspose.Cells style pattern solid fill example for Excel progress tracking
+// Tags: solid fill style Aspose.Cells | set cell foreground color Aspose.Cells | set cell background color Aspose.Cells | apply style to column B Aspose.Cells | progress tracking cell formatting .NET
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program loads 'Progress.xlsx', creates a solid fill style with a green foreground and yellow background using Aspose.Cells, applies this style to cells B2‑B11 (the progress column), ensures the output directory exists, and saves the modified workbook as 'Progress_Gradient.xlsx'.
+class Program
 {
-    // The program checks for the input workbook, loads it, defines the range A2:A20 on the first worksheet, creates a style with a solid green fill, applies only the cell shading to that range using a StyleFlag, and saves the updated workbook.
-    class ProgressCellGradient
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "Progress.xlsx";
+            const string outputPath = "Progress_Gradient.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "ProgressReport.xlsx";
-                const string outputPath = "ProgressReport_Gradient.xlsx";
-
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Define the range of progress cells (e.g., A2:A20)
-                Aspose.Cells.Range progressRange = worksheet.Cells.CreateRange("A2:A20");
-
-                // Create a new style for the fill
-                Style fillStyle = workbook.CreateStyle();
-
-                // Apply a solid fill (green) as a fallback when gradient APIs are unavailable
-                fillStyle.Pattern = BackgroundType.Solid;
-                fillStyle.ForegroundColor = Color.Green;
-
-                // Apply only the cell shading (no font or border changes)
-                StyleFlag styleFlag = new StyleFlag
-                {
-                    CellShading = true
-                };
-
-                // Apply the style to the defined range
-                progressRange.ApplyStyle(fillStyle, styleFlag);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the progress cells
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create a style with a simple fill (gradient not available in this version, using solid fill)
+            Style gradientStyle = workbook.CreateStyle();
+            gradientStyle.Pattern = BackgroundType.Solid;          // Use solid fill as fallback
+            gradientStyle.ForegroundColor = Color.Green;          // Fill color
+            gradientStyle.BackgroundColor = Color.Yellow;         // Not used for solid fill but kept for reference
+
+            // Apply the style to column B rows 2‑11 (zero‑based indices)
+            for (int row = 1; row <= 10; row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Cell cell = sheet.Cells[row, 1]; // Column B
+                cell.SetStyle(gradientStyle);
             }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

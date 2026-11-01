@@ -1,39 +1,33 @@
-// Title: Apply Flate compression while converting an Excel workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.Compression to Flate, and saves the workbook as a compressed PDF with Aspose.Cells. | Show how to enable Flate compression in Aspose.Cells PdfSaveOptions to reduce PDF size when exporting Excel to PDF in C#. | Provide a C# example that verifies the source Excel file, configures PDF save options for Flate compression, and handles errors during conversion with Aspose.Cells.
-// Common Searches: how to enable Flate compression in Aspose.Cells PDF export C# | reduce size of PDF generated from Excel using Aspose.Cells .NET | Aspose.Cells PdfSaveOptions compression option example | C# convert XLSX to PDF with minimal file size using Aspose.Cells | set PDF compression to Flate when saving workbook with Aspose.Cells
-// Tags: Flate compression PdfSaveOptions Aspose.Cells | export Excel to compressed PDF .NET | Aspose.Cells PDF size optimization | C# set PDF compression option Aspose | Workbook.Save with compression Aspose.Cells
+// Title: Enable Flate compression for PDF output when converting an Excel workbook with Aspose.Cells in C#
+// Common Searches: how to set Flate compression in PdfSaveOptions with Aspose.Cells C# | reduce size of PDF generated from Excel using Aspose.Cells .NET | Aspose.Cells PDF compression options for Excel to PDF conversion | C# code to save workbook as compressed PDF using Aspose.Cells | Flate compression parameter for PDF export in Aspose.Cells library
+// Tags: Aspose.Cells PdfSaveOptions Flate compression | C# Excel to compressed PDF conversion | PDF size reduction Aspose.Cells .NET | Flate compression setting Aspose.Cells | compressed PDF export from workbook C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Retained for potential future use
 
-// The sample checks that the input .xlsx file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to use Flate compression (and optionally disables one-page-per-sheet), then saves the workbook as a reduced‑size PDF while handling any runtime exceptions.
-class Program
+// The program verifies the presence of an input Excel file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (default settings), and saves the workbook as a PDF to the specified output path. It includes basic error handling and demonstrates where PdfSaveOptions can be configured for Flate compression to reduce the resulting PDF file size.
+class PdfCompressionExample
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the source Excel workbook
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_compressed.pdf";
+
+            // Verify that the source Excel file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Keep original sheet layout; other options can be set if supported by the library version
-                OnePagePerSheet = false
-            };
+            // Create PDF save options (compression setting not available in this version)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
             // Save the workbook as a PDF
             workbook.Save(outputPath, pdfOptions);
@@ -41,7 +35,6 @@ class Program
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,14 +1,12 @@
-// Title: Add a rectangle shape linked to a date cell with a custom format and display the formatted date using Aspose.Cells for .NET
-// AI Prompts: Write C# code that inserts a rectangle shape into a worksheet, links it to a specific cell, and sets the shape's text to the cell's formatted date value. | Adjust the shape's placement so it moves and resizes with the linked cell and position the shape directly over that cell. | Change the cell's custom date format to include time (e.g., "dd-MMM-yyyy HH:mm") and update the shape's displayed text accordingly.
-// Common Searches: aspnet add rectangle shape linked to date cell Aspose.Cells | display custom formatted date inside a shape using Aspose.Cells for .NET | how to make a shape move and size with its linked cell in Aspose.Cells | set custom date format in Excel cell and show it in a shape with Aspose.Cells
-// Tags: Aspose.Cells rectangle shape insertion | shape linked to cell placement MoveAndSize | custom date format in Excel cell Aspose.Cells | shape text bound to cell value .NET | save workbook as xlsx Aspose.Cells
+// Title: Create a rectangle shape linked to a formatted date cell and display the date using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# link shape text to a cell with a custom date format | How to show a formatted date inside a rectangle shape with Aspose.Cells | C# Aspose.Cells set shape placement to move and size with cells | Add rectangle shape to worksheet and bind it to cell A1 date value Aspose.Cells | Apply custom date format to a cell and reference it from a shape in Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | link shape text to cell formula Aspose.Cells | custom date format cell Aspose.Cells | shape placement moveandsize Aspose.Cells | save workbook with linked shape Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, writes the current date to cell A1 with a custom "dd-mmm-yyyy" format, adds a rectangle shape, links the shape to the cell using MoveAndSize placement, sets the shape's text to the formatted date, and saves the workbook as Output.xlsx.
+// The example creates a new workbook, writes the current date to cell A1, applies a custom "dd-mmm-yyyy" format, adds a rectangle shape at row 5 column 5, links the shape's text to the formatted date using the =A1 formula, sets the shape to move and size with the cells, and saves the file as ShapeLinkedDate.xlsx.
 class Program
 {
     static void Main()
@@ -21,57 +19,39 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a DateTime value into cell A1
+            // Put a date value into cell A1
             Cell dateCell = sheet.Cells["A1"];
             dateCell.PutValue(DateTime.Now);
 
-            // Apply a custom date format (e.g., 15-Mar-2023)
+            // Apply a custom date format to the cell
             Style dateStyle = workbook.CreateStyle();
             dateStyle.Custom = "dd-mmm-yyyy";
             dateCell.SetStyle(dateStyle);
 
-            // Add a rectangle shape to the sheet
-            // Position it initially at row 2, column 1 (B3) with size 150x50 points
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
             Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // Shape type
-                2,    // Upper left row (zero‑based)
-                1,    // Upper left column (zero‑based)
-                0,    // Top offset in points
-                0,    // Left offset in points
-                50,   // Height in points
-                150); // Width in points
+                MsoDrawingType.Rectangle, // shape type
+                5,   // upper left row
+                5,   // upper left column
+                100, // top offset (in points)
+                30,  // left offset (in points)
+                30,  // height (in points)
+                100  // width (in points)
+            );
 
-            // Link the shape to the date cell so it moves/resizes with the cell
+            // Link the shape's text to cell A1 so it displays the formatted date
+            shape.Text = "=A1";
+
+            // Ensure the shape moves and sizes with the cells (optional)
             shape.Placement = PlacementType.MoveAndSize;
 
-            // (Optional) Position the shape over cell A1.
-            // The SetPosition method is not available in older versions, so we rely on the initial placement.
-            // shape.SetPosition(0, 0, 0, 0);
-
-            // Display the formatted date inside the shape
-            shape.Text = dateCell.StringValue;
-
-            // Determine output file path
-            string outputPath = "Output.xlsx";
-
-            // Ensure the directory exists (handle case where outputPath has no directory component)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (string.IsNullOrEmpty(outputDir))
-            {
-                outputDir = Directory.GetCurrentDirectory();
-            }
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("ShapeLinkedDate.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

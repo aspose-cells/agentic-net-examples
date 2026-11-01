@@ -1,7 +1,7 @@
-// Title: Export a chart to a 300 DPI PNG image with Aspose.Cells in C# for print‑quality output
-// AI Prompts: Write C# code that creates a column chart using Aspose.Cells and saves it as a 300 DPI PNG by configuring ImageOrPrintOptions. | Show how to set ImageOrPrintOptions.HorizontalResolution and VerticalResolution to 300 for high‑resolution chart rendering in Aspose.Cells. | Provide a complete example that builds sample data, adds a chart, and exports it to a print‑ready PNG file at 300 DPI.
-// Common Searches: how to export Aspose.Cells chart as 300 DPI PNG in C# | Aspose.Cells ImageOrPrintOptions set resolution for chart image | C# generate print‑ready chart PNG with 300 DPI using Aspose.Cells | set chart image DPI when saving to PNG with Aspose.Cells .NET | high resolution chart export Aspose.Cells example C#
-// Tags: Aspose.Cells chart export PNG 300 DPI | ImageOrPrintOptions set resolution for chart | C# high‑resolution chart image generation | column chart PNG export Aspose.Cells | print‑ready chart image Aspose.Cells .NET
+// Title: Export an Excel chart to a 300 DPI PNG file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook, retrieves the first chart, configures ImageOrPrintOptions with 300 dpi for both horizontal and vertical resolution, and saves the chart as a PNG image. | Show how to implement error handling for a missing input workbook and for worksheets that contain no charts before exporting a high‑resolution chart image. | Demonstrate using Chart.ToImage together with ImageOrPrintOptions to produce a high‑resolution PNG export of an Excel chart.
+// Common Searches: Aspose.Cells export chart to PNG with 300 DPI in C# | C# set chart image resolution when saving as PNG using Aspose.Cells | How to increase DPI of chart image exported from Excel with Aspose.Cells | ImageOrPrintOptions HorizontalResolution 300 for chart export Aspose.Cells .NET
+// Tags: Aspose.Cells chart export PNG high DPI | ImageOrPrintOptions resolution settings C# | Chart.ToImage high resolution export | Excel chart PNG 300 DPI Aspose.Cells | C# error handling missing workbook chart
 
 using System;
 using System.IO;
@@ -9,57 +9,55 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// The program creates a workbook, adds sample data, inserts a column chart, configures ImageOrPrintOptions with 300 DPI horizontal and vertical resolution, and exports the chart to a PNG file named Chart300DPI.png.
-class Program
+// The example loads 'input.xlsx', checks for the presence of a chart, sets ImageOrPrintOptions HorizontalResolution and VerticalResolution to 300 dpi, and uses Chart.ToImage to export the first chart as a high‑quality PNG file named 'chart.png', with error handling for missing files and absent charts.
+class ExportChartWithHighDpi
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "chart.png";
 
-            // Access the first worksheet and name it
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
-
-            // Fill sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart to the worksheet
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
-
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Configure image export options with 300 DPI (default format is PNG)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                HorizontalResolution = 300, // DPI horizontally
-                VerticalResolution = 300    // DPI vertically
-            };
-
-            // Export the chart to a PNG file using the high‑resolution settings
-            using (MemoryStream ms = new MemoryStream())
-            {
-                chart.ToImage(ms, imgOptions);
-                File.WriteAllBytes("Chart300DPI.png", ms.ToArray());
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
 
-            Console.WriteLine("Chart exported successfully to Chart300DPI.png");
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("Error: No charts found in the first worksheet.");
+                return;
+            }
+
+            // Get the first chart on the worksheet
+            Chart chart = worksheet.Charts[0];
+
+            // Configure image export options with 300 DPI for high‑quality PNG
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 300,
+                VerticalResolution = 300
+                // Image format is inferred from the output file extension (.png)
+            };
+
+            // Export the chart directly to a PNG file using the specified DPI
+            chart.ToImage(outputPath, imgOptions);
+
+            Console.WriteLine($"Chart exported to PNG with 300 DPI at '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

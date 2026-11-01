@@ -1,55 +1,52 @@
-// Title: Create a clickable label hyperlink on an Excel chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that inserts a label shape onto a worksheet, styles it as a blue underlined link, and attaches a hyperlink that opens a specified URL when the chart is displayed. | Generate a .NET example that creates a workbook, adds a column chart, places a label at a chosen position, sets its text and screen tip, and configures the label’s Hyperlink property to navigate to an external web page.
-// Common Searches: aspnet c# how to add a hyperlink label to an Excel chart with Aspose.Cells | Aspose.Cells set hyperlink on a shape displayed over a chart | C# add clickable text label to Excel chart using Aspose.Cells library | save Excel file with label shape that opens a web page when chart is opened Aspose.Cells
-// Tags: Aspose.Cells add label hyperlink | C# Excel chart shape link | Aspose.Cells configure label screen tip | Excel workbook save with clickable label | Aspose.Cells format label blue underline
+// Title: Add a clickable hyperlink label to an Aspose.Cells chart in C#
+// AI Prompts: Generate C# code that creates a rectangle shape on a worksheet, sets its text, and attaches a hyperlink so the label opens a web page when the chart is displayed using Aspose.Cells. | Show how to embed a hyperlink‑enabled label into an Excel chart created with Aspose.Cells for .NET. | Provide a step‑by‑step example that adds a shape with a URL to a chart worksheet and saves the workbook.
+// Common Searches: how to attach a URL to a shape in an Aspose.Cells generated chart using C# | Aspose.Cells C# add hyperlink to chart label rectangle | example of adding clickable label to Excel chart with Aspose.Cells .NET | C# code to place a hyperlink shape on a worksheet that appears over a chart | Aspose.Cells add hyperlink to shape on chart worksheet
+// Tags: Aspose.Cells add shape hyperlink C# | Excel chart label hyperlink Aspose.Cells | C# rectangle shape with URL Aspose.Cells | hyperlink on chart overlay shape Aspose.Cells | Aspose.Cells chart annotation hyperlink .NET
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// The example creates a new workbook, fills cells with data, adds a column chart, inserts a rectangle shape labeled “Click Here”, assigns a hyperlink to the shape, and saves the file as ChartWithHyperlink.xlsx.
+class Program
 {
-    // The example creates a new workbook, adds a column chart, inserts a label shape at the top-left corner, formats the label text as a blue underlined link, assigns a hyperlink to https://www.openai.com with a screen tip, and saves the file as ChartWithHyperlink.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a sample column chart (optional, just to have a chart on the sheet)
-                int chartIdx = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = worksheet.Charts[chartIdx];
-                // Populate chart data here if needed
+            // Populate data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Item 1");
+            sheet.Cells["A3"].PutValue("Item 2");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
 
-                // Add a label shape that will act as a hyperlink
-                // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-                Label labelShape = worksheet.Shapes.AddLabel(0, 0, 0, 0, 30, 200);
-                labelShape.Text = "Visit OpenAI";
-                labelShape.Font.Color = Color.Blue;
-                labelShape.Font.Underline = FontUnderlineType.Single;
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
 
-                // Configure hyperlink for the label shape
-                Hyperlink hyperlink = labelShape.Hyperlink;
-                hyperlink.Address = "https://www.openai.com";
-                hyperlink.ScreenTip = "OpenAI";
+            // Add a rectangle shape that will act as a label with hyperlink
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape labelShape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 5, 5, 30, 100);
+            labelShape.Text = "Click Here";
 
-                // Define output file path
-                string outputPath = "ChartWithHyperlink.xlsx";
+            // Assign a hyperlink to the shape
+            labelShape.AddHyperlink("https://www.example.com");
 
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ChartWithHyperlink.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

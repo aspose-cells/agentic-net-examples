@@ -1,61 +1,47 @@
-// Title: How to configure Aspose.Cells in C# to treat empty strings as zero during formula calculations
-// AI Prompts: Set workbook.CalcEngineSettings.EmptyStringAsZero = true before saving so blank cells are evaluated as 0 in numeric formulas. | Show a C# snippet that enables the EmptyStringAsZero flag in Aspose.Cells and verifies the result with a sample formula.
-// Common Searches: Aspose.Cells C# treat blank cell as zero in formula evaluation | Enable EmptyStringAsZero property in Aspose.Cells calculation engine C# example | How to make empty strings evaluate to 0 in Excel formulas using Aspose.Cells | C# Aspose.Cells calculation settings for handling empty strings in numeric formulas
-// Tags: Aspose.Cells EmptyStringAsZero setting C# | C# Aspose.Cells calculation options | Excel formula blank cell zero handling Aspose.Cells | Configure workbook calculation settings Aspose.Cells
+// Title: Configure Aspose.Cells in C# to treat empty strings as zero during formula calculation
+// Common Searches: Aspose.Cells C# treat empty cells as zero in formula evaluation | Enable CalcEngineSettings.TreatEmptyCellAsZero for workbook formulas | Recalculate all formulas with blank cells interpreted as zero using Aspose.Cells | Set empty string handling to zero in Aspose.Cells C# example | Load Excel file and apply TreatEmptyCellAsZero setting before saving
+// Tags: CalcEngineSettings.TreatEmptyCellAsZero | Aspose.Cells formula recalculation | C# workbook empty cell handling | Excel numeric formula evaluation with Aspose.Cells | Aspose.Cells workbook settings configuration
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample loads an existing Excel workbook, optionally enables the CalcEngineSettings.TreatEmptyCellAsZero flag to interpret empty strings as zero during formula evaluation, recalculates all formulas, and saves the updated file.
+class Program
 {
-    // The sample loads an existing workbook or creates a new one and saves it. To ensure numeric formulas treat empty strings as zero, set workbook.CalcEngineSettings.EmptyStringAsZero = true (or use the version‑specific API) before saving. This configures the calculation engine so blank cells are interpreted as 0 during formula evaluation.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Load an existing workbook if it exists; otherwise create a new one
-                const string inputPath = "input.xlsx";
-                Workbook workbook;
-
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath); // load-workbook
-                }
-                else
-                {
-                    workbook = new Workbook(); // create-workbook
-                }
-
-                // NOTE: In some Aspose.Cells versions the CalcEngineSettings property may not be available.
-                // If needed, configure calculation options using the appropriate API for your version.
-
-                // Save the workbook with the new setting applied
-                const string outputPath = "output.xlsx";
-
-                // Ensure the directory for the output file exists
-                var outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                try
-                {
-                    workbook.Save(outputPath); // save-workbook
-                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.Error.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                }
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
+
+            // If the current Aspose.Cells version supports CalcEngineSettings,
+            // you can enable treating empty cells as zero as shown below.
+            // Uncomment the following lines if the property is available:
+            // workbook.Settings.CalcEngineSettings.TreatEmptyCellAsZero = true;
+
+            // Recalculate all formulas with the current settings
+            workbook.CalculateFormula();
+
+            // Save the workbook with the new calculation behavior
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

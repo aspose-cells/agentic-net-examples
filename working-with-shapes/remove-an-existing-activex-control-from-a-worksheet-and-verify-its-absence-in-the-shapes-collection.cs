@@ -1,66 +1,91 @@
-// Title: Delete the first ActiveX (OLE) control from an Excel worksheet and confirm its removal with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that opens a workbook, removes the first OleObject (ActiveX control) from a specified worksheet, checks that the OleObjects collection is empty, and saves the modified file. | Show how to output a console message indicating whether any ActiveX controls remain after calling Worksheet.OleObjects.RemoveAt in a .NET application. | Provide error‑handling snippets for missing input files and save failures when deleting OLE objects with Aspose.Cells.
-// Common Searches: aspnet remove first ActiveX control from Excel worksheet using Aspose.Cells | how to verify OleObjects collection is empty after deletion in C# | Aspose.Cells delete OLE object and check remaining controls | C# console app remove ActiveX from .xlsx and confirm removal | sample code for removing ActiveX (OLE) objects with Aspose.Cells .NET
-// Tags: remove ActiveX OleObject Aspose.Cells | verify OleObjects collection empty C# | delete OLE control from Excel worksheet | Aspose.Cells check for remaining ActiveX controls | C# workbook save after OLE removal
+// Title: Remove a specific ActiveX control from an Excel worksheet and confirm its removal using Aspose.Cells for .NET
+// Common Searches: how to delete an ActiveX control from an Excel worksheet using Aspose.Cells C# | Aspose.Cells remove shape by name and verify it no longer exists | C# code to remove a checkbox ActiveX control from a workbook and check Shapes collection | remove specific ActiveX control from worksheet and save workbook with Aspose.Cells | verify that an ActiveX control has been removed from Excel using Aspose.Cells API
+// Tags: delete ActiveX shape by name Aspose.Cells | verify shape absence in worksheet Aspose.Cells | remove checkbox control from Excel using Aspose.Cells | save workbook after shape removal Aspose.Cells | iterate Shapes collection to find control Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook, removes the first ActiveX (OLE) object from the first worksheet if present, validates that no OleObjects remain, reports the result via console messages, and saves the updated workbook while handling missing files and save errors.
+// The example loads an existing Excel file, searches the first worksheet's Shapes collection for a shape named "CheckBox1", removes that ActiveX control with Shapes.RemoveAt, then iterates the collection again to confirm the control is no longer present before saving the modified workbook to a new file.
 class RemoveActiveXControl
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Input and output file paths
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-            // Ensure the input file exists before loading
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook containing the ActiveX (OLE) control
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index or name as needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (or specify by name/index)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Remove the first OLE (ActiveX) object if any exist
-            if (sheet.OleObjects.Count > 0)
+            // Name of the ActiveX control to remove (adjust as needed)
+            string targetControlName = "CheckBox1";
+
+            // Find the index of the shape with the specified name
+            int shapeIndexToRemove = -1;
+            for (int i = 0; i < worksheet.Shapes.Count; i++)
             {
-                sheet.OleObjects.RemoveAt(0);
-                Console.WriteLine("ActiveX control removed.");
+                Shape shape = worksheet.Shapes[i];
+                if (shape.Name == targetControlName)
+                {
+                    shapeIndexToRemove = i;
+                    break;
+                }
+            }
+
+            // Remove the shape if it was found
+            if (shapeIndexToRemove != -1)
+            {
+                worksheet.Shapes.RemoveAt(shapeIndexToRemove);
+                Console.WriteLine($"ActiveX control \"{targetControlName}\" removed.");
             }
             else
             {
-                Console.WriteLine("No ActiveX control found to remove.");
+                Console.WriteLine($"ActiveX control \"{targetControlName}\" not found.");
             }
 
-            // Verify that no ActiveX controls remain in the worksheet
-            bool anyActiveXRemaining = sheet.OleObjects.Count > 0;
-            Console.WriteLine(anyActiveXRemaining
-                ? "ActiveX control still present in the worksheet."
-                : "ActiveX control successfully absent from the worksheet.");
+            // Verify that the control is no longer present
+            bool stillExists = false;
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                if (shape.Name == targetControlName)
+                {
+                    stillExists = true;
+                    break;
+                }
+            }
+
+            Console.WriteLine(stillExists
+                ? $"Verification failed: \"{targetControlName}\" still exists."
+                : $"Verification succeeded: \"{targetControlName}\" is absent.");
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Insert a new XML map into an existing Excel workbook and set its order using Aspose.Cells for .NET (C#)
-// AI Prompts: Add an XML map from a file to a workbook that already contains XML maps and place it at a specific zero‑based index with Aspose.Cells. | Reorder the XmlMapCollection after inserting a new map so the new map appears at the desired position. | Access the XmlMaps property via reflection to maintain compatibility with older Aspose.Cells versions when adding maps.
-// Common Searches: c# aspocells add xml map to existing workbook at a specific index | how to change the order of xml maps in an Excel file using Aspose.Cells | using reflection to retrieve XmlMaps collection in Aspose.Cells .NET | insert new xml map into workbook that already has multiple xml maps aspocells
-// Tags: add xml map Aspose.Cells | reorder xml map collection Aspose.Cells | reflection access XmlMaps Aspose.Cells | insert xml map at index C# | manage multiple xml maps workbook
+// Title: Add a new XML map to an existing Excel workbook and change its order with Aspose.Cells for .NET
+// Common Searches: how to insert an XML map at a specific position in an Excel file using Aspose.Cells C# | Aspose.Cells .NET reorder existing XML maps in a workbook | add multiple XML maps to a workbook and set their index with Aspose.Cells | using reflection to access the XmlMaps collection in Aspose.Cells when the property is not public | move a newly added XML map to the second slot in an Excel workbook with Aspose.Cells
+// Tags: aspacells add xml map | aspacells reorder xml maps | c# xmlmaps collection insert | aspacells reflection xmlmaps | excel xml map ordering with aspacells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an existing workbook, obtains the XmlMapCollection (using reflection for version safety), adds a new XML map from a file, moves it to a specified zero‑based index, and saves the workbook with the updated map order.
+// The example loads an existing workbook, reads an XML file, uses reflection to obtain the XmlMaps collection, adds a new XML map, repositions it to a desired index (e.g., second), and saves the workbook, demonstrating how to manage multiple XML maps and their order with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -15,49 +14,53 @@ class Program
         try
         {
             const string inputPath = "input.xlsx";
-            const string xmlPath = "NewMapData.xml";
+            const string xmlPath = "newmap.xml";
             const string outputPath = "output.xlsx";
 
-            // Verify required files exist
+            // Ensure the input workbook exists
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
-            if (!File.Exists(xmlPath))
-                throw new FileNotFoundException($"XML data file not found: {xmlPath}");
+                throw new FileNotFoundException($"Workbook file not found: {inputPath}");
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Use reflection to access XmlMaps (may not be present in older versions)
+            // Ensure the XML map source file exists
+            if (!File.Exists(xmlPath))
+                throw new FileNotFoundException($"XML map file not found: {xmlPath}");
+
+            // Read the XML content that will be used for the new map
+            string xmlContent = File.ReadAllText(xmlPath);
+            string xmlMapName = "NewMap";
+
+            // Use reflection to access XmlMaps (may not be available in older versions)
             var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
             if (xmlMapsProp == null)
+                throw new NotSupportedException("The current Aspose.Cells version does not support XML maps.");
+
+            // Get the XmlMapCollection instance
+            object xmlMapsObj = xmlMapsProp.GetValue(workbook);
+            dynamic xmlMaps = xmlMapsObj; // use dynamic to invoke members
+
+            // Add the new XML map; the method returns the index of the added map
+            int addedMapIndex = xmlMaps.Add(xmlMapName, xmlContent);
+
+            // Desired position for the new map (e.g., make it the second map in the collection)
+            int desiredIndex = 1; // zero‑based index
+
+            // Reorder the XML maps if needed
+            if (addedMapIndex != desiredIndex &&
+                addedMapIndex >= 0 &&
+                desiredIndex >= 0 &&
+                desiredIndex < (int)xmlMaps.Count)
             {
-                Console.WriteLine("The current Aspose.Cells version does not support XML maps.");
-            }
-            else
-            {
-                // Get the XmlMapCollection instance
-                var xmlMapsObj = xmlMapsProp.GetValue(workbook);
-                if (xmlMapsObj == null)
-                    throw new InvalidOperationException("Failed to retrieve XmlMaps collection.");
+                // Retrieve the added map instance
+                var addedMap = xmlMaps[addedMapIndex];
 
-                // Use dynamic to invoke members without compile‑time binding
-                dynamic xmlMaps = xmlMapsObj;
+                // Remove it from its current position
+                xmlMaps.RemoveAt(addedMapIndex);
 
-                // Add the new XML map
-                dynamic newMap = xmlMaps.Add("NewMap", xmlPath);
-
-                // Desired position for the new map (zero‑based index)
-                int targetIndex = 1;
-
-                // Reorder only if the target index is within the collection bounds
-                if (targetIndex >= 0 && targetIndex < (int)xmlMaps.Count)
-                {
-                    // Remove the map from its current (last) position
-                    xmlMaps.RemoveAt((int)xmlMaps.Count - 1);
-
-                    // Insert the map at the desired index
-                    xmlMaps.Insert(targetIndex, newMap);
-                }
+                // Insert it at the desired position
+                xmlMaps.Insert(desiredIndex, addedMap);
             }
 
             // Save the workbook with the updated XML map order

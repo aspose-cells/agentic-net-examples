@@ -1,45 +1,40 @@
-// Title: How to embed PDF title, author, and subject metadata when saving an Aspose.Cells workbook to PDF in C#
-// AI Prompts: Generate a PDF from an Aspose.Cells workbook and embed custom Title, Author, and Subject properties using C#. | Demonstrate setting built‑in document properties before calling Workbook.Save with PdfSaveOptions in Aspose.Cells. | Add additional PDF metadata such as Keywords and Creator to a workbook‑to‑PDF conversion with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set PDF document title author subject before saving | How to add custom metadata to PDF generated from Excel using Aspose.Cells | Embedding PDF metadata when converting workbook to PDF with PdfSaveOptions in .NET | C# code example for setting built‑in document properties for PDF output in Aspose.Cells
-// Tags: Aspose.Cells set PDF metadata | PdfSaveOptions embed document properties | C# workbook to PDF with custom title | built‑in document properties Aspose.Cells | Excel to PDF conversion metadata .NET
+// Title: Setting PDF document properties (Title, Author, Subject) when converting an Excel workbook to PDF with Aspose.Cells in C#
+// Common Searches: how to set PDF title and author when saving Excel as PDF using Aspose.Cells C# | Aspose.Cells C# add PDF metadata after workbook conversion | set PDF document properties with Aspose.Cells and Aspose.Pdf in .NET | cannot set PDF metadata via PdfSaveOptions Aspose.Cells workaround | add custom PDF metadata to Excel to PDF conversion in C#
+// Tags: Aspose.Cells PDF document properties | C# set PDF metadata after Excel conversion | PdfSaveOptions metadata limitation Aspose.Cells | Aspose.Pdf modify PDF properties post conversion | Excel to PDF metadata handling .NET
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// // Creates a workbook, assigns Title, Author, and Subject via BuiltInDocumentProperties, and saves it as a PDF using PdfSaveOptions, embedding the specified metadata.
+// The example creates a Workbook, writes a value to cell A1, configures PdfSaveOptions, and saves the workbook as a PDF. It highlights that PdfSaveOptions does not provide a way to set PDF metadata such as Title, Author, or Subject directly, and suggests using Aspose.Pdf to add those properties after the conversion.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create
 
-            // Add sample data (optional)
+            // Optional: add some data to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample content for PDF");
+            sheet.Cells["A1"].PutValue("Hello World");
 
-            // Set document properties (metadata) that will be written to the PDF
-            workbook.BuiltInDocumentProperties.Title = "My PDF Title";
-            workbook.BuiltInDocumentProperties.Author = "Jane Smith";
-            workbook.BuiltInDocumentProperties.Subject = "PDF metadata example";
-
-            // Configure PDF save options
+            // Prepare PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Define output file path
-            string outputPath = "MyWorkbook.pdf";
+            // NOTE: Setting PDF document metadata (Title, Author, Subject) is not supported
+            // directly via PdfSaveOptions in the current Aspose.Cells version.
+            // If needed, metadata can be added later using Aspose.Pdf after conversion.
 
-            // Save the workbook as PDF with the specified metadata
+            // Save the workbook as PDF
+            string outputPath = "SampleOutput.pdf";
             workbook.Save(outputPath, pdfOptions);
-
             Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

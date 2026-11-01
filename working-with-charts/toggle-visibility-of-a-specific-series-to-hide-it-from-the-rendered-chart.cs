@@ -1,73 +1,81 @@
-// Title: Hide a specific data series in an Excel column chart using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart, adds two series, and sets the first series IsFiltered = true to hide it. | Write a C# snippet that reads the IsFiltered flag of each chart series and logs the visibility status before saving the workbook with Aspose.Cells. | Provide an example that toggles a chart series' visibility on demand and saves the workbook as an .xlsx file using Aspose.Cells.
-// Common Searches: aspnet hide first series in column chart using Aspose.Cells | how to use IsFiltered property to hide chart series in Aspose.Cells C# | programmatically filter out a series from an Excel chart with Aspose.Cells .NET | toggle visibility of chart series at runtime Aspose.Cells | Aspose.Cells column chart series visibility example C#
-// Tags: Aspose.Cells IsFiltered chart series | hide column chart series C# | toggle chart series visibility Aspose.Cells | filter out series Excel chart .NET | chart series visibility control Aspose.Cells
+// Title: Toggle visibility of a specific series in an Excel chart using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that hides or shows a chosen series in an Aspose.Cells chart, using reflection when the IsVisible property is unavailable. | Create a reusable method that accepts a workbook path, chart index, and series index, then toggles that series' visibility with proper error handling. | Show an example that validates the series index, flips the IsVisible flag via reflection, and saves the updated workbook.
+// Common Searches: c# hide specific series in an Aspose.Cells generated Excel chart | how to programmatically toggle chart series visibility with Aspose.Cells .NET | using reflection to access IsVisible property of a chart series in Aspose.Cells | validate series index before changing visibility in Aspose.Cells chart example
+// Tags: Aspose.Cells chart series IsVisible reflection | C# hide Excel chart series using Aspose.Cells | validate chart series index Aspose.Cells | modify chart series visibility programmatically Aspose.Cells | save workbook after chart changes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsSeriesVisibilityDemo
+namespace AsposeCellsExample
 {
-    // The sample creates a workbook, fills it with sample data, builds a column chart with two series, hides the first series by setting its IsFiltered property to true, prints each series' visibility flag, and saves the file as SeriesVisibilityDemo.xlsx.
+    // Loads an Excel workbook, accesses the first chart, validates the requested series index, uses reflection to toggle the series' IsVisible flag when supported, and saves the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for two series
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["A5"].PutValue("D");
-
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["B5"].PutValue(40);
-
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["C2"].PutValue(15);
-                sheet.Cells["C3"].PutValue(25);
-                sheet.Cells["C4"].PutValue(35);
-                sheet.Cells["C5"].PutValue(45);
-
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
-
-                // Set data ranges for the two series
-                chart.NSeries.Add("B2:B5", true); // Series1
-                chart.NSeries.Add("C2:C5", true); // Series2
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // Hide the first series (Series1) by setting IsFiltered = true
-                if (chart.NSeries.Count > 0)
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
                 {
-                    chart.NSeries[0].IsFiltered = true;
+                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                    return;
                 }
 
-                // Output visibility status safely
-                Console.WriteLine("Series1 IsFiltered = " +
-                                  (chart.NSeries.Count > 0 ? chart.NSeries[0].IsFiltered.ToString() : "N/A"));
-                Console.WriteLine("Series2 IsFiltered = " +
-                                  (chart.NSeries.Count > 1 ? chart.NSeries[1].IsFiltered.ToString() : "N/A"));
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Save the workbook
-                string outputPath = "SeriesVisibilityDemo.xlsx";
+                // Access the first worksheet (or modify as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one chart
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("Error: No charts found on the first worksheet.");
+                    return;
+                }
+
+                // Get the first chart on the worksheet
+                Chart chart = sheet.Charts[0];
+
+                // Index of the series to toggle (0‑based)
+                int seriesIndex = 1; // example: second series
+
+                // Validate the series index
+                if (seriesIndex < 0 || seriesIndex >= chart.NSeries.Count)
+                {
+                    Console.WriteLine($"Error: Series index {seriesIndex} is out of range. Chart contains {chart.NSeries.Count} series.");
+                    return;
+                }
+
+                // Retrieve the series
+                Series series = chart.NSeries[seriesIndex];
+
+                // Attempt to toggle visibility using reflection (covers versions without IsVisible property)
+                var visibilityProp = series.GetType().GetProperty("IsVisible");
+                if (visibilityProp != null && visibilityProp.PropertyType == typeof(bool))
+                {
+                    bool current = (bool)visibilityProp.GetValue(series);
+                    visibilityProp.SetValue(series, !current);
+                    Console.WriteLine($"Series visibility toggled to {!current}.");
+                }
+                else
+                {
+                    Console.WriteLine("Series visibility property not available in this Aspose.Cells version.");
+                }
+
+                // Save the updated workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
     }

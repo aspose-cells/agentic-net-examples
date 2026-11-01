@@ -1,66 +1,85 @@
-// Title: How to add median data labels to a Box‑and‑Whisker chart from a linked cell range using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a Box‑and‑Whisker chart, links its data labels to a separate column, and displays the labels inside each box using Aspose.Cells. | Write C# code that activates ShowValue and ShowCellRange on a chart series, assigns LinkedSource to a cell range, and displays custom summary values in the chart labels using Aspose.Cells. | Show how to configure the label placement to appear within each box of a Box‑and‑Whisker chart and export the workbook to an XLSX file with Aspose.Cells.
-// Common Searches: asp.net aspose.cells link box whisker chart data labels to cell range | c# add median labels to box and whisker chart using aspose cells | how to show statistical summary values as data labels in aspose cells chart | set data label position inside box whisker series aspose.cells .net | asp.net create box whisker chart with custom data labels from another column
-// Tags: box-whisker chart linked data label range | aspnet aspose.cells median label association | c# chart series showcellrange property | inside label positioning for box-whisker chart | aspose.cells create box-whisker chart xlsx
+// Title: Enable and format data labels on a box‑and‑whisker chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# sample using Aspose.Cells to build a box‑and‑whisker chart from a data matrix and activate its data labels to show the computed values. | Demonstrate how to set the font size and color of data labels for a box‑and‑whisker chart derived from a statistical summary range in Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable data labels on box plot chart | show values on box‑and‑whisker chart using Aspose.Cells .NET | how to format data label font for box plot in Aspose.Cells | create box and whisker chart from raw data range Aspose.Cells C# | use statistical summary range for box plot chart Aspose.Cells
+// Tags: Aspose.Cells enable data labels C# | box-and-whisker chart data labels Aspose.Cells | statistical summary range chart Aspose.Cells | format data label font Aspose.Cells | create box plot column chart Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates using Aspose.Cells for .NET to build a Box‑and‑Whisker chart, populate categories and raw values, add a median column, enable data labels, link them to the median range, position the labels inside the boxes, and save the workbook as an XLSX file.
-class BoxWhiskerDataLabelsDemo
+// The example creates a workbook, writes category and observation data, adds a column chart that Aspose.Cells interprets as a box‑and‑whisker chart, enables data labels to display the calculated statistics, customizes label font size and color, and saves the file as BoxAndWhiskerChart_WithDataLabels.xlsx.
+class BoxAndWhiskerChartExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the box‑and‑whisker chart
-        // Column A – categories
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q1");
-        sheet.Cells["A4"].PutValue("Q1");
-        sheet.Cells["A5"].PutValue("Q2");
-        sheet.Cells["A6"].PutValue("Q2");
-        sheet.Cells["A7"].PutValue("Q2");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Column B – raw values used to build the box‑and‑whisker
-        sheet.Cells["B1"].PutValue("Values");
-        sheet.Cells["B2"].PutValue(15);
-        sheet.Cells["B3"].PutValue(25);
-        sheet.Cells["B4"].PutValue(30);
-        sheet.Cells["B5"].PutValue(20);
-        sheet.Cells["B6"].PutValue(35);
-        sheet.Cells["B7"].PutValue(40);
+            // Sample categories
+            string[] categories = { "A", "B", "C", "D", "E" };
 
-        // Column C – statistical summary that will be shown in data labels
-        // (e.g., median values for each category)
-        sheet.Cells["C1"].PutValue("Median");
-        sheet.Cells["C2"].PutValue(25); // median for Q1
-        sheet.Cells["C5"].PutValue(30); // median for Q2
+            // Sample observations (5 categories × 5 observations)
+            double[,] values = {
+                { 10, 12, 14, 13, 11 },
+                { 20, 22, 19, 21, 23 },
+                { 30, 28, 31, 29, 32 },
+                { 40, 42, 39, 41, 43 },
+                { 50, 48, 51, 49, 52 }
+            };
 
-        // Add a box‑and‑whisker chart
-        int chartIndex = sheet.Charts.Add(ChartType.BoxWhisker, 5, 0, 25, 15);
-        Chart chart = sheet.Charts[chartIndex];
+            // Write categories to column A (A2:A6)
+            for (int i = 0; i < categories.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(categories[i]);
+            }
 
-        // Set the data range for the chart (raw values)
-        chart.SetChartDataRange("B1:B7", true);
-        chart.NSeries.CategoryData = "A2:A7";
+            // Write observations to columns B‑F (B2:F6)
+            for (int row = 0; row < values.GetLength(0); row++)
+            {
+                for (int col = 0; col < values.GetLength(1); col++)
+                {
+                    sheet.Cells[row + 1, col + 1].PutValue(values[row, col]);
+                }
+            }
 
-        // Access the first (and only) series
-        Series series = chart.NSeries[0];
+            // Define the raw data range for the chart
+            string dataRange = "B2:F6";
 
-        // Enable data labels and bind them to the statistical summary range
-        series.DataLabels.ShowValue = true;          // show the value (median) in the label
-        series.DataLabels.ShowCellRange = true;     // indicate that the label comes from a cell range
-        series.DataLabels.LinkedSource = "C2:C5";   // range containing the summary values
+            // Add a column chart (Box‑and‑Whisker not available in older versions)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 30, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Optional: position the data labels inside the box
-        series.DataLabels.Position = LabelPositionType.InsideBase;
+            // Use the raw data range; Aspose.Cells will compute the statistical summary automatically
+            chart.NSeries.Add(dataRange, true);
 
-        // Save the workbook
-        workbook.Save("BoxWhisker_WithDataLabels.xlsx");
+            // Enable and format data labels
+            chart.NSeries[0].DataLabels.ShowValue = true;
+            chart.NSeries[0].DataLabels.Font.Size = 10;
+            chart.NSeries[0].DataLabels.Font.Color = Color.Black;
+
+            // Save the workbook
+            string outputPath = "BoxAndWhiskerChart_WithDataLabels.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

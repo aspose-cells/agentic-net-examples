@@ -1,35 +1,70 @@
-// Title: Update a named range's RefersTo address to include extra cells using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, retrieves a specific named range, and expands its RefersTo address to cover additional cells. | Show how to change the RefersTo property of an existing Name object in Aspose.Cells, then save the modified workbook.
-// Common Searches: C# Aspose.Cells how to change the address of an existing named range | extend named range RefersTo property programmatically with Aspose.Cells | Aspose.Cells update named range to include additional rows in .NET | modify Excel named range address using Aspose.Cells API
-// Tags: Aspose.Cells modify named range RefersTo | C# update Excel named range address | Aspose.Cells extend range programmatically | named range address change Aspose.Cells .NET
+// Title: Extend an existing named range by appending cells using the RefersTo property in Aspose.Cells for .NET (C#)
+// Common Searches: how to add extra cells to an existing named range with Aspose.Cells C# | using Aspose.Cells RefersTo to concatenate ranges in a workbook | programmatically extend a named range in Excel using Aspose.Cells .NET | append additional rows to a named range RefersTo property in C# | update named range formula to include new cells Aspose.Cells example
+// Tags: named range RefersTo manipulation Aspose.Cells | expand Excel named range via code | concatenate multiple ranges C# | modify named range formula .NET | update named range cell addresses
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Loads input.xlsx, retrieves the named range "MyRange", updates its RefersTo from the original address to Sheet1!$A$1:$A$10 to expand the range, and saves the workbook as output.xlsx.
-class Program
+// The example loads a workbook, retrieves a named range, builds a new RefersTo string that combines the original range with additional cell addresses, assigns the updated RefersTo back to the named range, and saves the workbook.
+class ModifyNamedRange
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Retrieve the named range by its name
-        Name namedRange = workbook.Worksheets.Names["MyRange"];
-        if (namedRange != null)
+        try
         {
-            // Existing RefersTo string (e.g., Sheet1!$A$1:$A$5)
-            string oldRefersTo = namedRange.RefersTo;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Define the new range to include additional cells (e.g., extend to A10)
-            // Adjust the sheet name and address as needed for your scenario
-            string newRefersTo = "Sheet1!$A$1:$A$10";
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Update the RefersTo property with the new address
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Name of the existing named range to modify
+            string rangeName = "MyRange";
+
+            // Retrieve the named range object by name
+            Name namedRange = workbook.Worksheets.Names[rangeName];
+            if (namedRange == null)
+            {
+                Console.WriteLine($"Named range \"{rangeName}\" not found.");
+                return;
+            }
+
+            // Existing RefersTo string (e.g., "=Sheet1!$A$1:$A$5")
+            string existingRefersTo = namedRange.RefersTo;
+
+            // Define the additional cells to include (adjust sheet name and address as needed)
+            string additionalRefersTo = "Sheet1!$A$6:$A$10";
+
+            // Build the new RefersTo expression by appending the additional cells.
+            string newRefersTo;
+            if (existingRefersTo.StartsWith("="))
+            {
+                // Remove the leading '=' for concatenation, then prepend it back.
+                newRefersTo = "=" + existingRefersTo.Substring(1) + "," + additionalRefersTo;
+            }
+            else
+            {
+                newRefersTo = "=" + existingRefersTo + "," + additionalRefersTo;
+            }
+
+            // Update the named range's RefersTo property
             namedRange.RefersTo = newRefersTo;
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

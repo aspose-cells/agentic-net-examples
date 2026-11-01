@@ -1,50 +1,57 @@
 // Title: Copy a worksheet from one Excel workbook to another while preserving formulas using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to copy the first sheet of source.xlsx into a new workbook target.xlsx, ensuring all cell formulas are retained. | Create an empty workbook, remove its default sheet, and add a copy of a specific worksheet from another workbook with formulas intact using the Aspose.Cells AddCopy method.
-// Common Searches: Aspose.Cells C# copy worksheet to another workbook keep formulas | How to duplicate a sheet with formulas using Aspose.Cells .NET | AddCopy method example preserving formulas in Excel files | Copy first worksheet from source.xlsx to target.xlsx Aspose.Cells
-// Tags: Aspose.Cells AddCopy worksheet copy | copy worksheet with formulas .NET | duplicate Excel sheet to new workbook C# | retain formulas during sheet copy Aspose.Cells
+// AI Prompts: Use Aspose.Cells in C# to duplicate the first sheet of source.xlsx into target.xlsx, keep all formulas, rename the copied sheet, and delete the default Sheet1. | Create a new workbook, add a copy of a specific worksheet from an existing workbook with Worksheets.AddCopy, ensure formulas stay intact, and save the result.
+// Common Searches: Aspose.Cells C# copy worksheet to new workbook keep formulas | How to preserve Excel formulas when copying sheets between workbooks with Aspose.Cells | Worksheets.AddCopy example preserving formulas in .NET | Remove default Sheet1 after adding copied worksheet Aspose.Cells
+// Tags: Worksheets.AddCopy method C# | copy worksheet with formulas Aspose.Cells | remove default Sheet1 Aspose.Cells | rename copied worksheet Aspose.Cells | duplicate Excel sheet between workbooks .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for the existence of source.xlsx (creating an empty workbook if missing), loads it, creates an empty target workbook, copies the first worksheet using the AddCopy method (which retains all formulas), and saves the result as target.xlsx.
+// The code checks for the source file, loads it into a Workbook, creates an empty target Workbook, copies the first worksheet using Worksheets.AddCopy (renaming it with a _Copy suffix), removes the automatically created Sheet1 if present, and saves the target file, ensuring all formulas are retained.
 class Program
 {
     static void Main()
     {
-        // Paths to the source and target Excel files
-        string sourcePath = "source.xlsx";
-        string targetPath = "target.xlsx";
-
         try
         {
-            // Ensure the source file exists; create an empty workbook if missing
+            const string sourcePath = "source.xlsx";
+            const string targetPath = "target.xlsx";
+
+            // Ensure the source file exists before loading
             if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}. Creating an empty workbook.");
-                var emptyWorkbook = new Workbook();
-                emptyWorkbook.Worksheets[0].Name = "Sheet1";
-                emptyWorkbook.Save(sourcePath);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
             // Load the source workbook
-            var sourceWorkbook = new Workbook(sourcePath);
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Create a new (empty) target workbook and remove the default sheet
-            var targetWorkbook = new Workbook();
-            targetWorkbook.Worksheets.Clear();
+            // Create a new (empty) target workbook
+            Workbook targetWorkbook = new Workbook();
 
-            // Copy the first worksheet from the source workbook to the target workbook
+            // Get the first worksheet from the source workbook
             Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            targetWorkbook.Worksheets.AddCopy(sourceSheet.Name);
+
+            // Copy the worksheet to the target workbook using the overload that accepts arrays
+            string copiedSheetName = sourceSheet.Name + "_Copy";
+            targetWorkbook.Worksheets.AddCopy(
+                new Worksheet[] { sourceSheet },
+                new string[] { copiedSheetName });
+
+            // Remove the default empty sheet that Aspose.Cells creates in a new workbook
+            if (targetWorkbook.Worksheets.Count > 1 && targetWorkbook.Worksheets[0].Name == "Sheet1")
+            {
+                targetWorkbook.Worksheets.RemoveAt(0);
+            }
 
             // Save the target workbook with the copied worksheet
             targetWorkbook.Save(targetPath);
-            Console.WriteLine($"Target workbook saved to: {targetPath}");
+            Console.WriteLine($"Worksheet copied successfully to {targetPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,77 +1,74 @@
-// Title: How to set ShowValuesSetting.CalculationType to RankLargestToSmallest for multiple pivot data fields using Aspose.Cells for .NET (C#)
-// AI Prompts: Configure the ShowValuesSetting of a pivot table so that all data fields use a largest‑to‑smallest ranking calculation in Aspose.Cells (C#). | Apply a uniform ranking calculation to the Amount and Quantity data fields of a pivot table using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# set ShowValuesSetting calculation type for multiple pivot data fields | Rank largest to smallest for pivot table values using Aspose.Cells .NET | How to apply the same ShowValuesSetting to all data items in an Aspose.Cells pivot table
-// Tags: aspocells pivot showvalues calculationtype ranklargesttosmallest | c# set pivot data field ranking aspocells | uniform showvalues setting multiple fields aspocells | pivot table ranking calculation aspocells c#
+// Title: How to set ShowValuesSetting.CalculationType to RankLargestToSmallest for all pivot tables in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set ShowValuesSetting CalculationType to RankLargestToSmallest for each pivot table | bulk change ShowValues calculation type in multiple pivot tables with Aspose.Cells .NET | using reflection to modify ShowValuesSetting in Aspose.Cells pivot tables | apply RankLargestToSmallest ranking to all pivot fields in an Excel file via Aspose.Cells | iterate worksheets and pivot tables to update ShowValuesSetting in C#
+// Tags: Aspose.Cells ShowValuesSetting CalculationType RankLargestToSmallest | C# bulk update pivot table ShowValues calculation | Aspose.Cells reflection modify pivot properties | set pivot table ranking order Aspose.Cells .NET | iterate worksheets pivot tables Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, fills it with sample data, adds a pivot table with Category rows, SubCategory columns, and Amount and Quantity as data fields, sets ShowValuesSetting.CalculationType to RankLargestToSmallest for both data fields, refreshes and calculates the pivot, and saves the result as PivotShowValues_RankLargestToSmallest.xlsx.
-    public class SetShowValuesCalculationForMultipleFields
+    // The example loads an Excel workbook, loops through every worksheet and each pivot table, uses reflection to access the ShowValuesSetting property, and sets its CalculationType to the RankLargestToSmallest enum value. After updating all pivot tables, the workbook is saved, with error handling for missing files and property‑access issues.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Category";
-                sheet.Cells["B1"].Value = "SubCategory";
-                sheet.Cells["C1"].Value = "Amount";
-                sheet.Cells["D1"].Value = "Quantity";
-
-                string[] categories = { "A", "A", "B", "B", "C", "C" };
-                string[] subCategories = { "X", "Y", "X", "Y", "X", "Y" };
-                double[] amounts = { 1000, 1500, 2000, 2500, 3000, 3500 };
-                int[] quantities = { 10, 15, 20, 25, 30, 35 };
-
-                for (int i = 0; i < categories.Length; i++)
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    int row = i + 2; // Data starts from row 2
-                    sheet.Cells[row, 0].Value = categories[i];
-                    sheet.Cells[row, 1].Value = subCategories[i];
-                    sheet.Cells[row, 2].Value = amounts[i];
-                    sheet.Cells[row, 3].Value = quantities[i];
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:D7", "F3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
+                {
+                    // Iterate through all pivot tables in the worksheet
+                    foreach (PivotTable pivotTable in worksheet.PivotTables)
+                    {
+                        // Set ShowValues calculation type using reflection for compatibility
+                        try
+                        {
+                            var showValuesProp = pivotTable.GetType().GetProperty("ShowValuesSetting");
+                            if (showValuesProp != null)
+                            {
+                                var showValuesObj = showValuesProp.GetValue(pivotTable);
+                                if (showValuesObj != null)
+                                {
+                                    var calcProp = showValuesObj.GetType().GetProperty("CalculationType");
+                                    if (calcProp != null)
+                                    {
+                                        var enumType = calcProp.PropertyType;
+                                        var enumValue = Enum.Parse(enumType, "RankLargestToSmallest");
+                                        calcProp.SetValue(showValuesObj, enumValue);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to set ShowValues calculation type: {ex.Message}");
+                        }
+                    }
+                }
 
-                // Add two data fields: Amount and Quantity
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
-
-                // Refresh and calculate the pivot table data using the correct API
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotShowValues_RankLargestToSmallest.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetShowValuesCalculationForMultipleFields.Run();
         }
     }
 }

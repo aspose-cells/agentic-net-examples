@@ -1,64 +1,59 @@
-// Title: How to enforce a minimum row height then auto‑fit a row with wrapped text using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that defines a lower bound for a worksheet row's height, enables text wrapping, calls Worksheet.AutoFitRow, and restores the lower bound if the auto‑fit result is smaller, using Aspose.Cells. | Write a .NET example that sets a 20‑point lower limit for row 0, inserts a long wrapped string into cell A1, auto‑fits the row, and guarantees the final height never drops below that limit.
-// Common Searches: Aspose.Cells C# set minimum row height before AutoFitRow | keep row height from shrinking after AutoFitRow in .NET | auto fit row with text wrap and minimum height using Aspose.Cells | C# Aspose.Cells enforce row height lower bound when auto fitting | how to prevent Aspose.Cells AutoFitRow from reducing row height
-// Tags: set row height minimum limit Aspose.Cells C# | auto‑fit row respecting minimum limit Aspose.Cells | text wrap influences row height Aspose.Cells | prevent row height shrinkage Aspose.Cells | Aspose.Cells worksheet row height management .NET
+// Title: How to set a minimum row height then auto‑fit a row using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that assigns a fixed minimum height to a worksheet row, calls AutoFitRows, and ensures the final height does not drop below the minimum with Aspose.Cells. | Generate a complete example that loads an existing Excel file, sets row 3 height to 20 points, auto‑fits the row, re‑applies the minimum if needed, and saves the workbook using Aspose.Cells in .NET. | Provide a snippet demonstrating how to combine Row.Height and Worksheet.AutoFitRows to enforce a lower bound on row height in a C# Aspose.Cells project.
+// Common Searches: Aspose.Cells C# set row height minimum before AutoFitRows | prevent row height from shrinking after auto‑fit in Aspose.Cells | how to enforce lower bound on Excel row height using Aspose.Cells .NET | auto‑fit a specific row while keeping a minimum height in C#
+// Tags: row height assignment Aspose.Cells | auto‑fit rows with height floor | minimum row height enforcement C# | worksheet row sizing Aspose.Cells .NET | prevent row shrinkage after autofit
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook, sets a minimum height of 20 points for the third row, auto‑fits that row, restores the minimum height if the auto‑fit reduces it, and saves the modified file.
+class Program
 {
-    // The example creates a workbook, applies a 20‑point minimum height to row 0, adds long wrapped text to cell A1, auto‑fits the row, checks the resulting height, and restores the minimum height if the auto‑fit makes the row shorter, then saves the file as SetRowHeightWithAutoFitDemo.xlsx.
-    public class SetRowHeightWithAutoFitDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Row index to work with
-                int rowIndex = 0;
-
-                // Set a minimum row height (in points)
-                double minHeight = 20.0; // points
-                cells.SetRowHeight(rowIndex, minHeight);
-
-                // Add long text that may require a larger height
-                cells["A1"].PutValue("This is a very long piece of text that should cause the row to expand when auto‑fitted.");
-                Style style = cells["A1"].GetStyle();
-                style.IsTextWrapped = true; // Enable wrapping so the text affects row height
-                cells["A1"].SetStyle(style);
-
-                // Auto‑fit the row based on its content
-                worksheet.AutoFitRow(rowIndex);
-
-                // Ensure the row height is not less than the minimum height
-                double actualHeight = cells.GetRowHeight(rowIndex);
-                if (actualHeight < minHeight)
-                {
-                    cells.SetRowHeight(rowIndex, minHeight);
-                }
-
-                // Save the workbook
-                workbook.Save("SetRowHeightWithAutoFitDemo.xlsx");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Row index (zero‑based) and minimum height in points
+            int rowIndex = 2;          // third row
+            double minHeight = 20.0;   // minimum height
+
+            // Access the row and set its height to the minimum value
+            Row row = sheet.Cells.Rows[rowIndex];
+            row.Height = minHeight;
+
+            // Auto‑fit the row based on its content
+            sheet.AutoFitRows(rowIndex, rowIndex);
+
+            // Ensure the row height does not fall below the minimum
+            if (row.Height < minHeight)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                row.Height = minHeight;
             }
+
+            // Save the workbook with the changes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetRowHeightWithAutoFitDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

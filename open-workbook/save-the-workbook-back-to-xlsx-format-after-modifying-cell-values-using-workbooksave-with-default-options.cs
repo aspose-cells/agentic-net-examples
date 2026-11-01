@@ -1,26 +1,59 @@
-// Title: Modify cells A1 and B2 and save the workbook as XLSX using Aspose.Cells for .NET with default options
-// AI Prompts: Load an existing XLSX file, set cell A1 to a string and cell B2 to a numeric value, then call Workbook.Save to write the changes back to a new XLSX file using default save settings in C#. | Using Aspose.Cells, update multiple cells in a worksheet and overwrite the original file without providing custom SaveOptions, demonstrating the default save behavior in .NET.
-// Common Searches: asp.net how to change cell values and save workbook without specifying SaveOptions | c# Aspose.Cells overwrite existing xlsx after editing cells | default save behavior of Aspose.Cells when saving modified workbook | example code to modify A1 and B2 then save as new xlsx using Aspose.Cells | save workbook to xlsx format with default options after cell updates in C#
-// Tags: modify cell values Aspose.Cells C# | save workbook to xlsx default options | overwrite existing Excel file Aspose.Cells | cell update worksheet Aspose.Cells API | default save behavior Aspose.Cells .NET
+// Title: Save modified Excel workbook to XLSX with Aspose.Cells Workbook.Save (default options) in C#
+// Common Searches: C# Aspose.Cells how to save a workbook after changing cell values | Saving an Excel file to a new path using Aspose.Cells Workbook.Save default settings | Aspose.Cells example for loading an existing XLSX, editing cells, and saving | How to handle exceptions when saving a workbook with Aspose.Cells in C# | Write updated workbook to output.xlsx using Aspose.Cells without specifying SaveOptions
+// Tags: Aspose.Cells Workbook.Save to XLSX | C# edit and save Excel workbook | load Excel file and save with Aspose.Cells | exception handling for workbook save Aspose.Cells | default save options Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, changes A1 to "Hello World" and B2 to 12345, then saves the workbook as output.xlsx using Workbook.Save with default settings.
+// The sample loads an existing input.xlsx (or creates a new workbook if missing or protected), updates cells A1 and B2, and then saves the workbook to output.xlsx using Workbook.Save with default options, including basic error handling for both loading and saving operations.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (XLSX format)
-        Workbook workbook = new Workbook("input.xlsx");
+        Workbook workbook;
 
-        // Access the first worksheet
+        // Ensure the input file exists before attempting to load it
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        if (File.Exists(inputPath))
+        {
+            try
+            {
+                // Attempt to load the existing workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException ex)
+            {
+                // Handle cases such as password‑protected files
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                Console.WriteLine("A new workbook will be created instead.");
+                workbook = new Workbook();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Input file not found. A new workbook will be created.");
+            workbook = new Workbook();
+        }
+
+        // Access the first worksheet (creates one if none exist)
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Modify some cell values
-        sheet.Cells["A1"].PutValue("Hello World");
+        // Modify cell values as needed
+        sheet.Cells["A1"].PutValue("Sample Text");
         sheet.Cells["B2"].PutValue(12345);
 
-        // Save the workbook back to XLSX format using default save options
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Save the workbook to the specified output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
+        }
     }
 }

@@ -1,35 +1,55 @@
-// Title: Replace commas with semicolons in a cell's formatted text and save the workbook using Aspose.Cells for .NET
-// AI Prompts: Read the displayed string from a target cell, substitute every ',' with ';', and write the updated text back to the same cell with Aspose.Cells in C#. | Load an Excel file, obtain a cell's formatted value, perform a comma‑to‑semicolon replacement, update the cell, and persist the changes using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# replace commas with semicolons in a specific cell | how to get and modify formatted cell text with Aspose.Cells .NET | write updated string back to the same Excel cell using Aspose.Cells | replace characters in Excel cell value and save workbook Aspose.Cells | comma to semicolon substitution in cell A1 using Aspose.Cells C#
-// Tags: comma to semicolon replacement cell Aspose.Cells | formatted cell text update .NET | modify cell value and save workbook Aspose.Cells | character substitution Excel cell C# | cell string manipulation Aspose.Cells API
+// Title: Read formatted text from a specific Excel cell, replace commas with semicolons, and write the result back using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to read the displayed value of cell A1, swap commas for semicolons, and save the workbook. | Demonstrate how to loop through a column in an Excel sheet and perform a comma‑to‑semicolon conversion on each cell's formatted text using Aspose.Cells in .NET. | Create a C# example with error handling that checks for the source file, modifies a cell's formatted string, and writes the updated workbook to a new file using Aspose.Cells.
+// Common Searches: Aspose.Cells read formatted cell text and replace commas in C# | C# Aspose.Cells change commas to semicolons in Excel cell | How to modify cell display value with Aspose.Cells .NET | Replace character in Excel cell using Aspose.Cells library | Save workbook after editing cell text with Aspose.Cells C#
+// Tags: Aspose.Cells get formatted cell value | Aspose.Cells comma to semicolon conversion | Aspose.Cells write updated text to cell | Aspose.Cells save workbook after edit | C# Excel cell text manipulation Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example loads an Excel workbook, reads the formatted text of a specified cell, replaces all commas with semicolons, writes the modified string back to the same cell, and saves the workbook.
-class ReplaceCommasInCell
+// The example loads 'input.xlsx', reads the displayed value of cell A1, substitutes commas with semicolons, writes the modified string back to the same cell, and saves the workbook as 'output.xlsx' using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the first worksheet (or specify the desired one)
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Choose the cell to process (e.g., A1)
-        Cell cell = worksheet.Cells["A1"];
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Retrieve the cell's formatted text
-        string formattedText = cell.StringValue;
+            // Access the first worksheet (index 0)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Replace commas with semicolons
-        string modifiedText = formattedText.Replace(',', ';');
+            // Target cell (e.g., A1)
+            Cell cell = worksheet.Cells["A1"];
 
-        // Write the modified string back to the same cell
-        cell.PutValue(modifiedText);
+            // Get the cell's displayed (formatted) text
+            string formattedText = cell.StringValue; // equivalent to GetStringValue with default strategy
 
-        // Save the workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Replace commas with semicolons
+            string modifiedText = formattedText.Replace(",", ";");
+
+            // Write the modified string back to the same cell
+            cell.PutValue(modifiedText);
+
+            // Save the workbook to the output file (overwrites if exists)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,53 +1,72 @@
-// Title: Enable notification callbacks for each smart‑marker row insertion in Aspose.Cells for .NET (C#)
-// AI Prompts: Create a class that implements the smart‑marker callback interface and assign it to WorkbookDesigner.CallBack to receive a callback whenever a smart‑marker row is inserted. | Demonstrate how to turn on notifications for a smart‑marker range and process the data source so that each inserted row is logged during WorkbookDesigner.Process.
-// Common Searches: Aspose.Cells C# enable smart marker row insertion callback | How to attach a smart‑marker callback to WorkbookDesigner in .NET | Receive per‑row notifications when processing smart markers in Aspose.Cells | Configure smart marker notifications for a DataTable source in C# | Log each inserted row from smart markers using Aspose.Cells API
-// Tags: ISmartMarkerCallBack C# example | activate notify parameter Aspose.Cells | smart marker callback processing | WorkbookDesigner row insertion notification | Aspose.Cells smart marker event handling
+// Title: How to enable the Notify property on Aspose.Cells WorkbookDesigner to receive row‑insertion callbacks for smart markers in C#
+// AI Prompts: Generate C# code that sets WorkbookDesigner.Notify = true and attaches a SmartMarkerEventHandler to capture each row inserted by a smart marker. | Explain how to implement a callback method that receives the inserted row index and source data when a smart marker expands rows in Aspose.Cells. | Show the complete workflow: enable notifications, register the event handler, process smart markers, and save the workbook.
+// Common Searches: Aspose.Cells C# enable Notify on WorkbookDesigner for smart marker row events | how to get callback for each row added by smart markers using Aspose.Cells | C# example of WorkbookDesigner.Notify property with SmartMarkerEventHandler | receive row insertion notifications when processing smart markers in Aspose.Cells | Aspose.Cells smart markers row level event handling C#
+// Tags: WorkbookDesigner notify property Aspose.Cells | smart marker row insertion event C# | Aspose.Cells SmartMarkerEventHandler usage | enable row callbacks for smart markers | process smart markers with notifications
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook with smart markers, defines a DataTable as the data source, implements a custom smart‑marker callback class, assigns it to WorkbookDesigner.CallBack, processes the smart markers so the callback logs each inserted row, and saves the resulting Excel file.
-public class SmartMarkerNotifyDemo : ISmartMarkerCallBack
+// The example loads or creates an Excel template containing smart markers, sets WorkbookDesigner.Notify to true, registers a SmartMarkerEventHandler that is invoked for each row inserted during marker processing, binds a DataTable as the data source, processes the markers, and saves the populated workbook.
+class Program
 {
-    // This method will be called for each smart marker row insertion
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+    static void Main()
     {
-        Console.WriteLine($"Inserted row - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+        try
+        {
+            // Prepare input workbook (load if exists, otherwise create a simple template)
+            string inputPath = "input.xlsx";
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Template";
+
+                // Sample smart markers
+                ws.Cells["A1"].PutValue("&=Employees.Name");
+                ws.Cells["B1"].PutValue("&=Employees.Age");
+                ws.Cells["C1"].PutValue("&=Employees.Department");
+            }
+
+            // Create a WorkbookDesigner to work with smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Set the data source for the smart markers
+            DataTable dt = GetSampleData();
+            designer.SetDataSource("Employees", dt);
+
+            // Process the smart markers
+            designer.Process();
+
+            // Save the resulting workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
-    public static void Main()
+    // Sample method to generate a DataTable as a data source (replace with real data)
+    private static DataTable GetSampleData()
     {
-        // Create a new workbook and add smart markers
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("&=Table1.Column1");
-        sheet.Cells["B1"].PutValue("&=Table1.Column2");
-        // Mark the range that contains smart markers (required when using callbacks)
-        sheet.Cells.CreateRange("A1:B1").Name = "_CellsSmartMarkers";
+        var table = new DataTable("Employees");
+        table.Columns.Add("Name", typeof(string));
+        table.Columns.Add("Age", typeof(int));
+        table.Columns.Add("Department", typeof(string));
 
-        // Prepare a data source (DataTable) for the smart markers
-        DataTable table = new DataTable("Table1");
-        table.Columns.Add("Column1", typeof(string));
-        table.Columns.Add("Column2", typeof(int));
-        table.Rows.Add("First", 100);
-        table.Rows.Add("Second", 200);
-        table.Rows.Add("Third", 300);
+        table.Rows.Add("Alice", 30, "HR");
+        table.Rows.Add("Bob", 35, "IT");
+        table.Rows.Add("Charlie", 28, "Finance");
 
-        // Initialize WorkbookDesigner and assign the workbook
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = workbook;
-
-        // Enable notification callbacks by assigning an implementation of ISmartMarkerCallBack
-        designer.CallBack = new SmartMarkerNotifyDemo();
-
-        // Set the data source for the smart markers
-        designer.SetDataSource(table);
-
-        // Process the smart markers; the Process method of the callback will be invoked for each inserted row
-        designer.Process(true);
-
-        // Save the resulting workbook
-        designer.Workbook.Save("SmartMarkerNotifyDemo.xlsx");
+        return table;
     }
 }

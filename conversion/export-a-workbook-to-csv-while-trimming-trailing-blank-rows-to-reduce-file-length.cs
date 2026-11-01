@@ -1,39 +1,37 @@
-// Title: Export an Excel workbook to CSV with Aspose.Cells for .NET while removing blank rows and trimming trailing cells
-// AI Prompts: Generate C# code that loads an .xlsx file, removes all fully empty rows from the first worksheet, and saves the result as a CSV using Aspose.Cells with UTF-8 encoding and a comma separator. | Show how to configure TxtSaveOptions in Aspose.Cells to enable TrimTailingBlankCells, set the CSV separator, and specify the output encoding.
-// Common Searches: Aspose.Cells how to delete empty rows before saving as CSV | C# export Excel to CSV without trailing blank cells using Aspose | Configure TxtSaveOptions for UTF-8 CSV output in Aspose.Cells .NET | Remove blank rows from worksheet then convert to CSV with Aspose.Cells
-// Tags: Aspose.Cells delete empty rows | CSV export TrimTailingBlankCells option | TxtSaveOptions set CSV separator .NET | UTF-8 CSV generation Aspose.Cells | remove blank rows prior to CSV conversion
+// Title: Trim trailing blank rows from an Excel workbook and export to CSV using Aspose.Cells for .NET (C#)
+// Common Searches: c# aspose.cells remove trailing empty rows before saving as csv | how to delete rows after the last data row in each worksheet using aspose.cells | export excel to csv without extra blank rows in asp.net with aspose.cells | trim blank rows in workbook then save as csv using aspose.cells c# | aspose.cells c# save first worksheet as csv after removing empty rows
+// Tags: clean empty rows aspose.cells c# | export worksheet to csv aspose.cells | delete rows after MaxDataRow aspose.cells | save workbook as csv without empty rows | iterate worksheets aspose.cells c# | remove extra rows excel aspose.cells
 
 using System;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvExport
+// The example loads an Excel workbook, iterates through each worksheet to locate the last populated row using MaxDataRow, deletes any rows that follow, and then saves the first worksheet as a CSV file, eliminating trailing blank rows.
+class Program
 {
-    // Loads an Excel workbook, deletes completely blank rows from the first worksheet, configures TxtSaveOptions to trim trailing blank cells, use a comma separator and UTF-8 encoding, then saves the workbook as a compact CSV file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Process each worksheet to remove trailing blank rows
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Determine the last row that contains data
+            int lastDataRow = sheet.Cells.MaxDataRow; // zero‑based index
 
-            // Remove all completely blank rows from the first worksheet
-            // This reduces the length of the exported CSV by eliminating empty rows.
-            workbook.Worksheets[0].Cells.DeleteBlankRows();
+            // If there are rows after the last data row, delete them
+            int totalRows = sheet.Cells.MaxRow; // total rows in the sheet (zero‑based)
+            int rowsToDelete = totalRows - lastDataRow;
 
-            // Configure CSV (text) save options
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            if (rowsToDelete > 0)
             {
-                // Trim trailing blank cells in each row (optional, further reduces file size)
-                TrimTailingBlankCells = true,
-                // Use comma as the separator for CSV
-                Separator = ',',
-                // Set desired encoding
-                Encoding = Encoding.UTF8
-            };
-
-            // Export the workbook to CSV using the configured options
-            workbook.Save("output.csv", csvOptions);
+                // Delete rows starting from the row after the last data row
+                // Parameters: start row index (zero‑based), number of rows to delete
+                sheet.Cells.DeleteRows(lastDataRow + 1, rowsToDelete);
+            }
         }
+
+        // Save the trimmed workbook as CSV (only the first worksheet is exported by default)
+        workbook.Save("output.csv", SaveFormat.Csv);
     }
 }

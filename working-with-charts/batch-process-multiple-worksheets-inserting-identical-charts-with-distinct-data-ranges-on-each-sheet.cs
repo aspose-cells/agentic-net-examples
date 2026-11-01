@@ -1,71 +1,63 @@
-// Title: Insert identical column charts with individual data ranges into multiple worksheets using Aspose.Cells for .NET
-// AI Prompts: Create a new workbook, add a set of worksheets, populate each with its own A1:B6 data, and place a column chart on every sheet that references that sheet's specific range. | Change the chart type to a line chart while keeping the per‑worksheet data source logic unchanged. | Extend the loop to assign a custom chart title that includes the worksheet name and save the workbook to a filename supplied at runtime.
-// Common Searches: how to add the same chart to several worksheets with different data sources using Aspose.Cells .NET | Aspose.Cells programmatically create a chart on each sheet in a workbook | set chart NSeries range per worksheet in C# Aspose.Cells | batch generate column charts for multiple sheets with unique data in Aspose.Cells
-// Tags: add column chart per worksheet Aspose.Cells | set NSeries data range Aspose.Cells C# | batch chart creation Aspose.Cells .NET | dynamic chart source multiple sheets | Aspose.Cells workbook chart automation
+// Title: Add identical column charts with worksheet‑specific titles to all sheets in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add the same column chart to every worksheet in a workbook | programmatically insert a chart on each sheet with a dynamic title using Aspose.Cells | batch create column charts for multiple worksheets in an existing Excel file C# | how to loop through worksheets and add charts with a fixed data range Aspose.Cells | set chart position and legend for each sheet using Aspose.Cells .NET API | add column chart to all worksheets and save workbook with Aspose.Cells
+// Tags: Aspose.Cells add column chart to each worksheet | iterate worksheets create charts C# | fixed data range A1:B5 chart series Aspose.Cells | dynamic chart title using worksheet name | chart positioning rows columns Aspose.Cells | set legend position bottom Aspose.Cells chart | batch chart insertion Excel workbook .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsBatchChartDemo
+// The example loads an existing Excel workbook, loops through every worksheet, and inserts a column chart (rows 5‑20, columns 3‑15) using a fixed data range (A1:B5). Each chart receives a title that incorporates the worksheet name, a series name, and a bottom‑positioned legend. The modified workbook is then saved to a new file.
+class BatchChartInsertion
 {
-    // The example creates a new workbook, removes the default sheet, adds three uniquely named worksheets, fills each with sample category/value data, inserts a column chart positioned from row 8 column 1 to row 20 column 8 on each sheet, assigns the chart's data source to the sheet's own A1:B6 range, customizes the chart title with the sheet name, and saves the workbook as BatchChartsOutput.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // Remove the default worksheet to avoid name collisions
-                workbook.Worksheets.Clear();
-
-                // Define the number of worksheets to process
-                int sheetCount = 3;
-
-                // Loop to add worksheets and insert identical charts with distinct data ranges
-                for (int i = 0; i < sheetCount; i++)
-                {
-                    // Add a new worksheet with a unique name (rule: WorksheetCollection.Add(string))
-                    string sheetName = $"Sheet{i + 1}";
-                    Worksheet sheet = workbook.Worksheets.Add(sheetName);
-
-                    // Populate sample data for the chart in each worksheet
-                    // Header
-                    sheet.Cells["A1"].PutValue("Category");
-                    sheet.Cells["B1"].PutValue("Value");
-
-                    // Sample rows (different values per sheet to illustrate distinct ranges)
-                    for (int row = 2; row <= 6; row++)
-                    {
-                        sheet.Cells[$"A{row}"].PutValue($"Item {row - 1}");
-                        // Value varies by sheet index to make each chart unique
-                        sheet.Cells[$"B{row}"].PutValue((row - 1) * (i + 1) * 10);
-                    }
-
-                    // Add a column chart to the worksheet (rule: ChartCollection.Add(ChartType, int, int, int, int))
-                    // Position the chart from row 8, column 1 to row 20, column 8
-                    int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 1, 20, 8);
-                    Chart chart = sheet.Charts[chartIndex];
-
-                    // Set the data range for the chart (using NSeries.Add)
-                    // The range includes the header row for proper series/category handling
-                    string dataRange = $"{sheetName}!$A$1:$B$6";
-                    chart.NSeries.Add(dataRange, true);
-
-                    // Customize chart title to reflect the sheet
-                    chart.Title.Text = $"Sales Data - {sheetName}";
-                }
-
-                // Save the workbook (lifecycle: save)
-                workbook.Save("BatchChartsOutput.xlsx");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define the data range for each worksheet (adjust as needed)
+            string dataRange = "A1:B5";
+
+            // Iterate through all worksheets and add a chart to each
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Add a column chart positioned from row 5, column 3 to row 20, column 15
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 3, 20, 15);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set chart title
+                chart.Title.Text = $"Sales Data - {sheet.Name}";
+                chart.Title.IsVisible = true;
+
+                // Add series using the defined data range; first column as categories, second as values
+                int seriesIndex = chart.NSeries.Add(dataRange, true);
+                chart.NSeries[seriesIndex].Name = $"Series_{sheet.Name}";
+
+                // Optional appearance customizations
+                chart.ShowLegend = true;
+                chart.Legend.Position = LegendPositionType.Bottom;
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

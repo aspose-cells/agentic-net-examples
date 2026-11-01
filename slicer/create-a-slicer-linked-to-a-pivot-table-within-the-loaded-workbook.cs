@@ -1,47 +1,58 @@
-// Title: Add a slicer linked to the first base field of a pivot table in an existing Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file, finds the first pivot table, adds a slicer for its first base field at cell E3, sets a custom caption, and saves the workbook using Aspose.Cells. | Create a method that iterates over all base fields of a given pivot table and inserts a separate slicer for each field, positioning them sequentially on the worksheet with Aspose.Cells. | Modify the workbook saving routine to keep existing slicer settings intact while appending new slicers programmatically in Aspose.Cells.
-// Common Searches: Aspose.Cells C# add slicer to existing pivot table example | how to programmatically create slicer for pivot table in .NET | place Excel slicer at specific cell using Aspose.Cells | set slicer caption based on base field name Aspose.Cells | add multiple slicers for each pivot field Aspose.Cells C#
-// Tags: add slicer to pivot table Aspose.Cells | link slicer with pivot table .NET | position slicer at cell E3 Aspose.Cells | customize slicer caption programmatically | create slicer for each base field Excel
+// Title: Insert a slicer linked to a pivot table in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that adds a slicer for a specified pivot field, positions it at a given cell, and saves the workbook. | Show how to modify slicer properties such as Name, Caption, Width, and Height after the slicer is created with Aspose.Cells.
+// Common Searches: how to programmatically add a slicer to a pivot table with Aspose.Cells C# | Aspose.Cells example for linking slicer to pivot field and setting its size | C# code to place an Excel slicer at cell A1 using Aspose.Cells | customizing slicer caption and name in Aspose.Cells .NET
+// Tags: Aspose.Cells add slicer to pivot table | C# set slicer properties Aspose.Cells | Aspose.Cells slicer placement cell A1 | Excel slicer customization Aspose.Cells .NET | save workbook after inserting slicer Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-// Loads input.xlsx, retrieves the first pivot table, adds a slicer for its first base field at cell E3, sets a caption based on the field name, and saves the workbook as output.xlsx.
+// The example loads an existing Excel file, retrieves the first pivot table, adds a slicer linked to the "Category" field at cell A1, customizes its name, caption, width, and height, and then saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Assume the first worksheet contains the pivot table
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Retrieve the first pivot table in the worksheet
-        if (sheet.PivotTables.Count == 0)
+        try
         {
-            System.Console.WriteLine("No pivot tables found in the worksheet.");
-            return;
-        }
-        PivotTable pivot = sheet.PivotTables[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Ensure the pivot table has at least one base field to use for the slicer
-        if (pivot.BaseFields.Count == 0)
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume the pivot table is the first one on the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Field name to be used for the slicer (must match a pivot field)
+            string slicerFieldName = "Category"; // replace with your actual field name
+
+            // Add a slicer linked to the pivot table at cell A1
+            int slicerIndex = worksheet.Slicers.Add(pivotTable, "A1", slicerFieldName);
+            Slicer slicer = worksheet.Slicers[slicerIndex];
+
+            // Optional: customize slicer appearance
+            slicer.Name = "CategorySlicer";
+            slicer.Caption = "Select Category";
+            slicer.Width = 150;
+            slicer.Height = 200;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
         {
-            System.Console.WriteLine("Pivot table has no base fields.");
-            return;
+            Console.WriteLine($"Error: {ex.Message}");
         }
-        string baseFieldName = pivot.BaseFields[0].Name;
-
-        // Add a slicer linked to the pivot table at cell E3
-        int slicerIndex = sheet.Slicers.Add(pivot, "E3", baseFieldName);
-        Slicer slicer = sheet.Slicers[slicerIndex];
-
-        // Optional: set slicer properties
-        slicer.Caption = $"{baseFieldName} Slicer";
-
-        // Save the workbook with the new slicer
-        workbook.Save("output.xlsx");
     }
 }

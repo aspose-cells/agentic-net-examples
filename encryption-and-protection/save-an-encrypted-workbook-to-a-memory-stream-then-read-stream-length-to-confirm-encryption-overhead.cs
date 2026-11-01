@@ -1,53 +1,33 @@
-// Title: Save a password‑protected Excel workbook to a MemoryStream and read its length to see encryption overhead with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells to encrypt a workbook with a password, save it directly to a MemoryStream, and output the stream's byte length. | Change the workbook password, re‑save to a MemoryStream, and compare the resulting stream sizes to evaluate encryption impact. | Retrieve the length of an encrypted XLSX file stored in a MemoryStream without writing the file to disk using Aspose.Cells. | Configure OoxmlSaveOptions for password protection and obtain the memory‑stream size after saving the workbook.
-// Common Searches: how to get size of password protected Excel file in memory using Aspose.Cells | Aspose.Cells encrypt workbook to memory stream and check length | measure encryption overhead of XLSX with Aspose.Cells .NET | save encrypted workbook to MemoryStream without creating a file Aspose.Cells | retrieve byte count of encrypted Excel workbook in C# Aspose.Cells
-// Tags: encrypted workbook memory stream Aspose.Cells | OoxmlSaveOptions password protection .NET | measure encrypted XLSX size in memory | Aspose.Cells workbook encryption overhead | retrieve stream length after workbook save | password protected Excel file size calculation
+// Title: Encrypt an Excel workbook, save it to a MemoryStream, and read the encrypted file size with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# encrypt workbook and write to MemoryStream | Get size of password‑protected XLSX saved to a stream using Aspose.Cells | How to determine encryption overhead of an Excel file in .NET | Save encrypted workbook to MemoryStream and retrieve Length property with Aspose.Cells
+// Tags: Aspose.Cells encrypt workbook to MemoryStream | password protected XLSX size calculation | Workbook.Settings.Password encryption example | SaveFormat.Xlsx encrypted output stream | MemoryStream length after Aspose.Cells save
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving; // For OoxmlSaveOptions
 
-// // Creates a new workbook, adds sample data, applies a password via Settings.Password, saves the encrypted workbook to a MemoryStream using OoxmlSaveOptions, and prints the stream's Length to illustrate the size impact of encryption.
+// The example creates a Workbook, adds data, applies a password via Workbook.Settings.Password to encrypt the file, saves the encrypted workbook to a MemoryStream in XLSX format, and then reads the MemoryStream.Length to obtain the size of the encrypted workbook, demonstrating how to measure encryption overhead.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook and add some data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample data");
+
+        // Set a password to encrypt the workbook
+        workbook.Settings.Password = "SecretPassword";
+
+        // Save the encrypted workbook to a memory stream
+        using (MemoryStream ms = new MemoryStream())
         {
-            // Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
+            workbook.Save(ms, SaveFormat.Xlsx);
 
-            // Add some sample data
-            workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+            // Get the length of the stream (includes encryption overhead)
+            long encryptedLength = ms.Length;
 
-            // Set password protection for the workbook
-            workbook.Settings.Password = "MySecretPassword";
-
-            // Configure save options (no password property needed here)
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-
-            // Save the encrypted workbook to a memory stream (lifecycle save rule)
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                try
-                {
-                    workbook.Save(memoryStream, saveOptions);
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Error during save: {saveEx.Message}");
-                    return;
-                }
-
-                // Get the length of the stream to observe encryption overhead
-                long encryptedLength = memoryStream.Length;
-                Console.WriteLine($"Encrypted workbook stream length: {encryptedLength}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Encrypted workbook size (bytes): {encryptedLength}");
         }
     }
 }

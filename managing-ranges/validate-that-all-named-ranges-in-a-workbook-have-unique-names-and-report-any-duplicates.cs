@@ -1,61 +1,88 @@
-// Title: Check for duplicate named ranges in an Excel workbook with Aspose.Cells for .NET and report their RefersTo addresses
-// AI Prompts: Write C# code using Aspose.Cells that iterates all workbook named ranges, identifies names that appear more than once (ignoring case), and prints each duplicate with its RefersTo address. | Create a reusable C# method that receives a Workbook object and returns a dictionary where keys are duplicate named‑range names and values are lists of their RefersTo formulas.
-// Common Searches: Aspose.Cells C# find duplicate named range definitions in an .xlsx file | how to list named ranges and detect name collisions with Aspose.Cells .NET | C# program to validate that named range names are unique in an Excel workbook using Aspose.Cells
-// Tags: detect duplicate named ranges Aspose.Cells | validate unique named range names C# | case-insensitive named range check Aspose.Cells | list workbook named ranges .NET
+// Title: Check for duplicate named ranges in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells find duplicate named ranges in an existing workbook | how to list repeated defined names using Aspose.Cells .NET | detect non‑unique named ranges in Excel file with Aspose.Cells API | Aspose.Cells C# code to report named range name collisions | validate named range uniqueness case insensitive Aspose.Cells
+// Tags: Aspose.Cells named range duplication detection | C# named range uniqueness check | Excel workbook defined name collision detection | case-insensitive name counting with Aspose.Cells | reporting duplicate defined names Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, groups all named ranges case‑insensitively, and prints any names that occur multiple times together with each RefersTo address.
-class NamedRangeValidator
+namespace AsposeCellsExample
 {
-    static void Main(string[] args)
+    // The example loads (or creates) an Excel workbook, iterates through all defined names via workbook.Worksheets.Names, counts each name case‑insensitively using a dictionary, gathers any names that appear more than once, and writes a console report listing each duplicate name with its occurrence count.
+    class Program
     {
-        // Path to the workbook to validate
-        string filePath = "input.xlsx";
-
-        // Load the workbook
-        Workbook workbook = new Workbook(filePath);
-
-        // Dictionary to track occurrences of each named range name (case‑insensitive)
-        Dictionary<string, List<string>> nameOccurrences = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-
-        // Iterate through all named ranges in the workbook
-        foreach (Name namedRange in workbook.Worksheets.Names)
+        static void Main(string[] args)
         {
-            string rangeName = namedRange.Text;          // The name of the range
-            string refersTo = namedRange.RefersTo;       // The address the name refers to
+            const string inputPath = "input.xlsx";
+            Workbook workbook = null;
 
-            // Record the occurrence
-            if (!nameOccurrences.ContainsKey(rangeName))
+            try
             {
-                nameOccurrences[rangeName] = new List<string> { refersTo };
+                if (File.Exists(inputPath))
+                {
+                    // Load existing workbook (add LoadOptions.Password if needed)
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    // Create a new workbook if the file does not exist
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                    workbook.Save(inputPath);
+                    Console.WriteLine($"Input file not found. Created a new workbook at '{inputPath}'.");
+                }
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error while loading workbook: {ex.Message}");
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return;
+            }
+
+            // Track named range occurrences (case‑insensitive)
+            var nameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var duplicateNames = new List<string>();
+
+            // Iterate through all named ranges in the workbook
+            foreach (Name namedRange in workbook.Worksheets.Names)
+            {
+                string name = namedRange.Text;
+
+                if (nameCounts.ContainsKey(name))
+                {
+                    nameCounts[name]++;
+                    if (nameCounts[name] == 2)
+                    {
+                        duplicateNames.Add(name);
+                    }
+                }
+                else
+                {
+                    nameCounts[name] = 1;
+                }
+            }
+
+            // Report duplicate named ranges
+            if (duplicateNames.Count > 0)
+            {
+                Console.WriteLine("Duplicate named ranges found:");
+                foreach (string dup in duplicateNames)
+                {
+                    Console.WriteLine($"- {dup} (occurs {nameCounts[dup]} times)");
+                }
             }
             else
             {
-                nameOccurrences[rangeName].Add(refersTo);
+                Console.WriteLine("All named ranges have unique names.");
             }
-        }
 
-        // Report any duplicate names
-        bool duplicatesFound = false;
-        foreach (var entry in nameOccurrences)
-        {
-            if (entry.Value.Count > 1)
-            {
-                duplicatesFound = true;
-                Console.WriteLine($"Duplicate named range \"{entry.Key}\" found {entry.Value.Count} times:");
-                for (int i = 0; i < entry.Value.Count; i++)
-                {
-                    Console.WriteLine($"  Instance {i + 1}: RefersTo = {entry.Value[i]}");
-                }
-            }
-        }
-
-        if (!duplicatesFound)
-        {
-            Console.WriteLine("All named ranges have unique names.");
+            // Optional: save the workbook if modifications were made
+            // workbook.Save("output.xlsx");
         }
     }
 }

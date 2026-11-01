@@ -1,63 +1,46 @@
-// Title: Export an Excel workbook to plain HTML without conditional formatting using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to disable conditional formatting, and saves the workbook as an HTML file, creating the output folder if needed. | Update the provided Aspose.Cells example so that HtmlSaveOptions.ExportConditionalFormatting is set to false, producing a clean HTML view without any conditional formatting rules.
-// Common Searches: aspocells c# export excel to html without conditional formatting | how to turn off conditional formatting when saving workbook as html using aspose.cells | c# generate plain html from excel workbook with aspose.cells HtmlSaveOptions | disable conditional formatting in aspose.cells html export example
-// Tags: Aspose.Cells HtmlSaveOptions disable conditional formatting | C# export Excel to HTML without styles | Aspose.Cells generate plain HTML output | HtmlSaveOptions ExportConditionalFormatting false | Aspose.Cells HTML conversion without conditional rules
+// Title: Create plain HTML from an Excel workbook without exporting conditional formatting using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, clears all conditional formatting rules, and saves the workbook as plain HTML with Aspose.Cells. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to generate a clean HTML representation of a workbook while ensuring no conditional formatting is included.
+// Common Searches: how to export Excel to HTML without conditional formatting using Aspose.Cells C# | Aspose.Cells generate plain HTML from workbook ignoring conditional formatting rules | C# remove conditional formatting before saving workbook as HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions plain visual output no conditional styles
+// Tags: Aspose.Cells HtmlSaveOptions plain HTML export | C# clear workbook conditional formatting Aspose.Cells | Aspose.Cells export workbook to HTML without styles | remove conditional formatting Aspose.Cells HTML conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The example loads an existing Excel file (or creates a simple workbook), optionally clears all conditional formatting, configures HtmlSaveOptions, and saves the workbook as an HTML file that displays the data without any conditional formatting styles, providing a clean visual representation.
+class Program
 {
-    // This example demonstrates loading an Excel file with Aspose.Cells, configuring HtmlSaveOptions to suppress conditional formatting during the HTML conversion, ensuring the output directory exists, and saving the workbook as a clean HTML document while handling missing files and runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the source Excel file
-            string excelPath = @"C:\Input\Sample.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Path where the HTML output will be saved
-            string htmlPath = @"C:\Output\Sample.html";
-
-            // Verify that the input file exists
-            if (!File.Exists(excelPath))
+            // Load workbook from file if it exists; otherwise create a simple workbook.
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {excelPath}");
-                return;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample data");
             }
 
-            try
-            {
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(excelPath);
+            // Configure HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // The ExportConditionalFormatting property is not available in the current API version.
+            // If needed, adjust other HtmlSaveOptions properties here.
 
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Optional: Export only the first worksheet (set to false to export all)
-                    // ExportAllWorksheets = false,
-
-                    // Optional: Set the encoding if needed
-                    // Encoding = System.Text.Encoding.UTF8
-                };
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(htmlPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(htmlPath, htmlOptions);
-
-                Console.WriteLine("Workbook has been exported to HTML.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as HTML using the configured options.
+            workbook.Save(outputPath, htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

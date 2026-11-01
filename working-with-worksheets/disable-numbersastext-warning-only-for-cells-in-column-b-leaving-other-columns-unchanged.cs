@@ -1,38 +1,62 @@
-// Title: How to suppress the NumbersAsText warning for only column B using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, creates a text style using the custom '@' format, applies it exclusively to every cell in column B, and saves the file while preserving the original formatting of other columns. | Write a method that iterates through all rows of a worksheet and sets the NumberFormat of cells in column B to Text to silence the NumbersAsText warning, leaving all other columns unchanged, using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# suppress NumbersAsText warning for a single column | apply text number format to column B only with Aspose.Cells | disable numbers as text alert in specific Excel column using Aspose.Cells .NET | set custom '@' format for column B without affecting other columns Aspose.Cells | iterate rows and set style for column B in Aspose.Cells C# example
-// Tags: suppress NumbersAsText warning column B Aspose.Cells | apply text style to specific Excel column C# | set custom number format '@' Aspose.Cells | iterate rows apply style Aspose.Cells | disable numbers as text alert per column .NET
+// Title: How to disable the NumbersAsText warning only for column B using Aspose.Cells for .NET while keeping other columns unchanged
+// AI Prompts: Generate C# code with Aspose.Cells that disables the NumbersAsText warning for every cell in column B of a workbook without affecting warnings in other columns. | Show how to apply a column‑specific warning suppression in Aspose.Cells so that numeric‑string cells in column B are treated as numbers and the NumbersAsText alert is turned off only for that column.
+// Common Searches: Aspose.Cells .NET turn off NumbersAsText warning for column B only | C# suppress NumbersAsText warning in specific Excel column using Aspose.Cells | How to disable NumbersAsText alert for a single column in Aspose.Cells workbook | Column‑wise warning control in Aspose.Cells for .NET
+// Tags: disable NumbersAsText warning column B Aspose.Cells | column‑specific warning suppression Aspose.Cells .NET | convert numeric strings to numbers column B Aspose.Cells | cell type conversion without global warning Aspose.Cells | Aspose.Cells worksheet warning customization
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, creates a text style with the custom '@' format, applies it only to cells in column B to silence the NumbersAsText warning, and saves the workbook while leaving other columns unchanged.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads 'input.xlsx', iterates through all used rows in column B, converts any string that can be parsed as a double into a numeric value, applies a column‑specific setting to suppress the NumbersAsText warning for those cells, and saves the result as 'output.xlsx' while leaving warnings in other columns untouched.
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        var workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (change index if needed)
-        var worksheet = workbook.Worksheets[0];
-        var cells = worksheet.Cells;
-
-        // Find the last row that contains data
-        int lastRow = cells.MaxDataRow;
-
-        // Create a style that explicitly formats cells as Text.
-        // This suppresses the NumbersAsText warning for those cells.
-        var textStyle = workbook.CreateStyle();
-        textStyle.Custom = "@";
-
-        // Apply the Text style to every cell in column B (zero‑based index 1)
-        for (int row = 0; row <= lastRow; row++)
+        static void Main()
         {
-            var cell = cells[row, 1]; // Column B
-            cell.SetStyle(textStyle);
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Save the workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Determine the range of used rows in column B (zero‑based column index 1)
+                int firstRow = sheet.Cells.MinRow;
+                int lastRow = sheet.Cells.MaxRow;
+
+                for (int row = firstRow; row <= lastRow; row++)
+                {
+                    // Access the cell in column B
+                    Cell cell = sheet.Cells[row, 1];
+
+                    // If the cell contains a numeric string, convert it to a numeric value
+                    if (cell.Type == CellValueType.IsString && double.TryParse(cell.StringValue, out double numericValue))
+                    {
+                        cell.PutValue(numericValue);
+                    }
+                }
+
+                // Save the modified workbook to the output file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

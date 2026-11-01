@@ -1,49 +1,84 @@
-// Title: Load an Excel workbook asynchronously with Aspose.Cells for .NET and freeze the first row and column
-// AI Prompts: Open an existing .xlsx file on a background thread using Aspose.Cells, then call Worksheet.FreezePanes(1,1,1,1) to lock the top row and left column. | When the input file is absent, instantiate a new Workbook, rename the default sheet, apply FreezePanes, and save both the template and the modified workbook. | Adjust the FreezePanes parameters after the async load to freeze a custom range of rows and columns (e.g., rows 0‑4 and columns 0‑2).
-// Common Searches: asp.net async load excel file using aspose.cells and freeze panes | c# how to freeze top row and first column after loading workbook asynchronously | aspose.cells create workbook when file does not exist then apply freeze panes | await Task.Run new Workbook example with freeze panes in C# | freeze panes parameters explanation zero based Aspose.Cells
-// Tags: asynchronous workbook loading Aspose.Cells .NET | worksheet FreezePanes method C# | create workbook if file missing Aspose.Cells | freeze top row and first column Excel Aspose.Cells | zero‑based indices in FreezePanes Aspose.Cells
+// Title: Asynchronously load an Excel workbook, apply FreezePanes to the first row and column, and save it with Aspose.Cells for .NET
+// AI Prompts: Read an Excel file into a MemoryStream using async I/O, load it with Aspose.Cells Workbook, freeze the first row and column on the first worksheet, and save the result without blocking the calling thread. | After the workbook is loaded asynchronously, change the FreezePanes parameters to lock rows 5‑10 and columns B‑E on the target worksheet. | Add logic that creates the output directory if it does not exist before invoking Workbook.Save inside an async method. | Wrap the Workbook.Save call in Task.Run, capture any exceptions, and return a Task that signals completion of the async processing.
+// Common Searches: asp.net core async load excel file with aspose.cells and apply freeze panes | how to freeze first row and column after loading workbook asynchronously in c# | non‑blocking save of modified excel workbook using aspose.cells | read excel into memory stream asynchronously then set FreezePanes Aspose.Cells | c# async workbook processing Aspose.Cells freeze panes example
+// Tags: asynchronous Excel workbook loading Aspose.Cells | FreezePanes method Aspose.Cells worksheet | memory stream workbook load .NET | non‑blocking workbook save Aspose.Cells | error handling file not found Aspose.Cells | async file I/O with Aspose.Cells
 
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Loads an existing Excel file asynchronously (or creates a new one if missing), applies Worksheet.FreezePanes to lock the first row and column of the first sheet, and saves the updated workbook.
-class Program
+// This example demonstrates how to read an Excel file into a MemoryStream using asynchronous I/O, load it with Aspose.Cells, apply FreezePanes to lock the first row and column on the first worksheet, and save the modified workbook without blocking the calling thread.
+public class WorkbookProcessor
 {
-    static async Task Main(string[] args)
+    // Asynchronously loads a workbook, applies FreezePanes, and saves the result.
+    public static async Task ProcessWorkbookAsync(string inputPath, string outputPath)
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
         try
         {
-            Workbook workbook;
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Load existing workbook or create a new one if the file is missing
-            if (File.Exists(inputPath))
+            // Read the source file into a memory stream asynchronously.
+            using (var memoryStream = new MemoryStream())
             {
-                workbook = await Task.Run(() => new Workbook(inputPath));
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Sheet1";
-                workbook.Save(inputPath); // optional: persist the new template
-            }
+                // Open the source file for asynchronous reading.
+                using (FileStream sourceStream = new FileStream(
+                    inputPath,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.Read,
+                    bufferSize: 4096,
+                    useAsync: true))
+                {
+                    await sourceStream.CopyToAsync(memoryStream).ConfigureAwait(false);
+                }
 
-            // Freeze first row and first column in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            // row, column specify the top‑left cell of the scrollable area (zero‑based)
-            // totalRows, totalColumns specify how many rows/columns to freeze
-            sheet.FreezePanes(1, 1, 1, 1); // freezes row 0 and column 0
+                // Reset the position of the memory stream before loading.
+                memoryStream.Position = 0;
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
+                // Load the workbook from the memory stream.
+                var workbook = new Workbook(memoryStream);
+
+                // Apply FreezePanes to the first worksheet.
+                // Freeze the first row and first column.
+                Worksheet sheet = workbook.Worksheets[0];
+                // totalRows, totalColumns, frozenRows, frozenColumns
+                sheet.FreezePanes(1, 1, 1, 1);
+
+                // Save the modified workbook to the specified output path.
+                // Wrap synchronous Save in Task.Run to avoid blocking the calling thread.
+                await Task.Run(() => workbook.Save(outputPath)).ConfigureAwait(false);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error processing workbook: {ex.Message}");
+            throw;
+        }
+    }
+
+    // Example usage.
+    public static async Task Main(string[] args)
+    {
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: WorkbookProcessor <inputPath> <outputPath>");
+            return;
+        }
+
+        string inputPath = args[0];
+        string outputPath = args[1];
+
+        try
+        {
+            await ProcessWorkbookAsync(inputPath, outputPath);
+            Console.WriteLine("Workbook processed and saved to: " + outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to process workbook: {ex.Message}");
         }
     }
 }

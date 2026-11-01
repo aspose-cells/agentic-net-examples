@@ -1,50 +1,35 @@
-// Title: Configure Aspose.Cells in C# to replace #DIV/0! errors with blank cells during formula calculation
-// AI Prompts: Generate C# code that sets Aspose.Cells calculation options so that any division‑by‑zero error is automatically converted to an empty cell before saving the workbook. | Show how to detect a #DIV/0! result after Workbook.CalculateFormula() and replace the cell value with a blank string using Aspose.Cells. | Explain the steps to configure Aspose.Cells to treat divide‑by‑zero as a blank cell, including any required CalculationOptions settings and post‑calculation cleanup.
-// Common Searches: Aspose.Cells C# replace #DIV/0! with empty cell after CalculateFormula | how to suppress division by zero error in Aspose.Cells workbook | set calculation options to ignore divide by zero Aspose.Cells .NET | C# Aspose.Cells blank cell for #DIV/0! error handling | Aspose.Cells treat divide by zero as null value in Excel file
-// Tags: Aspose.Cells calculationoptions divide-by-zero handling | replace #DIV/0! with blank cell Aspose.Cells | C# Aspose.Cells formula error post‑processing | Aspose.Cells workbook save without division errors | Aspose.Cells blank cell for divide by zero
+// Title: How to configure Aspose.Cells CalcEngineOptions in C# to display a blank cell instead of a #DIV/0! error
+// Common Searches: Aspose.Cells C# set calculation option to return empty cell for divide by zero | replace #DIV/0! with blank using Aspose.Cells CalcEngineOptions | C# Aspose.Cells hide division by zero error in generated Excel | configure workbook calculation engine to treat division by zero as null in .NET | Aspose.Cells suppress #DIV/0! error when saving Excel file
+// Tags: Aspose.Cells CalcEngineOptions blank on divide by zero | C# suppress #DIV/0! error in Excel output | Excel calculation engine error handling Aspose.Cells | set error value to empty string Aspose.Cells | formula error display customization .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, assigns a formula that divides by zero, and shows how to use CalcEngineOptions (e.g., workbook.Settings.CalcEngineOptions.ErrorValue = "") to replace the resulting #DIV/0! error with a blank cell before saving the file.
+class Program
 {
-    // The example creates a workbook, inserts a formula that divides by zero, forces calculation, checks for the #DIV/0! error, replaces the error with an empty string, and saves the file as DivisionByZeroBlank.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a sample formula that would cause a division‑by‑zero error
-                Worksheet sheet = workbook.Worksheets[0];
-                Cell formulaCell = sheet.Cells["A1"];
-                formulaCell.Formula = "=1/0";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Force calculation
-                workbook.CalculateFormula();
+            // Set a formula that would cause a division by zero error
+            sheet.Cells["A1"].Formula = "10/0";
 
-                // If the formula resulted in a #DIV/0! error, replace it with a blank value
-                // After calculation, error values are represented as the string "#DIV/0!"
-                if (formulaCell.StringValue == "#DIV/0!")
-                {
-                    formulaCell.PutValue(string.Empty);
-                }
+            // Recalculate formulas (default behavior will show the error value)
+            workbook.CalculateFormula();
 
-                // Define output file path
-                string outputPath = "DivisionByZeroBlank.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

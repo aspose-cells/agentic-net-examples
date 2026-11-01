@@ -1,11 +1,12 @@
-// Title: Hide the second worksheet in an existing Excel workbook with Aspose.Cells for .NET and save the changes
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets the second worksheet’s visibility to hidden, and saves the workbook to a new file. | Show how to use Aspose.Cells to programmatically hide a worksheet by index and persist the modified workbook in .NET. | Provide a snippet that demonstrates changing a worksheet’s IsVisible property to false and then exporting the workbook using Aspose.Cells.
-// Common Searches: aspnet hide worksheet at index 1 using Aspose.Cells | C# Aspose.Cells hide second sheet and save workbook | how to make a specific worksheet invisible in an existing Excel file with Aspose.Cells .NET | Aspose.Cells hide worksheet programmatically before saving
-// Tags: hide worksheet by index Aspose.Cells .NET | set worksheet IsVisible false Aspose.Cells | save modified workbook after changing sheet visibility | Aspose.Cells hide second sheet example | programmatic worksheet visibility control Aspose.Cells
+// Title: Hide the second worksheet of an existing Excel workbook and save the changes using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx file with Aspose.Cells, set the worksheet at index 1 to hidden by changing its IsVisible property, and save the workbook to a new file. | Write C# code that opens a workbook, hides the second sheet using Aspose.Cells, and writes the result as output.xlsx.
+// Common Searches: Aspose.Cells C# hide worksheet at index 1 and save workbook | How to set a specific sheet to hidden in an existing Excel file using Aspose.Cells .NET | C# example for hiding the second sheet in an Excel workbook with Aspose.Cells | Change worksheet visibility to hidden without opening Excel using Aspose.Cells | Save workbook after modifying sheet visibility with Aspose.Cells for .NET
+// Tags: worksheet IsVisible false Aspose.Cells | hide specific sheet .NET Aspose.Cells | modify workbook sheet visibility C# | save workbook after sheet hide Aspose.Cells | second worksheet hidden Aspose.Cells example
 
 using Aspose.Cells;
+using System;
 
-// Loads 'input.xlsx' with Aspose.Cells, hides the worksheet at index 1, and saves the result as 'output.xlsx'.
+// // Loads 'input.xlsx', hides the second worksheet by setting IsVisible = false, and saves the updated workbook as 'output.xlsx' using Aspose.Cells.
 class Program
 {
     static void Main()

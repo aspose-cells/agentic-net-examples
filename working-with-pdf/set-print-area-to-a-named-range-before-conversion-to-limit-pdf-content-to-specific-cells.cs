@@ -1,23 +1,59 @@
-// Title: Use a named range as the print area in Aspose.Cells for .NET and export only that range to PDF
-// AI Prompts: Assign an existing named range to the worksheet's PageSetup.PrintArea and save the workbook as a PDF with Aspose.Cells in C#. | If the named range is missing, add it to the worksheet, set it as the print area, and generate a PDF that includes just that range using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set print area to a named range before PDF export | How to export only a named range to PDF with Aspose.Cells .NET | Limit PDF output to specific cells using named range in Aspose.Cells | C# example for setting worksheet print area to a named range and saving as PDF
-// Tags: Aspose.Cells set print area named range | Aspose.Cells export named range to PDF | C# worksheet print area Aspose.Cells | PDF conversion limited to range Aspose.Cells | named range creation Aspose.Cells .NET
+// Title: Set a worksheet's print area to a named range before converting an Excel workbook to PDF with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set print area from a named range before PDF export | How to limit PDF output to a specific named range using Aspose.Cells | C# convert Excel to PDF with only the PrintRange area using Aspose.Cells | Programmatically assign worksheet PageSetup.PrintArea to a named range in Aspose.Cells | Save Excel workbook as PDF with custom print area defined by a name in .NET
+// Tags: Aspose.Cells set named range as print area | C# PDF export limited to named range | PageSetup.PrintArea configuration Aspose.Cells | Excel to PDF conversion using named range print area | Aspose.Cells workbook save PDF print area
 
-// Load the workbook from an existing Excel file
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
+using System;
+using System.IO;
+using Aspose.Cells;
 
-// Define the name of the range that should be used as the print area
-string namedRange = "MyPrintRange";
+// The example loads an Excel workbook, retrieves the named range "PrintRange", assigns its address to the worksheet's PageSetup.PrintArea, and then saves the workbook as a PDF so that only the defined range appears in the output.
+class Program
+{
+    static void Main()
+    {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-// Retrieve the first worksheet (or specify the appropriate index/name)
-Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-// Set the print area of the worksheet to the named range
-// The PrintArea property expects the range in A1 style; using the named range name works directly
-sheet.PageSetup.PrintArea = namedRange;
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-// Optionally, ensure the named range exists; if not, you can create it like this:
-// workbook.Worksheets.Names.Add(namedRange, sheet.Name + "!A1:C10");
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-// Convert the workbook to PDF, which will now include only the cells within the specified print area
-workbook.Save("output.pdf", Aspose.Cells.SaveFormat.Pdf);
+            // Retrieve the named range definition from the workbook's Names collection
+            Name printRangeName = workbook.Worksheets.Names["PrintRange"];
+            if (printRangeName == null)
+            {
+                Console.WriteLine("Error: Named range \"PrintRange\" not found.");
+                return;
+            }
+
+            // Get the address of the named range (e.g., "=Sheet1!$A$1:$D$10")
+            string rangeRef = printRangeName.RefersTo;
+
+            // Remove the leading '=' if present
+            if (!string.IsNullOrEmpty(rangeRef) && rangeRef.StartsWith("="))
+                rangeRef = rangeRef.Substring(1);
+
+            // Set the print area to the named range address
+            sheet.PageSetup.PrintArea = rangeRef;
+
+            // Save the workbook as PDF – only the defined print area will be included
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}

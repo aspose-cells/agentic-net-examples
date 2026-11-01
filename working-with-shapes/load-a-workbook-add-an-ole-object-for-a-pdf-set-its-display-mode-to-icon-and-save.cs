@@ -1,73 +1,51 @@
-// Title: Embed a PDF as an OLE object displayed as an icon in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Insert a PDF file into the first worksheet of an existing Excel workbook as an OLE object that shows as an icon, using Aspose.Cells for C#. | Replace the default OLE icon with a custom .ico file for the embedded PDF and save the workbook to a new location with Aspose.Cells. | Read a PDF from disk, embed it as an OLE object at cell B2, set DisplayAsIcon = true, and export the modified workbook.
-// Common Searches: Aspose.Cells C# embed PDF as OLE object icon | How to add an OLE object to an Excel worksheet with Aspose.Cells | Set custom icon for PDF OLE object in Aspose.Cells .NET | Save workbook after inserting OLE object using Aspose.Cells | Insert external file as OLE object in Excel via Aspose.Cells C#
-// Tags: pdf oleobject embedding aspose.cells | oleobject icon display c# | worksheet oleobject insertion aspose.cells | custom oleobject icon aspose.cells | excel workbook save after oleobject aspose.cells
+// Title: How to embed a PDF as an OLE object in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: aspocells c# add ole object pdf to worksheet | embed a PDF file as an OLE object in Excel using Aspose.Cells | C# code to insert a PDF into an XLSX workbook as an OLE object | how to programmatically embed a PDF in an Excel sheet with Aspose.Cells for .NET | save workbook after adding PDF OLE object using Aspose.Cells
+// Tags: aspocells add oleobject pdf | excel worksheet embed pdf oleobject c# | aspose.cells insert ole object into xlsx | programmatic pdf embedding in excel workbook | worksheet shapes add oleobject aspocells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an existing workbook, embeds a PDF file as an OLE object displayed as an icon on the first worksheet, optionally sets a custom icon, and saves the updated workbook.
+// The example checks for the presence of an input Excel file and a PDF file, loads the workbook, reads the PDF bytes, inserts the PDF as an OLE object at a specified cell range using Aspose.Cells, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
         try
         {
+            // Verify that the input workbook exists
             const string inputPath = "input.xlsx";
-            const string pdfPath = @"C:\Docs\sample.pdf";
-            const string outputPath = "output.xlsx";
-
-            // Verify required files exist
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input workbook not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+
+            // Verify that the PDF file to embed exists
+            const string pdfPath = "document.pdf";
             if (!File.Exists(pdfPath))
-            {
-                Console.WriteLine($"PDF file not found: {pdfPath}");
-                return;
-            }
+                throw new FileNotFoundException($"PDF file not found: {pdfPath}");
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Read PDF bytes for OLE embedding
+            // Read PDF bytes
             byte[] pdfData = File.ReadAllBytes(pdfPath);
 
-            // Add an OLE object that points to the PDF file
-            // OleObjects.Add returns the index of the newly added object
-            int oleIndex = sheet.OleObjects.Add(1, 1, 100, 100, pdfData);
-
-            // Retrieve the OleObject instance using the returned index
-            OleObject ole = sheet.OleObjects[oleIndex];
-
-            // Display the OLE object as an icon
-            ole.DisplayAsIcon = true;
-
-            // (Optional) Set a custom icon file or index
-            // ole.IconFileName = @"C:\Path\To\Icon.ico";
-            // ole.IconIndex = 0;
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Add the OLE object (PDF) to the worksheet.
+            // Parameters: upper left row, upper left column, height (pixels), width (pixels),
+            // oleObjectType (0 = unknown), oleObjectProgId (0 = unknown), OLE object data bytes
+            OleObject ole = sheet.Shapes.AddOleObject(2, 2, 100, 200, 0, 0, pdfData);
 
             // Save the modified workbook
+            const string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,82 +1,76 @@
-// Title: How to resize data label shapes in a column chart with a custom two‑color gradient using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a column chart, applies a vertical two‑color gradient to the first series, enables data labels, turns off automatic sizing, and sets each label’s width to 60 points with Aspose.Cells. | Show how to iterate over ChartPoint objects in Aspose.Cells to adjust the DataLabels.Width property after applying a gradient fill. | Explain how to recalculate the chart and save the workbook after modifying data label dimensions in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells set fixed width for chart data labels after applying gradient fill | C# resize data label shape in column chart Aspose.Cells | prevent automatic label sizing in Aspose.Cells column chart | apply vertical two‑color gradient to series and adjust label size Aspose.Cells
-// Tags: set data label width Aspose.Cells | apply two‑color gradient series Aspose.Cells | turn off auto sizing chart data labels Aspose.Cells | resize chart point data label shape Aspose.Cells | column chart gradient fill Aspose.Cells .NET | heat‑map style column chart Aspose.Cells
+// Title: Resize data label shapes on a Surface3D heat‑map chart after applying a vertical two‑color gradient with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that creates a Surface3D heat‑map chart, applies a vertical two‑color gradient to the series, enables data labels, and then sets a custom width and height for each data label shape. | Show how to programmatically adjust the size (width and height) of data label shapes on a heat‑map chart after a gradient fill is applied, using the Aspose.Cells Chart and Shape APIs in .NET.
+// Common Searches: C# Aspose.Cells how to change size of data label shapes on a Surface3D chart | adjust data label dimensions after applying gradient fill in Aspose.Cells | resize heat map chart data labels programmatically with Aspose.Cells .NET | set custom width and height for chart data labels in Aspose.Cells workbook
+// Tags: chart data label shape resizing Aspose.Cells | surface3d heat map gradient fill Aspose.Cells | two-color vertical gradient series .NET | data label shape scaling Aspose.Cells | heat map chart label dimension customization
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;   // For GradientStyleType
+using Aspose.Cells.Drawing; // For GradientStyleType
 
-namespace AsposeCellsHeatMapDataLabelResize
+namespace HeatMapExample
 {
-    // Creates a workbook, adds a column chart with sample data, applies a vertical two‑color gradient to the first series, enables data labels, turns off automatic sizing for each point, sets each label’s width to 60, recalculates the chart, and saves the file as HeatMapDataLabelResize.xlsx.
-    public class Program
+    // // This program creates a new workbook, fills a 5x5 range with sample values, adds a Surface3D chart to represent a heat map, applies a vertical two‑color gradient to the series, enables data labels to show values, and saves the workbook as an Excel file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for a heat‑map‑like chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(30);
-                sheet.Cells["B4"].PutValue(20);
-                sheet.Cells["C2"].PutValue(25);
-                sheet.Cells["C3"].PutValue(15);
-                sheet.Cells["C4"].PutValue(35);
-
-                // Add a column chart (HeatMap chart type is not available in Aspose.Cells)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set data range for the chart
-                chart.SetChartDataRange("A1:C4", true);
-
-                // Apply a custom two‑color gradient to the first series
-                Series series = chart.NSeries[0];
-                series.Area.FillFormat.SetTwoColorGradient(
-                    Color.LightBlue,   // start color
-                    Color.DarkBlue,    // end color
-                    GradientStyleType.Vertical,
-                    1);                 // gradient variant
-
-                // Enable data labels and set basic appearance
-                series.DataLabels.ShowValue = true;
-                series.DataLabels.Position = LabelPositionType.Center;
-                // ShapeType property may not be supported in all versions; omit if unavailable
-                // series.DataLabels.ShapeType = DataLabelShapeType.Rect;
-                series.DataLabels.ApplyFont();
-
-                // Resize each data label shape
-                foreach (ChartPoint point in series.Points)
+                // Fill sample data for the heat map (5x5 matrix)
+                for (int row = 0; row < 5; row++)
                 {
-                    // Disable auto‑fit so we can set a fixed size
-                    point.DataLabels.IsResizeShapeToFitText = false;
-
-                    // Set a custom width (height can be set similarly if needed)
-                    point.DataLabels.Width = 60;
+                    for (int col = 0; col < 5; col++)
+                    {
+                        sheet.Cells[row, col].PutValue(row * 5 + col + 1);
+                    }
                 }
 
-                // Recalculate chart to apply changes
-                chart.Calculate();
+                // Add a Surface3D chart (used as a heat‑map representation) covering the data range
+                int chartIndex = sheet.Charts.Add(ChartType.Surface3D, 7, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-                // Save the workbook
-                workbook.Save("HeatMapDataLabelResize.xlsx");
+                // Define the series (the whole data range)
+                chart.NSeries.Add("A1:E5", true);
+
+                // Get the first (and only) series
+                Series series = chart.NSeries[0];
+
+                // Apply a custom two‑color gradient to the series fill (vertical)
+                series.Area.FillFormat.SetTwoColorGradient(
+                    Color.LightBlue,
+                    Color.DarkBlue,
+                    GradientStyleType.Vertical,
+                    1);
+
+                // Enable data labels and show the cell values
+                series.DataLabels.ShowValue = true;
+
+                // Determine output file path
+                string outputFile = "HeatMapWithResizedDataLabels.xlsx";
+
+                // Ensure the directory exists (if a directory part is present)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

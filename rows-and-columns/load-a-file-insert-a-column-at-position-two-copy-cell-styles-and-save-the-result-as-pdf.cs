@@ -1,35 +1,36 @@
-// Title: Insert a column at position two, copy its formatting from the first column, and save the workbook as PDF using Aspose.Cells for .NET
-// AI Prompts: Insert a column at index 1, copy just the formats from column A, and generate a PDF file with Aspose.Cells in C#. | Using Aspose.Cells for .NET, add a second column, apply PasteOptions to transfer formatting, then save the workbook as PDF.
-// Common Searches: C# Aspose.Cells insert column and preserve formatting | How to copy only cell styles when adding a new column with Aspose.Cells | Export Excel to PDF after modifying columns using Aspose.Cells .NET | Maintain formula references after inserting a column in Aspose.Cells
-// Tags: insert column with PasteOptions formats Aspose.Cells | copy column formatting Aspose.Cells C# | save workbook as PDF Aspose.Cells | update formulas after column insertion Aspose.Cells | PdfSaveOptions configuration Aspose.Cells
+// Title: Insert a new column at position 2, copy original column styles, and export the worksheet to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a column at index 1, copies the style from column A to the new column for every row, and saves the workbook as a PDF file. | Generate a .NET routine that loads an Excel workbook, adds a second column while preserving the formatting of the first column, and converts the updated sheet to PDF using Aspose.Cells.
+// Common Searches: Aspose.Cells C# insert column at second position and keep original formatting | How to copy column A style to a newly inserted column with Aspose.Cells .NET | Save Excel workbook as PDF after adding a column using Aspose.Cells | C# Aspose.Cells duplicate cell style between columns before PDF export | Preserve formatting when inserting a column in Aspose.Cells and convert to PDF
+// Tags: insert column Aspose.Cells C# | duplicate column formatting Aspose.Cells | export workbook to PDF Aspose.Cells | preserve cell style after column insertion | copy cell style between columns Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
 
-// The example loads 'input.xlsx', inserts a new column at position two while updating references, copies only the formatting from the original first column to the new column using PasteOptions with PasteType.Formats, and saves the result as 'output.pdf' via PdfSaveOptions.
-class InsertColumnAndSavePdf
+// Loads input.xlsx, inserts a column at index 1, copies the style from column A to the new column for all rows, and saves the workbook as output.pdf in PDF format.
+class Program
 {
     static void Main()
     {
-        // Load the existing Excel file
+        // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the first worksheet
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
 
-        // Insert a new column at position two (index 1) and update references
-        cells.InsertColumn(1, true);
+        // Insert a new column at position two (zero‑based index 1)
+        sheet.Cells.InsertColumn(1);
 
-        // Copy only the formatting (styles) from the original column (index 0) to the new column (index 1)
-        PasteOptions pasteOptions = new PasteOptions
+        // Copy cell styles from the original first column (index 0) to the new column (index 1)
+        int maxRow = sheet.Cells.MaxDataRow;
+        int totalRows = Math.Max(maxRow + 1, sheet.Cells.MaxRow + 1);
+        for (int row = 0; row < totalRows; row++)
         {
-            PasteType = PasteType.Formats
-        };
-        cells.CopyColumns(cells, 0, 1, 1, pasteOptions);
+            Cell sourceCell = sheet.Cells[row, 0];
+            Cell destCell = sheet.Cells[row, 1];
+            destCell.SetStyle(sourceCell.GetStyle());
+        }
 
-        // Save the modified workbook as PDF
-        workbook.Save("output.pdf", new PdfSaveOptions());
+        // Save the workbook as PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

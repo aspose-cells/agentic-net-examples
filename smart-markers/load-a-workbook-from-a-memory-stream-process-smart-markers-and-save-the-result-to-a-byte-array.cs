@@ -1,52 +1,43 @@
-// Title: Process smart markers in an Excel workbook loaded from a byte array and return the result as a byte array (Excel97‑2003) using Aspose.Cells for .NET
-// AI Prompts: Write C# code that takes a byte[] with an Excel template, binds a DataTable to Aspose.Cells WorkbookDesigner, processes all smart markers, and returns the modified workbook as a byte[] in Excel97‑2003 format. | Show how to load an Excel file from a MemoryStream, apply smart markers with Aspose.Cells, and save the processed workbook to another MemoryStream without touching the file system.
-// Common Searches: asp.net load excel from byte array and process smart markers | asp.net core convert processed workbook to byte array using Aspose.Cells | how to bind a DataTable to WorkbookDesigner for smart markers in memory | save Aspose.Cells workbook as Excel97-2003 format without creating a file | process smart markers from template.xlsx stored in a memory stream c#
-// Tags: WorkbookDesigner smart markers binding | load workbook from byte array Aspose.Cells | save workbook as Excel97-2003 byte array | in-memory Excel processing Aspose.Cells | DataTable data source for smart markers
+// Title: Process Excel smart markers from a byte array and return the updated workbook as a byte array using Aspose.Cells in C#
+// AI Prompts: Generate a C# method that accepts a byte[] with an XLSX file, invokes WorkbookDesigner to evaluate all smart markers, and returns the modified workbook as a new byte[]. | Create a utility class that loads an Excel workbook from a MemoryStream, runs smart‑marker processing, and writes the result to another MemoryStream without using the file system.
+// Common Searches: Aspose.Cells smart marker evaluation from byte array C# | C# convert processed Excel workbook to byte[] without saving to disk | How to use WorkbookDesigner with streams to obtain a byte array result | Processing smart markers in memory using Aspose.Cells API | Example of using WorkbookDesigner without file I/O
+// Tags: WorkbookDesigner memory stream processing | Aspose.Cells load workbook from byte array | save workbook to byte array XLSX | C# in‑memory smart marker handling | avoid temporary files Aspose.Cells
 
 using System;
-using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates loading an Excel workbook from a byte array via a MemoryStream, binding a DataTable to WorkbookDesigner to resolve smart markers, and saving the resulting workbook to another MemoryStream in Excel97‑2003 format, returning the final file as a byte array.
-public static class SmartMarkerProcessor
+// // Loads an Excel workbook from a byte array, processes all smart markers with WorkbookDesigner, and returns the updated workbook as a byte array.
+public static class SmartMarkerHelper
 {
-    /// <param name="templateBytes">Byte array containing the source workbook with smart markers.</param>
-    /// <returns>Byte array of the processed workbook.</returns>
-    public static byte[] ProcessSmartMarkers(byte[] templateBytes)
+    /// <param name="inputData">The input workbook data (e.g., an XLSX file) as a byte array.</param>
+    /// <returns>The processed workbook data as a byte array.</returns>
+    public static byte[] ProcessSmartMarkers(byte[] inputData)
     {
-        // Load the workbook from the input memory stream
-        using (MemoryStream inputStream = new MemoryStream(templateBytes))
+        try
         {
-            Workbook workbook = new Workbook(inputStream);
-
-            // Initialize WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // ----- Sample data source for demonstration -----
-            // Create a DataTable that matches the smart markers in the template
-            DataTable data = new DataTable("SampleData");
-            data.Columns.Add("Name", typeof(string));
-            data.Columns.Add("Value", typeof(double));
-
-            // Populate the table with sample rows
-            data.Rows.Add("Item1", 10.5);
-            data.Rows.Add("Item2", 20.75);
-            data.Rows.Add("Item3", 30.0);
-
-            // Bind the data source to the designer
-            designer.SetDataSource(data);
-            // ------------------------------------------------
-
-            // Process all smart markers in the workbook
-            designer.Process();
-
-            // Save the processed workbook to a memory stream (Excel97-2003 format)
-            using (MemoryStream outputStream = new MemoryStream())
+            // Load the workbook from the input memory stream
+            using (var inputStream = new MemoryStream(inputData))
             {
-                workbook.Save(outputStream, SaveFormat.Excel97To2003);
-                return outputStream.ToArray();
+                var workbook = new Workbook(inputStream);
+
+                // Process all smart markers present in the workbook using WorkbookDesigner
+                var designer = new WorkbookDesigner(workbook);
+                designer.Process();
+
+                // Save the processed workbook to an output memory stream
+                using (var outputStream = new MemoryStream())
+                {
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
+                    return outputStream.ToArray();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception as needed
+            Console.Error.WriteLine($"Error processing smart markers: {ex.Message}");
+            throw;
         }
     }
 }
@@ -55,26 +46,25 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            string templatePath = args.Length > 0 ? args[0] : "template.xlsx";
-
-            if (!File.Exists(templatePath))
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            byte[] templateBytes = File.ReadAllBytes(templatePath);
-            byte[] resultBytes = SmartMarkerProcessor.ProcessSmartMarkers(templateBytes);
-
-            string outputPath = "output.xls";
-            File.WriteAllBytes(outputPath, resultBytes);
-            Console.WriteLine($"Processed workbook saved to {outputPath}");
+            byte[] inputData = File.ReadAllBytes(inputPath);
+            byte[] resultData = SmartMarkerHelper.ProcessSmartMarkers(inputData);
+            File.WriteAllBytes(outputPath, resultData);
+            Console.WriteLine($"Processed workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

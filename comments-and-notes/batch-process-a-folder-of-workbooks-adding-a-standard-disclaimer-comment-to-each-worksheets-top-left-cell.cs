@@ -1,106 +1,67 @@
-// Title: Batch add a disclaimer comment to cell A1 of every worksheet in multiple Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Write a C# routine that scans a directory for all supported Excel files and inserts a given disclaimer as a comment in cell A1 of each worksheet using Aspose.Cells. | Implement logic to save the updated workbooks either by overwriting the originals or by writing them to a separate output folder while preserving file names. | Add comprehensive error handling that skips non‑Excel files, logs missing files, and gracefully bypasses password‑protected or corrupted workbooks.
-// Common Searches: how to add the same comment to every sheet in a batch of Excel files with Aspose.Cells C# | C# process folder of .xlsx files and insert disclaimer comment in A1 using Aspose.Cells | Aspose.Cells bulk add worksheet note and handle password protected workbooks .NET
-// Tags: add worksheet comment Aspose.Cells C# | batch process Excel files Aspose.Cells | insert disclaimer note cell A1 Aspose.Cells | save modified workbooks to separate folder Aspose.Cells | handle password protected Excel Aspose.Cells
+// Title: Add a confidentiality disclaimer comment to cell A1 of every worksheet in multiple Excel workbooks using Aspose.Cells for .NET
+// Common Searches: how to programmatically add the same comment to A1 in all sheets of several Excel files with Aspose.Cells C# | batch process a folder of .xlsx and .xls files to insert a disclaimer note in the top‑left cell using Aspose.Cells | C# Aspose.Cells add comment to each worksheet's first cell while overwriting the original workbook | iterate through worksheets and add a comment with Aspose.Cells .NET for multiple workbooks | automate adding a confidentiality comment to Excel workbooks in a directory using Aspose.Cells
+// Tags: add comment to A1 Aspose.Cells .NET | batch process Excel workbooks C# | insert disclaimer note worksheet comment | overwrite original workbook Aspose.Cells | iterate worksheets add comment C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchWorkbookProcessor
+// The C# console app receives a folder path, scans it for .xlsx and .xls files, loads each workbook with Aspose.Cells, iterates through every worksheet, adds a comment containing a confidentiality disclaimer to cell A1, saves the workbook back to the same file, and logs processing results or errors.
+class BatchDisclaimerAdder
 {
-    // Iterates through all supported Excel files in a specified folder, adds a provided disclaimer as a comment to cell A1 of each worksheet, and saves the workbooks either in place or to an output directory, while gracefully handling non‑Excel files, missing files, and password‑protected or corrupted workbooks.
-    public static class DisclaimerAdder
+    // Standard disclaimer text to be added as a comment.
+    private const string DisclaimerText = "This workbook is confidential and intended for authorized personnel only.";
+
+    static void Main(string[] args)
     {
-        /// <param name="inputFolder">Folder containing the workbooks to process.</param>
-        /// <param name="disclaimer">The disclaimer text to add as a comment.</param>
-        /// <param name="outputFolder">
-        /// Optional folder to save the modified workbooks.
-        /// If null or empty, the original files are overwritten.
-        /// </param>
-        public static void ProcessFolder(string inputFolder, string disclaimer, string outputFolder = null)
+        // Validate input folder path.
+        if (args.Length == 0)
         {
-            if (string.IsNullOrWhiteSpace(inputFolder))
-                throw new ArgumentException("Input folder path must be provided.", nameof(inputFolder));
-
-            if (!Directory.Exists(inputFolder))
-                throw new DirectoryNotFoundException($"The folder '{inputFolder}' does not exist.");
-
-            // Determine whether to overwrite or write to a separate folder
-            bool overwrite = string.IsNullOrWhiteSpace(outputFolder);
-            if (!overwrite && !Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            // Supported Excel extensions
-            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".ods", ".csv" };
-
-            foreach (string filePath in Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
-            {
-                if (Array.IndexOf(extensions, Path.GetExtension(filePath).ToLowerInvariant()) < 0)
-                    continue; // Skip non‑Excel files
-
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook; if the file is password‑protected, an exception will be thrown and caught below
-                    LoadOptions loadOptions = new LoadOptions();
-                    using (Workbook workbook = new Workbook(filePath, loadOptions))
-                    {
-                        // Add disclaimer comment to cell A1 of each worksheet
-                        foreach (Worksheet sheet in workbook.Worksheets)
-                        {
-                            int commentIndex = sheet.Comments.Add("A1");
-                            sheet.Comments[commentIndex].Note = disclaimer;
-                            sheet.Comments[commentIndex].Author = "System";
-                        }
-
-                        // Determine the save path
-                        string savePath = overwrite
-                            ? filePath
-                            : Path.Combine(outputFolder, Path.GetFileName(filePath));
-
-                        // Save the modified workbook
-                        workbook.Save(savePath);
-                    }
-                }
-                catch (CellsException ex)
-                {
-                    // Handle password‑protected or corrupted files gracefully
-                    Console.WriteLine($"Skipping file '{filePath}': {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    // Catch any other unexpected errors
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
-            }
+            Console.WriteLine("Please provide the path to the folder containing workbooks.");
+            return;
         }
-    }
 
-    // Example usage
-    class Program
-    {
-        static void Main()
+        string folderPath = args[0];
+
+        if (!Directory.Exists(folderPath))
         {
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
+        }
+
+        // Process each Excel file in the folder (including .xlsx and .xls).
+        string[] excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+        foreach (string filePath in excelFiles)
+        {
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            if (extension != ".xlsx" && extension != ".xls")
+                continue; // Skip non‑Excel files.
+
             try
             {
-                string folderPath = @"C:\ExcelFiles";
-                string disclaimerText = "Confidential: This document is for internal use only.";
-                string outputFolder = @"C:\ProcessedExcelFiles";
+                // Load the workbook.
+                Workbook workbook = new Workbook(filePath);
 
-                DisclaimerAdder.ProcessFolder(folderPath, disclaimerText, outputFolder);
+                // Iterate through all worksheets.
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Add a comment to the top‑left cell (A1).
+                    int commentIndex = sheet.Comments.Add("A1");
+                    Comment comment = sheet.Comments[commentIndex];
+                    comment.Author = "System";
+                    comment.Note = DisclaimerText;
+                }
 
-                Console.WriteLine("Processing completed.");
+                // Save the workbook, overwriting the original file.
+                workbook.Save(filePath);
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fatal error: {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
+
+        Console.WriteLine("Batch processing completed.");
     }
 }

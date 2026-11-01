@@ -1,78 +1,80 @@
-// Title: Log original and updated worksheet page‑setup properties (paper size and orientation) to a text file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, iterates through every worksheet, sets each sheet’s PaperSize to PaperA4, and writes the previous and new PaperSize and Orientation values to a log file. | Extend the Aspose.Cells example to also capture the Top, Bottom, Left, and Right margin values and output the complete audit information in CSV format. | Add robust error handling that catches exceptions during PageSetup access or workbook saving and records any failures in the same log file.
-// Common Searches: Aspose.Cells C# log worksheet page setup changes to a file | how to record original paper size and orientation when modifying Excel sheets with Aspose.Cells | C# write Excel page setup audit log for each worksheet using Aspose.Cells
-// Tags: Aspose.Cells log page setup changes | C# record worksheet paper size Aspose | Aspose.Cells audit worksheet page orientation | write Excel page setup audit log C#
+// Title: Log previous and new worksheet page‑setup dimensions when changing to A4 with Aspose.Cells for .NET
+// Common Searches: how to record worksheet page setup dimensions before and after setting PaperSize to A4 using Aspose.Cells in C# | append page setup change log for each sheet in an Excel workbook with Aspose.Cells .NET | capture previous PaperWidth and PaperHeight values when modifying page setup in Aspose.Cells | log worksheet page setup changes to a file while converting workbook to A4 size in C# | track paper size modifications per worksheet using Aspose.Cells for .NET
+// Tags: Aspose.Cells worksheet PaperSize A4 logging | C# log previous and new paper dimensions | Aspose.Cells page setup dimension tracking | append Excel sheet change entries to log | record worksheet paper width height Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example opens an existing workbook, iterates over all worksheets, changes each sheet’s paper size to A4, logs the previous and new paper size and orientation to PageSetupChanges.log, and saves the modified workbook as output.xlsx.
+// The example loads an existing workbook (or creates a new one), iterates through each worksheet, records the current PaperWidth and PaperHeight, sets the page setup to A4, records the new dimensions, and writes both the previous and new measurements with timestamps to a log file before saving the updated workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input workbook path
+            // Input and output file paths
             string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
+            // Load workbook – create a new one if the input file does not exist
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook
+                Console.WriteLine($"Input file not found. A new workbook has been created.");
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Prepare the log file (overwrites if it already exists)
+            // Prepare the log file (append mode)
             string logPath = "PageSetupChanges.log";
-            using (StreamWriter logWriter = new StreamWriter(logPath, false))
+            using (StreamWriter logWriter = new StreamWriter(logPath, true))
             {
-                // Iterate through each worksheet in the workbook
+                // Iterate through each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Capture the original page‑setup settings
-                    PageSetup oldSetup = sheet.PageSetup;
-                    PaperSizeType oldPaperSize = oldSetup.PaperSize;
-                    string oldOrientation = oldSetup.Orientation.ToString();
+                    try
+                    {
+                        // Capture previous paper dimensions (in millimeters)
+                        double previousWidth = sheet.PageSetup.PaperWidth;
+                        double previousHeight = sheet.PageSetup.PaperHeight;
 
-                    // ----- BEGIN PAGE‑SETUP MODIFICATION -----
-                    // Example change: set paper size to A4
-                    sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-                    // ----- END PAGE‑SETUP MODIFICATION -----
+                        // Change page setup to A4 size
+                        sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
 
-                    // Capture the new page‑setup settings after modification
-                    PageSetup newSetup = sheet.PageSetup;
-                    PaperSizeType newPaperSize = newSetup.PaperSize;
-                    string newOrientation = newSetup.Orientation.ToString();
+                        // Capture new paper dimensions
+                        double newWidth = sheet.PageSetup.PaperWidth;
+                        double newHeight = sheet.PageSetup.PaperHeight;
 
-                    // Log detailed information about the change
-                    logWriter.WriteLine($"Worksheet: {sheet.Name}");
-                    logWriter.WriteLine($"  PaperSize   : {oldPaperSize} -> {newPaperSize}");
-                    logWriter.WriteLine($"  Orientation : {oldOrientation} -> {newOrientation}");
-                    logWriter.WriteLine(); // Blank line for readability
+                        // Log the change details
+                        logWriter.WriteLine($"{DateTime.Now}: Worksheet '{sheet.Name}' page‑setup changed.");
+                        logWriter.WriteLine($"    Previous dimensions: Width={previousWidth}mm, Height={previousHeight}mm");
+                        logWriter.WriteLine($"    New dimensions:      Width={newWidth}mm, Height={newHeight}mm");
+                    }
+                    catch (Exception ex)
+                    {
+                        logWriter.WriteLine($"{DateTime.Now}: Error processing worksheet '{sheet.Name}': {ex.Message}");
+                    }
                 }
             }
 
-            // Save the modified workbook to a new file
-            string outputPath = "output.xlsx";
+            // Save the modified workbook
             try
             {
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
         catch (Exception ex)
         {
-            // Log unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

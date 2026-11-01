@@ -1,66 +1,47 @@
-// Title: Add a list‑type data validation that references a named range "ValidCodes" in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that defines a named range called ValidCodes containing a set of codes and applies a list‑type validation to cells A1:A10 based on that named range. | Show how to set a custom error title and message for the list validation rule created from a named range in Aspose.Cells.
-// Common Searches: how to use a named range for list data validation with Aspose.Cells C# | Aspose.Cells create named range and apply list validation to a cell range | C# Aspose.Cells set custom error message for list validation from named range | Excel data validation list referencing named range using Aspose.Cells .NET
-// Tags: Aspose.Cells create named range | Aspose.Cells list validation from named range | C# Excel data validation list Aspose.Cells | Aspose.Cells custom validation error message | Aspose.Cells define cell area validation
+// Title: Add list data validation linked to the named range "ValidCodes" in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a dropdown list validation from a named range with Aspose.Cells C# | Aspose.Cells C# list validation using existing named range | set data validation formula to a named range in Aspose.Cells workbook | apply list‑type validation to a cell range using Aspose.Cells .NET | create Excel data validation referencing named range ValidCodes with Aspose.Cells
+// Tags: list validation using named range Aspose.Cells | Aspose.Cells dropdown validation C# | Excel validation formula referencing named range | cell area validation Aspose.Cells .NET | data validation error alert configuration Aspose
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace DataValidationExample
+// The example creates a workbook, defines the cell area C1:C10, adds a List‑type validation that points to the existing named range "ValidCodes", enables an in‑cell drop‑down with an error alert, and saves the file as DataValidationExample.xlsx.
+class Program
 {
-    // // This program creates a workbook, defines a named range "ValidCodes" with sample codes, applies a list‑type validation to cells A1‑A10 that points to the named range, configures a custom error title and message, and saves the file as DataValidation.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Assume the named range "ValidCodes" already exists in the workbook.
+        // If you need to create it, you could do something like:
+        // Range validCodes = sheet.Cells.CreateRange("B1:B5");
+        // validCodes.Name = "ValidCodes";
+
+        // Define the area where the validation will be applied (e.g., C1:C10)
+        CellArea validationArea = new CellArea
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            StartRow = 0,
+            EndRow = 9,
+            StartColumn = 2,
+            EndColumn = 2
+        };
 
-                // Get the first worksheet and set its name
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "DataSheet";
+        // Add a List-type data validation that references the named range "ValidCodes"
+        int validationIndex = sheet.Validations.Add(validationArea);
+        Validation validation = sheet.Validations[validationIndex];
+        validation.Type = ValidationType.List;
+        validation.Operator = OperatorType.Between; // Required placeholder for List type
+        validation.Formula1 = "=ValidCodes"; // Reference to the named range
+        validation.InCellDropDown = true;
+        validation.ShowError = true;
+        validation.ErrorTitle = "Invalid Code";
+        validation.ErrorMessage = "Please select a value from the list of valid codes.";
 
-                // Populate sample valid codes in column B (B1:B3)
-                sheet.Cells["B1"].PutValue("CodeA");
-                sheet.Cells["B2"].PutValue("CodeB");
-                sheet.Cells["B3"].PutValue("CodeC");
-
-                // Apply data validation to cells A1:A10 to restrict input to the list in B1:B3
-                ValidationCollection validations = sheet.Validations;
-
-                // Define the cell area for A1:A10 (rows 0‑9, column 0)
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = 9,
-                    EndColumn = 0
-                };
-
-                // Add a validation for the defined area
-                int validationIndex = validations.Add(area);
-                Validation validation = validations[validationIndex];
-
-                // Set validation type to List and point directly to the range B1:B3
-                validation.Type = ValidationType.List;
-                validation.Formula1 = "$B$1:$B$3";
-
-                // Optional: configure error message
-                validation.ShowError = true;
-                validation.ErrorTitle = "Invalid Entry";
-                validation.ErrorMessage = "Please select a value from the predefined list.";
-
-                // Save the workbook to a file
-                string outputPath = "DataValidation.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("DataValidationExample.xlsx");
     }
 }

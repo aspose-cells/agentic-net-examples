@@ -1,12 +1,12 @@
-// Title: How to Validate and Auto‑Correct Worksheet TabId Values (1‑65535) with Aspose.Cells for .NET
-// AI Prompts: Generate C# code using Aspose.Cells that loops through every worksheet in an Excel file, checks the TabId, and clamps any value outside 1‑65535 to the nearest valid limit. | Write a reusable method in C# that receives a Workbook object and throws an InvalidOperationException if any worksheet’s TabId is less than 1 or greater than 65535, leveraging Aspose.Cells APIs. | Create a console application that loads a workbook, validates each sheet’s TabId against the 1‑65535 range, optionally corrects invalid IDs, and saves the file, using Aspose.Cells for .NET.
-// Common Searches: aspocells c# check worksheet tabid range 1-65535 | how to clamp invalid Excel sheet TabId with Aspose.Cells | C# program to enforce TabId limits for compatibility with older Excel versions | throw exception for out‑of‑range TabId in Aspose.Cells workbook | validate Excel worksheet TabId values using Aspose.Cells .NET library
-// Tags: Aspose.Cells TabId range enforcement | C# adjust worksheet TabId | correct out‑of‑range TabId Aspose.Cells | Excel sheet TabId compatibility 1‑65535 | check TabId values .NET Aspose.Cells
+// Title: Check and Correct Worksheet TabId Values (1‑65535) Using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates every worksheet, verifies that each sheet's TabId is between 1 and 65535, logs any out‑of‑range IDs, and resets invalid values to a safe default before saving. | Create a reusable method in C# that validates worksheet TabId compatibility for older Excel versions, returns a list of sheets with invalid IDs, updates those TabId values, and persists the corrected workbook.
+// Common Searches: how to validate worksheet tabid range with aspose.cells c# | reset invalid tabid values in excel workbook using asp.net | c# check tabid compatibility for Excel 97-2003 with Aspose.Cells | iterate worksheets and fix tabid out of range aspnet core | ensure excel file tabid stays within 1‑65535 using Aspose
+// Tags: validate worksheet tabid range Aspose.Cells | reset out-of-range tabid c# | excel 97-2003 compatibility tabid | iterate worksheets tabid check Aspose | c# tabid validation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// // Loads an Excel workbook, iterates through each worksheet, verifies that the TabId is within the 1‑65535 range, optionally clamps invalid values or throws an exception, and saves the corrected workbook.
+// The example loads an existing workbook, walks through each worksheet, checks that the TabId property falls within the 1‑65535 range required for legacy Excel compatibility, logs any violations, resets invalid TabId values to 1, and saves the corrected workbook.
 class Program
 {
     static void Main()
@@ -14,24 +14,21 @@ class Program
         // Load an existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets and validate TabId values
+        // Iterate through all worksheets and validate their TabId values
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             int tabId = sheet.TabId;
 
-            // Check if TabId is outside the allowed range (1 to 65535)
+            // TabId must be between 1 and 65535 for compatibility with older Excel versions
             if (tabId < 1 || tabId > 65535)
             {
-                // Option 1: Adjust to the nearest valid value
-                sheet.TabId = Math.Max(1, Math.Min(tabId, 65535));
-
-                // Option 2: Throw an exception to signal invalid data
-                // throw new InvalidOperationException(
-                //     $"Worksheet \"{sheet.Name}\" has an invalid TabId ({tabId}). Valid range is 1‑65535.");
+                // Log the issue and reset to a safe default (e.g., 1)
+                Console.WriteLine($"Worksheet '{sheet.Name}' has invalid TabId {tabId}. Resetting to 1.");
+                sheet.TabId = 1;
             }
         }
 
-        // Save the workbook after validation (or correction)
+        // Save the workbook after validation
         workbook.Save("output.xlsx");
     }
 }

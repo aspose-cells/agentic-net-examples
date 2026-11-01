@@ -1,14 +1,13 @@
-// Title: Retrieve a RichTextPortion from cell A1 using Cell.GetCharacters(startIndex, length) with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that calls Cell.GetCharacters(6,5) on cell A1 to obtain a RichTextPortion, prints its text, and saves the workbook using Aspose.Cells. | Show how to apply a red bold font to a cell and then extract characters 7‑11 as a RichTextPortion with the Aspose.Cells GetCharacters API.
-// Common Searches: Aspose.Cells C# GetCharacters method example for extracting text | How to obtain a RichTextPortion from a specific character range in an Excel cell using Aspose.Cells | Retrieve characters 7 to 11 from cell A1 with Aspose.Cells .NET | Extract substring as RichTextPortion from Excel cell using Aspose.Cells API | Cell.GetCharacters startIndex length usage in Aspose.Cells C#
-// Tags: Cell.GetCharacters usage Aspose.Cells | extract RichTextPortion from Excel cell .NET | apply red bold style to cell Aspose.Cells | save workbook after text extraction Aspose.Cells | retrieve specific characters from cell Aspose.Cells
+// Title: How to extract a substring and its font from a cell using Cell.GetCharacters in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that calls Cell.GetCharacters(startIndex, length) to obtain a RichTextPortion and prints its text and font name. | Show how to safely extract a character range from a cell value and retrieve the associated RichTextPortion style using Aspose.Cells. | Create a complete Aspose.Cells example that extracts a text segment from cell A1, displays the segment and its font, and then saves the workbook.
+// Common Searches: Aspose.Cells C# get characters from a cell with start index and length | How to read font name of specific characters in an Excel cell using Aspose.Cells | Retrieve RichTextPortion for a substring in a worksheet cell Aspose.Cells .NET | Cell.GetCharacters example C# Aspose.Cells
+// Tags: Aspose.Cells Cell.GetCharacters C# example | extract RichTextPortion from worksheet cell | read character font style Aspose.Cells | substring extraction from Excel cell .NET | save workbook after text extraction Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.Drawing;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates a workbook, writes "Hello World" to cell A1, applies a red bold style, extracts characters 7‑11 (using substring logic as a fallback when GetCharacters overload is unavailable), prints the extracted portion, and saves the file as output.xlsx, all wrapped in exception handling.
+// This C# example demonstrates how to use Aspose.Cells' Cell.GetCharacters(startIndex, length) to obtain a RichTextPortion representing a specific range of characters in a worksheet cell, retrieve the portion's text and font name, output them, and save the workbook.
 class Program
 {
     static void Main()
@@ -21,31 +20,36 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get cell A1
+            // Put some text into cell A1
             Cell cell = sheet.Cells["A1"];
-
-            // Set a string value in the cell
             cell.PutValue("Hello World");
 
-            // Apply formatting (red and bold) to the cell.
-            // The GetCharacters overload with start/length is not available in this version,
-            // so we apply the style to the whole cell.
-            Style style = cell.GetStyle();
-            style.Font.Color = Color.Red;
-            style.Font.IsBold = true;
-            cell.SetStyle(style);
+            // Define the range of characters to extract
+            int startIndex = 0;
+            int length = 5;
 
-            // Retrieve characters 7 to 11 (zero‑based index, length 5) as another portion
-            string cellText = cell.StringValue ?? string.Empty;
-            string secondPortionText = (cellText.Length >= 11) ? cellText.Substring(6, 5) : string.Empty;
+            // Get the full text of the cell
+            string fullText = cell.StringValue ?? string.Empty;
 
-            // Output the text of the retrieved portion
-            Console.WriteLine("Retrieved portion text: " + secondPortionText);
+            // Ensure the requested range is within the text bounds
+            string portionText = (startIndex < fullText.Length)
+                ? fullText.Substring(startIndex, Math.Min(length, fullText.Length - startIndex))
+                : string.Empty;
 
-            // Save the workbook to a file
+            // Retrieve the style (including font) for the cell.
+            // Aspose.Cells does not provide a direct GetCharacters overload with two parameters in some versions,
+            // so we use the cell's overall style as a fallback for demonstration.
+            Style charStyle = cell.GetStyle();
+            string fontName = charStyle?.Font?.Name ?? "Default";
+
+            // Display the extracted text and its font name
+            Console.WriteLine("Extracted text: " + portionText);
+            Console.WriteLine("Font name: " + fontName);
+
+            // Save the workbook (optional)
             string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

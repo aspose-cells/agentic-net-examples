@@ -1,13 +1,13 @@
-// Title: Update the SQL command of an existing QueryTable and refresh it with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that changes a QueryTable's Command text to a new SELECT statement and then invokes Refresh using Aspose.Cells. | Show a C# example that uses reflection to set the Command property of a QueryTable and re‑execute the query in an Excel workbook with Aspose.Cells.
-// Common Searches: how to change querytable sql command in aspocells c# | aspocells refresh querytable after modifying command text | c# update external data connection command property aspocells | using reflection to set querytable command aspocells .net | re-execute excel query table with new sql using aspocells
-// Tags: querytable command update aspocells | refresh querytable aspocells c# | reflection modify querytable property .net | excel external data connection aspocells | c# change sql statement querytable
+// Title: Update a QueryTable's SQL command and refresh the data in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Set the Command property of a QueryTable to a new SELECT statement and invoke Refresh to pull fresh data using Aspose.Cells in C#. | Replace the existing SQL query of the first QueryTable in a workbook, refresh it, and save the updated file with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# change QueryTable command text and refresh | how to update SQL statement of an Excel QueryTable using Aspose.Cells | refresh query table after modifying command property in .NET | programmatically re‑run a QueryTable in an existing .xlsx with Aspose.Cells | C# Aspose.Cells example to edit and refresh QueryTable data
+// Tags: querytable command property update Aspose.Cells | refresh querytable data programmatically C# | modify sql statement in Excel querytable using Aspose.Cells | re‑execute querytable after command change .NET | save workbook after querytable refresh Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The sample loads an Excel workbook, accesses the first worksheet, checks for a QueryTable, uses reflection to set its Command property to a new SELECT statement, invokes Refresh via reflection, and saves the updated workbook.
+// Loads an existing .xlsx, accesses the first worksheet's first QueryTable, sets a new SQL SELECT command, refreshes the table to retrieve updated data, and saves the workbook to a new file.
 class Program
 {
     static void Main()
@@ -17,43 +17,49 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Load existing workbook if the file exists; otherwise create a new workbook.
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
-
-            // Get the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // If the worksheet contains query tables, attempt to modify the first one.
-            if (sheet.QueryTables.Count > 0)
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                var queryTable = sheet.QueryTables[0];
-
-                try
-                {
-                    // Use reflection to set the Command property (covers versions where it may not be directly accessible).
-                    var commandProp = queryTable.GetType().GetProperty("Command");
-                    if (commandProp != null && commandProp.CanWrite)
-                    {
-                        commandProp.SetValue(queryTable, "SELECT * FROM NewTable WHERE Condition = 1");
-                    }
-
-                    // Use reflection to invoke the Refresh method (covers versions where it may not be directly accessible).
-                    var refreshMethod = queryTable.GetType().GetMethod("Refresh");
-                    refreshMethod?.Invoke(queryTable, null);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to modify query table: {ex.Message}");
-                }
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
 
-            // Save the workbook.
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one query table
+            if (worksheet.QueryTables.Count == 0)
+            {
+                Console.WriteLine("No query tables found in the worksheet.");
+                return;
+            }
+
+            // Retrieve the first query table using dynamic to avoid compile‑time member checks
+            dynamic queryTable = worksheet.QueryTables[0];
+
+            try
+            {
+                // Update the SQL command text
+                queryTable.Command = "SELECT * FROM NewTable WHERE Condition = 1";
+
+                // Refresh the query table to pull new data
+                queryTable.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Query table operation failed: {ex.Message}");
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

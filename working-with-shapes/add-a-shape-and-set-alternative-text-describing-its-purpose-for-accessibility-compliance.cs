@@ -1,38 +1,49 @@
-// Title: Insert a rectangle shape at cell B2 and set its alternative text for accessibility with Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates a workbook, adds a rectangle shape anchored at B2, assigns an AlternativeText describing its purpose, and saves the file as XLSX using Aspose.Cells. | Write a C# snippet that uses Aspose.Cells to place a rectangle shape on the first worksheet, set its AlternativeText property for screen‑reader accessibility, and export the workbook. | Provide a C# example demonstrating how to add a shape to an Excel sheet with Aspose.Cells and configure the shape's AlternativeText before saving.
-// Common Searches: how to set alternative text for a shape in Aspose.Cells C# | Aspose.Cells add rectangle shape at specific cell with alt text | C# Aspose.Cells shape accessibility example | set shape AlternativeText property in Excel using Aspose.Cells .NET | add shape to worksheet and define alt text for screen readers Aspose.Cells
-// Tags: Aspose.Cells add rectangle shape C# | Aspose.Cells shape alternative text .NET | Excel shape accessibility Aspose.Cells | C# insert shape with alt text Aspose.Cells | Aspose.Cells shape property AlternativeText
+// Title: Add a rectangle shape with alternative text for accessibility in an Excel workbook using Aspose.Cells for C#
+// Common Searches: how to add a rectangle shape with alt text to an Excel file using Aspose.Cells C# | setting alternative text on Excel shapes for accessibility with Aspose.Cells .NET | example of drawing a rectangle and assigning alt description in Aspose.Cells C# | using Aspose.Cells to create accessible shapes in an Excel workbook programmatically | C# code to add a shape and define its alternative description for screen readers with Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | set shape alt description Aspose.Cells | Excel shape metadata Aspose.Cells | Aspose.Cells drawing API rectangle shape | shape alternative attributes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, adds a rectangle shape anchored at B2, assigns alternative text for accessibility, and saves the file as Result.xlsx.
+// Creates a new workbook, inserts a rectangle shape on the first worksheet, assigns alternative text for accessibility compliance, and saves the file as ShapeWithAltText.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape (row 2, column 2) with width 150 and height 80 points
-            // AddShape returns a Shape object in recent Aspose.Cells versions
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 150, 80);
+            // Add a rectangle shape to the worksheet and obtain the Shape object directly
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row (zero‑based)
+                2,   // upper left column (zero‑based)
+                50,  // top offset in points
+                50,  // left offset in points
+                200, // width in points
+                100  // height in points
+            );
 
             // Set alternative text for accessibility compliance
-            shape.AlternativeText = "Rectangle indicating the sales target area.";
+            shape.AlternativeText = "Rectangle highlighting the sales target area.";
 
-            // Save the workbook
-            workbook.Save("Result.xlsx", SaveFormat.Xlsx);
+            // Define output file path
+            string outputPath = "ShapeWithAltText.xlsx";
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

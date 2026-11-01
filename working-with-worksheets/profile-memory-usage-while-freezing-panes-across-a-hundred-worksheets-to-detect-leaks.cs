@@ -1,79 +1,99 @@
-// Title: How to profile memory usage while freezing panes on 100 worksheets with Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that creates a workbook, adds 100 worksheets, applies FreezePanes(1,1,1,1) to each sheet, forces garbage collection, and logs the memory usage after each sheet using GC.GetTotalMemory. | Extend the program to export the recorded memory values and per‑sheet deltas to a CSV file and calculate the average memory increase per worksheet.
-// Common Searches: Aspose.Cells memory leak detection when using FreezePanes on many sheets | C# measure memory consumption after applying FreezePanes to each worksheet | profile .NET Excel workbook memory while adding and freezing 100 worksheets | log GC.GetTotalMemory for each worksheet in Aspose.Cells
-// Tags: Aspose.Cells worksheet freeze panes performance | C# Excel workbook memory analysis | GC.GetTotalMemory profiling Aspose.Cells | detect Excel memory leaks .NET | benchmark worksheet freeze operation
+// Title: Measure .NET memory consumption when applying FreezePanes to 100 worksheets with Aspose.Cells
+// AI Prompts: Write a C# console program that creates a workbook, adds 100 worksheets, calls FreezePanes(1,1,0,0) on each sheet, and logs GC.GetTotalMemory after every iteration. | Enhance the profiling code to capture the workbook's byte size after each FreezePanes call and export the measurements to a CSV file for later analysis. | Extend the example to save the workbook in both XLSX and CSV formats, record memory usage before and after each save, and compare the memory impact of the two formats.
+// Common Searches: how to detect memory leaks in Aspose.Cells when freezing panes on many worksheets | C# profiling memory usage of a workbook with 100 sheets using GC.GetTotalMemory | benchmark freeze panes performance across multiple worksheets in Aspose.Cells | measure memory growth after applying FreezePanes in a large Aspose.Cells workbook | Aspose.Cells memory consumption when adding and freezing rows and columns
+// Tags: memory profiling Aspose.Cells FreezePanes | GC.GetTotalMemory workbook creation .NET | detect memory leak adding worksheets Aspose.Cells | freeze panes performance measurement | Aspose.Cells workbook size after save
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a workbook, adds 100 worksheets, freezes the first row and column on each sheet, forces garbage collection after each operation, records total memory using GC.GetTotalMemory, and prints per‑sheet memory differences to help identify potential leaks.
-class FreezePanesMemoryProfile
+namespace AsposeCellsMemoryProfiling
 {
-    static void Main()
+    // The sample creates a new Workbook, adds 100 worksheets, names each sheet, applies FreezePanes(1,1,0,0), writes a value to A1, forces garbage collection, records memory usage with GC.GetTotalMemory after each sheet, saves the workbook to a MemoryStream as XLSX, and prints per‑worksheet memory deltas and total memory increase to help identify potential leaks.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // List to store memory usage after each worksheet operation
-            List<long> memoryUsage = new List<long>();
-
-            // Force a full garbage collection before starting the test
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            // Record baseline memory usage
-            long baselineMemory = GC.GetTotalMemory(true);
-            Console.WriteLine($"Baseline memory: {baselineMemory} bytes");
-
-            // Create a new workbook (contains a default worksheet)
-            Workbook workbook = new Workbook();
-
-            // Rename the default worksheet to avoid name clash with added sheets
-            workbook.Worksheets[0].Name = "Sheet0";
-
-            // Loop to create 100 worksheets and freeze panes on each
-            for (int i = 0; i < 100; i++)
+            try
             {
-                // Add a new worksheet with a unique name
-                string sheetName = $"Sheet{i + 1}";
-                Worksheet newSheet = workbook.Worksheets.Add(sheetName);
+                // List to hold memory usage after each worksheet processing
+                List<long> memoryUsage = new List<long>();
 
-                // Freeze the first row and first column (equivalent to FreezePanes at row 2, column 2)
-                newSheet.FreezePanes(1, 1, 1, 1);
-
-                // Optional: add some data to make the sheet realistic
-                newSheet.Cells["A1"].PutValue("Header");
-                newSheet.Cells["B2"].PutValue(i);
-
-                // Force garbage collection to get a more accurate measurement
+                // Force garbage collection before starting measurement
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
 
-                // Capture memory usage after processing this worksheet
-                long currentMemory = GC.GetTotalMemory(true);
-                memoryUsage.Add(currentMemory);
-                Console.WriteLine($"After sheet {i + 1}: {currentMemory} bytes (Δ {currentMemory - baselineMemory} bytes)");
-            }
+                // Record baseline memory usage
+                long baselineMemory = GC.GetTotalMemory(true);
+                Console.WriteLine($"Baseline memory: {baselineMemory:N0} bytes");
 
-            // Analyze memory usage to detect potential leaks
-            Console.WriteLine("\nMemory usage differences between consecutive sheets:");
-            for (int i = 1; i < memoryUsage.Count; i++)
+                // Create a new workbook (allowed creation rule)
+                Workbook workbook = new Workbook();
+
+                // Process 100 worksheets
+                for (int i = 0; i < 100; i++)
+                {
+                    Worksheet sheet;
+                    if (i == 0)
+                    {
+                        // First worksheet already exists in a new workbook
+                        sheet = workbook.Worksheets[0];
+                    }
+                    else
+                    {
+                        // Add additional worksheet and retrieve it by index (Add returns int in some versions)
+                        int newIndex = workbook.Worksheets.Add();
+                        sheet = workbook.Worksheets[newIndex];
+                    }
+
+                    sheet.Name = $"Sheet{i + 1}";
+
+                    // Apply Freeze Panes (freeze first row and first column)
+                    // Use the overload that accepts four parameters for compatibility
+                    sheet.FreezePanes(1, 1, 0, 0);
+
+                    // Optional: write some data to ensure the sheet has content
+                    sheet.Cells["A1"].PutValue($"Data in {sheet.Name}");
+
+                    // Force a collection to get a more accurate measurement per iteration
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+
+                    // Record memory usage after processing this worksheet
+                    long currentMemory = GC.GetTotalMemory(true);
+                    memoryUsage.Add(currentMemory);
+                    Console.WriteLine($"After processing {sheet.Name}: {currentMemory:N0} bytes (Δ {currentMemory - baselineMemory:N0})");
+                }
+
+                // Save the workbook to a memory stream (allowed save rule)
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    Console.WriteLine($"Workbook saved to memory stream. Size: {ms.Length:N0} bytes");
+                }
+
+                // Analyze memory usage differences
+                Console.WriteLine("\nMemory usage delta per worksheet:");
+                for (int i = 0; i < memoryUsage.Count; i++)
+                {
+                    long delta = i == 0 ? memoryUsage[i] - baselineMemory : memoryUsage[i] - memoryUsage[i - 1];
+                    Console.WriteLine($"Worksheet {i + 1}: Δ {delta:N0} bytes");
+                }
+
+                // Final memory snapshot
+                long finalMemory = GC.GetTotalMemory(true);
+                Console.WriteLine($"\nFinal memory after all operations: {finalMemory:N0} bytes");
+                Console.WriteLine($"Total increase from baseline: {finalMemory - baselineMemory:N0} bytes");
+            }
+            catch (Exception ex)
             {
-                long diff = memoryUsage[i] - memoryUsage[i - 1];
-                Console.WriteLine($"Sheet {i} -> Sheet {i + 1}: Δ {diff} bytes");
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Save the workbook (optional, not required for profiling)
-            // workbook.Save("FreezePanesTest.xlsx");
-
-            Console.WriteLine("\nProfiling completed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

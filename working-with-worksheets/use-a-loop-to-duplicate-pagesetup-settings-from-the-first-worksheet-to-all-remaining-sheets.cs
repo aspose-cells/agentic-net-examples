@@ -1,45 +1,53 @@
-// Title: How to copy page‑setup settings from the first worksheet to all other worksheets using Aspose.Cells for .NET (C#)
-// AI Prompts: Retrieve the PageSetup object from the first worksheet and assign its properties to each subsequent worksheet in a workbook with Aspose.Cells. | Iterate through a workbook's worksheets and replicate paper size, orientation, margins, and print titles from worksheet index 0 using C#. | Programmatically propagate print area, header/footer margins, and centering settings across all sheets in an Excel file with Aspose.Cells.
-// Common Searches: Aspose.Cells copy page setup from first sheet to all sheets C# | C# loop to duplicate worksheet margins and print area using Aspose.Cells | How to apply same page orientation to every worksheet in an Excel workbook with Aspose.Cells | Set identical print titles for all worksheets programmatically Aspose.Cells .NET
-// Tags: synchronize worksheet page settings Aspose.Cells | propagate margins and orientation across sheets .NET | duplicate print area for all worksheets C# | apply uniform paper size to Excel workbook Aspose.Cells | set common print titles in multiple sheets C#
+// Title: How to copy the first worksheet’s PageSetup to all other worksheets in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, reads the PageSetup of the first sheet, and applies it to every other sheet using a loop. | Write a method that accepts a Workbook object and transfers the source PageSetup to each target worksheet via the PageSetup.Copy function with default CopyOptions. | Create a console application that checks for an input .xlsx file, propagates its first sheet’s page layout to all remaining sheets, and saves the updated workbook.
+// Common Searches: Aspose.Cells C# copy page setup from first worksheet to all worksheets in a workbook | How to duplicate Excel sheet page layout using Aspose.Cells .NET | Loop through worksheets and apply same PageSetup settings with Aspose.Cells | Copy PageSetup properties between worksheets Aspose.Cells C# example | Programmatically propagate page margins and orientation to all sheets using Aspose.Cells
+// Tags: Aspose.Cells PageSetup.Copy method | C# loop replicate worksheet page layout | propagate Excel page margins with Aspose.Cells | apply first sheet page orientation to all worksheets | copy worksheet print settings programmatically
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, extracts the PageSetup from the first worksheet, loops through the remaining worksheets, and copies key page‑setup properties—including paper size, orientation, margins, header/footer margins, centering options, print area, and title rows/columns—to each sheet before saving the updated file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads 'input.xlsx', retrieves the PageSetup of the first worksheet, iterates over the remaining worksheets copying those settings with PageSetup.Copy and default CopyOptions, and saves the modified workbook as 'output.xlsx' while handling missing files and exceptions.
+    class Program
     {
-        // Load the workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Get the page‑setup settings from the first worksheet
-        PageSetup sourceSetup = workbook.Worksheets[0].PageSetup;
-
-        // Loop through all remaining worksheets and copy the settings
-        for (int i = 1; i < workbook.Worksheets.Count; i++)
+        static void Main(string[] args)
         {
-            PageSetup targetSetup = workbook.Worksheets[i].PageSetup;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Copy common page‑setup properties
-            targetSetup.PaperSize = sourceSetup.PaperSize;
-            targetSetup.Orientation = sourceSetup.Orientation;
-            targetSetup.BottomMargin = sourceSetup.BottomMargin;
-            targetSetup.TopMargin = sourceSetup.TopMargin;
-            targetSetup.LeftMargin = sourceSetup.LeftMargin;
-            targetSetup.RightMargin = sourceSetup.RightMargin;
-            targetSetup.HeaderMargin = sourceSetup.HeaderMargin;
-            targetSetup.FooterMargin = sourceSetup.FooterMargin;
-            targetSetup.CenterHorizontally = sourceSetup.CenterHorizontally;
-            targetSetup.CenterVertically = sourceSetup.CenterVertically;
-            targetSetup.PrintArea = sourceSetup.PrintArea;
-            targetSetup.PrintTitleRows = sourceSetup.PrintTitleRows;
-            targetSetup.PrintTitleColumns = sourceSetup.PrintTitleColumns;
-            // Add additional properties here if needed
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the PageSetup of the first worksheet (source settings)
+                PageSetup sourceSetup = workbook.Worksheets[0].PageSetup;
+
+                // Copy page‑setup settings to all other worksheets
+                for (int i = 1; i < workbook.Worksheets.Count; i++)
+                {
+                    PageSetup targetSetup = workbook.Worksheets[i].PageSetup;
+                    // Use default CopyOptions to copy all properties
+                    targetSetup.Copy(sourceSetup, new CopyOptions());
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
     }
 }

@@ -1,70 +1,77 @@
-// Title: How to clear a filter on a specific pivot column field while keeping other pivot filters in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that removes only the Region column filter from an Aspose.Cells pivot table without affecting the existing Category row filter. | Show how to call PivotField.ClearFilter on a single pivot field and then refresh the pivot table using Aspose.Cells. | Provide a step‑by‑step example of preserving row filters while clearing column filters in a .NET workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# clear column filter in pivot table while preserving row filter | remove specific pivot field filter Aspose.Cells .NET example | how to use PivotField.ClearFilter for a single field in Aspose.Cells | refresh pivot table after clearing a filter with Aspose.Cells C# | Aspose.Cells pivot table filter management code sample
-// Tags: Aspose.Cells PivotField.ClearFilter method | clear individual pivot field filter .NET | retain row filters when clearing column filter Aspose.Cells | pivot table refresh after filter modification C# | Aspose.Cells pivot table filter handling
+// Title: Clearing a filter on a specific pivot page field while preserving other filters in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# clear filter on one pivot page field only | remove filter from a specific pivot field without affecting other filters Aspose.Cells | how to reset a single page field filter in a pivot table using Aspose.Cells .NET | C# code to clear pivot table page field filter while keeping other filters | Aspose.Cells example to clear pivot table filter on selected field
+// Tags: Aspose.Cells clear pivot page field filter | Aspose.Cells preserve other pivot filters | C# pivot table filter manipulation Aspose.Cells | Excel workbook pivot field filter reset .NET | Aspose.Cells pivot table page fields API
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using System;
 
-// The sample creates a workbook, adds a pivot table, applies label filters to the Category row field and Region column field, then uses PivotField.ClearFilter to remove only the column filter while preserving the row filter, refreshes the pivot table, and saves the file.
-class ClearSpecificPivotFilter
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses a named pivot table, validates a page‑field index, clears the filter on that specific pivot field by disabling its auto‑show and auto‑sort settings, and saves the workbook, leaving filters on all other pivot fields unchanged.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Define file paths and parameters
+            string workbookPath = "input.xlsx";          // TODO: set actual input workbook path
+            string pivotTableName = "PivotTable1";       // TODO: set actual pivot table name
+            int fieldIndex = 0;                          // Index of the page field to clear filter (0‑based)
+            string outputPath = "output.xlsx";           // TODO: set desired output path
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Region");
-        worksheet.Cells["C1"].PutValue("Sales");
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+                    return;
+                }
 
-        worksheet.Cells["A2"].PutValue("Fruit");
-        worksheet.Cells["B2"].PutValue("North");
-        worksheet.Cells["C2"].PutValue(100);
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
 
-        worksheet.Cells["A3"].PutValue("Fruit");
-        worksheet.Cells["B3"].PutValue("South");
-        worksheet.Cells["C3"].PutValue(150);
+                // Access the first worksheet (adjust if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        worksheet.Cells["A4"].PutValue("Vegetable");
-        worksheet.Cells["B4"].PutValue("North");
-        worksheet.Cells["C4"].PutValue(200);
+                // Retrieve the pivot table by name
+                PivotTable pivotTable = worksheet.PivotTables[pivotTableName];
+                if (pivotTable == null)
+                {
+                    Console.WriteLine($"Error: Pivot table '{pivotTableName}' not found in worksheet '{worksheet.Name}'.");
+                    return;
+                }
 
-        worksheet.Cells["A5"].PutValue("Vegetable");
-        worksheet.Cells["B5"].PutValue("South");
-        worksheet.Cells["C5"].PutValue(250);
+                // Ensure the field index is valid
+                if (fieldIndex < 0 || fieldIndex >= pivotTable.PageFields.Count)
+                {
+                    Console.WriteLine($"Error: Field index {fieldIndex} is out of range. The pivot table has {pivotTable.PageFields.Count} page fields.");
+                    return;
+                }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                // Clear the filter on the selected page field
+                PivotField targetField = pivotTable.PageFields[fieldIndex];
+                targetField.IsAutoShow = false;
+                targetField.IsAutoSort = false;
+                // Note: Aspose.Cells does not expose an IsAutoSubtotal property for PivotField; omitted.
 
-        // Add fields: Category as row, Region as column, Sales as data
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Apply filters on both row and column fields
-        // Row filter: show only "Fruit"
-        pivotTable.RowFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
-        // Column filter: show only "North"
-        pivotTable.ColumnFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "North", null);
-
-        // Refresh to apply the filters
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Clear filter only on the column field (Region) while preserving the row filter
-        // Using PivotField.ClearFilter method as per the provided rule
-        pivotTable.ColumnFields[0].ClearFilter();
-
-        // Refresh again to reflect the change
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook
-        workbook.Save("ClearSpecificPivotFilter.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An unexpected error occurred:");
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

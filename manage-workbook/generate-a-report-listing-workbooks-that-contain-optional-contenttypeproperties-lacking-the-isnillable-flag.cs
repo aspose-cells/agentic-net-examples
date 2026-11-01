@@ -1,126 +1,110 @@
-// Title: Generate a C# Aspose.Cells report of workbooks that have optional ContentTypeProperties missing the IsNillable flag
-// AI Prompts: Write a C# console program that uses Aspose.Cells to iterate over every .xlsx file in a given folder, selects ContentTypeProperties where IsOptional is true and IsNillable is false, and writes the workbook name, property name, and flag values into a new Excel summary workbook. | Extend the program to also capture each property's data type, sort the rows by workbook name, and add a timestamp column indicating when the report entry was created. | Add comprehensive error handling that logs unreadable or corrupted workbooks to a separate text file, including the exception message and file path, while allowing the scan to continue.
-// Common Searches: aspocells c# list optional contenttypeproperties without isnillable | how to create a report of missing isnillable flag in excel files using Aspose.Cells | scan a directory for contenttypeproperty attributes in .xlsx files c# | export optional contenttypeproperty details to a new workbook with Aspose.Cells
-// Tags: list optional ContentTypeProperties Aspose.Cells | detect missing IsNillable flag Excel | C# folder scan workbooks Aspose.Cells | export ContentTypeProperty analysis to Excel | dynamic property access Aspose.Cells
+// Title: Create a C# program with Aspose.Cells to report Excel workbooks that have optional ContentTypeProperties missing the IsNillable flag
+// Common Searches: C# Aspose.Cells find Excel workbooks where optional ContentTypeProperties are not nillable | how to generate a list of .xlsx files with missing IsNillable flag in ContentTypeProperties using Aspose.Cells | scan directory for Excel files with optional non‑nillable ContentTypeProperties in .NET | Aspose.Cells reflection example to check IsOptional and IsNillable properties in workbooks | report workbooks containing optional ContentTypeProperties without IsNillable flag in C#
+// Tags: Aspose.Cells optional ContentTypeProperties detection | C# reflection inspection of ContentTypeProperties | Excel workbook scanning for missing IsNillable flag | batch processing .xlsx files with Aspose.Cells | generate compliance report for non‑nillable optional properties
 
 using System;
-using System.Data;
 using System.IO;
+using System.Collections.Generic;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace WorkbookContentTypeReport
+namespace ContentTypePropertyReport
 {
-    // Scans a specified folder for .xlsx files, identifies ContentTypeProperties that are optional but not nillable, and writes workbook name, property name, and flag values to a generated Excel report using Aspose.Cells, with optional logging for errors.
+    // The C# utility recursively enumerates .xlsx files in a folder, loads each workbook with Aspose.Cells, uses reflection to read the IsOptional and IsNillable attributes of every ContentTypeProperty, records workbooks that contain an optional property where IsNillable is false, and writes the full paths and a total count to a text report.
     class Program
     {
         static void Main(string[] args)
         {
-            // Folder containing the workbooks to be scanned
-            string inputFolder = @"C:\Workbooks";
+            // Folder containing the workbooks to scan
+            string workbooksFolder = @"C:\Workbooks";
 
-            // Path for the generated report workbook
-            string reportPath = @"C:\Report\OptionalContentTypePropertiesReport.xlsx";
+            // Output report file
+            string reportPath = @"C:\Report\WorkbooksWithMissingIsNillable.txt";
 
-            // Ensure the input folder exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                return;
-            }
-
-            // Ensure the directory for the report exists
+            // Ensure the output directory exists
             string reportDir = Path.GetDirectoryName(reportPath);
-            if (!Directory.Exists(reportDir))
+            if (!string.IsNullOrEmpty(reportDir))
             {
                 Directory.CreateDirectory(reportDir);
             }
 
-            // DataTable to collect report data
-            DataTable reportTable = new DataTable();
-            reportTable.Columns.Add("Workbook", typeof(string));
-            reportTable.Columns.Add("ContentTypeProperty", typeof(string));
-            reportTable.Columns.Add("IsOptional", typeof(bool));
-            reportTable.Columns.Add("IsNillable", typeof(bool));
+            // List to hold workbook names that meet the criteria
+            List<string> workbooksWithIssues = new List<string>();
 
-            // Iterate through all Excel files in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Get all Excel files in the specified folder (including subfolders)
+            string[] excelFiles = Directory.GetFiles(workbooksFolder, "*.xlsx", SearchOption.AllDirectories);
+
+            foreach (string filePath in excelFiles)
             {
+                // Verify the file exists before attempting to load
+                if (!File.Exists(filePath))
+                {
+                    continue;
+                }
+
                 try
                 {
-                    // Verify the file exists before loading
-                    if (!File.Exists(filePath))
-                        continue;
-
                     // Load the workbook using Aspose.Cells
-                    Workbook wb = new Workbook(filePath);
+                    Workbook workbook = new Workbook(filePath);
 
-                    // Access the collection of ContentTypeProperties
-                    var contentTypeProperties = wb.ContentTypeProperties;
+                    // Flag to indicate if this workbook has at least one offending property
+                    bool hasIssue = false;
 
-                    // Examine each ContentTypeProperty using dynamic to avoid compile‑time type dependency
-                    foreach (var prop in contentTypeProperties)
+                    // Iterate through all ContentTypeProperties of the workbook
+                    foreach (object propObj in workbook.ContentTypeProperties)
                     {
-                        try
+                        // Use reflection to access IsOptional and IsNillable properties
+                        Type propType = propObj.GetType();
+                        PropertyInfo optionalProp = propType.GetProperty("IsOptional");
+                        PropertyInfo nillableProp = propType.GetProperty("IsNillable");
+
+                        if (optionalProp != null && nillableProp != null)
                         {
-                            dynamic d = prop; // Resolve at runtime
-                            if (d.IsOptional && !d.IsNillable)
+                            bool isOptional = Convert.ToBoolean(optionalProp.GetValue(propObj));
+                            bool isNillable = Convert.ToBoolean(nillableProp.GetValue(propObj));
+
+                            // Check for optional properties that are NOT nillable
+                            if (isOptional && !isNillable)
                             {
-                                reportTable.Rows.Add(
-                                    Path.GetFileName(filePath),
-                                    d.Name,
-                                    (bool)d.IsOptional,
-                                    (bool)d.IsNillable);
+                                hasIssue = true;
+                                break; // No need to continue scanning this workbook
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            // Log and continue with next property
-                            Console.WriteLine($"Error processing property in '{filePath}': {ex.Message}");
-                        }
+                    }
+
+                    if (hasIssue)
+                    {
+                        // Add the workbook full path to the report list
+                        workbooksWithIssues.Add(filePath);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Log and continue with next workbook
-                    Console.WriteLine($"Error processing workbook '{filePath}': {ex.Message}");
+                    // Log or handle errors for individual workbooks without stopping the whole process
+                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
                 }
             }
 
-            // Create a new workbook for the report
-            Workbook reportWorkbook = new Workbook();
-            Worksheet sheet = reportWorkbook.Worksheets[0];
-            sheet.Name = "OptionalProperties";
-
-            // Write header row
-            sheet.Cells["A1"].PutValue("Workbook");
-            sheet.Cells["B1"].PutValue("ContentTypeProperty");
-            sheet.Cells["C1"].PutValue("IsOptional");
-            sheet.Cells["D1"].PutValue("IsNillable");
-
-            // Populate rows from the DataTable
-            for (int i = 0; i < reportTable.Rows.Count; i++)
-            {
-                DataRow row = reportTable.Rows[i];
-                int excelRow = i + 2; // +2 because of header row
-
-                sheet.Cells[$"A{excelRow}"].PutValue(row["Workbook"]);
-                sheet.Cells[$"B{excelRow}"].PutValue(row["ContentTypeProperty"]);
-                sheet.Cells[$"C{excelRow}"].PutValue(row["IsOptional"]);
-                sheet.Cells[$"D{excelRow}"].PutValue(row["IsNillable"]);
-            }
-
-            // Auto‑fit columns for better readability
-            sheet.AutoFitColumns();
-
-            // Save the report workbook with safety handling
+            // Write the report
             try
             {
-                reportWorkbook.Save(reportPath);
-                Console.WriteLine($"Report saved to: {reportPath}");
+                using (StreamWriter writer = new StreamWriter(reportPath))
+                {
+                    writer.WriteLine("Workbooks containing optional ContentTypeProperties lacking the IsNillable flag:");
+                    writer.WriteLine("--------------------------------------------------------------------------");
+                    foreach (string wb in workbooksWithIssues)
+                    {
+                        writer.WriteLine(wb);
+                    }
+                    writer.WriteLine("--------------------------------------------------------------------------");
+                    writer.WriteLine($"Total workbooks found: {workbooksWithIssues.Count}");
+                }
+
+                Console.WriteLine("Report generation completed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save report: {ex.Message}");
+                Console.WriteLine($"Failed to write report: {ex.Message}");
             }
         }
     }

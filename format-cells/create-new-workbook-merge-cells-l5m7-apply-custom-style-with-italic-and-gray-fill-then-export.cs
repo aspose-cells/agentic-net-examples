@@ -1,14 +1,15 @@
-// Title: Merge cells L5:M7, apply italic gray fill style, and save as XLSX using Aspose.Cells for .NET
-// AI Prompts: Create a new workbook, merge the range L5:M7, define a style with italic font and a gray solid fill, apply the style to the merged range, and save the file as MergedStyled.xlsx using Aspose.Cells in C#. | Using Aspose.Cells for .NET, generate a style that sets Font.IsItalic = true and a gray background, apply this style to the merged cell block L5:M7, then export the workbook to an XLSX file.
-// Common Searches: Aspose.Cells C# merge a rectangular range and set italic font with gray background | How to apply custom style to merged cells L5:M7 in a .NET Excel workbook | Saving a workbook with styled merged cells using Aspose.Cells for .NET | Create and apply italic gray style to a merged range in Aspose.Cells C# example
-// Tags: merge cell range L5:M7 Aspose.Cells | italic font style Aspose.Cells C# | gray solid fill background Aspose.Cells | apply style to merged cells Aspose.Cells | save workbook as XLSX Aspose.Cells
+// Title: Create a new workbook, merge cells L5:M7, and apply an italic gray style with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# merge cells L5:M7 and set italic font with gray background | How to apply a custom style to a merged range using Aspose.Cells .NET | Create workbook and style merged cells with solid gray fill in C# | Save an Excel file after merging cells and applying italic text with Aspose.Cells | Example of merging a rectangular range and formatting it with Aspose.Cells for .NET
+// Tags: merge cells range Aspose.Cells C# | apply custom style Aspose.Cells | italic font gray fill Aspose.Cells | save workbook as xlsx Aspose.Cells | create workbook Aspose.Cells .NET
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
+
+// Alias to avoid conflict with System.Range introduced in C# 8.0
 using AsposeRange = Aspose.Cells.Range;
 
-// The program creates a new workbook, merges cells L5:M7, defines a custom style with italic font and a gray solid fill, applies this style to the merged range, and saves the result as MergedStyled.xlsx.
+// The example demonstrates how to instantiate a new Workbook, merge the cell range L5:M7 on the first worksheet, define a custom Style with italic font and a solid gray fill, apply this style to the merged range, and finally save the workbook as an XLSX file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -18,35 +19,30 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells L5:M7 (zero‑based indices: row 4, column 11, 3 rows, 2 columns)
+            // Merge cells L5:M7 (range "L5:M7")
+            // Row index 4 (zero‑based for L5), column index 11 (L), 3 rows, 2 columns
             sheet.Cells.Merge(4, 11, 3, 2);
 
-            // Create a style with italic font and gray fill
-            Style customStyle = workbook.CreateStyle();
-            customStyle.Font.IsItalic = true;
-            customStyle.ForegroundColor = Color.Gray;
-            customStyle.Pattern = BackgroundType.Solid;
+            // Create a custom style: italic font and gray fill
+            Style style = workbook.CreateStyle();
+            style.Font.IsItalic = true;
+            style.ForegroundColor = Color.Gray;
+            style.Pattern = BackgroundType.Solid;
 
-            // Define which style elements to apply
-            StyleFlag flag = new StyleFlag
-            {
-                FontItalic = true,
-                CellShading = true
-            };
-
-            // Apply the style to the merged range L5:M7
+            // Apply the style to the merged range
+            StyleFlag styleFlag = new StyleFlag { All = true };
             AsposeRange mergedRange = sheet.Cells.CreateRange("L5:M7");
-            mergedRange.ApplyStyle(customStyle, flag);
+            mergedRange.ApplyStyle(style, styleFlag);
 
-            // Save the workbook
-            workbook.Save("MergedStyled.xlsx");
+            // Save the workbook to a file
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

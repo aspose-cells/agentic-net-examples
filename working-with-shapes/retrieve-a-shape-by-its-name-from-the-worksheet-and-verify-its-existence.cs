@@ -1,64 +1,55 @@
-// Title: How to locate and verify a named shape in an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, searches the first worksheet's Shapes collection for a shape named "MyShape", and prints its Type when found. | Provide a C# example that iterates over Worksheet.Shapes to determine whether a specific shape exists and handles the case where the shape is missing.
-// Common Searches: Aspose.Cells C# find shape by its Name property in a worksheet | C# code to check if a shape exists in an Excel file using Aspose.Cells | How to get the Type of a named shape in Aspose.Cells for .NET | Iterate through worksheet shapes collection to locate a specific shape Aspose.Cells
-// Tags: shape name lookup Aspose.Cells | verify shape presence worksheet C# | retrieve shape type Aspose.Cells | enumerate worksheet shapes Aspose.Cells
+// Title: How to retrieve a named shape from an Excel worksheet and verify its existence using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, accesses a worksheet, and uses the Shapes collection indexer to fetch a shape by its name, then prints whether the shape was found and its type. | Show how to handle the scenario where the requested shape name is not present in the worksheet when working with Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# retrieve shape by its name from worksheet | Check if a drawing object exists in an Excel sheet using Aspose.Cells | How to get shape type after finding a named shape with Aspose.Cells .NET | Worksheet.Shapes indexer example for named shapes in Aspose.Cells
+// Tags: Aspose.Cells retrieve shape by name | C# worksheet shapes indexer | verify shape existence Excel | Aspose.Cells shape type detection | handle missing shape Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, iterates through the first worksheet's Shapes collection to find a shape named "MyShape", and outputs whether the shape exists together with its Type.
+// // Loads 'input.xlsx', accesses the first worksheet, attempts to retrieve a shape named 'MyShape' via worksheet.Shapes["MyShape"], and prints whether the shape exists along with its ShapeType.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the input workbook
             string inputPath = "input.xlsx";
 
-            // Verify that the file exists to avoid FileNotFoundException
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook from the file
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (index 0)
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Name of the shape to retrieve
             string targetShapeName = "MyShape";
 
-            // Search for the shape by its name
-            Shape foundShape = null;
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                if (shape.Name == targetShapeName)
-                {
-                    foundShape = shape;
-                    break;
-                }
-            }
+            // Retrieve the shape by its name
+            Shape shape = worksheet.Shapes[targetShapeName];
 
-            // Output the result
-            if (foundShape != null)
+            // Check if the shape exists and output its type
+            if (shape != null)
             {
-                Console.WriteLine($"Shape '{targetShapeName}' exists. Type: {foundShape.Type}");
+                Console.WriteLine($"Shape '{targetShapeName}' exists. Type: {shape.Type}");
             }
             else
             {
-                Console.WriteLine($"Shape '{targetShapeName}' does not exist in the worksheet.");
+                Console.WriteLine($"Shape '{targetShapeName}' does not exist.");
             }
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

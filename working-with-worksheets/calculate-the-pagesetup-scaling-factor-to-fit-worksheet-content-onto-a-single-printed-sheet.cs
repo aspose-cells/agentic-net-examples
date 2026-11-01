@@ -1,64 +1,49 @@
-// Title: Retrieve the page‑setup Zoom (scaling factor) after fitting an Excel worksheet to one printed page using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx workbook, sets PageSetup.FitToPagesWide = 1 and FitToPagesTall = 1 with Aspose.Cells, then reads the resulting PageSetup.Zoom value and writes it to the console. | Show how to obtain the automatic scaling percentage after configuring a worksheet to fit on a single printed page in Aspose.Cells for .NET. | Provide a .NET snippet that saves the workbook after adjusting the page‑setup and logs the calculated scaling factor.
-// Common Searches: Aspose.Cells .NET get page zoom after setting FitToPagesWide and FitToPagesTall | C# how to read scaling factor for single-page print in Excel using Aspose.Cells | retrieve worksheet print scaling percentage with Aspose.Cells for .NET | fit worksheet to one page and obtain Zoom value programmatically Aspose.Cells | Aspose.Cells page setup fit to one page calculate scaling factor
-// Tags: Aspose.Cells page setup fit to one page | Aspose.Cells retrieve Zoom percentage | C# Excel worksheet print scaling Aspose.Cells | Aspose.Cells FitToPagesWide FitToPagesTall usage | Aspose.Cells calculate page scaling factor
+// Title: How to retrieve the page‑setup Zoom scaling factor after fitting an Aspose.Cells worksheet to a single printed page in C#
+// AI Prompts: Create C# code that sets Worksheet.PageSetup.FitToPagesWide = 1 and FitToPagesTall = 1 with Aspose.Cells, then reads the Worksheet.PageSetup.Zoom value and prints it. | Write a C# example that configures a workbook to print on one page using Aspose.Cells and returns the calculated scaling percentage from the Zoom property.
+// Common Searches: Aspose.Cells .NET get Zoom percentage after setting FitToPagesWide and FitToPagesTall | C# determine print scaling factor for Excel worksheet using Aspose.Cells page setup | How to read page setup scaling factor when fitting worksheet to one page in Aspose.Cells | Retrieve worksheet zoom value after FitToPagesWide=1 in Aspose.Cells C#
+// Tags: Aspose.Cells page setup FitToPagesWide property | Aspose.Cells page setup FitToPagesTall usage | Aspose.Cells retrieve Zoom scaling | C# Aspose.Cells print scaling factor | Aspose.Cells fit worksheet on one printed page
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// Demonstrates creating a workbook, populating data, configuring the worksheet to fit on a single printed page with FitToPagesWide and FitToPagesTall, reading the resulting Zoom scaling factor, and outputting the percentage.
+class Program
 {
-    // The example loads an Excel workbook, accesses the first worksheet, configures its PageSetup to fit the content to a single printed page (both horizontally and vertically), reads the automatically computed Zoom (scaling) percentage, outputs the value, and saves the modified workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the workbook from the input file
-                Workbook workbook = new Workbook(inputPath);
+            // Populate the worksheet with sample data
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(150);
+            sheet.Cells["A3"].PutValue("Oranges");
+            sheet.Cells["B3"].PutValue(200);
+            // Add more rows as needed...
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Configure page setup to fit the entire sheet on a single printed page
+            sheet.PageSetup.FitToPagesWide = 1; // fit width to 1 page
+            sheet.PageSetup.FitToPagesTall = 1; // fit height to 1 page
 
-                // Configure page setup to fit the entire content on a single printed sheet
-                PageSetup pageSetup = sheet.PageSetup;
-                pageSetup.FitToPagesWide = 1; // fit to 1 page horizontally
-                pageSetup.FitToPagesTall = 1; // fit to 1 page vertically
+            // After setting FitToPages, the Zoom property reflects the scaling factor (percentage)
+            double scalingFactor = sheet.PageSetup.Zoom;
 
-                // After setting FitToPages, Aspose.Cells computes the scaling factor
-                int scalingFactor = pageSetup.Zoom; // scaling percentage (e.g., 85 means 85%)
+            // Output the scaling factor
+            Console.WriteLine("Scaling factor to fit on one page: " + scalingFactor + "%");
 
-                // Output the scaling factor
-                Console.WriteLine($"Scaling factor to fit on one page: {scalingFactor}%");
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook with the updated page‑setup changes
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook (optional)
+            workbook.Save("ScaledWorksheet.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

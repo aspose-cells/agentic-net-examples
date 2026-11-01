@@ -1,61 +1,59 @@
-// Title: Count non‑empty HTML cells after importing a DataTable into an Aspose.Cells worksheet (C#)
-// AI Prompts: Write C# code that imports a DataTable with HTML strings into an Aspose.Cells worksheet and returns the number of cells containing HTML tags. | Modify the cell enumeration loop to increment a counter only when the cell's string value includes both '<' and '>' characters. | Add code to log the address (e.g., A1, B2) of each cell that contains HTML content while counting them.
-// Common Searches: how to detect HTML strings in worksheet cells using Aspose.Cells for .NET | C# Aspose.Cells import DataTable with HTML and count cells containing tags | enumerate cells in Aspose.Cells workbook and check for non‑empty HTML content | Aspose.Cells count cells that have HTML markup after ImportData | sample code for counting HTML cells in a worksheet with Aspose.Cells C#
-// Tags: import DataTable as HTML strings Aspose.Cells | enumerate worksheet cells Aspose.Cells C# | detect HTML markup in cell values Aspose.Cells | count cells containing HTML tags C# | Aspose.Cells cell iteration HTML detection
+// Title: Count cells with non‑empty HTML markup in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, scans each worksheet's used range, and returns the number of cells whose string value contains HTML tags. | Create a helper method that checks whether a string includes HTML markup by looking for opening and closing angle brackets, and use it while counting cells. | Improve performance by limiting the loops to MaxDataRow and MaxDataColumn for each worksheet when counting cells that contain HTML.
+// Common Searches: aspocells count cells that contain html tags in c# | how to detect html markup in excel cell values using aspocells .net | iterate only used range of worksheets with aspocells to improve performance | c# sample to count non‑empty html cells in an xlsx workbook | aspocells example for scanning cells for html content
+// Tags: html cell count aspocells | html markup detection in excel cells aspocells | used range iteration aspocells | cell string value analysis aspocells | maxdatarow maxdatacolumn loop aspocells | excel workbook cell scanning aspocells
 
-using System;
-using System.Data;
-using System.Collections;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsHtmlCountDemo
+// The program loads an Excel workbook with Aspose.Cells, iterates through each worksheet's used range, checks each cell for a non‑empty string, uses a simple tag‑search to identify HTML markup, increments a counter for matching cells, and prints the total number of cells containing HTML content.
+class Program
 {
-    // Demonstrates importing a DataTable with HTML strings into an Aspose.Cells worksheet, iterating all cells, counting those whose values contain both '<' and '>' characters, optionally logging their addresses, and saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        int htmlCellCount = 0;
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Prepare a DataTable with sample HTML content
-            DataTable table = new DataTable();
-            table.Columns.Add("ID");
-            table.Columns.Add("Content");
-            table.Columns.Add("Time");
+            Cells cells = sheet.Cells;
 
-            table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
-            table.Rows.Add("2", "Plain text", "3:45 PM");
-            table.Rows.Add("3", "<b>Bold Text</b>", "4:00 PM");
+            // Determine the used range to limit iteration
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Import the DataTable with HTML strings recognized
-            worksheet.Cells.ImportData(table, 0, 0, new ImportTableOptions
+            for (int row = 0; row <= maxRow; row++)
             {
-                IsFieldNameShown = true,
-                IsHtmlString = true,
-                NumberFormats = new string[] { null, null, "h:mm AM/PM" }
-            });
-
-            // Iterate through all cells and count those containing non‑empty HTML
-            int htmlCellCount = 0;
-            IEnumerator enumerator = worksheet.Cells.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                Cell cell = (Cell)enumerator.Current;
-                // Get the cell value as string (if any)
-                string value = cell.Value?.ToString();
-                // Consider it HTML if it contains at least one opening and closing tag
-                if (!string.IsNullOrEmpty(value) && value.Contains("<") && value.Contains(">"))
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    htmlCellCount++;
+                    Cell cell = cells[row, col];
+
+                    // Check if the cell contains a non‑empty string
+                    if (cell.Value != null && cell.Type == CellValueType.IsString)
+                    {
+                        string text = cell.StringValue.Trim();
+
+                        // Simple detection of HTML content (looks for <...> tags)
+                        if (!string.IsNullOrEmpty(text) && ContainsHtml(text))
+                        {
+                            htmlCellCount++;
+                        }
+                    }
                 }
             }
-
-            Console.WriteLine($"Number of cells containing non‑empty HTML content: {htmlCellCount}");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("HtmlContentCountDemo.xlsx");
         }
+
+        Console.WriteLine($"Number of cells with non‑empty HTML content: {htmlCellCount}");
+    }
+
+    // Helper method to detect presence of HTML tags in a string
+    static bool ContainsHtml(string text)
+    {
+        int start = text.IndexOf('<');
+        int end = text.IndexOf('>', start + 1);
+        return start >= 0 && end > start;
     }
 }

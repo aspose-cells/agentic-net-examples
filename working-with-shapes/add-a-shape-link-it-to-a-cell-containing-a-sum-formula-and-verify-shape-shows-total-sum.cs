@@ -1,13 +1,14 @@
-// Title: Create a rectangle shape linked to a SUM formula cell and validate its displayed value using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet, assigns the shape's caption to the result of a SUM(A1:A4) formula, and confirms the caption matches the calculated total. | Write an Aspose.Cells example that populates cells, inserts a SUM formula, calculates it, links a shape's text to the formula result, verifies the link, and saves the workbook.
-// Common Searches: Aspose.Cells C# set shape caption to result of SUM formula | how to bind a shape's displayed text to a calculated cell value in Aspose.Cells | validate that a rectangle shape shows the same total as a SUM cell in a .NET workbook | link shape text to cell containing SUM(A1:A4) using Aspose.Cells
-// Tags: add rectangle shape Aspose.Cells | assign shape caption from cell formula C# | check shape text equals calculated sum Aspose.Cells | persist linked shape in .xlsx workbook
+// Title: Create a rectangle shape linked to a SUM formula cell and verify its displayed value using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet, sets its Text property to reference a cell containing a SUM formula, runs workbook.CalculateFormula, and asserts that the shape’s text matches the computed total. | Write a script that binds a shape’s text to cell B1 (=SUM(A1:A5)), triggers recalculation, parses the shape text, and confirms the value equals the expected sum.
+// Common Searches: aspnet add rectangle shape linked to cell formula Aspose.Cells example | how to bind shape text to a SUM cell in C# using Aspose.Cells | verify that a shape displays the result of a formula in an Excel file with Aspose.Cells | C# Aspose.Cells shape text shows calculated total from range A1:A5
+// Tags: link shape text to cell formula Aspose.Cells | add rectangle shape to worksheet C# | bind shape to SUM cell Aspose.Cells | verify shape displays calculated value .NET | shape text formula reference Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
+using System.IO;
 
-// The example creates a workbook, fills cells A1‑A4 with numbers, inserts a SUM formula in A5, calculates the formula, adds a rectangle shape, sets the shape's caption to the computed sum, verifies the caption matches the cell value, and saves the file as ShapeLinkedToSum.xlsx.
+// The example creates a workbook, fills A1:A5 with numbers, places a SUM formula in B1, adds a rectangle shape, links the shape's text to B1, recalculates the workbook, checks that the shape's displayed text equals the calculated sum, and saves the file.
 class Program
 {
     static void Main()
@@ -16,43 +17,51 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells A1:A4 with sample numeric data
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(20);
-            worksheet.Cells["A3"].PutValue(30);
-            worksheet.Cells["A4"].PutValue(40);
+            // Populate data in A1:A5
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+            sheet.Cells["A4"].PutValue(40);
+            sheet.Cells["A5"].PutValue(50);
 
-            // Insert a SUM formula in cell A5 that adds the values from A1 to A4
-            worksheet.Cells["A5"].Formula = "=SUM(A1:A4)";
-
-            // Calculate all formulas so that A5 now contains the computed total
+            // Set SUM formula in B1 and calculate
+            sheet.Cells["B1"].Formula = "=SUM(A1:A5)";
             workbook.CalculateFormula();
 
             // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, width, height
-            Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 200, 50);
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 150, 30);
 
-            // Link the shape's displayed text to the value of the SUM cell (A5)
-            shape.Text = worksheet.Cells["A5"].StringValue; // After calculation, this holds the total sum
+            // Link the shape's text to cell B1 (the shape will display the calculated sum)
+            shape.Text = "=B1";
 
-            // Verification: ensure the shape's text matches the computed sum in cell A5
-            double cellSum = worksheet.Cells["A5"].DoubleValue;
-            double shapeSum;
-            bool isValid = double.TryParse(shape.Text, out shapeSum) && shapeSum == cellSum;
+            // Recalculate to ensure the shape's displayed text is updated
+            workbook.CalculateFormula();
 
-            if (isValid)
+            // Verify that the shape shows the total sum
+            string shapeText = shape.Text;
+            double expectedSum = sheet.Cells["B1"].DoubleValue;
+
+            Console.WriteLine($"Shape text: {shapeText}");
+            Console.WriteLine($"Expected sum: {expectedSum}");
+
+            // Attempt to parse the shape text as a double for verification
+            if (double.TryParse(shapeText, out double shapeValue) &&
+                Math.Abs(shapeValue - expectedSum) < 0.0001)
             {
-                Console.WriteLine($"Verification passed: Shape displays the correct total sum ({shapeSum}).");
+                Console.WriteLine("Verification passed: Shape displays the correct total sum.");
             }
             else
             {
-                Console.WriteLine("Verification failed: Shape text does not match the cell sum.");
+                Console.WriteLine("Verification failed: Shape does not display the correct total sum.");
             }
 
-            // Save the workbook (optional, demonstrates that the shape is persisted)
-            workbook.Save("ShapeLinkedToSum.xlsx");
+            // Save the workbook (optional)
+            string outputPath = "ShapeLinkedToSum.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

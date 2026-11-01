@@ -1,32 +1,49 @@
-// Title: Suppress scientific notation when exporting numbers over one million to HTML with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that writes values greater than 1,000,000 into an Aspose.Cells workbook, applies a custom numeric format to keep the numbers as plain integers, and saves the sheet as an HTML file. | Show how to configure Aspose.Cells Style.Custom with the format string "0" to avoid exponential notation in the HTML export.
-// Common Searches: Aspose.Cells how to keep large numbers from showing scientific notation in HTML output | C# export Excel to HTML with plain integer formatting using Aspose.Cells | prevent exponential notation for values over 1 million when saving workbook as HTML Aspose.Cells | custom number format 0 for HTML export in Aspose.Cells .NET example
-// Tags: Aspose.Cells HTML custom numeric style | disable exponential display in HTML export | format cells as integer for HTML output | C# Aspose.Cells set style custom 0 | HTML export large integer values Aspose.Cells
+// Title: How to export Excel cells with values over one million to HTML without scientific notation using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, inserts numbers larger than 1,000,000, applies a custom number format "0" to each cell, and saves the file as HTML with Aspose.Cells, ensuring the output shows plain decimal values. | Show how to configure HtmlSaveOptions and cell styles in Aspose.Cells to suppress exponential notation when converting a worksheet containing large numeric values to HTML.
+// Common Searches: Aspose.Cells C# export worksheet to HTML keep large numbers in decimal format | prevent scientific notation for numbers > 10^6 in HTML output with Aspose.Cells | set custom number format for big integers before saving as HTML using Aspose.Cells .NET
+// Tags: HTML export suppress scientific notation Aspose.Cells | custom number format integer cells Aspose.Cells | large numeric values HTML save Aspose.Cells | C# Aspose.Cells prevent exponential notation
 
 using Aspose.Cells;
+using System;
 
-// The example creates a workbook, inserts two numbers larger than one million, applies a custom "0" number format to each cell to keep them as plain integers, and saves the workbook as an HTML file, ensuring scientific notation is not used.
+// Creates a workbook, writes several numbers greater than 1,000,000, applies the custom format "0" to each cell to force plain decimal representation, and saves the workbook as an HTML file using Aspose.Cells, demonstrating how to suppress scientific notation in the HTML output.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (create rule)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            var workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet and rename it
+            var sheet = workbook.Worksheets[0];
+            sheet.Name = "LargeNumbers";
 
-        // Insert values larger than 10⁶
-        sheet.Cells["A1"].PutValue(1234567);
-        sheet.Cells["A2"].PutValue(9876543);
+            // Large numeric values (greater than 10⁶)
+            double[] values = { 1234567, 9876543210, 1.23e6, 5.6789e7 };
 
-        // Apply a plain integer number format to suppress scientific notation
-        Style plainStyle = workbook.CreateStyle();
-        plainStyle.Custom = "0";
-        sheet.Cells["A1"].SetStyle(plainStyle);
-        sheet.Cells["A2"].SetStyle(plainStyle);
+            // Write values to cells and apply a custom number format to suppress scientific notation
+            for (int i = 0; i < values.Length; i++)
+            {
+                var cell = sheet.Cells[i, 0];
+                cell.PutValue(values[i]);
 
-        // Export the workbook to HTML (save rule)
-        workbook.Save("LargeNumbers.html", SaveFormat.Html);
+                // Force plain decimal representation (no exponential format)
+                var style = cell.GetStyle();
+                style.Custom = "0"; // integer format without scientific notation
+                cell.SetStyle(style);
+            }
+
+            // Configure HTML export options
+            var htmlOptions = new HtmlSaveOptions();
+
+            // Save the workbook as HTML (format inferred from file extension)
+            workbook.Save("LargeNumbers.html", htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

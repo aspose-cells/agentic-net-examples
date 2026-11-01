@@ -1,44 +1,54 @@
-// Title: Create a custom view called ReportView and freeze header rows in an Excel worksheet with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to add a custom view named ReportView, then apply FreezePanes to the first N header rows while keeping existing view settings unchanged. | Generate a snippet that loads a workbook, creates or selects a custom view, freezes the top header rows, and saves the file without losing any view configurations.
-// Common Searches: Aspose.Cells C# create custom view ReportView and freeze top rows | preserve existing worksheet view when applying FreezePanes Aspose.Cells .NET | how to set named view and freeze header rows in Excel using Aspose.Cells
-// Tags: custom view ReportView Aspose.Cells | freeze header rows Aspose.Cells | preserve worksheet view settings .NET | Aspose.Cells FreezePanes with custom view | C# Excel custom view and freeze panes
+// Title: Create a custom worksheet view named “ReportView” with frozen header rows and preserved view settings using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to create a named view and freeze the first row | freeze header rows while keeping gridlines and ruler visible in Aspose.Cells workbook | set custom worksheet view properties and save as ReportView.xlsx with Aspose.Cells | C# Aspose.Cells FreezePanes example with view settings preservation | create worksheet view and maintain view options like gridlines in Aspose.Cells for .NET
+// Tags: custom worksheet view Aspose.Cells | freeze header rows Aspose.Cells C# | preserve gridlines ruler Aspose.Cells | set view properties Aspose.Cells workbook | save workbook with named view Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, freezes the first row of the first worksheet using FreezePanes, and saves the modified file, demonstrating basic pane freezing while handling missing files and exceptions.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Demonstrates how to create a new workbook, define a custom view called "ReportView", freeze the header row using FreezePanes, keep gridlines, row/column headers, and ruler visible, and save the file as ReportView.xlsx with Aspose.Cells for .NET.
+    class Program
     {
-        const string inputPath = "Input.xlsx";
-        const string outputPath = "Output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        try
-        {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the first row (rows above row index 1 are frozen)
-            // Parameters: row, column, totalRows, totalColumns
-            sheet.FreezePanes(1, 0, 1, 0);
+                // Freeze the first row (header row)
+                // Parameters: totalRows, totalColumns, row index of first unfrozen row, column index of first unfrozen column
+                sheet.FreezePanes(1, 0, 1, 0);
 
-            // Save the workbook with the changes
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Optional view settings
+                sheet.IsGridlinesVisible = true;
+                sheet.IsRowColumnHeadersVisible = true;
+                sheet.IsRulerVisible = true;
+
+                // Define output file path
+                string outputFile = "ReportView.xlsx";
+
+                // Ensure the directory exists
+                string fullPath = Path.GetFullPath(outputFile);
+                string outputDir = Path.GetDirectoryName(fullPath) ?? Directory.GetCurrentDirectory();
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved to: {fullPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,64 +1,58 @@
-// Title: Move a worksheet shape to the front, capture its ZOrderPosition, then send it to the back with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that adds a rectangle shape to a worksheet, reads its ZOrderPosition, sets the shape to the highest Z-order, then resets it to the lowest Z-order and prints each value. | Show how to programmatically bring a shape to the front and send it to the back in an Excel file using Aspose.Cells, including verification of Z-order changes. | Create a sample that saves an Excel workbook after modifying a shape's ZOrderPosition, demonstrating both BringToFront and SendToBack operations.
-// Common Searches: aspnet aspose.cells set shape ZOrderPosition to front | c# retrieve shape Z-order index in Excel workbook using Aspose.Cells | programmatic method for moving an Excel shape behind other objects with Aspose.Cells | step-by-step guide to adjust shape layering order in Aspose.Cells .NET | Aspose.Cells shape ordering Z-order manipulation tutorial
-// Tags: Aspose.Cells shape ZOrderPosition manipulation | C# bring shape to front Aspose.Cells | C# send shape to back Aspose.Cells | Aspose.Cells worksheet shape ordering | Excel shape Z-order handling with Aspose.Cells | Aspose.Cells rectangle shape example
+// Title: Programmatically bring a shape to the front, send it to the back, and compare Z-order positions in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a rectangle shape to a worksheet, reads its initial ZOrderPosition, sets the shape to the front by assigning the highest Z-order index, then moves it to the back by setting ZOrderPosition to 0, and prints the before/after values using Aspose.Cells. | Show how to retrieve a shape's Z-order index, modify it to bring the shape forward or send it backward, and verify the changes in an Excel workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to bring shape to front | How to move an Excel shape to the back using Aspose.Cells .NET | Retrieve and compare shape Z-order index in Aspose.Cells workbook | C# example for changing Z-order of shapes in Excel with Aspose.Cells | Aspose.Cells shape ordering front back Z-order manipulation
+// Tags: Aspose.Cells shape ZOrderPosition | C# bring Excel shape to front Aspose.Cells | C# send Excel shape to back Aspose.Cells | compare shape Z-order Aspose.Cells | rectangle shape Z-order Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a rectangle shape, records its initial ZOrderPosition, moves the shape to the front by assigning the highest Z-order index, then moves it to the back by assigning zero, prints the original, front, and back Z-order values, validates the ordering logic, and saves the workbook as ShapeZOrderDemo.xlsx.
-class Program
+// Creates a new workbook, adds a rectangle shape, captures its initial ZOrderPosition, moves the shape to the front by setting the Z-order to the highest index, then sends it to the back by setting ZOrderPosition to zero, compares the indices, and saves the workbook.
+class ShapeZOrderDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 150, 80);
+            // Parameters: shape type, upper left row, upper left column, upper left row offset, upper left column offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 100);
 
-            // Capture the original Z-order index
-            int originalZOrder = shape.ZOrderPosition;
+            // Capture the initial Z-order position
+            int initialZOrder = shape.ZOrderPosition;
+            Console.WriteLine($"Initial Z-order: {initialZOrder}");
 
-            // Bring the shape to the front by setting its Z-order to the highest index
+            // Bring the shape to the front by setting its Z-order to the maximum index
             shape.ZOrderPosition = sheet.Shapes.Count - 1;
             int frontZOrder = shape.ZOrderPosition;
+            Console.WriteLine($"Z-order after bringing to front: {frontZOrder}");
 
-            // Send the shape to the back by setting its Z-order to the lowest index
+            // Send the shape to the back by setting its Z-order to zero
             shape.ZOrderPosition = 0;
             int backZOrder = shape.ZOrderPosition;
+            Console.WriteLine($"Z-order after sending to back: {backZOrder}");
 
-            // Output the Z-order values
-            Console.WriteLine($"Original Z-order: {originalZOrder}");
-            Console.WriteLine($"After BringToFront Z-order: {frontZOrder}");
-            Console.WriteLine($"After SendToBack Z-order: {backZOrder}");
-
-            // Verify expected behavior
-            if (frontZOrder > originalZOrder && backZOrder < frontZOrder)
+            // Verify the Z-order manipulation
+            if (initialZOrder == backZOrder && frontZOrder > initialZOrder)
             {
-                Console.WriteLine("Z-order changes as expected.");
+                Console.WriteLine("Z-order manipulation succeeded.");
             }
             else
             {
-                Console.WriteLine("Unexpected Z-order behavior.");
+                Console.WriteLine("Z-order manipulation did not behave as expected.");
             }
 
-            // Ensure the output directory exists
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
             string outputPath = "ShapeZOrderDemo.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

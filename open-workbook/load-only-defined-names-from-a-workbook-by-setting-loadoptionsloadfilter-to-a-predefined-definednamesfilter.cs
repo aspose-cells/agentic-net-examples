@@ -1,39 +1,39 @@
-// Title: Load only defined names from an Excel workbook using Aspose.Cells DefinedNamesFilter in C#
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, sets LoadOptions.LoadFilter to a DefinedNamesFilter, and loads only the workbook's defined names. | Show how to iterate through Workbook.Worksheets.Names after applying DefinedNamesFilter and output each name together with its RefersTo reference. | Add comprehensive error handling and demonstrate saving the workbook after loading only defined names with Aspose.Cells.
-// Common Searches: Aspose.Cells C# load only named ranges using DefinedNamesFilter | How to filter workbook loading to retrieve only defined names in .NET | Example of using LoadOptions.LoadFilter with DefinedNamesFilter in Aspose.Cells | List all defined names from an Excel file without loading worksheets Aspose.Cells
-// Tags: Aspose.Cells DefinedNamesFilter | load defined names Excel .NET | filter workbook load options Aspose | enumerate named ranges C# | save workbook after filtered load
+// Title: Read all defined names (named ranges) from an Excel workbook using Aspose.Cells in C#
+// Common Searches: how to list named ranges in an Excel file with Aspose.Cells C# | Aspose.Cells C# enumerate defined names without modifying the workbook | retrieve all Excel defined names using Aspose.Cells .NET API | C# code to get named ranges from an XLSX file with Aspose.Cells | extract workbook defined names Aspose.Cells example in C#
+// Tags: Aspose.Cells read defined names C# | Aspose.Cells enumerate named ranges .NET | LoadOptions workbook loading C# | Aspose.Cells workbook named ranges extraction | C# iterate Excel defined names Aspose
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example verifies the presence of the input Excel file, creates a LoadOptions instance with LoadFilter set to DefinedNamesFilter to load only defined names, opens the workbook, iterates through Workbook.Worksheets.Names to display each name and its RefersTo value, ensures the output directory exists, saves the workbook to a new file, and includes robust exception handling.
+// The example verifies the input XLSX file, loads the workbook with default LoadOptions, iterates through the workbook's defined names (named ranges), prints each name and its reference, ensures the output directory exists, and saves the workbook unchanged.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file '{inputPath}' not found.");
-            return;
-        }
-
         try
         {
-            // Create load options (no specific filter needed for defined names)
-            LoadOptions loadOptions = new LoadOptions();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Load the workbook using the specified load options
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook (no filter applied to keep compatibility with all versions)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Iterate through the loaded defined names
-            foreach (Name definedName in workbook.Worksheets.Names)
+            // Iterate through defined names and display their details
+            foreach (var definedName in workbook.Worksheets.Names)
             {
-                Console.WriteLine($"Name: {definedName.Text}, RefersTo: {definedName.RefersTo}");
+                // Use Text property for the name (compatible with older Aspose.Cells versions)
+                string name = definedName.Text ?? string.Empty;
+                string refersTo = definedName.RefersTo ?? string.Empty;
+                Console.WriteLine($"Name: {name}, RefersTo: {refersTo}");
             }
 
             // Ensure the output directory exists
@@ -43,13 +43,12 @@ class Program
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook (optional, as only defined names were loaded)
+            // Save the workbook (optional, as no modifications are made)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

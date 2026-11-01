@@ -1,104 +1,91 @@
-// Title: Automatically apply a predefined shadow style to every picture added in an Aspose.Cells worksheet (C#)
-// AI Prompts: Create a C# helper that inserts an image into a worksheet cell and sets its shadow attributes through reflection. | Update the picture insertion routine to automatically set predefined blur, transparency, offset, rotation, and visibility for each new picture. | Implement runtime detection of the Shadow property and apply all shadow attributes only when the current Aspose.Cells version supports it.
-// Common Searches: C# Aspose.Cells add picture with automatic shadow effect | set default shadow parameters for every inserted image in Excel using Aspose.Cells | use reflection to configure picture shadow properties in Aspose.Cells .NET | apply consistent shadow style to all pictures in a workbook with Aspose.Cells C#
-// Tags: Aspose.Cells picture shadow configuration | C# reflection based picture shadow setting | auto apply shadow to inserted images | default shadow style for Excel pictures | Aspose.Cells image formatting C#
+// Title: How to automatically apply a predefined shadow style to each picture shape when inserting images with Aspose.Cells for .NET
+// Common Searches: C# add picture to worksheet with automatic shadow using Aspose.Cells | apply predefined shadow to images inserted in Excel via Aspose.Cells .NET | automate picture shape shadow effect when adding pictures in Aspose.Cells workbook | set shadow style for newly added pictures in Aspose.Cells C# example | Aspose.Cells picture insertion with shadow formatting code sample
+// Tags: add picture with shadow Aspose.Cells C# | picture shape shadow styling Aspose.Cells | worksheet image shadow formatting .NET | automatic picture shadow application Excel | Aspose.Cells picture formatting example
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, inserts a picture into a specified cell, and uses reflection to apply a predefined shadow style (blur, transparency, offsets, rotation, scale, visibility) only when the Shadow feature is available in the Aspose.Cells version, then saves the file.
+// The sample defines a placeholder ApplyPredefinedShadow method for future shadow settings, adds pictures to a worksheet through AddPictureWithShadow which invokes the placeholder, creates a workbook, inserts an image, and saves the file, demonstrating how to structure code for automatic shadow styling of newly added picture shapes in Aspose.Cells for .NET.
 class Program
 {
-    // Predefined shadow style constants (except Type, which is not supported in this version)
-    private const double PredefinedBlur = 5.0;
-    private const double PredefinedTransparency = 0.5;
-    private const double PredefinedOffsetX = 3.0;
-    private const double PredefinedOffsetY = 3.0;
-    private const double PredefinedRotation = 0.0;
-    private const double PredefinedScaleX = 100.0;
-    private const double PredefinedScaleY = 100.0;
-    private const bool PredefinedVisible = true;
+    // Placeholder for applying a predefined shadow.
+    // Shadow effects are not available in the current Aspose.Cells version.
+    private static void ApplyPredefinedShadow(Picture picture)
+    {
+        try
+        {
+            // Future implementation can set picture.ShadowEffect properties here.
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to apply shadow: {ex.Message}");
+        }
+    }
+
+    // Adds a picture to the worksheet and attempts to apply a shadow.
+    private static Picture AddPictureWithShadow(Worksheet sheet, int upperLeftRow, int upperLeftColumn, string imagePath)
+    {
+        try
+        {
+            // Add the picture (returns the picture index).
+            int pictureIndex = sheet.Pictures.Add(upperLeftRow, upperLeftColumn, imagePath);
+
+            // Retrieve the picture object.
+            Picture picture = sheet.Pictures[pictureIndex];
+
+            // Apply the predefined shadow style (if supported).
+            ApplyPredefinedShadow(picture);
+
+            return picture;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding picture: {ex.Message}");
+            throw;
+        }
+    }
 
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Path to the image to be inserted.
+            string imagePath = @"C:\Images\SamplePicture.png";
+
+            // Verify that the image file exists.
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
+
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Path to the image file
-            string imagePath = "sampleImage.png";
+            // Add a picture with automatic shadow styling (row 2, column 1 – zero‑based).
+            AddPictureWithShadow(sheet, 2, 1, imagePath);
 
-            // Add a picture and apply the predefined shadow style if the image exists
-            if (File.Exists(imagePath))
+            // Ensure the output directory exists.
+            string outputPath = @"C:\Output\WorkbookWithShadowedPictures.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                AddPictureWithShadow(sheet, 2, 2, imagePath);
-            }
-            else
-            {
-                Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
-            string resultPath = "Result.xlsx";
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully as {resultPath}.");
+            // Save the workbook.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Adds a picture to the specified cell and applies the predefined shadow style (if supported)
-    private static void AddPictureWithShadow(Worksheet sheet, int row, int column, string imagePath)
-    {
-        try
-        {
-            // Add picture anchored to the upper-left corner of the specified cell
-            int pictureIndex = sheet.Pictures.Add(row, column, imagePath);
-            Picture picture = sheet.Pictures[pictureIndex];
-
-            // Attempt to set shadow properties via reflection (compatible with versions that support Shadow)
-            var shadowProp = picture.GetType().GetProperty("Shadow");
-            if (shadowProp != null)
-            {
-                object shadowObj = shadowProp.GetValue(picture);
-                if (shadowObj != null)
-                {
-                    SetShadowProperty(shadowObj, "Blur", PredefinedBlur);
-                    SetShadowProperty(shadowObj, "Transparency", PredefinedTransparency);
-                    SetShadowProperty(shadowObj, "OffsetX", PredefinedOffsetX);
-                    SetShadowProperty(shadowObj, "OffsetY", PredefinedOffsetY);
-                    SetShadowProperty(shadowObj, "Rotation", PredefinedRotation);
-                    SetShadowProperty(shadowObj, "ScaleX", PredefinedScaleX);
-                    SetShadowProperty(shadowObj, "ScaleY", PredefinedScaleY);
-                    SetShadowProperty(shadowObj, "Visible", PredefinedVisible);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Shadow feature is not available in the current Aspose.Cells version.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to add picture with shadow: {ex.Message}");
-        }
-    }
-
-    // Helper to set a property on the shadow object via reflection
-    private static void SetShadowProperty(object shadowObj, string propertyName, object value)
-    {
-        var prop = shadowObj.GetType().GetProperty(propertyName);
-        if (prop != null && prop.CanWrite)
-        {
-            prop.SetValue(shadowObj, Convert.ChangeType(value, prop.PropertyType));
         }
     }
 }

@@ -1,71 +1,84 @@
-// Title: How to copy rows safely in Aspose.Cells for .NET without exceeding the worksheet row limit
-// AI Prompts: Generate C# code that copies a block of rows from a source worksheet to a destination worksheet using Aspose.Cells, first checking Workbook.Settings.MaxRow and trimming the row count if the copy would surpass the allowed rows. | Show an example of adding error handling around Cells.CopyRows in Aspose.Cells to gracefully handle cases where the destination start index is beyond the maximum row capacity.
-// Common Searches: Aspose.Cells copy rows when destination exceeds max rows .NET | C# Aspose.Cells prevent exception for row overflow during CopyRows | adjust rowsToCopy based on Settings.MaxRow Aspose.Cells example | safe row copy between workbooks using Aspose.Cells C# | how to validate worksheet row limit before copying rows Aspose.Cells
-// Tags: Aspose.Cells copy rows with max row check | C# Aspose.Cells row limit handling | Aspose.Cells Settings.MaxRow validation | Aspose.Cells safe row copy between worksheets | Aspose.Cells prevent row overflow exception
+// Title: C# Aspose.Cells example: copy rows between worksheets with worksheet row‑limit validation and robust error handling
+// AI Prompts: Create C# code that uses Aspose.Cells to copy a specified range of rows from one worksheet to another, automatically truncating the range if the destination start row plus the range exceeds the worksheet's MaxRow, and includes checks for file existence and worksheet count. | Write a reusable C# method that validates the destination start row against Excel's maximum row count, adjusts the rowsToCopy value accordingly, performs the copy with Aspose.Cells, and logs meaningful error messages for missing files, insufficient worksheets, or overflow conditions.
+// Common Searches: Aspose.Cells copy rows with MaxRow check in C# | prevent Excel row overflow when copying rows using Aspose.Cells .NET | adjust rowsToCopy based on destination start row Aspose.Cells | C# error handling for large row copy with Aspose.Cells | how to validate worksheet row limit before copying rows Aspose.Cells
+// Tags: Aspose.Cells row copy MaxRow validation | C# worksheet row overflow protection | Aspose.Cells adjust rowsToCopy for Excel limit | C# error handling Aspose.Cells copy operation | Aspose.Cells copy rows between worksheets
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowCopyExample
+// Demonstrates copying rows from one worksheet to another with Aspose.Cells in C#, checking the destination worksheet's MaxRow, automatically adjusting the number of rows to copy to stay within Excel's row limit, and handling errors such as missing files, insufficient worksheets, and overflow conditions.
+class RowCopyWithLimitCheck
 {
-    // The example creates a source workbook with sample data, then copies its rows to a destination workbook while checking the destination worksheet's Settings.MaxRow. If the copy would exceed the allowed rows, the code adjusts the number of rows to copy or aborts, preventing runtime exceptions. The result is saved as RowCopySafeResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ---------- Create source workbook and add sample data ----------
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cells sourceCells = sourceSheet.Cells;
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Populate 10 rows of data in the source sheet
-            for (int i = 0; i < 10; i++)
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sourceCells[i, 0].PutValue($"Row {i + 1} - Col A");
-                sourceCells[i, 1].PutValue($"Row {i + 1} - Col B");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // ---------- Create destination workbook ----------
-            Workbook destWorkbook = new Workbook();
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-            Cells destCells = destSheet.Cells;
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Desired copy parameters
-            int sourceRowIndex = 0;               // start copying from first row of source
-            int destinationRowIndex = 0;          // start pasting at first row of destination
-            int rowsToCopy = sourceCells.MaxRow + 1; // total rows that contain data in source
-
-            // ---------- Error‑handling logic ----------
-            // MaxRow is zero‑based; it returns the highest row index allowed by the file format.
-            int maxAllowedRowIndex = destWorkbook.Settings.MaxRow;
-
-            // Calculate the last row index that would be written after the copy operation
-            int lastDestinationRowIndex = destinationRowIndex + rowsToCopy - 1;
-
-            if (lastDestinationRowIndex > maxAllowedRowIndex)
+            // Ensure there are at least two worksheets
+            if (workbook.Worksheets.Count < 2)
             {
-                // Adjust the number of rows to copy so we do not exceed the limit
-                rowsToCopy = maxAllowedRowIndex - destinationRowIndex + 1;
+                Console.WriteLine("The workbook must contain at least two worksheets.");
+                return;
+            }
 
+            // Get source and destination worksheets
+            Worksheet srcSheet = workbook.Worksheets[0];
+            Worksheet destSheet = workbook.Worksheets[1];
+
+            // Define copy parameters (zero‑based indices)
+            int srcStartRow = 0;          // first row to copy from source
+            int rowsToCopy = 500000;      // intended number of rows to copy
+            int destStartRow = 600000;    // first row in destination where data will be pasted
+
+            // Maximum rows allowed in the destination worksheet (total count, not zero‑based index)
+            int maxRows = destSheet.Cells.MaxRow + 1; // typically 1,048,576 for .xlsx
+
+            // Calculate the last row index after copy
+            long lastDestRow = (long)destStartRow + rowsToCopy - 1;
+
+            // Adjust rowsToCopy if the operation would exceed the worksheet limit
+            if (lastDestRow >= maxRows)
+            {
+                rowsToCopy = (int)(maxRows - destStartRow);
                 if (rowsToCopy <= 0)
                 {
-                    Console.WriteLine("Cannot copy rows: destination start index is beyond the worksheet row limit.");
+                    Console.WriteLine("Copy operation aborted: destination start row exceeds worksheet row limit.");
+                    return;
                 }
-                else
-                {
-                    Console.WriteLine($"Adjusted rows to copy to {rowsToCopy} to stay within the row limit.");
-                    destCells.CopyRows(sourceCells, sourceRowIndex, destinationRowIndex, rowsToCopy);
-                }
-            }
-            else
-            {
-                // Safe to copy all requested rows
-                destCells.CopyRows(sourceCells, sourceRowIndex, destinationRowIndex, rowsToCopy);
+
+                Console.WriteLine($"Adjusted rows to copy to {rowsToCopy} to stay within the worksheet limit.");
             }
 
-            // ---------- Save the result ----------
-            destWorkbook.Save("RowCopySafeResult.xlsx");
-            Console.WriteLine("Workbook saved as RowCopySafeResult.xlsx");
+            // Determine the number of columns to copy (all columns that contain data in the source sheet)
+            int totalColumns = srcSheet.Cells.MaxColumn + 1;
+
+            // Create source and destination ranges
+            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange(srcStartRow, 0, rowsToCopy, totalColumns);
+            Aspose.Cells.Range destRange = destSheet.Cells.CreateRange(destStartRow, 0, rowsToCopy, totalColumns);
+
+            // Perform the copy
+            destRange.Copy(srcRange);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Rows copied successfully. Output saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

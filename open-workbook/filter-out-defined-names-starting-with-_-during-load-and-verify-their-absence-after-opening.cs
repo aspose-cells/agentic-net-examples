@@ -1,14 +1,13 @@
-// Title: Remove underscore‑prefixed defined names from an Excel workbook using Aspose.Cells in C# and verify their removal before saving
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates through the NameCollection, deletes every defined name whose text starts with an underscore, confirms the collection no longer contains such names, and then saves the workbook. | Show how to filter named ranges by a leading '_' character, remove them from the worksheet's Names collection, and programmatically check that the removal succeeded before exporting the file.
-// Common Searches: aspnet c# remove named ranges that begin with '_' using Aspose.Cells | how to delete underscore prefixed defined names when loading an Excel file with Aspose.Cells | verify that no named ranges start with underscore after opening workbook Aspose.Cells C# | Aspose.Cells filter NameCollection by prefix and save cleaned workbook | C# code sample for cleaning up defined names in Excel with Aspose.Cells
-// Tags: aspocells remove underscore defined names | c# filter NameCollection by prefix | aspocells delete named ranges excel | c# verify named range removal aspocells | aspocells load workbook clean defined names
+// Title: Remove underscore‑prefixed defined names from an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# remove defined names that start with underscore | filter out named ranges beginning with '_' when loading a workbook with Aspose.Cells | verify that no underscore‑prefixed named ranges exist after opening an Excel file in C# | how to delete hidden named ranges in an Excel workbook using Aspose.Cells .NET | remove and validate underscore‑prefixed named ranges before saving a workbook
+// Tags: Aspose.Cells remove underscore named ranges | C# filter defined names on workbook load | Aspose.Cells validate named range cleanup | Excel hidden named range deletion .NET | named range removal before workbook save
 
-using Aspose.Cells;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using Aspose.Cells;
 
-// // Loads an Excel file, removes any defined names that start with an underscore, checks that none remain, and saves the cleaned workbook to a new file.
+// Loads an Excel file, collects all defined names that begin with an underscore, removes them from the workbook, verifies none remain, and saves the result to a new file.
 class Program
 {
     static void Main()
@@ -18,56 +17,40 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists before loading
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook from the input file
+            var workbook = new Workbook(inputPath);
+
+            // Collect defined names that start with "_" for removal
+            var namesToRemove = new List<Name>();
+            foreach (Name name in workbook.Worksheets.Names)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                if (name.Text.StartsWith("_", StringComparison.Ordinal))
+                    namesToRemove.Add(name);
             }
 
-            // Load the workbook
-            var loadOptions = new LoadOptions();
-            var workbook = new Workbook(inputPath, loadOptions);
-
-            // Access the collection of defined names
-            NameCollection definedNames = workbook.Worksheets.Names;
-
-            // Identify defined names that start with '_' and collect their texts
-            var namesToRemove = definedNames
-                .Cast<Name>()
-                .Where(n => n.Text.StartsWith("_", StringComparison.Ordinal))
-                .Select(n => n.Text)
-                .ToList();
-
-            // Remove the identified defined names from the collection
-            foreach (string name in namesToRemove)
+            // Remove the collected names from the workbook
+            foreach (Name name in namesToRemove)
             {
-                definedNames.Remove(name);
+                workbook.Worksheets.Names.Remove(name.Text);
             }
 
-            // Verify that no defined name beginning with '_' remains
-            bool underscoreNamesExist = definedNames
-                .Cast<Name>()
-                .Any(n => n.Text.StartsWith("_", StringComparison.Ordinal));
-
-            Console.WriteLine(underscoreNamesExist
-                ? "Underscore defined names still exist."
-                : "All underscore defined names have been removed.");
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that no defined name starting with "_" remains
+            foreach (Name name in workbook.Worksheets.Names)
             {
-                Directory.CreateDirectory(outputDir);
+                if (name.Text.StartsWith("_", StringComparison.Ordinal))
+                    throw new InvalidOperationException($"Defined name '{name.Text}' was not removed.");
             }
 
-            // Save the workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

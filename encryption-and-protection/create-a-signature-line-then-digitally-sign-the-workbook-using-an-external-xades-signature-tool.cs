@@ -1,14 +1,14 @@
-// Title: Create an Excel workbook with a placeholder signature line and sign it using an external XAdES command‑line tool in C# (Aspose.Cells)
-// AI Prompts: Generate C# code that builds a new workbook with Aspose.Cells, inserts a placeholder signature line at a specific cell, saves the file as .xlsx, and then invokes an external XAdES signer via Process.Start to apply a digital signature. | Modify the example to accept the workbook path and the XAdES signer executable path as command‑line arguments, adding robust error handling for missing files and process launch failures. | Demonstrate how to capture the exit code from the XAdES signing process, log a success or failure message, and optionally clean up the unsigned file when the signature operation fails.
-// Common Searches: how to add a signature line placeholder to an Excel file with Aspose.Cells C# | C# run external XAdES signing executable to digitally sign a .xlsx workbook | process.start error handling when calling command line signer for Excel files in .NET
-// Tags: signature line placeholder Aspose.Cells C# | external XAdES signer integration .xlsx | process.start digital signature Excel C# | command line signing utility error handling | Aspose.Cells workbook save and sign workflow
+// Title: Add a rectangle signature placeholder and sign an Excel workbook with an external XAdES tool using Aspose.Cells for .NET
+// Common Searches: how to add a rectangle shape as a signature placeholder in Excel using Aspose.Cells for .NET | C# code to digitally sign an XLSX file with an external XAdES signer | run an external XAdES signing executable from a .NET application | verify that a signed Excel workbook was created after external signing in C# | save an unsigned workbook then apply XAdES digital signature with Aspose.Cells
+// Tags: Aspose.Cells shape insertion C# | Excel signature line placeholder Aspose.Cells | XLSX workbook save Aspose.Cells C# | ProcessStartInfo external XAdES signer | post‑sign verification of Excel file C# | digital signature integration Aspose.Cells XAdES
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook with Aspose.Cells, adds a placeholder signature line, saves it as an .xlsx file, and then launches an external XAdES signing executable via Process.Start to apply a digital signature, including checks for the signer tool and basic process error handling.
+// The example creates a new Workbook, inserts a rectangular shape labeled "Signature Line" as a visual placeholder on the first worksheet, saves the file as an unsigned XLSX, then launches an external XAdES signing executable via ProcessStartInfo to produce a signed workbook, checks the process exit code, and finally loads the signed file to confirm the digital signature was applied.
 class Program
 {
     static void Main()
@@ -18,75 +18,96 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (optional, shown for completeness)
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -----------------------------------------------------------------
-            // NOTE: SignatureLine feature is not available in the current
-            // Aspose.Cells version used in this project. If a newer version
-            // is referenced, the code below can be re‑enabled:
-            //
-            // int row = 5;
-            // int column = 2;
-            // int signatureIndex = sheet.SignatureLineCollection.Add(row, column);
-            // SignatureLine signatureLine = sheet.SignatureLineCollection[signatureIndex];
-            // signatureLine.Comment = "Approved by";
-            // signatureLine.SuggestedSigner = "John Doe";
-            // signatureLine.SuggestedSignerEmail = "john.doe@example.com";
-            // signatureLine.ShowDate = true;
-            // -----------------------------------------------------------------
+            // Position and size for a placeholder signature line
+            int row = 4;      // zero‑based index (row 5)
+            int column = 1;   // zero‑based index (column B)
+            int offsetX = 0;
+            int offsetY = 0;
+            int width = 200;
+            int height = 100;
 
-            // Define the output file path
-            string tempFilePath = "WorkbookWithSignatureLine.xlsx";
+            // Add a simple rectangle shape as a visual placeholder for the signature line
+            Shape placeholder = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                row,
+                column,
+                offsetX,
+                offsetY,
+                width,
+                height);
+            placeholder.Text = "Signature Line";
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(tempFilePath));
-            if (!Directory.Exists(outputDir))
+            // Save the workbook to a temporary file (unsigned)
+            string unsignedPath = "UnsignedWorkbook.xlsx";
+            workbook.Save(unsignedPath, SaveFormat.Xlsx);
+
+            // Path for the signed output file
+            string signedPath = "SignedWorkbook.xlsx";
+
+            // Verify the unsigned file exists before invoking the external signer
+            if (!File.Exists(unsignedPath))
             {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            workbook.Save(tempFilePath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to: {tempFilePath}");
-
-            // Path to the external signing utility
-            string signerExe = "XAdESSigner.exe";
-
-            // Verify that the signing utility exists
-            if (!File.Exists(signerExe))
-            {
-                Console.WriteLine($"Signing utility not found: {signerExe}");
+                Console.WriteLine($"Unsigned workbook not found at {unsignedPath}");
                 return;
             }
 
-            // Prepare process start information
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            // Invoke external XAdES signing tool
+            ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = signerExe,
-                Arguments = $"\"{tempFilePath}\" \"{tempFilePath}\"",
+                FileName = "XAdESSigner.exe", // external XAdES signing tool
+                Arguments = $"\"{unsignedPath}\" \"{signedPath}\"",
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
             };
 
-            // Execute the external signing tool
             try
             {
-                using (Process signerProcess = Process.Start(startInfo))
+                using (Process proc = Process.Start(psi))
                 {
-                    signerProcess?.WaitForExit();
-                }
+                    if (proc == null)
+                    {
+                        Console.WriteLine("Failed to start the signing process.");
+                        return;
+                    }
 
-                Console.WriteLine("Workbook created and signed successfully.");
+                    // Capture any output for debugging (optional)
+                    string output = proc.StandardOutput.ReadToEnd();
+                    string error = proc.StandardError.ReadToEnd();
+                    proc.WaitForExit();
+
+                    if (proc.ExitCode != 0)
+                    {
+                        Console.WriteLine("XAdES signing failed:");
+                        Console.WriteLine(error);
+                        return;
+                    }
+                }
             }
-            catch (Exception procEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error during signing process: {procEx.Message}");
+                Console.WriteLine($"Error while executing signing tool: {ex.Message}");
+                return;
+            }
+
+            // Verify that the signed file exists before loading
+            if (File.Exists(signedPath))
+            {
+                Workbook signedWorkbook = new Workbook(signedPath);
+                Console.WriteLine("Workbook signed successfully and saved to: " + signedPath);
+            }
+            else
+            {
+                Console.WriteLine("Signed workbook was not created at the expected location.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

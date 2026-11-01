@@ -1,103 +1,93 @@
-// Title: Create a Gantt chart with priority‑based custom colors using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that builds a stacked bar Gantt chart and assigns colors to each task bar according to a priority column (red for high, orange for medium, green for low). | Show how to make the start‑date series transparent in an Aspose.Cells stacked bar chart to achieve the classic Gantt view. | Provide a reusable method that reads a priority value from a worksheet cell and sets the corresponding chart point's foreground color.
-// Common Searches: how to color Gantt chart bars by priority using Aspose.Cells C# | Aspose.Cells conditional bar colors based on worksheet column | C# create stacked bar chart for Gantt and hide start series Aspose | set individual point colors in Aspose.Cells chart series | custom color palette for task priority in Aspose.Cells Gantt chart
-// Tags: apply custom palette to Aspose.Cells Gantt chart | hide start series in stacked bar chart Aspose | assign foreground color to chart points C# | priority driven bar colors Aspose.Cells | create Gantt chart with Aspose.Cells .NET
+// Title: Color‑code Gantt chart bars by task priority using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set bar color in Gantt chart based on priority column | How to apply conditional colors to stacked bar chart points with Aspose.Cells | Change Gantt chart task bar colors programmatically in .NET | C# example for coloring Gantt chart bars according to priority values | Aspose.Cells assign different colors to series points in a stacked bar chart
+// Tags: set series point color Aspose.Cells C# | conditional bar coloring Gantt chart Aspose.Cells | stacked bar chart color customization .NET | priority based Gantt chart colors Excel | apply custom palette to chart series Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.Drawing;
 
-// The example creates a new workbook, fills it with task, start date, duration, and priority data, adds a stacked bar chart that mimics a Gantt chart, hides the start‑date series to make the bars appear as tasks, and then colors each duration bar red, orange, or green based on the priority value before saving the file as GanttChart_CustomPalette.xlsx.
-class GanttChartWithCustomPalette
+// The sample creates an Excel workbook, adds task data with start dates, durations, and priority levels, builds a stacked bar chart to act as a Gantt chart, hides the start‑date series, then iterates over the duration series points and assigns red, orange, or green colors based on the priority value before saving the file.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook();                     // create
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "GanttData";
 
-            // Sample data: Task, Start Date, Duration (days), Priority (1=High,2=Medium,3=Low)
-            string[,] data = new string[,]
-            {
-                { "Task", "Start", "Duration", "Priority" },
-                { "Design", "2024-09-01", "5", "1" },
-                { "Development", "2024-09-06", "10", "2" },
-                { "Testing", "2024-09-16", "4", "3" },
-                { "Deployment", "2024-09-20", "2", "1" }
-            };
+            // ---------- Populate sample data ----------
+            // Headers
+            sheet.Cells["A1"].PutValue("Task");
+            sheet.Cells["B1"].PutValue("Start");
+            sheet.Cells["C1"].PutValue("Duration");
+            sheet.Cells["D1"].PutValue("Priority");
 
-            // Populate worksheet with data
-            for (int r = 0; r < data.GetLength(0); r++)
-            {
-                for (int c = 0; c < data.GetLength(1); c++)
-                {
-                    sheet.Cells[r, c].PutValue(data[r, c]);
-                }
-            }
+            // Row 2
+            sheet.Cells["A2"].PutValue("Design");
+            sheet.Cells["B2"].PutValue(new DateTime(2023, 10, 1));
+            sheet.Cells["C2"].PutValue(5);
+            sheet.Cells["D2"].PutValue("High");
 
-            // Convert Start column to DateTime and Duration to numeric
-            int rows = data.GetLength(0);
-            for (int r = 1; r < rows; r++)
-            {
-                DateTime start = DateTime.Parse(sheet.Cells[r, 1].StringValue);
-                sheet.Cells[r, 1].PutValue(start);
+            // Row 3
+            sheet.Cells["A3"].PutValue("Development");
+            sheet.Cells["B3"].PutValue(new DateTime(2023, 10, 6));
+            sheet.Cells["C3"].PutValue(10);
+            sheet.Cells["D3"].PutValue("Medium");
 
-                double duration = double.Parse(sheet.Cells[r, 2].StringValue);
-                sheet.Cells[r, 2].PutValue(duration);
-            }
+            // Row 4
+            sheet.Cells["A4"].PutValue("Testing");
+            sheet.Cells["B4"].PutValue(new DateTime(2023, 10, 16));
+            sheet.Cells["C4"].PutValue(4);
+            sheet.Cells["D4"].PutValue("Low");
 
-            // Add a stacked bar chart (Gantt style)
-            int chartRow = rows + 2;
-            int chartCol = 0;
-            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, chartRow, chartCol, chartRow + 15, chartCol + 10);
+            // Format the Start column as dates
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Number = 14; // Excel date format
+            sheet.Cells["B2:B4"].SetStyle(dateStyle);
+
+            // ---------- Add a stacked bar chart to act as a Gantt chart ----------
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 25, 10);
             Chart ganttChart = sheet.Charts[chartIndex];
+            ganttChart.Title.Text = "Project Gantt";
 
-            // Define ranges for series and categories
-            string startRange = $"B2:B{rows}";
-            string durationRange = $"C2:C{rows}";
-            string categoryRange = $"A2:A{rows}";
+            // Series 1: Start dates (invisible, used for offset)
+            ganttChart.NSeries.Add("B2:B4", true);
+            ganttChart.NSeries[0].Area.ForegroundColor = Color.Transparent; // hide
+            ganttChart.NSeries[0].Border.IsVisible = false;
 
-            // First series: Start (invisible)
-            ganttChart.NSeries.Add(startRange, true);
+            // Series 2: Duration (visible bars)
+            ganttChart.NSeries.Add("C2:C4", true);
+            ganttChart.NSeries[1].PlotOnSecondAxis = false;
 
-            // Second series: Duration (colored based on priority)
-            ganttChart.NSeries.Add(durationRange, true);
+            // Set categories (task names)
+            ganttChart.NSeries.CategoryData = "A2:A4";
 
-            // Set category axis labels (Task names)
-            ganttChart.NSeries.CategoryData = categoryRange;
-
-            // Hide the first series (Start) to create the Gantt effect
-            ganttChart.NSeries[0].Area.ForegroundColor = Color.Transparent;
-            ganttChart.NSeries[0].Area.Transparency = 100;
-
-            // Define custom colors for priority levels
-            Color highPriorityColor = Color.Red;
-            Color mediumPriorityColor = Color.Orange;
-            Color lowPriorityColor = Color.Green;
-
-            // Apply colors to each bar based on priority
+            // ---------- Apply custom colors based on priority ----------
+            // Priority column is D (zero‑based index 3)
             for (int i = 0; i < ganttChart.NSeries[1].Points.Count; i++)
             {
-                int priority = int.Parse(sheet.Cells[i + 1, 3].StringValue);
-                Color barColor = lowPriorityColor; // default
-
-                if (priority == 1)
-                    barColor = highPriorityColor;
-                else if (priority == 2)
-                    barColor = mediumPriorityColor;
-
+                string priority = sheet.Cells[i + 1, 3].StringValue; // row offset + column D
+                Color barColor = priority switch
+                {
+                    "High"   => Color.Red,
+                    "Medium" => Color.Orange,
+                    "Low"    => Color.Green,
+                    _        => Color.Gray
+                };
                 ganttChart.NSeries[1].Points[i].Area.ForegroundColor = barColor;
             }
 
-            // Save the workbook
-            workbook.Save("GanttChart_CustomPalette.xlsx");
+            // ---------- Save the workbook ----------
+            workbook.Save("GanttChart.xlsx");                       // save
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

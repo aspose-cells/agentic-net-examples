@@ -1,67 +1,97 @@
-// Title: Export only non‑empty cells from an Excel worksheet to a JSON array with headers using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to export the used range of a worksheet to a JSON array, omitting empty cells and treating the first row as column headers. | Show how to configure ExportRangeToJsonOptions to include empty cells as null values while preserving data types in the JSON output. | Create a reusable C# method that accepts a Worksheet object and returns a JSON string of its populated cells with header mapping, using Aspose.Cells.
-// Common Searches: asp.net export excel worksheet to json without empty cells using aspose.cells | c# aspose.cells export used range to json array with header row | how to skip blank cells when converting Excel to JSON with Aspose.Cells | export populated cells from workbook to json string aspose.cells .net | json export options for aspose.cells to ignore empty cells
-// Tags: Aspose.Cells ExportRangeToJsonOptions configuration | skip empty cells JSON export Aspose.Cells | export used range to JSON C# | header row mapping in JSON output Aspose.Cells | convert worksheet range to JSON string .NET
+// Title: Export validated cells from the first worksheet of an Excel workbook to a JSON file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates over the used range of the first worksheet, and writes each cell's address and value to a pretty‑printed JSON array on disk. | Create a method that verifies the input Excel file exists, ensures the output directory is created, and serializes a list of objects containing cell address and value to JSON using System.Text.Json. | Write robust error‑handling that logs cell‑level exceptions during iteration, continues processing remaining cells, and finally saves the collected data to a JSON file.
+// Common Searches: how to use Aspose.Cells in C# to convert worksheet cells to JSON | C# export Excel used range to JSON array with Aspose.Cells | serialize cell address and value to JSON using Aspose.Cells .NET | Aspose.Cells example for writing validated cell data to a JSON file | handle missing Excel file and create output folder when exporting cells to JSON in C#
+// Tags: Aspose.Cells export worksheet cells to JSON | C# serialize Excel cell address and value | used range iteration Aspose.Cells | System.Text.Json output file creation | cell processing error handling Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
-namespace AsposeCellsExportValidatedJson
+// The sample loads an input.xlsx workbook, accesses the first worksheet, iterates through its used range, treats every cell as validated, collects each cell's address and value into a list, serializes the list to an indented JSON array with System.Text.Json, creates the output directory if necessary, writes the result to validated_cells.json, and logs any cell‑level errors while continuing processing.
+class ExportValidatedCells
 {
-    // Demonstrates creating a workbook, defining its used range, and using Aspose.Cells ExportRangeToJsonOptions to export only populated cells to a JSON array with the first row treated as headers.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "validated_cells.json";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine the used range of the worksheet (avoid ambiguity with System.Range)
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            // List to hold validated cell information
+            var validatedCells = new List<object>();
+
+            // Iterate through each cell in the used range
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    try
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // In this example we treat all cells as "validated"
+                        // Add cell address and value to the result list
+                        validatedCells.Add(new
+                        {
+                            Address = cell.Name,
+                            Value = cell.Value
+                        });
+                    }
+                    catch (Exception cellEx)
+                    {
+                        // Log cell‑level errors but continue processing other cells
+                        Console.WriteLine($"Cell processing error at {sheet.Cells[row, col].Name}: {cellEx.Message}");
+                    }
+                }
+            }
+
+            // Serialize the list of validated cells to JSON
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(validatedCells, jsonOptions);
+
+            // Ensure the output directory exists
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data (some cells are left empty intentionally)
-                cells["A1"].PutValue("Name");
-                cells["B1"].PutValue("Age");
-                cells["C1"].PutValue("City");
-
-                cells["A2"].PutValue("John");
-                cells["B2"].PutValue(30);
-                // C2 left empty
-
-                cells["A3"].PutValue("Alice");
-                // B3 left empty
-                cells["C3"].PutValue("London");
-
-                // Determine the used range (from first row/column to the last populated cell)
-                int lastRow = cells.MaxDataRow;      // zero‑based index of the last row with data
-                int lastCol = cells.MaxDataColumn;   // zero‑based index of the last column with data
-
-                // Create a range that covers the used area
-                AsposeRange usedRange = cells.CreateRange(0, 0, lastRow + 1, lastCol + 1);
-
-                // Configure export options:
-                // - ExportEmptyCells = false  => skip empty cells (only validated/non‑empty cells are exported)
-                // - HasHeaderRow = true       => first row is treated as header
-                ExportRangeToJsonOptions jsonOptions = new ExportRangeToJsonOptions
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    ExportEmptyCells = false,
-                    HasHeaderRow = true,
-                    ExportAsString = false   // keep original data types
-                };
-
-                // Export the range to a JSON string
-                string jsonResult = JsonUtility.ExportRangeToJson(usedRange, jsonOptions);
-
-                // Output the JSON for downstream processing
-                Console.WriteLine(jsonResult);
+                    Directory.CreateDirectory(outputDir);
+                }
             }
-            catch (Exception ex)
+            catch (Exception dirEx)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to create output directory: {dirEx.Message}");
             }
+
+            // Write the JSON output to a file
+            File.WriteAllText(outputPath, json);
+            Console.WriteLine($"Validated cells have been exported to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

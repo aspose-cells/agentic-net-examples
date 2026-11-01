@@ -1,51 +1,51 @@
-// Title: Detect VBA project presence in an .xlsx file and report lack of digital signature validation support in Aspose.Cells .NET
-// AI Prompts: Write a C# console application using Aspose.Cells that opens a specified .xlsx file, determines whether it contains a VBA project, and outputs a message indicating that VBA digital signature verification cannot be performed because the API does not provide this feature. | Generate C# code that loads an Excel workbook, checks the VbaProject property, and gracefully handles the cases of missing file, absent VBA project, and unsupported signature validation, logging appropriate messages.
-// Common Searches: how to determine if an Excel file has a VBA project using Aspose.Cells C# | Aspose.Cells .NET check VBA macro presence in .xlsx | is there a way to validate VBA digital signatures with Aspose.Cells | C# read VBA project information from workbook with Aspose.Cells | Aspose.Cells limitation for VBA signature verification
-// Tags: Aspose.Cells VBA project detection .NET | C# inspect VbaProject property in Excel workbook | unsupported VBA digital signature validation Aspose.Cells | handle missing VBA project with Aspose.Cells | load .xlsx and check for macros using Aspose.Cells
+// Title: Check for a VBA project and assess digital signature support in a macro-enabled .xlsm workbook using Aspose.Cells for .NET
+// Common Searches: how to detect if a VBA project is signed in an .xlsm file using Aspose.Cells C# | Aspose.Cells .NET check VBA macro digital signature availability | C# read VBA project from macro-enabled workbook with Aspose.Cells | determine whether Aspose.Cells can verify VBA project signature in .xlsm | handle missing VBA project signature validation in Aspose.Cells API
+// Tags: Aspose.Cells VBA project detection C# | macro-enabled workbook VBA signature support | C# check VBA project presence Aspose.Cells | digital signature validation limitation Aspose.Cells | load .xlsm workbook VBA project Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba; // Provides VbaProject class
 
-namespace Example
+// The example loads a macro-enabled Excel workbook, accesses its VbaProject via Aspose.Cells for .NET, and demonstrates that the current API can only detect the presence of a VBA project; direct digital signature verification of the VBA project is not supported.
+class VbaSignatureValidator
 {
-    // The example loads an Excel workbook, verifies the file exists, accesses its VbaProject property, reports if no VBA project is found, and informs the developer that Aspose.Cells does not provide an API to validate the VBA project's digital signature.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string filePath = "input.xlsm";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            const string inputPath = "input.xlsx";
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+        try
+        {
+            // Load the workbook (must be a macro-enabled file, e.g., .xlsm)
+            Workbook workbook = new Workbook(filePath);
+
+            // Access the VBA project of the workbook
+            VbaProject vbaProject = workbook.VbaProject;
+
+            if (vbaProject != null)
             {
-                Console.WriteLine($"File not found: {inputPath}");
-                return;
+                // Digital signature validation for VBA projects is not exposed directly
+                // in the current Aspose.Cells API. You can check for the presence of a
+                // signature by inspecting the project’s raw data if needed.
+                Console.WriteLine("VBA project found. Digital signature validation is not supported via this API.");
             }
-
-            try
+            else
             {
-                // Load the workbook that may contain a VBA project
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the VBA project; if none exists, report and exit
-                VbaProject vbaProject = workbook.VbaProject;
-                if (vbaProject == null)
-                {
-                    Console.WriteLine("No VBA project found in the workbook.");
-                    return;
-                }
-
-                // Aspose.Cells does not expose a direct API for VBA digital signature validation.
-                // This placeholder informs the user about the limitation.
-                Console.WriteLine("VBA project is present. Signature validation is not supported by Aspose.Cells.");
+                Console.WriteLine("No VBA project found in the workbook.");
             }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine("An error occurred while processing the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

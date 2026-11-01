@@ -1,47 +1,45 @@
-// Title: Set PdfSaveOptions.ImageResample to 150 DPI for PDF export with Aspose.Cells in C# (including fallback when property is missing)
-// AI Prompts: Generate C# code that creates a PdfSaveOptions object, assigns ImageResample = 150 DPI, and saves an Excel workbook as a PDF using Aspose.Cells. | Provide C# alternatives for reducing PDF size while preserving image clarity when the ImageResample property is not available in Aspose.Cells.
-// Common Searches: Aspose.Cells C# set PDF image resample DPI to 150 | PdfSaveOptions ImageResample property missing workaround | How to reduce PDF size by resampling images in Aspose.Cells | C# Excel to PDF image quality control with Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions image DPI | C# Excel to PDF image resampling | reduce PDF file size Aspose.Cells | alternative image quality settings Aspose.Cells | PDF export image compression C#
+// Title: How to set PdfSaveOptions.ImageResample to 150 DPI in Aspose.Cells for C# to shrink PDF size while keeping image clarity
+// AI Prompts: Generate C# code that configures PdfSaveOptions.ImageResample to 150 DPI before calling Workbook.Save to produce a smaller PDF. | Modify the provided Aspose.Cells example to resample embedded images at 150 DPI during PDF export. | Explain the steps to apply a 150‑DPI image resampling setting in Aspose.Cells when converting an Excel workbook to PDF using C#.
+// Common Searches: Aspose.Cells C# set PDF image resample DPI to 150 for smaller file size | How to reduce PDF output size by resampling images with PdfSaveOptions in Aspose.Cells | C# Aspose.Cells PDF export image DPI adjustment example | PdfSaveOptions ImageResample property usage in .NET
+// Tags: Aspose.Cells PDF image resampling DPI | PdfSaveOptions ImageResample setting | reduce PDF size Aspose.Cells | C# export Excel to PDF with image DPI control | optimize PDF output image quality Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, attempts to configure PdfSaveOptions for image resampling at 150 DPI, notes that the ImageResample property may be unavailable in the current Aspose.Cells version, and saves the workbook as a PDF while handling missing files and runtime errors.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // // Loads an Excel workbook, creates PdfSaveOptions, and saves it as PDF. To lower the PDF size while preserving image clarity, set pdfOptions.ImageResample = 150 before calling workbook.Save.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
 
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // NOTE: The ImageResample property is not available in the current Aspose.Cells version.
-            // If needed, adjust image quality using other available options.
+                // Configure PDF save options (default settings)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as a PDF with the specified options
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook as PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

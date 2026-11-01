@@ -1,39 +1,38 @@
-// Title: Convert an Excel workbook with ColorScale conditional formatting to HTML while preserving gradient colors using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file containing ColorScale conditional formatting and saves it as an HTML file using Aspose.Cells, ensuring the gradient colors are retained. | Show how to configure Aspose.Cells HtmlSaveOptions to export conditional formatting, specifically ColorScale rules, when converting a workbook to HTML in a .NET application.
-// Common Searches: Aspose.Cells preserve ColorScale gradients when exporting Excel to HTML in C# | How to export conditional formatting ColorScale to HTML using Aspose.Cells .NET | C# convert workbook with ColorScale rules to HTML with Aspose.Cells | HtmlSaveOptions settings for keeping Excel color scales in HTML output
-// Tags: Aspose.Cells HtmlSaveOptions export ColorScale | C# Excel to HTML conversion preserving conditional formatting | ColorScale gradient export Aspose.Cells .NET | SaveFormat.Html with conditional formatting | Excel workbook HTML output color scales
+// Title: Export an Excel workbook with ColorScale conditional formatting to HTML using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file containing ColorScale conditional formatting and saves it as an HTML file with gradient colors using Aspose.Cells. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions so that ColorScale rules are retained in the produced HTML output. | Provide a C# example that validates the input workbook, handles missing‑file errors, and converts the workbook with ColorScale rules to HTML via Aspose.Cells.
+// Common Searches: Aspose.Cells C# export workbook with conditional formatting color scales to HTML | How to keep Excel gradient color scales when saving as HTML with Aspose.Cells | C# HtmlSaveOptions preserve ColorScale rules in generated HTML | Convert Excel file containing ColorScale CF to HTML using Aspose.Cells .NET | Saving Excel conditional formatting as HTML Aspose.Cells example
+// Tags: Aspose.Cells HtmlSaveOptions for ColorScale preservation | C# generate HTML from Excel with gradient conditional formatting | export Excel conditional formatting to HTML using .NET API | load workbook and convert to HTML preserving color scales | conditional formatting color scale HTML export Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// Loads 'ColorScaleWorkbook.xlsx', applies default HtmlSaveOptions, and saves as 'ColorScaleWorkbook.html' while preserving the ColorScale conditional formatting gradients.
+// The sample checks for the input Excel file, loads it with Aspose.Cells, uses default HtmlSaveOptions (which include conditional formatting), and saves the workbook as HTML. The resulting HTML retains the gradient colors defined by ColorScale conditional formatting rules, with error handling for missing files.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "ColorScaleWorkbook.xlsx";
-        const string outputFile = "ColorScaleWorkbook.html";
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
             // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook that contains ColorScale conditional formatting rules
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook containing ColorScale conditional formatting rules
+            Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options (conditional formatting is exported by default)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Save the workbook as HTML with gradient colors reflected
-            workbook.Save(outputFile, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+            // Save the workbook as HTML; the generated HTML reflects the gradient colors defined by ColorScale rules
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {

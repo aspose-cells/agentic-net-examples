@@ -1,36 +1,36 @@
-// Title: Read and log a chart trendline equation from an XLSX workbook after recalculating formulas with Aspose.Cells for .NET
-// AI Prompts: Load an existing XLSX file using Aspose.Cells, call CalculateFormula, then extract the first chart's first series trendline equation and output it. | Extend the code to iterate through all worksheets, charts, and series, gathering each trendline equation into a collection. | Add version‑check logic that detects if the Trendline property is unavailable and writes a clear warning to the console.
-// Common Searches: aspnet read chart trendline equation after workbook.CalculateFormula | c# Aspose.Cells get trendline equation from chart | how to display trendline equation programmatically with Aspose.Cells | iterate over all charts in an XLSX and extract trendline formulas using Aspose.Cells | check Aspose.Cells version for trendline support in .NET
-// Tags: chart trendline equation extraction Aspose.Cells | recalculate formulas before reading chart data | enumerate worksheets and charts for trendline equations | fallback handling for unsupported trendline API | log trendline equation from first series C#
+// Title: Read the trendline equation from the first chart in an XLSX file after refreshing data with Aspose.Cells for .NET
+// AI Prompts: Load an XLSX workbook with Aspose.Cells, recalculate all formulas, invoke RefreshChartData on the first chart, and print the trendline equation of its first series. | Use C# reflection to read the TrendlineEquation property of a chart's trendline when the direct API is unavailable, then output the equation text.
+// Common Searches: how to get chart trendline equation using Aspose.Cells in C# | Aspose.Cells update chart after recalculation before reading trendline | C# read trendline formula from Excel chart after workbook calculation | how to access trendline equation via reflection in Aspose.Cells | extract trendline equation from first chart in XLSX with Aspose.Cells .NET
+// Tags: Aspose.Cells chart data refresh C# | retrieve chart trendline equation Aspose.Cells | use reflection for TrendlineEquation property .NET | calculate workbook formulas before chart access Aspose.Cells | first chart series trendline extraction C#
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The example loads an XLSX workbook with Aspose.Cells, recalculates all formulas to refresh chart data, accesses the first worksheet’s first chart, obtains the first series’ trendline, forces the equation to be displayed, prints the equation text, and includes error handling for missing files or unsupported Trendline API.
+// The example loads an XLSX workbook, recalculates all formulas, optionally refreshes the first chart's data, accesses the first series, and uses reflection to obtain the trendline's equation text, which is then written to the console.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the existing XLSX workbook
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"File not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Recalculate all formulas to ensure chart data is up‑to‑date
+            // Recalculate all formulas
             workbook.CalculateFormula();
 
-            // Access the first worksheet (adjust index if needed)
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
@@ -40,50 +40,74 @@ class Program
                 return;
             }
 
-            // Get the first chart in the worksheet
+            // Access the first chart
             Chart chart = sheet.Charts[0];
 
-            // Ensure the chart has at least one series
-            if (chart.NSeries.Count == 0)
-            {
-                Console.WriteLine("The chart does not contain any series.");
-                return;
-            }
-
-            // Use dynamic to access Trendline members (avoids compile‑time errors if API is unavailable)
-            dynamic series = chart.NSeries[0];
-
+            // Refresh chart data after recalculation (available in newer versions)
             try
             {
-                // Attempt to retrieve the Trendlines collection
-                var trendlines = series.Trendlines;
-
-                // Ensure the series has at least one trendline
-                if (trendlines == null || trendlines.Count == 0)
+                // The RefreshChartData method may not exist in older Aspose.Cells versions.
+                // If it is unavailable, the call is simply omitted.
+                var refreshMethod = chart.GetType().GetMethod("RefreshChartData");
+                if (refreshMethod != null)
                 {
-                    Console.WriteLine("The series does not contain any trendlines.");
-                    return;
+                    refreshMethod.Invoke(chart, null);
                 }
-
-                // Get the first trendline
-                dynamic trendline = trendlines[0];
-
-                // Ensure the equation is displayed (required to retrieve it)
-                trendline.DisplayEquation = true;
-
-                // Retrieve and display the equation text
-                string equationText = trendline.TrendlineEquation;
-                Console.WriteLine("Trendline Equation: " + equationText);
             }
-            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            catch (Exception ex)
             {
-                // Trendline API not available in the referenced Aspose.Cells version
-                Console.WriteLine("Trendline functionality is not supported by the current Aspose.Cells version.");
+                Console.WriteLine($"Failed to refresh chart data: {ex.Message}");
+            }
+
+            // Check for series
+            if (chart.NSeries.Count > 0)
+            {
+                Series series = chart.NSeries[0];
+
+                // Attempt to retrieve trendline information if supported
+                try
+                {
+                    var trendlinesProp = series.GetType().GetProperty("Trendlines");
+                    if (trendlinesProp != null)
+                    {
+                        var trendlines = trendlinesProp.GetValue(series) as System.Collections.IEnumerable;
+                        var enumerator = trendlines?.GetEnumerator();
+                        if (enumerator != null && enumerator.MoveNext())
+                        {
+                            var trendline = enumerator.Current;
+                            var equationProp = trendline.GetType().GetProperty("TrendlineEquation");
+                            if (equationProp != null)
+                            {
+                                string equation = equationProp.GetValue(trendline) as string;
+                                Console.WriteLine("Trendline equation: " + equation);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Trendline equation property not available.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No trendline found in the chart.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Trendlines collection not supported in this version.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error accessing trendline information: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No series found in the chart.");
             }
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
             Console.WriteLine("An error occurred: " + ex.Message);
         }
     }

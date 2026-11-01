@@ -1,61 +1,58 @@
-// Title: Resize the first PNG image on an Excel worksheet to 800 × 600 pixels with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that opens a workbook, finds the first PNG picture on the first worksheet, and sets its Width to 800 and Height to 600 pixels before saving. | Update the Aspose.Cells snippet to iterate over all pictures on a worksheet, detect PNG format, and resize only those images to 800 × 600 pixels. | Enhance the example with error handling that logs a warning when no PNG pictures are found and prevents the program from crashing.
-// Common Searches: Aspose.Cells C# resize PNG picture in Excel worksheet to specific pixel dimensions | How to set picture width and height in an .xlsx file using Aspose.Cells .NET | Programmatically change size of embedded image in Excel with Aspose.Cells | Resize first image on Excel sheet to 800x600 using Aspose.Cells library | C# code to adjust dimensions of PNG objects in a workbook with Aspose.Cells
-// Tags: Aspose.Cells resize PNG picture | worksheet picture width height Aspose.Cells | set embedded image dimensions Excel .NET | programmatic picture scaling in workbook | adjust PNG size on Excel worksheet
+// Title: Resize an embedded PNG picture in an Excel worksheet to 800 × 600 pixels using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook, retrieve the first picture on a worksheet, and assign 800 to Picture.Width and 600 to Picture.Height using Aspose.Cells in C#. | Programmatically scale an embedded PNG image in an Excel sheet to 800 × 600 pixels with the Aspose.Cells API. | Change the dimensions of a worksheet picture by setting pixel values on its Width and Height properties in a .NET project.
+// Common Searches: how to change size of an embedded picture in Excel using Aspose.Cells C# | Aspose.Cells set picture dimensions in pixels for PNG image | resize worksheet image to 800x600 with Aspose.Cells .NET | C# code to adjust Excel picture width and height using Aspose.Cells
+// Tags: Aspose.Cells picture resize PNG | set picture dimensions Aspose.Cells C# | worksheet image scaling .NET | Picture.Width Height property Aspose.Cells | embedded PNG size adjustment Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel file, accesses the first worksheet, checks for a picture, sets its Width to 800 and Height to 600 pixels via the Picture.Width and Picture.Height properties, and saves the workbook with the resized image.
+class ResizeWorksheetImage
 {
-    // The program opens input.xlsx, accesses the first worksheet, resizes the first picture on that sheet to 800 × 600 pixels, and saves the modified workbook as output.xlsx, including file existence verification and basic exception handling.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one picture on the worksheet
-                if (worksheet.Pictures.Count > 0)
-                {
-                    // Get the first picture
-                    Picture picture = worksheet.Pictures[0];
-
-                    // Resize the picture to 800x600 pixels
-                    picture.Width = 800;
-                    picture.Height = 600;
-                }
-                else
-                {
-                    Console.WriteLine("No pictures found on the worksheet.");
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook that contains the PNG image
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one picture on the worksheet
+            if (sheet.Pictures.Count > 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Get the first picture (the PNG image)
+                Picture picture = sheet.Pictures[0];
+
+                // Set the desired size in pixels (Aspose.Cells uses points; 1 point ≈ 1 pixel for screen display)
+                picture.Width = 800;   // width in pixels
+                picture.Height = 600;  // height in pixels
             }
+            else
+            {
+                Console.WriteLine("No pictures found on the worksheet.");
+            }
+
+            // Save the workbook with the resized image
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

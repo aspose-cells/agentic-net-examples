@@ -1,43 +1,20 @@
-// Title: Load an XLSX file from a local path with Aspose.Cells in C# and create a new workbook if the file is missing
-// AI Prompts: Create C# code that uses Aspose.Cells to read an Excel workbook located at a specified path, verifies the file's presence, and if absent, instantiates a new Workbook and saves it to that location. | Write a try‑catch block in C# that loads an existing .xlsx using the Workbook(string) constructor and falls back to a default Workbook() with a save operation when the specified file cannot be found.
-// Common Searches: c# aspocells load excel file using full path and create if missing | how to verify excel file existence before opening with Aspose.Cells in .NET | using Aspose.Cells Workbook constructor to open existing xlsx or generate new one | example handling missing Excel file when loading with Aspose.Cells C#
-// Tags: Aspose.Cells open workbook from file path | C# verify Excel file existence before loading | fallback create new workbook Aspose.Cells | Aspose.Cells workbook initialization from file | handle missing XLSX file Aspose.Cells
+// Title: Load an XLSX workbook from a local file path using Aspose.Cells Workbook constructor in C#
+// Common Searches: C# Aspose.Cells load workbook from absolute file path | How to instantiate Workbook with a local XLSX file in .NET | Aspose.Cells open Excel file from disk using default constructor | Reading an existing XLSX file with Aspose.Cells in a C# console app | Load Excel workbook from C:\Data\SampleWorkbook.xlsx using Aspose.Cells
+// Tags: Aspose.Cells workbook constructor with file name | load xlsx workbook using default constructor | initialize Aspose.Cells workbook from local file | open existing Excel workbook in C# Aspose.Cells | read Excel file from disk with Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 
-// The sample checks whether a given .xlsx file exists, loads it with the Workbook(string) constructor when present, otherwise creates a new Workbook, saves it to the same path, and wraps the process in a try‑catch for robust error handling.
+// The example shows how to specify a full file path to an XLSX workbook and create a new Aspose.Cells Workbook instance by passing that path to the default constructor, thereby loading the workbook for further processing in C#.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file
-        string filePath = @"C:\path\to\your\file.xlsx";
+        // Specify the full path to the XLSX file
+        string filePath = @"C:\Data\SampleWorkbook.xlsx";
 
-        try
-        {
-            Workbook workbook;
+        // Open the workbook using the default Workbook constructor
+        Workbook workbook = new Workbook(filePath);
 
-            if (File.Exists(filePath))
-            {
-                // Load existing workbook
-                workbook = new Workbook(filePath);
-                Console.WriteLine("Workbook loaded successfully.");
-            }
-            else
-            {
-                // Create a new workbook as fallback and save it
-                workbook = new Workbook();
-                workbook.Save(filePath);
-                Console.WriteLine($"File not found. Created new workbook and saved to '{filePath}'.");
-            }
-
-            // Further operations on 'workbook' can be added here
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // The workbook is now loaded and can be used for further processing
     }
 }

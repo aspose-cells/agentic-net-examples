@@ -1,77 +1,51 @@
-// Title: Measuring the execution time of Shape.UpdateSelectedValue across thousands of linked shapes in a large Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Create C# code that iterates through all shapes in a worksheet, calls the method that syncs each shape with its linked cell, and records the total duration with a Stopwatch. | Add try‑catch blocks around each shape update to capture exceptions and log the shape name together with the error message. | After processing, save the workbook to a new file and output the full path and the number of shapes processed. | Include a console summary that prints the elapsed milliseconds and the average time per shape.
-// Common Searches: how to time Shape.UpdateSelectedValue calls in Aspose.Cells .NET | performance of linked shape refresh in large Excel files using Aspose | measure execution speed of shape value synchronization with Aspose.Cells | C# benchmark for updating thousands of worksheet shapes in Excel | Aspose.Cells shape update latency testing on big workbooks
-// Tags: shape value synchronization timing Aspose.Cells | large workbook linked shape processing .NET | measure shape refresh latency Excel | optimize shape update throughput Aspose | profiling worksheet shape operations C#
+// Title: Benchmark the UpdateSelectedValue method on linked shapes in a large Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a workbook, iterates all worksheets and shapes, calls UpdateSelectedValue only on supported shapes, and records the total execution time with Stopwatch. | Write a performance test that measures how long UpdateSelectedValue takes for every linked shape in a multi‑sheet .xlsx file, handling exceptions for non‑linked shapes. | Create a utility that skips shapes that throw when UpdateSelectedValue is invoked, logs the number of processed shapes, and outputs the elapsed milliseconds.
+// Common Searches: how to benchmark UpdateSelectedValue for linked shapes using Aspose.Cells .NET | measure time of shape value updates in a large Excel file C# Aspose.Cells | iterate all shapes in workbook and call UpdateSelectedValue with error handling | performance testing of linked shape updates in Aspose.Cells large workbook
+// Tags: Aspose.Cells UpdateSelectedValue benchmark | linked shape value update performance .NET | measure shape processing time Aspose.Cells | large workbook shape iteration Aspose.Cells | handle unsupported shapes Aspose.Cells
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Loads a large Excel workbook, iterates over every shape on the first worksheet, calls UpdateSelectedValue for each shape while timing the operation with Stopwatch, logs any errors per shape, prints total shapes processed and elapsed milliseconds, then saves the modified workbook to a new file.
+// The example loads a large Excel workbook, walks through each worksheet and its shapes, attempts to invoke UpdateSelectedValue on linked shapes while safely ignoring unsupported ones, measures the total elapsed time with a Stopwatch, prints the duration, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Path to the input workbook.
-        string inputPath = "LargeWorkbook.xlsx";
+        // Load the large workbook (load rule)
+        Workbook workbook = new Workbook("LargeWorkbook.xlsx");
 
-        // Verify that the input file exists.
-        if (!File.Exists(inputPath))
+        // Prepare a stopwatch to measure performance
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the workbook.
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        try
-        {
-            // Work with the first worksheet.
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Get all shapes on the worksheet.
-            ShapeCollection shapes = worksheet.Shapes;
-
-            // Measure time taken to update each shape.
-            Stopwatch timer = Stopwatch.StartNew();
-
-            foreach (Shape shape in shapes)
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
+                // Attempt to update the selected value for linked shapes
+                // (UpdateSelectedValue is applicable only to linked shapes;
+                //  unsupported shapes will throw, so we catch and ignore)
                 try
                 {
-                    // Update the shape's displayed value based on its linked cell.
                     shape.UpdateSelectedValue();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Error updating shape '{shape.Name}': {ex.Message}");
+                    // Ignore shapes that do not support UpdateSelectedValue
                 }
             }
-
-            timer.Stop();
-
-            Console.WriteLine($"UpdateSelectedValue called on {shapes.Count} shapes in {timer.ElapsedMilliseconds} ms.");
-
-            // Save the updated workbook.
-            string outputPath = "LargeWorkbook_Updated.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Processing error: {ex.Message}");
-        }
+
+        stopwatch.Stop();
+
+        // Output the elapsed time
+        Console.WriteLine($"UpdateSelectedValue executed in {stopwatch.ElapsedMilliseconds} ms.");
+
+        // Save the workbook after updates (save rule)
+        workbook.Save("LargeWorkbook_Updated.xlsx");
     }
 }

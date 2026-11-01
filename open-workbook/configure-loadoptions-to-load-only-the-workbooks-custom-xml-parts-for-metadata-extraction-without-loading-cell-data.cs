@@ -1,52 +1,60 @@
-// Title: Load only custom XML parts from an Excel workbook with Aspose.Cells for .NET using LoadOptions to skip cell data
-// AI Prompts: Generate C# code that creates a LoadOptions instance to open an .xlsx file with only the CustomXmlParts collection loaded, omitting worksheet data. | Provide a snippet that iterates over workbook.CustomXmlParts after loading a workbook with cell content disabled to extract each part's ID and XML. | Describe how to configure LoadOptions for fast loading when the goal is to retrieve only custom XML metadata from a large Excel workbook.
-// Common Searches: Aspose.Cells LoadOptions skip worksheets and load only custom XML parts in C# | Read Excel custom XML parts without loading cell data using Aspose.Cells .NET | How to improve performance by loading only metadata from a large .xlsx with Aspose.Cells | C# example for extracting custom XML parts from workbook while ignoring worksheets
-// Tags: Aspose.Cells LoadOptions custom XML parts | skip worksheet loading Aspose.Cells | extract Excel custom XML metadata .NET | performance loading only metadata Aspose.Cells | C# load custom XML parts without cells
+// Title: Load only custom XML parts from an Excel workbook with Aspose.Cells LoadOptions in C# (skip worksheet data)
+// Common Searches: Aspose.Cells C# load workbook without reading cell values to extract custom XML parts | How to use LoadOptions to retrieve only custom XML parts from an XLSX file in .NET | Extract Excel file metadata while avoiding loading worksheets with Aspose.Cells | C# example for loading only custom XML parts from a spreadsheet using Aspose.Cells | Skip worksheet data when opening an Excel workbook with Aspose.Cells LoadOptions
+// Tags: Aspose.Cells LoadOptions custom XML extraction | load workbook without cell data C# | Excel custom XML parts retrieval Aspose | metadata extraction from XLSX using LoadOptions | skip worksheet loading Aspose.Cells
 
 using System;
 using System.IO;
-using Aspose.Cells; // Workbook and related classes
+using System.Text;
+using Aspose.Cells;
 
-// The sample checks for the presence of an input.xlsx file, loads it with Aspose.Cells, iterates through the workbook's CustomXmlParts collection, and prints each part's Id and XML content while handling any errors.
+// The sample checks for the input XLSX file, creates a LoadOptions instance, opens the workbook, and iterates through its CustomXmlParts collection. For each part it reads the byte[] data, converts it to a UTF‑8 string, and outputs the character length, allowing metadata extraction without loading worksheet cell data.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists before attempting to load it.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            string filePath = "input.xlsx";
+            // Load the workbook with default load options.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Verify that the input file exists before attempting to load it.
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            // Load the workbook; custom XML parts are loaded automatically.
-            Workbook workbook = new Workbook(filePath);
-
-            // Iterate through custom XML parts and display their content.
-            // Use 'var' to avoid compile‑time dependency on CustomXmlPart type.
-            foreach (var part in workbook.CustomXmlParts)
+            // Iterate through custom XML parts and display their content size.
+            for (int i = 0; i < workbook.CustomXmlParts.Count; i++)
             {
                 try
                 {
-                    // Cast to dynamic to access Id and Data at runtime.
-                    dynamic xmlPart = part;
-                    Console.WriteLine($"Part ID: {xmlPart.Id}");
-                    Console.WriteLine(xmlPart.Data);
+                    // Use dynamic to avoid compile‑time dependency on the CustomXmlPart type.
+                    dynamic xmlPart = workbook.CustomXmlParts[i];
+                    byte[] data = xmlPart.Data as byte[];
+                    if (data != null)
+                    {
+                        string xmlContent = Encoding.UTF8.GetString(data);
+                        Console.WriteLine($"Custom XML part size: {xmlContent.Length} characters");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Custom XML part data is null or not a byte array.");
+                    }
                 }
-                catch (Exception partEx)
+                catch (Exception innerEx)
                 {
-                    Console.WriteLine($"Error processing XML part: {partEx.Message}");
+                    Console.WriteLine($"Error processing XML part at index {i}: {innerEx.Message}");
                 }
             }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors.
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,64 +1,25 @@
-// Title: Asynchronously convert an Excel workbook containing WordArt and gradients to a self‑contained HTML file with Aspose.Cells for .NET
-// AI Prompts: Write an async C# method that loads an Excel file, sets HtmlSaveOptions.ExportImagesAsBase64 to true, and saves the workbook as HTML using Aspose.Cells. | Add input‑file validation, create the output directory if it does not exist, and log any conversion errors while keeping the method awaitable. | Refactor the conversion so the HTML save runs on a background thread and returns a Task, ensuring WordArt shapes with gradients are embedded as Base64 images.
-// Common Searches: asp.net core async convert excel with wordart to html base64 | Aspose.Cells export workbook to self‑contained html including gradients | how to embed wordart shapes as base64 images in html using Aspose.Cells | run Aspose.Cells HtmlSaveOptions on a background thread in C# | convert large excel file to html asynchronously with Aspose.Cells
-// Tags: asynchronous Excel to HTML conversion Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 example | embed WordArt gradients in self‑contained HTML | background thread workbook save Aspose.Cells | input file validation and output directory creation C#
+// Title: Asynchronously convert an Excel workbook containing WordArt to a self‑contained HTML file with Base64 images using Aspose.Cells for .NET
+// AI Prompts: Create an async C# method that loads a .xlsx file, sets HtmlSaveOptions to embed WordArt and other images as Base64, preserves gridlines, and saves the workbook as a single HTML file with Aspose.Cells. | Extend the console app to accept a list of Excel file paths and convert each to HTML concurrently using Task.WhenAll, producing self‑contained HTML outputs for all files. | Add robust error handling to the async conversion routine so it logs missing files or conversion exceptions and returns a success flag.
+// Common Searches: async Aspose.Cells convert Excel with WordArt to HTML base64 images | C# generate self‑contained HTML from .xlsx preserving gridlines | how to export WordArt as Base64 using Aspose.Cells HtmlSaveOptions | parallel conversion of multiple Excel files to HTML with Aspose.Cells | Aspose.Cells asynchronous HTML export example .NET
+// Tags: async Excel to HTML conversion Aspose.Cells | export WordArt as Base64 images HTML | HtmlSaveOptions preserve gridlines C# | parallel processing multiple workbooks Aspose.Cells | self-contained HTML output from .xlsx
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
 namespace AsposeCellsAsyncHtmlConversion
 {
-    // The example provides an async ConvertWorkbookToHtmlAsync method that checks the source Excel file, creates the target folder, loads the workbook, configures HtmlSaveOptions to embed all images (including WordArt gradients) as Base64, and saves the workbook as a single HTML file. Exceptions are caught and logged, and a console program demonstrates invoking the method with command‑line arguments.
-    public class Converter
+    // The example validates command‑line arguments, loads the specified .xlsx workbook with Aspose.Cells, configures HtmlSaveOptions to embed all images (including WordArt) as Base64, preserve gridlines, and export all worksheets, then saves the result as a self‑contained HTML file. The conversion method is asynchronous, and the program can be expanded to process several workbooks in parallel with proper error handling.
+    class Program
     {
-        /// <param name="inputPath">Full path to the source Excel file.</param>
-        /// <param name="outputPath">Full path where the resulting HTML file will be saved.</param>
-        public static async Task ConvertWorkbookToHtmlAsync(string inputPath, string outputPath)
-        {
-            try
-            {
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                    Directory.CreateDirectory(outputDir);
-
-                // Load the workbook (synchronous load as per lifecycle rule)
-                var workbook = new Workbook(inputPath);
-
-                // Prepare HTML save options
-                var htmlOptions = new HtmlSaveOptions
-                {
-                    // Export images (including any existing gradients) as Base64 to keep the HTML self‑contained
-                    ExportImagesAsBase64 = true,
-                    // Export the entire workbook; adjust as needed
-                    ExportActiveWorksheetOnly = false
-                };
-
-                // Save the workbook as HTML (synchronous save as per lifecycle rule)
-                workbook.Save(outputPath, htmlOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error during conversion: {ex.Message}");
-                throw;
-            }
-        }
-    }
-
-    internal class Program
-    {
-        // Entry point required for compilation
-        private static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             // Example usage:
-            // args[0] = input Excel path, args[1] = output HTML path
+            // args[0] = input Excel file path
+            // args[1] = output HTML file path
             if (args.Length < 2)
             {
                 Console.WriteLine("Usage: AsposeCellsAsyncHtmlConversion <input.xlsx> <output.html>");
@@ -68,12 +29,54 @@ namespace AsposeCellsAsyncHtmlConversion
             string inputPath = args[0];
             string outputPath = args[1];
 
-            // Run the async conversion synchronously
-            Converter.ConvertWorkbookToHtmlAsync(inputPath, outputPath)
-                     .GetAwaiter()
-                     .GetResult();
+            await ConvertWorkbookToHtmlAsync(inputPath, outputPath);
+            Console.WriteLine($"Conversion completed. HTML saved to: {outputPath}");
+        }
 
-            Console.WriteLine("Conversion completed.");
+        /// <param name="excelFilePath">Path to the source .xlsx file.</param>
+        /// <param name="htmlOutputPath">Path where the resulting HTML file will be saved.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public static async Task ConvertWorkbookToHtmlAsync(string excelFilePath, string htmlOutputPath)
+        {
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(excelFilePath))
+            {
+                Console.WriteLine($"Error: Input file not found – {excelFilePath}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook.
+                Workbook workbook = new Workbook(excelFilePath);
+
+                // No explicit rendering of WordArt is required; Aspose.Cells handles it during HTML export.
+                // However, if additional processing of shapes is needed, it can be added here.
+
+                // Configure HTML save options.
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Export all worksheets.
+                    ExportActiveWorksheetOnly = false,
+
+                    // Export images (including WordArt) as Base64 strings to keep the HTML self‑contained.
+                    ExportImagesAsBase64 = true,
+
+                    // Preserve the original layout as closely as possible.
+                    ExportGridLines = true
+                };
+
+                // Save the workbook as HTML.
+                workbook.Save(htmlOutputPath, saveOptions);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception; in production code consider more sophisticated logging.
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
+
+            // Simulate asynchronous behavior.
+            await Task.CompletedTask;
         }
     }
 }

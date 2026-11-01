@@ -1,77 +1,78 @@
-// Title: Deselect Excel slicer items that match a given keyword using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, refreshes slicer caches, and sets Selected = false for any slicer cache item whose Value matches a given keyword. | Create a method that walks through each worksheet and slicer, clears the selection of entries whose label is "Apple", refreshes the slicer, and saves the updated file. | Generate a script that programmatically changes slicer selections based on a keyword and writes the result to a new Excel workbook using Aspose.Cells.
-// Common Searches: how to filter slicer entries by text using Aspose.Cells C# | C# code to unselect specific slicer values in Excel | programmatically clear slicer selection for a given keyword with Aspose.Cells | iterate through slicer cache items and change selection in .NET | Aspose.Cells example to modify slicer selections based on a string
-// Tags: Aspose.Cells deselect slicer items | C# loop over slicer cache items | slicer cache refresh Aspose.Cells | Excel slicer selection programmatic | unselect slicer entries by keyword
+// Title: How to deselect slicer cache items containing a specific keyword in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, finds all slicers, and sets Selected = false for any slicer cache item whose text includes a given keyword (case‑insensitive). | Create a reusable method that accepts an input file path, output file path, and keyword, then iterates through each worksheet's slicer caches to deselect matching items and saves the modified workbook. | Show how to add robust error handling for missing files, absent slicers, or empty slicer caches while performing keyword‑based deselection of slicer items in a .NET application.
+// Common Searches: Aspose.Cells C# deselect slicer items that contain a keyword | Programmatically unselect slicer cache entries in Excel using .NET | Iterate through slicer cache items and set Selected false based on text value Aspose.Cells | How to filter slicer selections by keyword in a .xlsx file with Aspose.Cells | Remove specific slicer selections from an Excel workbook via C#
+// Tags: slicer cache item deselection Aspose.Cells | keyword based slicer filtering .NET | iterate slicer cache items C# | update slicer selections Excel workbook | save modified workbook Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// // Loads an Excel workbook, walks through every worksheet and its slicers, deselects any slicer cache items whose value contains the specified keyword (case‑insensitive), and saves the updated workbook to a new file.
+class SlicerCacheDeselector
 {
-    // // Loads an Excel workbook, refreshes all slicer caches, iterates through each worksheet and slicer, deselects any slicer cache item whose value equals the keyword "Apple", refreshes the slicer, and saves the modified workbook.
-    public class DeselectSlicerItemsByKeyword
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Define file paths
+        string inputPath = @"C:\Input\Sample.xlsx";
+        string outputPath = @"C:\Output\Sample_Modified.xlsx";
 
-        public static void Run()
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify input file exists
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that contains the slicer
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Refresh all slicer caches
-            workbook.RefreshAll();
+            // Keyword to match slicer items that should be deselected
+            string keyword = "Exclude";
 
-            // Keyword of items to be deselected
-            string keyword = "Apple";
-
-            // Iterate through each worksheet
+            // Iterate through all worksheets and their slicers
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each slicer on the worksheet
-                foreach (Slicer slicer in sheet.Slicers)
-                {
-                    // Get the collection of slicer cache items
-                    SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
+                var slicers = sheet.Slicers;
+                if (slicers == null) continue;
 
-                    // Deselect items whose label matches the keyword
+                foreach (Slicer slicer in slicers)
+                {
+                    var cache = slicer.SlicerCache;
+                    if (cache == null) continue;
+
+                    var items = cache.SlicerCacheItems;
+                    if (items == null) continue;
+
+                    // Iterate over each slicer cache item
                     foreach (SlicerCacheItem item in items)
                     {
-                        if (item.Value == keyword)
+                        // Use the item's value (as string) for comparison
+                        string itemValue = item.Value?.ToString();
+                        if (!string.IsNullOrEmpty(itemValue) &&
+                            itemValue.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
+                            // Deselect matching items
                             item.Selected = false;
                         }
                     }
-
-                    // Refresh the slicer to apply the changes
-                    slicer.Refresh();
                 }
             }
 
+            // Ensure the output directory exists
+            string outDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,86 +1,58 @@
-// Title: Build a case‑insensitive dictionary of Excel cell addresses to values using Aspose.Cells in C# for rapid lookup
-// AI Prompts: Generate C# code that loads a workbook with Aspose.Cells, iterates the worksheet’s used range, and adds each non‑empty cell’s address (e.g., "B3") and its value to a Dictionary<string, object> using StringComparer.OrdinalIgnoreCase. | Demonstrate how to query the dictionary for a specific cell address, handling missing keys gracefully and printing either the retrieved value or a fallback message. | Add error handling that creates a new workbook when the input file is absent, builds the lookup dictionary, and saves the workbook after processing.
-// Common Searches: aspocells c# create dictionary of cell address to value for fast lookup | how to use StringComparer.OrdinalIgnoreCase with Aspose.Cells cell address keys | enumerate used range in Aspose.Cells and store non‑empty cells in a map | retrieve Excel cell value by address using a pre‑built lookup table in C#
-// Tags: Aspose.Cells used range to dictionary | C# case‑insensitive Excel cell key | non‑empty cell value map Aspose.Cells | fast cell lookup table C# | create workbook if missing Aspose.Cells
+// Title: Build a case‑insensitive lookup dictionary of Excel cell addresses to values with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates over every Cell in an Aspose.Cells worksheet and populates a Dictionary<string, object> where the key is the cell's address (e.g., "A2") and the value is the cell's content. | Show how to retrieve a value from the dictionary by providing a cell address string, including proper handling when the address does not exist. | Include sample data creation, dictionary construction, a demonstration lookup, and code to save the workbook as an .xlsx file.
+// Common Searches: asp.net c# create dictionary of cell addresses using Aspose.Cells | how to map Excel cell names to values with Aspose.Cells .NET | case insensitive lookup of Excel cell by address Aspose.Cells | enumerate all cells in Aspose.Cells worksheet and store in Dictionary | fast retrieve cell value by address Aspose.Cells C#
+// Tags: Aspose.Cells enumerate cells to dictionary | case-insensitive cell address lookup Aspose.Cells | C# dictionary mapping Excel cell names | fast cell value retrieval Aspose.Cells | save workbook after building lookup Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using Aspose.Cells;
 
-// Alias to avoid ambiguity with System.Range
-using AsposeRange = Aspose.Cells.Range;
-
-// The program loads or creates an Excel workbook, iterates the first worksheet's used range, stores each non‑empty cell's address and value in a case‑insensitive Dictionary for O(1) retrieval, demonstrates a lookup example, and saves the workbook.
-class Program
+namespace AsposeCellsLookupExample
 {
-    static void Main()
+    // The example creates a Workbook, fills cells A1:B4 with sample data, iterates through every cell in the first worksheet, and stores each cell's address and value in a case‑insensitive Dictionary<string, object> for rapid lookup. It then demonstrates retrieving the value at address B3 and saves the workbook as LookupExample.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Load existing workbook or create a new one if the file is missing
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                workbook = new Workbook();
-            }
+            // Initialize a new workbook (you could also load an existing one using Workbook(string fileName))
+            Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Determine the used range of the worksheet
-            AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+            // Populate some sample data for demonstration purposes
+            worksheet.Cells["A1"].PutValue("Name");
+            worksheet.Cells["B1"].PutValue("Score");
+            worksheet.Cells["A2"].PutValue("Alice");
+            worksheet.Cells["B2"].PutValue(85);
+            worksheet.Cells["A3"].PutValue("Bob");
+            worksheet.Cells["B3"].PutValue(92);
+            worksheet.Cells["A4"].PutValue("Charlie");
+            worksheet.Cells["B4"].PutValue(78);
 
-            // Prepare a lookup dictionary for cell address → value
-            var lookup = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            // Create a dictionary to hold cell address (e.g., "A2") as key and its value as value
+            Dictionary<string, object> cellLookup = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-            // Enumerate cells only if a used range exists and contains cells
-            if (usedRange != null && usedRange.RowCount > 0 && usedRange.ColumnCount > 0)
+            // Enumerate all cells in the worksheet and populate the dictionary
+            foreach (Cell cell in worksheet.Cells)
             {
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                for (int row = startRow; row <= endRow; row++)
-                {
-                    for (int col = startCol; col <= endCol; col++)
-                    {
-                        Cell cell = sheet.Cells[row, col];
-                        if (cell.Value != null)
-                        {
-                            // Use the cell's address (e.g., "B3") as the key
-                            lookup[cell.Name] = cell.Value;
-                        }
-                    }
-                }
+                // Skip empty cells if desired; here we include all cells
+                cellLookup[cell.Name] = cell.Value;
             }
 
-            // Example of fast retrieval using the dictionary
-            if (lookup.TryGetValue("B2", out object retrievedValue))
+            // Example usage: fast retrieval of a cell's value by its address
+            string addressToLookup = "B3";
+            if (cellLookup.TryGetValue(addressToLookup, out object value))
             {
-                Console.WriteLine($"Value at B2: {retrievedValue}");
+                Console.WriteLine($"Value at {addressToLookup}: {value}");
             }
             else
             {
-                Console.WriteLine("Cell B2 is empty or does not exist.");
+                Console.WriteLine($"Cell {addressToLookup} not found in the lookup table.");
             }
 
-            // Save the workbook (creates the file if it does not exist)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Optionally, save the workbook to a file (using the standard save method)
+            workbook.Save("LookupExample.xlsx");
         }
     }
 }

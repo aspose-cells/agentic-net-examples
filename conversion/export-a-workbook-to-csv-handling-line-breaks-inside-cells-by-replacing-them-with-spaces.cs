@@ -1,58 +1,75 @@
-// Title: Replace line breaks in Excel cells and export the workbook to CSV with Aspose.Cells for .NET
-// AI Prompts: Iterate all worksheets, replace '\r' and '\n' in string cells with a space, then save the workbook as CSV using Aspose.Cells. | Clean newline characters from Excel cell values before performing a CSV export in a C# application with Aspose.Cells.
-// Common Searches: Aspose.Cells .NET remove newline characters from Excel cells before CSV conversion | How to clean line breaks in Excel data when exporting to CSV using Aspose.Cells | C# replace line breaks in worksheet cells and save as CSV with Aspose.Cells library
-// Tags: replace line breaks in Excel cells Aspose.Cells | CSV export with cleaned cell values .NET | iterate worksheets modify string cells Aspose | remove newline characters during CSV conversion Aspose.Cells | handle embedded line breaks in CSV output .NET
+// Title: Export an Excel workbook to CSV in C# with Aspose.Cells while stripping line‑break characters from cell text
+// Common Searches: c# aspnet replace line breaks in Excel cells before saving as csv using Aspose.Cells | how to remove newline characters from Excel cell values during CSV export with Aspose.Cells | Aspose.Cells export to CSV without embedded carriage returns in cell strings | clean Excel worksheet text for CSV output in .NET Aspose.Cells | remove \r\n from cells when converting XLSX to CSV with Aspose.Cells
+// Tags: Aspose.Cells CSV export line break handling | C# clean Excel cell strings before CSV conversion | remove carriage return from workbook cells Aspose | sanitize worksheet text for CSV output | save XLSX as CSV with whitespace replacement
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// The example loads an Excel workbook, iterates through each worksheet and its string cells, replaces any '\r' or '\n' line‑break characters with a space, updates the cells, and finally saves the modified workbook as a CSV file using Aspose.Cells.
+// The example loads an XLSX workbook using Aspose.Cells, iterates through every worksheet and cell, replaces Windows (\r\n), Unix (\n) and old Mac (\r) line‑break characters in string cells with a space, updates the cells when changes occur, and then saves the workbook directly as a CSV file.
 class Program
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.csv";
 
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Get the cells collection for the current sheet
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Loop through all cells in the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = 0; col <= maxCol; col++)
+                Cells cells = sheet.Cells;
+
+                // Determine the used range to limit iteration
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
+
+                // Loop through each cell in the used range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    Cell cell = cells[row, col];
-
-                    // Process only string cells (skip numbers, dates, etc.)
-                    if (cell.Type == CellValueType.IsString)
+                    for (int col = 0; col <= maxColumn; col++)
                     {
-                        string text = cell.StringValue;
+                        Cell cell = cells[row, col];
 
-                        // If the cell contains line breaks, replace them with spaces
-                        if (!string.IsNullOrEmpty(text) && (text.Contains("\n") || text.Contains("\r")))
+                        // Process only string cells (line breaks are relevant for text)
+                        if (cell.Type == CellValueType.IsString)
                         {
-                            string cleaned = text
-                                .Replace("\r\n", " ")
-                                .Replace("\n", " ")
-                                .Replace("\r", " ");
+                            string original = cell.StringValue;
 
-                            // Update the cell with the cleaned text
-                            cell.PutValue(cleaned);
+                            // Replace Windows (\r\n), Unix (\n) and old Mac (\r) line breaks with a space
+                            string cleaned = original.Replace("\r\n", " ")
+                                                    .Replace("\n", " ")
+                                                    .Replace("\r", " ");
+
+                            // Update the cell only if a change was made
+                            if (cleaned != original)
+                            {
+                                cell.PutValue(cleaned);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Export the modified workbook to CSV format
-        workbook.Save("output.csv", SaveFormat.Csv);
+            // Save the modified workbook directly as CSV using the built‑in format enum
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

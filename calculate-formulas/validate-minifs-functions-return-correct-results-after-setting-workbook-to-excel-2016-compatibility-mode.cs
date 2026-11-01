@@ -1,69 +1,55 @@
-// Title: Validate MINIFS formula results in Excel 2016 compatibility mode with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to set the workbook compliance to Excel 2016, insert a MINIFS formula with a numeric criteria range, calculate the sheet, and assert that the result equals the expected minimum value. | Demonstrate how to save a workbook that contains a MINIFS formula, reload it with Aspose.Cells, recalculate, and confirm that the formula result is unchanged.
-// Common Searches: how to use MINIFS with Aspose.Cells in C# when workbook is set to Excel 2016 compatibility | Aspose.Cells calculate MINIFS after saving and reopening workbook | C# set OoxmlCompliance to Ecma376_2006 for conditional minimum function | verify MINIFS formula persistence in .NET using Aspose.Cells | testing MINIFS calculation accuracy in Excel 2016 mode with Aspose.Cells
-// Tags: Aspose.Cells MINIFS support | Excel 2016 OoxmlCompliance setting | C# formula evaluation after save | conditional minimum verification .NET | recalculate loaded workbook Aspose.Cells
+// Title: Validate MINIFS formula result in Excel 2016 compatibility mode with Aspose.Cells for .NET
+// Common Searches: how to verify MINIFS calculation using Aspose.Cells C# | set CalcEngineVersion to Excel 2016 and test MINIFS result | Aspose.Cells calculate MINIFS formula in compatibility mode example | C# program to validate MINIFS output after workbook.CalculateFormula | using Aspose.Cells to test MINIFS with criteria range
+// Tags: Aspose.Cells MINIFS calculation | Excel 2016 CalcEngineVersion compatibility | C# workbook.CalculateFormula usage | MINIFS criteria range validation | formula compatibility mode Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsMinifsValidation
+// The example creates a Workbook, optionally sets its CalcEngineVersion to Excel 2016, fills columns A and B with numeric values and criteria, inserts a MINIFS formula in C2 to find the minimum value where the criteria match, runs workbook.CalculateFormula, reads the result, compares it to the expected value (8), and prints whether the validation passed.
+class Program
 {
-    // The example creates a workbook, configures it for Excel 2016 compatibility, populates data, applies a MINIFS formula with a >10 criterion, calculates and checks the result, saves the file, reloads it, recalculates, and confirms that the persisted formula still returns the expected minimum value.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook(); // create
+            // Create a new workbook (create rule)
+            Workbook workbook = new Workbook();
 
-            // Set Excel 2016 compatibility mode (use OOXML compliance as a proxy)
-            workbook.Settings.Compliance = OoxmlCompliance.Ecma376_2006; // Excel 2016 compatible
+            // If the CalcEngineVersion property is available, you can set it to Excel 2016 compatibility:
+            // workbook.Settings.CalcEngineVersion = CalcEngineVersion.Version_2016;
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
             // Populate sample data
-            // Values to evaluate
-            cells["A2"].PutValue(5);
-            cells["A3"].PutValue(12);
-            cells["A4"].PutValue(8);
-            cells["A5"].PutValue(20);
+            double[] values = { 10, 5, 8, 3, 12 };
+            string[] criteria = { "X", "Y", "X", "Y", "X" };
 
-            // Criteria range
-            cells["B2"].PutValue(7);
-            cells["B3"].PutValue(15);
-            cells["B4"].PutValue(9);
-            cells["B5"].PutValue(25);
+            for (int i = 0; i < values.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(values[i]);   // Column A
+                cells[i + 1, 1].PutValue(criteria[i]); // Column B
+            }
 
-            // MINIFS formula: find minimum in A2:A5 where corresponding B2:B5 > 10
-            cells["C2"].Formula = "=MINIFS(A2:A5,B2:B5,\">10\")";
+            // Insert MINIFS formula in C2:
+            // MINIFS(A2:A6, B2:B6, "X") returns the minimum value from A where B = "X"
+            cells["C2"].Formula = "MINIFS(A2:A6,B2:B6,\"X\")";
 
-            // Calculate formulas
+            // Calculate all formulas (lifecycle rule)
             workbook.CalculateFormula();
 
-            // Expected result: minimum of {12,20} = 12
-            double expected = 12;
-            double actual = cells["C2"].DoubleValue;
+            // Retrieve the computed result
+            double result = cells["C2"].DoubleValue;
+            double expected = 8;
 
-            Console.WriteLine($"MINIFS result: {actual} (expected: {expected})");
-            Console.WriteLine($"Validation {(Math.Abs(actual - expected) < 1e-9 ? "passed" : "failed")}");
-
-            // ---------- Save the workbook ----------
-            string filePath = "MinifsValidation.xlsx";
-            workbook.Save(filePath); // save
-
-            // ---------- Load the workbook ----------
-            Workbook loadedWorkbook = new Workbook(filePath); // load
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Cells loadedCells = loadedSheet.Cells;
-
-            // Recalculate after load to ensure formula persists correctly
-            loadedWorkbook.CalculateFormula();
-
-            double loadedResult = loadedCells["C2"].DoubleValue;
-            Console.WriteLine($"Loaded MINIFS result: {loadedResult} (expected: {expected})");
-            Console.WriteLine($"Loaded validation {(Math.Abs(loadedResult - expected) < 1e-9 ? "passed" : "failed")}");
+            // Validate the result
+            Console.WriteLine("MINIFS result: " + result);
+            Console.WriteLine("Validation: " + (Math.Abs(result - expected) < 1e-9 ? "Passed" : "Failed"));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

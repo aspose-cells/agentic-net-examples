@@ -1,38 +1,44 @@
-// Title: Count and log worksheets that have no printer settings after clearing them with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to remove printer settings from every worksheet in a workbook, then determine how many worksheets have a null PrinterSettings property and output the count. | Generate a .NET example that iterates through all worksheets, sets PageSetup.PrinterSettings to null, counts sheets lacking printer configuration, logs the result, and saves the workbook.
-// Common Searches: Aspose.Cells C# count worksheets with null PageSetup.PrinterSettings after batch clear | how to log number of Excel sheets without printer settings using Aspose.Cells | remove printer settings from all worksheets and get count in .NET | C# example for clearing PageSetup.PrinterSettings and reporting affected worksheets | Aspose.Cells batch clear printer configuration and verify sheets
-// Tags: Aspose.Cells clear worksheet printer settings | count worksheets null PrinterSettings Aspose.Cells | log worksheet printer configuration status C# | batch PageSetup.PrinterSettings removal .NET | iterate workbook worksheets Aspose.Cells
+// Title: Log the count of worksheets that have no printer settings after batch clearing PageSetup properties with Aspose.Cells for .NET
+// Common Searches: how to count worksheets with empty PrintArea after clearing printer settings using Aspose.Cells in C# | Aspose.Cells C# batch remove printer settings and log number of worksheets without print titles | log number of worksheets missing PageSetup printer configuration after reset with Aspose.Cells .NET | determine worksheets that lack printer settings after clearing PageSetup properties in a workbook | C# Aspose.Cells count worksheets without printer configuration after batch PageSetup cleanup
+// Tags: batch clear worksheet printer settings Aspose.Cells | count worksheets lacking PageSetup printer configuration C# | log printer settings removal Aspose.Cells .NET | audit worksheet print area after PageSetup reset | reset PageSetup properties across workbook Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, clears the printer settings of each worksheet by setting PageSetup.PrinterSettings to null, counts how many worksheets now have a null PrinterSettings property, writes that count to the console, and saves the modified workbook.
+// The example loads a workbook, iterates through all worksheets to clear printer‑related PageSetup properties (PrintArea, PrintTitleRows, PrintTitleColumns), then counts how many worksheets have none of these settings defined, writes the count to the console, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
 
         // Batch removal of printer settings from all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Remove printer settings by setting the property to null
-            sheet.PageSetup.PrinterSettings = null;
+            // Clear common printer-related settings
+            sheet.PageSetup.PrintArea = string.Empty;
+            sheet.PageSetup.PrintTitleRows = string.Empty;
+            sheet.PageSetup.PrintTitleColumns = string.Empty;
+            // Additional printer settings can be cleared here if needed
         }
 
         // Count worksheets that now lack printer settings
         int worksheetsWithoutPrinterSettings = 0;
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            if (sheet.PageSetup.PrinterSettings == null)
+            bool hasPrintArea = !string.IsNullOrEmpty(sheet.PageSetup.PrintArea);
+            bool hasTitleRows = !string.IsNullOrEmpty(sheet.PageSetup.PrintTitleRows);
+            bool hasTitleColumns = !string.IsNullOrEmpty(sheet.PageSetup.PrintTitleColumns);
+
+            if (!hasPrintArea && !hasTitleRows && !hasTitleColumns)
             {
                 worksheetsWithoutPrinterSettings++;
             }
         }
 
         // Log the result
-        Console.WriteLine($"Number of worksheets without printer settings: {worksheetsWithoutPrinterSettings}");
+        Console.WriteLine($"Number of worksheets lacking printer settings: {worksheetsWithoutPrinterSettings}");
 
         // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");

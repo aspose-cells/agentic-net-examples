@@ -1,61 +1,62 @@
-// Title: Set PreserveFormatting = true for all QueryTables in every worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates over each worksheet, sets QueryTable.PreserveFormatting to true for every query table, and saves the file. | Show a step‑by‑step example of enabling formatting preservation on all data‑connection tables in a workbook and exporting it as XLSX with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set PreserveFormatting on all query tables in a workbook | How to enable formatting preservation for Excel QueryTable objects using Aspose.Cells | Iterate through worksheets and update QueryTable properties in .NET | Batch modify QueryTable.PreserveFormatting flag with Aspose.Cells API | Preserve cell formatting when refreshing data connections in Aspose.Cells
-// Tags: Aspose.Cells QueryTable formatting preservation | C# loop through worksheets to modify QueryTables | batch set QueryTable properties Aspose.Cells | Excel data connection formatting preservation .NET | enable QueryTable PreserveFormatting flag
+// Title: Set QueryTable.PreserveFormatting to true for all worksheets using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set PreserveFormatting on every QueryTable in a workbook | How to enable formatting retention for all external data connections in an Excel file with Aspose.Cells | Iterate through all worksheets and QueryTables to preserve formatting in .NET | Bulk update QueryTable.PreserveFormatting property using Aspose.Cells API | C# code sample for preserving formatting of query tables across all sheets
+// Tags: Aspose.Cells QueryTable PreserveFormatting | C# iterate worksheets QueryTables | bulk set QueryTable formatting retention | Excel external data connection formatting Aspose | Aspose.Cells workbook query table loop
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel workbook (or creates a new one if missing or protected), ensures at least one worksheet exists, then loops through every worksheet and each QueryTable, setting the QueryTable.PreserveFormatting property to true before saving the workbook.
+class Program
 {
-    // The example loads an existing workbook (or creates a new one if missing), walks through every worksheet's QueryTable collection, sets each QueryTable's PreserveFormatting property to true, and saves the updated workbook as output.xlsx.
-    public class SetQueryTablePreserveFormatting
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        public static void Run()
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
             Workbook workbook;
 
-            // Load existing workbook if it exists; otherwise create a new one
+            // Load existing workbook if the file exists; otherwise create a new one
             if (File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (CellsException)
+                {
+                    // If the workbook is password‑protected or cannot be opened, create a new workbook instead
+                    workbook = new Workbook();
+                }
             }
             else
             {
-                workbook = new Workbook(); // creates a default workbook with one worksheet
-                Console.WriteLine($"Input file '{inputPath}' not found. A new workbook has been created.");
+                workbook = new Workbook();
             }
 
-            // Iterate through all worksheets and set PreserveFormatting for each QueryTable
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                workbook.Worksheets.Add();
+            }
+
+            // Set PreserveFormatting = true for all query tables in all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                QueryTableCollection queryTables = sheet.QueryTables;
-                for (int i = 0; i < queryTables.Count; i++)
+                foreach (QueryTable queryTable in sheet.QueryTables)
                 {
-                    QueryTable qt = queryTables[i];
-                    qt.PreserveFormatting = true;
+                    queryTable.PreserveFormatting = true;
                 }
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook to the desired output path
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

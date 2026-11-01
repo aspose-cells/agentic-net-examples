@@ -1,123 +1,100 @@
-// Title: Generate an Excel audit worksheet that lists each chart’s axis type and tick‑label direction using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates through every worksheet, extracts the primary Category, Value, and Series axes of each chart, and writes the axis type together with its tick‑label direction to a new worksheet named AuditReport. | Update the chart‑audit example to also capture each axis’s tick‑label font name and add that information to the audit worksheet. | Convert the audit program so that it writes the collected axis type and tick‑label direction data to a CSV file instead of an .xlsx workbook.
-// Common Searches: aspocells how to list chart axis types and tick label direction in a workbook | c# iterate over charts in Excel file and get axis tick label orientation using Aspose.Cells | generate audit report of chart properties axis tick labels with Aspose.Cells .NET | retrieve chart axis tick label direction for each chart in Aspose.Cells workbook | export chart axis information to a separate worksheet using Aspose.Cells
-// Tags: Aspose.Cells enumerate chart axes | Aspose.Cells retrieve tick label direction | Aspose.Cells write chart audit worksheet | Aspose.Cells export chart properties to CSV | Aspose.Cells auto‑fit columns after audit data
+// Title: Generate a chart axis audit worksheet that lists each axis type and tick‑label position using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells to iterate all worksheets, extract each chart’s CategoryAxis and ValueAxis properties, and record the axis class name and TickLabelPosition into a new sheet. | Modify the sample to also include secondary axes and output the collected axis information to a CSV file.
+// Common Searches: how to list axis type and tick label position for all charts in an Excel file using Aspose.Cells C# | Aspose.Cells C# create report of chart axes properties | retrieve chart axis TickLabelPosition with Aspose.Cells .NET | export chart axis metadata to a new worksheet in Aspose.Cells | C# enumerate charts and write axis details to a summary sheet
+// Tags: Aspose.Cells extract chart axis properties | C# generate chart axis audit worksheet | Aspose.Cells enumerate workbook charts | record TickLabelPosition Aspose.Cells | write axis metadata to Excel sheet
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsAudit
+// The example loads an existing workbook, adds a worksheet named "Chart Axis Report", walks through every worksheet and its charts, captures the Category and Value axis types (using the runtime class name) and their TickLabelPosition values, writes these details to the report sheet, auto‑fits columns, and saves the workbook with the new audit data.
+class ChartAxisReport
 {
-    // The program creates a workbook, adds sample data and two charts, then scans every worksheet (excluding the audit sheet) to record for each chart the axis type (Category, Value, Series) and the tick‑label direction into an "AuditReport" worksheet, auto‑fits the columns, and saves the file as AuditReport.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Input workbook path
+            string inputPath = "input.xlsx";
 
-            // -------------------------------------------------
-            // Sample data and charts (for demonstration only)
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Populate sample data
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["A2"].PutValue("A");
-            dataSheet.Cells["A3"].PutValue("B");
-            dataSheet.Cells["A4"].PutValue("C");
-            dataSheet.Cells["B1"].PutValue("Value");
-            dataSheet.Cells["B2"].PutValue(10);
-            dataSheet.Cells["B3"].PutValue(20);
-            dataSheet.Cells["B4"].PutValue(30);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a column chart
-            int chartIdx1 = dataSheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart1 = dataSheet.Charts[chartIdx1];
-            chart1.NSeries.Add("B2:B4", true);
-            chart1.NSeries.CategoryData = "A2:A4";
+            // Add a new worksheet for the audit report
+            int reportSheetIndex = workbook.Worksheets.Add();
+            Worksheet reportSheet = workbook.Worksheets[reportSheetIndex];
+            reportSheet.Name = "Chart Axis Report";
 
-            // Add a line chart
-            int chartIdx2 = dataSheet.Charts.Add(ChartType.Line, 25, 0, 40, 10);
-            Chart chart2 = dataSheet.Charts[chartIdx2];
-            chart2.NSeries.Add("B2:B4", true);
-            chart2.NSeries.CategoryData = "A2:A4";
-
-            // Ensure charts are calculated before accessing axis properties
-            chart1.Calculate();
-            chart2.Calculate();
-
-            // -------------------------------------------------
-            // Create a worksheet to hold the audit report
-            // -------------------------------------------------
-            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            reportSheet.Name = "AuditReport";
-
-            // Header row
+            // Write header row
             reportSheet.Cells[0, 0].PutValue("Worksheet");
             reportSheet.Cells[0, 1].PutValue("Chart Index");
-            reportSheet.Cells[0, 2].PutValue("Axis Type");
-            reportSheet.Cells[0, 3].PutValue("Tick Label Direction");
+            reportSheet.Cells[0, 2].PutValue("Axis");
+            reportSheet.Cells[0, 3].PutValue("Axis Type");
+            reportSheet.Cells[0, 4].PutValue("Tick Label Position");
 
-            int reportRow = 1; // start after header
+            int reportRow = 1;
 
-            // -------------------------------------------------
-            // Iterate through all worksheets and their charts
-            // -------------------------------------------------
+            // Iterate through all worksheets except the report sheet itself
             foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Skip the report sheet itself
-                if (ws.Name == "AuditReport") continue;
+                if (ws.Name == reportSheet.Name) continue;
 
+                // Process each chart on the worksheet
                 for (int i = 0; i < ws.Charts.Count; i++)
                 {
                     Chart chart = ws.Charts[i];
 
-                    // Category Axis (primary)
-                    if (chart.HasAxis(AxisType.Category, true))
+                    // Primary Category (X) Axis
+                    Axis categoryAxis = chart.CategoryAxis;
+                    if (categoryAxis != null)
                     {
-                        Axis catAxis = chart.CategoryAxis;
-                        ChartTextDirectionType dir = catAxis.TickLabels.DirectionType;
-                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(i);
-                        reportSheet.Cells[reportRow, 2].PutValue("Category");
-                        reportSheet.Cells[reportRow, 3].PutValue(dir.ToString());
-                        reportRow++;
+                        WriteAxisInfo(reportSheet, ref reportRow, ws.Name, i, "Category (X)", categoryAxis);
                     }
 
-                    // Value Axis (primary)
-                    if (chart.HasAxis(AxisType.Value, true))
+                    // Primary Value (Y) Axis
+                    Axis valueAxis = chart.ValueAxis;
+                    if (valueAxis != null)
                     {
-                        Axis valAxis = chart.ValueAxis;
-                        ChartTextDirectionType dir = valAxis.TickLabels.DirectionType;
-                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(i);
-                        reportSheet.Cells[reportRow, 2].PutValue("Value");
-                        reportSheet.Cells[reportRow, 3].PutValue(dir.ToString());
-                        reportRow++;
+                        WriteAxisInfo(reportSheet, ref reportRow, ws.Name, i, "Value (Y)", valueAxis);
                     }
 
-                    // Series Axis (if present)
-                    if (chart.HasAxis(AxisType.Series, true))
-                    {
-                        Axis serAxis = chart.SeriesAxis;
-                        ChartTextDirectionType dir = serAxis.TickLabels.DirectionType;
-                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(i);
-                        reportSheet.Cells[reportRow, 2].PutValue("Series");
-                        reportSheet.Cells[reportRow, 3].PutValue(dir.ToString());
-                        reportRow++;
-                    }
+                    // Note: Secondary axes are not accessed here due to API version differences.
                 }
             }
 
-            // Auto-fit columns for better readability
+            // Adjust column widths for readability
             reportSheet.AutoFitColumns();
 
-            // Save the workbook with the audit report
-            workbook.Save("AuditReport.xlsx");
+            // Save the workbook with the added report
+            string outputPath = "output_with_chart_axis_report.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Report saved to {outputPath}");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method to write axis information to the report sheet
+    private static void WriteAxisInfo(Worksheet sheet, ref int row, string worksheetName, int chartIndex, string axisLabel, Axis axis)
+    {
+        sheet.Cells[row, 0].PutValue(worksheetName);
+        sheet.Cells[row, 1].PutValue(chartIndex);
+        sheet.Cells[row, 2].PutValue(axisLabel);
+        // Use the runtime type name as a fallback for axis type information
+        sheet.Cells[row, 3].PutValue(axis.GetType().Name);
+        // Use TickLabelPosition as a representative property for label direction/position
+        sheet.Cells[row, 4].PutValue(axis.TickLabelPosition.ToString());
+
+        row++;
     }
 }

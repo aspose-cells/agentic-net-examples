@@ -1,63 +1,69 @@
-// Title: Apply distinct passwords to each worksheet in an Excel file using Aspose.Cells for .NET based on the workbook name
-// AI Prompts: Generate C# code with Aspose.Cells that protects every worksheet using a password formed from the workbook filename and the sheet name. | Show how to save the password‑protected workbook to a new location, automatically creating the output folder when it does not exist. | Add error handling that verifies the source file exists and reports any failures during worksheet protection or file saving.
-// Common Searches: Aspose.Cells C# protect each worksheet with a different password derived from file name | How to set unique passwords for multiple sheets in an Excel workbook using .NET | Save a protected Excel workbook to a new file and ensure output directory exists in C# | C# code to apply per‑sheet protection with Aspose.Cells and handle missing input file
-// Tags: Aspose.Cells per‑worksheet password protection | generate worksheet password from workbook filename | save protected Excel workbook Aspose.Cells .NET | C# create output directory if missing Aspose.Cells | error handling missing input file Aspose.Cells
+// Title: Protect each worksheet with a unique password based on the workbook file name using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells protect individual worksheets with different passwords | How to generate worksheet passwords from Excel file name using Aspose.Cells | Apply ProtectionType.All to each sheet and save the protected workbook in .NET | Set per‑sheet password in Aspose.Cells based on sheet name and file name | Save a protected Excel workbook to a new file with Aspose.Cells C# example
+// Tags: Aspose.Cells worksheet.Protect dynamic password | generate per‑sheet password from workbook filename C# | protect Excel worksheets individually Aspose.Cells | save protected workbook to new file .NET | ProtectionType.All usage Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, derives a base password from the file name, and iterates through all worksheets, protecting each with a unique password that combines the base name and the sheet name using ProtectionType.All. It ensures the output directory exists, saves the protected workbook to a new file, and includes checks for a missing source file and general exception handling.
-class Program
+namespace WorksheetProtectionExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, derives a base password from the file name, creates a unique password for each worksheet by appending the sheet name, protects each sheet with ProtectionType.All, and saves the protected workbook to a new file, creating the output directory if necessary and handling errors.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Path to the source workbook
-            string inputPath = @"C:\Data\SampleWorkbook.xlsx";
+            // Input and output file paths
+            string inputFile = @"C:\Data\SampleWorkbook.xlsx";
+            string outputFile = @"C:\Data\SampleWorkbook_Protected.xlsx";
 
             // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {inputFile}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Derive a base password from the file name (without extension)
-            string basePassword = Path.GetFileNameWithoutExtension(inputPath);
-
-            // Protect each worksheet with a unique password
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Create a unique password for the current sheet
-                string sheetPassword = $"{basePassword}_{sheet.Name}";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
 
-                // Apply protection with the generated password.
-                // The third parameter (oldPassword) is not required for new protection, so pass null.
-                sheet.Protect(ProtectionType.All, sheetPassword, null);
+                // Derive a base password from the file name (without extension)
+                string basePassword = Path.GetFileNameWithoutExtension(inputFile);
+
+                // Protect each worksheet with a unique password
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    try
+                    {
+                        // Create a unique password for the worksheet (BaseFileName_SheetName)
+                        string sheetPassword = $"{basePassword}_{sheet.Name}";
+
+                        // Protect the worksheet; oldPassword is null because the sheet is not previously protected
+                        sheet.Protect(ProtectionType.All, sheetPassword, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to protect sheet '{sheet.Name}': {ex.Message}");
+                    }
+                }
+
+                // Ensure the output directory exists
+                string? outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir!))
+                {
+                    Directory.CreateDirectory(outputDir!);
+                }
+
+                // Save the protected workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
             }
-
-            // Path for the protected workbook
-            string outputPath = @"C:\Data\SampleWorkbook_Protected.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the protected workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

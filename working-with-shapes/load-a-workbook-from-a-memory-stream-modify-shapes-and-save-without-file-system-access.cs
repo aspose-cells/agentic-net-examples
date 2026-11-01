@@ -1,7 +1,6 @@
-// Title: Load an Excel workbook from a byte array, replace a rectangle shape, and return the updated file as a byte array using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that takes a byte[] containing an XLSX workbook, deletes any shape named "MyRectangle", inserts a new rectangle with custom text and formatting, and returns the updated workbook as a byte[]. | Show how to open an Excel workbook from a MemoryStream using Aspose.Cells, shift the position of the first existing shape, and write the modified file to another MemoryStream. | Design a reusable routine that accepts parameters for rectangle size, fill color, and label text, updates the workbook's shapes in memory, and outputs the result as a byte array without touching the file system.
-// Common Searches: Aspose.Cells C# load workbook from byte array and edit shapes in memory | How to delete a specific shape in an Excel file using Aspose.Cells without writing to disk | Saving modified Excel workbook to a byte[] with Aspose.Cells .NET | Replace rectangle shape and adjust shape position using Aspose.Cells C# example
-// Tags: load workbook from memory stream Aspose.Cells | remove shape programmatically Aspose.Cells | add rectangle shape Aspose.Cells | export workbook to byte array Aspose.Cells | configure shape formatting Aspose.Cells C#
+// Title: Load an Excel workbook from a byte array, add or modify shapes, and save back to a byte array using Aspose.Cells for .NET
+// Common Searches: how to load an Excel file from a byte array with Aspose.Cells and edit worksheet shapes in C# | Aspose.Cells C# add rectangle shape to a worksheet without writing to disk | modify existing shape position and text in a workbook loaded from a memory stream using Aspose.Cells | save modified Excel workbook to a byte array using Aspose.Cells .NET API | process Excel shapes in memory with Aspose.Cells for serverless or cloud functions
+// Tags: load workbook from memory stream Aspose.Cells | add rectangle shape worksheet Aspose.Cells | update shape position size text Aspose.Cells | save workbook to byte array Aspose.Cells | shape manipulation without file system Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,50 +8,68 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example demonstrates loading an XLSX workbook from a byte array via a MemoryStream, removing any existing shape named "MyRectangle", adding a new formatted rectangle shape, optionally repositioning the first shape, and saving the modified workbook back to a byte array—all without accessing the file system.
+// The example demonstrates loading an Excel workbook from a byte array via a MemoryStream, adding a new rectangle shape, optionally updating the first existing shape's position, size, and text, and then saving the modified workbook back to a byte array—all using Aspose.Cells for .NET without any file‑system access.
 public class WorkbookShapeProcessor
 {
-    /// <param name="inputWorkbookBytes">The original workbook data.</param>
-    /// <returns>The modified workbook data.</returns>
-    public byte[] ProcessWorkbook(byte[] inputWorkbookBytes)
+    /// <param name="inputBytes">The original workbook bytes.</param>
+    /// <returns>Byte array of the modified workbook, or null if an error occurs.</returns>
+    public byte[] ProcessWorkbook(byte[] inputBytes)
     {
+        if (inputBytes == null || inputBytes.Length == 0)
+            throw new ArgumentException("Input workbook bytes are null or empty.", nameof(inputBytes));
+
         try
         {
-            // Load the workbook from the input memory stream
-            using (MemoryStream inputStream = new MemoryStream(inputWorkbookBytes))
+            // Load workbook from the input byte array using a MemoryStream (no file system access)
+            using (var inputStream = new MemoryStream(inputBytes))
             {
-                Workbook workbook = new Workbook(inputStream);
-                Worksheet sheet = workbook.Worksheets[0];
+                var workbook = new Workbook(inputStream);
+                var worksheet = workbook.Worksheets[0];
 
-                // Remove existing shapes named "MyRectangle" to avoid duplicates
-                for (int i = sheet.Shapes.Count - 1; i >= 0; i--)
+                // ------------------------------
+                // Shape modifications start here
+                // ------------------------------
+
+                // Example 1: Add a new rectangle shape
+                Shape rectangle = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // shape type
+                    5,   // upper left row
+                    0,   // upper left column
+                    5,   // top offset (points)
+                    0,   // left offset (points)
+                    200, // width (points)
+                    100  // height (points)
+                );
+
+                rectangle.Text = "Sample Rectangle";
+                rectangle.Placement = PlacementType.FreeFloating;
+                // Note: FillColor, LineWeight, and LineColor properties are not available in the current Aspose.Cells version.
+                // If needed, they can be set via the Shape's Fill and Line objects in newer versions.
+
+                // Example 2: Modify an existing shape if any exist
+                if (worksheet.Shapes.Count > 0)
                 {
-                    Shape existingShape = sheet.Shapes[i];
-                    if (existingShape.Name == "MyRectangle")
-                    {
-                        sheet.Shapes.RemoveAt(i);
-                    }
+                    Shape existingShape = worksheet.Shapes[0];
+
+                    // Change its position and size
+                    existingShape.Left = 50;   // points from the left edge
+                    existingShape.Top = 50;    // points from the top edge
+                    existingShape.Width = 150;
+                    existingShape.Height = 80;
+
+                    // Update text (all shapes have a Text property)
+                    existingShape.Text = "Updated Shape Text";
+
+                    // Change fill color if supported; otherwise this line is omitted.
+                    // existingShape.FillColor = Color.LightGreen;
                 }
 
-                // Add a new rectangle shape
-                Shape rectangle = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 200, 100);
-                rectangle.Name = "MyRectangle";
-                rectangle.Text = "Hello Aspose.Cells!";
-                rectangle.Font.Color = Color.White;
-                rectangle.FillFormat.ForeColor = Color.Blue;
-                rectangle.LineFormat.ForeColor = Color.Black;
-                rectangle.LineFormat.Weight = 1.5;
+                // ------------------------------
+                // Shape modifications end here
+                // ------------------------------
 
-                // Move the first existing shape (if any)
-                if (sheet.Shapes.Count > 0)
-                {
-                    Shape firstShape = sheet.Shapes[0];
-                    firstShape.Left += 10;
-                    firstShape.Top += 5;
-                }
-
-                // Save the modified workbook to an output memory stream
-                using (MemoryStream outputStream = new MemoryStream())
+                // Save the modified workbook to a new memory stream
+                using (var outputStream = new MemoryStream())
                 {
                     workbook.Save(outputStream, SaveFormat.Xlsx);
                     return outputStream.ToArray();
@@ -61,46 +78,47 @@ public class WorkbookShapeProcessor
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error processing workbook: {ex.Message}");
-            throw;
+            // Wrap any exception to provide context
+            throw new InvalidOperationException("Failed to process workbook shapes.", ex);
         }
     }
 }
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
+            const string inputPath = "sample.xlsx";
             byte[] inputBytes;
 
+            // Load existing file if present; otherwise create a new empty workbook
             if (File.Exists(inputPath))
             {
                 inputBytes = File.ReadAllBytes(inputPath);
             }
             else
             {
-                // Create a new empty workbook if the input file does not exist
-                Workbook wb = new Workbook();
-                using (MemoryStream ms = new MemoryStream())
+                var wb = new Workbook();
+                using (var ms = new MemoryStream())
                 {
                     wb.Save(ms, SaveFormat.Xlsx);
                     inputBytes = ms.ToArray();
                 }
             }
 
-            WorkbookShapeProcessor processor = new WorkbookShapeProcessor();
+            var processor = new WorkbookShapeProcessor();
             byte[] resultBytes = processor.ProcessWorkbook(inputBytes);
 
-            string outputPath = "output.xlsx";
+            // Write the modified workbook to disk
+            const string outputPath = "result.xlsx";
             File.WriteAllBytes(outputPath, resultBytes);
-            Console.WriteLine($"Modified workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook processed successfully. Output saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

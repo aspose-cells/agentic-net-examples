@@ -1,61 +1,50 @@
-// Title: Generate a line sparkline in Aspose.Cells for .NET while configuring empty‑cell handling to prevent rendering errors
-// AI Prompts: Write C# code that adds a line sparkline to a worksheet using Aspose.Cells and sets the sparkline group to plot empty cells as zeros. | Show how to create a SparklineGroup in Aspose.Cells and configure it to interpolate missing values instead of skipping them. | Provide a C# example that sets PlotEmptyCellsType to NotPlotted for a sparkline range to hide null cells.
-// Common Searches: Aspose.Cells how to set PlotEmptyCellsType for a sparkline in C# | C# sparkline ignore empty cells Aspose.Cells example | Configure empty cell handling for line sparkline using Aspose.Cells .NET
-// Tags: Aspose.Cells line sparkline empty cells | PlotEmptyCellsType zero setting | sparkline group options Aspose.Cells | C# handling null values in sparkline | interpolate missing sparkline points .NET
+// Title: Create a line sparkline in Aspose.Cells for .NET while skipping empty cells in the source range
+// Common Searches: Aspose.Cells C# create line sparkline that ignores blank cells in source range | how to prevent sparkline rendering errors caused by null values using Aspose.Cells | C# Aspose.Cells sparkline group hide markers for empty data points | generate sparkline from range with missing values in Aspose.Cells .NET | skip null cells when adding sparkline to worksheet with Aspose.Cells
+// Tags: line sparkline creation Aspose.Cells C# | null cell handling in sparkline source range | SparklineGroup ShowMarkers property usage | CellArea definition for sparkline data range | sparkline rendering with missing data points
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, fills cells A1‑E1 with numbers and intentional empty cells, adds a line sparkline at F1 covering that range, configures PlotEmptyCellsType to define how empty cells are rendered (e.g., as zeros, interpolated, or not plotted), and saves the file as SparklineNullHandlingDemo.xlsx.
-public class SparklineNullHandlingDemo
+// The example creates a workbook, fills column A with numbers leaving specific cells blank to simulate nulls, defines the source range A1:A7 using CellArea, adds a line sparkline to cell B1, disables markers for empty cells via ShowMarkers = false, and saves the file as SparklineWithNulls.xlsx, ensuring null values do not cause rendering errors.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            Run();
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate source data range A1:A7 with numbers, leaving some cells empty (null)
+            double[] data = { 10, 20, 30, 40, 50, 60, 70 };
+            // Indices 2 and 5 will be left empty to simulate nulls
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (i == 2 || i == 5) // skip these indices to create empty cells
+                    continue;
+
+                sheet.Cells[i, 0].PutValue(data[i]); // Column A (index 0)
+            }
+
+            // Define source data range as CellArea
+            CellArea sourceRange = CellArea.CreateCellArea("A1", "A7");
+
+            // Add a sparkline group of type Line in cell B1 referencing the source range A1:A7
+            // The Add method returns the index of the newly created group
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "B1", false, sourceRange);
+            SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+
+            // Optional: hide markers for empty cells to keep the visual clean
+            sparklineGroup.ShowMarkers = false;
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("SparklineWithNulls.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate the source range with some values and intentional nulls (empty cells)
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(null); // empty cell
-        sheet.Cells["C1"].PutValue(8);
-        sheet.Cells["D1"].PutValue(null); // empty cell
-        sheet.Cells["E1"].PutValue(3);
-
-        // Define the location where the sparkline will be placed (column F, row 1)
-        CellArea location = new CellArea
-        {
-            StartColumn = 5, // column index for "F"
-            EndColumn = 5,
-            StartRow = 0,    // row index for "1"
-            EndRow = 0
-        };
-
-        // Add a sparkline group for the data range A1:E1.
-        // This call also creates a sparkline automatically.
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:E1", false, location);
-        SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-        // Configure how empty cells are plotted.
-        // Options: PlotEmptyCellsType.Zero, PlotEmptyCellsType.Interpolated, PlotEmptyCellsType.NotPlotted
-        group.PlotEmptyCellsType = PlotEmptyCellsType.Zero;
-
-        // Save the workbook to a file
-        string outputPath = "SparklineNullHandlingDemo.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

@@ -1,106 +1,81 @@
-// Title: Generate hierarchical master‑detail Excel tables using Aspose.Cells smart marker grouping in C#
-// AI Prompts: Write C# code that defines Order and OrderDetail classes, creates a workbook template with smart markers, binds a List<Order> to WorkbookDesigner, and processes the markers to produce a grouped master‑detail sheet. | Show how to add a subtotal row for each order's detail section using smart marker syntax and calculate totals automatically. | Demonstrate how to export the processed workbook to a .xlsx file and open it for verification.
-// Common Searches: aspocells c# smart markers hierarchical master detail grouping | how to use smart marker syntax for nested collections in Excel with Aspose.Cells | C# generate master‑detail Excel report with row grouping using Aspose.Cells | smart marker template for orders and order details Aspose.Cells .NET | group master rows and detail rows automatically Aspose.Cells smart markers
-// Tags: smart marker grouping master‑detail | C# Aspose.Cells hierarchical export | bind nested collection WorkbookDesigner | Excel row grouping with smart markers | generate master‑detail .xlsx using Aspose.Cells
+// Title: Create hierarchical master‑detail tables in Excel using Aspose.Cells smart marker grouping with C#
+// AI Prompts: Generate an Excel workbook that expands each master row and nests its related detail rows by applying smart marker grouping with a DataSet in Aspose.Cells C#. | Add extra detail columns to the smart marker template and reprocess the workbook so the hierarchical output includes the new fields. | Extend the template to introduce a second grouping level (e.g., product category) and produce a multi‑level grouped report using WorkbookDesigner.
+// Common Searches: Aspose.Cells C# example for master‑detail smart marker grouping in Excel | How to use WorkbookDesigner with a DataSet to create hierarchical Excel reports | C# code to link master and detail tables via DataRelation for smart markers | Generate grouped rows in an Excel template using Aspose.Cells smart markers | Populate Excel template from multiple DataTables with a master‑detail relationship C#
+// Tags: smart marker grouping with WorkbookDesigner | master-detail DataSet relation Aspose.Cells | hierarchical Excel generation C# | populate Excel template from DataTables | grouped rows using smart markers
 
 using System;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-namespace AsposeCellsSmartMarkerGroupingDemo
+// The sample loads a template workbook, builds master and detail DataTables, creates a DataRelation on OrderID, adds both tables to a DataSet, assigns the DataSet to a WorkbookDesigner, processes the smart markers to produce hierarchical rows, and saves the populated workbook as Result.xlsx.
+class Program
 {
-    // Master class
-    // The example creates a workbook, inserts smart markers for Order master rows and OrderDetail rows, builds a List<Order> with nested OrderDetail collections, sets this list as the "Orders" data source for a WorkbookDesigner, processes the markers to automatically expand and group master‑detail rows, and saves the result as MasterDetailGrouped.xlsx.
-    public class Order
+    static void Main()
     {
-        public int OrderID { get; set; }
-        public DateTime OrderDate { get; set; }
-        public List<OrderDetail> Details { get; set; }
-
-        public Order(int id, DateTime date, List<OrderDetail> details)
+        try
         {
-            OrderID = id;
-            OrderDate = date;
-            Details = details;
-        }
-    }
+            // Path to the template workbook
+            string templatePath = "Template.xlsx";
 
-    // Detail class
-    public class OrderDetail
-    {
-        public string Product { get; set; }
-        public int Quantity { get; set; }
-        public double UnitPrice { get; set; }
-
-        public OrderDetail(string product, int qty, double price)
-        {
-            Product = product;
-            Quantity = qty;
-            UnitPrice = price;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // 1. Create a new workbook (template) and add smart markers.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Header row for master data
-            cells["A1"].PutValue("Order ID");
-            cells["B1"].PutValue("Order Date");
-
-            // Master smart markers (first row of data)
-            cells["A2"].PutValue("&=$Orders.OrderID");
-            cells["B2"].PutValue("&=$Orders.OrderDate");
-
-            // Header row for detail data (placed directly below master row)
-            cells["A3"].PutValue("Product");
-            cells["B3"].PutValue("Quantity");
-            cells["C3"].PutValue("Unit Price");
-
-            // Detail smart markers (repeat for each order)
-            cells["A4"].PutValue("&=$Orders.Details.Product");
-            cells["B4"].PutValue("&=$Orders.Details.Quantity");
-            cells["C4"].PutValue("&=$Orders.Details.UnitPrice");
-
-            // 2. Prepare hierarchical data (master‑detail).
-            List<Order> orders = new List<Order>
+            // Ensure the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
             {
-                new Order(
-                    1001,
-                    new DateTime(2023, 1, 15),
-                    new List<OrderDetail>
-                    {
-                        new OrderDetail("Apple", 10, 1.5),
-                        new OrderDetail("Banana", 5, 0.9)
-                    })
-                ,
-                new Order(
-                    1002,
-                    new DateTime(2023, 2, 3),
-                    new List<OrderDetail>
-                    {
-                        new OrderDetail("Orange", 8, 1.2),
-                        new OrderDetail("Grapes", 12, 2.0),
-                        new OrderDetail("Mango", 3, 3.5)
-                    })
-            };
+                Console.WriteLine($"Error: Template file '{templatePath}' not found.");
+                return;
+            }
 
-            // 3. Bind the data source to the workbook designer using the smart marker name.
+            // Load the Excel template that contains smart markers for grouping
+            Workbook workbook = new Workbook(templatePath);
+
+            // ---------- Prepare master data ----------
+            DataTable masterTable = new DataTable("Master");
+            masterTable.Columns.Add("OrderID", typeof(int));
+            masterTable.Columns.Add("Customer", typeof(string));
+
+            masterTable.Rows.Add(1, "Alice");
+            masterTable.Rows.Add(2, "Bob");
+            masterTable.Rows.Add(3, "Charlie");
+
+            // ---------- Prepare detail data ----------
+            DataTable detailTable = new DataTable("Detail");
+            detailTable.Columns.Add("OrderID", typeof(int));
+            detailTable.Columns.Add("Product", typeof(string));
+            detailTable.Columns.Add("Quantity", typeof(int));
+
+            detailTable.Rows.Add(1, "Apple", 10);
+            detailTable.Rows.Add(1, "Banana", 5);
+            detailTable.Rows.Add(2, "Orange", 7);
+            detailTable.Rows.Add(2, "Grape", 3);
+            detailTable.Rows.Add(3, "Mango", 12);
+            detailTable.Rows.Add(3, "Peach", 8);
+
+            // ---------- Combine into a DataSet and define relation ----------
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add(masterTable);
+            dataSet.Tables.Add(detailTable);
+
+            // Relation on OrderID links master rows to their detail rows
+            dataSet.Relations.Add(
+                "MasterDetail",
+                masterTable.Columns["OrderID"]!,
+                detailTable.Columns["OrderID"]!
+            );
+
+            // ---------- Process smart markers ----------
+            // Use WorkbookDesigner to process smart markers with the dataset
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Orders", orders);
-
-            // 4. Process the smart markers – Aspose.Cells will automatically expand the master rows,
-            //    insert detail rows for each master, and maintain the hierarchical grouping.
+            designer.SetDataSource(dataSet);
             designer.Process();
 
-            // 5. Save the result.
-            workbook.Save("MasterDetailGrouped.xlsx");
+            // Save the populated workbook
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

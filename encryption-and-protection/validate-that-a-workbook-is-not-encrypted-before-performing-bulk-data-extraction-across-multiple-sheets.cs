@@ -1,87 +1,118 @@
-// Title: Validate workbook encryption and extract all rows from each populated worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, checks Workbook.IsEncrypted (or LoadOptions.Password) and throws a clear exception if the file is encrypted, otherwise extracts every cell value from all non‑empty worksheets into a Dictionary<string, List<object[]>>. | Create a reusable method ExtractData(string filePath) that returns a dictionary mapping sheet names to row arrays, performs an encryption check before loading, and logs any worksheets that are empty and therefore skipped. | Update the example to handle password‑protected workbooks by prompting for a password, using LoadOptions.Password with Aspose.Cells, and proceeding with data extraction only after successful decryption.
-// Common Searches: how to check if an Excel workbook is encrypted with Aspose.Cells before reading data | extract data from all non‑empty sheets in a .xlsx file using Aspose.Cells C# | skip empty worksheets while iterating through workbook worksheets Aspose.Cells | load password protected Excel file with Aspose.Cells and read its contents in .NET
-// Tags: aspocells workbook encryption check | aspocells extract all worksheets data | aspocells skip empty sheets | aspocells load password protected xlsx | c# bulk excel sheet extraction aspocells
+// Title: Validate that an Excel workbook is not password‑protected before bulk extracting data from all worksheets using Aspose.Cells in C#
+// Common Searches: how to detect if an Excel file is password protected using Aspose.Cells C# | bulk read all worksheets after confirming workbook is not encrypted with Aspose.Cells | C# code to verify Excel workbook encryption before iterating sheets | Aspose.Cells load workbook without password exception for multiple sheet extraction | extract data from every sheet in an unencrypted Excel workbook using Aspose.Cells
+// Tags: detect encrypted workbook Aspose.Cells | bulk extract worksheets Aspose.Cells | handle password‑protected Excel Aspose.Cells | verify workbook encryption C# | iterate worksheets Aspose.Cells | use MaxDisplayRange Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace WorkbookExtraction
+namespace BulkDataExtraction
 {
-    // The sample loads an Excel workbook with Aspose.Cells, verifies the file exists, optionally checks for encryption, iterates through each worksheet, skips those without data, extracts every cell value into a dictionary keyed by sheet name, and reports the row count per sheet; encryption handling can be added via Workbook.IsEncrypted or LoadOptions.
-    class Program
+    // The example loads an Excel file with Aspose.Cells, automatically throws an exception if the file is missing or password‑protected, then iterates each worksheet, determines its used range via MaxDisplayRange, and copies every cell's string value into a dictionary keyed by sheet name, returning a list‑of‑lists representation while providing comprehensive error handling.
+    public class WorkbookExtractor
     {
-        static void Main(string[] args)
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <returns>
+        /// A dictionary where the key is the worksheet name and the value is a list of rows,
+        /// each row represented as a list of string values.
+        /// </returns>
+        public static Dictionary<string, List<List<string>>> ExtractData(string filePath)
         {
-            // Path to the Excel file
-            string filePath = @"C:\Data\Sample.xlsx";
-
-            // Verify that the file exists before attempting to load it
             if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            Workbook workbook = null;
+                throw new FileNotFoundException("The specified Excel file was not found.", filePath);
 
             try
             {
-                // Load the workbook (uses the standard load rule)
-                workbook = new Workbook(filePath);
+                // Load the workbook. If the file is password‑protected, an exception will be thrown.
+                Workbook workbook = new Workbook(filePath);
+
+                var result = new Dictionary<string, List<List<string>>>();
+
+                // Iterate through all worksheets.
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    var sheetData = new List<List<string>>();
+
+                    // Determine the used range of the sheet.
+                    AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // If the sheet is empty, skip it.
+                    if (usedRange == null || usedRange.RowCount == 0 || usedRange.ColumnCount == 0)
+                    {
+                        result.Add(sheet.Name, sheetData);
+                        continue;
+                    }
+
+                    int startRow = usedRange.FirstRow;
+                    int endRow = startRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = startCol + usedRange.ColumnCount - 1;
+
+                    // Loop through rows and columns within the used range.
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        var rowData = new List<string>();
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            // Retrieve the cell value as a string (null‑safe).
+                            string cellValue = sheet.Cells[row, col].StringValue ?? string.Empty;
+                            rowData.Add(cellValue);
+                        }
+                        sheetData.Add(rowData);
+                    }
+
+                    result.Add(sheet.Name, sheetData);
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                // Wrap any exception to provide context.
+                throw new InvalidOperationException($"Failed to extract data from workbook '{filePath}'.", ex);
+            }
+        }
+
+        // Entry point for the console application.
+        public static void Main(string[] args)
+        {
+            // Example usage: provide the Excel file path as the first argument.
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the full path to the Excel file as a command‑line argument.");
                 return;
             }
 
-            // NOTE: Older Aspose.Cells versions may not expose an IsEncrypted property.
-            // If needed, handle encryption via Workbook.LoadOptions in a real scenario.
+            string filePath = args[0];
 
-            // Prepare a container for extracted data
-            var extractedData = new Dictionary<string, List<object[]>>();
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Determine if the sheet is empty by checking the used range
-                var cells = sheet.Cells;
-                if (cells.MaxDataRow < 0 || cells.MaxDataColumn < 0)
+                var data = ExtractData(filePath);
+                Console.WriteLine($"Extracted data from '{Path.GetFileName(filePath)}':");
+
+                foreach (var sheetEntry in data)
                 {
-                    // Skip empty sheets
-                    continue;
-                }
-
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                var sheetData = new List<object[]>();
-
-                // Extract data row by row
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    var rowData = new object[maxCol + 1];
-                    for (int col = 0; col <= maxCol; col++)
+                    Console.WriteLine($"\nWorksheet: {sheetEntry.Key}");
+                    foreach (var row in sheetEntry.Value)
                     {
-                        rowData[col] = cells[row, col].Value;
+                        Console.WriteLine(string.Join("\t", row));
                     }
-                    sheetData.Add(rowData);
                 }
-
-                // Store data keyed by sheet name
-                extractedData[sheet.Name] = sheetData;
             }
-
-            // Example: output the number of rows extracted per sheet
-            foreach (var kvp in extractedData)
+            catch (FileNotFoundException fnfEx)
             {
-                Console.WriteLine($"Sheet '{kvp.Key}' - Rows extracted: {kvp.Value.Count}");
+                Console.WriteLine(fnfEx.Message);
             }
-
-            // Further processing of extractedData can be performed here
+            catch (InvalidOperationException invEx)
+            {
+                Console.WriteLine(invEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

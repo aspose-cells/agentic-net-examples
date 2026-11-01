@@ -1,43 +1,46 @@
-// Title: How to disable external resource loading in Aspose.Cells PDF conversion for .NET to boost performance
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and saves it as a PDF while setting PdfSaveOptions.DisableExternalLinks = true to skip external resources. | Demonstrate how to configure PdfSaveOptions in Aspose.Cells for .NET to prevent loading of external hyperlinks, images, or OLE objects during PDF rendering.
-// Common Searches: Aspose.Cells .NET disable external links when saving workbook to PDF | skip external images during Excel to PDF conversion using Aspose.Cells | improve PDF generation speed by turning off external resources in Aspose.Cells | PdfSaveOptions.DisableExternalLinks example C# | how to prevent external hyperlinks from being embedded in PDF with Aspose.Cells
-// Tags: aspocells pdfsaveoptions disableexternallinks | excel to pdf conversion performance aspocells | skip external resources aspocells pdf rendering | c# aspocells pdf generation optimization | disable external hyperlinks aspocells pdfsaveoptions
+// Title: How to disable external resource loading when converting Excel to PDF with Aspose.Cells for .NET to improve performance
+// AI Prompts: Generate C# code that configures PdfSaveOptions to ignore external links, images, and other resources during Workbook.Save to PDF using Aspose.Cells. | Show the steps to turn off external content fetching in Aspose.Cells PDF rendering to speed up conversion of large workbooks. | Explain which PdfSaveOptions settings affect external resource handling and how to apply them in a .NET application.
+// Common Searches: Aspose.Cells .NET disable external images during Excel to PDF conversion | How to improve PDF conversion speed in Aspose.Cells by turning off external links | PdfSaveOptions setting to prevent loading of external resources in Aspose.Cells | Best practice for faster Excel to PDF export with Aspose.Cells by disabling external content | Avoid external resource download when saving workbook as PDF using Aspose.Cells
+// Tags: Aspose.Cells PDF external resource suppression | disable external links Aspose.Cells .NET | optimize Excel to PDF performance Aspose.Cells | PdfSaveOptions external content control | speed up PDF rendering Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The program checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions instance with DisableExternalLinks set to true to block external hyperlinks, images, and OLE objects, and then saves the workbook as a PDF. Exceptions are caught and reported, ensuring a fast and resource‑light PDF conversion.
+// The example loads an Excel workbook, configures PdfSaveOptions to skip external links and images, and saves the workbook as a PDF. This disables external resource loading during rendering, resulting in faster conversion and reduced network calls, while handling errors gracefully.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the existing Excel file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the workbook from the existing file
             Workbook workbook = new Workbook(inputPath);
 
-            // Create PDF save options (default settings)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Additional PDF options can be set here if needed
+            };
 
-            // Save the workbook as a PDF using the configured options
+            // Save the workbook as PDF using the configured options
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF file successfully created at \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors during processing
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

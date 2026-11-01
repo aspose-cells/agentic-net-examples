@@ -1,65 +1,73 @@
-// Title: Delete all slicers associated with a specific table in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that scans each worksheet, identifies slicers whose TableName equals a specified value, purges them, and writes the updated file. | Demonstrate how to traverse the Slicers collection in reverse order to safely eliminate matching slicers in Aspose.Cells. | Include file existence verification and per‑slicer exception handling while deleting slicers for a target table in a .NET example.
-// Common Searches: aspnet remove slicers from Excel workbook by table name using Aspose.Cells | c# code to delete slicers linked to a specific table in .xlsx | how to iterate slicer collection backwards in Aspose.Cells | programmatically clear slicers for a given table with Aspose.Cells .NET | sample to delete Excel slicers for Table1 using Aspose.Cells
-// Tags: Aspose.Cells remove slicers by table name | C# delete slicer collection .xlsx | iterate worksheets remove slicers Aspose.Cells | backward loop slicer removal C# | Excel slicer cleanup Aspose.Cells
+// Title: How to delete all slicers linked to a specific table in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# remove slicers that reference a table name | delete slicer objects from a worksheet based on table association in .NET | C# code to clear slicer cache for a given Excel table using Aspose.Cells | remove all slicers tied to a particular table in an Excel file with Aspose.Cells | how to programmatically purge table slicers in a workbook using Aspose.Cells
+// Tags: Aspose.Cells remove slicers by table name | C# delete worksheet slicer objects | Aspose.Cells slicer cache removal | Excel worksheet slicer cleanup .NET | programmatic slicer deletion Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Slicers;   // Required for Slicer classes
 
-// The example loads an input.xlsx workbook, checks that the file exists, then iterates through each worksheet. It walks the Slicers collection in reverse order, compares each slicer’s TableName to the target name (e.g., "Table1"), and removes matching slicers. After processing all sheets, the workbook is saved as output.xlsx. The code includes robust error handling for missing files and individual slicer processing failures.
+// The example loads an Excel workbook, selects a worksheet (by name or the first sheet), identifies slicers whose SlicerCache name matches a specified table, removes those slicers from the worksheet, and saves the updated workbook to the output path.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-        const string targetTableName = "Table1";
+        // Define input and output paths (replace placeholders with actual paths)
+        string inputPath = "{InputFilePath}";
+        string outputPath = "{OutputFilePath}";
+        string worksheetName = "{WorksheetName}";
+        string targetTableName = "{TableName}";
 
         try
         {
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Get the worksheet by name (or fallback to the first worksheet)
+            Worksheet sheet = null;
+            if (!string.IsNullOrEmpty(worksheetName) && workbook.Worksheets[worksheetName] != null)
+                sheet = workbook.Worksheets[worksheetName];
+            else
+                sheet = workbook.Worksheets[0];
+
+            if (sheet == null)
+                throw new InvalidOperationException("Worksheet could not be determined.");
+
+            // Collect indices of slicers linked to the specified table
+            List<int> slicerIndices = new List<int>();
+            for (int i = 0; i < sheet.Slicers.Count; i++)
             {
-                // Iterate backwards to safely remove slicers while iterating
-                for (int i = sheet.Slicers.Count - 1; i >= 0; i--)
+                Slicer slicer = sheet.Slicers[i];
+                // Use the SlicerCache name (or other identifiable property) to match the table
+                string slicerCacheName = slicer.SlicerCache?.Name;
+                if (!string.IsNullOrEmpty(slicerCacheName) &&
+                    string.Equals(slicerCacheName, targetTableName, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Use dynamic to avoid compile‑time dependency on the Slicer type
-                    dynamic slicer = sheet.Slicers[i];
-                    try
-                    {
-                        string slicerTableName = slicer.TableName as string;
-                        if (string.Equals(slicerTableName, targetTableName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            sheet.Slicers.RemoveAt(i);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log and continue if a particular slicer cannot be processed
-                        Console.WriteLine($"Error processing slicer at index {i} on sheet '{sheet.Name}': {ex.Message}");
-                    }
+                    slicerIndices.Add(i);
                 }
             }
 
+            // Remove slicers in reverse order to avoid index shifting
+            for (int i = slicerIndices.Count - 1; i >= 0; i--)
+                sheet.Slicers.RemoveAt(slicerIndices[i]);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            // General exception handling for unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

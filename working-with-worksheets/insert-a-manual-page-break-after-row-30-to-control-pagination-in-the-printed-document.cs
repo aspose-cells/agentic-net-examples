@@ -1,13 +1,13 @@
-// Title: How to insert a manual horizontal page break after row 30 in an Excel worksheet with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing .xlsx file, adds a manual horizontal page break after row 30 on the first worksheet using Aspose.Cells, and saves the workbook. | Write a .NET console application that uses Aspose.Cells to place a page break before row 31 (zero‑based index 30) and verifies the break is added. | Create a snippet that demonstrates adding a horizontal page break to a worksheet at row 30 with Aspose.Cells and outputs the modified file path.
-// Common Searches: Aspose.Cells add horizontal page break after row 30 C# example | C# set manual page break in Excel worksheet using Aspose.Cells | How to control pagination in an Excel file with Aspose.Cells .NET | Insert page break before row 31 Aspose.Cells API usage
-// Tags: Aspose.Cells horizontal page break API | C# insert manual page break Excel worksheet | Excel pagination after specific row Aspose.Cells | Worksheet page break manipulation .NET | Aspose.Cells add page break to workbook
+// Title: How to insert a manual horizontal page break after row 30 in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Add a manual horizontal page break after row 30 to a worksheet loaded with Aspose.Cells and save the updated workbook. | Modify C# code to insert a horizontal page break at a configurable row index and confirm the pagination when printing the Excel file.
+// Common Searches: Aspose.Cells C# add manual page break after row 30 | set horizontal page break programmatically with Aspose.Cells .NET | C# insert page break at specific row for printed Excel pagination using Aspose.Cells | example of using HorizontalPageBreaks collection in Aspose.Cells | how to control Excel print pagination via Aspose.Cells API
+// Tags: Aspose.Cells horizontal page break API | insert manual page break C# Excel | control Excel pagination Aspose.Cells | add worksheet page break programmatically | horizontal page breaks collection Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an existing workbook, inserts a manual horizontal page break after row 30 on the first worksheet using Aspose.Cells, and saves the updated file.
+// The example loads an existing workbook, accesses the first worksheet, inserts a manual horizontal page break after row 30 via the HorizontalPageBreaks collection, and saves the modified file, with error handling for missing files and exceptions.
 class Program
 {
     static void Main()
@@ -20,28 +20,26 @@ class Program
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (adjust index or name as needed)
-            var worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a manual horizontal page break after row 30
-            // HorizontalPageBreaks.Add adds a break before the specified row (zero‑based index)
-            // Adding a break before row 31 (index 30) creates a break after row 30
-            worksheet.HorizontalPageBreaks.Add(30);
+            // Insert a manual horizontal page break after row 30 (zero‑based index)
+            sheet.HorizontalPageBreaks.Add(30);
 
-            // Save the workbook with the new page break
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for debugging
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

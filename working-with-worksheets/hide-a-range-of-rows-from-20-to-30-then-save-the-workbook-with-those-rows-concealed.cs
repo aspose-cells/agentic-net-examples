@@ -1,12 +1,12 @@
 // Title: Hide rows 20‑30 in an Excel worksheet and save the workbook with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells for .NET to hide rows 20 through 30 in a worksheet and then save the workbook as an .xlsx file. | Programmatically conceal a range of rows (20‑30) in a new Excel workbook using the Cells.HideRows method and persist the file. | Create a workbook, hide rows 20‑30 on the first sheet with Aspose.Cells, and export the result to HiddenRows.xlsx.
-// Common Searches: Aspose.Cells C# hide rows 20 to 30 and save workbook | How to conceal a specific row range in Excel using Aspose.Cells .NET | C# example for hiding rows in an Aspose.Cells worksheet | Saving an Excel file with hidden rows using Aspose.Cells for .NET | Cells.HideRows method usage in Aspose.Cells C# example
-// Tags: Aspose.Cells hide rows example | Cells.HideRows C# | save workbook with hidden rows Aspose | Excel row concealment Aspose.Cells .NET | programmatic row hiding Aspose.Cells
+// Common Searches: Aspose.Cells C# hide rows 20 through 30 in an Excel file | How to hide a range of rows and save the workbook using Aspose.Cells .NET | C# set Row.IsHidden property for multiple rows with Aspose.Cells | Saving an Excel workbook after concealing rows via Aspose.Cells API | Hide specific rows in Excel programmatically with Aspose.Cells for .NET
+// Tags: hide rows Aspose.Cells | Row.IsHidden property C# | Excel hidden rows .NET | save workbook with hidden rows Aspose.Cells | conceal worksheet rows programmatically
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The sample creates a new workbook, hides rows 20‑30 on the first worksheet using Cells.HideRows, and saves the file as HiddenRows.xlsx.
+// The example creates a new Workbook, accesses the first worksheet, iterates over rows 20‑30 (zero‑based indices 19‑29) setting each Row.IsHidden to true, and then saves the file as HiddenRows.xlsx.
 class Program
 {
     static void Main()
@@ -19,16 +19,19 @@ class Program
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range to hide (rows 20 to 30, 1‑based indexing)
-            int startRowIndex = 19; // row 20 (zero‑based)
-            int endRowIndex = 29;   // row 30 (zero‑based)
-            int totalRows = endRowIndex - startRowIndex + 1;
+            // Hide rows 20 to 30 (Aspose.Cells uses zero‑based indexing)
+            for (int rowIndex = 19; rowIndex <= 29; rowIndex++)
+            {
+                // Use the IsHidden property of the Row object
+                sheet.Cells.Rows[rowIndex].IsHidden = true;
+            }
 
-            // Hide the specified rows using the correct API
-            sheet.Cells.HideRows(startRowIndex, totalRows);
+            // Define output file path
+            string outputPath = "HiddenRows.xlsx";
 
-            // Save the workbook with the rows concealed
-            workbook.Save("HiddenRows.xlsx");
+            // Save the workbook with the hidden rows
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

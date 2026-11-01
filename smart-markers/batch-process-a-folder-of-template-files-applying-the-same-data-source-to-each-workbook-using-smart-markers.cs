@@ -1,82 +1,93 @@
-// Title: Batch fill Aspose.Cells smart markers in multiple Excel templates with a JSON data source using C#
-// AI Prompts: Generate C# code that scans a folder for .xlsx files, loads each workbook into a WorkbookDesigner, assigns a JSON data source named 'DataSource' to the smart markers, processes them, and saves the results to a specified output directory. | Modify the batch example to read an XML data source instead of JSON while keeping the same folder traversal and smart‑marker processing logic. | Add comprehensive logging to the batch routine that records the start time, each file processed, success or error status, and a summary report at the end.
-// Common Searches: aspocells batch processing smart markers C# folder of templates | how to apply the same JSON data to many Excel files with WorkbookDesigner | C# loop through directory and populate smart markers in each workbook | save processed Excel workbooks to a different folder using Aspose.Cells | error handling for batch smart marker conversion in C#
-// Tags: bulk smart marker handling with WorkbookDesigner | populate Excel templates from JSON using Aspose.Cells | iterate over .xlsx files in C# and apply data source | save processed workbooks to separate output directory | exception handling for bulk smart marker execution
+// Title: How to batch process Excel template files with smart markers using a shared DataTable in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates over all .xlsx files in a given folder, assigns a common DataTable to WorkbookDesigner, processes the smart markers, and saves each workbook to a target directory. | Show how to create a sample DataTable and use it as the data source for smart markers across multiple workbooks in a single batch operation with Aspose.Cells. | Provide a robust method that validates input and output folders, loads each template workbook, applies the shared data source, processes smart markers, and includes error handling for batch processing.
+// Common Searches: Aspose.Cells batch processing smart markers from a single DataTable in C# | C# loop through folder of .xlsx templates and populate smart markers with the same data source | How to use WorkbookDesigner to apply one DataTable to many Excel files using Aspose.Cells | Automate bulk smart marker replacement in multiple Excel workbooks with Aspose.Cells .NET | Validate source and destination directories when processing smart markers in batch with Aspose.Cells
+// Tags: batch smart marker processing Aspose.Cells | WorkbookDesigner set DataTable for multiple workbooks | process multiple .xlsx templates with smart markers | shared data source for Excel smart markers .NET | automated Excel template population Aspose.Cells
 
 using System;
 using System.IO;
+using System.Data;
 using Aspose.Cells;
 
 namespace BatchSmartMarkerProcessing
 {
-    // The program enumerates all .xlsx files in a source folder, loads each workbook, sets a JSON data source for the smart markers via WorkbookDesigner, processes the markers, and writes the populated workbooks to a target folder, with basic error handling.
+    // The example scans a folder for .xlsx template files, loads each workbook, assigns a shared DataTable as the smart‑marker data source via WorkbookDesigner, processes the markers, and saves the populated workbooks to an output directory, handling folder validation and errors.
     class Program
     {
         static void Main(string[] args)
         {
-            // Folder containing template workbooks with smart markers
-            string inputFolder = @"C:\Templates";
-
-            // Folder where processed workbooks will be saved
-            string outputFolder = @"C:\Processed";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Verify that the input folder exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder not found: {inputFolder}");
-                return;
-            }
-
-            // Sample JSON data source that will be applied to every workbook
-            string jsonData = @"{""Name"":""John Doe"",""Age"":30,""City"":""New York""}";
-
             try
             {
-                // Process each Excel file in the input folder
-                foreach (string templatePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+                // Folder containing template workbooks with smart markers
+                string templateFolder = @"C:\Templates";
+                // Folder where processed workbooks will be saved
+                string outputFolder = @"C:\Processed";
+
+                // Verify template folder exists
+                if (!Directory.Exists(templateFolder))
                 {
-                    // Ensure the template file still exists before loading
+                    Console.WriteLine($"Template folder does not exist: {templateFolder}");
+                    return;
+                }
+
+                // Ensure output folder exists
+                if (!Directory.Exists(outputFolder))
+                    Directory.CreateDirectory(outputFolder);
+
+                // Create a sample data source (DataTable) to be applied to all workbooks
+                DataTable dataSource = GetSampleData();
+
+                // Process each .xlsx file in the template folder
+                foreach (string templatePath in Directory.GetFiles(templateFolder, "*.xlsx"))
+                {
+                    // Verify the template file exists
                     if (!File.Exists(templatePath))
                     {
-                        Console.WriteLine($"File not found (skipped): {templatePath}");
+                        Console.WriteLine($"File not found: {templatePath}");
                         continue;
                     }
 
-                    try
-                    {
-                        // Load the template workbook
-                        Workbook workbook = new Workbook(templatePath);
+                    // Load the workbook
+                    Workbook workbook = new Workbook(templatePath);
 
-                        // Initialize the WorkbookDesigner with the loaded workbook
-                        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                    // Initialize the WorkbookDesigner for smart marker processing
+                    WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-                        // Set the JSON data source (the name "DataSource" must match the smart marker prefix in the templates)
-                        designer.SetJsonDataSource("DataSource", jsonData);
+                    // Set the data source for smart markers
+                    designer.SetDataSource(dataSource);
 
-                        // Process all smart markers in the workbook
-                        designer.Process();
+                    // Process the smart markers in the workbook
+                    designer.Process();
 
-                        // Determine the output file path (same file name, different folder)
-                        string outputPath = Path.Combine(outputFolder, Path.GetFileName(templatePath));
+                    // Build the output file path
+                    string fileName = Path.GetFileNameWithoutExtension(templatePath);
+                    string outputPath = Path.Combine(outputFolder, $"{fileName}_Processed.xlsx");
 
-                        // Save the processed workbook
-                        workbook.Save(outputPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing file '{templatePath}': {ex.Message}");
-                    }
+                    // Save the processed workbook
+                    workbook.Save(outputPath);
                 }
 
                 Console.WriteLine("Batch processing completed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Generates a sample DataTable used as the data source for smart markers
+        private static DataTable GetSampleData()
+        {
+            DataTable table = new DataTable("Employees");
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Department", typeof(string));
+            table.Columns.Add("Salary", typeof(double));
+
+            table.Rows.Add("John Doe", "Finance", 75000);
+            table.Rows.Add("Jane Smith", "HR", 68000);
+            table.Rows.Add("Mike Johnson", "IT", 82000);
+            table.Rows.Add("Emily Davis", "Marketing", 71000);
+
+            return table;
         }
     }
 }

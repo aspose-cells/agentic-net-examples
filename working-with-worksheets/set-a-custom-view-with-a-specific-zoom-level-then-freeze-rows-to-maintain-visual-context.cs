@@ -1,12 +1,13 @@
-// Title: Create a custom view with 120% zoom and freeze the first two rows in an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to add a named custom view with a 120% zoom level and then freeze the first two rows of the worksheet. | Show how to detect if the CustomViews collection is available in Aspose.Cells, set the zoom for that view, and apply FreezePanes to keep the top two rows visible while scrolling. | Generate a complete Aspose.Cells example that creates a workbook, optionally creates a custom view at a specific zoom, freezes rows, and saves the file.
-// Common Searches: aspnet cells how to set custom view zoom level programmatically | aspnet cells freeze first two rows while scrolling | c# aspnet cells create custom view and freeze panes example | aspnet cells workbook save with custom view and frozen rows
-// Tags: custom view zoom Aspose.Cells | freeze panes rows Aspose.Cells | conditional custom view usage Aspose.Cells | worksheet top rows freeze Aspose.Cells | set worksheet zoom Aspose.Cells
+// Title: Set worksheet zoom to 150% and freeze the first four rows using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that adjusts the worksheet zoom to 150% and freezes rows 1‑4 across the entire used range. | Generate a .NET example that creates a workbook, applies a custom view with a specific zoom level, and uses FreezePanes to lock the top four rows.
+// Common Searches: Aspose.Cells C# set zoom level and freeze top rows | How to freeze first four rows after setting zoom in Aspose.Cells .NET | C# Aspose.Cells FreezePanes with custom view zoom | Set worksheet zoom to 150% and freeze panes using Aspose.Cells | Freeze rows while preserving zoom in Excel file with Aspose.Cells
+// Tags: adjust zoom level Aspose.Cells C# | freeze top rows Aspose.Cells | custom view Excel Aspose.Cells | FreezePanes used range C# | apply zoom and freeze panes Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example creates a new workbook, accesses the first worksheet, optionally adds a custom view named "MyCustomView" with a 120% zoom (if the library version supports CustomViews), freezes the first two rows using FreezePanes, and saves the result as CustomViewAndFreeze.xlsx.
+// The example creates a new workbook, sets the first worksheet's zoom to 150%, freezes the first four rows across the used range with FreezePanes, and saves the file as CustomViewAndFreeze.xlsx.
 class Program
 {
     static void Main()
@@ -16,25 +17,24 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // ----- Custom View (if supported) -----
-            // Aspose.Cells versions prior to 23.9 do not expose the CustomViews collection.
-            // If the current library supports it, the following code can be uncommented.
-            /*
-            int viewIndex = sheet.CustomViews.Add("MyCustomView");
-            sheet.CustomViews[viewIndex].Zoom = 120;
-            */
+            // Set the zoom level for the worksheet (e.g., 150%)
+            sheet.Zoom = 150;
 
-            // Freeze the first two rows to keep them visible while scrolling
-            // Parameters: totalRows to freeze, totalColumns to freeze, row of the top-left scrollable cell, column of the top-left scrollable cell
-            sheet.FreezePanes(2, 0, 2, 0);
+            // Freeze the first 4 rows (row index is zero‑based, so use 4)
+            // Use the overload that specifies total rows and columns to avoid version issues
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(4, 0, totalRows, totalColumns);
 
-            // Save the workbook to a file
+            // Define output path
             string outputPath = "CustomViewAndFreeze.xlsx";
+
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

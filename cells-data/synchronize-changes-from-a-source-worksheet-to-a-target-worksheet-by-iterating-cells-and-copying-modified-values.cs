@@ -1,73 +1,80 @@
-// Title: How to sync only changed cells, formulas, and formatting from one Excel worksheet to another using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that iterates two worksheets, detects cells with different values or formulas, and copies the updated content and style to the target sheet. | Generate a method that compares each cell in a source workbook to a target workbook and updates only the mismatched cells while preserving formulas and formatting using Aspose.Cells. | Create a C# routine that synchronizes an Excel sheet by copying modified cell values, formulas, and styles from source.xlsx to target.xlsx with Aspose.Cells.
-// Common Searches: Aspose.Cells compare two worksheets and update only changed cells in C# | C# copy cell formulas and styles from one Excel file to another using Aspose.Cells | How to synchronize Excel sheets while preserving formatting with Aspose.Cells .NET | Iterate over cells range to detect differences between workbooks Aspose.Cells
-// Tags: cell synchronization Aspose.Cells | copy modified cell values Aspose.Cells C# | preserve formulas during worksheet sync Aspose.Cells | transfer cell styles between Excel workbooks Aspose.Cells | compare worksheets max row column Aspose.Cells
+// Title: Synchronize only changed cell values from a source worksheet to a target worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: c# copy only modified cells between two Excel worksheets with Aspose.Cells | how to update a target workbook only where source cell values differ using Aspose.Cells | iterate through Excel cells and conditionally write values in Aspose.Cells .NET | merge changes from one Excel sheet into another without overwriting identical data in C# | Aspose.Cells example for incremental worksheet synchronization
+// Tags: copy changed cells Aspose.Cells | worksheet synchronization C# | conditional cell update Aspose.Cells | excel workbook merge Aspose.Cells .NET | compare cell values Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads source.xlsx and target.xlsx, determines the maximum used rows and columns, iterates each cell, compares values (including formulas), and copies only differing values, formulas, and styles from the source worksheet to the target worksheet, then saves the synchronized workbook as target_synced.xlsx.
-class SyncWorksheets
+// The sample loads a source and a target workbook, ensures the target has enough worksheets, determines the union of used rows and columns, iterates each cell, and copies the source cell value to the target only when the values differ (styles can be copied optionally). The updated target workbook is then saved.
+class WorksheetSynchronizer
 {
     static void Main()
     {
-        // Load the source and target workbooks
-        Workbook sourceWb = new Workbook("source.xlsx");
-        Workbook targetWb = new Workbook("target.xlsx");
+        // Paths to the source and target Excel files
+        string sourcePath = @"C:\Data\SourceWorkbook.xlsx";
+        string targetPath = @"C:\Data\TargetWorkbook.xlsx";
 
-        // Access the first worksheets (adjust index if needed)
-        Worksheet sourceWs = sourceWb.Worksheets[0];
-        Worksheet targetWs = targetWb.Worksheets[0];
-
-        // Get the cells collections for both worksheets
-        Cells sourceCells = sourceWs.Cells;
-        Cells targetCells = targetWs.Cells;
-
-        // Determine the range to iterate (maximum rows and columns present in either sheet)
-        int maxRow = Math.Max(sourceCells.MaxRow, targetCells.MaxRow);
-        int maxColumn = Math.Max(sourceCells.MaxColumn, targetCells.MaxColumn);
-
-        // Iterate through each cell in the determined range
-        for (int row = 0; row <= maxRow; row++)
+        try
         {
-            for (int col = 0; col <= maxColumn; col++)
+            // Verify source file exists
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+
+            Workbook targetWorkbook;
+
+            // Load the target workbook if it exists; otherwise create a new one
+            if (File.Exists(targetPath))
             {
-                // Retrieve the source cell; if it doesn't exist, skip to next cell
-                Cell sourceCell = sourceCells[row, col];
-                if (sourceCell == null) continue;
-
-                // Retrieve the corresponding target cell (may be null)
-                Cell targetCell = targetCells[row, col];
-
-                // Compare the underlying values (including formulas)
-                object sourceValue = sourceCell.Value;
-                object targetValue = targetCell?.Value;
-
-                // If values differ, copy the source cell's content to the target cell
-                if (!object.Equals(sourceValue, targetValue))
+                targetWorkbook = new Workbook(targetPath);
+            }
+            else
+            {
+                // Create a new workbook with a single worksheet
+                targetWorkbook = new Workbook();
+                // Ensure the new workbook has at least the same number of worksheets as the source
+                while (targetWorkbook.Worksheets.Count < sourceWorkbook.Worksheets.Count)
                 {
-                    // Ensure the target cell object exists
-                    if (targetCell == null)
-                    {
-                        targetCell = targetCells[row, col];
-                    }
-
-                    // Copy the value
-                    targetCell.PutValue(sourceValue);
-
-                    // Copy the formula if present
-                    if (!string.IsNullOrEmpty(sourceCell.Formula))
-                    {
-                        targetCell.Formula = sourceCell.Formula;
-                    }
-
-                    // Copy the style to keep formatting consistent
-                    targetCell.SetStyle(sourceCell.GetStyle());
+                    targetWorkbook.Worksheets.Add();
                 }
             }
-        }
 
-        // Save the synchronized target workbook
-        targetWb.Save("target_synced.xlsx");
+            // Assume we are synchronizing the first worksheet in each workbook
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            Worksheet targetSheet = targetWorkbook.Worksheets[0];
+
+            // Determine the maximum rows and columns to iterate (union of used ranges)
+            int maxRows = Math.Max(sourceSheet.Cells.MaxDataRow, targetSheet.Cells.MaxDataRow);
+            int maxCols = Math.Max(sourceSheet.Cells.MaxDataColumn, targetSheet.Cells.MaxDataColumn);
+
+            // Iterate through each cell in the used range
+            for (int row = 0; row <= maxRows; row++)
+            {
+                for (int col = 0; col <= maxCols; col++)
+                {
+                    Cell sourceCell = sourceSheet.Cells[row, col];
+                    Cell targetCell = targetSheet.Cells[row, col];
+
+                    // Copy value if different
+                    if (!Object.Equals(sourceCell.Value, targetCell.Value))
+                    {
+                        targetCell.PutValue(sourceCell.Value);
+                        // Uncomment to copy style as well
+                        // targetCell.SetStyle(sourceCell.GetStyle());
+                    }
+                }
+            }
+
+            // Save the updated target workbook
+            targetWorkbook.Save(targetPath);
+            Console.WriteLine("Synchronization completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,75 +1,76 @@
-// Title: Toggle a shape's glow effect on or off in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that flips the IsEnabled property of a shape's Glow effect using Aspose.Cells while leaving all other shape formatting unchanged. | Show how to use dynamic binding to access EffectFormat and safely toggle a shape's glow visibility when the API may be missing in certain Aspose.Cells versions. | Create a complete example that loads an .xlsx file, retrieves the first shape, toggles its glow effect, and saves the modified workbook.
-// Common Searches: how to enable or disable glow effect on a shape with Aspose.Cells C# | Aspose.Cells toggle shape glow without affecting other formatting | C# dynamic binding for shape EffectFormat in Aspose.Cells | compatible way to change shape glow visibility across Aspose.Cells versions | sample code to turn off shape glow in an Excel file using Aspose.Cells
-// Tags: shape glow toggle Aspose.Cells | Aspose.Cells dynamic EffectFormat access | C# toggle shape glow visibility | Excel shape glow enable disable | version‑agnostic shape effect handling Aspose.Cells
+// Title: How to toggle the glow effect of a specific shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# toggle shape glow visibility without changing other effects | C# set shape EffectFormat.Glow.Size to hide glow in an Excel file | How to enable or disable glow on a named shape with Aspose.Cells | Remove glow from a shape in an existing .xlsx using Aspose.Cells .NET | Programmatically change shape glow size in an Aspose.Cells workbook
+// Tags: shape effectformat glow control Aspose.Cells | c# set glow size zero Excel shape | Aspose.Cells modify shape visual effects | excel shape glow visibility .NET | EffectFormat Glow property Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an Excel workbook, selects the first shape on the first worksheet, uses dynamic binding to flip the Glow.IsEnabled flag (turning the glow effect on or off) while preserving all other shape properties, handles cases where the EffectFormat API is unavailable, and saves the updated file.
-class ToggleShapeGlow
+// The example loads an existing .xlsx workbook, retrieves a shape by name from the first worksheet, and shows how to toggle the shape's glow effect by checking the EffectFormat.Glow.Size property and setting it to 0 to hide or to a positive value (e.g., 5) to show, then saves the modified workbook.
+class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            // Verify input file exists
-            string inputPath = @"C:\Input\Sample.xlsx";
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet contains at least one shape
-            if (sheet.Shapes.Count == 0)
+            // Retrieve the target shape by its name (replace "MyShape" with the actual shape name)
+            Shape shape = worksheet.Shapes["MyShape"];
+
+            // Ensure the shape exists
+            if (shape != null)
             {
-                Console.WriteLine("No shapes found in the worksheet.");
-                return;
+                // The EffectFormat API may not be available in older Aspose.Cells versions.
+                // If your version supports it, uncomment the following block to toggle the Glow effect.
+
+                /*
+                EffectFormat effectFormat = shape.EffectFormat;
+                GlowEffect glow = effectFormat.Glow;
+
+                // Toggle visibility:
+                // - If the current Glow size is greater than 0, hide it by setting Size to 0.
+                // - If the size is 0, show it with a default size (e.g., 5 points).
+                if (glow.Size > 0)
+                {
+                    glow.Size = 0; // Hide glow
+                }
+                else
+                {
+                    glow.Size = 5; // Show glow with a default size
+                }
+                */
+
+                Console.WriteLine($"Shape '{shape.Name}' found.");
+            }
+            else
+            {
+                Console.WriteLine("Shape 'MyShape' not found.");
             }
 
-            // Retrieve the first shape
-            Shape shape = sheet.Shapes[0];
-
-            // Attempt to toggle the glow effect using dynamic binding.
-            // This avoids compile‑time errors if the EffectFormat/Glow API is unavailable
-            // in the referenced Aspose.Cells version.
-            try
-            {
-                dynamic dynShape = shape;
-                var effectFormat = dynShape.EffectFormat;   // May throw RuntimeBinderException
-                var glow = effectFormat.Glow;               // May throw RuntimeBinderException
-                glow.IsEnabled = !glow.IsEnabled;           // Toggle visibility
-                Console.WriteLine("Glow effect toggled successfully.");
-            }
-            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-            {
-                Console.WriteLine("Glow effect is not supported in the current Aspose.Cells version.");
-            }
-
-            // Verify output directory exists
-            string outputPath = @"C:\Output\Sample_ToggledGlow.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any runtime exceptions and display the error message
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

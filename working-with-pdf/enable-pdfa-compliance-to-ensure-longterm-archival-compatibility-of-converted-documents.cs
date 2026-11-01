@@ -1,52 +1,57 @@
-// Title: Save an Excel workbook as PDF/A‑1b using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.Compliance to PdfA1b, and saves the workbook as a PDF/A‑1b document with Aspose.Cells. | Show how to create the output directory, handle missing input files, and export a workbook to PDF/A while catching exceptions in C#. | Provide a minimal Aspose.Cells example that converts a worksheet to a PDF/A‑1b file suitable for long‑term archiving.
-// Common Searches: Aspose.Cells how to export Excel to PDF/A‑1b in C# | C# set PdfSaveOptions compliance to PDF/A using Aspose.Cells | Convert .xlsx to PDF/A archive format with Aspose.Cells .NET | Save workbook as PDF/A for long term storage Aspose.Cells | Create output folder before saving PDF/A with Aspose.Cells C#
-// Tags: Aspose.Cells PDF/A export C# | PdfSaveOptions set compliance PDF/A .NET | Excel to PDF/A archival conversion | C# generate PDF/A‑1b workbook | Aspose.Cells long‑term archive PDF
+// Title: Generate a PDF/A‑1b compliant document from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that builds an Excel workbook, fills cells with sample data, and saves it as a PDF/A‑1b file using Aspose.Cells PdfSaveOptions. | Demonstrate how to configure Aspose.Cells PdfSaveOptions to enforce PDF/A‑1b compliance when exporting a workbook to PDF in a .NET application.
+// Common Searches: how to export Excel to PDF/A 1b using Aspose.Cells in C# | set PDF/A compliance level with Aspose.Cells PdfSaveOptions .NET | sample code for creating PDF/A‑1b from workbook Aspose | archival PDF generation from Excel with Aspose.Cells example
+// Tags: aspocells pdfa1b export c# | pdfsaveoptions compliance setting aspocells | excel workbook to archival pdf using aspocells | c# generate pdfa compliant document from worksheet | save workbook as pdfa1b with aspocells rendering
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example loads an existing Excel file (or creates a new workbook if the file is missing), ensures the target directory exists, configures PdfSaveOptions for PDF/A compliance, and saves the workbook as a PDF/A‑1b document, with error handling to capture any issues during the conversion.
-class Program
+// The example creates a new Workbook, populates it with sample product data, configures PdfSaveOptions with PdfCompliance.PdfA1b for PDF/A‑1b compliance, ensures the output directory exists, and saves the workbook as an archival PDF/A‑1b file named SamplePdfA.pdf.
+class PdfAConversionExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            Workbook workbook;
+            // Populate the workbook with sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Oranges");
+            sheet.Cells["B3"].PutValue(85);
 
-            // Load existing workbook if the file exists; otherwise create a new one.
-            if (File.Exists(inputPath))
+            // Configure PDF save options for PDF/A compliance
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Sheet1";
-                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
-            }
+                // Set the desired PDF/A compliance level (PDF/A-1b in this case)
+                Compliance = PdfCompliance.PdfA1b
+                // EmbedStandardFonts and Title are not supported in this version of PdfSaveOptions
+            };
 
-            // Configure PDF save options (default compliance).
-            PdfSaveOptions saveOptions = new PdfSaveOptions();
+            // Define output file path
+            string outputPath = "SamplePdfA.pdf";
 
-            // Ensure the output directory exists.
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook as a PDF file.
-            workbook.Save(outputPath, saveOptions);
+            // Save the workbook as a PDF/A compliant document
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF/A file saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

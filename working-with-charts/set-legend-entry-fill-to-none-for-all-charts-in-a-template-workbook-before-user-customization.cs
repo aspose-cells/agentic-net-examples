@@ -1,64 +1,60 @@
-// Title: Set chart legend fill to none for all charts in an Excel template workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates through every worksheet and chart, and sets each chart's legend area FillFormat.FillType to None. | Create a reusable method that accepts a template file path, clears the background fill of all chart legends, and saves the modified workbook to a specified output location while handling missing‑file errors. | Show how to safely access a chart's Legend.Area.FillFormat and apply a transparent fill without affecting other chart properties in Aspose.Cells.
-// Common Searches: aspnet aspocells remove chart legend background from all worksheets | c# set legend filltype none for every chart in an existing Excel file | how to make chart legend transparent in Aspose.Cells workbook | bulk update chart legends to no fill in Excel template using Aspose.Cells | iterate charts in Aspose.Cells and clear legend area fill
-// Tags: clear legend area fill Aspose.Cells | bulk update chart legends Excel .NET | iterate workbook charts Aspose.Cells C# | transparent chart legend area Aspose.Cells | template workbook legend modification Aspose.Cells
+// Title: Set chart legend entries to transparent (no fill) for all charts in an Excel template using Aspose.Cells for .NET
+// AI Prompts: Loop over every worksheet and chart and make the legend text invisible by assigning a transparent color with Aspose.Cells. | Programmatically clear the fill of all chart legend entries before saving the workbook in C#. | Use Aspose.Cells to apply a no‑fill style to legend items of every chart in a template Excel file.
+// Common Searches: how to make chart legend entries transparent in Aspose.Cells C# | remove legend fill from all charts in an Excel workbook programmatically | Aspose.Cells set legend entry font color to transparent for multiple charts | clear chart legend background in a template workbook using .NET
+// Tags: Aspose.Cells legend entry no fill | bulk modify chart legends .NET | apply transparent legend style Aspose | process all worksheets charts Aspose.Cells | template Excel chart formatting C#
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// The code loads a template Excel workbook, iterates through each worksheet and its charts, accesses each chart's legend, and sets the legend entry font color to transparent to simulate no fill, then saves the modified workbook.
+class Program
 {
-    // The example loads a template Excel file with Aspose.Cells, walks through each worksheet and every chart it contains, and sets the legend's area FillFormat.FillType to None, making the legend background transparent. After processing all charts, the workbook is saved to a new file, with error handling for missing templates and other exceptions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string templatePath = "Template.xlsx";
-            const string resultPath = "Result.xlsx";
+            const string templatePath = "TemplateWorkbook.xlsx";
+            const string outputPath = "CustomizedWorkbook.xlsx";
 
-            try
+            // Ensure the template file exists before loading
+            if (!File.Exists(templatePath))
             {
-                // Ensure the template file exists before loading
-                if (!File.Exists(templatePath))
-                {
-                    throw new FileNotFoundException($"The template file '{templatePath}' was not found.");
-                }
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
 
-                // Load the template workbook
-                Workbook workbook = new Workbook(templatePath);
+            // Load the template workbook
+            Workbook workbook = new Workbook(templatePath);
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts on the worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    // Iterate through all charts on the worksheet
-                    foreach (Chart chart in sheet.Charts)
+                    Legend legend = chart.Legend;
+                    if (legend != null)
                     {
-                        // Access the chart's legend
-                        Legend legend = chart.Legend;
-
-                        // Set the legend background fill to none (transparent)
-                        if (legend != null && legend.Area != null && legend.Area.FillFormat != null)
+                        // Iterate through each legend entry
+                        foreach (LegendEntry entry in legend.LegendEntries)
                         {
-                            legend.Area.FillFormat.FillType = FillType.None;
+                            // Simulate no fill by making the legend entry font transparent
+                            entry.Font.Color = Color.Transparent;
                         }
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.Error.WriteLine($"File error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,63 +1,45 @@
-// Title: Load an XLSX workbook from a read‑only FileStream and calculate all formulas with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an XLSX file via a read‑only FileStream, loads it into an Aspose.Cells Workbook, and invokes CalculateFormula to evaluate every formula. | Show how to verify that a workbook file path exists, handle missing‑file errors, and implement exception handling when loading a workbook from a stream using Aspose.Cells.
-// Common Searches: C# Aspose.Cells load workbook from FileStream and calculate formulas | how to enable automatic formula calculation when opening an XLSX with Aspose.Cells | Aspose.Cells example for reading an XLSX file as a read‑only stream | validate file path before loading workbook using Aspose.Cells .NET | exception handling pattern for workbook loading from stream Aspose.Cells
-// Tags: open xlsx file as read‑only stream Aspose.Cells | calculate workbook formulas Aspose.Cells | file path existence check Aspose.Cells .NET | exception handling for workbook loading Aspose.Cells | stream‑based workbook loading Aspose.Cells
+// Title: Load an XLSX workbook from a FileStream and calculate all formulas with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells load workbook from FileStream and recalculate formulas | How to open an Excel file via stream and trigger CalculateFormula in Aspose.Cells | Aspose.Cells .NET example for reading XLSX from FileStream and saving after formula evaluation | Using Aspose.Cells to read Excel file from memory stream and automatically compute formulas | Error handling when loading an Excel workbook from a stream with Aspose.Cells in C#
+// Tags: filestream workbook loading Aspose.Cells | automatic formula calculation Aspose.Cells | saving workbook after calculation Aspose.Cells | input file existence verification C# | exception handling for Aspose.Cells file operations
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample verifies that the input XLSX file exists, opens it through a FileStream, loads it into an Aspose.Cells Workbook, runs full formula calculation with CalculateFormula(), and then saves the updated workbook to a new file while handling potential exceptions.
+class Program
 {
-    // The example validates a non‑empty, existing file path, opens the XLSX file with a read‑only FileStream, loads it into an Aspose.Cells Workbook, forces immediate formula evaluation via CalculateFormula, outputs a success message, and catches any processing exceptions.
-    public class WorkbookProcessor
+    static void Main()
     {
-        /// <param name="filePath">Full path to the XLSX file.</param>
-        public void LoadWorkbookAndEnableAutoCalc(string filePath)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("Error: File path is null or empty.");
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                 return;
             }
 
-            if (!File.Exists(filePath))
+            // Load the workbook from a file stream
+            using (FileStream fileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
             {
-                Console.WriteLine($"Error: File not found at '{filePath}'.");
-                return;
-            }
+                Workbook workbook = new Workbook(fileStream);
 
-            try
-            {
-                // Open the XLSX file as a read‑only stream
-                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                {
-                    // Load the workbook from the stream
-                    Workbook workbook = new Workbook(stream);
+                // Calculate all formulas in the workbook
+                workbook.CalculateFormula();
 
-                    // Force an immediate calculation of all formulas
-                    workbook.CalculateFormula();
-
-                    Console.WriteLine("Workbook loaded and formulas calculated successfully.");
-                    // Further processing can be done here
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+                // Save the workbook to the specified output file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
             }
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            // Example usage: provide the path to an existing XLSX file.
-            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
-
-            WorkbookProcessor processor = new WorkbookProcessor();
-            processor.LoadWorkbookAndEnableAutoCalc(filePath);
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,82 +1,53 @@
-// Title: Render an Excel worksheet to PNG with only cell borders (gridlines hidden) using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that turns off worksheet gridlines, adds thin borders to a specific cell range, and saves the sheet as a PNG image using Aspose.Cells. | Show how to set high‑resolution ImageOrPrintOptions and use SheetRender to export a workbook page while preserving only the applied cell borders.
-// Common Searches: how to hide gridlines when exporting Excel to PNG with Aspose.Cells C# | Aspose.Cells render worksheet to image with custom borders only | C# code sample that adds thin cell borders and exports the sheet as a PNG image
-// Tags: disable worksheet gridlines Aspose.Cells | apply thin borders to range Aspose.Cells | render worksheet to PNG Aspose.Cells | high‑resolution image rendering options | SheetRender export image without gridlines
+// Title: How to hide Excel gridlines and add thin black borders to a specific cell range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# hide worksheet gridlines and add thin borders to a range | How to turn off default Excel gridlines while applying custom cell borders with Aspose.Cells | C# example for disabling solid gridlines and setting black borders on cells A1:C3 using Aspose.Cells | Remove Excel gridlines but keep cell borders in a .NET workbook with Aspose.Cells | Aspose.Cells hide gridlines and style cell borders programmatically in C#
+// Tags: hide worksheet gridlines Aspose.Cells | apply thin black borders to cell range Aspose.Cells | set cell border style C# Aspose.Cells | disable solid gridlines Excel Aspose.Cells | save workbook with custom borders Aspose.Cells Xlsx
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System.Drawing;
 
-// Alias to avoid conflict with System.Range
-using AsposeRange = Aspose.Cells.Range;
-
-namespace RenderGridlinesExampleApp
+// The example creates a new workbook, disables the default gridlines, defines the A1:C3 range, applies thin black borders to each side of every cell in that range, and saves the file as GridlinesFalse.xlsx.
+class Program
 {
-    // // Demonstrates creating a workbook, applying thin borders to cells A1:B2, disabling gridlines, configuring image options, and rendering the worksheet to a PNG image using Aspose.Cells.
-    class RenderGridlinesExample
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Hide the default solid gridlines
+        sheet.IsGridlinesVisible = false;
+
+        // Define the range where borders will be applied (e.g., A1:C3)
+        CellArea area = new CellArea
         {
-            try
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = 2,
+            EndColumn = 2
+        };
+
+        // Apply thin black borders to each cell in the defined range
+        for (int row = area.StartRow; row <= area.EndRow; row++)
+        {
+            for (int col = area.StartColumn; col <= area.EndColumn; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Style style = workbook.CreateStyle();
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Header 1");
-                sheet.Cells["B1"].PutValue("Header 2");
-                sheet.Cells["A2"].PutValue("Data 1");
-                sheet.Cells["B2"].PutValue("Data 2");
+                style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
 
-                // Apply borders so cells are visible when gridlines are hidden
-                Style borderStyle = workbook.CreateStyle();
-                borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-                borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.TopBorder].Color = Color.Black;
+                style.Borders[BorderType.BottomBorder].Color = Color.Black;
+                style.Borders[BorderType.LeftBorder].Color = Color.Black;
+                style.Borders[BorderType.RightBorder].Color = Color.Black;
 
-                // Apply the style to the range A1:B2
-                AsposeRange range = sheet.Cells.CreateRange("A1:B2");
-                range.ApplyStyle(borderStyle, new StyleFlag { Borders = true });
-
-                // Hide worksheet gridlines
-                sheet.IsGridlinesVisible = false;
-
-                // Configure rendering options (gridlines already hidden)
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-                {
-                    HorizontalResolution = 150,
-                    VerticalResolution = 150
-                };
-
-                // Render the worksheet to an image
-                SheetRender sr = new SheetRender(sheet, renderOptions);
-                string outputPath = "RenderedSheet.png";
-
-                // Ensure any existing file is overwritten safely
-                if (File.Exists(outputPath))
-                {
-                    File.Delete(outputPath);
-                }
-
-                sr.ToImage(0, outputPath);
-
-                // Verify that the file was created
-                if (File.Exists(outputPath))
-                {
-                    Console.WriteLine($"Rendering completed. Check '{outputPath}' for output without solid gridlines.");
-                }
-                else
-                {
-                    Console.WriteLine("Rendering completed, but the output file was not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                sheet.Cells[row, col].SetStyle(style);
             }
         }
+
+        // Save the workbook
+        workbook.Save("GridlinesFalse.xlsx", SaveFormat.Xlsx);
     }
 }

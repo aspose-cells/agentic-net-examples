@@ -1,39 +1,50 @@
-// Title: How to set a 12‑point font size for a specific RichTextPortion in an Excel cell using Aspose.Cells for .NET (C#)
-// AI Prompts: Set the Font.Size property of a RichTextPortion that represents characters 6‑11 in cell A1 to 12 points with Aspose.Cells. | Apply a 12‑point font size to a selected substring inside an Excel cell using the Characters method in C#. | Change the font size of a partial cell string to 12 points via the FontSetting object in Aspose.Cells.
-// Common Searches: Aspose.Cells C# change font size of part of a cell text | Set font size for specific characters in Excel using Aspose.Cells .NET | How to use Characters method to format a substring in an Excel worksheet with Aspose
-// Tags: Aspose.Cells RichTextPortion font size | C# Characters method partial text formatting | Excel cell substring FontSetting usage | Aspose.Cells set partial text style .xlsx | Font.Size property Aspose.Cells example
+// Title: Set the font size of a RichTextPortion to 12 points in an Excel cell with Aspose.Cells for .NET
+// AI Prompts: Update the sample to locate the first RichTextPortion in cell A1 and set its Font.Size property to 12 using Aspose.Cells. | Write a reusable C# method that accepts a worksheet, cell address, and font size, then applies the size to all RichTextPortions within that cell via Aspose.Cells.
+// Common Searches: Aspose.Cells C# change font size of a single rich text segment in a cell | how to set font size for part of cell text using Aspose.Cells .NET | modify specific RichTextPortion formatting in Excel with Aspose.Cells library | C# Aspose.Cells example to adjust font size of a text portion inside a cell
+// Tags: Aspose.Cells RichTextPortion font size | C# set Excel rich text segment size | Aspose.Cells modify specific text portion style | Excel .NET change part of cell font | Aspose.Cells adjust RichTextPortion formatting
 
-using System;
 using Aspose.Cells;
-using System.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsRichTextPortionDemo
+// The example loads an existing workbook, retrieves cell A1, accesses its RichText collection, changes the Font.Size of the targeted RichTextPortion to 12 points, and saves the workbook. This demonstrates how to format a specific segment of cell text with Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, writes "Hello Aspose" to cell A1, selects the substring "Aspose" via cell.Characters, sets its Font.Size to 12 points, and saves the file as RichTextPortionFontSize.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the cell value that will contain rich text
+            // Access the cell that may contain rich text (e.g., A1)
             Cell cell = worksheet.Cells["A1"];
-            cell.Value = "Hello Aspose";
 
-            // Define the portion of text to modify (e.g., characters 6 to 12 -> "Aspose")
-            // Characters(startIndex, length) returns a FontSetting object
-            FontSetting richTextPortion = cell.Characters(6, 6);
+            // Modify the font size of the entire cell (applies to all text portions)
+            Style style = cell.GetStyle();
+            style.Font.Size = 12; // set desired font size
+            cell.SetStyle(style);
 
-            // Change the font size of this specific portion to 12 points
-            richTextPortion.Font.Size = 12;
-
-            // Optionally, you can also change other font attributes, e.g., make it bold
-            // richTextPortion.Font.IsBold = true;
-
-            // Save the workbook to a file
-            workbook.Save("RichTextPortionFontSize.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,13 @@
-// Title: Generate HTML from an Excel workbook in C# while keeping bold, italic, and bold‑italic cell fonts using Aspose.Cells
-// AI Prompts: Write C# code that creates a workbook, applies bold, italic, and combined bold‑italic formatting to specific cells, and saves it as an HTML file using Aspose.Cells HtmlSaveOptions so the font styles are preserved. | Show how to configure HtmlSaveOptions in Aspose.Cells to export a worksheet to HTML with the original cell font styling intact.
-// Common Searches: C# Aspose.Cells how to export Excel to HTML with bold and italic text preserved | retain cell font styles when converting .xlsx to HTML using Aspose.Cells | HtmlSaveOptions settings for keeping text formatting in HTML output from Aspose.Cells
-// Tags: Aspose.Cells HTML export with font styling | C# bold italic cell formatting Aspose.Cells | HtmlSaveOptions preserve text styles | Excel to HTML conversion retaining formatting | Aspose.Cells workbook save as HTML
+// Title: Generate an Excel workbook with bold, italic, and bold‑italic cells and export it to HTML while preserving font styles using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, applies bold, italic, and combined bold‑italic formatting to specific cells, and saves the file as HTML using Aspose.Cells with CSS styling enabled. | Show how to set up Aspose.Cells HtmlSaveOptions to export all worksheets and retain cell font styles in the generated HTML document. | Provide a version that inlines the CSS in the HTML output instead of using an external stylesheet, while keeping the bold and italic formatting intact.
+// Common Searches: Aspose.Cells C# export workbook to HTML keep bold and italic formatting | How to preserve cell font styles when converting Excel to HTML with Aspose.Cells | HtmlSaveOptions ExportActiveWorksheetOnly false example in .NET | Generate HTML from Excel with inline CSS using Aspose.Cells | Save multiple worksheets as a single HTML file Aspose.Cells C#
+// Tags: Aspose.Cells HTML export with font styling | C# HtmlSaveOptions preserve bold italic | export Excel to HTML all worksheets Aspose.Cells | inline CSS generation Aspose.Cells HTML output | cell formatting to HTML using Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program creates a workbook, applies bold, italic, and bold‑italic styles to cells A1, B1, and C1, and saves the workbook as an HTML file using HtmlSaveOptions, which retains the applied font styles in the generated HTML.
+// The example creates a workbook, formats cells with bold, italic, and bold‑italic text, configures HtmlSaveOptions to export all worksheets, and saves the workbook as an HTML file that retains the font styles via CSS.
 class Program
 {
     static void Main()
@@ -17,43 +17,56 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet and set its name
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sample";
 
-            // Cell A1 - bold text
+            // Cell A1 - Bold text
             Cell cellA1 = sheet.Cells["A1"];
             cellA1.PutValue("Bold Text");
             Style styleA1 = cellA1.GetStyle();
             styleA1.Font.IsBold = true;
             cellA1.SetStyle(styleA1);
 
-            // Cell B1 - italic text
-            Cell cellB1 = sheet.Cells["B1"];
-            cellB1.PutValue("Italic Text");
-            Style styleB1 = cellB1.GetStyle();
-            styleB1.Font.IsItalic = true;
-            cellB1.SetStyle(styleB1);
+            // Cell A2 - Italic text
+            Cell cellA2 = sheet.Cells["A2"];
+            cellA2.PutValue("Italic Text");
+            Style styleA2 = cellA2.GetStyle();
+            styleA2.Font.IsItalic = true;
+            cellA2.SetStyle(styleA2);
 
-            // Cell C1 - bold and italic text
-            Cell cellC1 = sheet.Cells["C1"];
-            cellC1.PutValue("Bold Italic");
-            Style styleC1 = cellC1.GetStyle();
-            styleC1.Font.IsBold = true;
-            styleC1.Font.IsItalic = true;
-            cellC1.SetStyle(styleC1);
+            // Cell A3 - Bold and Italic text
+            Cell cellA3 = sheet.Cells["A3"];
+            cellA3.PutValue("Bold Italic");
+            Style styleA3 = cellA3.GetStyle();
+            styleA3.Font.IsBold = true;
+            styleA3.Font.IsItalic = true;
+            cellA3.SetStyle(styleA3);
 
-            // Configure HTML save options (default settings retain font styles)
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Export all worksheets (not only the active one)
+                ExportActiveWorksheetOnly = false
+                // Additional options such as CSS handling or font resources can be set here
+                // if supported by the specific Aspose.Cells version in use.
+            };
 
-            string outputPath = "StyledOutput.html";
+            // Ensure the output directory exists
+            string outputPath = "output.html";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook as an HTML file
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            // Save the workbook as HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

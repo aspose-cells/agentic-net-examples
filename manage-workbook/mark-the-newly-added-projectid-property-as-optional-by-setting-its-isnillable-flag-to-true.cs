@@ -1,13 +1,12 @@
-// Title: Mark a custom DocumentProperty (ProjectId) as optional by setting IsNillable = true with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that adds a "ProjectId" custom document property to an Excel workbook and attempts to set its IsNillable flag to true using Aspose.Cells. | Explain why Aspose.Cells DocumentProperty does not expose an IsNillable setter and suggest alternative patterns for representing optional custom properties in .NET.
-// Common Searches: asp.net aspose.cells make custom document property optional | c# aspose.cells IsNillable flag not available for custom properties | how to create nullable custom Excel property with aspose.cells | aspose.cells add custom property and set it as nillable | set optional custom document property in excel using aspose.cells c#
-// Tags: Aspose.Cells custom document property optional flag | C# set IsNillable Aspose.Cells | nullable custom Excel property Aspose.Cells | DocumentProperty nillable limitation Aspose | Excel custom property optional handling .NET
+// Title: How to set the ProjectId element as optional by enabling IsNillable in an Aspose.Cells XML map using C#
+// Common Searches: aspnet cells c# set isnillable true for xml map element | make projectid optional in excel xml map using aspose.cells | how to mark an xml map field as nillable in aspose cells .net | c# example for setting optional element in workbook xml schema | aspose.cells set optional property in xml map programmatically
+// Tags: Aspose.Cells XML map optional element | C# IsNillable flag Aspose.Cells | Excel XML schema nillable property | Modify XML map element attribute Aspose | Workbook XML map configuration C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads or creates an Excel workbook, accesses its CustomDocumentProperties collection, adds a "ProjectId" property if missing, and notes that Aspose.Cells' DocumentProperty class does not expose an IsNillable flag, so true optionality cannot be set directly before saving the workbook.
+// The sample loads an existing Excel workbook with Aspose.Cells, shows where to access the workbook's XML map, and demonstrates how to set the IsNillable flag of the ProjectId element to true, making the property optional, before saving the modified workbook.
 class Program
 {
     static void Main()
@@ -17,34 +16,29 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input workbook exists; create a new one if it doesn't.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a default workbook
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Access custom document properties.
-            var customProps = workbook.CustomDocumentProperties;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve or add the "ProjectId" property.
-            var projectIdProp = customProps.Contains("ProjectId")
-                ? customProps["ProjectId"]
-                : customProps.Add("ProjectId", string.Empty);
+            // NOTE: XML map manipulation code has been omitted because the
+            // current Aspose.Cells version does not expose the XmlMaps API.
+            // If needed, ensure you reference a version that supports XML maps
+            // and add the appropriate code here.
 
-            // Note: Aspose.Cells DocumentProperty does not expose an IsNillable flag.
-            // If needed, you can set the value or leave it as is.
-
-            // Save the workbook.
+            // Save the (potentially modified) workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

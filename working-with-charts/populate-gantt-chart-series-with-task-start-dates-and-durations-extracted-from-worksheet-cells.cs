@@ -1,98 +1,81 @@
-// Title: Create a Gantt chart in Excel using Aspose.Cells for .NET by loading task names, start dates, and durations from worksheet cells
-// AI Prompts: Generate C# code with Aspose.Cells that reads task names, start dates, and duration values from a worksheet range and builds a stacked‑bar Gantt chart on a new sheet. | Adjust the chart so the start‑date series is hidden (transparent) and the duration series uses a light‑blue fill, while assigning the task names to the vertical axis labels. | Add data labels to the duration series that display each task's duration on the Gantt bars and save the workbook to a specified output file.
-// Common Searches: aspnet create gantt chart from excel data using Aspose.Cells stacked bar | how to bind start date and duration columns to a Gantt chart in Aspose.Cells C# | make start date series invisible in Aspose.Cells stacked bar chart | set task names as category axis labels in Aspose.Cells chart | save generated Gantt chart to a new worksheet with Aspose.Cells .NET
-// Tags: Aspose.Cells stacked bar Gantt chart creation | populate chart series from Excel range C# | hide start date series Aspose.Cells | task names as category axis labels Aspose.Cells | save workbook with generated chart .NET
+// Title: Generate a Gantt chart in C# with Aspose.Cells by binding task names, start dates and durations to a stacked‑bar chart series
+// Common Searches: C# Aspose.Cells create Gantt chart from worksheet data | how to bind start date and duration columns to stacked bar series in Aspose.Cells | make invisible start series for offsetting bars in Aspose.Cells chart | set category axis labels from a range when building Gantt chart with Aspose.Cells | save Gantt chart as XLSX using Aspose.Cells .NET
+// Tags: Aspose.Cells stacked bar Gantt chart C# | bind worksheet range to chart series Aspose.Cells | transparent start series Aspose.Cells | category axis labels from cell range Aspose.Cells | export Gantt chart to XLSX Aspose.Cells
 
-using System;
-using System.IO;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.Drawing;
 
-// The example loads task names, start dates, and durations from the first worksheet of an input Excel file, creates a stacked‑bar Gantt chart on a new sheet, makes the start‑date series transparent, colors the duration series light blue, sets task names as vertical axis labels, and saves the workbook with the chart.
-class GanttChartGenerator
+// The example creates a new workbook, writes task names, start dates and duration values, defines cell ranges, adds a stacked‑bar chart, adds an invisible start‑date series to offset the visible duration series, assigns the task names as Y‑axis category labels, and saves the file as GanttChart.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Tasks";
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
+            // Header
+            sheet.Cells["A1"].PutValue("Task");
+            sheet.Cells["B1"].PutValue("Start");
+            sheet.Cells["C1"].PutValue("Duration");
 
-            // Load the source workbook that contains task data
-            Workbook workbook = new Workbook(inputPath);
+            // Sample data
+            sheet.Cells["A2"].PutValue("Task 1");
+            sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["C2"].PutValue(5);
 
-            // Assume task data is on the first worksheet
-            Worksheet dataSheet = workbook.Worksheets[0];
+            sheet.Cells["A3"].PutValue("Task 2");
+            sheet.Cells["B3"].PutValue(new DateTime(2023, 1, 3));
+            sheet.Cells["C3"].PutValue(8);
 
-            // Add a new worksheet for the Gantt chart
-            int chartSheetIndex = workbook.Worksheets.Add();
-            Worksheet chartSheet = workbook.Worksheets[chartSheetIndex];
-            chartSheet.Name = "Gantt";
+            sheet.Cells["A4"].PutValue("Task 3");
+            sheet.Cells["B4"].PutValue(new DateTime(2023, 1, 5));
+            sheet.Cells["C4"].PutValue(3);
 
-            // Define the range of data (A: Task Name, B: Start Date, C: Duration)
-            int firstDataRow = 1; // zero‑based index, row 2 in Excel (skip header)
-            int lastDataRow = dataSheet.Cells.MaxDataRow; // last row with data
+            // Determine the last row with data
+            int lastRow = sheet.Cells.MaxDataRow;
+            if (lastRow < 1) return; // No data to plot
 
-            string taskNamesRange = $"'{dataSheet.Name}'!A{firstDataRow + 1}:A{lastDataRow + 1}";
-            string startDatesRange = $"'{dataSheet.Name}'!B{firstDataRow + 1}:B{lastDataRow + 1}";
-            string durationsRange = $"'{dataSheet.Name}'!C{firstDataRow + 1}:C{lastDataRow + 1}";
+            // Define ranges for categories, start dates, and durations
+            string categoryRange = $"A2:A{lastRow}";
+            string startRange = $"B2:B{lastRow}";
+            string durationRange = $"C2:C{lastRow}";
 
-            // Add a stacked bar chart (used for Gantt representation)
-            int chartIndex = chartSheet.Charts.Add(ChartType.BarStacked, 1, 1, 20, 10);
-            Chart ganttChart = chartSheet.Charts[chartIndex];
+            // Add a stacked bar chart (used for Gantt charts)
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 25, 10);
+            Chart ganttChart = sheet.Charts[chartIndex];
+            ganttChart.Title.Text = "Gantt Chart";
 
-            // First series: Start Dates (invisible, used to offset the bars)
-            int startSeriesIdx = ganttChart.NSeries.Add(startDatesRange, true);
+            // Series 1: Start dates (invisible, used to offset the duration bars)
+            int startSeriesIdx = ganttChart.NSeries.Add(startRange, true);
             Series startSeries = ganttChart.NSeries[startSeriesIdx];
+            startSeries.Name = "Start";
             startSeries.Area.ForegroundColor = Color.Transparent;
             startSeries.Border.IsVisible = false;
 
-            // Second series: Durations (visible bars)
-            int durationSeriesIdx = ganttChart.NSeries.Add(durationsRange, true);
+            // Series 2: Durations (visible bars)
+            int durationSeriesIdx = ganttChart.NSeries.Add(durationRange, true);
             Series durationSeries = ganttChart.NSeries[durationSeriesIdx];
-            durationSeries.Area.ForegroundColor = Color.LightBlue;
+            durationSeries.Name = "Duration";
+            durationSeries.Area.ForegroundColor = Color.Blue;
 
-            // Set the category (vertical) axis labels to task names
-            ganttChart.NSeries.CategoryData = taskNamesRange;
+            // Assign task names as category (Y‑axis) labels
+            ganttChart.NSeries.CategoryData = categoryRange;
 
-            // Configure legend position
-            if (ganttChart.Legend != null)
-            {
-                ganttChart.Legend.Position = LegendPositionType.Bottom;
-            }
+            // Optional: reverse the category axis (not supported in this version)
+            // ganttChart.CategoryAxis.IsReverse = true;
 
-            // Hide the start series from the legend
-            ganttChart.NSeries[0].Name = string.Empty;
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the new Gantt chart
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Gantt chart generated and saved to \"{outputPath}\".");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook
+            workbook.Save("GanttChart.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,16 +1,14 @@
-// Title: Convert Gregorian dates to Japanese era strings in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, scans every worksheet, finds cells of type DateTime, converts each Gregorian date to a Japanese era representation (e.g., "令和3年5月10日"), and writes the formatted string back to the cell. | Show how to apply the custom Japanese locale number format "[$-ja-JP]ggge\"年\"m\"月\"d\"日\";@" to cells after converting dates with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# convert Excel Gregorian dates to Japanese era format | how to display Japanese era dates in an Excel workbook using Aspose.Cells | C# replace DateTime cells with Japanese calendar strings in .xlsx | apply Japanese custom number format to Excel cells with Aspose.Cells .NET | iterate all worksheets and convert dates to Japanese calendar using Aspose.Cells
-// Tags: convert Gregorian dates to Japanese era Aspose.Cells | apply Japanese custom number format Excel .NET | iterate workbook cells date conversion C# | JapaneseCalendar API usage with Aspose.Cells | preserve era information in Excel cells
+// Title: Convert Gregorian date cells to Japanese era strings in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# convert Excel date cells to Japanese era format | replace Gregorian dates with Japanese calendar strings in a .NET workbook | format Excel cells using JapaneseCalendar with Aspose.Cells | C# read Excel dates and output era name using Aspose.Cells | save Excel file with Japanese era dates using Aspose.Cells .NET
+// Tags: convert Gregorian dates to Japanese era Aspose.Cells | JapaneseCalendar date formatting Excel .NET | replace Excel cell date with era string C# | cultureinfo Japanese calendar Aspose.Cells | localize Excel dates to Japanese calendar .NET
 
+using Aspose.Cells;
 using System;
 using System.Globalization;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel file with Aspose.Cells, iterates through each worksheet's used range, detects cells containing DateTime values, converts each Gregorian date to a Japanese era string (e.g., "令和3年5月10日"), replaces the cell value with the formatted string, applies a Japanese locale custom number format to keep the display consistent, and saves the updated workbook.
-class JapaneseCalendarConverter
+// The example loads an Excel workbook with Aspose.Cells, scans all used cells, identifies those containing Gregorian dates, converts each date to a Japanese era string (e.g., "令和3年5月1日") using a CultureInfo configured with JapaneseCalendar, writes the formatted string back to the cell, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
@@ -26,52 +24,29 @@ class JapaneseCalendarConverter
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // CultureInfo for Japanese calendar formatting
+            CultureInfo japaneseCulture = new CultureInfo("ja-JP");
+            japaneseCulture.DateTimeFormat.Calendar = new JapaneseCalendar();
+
+            // Iterate through all used cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                Cells cells = sheet.Cells;
-
-                // Get the used range of the worksheet
-                AsposeRange usedRange = cells.MaxDisplayRange;
-
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                // Loop through each cell in the used range
-                for (int row = startRow; row <= endRow; row++)
+                // Process only cells that contain a Gregorian date
+                if (cell.Type == CellValueType.IsDateTime)
                 {
-                    for (int col = startCol; col <= endCol; col++)
-                    {
-                        Cell cell = cells[row, col];
+                    DateTime gregorianDate = cell.DateTimeValue;
 
-                        // Process only cells that contain a DateTime value
-                        if (cell.Type == CellValueType.IsDateTime)
-                        {
-                            DateTime gregorianDate = cell.DateTimeValue;
+                    // Convert to Japanese era string, e.g., "令和3年5月1日"
+                    string japaneseDate = gregorianDate.ToString("ggyy年M月d日", japaneseCulture);
 
-                            // Convert Gregorian date to Japanese era information
-                            JapaneseCalendar jpCal = new JapaneseCalendar();
-                            int era = jpCal.GetEra(gregorianDate);
-                            string eraName = new CultureInfo("ja-JP").DateTimeFormat.GetEraName(era);
-                            int yearOfEra = jpCal.GetYear(gregorianDate);
-
-                            // Build the Japanese calendar string (e.g., "令和3年5月10日")
-                            string japaneseDate = $"{eraName}{yearOfEra}年{gregorianDate.Month}月{gregorianDate.Day}日";
-
-                            // Replace the cell value with the Japanese calendar string
-                            cell.PutValue(japaneseDate);
-
-                            // Apply a custom number format to keep the display consistent
-                            Style style = cell.GetStyle();
-                            style.Custom = "[$-ja-JP]ggge\"年\"m\"月\"d\"日\";@";
-                            cell.SetStyle(style);
-                        }
-                    }
+                    // Replace the cell value with the Japanese calendar string
+                    cell.PutValue(japaneseDate);
                 }
             }
 

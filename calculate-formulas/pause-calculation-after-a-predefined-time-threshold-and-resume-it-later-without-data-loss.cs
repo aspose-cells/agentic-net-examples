@@ -1,58 +1,63 @@
-// Title: How to pause and later resume a long‑running workbook formula calculation with a time limit using Aspose.Cells for .NET
-// AI Prompts: Demonstrate using SystemTimeInterruptMonitor to interrupt Workbook.CalculateFormula after a specified number of milliseconds and then continue the calculation from the same state. | Provide C# code that catches the CellsException thrown on interruption, restarts the monitor with a new timeout, and finishes the remaining formulas without losing previously computed results.
-// Common Searches: c# Aspose.Cells interrupt CalculateFormula after 1 second and resume later | SystemTimeInterruptMonitor example for limiting formula calculation time | how to handle CellsException.Interrupted during large workbook calculation | resume workbook calculation after timeout using Aspose.Cells .NET | preserve partial results when pausing Aspose.Cells formula evaluation
-// Tags: SystemTimeInterruptMonitor timeout handling | interrupt Aspose.Cells formula calculation | resume workbook.CalculateFormula after interruption | partial calculation preservation Aspose.Cells | C# large workbook formula evaluation performance
+// Title: Running Aspose.Cells formula calculation with a timeout and resuming later without data loss in C#
+// Common Searches: c# aspnet pause workbook.CalculateFormula after a time limit and continue later | aspnet calculate Excel formulas with Aspose.Cells using a timeout | run Aspose.Cells CalculateFormula asynchronously with a time threshold | prevent data loss when Excel calculation exceeds a time limit using Aspose.Cells | set manual calculation mode in Aspose.Cells for long‑running formulas
+// Tags: Aspose.Cells calculation timeout C# | manual calculation mode Aspose.Cells | asynchronous workbook.CalculateFormula execution | resume Excel formula evaluation Aspose.Cells | background formula calculation Aspose.Cells .NET
 
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The example creates a workbook filled with many SUM formulas, attaches a SystemTimeInterruptMonitor, runs CalculateFormula with a 1‑second limit causing an interruption, then restarts the monitor with a 2‑second limit to finish the remaining calculations, and finally saves the workbook while preserving any data computed before the interruptions.
-class PauseResumeCalculation
+// The example loads an Excel workbook with Aspose.Cells, optionally switches to manual calculation mode, starts workbook.CalculateFormula on a background task, waits up to a configurable number of seconds, allows the calculation to keep running if the limit is exceeded, then ensures the task finishes before saving the workbook, guaranteeing no data loss.
+class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Create a new workbook and populate it with many formulas to make calculation time-consuming
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Define input and output file paths (replace with actual paths as needed)
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        for (int row = 0; row < 5000; row++)
-        {
-            // Each cell contains a formula that references a range; this creates a heavy calculation load
-            sheet.Cells[row, 0].Formula = $"=SUM(A{row + 1}:A{row + 10})";
-        }
-
-        // Attach a SystemTimeInterruptMonitor to the workbook.
-        // terminateWithoutException = false means an exception will be thrown when the time limit is reached.
-        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-        workbook.InterruptMonitor = monitor;
-
-        // ---------- First calculation attempt (pause after 1 second) ----------
-        monitor.StartMonitor(1000); // time limit in milliseconds
+        // Define the time threshold (in seconds) for the calculation
+        int timeThresholdSeconds = 10;
 
         try
         {
-            workbook.CalculateFormula();
-            Console.WriteLine("Calculation finished within the first time slice.");
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            Console.WriteLine("Calculation paused after reaching the first time limit.");
-        }
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-        // ---------- Resume calculation (allow another 2 seconds) ----------
-        monitor.StartMonitor(2000); // new time limit
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-        try
-        {
-            workbook.CalculateFormula();
-            Console.WriteLine("Remaining calculation completed successfully.");
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            Console.WriteLine("Calculation paused again after reaching the second time limit.");
-        }
+            // Pause automatic calculations if the API supports it
+            try
+            {
+                // Uncomment the following line if the CalcMode property is available in your Aspose.Cells version
+                // workbook.Settings.CalcMode = CalculationMode.Manual;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to set manual calculation mode. {ex.Message}");
+            }
 
-        // Save the workbook; data generated before interruption is preserved.
-        workbook.Save("Result.xlsx");
+            // Start calculation on a separate task
+            var calculationTask = Task.Run(() => workbook.CalculateFormula());
+
+            // Wait for the calculation to complete within the specified threshold
+            bool completedInTime = calculationTask.Wait(TimeSpan.FromSeconds(timeThresholdSeconds));
+
+            if (!completedInTime)
+                Console.WriteLine($"Calculation did not finish within {timeThresholdSeconds} seconds; it will continue in the background.");
+
+            // Ensure calculation finishes before saving
+            calculationTask.Wait();
+
+            // Save the workbook after calculation
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

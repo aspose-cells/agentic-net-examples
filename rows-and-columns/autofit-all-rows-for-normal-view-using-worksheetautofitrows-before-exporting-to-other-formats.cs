@@ -1,45 +1,17 @@
-// Title: C# example: Auto‑fit all rows in an Aspose.Cells worksheet with text wrapping before saving as PDF
-// AI Prompts: Write C# code that creates a workbook, enables text wrapping for cells, calls Worksheet.AutoFitRows, and saves the file as a PDF using Aspose.Cells. | Show how to populate long strings in a worksheet, apply row auto‑fit, and export the result to PDF in a .NET application. | Provide a step‑by‑step C# snippet that demonstrates row height adjustment with Worksheet.AutoFitRows followed by PDF generation.
-// Common Searches: asp.net how to auto fit rows in Aspose.Cells before exporting to PDF | c# Aspose.Cells auto fit row height with wrapped text example | Worksheet.AutoFitRows usage for PDF generation in .NET | adjust row heights automatically Aspose.Cells C# | export worksheet to PDF after auto‑fitting rows Aspose.Cells
-// Tags: auto fit rows Aspose.Cells | Worksheet.AutoFitRows C# example | export worksheet to PDF Aspose.Cells | text wrapping row height Aspose.Cells | row height adjustment before PDF export
+// Title: Automatically adjust row heights with Worksheet.AutoFitRows and export the workbook to PDF using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an Aspose.Cells workbook, invokes Worksheet.AutoFitRows to adjust all row heights for normal view, and then saves the workbook as a PDF file. | Show how to apply Worksheet.AutoFitRows on a selected worksheet and subsequently export the same workbook to PDF and XLSX formats within a .NET application.
+// Common Searches: c# aspose.cells auto fit rows before saving as pdf | how to use Worksheet.AutoFitRows to adjust row height in Aspose.Cells | export aspose.cells workbook to pdf after auto fitting rows | auto fit all rows in excel file using Aspose.Cells .NET | aspose.cells auto fit rows normal view pdf export example
+// Tags: Aspose.Cells Worksheet.AutoFitRows implementation | auto-fit rows prior to PDF export Aspose.Cells | row height normalization C# Aspose.Cells | PDF generation after row auto-fit Aspose.Cells | C# workbook export with adjusted row heights
 
-using System;
-using System.IO;
-using Aspose.Cells;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-namespace AutoFitRowsExample
-{
-    // The sample creates a workbook, inserts long and multi‑line text, enables text wrapping, calls Worksheet.AutoFitRows to adjust all row heights, and saves the worksheet as a PDF on the desktop.
-    class Program
-    {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+// Access the first worksheet (or any specific worksheet)
+Aspose.Cells.Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+// Auto‑fit all rows in the worksheet for normal view
+worksheet.AutoFitRows();
 
-            // Populate some sample data that will require row height adjustment
-            sheet.Cells["A1"].PutValue("This is a long text that will demonstrate the AutoFitRows functionality. It should wrap and increase the row height accordingly.");
-            sheet.Cells["A2"].PutValue("Another line with\nmultiple line breaks\nto test row auto‑fitting.");
-            sheet.Cells["B1"].PutValue("Short text");
-            sheet.Cells["B2"].PutValue("Medium length text");
-
-            // Enable text wrapping so that rows need to expand vertically
-            Style wrapStyle = sheet.Cells["A1"].GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            sheet.Cells["A1"].SetStyle(wrapStyle);
-            sheet.Cells["A2"].SetStyle(wrapStyle);
-
-            // Auto‑fit all rows in the worksheet before exporting
-            sheet.AutoFitRows();
-
-            // Export the workbook to PDF (or any other format) after auto‑fitting
-            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "AutoFitRowsResult.pdf");
-            workbook.Save(outputPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"Workbook saved with auto‑fitted rows to: {outputPath}");
-        }
-    }
-}
+// Export the workbook to the desired format (e.g., PDF, XLSX, etc.)
+// Example: save as PDF
+workbook.Save("ExportedDocument.pdf", Aspose.Cells.SaveFormat.Pdf);

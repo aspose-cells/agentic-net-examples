@@ -1,7 +1,7 @@
-// Title: Convert each worksheet of an Excel workbook to PNG in parallel using TPL and Aspose.Cells (C#)
-// AI Prompts: Generate C# code that employs Parallel.For to render every worksheet of a workbook to a separate PNG file with Aspose.Cells, creating a new Workbook instance inside each iteration for thread safety. | Show how to configure ImageOrPrintOptions for PNG output and ensure the output directory is created automatically when processing worksheets in parallel. | Add per‑sheet exception handling that logs the sheet index and error while allowing the remaining worksheets to continue converting.
-// Common Searches: how to speed up Excel worksheet to PNG conversion with Aspose.Cells and TPL | thread‑safe way to render multiple sheets to images in .NET | parallel processing of Excel sheets to PNG using Aspose.Cells C# example | best practice for multi‑core worksheet image export with Aspose.Cells
-// Tags: TPL parallel worksheet image export Aspose.Cells | thread‑safe workbook instance per task C# | PNG rendering options Aspose.Cells | multi‑core Excel sheet conversion Aspose.Cells | parallel file output directory creation .NET
+// Title: Parallelize worksheet‑to‑PNG conversion with Aspose.Cells using C# Task Parallel Library
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells and uses Parallel.ForEach to render each worksheet to a PNG file. | Add a helper method that sanitizes worksheet names for safe file names while converting worksheets concurrently. | Configure ImageOrPrintOptions for single‑page PNG output and write each image to a designated output folder with per‑sheet error handling. | Show how to limit the degree of parallelism for the worksheet conversion to avoid excessive CPU usage.
+// Common Searches: c# aspose.cells convert all sheets to png in parallel | using Parallel.ForEach to render Excel worksheets as images with Aspose.Cells | task parallel library example for exporting Excel worksheets to PNG files | how to safely name PNG files generated from worksheet names in Aspose.Cells | control max concurrency when converting Excel sheets to images in C#
+// Tags: parallel worksheet PNG conversion Aspose.Cells | Task Parallel Library image rendering Excel | ImageOrPrintOptions PNG configuration Aspose.Cells | sanitize worksheet names for file output C# | limit degree of parallelism Excel sheet conversion | multi‑core Excel to image processing Aspose
 
 using System;
 using System.IO;
@@ -9,56 +9,57 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The program loads an Excel workbook, creates an output folder, and uses Parallel.For to render each worksheet to an individual PNG file with Aspose.Cells, instantiating a fresh Workbook inside each parallel iteration to maintain thread safety and handling errors per sheet.
+// The example loads an Excel workbook, creates an output directory, and uses Parallel.ForEach (TPL) to render each worksheet to a PNG image with Aspose.Cells. It configures ImageOrPrintOptions for PNG, sanitizes worksheet names for safe filenames, handles errors per sheet, and demonstrates how to control parallelism for optimal multi‑core performance.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input workbook path
-            string inputPath = "input.xlsx";
+            // Path to the input workbook
+            var workbookPath = "input.xlsx";
 
             // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
                 return;
             }
 
-            // Load the workbook once (used only for sheet count)
-            Workbook templateWorkbook = new Workbook(inputPath);
-            int sheetCount = templateWorkbook.Worksheets.Count;
+            // Load the workbook
+            var workbook = new Workbook(workbookPath);
 
             // Ensure the output directory exists
-            string outputDir = "output_png";
+            var outputDir = "output_png";
             Directory.CreateDirectory(outputDir);
 
-            // Process each worksheet in parallel
-            Parallel.For(0, sheetCount, sheetIndex =>
+            // Convert each worksheet to a PNG image in parallel
+            Parallel.ForEach(workbook.Worksheets, worksheet =>
             {
                 try
                 {
-                    // Load a fresh workbook instance for thread safety
-                    Workbook wb = new Workbook(inputPath);
-
-                    // Get the worksheet to render
-                    Worksheet ws = wb.Worksheets[sheetIndex];
-
-                    // Configure image rendering options (default format is PNG)
-                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    // Set rendering options for PNG output
+                    var imgOptions = new ImageOrPrintOptions
                     {
-                        OnePagePerSheet = true
+                        OnePagePerSheet = true,
+                        Transparent = false
+                        // ImageFormat is inferred from the file extension (.png)
                     };
 
-                    // Render the worksheet to PNG
-                    SheetRender sr = new SheetRender(ws, imgOptions);
-                    string outputPath = Path.Combine(outputDir, $"{ws.Name}.png");
-                    sr.ToImage(0, outputPath);
+                    // Render the worksheet to an image
+                    var sheetRender = new SheetRender(worksheet, imgOptions);
+
+                    // Build a safe file name using worksheet index and name
+                    var safeName = SanitizeFileName(worksheet.Name);
+                    var filePath = Path.Combine(outputDir,
+                        $"Sheet_{worksheet.Index}_{safeName}.png");
+
+                    // Save the first (and only) page as PNG
+                    sheetRender.ToImage(0, filePath);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing sheet index {sheetIndex}: {ex.Message}");
+                    Console.WriteLine($"Failed to process sheet '{worksheet.Name}': {ex.Message}");
                 }
             });
 
@@ -66,7 +67,15 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Helper method to replace invalid filename characters
+    static string SanitizeFileName(string name)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+            name = name.Replace(c, '_');
+        return name;
     }
 }

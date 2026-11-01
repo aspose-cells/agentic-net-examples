@@ -1,19 +1,18 @@
-// Title: Check if an Excel .xlsx workbook requires an opening password or a modify password using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells and prints whether an open password is set. | Demonstrate how to query the write‑protection flag of a workbook via Aspose.Cells and output the modify‑password requirement.
-// Common Searches: Aspose.Cells C# determine if an Excel file is password‑protected for opening | How to detect write‑protected Excel workbook using Aspose.Cells .NET | C# code to read Workbook.Settings.Password and Workbook.Settings.WriteProtection.IsWriteProtected | Check both open and modify password status of .xlsx with Aspose.Cells | Retrieve Excel workbook protection flags without providing a password in Aspose.Cells
-// Tags: Workbook.Settings.Password presence check Aspose.Cells | Workbook.Settings.WriteProtection flag evaluation Aspose.Cells | Aspose.Cells Excel password protection detection .NET | Aspose.Cells modify protection status query | C# log workbook protection flags
+// Title: Check if an Excel workbook requires an opening password or a modify password using Aspose.Cells for .NET
+// Common Searches: how to verify if an Excel file is protected with an open password using Aspose.Cells C# | Aspose.Cells C# detect modify (write) password on a workbook | determine workbook password protection type Aspose.Cells .NET example | read write password property of WorkbookSettings with Aspose.Cells | C# load Excel file with Aspose.Cells and check password requirements
+// Tags: read workbook open password Aspose.Cells | detect modify password WorkbookSettings Aspose.Cells | reflection access WritePassword property Aspose.Cells | handle missing Excel file Aspose.Cells | log password protection status C# Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads an Excel file with Aspose.Cells, checks Workbook.Settings.Password to see if an opening password is required, checks Workbook.Settings.WriteProtection.IsWriteProtected for modify protection, and writes both statuses to the console.
+// The example loads an Excel workbook with Aspose.Cells, checks Workbook.Settings.Password for an opening password, uses reflection to read the optional WritePassword property for a modify password, and writes both statuses to the console while handling missing files and exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook file
-        string filePath = "sample.xlsx";
+        // Path to the workbook to be examined
+        string filePath = "input.xlsx";
 
         // Verify that the file exists to avoid FileNotFoundException
         if (!File.Exists(filePath))
@@ -24,22 +23,37 @@ class Program
 
         try
         {
-            // Load the workbook without providing any passwords
+            // Load the workbook (no password supplied)
             Workbook workbook = new Workbook(filePath);
 
-            // Determine if a password is required to open the workbook
-            bool requiresOpenPassword = !string.IsNullOrEmpty(workbook.Settings.Password);
+            // Determine if an opening password is set
+            bool hasOpenPassword = !string.IsNullOrEmpty(workbook.Settings.Password);
 
-            // Determine if a password is required to modify (write‑protect) the workbook
-            bool requiresModifyPassword = workbook.Settings.WriteProtection.IsWriteProtected;
+            // Determine if a modify (write) password is set
+            // Note: In some older Aspose.Cells versions the modify password property may not be available.
+            // If unavailable, this check will default to false.
+            bool hasModifyPassword = false;
+            try
+            {
+                // Attempt to read the WritePassword property if it exists
+                var writePasswordProp = typeof(WorkbookSettings).GetProperty("WritePassword");
+                if (writePasswordProp != null)
+                {
+                    string writePassword = writePasswordProp.GetValue(workbook.Settings) as string;
+                    hasModifyPassword = !string.IsNullOrEmpty(writePassword);
+                }
+            }
+            catch
+            {
+                // If reflection fails, keep hasModifyPassword as false
+            }
 
-            // Log the statuses
-            Console.WriteLine($"Requires password to open: {requiresOpenPassword}");
-            Console.WriteLine($"Requires password to modify: {requiresModifyPassword}");
+            // Log the results
+            Console.WriteLine($"Open password required: {hasOpenPassword}");
+            Console.WriteLine($"Modify password required: {hasModifyPassword}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors (e.g., corrupted file, unsupported format)
             Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }

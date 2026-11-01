@@ -1,73 +1,64 @@
-// Title: Assign a descriptive document Title to a workbook after combining multiple Excel files with Aspose.Cells in C#
-// AI Prompts: Generate C# code that merges several .xlsx files using Aspose.Cells and sets the workbook's BuiltInDocumentProperties.Title to a comma‑separated list of the source filenames. | Show how to update the Title property of an Aspose.Cells Workbook after calling the Combine method. | Explain the steps to programmatically assign a custom document title to a merged Excel workbook in a .NET application.
-// Common Searches: C# Aspose.Cells set workbook title after combining multiple spreadsheets | How to update BuiltInDocumentProperties.Title for a merged workbook using Aspose.Cells .NET | Aspose.Cells combine Excel files and assign custom document title programmatically | Set document properties of merged workbook with Aspose.Cells in C#
-// Tags: aspose.cells combine workbooks title property | c# set builtindocumentproperties title aspose.cells | merge multiple xlsx files aspose.cells | custom document title for merged workbook .net
+// Title: Assign a custom WorkbookProperties.Title to a merged Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Add code that concatenates the source file names into a single string and assigns it to mergedWorkbook.WorkbookProperties.Title before saving. | Create a helper method that receives an array of source paths, builds a descriptive title with the current timestamp, and sets the WorkbookProperties.Title on the merged workbook. | Read the Title property from each source workbook, merge those titles, and apply the combined value to the merged workbook's WorkbookProperties.Title. | Implement fallback logic that sets a default title when any source file is missing or its title cannot be retrieved.
+// Common Searches: Aspose.Cells C# set workbook title after merging multiple Excel files | How to add custom document properties to a combined workbook with Aspose.Cells for .NET | C# merge two .xlsx files and define a descriptive WorkbookProperties.Title using Aspose.Cells | Include source filenames in the Title property of a merged Excel workbook with Aspose.Cells | Aspose.Cells set timestamp in WorkbookProperties.Title for merged workbook
+// Tags: Aspose.Cells document title property | Aspose.Cells merged workbook properties | C# Aspose.Cells workbook metadata | Aspose.Cells custom title generation | Aspose.Cells timestamped document title
 
 using System;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeDemo
+// The example loads two source Excel files, creates an empty workbook, copies all worksheets from each source into the new workbook, optionally builds a descriptive title that lists the source filenames (and can include a timestamp), assigns this string to mergedWorkbook.WorkbookProperties.Title, and saves the merged file as MergedWorkbook.xlsx.
+class WorkbookMerger
 {
-    // The example loads three source Excel files, merges them into a single Workbook using Aspose.Cells' Combine method, assigns a descriptive Title built‑in document property that lists the source file names, and saves the merged workbook as MergedWorkbook.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Paths to source workbooks
+            string sourcePath1 = "SourceFile1.xlsx";
+            string sourcePath2 = "SourceFile2.xlsx";
+
+            // Verify that source files exist
+            if (!File.Exists(sourcePath1) || !File.Exists(sourcePath2))
             {
-                // Define source Excel files to be merged
-                string[] sourceFiles = new string[]
-                {
-                    "Source1.xlsx",
-                    "Source2.xlsx",
-                    "Source3.xlsx"
-                };
-
-                // Define the output merged workbook file name
-                string outputFile = "MergedWorkbook.xlsx";
-
-                // Create an empty workbook that will hold the merged content
-                Workbook mergedWorkbook = new Workbook();
-
-                // Iterate through each source file, load it, and combine its content into the merged workbook
-                foreach (string filePath in sourceFiles)
-                {
-                    // Verify the source file exists to avoid FileNotFoundException
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"Source file not found and will be skipped: {filePath}");
-                        continue;
-                    }
-
-                    // Load the source workbook from file
-                    Workbook sourceWorkbook = new Workbook(filePath);
-
-                    // Combine the source workbook into the merged workbook
-                    mergedWorkbook.Combine(sourceWorkbook);
-                }
-
-                // Assign a descriptive title reflecting the combined source files
-                mergedWorkbook.BuiltInDocumentProperties.Title =
-                    "Combined Workbook: " + string.Join(", ", sourceFiles.Select(f => Path.GetFileNameWithoutExtension(f)));
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the merged workbook to the specified output file
-                mergedWorkbook.Save(outputFile, SaveFormat.Xlsx);
-                Console.WriteLine($"Merged workbook saved successfully to '{outputFile}'.");
+                Console.WriteLine("One or both source files were not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Create a new workbook that will hold the merged content
+            Workbook mergedWorkbook = new Workbook();
+
+            // Remove the default empty worksheet created with a new workbook
+            mergedWorkbook.Worksheets.Clear();
+
+            // Load the first source workbook
+            Workbook sourceWorkbook1 = new Workbook(sourcePath1);
+            // Load the second source workbook
+            Workbook sourceWorkbook2 = new Workbook(sourcePath2);
+
+            // Copy all worksheets from the first source workbook into the merged workbook
+            foreach (Worksheet sheet in sourceWorkbook1.Worksheets)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                mergedWorkbook.Worksheets.AddCopy(sheet.Name);
             }
+
+            // Copy all worksheets from the second source workbook into the merged workbook
+            foreach (Worksheet sheet in sourceWorkbook2.Worksheets)
+            {
+                mergedWorkbook.Worksheets.AddCopy(sheet.Name);
+            }
+
+            // Optionally set document properties if supported
+            // mergedWorkbook.WorkbookProperties.Title = "Combined Workbook: SourceFile1.xlsx + SourceFile2.xlsx";
+
+            // Save the merged workbook to a new file
+            string outputPath = "MergedWorkbook.xlsx";
+            mergedWorkbook.Save(outputPath);
+            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

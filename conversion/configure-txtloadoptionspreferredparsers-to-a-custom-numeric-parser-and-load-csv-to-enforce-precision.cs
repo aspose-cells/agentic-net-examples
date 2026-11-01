@@ -1,68 +1,85 @@
-// Title: Load CSV with high‑precision decimals using Aspose.Cells TxtLoadOptions and a custom ICustomParser in C#
-// AI Prompts: Implement an ICustomParser that converts string values to decimal and assign it to TxtLoadOptions.PreferredParsers for the numeric column when loading a CSV file. | Enable TxtLoadOptions.KeepPrecision, load CSV data from a MemoryStream into a Workbook, verify cell types and values, and save the workbook as an XLSX file.
-// Common Searches: Aspose.Cells how to use TxtLoadOptions.PreferredParsers for custom numeric parsing in C# | preserve decimal precision when importing CSV with Aspose.Cells | example of custom ICustomParser for decimal values in Aspose.Cells CSV import | load CSV with high precision numbers and keep precision property Aspose.Cells | C# load CSV to Excel with column‑specific parser using Aspose.Cells
-// Tags: custom ICustomParser decimal parsing Aspose.Cells | TxtLoadOptions PreferredParsers CSV import | KeepPrecision property CSV to Excel | high precision numeric values CSV Aspose.Cells | load CSV with column‑specific parser C#
+// Title: Use TxtLoadOptions.PreferredParsers with a custom numeric parser to load CSV and enforce decimal precision in Aspose.Cells for .NET
+// Common Searches: how to set a custom numeric parser for CSV import using TxtLoadOptions in Aspise.Cells C# | Aspose.Cells load CSV with specific decimal rounding using ICustomParser | C# example of enforcing 6 decimal places when reading CSV with Aspose.Cells | configure TxtLoadOptions.PreferredParsers to round numbers during CSV to workbook conversion | use CustomNumericParser with Aspose.Cells TxtLoadOptions to control precision
+// Tags: ICustomParser implementation for rounding numbers | TxtLoadOptions PreferredParsers for CSV files | decimal precision control on CSV load | Aspose.Cells workbook load with precision settings | CSV to XLSX conversion preserving numeric precision
 
 using System;
-using System.IO;
-using System.Text;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// The example defines a DecimalParser that implements ICustomParser to parse strings as decimal, assigns it to TxtLoadOptions.PreferredParsers (null for the first column, DecimalParser for the second), enables KeepPrecision, loads CSV data from a MemoryStream into a Workbook, prints cell types and values to confirm precise parsing, and saves the result as PreciseNumbers.xlsx.
-class Program
+// Custom numeric parser that parses numbers with high precision and rounds to a specified number of decimal places
+// The sample defines a CustomNumericParser that implements ICustomParser to round parsed decimal values to a configurable number of places (e.g., 6). It configures TxtLoadOptions with a comma separator and assigns the custom parser via the PreferredParsers array, then loads a CSV file into a Workbook and saves it as XLSX, ensuring numeric precision is maintained while handling missing files and runtime errors.
+public class CustomNumericParser : ICustomParser
 {
-    // Custom parser that tries to parse a value as decimal to retain full precision.
-    private class DecimalParser : ICustomParser
+    private readonly int _decimalPlaces;
+
+    public CustomNumericParser(int decimalPlaces = 10)
     {
-        public bool Parse(string value, out object result)
-        {
-            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal dec))
-            {
-                result = dec;
-                return true;
-            }
-            result = null;
-            return false;
-        }
-
-        public object ParseObject(string value)
-        {
-            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal dec))
-                return dec;
-            return value;
-        }
-
-        public string GetFormat()
-        {
-            return "Decimal";
-        }
+        _decimalPlaces = decimalPlaces;
     }
 
-    static void Main()
+    // Parse a string value and return a decimal rounded to the required precision, or the original string if parsing fails
+    public object ParseObject(string value)
     {
-        // Sample CSV containing high‑precision numeric values.
-        string csvData = "ID,Value\n1,1234567890.123456789\n2,0.00000000123456789";
-
-        // Create TxtLoadOptions for CSV loading.
-        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv);
-        // Assign custom parsers: first column uses default parser (null), second column uses DecimalParser.
-        loadOptions.PreferredParsers = new ICustomParser[] { null, new DecimalParser() };
-        // Keep precision for long string values (optional but demonstrates the property).
-        loadOptions.KeepPrecision = true;
-
-        // Load the CSV data into a workbook using the configured options.
-        using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(csvData)))
+        if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal number))
         {
-            Workbook workbook = new Workbook(ms, loadOptions);
-            Cells cells = workbook.Worksheets[0].Cells;
+            number = Math.Round(number, _decimalPlaces, MidpointRounding.AwayFromZero);
+            return number;
+        }
 
-            // Output cell types and values to verify parsing.
-            Console.WriteLine($"A2 Type: {cells[1, 0].Type}, Value: {cells[1, 0].StringValue}");
-            Console.WriteLine($"B2 Type: {cells[1, 1].Type}, Value: {cells[1, 1].Value}");
+        return value;
+    }
 
-            // Save the workbook to an Excel file.
-            workbook.Save("PreciseNumbers.xlsx", SaveFormat.Xlsx);
+    // No specific format required
+    public string GetFormat()
+    {
+        return null;
+    }
+
+    // Optional helper matching older signature (not required by the interface)
+    public object Parse(string value, Cell cell)
+    {
+        return ParseObject(value);
+    }
+}
+
+public class CsvLoader
+{
+    public static void Main()
+    {
+        // Path to the source CSV file
+        string csvPath = "input.csv";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(csvPath))
+        {
+            Console.WriteLine($"Input file not found: {csvPath}");
+            return;
+        }
+
+        // Configure TxtLoadOptions with the custom numeric parser
+        TxtLoadOptions loadOptions = new TxtLoadOptions
+        {
+            // Ensure the file is treated as a CSV (comma‑separated values)
+            Separator = ',',
+            // Assign the custom parser via the PreferredParsers array
+            PreferredParsers = new ICustomParser[] { new CustomNumericParser(decimalPlaces: 6) }
+        };
+
+        try
+        {
+            // Load the CSV file using the configured options
+            Workbook workbook = new Workbook(csvPath, loadOptions);
+
+            // Save the workbook to another format to verify the precision enforcement
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,75 +1,81 @@
-// Title: Check that a custom palette color remains after saving and reopening an Excel file with Aspose.Cells for .NET
-// AI Prompts: Create a C# program using Aspose.Cells that changes a specific palette index to a custom RGB value, saves the workbook, reloads it, and verifies the color value matches the original. | Show how to add a slicer to a pivot table in Aspose.Cells and then confirm that the workbook’s custom palette entry persists after the file is saved and opened again.
-// Common Searches: Aspose.Cells .NET verify custom palette entry after workbook save | C# test if Excel palette color persists when using ChangePalette | How to check color persistence in slicer‑linked workbook with Aspose.Cells | Validate IsColorInPalette after reloading an Excel file in C#
-// Tags: change palette entry Aspose.Cells | custom RGB color persistence Excel .NET | slicer linked pivot table palette verification | IsColorInPalette after workbook reload | validate palette index after save
+// Title: Check that custom slice colors in an Aspose.Cells pie chart are retained after saving to XLSX and reloading
+// AI Prompts: Create a pie chart, assign distinct colors to each slice via NSeries points, save the workbook as XLSX, reload it, and compare the slice colors to confirm they match. | Replace the pie chart with a doughnut chart, apply custom colors to each segment, perform a save‑and‑load round‑trip, and verify the colors are still preserved. | Add error handling that throws an exception when any reloaded slice color differs from the original custom color, and log the mismatched values.
+// Common Searches: Aspose.Cells how to keep pie chart slice colors after saving workbook | C# verify custom colors of chart slices after reloading XLSX with Aspose.Cells | preserve chart segment colors in Aspose.Cells round‑trip save load | test if Aspose.Cells retains custom slice colors in pie chart
+// Tags: pie chart slice custom colors Aspose.Cells | XLSX round‑trip chart color persistence | NSeries point color setting Aspose.Cells | verify chart colors after reload C# | Aspose.Cells chart color validation
 
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 using System;
 using System.Drawing;
-using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Slicers;
+using System.IO;
 
-// The example creates a new workbook, modifies palette index 55 to a light orange RGB color, adds sample data, builds a pivot table, inserts a slicer, saves the file, reloads it, retrieves the color from the same palette index, compares it to the original custom color, and uses IsColorInPalette to confirm the color is still present, outputting the verification results.
-class CustomSliceColorPersistenceDemo
+// The example creates a workbook, adds a pie chart with three data points, sets red, green, and blue colors for the slices using NSeries point properties, saves the workbook to an XLSX stream, reloads it, and checks that each slice's foreground color matches the original assignment, reporting whether all custom colors persisted.
+class Program
 {
     static void Main()
     {
-        // Path for the temporary workbook file
-        string filePath = "CustomSliceColorDemo.xlsx";
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // ---------- Create a new workbook ----------
-        Workbook workbook = new Workbook();
+            // Populate data for the pie chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
-        // Define a custom color and the palette index to modify (e.g., index 55)
-        Color customColor = Color.FromArgb(255, 250, 223); // Light orange
-        int paletteIndex = 55;
+            // Add a pie chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 10);
+            Chart pieChart = sheet.Charts[chartIndex];
+            pieChart.NSeries.Add("B2:B4", true);          // Values
+            pieChart.NSeries.CategoryData = "A2:A4";      // Categories
 
-        // Change the palette entry to the custom color
-        workbook.ChangePalette(customColor, paletteIndex);
+            // Define custom colors for each slice
+            Color[] customSliceColors = new Color[] { Color.Red, Color.Green, Color.Blue };
 
-        // Add sample data for a pivot table (required to create a slicer)
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Cells["A1"].PutValue("Product");
-        dataSheet.Cells["A2"].PutValue("Apple");
-        dataSheet.Cells["A3"].PutValue("Banana");
-        dataSheet.Cells["A4"].PutValue("Orange");
-        dataSheet.Cells["B1"].PutValue("Sales");
-        dataSheet.Cells["B2"].PutValue(120);
-        dataSheet.Cells["B3"].PutValue(80);
-        dataSheet.Cells["B4"].PutValue(150);
+            // Apply custom colors to the slices using NSeries
+            for (int i = 0; i < customSliceColors.Length; i++)
+            {
+                pieChart.NSeries[0].Points[i].Area.ForegroundColor = customSliceColors[i];
+            }
 
-        // Create a pivot table based on the data
-        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-        int pivotIdx = pivotSheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
-        PivotTable pivotTable = pivotSheet.PivotTables[pivotIdx];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+            // Save the workbook to a memory stream
+            using (MemoryStream stream = new MemoryStream())
+            {
+                workbook.Save(stream, SaveFormat.Xlsx);
 
-        // Add a slicer linked to the pivot table (the slicer itself does not store custom colors,
-        // but its existence ensures the workbook contains slicer objects)
-        Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
-        int slicerIdx = slicerSheet.Slicers.Add(pivotTable, "A1", "Product");
-        Slicer slicer = slicerSheet.Slicers[slicerIdx];
-        slicer.StyleType = SlicerStyleType.SlicerStyleDark2; // any built‑in style
+                // Reload the workbook from the memory stream
+                stream.Position = 0;
+                Workbook reloadedWorkbook = new Workbook(stream);
+                Worksheet reloadedSheet = reloadedWorkbook.Worksheets[0];
+                Chart reloadedChart = reloadedSheet.Charts[chartIndex];
 
-        // ---------- Save the workbook ----------
-        workbook.Save(filePath);
+                // Verify that the custom slice colors persisted after reload
+                bool colorsMatch = true;
+                for (int i = 0; i < customSliceColors.Length; i++)
+                {
+                    Color loadedColor = reloadedChart.NSeries[0].Points[i].Area.ForegroundColor;
+                    if (loadedColor.ToArgb() != customSliceColors[i].ToArgb())
+                    {
+                        colorsMatch = false;
+                        Console.WriteLine($"Slice {i} color mismatch. Expected: {customSliceColors[i]}, Loaded: {loadedColor}");
+                    }
+                }
 
-        // ---------- Load the workbook ----------
-        Workbook loadedWorkbook = new Workbook(filePath);
-
-        // Retrieve the color from the palette after reload
-        Color loadedColor = loadedWorkbook.Colors[paletteIndex];
-
-        // Verify that the loaded color matches the custom color
-        bool colorsMatch = loadedColor.ToArgb() == customColor.ToArgb();
-
-        // Additionally, check that the color is recognized as being in the palette
-        bool isInPalette = loadedWorkbook.IsColorInPalette(customColor);
-
-        // Output verification results
-        Console.WriteLine($"Custom color persisted: {colorsMatch}");
-        Console.WriteLine($"Is custom color in palette after reload: {isInPalette}");
-        Console.WriteLine($"Loaded palette color (ARGB): {loadedColor.ToArgb():X8}");
+                Console.WriteLine(colorsMatch
+                    ? "All custom slice colors persisted after saving and reloading."
+                    : "Some custom slice colors did not persist.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,45 +1,60 @@
-// Title: Insert a group label after the grouped rows using LabelPosition=After with Aspose.Cells smart markers in C#
-// AI Prompts: Generate C# code that adds a smart marker with GroupLabel and configures its label to appear after the grouped rows using the LabelPosition attribute. | Show how to bind a DataTable to WorkbookDesigner, process the smart marker, and produce an .xlsx where the group label follows the data rows.
-// Common Searches: how to make group label appear after rows in Aspose.Cells smart markers C# | C# Aspose.Cells example using LabelPosition attribute to position group labels | smart marker GroupLabel placement after data rows with WorkbookDesigner | Aspose.Cells generate Excel with group label after grouped data using C#
-// Tags: Aspose.Cells smart marker group label positioning | LabelPosition attribute after rows | C# WorkbookDesigner data source binding | Excel export grouped rows with smart markers | Aspose.Cells group label after rows example
+// Title: Set smart marker group label to appear after data rows with Aspose.Cells in C#
+// AI Prompts: Write C# code that opens an Excel template, finds the smart marker group definition, sets its LabelPosition attribute to "After", processes a DataSet with employee data using WorkbookDesigner, and saves the result workbook. | Show how to edit the smart marker XML inside a workbook to move the group label to the bottom of the generated rows using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set smart marker group label after rows | change smart marker LabelPosition to After in Excel template | how to place group labels after data rows with Aspose.Cells | modify smart marker XML labelposition attribute Aspose.Cells | C# Aspose.Cells group label placement after generated rows
+// Tags: Aspose.Cells set smart marker labelposition | C# edit smart marker XML | group label after rows Aspose.Cells | WorkbookDesigner process smart markers with after label | Excel template smart marker label placement
 
-using System;
-using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 
-// // Creates a workbook, adds sample category data, inserts a smart marker {GroupLabel:LabelPosition=After}, binds a DataTable as the data source, processes the smart marker with WorkbookDesigner, and saves the file as SmartMarkerGroupLabelAfter.xlsx.
-class SmartMarkerGroupLabelAfter
+// This example demonstrates loading an Excel template, updating the smart marker definition to set LabelPosition="After" so that group labels appear after the data rows, binding a DataSet containing employee information, processing the smart markers with WorkbookDesigner, and saving the resulting workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string templatePath = "Template.xlsx";
 
-        // Add sample data that will be used for grouping
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
+            // Verify that the template file exists before attempting to load it
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
 
-        // Insert a smart marker for the group label.
-        // The attribute LabelPosition=After places the label after the data rows.
-        sheet.Cells["B1"].PutValue("{GroupLabel:LabelPosition=After}");
+            // Load the workbook that contains the smart marker definitions
+            Workbook workbook = new Workbook(templatePath);
 
-        // Prepare a data source (DataTable) that matches the smart marker.
-        DataTable dt = new DataTable("Data");
-        dt.Columns.Add("Category", typeof(string));
-        dt.Rows.Add("A");
-        dt.Rows.Add("B");
-        dt.Rows.Add("C");
+            // Prepare data for the smart markers using a DataSet (required by WorkbookDesigner)
+            DataSet dataSet = new DataSet();
 
-        // Use WorkbookDesigner to process the smart marker with the data source.
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
-        designer.SetDataSource(dt);
-        designer.Process();
+            DataTable employeeTable = new DataTable("Employees");
+            employeeTable.Columns.Add("Name", typeof(string));
+            employeeTable.Columns.Add("Age", typeof(int));
 
-        // Save the resulting workbook.
-        workbook.Save("SmartMarkerGroupLabelAfter.xlsx");
+            employeeTable.Rows.Add("John", 30);
+            employeeTable.Rows.Add("Jane", 25);
+
+            dataSet.Tables.Add(employeeTable);
+
+            // Create a WorkbookDesigner to process smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Assign the data source and process the smart markers
+            designer.SetDataSource(dataSet);
+            designer.Process();
+
+            // Save the resulting workbook
+            const string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

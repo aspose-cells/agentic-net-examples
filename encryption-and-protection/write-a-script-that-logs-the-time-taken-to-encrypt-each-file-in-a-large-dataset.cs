@@ -1,24 +1,21 @@
-// Title: Measure and log encryption time for each Excel workbook in a folder using Aspose.Cells for .NET
-// AI Prompts: Create a C# console app that scans a directory for .xlsx files, encrypts each workbook with a given password using Aspose.Cells, saves the encrypted files to an output folder, and prints the filename with elapsed milliseconds to the console. | Update the script to write the filename, encryption duration, and any error messages to a CSV log file instead of the console, creating the log file if it does not exist. | Extend the program to handle .xls, .xlsx, and .xlsm files, record the encryption time for each format, and display a summary of total files processed and average encryption time.
-// Common Searches: C# how to batch encrypt Excel files with Aspose.Cells and capture processing time per file | Aspose.Cells encrypt multiple workbooks and log duration in a .NET console application | measure performance of password protection for Excel workbooks using Aspose.Cells C# | log encryption time for each .xlsx file while saving with Aspose.Cells | automate Excel file password protection and timing with Aspose.Cells for .NET
-// Tags: Aspose.Cells workbook password protection C# | encrypt multiple Excel workbooks .NET | measure workbook encryption latency | record encryption duration per file C# | save protected .xlsx using Aspose.Cells
+// Title: C# script to encrypt a batch of Excel (.xlsx) files with Aspose.Cells and log per‑file processing time
+// Common Searches: how to encrypt multiple .xlsx files using Aspose.Cells in C# and record execution time | C# program to batch encrypt Excel workbooks with password and write timing log | measure encryption duration for each Excel file with Aspose.Cells library | preserve folder structure while encrypting Excel files in C# using Aspose.Cells | log encryption performance of a large Excel dataset to a text file in .NET
+// Tags: batch encryption of Excel files with Aspose.Cells | Aspose.Cells password protection for .xlsx | measure encryption time using Stopwatch in C# | log processing duration to text file in .NET | preserve directory hierarchy when saving encrypted workbooks | performance logging for Aspose.Cells encryption
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// The example iterates through all .xlsx files in a specified input folder, loads each workbook with Aspose.Cells, applies a password to encrypt it, saves the encrypted copy to an output folder, and writes the elapsed milliseconds for each file to the console.
-class Program
+// The C# utility scans a source directory (including subfolders) for .xlsx files, loads each workbook with Aspose.Cells, applies a password to encrypt it, saves the encrypted copy to a target folder while preserving the original folder hierarchy, measures the encryption time with Stopwatch, and writes a timestamped entry containing the relative file path and elapsed milliseconds to EncryptionLog.txt; any errors are captured and logged per file.
+class EncryptAndLog
 {
     static void Main(string[] args)
     {
-        // Folder containing the original Excel files
-        string inputFolder = @"C:\Data\Input";
-        // Folder where encrypted files will be saved
-        string outputFolder = @"C:\Data\Output";
-        // Password to encrypt each workbook
-        string password = "Secret123";
+        // Input folder containing the original Excel files
+        string inputFolder = @"C:\Data\OriginalFiles";
+        // Output folder where encrypted files will be saved
+        string outputFolder = @"C:\Data\EncryptedFiles";
 
         // Verify input folder exists
         if (!Directory.Exists(inputFolder))
@@ -27,46 +24,60 @@ class Program
             return;
         }
 
-        // Ensure the output directory exists
+        // Ensure output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Process each .xlsx file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+        // Log file to record processing times
+        string logFilePath = Path.Combine(outputFolder, "EncryptionLog.txt");
+        using (StreamWriter logWriter = new StreamWriter(logFilePath, false))
         {
-            string fileName = Path.GetFileName(filePath);
-            string outputPath = Path.Combine(outputFolder, fileName);
-
-            try
+            // Iterate over all Excel files in the input folder (including subfolders)
+            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.AllDirectories))
             {
-                // Verify the file exists before loading
+                // Skip if the file somehow does not exist
                 if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {filePath}");
+                    Console.WriteLine($"File not found, skipping: {filePath}");
                     continue;
                 }
 
-                // Start timing the encryption operation
-                Stopwatch sw = Stopwatch.StartNew();
+                try
+                {
+                    // Measure time for each file
+                    Stopwatch sw = Stopwatch.StartNew();
 
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
+                    // Load the workbook
+                    Workbook workbook = new Workbook(filePath);
 
-                // Apply password protection (encryption)
-                workbook.Settings.Password = password;
+                    // Set encryption password
+                    workbook.Settings.Password = "StrongPassword123";
 
-                // Save the encrypted workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+                    // Determine output file path preserving relative structure
+                    string relativePath = Path.GetRelativePath(inputFolder, filePath);
+                    string encryptedFilePath = Path.Combine(outputFolder, relativePath);
+                    Directory.CreateDirectory(Path.GetDirectoryName(encryptedFilePath));
 
-                // Stop timing
-                sw.Stop();
+                    // Save the encrypted workbook
+                    workbook.Save(encryptedFilePath, SaveFormat.Xlsx);
 
-                // Log the time taken for this file
-                Console.WriteLine($"{fileName}: {sw.ElapsedMilliseconds} ms");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing {fileName}: {ex.Message}");
+                    // Stop timing
+                    sw.Stop();
+
+                    // Log the result
+                    string logEntry = $"{DateTime.Now:u} | File: {relativePath} | TimeTaken(ms): {sw.ElapsedMilliseconds}";
+                    Console.WriteLine(logEntry);
+                    logWriter.WriteLine(logEntry);
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors for this file and continue processing others
+                    string errorEntry = $"{DateTime.Now:u} | File: {filePath} | Error: {ex.Message}";
+                    Console.WriteLine(errorEntry);
+                    logWriter.WriteLine(errorEntry);
+                }
             }
         }
+
+        Console.WriteLine("Encryption process completed. See log for details.");
     }
 }

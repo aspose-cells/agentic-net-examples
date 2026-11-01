@@ -1,23 +1,51 @@
-// Title: How to unhide rows 30‑35 with default height and save the worksheet as PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to unhide rows 30 through 35 (default height) and then export the workbook to a PDF file. | Create a reusable C# method that takes a worksheet, start row, row count, and height, unhides those rows with Aspose.Cells, and returns a PDF stream. | Adapt the Aspose.Cells example to accept a user‑provided Excel file path, unhide a configurable row range, and save the result as a PDF.
-// Common Searches: Aspose.Cells C# unhide rows 30-35 before converting to PDF | set default row height while unhiding rows using Aspose.Cells .NET | convert Excel to PDF after making hidden rows visible with Aspose.Cells | C# code to unhide specific rows in a worksheet and export to PDF using Aspose.Cells
-// Tags: Aspose.Cells row visibility C# | Aspose.Cells PDF export .NET | default row height Aspose.Cells | worksheet row range manipulation Aspose.Cells | unhide rows operation Aspose.Cells
+// Title: How to unhide rows 30‑35 in an Excel worksheet and export the workbook to PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# unhide rows 30 to 35 before saving as PDF | C# code to make hidden rows visible in an Excel file with Aspose.Cells | Export Excel to PDF after revealing specific rows using Aspose.Cells .NET | Set row.IsHidden false for a range of rows in Aspose.Cells and generate PDF | Aspose.Cells .NET hide/unhide rows and convert workbook to PDF example
+// Tags: unhide specific rows Aspose.Cells | row.IsHidden Aspose.Cells API | save workbook as PDF Aspose.Cells | Excel to PDF conversion Aspose.Cells .NET | default row height handling Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file with Aspose.Cells, unhides rows 30‑35 using the default height (-1), and saves the worksheet as a PDF document.
+// The sample verifies the input file, loads it with Aspose.Cells, accesses the first worksheet, iterates rows 30‑35 (indices 29‑34) to set each row's IsHidden property to false, and then saves the workbook as a PDF file.
 class Program
 {
     static void Main()
     {
-        // Load the existing spreadsheet
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Unhide rows 30 to 35 (zero‑based index), total 6 rows, default height (-1)
-        workbook.Worksheets[0].Cells.UnhideRows(30, 6, -1);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Export the workbook to PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Load the existing spreadsheet
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Unhide rows 30 to 35 (row numbers are 1‑based, indices are 0‑based)
+            for (int rowIndex = 29; rowIndex <= 34; rowIndex++)
+            {
+                // Access the row via Cells.Rows collection
+                Row row = sheet.Cells.Rows[rowIndex];
+                row.IsHidden = false; // make the row visible
+                // Height reset is optional; omitted to avoid API compatibility issues
+            }
+
+            // Export the workbook to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

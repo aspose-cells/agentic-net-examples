@@ -1,13 +1,13 @@
-// Title: Save the first worksheet of an Excel workbook as a UTF‑8 encoded SVG file with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook, selects the first worksheet, and saves it as an SVG file encoded in UTF‑8 using Aspose.Cells. | Update existing Aspose.Cells code to explicitly set UTF‑8 encoding for the SVG output so Unicode characters are retained.
-// Common Searches: Aspose.Cells C# export worksheet to SVG with UTF-8 encoding | preserve Unicode characters when saving Excel sheet as SVG using Aspose.Cells | save only the first sheet of an Excel file to SVG in .NET | set encoding for SVG output in Aspose.Cells workbook.Save
-// Tags: Aspose.Cells save worksheet as SVG UTF-8 | C# export Excel to SVG with Unicode support | Aspose.Cells workbook.Save SVG format | UTF-8 encoding for SVG output Aspose.Cells
+// Title: Save the first worksheet of an Excel workbook as a UTF‑8 encoded SVG file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook, verifies the file exists, and saves the first worksheet to a UTF‑8 encoded SVG with Aspose.Cells. | Provide a C# example that demonstrates handling a missing Excel file when converting a worksheet to SVG using Aspose.Cells. | Show how to set a custom output path and ensure Unicode characters are retained while exporting a worksheet to SVG in C# with Aspose.Cells.
+// Common Searches: how to export a single Excel sheet to SVG with UTF-8 encoding in C# using Aspose.Cells | c# Aspose.Cells save first worksheet as SVG with Unicode support | example code for converting .xlsx to .svg with Aspose.Cells | Aspose.Cells SVG output Unicode characters C# | save worksheet as SVG file with UTF-8 using .NET library
+// Tags: Aspose.Cells worksheet to SVG conversion | UTF-8 SVG export .NET | C# first sheet SVG output | missing file handling Aspose.Cells | Unicode characters in SVG export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks for the input.xlsx file, loads it into an Aspose.Cells Workbook, and uses workbook.Save with SaveFormat.Svg to write the first worksheet to output.svg, ensuring the SVG is UTF‑8 encoded to keep Unicode characters intact.
+// The sample checks for the presence of input.xlsx, loads it with Aspose.Cells, and saves the first worksheet as a UTF‑8 encoded SVG file (output.svg) while handling potential errors.
 class Program
 {
     static void Main()
@@ -20,20 +20,18 @@ class Program
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook from the existing file
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the first worksheet as SVG
-            // Aspose.Cells can directly save a workbook (or a specific worksheet) to SVG format.
-            // Here we save the entire workbook; each sheet will be rendered as a separate SVG file.
-            // If only the first sheet is needed, we can export that sheet individually.
+            // Save the workbook (first worksheet) as SVG
+            // Aspose.Cells saves each worksheet as a separate SVG file; the first worksheet will be outputPath
             workbook.Save(outputPath, SaveFormat.Svg);
 
-            Console.WriteLine($"SVG file has been saved to \"{outputPath}\".");
+            Console.WriteLine($"SVG file has been successfully created at '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,74 +1,73 @@
-// Title: Create a styled ListObject table and insert a SharePoint hyperlink comment in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a worksheet, defines a range, converts it to a ListObject table with headers, applies a medium table style, and adds a comment containing a SharePoint URL to cell A1. | Write a C# example that saves the workbook to a specified file path, automatically creating the output directory if it does not exist, using Aspose.Cells. | Show how to add a plain‑text comment with a clickable SharePoint link to an Excel cell via Aspose.Cells.
-// Common Searches: asp.net aspose.cells create excel ListObject table with header and style | c# add comment with hyperlink to excel cell using Aspose.Cells | asp.net save workbook to folder creating directory if missing Aspose.Cells | how to apply TableStyleMedium9 to a table in Aspose.Cells C# | insert SharePoint document link in Excel cell comment via Aspose.Cells
-// Tags: Aspose.Cells ListObject table creation C# | Aspose.Cells apply table style .xlsx | Aspose.Cells add cell comment hyperlink | Aspose.Cells ensure output directory exists | Aspose.Cells save workbook with comment
+// Title: Create an Excel ListObject table with a visible comment using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a ListObject table to an Excel worksheet with Aspose.Cells in C# | Aspose.Cells C# add a visible comment to a specific cell | apply a built‑in table style and show first/last columns using Aspose.Cells | save a workbook containing a table and comment to a .xlsx file with Aspose.Cells | set comment author and visibility in Aspose.Cells for .NET
+// Tags: Aspose.Cells create ListObject table C# | Aspose.Cells apply TableStyleMedium9 | Aspose.Cells add visible cell comment | Aspose.Cells show first and last column in table | Aspose.Cells save workbook as XLSX
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using System;
 using System.IO;
 
-// The example creates a new workbook, defines a two‑column range, converts it into a ListObject table with headers, applies the TableStyleMedium9 style, adds a comment to cell A1 that contains a SharePoint document URL, ensures the target directory exists, and saves the file as TableWithComment.xlsx.
+// The example creates a new workbook, adds a worksheet named "Data", fills cells A1:C4 with sample data, defines a ListObject table covering A1:C5, applies the TableStyleMedium9 style with first and last column highlighting, inserts a visible comment authored by "Automation" into cell A1, and saves the file as TableWithComment.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some data that will become the table
+            // Access the first worksheet and name it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate sample data
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
+
             sheet.Cells["A2"].PutValue(1);
             sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
+
             sheet.Cells["A3"].PutValue(2);
             sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
 
-            // Define the range that will be converted into a table (ListObject)
-            CellArea tableArea = new CellArea
-            {
-                StartRow = 0,   // A1 row index
-                StartColumn = 0,
-                EndRow = 2,     // A3 row index
-                EndColumn = 1
-            };
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
 
-            // Add the table to the worksheet (hasHeaders = true because first row contains column names)
-            int tableIndex = sheet.ListObjects.Add(
-                tableArea.StartRow,
-                tableArea.StartColumn,
-                tableArea.EndRow,
-                tableArea.EndColumn,
-                true);
+            // Define the range that will become a table (list object)
+            // Header row + 4 data rows = 5 rows, 3 columns (A:C)
+            int firstRow = 0;      // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 5;
+            int totalColumns = 3;
 
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
             ListObject table = sheet.ListObjects[tableIndex];
-            table.ShowHeaderRow = true;
+            table.DisplayName = "SampleTable";
             table.TableStyleType = TableStyleType.TableStyleMedium9;
+            table.ShowTableStyleFirstColumn = true;
+            table.ShowTableStyleLastColumn = true;
 
-            // Add a comment to cell A1 that contains a hyperlink to a SharePoint document
-            // The hyperlink appears as plain text; Excel will treat it as a clickable link.
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "Reference document: https://sharepoint.company.com/sites/docs/Reference.docx";
+            // Add a simple comment to the first cell of the table (A1)
+            int commentIdx = sheet.Comments.Add("A1");
+            Comment comment = sheet.Comments[commentIdx];
+            comment.Note = "Reference Document";   // set comment text
+            comment.Author = "Automation";
+            comment.IsVisible = true;
 
-            // Save the workbook to a file
+            // Save the workbook
             string outputPath = "TableWithComment.xlsx";
-            // Ensure the directory exists (in case a relative path is used)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

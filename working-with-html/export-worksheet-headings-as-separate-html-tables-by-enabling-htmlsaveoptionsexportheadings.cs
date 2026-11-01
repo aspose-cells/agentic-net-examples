@@ -1,25 +1,45 @@
-// Title: Export worksheet headings as individual HTML tables with Aspose.Cells HtmlSaveOptions in C#
-// AI Prompts: Generate C# code that loads an .xlsx workbook, sets HtmlSaveOptions.ExportHeadings = true, and saves it as HTML where each heading appears in its own table. | Show how to export only the heading rows of a specific worksheet to separate HTML tables using Aspose.Cells HtmlSaveOptions in C#. | Adapt the example to specify a custom output folder and file name while keeping ExportHeadings enabled for HTML conversion.
-// Common Searches: Aspose.Cells C# export worksheet headings as separate HTML tables | Enable ExportHeadings in HtmlSaveOptions when converting Excel to HTML | Save Excel file to HTML with headings in distinct tables using Aspose.Cells .NET | Export only header rows of an Excel sheet to HTML with Aspose.Cells | C# Aspose.Cells HtmlSaveOptions ExportHeadings example
-// Tags: HtmlSaveOptions ExportHeadings | export worksheet headings as html tables | aspocells excel to html conversion | c# html save options for excel headings | separate heading tables in html output
+// Title: Export Excel worksheet headings as separate HTML tables using Aspose.Cells HtmlSaveOptions in C#
+// Common Searches: C# Aspose.Cells export worksheet headings as individual HTML tables | How to enable ExportHeadings in HtmlSaveOptions for Excel to HTML conversion | Saving an XLSX file to HTML with separate heading tables using Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportHeadings example in .NET | Convert Excel workbook to HTML with headings split into tables in C#
+// Tags: Aspose.Cells HtmlSaveOptions ExportHeadings | export Excel headings to separate HTML tables C# | save workbook as HTML with heading tables | XLSX to HTML conversion preserving headings | C# Aspose.Cells HTML export with headings
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// Loads an Excel workbook, enables HtmlSaveOptions.ExportHeadings, and saves it as HTML where each worksheet heading is rendered in its own table.
-class ExportHeadingsToHtml
+// The program verifies the input Excel file, loads it with Aspose.Cells, configures HtmlSaveOptions with ExportHeadings enabled to generate a separate HTML table for each worksheet heading, and saves the output as an HTML file while handling potential errors.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Configure HTML save options to export headings as separate tables
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        saveOptions.ExportHeadings = true; // Enable exporting of worksheet headings
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Save the workbook as HTML with the specified options
-        workbook.Save("output.html", saveOptions);
+            // Load the workbook from the existing Excel file
+            var workbook = new Workbook(inputPath);
+
+            // Configure HTML save options to export each heading as a separate HTML table
+            var saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportHeadings = true // Enable heading export
+            };
+
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,48 +1,42 @@
-// Title: How to freeze columns A‑C and rows 1‑4 (split panes) in an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, applies Worksheet.FreezePanes to lock the first three columns and first four rows, and saves the file. | Demonstrate how to verify or create the output folder before calling Workbook.Save with Aspose.Cells. | Explain the meaning of each parameter in Worksheet.FreezePanes for configuring split panes.
-// Common Searches: Aspose.Cells C# example to freeze first three columns and first four rows | Worksheet.FreezePanes row column count parameters Aspose.Cells .NET | Create split panes in Excel using Aspose.Cells C# code | Save Excel workbook to a custom directory after freezing panes with Aspose.Cells
-// Tags: freeze panes Worksheet.FreezePanes Aspose.Cells | split pane configuration Excel .NET | ensure output directory before Workbook.Save C# | freeze first three columns and four rows Aspose.Cells | create workbook and apply split panes Aspose.Cells
+// Title: Freeze first three columns and top four rows (split panes) in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to freeze columns A‑C and rows 1‑4 in a worksheet. | Show how to set split panes at cell D5 in a .NET workbook with Aspose.Cells. | Create a minimal example that saves an Excel file with frozen left columns and top rows using Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze panes first three columns and first four rows | how to set split panes at D5 using Aspose.Cells .NET API | Worksheet FreezePanes parameters row index column index explanation | example of saving Excel file with frozen top rows and left columns in C#
+// Tags: Worksheet.FreezePanes left columns split pane | Aspose.Cells freeze panes C# example | Excel split panes D5 Aspose.Cells | freeze top rows and left columns Aspose.Cells .NET | save workbook with frozen panes Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to generate a new workbook, freeze columns A‑C and rows 1‑4 with Worksheet.FreezePanes, ensure the target folder exists, and save the result as SplitPanes.xlsx using Aspose.Cells for .NET.
-class Program
+namespace Example
 {
-    static void Main()
+    // The program creates a new workbook, accesses the first worksheet, freezes the first three columns (A‑C) and the first four rows (1‑4) by calling FreezePanes(4, 3, 4, 3), and saves the file as SplitPanes.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Freeze the pane so that the left frozen area includes the first three columns (A‑C)
-            // and the top frozen area includes the first four rows (1‑4).
-            // Parameters: row index, column index, total rows to freeze, total columns to freeze (zero‑based).
-            sheet.FreezePanes(4, 3, 4, 3);
-
-            // Define output file path.
-            string outputPath = "SplitPanes.xlsx";
-
-            // Ensure the directory for the output file exists.
-            string fullOutputPath = Path.GetFullPath(outputPath);
-            string outputDir = Path.GetDirectoryName(fullOutputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook to a file.
-            workbook.Save(fullOutputPath);
-            Console.WriteLine($"Workbook saved successfully to '{fullOutputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Freeze the first 3 columns (A‑C) and the first 4 rows (1‑4)
+                // Freeze at cell D5 (row index 4, column index 3) and specify the number of rows/columns to freeze
+                sheet.FreezePanes(4, 3, 4, 3);
+
+                // Define output file path
+                string outputPath = "SplitPanes.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

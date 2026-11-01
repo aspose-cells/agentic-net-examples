@@ -1,52 +1,58 @@
-// Title: Write an Aspose.Cells chart to a PDF MemoryStream for in‑memory processing in C#
-// AI Prompts: Generate C# code that creates a worksheet, adds a column chart, and exports the chart to a PDF directly into a MemoryStream using Aspose.Cells. | Show how to retrieve the PDF byte array from a chart exported with chart.ToPdf without writing a file to disk. | Demonstrate resetting the MemoryStream position after exporting a chart to PDF for subsequent reading.
-// Common Searches: Aspose.Cells export chart to PDF memory stream C# example | How to get PDF bytes from an Excel chart using Aspose.Cells | Create PDF from chart in memory with Aspose.Cells without saving file | C# Aspose.Cells chart.ToPdf to MemoryStream usage guide
-// Tags: Aspose.Cells chart.ToPdf memory stream | in‑memory PDF generation from Excel chart | retrieve PDF byte array Aspose.Cells chart | C# export chart to PDF without file | chart PDF output using Aspose.Cells API
+// Title: Export an Aspose.Cells chart to PDF using a MemoryStream in C#
+// AI Prompts: Write C# code that creates a worksheet chart and saves the workbook as a PDF directly into a MemoryStream with Aspose.Cells. | Show how to reset a MemoryStream after saving a chart PDF with Aspose.Cells so the data can be read or transmitted elsewhere. | Demonstrate extracting the PDF byte array from a MemoryStream after exporting a chart with Aspose.Cells without writing a file.
+// Common Searches: how to export a chart from Aspose.Cells to a PDF stream in C# | Aspose.Cells save workbook as PDF to MemoryStream without creating a file | C# in‑memory PDF generation for Excel chart using Aspose.Cells | resetting MemoryStream position after Aspose.Cells PDF save for further processing
+// Tags: Aspose.Cells chart PDF memory stream | C# save workbook as PDF to stream | in‑memory PDF export Aspose.Cells | MemoryStream position reset after PDF export | Aspose.Cells SaveFormat.Pdf stream output
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, fills it with sample data, adds a column chart, and uses chart.ToPdf to write the chart as a PDF into a MemoryStream. It then resets the stream position and extracts the PDF bytes for further in‑memory processing, avoiding any file system writes.
-class ChartPdfToMemoryStreamDemo
+// The example creates a workbook, adds sample data and a column chart, then saves the workbook as a PDF directly into a MemoryStream, resets the stream position, and leaves the PDF bytes available for further in‑memory processing.
+class ChartPdfToMemoryStream
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["B2"].PutValue(30);
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["B3"].PutValue(45);
-        worksheet.Cells["A4"].PutValue("Cherry");
-        worksheet.Cells["B4"].PutValue(25);
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+        // Populate some sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["A2"].PutValue("Jan");
+        sheet.Cells["A3"].PutValue("Feb");
+        sheet.Cells["A4"].PutValue("Mar");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
+
+        // Add a chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        Chart chart = sheet.Charts[chartIndex];
 
         // Set the data source for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Create a memory stream to hold the PDF output
+        // Optional: set chart title
+        chart.Title.Text = "Sample Column Chart";
+
+        // Prepare a memory stream to hold the PDF output
         using (MemoryStream pdfStream = new MemoryStream())
         {
-            // Export the chart to PDF directly into the memory stream
-            chart.ToPdf(pdfStream);
+            // Save the workbook (including the chart) as PDF into the memory stream
+            workbook.Save(pdfStream, SaveFormat.Pdf);
 
-            // Reset the stream position if you need to read from it later
+            // Reset the stream position to the beginning for further processing
             pdfStream.Position = 0;
 
-            // Example: retrieve the PDF bytes for further in‑memory processing
-            byte[] pdfBytes = pdfStream.ToArray();
-            Console.WriteLine($"Chart PDF generated in memory. Size: {pdfBytes.Length} bytes");
+            // Example: write the PDF bytes to a file (optional, can be omitted)
+            // File.WriteAllBytes("ChartOutput.pdf", pdfStream.ToArray());
+
+            // At this point, pdfStream contains the PDF data and can be used for further in‑memory processing
         }
     }
 }

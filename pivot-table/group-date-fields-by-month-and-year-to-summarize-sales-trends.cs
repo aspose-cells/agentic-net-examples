@@ -1,74 +1,99 @@
-// Title: Group a Date column by month and year in an Aspose.Cells pivot table using C# to summarize sales data
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, inserts date and sales columns, adds a pivot table, and applies month‑year grouping to the Date row field. | Show how to apply month and year grouping to a pivot table field and then refresh and calculate the pivot using Aspose.Cells for .NET.
-// Common Searches: aspnet aspose.cells group pivot table date by month and year c# example | c# create sales pivot table with month-year grouping using Aspose.Cells | how to group dates in an Aspose.Cells pivot table row field | refresh pivot table after grouping dates in Aspose.Cells .NET | Aspose.Cells pivot table grouping months years for sales report
-// Tags: Aspose.Cells pivot table date grouping | C# month and year grouping in pivot table | sales data pivot table Aspose.Cells | Aspose.Cells refresh pivot calculation | create pivot table with Aspose.Cells .NET
+// Title: Generate a monthly sales summary worksheet by grouping dates by month and year with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells group Excel rows by month and year for sales report | How to create a summary sheet with total sales per month using Aspose.Cells | Aspose.Cells .NET example to aggregate sales data by month | Export Excel range to DataTable and summarize sales in C# | Add a new worksheet with monthly totals using Aspose.Cells API
+// Tags: group rows by month year Aspose.Cells C# | create summary worksheet from DataTable Aspose.Cells | aggregate sales totals per month Aspose.Cells | export Excel range to DataTable Aspose.Cells | add new worksheet with formatted month Aspose.Cells | pivot-like monthly sales summary Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using System;
+using System.Data;
+using System.IO;
+using System.Linq;
 
-// Creates a workbook, adds Date and Sales columns, builds a pivot table, groups the Date row field by months and years, refreshes and calculates the pivot, and saves the result as SalesByMonthYear.xlsx.
-class GroupSalesByMonthYear
+// The example loads an existing workbook (or creates a sample one), exports the data range to a DataTable, groups rows by the Year and Month of the "Date" column, sums the "Sales" values for each group, adds a new "Summary" worksheet, writes the month/year label and total sales, and saves the workbook with the generated summary.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add headers for the source data
-        worksheet.Cells["A1"].PutValue("Date");
-        worksheet.Cells["B1"].PutValue("Sales");
-
-        // Sample sales data with dates
-        DateTime[] dates = new DateTime[]
+        try
         {
-            new DateTime(2023, 1, 15),
-            new DateTime(2023, 2, 20),
-            new DateTime(2023, 3, 10),
-            new DateTime(2023, 4, 5),
-            new DateTime(2023, 5, 25),
-            new DateTime(2023, 6, 12)
-        };
-        double[] sales = new double[] { 1500, 2300, 3200, 4100, 5000, 6000 };
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        // Populate the worksheet with the sample data
-        for (int i = 0; i < dates.Length; i++)
-        {
-            worksheet.Cells[i + 1, 0].PutValue(dates[i]); // Column A (Date)
-            worksheet.Cells[i + 1, 1].PutValue(sales[i]); // Column B (Sales)
+            Workbook workbook;
+
+            if (File.Exists(inputPath))
+            {
+                // Load existing workbook
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                // Create a sample workbook with required columns if input file is missing
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                Cells cells = ws.Cells;
+                cells["A1"].PutValue("Date");
+                cells["B1"].PutValue("Sales");
+                // Sample data rows
+                cells["A2"].PutValue(DateTime.Today);
+                cells["B2"].PutValue(1000);
+                cells["A3"].PutValue(DateTime.Today.AddMonths(-1));
+                cells["B3"].PutValue(1500);
+            }
+
+            // Access first worksheet containing raw sales data
+            Worksheet dataSheet = workbook.Worksheets[0];
+            Cells dataCells = dataSheet.Cells;
+
+            // Determine used range (including header row)
+            int lastRow = dataCells.MaxDataRow;
+            int lastCol = dataCells.MaxDataColumn;
+
+            // Export the range to a DataTable (first row contains column names)
+            DataTable dt = dataCells.ExportDataTable(0, 0, lastRow + 1, lastCol + 1, true);
+
+            // Group rows by Year and Month of the "Date" column and sum the "Sales" column
+            var grouped = dt.AsEnumerable()
+                .GroupBy(r => new
+                {
+                    Year = r.Field<DateTime>("Date").Year,
+                    Month = r.Field<DateTime>("Date").Month
+                })
+                .Select(g => new
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalSales = g.Sum(r => Convert.ToDouble(r["Sales"]))
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToList();
+
+            // Add a new worksheet to hold the summary
+            Worksheet summarySheet = workbook.Worksheets.Add("Summary");
+            Cells summaryCells = summarySheet.Cells;
+
+            // Write header row
+            summaryCells["A1"].PutValue("Month");
+            summaryCells["B1"].PutValue("Year");
+            summaryCells["C1"].PutValue("Total Sales");
+
+            // Populate the summary data
+            int row = 1; // zero‑based index; row 1 is the second row in the sheet
+            foreach (var item in grouped)
+            {
+                // Format month as MM/yyyy for readability
+                summaryCells[row, 0].PutValue($"{item.Month:D2}/{item.Year}");
+                summaryCells[row, 1].PutValue(item.Year);
+                summaryCells[row, 2].PutValue(item.TotalSales);
+                row++;
+            }
+
+            // Save the workbook with the new summary sheet
+            workbook.Save(outputPath);
         }
-
-        // Create a pivot table that covers the data range A1:B7 and place it at D3
-        int pivotIndex = worksheet.PivotTables.Add("A1:B7", "D3", "SalesPivot");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-        // Add the Date field to the Row area and the Sales field to the Data area
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Retrieve the PivotField representing the Date column
-        PivotField dateField = pivotTable.RowFields[0];
-
-        // Define grouping parameters: group by Months and Years for the whole year 2023
-        DateTime startDate = new DateTime(2023, 1, 1);
-        DateTime endDate   = new DateTime(2023, 12, 31);
-        PivotGroupByType[] groupTypes = new PivotGroupByType[]
+        catch (Exception ex)
         {
-            PivotGroupByType.Months,
-            PivotGroupByType.Years
-        };
-        double interval = 1;          // Interval is required by the API (not used for date grouping)
-        bool firstAsNewField = false; // Do not create a separate field for the first group
-
-        // Apply the grouping to the date field
-        dateField.GroupBy(startDate, endDate, groupTypes, interval, firstAsNewField);
-
-        // Refresh and calculate the pivot table to reflect the grouping
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook with the grouped pivot table
-        workbook.Save("SalesByMonthYear.xlsx");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

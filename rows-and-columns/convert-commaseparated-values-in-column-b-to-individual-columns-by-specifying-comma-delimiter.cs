@@ -1,37 +1,45 @@
-// Title: How to split comma‑separated strings in column B into separate columns using Aspose.Cells TextToColumns in C#
-// AI Prompts: Generate C# code that configures TxtLoadOptions with a comma separator and applies Cells.TextToColumns to split the values in column B of a worksheet into individual columns. | Show a complete example that creates a workbook, writes CSV strings to column B, runs TextToColumns with a custom delimiter, captures the resulting column count, and saves the file as an .xlsx. | Explain how to retrieve and use the number of columns produced after the TextToColumns operation in Aspose.Cells.
-// Common Searches: asp.net core split column B csv values into separate cells using Aspose.Cells TextToColumns | c# Aspose.Cells TextToColumns delimiter comma example | how to convert comma separated strings in an Excel column to multiple columns with Aspose.Cells | using TxtLoadOptions separator property to split Excel column data in C#
-// Tags: Aspose.Cells TextToColumns comma delimiter | C# TxtLoadOptions separator property | split Excel column CSV strings Aspose.Cells | convert column B to multiple columns C# | save workbook as XLSX after TextToColumns
+// Title: How to split comma‑separated strings in Excel column B into separate columns using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, reads each cell in column B, splits the string on commas, trims each part, writes the parts into consecutive cells starting at column C, and saves the updated file. | Create a .NET method that uses Aspose.Cells to iterate over column B, parse comma‑delimited text, populate adjacent columns with the trimmed elements, and preserve existing worksheet data.
+// Common Searches: Aspose.Cells C# split values in a single column by comma and expand to multiple columns | programmatically separate comma delimited list in Excel column using Aspose.Cells .NET | C# example to parse comma separated strings in Excel and write each part to next columns | how to use Aspose.Cells to convert a CSV list inside a cell into separate cells
+// Tags: Aspose.Cells split cell by delimiter | C# write split values to adjacent columns | Excel column B to multiple columns Aspose | process comma delimited strings Aspose.Cells | dynamic cell insertion based on split parts .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The sample creates a new workbook, writes comma‑separated strings into cells B1‑B3, sets TxtLoadOptions.Separator to a comma, calls Cells.TextToColumns starting at row 0 column 1 for three rows, captures the total number of columns generated, and saves the result to output.xlsx.
+// Loads an Excel workbook, iterates through each row of column B, splits non‑empty string values on commas, trims each segment, writes the segments into consecutive cells beginning with column C, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Populate column B (index 1) with comma‑separated values
-        cells["B1"].PutValue("John,Doe,30");
-        cells["B2"].PutValue("Jane,Smith,28");
-        cells["B3"].PutValue("Bob,Johnson,45");
+        // Find the last row that contains data in the sheet
+        int lastRow = cells.MaxDataRow;
 
-        // Configure TextLoadOptions to use a comma as the delimiter
-        TxtLoadOptions options = new TxtLoadOptions();
-        options.Separator = ',';
+        // Iterate through each row in column B (index 1)
+        for (int row = 0; row <= lastRow; row++)
+        {
+            Cell cell = cells[row, 1]; // Column B
 
-        // Split the text in column B into separate columns
-        // Parameters: start row (0), start column (1), number of rows (3), options
-        int totalColumns = cells.TextToColumns(0, 1, 3, options);
+            // Process only string cells that are not empty
+            if (cell.Type == CellValueType.IsString && !string.IsNullOrWhiteSpace(cell.StringValue))
+            {
+                // Split the cell value by comma delimiter
+                string[] parts = cell.StringValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-        Console.WriteLine($"Total columns after split: {totalColumns}");
+                // Trim each part and write it to subsequent columns starting from column C (index 2)
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    string trimmed = parts[i].Trim();
+                    cells[row, 2 + i].PutValue(trimmed);
+                }
+            }
+        }
 
-        // Save the workbook to an Excel file
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

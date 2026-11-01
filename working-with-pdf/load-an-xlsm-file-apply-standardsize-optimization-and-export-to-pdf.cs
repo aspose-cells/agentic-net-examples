@@ -1,40 +1,48 @@
-// Title: How to convert a macro-enabled XLSM workbook to PDF in C# using Aspose.Cells
-// AI Prompts: Generate C# code that checks for an .xlsm file, loads it with Aspose.Cells Workbook, and saves it as a PDF with proper exception handling. | Show a console application example that validates the input path before converting a macro-enabled Excel file to PDF using Aspose.Cells. | Provide a minimal Aspose.Cells workflow in C# for reading an XLSM workbook and exporting it to PDF format.
-// Common Searches: c# aspnet convert macro enabled xlsm to pdf using aspose.cells library | how to verify excel file exists before saving as pdf with aspose.cells | asp.net console app export xlsm workbook to pdf with error handling | aspose.cells save workbook as pdf without losing macros | sample code for converting xlsm to pdf in .NET
-// Tags: aspose.cells xlsm to pdf conversion | c# workbook save as pdf with aspose.cells | file existence check before aspose.cells export | asp.net console pdf export from macro-enabled excel | exception handling for aspose.cells pdf save
+// Title: Convert a macro‑enabled XLSM workbook to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to export an XLSM file to PDF with Aspose.Cells | How to use PdfSaveOptions when saving a macro‑enabled workbook as PDF in .NET | Aspose.Cells example for converting macro‑enabled Excel to PDF with file existence check | Saving an XLSM workbook as PDF in C# without losing macros | Aspose.Cells .NET tutorial for XLSM to PDF conversion with default options
+// Tags: XLSM to PDF conversion with Aspose.Cells | PdfSaveOptions configuration in C# | macro-enabled workbook export to PDF | Aspose.Cells workbook.Save PDF example | input file validation before Excel conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console program that verifies the presence of an input.xlsm file, loads it into an Aspose.Cells Workbook, and saves the workbook as output.pdf using the Pdf SaveFormat, while handling any runtime exceptions.
+// The sample verifies the XLSM file exists, loads it into an Aspose.Cells Workbook, applies default PdfSaveOptions, ensures the output directory is created, and saves the workbook as a PDF, handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsm";
+        string outputPath = "output.pdf";
+
         try
         {
-            const string inputPath = "input.xlsm";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the XLSM workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Export the workbook to PDF
-            workbook.Save(outputPath, SaveFormat.Pdf);
+            // Configure PDF save options (default options used)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Export the workbook to PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
+            // Handle any runtime errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,84 +1,96 @@
-// Title: Create a lazy‑initialized C# read‑only dictionary that maps Aspose.Cells PresetShadowType enum values to user‑friendly shadow labels
-// AI Prompts: Generate a static C# class that lazily builds a read‑only dictionary linking every PresetShadowType enum member to a concise UI label. | Write a method that receives a PresetShadowType value and returns its friendly label, providing a default string for undefined entries. | Demonstrate iterating over the mapping to populate a UI control such as a dropdown list with the shadow names.
-// Common Searches: how to convert Aspose.Cells PresetShadowType enum to readable text in C# | lazy initialization pattern for enum‑to‑string dictionary in Aspose.Cells | populate a combo box with Aspose.Cells shadow preset names using C# | C# example for mapping PresetShadowType to display strings for UI
-// Tags: Aspose.Cells PresetShadowType label mapping | lazy initialized enum‑string dictionary C# | friendly shadow name generation Aspose.Cells | UI dropdown population from PresetShadowType | read‑only mapping of shadow presets
+// Title: Map Aspose.Cells PresetShadowType enum to user‑friendly labels in C#
+// Common Searches: how to get a readable name for a PresetShadowType value in Aspose.Cells C# | C# dictionary lookup for Aspose.Cells preset shadow enum descriptions | convert Aspose.Cells PresetShadowType to display text for UI | example of mapping Aspose.Cells shadow types to friendly strings in .NET
+// Tags: Aspose.Cells preset shadow enum to label mapping | C# enum description dictionary for Aspose.Cells | friendly shadow type names for UI | custom shadow label lookup in .NET | display Aspose.Cells shadow names in application
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells.Drawing;
 
-// The example defines a static PresetShadowMapper class that lazily creates a read‑only dictionary mapping each PresetShadowType enum value to a user‑friendly label such as "Shadow 1". It provides a Mapping property, a GetLabel method with a fallback for unknown values, and a label generator that strips the "PresetShadow" prefix. A sample program enumerates the enum, retrieves a label, and prints the full mapping, illustrating how to fill a UI dropdown with these labels.
-public static class PresetShadowMapper
+namespace AsposeCellsExample
 {
-    // Lazy‑initialized dictionary that maps each PresetShadowType to a friendly UI label.
-    private static readonly Lazy<IReadOnlyDictionary<PresetShadowType, string>> _lazyMap =
-        new Lazy<IReadOnlyDictionary<PresetShadowType, string>>(CreateMapping);
-
-    // Public accessor for the mapping.
-    public static IReadOnlyDictionary<PresetShadowType, string> Mapping => _lazyMap.Value;
-
-    // Retrieves the friendly label for a specific PresetShadowType.
-    public static string GetLabel(PresetShadowType type)
+    // Local definition of preset shadow types matching Aspose.Cells drawing capabilities.
+    // If a newer Aspose.Cells version provides its own PresetShadowType enum, replace this
+    // definition with the library enum and remove the duplicate.
+    public enum PresetShadowType
     {
-        return Mapping.TryGetValue(type, out var label) ? label : "Unknown Shadow Type";
+        PresetShadow1, PresetShadow2, PresetShadow3, PresetShadow4,
+        PresetShadow5, PresetShadow6, PresetShadow7, PresetShadow8,
+        PresetShadow9, PresetShadow10, PresetShadow11, PresetShadow12,
+        PresetShadow13, PresetShadow14, PresetShadow15, PresetShadow16,
+        PresetShadow17, PresetShadow18, PresetShadow19, PresetShadow20,
+        PresetShadow21, PresetShadow22, PresetShadow23, PresetShadow24,
+        PresetShadow25, PresetShadow26, PresetShadow27, PresetShadow28,
+        PresetShadow29, PresetShadow30, PresetShadow31, PresetShadow32,
+        PresetShadow33, PresetShadow34, PresetShadow35, PresetShadow36
     }
 
-    // Builds the dictionary by iterating over all enum values.
-    private static IReadOnlyDictionary<PresetShadowType, string> CreateMapping()
+    // The sample defines a local PresetShadowType enumeration that mirrors Aspose.Cells shadow options and provides a static ShadowTypeMapper class containing a Dictionary that maps each enum value to a human‑readable description. The GetLabel method returns the friendly label or falls back to the enum name, and the example program demonstrates retrieving a label for a specific shadow type.
+    public static class ShadowTypeMapper
     {
-        var dict = new Dictionary<PresetShadowType, string>();
-        foreach (PresetShadowType type in Enum.GetValues(typeof(PresetShadowType)))
+        // Mapping between preset shadow enum values and user‑friendly descriptions.
+        private static readonly Dictionary<PresetShadowType, string> _shadowLabels = new Dictionary<PresetShadowType, string>
         {
-            dict[type] = GenerateLabel(type);
+            { PresetShadowType.PresetShadow1, "Outer Shadow – Soft Edge" },
+            { PresetShadowType.PresetShadow2, "Outer Shadow – Hard Edge" },
+            { PresetShadowType.PresetShadow3, "Inner Shadow – Soft Edge" },
+            { PresetShadowType.PresetShadow4, "Inner Shadow – Hard Edge" },
+            { PresetShadowType.PresetShadow5, "Perspective Shadow – Light" },
+            { PresetShadowType.PresetShadow6, "Perspective Shadow – Dark" },
+            { PresetShadowType.PresetShadow7, "Diagonal Shadow – Light" },
+            { PresetShadowType.PresetShadow8, "Diagonal Shadow – Dark" },
+            { PresetShadowType.PresetShadow9, "Top Left Shadow – Light" },
+            { PresetShadowType.PresetShadow10, "Top Left Shadow – Dark" },
+            { PresetShadowType.PresetShadow11, "Bottom Right Shadow – Light" },
+            { PresetShadowType.PresetShadow12, "Bottom Right Shadow – Dark" },
+            { PresetShadowType.PresetShadow13, "Top Right Shadow – Light" },
+            { PresetShadowType.PresetShadow14, "Top Right Shadow – Dark" },
+            { PresetShadowType.PresetShadow15, "Bottom Left Shadow – Light" },
+            { PresetShadowType.PresetShadow16, "Bottom Left Shadow – Dark" },
+            { PresetShadowType.PresetShadow17, "Center Shadow – Light" },
+            { PresetShadowType.PresetShadow18, "Center Shadow – Dark" },
+            { PresetShadowType.PresetShadow19, "Outer Shadow – Wide" },
+            { PresetShadowType.PresetShadow20, "Outer Shadow – Narrow" },
+            { PresetShadowType.PresetShadow21, "Inner Shadow – Wide" },
+            { PresetShadowType.PresetShadow22, "Inner Shadow – Narrow" },
+            { PresetShadowType.PresetShadow23, "Perspective Shadow – Wide" },
+            { PresetShadowType.PresetShadow24, "Perspective Shadow – Narrow" },
+            { PresetShadowType.PresetShadow25, "Diagonal Shadow – Wide" },
+            { PresetShadowType.PresetShadow26, "Diagonal Shadow – Narrow" },
+            { PresetShadowType.PresetShadow27, "Top Left Shadow – Wide" },
+            { PresetShadowType.PresetShadow28, "Top Left Shadow – Narrow" },
+            { PresetShadowType.PresetShadow29, "Bottom Right Shadow – Wide" },
+            { PresetShadowType.PresetShadow30, "Bottom Right Shadow – Narrow" },
+            { PresetShadowType.PresetShadow31, "Top Right Shadow – Wide" },
+            { PresetShadowType.PresetShadow32, "Top Right Shadow – Narrow" },
+            { PresetShadowType.PresetShadow33, "Bottom Left Shadow – Wide" },
+            { PresetShadowType.PresetShadow34, "Bottom Left Shadow – Narrow" },
+            { PresetShadowType.PresetShadow35, "Center Shadow – Wide" },
+            { PresetShadowType.PresetShadow36, "Center Shadow – Narrow" }
+        };
+
+        /// <param name="type">The preset shadow type.</param>
+        /// <returns>User‑friendly description; if not found, returns the enum name.</returns>
+        public static string GetLabel(PresetShadowType type)
+        {
+            return _shadowLabels.TryGetValue(type, out string label) ? label : type.ToString();
         }
-        return dict;
     }
 
-    // Generates a descriptive label from the enum name.
-    private static string GenerateLabel(PresetShadowType type)
+    class Program
     {
-        // Enum names are like "PresetShadow1", "PresetShadow2", etc.
-        // Convert them to a more readable form, e.g., "Shadow 1".
-        const string prefix = "PresetShadow";
-        var name = type.ToString();
-        if (name.StartsWith(prefix, StringComparison.Ordinal))
+        static void Main()
         {
-            var numberPart = name.Substring(prefix.Length);
-            return $"Shadow {numberPart}";
-        }
-        // Fallback for any unexpected naming.
-        return name;
-    }
-}
-
-// Example usage.
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // Safely obtain the first enum value for demonstration.
-            var enumValues = Enum.GetValues(typeof(PresetShadowType));
-            if (enumValues.Length == 0)
+            try
             {
-                Console.WriteLine("No PresetShadowType values are defined.");
-                return;
+                // Example: retrieve label for a specific preset shadow type.
+                PresetShadowType shadow = PresetShadowType.PresetShadow5;
+                string description = ShadowTypeMapper.GetLabel(shadow);
+                Console.WriteLine($"Shadow type {shadow} is displayed as: {description}");
             }
-
-            var firstShadow = (PresetShadowType)enumValues.GetValue(0);
-            var label = PresetShadowMapper.GetLabel(firstShadow);
-            Console.WriteLine($"Label for {firstShadow}: {label}");
-
-            // Simulate populating a UI dropdown (console output).
-            foreach (var kvp in PresetShadowMapper.Mapping)
+            catch (Exception ex)
             {
-                Console.WriteLine($"{kvp.Key} => {kvp.Value}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

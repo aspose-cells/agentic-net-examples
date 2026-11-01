@@ -1,36 +1,33 @@
-// Title: How to protect an Excel worksheet with a password while allowing edits only in a specific unlocked range using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that unlocks a defined cell range (e.g., A1:B5) and then protects the entire worksheet with a password using Aspose.Cells. | Demonstrate how to apply a style to make cells editable before calling Worksheet.Protect with ProtectionType.All in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# protect worksheet password but keep A1:B5 editable | unlock cells before worksheet protection Aspose.Cells .NET example | C# code to lock all cells except a range and save as .xlsx using Aspose.Cells | how to use Worksheet.Protect with ProtectionType.All in Aspose.Cells | set IsLocked false for a range then protect sheet Aspose.Cells C#
-// Tags: worksheet protection with password Aspose.Cells | unlock cell range Aspose.Cells C# | apply unlocked style Aspose.Cells | ProtectionType.All worksheet Aspose.Cells | lock cells except specific range Aspose.Cells
+// Title: How to password‑protect an Excel worksheet while allowing specific cells to remain editable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet with a password and keeps cell B1 unlocked for user edits. | Demonstrate creating a style that sets IsLocked = false for selected cells before calling Worksheet.Protect in Aspose.Cells. | Show the steps to lock all cells by default, unlock chosen cells, apply ProtectionType.All with a custom password, and save the workbook as an .xlsx file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# protect worksheet with password but allow editing of specific cells | unlock cells before worksheet protection Aspose.Cells .NET example | set IsLocked false style for a cell in Aspose.Cells C# | protect Excel sheet with ProtectionType.All and custom password using Aspose.Cells | save password‑protected workbook as .xlsx with Aspose.Cells C#
+// Tags: worksheet protection password Aspose.Cells C# | unlock specific cells Aspose.Cells style | set IsLocked false Aspose.Cells | ProtectionType.All usage Aspose.Cells | save protected workbook xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// // Creates a new workbook, unlocks cells A1:B5, protects the first worksheet with a password using ProtectionType.All, and saves the file as ProtectedWorksheet.xlsx.
+// Creates a new workbook, unlocks cell B1 by applying a style with IsLocked = false, protects the worksheet with a password using ProtectionType.All, and saves the result as ProtectedWorksheet.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Unlock the cells that users are allowed to edit (example: range A1:B5)
+            // Add data to cells
+            sheet.Cells["A1"].PutValue("This cell will be locked");
+            sheet.Cells["B1"].PutValue("This cell will be editable");
+
+            // Unlock cell B1 so it can be edited after protection
             Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;               // cells are unlocked
+            unlockedStyle.IsLocked = false;               // Mark as unlocked
+            sheet.Cells["B1"].SetStyle(unlockedStyle);    // Apply the style
 
-            StyleFlag styleFlag = new StyleFlag();
-            styleFlag.Locked = true;                       // apply the locked flag only
-
-            sheet.Cells.CreateRange("A1:B5").ApplyStyle(unlockedStyle, styleFlag);
-
-            // Protect the worksheet with a password; all other cells remain locked
-            // The third parameter is the old password (not required here), pass null or empty string
-            sheet.Protect(ProtectionType.All, "MySecurePassword", null);
+            // Protect the worksheet. Provide the new password and an empty old password.
+            sheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
 
             // Save the workbook
             workbook.Save("ProtectedWorksheet.xlsx");

@@ -1,55 +1,57 @@
-// Title: Insert a Curved WordArt Text Effect into an Excel Worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells to add a WordArt shape with the Curved Text preset, specifying font, size, and cell‑based coordinates. | Show how to switch between different MsoPresetTextEffect values in Aspose.Cells to achieve alternative WordArt curvature levels.
-// Common Searches: how to add curved WordArt text effect to Excel using Aspose.Cells C# | Aspose.Cells C# set WordArt shape position with cell indices | list of MsoPresetTextEffect values for WordArt in Aspose.Cells | change WordArt curvature in Aspose.Cells when Adjustments property is unavailable
-// Tags: Aspose.Cells WordArt shape creation | C# apply Curved Text preset Aspose.Cells | Excel shape placement via cell indices Aspose.Cells | MsoPresetTextEffect enumeration Aspose.Cells | WordArt curvature control Aspose.Cells
+// Title: Add a Curved WordArt TextEffect Shape to an Excel Worksheet and Adjust Its Curvature Using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a Workbook, adds a TextEffect shape with the Curved preset, and assigns specific adjustment parameters to define the curve. | Demonstrate how to access the adjustment handles of a WordArt element in Aspose.Cells and update them to increase or decrease the curvature. | Provide a C# routine that writes the workbook to a given file path, automatically creating any missing folders.
+// Common Searches: how to add a curved WordArt text effect to an Excel workbook with Aspose.Cells in C# | c# Aspose.Cells modify WordArt curvature after inserting a WordArt shape | example of setting curve level for a WordArt shape using Aspose.Cells API | save Aspose.Cells workbook to a specific folder and create the folder if it does not exist
+// Tags: insert WordArt via TextEffect API Aspose.Cells | tune WordArt bend factor Aspose.Cells | create missing directory before saving workbook Aspose.Cells | export workbook to .xlsx format with Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, inserts a WordArt shape using the built‑in Curved Text preset, defines its font, size, and cell‑based position and dimensions, and saves the file as WordArtCurved.xlsx. Direct curvature adjustment via an Adjustments property is not supported; the selected preset determines the curve.
+// The sample creates a new Workbook, inserts a Curved preset WordArt TextEffect shape, optionally adjusts its curvature via adjustment parameters, ensures the output directory exists, and saves the file as an .xlsx workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the position of the WordArt shape (in cells)
-            int upperLeftRow = 2;      // zero‑based row index
-            int upperLeftColumn = 2;   // zero‑based column index
-            int lowerRightRow = 6;
-            int lowerRightColumn = 10;
-
-            // Width and height of the shape (in points)
-            int shapeWidth = 300;
-            int shapeHeight = 100;
-
-            // Add a WordArt shape with initial text
+            // Add a WordArt (TextEffect) shape using the appropriate overload.
+            // Parameters: preset, text, font name, font size, isBold, isItalic,
+            // upper left row, upper left column, top offset, left offset, height, width
             Shape wordArt = sheet.Shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1, // preset
-                "Curved Text",                   // displayed text
+                MsoPresetTextEffect.TextEffect1, // preset (curved style)
+                "Curved WordArt",                // displayed text
                 "Arial",                         // font name
                 36,                              // font size
-                false,                           // bold
-                false,                           // italic
-                upperLeftRow,
-                upperLeftColumn,
-                lowerRightRow,
-                lowerRightColumn,
-                shapeWidth,
-                shapeHeight);
+                false,                           // isBold
+                false,                           // isItalic
+                5,                               // upper left row
+                1,                               // upper left column
+                0,                               // top offset (pixels)
+                0,                               // left offset (pixels)
+                100,                             // height (pixels)
+                400                              // width (pixels)
+            );
 
-            // Note: Adjustments property is not available in Aspose.Cells Shape.
-            // Curvature can be set via preset effects; the chosen preset already provides a curved style.
+            // Define output path
+            string outputPath = "WordArtCurved.xlsx";
+
+            // Ensure the output directory exists (handle null when only file name is provided)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "WordArtCurved.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

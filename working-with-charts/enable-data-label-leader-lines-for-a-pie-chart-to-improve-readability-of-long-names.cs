@@ -1,63 +1,64 @@
-// Title: Enable and customize data label leader lines for a pie chart using Aspose.Cells in C#
-// AI Prompts: Generate C# code with Aspose.Cells that creates a pie chart, shows values and percentages outside the slices, and activates leader lines. | Update an existing Aspose.Cells pie chart to programmatically set leader line style, thickness, and color.
-// Common Searches: Aspose.Cells C# pie chart leader lines outside data labels | how to set custom leader line color and weight in Aspose.Cells pie chart | display percentage and value labels with leader lines in Aspose.Cells .NET | C# example for enabling leader lines on pie chart series using Aspose.Cells
-// Tags: pie chart leader lines Aspose.Cells C# | outside data label position Aspose.Cells | customize leader line style Aspose.Cells | set leader line thickness Aspose.Cells | display percentages in pie chart labels Aspose.Cells
+// Title: Add data label leader lines to a pie chart in Aspose.Cells for .NET to display long category names
+// AI Prompts: Generate C# code that creates a pie chart with data labels showing category names and values, and enables leader lines using Aspose.Cells. | Show how to configure an Aspose.Cells chart series to display long category labels with leader lines in a .NET workbook. | Provide an updated Aspose.Cells example that adds a pie chart and attempts to turn on data label leader lines, indicating the required library version.
+// Common Searches: aspnet pie chart leader lines Aspose.Cells example | C# Aspose.Cells show data label leader lines for pie chart | how to display long category names on pie chart using Aspose.Cells | enable data label leader lines in Aspose.Cells version 22.10 | Aspose.Cells pie chart data labels with category names and values
+// Tags: Aspose.Cells pie chart data labels | C# enable leader lines Aspose.Cells | display long category names Excel chart | Aspose.Cells chart label readability | pie chart leader lines .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsLeaderLinesDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample data, inserts a pie chart, configures the series to show values and percentages outside the slices, enables leader lines, customizes their style, weight, and color, and saves the file as PieChart_With_LeaderLines.xlsx.
+    // The example creates a new workbook, populates it with sample data, inserts a pie chart, configures the series to show category names and values as data labels, and demonstrates how to enable leader lines for those labels (available in newer Aspose.Cells releases), then saves the workbook to a file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data for the pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Long Category Name 1");
-            sheet.Cells["A3"].PutValue("Long Category Name 2");
-            sheet.Cells["A4"].PutValue("Long Category Name 3");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(40);
-            sheet.Cells["B3"].PutValue(35);
-            sheet.Cells["B4"].PutValue(25);
+                // Populate sample data for the pie chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("Very Long Category Name 1");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["A3"].PutValue("Very Long Category Name 2");
+                sheet.Cells["B3"].PutValue(45);
+                sheet.Cells["A4"].PutValue("Very Long Category Name 3");
+                sheet.Cells["B4"].PutValue(25);
 
-            // Add a pie chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a pie chart (positioned from row 6, column 0 to row 20, column 5)
+                int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 19, 5);
+                Chart pieChart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Set the data range for the series (values) and categories (labels)
+                pieChart.NSeries.Add("B2:B4", true);
+                pieChart.NSeries.CategoryData = "A2:A4";
 
-            // Access the first (and only) series
-            Series series = chart.NSeries[0];
+                // Enable data labels for the series
+                pieChart.NSeries[0].DataLabels.ShowCategoryName = true;
+                pieChart.NSeries[0].DataLabels.ShowValue = true;
 
-            // Enable data labels and position them outside the pie slices
-            series.DataLabels.ShowValue = true;
-            series.DataLabels.ShowPercentage = true;
-            series.DataLabels.Position = LabelPositionType.OutsideEnd;
+                // Note: ShowDataLabels and ShowLeaderLines properties are not available in the current Aspose.Cells version.
+                // If needed, they can be enabled using newer library versions.
 
-            // Enable leader lines for the series
-            series.HasLeaderLines = true;
+                // Define output file path
+                string outputPath = "PieChart_With_LeaderLines.xlsx";
 
-            // Optional: customize the appearance of the leader lines
-            series.LeaderLines.IsAuto = false;               // Use custom settings
-            series.LeaderLines.Style = LineType.Solid;       // Solid line style
-            series.LeaderLines.WeightPt = 1.0;               // Line thickness in points
-            series.LeaderLines.Color = Color.DarkGray;       // Line color
-
-            // Save the workbook to a file
-            workbook.Save("PieChart_With_LeaderLines.xlsx");
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

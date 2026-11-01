@@ -1,13 +1,14 @@
-// Title: How to add a bottom legend to a column chart and freeze the legend rows in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a column chart, positions its legend at the bottom, and applies FreezePanes to keep the legend rows visible while scrolling, using Aspose.Cells. | Write a .NET snippet that adds a bottom‑positioned legend to a chart and then freezes the first five rows of the worksheet so the legend stays in view, leveraging Aspose.Cells APIs.
-// Common Searches: asp.net add bottom legend to column chart and freeze rows with Aspose.Cells | how to keep chart legend visible while scrolling using Aspose.Cells FreezePanes | set legend position bottom and freeze top rows in Excel file Aspose.Cells C# | Aspose.Cells example freezing rows above a chart legend | C# Aspose.Cells column chart with legend and frozen header rows
-// Tags: Aspose.Cells column chart legend bottom | Aspose.Cells FreezePanes rows | C# chart legend positioning Aspose.Cells | freeze worksheet header rows Aspose.Cells | Excel workbook chart legend visibility .NET
+// Title: Add a right‑side legend to a column chart and freeze the rows containing the legend using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart, shows a legend on the right side, and freezes the top rows so the legend stays visible while scrolling. | Write a program that adds a legend to an Excel chart and applies FreezePanes to keep the legend in view using Aspose.Cells for .NET.
+// Common Searches: asp.net add legend to column chart and freeze top rows using Aspose.Cells | C# Aspose.Cells keep chart legend visible while scrolling | how to freeze panes after inserting a chart legend with Aspose.Cells | Aspose.Cells set legend position right and freeze rows example
+// Tags: column chart legend Aspose.Cells C# | freeze panes rows Aspose.Cells | legend position right Aspose.Cells | keep chart legend visible scrolling Aspose.Cells | add legend to chart Aspose.Cells .NET
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
 
-// Creates a workbook, inserts sample data, adds a column chart with a bottom legend, freezes the first five rows so the legend remains visible during scrolling, and saves the file as ChartWithLegend.xlsx using Aspose.Cells for .NET.
+// The example creates a new workbook, fills it with sample data, inserts a column chart, enables a right‑side legend, freezes the first seven rows so the legend remains visible during scrolling, and saves the file as ChartWithLegend.xlsx.
 class Program
 {
     static void Main()
@@ -24,32 +25,38 @@ class Program
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
             sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
             sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet (rows 5‑20, columns A‑G)
+            // Add a column chart (rows 5‑20, columns 0‑7)
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";     // Categories
+            // Set the data source for the series
+            chart.NSeries.Add("B2:B4", true);
+            // Category data is inferred from the first column (A2:A4) by default,
+            // so explicit assignment is not required.
 
-            // Enable and position the legend
+            // Enable the legend and position it on the right side of the chart
             chart.ShowLegend = true;
-            // Use LegendPositionType for compatibility with older Aspose.Cells versions
-            chart.Legend.Position = LegendPositionType.Bottom;
+            chart.Legend.Position = LegendPositionType.Right;
 
-            // Freeze rows above the chart (rows 0‑4) so the chart stays visible while scrolling
-            int totalRows = sheet.Cells.MaxDataRow + 1;
-            int totalColumns = sheet.Cells.MaxDataColumn + 1;
-            sheet.FreezePanes(5, 0, totalRows, totalColumns);
+            // Freeze the top 7 rows so the legend (if placed there) stays visible while scrolling
+            sheet.FreezePanes(7, 0, 0, 0);
+
+            // Ensure the output directory exists
+            string outputPath = "ChartWithLegend.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("ChartWithLegend.xlsx");
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {

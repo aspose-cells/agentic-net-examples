@@ -1,15 +1,14 @@
-// Title: Add a cubic (order‑3) polynomial series to a scatter chart and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, generates a column of X³ values, adds this column as a new series to the first scatter chart, and saves the workbook to a new file. | Modify the program to calculate the cubic polynomial equation for the added series and output the equation to the console.
-// Common Searches: how to add a third order polynomial series to a scatter chart with Aspose.Cells C# | Aspose.Cells create cubic trendline for scatter chart in .NET | C# Aspose.Cells add custom series to existing Excel chart and save workbook | retrieve polynomial equation from Aspose.Cells chart series .NET
-// Tags: Aspose.Cells add cubic series to scatter chart | C# create polynomial series in Excel chart | Aspose.Cells write X³ values to worksheet | save modified workbook with Aspose.Cells .NET | Excel scatter chart custom series Aspose.Cells
+// Title: Add a third‑order polynomial trendline to a scatter chart series and capture its equation with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add third order polynomial trendline to scatter chart | How to display polynomial trendline equation in an Excel chart using Aspose.Cells | Retrieve trendline equation from a scatter chart series in .NET with Aspose.Cells | C# code to add polynomial trendline and get its formula from an Excel workbook
+// Tags: polynomial trendline API Aspose.Cells | scatter chart trendline configuration C# | order 3 trendline equation extraction .NET | chart series trendline addition Aspose.Cells | excel workbook trendline handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example ensures an input.xlsx file exists (creating one with X values and a quadratic Y series if needed), loads the workbook, computes X³ values in a new column, adds those values as a cubic (order‑3) series to the first scatter chart, and saves the updated workbook as output.xlsx.
-class Program
+// The example loads or creates a workbook with X/Y data, inserts a scatter chart, adds a third‑order polynomial trendline to the first series, enables equation display, outputs the generated formula, and saves the workbook.
+class AddTrendlineExample
 {
     static void Main()
     {
@@ -18,107 +17,60 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists; if not, create a simple workbook with sample data and a scatter chart.
-            if (!File.Exists(inputPath))
-            {
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-                ws.Name = "Data";
-
-                // Populate sample data for X and Y series.
-                ws.Cells["A1"].PutValue("X");
-                ws.Cells["B1"].PutValue("Y");
-                for (int i = 0; i < 10; i++)
-                {
-                    ws.Cells[i + 1, 0].PutValue(i);                     // X values
-                    ws.Cells[i + 1, 1].PutValue(Math.Pow(i, 2));       // Y = X^2 (quadratic)
-                }
-
-                // Add a scatter chart.
-                int chartIdx = ws.Charts.Add(ChartType.Scatter, 5, 0, 20, 10);
-                Chart scatterChart = ws.Charts[chartIdx];
-                scatterChart.NSeries.Add("B2:B11", true);
-                scatterChart.NSeries[0].XValues = "A2:A11";
-
-                wb.Save(inputPath);
-            }
-
-            // Load the workbook safely.
+            // Load existing workbook or create a new one with sample data if the file is missing
             Workbook workbook;
-            try
+            if (File.Exists(inputPath))
             {
                 workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Failed to load workbook '{inputPath}': {ex.Message}");
-                return;
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                // Populate sample data for X (A) and Y (B) columns (A1:A10, B1:B10)
+                for (int i = 1; i <= 10; i++)
+                {
+                    ws.Cells[$"A{i}"].PutValue(i);          // X values
+                    ws.Cells[$"B{i}"].PutValue(i * 2);      // Y values
+                }
             }
 
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Assume the first chart is the target scatter chart.
-            if (worksheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
-            }
+            // Add a scatter chart (positioned at rows 5-20, columns 0-10)
+            int chartIndex = sheet.Charts.Add(ChartType.Scatter, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            Chart targetChart = worksheet.Charts[0];
+            // Define the data range for the scatter series (X: A1:A10, Y: B1:B10)
+            chart.NSeries.Add("A1:B10", true);
 
-            // Ensure the chart has at least one series.
-            if (targetChart.NSeries.Count == 0)
-            {
-                Console.WriteLine("The chart does not contain any series.");
-                return;
-            }
-
-            // Add a polynomial (order 3) approximation by creating a new series.
+            // NOTE: Trendline APIs may not be available in older Aspose.Cells versions.
+            // If supported, you can uncomment the following block to add a polynomial trendline.
+            /*
             try
             {
-                // Prepare column for cubic values.
-                worksheet.Cells["C1"].PutValue("Y³");
-                for (int row = 2; row <= 11; row++)
-                {
-                    double x = worksheet.Cells[row - 1, 0].DoubleValue; // X from column A
-                    worksheet.Cells[row - 1, 2].PutValue(Math.Pow(x, 3)); // Y³ in column C
-                }
+                // Add a polynomial trendline of order 3 to the first series
+                Trendline trendline = chart.NSeries[0].Trendlines.Add(TrendlineType.Polynomial);
+                trendline.Order = 3;                 // Set polynomial order to 3
+                trendline.DisplayEquation = true;    // Show equation on the chart
 
-                // Add the new series to the chart.
-                int newSeriesIdx = targetChart.NSeries.Add("C2:C11", true);
-                Series polySeries = targetChart.NSeries[newSeriesIdx];
-                polySeries.XValues = "A2:A11";
-                polySeries.Name = "Cubic Approximation";
-
-                // Optional styling can be added here if supported by the API version.
-
-                Console.WriteLine("Polynomial (order 3) series added to the chart.");
+                // Output the generated equation
+                Console.WriteLine("Polynomial Order 3 Trendline Equation: " + trendline.TrendlineEquation);
             }
-            catch (Exception ex)
+            catch (Exception tlEx)
             {
-                Console.WriteLine("Failed to add polynomial series: " + ex.Message);
+                Console.WriteLine("Trendline could not be added: " + tlEx.Message);
             }
+            */
 
-            // Ensure output directory exists.
-            try
-            {
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

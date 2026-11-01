@@ -1,86 +1,86 @@
-// Title: Calculate the sum of a column in a large XLSX workbook using Aspose.Cells LightCells and LoadOptions in C# with low memory usage
-// AI Prompts: Generate C# code that opens a massive .xlsx file with Aspose.Cells LoadOptions configured for LightCells streaming, iterates through column B to accumulate numeric values, and writes the total to a new workbook while keeping memory consumption minimal. | Show how to set up LoadOptions for low‑memory processing of a big worksheet, use the LightCells API to read rows sequentially, compute an aggregate for a specific column, and save the aggregate result to a separate Excel file.
-// Common Searches: aspocells lightcells how to sum a column in a huge xlsx without loading whole file | c# load large excel with loadoptions streaming and calculate column total | memory efficient processing of big dataset in excel using aspocells lightcells api
-// Tags: LightCells streaming aggregation for large Excel files | LoadOptions memory‑efficient workbook loading Aspose.Cells | column B numeric sum using Aspose.Cells LightCells | write aggregation result to separate workbook Aspose.Cells | process massive XLSX dataset in .NET with LightCells
+// Title: Use Aspose.Cells LoadOptions with LightCells API in C# to stream and process a large XLSX workbook row by row while minimizing memory usage
+// Common Searches: how to stream rows from a large XLSX file using Aspose.Cells LightCells API in C# | process large Excel workbook with minimal memory using LoadOptions and LightCells in .NET | row‑by‑row calculation and copy to new workbook with Aspose.Cells without loading entire file | C# example for adding a computed column while reading Excel data with LightCells | avoid OutOfMemoryException when handling big XLSX files with Aspose.Cells LoadOptions
+// Tags: Aspose.Cells LightCells API row streaming | LoadOptions memory‑efficient XLSX processing .NET | C# calculate column while copying Excel rows | large workbook row‑wise processing Aspose.Cells | streaming Excel data to new workbook C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example checks for the presence of a large XLSX file, loads it with LoadOptions set for LightCells streaming, determines the used range of the first worksheet, iterates through column B to sum numeric values, creates a new workbook, writes the computed sum into the first row, ensures the output directory exists, and saves the result while handling possible I/O errors, all with minimal memory footprint.
-class Program
+// The example loads a large XLSX workbook using Aspose.Cells LoadOptions, then employs the LightCells API to iterate rows one at a time, copy existing cell values, compute a sum of the first two numeric columns, append the result as a new column, and write each processed row to a new workbook, all while keeping memory consumption low.
+class LightCellsProcessing
 {
     static void Main()
     {
         // Paths for input and output files
-        string inputPath = "large_dataset.xlsx";
-        string outputPath = "processed_result.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
+        string inputPath = "large_input.xlsx";
+        string outputPath = "processed_output.xlsx";
 
         try
         {
-            // Load the workbook
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook (default load options are sufficient for most scenarios)
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            using (Workbook workbook = new Workbook(inputPath, loadOptions))
+            using (Workbook inputWb = new Workbook(inputPath, loadOptions))
             {
-                // Assume the data to process is in the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet of the input workbook
+                Worksheet inputWs = inputWb.Worksheets[0];
+                Cells inputCells = inputWs.Cells;
 
-                // Determine the used range of the worksheet
-                AsposeRange usedRange = worksheet.Cells.MaxDisplayRange;
+                // Prepare the output workbook (empty) and its first worksheet
+                Workbook outputWb = new Workbook();
+                Worksheet outputWs = outputWb.Worksheets[0];
+                Cells outputCells = outputWs.Cells;
 
-                // Example processing: calculate the sum of values in column B (index 1)
-                double sum = 0.0;
-                int startRow = usedRange.FirstRow;
-                int endRow = startRow + usedRange.RowCount; // exclusive
+                // Determine the range of rows and columns that contain data
+                int maxRow = inputCells.MaxDataRow;
+                int maxCol = inputCells.MaxDataColumn;
 
-                for (int row = startRow; row < endRow; row++)
+                // Process each row
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    object val = worksheet.Cells[row, 1].Value; // column B
-                    if (val != null && double.TryParse(val.ToString(), out double d))
+                    // Copy existing cell values to an object array (+1 for the new sum column)
+                    object[] values = new object[maxCol + 2];
+
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        sum += d;
+                        Cell cell = inputCells[row, col];
+                        values[col] = cell.Value;
+                    }
+
+                    // Example processing: calculate sum of first two numeric columns
+                    double sum = 0;
+                    if (inputCells[row, 0].Value is double d0) sum += d0;
+                    if (inputCells[row, 1].Value is double d1) sum += d1;
+
+                    // Append the calculated sum as a new column
+                    values[maxCol + 1] = sum;
+
+                    // Write the processed row to the output worksheet
+                    for (int col = 0; col < values.Length; col++)
+                    {
+                        outputCells[row, col].Value = values[col];
                     }
                 }
 
-                // Create a new workbook to store the result
-                using (Workbook resultWorkbook = new Workbook())
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Worksheet resultSheet = resultWorkbook.Worksheets[0];
-                    resultSheet.Cells[0, 0].PutValue("Sum of Column B");
-                    resultSheet.Cells[0, 1].PutValue(sum);
-
-                    // Ensure the output directory exists
-                    string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Save the result workbook with error handling
-                    try
-                    {
-                        resultWorkbook.Save(outputPath);
-                        Console.WriteLine($"Processing completed. Result saved to {outputPath}");
-                    }
-                    catch (Exception saveEx)
-                    {
-                        Console.WriteLine($"Failed to save result workbook: {saveEx.Message}");
-                    }
+                    Directory.CreateDirectory(outputDir);
                 }
+
+                // Save the processed workbook (default options are sufficient)
+                outputWb.Save(outputPath);
             }
+
+            Console.WriteLine($"Processing completed successfully. Output saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

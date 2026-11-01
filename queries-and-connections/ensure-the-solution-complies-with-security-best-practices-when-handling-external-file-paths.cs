@@ -1,73 +1,98 @@
-// Title: Securely Validate External Connection Paths in an Aspose.Cells Workbook Using a Whitelisted Base Folder (C#)
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, iterates over workbook.DataConnections, resolves each connection.SourceFile to an absolute path, and retains only those paths that reside inside a predefined safe directory. | Write a C# helper method that normalizes a file path, checks it against a whitelist folder, clears the ExternalConnection.SourceFile when the check fails, and logs the action for each connection. | Show how to safely save the sanitized workbook to a designated output folder after processing external connections, including error handling for missing files and invalid paths.
-// Common Searches: how to restrict Aspose.Cells external data connections to a specific directory in C# | C# code to prevent directory traversal in Excel workbook external links using Aspose.Cells | validate source file paths of DataConnections in Aspose.Cells before saving workbook | Aspose.Cells secure handling of external connection file paths in .NET | example of whitelisting external Excel file locations with Aspose.Cells C#
-// Tags: Aspose.Cells external connection path validation | C# whitelist directory for Excel data connections | prevent directory traversal Aspose.Cells | secure external file handling in Excel workbook | sanitize ExternalConnection.SourceFile C#
+// Title: Securely validate file paths when loading and saving Excel workbooks with Aspose.Cells in C#
+// Common Searches: how to prevent path traversal attacks while using Aspose.Cells in a C# application | C# code to validate Excel file paths before loading with Aspose.Cells | restrict Aspose.Cells workbook save to a specific safe directory in .NET | validate absolute path against a whitelist folder when processing Excel files in C# | example of secure FileStream usage for Aspose.Cells workbook read/write
+// Tags: Aspose.Cells directory confinement | C# absolute path validation | restricted folder workbook save Aspose.Cells | safe base folder check before load | Excel workbook FileStream security
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-// The example defines a trusted base directory, loads an Excel workbook with Aspose.Cells, iterates through its DataConnections, resolves each connection's source file to an absolute path, verifies the path stays within the allowed folder to block directory‑traversal or unauthorized access, clears unsafe paths, and finally saves the sanitized workbook to a secure location.
-class SecureExternalPathHandler
+// The sample defines fixed input and output Excel file paths, validates each with a custom IsPathSecure method that checks for null or empty values, invalid characters, absolute paths, resolves the full path, and ensures the location resides within a predefined safe base directory. It then loads the workbook from the input path if it exists (using a read‑only FileStream) or creates a new workbook, adds a worksheet, creates the output directory if needed, and saves the workbook to the output path via a write‑only FileStream, handling any exceptions.
+class Program
 {
     static void Main()
     {
-        // Define a base directory that is considered safe for external files.
-        string baseDirectory = Path.GetFullPath(@"C:\AllowedExternalFiles");
+        // Define input and output file paths
+        string inputPath = @"C:\SafeFolder\input.xlsx";
+        string outputPath = @"C:\SafeFolder\output.xlsx";
 
-        // Path to the workbook that will be processed.
-        string inputPath = Path.Combine(baseDirectory, "input.xlsx");
-
-        // Verify that the input workbook exists before attempting to load it.
-        if (!File.Exists(inputPath))
+        // Validate the file paths to prevent path traversal and other attacks
+        if (!IsPathSecure(inputPath) || !IsPathSecure(outputPath))
         {
-            Console.WriteLine($"Input workbook not found: {inputPath}");
+            Console.WriteLine("One or more file paths are invalid or insecure.");
             return;
         }
 
-        // Load the workbook using Aspose.Cells (create/load rule).
-        Workbook workbook = new Workbook(inputPath);
+        Workbook workbook = null;
 
-        // Iterate through all external connections in the workbook.
-        foreach (ExternalConnection connection in workbook.DataConnections)
+        try
         {
-            string sourceFile = connection.SourceFile;
-            if (string.IsNullOrEmpty(sourceFile))
-                continue; // No external file associated with this connection.
-
-            // Resolve the provided path to an absolute path.
-            string absolutePath;
-            try
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                absolutePath = Path.GetFullPath(sourceFile);
+                using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    workbook = new Workbook(fs);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                // If the path cannot be resolved, skip this connection.
-                Console.WriteLine($"Invalid path '{sourceFile}': {ex.Message}");
-                continue;
+                workbook = new Workbook(); // create empty workbook
+                Console.WriteLine("Input file not found. A new workbook was created.");
             }
 
-            // Ensure the absolute path is within the allowed base directory.
-            // This prevents directory traversal attacks and unauthorized file access.
-            if (!absolutePath.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase))
+            // Example operation: add a new worksheet
+            workbook.Worksheets.Add("NewSheet");
+
+            // Ensure the output directory exists
+            string outDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+
+            // Save the workbook to the validated output path using a FileStream
+            using (FileStream fsOut = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                Console.WriteLine($"Blocked external path outside allowed directory: {absolutePath}");
-                // Optionally clear the unsafe path to avoid later failures.
-                connection.SourceFile = string.Empty;
-                continue;
+                workbook.Save(fsOut, SaveFormat.Xlsx);
             }
 
-            // Normalize the path (optional) and assign it back to the connection.
-            connection.SourceFile = absolutePath;
+            Console.WriteLine("Workbook processed and saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+        }
+    }
+
+    // Security check for file paths
+    static bool IsPathSecure(string path)
+    {
+        // Null or empty check
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        // Reject paths containing invalid characters
+        char[] invalidChars = Path.GetInvalidPathChars();
+        if (path.IndexOfAny(invalidChars) >= 0)
+            return false;
+
+        // Must be an absolute path
+        if (!Path.IsPathRooted(path))
+            return false;
+
+        // Resolve to a full path to eliminate ".." segments
+        string fullPath;
+        try
+        {
+            fullPath = Path.GetFullPath(path);
+        }
+        catch
+        {
+            return false;
         }
 
-        // Define the output path for the modified workbook.
-        string outputPath = Path.Combine(baseDirectory, "output.xlsx");
+        // Define a safe base directory (adjust as needed)
+        string safeBase = Path.GetFullPath(@"C:\SafeFolder\");
 
-        // Save the workbook using Aspose.Cells (save rule).
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved securely to: {outputPath}");
+        // Ensure the resolved path resides within the safe base directory
+        return fullPath.StartsWith(safeBase, StringComparison.OrdinalIgnoreCase);
     }
 }

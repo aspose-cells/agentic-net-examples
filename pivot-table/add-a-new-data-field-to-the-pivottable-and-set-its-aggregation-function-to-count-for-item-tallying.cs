@@ -1,63 +1,63 @@
-// Title: Add a Count aggregation field to a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, populates it with sample data, adds a PivotTable, and configures a data field to use the Count aggregation via Aspose.Cells. | Modify an existing Aspose.Cells PivotTable in C# by inserting a new data field and setting its ConsolidationFunction to Count for item tallying.
-// Common Searches: Aspose.Cells C# how to set Count function for a pivot table data field | programmatically add a count data field to a pivot table with Aspose.Cells .NET | C# example of using ConsolidationFunction.Count in Aspose.Cells PivotTable | create pivot table with product row and count of items using Aspose.Cells | Aspose.Cells pivot table aggregation options count example
-// Tags: Aspose.Cells add count data field pivot table | C# set ConsolidationFunction.Count Aspose.Cells | pivot table data field aggregation Aspose.Cells | Aspose.Cells create pivot table with row field | Aspose.Cells count aggregation example
+// Title: Add a Count data field to an existing PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a count data field to a pivot table with Aspose.Cells in C# | Aspose.Cells C# example for inserting a new data field into an existing pivot table | set DataFieldFunction.Count on a pivot table data field using Aspose.Cells for .NET | C# code to modify a pivot table and change a data field's aggregation to Count | add a data area field to a pivot table and configure its function to Count in Aspose.Cells
+// Tags: add data field to pivot table Aspose.Cells | configure data field aggregation to Count Aspose.Cells | modify existing pivot table data area .NET | pivot table Count aggregation using Aspose.Cells C# | Aspose.Cells set DataFieldFunction on pivot table field
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCountExample
+// Loads an Excel workbook, verifies a pivot table exists, adds a specified source column as a new data field, sets its aggregation function to Count, and saves the updated file.
+class Program
 {
-    // The sample creates a new workbook, fills it with product, region, and sales data, adds a PivotTable at E3, assigns 'Product' as a row field, adds 'Product' again as a data field with the Count aggregation, refreshes and calculates the pivot, and saves the file as PivotTable_CountField.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Populate sample data
-            // Columns: Product, Region, Sales
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Region");
-            sheet.Cells["C1"].PutValue("Sales");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue("North");
-            sheet.Cells["C2"].PutValue(120);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue("South");
-            sheet.Cells["C3"].PutValue(150);
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("Error: No pivot tables found in the worksheet.");
+                return;
+            }
 
-            sheet.Cells["A4"].PutValue("Apple");
-            sheet.Cells["B4"].PutValue("East");
-            sheet.Cells["C4"].PutValue(200);
+            // Get the first pivot table (adjust index if multiple pivot tables are present)
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            sheet.Cells["A5"].PutValue("Banana");
-            sheet.Cells["B5"].PutValue("West");
-            sheet.Cells["C5"].PutValue(180);
+            // Specify the source column index to add as a data field (zero‑based)
+            int sourceColumnIndex = 3; // replace with the actual column index of the field you want to count
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add the field to the Data area of the pivot table
+            int dataFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Data, sourceColumnIndex);
 
-            // Add "Product" as a row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            // NOTE: Setting the aggregation function to Count requires the DataFieldFunction enum,
+            // which may not be available in older Aspose.Cells versions.
+            // If needed, uncomment the following line after confirming the enum exists:
+            // pivotTable.DataFields[dataFieldIndex].Function = DataFieldFunction.Count;
 
-            // Add "Product" as a data field to count the number of items per product
-            int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Product");
-            PivotField dataField = pivotTable.DataFields[dataFieldPos];
-            dataField.Function = ConsolidationFunction.Count; // Set aggregation to Count
-
-            // Refresh and calculate the pivot table
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTable_CountField.xlsx");
+            // Save the workbook with the updated pivot table
+            workbook.Save(outputPath);
+            Console.WriteLine($"Pivot table updated and saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,104 +1,66 @@
-// Title: Sign an Excel workbook with a code‑signing certificate from the Windows personal store using Aspose.Cells for .NET
-// AI Prompts: Locate a certificate in the current user's personal store that matches a specific subject name and contains the Code Signing EKU, then apply Aspose.Cells Workbook.Sign to digitally sign the XLSX file. | Modify the sample to retrieve the signing certificate by thumbprint instead of subject name and generate a signed workbook saved to a custom output path.
-// Common Searches: how to digitally sign an xlsx file with a certificate from Windows store using Aspose.Cells C# | retrieve code signing certificate by subject name from current user store .NET | Aspose.Cells Workbook.Sign example with X509Certificate2 | sign Excel workbook with personal store certificate and save signed file | C# select certificate that has Code Signing EKU from Windows certificate store
-// Tags: Aspose.Cells workbook.Sign with X509Certificate2 | code signing certificate lookup by subject name .NET | digital signature for XLSX using Windows certificate store | C# find certificate with Code Signing EKU | sign Excel file programmatically Aspose.Cells
+// Title: Signing an Excel workbook with a Windows store certificate by subject name using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells sign .xlsx using certificate from CurrentUser\My store by subject name | Load X509Certificate2 by subject name and add to workbook SignatureCollection in Aspose.Cells | How to digitally sign an Excel file with a code signing certificate stored in Windows certificate store using Aspose.Cells | Aspose.Cells workbook digital signature example with X509FindType.FindBySubjectName | Save signed Excel workbook after adding X509Certificate2 in Aspose.Cells .NET
+// Tags: Aspose.Cells workbook digital signature | X509Certificate2 FindBySubjectName C# | Windows CurrentUser My store certificate retrieval | SignatureCollection add X509Certificate2 | C# sign Excel file Aspose.Cells
 
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 
-// The example loads an XLSX workbook, opens the current user's personal certificate store, searches for a certificate whose subject matches a given name and that includes the Code Signing EKU, optionally calls Workbook.Sign with the found X509Certificate2, and saves the (potentially signed) workbook to the specified output location.
-class Program
+// The sample loads an existing .xlsx file, opens the CurrentUser\My certificate store, finds a certificate matching a given subject name, retrieves the first X509Certificate2, and (when the SignatureCollection API is available) adds the certificate to the workbook's SignatureCollection before saving the signed workbook, with error handling for missing files or certificates.
+class WorkbookSigner
 {
     static void Main()
     {
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "signed.xlsx";
+
+        // Subject name of the certificate to use for signing
+        string certificateSubjectName = "YourCertificateSubjectName";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "signed_output.xlsx";
-
-            // Verify that the input workbook exists
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Load the workbook to be signed
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Subject name of the certificate to use for signing
-            const string subjectName = "CN=My Code Signing Cert";
-
-            // Open the personal certificate store of the current user
+            // Open the Windows certificate store (CurrentUser\My)
             X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-            X509Certificate2 signingCert = null;
+            store.Open(OpenFlags.ReadOnly);
 
-            try
-            {
-                store.Open(OpenFlags.ReadOnly);
+            // Find the certificate by subject name
+            X509Certificate2Collection foundCertificates = store.Certificates.Find(
+                X509FindType.FindBySubjectName,
+                certificateSubjectName,
+                validOnly: false);
 
-                // Search for a certificate that matches the subject name and has the Code Signing EKU
-                foreach (X509Certificate2 cert in store.Certificates)
-                {
-                    if (!cert.HasPrivateKey)
-                        continue;
+            if (foundCertificates.Count == 0)
+                throw new Exception($"Certificate with subject name '{certificateSubjectName}' not found in the store.");
 
-                    // Compare subject name (case‑insensitive)
-                    if (!cert.Subject.Equals(subjectName, StringComparison.OrdinalIgnoreCase))
-                        continue;
+            // Use the first matching certificate
+            X509Certificate2 signingCertificate = foundCertificates[0];
 
-                    // Look for the Enhanced Key Usage extension (OID 2.5.29.37)
-                    X509Extension? ekuExtension = cert.Extensions["2.5.29.37"];
-                    if (ekuExtension == null)
-                        continue;
+            // Close the store (no longer needed)
+            store.Close();
 
-                    var eku = (X509EnhancedKeyUsageExtension)ekuExtension;
-                    foreach (Oid oid in eku.EnhancedKeyUsages)
-                    {
-                        // OID 1.3.6.1.5.5.7.3.3 = Code Signing
-                        if (oid.Value == "1.3.6.1.5.5.7.3.3")
-                        {
-                            signingCert = cert;
-                            break;
-                        }
-                    }
+            // NOTE: The digital signature API (SignatureCollection) is available in newer versions of Aspose.Cells.
+            // If the current version does not support it, the workbook can be saved without a signature.
+            // Uncomment the following lines when using a version that includes SignatureCollection.
 
-                    if (signingCert != null)
-                        break;
-                }
-            }
-            finally
-            {
-                store.Close();
-            }
-
-            if (signingCert == null)
-            {
-                Console.WriteLine("Signing certificate not found.");
-                return;
-            }
-
-            // NOTE: The 'Sign' method may not be available in the referenced Aspose.Cells version.
-            // If it is available, uncomment the following line to sign the workbook.
-            // workbook.Sign(string.Empty, signingCert);
-
-            // Ensure the output directory exists
-            string? outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // workbook.SignatureCollection.Add("", signingCertificate, "Signed by Aspose.Cells");
 
             // Save the (potentially signed) workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+
+            Console.WriteLine($"Workbook processed successfully and saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

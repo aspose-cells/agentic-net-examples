@@ -1,66 +1,100 @@
-// Title: Prompt user to select a new external data source file and update an Excel workbook’s DataConnection using Aspose.Cells for .NET
-// AI Prompts: Generate a C# console application that opens a given workbook, shows a file‑picker prompt for the user to choose a replacement external data source, assigns the chosen path to the first DataConnection, and saves the workbook under a new name. | Write C# code with Aspose.Cells that verifies the existence of both the input workbook and the selected source file, updates the workbook’s external connection to point to the new file, and includes robust error handling.
-// Common Searches: how to use Aspose.Cells to change the source file of an external data connection in an Excel workbook | C# console program to ask user for a file path and update Excel external connection | Aspose.Cells .NET update DataConnection source after user selects file | validate workbook and external source file existence before modifying connection Aspose.Cells | save workbook with updated external connection using Aspose.Cells C#
-// Tags: modify external connection source Aspose.Cells | C# console file selection for Excel data connection | check workbook and source file existence .NET | save workbook after external connection update Aspose.Cells | replace external data source path in Excel using Aspose.Cells
+// Title: Load an external Excel workbook from a ribbon button file picker using Aspose.Cells in a C# .NET application
+// AI Prompts: Write C# code that opens a Windows file picker when a ribbon button is clicked and loads the selected .xlsx file into an Aspose.Cells Workbook with comprehensive try/catch error handling. | Demonstrate how to store the loaded Workbook in a nullable field and later retrieve its first worksheet for further processing. | Add logic to verify that the user‑chosen file path exists and provide clear console messages before instantiating the Workbook.
+// Common Searches: C# ribbon button open file dialog to select Excel file with Aspose.Cells | how to load a user selected .xlsx into Aspose.Cells Workbook in .NET | validate file path before creating Aspose.Cells Workbook in C# | refresh data from a workbook loaded via ribbon UI using Aspose.Cells | store selected workbook in nullable variable for later use Aspose.Cells
+// Tags: ribbon button file picker Aspose.Cells | load external Excel workbook C# | validate file existence before Workbook creation | nullable Workbook field data source | access first worksheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-// // Loads an existing workbook, prompts the user via a console file picker to choose a new external data source, updates the first DataConnection's SourceFile property, and saves the modified workbook as output.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    // Entry point of the console application.
-    static void Main()
+    // The example shows how to handle a ribbon button click in a C# .NET app, prompt the user for an Excel file path via a console‑based file picker, verify the file exists, load it into an Aspose.Cells Workbook, store the workbook in a nullable field, and later access the first worksheet for processing.
+    public class RibbonHandler
     {
-        try
+        // Holds the currently selected external data source workbook (nullable)
+        private Workbook? currentDataSource;
+
+        // Simulated ribbon button click event handler
+        public void btnSelectDataSource_Click(object? sender, EventArgs e)
         {
-            // Path to the workbook that contains an external connection.
-            const string inputWorkbookPath = "input.xlsx";
-
-            // Verify that the input workbook exists.
-            if (!File.Exists(inputWorkbookPath))
+            try
             {
-                Console.WriteLine($"Error: The workbook \"{inputWorkbookPath}\" was not found.");
-                return;
+                Console.WriteLine("Enter the full path of the external Excel file:");
+                string? selectedPath = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(selectedPath))
+                {
+                    Console.WriteLine("No path entered. Operation cancelled.");
+                    return;
+                }
+
+                // Verify that the file exists before attempting to load it
+                if (!File.Exists(selectedPath))
+                {
+                    Console.WriteLine($"File not found: {selectedPath}");
+                    return;
+                }
+
+                // Load the selected file into an Aspose.Cells Workbook
+                Workbook workbook = new Workbook(selectedPath);
+
+                // Store the loaded workbook as the current data source
+                currentDataSource = workbook;
+
+                // Notify the user that the data source was loaded
+                Console.WriteLine($"Data source loaded from:\n{selectedPath}");
             }
-
-            // Prompt the user to provide the external data source file path.
-            Console.Write("Enter the full path of the external data source file: ");
-            string sourceFilePath = Console.ReadLine()?.Trim();
-
-            // Validate the provided source file path.
-            if (string.IsNullOrEmpty(sourceFilePath) || !File.Exists(sourceFilePath))
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: The specified external data source file does not exist.");
-                return;
+                // Handle any unexpected errors during loading
+                Console.WriteLine($"Error loading data source: {ex.Message}");
             }
-
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputWorkbookPath);
-
-            // Ensure the workbook contains at least one external connection.
-            if (workbook.DataConnections.Count == 0)
-            {
-                Console.WriteLine("Error: No external connections found in the workbook.");
-                return;
-            }
-
-            // Update the first external connection's source file.
-            ExternalConnection connection = workbook.DataConnections[0];
-            connection.SourceFile = sourceFilePath;
-
-            // Save the workbook with the updated connection.
-            const string outputWorkbookPath = "output.xlsx";
-            workbook.Save(outputWorkbookPath);
-
-            Console.WriteLine($"Success: External data source updated and workbook saved as \"{outputWorkbookPath}\".");
         }
-        catch (Exception ex)
+
+        // Example method that could use the loaded data source
+        public void RefreshData()
         {
-            // Catch any unexpected exceptions and display a friendly message.
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            try
+            {
+                if (currentDataSource == null)
+                {
+                    Console.WriteLine("No external data source selected.");
+                    return;
+                }
+
+                // Perform operations with currentDataSource, e.g., read a worksheet
+                Worksheet sheet = currentDataSource.Worksheets[0];
+                // ... further processing ...
+
+                Console.WriteLine($"Worksheet '{sheet.Name}' is ready for processing.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that occur during data refresh
+                Console.WriteLine($"Error refreshing data: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                RibbonHandler handler = new RibbonHandler();
+
+                // Simulate button click to select data source
+                handler.btnSelectDataSource_Click(null, EventArgs.Empty);
+
+                // After loading, refresh data
+                handler.RefreshData();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

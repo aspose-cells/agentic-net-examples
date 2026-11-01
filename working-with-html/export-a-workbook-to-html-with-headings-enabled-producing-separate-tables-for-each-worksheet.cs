@@ -1,24 +1,23 @@
-// Title: Export an Excel workbook to HTML with row and column headings, generating a separate table for each worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to include row and column headings, and saves the workbook so each worksheet appears as its own table in the resulting HTML. | Update an existing Aspose.Cells export routine to produce HTML that shows headers for rows and columns and splits the output into distinct tables per sheet without relying on the deprecated OnePagePerSheet setting.
-// Common Searches: how to export Excel to HTML with row and column headings using Aspose.Cells .NET | Aspose.Cells generate separate HTML tables for each worksheet | C# save workbook as HTML with headings per sheet Aspose | HtmlSaveOptions ExportRowColumnHeadings example Aspose.Cells | convert multi‑sheet Excel to single HTML file with sheet separation Aspose
-// Tags: Aspose.Cells HtmlSaveOptions row column headings | C# export Excel to HTML separate sheets | Aspose.Cells multi‑sheet HTML conversion | HTML export with worksheet separation Aspose | Aspose.Cells workbook to HTML per worksheet
+// Title: Export an Excel workbook to HTML with worksheet headings and separate tables for each sheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export workbook to HTML with each worksheet as its own table | How to include worksheet headings when saving Excel as HTML using Aspose.Cells | Save Excel file as HTML with separate tables per sheet in .NET | C# HtmlSaveOptions to generate HTML with sheet headers using Aspose.Cells | Export multiple worksheets to HTML with headings using Aspose.Cells library
+// Tags: Aspose.Cells HtmlSaveOptions export multiple worksheets to HTML | C# export Excel workbook to HTML with sheet headings | Aspose.Cells generate separate HTML tables per worksheet | save workbook as HTML with worksheet headers using .NET | Aspose.Cells HTML export with distinct sheet tables
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies the input file, loads it into an Aspose.Cells Workbook, sets HtmlSaveOptions.ExportRowColumnHeadings to true, and saves the workbook as a single HTML file where each worksheet is rendered as an independent table, handling any runtime exceptions.
-class Program
+// The example checks for the input XLSX file, loads it into an Aspose.Cells Workbook, uses HtmlSaveOptions (which include worksheet headings by default) and saves the workbook as a single HTML file where each worksheet appears as a separate table, handling any runtime errors gracefully.
+class ExportWorkbookToHtml
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
+        string inputPath = "input.xlsx";
+        string outputPath = "output.html";
 
         // Verify that the input workbook exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
@@ -27,22 +26,17 @@ class Program
             // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                // Use the updated property for exporting row/column headings
-                ExportRowColumnHeadings = true
-                // Note: OnePagePerSheet property is not available in the current API version
-            };
+            // Configure HTML save options (defaults already export headers)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Save the workbook as an HTML file with the configured options
+            // Save the workbook as an HTML file
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully exported to HTML: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display an informative message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any runtime errors and display a friendly message
+            Console.WriteLine($"An error occurred during export: {ex.Message}");
         }
     }
 }

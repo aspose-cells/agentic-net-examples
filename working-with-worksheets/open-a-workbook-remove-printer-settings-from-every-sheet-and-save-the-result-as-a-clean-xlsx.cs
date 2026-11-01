@@ -1,36 +1,56 @@
-// Title: Remove printer‑related page setup settings from all worksheets in an XLSX file using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet, clears the PrintArea, PrintTitleRows, PrintTitleColumns, and resets FitToPagesWide/FitToPagesTall, then saves the workbook as a new XLSX file. | Show how to use the PageSetup object in Aspose.Cells to strip all printer configuration from each sheet and produce a clean Excel workbook.
-// Common Searches: aspnet remove print area and titles from all sheets in an existing Excel workbook | c# aspose.cells clear page setup settings for every worksheet | how to reset fit-to-page options in Aspose.Cells before saving workbook | strip printer settings from XLSX using Aspose.Cells .NET API
-// Tags: aspocells strip worksheet page setup | remove printer configuration from Excel using Aspose.Cells | clean Excel workbook by clearing page setup | aspocells reset worksheet print settings | save cleaned XLSX with Aspose.Cells
+// Title: Remove printer‑related page‑setup settings from all worksheets in an XLSX file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens an existing XLSX, clears the print area, title rows/columns, fit‑to‑page and zoom settings on every worksheet, and saves the cleaned workbook as a new file. | Create a reusable C# method that accepts an input Excel path, removes all page‑setup properties (print area, titles, fit‑to‑page, zoom) from each sheet using Aspose.Cells, and returns the modified Workbook object. | Update the sample program to also reset page margins to their default values after clearing printer settings, then save the workbook.
+// Common Searches: how to clear printer settings from all worksheets with Aspose.Cells C# | remove print area and title rows from Excel file using Aspose.Cells .NET | reset fit-to-page and zoom for every sheet in an XLSX using Aspose.Cells | save Excel workbook without page‑setup information Aspose.Cells
+// Tags: Aspose.Cells remove worksheet printer settings | clear page setup Aspose.Cells C# | reset print area Aspose.Cells workbook | clean Excel file printer configuration Aspose.Cells | save cleaned XLSX Aspose.Cells .NET | iterate worksheets Aspose.Cells page setup
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads 'input.xlsx', iterates over each worksheet, clears print‑related PageSetup properties (PrintArea, PrintTitleRows, PrintTitleColumns, FitToPagesWide/Tall), and saves the cleaned workbook as 'cleaned.xlsx'.
+// The program loads an XLSX workbook, iterates through each worksheet, clears printer‑related page‑setup properties (print area, title rows/columns, fit‑to‑page, zoom), and saves the cleaned workbook as a new XLSX file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "clean.xlsx";
 
-        // Remove printer‑related settings from each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            PageSetup pageSetup = sheet.PageSetup;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Clear the defined print area
-            pageSetup.PrintArea = "";
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
 
-            // Clear rows and columns set as print titles
-            pageSetup.PrintTitleRows = "";
-            pageSetup.PrintTitleColumns = "";
+            // Clear printer‑related settings from each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Remove print area and title rows/columns
+                sheet.PageSetup.PrintArea = null;
+                sheet.PageSetup.PrintTitleRows = null;
+                sheet.PageSetup.PrintTitleColumns = null;
 
-            // Reset any fit‑to‑page scaling
-            pageSetup.FitToPagesWide = 0;
-            pageSetup.FitToPagesTall = 0;
+                // Reset fit‑to‑page settings to defaults
+                sheet.PageSetup.FitToPagesTall = 0;
+                sheet.PageSetup.FitToPagesWide = 0;
+
+                // Reset zoom to 100%
+                sheet.PageSetup.Zoom = 100;
+            }
+
+            // Save the cleaned workbook as a new XLSX file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Save the cleaned workbook as a new XLSX file
-        workbook.Save("cleaned.xlsx", SaveFormat.Xlsx);
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

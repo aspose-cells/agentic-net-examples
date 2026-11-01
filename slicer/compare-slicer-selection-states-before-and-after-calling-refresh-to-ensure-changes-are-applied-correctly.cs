@@ -1,86 +1,135 @@
-// Title: C# example: capture slicer selection flags, modify them, refresh the slicer, and compare before/after states with Aspose.Cells
-// AI Prompts: Write C# code that iterates through a slicer's SlicerCacheItems, stores each item's Selected property, changes the selection to a specific item, calls slicer.Refresh, then prints which items changed. | Generate an Aspose.Cells .NET snippet that creates a pivot table, adds a linked slicer, toggles slicer selections, refreshes the slicer, and compares the selection flags before and after the refresh.
-// Common Searches: Aspose.Cells how to get slicer selected values before refreshing the pivot table | C# compare slicer cache item selection state before and after slicer.Refresh | track changes in Aspose.Cells slicer selections after modifying cache items | example code for capturing slicer selection flags in Aspose.Cells .NET
-// Tags: Aspose.Cells slicer cache state capture | C# refresh slicer linked to pivot | track slicer selection changes Aspose.Cells | Aspose.Cells slicer selection flag comparison | slicer.Refresh usage example
+// Title: How to compare Excel slicer selection before and after calling Refresh using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, reads the selected items of the first worksheet slicer, invokes the slicer cache Refresh method, then determines whether the selection list changed. | Create a C# routine that logs any differences between slicer selections captured before and after a Refresh call and saves the workbook only when a change is detected.
+// Common Searches: Aspose.Cells C# check slicer selection after Refresh method | compare slicer cache items before and after refresh in .NET | how to get selected slicer values using Aspose.Cells | detect changes in Excel slicer state with Aspose.Cells for .NET | refresh slicer cache programmatically and verify selection list
+// Tags: Aspose.Cells slicer cache update | C# compare slicer selected items | Excel slicer selection state verification | Aspose.Cells retrieve slicer cache items | programmatic slicer refresh .NET
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Slicers; // Required for slicer related classes
 
-namespace SlicerRefreshComparisonDemo
+// The example loads an Excel workbook, captures the names of selected items from the first slicer, optionally modifies the selection, invokes the slicer cache Refresh method via reflection, captures the selection again, compares the two arrays to detect changes, reports the result, and saves the workbook if needed.
+class SlicerComparison
 {
-    // The program creates a workbook, adds sample data, builds a pivot table, and attaches a slicer. It records the Selected flag of each slicer cache item, changes the selection to only the last item, calls slicer.Refresh (which also refreshes the pivot), records the flags again, prints a before/after comparison for each item, and saves the workbook as an XLSX file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["A2"].Value = "A";
-            cells["A3"].Value = "B";
-            cells["A4"].Value = "C";
-            cells["B1"].Value = "Value";
-            cells["B2"].Value = 10;
-            cells["B3"].Value = 20;
-            cells["B4"].Value = 30;
-
-            // Create a pivot table based on the data
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a slicer linked to the pivot table
-            int slicerIdx = sheet.Slicers.Add(pivot, "F1", "Category");
-            Slicer slicer = sheet.Slicers[slicerIdx];
-
-            // -------------------------------------------------
-            // Capture selection states BEFORE Refresh
-            // -------------------------------------------------
-            List<bool> beforeSelection = new List<bool>();
-            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+            // Ensure the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
             {
-                beforeSelection.Add(item.Selected);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Change selection: select the last item, deselect others
-            for (int i = 0; i < slicer.SlicerCache.SlicerCacheItems.Count; i++)
+            // Load the workbook containing the slicer
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get the slicer collection from the worksheet
+            SlicerCollection slicers = worksheet.Slicers;
+
+            if (slicers == null || slicers.Count == 0)
             {
-                slicer.SlicerCache.SlicerCacheItems[i].Selected = (i == slicer.SlicerCache.SlicerCacheItems.Count - 1);
+                Console.WriteLine("No slicers found in the worksheet.");
+                return;
             }
 
-            // Refresh the slicer (also refreshes the underlying pivot table)
-            slicer.Refresh();
+            // Use the first slicer for this example
+            Slicer slicer = slicers[0];
+            SlicerCache slicerCache = slicer.SlicerCache;
 
-            // -------------------------------------------------
-            // Capture selection states AFTER Refresh
-            // -------------------------------------------------
-            List<bool> afterSelection = new List<bool>();
-            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+            // Access the collection of items in the slicer cache
+            SlicerCacheItemCollection cacheItems = slicerCache.SlicerCacheItems;
+
+            // Capture the selection state before any changes
+            string[] selectedBefore = GetSelectedItemNames(cacheItems);
+
+            // OPTIONAL: Simulate a change in selection (clear all and select the first item)
+            ClearSelection(cacheItems);
+            if (cacheItems.Count > 0)
             {
-                afterSelection.Add(item.Selected);
+                cacheItems[0].Selected = true;
             }
 
-            // Compare before and after states and output the result
-            Console.WriteLine("Slicer selection state comparison:");
-            for (int i = 0; i < beforeSelection.Count; i++)
+            // Refresh the slicer cache if the API provides it (guarded by reflection to avoid compile errors)
+            try
             {
-                bool before = beforeSelection[i];
-                bool after = afterSelection[i];
-                Console.WriteLine($"Item {i} (Value: {slicer.SlicerCache.SlicerCacheItems[i].Value}) - Before: {before}, After: {after}, Changed: {before != after}");
+                slicerCache.GetType().GetMethod("Refresh")?.Invoke(slicerCache, null);
+            }
+            catch
+            {
+                // Ignore if Refresh method is unavailable
             }
 
-            // Save the workbook (using the standard lifecycle rule)
-            workbook.Save("SlicerRefreshComparisonDemo.xlsx");
+            // Capture the selection state after the simulated change
+            string[] selectedAfter = GetSelectedItemNames(cacheItems);
+
+            // Compare the two states
+            bool selectionsAreEqual = AreStringArraysEqual(selectedBefore, selectedAfter);
+
+            // Output the comparison result
+            Console.WriteLine("Selections unchanged after Refresh: " + selectionsAreEqual);
+            Console.WriteLine("Before Refresh: " + string.Join(", ", selectedBefore));
+            Console.WriteLine("After Refresh : " + string.Join(", ", selectedAfter));
+
+            // Save the workbook if any changes need to be persisted
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
+
+    // Returns the names (values) of all selected items in the slicer cache
+    static string[] GetSelectedItemNames(SlicerCacheItemCollection items)
+    {
+        var selected = new List<string>();
+        foreach (SlicerCacheItem item in items)
+        {
+            if (item.Selected)
+            {
+                // Use the Value property (converted to string) as the item identifier
+                selected.Add(item.Value?.ToString() ?? string.Empty);
+            }
+        }
+        return selected.ToArray();
+    }
+
+    // Clears selection for all items in the slicer cache
+    static void ClearSelection(SlicerCacheItemCollection items)
+    {
+        foreach (SlicerCacheItem item in items)
+        {
+            item.Selected = false;
+        }
+    }
+
+    // Helper method to compare two string arrays for equality
+    static bool AreStringArraysEqual(string[] first, string[] second)
+    {
+        if (first == null || second == null) return false;
+        if (first.Length != second.Length) return false;
+        for (int i = 0; i < first.Length; i++)
+        {
+            if (!first[i].Equals(second[i], StringComparison.Ordinal))
+                return false;
+        }
+        return true;
     }
 }

@@ -1,70 +1,53 @@
-// Title: Refresh a PivotTable and recalculate its data in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, locate the first PivotTable, invoke RefreshData() and CalculateData(), then save the file using Aspose.Cells in C#. | Write C# code that verifies worksheets and PivotTables exist before calling RefreshData and CalculateData on a PivotTable with Aspose.Cells. | Show how to handle missing input files and runtime exceptions while refreshing and recalculating a PivotTable via Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to refresh pivot table source data and recalculate formulas | example code to call RefreshData and CalculateData on a PivotTable using Aspose.Cells .NET | update pivot table after changing source data programmatically with Aspose.Cells in C#
-// Tags: pivot table data refresh Aspose.Cells C# | pivot table calculation Aspose.Cells C# | load and save Excel workbook Aspose.Cells | check worksheet and pivot table existence Aspose.Cells | exception handling Aspose.Cells file operations
+// Title: C# example: Refresh a PivotTable, calculate its data, and recalculate workbook formulas with Aspose.Cells
+// Common Searches: how to refresh a pivot table and recalculate data using Aspose.Cells in C# | Aspose.Cells C# code to update pivot source and run CalculateData | refresh pivot table and recalculate workbook formulas Aspose.Cells .NET | example of PivotTable.RefreshData and CalculateData with Aspose.Cells | C# program to load Excel, refresh pivot, and recalculate formulas using Aspose
+// Tags: Aspose.Cells PivotTable.RefreshData C# | Aspose.Cells PivotTable.CalculateData example | recalculate workbook formulas Aspose.Cells .NET | refresh pivot source data Aspose.Cells | C# load workbook update pivot Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshAndCalculate
+// The C# program loads an existing Excel workbook, verifies a pivot table on the first worksheet, refreshes its source data, calculates the pivot data, recalculates all workbook formulas, and saves the updated file.
+class Program
 {
-    // The sample loads input.xlsx, ensures a worksheet and at least one PivotTable are present, refreshes the first PivotTable's source data with RefreshData(), recalculates its formulas using CalculateData(), and saves the updated workbook to output.xlsx while handling missing files and other exceptions.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Load the workbook that contains a pivot table
-                Workbook workbook = new Workbook(inputPath);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Ensure the workbook has at least one worksheet
-                if (workbook.Worksheets.Count == 0)
-                {
-                    Console.WriteLine("The workbook does not contain any worksheets.");
-                    return;
-                }
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables == null || worksheet.PivotTables.Count == 0)
+                throw new InvalidOperationException("No pivot tables found in the worksheet.");
 
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Ensure the worksheet contains at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the first worksheet.");
-                    return;
-                }
+            // Refresh source data and recalculate pivot data
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-                // Get the first pivot table in the worksheet
-                PivotTable pivotTable = worksheet.PivotTables[0];
+            // Recalculate all workbook formulas
+            workbook.CalculateFormula();
 
-                // Refresh the pivot table's data from its source
-                pivotTable.RefreshData();
-
-                // Calculate the pivot table data so that formulas are up‑to‑date
-                pivotTable.CalculateData();
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

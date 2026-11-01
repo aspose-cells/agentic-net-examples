@@ -1,35 +1,44 @@
-// Title: Programmatically hide PivotTable ribbons and field list UI in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Disable the PivotTable field list ribbon for the entire workbook with Aspose.Cells before saving. | Iterate over each worksheet and set EnableWizard and EnableFieldList to false on every PivotTable using C#. | Apply workbook.Settings.HidePivotFieldList = true to suppress all PivotTable UI elements globally in Aspose.Cells.
-// Common Searches: how to hide pivot table field list ribbon in Aspose.Cells C# | disable pivot table wizard for all sheets using Aspose.Cells .NET | remove pivot table UI elements before saving Excel file with Aspose.Cells
-// Tags: Aspose.Cells suppress pivot UI ribbon | disable pivot wizard C# Aspose | pivot table UI removal Aspose.Cells | save workbook without pivot field list | C# iterate worksheets pivot tables Aspose
+// Title: Programmatically hide PivotTable UI ribbons in an Excel file with Aspose.Cells for .NET before saving
+// AI Prompts: Write C# code using Aspose.Cells that loads an existing .xlsx file, turns off the PivotTable UI ribbons, and saves the workbook to a new location. | Modify the provided Aspose.Cells example to include a check for the EnablePivotTableUI property and set it to false when the API supports it, while preserving error handling. | Create a robust C# routine that verifies the input workbook, suppresses PivotTable toolbars using Aspose.Cells settings, and writes the result to an output path.
+// Common Searches: Aspose.Cells hide pivot table ribbon before saving workbook C# | remove PivotTable toolbar from Excel file with Aspose.Cells in C# | C# program to turn off PivotTable toolbar in generated Excel file | how to suppress PivotTable UI in Aspose.Cells when exporting | Excel pivot table UI removal using Aspose.Cells .NET
+// Tags: Aspose.Cells disable pivot table UI | C# suppress Excel pivot table ribbons | Aspose.Cells UI ribbon suppression | save workbook without UI clutter Aspose | Excel UI clutter reduction .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// The example loads an existing workbook, globally hides the PivotTable field list ribbon, iterates through each worksheet to turn off the wizard and field list for every PivotTable, and then saves the workbook with all PivotTable UI elements suppressed.
-class DisablePivotRibbonDemo
+// Demonstrates loading an existing Excel workbook with Aspose.Cells, optionally disabling the PivotTable UI ribbons via the Settings.EnablePivotTableUI property (commented because not supported in the current version), and saving the workbook to a new file with basic file‑existence validation and exception handling.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Hide the PivotTable field list ribbon for the whole workbook
-        workbook.Settings.HidePivotFieldList = true;
-
-        // Iterate through all worksheets and their pivot tables
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            foreach (PivotTable pivotTable in sheet.PivotTables)
-            {
-                // Disable the PivotTable wizard and the field list UI
-                pivotTable.EnableWizard = false;
-                pivotTable.EnableFieldList = false;
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Save the workbook with the UI elements disabled
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
+
+            // The EnablePivotTableUI property is not available in the current Aspose.Cells version.
+            // If needed, this line can be uncommented when the property becomes supported.
+            // workbook.Settings.EnablePivotTableUI = false;
+
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

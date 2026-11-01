@@ -1,35 +1,91 @@
-// Title: Change workbook localization at runtime in Aspose.Cells for .NET without reloading the file
-// AI Prompts: Write a C# method that takes a Workbook instance and a culture name, sets Workbook.Settings.CultureInfo to the new CultureInfo, and then calls Workbook.CalculateFormula to apply the locale instantly. | Show how to let a user pick a language at runtime and update an Aspose.Cells workbook’s localization without reopening the file, using CultureInfo and formula recalculation.
-// Common Searches: aspnet change Excel workbook language on the fly using Aspose.Cells | how to update workbook culture info without reopening the file in C# | apply new locale to Aspose.Cells workbook and refresh formulas | runtime localization of Excel file with Aspose.Cells .NET | switch Excel workbook culture to German programmatically Aspose.Cells
-// Tags: Workbook.Settings.CultureInfo runtime update | Apply CultureInfo and recalculate formulas Aspose.Cells | Dynamic Excel localization C# | Switch workbook locale without reload | Runtime culture switch Aspose.Cells .NET
+// Title: Change Excel workbook culture at runtime with Aspose.Cells for .NET without reloading the file
+// Common Searches: Aspose.Cells C# change workbook culture after loading | Set Workbook.Settings.CultureInfo dynamically in .NET | Recalculate formulas after changing culture in Aspose.Cells | Switch Excel localization to French or German without reopening file | Runtime localization of Excel files using Aspose.Cells API | Apply different CultureInfo to the same workbook in C#
+// Tags: Aspose.Cells workbook culture change | Settings.CultureInfo property usage | formula recalculation after culture update | dynamic Excel localization .NET | apply CultureInfo without reloading workbook | Aspose.Cells localization support
 
 using Aspose.Cells;
+using System;
 using System.Globalization;
+using System.IO;
 
-// A helper that assigns a new CultureInfo to Workbook.Settings.CultureInfo and invokes CalculateFormula, enabling instant culture‑specific formatting and formula evaluation without reloading the workbook.
-public static class LocalizationHelper
+// The WorkbookLocalizationManager loads an Excel workbook, lets you change its culture at runtime by assigning a new CultureInfo to Settings.CultureInfo, recalculates formulas to reflect culture‑specific formatting, and saves the file—all without reloading the workbook.
+public class WorkbookLocalizationManager
 {
-    // Switches the workbook's localization at runtime without reloading.
-    public static void SwitchLocalization(Workbook workbook, string cultureName)
+    private Workbook _workbook;
+
+    // Load the workbook using the provided load rule
+    public WorkbookLocalizationManager(string filePath)
     {
-        // Apply the selected culture to the workbook.
-        workbook.Settings.CultureInfo = new CultureInfo(cultureName);
-        // Recalculate formulas so that culture‑specific formatting takes effect.
-        workbook.CalculateFormula();
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"Input file not found: {filePath}");
+
+        // {LoadWorkbook}
+        _workbook = new Workbook(filePath);
     }
-}
 
-public class Program
-{
-    public static void Main()
+    // Switches the workbook's localization at runtime without reloading
+    public void SwitchLocalization(string cultureName)
     {
-        // Load the workbook (using the provided load rule).
-        Workbook workbook = new Workbook("input.xlsx");
+        // Apply the selected culture to the workbook settings
+        _workbook.Settings.CultureInfo = new CultureInfo(cultureName);
+        // Recalculate formulas so that culture‑specific formatting takes effect
+        _workbook.CalculateFormula();
+    }
 
-        // Example: user selects German (Germany) localization.
-        LocalizationHelper.SwitchLocalization(workbook, "de-DE");
+    // Save the workbook using the provided save rule
+    public void Save(string outputPath)
+    {
+        // {SaveWorkbook}
+        _workbook.Save(outputPath);
+    }
 
-        // Save the workbook (using the provided save rule).
-        workbook.Save("output.xlsx");
+    // Example usage
+    public static void Example()
+    {
+        const string inputPath = "input.xlsx";
+
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' does not exist.");
+            return;
+        }
+
+        var manager = new WorkbookLocalizationManager(inputPath);
+
+        try
+        {
+            // User selects French localization
+            manager.SwitchLocalization("fr-FR");
+            manager.Save("output_fr.xlsx");
+            Console.WriteLine("Saved French localized workbook as output_fr.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during French localization: {ex.Message}");
+        }
+
+        try
+        {
+            // User selects German localization
+            manager.SwitchLocalization("de-DE");
+            manager.Save("output_de.xlsx");
+            Console.WriteLine("Saved German localized workbook as output_de.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during German localization: {ex.Message}");
+        }
+    }
+
+    // Entry point for the application
+    public static void Main(string[] args)
+    {
+        try
+        {
+            Example();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
+        }
     }
 }

@@ -1,33 +1,33 @@
-// Title: Use Aspose.Cells for .NET to password‑protect workbook structure and verify that sheet removal is prevented
-// AI Prompts: Write C# code that creates a workbook, adds worksheets, applies structure protection with a password using Aspose.Cells, then attempts to delete a sheet and captures the resulting exception. | Show how to handle the error raised when trying to remove a worksheet from a structure‑protected workbook and then save the file as an .xlsx.
-// Common Searches: aspnet protect Excel workbook structure with password using Aspose.Cells | c# prevent worksheet deletion after applying workbook protection Aspose.Cells | how to handle error when removing sheet from a protected workbook in Aspose.Cells | example of using workbook.Protect(ProtectionType.Structure) in C# | verify that structure protection blocks sheet removal with Aspose.Cells
-// Tags: structure protection Aspose.Cells C# | password protect workbook Aspose.Cells | block worksheet deletion Aspose.Cells | handle protected sheet removal error C# | save protected workbook as xlsx Aspose.Cells
+// Title: How to protect workbook structure and prevent worksheet deletion with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells protect workbook structure C# example | prevent deleting a sheet from a protected workbook using Aspose.Cells | catch CellsException when removing a worksheet from a protected workbook in .NET | protect Excel file structure without password with Aspose.Cells API | remove worksheet from a protected workbook throws exception Aspose.Cells
+// Tags: workbook structure protection Aspose.Cells | prevent worksheet deletion C# | CellsException handling sheet removal | protect Excel workbook without password | Aspose.Cells blocked sheet removal | save protected workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The sample creates a workbook with two sheets, applies password‑based structure protection via Aspose.Cells, attempts to delete the first sheet (which triggers an exception), catches and logs the expected error, and finally saves the protected workbook as ProtectedWorkbook.xlsx.
+// The example creates a Workbook, adds a second sheet, applies structure protection with an empty password, attempts to delete the first worksheet (which raises a CellsException), catches the exception to confirm the deletion is blocked, and saves the protected file as "ProtectedWorkbook.xlsx".
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook with two worksheets
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "Sheet1";
+
+            // Add a second worksheet for demonstration
             workbook.Worksheets.Add("Sheet2");
 
-            // Protect the workbook structure with a password
-            workbook.Protect(ProtectionType.Structure, "pwd123");
+            // Protect the workbook structure (empty password)
+            workbook.Protect(ProtectionType.Structure, string.Empty);
 
-            // Attempt to delete a worksheet; this should be blocked by the protection
+            // Attempt to delete the first worksheet
             try
             {
                 workbook.Worksheets.RemoveAt(0);
                 Console.WriteLine("Worksheet deleted (unexpected).");
             }
-            catch (Exception ex)
+            catch (CellsException ex)
             {
                 Console.WriteLine("Deletion blocked as expected: " + ex.Message);
             }

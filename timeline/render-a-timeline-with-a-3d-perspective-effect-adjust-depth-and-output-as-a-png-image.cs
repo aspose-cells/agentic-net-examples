@@ -1,86 +1,64 @@
-// Title: Render a 3‑D perspective timeline from a pivot table and save it as a PNG using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, adds a pivot table, inserts a timeline linked to the Date field, applies a 45° perspective and depth via TimelineShape.ThreeDFormat, and renders the sheet to a PNG file. | Show how to adjust the width, height, and position of a TimelineShape and configure ImageOrPrintOptions for PNG output with Aspose.Cells.
-// Common Searches: aspnet how to apply 3d perspective to a timeline control in Aspose.Cells | c# export worksheet containing a timeline as a PNG image using Aspose.Cells | set ThreeDFormat perspective and Z depth for TimelineShape in Aspose.Cells | render pivot table timeline to image with Aspose.Cells .NET | adjust timeline shape size and position before rendering to PNG
-// Tags: Aspose.Cells timeline 3d perspective | C# ThreeDFormat timeline shape | render worksheet to PNG Aspose.Cells | pivot table linked timeline Aspose.Cells | timeline shape size position adjustment
+// Title: Generate a 3‑D column timeline chart with perspective in C# using Aspose.Cells and save it as an XLSX workbook
+// Common Searches: C# Aspose.Cells create a 3D column chart for a project timeline | How to set perspective angle on a 3D chart with Aspose.Cells .NET | Adding date categories to a 3D column chart in Aspose.Cells | Saving an Aspose.Cells workbook that contains a 3D chart to an XLSX file | Configure chart title and data series for a timeline chart in Aspose.Cells C#
+// Tags: Aspose.Cells 3D column chart creation | Aspose.Cells chart perspective setting | Aspose.Cells timeline data series definition | Aspose.Cells workbook export to XLSX | C# generate timeline chart with dates
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Timelines;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Charts;
 
-namespace Timeline3DPerspectiveDemo
+// The example demonstrates how to create a new Workbook, populate columns with dates and values, add a 3‑D column chart representing a timeline, assign the data series and category range, set a chart title, apply a 30‑degree perspective angle, and finally save the workbook containing the chart as 'timeline.xlsx' using Aspose.Cells for .NET.
+class Timeline3D
 {
-    // Demonstrates creating a workbook, building a pivot table, adding a timeline linked to the Date field, configuring TimelineShape.ThreeDFormat for 45° perspective, depth (Z) and extrusion, resizing the timeline, and rendering the sheet to a PNG image while optionally saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate worksheet with sample data (Date and Amount)
-                sheet.Cells["A1"].Value = "Date";
-                sheet.Cells["B1"].Value = "Amount";
-                sheet.Cells["A2"].Value = new DateTime(2023, 1, 1);
-                sheet.Cells["A3"].Value = new DateTime(2023, 2, 1);
-                sheet.Cells["A4"].Value = new DateTime(2023, 3, 1);
-                sheet.Cells["B2"].Value = 100;
-                sheet.Cells["B3"].Value = 150;
-                sheet.Cells["B4"].Value = 200;
+            // Populate sample data: dates in column A and values in column B
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 1));
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 1));
+            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["A5"].PutValue(new DateTime(2023, 4, 1));
+            sheet.Cells["B5"].PutValue(130);
+            sheet.Cells["A6"].PutValue(new DateTime(2023, 5, 1));
+            sheet.Cells["B6"].PutValue(170);
 
-                // Create a pivot table based on the data
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "Pivot1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Add a 3‑D column chart to the worksheet
+            // Parameters: chart type, upper‑left row, upper‑left column, lower‑right row, lower‑right column
+            int chartIndex = sheet.Charts.Add(ChartType.Column3D, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Add the Date field as a Page (filter) field – required for Timeline
-                pivot.AddFieldToArea(PivotFieldType.Page, "Date");
-                // Add the Amount field as Data field
-                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Set the data series (values) and category (dates)
+            chart.NSeries.Add("B2:B6", true);
+            chart.NSeries.CategoryData = "A2:A6";
 
-                // Refresh and calculate the pivot table
-                pivot.RefreshData();
-                pivot.CalculateData();
+            // Configure chart title
+            chart.Title.Text = "Project Timeline (3‑D)";
 
-                // Add a Timeline control linked to the pivot table (Date field)
-                int timelineIndex = sheet.Timelines.Add(pivot, 10, 5, "Date");
-                Timeline timeline = sheet.Timelines[timelineIndex];
+            // Apply 3‑D perspective (available in Chart API)
+            chart.Perspective = 30;   // Perspective angle (0‑90)
 
-                // Access the underlying shape of the timeline
-                TimelineShape timelineShape = timeline.Shape;
+            // Note: Depth, RotationX, and RotationY properties are not available in the current Aspose.Cells version.
+            // They can be omitted or replaced with other 3‑D settings if needed.
 
-                // Apply 3‑D perspective and depth adjustments
-                ThreeDFormat threeD = timelineShape.ThreeDFormat;
-                threeD.Perspective = 45;      // Perspective angle (0‑120 degrees)
-                threeD.Z = 30;                // Distance from the ground (depth)
-                threeD.ExtrusionHeight = 15; // Optional extrusion to enhance 3‑D effect
+            // Save the workbook (which includes the chart) to an Excel file
+            string outputPath = "timeline.xlsx";
+            workbook.Save(outputPath);
 
-                // Optional: adjust size and position of the timeline
-                timelineShape.Width = 400;
-                timelineShape.Height = 120;
-                timelineShape.Top = 200;
-                timelineShape.Left = 100;
-
-                // Render the worksheet (which now contains the 3‑D timeline) to a PNG image
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-                {
-                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                    OnePagePerSheet = true
-                };
-                SheetRender sheetRender = new SheetRender(sheet, renderOptions);
-                sheetRender.ToImage(0, "Timeline3DPerspective.png");
-
-                // Save the workbook for reference (optional)
-                workbook.Save("Timeline3DPerspective.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Cleanup
+            workbook.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

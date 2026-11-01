@@ -1,66 +1,81 @@
-// Title: Replace multiple placeholder tags in an Excel TextBox using a dictionary with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells to replace placeholders like <TAG_A>, <TAG_B>, and <TAG_C> in a TextBox shape using a Dictionary<string,string>. | Extend the example to loop through all TextBox shapes on a worksheet and apply dictionary‑based placeholder replacement. | Create a case‑insensitive placeholder substitution routine for TextBox objects in an Excel workbook using Aspose.Cells.
-// Common Searches: how to replace placeholder tags in an Excel textbox using Aspose.Cells C# | dictionary based text replacement for shapes in Aspose.Cells workbook | update multiple textboxes in an Excel sheet with values from a C# dictionary Aspose.Cells | case insensitive placeholder substitution in Excel shapes using Aspose.Cells .NET
-// Tags: textbox placeholder replacement Aspose.Cells C# | dictionary driven text update Excel shape | iterate worksheet shapes Aspose.Cells | case insensitive tag substitution Aspose.Cells | bulk text replacement Excel textbox .NET
+// Title: Replace multiple placeholder tags in Excel TextBox shapes using Aspose.Cells for .NET (C#)
+// Common Searches: C# replace <TAG_A> <TAG_B> placeholders in Excel TextBox with Aspose.Cells | Aspose.Cells iterate shapes and update TextBox text from a dictionary | How to perform bulk placeholder substitution in Excel shape text using Aspose.Cells .NET | Programmatically replace custom tags in Excel shape objects via Aspose.Cells | Using a dictionary to map placeholder tags to values in an Excel workbook with Aspose.Cells
+// Tags: placeholder tag replacement in Excel shapes Aspose.Cells | dictionary based shape text update Aspose.Cells C# | iterate over worksheet shapes to modify TextBox Aspose.Cells | bulk replace custom tags in .xlsx using Aspose.Cells | programmatic TextBox content substitution Aspose.Cells .NET
 
-using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The sample loads an Excel workbook, finds the first TextBox shape on the first worksheet, replaces the placeholders <TAG_A>, <TAG_B>, and <TAG_C> with values from a dictionary, writes the updated text back to the TextBox, and saves the workbook.
-class ReplaceTextBoxPlaceholders
+// The example loads an existing .xlsx file, defines a dictionary that maps placeholder tags (e.g., <TAG_A>, <TAG_B>, <TAG_C>) to replacement strings, iterates through every worksheet and each shape on the sheet, replaces any matching placeholders in TextBox shape text, ensures the output directory exists, and saves the modified workbook. It includes error handling for missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your file path)
-        Workbook workbook = new Workbook("Input.xlsx");
-
-        // Access the first worksheet (adjust as needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Find the first TextBox shape in the worksheet
-        // You can also locate by shape name or index if known
-        TextBox textbox = null;
-        foreach (Shape shape in sheet.Shapes)
+        try
         {
-            if (shape is TextBox)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                textbox = (TextBox)shape;
-                break; // use the first textbox found
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-        }
 
-        if (textbox == null)
-        {
-            Console.WriteLine("No TextBox found in the worksheet.");
-            return;
-        }
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Dictionary mapping placeholders to replacement values
-        var placeholderMap = new Dictionary<string, string>
-        {
-            { "<TAG_A>", "Value for A" },
-            { "<TAG_B>", "Value for B" },
-            { "<TAG_C>", "Value for C" }
-        };
-
-        // Get the current text of the TextBox
-        string text = textbox.Text;
-
-        // Replace each placeholder with its corresponding value
-        foreach (var kvp in placeholderMap)
-        {
-            if (!string.IsNullOrEmpty(kvp.Key))
+            // Map placeholders to replacement values
+            var placeholderMap = new Dictionary<string, string>
             {
-                text = text.Replace(kvp.Key, kvp.Value);
+                { "<TAG_A>", "Replacement for A" },
+                { "<TAG_B>", "Replacement for B" },
+                { "<TAG_C>", "Replacement for C" }
+            };
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Process shapes that contain text (e.g., TextBox)
+                    if (!string.IsNullOrEmpty(shape.Text))
+                    {
+                        string text = shape.Text;
+
+                        // Replace placeholders
+                        foreach (var kvp in placeholderMap)
+                        {
+                            if (text.Contains(kvp.Key))
+                            {
+                                text = text.Replace(kvp.Key, kvp.Value);
+                            }
+                        }
+
+                        // Update the shape text
+                        shape.Text = text;
+                    }
+                }
             }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Assign the modified text back to the TextBox
-        textbox.Text = text;
-
-        // Save the workbook (replace with your desired output path)
-        workbook.Save("Output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,27 +1,44 @@
-// Title: How to add a thick left border and light‑blue background fill to a single cell with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a style with a solid light‑blue fill and a thick left border, then applies it to cell A1 in a new Aspose.Cells workbook. | Modify the example to apply the same style to an entire range (e.g., B2:D5) while preserving the left‑border thickness and background color. | Extend the style to include thick borders on all four sides, keep the light‑blue fill, and apply it to cell C3.
-// Common Searches: Aspose.Cells C# set left border thickness and background color for a cell | C# example of applying solid fill and custom border to a specific cell using Aspose.Cells | How to style cell A1 with light blue background and thick left border in Aspose.Cells .NET | Apply custom cell style to a range of cells in Aspose.Cells C# tutorial
-// Tags: Aspose.Cells style left border thickness | light blue cell fill Aspose.Cells | C# apply custom style to cell A1 | Aspose.Cells solid background fill example | cell formatting borders fill Aspose.Cells .NET
+// Title: How to add a thick left border and light‑blue background to a single cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a style with a black thick left border and a light‑blue fill, applies it to cell A1, and saves the workbook as an .xlsx file using Aspose.Cells. | Write a C# method that receives a worksheet and a cell address, then sets a thick left border and a light‑blue background on that cell with Aspose.Cells styling APIs.
+// Common Searches: Aspose.Cells C# set left border thickness for a specific cell | C# Aspose.Cells apply light blue background color to a cell | How to style a single cell with border and fill using Aspose.Cells .NET | Example of creating a custom cell style in an Aspose.Cells workbook C#
+// Tags: Aspose.Cells set cell left border thickness C# | Aspose.Cells background color fill C# | custom cell style Aspose.Cells workbook | StyleFlag apply all attributes Aspose.Cells | save workbook as xlsx Aspose.Cells
 
-// Create a new workbook
-var workbook = new Aspose.Cells.Workbook();
+using System;
+using System.Drawing;
+using Aspose.Cells;
 
-// Access the first worksheet
-var worksheet = workbook.Worksheets[0];
+// // Creates a workbook, defines a style with a thick left border and light‑blue background, applies it to cell A1, and saves the file as StyledCell.xlsx.
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-// Create a new style object
-var style = workbook.CreateStyle();
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-// Set the background fill to light blue
-style.ForegroundColor = System.Drawing.Color.LightBlue;
-style.Pattern = Aspose.Cells.BackgroundType.Solid;
+        // Get the cell to which the style will be applied (e.g., A1)
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Styled Cell");
 
-// Set a thick left border
-style.Borders[Aspose.Cells.BorderType.LeftBorder].LineStyle = Aspose.Cells.CellBorderType.Thick;
+        // Create a new style object
+        Style style = workbook.CreateStyle();
 
-// Apply the style to a specific cell (e.g., A1)
-var cell = worksheet.Cells["A1"];
-cell.SetStyle(style);
+        // Set a thick left border
+        style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+        style.Borders[BorderType.LeftBorder].Color = Color.Black; // optional border color
 
-// Save the workbook to a file
-workbook.Save("StyledWorkbook.xlsx");
+        // Set a light blue background fill
+        style.ForegroundColor = Color.LightBlue;
+        style.Pattern = BackgroundType.Solid;
+
+        // Apply the style to the cell
+        StyleFlag flag = new StyleFlag();
+        flag.All = true; // apply all style attributes
+        cell.SetStyle(style, flag);
+
+        // Save the workbook to a file
+        workbook.Save("StyledCell.xlsx");
+    }
+}

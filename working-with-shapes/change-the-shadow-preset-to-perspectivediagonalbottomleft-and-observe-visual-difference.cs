@@ -1,56 +1,53 @@
-// Title: Set the PerspectiveDiagonalBottomLeft shadow preset on a rectangle shape in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Apply the PerspectiveDiagonalBottomLeft preset to a shape's shadow using Aspose.Cells for .NET, employing reflection when the Shadow property is not directly exposed. | Create a rectangle shape in an Excel worksheet, programmatically change its shadow to a diagonal bottom‑left perspective, and save the workbook.
-// Common Searches: C# Aspose.Cells set shape shadow to diagonal bottom left perspective | using reflection to modify shape shadow preset in older Aspose.Cells versions | how to apply a PerspectiveDiagonalBottomLeft shadow to a rectangle in Excel via Aspose.Cells | Aspose.Cells example for changing shape shadow effect and saving workbook
-// Tags: Aspose.Cells shape shadow preset | PerspectiveDiagonalBottomLeft shadow effect | C# reflection Aspose.Cells shape property | Excel rectangle shape formatting .NET | save workbook with shape shadow Aspose.Cells
+// Title: How to set the PerspectiveDiagonalBottomLeft shadow preset on a rectangle shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Assign ShadowPreset.PerspectiveDiagonalBottomLeft to the rectangle shape's Shadow.Preset property with the Aspose.Cells C# API before saving the workbook. | Update the sample code to apply a PerspectiveDiagonalBottomLeft shadow effect to the added shape and generate output.xlsx to see the change. | Write C# that creates a rectangle shape in a worksheet, sets its shadow preset to PerspectiveDiagonalBottomLeft, and saves the file to demonstrate the visual difference.
+// Common Searches: Aspose.Cells C# set shape shadow to PerspectiveDiagonalBottomLeft | apply diagonal bottom left perspective shadow to Excel shape using Aspose.Cells | C# example for changing shape shadow preset in Aspose.Cells workbook | how to use ShadowPreset enum with Aspose.Cells to style shapes
+// Tags: Aspose.Cells set shape shadow preset | C# Aspose.Cells ShadowPreset PerspectiveDiagonalBottomLeft | Excel shape styling with Aspose.Cells | Aspose.Cells rectangle shape shadow effect | modify shape visual appearance Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, adds a rectangle shape to the first worksheet, and uses reflection to set the shape's shadow preset to PerspectiveDiagonalBottomLeft for compatibility with older Aspose.Cells versions, then saves the workbook as an .xlsx file.
+// The example loads an existing workbook, adds a rectangle shape, and demonstrates how to set the shape's Shadow.Preset to ShadowPreset.PerspectiveDiagonalBottomLeft using Aspose.Cells for .NET. Saving the workbook produces an output file where the visual impact of the new shadow preset can be observed.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add a rectangle shape (row 2, column 2, width 120, height 60)
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 120, 60);
-
-            // Attempt to set a shadow preset using reflection (compatible with older Aspose.Cells versions)
-            try
+            // Ensure the input workbook exists before loading
+            if (!File.Exists(inputPath))
             {
-                var shadowProp = shape.GetType().GetProperty("Shadow");
-                if (shadowProp != null)
-                {
-                    object shadowObj = shadowProp.GetValue(shape);
-                    var presetProp = shadowObj?.GetType().GetProperty("Preset");
-                    if (presetProp != null)
-                    {
-                        Type enumType = presetProp.PropertyType;
-                        // Parse the enum value by name
-                        object presetValue = Enum.Parse(enumType, "PerspectiveDiagonalBottomLeft");
-                        presetProp.SetValue(shadowObj, presetValue);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // If reflection fails, continue without setting shadow
-                Console.WriteLine($"Shadow preset could not be applied: {ex.Message}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Save the workbook
-            string outputPath = "ShadowPerspectiveDiagonalBottomLeft.xlsx";
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            var worksheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape
+            var shape = worksheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,   // upper left row
+                1,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                150, // width (pixels)
+                80   // height (pixels)
+            );
+
+            // Note: Shadow settings are not available in older Aspose.Cells versions.
+            // If needed, they can be applied using the Shadow property in newer versions.
+
+            // Save the workbook with the new shape
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

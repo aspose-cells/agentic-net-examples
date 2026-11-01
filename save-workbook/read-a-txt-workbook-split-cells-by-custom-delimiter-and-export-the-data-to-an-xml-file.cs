@@ -1,55 +1,91 @@
-// Title: Convert a pipe‑delimited TXT file to XML by splitting the first column with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads a pipe‑delimited TXT file into an Aspose.Cells Workbook using TxtLoadOptions, splits column A into separate columns with TextToColumns, and saves the workbook as an XML file. | Generate a C# example showing how to set a custom separator in TxtLoadOptions, apply TextToColumns on the first column of a loaded TXT workbook, and export the processed workbook to XML with Aspose.Cells.
-// Common Searches: aspnet c# how to use TextToColumns on a txt workbook with Aspose.Cells | convert pipe separated txt to xml using Aspose.Cells .NET | load txt file with custom delimiter and split column A in Aspose.Cells | save workbook as xml after processing txt data in C# Aspose.Cells | Aspose.Cells TxtLoadOptions separator example c#
-// Tags: TxtLoadOptions custom separator Aspose.Cells | TextToColumns split column C# Aspose.Cells | export workbook to XML Aspose.Cells | pipe delimited txt to XML conversion Aspose.Cells | process txt workbook Aspose.Cells .NET
+// Title: Convert a pipe‑delimited TXT workbook to SpreadsheetML XML while splitting cells using Aspose.Cells for .NET
+// AI Prompts: Load a pipe‑delimited TXT file into an Aspose.Cells Workbook, split every string cell on the '|' character, and write each part into separate columns of a new workbook. | Traverse all worksheets and rows, copying non‑delimited values unchanged and expanding delimited values into adjacent cells. | Save the populated workbook as SpreadsheetML XML to a target path, creating the output directory if it does not exist.
+// Common Searches: Aspose.Cells C# split pipe‑delimited cells when converting TXT to XML | How to export a TXT workbook to SpreadsheetML XML with custom delimiter handling | C# read multi‑sheet TXT file, split cell values by '|' and save as XML using Aspose.Cells | Convert pipe‑separated text workbook to XML preserving original data in Aspose.Cells | Split cell contents during TXT to XML conversion in .NET with Aspose.Cells
+// Tags: pipe delimiter cell split Aspose.Cells | TXT to SpreadsheetML XML conversion C# | split cell values during workbook import | multi‑sheet processing Aspose.Cells | preserve non‑delimited cell data Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTxtToXmlDemo
+// The program loads a pipe‑delimited TXT file into an Aspose.Cells Workbook, iterates through each worksheet and cell, splits string cells on the '|' character into separate columns while copying other values unchanged, and saves the result as a SpreadsheetML XML file.
+class TxtToXmlConverter
 {
-    // The sample loads a pipe‑delimited TXT file into an Aspose.Cells Workbook using TxtLoadOptions, splits the data in the first column into separate columns via TextToColumns, and then saves the workbook as an XML file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input TXT file path
+        string txtFilePath = @"C:\Data\input.txt";
+
+        // Output XML file path
+        string xmlOutputPath = @"C:\Data\output.xml";
+
+        // Custom delimiter used to split cell contents
+        string delimiter = "|";
+
+        try
         {
-            // Paths for the input TXT file and the output XML file
-            string txtPath = "input.txt";
-            string xmlPath = "output.xml";
+            // Verify that the input file exists
+            if (!File.Exists(txtFilePath))
+                throw new FileNotFoundException($"Input file not found: {txtFilePath}");
 
-            // -----------------------------------------------------------------
-            // 1. Load the TXT file into a Workbook.
-            //    Use TxtLoadOptions to specify the same delimiter that the file uses.
-            // -----------------------------------------------------------------
-            TxtLoadOptions loadOptions = new TxtLoadOptions();
-            // Example custom delimiter – change as needed (e.g., '|', ';', etc.)
-            loadOptions.Separator = '|';
-            Workbook workbook = new Workbook(txtPath, loadOptions);
+            // Load the TXT workbook (Aspose.Cells automatically detects the format)
+            Workbook srcWorkbook = new Workbook(txtFilePath);
 
-            // -----------------------------------------------------------------
-            // 2. Split the data in the first column into multiple columns.
-            //    The TextToColumns method works on a specific column range.
-            // -----------------------------------------------------------------
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Create a new workbook that will hold the split data
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
 
-            // Determine how many rows contain data in the first column.
-            int totalRows = cells.MaxDataRow + 1; // MaxDataRow is zero‑based.
+            int destRow = 0; // Row index in the destination sheet
 
-            // Options for the split operation – set the same delimiter.
-            TxtLoadOptions splitOptions = new TxtLoadOptions();
-            splitOptions.SeparatorString = "|";
+            // Iterate through each worksheet in the source workbook
+            foreach (Worksheet srcSheet in srcWorkbook.Worksheets)
+            {
+                // Determine the used range of rows and columns
+                int maxRow = srcSheet.Cells.MaxDataRow;
+                int maxCol = srcSheet.Cells.MaxDataColumn;
 
-            // Split starting at row 0, column 0 (cell A1).
-            cells.TextToColumns(0, 0, totalRows, splitOptions);
+                // Process each row
+                for (int i = 0; i <= maxRow; i++)
+                {
+                    int destCol = 0; // Column index in the destination sheet for the current row
 
-            // -----------------------------------------------------------------
-            // 3. Export the processed workbook to an XML file.
-            //    Saving with an .xml extension automatically creates XML output.
-            // -----------------------------------------------------------------
-            workbook.Save(xmlPath);
+                    // Process each cell in the current row
+                    for (int j = 0; j <= maxCol; j++)
+                    {
+                        Cell srcCell = srcSheet.Cells[i, j];
 
-            Console.WriteLine($"TXT file '{txtPath}' has been processed and exported to XML file '{xmlPath}'.");
+                        // If the cell contains a string, split it by the custom delimiter
+                        if (srcCell.Type == CellValueType.IsString && srcCell.StringValue.Contains(delimiter))
+                        {
+                            string[] parts = srcCell.StringValue.Split(new string[] { delimiter }, StringSplitOptions.None);
+                            foreach (string part in parts)
+                            {
+                                destSheet.Cells[destRow, destCol].PutValue(part);
+                                destCol++;
+                            }
+                        }
+                        else
+                        {
+                            // Copy the original cell value as‑is
+                            destSheet.Cells[destRow, destCol].PutValue(srcCell.Value);
+                            destCol++;
+                        }
+                    }
+
+                    destRow++; // Move to the next row in the destination sheet
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(xmlOutputPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the resulting workbook as an XML file (SpreadsheetML format)
+            destWorkbook.Save(xmlOutputPath, SaveFormat.Xml);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,14 +1,13 @@
-// Title: Create a worksheet table from a cell range and assign a custom display name with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to convert the range A1:C5 into a ListObject, enable the header row, and set its DisplayName to a custom identifier. | Show how to define a CellArea, add a styled table to a worksheet, apply a built‑in table style such as TableStyleMedium9, and save the workbook as an XLSX file using Aspose.Cells. | Provide a complete example that populates sample data, creates a table with a custom display name, applies a table style, and writes the file to disk in C#.
-// Common Searches: Aspose.Cells C# create table from range A1:C5 with custom display name | how to add a ListObject with headers and set DisplayName in Aspose.Cells for .NET | apply TableStyleMedium9 to a worksheet table using Aspose.Cells C# | save an Excel workbook containing a styled table to XLSX with Aspose.Cells | define CellArea for table creation in Aspose.Cells C# example
-// Tags: worksheet table creation from cell range Aspose.Cells | custom display name for ListObject Aspose.Cells | apply built-in table style Aspose.Cells C# | CellArea definition for table creation Aspose.Cells | save workbook as XLSX with styled table Aspose.Cells
+// Title: Create a worksheet table from a cell range and assign a custom name with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# create table from range A1:C5 and set custom table name | Add ListObject to worksheet using zero‑based indices and assign DisplayName in Aspose.Cells | Apply TableStyleMedium9 to a worksheet table programmatically with Aspose.Cells .NET | Save workbook containing a named table as XLSX using Aspose.Cells C# | Set custom name for ListObject table in Aspose.Cells example code
+// Tags: add ListObject from cell range Aspose.Cells | set custom table DisplayName C# | apply TableStyleMedium9 programmatically | define table range using zero‑based indices | save workbook with XLSX format containing table
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using System;
 using System.IO;
 
-// The sample program creates a new workbook, fills cells A1:C5 with sample data, defines a CellArea covering that range, adds a ListObject (table) with headers, assigns a custom DisplayName, applies the TableStyleMedium9 style, and saves the result as CreatedTable.xlsx.
+// The example creates a new workbook, fills cells A1:C5 with sample data, defines the range using zero‑based row and column indices, adds a ListObject covering that range, sets its DisplayName to "MyCustomTable" and applies TableStyleMedium9, then saves the file as Output.xlsx.
 class Program
 {
     static void Main()
@@ -18,11 +17,11 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (or add a new one)
+            // Access the first worksheet and give it a friendly name
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "DataSheet";
 
-            // Fill sample data into cells A1:C5
+            // Fill sample data into range A1:C5
             sheet.Cells["A1"].PutValue("ID");
             sheet.Cells["B1"].PutValue("Name");
             sheet.Cells["C1"].PutValue("Score");
@@ -44,39 +43,23 @@ class Program
             int firstColumn = 0;       // zero‑based index for column A
             int totalRows = 5;
             int totalColumns = 3;
-            CellArea tableArea = new CellArea
-            {
-                StartRow = firstRow,
-                StartColumn = firstColumn,
-                EndRow = firstRow + totalRows - 1,
-                EndColumn = firstColumn + totalColumns - 1
-            };
 
-            // Add a ListObject (table) to the worksheet based on the defined range
-            int tableIndex = sheet.ListObjects.Add(
-                tableArea.StartRow,
-                tableArea.StartColumn,
-                tableArea.EndRow,
-                tableArea.EndColumn,
-                true); // true indicates that the first row contains column headers
-
-            // Retrieve the created table
+            // Add a table (ListObject) to the worksheet based on the defined range
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
             ListObject table = sheet.ListObjects[tableIndex];
 
-            // Assign a custom display name to the table (Name property is not available in this API version)
+            // Assign a custom name and style to the table
             table.DisplayName = "MyCustomTable";
-
-            // Optionally, apply a built‑in table style
             table.TableStyleType = TableStyleType.TableStyleMedium9;
 
             // Save the workbook to a file
-            string outputPath = "CreatedTable.xlsx";
+            string outputPath = "Output.xlsx";
             workbook.Save(outputPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

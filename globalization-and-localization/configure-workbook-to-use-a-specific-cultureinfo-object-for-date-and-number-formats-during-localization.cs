@@ -1,27 +1,40 @@
-// Title: Set a specific CultureInfo on an Aspose.Cells workbook to localize date and number formats in C#
-// AI Prompts: Assign workbook.Settings.CultureInfo to a target locale before inserting data so that dates and numbers adopt that culture's formatting. | Create a new workbook, apply French (fr-FR) culture, write a DateTime value and a decimal, then save the file as an .xlsx document. | Change the workbook's CultureInfo to German (de-DE) after creation and retrieve the formatted cell strings to confirm locale‑specific rendering.
-// Common Searches: Aspose.Cells set workbook cultureinfo for French localization C# | How to apply a specific CultureInfo to an Excel workbook using Aspose.Cells .NET | Localize date and number formatting in an Aspose.Cells workbook | C# Aspose.Cells change workbook locale to German (de-DE) | Saving an Aspose.Cells workbook with culture‑specific formats
-// Tags: set workbook cultureinfo Aspose.Cells | localize date formatting Aspose.Cells C# | apply cultureinfo to Excel workbook | culture-specific number formatting Aspose.Cells | Aspose.Cells workbook localization fr-FR
+// Title: Configure Aspose.Cells workbook to use French (fr-FR) CultureInfo for localized date and number formatting in C#
+// Common Searches: C# how to apply French culture to Aspose.Cells workbook for date formatting | set workbook Settings.CultureInfo to fr-FR in Aspose.Cells example | localize numeric and date cells in Excel using Aspose.Cells and CultureInfo | Aspose.Cells date style respects workbook culture in C# | export Excel with French number format using Aspose.Cells C#
+// Tags: Aspose.Cells workbook cultureinfo setting | French fr-FR localization Aspose.Cells | date formatting with CultureInfo in Excel C# | numeric formatting culture-specific Aspose.Cells | C# Excel export culture settings Aspose
 
 using Aspose.Cells;
 using System;
 using System.Globalization;
 
-// The example creates a Workbook, sets its Settings.CultureInfo to a chosen locale (e.g., fr-FR), adds a date and a numeric value to demonstrate localized formatting, and saves the workbook as LocalizedWorkbook.xlsx.
+// The sample creates a Workbook, assigns Settings.CultureInfo to French (fr-FR), adds a date and a numeric value, applies a short date style and a two‑decimal number style that follow the specified culture, and saves the file as LocalizedWorkbook.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook
-        var workbook = new Workbook();
+        Workbook workbook = new Workbook();
 
         // Configure the workbook to use a specific CultureInfo (e.g., French - France)
         workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
         // Add sample data to demonstrate localized formatting
-        var sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue(DateTime.Now);   // Date will be formatted according to the culture
-        sheet.Cells["A2"].PutValue(12345.67);       // Number will be formatted according to the culture
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Insert a date value
+        cells["A1"].PutValue(DateTime.Now);
+        // Insert a numeric value
+        cells["B1"].PutValue(12345.6789);
+
+        // Apply a date style that respects the workbook's culture
+        Style dateStyle = workbook.CreateStyle();
+        dateStyle.Number = 14; // Short date format
+        cells["A1"].SetStyle(dateStyle);
+
+        // Apply a numeric style that respects the workbook's culture
+        Style numberStyle = workbook.CreateStyle();
+        numberStyle.Number = 2; // Number with two decimal places
+        cells["B1"].SetStyle(numberStyle);
 
         // Save the workbook
         workbook.Save("LocalizedWorkbook.xlsx");

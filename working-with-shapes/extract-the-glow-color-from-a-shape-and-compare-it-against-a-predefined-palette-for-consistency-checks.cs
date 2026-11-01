@@ -1,93 +1,90 @@
-// Title: How to extract a shape's glow color and validate it against a custom palette using Aspose.Cells for .NET (C#)
-// AI Prompts: Retrieve the Glow effect color of a specific shape on an Excel worksheet with Aspose.Cells and return it as a System.Drawing.Color. | Determine if the retrieved glow color exists in a predefined list of allowed colors and output a true/false result. | Save the workbook after performing the glow‑color validation to preserve any changes.
-// Common Searches: aspocells get shape glow color c# example | compare shape glow effect to custom color palette aspocells | using reflection to read EffectFormat Glow property in Aspose.Cells | validate Excel shape glow color against allowed colors in .NET | how to check shape effect consistency with Aspose.Cells
-// Tags: read shape glow color Aspose.Cells | validate shape glow against palette | C# reflection EffectFormat Aspose.Cells | Excel shape effect extraction .NET | color consistency check Aspose.Cells
+// Title: Extract the glow color of an Excel shape and validate it against a custom palette using Aspose.Cells for .NET
+// Common Searches: how to read the glow color of a shape in an Excel file with Aspose.Cells C# | using reflection to get EffectFormat.Glow.Color from a worksheet shape in .NET | compare a shape's glow color to a predefined list of colors in C# | verify consistency of Excel shape glow effects against a color palette using Aspose.Cells | retrieve hidden shape effect properties in Aspose.Cells via reflection
+// Tags: extract shape glow color via reflection Aspose.Cells | validate shape glow against custom color palette C# | read EffectFormat Glow property .NET | check Excel shape effect consistency Aspose.Cells | compare extracted glow color with predefined palette
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an Excel workbook, accesses the first shape on the first worksheet, uses reflection to obtain the shape's Glow effect color, compares that color to a predefined palette of acceptable colors, prints the result, and saves the workbook.
-class ShapeGlowChecker
+// The example loads an Excel workbook, accesses the first shape on the first worksheet, and uses reflection to read the hidden EffectFormat.Glow.Color property. It then checks whether the extracted glow color matches any entry in a predefined palette of acceptable colors and outputs the result.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust as needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Ensure there is at least one shape on the worksheet
-            if (sheet.Shapes.Count == 0)
+            if (worksheet.Shapes.Count == 0)
             {
                 Console.WriteLine("No shapes found on the worksheet.");
                 return;
             }
 
-            // Retrieve the first shape (adjust index as needed)
-            Shape shape = sheet.Shapes[0];
+            // Retrieve the first shape (or use a specific index/name as required)
+            Shape shape = worksheet.Shapes[0];
 
-            // Attempt to read the glow color using reflection (covers versions without EffectFormat)
+            // Attempt to extract the glow color via reflection (EffectFormat not directly exposed)
             Color glowColor = Color.Empty;
             try
             {
-                var effectFormatObj = shape.GetType().GetProperty("EffectFormat")?.GetValue(shape);
-                if (effectFormatObj != null)
+                PropertyInfo effectProp = shape.GetType().GetProperty("EffectFormat");
+                if (effectProp != null)
                 {
-                    var glowObj = effectFormatObj.GetType().GetProperty("Glow")?.GetValue(effectFormatObj);
-                    if (glowObj != null)
+                    object effectFormat = effectProp.GetValue(shape);
+                    PropertyInfo glowProp = effectFormat?.GetType().GetProperty("Glow");
+                    object glow = glowProp?.GetValue(effectFormat);
+                    PropertyInfo colorProp = glow?.GetType().GetProperty("Color");
+                    object colorObj = colorProp?.GetValue(glow);
+                    if (colorObj is Color c)
                     {
-                        var colorObj = glowObj.GetType().GetProperty("Color")?.GetValue(glowObj);
-                        if (colorObj is Color c)
-                            glowColor = c;
+                        glowColor = c;
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception reflEx)
             {
-                Console.WriteLine($"Warning: Unable to retrieve glow color via EffectFormat. {ex.Message}");
+                // Reflection failed; glow effect may not be supported in this version
+                Console.WriteLine($"Reflection error while retrieving glow color: {reflEx.Message}");
             }
 
-            // Define a palette of acceptable glow colors
+            // Define a predefined palette of acceptable glow colors
             List<Color> palette = new List<Color>
             {
-                Color.FromArgb(255, 255, 0, 0),   // Red
-                Color.FromArgb(255, 0, 255, 0),   // Green
-                Color.FromArgb(255, 0, 0, 255),   // Blue
-                Color.FromArgb(255, 255, 255, 0)  // Yellow
+                Color.FromArgb(255, 255, 0, 0), // Red
+                Color.FromArgb(255, 0, 255, 0), // Green
+                Color.FromArgb(255, 0, 0, 255)  // Blue
             };
 
-            // Determine consistency with the palette (if glowColor was retrieved)
-            bool isConsistent = glowColor != Color.Empty &&
-                                palette.Exists(c => c.ToArgb() == glowColor.ToArgb());
+            // Compare the extracted glow color against the palette
+            bool isConsistent = palette.Contains(glowColor);
 
-            // Output results
-            Console.WriteLine($"Glow Color: {(glowColor == Color.Empty ? "None/Unavailable" : glowColor.ToString())}");
-            Console.WriteLine($"Consistency with palette: {(isConsistent ? "Yes" : "No")}");
-
-            // Save the workbook (even if unchanged) to the output path
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            // Output the results
+            Console.WriteLine($"Extracted glow color: {glowColor}");
+            Console.WriteLine($"Is the glow color consistent with the palette? {isConsistent}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

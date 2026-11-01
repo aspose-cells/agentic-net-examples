@@ -1,78 +1,65 @@
-// Title: Create CountNumbers subtotals in column K grouped by column A without outline levels using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that applies the numeric count consolidation function to column K, groups rows by column A, and disables outline groups using Aspose.Cells. | Demonstrate how to configure the Subtotal method parameters to prevent outline hierarchy and save the workbook as an .xlsx file.
-// Common Searches: how to add count numbers subtotal to a specific column using Aspose.Cells C# | aspocells subtotal method without creating outline groups | c# group rows by column A and count numeric values in column K with Aspose.Cells | prevent outline groups when applying subtotal in Aspose.Cells workbook | how to use CountNums function for subtotals in Aspose.Cells
-// Tags: Aspose.Cells ConsolidationFunction.CountNums subtotal column K C# | Aspose.Cells subtotal without outline hierarchy | remove outline hierarchy from Excel subtotals Aspose.Cells | C# add numeric count subtotals to worksheet | Excel workbook subtotal example using Aspose.Cells
+// Title: Add a COUNT subtotal for column K in an Excel workbook with Aspose.Cells for .NET without using outline levels
+// AI Prompts: Write C# code that uses Aspose.Cells to locate the last populated row in the first worksheet, then inserts a label in column J and a =COUNT(K2:K{lastRow}) formula in column K two rows below the data, ensuring no outline hierarchy is created. | Generate a .NET snippet that loads an existing .xlsx file, adds a numeric count subtotal for column K by placing the formula after the data range, and saves the workbook, all with Aspose.Cells and without creating outline levels.
+// Common Searches: aspocells count values in column K without outline | c# add subtotal row at end of data using Aspose.Cells | how to insert COUNT formula programmatically in Excel with Aspose.Cells .NET | Aspose.Cells place formula two rows below last row | calculate numeric count of a column in .xlsx using Aspose.Cells C#
+// Tags: Aspose.Cells insert COUNT formula column K | C# add subtotal row without outline levels | Excel numeric count subtotal using Aspose.Cells | determine last data row Aspose.Cells | save workbook after adding formula Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalExample
+// The example loads an input.xlsx file, checks its existence, and opens the first worksheet. It determines the last row containing data, then writes a descriptive label in column J and a =COUNT(K2:K{lastRow}) formula in column K two rows below the data range, without creating any outline levels. The workbook is saved as output.xlsx, and the code includes basic error handling and directory creation.
+class Program
 {
-    // The program creates a workbook, fills columns A and K with sample data, adds a CountNumbers subtotal on column K grouped by column A while suppressing outline levels, and saves the file as Subtotal_CountNums_ColumnK.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // ------------------------------------------------------------
-            // Sample data setup (columns A to K, rows 1 to 6)
-            // ------------------------------------------------------------
-            // Header row
-            cells["A1"].PutValue("Group");
-            cells["K1"].PutValue("Values"); // Column K (index 10)
-
-            // Data rows
-            object[,] data = new object[,]
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                { "A", 12 },
-                { "A", 7  },
-                { "B", 5  },
-                { "B", 9  },
-                { "C", 3  },
-                { "C", 8  }
-            };
-
-            // Populate the sample data (starting from row 2)
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                // Column A (index 0) – group identifier
-                cells[i + 1, 0].PutValue(data[i, 0]);
-                // Column K (index 10) – numeric values to be counted
-                cells[i + 1, 10].PutValue(data[i, 1]);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // ------------------------------------------------------------
-            // Define the range that contains the data (A1:K6)
-            // ------------------------------------------------------------
-            CellArea area = CellArea.CreateCellArea("A1", "K6");
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // ------------------------------------------------------------
-            // Add subtotals:
-            //   - Group by column A (zero‑based index 0)
-            //   - Use CountNums function (counts numeric values)
-            //   - Apply subtotal to column K (zero‑based index 10)
-            //   - Do not replace existing subtotals, no page breaks,
-            //     and place summary below data (set to false to avoid
-            //     outline levels)
-            // ------------------------------------------------------------
-            worksheet.Cells.Subtotal(
-                area,                     // range
-                0,                        // group by column A
-                ConsolidationFunction.CountNums, // CountNumbers function
-                new int[] { 10 },         // subtotal column K
-                false,                    // replace existing subtotals
-                false,                    // no page breaks between groups
-                false                     // summary not below data (prevents outline)
-            );
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // ------------------------------------------------------------
-            // Save the workbook
-            // ------------------------------------------------------------
-            workbook.Save("Subtotal_CountNums_ColumnK.xlsx");
+            // Determine the last row that contains data
+            int lastRow = sheet.Cells.MaxDataRow;
+
+            // If there is data, add a formula that counts numeric values in column K (index 10)
+            if (lastRow >= 1) // assuming row 0 contains headers
+            {
+                // Place the result two rows below the last data row
+                int resultRow = lastRow + 2;
+                // Excel rows are 1‑based, so add 1 to indices
+                string startCell = $"K{2}";
+                string endCell = $"K{lastRow + 1}";
+                sheet.Cells[resultRow, 10].Formula = $"=COUNT({startCell}:{endCell})";
+                sheet.Cells[resultRow, 9].PutValue("Count of numeric values in K:");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

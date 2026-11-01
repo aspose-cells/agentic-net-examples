@@ -1,66 +1,111 @@
-// Title: Import a List of Product objects into an Aspose.Cells worksheet while preserving HTML tags in description cells (C#)
-// AI Prompts: Generate C# code that builds an ICellsDataTable from a List<Product> and imports it into a worksheet with headers and HTML strings retained. | Show how to configure ImportTableOptions.IsHtmlString = true when calling Worksheet.Cells.ImportData to keep HTML formatting. | Outline the steps to save the workbook after importing custom objects that contain HTML‑formatted description fields.
-// Common Searches: how to import a List<T> into Aspose.Cells and keep HTML formatting in cells | Aspose.Cells C# preserve HTML tags when exporting a collection of objects | using ImportTableOptions to retain HTML content during Excel export | convert custom object list to ICellsDataTable and write to .xlsx with styled text
-// Tags: import custom objects ICellsDataTable C# | keep html formatting during Excel import | use ImportTableOptions for html content | export product list to xlsx with styled description | worksheet cells import data with headers
+// Title: Create an Excel workbook with Aspose.Cells, import custom C# objects, and display HTML-formatted descriptions
+// Common Searches: how to import a list of C# objects into Aspose.Cells without column headers | preserve HTML tags in Excel cells when using ImportCustomObjects in Aspose.Cells | set HtmlString property for cells after importing data with Aspose.Cells | Aspose.Cells import custom objects and render HTML in description column | C# Aspose.Cells create worksheet and import objects with HTML formatting
+// Tags: ImportCustomObjects without field names | HtmlString rendering for cell values | create workbook and add worksheet Aspose.Cells | import C# objects with HTML description | preserve HTML formatting in Excel cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomObjectImport
+namespace AsposeCellsImportHtmlExample
 {
-    // Custom data class with an HTML formatted description field
-    // The program creates a new Workbook, converts a List<Product> (where Description contains HTML) into an ICellsDataTable, sets ImportTableOptions to show field names and treat values as HTML strings, imports the table starting at A1 of the first worksheet, and saves the file as CustomObjectsWithHtml.xlsx.
+    // Custom object with an HTML formatted description
+    // The sample creates a new Workbook, adds a worksheet named "Products", builds a List<Product> where each Description contains HTML markup, and imports the list into the sheet starting at A1 using ImportCustomObjects with IsFieldNameShown set to false to omit property names as headers. After import it locates the description cells, assigns the raw HTML string to each cell's HtmlString property so the markup is rendered in Excel, and finally saves the file as "ProductsWithHtml.xlsx" with basic error handling.
     public class Product
     {
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }   // HTML content
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet (adds a worksheet automatically)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Sample data with HTML in the Description field
-            List<Product> products = new List<Product>
+            try
             {
-                new Product
+                // 1. Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // 2. Add a new worksheet (optional, the default workbook already contains one)
+                Worksheet sheet = workbook.Worksheets[workbook.Worksheets.Add()];
+                sheet.Name = "Products";
+
+                // 3. Prepare a list of custom objects
+                List<Product> products = new List<Product>
                 {
-                    Name = "Apple",
-                    Price = 2.99m,
-                    Description = "<b>Fresh</b> and <i>crisp</i> apples."
-                },
-                new Product
+                    new Product
+                    {
+                        Id = 1,
+                        Name = "Laptop",
+                        Description = "<b>Powerful</b> laptop with <i>16GB RAM</i> and <u>SSD</u>."
+                    },
+                    new Product
+                    {
+                        Id = 2,
+                        Name = "Smartphone",
+                        Description = "Latest <font color='red'>Android</font> phone with <span style='color:blue'>high‑resolution</span> display."
+                    },
+                    new Product
+                    {
+                        Id = 3,
+                        Name = "Headphones",
+                        Description = "Noise‑cancelling <strong>over‑ear</strong> headphones."
+                    }
+                };
+
+                // 4. Import the custom objects into the worksheet starting at cell A1
+                //    Use ImportTableOptions to disable column name import.
+                var importOptions = new ImportTableOptions
                 {
-                    Name = "Orange",
-                    Price = 1.99m,
-                    Description = "<u>Juicy</u> oranges with <span style='color:orange'>vibrant color</span>."
+                    IsFieldNameShown = false // do not import property names as column headers
+                };
+                sheet.Cells.ImportCustomObjects(products, 0, 0, importOptions);
+
+                // 5. Preserve HTML formatting for the Description column (column C, index 2)
+                //    After import, each description cell contains the raw HTML string.
+                //    Setting the HtmlString property makes the cell render the HTML.
+                int startRow = sheet.Cells.MaxDataRow - products.Count + 1; // first data row index
+                for (int i = 0; i < products.Count; i++)
+                {
+                    try
+                    {
+                        int rowIndex = startRow + i;               // Row where the product is placed
+                        Cell descCell = sheet.Cells[rowIndex, 2]; // Column C (index 2)
+
+                        // Render the HTML stored in the cell
+                        descCell.HtmlString = descCell.StringValue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing row {i}: {ex.Message}");
+                    }
                 }
-            };
 
-            // Build an ICellsDataTable from the custom object collection
-            CellsDataTableFactory factory = workbook.CellsDataTableFactory;
-            ICellsDataTable dataTable = factory.GetInstance(products);
+                // 6. Save the workbook to a file
+                string outputPath = "ProductsWithHtml.xlsx";
 
-            // Set import options to treat values as HTML strings
-            ImportTableOptions importOptions = new ImportTableOptions
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
             {
-                IsFieldNameShown = true,   // import property names as header row
-                IsHtmlString = true        // preserve HTML formatting
-            };
-
-            // Import the data table into the worksheet starting at cell A1
-            sheet.Cells.ImportData(dataTable, 0, 0, importOptions);
-
-            // Save the workbook (lifecycle rule)
-            workbook.Save("CustomObjectsWithHtml.xlsx");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

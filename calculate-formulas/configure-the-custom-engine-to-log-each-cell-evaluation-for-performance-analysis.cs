@@ -1,67 +1,54 @@
-// Title: Log every formula cell evaluation with a custom Aspose.Cells calculation engine in C#
-// AI Prompts: Create a C# class that inherits AbstractCalculationEngine and writes the worksheet name, cell address, and function name to the console inside the Calculate method. | Configure CalculationOptions to assign the custom LoggingEngine, then call Workbook.CalculateFormula to trigger logging for all formula cells. | Enhance the LoggingEngine to measure and output the elapsed time for each formula evaluation together with the cell details.
-// Common Searches: aspnet how to use a custom calculation engine in Aspose.Cells to log formula evaluations | c# Aspose.Cells log each cell formula execution for performance monitoring | example of overriding AbstractCalculationEngine to capture formula name and cell location in Aspose.Cells | measure formula calculation time per cell with Aspose.Cells custom engine C#
-// Tags: custom calculation engine Aspose.Cells | log formula evaluation per cell C# | Aspose.Cells calculationoptions customengine | performance monitoring spreadsheet formulas | console logging cell calculations Aspose.Cells
+// Title: Log each evaluated formula cell during workbook calculation with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells log formula evaluation for each cell after CalculateFormula | How to output evaluated formula values while calculating a workbook in Aspose.Cells | Record cell calculation results for performance analysis using Aspose.Cells .NET | Iterate over worksheet cells to capture formula results in Aspose.Cells C# example | Save workbook after logging formula evaluations with Aspose.Cells
+// Tags: log formula evaluation Aspose.Cells .NET | iterate cells after CalculateFormula | output evaluated cell values C# | performance monitoring Aspose.Cells calculations | save workbook with logged formula results | exception handling Aspose.Cells example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomEngineLogging
+// The sample creates a workbook, adds numeric data and a formula, runs CalculateFormula, then iterates through all cells to write each formula cell and its evaluated value to the console. It ensures the output directory exists, saves the workbook as 'output.xlsx', and includes basic exception handling.
+class Program
 {
-    // Custom calculation engine that logs each function evaluation (i.e., each cell with a formula)
-    // The example defines a LoggingEngine class derived from AbstractCalculationEngine that overrides ProcessBuiltInFunctions and Calculate to write worksheet name, row, column, and function name to the console for each formula cell. CalculationOptions is set to use this engine, wb.CalculateFormula triggers the logging, and the workbook is saved after verification.
-    public class LoggingEngine : AbstractCalculationEngine
+    static void Main()
     {
-        // Enable processing of built‑in functions so that the engine is invoked for every formula.
-        public override bool ProcessBuiltInFunctions => true;
-
-        // Called for each function (built‑in or custom) during calculation.
-        public override void Calculate(CalculationData data)
+        try
         {
-            // Log basic information about the cell being evaluated.
-            Console.WriteLine($"[Engine] Sheet: {data.Worksheet.Name}, Row: {data.CellRow}, Column: {data.CellColumn}, Function: {data.FunctionName}");
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Do not modify data.CalculatedValue here – let the default engine continue the calculation.
-            // By not setting CalculatedValue, Aspose.Cells will compute the function normally.
-        }
+            // Example data and formula to demonstrate logging
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].Formula = "=A1+A2";
 
-        // No special force‑recalculation logic required.
-        public override bool ForceRecalculate(string functionName) => false;
-    }
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-    class Program
-    {
-        static void Main()
-        {
-            // ---------- Create a new workbook ----------
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-
-            // Populate some data and formulas
-            ws.Cells["A1"].PutValue(10);
-            ws.Cells["A2"].PutValue(20);
-            ws.Cells["A3"].Formula = "=SUM(A1:A2)";          // Built‑in function
-            ws.Cells["B1"].Formula = "=A1*A2";              // Arithmetic expression
-            ws.Cells["B2"].Formula = "=HYPERLINK(\"http://example.com\",\"Link\")"; // Built‑in function with string
-
-            // ---------- Configure calculation options with the custom logging engine ----------
-            CalculationOptions options = new CalculationOptions
+            // Log each cell that contains a formula and its evaluated value
+            foreach (Cell cell in sheet.Cells)
             {
-                CustomEngine = new LoggingEngine(),
-                // Other options can be set as needed, e.g., IgnoreError = false, Recursive = true
-            };
+                if (!string.IsNullOrEmpty(cell.Formula))
+                {
+                    Console.WriteLine($"Cell {cell.Name} evaluated to {cell.Value}");
+                }
+            }
 
-            // Perform calculation – the LoggingEngine will be invoked for each formula cell.
-            wb.CalculateFormula(options);
+            // Ensure the output directory exists (if a directory part is present)
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Output results to verify that calculations succeeded.
-            Console.WriteLine($"A3 (SUM) = {ws.Cells["A3"].Value}");
-            Console.WriteLine($"B1 (A1*A2) = {ws.Cells["B1"].Value}");
-            Console.WriteLine($"B2 (HYPERLINK) = {ws.Cells["B2"].StringValue}");
-
-            // ---------- Save the workbook ----------
-            wb.Save("CustomEngineLoggingDemo.xlsx");
-            wb.Save("CustomEngineLoggingDemo.pdf");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

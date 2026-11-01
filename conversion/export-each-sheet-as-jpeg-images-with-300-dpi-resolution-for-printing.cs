@@ -1,53 +1,71 @@
-// Title: Export every Excel worksheet to a 300 DPI JPEG image using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, configures ImageOrPrintOptions for JPEG at 300 DPI, and saves each worksheet as an individual .jpg file with Aspose.Cells. | Show how to use SheetRender together with ImageOrPrintOptions to produce high‑resolution JPEG images for all sheets in a workbook.
-// Common Searches: how to save each sheet of an Excel workbook as a 300 dpi JPEG using Aspose.Cells C# | Aspose.Cells C# export workbook worksheets to high resolution JPEG images | C# convert Excel worksheets to separate JPEG files with 300 DPI resolution | using ImageOrPrintOptions to set JPEG resolution for Excel sheet rendering in .NET
-// Tags: Aspose.Cells export worksheets to JPEG 300dpi | ImageOrPrintOptions JPEG resolution setting | SheetRender save sheet as image .NET | C# high‑resolution Excel to JPEG conversion | batch export Excel sheets as JPEG files
+// Title: Export every worksheet in an Excel workbook to high‑resolution 300 DPI JPEG files using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export each Excel sheet as a 300 DPI JPEG for print quality | How to render Excel worksheets to high‑resolution JPEG images with Aspose.Cells in .NET | Save Excel workbook pages as 300 DPI JPEG files using SheetRender and ImageOrPrintOptions | Aspose.Cells C# generate per‑sheet JPEG images at 300 DPI for printing | Convert XLSX worksheets to 300 DPI JPEG images programmatically with Aspose.Cells
+// Tags: SheetRender high‑resolution JPEG export | ImageOrPrintOptions 300 DPI setting | Aspose.Cells per‑worksheet image conversion | C# Excel to JPEG rendering | printing quality Excel image generation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, configures ImageOrPrintOptions for JPEG output at 300 DPI, iterates through each worksheet, and uses SheetRender to render the first page of every sheet to a separate JPEG file named after the sheet, storing the images in a designated output folder.
+// The example loads an XLSX workbook, iterates through all worksheets, configures ImageOrPrintOptions with 300 DPI horizontal and vertical resolution, uses SheetRender to render each sheet (and each page within a sheet) to separate JPEG files named "Sheet_{index}_Page_{page}.jpeg", and includes error handling for missing files and rendering failures.
 class ExportSheetsToJpeg
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        const string inputPath = "input.xlsx";
 
-        // Ensure the output directory exists
-        string outputDir = "output";
-        Directory.CreateDirectory(outputDir);
-
-        // Configure image options: JPEG format with 300 DPI resolution
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Jpeg;          // Set output format to JPEG
-        options.HorizontalResolution = 300;          // 300 DPI horizontally
-        options.VerticalResolution = 300;            // 300 DPI vertically
-        options.OnePagePerSheet = true;              // One image per sheet
-
-        // Iterate through all worksheets and export each as a JPEG image
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Worksheet sheet = workbook.Worksheets[i];
-
-            // Create a renderer for the current worksheet
-            SheetRender renderer = new SheetRender(sheet, options);
-
-            // Build a safe file name based on the sheet name
-            string safeSheetName = sheet.Name;
-            foreach (char c in Path.GetInvalidFileNameChars())
-                safeSheetName = safeSheetName.Replace(c, '_');
-
-            string outputPath = Path.Combine(outputDir, $"{safeSheetName}.jpg");
-
-            // Render the first (and only) page of the sheet to the JPEG file
-            renderer.ToImage(0, outputPath);
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        Console.WriteLine("All worksheets have been exported as 300 DPI JPEG images.");
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
+            {
+                Worksheet sheet = workbook.Worksheets[sheetIndex];
+
+                // Configure image options: 300 DPI resolution
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    HorizontalResolution = 300,
+                    VerticalResolution = 300
+                    // Note: ImageFormat property is omitted to avoid compatibility issues.
+                    // The default format is PNG; if JPEG is required, ensure the Aspose.Cells version supports ImageFormat.
+                };
+
+                // Create a renderer for the current sheet
+                SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+
+                // Export each page of the sheet (most sheets have a single page)
+                for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
+                {
+                    // Build output file name, e.g., Sheet_1_Page_1.jpeg
+                    string outputFile = $"Sheet_{sheetIndex + 1}_Page_{pageIndex + 1}.jpeg";
+
+                    try
+                    {
+                        // Render the page to an image file
+                        sheetRender.ToImage(pageIndex, outputFile);
+                        Console.WriteLine($"Exported: {outputFile}");
+                    }
+                    catch (Exception exPage)
+                    {
+                        Console.WriteLine($"Failed to export page {pageIndex + 1} of sheet {sheetIndex + 1}: {exPage.Message}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

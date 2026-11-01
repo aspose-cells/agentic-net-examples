@@ -1,53 +1,55 @@
-// Title: Check that a regular rectangle shape's IsSmartArt property stays false before and after saving to XLSX with Aspose.Cells for .NET
-// AI Prompts: Write a C# snippet using Aspose.Cells that adds a rectangle shape to a worksheet, saves the workbook as XLSX, reloads it, and asserts shape.IsSmartArt is false. | Generate a C# unit test that creates a workbook, inserts a non‑SmartArt rectangle, records the shape index, persists the file, loads it back, and verifies the IsSmartArt flag remains false. | Provide code to print the IsSmartArt value of a regular shape both before saving and after loading the XLSX file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to confirm a shape is not SmartArt after saving workbook | verify IsSmartArt property of rectangle shape after XLSX conversion using Aspose.Cells | C# Aspose.Cells shape.IsSmartArt returns false for regular shapes | test shape property persistence in saved Excel file with Aspose.Cells for .NET
-// Tags: Aspose.Cells shape smartart detection | C# rectangle shape non‑smartart verification | shape property consistency after workbook save | Aspose.Cells XLSX persistence test | validate shape type after reload
+// Title: Validate that Shape.IsSmartArt returns false for a regular rectangle shape after saving and reloading an XLSX workbook with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to confirm a shape is not SmartArt after workbook save | verify IsSmartArt property for a rectangle shape in a loaded Excel file using Aspose.Cells | determine if a regular shape becomes SmartArt after reloading an XLSX workbook in .NET | Aspose.Cells shape.IsSmartArt false check example for non‑SmartArt shapes | check shape type after round‑trip save and load with Aspose.Cells C#
+// Tags: Aspose.Cells shape IsSmartArt verification | C# rectangle shape non‑SmartArt detection | Excel workbook save reload shape property | XLSX shape IsSmartArt false validation | Aspose.Cells shape round‑trip test
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a rectangle shape, prints its IsSmartArt property (expected false), saves the workbook to an XLSX file, reloads the file, retrieves the same shape by index, and prints IsSmartArt again to confirm the value remains false.
+// The example creates a workbook, adds a rectangle shape, saves it as XLSX, reloads the file, retrieves the shape by name, and asserts that the Shape.IsSmartArt property is false, confirming that regular shapes remain non‑SmartArt after a workbook round‑trip.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            // Create a new workbook and access the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet ws = wb.Worksheets[0];
+            // Add a regular shape (rectangle) to the worksheet
+            // Parameters: upper left row, upper left column, top, left, bottom, right
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 200);
+            shape.Name = "RegularRectangle";
 
-            // Add a regular rectangle shape
-            Shape shape = ws.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
-
-            // Get the shape's index within the collection
-            int shapeIndex = ws.Shapes.IndexOf(shape);
-
-            // Validate that IsSmartArt is false for the regular shape
-            Console.WriteLine("Before conversion IsSmartArt: " + shape.IsSmartArt); // Expected: False
-
-            // Save the workbook to a temporary file (conversion step)
-            string filePath = "temp.xlsx";
-            wb.Save(filePath, SaveFormat.Xlsx);
+            // Save the workbook to a temporary file
+            string filePath = "SmartArtCheck.xlsx";
+            workbook.Save(filePath, SaveFormat.Xlsx);
 
             // Ensure the file exists before loading
             if (!File.Exists(filePath))
-                throw new FileNotFoundException("The workbook file was not created.", filePath);
+                throw new FileNotFoundException($"The file '{filePath}' was not found.");
 
-            // Load the workbook back from the file
-            Workbook loadedWb = new Workbook(filePath);
-            Shape loadedShape = loadedWb.Worksheets[0].Shapes[shapeIndex];
+            // Load the workbook back
+            Workbook loadedWorkbook = new Workbook(filePath);
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
 
-            // Validate that IsSmartArt remains false after conversion
-            Console.WriteLine("After conversion IsSmartArt: " + loadedShape.IsSmartArt); // Expected: False
+            // Retrieve the shape by name
+            Shape loadedShape = loadedSheet.Shapes["RegularRectangle"];
+
+            // Validate that IsSmartArt is false for a regular shape
+            bool isSmartArt = loadedShape.IsSmartArt;
+            Console.WriteLine($"Shape.IsSmartArt = {isSmartArt}");
+
+            if (isSmartArt)
+                throw new InvalidOperationException("IsSmartArt should be false for a regular shape.");
+            else
+                Console.WriteLine("Validation passed: regular shape is not SmartArt.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

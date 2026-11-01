@@ -1,49 +1,48 @@
-// Title: Load a password‑protected Excel workbook with Aspose.Cells for .NET and save it as an unencrypted file
-// AI Prompts: Provide the workbook password via LoadOptions when constructing the Workbook object, then save the file without specifying a password. | After loading the file, call the unprotect function with the original password to release workbook protection before saving.
-// Common Searches: Aspose.Cells .NET how to open encrypted Excel file and remove password | C# load password‑protected xlsx with LoadOptions and save as plain workbook | remove workbook structure protection using Aspose.Cells after loading encrypted file
-// Tags: Aspose.Cells LoadOptions.Password for encrypted xlsx | Workbook.Unprotect method C# example | save workbook without password Aspose.Cells | open password protected Excel file Aspose.Cells .NET | clear workbook structure protection Aspose.Cells
+// Title: Load a password‑protected Excel workbook and save it without a password using Aspose.Cells for .NET
+// Common Searches: C# load encrypted Excel file with Aspose.Cells and remove its password | how to save an Aspose.Cells workbook without password after opening | Aspose.Cells .NET clear workbook password after loading | remove workbook encryption using LoadOptions and Workbook.Settings in C# | unprotect Excel file programmatically with Aspose.Cells
+// Tags: load password protected workbook Aspose.Cells | clear LoadOptions.Password C# | remove workbook encryption Aspose.Cells | save unprotected Excel file Aspose.Cells | Workbook.Settings.Password null C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample checks for the existence of a password‑protected Excel file, loads it using LoadOptions.Password, optionally removes workbook structure protection, and then saves the workbook as an unencrypted file.
+// Demonstrates how to open an Excel workbook that is protected with a password using Aspose.Cells LoadOptions, clear the password from both LoadOptions and Workbook.Settings, and then save the workbook as an unprotected file, with error handling for CellsException and general exceptions.
 class Program
 {
     static void Main()
     {
         // Path to the password‑protected workbook
-        string inputPath = "protected.xlsx";
-        string outputPath = "unprotected.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
+        string inputFile = "protected.xlsx";
+        // Path where the unprotected workbook will be saved
+        string outputFile = "unprotected.xlsx";
 
         try
         {
-            // LoadOptions with the password required to open the encrypted file
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
+            }
+
+            // Set load options with the password required to open the file
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = "myPassword"
             };
 
             // Load the workbook using the provided password
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            Workbook workbook = new Workbook(inputFile, loadOptions);
 
-            // If the workbook itself is protected (structure), unprotect it
-            // (use the same password if it was set for workbook protection)
-            if (!string.IsNullOrEmpty(workbook.Settings.Password))
-            {
-                workbook.Unprotect("myPassword");
-            }
+            // Clear the password from load options (optional cleanup)
+            loadOptions.Password = null;
 
-            // Save the workbook without a password (no encryption)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved without password to: {outputPath}");
+            // Remove encryption password from the workbook before saving
+            workbook.Settings.Password = null;
+
+            // Save the workbook without a password
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to {outputFile}");
         }
         catch (CellsException ex)
         {

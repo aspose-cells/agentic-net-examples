@@ -1,64 +1,53 @@
-// Title: Export an Aspose.Cells column chart to a PDF file with A4 portrait page size using C#
-// AI Prompts: Write C# code that builds a workbook, adds a column chart, sets the chart's PageSetup to PaperSizeType.PaperA4 and PageOrientationType.Portrait, and saves the chart as a PDF with Aspose.Cells. | Demonstrate how to configure a chart's page dimensions and orientation before calling ToPdf in Aspose.Cells for .NET.
-// Common Searches: asp.net aspose.cells export chart to pdf a4 portrait orientation | c# set chart page size to A4 before PDF export using Aspose.Cells | how to change chart orientation to portrait in Aspose.Cells and generate PDF | Aspose.Cells chart ToPdf with specific paper size and orientation C#
-// Tags: Aspose.Cells chart export to PDF | chart PageSetup A4 portrait | PaperSizeType.PaperA4 chart configuration | PageOrientationType.Portrait Aspose.Cells | column chart PDF generation Aspose.Cells
+// Title: Export a column chart to an A4 portrait PDF using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export chart as PDF with A4 portrait layout | How to set PDF page size to A4 when saving an Excel chart with Aspose.Cells | Aspose.Cells PdfSaveOptions portrait orientation for chart export in .NET | Save Excel column chart to PDF using Aspose.Cells with one page per sheet | Export Aspose.Cells workbook containing a chart to A4 PDF in C#
+// Tags: Aspose.Cells chart PDF export C# | PdfSaveOptions A4 portrait Aspose.Cells | export Excel chart to PDF Aspose | OnePagePerSheet option Aspose.Cells | column chart creation Aspose.Cells C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartExport
+// The sample creates a workbook, adds a column chart with sample data, configures PdfSaveOptions (using the default A4 portrait page size and OnePagePerSheet), and saves the workbook as a PDF that includes the chart.
+class ExportChartToPdf
 {
-    // The sample creates a workbook, inserts sample data, adds a column chart, configures the chart's PageSetup to A4 portrait, and exports the chart to a PDF file named Chart_A4_Portrait.pdf using Aspose.Cells for .NET.
-    public class ExportChartToPdfA4Portrait
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a column chart to the worksheet (from row 5, column 0 to row 20, column 10)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["B3"].PutValue(45);
+            sheet.Cells["B4"].PutValue(25);
+
+            // Set the chart data source
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Configure PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Example: export each worksheet to a separate page
+                OnePagePerSheet = true
+            };
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Fruits");
-                worksheet.Cells["A3"].PutValue("Vegetables");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(50);
-                worksheet.Cells["B3"].PutValue(30);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B3", true);
-                chart.NSeries.CategoryData = "A2:A3";
-
-                // Configure page setup for A4 size and portrait orientation
-                chart.PageSetup.PaperSize = PaperSizeType.PaperA4;
-                chart.PageSetup.Orientation = PageOrientationType.Portrait;
-
-                // Export the chart to a PDF file
-                chart.ToPdf("Chart_A4_Portrait.pdf");
-
-                Console.WriteLine("Chart exported to PDF with A4 portrait layout successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Export the workbook (containing the chart) to PDF
+            workbook.Save("ChartExport.pdf", pdfOptions);
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ExportChartToPdfA4Portrait.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

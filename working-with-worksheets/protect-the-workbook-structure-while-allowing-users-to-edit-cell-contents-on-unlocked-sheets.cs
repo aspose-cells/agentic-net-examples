@@ -1,43 +1,43 @@
-// Title: Protect only the workbook structure with a password while keeping cells editable on unlocked worksheets using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Excel workbook, adds multiple worksheets, writes data to cells, and applies structure‑only protection with a password using Aspose.Cells. | Show how to use Aspose.Cells to prevent sheet reordering, addition, or deletion while allowing all cell contents to remain editable.
-// Common Searches: Aspose.Cells C# protect workbook structure without locking cell content | How to enable password‑protected workbook layout only in Aspose.Cells | Prevent sheet reordering in Excel using Aspose.Cells .NET | Structure‑only protection for Excel files while keeping cells editable Aspose.Cells | C# example for password protecting workbook structure with Aspose.Cells
-// Tags: workbook structure protection Aspose.Cells | password protect workbook layout C# | allow cell editing on protected workbook | prevent sheet addition deletion Aspose.Cells | Aspose.Cells Protect method usage
+// Title: Protect only the workbook structure while keeping cells editable on unlocked worksheets using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells protect workbook structure without password in C# | Allow cell editing on unlocked sheets while workbook structure is locked using Aspose.Cells | C# code to prevent adding or deleting worksheets but keep cell editing enabled | How to apply structure‑only protection to an Excel file with Aspose.Cells | Save Excel workbook with structure protection and no password using Aspose.Cells .NET
+// Tags: Workbook.Protect structure protection Aspose.Cells | Excel workbook structure lock C# | Editable cells on unlocked worksheets Aspose.Cells | Prevent sheet addition deletion Aspose.Cells | Save protected workbook without password .NET
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, adds two worksheets, writes sample text to cell A1 on each sheet, then protects only the workbook structure with a password using workbook.Protect(ProtectionType.Structure, "MySecretPassword"), allowing users to edit cell contents while the sheet order and addition/deletion are locked.
+// Loads an existing Excel file, applies structure‑only protection (preventing sheet add, delete, rename, or move) with an empty password via Workbook.Protect, and saves the protected workbook while leaving cells on unlocked sheets editable.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet and rename it
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
+            // Protect only the workbook structure (prevents adding, deleting, renaming, or moving worksheets)
+            // An empty password is supplied because the overload requires it.
+            workbook.Protect(ProtectionType.Structure, string.Empty);
 
-            // Add a second worksheet
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-
-            // Populate some cells with sample data
-            sheet1.Cells["A1"].PutValue("Editable data on Sheet1");
-            sheet2.Cells["A1"].PutValue("Editable data on Sheet2");
-
-            // Protect only the workbook structure with a password
-            workbook.Protect(ProtectionType.Structure, "MySecretPassword");
-
-            // Save the workbook
-            string outputPath = "ProtectedStructure.xlsx";
+            // Save the workbook with the applied protection
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

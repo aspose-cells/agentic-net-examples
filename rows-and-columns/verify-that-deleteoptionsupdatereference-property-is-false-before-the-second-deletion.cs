@@ -1,69 +1,46 @@
-// Title: How to delete a row with UpdateReference=true and then conditionally delete another row with UpdateReference=false using Aspose.Cells for .NET
-// AI Prompts: Write C# code that removes a specific row from an Aspose.Cells worksheet with DeleteOptions.UpdateReference set to true, then removes a different row only after confirming DeleteOptions.UpdateReference is false. | Demonstrate how to check the UpdateReference flag of a DeleteOptions instance before performing a second row deletion in a .NET workbook.
-// Common Searches: Aspose.Cells C# delete row with UpdateReference true then false | verify DeleteOptions.UpdateReference before second row deletion .NET | conditional row removal using DeleteOptions in Aspose.Cells workbook | prevent reference updates when deleting rows with Aspose.Cells | C# example of DeleteRows with different UpdateReference settings
-// Tags: DeleteRows UpdateReference true Aspose.Cells | conditional row deletion DeleteOptions .NET | verify DeleteOptions.UpdateReference false | Aspose.Cells row removal without reference update | C# workbook row deletion based on DeleteOptions flag
+// Title: Delete rows in an Excel worksheet while preserving formulas by ensuring UpdateReference is false for each DeleteRows call using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that deletes the second and third rows of the first worksheet with Aspose.Cells, passing false for the updateReference parameter on both DeleteRows calls to keep all formulas unchanged. | Demonstrate how to verify that DeleteOptions.UpdateReference remains false before performing a second row deletion to avoid shifting cell references in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells DeleteRows keep formulas unchanged | C# delete multiple rows without updating cell references in Excel | How to prevent formula reference changes when removing rows with Aspose.Cells | Check UpdateReference flag before second DeleteRows call in Aspose.Cells
+// Tags: delete rows without updating references Aspose.Cells | DeleteRows updateReference false C# | preserve formulas during row deletion Aspose.Cells | Aspose.Cells DeleteOptions.UpdateReference usage | sequential row removal Excel workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel file, deletes the second row and then the third row on the first worksheet using DeleteRows with the updateReference argument set to false for both operations, ensuring that all formulas and cell references remain unchanged, and saves the result to a new file.
+class Program
 {
-    // The example creates a workbook, fills column A with values 1‑5, deletes row 2 using DeleteOptions with UpdateReference = true, checks that a second DeleteOptions instance has UpdateReference = false, then deletes row 3, and finally saves the workbook.
-    public class VerifyDeleteOptionsUpdateReference
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data in column A (A1:A5 = 1,2,3,4,5)
-                for (int i = 0; i < 5; i++)
-                {
-                    cells[i, 0].PutValue(i + 1);
-                }
-
-                // First deletion: delete row 2 (index 1) with UpdateReference = true
-                DeleteOptions firstOptions = new DeleteOptions
-                {
-                    UpdateReference = true
-                };
-                cells.DeleteRows(1, 1, firstOptions);
-
-                // Second deletion: delete row 3 (original index 3, now index 2) with UpdateReference = false
-                DeleteOptions secondOptions = new DeleteOptions
-                {
-                    UpdateReference = false
-                };
-
-                if (!secondOptions.UpdateReference)
-                {
-                    cells.DeleteRows(2, 1, secondOptions);
-                    Console.WriteLine("Second deletion performed with UpdateReference = false.");
-                }
-                else
-                {
-                    Console.WriteLine("UpdateReference is not false; aborting second deletion.");
-                }
-
-                // Save the workbook to verify the result
-                string outputPath = "VerifyDeleteOptionsUpdateReference.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // First deletion (delete the second row) without updating references
+            workbook.Worksheets[0].Cells.DeleteRows(1, 1, false);
+
+            // Second deletion (delete the third row) also without updating references
+            workbook.Worksheets[0].Cells.DeleteRows(2, 1, false);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

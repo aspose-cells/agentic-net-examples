@@ -1,61 +1,55 @@
-// Title: Retrieve chart title X/Y position ratios from an Excel workbook using Aspose.Cells for .NET and convert them to 1/4000 units
-// AI Prompts: Generate C# code with Aspose.Cells that opens an .xlsx file, reads the X and Y position ratios of each chart title, converts the ratios to 1/4000 units, and prints the results to the console. | Enhance the example to return a dictionary of chart names mapped to their title coordinates in 1/4000 units, skipping any chart that lacks a title. | Add robust error handling that logs a warning when a chart has no title and continues processing the remaining charts.
-// Common Searches: Aspose.Cells get chart title X Y position ratios in C# | convert chart title position ratio to 1/4000 units using .NET | C# read chart title coordinates from Excel workbook with Aspose.Cells | handle missing chart title when retrieving title position in Aspose.Cells
-// Tags: Aspose.Cells chart title coordinates extraction | convert title ratio to 1/4000 units C# | read chart title position Aspose.Cells | missing chart title handling Aspose.Cells | iterate worksheet charts Aspose.Cells
+// Title: Retrieve a chart title’s text, visibility, and position ratio, convert the ratio to 1/4000 units, and log the values using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx workbook with Aspose.Cells, access the first worksheet’s first chart, read the title Text, IsVisible flag, and PositionRatio, transform the ratio into a 1/4000‑unit scale, and output all values to the console. | Extend the sample to also obtain the chart title’s absolute X/Y coordinates (in points) and log them together with the converted position ratio. | Add error handling to gracefully report when a worksheet contains no charts or when the chart title is not visible.
+// Common Searches: how to get chart title position ratio Aspose.Cells C# | Aspose.Cells convert chart title position to 1/4000 units | read chart title visibility and coordinates from Excel using .NET | C# example for logging Excel chart title properties with Aspose.Cells | retrieve first chart title text and position in Aspose.Cells workbook
+// Tags: Aspose.Cells chart title position ratio conversion | C# read Excel chart title visibility Aspose.Cells | log chart title text and coordinates Aspose.Cells | convert chart title position to 1/4000 units C# | access first worksheet chart title properties Aspose.Cells | Aspose.Cells retrieve chart title position ratio
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an Excel workbook, accesses the first worksheet's charts, reads each chart title's X and Y position ratios, converts the ratios to integer values in 1/4000 units, and writes the converted coordinates to the console, with optional handling for charts without titles.
-class Program
+// // Loads an Excel workbook, accesses the first worksheet's first chart, reads the chart title text, visibility flag, and position ratio, converts the ratio to a 1/4000‑unit scale, and writes all retrieved values to the console.
+class ChartTitleInfoLogger
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
 
-            // Get the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No charts found in the first worksheet.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Get the first chart on the worksheet
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Work with the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart in the worksheet
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Get the first chart
             Chart chart = sheet.Charts[0];
 
-            // Retrieve the title position ratios (values between 0 and 1)
-            // Title.X and Title.Y represent the position ratios.
-            double ratioX = chart.Title.X; // Horizontal position ratio
-            double ratioY = chart.Title.Y; // Vertical position ratio
+            // Retrieve title information
+            Title title = chart.Title;
 
-            // Convert ratios to 1/4000 units
-            int posX = (int)Math.Round(ratioX * 4000);
-            int posY = (int)Math.Round(ratioY * 4000);
-
-            // Log the converted positions
-            Console.WriteLine($"Chart Title Position X: {posX} /4000 units");
-            Console.WriteLine($"Chart Title Position Y: {posY} /4000 units");
+            // Log the results
+            Console.WriteLine("Chart Title Information:");
+            Console.WriteLine($"  Text       : {title.Text}");
+            Console.WriteLine($"  Is Visible : {title.IsVisible}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors (e.g., loading issues, Aspose.Cells exceptions)
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

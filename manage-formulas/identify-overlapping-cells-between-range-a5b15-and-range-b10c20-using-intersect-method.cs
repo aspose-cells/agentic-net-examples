@@ -1,37 +1,43 @@
-// Title: Find overlapping cells of ranges A5:B15 and B10:C20 using Aspose.Cells Range.Intersect in C#
-// AI Prompts: Generate C# code that creates two Aspose.Cells ranges (A5:B15 and B10:C20) and prints the addresses of their intersecting cells. | Write a reusable method in C# that accepts two Aspose.Cells Range objects and returns a list of cell names representing their intersection. | Show how to save the workbook after retrieving intersected cells with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# how to get cells that overlap between two ranges | example of Range.Intersect method for Excel ranges in Aspose.Cells | C# code to list intersecting cells of A5:B15 and B10:C20 using Aspose.Cells | retrieve overlapping cell addresses from two ranges with Aspose.Cells library | using CreateRange and Intersect to find common cells in an Excel worksheet C#
-// Tags: Aspose.Cells range intersect C# | extract overlapping cell addresses Aspose.Cells | CreateRange and Intersect usage example | list intersected cells in Excel workbook | save workbook after range intersection Aspose.Cells
+// Title: Find overlapping cells of two Excel ranges (A5:B15 and B10:C20) using Aspose.Cells Intersect in C#
+// Common Searches: Aspose.Cells C# intersect two ranges to get common cells | How to retrieve overlapping cells between A5:B15 and B10:C20 with Aspose.Cells | C# example for using Range.Intersect in Aspose.Cells | Iterate cells of an intersected range and read values in Aspose.Cells .NET | Save workbook after extracting intersected cells using Aspose.Cells
+// Tags: range intersect method Aspose.Cells | overlapping cells extraction Aspose.Cells | enumerate intersected cells .NET | save intersected range workbook Aspose.Cells | Excel range intersection example C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The sample creates a workbook, defines two ranges A5:B15 and B10:C20 on the first worksheet, uses the Range.Intersect method to obtain any overlapping cells, prints each intersecting cell's address, and saves the workbook as IntersectExample.xlsx.
+// The sample creates a new workbook, defines two ranges (A5:B15 and B10:C20) on the first worksheet, obtains their intersected range with the Range.Intersect method, checks for a non‑empty result, iterates through each intersected cell to output its address and value, and finally saves the workbook as IntersectResult.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the two ranges
-            AsposeRange rangeA = sheet.Cells.CreateRange("A5", "B15");
-            AsposeRange rangeB = sheet.Cells.CreateRange("B10", "C20");
+            // Define the two ranges using Aspose.Cells.Range
+            Aspose.Cells.Range rangeA = sheet.Cells.CreateRange("A5", "B15");
+            Aspose.Cells.Range rangeB = sheet.Cells.CreateRange("B10", "C20");
 
-            // Find the intersecting range
-            AsposeRange intersect = rangeA.Intersect(rangeB);
+            // Get the intersected range
+            Aspose.Cells.Range intersectRange = rangeA.Intersect(rangeB);
 
-            // Output the addresses of the overlapping cells, if any
-            if (intersect != null)
+            // Check if there is an intersection
+            if (intersectRange != null && intersectRange.RowCount > 0 && intersectRange.ColumnCount > 0)
             {
-                foreach (Cell cell in intersect)
+                Console.WriteLine("Overlapping cells:");
+                // Iterate through the intersected cells
+                for (int i = 0; i < intersectRange.RowCount; i++)
                 {
-                    Console.WriteLine(cell.Name);
+                    for (int j = 0; j < intersectRange.ColumnCount; j++)
+                    {
+                        Cell cell = intersectRange[i, j];
+                        Console.WriteLine($"{cell.Name} = {cell.Value}");
+                    }
                 }
             }
             else
@@ -39,14 +45,14 @@ class Program
                 Console.WriteLine("No overlapping cells found.");
             }
 
-            // Save the workbook (optional, just to demonstrate lifecycle handling)
-            string outputPath = "IntersectExample.xlsx";
+            // Save the workbook
+            string outputPath = "IntersectResult.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,182 +1,192 @@
-// Title: Compare two Excel workbooks for visual consistency after removing unused styles using Aspose.Cells in C#
-// AI Prompts: Write a C# method that loads two .xlsx files with Aspose.Cells and returns true only if every cell’s value, formula, and full style (font, color, border, alignment, number format) are identical. | Create a console utility that prints the first cell address where the worksheets differ and indicates whether the mismatch is in the cell value or a specific style attribute. | Adjust the comparison routine to ignore style objects that are not referenced in either workbook while still confirming that the visible formatting remains the same.
-// Common Searches: Aspose.Cells compare two workbooks visual differences C# | C# check if Excel files have identical formatting using Aspose.Cells | how to detect style mismatches between original and optimized .xlsx in C# | compare cell values and formatting of two Excel workbooks programmatically
-// Tags: Aspose.Cells visual workbook comparison C# | Excel cell style equality check Aspose | compare .xlsx formatting differences C# | worksheet consistency validation Aspose.Cells | unused style removal impact assessment
+// Title: Compare two Excel workbooks for cell values and formatting differences after removing unused styles using Aspose.Cells for .NET
+// Common Searches: C# compare two .xlsx files cell values and formatting with Aspose.Cells | how to detect style mismatches after cleaning unused styles in Excel using Aspose.Cells | Aspose.Cells sample for workbook visual consistency verification in C# | compare worksheet fonts, colors, and borders between two workbooks in .NET | detect visual differences between original and optimized Excel files using Aspose.Cells
+// Tags: Aspose.Cells workbook formatting comparison C# | cell style diff detection Aspose.Cells | Excel unused style removal impact analysis | worksheet value and formatting comparison .NET | visual consistency check for Excel files using Aspose
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an original workbook and an optimized workbook (with unused styles removed), verifies file existence, then iterates through each worksheet to compare names, cell values (including formulas), and a comprehensive set of style properties such as fonts, colors, patterns, alignments, borders, and number formats. It reports the first discrepancy found and outputs whether the workbooks are visually identical.
-class WorkbookComparer
+namespace WorkbookComparison
 {
-    // Entry point
-    static void Main()
+    // The example loads an original workbook and a version with unused styles removed, then iterates through matching worksheets, determines each sheet's used range, and compares every cell's value and style. Differences in font, fill, alignment, and borders are reported to the console. The code demonstrates how to use Aspose.Cells for .NET to verify visual consistency after style cleanup.
+    class Program
     {
-        const string originalPath = "OriginalWorkbook.xlsx";
-        const string optimizedPath = "OptimizedWorkbook.xlsx";
-
-        // Verify that the required files exist
-        if (!File.Exists(originalPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"File not found: {originalPath}");
-            return;
+            // Paths to the two workbooks: one with unused styles removed, one without.
+            string workbookPathWithRemovedStyles = @"C:\Temp\Workbook_WithRemovedStyles.xlsx";
+            string workbookPathOriginal = @"C:\Temp\Workbook_Original.xlsx";
+
+            // Perform the comparison.
+            CompareWorkbooks(workbookPathWithRemovedStyles, workbookPathOriginal);
         }
 
-        if (!File.Exists(optimizedPath))
+        static void CompareWorkbooks(string pathA, string pathB)
         {
-            Console.WriteLine($"File not found: {optimizedPath}");
-            return;
-        }
-
-        Workbook wbOriginal = null;
-        Workbook wbOptimized = null;
-
-        try
-        {
-            // Load the two workbooks
-            wbOriginal = new Workbook(originalPath);   // Workbook without removing unused styles
-            wbOptimized = new Workbook(optimizedPath); // Workbook with unused styles removed
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading workbooks: {ex.Message}");
-            return;
-        }
-
-        bool areVisuallyIdentical = false;
-        try
-        {
-            // Perform visual comparison
-            areVisuallyIdentical = CompareWorkbooks(wbOriginal, wbOptimized);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during comparison: {ex.Message}");
-            return;
-        }
-
-        // Output result
-        Console.WriteLine(areVisuallyIdentical
-            ? "The workbooks are visually identical."
-            : "The workbooks differ visually.");
-    }
-
-    // Compares two workbooks for visual consistency (values + style properties)
-    static bool CompareWorkbooks(Workbook wb1, Workbook wb2)
-    {
-        // Quick check: same number of worksheets?
-        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
-        {
-            Console.WriteLine("Worksheet count mismatch.");
-            return false;
-        }
-
-        // Iterate through each worksheet
-        for (int i = 0; i < wb1.Worksheets.Count; i++)
-        {
-            Worksheet ws1 = wb1.Worksheets[i];
-            Worksheet ws2 = wb2.Worksheets[i];
-
-            // Compare worksheet names
-            if (!ws1.Name.Equals(ws2.Name, StringComparison.Ordinal))
+            // Verify that both files exist before attempting to load them.
+            if (!File.Exists(pathA))
             {
-                Console.WriteLine($"Worksheet name mismatch at index {i}: '{ws1.Name}' vs '{ws2.Name}'.");
-                return false;
+                Console.WriteLine($"File not found: {pathA}");
+                return;
             }
 
-            // Determine the used range for both sheets
-            int maxRow = Math.Max(ws1.Cells.MaxDataRow, ws2.Cells.MaxDataRow);
-            int maxCol = Math.Max(ws1.Cells.MaxDataColumn, ws2.Cells.MaxDataColumn);
-
-            // Iterate through each cell within the union of used ranges
-            for (int row = 0; row <= maxRow; row++)
+            if (!File.Exists(pathB))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"File not found: {pathB}");
+                return;
+            }
+
+            Workbook wbA;
+            Workbook wbB;
+
+            try
+            {
+                wbA = new Workbook(pathA);
+                wbB = new Workbook(pathB);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbooks: {ex.Message}");
+                return;
+            }
+
+            // Quick check: same number of worksheets?
+            if (wbA.Worksheets.Count != wbB.Worksheets.Count)
+            {
+                Console.WriteLine($"Worksheet count mismatch: {wbA.Worksheets.Count} vs {wbB.Worksheets.Count}");
+                // Continue comparison for existing sheets.
+            }
+
+            int sheetCount = Math.Min(wbA.Worksheets.Count, wbB.Worksheets.Count);
+
+            for (int i = 0; i < sheetCount; i++)
+            {
+                Worksheet wsA = wbA.Worksheets[i];
+                Worksheet wsB = wbB.Worksheets[i];
+
+                // Compare worksheet names.
+                if (!wsA.Name.Equals(wsB.Name, StringComparison.Ordinal))
                 {
-                    Cell cell1 = ws1.Cells[row, col];
-                    Cell cell2 = ws2.Cells[row, col];
+                    Console.WriteLine($"Worksheet {i + 1} name mismatch: '{wsA.Name}' vs '{wsB.Name}'");
+                }
 
-                    // Compare cell values (including formulas)
-                    if (!object.Equals(cell1.Value, cell2.Value))
-                    {
-                        Console.WriteLine($"Value mismatch at {ws1.Name}!{CellIndexToName(row, col)}: '{cell1.Value}' vs '{cell2.Value}'.");
-                        return false;
-                    }
+                // Determine the used range for each sheet.
+                int endRowA = 0, endColA = 0, endRowB = 0, endColB = 0;
 
-                    // Compare style objects
-                    if (!AreStylesEqual(cell1.GetStyle(), cell2.GetStyle()))
+                if (wsA.Cells.MaxDisplayRange != null)
+                {
+                    var rangeA = wsA.Cells.MaxDisplayRange;
+                    endRowA = rangeA.FirstRow + rangeA.RowCount - 1;
+                    endColA = rangeA.FirstColumn + rangeA.ColumnCount - 1;
+                }
+
+                if (wsB.Cells.MaxDisplayRange != null)
+                {
+                    var rangeB = wsB.Cells.MaxDisplayRange;
+                    endRowB = rangeB.FirstRow + rangeB.RowCount - 1;
+                    endColB = rangeB.FirstColumn + rangeB.ColumnCount - 1;
+                }
+
+                int maxRow = Math.Max(endRowA, endRowB);
+                int maxCol = Math.Max(endColA, endColB);
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        Console.WriteLine($"Style mismatch at {ws1.Name}!{CellIndexToName(row, col)}.");
-                        return false;
+                        try
+                        {
+                            Cell cellA = wsA.Cells[row, col];
+                            Cell cellB = wsB.Cells[row, col];
+
+                            // Compare cell values (including formulas).
+                            string valueA = cellA.Value?.ToString() ?? string.Empty;
+                            string valueB = cellB.Value?.ToString() ?? string.Empty;
+                            if (!valueA.Equals(valueB, StringComparison.Ordinal))
+                            {
+                                Console.WriteLine($"Value mismatch at {wsA.Name}!{CellReference(row, col)}: '{valueA}' vs '{valueB}'");
+                            }
+
+                            // Compare style objects.
+                            Style styleA = cellA.GetStyle();
+                            Style styleB = cellB.GetStyle();
+
+                            List<string> styleDifferences = GetStyleDifferences(styleA, styleB);
+                            if (styleDifferences.Count > 0)
+                            {
+                                Console.WriteLine($"Style mismatch at {wsA.Name}!{CellReference(row, col)}:");
+                                foreach (var diff in styleDifferences)
+                                {
+                                    Console.WriteLine($"  - {diff}");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error comparing cell {wsA.Name}!{CellReference(row, col)}: {ex.Message}");
+                        }
                     }
                 }
             }
+
+            Console.WriteLine("Comparison completed.");
         }
 
-        // All checks passed
-        return true;
-    }
-
-    // Helper to compare two Style objects for visual equality
-    static bool AreStylesEqual(Style s1, Style s2)
-    {
-        // Font properties
-        if (s1.Font.Name != s2.Font.Name ||
-            s1.Font.Size != s2.Font.Size ||
-            s1.Font.IsBold != s2.Font.IsBold ||
-            s1.Font.IsItalic != s2.Font.IsItalic ||
-            s1.Font.Color != s2.Font.Color ||
-            s1.Font.Underline != s2.Font.Underline)
-            return false;
-
-        // Background and pattern
-        if (s1.ForegroundColor != s2.ForegroundColor ||
-            s1.BackgroundColor != s2.BackgroundColor ||
-            s1.Pattern != s2.Pattern)
-            return false;
-
-        // Alignment
-        if (s1.HorizontalAlignment != s2.HorizontalAlignment ||
-            s1.VerticalAlignment != s2.VerticalAlignment)
-            return false;
-
-        // Borders
-        if (!AreBordersEqual(s1, s2))
-            return false;
-
-        // Number format
-        if (s1.Custom != s2.Custom ||
-            s1.Number != s2.Number)
-            return false;
-
-        // Text wrapping and shrink to fit
-        if (s1.IsTextWrapped != s2.IsTextWrapped ||
-            s1.ShrinkToFit != s2.ShrinkToFit)
-            return false;
-
-        // All relevant style properties match
-        return true;
-    }
-
-    // Helper to compare border collections of two styles
-    static bool AreBordersEqual(Style s1, Style s2)
-    {
-        foreach (BorderType side in Enum.GetValues(typeof(BorderType)))
+        static List<string> GetStyleDifferences(Style a, Style b)
         {
-            var b1 = s1.Borders[side];
-            var b2 = s2.Borders[side];
+            var diffs = new List<string>();
 
-            if (b1.LineStyle != b2.LineStyle ||
-                b1.Color != b2.Color)
-                return false;
+            // Font properties.
+            if (!a.Font.Name.Equals(b.Font.Name, StringComparison.Ordinal))
+                diffs.Add($"Font name: '{a.Font.Name}' vs '{b.Font.Name}'");
+            if (a.Font.Size != b.Font.Size)
+                diffs.Add($"Font size: {a.Font.Size} vs {b.Font.Size}");
+            if (a.Font.IsBold != b.Font.IsBold)
+                diffs.Add($"Bold: {a.Font.IsBold} vs {b.Font.IsBold}");
+            if (a.Font.IsItalic != b.Font.IsItalic)
+                diffs.Add($"Italic: {a.Font.IsItalic} vs {b.Font.IsItalic}");
+            if (a.Font.Color != b.Font.Color)
+                diffs.Add($"Font color: {a.Font.Color} vs {b.Font.Color}");
+            if (a.Font.Underline != b.Font.Underline)
+                diffs.Add($"Underline: {a.Font.Underline} vs {b.Font.Underline}");
+
+            // Fill (background) properties.
+            if (a.ForegroundColor != b.ForegroundColor)
+                diffs.Add($"Foreground color: {a.ForegroundColor} vs {b.ForegroundColor}");
+            if (a.BackgroundColor != b.BackgroundColor)
+                diffs.Add($"Background color: {a.BackgroundColor} vs {b.BackgroundColor}");
+            if (a.Pattern != b.Pattern)
+                diffs.Add($"Pattern: {a.Pattern} vs {b.Pattern}");
+
+            // Alignment.
+            if (a.HorizontalAlignment != b.HorizontalAlignment)
+                diffs.Add($"Horizontal alignment: {a.HorizontalAlignment} vs {b.HorizontalAlignment}");
+            if (a.VerticalAlignment != b.VerticalAlignment)
+                diffs.Add($"Vertical alignment: {a.VerticalAlignment} vs {b.VerticalAlignment}");
+            if (a.IsTextWrapped != b.IsTextWrapped)
+                diffs.Add($"Wrap text: {a.IsTextWrapped} vs {b.IsTextWrapped}");
+
+            // Borders (compare each side).
+            CompareBorder(a.Borders[BorderType.LeftBorder], b.Borders[BorderType.LeftBorder], "Left border", diffs);
+            CompareBorder(a.Borders[BorderType.RightBorder], b.Borders[BorderType.RightBorder], "Right border", diffs);
+            CompareBorder(a.Borders[BorderType.TopBorder], b.Borders[BorderType.TopBorder], "Top border", diffs);
+            CompareBorder(a.Borders[BorderType.BottomBorder], b.Borders[BorderType.BottomBorder], "Bottom border", diffs);
+
+            return diffs;
         }
-        return true;
-    }
 
-    // Convert zero‑based row/column indices to Excel cell name (e.g., 0,0 -> A1)
-    static string CellIndexToName(int row, int col)
-    {
-        return CellsHelper.CellIndexToName(row, col);
+        static void CompareBorder(Border a, Border b, string sideName, List<string> diffs)
+        {
+            if (a.LineStyle != b.LineStyle)
+                diffs.Add($"{sideName} line style: {a.LineStyle} vs {b.LineStyle}");
+            if (a.Color != b.Color)
+                diffs.Add($"{sideName} color: {a.Color} vs {b.Color}");
+        }
+
+        static string CellReference(int row, int column)
+        {
+            return CellsHelper.CellIndexToName(row, column);
+        }
     }
 }

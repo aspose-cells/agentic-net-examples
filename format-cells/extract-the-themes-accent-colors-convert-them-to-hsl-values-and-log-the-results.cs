@@ -1,69 +1,41 @@
-// Title: Retrieve Excel theme accent colors and convert them to HSL using Aspose.Cells in C#
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, reads ThemeColorType.Accent1‑Accent6 via GetThemeColor, converts each System.Drawing.Color to HSL, and prints the results. | Add file‑existence validation and comprehensive exception handling to a console application that extracts theme accent colors from an Excel file using Aspose.Cells. | Implement a reusable static method that transforms a System.Drawing.Color (RGB) into HSL and apply it to all theme accent colors obtained from a workbook.
-// Common Searches: Aspose.Cells C# how to read Excel theme accent colors | convert System.Drawing.Color to HSL in .NET | C# example for Workbook.GetThemeColor returning RGB values | log Excel theme palette HSL values using Aspose.Cells | handle missing Excel file when extracting theme colors with Aspose.Cells
-// Tags: Aspose.Cells GetThemeColor accent extraction | C# RGB to HSL conversion method | Excel theme palette reading .NET | console logging HSL values | file existence check Aspose.Cells workbook
+// Title: Read Excel theme accent colors and output their HSL values with Aspose.Cells for .NET (C#)
+// Common Searches: how to get theme accent colors from an .xlsx file using Aspose.Cells in C# | convert workbook theme RGB colors to HSL with Aspose.Cells .NET | sample code for extracting Excel theme colors and printing HSL in C# | Aspose.Cells GetThemeColor example converting to HSL format | retrieve and log six accent colors from Excel theme using C#
+// Tags: Aspose.Cells GetThemeColor API | Excel theme accent color extraction C# | RGB to HSL conversion method C# | log theme colors as HSL Aspose.Cells | process workbook theme colors .NET
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// This C# console sample loads an .xlsx workbook with Aspose.Cells, retrieves the six theme accent colors via Workbook.GetThemeColor, converts each RGB color to HSL using a custom conversion method, and writes both RGB and HSL values to the console while handling missing files and other exceptions.
+// The example loads an .xlsx workbook, uses Workbook.GetThemeColor to fetch the six theme accent colors (Accent1‑Accent6), converts each System.Drawing.Color from RGB to HSL with a custom conversion routine, and writes both the original RGB and the calculated HSL values to the console.
 class ThemeAccentExtractor
 {
-    // Convert a System.Drawing.Color (RGB) to HSL.
-    // Returns a tuple: (Hue [0-360], Saturation [0-1], Lightness [0-1])
-    static (float H, float S, float L) RgbToHsl(Color rgb)
-    {
-        float r = rgb.R / 255f;
-        float g = rgb.G / 255f;
-        float b = rgb.B / 255f;
-
-        float max = Math.Max(r, Math.Max(g, b));
-        float min = Math.Min(r, Math.Min(g, b));
-        float delta = max - min;
-
-        // Lightness
-        float l = (max + min) / 2f;
-
-        float h = 0f;
-        float s = 0f;
-
-        if (delta != 0f)
-        {
-            // Saturation
-            s = l < 0.5f ? delta / (max + min) : delta / (2f - max - min);
-
-            // Hue
-            if (max == r)
-                h = ((g - b) / delta) % 6f;
-            else if (max == g)
-                h = ((b - r) / delta) + 2f;
-            else // max == b
-                h = ((r - g) / delta) + 4f;
-
-            h *= 60f; // convert to degrees
-            if (h < 0f)
-                h += 360f;
-        }
-
-        return (h, s, l);
-    }
-
     static void Main()
     {
-        const string inputPath = "input.xlsx";
+        const string filePath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"Error: File not found -> {filePath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(filePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
         try
         {
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The file '{inputPath}' was not found.");
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Define the six accent theme colors
+            // Define the accent theme color types
             ThemeColorType[] accentTypes = new ThemeColorType[]
             {
                 ThemeColorType.Accent1,
@@ -74,21 +46,56 @@ class ThemeAccentExtractor
                 ThemeColorType.Accent6
             };
 
-            // Log each accent color and its HSL representation
+            // Retrieve and process each accent color
             for (int i = 0; i < accentTypes.Length; i++)
             {
                 Color rgb = workbook.GetThemeColor(accentTypes[i]);
-                var (h, s, l) = RgbToHsl(rgb);
-                Console.WriteLine($"Accent {i + 1}: RGB({rgb.R}, {rgb.G}, {rgb.B}) => HSL({h:F1}°, {s:P1}, {l:P1})");
+                var hsl = RgbToHsl(rgb);
+                Console.WriteLine(
+                    $"Accent {i + 1}: RGB({rgb.R},{rgb.G},{rgb.B}) => HSL({hsl.H:F2}°, {hsl.S:P2}, {hsl.L:P2})");
             }
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing theme colors: {ex.Message}");
         }
+    }
+
+    // Convert a System.Drawing.Color (RGB) to HSL
+    private static (double H, double S, double L) RgbToHsl(Color color)
+    {
+        double r = color.R / 255.0;
+        double g = color.G / 255.0;
+        double b = color.B / 255.0;
+
+        double max = Math.Max(r, Math.Max(g, b));
+        double min = Math.Min(r, Math.Min(g, b));
+        double delta = max - min;
+
+        // Lightness
+        double l = (max + min) / 2.0;
+
+        double h = 0.0;
+        double s = 0.0;
+
+        if (delta != 0)
+        {
+            // Saturation
+            s = l < 0.5 ? delta / (max + min) : delta / (2.0 - max - min);
+
+            // Hue
+            if (max == r)
+                h = ((g - b) / delta) % 6;
+            else if (max == g)
+                h = ((b - r) / delta) + 2;
+            else // max == b
+                h = ((r - g) / delta) + 4;
+
+            h *= 60; // Convert to degrees
+            if (h < 0)
+                h += 360;
+        }
+
+        return (h, s, l);
     }
 }

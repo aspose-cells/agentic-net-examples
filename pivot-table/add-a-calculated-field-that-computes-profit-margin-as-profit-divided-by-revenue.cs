@@ -1,53 +1,67 @@
-// Title: Create and format a ProfitMargin calculated field in an Aspose.Cells PivotTable using C#
-// AI Prompts: Generate C# code that inserts a new field called ProfitMargin into an Aspose.Cells PivotTable using the formula Profit/Revenue and sets its display format to percentage. | Show how to refresh the PivotTable data and write the workbook to an XLSX file after creating the ProfitMargin field with Aspose.Cells in C#.
-// Common Searches: asp.net insert profit margin calculated field in Aspose.Cells pivot table | c# Aspose.Cells pivot table compute profit margin as percentage | how to apply percentage number format to a calculated pivot field in Aspose.Cells | refresh pivot table after adding calculated field using Aspose.Cells C#
-// Tags: add calculated field to Aspose.Cells pivot table | profit margin calculation in Aspose.Cells pivot | percentage number format for pivot data field Aspose.Cells | update pivot table after calculated field Aspose.Cells | export workbook to xlsx with Aspose.Cells
+// Title: Add a ProfitMargin calculated field (Profit ÷ Revenue) to an existing PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to create a profit margin calculated field in a pivot table with Aspose.Cells C# | Aspose.Cells add calculated field Profit/Revenue to an existing pivot table programmatically | C# code to insert a data field that calculates profit margin in an Excel pivot table using Aspose | using Aspose.Cells .NET to modify a pivot table and add a custom profit margin calculation | example of adding a calculated field to a pivot table in an Aspose.Cells workbook
+// Tags: calculated field addition using Aspose.Cells API | profit margin computation in Excel pivot via Aspose | programmatic pivot table modification .NET | Aspose.Cells pivot table data field API | C# Excel pivot calculated field example
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-// The example builds a workbook with product, revenue, and profit data, creates a PivotTable, inserts a calculated field named ProfitMargin that divides Profit by Revenue, formats this field as a percentage, refreshes and recalculates the PivotTable, and saves the result as an XLSX file using Aspose.Cells for .NET.
+// The sample loads an existing workbook, checks for a pivot table on the first worksheet, adds a calculated field named "ProfitMargin" with the formula "Profit/Revenue" directly into the data area, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data: Product, Revenue, Profit
-        cells["A1"].PutValue("Product");
-        cells["B1"].PutValue("Revenue");
-        cells["C1"].PutValue("Profit");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        cells["A2"].PutValue("A"); cells["B2"].PutValue(1000); cells["C2"].PutValue(200);
-        cells["A3"].PutValue("B"); cells["B3"].PutValue(1500); cells["C3"].PutValue(300);
-        cells["A4"].PutValue("C"); cells["B4"].PutValue(2000); cells["C4"].PutValue(400);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add fields to the pivot table
-        pivot.AddFieldToArea(PivotFieldType.Row, "Product");          // Row field
-        pivot.AddFieldToArea(PivotFieldType.Data, "Revenue");        // Data field
-        pivot.AddFieldToArea(PivotFieldType.Data, "Profit");         // Data field
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
+            }
 
-        // Add a calculated field named "ProfitMargin" that computes Profit / Revenue
-        // The third parameter 'true' drags the field to the data area automatically
-        pivot.AddCalculatedField("ProfitMargin", "=Profit/Revenue", true);
+            // Retrieve the first pivot table
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-        // Format the calculated field as a percentage
-        PivotField profitMarginField = pivot.DataFields[pivot.DataFields.Count - 1];
-        profitMarginField.NumberFormat = "0.00%";
+            // Define the calculated field formula: Profit divided by Revenue
+            string formula = "Profit/Revenue";
 
-        // Refresh and calculate the pivot table data
-        pivot.RefreshData();
-        pivot.CalculateData();
+            // Add the calculated field named "ProfitMargin" and place it directly in the data area
+            // The overload with the third parameter adds the field as a data field automatically
+            pivotTable.AddCalculatedField("ProfitMargin", formula, true);
 
-        // Save the workbook
-        workbook.Save("PivotTable_With_ProfitMargin.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

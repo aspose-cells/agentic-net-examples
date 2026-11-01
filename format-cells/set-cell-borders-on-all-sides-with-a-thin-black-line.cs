@@ -1,12 +1,11 @@
-// Title: How to add a thin black border on all sides of a cell using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a style with a thin black border on the top, bottom, left, and right and applies it to a specified cell in an Aspose.Cells workbook. | Provide a reusable C# method named ApplyThinBlackBorder that takes a Worksheet and a cell address, sets a uniform thin black border using Aspose.Cells, and returns the styled cell. | Show the steps to save the workbook as an .xlsx file after applying the border style to a cell with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set uniform thin black border for a single cell | How to apply borders on all sides of a cell with Aspose.Cells .NET | C# example adding thin black borders to cell A1 using Aspose.Cells | Aspose.Cells style object border color and line style tutorial | Saving workbook after formatting cell borders in Aspose.Cells C#
-// Tags: apply thin black border Aspose.Cells C# | cell style borders Aspose.Cells .NET | uniform cell border formatting Aspose.Cells | save workbook after styling cell Aspose.Cells | CellBorderType.Thin usage example
+// Title: Add thin black borders to all sides of a cell with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells example for setting thin black borders on a cell | How to apply borders on every side of an Excel cell using Aspose.Cells .NET | Aspose.Cells BorderType.Thin usage for cell border styling in C# | Set cell style borders to a black line in an Aspose.Cells workbook | Apply top, bottom, left, and right borders to a cell with the Aspose.Cells API
+// Tags: Aspose.Cells thin black cell border | C# set cell borders Aspose.Cells | Excel cell border styling .NET | BorderType enumeration thin line Aspose.Cells | apply borders to Excel cell using Aspose.Cells | cell style border customization C#
 
 using Aspose.Cells;
 using System.Drawing;
 
-// // Demonstrates creating a workbook, defining a style with thin black borders on all four sides, applying it to cell A1, and saving the file as Output.xlsx using Aspose.Cells for .NET.
+// The sample creates a new Workbook, selects cell A1 on the first worksheet, retrieves its Style, sets a thin black line for the top, bottom, left, and right borders via the Borders collection, reapplies the Style to the cell, and saves the workbook as Output.xlsx.
 class Program
 {
     static void Main()
@@ -17,13 +16,14 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Get the cell to apply borders (e.g., A1)
+        // Target cell (A1) to apply borders
         Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Sample"); // optional content
 
-        // Create a style object
-        Style style = workbook.CreateStyle();
+        // Retrieve the cell's style
+        Style style = cell.GetStyle();
 
-        // Set thin black border on all sides
+        // Define a thin black line for each border side
         style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
         style.Borders[BorderType.TopBorder].Color = Color.Black;
 
@@ -36,10 +36,10 @@ class Program
         style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
         style.Borders[BorderType.RightBorder].Color = Color.Black;
 
-        // Apply the style to the cell
+        // Apply the modified style back to the cell
         cell.SetStyle(style);
 
-        // Save the workbook
+        // Save the workbook to a file
         workbook.Save("Output.xlsx");
     }
 }

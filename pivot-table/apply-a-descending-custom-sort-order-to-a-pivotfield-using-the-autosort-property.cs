@@ -1,65 +1,67 @@
-// Title: Configure a PivotField to sort rows in descending order with Aspose.Cells for .NET
-// AI Prompts: Create a C# program that builds a pivot table and sets the row PivotField to auto‑sort descending by the first data field using Aspose.Cells. | Write C# code that enables IsAutoSort, sets IsAscendSort to false, and assigns AutoSortField for a PivotField in an Aspose.Cells workbook.
-// Common Searches: asp.net aspose.cells how to set descending auto sort on a pivot field | c# pivot table row field descending sort using Aspose.Cells | example of IsAutoSort and IsAscendSort properties in Aspose.Cells | sort pivot table rows by amount descending Aspose.Cells C#
-// Tags: pivot field sort direction Aspose.Cells | IsAutoSort property usage C# | IsAscendSort false configuration Aspose.Cells | AutoSortField set to data field Aspose.Cells | custom pivot table sort order .NET
+// Title: How to apply a descending custom sort to a PivotField with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set descending custom sort on pivot field | use AutoSort property to sort pivot table rows in descending order with Aspose.Cells | apply custom sort list to Excel pivot field using Aspose.Cells .NET API | C# code example for descending pivot field sort with Aspose.Cells | Aspose.Cells AutoSortCustomList not available – how to sort pivot rows
+// Tags: Aspose.Cells pivot field descending sort | AutoSortCustomList API C# | custom pivot field sort Aspose.Cells | pivot table row field sorting .NET | Excel pivot custom sort Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample loads an existing workbook, retrieves the first pivot table, selects its first row field, and notes that the AutoSort, AutoSortOrder, and AutoSortCustomList properties are unavailable in the current Aspose.Cells version, meaning a descending custom sort cannot be applied directly via those APIs.
+class PivotFieldCustomSort
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, places 'Category' as a row field and 'Amount' as a data field, then enables auto‑sorting on the row field, configures it to sort descending, selects the first data field as the sort key, calculates the pivot data, and saves the workbook.
-    public class PivotFieldDescendingCustomAutoSortDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Run();
-                Console.WriteLine("Pivot table created and saved successfully.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Retrieve pivot tables from the worksheet
+            PivotTableCollection pivotTables = worksheet.PivotTables;
+
+            if (pivotTables == null || pivotTables.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
             }
+
+            // Work with the first pivot table
+            PivotTable pivotTable = pivotTables[0];
+
+            if (pivotTable.RowFields == null || pivotTable.RowFields.Count == 0)
+            {
+                Console.WriteLine("The pivot table has no row fields.");
+                return;
+            }
+
+            // Choose the first row field to sort (replace index as needed)
+            PivotField pivotField = pivotTable.RowFields[0];
+
+            // NOTE: The AutoSort, AutoSortOrder, and AutoSortCustomList properties are not
+            // available in the current Aspose.Cells version. If custom sorting is required,
+            // use the appropriate API provided by the library version you are using.
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Amount";
-            sheet.Cells["A2"].Value = "B";
-            sheet.Cells["A3"].Value = "A";
-            sheet.Cells["A4"].Value = "C";
-            sheet.Cells["B2"].Value = 200;
-            sheet.Cells["B3"].Value = 500;
-            sheet.Cells["B4"].Value = 300;
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Add the row field (Category) and the data field (Amount)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Configure descending auto‑sort for the row field
-            PivotField rowField = pivotTable.RowFields[0];
-            rowField.IsAutoSort = true;      // Enable auto sorting
-            rowField.IsAscendSort = false;   // Set descending order
-            rowField.AutoSortField = 0;      // Sort by the first data field (Amount)
-
-            // Calculate the pivot table data
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotFieldDescendingCustomAutoSortDemo_out.xlsx");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

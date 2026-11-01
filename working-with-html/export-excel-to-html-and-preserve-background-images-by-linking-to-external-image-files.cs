@@ -1,13 +1,13 @@
-// Title: Export Excel to HTML with linked background images using Aspose.Cells for .NET
-// AI Prompts: Write C# that opens an .xlsx workbook, turns off Base64 image encoding in HtmlSaveOptions, creates a directory for picture files, and saves the workbook as an HTML page with the images referenced externally. | Demonstrate how to configure Aspose.Cells to export background graphics as individual image files during Excel‑to‑HTML conversion in .NET.
-// Common Searches: Aspose.Cells C# export Excel to HTML without embedding images | Save Excel background pictures as separate files when converting to HTML using Aspose.Cells | How to disable Base64 image embedding in HtmlSaveOptions | Specify output folder for images in Aspose.Cells HTML conversion
-// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 false | Aspose.Cells ImageFolder property for HTML export | C# Excel to HTML conversion with external image files | preserve workbook background pictures in HTML output | Aspose.Cells linked images in generated HTML
+// Title: Export an Excel workbook to HTML with external image files and preserve worksheet background images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a .xlsx file, configures HtmlSaveOptions to save the workbook as HTML, stores all embedded images and worksheet background images in a separate folder, and disables base‑64 image embedding. | Show how to use reflection in C# to set HtmlSaveOptions.ExportImagesFolder and HtmlSaveOptions.ExportBackgroundImages only when those properties exist in the installed Aspose.Cells version.
+// Common Searches: Aspose.Cells .NET export Excel to HTML with images saved as separate files | how to keep worksheet background picture when converting Excel to HTML using Aspose.Cells | HtmlSaveOptions ExportImagesFolder property example | C# save workbook as HTML without base64 images Aspose.Cells | export background images from Excel to HTML using Aspose.Cells reflection
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesFolder | Aspose.Cells export background images to HTML | C# save Excel as HTML external images | reflection for HtmlSaveOptions compatibility | preserve worksheet background image Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample loads an input.xlsx workbook, configures HtmlSaveOptions to export images as separate files, creates an images folder, sets the ImageFolder property when available, and saves the workbook as output.html with all background images stored externally.
+// Loads an Excel file, configures HtmlSaveOptions to write images and worksheet background images to a specified folder as separate files (not base64), and saves the workbook as an HTML document.
 class Program
 {
     static void Main()
@@ -15,10 +15,10 @@ class Program
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputHtml = "output.html";
-            const string imagesFolder = "images";
+            const string outputPath = "output.html";
+            const string imagesFolder = "Images";
 
-            // Verify that the input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file '{inputPath}' not found.");
@@ -26,30 +26,36 @@ class Program
             }
 
             // Load the workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            var options = new HtmlSaveOptions();
-            options.ExportImagesAsBase64 = false; // export images as separate files
-
-            // Ensure the images folder exists
-            if (!Directory.Exists(imagesFolder))
-                Directory.CreateDirectory(imagesFolder);
-
-            // Set the folder for exported images if the property exists (newer API versions)
-            var imageFolderProp = options.GetType().GetProperty("ImageFolder");
-            if (imageFolderProp != null && imageFolderProp.CanWrite)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                imageFolderProp.SetValue(options, imagesFolder);
+                ExportImagesAsBase64 = false,          // Export images as separate files
+                ExportActiveWorksheetOnly = false      // Export all worksheets
+            };
+
+            // Set the folder for external images if the property exists in the current version
+            var exportImagesFolderProp = typeof(HtmlSaveOptions).GetProperty("ExportImagesFolder");
+            if (exportImagesFolderProp != null && exportImagesFolderProp.CanWrite)
+            {
+                exportImagesFolderProp.SetValue(htmlOptions, imagesFolder);
+            }
+
+            // Enable background image export if the property exists
+            var exportBgImagesProp = typeof(HtmlSaveOptions).GetProperty("ExportBackgroundImages");
+            if (exportBgImagesProp != null && exportBgImagesProp.CanWrite)
+            {
+                exportBgImagesProp.SetValue(htmlOptions, true);
             }
 
             // Save the workbook as HTML
-            workbook.Save(outputHtml, options);
-            Console.WriteLine($"Workbook saved to '{outputHtml}'. Images are stored in '{imagesFolder}'.");
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

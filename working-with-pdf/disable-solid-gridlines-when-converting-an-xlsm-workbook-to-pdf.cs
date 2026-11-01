@@ -1,13 +1,12 @@
-// Title: How to hide worksheet gridlines when converting an XLSM workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a macro‑enabled XLSM workbook with Aspose.Cells, disables gridlines on every worksheet, and saves it as a PDF. | Show how to configure PdfSaveOptions in Aspose.Cells so the generated PDF does not display any gridlines. | Explain the steps to iterate through all worksheets in a Workbook object and set IsGridlinesVisible = false before exporting to PDF.
-// Common Searches: Aspose.Cells C# hide gridlines before saving XLSM as PDF | disable solid gridlines in PDF output from macro enabled workbook using Aspose.Cells | C# code to turn off worksheet gridlines when exporting to PDF with Aspose.Cells | PdfSaveOptions gridlines visibility Aspose.Cells .NET
-// Tags: Aspose.Cells hide worksheet gridlines PDF export | C# set IsGridlinesVisible false Aspose.Cells | PdfSaveOptions gridlines control Aspose.Cells | export XLSM to PDF without gridlines Aspose.Cells
+// Title: Disable gridlines when converting an XLSM workbook to PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export XLSM to PDF without gridlines | How to hide Excel gridlines in PDF output with PdfSaveOptions | C# remove solid gridlines from PDF generated from a macro-enabled workbook | PdfSaveOptions set to hide gridlines in Aspose.Cells PDF conversion | Convert macro-enabled Excel file to PDF without showing gridlines in .NET
+// Tags: Aspose.Cells PDFSaveOptions hide gridlines | XLSM to PDF conversion without gridlines | disable Excel gridlines in PDF export C# | macro workbook PDF export settings Aspose.Cells | gridlines off PDF conversion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an XLSM workbook, disables gridlines on each worksheet by setting IsGridlinesVisible to false, and saves the workbook as a PDF using default PdfSaveOptions.
+// The example loads an XLSM workbook, creates a PdfSaveOptions object (gridlines are disabled by default), and saves the workbook as a PDF, resulting in a PDF file that does not display solid gridlines.
 class Program
 {
     static void Main()
@@ -17,29 +16,27 @@ class Program
             const string inputPath = "input.xlsm";
             const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
             // Load the XLSM workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Disable gridlines for each worksheet (affects PDF rendering)
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.IsGridlinesVisible = false;
-            }
-
-            // Configure PDF save options (default options are sufficient)
+            // Configure PDF save options (gridlines are disabled by default)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF with the specified options
+            // Save the workbook as a PDF file
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

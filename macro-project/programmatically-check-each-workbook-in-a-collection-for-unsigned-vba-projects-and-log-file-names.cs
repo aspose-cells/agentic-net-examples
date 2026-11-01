@@ -1,75 +1,87 @@
-// Title: Scan a collection of Excel workbooks and list those with unsigned VBA projects using Aspose.Cells in C#
-// AI Prompts: Write a C# method that accepts an IEnumerable of Excel file paths, loads each workbook with Aspose.Cells, checks the VbaProject.IsSigned flag, and returns the paths where a VBA project exists but is not signed. | Enhance the method to handle missing files gracefully, output a warning for each absent file, and log any exceptions thrown while loading a workbook without stopping the overall scan. | Adapt the scanner so that instead of returning a list, it appends each identified unsigned‑VBA workbook path to a log file with a timestamp, creating the log if it does not exist.
-// Common Searches: how to use Aspose.Cells in C# to find Excel files with unsigned VBA macros | C# code to iterate over multiple .xlsm files and check VBA project signature with Aspose | detect unsigned VBA projects in a batch of workbooks using Aspose.Cells library | list Excel workbooks that contain unsigned macro projects in .NET | Aspose.Cells VBA IsSigned property example for scanning directories
-// Tags: batch scan Excel workbooks for unsigned VBA using Aspose.Cells | C# Aspose.Cells VBA project signature check | detect unsigned macro projects in .xlsm files | enumerate Excel files and evaluate VbaProject.IsSigned | log unsigned VBA workbooks in .NET application
+// Title: Detect and log unsigned VBA projects in multiple Excel workbooks using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to scan a directory of .xlsx files and list workbooks with unsigned VBA macros using Aspose.Cells | How to identify unsigned VBA projects in Excel files with Aspose.Cells .NET library | Batch process Excel workbooks to find unsigned macro projects and generate a log file in C# | Skip password‑protected Excel files while checking VBA signature status with Aspose.Cells | Write a list of workbooks containing unsigned VBA projects to a log using Aspose.Cells
+// Tags: detect unsigned VBA projects Aspose.Cells | batch scan Excel workbooks for unsigned macros C# | log unsigned VBA workbooks Aspose.Cells | skip password protected Excel files Aspose.Cells | enumerate .xlsx files directory C# Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace VbaProjectChecker
+// The program enumerates all .xlsx files in a given folder (including subfolders), loads each workbook with Aspose.Cells, checks whether a VBA project exists and if it is unsigned, collects the file names of such workbooks, writes the list to a log file, and outputs the results to the console while gracefully handling password‑protected files and other exceptions.
+class Program
 {
-    // Scans a set of Excel file paths, loads each workbook with Aspose.Cells, and returns (or logs) the full paths of those containing a VBA project whose IsSigned property is false, while safely handling missing files and load errors.
-    public class UnsignedVbaScanner
+    static void Main(string[] args)
     {
-        /// <param name="workbookFiles">Collection of full file paths to Excel workbooks.</param>
-        /// <returns>List of file names (with full path) that have an unsigned VBA project.</returns>
-        public static List<string> GetWorkbooksWithUnsignedVba(IEnumerable<string> workbookFiles)
+        // Folder that contains the workbooks to be examined
+        string folderPath = @"C:\Workbooks";
+
+        // Verify that the folder exists
+        if (!Directory.Exists(folderPath))
         {
-            var unsignedWorkbooks = new List<string>();
-
-            foreach (var filePath in workbookFiles)
-            {
-                // Ensure the file exists before attempting to load.
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook using Aspose.Cells.
-                    var workbook = new Workbook(filePath);
-
-                    // Check if the workbook contains a VBA project.
-                    var vbaProject = workbook.VbaProject;
-
-                    // If a VBA project exists and it is not signed, record the file name.
-                    if (vbaProject != null && !vbaProject.IsSigned)
-                    {
-                        unsignedWorkbooks.Add(filePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log any loading errors but continue processing other files.
-                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                }
-            }
-
-            return unsignedWorkbooks;
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
         }
 
-        // Example usage.
-        public static void Main(string[] args)
+        // Retrieve all Excel files in the folder (including subfolders)
+        string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories);
+
+        // List to collect names of workbooks with unsigned VBA projects
+        List<string> unsignedVbaWorkbooks = new List<string>();
+
+        foreach (string filePath in workbookFiles)
         {
-            // Example collection of workbook file paths.
-            var workbookPaths = new List<string>
-            {
-                @"C:\Workbooks\Report1.xlsx",
-                @"C:\Workbooks\Report2.xlsm",
-                @"C:\Workbooks\Report3.xlsb"
-            };
+            // Ensure the file still exists before attempting to load
+            if (!File.Exists(filePath))
+                continue;
 
-            var unsignedFiles = GetWorkbooksWithUnsignedVba(workbookPaths);
-
-            Console.WriteLine("Workbooks with unsigned VBA projects:");
-            foreach (var file in unsignedFiles)
+            try
             {
-                Console.WriteLine(file);
+                // Load the workbook (no password supplied). If a password is required,
+                // Aspose.Cells will throw a CellsException which we handle below.
+                Workbook workbook = new Workbook(filePath);
+
+                // If the workbook contains a VBA project, check its signature status
+                if (workbook.VbaProject != null && !workbook.VbaProject.IsSigned)
+                {
+                    // Add the file name (without path) to the log list
+                    unsignedVbaWorkbooks.Add(Path.GetFileName(filePath));
+                }
             }
+            catch (CellsException ex)
+            {
+                // Detect password‑protected files by inspecting the exception message
+                if (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine($"Skipped password‑protected file: {Path.GetFileName(filePath)}");
+                }
+                else
+                {
+                    Console.WriteLine($"CellsException processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log any other unexpected errors and continue
+                Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+            }
+        }
+
+        // Write the results to a log file in the same folder
+        string logFilePath = Path.Combine(folderPath, "UnsignedVbaWorkbooks.log");
+        try
+        {
+            File.WriteAllLines(logFilePath, unsignedVbaWorkbooks);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write log file: {ex.Message}");
+        }
+
+        // Also output the results to the console for immediate feedback
+        Console.WriteLine("Workbooks with unsigned VBA projects:");
+        foreach (string name in unsignedVbaWorkbooks)
+        {
+            Console.WriteLine(name);
         }
     }
 }

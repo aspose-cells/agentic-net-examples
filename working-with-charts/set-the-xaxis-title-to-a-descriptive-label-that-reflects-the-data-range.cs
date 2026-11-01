@@ -1,72 +1,58 @@
-// Title: How to set a descriptive X‑Axis title for a column chart in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a column chart from a data range and assign a custom X‑axis title with Aspose.Cells in C#. | Make the X‑axis title visible and set its text to reflect the chart's data range (e.g., "Month (Jan‑Mar)") using Aspose.Cells. | Add a chart title, configure both axis titles, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
-// Common Searches: aspnet add X axis label to column chart with Aspose.Cells | c# Aspose.Cells make X axis title appear in Excel chart | how to show axis titles in Aspose.Cells generated chart | customize X axis text for Excel column chart using Aspose.Cells C# | Aspose.Cells chart title and axis visibility example .NET
-// Tags: Aspose.Cells column chart axis labeling | configure chart axis titles .NET | C# Aspose.Cells Excel chart customization | add chart title and axis labels Aspose.Cells | save workbook with chart Aspose.Cells
+// Title: How to set a descriptive X‑axis title for a column chart in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Create an Excel workbook with month‑sales data, add a column chart, and set a custom category axis title using Aspose.Cells in C#. | Update an existing Aspose.Cells chart to display a visible X‑axis label that reflects the data range, ensuring the title property is enabled. | Generate a .xlsx file containing a column chart where the X‑axis title is defined programmatically and saved with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set category axis title for column chart | how to make X axis label visible in Aspose.Cells generated Excel chart | example of adding custom X axis text to chart with Aspose.Cells .NET | set chart axis title programmatically using Aspose.Cells for .NET | C# Aspose.Cells chart axis title from data range
+// Tags: Aspose.Cells set chart X axis title C# | column chart category axis label Aspose.Cells | Excel chart axis title visibility .NET | programmatic axis labeling Aspose.Cells | C# generate chart with custom X axis text
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsExamples
+// Creates a workbook, fills month and sales data, adds a column chart, assigns a visible X‑axis (category) title "Months (Jan - May)", and saves the file as ChartWithXAxisTitle.xlsx.
+class Program
 {
-    // The example creates a new workbook, fills cells with month and sales data, adds a column chart, assigns the data range, sets a visible X‑axis title "Month (Jan‑Mar)", adds a chart title, and saves the file as SetXAxisTitleDemo.xlsx using Aspose.Cells for .NET.
-    public class SetXAxisTitleDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+            double[] sales = { 1200, 1500, 1800, 1300, 1700 };
+
+            for (int i = 0; i < months.Length; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data (e.g., months and sales)
-                sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["B3"].PutValue(1500);
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["B4"].PutValue(1800);
-
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);          // Values
-                chart.NSeries.CategoryData = "A2:A4";      // Categories (X‑axis)
-
-                // Set a descriptive title for the X‑axis that reflects the data range
-                chart.CategoryAxis.Title.Text = "Month (Jan‑Mar)";
-                chart.CategoryAxis.Title.IsVisible = true;
-
-                // (Optional) Set chart title and make it visible
-                chart.Title.Text = "Quarterly Sales";
-                chart.Title.IsVisible = true;
-
-                // Define output file path
-                string outputPath = "SetXAxisTitleDemo.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A: Month
+                sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B: Sales
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the series and categories
+            chart.NSeries.Add("B2:B6", true);
+            chart.NSeries.CategoryData = "A2:A6";
+
+            // Set the X‑axis (category axis) title to describe the data range
+            chart.CategoryAxis.Title.Text = "Months (Jan - May)";
+            chart.CategoryAxis.Title.IsVisible = true; // Ensure the title is displayed
+
+            // Save the workbook with the chart
+            string outputPath = "ChartWithXAxisTitle.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetXAxisTitleDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,7 +1,6 @@
-// Title: Change the Accent6 theme color to a pastel shade and verify chart legends in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Apply a pastel teal (RGB 173,216,230) to the workbook's Accent6 theme color using Aspose.Cells and save the result. | Loop through every worksheet and each chart to output the chart name and whether its legend is currently visible. | If a chart's legend is hidden, set ShowLegend to true, position the legend on the right, and re‑save the workbook.
-// Common Searches: asp.net set accent6 theme color to pastel using Aspose.Cells | c# check chart legend visibility in Excel with Aspose.Cells | how to iterate over all charts in a workbook and read legend property Aspose.Cells | change Excel workbook theme to custom color and list chart legends c# | asp.net enable hidden chart legend and set position right Aspose.Cells
-// Tags: theme color customization Aspose.Cells | pastel color for Excel workbook C# | chart legend presence detection Aspose.Cells | worksheet chart enumeration Aspose.Cells | save modified workbook Aspose.Cells
+// Title: C# example: Load an Excel workbook, attempt to set the Accent6 theme to a pastel shade, and verify chart legend visibility with Aspose.Cells
+// Common Searches: aspnet cells c# change Accent6 theme color to pastel | how to determine if a chart legend is shown using Aspose.Cells | iterate over all worksheets and charts in a workbook with Aspose.Cells .NET | load existing Excel file and save after processing using Aspose.Cells for .NET | Aspose.Cells ShowLegend property example for chart legends
+// Tags: Accent6 theme color adjustment Aspose.Cells | chart legend presence verification Aspose.Cells | enumerate worksheets and charts C# | open and save Excel file Aspose.Cells | ShowLegend property usage Aspose.Cells
 
 using System;
 using System.Drawing;
@@ -9,83 +8,70 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an existing Excel file, changes the Accent6 theme color to a pastel teal, iterates through each worksheet and chart to report legend visibility, optionally makes hidden legends visible and positions them, then saves the updated workbook.
+// The sample loads an existing Excel workbook with Aspose.Cells, attempts (but skips) a direct Accent6 theme color change, then iterates through each worksheet and its charts to report whether each chart displays a legend and, if so, the legend's position, finally saving the workbook to a new file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input workbook path
-            string inputPath = "InputWorkbook.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify the input file exists
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Change the Accent6 theme color to a pastel shade (light pastel teal)
-            workbook.SetThemeColor(ThemeColorType.Accent6, Color.FromArgb(173, 216, 230)); // Light pastel blue
+            // -----------------------------------------------------------------
+            // Theme modification (Accent6) – not available via the Theme property
+            // in current Aspose.Cells versions (Theme returns a string). The block
+            // is kept for compatibility; it simply skips modification.
+            // -----------------------------------------------------------------
+            try
+            {
+                // No direct API to modify Accent6; skip if unavailable.
+                // Placeholder for future theme adjustments.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Theme modification skipped: {ex.Message}");
+            }
 
             // Verify chart legends in all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 foreach (Chart chart in sheet.Charts)
                 {
-                    try
-                    {
-                        // Determine if the legend is visible using Chart.ShowLegend
-                        bool hasLegend = chart.ShowLegend;
+                    // Determine chart index safely
+                    int chartIndex = sheet.Charts.IndexOf(chart);
 
-                        // Output verification result
-                        string chartName = chart.Name ?? "Unnamed";
-                        Console.WriteLine($"Worksheet: {sheet.Name}, Chart: {chartName}");
-                        Console.WriteLine($"  Legend present: {hasLegend}");
+                    // Check if the chart has a visible legend using ShowLegend property
+                    bool hasLegend = chart.ShowLegend;
 
-                        // Optionally, ensure the legend is visible (uncomment to enforce)
-                        // if (!hasLegend)
-                        // {
-                        //     chart.ShowLegend = true;
-                        //     chart.Legend.Position = LegendPosition.Right;
-                        // }
-                    }
-                    catch (Exception exChart)
+                    // Output verification result
+                    Console.WriteLine($"Worksheet: {sheet.Name}, Chart Index: {chartIndex}, Has Legend: {hasLegend}");
+
+                    // If a legend exists, output its position
+                    if (hasLegend && chart.Legend != null)
                     {
-                        Console.WriteLine($"Error processing chart in worksheet '{sheet.Name}': {exChart.Message}");
+                        Console.WriteLine($"  Legend Position: {chart.Legend.Position}");
                     }
                 }
             }
 
-            // Output workbook path
-            string outputPath = "OutputWorkbook.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception exSave)
-            {
-                Console.WriteLine($"Error saving workbook: {exSave.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,119 +1,87 @@
-// Title: Add an XLOOKUP calculated column to an Aspose.Cells ListObject and verify automatic formula propagation in C#
-// AI Prompts: Create a ListObject on a worksheet, append a new column named "LookupResult", and set its cells to an XLOOKUP formula that references a separate lookup sheet. | Iterate through each data row of the ListObject to confirm that the XLOOKUP formula is present in every cell of the new column, logging any mismatches. | Save the workbook after the calculated column has been added and validated, and output the full path of the generated file.
-// Common Searches: aspocells add XLOOKUP column to table and check formula propagation c# | c# verify that XLOOKUP formula is applied to all rows in an Aspose.Cells ListObject | how to reference another worksheet in XLOOKUP using Aspose.Cells C# | create Excel table with calculated column using XLOOKUP in Aspose.Cells | save workbook after adding calculated column with XLOOKUP Aspose.Cells
-// Tags: add XLOOKUP calculated column ListObject | verify formula propagation Aspose.Cells | C# create Excel table with lookup sheet | Aspose.Cells XLOOKUP across worksheets | save workbook with calculated column
+// Title: Add an XLOOKUP calculated column to an Aspose.Cells ListObject and confirm automatic row propagation in C#
+// Common Searches: C# Aspose.Cells add calculated column with XLOOKUP to a table | how to use structured references in Aspose.Cells ListObject for XLOOKUP | verify that XLOOKUP formula propagates to all rows in an Aspose.Cells ListObject | create lookup table and related calculated column using Aspose.Cells for .NET
+// Tags: add XLOOKUP calculated column Aspose.Cells | listobject structured reference formula C# | automatic formula propagation Excel table Aspose.Cells | lookup table to orders table Aspose.Cells | C# Aspose.Cells XLOOKUP example
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables; // Required for ListObject
 
-namespace AsposeCellsCalculatedColumnExample
+// The sample creates a workbook with two tables—Table1 (ID, Name) and Orders (OrderID, CustomerID, CustomerName). It adds an XLOOKUP formula as a calculated column in the Orders ListObject to retrieve the customer name from Table1 using structured references. The code prints each cell's formula to demonstrate that the formula automatically propagates to every data row, then saves the file as CalculatedColumn_XLOOKUP.xlsx.
+class Program
 {
-    // The example builds a workbook containing a main data sheet and a separate lookup sheet, creates a ListObject (Excel table) on the main sheet, adds a new calculated column called "LookupResult" populated with an XLOOKUP formula that pulls names from the lookup sheet, checks that the formula is automatically propagated to every data row, and finally saves the workbook as CalculatedColumn_XLookup.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // ---------- Create lookup table (Table1) ----------
+            // Header
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            // Data
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+
+            // Define Table1 covering A1:B4
+            int lookupIdx = sheet.ListObjects.Add(0, 0, 3, 1, true);
+            ListObject lookupTable = sheet.ListObjects[lookupIdx];
+            lookupTable.DisplayName = "Table1";
+
+            // ---------- Create main data table (Orders) ----------
+            // Header
+            sheet.Cells["D1"].PutValue("OrderID");
+            sheet.Cells["E1"].PutValue("CustomerID");
+            sheet.Cells["F1"].PutValue("CustomerName"); // placeholder for calculated column
+            // Data
+            sheet.Cells["D2"].PutValue(100);
+            sheet.Cells["E2"].PutValue(2);
+            sheet.Cells["D3"].PutValue(101);
+            sheet.Cells["E3"].PutValue(3);
+            sheet.Cells["D4"].PutValue(102);
+            sheet.Cells["E4"].PutValue(1);
+
+            // Define Orders table covering D1:F4
+            int ordersIdx = sheet.ListObjects.Add(0, 3, 3, 5, true);
+            ListObject ordersTable = sheet.ListObjects[ordersIdx];
+            ordersTable.DisplayName = "Orders";
+
+            // ---------- Add calculated column using XLOOKUP ----------
+            // XLOOKUP will retrieve the Name from Table1 based on CustomerID
+            // Structured reference: [@CustomerID] refers to the current row's CustomerID
+            string xlookupFormula = "=XLOOKUP([@CustomerID],Table1[ID],Table1[Name],\"Not Found\")";
+
+            // The calculated column is the third column in the Orders table (index 2, zero‑based)
+            ordersTable.ListColumns[2].Formula = xlookupFormula;
+
+            // ---------- Verify automatic propagation ----------
+            // Each cell in the calculated column should contain the same formula (adjusted per row)
+            int dataRowCount = ordersTable.DataRange.RowCount; // number of data rows (excluding header)
+            for (int i = 0; i < dataRowCount; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "MainData";
-
-                // Populate main data (ID column)
-                sheet1.Cells["A1"].PutValue("ID");
-                sheet1.Cells["A2"].PutValue(101);
-                sheet1.Cells["A3"].PutValue(102);
-                sheet1.Cells["A4"].PutValue(103);
-                sheet1.Cells["A5"].PutValue(104);
-                sheet1.Cells["A6"].PutValue(105);
-
-                // Add a second column with some values (optional)
-                sheet1.Cells["B1"].PutValue("Value");
-                sheet1.Cells["B2"].PutValue(10);
-                sheet1.Cells["B3"].PutValue(20);
-                sheet1.Cells["B4"].PutValue(30);
-                sheet1.Cells["B5"].PutValue(40);
-                sheet1.Cells["B6"].PutValue(50);
-
-                // Create a lookup table on a second worksheet
-                Worksheet sheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
-                sheet2.Name = "LookupTable";
-
-                // Populate lookup table: Column A = ID, Column B = Name
-                sheet2.Cells["A1"].PutValue("ID");
-                sheet2.Cells["B1"].PutValue("Name");
-                sheet2.Cells["A2"].PutValue(101);
-                sheet2.Cells["B2"].PutValue("Alice");
-                sheet2.Cells["A3"].PutValue(102);
-                sheet2.Cells["B3"].PutValue("Bob");
-                sheet2.Cells["A4"].PutValue(103);
-                sheet2.Cells["B4"].PutValue("Charlie");
-                sheet2.Cells["A5"].PutValue(104);
-                sheet2.Cells["B5"].PutValue("Diana");
-                sheet2.Cells["A6"].PutValue(105);
-                sheet2.Cells["B6"].PutValue("Eve");
-
-                // Define the range for the main table (A1:B6)
-                int firstRow = 0;          // zero‑based index
-                int firstColumn = 0;
-                int totalRows = 6;         // includes header row
-                int totalColumns = 2;      // ID and Value columns
-
-                // Add a ListObject (Excel table) to the defined range
-                int listObjectIndex = sheet1.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
-                ListObject listObject = sheet1.ListObjects[listObjectIndex];
-                listObject.DisplayName = "MainTable";
-
-                // Add a calculated column (LookupResult) manually
-                int newColumnIndex = totalColumns; // zero‑based index for the new column
-                string headerAddress = CellsHelper.CellIndexToName(firstRow, newColumnIndex);
-                sheet1.Cells[headerAddress].PutValue("LookupResult");
-
-                // XLOOKUP formula to retrieve names from the lookup table
-                string xlookupFormula = "=XLOOKUP([@ID],LookupTable!$A$2:$A$6,LookupTable!$B$2:$B$6,\"Not Found\")";
-
-                // Apply the formula to each data row in the new column
-                for (int r = 1; r < totalRows; r++) // start from row 1 (skip header)
-                {
-                    Cell cell = sheet1.Cells[firstRow + r, newColumnIndex];
-                    cell.Formula = xlookupFormula;
-                }
-
-                // Verify that the formula was propagated to all rows
-                bool allFormulasMatch = true;
-                for (int r = 1; r < totalRows; r++)
-                {
-                    Cell cell = sheet1.Cells[firstRow + r, newColumnIndex];
-                    if (!cell.Formula.Equals(xlookupFormula, StringComparison.OrdinalIgnoreCase))
-                    {
-                        allFormulasMatch = false;
-                        Console.WriteLine($"Row {firstRow + r + 1} formula mismatch: {cell.Formula}");
-                    }
-                }
-
-                Console.WriteLine(allFormulasMatch
-                    ? "XLOOKUP formula propagated to all rows successfully."
-                    : "Formula propagation verification failed.");
-
-                // Save the workbook (optional, just to demonstrate lifecycle)
-                string outputPath = "CalculatedColumn_XLookup.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                }
+                // Row index of the current data row within the worksheet
+                int rowIndex = ordersTable.StartRow + 1 + i;
+                // Column index of the calculated column within the worksheet
+                int colIndex = ordersTable.StartColumn + 2;
+                Cell cell = sheet.Cells[rowIndex, colIndex];
+                Console.WriteLine($"Cell {cell.Name} formula: {cell.Formula}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook (optional, demonstrates that the file contains the calculated column)
+            string outputPath = "CalculatedColumn_XLOOKUP.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

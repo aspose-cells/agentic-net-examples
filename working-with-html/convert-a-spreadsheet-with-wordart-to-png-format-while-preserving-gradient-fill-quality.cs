@@ -1,64 +1,53 @@
-// Title: Render Excel worksheets with WordArt to high‑resolution PNG images while preserving gradient fills using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, verifies its existence, and uses Aspose.Cells to render each worksheet containing WordArt to a 300 dpi PNG with transparent background and gradient‑fill preservation. | Show how to configure ImageOrPrintOptions in Aspose.Cells to adjust DPI, enable transparency, and switch the output format from PNG to JPEG when rendering Excel sheets. | Write a snippet that iterates over all worksheets in a workbook, saves each as a separate PNG named after the sheet, and logs the generated file paths.
-// Common Searches: how to export Excel sheet with WordArt to PNG preserving gradient colors using Aspose.Cells .NET | C# Aspose.Cells render worksheet to high DPI PNG with transparent background | set image resolution when converting Excel to PNG with Aspose.Cells | preserve WordArt gradient fill when converting Excel to image in .NET
-// Tags: Aspose.Cells SheetRender to PNG with gradient fill | high DPI image export Aspose.Cells | transparent background PNG from Excel WordArt | ImageOrPrintOptions DPI setting Aspose.Cells | batch render worksheets to PNG Aspose.Cells
+// Title: Convert an Excel worksheet with WordArt to a high‑resolution PNG image while preserving gradient fills using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file containing WordArt and exports the first worksheet to a 300 dpi PNG with gradient fill retained using Aspose.Cells. | Show how to configure ImageOrPrintOptions for high‑resolution PNG output and render each sheet to separate image files in C#. | Provide a C# snippet that checks for workbook existence, sets OnePagePerSheet, and saves the worksheet as a transparent‑background PNG with Aspose.Cells.
+// Common Searches: how to export Excel sheet with WordArt to PNG using Aspose.Cells C# | preserve gradient fill when converting Excel to high resolution PNG Aspose.Cells | set DPI for PNG export in Aspose.Cells ImageOrPrintOptions C# | render first worksheet as single‑page PNG Aspose.Cells .NET | export WordArt graphics from Excel to PNG without quality loss
+// Tags: Aspose.Cells PNG export with gradient fill | ImageOrPrintOptions DPI setting C# | SheetRender ToImage high‑resolution output | WordArt rendering to PNG Aspose.Cells | OnePagePerSheet Excel to image conversion | transparent background PNG export Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an Excel workbook, checks the input file, and uses Aspose.Cells SheetRender with high‑resolution ImageOrPrintOptions to export each worksheet containing WordArt to a 300 dpi PNG that retains gradient fills and transparency.
-class WordArtToPngConverter
+// The program verifies the input Excel file, loads it with Aspose.Cells, configures ImageOrPrintOptions for 300 dpi and OnePagePerSheet, then uses SheetRender to export the first worksheet as a high‑resolution PNG that retains WordArt gradient quality.
+class Program
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
+            const string outputPath = "output.png";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException.
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Load the Excel workbook that contains WordArt.
+            // Load the workbook that contains WordArt
             Workbook workbook = new Workbook(inputPath);
 
-            // Set up image rendering options.
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Ensure there is at least one worksheet to render
+            if (workbook.Worksheets.Count == 0)
+                throw new InvalidOperationException("The workbook does not contain any worksheets.");
+
+            // Configure image export options (default format is PNG)
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                // Render the whole sheet on a single page.
+                // Render each sheet on a single page
                 OnePagePerSheet = true,
-                // High resolution to preserve gradient fill quality.
+                // High resolution improves gradient rendering
                 HorizontalResolution = 300,
-                VerticalResolution = 300,
-                // Maximum quality.
-                Quality = 100,
-                // Preserve transparency if WordArt contains it.
-                Transparent = true
-                // Note: ImageFormat defaults to PNG, so no explicit setting is required.
+                VerticalResolution = 300
             };
 
-            // Loop through each worksheet and render it to a PNG file.
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                Worksheet sheet = workbook.Worksheets[i];
-                // Create a SheetRender object for the current sheet.
-                SheetRender sheetRender = new SheetRender(sheet, imgOptions);
-                // Render the first (and only) page to an image.
-                // The file name includes the sheet name for clarity.
-                string outputPath = $"Sheet_{sheet.Name}.png";
-                sheetRender.ToImage(0, outputPath);
-                Console.WriteLine($"Rendered sheet \"{sheet.Name}\" to \"{outputPath}\".");
-            }
+            // Render the first worksheet (index 0) to a PNG image
+            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], options);
+            sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Worksheet rendered successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

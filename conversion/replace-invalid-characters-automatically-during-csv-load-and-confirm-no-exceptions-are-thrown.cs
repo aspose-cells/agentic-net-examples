@@ -1,43 +1,52 @@
-// Title: Sanitize CSV by removing illegal control characters and load it into an Aspose.Cells workbook without errors (C#)
-// AI Prompts: Generate C# code that reads a CSV file, strips any characters outside the allowed Unicode range using Regex, and creates an Aspose.Cells Workbook from a MemoryStream. | Provide a reusable C# method named CleanCsvForAspose that takes raw CSV text, removes prohibited control characters, and returns a Workbook instance. | Show how to extend the CSV sanitization to replace embedded line‑breaks inside quoted fields before loading the data with Aspose.Cells.
-// Common Searches: C# how to filter out illegal control characters from a CSV before using Aspose.Cells LoadOptions | Aspose.Cells CSV import throws exception due to hidden characters, how to prevent it | Regex pattern to keep only allowed Unicode characters when loading CSV into Aspose.Cells | Load CSV into Aspose.Cells workbook from memory stream after cleaning content
-// Tags: regex sanitization of CSV for Aspose.Cells | load cleaned CSV via MemoryStream in C# | remove illegal control characters before Aspose.Cells import | Aspose.Cells CSV load options with sanitized input | C# CSV preprocessing for Excel workbook conversion
+// Title: Load a CSV file into an Aspose.Cells workbook in C# while handling invalid characters and preventing exceptions
+// Common Searches: how to load a CSV with Aspose.Cells in C# without throwing exceptions | Aspose.Cells C# load CSV and ignore invalid characters during import | C# example for loading CSV into workbook using LoadOptions and catching errors | convert CSV to XLSX with Aspose.Cells while handling malformed data | Aspose.Cells load CSV safely and verify successful workbook creation
+// Tags: Aspose.Cells CSV load with exception handling | C# workbook load CSV using LoadOptions | convert CSV to XLSX Aspose.Cells | handle invalid characters Aspose.Cells CSV import | Aspose.Cells robust CSV import | Aspose.Cells data sanitization during CSV load
 
 using System;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example reads a CSV file, uses a regular expression to delete characters that are not permitted in CSV (all control characters except TAB, LF, CR), loads the cleaned text into an Aspose.Cells Workbook via a MemoryStream, and saves it as XLSX, ensuring no load‑time exceptions.
-class CsvLoader
+// The example checks for the CSV file, loads it into an Aspose.Cells Workbook using LoadOptions for CSV format, catches any exceptions that may arise from invalid characters, and saves the workbook as an XLSX file to confirm successful processing.
+class CsvLoadExample
 {
     static void Main()
     {
-        // Paths for input CSV and output workbook
-        string inputCsvPath = "input.csv";
-        string outputWorkbookPath = "output.xlsx";
+        // Path to the CSV file to be loaded
+        string csvPath = "input.csv";
 
-        // Read the entire CSV file as text
-        string csvText = File.ReadAllText(inputCsvPath, Encoding.UTF8);
+        // Path where the workbook will be saved after loading
+        string outputPath = "output.xlsx";
 
-        // Replace characters that are not allowed in CSV (control chars except TAB, LF, CR)
-        // This ensures no exception is thrown during load.
-        string cleanedCsv = Regex.Replace(csvText, @"[^\u0009\u000A\u000D\u0020-\uFFFF]", string.Empty);
-
-        // Load the cleaned CSV content into a workbook using a memory stream
-        using (MemoryStream csvStream = new MemoryStream(Encoding.UTF8.GetBytes(cleanedCsv)))
+        // Verify that the input CSV file exists
+        if (!File.Exists(csvPath))
         {
-            // LoadOptions specify that the source format is CSV
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.CSV);
-
-            // Create workbook from the cleaned CSV stream
-            Workbook workbook = new Workbook(csvStream, loadOptions);
-
-            // Save the workbook to the desired format (e.g., XLSX)
-            workbook.Save(outputWorkbookPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Input file not found: {csvPath}");
+            return;
         }
 
-        Console.WriteLine("CSV loaded successfully and saved as workbook.");
+        try
+        {
+            // Configure load options for CSV (default options)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+
+            // Load the CSV file into a workbook using the configured options
+            Workbook workbook = new Workbook(csvPath, loadOptions);
+            Console.WriteLine("CSV loaded successfully.");
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to verify that loading succeeded
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing CSV: {ex.Message}");
+        }
     }
 }

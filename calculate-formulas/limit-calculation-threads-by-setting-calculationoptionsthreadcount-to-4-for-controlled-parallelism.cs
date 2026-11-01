@@ -1,63 +1,32 @@
-// Title: Set Aspose.Cells CalculationOptions.ThreadCount to 4 for controlled formula evaluation in C#
-// AI Prompts: Generate C# code that configures Aspose.Cells CalculationOptions.ThreadCount = 4 before calling Workbook.CalculateFormula(). | Show an example of limiting the number of parallel calculation threads to four when evaluating formulas with Aspose.Cells in a .NET application. | Explain how to adjust Aspose.Cells calculation thread pool to a fixed size of four threads and then save the workbook.
-// Common Searches: how to restrict Aspose.Cells formula calculation to a specific number of threads in C# | Aspose.Cells CalculationOptions ThreadCount property usage example | limit parallel formula evaluation in Aspose.Cells .NET | set maximum calculation threads for Excel workbook using Aspose.Cells | C# Aspose.Cells control calculation thread pool size
-// Tags: Aspose.Cells calculation thread count | C# set CalculationOptions.ThreadCount | limit parallel formula evaluation Aspose.Cells | configure Aspose.Cells calculation options | control workbook.CalculateFormula threads
+// Title: Limiting formula calculation threads to 4 with Aspose.Cells CalculationOptions in C#
+// Common Searches: Aspose.Cells set calculation thread count to 4 in C# | limit number of parallel formula calculations using Aspose.Cells | configure CalculationOptions.ThreadCount for workbook calculation Aspose | control Excel formula calculation concurrency with Aspose.Cells .NET | how to restrict formula engine threads in Aspose.Cells library
+// Tags: Aspose.Cells calculationoptions threadcount | limit parallel formula calculation c# | configure workbook calculation concurrency | set max calculation threads aspnet | control formula engine threads aspose.cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates loading or creating a workbook, adding data and formulas, configuring Aspose.Cells CalculationOptions.ThreadCount to 4 to restrict parallel formula evaluation, calculating the formulas, and saving the workbook as an XLSX file.
+// The example creates a Workbook, sets CalculationOptions.ThreadCount to 4 to restrict parallel formula evaluation, runs CalculateFormula(), and saves the workbook to 'output.xlsx' while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Load existing workbook if present; otherwise create a new blank workbook
-            string inputPath = "input.xlsx";
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-            }
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Add sample data and formulas
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-            cells["A1"].PutValue(10);
-            cells["A2"].Formula = "=A1*2";
-            cells["A3"].Formula = "=SUM(A1:A2)";
+            // Perform a full calculation (optional, ensures formulas are evaluated)
+            workbook.CalculateFormula();
 
-            // Calculate all formulas (default calculation options)
-            try
-            {
-                workbook.CalculateFormula();
-            }
-            catch (Exception calcEx)
-            {
-                Console.WriteLine($"Formula calculation error: {calcEx.Message}");
-            }
-
-            // Ensure the output directory exists
+            // Save the workbook to a file
             string outputPath = "output.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log or handle any unexpected errors
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

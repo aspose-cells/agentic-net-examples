@@ -1,7 +1,7 @@
-// Title: Insert a picture into an Aspose.Cells chart from an image stream and set its width to 100 points (C#)
-// AI Prompts: How can I add a picture to a chart in Aspose.Cells for .NET using a MemoryStream and set the picture width to 100 points? | Generate C# code that loads an image into a stream, places it as a picture control on a column chart, and adjusts its width to 100 points with Aspose.Cells.
-// Common Searches: Aspose.Cells C# add image to chart from stream with specific width | set chart picture size in points using Aspose.Cells .NET | place picture control on column chart using image stream Aspose.Cells example
-// Tags: Aspose.Cells chart picture insertion from stream | set picture width points Aspose.Cells | C# column chart add image control | Aspose.Cells workbook picture workaround chart
+// Title: Insert a picture from a FileStream into an Excel worksheet and set its width to 100 points using Aspose.Cells for .NET
+// AI Prompts: Read a PNG file into a FileStream, add it as a picture on a worksheet, assign the Width property a value of 100 points, and save the workbook with Aspose.Cells in C#. | Create a column chart, overlay an image loaded from a stream as a picture, adjust the picture's width to 100 points, and export the file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add picture from FileStream to worksheet and set width | how to set picture width in points using Aspose.Cells | load PNG into stream and insert into Excel workbook with Aspose.Cells .NET | resize picture inserted via Aspose.Cells C# example | place image over chart in Aspose.Cells worksheet
+// Tags: image stream picture insertion Aspose.Cells | picture width 100 points Aspose.Cells | PNG overlay on worksheet chart Aspose.Cells | worksheet picture sizing Aspose.Cells | Aspose.Cells picture control dimensions
 
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, adds a column chart, loads an image file into a stream, inserts the image as a picture control on the chart (using a worksheet picture as a workaround), sets the picture width to 100 points, and saves the workbook as output.xlsx.
+// // This example creates a workbook, adds a column chart, loads a PNG image via FileStream, inserts it as a picture on the worksheet, sets the picture width to 100 points, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
@@ -19,41 +19,44 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart to the worksheet (positioned from row 5, column 0 to row 15, column 5)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            // Add a column chart to the worksheet (position and size are arbitrary)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Verify that the image file exists before attempting to load it
-            const string imagePath = "image.png";
+            // Path to the image file
+            string imagePath = "image.png";
+
+            // Verify that the image file exists before loading
             if (File.Exists(imagePath))
             {
                 try
                 {
-                    // Insert the picture into the worksheet (as a workaround for chart picture insertion)
-                    // The picture is placed at row 0, column 0 of the worksheet.
-                    int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
-                    Picture picture = sheet.Pictures[pictureIndex];
+                    // Load the image file into a stream
+                    using (FileStream imgStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        // Add a picture to the worksheet; Add returns the picture index
+                        int pictureIndex = sheet.Pictures.Add(0, 0, 0, 0, imgStream);
+                        Picture picture = sheet.Pictures[pictureIndex];
 
-                    // Set the picture width to 100 points
-                    picture.Width = 100;
+                        // Set the picture width to 100 points
+                        picture.Width = 100;
+                    }
                 }
-                catch (Exception picEx)
+                catch (Exception imgEx)
                 {
-                    Console.WriteLine($"Failed to insert picture: {picEx.Message}");
+                    Console.WriteLine($"Failed to add picture: {imgEx.Message}");
                 }
             }
             else
             {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+                Console.WriteLine($"Image file not found: {imagePath}");
             }
 
             // Save the workbook to a file
-            const string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully as '{outputPath}'.");
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

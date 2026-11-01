@@ -1,46 +1,50 @@
-// Title: Set workbook to Automatic calculation mode, recalculate all formulas, and read updated cell values using Aspose.Cells for .NET
-// AI Prompts: Load an Excel file, assign Workbook.Settings.CalculationMode = CalculationModeType.Automatic, invoke workbook.CalculateFormula(), then output the value of cell A1. | Switch the workbook to automatic calculation, trigger a full formula refresh, and verify the result of a dependent cell before saving. | Programmatically enable automatic evaluation, recalculate the entire sheet, and retrieve the refreshed value of a target cell to confirm the update.
-// Common Searches: C# Aspose.Cells how to turn on automatic formula evaluation and refresh all cells | recalculate workbook formulas after changing calculation settings with Aspose.Cells | retrieve updated value of a cell after calling CalculateFormula in Aspose.Cells .NET | save modified workbook after enabling automatic calculation using Aspose.Cells
-// Tags: Workbook.Settings.CalculationMode Automatic Aspose.Cells | recalculate all formulas using Aspose.Cells API | read cell value after formula evaluation Aspose.Cells | save updated workbook to XLSX Aspose.Cells | handle workbook load errors Aspose.Cells
+// Title: Set Aspose.Cells workbook calculation mode to Automatic, recalculate formulas, and read updated cell values in C#
+// Common Searches: Aspose.Cells C# set calculation mode to Automatic | Recalculate all formulas in an Excel workbook using Aspose.Cells .NET | Get cell value after CalculateFormula with Aspose.Cells | Save workbook after formula recalculation in Aspose.Cells C# | Verify updated Excel cell values programmatically with Aspose.Cells
+// Tags: automatic calculation mode Aspose.Cells | recalculate workbook formulas Aspose.Cells | read cell value after formula evaluation Aspose.Cells | save workbook with refreshed values Aspose.Cells | load Excel file verify cell content Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example loads an Excel workbook, switches the calculation mode to Automatic, recalculates every formula, reads the refreshed value of cell A1, and saves the updated file, with proper exception handling.
+// The example loads an existing Excel workbook with Aspose.Cells for .NET, optionally switches the calculation mode to Automatic, forces a full formula recalculation, reads the updated value of a specific cell, and saves the workbook with the refreshed results.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
+            // Optional: set calculation mode to Automatic if supported
+            // In recent versions CalcMode may be unavailable; the default mode recalculates automatically.
+            // workbook.Settings.CalcMode = CalcMode.Automatic;
 
             // Recalculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Example: read the value of cell A1 after recalculation
-            var worksheet = workbook.Worksheets[0];
-            var cell = worksheet.Cells["A1"];
+            // Read a sample cell value after recalculation (A1 in the first worksheet)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
             Console.WriteLine($"A1 value after recalculation: {cell.Value}");
 
-            // Save the updated workbook
+            // Save the workbook with updated values
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

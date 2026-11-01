@@ -1,47 +1,41 @@
-// Title: Recalculate all workbook formulas after loading XML data with Aspose.Cells and save as XLSX in C#
-// AI Prompts: Load an XML file into an Aspose.Cells Workbook, invoke CalculateFormula to refresh all dependent calculations, and write the result to an XLSX file using C#. | Write C# code that verifies the XML source exists, imports it with LoadOptions(LoadFormat.Xml), triggers a full formula recalculation, and saves the workbook as output.xlsx. | Generate a C# example showing how to import XML data, recalculate all formulas, and export the workbook to Excel format with Aspose.Cells.
-// Common Searches: how to force formula recalculation after importing XML with Aspose.Cells .NET | Aspose.Cells C# load XML and update dependent formulas before saving | C# example for CalculateFormula after loading XML data into workbook | save workbook as XLSX after XML import and formula refresh using Aspose.Cells | recalculate all formulas programmatically in Aspose.Cells after XML map load
-// Tags: import XML data with Aspose.Cells | recalculate formulas programmatically | export workbook to XLSX C# | Aspose.Cells LoadOptions XML usage | C# formula refresh after XML load
+// Title: Recalculate all workbook formulas after loading an XML spreadsheet with Aspose.Cells for .NET (C#)
+// Common Searches: how to force formula recalculation after loading an XML file with Aspose.Cells in C# | Aspose.Cells C# recalculate workbook formulas after importing XML data | C# load XML spreadsheet and evaluate formulas using Aspose.Cells | using LoadOptions to import XML and update dependent calculations in Aspose.Cells | convert XML to XLSX while preserving and recalculating formulas with Aspose.Cells
+// Tags: Aspose.Cells Workbook.CalculateFormula after XML import | C# LoadOptions LoadFormat.Xml for spreadsheet import | XML to XLSX conversion with formula evaluation Aspose.Cells | update dependent calculations in Aspose.Cells workbook | recalculate formulas programmatically Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The C# program checks for the presence of data.xml, loads it into an Aspose.Cells Workbook using LoadFormat.Xml, calls CalculateFormula to update all dependent calculations, and saves the refreshed workbook as output.xlsx.
+// The example checks for an input XML file, loads it into an Aspose.Cells Workbook using LoadOptions set to XML format, forces a full formula recalculation with CalculateFormula, and then saves the workbook as an XLSX file, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the XML source file
-            string xmlPath = "data.xml";
+            const string inputPath = "input.xml";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the XML file exists to avoid FileNotFoundException
-            if (!File.Exists(xmlPath))
+            // Ensure the input XML file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{xmlPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load XML data into a new workbook using LoadOptions
+            // Load the XML spreadsheet with appropriate load options
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
-            Workbook workbook = new Workbook(xmlPath, loadOptions);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Recalculate all formulas so that dependent calculations reflect the new data
+            // Recalculate all formulas after loading data
             workbook.CalculateFormula();
 
-            // Path for the output Excel file
-            string outputPath = "output.xlsx";
-
-            // Save the updated workbook to an Excel file
+            // Save the workbook as an XLSX file
             workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

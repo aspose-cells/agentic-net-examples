@@ -1,65 +1,51 @@
-// Title: How to auto‑resize data label shapes for long category names in a radar chart using Aspose.Cells for .NET
-// AI Prompts: Write C# code that builds a radar chart with long category names, displays those names in data labels, and enables the label shapes to automatically resize to fit the text with Aspose.Cells. | Show the steps to set the IsResizeShapeToFitText property on a radar chart series, recalculate the chart, and save the workbook in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# radar chart auto resize data labels for long category names | How to make radar chart data label shapes fit long text using Aspose.Cells | Enable IsResizeShapeToFitText on radar chart series in .NET | Resize radar chart data labels automatically with Aspose.Cells example
-// Tags: radar chart data label auto‑fit Aspose.Cells | resize label shape to fit long category names C# | set IsResizeShapeToFitText property Aspose.Cells | enable radar axis labels with long text .NET | auto‑adjust chart label dimensions Aspose.Cells
+// Title: Automatically resize radar chart data label shapes for long category names using Aspose.Cells for .NET
+// AI Prompts: Set series.DataLabels.IsAutoFit = true so radar chart data label shapes expand automatically to fit long category text in Aspose.Cells C#. | Add code that enables auto‑fit for data labels on a radar chart before saving the workbook with Aspose.Cells. | Configure the radar chart's data label auto‑size property in a C# Aspose.Cells example to handle lengthy category names.
+// Common Searches: Aspose.Cells C# enable auto fit for radar chart data labels with long category names | how to make radar chart data labels adjust size automatically in .NET | resize data label shapes for long category text in Aspose.Cells radar chart | C# Aspose.Cells set data label auto size on radar chart
+// Tags: auto fit chart data labels Aspose.Cells | radar chart label auto size C# | long category names radar chart Aspose.Cells | set IsAutoFit property chart series
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsRadarChartAutoResize
+// The example creates a workbook, fills column A with very long category names and column B with values, adds a radar chart, binds the series and categories, and shows values on data labels. To ensure the label shapes automatically resize for the long category names, set the series' DataLabels.IsAutoFit property to true before saving the workbook.
+class Program
 {
-    // Creates a workbook, adds a radar chart with long category names, shows those names in data labels, sets IsResizeShapeToFitText to true so label shapes auto‑resize to fit the text, recalculates the chart layout, and saves the file as RadarChart_AutoResizeDataLabels.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
 
-                // Populate sample data with long category names
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Very Long Category Name 1");
-                sheet.Cells["A3"].PutValue("Extremely Long Category Name 2");
-                sheet.Cells["A4"].PutValue("Super Long Category Name 3");
+            // Fill data with long category names
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series1");
+            sheet.Cells["A2"].PutValue("VeryLongCategoryNameOne");
+            sheet.Cells["A3"].PutValue("ExtremelyLongCategoryNameTwo");
+            sheet.Cells["A4"].PutValue("SuperLongCategoryNameThree");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Add a radar chart
+            int chartIndex = sheet.Charts.Add(ChartType.Radar, 5, 0, 20, 10);
+            var chart = sheet.Charts[chartIndex];
 
-                // Add a radar chart
-                int chartIndex = sheet.Charts.Add(ChartType.Radar, 5, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+            // Set the data range for the series and categories
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-                // Set series data and category data
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+            // Show values on data labels
+            var series = chart.NSeries[0];
+            series.DataLabels.ShowValue = true;
 
-                // Enable axis labels for radar chart (category names)
-                chart.NSeries[0].HasRadarAxisLabels = true;
-
-                // Enable data labels for the series
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowCategoryName = true;   // display the long category names
-                series.DataLabels.Position = LabelPositionType.Center;
-
-                // Allow the data label shape to auto‑fit the text
-                series.DataLabels.IsResizeShapeToFitText = true;
-
-                // Recalculate the chart to apply layout changes
-                chart.Calculate();
-
-                // Save the workbook
-                workbook.Save("RadarChart_AutoResizeDataLabels.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("RadarChartAutoResize.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,42 @@
-// Title: Dynamically freeze all populated columns in an Excel worksheet using Aspose.Cells MaxDataColumn (C#)
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, determines the last column containing data via Worksheet.Cells.MaxDataColumn, and applies Worksheet.FreezePanes to lock those columns. | Show how to compute both MaxDataColumn and MaxDataRow and use them to set a dynamic freeze pane that freezes columns up to the rightmost data column while keeping rows unfrozen. | Create a reusable C# method named ApplyDynamicColumnFreeze that accepts a file path, calculates the maximum data column, and saves the workbook with the appropriate FreezePanes settings.
-// Common Searches: Aspose.Cells C# freeze columns up to the last used column automatically | how to use MaxDataColumn to set dynamic freeze panes in Excel with .NET | C# code example for freezing all data columns in a worksheet using Aspose.Cells | determine rightmost data column and apply FreezePanes in Aspose.Cells for .NET | dynamic column freeze based on worksheet content Aspose.Cells tutorial
-// Tags: Worksheet.FreezePanes column locking Aspose.Cells | max data column retrieval C# Aspose.Cells | auto column freeze based on data .NET | last used column calculation Aspose.Cells | dynamic column freeze implementation C#
+// Title: Dynamically freeze columns up to the last populated column in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsx file, uses Worksheet.Cells.MaxDataColumn to locate the final column containing data, and applies FreezePanes to lock all columns through that index. | Create a reusable C# method that takes input and output paths, validates the source file, determines the maximum data column with Aspose.Cells, freezes the appropriate columns, and saves the workbook. | Show how to handle missing input files and ensure the output directory exists while dynamically applying FreezePanes based on the detected data column in Aspose.Cells.
+// Common Searches: asp.net freeze panes based on last used column Aspose.Cells | c# get last populated column in Excel worksheet using Aspose.Cells | how to programmatically freeze columns up to max data column with Aspose.Cells | example of Worksheet.FreezePanes with dynamic column range in .NET
+// Tags: dynamic column freeze Aspose.Cells | detect last populated column Aspose.Cells | freeze panes up to last column .NET | excel workbook manipulation C# Aspose | auto freeze columns based on content
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook, uses Worksheet.Cells.MaxDataColumn and MaxDataRow to find the furthest populated column and row, freezes all columns up to that column with Worksheet.FreezePanes, and saves the modified file.
+// The sample verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, retrieves the zero‑based index of the last column that contains data via Worksheet.Cells.MaxDataColumn, and freezes all columns up to that column using FreezePanes. It also creates the output directory if needed, saves the modified workbook to output.xlsx, and logs any errors.
 class DynamicFreezeColumns
 {
     static void Main()
     {
-        string inputPath = @"C:\Input\Sample.xlsx";
-        string outputPath = @"C:\Output\Sample_Frozen.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (or modify as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Determine the rightmost column that contains data (zero‑based index)
-            int maxDataColumn = sheet.Cells.MaxDataColumn;
-
-            // Determine the bottommost row that contains data (zero‑based index)
-            int maxDataRow = sheet.Cells.MaxDataRow;
+            // Determine the last column that contains data (zero‑based index)
+            int maxDataColumn = worksheet.Cells.MaxDataColumn;
 
             // Freeze all columns that contain data.
-            // FreezePanes(row, column, totalRows, totalColumns) freezes rows above 'row' and columns left of 'column'.
-            // No rows are frozen (row = 0), columns left of (maxDataColumn + 1) are frozen.
-            sheet.FreezePanes(0, maxDataColumn + 1, maxDataRow + 1, maxDataColumn + 1);
+            // Use the overload with four parameters: row, column, totalRows, totalColumns.
+            // Setting row = 0 freezes no rows; column = maxDataColumn + 1 freezes up to that column.
+            worksheet.FreezePanes(0, maxDataColumn + 1, 0, 0);
 
             // Ensure the output directory exists
             string outputDir = Path.GetDirectoryName(outputPath);
@@ -50,11 +47,11 @@ class DynamicFreezeColumns
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,62 +1,65 @@
-// Title: Load multiple Excel workbooks with a shared LoadOptions configuration and keep only worksheets that start with a specific prefix using Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates over a list of .xlsx file paths, loads each workbook with a common LoadOptions object, and removes every worksheet whose name does not begin with a given prefix. | Generate a method that receives a collection of workbook paths and a worksheet prefix, opens each file with a shared LoadOptions instance, filters out sheets that don't match the prefix, and returns the count of retained sheets per workbook.
-// Common Searches: asp.net load several Excel files with the same LoadOptions and filter sheets by name prefix | c# batch open workbooks using Aspose.Cells and keep only sheets starting with 'Data' | how to apply identical LoadOptions to multiple workbooks in Aspose.Cells | remove worksheets that don't match a naming pattern when loading Excel files in C#
-// Tags: batch workbook loading with shared LoadOptions Aspose.Cells | prefix‑based worksheet filtering C# | remove non‑matching sheets during Aspose.Cells import | iterate over multiple .xlsx files using Aspose.Cells | consistent sheet filtering across workbooks C#
+// Title: Batch load multiple Excel workbooks and filter worksheets by name prefix using Aspose.Cells for .NET
+// Common Searches: aspnet load several .xlsx files and keep only worksheets that start with 'Data' using Aspose.Cells | c# batch process Excel workbooks to remove non‑matching worksheet names with Aspose.Cells | how to apply the same LoadOptions to multiple workbooks in Aspose.Cells .NET | filter worksheets by prefix while iterating over a list of Excel files in C# | save filtered Excel workbooks with a suffix using Aspose.Cells
+// Tags: batch loading of Excel workbooks with Aspose.Cells | prefix‑based worksheet removal in C# | consistent LoadOptions usage across multiple workbooks | saving filtered workbooks with custom filename suffix | automated worksheet filtering Aspose.Cells .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example iterates through a list of Excel file paths, loads each workbook using a common LoadOptions for Xlsx format, deletes any worksheet whose name does not start with the defined prefix, and outputs the number of retained worksheets while handling missing files and load errors.
+// The example iterates over a collection of Excel file paths, loads each workbook with Aspose.Cells, removes any worksheet whose name does not start with "Data", and saves the filtered workbook to a new file that includes a "_filtered" suffix.
 class Program
 {
     static void Main()
     {
-        // List of workbook file paths to be loaded
-        List<string> workbookFiles = new List<string>
+        try
         {
-            "Book1.xlsx",
-            "Book2.xlsx",
-            "Book3.xlsx"
-        };
-
-        // Prefix used to filter worksheets after loading
-        const string worksheetPrefix = "Data";
-
-        // Load each workbook safely
-        foreach (string filePath in workbookFiles)
-        {
-            try
+            // List of workbook file paths to process
+            List<string> workbookPaths = new List<string>
             {
-                // Ensure the file exists before attempting to load
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
+                "Book1.xlsx",
+                "Book2.xlsx",
+                "Book3.xlsx"
+            };
 
-                // Load the workbook (full load)
-                Workbook workbook = new Workbook(filePath, new LoadOptions(LoadFormat.Xlsx));
-
-                // Remove worksheets that do not start with the specified prefix
-                for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+            foreach (string path in workbookPaths)
+            {
+                try
                 {
-                    Worksheet sheet = workbook.Worksheets[i];
-                    if (!sheet.Name.StartsWith(worksheetPrefix, StringComparison.OrdinalIgnoreCase))
+                    // Verify that the source file exists
+                    if (!File.Exists(path))
                     {
-                        workbook.Worksheets.RemoveAt(i);
+                        Console.WriteLine($"Source file not found: {path}");
+                        continue;
                     }
-                }
 
-                // Example usage: display the number of worksheets actually retained
-                Console.WriteLine($"Loaded '{filePath}' with {workbook.Worksheets.Count} worksheet(s) matching prefix \"{worksheetPrefix}\".");
+                    // Load the workbook (no load filter)
+                    Workbook wb = new Workbook(path);
+
+                    // Remove worksheets whose name does NOT start with "Data"
+                    for (int i = wb.Worksheets.Count - 1; i >= 0; i--)
+                    {
+                        Worksheet ws = wb.Worksheets[i];
+                        if (!ws.Name.StartsWith("Data", StringComparison.OrdinalIgnoreCase))
+                        {
+                            wb.Worksheets.RemoveAt(i);
+                        }
+                    }
+
+                    // Save the filtered workbook to a new file
+                    string outputPath = Path.GetFileNameWithoutExtension(path) + "_filtered.xlsx";
+                    wb.Save(outputPath, SaveFormat.Xlsx);
+                    Console.WriteLine($"Filtered workbook saved to: {outputPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{path}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors and continue processing other files
-                Console.WriteLine($"Error loading '{filePath}': {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

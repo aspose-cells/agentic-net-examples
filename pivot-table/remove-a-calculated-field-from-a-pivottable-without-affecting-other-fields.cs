@@ -1,92 +1,113 @@
-// Title: How to delete a single calculated field from an Aspose.Cells PivotTable in C# without altering other data fields
-// AI Prompts: Write C# code that uses Aspose.Cells to locate a calculated field named "Profit" in a PivotTable and delete it with RemoveField while preserving other data fields. | Demonstrate iterating through PivotTable.DataFields to identify the calculated field, delete it, then call RefreshData and CalculateData to update the pivot. | Create a full example that saves the workbook after the calculated field is deleted and the pivot view is refreshed.
-// Common Searches: Aspose.Cells C# remove calculated field from pivot table without affecting other fields | delete specific pivot table calculated field using Aspose.Cells API | how to refresh a pivot table after removing a calculated field in C# | C# code example for removing a calculated field named Profit from Aspose.Cells pivot | Aspose.Cells remove calculated field from Data area programmatically
-// Tags: delete calculated field Aspose.Cells pivot | pivot table data field deletion C# | refresh pivot after field removal Aspose.Cells | find calculated field in DataFields Aspose.Cells | Aspose.Cells calculated field removal example
+// Title: Delete a calculated field from a PivotTable in an existing Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that removes a calculated field named 'MyCalculatedField' from the first PivotTable in a workbook while leaving other fields untouched. | Show how to check whether a calculated field exists in a PivotTable before deleting it, using dynamic typing to support different Aspose.Cells versions. | Provide a .NET example that accesses the CalculatedFields collection dynamically, removes the target field, and safely saves the modified Excel file.
+// Common Searches: asp.net remove calculated field from pivot table using Aspose.Cells | c# code to delete specific calculated field in Excel pivot table | how to verify calculated field existence before removal with Aspose.Cells | dynamic access to CalculatedFields collection Aspose.Cells version compatibility | remove pivot table calculated field without affecting other fields in .NET
+// Tags: Aspose.Cells PivotTable calculated field deletion | C# remove pivot calculated field | Aspose.Cells CalculatedFields dynamic handling | Excel workbook pivot field management .NET | version‑compatible Aspose.Cells pivot operations
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, locates the first PivotTable, checks for a calculated field named 'MyCalculatedField', removes it using dynamic access to the CalculatedFields collection (compatible with multiple Aspose.Cells versions), and saves the workbook while handling possible errors.
+class Program
 {
-    // The sample creates a workbook, adds a pivot table with Product, Sales, and Cost fields, defines a calculated field "Profit", locates that calculated field in the DataFields collection, deletes it using RemoveField, refreshes and recalculates the pivot, and saves the result as RemovedCalculatedField.xlsx.
-    class RemoveCalculatedFieldDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the existing workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet contains at least one pivot table
+        if (worksheet.PivotTables == null || worksheet.PivotTables.Count == 0)
+        {
+            Console.WriteLine("No pivot tables found on the worksheet.");
+            return;
+        }
+
+        // Get the first pivot table (adjust index or name as required)
+        PivotTable pivotTable = worksheet.PivotTables[0];
+
+        // Name of the calculated field to be removed
+        string calculatedFieldName = "MyCalculatedField";
+
+        // Attempt to remove the calculated field using dynamic to stay compatible with different library versions
+        try
+        {
+            dynamic dynPivot = pivotTable;
+            // Try to access the CalculatedFields collection; if it doesn't exist, an exception will be thrown
+            dynamic calcFields = dynPivot.CalculatedFields;
+
+            bool fieldExists = false;
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["A4"].PutValue("Orange");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["B2"].PutValue(1000);
-                sheet.Cells["B3"].PutValue(2000);
-                sheet.Cells["B4"].PutValue(1500);
-                sheet.Cells["C1"].PutValue("Cost");
-                sheet.Cells["C2"].PutValue(400);
-                sheet.Cells["C3"].PutValue(800);
-                sheet.Cells["C4"].PutValue(600);
-
-                // Add a pivot table covering the data range
-                int ptIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[ptIndex];
-
-                // Add row and data fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");
-
-                // Add a calculated field named "Profit"
-                pivotTable.AddCalculatedField("Profit", "=Sales-Cost", true);
-
-                // Refresh and calculate the pivot table to populate data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Locate the calculated field in the DataFields collection
-                PivotField calculatedField = null;
-                foreach (PivotField df in pivotTable.DataFields)
+                // Some versions expose Contains(string), others may require iteration
+                fieldExists = calcFields.Contains(calculatedFieldName);
+            }
+            catch
+            {
+                // Fallback: iterate through the collection to find the field by name
+                foreach (var cf in calcFields)
                 {
-                    if (df.IsCalculatedField && df.Name == "Profit")
+                    if (cf.Name == calculatedFieldName)
                     {
-                        calculatedField = df;
+                        fieldExists = true;
                         break;
                     }
                 }
-
-                // If the calculated field is found, remove it from the Data area
-                if (calculatedField != null)
-                {
-                    // Use RemoveField with the field name to delete only this calculated field
-                    pivotTable.RemoveField(PivotFieldType.Data, calculatedField.Name);
-                }
-
-                // Recalculate after removal to update the pivot view
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook with the updated pivot table
-                workbook.Save("RemovedCalculatedField.xlsx");
             }
-            catch (Exception ex)
+
+            if (fieldExists)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Remove the calculated field
+                calcFields.Remove(calculatedFieldName);
+                Console.WriteLine($"Calculated field '{calculatedFieldName}' removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Calculated field '{calculatedFieldName}' does not exist.");
             }
         }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
         {
-            RemoveCalculatedFieldDemo.Run();
+            // The CalculatedFields property is not available in this version of Aspose.Cells
+            Console.WriteLine("Calculated fields are not supported by the current Aspose.Cells version.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during removal
+            Console.WriteLine($"Unable to remove calculated field '{calculatedFieldName}': {ex.Message}");
+        }
+
+        // Save the modified workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

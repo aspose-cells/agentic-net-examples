@@ -1,48 +1,85 @@
-// Title: Attempt to modify a password-protected worksheet without a password and capture the exception using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that protects the first worksheet with a password using Aspose.Cells, then tries to write to cell A1 without supplying the password and logs the caught exception. | Show how to handle the exception thrown when a protected worksheet is edited without a password in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells .NET how to catch exception when editing a protected worksheet without password | C# attempt to write to password protected Excel sheet using Aspose.Cells and get error message | example of protecting a worksheet and then failing to modify it without password in Aspose.Cells
-// Tags: worksheet.Protect with password Aspose.Cells | edit protected sheet without password exception Aspose.Cells | exception handling for protected worksheet Aspose.Cells | saving workbook after protection failure Aspose.Cells | C# Aspose.Cells worksheet protection example
+// Title: Attempt to edit a password‑protected worksheet without unprotecting it using Aspose.Cells for .NET and capture the failure
+// Common Searches: Aspose.Cells C# edit cell in protected worksheet without password | How to catch CellsException when modifying a locked Excel sheet with Aspose.Cells | C# load Excel file with optional password prompt using Aspose.Cells LoadOptions | Record failure of editing a protected worksheet in Aspose.Cells example | Attempt to write to a protected sheet without unprotecting using Aspose.Cells .NET
+// Tags: edit protected worksheet Aspose.Cells | handle CellsException Aspose.Cells | load workbook optional password Aspose.Cells | detect worksheet protection C# | record edit failure Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Demonstrates protecting the first worksheet with a password, attempting to write to cell A1 without the password, catching the resulting exception, and saving the workbook.
+// The sample loads an Excel workbook, prompting for a password if the initial load fails, accesses the first worksheet, attempts to write to cell A1 without unprotecting the sheet, catches CellsException to identify protection, and outputs whether the edit succeeded or correctly failed.
 class Program
 {
     static void Main()
     {
+        const string filePath = "protected.xlsx";
+
+        // Verify that the workbook file exists before attempting to load it.
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        Workbook workbook = null;
+
+        // Attempt to load the workbook; if it fails, assume it may be password‑protected.
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            workbook = new Workbook(filePath);
+        }
+        catch (Exception loadEx)
+        {
+            Console.WriteLine("Initial load failed (possible password protection): " + loadEx.Message);
+            Console.Write("Enter password: ");
+            string password = Console.ReadLine();
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Protect the worksheet with a password (oldPassword is not required for new protection)
-            worksheet.Protect(ProtectionType.All, "myPassword", string.Empty);
-
-            // Attempt to edit a cell without providing the password
             try
             {
-                // This operation should fail because the sheet is protected
-                worksheet.Cells["A1"].PutValue("Attempted Edit");
-                Console.WriteLine("Edit succeeded unexpectedly.");
+                LoadOptions loadOptions = new LoadOptions { Password = password };
+                workbook = new Workbook(filePath, loadOptions);
             }
-            catch (Exception ex)
+            catch (Exception pwdEx)
             {
-                // Record the failure outcome
-                Console.WriteLine("Failed to edit protected worksheet without password: " + ex.Message);
+                Console.WriteLine("Failed to load workbook with provided password: " + pwdEx.Message);
+                return;
             }
+        }
 
-            // Save the workbook (optional, just to demonstrate saving)
-            workbook.Save("ProtectedWorksheetDemo.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+        // Ensure workbook was loaded.
+        if (workbook == null)
+        {
+            Console.WriteLine("Workbook could not be loaded.");
+            return;
+        }
+
+        // Access the first worksheet (index 0).
+        Worksheet sheet = workbook.Worksheets[0];
+
+        bool editSucceeded = false;
+
+        // Try to modify a cell on the protected worksheet without unprotecting it.
+        try
+        {
+            sheet.Cells["A1"].PutValue("Attempted Edit");
+            editSucceeded = true; // Unexpected success.
+        }
+        catch (CellsException)
+        {
+            Console.WriteLine("Failed to edit protected worksheet (cell is protected).");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Unexpected error during edit attempt: " + ex.Message);
+        }
+
+        // Output the result of the edit attempt.
+        if (editSucceeded)
+        {
+            Console.WriteLine("Edit unexpectedly succeeded.");
+        }
+        else
+        {
+            Console.WriteLine("Edit correctly failed due to worksheet protection.");
         }
     }
 }

@@ -1,55 +1,60 @@
-// Title: Freeze specific rows and columns in an Excel worksheet using Aspose.Cells for .NET with command‑line arguments
-// AI Prompts: Generate C# code that reads row and column numbers from command‑line inputs and applies Worksheet.FreezePanes with Aspose.Cells. | Add validation for the command‑line values and default to no freeze when the inputs are missing or invalid. | Show how to modify the FreezePanes call to freeze a fixed number of rows and columns that differ from the split position.
-// Common Searches: asp.net console app freeze panes using Aspose.Cells command line arguments | c# how to set freeze row and column in Excel file with Aspose.Cells | using Worksheet.FreezePanes with user‑provided indices in a .NET application | example of freezing top rows and left columns in generated Excel workbook via Aspose.Cells | command line driven freeze pane configuration in Aspose.Cells C#
-// Tags: Aspose.Cells FreezePanes API C# | command‑line row column freeze Aspose.Cells | programmatic Excel freeze pane .NET | set freeze panes from args Aspose.Cells | freeze rows and columns in generated workbook
+// Title: Freeze rows and columns in an Excel file from command‑line arguments using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads two integer arguments from the command line, creates a workbook with Aspose.Cells, fills it with sample data, and freezes panes at the supplied row and column indices. | Show how to determine the worksheet's total row and column count and invoke Worksheet.FreezePanes(totalRows, totalColumns, freezeRow, freezeColumn) before saving the workbook as an .xlsx file.
+// Common Searches: aspocells c# freeze panes based on command line input | how to use Worksheet.FreezePanes with dynamic row and column indices in .NET | C# program to freeze top rows and left columns in an Excel file using Aspose.Cells | command line arguments for FreezePanes method Aspose.Cells example | freeze panes at specific cell position Aspose.Cells C# tutorial
+// Tags: Worksheet.FreezePanes with command‑line parameters | Aspose.Cells freeze rows and columns | populate worksheet before freezing panes | save workbook as .xlsx after FreezePanes | calculate total rows columns Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The console program reads optional row and column indices from the command line, creates a new workbook, fills sample data, applies Worksheet.FreezePanes with the supplied indices on the first worksheet, and saves the result as FrozenPaneOutput.xlsx.
-class Program
+namespace FreezePanesExample
 {
-    static void Main(string[] args)
+    // The example reads two integers from the command line representing the row and column to freeze, creates a new workbook, populates cells with sample data, computes the worksheet's total rows and columns, applies Worksheet.FreezePanes using those totals and the user‑specified indices, saves the result as FrozenPaneOutput.xlsx, and prints a confirmation message.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Parse command‑line arguments for row and column freeze values.
-            // If arguments are missing or invalid, defaults to 0 (no freeze).
-            int freezeRow = 0;
-            int freezeColumn = 0;
-
-            if (args.Length >= 1 && int.TryParse(args[0], out int parsedRow))
-                freezeRow = parsedRow;
-
-            if (args.Length >= 2 && int.TryParse(args[1], out int parsedColumn))
-                freezeColumn = parsedColumn;
-
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate some sample data (optional, just to visualize the freeze effect).
-            for (int i = 0; i < 20; i++)
+            try
             {
-                for (int j = 0; j < 10; j++)
+                // Validate command‑line arguments: first is row index, second is column index.
+                if (args.Length < 2 ||
+                    !int.TryParse(args[0], out int freezeRow) ||
+                    !int.TryParse(args[1], out int freezeColumn))
                 {
-                    sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
+                    Console.WriteLine("Usage: FreezePanesExample <freezeRow> <freezeColumn>");
+                    return;
                 }
+
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Fill sample data to visualize the freeze effect.
+                for (int r = 0; r < 20; r++)
+                {
+                    for (int c = 0; c < 10; c++)
+                    {
+                        sheet.Cells[r, c].PutValue($"R{r + 1}C{c + 1}");
+                    }
+                }
+
+                // Apply FreezePanes.
+                // The overload requires total rows/columns of the sheet plus the rows/columns to freeze.
+                int totalRows = sheet.Cells.MaxDataRow + 1;
+                int totalColumns = sheet.Cells.MaxDataColumn + 1;
+                sheet.FreezePanes(totalRows, totalColumns, freezeRow, freezeColumn);
+
+                // Save the workbook.
+                string outputPath = "FrozenPaneOutput.xlsx";
+                workbook.Save(outputPath);
+
+                Console.WriteLine($"Workbook saved with panes frozen at row {freezeRow}, column {freezeColumn}.");
             }
-
-            // Apply FreezePanes.
-            // FreezePanes(row, column, totalRows, totalColumns) freezes 'totalRows' rows above 'row'
-            // and 'totalColumns' columns left of 'column'.
-            sheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
-
-            // Save the workbook.
-            workbook.Save("FrozenPaneOutput.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

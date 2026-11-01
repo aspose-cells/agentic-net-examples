@@ -1,40 +1,55 @@
-// Title: Load an XLSX workbook with AutoFitterOptions.ForRendering and convert it to PDF using Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx file with AutoFitterOptions.ForRendering enabled, then save the workbook as a PDF using Aspose.Cells. | Apply rendering‑mode auto‑fit during workbook loading and export the result with default PdfSaveOptions in C#.
-// Common Searches: Aspose.Cells C# load Excel file with AutoFitterOptions rendering mode and export to PDF | How to enable AutoFitterOptions.ForRendering when converting XLSX to PDF in .NET | C# convert XLSX to PDF with column autofit for rendering using Aspose.Cells
-// Tags: AutoFitterOptions.ForRendering load option | XLSX to PDF conversion Aspose.Cells | rendering mode column autofit Aspose.Cells | PdfSaveOptions default usage | Workbook.Save PDF Aspose.Cells
+// Title: Auto‑fit all rows and columns for rendering and convert an XLSX workbook to PDF with Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file, sets AutoFitterOptions.ForRendering = true, auto‑fits rows and columns on every worksheet, and saves the workbook as a PDF using Aspose.Cells. | Create a .NET console program that checks for the existence of an input Excel file, applies AutoFitColumns and AutoFitRows with rendering options to each sheet, and outputs a PDF file. | Implement a method that receives a stream of an Excel workbook, applies AutoFitterOptions for rendering to auto‑size all rows and columns, and returns the generated PDF as a byte array.
+// Common Searches: how to use AutoFitterOptions.ForRendering with Aspose.Cells to export Excel to PDF in C# | C# Aspose.Cells auto‑size rows and columns before PDF conversion | convert XLSX to PDF while preserving column widths using Aspose.Cells | apply rendering auto‑fit to all worksheets in Aspose.Cells .NET example
+// Tags: auto‑fit rows columns rendering Aspose.Cells | XLSX to PDF conversion Aspose.Cells C# | AutoFitterOptions ForRendering usage | AutoFitColumns AutoFitRows PDF export | Aspose.Cells workbook rendering options
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitPdfDemo
+// Loads an XLSX workbook, applies AutoFitterOptions with ForRendering=true to auto‑fit rows and columns on each worksheet, and saves the result as a PDF file.
+class Program
 {
-    // The program loads 'input.xlsx' using LoadOptions that contain AutoFitterOptions with ForRendering set to true, then saves the workbook as 'output.pdf' using default PdfSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source XLSX file
-            string sourcePath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Create AutoFitterOptions and enable rendering mode
-            AutoFitterOptions autoFitOptions = new AutoFitterOptions();
-            autoFitOptions.ForRendering = true; // Apply rendering‑specific auto‑fit
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Assign the options to LoadOptions
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.AutoFitterOptions = autoFitOptions;
+            // Load the XLSX workbook from file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load the workbook with the specified load options
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+            // Prepare AutoFitterOptions for rendering (set ForRendering = true)
+            AutoFitterOptions renderOptions = new AutoFitterOptions
+            {
+                ForRendering = true
+            };
 
-            // Create PDF save options (default constructor)
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+            // Apply AutoFitterOptions to each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Auto‑fit all columns using rendering options
+                sheet.AutoFitColumns(renderOptions);
+                // Auto‑fit all rows using rendering options
+                sheet.AutoFitRows(renderOptions);
+            }
 
-            // Save the workbook as PDF using the save options
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfSaveOptions);
-
-            Console.WriteLine($"Workbook converted to PDF successfully: {outputPath}");
+            // Save the workbook as a PDF document
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

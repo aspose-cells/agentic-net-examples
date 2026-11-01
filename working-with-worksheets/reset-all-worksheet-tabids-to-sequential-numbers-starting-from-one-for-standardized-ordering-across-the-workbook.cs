@@ -1,34 +1,28 @@
-// Title: Reset worksheet TabId values to sequential numbers with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells, iterates through all worksheets, assigns TabId values starting at 1, and saves the modified workbook. | Create a .NET script with Aspose.Cells that renumbers the TabId property of every sheet in a workbook so the tabs are ordered 1,2,3,… and writes the result to a new file.
-// Common Searches: how to renumber Excel sheet TabId using Aspose.Cells in C# | Aspose.Cells set TabId sequentially for all worksheets | C# code to reset worksheet tab identifiers to consecutive numbers | standardize tab order in an Excel workbook with Aspose.Cells
-// Tags: Aspose.Cells sequential TabId assignment | C# worksheet TabId reset | Excel workbook reorder sheet tabs Aspose | TabId property usage in Aspose.Cells | programmatic worksheet ordering .NET
+// Title: Renumber all worksheet TabId values sequentially starting at 1 using Aspose.Cells for .NET
+// AI Prompts: Loop through each worksheet in a workbook, assign its TabId property an incrementing integer beginning with 1, and save the file with Aspose.Cells in C#. | Update the TabId of every sheet in an Excel workbook to create a continuous sequence (1,2,3…) using Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells how to set worksheet TabId sequentially | renumber Excel sheet tabs after deleting worksheets with Aspose.Cells | programmatically reset worksheet tab order using Aspose.Cells .NET | assign incremental TabId to all worksheets in a workbook Aspose.Cells | standardize Excel worksheet TabId values with C# Aspose.Cells
+// Tags: set worksheet TabId Aspose.Cells | sequential TabId assignment .NET | renumber Excel sheet tabs C# | standardize worksheet tab order Aspose.Cells | update worksheet TabId property programmatically
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, iterates through each worksheet assigning TabId values 1, 2, 3…, and saves the updated file.
+// Loads an Excel workbook, iterates over each worksheet to assign TabId values 1, 2, 3…, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Path to the source workbook
-        string inputPath = "input.xlsx";
+        // Load the workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook
-        Workbook workbook = new Workbook(inputPath);
-
-        // Reset TabId for each worksheet to sequential numbers starting from 1
-        int nextTabId = 1;
+        // Assign sequential TabIds starting from 1
+        int tabId = 1;
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            sheet.TabId = nextTabId;
-            nextTabId++;
+            sheet.TabId = tabId;
+            tabId++;
         }
 
-        // Path for the updated workbook
-        string outputPath = "output.xlsx";
-
         // Save the modified workbook
-        workbook.Save(outputPath);
+        workbook.Save("output.xlsx");
     }
 }

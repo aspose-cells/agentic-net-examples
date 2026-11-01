@@ -1,82 +1,102 @@
-// Title: C# example: read cells from a worksheet's defined print area using Aspose.Cells LightCells
-// AI Prompts: Provide C# sample code that opens an Excel file with Aspose.Cells, determines the PageSetup.PrintArea of the first worksheet, and uses the LightCells API to iterate through each cell in that area, outputting the address and value. | Create a reusable C# function that loads a workbook, identifies the defined print area (or falls back to the used range if none), and efficiently reads cell data with LightCells, including handling missing files and cell read exceptions.
-// Common Searches: Aspose.Cells C# read only cells inside the defined print area | How to use LightCells to process a print area in an Excel workbook | C# extract cell values from worksheet print area with Aspose.Cells | Get cell addresses from a print area range using Aspose.Cells LightCells | Fallback to used range when print area is not set in Aspose.Cells
-// Tags: Aspose.Cells LightCells read print area | C# extract worksheet print area cells | Aspose.Cells load workbook defined print area | Excel print area processing with LightCells | Efficient cell iteration Aspose.Cells C#
+// Title: Extract cells within a worksheet's defined print area using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read only the print area of an Excel worksheet | how to get cells from a print area range with Aspose.Cells .NET | extract values from a defined print area in an .xlsx file using Aspose.Cells | parse PageSetup.PrintArea string to CellArea in C# Aspose.Cells | iterate over cells in a print area without loading entire sheet Aspose.Cells
+// Tags: Aspose.Cells extract print area cells | C# parse print area string CellArea | Aspose.Cells PageSetup print area handling | Excel workbook load specific range Aspose.Cells | iterate worksheet cells within defined print area
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The sample loads an Excel workbook, accesses the first worksheet, retrieves its PageSetup.PrintArea (or the used range if no print area is defined), calculates the boundaries, and uses Aspose.Cells LightCells to efficiently iterate over each cell in that region, printing the cell address and value while handling file‑not‑found and cell‑read errors.
+// The sample loads an Excel workbook, retrieves the worksheet's print area from PageSetup, converts the range string into a CellArea object, and iterates over each cell in that area, outputting addresses and values while handling missing files, undefined print areas, and parsing errors.
 class ExtractPrintArea
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Path to the input workbook
-            string workbookPath = "input.xlsx";
+            // Load the workbook (the file must have a print area defined)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure the file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the print area string (e.g., "A1:C10")
+            string printAreaRef = sheet.PageSetup.PrintArea;
+
+            // If no print area is defined, exit
+            if (string.IsNullOrEmpty(printAreaRef))
             {
-                Console.WriteLine($"Error: File '{workbookPath}' not found.");
+                Console.WriteLine("No print area defined in the worksheet.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Retrieve the defined print area (e.g., "A1:C10")
-            string printAreaRef = sheet.PageSetup.PrintArea;
-
-            // Determine the area to process
-            int startRow, startColumn, endRow, endColumn;
-
-            if (string.IsNullOrEmpty(printAreaRef))
+            // Parse the print area reference into a CellArea structure
+            CellArea printArea;
+            try
             {
-                // No print area defined – use the worksheet's used range
-                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-                startRow = usedRange.FirstRow;
-                startColumn = usedRange.FirstColumn;
-                endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+                // Print area can be a single cell or a range like "A1:C10"
+                string[] parts = printAreaRef.Split(':');
+                if (parts.Length == 2)
+                {
+                    CellsHelper.CellNameToIndex(parts[0], out int startRow, out int startColumn);
+                    CellsHelper.CellNameToIndex(parts[1], out int endRow, out int endColumn);
+                    printArea = new CellArea
+                    {
+                        StartRow = startRow,
+                        StartColumn = startColumn,
+                        EndRow = endRow,
+                        EndColumn = endColumn
+                    };
+                }
+                else
+                {
+                    // Single cell reference
+                    CellsHelper.CellNameToIndex(printAreaRef, out int row, out int column);
+                    printArea = new CellArea
+                    {
+                        StartRow = row,
+                        StartColumn = column,
+                        EndRow = row,
+                        EndColumn = column
+                    };
+                }
             }
-            else
+            catch (Exception exParse)
             {
-                // Use the print area reference to create a range and derive boundaries
-                AsposeRange printRange = sheet.Cells.CreateRange(printAreaRef);
-                startRow = printRange.FirstRow;
-                startColumn = printRange.FirstColumn;
-                endRow = printRange.FirstRow + printRange.RowCount - 1;
-                endColumn = printRange.FirstColumn + printRange.ColumnCount - 1;
+                Console.WriteLine($"Failed to parse the print area reference: {exParse.Message}");
+                return;
             }
 
-            // Iterate through the cells within the determined area
-            for (int row = startRow; row <= endRow; row++)
+            // Iterate through the cells within the print area
+            for (int row = printArea.StartRow; row <= printArea.EndRow; row++)
             {
-                for (int col = startColumn; col <= endColumn; col++)
+                for (int col = printArea.StartColumn; col <= printArea.EndColumn; col++)
                 {
                     try
                     {
                         Cell cell = sheet.Cells[row, col];
-                        // Output cell address (e.g., A1) and its value
-                        Console.WriteLine($"{cell.Name} = {cell.Value}");
+                        string address = CellsHelper.CellIndexToName(row, col);
+                        Console.WriteLine($"{address}: {cell.Value}");
                     }
-                    catch (Exception cellEx)
+                    catch (Exception exCell)
                     {
-                        Console.WriteLine($"Error reading cell R{row + 1}C{col + 1}: {cellEx.Message}");
+                        Console.WriteLine($"Error reading cell at row {row}, column {col}: {exCell.Message}");
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

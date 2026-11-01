@@ -1,108 +1,135 @@
-// Title: Generate an audit report of differing custom document properties between two Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that takes two Aspose.Cells Workbook objects and returns a list describing any mismatched or missing custom document properties. | Show how to load two .xlsx files with Aspose.Cells, compare their CustomDocumentProperties collections, and output a summary of differences. | Add comprehensive error handling to a custom property comparison routine, covering file‑not‑found checks and exception reporting.
-// Common Searches: aspnet compare custom document properties of two Excel files with Aspose.Cells | c# code to audit custom properties differences between two workbooks | how to list missing custom properties when comparing two .xlsx files using Aspose.Cells | generate a diff report of custom document properties in Excel workbooks with Aspose.Cells .NET
-// Tags: customdocumentproperties comparison Aspose.Cells | audit workbook metadata .NET | detect mismatched custom properties Excel | compare workbook custom properties C# | list missing custom document properties Aspose
+// Title: Compare custom document properties of two Excel workbooks and generate an audit report with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# compare custom document properties between two .xlsx files | Generate a text file audit of differing custom properties in Excel workbooks using Aspose.Cells | How to list missing or mismatched custom properties when comparing two workbooks in .NET | C# code to compare workbook custom properties and export differences with Aspose.Cells | Case‑insensitive custom property comparison for Excel files using Aspose.Cells API
+// Tags: custom document property comparison Aspose.Cells | audit report generation Excel workbooks C# | compare workbook custom properties .xlsx | case-insensitive property name matching Aspose.Cells | export property differences to text file C#
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-// The example verifies that two .xlsx files exist, loads them into Aspose.Cells Workbook objects, extracts their CustomDocumentProperties, and iterates through each collection to identify value mismatches or properties present in only one workbook. It returns a descriptive list of differences and includes robust error handling for missing files and comparison exceptions.
-class Program
+namespace CustomPropertyComparison
 {
-    static void Main()
+    // The example loads two Excel workbooks with Aspose.Cells, extracts their CustomDocumentProperties into case‑insensitive dictionaries, compares property names and values, records any missing or mismatched entries, prints the differences, and writes them to a text file for auditing.
+    class Program
     {
-        // Paths to the workbooks to compare
-        string workbookPath1 = "Workbook1.xlsx";
-        string workbookPath2 = "Workbook2.xlsx";
-
-        try
+        static void Main()
         {
+            // Paths to the workbooks to compare
+            string workbookPath1 = @"C:\Data\Workbook1.xlsx";
+            string workbookPath2 = @"C:\Data\Workbook2.xlsx";
+
             // Verify that the input files exist
             if (!File.Exists(workbookPath1))
-                throw new FileNotFoundException($"File not found: {workbookPath1}");
-            if (!File.Exists(workbookPath2))
-                throw new FileNotFoundException($"File not found: {workbookPath2}");
-
-            // Load the two workbooks
-            Workbook wb1 = new Workbook(workbookPath1);
-            Workbook wb2 = new Workbook(workbookPath2);
-
-            // Compare custom properties and collect differences
-            List<string> differences = CompareCustomProperties(wb1, wb2);
-
-            // Output the differences for auditing
-            foreach (string diff in differences)
             {
-                Console.WriteLine(diff);
+                Console.WriteLine($"File not found: {workbookPath1}");
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
 
-    /// <param name="wb1">First workbook.</param>
-    /// <param name="wb2">Second workbook.</param>
-    /// <returns>List of difference descriptions.</returns>
-    static List<string> CompareCustomProperties(Workbook wb1, Workbook wb2)
-    {
-        var diffs = new List<string>();
+            if (!File.Exists(workbookPath2))
+            {
+                Console.WriteLine($"File not found: {workbookPath2}");
+                return;
+            }
 
-        try
-        {
-            // Retrieve the custom property collections
+            Workbook wb1 = null;
+            Workbook wb2 = null;
+
+            try
+            {
+                // Load the workbooks
+                wb1 = new Workbook(workbookPath1);
+                wb2 = new Workbook(workbookPath2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbooks: {ex.Message}");
+                return;
+            }
+
+            // Retrieve custom document properties collections
             var props1 = wb1.CustomDocumentProperties;
             var props2 = wb2.CustomDocumentProperties;
 
-            // Check each property in the first collection
-            foreach (var propObj1 in props1)
-            {
-                // Use dynamic to avoid compile‑time dependency on CustomDocumentProperty type
-                dynamic prop1 = propObj1;
-                string name = prop1.Name as string;
+            // Prepare a list to hold difference descriptions
+            List<string> differences = new List<string>();
 
-                if (props2.Contains(name))
+            try
+            {
+                // Build dictionaries for quick lookup (property name -> value)
+                var dict1 = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var prop in props1)
                 {
-                    // Property exists in both workbooks; compare values
-                    dynamic prop2 = props2[name];
-                    if (!object.Equals(prop1.Value, prop2.Value))
+                    dict1[prop.Name] = prop.Value?.ToString() ?? string.Empty;
+                }
+
+                var dict2 = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var prop in props2)
+                {
+                    dict2[prop.Name] = prop.Value?.ToString() ?? string.Empty;
+                }
+
+                // Find properties present in workbook1 but missing or different in workbook2
+                foreach (var kvp in dict1)
+                {
+                    if (!dict2.TryGetValue(kvp.Key, out string valueInWb2))
                     {
-                        diffs.Add($"Value mismatch for property '{name}': Workbook1 = '{prop1.Value}' vs Workbook2 = '{prop2.Value}'.");
+                        differences.Add($"Property '{kvp.Key}' exists in Workbook1 but is missing in Workbook2.");
+                    }
+                    else if (!string.Equals(kvp.Value, valueInWb2, StringComparison.Ordinal))
+                    {
+                        differences.Add($"Property '{kvp.Key}' differs: Workbook1='{kvp.Value}' vs Workbook2='{valueInWb2}'.");
                     }
                 }
-                else
+
+                // Find properties present in workbook2 but missing in workbook1
+                foreach (var kvp in dict2)
                 {
-                    // Property missing in the second workbook
-                    diffs.Add($"Property '{name}' exists in Workbook1 but not in Workbook2.");
+                    if (!dict1.ContainsKey(kvp.Key))
+                    {
+                        differences.Add($"Property '{kvp.Key}' exists in Workbook2 but is missing in Workbook1.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing custom properties: {ex.Message}");
+                return;
+            }
+
+            // Output the differences
+            if (differences.Count == 0)
+            {
+                Console.WriteLine("No differences found in custom property sets.");
+            }
+            else
+            {
+                Console.WriteLine("Differences in custom property sets:");
+                foreach (var diff in differences)
+                {
+                    Console.WriteLine("- " + diff);
                 }
             }
 
-            // Find properties that exist only in the second workbook
-            foreach (var propObj2 in props2)
-            {
-                dynamic prop2 = propObj2;
-                string name = prop2.Name as string;
+            // Optionally, write the differences to a text file for auditing
+            string auditReportPath = @"C:\Data\CustomPropertyDifferences.txt";
 
-                if (!props1.Contains(name))
+            try
+            {
+                // Ensure the directory exists
+                string dir = Path.GetDirectoryName(auditReportPath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                 {
-                    diffs.Add($"Property '{name}' exists in Workbook2 but not in Workbook1.");
+                    Directory.CreateDirectory(dir);
                 }
-            }
 
-            // If no differences were found, indicate that
-            if (diffs.Count == 0)
+                File.WriteAllLines(auditReportPath, differences);
+                Console.WriteLine($"Audit report saved to: {auditReportPath}");
+            }
+            catch (Exception ex)
             {
-                diffs.Add("No differences in custom properties between the two workbooks.");
+                Console.WriteLine($"Error writing audit report: {ex.Message}");
             }
         }
-        catch (Exception ex)
-        {
-            diffs.Add($"Error during comparison: {ex.Message}");
-        }
-
-        return diffs;
     }
 }

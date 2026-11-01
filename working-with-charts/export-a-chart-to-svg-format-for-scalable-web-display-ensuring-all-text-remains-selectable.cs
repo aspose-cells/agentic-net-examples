@@ -1,61 +1,66 @@
-// Title: Export the first chart from an Excel workbook to an SVG file with selectable text using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook, retrieves the first chart on the first worksheet, and saves it as an SVG while keeping the text selectable with Aspose.Cells. | Show how to configure ImageOrPrintOptions.OnePagePerSheet for SVG chart export so the resulting SVG preserves searchable text. | Write a C# routine that loops through all charts in a worksheet and exports each chart to its own SVG file using Aspose.Cells.
-// Common Searches: aspnet export excel chart to svg with selectable text using aspose.cells | c# how to save a chart as scalable vector graphics from a workbook | imageorprintoptions onepagepersheet svg chart export example | export multiple charts from a worksheet to separate svg files asp.net | preserve text layer when converting excel chart to svg asp.net
-// Tags: chart export to SVG Aspose.Cells | ImageOrPrintOptions OnePagePerSheet SVG | selectable text in SVG chart Aspose | C# export Excel chart as scalable vector graphics | multiple chart SVG export Aspose.Cells
+// Title: Export a column chart from an Aspose.Cells workbook to an SVG file with selectable text in C#
+// AI Prompts: Generate C# code that creates a column chart in an Aspose.Cells workbook and uses ImageOrPrintOptions to save the chart as an SVG file with selectable text. | Show how to export only a chosen chart from a worksheet to SVG using Aspose.Cells' Chart.ToImage method and configure the output for web‑ready scalability. | Provide a C# example that iterates over all charts on a worksheet and writes each one to a separate SVG file while preserving editable text.
+// Common Searches: how to save an Aspose.Cells chart as an SVG with editable text in C# | C# Aspose.Cells export specific chart to SVG using ImageOrPrintOptions | export multiple Excel charts to separate SVG files with selectable text using Aspose.Cells | Aspose.Cells Chart.ToImage SVG example C#
+// Tags: Aspose.Cells export chart to SVG | C# ImageOrPrintOptions SVG chart output | selectable text in SVG from Excel chart | Chart.ToImage method Aspose.Cells | multiple chart SVG export Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering; // Required for ImageOrPrintOptions
 
-// Loads an Excel workbook, accesses the first worksheet's first chart, and exports it to an SVG file using Aspose.Cells with ImageOrPrintOptions.OnePagePerSheet to retain selectable text.
+// Creates a workbook, adds sample data, builds a column chart, sets its title, configures ImageOrPrintOptions with ImageType.Svg, and uses Chart.ToImage to write the chart to an SVG file where text remains selectable; optionally saves the workbook as an XLSX file.
 class ExportChartToSvg
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "chart.svg";
+            // Create a new workbook (or load an existing one with Workbook workbook = new Workbook("input.xlsx");)
+            Workbook workbook = new Workbook();
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Load the workbook containing the chart
-            Workbook workbook = new Workbook(inputPath);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B4"].PutValue(180);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Ensure the worksheet contains at least one chart
-            if (worksheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
-            }
+            // Define the data range for the series and categories
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Get the first chart on the worksheet
-            Chart chart = worksheet.Charts[0];
+            // Set a title for the chart
+            chart.Title.Text = "Quarterly Sales";
 
             // Configure image options for SVG output
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // ImageFormat property is optional; SVG is inferred from file extension
-                OnePagePerSheet = true // Required flag for image export
+                ImageType = ImageType.Svg // Export as SVG
             };
 
-            // Export the chart to an SVG file
-            chart.ToImage(outputPath, imgOptions);
-            Console.WriteLine($"Chart exported successfully to '{outputPath}'.");
+            // Export the chart directly to an SVG file
+            string svgPath = "ChartOutput.svg";
+            chart.ToImage(svgPath, imgOptions);
+
+            // (Optional) Save the workbook if you need the Excel file as well
+            string workbookPath = "WorkbookWithChart.xlsx";
+            workbook.Save(workbookPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

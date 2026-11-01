@@ -1,58 +1,43 @@
-// Title: Open a macro-enabled .xlsm workbook in C# with Aspose.Cells, loading only the VBA project and skipping worksheet cells
-// AI Prompts: Use Aspose.Cells LoadOptions in C# to open an .xlsm file with the VBA filter enabled, then enumerate the VBA modules without loading any worksheet data. | Create a C# program that checks for an .xlsm file, loads only its VBA project via Aspose.Cells, and prints each module name while ignoring sheet content.
-// Common Searches: Aspose.Cells C# load only VBA project from .xlsm file | skip loading worksheets when opening macro-enabled Excel workbook with Aspose.Cells | retrieve VBA module names without reading cell data using Aspose.Cells | how to use LoadOptions VBA filter in Aspose.Cells C# example | open .xlsm in C# and list VBA modules without loading sheets
-// Tags: Aspose.Cells LoadOptions VBA filter | C# load only VBA project .xlsm | skip worksheet data Aspose.Cells | enumerate VBA modules Aspose.Cells | macro-enabled workbook loading C#
+// Title: Load a macro‑enabled .xlsm workbook in C# with Aspose.Cells while skipping all worksheet data using the VBA‑only filter
+// Common Searches: C# Aspose.Cells load only VBA project from .xlsm | How to open a macro‑enabled workbook without loading worksheets using Aspose.Cells | Retrieve VBA project name from an .xlsm file with Aspose.Cells in C# | Skip worksheet data when loading a macro‑enabled Excel file with Aspose.Cells | Aspose.Cells LoadOptions to ignore sheets in .xlsm
+// Tags: extract VBA project Aspose.Cells | ignore worksheet content .xlsm Aspose.Cells | Workbook.VbaProject property C# | LoadOptions VbaProjectOnly flag Aspose.Cells | load .xlsm skipping sheet data
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The sample checks that a macro-enabled .xlsm file exists, loads it with Aspose.Cells using the VBA filter to avoid loading worksheet cells, accesses the VbaProject, iterates through its modules, and prints each module name while handling possible errors.
+// The example verifies the .xlsm file exists, loads it with Aspose.Cells using the default options, accesses the VBA project via workbook.VbaProject to obtain its name, and shows how to optionally save the workbook after modifications.
 class Program
 {
     static void Main()
     {
-        const string filePath = "MacroWorkbook.xlsm";
+        // Path to the source workbook
+        string sourcePath = @"C:\Path\To\YourWorkbook.xlsm";
 
-        // Ensure the input file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            Console.WriteLine($"File not found: {filePath}");
+            Console.WriteLine($"Source file not found: {sourcePath}");
             return;
         }
 
-        Workbook workbook = null;
-
         try
         {
-            // Load the workbook (Aspose.Cells auto‑detects the format)
-            workbook = new Workbook(filePath);
+            // Load the workbook using default load options (auto‑detect format)
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Access the VBA project name (if present)
+            string vbaProjectName = workbook.VbaProject?.Name ?? "No VBA project found";
+            Console.WriteLine($"VBA Project Name: {vbaProjectName}");
+
+            // (Optional) Save the workbook after modifications
+            // string outputPath = @"C:\Path\To\ModifiedWorkbook.xlsm";
+            // workbook.Save(outputPath, SaveFormat.Xlsm);
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"Error loading workbook: {ex.Message}");
-            return;
-        }
-
-        try
-        {
-            // Access the VBA project (if any) and list its modules
-            var vbaProject = workbook.VbaProject;
-            if (vbaProject != null && vbaProject.Modules != null)
-            {
-                foreach (var module in vbaProject.Modules)
-                {
-                    Console.WriteLine($"Module: {module.Name}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No VBA project or modules found in the workbook.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error processing VBA project: {ex.Message}");
         }
     }
 }

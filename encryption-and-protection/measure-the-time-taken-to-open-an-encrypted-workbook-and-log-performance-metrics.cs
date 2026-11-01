@@ -1,57 +1,62 @@
-// Title: Measure and log the time required to open a password‑protected Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an encrypted .xlsx file with Aspose.Cells, starts a Stopwatch, and prints the elapsed milliseconds and formatted TimeSpan after the workbook is opened. | Show how to set LoadOptions with a password, catch CellsException for an invalid password, and still report the time elapsed before the exception was thrown. | Demonstrate logging of both successful and failed workbook opening attempts, including performance metrics, using Console output in a .NET console application.
-// Common Searches: how to benchmark opening speed of a password protected Excel file using Aspose.Cells in C# | c# measure time to load encrypted .xlsx with Aspose.Cells LoadOptions | catch invalid password error when loading protected workbook with Aspose.Cells and get elapsed time | performance logging for Aspose.Cells workbook load operation
-// Tags: Aspose.Cells load encrypted workbook timing | C# Stopwatch Aspose.Cells performance | LoadOptions password Aspose.Cells | CellsException invalid password handling | benchmark workbook opening latency Aspose.Cells
+// Title: Benchmark loading time and memory usage of a password‑protected XLSX workbook using Aspose.Cells for .NET
+// Common Searches: how to measure load time of an encrypted Excel file with Aspose.Cells in C# | C# code to log memory consumption when opening a password protected workbook using Aspose.Cells | benchmark performance of Aspose.Cells LoadOptions for encrypted XLSX files | record elapsed milliseconds while loading a protected workbook with Aspose.Cells .NET | detect invalid password error when timing workbook load in Aspose.Cells
+// Tags: Aspose.Cells encrypted workbook load timing | memory profiling Aspose.Cells LoadOptions | benchmarking password protected XLSX loading .NET | handle CellsException invalid password Aspose.Cells | performance metrics for Aspose.Cells workbook opening
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies the encrypted Excel file exists, configures LoadOptions with the workbook password, and starts a Stopwatch. It then attempts to load the workbook using Aspose.Cells. On success, the timer stops and the elapsed time is printed in milliseconds and as a formatted TimeSpan. If a CellsException occurs, the code checks for an "Invalid password" message, reports the specific error, and logs the time elapsed before the failure. Any other exceptions are caught, the timer is stopped, and the error is displayed.
+// The sample verifies the encrypted Excel file exists, captures memory usage before loading, starts a Stopwatch, and opens the workbook with LoadOptions that include the password. After loading, it stops the timer, records memory usage again, and prints elapsed milliseconds, memory before, memory after, and additional memory allocated. It also catches CellsException to identify an invalid password and ensures the stopwatch is stopped for any exception.
 class Program
 {
     static void Main()
     {
         // Path to the encrypted workbook and its password
-        string filePath = "encrypted.xlsx";
-        string password = "yourPassword";
+        string workbookPath = "encrypted.xlsx";
+        string password = "myPassword";
 
         // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        if (!File.Exists(workbookPath))
         {
-            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
             return;
         }
 
-        // Prepare load options with the password
-        LoadOptions loadOptions = new LoadOptions
-        {
-            Password = password
-        };
+        // Capture memory usage before loading
+        long memoryBefore = GC.GetTotalMemory(forceFullCollection: true);
 
-        // Start measuring time
+        // Start timing
         Stopwatch stopwatch = Stopwatch.StartNew();
 
         try
         {
-            // Load the encrypted workbook
-            Workbook workbook = new Workbook(filePath, loadOptions);
+            // Set load options with the password for the encrypted file
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
 
-            // Stop measuring time after successful load
+            // Open the encrypted workbook
+            Workbook workbook = new Workbook(workbookPath, loadOptions);
+
+            // Stop timing after successful load
             stopwatch.Stop();
 
+            // Capture memory usage after loading
+            long memoryAfter = GC.GetTotalMemory(forceFullCollection: true);
+
             // Log performance metrics
-            Console.WriteLine("Workbook opened successfully.");
             Console.WriteLine($"Time taken to open encrypted workbook: {stopwatch.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Time taken (hh:mm:ss.fff): {stopwatch.Elapsed}");
+            Console.WriteLine($"Memory used before load: {memoryBefore / 1024} KB");
+            Console.WriteLine($"Memory used after load: {memoryAfter / 1024} KB");
+            Console.WriteLine($"Additional memory allocated: {(memoryAfter - memoryBefore) / 1024} KB");
         }
         catch (CellsException ex)
         {
             stopwatch.Stop();
-
-            // Check if the exception is due to an invalid password
-            if (ex.Message != null && ex.Message.IndexOf("Invalid password", StringComparison.OrdinalIgnoreCase) >= 0)
+            // Determine if the exception is due to an invalid password
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 Console.WriteLine("Error: Invalid password provided for the encrypted workbook.");
             }
@@ -59,8 +64,6 @@ class Program
             {
                 Console.WriteLine($"CellsException occurred: {ex.Message}");
             }
-
-            Console.WriteLine($"Elapsed time before failure: {stopwatch.ElapsedMilliseconds} ms");
         }
         catch (Exception ex)
         {

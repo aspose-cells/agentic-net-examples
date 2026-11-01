@@ -1,51 +1,52 @@
-// Title: Create a rectangle shape, link its text to a REPLACE formula on cell A1, and read the calculated text with Aspose.Cells for .NET
-// AI Prompts: Add a rectangle shape to the first worksheet, assign the Text property =REPLACE(A1,1,5,"Hi"), call workbook.CalculateFormula(), and output the shape's resulting text. | Swap the REPLACE formula with =CONCAT(A1,"_2023"), recalculate the workbook, and display the new shape text. | Persist the workbook after linking the shape to the formula, then reopen the file to verify the shape displays the expected text.
-// Common Searches: Aspose.Cells bind shape text to REPLACE formula C# example | How to set a shape's Text property to an Excel formula using Aspose.Cells | Get shape's calculated text after workbook.CalculateFormula in .NET | Link rectangle shape to cell A1 formula with Aspose.Cells for .NET
-// Tags: add rectangle shape with formula text Aspose.Cells | shape formula REPLACE C# | calculate shape formulas Aspose.Cells | retrieve shape displayed value .NET | link shape to cell A1 Aspose.Cells
+// Title: Create a rectangle shape, assign a REPLACE formula linked to cell A1, evaluate it, and save the workbook with Aspose.Cells for .NET
+// AI Prompts: Add a rectangle shape to the first worksheet, set its Text property to =REPLACE(A1,1,5,"Hi"), call workbook.CalculateFormula(), and output the evaluated shape text. | Replace the shape's Text with a SUBSTITUTE formula that changes "World" to "Universe", recalculate the workbook, and display the updated shape text. | After formula evaluation, save the workbook as ShapeReplaceResult.xlsx and print the full file path.
+// Common Searches: how to bind a shape's text to an Excel formula using Aspose.Cells C# | evaluate REPLACE function inside a shape with Aspose.Cells .NET | Aspose.Cells calculate formulas in shapes after adding them | set rectangle shape text to reference cell A1 in C# Aspose.Cells | save workbook after shape formula evaluation Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | shape text REPLACE formula evaluation | calculate workbook formulas Aspose.Cells | save workbook with evaluated shape text .xlsx | link shape text to worksheet cell using formula
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, writes "HelloWorld" to cell A1, adds a rectangle shape, assigns a REPLACE formula (=REPLACE(A1,1,5,"Hi")) to the shape's Text property, forces formula calculation, and prints the resulting shape text ("HiWorld").
-class Program
+// The example creates a new workbook, writes "HelloWorld" to cell A1, adds a rectangle shape, assigns a REPLACE formula to the shape's Text property, forces formula calculation, reads and prints the evaluated shape text, and saves the result as ShapeReplaceResult.xlsx.
+class ShapeReplaceExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put original text into cell A1
-            Cell sourceCell = sheet.Cells["A1"];
-            sourceCell.PutValue("HelloWorld");
+            // Put sample text into cell A1
+            Cell cellA1 = sheet.Cells["A1"];
+            cellA1.PutValue("HelloWorld");
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, height, width (points)
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 50);
+            // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, lower right row, lower right column offset
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 4, 200);
 
-            // Link the shape's text to a REPLACE formula that operates on A1
-            // This will replace the first 5 characters of A1 with "Hi"
+            // Set the shape's text to a REPLACE formula that operates on A1
             shape.Text = "=REPLACE(A1,1,5,\"Hi\")";
 
-            // Force calculation of all formulas in the workbook
+            // Calculate all formulas in the workbook so the shape's text is evaluated
             workbook.CalculateFormula();
 
-            // Retrieve the displayed text of the shape after calculation
-            string displayedText = shape.Text;
+            // Retrieve the evaluated text from the shape
+            string shapeText = shape.Text;
+            Console.WriteLine("Shape text after REPLACE: " + shapeText);
 
-            // Output the result to verify the replacement
-            Console.WriteLine("Shape text after REPLACE formula: " + displayedText);
-            // Expected output: "HiWorld"
-
-            // (Optional) Save the workbook to inspect manually
-            // workbook.Save("ShapeReplaceDemo.xlsx");
+            // Save the workbook
+            string outputPath = "ShapeReplaceResult.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to " + Path.GetFullPath(outputPath));
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

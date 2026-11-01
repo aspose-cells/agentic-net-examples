@@ -1,55 +1,25 @@
-// Title: How to add an Arial 12‑point bold title to a column chart with Aspose.Cells in C#
-// AI Prompts: Write C# code that creates a column chart using Aspose.Cells and applies an Arial 12‑point bold font to the chart title. | Show how to modify the Font properties of a chart title in an Aspose.Cells workbook programmatically. | Provide a step‑by‑step example of adding a custom styled title to an Excel chart with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set chart title font to Arial bold | example of formatting column chart title in Aspose.Cells .NET | how to apply 12 point Arial style to Excel chart title using Aspose.Cells
-// Tags: Aspose.Cells set chart title font | C# column chart title styling | Excel chart title Arial bold | Aspose.Cells chart title formatting .NET
+// Title: Add a bold Arial 12‑point title to a column chart with Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, insert a column chart, and set its title to "Sample Label" using Arial 12‑pt bold font via Aspose.Cells C#. | Apply Arial 12‑point bold styling to the title of an existing column chart in an Aspose.Cells workbook using .NET.
+// Common Searches: Aspose.Cells C# set chart title font to Arial 12 bold | How to format a chart title in Aspose.Cells .NET | Add a bold title to a column chart with Aspose.Cells | Change Excel chart title font programmatically using Aspose.Cells | Set chart title properties in C# Aspose.Cells API
+// Tags: Aspose.Cells chart title font styling | set chart title Arial bold .NET | column chart label formatting Aspose.Cells | Excel chart title customization C# | Aspose.Cells workbook chart creation
 
-using System;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// The sample creates a new workbook, inserts sample data, adds a column chart, and then sets the chart title text to "Sample Chart Title" with an Arial 12‑point bold font before saving the workbook as ChartWithLabel.xlsx.
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+// Access the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+// Add a chart (Column type) to the worksheet
+int chartIndex = sheet.Charts.Add(Aspose.Cells.Charts.ChartType.Column, 5, 0, 15, 5);
+Aspose.Cells.Charts.Chart chart = sheet.Charts[chartIndex];
 
-            // Add sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+// Set the label (chart title) text
+chart.Title.Text = "Sample Label";
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+// Configure the label font: Arial, size 12, bold
+chart.Title.Font.Name = "Arial";
+chart.Title.Font.Size = 12;
+chart.Title.Font.IsBold = true;
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Add a label (chart title) with Arial font, size 12, bold style
-            chart.Title.Text = "Sample Chart Title";
-            chart.Title.Font.Name = "Arial";
-            chart.Title.Font.Size = 12;
-            chart.Title.Font.IsBold = true;
-
-            // Save the workbook to a file
-            workbook.Save("ChartWithLabel.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
+// Save the workbook to a file
+workbook.Save("ChartWithLabel.xlsx");

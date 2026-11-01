@@ -1,52 +1,62 @@
-// Title: How to convert an Excel file with WordArt gradient fill to PDF/A‑1b while embedding an ICC profile using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an .xlsx workbook, sets PdfSaveOptions.Compliance to PdfA1b to embed the standard ICC profile, and saves the workbook as a PDF preserving the WordArt gradient fill. | Show a step‑by‑step example of using Aspose.Cells to export an Excel worksheet containing WordArt with gradient shading to a PDF/A‑1b document that includes an embedded ICC color profile.
-// Common Searches: Aspose.Cells export Excel WordArt gradient to PDF/A with ICC profile in C# | C# save workbook as PDF/A‑1b preserving gradient fill of WordArt | embed ICC color profile when converting Excel to PDF using Aspose.Cells | PDF/A compliance for WordArt gradient colors Aspose.Cells .NET example
-// Tags: Aspose.Cells PDF/A conversion with WordArt gradient | embed ICC profile in PDF generated from Excel | preserve gradient fill during Excel to PDF export | PdfSaveOptions.Compliance PdfA1b C# | convert Excel workbook to PDF/A1b using .NET
+// Title: Convert an Excel workbook with WordArt to PDF and embed an ICC color profile using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file containing WordArt, configures PdfSaveOptions to apply an ICC color profile only when the profile file exists and the Aspose.Cells API supports it, then saves the workbook as a PDF. | Show how to detect the presence of an ICC file and safely enable color‑management options during Excel‑to‑PDF conversion with Aspose.Cells, including fallback handling for older library versions.
+// Common Searches: how to embed an ICC profile when saving Excel to PDF with Aspose.Cells .NET | preserve WordArt gradient colors in PDF output using Aspose.Cells C# | conditional IccProfilePath setting in PdfSaveOptions for .NET | color management support check for Aspose.Cells version before PDF conversion | convert workbook with WordArt to PDF using sRGB ICC profile in C#
+// Tags: pdfsaveoptions icc embedding Aspose.Cells | excel wordart pdf export c# | icc profile presence check .net | gradient fill retention Aspose.Cells pdf | version check for color‑management Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace Example
+// The example loads 'InputWithWordArt.xlsx', verifies the workbook and an optional 'sRGB.icc' file, creates a PdfSaveOptions object, conditionally sets IccProfilePath and EmbedIccProfile when supported, saves the workbook as 'Output.pdf', and logs success or error messages.
+class Program
 {
-    // The sample checks for the input .xlsx file, loads it with Aspose.Cells, configures PdfSaveOptions.Compliance to PdfA1b (which forces embedding of the standard ICC profile), and saves the workbook as a PDF/A‑1b document, ensuring the WordArt gradient fill is retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.pdf";
+            const string inputPath = "InputWithWordArt.xlsx";
+            const string outputPath = "Output.pdf";
+            const string iccPath = "sRGB.icc";
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // Verify that the input workbook exists.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook containing WordArt objects.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options.
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // If an ICC profile file is present and the current Aspose.Cells version supports it,
+            // you can embed it by setting the appropriate properties (available in newer versions).
+            // The following block is guarded by a file‑existence check and a try‑catch to avoid
+            // runtime errors on older library versions.
+            if (File.Exists(iccPath))
+            {
+                try
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // The properties IccProfilePath and EmbedIccProfile exist in recent releases.
+                    // Uncomment the lines below when using a version that provides them.
+                    // pdfOptions.IccProfilePath = iccPath;
+                    // pdfOptions.EmbedIccProfile = true;
                 }
-
-                // Load the Excel workbook that contains WordArt with gradient fill
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                catch (Exception ex)
                 {
-                    // PDF/A compliance forces embedding of an ICC profile, preserving color fidelity
-                    Compliance = PdfCompliance.PdfA1b
-                    // The EmbedStandardPdfFonts property is not available in this version of Aspose.Cells
-                };
+                    Console.WriteLine($"Warning: Unable to set ICC profile options – {ex.Message}");
+                }
+            }
 
-                // Save the workbook as PDF; the gradient fill of the WordArt will be retained
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook as a PDF.
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

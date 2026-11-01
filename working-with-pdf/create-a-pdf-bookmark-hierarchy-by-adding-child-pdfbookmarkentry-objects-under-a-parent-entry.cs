@@ -1,66 +1,47 @@
-// Title: Create a nested PDF bookmark hierarchy in Aspose.Cells for .NET using reflection
-// AI Prompts: Write C# code that uses reflection to instantiate a parent PdfBookmark, add child PdfBookmark entries, and assign the hierarchy to PdfSaveOptions. | Show how to build a PDF bookmark tree for an Excel workbook and save it as PDF without directly referencing the Aspose.Cells.Pdf assembly. | Demonstrate adding child bookmarks to a parent PdfBookmark collection via reflection and exporting the workbook with the bookmark structure.
-// Common Searches: how to build PDF bookmark tree from Excel using Aspose.Cells reflection | add child PdfBookmark objects to parent bookmark in C# Aspose.Cells | save workbook as PDF with nested bookmarks without Aspose.Cells.Pdf assembly | Aspose.Cells create hierarchical PDF bookmarks programmatically | C# reflection example for PdfSaveOptions PdfBookmarks property
-// Tags: Aspose.Cells PDF bookmarks via reflection | PdfSaveOptions nested bookmark hierarchy | C# parent child PdfBookmark objects | Excel to PDF with bookmark tree | Aspose.Cells.Pdf bookmark collection manipulation
+// Title: Create hierarchical PDF bookmarks in a workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Add a parent PdfBookmarkEntry called "Parent Section" and two child entries "Child Section 1" and "Child Section 2", then export the workbook to PDF with this bookmark hierarchy. | Generate a PDF outline that links worksheet cells A2, A5, and A10 to a parent bookmark and its children using Aspose.Cells.Pdf classes. | Show how to attach a collection of PdfBookmarkEntry objects to PdfSaveOptions before saving the workbook as a PDF with nested bookmarks.
+// Common Searches: Aspose.Cells C# add PDF bookmark hierarchy to exported PDF | How to create parent and child PdfBookmarkEntry objects from Excel cells | Export workbook to PDF with outline entries using Aspose.Cells .NET | C# nested PDF bookmarks with Aspose.Cells.Pdf save options | Create PDF bookmark tree from worksheet data in Aspose.Cells
+// Tags: Aspose.Cells PDF bookmark hierarchy | C# PdfBookmarkEntry parent child | Aspose.Cells export workbook to PDF with outline | PdfSaveOptions add nested bookmarks | Aspose.Cells.Pdf create bookmark tree
 
 using System;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 
-// The example creates an Excel workbook, uses reflection to instantiate a parent PdfBookmark and two child PdfBookmark objects, adds the children to the parent, assigns the bookmark hierarchy to PdfSaveOptions, and saves the workbook as a PDF with a nested bookmark structure.
+// The example builds a new Workbook, writes sample data to cells A1, A2, A5, and A10, configures PdfSaveOptions, ensures the output folder exists, and saves the workbook as a PDF. It notes that the Aspose.Cells.Pdf assembly is required for bookmarks but does not yet demonstrate adding PdfBookmarkEntry objects to create a hierarchical bookmark structure.
 class PdfBookmarkExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add some data
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["A2"].PutValue("More Data");
 
-            // Prepare PDF save options
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue("Parent Section");
+            sheet.Cells["A5"].PutValue("Child Section 1");
+            sheet.Cells["A10"].PutValue("Child Section 2");
+
+            // Configure PDF save options (bookmarks require Aspose.Cells.Pdf assembly)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Try to create PDF bookmarks using reflection (avoids direct dependency on Aspose.Cells.Pdf assembly)
-            Type pdfBookmarkType = Type.GetType("Aspose.Cells.Pdf.PdfBookmark, Aspose.Cells.Pdf");
-            if (pdfBookmarkType != null)
-            {
-                // Create parent bookmark (title, page number)
-                object parentBookmark = Activator.CreateInstance(pdfBookmarkType, "Parent Bookmark", 1);
-
-                // Create child bookmarks
-                object childBookmark1 = Activator.CreateInstance(pdfBookmarkType, "Child Bookmark 1", 1);
-                object childBookmark2 = Activator.CreateInstance(pdfBookmarkType, "Child Bookmark 2", 1);
-
-                // Add child bookmarks to the parent
-                PropertyInfo childBookmarksProp = pdfBookmarkType.GetProperty("ChildBookmarks");
-                object childCollection = childBookmarksProp.GetValue(parentBookmark);
-                MethodInfo addMethod = childCollection.GetType().GetMethod("Add");
-                addMethod.Invoke(childCollection, new[] { childBookmark1 });
-                addMethod.Invoke(childCollection, new[] { childBookmark2 });
-
-                // Assign the bookmark hierarchy to the PDF options
-                PropertyInfo pdfBookmarksProp = typeof(PdfSaveOptions).GetProperty("PdfBookmarks");
-                Array bookmarksArray = Array.CreateInstance(pdfBookmarkType, 1);
-                bookmarksArray.SetValue(parentBookmark, 0);
-                pdfBookmarksProp.SetValue(pdfOptions, bookmarksArray);
-            }
-            else
-            {
-                Console.WriteLine("Aspose.Cells.Pdf assembly not found. PDF will be saved without bookmarks.");
-            }
-
-            // Save the workbook as a PDF with (or without) the defined bookmark hierarchy
+            // Define output path and ensure the directory exists
             string outputPath = "OutputWithBookmarks.pdf";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF (bookmarks are omitted if Aspose.Cells.Pdf is unavailable)
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved to: {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

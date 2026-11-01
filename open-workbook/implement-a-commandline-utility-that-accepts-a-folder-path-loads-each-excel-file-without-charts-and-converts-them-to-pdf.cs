@@ -1,15 +1,14 @@
-// Title: Create a C# console utility to batch‑convert Excel workbooks (.xls, .xlsx, .xlsm) to PDF while stripping all charts with Aspose.Cells
-// AI Prompts: Write a C# console program that takes a folder path argument, loads every .xls* file with Aspose.Cells, clears the Charts collection of each worksheet, and saves the workbook as a PDF. | Generate code to enumerate Excel files in a directory, handle missing folder or no files, and export each workbook to PDF using Workbook.Save with SaveFormat.Pdf after removing charts. | Add comprehensive try‑catch blocks and user‑friendly messages to a batch Excel‑to‑PDF command‑line tool that removes charts before conversion.
-// Common Searches: c# aspose.cells batch convert excel files to pdf without charts | how to remove all charts from worksheets before exporting to pdf in .net | command line tool for converting .xls, .xlsx, .xlsm to pdf using Aspose.Cells | process multiple Excel workbooks in a folder and save as pdf in C#
-// Tags: batch convert Excel to PDF Aspose.Cells | remove worksheet charts Aspose.Cells | command line Excel PDF conversion C# | process .xls* files programmatically Aspose.Cells | save workbook as PDF without charts
+// Title: Command‑line tool to batch convert Excel (.xls, .xlsx) workbooks to PDF while removing all charts using Aspose.Cells for .NET
+// Common Searches: c# aspocells convert all excel files in a folder to pdf without charts | how to strip charts from worksheets before saving as pdf with Aspose.Cells | batch process .xls and .xlsx files to pdf via command line using Aspose.Cells | run excel to pdf conversion for multiple files in a directory with Aspose.Cells C# | aspocells command‑line utility to export workbooks to pdf after clearing charts
+// Tags: batch excel to pdf conversion aspocells | remove worksheet charts aspocells | c# command line folder processing aspocells | save workbook as pdf without charts | process xls xlsx files programmatically aspocells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace ExcelToPdfWithoutCharts
+namespace ExcelToPdfConverter
 {
-    // Console app that receives a folder path, finds all .xls, .xlsx, .xlsm files, loads each workbook with Aspose.Cells, clears every chart from all worksheets, and saves the result as a PDF with the same name.
+    // A C# console application that accepts a folder path, enumerates all .xls and .xlsx files, loads each workbook with Aspose.Cells, clears every chart from every worksheet, and saves the result as a PDF with the same name. It reports success or errors for each file, enabling fast batch conversion of Excel workbooks to PDF without chart graphics.
     class Program
     {
         static void Main(string[] args)
@@ -17,7 +16,7 @@ namespace ExcelToPdfWithoutCharts
             // Verify that a folder path was provided
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: ExcelToPdfWithoutCharts <folderPath>");
+                Console.WriteLine("Usage: ExcelToPdfConverter <folderPath>");
                 return;
             }
 
@@ -30,7 +29,7 @@ namespace ExcelToPdfWithoutCharts
                 return;
             }
 
-            // Get all Excel files in the folder (supports .xls, .xlsx, .xlsm)
+            // Get all Excel files in the folder (including .xls and .xlsx)
             string[] excelFiles = Directory.GetFiles(folderPath, "*.xls*");
 
             if (excelFiles.Length == 0)
@@ -62,7 +61,7 @@ namespace ExcelToPdfWithoutCharts
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to process \"{Path.GetFileName(excelFile)}\": {ex.Message}");
+                    Console.WriteLine($"Failed to convert \"{Path.GetFileName(excelFile)}\": {ex.Message}");
                 }
             }
         }

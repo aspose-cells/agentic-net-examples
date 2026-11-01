@@ -1,69 +1,60 @@
-// Title: Insert a local PNG picture into cell B2 of a new Excel workbook with FreeFloating placement using Aspose.Cells for .NET
-// AI Prompts: Add a picture from a file path to a specific cell (e.g., B2) in a new workbook with Aspose.Cells C# and retrieve the picture object. | Set the inserted picture's Placement property to FreeFloating to allow independent movement. | Create the output directory if missing, then save the workbook to a given path after adding the picture.
-// Common Searches: Aspose.Cells C# insert image at cell address B2 | How to add a PNG picture to an Excel worksheet using Aspose.Cells | Change picture placement mode in Aspose.Cells .NET | Save workbook after adding picture with Aspose.Cells example | Convert cell name to row and column indexes Aspose.Cells
-// Tags: insert image into worksheet cell Aspose.Cells | PNG picture insertion Aspose.Cells .NET | FreeFloating picture placement Aspose.Cells | create output folder before saving workbook C# | cell name to row column conversion Aspose.Cells
+// Title: Insert a local PNG image into a specific worksheet cell and resize it using Aspose.Cells for .NET
+// AI Prompts: Add a PNG from C:\Images\myPicture.png to cell B2 of a new workbook with Aspose.Cells and set its width to 200 px and height to 150 px. | Create an empty Excel file, place an image at row 1, column 1, adjust its size, and save the file to C:\Output\WorkbookWithPicture.xlsx. | Verify the image file exists, insert it into the first worksheet, modify the picture dimensions, and persist the workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to place an image at a specific cell address | resize inserted picture in Excel workbook using Aspose.Cells .NET | anchor PNG to B2 cell when generating Excel file with Aspose.Cells | programmatically add and scale a picture in a worksheet using Aspose.Cells for .NET
+// Tags: add picture to worksheet cell Aspose.Cells | insert png image into Excel cell C# | set picture width and height Aspose.Cells | anchor image to specific cell coordinates Aspose.Cells | save workbook with embedded picture Aspose.Cells | verify image file existence before insertion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example checks that the PNG file exists, creates a new workbook, converts cell B2 to row/column indexes, inserts the picture at that location, sets its placement to FreeFloating, ensures the output directory is present, and saves the workbook as Result.xlsx.
+// The example loads a local PNG file, inserts it into cell B2 of a newly created workbook, resizes the picture to 200 × 150 pixels, and saves the workbook to the designated output path.
 class InsertPictureExample
 {
     static void Main()
     {
-        // Path to the picture file to be inserted
-        string picturePath = @"C:\Images\MyPicture.png";
-
-        // Path where the resulting workbook will be saved
-        string outputPath = @"C:\Output\Result.xlsx";
-
         try
         {
-            // Verify picture file exists
-            if (!File.Exists(picturePath))
-            {
-                Console.WriteLine($"Picture file not found: {picturePath}");
-                return;
-            }
+            // Path to the image file to be inserted
+            string imagePath = @"C:\Images\myPicture.png";
 
-            // Ensure output directory exists (if any)
+            // Verify that the image file exists
+            if (!File.Exists(imagePath))
+                throw new FileNotFoundException("Image file not found.", imagePath);
+
+            // Path where the resulting Excel file will be saved
+            string outputPath = @"C:\Output\WorkbookWithPicture.xlsx";
+
+            // Ensure the output directory exists
             string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
+            if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
-            }
 
-            // Create a new empty workbook
+            // Create a new workbook (empty Excel file)
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Get the first worksheet in the workbook
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Target cell for the picture's top‑left corner
-            string targetCell = "B2";
+            // Define the target cell coordinate (e.g., B2)
+            // Row and column indexes are zero‑based, so B2 => row 1, column 1
+            int targetRow = 1;    // B2 row
+            int targetColumn = 1; // B2 column
 
-            // Convert cell name to row and column indexes
-            int row = worksheet.Cells[targetCell].Row;
-            int column = worksheet.Cells[targetCell].Column;
+            // Insert the picture; the top‑left corner of the picture will be anchored to the specified cell
+            int pictureIndex = worksheet.Pictures.Add(targetRow, targetColumn, imagePath);
 
-            // Add the picture; Add returns the picture index
-            int pictureIndex = worksheet.Pictures.Add(row, column, picturePath);
-
-            // Retrieve the Picture object using the index
+            // Optional: adjust picture size or offsets if needed
             Picture picture = worksheet.Pictures[pictureIndex];
+            picture.Width = 200;   // width in pixels
+            picture.Height = 150;  // height in pixels
 
-            // Optional: set placement type (FreeFloating allows independent movement)
-            picture.Placement = PlacementType.FreeFloating;
-
-            // Save the workbook
+            // Save the workbook to the specified file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

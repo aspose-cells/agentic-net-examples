@@ -1,7 +1,7 @@
-// Title: Update SmartArt shape text in an Excel workbook using a CSV mapping with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, reads a CSV file of shape names and new texts into a case‑insensitive dictionary, and updates the Text property of any SmartArt shape whose current text matches a key. | Create a robust CSV‑parsing method that handles commas inside values, builds the mapping dictionary, and applies it to modify SmartArt shapes across all worksheets. | Add comprehensive error handling that validates the presence of the workbook and CSV files, creates the output folder when missing, and saves the modified workbook to a target path.
-// Common Searches: how to change SmartArt text in Excel using Aspose.Cells and a CSV file in C# | replace Excel shape names with new values from a mapping file using Aspose.Cells .NET | C# example for iterating worksheet shapes and updating SmartArt text based on CSV data
-// Tags: Aspose.Cells SmartArt text replacement via CSV | Excel shape name mapping with Aspose.Cells | iterate worksheet shapes Aspose.Cells | C# update SmartArt text in .xlsx | load CSV into dictionary for Excel processing
+// Title: Replace SmartArt shape text in an Excel workbook using a CSV mapping with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, reads a CSV file containing shape‑name and new‑label pairs, builds a case‑insensitive dictionary, and updates each SmartArt shape whose current label matches a key. | Create a method that iterates through all worksheets and their Shapes collection, checks the Shape.Text property, substitutes it with the mapped value, and saves the modified workbook to a new file. | Add try‑catch blocks around shape processing to log warnings for shapes that cannot be updated while allowing the rest of the SmartArt update operation to continue.
+// Common Searches: C# Aspose.Cells replace SmartArt text from CSV file | bulk update Excel SmartArt shape labels using a mapping file | read shape name to text mapping CSV and apply to Excel workbook with Aspose.Cells | iterate over worksheet shapes and change text in Aspose.Cells .NET | handle errors when updating SmartArt shapes in Aspose.Cells
+// Tags: Aspose.Cells update SmartArt shape labels | C# CSV mapping to modify Excel shapes | bulk update SmartArt shapes Aspose.Cells | shape processing error handling Aspose.Cells | iterate worksheet shapes with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,89 +9,75 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample validates that both the source workbook and the CSV mapping file exist, loads the workbook with Aspose.Cells, reads the CSV into a case‑insensitive dictionary of shape names to replacement texts, iterates through every worksheet and its shapes, updates the Text property of each SmartArt shape whose current text matches a dictionary key, ensures the output directory is present, and saves the modified workbook to the specified location.
-class Program
+// The example loads an Excel workbook, reads a CSV file of shape‑name to new‑text mappings into a case‑insensitive dictionary, iterates through every worksheet and each shape, updates the shape's text when it matches a dictionary key, logs warnings for any shape that cannot be processed, and saves the result as a new .xlsx file.
+class SmartArtTextReplacer
 {
     static void Main()
     {
+        // Paths to the Excel file and the CSV mapping file
+        string excelPath = "input.xlsx";
+        string csvPath = "mapping.csv";
+        string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string mappingPath = "mapping.csv";
-            const string outputPath = "output.xlsx";
+            // Verify input files exist
+            if (!File.Exists(excelPath))
+                throw new FileNotFoundException($"Excel file not found: {excelPath}");
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"CSV mapping file not found: {csvPath}");
 
-            // Verify input workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
 
-            // Verify mapping file exists
-            if (!File.Exists(mappingPath))
-                throw new FileNotFoundException($"Mapping CSV not found: {mappingPath}");
+            // Build a dictionary from the CSV file: shapeName -> newText
+            var mapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var line in File.ReadAllLines(csvPath))
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+                // Expected format: ShapeName,NewValue
+                var parts = line.Split(new[] { ',' }, 2);
+                if (parts.Length == 2)
+                {
+                    string shapeName = parts[0].Trim();
+                    string newValue = parts[1].Trim();
+                    if (!mapping.ContainsKey(shapeName))
+                        mapping.Add(shapeName, newValue);
+                }
+            }
 
-            // Load the CSV mapping of shape names to new text values
-            Dictionary<string, string> mapping = LoadCsvMapping(mappingPath);
-
-            // Iterate through all worksheets in the workbook
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 // Iterate through all shapes on the worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Process only SmartArt shapes (or any shape with text)
-                    if (shape.IsSmartArt)
+                    try
                     {
-                        // Use the shape's text as the key for replacement
-                        string currentText = shape.Text;
-
-                        if (mapping.TryGetValue(currentText, out string newText))
+                        // Attempt to replace the shape's text if it matches a key in the mapping
+                        string currentText = shape.Text?.Trim();
+                        if (!string.IsNullOrEmpty(currentText) && mapping.TryGetValue(currentText, out string replacement))
                         {
-                            shape.Text = newText;
+                            shape.Text = replacement;
                         }
+                    }
+                    catch (Exception exShape)
+                    {
+                        // Log shape‑level errors but continue processing other shapes
+                        Console.WriteLine($"Warning: Could not process shape '{shape.Name}'. {exShape.Message}");
                     }
                 }
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
             // Save the modified workbook
-            workbook.Save(outputPath);
+            workbook.Save(outputPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    // Helper method to read a CSV file where each line is: ShapeName,NewValue
-    static Dictionary<string, string> LoadCsvMapping(string csvPath)
-    {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (string line in File.ReadLines(csvPath))
-        {
-            // Skip empty or whitespace-only lines
-            if (string.IsNullOrWhiteSpace(line))
-                continue;
-
-            // Split on the first comma to allow commas inside the new value
-            int commaIndex = line.IndexOf(',');
-            if (commaIndex <= 0)
-                continue; // Invalid line format
-
-            string key = line.Substring(0, commaIndex).Trim();
-            string value = line.Substring(commaIndex + 1).Trim();
-
-            if (!string.IsNullOrEmpty(key))
-                dict[key] = value;
-        }
-
-        return dict;
     }
 }

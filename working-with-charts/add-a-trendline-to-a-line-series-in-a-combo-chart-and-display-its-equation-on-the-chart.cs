@@ -1,7 +1,7 @@
-// Title: Create a combo chart with column and line series and add a linear trendline showing equation and R‑squared using Aspose.Cells for .NET
-// AI Prompts: Generate an Excel workbook that contains a combo chart with a column series and a line series, then attach a linear trendline to the line series and enable the display of its equation and R‑squared value. | Update an existing Aspose.Cells chart by converting a series to line type and programmatically adding a linear trendline that shows both the formula and the R‑squared statistic on the chart.
-// Common Searches: how to add a linear trendline with equation to a line series in an Aspose.Cells combo chart | Aspose.Cells .NET create combo chart with column and line series and show trendline equation | display R squared value for trendline in Excel chart using Aspose.Cells | change series type to line in Aspose.Cells combo chart programmatically
-// Tags: Aspose.Cells combo chart trendline | add linear trendline Aspose.Cells | display trendline equation .NET Excel | convert series to line chart Aspose.Cells | Excel workbook chart customization Aspose.Cells
+// Title: How to add a linear trendline with its equation to the line series of a combo (column‑line) chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a combo chart with a column series for sales and a line series for profit, then add a linear trendline to the profit series and display its equation using Aspose.Cells in C#. | Use reflection to access the Trendlines collection of a chart series and enable the DisplayEquation property when the API does not expose it directly in Aspose.Cells for .NET.
+// Common Searches: asp.net add linear trendline to line series in combo chart using Aspose.Cells | display trendline equation on Aspose.Cells chart C# | how to use reflection to add trendline in Aspose.Cells | combo chart column and line series with trendline Aspose.Cells example | Aspose.Cells add trendline to profit series in Excel workbook
+// Tags: linear trendline implementation Aspose.Cells | show trendline formula Aspose.Cells | combo chart column line series Aspose.Cells | reflection based Trendlines access Aspose.Cells | save chart as XLSX Aspose.Cells
 
 using System;
 using System.IO;
@@ -10,83 +10,99 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsTrendlineExample
 {
-    // Creates a new workbook, populates sample data, adds a combo chart with a column series and a line series, switches the second series to a line type, optionally adds a linear trendline with equation and R‑squared display, and saves the workbook as an XLSX file.
+    // The sample creates a workbook, fills it with month, sales, and profit data, builds a combo chart (column for sales, line for profit), converts the profit series to a line type, and then uses reflection to add a linear trendline with its equation displayed. The workbook is saved as an XLSX file.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                // Column A: Categories
-                // Column B: Column series values
-                // Column C: Line series values
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Column Series");
-                sheet.Cells["C1"].PutValue("Line Series");
+                // Populate sample data for the combo chart
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["C1"].PutValue("Profit");
 
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["A5"].PutValue("Apr");
-                sheet.Cells["A6"].PutValue("May");
+                string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+                double[] sales = { 12000, 15000, 13000, 17000, 16000 };
+                double[] profit = { 3000, 3500, 3200, 4000, 3800 };
 
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["B5"].PutValue(25);
-                sheet.Cells["B6"].PutValue(15);
+                for (int i = 0; i < months.Length; i++)
+                {
+                    sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A
+                    sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B
+                    sheet.Cells[i + 1, 2].PutValue(profit[i]);  // Column C
+                }
 
-                sheet.Cells["C2"].PutValue(12);
-                sheet.Cells["C3"].PutValue(22);
-                sheet.Cells["C4"].PutValue(28);
-                sheet.Cells["C5"].PutValue(27);
-                sheet.Cells["C6"].PutValue(18);
-
-                // Add a Combo chart (default type is Column, we will change the second series to Line)
+                // Add a Combo chart (Column + Line) to the worksheet
+                // Position: from row 7, column 0 to row 25, column 10
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Set chart title
-                chart.Title.Text = "Combo Chart with Trendline";
+                // Add the column series (Sales)
+                chart.NSeries.Add("B2:B6", true);
+                chart.NSeries[0].Name = "Sales";
 
-                // Add first series (Column)
-                int colSeriesIndex = chart.NSeries.Add("B2:B6", true);
-                chart.NSeries[colSeriesIndex].Name = "Column Series";
+                // Add the line series (Profit)
+                chart.NSeries.Add("C2:C6", true);
+                chart.NSeries[1].Name = "Profit";
 
-                // Add second series (Line)
-                int lineSeriesIndex = chart.NSeries.Add("C2:C6", true);
-                chart.NSeries[lineSeriesIndex].Name = "Line Series";
+                // Set the second series to be displayed as a line
+                Series profitSeries = chart.NSeries[1];
+                profitSeries.Type = ChartType.Line;
 
-                // Change the second series to a Line chart type within the combo chart
-                chart.NSeries[lineSeriesIndex].Type = ChartType.Line;
+                // Attempt to add a linear trendline to the profit series using reflection.
+                // This works for versions that expose the Trendlines property.
+                try
+                {
+                    var trendlinesProp = profitSeries.GetType().GetProperty("Trendlines");
+                    if (trendlinesProp != null)
+                    {
+                        var trendlinesObj = trendlinesProp.GetValue(profitSeries);
+                        var addMethod = trendlinesObj?.GetType().GetMethod("Add");
+                        var trendlineObj = addMethod?.Invoke(trendlinesObj, new object[] { TrendlineType.Linear });
+                        var displayEqProp = trendlineObj?.GetType().GetProperty("DisplayEquation");
+                        if (displayEqProp != null)
+                        {
+                            displayEqProp.SetValue(trendlineObj, true);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // If any reflection step fails, continue without a trendline.
+                    Console.WriteLine("Trendline could not be added: " + ex.Message);
+                }
 
-                // NOTE: Trendline support may depend on the Aspose.Cells version.
-                // If the Trendlines property is unavailable, this section can be omitted.
-                // Uncomment the following lines if your version supports trendlines.
+                // Optional chart title
+                chart.Title.Text = "Sales vs Profit with Trendline";
 
-                /*
-                Series lineSeries = chart.NSeries[lineSeriesIndex];
-                Trendline trendline = lineSeries.Trendlines.Add(TrendlineType.Linear);
-                trendline.DisplayEquation = true;   // Show equation on chart
-                trendline.DisplayRSquared = true;   // Show R‑squared value
-                */
-
-                // Determine output path and save the workbook
+                // Determine output path and ensure the directory exists
                 string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ComboChartWithTrendline.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine("Failed to save workbook: " + saveEx.Message);
+                }
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

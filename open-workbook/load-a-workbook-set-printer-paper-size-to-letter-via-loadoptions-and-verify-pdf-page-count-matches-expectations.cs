@@ -1,61 +1,58 @@
-// Title: Load an Excel workbook, set the first worksheet’s paper size to Letter, export to PDF in a MemoryStream, and confirm the PDF stream is not empty using Aspose.Cells for .NET (C#)
-// AI Prompts: Load a .xlsx file with Aspose.Cells, change the first worksheet's PageSetup.PaperSize to PaperLetter, save the workbook as PDF into a MemoryStream, and output the stream length. | Write a C# snippet that opens an Excel file, applies a Letter paper size to the first sheet, converts the workbook to PDF in memory, and asserts that the resulting PDF contains exactly one page. | Create a unit test that uses Aspose.Cells to load a workbook, set the worksheet paper size to Letter via PageSetup, saves to PDF with PdfSaveOptions, and verifies the PDF stream size is greater than zero.
-// Common Searches: Aspose.Cells C# set worksheet paper size to Letter before PDF conversion | How to export Excel to PDF in a MemoryStream using Aspose.Cells .NET | Validate PDF page count after converting an Excel workbook with Aspose.Cells | Check PDF stream length after saving workbook as PDF in C# Aspose.Cells
-// Tags: set worksheet paper size Letter Aspose.Cells | export workbook to PDF memory stream C# | verify PDF stream length Aspose.Cells | convert Excel to PDF Aspose.Cells .NET | page count validation PDF Aspose.Cells
+// Title: How to load an Excel workbook with LoadOptions, set the first worksheet's printer paper size to Letter, and export it as PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load workbook with LoadOptions then change page setup before PDF export | set worksheet paper size to Letter in Aspose.Cells before saving as PDF | verify generated PDF page count after setting paper size with Aspose.Cells C# | C# check if PDF file was created after converting Excel using Aspose.Cells | use PaperSizeType.PaperLetter in Aspose.Cells page setup
+// Tags: LoadOptions workbook loading Aspose.Cells | worksheet PageSetup PaperSizeType.PaperLetter | custom page setup for Excel to PDF conversion | C# verify PDF generation Aspose.Cells | export Excel worksheet as PDF with specific paper size
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file, sets the first worksheet's paper size to Letter via PageSetup, saves the workbook as a PDF into a MemoryStream using PdfSaveOptions, and confirms that the generated PDF stream contains data, handling any errors that may occur.
+// The example loads an Excel file (input.xlsx) using Aspose.Cells LoadOptions, changes the first worksheet's PageSetup.PaperSize to PaperLetter, saves the workbook as a PDF (output.pdf), and confirms that the PDF file was successfully created.
 class Program
 {
     static void Main()
     {
+        // Path to the source Excel file
+        string excelPath = "input.xlsx";
+
+        // Verify that the input Excel file exists
+        if (!File.Exists(excelPath))
+        {
+            Console.WriteLine($"Error: The file '{excelPath}' was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
+            // LoadOptions can be used to specify load behavior; here we just instantiate it
+            LoadOptions loadOptions = new LoadOptions();
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            // Load the workbook with the specified LoadOptions
+            Workbook workbook = new Workbook(excelPath, loadOptions);
+
+            // Set the printer paper size to Letter for the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
+
+            // Define the output PDF file path
+            string pdfPath = "output.pdf";
+
+            // Save the workbook as PDF
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+
+            // Verify that the PDF was created
+            if (File.Exists(pdfPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
+                Console.WriteLine($"Success: PDF file '{pdfPath}' was generated.");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Set the paper size for the first worksheet (Letter)
-            if (workbook.Worksheets.Count > 0)
+            else
             {
-                workbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperLetter;
-            }
-
-            // Set PDF save options (no PaperSize property here)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Save to PDF in a memory stream
-            using (MemoryStream pdfStream = new MemoryStream())
-            {
-                workbook.Save(pdfStream, pdfOptions);
-                pdfStream.Position = 0; // Reset for further use
-
-                // Verify that the PDF stream contains data
-                if (pdfStream.Length > 0)
-                {
-                    Console.WriteLine($"PDF generation succeeded. Stream length: {pdfStream.Length}");
-                }
-                else
-                {
-                    Console.WriteLine("PDF generation failed: resulting stream is empty.");
-                }
+                Console.WriteLine($"Failure: PDF file '{pdfPath}' was not created.");
             }
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

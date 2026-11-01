@@ -1,42 +1,46 @@
-// Title: Insert an external SVG file into cells E5:F6 without scaling using Aspose.Cells for .NET
-// AI Prompts: Add the SVG file 'logo.svg' to the worksheet at cells E5:F6, keep its original size, and save the workbook as output.xlsx with Aspose.Cells C# API. | Generate C# code that verifies logo.svg exists, inserts it using the Pictures.Add overload that preserves dimensions, and exports the file to XLSX.
-// Common Searches: Aspose.Cells C# add external SVG to specific cells without resizing | How to place an SVG image in Excel range E5:F6 using Aspose.Cells | Preserve original SVG dimensions when inserting picture with Aspose.Cells .NET | C# Pictures.Add overload example for SVG file in Aspose.Cells | Insert external vector graphic into Excel worksheet using Aspose.Cells API
-// Tags: Aspose.Cells insert SVG picture | Pictures.Add overload preserve dimensions | C# add external SVG to worksheet | Insert image into specific cell range Aspose.Cells | Save workbook with SVG image .NET
+// Title: Insert an external SVG file (logo.svg) into cells E5:F6 of an Excel worksheet using Aspose.Cells for .NET while preserving its original dimensions
+// AI Prompts: Insert logo.svg into the range E5:F6 of a new workbook and keep its original dimensions using Aspose.Cells C#. | Add an external SVG picture to specific cells, set Placement to MoveAndSize, and save the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# insert SVG into specific cell range E5:F6 | preserve original size of SVG when adding picture to Excel worksheet using Aspose.Cells | set picture placement to MoveAndSize for SVG image in Aspose.Cells .NET | how to add external logo.svg to Excel file with Aspose.Cells C# example
+// Tags: pictures.add svg Aspose.Cells | svg insertion into worksheet range | moveandsize placement Aspose.Cells | c# add external image to Excel cells | preserve svg dimensions Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, checks for the presence of logo.svg, inserts the SVG into cells E5:F6 using the Pictures.Add overload that retains the original image size, and saves the result as output.xlsx.
+// The code creates a new workbook, verifies that logo.svg exists, inserts the SVG into cell E5 (spanning E5:F6) using the Pictures.Add method, sets the picture's Placement to MoveAndSize to retain its original dimensions, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Path to the external SVG file
             string svgPath = "logo.svg";
 
-            // Insert the SVG picture if the file exists
-            if (File.Exists(svgPath))
+            // Verify that the SVG file exists before attempting to add it
+            if (!File.Exists(svgPath))
             {
-                // Insert the external SVG file at cell E5 (row index 4, column index 4)
-                // Using the overload without lower‑right cell preserves the original SVG dimensions.
-                sheet.Pictures.Add(4, 4, svgPath);
-            }
-            else
-            {
-                Console.WriteLine($"Warning: SVG file '{svgPath}' not found. Skipping picture insertion.");
+                Console.WriteLine($"SVG file not found: {svgPath}");
+                return;
             }
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Add the SVG picture to cell E5 (row index 4, column index 4)
+            // Add method returns the picture index; retrieve the Picture object afterwards
+            int pictureIndex = sheet.Pictures.Add(4, 4, svgPath);
+            Picture picture = sheet.Pictures[pictureIndex];
+
+            // Make the picture move and size with cells
+            picture.Placement = PlacementType.MoveAndSize;
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

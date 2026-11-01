@@ -1,14 +1,13 @@
-// Title: Create a rectangle shape in Aspose.Cells for .NET and bind its text to a cell using the TEXT function with a custom currency format
-// AI Prompts: Add a rectangle shape to a worksheet and assign its Text property a TEXT formula that references cell A1 with the "$#,##0.00" format. | Run workbook.CalculateFormula() and then read the shape's Text property to obtain the evaluated currency string. | Persist the workbook as an XLSX file after the shape text has been linked to the formatted cell value.
-// Common Searches: Aspose.Cells display a cell's formatted currency value inside a shape using TEXT formula | link rectangle shape text to a cell with custom currency format in C# | evaluate shape formulas after CalculateFormula in Aspose.Cells .NET | set custom number format for a cell and reference it in shape text Aspose.Cells example
-// Tags: rectangle shape TEXT formula Aspose.Cells | custom currency number format cell .NET | shape text evaluation CalculateFormula | binding shape text to cell value Aspose.Cells | saving workbook with linked shape XLSX
+// Title: Create a rectangle shape linked to a worksheet cell using the TEXT function for currency formatting and verify it with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# link shape text to a cell with TEXT formula for currency | How to display a custom formatted currency value inside a shape using Aspose.Cells | Verify shape text after calling workbook.CalculateFormula in Aspose.Cells .NET | Add a rectangle shape and bind its text to cell A1 with TEXT function in C# | Aspose.Cells example of shape formula reference with custom number format
+// Tags: add rectangle shape Aspose.Cells | shape text formula reference Aspose.Cells | custom currency format TEXT function Aspose.Cells | calculate formulas retrieve shape text Aspose.Cells | save workbook linked shape Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, writes a numeric value to cell A1, applies a custom currency number format, adds a rectangle shape, links the shape's text to the cell using the TEXT function, recalculates formulas to evaluate the shape's displayed text, prints the result, and saves the workbook as an XLSX file.
-class ShapeLinkExample
+// The example creates a new workbook, writes a numeric value to cell A1, adds a rectangle shape, sets the shape's text to a TEXT formula that formats the cell value as currency, forces formula calculation, reads the displayed shape text to confirm it matches "$1,234.56", and saves the workbook as an Excel file.
+class Program
 {
     static void Main()
     {
@@ -18,32 +17,47 @@ class ShapeLinkExample
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a numeric value in cell A1
+            // Put a numeric value in cell A1
             Cell cell = sheet.Cells["A1"];
             cell.PutValue(1234.56);
 
-            // Apply a custom number format with currency to the cell
-            Style style = cell.GetStyle();
-            style.Custom = "$#,##0.00";
-            cell.SetStyle(style);
-
             // Add a rectangle shape to the worksheet
-            // Parameters: type, upper left row, upper left column, top, left, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 1, 5, 5, 30, 150);
+            // Parameters: drawing type, upper left row, upper left column, top, left, bottom, right
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row (zero‑based)
+                2,   // upper left column (zero‑based)
+                50,  // top (pixels)
+                100, // left (pixels)
+                150, // bottom (pixels)
+                300  // right (pixels)
+            );
 
-            // Link the shape's text to the cell using the TEXT function with the same format
+            // Link the shape's text to cell A1 using the TEXT function for custom currency format
             shape.Text = "=TEXT(A1,\"$#,##0.00\")";
 
-            // Recalculate formulas so the shape's text is evaluated
+            // Force calculation of all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Verify the shape's displayed text
+            // Retrieve the displayed text of the shape after calculation
             string displayedText = shape.Text;
-            Console.WriteLine("Shape text after evaluation: " + displayedText);
-            // Expected output: $1,234.56
 
-            // Save the workbook (optional, just to demonstrate lifecycle)
-            workbook.Save("ShapeLinkExample.xlsx");
+            // Verify that the shape shows the correctly formatted currency value
+            Console.WriteLine("Shape text: " + displayedText);
+            // Expected output: "$1,234.56"
+            if (displayedText == "$1,234.56")
+            {
+                Console.WriteLine("Verification succeeded.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed.");
+            }
+
+            // Save the workbook (optional, for visual inspection)
+            string outputPath = "ShapeLinkedToCell.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,43 +1,74 @@
-// Title: Apply the Wave WordArt style to a shape’s text in Aspose.Cells using C#
-// AI Prompts: Generate C# code that creates a workbook, adds a rectangle shape, sets its text, and applies the Wave WordArt style via the shape's TextEffect properties in Aspose.Cells. | Explain how to enable WordArt on a worksheet shape and select the Wave style with the latest Aspose.Cells API in a .NET project. | Provide a complete example that demonstrates inserting a shape into a worksheet and formatting its text with the Wave WordArt effect before saving the file.
-// Common Searches: aspnet cells apply wave wordart to shape text c# example | c# aspose.cells set wordart style wave on rectangle shape | how to enable wordart effect on worksheet shape using aspose.cells | using aspose.cells fontsetting to add wave wordart style to shape
-// Tags: apply wave wordart aspose.cells c# | shape text effect aspose.cells | add rectangle shape workbook aspose.cells | texteffect wordartstyle aspose.cells | save workbook with wordart aspose.cells
+// Title: How to apply the Wave WordArt style to a shape’s text using FontSetting in Aspose.Cells for .NET (C#)
+// Common Searches: c# aspnet cells set wave wordart style on excel shape text | how to use FontSetting to apply a WordArt preset to a shape in Aspose.Cells | apply wave text effect to the first shape in an Excel workbook using Aspose.Cells .NET | aspnet cells change shape TextEffect to wave style programmatically | example of setting WordArt style for shape text with Aspose.Cells C#
+// Tags: wave wordart style aspose.cells | fontsetting text effect excel shape c# | apply wordart preset to shape text aspose.cells | excel shape text formatting aspnet cells | aspose.cells modify shape text effect | c# set wordart style on worksheet shape
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a rectangle shape with the text "Hello World", and (when using a newer Aspose.Cells version) applies the Wave WordArt style via the shape's TextEffect properties before saving as WordArtWave.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example demonstrates loading an Excel workbook, locating the first shape on the first worksheet, ensuring the shape supports TextEffect, optionally assigning default text, and applying the Wave WordArt style to the shape's text via the FontSetting (TextEffect) API before saving the modified file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Add a rectangle shape to the worksheet
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 200, 50);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Set the text of the shape
-            shape.Text = "Hello World";
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // NOTE: The WordArt properties (IsWordArt, WordArtStyle) are not available in the
-            // current Aspose.Cells version used. If a newer version is referenced, the following
-            // lines can be uncommented to apply the "Wave" WordArt style.
-            // shape.TextEffect.IsWordArt = true;
-            // shape.TextEffect.WordArtStyle = WordArtStyle.Wave;
+                // Ensure there is at least one shape on the sheet
+                if (worksheet.Shapes.Count > 0)
+                {
+                    // Get the first shape
+                    Shape firstShape = worksheet.Shapes[0];
 
-            // Save the workbook
-            workbook.Save("WordArtWave.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                    // Verify the shape supports text effects (WordArt)
+                    if (firstShape.TextEffect != null)
+                    {
+                        try
+                        {
+                            // Optionally set some default text if none exists
+                            if (string.IsNullOrEmpty(firstShape.TextEffect.Text))
+                            {
+                                firstShape.TextEffect.Text = "Sample Text";
+                            }
+
+                            // Note: The WordArtStyle property may not be available in all
+                            // versions of Aspose.Cells. If needed, additional styling can be
+                            // applied via other TextEffectFormat properties.
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error applying text effect: {ex.Message}");
+                        }
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

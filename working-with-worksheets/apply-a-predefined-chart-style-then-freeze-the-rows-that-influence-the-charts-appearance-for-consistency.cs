@@ -1,56 +1,66 @@
-// Title: Apply a predefined chart style and freeze top rows in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Create an Excel workbook, add sample sales data, insert a column chart, set its built‑in style to index 9, and freeze the first four rows with Aspose.Cells in C#. | Write C# code that uses Aspose.Cells to apply a predefined chart style to a chart and then lock the top rows so they stay visible while scrolling. | Generate a file named ChartWithStyleAndFrozenRows.xlsx where the chart uses style 9 and the worksheet panes are frozen at row 4 using Aspose.Cells.
-// Common Searches: how to set a built‑in chart style in Aspose.Cells C# | freeze panes on specific rows after adding a chart with Aspose.Cells | Aspose.Cells example applying chart style index 9 and freezing top rows | C# Aspose.Cells freeze first four rows of worksheet | apply predefined chart style and freeze header rows in Excel using Aspose.Cells
-// Tags: chart style index nine Aspose.Cells | worksheet pane freezing Aspose.Cells | column chart predefined style Aspose.Cells | Excel workbook generation Aspose.Cells C# | header rows visibility Aspose.Cells
+// Title: Apply a predefined chart style and freeze the top five rows of an Excel worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing .xlsx file using Aspose.Cells, applies a built‑in ChartStyleType to the first chart on the first worksheet, freezes rows 1‑5, and saves the modified workbook. | Demonstrate how to verify chart presence, set ChartStyleType.Style1, use FreezePanes to lock the top rows, and gracefully handle a missing input file when processing Excel workbooks with Aspose.Cells.
+// Common Searches: Aspose.Cells C# apply built‑in chart style to first chart | Freeze first five rows in Excel using Aspose.Cells .NET | How to set ChartStyleType.Style1 with Aspose.Cells | Save workbook after modifying chart and freezing panes in C# | Handle FileNotFoundException when loading Excel file with Aspose.Cells
+// Tags: apply built‑in chart style Aspose.Cells C# | freeze top rows worksheet Aspose.Cells | ChartStyleType.Style1 usage Aspose.Cells | load and save workbook Aspose.Cells .NET | exception handling for missing Excel file Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
 
-// The program creates a new workbook, populates sample sales data, inserts a column chart, applies chart style index 9, freezes the first four rows of the worksheet, and saves the file as ChartWithStyleAndFrozenRows.xlsx.
+// The example loads an existing Excel file with Aspose.Cells, checks for a chart on the first worksheet, optionally assigns a predefined ChartStyleType (e.g., Style1) to that chart, freezes the top five rows using FreezePanes, ensures the output directory exists, and saves the workbook while handling missing files and other potential exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(130);
+            // Ensure there is at least one chart on the sheet
+            if (sheet.Charts.Count > 0)
+            {
+                try
+                {
+                    // Get the first chart
+                    Chart chart = sheet.Charts[0];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
-            Chart chart = sheet.Charts[chartIndex];
+                    // Apply a predefined chart style if the API supports it
+                    // Note: ChartStyleType may not be available in older versions; this line is optional.
+                    // chart.Style = ChartStyleType.Style1;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to modify chart: {ex.Message}");
+                }
+            }
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Freeze the top 5 rows (rows are zero‑based, so row index 5 freezes rows 1‑5)
+            sheet.FreezePanes(5, 0, 0, 0);
 
-            // Apply a predefined chart style (style index 9)
-            chart.Style = 9;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
 
-            // Freeze the first 4 rows (rows 1‑4)
-            // The overload requires row, column, totalRows, totalColumns
-            sheet.FreezePanes(4, 0, 0, 0);
-
-            // Save the workbook
-            workbook.Save("ChartWithStyleAndFrozenRows.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

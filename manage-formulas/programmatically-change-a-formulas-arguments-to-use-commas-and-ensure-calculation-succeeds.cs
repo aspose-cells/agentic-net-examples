@@ -1,14 +1,12 @@
-// Title: Convert semicolon‑separated Excel formula arguments to commas and recalculate workbook with Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook using Aspose.Cells, replace every ';' in cell formulas with ',', then invoke Workbook.CalculateFormula to update results. | Assign Workbook.Settings.CultureInfo = new CultureInfo("en-US") so that Aspose.Cells parses formulas with comma separators before saving. | Traverse all worksheets and cells, use Cell.IsFormula to identify formulas, modify the Formula string, and finally call Workbook.CalculateFormula.
-// Common Searches: aspnet replace semicolon in Excel formula arguments using Aspose.Cells | how to change formula delimiter from ';' to ',' in Aspose.Cells workbook | recalculate formulas after editing them with Aspose.Cells .NET | set workbook culture to en-US for formula parsing Aspose.Cells | iterate over cells to update formulas in Aspose.Cells example
-// Tags: formula argument separator conversion Aspose.Cells | workbook cultureinfo en-us setting Aspose.Cells | bulk formula update across worksheets Aspose.Cells | recalculate workbook formulas Aspose.Cells | locale-aware formula parsing Aspose.Cells
+// Title: Programmatically replace semicolon argument separators with commas in Excel formulas and recalculate the workbook using Aspose.Cells for .NET
+// Common Searches: how to change Excel formula delimiter from semicolon to comma using Aspose.Cells C# | Aspose.Cells C# replace semicolon in cell formulas and recalculate workbook | iterate through all cells to fix formula separators in .NET with Aspose.Cells | recalculate workbook after modifying formulas with Aspose.Cells API | convert European Excel formula separators to US style programmatically in C#
+// Tags: Aspose.Cells replace formula delimiter | C# convert formula argument separator | recalculate all formulas Aspose.Cells | iterate worksheets cells modify formulas | Excel formula comma separator conversion
 
-using System;
-using System.Globalization;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example loads an Excel file, forces the workbook to use the en-US locale so commas are the argument separator, scans every worksheet and cell, replaces any semicolons in formulas with commas, recalculates all formulas, and saves the updated workbook.
+// The example loads an Excel workbook with Aspose.Cells, walks through every worksheet and cell, replaces any semicolon characters in cell formulas with commas, updates the formula when changed, forces a full recalculation of all formulas, and saves the corrected workbook to a new file.
 class Program
 {
     static void Main()
@@ -18,56 +16,49 @@ class Program
 
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook (no password). If the file is password‑protected,
+            // a CellsException will be thrown and handled in the catch block.
             Workbook workbook = new Workbook(inputPath);
 
-            // Force the workbook to use a culture that expects commas as argument separators
-            workbook.Settings.CultureInfo = new CultureInfo("en-US");
-
-            // Iterate through all worksheets and cells
+            // Iterate through each worksheet and each cell to fix formulas
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
+                foreach (Cell cell in sheet.Cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        Cell cell = cells[row, col];
-                        // Use IsFormula to check if the cell contains a formula
-                        if (cell.IsFormula)
+                        string correctedFormula = cell.Formula.Replace(";", ",");
+                        if (correctedFormula != cell.Formula)
                         {
-                            // Replace any semicolons with commas in the formula
-                            string formula = cell.Formula;
-                            if (formula.Contains(";"))
-                            {
-                                cell.Formula = formula.Replace(";", ",");
-                            }
+                            cell.Formula = correctedFormula;
                         }
                     }
                 }
             }
 
-            // Recalculate all formulas to ensure they evaluate correctly
+            // Recalculate all formulas after modifications
             workbook.CalculateFormula();
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (CellsException ex)
+        {
+            // Handle password‑protected files or other Aspose.Cells specific errors
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // General exception handling
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

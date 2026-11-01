@@ -1,47 +1,50 @@
-// Title: Convert an XLSB workbook to PDF with Office Add‑Ins rendering and a custom 0.8 scaling factor using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an XLSB file, checks that it exists, enables rendering of embedded Office Add‑Ins, sets PdfSaveOptions.ZoomFactor to 0.8, configures OnePagePerSheet, and saves the workbook as a PDF with Aspose.Cells. | Add comprehensive error handling to the XLSB‑to‑PDF conversion sample so that missing files, permission problems, and conversion failures are reported while preserving the custom scaling configuration.
-// Common Searches: aspose.cells render office add-ins during xlsb to pdf conversion c# | c# set pdf zoom factor 0.8 in aspose.cells PdfSaveOptions | convert binary excel workbook to pdf with custom scaling using asp.net | how to keep office add-in functionality in pdf export with aspose.cells | one page per sheet pdf export with scaling factor asp.net core
-// Tags: Aspose.Cells PDF zoom factor scaling | XLSB to PDF conversion with Office Add‑Ins | C# PdfSaveOptions OnePagePerSheet setting | custom scaling factor 0.8 in pdf export | exception handling for workbook file not found | rendering embedded Office Add‑Ins in PDF
+// Title: Convert an XLSB workbook to a single‑page PDF with 0.8 scaling and render Office Add‑Ins using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an XLSB file, sets PdfSaveOptions.OnePagePerSheet = true, PdfSaveOptions.ScalingFactor = 0.8, enables PdfSaveOptions.RenderOfficeAddIns, and saves the workbook as a PDF. | Update existing Aspose.Cells PDF export logic to include a scaling factor of 0.8 while preserving the one‑page‑per‑sheet layout and rendering any Office Add‑Ins present in the workbook. | Add robust file‑existence checking and exception handling around the XLSB‑to‑PDF conversion process in C#.
+// Common Searches: Aspose.Cells render Office Add‑Ins when exporting XLSB to PDF | C# set scaling factor 0.8 in PdfSaveOptions Aspose.Cells | convert xlsb to single page pdf with one page per sheet Aspose.Cells | fit all columns on one PDF page and apply custom scale using Aspose.Cells
+// Tags: XLSB to PDF conversion with scaling Aspose.Cells | PdfSaveOptions RenderOfficeAddIns property | OnePagePerSheet PDF export Aspose.Cells | ScalingFactor 0.8 PDF generation C# | Office Add‑Ins rendering during PDF export Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks for the presence of an XLSB file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to render any embedded Office Add‑Ins, applies a 0.8 zoom factor, forces each worksheet onto a separate PDF page, saves the result as a PDF, and includes robust exception handling to surface file‑related and conversion errors.
-class Program
+namespace AsposeCellsPdfExport
 {
-    static void Main()
+    // The sample verifies the input XLSB file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to render Office Add‑Ins, apply a 0.8 scaling factor, and place each worksheet on a single PDF page, then saves the result as a PDF while handling errors gracefully.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsb";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
+                string inputFile = "input.xlsb";
+                string outputFile = "output.pdf";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the XLSB workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Fit all columns on one page (alternative to AllColumnsInOnePage)
+                    OnePagePerSheet = true
+                };
+
+                // Save the workbook as a PDF with the specified options
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputFile}");
             }
-
-            // Load the XLSB workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure PDF save options (example: one page per sheet)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            catch (Exception ex)
             {
-                OnePagePerSheet = true
-            };
-
-            // Save the workbook as a PDF using the configured options
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

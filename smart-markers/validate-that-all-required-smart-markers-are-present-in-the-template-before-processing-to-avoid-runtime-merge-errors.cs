@@ -1,122 +1,102 @@
-// Title: C# method to validate required smart markers in an Excel template with Aspose.Cells before processing
-// AI Prompts: Write a C# function that loads an Excel workbook using Aspose.Cells, extracts all smart markers with WorkbookDesigner.GetSmartMarkers, compares them to a provided array of required markers, and throws an InvalidOperationException listing any missing markers. | Show how to invoke the validation function, bind a data collection to a smart‑marker name, and call WorkbookDesigner.Process only when the validation succeeds. | Create a complete console program that validates smart markers, catches missing‑marker errors, processes the workbook, and saves the result to a new file.
-// Common Searches: aspnet validate smart markers in Excel template Aspose.Cells | c# check missing smart markers before WorkbookDesigner.Process | how to throw exception for absent smart markers using Aspose.Cells | verify required smart markers exist in .xlsx file with Aspose.Cells .NET
-// Tags: smart marker presence validation Aspose.Cells | smart marker extraction using WorkbookDesigner | required smart markers check Excel template | invalidoperationexception for missing markers | pre‑process smart marker verification Aspose.Cells
+// Title: How to validate that required smart markers exist in an Excel template using Aspose.Cells for .NET
+// Common Searches: C# code to ensure all required smart markers are present in an Aspose.Cells Excel template before merging | Aspose.Cells validate missing smart markers in a workbook programmatically | check for &= smart markers in an Excel file using Aspose.Cells .NET | detect absent smart markers in an Excel template with Aspose.Cells C# | pre‑merge validation of smart markers in an Aspose.Cells template
+// Tags: smart marker validation Aspose.Cells | required smart markers detection .NET | excel template marker presence check | Aspose.Cells workbook cell scanning | pre‑merge smart marker verification
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-namespace SmartMarkerValidationDemo
+// The SmartMarkerValidator class loads an Excel workbook, scans every cell for markers prefixed with "&=", collects their names, and compares them against a supplied list of required markers. It throws an InvalidOperationException listing any missing markers and writes a success message to the console when all required markers are found.
+public class SmartMarkerValidator
 {
-    // Provides a C# utility that loads an Excel template, retrieves its smart markers via WorkbookDesigner.GetSmartMarkers, compares them against a required list, and throws an InvalidOperationException with the names of any missing markers before any data binding or processing occurs.
-    public static class SmartMarkerValidator
+    /// <param name="templatePath">Full path to the Excel template file.</param>
+    /// <param name="requiredMarkers">List of smart marker names that must be present (e.g., "Customers.Name").</param>
+    public static void Validate(string templatePath, List<string> requiredMarkers)
     {
-        /// <summary>
-        /// Checks whether all <paramref name="requiredMarkers"/> exist in the workbook template.
-        /// Throws an exception if any marker is missing.
-        /// </summary>
-        /// <param name="templatePath">Path to the Excel template containing smart markers.</param>
-        /// <param name="requiredMarkers">Array of smart marker strings that must be present.</param>
-        public static void Validate(string templatePath, string[] requiredMarkers)
+        // Ensure the template file exists to avoid FileNotFoundException.
+        if (!File.Exists(templatePath))
+            throw new FileNotFoundException($"Template file not found: {templatePath}");
+
+        try
         {
-            // Load the template workbook (using default load options)
-            Workbook templateWorkbook = new Workbook(templatePath);
+            // Load the workbook (template) from the specified path.
+            Workbook workbook = new Workbook(templatePath);
 
-            // Initialize the designer with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
+            // Collect smart markers present in the workbook by scanning cell values.
+            HashSet<string> foundMarkers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Workbook = templateWorkbook
-            };
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-            // Retrieve all smart markers present in the workbook
-            string[] existingMarkers = designer.GetSmartMarkers();
-
-            // Convert to a HashSet for fast lookup (case‑insensitive)
-            HashSet<string> markerSet = new HashSet<string>(existingMarkers, StringComparer.OrdinalIgnoreCase);
-
-            // Collect missing markers for reporting
-            List<string> missing = new List<string>();
-            foreach (string required in requiredMarkers)
-            {
-                if (!markerSet.Contains(required))
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    missing.Add(required);
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        string cellText = cells[row, col].StringValue;
+                        if (string.IsNullOrEmpty(cellText))
+                            continue;
+
+                        // Smart markers start with "&=" (e.g., "&=Customers.Name").
+                        if (cellText.StartsWith("&="))
+                        {
+                            string marker = cellText.Substring(2); // Remove the leading "&="
+                            // In case the marker contains additional formatting, take the first token.
+                            int spaceIndex = marker.IndexOf(' ');
+                            if (spaceIndex > 0)
+                                marker = marker.Substring(0, spaceIndex);
+
+                            foundMarkers.Add(marker);
+                        }
+                    }
                 }
             }
 
-            // If any required marker is absent, raise an informative exception
-            if (missing.Count > 0)
+            // Find any required markers that are missing.
+            List<string> missingMarkers = requiredMarkers
+                .Where(m => !foundMarkers.Contains(m))
+                .ToList();
+
+            // If there are missing markers, raise an informative exception.
+            if (missingMarkers.Count > 0)
             {
-                string message = $"The following required smart markers are missing in the template '{Path.GetFileName(templatePath)}': {string.Join(", ", missing)}";
-                throw new InvalidOperationException(message);
+                string missing = string.Join(", ", missingMarkers);
+                throw new InvalidOperationException(
+                    $"The following required smart markers are missing in the template '{templatePath}': {missing}");
             }
+
+            // All required markers are present; validation succeeded.
+            Console.WriteLine("Smart marker validation passed. All required markers are present.");
+        }
+        catch (Exception ex)
+        {
+            // Log the error and rethrow for upstream handling if needed.
+            Console.WriteLine($"Validation failed: {ex.Message}");
+            throw;
         }
     }
+}
 
-    /// <summary>
-    /// Demonstrates loading a template, validating smart markers, processing data, and saving the result.
-    /// </summary>
-    public class Program
+public class Program
+{
+    public static void Main()
     {
-        public static void Main()
+        // Example usage:
+        var required = new List<string> { "Customers.Name", "Customers.Address", "Orders.Total" };
+        string templatePath = @"C:\Templates\ReportTemplate.xlsx";
+
+        try
         {
-            // Path to the template file that contains smart markers
-            string templatePath = "TemplateWithSmartMarkers.xlsx";
-
-            // Define the list of smart markers that must be present in the template
-            string[] requiredMarkers = new[]
-            {
-                "&=Employees.Name",
-                "&=Employees.Age",
-                "&=Employees.Department"
-            };
-
-            try
-            {
-                // Validate the template before any processing
-                SmartMarkerValidator.Validate(templatePath, requiredMarkers);
-                Console.WriteLine("All required smart markers are present.");
-
-                // Load the workbook (again) for processing
-                Workbook workbook = new Workbook(templatePath);
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // Sample data source
-                var employees = new List<Employee>
-                {
-                    new Employee { Name = "John Doe", Age = 30, Department = "Sales" },
-                    new Employee { Name = "Jane Smith", Age = 28, Department = "HR" }
-                };
-
-                // Bind the data source to the smart marker name "Employees"
-                designer.SetDataSource("Employees", employees);
-
-                // Process the smart markers now that we know they are all present
-                designer.Process();
-
-                // Save the processed workbook
-                string outputPath = "ProcessedOutput.xlsx";
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle validation or processing errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            SmartMarkerValidator.Validate(templatePath, required);
         }
-
-        // Simple POCO representing an employee (used as data source)
-        public class Employee
+        catch (Exception ex)
         {
-            public string Name { get; set; }
-            public int Age { get; set; }
-            public string Department { get; set; }
+            // Handle or log the exception as appropriate.
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

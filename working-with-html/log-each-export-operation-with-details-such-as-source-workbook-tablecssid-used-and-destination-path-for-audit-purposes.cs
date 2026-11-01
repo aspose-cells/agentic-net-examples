@@ -1,52 +1,78 @@
-// Title: Create an audit log for Aspose.Cells HTML export with source workbook, TableCssId, and destination path in C#
-// AI Prompts: Write a C# console program that loads an Excel workbook, exports it to HTML using Aspose.Cells HtmlSaveOptions with a custom TableCssId, and appends a UTC timestamped entry containing the source file, TableCssId, and output path to a log file. | Add robust exception handling so that any error during the HTML export is captured and written with a timestamp to the same audit log, creating the log file if it does not exist. | Extend the logging to include the elapsed time of the export operation and store each entry in CSV format for easier analysis.
-// Common Searches: how to write an audit log for Aspose.Cells HTML export in a .NET console app | record source workbook and TableCssId when saving Excel as HTML using Aspose.Cells | C# example for logging Excel to HTML conversion details with timestamp | append error information to export log file during Aspose.Cells HTML save | measure export duration and save log as CSV in Aspose.Cells C#
-// Tags: Aspose.Cells HTML export audit logging | C# HtmlSaveOptions TableCssId configuration | timestamped export log file .NET | exception handling for Aspose.Cells HTML save | CSV format export performance logging
+// Title: Logging Aspose.Cells HTML export details – source workbook, TableCssId, and destination path – in C#
+// AI Prompts: Generate C# code that loads a workbook, saves it as HTML using Aspose.Cells with a custom CSS Id for the table, and writes a UTC‑timestamped entry to a log file containing the source file path, the CSS Id, and the output HTML path. | Write C# error‑handling logic that catches exceptions from the Aspose.Cells HTML save operation and appends the exception message with a timestamp to the same log file. | Create C# logic that checks for the existence of the output directory before saving the HTML file and creates it if missing.
+// Common Searches: c# Aspose.Cells export workbook to html with custom TableCssId and audit log | how to record source and destination paths when saving HTML with Aspose.Cells | append export details to a text file during Aspose.Cells HTML conversion | ensure output folder exists before Aspose.Cells HTML save in .NET | log errors from Aspose.Cells HTML export to a file
+// Tags: Aspose.Cells HTML export metadata logging | C# workbook to HTML conversion using CSS identifier | Create output directory before Aspose.Cells save | Write export metadata to a text file in .NET | Exception handling for Aspose.Cells HTML save
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample loads a source.xlsx workbook, exports it to exported.html with HtmlSaveOptions.TableCssId set to "myTable", and appends a UTC timestamped line to export_log.txt that records the source path, TableCssId, and destination path. It also captures any exceptions, logs them with timestamps, and demonstrates how to add duration tracking and CSV‑style entries.
-class ExportLogger
+namespace MyExportApp
 {
-    static void Main()
+    // The ExportLogger class loads a workbook, saves it as HTML with a specified TableCssId, ensures the output directory exists, and appends a UTC‑timestamped entry with source path, CSS Id, and destination path to a log file, while also recording any exceptions that occur.
+    public class ExportLogger
     {
-        // Define paths and TableCssId
-        string sourcePath = "source.xlsx";          // source workbook
-        string destinationPath = "exported.html";   // export destination
-        string logPath = "export_log.txt";          // audit log file
-        string tableCssId = "myTable";              // TableCssId to apply
-
-        try
+        /// <param name="sourcePath">Full path to the source workbook.</param>
+        /// <param name="tableCssId">CSS Id to assign to the exported HTML table.</param>
+        /// <param name="destPath">Full path where the HTML file will be saved.</param>
+        public static void ExportTable(string sourcePath, string tableCssId, string destPath)
         {
-            // Verify source workbook exists
-            if (!File.Exists(sourcePath))
-                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+            try
+            {
+                // Verify source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
+                    throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
 
-            // Load the workbook (load rule)
-            Workbook workbook = new Workbook(sourcePath);
+                // Load the source workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(sourcePath);
 
-            // Configure HTML export options with the specified TableCssId
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // The following properties are not available in the current Aspose.Cells version:
-            // htmlOptions.ExportTableColumnHeaders = true;
-            // htmlOptions.ExportTableRowHeaders = true;
-            htmlOptions.TableCssId = tableCssId; // apply CSS ID to the exported table
+                // Configure HTML save options (including the TableCssId)
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Export as HTML table (default behavior)
+                    TableCssId = tableCssId
+                };
 
-            // Save the workbook as HTML (save rule)
-            workbook.Save(destinationPath, htmlOptions);
+                // Ensure destination directory exists
+                string destDir = Path.GetDirectoryName(destPath);
+                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+                    Directory.CreateDirectory(destDir);
 
-            // Log the export operation for audit purposes
-            string logEntry = $"{DateTime.Now:u}: Source='{sourcePath}', TableCssId='{tableCssId}', Destination='{destinationPath}'{Environment.NewLine}";
-            File.AppendAllText(logPath, logEntry);
+                // Save the workbook as HTML (lifecycle rule: save)
+                workbook.Save(destPath, saveOptions);
+
+                // Prepare audit log entry
+                string logEntry = $"Timestamp: {DateTime.UtcNow:O} | SourceWorkbook: {sourcePath} | TableCssId: {tableCssId} | Destination: {destPath}";
+                File.AppendAllText("ExportAuditLog.txt", logEntry + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                // Log any errors to the audit log and rethrow
+                string errorEntry = $"Timestamp: {DateTime.UtcNow:O} | Error: {ex.Message}";
+                File.AppendAllText("ExportAuditLog.txt", errorEntry + Environment.NewLine);
+                throw;
+            }
         }
-        catch (Exception ex)
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Log the error details
-            string errorLog = $"{DateTime.Now:u}: ERROR - {ex.Message}{Environment.NewLine}";
-            File.AppendAllText(logPath, errorLog);
-            Console.Error.WriteLine(errorLog);
+            // Example usage; adjust paths as needed.
+            string sourcePath = "Sample.xlsx";
+            string tableCssId = "myTable";
+            string destPath = "Output.html";
+
+            try
+            {
+                ExportLogger.ExportTable(sourcePath, tableCssId, destPath);
+                Console.WriteLine("Export completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Export failed: {ex.Message}");
+            }
         }
     }
 }

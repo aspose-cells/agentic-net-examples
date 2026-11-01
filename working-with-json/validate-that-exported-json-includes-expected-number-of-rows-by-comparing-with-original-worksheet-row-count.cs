@@ -1,76 +1,77 @@
-// Title: Check that exported JSON row count equals original Excel worksheet rows using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, saves it as JSON, reads the JSON file, and confirms that the JSON array length matches the worksheet's MaxDataRow + 1. | Create a .NET method that accepts a workbook path, exports the first worksheet to JSON, parses the JSON, and returns true if the row counts are identical, otherwise false.
-// Common Searches: how to compare Excel worksheet row count with JSON export using Aspose.Cells C# | C# Aspose.Cells verify number of rows after saving workbook as JSON | validate data rows after converting Excel to JSON with Aspose.Cells .NET | check row count consistency between .xlsx and generated JSON file in C#
-// Tags: Aspose.Cells JSON export row validation | C# check worksheet rows vs JSON array | Excel to JSON data row consistency | Aspose.Cells MaxDataRow verification
+// Title: Validate that the row count exported to JSON matches the original Excel worksheet using Aspose.Cells in C#
+// AI Prompts: Write a C# console application that opens an Excel workbook with Aspose.Cells, determines the data row count of the first worksheet, saves that worksheet as a JSON file, parses the JSON to count the entries in the "Rows" array, and prints whether the two counts are equal. | Create a .NET method that takes an Excel file path, uses Aspose.Cells to export the first sheet to JSON, reads the generated JSON, compares the JSON row count to the worksheet's MaxDataRow+1, and returns a boolean indicating a match.
+// Common Searches: how to compare Excel worksheet row count with exported JSON rows using Aspose.Cells C# | Aspose.Cells verify row count after saving sheet as JSON | C# count rows in Aspose.Cells JSON output | validate that JSON export from Excel retains same number of rows Aspose.Cells | check MaxDataRow against JSON Rows array Aspose.Cells .NET
+// Tags: Aspose.Cells export worksheet to JSON | compare worksheet row count with JSON rows | validate JSON row count Aspose.Cells | C# MaxDataRow row count verification | JSON Rows array length Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
-// The program loads an Excel workbook, determines the number of data rows in the first worksheet, saves the workbook as JSON, reads the generated JSON file, extracts the worksheet array, and validates that the JSON row count matches the original worksheet row count.
-class Program
+// The example loads an Excel file, calculates the number of data rows in the first worksheet using MaxDataRow+1, saves that worksheet as a JSON file with Aspose.Cells, reads and parses the JSON to count the objects in the "Rows" array, and then compares the two counts, outputting a success or mismatch message while handling missing files and exceptions.
+class JsonRowCountValidator
 {
     static void Main()
     {
         try
         {
-            // Path to the input workbook
-            string workbookPath = "input.xlsx";
+            // Path to the source Excel file
+            string excelPath = "input.xlsx";
 
-            // Ensure the workbook file exists
-            if (!File.Exists(workbookPath))
+            // Verify that the Excel file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: Workbook file \"{workbookPath}\" not found.");
+                Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            Workbook workbook = new Workbook(excelPath);
 
-            // Access the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the number of rows that contain data (zero‑based + 1)
+            // Determine the number of rows that contain data in the worksheet
+            // MaxDataRow is zero‑based, so add 1 to get the count
             int originalRowCount = sheet.Cells.MaxDataRow + 1;
 
-            // Export the workbook to JSON
+            // Export the worksheet to JSON format
             string jsonPath = "output.json";
+
+            // Save only the first worksheet as JSON
             workbook.Save(jsonPath, SaveFormat.Json);
 
-            // Ensure the JSON file was created
+            // Verify that the JSON file was created
             if (!File.Exists(jsonPath))
             {
-                Console.WriteLine($"Error: JSON file \"{jsonPath}\" was not created.");
+                Console.WriteLine($"Error: Failed to create JSON file at '{jsonPath}'.");
                 return;
             }
 
-            // Read and parse the generated JSON
+            // Read the generated JSON file
             string jsonContent = File.ReadAllText(jsonPath);
-            using JsonDocument doc = JsonDocument.Parse(jsonContent);
-            JsonElement root = doc.RootElement;
 
-            // Retrieve the array for the exported worksheet
-            int jsonRowCount = 0;
-            if (root.TryGetProperty(sheet.Name, out JsonElement rowsElement) &&
-                rowsElement.ValueKind == JsonValueKind.Array)
-            {
-                jsonRowCount = rowsElement.GetArrayLength();
-            }
+            // Parse the JSON; Aspose.Cells writes an array of row objects under the "Rows" property
+            JsonNode rootNode = JsonNode.Parse(jsonContent);
+            JsonArray rowsArray = rootNode?["Rows"]?.AsArray();
 
-            // Validate row counts
+            // Count the rows present in the exported JSON
+            int jsonRowCount = rowsArray?.Count ?? 0;
+
+            // Validate that the row counts match
             if (originalRowCount == jsonRowCount)
             {
-                Console.WriteLine($"Validation succeeded: both original and JSON contain {originalRowCount} rows.");
+                Console.WriteLine($"Success: Row count matches ({originalRowCount} rows).");
             }
             else
             {
-                Console.WriteLine($"Validation failed: original rows = {originalRowCount}, JSON rows = {jsonRowCount}.");
+                Console.WriteLine($"Mismatch: Original worksheet has {originalRowCount} rows, but JSON contains {jsonRowCount} rows.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

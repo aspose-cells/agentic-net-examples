@@ -1,56 +1,56 @@
-// Title: Load an Excel workbook, change cell B4 text, and export to HTML with a custom default font using Aspose.Cells for .NET
-// AI Prompts: Load input.xlsx with Aspose.Cells, set worksheet.Cells["B4"] to "New Text", configure HtmlSaveOptions.DefaultFont to "Arial", and save as output.html. | Read an existing .xlsx file, update a specific cell value, apply a default Arial font via HtmlSaveOptions, and generate an HTML file using C#.
-// Common Searches: Aspose.Cells C# change cell value and save workbook as HTML with specific font | how to set default font in HtmlSaveOptions when converting Excel to HTML | update B4 cell in Excel and export to HTML using Aspose.Cells .NET | set Arial as default font for HTML output from Aspose.Cells workbook | convert xlsx to html with custom font using Aspose.Cells C# example
-// Tags: Aspose.Cells HtmlSaveOptions default font | modify worksheet cell before HTML export | Excel to HTML conversion with custom font | C# update cell B4 Aspose.Cells | set default font for HTML output Aspose.Cells
+// Title: Load an Excel workbook, update cell B4, and export to HTML with a custom default font using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens a .xlsx file with Aspose.Cells, changes the value of cell B4, sets HtmlSaveOptions.DefaultFontName to a chosen font, and saves the workbook as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions to export only the active worksheet and apply a specific default font when converting Excel to HTML in C#. | Provide a C# example that verifies the source Excel file exists, updates a cell, and includes exception handling while saving the workbook as HTML with custom font settings.
+// Common Searches: Aspose.Cells C# change cell value and save workbook as HTML with specific default font | How to set DefaultFontName in HtmlSaveOptions when converting Excel to HTML using Aspose.Cells | Export only the active worksheet to HTML with custom font using Aspose.Cells .NET | C# code to handle missing input.xlsx file before converting to HTML with Aspose.Cells | Aspose.Cells HTML conversion custom font Calibri example
+// Tags: Aspose.Cells HtmlSaveOptions DefaultFontName | C# modify Excel cell before HTML export | Export active worksheet only Aspose.Cells | Excel to HTML conversion with custom font .NET | Error handling missing input file Aspose.Cells | Aspose.Cells workbook.Save HTML with options
 
-using Aspose.Cells;
 using System;
 using System.IO;
-using System.Reflection;
+using Aspose.Cells;
 
-// The program checks for input.xlsx, loads it with Aspose.Cells, changes cell B4 to "New Text", uses reflection to set HtmlSaveOptions.DefaultFont to Arial for compatibility across library versions, and saves the workbook as output.html.
+// The program checks for input.xlsx, loads it with Aspose.Cells, updates cell B4 to "New text for B4", configures HtmlSaveOptions with DefaultFontName="Calibri" and ExportActiveWorksheetOnly=true, then saves the result as output.html while handling potential errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Path to the source workbook
+            string inputPath = "input.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing Excel file
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (you can change the index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Modify the text of cell B4
-            Cell cell = worksheet.Cells["B4"];
-            cell.PutValue("New Text");
+            // Modify the text of cell B4 (row index 3, column index 1)
+            Cell targetCell = sheet.Cells["B4"];
+            targetCell.PutValue("New text for B4");
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Set default font if the property exists (covers different library versions)
-            PropertyInfo defaultFontProp = typeof(HtmlSaveOptions).GetProperty("DefaultFont");
-            if (defaultFontProp != null && defaultFontProp.CanWrite)
+            // Prepare HTML save options with a custom default font
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                defaultFontProp.SetValue(htmlOptions, "Arial");
-            }
+                // Set the default font to be used when a cell does not specify a font
+                DefaultFontName = "Calibri", // Change to any font you prefer
+                // Export only the active worksheet for a smaller output
+                ExportActiveWorksheetOnly = true
+            };
 
             // Save the workbook as an HTML file using the specified options
+            string outputPath = "output.html";
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

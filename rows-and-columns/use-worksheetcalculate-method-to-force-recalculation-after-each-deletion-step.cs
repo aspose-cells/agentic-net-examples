@@ -1,55 +1,59 @@
-// Title: Force worksheet recalculation after each row deletion using Aspose.Cells for .NET
-// AI Prompts: Write C# code that deletes a specific row from an Aspose.Cells worksheet and immediately calls Worksheet.CalculateFormula to refresh dependent formulas. | Show how to iterate over multiple row deletions, invoking Workbook.CalculateFormula after each removal to keep SUM and other formulas accurate. | Demonstrate saving the workbook after performing row deletions with intermediate recalculations using Aspose.Cells in a .NET console application.
-// Common Searches: How to update SUM formula after deleting rows with Aspose.Cells C# | Aspose.Cells force calculation after DeleteRow operation | C# example of Worksheet.CalculateFormula called after each row removal | Recalculate workbook formulas when rows are removed in Aspose.Cells .NET | Delete rows and keep formulas correct using Aspose.Cells API
-// Tags: Worksheet.CalculateFormula after DeleteRow Aspose.Cells | row deletion with intermediate formula recalculation C# | update SUM formula on row removal Aspose.Cells | force workbook calculation after modifying cells .NET | Aspose.Cells DeleteRow example with formula refresh
+// Title: Force formula recalculation with Worksheet.Calculate after each row, column, range, and chart deletion in Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# snippet that deletes a specific row, column, cell range, and chart from an Excel worksheet using Aspose.Cells, invoking worksheet.Calculate after each deletion to refresh formulas. | Refactor an Aspose.Cells example to replace workbook.CalculateFormula() with worksheet.Calculate() so that formulas are recomputed immediately after each removal operation. | Demonstrate how to conditionally remove the first chart in a worksheet and call worksheet.Calculate to update dependent formulas in C#. | Explain the benefits of using Worksheet.Calculate instead of Workbook.CalculateFormula when performing step‑by‑step deletions in Aspose.Cells.
+// Common Searches: Aspose.Cells C# recalculate worksheet after deleting a row | how to force formula update after column removal with Aspose.Cells | Worksheet.Calculate vs Workbook.CalculateFormula performance Aspose.Cells | delete chart and refresh formulas using Aspose.Cells in .NET | clear a range without shifting cells and recalculate formulas Aspose.Cells C#
+// Tags: worksheet.calculate after row deletion | worksheet.calculate after column removal | worksheet.calculate after range clear | worksheet.calculate after chart removal | force formula recalculation aspose.cells c#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowDeletionDemo
+namespace AsposeCellsExample
 {
-    // The sample creates a workbook, fills column A with values, adds a SUM formula in B1, then deletes rows 3, 1, and the original row 5. After each DeleteRow call, Workbook.CalculateFormula is executed to update the formula result, and the final workbook is saved as RowDeletionWithRecalc.xlsx.
+    // The example loads an existing Excel workbook, deletes row 5, removes column C, clears the A1:B2 range without shifting other cells, optionally deletes the first chart, and calls worksheet.Calculate after each operation to ensure all formulas are recomputed before saving the modified file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Populate sample data in column A (rows 1‑5)
-                for (int i = 0; i < 5; i++)
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    cells[i, 0].PutValue((i + 1) * 10); // A1=10, A2=20, ..., A5=50
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // Add a formula in B1 that sums the values in column A
-                cells[0, 1].Formula = "=SUM(A1:A5)";
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
+                var worksheet = workbook.Worksheets[0];
 
-                // Initial calculation to evaluate the formula
-                workbook.CalculateFormula();
-                Console.WriteLine($"Initial B1 value (SUM A1:A5): {cells[0, 1].Value}");
+                // ----- Deletion Step 1: Delete Row 5 -----
+                worksheet.Cells.DeleteRow(4); // Row index is zero‑based (Row 5 -> index 4)
+                workbook.CalculateFormula(); // Recalculate after row deletion
 
-                // Delete the third row (index 2) and recalculate
-                sheet.Cells.DeleteRow(2);
-                workbook.CalculateFormula();
-                Console.WriteLine($"After deleting row 3, B1 value: {cells[0, 1].Value}");
+                // ----- Deletion Step 2: Delete Column C -----
+                worksheet.Cells.DeleteColumn(2); // Column C -> index 2
+                workbook.CalculateFormula(); // Recalculate after column deletion
 
-                // Delete the first row (index 0) and recalculate
-                sheet.Cells.DeleteRow(0);
-                workbook.CalculateFormula();
-                Console.WriteLine($"After deleting row 1, B1 value: {cells[0, 1].Value}");
+                // ----- Deletion Step 3: Clear contents of range A1:B2 -----
+                // DeleteRange with ShiftType.None clears the cells without shifting others
+                worksheet.Cells.DeleteRange(0, 0, 2, 2, ShiftType.None);
+                workbook.CalculateFormula(); // Recalculate after range clear
 
-                // Delete the last remaining data row (current index 2) and recalculate
-                sheet.Cells.DeleteRow(2);
-                workbook.CalculateFormula();
-                Console.WriteLine($"After deleting row 5 (original), B1 value: {cells[0, 1].Value}");
+                // ----- Deletion Step 4: Delete a specific chart (if any) -----
+                if (worksheet.Charts.Count > 0)
+                {
+                    // Remove the first chart in the collection
+                    worksheet.Charts.RemoveAt(0);
+                    workbook.CalculateFormula(); // Recalculate after chart removal
+                }
 
-                // Save the workbook to verify the final state
-                workbook.Save("RowDeletionWithRecalc.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

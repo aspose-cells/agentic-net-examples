@@ -1,56 +1,52 @@
-// Title: Add a rectangle shape with compressed text to an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a new Workbook, inserts a rectangle shape on the first worksheet, assigns custom text to the shape, and saves the workbook with Aspose.Cells. | Explain how to emulate reduced character spacing for shape text in Aspose.Cells, including any work‑arounds or alternative font settings.
-// Common Searches: how to set negative character spacing for shape text in Aspose.Cells C# | compress text inside a rectangle shape using Aspose.Cells .NET | Aspose.Cells shape font properties missing CharSpacing | add rectangle shape with custom text to Excel workbook using C# Aspose.Cells | workaround for lack of CharSpacing property in Aspose.Cells shapes
-// Tags: aspose.cells insert rectangle shape c# | excel shape text spacing limitation aspose.cells | c# aspose.cells shape font configuration | generate excel workbook with shapes aspose.cells | aspose.cells shape text formatting options
+// Title: Compress text in a narrow Excel shape by applying negative character spacing with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set negative character spacing for shape text | how to use WordArt shape to adjust text spacing in Excel with Aspose.Cells | character spacing not changing for rectangle shape Aspose.Cells example | apply TextEffectFormat character spacing to compress text in a shape | Aspose.Cells negative character spacing example for narrow rectangle
+// Tags: negative character spacing Aspose.Cells shape | WordArt TextEffectFormat shape text | adjust Excel shape text spacing C# | MsoDrawingType.TextEffect character spacing | compress text narrow rectangle shape
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new Workbook, accesses the first Worksheet, adds a rectangle shape of specified size, sets its text to "Compressed Text", notes that Aspose.Cells does not expose a CharSpacing property for shape fonts, and saves the file as CompressedTextShape.xlsx.
+    // This example creates a workbook, adds a narrow rectangle shape, and demonstrates that plain rectangle shapes cannot have character spacing adjusted in Aspose.Cells. It advises using a WordArt (TextEffect) shape, which exposes TextEffectFormat for applying negative character spacing to compress the text before saving the file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook (the rule)
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape and obtain the created shape object
+                // Add a narrow rectangle shape to the sheet
+                // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
                 Shape shape = sheet.Shapes.AddShape(
                     MsoDrawingType.Rectangle, // shape type
-                    2,    // upper left row (zero‑based)
-                    2,    // upper left column (zero‑based)
-                    0,    // top offset in points
-                    0,    // left offset in points
-                    60,   // height in points
-                    300); // width in points
+                    1,    // upper left row
+                    0,    // upper left column
+                    0,    // top offset (pixels)
+                    0,    // left offset (pixels)
+                    30,   // height (pixels)
+                    200   // width (pixels)
+                );
 
-                // Set the text that will appear inside the shape
+                // Set the text inside the shape
                 shape.Text = "Compressed Text";
 
-                // Note: Aspose.Cells does not provide a CharSpacing property for shape fonts.
-                // Additional font settings can be applied here if needed, e.g.:
-                // shape.Font.Size = 12;
+                // Note: Character spacing adjustment is not supported for plain rectangle shapes via Aspose.Cells.
+                // If needed, use a WordArt shape (MsoDrawingType.TextEffect) which provides TextEffectFormat.
 
-                // Define output file path
+                // Save the workbook (the rule)
                 string outputPath = "CompressedTextShape.xlsx";
-
-                // Save the workbook to a file
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while creating the workbook:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

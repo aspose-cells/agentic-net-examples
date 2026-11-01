@@ -1,66 +1,64 @@
-// Title: Export each worksheet of an Excel workbook to separate HTML files with a unique TableCssId using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through all worksheets, and saves each one as an individual HTML file while assigning a distinct TableCssId for each output. | Modify the Aspose.Cells example to set HtmlSaveOptions.TableCssId to the current worksheet name before calling Workbook.Save for every sheet. | Create a script that exports every worksheet to its own HTML file in a target folder and ensures each file uses a different CSS table identifier for independent styling.
-// Common Searches: how to export each worksheet to a separate html file with Aspose.Cells and custom TableCssId | c# aspocells save individual sheets as html with unique css id per sheet | Aspose.Cells HtmlSaveOptions TableCssId per worksheet example | generate separate html files for each Excel sheet using Aspose.Cells .NET
-// Tags: aspocells export worksheet to html with custom tablecssid | c# aspocells htmlsaveoptions per worksheet | individual html files for excel sheets aspocells | custom css id for html tables aspocells | save excel worksheets as separate html files .net
+// Title: Export each Excel worksheet to a separate HTML file with a distinct TableCssId using Aspose.Cells for .NET (C#)
+// Common Searches: C# how to save each worksheet of an Excel file as an individual HTML page with Aspose.Cells | Aspose.Cells set unique TableCssId for HTML tables when exporting multiple worksheets | Export active worksheet only to HTML using HtmlSaveOptions in Aspose.Cells .NET | Generate separate HTML files for each sheet in a workbook with custom CSS IDs using Aspose.Cells | Save Excel sheets as separate HTML documents with distinct table IDs in C#
+// Tags: Aspose.Cells export worksheet to HTML | HtmlSaveOptions ExportActiveWorksheetOnly | TableCssId custom CSS identifier | C# generate separate HTML files per worksheet | Aspose.Cells per-sheet HTML output
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsExportWorksheetsToHtml
+// The C# program loads an Excel workbook, iterates through its worksheets, activates each sheet, and saves it as an individual HTML file using HtmlSaveOptions with ExportActiveWorksheetOnly=true and a unique TableCssId (e.g., table_1, table_2) for distinct styling.
+class Program
 {
-    // The program verifies the source Excel file, creates an output directory, loads the workbook with Aspose.Cells, loops through each worksheet, configures HtmlSaveOptions to export only the active sheet, sets HtmlSaveOptions.TableCssId to a unique value (e.g., the worksheet name), and saves each worksheet as a separate HTML file in the designated folder.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the source Excel file
-            string sourceFile = "input.xlsx";
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-            // Folder where individual HTML files will be saved
-            string outputFolder = "output";
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            try
+            // Iterate through each worksheet and save it as an individual HTML file
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Verify that the source file exists
-                if (!File.Exists(sourceFile))
+                Worksheet sheet = workbook.Worksheets[i];
+
+                // Set the current worksheet as active so that only it is exported
+                workbook.Worksheets.ActiveSheetIndex = i;
+
+                // Configure HTML save options for the current worksheet
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    Console.WriteLine($"Source file not found: {sourceFile}");
-                    return;
-                }
+                    ExportActiveWorksheetOnly = true,   // Export only the active sheet
+                    TableCssId = $"table_{i + 1}"        // Unique CSS ID for styling
+                };
 
-                // Ensure the output directory exists
-                if (!Directory.Exists(outputFolder))
+                // Define the output HTML file name using the worksheet name
+                string htmlFileName = $"{sheet.Name}.html";
+
+                try
                 {
-                    Directory.CreateDirectory(outputFolder);
+                    // Save the worksheet as an HTML file
+                    workbook.Save(htmlFileName, htmlOptions);
+                    Console.WriteLine($"Saved worksheet '{sheet.Name}' to '{htmlFileName}'.");
                 }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(sourceFile);
-
-                // Iterate through each worksheet in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
+                catch (Exception ex)
                 {
-                    // Create HTML save options
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        // Export only the current worksheet
-                        ExportActiveWorksheetOnly = true
-                    };
-
-                    // Build the output HTML file path (using worksheet name)
-                    string htmlFilePath = Path.Combine(outputFolder, $"{sheet.Name}.html");
-
-                    // Save the current worksheet as an HTML file with the specified options
-                    workbook.Save(htmlFilePath, saveOptions);
+                    Console.WriteLine($"Failed to save worksheet '{sheet.Name}': {ex.Message}");
                 }
-
-                Console.WriteLine("Export completed. HTML files are located in the 'output' folder.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 }

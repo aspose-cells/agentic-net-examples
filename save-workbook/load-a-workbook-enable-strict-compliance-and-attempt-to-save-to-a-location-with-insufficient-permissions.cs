@@ -1,58 +1,53 @@
-// Title: Load an Excel workbook, enable ISO/IEC 29500:2008 strict compliance, and handle save errors caused by insufficient permissions using Aspose.Cells in C#
-// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, sets workbook.Settings.Compliance to OoxmlCompliance.Iso29500_2008_Strict, and attempts to save it to a directory without write rights, capturing any exception. | Show how to catch and log an UnauthorizedAccessException when saving a strict‑compliance workbook to a protected system folder in C# with Aspose.Cells.
-// Common Searches: Aspose.Cells C# enable ISO 29500 strict mode and save to protected folder | how to catch unauthorized access exception when saving Excel file with Aspose.Cells | save workbook with strict compliance to System32 directory C# | set OoxmlCompliance.Iso29500_2008_Strict before saving and handle permission error
-// Tags: enable strict OoxmlCompliance Aspose.Cells | save workbook to protected directory C# | handle UnauthorizedAccessException Aspose.Cells | load workbook then set ISO29500 strict mode | Aspose.Cells permission error on save
+// Title: Load an Excel workbook with Aspose.Cells for .NET, enable strict compatibility mode, and handle access‑denied errors when saving to a protected folder
+// AI Prompts: Write C# code that loads a .xlsx file using Aspose.Cells, applies strict Excel compatibility (if supported), and saves it to a system‑protected directory while catching and logging any permission‑denied exceptions. | Create a .NET example that verifies the source Excel file exists, opens it with Aspose.Cells, and demonstrates graceful error handling for Workbook.Save when the target path requires administrator rights.
+// Common Searches: Aspose.Cells .NET how to catch permission denied exception when saving workbook to C:\Windows\System32 | load workbook and enable strict compatibility mode using Aspose.Cells C# | example of Workbook.Save throwing access denied error Aspose.Cells | C# Aspose.Cells save Excel file to protected folder with error handling | Aspose.Cells strict Excel compatibility mode not available in current version
+// Tags: Aspose.Cells .NET workbook initialization | Aspose.Cells Excel strict mode | Aspose.Cells save operation access denied | Aspose.Cells protected path saving | Aspose.Cells save exception handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsStrictComplianceDemo
+// The sample checks for input.xlsx, loads it into an Aspose.Cells Workbook, attempts to save the file to C:\Windows\System32\output.xlsx (a location that typically requires elevated rights), and captures any exceptions from loading or saving, noting that strict Excel compatibility mode is unavailable in the current Aspose.Cells version.
+class Program
 {
-    // The example creates a temporary workbook, reloads it, switches the workbook's compliance to ISO/IEC 29500:2008 Strict, and then tries to save the file to a system folder that requires elevated rights. It demonstrates catching the resulting permission‑related exception and cleaning up the temporary file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and add some data
-            Workbook tempWorkbook = new Workbook();
-            tempWorkbook.Worksheets[0].Cells["A1"].PutValue("Strict compliance test");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Save the workbook to a temporary file (normal location)
-            string tempPath = Path.Combine(Path.GetTempPath(), "TempWorkbook.xlsx");
-            tempWorkbook.Save(tempPath);
-            tempWorkbook.Dispose();
+        Workbook workbook;
+        try
+        {
+            // Load the existing workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            // Load the workbook from the temporary file
-            Workbook workbook = new Workbook(tempPath);
+        // Strict Excel compatibility mode is not available in this version of Aspose.Cells.
+        // Additional workbook settings can be configured here if needed.
 
-            // Enable ISO/IEC 29500:2008 Strict compliance
-            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
-
-            // Attempt to save to a location with insufficient permissions
-            // Example: system directory (usually requires elevated rights)
-            string restrictedPath = @"C:\Windows\System32\RestrictedWorkbook.xlsx";
-
-            try
-            {
-                workbook.Save(restrictedPath);
-                Console.WriteLine("Workbook saved successfully (unexpected).");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to save workbook due to insufficient permissions:");
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                workbook.Dispose();
-
-                // Clean up temporary file
-                if (File.Exists(tempPath))
-                {
-                    File.Delete(tempPath);
-                }
-            }
+        try
+        {
+            // Attempt to save the workbook to a location that typically requires elevated permissions
+            // This path is expected to cause an access denied error on most systems
+            string restrictedPath = @"C:\Windows\System32\output.xlsx";
+            workbook.Save(restrictedPath);
+            Console.WriteLine($"Workbook saved successfully to {restrictedPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle the expected permission error
+            Console.WriteLine("Failed to save workbook: " + ex.Message);
         }
     }
 }

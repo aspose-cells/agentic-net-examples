@@ -1,51 +1,63 @@
-// Title: How to load an XLSB workbook and enumerate its Power Query formulas with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an XLSB file with Aspose.Cells and iterates through workbook.DataMashup.PowerQueryFormulas to display each formula's name, definition, type, group name, and description. | Provide a C# snippet that writes the names and definitions of all Power Query formulas from a loaded XLSB workbook to a CSV file using Aspose.Cells. | Show how to check for the existence of Power Query formulas in a workbook and handle the case when none are found, using Aspose.Cells in .NET.
-// Common Searches: C# Aspose.Cells how to list Power Query formulas from an XLSB file | retrieve Power Query mashup data programmatically with Aspose.Cells .NET | enumerate PowerQueryFormulaCollection in a binary Excel workbook using Aspose.Cells | read Power Query formula definitions from XLSB using Aspose.Cells API | Aspose.Cells DataMashup PowerQueryFormulas example in C#
-// Tags: Aspose.Cells read PowerQueryFormulaCollection XLSB | enumerate Power Query formulas .NET | extract DataMashup PowerQueryFormulas C# | list Power Query formula definitions Aspose.Cells | access workbook.DataMashup PowerQueryFormulas
+// Title: How to load an XLSB workbook and list all Power Query formulas using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens a binary Excel (.xlsb) file with Aspose.Cells and prints each Power Query formula to the console. | Show a robust C# example that verifies the PowerQueryFormulaCollection exists via reflection and safely iterates over its items. | Provide a C# snippet that detects missing Power Query support in Aspose.Cells, logs an appropriate warning, and then enumerates any available formulas.
+// Common Searches: C# Aspose.Cells retrieve Power Query formulas from an .xlsb workbook | How to enumerate PowerQueryFormulaCollection in Aspose.Cells using reflection | List all Power Query queries in a binary Excel file with Aspose.Cells .NET | Check if Power Query support is available in Aspose.Cells before accessing formulas
+// Tags: open binary Excel workbook using Aspose.Cells | enumerate PowerQueryFormulaCollection in C# | access Power Query formulas via reflection Aspose.Cells | detect Power Query support in Aspose.Cells workbook | output Power Query formulas to console
 
 using System;
+using System.IO;
+using System.Collections;
 using Aspose.Cells;
-using Aspose.Cells.QueryTables;
 
-namespace AsposeCellsPowerQueryDemo
+namespace AsposeCellsExample
 {
-    // The example loads an XLSB workbook with Aspose.Cells, accesses its DataMashup, verifies that the PowerQueryFormulas collection is present, and iterates through each PowerQueryFormula to print its name, definition, type, group name, and description.
+    // The example checks that the specified .xlsb file exists, loads it into an Aspose.Cells Workbook, uses reflection to obtain the Worksheets.PowerQueryFormulaCollection when available, iterates through each item to read its Formula property, prints the formulas to the console, and gracefully handles cases where Power Query support is absent or errors occur.
     class Program
     {
         static void Main()
         {
-            // Path to the XLSB workbook that contains Power Query formulas
-            string sourcePath = "source.xlsb";
+            const string filePath = "input.xlsb";
 
-            // Load the workbook (XLSB format is automatically detected)
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Access the mashup data of the workbook
-            DataMashup mashup = workbook.DataMashup;
-
-            // Ensure the mashup and its PowerQueryFormulas collection are available
-            if (mashup != null && mashup.PowerQueryFormulas != null && mashup.PowerQueryFormulas.Count > 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Found {mashup.PowerQueryFormulas.Count} Power Query formula(s):");
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-                // Enumerate each PowerQueryFormula in the collection
-                foreach (PowerQueryFormula formula in mashup.PowerQueryFormulas)
+            try
+            {
+                // Load the XLSB workbook
+                Workbook workbook = new Workbook(filePath);
+
+                // Attempt to retrieve Power Query formulas via reflection (compatible with multiple versions)
+                var worksheets = workbook.Worksheets;
+                var pqProp = worksheets.GetType().GetProperty("PowerQueryFormulaCollection");
+                if (pqProp == null)
                 {
-                    Console.WriteLine("--------------------------------------------------");
-                    Console.WriteLine($"Formula Name       : {formula.Name}");
-                    Console.WriteLine($"Formula Definition : {formula.FormulaDefinition}");
-                    Console.WriteLine($"Formula Type       : {formula.Type}");
-                    Console.WriteLine($"Group Name         : {formula.GroupName}");
-                    Console.WriteLine($"Description        : {formula.Description}");
+                    Console.WriteLine("Power Query formulas are not supported in this version of Aspose.Cells.");
+                    return;
+                }
+
+                var pqCollection = pqProp.GetValue(worksheets) as IEnumerable;
+                if (pqCollection == null)
+                {
+                    Console.WriteLine("No Power Query formulas found.");
+                    return;
+                }
+
+                // Enumerate and display each Power Query formula
+                foreach (var pqItem in pqCollection)
+                {
+                    var formulaProp = pqItem.GetType().GetProperty("Formula");
+                    var formula = formulaProp?.GetValue(pqItem) as string;
+                    Console.WriteLine(formula);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No Power Query formulas found in the workbook.");
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // (Optional) Save the workbook to a new file if any modifications were made
-            // workbook.Save("output.xlsb");
         }
     }
 }

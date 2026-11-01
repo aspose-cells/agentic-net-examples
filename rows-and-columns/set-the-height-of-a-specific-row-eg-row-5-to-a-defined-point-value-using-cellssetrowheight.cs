@@ -1,36 +1,38 @@
-// Title: How to set the height of row 5 to 30 points in an Excel file using Aspose.Cells SetRowHeight (C#)
-// AI Prompts: Write C# code that creates a workbook, sets row index 5 height to 30 points with Cells.SetRowHeight, and saves the file. | Show how to read back the height of a specific row after calling SetRowHeight in Aspose.Cells for .NET. | Explain the zero‑based row indexing rules when adjusting row height with the Aspose.Cells SetRowHeight method.
-// Common Searches: Aspose.Cells C# set row height in points example | change height of row 5 in Excel using Aspose.Cells library | retrieve row height after setting it with Aspose.Cells .NET | how to use Cells.SetRowHeight for specific rows in a workbook | adjust Excel row height programmatically with Aspose.Cells C#
-// Tags: Aspose.Cells SetRowHeight C# | Excel row height points Aspose.Cells | zero based row index Aspose.Cells | retrieve row height Aspose.Cells | save workbook after row height change Aspose.Cells
+// Title: Set a specific row height in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set height of row 5 to 30 points | How to change row height in an Excel sheet with Aspose.Cells .NET | Use Cells.SetRowHeight to adjust a single row in C# | Programmatically set Excel row height by index using Aspose.Cells | Example of setting row height in a workbook with Aspose.Cells for .NET
+// Tags: Aspose.Cells SetRowHeight C# | adjust Excel row height .NET | set row height points Aspose.Cells | modify worksheet row dimensions C# | row height customization Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowHeightDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, accessing the first worksheet, setting row 5 (zero‑based) height to 30 points with Cells.SetRowHeight, retrieving the height, printing it, and saving the file as RowHeightDemo.xlsx.
+    // This C# example creates a workbook (or loads one), accesses the first worksheet, and uses Cells.SetRowHeight to set row 5 (zero‑based index 4) to 30 points, then saves the file as output.xlsx while handling potential exceptions.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the Cells collection
-            Cells cells = worksheet.Cells;
+                // Set the height of row 5 (zero‑based index 4) to 30 points
+                sheet.Cells.SetRowHeight(4, 30);
 
-            // Set the height of row 5 (zero‑based index) to 30 points
-            cells.SetRowHeight(5, 30);
-
-            // Verify the height (optional)
-            double height = cells.GetRowHeight(5);
-            Console.WriteLine($"Row 5 height set to {height} points.");
-
-            // Save the workbook
-            workbook.Save("RowHeightDemo.xlsx");
+                // Save the workbook to a file
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

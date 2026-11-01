@@ -1,53 +1,51 @@
-// Title: How to rotate a TextBox shape by a given angle and confirm its orientation using Aspose.Cells for .NET
-// AI Prompts: Add a TextBox to cell B2, assign its RotationAngle property to a variable angle (e.g., 45), and print both the expected and actual rotation values to the console. | Create a reusable C# method RotateShape(Shape shape, double angle) that sets the shape's RotationAngle and returns the applied angle. | Generate a workbook with several TextBox shapes, rotate each by a different degree, verify each shape's RotationAngle, and save the file as RotatedTextbox.xlsx. | Load an existing workbook, read the RotationAngle of a saved TextBox, and output the value to verify the orientation.
-// Common Searches: Aspose.Cells C# set textbox rotation angle programmatically | how to read the rotation angle of a shape in Aspose.Cells workbook | verify that a TextBox is rotated correctly in an Excel file using Aspose.Cells | rotate multiple shapes with different angles using Aspose.Cells .NET | sample code for rotating a textbox and checking its orientation in Aspose.Cells
-// Tags: Aspose.Cells rotate textbox | Aspose.Cells set shape rotation angle | Aspose.Cells read textbox rotation | C# rotate shape in worksheet | Aspose.Cells verify shape orientation | rotate multiple textboxes Aspose.Cells
+// Title: Rotate a TextBox shape to a specific angle and verify its orientation with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# rotate textbox shape 45 degrees | How to set rotation angle for a shape in an Excel workbook using Aspose.Cells | C# verify textbox rotation angle programmatically with Aspose.Cells | Read shape RotationAngle property after rotating textbox in Aspose.Cells | Save rotated textbox in Excel file using Aspose.Cells for .NET
+// Tags: textbox shape rotation Aspose.Cells .NET | set shape rotation angle Excel Aspose.Cells | verify textbox orientation C# | add textbox to worksheet Aspose.Cells | read shape rotation property Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, inserts a TextBox at cell B2, sets its RotationAngle to 45 degrees, prints the expected and actual rotation values, and saves the workbook as RotatedTextbox.xlsx, demonstrating how to rotate and verify a textbox shape with Aspose.Cells for .NET.
+// The example creates a new workbook, adds a TextBox shape to the first worksheet, sets its RotationAngle to a desired degree, reads the property back to confirm the rotation, and saves the workbook as RotatedTextbox.xlsx.
 class RotateTextboxExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define textbox position and size (zero‑based row/column, pixel offsets)
-            int upperLeftRow = 1;      // Row 2
-            int upperLeftColumn = 1;   // Column B
-            int top = 0;               // Pixels from top of the cell
-            int left = 0;              // Pixels from left of the cell
-            int height = 100;          // Height in pixels
-            int width = 200;           // Width in pixels
-
-            // Add a textbox shape to the worksheet
-            TextBox textbox = (TextBox)sheet.Shapes.AddTextBox(
-                upperLeftRow, upperLeftColumn, top, left, height, width);
+            // Add a textbox shape to the worksheet.
+            // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
+            TextBox textbox = sheet.Shapes.AddTextBox(2, 2, 0, 0, 100, 200);
             textbox.Text = "Rotated TextBox";
 
-            // Set rotation angle (positive = clockwise)
+            // Specify the rotation angle in degrees (e.g., 45 degrees)
             double rotationAngle = 45.0;
             textbox.RotationAngle = rotationAngle;
 
-            // Verify the rotation
+            // Verify the new orientation by checking the RotationAngle property
             double actualAngle = textbox.RotationAngle;
-            Console.WriteLine($"Expected rotation: {rotationAngle} degrees");
-            Console.WriteLine($"Actual rotation:   {actualAngle} degrees");
+            if (Math.Abs(actualAngle - rotationAngle) < 0.001)
+            {
+                Console.WriteLine($"Textbox rotation verified: {actualAngle} degrees.");
+            }
+            else
+            {
+                Console.WriteLine($"Rotation verification failed. Expected: {rotationAngle}, Actual: {actualAngle}");
+            }
 
-            // Save the workbook
+            // Save the workbook (lifecycle rule: save)
             workbook.Save("RotatedTextbox.xlsx");
+            Console.WriteLine("Workbook saved as RotatedTextbox.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

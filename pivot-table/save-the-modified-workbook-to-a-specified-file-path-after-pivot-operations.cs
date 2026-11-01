@@ -1,49 +1,84 @@
-// Title: Save a refreshed Aspose.Cells pivot table workbook to a specific .xlsx file path in C#
-// AI Prompts: Write C# code that builds a workbook, inserts sample data, creates a pivot table, refreshes it, and saves the result to a user‑defined .xlsx file using Aspose.Cells. | Show how to modify the example to save the workbook as a PDF after refreshing the pivot table with Aspose.Cells for .NET. | Demonstrate changing the pivot table source range and directing the saved workbook to a different folder path in C# using Aspose.Cells.
-// Common Searches: how to programmatically save an Aspose.Cells workbook after refreshing pivot tables in C# | Aspose.Cells .NET example for creating a pivot table and exporting to a custom Excel file location | C# code to refresh pivot tables before calling Workbook.Save with a specific path | save pivot‑generated workbook to a network share using Aspose.Cells for .NET | Aspose.Cells refresh pivot tables then save workbook as PDF in C#
-// Tags: Aspose.Cells workbook.save with custom path | refresh pivot tables Aspose.Cells C# | create pivot table Aspose.Cells worksheet | export workbook to PDF Aspose.Cells .NET | change pivot source range Aspose.Cells
+// Title: Refresh all pivot tables and save the modified Excel workbook to a custom path using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells refresh all pivot tables before saving the workbook | How to save an Excel file to a specific folder after pivot table updates with Aspose.Cells | Aspose.Cells ensure output directory exists when calling Workbook.Save in .NET | Programmatically refresh pivot tables in an existing workbook using Aspose.Cells | Save modified workbook to a dynamic file path using Aspose.Cells example
+// Tags: Aspose.Cells pivot table refresh | Workbook.Save custom location C# | create output directory before saving Excel Aspose.Cells | programmatic pivot table refresh .NET | save modified Excel workbook Aspose.Cells example
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable class
 
-// Illustrates creating a workbook, adding sample data, building and refreshing a pivot table, then saving the workbook to a specified .xlsx file using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The PivotWorkbookHandler class loads an existing Excel file, iterates through each worksheet to refresh every pivot table, ensures the target output directory exists, and then saves the modified workbook to the specified path using Aspose.Cells for .NET.
+    public class PivotWorkbookHandler
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        private readonly Workbook _workbook;
 
-        // Populate sample data for the pivot table
-        cells["A1"].Value = "Category";
-        cells["B1"].Value = "Amount";
-        cells["A2"].Value = "Food";
-        cells["B2"].Value = 1200;
-        cells["A3"].Value = "Drink";
-        cells["B3"].Value = 800;
-        cells["A4"].Value = "Supplies";
-        cells["B4"].Value = 450;
+        // Load the workbook (uses the load rule)
+        public PivotWorkbookHandler(string sourcePath)
+        {
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
+            _workbook = new Workbook(sourcePath);
+        }
 
-        // Configure the pivot table: rows and data fields
-        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+        // Perform pivot table modifications here
+        public void ModifyPivotTables()
+        {
+            try
+            {
+                // Refresh all pivot tables in the workbook
+                foreach (Worksheet sheet in _workbook.Worksheets)
+                {
+                    foreach (PivotTable pt in sheet.PivotTables)
+                    {
+                        pt.RefreshData();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error while modifying pivot tables: {ex.Message}");
+                throw;
+            }
+        }
 
-        // Refresh the pivot table to calculate its data
-        sheet.RefreshPivotTables();
+        // Save the modified workbook to the specified file path (uses the save rule)
+        public void Save(string outputPath)
+        {
+            // Ensure the output directory exists
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
 
-        // Specify the output file path
-        string outputPath = "ModifiedPivotWorkbook.xlsx";
+            _workbook.Save(outputPath);
+        }
+    }
 
-        // Save the modified workbook (uses Workbook.Save(string) rule)
-        workbook.Save(outputPath);
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Example input and output file paths; adjust as needed
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        Console.WriteLine($"Workbook saved to: {outputPath}");
+            try
+            {
+                var handler = new PivotWorkbookHandler(inputPath);
+                handler.ModifyPivotTables(); // Apply modifications
+                handler.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+        }
     }
 }

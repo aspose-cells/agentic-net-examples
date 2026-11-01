@@ -1,37 +1,36 @@
-// Title: Export an Excel workbook to HTML with embedded Base64 images and custom page margins using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file, sets left, right, top, and bottom margins on the first worksheet, and saves the workbook as an HTML file with all images embedded as Base64 using Aspose.Cells. | Demonstrate how to configure HtmlSaveOptions in Aspose.Cells to embed worksheet images directly in the exported HTML document.
-// Common Searches: Aspose.Cells export worksheet to HTML with embedded Base64 images | C# set page margins before saving Excel as HTML using Aspose.Cells | How to embed images in HTML output when converting Excel with Aspose.Cells .NET | HtmlSaveOptions ExportImagesAsBase64 example for Aspose.Cells
-// Tags: html export base64 image embedding Aspose.Cells | worksheet page margin configuration Aspose.Cells C# | HtmlSaveOptions ExportImagesAsBase64 usage | embed images in html output Aspose.Cells | set page margins before html conversion Aspose.Cells
+// Title: Set 0.5‑inch page margins for all worksheets and export an Excel workbook to a single HTML file with embedded Base64 images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook, applies 0.5‑inch margins to every worksheet, and saves it as one HTML document with all images embedded as Base64 using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to embed images, include all worksheets, and keep the original margins when converting Excel to HTML in C#.
+// Common Searches: how to export an Excel file to HTML with embedded images using Aspose.Cells .NET | C# set uniform page margins for all worksheets before saving as HTML | Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 example | save multiple worksheets to one HTML document with base64 images in C# | preserve page setup margins when converting Excel to HTML with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions embed images base64 | set worksheet page margins Aspose.Cells | export workbook as one HTML page Aspose.Cells | preserve page setup during HTML conversion | C# convert Excel to HTML with embedded images
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// Loads input.xlsx, applies 0.5‑inch margins to each worksheet, configures HtmlSaveOptions to embed images as Base64 and export all worksheets, then saves the result as a single HTML file.
+class Program
 {
-    // Loads an Excel workbook, configures left/right/top/bottom margins on the first worksheet, sets HtmlSaveOptions to embed images as Base64, and saves the result as an HTML file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Enable and configure page margins for each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook from disk
-            // Replace "input.xlsx" with the path to your source Excel file
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Enable page margins for the first worksheet
-            // Margins are specified in inches (default unit)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.PageSetup.LeftMargin = 0.5;   // Left margin
-            sheet.PageSetup.RightMargin = 0.5;  // Right margin
-            sheet.PageSetup.TopMargin = 0.75;   // Top margin
-            sheet.PageSetup.BottomMargin = 0.75; // Bottom margin
-
-            // Configure HTML save options to embed images as Base64 strings
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.ExportImagesAsBase64 = true; // Embed images directly in the HTML
-
-            // Save the workbook as an HTML file with the specified options
-            // The resulting HTML will contain embedded images
-            workbook.Save("output.html", htmlOptions);
+            PageSetup pageSetup = sheet.PageSetup;
+            // Margins are specified in inches
+            pageSetup.LeftMargin = 0.5;
+            pageSetup.RightMargin = 0.5;
+            pageSetup.TopMargin = 0.5;
+            pageSetup.BottomMargin = 0.5;
         }
+
+        // Set HTML save options to embed images directly in the HTML as base64 strings
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportImagesAsBase64 = true;          // Embed images
+        htmlOptions.ExportActiveWorksheetOnly = false;   // Export all worksheets
+
+        // Save the workbook as an HTML file with embedded images
+        workbook.Save("output.html", htmlOptions);
     }
 }

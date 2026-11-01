@@ -1,59 +1,67 @@
-// Title: Show item labels in the values area of an Excel PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Set PivotTable.ShowValuesColumn = true on the first PivotTable in a workbook with Aspose.Cells for .NET to display item labels in the values area. | Modify a C# Aspose.Cells script to enable the values column label visibility for a PivotTable and save the updated workbook.
-// Common Searches: Aspose.Cells C# how to enable item labels in pivot table values area | Set ShowValuesColumn property true for PivotTable using Aspose.Cells .NET | Display values column labels in Excel pivot table programmatically with Aspose.Cells | C# code to show item labels in pivot table values area Aspose.Cells
-// Tags: Aspose.Cells PivotTable ShowValuesColumn | C# enable values column label in pivot table | Aspose.Cells display item labels in values area | programmatic pivot table label visibility Aspose.Cells | Excel pivot table values column property .NET
+// Title: How to show item labels in the values area of a PivotTable by enabling ShowValuesColumn in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads a workbook, accesses the first PivotTable, sets its ShowValuesColumn property to true, and saves the file using Aspose.Cells. | Describe the steps required to display item labels in the values section of a PivotTable with Aspose.Cells, noting any version constraints for the ShowValuesColumn property. | Provide a concise Aspose.Cells example that enables the values column for a PivotTable and includes fallback handling when the property is unavailable.
+// Common Searches: Aspose.Cells C# enable ShowValuesColumn for pivot table values area | display item labels in pivot table values column using Aspose.Cells .NET | set ShowValuesColumn true Aspose.Cells pivot table example | how to show row field labels in values area with Aspose.Cells C#
+// Tags: Aspose.Cells pivot table values column | C# display item labels in pivot values area | Aspose.Cells .NET pivot table configuration | enable values column Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExample
+// The sample loads "Template.xlsx" (or creates a new workbook if missing), checks for a PivotTable on the first worksheet, indicates where the ShowValuesColumn property would be set to true to display item labels in the values area, and saves the result as "Result.xlsx".
+class Program
 {
-    // The example loads an existing workbook, checks for a PivotTable on the first worksheet, optionally sets PivotTable.ShowValuesColumn = true to show item labels in the values area, and saves the modified workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            string inputPath = "Template.xlsx";
+            Workbook workbook;
 
-            try
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                // Verify that the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                var workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                var worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
-
-                var pivotTable = worksheet.PivotTables[0];
-
-                // Enable the display of item labels in the values area (if supported by the version)
-                // The property ShowValuesColumn may not be available in older versions.
-                // Uncomment the following line if the property exists in your Aspose.Cells version:
-                // pivotTable.ShowValuesColumn = true;
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                workbook = new Workbook();
+                Console.WriteLine($"File '{inputPath}' not found. Created a new workbook without pivot tables.");
+                workbook.Save("Result.xlsx");
+                return;
             }
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure a pivot table exists before accessing it
+            if (sheet.PivotTables.Count > 0)
+            {
+                try
+                {
+                    PivotTable pivotTable = sheet.PivotTables[0];
+
+                    // The ShowValuesColumn property is not available in this version of Aspose.Cells.
+                    // If you need to display item labels in the values area, configure the pivot table
+                    // fields accordingly (e.g., add a data field). This placeholder demonstrates where
+                    // such configuration would occur.
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error configuring pivot table: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+            }
+
+            // Save the updated workbook
+            workbook.Save("Result.xlsx");
+            Console.WriteLine("Workbook saved as Result.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,83 +1,105 @@
-// Title: Generate a CSV report of Excel file names, detected formats, and encryption status using Aspose.Cells in C#
-// AI Prompts: Write a C# console application that scans a given directory, loads each Excel workbook with Aspose.Cells, captures the Workbook.FileFormat value, infers encryption by catching CellsException, and writes FileName, Format, and IsEncrypted columns to a CSV file. | Extend the program to accept a recursive‑scan flag, traverse subfolders, and add a WorkbookVersion column derived from the FileFormat enum. | Implement logging that records files failing to load for reasons other than encryption to a separate error log while continuing the CSV generation.
-// Common Searches: C# Aspose.Cells create CSV list of Excel files with format and encryption flag | how to detect password protected Excel workbooks using Aspose.Cells .NET | list workbook file format for all .xls .xlsx files in a folder with Aspose.Cells | generate report of encrypted Excel files in a directory using C#
-// Tags: Aspose.Cells enumerate workbook formats | detect encrypted Excel files Aspose.Cells | export workbook metadata to CSV C# | folder scan Excel files Aspose.Cells | CSV report of Excel file properties .NET
+// Title: Generate a CSV inventory of Excel files with format and password‑protection status using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to list Excel files in a folder and export their format and encryption flag to CSV with Aspose.Cells | How to detect password‑protected .xlsx files in a directory using the Aspose.Cells library | Create a batch report of workbook file types and protection status in .NET | Aspose.Cells load options to check if an Excel workbook is encrypted without providing a password | Generate CSV report of Excel file metadata (name, format, isEncrypted) in C#
+// Tags: Aspose.Cells workbook format detection C# | enumerate Excel files encryption status Aspose.Cells | export Excel metadata to CSV .NET | detect password protected Excel workbook Aspose.Cells | batch processing Excel files Aspose.Cells
 
 using System;
 using System.IO;
+using System.Text;
+using System.Linq;
 using Aspose.Cells;
 
-// Scans a specified folder for Excel files, loads each with Aspose.Cells to obtain the FileFormat enum, infers encryption by catching CellsException, and writes the filename, detected format, and encryption flag to a CSV report.
-class Program
+// The example scans a specified directory, filters supported Excel extensions, attempts to load each workbook with Aspose.Cells to determine its file format and whether it is password‑protected, and writes the filename, detected format, and encryption flag to a UTF‑8 CSV report.
+class ExcelEncryptionReport
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Determine folder to scan – use first argument or current directory if none provided
-        string folderPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+        // Folder containing the Excel files
+        string folderPath = @"C:\ExcelFolder";
 
+        // Verify the folder exists
         if (!Directory.Exists(folderPath))
         {
-            Console.WriteLine($"Folder does not exist: {folderPath}");
+            Console.WriteLine($"Folder not found: {folderPath}");
             return;
         }
 
         // Path for the generated CSV report
-        string csvPath = Path.Combine(folderPath, "ExcelFilesReport.csv");
+        string reportPath = Path.Combine(folderPath, "report.csv");
 
-        // Define Excel file extensions to consider
-        string[] excelExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".xlsxml" };
+        // Prepare a StringBuilder for CSV content
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.AppendLine("FileName,Format,IsEncrypted");
 
-        try
+        // Define Excel file extensions to look for
+        string[] excelExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".csv" };
+
+        // Iterate through all files in the folder
+        foreach (string filePath in Directory.GetFiles(folderPath))
         {
-            using (var writer = new StreamWriter(csvPath))
+            string extension = Path.GetExtension(filePath);
+            if (!excelExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+                continue; // Skip non‑Excel files
+
+            // Ensure the file actually exists before attempting to load it
+            if (!File.Exists(filePath))
+                continue;
+
+            string fileName = Path.GetFileName(filePath);
+            string formatName = "Unknown";
+            bool isEncrypted = false;
+
+            try
             {
-                // Write CSV header
-                writer.WriteLine("FileName,Format,IsEncrypted");
+                // Attempt to load the workbook without a password
+                LoadOptions loadOptions = new LoadOptions();
+                Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Enumerate files in the folder
-                foreach (string filePath in Directory.GetFiles(folderPath))
+                // Retrieve the detected format
+                formatName = workbook.FileFormat.ToString();
+
+                // If loading succeeded, the file is not encrypted
+                isEncrypted = false;
+            }
+            catch (Exception ex)
+            {
+                // Check if the exception indicates a password‑protected file
+                if (ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    // Process only files with Excel extensions
-                    if (Array.Exists(excelExtensions, ext => ext.Equals(Path.GetExtension(filePath), StringComparison.OrdinalIgnoreCase)))
-                    {
-                        bool isEncrypted = false;
-                        string format = "Unknown";
-
-                        try
-                        {
-                            // Load the workbook (Aspose.Cells automatically detects format)
-                            Workbook workbook = new Workbook(filePath);
-
-                            // Retrieve format (FileFormat property returns FileFormatType enum)
-                            format = workbook.FileFormat.ToString();
-
-                            // Aspose.Cells does not expose an IsEncrypted property directly.
-                            // If loading succeeded, we assume the file is not encrypted.
-                            isEncrypted = false;
-                        }
-                        catch (CellsException)
-                        {
-                            // If loading fails, assume the file is encrypted or corrupted
-                            isEncrypted = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            // Log unexpected errors but continue processing other files
-                            Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
-                            continue;
-                        }
-
-                        // Write a line to the CSV
-                        writer.WriteLine($"{Path.GetFileName(filePath)},{format},{isEncrypted}");
-                    }
+                    isEncrypted = true;
+                    formatName = extension.TrimStart('.').ToUpperInvariant();
+                }
+                else
+                {
+                    // Log unexpected errors and continue processing other files
+                    Console.WriteLine($"Error processing '{fileName}': {ex.Message}");
+                    continue;
                 }
             }
 
-            Console.WriteLine($"CSV report generated at: {csvPath}");
+            // Append the information as a CSV line
+            csvBuilder.AppendLine($"{EscapeCsv(fileName)},{EscapeCsv(formatName)},{isEncrypted}");
+        }
+
+        // Write the CSV content to the report file
+        try
+        {
+            File.WriteAllText(reportPath, csvBuilder.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Report generated at: {reportPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to generate report: {ex.Message}");
+            Console.WriteLine($"Failed to write report: {ex.Message}");
         }
+    }
+
+    // Helper method to escape CSV fields containing commas or quotes
+    private static string EscapeCsv(string field)
+    {
+        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        {
+            field = field.Replace("\"", "\"\"");
+            return $"\"{field}\"";
+        }
+        return field;
     }
 }

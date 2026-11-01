@@ -1,13 +1,13 @@
-// Title: Determine worksheet paper size with PageSetup and set custom zoom to fit US Letter using Aspose.Cells for .NET
-// AI Prompts: Read the PageSetup.PaperWidth and PageSetup.PaperHeight of a worksheet, convert the values from points to inches, compute the scaling factor needed to match US Letter dimensions, and assign the resulting percentage to PageSetup.Zoom. | Calculate separate width and height scaling ratios from the worksheet's paper size, select the smaller ratio to preserve aspect ratio, clamp the zoom value between 10% and 400%, and apply it to the workbook. | Create a routine that automatically adjusts the print zoom of any Aspose.Cells workbook so that the printed area fits within an 8.5" × 11" page, using the PageSetup properties.
-// Common Searches: Aspose.Cells C# get worksheet paper width and height points | how to convert PageSetup.PaperWidth from points to inches in Aspose.Cells | set worksheet zoom to fit US Letter size using Aspose.Cells .NET | calculate custom print scaling factor from PageSetup in Aspose.Cells | Aspose.Cells PageSetup.Zoom limits 10 to 400 percent
-// Tags: Aspose.Cells PageSetup paper size scaling | worksheet print zoom calculation Aspose.Cells | convert points to inches Aspose.Cells | custom worksheet zoom US Letter Aspose.Cells | maintain aspect ratio print scaling Aspose.Cells
+// Title: Read worksheet paper size and compute custom print zoom to fit a target page using Aspose.Cells for .NET
+// AI Prompts: Write C# code that extracts PageSetup.PaperWidth and PaperHeight, converts the values from points to inches, and calculates a zoom percentage to fit a specified target page size. | Create a reusable C# method that accepts target width and height in inches, computes the appropriate Worksheet.PageSetup.Zoom, and clamps the result between 10% and 400%. | Show how to output the original paper dimensions, scaling factors, and the applied zoom before saving the workbook.
+// Common Searches: Aspose.Cells how to get worksheet paper width in inches | C# calculate print zoom from PageSetup.PaperHeight Aspose.Cells | Set worksheet zoom to match letter size using Aspose.Cells .NET API | Convert PageSetup paper dimensions from points to inches Aspose.Cells example | Clamp Aspose.Cells PageSetup.Zoom between 10 and 400 percent
+// Tags: Aspose.Cells PageSetup paper size retrieval | worksheet print zoom calculation C# | convert points to inches Aspose.Cells | custom scaling factor for worksheet printing | set PageSetup.Zoom programmatically .NET
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example loads or creates a workbook, reads the first worksheet's PageSetup.PaperWidth and PaperHeight (in points), converts them to inches, computes width and height scaling factors to match an 8.5" × 11" page, selects the smaller factor to keep the aspect ratio, clamps the zoom between 10% and 400%, sets PageSetup.Zoom, and saves the workbook.
+// The example loads a workbook, reads the worksheet's PaperWidth and PaperHeight (in points), converts them to inches, computes X and Y scaling factors for a desired target page size, determines a zoom percentage (clamped to 10‑400%), applies it via PageSetup.Zoom, and saves the updated file.
 class Program
 {
     static void Main()
@@ -17,18 +17,15 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            Workbook workbook;
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Load existing workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                workbook = new Workbook();
-            }
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
@@ -44,31 +41,35 @@ class Program
             double paperWidthInches = paperWidthPoints / 72.0;
             double paperHeightInches = paperHeightPoints / 72.0;
 
-            // Desired target dimensions (in inches) – US Letter size
-            double targetWidthInches = 8.5;
-            double targetHeightInches = 11.0;
+            // Define desired custom dimensions (in inches)
+            double targetWidthInches = 8.5;   // Example: Letter width
+            double targetHeightInches = 11.0; // Example: Letter height
 
-            // Calculate scaling factors for width and height
+            // Calculate scaling factors based on target vs. actual paper size
             double scaleX = targetWidthInches / paperWidthInches;
             double scaleY = targetHeightInches / paperHeightInches;
 
-            // Use the smaller factor to maintain aspect ratio
-            double scaleFactor = Math.Min(scaleX, scaleY);
+            // Determine zoom percentage (must be between 10 and 400)
+            int zoom = (int)(Math.Min(scaleX, scaleY) * 100);
+            zoom = Math.Max(10, Math.Min(zoom, 400)); // Clamp to valid range
 
-            // Convert to percentage and clamp to allowed range (10‑400)
-            int zoom = (int)Math.Round(scaleFactor * 100);
-            zoom = Math.Clamp(zoom, 10, 400);
-
-            // Apply the zoom factor
+            // Apply the zoom
             pageSetup.Zoom = zoom;
 
-            // Save the workbook
+            // Output the retrieved dimensions and calculated scaling factors
+            Console.WriteLine($"Paper Width: {paperWidthInches:F2} inches");
+            Console.WriteLine($"Paper Height: {paperHeightInches:F2} inches");
+            Console.WriteLine($"Scale X: {scaleX:F3}");
+            Console.WriteLine($"Scale Y: {scaleY:F3}");
+            Console.WriteLine($"Applied Zoom: {pageSetup.Zoom}%");
+
+            // Save the workbook if any changes need to be persisted
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\" with zoom set to {zoom}%.");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

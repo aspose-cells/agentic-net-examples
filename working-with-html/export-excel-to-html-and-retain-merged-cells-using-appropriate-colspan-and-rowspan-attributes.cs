@@ -1,55 +1,48 @@
-// Title: Export an Excel workbook to HTML with merged cells rendered as colspan and rowspan using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions to keep merged cell formatting (colspan/rowspan), and saves the workbook as a single HTML file. | Demonstrate how to enable base64‑encoded image embedding while exporting Excel to HTML with Aspose.Cells, ensuring merged ranges are preserved.
-// Common Searches: how to keep merged cells when converting Excel to HTML with Aspose.Cells C# | Aspose.Cells HtmlSaveOptions ExportMergedCells example | C# export workbook to single HTML file with embedded images Aspose | preserve colspan rowspan in HTML output from Excel using Aspose.Cells | convert .xlsx to HTML preserving layout Aspose.Cells .NET
-// Tags: Aspose.Cells HtmlSaveOptions ExportMergedCells | C# export Excel to HTML with merged cells | Aspose.Cells embed images as base64 in HTML | preserve colspan rowspan Aspose.Cells HTML export | export multiple worksheets to single HTML file Aspose
+// Title: Export an Excel workbook to HTML with merged cells preserved using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as HTML, ensuring merged cells are rendered with correct colspan and rowspan attributes. | Demonstrate how to configure HtmlSaveOptions in Aspose.Cells so that merged ranges remain intact when converting a workbook to HTML.
+// Common Searches: how to export merged cells from Excel to HTML using Aspose.Cells .NET | C# Aspose.Cells HtmlSaveOptions preserve merged ranges | generate HTML from .xlsx with correct colspan and rowspan attributes | Aspose.Cells export workbook to HTML while keeping cell merges | save Excel file as HTML with merged cells using Aspose.Cells for .NET
+// Tags: Aspose.Cells HtmlSaveOptions merged cells | export Excel to HTML with colspan rowspan | C# Aspose.Cells preserve merged ranges | HTML conversion of .xlsx using Aspose | save workbook as HTML Aspose .NET
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample checks for the input.xlsx file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions (including ExportMergedCells = true and optional base64 image embedding), and saves the workbook as output.html while preserving merged cell layout and handling any runtime exceptions.
+// Loads an .xlsx workbook with Aspose.Cells, applies HtmlSaveOptions (UTF‑8 encoding), and saves it as HTML; merged cells are automatically emitted with appropriate colspan and rowspan attributes.
 class ExportExcelToHtml
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+        string inputPath = "input.xlsx";
+        string outputPath = "output.html";
 
         try
         {
-            // Load the existing Excel workbook
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the source Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                // Export all worksheets (set to true to export only the active sheet)
-                ExportActiveWorksheetOnly = false,
-
-                // Set the encoding for the generated HTML file
-                Encoding = Encoding.UTF8
-
-                // Optional: generate a single HTML file without external resources
-                // ExportImagesAsBase64 = true,
+                // Set the encoding for the generated HTML
+                Encoding = System.Text.Encoding.UTF8
+                // ExportMergedCells property is not required; merged cells are handled by default
             };
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully exported to {outputPath}");
         }
         catch (Exception ex)
         {
             // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,35 +1,33 @@
-// Title: Auto‑fit a single column in an Aspose.Cells worksheet based on its cell contents using C#
-// AI Prompts: Generate C# code that creates a workbook, fills column A with strings of varying length, prints the column width before and after calling Worksheet.AutoFitColumn for rows 0‑2, and saves the file. | Write a reusable C# method that accepts a Worksheet, column index, start row, end row, and optionally logs the column width before and after auto‑fitting with Aspose.Cells. | Show how to use Worksheet.AutoFitColumn to adjust the width of column 0 for a specific row range and then retrieve the updated column width in C#.
-// Common Searches: C# Aspose.Cells how to auto fit a column for a specific row range | retrieve column width before and after AutoFitColumn in Aspose.Cells | example of using Worksheet.AutoFitColumn with start and end row indices | auto fit column based on cell content Aspose.Cells .NET example
-// Tags: Aspose.Cells Worksheet.AutoFitColumn for specific rows | auto-fit column width based on cell content C# | retrieve column width Aspose.Cells | save workbook after column auto-fit Aspose.Cells | C# example auto-fitting single column Aspose.Cells
+// Title: Auto‑fit a single Excel column based on its content with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# auto fit column width for column A only | How to resize a specific Excel column using Worksheet.AutoFitColumn in .NET | C# code to auto‑adjust column width after writing data with Aspose.Cells | Example of using Worksheet.AutoFitColumn to fit column content in a workbook | Programmatically auto‑size a single column in an Excel file using Aspose.Cells API
+// Tags: Worksheet.AutoFitColumn usage .NET | single column sizing Aspose.Cells | Excel column auto sizing C# API | dynamic column sizing based on cell content | programmatic column resizing with Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The sample creates a new workbook, populates column A with short and long text strings, displays the column width before and after invoking worksheet.AutoFitColumn(0, 0, 2) to fit rows 0‑2, and saves the result as AutoFitColumnDemo.xlsx.
-class AutoFitColumnExample
+namespace AutoFitColumnExample
 {
-    static void Main()
+    // The sample creates a new Workbook, writes three strings of varying length into cells A1‑A3 of the first worksheet, calls Worksheet.AutoFitColumn(0) to automatically adjust column A's width to fit its content, and saves the file as AutoFitColumnResult.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Create a new workbook (uses the create rule)
+            Workbook workbook = new Workbook();
 
-        // Populate column A (index 0) with sample data of varying lengths
-        worksheet.Cells["A1"].PutValue("Short");
-        worksheet.Cells["A2"].PutValue("This is a longer text that should cause the column to expand");
-        worksheet.Cells["A3"].PutValue("Another very very long text entry to demonstrate auto-fitting of column width");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Show column width before auto‑fit (optional)
-        Console.WriteLine($"Column A width before AutoFitColumn: {worksheet.Cells.GetColumnWidth(0)}");
+            // Populate some cells in column A (index 0) with sample data
+            sheet.Cells["A1"].PutValue("Short");
+            sheet.Cells["A2"].PutValue("A bit longer text");
+            sheet.Cells["A3"].PutValue("This is a considerably longer piece of text to demonstrate auto‑fit.");
 
-        // Auto‑fit column A for rows 0 to 2 (zero‑based indices)
-        worksheet.AutoFitColumn(0, 0, 2);
+            // Auto‑fit column A based on its content (column index 0)
+            sheet.AutoFitColumn(0);
 
-        // Show column width after auto‑fit (optional)
-        Console.WriteLine($"Column A width after AutoFitColumn: {worksheet.Cells.GetColumnWidth(0)}");
-
-        // Save the workbook to a file
-        workbook.Save("AutoFitColumnDemo.xlsx");
+            // Save the workbook (uses the save rule)
+            workbook.Save("AutoFitColumnResult.xlsx");
+        }
     }
 }

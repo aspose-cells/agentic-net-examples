@@ -1,62 +1,51 @@
-// Title: Apply 0.5‑inch custom PDF margins to all worksheets when converting an Excel file to PDF with Aspose.Cells for .NET
-// AI Prompts: Write C# code that sets 0.5‑inch top, bottom, left, and right margins on every worksheet using Aspose.Cells PageSetup before saving as PDF. | Show how to set header and footer margins to zero and export the workbook to a PDF file with Aspose.Cells in a .NET application.
-// Common Searches: Aspose.Cells C# set page margins before PDF export | How to define custom PDF margins for each worksheet in Aspose.Cells | Convert Excel to PDF with 0.5 inch margins using Aspose.Cells .NET | PageSetup margin values in points for PDF output with Aspose.Cells | C# Aspose.Cells PDF conversion margin configuration example
-// Tags: Aspose.Cells worksheet page setup | PDF export margin settings .NET | Set page margins in points Aspose.Cells | Excel to PDF conversion margins | C# Aspose.Cells page setup API
+// Title: Set custom PDF page margins for Excel-to-PDF conversion using Aspose.Cells in C#
+// AI Prompts: Write C# code that configures left, right, top, and bottom margins in centimeters on a worksheet before saving it as a PDF with Aspose.Cells. | Demonstrate how to apply 0.5‑inch side margins and 0.75‑inch top/bottom margins to an Excel workbook during PDF export using Aspose.Cells.
+// Common Searches: how to define worksheet margins in centimeters for Aspose.Cells PDF export C# | Aspose.Cells C# set 0.5 inch left and right margins when converting Excel to PDF | convert Excel file to PDF with 0.75 inch top and bottom margins using Aspose.Cells | C# example for adjusting page setup margins before saving workbook as PDF with Aspose.Cells
+// Tags: worksheet page margins Aspose.Cells | excel to pdf margin configuration C# | pdf export margin settings Aspose.Cells | centimeter margin values Aspose.Cells | page setup margins conversion
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The program loads an Excel workbook, sets the first worksheet's left/right margins to 1.27 cm (0.5 in) and top/bottom margins to 1.905 cm (0.75 in), then saves the workbook as a PDF using Aspose.Cells.
+class Program
 {
-    // The program creates a workbook if missing, iterates through all worksheets, sets 0.5‑inch (36‑point) top, bottom, left, and right margins (header/footer set to zero) via the PageSetup object, and saves the workbook as a PDF using Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.pdf";
-
-                // Ensure the input file exists; create a simple workbook if it does not.
-                if (!File.Exists(inputPath))
-                {
-                    var tempWb = new Workbook();
-                    tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                    tempWb.Save(inputPath);
-                }
-
-                // Load the source workbook.
-                var workbook = new Workbook(inputPath);
-
-                // Custom margins in points (1 point = 1/72 inch).
-                const double top = 36;      // 0.5 inch
-                const double bottom = 36;   // 0.5 inch
-                const double left = 36;     // 0.5 inch
-                const double right = 36;    // 0.5 inch
-                const double header = 0;
-                const double footer = 0;
-
-                // Apply margins to each worksheet.
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    var pageSetup = sheet.PageSetup;
-                    pageSetup.TopMargin = top;
-                    pageSetup.BottomMargin = bottom;
-                    pageSetup.LeftMargin = left;
-                    pageSetup.RightMargin = right;
-                    pageSetup.HeaderMargin = header;
-                    pageSetup.FooterMargin = footer;
-                }
-
-                // Save the workbook as PDF.
-                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the Excel workbook from file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (you can repeat for other sheets if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set custom PDF page margins.
+            // Aspose.Cells expects margins in centimeters.
+            // 0.5 inch = 1.27 cm, 0.75 inch = 1.905 cm
+            sheet.PageSetup.LeftMargin   = 1.27;   // 0.5 inch
+            sheet.PageSetup.RightMargin  = 1.27;   // 0.5 inch
+            sheet.PageSetup.TopMargin    = 1.905;  // 0.75 inch
+            sheet.PageSetup.BottomMargin = 1.905;  // 0.75 inch
+
+            // Convert and save the workbook as a PDF file with the specified margins
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

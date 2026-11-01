@@ -1,32 +1,52 @@
-// Title: Auto‑fit all columns in each worksheet after merging two Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads two .xlsx files, merges them with Workbook.Combine, calls AutoFitColumns on every worksheet, and saves the result. | Show how to iterate through mergedWorkbook.Worksheets and apply AutoFitColumns to adjust column widths automatically. | Create a reusable method that accepts a list of Excel file paths, merges them into one workbook, auto‑fits columns across all sheets, and returns the saved file path.
-// Common Searches: Aspose.Cells C# merge multiple Excel files and auto adjust column widths | auto fit columns in all sheets after combining workbooks with Aspose | C# example for Workbook.Combine followed by AutoFitColumns for each worksheet | how to automatically resize columns in a merged Excel workbook using Aspose.Cells | best practice for column width auto‑fit after workbook combine in .NET
-// Tags: Workbook.Combine AutoFitColumns | auto‑fit columns post workbook combine | C# Aspose.Cells column width auto‑adjust | merge Excel workbooks and resize columns .NET | auto‑adjust column widths in combined workbook
+// Title: Automatically AutoFit all columns in a merged Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing Excel file, iterates through each worksheet, calls AutoFitColumns(), and saves the workbook with Aspose.Cells. | Update a workbook‑merging routine in C# to invoke AutoFitColumns on every worksheet after the merge using Aspose.Cells.
+// Common Searches: C# Aspose.Cells auto fit columns for every sheet after merging workbooks | how to apply AutoFitColumns to all worksheets in an existing Excel file using Aspose.Cells .NET | resize all columns automatically in a merged workbook with Aspose.Cells C#
+// Tags: auto fit columns Aspose.Cells | auto fit all worksheets C# | column width adjustment after workbook merge Aspose.Cells | apply AutoFitColumns to merged Excel file .NET | programmatic column resizing Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads source1.xlsx and source2.xlsx, merges them with Workbook.Combine, iterates through each worksheet to call AutoFitColumns, and saves the merged workbook as merged_autofit.xlsx.
-class AutoFitMergedWorkbook
+// The example loads a merged.xlsx workbook (or creates a new one), loops through each worksheet calling AutoFitColumns() to adjust column widths, and saves the result as merged_autofit.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load the first workbook which will serve as the base for merging
-        Workbook mergedWorkbook = new Workbook("source1.xlsx");
+        const string inputPath = "merged.xlsx";
+        const string outputPath = "merged_autofit.xlsx";
 
-        // Load the second workbook to be combined with the first one
-        Workbook secondWorkbook = new Workbook("source2.xlsx");
-
-        // Combine the second workbook into the first (mergedWorkbook)
-        mergedWorkbook.Combine(secondWorkbook);
-
-        // Apply AutoFit to all columns in every worksheet of the merged workbook
-        foreach (Worksheet sheet in mergedWorkbook.Worksheets)
+        try
         {
-            sheet.AutoFitColumns();
-        }
+            Workbook workbook;
 
-        // Save the resulting workbook with auto‑fitted columns
-        mergedWorkbook.Save("merged_autofit.xlsx", SaveFormat.Xlsx);
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                // Create a new workbook with a single worksheet as a fallback.
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                // Optional: add sample data to demonstrate AutoFit.
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample");
+                workbook.Worksheets[0].Cells["B1"].PutValue("Data");
+            }
+
+            // Apply AutoFit to all columns in each worksheet.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.AutoFitColumns();
+            }
+
+            // Save the updated workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

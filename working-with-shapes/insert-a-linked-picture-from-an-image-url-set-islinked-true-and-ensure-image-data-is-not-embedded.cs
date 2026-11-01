@@ -1,13 +1,14 @@
-// Title: Insert a linked picture from a remote URL into an Excel worksheet using Aspose.Cells for .NET without embedding the image data
-// AI Prompts: Add a picture to cell A1 that references an external image URL and keep it linked rather than embedding the file. | Create an Excel workbook, place a linked external image with specific width and height, and save it as .xlsx using Aspose.Cells for .NET. | Ensure the picture's IsLinked property is set to true so the workbook does not store the image bytes.
-// Common Searches: asp.net insert linked picture from web URL using Aspose.Cells | how to add external image to Excel without embedding with Aspose.Cells C# | set picture IsLinked property true in Aspose.Cells example | Aspose.Cells picture dimensions and external link C#
-// Tags: insert linked picture Aspose.Cells | external image URL Excel .NET | disable image embedding Aspose.Cells | IsLinked property picture C# | picture size Aspose.Cells
+// Title: Insert a linked picture from an external URL into an Excel worksheet using Aspose.Cells for .NET without embedding the image
+// AI Prompts: Add a picture to cell A1 that references https://example.com/image.png and set its IsLinked property to true using Aspose.Cells. | Save the workbook as an XLSX file while preserving the picture as a linked image rather than embedding the binary data. | Verify that the generated Excel file contains a linked picture by inspecting the workbook's picture collection.
+// Common Searches: Aspose.Cells C# add picture from URL as linked image | How to keep Excel picture linked instead of embedded using Aspose.Cells | Save workbook with external image reference in .NET Aspose.Cells | Set IsLinked property for picture in Aspose.Cells example | Create Excel file with web-linked picture using Aspose.Cells for .NET
+// Tags: add linked picture Aspose.Cells | picture IsLinked property .NET | save workbook with external image Aspose.Cells | Excel linked image from URL C# | prevent image embedding Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
+using System.IO;
 
-// // Creates a new workbook, adds a picture that links to an external URL at cell A1, sets its width and height, ensures IsLinked is true so the image data is not embedded, and saves the file as LinkedPicture.xlsx using Aspose.Cells for .NET.
+// The example creates a new workbook, inserts a picture at cell A1 that points to an external URL, marks it as linked (IsLinked = true), and saves the file as an XLSX workbook, ensuring the image data remains external and is not embedded.
 class Program
 {
     static void Main()
@@ -23,19 +24,26 @@ class Program
             // URL of the image to link
             string imageUrl = "https://example.com/image.png";
 
-            // Add a picture at cell A1 (row 0, column 0) using the URL.
-            // The Add method returns the index of the newly added picture.
+            // Add a picture at cell A1 (row 0, column 0). The picture will be linked if the source is a URL.
             int pictureIndex = sheet.Pictures.Add(0, 0, imageUrl);
 
-            // Retrieve the picture object
-            Picture linkedPicture = sheet.Pictures[pictureIndex];
+            // Retrieve the picture object (optional, for further manipulation)
+            Picture picture = sheet.Pictures[pictureIndex];
 
-            // Optionally set size (in pixels)
-            linkedPicture.Width = 200;
-            linkedPicture.Height = 150;
+            // Define output file path
+            string outputPath = "LinkedPicture.xlsx";
 
-            // Save the workbook to a file
-            workbook.Save("LinkedPicture.xlsx", SaveFormat.Xlsx);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

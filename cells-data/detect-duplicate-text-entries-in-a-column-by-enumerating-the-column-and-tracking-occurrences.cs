@@ -1,71 +1,70 @@
-// Title: Identify and count duplicate text values in a specific Excel column using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates a given column, builds a case‑insensitive dictionary of string values, and outputs each duplicate with its occurrence count. | Modify the duplicate‑detection example to apply a yellow fill style to every cell that contains a repeated value. | Create a method that returns a list of row numbers for each duplicate string found in a column using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to list duplicate entries in column A of an Excel file | C# count repeated text values in an Excel worksheet column using Aspose.Cells | detect case‑insensitive duplicate strings in Excel with Aspose.Cells .NET API
-// Tags: duplicate detection in Excel column Aspose.Cells | enumerate column values C# Aspose.Cells | case‑insensitive string count Aspose.Cells | highlight duplicate cells Aspose.Cells .NET | retrieve row indices of duplicate entries Aspose.Cells
+// Title: Detect and list duplicate text entries in a specific Excel column using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates a chosen column, and returns a dictionary of text values with their occurrence counts, highlighting those occurring more than once. | Write a method using Aspose.Cells that trims cell strings, performs case‑insensitive counting, and prints each duplicate value together with its frequency. | Create a reusable function in C# that accepts a worksheet and column index, enumerates the cells with Aspose.Cells, and outputs duplicate entries while ignoring empty cells.
+// Common Searches: Aspose.Cells C# find duplicate strings in column A of an Excel file | C# enumerate Excel column and count repeated text values with Aspose.Cells | case insensitive duplicate detection in Excel using Aspose.Cells .NET | how to get last data row and check for duplicate entries in a column with Aspose.Cells
+// Tags: duplicate text detection Aspose.Cells .NET | enumerate column cells Aspose.Cells | case‑insensitive string counting Excel C# | max data row retrieval Aspose.Cells | dictionary occurrence tracking Excel column
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsDuplicateDetection
+// The example loads an Excel workbook, iterates through all rows of a specified column, trims and case‑insensitively counts each non‑empty string using a Dictionary, and prints any values that appear more than once.
+class DetectDuplicateTextInColumn
 {
-    // The example creates a workbook, fills column A with sample strings, iterates the column to build a case‑insensitive dictionary, records values that appear more than once, prints each duplicate with its occurrence count, and saves the file as DuplicateDetection.xlsx.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Path to the Excel file
+        string filePath = "input.xlsx";
+
+        // Load the workbook (using the provided load rule)
+        Workbook workbook = new Workbook(filePath);
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Specify the column index to check (0 = column A)
+        int columnIndex = 0;
+
+        // Dictionary to track occurrences of each text value
+        Dictionary<string, int> occurrences = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        // Determine the last row with data in the worksheet
+        int lastRow = sheet.Cells.MaxDataRow;
+
+        // Enumerate the cells in the specified column
+        for (int row = 0; row <= lastRow; row++)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Get the cell value as a string
+            string cellValue = sheet.Cells[row, columnIndex].StringValue?.Trim();
 
-            // Populate sample data in column A (index 0) with some duplicates
-            string[] sampleData = { "Apple", "Banana", "Apple", "Orange", "Banana", "Grape" };
-            for (int i = 0; i < sampleData.Length; i++)
-            {
-                cells[i, 0].PutValue(sampleData[i]);
-            }
+            // Skip empty cells
+            if (string.IsNullOrEmpty(cellValue))
+                continue;
 
-            // Dictionary to count occurrences of each text value
-            Dictionary<string, int> occurrenceMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            // List to keep track of values that are duplicates (appear more than once)
-            List<string> duplicateValues = new List<string>();
-
-            // Determine the last row that contains data in the column
-            int lastRow = cells.MaxDataRow;
-
-            // Enumerate the column and track occurrences
-            for (int row = 0; row <= lastRow; row++)
-            {
-                string cellValue = cells[row, 0].StringValue;
-
-                // Skip empty cells
-                if (string.IsNullOrEmpty(cellValue))
-                    continue;
-
-                if (occurrenceMap.ContainsKey(cellValue))
-                {
-                    occurrenceMap[cellValue]++;
-
-                    // Add to duplicate list only once when the second occurrence is found
-                    if (!duplicateValues.Contains(cellValue))
-                        duplicateValues.Add(cellValue);
-                }
-                else
-                {
-                    occurrenceMap[cellValue] = 1;
-                }
-            }
-
-            // Output the detected duplicate entries and their counts
-            Console.WriteLine("Duplicate entries in column A:");
-            foreach (string dup in duplicateValues)
-            {
-                Console.WriteLine($"{dup} occurs {occurrenceMap[dup]} times");
-            }
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("DuplicateDetection.xlsx");
+            // Update the count for this text entry
+            if (occurrences.ContainsKey(cellValue))
+                occurrences[cellValue]++;
+            else
+                occurrences[cellValue] = 1;
         }
+
+        // Output duplicate entries
+        Console.WriteLine("Duplicate text entries in column {0}:", (char)('A' + columnIndex));
+        bool anyDuplicates = false;
+        foreach (var kvp in occurrences)
+        {
+            if (kvp.Value > 1)
+            {
+                anyDuplicates = true;
+                Console.WriteLine($"\"{kvp.Key}\" occurs {kvp.Value} times");
+            }
+        }
+
+        if (!anyDuplicates)
+        {
+            Console.WriteLine("No duplicate text entries found.");
+        }
+
+        // (Optional) Save the workbook if modifications were made
+        // workbook.Save("output.xlsx"); // using the provided save rule
     }
 }

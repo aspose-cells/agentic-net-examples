@@ -1,67 +1,87 @@
-// Title: Set French GlobalizationSettings on an Aspose.Cells workbook before generating category subtotals in C#
-// AI Prompts: Apply a French CultureInfo to the workbook's Settings.CultureInfo, then calculate and insert subtotal rows for each category using Aspose.Cells. | Create a C# routine that groups rows by a column, sums numeric values, and writes localized subtotal rows with number formatting based on GlobalizationSettings.
-// Common Searches: aspnet how to set workbook culture to fr-FR before adding subtotal rows with Aspose.Cells | c# Aspose.Cells localized number formatting for subtotal calculations | example of grouping data and inserting subtotals after setting GlobalizationSettings in Aspose.Cells
-// Tags: Aspose.Cells set workbook culture info | C# generate localized subtotals in Excel | globalizationsettings fr-FR Aspose.Cells | group by column and sum using Aspose.Cells API | Excel export with French number formatting Aspose.Cells
+// Title: How to apply German CultureInfo to an Aspose.Cells workbook before inserting subtotal rows for localized labels (C#)
+// Common Searches: Aspose.Cells set workbook cultureinfo to de-DE for German subtotal labels in C# | C# add subtotal rows with localized labels using Aspose.Cells workbook settings | How to localize Excel subtotal text to German with Aspose.Cells .NET | Insert subtotal rows after grouping data with culture-specific labels in Aspose.Cells | Saving workbook with German UI strings for subtotal rows using Aspose.Cells
+// Tags: workbook cultureinfo Aspose.Cells C# | localized subtotal rows Excel Aspose.Cells | German subtotal label Summe Aspose.Cells | grouped data subtotal insertion Aspose.Cells | globalization settings workbook Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, fills it with category and amount data, sets the workbook's CultureInfo to French (fr-FR) to localize number formatting, computes totals per category, writes subtotal rows, and saves the file as SubtotalsWithLocalization.xlsx using Aspose.Cells for .NET.
+// The example creates a new Workbook, assigns the German CultureInfo (de-DE) to the workbook settings, populates sample category and amount data, groups rows by category, inserts subtotal rows with German labels such as "Kategorie Summe" and SUM formulas, and saves the file as LocalizedSubtotals.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Set German culture for localized subtotal labels (e.g., "Summe")
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["A2"].PutValue("Food");
-            sheet.Cells["B2"].PutValue(120.5);
-            sheet.Cells["A3"].PutValue("Food");
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["A4"].PutValue("Transport");
-            sheet.Cells["B4"].PutValue(50);
-            sheet.Cells["A5"].PutValue("Transport");
-            sheet.Cells["B5"].PutValue(70);
+            cells["A1"].PutValue("Kategorie"); // Category header (German)
+            cells["B1"].PutValue("Betrag");    // Amount header (German)
 
-            // Apply French culture settings for number formatting
-            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            cells["A2"].PutValue("Essen");
+            cells["B2"].PutValue(12.5);
+            cells["A3"].PutValue("Essen");
+            cells["B3"].PutValue(8.75);
+            cells["A4"].PutValue("Transport");
+            cells["B4"].PutValue(15.0);
+            cells["A5"].PutValue("Transport");
+            cells["B5"].PutValue(20.0);
 
-            // Calculate subtotals manually (group by Category in column A, sum Amount in column B)
-            int firstDataRow = 1; // zero‑based index, row after header
-            int lastDataRow = sheet.Cells.MaxDataRow;
-            var sums = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
-
-            for (int row = firstDataRow; row <= lastDataRow; row++)
+            // Manually add subtotal rows (sum) for each category
+            // Collect rows per category
+            var categoryRows = new Dictionary<string, List<int>>();
+            for (int row = 1; row <= 4; row++) // data rows are 2..5 (zero‑based index)
             {
-                string category = sheet.Cells[row, 0].StringValue;
-                double amount = sheet.Cells[row, 1].DoubleValue;
-                if (!sums.ContainsKey(category))
-                    sums[category] = 0;
-                sums[category] += amount;
+                string category = cells[row, 0].StringValue;
+                if (!categoryRows.ContainsKey(category))
+                    categoryRows[category] = new List<int>();
+                categoryRows[category].Add(row);
             }
 
-            // Write subtotal rows after the original data
-            int subtotalStartRow = lastDataRow + 2; // leave one empty row
-            int currentRow = subtotalStartRow;
-            foreach (var kvp in sums)
+            // Insert subtotal rows starting from the bottom to keep indices valid
+            int offset = 0;
+            foreach (var kvp in categoryRows)
             {
-                sheet.Cells[currentRow, 0].PutValue($"{kvp.Key} Total");
-                sheet.Cells[currentRow, 1].PutValue(kvp.Value);
-                currentRow++;
+                // Determine insertion point: after the last row of the current group
+                int insertRow = kvp.Value[kvp.Value.Count - 1] + 1 + offset;
+
+                // Insert a new row for the subtotal
+                sheet.Cells.InsertRows(insertRow, 1);
+                offset++; // account for the newly inserted row
+
+                // Write label and sum formula
+                cells[insertRow, 0].PutValue($"{kvp.Key} Summe");
+                // Sum the amount column for the group's rows
+                int firstDataRow = kvp.Value[0] + 1; // Excel rows are 1‑based in formulas
+                int lastDataRow = kvp.Value[kvp.Value.Count - 1] + 1;
+                string sumFormula = $"SUM(B{firstDataRow}:B{lastDataRow})";
+                cells[insertRow, 1].Formula = sumFormula;
+            }
+
+            // Determine output file path
+            string outputPath = "LocalizedSubtotals.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook
-            string outputPath = "SubtotalsWithLocalization.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

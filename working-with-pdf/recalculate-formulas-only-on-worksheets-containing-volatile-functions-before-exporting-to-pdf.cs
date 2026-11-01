@@ -1,89 +1,79 @@
-// Title: Recalculate formulas only on worksheets with volatile functions before exporting to PDF using Aspose.Cells for .NET
-// AI Prompts: Search each worksheet for volatile Excel functions and invoke Workbook.CalculateFormula only when such functions are found, then save the workbook as a PDF. | Create a conditional formula recalculation step that runs after detecting NOW, TODAY, RAND, OFFSET, INDIRECT, INFO, or CELL functions, before converting the workbook to PDF with Aspose.Cells. | Add diagnostic logging to list worksheets containing volatile formulas, trigger on‑demand calculation, and export the workbook to PDF.
-// Common Searches: Aspose.Cells recalculate formulas only on sheets with volatile functions before PDF export | C# detect volatile Excel functions in workbook and conditionally calculate formulas | how to limit formula calculation to volatile sheets when converting Excel to PDF with Aspose | conditional workbook.CalculateFormula based on volatile functions Aspose.Cells
-// Tags: volatile function detection Aspose.Cells | on-demand workbook.CalculateFormula .NET | PDF conversion after formula evaluation Aspose.Cells | skip unnecessary calculations Excel to PDF | worksheet-level volatile formula check C#
+// Title: Recalculate formulas only when volatile functions are present before exporting an Excel workbook to PDF with Aspose.Cells for .NET
+// Common Searches: c# aspnet detect volatile Excel functions with Aspose.Cells before PDF conversion | how to trigger workbook.CalculateFormula only if sheet contains NOW or RAND in Aspose.Cells | selective formula calculation in Aspose.Cells prior to saving workbook as PDF | scan worksheets for volatile formulas using Aspose.Cells C# and recalc conditionally | conditional Excel to PDF export with Aspose.Cells based on presence of volatile functions
+// Tags: volatile function detection Aspose.Cells | conditional formula calculation .NET | Excel to PDF conversion Aspose.Cells | worksheet scanning for volatile formulas C# | calculate workbook formulas before PDF export
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, scans each worksheet for volatile functions such as NOW, TODAY, RAND, OFFSET, INDIRECT, INFO, and CELL. If any worksheet contains these functions, it triggers a single workbook.CalculateFormula call to update formulas, then saves the workbook as a PDF, handling missing files and exceptions gracefully.
+// The example loads an Excel file with Aspose.Cells, iterates through each worksheet to find formulas that contain volatile functions such as NOW(), RAND(), or OFFSET(). If any worksheet includes such functions, it triggers a full workbook recalculation using workbook.CalculateFormula() and then saves the workbook as a PDF.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook from the file
             Workbook workbook = new Workbook(inputPath);
 
-            // List of common volatile functions (case‑insensitive)
-            string[] volatileFunctions = new[]
+            // List of volatile functions to look for (case‑insensitive)
+            string[] volatileFunctions = new string[]
             {
-                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET()", "INDIRECT()", "INFO()", "CELL()",
-                "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT", "INFO", "CELL"
+                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET()", "INDIRECT()", "CELL()", "INFO()", "AREAS()", "GETPIVOTDATA()"
             };
 
-            bool anySheetContainsVolatile = false;
+            bool anySheetNeedsRecalc = false;
 
-            // Iterate through each worksheet
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 bool containsVolatile = false;
-                Cells cells = sheet.Cells;
 
-                // Determine the used range
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                // Scan cells for volatile formulas
-                for (int row = 0; row <= maxRow && !containsVolatile; row++)
+                // Scan all cells that have formulas
+                foreach (Cell cell in sheet.Cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    if (cell.IsFormula)
                     {
-                        Cell cell = cells[row, col];
-                        if (cell.IsFormula)
+                        string formula = cell.Formula.ToUpperInvariant();
+
+                        // Check if the formula contains any volatile function
+                        foreach (string vf in volatileFunctions)
                         {
-                            string formula = cell.Formula?.ToUpperInvariant() ?? string.Empty;
-                            foreach (string volatileFunc in volatileFunctions)
+                            if (formula.Contains(vf))
                             {
-                                if (formula.Contains(volatileFunc.ToUpperInvariant()))
-                                {
-                                    containsVolatile = true;
-                                    break;
-                                }
+                                containsVolatile = true;
+                                break;
                             }
                         }
 
                         if (containsVolatile)
-                            break;
+                            break; // No need to continue scanning this sheet
                     }
                 }
 
                 if (containsVolatile)
                 {
-                    anySheetContainsVolatile = true;
-                    // No per‑sheet calculation API; will recalculate whole workbook later
+                    anySheetNeedsRecalc = true;
                 }
             }
 
-            // Recalculate formulas if any volatile functions were found
-            if (anySheetContainsVolatile)
+            // Perform calculation if any sheet contained volatile functions
+            if (anySheetNeedsRecalc)
             {
-                workbook.CalculateFormula();
+                workbook.CalculateFormula(); // Recalculates all formulas in the workbook
             }
 
-            // Save the workbook as PDF
+            // Export the workbook to PDF
             workbook.Save(outputPath, SaveFormat.Pdf);
             Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
         }

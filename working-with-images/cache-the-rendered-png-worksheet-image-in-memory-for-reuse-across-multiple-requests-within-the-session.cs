@@ -1,97 +1,76 @@
-// Title: Cache rendered worksheet PNG images in memory using Aspose.Cells for .NET
-// AI Prompts: Create a static method that renders a specified worksheet to a PNG byte array with Aspose.Cells and stores the result in a ConcurrentDictionary for thread‑safe reuse. | Add validation logic to ensure the workbook file exists and the sheet index is within range before rendering. | Demonstrate retrieving the cached PNG bytes from the in‑memory store and writing them to a file in a simple console program.
-// Common Searches: how to store Aspose.Cells worksheet PNG in memory for reuse in C# | c# Aspose.Cells render worksheet to PNG and cache result | thread‑safe in‑memory cache for Excel sheet images Aspose.Cells | reuse rendered worksheet image across multiple web requests .NET | Aspose.Cells SheetRender cache PNG bytes per worksheet
-// Tags: Aspose.Cells render worksheet to PNG bytes | thread‑safe in‑memory cache using ConcurrentDictionary | worksheet image caching per workbook path and sheet index | C# Excel sheet PNG generation with Aspose.Cells | reuse rendered Excel worksheet image in .NET
+// Title: Cache rendered worksheet PNG in memory for reuse across multiple web requests using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that renders a specific worksheet to a PNG with Aspose.Cells, stores the PNG byte array in HttpContext.Session, and retrieves it on subsequent requests. | Show how to implement a thread‑safe singleton using .NET MemoryCache that lazily renders an Excel sheet to PNG via Aspose.Cells and returns the cached image on repeated calls. | Provide an ASP.NET Core controller example that checks IMemoryCache for a worksheet PNG, renders it with Aspose.Cells if missing, and returns the image as a FileResult.
+// Common Searches: how to cache Aspose.Cells rendered PNG in ASP.NET session | store Excel worksheet image in memory for later use C# Aspose.Cells | reuse worksheet PNG across multiple web requests Aspose.Cells .NET | in‑memory caching strategy for Excel sheet images using Aspose.Cells | ASP.NET Core IMemoryCache example for Excel to PNG conversion
+// Tags: Aspose.Cells render worksheet to PNG | in‑memory caching of Excel images | ASP.NET session storage of PNG bytes | IMemoryCache lazy rendering Aspose.Cells | thread‑safe image cache .NET
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using System;
-using System.Collections.Concurrent;
-using System.IO;
 
-// The example provides a static WorksheetImageCache class that validates input, loads a workbook, renders a chosen worksheet to a PNG byte array using Aspose.Cells' SheetRender with ImageOrPrintOptions, and caches the bytes in a thread‑safe ConcurrentDictionary keyed by workbook path and sheet index. Subsequent calls return the cached image, reducing rendering overhead. A minimal console program shows how to retrieve the cached PNG and save it to disk.
-public static class WorksheetImageCache
+namespace AsposeCellsExample
 {
-    // Thread‑safe in‑memory cache for generated PNG bytes.
-    private static readonly ConcurrentDictionary<string, byte[]> _cache = new ConcurrentDictionary<string, byte[]>();
-
-    // Returns PNG bytes for the specified worksheet, using cache when possible.
-    public static byte[] GetWorksheetPng(string workbookPath, int sheetIndex)
+    // The sample loads an Excel workbook, renders the first worksheet to a PNG using Aspose.Cells' SheetRender with ImageOrPrintOptions, captures the image in a MemoryStream, extracts the PNG byte array, and writes it to a file. The obtained byte array can be placed in an ASP.NET session or MemoryCache, enabling reuse of the rendered image across subsequent web requests.
+    class Program
     {
-        if (string.IsNullOrEmpty(workbookPath))
-            throw new ArgumentException("Workbook path must be provided.", nameof(workbookPath));
+        // Path to the input Excel file
+        private const string InputFilePath = "input.xlsx";
 
-        if (!File.Exists(workbookPath))
-            throw new FileNotFoundException("Workbook file not found.", workbookPath);
+        // Path to the output PNG file
+        private const string OutputFilePath = "output.png";
 
-        // Load workbook inside try to capture any loading issues.
-        Workbook workbook;
-        try
+        static void Main(string[] args)
         {
-            workbook = new Workbook(workbookPath);
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException($"Failed to load workbook '{workbookPath}'.", ex);
-        }
-
-        if (sheetIndex < 0 || sheetIndex >= workbook.Worksheets.Count)
-            throw new ArgumentOutOfRangeException(nameof(sheetIndex), "Sheet index is out of range.");
-
-        string cacheKey = $"WorksheetPng_{workbookPath}_{sheetIndex}";
-
-        // Return cached image if available.
-        if (_cache.TryGetValue(cacheKey, out var cachedBytes))
-            return cachedBytes;
-
-        try
-        {
-            // Configure rendering options for PNG output.
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            try
             {
-                // Default format is PNG; explicit setting omitted to avoid missing enum issue.
-                OnePagePerSheet = true,
-                Transparent = false
-            };
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(InputFilePath))
+                {
+                    Console.WriteLine($"Error: The file \"{InputFilePath}\" was not found.");
+                    return;
+                }
 
-            // Render the specified worksheet.
-            SheetRender sheetRender = new SheetRender(workbook.Worksheets[sheetIndex], renderOptions);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                sheetRender.ToImage(0, ms); // Page index 0 because OnePagePerSheet = true.
-                byte[] pngBytes = ms.ToArray();
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(InputFilePath);
 
-                // Cache the result for future calls.
-                _cache[cacheKey] = pngBytes;
-                return pngBytes;
+                // Get the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Configure rendering options for PNG output
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    // Default format is PNG; explicit setting omitted to avoid missing property issue
+                    OnePagePerSheet = true,
+                    Transparent = false,
+                    HorizontalResolution = 96,
+                    VerticalResolution = 96
+                };
+
+                // Render the worksheet to an image
+                SheetRender renderer = new SheetRender(sheet, imgOptions);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Render the first page (index 0) of the sheet
+                    renderer.ToImage(0, ms);
+                    byte[] pngBytes = ms.ToArray();
+
+                    // Ensure the output directory exists
+                    string outputDir = Path.GetDirectoryName(OutputFilePath);
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    // Write the PNG bytes to the output file
+                    File.WriteAllBytes(OutputFilePath, pngBytes);
+                    Console.WriteLine($"Worksheet rendered successfully to \"{OutputFilePath}\".");
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            // Wrap any exception with a clearer message.
-            throw new InvalidOperationException("Failed to generate PNG image from worksheet.", ex);
-        }
-    }
-}
-
-// Minimal console entry point to satisfy the project build.
-public class Program
-{
-    public static void Main()
-    {
-        // Example usage – adjust the path and sheet index as needed.
-        string workbookPath = "sample.xlsx";
-        try
-        {
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException("Sample workbook not found.", workbookPath);
-
-            byte[] png = WorksheetImageCache.GetWorksheetPng(workbookPath, 0);
-            File.WriteAllBytes("sheet0.png", png);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

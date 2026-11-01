@@ -1,75 +1,85 @@
-// Title: Detect Excel file format and conditionally decrypt password‑protected workbooks with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells LoadOptions with LoadFormat.Auto, tries to open it without a password, and if a CellsException occurs, reloads the workbook with a supplied password. | Create a reusable C# method that takes a file path and password, determines whether the workbook is encrypted, and returns an opened Workbook instance ready for further processing. | Show how to read the value of cell A1 after handling possible encryption and then save the workbook to a new file using Aspose.Cells.
-// Common Searches: aspocells c# load excel file with automatic format detection and password fallback | how to open encrypted .xlsx using Aspose.Cells LoadOptions in .NET | detect file format and decrypt Excel workbook programmatically with Aspose.Cells | c# example for handling password protected Excel files with Aspose.Cells
-// Tags: auto format detection LoadOptions Aspose.Cells | conditional workbook decryption C# | open password protected Excel with Aspose.Cells | read cell A1 after workbook decryption .NET | save processed workbook Aspose.Cells
+// Title: Detect Excel file format and prompt for password to decrypt workbook using Aspose.Cells in C#
+// Common Searches: how to automatically detect Excel file format and open password‑protected workbook with Aspose.Cells C# | Aspose.Cells load workbook of unknown format and ask user for password if encrypted | C# code to open encrypted Excel file after auto format detection using Aspose.Cells | prompt for workbook password when loading Excel file with LoadOptions Auto in Aspose.Cells | detect and decrypt password‑protected Excel workbook before processing in C#
+// Tags: auto format detection LoadOptions Aspose.Cells | load encrypted Excel workbook C# | decrypt workbook using Aspose.Cells | handle unknown Excel format Aspose.Cells | save decrypted workbook C# | user password prompt for workbook Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program uses Aspose.Cells to automatically detect the Excel file format, attempts to load the workbook without a password, and if a CellsException indicates encryption, reloads it with the provided password before reading cell A1 and saving the result as a new file.
+// The example checks that the source Excel file exists, uses Aspose.Cells LoadOptions with LoadFormat.Auto to automatically determine the workbook format, catches exceptions that indicate password protection, prompts the user for the password, reloads the workbook with the supplied password, lists worksheet names, and finally saves a decrypted copy of the workbook to a specified output path.
 class Program
 {
     static void Main()
     {
-        // Input file path (provide full name with extension)
-        string inputPath = "inputFile.xlsx";
+        // Path to the source workbook (any supported format)
+        string sourcePath = @"C:\Data\inputFile.xlsx";
 
-        // Password for encrypted workbooks (if needed)
-        string password = "myPassword";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Source file not found: {sourcePath}");
             return;
         }
 
-        // Load options with automatic format detection
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
         Workbook workbook = null;
 
+        // Attempt to load the workbook; if password is required, prompt the user
         try
         {
-            // Attempt to load the workbook without a password first
-            workbook = new Workbook(inputPath, loadOptions);
+            // 1. Detect file format automatically
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+            workbook = new Workbook(sourcePath, loadOptions);
         }
-        catch (CellsException)
+        catch (Exception ex)
         {
-            // Workbook may be encrypted; reload using the supplied password
-            loadOptions.Password = password;
-            try
+            // Check if the exception indicates a password‑protected file
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                workbook = new Workbook(inputPath, loadOptions);
+                Console.Write("Enter password for the workbook: ");
+                string password = Console.ReadLine();
+
+                try
+                {
+                    // Reload the workbook with the supplied password
+                    LoadOptions pwdOptions = new LoadOptions(LoadFormat.Auto) { Password = password };
+                    workbook = new Workbook(sourcePath, pwdOptions);
+                }
+                catch (Exception pwdEx)
+                {
+                    Console.WriteLine($"Failed to load workbook with password: {pwdEx.Message}");
+                    return;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Failed to load encrypted workbook: {ex.Message}");
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
                 return;
             }
         }
-        catch (Exception ex)
+
+        // At this point the workbook is loaded (and decrypted if it was protected)
+        Console.WriteLine("Worksheets in the workbook:");
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
+            Console.WriteLine("- " + ws.Name);
         }
+
+        // Save the processed workbook (optional – here we save a copy)
+        string outputPath = @"C:\Data\outputFile.xlsx";
 
         try
         {
-            // Example processing: read value from first worksheet cell A1
-            Worksheet sheet = workbook.Worksheets[0];
-            string cellValue = sheet.Cells["A1"].StringValue;
-            Console.WriteLine($"Value in A1: {cellValue}");
+            // Ensure the output directory exists
+            string outDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
 
-            // (Additional processing can be added here)
-
-            // Save the processed workbook
-            workbook.Save("output.xlsx");
-            Console.WriteLine("Workbook saved as output.xlsx");
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during processing or saving: {ex.Message}");
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

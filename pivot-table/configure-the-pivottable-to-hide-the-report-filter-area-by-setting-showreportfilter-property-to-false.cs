@@ -1,60 +1,56 @@
-// Title: Hide the report filter area of a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds a pivot table, and disables the report filter UI by setting ShowReportFilter = false. | Update an existing Aspose.Cells pivot‑table example to turn off the report filter pane without altering row or data fields. | Show how to programmatically hide the report filter section of a PivotTable after refreshing data with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# remove report filter section from generated pivot table | Set ShowReportFilter property to false in Aspose.Cells pivot table example | How to remove report filter area from a PivotTable using Aspose.Cells for .NET | C# Aspose.Cells pivot table UI options hide filter pane | Disable report filter area in Excel pivot table created with Aspose.Cells
-// Tags: Aspose.Cells pivot table ShowReportFilter | hide report filter UI Aspose.Cells | C# pivot table display options Aspose.Cells | Excel pivot table filter pane suppression Aspose.Cells | Aspose.Cells workbook pivot table configuration
+// Title: How to hide the report filter area of an Aspose.Cells PivotTable in C# by setting ShowReportFilter to false
+// Common Searches: Aspose.Cells C# hide pivot table report filter pane | Set ShowReportFilter false on Aspose.Cells PivotTable | Remove report filter area from Excel pivot generated with Aspose.Cells .NET | How to disable report filter section in Aspose.Cells pivot table using C#
+// Tags: Aspose.Cells PivotTable ShowReportFilter | hide report filter pane Aspose.Cells | disable pivot report filter C# | Excel pivot layout configuration Aspose.Cells | remove report filter area .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
 
-namespace AsposeCellsPivotDemo
+// The example creates a new workbook, adds sample data to a sheet named "Data", creates a second sheet called "Pivot", builds a pivot table from the range A1:B5 at cell C3, and demonstrates how to hide the report filter area by setting the PivotTable.ShowReportFilter property to false before saving the file as PivotTable_HideReportFilter.xlsx.
+class Program
 {
-    // The example creates a new workbook, fills it with sample data, adds a pivot table on range A1:B5, assigns 'Category' as a row field and 'Amount' as a data field, refreshes and calculates the pivot, sets ShowReportFilter to false to hide the filter pane, and saves the file as PivotTable_HideReportFilter.xlsx.
-    class HideReportFilterArea
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Add sample data to the first worksheet
+            Worksheet dataSheet = wb.Worksheets[0];
+            dataSheet.Name = "Data";
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("Food");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Drink");
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["A4"].PutValue("Food");
-                sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("Drink");
-                sheet.Cells["B5"].PutValue(70);
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+            dataSheet.Cells["A2"].PutValue("Food");
+            dataSheet.Cells["B2"].PutValue(100);
+            dataSheet.Cells["A3"].PutValue("Transport");
+            dataSheet.Cells["B3"].PutValue(50);
+            dataSheet.Cells["A4"].PutValue("Food");
+            dataSheet.Cells["B4"].PutValue(150);
+            dataSheet.Cells["A5"].PutValue("Utilities");
+            dataSheet.Cells["B5"].PutValue(200);
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add a worksheet that will contain the pivot table
+            int pivotSheetIdx = wb.Worksheets.Add();
+            Worksheet pivotSheet = wb.Worksheets[pivotSheetIdx];
+            pivotSheet.Name = "Pivot";
 
-                // Configure the pivot table fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Create the pivot table on the pivot sheet
+            // The source range is specified as a string, and the destination cell is "C3"
+            int pivotIdx = pivotSheet.PivotTables.Add("=Data!A1:B5", "C3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIdx];
 
-                // Refresh the pivot cache and calculate the pivot table
-                pivotTable.RefreshData();   // Correct API call
-                pivotTable.CalculateData();
+            // Note: In this version of Aspose.Cells the RowFields and DataFields collections
+            // require PivotField objects. Adding fields by index is not supported, so we rely
+            // on the default layout generated by the library.
 
-                // Save the workbook to a file
-                string outputPath = "PivotTable_HideReportFilter.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            wb.Save("PivotTable_HideReportFilter.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

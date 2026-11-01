@@ -1,14 +1,13 @@
-// Title: Generate a PDF from an Excel workbook using Aspose.Cells for .NET and understand the lack of worksheet‑attachment support
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, verifies the file exists, configures PdfSaveOptions, and saves the workbook as a PDF. | Add robust exception handling and logging to the Excel‑to‑PDF conversion sample using Aspose.Cells in C#. | Describe why Aspose.Cells currently cannot embed individual worksheets as separate PDF attachments and propose alternative methods for providing worksheet‑level review.
-// Common Searches: asp.net convert excel workbook to pdf using aspose.cells c# | aspose.cells embed worksheet as pdf attachment limitation | c# pdfsaveoptions usage with aspose.cells for excel conversion | how to handle file not found error in aspose.cells excel to pdf conversion | alternative ways to attach individual worksheets to a pdf generated from excel
-// Tags: aspose.cells excel to pdf conversion c# | pdfsaveoptions configuration aspose.cells | c# file existence check before aspose.cells export | exception handling for aspose.cells pdf generation | worksheet attachment limitation aspose.cells
+// Title: Create individual PDF files for each Excel worksheet and a combined PDF using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, loops through all worksheets, and saves each worksheet as a separate PDF named after the sheet. | Add logic to the same program to export the whole workbook as a single combined PDF after generating the per‑sheet PDFs.
+// Common Searches: Aspose.Cells C# export each worksheet to a separate PDF file | How to save an entire Excel workbook as one PDF and also get per‑sheet PDFs using Aspose.Cells | C# generate PDF files for every sheet in an Excel workbook with Aspose.Cells | Create temporary workbook for single‑sheet PDF conversion Aspose.Cells | Save Excel worksheets as individual PDFs and a combined PDF in .NET
+// Tags: Aspose.Cells per‑sheet PDF export | C# generate individual worksheet PDFs | combined workbook PDF generation Aspose.Cells | temporary workbook single sheet conversion | save Excel as PDF with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving; // For PdfSaveOptions
 
-// The sample checks for the input.xlsx file, loads it with Aspose.Cells, applies default PdfSaveOptions, and saves output.pdf. It includes file‑existence validation and exception handling, and notes that Aspose.Cells does not currently provide an API to embed each worksheet as a separate PDF attachment.
+// The program verifies the input Excel file, loads it with Aspose.Cells, iterates through each worksheet, creates a temporary workbook containing only that sheet, removes the default empty sheet, saves the temporary workbook as a PDF named after the sheet, and finally saves the original workbook as a single combined PDF, handling errors throughout.
 class Program
 {
     static void Main()
@@ -18,7 +17,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input Excel file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,12 +27,35 @@ class Program
             // Load the source Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Prepare PDF save options (no attachments used due to missing PdfAttachment API)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Generate a separate PDF for each worksheet (optional demonstration)
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    // Create a temporary workbook containing only the current worksheet
+                    Workbook tempWb = new Workbook();
+                    tempWb.Worksheets.AddCopy(sheet.Name);
 
-            // Save the workbook as a PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF generated successfully: {outputPath}");
+                    // Remove the default empty sheet that exists in a new workbook
+                    if (tempWb.Worksheets.Count > 1)
+                    {
+                        tempWb.Worksheets.RemoveAt(0);
+                    }
+
+                    // Save the temporary workbook as a PDF file
+                    string sheetPdfPath = $"{sheet.Name}.pdf";
+                    tempWb.Save(sheetPdfPath, SaveFormat.Pdf);
+                    Console.WriteLine($"Generated PDF for sheet \"{sheet.Name}\": {sheetPdfPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to generate PDF for sheet \"{sheet.Name}\": {ex.Message}");
+                }
+            }
+
+            // Save the original workbook as a single PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Combined PDF generated successfully: {outputPath}");
         }
         catch (Exception ex)
         {

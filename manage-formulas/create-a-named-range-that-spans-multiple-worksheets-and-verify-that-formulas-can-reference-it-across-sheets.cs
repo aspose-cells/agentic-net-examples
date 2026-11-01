@@ -1,13 +1,11 @@
-// Title: How to define a named range that spans multiple worksheets and use it in a SUM formula with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range covering A1:A2 on two worksheets and inserts a =SUM(namedRange) formula on a third worksheet. | Show how to trigger formula calculation and read the resulting value of a multi‑sheet named range in a .NET workbook using Aspose.Cells.
-// Common Searches: how to create a named range that includes cells from multiple sheets using Aspose.Cells C# | using Aspose.Cells C# to sum values from a multi‑sheet named range | Aspose.Cells calculate formulas after adding a cross‑sheet named range | verify result of SUM of named range spanning several worksheets in Aspose.Cells | save workbook with multi‑sheet named range to XLSX using Aspose.Cells .NET
-// Tags: Aspose.Cells define multi‑sheet named range | Aspose.Cells SUM formula with named range | C# Aspose.Cells calculate workbook formulas | Aspose.Cells reference named range across worksheets | Aspose.Cells save workbook to XLSX
+// Title: Define a multi‑sheet named range and sum it with a formula using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# create named range that includes cells from multiple worksheets | C# Aspose.Cells sum values across sheets using a named range | Set RefersTo property for a multi‑sheet range in Aspose.Cells .NET | Calculate formula that references a named range spanning several worksheets with Aspose.Cells | Add multi‑sheet named range and use SUM function in Aspose.Cells workbook
+// Tags: define multi‑sheet named range Aspose.Cells | SUM formula referencing named range C# Aspose.Cells | Workbook.Worksheets.Names.Add cross‑sheet range | RefersTo property multi‑sheet range Aspose.Cells | calculate formulas after adding named range Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The program creates a workbook with three sheets, defines a named range that includes A1:A2 on Sheet1 and Sheet2, uses that range in a =SUM formula on Sheet3, calculates the formulas (resulting in 100), outputs the sum, and saves the file as MultiSheetNamedRange.xlsx.
+// The example creates a workbook with two worksheets, fills A1:A2 on each sheet, defines a named range that spans those cells across both sheets, inserts a SUM formula that references the multi‑sheet named range, calculates all formulas, outputs the result, and saves the file as MultiSheetNamedRange.xlsx.
 class Program
 {
     static void Main()
@@ -17,9 +15,11 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Rename the default sheet and add a second sheet
+            // Access the first worksheet and rename it
             Worksheet sheet1 = workbook.Worksheets[0];
             sheet1.Name = "Sheet1";
+
+            // Add a second worksheet
             Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
             // Populate some numeric data in both sheets
@@ -28,28 +28,27 @@ class Program
             sheet2.Cells["A1"].PutValue(30);
             sheet2.Cells["A2"].PutValue(40);
 
-            // Create a named range that spans A1:A2 on both Sheet1 and Sheet2
-            // Add returns the index of the new name; retrieve the Name object via the index
-            int rangeIndex = workbook.Worksheets.Names.Add("MyMultiSheetRange");
-            Name multiSheetRange = workbook.Worksheets.Names[rangeIndex];
-            multiSheetRange.RefersTo = "Sheet1!$A$1:$A$2,Sheet2!$A$1:$A$2";
+            // Define a named range that spans A1:A2 on both worksheets
+            string refersTo = "Sheet1!$A$1:$A$2,Sheet2!$A$1:$A$2";
 
-            // Add a third sheet to test referencing the named range
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-            // Use the named range in a formula (sum all values across the two sheets)
-            sheet3.Cells["A1"].Formula = "=SUM(MyMultiSheetRange)";
+            // Add the named range (Names.Add returns the index of the new name)
+            int nameIndex = workbook.Worksheets.Names.Add("MyMultiSheetRange");
+            Name rangeName = workbook.Worksheets.Names[nameIndex];
+            rangeName.RefersTo = refersTo;
 
-            // Calculate formulas in the workbook
+            // Insert a formula that references the multi‑sheet named range
+            sheet1.Cells["B1"].Formula = "SUM(MyMultiSheetRange)";
+
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Verify the result (expected 10+20+30+40 = 100)
-            double sumResult = sheet3.Cells["A1"].DoubleValue;
-            Console.WriteLine("Sum of MyMultiSheetRange = " + sumResult);
+            // Output the calculated result to the console
+            Console.WriteLine("Result of SUM(MyMultiSheetRange): " + sheet1.Cells["B1"].StringValue);
 
-            // Save the workbook to a file
+            // Save the workbook
             string outputPath = "MultiSheetNamedRange.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,7 +1,7 @@
-// Title: Convert a folder of XLSX files to single‑file HTML with Aspose.Cells for .NET while suppressing document properties
-// AI Prompts: Generate a C# console application that scans a directory for *.xlsx files and saves each workbook as an HTML file using Aspose.Cells HtmlSaveOptions with ExportDocumentProperties set to false and images embedded as Base64. | Write .NET code to batch process Excel workbooks to HTML, ensuring no document metadata is included and all images are inlined for a single‑file output. | Create a C# script that converts multiple Excel files to privacy‑compliant HTML, logs conversion outcomes, and gracefully handles missing or corrupt files.
-// Common Searches: how to batch convert xlsx files to html with aspose.cells c# without exporting document properties | c# aspnet convert multiple excel workbooks to single html files embed images base64 | aspose.cells htmlsaveoptions exportdocumentproperties false example | privacy compliant excel to html conversion using asp.net and aspose.cells | convert all xlsx in a folder to html using aspose.cells console app
-// Tags: Aspose.Cells batch XLSX to HTML conversion | HtmlSaveOptions ExportDocumentProperties false | Base64 image embedding in HTML with Aspose.Cells | C# console app bulk Excel to HTML | privacy‑first Excel HTML export
+// Title: Batch convert a folder of XLSX workbooks to HTML with Aspose.Cells while excluding document properties
+// AI Prompts: Iterate over every .xlsx file in a source directory, use Aspose.Cells to save each workbook as HTML, and set HtmlSaveOptions.ExportDocumentProperties to false before writing the files to a target folder. | Create a C# utility that loads each Excel file from a given path, converts all worksheets to HTML, disables metadata export, and stores the resulting .html files in a separate output directory.
+// Common Searches: how to batch convert xlsx files to html using aspose.cells c# | c# export excel workbook to html without document properties | aspose.cells hide metadata when saving excel as html | convert all worksheets in multiple Excel files to html folder c# | privacy compliant html export from excel workbooks asp.net
+// Tags: batch xlsx to html conversion Aspose.Cells | HtmlSaveOptions ExportDocumentProperties false | exclude workbook metadata in html export | convert folder of Excel files to html c# | export all worksheets to html Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using Aspose.Cells;
 
 namespace BatchXlsxToHtml
 {
-    // The sample scans a specified input folder, loads each .xlsx workbook with Aspose.Cells, and saves it as a single HTML file using HtmlSaveOptions that disable document property export and embed images as Base64, while creating the output directory, handling missing files, and logging conversion results.
+    // The sample iterates through all .xlsx files in a specified input folder, loads each workbook with Aspose.Cells, and saves it as an HTML file in an output folder using HtmlSaveOptions with ExportDocumentProperties disabled, ensuring no document metadata is included.
     class Program
     {
         static void Main(string[] args)
@@ -22,53 +22,60 @@ namespace BatchXlsxToHtml
             // Verify input folder exists
             if (!Directory.Exists(inputFolder))
             {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                Console.WriteLine($"Input folder not found: {inputFolder}");
                 return;
             }
 
             // Ensure output directory exists
             Directory.CreateDirectory(outputFolder);
 
-            // Get all .xlsx files in the input folder (non-recursive)
-            string[] xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            // HtmlSaveOptions with document properties omitted for privacy compliance
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            try
             {
-                ExportDocumentProperties = false, // Do not include document properties in the HTML output
-                ExportImagesAsBase64 = true        // Embed images as base64 to keep a single HTML file
-            };
+                // Get all .xlsx files in the input folder (non-recursive)
+                string[] xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            foreach (string xlsxPath in xlsxFiles)
-            {
-                try
+                foreach (string xlsxPath in xlsxFiles)
                 {
-                    // Ensure the source file exists before loading
-                    if (!File.Exists(xlsxPath))
+                    try
                     {
-                        Console.WriteLine($"File not found: {xlsxPath}");
-                        continue;
+                        // Verify the file exists before loading
+                        if (!File.Exists(xlsxPath))
+                        {
+                            Console.WriteLine($"File not found, skipping: {xlsxPath}");
+                            continue;
+                        }
+
+                        // Load the workbook from the XLSX file
+                        Workbook workbook = new Workbook(xlsxPath);
+
+                        // Configure HTML save options to omit document properties for privacy
+                        HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                        {
+                            ExportDocumentProperties = false, // Do not include document properties in the HTML
+                            ExportActiveWorksheetOnly = false // Export all worksheets (adjust as needed)
+                        };
+
+                        // Build the output HTML file path (same name, .html extension)
+                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
+                        string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                        // Save the workbook as HTML using the configured options
+                        workbook.Save(htmlPath, saveOptions);
+
+                        Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} -> {Path.GetFileName(htmlPath)}");
                     }
-
-                    // Load the workbook from the XLSX file
-                    Workbook workbook = new Workbook(xlsxPath);
-
-                    // Determine output HTML file name
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
-                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
-
-                    // Save the workbook as HTML using the configured options
-                    workbook.Save(htmlPath, htmlOptions);
-
-                    Console.WriteLine($"Converted: {xlsxPath} -> {htmlPath}");
+                    catch (Exception exFile)
+                    {
+                        Console.WriteLine($"Error processing file '{xlsxPath}': {exFile.Message}");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error converting '{xlsxPath}': {ex.Message}");
-                }
+
+                Console.WriteLine("Batch conversion completed.");
             }
-
-            Console.WriteLine("Batch conversion completed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

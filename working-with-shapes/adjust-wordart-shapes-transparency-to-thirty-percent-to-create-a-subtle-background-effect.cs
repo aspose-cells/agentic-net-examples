@@ -1,55 +1,62 @@
-// Title: Set 30% fill transparency for a WordArt shape in an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new workbook, add a WordArt text effect shape, and set its Fill.Transparency to 0.3 using Aspose.Cells in C#. | Programmatically adjust the background opacity of a WordArt shape to 30% and save the worksheet as XLSX with Aspose.Cells for .NET. | Insert a WordArt shape into a worksheet and modify its fill color and transparency to achieve a subtle background effect using C#.
-// Common Searches: Aspose.Cells C# set WordArt shape fill transparency to 30 percent | How to change opacity of a text effect shape in Excel using Aspose.Cells .NET | Example code for adjusting WordArt background opacity in an Excel file with Aspose.Cells | C# Aspose.Cells modify WordArt fill transparency before saving workbook
-// Tags: Aspose.Cells set shape opacity | WordArt shape fill opacity C# | Excel worksheet WordArt opacity adjustment | C# modify shape fill opacity Aspose.Cells | text effect shape transparency .NET
+// Title: Adjust WordArt shape fill transparency to 30% in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook, locate the first WordArt object, assign 0.3 to its Fill.Transparency, and save the file with Aspose.Cells in C#. | Iterate through worksheet.Shapes, identify shapes where IsWordArt is true, change the shape's fill opacity to 30 %, then write the updated workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells .NET example for changing WordArt opacity in Excel | C# code to make a WordArt object semi‑transparent with Aspose.Cells | How to adjust fill transparency of a WordArt shape using Aspose.Cells library | Set 30 percent transparency on Excel WordArt via C# Aspose.Cells
+// Tags: Aspose.Cells shape fill transparency | C# WordArt opacity modification | Excel WordArt transparency example | set fill transparency Aspose.Cells .NET | programmatic shape opacity Excel C#
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates creating a workbook, inserting a WordArt text effect shape, setting its fill transparency to 30%, and saving the file as XLSX using Aspose.Cells for .NET.
+// The sample loads Input.xlsx, searches the first worksheet for a WordArt shape, sets its Fill.Transparency property to 0.3 (30 % transparency), saves the modified workbook as Output.xlsx, and prints status messages.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a WordArt (text effect) shape to the worksheet using a preset effect
-            Shape wordArt = sheet.Shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1, // preset text effect
-                "Sample WordArt",                // text
-                "Arial",                         // font name
-                36,                              // font size
-                false,                           // bold
-                false,                           // italic
-                2,                               // upper left row
-                2,                               // upper left column
-                0,                               // upper left pixel (top)
-                0,                               // left pixel
-                100,                             // height
-                300                              // width
-            );
+            // Load the workbook containing the WordArt shape
+            Workbook workbook = new Workbook(inputPath);
 
-            // Adjust the fill transparency to 30% (0.3)
-            // Transparency range: 0 (opaque) to 1 (fully transparent)
-            wordArt.Fill.Transparency = 0.3;
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Optionally set a light fill color for a subtle background effect
-            // Note: ForeColor property may not be available in some versions; this line can be omitted or adjusted as needed.
-            // wordArt.Fill.ForeColor = Color.LightGray;
+            // Find the WordArt shape and set its transparency to 30%
+            bool wordArtFound = false;
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                // Use the IsWordArt property to identify WordArt shapes
+                if (shape.IsWordArt)
+                {
+                    // Transparency value is between 0 (opaque) and 1 (fully transparent)
+                    shape.Fill.Transparency = 0.3; // 30% transparency
+                    wordArtFound = true;
+                    break; // Assuming only one WordArt needs adjustment
+                }
+            }
 
-            // Save the workbook to a file
-            workbook.Save("WordArtTransparency.xlsx", SaveFormat.Xlsx);
+            if (!wordArtFound)
+            {
+                Console.WriteLine("No WordArt shape found in the worksheet.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

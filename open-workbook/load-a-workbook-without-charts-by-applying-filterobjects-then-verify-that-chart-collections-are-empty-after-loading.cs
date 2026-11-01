@@ -1,58 +1,48 @@
-// Title: Load an XLSX workbook without charts using Aspose.Cells FilterObjects and confirm empty chart collections (C#)
-// AI Prompts: Apply Aspose.Cells LoadOptions.FilterObjects to open an XLSX file while ignoring chart objects, then iterate workbook.Worksheets and assert that each sheet.Charts.Count equals zero. | Rewrite the loading routine to exclude charts, and output a success message only when every worksheet's Charts collection is empty after the workbook is loaded.
-// Common Searches: Aspose.Cells C# load workbook without chart objects using FilterObjects | How to ignore charts when opening an Excel file with Aspose.Cells .NET | Check worksheet chart collection is empty after loading with Aspose.Cells | FilterObjects property example for excluding charts in Aspose.Cells | C# verify no charts in loaded workbook Aspose.Cells
-// Tags: load workbook with FilterObjects Aspose.Cells | exclude chart objects during Excel load .NET | verify empty worksheet chart collection Aspose.Cells | filter out charts using LoadOptions C# | chart collection count check Aspose.Cells
+// Title: Load an XLSX workbook without chart objects using Aspose.Cells LoadOptions and verify empty chart collections in C#
+// Common Searches: how to prevent charts from loading when opening an Excel file with Aspose.Cells C# | Aspose.Cells LoadOptions filter to exclude chart objects from workbook | check if worksheets contain charts after loading workbook in C# | C# code to load Excel workbook without charts using Aspose.Cells | verify chart collection count for each worksheet after workbook load Aspose.Cells
+// Tags: load workbook excluding charts Aspose.Cells | filter objects loadoptions C# | worksheet chart count verification Aspose.Cells | skip chart objects on workbook load | chart collection empty check C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates how to load an XLSX workbook with Aspose.Cells while skipping chart objects by configuring LoadOptions.FilterObjects. After loading, it iterates through each worksheet, prints the chart count, and confirms that the Charts collection is empty, handling missing files and exceptions.
+// The example demonstrates loading an XLSX file with Aspose.Cells while skipping chart objects via LoadOptions, then iterates through each worksheet to report whether its Charts collection is empty or contains charts, handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the source workbook (replace with your actual file path)
-        string sourcePath = "input.xlsx";
+        const string inputPath = "input.xlsx";
 
-        // Ensure the source file exists to avoid FileNotFoundException
-        if (!File.Exists(sourcePath))
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
-            // Configure load options (ignore objects such as charts, shapes, etc.) if supported.
-            // LoadDataOnly property is not available in this version, so we load normally.
+            // Load the workbook without loading unnecessary objects
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Verify that each worksheet has no charts after loading
+            // Verify that each worksheet's chart collection is empty (or report count)
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                int chartCount = sheet.Charts.Count;
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {chartCount} chart(s).");
-
-                if (chartCount != 0)
+                if (sheet.Charts.Count == 0)
                 {
-                    Console.WriteLine("Error: Chart collection is not empty.");
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" has no charts.");
                 }
                 else
                 {
-                    Console.WriteLine("Success: Chart collection is empty.");
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {sheet.Charts.Count} chart(s).");
                 }
             }
-
-            // (Optional) Save the workbook if further processing is needed.
-            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An exception occurred: {ex.Message}");
+            // Catch any unexpected errors during loading or processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

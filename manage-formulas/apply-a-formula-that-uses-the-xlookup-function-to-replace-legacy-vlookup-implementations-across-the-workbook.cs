@@ -1,76 +1,96 @@
-// Title: Replace VLOOKUP formulas with XLOOKUP in every worksheet of an Excel file using Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx workbook with Aspose.Cells, loop through all worksheets, find cells that contain VLOOKUP, and rewrite each formula to an XLOOKUP expression in C#. | Use a regular expression to extract the lookup value, table array, and column index from a VLOOKUP formula, build the matching XLOOKUP syntax, and assign it back to the cell via the Aspose.Cells API. | After converting all lookup formulas, save the updated workbook to a new file while preserving the original formatting and data.
-// Common Searches: how to convert VLOOKUP to XLOOKUP programmatically with Aspose.Cells C# | replace legacy lookup formulas in all sheets using Aspose.Cells .NET | regex extract arguments from Excel formula in C# Aspose.Cells example | bulk update Excel formulas across workbook using Aspose.Cells library
-// Tags: Aspose.Cells replace VLOOKUP with XLOOKUP | C# bulk formula transformation Excel workbook | regex parse Excel formula arguments .NET | update cell formulas across worksheets Aspose.Cells | save modified workbook Aspose.Cells .xlsx
+// Title: Convert all VLOOKUP formulas to XLOOKUP in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# replace VLOOKUP formulas with XLOOKUP across workbook | programmatically change Excel VLOOKUP to XLOOKUP using .NET API | bulk conversion of legacy VLOOKUP to XLOOKUP with Aspose.Cells | C# code to scan worksheets and update VLOOKUP formulas to XLOOKUP | regex based detection of VLOOKUP formulas in Aspose.Cells
+// Tags: VLOOKUP to XLOOKUP conversion Aspose.Cells | bulk formula replacement .NET | Excel formula transformation C# | regex VLOOKUP detection Aspose.Cells | column index to letter utility C#
 
 using System;
 using System.IO;
-using Aspose.Cells;
 using System.Text.RegularExpressions;
+using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace XLookupReplacement
 {
-    // The example loads an input .xlsx file, iterates through every worksheet and cell, detects VLOOKUP formulas, extracts their arguments with a regular expression, constructs equivalent XLOOKUP formulas, replaces the original formulas, and saves the workbook to a new file.
+    // The example loads an Excel file with Aspose.Cells, iterates through every worksheet and cell, uses a regular expression to identify VLOOKUP formulas, extracts lookup parameters, computes corresponding XLOOKUP ranges, constructs an XLOOKUP expression, replaces the original formula, and saves the updated workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
             try
             {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets
+                // Regex to capture VLOOKUP components
+                Regex vlookupRegex = new Regex(
+                    @"=VLOOKUP\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,\)]+)\s*\)",
+                    RegexOptions.IgnoreCase);
+
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Cells cells = sheet.Cells;
-                    foreach (Cell cell in cells)
+                    // Iterate through all cells that contain formulas
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        // Process only cells that contain formulas
-                        if (cell.IsFormula)
+                        if (cell.IsFormula && cell.Formula.Contains("VLOOKUP", StringComparison.OrdinalIgnoreCase))
                         {
-                            string formula = cell.Formula;
+                            Match match = vlookupRegex.Match(cell.Formula);
+                            if (!match.Success) continue;
 
-                            // Look for VLOOKUP usage
-                            if (formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
+                            string lookupValue = match.Groups[1].Value.Trim();
+                            string tableArray = match.Groups[2].Value.Trim();
+                            string colIndexStr = match.Groups[3].Value.Trim();
+                            string rangeLookup = match.Groups[4].Value.Trim();
+
+                            // Parse column index
+                            if (!int.TryParse(colIndexStr, out int colIndex) || colIndex < 1)
+                                continue; // invalid column index
+
+                            // Determine sheet name and range part
+                            string sheetName = sheet.Name; // default
+                            string rangePart = tableArray;
+
+                            int exclPos = tableArray.IndexOf('!');
+                            if (exclPos >= 0)
                             {
-                                Match match = Regex.Match(
-                                    formula,
-                                    @"VLOOKUP\s*\(\s*(?<args>.+?)\s*\)",
-                                    RegexOptions.IgnoreCase);
-
-                                if (match.Success)
-                                {
-                                    // Split arguments (simple split works for typical VLOOKUP)
-                                    string[] formulaArgs = match.Groups["args"].Value.Split(',');
-
-                                    if (formulaArgs.Length >= 3)
-                                    {
-                                        for (int i = 0; i < formulaArgs.Length; i++)
-                                            formulaArgs[i] = formulaArgs[i].Trim();
-
-                                        string lookupValue = formulaArgs[0];
-                                        string tableArray = formulaArgs[1];
-                                        string colIndexNum = formulaArgs[2];
-
-                                        // Build equivalent XLOOKUP formula
-                                        string xlookupFormula = $"=XLOOKUP({lookupValue},INDEX({tableArray},0,1),INDEX({tableArray},0,{colIndexNum}),\"\",0,1)";
-
-                                        // Replace the old VLOOKUP formula
-                                        cell.Formula = xlookupFormula;
-                                    }
-                                }
+                                sheetName = tableArray.Substring(0, exclPos).Trim('\'');
+                                rangePart = tableArray.Substring(exclPos + 1);
                             }
+
+                            // Split range into start and end cells
+                            string[] rangeBounds = rangePart.Split(':');
+                            if (rangeBounds.Length != 2) continue; // malformed range
+
+                            string startCell = rangeBounds[0];
+                            string endCell = rangeBounds[1];
+
+                            // Extract column letters and row numbers
+                            string startCol = GetColumnLetter(startCell);
+                            string endCol = GetColumnLetter(endCell);
+                            int startRow = GetRowNumber(startCell);
+                            int endRow = GetRowNumber(endCell);
+
+                            // Build lookup_array (first column of the range)
+                            string lookupArray = $"'{sheetName}'!{startCol}{startRow}:{startCol}{endRow}";
+
+                            // Determine return column based on colIndex
+                            int startColIndex = ColumnLetterToNumber(startCol);
+                            int returnColIndex = startColIndex + colIndex - 1;
+                            string returnColLetter = ColumnNumberToLetter(returnColIndex);
+                            string returnArray = $"'{sheetName}'!{returnColLetter}{startRow}:{returnColLetter}{endRow}";
+
+                            // Construct XLOOKUP formula
+                            string xlookupFormula = $"=XLOOKUP({lookupValue}, {lookupArray}, {returnArray}, \"\", 0)";
+
+                            // Apply new formula
+                            cell.Formula = xlookupFormula;
                         }
                     }
                 }
@@ -81,8 +101,48 @@ namespace AsposeCellsExample
             }
             catch (Exception ex)
             {
+                // Generic error handling (covers file issues, password protection, etc.)
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Helper: Extract column letters from a cell reference (e.g., $A$1 -> A)
+        private static string GetColumnLetter(string cellRef)
+        {
+            var match = Regex.Match(cellRef, @"([A-Za-z]+)");
+            return match.Success ? match.Groups[1].Value.ToUpper() : "";
+        }
+
+        // Helper: Extract row number from a cell reference (e.g., $A$12 -> 12)
+        private static int GetRowNumber(string cellRef)
+        {
+            var match = Regex.Match(cellRef, @"(\d+)");
+            return match.Success ? int.Parse(match.Groups[1].Value) : 0;
+        }
+
+        // Convert column letter to 1‑based index (A=1, B=2, ...)
+        private static int ColumnLetterToNumber(string column)
+        {
+            int sum = 0;
+            foreach (char c in column.ToUpper())
+            {
+                sum *= 26;
+                sum += (c - 'A' + 1);
+            }
+            return sum;
+        }
+
+        // Convert 1‑based column index to letter (1=A, 2=B, ...)
+        private static string ColumnNumberToLetter(int number)
+        {
+            string column = "";
+            while (number > 0)
+            {
+                int remainder = (number - 1) % 26;
+                column = (char)('A' + remainder) + column;
+                number = (number - remainder) / 26;
+            }
+            return column;
         }
     }
 }

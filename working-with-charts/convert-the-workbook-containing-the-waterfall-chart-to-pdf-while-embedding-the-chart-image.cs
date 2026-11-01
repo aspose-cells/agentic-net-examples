@@ -1,50 +1,85 @@
-// Title: Convert a Waterfall chart Excel workbook to PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads a .xlsx workbook containing a Waterfall chart, verifies the file exists, and saves it as a PDF using Aspose.Cells. | Demonstrate how to retrieve the first chart from a worksheet before exporting the workbook to PDF with Aspose.Cells in a .NET console application. | Create robust error handling for converting an Excel file with embedded charts to PDF using Aspose.Cells, covering FileNotFoundException and generic exceptions.
-// Common Searches: asp.net convert excel file with waterfall chart to pdf using aspose.cells | c# export workbook to pdf preserving charts asp.net | how to save excel workbook as pdf with charts using aspose.cells library | asp.net check if excel file exists before converting to pdf with aspose.cells
-// Tags: Aspose.Cells workbook to PDF conversion with charts | C# load Excel workbook and render Waterfall chart to PDF | SaveFormat.Pdf usage in Aspose.Cells | Excel file existence validation in C# before Aspose.Cells conversion | exception handling for Aspose.Cells PDF export
+// Title: Convert a Waterfall chart from an Excel workbook to a PDF by embedding it as an image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file, finds the first Waterfall chart, uses Chart.ToImage to export it to PNG, inserts the PNG into a new worksheet, and saves the result as a PDF with Aspose.Cells. | Show how to detect the absence of a Waterfall chart in a workbook and return a friendly message while performing the conversion with Aspose.Cells. | Demonstrate proper cleanup of a temporary PNG file after converting an Excel chart to PDF in a C# application.
+// Common Searches: Aspose.Cells C# convert specific Waterfall chart to PDF | How to export only a chart from Excel to PDF using Aspose.Cells | Render Excel Waterfall chart as image and embed in PDF programmatically | C# sample for saving Excel chart as PNG then creating PDF with Aspose | Temporary file handling when converting Excel chart to PDF Aspose.Cells
+// Tags: Chart.ToImage method Aspose.Cells | Save workbook as PDF Aspose.Cells | Insert picture into worksheet Aspose.Cells | Waterfall chart detection Aspose.Cells | Temporary PNG cleanup C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The example verifies that the input Excel file exists, loads the workbook with Aspose.Cells, optionally accesses the first chart on the first worksheet, and then saves the entire workbook—including the Waterfall chart—as a PDF, while providing comprehensive exception handling.
-class WaterfallChartToPdf
+// The example loads WaterfallChart.xlsx, locates the first Waterfall chart, renders it to a temporary PNG file, inserts the image into a new workbook, saves that workbook as WaterfallChart.pdf, and finally deletes the temporary image.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Paths for input workbook and output PDF
-            string inputWorkbookPath = "WaterfallChart.xlsx";
-            string outputPdfPath = "WaterfallChart.pdf";
+            const string inputFile = "WaterfallChart.xlsx";
+            const string outputPdf = "WaterfallChart.pdf";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputWorkbookPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Input file not found: {inputWorkbookPath}");
+                Console.WriteLine($"Input file '{inputFile}' not found.");
                 return;
             }
 
-            // Load the workbook containing the Waterfall chart
-            Workbook workbook = new Workbook(inputWorkbookPath);
+            // Load the workbook that contains the Waterfall chart
+            Workbook workbook = new Workbook(inputFile);
 
-            // Optional: Check if the first worksheet contains any charts
-            Worksheet sheet = workbook.Worksheets[0];
-            if (sheet.Charts.Count > 0)
+            // Assume the chart is on the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Locate the first Waterfall chart in the worksheet
+            Chart waterfallChart = null;
+            foreach (Chart chart in worksheet.Charts)
             {
-                // Access the first chart (type inferred with var)
-                var waterfallChart = sheet.Charts[0];
-                // Additional chart processing can be added here if needed.
+                if (chart.Type == ChartType.Waterfall)
+                {
+                    waterfallChart = chart;
+                    break;
+                }
             }
 
-            // Convert the entire workbook to PDF (charts are rendered automatically)
-            workbook.Save(outputPdfPath, SaveFormat.Pdf);
+            if (waterfallChart == null)
+            {
+                Console.WriteLine("No Waterfall chart found in the workbook.");
+                return;
+            }
 
-            Console.WriteLine("Conversion completed. PDF saved to: " + outputPdfPath);
+            // Create a temporary PNG file for the chart image
+            string tempImagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
+
+            try
+            {
+                // Render the chart directly to the temporary PNG file
+                waterfallChart.ToImage(tempImagePath);
+
+                // Create a temporary workbook to hold the chart image
+                Workbook imgWorkbook = new Workbook();
+                Worksheet imgSheet = imgWorkbook.Worksheets[0];
+
+                // Insert the chart image into the worksheet
+                imgSheet.Pictures.Add(0, 0, tempImagePath);
+
+                // Save the temporary workbook as PDF (contains only the chart image)
+                imgWorkbook.Save(outputPdf, SaveFormat.Pdf);
+            }
+            finally
+            {
+                // Clean up the temporary image file
+                if (File.Exists(tempImagePath))
+                {
+                    try { File.Delete(tempImagePath); } catch { /* ignore cleanup errors */ }
+                }
+            }
+
+            Console.WriteLine($"PDF file '{outputPdf}' created successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred during conversion: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

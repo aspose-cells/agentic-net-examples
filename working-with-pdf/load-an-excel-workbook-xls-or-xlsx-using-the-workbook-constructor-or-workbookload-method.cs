@@ -1,11 +1,11 @@
-// Title: Load an Excel workbook (XLS or XLSX) from a file path using Aspose.Cells Workbook constructor or Workbook.Load in C#
-// AI Prompts: Write C# code that creates a Workbook instance from a .xlsx file path using the Aspose.Cells constructor. | Demonstrate how to call Workbook.Load to open an existing .xls file with Aspose.Cells, including basic error handling. | Show a C# snippet that decides at runtime whether to use the constructor or Load method for opening Excel files with Aspose.Cells.
-// Common Searches: aspocells c# open existing xls file from disk | difference between Workbook constructor and Load method in Aspose.Cells | how to read an Excel workbook using Aspose.Cells without saving changes | c# load excel workbook from path using Aspose.Cells library | example of loading both .xls and .xlsx with Aspose.Cells in .NET
-// Tags: initialize workbook using file location Aspose.Cells C# | invoke Workbook.Load for Excel import Aspose.Cells | open XLSX workbook programmatically Aspose.Cells | read Excel file from local storage Aspose.Cells | error handling for unsupported Excel format Aspose.Cells | select loading strategy for Excel import Aspose.Cells
+// Title: How to load an XLS or XLSX workbook from a file with Aspose.Cells in C# using the Workbook constructor or Load method
+// AI Prompts: Write C# code that creates a Workbook instance by passing the path of an .xlsx file to the Aspose.Cells Workbook constructor. | Show a C# example that initializes an empty Workbook object and then calls the Load method to open an Excel file from disk. | Provide a single Aspose.Cells snippet that determines the file extension and loads either a .xls or .xlsx file into a Workbook.
+// Common Searches: asp.net core load excel file using aspose.cells workbook constructor | c# load .xls file with aspose.cells without saving first | difference between Workbook constructor and Load method in Aspose.Cells | how to open an existing workbook from a path in Aspose.Cells C# | load excel workbook from file path using Aspose.Cells in .NET 6
+// Tags: Aspose.Cells load workbook from file path | Workbook constructor for .xlsx in C# | Workbook.Load method for .xls files | .NET read Excel file using Aspose.Cells | initialize Aspose.Cells workbook without saving
 
 using Aspose.Cells;
 
-// Demonstrates loading an Excel workbook (XLS or XLSX) from a specified file path using Aspose.Cells' Workbook constructor, with an alternative approach shown using the Workbook.Load method.
+// // Loads an Excel workbook from 'input.xlsx' using the Aspose.Cells Workbook constructor; alternative Load method shown.
 class Program
 {
     static void Main()
@@ -13,10 +13,10 @@ class Program
         // Path to the Excel file (XLS or XLSX)
         string filePath = "input.xlsx";
 
-        // Load the workbook using the constructor (preferred for simplicity)
+        // Load the workbook using the constructor
         Workbook workbook = new Workbook(filePath);
 
-        // Alternative way: load using the Load method
+        // Alternatively, you can load using the Load method:
         // Workbook workbook = new Workbook();
         // workbook.Load(filePath);
     }

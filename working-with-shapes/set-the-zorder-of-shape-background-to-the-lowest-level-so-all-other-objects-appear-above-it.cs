@@ -1,65 +1,63 @@
-// Title: Send the "Background" shape to the back by setting its Z‑order to the lowest level in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells to locate a shape named "Background" and set its ZOrderPosition to 0. | Generate a .NET snippet that moves the "Background" shape behind all other worksheet objects by adjusting its Z‑order. | Create a C# program that loads an existing .xlsx file, finds the "Background" shape, sends it to the back, and saves the workbook.
-// Common Searches: Aspose.Cells C# how to move a shape to the back of a worksheet | set ZOrderPosition to 0 for a specific shape in an Excel file using Aspose.Cells | C# code to send background image behind other objects in an .xlsx with Aspose.Cells | change layering order of shapes in Aspose.Cells workbook programmatically
-// Tags: Aspose.Cells shape ZOrderPosition .NET | C# send Excel shape to back | background shape layering Aspose.Cells | adjust shape order in worksheet using Aspose.Cells | move shape behind others Aspose.Cells C#
+// Title: How to move a shape named "Background" to the back layer in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to send background shape to back | C# code to place a specific Excel shape behind all other objects with Aspose.Cells | move Excel shape to backmost layer using Aspose.Cells .NET API | change Z-order of a shape named Background in a workbook with Aspose.Cells | Aspose.Cells example for adjusting shape layering in an Excel file
+// Tags: Aspose.Cells set shape ZOrderPosition | C# Aspose.Cells shape ordering | Excel shape back layer Aspose.Cells | background shape Z-order Aspose.Cells | modify shape Z-order in .NET workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing Excel workbook, finds the shape named "Background" on the first worksheet, sets its ZOrderPosition to 0 to place it behind all other objects, and saves the updated file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an Excel workbook, finds the shape named "Background" on the first worksheet, sets its ZOrderPosition to 0 to move it to the backmost layer, and saves the updated file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Locate the shape named "Background"
-            Shape backgroundShape = null;
-            foreach (Shape shape in sheet.Shapes)
-            {
-                if (shape.Name == "Background")
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    backgroundShape = shape;
-                    break;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
-            }
 
-            // If the shape is found, send it to the back by setting the lowest Z‑order position
-            if (backgroundShape != null)
-            {
-                // Setting ZOrderPosition to 0 moves the shape behind all others
-                backgroundShape.ZOrderPosition = 0;
-            }
-            else
-            {
-                Console.WriteLine("Shape named \"Background\" was not found.");
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook with the updated Z‑order
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Find the shape named "Background" and send it to the back
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    if (shape.Name == "Background")
+                    {
+                        // Set Z-order position to 0 (backmost)
+                        shape.ZOrderPosition = 0;
+                        break; // Assuming only one shape with this name
+                    }
+                }
+
+                // Ensure output directory exists
+                string outDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                {
+                    Directory.CreateDirectory(outDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

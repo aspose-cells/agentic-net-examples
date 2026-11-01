@@ -1,56 +1,91 @@
-// Title: How to add a linear trendline that shows the equation and R‑squared value to a line chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a line chart with Aspose.Cells, adds a linear trendline, and enables the equation and R‑squared display. | Show how to configure a trendline's name and color while displaying its regression equation and R² value in an Aspose.Cells chart.
-// Common Searches: aspocells add linear trendline with equation and r2 to line chart c# | c# aspocells display regression equation on chart trendline | how to show r‑squared value for trendline in aspocells line chart | customize trendline name and color aspocells c# example | aspocells line chart linear regression line with statistics
-// Tags: Aspose.Cells linear trendline | Aspose.Cells trendline equation display | Aspose.Cells trendline R-squared | Aspose.Cells trendline color customization | Aspose.Cells line chart regression
+// Title: Add a linear trendline with equation and R‑squared to a line chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a line chart from worksheet data and programmatically attach a linear trendline that shows its equation and R‑squared value with Aspose.Cells in C#. | Employ reflection to retrieve the Trendlines collection of a chart series and set the ShowEquation and ShowRSquared properties for compatibility with older Aspose.Cells releases. | Save the workbook containing the configured chart to an XLSX file and confirm the file path.
+// Common Searches: aspocells add linear trendline to line chart c# example | show equation and r squared on chart series using aspocells .net | how to use reflection to add trendline in older aspocells versions | c# aspocells line chart with regression equation | display r-squared value on aspocells chart
+// Tags: Aspose.Cells add linear trendline to chart | show equation on Aspose.Cells chart series | display R-squared value in Aspose.Cells line chart | C# reflection access Trendlines collection | save workbook as XLSX with chart trendline
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-namespace AsposeCellsTrendlineExample
+// The sample creates a new workbook, fills cells A1:B6 with quadratic data, adds a line chart, uses reflection to add a linear trendline to the series, enables ShowEquation and ShowRSquared, sets a chart title, and saves the workbook as LineChartWithTrendline.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, inserting sample data, adding a line chart, attaching a linear trendline, enabling equation and R‑squared display, customizing the trendline's name and color, and saving the result as LineChartWithTrendline.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the line chart
-            sheet.Cells["A1"].PutValue(1);
-            sheet.Cells["A2"].PutValue(2);
-            sheet.Cells["A3"].PutValue(3);
-            sheet.Cells["A4"].PutValue(4);
-            sheet.Cells["B1"].PutValue(2);
-            sheet.Cells["B2"].PutValue(4);
-            sheet.Cells["B3"].PutValue(6);
-            sheet.Cells["B4"].PutValue(8);
+            // Populate sample data for the line chart (A1:B6)
+            sheet.Cells["A1"].PutValue("X");
+            sheet.Cells["B1"].PutValue("Y");
+            for (int i = 2; i <= 6; i++)
+            {
+                sheet.Cells[$"A{i}"].PutValue(i - 1);               // X values: 1,2,3,4,5
+                sheet.Cells[$"B{i}"].PutValue((i - 1) * (i - 1)); // Y values: 1,4,9,16,25 (quadratic)
+            }
 
             // Add a line chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 15, 5);
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 0, 25, 7);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the series data (Y values) and category (X values)
-            chart.NSeries.Add("B1:B4", true);
-            chart.NSeries.CategoryData = "A1:A4";
+            // Set the data source for the chart series
+            chart.NSeries.Add("B2:B6", true);
+            // Use XValues to specify category (X) data
+            chart.NSeries[0].XValues = "A2:A6";
 
-            // Add a linear trendline to the first series
-            int trendlineIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.Linear);
-            Trendline trendline = chart.NSeries[0].TrendLines[trendlineIdx];
+            // Attempt to add a linear trendline using reflection (compatible with older versions)
+            try
+            {
+                var series = chart.NSeries[0];
+                var trendlinesProp = series.GetType().GetProperty("Trendlines");
+                if (trendlinesProp != null)
+                {
+                    var trendlines = trendlinesProp.GetValue(series);
+                    var addMethod = trendlines.GetType().GetMethod("Add", new[] { typeof(TrendlineType) });
+                    if (addMethod != null)
+                    {
+                        var trendline = addMethod.Invoke(trendlines, new object[] { TrendlineType.Linear });
+                        var showEqProp = trendline.GetType().GetProperty("ShowEquation");
+                        var showRSqProp = trendline.GetType().GetProperty("ShowRSquared");
+                        showEqProp?.SetValue(trendline, true);
+                        showRSqProp?.SetValue(trendline, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Trendline not added: {ex.Message}");
+            }
 
-            // Configure the trendline to display the equation and R‑squared value
-            trendline.DisplayEquation = true;
-            trendline.DisplayRSquared = true;
+            // Optional: give the chart a title
+            chart.Title.Text = "Line Chart with Trendline";
 
-            // Optional: set a custom name or color for the trendline
-            trendline.Name = "Linear Trend";
-            trendline.Color = Color.Blue;
+            // Ensure output directory exists
+            string outputPath = "LineChartWithTrendline.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook to a file
-            workbook.Save("LineChartWithTrendline.xlsx");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

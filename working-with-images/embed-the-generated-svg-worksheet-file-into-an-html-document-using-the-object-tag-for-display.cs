@@ -1,66 +1,59 @@
-// Title: Export an Excel worksheet to SVG and embed it in an HTML page using the <object> tag with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to render a worksheet as a single‑page SVG file and writes an HTML file that displays the SVG via an <object> element. | Modify the example to accept custom width and height values for the <object> tag and make the HTML output responsive. | Add comprehensive error handling that verifies the output directory, catches rendering exceptions, and logs any failures during SVG export or HTML creation.
-// Common Searches: how to render an Excel sheet as SVG with Aspose.Cells and show it in a web page | C# embed exported worksheet SVG in HTML using object tag | Aspose.Cells save worksheet to SVG then create HTML viewer | display Excel data as scalable vector graphic in browser with .NET | object tag for embedding SVG generated from Excel workbook
-// Tags: Aspose.Cells export worksheet to SVG | C# embed SVG using object tag | HTML viewer for Excel worksheet image | single-page worksheet SVG rendering | responsive SVG embed in web page
+// Title: Create an SVG file from an Aspose.Cells worksheet and embed it in an HTML page using the <object> tag (C#)
+// AI Prompts: Write C# code that converts the first worksheet of a new Aspose.Cells workbook to an SVG file and generates an HTML file that embeds the SVG with an <object> element. | Adjust the generated HTML so the <object> tag includes width and height attributes that scale responsively with the browser window. | Add logic to verify that the SVG file was successfully created before writing the HTML file, and log an error if the file is missing.
+// Common Searches: C# Aspose.Cells export worksheet to SVG and embed in HTML page | How to display an SVG generated from Excel using the <object> tag in ASP.NET | Responsive HTML layout for SVG output from Aspose.Cells workbook | Validate SVG file existence before creating HTML with Aspose.Cells C# | One-page-per-sheet SVG rendering with Aspose.Cells and HTML embedding
+// Tags: Aspose.Cells worksheet to SVG conversion | C# embed SVG using object tag | generate HTML with embedded SVG from Excel | responsive SVG display in HTML | check SVG file existence Aspose.Cells | one-page-per-sheet SVG rendering
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-// The program creates a workbook, populates cells, saves the first worksheet as a single‑page SVG file using Aspose.Cells, and generates an HTML file that embeds the SVG via an <object> tag for browser display.
+// The program creates a new Aspose.Cells workbook, fills the first worksheet with sample data, renders that sheet to a single-page SVG file, and writes an HTML document that embeds the SVG via an <object> element for browser display.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
             // Populate the first worksheet with sample data
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["B1"].PutValue("Data");
+            sheet.Cells["A2"].PutValue(100);
+            sheet.Cells["B2"].PutValue(200);
 
-            // Define output folder and file names
-            string outputFolder = Path.Combine(Environment.CurrentDirectory, "Output");
-            Directory.CreateDirectory(outputFolder);
-            string svgPath = Path.Combine(outputFolder, "Sheet1.svg");
-            string htmlPath = Path.Combine(outputFolder, "index.html");
+            // Define file paths for the SVG and the resulting HTML
+            string svgFile = "worksheet.svg";
+            string htmlFile = "worksheet.html";
 
-            // Save the worksheet as an SVG image
+            // Save the worksheet as an SVG image (lifecycle rule: save)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // ImageFormat is inferred from the file extension (SVG)
+                SaveFormat = SaveFormat.Svg,
                 OnePagePerSheet = true
             };
-            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
-            // Render the first (and only) page of the sheet to SVG
-            sheetRender.ToImage(0, svgPath);
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            renderer.ToImage(0, svgFile); // Generates the SVG file
 
-            // Build HTML content that embeds the SVG using an <object> tag
-            string htmlContent = $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset=""UTF-8"">
-    <title>Worksheet SVG Display</title>
-</head>
-<body>
-    <h1>Worksheet as SVG</h1>
-    <object type=""image/svg+xml"" data=""{Path.GetFileName(svgPath)}"" width=""100%"" height=""600px"">
-        Your browser does not support SVG.
-    </object>
-</body>
-</html>";
+            // Build an HTML document that embeds the SVG using the <object> tag
+            string htmlContent = $"<!DOCTYPE html>{Environment.NewLine}" +
+                                 $"<html>{Environment.NewLine}" +
+                                 $"<head>{Environment.NewLine}" +
+                                 $"    <meta charset=\"UTF-8\">{Environment.NewLine}" +
+                                 $"    <title>Worksheet SVG</title>{Environment.NewLine}" +
+                                 $"</head>{Environment.NewLine}" +
+                                 $"<body>{Environment.NewLine}" +
+                                 $"    <object data=\"{svgFile}\" type=\"image/svg+xml\" width=\"100%\" height=\"100%\">{Environment.NewLine}" +
+                                 $"        Your browser does not support SVG.{Environment.NewLine}" +
+                                 $"    </object>{Environment.NewLine}" +
+                                 $"</body>{Environment.NewLine}" +
+                                 $"</html>";
 
-            // Write the HTML file to disk (same folder as the SVG)
-            File.WriteAllText(htmlPath, htmlContent);
-
-            Console.WriteLine($"HTML file generated at: {htmlPath}");
+            // Write the HTML content to a file (lifecycle rule: save)
+            File.WriteAllText(htmlFile, htmlContent);
         }
         catch (Exception ex)
         {

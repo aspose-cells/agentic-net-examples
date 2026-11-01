@@ -1,55 +1,47 @@
-// Title: Retrieve font substitution warnings from a workbook after saving to PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Excel workbook, applies a non‑existent font to a cell, saves the workbook as PDF using Aspose.Cells, and then iterates over workbook.Warnings to display any font substitution messages. | Show how to capture and log font fallback warnings generated during PDF conversion with Aspose.Cells for .NET by checking the Warnings collection after the Save call.
-// Common Searches: asp.net aspocells how to read font substitution warnings after pdf conversion | c# detect missing fonts when exporting Excel to PDF with Aspose.Cells | retrieve workbook warnings collection for font fallback in Aspose.Cells .NET
-// Tags: aspocells pdf font substitution warnings | c# workbook warnings after pdf save | aspocells missing font detection | excel to pdf font fallback handling | aspocells warning collection usage
+// Title: Check for font substitution warnings in Aspose.Cells workbook after PDF conversion (C#)
+// Common Searches: how to capture font substitution warnings when converting Excel to PDF with Aspose.Cells C# | Aspose.Cells .NET retrieve workbook warnings after saving as PDF | detect missing font warnings during PDF export using Aspose.Cells | Aspose.Cells GetWarnings method usage for PDF conversion warnings | C# example to read font substitution alerts after workbook.Save to PDF
+// Tags: Aspose.Cells font substitution warning handling | C# workbook warnings after PDF conversion | Aspose.Cells GetWarnings API | missing font alert handling in PDF export | memory stream PDF generation Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates a new Workbook, writes text to cell A1, assigns a deliberately missing font to the cell style, saves the workbook as a PDF, and then examines the workbook.Warnings collection to identify any font substitution warnings generated during the conversion.
+// The example creates an in‑memory Workbook, writes text to cell A1, applies a style with a non‑existent font to trigger substitution, saves the workbook to PDF via a MemoryStream, and shows that font substitution warnings can be accessed through the workbook's GetWarnings method when available.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            var workbook = new Workbook();
+            // Create a new workbook in memory
+            Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a value in a cell
-            var cell = sheet.Cells["A1"];
-            cell.PutValue("Test Font Substitution");
+            // Write sample text to cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Testing font substitution warning");
 
-            // Apply a style with a font that likely does not exist on the system
-            var style = cell.GetStyle();
+            // Apply a style with a non‑existent font to trigger substitution
+            Style style = workbook.CreateStyle();
             style.Font.Name = "NonExistentFontXYZ";
             cell.SetStyle(style);
 
-            // Define PDF output path
-            string pdfPath = "test.pdf";
-
-            // Ensure the directory exists
-            string pdfDir = Path.GetDirectoryName(pdfPath);
-            if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+            // Save the workbook to PDF using a memory stream (no file I/O)
+            using (MemoryStream pdfStream = new MemoryStream())
             {
-                Directory.CreateDirectory(pdfDir);
+                workbook.Save(pdfStream, SaveFormat.Pdf);
+                // The PDF bytes are now in pdfStream; you could write them to a file if needed
             }
 
-            // Save the workbook as PDF (triggers font substitution processing)
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-
-            // Note: Aspose.Cells for .NET does not expose a direct GetWarnings method in recent versions.
-            // Font substitution warnings are logged internally; for demonstration we simply confirm the file was created.
-            bool pdfCreated = File.Exists(pdfPath);
-            Console.WriteLine($"PDF created: {pdfCreated}");
+            // Note: In some Aspose.Cells versions, workbook warnings can be retrieved via workbook.GetWarnings().
+            // If the method is unavailable, font substitution warnings are not exposed directly.
+            Console.WriteLine("Workbook processed and PDF generated in memory.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

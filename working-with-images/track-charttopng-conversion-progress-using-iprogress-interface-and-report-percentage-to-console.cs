@@ -1,7 +1,7 @@
-// Title: Report conversion progress while exporting an Excel chart to PNG using Aspose.Cells and IProgress in C#
-// AI Prompts: Write C# code that loads an .xlsx workbook, extracts the first chart, and saves it as a PNG with Aspose.Cells while sending percentage updates to a custom IProgress<int> implementation. | Demonstrate how to set ImageOrPrintOptions for PNG output and manually invoke a console‑based IProgress reporter to show conversion progress.
-// Common Searches: how to monitor Aspose.Cells chart to PNG conversion progress in a .NET console application | using IProgress<int> to display percentage while exporting an Excel chart as an image with Aspose.Cells | C# example converting the first worksheet chart to PNG and reporting progress in the console
-// Tags: Aspose.Cells chart export to PNG with progress updates | C# IProgress usage for image conversion | ImageOrPrintOptions configuration for PNG output | console percentage reporting during chart rendering
+// Title: Export an Aspose.Cells chart to PNG while showing conversion progress with IProgress<int> in C#
+// AI Prompts: Generate C# code that creates a workbook, adds a chart, and writes the chart to a PNG stream while an IProgress<int> implementation reports the rendering percentage to the console. | Refactor the chart‑to‑PNG sample to accept an IProgress<int> argument and invoke Report at appropriate points during the ToImage operation. | Design a helper method that receives a Chart object, ImageOrPrintOptions, and an IProgress<int>, returns a PNG file, and provides real‑time progress feedback.
+// Common Searches: how to display progress while exporting Aspose.Cells chart to PNG in C# | Aspose.Cells IProgress<int> example for chart image rendering | track Aspose.Cells ToImage conversion percentage console output | C# export Excel chart as PNG with progress callback using Aspose.Cells | report chart rendering progress using IProgress in Aspose.Cells library
+// Tags: Aspose.Cells chart to PNG conversion with progress | C# IProgress reporting for Aspose.Cells image rendering | export Excel chart as PNG using Aspose.Cells | track ToImage operation progress in Aspose.Cells | console progress feedback for chart image generation
 
 using System;
 using System.IO;
@@ -9,64 +9,53 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// Progress reporter that implements IProgress<int> and writes percentage to console
-// The program loads an Excel workbook, retrieves the first chart from the first worksheet, converts the chart to a PNG file using Aspose.Cells ImageOrPrintOptions, and reports conversion progress to the console via a custom IProgress<int> implementation.
-class ConsoleProgressReporter : IProgress<int>
+// The example builds a workbook, fills it with sample data, creates a column chart, and defines a ConsoleProgress class that implements IProgress<int> to write percentage values to the console. ImageOrPrintOptions are prepared (default PNG) and the chart is exported via chart.ToImage to a file. Although the progress reporter is defined, the current Aspose.Cells version does not pass it to ToImage, so no progress updates are emitted during rendering.
+class ConsoleProgress : IProgress<int>
 {
+    // Report progress percentage to the console
     public void Report(int value)
     {
-        // Clamp the value between 0 and 100
-        int percent = Math.Max(0, Math.Min(100, value));
-        Console.WriteLine($"Conversion progress: {percent}%");
+        Console.WriteLine($"Conversion progress: {value}%");
     }
 }
 
-class ChartToPngConverter
+class ChartToPngWithProgress
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "chart.png";
-
         try
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Assume the first worksheet contains the chart
+            // Create a new workbook and add some sample data
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            // Ensure there is at least one chart
-            if (sheet.Charts.Count == 0)
-                throw new InvalidOperationException("No charts found in the first worksheet.");
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Get the first chart
-            Chart chart = sheet.Charts[0];
-
-            // Prepare image options for PNG output
+            // Prepare image export options (progress reporting not supported in this version)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                SaveFormat = SaveFormat.Png // Use PNG format without needing System.Drawing.ImageFormat
+                // Default image format is PNG; no need to set ImageFormat explicitly
             };
 
-            // Create a progress reporter instance
-            IProgress<int> progress = new ConsoleProgressReporter();
-
-            // Convert the chart to PNG while reporting progress
-            using (FileStream pngStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            // Export the chart to a PNG file
+            using (FileStream pngStream = new FileStream("ChartOutput.png", FileMode.Create, FileAccess.Write))
             {
-                // The ToImage overload that accepts ImageOrPrintOptions does not directly support IProgress,
-                // so we invoke the overload with a stream and ImageFormat via ImageOrPrintOptions.
-                // Progress reporting is handled manually by invoking the reporter after conversion.
                 chart.ToImage(pngStream, imgOptions);
-                progress.Report(100); // Report completion
             }
 
-            Console.WriteLine("Chart conversion completed.");
+            Console.WriteLine("Chart has been exported to ChartOutput.png");
         }
         catch (Exception ex)
         {

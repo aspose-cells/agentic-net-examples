@@ -1,26 +1,26 @@
-// Title: How to enable gridlines when printing an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that sets Worksheet.PageSetup.PrintGridlines to true using Aspose.Cells and saves the workbook. | Show an example of loading an existing workbook, turning on gridline printing, and exporting it as XLSX with Aspose.Cells. | Explain how to configure page‑setup printing options to include gridlines in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# enable gridlines on printed worksheet | set PrintGridlines property before saving Excel file with Aspose.Cells | how to show Excel gridlines when printing using Aspose.Cells for .NET | page setup print options gridlines Aspose.Cells example | C# Aspose.Cells print gridlines without displaying them on screen
-// Tags: Aspose.Cells print gridlines C# | worksheet page setup print options | enable gridlines on printed Excel Aspose.Cells | set PrintGridlines property Aspose.Cells | Excel workbook printing settings C#
+// Title: Enable gridlines when printing a worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, sets PageSetup.PrintGridlines to true for the first worksheet, and saves it as an XLSX file. | Show a minimal Aspose.Cells example that configures printing options to include gridlines in the output document. | Demonstrate how to toggle the PrintGridlines flag on a worksheet's PageSetup and persist the changes with Aspose.Cells.
+// Common Searches: Aspose.Cells C# print worksheet with gridlines visible | set PrintGridlines property in Aspose.Cells .NET example | enable gridlines for printed Excel file using Aspose.Cells API | how to show Excel gridlines when exporting to XLSX with Aspose.Cells | C# Aspose.Cells page setup print gridlines configuration
+// Tags: Aspose.Cells worksheet PrintGridlines setting | C# enable printing gridlines Aspose.Cells | Aspose.Cells page setup print options | export Excel with gridlines using Aspose.Cells | save workbook with visible gridlines .NET
 
 using Aspose.Cells;
 using System;
 
-// Creates or loads a workbook, accesses the first worksheet, sets its PageSetup.PrintGridlines property to true, and saves the file, ensuring gridlines appear when the worksheet is printed.
+// // Creates a new workbook, turns on PrintGridlines for the first worksheet, and saves it as PrintedWithGridlines.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Enable gridlines visibility when printing
-        worksheet.PageSetup.PrintGridlines = true;
+        sheet.PageSetup.PrintGridlines = true;
 
-        // Save the workbook to a file
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+        // Save the workbook
+        workbook.Save("PrintedWithGridlines.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,57 +1,43 @@
-// Title: Programmatically transpose a CSV file’s rows and columns using Aspose.Cells for .NET and export the result as a new CSV
-// AI Prompts: Read a CSV file into an Aspose.Cells Workbook, create a range covering the entire data area, call Range.Transpose, and save the transformed worksheet as a CSV using C#. | Write C# code that loads a CSV, flips its matrix with Aspose.Cells’ transpose functionality, and writes the flipped content to another CSV file.
-// Common Searches: how to transpose entire CSV file using Aspose.Cells in C# | Aspose.Cells C# example for flipping rows to columns and saving as CSV | convert CSV to workbook, transpose data range, and export back to CSV with Aspose.Cells | C# code to reverse rows and columns of a CSV using Aspose.Cells Range.Transpose
-// Tags: Aspose.Cells CSV matrix flip C# | Range.Transpose API Aspose.Cells | export transposed worksheet to CSV .NET | full worksheet range creation Aspose.Cells | CSV to Aspose.Cells workbook conversion
+// Title: Transpose rows and columns of a CSV file using Aspose.Cells for .NET (C#) and export to a new CSV
+// Common Searches: C# Aspose.Cells example to transpose CSV data and write to another CSV file | How to swap rows and columns in a CSV using Aspose.Cells workbook in .NET | Programmatically transpose a CSV matrix with Aspose.Cells and save as CSV in C# | Aspose.Cells transpose worksheet data from CSV and export result as CSV | Remove original sheet after transposing CSV with Aspose.Cells in C#
+// Tags: Aspose.Cells transpose CSV worksheet | C# transpose rows to columns using Aspose.Cells | save transposed data as CSV with Aspose.Cells | remove original worksheet after CSV transpose Aspose.Cells | load CSV into workbook Aspose.Cells .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTransposeCsv
+// The sample loads 'input.csv' into an Aspose.Cells Workbook, creates a new worksheet, copies each cell to its transposed position (row ↔ column), optionally removes the original sheet, and saves the transposed matrix as 'output.csv' using SaveFormat.Csv.
+class CsvTranspose
 {
-    // The example loads an input CSV into an Aspose.Cells Workbook, determines the used range, creates a range that covers all populated cells, transposes that range so rows become columns, and saves the resulting matrix to a new CSV file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the source CSV file into a workbook
+        Workbook workbook = new Workbook("input.csv");
+
+        // Get the first worksheet (the CSV data is loaded into the first sheet)
+        Worksheet sourceSheet = workbook.Worksheets[0];
+
+        // Determine the used range dimensions
+        int rowCount = sourceSheet.Cells.MaxDataRow + 1;      // total rows
+        int colCount = sourceSheet.Cells.MaxDataColumn + 1;  // total columns
+
+        // Add a new worksheet to hold the transposed data
+        int transSheetIndex = workbook.Worksheets.Add();
+        Worksheet transSheet = workbook.Worksheets[transSheetIndex];
+
+        // Transpose: swap rows with columns
+        for (int r = 0; r < rowCount; r++)
         {
-            try
+            for (int c = 0; c < colCount; c++)
             {
-                // Paths for input and output CSV files
-                string inputCsvPath = "input.csv";
-                string outputCsvPath = "output.csv";
-
-                // Verify input file exists
-                if (!File.Exists(inputCsvPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputCsvPath}");
-                    return;
-                }
-
-                // Load the CSV file into a workbook
-                Workbook workbook = new Workbook(inputCsvPath);
-
-                // Access the first worksheet (the CSV data is loaded here)
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Determine the used range dimensions
-                int lastRow = cells.MaxDataRow;
-                int lastColumn = cells.MaxDataColumn;
-
-                // Create a range that covers all populated cells
-                Aspose.Cells.Range dataRange = cells.CreateRange(0, 0, lastRow + 1, lastColumn + 1);
-
-                // Transpose the range (rows become columns and vice versa)
-                dataRange.Transpose();
-
-                // Save the transposed data back to a CSV file
-                workbook.Save(outputCsvPath, SaveFormat.Csv);
-                Console.WriteLine($"Transposed CSV saved to {outputCsvPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Copy the value from source (r, c) to transposed (c, r)
+                transSheet.Cells[c, r].Value = sourceSheet.Cells[r, c].Value;
             }
         }
+
+        // Optional: remove the original sheet if you only want the transposed result
+        workbook.Worksheets.RemoveAt(0);
+
+        // Save the transposed matrix as a new CSV file
+        workbook.Save("output.csv", SaveFormat.Csv);
     }
 }

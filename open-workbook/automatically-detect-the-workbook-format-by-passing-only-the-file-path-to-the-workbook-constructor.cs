@@ -1,23 +1,45 @@
-// Title: Load any Excel or CSV workbook by passing only the file path to Aspose.Cells Workbook constructor in C#
-// AI Prompts: Generate a C# example that creates a new Aspose.Cells Workbook using just a file path, allowing the library to automatically detect XLS, XLSX, CSV, or other supported formats, then prints the total number of worksheets. | Show how to open a workbook with an unknown extension in C# using Aspose.Cells, access its Worksheets collection, and demonstrate that no format argument is required.
-// Common Searches: Aspose.Cells C# open workbook without specifying file type | How to let Aspose.Cells detect XLSX or CSV format from file path in .NET | C# load Excel file of unknown extension using Aspose.Cells Workbook constructor | Retrieve worksheet count after auto-detecting workbook format with Aspose.Cells
-// Tags: auto-detect workbook format Aspose.Cells | load workbook from file path C# | open XLSX or CSV without format parameter Aspose.Cells | instantiate Workbook with path detection | retrieve worksheet count Aspose.Cells
+// Title: Automatically detect Excel workbook format by using only the file path with Aspose.Cells Workbook constructor in C#
+// Common Searches: Aspose.Cells C# load workbook without specifying format using file path | How to let Aspose.Cells infer Excel file type from its extension when opening | Create a new workbook automatically when source file does not exist Aspose.Cells | Save Aspose.Cells workbook and have format determined by output file extension | C# Aspose.Cells auto-detect input workbook format from .xls or .xlsx path
+// Tags: auto format detection via Workbook constructor Aspose.Cells | load Excel file by path without format argument | save workbook with inferred extension Aspose.Cells | fallback create new workbook when file missing Aspose.Cells | file extension based format inference Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Demonstrates using the Aspose.Cells Workbook constructor to open a workbook from a file path, letting the library automatically determine the file format (XLS, XLSX, CSV, etc.) and then outputting the number of worksheets loaded.
-class Program
+namespace Example
 {
-    static void Main()
+    // The example checks whether the input Excel file exists; if it does, a Workbook is instantiated with just the file path, letting Aspose.Cells automatically determine the source format (XLS, XLSX, etc.). If the file is missing, a new default workbook is created. The workbook is then saved to a target path, where the output format is inferred from the file extension.
+    class Program
     {
-        // Specify the path to the workbook file (XLS, XLSX, CSV, etc.).
-        string filePath = @"C:\Data\SampleWorkbook.xlsx";
+        static void Main(string[] args)
+        {
+            // Paths for input and output workbooks
+            string inputPath = @"C:\Data\SourceWorkbook.xls";
+            string outputPath = @"C:\Data\ConvertedWorkbook.xlsx";
 
-        // The Workbook constructor automatically detects the file format.
-        Workbook workbook = new Workbook(filePath);
+            Workbook workbook = null;
 
-        // Example usage: output the number of worksheets loaded.
-        Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
+            try
+            {
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath); // format auto‑detected
+                }
+                else
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}. Creating a new workbook.");
+                    workbook = new Workbook(); // creates a default workbook with one worksheet
+                }
+
+                // Save the workbook; format inferred from the file extension
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

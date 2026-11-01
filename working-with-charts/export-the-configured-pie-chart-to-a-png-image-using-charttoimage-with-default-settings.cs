@@ -1,16 +1,14 @@
 // Title: Export a pie chart from an Excel workbook to a PNG file using Aspose.Cells Chart.ToImage in C#
-// AI Prompts: Write C# code that opens an Excel file, selects the first chart (assumed to be a pie chart), and saves it as a PNG using Aspose.Cells Chart.ToImage with default ImageOrPrintOptions. | Show how to use ImageOrPrintOptions together with Chart.ToImage to render any Excel chart to a PNG image in a .NET application.
-// Common Searches: c# aspose.cells export first chart in workbook to png | how to render an Excel pie chart as a PNG using Aspose.Cells Chart.ToImage | asp.net save Excel chart to image with default settings Aspose.Cells
-// Tags: Aspose.Cells Chart.ToImage PNG export | C# export Excel chart to image | ImageOrPrintOptions default configuration | render pie chart as PNG Aspose.Cells | export workbook chart to PNG .NET
+// Common Searches: C# Aspose.Cells export first worksheet chart as PNG | How to save an Excel pie chart as an image with Aspose.Cells | Using Chart.ToImage to generate PNG from an Excel chart in .NET | Aspose.Cells convert Excel chart to PNG file with default settings | Export Excel chart to PNG without specifying image options in C#
+// Tags: Aspose.Cells chart to PNG conversion | Chart.ToImage method usage | C# export Excel pie chart image | default settings image export Aspose.Cells | save worksheet chart as PNG file
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 using System;
 using System.IO;
 
-// The example loads 'input.xlsx', accesses the first worksheet, retrieves the first chart (expected to be a pie chart), and uses Aspose.Cells' Chart.ToImage method with default ImageOrPrintOptions to generate 'pieChart.png'. It includes checks for missing files and absent charts, and reports success or errors to the console.
-class Program
+// The example loads an existing workbook, checks for charts on the first worksheet, retrieves the first chart (assumed to be a pie chart), and exports it to a PNG file using the Chart.ToImage method with default options, while handling missing files and runtime exceptions.
+class ExportChartToPng
 {
     static void Main()
     {
@@ -19,39 +17,37 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "pieChart.png";
 
-            // Verify the input workbook exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook that contains the configured pie chart
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
             if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine("Error: No charts were found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first chart (assumed to be a pie chart)
-            Chart pieChart = sheet.Charts[0];
+            // Retrieve the first chart (assumed to be the pie chart)
+            Chart chart = sheet.Charts[0];
 
-            // Set image export options (default format is PNG)
-            ImageOrPrintOptions options = new ImageOrPrintOptions();
+            // Export the chart to a PNG image using default settings
+            chart.ToImage(outputPath);
 
-            // Export the chart to a PNG image
-            pieChart.ToImage(outputPath, options);
-            Console.WriteLine($"Chart exported successfully to '{outputPath}'.");
+            Console.WriteLine($"Pie chart exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -1,41 +1,48 @@
-// Title: Render bold HTML text in an Excel cell using Aspose.Cells smart markers (C#)
-// AI Prompts: Write C# code that sets a smart marker's HtmlString to "<b>&=FieldName</b>", binds a DataTable to WorkbookDesigner, processes the marker, and saves the workbook as an .xlsx file. | Show how to use Aspose.Cells WorkbookDesigner to apply HTML bold formatting to a smart marker and generate a spreadsheet with bold text.
-// Common Searches: how to embed <b> tags in a smart marker for Aspose.Cells C# | Aspose.Cells smart marker HtmlString property usage example | process smart markers with HTML content to produce bold text in Excel using C# | C# code sample for binding DataTable to WorkbookDesigner and saving as .xlsx
-// Tags: smart marker html bold Aspose.Cells | WorkbookDesigner set HtmlString C# | export bold text to xlsx via smart markers | bind DataTable to WorkbookDesigner Aspose.Cells | HTML rendering in Excel cells using Aspose.Cells
+// Title: Using the HTML property in Aspose.Cells smart markers to render bold text with C#
+// Common Searches: C# Aspose.Cells smart marker HTML property to make text bold | How to apply HTML formatting to a smart marker field in Excel using Aspose.Cells | Set bold HTML content in a cell via smart markers with WorkbookDesigner | Aspose.Cells example for rendering <b> tags from a DataSet in smart markers | Insert HTML property smart marker in Aspose.Cells workbook programmatically
+// Tags: Aspose.Cells HTML smart marker | C# set smart marker HTML property | WorkbookDesigner process HTML formatting | Export bold text Excel using smart markers | smart marker HTML property example | DataSet to smart marker HTML content
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace SmartMarkerExample
+namespace AsposeCellsSmartMarkerHtmlExample
 {
-    // The example creates a workbook, assigns "<b>&=Name</b>" to cell A1 via the HtmlString property, supplies a DataTable with a Name column, processes the smart marker with WorkbookDesigner, and saves the result as SmartMarkerBoldOutput.xlsx.
+    // The sample creates a workbook, places a smart marker that uses the HTML property syntax (&="HTML" &="Text"), provides a DataSet with a '<b>Bold Text</b>' value, processes the marker with WorkbookDesigner, and saves the file. The resulting cell displays the text in bold using HTML formatting.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Define a smart marker with HTML bold tags in cell A1
-                sheet.Cells["A1"].HtmlString = "<b>&=Name</b>";
+                // Insert a smart marker that uses the HTML property.
+                // Syntax: &="HTML" &="FieldName"
+                sheet.Cells["A1"].PutValue("&=\"HTML\" &=\"Text\"");
 
-                // Prepare sample data source
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Name", typeof(string));
-                dt.Rows.Add("Bold Text Example");
+                // Prepare the data source as a DataSet with a DataTable.
+                DataTable table = new DataTable();
+                table.Columns.Add("Text", typeof(string));
+                table.Rows.Add("<b>Bold Text</b>");
 
-                // Process smart markers
+                DataSet dataSource = new DataSet();
+                dataSource.Tables.Add(table);
+
+                // Process the smart markers using WorkbookDesigner
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource(dt);
+                designer.SetDataSource(dataSource);
                 designer.Process();
 
-                // Ensure output directory exists
-                string outputPath = "SmartMarkerBoldOutput.xlsx";
+                // Define output file path
+                string outputPath = "SmartMarkerHtmlOutput.xlsx";
+
+                // Ensure the directory exists
                 string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
                 if (!Directory.Exists(outputDir))
                 {
@@ -44,11 +51,11 @@ namespace SmartMarkerExample
 
                 // Save the resulting workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

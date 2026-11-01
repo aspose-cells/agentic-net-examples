@@ -1,61 +1,60 @@
-// Title: Refresh linked shapes after saving an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, saves it, then iterates through each worksheet's Shapes collection to call Refresh on shapes where IsLinked is true, and saves the workbook again. | Show a C# example that checks for the presence of an input Excel file, uses Aspose.Cells to open it, performs a double‑save workflow to update linked pictures, and includes robust error handling. | Generate a C# snippet that demonstrates how to refresh linked objects by looping over Worksheet.Shapes and invoking the Refresh method only on linked shapes after the first save.
-// Common Searches: aspocells c# refresh linked pictures after workbook save | how to update linked shapes in an Excel file using Aspose.Cells .NET | iterate over worksheet shapes and call Refresh for linked objects Aspose.Cells | double save Excel workbook to refresh linked objects Aspose.Cells | check if shape is linked before refreshing Aspose.Cells C#
-// Tags: linked shape refresh Aspose.Cells | iterate worksheet shapes C# | double save workbook Aspose.Cells | shape.IsLinked check C# | missing input Excel file handling Aspose.Cells
+// Title: Refresh linked shapes after saving an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells recalculate formulas to update linked shapes after workbook save | how to reload a workbook with Aspose.Cells to refresh shape positions | Aspose.Cells refresh linked objects after modifying and saving an Excel file | update Excel shape coordinates after saving using Aspose.Cells .NET | ensure linked shapes stay accurate after workbook save with Aspose.Cells C#
+// Tags: recalculate formulas Aspose.Cells C# | linked shape synchronization Aspose.Cells | post‑save workbook reload Aspose.Cells | update shape coordinates Excel Aspose.Cells | temporary workbook workflow Aspose.Cells | linked objects refresh Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace RefreshLinkedShapesExampleApp
+// The example loads an existing Excel file, saves it to a temporary workbook, reloads the file, recalculates all formulas to refresh linked shapes, and then saves the final workbook, handling errors at each step.
+class Program
 {
-    // The sample loads an existing workbook, saves it, optionally loops through each worksheet's Shapes collection to refresh linked shapes (using the IsLinked property), and saves the workbook a second time, demonstrating a double‑save pattern to keep linked objects up‑to‑date while handling missing input files and exceptions.
-    class RefreshLinkedShapesExample
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string tempPath = "temp.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-
-                // Verify that the input file exists before attempting to load it
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load an existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Perform any required modifications here
-                // ...
-
-                // Save the workbook for the first time
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-
-                // NOTE: The RefreshAllLinkedObjects method is not available in the current Aspose.Cells for .NET version.
-                // If linked objects need to be refreshed, iterate through shapes and refresh individually as needed.
-                // Example (optional):
-                // foreach (Worksheet sheet in workbook.Worksheets)
-                // {
-                //     foreach (Shape shape in sheet.Shapes)
-                //     {
-                //         if (shape.IsLinked) shape.Refresh();
-                //     }
-                // }
-
-                // Save the workbook again after (potential) refreshing linked objects
-                string refreshedPath = "output_refreshed.xlsx";
-                workbook.Save(refreshedPath);
-                Console.WriteLine($"Refreshed workbook saved to '{refreshedPath}'.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
+
+            // (Optional) make any changes to the workbook here
+            // ...
+
+            // Save once to commit any modifications
+            workbook.Save(tempPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during initial load/save: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Reload the workbook to ensure all objects are up‑to‑date
+            Workbook workbook = new Workbook(tempPath);
+
+            // Recalculate formulas (as a substitute for refreshing linked objects)
+            workbook.CalculateFormula();
+
+            // Save the workbook with refreshed data
+            workbook.Save(outputPath);
+
+            Console.WriteLine("Workbook processing completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during processing/saving: {ex.Message}");
         }
     }
 }

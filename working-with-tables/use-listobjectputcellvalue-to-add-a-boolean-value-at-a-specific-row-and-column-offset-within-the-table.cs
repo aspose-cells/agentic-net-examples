@@ -1,14 +1,13 @@
-// Title: How to use ListObject.PutCellValue to insert a Boolean into a specific row and column of an Excel table with Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates a workbook, adds a ListObject table, and calls ListObject.PutCellValue to set a true Boolean at row offset 1 and column offset 1. | Show a step‑by‑step example of updating the "Flag" column in the second data row of an Aspose.Cells ListObject using PutCellValue. | Provide a complete C# snippet that saves the workbook after inserting a Boolean value into a table cell via ListObject.PutCellValue.
-// Common Searches: Aspose.Cells C# put boolean value in ListObject table cell by row and column offset | How to set true in a specific cell of an Excel table using Aspose.Cells ListObject.PutCellValue | C# example for inserting a Boolean into the Flag column of a ListObject | PutCellValue method row offset column offset Aspose.Cells tutorial | Add boolean data to an Excel table created with Aspose.Cells in C#
-// Tags: Aspose.Cells ListObject.PutCellValue boolean | C# insert boolean into Excel table | ListObject row offset column offset | Aspose.Cells create and save workbook with table | update Flag column Aspose.Cells
+// Title: Insert a Boolean flag into a specific row and column of an Aspose.Cells ListObject table with C#
+// AI Prompts: Generate C# code that creates a ListObject, then uses ListObject.PutCellValue to set a true value at row offset 1 and column offset 1. | Show how to add a boolean value to the 'Flag' column of an Aspose.Cells table by specifying row and column offsets. | Provide a C# example that defines a table range, creates a ListObject, and inserts a true flag into a cell using PutCellValue.
+// Common Searches: Aspose.Cells C# put boolean value in ListObject table cell by offset | How to set true flag in a specific column of an Excel table using Aspose.Cells | C# ListObject.PutCellValue row offset column offset example | Insert boolean into Aspose.Cells table without referencing cell address | Add flag column value to Aspose.Cells ListObject programmatically
+// Tags: Aspose.Cells ListObject PutCellValue boolean | C# insert boolean into Excel table cell | row offset column offset Aspose.Cells | populate Flag column ListObject C# | programmatic table data entry Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using System;
-using System.IO;
 
-// Demonstrates creating a workbook, defining a ListObject table, and using ListObject.PutCellValue to place a true Boolean in the second data row of the Flag column, then saving the file as output.xlsx.
+// Demonstrates creating a workbook, defining a ListObject range, and using ListObject.PutCellValue with row and column offsets to insert a true boolean into the 'Flag' column, then saving the workbook as output.xlsx.
 class Program
 {
     static void Main()
@@ -19,38 +18,43 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate data (header + rows). Column B (Flag) is initially empty.
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Flag");
+            // Populate some sample data to define the table range
+            sheet.Cells["A1"].PutValue("ID");   // Header for first column
+            sheet.Cells["B1"].PutValue("Flag"); // Header for second column
             sheet.Cells["A2"].PutValue(1);
             sheet.Cells["A3"].PutValue(2);
             sheet.Cells["A4"].PutValue(3);
 
-            // Define the range that will become the ListObject (table)
-            int firstRow = 0;      // Row index for A1
-            int firstColumn = 0;   // Column index for A
-            int totalRows = 4;     // A1:B4 (including header)
-            int totalColumns = 2;  // Two columns: ID and Flag
-            bool hasHeaders = true;
+            // Define the range of the ListObject (table) including headers
+            int firstRow = 0;          // Row index for A1 (zero‑based)
+            int firstColumn = 0;       // Column index for A1
+            int totalRows = 4;         // A1:B4 (including header)
+            int totalColumns = 2;      // Two columns: A and B
 
-            // Add the ListObject to the worksheet
-            int listObjectIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, hasHeaders);
-            ListObject listObject = sheet.ListObjects[listObjectIndex];
-            listObject.DisplayName = "SampleTable";
+            // Add the ListObject to the worksheet and give it a name
+            int listObjectIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
 
-            // Put a boolean value (true) at a specific row and column offset within the table
-            // Row offset 1 => second data row (originally row 3 in the sheet)
-            // Column offset 1 => second column of the table (Flag column)
-            listObject.PutCellValue(1, 1, true);
+            ListObject table = sheet.ListObjects[listObjectIndex];
+            table.DisplayName = "MyTable";
+
+            // Add a boolean value using PutCellValue
+            // rowOffset = 1 -> second data row (row 3 in the sheet, because row 0 is header)
+            // columnOffset = 1 -> second column of the table ("Flag")
+            int rowOffset = 1;
+            int columnOffset = 1;
+            table.PutCellValue(rowOffset, columnOffset, true);
 
             // Save the workbook to a file
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

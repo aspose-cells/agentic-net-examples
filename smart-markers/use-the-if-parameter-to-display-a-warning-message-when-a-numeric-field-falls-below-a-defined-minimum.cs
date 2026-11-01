@@ -1,76 +1,34 @@
-// Title: Add a warning‑style numeric minimum validation with custom error and input messages to a cell range using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, fills column A, and applies a whole‑number validation to A1:A10 that shows a warning when the entered value is less than 10 using Aspose.Cells. | Generate a C# snippet to configure ValidationAlertType.Warning with a custom error title and message for numeric cells that fall below a defined threshold in an Aspose.Cells worksheet. | Provide a C# example that adds an input prompt and warning message to a numeric validation rule for a column of cells in an Excel file using Aspose.Cells.
-// Common Searches: asp.net add warning data validation for numbers below minimum using Aspose.Cells | c# Aspose.Cells set numeric validation with custom error title and message | how to show input message with numeric validation in Aspose.Cells workbook | Aspose.Cells less than operator warning alert example in C#
-// Tags: Aspose.Cells warning style validation | C# set validation alert type warning | custom error title Aspose.Cells | input prompt for validated cells
+// Title: Use Aspose.Cells for .NET to add an IF formula that shows a warning when a numeric cell is below a minimum value
+// AI Prompts: Generate C# code with Aspose.Cells that writes an IF formula into a target cell to display a custom warning message when a source cell’s numeric value is less than a specified threshold. | Show how to trigger formula evaluation and save the workbook after inserting the conditional warning using Aspose.Cells in a .NET application.
+// Common Searches: aspocells c# insert if formula to display warning for values under a limit | how to evaluate an if formula immediately after adding it with Aspose.Cells | save Excel file after programmatically adding conditional warning using Aspose.Cells .NET | set numeric threshold and show warning message in another cell with Aspose.Cells | using Aspose.Cells to check cell value against minimum and output alert
+// Tags: Aspose.Cells conditional formula warning | C# numeric threshold validation Excel | Aspose.Cells formula recompute | save workbook after formula update .NET | Excel warning message cell Aspose
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// Creates a new workbook, writes a numeric value to A1, adds an IF formula in B1 that returns a warning string when the value is less than 10, forces formula calculation, and saves the file as Result.xlsx.
+class Program
 {
-    // The example creates a workbook, populates column A with numeric values, adds a whole‑number validation to cells A1:A10 that triggers a warning when a value is less than 10, and configures custom error title, error message, and an input prompt before saving the file as NumericMinimumWarningDemo.xlsx.
-    public class NumericMinimumWarningDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate some sample numeric data in column A (cells A1:A10)
-                for (int i = 0; i < 10; i++)
-                {
-                    worksheet.Cells[i, 0].PutValue(i * 5); // values: 0,5,10,...45
-                }
+        // Define the minimum allowed value
+        double minValue = 10.0;
 
-                // Define the range to which the validation will be applied (A1:A10)
-                CellArea validationArea = CellArea.CreateCellArea(0, 0, 9, 0);
+        // Example numeric input in cell A1
+        sheet.Cells["A1"].PutValue(5.0);
 
-                // Add a validation rule to the worksheet using the newer API
-                int validationIndex = worksheet.Validations.Add(validationArea);
-                Validation validation = worksheet.Validations[validationIndex];
+        // Use an IF formula to display a warning when the value falls below the minimum
+        // The result will appear in cell B1
+        sheet.Cells["B1"].Formula = $"IF(A1<{minValue},\"Warning: value below minimum\",\"\")";
 
-                // Configure the validation:
-                // - Whole number type
-                // - Operator: LessThan (value must be less than the minimum)
-                // - Minimum threshold set to 10
-                validation.Type = ValidationType.WholeNumber;
-                validation.Operator = OperatorType.LessThan;
-                validation.Formula1 = "10";
+        // Evaluate the formula so the warning appears immediately
+        workbook.CalculateFormula();
 
-                // Set the alert style to Warning so a warning message is shown (not a stop)
-                validation.AlertStyle = ValidationAlertType.Warning;
-
-                // Provide a title and message for the warning
-                validation.ErrorTitle = "Value Too Low";
-                validation.ErrorMessage = "The entered number is below the allowed minimum of 10.";
-
-                // Ensure the warning is displayed when the user enters an invalid value
-                validation.ShowError = true;
-
-                // Optionally, display an input message when the cell is selected
-                validation.ShowInput = true;
-                validation.InputTitle = "Enter Value";
-                validation.InputMessage = "Please enter a number greater than or equal to 10.";
-
-                // Save the workbook
-                workbook.Save("NumericMinimumWarningDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            NumericMinimumWarningDemo.Run();
-        }
+        // Save the workbook
+        workbook.Save("Result.xlsx");
     }
 }

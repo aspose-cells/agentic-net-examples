@@ -1,45 +1,80 @@
-// Title: Read numeric cells from an Apple‑generated Excel workbook with Aspose.Cells for .NET and calculate their average
-// AI Prompts: Write C# code using Aspose.Cells that opens a given Excel file, iterates over every used cell in the first worksheet, sums only numeric values, computes the average, and writes the result to the console. | Update the Aspose.Cells example to exclude cells located in hidden rows or columns when determining the average of numeric data. | Add robust try‑catch blocks around workbook loading and numeric aggregation to provide clear error messages in the Aspose.Cells C# sample.
-// Common Searches: Aspose.Cells C# calculate average of numeric cells in Excel workbook | how to ignore hidden rows while averaging numbers with Aspose.Cells .NET | read numeric values from an Apple generated .xlsx using Aspose.Cells | C# example to sum and average cells of type numeric in Aspose.Cells
-// Tags: calculate average numeric cells Aspose.Cells | iterate worksheet cells .NET | load Apple generated Excel file Aspose.Cells | skip hidden rows Aspose.Cells | exception handling workbook loading Aspose.Cells
+// Title: Read numeric cells from the first worksheet of an Excel file and calculate their average using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read all numeric cells from first worksheet and compute average | How to iterate over used range in an Excel file with Aspose.Cells and calculate mean value | Example of handling password‑protected Excel workbook while averaging numeric data using Aspose.Cells | Console application to calculate average of numbers in an exported Apple Numbers .xlsx using Aspose.Cells
+// Tags: average numeric cells Aspose.Cells | iterate used range worksheet C# | extract numeric values Excel Aspose.Cells | handle password protected workbook exception Aspose.Cells | load workbook from file path Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, scans all used cells in the first worksheet, sums values of cells identified as numeric, computes their average, and prints the result to the console.
+// The C# console program verifies the presence of an input.xlsx file, loads it with Aspose.Cells, gracefully handles missing or password‑protected workbooks, accesses the first worksheet, iterates through the used rows and columns to collect numeric cell values, computes their average, and writes the result to the console while managing any processing errors.
 class Program
 {
     static void Main()
     {
-        // Load the Apple‑generated spreadsheet
-        var workbook = new Workbook("input.xlsx"); // replace with actual file path
+        const string inputPath = "input.xlsx";
 
-        // Access the first worksheet (modify if needed)
-        var worksheet = workbook.Worksheets[0];
-        var cells = worksheet.Cells;
-
-        double sum = 0;
-        int count = 0;
-
-        // Iterate through all used cells and collect numeric values
-        foreach (Cell cell in cells)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            if (cell.Type == CellValueType.IsNumeric)
-            {
-                sum += cell.DoubleValue;
-                count++;
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Calculate and output the average
-        if (count > 0)
+        Workbook workbook = null;
+
+        try
         {
-            double average = sum / count;
+            // Attempt to load the workbook (no password supplied)
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            // Detect password‑protected workbook by inspecting the exception message
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Please provide a valid password.");
+            }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
+        }
+
+        try
+        {
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Collect all numeric values from the used range
+            List<double> numericValues = new List<double>();
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxColumn; col++)
+                {
+                    Cell cell = cells[row, col];
+                    if (cell.Type == CellValueType.IsNumeric)
+                    {
+                        numericValues.Add(cell.DoubleValue);
+                    }
+                }
+            }
+
+            // Calculate the average of the collected numbers
+            double average = numericValues.Count > 0 ? numericValues.Average() : 0.0;
+
+            // Output the result to the console
             Console.WriteLine($"Average of numeric cells: {average}");
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No numeric cells found.");
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 }

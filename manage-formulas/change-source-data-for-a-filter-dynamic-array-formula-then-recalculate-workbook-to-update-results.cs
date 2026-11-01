@@ -1,33 +1,88 @@
-// Title: Change the source range of a FILTER dynamic array formula and recalculate the workbook with Aspose.Cells for .NET
-// AI Prompts: Update cells referenced by a FILTER dynamic array formula, run workbook.CalculateFormula(), and save the workbook using Aspose.Cells in C#. | Programmatically modify the source data of a FILTER formula, trigger full workbook recalculation, and export the result to a new XLSX file. | Replace values in the FILTER range, invoke Aspose.Cells calculation engine, and write the refreshed workbook to disk.
-// Common Searches: Aspose.Cells how to change the range used by a FILTER formula in C# | recalculate FILTER dynamic array after updating source cells with Aspose.Cells | C# example for refreshing FILTER formula results after data modification using Aspose.Cells | update source data for Excel FILTER function and recalc workbook programmatically | Aspose.Cells workbook.CalculateFormula for dynamic array formulas
-// Tags: filter formula source range update Aspose.Cells | recalculate workbook formulas Aspose.Cells | modify cell values before CalculateFormula C# | save updated workbook as xlsx Aspose.Cells | dynamic array formula refresh .NET
+// Title: How to replace the source range of a FILTER dynamic array formula and recalculate the workbook using Aspose.Cells in C#
+// Common Searches: aspnet replace source range in Excel FILTER formula using Aspose.Cells | c# update FILTER dynamic array source range and recalculate workbook | programmatically modify FILTER function range with Aspose.Cells .NET | recalculate Excel workbook after changing a formula with Aspose.Cells C# | Aspose.Cells change FILTER formula arguments and refresh results
+// Tags: filter formula source range modification Aspose.Cells | workbook recalculation after formula edit .NET | dynamic array update using Aspose.Cells C# | replace formula substring Aspose.Cells API | excel filter function programmatic change
 
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads input.xlsx, changes specific cells in the source range of a FILTER dynamic array formula, recalculates all formulas with workbook.CalculateFormula(), and saves the updated workbook to output.xlsx using Aspose.Cells for .NET.
+// The example loads an Excel workbook, finds the FILTER dynamic array formula in cell A1, replaces its source range with "D2:D10", triggers a full workbook recalculation to update the array results, and saves the modified file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (load rule)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // ----- Change source data for the FILTER dynamic array formula -----
-        // Example: the FILTER formula uses the range B2:C10 as its source.
-        // Update some cells in that source range.
-        sheet.Cells["B2"].PutValue(123);   // new value in B2
-        sheet.Cells["C5"].PutValue(456);   // new value in C5
-        sheet.Cells["B8"].PutValue(789);   // new value in B8
-        // Add or modify additional cells as required for your scenario.
+            // Load the workbook (no password required)
+            var loadOptions = new LoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Recalculate all formulas, including the FILTER dynamic array formula
-        workbook.CalculateFormula();
+            // Get the worksheet that contains the FILTER formula
+            Worksheet sheet = workbook.Worksheets["Sheet1"];
+            if (sheet == null)
+            {
+                Console.WriteLine("Worksheet 'Sheet1' not found.");
+                return;
+            }
 
-        // Save the updated workbook (save rule)
-        workbook.Save("output.xlsx");
+            // Locate the cell with the FILTER dynamic array formula (example: A1)
+            Cell filterCell = sheet.Cells["A1"];
+            if (filterCell == null)
+            {
+                Console.WriteLine("Cell A1 not found.");
+                return;
+            }
+
+            string originalFormula = filterCell.Formula;
+            if (string.IsNullOrEmpty(originalFormula) ||
+                originalFormula.IndexOf("FILTER(", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                Console.WriteLine("No FILTER formula found in cell A1.");
+                return;
+            }
+
+            // Define the new source range you want the FILTER to use
+            string newSourceRange = "D2:D10";
+
+            // Replace the source range part of the FILTER formula
+            int filterPos = originalFormula.IndexOf("FILTER(", StringComparison.OrdinalIgnoreCase);
+            if (filterPos >= 0)
+            {
+                int openParen = originalFormula.IndexOf('(', filterPos);
+                int firstComma = originalFormula.IndexOf(',', openParen);
+                if (firstComma > openParen)
+                {
+                    string beforeSource = originalFormula.Substring(0, openParen + 1);
+                    string afterSource = originalFormula.Substring(firstComma);
+                    string newFormula = beforeSource + newSourceRange + afterSource;
+                    filterCell.Formula = newFormula;
+                }
+            }
+
+            // Recalculate the workbook so the dynamic array updates
+            workbook.CalculateFormula();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

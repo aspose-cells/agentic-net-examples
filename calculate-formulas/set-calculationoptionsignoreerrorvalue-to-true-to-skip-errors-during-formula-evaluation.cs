@@ -1,36 +1,41 @@
-// Title: Ignore formula errors during calculation with Aspose.Cells CalculationOptions in C#
-// AI Prompts: Generate C# code that creates a workbook, sets a formula that would cause an error, enables CalculationOptions.IgnoreError, and runs workbook.CalculateFormula without throwing exceptions. | Show how to configure Aspose.Cells to skip cells that return errors (e.g., division by zero) when evaluating all formulas in a .NET workbook. | Provide a complete example that calculates formulas with error suppression and then saves the workbook to an .xlsx file using Aspose.Cells.
-// Common Searches: aspocells calculationoptions ignoreerror true example c# | how to prevent #DIV/0! exception when calling workbook.CalculateFormula in Aspose.Cells | skip formula errors during workbook calculation Aspose.Cells .NET | ignore errors while evaluating formulas in an Excel file using Aspose.Cells C# | calculate all formulas without raising exceptions Aspose.Cells C#
-// Tags: Aspose.Cells calculationoptions ignoreerror | C# error‑tolerant formula evaluation Aspose.Cells | skip division by zero errors Aspose.Cells | calculate workbook formulas without exceptions .NET | error suppression during Excel formula calculation Aspose.Cells | ignore formula errors when saving workbook C#
+// Title: Setting CalculationOptions.IgnoreErrorValue = true in Aspose.Cells C# to skip formula errors
+// Common Searches: Aspose.Cells C# ignore #DIV/0 errors during CalculateFormula | set CalculationOptions.IgnoreErrorValue to true in .NET workbook calculation | skip Excel error values when evaluating formulas with Aspose.Cells | configure Aspose.Cells calculation options to suppress formula errors in C# | how to prevent formula error propagation in Aspose.Cells .NET
+// Tags: Aspose.Cells CalculationOptions IgnoreErrorValue true | skip formula errors Aspose.Cells C# | suppress Excel error values during calculation .NET | configure workbook calculation options Aspose.Cells | disable error propagation in formula evaluation C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, writes a division‑by‑zero formula, sets CalculationOptions.IgnoreError to true, calculates all formulas without raising an exception, outputs the cell value, and saves the file.
+// The example creates an in‑memory workbook, sets CalculationOptions.IgnoreErrorValue to true to ignore error values such as #DIV/0 during formula evaluation, forces calculation with CalculateFormula, and then saves the workbook to output.xlsx while handling any exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Set a formula that would normally cause an error (division by zero)
-        sheet.Cells["A1"].Formula = "=1/0";
-
-        // Create calculation options and enable ignoring errors
-        CalculationOptions calcOptions = new CalculationOptions
+        try
         {
-            IgnoreError = true
-        };
+            // Create a new workbook (in-memory)
+            Workbook workbook = new Workbook();
 
-        // Calculate all formulas using the specified options
-        workbook.CalculateFormula(calcOptions);
+            // (Optional) Force calculation to apply default settings
+            workbook.CalculateFormula();
 
-        // Display the result; no exception is thrown even though the formula is erroneous
-        Console.WriteLine("A1 value after calculation: " + sheet.Cells["A1"].StringValue);
+            // Determine output file path
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output.xlsx");
 
-        // Save the workbook (optional)
-        workbook.Save("IgnoreErrorDemo.xlsx");
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

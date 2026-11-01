@@ -1,70 +1,98 @@
-// Title: Generate an Excel report from a JSON file using Aspose.Cells smart markers in C#
-// AI Prompts: Write C# code that loads an Excel template, reads a JSON file, assigns the JSON to a smart‑marker named 'Employee' with WorkbookDesigner.SetJsonDataSource, processes the markers, and saves the output workbook. | Modify the sample to handle a JSON array of employees and bind it to a table smart marker, including validation for missing template or data files. | Create a reusable C# method that accepts template path, JSON string, and output path, then uses WorkbookDesigner to populate smart markers and return the generated workbook.
-// Common Searches: how to bind JSON data to Aspose.Cells smart markers in C# | Aspose.Cells WorkbookDesigner SetJsonDataSource example for Excel report | populate Excel template with JSON array using Aspose.Cells .NET | C# generate Excel file from JSON using smart markers Aspose | error handling for missing template or JSON file Aspose.Cells
-// Tags: Aspose.Cells SetJsonDataSource smart markers | C# fill Excel template from JSON | WorkbookDesigner smart marker processing | JSON-driven Excel report generation | Excel smart marker data binding .NET
+// Title: Create an Excel report with Aspose.Cells smart markers by loading JSON data into a DataTable in C#
+// AI Prompts: Read a JSON file into a List<Dictionary<string, object>> and transform it into a DataTable suitable for Aspose.Cells smart markers. | Set the DataTable as the 'Data' source of WorkbookDesigner, process the smart markers, and save the filled workbook as a new Excel file. | Implement robust error handling for missing JSON or template files while generating the report with Aspose.Cells.
+// Common Searches: how to bind JSON data to Aspose.Cells smart markers using C# | convert List<Dictionary<string, object>> to DataTable for WorkbookDesigner | populate Excel template with smart markers from a JSON file in .NET | Aspose.Cells generate report from JSON array C# example | file not found handling for JSON or template when using Aspose.Cells smart markers
+// Tags: Aspose.Cells WorkbookDesigner JSON DataTable source | C# JSON to DataTable conversion for Aspose.Cells | Excel template smart marker population with Aspose.Cells | generate report.xlsx from template.xlsx using Aspose.Cells | exception handling for missing JSON or template files in Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsJsonSmartMarkerDemo
+// // Reads a JSON array, converts it to a DataTable, assigns the table to the "Data" source of WorkbookDesigner, processes smart markers in an Excel template, and saves the populated report as report.xlsx.
+class Program
 {
-    // The example verifies the presence of an Excel template and a JSON file, loads the template into a Workbook, reads the JSON content, assigns it to the 'Employee' smart marker via WorkbookDesigner.SetJsonDataSource, processes all smart markers to populate the worksheet, and saves the resulting workbook as Report_Output.xlsx while handling potential exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Path to the JSON file containing an array of objects
+            string jsonPath = "data.json";
+
+            if (!File.Exists(jsonPath))
+                throw new FileNotFoundException($"JSON data file not found: {jsonPath}");
+
+            // Load JSON and deserialize into a list of dictionaries
+            List<Dictionary<string, object>> records;
+            using (StreamReader sr = new StreamReader(jsonPath))
             {
-                // Path to the Excel template that contains smart markers, e.g. &=$Employee.Name
-                string templatePath = "Template.xlsx";
-
-                // Verify that the template file exists
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                // Load the template workbook
-                Workbook workbook = new Workbook(templatePath);
-
-                // Create a WorkbookDesigner and assign the loaded workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // Path to the JSON data file
-                string jsonFilePath = "EmployeeData.json";
-
-                // Verify that the JSON file exists
-                if (!File.Exists(jsonFilePath))
-                {
-                    Console.WriteLine($"JSON data file not found: {jsonFilePath}");
-                    return;
-                }
-
-                // Read JSON content from the file
-                string jsonData = File.ReadAllText(jsonFilePath);
-
-                // Set the JSON string as a data source for the smart marker named "Employee"
-                designer.SetJsonDataSource("Employee", jsonData);
-
-                // Process the smart markers and populate the worksheet with data
-                designer.Process();
-
-                // Save the resulting workbook
-                string outputPath = "Report_Output.xlsx";
-                designer.Workbook.Save(outputPath);
-
-                Console.WriteLine($"Report generated successfully: {outputPath}");
+                string json = sr.ReadToEnd();
+                records = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(json);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Ensure we have a valid collection
+            records ??= new List<Dictionary<string, object>>();
+
+            // Convert the list of dictionaries to a DataTable (required by WorkbookDesigner)
+            DataTable dataTable = ConvertToDataTable(records);
+
+            // Path to the Excel template that contains smart markers (e.g., <#=Data.Name#>)
+            string templatePath = "template.xlsx";
+
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Excel template file not found: {templatePath}");
+
+            // Load the template workbook
+            Workbook workbook = new Workbook(templatePath);
+
+            // Set up the WorkbookDesigner to process smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource("Data", dataTable);
+            designer.Process(); // Populate the template with JSON data
+
+            // Save the populated report
+            string outputPath = "report.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Report generated successfully: {outputPath}");
         }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to convert a list of dictionaries to a DataTable
+    private static DataTable ConvertToDataTable(List<Dictionary<string, object>> records)
+    {
+        DataTable table = new DataTable();
+
+        // Determine all column names from the records
+        HashSet<string> columnNames = new HashSet<string>();
+        foreach (var record in records)
+        {
+            foreach (var key in record.Keys)
+                columnNames.Add(key);
+        }
+
+        // Add columns to the DataTable
+        foreach (var columnName in columnNames)
+            table.Columns.Add(columnName, typeof(string));
+
+        // Populate rows
+        foreach (var record in records)
+        {
+            DataRow row = table.NewRow();
+            foreach (var columnName in columnNames)
+            {
+                if (record.TryGetValue(columnName, out var value) && value != null)
+                    row[columnName] = value.ToString();
+                else
+                    row[columnName] = DBNull.Value;
+            }
+            table.Rows.Add(row);
+        }
+
+        return table;
     }
 }

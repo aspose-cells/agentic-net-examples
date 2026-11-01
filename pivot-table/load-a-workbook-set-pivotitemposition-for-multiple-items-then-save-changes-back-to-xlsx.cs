@@ -1,110 +1,82 @@
-// Title: Reorder specific row items in an Excel pivot table with Aspose.Cells for .NET and save the workbook
-// AI Prompts: Update the positions of the row items 'Apple', 'Banana', and 'Orange' in a pivot table, recalculate the pivot, and write the result to a new XLSX file using Aspose.Cells C#. | Generate C# code that safely changes the order of pivot items, skips items that are not present, refreshes the pivot data, and saves the workbook as OutputPivot.xlsx.
-// Common Searches: Aspose.Cells C# set pivot row item order programmatically | How to change the position of specific items in an Excel pivot table using .NET | Reorder pivot table row fields and save workbook with Aspose.Cells | Handle missing pivot items when updating order in C# | Refresh and recalculate pivot table after modifying item positions Aspose.Cells
-// Tags: pivot item position Aspose.Cells | reorder pivot row items C# | save workbook after pivot changes Aspose.Cells | missing pivot item handling .NET | recalculate pivot table Aspose.Cells
+// Title: Reorder Pivot Table Row Items by Setting PivotItem.Position and Save Workbook to XLSX with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to set PivotItem.Position for multiple items in a pivot table | reorder row field items in an existing Excel pivot table using Aspose.Cells .NET | save modified workbook after changing pivot item order with Aspose.Cells | Aspose.Cells change order of pivot table items programmatically in C# | update pivot table row items position and export to XLSX using Aspose.Cells
+// Tags: Aspose.Cells set PivotItem.Position C# | reorder pivot row items Aspose.Cells | modify existing pivot table Aspose.Cells | save workbook as XLSX Aspose.Cells | pivot table item ordering .NET
 
-using System;
-using System.IO;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace PivotExample
+// The example loads an existing XLSX workbook, accesses the first pivot table, reorders the items of its first row field by assigning new values to each PivotItem.Position based on a predefined list, and then saves the updated workbook to a new XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // The example loads InputPivot.xlsx, accesses the first worksheet's first pivot table, refreshes its data, safely sets the positions of the row items "Apple", "Banana", and "Orange", refreshes and recalculates the pivot again, and saves the modified workbook as OutputPivot.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            const string inputPath = "InputPivot.xlsx";
-            const string outputPath = "OutputPivot.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook containing the pivot table
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
-
-                // Get the first pivot table
-                PivotTable pivotTable = worksheet.PivotTables[0];
-
-                // Refresh data using the correct API
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Ensure the pivot table has at least one row field
-                if (pivotTable.RowFields.Count == 0)
-                {
-                    Console.WriteLine("Pivot table has no row fields.");
-                    return;
-                }
-
-                // Access the first row field
-                PivotField rowField = pivotTable.RowFields[0];
-
-                // Set positions for specific pivot items, handling missing items gracefully
-                SetPivotItemPosition(rowField, "Apple", 0);
-                SetPivotItemPosition(rowField, "Banana", 1);
-                SetPivotItemPosition(rowField, "Orange", 2);
-
-                // Recalculate after modifying item positions
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No pivot tables found on the worksheet.");
+                return;
             }
-        }
 
-        // Helper method to set the position of a pivot item safely
-        private static void SetPivotItemPosition(PivotField field, string itemName, int position)
-        {
-            try
+            // Get the first pivot table on the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Ensure the pivot table has at least one row field
+            if (pivotTable.RowFields.Count == 0)
             {
-                // Find the pivot item by name
-                PivotItem pivotItem = field.PivotItems.FirstOrDefault(p => p.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+                Console.WriteLine("Pivot table does not contain any row fields.");
+                return;
+            }
 
-                if (pivotItem != null)
+            // Choose the first row field whose items we want to reorder
+            PivotField pivotField = pivotTable.RowFields[0];
+
+            // Desired order of items (by their display names)
+            List<string> desiredOrder = new List<string> { "ItemB", "ItemA", "ItemC" };
+
+            // Reorder each item by setting its Position property (zero‑based)
+            for (int i = 0; i < desiredOrder.Count; i++)
+            {
+                string itemName = desiredOrder[i];
+                PivotItem item = pivotField.PivotItems[itemName];
+                if (item != null)
                 {
-                    pivotItem.Position = position;
+                    item.Position = i;
                 }
                 else
                 {
                     Console.WriteLine($"Pivot item '{itemName}' not found.");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to set position for '{itemName}': {ex.Message}");
-            }
+
+            // Save the workbook with the updated pivot item positions
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display the message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

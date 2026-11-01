@@ -1,50 +1,47 @@
-// Title: How to read the evaluated value of cell D5 after recalculating formulas with Aspose.Cells in C#
-// AI Prompts: Load an Excel workbook with Aspose.Cells, invoke Workbook.CalculateFormula, and return the value of cell D5 as a C# object. | Adapt the code to accept any cell address and output its calculated value after Worksheet.CalculateFormula execution. | Format the retrieved D5 value to two decimal places and display it on the console using C#.
-// Common Searches: Aspose.Cells C# get value of a cell after calling CalculateFormula | C# read evaluated result of Excel cell D5 using Aspose.Cells | How to recalculate formulas and fetch a specific cell value with Aspose.Cells for .NET | Example of Workbook.CalculateFormula and accessing cell value in C#
-// Tags: aspocells calculateformula read cell value | c# retrieve evaluated excel cell aspocells | worksheet recalculate formulas get cell result | excel cell d5 value after recalculation aspocells | load workbook calculate all formulas aspocells
+// Title: How to read the evaluated value of cell D5 after calling Workbook.CalculateFormula with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells get the result of a formula in cell D5 after Workbook.CalculateFormula | retrieve evaluated cell value after worksheet.Calculate in Aspose.Cells | Aspose.Cells example to read calculated value from Excel cell D5 in .NET | how to obtain formula output from a specific cell after recalculating workbook using Aspose.Cells C# | read cell D5 value after invoking Workbook.CalculateFormula with Aspose.Cells
+// Tags: Workbook.CalculateFormula retrieve cell value | Aspose.Cells read evaluated cell D5 | C# get formula result from Excel cell | Aspose.Cells calculate all formulas and access cell | Excel cell value after recalculation Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Loads 'input.xlsx' with Aspose.Cells, recalculates all formulas using Workbook.CalculateFormula, reads the evaluated value of cell D5, and prints it to the console.
+// The sample loads an existing workbook, triggers full formula recalculation with Workbook.CalculateFormula(), accesses the first worksheet, reads the evaluated value of cell D5 via the Cells collection, and prints the result to the console while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            // Load the workbook from the specified file
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Recalculate all formulas in the workbook
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Get the first worksheet (or specify by name/index)
+            // Access the first worksheet (or specify by name/index)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve cell D5 (row 4, column 3)
+            // Retrieve the calculated value of cell D5
             Cell cellD5 = worksheet.Cells["D5"];
+            object calculatedValue = cellD5.Value; // could be double, string, DateTime, etc.
 
-            // Read the calculated value
-            object calculatedValue = cellD5.Value;
-
-            // Display the result
-            Console.WriteLine("Calculated value of D5: " + calculatedValue);
+            // Output the result
+            Console.WriteLine($"Calculated value of D5: {calculatedValue}");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

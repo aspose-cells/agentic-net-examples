@@ -1,46 +1,35 @@
-// Title: Automatically auto‑fit all row heights when loading an XLSX workbook with Aspose.Cells for .NET
-// AI Prompts: Load an existing XLSX file with Aspose.Cells using LoadOptions that include AutoFitterOptions (OnlyAuto = false) to auto‑fit every row height, then save the workbook. | Configure AutoFitterOptions to ignore custom row heights and apply auto‑fit on load, demonstrating how to preserve the adjusted layout in the output file.
-// Common Searches: Aspose.Cells C# load workbook with auto‑fit rows enabled | How to auto‑adjust row heights on opening an Excel file using Aspose.Cells .NET | Set LoadOptions.AutoFitterOptions to auto‑fit rows in Aspose.Cells | Preserve original layout after loading Excel with Aspose.Cells auto‑fit rows | OnlyAuto false effect on row height auto‑fit in Aspose.Cells
-// Tags: auto‑fit row heights via LoadOptions Aspose.Cells | AutoFitterOptions OnlyAuto false C# example | adjust row height during workbook load .NET | preserve Excel layout after loading Aspose.Cells | load XLSX with automatic row height adjustment Aspose
+// Title: Automatically auto‑fit row heights for every worksheet when loading an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells, loop through each worksheet, and invoke Worksheet.AutoFitRows to automatically adjust row heights based on cell content. | Use Cells.MaxDataRow to find the last populated row in a sheet, then call AutoFitRows from the first row to that row to keep the original layout intact. | After auto‑fitting rows on all worksheets, save the workbook to a new file while preserving formatting and layout.
+// Common Searches: how to auto‑fit row heights for all sheets when opening an Excel file with Aspose.Cells C# | Aspose.Cells auto adjust row height after loading workbook .NET | preserve original Excel layout by auto‑sizing rows programmatically in C#
+// Tags: Worksheet.AutoFitRows Aspose.Cells .NET | auto‑fit rows after workbook load | adjust row heights based on cell content C# | preserve Excel layout Aspose.Cells | iterate all worksheets auto‑fit rows
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitOnLoad
+// The example loads an Excel workbook, iterates through each worksheet, determines the last row containing data, applies Worksheet.AutoFitRows to automatically adjust row heights from the first row to the last populated row, and saves the workbook with the updated layout.
+class Program
 {
-    // The example loads an XLSX workbook with Aspose.Cells using LoadOptions that contain an AutoFitterOptions object (OnlyAuto = false), automatically adjusts all row heights on load, and saves the workbook while preserving the new layout.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source workbook
-            string inputPath = "input.xlsx";
+            // Determine the last row that contains data
+            int lastDataRow = sheet.Cells.MaxDataRow;
 
-            // Configure load options to enable auto‑fitting of rows (and columns if desired)
-            LoadOptions loadOptions = new LoadOptions();
-
-            // Create AutoFitterOptions and set properties.
-            // OnlyAuto = false ensures that all rows are auto‑fitted, even those with custom heights.
-            AutoFitterOptions autoFitOptions = new AutoFitterOptions
+            // If there is at least one row with data, auto‑fit the row heights
+            if (lastDataRow >= 0)
             {
-                OnlyAuto = false
-                // Additional options can be set here, e.g., MaxRowHeight, IgnoreHidden, etc.
-            };
-
-            // Assign the options to the load options.
-            loadOptions.AutoFitterOptions = autoFitOptions;
-
-            // Load the workbook with the specified options.
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // (Optional) Verify that rows have been auto‑fitted.
-            Console.WriteLine("Row 0 height after load: " + workbook.Worksheets[0].Cells.GetRowHeight(0));
-
-            // Save the workbook preserving the auto‑fitted layout.
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine("Workbook saved with auto‑fitted rows to: " + outputPath);
+                // AutoFitRows(startRow, totalRows)
+                // startRow = 0 (first row), totalRows = lastDataRow + 1 (to include the last row)
+                sheet.AutoFitRows(0, lastDataRow + 1);
+            }
         }
+
+        // Save the workbook after adjusting row heights
+        workbook.Save("output.xlsx");
     }
 }

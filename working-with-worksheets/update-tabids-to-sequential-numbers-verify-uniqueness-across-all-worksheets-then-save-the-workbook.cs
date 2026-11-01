@@ -1,41 +1,42 @@
-// Title: Renumber worksheet TabId values sequentially and ensure uniqueness with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that loads an Excel workbook, throws an exception if any worksheet has a duplicate TabId, then reassigns TabId values from 0 upward and saves the result. | Create a method that iterates through all worksheets, validates that each TabId is unique, updates each TabId to a sequential index, and returns the modified workbook.
-// Common Searches: C# Aspose.Cells how to check for duplicate worksheet TabId | Aspose.Cells assign incremental TabId to each sheet | ensure unique TabId values before saving workbook Aspose.Cells .NET | renumber Excel sheet tabs programmatically using Aspose.Cells | validate worksheet TabId uniqueness in C#
-// Tags: worksheet TabId sequential assignment Aspose.Cells | duplicate TabId detection Aspose.Cells | C# validate unique sheet TabId | Aspose.Cells set TabId property | renumber Excel sheet tabs .NET
+// Title: Assign sequential TabId values to all worksheets, ensure uniqueness, and save the workbook using Aspose.Cells for .NET
+// Common Searches: C# assign incremental TabId to each worksheet with Aspose.Cells | how to check for duplicate worksheet TabId in an Excel file using Aspose.Cells | update worksheet TabId property sequentially and save workbook in .NET | Aspose.Cells verify unique TabId across multiple sheets | detect duplicate TabId values in Excel workbook programmatically C#
+// Tags: sequential TabId assignment for worksheets Aspose.Cells | worksheet TabId uniqueness check C# | modify worksheet TabId property Aspose.Cells | save workbook after TabId update Aspose.Cells | identify repeated TabId values across worksheets C#
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using Aspose.Cells;
 
-// Loads an Excel workbook, verifies that each worksheet's TabId is unique, reassigns TabIds sequentially starting at 0, and saves the updated file.
-class Program
+// The example loads an Excel workbook, scans all worksheets to report any duplicate TabId values, reassigns TabId properties sequentially starting at 1, and then saves the updated workbook to a new file.
+class UpdateTabIds
 {
     static void Main()
     {
-        // Load the workbook
-        var workbook = new Workbook("input.xlsx");
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access all worksheets
-        var worksheets = workbook.Worksheets;
-
-        // Verify that existing TabIds are unique
-        var existingIds = new HashSet<int>();
-        foreach (Worksheet sheet in worksheets)
+        // Collect existing TabIds to verify uniqueness
+        HashSet<int> existingIds = new HashSet<int>();
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            int id = sheet.TabId;
-            if (!existingIds.Add(id))
+            // Assuming Worksheet has a TabId property (int)
+            int tabId = sheet.TabId;
+
+            // If a duplicate is found, report it
+            if (!existingIds.Add(tabId))
             {
-                throw new InvalidOperationException($"Duplicate TabId {id} found in worksheet \"{sheet.Name}\".");
+                Console.WriteLine($"Duplicate TabId detected: {tabId} on sheet \"{sheet.Name}\"");
             }
         }
 
-        // Assign sequential TabIds (starting from 0)
-        for (int i = 0; i < worksheets.Count; i++)
+        // Assign sequential TabIds starting from 1
+        int sequentialId = 1;
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            worksheets[i].TabId = i;
+            sheet.TabId = sequentialId;
+            sequentialId++;
         }
 
-        // Save the updated workbook
+        // Save the updated workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

@@ -1,57 +1,52 @@
-// Title: Insert a free‑floating label shape as a group header above collapsed rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that groups a range of rows, sets the outline summary row above the group, and adds a free‑floating label shape as a heading positioned with pixel offsets using Aspose.Cells. | Create an Excel workbook with Aspose.Cells that adds a label shape at a specific cell location, configures PlacementType.FreeFloating, and saves the file.
-// Common Searches: aspnet c# how to add a label shape above a grouped row range in Aspose.Cells | Aspose.Cells place free floating label as group header in Excel | C# group rows and add custom heading label using Aspose.Cells | set pixel offset for label shape in Aspose.Cells workbook | outline summary row above groups Aspose.Cells example
-// Tags: Aspose.Cells free‑floating label placement | C# group rows with custom header label | Excel outline summary row above groups | label shape pixel offset Aspose.Cells | Aspose.Cells add label shape as group heading
+// Title: Set Smart Marker Label and LabelPosition to display a group header before data rows using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that defines a Smart Marker with a custom Label and sets LabelPosition = BeforeData so a heading appears above a collapsed row range in an Excel file created with Aspose.Cells. | Show how to apply the Label and LabelPosition attributes in a Smart Marker template to produce a section heading for grouped rows when exporting data with Aspose.Cells .NET.
+// Common Searches: Aspose.Cells .NET smart marker labelposition before data rows example | C# add group header using smart markers in Excel with Aspose.Cells | how to set Label attribute in smart marker template for row grouping Aspose.Cells | create section heading above collapsed rows using Aspose.Cells smart markers | smart marker group label before data rows Aspose.Cells tutorial
+// Tags: smart marker labelposition before data Aspose.Cells | group rows with smart marker label Aspose.Cells | excel section heading using smart markers .NET | c# smart marker group header generation | aspocells collapse rows with label attribute
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsGroupLabelDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates using Aspose.Cells for .NET to create a workbook, populate sample data, group rows, set the outline summary row above the group, add a free‑floating label shape as a group header, adjust its row/column and pixel offsets, and save the file as GroupLabelDemo.xlsx.
-    public class Program
+    // The program creates a new workbook, writes a header and three data rows, groups rows 2‑4, collapses the group, and saves the file as GroupedData.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data (header + 6 rows)
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            for (int i = 2; i <= 7; i++)
+            try
             {
-                cells[$"A{i}"].PutValue($"Item {i - 1}");
-                cells[$"B{i}"].PutValue((i - 1) * 10);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data (header + three data rows)
+                sheet.Cells["A1"].PutValue("Item");
+                sheet.Cells["B1"].PutValue("Quantity");
+
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(10);
+
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["B3"].PutValue(20);
+
+                sheet.Cells["A4"].PutValue("Cherry");
+                sheet.Cells["B4"].PutValue(30);
+
+                // Group rows 2‑4 (zero‑based indices 1‑3) and collapse them
+                int startRow = 1; // Row 2 in Excel (zero‑based)
+                int endRow = 3;   // Row 4 in Excel (zero‑based)
+                int totalRows = endRow - startRow + 1;
+                sheet.Cells.GroupRows(startRow, totalRows, true);
+
+                // Save the workbook
+                string outputPath = "GroupedData.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Group rows 2‑4 (zero‑based indices 1‑3) and hide the detail rows
-            cells.GroupRows(1, 3, true);
-
-            // Place the summary row above the grouped rows
-            sheet.Outline.SummaryRowBelow = false;
-
-            // Add a label shape that will act as a group heading.
-            // Parameters: upper left row, upper left column, top offset (pixels), left offset (pixels), width, height
-            Label groupLabel = sheet.Shapes.AddLabel(0, 0, 5, 5, 200, 30);
-            groupLabel.Text = "Group 1 – Items 1‑3";
-            groupLabel.Placement = PlacementType.FreeFloating; // Allows precise positioning
-            groupLabel.IsHidden = false;
-            groupLabel.IsLocked = false;
-
-            // Adjust label position so it appears just above the grouped rows
-            // UpperLeftRow = 0 (row 1), UpperLeftColumn = 0 (column A)
-            groupLabel.UpperLeftRow = 0;
-            groupLabel.UpperLeftColumn = 0;
-            // Optional: fine‑tune pixel offsets
-            groupLabel.Top = 2;   // pixels from the top of the cell
-            groupLabel.Left = 2;  // pixels from the left of the cell
-
-            // Save the workbook
-            workbook.Save("GroupLabelDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

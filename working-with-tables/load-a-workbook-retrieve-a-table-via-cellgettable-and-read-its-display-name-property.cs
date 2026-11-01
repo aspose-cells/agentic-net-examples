@@ -1,14 +1,14 @@
-// Title: How to read an Excel table's display name from a specific cell using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx workbook, uses Cell.GetTable to locate the ListObject containing cell A1, and prints the table's DisplayName while handling a null result. | Show a safe way to obtain the display name of a worksheet table by calling Cell.GetTable in Aspose.Cells and checking for null before accessing the DisplayName property.
-// Common Searches: Aspose.Cells C# get table display name from cell reference | How to use Cell.GetTable to obtain ListObject name in .NET | Retrieve Excel table DisplayName with Aspose.Cells when cell is not part of a table | C# example reading Excel table name via cell A1 using Aspose.Cells | Aspose.Cells handling null result from Cell.GetTable
-// Tags: cell.GetTable retrieve ListObject .NET | extract table DisplayName Aspose.Cells | load workbook access table properties C# | null handling for Cell.GetTable Aspose.Cells | Excel table name extraction using Aspose.Cells
+// Title: How to read an Excel table's display name from a cell using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, finds the table that includes cell A1, and prints the table's name. | Show a .NET example that calls Cell.GetTable() to obtain a ListObject and retrieves its DisplayName property.
+// Common Searches: Aspose.Cells C# get table name from a specific cell | Retrieve ListObject name using Cell.GetTable in .NET | How to obtain the name of an Excel table that contains a given cell with Aspose.Cells | Read Excel table metadata (display name) via Aspose.Cells API
+// Tags: Cell.GetTable display name Aspose.Cells | Aspose.Cells retrieve ListObject name | C# read Excel table metadata | Aspose.Cells load workbook access table properties | Excel table DisplayName extraction .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// Loads an .xlsx workbook, accesses the first worksheet, obtains the ListObject that contains cell A1 via Cell.GetTable, checks for a null result, reads the table's DisplayName property, and writes it to the console.
+// The sample loads 'input.xlsx', accesses the first worksheet, selects cell A1, uses Cell.GetTable() to get the containing ListObject, and prints its DisplayName if the cell belongs to a table.
 class Program
 {
     static void Main()
@@ -18,7 +18,7 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
@@ -27,32 +27,30 @@ class Program
             // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (or specify by name/index)
+            // Get the first worksheet (adjust index or name as needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get a cell that belongs to a table (adjust the address as needed)
+            // Choose a cell that belongs to the table (e.g., A1)
             Cell cell = worksheet.Cells["A1"];
 
-            // Retrieve the table (ListObject) that contains this cell
+            // Retrieve the table (ListObject) that the cell is part of
             ListObject table = cell.GetTable();
 
-            // If the cell is not part of any table, handle gracefully
-            if (table == null)
+            if (table != null)
             {
-                Console.WriteLine("The specified cell does not belong to any table.");
-                return;
+                // Read the display name of the table
+                string displayName = table.DisplayName;
+                Console.WriteLine("Table Display Name: " + displayName);
             }
-
-            // Read the display name of the table
-            string displayName = table.DisplayName;
-
-            // Output the display name
-            Console.WriteLine($"Table display name: {displayName}");
+            else
+            {
+                Console.WriteLine("The specified cell is not part of any table.");
+            }
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display an error message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

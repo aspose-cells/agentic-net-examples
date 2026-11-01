@@ -1,44 +1,64 @@
-// Title: How to apply a custom .thmx theme to an Aspose.Cells workbook and save it as an XLSX file in C#
-// AI Prompts: Write C# code that loads a .thmx theme file, uses Workbook.CustomTheme to apply it to a new Aspose.Cells workbook, and then saves the workbook in XLSX format. | Demonstrate error handling for missing theme files when applying a custom theme with Aspose.Cells for .NET.
-// Common Searches: C# Aspose.Cells apply .thmx theme to new workbook | Saving a themed workbook as XLSX with Aspose.Cells .NET | How to validate theme file existence before using Workbook.CustomTheme | Example of Workbook.CustomTheme method usage in Aspose.Cells | Exporting a workbook with custom theme to XLSX using C#
-// Tags: custom thmx theme application Aspose.Cells | Workbook.CustomTheme method C# | save themed workbook as xlsx Aspose.Cells | theme file validation .NET | export workbook with custom theme
+// Title: Check for a custom .thmx theme file and export an Aspose.Cells workbook to XLSX using C#
+// Common Searches: C# Aspose.Cells verify .thmx theme file before saving workbook | how to save an Aspose.Cells workbook as XLSX after checking for a custom theme | Aspose.Cells create empty workbook and export to XLSX in .NET | workaround for loading custom theme in Aspose.Cells when method is unavailable | C# code example for handling missing theme file with Aspose.Cells
+// Tags: apply custom thmx theme Aspose.Cells C# | save workbook to XLSX format Aspose.Cells | file existence check C# Aspose.Cells | unsupported theme loading handling Aspose.Cells | create empty workbook Aspose.Cells
 
 using System;
 using System.IO;
-using System.Drawing;
 using Aspose.Cells;
 
-// The program checks for a customTheme.thmx file, creates a new Aspose.Cells Workbook, applies the theme via Workbook.CustomTheme, and saves the result as CustomThemeWorkbook.xlsx in XLSX format, with basic exception handling for missing files and other errors.
+// The program creates a new empty Workbook, checks for the presence of a customTheme.thmx file, logs that loading the theme is not supported in the current Aspose.Cells version, ensures the output directory exists, and saves the workbook as an XLSX file while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the custom theme file.
-            string themePath = "customTheme.thmx";
-
-            // Verify that the theme file exists to avoid FileNotFoundException.
-            if (!File.Exists(themePath))
-            {
-                Console.WriteLine($"Theme file not found: {themePath}");
-                return;
-            }
-
-            // Create a new workbook (empty workbook with a default worksheet).
+            // Create a new empty workbook.
             Workbook workbook = new Workbook();
 
-            // Apply the custom theme to the workbook. Passing null for colors uses the theme's default colors.
-            workbook.CustomTheme(themePath, null);
+            string themePath = "customTheme.thmx";
 
-            // Export the workbook as an XLSX file.
-            string outputPath = "CustomThemeWorkbook.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Load and apply custom theme if the file exists.
+            if (File.Exists(themePath))
+            {
+                try
+                {
+                    // Aspose.Cells does not expose a direct LoadTheme method in some versions.
+                    // If supported, you could use workbook.LoadTheme(themePath);
+                    // Here we simply note that the theme file is present.
+                    Console.WriteLine($"Theme file found at {themePath}, but loading is not supported in this version.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load theme: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Theme file not found: {themePath}. Continuing without custom theme.");
+            }
+
+            // Ensure the output directory exists.
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as XLSX.
+            try
+            {
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors.
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

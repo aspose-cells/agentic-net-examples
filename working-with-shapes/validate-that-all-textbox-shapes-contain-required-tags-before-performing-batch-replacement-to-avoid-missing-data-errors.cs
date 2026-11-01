@@ -1,7 +1,6 @@
-// Title: Validate required placeholder tags in every TextBox shape before batch replacement with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, iterates through all TextBox shapes, checks each for a predefined list of placeholders (e.g., {{Name}}, {{Date}}, {{Amount}}), logs any missing tags, and aborts the operation if validation fails. | Generate a C# method that performs placeholder substitution inside TextBox shapes only after confirming that every shape contains all required tags, then saves the updated workbook. | Create a C# example that collects validation errors for missing placeholders in Excel TextBox shapes and throws an InvalidOperationException when any required tag is absent.
-// Common Searches: c# Aspose.Cells verify required placeholders in Excel textbox shapes before replace | how to abort batch placeholder substitution when a textbox shape is missing a tag in Aspose.Cells | log missing {{Name}} tag in Excel textbox using Aspose.Cells .NET | validate all TextBox shapes for {{Date}} and {{Amount}} placeholders with Aspose.Cells | batch replace placeholder values in Excel textbox after validation Aspose.Cells
-// Tags: Aspose.Cells validate textbox placeholders | C# substitute Excel textbox placeholder values | detect missing shape tags Aspose.Cells | Excel shape tag verification .NET | placeholder substitution workflow Aspose.Cells
+// Title: Validate required placeholder tags in Excel TextBox shapes before batch replacement with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells verify that every TextBox shape contains {{CustomerName}} placeholder before replacement | How to detect missing required tags in Excel TextBox objects using Aspose.Cells .NET API | Batch replace placeholders in worksheet TextBox shapes after tag validation with Aspose.Cells | Throw exception for absent tags in Excel TextBox shapes when processing workbooks in C#
+// Tags: Aspose.Cells validate TextBox placeholders | Excel TextBox tag verification C# | batch replace TextBox placeholders Aspose.Cells | required tag check worksheet shapes .NET | exception missing TextBox tag Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,99 +8,122 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, scans every worksheet's shapes, validates that each TextBox contains the required tags {{Name}}, {{Date}} and {{Amount}}, reports any missing tags and aborts with an exception, and if validation passes performs a batch substitution of those placeholders with actual values before saving the workbook.
+// The example loads an Excel workbook, iterates through each worksheet and its shapes, and ensures every TextBox shape contains a predefined set of placeholder tags (e.g., {{CustomerName}}, {{OrderDate}}, {{TotalAmount}}). If a tag is missing, an InvalidOperationException is thrown with details. After successful validation, the code performs a batch replacement of those placeholders with supplied values and saves the updated workbook.
 class TextBoxTagValidator
 {
+    // List of required tags that must be present in every TextBox shape
+    private static readonly List<string> RequiredTags = new List<string>
+    {
+        "{{CustomerName}}",
+        "{{OrderDate}}",
+        "{{TotalAmount}}"
+    };
+
+    // Sample replacement values for batch replacement
+    private static readonly Dictionary<string, string> ReplacementValues = new Dictionary<string, string>
+    {
+        { "{{CustomerName}}", "Acme Corp" },
+        { "{{OrderDate}}", DateTime.Today.ToShortDateString() },
+        { "{{TotalAmount}}", "$1,234.56" }
+    };
+
     static void Main()
     {
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Required tags that must be present in every TextBox shape
-            List<string> requiredTags = new List<string> { "{{Name}}", "{{Date}}", "{{Amount}}" };
+            // Validate TextBox shapes for required tags
+            ValidateTextBoxTags(workbook);
 
-            // Collect validation errors
-            List<string> validationErrors = new List<string>();
+            // Perform batch replacement after validation succeeds
+            BatchReplaceTextBoxPlaceholders(workbook);
 
-            // Iterate through all worksheets and their shapes
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    // Process only TextBox shapes (use AutoShapeType for compatibility)
-                    if (shape.Type == AutoShapeType.TextBox)
-                    {
-                        string text = shape.Text;
-
-                        foreach (string tag in requiredTags)
-                        {
-                            if (!text.Contains(tag))
-                            {
-                                validationErrors.Add(
-                                    $"Worksheet \"{sheet.Name}\", Shape \"{shape.Name}\": missing tag {tag}");
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Abort if validation fails
-            if (validationErrors.Count > 0)
-            {
-                Console.WriteLine("Validation failed. Missing required tags:");
-                foreach (string error in validationErrors)
-                {
-                    Console.WriteLine(error);
-                }
-                throw new InvalidOperationException("One or more TextBox shapes are missing required tags.");
-            }
-
-            // ----- Batch Replacement (executed only after successful validation) -----
-            Dictionary<string, string> replacementMap = new Dictionary<string, string>
-            {
-                { "{{Name}}", "John Doe" },
-                { "{{Date}}", DateTime.Today.ToString("yyyy-MM-dd") },
-                { "{{Amount}}", "1234.56" }
-            };
-
-            // Perform replacement inside each TextBox shape
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    if (shape.Type == AutoShapeType.TextBox)
-                    {
-                        string updatedText = shape.Text;
-
-                        foreach (var kvp in replacementMap)
-                        {
-                            updatedText = updatedText.Replace(kvp.Key, kvp.Value);
-                        }
-
-                        shape.Text = updatedText;
-                    }
-                }
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    private static void ValidateTextBoxTags(Workbook workbook)
+    {
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Get all shapes on the worksheet
+            ShapeCollection shapes = sheet.Shapes;
+
+            foreach (Shape shape in shapes)
+            {
+                // Process only TextBox shapes
+                if (shape.AutoShapeType == AutoShapeType.TextBox)
+                {
+                    // Retrieve the text content of the TextBox (null‑safe)
+                    string text = shape.Text ?? string.Empty;
+
+                    // Check each required tag
+                    foreach (string tag in RequiredTags)
+                    {
+                        if (!text.Contains(tag))
+                        {
+                            // Throw an exception with details about the missing tag
+                            throw new InvalidOperationException(
+                                $"Missing required tag '{tag}' in TextBox on sheet '{sheet.Name}'.");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void BatchReplaceTextBoxPlaceholders(Workbook workbook)
+    {
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            ShapeCollection shapes = sheet.Shapes;
+
+            foreach (Shape shape in shapes)
+            {
+                // Process only TextBox shapes
+                if (shape.AutoShapeType == AutoShapeType.TextBox)
+                {
+                    string text = shape.Text ?? string.Empty;
+
+                    // Replace each placeholder with its corresponding value
+                    foreach (var kvp in ReplacementValues)
+                    {
+                        if (text.Contains(kvp.Key))
+                        {
+                            text = text.Replace(kvp.Key, kvp.Value);
+                        }
+                    }
+
+                    // Update the TextBox with the new text
+                    shape.Text = text;
+                }
+            }
         }
     }
 }

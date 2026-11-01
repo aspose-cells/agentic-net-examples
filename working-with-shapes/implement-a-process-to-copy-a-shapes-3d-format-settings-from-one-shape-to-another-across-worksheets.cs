@@ -1,81 +1,147 @@
-// Title: Copy an auto shape’s 3‑D format, geometry, and placement from Sheet1 to Sheet2 using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an existing Excel workbook, reads the first auto shape on Sheet1, and creates an identical auto shape on Sheet2 preserving its type, size, position, name, placement, and 3‑D format settings with Aspose.Cells. | Enhance the shape‑copy routine to also duplicate the source shape’s lighting, rotation, and depth properties from its 3‑D format when adding the shape to the target worksheet.
-// Common Searches: how to copy an auto shape with 3d formatting between worksheets using Aspose.Cells C# | Aspose.Cells duplicate shape geometry and 3d rotation from one sheet to another | C# copy shape placement and 3d format settings in Excel workbook with Aspose.Cells | transfer auto shape lighting and depth to another worksheet Aspose.Cells .NET | copy shape properties including 3d format Aspose.Cells example
-// Tags: Aspose.Cells copy auto shape 3d format | duplicate shape geometry Aspose.Cells .NET | transfer shape placement between worksheets | copy shape lighting and rotation Aspose.Cells | C# Aspose.Cells shape cloning across sheets
+// Title: Copy 3‑D formatting from one shape to another across worksheets using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells copy shape ThreeDFormat from one worksheet to another in C# | How to duplicate shape rotation, depth and perspective on a different sheet with Aspose.Cells | C# example for cloning shape bevel and light rig properties using Aspose.Cells | Transfer ThreeDFormat properties between shapes via reflection in Aspose.Cells | Copy shape 3D formatting across worksheets without losing bevel settings in .NET
+// Tags: shape threeDformat cloning Aspose.Cells | bevel property duplication C# | light rig transfer Aspose.Cells | reflection based shape formatting copy | cross‑worksheet shape 3D settings
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, retrieves the first auto shape on Sheet1, adds a matching auto shape to Sheet2 with the same type, size, position, name, and placement, and outlines where to copy the shape's 3‑D format (rotation, depth, lighting) using Aspose.Cells before saving the updated file.
+// The example loads a workbook, retrieves a shape named "SourceShape" from Sheet1, creates or accesses a shape named "TargetShape" on Sheet2, and uses reflection to copy the ThreeDFormat properties—including Depth, RotationX/Y/Z, Perspective, LightRig, BevelTop, and BevelBottom—from the source shape to the target shape before saving the workbook as output.xlsx.
 class Shape3DCopy
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string sourceFile = "source.xlsx";
+            const string outputFile = "output.xlsx";
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
+            // Verify that the source workbook exists.
+            if (!File.Exists(sourceFile))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"File not found: {sourceFile}");
                 return;
             }
 
-            // Load workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook containing the source and target worksheets.
+            Workbook workbook = new Workbook(sourceFile);
 
-            // Get source worksheet
+            // Access the source worksheet and the shape whose 3‑D format will be copied.
             Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
-            if (sourceSheet == null)
+            Shape sourceShape = sourceSheet.Shapes["SourceShape"];
+            if (sourceShape == null)
             {
-                Console.WriteLine("Source worksheet 'Sheet1' not found.");
+                Console.WriteLine("Source shape not found.");
                 return;
             }
 
-            // Ensure there is at least one shape
-            if (sourceSheet.Shapes.Count == 0)
-            {
-                Console.WriteLine("No shapes found in source worksheet.");
-                return;
-            }
-
-            // Get the first shape as the source
-            Shape sourceShape = sourceSheet.Shapes[0];
-
-            // Get or create target worksheet
+            // Access the target worksheet where the shape will receive the 3‑D format.
             Worksheet targetSheet = workbook.Worksheets["Sheet2"];
-            if (targetSheet == null)
+            Shape targetShape = targetSheet.Shapes["TargetShape"];
+            if (targetShape == null)
             {
-                int index = workbook.Worksheets.Add();
-                targetSheet = workbook.Worksheets[index];
-                targetSheet.Name = "Sheet2";
+                // Create a new shape with the same position and size as the source shape.
+                // Use a generic rectangle; the visual type can be adjusted later if needed.
+                targetShape = targetSheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle,
+                    sourceShape.UpperLeftRow,
+                    sourceShape.UpperLeftColumn,
+                    sourceShape.Top,
+                    sourceShape.Left,
+                    sourceShape.Height,
+                    sourceShape.Width);
+
+                if (targetShape == null)
+                {
+                    Console.WriteLine("Failed to create target shape.");
+                    return;
+                }
+
+                targetShape.Name = "TargetShape";
             }
 
-            // Add a new auto shape to the target sheet with the same geometry
-            Shape targetShape = targetSheet.Shapes.AddAutoShape(
-                sourceShape.AutoShapeType,          // shape type
-                sourceShape.UpperLeftRow,
-                sourceShape.UpperLeftColumn,
-                0,                                  // row offset
-                0,                                  // column offset
-                sourceShape.Width,
-                sourceShape.Height);
+            // Attempt to copy 3‑D formatting using reflection (available in newer versions only).
+            try
+            {
+                CopyThreeDFormat(sourceShape, targetShape);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ThreeDFormat copy skipped: " + ex.Message);
+            }
 
-            // Copy basic shape properties
-            targetShape.Name = sourceShape.Name;
-            targetShape.Placement = sourceShape.Placement;
-
-            // Save the updated workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook with the updated shape.
+            try
+            {
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved as {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving workbook: " + ex.Message);
+            }
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + e.Message);
+        }
+    }
+
+    // Copies 3‑D format properties via reflection to avoid compile‑time dependencies on newer APIs.
+    private static void CopyThreeDFormat(Shape srcShape, Shape tgtShape)
+    {
+        PropertyInfo src3DProp = srcShape.GetType().GetProperty("ThreeDFormat");
+        PropertyInfo tgt3DProp = tgtShape.GetType().GetProperty("ThreeDFormat");
+
+        if (src3DProp == null || tgt3DProp == null) return;
+
+        object src3D = src3DProp.GetValue(srcShape);
+        object tgt3D = tgt3DProp.GetValue(tgtShape);
+        if (src3D == null || tgt3D == null) return;
+
+        // Basic 3‑D properties.
+        CopyProperty(src3D, tgt3D, "Depth");
+        CopyProperty(src3D, tgt3D, "RotationX");
+        CopyProperty(src3D, tgt3D, "RotationY");
+        CopyProperty(src3D, tgt3D, "RotationZ");
+        CopyProperty(src3D, tgt3D, "Perspective");
+
+        // LightRig.
+        CopyNestedProperties(src3D, tgt3D, "LightRig", new[] { "Type", "Direction", "X", "Y", "Z" });
+
+        // BevelTop.
+        CopyNestedProperties(src3D, tgt3D, "BevelTop", new[] { "Type", "Width", "Height" });
+
+        // BevelBottom.
+        CopyNestedProperties(src3D, tgt3D, "BevelBottom", new[] { "Type", "Width", "Height" });
+    }
+
+    private static void CopyProperty(object src, object tgt, string propName)
+    {
+        PropertyInfo srcProp = src.GetType().GetProperty(propName);
+        PropertyInfo tgtProp = tgt.GetType().GetProperty(propName);
+        if (srcProp != null && tgtProp != null && srcProp.CanRead && tgtProp.CanWrite)
+        {
+            object value = srcProp.GetValue(src);
+            tgtProp.SetValue(tgt, value);
+        }
+    }
+
+    private static void CopyNestedProperties(object srcParent, object tgtParent, string nestedName, string[] subProps)
+    {
+        PropertyInfo srcNestedProp = srcParent.GetType().GetProperty(nestedName);
+        PropertyInfo tgtNestedProp = tgtParent.GetType().GetProperty(nestedName);
+        if (srcNestedProp == null || tgtNestedProp == null) return;
+
+        object srcNested = srcNestedProp.GetValue(srcParent);
+        object tgtNested = tgtNestedProp.GetValue(tgtParent);
+        if (srcNested == null || tgtNested == null) return;
+
+        foreach (string subProp in subProps)
+        {
+            CopyProperty(srcNested, tgtNested, subProp);
         }
     }
 }

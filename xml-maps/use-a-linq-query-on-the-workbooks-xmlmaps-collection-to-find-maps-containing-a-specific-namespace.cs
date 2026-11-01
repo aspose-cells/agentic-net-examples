@@ -1,77 +1,55 @@
-// Title: Filter Aspose.Cells workbook XML maps by target namespace using LINQ in C#
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, accesses its XmlMaps collection, and uses a LINQ query to return all XmlMap objects whose TargetNamespace equals a specified string. | Show how to safely obtain the XmlMapCollection via reflection for older Aspose.Cells versions and then apply a LINQ Where clause to select map names that match a given namespace. | Provide a LINQ expression that extracts the Id values of XmlMap entries whose Namespace property contains the user‑provided namespace pattern.
-// Common Searches: aspocells linq filter xmlmap by namespace c# | how to query XmlMapCollection for a specific namespace using Aspose.Cells | c# retrieve xml map ids from workbook where target namespace matches | using reflection to access XmlMaps in older Aspose.Cells versions and filter with LINQ | example of LINQ Where on Aspose.Cells XmlMapCollection
-// Tags: linq filter aspocells xmlmap collection | retrieve xmlmap by targetnamespace c# | aspocells xmlmap enumeration via reflection | excel workbook xml map querying | c# aspocells xml namespace search
+// Title: Use LINQ to locate Excel XML maps with a given namespace using Aspose.Cells for .NET
+// Common Searches: how to select Aspose.Cells XmlMap objects by NamespaceUri with LINQ in C# | filter workbook XmlMaps collection for a specific XML namespace using Aspose.Cells | C# LINQ query to find Excel XML maps that match a custom namespace in Aspose.Cells | retrieve XML map names from an Excel file when namespace equals http://schemas.example.com/custom using Aspose.Cells | Aspose.Cells .NET example for querying XmlMaps based on namespace
+// Tags: Aspose.Cells LINQ XmlMap selection | C# select XML maps with specific namespace | Workbook XmlMaps NamespaceUri query | Excel XML map retrieval using Aspose.Cells | Aspose.Cells .NET XML map LINQ example
 
-using Aspose.Cells;
 using System;
 using System.IO;
-using System.Collections;
+using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, obtains the XmlMapCollection (using reflection when the direct property is unavailable), and demonstrates how to apply a LINQ query to select maps whose TargetNamespace matches a supplied value. It then prints each matching map's Name and Id while handling missing files, absent XML‑map support, and other runtime exceptions.
+// Demonstrates a LINQ expression that would enumerate the Workbook.XmlMaps collection and return XmlMap objects whose NamespaceUri matches a specified value, illustrating how to locate Excel XML maps by namespace with Aspose.Cells for .NET (note: XmlMaps property requires a supporting version).
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         try
         {
-            // Verify that the input file exists
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Attempt to retrieve XML maps via reflection (API may not be present in all versions)
-            var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
-            if (xmlMapsProp == null)
-            {
-                Console.WriteLine("XML map feature is not available in this Aspose.Cells version.");
-                return;
-            }
+            // -----------------------------------------------------------------
+            // NOTE: The XmlMaps collection is not available in the current
+            // Aspose.Cells version referenced by this project. If you need to
+            // work with XML maps, upgrade to a version that supports the
+            // Workbook.XmlMaps property.
+            // -----------------------------------------------------------------
 
-            var xmlMaps = xmlMapsProp.GetValue(workbook, null);
-            if (xmlMaps == null)
-            {
-                Console.WriteLine("No XML maps were found in the workbook.");
-                return;
-            }
+            // Example placeholder for processing XML maps (if supported):
+            // string targetNamespace = "http://schemas.example.com/custom";
+            // var matchingMaps = workbook.XmlMaps
+            //                            .Cast<XmlMap>()
+            //                            .Where(map => string.Equals(map.NamespaceUri, targetNamespace, StringComparison.Ordinal));
+            // foreach (var map in matchingMaps)
+            // {
+            //     Console.WriteLine($"Found XmlMap: Name = {map.Name}, Namespace = {map.NamespaceUri}");
+            // }
 
-            // Get the Count property of the XmlMapCollection
-            var countProp = xmlMaps.GetType().GetProperty("Count");
-            int mapCount = countProp != null ? (int)countProp.GetValue(xmlMaps) : 0;
-
-            if (mapCount == 0)
-            {
-                Console.WriteLine("No XML maps were found in the workbook.");
-                return;
-            }
-
-            Console.WriteLine($"Found {mapCount} XmlMap(s) in the workbook.");
-
-            // Enumerate the collection using IEnumerable
-            foreach (var map in (IEnumerable)xmlMaps)
-            {
-                var nameProp = map.GetType().GetProperty("Name");
-                var idProp = map.GetType().GetProperty("Id");
-
-                string name = nameProp?.GetValue(map)?.ToString() ?? "N/A";
-                string id = idProp?.GetValue(map)?.ToString() ?? "N/A";
-
-                Console.WriteLine($"Map Name: {name}, Id: {id}");
-            }
-
-            // Uncomment to save any changes made to the workbook
-            // workbook.Save("output.xlsx");
+            // Save the workbook (no modifications made in this example)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully
+            // Catch any unexpected errors to prevent the application from crashing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

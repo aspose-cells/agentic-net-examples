@@ -1,57 +1,68 @@
-// Title: Encrypt newly created Excel workbooks in a folder with timestamp‑based passwords using Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that scans a given directory for .xlsx files, loads each workbook with Aspose.Cells, assigns a password generated from the current timestamp, and saves the workbook encrypted. | Update the batch encryption script to detect workbooks that already have a password and skip them, while still applying a timestamp‑derived password to unprotected files. | Add logging to the program so that each encrypted workbook’s filename and generated password are written to a log file, and ensure exceptions are handled gracefully.
-// Common Searches: how to use Aspose.Cells to add a timestamp password to multiple Excel files in C# | C# program to encrypt all .xlsx files in a folder with a dynamic password | batch encrypt Excel workbooks with Aspose.Cells and save them back to the same location | automate Excel file protection using current date and time as password in .NET
-// Tags: Aspose.Cells workbook password protection | dynamic date‑based password C# | batch encrypt .xlsx files .NET | programmatic Excel file security Aspose | folder scan encrypt Excel workbooks
+// Title: C# batch program to encrypt newly created Excel .xlsx workbooks with a timestamp‑based password using Aspose.Cells
+// Common Searches: how to add an open password to each .xlsx file in a folder using Aspose.Cells C# | C# script to encrypt multiple Excel workbooks with a generated timestamp password | batch encrypt Excel files with Aspose.Cells and save to another directory | Aspose.Cells encrypt workbook programmatically with dynamic password | automate Excel workbook protection in .NET using timestamped passwords
+// Tags: Aspose.Cells encrypt workbook programmatically | C# timestamp password for Excel files | batch processing of .xlsx encryption | Settings.Password open password Aspose.Cells | SaveFormat.Xlsx encrypted workbook output
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // This console app iterates over every .xlsx file in a specified directory, loads each workbook with Aspose.Cells, sets a password derived from the current timestamp, and saves the file back encrypted.
-class WorkbookEncryptionBatch
+namespace WorkbookEncryptionBatch
 {
-    static void Main()
+    // The C# console application scans a source folder for .xlsx files, loads each workbook with Aspose.Cells, creates a password based on the current timestamp (yyyyMMddHHmmss), assigns it to the workbook's open password via Settings.Password, and saves the encrypted copy to a destination folder using SaveFormat.Xlsx. It logs progress, creates the destination directory if needed, and handles missing files or runtime errors.
+    class Program
     {
-        // Folder containing the workbooks to encrypt
-        string folderPath = @"C:\Workbooks";
-
-        // Verify that the folder exists
-        if (!Directory.Exists(folderPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Folder not found: {folderPath}");
-            return;
-        }
+            // Folder containing the workbooks to be encrypted
+            string sourceFolder = @"C:\Workbooks\Source";
+            // Folder where encrypted workbooks will be saved
+            string destinationFolder = @"C:\Workbooks\Encrypted";
 
-        // Get all Excel files in the folder
-        string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-        foreach (string filePath in files)
-        {
-            // Ensure the file exists before attempting to load
-            if (!File.Exists(filePath))
+            // Ensure source and destination folders exist
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"File not found: {filePath}");
-                continue;
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
             }
+            Directory.CreateDirectory(destinationFolder);
 
-            try
+            // Get all .xlsx files in the source folder
+            string[] files = Directory.GetFiles(sourceFolder, "*.xlsx");
+
+            foreach (string filePath in files)
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
+                try
+                {
+                    // Verify the file still exists before loading
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"File not found, skipping: {filePath}");
+                        continue;
+                    }
 
-                // Generate a timestamped password (e.g., 20230920143055)
-                string timestampPassword = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    // Load the workbook
+                    Workbook workbook = new Workbook(filePath);
 
-                // Apply password protection to the workbook (file encryption)
-                workbook.Settings.Password = timestampPassword;
+                    // Generate a timestamped password (e.g., 20231027143055)
+                    string timestampPassword = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-                // Save the workbook back to the same file, now encrypted
-                workbook.Save(filePath, SaveFormat.Xlsx);
-                Console.WriteLine($"Encrypted: {Path.GetFileName(filePath)} with password {timestampPassword}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                    // Apply the password to encrypt the workbook (open password)
+                    workbook.Settings.Password = timestampPassword;
+                    // Note: Write protection can be added via other APIs if needed
+
+                    // Build the output file path
+                    string fileName = Path.GetFileName(filePath);
+                    string encryptedPath = Path.Combine(destinationFolder, fileName);
+
+                    // Save the encrypted workbook
+                    workbook.Save(encryptedPath, SaveFormat.Xlsx);
+
+                    Console.WriteLine($"Encrypted workbook saved: {encryptedPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
             }
         }
     }

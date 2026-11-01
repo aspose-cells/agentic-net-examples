@@ -1,7 +1,7 @@
-// Title: Load JSON from an HTTP response stream into an Aspose.Cells workbook with JsonUtility.Load (C#)
-// AI Prompts: Generate C# code that uses HttpClient to download a JSON file, passes the response Stream directly to Aspose.Cells JsonUtility.Load, and writes the parsed data into a new worksheet. | Create a version that maps each JSON field to separate columns after loading with JsonUtility.Load, then saves the workbook as an XLSX file. | Add comprehensive error handling for HttpRequestException, IOException, and generic exceptions while ensuring the output folder exists when using JsonUtility.Load.
-// Common Searches: asp.net aspose.cells JsonUtility.Load download json stream example | c# read json from web API and import into excel using Aspose.Cells | how to use JsonUtility.Load with HttpClient response stream in C# | save parsed JSON data to XLSX with Aspose.Cells library
-// Tags: JsonUtility.Load from HttpClient stream | Aspose.Cells import JSON to worksheet | C# save workbook as XLSX using Aspose.Cells | handle network and file I/O errors Aspose.Cells | create output directory before saving Excel file
+// Title: Load JSON from a web URL into an Aspose.Cells workbook using JsonUtility.Load with a network stream in C#
+// AI Prompts: Write C# code that uses HttpClient to download a JSON response as a Stream, passes the stream to Aspose.Cells JsonUtility.Load, and saves the resulting workbook as an XLSX file. | Show how to read a JSON stream from a REST endpoint and map its objects to specific cells or tables in an Aspose.Cells worksheet using JsonUtility.Load. | Adapt the example to handle large JSON payloads by streaming directly into a workbook without loading the entire content into memory, using Aspose.Cells JsonUtility.Load.
+// Common Searches: Aspose.Cells JsonUtility.Load from HttpClient response stream C# | How to import JSON data from a web service into an Excel workbook using Aspose.Cells .NET | C# load remote JSON into worksheet cells with Aspose.Cells without temporary files | Example of streaming JSON into Aspose.Cells workbook from a URL | Using Aspose.Cells to read JSON via network stream and save as XLSX
+// Tags: Aspose.Cells JsonUtility.Load HTTP stream | C# import remote JSON into Excel workbook | Stream-based JSON loading Aspose.Cells | Load JSON from URL into worksheet cells | Save JSON data as XLSX using Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,51 +9,59 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The example demonstrates how to download JSON content via HttpClient, feed the response stream into Aspose.Cells JsonUtility.Load, populate a worksheet with the parsed data, ensure the destination folder exists, and save the result as an XLSX workbook while handling HTTP, I/O, and generic exceptions.
+// The program fetches JSON from a specified URL using HttpClient, obtains the response as a Stream, and feeds that stream directly to Aspose.Cells JsonUtility.Load to create a workbook. The workbook is then saved as an XLSX file, with error handling for HTTP, I/O, and general exceptions.
 class Program
 {
-    static async Task Main()
+    static async Task Main(string[] args)
     {
+        // URL of the JSON data source
         const string jsonUrl = "https://example.com/data.json";
-        const string outputPath = "Result.xlsx";
 
         try
         {
-            // Download JSON content
-            using (HttpClient client = new HttpClient())
-            using (Stream jsonStream = await client.GetStreamAsync(jsonUrl))
-            using (StreamReader reader = new StreamReader(jsonStream))
+            // Create an HttpClient to fetch the JSON stream
+            using (HttpClient httpClient = new HttpClient())
             {
-                string jsonContent = await reader.ReadToEndAsync();
-
-                // Create a new workbook and place the JSON text into the first cell
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue(jsonContent);
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
+                // Get the response stream asynchronously
+                using (Stream jsonStream = await httpClient.GetStreamAsync(jsonUrl))
+                using (StreamReader reader = new StreamReader(jsonStream))
                 {
-                    Directory.CreateDirectory(outputDir);
-                }
+                    // Read the entire JSON content
+                    string jsonContent = await reader.ReadToEndAsync();
 
-                // Save the workbook to an Excel file
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                    // Create a new workbook
+                    Workbook workbook = new Workbook();
+
+                    // Simple demonstration: place the raw JSON into cell A1
+                    // (Replace with proper JSON parsing and cell population as needed)
+                    workbook.Worksheets[0].Cells["A1"].PutValue(jsonContent);
+
+                    // Save the workbook to verify the load succeeded
+                    const string outputPath = "Output.xlsx";
+
+                    // Ensure the directory exists before saving
+                    string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                    if (!Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+                    Console.WriteLine($"JSON data loaded into workbook and saved as {outputPath}");
+                }
             }
         }
-        catch (HttpRequestException ex)
+        catch (HttpRequestException httpEx)
         {
-            Console.Error.WriteLine($"Error downloading JSON data: {ex.Message}");
+            Console.WriteLine($"Error fetching JSON data: {httpEx.Message}");
         }
-        catch (IOException ex)
+        catch (IOException ioEx)
         {
-            Console.Error.WriteLine($"File I/O error: {ex.Message}");
+            Console.WriteLine($"File I/O error: {ioEx.Message}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

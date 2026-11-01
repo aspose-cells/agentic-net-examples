@@ -1,13 +1,13 @@
-// Title: How to refresh linked shapes (charts and pictures) after modifying source cells using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, change values in specific cells, and invoke Aspose.Cells to trigger formula calculation so that all linked charts and pictures update automatically. | Write C# code that updates cells A1, A2, and A3 in a worksheet and programmatically refreshes linked shapes without reopening the file. | Demonstrate using Aspose.Cells to modify cell data, recalculate the workbook, and save the file with refreshed linked objects.
-// Common Searches: Aspose.Cells C# refresh chart after updating cell values programmatically | How to recalculate formulas and update linked pictures in an Excel file using Aspose.Cells .NET | Programmatically trigger linked shape refresh in Aspose.Cells after changing source data | C# example to update cells and refresh all linked objects in an existing workbook with Aspose.Cells
-// Tags: Aspose.Cells refresh chart objects | Aspose.Cells refresh picture objects | Aspose.Cells trigger formula calculation | C# programmatically update Excel cells | Aspose.Cells modify cell data source
+// Title: How to refresh linked shapes after modifying source cells in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Update cell values and trigger a refresh of all linked shapes in a workbook with Aspose.Cells C#. | Recalculate formulas and refresh linked objects after changing source cells using the Aspose.Cells API. | Save the workbook ensuring linked pictures display the new data after cell updates in .NET.
+// Common Searches: Aspose.Cells .NET refresh linked picture after cell value change | C# recalculate formulas and update linked shapes in Excel file | How to force linked objects to refresh in Aspose.Cells after editing cells | Save workbook with refreshed linked shapes using Aspose.Cells for .NET
+// Tags: linked shape refresh Aspose.Cells | source cell update linked objects | formula recalculation C# Aspose.Cells | output directory handling Aspose.Cells | save workbook with refreshed linked pictures
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook (or creates a new one), updates cells A1, A2, and A3 with new values, triggers a workbook-wide formula calculation to refresh any linked charts or pictures, and saves the result to a new file.
+// The example loads an existing Excel workbook, changes the values of cells A1 and B2, recalculates all formulas to refresh any linked shapes or pictures, ensures the output directory exists, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
@@ -17,37 +17,41 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            Workbook workbook;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Load existing workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                // Optionally add a default worksheet
-                workbook.Worksheets.Add("Sheet1");
-            }
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
             // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            var worksheet = workbook.Worksheets[0];
 
-            // Update source cells that linked shapes depend on
-            sheet.Cells["A1"].PutValue(150);
-            sheet.Cells["A2"].PutValue(250);
-            sheet.Cells["A3"].PutValue(350);
+            // Update the source cells that linked shapes depend on
+            worksheet.Cells["A1"].PutValue(123); // example value
+            worksheet.Cells["B2"].PutValue(456); // example value
 
-            // Recalculate formulas (charts will reflect updated data automatically)
+            // Recalculate formulas and refresh linked objects (including linked shapes)
             workbook.CalculateFormula();
 
-            // Save the workbook with refreshed data
+            // Ensure the output directory exists
+            var outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,84 +1,75 @@
-// Title: How to update external named range paths in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads a workbook with Aspose.Cells, iterates over all defined names, replaces any old external file path in the RefersTo formula with a new path, and saves the workbook. | Create a reusable method UpdateExternalNamedRanges(string workbookPath, string oldPath, string newPath, string outputPath) that updates external references in named ranges, validates file existence, creates missing directories, and writes the updated file. | Provide a robust C# example that handles exceptions, verifies the source workbook, updates external links in both workbook‑ and worksheet‑scoped names, ensures the output folder exists, and saves the modified workbook.
-// Common Searches: Aspose.Cells C# change external file reference in named range after moving source workbook | Update RefersTo formula path for external named ranges using .NET | Programmatically fix broken external links in Excel defined names with Aspose.Cells
-// Tags: Aspose.Cells update external named range path | C# modify RefersTo external link | Aspose.Cells defined names external reference | Excel workbook external file relocation .NET | Aspose.Cells save workbook after link update
+// Title: How to update the file path of an external named range in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# change external named range file path after moving source workbook | Update RefersTo of an external named range to a new location with Aspose.Cells .NET | Replace old workbook path in a named range reference using Aspose.Cells in C# | Modify external reference of a workbook‑level named range in Aspose.Cells for .NET | C# code to relocate external named range source file in Excel using Aspose.Cells
+// Tags: update external named range RefersTo Aspose.Cells | replace workbook path in Excel named range C# | modify external reference of workbook‑level named range | Aspose.Cells external link path change | C# regex extract file path from RefersTo
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace ExternalReferenceUpdater
+// The example loads a workbook, finds a workbook‑level named range that points to an external workbook, extracts the old file path from its RefersTo string with a regular expression, replaces it with a new path, updates the RefersTo property, and saves the workbook to a new file.
+class UpdateExternalReference
 {
-    // The sample loads an existing Excel workbook, scans every defined name (both workbook‑ and worksheet‑scoped), replaces occurrences of a specified old external file path in the RefersTo property with a new path, ensures the destination directory exists, and saves the updated workbook, all with comprehensive error handling.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Paths for the workbook and external files
-            string workbookPath = @"C:\Data\MyWorkbook.xlsx";
-            string updatedWorkbookPath = @"C:\Data\MyWorkbook_Updated.xlsx";
-            string oldExternalPath = @"C:\OldFolder\ExternalFile.xlsx";
-            string newExternalPath = @"D:\NewFolder\ExternalFile.xlsx";
+            // Paths
+            string inputPath = @"C:\Workbooks\MainWorkbook.xlsx";
+            string outputPath = @"C:\Workbooks\MainWorkbook_Updated.xlsx";
+            string newFilePath = @"D:\NewFolder\Source.xlsx";
+            string externalRangeName = "MyExternalRange";
 
-            try
+            // Verify input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Verify that the source workbook exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Workbook not found: {workbookPath}");
-                    return;
-                }
+                Console.WriteLine($"Input workbook not found: {inputPath}");
+                return;
+            }
 
-                // Load the workbook
-                Workbook workbook;
-                try
-                {
-                    workbook = new Workbook(workbookPath);
-                }
-                catch (Exception loadEx)
-                {
-                    Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                    return;
-                }
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Get all defined names (both workbook‑ and worksheet‑scoped)
-                NameCollection allNames = workbook.Worksheets.Names;
-                for (int i = 0; i < allNames.Count; i++)
-                {
-                    Name name = allNames[i];
-                    string refersTo = name.RefersTo;
+            // Access the collection of named ranges at the workbook level
+            Name externalName = workbook.Worksheets.Names[externalRangeName];
 
-                    // Update external references that contain the old path
-                    if (!string.IsNullOrEmpty(refersTo) &&
-                        refersTo.IndexOf(oldExternalPath, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        string updatedRef = refersTo.Replace(oldExternalPath, newExternalPath, StringComparison.OrdinalIgnoreCase);
-                        name.RefersTo = updatedRef;
-                    }
-                }
+            if (externalName != null)
+            {
+                // Example RefersTo: ='[C:\OldFolder\Source.xlsx]Sheet1'!$A$1
+                string currentRef = externalName.RefersTo;
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(updatedWorkbookPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Extract the file path inside brackets [...]
+                Match match = Regex.Match(currentRef, @"\[(.*?)\]");
+                if (match.Success)
                 {
-                    Directory.CreateDirectory(outputDir);
+                    string oldFilePath = match.Groups[1].Value;
+                    string updatedRef = currentRef.Replace(oldFilePath, newFilePath);
+                    externalName.RefersTo = updatedRef;
                 }
-
-                // Save the updated workbook
-                try
+                else
                 {
-                    workbook.Save(updatedWorkbookPath);
-                    Console.WriteLine($"Workbook saved successfully to: {updatedWorkbookPath}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                    Console.WriteLine("The named range does not contain an external reference.");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"Named range '{externalRangeName}' not found.");
             }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

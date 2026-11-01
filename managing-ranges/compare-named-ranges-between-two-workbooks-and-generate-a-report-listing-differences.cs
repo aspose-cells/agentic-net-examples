@@ -1,7 +1,6 @@
-// Title: Create a C# Aspose.Cells script to compare named ranges in two Excel workbooks and export a differences report
-// AI Prompts: Write C# code using Aspose.Cells that loads two .xlsx files, builds case‑insensitive dictionaries of defined names, compares each named range cell‑by‑cell, and saves an Excel workbook reporting missing ranges, size mismatches, and value differences. | Adapt the comparison program to ignore whitespace and apply a numeric tolerance when evaluating cell values, then output the mismatch list as a CSV file instead of an Excel workbook. | Enhance the script to detect formula changes inside matching named ranges and add a "Formula Difference" column to the generated report.
-// Common Searches: aspnet compare defined names between two Excel workbooks using Aspose.Cells | c# generate report of named range mismatches in .xlsx files | how to list missing named ranges when comparing two spreadsheets with Aspose.Cells | detect size differences in named ranges across workbooks C# Aspose | compare cell values of matching named ranges in two workbooks programmatically
-// Tags: Aspose.Cells compare named ranges | C# generate named range differences report | Excel workbook named range size mismatch detection | Aspose.Cells resolve defined name to range | auto‑fit columns in Aspose.Cells report workbook
+// Title: Generate a named‑range differences report by comparing two Excel workbooks with Aspose.Cells for .NET
+// Common Searches: c# compare named ranges in two Excel files using Aspose.Cells | how to create a report of missing or mismatched named ranges with Aspose.Cells .NET | Aspose.Cells example for detecting dimension differences in named ranges across workbooks | C# code to list cell‑by‑cell value differences for matching named ranges in Excel | generate Excel report of named range discrepancies using Aspose.Cells library
+// Tags: Aspose.Cells named range diff analysis | detect absent named ranges in Excel C# | named range size mismatch detection | cell‑level value comparison for named ranges | auto‑generate differences workbook with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,25 +8,27 @@ using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// The example validates two input .xlsx files, loads them with Aspose.Cells, creates case‑insensitive dictionaries of defined names, and builds a union of all named range identifiers. It then generates a new workbook, writes a header row, and iterates through each name to report missing ranges, unresolved definitions, size mismatches, and cell‑by‑cell value differences. Columns are auto‑fitted and the report is saved as NamedRangeDifferencesReport.xlsx, with comprehensive exception handling throughout.
+// The sample loads two Excel workbooks with Aspose.Cells, builds case‑insensitive dictionaries of their named ranges, and iterates the combined set to identify missing ranges, dimension mismatches, or cell‑by‑cell value differences. Each discrepancy is recorded in a new workbook that lists the range name, cell address, values from both source files, and a comment, then auto‑fits columns and saves the report.
 class NamedRangeComparer
 {
     static void Main()
     {
         try
         {
-            // Verify input files exist
-            const string file1 = "Workbook1.xlsx";
-            const string file2 = "Workbook2.xlsx";
+            // Paths to the source workbooks and the report workbook
+            string workbookPath1 = "Workbook1.xlsx";
+            string workbookPath2 = "Workbook2.xlsx";
+            string reportPath = "NamedRangeDifferencesReport.xlsx";
 
-            if (!File.Exists(file1))
-                throw new FileNotFoundException($"Input file not found: {file1}");
-            if (!File.Exists(file2))
-                throw new FileNotFoundException($"Input file not found: {file2}");
+            // Verify source files exist to avoid FileNotFoundException
+            if (!File.Exists(workbookPath1))
+                throw new FileNotFoundException($"Source workbook not found: {workbookPath1}");
+            if (!File.Exists(workbookPath2))
+                throw new FileNotFoundException($"Source workbook not found: {workbookPath2}");
 
-            // Load the two workbooks to compare
-            Workbook wb1 = new Workbook(file1);
-            Workbook wb2 = new Workbook(file2);
+            // Load the two workbooks
+            Workbook wb1 = new Workbook(workbookPath1);
+            Workbook wb2 = new Workbook(workbookPath2);
 
             // Create a new workbook for the report
             Workbook reportWb = new Workbook();
@@ -37,145 +38,101 @@ class NamedRangeComparer
             // Write header row
             reportSheet.Cells[0, 0].PutValue("Named Range");
             reportSheet.Cells[0, 1].PutValue("Cell Address");
-            reportSheet.Cells[0, 2].PutValue("Workbook1 Value");
-            reportSheet.Cells[0, 3].PutValue("Workbook2 Value");
-            reportSheet.Cells[0, 4].PutValue("Status");
+            reportSheet.Cells[0, 2].PutValue("Value in Workbook 1");
+            reportSheet.Cells[0, 3].PutValue("Value in Workbook 2");
+            reportSheet.Cells[0, 4].PutValue("Comment");
 
             int reportRow = 1;
 
             // Build dictionaries of named ranges for quick lookup
-            var names1 = new Dictionary<string, Name>(StringComparer.OrdinalIgnoreCase);
-            foreach (Name n in wb1.Worksheets.Names)
-                names1[n.Text] = n;
+            var ranges1 = new Dictionary<string, AsposeRange>(StringComparer.OrdinalIgnoreCase);
+            foreach (Name name in wb1.Worksheets.Names)
+            {
+                AsposeRange rng = name.GetRange();
+                if (rng != null)
+                    ranges1[name.Text] = rng;
+            }
 
-            var names2 = new Dictionary<string, Name>(StringComparer.OrdinalIgnoreCase);
-            foreach (Name n in wb2.Worksheets.Names)
-                names2[n.Text] = n;
+            var ranges2 = new Dictionary<string, AsposeRange>(StringComparer.OrdinalIgnoreCase);
+            foreach (Name name in wb2.Worksheets.Names)
+            {
+                AsposeRange rng = name.GetRange();
+                if (rng != null)
+                    ranges2[name.Text] = rng;
+            }
 
-            // Union of all named range names
-            var allNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            allNames.UnionWith(names1.Keys);
-            allNames.UnionWith(names2.Keys);
+            // Union of all named range keys
+            var allNames = new HashSet<string>(ranges1.Keys, StringComparer.OrdinalIgnoreCase);
+            allNames.UnionWith(ranges2.Keys);
 
             foreach (string rangeName in allNames)
             {
-                bool inWb1 = names1.TryGetValue(rangeName, out Name name1);
-                bool inWb2 = names2.TryGetValue(rangeName, out Name name2);
+                bool inFirst = ranges1.TryGetValue(rangeName, out AsposeRange range1);
+                bool inSecond = ranges2.TryGetValue(rangeName, out AsposeRange range2);
 
-                if (!inWb1)
+                if (!inFirst)
                 {
-                    // Named range exists only in Workbook2
+                    // Named range exists only in workbook 2
                     reportSheet.Cells[reportRow, 0].PutValue(rangeName);
-                    reportSheet.Cells[reportRow, 1].PutValue("-");
-                    reportSheet.Cells[reportRow, 2].PutValue("-");
-                    reportSheet.Cells[reportRow, 3].PutValue("-");
-                    reportSheet.Cells[reportRow, 4].PutValue("Missing in Workbook1");
+                    reportSheet.Cells[reportRow, 4].PutValue("Missing in Workbook 1");
                     reportRow++;
                     continue;
                 }
 
-                if (!inWb2)
+                if (!inSecond)
                 {
-                    // Named range exists only in Workbook1
+                    // Named range exists only in workbook 1
                     reportSheet.Cells[reportRow, 0].PutValue(rangeName);
-                    reportSheet.Cells[reportRow, 1].PutValue("-");
-                    reportSheet.Cells[reportRow, 2].PutValue("-");
-                    reportSheet.Cells[reportRow, 3].PutValue("-");
-                    reportSheet.Cells[reportRow, 4].PutValue("Missing in Workbook2");
+                    reportSheet.Cells[reportRow, 4].PutValue("Missing in Workbook 2");
                     reportRow++;
                     continue;
                 }
 
-                // Both workbooks contain the named range – compare cell by cell
-                AsposeRange? range1 = null;
-                AsposeRange? range2 = null;
-
-                try
+                // Both workbooks contain the named range – compare dimensions first
+                if (range1.RowCount != range2.RowCount || range1.ColumnCount != range2.ColumnCount)
                 {
-                    range1 = name1.GetRange();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Unable to resolve range '{rangeName}' in Workbook1: {ex.Message}");
-                }
-
-                try
-                {
-                    range2 = name2.GetRange();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Unable to resolve range '{rangeName}' in Workbook2: {ex.Message}");
-                }
-
-                if (range1 == null || range2 == null)
-                {
-                    // Could not resolve one of the ranges – report and skip
                     reportSheet.Cells[reportRow, 0].PutValue(rangeName);
-                    reportSheet.Cells[reportRow, 1].PutValue("N/A");
-                    reportSheet.Cells[reportRow, 2].PutValue(range1 == null ? "Unresolved" : "Resolved");
-                    reportSheet.Cells[reportRow, 3].PutValue(range2 == null ? "Unresolved" : "Resolved");
-                    reportSheet.Cells[reportRow, 4].PutValue("Resolution Failure");
+                    reportSheet.Cells[reportRow, 4].PutValue("Dimension mismatch");
                     reportRow++;
                     continue;
                 }
 
-                // Ensure the ranges have the same dimensions
-                int rows1 = range1.RowCount;
-                int cols1 = range1.ColumnCount;
-                int rows2 = range2.RowCount;
-                int cols2 = range2.ColumnCount;
-
-                if (rows1 != rows2 || cols1 != cols2)
+                // Compare each cell inside the range
+                for (int i = 0; i < range1.RowCount; i++)
                 {
-                    // Different size – report as a whole
-                    reportSheet.Cells[reportRow, 0].PutValue(rangeName);
-                    reportSheet.Cells[reportRow, 1].PutValue("Entire Range");
-                    reportSheet.Cells[reportRow, 2].PutValue($"{rows1}x{cols1}");
-                    reportSheet.Cells[reportRow, 3].PutValue($"{rows2}x{cols2}");
-                    reportSheet.Cells[reportRow, 4].PutValue("Size Mismatch");
-                    reportRow++;
-                    continue;
-                }
-
-                // Iterate through each cell in the range
-                for (int r = 0; r < rows1; r++)
-                {
-                    for (int c = 0; c < cols1; c++)
+                    for (int j = 0; j < range1.ColumnCount; j++)
                     {
-                        int row1 = range1.FirstRow + r;
-                        int col1 = range1.FirstColumn + c;
-                        int row2 = range2.FirstRow + r;
-                        int col2 = range2.FirstColumn + c;
-
-                        Cell cell1 = range1.Worksheet.Cells[row1, col1];
-                        Cell cell2 = range2.Worksheet.Cells[row2, col2];
+                        Cell cell1 = range1[i, j];
+                        Cell cell2 = range2[i, j];
 
                         string val1 = cell1.Value?.ToString() ?? string.Empty;
                         string val2 = cell2.Value?.ToString() ?? string.Empty;
 
-                        if (!string.Equals(val1, val2, StringComparison.Ordinal))
+                        if (!val1.Equals(val2, StringComparison.Ordinal))
                         {
                             // Record the difference
-                            string address = cell1.Name; // address relative to its sheet
                             reportSheet.Cells[reportRow, 0].PutValue(rangeName);
+                            string address = $"{cell1.Worksheet.Name}!{cell1.Name}";
                             reportSheet.Cells[reportRow, 1].PutValue(address);
                             reportSheet.Cells[reportRow, 2].PutValue(val1);
                             reportSheet.Cells[reportRow, 3].PutValue(val2);
-                            reportSheet.Cells[reportRow, 4].PutValue("Different");
+                            reportSheet.Cells[reportRow, 4].PutValue("Value mismatch");
                             reportRow++;
                         }
                     }
                 }
             }
 
-            // Auto-fit columns for readability
+            // Auto‑fit columns for readability
             reportSheet.AutoFitColumns();
 
+            // Ensure the directory for the report exists
+            string reportDir = Path.GetDirectoryName(reportPath);
+            if (!string.IsNullOrEmpty(reportDir) && !Directory.Exists(reportDir))
+                Directory.CreateDirectory(reportDir);
+
             // Save the report workbook
-            const string reportFile = "NamedRangeDifferencesReport.xlsx";
-            reportWb.Save(reportFile);
-            Console.WriteLine($"Report saved to {reportFile}");
+            reportWb.Save(reportPath);
         }
         catch (Exception ex)
         {

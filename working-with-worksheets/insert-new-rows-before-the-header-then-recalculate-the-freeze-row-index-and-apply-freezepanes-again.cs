@@ -1,21 +1,22 @@
-// Title: Insert rows before a header row and adjust FreezePanes in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a specified number of rows above a given header row, recalculate the freeze‑pane row index, and apply FreezePanes with the 4‑parameter overload in C# using Aspose.Cells. | Load an existing workbook, verify the input file, add rows before the header, shift the frozen rows to stay above the new header, ensure the output directory exists, and save the updated file.
-// Common Searches: C# Aspose.Cells insert rows before header while preserving frozen panes | How to recalculate FreezePanes row index after adding rows in Aspose.Cells .NET | Aspose.Cells example for inserting rows above a header and reapplying FreezePanes | Adjust frozen rows after inserting rows with Aspose.Cells in C# | Insert multiple rows before a specific row and maintain freeze pane using Aspose.Cells
-// Tags: insert rows before header Aspose.Cells | recalculate freeze pane row index Aspose.Cells | apply FreezePanes 4‑parameter overload Aspose.Cells | load and save workbook Aspose.Cells C# | verify input file existence C#
+// Title: How to insert rows before a header row and reset FreezePanes in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert two blank rows above row 5 and then update the FreezePanes settings so the header stays frozen using Aspose.Cells in C#. | After adding rows, compute the new freeze row number and call Worksheet.FreezePanes to keep the top rows locked. | Save the workbook to a new file after adjusting the frozen rows with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# insert rows before header and keep freeze panes | how to update FreezePanes after inserting rows in an Excel file using .NET | recalculate frozen row count when adding rows with Aspose.Cells | C# program to add rows and reset freeze panes in Excel workbook | example of Worksheet.FreezePanes after row insertion Aspose.Cells
+// Tags: insert rows before header Aspose.Cells | recalculate freeze pane index C# | apply FreezePanes after row insertion Aspose.Cells | save modified workbook Aspose.Cells .NET | adjust frozen rows programmatically Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The code loads input.xlsx, inserts two rows before the original header row (row 6), updates the FreezePanes to the new header position using the 4‑parameter overload, creates the output directory if needed, and saves the modified workbook as output.xlsx while handling missing input files.
+// The example loads an existing workbook, inserts two rows before the header at row index 4, recalculates the freeze row index, reapplies FreezePanes to keep the header frozen, and saves the updated file as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
@@ -24,49 +25,49 @@ class Program
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets.Count > 0 ? workbook.Worksheets[0] : null;
-            if (sheet == null)
-            {
-                Console.WriteLine("No worksheets found in the workbook.");
-                return;
-            }
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Index of the header row (0‑based). Adjust as needed.
-            int headerRowIndex = 5; // e.g., Excel row 6
+            // -------------------------------------------------
+            // 1. Insert new rows before the header row
+            // -------------------------------------------------
+            // Assume the header is currently at row index 4 (i.e., Excel row 5)
+            int headerRowIndex = 4;          // zero‑based index of the header row
+            int rowsToInsert = 2;            // number of rows you want to add
 
-            // Number of rows to insert before the header
-            int rowsToInsert = 2;
-
-            // Insert the rows
+            // Insert the rows; existing rows shift down
             sheet.Cells.InsertRows(headerRowIndex, rowsToInsert);
 
-            // Recalculate the freeze pane row index.
-            // If the original freeze was at the header row, shift it down by the inserted rows.
-            int originalFreezeRow = headerRowIndex;          // original freeze row before insertion
-            int newFreezeRow = originalFreezeRow + rowsToInsert;
+            // -------------------------------------------------
+            // 2. Apply FreezePanes after inserting rows
+            // -------------------------------------------------
+            // Freeze rows above the header (including any previously frozen rows)
+            int newFreezeRow = headerRowIndex + rowsToInsert; // rows to freeze (zero‑based count)
+            int freezeColumn = 0; // no columns frozen
 
-            // Apply FreezePanes again (freeze rows above newFreezeRow, no column freeze)
-            // Use the 4‑parameter overload: FreezePanes(row, column, totalRows, totalColumns)
-            sheet.FreezePanes(newFreezeRow, 0, newFreezeRow, 0);
+            // FreezePanes(row, column, totalRows, totalColumns)
+            // row/column specify the first unfrozen cell; totalRows/totalColumns specify how many rows/columns to freeze
+            sheet.FreezePanes(newFreezeRow, freezeColumn, newFreezeRow, freezeColumn);
 
+            // -------------------------------------------------
+            // 3. Save the modified workbook
+            // -------------------------------------------------
             // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for troubleshooting
+            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

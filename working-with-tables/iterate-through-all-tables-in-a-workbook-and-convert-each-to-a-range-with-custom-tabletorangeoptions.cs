@@ -1,66 +1,68 @@
-// Title: Convert all Excel tables (ListObjects) to ranges in every worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates through each worksheet, and calls ListObject.ConvertToRange on every table while preserving formatting. | Write a C# program that safely converts all ListObjects in a workbook to regular ranges, handling missing input files and creating the output folder if needed. | Create a script that processes an Excel workbook with Aspose.Cells, converts tables to ranges in reverse order to avoid collection changes, and saves the modified file.
-// Common Searches: Aspose.Cells C# convert all tables in a workbook to ranges | How to remove ListObject tables and keep data in Excel using Aspose.Cells .NET | Batch convert Excel tables to ranges with Aspose.Cells and preserve formulas | Iterate worksheets and convert ListObjects to ranges in C# Aspose.Cells example | Aspose.Cells TableToRangeOptions default behavior for converting tables
-// Tags: Aspose.Cells convert ListObject to range | C# batch table-to-range conversion Excel | Aspose.Cells retain cell formatting during table conversion | convert tables in reverse order Aspose.Cells | ensure output path exists Aspose.Cells workbook save
+// Title: Convert every Excel table to a regular range in a workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, iterates all worksheets, and converts each ListObject table to a range with ConvertToRange while handling exceptions. | Show how to loop through a ListObjectCollection in reverse order to safely call ConvertToRange and avoid collection modification errors in Aspose.Cells. | Provide a complete example that saves the workbook after all tables have been transformed into regular ranges to a new .xlsx file.
+// Common Searches: Aspose.Cells C# iterate all worksheets and convert tables to ranges | How to remove Excel tables and keep data using Aspose.Cells ConvertToRange | Convert ListObject to range in bulk with Aspose.Cells .NET | C# code to change Excel tables to normal cells using Aspose.Cells | Aspose.Cells example for converting multiple tables to ranges in one workbook
+// Tags: Aspose.Cells ConvertToRange bulk tables | C# Aspose.Cells ListObject to range conversion | Excel table to range Aspose.Cells .NET | Iterate worksheets Aspose.Cells table removal | Reverse iteration ListObjectCollection Aspose
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// The example loads an input.xlsx workbook, verifies its existence, then loops through each worksheet. For each sheet it iterates the ListObjects collection backwards and calls ListObject.ConvertToRange, which transforms the table into a normal range while keeping formatting and formulas. Errors for individual tables are caught and reported. The program also creates the output directory if it does not exist, saves the modified workbook as output.xlsx, and writes status messages to the console.
-class Program
+namespace TableToRangeConversion
 {
-    static void Main()
+    // The sample verifies the input file, loads it with Aspose.Cells, iterates each worksheet and its ListObject tables in reverse order, converts every table to a regular range using ConvertToRange while catching conversion errors, and saves the modified workbook to a new file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Convert each table (ListObject) in every worksheet to a range
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Iterate backwards because converting removes the table from the collection
-                for (int i = sheet.ListObjects.Count - 1; i >= 0; i--)
+                // Load the workbook from the existing file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    try
+                    // Get the collection of tables (ListObjects) on the current worksheet
+                    ListObjectCollection tables = sheet.ListObjects;
+
+                    // Iterate backwards because converting a table to a range removes it from the collection
+                    for (int i = tables.Count - 1; i >= 0; i--)
                     {
-                        ListObject table = sheet.ListObjects[i];
-                        // Convert using default options (preserves formatting, formulas, etc.)
-                        table.ConvertToRange();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to convert table on sheet '{sheet.Name}': {ex.Message}");
+                        ListObject table = tables[i];
+
+                        try
+                        {
+                            // Convert the table to a regular range using default options
+                            table.ConvertToRange();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Use DisplayName as the table identifier (Name property may not be available in some versions)
+                            string tableId = !string.IsNullOrEmpty(table.DisplayName) ? table.DisplayName : $"Index_{i}";
+                            Console.WriteLine($"Failed to convert table '{tableId}' on sheet '{sheet.Name}': {ex.Message}");
+                        }
                     }
                 }
-            }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Save the modified workbook to a new file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

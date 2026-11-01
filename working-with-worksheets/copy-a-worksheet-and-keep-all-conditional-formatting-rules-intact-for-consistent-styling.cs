@@ -1,58 +1,32 @@
-// Title: Copy a worksheet in an Excel workbook while preserving all conditional formatting using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to duplicate the worksheet named 'Sheet1' into a new sheet called 'Sheet1_Copy' and ensure every conditional formatting rule is retained. | Programmatically add a blank worksheet to a workbook and copy an existing sheet into it with full formatting, styles, and conditional rules using the Worksheet.Copy method in Aspose.Cells for .NET. | Create a C# script that loads an existing .xlsx file, copies a specific worksheet to a new position in the same workbook, and saves the result without losing any conditional formatting.
-// Common Searches: Aspose.Cells C# copy worksheet without losing conditional formatting | How to duplicate an Excel sheet and keep conditional formatting rules using .NET | Worksheet.Copy method preserve conditional formats Aspose.Cells example
-// Tags: worksheet.copy preserve conditional formatting aspocells | aspocells duplicate worksheet retain styles | c# copy excel sheet with conditional rules | aspocells copy sheet without losing formatting | excel workbook clone worksheet .net
+// Title: Copy an Excel worksheet while preserving all conditional formatting rules using Aspose.Cells for .NET
+// AI Prompts: Duplicate a worksheet in the same workbook and keep every conditional formatting rule unchanged with Aspose.Cells in C#. | Create a copy of a specific sheet, retain its conditional formatting, rename it, and save the workbook using Aspose.Cells for .NET. | Clone an Excel sheet, ensure all conditional formatting is transferred, and write the result to a new file with Aspose.Cells.
+// Common Searches: how to copy worksheet with conditional formatting using Aspose.Cells C# | preserve conditional formatting when duplicating an Excel sheet in .NET | Aspose.Cells copy sheet retain conditional formatting rules
+// Tags: copy sheet with conditional formatting Aspose.Cells | preserve formatting rules on worksheet clone .NET | Aspose.Cells worksheet copy example C# | retain conditional formatting when duplicating Excel sheet
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example checks for source.xlsx, creates it if missing, loads the workbook, adds a new worksheet, copies the existing 'Sheet1' to the new sheet using Worksheet.Copy, renames it to 'Sheet1_Copy', and saves as output.xlsx, preserving all formatting including conditional formatting rules.
+// // Loads source.xlsx, copies Sheet1 to a new worksheet while keeping all conditional formatting, renames the copy, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            string sourcePath = "source.xlsx";
-            string outputPath = "output.xlsx";
+        // Load the source workbook
+        Workbook workbook = new Workbook("source.xlsx");
 
-            // Ensure the source file exists; create a simple workbook if it does not.
-            if (!File.Exists(sourcePath))
-            {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Name = "Sheet1";
-                tempWb.Save(sourcePath);
-            }
+        // Get the worksheet to be copied (by name or index)
+        Worksheet sourceSheet = workbook.Worksheets["Sheet1"]; // replace with your sheet name
 
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(sourcePath);
+        // Add a new worksheet to hold the copy
+        int newSheetIndex = workbook.Worksheets.Add();
 
-            // Retrieve the worksheet to copy.
-            Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
-            if (sourceSheet == null)
-            {
-                Console.WriteLine("Worksheet 'Sheet1' not found.");
-                return;
-            }
+        // Copy the source worksheet (including all conditional formatting) to the new worksheet
+        sourceSheet.Copy(workbook.Worksheets[newSheetIndex]);
 
-            // Add a new empty worksheet and obtain its index.
-            int destinationIndex = workbook.Worksheets.Add();
+        // Optionally rename the copied worksheet
+        workbook.Worksheets[newSheetIndex].Name = "Sheet1_Copy";
 
-            // Copy the source worksheet (including formatting, styles, etc.) to the new worksheet.
-            // Use Worksheet.Copy to avoid ambiguity with System.MemoryExtensions.CopyTo.
-            workbook.Worksheets[destinationIndex].Copy(sourceSheet);
-
-            // Optionally rename the copied worksheet.
-            workbook.Worksheets[destinationIndex].Name = "Sheet1_Copy";
-
-            // Save the workbook with the copied worksheet.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook with the copied worksheet
+        workbook.Save("output.xlsx");
     }
 }

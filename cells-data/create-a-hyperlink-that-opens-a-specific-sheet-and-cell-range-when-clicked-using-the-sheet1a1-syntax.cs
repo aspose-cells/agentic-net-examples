@@ -1,27 +1,51 @@
-// Title: Create an internal hyperlink that jumps to Sheet1!A1 in an Aspose.Cells workbook using C#
-// AI Prompts: Insert a hyperlink into cell B2 that navigates to '#Sheet1!A1' and set its displayed text to 'Go to Sheet1!A1' with Aspose.Cells for .NET. | Generate a new workbook, add an internal link pointing to a different worksheet cell range, and save it as HyperlinkInternal.xlsx using the Aspose.Cells C# API.
-// Common Searches: Aspose.Cells C# add internal hyperlink to another worksheet cell | How to use '#Sheet1!A1' syntax for internal links in Aspose.Cells | C# example of creating a hyperlink that opens a specific sheet and cell in an Excel file with Aspose
-// Tags: Aspose.Cells internal hyperlink creation | C# hyperlink to worksheet cell reference | Aspose.Cells '#Sheet1!A1' link syntax | programmatic Excel hyperlink .NET
+// Title: How to add an internal '#Sheet1!A1' hyperlink in another worksheet cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that inserts a hyperlink in Sheet2!B2 pointing to Sheet1!A1 using the '#Sheet1!A1' address. | Show how to apply blue font color and single underline styling to the hyperlink cell with Aspose.Cells styling API. | Demonstrate saving the workbook as an .xlsx file after creating the internal sheet hyperlink.
+// Common Searches: Aspose.Cells C# internal hyperlink to another sheet using #Sheet1!A1 syntax | Create a link from Sheet2 to Sheet1!A1 in Aspose.Cells .NET | C# Aspose.Cells format hyperlink with blue underline | Save workbook with cross‑sheet hyperlink using Aspose.Cells for .NET
+// Tags: Aspose.Cells create cross‑sheet hyperlink C# | hyperlink styling blue underline Aspose.Cells | save workbook as xlsx Aspose.Cells .NET | worksheet hyperlink address #Sheet1!A1 | add internal sheet link Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Drawing;
 
-// The program creates a new workbook, adds an internal hyperlink in cell B2 that points to Sheet1!A1 using the '#Sheet1!A1' reference, sets custom display text, and saves the file as HyperlinkInternal.xlsx.
-class Program
+// The example creates a new workbook, renames the first worksheet to Sheet1, writes a value to A1, adds a second worksheet named Sheet2, places the text "Go to Sheet1!A1" in B2, inserts an internal hyperlink '#Sheet1!A1' on that cell, styles it with blue underlined font, and saves the file as HyperlinkToSheet1.xlsx.
+class HyperlinkDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a hyperlink to cell B2 that points to Sheet1!A1 using the '#Sheet1!A1' syntax
-        int hyperlinkIndex = worksheet.Hyperlinks.Add("B2", 1, 1, "#Sheet1!A1");
+            // Get the default first worksheet and rename it to "Sheet1"
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
 
-        // Set the text that will be displayed for the hyperlink
-        worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Go to Sheet1!A1";
+            // Put some sample data in Sheet1!A1
+            sheet1.Cells["A1"].PutValue("This is Sheet1!A1");
 
-        // Save the workbook
-        workbook.Save("HyperlinkInternal.xlsx");
+            // Add a second worksheet where the hyperlink will be placed
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+
+            // Set display text for the hyperlink in Sheet2!B2
+            sheet2.Cells["B2"].PutValue("Go to Sheet1!A1");
+
+            // Add a hyperlink that uses the '#Sheet1!A1' syntax
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlinkAddress
+            sheet2.Hyperlinks.Add(1, 1, 0, 0, "#Sheet1!A1"); // B2 cell (row index 1, column index 1)
+
+            // Apply typical hyperlink styling (blue and underlined)
+            Style hyperlinkStyle = workbook.CreateStyle();
+            hyperlinkStyle.Font.Color = Color.Blue;
+            hyperlinkStyle.Font.Underline = FontUnderlineType.Single;
+            sheet2.Cells["B2"].SetStyle(hyperlinkStyle);
+
+            // Save the workbook to a file
+            workbook.Save("HyperlinkToSheet1.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,63 +1,54 @@
-// Title: Create an in‑cell dropdown list for rows 1‑100 in column H using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that defines a CellArea covering rows 1‑100 in column H, adds a List‑type validation with the values Option1, Option2, Option3, sets Validation.InCellDropDown to true, and saves the workbook. | Write a C# snippet using Aspose.Cells to apply an in‑cell dropdown to column H (rows 1‑100) by configuring Validation.Type = List and enabling the dropdown.
-// Common Searches: Aspose.Cells C# add dropdown list to column H rows 1 to 100 | How to enable in‑cell dropdown for a specific column using Aspose.Cells .NET | Set list validation with InCellDropDown property in Aspose.Cells workbook | Create Excel dropdown in column H with Aspose.Cells C# example | Aspose.Cells validation for column H range 1‑100 list values
-// Tags: Aspose.Cells list validation column H | C# Aspose.Cells enable in‑cell dropdown | Aspose.Cells Validation.InCellDropDown property | Define CellArea for column range Aspose.Cells | Excel dropdown list generation Aspose.Cells C#
+// Title: Enable an in‑cell dropdown list for column H in an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add list validation dropdown to column H | how to set Validation.InCellDropDown true for a range using Aspose.Cells | create Excel dropdown list in column H with Aspose.Cells .NET | Aspose.Cells example for in‑cell dropdown list validation | define CellArea H1:H100 and enable dropdown in Aspose.Cells
+// Tags: set Validation.InCellDropDown property | list validation for column H | Aspose.Cells create Excel dropdown list | C# define CellArea range | list validation formula with comma‑separated items
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The example creates a new workbook, defines a CellArea covering rows 1‑100 in column H, adds a list‑type validation with three options, enables the InCellDropDown property, and saves the file as ColumnH_InCellDropdown.xlsx.
-    public class EnableInCellDropdownForColumnH
+    // The sample creates a new workbook, defines the range H1:H100 using a CellArea, adds a list validation to that range, sets the validation type to List, enables the in‑cell dropdown by setting Validation.InCellDropDown to true, supplies the dropdown items via the Formula1 property, and saves the file as InCellDropdown.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the validation area for column H (index 7), rows 1 to 100 (0‑based indices)
+                // Define the range for column H (H1:H100)
                 CellArea area = new CellArea
                 {
-                    StartRow = 0,      // Row 1
-                    EndRow = 99,       // Row 100
-                    StartColumn = 7,   // Column H
+                    StartRow = 0,
+                    EndRow = 99,
+                    StartColumn = 7,
                     EndColumn = 7
                 };
 
-                // Add a new validation to the worksheet for the defined area
-                int validationIndex = worksheet.Validations.Add(area);
-                Validation validation = worksheet.Validations[validationIndex];
+                // Add a list validation to the defined range
+                int validationIndex = sheet.Validations.Add(area);
+                Validation validation = sheet.Validations[validationIndex];
 
-                // Set the validation type to List and provide the list of acceptable values
+                // Set validation type to List and enable in‑cell dropdown
                 validation.Type = ValidationType.List;
-                validation.Formula1 = "Option1,Option2,Option3";
-
-                // Enable the in‑cell drop‑down list
                 validation.InCellDropDown = true;
 
-                // Save the workbook to a file
-                workbook.Save("ColumnH_InCellDropdown.xlsx");
-                Console.WriteLine("Workbook saved successfully as ColumnH_InCellDropdown.xlsx");
+                // Define list items for the dropdown
+                validation.Formula1 = "\"Option1,Option2,Option3\"";
+
+                // Save the workbook
+                string outputPath = "InCellDropdown.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            EnableInCellDropdownForColumnH.Run();
         }
     }
 }

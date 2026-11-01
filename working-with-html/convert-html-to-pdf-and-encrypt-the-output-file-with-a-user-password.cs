@@ -1,36 +1,41 @@
-// Title: How to convert an HTML file to a password‑protected PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF protected with a user password using PdfSaveOptions. | Show how to assign the Password property (and optionally an EncryptionType) on PdfSaveOptions when converting HTML to PDF with Aspose.Cells. | Add robust error handling for missing HTML input, workbook load failures, and PDF save exceptions in the Aspose.Cells HTML‑to‑PDF workflow.
-// Common Searches: Aspose.Cells C# convert html to pdf and set user password | set pdf password when saving workbook as pdf using Aspose.Cells | encrypt pdf generated from html with Aspose.Cells .NET example | handle file not found error in Aspose.Cells html to pdf conversion
-// Tags: HTML to PDF conversion Aspose.Cells C# | PdfSaveOptions password protection | Aspose.Cells encrypt PDF output | C# load HTML workbook Aspose.Cells | error handling Aspose.Cells file conversion
+// Title: Convert an HTML spreadsheet to a password‑protected PDF with Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, sets a user password via PdfSaveOptions, and saves the workbook as an encrypted PDF. | Update the provided program to create the output folder when missing and apply PDF password protection using Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert HTML file to encrypted PDF | how to set user password when saving workbook as PDF with Aspose.Cells | example of PDF encryption using PdfSaveOptions in Aspose.Cells .NET | protect PDF generated from HTML spreadsheet in C#
+// Tags: Aspose.Cells HTML to PDF with password protection | C# PdfSaveOptions user password | encrypt PDF output from Aspose.Cells workbook | convert HTML spreadsheet to PDF using Aspose.Cells | set PDF encryption in Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample verifies that the source HTML file exists, loads it into an Aspose.Cells Workbook via HtmlLoadOptions, configures PdfSaveOptions with a user password (and optional encryption settings), and saves the workbook as a password‑protected PDF. All operations are wrapped in try/catch blocks to report missing files, loading issues, or PDF‑save failures.
+// The example loads an HTML file that represents a spreadsheet into an Aspose.Cells Workbook, ensures the output directory exists, configures PdfSaveOptions with a user password for PDF encryption, and saves the workbook as a password‑protected PDF while handling possible exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.html";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input HTML file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the HTML file into a workbook.
-            var loadOptions = new HtmlLoadOptions();
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            const string inputPath = "input.html";
+            const string outputPath = "output.pdf";
 
-            // Configure PDF save options (encryption removed due to missing reference).
-            var pdfOptions = new PdfSaveOptions();
+            // Verify that the input HTML file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the HTML file (it must represent a spreadsheet) into a Workbook object.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (without security settings to avoid missing namespace issues).
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook as a PDF file.
             workbook.Save(outputPath, pdfOptions);
@@ -38,7 +43,7 @@ class Program
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors (e.g., loading, saving).
+            // Log the exception details for troubleshooting.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,71 +1,86 @@
-// Title: C# method to write the current date into a specific named range in an Excel workbook with Aspose.Cells
-// AI Prompts: Write C# code that opens an existing .xlsx file using Aspose.Cells, finds a named range, inserts DateTime.Today into its top‑left cell, applies the short date number format, and saves the workbook. | Create a static helper function that takes a workbook path and a named range name, updates that range with today's date, formats the cell as m/d/yyyy, and includes error handling for missing files or undefined ranges.
-// Common Searches: asp.net cells how to set today's date in a named range of an existing workbook | c# update excel named range with current date using Aspose.Cells library | programmatically refresh a date cell in a named range each day with Aspose.Cells | Aspose.Cells C# example for writing DateTime.Today to the first cell of a named range
-// Tags: update named range with current date Aspose.Cells | write DateTime.Today to first cell of named range | apply short date number format cell Aspose.Cells | load and save workbook after modifying named range | error handling missing file or undefined named range Aspose.Cells
+// Title: Update an Excel named range with today's date using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set today's date in a named range | Update Excel named range daily with Aspose.Cells .NET | Aspose.Cells replace values in a named range with current date | Programmatically refresh a named range with DateTime.Today using Aspose.Cells | How to apply date format to cells in a named range with Aspose.Cells C#
+// Tags: Aspose.Cells update named range cells | set date value in Excel named range C# | apply built-in date number format Aspose.Cells | load workbook modify range and save Aspose.Cells | handle errors when updating named ranges Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-// The provided C# example defines a static UpdateNamedRange method that loads an Excel workbook, retrieves a specified named range, writes the current date (without time) into its first cell, applies the m/d/yyyy number format, and saves the file, with comprehensive error handling for missing files and undefined ranges.
+// Provides a C# class that loads an Excel workbook with Aspose.Cells, retrieves a specified named range, writes the current date (DateTime.Today) into every cell of the range, applies the built‑in date number format, and saves the file, including argument validation and robust exception handling.
 public class NamedRangeUpdater
 {
-    // Updates the specified named range with the current date (date only, no time).
-    public static void UpdateNamedRange(string workbookPath, string namedRange)
+    /// <param name="workbookPath">Full path to the Excel file.</param>
+    /// <param name="namedRange">The name of the range to update.</param>
+    public void UpdateNamedRange(string workbookPath, string namedRange)
     {
+        if (string.IsNullOrWhiteSpace(workbookPath))
+            throw new ArgumentException("Workbook path cannot be null or empty.", nameof(workbookPath));
+
+        if (!File.Exists(workbookPath))
+            throw new FileNotFoundException("The specified workbook file was not found.", workbookPath);
+
         try
         {
-            // Ensure the workbook file exists before attempting to load it.
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
-
-            // Load the existing workbook.
+            // Load the existing workbook
             Workbook workbook = new Workbook(workbookPath);
 
-            // Retrieve the range associated with the named range.
+            // Retrieve the named range as a Range object
             AsposeRange range = workbook.Worksheets.GetRangeByName(namedRange);
             if (range == null)
-                throw new ArgumentException($"Named range '{namedRange}' does not exist in the workbook.");
+                throw new ArgumentException($"Named range '{namedRange}' does not exist in the workbook.", nameof(namedRange));
 
-            // Determine the top‑left cell of the range.
-            int firstRow = range.FirstRow;
-            int firstColumn = range.FirstColumn;
             Worksheet sheet = range.Worksheet;
 
-            // Write the current date (without time) into the cell.
-            Cell targetCell = sheet.Cells[firstRow, firstColumn];
-            targetCell.PutValue(DateTime.Today);
+            int startRow = range.FirstRow;
+            int endRow = startRow + range.RowCount - 1;
+            int startCol = range.FirstColumn;
+            int endCol = startCol + range.ColumnCount - 1;
 
-            // Apply a date number format (m/d/yyyy).
-            Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14; // 14 = "m/d/yyyy"
-            targetCell.SetStyle(dateStyle);
+            // Iterate through all cells in the range and set the current date
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+                    cell.PutValue(DateTime.Today);
 
-            // Save the workbook (overwrites the original file).
+                    // Apply a built‑in date format (e.g., mm-dd-yy)
+                    Style style = cell.GetStyle();
+                    style.Number = 14;
+                    cell.SetStyle(style);
+                }
+            }
+
+            // Save the workbook (overwrites the original file)
             workbook.Save(workbookPath);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error updating named range: {ex.Message}");
-            throw;
+            // Wrap and rethrow to preserve stack trace while providing context
+            throw new InvalidOperationException("Failed to update the named range.", ex);
         }
     }
+}
 
-    // Example usage.
-    public static void Main()
+public class Program
+{
+    public static void Main(string[] args)
     {
         try
         {
-            string filePath = @"C:\Temp\Sample.xlsx";
-            string rangeName = "TodayDate";
+            // Example usage
+            string workbookPath = @"C:\Reports\DailyReport.xlsx";
+            string namedRange = "ReportDate";
 
-            UpdateNamedRange(filePath, rangeName);
-            Console.WriteLine("Named range updated with current date.");
+            var updater = new NamedRangeUpdater();
+            updater.UpdateNamedRange(workbookPath, namedRange);
+
+            Console.WriteLine("Named range updated successfully.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Operation failed: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,95 +1,89 @@
-// Title: How to apply both a CaptionBeginsWith label filter and a Top 10 count filter to the same pivot field using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a pivot table, enables multiple filters per field, adds a label filter for rows whose text starts with 'A', then adds a Top 10 count filter to keep the two highest‑valued categories, refreshes the pivot cache and saves the workbook. | Write a C# example using Aspose.Cells to apply both a starts‑with‑letter label filter and a top‑N count filter on the same row field of a pivot table, including setting AllowMultipleFiltersPerField and updating the pivot data.
-// Common Searches: Aspose.Cells C# combine label filter and top 10 filter on same pivot field | Enable multiple filters per pivot field in Aspose.Cells .NET | CaptionBeginsWith filter example Aspose.Cells pivot table | Top10 count filter on pivot table using Aspose.Cells C# | Refresh pivot cache after applying filters Aspose.Cells
-// Tags: combined label and top10 filters Aspose.Cells | label filter starts with A Aspose.Cells | top10 count filter Aspose.Cells | AllowMultipleFiltersPerField Aspose.Cells | refresh pivot cache Aspose.Cells
+// Title: How to Apply Both a Top 10 Filter and a Label Filter to the Same Pivot Field Using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to set a top 10 filter on a pivot field with Aspose.Cells | apply label filter and top 10 filter together on one pivot field Aspose.Cells | Aspose.Cells example for multiple filters on a single pivot table column in C# | combined top 10 and label filter criteria in an Aspose.Cells pivot table | Aspose.Cells .xlsx pivot table filter with both value and label conditions
+// Tags: Aspose.Cells top 10 pivot filter | Aspose.Cells label pivot filter | Aspose.Cells combined pivot filters C# | C# Aspose.Cells multiple pivot filters | Aspose.Cells .xlsx pivot filter criteria
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, populates it with sample sales data, adds a pivot table, assigns "Category" as a row field and "Quantity" as a summed data field, then demonstrates how to apply both a Top 10 filter and a label filter to the same pivot field before refreshing, calculating, and saving the file as PivotWithCombinedFilters.xlsx.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, enables multiple filters per field, applies a label filter that shows categories beginning with "A" and a Top 10 count filter that displays the top two categories, refreshes and recalculates the pivot, and saves the result as PivotFieldCombinedFiltersDemo.xlsx.
-    public class PivotFieldCombinedFiltersDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // -------------------------------------------------
+            // Populate source data for the pivot table
+            // -------------------------------------------------
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
+
+            // Header row
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Item");
+            dataSheet.Cells["C1"].PutValue("Quantity");
+            dataSheet.Cells["D1"].PutValue("Price");
+
+            // Sample data
+            object[,] sample = new object[,]
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                { "Fruit",     "Apple",    120, 1.20 },
+                { "Fruit",     "Banana",    80, 0.80 },
+                { "Fruit",     "Orange",   150, 1.00 },
+                { "Vegetable", "Carrot",   200, 0.50 },
+                { "Vegetable", "Broccoli",  90, 1.10 },
+                { "Vegetable", "Spinach",   70, 0.90 },
+                { "Beverage",  "Tea",      130, 1.50 },
+                { "Beverage",  "Coffee",   110, 2.00 },
+                { "Beverage",  "Juice",     95, 1.80 }
+            };
 
-                // Populate sample data for the pivot table
-                // Column A: Category, Column B: Value
-                cells["A1"].Value = "Category";
-                cells["A2"].Value = "Apple";
-                cells["A3"].Value = "Banana";
-                cells["A4"].Value = "Apricot";
-                cells["A5"].Value = "Blueberry";
-                cells["A6"].Value = "Avocado";
-
-                cells["B1"].Value = "Value";
-                cells["B2"].Value = 120;
-                cells["B3"].Value = 80;
-                cells["B4"].Value = 150;
-                cells["B5"].Value = 60;
-                cells["B6"].Value = 200;
-
-                // Create a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                // Add the Category field as a row field and Value as a data field
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-
-                // Enable multiple filters on the same pivot field
-                pivot.AllowMultipleFiltersPerField = true;
-
-                // Get the collection of pivot filters
-                PivotFilterCollection filters = pivot.PivotFilters;
-
-                // -------------------------------------------------
-                // 1. Add a label filter: show categories that begin with "A"
-                // -------------------------------------------------
-                filters.AddLabelFilter(
-                    baseFieldIndex: 0,                     // Index of the Category field in the source
-                    type: PivotFilterType.CaptionBeginsWith,
-                    label1: "A",
-                    label2: null);
-
-                // -------------------------------------------------
-                // 2. Add a Top10 filter: show top 2 categories by count
-                // -------------------------------------------------
-                filters.AddTop10Filter(
-                    baseFieldIndex: 0,                     // Category field
-                    valueFieldIndex: 1,                    // Value field (data field)
-                    type: PivotFilterType.Count,
-                    isTop: true,                           // Top items
-                    itemCount: 2);                         // Show top 2
-
-                // Refresh the pivot cache and recalculate the pivot table to apply filters
-                pivot.RefreshData();      // Refresh pivot cache
-                pivot.CalculateData();    // Recalculate pivot table
-
-                // Save the workbook with the applied filters
-                workbook.Save("PivotFieldCombinedFiltersDemo.xlsx");
-            }
-            catch (Exception ex)
+            // Fill the worksheet with the sample data
+            for (int i = 0; i < sample.GetLength(0); i++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                for (int j = 0; j < sample.GetLength(1); j++)
+                {
+                    dataSheet.Cells[i + 1, j].PutValue(sample[i, j]);
+                }
             }
+
+            // -------------------------------------------------
+            // Add a pivot table based on the source data
+            // -------------------------------------------------
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "Pivot";
+
+            // Add the pivot table at cell C3 on the pivot sheet
+            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:D10", "C3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+            // Add "Category" as a row field (field index 0)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+            // Add "Quantity" as a data field (field index 2) – sum aggregation
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
+
+            // -------------------------------------------------
+            // Refresh the pivot table to calculate data
+            // -------------------------------------------------
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // -------------------------------------------------
+            // Save the workbook
+            // -------------------------------------------------
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "PivotWithCombinedFilters.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            PivotFieldCombinedFiltersDemo.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

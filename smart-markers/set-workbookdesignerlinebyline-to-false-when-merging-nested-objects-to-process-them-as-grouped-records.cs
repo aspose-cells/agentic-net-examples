@@ -1,28 +1,28 @@
-// Title: Create grouped Excel rows from Department and Employee objects by disabling WorkbookDesigner.LineByLine in Aspose.Cells for .NET
-// AI Prompts: Generate an Excel workbook in C# that binds a List<Department> containing nested Employee lists and outputs grouped rows by setting WorkbookDesigner.LineByLine = false. | Define a named smart‑marker range called _CellsSmartMarkers and process the template with WorkbookDesigner to merge parent‑child data into a single record set.
-// Common Searches: Aspose.Cells how to disable line‑by‑line processing for nested collections | C# smart markers grouped records with parent child objects | WorkbookDesigner set LineByLine false example with named range | Export Department and Employee data to Excel using Aspose.Cells smart markers | named smart marker range _CellsSmartMarkers usage in Aspose.Cells
-// Tags: WorkbookDesigner line-by-line false | smart markers nested collection | named smart marker range _CellsSmartMarkers | grouped records Aspose.Cells | C# export parent child objects to Excel
+// Title: Set WorkbookDesigner.LineByLine = false to merge nested Parent‑Child objects as grouped records with Aspose.Cells for .NET
+// Common Searches: how to disable linebyline in WorkbookDesigner for hierarchical data in Aspose.Cells C# | Aspose.Cells smart markers processing nested collections as grouped records | C# example merging parent child DataSet into Excel using WorkbookDesigner | using WorkbookDesigner to handle parent‑child relations without line‑by‑line output | Aspose.Cells template with smart markers for nested objects
+// Tags: WorkbookDesigner LineByLine false | Aspose.Cells hierarchical smart markers | C# nested DataSet relation Excel export | grouped records processing Aspose.Cells | parent child smart markers Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsLineByLineDemo
+namespace AsposeCellsExample
 {
-    // Sample child class representing nested objects
-    // Demonstrates using WorkbookDesigner with LineByLine set to false and a named smart‑marker range to merge Department objects and their Employee collections into grouped records in an Excel workbook.
-    public class Employee
+    // Sample data classes representing nested objects
+    // The example demonstrates creating a WorkbookDesigner, setting LineByLine to false so that nested Parent‑Child collections are treated as grouped records, building a DataSet with Parent and Child tables linked by a DataRelation, assigning the DataSet as the data source, processing smart markers in the Excel template, and saving the resulting workbook.
+    public class Parent
     {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
+        public string? Name { get; set; }
+        public List<Child>? Children { get; set; }
     }
 
-    // Sample parent class containing a collection of nested objects
-    public class Department
+    public class Child
     {
-        public string DeptName { get; set; } = string.Empty;
-        public List<Employee> Employees { get; set; } = new();
+        public string? Item { get; set; }
+        public int Quantity { get; set; }
     }
 
     class Program
@@ -31,65 +31,121 @@ namespace AsposeCellsLineByLineDemo
         {
             try
             {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                const string templatePath = "Template.xlsx";
+                const string resultPath = "Result.xlsx";
 
-                // 2. Insert smart markers for a parent object (Department) and its nested collection (Employees)
-                //    The markers are placed inside a range that will be named "_CellsSmartMarkers"
-                sheet.Cells["A1"].PutValue("&Department.DeptName");          // Parent property
-                sheet.Cells["A2"].PutValue("&Department.Employees.Name");   // Nested collection property
-                sheet.Cells["B2"].PutValue("&Department.Employees.Age");    // Nested collection property
-
-                // Define the range that contains the smart markers and give it the required name
-                // This is needed when LineByLine is set to false
-                AsposeRange smartMarkerRange = sheet.Cells.CreateRange("A1:B2");
-                smartMarkerRange.Name = "_CellsSmartMarkers";
-
-                // 3. Prepare sample data with nested objects
-                List<Department> departments = new List<Department>
+                // Ensure the template file exists; create a minimal workbook if missing
+                Workbook workbook;
+                if (File.Exists(templatePath))
                 {
-                    new Department
+                    workbook = new Workbook(templatePath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    // Optionally add a worksheet with markers for demonstration
+                    Worksheet ws = workbook.Worksheets[0];
+                    ws.Cells["A1"].PutValue("&=Parent.Name");
+                    ws.Cells["A2"].PutValue("&=Child.Item");
+                    ws.Cells["B2"].PutValue("&=Child.Quantity");
+                }
+
+                // Create a WorkbookDesigner instance for the loaded workbook
+                WorkbookDesigner designer = new WorkbookDesigner(workbook)
+                {
+                    // Treat nested collections as grouped records
+                    LineByLine = false
+                };
+
+                // Prepare sample nested data
+                var data = new List<Parent>
+                {
+                    new Parent
                     {
-                        DeptName = "Sales",
-                        Employees = new List<Employee>
+                        Name = "Order A",
+                        Children = new List<Child>
                         {
-                            new Employee { Name = "John Doe", Age = 30 },
-                            new Employee { Name = "Jane Smith", Age = 28 }
+                            new Child { Item = "Apple", Quantity = 10 },
+                            new Child { Item = "Banana", Quantity = 5 }
                         }
                     },
-                    new Department
+                    new Parent
                     {
-                        DeptName = "HR",
-                        Employees = new List<Employee>
+                        Name = "Order B",
+                        Children = new List<Child>
                         {
-                            new Employee { Name = "Bob Johnson", Age = 35 }
+                            new Child { Item = "Orange", Quantity = 8 },
+                            new Child { Item = "Grape", Quantity = 12 }
                         }
                     }
                 };
 
-                // 4. Initialize WorkbookDesigner, assign the workbook, and set LineByLine to false
-                //    This tells the designer to treat the nested collection as a grouped record set
-                WorkbookDesigner designer = new WorkbookDesigner(workbook)
-                {
-                    LineByLine = false // Obsolete but still functional; using range smart markers instead of line‑by‑line
-                };
+                // Convert the nested list into a DataSet compatible with WorkbookDesigner
+                DataSet ds = BuildDataSet(data);
 
-                // 5. Bind the data source to the smart marker name used in the template
-                designer.SetDataSource("Department", departments);
+                // Set the data source for the designer
+                designer.SetDataSource(ds);
 
-                // 6. Process the smart markers
+                // Process the markers in the workbook using the provided data
                 designer.Process();
 
-                // 7. Save the resulting workbook
-                string outputPath = "GroupedNestedOutput.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the resulting workbook
+                workbook.Save(resultPath);
+                Console.WriteLine($"Workbook saved to '{resultPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Builds a DataSet with Parent and Child tables and a relation between them
+        private static DataSet BuildDataSet(List<Parent> parents)
+        {
+            DataSet ds = new DataSet();
+
+            // Parent table
+            DataTable parentTable = new DataTable("Parent");
+            parentTable.Columns.Add("Name", typeof(string));
+            ds.Tables.Add(parentTable);
+
+            // Child table
+            DataTable childTable = new DataTable("Child");
+            childTable.Columns.Add("Item", typeof(string));
+            childTable.Columns.Add("Quantity", typeof(int));
+            childTable.Columns.Add("ParentName", typeof(string)); // foreign key column
+            ds.Tables.Add(childTable);
+
+            // Populate tables
+            foreach (var p in parents)
+            {
+                // Add parent row
+                DataRow parentRow = parentTable.NewRow();
+                parentRow["Name"] = p.Name ?? string.Empty;
+                parentTable.Rows.Add(parentRow);
+
+                // Add child rows linked to this parent
+                if (p.Children != null)
+                {
+                    foreach (var c in p.Children)
+                    {
+                        DataRow childRow = childTable.NewRow();
+                        childRow["Item"] = c.Item ?? string.Empty;
+                        childRow["Quantity"] = c.Quantity;
+                        childRow["ParentName"] = p.Name ?? string.Empty;
+                        childTable.Rows.Add(childRow);
+                    }
+                }
+            }
+
+            // Create relation between Parent.Name and Child.ParentName
+            DataRelation relation = new DataRelation(
+                "Parent_Child",
+                parentTable.Columns["Name"],
+                childTable.Columns["ParentName"]);
+            ds.Relations.Add(relation);
+
+            return ds;
         }
     }
 }

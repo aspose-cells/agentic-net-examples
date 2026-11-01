@@ -1,73 +1,56 @@
-// Title: Retrieve a shape's absolute top and left coordinates in points, convert them to pixel offsets, and compare the values using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, reads the first shape's Top and Left properties in points, converts those values to pixel offsets (using 1 point = 1/0.75 pixels), converts the pixel values back to points, and prints the original, converted, and difference values. | Show how to calculate pixel offsets from a shape's point coordinates and verify the conversion accuracy with Aspose.Cells in a .NET application.
-// Common Searches: how to get shape top left position in points with Aspose.Cells C# | convert shape coordinates from points to pixels using Aspose.Cells | compare Aspose.Cells shape point values with pixel offsets in Excel | C# Aspose.Cells retrieve absolute position of a drawing shape | pixel to point conversion for Excel shapes in .NET
-// Tags: Aspose.Cells shape position points | shape point to pixel conversion Aspose.Cells | retrieve shape top left coordinates C# | Excel shape absolute position Aspose.Cells | pixel offset verification Aspose.Cells
+// Title: Get a worksheet shape's absolute top and left coordinates in points and convert them to pixels using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, accesses the first shape on the first worksheet, and prints its Top and Left values in both points and pixels. | Create a helper method in C# that returns a shape's position as a struct containing the top/left measurements in points and the equivalent pixel values using Aspose.Cells. | Extend the sample to also output the shape's width and height, converting those dimensions from points to pixels with the 96/72 conversion factor.
+// Common Searches: Aspose.Cells get shape top coordinate in points C# | convert shape left position from points to pixels Aspose.Cells | how to read absolute position of Excel drawing shape using Aspose.Cells .NET | pixel conversion formula for Excel shape measurements C# Aspose
+// Tags: Aspose.Cells shape position points to pixels conversion | C# retrieve worksheet shape coordinates | Aspose.Cells get shape top left values | Excel shape measurement conversion .NET | Aspose.Cells shape dimensions conversion points pixels
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, accesses the first worksheet, obtains the first shape, reads its Top and Left values in points, converts those values to pixel offsets using the 1 point = 1/0.75 pixel ratio, converts the pixel offsets back to points, calculates the differences, and writes all results to the console.
+// The example loads a workbook, accesses the first shape on the first worksheet, reads its Top and Left properties (stored in points), converts those values to pixels using the 96/72 ratio, prints both units, and saves the workbook.
 class ShapePositionExample
 {
     static void Main()
     {
-        string filePath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(filePath);
+            // Load an existing workbook if present; otherwise create a new one.
+            const string inputPath = "input.xlsx";
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape on the worksheet
+            // Ensure there is at least one shape on the sheet.
             if (sheet.Shapes.Count == 0)
             {
-                Console.WriteLine("No shapes found on the worksheet.");
+                Console.WriteLine("No shapes found on the first worksheet.");
                 return;
             }
 
-            // Get the first shape
+            // Retrieve the first shape.
             Shape shape = sheet.Shapes[0];
 
-            // Retrieve the shape's absolute position in points
-            double topInPoints = shape.Top;
-            double leftInPoints = shape.Left;
+            // Excel stores the shape's top/left position in points.
+            double shapeTopPoints = shape.Top;
+            double shapeLeftPoints = shape.Left;
 
-            // Convert points to pixel offsets (1 point = 1/0.75 pixels)
-            int topOffsetPixels = (int)Math.Round(topInPoints / 0.75);
-            int leftOffsetPixels = (int)Math.Round(leftInPoints / 0.75);
+            // Convert points to pixels (1 point = 1/72 inch, 1 pixel = 1/96 inch).
+            double shapeTopPixels = shapeTopPoints * 96.0 / 72.0;
+            double shapeLeftPixels = shapeLeftPoints * 96.0 / 72.0;
 
-            // Convert pixel offsets back to points for comparison
-            double topOffsetPoints = topOffsetPixels * 0.75;
-            double leftOffsetPoints = leftOffsetPixels * 0.75;
+            Console.WriteLine($"Shape top: {shapeTopPoints:F2} pts ({shapeTopPixels:F0} px)");
+            Console.WriteLine($"Shape left: {shapeLeftPoints:F2} pts ({shapeLeftPixels:F0} px)");
 
-            // Compare the Aspose.Cells point values with the converted pixel values
-            double topDifference = Math.Abs(topInPoints - topOffsetPoints);
-            double leftDifference = Math.Abs(leftInPoints - leftOffsetPoints);
-
-            // Output the results
-            Console.WriteLine($"Shape Top (points): {topInPoints}");
-            Console.WriteLine($"Shape Left (points): {leftInPoints}");
-            Console.WriteLine($"Top offset (pixels) -> points: {topOffsetPixels} px = {topOffsetPoints} pt");
-            Console.WriteLine($"Left offset (pixels) -> points: {leftOffsetPixels} px = {leftOffsetPoints} pt");
-            Console.WriteLine($"Difference in Top: {topDifference} points");
-            Console.WriteLine($"Difference in Left: {leftDifference} points");
+            // Save the workbook.
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

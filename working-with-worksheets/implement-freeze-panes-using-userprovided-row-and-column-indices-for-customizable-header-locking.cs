@@ -1,40 +1,90 @@
-// Title: Freeze custom rows and columns in an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that freezes a user‑specified number of rows and columns in an Aspose.Cells workbook and saves the file. | Show how to use the Worksheet.FreezePanes method with dynamic row and column indices and include basic exception handling. | Create a snippet that reads row and column values from variables, applies FreezePanes, and writes the result to an .xlsx file.
-// Common Searches: how to freeze the first two rows and first column in Excel using Aspose.Cells C# | Aspose.Cells programmatically lock header rows based on user input | C# example for setting custom freeze panes in an .xlsx workbook with Aspose | using Worksheet.FreezePanes to define scrollable area in .NET
-// Tags: Aspose.Cells worksheet FreezePanes C# | custom row column freeze Excel .NET | programmatic header locking Aspose.Cells | freeze panes with user-defined indices | save workbook after applying FreezePanes
+// Title: Apply customizable freeze panes to lock header rows and columns in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that opens an Excel workbook, freezes the top N rows and left M columns with Aspose.Cells, and saves the modified file. | Create a console program that reads input file path, output file path, freeze row index, and freeze column index from command‑line arguments and applies FreezePanes to the first worksheet using Aspose.Cells. | Implement robust error handling that checks for the source file, creates missing output directories, and wraps exceptions when applying FreezePanes in Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze panes based on row and column indices | how to lock header rows and columns in Excel using Aspose.Cells .NET | C# console app to apply FreezePanes to the first worksheet with Aspose.Cells | example of saving an Excel file after setting FreezePanes with Aspose.Cells | validate input file and create output folder when using Aspose.Cells FreezePanes
+// Tags: Aspose.Cells FreezePanes C# | custom header lock Excel Aspose.Cells | load and save workbook Aspose.Cells .NET | command line Excel processing Aspose.Cells | error handling Aspose.Cells file operations
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, accesses the first worksheet, and calls Worksheet.FreezePanes with user‑provided row and column counts to lock the top rows and first column. The workbook is then saved as FreezePanesResult.xlsx, with basic exception handling around the operation.
-class FreezePanesExample
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example validates the source file, loads it into a Workbook, accesses the first worksheet, applies FreezePanes using user‑provided row and column indices, ensures the output directory exists, and saves the updated workbook with comprehensive exception handling.
+    public class FreezePaneHelper
     {
-        try
+        /// <param name="inputFilePath">Path to the source Excel file.</param>
+        /// <param name="outputFilePath">Path where the modified file will be saved.</param>
+        /// <param name="freezeRow">Number of rows to freeze (rows above this index will be locked).</param>
+        /// <param name="freezeColumn">Number of columns to freeze (columns left of this index will be locked).</param>
+        public void ApplyFreezePanes(string inputFilePath, string outputFilePath, int freezeRow, int freezeColumn)
         {
-            // User‑provided indices (0‑based for the API)
-            // Example: freeze first 2 rows and first column
-            int freezeRow = 2;      // Number of rows to freeze
-            int freezeColumn = 1;   // Number of columns to freeze
+            // Validate input file existence
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
 
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFilePath);
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet (modify index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Apply freeze panes:
-            // freezeRow and freezeColumn specify the top‑left cell of the scrollable area,
-            // the same values are used for totalRows and totalColumns to define the frozen area.
-            sheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
+                // Apply freeze panes: rows above freezeRow and columns left of freezeColumn
+                worksheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("FreezePanesResult.xlsx");
+                // Ensure the output directory exists
+                string outDir = Path.GetDirectoryName(outputFilePath);
+                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                    Directory.CreateDirectory(outDir);
+
+                // Save the modified workbook
+                workbook.Save(outputFilePath);
+            }
+            catch (Exception ex)
+            {
+                // Wrap exception for clearer context
+                throw new ApplicationException("Error applying freeze panes.", ex);
+            }
         }
-        catch (Exception ex)
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // args[0] = input file path, args[1] = output file path, args[2] = freeze row, args[3] = freeze column
+            if (args.Length < 4)
+            {
+                Console.WriteLine("Usage: <inputFilePath> <outputFilePath> <freezeRow> <freezeColumn>");
+                return;
+            }
+
+            string inputPath = args[0];
+            string outputPath = args[1];
+
+            if (!int.TryParse(args[2], out int freezeRow))
+            {
+                Console.WriteLine("Invalid freezeRow value.");
+                return;
+            }
+
+            if (!int.TryParse(args[3], out int freezeColumn))
+            {
+                Console.WriteLine("Invalid freezeColumn value.");
+                return;
+            }
+
+            try
+            {
+                var helper = new FreezePaneHelper();
+                helper.ApplyFreezePanes(inputPath, outputPath, freezeRow, freezeColumn);
+                Console.WriteLine($"Freeze panes applied successfully. Output saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

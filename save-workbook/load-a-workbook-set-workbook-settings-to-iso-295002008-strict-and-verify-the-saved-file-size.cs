@@ -1,38 +1,47 @@
-// Title: Save an Excel workbook with ISO‑29500‑2008 strict compliance using Aspose.Cells for .NET and check the file size in C#
-// AI Prompts: Create a new Workbook, set Settings.Compliance to OoxmlCompliance.Iso29500_2008_Strict, write a value to a cell, save it as an .xlsx file, and output the resulting file size. | Load the saved .xlsx file with the Workbook constructor and display its Settings.Compliance value to confirm strict ISO compliance.
-// Common Searches: Aspose.Cells C# how to enforce ISO 29500-2008 strict mode when saving an Excel file | C# code to get file size after saving workbook with Aspose.Cells | Verify workbook compliance setting after loading a strict OOXML file using Aspose.Cells | Set OoxmlCompliance to Iso29500_2008_Strict in Aspose.Cells .NET example | Check saved Excel file size programmatically with Aspose.Cells in C#
-// Tags: aspocells set workbook compliance iso29500 strict | aspocells save workbook strict ooxml | c# get saved excel file size aspocells | aspocells load workbook read compliance setting | ooxml compliance iso29500_2008_strict c#
+// Title: Load an Excel workbook, save it in ISO‑29500‑2008 strict OpenXML format, and display the resulting file size using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with Aspose.Cells, enable ISO‑29500‑2008 strict OpenXML mode, save the workbook, and print the saved file size in bytes. | Show how to verify the byte length of an Excel file after saving it in strict OpenXML format with C# and Aspose.Cells.
+// Common Searches: Aspose.Cells .NET save workbook as ISO 29500-2008 strict OpenXML and get file size | How to enable strict OpenXML mode when saving an Excel file with Aspose.Cells | Check output file size after saving workbook using Aspose.Cells C# | WorkbookSettings.IsStrict property availability in Aspose.Cells versions | Save existing Excel file as strict OpenXML using Aspose.Cells and verify byte length
+// Tags: strict OpenXML save Aspose.Cells | load and re‑save Excel workbook C# | verify saved workbook byte size | ISO 29500‑2008 mode Aspose.Cells | C# Aspose.Cells file size verification
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example creates a new Workbook, configures its Settings.Compliance to ISO‑29500‑2008 strict mode, writes a sample value, saves the file as StrictCompliance.xlsx, prints the saved file size, then reloads the workbook to display the compliance setting, demonstrating both strict OOXML compliance and file‑size verification.
+// The example loads an existing "input.xlsx" workbook with Aspose.Cells, notes that strict OpenXML mode may require a newer library version, saves the workbook as "output.xlsx" in XLSX format, and then prints the saved file's size in bytes.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (uses the Workbook() constructor rule)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Path to the input workbook
+            string inputPath = "input.xlsx";
 
-        // Set the OOXML compliance level to ISO/IEC 29500:2008 Strict
-        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Add a simple value so the file is not empty
-        workbook.Worksheets[0].Cells["A1"].PutValue("Strict compliance demo");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Define the output file name
-        string outputPath = "StrictCompliance.xlsx";
+            // NOTE: In the current Aspose.Cells version the strict OpenXML mode
+            // is not exposed via a public property. If needed, upgrade to a
+            // version that supports WorkbookSettings.IsStrict.
 
-        // Save the workbook (uses the Save(string) rule)
-        workbook.Save(outputPath);
+            // Save the workbook in XLSX format
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
 
-        // Verify the saved file size
-        FileInfo fileInfo = new FileInfo(outputPath);
-        Console.WriteLine($"Saved file size: {fileInfo.Length} bytes");
-
-        // Load the workbook back to confirm it can be opened (uses Workbook(string) rule)
-        Workbook loadedWorkbook = new Workbook(outputPath);
-        Console.WriteLine($"Loaded workbook compliance: {loadedWorkbook.Settings.Compliance}");
+            // Verify the saved file size
+            FileInfo fileInfo = new FileInfo(outputPath);
+            Console.WriteLine($"Saved file size: {fileInfo.Length} bytes");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,62 +1,80 @@
-// Title: Use Aspose.Cells in C# to calculate a chart and read generated value and category axis labels
-// AI Prompts: Generate C# code that builds a column chart with Aspose.Cells, calls Chart.Calculate(), and returns the array of strings from ValueAxis.GetAxisTexts(). | Write a C# snippet that extracts both value and category axis texts from a calculated Aspose.Cells chart using GetAxisTexts() and prints them. | Show how to save a workbook after retrieving calculated axis labels from a chart in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells how to get value axis labels after chart.Calculate in C# | C# Aspose.Cells retrieve category axis texts from a chart | example of using GetAxisTexts with Aspose.Cells chart objects | read calculated axis labels from column chart Aspose.Cells .NET | Chart.Calculate then ValueAxis.GetAxisTexts Aspose.Cells sample
-// Tags: Chart.Calculate axis label extraction Aspose.Cells | ValueAxis.GetAxisTexts C# | CategoryAxis.GetAxisTexts Aspose.Cells | column chart axis labels .NET | retrieve chart axis texts Aspose.Cells
+// Title: Read formatted X and Y axis labels from an Excel chart after calling Chart.Calculate() with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx workbook using Aspose.Cells, invokes Chart.Calculate() on the first chart, and prints the category and value axis texts via Axis.GetAxisTexts(). | Show how to capture the formatted axis label strings from a chart after calculation and store them in string arrays for further processing. | Adapt the example to export the retrieved X‑axis and Y‑axis labels to a CSV file instead of writing them to the console.
+// Common Searches: Aspose.Cells C# get chart axis labels after Chart.Calculate | How to retrieve formatted axis texts from an Excel chart using Aspose.Cells | Example of using Axis.GetAxisTexts() in .NET | Read X and Y axis values from a chart in an .xlsx workbook with Aspose.Cells | C# chart calculation before extracting axis labels Aspose.Cells
+// Tags: Chart.Calculate with Aspose.Cells | Axis.GetAxisTexts C# | extract formatted axis labels from Excel chart | read chart axis texts after calculation | Aspose.Cells chart axis retrieval | C# Excel chart label extraction
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds sample data, inserts a column chart, calls Chart.Calculate() to generate axis labels, then uses ValueAxis.GetAxisTexts() and CategoryAxis.GetAxisTexts() to obtain the calculated labels, prints them, and saves the workbook.
+// Loads an Excel workbook, selects the first worksheet and its first chart, runs Chart.Calculate() to update the chart, then obtains the formatted category (X) and value (Y) axis labels via Axis.GetAxisTexts() and writes them to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue(8000);
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B3"].PutValue(4000);
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B4"].PutValue(-8000);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-
-        // Set the data range for the series and the category axis
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Calculate the chart so that axis labels are generated
-        chart.Calculate();
-
-        // Retrieve the calculated labels for the value axis
-        string[] valueAxisLabels = chart.ValueAxis.GetAxisTexts();
-
-        // Retrieve the calculated labels for the category axis
-        string[] categoryAxisLabels = chart.CategoryAxis.GetAxisTexts();
-
-        // Output the axis labels to the console
-        Console.WriteLine("Value Axis Labels:");
-        foreach (string label in valueAxisLabels)
+        try
         {
-            Console.WriteLine(label);
-        }
+            const string inputPath = "input.xlsx";
 
-        Console.WriteLine("\nCategory Axis Labels:");
-        foreach (string label in categoryAxisLabels)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure the workbook contains at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("Error: The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("Error: The worksheet does not contain any charts.");
+                return;
+            }
+
+            // Get the first chart on the worksheet (adjust index if needed)
+            Chart chart = worksheet.Charts[0];
+
+            // Perform chart calculations to ensure axis data is up‑to‑date
+            chart.Calculate();
+
+            // Retrieve the category (X) axis and value (Y) axis
+            Axis xAxis = chart.CategoryAxis;
+            Axis yAxis = chart.ValueAxis;
+
+            // Get the formatted axis labels after calculation
+            string[] xAxisLabels = xAxis.GetAxisTexts();
+            string[] yAxisLabels = yAxis.GetAxisTexts();
+
+            // Output the axis labels
+            Console.WriteLine("X Axis Labels:");
+            foreach (string label in xAxisLabels)
+            {
+                Console.WriteLine(label);
+            }
+
+            Console.WriteLine("\nY Axis Labels:");
+            foreach (string label in yAxisLabels)
+            {
+                Console.WriteLine(label);
+            }
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine(label);
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("AxisLabelsDemo.xlsx");
     }
 }

@@ -1,85 +1,59 @@
-// Title: Apply a JSON-defined color scheme to an Excel workbook using Aspose.Cells SetThemeColor in C#
-// AI Prompts: Read a JSON file that maps ThemeColorType names to hex strings, convert each hex value to System.Drawing.Color, and assign it to the workbook with Workbook.SetThemeColor. | Refactor the code to accept a JSON string or stream instead of a file path, then apply the parsed theme colors to an existing Workbook instance. | Enhance the example with validation that skips entries with invalid hex formats or unknown ThemeColorType keys while logging detailed warnings.
-// Common Searches: C# Aspose.Cells load custom theme colors from JSON file | How to set Excel theme colors programmatically with Aspose.Cells | Parse hex color values from JSON and apply to workbook theme in .NET | Aspose.Cells SetThemeColor using dictionary of color names
-// Tags: setthemecolor from json Aspose.Cells | json-defined excel theme colors c# | convert hex to System.Drawing.Color c# | apply custom workbook theme Aspose.Cells | themecolortype mapping json c#
+// Title: Load a JSON color palette and set it as the workbook theme using Aspose.Cells for .NET
+// Common Searches: how to load theme colors from a JSON string and apply them to an Excel workbook with Aspose.Cells C# | Aspose.Cells set custom theme colors from a dictionary of hex values | C# example using SetThemeColor and ThemeColorType to import a JSON color scheme | apply JSON-defined hex colors to a workbook theme in Aspose.Cells .NET | convert JSON color map to System.Drawing.Color for Excel theme with Aspose.Cells
+// Tags: json color palette to workbook theme Aspose.Cells | setthemecolor method usage C# | themecolortype mapping from json Aspose.Cells | hex to System.Drawing.Color conversion Aspose.Cells | custom Excel theme creation Aspose.Cells .NET
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Text.Json;
 
-// The sample creates a new Workbook, reads a JSON file containing ThemeColorType keys and hex color values, converts each hex string to a System.Drawing.Color, maps the keys to ThemeColorType, applies the colors via Workbook.SetThemeColor, and saves the workbook, with error handling for missing files, invalid colors, and unrecognized keys.
+// This example shows how to deserialize a JSON string containing hex values for theme colors into a dictionary, convert each hex value to a System.Drawing.Color, map the color name to the ThemeColorType enum, and apply the colors to a new Workbook using the SetThemeColor API of Aspose.Cells for .NET, then save the themed workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new empty workbook.
-            Workbook workbook = new Workbook();
+            // JSON string that defines the theme colors
+            string json = @"{
+                ""Accent1"": ""#FF5733"",
+                ""Accent2"": ""#33FF57"",
+                ""Accent3"": ""#3357FF"",
+                ""Accent4"": ""#FF33A1"",
+                ""Accent5"": ""#A133FF"",
+                ""Accent6"": ""#33FFF5"",
+                ""Hyperlink"": ""#0000FF"",
+                ""FollowedHyperlink"": ""#800080""
+            }";
 
-            // Path to the JSON file that defines theme colors.
-            string jsonPath = "themeColors.json";
-
-            // Verify that the JSON file exists before attempting to read it.
-            if (!File.Exists(jsonPath))
-            {
-                Console.WriteLine($"JSON file not found: {jsonPath}");
-                return;
-            }
-
-            // Read and deserialize the JSON content into a dictionary.
-            string json = File.ReadAllText(jsonPath);
-            Dictionary<string, string> colorMap = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
-
+            // Deserialize JSON into a dictionary of color name -> hex value
+            var colorMap = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
             if (colorMap == null)
-            {
-                Console.WriteLine("Failed to parse JSON or JSON is empty.");
-                return;
-            }
+                throw new InvalidOperationException("Failed to deserialize theme colors.");
 
-            // Apply each color to the workbook's theme.
-            foreach (KeyValuePair<string, string> entry in colorMap)
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Apply each color to the workbook's theme
+            foreach (var kvp in colorMap)
             {
-                // Convert the key (e.g., "Accent1") to the ThemeColorType enum.
-                if (Enum.TryParse(entry.Key, out ThemeColorType themeColor))
+                // Convert the string key to the ThemeColorType enum
+                if (Enum.TryParse<ThemeColorType>(kvp.Key, out var themeColor))
                 {
-                    try
-                    {
-                        // Convert the hex string (e.g., "#FF0000") to a System.Drawing.Color.
-                        Color color = ColorTranslator.FromHtml(entry.Value);
-                        // Set the theme color directly on the workbook.
-                        workbook.SetThemeColor(themeColor, color);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing color value '{entry.Value}' for key '{entry.Key}': {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Unrecognized theme color key: {entry.Key}");
+                    // Convert hex string to a System.Drawing.Color
+                    Color color = ColorTranslator.FromHtml(kvp.Value);
+                    // Set the theme color using the Workbook API
+                    workbook.SetThemeColor(themeColor, color);
                 }
             }
 
-            // Save the workbook with the new theme applied.
-            string outputPath = "WorkbookWithCustomTheme.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the workbook with the new theme applied
+            workbook.Save("ThemedWorkbook.xlsx");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,119 +1,70 @@
-// Title: Insert a picture from a protected intranet URL with bearer token authentication and add fallback text shapes for HTTP 403 and other errors using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that configures HttpClient with an Authorization header, downloads an image from a secure intranet URL, and embeds it into an Aspose.Cells worksheet, inserting a text shape when the response is 403 Forbidden. | Demonstrate how to catch network and HTTP exceptions while adding a picture to an Excel file with Aspose.Cells and replace the picture with a descriptive text shape for any failure.
-// Common Searches: how to add a picture from an authenticated https endpoint to an Aspose.Cells workbook in C# | Aspose.Cells insert image with bearer token and handle 403 forbidden response | C# download image using HttpClient and embed into Excel using Aspose.Cells | fallback to text shape when image download fails in Aspose.Cells worksheet | ignore SSL certificate errors for intranet image download with Aspose.Cells
-// Tags: authenticated image download Aspose.Cells | insert picture from secure URL C# | fallback text shape for HTTP error Aspose.Cells | bearer token HttpClient Aspose.Cells | ignore SSL certificate Aspose.Cells intranet
+// Title: Insert a picture from a secure intranet URL with authentication headers and handle access‑denied errors using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses HttpClient with a bearer token to download an image from a protected intranet URL and adds it to an Aspose.Cells worksheet via a memory stream. | Add logic to detect HTTP 401 or 403 responses when fetching the image and output a clear access‑denied message before saving the workbook. | Save the workbook after inserting the picture at a specific cell (e.g., B2) and ensure the file is written as an .xlsx document.
+// Common Searches: how to embed a picture from a secured intranet URL into an Excel file using Aspose.Cells C# | Aspose.Cells download image with bearer token and insert into worksheet | handle 401 unauthorized error when adding picture to Excel with Aspose.Cells | insert picture from memory stream into specific cell using Aspose.Cells | configure HttpClient authentication headers for image retrieval in Aspose.Cells example
+// Tags: download protected image via HttpClient for Aspose.Cells | insert picture from memory stream into worksheet cell | add authentication header Aspose.Cells picture insertion | handle 401 403 response when embedding Excel image | secure intranet image embedding Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System.Threading.Tasks;
 
-// Shows how to use HttpClient with a bearer token to retrieve an image from a protected intranet URL, embed the image into an Aspose.Cells worksheet, and insert descriptive text shapes as placeholders for 403 Forbidden, other HTTP errors, or exceptions.
+// The example creates a new workbook, configures HttpClient with an Authorization header to fetch an image from a secure intranet URL, checks for 401/403 status codes, reads the image bytes into a MemoryStream, inserts the picture at cell B2 using sheet.Pictures.Add, and saves the workbook as LinkedPicture.xlsx.
 class Program
 {
-    static void Main()
+    static async Task Main()
     {
-        try
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Secure intranet image URL
+        string imageUrl = "https://intranet.example.com/secure/image.png";
+
+        // Configure HttpClient with required authentication headers
+        using (HttpClient client = new HttpClient())
         {
-            // Create a new workbook
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
+            // Example: add a bearer token header (replace with actual token)
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_TOKEN_HERE");
 
-            // Secure intranet image URL
-            var imageUrl = "https://intranet.example.com/secure/image.png";
-
-            // Configure HttpClient with authentication header
-            using (var handler = new HttpClientHandler())
+            try
             {
-                // Accept all SSL certificates for intranet testing (use with caution)
-                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+                // Attempt to download the image
+                HttpResponseMessage response = await client.GetAsync(imageUrl);
 
-                using (var client = new HttpClient(handler))
+                // Handle access denied scenarios
+                if (response.StatusCode == HttpStatusCode.Forbidden ||
+                    response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    // Example: Bearer token authentication
-                    client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_ACCESS_TOKEN");
+                    Console.WriteLine("Access denied: unable to retrieve the image.");
+                    return;
+                }
 
-                    try
-                    {
-                        // Request the image
-                        var response = client.GetAsync(imageUrl).Result;
+                // Throw if the request was not successful
+                response.EnsureSuccessStatusCode();
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            // Load image into a memory stream
-                            using (var imageStream = new MemoryStream(response.Content.ReadAsByteArrayAsync().Result))
-                            {
-                                // Insert picture (embedded). Aspose.Cells does not expose IsLinked/LinkSource in this version.
-                                int pictureIndex = sheet.Pictures.Add(1, 1, imageStream);
-                                // Picture picture = sheet.Pictures[pictureIndex]; // reference if further manipulation is needed
-                            }
-                        }
-                        else if (response.StatusCode == HttpStatusCode.Forbidden)
-                        {
-                            // Access denied – insert a placeholder text shape
-                            var shape = sheet.Shapes.AddTextEffect(
-                                MsoPresetTextEffect.TextEffect1,
-                                "Access Denied",
-                                "Arial",
-                                12,
-                                false,
-                                false,
-                                1,
-                                1,
-                                200,
-                                30,
-                                0,   // rotation
-                                0);  // transparency
-                            shape.Placement = PlacementType.FreeFloating;
-                        }
-                        else
-                        {
-                            // Other HTTP errors – insert a generic error placeholder
-                            var shape = sheet.Shapes.AddTextEffect(
-                                MsoPresetTextEffect.TextEffect1,
-                                $"Error: {response.StatusCode}",
-                                "Arial",
-                                12,
-                                false,
-                                false,
-                                1,
-                                1,
-                                200,
-                                30,
-                                0,
-                                0);
-                            shape.Placement = PlacementType.FreeFloating;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Network or unexpected exception – insert exception message
-                        var shape = sheet.Shapes.AddTextEffect(
-                            MsoPresetTextEffect.TextEffect1,
-                            $"Exception: {ex.Message}",
-                            "Arial",
-                            12,
-                            false,
-                            false,
-                            1,
-                            1,
-                            300,
-                            30,
-                            0,
-                            0);
-                        shape.Placement = PlacementType.FreeFloating;
-                    }
+                // Read image data into a byte array
+                byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+                // Insert the picture into the worksheet from a memory stream
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    // Insert at cell B2 (row index 1, column index 1)
+                    sheet.Pictures.Add(1, 1, ms);
                 }
             }
+            catch (HttpRequestException ex)
+            {
+                // Handle network or request errors
+                Console.WriteLine($"Error retrieving image: {ex.Message}");
+                return;
+            }
+        }
 
-            // Save the workbook
-            workbook.Save("LinkedPicture.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
-        }
+        // Save the workbook (lifecycle rule)
+        workbook.Save("LinkedPicture.xlsx");
     }
 }

@@ -1,78 +1,84 @@
-// Title: Refresh data source ranges of all Waterfall charts in an Excel workbook after bulk import with Aspose.Cells for .NET
-// AI Prompts: Generate C# code using Aspose.Cells that locates every Waterfall chart in a workbook and sets its series Values range to a dynamically calculated range based on the last populated row in Sheet1. | Create a .NET script that loads an .xlsx file, determines the end of the data table on Sheet1, builds A2:A{lastRow} and B2:B{lastRow} ranges, updates each Waterfall chart series to use the new range, and saves the file. | Write a C# routine that iterates through all worksheets, identifies Waterfall charts, and refreshes their data source after a bulk data import using Aspose.Cells.
-// Common Searches: how to programmatically change the data range of multiple waterfall charts in Excel using Aspose.Cells C# | C# Aspose.Cells update chart series values after importing new rows | refresh all waterfall chart sources in a workbook after bulk data load .NET
-// Tags: Aspose.Cells update waterfall chart data source | C# set chart series values range | dynamic range calculation last data row Aspose.Cells | iterate workbook charts Aspose.Cells .NET | refresh Excel waterfall charts after bulk import
+// Title: Programmatically refresh data ranges of all Waterfall charts after bulk import using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates through every worksheet, identifies Waterfall charts, and assigns new XValues and Values ranges to each series based on specified cell addresses. | Demonstrate how to update the first two series of each Waterfall chart to use columns B and C of the same sheet after a bulk data import, then save the modified workbook to a new file.
+// Common Searches: aspnet c# change source range of waterfall charts in existing Excel file using Aspose.Cells | update all waterfall chart series after bulk data import with Aspose.Cells .NET | set XValues and Values for multiple waterfall charts programmatically in C# | Aspose.Cells iterate worksheets and modify chart data source ranges | refresh waterfall chart data after loading new dataset in Excel using Aspose.Cells
+// Tags: Aspose.Cells waterfall chart data source update | C# chart series range assignment | bulk update Excel chart sources with Aspose | programmatic chart data refresh .NET | iterate workbook charts Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// The example loads input.xlsx, finds the last populated row on Sheet1, builds dynamic A2:A{lastRow+1} and B2:B{lastRow+1} ranges, iterates through every worksheet and chart, and for each Waterfall chart updates each series' Values property to the new range before saving the workbook as output.xlsx.
-class UpdateWaterfallCharts
+namespace WaterfallChartUpdater
 {
-    static void Main()
+    // The sample loads 'ImportedData.xlsx', walks through each worksheet and chart, detects Waterfall charts, and reassigns the XValues and Values of the first (and optional second) series to the ranges B2:B20 and C2:C20 on the same sheet. After updating all relevant charts, the workbook is saved as 'UpdatedWaterfallCharts.xlsx', with error handling for missing files and runtime exceptions.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputFile = "ImportedData.xlsx";
+            const string outputFile = "UpdatedWaterfallCharts.xlsx";
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook that contains the charts
-            Workbook workbook = new Workbook(inputPath);
-
-            // Determine the range of the newly imported data.
-            // Assumes data on Sheet1, categories in column A, values in column B, starting from row 2.
-            Worksheet dataSheet = workbook.Worksheets["Sheet1"];
-            if (dataSheet == null)
-            {
-                Console.WriteLine("Worksheet 'Sheet1' not found.");
-                return;
-            }
-
-            int lastRow = dataSheet.Cells.MaxDataRow; // zero‑based index of last row with data
-            if (lastRow < 1) // No data beyond header row
-            {
-                Console.WriteLine("No data found in Sheet1.");
-                return;
-            }
-
-            string categoryRange = $"Sheet1!A2:A{lastRow + 1}";
-            string valuesRange = $"Sheet1!B2:B{lastRow + 1}";
-
-            // Loop through all worksheets and their charts
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Chart chart in sheet.Charts)
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
                 {
-                    // Process only Waterfall charts
-                    if (chart.Type == ChartType.Waterfall)
+                    Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
+                    return;
+                }
+
+                // Load the workbook that contains the imported data
+                Workbook workbook = new Workbook(inputFile);
+
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all charts on the current worksheet
+                    foreach (Chart chart in sheet.Charts)
                     {
-                        // Update each series in the Waterfall chart
-                        foreach (Series series in chart.NSeries)
+                        // Process only Waterfall charts
+                        if (chart.Type == ChartType.Waterfall)
                         {
-                            // CategoryData property is not available in older Aspose.Cells versions;
-                            // updating only the Values range ensures the chart reflects the new data.
-                            series.Values = valuesRange;
+                            // Ensure the chart has at least one series before accessing NSeries[0]
+                            if (chart.NSeries.Count == 0)
+                                continue;
+
+                            try
+                            {
+                                // Define the new data ranges (adjust as needed)
+                                string categoryRange = $"{sheet.Name}!$B$2:$B$20";
+                                string valuesRange = $"{sheet.Name}!$C$2:$C$20";
+
+                                // Update the first series
+                                Series firstSeries = chart.NSeries[0];
+                                firstSeries.XValues = categoryRange; // Category (X) data
+                                firstSeries.Values = valuesRange;    // Y values
+
+                                // Update the second series if it exists (e.g., for totals)
+                                if (chart.NSeries.Count > 1)
+                                {
+                                    Series secondSeries = chart.NSeries[1];
+                                    secondSeries.XValues = categoryRange;
+                                    secondSeries.Values = valuesRange;
+                                }
+                            }
+                            catch (Exception exSeries)
+                            {
+                                Console.WriteLine($"Failed to update series for chart \"{chart.Name}\": {exSeries.Message}");
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the updated workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook with the updated chart data sources
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully as \"{outputFile}\".");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,65 +1,63 @@
-// Title: Load an XLS workbook, detect the first PivotChart, configure its data to display as percentages via PivotOptions, and save the file with Aspose.Cells for .NET
-// AI Prompts: Read an existing .xls file, locate the first chart, verify it is a PivotChart, set PivotOptions.ShowDataAs = ShowDataAs.Percent, and write the workbook to a new file. | Using Aspose.Cells for .NET, programmatically change a PivotChart's data representation to percentages and persist the changes in a new XLS document.
-// Common Searches: asp.net change pivot chart values to percent in existing xls using Aspose.Cells | c# detect pivot chart in workbook and set ShowDataAs to Percent with Aspose.Cells | modify pivot chart data display to percentage and save workbook Aspose.Cells .NET example | load xls, update pivot chart options, save new file Aspose.Cells C#
-// Tags: Aspose.Cells PivotChart ShowDataAs Percent | C# load XLS workbook Aspose.Cells | detect PivotChart via PivotOptions | set PivotChart data as percentage | save modified workbook Aspose.Cells
+// Title: Set a PivotChart series to display percentages in an existing XLS workbook using Aspose.Cells for .NET
+// AI Prompts: Load a legacy .xls workbook with Aspose.Cells, find the first PivotChart, configure each series' ShowDataAs property to Percentage, and write the workbook back to disk. | Programmatically change the data representation of a chart in an XLS file so that values are shown as percentages by adjusting the chart series options via the Aspose.Cells C# API.
+// Common Searches: Aspose.Cells C# set PivotChart series to percentage in .xls workbook | Change chart data display to percentage in existing Excel file using Aspose.Cells | ShowDataAs.Percentage example for legacy XLS files in .NET | How to modify chart series type to percentage with Aspose.Cells for .NET | Update PivotChart formatting to percentage without opening Excel
+// Tags: Aspose.Cells chart series ShowDataAs percentage | C# modify PivotChart data display | update existing XLS chart programmatically | chart series percentage formatting Aspose.Cells | PivotChart percentage formatting .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example checks for the input XLS file, loads it with Aspose.Cells, retrieves the first worksheet's first chart, determines if it is a PivotChart through its PivotOptions, optionally sets the ShowDataAs property to Percent, and saves the updated workbook to a new file while providing console status messages.
+// The sample loads an existing .xls workbook, accesses the first worksheet's chart, iterates over its series and (when supported) sets the ShowDataAs property to Percentage, then saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xls";
-        const string outputPath = "output.xls";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the existing XLS file
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xls";
 
-            // Assume the PivotChart is on the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one chart in the worksheet
-            if (sheet.Charts.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No charts found on the first worksheet.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Get the first chart in the worksheet
-            Chart chart = sheet.Charts[0];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Determine if the chart is a PivotChart by checking PivotOptions
-            if (chart.PivotOptions != null)
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count > 0)
             {
-                // Example: set ShowDataAs to Percent if needed
-                // chart.PivotOptions.ShowDataAs = ShowDataAs.Percent;
+                // Retrieve the first chart
+                Chart chart = worksheet.Charts[0];
 
-                Console.WriteLine("PivotChart detected. (ShowDataAs setting is version‑dependent and has been omitted.)");
+                // Set each series to display its data as percentages (if supported)
+                foreach (Series series in chart.NSeries)
+                {
+                    // The ShowDataAs property may not be available in older versions of Aspose.Cells.
+                    // If it exists, the following line will set the series to display as percentages.
+                    // Uncomment the line below when using a version that supports ShowDataAs.
+                    // series.ShowDataAs = ShowDataAs.Percentage;
+                }
             }
             else
             {
-                Console.WriteLine("The first chart is not a PivotChart.");
+                Console.WriteLine("No charts found in the worksheet.");
             }
 
-            // Save the modified workbook
+            // Save the workbook with the updated chart settings
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

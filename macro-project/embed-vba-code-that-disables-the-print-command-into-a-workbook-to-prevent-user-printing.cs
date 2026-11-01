@@ -1,65 +1,26 @@
-// Title: Add a Workbook_BeforePrint VBA event to a macro‑enabled Excel workbook with Aspose.Cells for .NET to block printing
-// AI Prompts: Generate C# code that uses Aspose.Cells to load an existing .xlsm file, create a ThisWorkbook class module, insert a Workbook_BeforePrint procedure that sets Cancel = True and shows a message, then save the workbook as a macro‑enabled file. | Demonstrate how to programmatically attach VBA code that disables the Print command by adding a class module through the Aspose.Cells .NET API.
-// Common Searches: how to programmatically disable printing in an .xlsm workbook using Aspose.Cells C# | add Workbook_BeforePrint event to existing macro enabled Excel file with .NET | insert VBA code into Excel file with Aspose.Cells to cancel print operation | Aspose.Cells C# add VBA class module to prevent user from printing | save changes to macro enabled workbook after adding VBA event using Aspose.Cells
-// Tags: Aspose.Cells add VBA class module C# | Workbook_BeforePrint event Aspose.Cells | disable Excel printing via VBA .NET | save macro enabled workbook Aspose.Cells | programmatic VBA insertion .xlsm C#
+// Title: Inject a VBA Workbook_BeforePrint macro to block printing in an Excel XLSM file using Aspose.Cells for .NET (C#)
+// Common Searches: how to programmatically add a Workbook_BeforePrint VBA handler with Aspose.Cells C# | C# code to embed a macro that cancels printing in an Excel XLSM using Aspose.Cells | save an Excel workbook with a disabled print command via Aspose.Cells VBA project | prevent users from printing an Excel file by injecting VBA through Aspose.Cells .NET
+// Tags: inject VBA Workbook_BeforePrint macro using Aspose.Cells C# | disable Excel printing via macro-enabled XLSM generation | add VBA module to workbook with Aspose.Cells .NET | save macro-enabled XLSM file programmatically Aspose.Cells | prevent user printing in Excel through VBA injection
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// The example loads a macro‑enabled workbook, verifies the VBA project, adds a ThisWorkbook class module containing a Workbook_BeforePrint procedure that cancels printing and displays a message, and saves the modified file as PrintDisabled.xlsm.
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // Path to a macro‑enabled template workbook that already contains a VBA project
-            const string templatePath = "MacroTemplate.xlsm";
+// Create a new workbook
+Workbook workbook = new Workbook();
 
-            // Verify that the template file exists
-            if (!File.Exists(templatePath))
-            {
-                Console.WriteLine($"Error: Template file '{templatePath}' not found. Please provide a macro‑enabled workbook.");
-                return;
-            }
+// Access the VBA project of the workbook
+VbaProject vbaProject = workbook.VbaProject;
 
-            // Load the template workbook (must be .xlsm to have a VBA project)
-            Workbook workbook = new Workbook(templatePath);
+// Get the ThisWorkbook module (code-behind for the workbook)
+VbaModule thisWorkbookModule = vbaProject.Modules["ThisWorkbook"];
 
-            // Ensure a VBA project exists; if not, inform the user and exit
-            if (workbook.VbaProject == null)
-            {
-                Console.WriteLine("Error: The loaded workbook does not contain a VBA project. Use a macro‑enabled template.");
-                return;
-            }
+// Insert VBA code that cancels any print operation
+thisWorkbookModule.Codes = 
+    "Private Sub Workbook_BeforePrint(Cancel As Boolean)\n" +
+    "    Cancel = True\n" +
+    "    MsgBox \"Printing is disabled.\"\n" +
+    "End Sub";
 
-            // Add a class module named "ThisWorkbook" to handle workbook‑level events
-            // In some Aspose.Cells versions Add returns the module index (int)
-            int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Class, "ThisWorkbook");
-            VbaModule thisWorkbookModule = workbook.VbaProject.Modules[moduleIndex];
-
-            // VBA code that cancels any print attempt
-            string vbaCode = @"
-Private Sub Workbook_BeforePrint(Cancel As Boolean)
-    Cancel = True
-    MsgBox ""Printing is disabled by policy.""
-End Sub
-";
-
-            // Assign the VBA code to the newly created module
-            thisWorkbookModule.Codes = vbaCode;
-
-            // Save the workbook as a macro‑enabled file so the VBA code is retained
-            const string outputPath = "PrintDisabled.xlsm";
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
+// Save the workbook as a macro‑enabled file (XLSM)
+XlsSaveOptions saveOptions = new XlsSaveOptions(SaveFormat.Xlsm);
+workbook.Save("PrintDisabledWorkbook.xlsm", saveOptions);

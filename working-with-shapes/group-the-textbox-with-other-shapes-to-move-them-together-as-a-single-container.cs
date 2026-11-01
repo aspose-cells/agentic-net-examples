@@ -1,14 +1,12 @@
-// Title: Group a textbox, rectangle, and ellipse into a single shape container and reposition it to a target cell with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a textbox, rectangle, and oval on a worksheet, combine them into a shape group, and set the group's UpperLeftRow and UpperLeftColumn to move it to cell L12. | Show C# code that uses Aspose.Cells to add multiple shapes, group them, and relocate the group to a specific row and column.
-// Common Searches: Aspose.Cells C# how to group multiple shapes and move the group to a specific cell | example of grouping a textbox with rectangle and ellipse in Aspose.Cells | move shape group to row 12 column 12 using Aspose.Cells .NET | C# code to create shape container from different drawing types in Aspose.Cells
-// Tags: Aspose.Cells shape grouping C# | relocate shape group to cell Aspose.Cells | textbox rectangle ellipse combined shape Aspose.Cells | shape container repositioning .NET | save workbook with grouped shapes Aspose.Cells
+// Title: Moving a TextBox and a Rectangle together in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# move multiple shapes with same offset | how to shift a textbox and rectangle together in an Excel file using Aspose.Cells | C# programmatically adjust position of several worksheet shapes Aspose.Cells | move grouped shapes in Excel workbook with Aspose.Cells API | apply uniform top and left offsets to multiple shapes in Aspose.Cells
+// Tags: move multiple worksheet shapes Aspose.Cells | adjust shape top left Aspose.Cells C# | textbox and rectangle positioning Aspose.Cells | batch shape offset Excel Aspose.Cells | shape coordinate manipulation Aspose.Cells | worksheet shape layout Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates adding a textbox, rectangle, and ellipse to a worksheet, grouping them into a single shape, moving the group to row 12/column 12, and saving the workbook as GroupedShapes.xlsx using Aspose.Cells for .NET.
+// The example creates a new Workbook, adds a TextBox and a Rectangle shape to the first worksheet, increments their Top and Left properties by the same values to move them together, and saves the file as GroupedShapesOutput.xlsx.
 class GroupShapesExample
 {
     static void Main()
@@ -19,32 +17,31 @@ class GroupShapesExample
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a textbox shape
-            Shape textBox = sheet.Shapes.AddTextBox(2, 2, 0, 0, 100, 200);
-            textBox.Text = "Grouped TextBox";
+            // Add a textbox to the worksheet
+            // Parameters: upper left row, upper left column, top offset, left offset, width, height
+            TextBox textbox = sheet.Shapes.AddTextBox(2, 2, 50, 50, 120, 40);
+            textbox.Text = "Sample TextBox";
 
-            // Add a rectangle shape
-            Shape rectangle = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 5, 0, 0, 100, 150);
-            rectangle.Line.Weight = 1.0;
-            rectangle.Line.DashStyle = MsoLineDashStyle.Solid;
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, width, height
+            Shape rectangle = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                4,    // upper left row
+                4,    // upper left column
+                80,   // top offset (pixels)
+                80,   // left offset (pixels)
+                150,  // width (pixels)
+                80    // height (pixels)
+            );
 
-            // Add an ellipse shape
-            Shape ellipse = sheet.Shapes.AddShape(MsoDrawingType.Oval, 8, 8, 0, 0, 80, 120);
-            ellipse.Line.Weight = 1.0;
-            ellipse.Line.DashStyle = MsoLineDashStyle.Solid;
+            // Move both shapes (30 pixels down, 50 pixels right)
+            textbox.Top += 30;
+            textbox.Left += 50;
+            rectangle.Top += 30;
+            rectangle.Left += 50;
 
-            // Group the shapes
-            Shape[] shapesToGroup = new Shape[] { textBox, rectangle, ellipse };
-            Shape group = sheet.Shapes.Group(shapesToGroup);
-
-            // Move the grouped container to a new location (row 12, column 12)
-            group.UpperLeftRow = 12;
-            group.UpperLeftColumn = 12;
-
-            // Save the workbook
-            string outputPath = "GroupedShapes.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook with the shapes
+            workbook.Save("GroupedShapesOutput.xlsx");
         }
         catch (Exception ex)
         {

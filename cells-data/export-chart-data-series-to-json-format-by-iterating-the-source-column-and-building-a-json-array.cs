@@ -1,69 +1,115 @@
-// Title: Export a chart series range to a JSON array using Aspose.Cells JsonUtility in C#
-// AI Prompts: Write C# code that obtains the data range of a chart series in an Aspose.Cells workbook and calls JsonUtility.ExportRangeToJson with appropriate JsonSaveOptions to produce a JSON array. | Show how to include both the category (X) and value (Y) fields in the exported JSON by exporting the chart's category range together with its value range. | Provide a C# example that writes the JSON string returned by JsonUtility.ExportRangeToJson to a .json file while leaving the original Excel workbook untouched.
-// Common Searches: how to use Aspose.Cells JsonUtility to export chart series data as JSON in C# | C# code example for exporting Excel chart values to a JSON array with Aspose.Cells | Aspose.Cells JsonSaveOptions settings for exporting a range without a header row | extract X and Y values from a chart series and save them to JSON using Aspose.Cells | export chart series range to JSON file while keeping workbook unchanged Aspose.Cells
-// Tags: Aspose.Cells chart series JSON export | JsonUtility ExportRangeToJson C# | JsonSaveOptions without header row | retrieve chart series range Aspose.Cells | convert Excel chart data to JSON array
+// Title: Export Excel chart series values to a JSON file using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells example for extracting chart series data and saving as JSON | how to convert Excel chart NSeries to JSON with Aspose.Cells library | retrieve chart series range values from a workbook and serialize to JSON in C# | Aspose.Cells code to export chart data points to a JSON file | export first chart's series values from an .xlsx to JSON using C#
+// Tags: Aspose.Cells export chart series to JSON | C# serialize Excel chart NSeries | retrieve chart values range Aspose.Cells | write JSON file from chart data C# | Excel chart data extraction Aspose.Cells | convert chart series values to JSON C#
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Utility;
-
-// Alias to avoid conflict with System.Range
 using AsposeRange = Aspose.Cells.Range;
 
-// The sample creates a workbook, fills columns with category and value data, adds a column chart bound to those cells, defines the series range, configures JsonSaveOptions to export values as strings without a header, and uses JsonUtility.ExportRangeToJson to generate a JSON array from the range. The JSON is printed to the console, and the workbook is optionally saved.
-class ExportChartSeriesToJson
+// The sample loads an Excel workbook with Aspose.Cells, accesses the first worksheet and its first chart, iterates through each series in the chart, resolves the series' value range, collects the cell values, builds an object containing the series name and its values, aggregates all series objects, serializes the collection to an indented JSON string, and writes the result to a specified JSON file while handling missing files, absent charts, and range errors.
+class ChartDataExporter
 {
     static void Main()
     {
+        // Paths for input workbook and output JSON
+        string workbookPath = "input.xlsx";
+        string jsonPath = "chartData.json";
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Fill sample data: categories in column A, values in column B
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 6; i++)
+            // Verify that the input workbook exists
+            if (!File.Exists(workbookPath))
             {
-                worksheet.Cells[$"A{i}"].PutValue("Cat " + (i - 1));
-                worksheet.Cells[$"B{i}"].PutValue(i * 10);
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+                return;
             }
 
-            // Add a column chart and bind its series to the values column (B2:B6)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 5);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("=Sheet1!$B$2:$B$6", true);               // Y‑values
-            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$6";          // X‑axis categories
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Define the range that holds the series data (column B, rows 2‑6)
-            // Row and column indices are zero‑based: startRow=1, startColumn=1, rowCount=5, columnCount=1
-            AsposeRange seriesRange = worksheet.Cells.CreateRange(1, 1, 5, 1);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Set JSON export options (export values as strings, no header row)
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                ExportAsString = true,
-                HasHeaderRow = false,
-                ExportEmptyCells = false
-            };
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-            // Export the range to a JSON string
-            string jsonResult = JsonUtility.ExportRangeToJson(seriesRange, jsonOptions);
+            // Assume the first chart on the worksheet is the target chart
+            Chart chart = sheet.Charts[0];
 
-            // Output the JSON array
-            Console.WriteLine(jsonResult);
+            // Prepare a list to hold each series data
+            var chartSeriesData = new List<object>();
 
-            // Save the workbook (optional, not required for JSON export)
-            string outputPath = "ChartSeriesDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            // Iterate through all series in the chart
+            foreach (Series series in chart.NSeries)
+            {
+                try
+                {
+                    // Retrieve the range reference for the series values (e.g., "Sheet1!$B$2:$B$5")
+                    string valuesRef = series.Values;
+
+                    // Resolve the range reference to an actual Range object
+                    AsposeRange valuesRange = null;
+                    try
+                    {
+                        valuesRange = sheet.Cells.CreateRange(valuesRef);
+                    }
+                    catch (Exception exRange)
+                    {
+                        Console.WriteLine($"Warning: Unable to create range '{valuesRef}' - {exRange.Message}");
+                        continue;
+                    }
+
+                    // Collect the cell values into a list
+                    var values = new List<object>();
+                    foreach (Cell cell in valuesRange)
+                    {
+                        values.Add(cell.Value);
+                    }
+
+                    // Build an anonymous object representing this series
+                    var seriesObject = new
+                    {
+                        Name = series.Name,   // Series name (if set)
+                        Values = values
+                    };
+
+                    chartSeriesData.Add(seriesObject);
+                }
+                catch (Exception exSeries)
+                {
+                    Console.WriteLine($"Warning: Failed to process a series - {exSeries.Message}");
+                }
+            }
+
+            // Serialize the collected series data to JSON
+            string json = JsonSerializer.Serialize(chartSeriesData, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(jsonPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Write JSON to a file
+            File.WriteAllText(jsonPath, json);
+
+            Console.WriteLine($"Chart data exported to {jsonPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

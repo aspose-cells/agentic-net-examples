@@ -1,25 +1,25 @@
-// Title: Set worksheet left page margin to 8 points using Aspose.Cells for .NET (C#)
-// AI Prompts: Apply Aspose.Cells PageSetup.LeftMargin to set an 8‑point left margin for a worksheet in C#. | Programmatically align Excel cell text with borders by configuring the left margin to 8 points via Aspose.Cells. | Create a workbook, adjust the left page margin to 8 points, and save the file using Aspose.Cells in .NET.
-// Common Searches: Aspose.Cells C# set worksheet left margin 8 points | how to change page left margin in Excel using Aspose.Cells .NET | align text with cell borders by adjusting left margin in Aspose.Cells workbook | PageSetup.LeftMargin property example Aspose.Cells C# | set Excel page margins programmatically Aspose.Cells
-// Tags: Aspose.Cells PageSetup.LeftMargin property | C# set worksheet left margin points | Excel workbook left page margin adjustment | align cell text with borders Aspose.Cells | programmatic Excel page margin configuration .NET
+// Title: Set the worksheet left page margin to 8 points with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells PageSetup to set the left margin of a worksheet to 8 points in C#. | Adjust the worksheet's left page margin so text aligns with cell borders using Aspose.Cells. | Create a workbook, configure its left margin to 8 points, and save it as an .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set left margin to 8 points | How to align Excel text with cell borders by adjusting page margins in Aspose.Cells | PageSetup.LeftMargin property example in Aspose.Cells for .NET | Set worksheet page margins programmatically using Aspose.Cells C# | MarginExample.xlsx left margin 8 points Aspose.Cells
+// Tags: worksheet left margin configuration Aspose.Cells | PageSetup.LeftMargin property usage | programmatic Excel page margin adjustment | text alignment with cell borders via margins | saving workbook with custom page margins
 
 using Aspose.Cells;
 
-// The example creates a new Workbook, accesses the first Worksheet, sets the left page margin to 8 points via the PageSetup.LeftMargin property, and saves the workbook as Output.xlsx.
+// The example creates a new Workbook, accesses the first worksheet, sets its PageSetup.LeftMargin to 8 points to align text with cell borders, and saves the file as MarginExample.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Create a new workbook (lifecycle rule)
+        var workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        var worksheet = workbook.Worksheets[0];
 
-        // Set the left margin to 8 points to align text with cell borders
-        sheet.PageSetup.LeftMargin = 8f;
+        // Set the left margin to eight points to align text with cell borders
+        worksheet.PageSetup.LeftMargin = 8.0; // points
 
-        // Save the workbook
-        workbook.Save("Output.xlsx");
+        // Save the workbook (lifecycle rule)
+        workbook.Save("MarginExample.xlsx");
     }
 }

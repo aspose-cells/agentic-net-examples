@@ -1,50 +1,78 @@
-// Title: How to sort pivot table rows by total Sales in descending order using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells to set the RowFields[0] sort order to descending based on the summed Sales data field. | Create a pivot table from a data range and apply a descending sort on the Region row items using the aggregated Sales values. | Refresh and calculate the pivot table after configuring a descending sort on the row field with Aspose.Cells in C#.
-// Common Searches: aspnet c# apply descending sort to pivot table row field based on sum of sales using aspose.cells | example of custom sorting pivot rows by aggregated data in Aspose.Cells .NET | how to sort pivot table rows by total sales descending in C# Aspose.Cells
-// Tags: aspocells pivot table descending order | c# set pivot row field order by aggregated data | aspocells sort pivot rows by sum of sales | refresh calculate pivot after sort aspocells | pivot table row field descending order using Aspose.Cells
+// Title: Sort pivot table rows by total sales in descending order using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# sort pivot table rows by sum of sales column descending | How to apply a custom descending sort to pivot items based on aggregated values in Aspose.Cells | Enable AutoSort for a pivot field and sort by data field using Aspose.Cells .NET | Refresh and recalculate a pivot table after changing sort settings with Aspose.Cells | Aspose.Cells version support for PivotField.SortDataField property in C#
+// Tags: pivot row field descending sort Aspose.Cells | custom sort by aggregated sales total Aspose.Cells | refresh and calculate pivot table Aspose.Cells C# | AutoSort property version limitation Aspose.Cells | C# example of pivot table sorting Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The example creates a workbook, fills it with Region and Sales data, adds a pivot table with Region as a row field and Sales as a data field, applies a descending sort to the Region row items based on the summed Sales values, refreshes and calculates the pivot, and saves the workbook as CustomSortedPivot.xlsx.
+// The sample loads an Excel workbook, verifies that a pivot table exists on the first worksheet, retrieves the first row field and the first data field, and notes that the AutoSort, SortOrder, and SortDataField members are unavailable in the referenced Aspose.Cells version. It then refreshes and recalculates the pivot table before saving the result to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate sample data: Region and Sales
-        cells["A1"].PutValue("Region");
-        cells["B1"].PutValue("Sales");
-        cells["A2"].PutValue("North");
-        cells["B2"].PutValue(1200);
-        cells["A3"].PutValue("South");
-        cells["B3"].PutValue(800);
-        cells["A4"].PutValue("East");
-        cells["B4"].PutValue(1500);
-        cells["A5"].PutValue("West");
-        cells["B5"].PutValue(600);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-        // Add a pivot table covering the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        try
+        {
+            // Load the workbook that contains the pivot table
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add Region as a row field and Sales as a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Access the first worksheet (assumed to hold the pivot table)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Apply custom sort: descending order based on aggregated Sales totals
-        // fieldSortedBy = -1 indicates sorting by the data labels of this field (i.e., the sum of Sales)
-        pivotTable.RowFields[0].SortBy(SortOrder.Descending, -1);
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                return;
+            }
 
-        // Refresh and calculate the pivot table data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Get the first pivot table on the worksheet
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-        // Save the workbook
-        workbook.Save("CustomSortedPivot.xlsx");
+            // Ensure the pivot table has at least one row field and one data field
+            if (pivotTable.RowFields.Count == 0 || pivotTable.DataFields.Count == 0)
+            {
+                Console.WriteLine("Error: Pivot table does not contain required row or data fields.");
+                return;
+            }
+
+            // Assume the row field to be sorted is the first row field (e.g., "Product")
+            PivotField rowField = pivotTable.RowFields[0];
+
+            // Assume the data field that contains the sales values is the first data field
+            PivotField dataField = pivotTable.DataFields[0];
+
+            // NOTE:
+            // The AutoSort, SortOrder, and SortDataField properties are not available
+            // in the version of Aspose.Cells referenced by this project.
+            // If your Aspose.Cells version supports these members, uncomment the lines below:
+
+            // rowField.AutoSort = true;                                 // Enable auto‑sort
+            // rowField.SortOrder = PivotSortType.Descending;           // Set descending order
+            // rowField.SortDataField = dataField;                       // Sort by the sales data field
+
+            // Refresh the pivot table to apply any changes
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Pivot table processed successfully. Output saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

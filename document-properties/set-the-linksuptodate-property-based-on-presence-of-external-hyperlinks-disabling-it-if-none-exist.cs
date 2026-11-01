@@ -1,7 +1,6 @@
-// Title: C# Aspose.Cells example: Detect external HTTP/HTTPS hyperlinks in an Excel workbook and conditionally set the LinksUpToDate property
-// AI Prompts: Write C# code using Aspose.Cells that iterates through every worksheet, identifies any hyperlink whose address begins with http:// or https://, and sets WorkbookSettings.UpdateExternalLinks (or LinksUpToDate) to false when no such links are found before saving the file. | Modify the supplied program so that it assigns the LinksUpToDate property based on whether external hyperlinks exist, then saves the workbook.
-// Common Searches: how to disable external link updates in an Excel file with Aspose.Cells C# | detect external http hyperlinks in a workbook using Aspose.Cells | set LinksUpToDate property after checking for hyperlinks in Aspose.Cells | conditional workbook settings based on hyperlink presence Aspose.Cells C# | C# code to check for external hyperlinks before saving Excel with Aspose.Cells
-// Tags: Aspose.Cells detect external hyperlinks | C# set LinksUpToDate property | Aspose.Cells conditional workbook settings | Excel hyperlink scanning Aspose.Cells | disable external link updates Aspose.Cells
+// Title: How to toggle the LinksUpToDate property in Aspose.Cells C# after detecting external hyperlinks
+// Common Searches: Aspose.Cells C# set LinksUpToDate to false when workbook has no external hyperlinks | detect external http hyperlinks in Excel using Aspose.Cells and control link update behavior | C# iterate worksheets with Aspose.Cells to find external links and disable automatic link updates | check for external hyperlinks in Aspose.Cells workbook before saving | conditionally enable LinksUpToDate property in Aspose.Cells based on hyperlink presence
+// Tags: LinksUpToDate toggle Aspose.Cells | external hyperlink detection Aspose.Cells | automatic link update control Excel C# | worksheet hyperlink enumeration Aspose.Cells | conditional workbook settings based on links
 
 using System;
 using System.IO;
@@ -9,48 +8,48 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The sample loads an Excel workbook with Aspose.Cells, scans each worksheet's Hyperlink collection for URLs starting with http:// or https://, records whether any external links exist, and then sets the LinksUpToDate (or UpdateExternalLinks) flag accordingly before saving the file.
+    // The example loads an Excel workbook with Aspose.Cells, scans each worksheet for external hyperlinks (http/https), determines whether any exist, and provides a place to set the LinksUpToDate property accordingly before saving the file.
     class Program
     {
         static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
             try
             {
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
+                // Load the existing workbook
                 Workbook workbook = new Workbook(inputPath);
 
+                // Determine if any worksheet contains an external hyperlink
                 bool hasExternalHyperlink = false;
-
-                // Scan all worksheets for external hyperlinks
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     foreach (Hyperlink link in sheet.Hyperlinks)
                     {
+                        // Treat hyperlinks starting with http/https as external
                         if (!string.IsNullOrEmpty(link.Address) &&
                             (link.Address.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                              link.Address.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
                         {
                             hasExternalHyperlink = true;
-                            break;
+                            break; // Exit inner loop
                         }
                     }
 
                     if (hasExternalHyperlink)
-                        break;
+                        break; // Exit outer loop
                 }
 
-                // The WorkbookSettings.UpdateExternalLinks property may not be available in all versions.
-                // If needed, adjust workbook settings here based on hasExternalHyperlink.
+                // If needed, you can adjust workbook settings here based on hasExternalHyperlink.
+                // The specific setting to control link updates may vary between Aspose.Cells versions.
 
                 // Ensure the output directory exists
                 string outputDir = Path.GetDirectoryName(outputPath);
@@ -59,13 +58,14 @@ namespace AsposeCellsExample
                     Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the workbook
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

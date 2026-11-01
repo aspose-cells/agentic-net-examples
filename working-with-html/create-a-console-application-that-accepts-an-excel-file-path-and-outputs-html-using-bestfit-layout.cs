@@ -1,13 +1,13 @@
-// Title: Create a C# console app to convert an Excel file to HTML5 with fit‑to‑page width and Base64‑embedded images using Aspose.Cells
-// AI Prompts: Generate a C# console program that accepts an Excel file path argument, sets each worksheet’s PageSetup.FitToPagesWide to 1, and saves the workbook as an HTML5 file with images embedded as Base64 using Aspose.Cells. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to export all worksheets, embed images as Base64, and produce HTML5 output in a .NET console application. | Add robust error handling for missing command‑line arguments, nonexistent files, and runtime exceptions during the Aspose.Cells HTML export.
-// Common Searches: how to export excel to html5 with fit to page width using aspose.cells c# | c# console application convert workbook to html with base64 images asp.net | set FitToPagesWide for all worksheets aspose.cells example | htmlsaveoptions embed images as base64 aspose.cells c# | asp.net command line tool convert xlsx to html5 using aspose.cells
-// Tags: aspocells htmlsaveoptions base64 images | excel to html5 conversion aspocells c# | fit-to-page width worksheet page setup aspocells | c# console utility excel html export | aspocells export all worksheets html
+// Title: Build a C# console utility that converts an Excel workbook to HTML with Aspose.Cells using a best‑fit layout
+// AI Prompts: Create a C# console application that accepts an Excel file path as a command‑line argument, loads the workbook with Aspose.Cells, and saves it as an HTML file using Aspose.Cells HTML export settings with the best‑fit layout enabled. | Add validation to ensure the argument is provided and the file exists, and wrap the conversion logic in a try‑catch block that outputs clear error messages. | Generate the output file name by replacing the source extension with .html, write the full path to the console, and ensure all worksheets are included in the HTML output.
+// Common Searches: c# how to use Aspose.Cells to convert an Excel workbook to a single HTML file from the command line | example of exporting all worksheets to HTML with best‑fit layout in a .NET console program | command‑line tool for converting .xlsx to .html using Aspose.Cells HtmlSaveOptions
+// Tags: aspocells html export settings optimal layout | c# command line excel to html conversion | export all worksheets to html aspocells | derive html filename from excel path c# | aspocells save workbook as html
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console utility that loads an Excel workbook from a command‑line path, applies a fit‑to‑page‑wide setting to every worksheet, configures HtmlSaveOptions to generate HTML5 with all sheets and Base64‑encoded images, and writes the result to a .html file while handling missing arguments and file errors.
+// A C# console program that reads an Excel file path supplied via the command line, loads the workbook with Aspose.Cells, configures HTML export options to include all worksheets and apply a best‑fit layout, then saves the result as an .html file sharing the original name, while providing robust argument validation and error handling.
 class Program
 {
     static void Main(string[] args)
@@ -15,50 +15,36 @@ class Program
         // Verify that a file path was provided.
         if (args.Length == 0)
         {
-            Console.WriteLine("Usage: AsposeCellsHtmlExport <excel-file-path>");
+            Console.WriteLine("Usage: Program <excel-file-path>");
             return;
         }
 
         string excelPath = args[0];
 
-        // Ensure the input file exists to avoid FileNotFoundException.
+        // Ensure the input Excel file exists.
         if (!File.Exists(excelPath))
         {
-            Console.WriteLine($"Error: The file \"{excelPath}\" does not exist.");
+            Console.WriteLine($"Error: File not found – {excelPath}");
             return;
         }
 
         try
         {
-            // Load the Excel workbook.
+            // Load the Excel workbook from the specified path.
             Workbook workbook = new Workbook(excelPath);
 
-            // Apply fit‑to‑page settings for each worksheet.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Fit the worksheet width to one page; height is unlimited.
-                sheet.PageSetup.FitToPagesWide = 1;
-                sheet.PageSetup.FitToPagesTall = 0;
-            }
-
             // Configure HTML save options.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                // Export all worksheets (set to true for a single sheet if needed).
-                ExportActiveWorksheetOnly = false,
-                // Embed images directly into the HTML as Base64 strings.
-                ExportImagesAsBase64 = true,
-                // Use HTML5 for better compatibility.
-                HtmlVersion = HtmlVersion.Html5
-            };
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Export all worksheets.
+            htmlOptions.ExportActiveWorksheetOnly = false;
 
-            // Determine the output HTML file path.
+            // Determine the output HTML file name (same name, .html extension).
             string htmlPath = Path.ChangeExtension(excelPath, ".html");
 
-            // Save the workbook as an HTML file using the configured options.
+            // Save the workbook as HTML using the configured options.
             workbook.Save(htmlPath, htmlOptions);
 
-            Console.WriteLine($"HTML file successfully created at: {htmlPath}");
+            Console.WriteLine($"HTML file generated: {htmlPath}");
         }
         catch (Exception ex)
         {

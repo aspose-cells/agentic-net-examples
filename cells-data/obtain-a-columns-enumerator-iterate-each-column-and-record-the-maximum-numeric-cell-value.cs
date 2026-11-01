@@ -1,89 +1,71 @@
-// Title: Find the maximum numeric value in a worksheet by enumerating columns with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to loop through every column in a worksheet and return the highest numeric cell value found. | Extend the column‑scanning logic to also consider decimal, float, and long types when calculating the maximum numeric value. | Add safeguards to ignore empty, null, or non‑numeric cells while aggregating the overall maximum across all columns.
-// Common Searches: asp.net find highest numeric cell value in Excel using Aspose.Cells column enumeration | c# Aspose.Cells iterate columns to get max number in worksheet | how to calculate overall maximum numeric value across columns with Aspose.Cells for .NET | retrieve maximum double or int from Excel sheet using Aspose.Cells Columns collection
-// Tags: enumerate columns Aspose.Cells C# | maximum numeric cell value Aspose.Cells | column-wise scanning Aspose.Cells | numeric type handling Aspose.Cells | worksheet data range Aspose.Cells
+// Title: Find the highest numeric value in an Excel worksheet and write it to a cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that opens an .xlsx file, scans every cell in the first worksheet, and returns the maximum numeric value. | Modify the program to insert the computed maximum into cell A1 and save the workbook as a new file. | Add robust error handling to report a missing input file and catch runtime exceptions in an Aspose.Cells script.
+// Common Searches: c# aspose.cells get maximum numeric value from worksheet | how to write a calculated value back to a specific cell using Aspose.Cells | asp.net read all cells in Excel and find highest number with Aspose.Cells | saving modified Excel workbook after processing cells with Aspose.Cells
+// Tags: Aspose.Cells maximum numeric value | C# iterate worksheet cells Aspose.Cells | write computed value to cell Aspose.Cells | load and save Excel workbook Aspose.Cells .NET | error handling missing file Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsColumnMaxValueDemo
+// // Loads "input.xlsx" with Aspose.Cells, iterates every cell in the first worksheet to locate the largest numeric entry, writes that value into cell A1, and saves the result as "output.xlsx" while handling missing files and runtime errors.
+class Program
 {
-    // The program creates a workbook, fills cells with numeric and non‑numeric data, enumerates each column via Cells.Columns, iterates rows between MinDataRow and MaxDataRow, checks for int and double values (with placeholders for other numeric types), tracks the highest numeric value, outputs the result, and saves the workbook as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Populate some sample numeric and non‑numeric data
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(25);
-            cells["A3"].PutValue("Text");
-            cells["B1"].PutValue(5);
-            cells["B2"].PutValue(30);
-            cells["C1"].PutValue(12.5);
-            cells["C2"].PutValue(null);
-            cells["D1"].PutValue(100);
-            cells["D2"].PutValue("Another text");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Variable to hold the overall maximum numeric value
-            double maxNumericValue = double.MinValue;
-            bool foundNumeric = false;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Obtain the Columns enumerator and iterate each column
-            foreach (Column column in cells.Columns)
+            double maxNumeric = double.MinValue;
+
+            // Iterate over all cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                // The Column class provides the Index property (zero‑based column index)
-                int colIndex = column.Index;
-
-                // Determine the range of rows that may contain data
-                int startRow = cells.MinDataRow;
-                int endRow = cells.MaxDataRow;
-
-                // If there are no data rows, skip this column
-                if (startRow == -1 || endRow == -1)
-                    continue;
-
-                // Iterate through each row in the current column
-                for (int row = startRow; row <= endRow; row++)
+                // Consider only numeric cells
+                if (cell.Type == CellValueType.IsNumeric)
                 {
-                    Cell cell = cells[row, colIndex];
-                    if (cell == null || cell.Value == null)
-                        continue;
-
-                    // Check if the cell contains a numeric value
-                    if (cell.Value is double d)
+                    double value = cell.DoubleValue;
+                    if (value > maxNumeric)
                     {
-                        if (!foundNumeric || d > maxNumericValue)
-                        {
-                            maxNumericValue = d;
-                            foundNumeric = true;
-                        }
+                        maxNumeric = value;
                     }
-                    else if (cell.Value is int i)
-                    {
-                        double dVal = i;
-                        if (!foundNumeric || dVal > maxNumericValue)
-                        {
-                            maxNumericValue = dVal;
-                            foundNumeric = true;
-                        }
-                    }
-                    // Add other numeric types if needed (e.g., decimal, float)
                 }
             }
 
-            // Output the result
-            if (foundNumeric)
-                Console.WriteLine("Maximum numeric cell value: " + maxNumericValue);
-            else
-                Console.WriteLine("No numeric cells were found.");
+            // If no numeric cells were found, set max to 0 (or handle as needed)
+            if (maxNumeric == double.MinValue)
+            {
+                maxNumeric = 0;
+            }
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("ColumnMaxValueDemo.xlsx");
+            // Output the maximum numeric value
+            Console.WriteLine("Maximum numeric value: " + maxNumeric);
+
+            // Optionally write the result back into the worksheet
+            sheet.Cells["A1"].PutValue(maxNumeric);
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

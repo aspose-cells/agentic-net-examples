@@ -1,49 +1,17 @@
-// Title: Set worksheet bottom margin to 2 points with Aspose.Cells for .NET to avoid text clipping
-// AI Prompts: Generate C# code that opens an existing Excel file using Aspose.Cells, sets the worksheet PageSetup.BottomMargin to 2 points, and saves the file. | Show how to change the bottom margin of a worksheet to two points in Aspose.Cells to prevent content from being cut off. | Provide a minimal .NET example that adjusts the BottomMargin property of a worksheet before exporting to PDF.
-// Common Searches: Aspose.Cells C# set bottom margin to 2 points to stop clipping | how to change worksheet bottom margin in .NET Excel library | prevent bottom text cut off when printing Excel with Aspose.Cells | adjust page setup margins programmatically using Aspose.Cells | example code for modifying BottomMargin property in Aspose.Cells workbook
-// Tags: Aspose.Cells set bottom margin points | C# Excel worksheet page setup margins | adjust worksheet bottom margin Aspose.Cells | prevent bottom text clipping Excel | modify page layout margins .NET
+// Title: Set BottomMargin to 2 points for every worksheet in an Excel file using Aspose.Cells for .NET to avoid bottom clipping
+// AI Prompts: Generate C# code that loads an .xlsx workbook, loops through each worksheet, and sets PageSetup.BottomMargin = 2 (points) with Aspose.Cells. | Show how to programmatically adjust the bottom page margin of all sheets to two points to prevent content from being cut off, then save the updated workbook using Aspose.Cells. | Provide a .NET snippet that applies a 2‑point bottom margin across every worksheet in a workbook and writes the result to a new file.
+// Common Searches: aspnet aspocells modify bottom margin for every sheet to two points | c# change Excel page setup bottom margin for all worksheets using Aspose.Cells | prevent bottom text clipping in generated Excel files with Aspose.Cells .NET | set worksheet bottom margin programmatically Aspose.Cells example
+// Tags: Aspose.Cells set worksheet bottom margin | C# adjust Excel page margins Aspose.Cells | prevent bottom clipping Excel Aspose.Cells | bulk update page setup margins .NET | bottom margin points Excel file
 
-using System;
-using System.IO;
-using Aspose.Cells;
+// Load an existing workbook (replace with your actual file path)
+var workbook = new Aspose.Cells.Workbook("input.xlsx");
 
-namespace AsposeCellsExample
+// Set the bottom margin to 2 points for each worksheet to avoid clipping
+foreach (var worksheet in workbook.Worksheets)
 {
-    // The example loads an existing Excel workbook, sets the first worksheet's PageSetup.BottomMargin to 2 points to prevent bottom text clipping, and saves the modified file.
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (or any specific worksheet you need)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Set the bottom margin to 2 points to avoid clipping
-                sheet.PageSetup.BottomMargin = 2;
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+    // BottomMargin is measured in points
+    worksheet.PageSetup.BottomMargin = 2;
 }
+
+// Save the modified workbook (replace with your desired output path)
+workbook.Save("output.xlsx");

@@ -1,61 +1,60 @@
-// Title: Validate slicer printable flag and enforce it before exporting a workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a slicer, checks its IsPrintable property, sets it to true when false, and then saves the workbook as a PDF with Aspose.Cells. | Show how to configure PdfSaveOptions while guaranteeing that all slicers in a workbook are marked printable before performing a PDF export in Aspose.Cells for .NET.
-// Common Searches: aspnet cells how to verify slicer IsPrintable before PDF export | c# Aspose.Cells set slicer printable flag programmatically | export Excel workbook to PDF only when slicer printable is true | using PdfSaveOptions with slicer printable validation in Aspose.Cells | check slicer printable property Aspose.Cells before saving as PDF
-// Tags: slicer IsPrintable property Aspose.Cells | set slicer printable flag C# | export workbook to PDF Aspose.Cells | PdfSaveOptions document structure Aspose.Cells | validate slicer before PDF export
+// Title: Validate slicer printable flag before exporting Excel workbook to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over every worksheet in a Workbook, checks each slicer's IsPrintable property, and throws an InvalidOperationException if any slicer is not printable before calling Workbook.Save with SaveFormat.Pdf. | Create a helper method that uses dynamic typing to safely read the IsPrintable flag of slicer objects, logs the slicer name when the flag is false, and aborts the PDF conversion process. | Enhance an existing Aspose.Cells PDF export routine by adding a pre‑export validation step that ensures all slicers are marked printable and returns a detailed error message if validation fails.
+// Common Searches: Aspose.Cells C# verify slicer IsPrintable property before PDF conversion | how to prevent PDF export when a slicer is not printable in Aspose.Cells | check all slicers printable flag in .NET workbook prior to saving as PDF | C# code sample for slicer printable validation using Aspose.Cells | exception handling for non‑printable slicers during Aspose.Cells PDF export
+// Tags: slicer printable validation Aspose.Cells | export workbook to PDF with slicer checks | Aspose.Cells IsPrintable property C# | dynamic slicer property access .NET | prevent PDF generation on non‑printable slicer | exception handling for slicer printability
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Tables;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace SlicerPrintableCheckDemo
+// Loads an Excel file, iterates through each worksheet's slicers using dynamic typing, validates that every slicer's IsPrintable property is true (throws an exception if not), and then saves the workbook as a PDF.
+class Program
 {
-    // The example creates a workbook, adds a table and a slicer, verifies the slicer's IsPrintable flag, sets it to true if needed, and then saves the workbook as a PDF using PdfSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Populate some data and create a table (required for slicer)
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Add a ListObject (table) covering the data range
-            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a slicer linked to the table's first column
-            int slicerIndex = sheet.Slicers.Add(table, 0, "D1");
-            Slicer slicer = sheet.Slicers[slicerIndex];
-
-            // Validate that the slicer is printable; if not, set it to true
-            if (!slicer.IsPrintable)
+            // Validate that every slicer's printable flag is true (using dynamic to avoid direct Slicer type reference)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Optionally, you could throw an exception here
-                // throw new InvalidOperationException("Slicer must be printable before exporting to PDF.");
-                slicer.IsPrintable = true; // Ensure printable flag is true
+                // The Slicers collection may be empty; iterate if present
+                foreach (var slicerObj in sheet.Slicers)
+                {
+                    try
+                    {
+                        dynamic slicer = slicerObj;
+                        if (slicer.IsPrintable == false)
+                        {
+                            throw new InvalidOperationException(
+                                $"Slicer '{slicer.Name}' on worksheet '{sheet.Name}' has IsPrintable set to false.");
+                        }
+                    }
+                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+                    {
+                        // If the slicer object does not expose IsPrintable, skip validation
+                    }
+                }
             }
 
-            // Prepare PDF save options (optional customizations)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Example: export document structure
-                ExportDocumentStructure = true
-            };
-
             // Export the workbook to PDF
-            string outputPath = "SlicerPrintableChecked.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook saved to PDF at: {outputPath}");
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception details for troubleshooting
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

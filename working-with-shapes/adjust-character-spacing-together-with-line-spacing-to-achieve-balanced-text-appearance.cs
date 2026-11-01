@@ -1,7 +1,7 @@
-// Title: Increase line spacing by setting row height and emulate character spacing in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to enlarge the vertical space between lines in a cell by setting the row height to a specific point value. | Explain a workaround to mimic text tracking in Aspose.Cells for .NET when the API lacks a direct property. | Show how to combine row‑height changes with additional font styling such as bold or italic using Aspose.Cells.
-// Common Searches: Aspose.Cells C# increase line spacing by changing row height | how to simulate character spacing in Aspose.Cells .NET | set row height for better text appearance in Excel using Aspose.Cells | Aspose.Cells adjust cell style when character spacing property is missing | increase row height to affect line spacing in Aspose.Cells workbook
-// Tags: row dimension adjustment Aspose.Cells .NET | spacing via row size Aspose.Cells | font tracking workaround Aspose.Cells | cell style modification Aspose.Cells C# | font formatting options Aspose.Cells
+// Title: How to adjust line spacing by setting row height and emulate character spacing for balanced text in Excel using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to set a specific row height to increase line spacing for a cell's text. | Show a method to simulate character spacing in an Excel cell with Aspose.Cells, such as inserting zero‑width spaces or using RichText fragments. | Provide a complete Aspose.Cells workbook example that combines row‑height line‑spacing adjustment with a custom character‑spacing workaround.
+// Common Searches: aspocells increase line spacing by adjusting row height c# | c# aspocells emulate character spacing in excel cell | how to balance text appearance in excel using aspocells row height | aspocells missing character spacing property workaround
+// Tags: row height line spacing Aspose.Cells C# | character spacing simulation Aspose.Cells | excel text layout adjustment Aspose.Cells .NET | cell style formatting without character spacing Aspose | balanced text appearance Excel Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,54 +9,45 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example creates or loads an Excel workbook, accesses cell A1, clones its style (noting that Aspose.Cells does not expose a character‑spacing property), sets the row height to 25 points to increase line spacing, and saves the modified workbook.
+    // The example creates a new workbook, writes "Balanced text appearance" into cell A1, notes that Aspose.Cells lacks a direct character‑spacing property, applies the unchanged style, sets the first row height to 30 points to increase line spacing, and saves the file as BalancedText.xlsx.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Define input and output file paths
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-                // Ensure the input file exists; create a blank workbook if it does not
-                if (!File.Exists(inputPath))
-                {
-                    var tempWorkbook = new Workbook();
-                    tempWorkbook.Save(inputPath);
-                }
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the workbook
-                var workbook = new Workbook(inputPath);
+                // Put sample text into cell A1
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("Balanced text appearance");
 
-                // Access the first worksheet
-                var worksheet = workbook.Worksheets[0];
+                // Retrieve the cell's style
+                Style style = cell.GetStyle();
 
-                // Choose the cell to format (e.g., A1)
-                var cell = worksheet.Cells["A1"];
+                // Note: Aspose.Cells does not provide a direct property for character spacing.
+                // If needed, other formatting options can be applied here.
 
-                // Clone the existing style
-                var style = cell.GetStyle();
-
-                // NOTE: Aspose.Cells does not provide a direct property for character spacing.
-                // If needed, other font properties (e.g., Bold, Italic) can be set here.
-                // Example: style.Font.IsBold = true;
-
-                // Apply the (potentially modified) style back to the cell
+                // Apply the (unchanged) style back to the cell
                 cell.SetStyle(style);
 
-                // Adjust line spacing by modifying the row height.
-                var row = worksheet.Cells.Rows[cell.Row];
-                row.Height = 25; // Set row height to 25 points
+                // Adjust line spacing by setting the row height (in points)
+                sheet.Cells.SetRowHeight(0, 30);
 
-                // Save the modified workbook
+                // Define output file path
+                string outputPath = "BalancedText.xlsx";
+
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

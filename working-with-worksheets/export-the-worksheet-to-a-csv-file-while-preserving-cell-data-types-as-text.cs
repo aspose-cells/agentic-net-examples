@@ -1,39 +1,49 @@
-// Title: Export a specific Excel worksheet to CSV as plain text using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, selects a single worksheet, and saves it to a .csv file ensuring every cell is written as a string. | Show how to configure Aspose.Cells CsvSaveOptions with ExportDataAsString = true to export a worksheet to CSV while keeping original cell values as text.
-// Common Searches: how to save an Excel worksheet as CSV with all values treated as text using Aspose.Cells C# | Aspose.Cells CsvSaveOptions ExportDataAsString example for .NET | C# export specific sheet to CSV preserving formatting Aspose.Cells | convert .xlsx to .csv without losing leading zeros Aspose.Cells | save workbook to csv file while handling missing input file in C# Aspose
-// Tags: Aspose.Cells export worksheet to CSV | CsvSaveOptions ExportDataAsString .NET | preserve leading zeros when exporting to CSV | select single worksheet for CSV export Aspose.Cells | handle missing input file Aspose.Cells C#
+// Title: Export an Excel worksheet to a UTF-8 CSV file as plain text while preserving cell data types using Aspose.Cells for .NET
+// Common Searches: how to save an Excel worksheet as CSV with text format using Aspose.Cells C# | preserve numeric and date values as text when exporting to CSV with Aspose.Cells | Aspose.Cells C# export active worksheet to UTF-8 CSV file | set TxtSaveOptions for CSV export to keep cell data types in Aspose.Cells | convert XLSX to CSV without losing cell formatting using Aspose.Cells .NET
+// Tags: Aspose.Cells TxtSaveOptions CSV example | CSV export preserving cell data types Aspose.Cells | UTF8 encoding for CSV output Aspose.Cells | active worksheet CSV save Aspose.Cells | C# Aspose.Cells SaveFormat.Csv usage
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// The program checks that the input.xlsx file exists, loads it with Aspose.Cells, and saves the workbook (or a chosen worksheet) as output.csv, writing all cell values as plain text and handling any runtime errors.
-class ExportWorksheetToCsv
+// The code verifies the input XLSX file, loads it into an Aspose.Cells Workbook, activates the first worksheet, configures TxtSaveOptions for CSV format with UTF-8 encoding, and saves the active worksheet as a CSV file while retaining the original cell data types as text.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.csv";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file not found – {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the existing file
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook (or a specific worksheet) as CSV using the built‑in SaveFormat
-            workbook.Save(outputPath, SaveFormat.Csv);
-            Console.WriteLine($"Workbook successfully exported to CSV: {outputPath}");
+            // Ensure the first worksheet is the active one (CSV export uses the active sheet)
+            workbook.Worksheets.ActiveSheetIndex = 0;
+
+            // Configure CSV (text) save options
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            {
+                Encoding = Encoding.UTF8   // set desired encoding
+                // Additional options can be set here if needed
+            };
+
+            // Export the selected worksheet to a CSV file
+            workbook.Save(outputPath, csvOptions);
+
+            Console.WriteLine($"Worksheet exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

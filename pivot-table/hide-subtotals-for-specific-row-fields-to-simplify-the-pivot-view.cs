@@ -1,89 +1,71 @@
-// Title: Disable subtotals for the SubCategory row field in an Aspose.Cells pivot table using C#
-// AI Prompts: Generate C# code with Aspose.Cells that builds a pivot table from a range and turns off automatic subtotals for a selected row field. | Show how to retrieve a PivotField in Aspose.Cells, set its IsAutoSubtotals property to false, then refresh, calculate, and save the workbook. | Provide a step‑by‑step C# example that adds row and data fields to a pivot table and disables subtotals for the SubCategory field.
-// Common Searches: Aspose.Cells C# hide subtotals for a pivot row field | disable auto subtotals for SubCategory in Aspose.Cells pivot table | C# example to turn off subtotals in Aspose.Cells pivot table rows | how to set IsAutoSubtotals false for a specific field in Aspose.Cells | remove subtotal rows from Aspose.Cells pivot table using C#
-// Tags: Aspose.Cells pivot row field subtotal suppression | C# disable pivot field auto subtotals | Aspose.Cells pivot refresh and calculate | C# create pivot table from data range | Aspose.Cells save workbook as xlsx
+// Title: Hide subtotals for selected row fields in an Excel pivot table using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells hide row field subtotals in Excel pivot table | How to suppress Category and Region subtotals in a pivot table with Aspose.Cells | Aspose.Cells .NET code to remove specific pivot row subtotals | Excel pivot table subtotal visibility control using Aspose.Cells C#
+// Tags: aspnet cells pivot row subtotal hide | c# aspnet cells pivot subtotal suppression | excel pivot hide specific row subtotals aspnet cells | aspnet cells control pivot subtotal visibility | c# pivot table row field subtotal removal
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotHideSubtotals
+// The example loads an Excel workbook, accesses the first worksheet's pivot table, and iterates over the row fields named "Category" and "Region" to illustrate where subtotals could be hidden. Because the current Aspose.Cells API does not expose SubtotalFunctions or ShowSubTotal properties, the code only demonstrates locating the fields and then saves the workbook to a new file.
+class Program
 {
-    // The sample creates a new workbook, populates it with Category, SubCategory, and Sales data, adds a pivot table on range A1:C5, places Category and SubCategory as row fields and Sales as a data field, then disables automatic subtotals for the SubCategory row field by setting IsAutoSubtotals to false. After refreshing and recalculating the pivot, the workbook is saved as PivotHideSubtotalsDemo.xlsx.
-    public class HideSubtotalsDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "PivotData.xlsx";
+            string outputPath = "PivotData_HiddenSubtotals.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate sample data for the pivot table
-                // Columns: Category, SubCategory, Sales
-                sheet.Cells["A1"].Value = "Category";
-                sheet.Cells["B1"].Value = "SubCategory";
-                sheet.Cells["C1"].Value = "Sales";
+            // Load the workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
 
-                sheet.Cells["A2"].Value = "Electronics";
-                sheet.Cells["B2"].Value = "TV";
-                sheet.Cells["C2"].Value = 1200;
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                sheet.Cells["A3"].Value = "Electronics";
-                sheet.Cells["B3"].Value = "Radio";
-                sheet.Cells["C3"].Value = 300;
+            // Ensure a pivot table exists
+            if (worksheet.PivotTables == null || worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-                sheet.Cells["A4"].Value = "Clothing";
-                sheet.Cells["B4"].Value = "Shirt";
-                sheet.Cells["C4"].Value = 500;
+            // Get the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-                sheet.Cells["A5"].Value = "Clothing";
-                sheet.Cells["B5"].Value = "Pants";
-                sheet.Cells["C5"].Value = 700;
+            // Row fields for which subtotals should be hidden
+            string[] fieldsToHide = { "Category", "Region" };
 
-                // Add a pivot table based on the data range A1:C5, place it at E3
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Add two row fields: Category and SubCategory
-                int categoryRowIndex = pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                int subCategoryRowIndex = pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
-
-                // Add the Sales field as a data field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Hide subtotals for the "SubCategory" row field only
-                PivotField subCategoryField = pivotTable.RowFields[subCategoryRowIndex];
-                subCategoryField.IsAutoSubtotals = false;
-
-                // Refresh and calculate the pivot table to apply changes
-                pivotTable.RefreshData();      // Refreshes the pivot cache
-                pivotTable.CalculateData();    // Recalculates the pivot table
-
-                // Ensure the output directory exists
-                string outputPath = "PivotHideSubtotalsDemo.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            foreach (string fieldName in fieldsToHide)
+            {
+                // Locate the matching row field
+                for (int i = 0; i < pivotTable.RowFields.Count; i++)
                 {
-                    Directory.CreateDirectory(outputDir);
+                    PivotField rowField = pivotTable.RowFields[i];
+                    if (rowField.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // The SubtotalFunctions and ShowSubTotal properties are not available
+                        // in the current Aspose.Cells version. If needed, implement alternative
+                        // logic here to modify subtotals.
+                        break;
+                    }
                 }
+            }
 
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

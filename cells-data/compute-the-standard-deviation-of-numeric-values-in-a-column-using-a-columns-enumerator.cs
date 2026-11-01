@@ -1,82 +1,66 @@
-// Title: Compute sample standard deviation of numeric values in the first worksheet column using Aspose.Cells Columns enumerator (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells Columns collection to iterate the first column, calculate the sample standard deviation of all numeric cells, and write the result to cell B1. | Show how to modify the example to compute population standard deviation instead of sample standard deviation with Aspose.Cells. | Provide a version that reads the column index from a variable and outputs the standard deviation to a configurable target cell.
-// Common Searches: Aspose.Cells C# calculate standard deviation of a column | How to iterate columns with Columns enumerator in Aspose.Cells to perform statistical calculations | Sample standard deviation formula implementation using Aspose.Cells in C# | Write result of column statistics to another cell with Aspose.Cells | Compute standard deviation for numeric data in Excel using Aspose.Cells C# example
-// Tags: standard deviation calculation Aspose.Cells C# | Columns enumerator numeric aggregation Aspose.Cells | write computed statistic to Excel cell Aspose.Cells | sample vs population standard deviation Aspose.Cells | iterate first worksheet column Aspose.Cells
+// Title: Calculate the standard deviation of numeric values in a worksheet column using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells calculate standard deviation for a column of numbers | How to iterate over a column with MaxDataRow in Aspose.Cells and compute statistics | Compute variance and standard deviation in Excel using Aspose.Cells API | Sample code for standard deviation calculation on an Excel column with Aspose.Cells .NET | Retrieve numeric cells from a column and get standard deviation using Aspose.Cells
+// Tags: standard deviation Aspose.Cells C# implementation | column iteration using MaxDataRow Aspose.Cells | numeric cell aggregation Aspose.Cells | statistical analysis workbook Aspose.Cells | export standard deviation result to XLSX Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a workbook, fills column A with numeric values, uses the Columns enumerator to traverse the first column, aggregates the numbers, computes the sample standard deviation (n‑1), writes the result to cell B1, and saves the file as StdDevColumnExample.xlsx.
-class StdDevColumnExample
+// The example creates a new workbook, fills column A with numeric data, uses MaxDataRow to enumerate the populated rows, aggregates sum and sum of squares for numeric cells, computes variance and standard deviation, prints the result, and saves the workbook as an XLSX file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate column A (index 0) with sample numeric data
-        double[] sampleData = { 10, 20, 30, 40, 50 };
-        for (int i = 0; i < sampleData.Length; i++)
+        try
         {
-            cells[i, 0].PutValue(sampleData[i]); // Row i, Column 0 (A)
-        }
+            // Create a new workbook (create rule)
+            var workbook = new Workbook();
 
-        // Compute standard deviation of the values in column A
-        // Use the Columns enumerator to satisfy the requirement
-        double sum = 0;
-        int count = 0;
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-        foreach (Column col in sheet.Cells.Columns)
-        {
-            // We are interested in the first column (index 0)
-            // Iterate through rows that contain data
-            for (int row = 0; row <= cells.MaxDataRow; row++)
+            // Sample numeric data placed in column A (index 0)
+            double[] sampleValues = { 12.5, 15.0, 9.8, 20.3, 14.1 };
+            for (int i = 0; i < sampleValues.Length; i++)
             {
-                object val = cells[row, 0].Value;
-                if (val is double d)
+                sheet.Cells[i, 0].PutValue(sampleValues[i]);
+            }
+
+            // Calculate standard deviation for column A
+            double sum = 0;
+            double sumSq = 0;
+            int count = 0;
+
+            // Iterate through rows that contain data
+            int maxRow = sheet.Cells.MaxDataRow;
+            for (int row = 0; row <= maxRow; row++)
+            {
+                var cell = sheet.Cells[row, 0];
+                if (cell.Type == CellValueType.IsNumeric)
                 {
-                    sum += d;
-                    count++;
-                }
-                else if (val is int i)
-                {
-                    sum += i;
+                    double val = cell.DoubleValue;
+                    sum += val;
+                    sumSq += val * val;
                     count++;
                 }
             }
-            // Process only the first column, then exit the loop
-            break;
-        }
 
-        if (count == 0)
+            double stdDev = 0;
+            if (count > 1)
+            {
+                double variance = (sumSq - (sum * sum) / count) / (count - 1);
+                stdDev = Math.Sqrt(variance);
+            }
+
+            Console.WriteLine($"Standard Deviation of column A: {stdDev}");
+
+            // Save the workbook (save rule)
+            string outputPath = "StandardDeviationResult.xlsx";
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine("No numeric data found in the column.");
-            return;
+            Console.WriteLine($"Error: {ex.Message}");
         }
-
-        double mean = sum / count;
-
-        double varianceSum = 0;
-        for (int row = 0; row <= cells.MaxDataRow; row++)
-        {
-            object val = cells[row, 0].Value;
-            double d = 0;
-            if (val is double dd) d = dd;
-            else if (val is int ii) d = ii;
-            else continue;
-
-            varianceSum += Math.Pow(d - mean, 2);
-        }
-
-        // Sample standard deviation (n-1 in denominator)
-        double stdDev = Math.Sqrt(varianceSum / (count - 1));
-
-        // Write the result to cell B1
-        cells[0, 1].PutValue(stdDev);
-
-        // Save the workbook
-        workbook.Save("StdDevColumnExample.xlsx");
     }
 }

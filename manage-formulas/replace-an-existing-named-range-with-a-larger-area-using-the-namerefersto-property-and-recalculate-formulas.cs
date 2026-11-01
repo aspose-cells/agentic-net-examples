@@ -1,31 +1,58 @@
-// Title: Expand a named range to a larger area and recalculate all formulas using Aspose.Cells for .NET (C#)
-// AI Prompts: Set the Name.RefersTo property to a new cell range and invoke Workbook.CalculateFormula to refresh every formula in a C# Aspose.Cells project. | Replace an existing named range with a bigger range definition and trigger a full workbook recalculation using the Aspose.Cells API.
-// Common Searches: how to change the RefersTo value of a named range in Aspose.Cells C# | expand an existing named range to a larger cell block and recalc formulas with Aspose.Cells | C# Aspose.Cells update named range area and recalculate workbook | Aspose.Cells replace MyRange with Sheet1!A1:D10 and recalculate formulas | programmatically increase named range size in Excel using Aspose.Cells .NET
-// Tags: Aspose.Cells update Name.RefersTo property | C# expand named range Excel | Aspose.Cells recalculate workbook formulas | modify named range area programmatically | Aspose.Cells set named range to larger range
+// Title: How to expand an existing named range and recalculate formulas with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# change named range reference to a larger area | Update Name.RefersTo property programmatically and recalculate workbook formulas | Expand MyRange to Sheet1!A1:E20 using Aspose.Cells and refresh calculations | C# code to modify named range and trigger formula recalculation in Excel file
+// Tags: named range RefersTo update Aspose.Cells | expand named range area C# | trigger formula recalculation Aspose.Cells | adjust Excel named range size .NET | programmatic named range modification Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, expands the named range 'MyRange' to Sheet1!A1:D10 via Name.RefersTo, recalculates all formulas, and saves the result as output.xlsx.
+// The example loads an Excel workbook, retrieves the named range "MyRange", changes its RefersTo property to a larger range (e.g., 'Sheet1'!$A$1:$E$20), forces a full formula recalculation, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (load rule)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Retrieve the named range by its name
-        Name namedRange = workbook.Worksheets.Names["MyRange"];
-        if (namedRange != null)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Replace the existing range with a larger area using RefersTo property
-            // Example: expand to A1:D10 on Sheet1
-            namedRange.RefersTo = "='Sheet1'!$A$1:$D$10";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Recalculate all formulas in the workbook
-        workbook.CalculateFormula();
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook (save rule)
-        workbook.Save("output.xlsx");
+            // Retrieve the named range by its name
+            Name namedRange = workbook.Worksheets.Names["MyRange"];
+            if (namedRange != null)
+            {
+                // Define the new larger area for the named range (e.g., Sheet1!$A$1:$E$20)
+                string newRefersTo = "'Sheet1'!$A$1:$E$20";
+
+                // Update the named range to refer to the new area
+                namedRange.RefersTo = newRefersTo;
+            }
+
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handle Aspose.Cells specific errors (e.g., password protection)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any other unexpected errors
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

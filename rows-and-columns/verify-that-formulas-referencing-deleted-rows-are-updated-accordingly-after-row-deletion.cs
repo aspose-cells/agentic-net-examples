@@ -1,54 +1,58 @@
-// Title: Verify that a shared SUM formula updates its range automatically after deleting rows using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a shared SUM formula, deletes a specific row, and prints the revised formula to demonstrate automatic range adjustment. | Show how to delete multiple rows with Aspose.Cells and retrieve the updated shared formula to confirm that the referenced range has shifted correctly.
-// Common Searches: Aspose.Cells C# how does a shared formula adjust when a row is removed | example of deleting rows and keeping SUM formula correct with Aspose.Cells | C# code to verify formula range changes after DeleteRow in Aspose.Cells | shared formula reference update after DeleteRows Aspose.Cells .NET | testing formula auto‑update after row deletion using Aspose.Cells
-// Tags: shared formula range adjustment Aspose.Cells | DeleteRow updates formula references .NET | Aspose.Cells automatic formula recalculation after row deletion | C# verify SUM formula shift after DeleteRows | Excel workbook formula integrity with Aspose.Cells
+// Title: Automatically adjust SUM formula range after deleting a row with Aspose.Cells for .NET
+// AI Prompts: Delete the third row of a worksheet and let Aspose.Cells update any SUM formulas that reference the removed cells. | Recalculate the workbook and retrieve the updated formula text and value to confirm the range changed from A1:A5 to A1:A4. | Persist the workbook and output verification results indicating whether the formula reference and computed sum are correct.
+// Common Searches: Aspose.Cells .NET how to keep SUM formula correct after removing a row | C# update cell references automatically when rows are deleted in an Excel workbook | Validate that formula range changes after DeleteRows in Aspose.Cells
+// Tags: Aspose.Cells row deletion formula update | C# SUM range auto-adjustment | Excel recalculation after DeleteRows | check formula reference correctness | persist workbook changes
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The sample creates a workbook, fills column B rows 10‑66 with incremental numbers, sets a shared SUM formula in A66 that references B10:B66, deletes row 9 and then rows 60‑61, and prints the formula after each deletion to show the range automatically updates. The workbook is saved for manual inspection.
-class VerifyFormulaUpdateAfterRowDeletion
+// The example creates a workbook, fills column A with values 1‑5, sets B1 to =SUM(A1:A5), calculates the formula, deletes row 3, recalculates, verifies the formula updates to A1:A4 and the sum becomes 12, and finally saves the workbook as Result.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (using the create rule)
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate column B (index 1) with sample numeric values from row 10 to row 66
-        // Row indices are zero‑based, so row 10 is index 9 and row 66 is index 65
-        for (int i = 9; i <= 65; i++)
+        // Populate column A with values 1 to 5
+        for (int i = 0; i < 5; i++)
         {
-            cells[i, 1].PutValue(i - 8); // simple incremental values
+            sheet.Cells[i, 0].PutValue(i + 1);
         }
 
-        // Set a shared formula in row 66 (index 65) column A (index 0)
-        // The formula sums the range B10:B66
-        cells[65, 0].SetSharedFormula("=SUM(B10:B66)", 1, 6);
+        // Insert a formula in B1 that sums A1:A5
+        sheet.Cells[0, 1].Formula = "SUM(A1:A5)";
 
-        // Display the original formula
-        Console.WriteLine($"Original formula in A66: {cells[65, 0].Formula}");
+        // Calculate the workbook to evaluate the formula
+        workbook.CalculateFormula();
 
-        // -------------------------------------------------
-        // Delete row 9 (index 8). This shifts all rows below up by one.
-        // -------------------------------------------------
-        cells.DeleteRow(8);
+        // Store the original formula text and value
+        string originalFormula = sheet.Cells[0, 1].Formula;
+        double originalValue = sheet.Cells[0, 1].DoubleValue;
 
-        // After deletion, the original row 66 becomes row 65 (index 64)
-        Console.WriteLine($"After deleting row 9, formula in A65: {cells[64, 0].Formula}");
+        // Delete row 3 (zero‑based index 2)
+        sheet.Cells.DeleteRows(2, 1);
 
-        // -------------------------------------------------
-        // Delete rows 60‑61 (original rows). After the previous deletion,
-        // those rows are now at indices 58 and 59.
-        // -------------------------------------------------
-        cells.DeleteRows(58, 2);
+        // Re‑calculate after deletion
+        workbook.CalculateFormula();
 
-        // After this second deletion, the formula row moves up again:
-        // original row 66 -> row 63 (index 62)
-        Console.WriteLine($"After deleting rows 60‑61, formula in A63: {cells[62, 0].Formula}");
+        // Get the updated formula and value
+        string updatedFormula = sheet.Cells[0, 1].Formula;
+        double updatedValue = sheet.Cells[0, 1].DoubleValue;
 
-        // Save the workbook (optional, for manual inspection)
-        workbook.Save("FormulaUpdateAfterDeletion.xlsx");
+        // Verify that the formula reference has been adjusted (A1:A4)
+        bool formulaAdjusted = updatedFormula.Contains("A4") && !updatedFormula.Contains("A5");
+
+        // Verify that the value reflects the new sum (1+2+4+5 = 12)
+        bool valueCorrect = Math.Abs(updatedValue - 12) < 0.0001;
+
+        Console.WriteLine($"Original formula: {originalFormula}, value: {originalValue}");
+        Console.WriteLine($"Updated formula: {updatedFormula}, value: {updatedValue}");
+        Console.WriteLine($"Formula adjusted: {formulaAdjusted}");
+        Console.WriteLine($"Value correct: {valueCorrect}");
+
+        // Save the workbook (using the save rule)
+        workbook.Save("Result.xlsx");
     }
 }

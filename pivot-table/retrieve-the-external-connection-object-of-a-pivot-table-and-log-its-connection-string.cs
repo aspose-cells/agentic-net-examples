@@ -1,68 +1,53 @@
-// Title: Retrieve and log the external connection string of a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, adds a PivotTable, calls GetSourceDataConnections on the PivotTable, and prints the first connection's ConnectionString to the console. | Show how to detect and display an external data connection of an Excel PivotTable with Aspose.Cells in a .NET console application.
-// Common Searches: Aspose.Cells C# get external connection string from a PivotTable | How to read source data connections of an Excel PivotTable using Aspose.Cells .NET | Example of logging PivotTable external connection in a console app with Aspose.Cells
-// Tags: Aspose.Cells GetSourceDataConnections pivot table | log external connection string C# | retrieve pivot table external data connection .NET | Aspose.Cells external connection Excel workbook | C# console output PivotTable connection
+// Title: Retrieve and log the external connection string of the first pivot table in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file, obtains the first PivotTable, extracts its external connection object, and prints the connection string to the console with Aspose.Cells. | Update the existing Aspose.Cells example to check if the PivotTable uses an external data source and output its connection string for debugging. | Show how to access PivotTable.DataSource in C# and log the external connection details of an Excel pivot table.
+// Common Searches: Aspose.Cells C# get external connection string from pivot table | How to read pivot table data source connection in a .NET workbook | C# code to print Excel pivot table external data source using Aspose.Cells | Retrieve PivotTable.DataSource property Aspose.Cells example | Log connection string of pivot table external source in C#
+// Tags: Aspose.Cells C# retrieve pivot table external connection | log pivot table connection string Aspose.Cells | read PivotTable.DataSource property .NET | access external data source of Excel pivot table | debug pivot table data source Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.ExternalConnections;
+using Aspose.Cells.Pivot; // Provides PivotTable related classes
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, ensures the file exists, accesses the first worksheet, verifies a pivot table is present, retrieves the first PivotTable object, and writes its DataSource (which contains the external connection information) to the console, with exception handling for robustness.
+class Program
 {
-    // The example creates a workbook, populates sample data, adds a PivotTable, uses GetSourceDataConnections to obtain any external connections, and writes the first connection string to the console before saving the file.
-    public class PivotTableExternalConnectionDemo
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        const string filePath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            Console.WriteLine($"File not found: {filePath}");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
 
-            // Populate sample data that will be used as the pivot table source
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(850);
-            sheet.Cells["A4"].PutValue("Banana");
-            sheet.Cells["B4"].PutValue(430);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a pivot table based on the sample data
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-            // Retrieve external data connections associated with the pivot table
-            ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-            // Log the connection string of the first connection (if any)
-            if (connections.Length > 0 && !string.IsNullOrEmpty(connections[0].ConnectionString))
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("Pivot Table Connection String: " + connections[0].ConnectionString);
-            }
-            else
-            {
-                Console.WriteLine("No external connection string found for the pivot table.");
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
             }
 
-            // Save the workbook
-            string outputPath = "PivotTableExternalConnectionDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+            // Retrieve the first pivot table on the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Display the data source of the pivot table
+            // Aspose.Cells provides the DataSource property for both internal and external sources
+            Console.WriteLine("Pivot Table Data Source: " + pivotTable.DataSource);
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

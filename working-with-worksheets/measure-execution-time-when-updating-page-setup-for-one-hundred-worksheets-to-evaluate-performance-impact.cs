@@ -1,47 +1,58 @@
-// Title: Benchmarking page‑setup updates for 100 worksheets with Aspose.Cells in C#
-// AI Prompts: Write a C# console program that creates a workbook with 100 worksheets, sets each sheet's PageSetup to landscape, A4 paper size, and FitToPagesWide = 1, then measures the elapsed time with Stopwatch and prints the result. | Show how to profile the performance of bulk PageSetup modifications in Aspose.Cells by timing the operation for a hundred worksheets and outputting the duration in milliseconds. | Generate example code that applies the same page‑setup settings to every worksheet in a workbook and records the execution time using System.Diagnostics.Stopwatch.
-// Common Searches: aspnet cells benchmark page setup for many worksheets | c# measure execution time updating page setup of 100 Excel sheets | performance test Aspose.Cells page setup orientation change across worksheets | how long does bulk page setup take with Aspose.Cells in .NET
-// Tags: Aspose.Cells bulk page setup performance | C# Stopwatch timing worksheet settings | measure page setup latency for Excel workbook | optimize page setup updates across multiple worksheets
+// Title: Measure execution time of updating PageSetup properties for 100 worksheets with Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates through 100 worksheets in an Aspose.Cells workbook, modifies PageSetup settings (orientation, paper size, margins, fit‑to‑page) and records the duration using Stopwatch. | Create a performance benchmark that applies bulk PageSetup changes to each sheet in a workbook and outputs the elapsed milliseconds for the operation.
+// Common Searches: how long does it take to change page setup for many sheets using Aspose.Cells .NET | benchmarking worksheet page orientation updates with Aspose.Cells | measure performance of batch margin settings in a 100‑sheet workbook C# | stopwatch timing Aspose.Cells PageSetup modifications across worksheets
+// Tags: Aspose.Cells bulk PageSetup update timing | C# worksheet page layout performance measurement | benchmark multiple worksheet page settings Aspose.Cells | measure page setup latency .NET | performance testing Aspose.Cells page configuration
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// The example creates a workbook with 100 worksheets, applies landscape orientation, A4 paper size, and FitToPagesWide = 1 to each sheet's PageSetup, measures the total time using Stopwatch, prints the elapsed milliseconds, and saves the file as PageSetupPerformanceTest.xlsx.
+// The example creates a workbook containing 100 worksheets, loops through each sheet to set orientation, paper size, margins, and fit‑to‑page options, measures the total time with Stopwatch, and prints the elapsed milliseconds, allowing developers to assess the performance impact of bulk PageSetup updates.
 class PageSetupPerformanceTest
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Ensure there are 100 worksheets
-        // The workbook initially contains one default worksheet
-        for (int i = 1; i < 100; i++)
+        try
         {
-            workbook.Worksheets.Add();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Ensure there are 100 worksheets (the workbook initially contains one worksheet)
+            for (int i = 1; i < 100; i++)
+            {
+                workbook.Worksheets.Add("Sheet" + (i + 1));
+            }
+
+            // Start measuring time
+            Stopwatch sw = Stopwatch.StartNew();
+
+            // Update page setup for each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                PageSetup setup = sheet.PageSetup;
+                // Example modifications (adjust as needed)
+                setup.Orientation = PageOrientationType.Portrait;
+                setup.PaperSize = PaperSizeType.PaperA4;
+                setup.LeftMargin = 0.5;   // inches
+                setup.RightMargin = 0.5;  // inches
+                setup.TopMargin = 0.75;   // inches
+                setup.BottomMargin = 0.75; // inches
+                setup.FitToPagesWide = 1;
+                setup.FitToPagesTall = 0;
+            }
+
+            // Stop measuring time
+            sw.Stop();
+
+            // Output the elapsed time
+            Console.WriteLine($"Time taken to update page setup for 100 worksheets: {sw.ElapsedMilliseconds} ms");
+
+            // Optionally save the workbook (not required for timing)
+            // workbook.Save("PageSetupPerformanceTest.xlsx");
         }
-
-        // Start timing the page setup updates
-        Stopwatch sw = Stopwatch.StartNew();
-
-        // Update page setup for each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        catch (Exception ex)
         {
-            // Example page setup changes
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-            sheet.PageSetup.FitToPagesWide = 1;
-            sheet.PageSetup.FitToPagesTall = 0; // Auto
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Stop timing
-        sw.Stop();
-
-        // Output the elapsed time
-        Console.WriteLine($"Time taken to update page setup for 100 worksheets: {sw.ElapsedMilliseconds} ms");
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("PageSetupPerformanceTest.xlsx");
     }
 }

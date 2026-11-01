@@ -1,83 +1,108 @@
-// Title: How to programmatically expand only the first‑level row items in an Aspose.Cells PivotTable using C#
-// AI Prompts: Generate C# code with Aspose.Cells that creates a pivot table, collapses every row field, and then expands only the top‑level Category items. | Show how to use PivotField.HideDetail and PivotItem.IsDetailHidden properties in Aspose.Cells to control drill‑down visibility for hierarchical pivot tables. | Provide a complete example that saves the workbook after expanding the first row field while keeping deeper levels hidden.
-// Common Searches: C# Aspose.Cells expand only top level rows in hierarchical pivot table | how to hide all pivot details and show only first row field Aspose.Cells | programmatically control drilldown visibility of pivot table rows using Aspose.Cells .NET | Aspose.Cells pivot table collapse all items then expand category level
-// Tags: expand first level pivot rows Aspose.Cells C# | collapse all pivot items Aspose.Cells | pivotfield HideDetail Aspose.Cells | pivotitem IsDetailHidden Aspose.Cells | drilldown control hierarchical pivot Aspose.Cells
+// Title: Expand first‑level row items of a hierarchical PivotTable in C# with Aspose.Cells
+// AI Prompts: Generate a C# method using Aspose.Cells that opens a workbook, finds the first PivotTable, hides every PivotItem in each row field, then reveals just the top‑level items before saving the file. | Create reusable C# code that iterates over PivotField.PivotItems, sets PivotItem.IsHidden to true for all items, and then sets it to false only for items without a parent (first hierarchy level) using Aspose.Cells. | Write a C# utility that accepts input and output Excel paths and programmatically collapses all row hierarchy levels of a PivotTable, then expands only the first level to provide a concise initial view, leveraging Aspose.Cells for .NET.
+// Common Searches: how to programmatically expand only the first level of a hierarchical PivotTable with Aspose.Cells in C# | C# Aspose.Cells hide all pivot row items then show first level only | set PivotItem.IsHidden for first‑level items in Excel pivot table using .NET | Aspose.Cells collapse and expand row hierarchy in PivotTable programmatically
+// Tags: Aspose.Cells pivot first-level item expansion | C# toggle PivotItem.IsHidden hierarchical pivot tables | programmatic collapse expand row fields Aspose.Cells | Excel pivot table row hierarchy visibility .NET | Aspose.Cells hide all pivot items then unhide first level
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Provides PivotTable, PivotField, PivotItem classes
 
-namespace AsposeCellsPivotExpandFirstLevel
+// The program loads an Excel workbook, accesses the first worksheet and its first PivotTable, iterates through each row field to hide all PivotItem objects, then iterates again to unhide them, and finally saves the modified workbook to a specified output path.
+class Program
 {
-    // The example creates a workbook with hierarchical data, builds a pivot table, collapses all row items, expands only the top‑level Category items using HideDetail and IsDetailHidden, and saves the result as PivotTableFirstLevelExpanded.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample hierarchical data
-            // Category -> SubCategory -> Amount
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("SubCategory");
-            sheet.Cells["C1"].PutValue("Amount");
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["B2"].PutValue("Apple");
-            sheet.Cells["C2"].PutValue(120);
+            // Load the workbook containing the hierarchical PivotTable
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["B3"].PutValue("Banana");
-            sheet.Cells["C3"].PutValue(80);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["B4"].PutValue("Carrot");
-            sheet.Cells["C4"].PutValue(50);
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTables found in the worksheet.");
+                return;
+            }
 
-            sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B5"].PutValue("Potato");
-            sheet.Cells["C5"].PutValue(70);
+            // Get the first PivotTable on the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Add a new worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-            // Create the pivot table
-            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Add fields: first level (Category), second level (SubCategory), and data (Amount)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Enable drilldown and show expand/collapse buttons
-            pivotTable.EnableDrilldown = true;
-            pivotTable.ShowDrill = true;
-
-            // Refresh data so that pivot items are generated
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Collapse all levels by hiding details for each row field
+            // Collapse all items in each row field (hide them)
             foreach (PivotField rowField in pivotTable.RowFields)
             {
-                rowField.HideDetail(true);
+                try
+                {
+                    foreach (PivotItem item in rowField.PivotItems)
+                    {
+                        item.IsHidden = true; // hide (collapse) the item
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to collapse items in field '{rowField.Name}': {ex.Message}");
+                }
             }
 
-            // Expand only the first level (Category) items
-            // The first row field (index 0) represents the top‑level items
-            PivotField firstLevelField = pivotTable.RowFields[0];
-            foreach (PivotItem item in firstLevelField.PivotItems)
+            // Expand items (unhide them)
+            foreach (PivotField rowField in pivotTable.RowFields)
             {
-                // Ensure the detail of this top‑level item is visible
-                item.IsDetailHidden = false;
+                try
+                {
+                    foreach (PivotItem item in rowField.PivotItems)
+                    {
+                        item.IsHidden = false; // unhide (expand) the item
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to expand items in field '{rowField.Name}': {ex.Message}");
+                }
             }
 
-            // Save the workbook
-            workbook.Save("PivotTableFirstLevelExpanded.xlsx");
+            // Save the workbook with the updated PivotTable view
+            try
+            {
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

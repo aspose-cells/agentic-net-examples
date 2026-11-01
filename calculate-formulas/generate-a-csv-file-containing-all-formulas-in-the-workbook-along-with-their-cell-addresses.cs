@@ -1,50 +1,93 @@
-// Title: Export every formula and its cell address from an Excel workbook to a CSV file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# program that opens an .xlsx file with Aspose.Cells, finds all cells containing formulas, and writes the worksheet name, A1 cell address, and formula text to a CSV file. | Refactor the example to ignore hidden worksheets and only export formulas from visible sheets while still recording the sheet name in the CSV. | Create a reusable method that returns a List<(string Sheet, string Address, string Formula)> representing all formula cells in a given workbook using Aspose.Cells. | Add code that logs the total number of formulas exported after the CSV file has been generated.
-// Common Searches: how to extract all formulas from an Excel file to a CSV using Aspose.Cells C# | C# Aspose.Cells list formula cells with addresses across worksheets | save Excel formulas as text with cell references using Aspose.Cells .NET | export worksheet formulas to CSV file programmatically Aspose.Cells | retrieve A1 notation formulas from workbook using Aspose.Cells C#
-// Tags: Aspose.Cells export formulas to CSV | C# extract cell formulas with Aspose.Cells | iterate worksheets to collect formulas Aspose.Cells | write formula strings to CSV in .NET | retrieve A1 addresses of formula cells Aspose.Cells
+// Title: Export Excel formulas with cell addresses to a CSV file using Aspose.Cells for .NET
+// Common Searches: C# code to list all formulas in an Excel file and save them as CSV with Aspose.Cells | how to extract cell address and formula from each worksheet using Aspose.Cells .NET | write Excel formula export utility to CSV in C# with Aspose.Cells | retrieve formulas from used range of a workbook with Aspose.Cells for .NET | generate CSV of formula cells from .xlsx using Aspose.Cells library
+// Tags: export formulas to CSV Aspose.Cells | iterate used range Aspose.Cells | detect IsFormula property C# | format A1 cell address with sheet name | escape quotes for CSV output C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The code loads an Excel workbook with Aspose.Cells, iterates through each worksheet and cell, detects formula cells, and writes the worksheet name, cell address (A1 notation), and formula text to a CSV file named formulas.csv.
-class Program
+// The example loads an .xlsx workbook with Aspose.Cells, walks through each worksheet's MaxDisplayRange, checks the IsFormula flag for each cell, builds a sheet‑prefixed A1 address, escapes double quotes in the formula, and writes "CellAddress,Formula" rows to a CSV file.
+class ExportFormulasToCsv
 {
     static void Main()
     {
-        // Load the workbook from a file (create/load rule)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Prepare a CSV file to store formulas (save rule for the CSV)
-        using (StreamWriter writer = new StreamWriter("formulas.csv"))
+        try
         {
-            // Write CSV header
-            writer.WriteLine("CellAddress,Formula");
+            // Path to the input workbook
+            string workbookPath = "input.xlsx";
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                Cells cells = sheet.Cells;
+                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
+                return;
+            }
 
-                // Iterate through all cells that contain data
-                foreach (Cell cell in cells)
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Path for the CSV output
+            string csvPath = "formulas.csv";
+
+            // Ensure the directory for the CSV exists
+            string? csvDir = Path.GetDirectoryName(csvPath);
+            if (!string.IsNullOrEmpty(csvDir) && !Directory.Exists(csvDir))
+            {
+                Directory.CreateDirectory(csvDir);
+            }
+
+            // Write formulas to CSV
+            using (StreamWriter writer = new StreamWriter(csvPath))
+            {
+                // CSV header
+                writer.WriteLine("CellAddress,Formula");
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Check if the cell holds a formula
-                    if (cell.IsFormula)
+                    // Get the used range of the worksheet
+                    AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // If the worksheet is empty, skip it
+                    if (usedRange == null || usedRange.RowCount == 0 || usedRange.ColumnCount == 0)
+                        continue;
+
+                    int startRow = usedRange.FirstRow;
+                    int endRow = startRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = startCol + usedRange.ColumnCount - 1;
+
+                    // Loop through each cell in the used range
+                    for (int row = startRow; row <= endRow; row++)
                     {
-                        // Get the cell address in A1 notation
-                        string address = cell.Name;
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
 
-                        // Get the formula text; escape double quotes for CSV compliance
-                        string formula = cell.Formula.Replace("\"", "\"\"");
+                            // Process only cells that contain a formula
+                            if (cell.IsFormula)
+                            {
+                                // Build the cell address with sheet name (A1 style)
+                                string address = $"'{sheet.Name}'!{cell.Name}";
 
-                        // Write the address and formula to the CSV (formula is quoted to handle commas)
-                        writer.WriteLine($"{address},\"{formula}\"");
+                                // Escape double quotes for CSV compliance
+                                string formula = cell.Formula.Replace("\"", "\"\"");
+
+                                // Write the address and formula, each enclosed in double quotes
+                                writer.WriteLine($"\"{address}\",\"{formula}\"");
+                            }
+                        }
                     }
                 }
             }
-        }
 
-        Console.WriteLine("All formulas have been exported to formulas.csv");
+            Console.WriteLine($"Formulas exported successfully to '{csvPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

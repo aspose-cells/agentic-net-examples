@@ -1,65 +1,80 @@
-// Title: How to dynamically set Excel row height in C# with Aspose.Cells using the tallest cell’s pixel measurement
-// AI Prompts: Generate C# code that loops through each row of an Aspose.Cells worksheet, measures each cell’s pixel height with Cell.GetHeightOfValue, and applies the maximum height to the row using SetRowHeightPixel. | Show how to enable text wrapping for cells, calculate the required row height based on wrapped content, and save the workbook with adjusted row heights in Aspose.Cells. | Provide a complete example that creates a workbook, populates cells with varying text lengths, determines the tallest cell per row, and sets row heights in pixels.
-// Common Searches: Aspose.Cells C# set row height based on cell content pixel value | calculate maximum cell height in a row Aspose.Cells .NET | adjust Excel row height automatically for wrapped text using Aspose.Cells | Cell.GetHeightOfValue usage example C# | SetRowHeightPixel per row Aspose.Cells tutorial
-// Tags: set row height pixel Aspose.Cells | measure cell pixel height Aspose.Cells | wrap text row height calculation Aspose.Cells | dynamic row height based on content Aspose.Cells | Cell.GetHeightOfValue C# example | iterate rows adjust height Aspose.Cells
+// Title: Set Excel row height in pixels dynamically from the tallest cell content with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells auto fit row height and retrieve pixel value | Convert Aspose.Cells row height from points to pixels in .NET | Enforce a minimum pixel row height after AutoFitRow using Aspose.Cells | Iterate worksheet rows and adjust Excel row height based on cell content with Aspose.Cells | How to set dynamic row height in pixels when processing an Excel file in C#
+// Tags: Aspose.Cells AutoFitRow pixel conversion | row height points‑pixel mapping Aspose.Cells | minimum pixel row height enforcement Aspose.Cells | worksheet row iteration height adjustment Aspose.Cells | dynamic Excel row height calculation .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, adds wrapped text to cells, iterates each row to obtain the pixel height of every non‑null cell via Cell.GetHeightOfValue, selects the maximum height per row, sets the row height with SetRowHeightPixel (including a small padding), and saves the file as DynamicRowHeight.xlsx.
-class DynamicRowHeight
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads or creates an Excel workbook, iterates through all used rows, auto‑fits each row, reads the calculated height in points, converts it to pixels, applies a minimum pixel height if needed, converts back to points, sets the adjusted height, and saves the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate sample data with varying lengths and enable text wrapping where needed
-        cells["A1"].PutValue("Short");
-        cells["B1"].PutValue("This is a longer text that should wrap and increase row height.");
-        Style wrapStyle = cells["B1"].GetStyle();
-        wrapStyle.IsTextWrapped = true;
-        cells["B1"].SetStyle(wrapStyle);
-
-        cells["A2"].PutValue("Another row with\nmultiple lines");
-        cells["B2"].PutValue("Medium length");
-        Style wrapStyle2 = cells["A2"].GetStyle();
-        wrapStyle2.IsTextWrapped = true;
-        cells["A2"].SetStyle(wrapStyle2);
-
-        // Determine the last row that contains data
-        int lastRow = cells.MaxDataRow;
-
-        // Iterate through each row to calculate the tallest cell content
-        for (int row = 0; row <= lastRow; row++)
+        static void Main(string[] args)
         {
-            int maxPixelHeight = 0;
-
-            // Iterate through each column in the current row
-            for (int col = 0; col <= cells.MaxDataColumn; col++)
+            try
             {
-                Cell cell = cells[row, col];
-                if (cell != null && cell.Type != CellValueType.IsNull)
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Load an existing workbook if the file exists; otherwise create a new one
+                Workbook workbook;
+                if (File.Exists(inputPath))
                 {
-                    // Get the height of the cell's value in pixels
-                    int cellPixelHeight = cell.GetHeightOfValue();
-
-                    // Track the maximum height found in this row
-                    if (cellPixelHeight > maxPixelHeight)
-                        maxPixelHeight = cellPixelHeight;
+                    workbook = new Workbook(inputPath);
                 }
-            }
+                else
+                {
+                    workbook = new Workbook(); // creates a new workbook with a default worksheet
+                }
 
-            // If any cell contributed a height, set the row height accordingly (add a small padding)
-            if (maxPixelHeight > 0)
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Enumerate all used rows in the worksheet
+                int firstRow = worksheet.Cells.MinRow;
+                int lastRow = worksheet.Cells.MaxRow;
+
+                for (int rowIndex = firstRow; rowIndex <= lastRow; rowIndex++)
+                {
+                    // Auto‑fit the current row based on the tallest cell content.
+                    // Note: Aspose.Cells' AutoFitRow method accepts only the row index.
+                    worksheet.AutoFitRow(rowIndex);
+
+                    // Retrieve the height that Aspose.Cells calculated (in points)
+                    double heightInPoints = worksheet.Cells.Rows[rowIndex].Height;
+
+                    // Convert points to pixels (1 point = 1/72 inch, 96 DPI => 1 point = 96/72 pixels)
+                    double heightInPixels = heightInPoints * 96.0 / 72.0;
+
+                    // Enforce a minimum pixel height if needed
+                    const double minPixels = 20.0;
+                    if (heightInPixels < minPixels)
+                    {
+                        heightInPixels = minPixels;
+                        // Convert back to points before setting the row height
+                        heightInPoints = heightInPixels * 72.0 / 96.0;
+                        worksheet.Cells.Rows[rowIndex].Height = heightInPoints;
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
             {
-                cells.SetRowHeightPixel(row, maxPixelHeight + 2);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
-
-        // Save the workbook with the dynamically adjusted row heights
-        workbook.Save("DynamicRowHeight.xlsx");
     }
 }

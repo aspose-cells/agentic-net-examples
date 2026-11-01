@@ -1,113 +1,83 @@
-// Title: How to toggle texture tiling (Tile vs Stretch) of a named shape in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate a C# method that takes a workbook file path and a shape name, finds the shape, and switches its FillFormat texture alignment between Tile and Stretch with Aspose.Cells. | Write C# code that uses reflection to detect and toggle either the TextureAlignment property or the TextureScaleX/TextureScaleY properties of a shape's FillFormat for version‑agnostic texture tiling control. | Create robust error‑handling for a routine that validates the file, locates the shape by name, toggles its texture tiling, and saves the workbook back to the same .xlsx file.
-// Common Searches: aspnet toggle shape texture tiling in excel using aspose.cells | c# change shape fill texture alignment tile stretch aspose cells | how to use reflection to modify FillFormat texture properties in Aspose.Cells | toggle texture scaling of a shape programmatically in an .xlsx file | asp.net find shape by name and change its texture mode with Aspose.Cells
-// Tags: aspocells shape texture tiling toggle | c# fillformat texturealignment reflection | excel shape fill tile stretch | aspocells version‑agnostic texture scaling | c# toggle shape fill texture in xlsx
+// Title: C# routine to toggle texture tiling of a named shape in an Excel workbook using Aspose.Cells
+// Common Searches: C# Aspose.Cells toggle texture tiling for a shape by name | how to enable or disable shape texture tiling in an Excel file with Aspose.Cells | programmatically change the Tiling property of a shape's fill texture using Aspose.Cells .NET | Aspose.Cells example to flip texture tiling flag on a worksheet shape | toggle image texture tiling on Excel shape using Aspose.Cells API
+// Tags: Aspose.Cells shape texture tiling toggle | C# modify shape fill texture property | Excel shape texture manipulation Aspose.Cells | Aspose.Cells workbook shape fill adjustment | toggle shape texture tiling .NET
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
-using System.Reflection;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace ShapeTextureTilerApp
+// The provided C# class loads an Excel workbook, finds a shape by its name, checks that the shape has a texture, flips the texture's Tiling flag, and saves the file, with detailed error handling for missing files, shapes, or textures.
+public class ShapeTextureTiler
 {
-    // Provides a C# routine that locates a named shape in the first worksheet of an Excel file, toggles its texture tiling between Tile and Stretch using reflection for cross‑version compatibility, and saves the workbook.
-    public class ShapeTextureTiler
+    /// <param name="filePath">Full path to the Excel file.</param>
+    /// <param name="shapeName">Name of the shape whose texture tiling will be toggled.</param>
+    public static void ToggleTextureTiling(string filePath, string shapeName)
     {
-        // Toggles the texture tiling property of a shape in the first worksheet.
-        public static void ToggleTextureTiling(string filePath, string shapeName)
+        // Verify that the workbook file exists
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("Excel file not found.", filePath);
+
+        try
         {
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Access the first worksheet (adjust if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Locate the shape by name
+            Shape targetShape = null;
+            foreach (Shape shape in sheet.Shapes)
             {
-                if (!File.Exists(filePath))
-                    throw new FileNotFoundException($"Workbook file not found: {filePath}");
-
-                // Load the workbook.
-                Workbook workbook = new Workbook(filePath);
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Locate the shape by name.
-                Shape targetShape = null;
-                foreach (Shape shape in sheet.Shapes)
+                if (shape.Name.Equals(shapeName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (!string.IsNullOrEmpty(shape.Name) &&
-                        shape.Name.Equals(shapeName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        targetShape = shape;
-                        break;
-                    }
+                    targetShape = shape;
+                    break;
                 }
-
-                if (targetShape == null)
-                    throw new ArgumentException($"Shape '{shapeName}' not found in the worksheet.");
-
-                // Attempt to toggle texture tiling.
-                FillFormat fill = targetShape.Fill;
-
-                // Use reflection to access TextureAlignment if it exists in the current Aspose.Cells version.
-                PropertyInfo texAlignProp = typeof(FillFormat).GetProperty("TextureAlignment", BindingFlags.Public | BindingFlags.Instance);
-                if (texAlignProp != null && texAlignProp.CanRead && texAlignProp.CanWrite)
-                {
-                    object currentValue = texAlignProp.GetValue(fill);
-                    Type enumType = texAlignProp.PropertyType;
-
-                    // Determine the enum names for Tile and Stretch (case‑insensitive).
-                    object tileValue = Enum.Parse(enumType, "Tile", true);
-                    object stretchValue = Enum.Parse(enumType, "Stretch", true);
-
-                    // Toggle between Tile and Stretch.
-                    object newValue = currentValue.Equals(tileValue) ? stretchValue : tileValue;
-                    texAlignProp.SetValue(fill, newValue);
-                }
-                else
-                {
-                    // Fallback: try to toggle TextureScaleX/Y via reflection if they exist.
-                    PropertyInfo scaleXProp = typeof(FillFormat).GetProperty("TextureScaleX", BindingFlags.Public | BindingFlags.Instance);
-                    PropertyInfo scaleYProp = typeof(FillFormat).GetProperty("TextureScaleY", BindingFlags.Public | BindingFlags.Instance);
-
-                    if (scaleXProp != null && scaleYProp != null && scaleXProp.CanRead && scaleXProp.CanWrite && scaleYProp.CanRead && scaleYProp.CanWrite)
-                    {
-                        double scaleX = Convert.ToDouble(scaleXProp.GetValue(fill));
-                        double scaleY = Convert.ToDouble(scaleYProp.GetValue(fill));
-
-                        // When both scales are 0 the texture is stretched; any positive value repeats the texture.
-                        bool isStretched = scaleX == 0 && scaleY == 0;
-                        double newScale = isStretched ? 1 : 0;
-
-                        scaleXProp.SetValue(fill, newScale);
-                        scaleYProp.SetValue(fill, newScale);
-                    }
-                    // If neither property exists, no further action is required.
-                }
-
-                // Save the workbook.
-                workbook.Save(filePath, SaveFormat.Xlsx);
             }
-            catch (Exception ex)
-            {
-                // Wrap the exception to provide context.
-                throw new ApplicationException("Failed to toggle texture tiling.", ex);
-            }
+
+            if (targetShape == null)
+                throw new ArgumentException($"Shape with name '{shapeName}' not found.");
+
+            // Get the fill format of the shape
+            FillFormat fill = targetShape.Fill;
+
+            // Ensure the shape has a texture; otherwise we cannot toggle tiling
+            if (fill.Texture == null)
+                throw new InvalidOperationException("The specified shape does not have a texture to toggle.");
+
+            // Use dynamic to avoid compile‑time dependency on the Texture class
+            dynamic texture = fill.Texture;
+
+            // Toggle the tiling flag (applicable for image textures)
+            bool currentTiling = texture.Tiling;
+            texture.Tiling = !currentTiling;
+
+            // Save the workbook back to the same file
+            workbook.Save(filePath);
+        }
+        catch (Exception ex)
+        {
+            // Wrap any exception with additional context
+            throw new InvalidOperationException("Failed to toggle texture tiling.", ex);
         }
     }
 
-    class Program
+    // Example usage
+    public static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Adjust the file path and shape name as needed.
-                string filePath = @"C:\Docs\Sample.xlsx";
-                string shapeName = "MyShape";
+            string excelPath = @"C:\Temp\Sample.xlsx";
+            string shapeToToggle = "MyShape";
 
-                ShapeTextureTiler.ToggleTextureTiling(filePath, shapeName);
-                Console.WriteLine("Texture tiling toggled successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            ToggleTextureTiling(excelPath, shapeToToggle);
+            Console.WriteLine("Texture tiling toggled successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

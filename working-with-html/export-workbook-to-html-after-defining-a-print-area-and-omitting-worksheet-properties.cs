@@ -1,36 +1,54 @@
-// Title: Export a workbook to HTML with a defined print area and suppress worksheet properties using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to save an Excel workbook as HTML, limiting the output to a defined print area and disabling worksheet property export. | Show how to set HtmlSaveOptions.ExportWorksheetProperties to false and configure Worksheet.PageSetup.PrintArea before calling Workbook.Save for HTML conversion.
-// Common Searches: how to export a specific range to HTML with Aspose.Cells in C# | Aspose.Cells C# hide worksheet properties when saving as HTML | set print area for HTML output using Aspose.Cells .NET | save Excel workbook as HTML without worksheet metadata Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportWorksheetProperties example
-// Tags: Aspose.Cells HTML export with print area | HtmlSaveOptions ExportWorksheetProperties false | C# define worksheet print area Aspose.Cells | suppress worksheet properties Aspose.Cells HTML
+// Title: Export an Aspose.Cells workbook to HTML with a specific print area and without worksheet properties using C#
+// AI Prompts: Generate C# code that creates a workbook, specifies a print range, and saves it as HTML using Aspose.Cells while turning off worksheet property export. | Demonstrate configuring HtmlSaveOptions to disable worksheet property export and preserve the defined print area when converting a workbook to HTML.
+// Common Searches: C# Aspose.Cells export to HTML respecting print area | How to hide worksheet properties in HTML output with Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportWorksheetProperties false example | Save Excel file as HTML without sheet metadata using Aspose.Cells | Define print area before converting workbook to HTML in C#
+// Tags: Aspose.Cells HTML export with print area | HtmlSaveOptions ExportWorksheetProperties false | C# define print area Aspose.Cells | exclude worksheet metadata HTML output | save workbook as HTML Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, populates cells, defines the print area (A1:B2), configures HtmlSaveOptions to exclude worksheet properties, and saves the workbook as an HTML file.
+// The sample creates a new workbook, fills cells A1:B3 with data, sets the print area to A1:B3, configures HtmlSaveOptions to disable worksheet property export, and saves the workbook as an HTML file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sample";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue("Header1");
-        sheet.Cells["B1"].PutValue("Header2");
-        sheet.Cells["A2"].PutValue(123);
-        sheet.Cells["B2"].PutValue(456);
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(50);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(30);
 
-        // Define the print area (A1:B2)
-        sheet.PageSetup.PrintArea = "A1:B2";
+            // Define the print area (A1:B3)
+            sheet.PageSetup.PrintArea = "A1:B3";
 
-        // Set HTML save options to omit worksheet properties
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        htmlOptions.ExportWorksheetProperties = false;
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Omit worksheet properties from the generated HTML
+                ExportWorksheetProperties = false
+                // ExportPrintArea property is not available in this version; the defined print area will be respected by default
+            };
 
-        // Export the workbook to HTML
-        workbook.Save("output.html", htmlOptions);
+            // Determine output path
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ExportedWorkbook.html");
+
+            // Export the workbook to HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook exported successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

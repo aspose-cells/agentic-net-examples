@@ -1,17 +1,15 @@
-// Title: Use LINQ to select only WordArt shapes from an Excel worksheet and apply fill and font styling with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, uses LINQ to retrieve shapes where IsWordArt is true, and sets each shape's FillFormat.ForeColor to LightBlue and Font to bold Arial 14. | Generate a method that accepts a Worksheet object, filters its ShapeCollection for WordArt shapes using LINQ, and applies a light blue fill and Arial 14 bold font to the shapes.
-// Common Searches: aspnet linq filter wordart shapes in worksheet using aspose.cells | how to change fill color of WordArt objects in Excel with Aspose.Cells C# | batch update font properties of WordArt shapes in Aspose.Cells | select only WordArt shapes from ShapeCollection with LINQ in C# | apply style changes to multiple WordArt shapes in an Excel file programmatically
-// Tags: linq filter wordart shapes aspose.cells | batch style update wordart excel c# | shapecollection wordart selection aspose | fillformat color change wordart c# | font formatting wordart aspose.cells
+// Title: Filter WordArt shapes with LINQ and apply batch formatting using Aspose.Cells for .NET
+// Common Searches: c# linq query to select only WordArt shapes from worksheet shape collection with Aspose.Cells | how to change fill color and line weight of multiple WordArt objects in an Excel file using Aspose.Cells | batch update text and style of WordArt shapes in a workbook with Aspose.Cells .NET | apply yellow fill and black border to all WordArt shapes in a spreadsheet using C# | filter shapes by type WordArt before formatting in Aspose.Cells
+// Tags: linq filter shapecollection aspnet cells | batch format wordart shapes aspnet cells | set wordart fill color aspnet cells | modify wordart line weight aspnet cells | update wordart text aspnet cells
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 
-// Loads an Excel workbook, uses LINQ to extract only WordArt shapes from the first worksheet's ShapeCollection, changes each shape's fill color to LightBlue and sets the font to bold Arial 14, then saves the modified file.
+// Loads an Excel workbook, uses LINQ to retrieve only shapes whose Type contains "WordArt" from the first worksheet's ShapeCollection, then sets each shape's fill color to yellow, line weight to 2.0 with a black border, updates the displayed text, and saves the modified workbook.
 class Program
 {
     static void Main()
@@ -22,7 +20,7 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
             return;
         }
 
@@ -31,33 +29,36 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index as needed)
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Select only WordArt shapes from the worksheet's ShapeCollection
-            List<Shape> wordArtShapes = sheet.Shapes
-                                            .Cast<Shape>()
-                                            .Where(s => s.IsWordArt)
-                                            .ToList();
+            var wordArtShapes = sheet.Shapes
+                                    .Cast<Shape>()
+                                    .Where(s => s.Type.ToString().Contains("WordArt"))
+                                    .ToList();
 
             // Apply batch style changes to each WordArt shape
-            foreach (Shape wordArt in wordArtShapes)
+            foreach (var shape in wordArtShapes)
             {
-                // Change fill color using FillFormat
-                wordArt.FillFormat.ForeColor = Color.LightBlue;
+                // Set fill color
+                shape.FillFormat.ForeColor = Color.Yellow;
 
-                // Modify font properties
-                wordArt.Font.Name = "Arial";
-                wordArt.Font.Size = 14;
-                wordArt.Font.IsBold = true;
+                // Set line weight and color
+                shape.LineFormat.Weight = 2.0;
+                shape.LineFormat.ForeColor = Color.Black;
+
+                // Update displayed text
+                shape.Text = "Updated WordArt";
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Handle any runtime exceptions gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

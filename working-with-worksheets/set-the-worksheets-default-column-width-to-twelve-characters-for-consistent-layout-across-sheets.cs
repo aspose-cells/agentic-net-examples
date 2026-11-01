@@ -1,13 +1,12 @@
-// Title: Set a default column width of 12 characters for every column in an Aspose.Cells worksheet using C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to set the width of all columns in the first worksheet to 12 characters and then saves the file. | Provide a C# snippet that iterates over the first 256 columns of a worksheet and applies a uniform column width of 12 characters with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set column width for entire worksheet | How to define default column width of 12 characters in Aspose.Cells workbook | C# loop to apply same column width to multiple columns using Aspose.Cells | Set uniform column width across all columns in an Aspose.Cells sheet | Default column width setting in Aspose.Cells .NET API
-// Tags: set column width Aspose.Cells C# | default column width 12 characters Aspose.Cells | iterate columns set width worksheet Aspose.Cells | uniform column width workbook .NET | save workbook after column width adjustment Aspose.Cells
+// Title: Set a worksheet's default column width to 12 characters with Aspose.Cells for .NET (C#)
+// AI Prompts: Use the Worksheet.Cells.StandardWidth property to set the default column width to 12 characters in a new C# Aspose.Cells workbook and save it as XLSX. | Create a workbook, adjust the default column width for all columns on the first sheet to 12 characters before adding any data, then export the file. | Modify an existing worksheet's StandardWidth to 12 characters using the Aspose.Cells API in C#.
+// Common Searches: Aspose.Cells C# set default column width to 12 characters | How to change the standard column width for a worksheet in Aspose.Cells .NET | C# Aspose.Cells set column width for all columns before populating data | Set worksheet default column width using StandardWidth property Aspose.Cells | Configure uniform column width in a new Excel file with Aspose.Cells for .NET
+// Tags: Aspose.Cells StandardWidth property | default column width worksheet .NET | column width 12 characters Aspose.Cells | uniform column width workbook C# | configure worksheet column width Aspose
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The program creates a new workbook, accesses the first worksheet, loops through the first 256 columns to set each column's width to 12 characters, and saves the workbook as Output.xlsx.
+// The program creates a new workbook, accesses the first worksheet, sets its default column width to 12 characters via the StandardWidth property, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
@@ -20,23 +19,15 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set column width for a reasonable range (e.g., first 256 columns) to emulate a default width
-            const double columnWidth = 12;
-            for (int col = 0; col < 256; col++)
-            {
-                sheet.Cells.SetColumnWidth(col, columnWidth);
-            }
+            // Set the default column width to 12 characters
+            sheet.Cells.StandardWidth = 12;
 
-            // Define output file path
-            string outputPath = "Output.xlsx";
-
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

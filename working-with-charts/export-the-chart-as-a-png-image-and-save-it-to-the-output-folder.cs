@@ -1,48 +1,62 @@
-// Title: Export a column chart from Aspose.Cells to a PNG file and store it in a custom output folder using C#
-// AI Prompts: Generate C# code that creates a workbook, adds a column chart with sample data, and uses Aspose.Cells' Chart.ToImage method to write the chart as a PNG to a specified directory. | Show how to programmatically ensure an output folder exists and then save an Aspose.Cells chart image (PNG) to that folder in a C# console application.
-// Common Searches: C# Aspose.Cells how to save a chart as a PNG image file | export Excel column chart to PNG using Aspose.Cells library | Aspose.Cells Chart.ToImage example with output directory in C# | create and export chart image from workbook with Aspose.Cells C# | save Aspose.Cells chart to file path programmatically
-// Tags: Aspose.Cells chart export PNG | C# Aspose.Cells column chart image generation | Chart.ToImage PNG output | ensure output directory Aspose.Cells C# | save Excel chart as image using Aspose.Cells
+// Title: Export an Excel worksheet chart to PNG using Aspose.Cells for .NET (C# example)
+// Common Searches: Aspose.Cells C# export chart from workbook to PNG image | How to save the first chart in an Excel sheet as a PNG file with Aspose.Cells | C# code to convert Excel chart to PNG using Aspose.Cells Chart.ToImage | Export Excel chart to image folder using Aspose.Cells .NET library | Save chart as PNG in C# without opening Excel
+// Tags: Aspose.Cells chart export to PNG | C# Aspose.Cells Chart.ToImage usage | export Excel chart as image .NET | save worksheet chart as PNG file | Aspose.Cells image conversion for charts
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, fills cells A1:B4 with sample data, adds a column chart, defines its data range, creates an "output" folder if needed, and uses Chart.ToImage to export the chart as a PNG file named ChartImage.png.
-class ExportChartToPng
+// This C# sample loads an Excel workbook, locates the first chart on the first worksheet, and uses Aspose.Cells' Chart.ToImage method to export the chart as a PNG file named "ChartExport.png" into a specified output folder, handling missing files and exceptions.
+class ExportChartAsPng
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Define input workbook path and output folder
+        string workbookPath = @"C:\Input\Sample.xlsx";
+        string outputFolder = @"C:\Output";
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Sales");
-        worksheet.Cells["B2"].PutValue(1200);
-        worksheet.Cells["B3"].PutValue(800);
-        worksheet.Cells["B4"].PutValue(1500);
+        try
+        {
+            // Verify that the input workbook exists
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"Input workbook not found: {workbookPath}");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Ensure the output folder exists
+            if (!Directory.Exists(outputFolder))
+            {
+                Directory.CreateDirectory(outputFolder);
+            }
 
-        // Set the data range for the chart
-        chart.SetChartDataRange("A1:B4", true);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-        // Ensure the output directory exists
-        string outputDir = "output";
-        Directory.CreateDirectory(outputDir);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Export the chart as a PNG image
-        string imagePath = Path.Combine(outputDir, "ChartImage.png");
-        chart.ToImage(imagePath, ImageType.Png);
+            // Retrieve the first chart on the worksheet (adjust index if needed)
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        Console.WriteLine($"Chart exported successfully to: {imagePath}");
+            Chart chart = sheet.Charts[0];
+
+            // Define the output PNG file path
+            string pngPath = Path.Combine(outputFolder, "ChartExport.png");
+
+            // Export the chart as a PNG image (default format is PNG)
+            chart.ToImage(pngPath);
+
+            Console.WriteLine($"Chart exported successfully to: {pngPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

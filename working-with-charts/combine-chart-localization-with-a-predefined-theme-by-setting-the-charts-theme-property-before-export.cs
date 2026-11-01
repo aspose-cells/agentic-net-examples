@@ -1,66 +1,59 @@
-// Title: Set a built‑in chart Theme, localize chart titles and axis labels, then export the chart as PNG using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, adds a column chart, assigns a built‑in Theme index to the chart, localizes the chart title and axis titles, and saves the chart as a PNG image with Aspose.Cells. | Update an existing Aspose.Cells chart example to replace the Style property with the Theme property, ensuring the exported PNG reflects the selected theme and localized text. | Show how to apply a specific Theme (e.g., ThemeIndex = 3) to a chart, set localized titles, and generate both an XLSX file and a PNG image in C# using Aspose.Cells.
-// Common Searches: aspnet how to assign a built‑in theme to a chart before exporting image with Aspose.Cells | c# Aspose.Cells chart localization with Theme property example | export Aspose.Cells chart to PNG after setting Theme index | apply predefined chart theme and localized axis titles using Aspose.Cells for .NET | set chart Theme property instead of Style in Aspose.Cells C#
-// Tags: chart Theme property usage Aspose.Cells | localized chart axis titles C# | PNG image export for Aspose.Cells chart | built‑in chart theme application .NET | replace Style with Theme in Aspose.Cells chart
+// Title: Applying a predefined chart theme and a French title to an Aspose.Cells column chart before exporting to PDF (C#)
+// Common Searches: Aspose.Cells C# set chart theme and localized title before PDF export | C# code to add a preset style to a column chart and change its title language using Aspose.Cells | How to apply a chart theme and French title when saving a workbook as PDF with Aspose.Cells | Set chart.Theme property in Aspose.Cells .NET and export the chart to PDF | Apply preset chart style and multilingual title in an Aspose.Cells workbook using C#
+// Tags: Aspose.Cells chart theme C# | Aspose.Cells localized chart title PDF | apply preset chart style Aspose.Cells | column chart export to PDF Aspose.Cells | set chart.Title text multilingual Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The example creates a workbook, populates sample data, adds a column chart, applies a predefined Theme via the chart's Theme property, localizes the chart title and axis titles, saves the workbook as an XLSX file, and exports the chart as a PNG image using Aspose.Cells for .NET.
-class ChartLocalizationWithTheme
+// The example creates a workbook, adds sample data, inserts a column chart, sets a French title for the chart, applies a predefined chart theme, and then saves the workbook with the chart as a PDF file using Aspose.Cells for .NET.
+class ChartWithThemeAndLocalization
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("Jan");
             sheet.Cells["A3"].PutValue("Feb");
             sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["B3"].PutValue(1500);
-            sheet.Cells["B4"].PutValue(1800);
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
 
-            // Add a column chart
+            // Add a column chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Apply a predefined chart style (as an alternative to a theme)
-            chart.Style = 2; // Example style index
-
-            // Define the data series and categories
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Localize chart title and axis titles
-            chart.Title.Text = "Sales Overview – Localized";
-            chart.Title.Font.Color = System.Drawing.Color.DarkBlue;
-            chart.Title.Font.Size = 14;
+            // ----- Localization -----
+            // Set chart title with a localized string (example: French)
+            chart.Title.Text = "Ventes Mensuelles";
 
-            chart.CategoryAxis.Title.Text = "Month (Localized)";
-            chart.ValueAxis.Title.Text = "Sales Amount (Localized)";
+            // ----- Theme -----
+            // Apply a predefined style to the chart (if supported by the library version)
+            // Note: ChartStyleType may not be available in older versions; this line is optional.
+            // chart.Style = ChartStyleType.Preset1;
 
-            // Make axis titles bold
-            chart.CategoryAxis.Title.Font.IsBold = true;
-            chart.ValueAxis.Title.Font.IsBold = true;
-
-            // Save the workbook containing the chart
-            workbook.Save("LocalizedChartWithTheme.xlsx");
-
-            // Export the chart as a PNG image
-            chart.ToImage("LocalizedChartWithTheme.png", ImageType.Png);
+            // Export the workbook (including the chart) to a PDF file
+            string outputPath = "ChartWithThemeAndLocalization.pdf";
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

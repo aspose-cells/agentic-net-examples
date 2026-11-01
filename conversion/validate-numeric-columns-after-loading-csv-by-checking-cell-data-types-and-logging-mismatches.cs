@@ -1,65 +1,50 @@
-// Title: Check numeric columns in a CSV with Aspose.Cells for .NET and log type mismatches
-// AI Prompts: Load a CSV file using Aspose.Cells, iterate through each column, and output the addresses of cells whose values are not numeric. | Write a .NET routine that validates numeric columns in a CSV, records non‑numeric entries together with their headers, and saves the workbook as an XLSX file.
-// Common Searches: aspnet validate numeric data in CSV using Aspose.Cells | how to detect non‑numeric values in CSV columns with Aspose.Cells .NET | log cell type mismatches when converting CSV to Excel with Aspose.Cells
-// Tags: numeric column validation Aspose.Cells | log non‑numeric cells .NET | CSV to XLSX data type checking Aspose.Cells | cell type verification Aspose.Cells CSV
+// Title: Validate numeric columns in a CSV with Aspose.Cells for .NET and log type mismatches
+// Common Searches: Aspose.Cells C# validate that specific CSV columns contain only numbers | how to detect non-numeric values in CSV columns using Aspose.Cells | C# code to log rows with invalid numeric data after loading CSV with Aspose.Cells | checking cell data type in a CSV worksheet with Aspose.Cells .NET | iterate through CSV rows and verify numeric columns using Aspose.Cells
+// Tags: numeric column validation Aspose.Cells | cell type checking CSV Aspose.Cells | log mismatched cell values C# | load CSV workbook Aspose.Cells | iterate worksheet rows Aspose.Cells | specify numeric columns by index Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsCsvValidation
+// The example loads a CSV file into an Aspose.Cells Workbook, defines the column indexes that must contain numeric data, iterates over each row up to the last populated row, checks each targeted cell's Type against CellValueType.IsNumeric, and writes a console message for any cell whose value is not numeric.
+class Program
 {
-    // The program loads a CSV file with Aspose.Cells (enabling numeric and datetime conversion), scans each column for cells that are not numeric, logs mismatches with column headers and cell addresses, and finally saves the validated workbook as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the CSV file
+        string csvPath = "data.csv";
+
+        // Load the CSV file into a workbook
+        var loadOptions = new LoadOptions(LoadFormat.Csv);
+        Workbook workbook = new Workbook(csvPath, loadOptions);
+
+        // Get the first worksheet (CSV data is loaded into the first sheet)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define which columns should contain numeric data (0‑based indices)
+        // Example: columns A and C are expected to be numeric
+        List<int> numericColumns = new List<int> { 0, 2 };
+
+        // Determine the last row with data
+        int maxRow = sheet.Cells.MaxDataRow;
+
+        // Iterate through each row and validate numeric columns
+        for (int row = 0; row <= maxRow; row++)
         {
-            // Path to the CSV file to be validated
-            string csvFilePath = "input.csv";
-
-            // Load options for CSV import
-            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+            foreach (int col in numericColumns)
             {
-                Separator = ',',          // CSV delimiter
-                ConvertNumericData = true, // Convert numeric strings to numeric values
-                ConvertDateTimeData = true // Also convert date strings if present
-            };
+                Cell cell = sheet.Cells[row, col];
 
-            // Load the CSV into a workbook
-            Workbook workbook = new Workbook(csvFilePath, loadOptions);
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Determine the used range
-            int maxRow = cells.MaxDataRow;      // zero‑based index of the last row with data
-            int maxCol = cells.MaxDataColumn;   // zero‑based index of the last column with data
-
-            // Assume first row contains headers
-            for (int col = 0; col <= maxCol; col++)
-            {
-                // Header name for reporting
-                string header = cells[0, col].StringValue;
-
-                // Scan data rows for non‑numeric values
-                for (int row = 1; row <= maxRow; row++)
+                // Check if the cell's value type is numeric
+                if (cell.Type != CellValueType.IsNumeric)
                 {
-                    Cell cell = cells[row, col];
-
-                    // Skip empty cells
-                    if (cell.Type == CellValueType.IsNull)
-                        continue;
-
-                    // If the cell is not numeric (int, double, or datetime) log the mismatch
-                    if (!cell.IsNumericValue)
-                    {
-                        Console.WriteLine($"Mismatch in column '{header}' (Index {col + 1}) at cell {cell.Name}: " +
-                                          $"Value=\"{cell.StringValue}\" is not numeric.");
-                    }
+                    // Log mismatch: row and column numbers are 1‑based for readability
+                    Console.WriteLine(
+                        $"Mismatch at Row {row + 1}, Column {col + 1}: " +
+                        $"Value '{cell.StringValue}' is not numeric.");
                 }
             }
-
-            // Optionally, save the workbook after validation (e.g., to Excel format)
-            workbook.Save("validated_output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

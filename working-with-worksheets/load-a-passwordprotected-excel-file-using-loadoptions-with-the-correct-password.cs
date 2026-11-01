@@ -1,51 +1,50 @@
-// Title: Load a password‑protected Excel workbook with Aspose.Cells LoadOptions in C# and save it unencrypted
-// AI Prompts: Generate C# code that opens a .xlsx file protected with a password using Aspose.Cells LoadOptions.Password, then saves the workbook without a password. | Demonstrate catching the specific CellsException thrown when the password supplied to LoadOptions does not match the workbook's encryption. | Provide an example that checks the source file exists, loads it with the correct password, and writes the unprotected workbook to a new location.
-// Common Searches: aspnet load password protected xlsx using aspose.cells loadoptions c# | how to remove password from excel file programmatically with aspose.cells | c# catch cellsexception invalid password when opening encrypted workbook | aspose.cells load encrypted workbook and save without protection
-// Tags: Aspose.Cells LoadOptions password | load encrypted xlsx C# | unprotect Excel workbook Aspose.Cells | handle CellsException invalid password | save workbook without encryption Aspose.Cells
+// Title: Open a password‑protected Excel workbook with Aspose.Cells LoadOptions in C# and save it without a password
+// AI Prompts: Write C# code that creates a LoadOptions object with a password, loads an encrypted .xlsx file using Aspose.Cells, reads the first worksheet name, and saves a new copy without any protection. | Show how to catch a CellsException when the supplied password is incorrect while loading a protected Excel file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# load encrypted Excel file with password | how to remove password from .xlsx using Aspose.Cells | C# LoadOptions Password property example Aspose.Cells | open password protected workbook and save unprotected Aspose.Cells | catch CellsException for wrong password Aspose.Cells C#
+// Tags: Aspose.Cells LoadOptions password | C# open encrypted .xlsx Aspose.Cells | remove Excel workbook password Aspose.Cells | save unprotected workbook Aspose.Cells | handle CellsException invalid password
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The sample verifies the presence of a password‑protected Excel file, configures LoadOptions with the correct password, loads the workbook using Aspose.Cells, and saves it to a new file without any password protection while handling both Aspose.Cells‑specific and general exceptions.
+// The example checks for the presence of a password‑protected Excel file, sets the password in a LoadOptions object, loads the workbook with Aspose.Cells, prints the first worksheet name, and then saves a copy of the workbook without any password protection.
 class Program
 {
     static void Main()
     {
-        // Path to the password‑protected workbook
-        const string inputPath = "protected.xlsx";
-        const string outputPath = "unprotected.xlsx";
+        // Path to the password‑protected Excel file
+        string inputPath = "protected.xlsx";
 
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
-        // Password for the protected workbook
-        string password = "myPassword";
-
         try
         {
-            // Configure load options with the correct password
+            // Create LoadOptions and set the password required to open the file
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Password = password
+                Password = "myPassword"
             };
 
-            // Load the protected workbook
+            // Load the workbook using the LoadOptions with the correct password
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // (Optional) Perform any operations on the workbook here
+            // Example operation: write the name of the first worksheet to console
+            Worksheet firstSheet = workbook.Worksheets[0];
+            Console.WriteLine($"First worksheet name: {firstSheet.Name}");
 
-            // Save the workbook without password protection
+            // Optional: save the workbook to a new file (e.g., without password)
+            string outputPath = "unprotected.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved without password to \"{outputPath}\".");
         }
         catch (CellsException ex)
         {
-            // Handles Aspose.Cells specific errors (e.g., invalid password)
+            // Handles errors related to Aspose.Cells operations (e.g., invalid password)
             Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)

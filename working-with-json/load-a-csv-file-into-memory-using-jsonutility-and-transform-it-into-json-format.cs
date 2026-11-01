@@ -1,43 +1,51 @@
-// Title: Load a CSV file into an Aspose.Cells Workbook and export it as a JSON string using JsonSaveOptions in C#
-// AI Prompts: Generate C# code that reads a CSV file into an Aspose.Cells Workbook, then uses JsonSaveOptions to write the workbook to a MemoryStream and returns the JSON string. | Modify the program to accept the input CSV path and an optional output JSON file path from command‑line arguments, writing the JSON result to the specified file. | Add error handling that validates the CSV file exists, catches malformed CSV content, and ensures the JSON output is encoded in UTF‑8.
-// Common Searches: c# how to read a CSV file with Aspose.Cells and convert it to JSON | using Aspose.Cells JsonSaveOptions to export workbook to JSON string | convert CSV to JSON in memory stream Aspose.Cells C# example | Aspose.Cells load CSV and save as JSON without creating intermediate Excel file
-// Tags: Aspose.Cells load CSV workbook | JsonSaveOptions export to JSON | C# convert CSV to JSON in memory | Aspose.Cells memory stream JSON output | CSV to JSON conversion using Aspose.Cells
+// Title: Read a CSV file with Aspose.Cells, convert it to a DataTable, and save as indented JSON using System.Text.Json (C#)
+// AI Prompts: Write C# code that loads a CSV file into an Aspose.Cells Workbook, exports the worksheet to a DataTable, and writes the data as pretty‑printed JSON with System.Text.Json. | Enhance the program to accept input and output file paths as command‑line arguments and add optional parameters for JSON indentation and culture‑specific number formatting.
+// Common Searches: c# aspocells read csv and export to json file | how to convert csv to json using Aspose.Cells workbook | serialize datatable to formatted json with System.Text.Json c# | aspocells csv to json example .net core | command line csv to json conversion aspocells c#
+// Tags: Aspose.Cells CSV import to DataTable | System.Text.Json DataTable serialization | CSV to JSON conversion C# | Workbook CSV loading Aspose.Cells | Indented JSON output .NET
 
 using System;
 using System.IO;
-using System.Text;
+using System.Data;
+using System.Text.Json;
 using Aspose.Cells;
 
-// Demonstrates loading a CSV file into an Aspose.Cells Workbook, exporting the workbook to a MemoryStream with JsonSaveOptions, converting the stream to a UTF‑8 JSON string, and printing the result, with basic file‑existence checking and exception handling.
-class CsvToJsonConverter
+// The example verifies the CSV file exists, loads it into an Aspose.Cells Workbook, accesses the first worksheet, determines the used range, exports the data to a DataTable, and then serializes that DataTable to indented JSON using System.Text.Json. The JSON is printed to the console and written to an output file, with error handling for unexpected exceptions.
+class Program
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.csv";
+            const string outputPath = "output.json";
 
-            // Ensure the input CSV file exists to avoid FileNotFoundException
+            // Verify input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the CSV file into a Workbook object
+            // Load the CSV file into a workbook (Aspose.Cells can read CSV directly)
             Workbook workbook = new Workbook(inputPath);
 
-            // Export the workbook to JSON using JsonSaveOptions
-            string json;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                JsonSaveOptions jsonOptions = new JsonSaveOptions();
-                workbook.Save(ms, jsonOptions);
-                json = Encoding.UTF8.GetString(ms.ToArray());
-            }
+            // Access the first worksheet which contains the CSV data
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Output the resulting JSON
+            // Determine the used range dimensions
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+
+            // Export the worksheet data to a DataTable
+            DataTable dt = sheet.Cells.ExportDataTable(0, 0, totalRows, totalColumns, true);
+
+            // Serialize the DataTable to a JSON string with indentation
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(dt, jsonOptions);
+
+            // Output the JSON to console and file
             Console.WriteLine(json);
+            File.WriteAllText(outputPath, json);
         }
         catch (Exception ex)
         {

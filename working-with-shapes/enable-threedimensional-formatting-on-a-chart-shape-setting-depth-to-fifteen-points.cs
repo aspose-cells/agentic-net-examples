@@ -1,50 +1,63 @@
-// Title: Set a 15‑point 3D depth on a Column3D chart shape using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a Column3D chart and sets its PlotArea 3D depth to 15 points. | Modify an existing Aspose.Cells chart object to enable 3‑D formatting and assign a depth of 15 points in a .NET workbook.
-// Common Searches: Aspose.Cells C# set 3D depth of Column3D chart to 15 points | How to enable three‑dimensional formatting for a chart shape in Aspose.Cells .NET | Change plot area depth for a 3D column chart using Aspose.Cells C# | Aspose.Cells example for adjusting chart 3D depth property
-// Tags: Aspose.Cells set chart 3d depth | C# Column3D chart PlotArea depth | Aspose.Cells enable 3d chart formatting | Aspose.Cells workbook chart depth property | Aspose.Cells .NET chart 3d formatting
+// Title: How to set the depth of a 3‑D Column chart to 15 points using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a Column3D chart in a workbook and assigns a depth of fifteen points via the chart's ThreeDFormat.Depth property using Aspose.Cells. | Update an existing Chart object in an Aspose.Cells workbook to enable three‑dimensional formatting and set its depth to fifteen points.
+// Common Searches: Aspose.Cells C# three dimensional chart depth 15 points | How to adjust 3D column chart depth in Aspose.Cells .NET | C# example for Aspose.Cells ThreeDFormat.Depth property | Increase 3D chart depth in an Excel file with Aspose.Cells | Set chart shape depth points using Aspose.Cells for .NET
+// Tags: Aspose.Cells ThreeDFormat.Depth | configure 3D chart depth C# | column3d chart depth property | enable three‑dimensional formatting Aspose.Cells | chart shape depth points .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a 3‑D Column chart, defines its series and categories, optionally sets the chart's PlotArea 3‑D depth to 15 points, and saves the file as output.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, fills cells A1:B4 with sample data, adds a 3‑D column chart linked to that data, sets the chart’s three‑dimensional depth to 15 points, and saves the file as ThreeDimensionalChart.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add sample data for the chart
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["B1"].PutValue("Value");
-            ws.Cells["A2"].PutValue("A");
-            ws.Cells["B2"].PutValue(10);
-            ws.Cells["A3"].PutValue("B");
-            ws.Cells["B3"].PutValue(20);
-            ws.Cells["A4"].PutValue("C");
-            ws.Cells["B4"].PutValue(30);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a 3‑D column chart to the worksheet
-            int chartIdx = ws.Charts.Add(ChartType.Column3D, 5, 0, 15, 5);
-            Chart chart = ws.Charts[chartIdx];
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B4"].PutValue(30);
 
-            // Define the data series and categories for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Add a 3‑D column chart (position: rows 5‑15, columns 0‑5)
+                int chartIdx = sheet.Charts.Add(ChartType.Column3D, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIdx];
 
-            // Optional: set 3‑D depth if supported by the library version
-            // chart.PlotArea.Area3DDepth = 15; // Uncomment if the property exists
+                // Define the data series including categories (A2:A4) and values (B2:B4)
+                chart.NSeries.Add("A2:B4", true);
 
-            // Save the workbook
-            wb.Save("output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Determine output path
+                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ThreeDimensionalChart.xlsx");
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

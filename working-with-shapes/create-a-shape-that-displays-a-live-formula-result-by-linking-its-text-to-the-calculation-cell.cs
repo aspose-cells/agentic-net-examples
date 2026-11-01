@@ -1,13 +1,14 @@
-// Title: How to bind a rectangle shape’s text to a cell formula for live updates in Aspose.Cells for .NET
-// AI Prompts: Create a rectangle shape on a worksheet and set its Text property to a cell reference so the shape displays the current formula result. | Generate code that links a shape’s displayed text to a worksheet cell, ensuring the text updates automatically when the cell’s formula recalculates.
-// Common Searches: Aspose.Cells .NET bind shape text to cell formula for live result | display cell formula result in a textbox shape using Aspose.Cells | update shape text automatically when worksheet cell changes Aspose.Cells | link rectangle shape to B2 formula Aspose.Cells example
-// Tags: rectangle shape text binding Aspose.Cells .NET | dynamic shape content from worksheet formula | shape text linked to cell value Aspose.Cells | C# Aspose.Cells live formula display in shape | binding shape to cell calculation result
+// Title: Add a rectangle shape that shows a live formula result by linking its text to a worksheet cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells to insert a rectangle shape and assign its Text property the evaluated value of a specific cell after formula calculation. | Show how to calculate worksheet formulas first, then bind the resulting value to a shape's text before saving the workbook.
+// Common Searches: Aspose.Cells C# bind shape text to cell value after formula calculation | display calculated cell result inside a rectangle shape in Excel using Aspose.Cells | set dynamic text for a shape based on worksheet formula result with Aspose.Cells for .NET
+// Tags: Aspose.Cells set shape text from cell value | C# add rectangle shape with dynamic text | Aspose.Cells calculate formula before binding to shape | Excel shape linked to formula result using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, writes a SUM formula in cell B2, adds a rectangle shape, sets the shape's Text property to "=B2" so it shows the live calculation result, formats the text, and saves the file as LiveFormulaShape.xlsx.
+// Creates a new workbook, writes a SUM formula in cell B2, calculates the formula, adds a rectangle shape, sets the shape's text to the calculated value of B2, and saves the file as LiveFormulaShape.xlsx.
 class Program
 {
     static void Main()
@@ -18,38 +19,37 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a formula in cell B2 (example: sum of numbers)
+            // Place a formula in cell B2 (example: sum of numbers)
             sheet.Cells["B2"].Formula = "=SUM(1,2,3)"; // Result will be 6
 
-            // Add a rectangle shape (acts as a textbox) to the worksheet
-            // Parameters: drawing type, upper left row, upper left column,
-            // top offset (points), left offset (points), height (points), width (points)
+            // Calculate formulas so the value is available for the shape
+            workbook.CalculateFormula();
+
+            // Add a rectangle shape to the worksheet
+            // Parameters: drawing type, upper left row, upper left row offset,
+            // upper left column, upper left column offset, width, height
             Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                1,    // upper left row
-                0,    // upper left column
-                0,    // top offset
-                100,  // left offset
-                30,   // height
-                200   // width
-            );
+                MsoDrawingType.Rectangle, 2, 0, 2, 0, 120, 30);
 
-            // Link the shape's text to the cell containing the formula.
-            // The shape will display the live result of B2 and update automatically.
-            shape.Text = "=B2";
-
-            // Optional: format the text inside the shape
-            shape.Font.Size = 12;
-            shape.Font.IsBold = true;
+            // Set the shape's text to the calculated value of B2
+            shape.Text = sheet.Cells["B2"].StringValue;
 
             // Save the workbook to a file
             string outputPath = "LiveFormulaShape.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

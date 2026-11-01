@@ -1,13 +1,13 @@
-// Title: Password‑protect specific cells while leaving other cells editable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that locks selected cells, unlocks others, and applies a worksheet password. | Show how to create a style that sets IsLocked = false and use it to make certain cells editable before protecting the sheet with a password.
-// Common Searches: Aspose.Cells C# protect only certain cells with a password | How to unlock specific cells while protecting the rest of the worksheet in Aspose.Cells | C# example for cell‑level protection using Aspose.Cells workbook | Apply password protection to a worksheet but allow editing of designated cells in .NET | Selective cell locking with Aspose.Cells and password protection
-// Tags: worksheet password protection Aspose.Cells | unlock cells for editing Aspose.Cells | cell lock style Aspose.Cells C# | selective cell protection .NET | apply locked property style Aspose.Cells
+// Title: How to password‑protect an Excel worksheet while keeping selected cells editable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that locks cell A1, unlocks cell B1, and protects the worksheet with a password. | Generate an Aspose.Cells .NET snippet that sets IsLocked = false for chosen cells before applying worksheet protection. | Create a C# example demonstrating how to unlock particular cells, then call Worksheet.Protect to enforce read‑only on locked cells.
+// Common Searches: Aspose.Cells C# lock only certain cells and protect sheet with password | How to unlock specific cells in an Excel file while protecting the rest using Aspose.Cells .NET | C# example for worksheet protection with password and selective cell editing in Aspose.Cells | Set cell IsLocked property in Aspose.Cells before applying worksheet protection
+// Tags: worksheet protection password Aspose.Cells .NET | unlock specific cells Aspose.Cells | cell IsLocked style C# | selective cell edit Aspose.Cells | protect Excel sheet Aspose.Cells example
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, writes data to A1‑B2, unlocks cells B1 and B2 via a style with IsLocked = false, protects the worksheet with a password so locked cells become read‑only, and saves the file as ProtectedCells.xlsx.
-class ProtectCellsExample
+// The program creates a new workbook, writes values to A1 (locked) and B1 (editable), sets B1's style IsLocked to false, protects the worksheet with a password using Worksheet.Protect, and saves the file as ProtectedCells.xlsx.
+class Program
 {
     static void Main()
     {
@@ -17,28 +17,21 @@ class ProtectCellsExample
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill some sample data
-            sheet.Cells["A1"].PutValue("Read‑Only Cell");
+            // Example data: A1 will be locked, B1 will be editable
+            sheet.Cells["A1"].PutValue("Locked Cell");
             sheet.Cells["B1"].PutValue("Editable Cell");
-            sheet.Cells["A2"].PutValue("Read‑Only Cell 2");
-            sheet.Cells["B2"].PutValue("Editable Cell 2");
 
-            // By default all cells are locked. Unlock the cells that should remain editable.
-            Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false; // make editable
-
-            // Apply the unlocked style to the cells that users can edit
-            StyleFlag flag = new StyleFlag();
-            flag.Locked = true; // indicate that the Locked property should be applied
-
-            sheet.Cells["B1"].SetStyle(unlockedStyle, flag);
-            sheet.Cells["B2"].SetStyle(unlockedStyle, flag);
+            // By default all cells are locked. Unlock B1 so users can edit it.
+            Style unlockedStyle = sheet.Cells["B1"].GetStyle();
+            unlockedStyle.IsLocked = false;               // make the cell editable
+            sheet.Cells["B1"].SetStyle(unlockedStyle);    // apply the style to the cell
 
             // Protect the worksheet with a password.
-            // All locked cells become read‑only, while unlocked cells stay editable.
-            sheet.Protect(ProtectionType.All, "MySecretPassword", null);
+            // All locked cells become read‑only, while unlocked cells (B1) remain editable.
+            // The third parameter (oldPassword) is not required for new protection; pass null.
+            sheet.Protect(ProtectionType.All, "MySecurePassword", null);
 
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save("ProtectedCells.xlsx");
         }
         catch (Exception ex)

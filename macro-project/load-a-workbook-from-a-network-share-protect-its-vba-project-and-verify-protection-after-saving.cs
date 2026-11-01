@@ -1,59 +1,62 @@
-// Title: Apply password protection to a VBA project in an XLSM workbook loaded from a UNC network share with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsm file from a UNC path, uses Aspose.Cells to set a read‑only password on its VbaProject, saves the workbook back to the network location, and checks the IsProtected flag after reloading. | Show how to verify VBA project protection after saving a macro‑enabled workbook by re‑instantiating the Workbook object and inspecting the VbaProject.IsProtected property.
-// Common Searches: Aspose.Cells protect VBA project password UNC path C# example | load macro-enabled Excel file from network share and set VBA protection using .NET | verify VBA project IsProtected after saving with Aspose.Cells | C# code to protect VBA project in .xlsm stored on a file server | how to save protected VBA project back to network location with Aspose.Cells
-// Tags: apply password to VBA project Aspose.Cells | load XLSM from UNC share C# | save macro-enabled workbook with protected VBA | inspect VbaProject.IsProtected after save | network file share handling Aspose.Cells
+// Title: How to load an XLSM workbook from a UNC network share, protect its VBA project with a password, and verify protection using Aspose.Cells for .NET
+// Common Searches: C# example for protecting a VBA project in an XLSM file stored on a UNC share with Aspose.Cells | Load workbook from a network path and set VBA password using Aspose.Cells .NET API | Verify VBA project protection after saving a macro-enabled workbook in C# | Aspose.Cells protect VBA project on a remote file server | Save a password‑protected macro workbook to a UNC location in C#
+// Tags: load XLSM from UNC path Aspose.Cells | protect VBA project password C# | save macro-enabled workbook with protection Aspose.Cells | check VBA IsProtected property C# | Aspose.Cells VBA project protection example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsm workbook from a UNC network share, applies a read‑only password to its VBA project via Aspose.Cells, saves the file back to the share, reloads it, and confirms the VBA project remains protected.
-class Program
+// The sample loads an XLSM workbook from a UNC network share, ensures the source file and destination directory exist, applies password protection to the workbook's VBA project via Aspose.Cells, saves the protected file back to a UNC location, reloads it, and confirms that the VBA project remains protected.
+class ProtectVbaProject
 {
     static void Main()
     {
+        // Paths to the workbook on a network share (UNC paths)
+        string sourcePath = @"\\ServerName\ShareFolder\MyWorkbook.xlsm";
+        string destinationPath = @"\\ServerName\ShareFolder\MyWorkbook_Protected.xlsm";
+
         try
         {
-            // Path to the source workbook on a network share
-            string sourcePath = @"\\server\share\folder\Sample.xlsm";
-
-            // Path where the protected workbook will be saved
-            string destPath = @"\\server\share\folder\Sample_Protected.xlsm";
-
-            // Verify source file exists
+            // Verify source file exists to avoid FileNotFoundException
             if (!File.Exists(sourcePath))
             {
                 Console.WriteLine($"Source file not found: {sourcePath}");
                 return;
             }
 
-            // Load the workbook from the network location
+            // Ensure the destination directory exists
+            string destDir = Path.GetDirectoryName(destinationPath);
+            if (!Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
+
+            // Load the workbook from the network share
             Workbook workbook = new Workbook(sourcePath);
 
-            // Verify that the workbook contains a VBA project
-            if (workbook.VbaProject == null)
+            // Ensure the workbook contains a VBA project
+            if (workbook.VbaProject != null)
+            {
+                // Protect the VBA project with a password (first argument: isReadOnly = false)
+                string vbaPassword = "MySecretPassword";
+                workbook.VbaProject.Protect(false, vbaPassword);
+            }
+            else
             {
                 Console.WriteLine("The workbook does not contain a VBA project.");
                 return;
             }
 
-            // Protect the VBA project with a password (first argument: isReadOnly)
-            string vbaPassword = "MySecretPassword";
-            workbook.VbaProject.Protect(true, vbaPassword);
+            // Save the workbook (preserving the VBA project protection)
+            workbook.Save(destinationPath, SaveFormat.Xlsm);
 
-            // Ensure destination directory exists
-            string destDir = Path.GetDirectoryName(destPath);
-            if (!Directory.Exists(destDir))
-                Directory.CreateDirectory(destDir);
+            // Reload the saved workbook to verify protection
+            Workbook verifyWorkbook = new Workbook(destinationPath);
 
-            // Save the workbook (must be saved as a macro-enabled format)
-            workbook.Save(destPath, SaveFormat.Xlsm);
+            // Check if the VBA project is protected
+            bool isProtected = verifyWorkbook.VbaProject != null && verifyWorkbook.VbaProject.IsProtected;
 
-            // Reload the saved workbook to verify that the VBA project is protected
-            Workbook verificationWorkbook = new Workbook(destPath);
-            bool isProtected = verificationWorkbook.VbaProject != null && verificationWorkbook.VbaProject.IsProtected;
-
-            Console.WriteLine($"VBA project protected: {isProtected}");
+            Console.WriteLine(isProtected
+                ? "VBA project is successfully protected."
+                : "VBA project protection failed.");
         }
         catch (Exception ex)
         {

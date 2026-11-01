@@ -1,7 +1,6 @@
-// Title: Export a chart from Aspose.Cells to a 300 DPI PNG image using ImageOrPrintOptions in C#
-// AI Prompts: Write C# code that creates a workbook, adds a column chart, and saves the chart as a PNG file with 300 DPI using ImageOrPrintOptions. | Show how to adjust HorizontalResolution and VerticalResolution in ImageOrPrintOptions to control the DPI of a chart image exported from Aspose.Cells. | Provide a snippet that exports an Aspose.Cells chart to PNG while allowing the DPI value to be changed dynamically.
-// Common Searches: Aspose.Cells export chart to PNG with specific DPI in C# | How to set image resolution for chart export using ImageOrPrintOptions in Aspose.Cells | C# code sample for saving Aspose.Cells chart as high‑resolution PNG | Changing horizontal and vertical resolution when converting Aspose.Cells chart to image
-// Tags: Aspose.Cells chart export PNG | ImageOrPrintOptions DPI setting | C# chart to high‑resolution image | Aspose.Cells ToImage method resolution | export chart with 300 DPI Aspose.Cells
+// Title: Export an Excel chart to a high‑resolution 300 DPI PNG using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export chart as PNG with 300 DPI | How to set image resolution for chart export in Aspose.Cells .NET | C# ImageOrPrintOptions 300 DPI chart image from workbook | Saving Excel chart to high‑resolution PNG using Aspose.Cells | chart.ToImage method with custom DPI in Aspose.Cells
+// Tags: chart export to PNG with custom DPI | ImageOrPrintOptions resolution settings | Aspose.Cells high‑resolution chart image | C# chart.ToImage PNG output | Excel workbook chart extraction Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,49 +8,61 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// The program creates a workbook with sample data, adds a column chart, and uses ImageOrPrintOptions to export the chart as a PNG file named 'Chart300DPI.png' with both horizontal and vertical resolutions set to 300 DPI.
+// The sample loads an Excel workbook, retrieves the first chart, configures ImageOrPrintOptions with 300 DPI horizontal and vertical resolution, ensures the output folder exists, and exports the chart to a PNG file using chart.ToImage.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add sample data
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "chart.png";
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
-            var chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";      // Categories
-
-            // Define image export options with 300 DPI resolution
-            var imgOptions = new ImageOrPrintOptions
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Default format is PNG; explicit format setting omitted to avoid API mismatch
-                HorizontalResolution = 300, // DPI
-                VerticalResolution = 300    // DPI
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Get the first chart on the worksheet (adjust index if needed)
+            Chart chart = sheet.Charts[0];
+
+            // Configure image export options with 300 DPI resolution
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Image format is inferred from the file extension, so no need to set ImageFormat explicitly
+                HorizontalResolution = 300, // 300 DPI horizontally
+                VerticalResolution = 300    // 300 DPI vertically
             };
 
-            // Export the chart to a PNG file using the specified resolution
-            using (var stream = new MemoryStream())
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                chart.ToImage(stream, imgOptions);
-                File.WriteAllBytes("Chart300DPI.png", stream.ToArray());
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Export the chart to a PNG file using the specified resolution
+            chart.ToImage(outputPath, imgOptions);
+            Console.WriteLine($"Chart exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

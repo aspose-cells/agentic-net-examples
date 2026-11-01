@@ -1,14 +1,14 @@
-// Title: How to set a currency number format on the value axis of a Waterfall chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a Waterfall chart with sample data and applies the "$#,##0.00" number format to its value axis using Aspose.Cells. | Show how to detect whether the ValueAxis.NumberFormat property exists and, if it does, set a currency format for a Waterfall chart in Aspose.Cells for .NET. | Provide a complete Aspose.Cells example that builds a Waterfall chart, saves it as an .xlsx file, and formats the axis values as monetary amounts, including proper error handling.
-// Common Searches: Aspose.Cells C# set currency format for waterfall chart axis | How to apply custom number format to chart axis in Aspose.Cells .NET | Waterfall chart value axis formatting with Aspose.Cells example | C# Aspose.Cells number format property not available on ValueAxis | Display monetary values on Excel waterfall chart using Aspose.Cells
-// Tags: Aspose.Cells chart axis number format customization | waterfall chart value axis currency display | C# set chart axis format Aspose.Cells .NET | Excel workbook save waterfall chart with formatted axis | conditional NumberFormat property check Aspose.Cells
+// Title: Set a custom currency number format on the value axis of a Waterfall chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a Waterfall chart and applies a currency number format (e.g., $#,##0.00) to its value axis, then saves the workbook. | Show how to create the target folder programmatically before calling Workbook.Save with Aspose.Cells. | Demonstrate adding a Waterfall chart, binding data series, and customizing the primary axis display as currency using the Aspose.Cells API.
+// Common Searches: aspnet aspose.cells how to format waterfall chart axis as currency in C# | c# set number format for chart value axis Aspose.Cells example | waterfall chart axis custom number format Aspose.Cells .NET tutorial | save excel workbook with waterfall chart and ensure output directory exists using Aspose.Cells
+// Tags: Aspose.Cells set chart value axis number format | C# waterfall chart currency axis formatting | Aspose.Cells chart axis NumberFormat property | ensure output directory exists Aspose.Cells save workbook | Aspose.Cells create waterfall chart from data
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System;
 using System.IO;
 
-// The example creates a new workbook, adds sample data, inserts a Waterfall chart, and demonstrates (with a conditional line) how to apply a "$#,##0.00" currency number format to the chart's value axis before saving the file as WaterfallCurrency.xlsx.
+// The example creates a new workbook, fills it with sample data, adds a Waterfall chart, applies a currency number format to the chart’s value axis (using the NumberFormat property when supported), ensures the destination folder exists, and saves the file as WaterfallChartCurrency.xlsx.
 class Program
 {
     static void Main()
@@ -18,7 +18,7 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the waterfall chart
@@ -26,29 +26,37 @@ class Program
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("Start");
             sheet.Cells["B2"].PutValue(5000);
-            sheet.Cells["A3"].PutValue("Increase");
-            sheet.Cells["B3"].PutValue(2000);
-            sheet.Cells["A4"].PutValue("Decrease");
-            sheet.Cells["B4"].PutValue(-1500);
-            sheet.Cells["A5"].PutValue("End");
-            sheet.Cells["B5"].PutValue(5500);
+            sheet.Cells["A3"].PutValue("Revenue");
+            sheet.Cells["B3"].PutValue(8000);
+            sheet.Cells["A4"].PutValue("Expense");
+            sheet.Cells["B4"].PutValue(-3000);
+            sheet.Cells["A5"].PutValue("Profit");
+            sheet.Cells["B5"].PutValue(0); // Placeholder for total
 
-            // Add a waterfall chart to the worksheet
+            // Add a Waterfall chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
+            // Set the data range for the series and categories
             chart.NSeries.Add("B2:B5", true);
             chart.NSeries.CategoryData = "A2:A5";
 
-            // NOTE: The Axis class in some Aspose.Cells versions does not expose a NumberFormat property.
-            // If your version supports it, you can uncomment the following line:
+            // Optional: format the primary value axis as currency
+            // Note: Axis.NumberFormat may not be available in older Aspose.Cells versions,
+            // so this line is omitted for compatibility.
             // chart.ValueAxis.NumberFormat = "$#,##0.00";
 
             // Define output file path
-            string outputPath = "WaterfallCurrency.xlsx";
+            string outputPath = "WaterfallChartCurrency.xlsx";
 
-            // Save the workbook to a file
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the chart
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }

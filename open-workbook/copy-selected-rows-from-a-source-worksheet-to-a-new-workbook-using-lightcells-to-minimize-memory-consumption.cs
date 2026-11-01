@@ -1,72 +1,79 @@
-// Title: Copy specific rows from a worksheet to a new workbook with Aspose.Cells LightCells in C#
-// AI Prompts: Write C# code that uses Aspose.Cells LightCells to extract rows 1, 3, and 4 from a source worksheet and write them to a new workbook while preserving cell values and styles. | Show how to implement memory‑efficient row copying in Aspose.Cells by iterating with LightCells and saving the selected rows to a separate Excel file. | Refactor the provided example to leverage LightCells for selective row export and reduce overall memory consumption.
-// Common Searches: Aspose.Cells C# copy selected rows to new Excel file using LightCells | How to export only certain rows from a worksheet with Aspose.Cells without loading the whole sheet | Memory efficient row extraction Aspose.Cells LightCells example C# | Preserve formatting when copying specific rows with Aspose.Cells | Select rows by index and save to another workbook Aspose.Cells C#
-// Tags: lightcells selective row copy C# | aspocells copy rows to new workbook | excel row extraction memory efficient | preserve cell style Aspose.Cells | copy rows without loading full sheet
+// Title: Copy specific rows from an Excel worksheet to a new workbook using Aspose.Cells LightCells with low memory usage (C#)
+// Common Searches: C# Aspose.Cells LightCells copy only certain rows to a new XLSX file | How to export selected rows from a large Excel workbook without loading the entire sheet in C# | Using LoadOptions MemoryPreference to copy rows while preserving formatting in Aspose.Cells | Minimal memory row copy example with Aspose.Cells LightCells API | Copy rows preserving cell styles to another workbook using Aspose.Cells C#
+// Tags: LightCells copy rows to new workbook | MemoryPreference load options Aspose.Cells | preserve cell style during row copy C# | selective row extraction Excel Aspose.Cells | low‑memory Excel row transfer C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads source.xlsx, uses LightCells to iterate only over rows 1, 3, and 4, copies each cell’s value and style to a new workbook, and saves the result as selected_rows.xlsx, minimizing memory usage.
-class Program
+namespace LightCellsCopyRows
 {
-    static void Main()
+    // The example loads a source XLSX workbook with LoadOptions set to MemoryPreference to minimize memory consumption, iterates over a predefined list of row indices, copies each cell's value and style to a new workbook using LightCells, and saves the result as selected_rows.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string sourcePath = "source.xlsx";
-            const string destPath = "selected_rows.xlsx";
-
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            try
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+                // Path to the source workbook
+                string sourcePath = "source.xlsx";
 
-            // Load the source workbook
-            Workbook srcWorkbook = new Workbook(sourcePath);
-            Worksheet srcSheet = srcWorkbook.Worksheets[0];
-
-            // Create a new workbook for the selected rows
-            Workbook destWorkbook = new Workbook();
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-
-            // Zero‑based indices of rows to copy (e.g., rows 2, 4, 5 in Excel are 1,3,4)
-            int[] rowsToCopy = new int[] { 1, 3, 4 };
-
-            // Determine the maximum column that contains data in the source sheet
-            int maxColumn = srcSheet.Cells.MaxDataColumn;
-
-            int destRowIndex = 0; // Destination row pointer
-
-            foreach (int srcRowIndex in rowsToCopy)
-            {
-                // Copy each cell in the selected row
-                for (int col = 0; col <= maxColumn; col++)
+                // Verify that the source file exists
+                if (!File.Exists(sourcePath))
                 {
-                    Cell srcCell = srcSheet.Cells[srcRowIndex, col];
-                    if (srcCell == null) continue;
-
-                    Cell destCell = destSheet.Cells[destRowIndex, col];
-                    destCell.Value = srcCell.Value;
-
-                    // Preserve style
-                    Style style = srcCell.GetStyle();
-                    destCell.SetStyle(style);
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
                 }
 
-                destRowIndex++; // Move to next row in destination sheet
-            }
+                // Define the zero‑based row indices that should be copied
+                int[] rowsToCopy = new int[] { 1, 3, 5 }; // example rows
 
-            // Save the result workbook
-            destWorkbook.Save(destPath);
-            Console.WriteLine($"Selected rows saved to: {destPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Load the source workbook with memory‑optimized settings
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    MemorySetting = MemorySetting.MemoryPreference // minimizes memory usage
+                };
+                Workbook sourceWorkbook = new Workbook(sourcePath, loadOptions);
+                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+
+                // Create a new workbook that will receive the selected rows
+                Workbook destWorkbook = new Workbook();
+                Worksheet destSheet = destWorkbook.Worksheets[0];
+
+                // Determine the number of columns in the source sheet (rectangular range)
+                int columnCount = sourceSheet.Cells.MaxColumn + 1;
+
+                int destRowIndex = 0; // current row in the destination sheet
+
+                // Iterate over the rows that need to be copied
+                foreach (int srcRowIndex in rowsToCopy)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        // Get source and destination cells
+                        Cell srcCell = sourceSheet.Cells[srcRowIndex, col];
+                        Cell destCell = destSheet.Cells[destRowIndex, col];
+
+                        // Copy cell value
+                        destCell.PutValue(srcCell.Value);
+
+                        // Copy cell style (font, color, borders, etc.)
+                        Style srcStyle = srcCell.GetStyle();
+                        destCell.SetStyle(srcStyle);
+                    }
+
+                    // Move to the next row in the destination sheet
+                    destRowIndex++;
+                }
+
+                // Save the new workbook containing only the selected rows
+                destWorkbook.Save("selected_rows.xlsx");
+                Console.WriteLine("Selected rows have been saved to 'selected_rows.xlsx'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

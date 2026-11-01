@@ -1,22 +1,32 @@
-// Title: How to format a cell in Aspose.Cells for .NET to show scientific notation with three significant digits
-// AI Prompts: Write C# code that assigns the custom number format "0.00E+00" to a cell in an Aspose.Cells workbook to display values in scientific notation with three significant digits. | Demonstrate setting a style on a specific worksheet cell using Aspose.Cells for .NET to render numbers in scientific notation with a precision of three significant digits.
-// Common Searches: Aspose.Cells C# apply custom number format 0.00E+00 to a cell | How to display numbers in scientific notation with three significant figures using Aspose.Cells for .NET | C# example for formatting Excel cell as scientific notation with specific precision in Aspose.Cells | Set cell style to scientific notation with three significant digits in Aspose.Cells workbook
-// Tags: custom number format scientific notation Aspose.Cells | apply 0.00E+00 format C# | cell style scientific notation .NET | three significant digits Excel formatting Aspose | Aspose.Cells workbook cell formatting example
+// Title: How to apply a custom scientific notation number format with three significant digits using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set cell format to scientific notation with three significant digits | C# example using Aspose.Cells to create a custom number format 0.00E+00 | How to display numbers in scientific notation with three sig figs using Aspose.Cells | Apply custom number format string 0.00E+00 to a cell in Aspose.Cells .NET | Saving workbook with scientific notation style using Aspose.Cells C#
+// Tags: 0.00E+00 custom format Aspose.Cells | three significant digits scientific notation C# | cell style number formatting .NET | workbook save with custom style | Aspose.Cells number format API example
 
-// Create a new workbook
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
+using Aspose.Cells;
 
-// Access the first worksheet
-Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
+// The example creates a new workbook, writes 12345.6789 to cell A1, defines a style with the custom number format "0.00E+00" to show three significant digits in scientific notation, applies the style to the cell, and saves the file as ScientificNotation.xlsx.
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook
+        var workbook = new Workbook();
 
-// Put a numeric value into a cell
-Aspose.Cells.Cell cell = sheet.Cells["A1"];
-cell.PutValue(12345.6789);
+        // Access the first worksheet
+        var sheet = workbook.Worksheets[0];
 
-// Apply a custom number format for scientific notation with three significant digits
-Aspose.Cells.Style style = cell.GetStyle();
-style.Custom = "0.00E+00"; // one digit before the decimal and two after = three significant digits
-cell.SetStyle(style);
+        // Put a sample number into cell A1
+        var cell = sheet.Cells["A1"];
+        cell.PutValue(12345.6789);
 
-// Save the workbook to a file
-workbook.Save("output.xlsx");
+        // Create a style with custom scientific notation (three significant digits)
+        var style = workbook.CreateStyle();
+        style.Custom = "0.00E+00";
+
+        // Apply the style to the cell
+        cell.SetStyle(style);
+
+        // Save the workbook
+        workbook.Save("ScientificNotation.xlsx");
+    }
+}

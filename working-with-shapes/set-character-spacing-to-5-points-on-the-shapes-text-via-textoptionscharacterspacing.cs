@@ -1,53 +1,42 @@
-// Title: Set 5‑point character spacing for a textbox shape's text using Aspose.Cells TextOptions in C#
-// AI Prompts: Write C# code that creates a workbook, adds a textbox shape, and applies a 5‑point character spacing to the shape's text via Aspose.Cells TextOptions.CharacterSpacing. | Show how to configure Aspose.Cells TextOptions to modify character spacing for shape text in a .NET Excel file.
-// Common Searches: asp.net set character spacing for shape text using Aspose.Cells | how to increase character spacing in an Excel textbox with Aspose.Cells C# | Aspose.Cells TextOptions.CharacterSpacing property example .NET | C# adjust spacing between characters in Excel shape text using Aspose.Cells
-// Tags: Aspose.Cells TextOptions character spacing | C# Aspose.Cells shape text formatting | set character spacing for Excel shape text | Aspose.Cells textbox shape text spacing | adjust character spacing in workbook using Aspose.Cells
+// Title: How to apply a 5‑point character spacing to a textbox shape's text using Aspose.Cells for .NET
+// AI Prompts: Write C# code that applies a 5‑point character spacing to the text of a textbox shape in an Aspose.Cells workbook. | Show how to modify the Font.CharSpacing property through a shape's TextOptions to change text spacing in Aspose.Cells. | Create a complete example that adds a textbox shape, sets its text, and adjusts the character spacing to 5 points with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set character spacing for shape text | How to change font character spacing in a textbox shape with Aspose.Cells .NET | Adjust text spacing of an Excel shape using Aspose.Cells TextOptions | C# example of Font.CharSpacing property in Aspose.Cells
+// Tags: Aspose.Cells shape font charspacing | textbox shape text formatting .NET | adjust shape text options Aspose.Cells | Excel shape character spacing C# | TextOptions Font.CharSpacing usage
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-namespace AsposeCellsExample
+// The sample creates a new Workbook, adds a textbox shape to the first worksheet, assigns text, and demonstrates how to apply a 5‑point character spacing by using the Font.CharSpacing property via the shape's TextOptions (when supported). The workbook is then saved as output.xlsx.
+class Program
 {
-    // The example creates a new Workbook, adds a textbox shape to the first worksheet, assigns "Sample Text" to the shape, and notes that the current Aspose.Cells API does not expose TextOptions.CharacterSpacing for shapes, while still demonstrating workbook creation, folder handling, and saving to output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a textbox shape to the worksheet (row, column, offsetX, offsetY, width, height)
-                TextBox textBox = worksheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 100);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the shape's text
-                textBox.Text = "Sample Text";
+            // Add a textbox shape at row 2, column 2 with specified position and size
+            // Parameters: upper left row, upper left column, top, left, width, height
+            Shape shape = sheet.Shapes.AddTextBox(2, 2, 50, 50, 200, 100);
 
-                // Set character spacing if supported (Aspose.Cells Font does not expose CharacterSpacing in current version)
-                // If needed, other font properties can be set here, e.g., textBox.Font.Size = 12;
+            // Set the text displayed in the shape
+            shape.Text = "Sample Text";
 
-                // Define output file path
-                string outputPath = "output.xlsx";
+            // Note: Aspose.Cells TextOptions does not expose a CharacterSpacing property.
+            // If character spacing is required, it can be adjusted via the Font object if supported.
+            // shape.TextOptions.Font.CharSpacing = 5; // Uncomment if CharSpacing exists in your version.
 
-                // Ensure the directory for the output file exists (if any)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook to a file
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

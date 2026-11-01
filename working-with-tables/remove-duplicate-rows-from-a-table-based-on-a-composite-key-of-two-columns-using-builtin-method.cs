@@ -1,74 +1,55 @@
-// Title: How to remove duplicate rows from an Excel table using Aspose.Cells RemoveDuplicates with a composite key in C#
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, selects the first ListObject, and calls Worksheet.Cells.RemoveDuplicates using column indexes 0 and 1 as a composite key. | Adjust the duplicate‑removal logic to keep the last occurrence of each composite key instead of the first, while using the Aspose.Cells RemoveDuplicates method. | Create a command‑line version of the program that accepts a comma‑separated list of column indexes for the composite key and processes any input Excel file.
-// Common Searches: Aspose.Cells C# remove duplicate rows based on two columns in a ListObject | Worksheet.Cells.RemoveDuplicates example with composite key in C# | How to keep the first row while deleting duplicate records in an Excel table using Aspose.Cells | C# code to delete duplicate rows in an Excel table by columns A and B with Aspose.Cells | Remove duplicate records from an Excel table using Aspose.Cells RemoveDuplicates method
-// Tags: aspocells removeduplicates method | excel table composite key deduplication | listobject duplicate elimination c# | worksheet cells deduplication case-sensitive | c# aspocells duplicate row removal
+// Title: Remove duplicate rows from an Excel worksheet using Aspose.Cells RemoveDuplicates with a two‑column composite key (C#)
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells and removes rows that have duplicate values in both column A and column B. | Demonstrate how to invoke the duplicate‑removal routine to keep the first occurrence of each A‑B key while preserving the header row. | Show how to adjust the parameters for a dynamic range and save the cleaned workbook to a new file.
+// Common Searches: Aspose.Cells C# remove duplicate rows based on columns A and B | How to use RemoveDuplicates for a composite key in an Excel file with Aspose.Cells | C# example of deleting duplicate Excel rows using Aspose.Cells Worksheet.Cells.RemoveDuplicates | Remove duplicate records from an Excel sheet using Aspose.Cells API with two key columns | Aspose.Cells RemoveDuplicates method parameters explanation for multi‑column keys
+// Tags: Aspose.Cells duplicate row removal using composite key | Excel deduplication with two key columns C# | Aspose.Cells duplicate detection feature | C# Excel duplicate elimination Aspose.Cells | Composite key data cleaning Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-// The example loads an input.xlsx workbook, accesses the first worksheet and its first ListObject, determines the data range, and calls Worksheet.Cells.RemoveDuplicates with a composite key consisting of the first two columns (A and B). It removes duplicate rows while preserving the first occurrence and saves the cleaned workbook as output.xlsx.
-class RemoveDuplicateRows
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads an input.xlsx workbook, uses Aspose.Cells' RemoveDuplicates method to eliminate rows where the values in columns A and B (the composite key) are duplicated, and saves the cleaned data to output.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Determine the range that contains the data
+                int firstRow = 0; // zero‑based index
+                int totalRows = worksheet.Cells.MaxDataRow + 1; // total rows with data
+                int firstColumn = 0; // column A
+                int totalColumns = 2; // columns A and B form the composite key
+
+                // Remove duplicate rows based on the composite key (columns A and B)
+                // columnOffsets = null means use consecutive columns starting from firstColumn
+                worksheet.Cells.RemoveDuplicates(firstRow, totalRows, firstColumn, totalColumns, false, null);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one table (ListObject)
-            if (sheet.ListObjects.Count == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
-                return;
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Get the first table
-            ListObject table = sheet.ListObjects[0];
-
-            // Define zero‑based column indexes that form the composite key (e.g., columns A and B)
-            int[] keyColumns = new int[] { 0, 1 };
-
-            // Determine the data range of the table
-            Aspose.Cells.Range dataRange = table.DataRange;
-            int startRow = dataRange.FirstRow;
-            int startColumn = dataRange.FirstColumn;
-            int totalRows = dataRange.RowCount;
-            int totalColumns = dataRange.ColumnCount;
-
-            // Remove duplicate rows based on the composite key, keeping the first occurrence
-            // Note: In recent Aspose.Cells versions the parameter order is (isCaseSensitive, keyColumns)
-            sheet.Cells.RemoveDuplicates(startRow, startColumn, totalRows, totalColumns, true, keyColumns);
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

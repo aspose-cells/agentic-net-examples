@@ -1,56 +1,63 @@
-// Title: Copy only cell values from source rows to another range using PasteOptions in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that copies a block of rows to a new location using PasteOptions with PasteType.Values to exclude formulas and formatting. | Show how to use Aspose.Cells PasteOptions to transfer only the values of a source range to a destination range in a worksheet. | Adapt the example to copy rows from one workbook into another workbook while preserving only cell values using PasteOptions.Values.
-// Common Searches: Aspose.Cells C# copy rows values only without formulas | How to use PasteOptions.Values to copy a range in Aspose.Cells .NET | Copy rows to another range ignoring formatting Aspose.Cells example | Transfer only cell values between worksheets using Aspose.Cells PasteOptions
-// Tags: pasteoptions values copy rows Aspose.Cells | copy rows values only C# Aspose.Cells | ignore formulas range copy .NET | values-only paste type Aspose.Cells | copy range without formatting Aspose.Cells
+// Title: Copy only cell values from a source range to another worksheet using PasteOptions in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy range values without formulas | How to use PasteOptions to paste only values in Aspose.Cells | Copy cells from one workbook to another ignoring formatting with Aspose.Cells | C# example copying A1:C10 values to a new workbook using Aspose.Cells | PasteType.Values usage in Aspose.Cells for .NET
+// Tags: PasteOptions values copy range Aspose.Cells | copy cell values without formulas Aspose.Cells C# | range to range value-only paste Aspose.Cells | Aspose.Cells copy values only .NET | ignore formatting during copy Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, populates cells with values and formulas, defines source and destination ranges, and uses PasteOptions with PasteType.Values to copy only the cell values—omitting formulas and formatting—from the source rows to the destination rows, then saves the workbook.
-    class CopyRowsValuesOnly
+    // The example loads a source workbook, creates an empty destination workbook, defines a source range (A1:C10) and a destination range starting at A1, configures PasteOptions with PasteType.Values to copy only the cell values (excluding formulas and formatting), and saves the result to a new file.
+    class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                string sourcePath = "source.xlsx";
+                string resultPath = "result.xlsx";
 
-                // Populate source rows with values and formulas
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["B1"].Formula = "=A1*2"; // Formula that will be ignored
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["B2"].Formula = "=A2*2";
-                sheet.Cells["A3"].PutValue(30);
-                sheet.Cells["B3"].Formula = "=A3*2";
+                // Verify that the source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file '{sourcePath}' not found.");
+                    return;
+                }
 
-                // Define the source range (rows 0‑2, columns A‑B)
-                Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange(0, 0, 3, 2);
+                // Load the source workbook
+                Workbook srcWorkbook = new Workbook(sourcePath);
 
-                // Define the destination range (starting at row 5, columns A‑B)
-                Aspose.Cells.Range destRange = sheet.Cells.CreateRange(5, 0, 3, 2);
+                // Create a new (empty) destination workbook
+                Workbook destWorkbook = new Workbook();
 
-                // Configure PasteOptions to copy only values (no formulas, no formatting)
+                // Get the first worksheet from each workbook
+                Worksheet srcSheet = srcWorkbook.Worksheets[0];
+                Worksheet destSheet = destWorkbook.Worksheets[0];
+
+                // Define the source range (A1:C10) and destination range (starting at A1)
+                Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:C10");
+                Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("A1");
+
+                // Configure paste options to copy only cell values
                 PasteOptions pasteOptions = new PasteOptions
                 {
-                    PasteType = PasteType.Values,
-                    SkipBlanks = true,
-                    OnlyVisibleCells = false,
-                    Transpose = false,
-                    IgnoreLinksToOriginalFile = true
+                    PasteType = PasteType.Values
                 };
 
-                // Perform the copy using the specified paste options
-                destRange.Copy(sourceRange, pasteOptions);
+                // Perform the copy operation using the configured options
+                srcRange.Copy(destRange, pasteOptions);
 
-                // Save the workbook to verify the result
-                string outputPath = "CopyRowsValuesOnly.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Ensure the directory for the result file exists
+                string resultDir = Path.GetDirectoryName(resultPath);
+                if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
+                {
+                    Directory.CreateDirectory(resultDir);
+                }
+
+                // Save the destination workbook
+                destWorkbook.Save(resultPath);
+                Console.WriteLine($"Data copied successfully to '{resultPath}'.");
             }
             catch (Exception ex)
             {

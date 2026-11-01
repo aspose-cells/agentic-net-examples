@@ -1,42 +1,42 @@
-// Title: Detect circular reference errors in formulas and export a workbook to ODS with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that enables formula circular‑reference detection in Aspose.Cells, catches any related exceptions, and saves the workbook as an ODS file. | Show how to wrap workbook.Save in a try‑catch block to handle circular reference errors before exporting to ODS using Aspose.Cells. | Provide a C# snippet that creates the target folder if it does not exist and then saves the workbook to ODS format with Aspose.Cells.
-// Common Searches: asp.net Aspose.Cells detect circular reference in formulas before ODS export | c# example for catching circular reference exception when saving workbook as ODS with Aspose.Cells | how to enable formula error checking in Aspose.Cells and export to ODS | save workbook to ODS format and ensure output directory exists using Aspose.Cells C# | Aspose.Cells circular reference property missing workaround for .NET
-// Tags: circular reference detection Aspose.Cells | export workbook to ODS Aspose.Cells | formula error handling C# | create output directory C# Aspose.Cells | save workbook with try‑catch Aspose.Cells | ODS file generation Aspose.Cells .NET
+// Title: Detect circular reference errors with Aspose.Cells, recalculate formulas, and save the workbook as ODS in C#
+// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, inserts a circular formula, runs formula recalculation to capture circular reference errors, and saves the file as ODS. | Show how to catch and log exceptions thrown by Aspose.Cells when a circular reference is found during formula calculation, then export the workbook to ODS. | Provide a step‑by‑step example of enabling circular reference detection, performing formula recalculation, and using SaveFormat.Ods to write the workbook in C#.
+// Common Searches: aspnet circular reference detection Aspose.Cells calculate formula ODS export | c# Aspose.Cells how to handle circular formula errors before saving as ODS | save workbook to OpenDocument Spreadsheet after formula calculation with Aspose.Cells | detect and log circular references in Excel files using Aspose.Cells .NET | example of using Workbook.CalculateFormula and SaveFormat.Ods in C#
+// Tags: circular reference handling Aspose.Cells | formula recalculation error handling | save workbook to ODS Aspose.Cells | C# Aspose.Cells formula calculation | exception handling for circular formulas .NET
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example creates a new Workbook, notes that the EnableCircularReference property is unavailable in the current version, ensures the destination folder exists, and saves the workbook as an ODS file. All operations are wrapped in a try‑catch block to surface any exceptions, such as formula circular‑reference errors.
+// The sample creates a workbook, adds a circular formula (A1 = A2, A2 = A1), triggers formula recalculation to detect the circular reference, catches any resulting exceptions, and saves the workbook as an ODS file using Aspose.Cells' SaveFormat.Ods.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // NOTE: EnableCircularReference is not available in the current Aspose.Cells version.
-            // If needed, refer to the documentation for the appropriate property in newer releases.
+            // Note: Circular reference detection is enabled by default during formula calculation.
+            // Add a worksheet with a circular formula for demonstration
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].Formula = "=A2";
+            sheet.Cells["A2"].Formula = "=A1";
+
+            // Recalculate formulas to trigger circular reference detection
+            workbook.CalculateFormula();
 
             // Define output file path
-            string outputPath = "output.ods";
+            string outputPath = "CircularReferenceCheckOutput.ods";
 
-            // Ensure the output directory exists (handle cases where outputPath has no directory part)
-            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook in ODS format
+            // Save the workbook to an ODS file (use the non‑obsolete enum value)
             workbook.Save(outputPath, SaveFormat.Ods);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

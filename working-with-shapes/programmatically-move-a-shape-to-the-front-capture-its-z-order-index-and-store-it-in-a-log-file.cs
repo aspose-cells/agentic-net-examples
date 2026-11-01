@@ -1,14 +1,14 @@
-// Title: Move a worksheet shape to the front and log its Z‑order index using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, brings a specific worksheet shape to the front by setting its ZOrderPosition, and appends the shape name and new Z‑order value to a text log. | Show how to programmatically reorder a shape on an Aspose.Cells worksheet, retrieve the resulting Z‑order index, write the information to a log file, and save the updated workbook.
-// Common Searches: Aspose.Cells C# bring shape to front and get Z-order position | how to log shape Z-order after moving in an Excel file using Aspose.Cells | set highest ZOrderPosition for worksheet shape Aspose.Cells .NET example | append shape reorder details to a text file with Aspose.Cells | save workbook after changing shape order Aspose.Cells C#
-// Tags: Aspose.Cells shape ZOrderPosition manipulation | move worksheet shape to front .NET | log shape Z-order index C# | append shape operation details to text file | save workbook after shape reorder Aspose.Cells
+// Title: Move an Excel worksheet shape to the front, capture its Z‑order index, and log the change using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that selects a shape on a worksheet, moves it to the topmost Z‑order, and returns the new ZOrderPosition. | Create a method that updates a shape's ZOrderPosition to the highest value, records the shape name and new index, and appends the information to a text log. | Show how to iterate through all shapes in a worksheet to find the maximum Z‑order, then set a specific shape's ZOrderPosition to max+1 using Aspose.Cells.
+// Common Searches: how to bring a shape to front in Excel using Aspose.Cells C# | retrieve and log Z-order of worksheet drawing objects with Aspose.Cells .NET | Aspose.Cells move shape to top layer and write details to a file | C# Aspose.Cells example for changing shape ZOrderPosition | log shape position changes in Excel workbook using Aspose.Cells
+// Tags: Aspose.Cells move shape to front | C# Aspose.Cells ZOrderPosition | log shape changes to text file | Excel worksheet shape Z-order manipulation | Aspose.Cells shape ordering example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads (or creates) an Excel workbook, accesses the first worksheet, moves the first shape to the front by assigning it the highest ZOrderPosition, records the shape's name and new Z‑order index to a text log, and saves the modified workbook.
+// // Loads an Excel workbook, moves the first shape on the first worksheet to the front by setting its ZOrderPosition to the highest existing value plus one, captures the shape name and new Z‑order index, appends this information to a log file, and saves the updated workbook.
 class Program
 {
     static void Main()
@@ -19,62 +19,57 @@ class Program
             const string outputPath = "output.xlsx";
             const string logPath = "shape_log.txt";
 
-            // Load existing workbook or create a new one if the file is missing
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            else
-            {
-                workbook = new Workbook(); // creates a default workbook with one worksheet
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the collection of shapes on the worksheet
-            ShapeCollection shapes = sheet.Shapes;
-
-            // Ensure there is at least one shape to work with
-            if (shapes.Count > 0)
+            // Ensure there is at least one shape on the sheet
+            if (sheet.Shapes.Count == 0)
             {
-                // Use the first shape (or locate by name/id as needed)
-                Shape shape = shapes[0];
-
-                // Bring the shape to the front by setting its Z-order position to the highest index
-                shape.ZOrderPosition = shapes.Count; // highest position
-
-                // Capture the shape's Z-order index after moving it
-                int zOrderIndex = shape.ZOrderPosition;
-
-                // Prepare a log entry
-                string logEntry = $"Shape '{shape.Name}' moved to front. Z-order index: {zOrderIndex}{Environment.NewLine}";
-
-                // Append the log entry to a text file
-                try
-                {
-                    File.AppendAllText(logPath, logEntry);
-                }
-                catch (Exception logEx)
-                {
-                    Console.WriteLine($"Logging error: {logEx.Message}");
-                }
+                Console.WriteLine("No shapes found on the worksheet.");
+                return;
             }
+
+            // Get the first shape (or select by index/name as needed)
+            Shape shape = sheet.Shapes[0];
+
+            // Determine the highest Z-order position among all shapes
+            int maxZOrder = 0;
+            foreach (Shape s in sheet.Shapes)
+            {
+                if (s.ZOrderPosition > maxZOrder)
+                    maxZOrder = s.ZOrderPosition;
+            }
+
+            // Move the shape to the front by setting its Z-order to max+1
+            shape.ZOrderPosition = maxZOrder + 1;
+
+            // Capture the current Z-order index after moving to front
+            int zOrderIndex = shape.ZOrderPosition;
+
+            // Prepare log entry
+            string logEntry = $"Shape '{shape.Name}' moved to front. Z-order index: {zOrderIndex}{Environment.NewLine}";
+
+            // Append the log entry to the log file
+            File.AppendAllText(logPath, logEntry);
 
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Save error: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+
+            Console.WriteLine("Shape moved to front, Z-order captured, and log written successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

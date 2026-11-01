@@ -1,49 +1,66 @@
-// Title: How to remove workbook and worksheet password protection from an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens a password‑protected .xlsx, calls Workbook.Unprotect and Worksheet.Unprotect with empty passwords, and saves the result as a new unprotected workbook. | Show a C# example that iterates through every worksheet in a workbook, clears any sheet‑level protection, and writes the unprotected file to a different location using Aspose.Cells.
-// Common Searches: aspnet remove password from excel workbook using Aspose.Cells | c# code to unprotect all sheets in a protected xlsx with Aspose.Cells | how to programmatically delete workbook protection Aspose.Cells .NET | Aspose.Cells unprotect worksheet without knowing password | save unprotected copy of a protected Excel file in C#
-// Tags: Aspose.Cells clear workbook protection C# | Aspose.Cells clear worksheet protection C# | Aspose.Cells save unprotected Excel file .NET | Aspose.Cells iterate worksheets unprotect | Aspose.Cells handle protected Excel file
+// Title: Remove opening and worksheet passwords from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to remove password protection from an Excel workbook with Aspose.Cells | How to unprotect all sheets in a protected XLSX using Aspose.Cells .NET | Aspose.Cells load password‑protected workbook and save without password | Programmatically clear opening password of an XLSX file in C# | Remove worksheet protection with Aspose.Cells without knowing the password
+// Tags: Aspose.Cells workbook password removal C# | Aspose.Cells worksheet unprotect method .NET | LoadOptions password protected XLSX Aspose | SaveFormat Xlsx unprotected output Aspose.Cells | Clear workbook Settings.Password Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads a possibly password‑protected Excel workbook, removes both workbook‑level and worksheet‑level protection using empty passwords, and saves the file as an unprotected copy.
-class Program
+namespace WorkbookUnprotectExample
 {
-    static void Main()
+    // The example loads a password‑protected XLSX file using LoadOptions (optionally supplying the opening password), clears the workbook's opening password via Settings.Password, iterates through each worksheet calling Unprotect to drop any sheet passwords, and saves the workbook as an unprotected file.
+    class Program
     {
-        const string inputPath = "protected.xlsx";
-        const string outputPath = "unprotected.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file '{inputPath}' not found.");
-            return;
-        }
+            // Paths for input (protected) and output (unprotected) workbooks
+            string inputFile = "protected.xlsx";
+            string outputFile = "unprotected.xlsx";
 
-        try
-        {
-            // Load the workbook that may have password protection
-            var workbook = new Workbook(inputPath);
-
-            // Attempt to remove workbook-level protection (no exception if not protected)
-            workbook.Unprotect(string.Empty);
-
-            // Remove worksheet-level protection for each sheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                // Unprotect the worksheet; safe to call even if not protected
-                sheet.Unprotect(string.Empty);
+                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                return;
             }
 
-            // Save the workbook without any protection
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved as '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            try
+            {
+                // If the workbook is password‑protected for opening, provide the password here.
+                // Leave empty if you don't know the password; the catch block will handle the error.
+                string openingPassword = ""; // TODO: set the actual password if known
+
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                if (!string.IsNullOrEmpty(openingPassword))
+                {
+                    loadOptions.Password = openingPassword;
+                }
+
+                // Load the workbook (with or without password)
+                Workbook workbook = new Workbook(inputFile, loadOptions);
+
+                // Remove the opening password (if any)
+                workbook.Settings.Password = string.Empty;
+
+                // Remove protection from each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // If the sheet has a password, passing null/empty removes it
+                    sheet.Unprotect();
+                }
+
+                // Save the workbook without any passwords
+                workbook.Save(outputFile, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook has been saved unprotected to \"{outputFile}\".");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

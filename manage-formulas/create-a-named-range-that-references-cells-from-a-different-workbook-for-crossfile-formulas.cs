@@ -1,47 +1,38 @@
-// Title: Define an external named range that points to another workbook and use it in a SUM formula with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to add a named range whose RefersTo points to a range in a separate Excel file, then place a SUM formula that references that named range. | Show how to build the external reference string for a Name object, assign it, and save the workbook that contains the external named range.
-// Common Searches: asp.net cells create named range referencing another workbook | c# aspose.cells external named range formula example | how to set RefersTo property for external range in Aspose.Cells | using external workbook range in SUM formula with Aspose.Cells C#
-// Tags: Aspose.Cells external named range definition | C# add RefersTo external reference | cross‑workbook range formula Aspose.Cells | named range external workbook Excel | SUM formula using external named range
+// Title: Create a named range that references an external workbook range for cross‑workbook formulas using Aspose.Cells in C#
+// Common Searches: how to define a named range that references a range in another Excel file with Aspose.Cells C# | Aspose.Cells C# external workbook reference in a named range for formulas | add external range to workbook names collection using Aspose.Cells .NET | use Aspose.Cells to create a named range for a SUM formula that pulls data from a different workbook | C# Aspose.Cells external reference string format for named ranges
+// Tags: Aspose.Cells create external named range | C# external workbook reference Aspose.Cells | named range RefersTo property .NET | cross-workbook formula Aspose.Cells | Excel external range string Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// C# program that creates a new workbook, defines a named range pointing to cells A1:C10 in an external file (Data.xlsx) via the RefersTo property, inserts a SUM formula referencing that named range, and saves the workbook as MainWorkbook.xlsx.
+// The example creates a new workbook, builds an Excel‑style external reference string to a range in another workbook, adds a named range called "ExternalData" that points to that external range, inserts a SUM formula using the named range, and saves the workbook as Result.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook that will hold the external named range definition
-            Workbook mainWb = new Workbook();
+        // Create a new workbook (default worksheet is added automatically)
+        Workbook workbook = new Workbook();
 
-            // Define the external reference string.
-            // Format: '[ExternalFile.xlsx]SheetName'!$StartCell:$EndCell
-            // Example assumes the external workbook is "Data.xlsx" in the same directory.
-            string externalRef = "'[Data.xlsx]Sheet1'!$A$1:$C$10";
+        // Define the external workbook file name, sheet name, and cell range to reference
+        string externalFile = "OtherWorkbook.xlsx";
+        string externalSheet = "Sheet1";
+        string externalRange = "$A$1:$B$2";
 
-            // Add a named range with the given name.
-            // The RefersTo property is set separately to avoid overload issues.
-            int nameIndex = mainWb.Worksheets.Names.Add("ExternalData");
-            Name externalName = mainWb.Worksheets.Names[nameIndex];
-            externalName.RefersTo = externalRef;
+        // Build the external reference string in Excel format:
+        // ='[OtherWorkbook.xlsx]Sheet1'!$A$1:$B$2
+        string externalReference = $"='[{externalFile}]{externalSheet}'!{externalRange}";
 
-            Console.WriteLine($"Created named range: {externalName.Text} -> {externalName.RefersTo}");
+        // Add a named range to the current workbook that points to the external range
+        // The name "ExternalData" can be used in formulas within this workbook
+        int nameIndex = workbook.Worksheets.Names.Add("ExternalData");
+        Name externalName = workbook.Worksheets.Names[nameIndex];
+        externalName.RefersTo = externalReference;
 
-            // Example usage: place a formula that references the external named range
-            Worksheet ws = mainWb.Worksheets[0];
-            ws.Cells["A1"].Formula = "=SUM(ExternalData)";
+        // Example usage: place a formula that sums the external range into cell C1
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["C1"].Formula = "SUM(ExternalData)";
 
-            // Save the workbook containing the external named range
-            string outputPath = "MainWorkbook.xlsx";
-            mainWb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook to a file
+        workbook.Save("Result.xlsx");
     }
 }

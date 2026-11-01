@@ -1,43 +1,48 @@
-// Title: Freeze the first column after auto‑fitting columns with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that auto‑fits all worksheet columns and then freezes column A using Aspose.Cells. | Show the correct order of calling Worksheet.AutoFitColumns followed by Worksheet.FreezePanes to keep column widths fixed in an Excel file with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# freeze column A after AutoFitColumns example | how to lock column widths after calling AutoFitColumns in Aspose.Cells .NET | C# code to freeze first column programmatically using Aspose.Cells | freeze panes after adjusting column sizes with Aspose.Cells for .NET
-// Tags: auto-fit columns then freeze panes Aspose.Cells | freeze first column C# Aspose.Cells | preserve column widths after AutoFitColumns .NET | Worksheet.FreezePanes usage Aspose.Cells | Excel column width lock Aspose.Cells C#
+// Title: How to AutoFit columns then freeze the top row in an Aspose.Cells workbook using C#
+// AI Prompts: Write C# code that calls Worksheet.AutoFitColumns and then Worksheet.FreezePanes to auto‑size columns and lock the first row in an Aspose.Cells workbook. | Show a .NET example that freezes the header row after auto‑fitting all columns with Aspose.Cells.
+// Common Searches: C# Aspose.Cells auto fit columns and then freeze first row example | Freeze panes after AutoFitColumns in Aspose.Cells .NET workbook | How to keep column widths fixed when freezing panes with Aspose.Cells for C#
+// Tags: auto‑fit columns then freeze panes Aspose.Cells | Worksheet.AutoFitColumns with FreezePanes C# | lock column widths after autofit Aspose.Cells | freeze top row after column auto‑size .NET | Aspose.Cells workbook column width locking
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample creates a workbook, populates cells, auto‑fits all columns, freezes the first row to preserve column widths, and saves the file as Output.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a new workbook, auto‑fits all columns on the first worksheet, freezes column A with FreezePanes(0,1,0,0) to lock the column widths, saves the file as FrozenColumns.xlsx, and includes basic error handling.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                var workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                var sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Auto‑fit all columns based on their content
-                sheet.AutoFitColumns();
+            // Sample data to demonstrate AutoFit
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue("This is a long piece of text that will cause the column to expand");
+            sheet.Cells["B2"].PutValue(12345);
 
-                // Freeze the first column (column A)
-                // FreezePanes(row, column, totalRows, totalColumns)
-                sheet.FreezePanes(0, 1, 0, 0);
+            // Auto‑fit all columns based on the content
+            sheet.AutoFitColumns();
 
-                // Save the workbook to a file
-                string outputPath = "FrozenColumns.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Freeze the first row (row index 1, column index 0) and keep column widths locked
+            // Parameters: row, column, totalRows, totalColumns
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

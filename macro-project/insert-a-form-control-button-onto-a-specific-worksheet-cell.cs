@@ -1,59 +1,64 @@
-// Title: Insert a Form Control button into cell B3 of an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Insert a Form Control button at row 2, column 1 (cell B3), set its height to 30 px, width to 100 px, label it "Click Me", and save the workbook as FormControlButton.xlsx using Aspose.Cells for .NET. | Programmatically create a new workbook, ensure the target directory exists, add a button shape with custom offsets, assign text, and write the file to disk with the Aspose.Cells C# API.
-// Common Searches: Aspose.Cells how to add a form control button to cell B3 in C# | C# Aspose.Cells place a button at a specific row and column | Setting button text and size when inserting a form control with Aspose.Cells | Saving an Excel file that contains a button using Aspose.Cells .NET | Creating a new workbook and adding a clickable button programmatically with Aspose.Cells
-// Tags: aspocells button shape insertion | aspocells button placement by cell coordinates | aspocells set button caption and dimensions | aspocells workbook save with controls | aspocells ensure output folder exists
+// Title: How to add a Form Control button to a specific cell in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: C# code to insert a form control button into cell B2 with Aspose.Cells | Aspose.Cells add button shape to a worksheet at a given cell | programmatically place a form control button on an Excel sheet using Aspose.Cells .NET | set button caption and size when adding a form control with Aspose.Cells | save workbook after adding a form control button using Aspose.Cells
+// Tags: add form control button Aspose.Cells .NET | insert button shape into Excel cell | set button caption Aspose.Cells | specify button dimensions Aspose.Cells | save workbook after shape insertion Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The example creates a new Workbook, accesses the first Worksheet, defines cell B3 (row index 2, column index 1), adds a Form Control button shape with a height of 30 px and width of 100 px, sets the caption to "Click Me", ensures the output directory exists, saves the file as FormControlButton.xlsx, and handles any exceptions.
-class InsertFormControlButton
+// The example loads an existing workbook, selects Sheet1 (or the first sheet), inserts a Form Control button shape at cell B2 with custom pixel dimensions, assigns the caption "Click Me", and saves the updated file to a new location.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the target cell (e.g., B3 -> row index 2, column index 1)
-            int targetRow = 2;      // zero‑based row index
-            int targetColumn = 1;   // zero‑based column index
-
-            // Add a button shape to the worksheet.
-            // Parameters: upper‑left row, upper‑left column,
-            // top offset, left offset, height (pixels), width (pixels)
-            Button button = sheet.Shapes.AddButton(
-                targetRow, targetColumn,
-                0, 0,
-                30,   // height
-                100); // width
-
-            // Set the button caption
-            button.Text = "Click Me";
-
-            // Define output file path
-            string outputPath = "FormControlButton.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook to a file (lifecycle rule: save)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the target worksheet (fallback to first sheet if not found)
+            Worksheet sheet = workbook.Worksheets["Sheet1"] ?? workbook.Worksheets[0];
+
+            // Target cell B2 (zero‑based indices)
+            int targetRow = 1;
+            int targetColumn = 1;
+
+            // Position and size of the button in pixels
+            int top = 5;
+            int left = 5;
+            int height = 30;
+            int width = 80;
+
+            // Insert a button (form control) onto the specified cell
+            Shape button = sheet.Shapes.AddButton(
+                targetRow,
+                targetColumn,
+                top,
+                left,
+                height,
+                width);
+
+            // Set the button's caption
+            button.Text = "Click Me";
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

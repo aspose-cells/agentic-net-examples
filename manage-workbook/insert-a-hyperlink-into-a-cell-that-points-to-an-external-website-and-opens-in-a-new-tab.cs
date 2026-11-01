@@ -1,37 +1,48 @@
-// Title: Insert a clickable external URL hyperlink into cell B2 of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to place the text "Google" in cell B2, attach a hyperlink to https://www.google.com that opens in a new browser tab, and save the workbook as HyperlinkExample.xlsx. | Show how to call the Hyperlinks.Add method in Aspose.Cells to add an external URL to a specific worksheet cell and configure it to launch in a new tab within a .NET application.
-// Common Searches: Aspose.Cells add external URL hyperlink to Excel cell C# | C# Aspose.Cells Hyperlinks.Add open link in new tab | how to make Excel hyperlink open in new window using Aspose.Cells | example of inserting clickable link into specific cell with Aspose.Cells for .NET
-// Tags: Aspose.Cells Hyperlinks.Add method | external URL hyperlink in Excel worksheet C# | hyperlink opens new tab Aspose.Cells | generate workbook with clickable link using Aspose.Cells
+// Title: Add an external hyperlink to cell B2 that opens in a new browser tab using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add hyperlink to a specific cell that opens in a new tab | How to set a screen tip for an Excel hyperlink with Aspose.Cells | Saving an Excel workbook that contains external links using Aspose.Cells for .NET | Aspose.Cells Hyperlinks.Add method usage example in C# | Create a clickable URL in an Excel cell programmatically with Aspose.Cells | Open an external website from an Excel cell in a new browser window using Aspose.Cells
+// Tags: Aspose.Cells create cell hyperlink C# | Excel hyperlink new tab Aspose.Cells | Aspose.Cells set hyperlink screen tip | Hyperlinks.Add API Aspose.Cells | Save workbook with external link Aspose.Cells | programmatic Excel URL insertion C#
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// // Creates a new workbook, writes "Google" into B2, adds a URL hyperlink to https://www.google.com that opens in a new tab, and saves the file as HyperlinkExample.xlsx.
+// The example demonstrates how to create a new workbook, access the first worksheet, and insert an external hyperlink into cell B2 using Aspose.Cells for .NET. It sets the display text, adds a screen tip, and saves the workbook as HyperlinkDemo.xlsx, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put display text into the target cell (B2)
-            Cell cell = sheet.Cells["B2"];
-            cell.PutValue("Google");
+            // Specify the cell (B2) where the hyperlink will be placed
+            int row = 1;      // zero‑based index for row 2
+            int column = 1;   // zero‑based index for column B
 
-            // Add a hyperlink to the cell that points to an external website
-            // The overload without HyperlinkType defaults to a URL hyperlink
-            sheet.Hyperlinks.Add(cell.Row, cell.Column, 1, 1, "https://www.google.com");
+            // Add a hyperlink that points to an external website.
+            // The Add method returns the index of the created hyperlink.
+            int hyperlinkIndex = sheet.Hyperlinks.Add("https://www.example.com", row, column, "Visit Example");
 
-            // Save the workbook to a file
-            workbook.Save("HyperlinkExample.xlsx");
+            // Retrieve the Hyperlink object using the returned index
+            Hyperlink link = sheet.Hyperlinks[hyperlinkIndex];
+
+            // Optional: add a screen tip
+            link.ScreenTip = "Click to open Example.com";
+
+            // Define output file path
+            string outputPath = "HyperlinkDemo.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            // Log or handle exceptions as needed
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

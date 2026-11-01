@@ -1,7 +1,7 @@
-// Title: Replace SmartArt shape text in an Excel workbook using a case‑insensitive dictionary with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, iterates all worksheets and their Shape objects, and substitutes each shape's Text property using a provided Dictionary<string,string> (case‑insensitive). | Add detailed console logging to the SmartArt text replacement routine so that the original text, the matched dictionary key, and the new text are recorded for every modified shape. | Encapsulate the SmartArt text replacement logic into a reusable method that accepts inputPath, outputPath, and a Dictionary<string,string>, then saves the updated workbook.
-// Common Searches: how to change SmartArt shape text in an Excel file with Aspose.Cells C# | c# replace worksheet shape text using dictionary Aspose.Cells | bulk update SmartArt labels in .xlsx programmatically Aspose | case insensitive text replacement for Excel shapes using Aspose.Cells .NET
-// Tags: Aspose.Cells SmartArt text substitution | C# iterate worksheet shapes | dictionary driven shape text update | case-insensitive text mapping Excel | save modified workbook Aspose.Cells
+// Title: How to replace SmartArt shape text in an Excel workbook using a case‑insensitive dictionary with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing XLSX file with Aspose.Cells, iterates through all worksheets, and updates the Text property of SmartArt shapes whose Name matches entries in a case‑insensitive Dictionary<string,string>. | Generate a snippet that creates the output directory if it does not exist, applies dictionary‑driven text replacements to matching SmartArt shapes, and saves the modified workbook as a new file using Aspose.Cells. | Show how to safely handle a missing input file and catch exceptions while performing shape text updates in an Excel workbook with Aspose.Cells. | Demonstrate iterating the Shapes collection of each worksheet, checking for non‑empty shape.Text, and assigning a new value from a mapping dictionary.
+// Common Searches: c# aspocells replace smartart text based on shape name dictionary | aspocells iterate worksheet shapes and modify text property | how to update specific SmartArt shapes in an existing Excel file using Aspose.Cells | save modified Excel workbook to a new file after shape text changes aspocells | case insensitive dictionary lookup for shape names in Aspose.Cells C#
+// Tags: Aspose.Cells modify SmartArt shape content | C# dictionary based shape text replacement | iterate worksheet shapes Aspose.Cells | save workbook after shape changes Aspose.Cells | create output folder if missing C# | case-insensitive shape name lookup Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,65 +9,62 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, walks through each worksheet's Shape collection, replaces any shape text that matches a key in a case‑insensitive dictionary, and saves the modified file to a new location.
-class SmartArtTextReplacer
+// The example loads an existing XLSX workbook with Aspose.Cells, builds a case‑insensitive dictionary that maps SmartArt shape names to new text, walks through each worksheet and its Shapes collection, replaces the Text property of matching shapes, ensures the output directory exists, and saves the updated workbook to a new file.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
+            // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Mapping of original text to replacement text
+            // Map shape names to the desired replacement text
             var replacements = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                { "Old Text 1", "New Text A" },
-                { "Old Text 2", "New Text B" }
-                // add more mappings as needed
+                { "SmartArt1", "Replacement Text for SmartArt 1" },
+                { "SmartArt2", "Replacement Text for SmartArt 2" }
+                // Add more mappings as needed
             };
 
-            // Iterate through all worksheets
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 // Iterate through all shapes on the worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    try
+                    // If the shape's name matches a key in the dictionary, replace its text
+                    if (replacements.TryGetValue(shape.Name, out string newText))
                     {
-                        // Replace shape text if it matches a key in the dictionary
-                        string currentText = shape.Text;
-                        if (!string.IsNullOrEmpty(currentText) && replacements.TryGetValue(currentText, out string newText))
+                        // For shapes that support text (e.g., TextBox, Rectangle, etc.)
+                        if (!string.IsNullOrEmpty(shape.Text))
                         {
                             shape.Text = newText;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log but continue processing other shapes
-                        Console.WriteLine($"Failed to process shape on sheet '{sheet.Name}': {ex.Message}");
                     }
                 }
             }
 
             // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
                 Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the modified workbook
+            // Save the modified workbook to a new file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

@@ -1,68 +1,46 @@
-// Title: Export an Aspose.Cells workbook with slicers to a single‑page PDF in C#
-// AI Prompts: Generate C# code that creates a worksheet, adds a table and a slicer, marks the slicer printable, and saves the workbook as a PDF using PdfSaveOptions so everything fits on one page. | Show how to configure Aspose.Cells PdfSaveOptions with OnePagePerSheet and AllColumnsInOnePagePerSheet to force all worksheet content, including slicers, onto a single PDF page. | Explain the steps required to make a slicer printable in Aspose.Cells before exporting the workbook to PDF.
-// Common Searches: Aspose.Cells C# export workbook with slicer to one-page PDF | How to keep slicer visible when saving Excel to PDF using Aspose.Cells | PdfSaveOptions OnePagePerSheet slicer printable Aspose.Cells example | Fit all columns and slicers on a single PDF page with Aspose.Cells | C# code sample for adding slicer and exporting to PDF in Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | Aspose.Cells slicer printable shape | export slicer to PDF Aspose.Cells C# | fit all columns single PDF page Aspose.Cells | create table and slicer Aspose.Cells C#
+// Title: Export an Excel workbook with slicers to a single-page PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file containing slicers, sets PdfSaveOptions to render each worksheet on one page, and saves the workbook as a PDF with Aspose.Cells. | Show how to check whether the source Excel file exists before conversion and throw a clear exception if it is missing. | Demonstrate configuring the PDF save options so that slicers stay on the same page when the workbook is exported.
+// Common Searches: c# aspocells export workbook containing slicers to pdf single page | how to keep slicers on same page when saving Excel as PDF with Aspose.Cells | pdfsaveoptions single page per sheet example for slicer worksheets | validate input file existence before converting xlsx to pdf using Aspose.Cells
+// Tags: Aspose.Cells PDF export with slicers | One-page-per-sheet PDF conversion | C# slicer preservation during PDF save | File existence check Aspose.Cells conversion | PdfSaveOptions configuration for single-page sheets
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
-using Aspose.Cells.Slicers;
 using Aspose.Cells.Rendering;
 
-namespace ExportWorkbookWithSlicers
+// // Loads an .xlsx workbook that contains slicers, configures PdfSaveOptions to render each worksheet on a single page so slicers stay together, validates the input file, and saves the result as a PDF with proper exception handling.
+class ExportWorkbookWithSlicers
 {
-    // The example creates a new workbook, adds sample data and a table, inserts a slicer linked to the first column, sets the slicer’s Shape.IsPrintable property, configures PdfSaveOptions with OnePagePerSheet and AllColumnsInOnePagePerSheet, and saves the workbook as a PDF where the slicer appears on the same page as the data.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+
+            // Load the existing workbook that contains slicers
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
+                // Export each worksheet as a single page so that all slicers stay on the same page
+                OnePagePerSheet = true
+                // Additional options (e.g., image resolution) can be set here if needed
+            };
 
-                // Populate sample data for a table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("A");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("C");
-                sheet.Cells["B5"].PutValue(40);
-
-                // Add a table covering the data range
-                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.ShowHeaderRow = true;
-                // Total row not required for this example; omitted to avoid API mismatch
-
-                // Add a slicer linked to the first column of the table
-                // Position the slicer at D2 (row 1, column 3)
-                int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], 1, 3);
-                Slicer slicer = sheet.Slicers[slicerIndex];
-
-                // Ensure the slicer is printable (required for PDF export)
-                slicer.Shape.IsPrintable = true;
-
-                // Configure PDF save options to force all content of the sheet onto a single page
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    OnePagePerSheet = true,               // All content on one page
-                    AllColumnsInOnePagePerSheet = true    // Fit all columns within the page width
-                };
-
-                // Save the workbook as PDF; slicer will appear on the same page as the data
-                workbook.Save("WorkbookWithSlicers.pdf", pdfOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook to PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log or display the error details for troubleshooting
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

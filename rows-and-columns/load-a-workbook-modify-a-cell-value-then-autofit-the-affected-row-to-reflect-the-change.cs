@@ -1,36 +1,51 @@
-// Title: Auto‑fit a worksheet row after updating a cell value using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing XLSX file, changes the text in cell B2, calls Worksheet.AutoFitRow for that row, and saves the workbook. | Generate a snippet that demonstrates modifying a cell value and automatically adjusting the row height with Aspose.Cells in a .NET console application. | Provide a step‑by‑step example of loading a workbook, updating a cell, invoking AutoFitRow on the affected row, and persisting the changes.
-// Common Searches: aspocells c# autofitrow after cell edit example | how to resize a specific row when cell content changes using Aspose.Cells | c# load workbook modify cell and auto‑fit row height | worksheet.AutoFitRow usage for single row in .NET Excel processing
-// Tags: auto-fit row Aspose.Cells C# | modify cell value worksheet Aspose.Cells | Worksheet.AutoFitRow method example | adjust row height after cell update .NET | load and save Excel workbook Aspose.Cells
+// Title: How to modify a cell value and auto‑fit its row using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing Excel workbook, change the value of a specific cell, invoke worksheet.AutoFitRow for that row, and save the workbook with Aspose.Cells in C#. | Write C# code that verifies the input file, updates a cell's content, automatically adjusts the row height to fit the new value, and writes the result to a new file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# auto fit row after updating cell value | C# change Excel cell and adjust row height programmatically with Aspose | How to use AutoFitRow on a specific row in Aspose.Cells .NET | Load workbook, modify cell, auto‑fit row, save using Aspose.Cells C# example | AutoFitRow method example for a single row in Aspose.Cells for .NET
+// Tags: Aspose.Cells AutoFitRow C# | modify Excel cell value Aspose.Cells | auto‑fit row height after cell edit | load and save workbook Aspose.Cells .NET | row height adjustment based on content Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitRowExample
+// The sample loads input.xlsx, updates cell A1 with a new string, automatically adjusts the height of the row containing that cell using AutoFitRow, and saves the modified workbook as output.xlsx, including file existence checks and exception handling.
+class Program
 {
-    // The sample loads an existing XLSX workbook, updates cell B2 with longer text, automatically fits the second row to the new content using Worksheet.AutoFitRow, and saves the modified file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook (replace with your actual file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Modify a cell value (e.g., B2). Row and column indexes are zero‑based.
-            worksheet.Cells["B2"].PutValue("Updated cell content with a longer text to demonstrate auto‑fit.");
+            // Load the existing workbook from file
+            var workbook = new Workbook(inputPath);
 
-            // Auto‑fit the row that contains the modified cell (row index 1 corresponds to row 2 in Excel)
-            worksheet.AutoFitRow(1);
+            // Get the first worksheet (you can change the index or name as needed)
+            var worksheet = workbook.Worksheets[0];
 
-            // Save the updated workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Modify the value of cell A1 (change the address as required)
+            var cell = worksheet.Cells["A1"];
+            cell.PutValue("New Value");
 
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Auto‑fit the row that contains the modified cell
+            int rowIndex = cell.Row; // zero‑based row index
+            worksheet.AutoFitRow(rowIndex); // overload with a single argument
+
+            // Save the workbook with the changes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

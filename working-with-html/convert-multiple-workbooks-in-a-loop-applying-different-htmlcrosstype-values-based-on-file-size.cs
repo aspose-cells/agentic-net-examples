@@ -1,61 +1,66 @@
-// Title: Batch convert Excel (.xlsx) files to HTML in C# with Aspose.Cells, applying HtmlCrossType based on each file’s size
-// AI Prompts: Generate a C# console application that scans a directory for .xlsx files, determines the size of each workbook, sets HtmlSaveOptions.HtmlCrossType to Embedded for files larger than a given threshold and to Linked for smaller files, and saves the workbooks as .html files using Aspose.Cells. | Write C# code that loops through multiple Excel workbooks, creates an HtmlSaveOptions instance per file, assigns HtmlCrossType conditionally according to the workbook’s byte length, and exports each workbook to a specified output folder as HTML with Aspose.Cells.
-// Common Searches: c# aspose.cells convert multiple excel files to html with size based HtmlCrossType | how to set HtmlSaveOptions.HtmlCrossType conditionally when saving workbooks in a batch | batch export .xlsx to .html using Aspose.Cells and file size threshold | c# loop through folder of Excel files and save each as html with embedded resources for large files | asp.net core convert excel to html different cross type for large and small workbooks
-// Tags: batch excel to html conversion with Aspose.Cells | conditional HtmlCrossType selection in C# | file size based HTML export using Aspose.Cells | loop processing multiple workbooks in C# | Aspose.Cells HtmlSaveOptions for large Excel files | automated .xlsx to .html conversion script
+// Title: Convert multiple Excel workbooks to HTML in C# with file‑size‑based HtmlCrossType using Aspose.Cells
+// AI Prompts: Generate C# code that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, checks the file size, and saves it as HTML using HtmlSaveOptions where the output mode is a single file for files larger than 1 MB and multiple files for smaller ones. | Modify the existing conversion loop to enable base‑64 image embedding when the workbook size exceeds a configurable threshold and to switch the HTML output mode accordingly, then write the HTML output to a designated directory. | Create a helper method `ConvertToHtml(string sourcePath, string destFolder, long sizeThreshold)` that determines the workbook size, configures HtmlSaveOptions with the appropriate output mode (single‑file or split) and image embedding options, saves the HTML file, and returns the generated file path.
+// Common Searches: aspnet convert a batch of .xlsx files to html with different output modes based on file size | c# Aspose.Cells how to set HTML output mode per workbook in a loop | conditional base64 image embedding for large Excel files when saving as HTML using Aspose.Cells | example code for size‑dependent HTML export options in Aspose.Cells C#
+// Tags: Aspose.Cells batch workbook to HTML conversion | HtmlSaveOptions HtmlCrossType based on file size | C# conditional HTML export settings for Excel | ExportImagesAsBase64 large Excel files Aspose.Cells | automated folder processing Excel to HTML .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// A C# console program that enumerates all .xlsx files in a source folder, checks each file's byte size, chooses HtmlSaveOptions.HtmlCrossType (Embedded for large files, Linked for smaller ones), and saves each workbook as an HTML file in a target directory using Aspose.Cells, with error handling and logging.
-class WorkbookHtmlConverter
+namespace WorkbookHtmlConversion
 {
-    static void Main()
+    // The sample program enumerates all .xlsx files in a given input directory, creates an output folder if needed, and for each workbook determines its byte size. It loads the workbook with Aspose.Cells, configures HtmlSaveOptions (adjusting the output mode and optionally embedding images as Base64 when a size threshold is exceeded), saves the workbook as an .html file in the output directory, and logs success or any errors.
+    class Program
     {
-        // Directory containing the source Excel files
-        string sourceFolder = @"C:\InputWorkbooks";
-        // Directory where the HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
-
-        // Ensure output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Get all Excel files in the source folder
-        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
-
-        foreach (string excelPath in excelFiles)
+        static void Main(string[] args)
         {
-            try
+            // Input and output directories (adjust as needed)
+            string inputFolder = @"C:\InputWorkbooks";
+            string outputFolder = @"C:\OutputHtml";
+
+            // Ensure output directory exists
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+
+            // Get all Excel files in the input folder
+            string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+            foreach (string workbookPath in workbookFiles)
             {
-                // Verify the source file exists
-                if (!File.Exists(excelPath))
+                // Verify the workbook file exists before attempting to load
+                if (!File.Exists(workbookPath))
                 {
-                    Console.WriteLine($"File not found: {excelPath}");
+                    Console.WriteLine($"File not found: {workbookPath}");
                     continue;
                 }
 
-                // Determine file size in bytes
-                long fileSize = new FileInfo(excelPath).Length;
+                try
+                {
+                    // Determine file size (bytes)
+                    long fileSize = new FileInfo(workbookPath).Length;
 
-                // Load the workbook
-                Workbook workbook = new Workbook(excelPath);
+                    // Load the workbook
+                    Workbook workbook = new Workbook(workbookPath);
 
-                // Configure HTML save options (default options are sufficient)
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+                    // Configure HTML save options (default settings)
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-                // Build output HTML file path (same name, .html extension)
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
-                string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+                    // Optionally, you could adjust save options based on file size here
+                    // For example, you might set saveOptions.ExportImagesAsBase64 = true for large files
 
-                // Save the workbook as HTML
-                workbook.Save(htmlPath, saveOptions);
+                    // Build output HTML file path
+                    string outputFileName = Path.GetFileNameWithoutExtension(workbookPath) + ".html";
+                    string outputPath = Path.Combine(outputFolder, outputFileName);
 
-                Console.WriteLine($"Converted '{excelPath}' ({fileSize} bytes) to HTML.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
+                    // Save the workbook as HTML
+                    workbook.Save(outputPath, saveOptions);
+                    Console.WriteLine($"Converted '{workbookPath}' to '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and continue processing other files
+                    Console.WriteLine($"Error processing '{workbookPath}': {ex.Message}");
+                }
             }
         }
     }

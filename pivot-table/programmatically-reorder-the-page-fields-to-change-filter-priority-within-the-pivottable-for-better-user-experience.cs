@@ -1,69 +1,80 @@
-// Title: Programmatically move a page field to the top of a PivotTable filter list using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to reorder page fields in a PivotTable, moving a chosen field to the first position to adjust filter priority. | Show how to configure the page field layout order and wrap count after changing the page field sequence in an Aspose.Cells PivotTable.
-// Common Searches: Aspose.Cells C# reorder pivot table page fields to change filter priority | how to move a filter field to the first position in an Aspose.Cells PivotTable | set page field order DownThenOver and wrap count in Aspose.Cells .NET | programmatic pivot table page field positioning with Aspose.Cells | change filter hierarchy of page fields in an Aspose.Cells workbook
-// Tags: Aspose.Cells PivotTable page field reordering | C# set PivotTable page field order DownThenOver | Aspose.Cells change filter priority in pivot table | PivotTable page field wrap count .NET | Aspose.Cells move page field position programmatically
+// Title: Reorder PivotTable report filters (page fields) to change filter priority with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to move a PivotTable page field from index 1 to index 0, changing the filter priority. | Programmatically adjust the order of report filters in an existing Excel PivotTable using the PageFields.Move method. | Rewrite the filter sequence of a PivotTable by reordering its page fields with Aspose.Cells for .NET. | Change the display order of PivotTable page fields in a workbook and save the result using C#.
+// Common Searches: how to change the order of pivot table report filters using Aspose.Cells C# | Aspose.Cells PageFields.Move example for reordering pivot filters | programmatically set pivot table filter priority in .NET | move pivot table page field to first position with Aspose.Cells | reorder Excel pivot table page fields via C# code
+// Tags: Aspose.Cells PageFields.Move | C# reorder pivot table page fields | Excel pivot filter priority .NET | programmatic pivot report filter ordering | modify pivot table filter sequence Aspose.Cells | change pivot table page field index C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace PivotTablePageFieldReorderDemo
+// The sample loads an existing workbook, accesses the first worksheet and its first PivotTable, then calls PageFields.Move to shift the page field at index 1 to index 0, thereby changing the filter priority, and finally saves the updated workbook to a new file.
+class Program
 {
-    // The example creates a workbook, fills it with sample data, adds a PivotTable with Category and Region as page (filter) fields, then moves the Region field to the first position to give it higher filter priority. It also sets the page field layout to DownThenOver, defines a wrap count of two, refreshes and calculates the PivotTable, and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data
-            // Header row
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Region";
-            cells["C1"].Value = "Product";
-            cells["D1"].Value = "Sales";
-
-            // Data rows
-            for (int i = 2; i <= 11; i++)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                cells[$"A{i}"].Value = $"Category{(i % 3) + 1}";
-                cells[$"B{i}"].Value = $"Region{(i % 2) + 1}";
-                cells[$"C{i}"].Value = $"Product{(i % 4) + 1}";
-                cells[$"D{i}"].Value = i * 100;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Add a pivot table
-            PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIndex = pivots.Add("A1:D11", "F5", "SalesPivot");
-            PivotTable pivot = pivots[pivotIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add fields to the pivot table
-            // Page fields (filters) – order matters for filter priority
-            pivot.AddFieldToArea(PivotFieldType.Page, "Category"); // initially first
-            pivot.AddFieldToArea(PivotFieldType.Page, "Region");   // initially second
-            // Row and data fields
-            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Access the worksheet that contains the PivotTable
+            Worksheet worksheet = workbook.Worksheets["Sheet1"];
+            if (worksheet == null)
+            {
+                Console.WriteLine("Worksheet 'Sheet1' not found.");
+                return;
+            }
 
-            // Reorder page fields: move "Region" to be the first filter (higher priority)
-            // Current positions: Category = 0, Region = 1
-            // Move field at position 1 to position 0
-            pivot.PageFields.Move(1, 0);
+            // Ensure there is at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTables found in the worksheet.");
+                return;
+            }
 
-            // Optional: change the layout order of page fields (DownThenOver)
-            pivot.PageFieldOrder = PrintOrderType.DownThenOver;
-            // Optional: set wrap count if you want multiple columns of page fields
-            pivot.PageFieldWrapCount = 2;
+            // Get the first PivotTable in the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Refresh and calculate the pivot table to apply changes
-            pivot.RefreshData();
-            pivot.CalculateData();
+            // Reorder page fields (report filters) to change filter priority
+            // Example: move the page field currently at index 1 to index 0
+            if (pivotTable.PageFields.Count > 1)
+            {
+                try
+                {
+                    // Use the Move method of the PageFields collection (Position is read‑only)
+                    pivotTable.PageFields.Move(1, 0);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to reorder page fields: {ex.Message}");
+                }
+            }
 
-            // Save the workbook
-            workbook.Save("PivotTable_PageField_Reordered.xlsx");
+            // Ensure the output directory exists (if any)
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

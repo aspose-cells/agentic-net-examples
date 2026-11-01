@@ -1,57 +1,70 @@
 // Title: Save each worksheet of an Excel workbook as a separate HTML file with gridlines using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, iterates through all worksheets, and writes each sheet to its own .html file while keeping the Excel gridlines visible. | Show how to set up Aspose.Cells HtmlSaveOptions to export only the active worksheet and enable ExportGridLines for HTML conversion in a .NET console application.
-// Common Searches: asp.net core convert each Excel sheet to separate HTML files preserving gridlines with Aspose.Cells | c# iterate workbook worksheets and export to html using HtmlSaveOptions ExportGridLines | how to save individual worksheets as html pages while keeping gridlines in Aspose.Cells | Aspose.Cells export active worksheet only to html with gridlines enabled
-// Tags: Aspose.Cells HtmlSaveOptions ExportGridLines | export each worksheet to individual HTML file | C# Aspose.Cells active worksheet HTML export | preserve Excel gridlines in HTML conversion | iterate workbook worksheets Aspose.Cells .NET
+// Common Searches: C# Aspose.Cells export each worksheet to individual HTML files while keeping gridlines | How to generate separate HTML pages for every sheet in an Excel file using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions ExportGridLines true for multiple worksheets in C# | Iterate workbook worksheets and save them as HTML with safe filenames in .NET | Preserve Excel gridlines when converting worksheets to HTML with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly | export worksheet to HTML with gridlines Aspose.Cells | generate separate HTML files per worksheet C# | sanitize worksheet name for file system Aspose.Cells | batch convert Excel sheets to HTML Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Loads input.xlsx, verifies the file exists, creates a Workbook, loops through all worksheets, sets each as the active sheet, configures HtmlSaveOptions with ExportGridLines=true and ExportActiveWorksheetOnly=true, saves each sheet as SheetName.html, and logs any errors.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates through all worksheets, sets each as the active sheet, configures HtmlSaveOptions to export only the active worksheet and include gridlines, creates a file‑system‑safe HTML filename from the worksheet name, and saves each sheet as an individual HTML file while logging the process.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
+            const string inputPath = "input.xlsx";
 
-        try
-        {
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Set the current worksheet as the active one
-                workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-                // Configure HTML save options to preserve gridlines
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            try
+            {
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate over a snapshot of worksheet indices to avoid collection-modification issues
+                int sheetCount = workbook.Worksheets.Count;
+                for (int i = 0; i < sheetCount; i++)
                 {
-                    ExportGridLines = true,               // keep gridlines visible
-                    ExportActiveWorksheetOnly = true      // export only the active sheet
-                    // OnePagePerSheet property is not available in this version of Aspose.Cells
-                };
+                    Worksheet sheet = workbook.Worksheets[i];
 
-                // Build the output file name (e.g., Sheet1.html)
-                string outputFile = $"{sheet.Name}.html";
+                    // Set the current worksheet as the active one
+                    workbook.Worksheets.ActiveSheetIndex = sheet.Index;
 
-                // Save the active worksheet as an individual HTML file
-                workbook.Save(outputFile, htmlOptions);
-                Console.WriteLine($"Saved: {outputFile}");
+                    // Configure HTML save options for the active sheet
+                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                    {
+                        ExportActiveWorksheetOnly = true,
+                        ExportGridLines = true
+                    };
+
+                    // Build a safe file name based on the worksheet name
+                    string fileName = MakeSafeFileName(sheet.Name) + ".html";
+
+                    // Save the active worksheet as an individual HTML file
+                    workbook.Save(fileName, htmlOptions);
+                    Console.WriteLine($"Saved sheet '{sheet.Name}' to '{fileName}'.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-        catch (Exception ex)
+
+        // Helper method to replace invalid filename characters with an underscore
+        static string MakeSafeFileName(string name)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            foreach (char invalidChar in Path.GetInvalidFileNameChars())
+            {
+                name = name.Replace(invalidChar, '_');
+            }
+            return name;
         }
     }
 }

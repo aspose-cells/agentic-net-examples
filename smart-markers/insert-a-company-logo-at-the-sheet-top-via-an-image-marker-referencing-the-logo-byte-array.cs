@@ -1,55 +1,65 @@
-// Title: Add a company PNG logo to the center header of an Excel workbook using Aspose.Cells SetHeaderPicture with a byte array (C#)
-// AI Prompts: Load a PNG file into a byte array and use Aspose.Cells to place it in the header's center section. | Replace the header text with the &G placeholder and enable scaling for the inserted picture. | Add logic that sets a plain‑text header when the logo file cannot be found.
-// Common Searches: C# Aspose.Cells how to set an image as the header picture using a byte array | Insert company logo into Excel header with Aspose.Cells SetHeaderPicture | Set center header image placeholder &G in Aspose.Cells .NET | Use SetHeaderPicture to add PNG logo to Excel page header in C# | Aspose.Cells header picture scaling options
-// Tags: Aspose.Cells SetHeaderPicture byte array | header image insertion Aspose.Cells | header picture scaling C# | fallback plain text header Aspose.Cells | load PNG logo into Excel header
+// Title: Insert a company logo at the top of an Excel worksheet using an image smart marker with Aspose.Cells for .NET (C#)
+// AI Prompts: Load a PNG file into a byte array, bind it to an image smart marker named "Logo" via WorkbookDesigner.SetDataSource, then call Process to embed the logo in the template. | Swap the placeholder image in the template with the logo byte array and save the modified workbook. | Add a company logo to the header row of an Excel file programmatically using Aspose.Cells smart markers without writing the image to disk.
+// Common Searches: C# Aspose.Cells how to bind a byte array to an image smart marker | replace image marker with logo in Excel template using WorkbookDesigner | insert company logo at top of worksheet using Aspose.Cells smart markers | Aspose.Cells set image data source from PNG bytes example | populate Excel template with logo using smart markers .NET
+// Tags: image smart marker with WorkbookDesigner | set image data source from byte array Aspose.Cells | swap placeholder image marker in Excel template | embed company logo in Excel worksheet C# | Aspose.Cells logo insertion example
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLogoHeader
+namespace Example
 {
-    // The example creates a new workbook, reads a PNG logo into a byte array, inserts it into the center of the page header with Worksheet.PageSetup.SetHeaderPicture, sets the header text to the &G placeholder, optionally enables picture scaling, and saves the file. If the logo file is missing, it falls back to a plain‑text header.
+    // The example loads a template workbook, reads a PNG logo into a byte array, assigns that array to an image smart marker named "Logo" via WorkbookDesigner, processes the markers to replace the placeholder, and saves the result as a new Excel file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                const string templatePath = "Template.xlsx";
+                const string logoPath = "logo.png";
+                const string resultPath = "Result.xlsx";
 
-                // Path to the logo file
-                string logoPath = "company_logo.png";
+                // Ensure the template workbook exists
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template file not found: {templatePath}");
+                    return;
+                }
 
-                // If the logo file exists, load it and insert into the header
+                // Load the template workbook
+                Workbook workbook = new Workbook(templatePath);
+
+                // Load logo bytes if the file exists
+                byte[] logoBytes = null;
                 if (File.Exists(logoPath))
                 {
-                    byte[] logoBytes = File.ReadAllBytes(logoPath);
-
-                    // Insert the logo into the center section of the header (1 = center)
-                    Picture headerPicture = worksheet.PageSetup.SetHeaderPicture(1, logoBytes);
-
-                    // Set the header text to display the picture placeholder (&G)
-                    worksheet.PageSetup.SetHeader(1, "&G");
-
-                    // Optional: adjust picture scaling
-                    // headerPicture.ScaleToFit = true;
+                    logoBytes = File.ReadAllBytes(logoPath);
                 }
                 else
                 {
-                    // Logo file not found – optionally set a plain text header or leave it empty
-                    worksheet.PageSetup.SetHeader(1, "Company Header");
+                    Console.WriteLine($"Logo file not found: {logoPath}. Image marker will be ignored.");
                 }
 
-                // Save the workbook
-                workbook.Save("Workbook_With_Logo_Header.xlsx");
+                // Work with markers in the workbook
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // Assign logo to the image marker named "Logo" if available
+                if (logoBytes != null)
+                {
+                    designer.SetDataSource("Logo", logoBytes);
+                }
+
+                // Process markers and insert the image
+                designer.Process();
+
+                // Save the modified workbook
+                workbook.Save(resultPath);
+                Console.WriteLine($"Workbook saved to {resultPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

@@ -1,56 +1,80 @@
-// Title: Import a DataTable into an Aspose.Cells worksheet at row 5 and insert rows to shift existing content
-// AI Prompts: Use ImportData with a DataTable, startRow = 5, and ImportTableOptions.InsertRows = true to add new rows without overwriting. | Show how to set ImportTableOptions.IsFieldNameShown = false when the DataTable already includes a header row. | Demonstrate saving the workbook after importing the table with a row offset and row insertion.
-// Common Searches: Aspose.Cells C# import DataTable starting at row 5 without overwriting existing rows | How to insert new rows when importing a DataTable into an Excel sheet using Aspose.Cells | ImportData with row offset and InsertRows option example in .NET | Shift existing worksheet data down while adding a DataTable in Aspose.Cells | Set firstRow parameter to 5 in ImportData method Aspose.Cells C#
-// Tags: ImportData row offset Aspose.Cells | InsertRows option ImportTableOptions | DataTable to Excel worksheet C# | Preserve existing worksheet rows Aspose.Cells | ImportTableOptions IsFieldNameShown false
+// Title: Insert five rows at row 5 and import a DataTable into an Aspose.Cells worksheet without overwriting existing data
+// AI Prompts: Add five blank rows starting at row index 5, then write a DataTable's column names and rows into the worksheet using Aspose.Cells for .NET. | Shift existing worksheet rows down by a specified offset and populate the newly created area with a DataTable, preserving all original content.
+// Common Searches: Aspose.Cells insert rows before importing DataTable | C# how to add row offset when exporting DataTable to Excel with Aspose.Cells | push existing rows down in Aspose.Cells worksheet | import DataTable into specific row in Aspose.Cells without overwriting | Aspose.Cells insert rows and write DataTable headers
+// Tags: insert rows offset Aspose.Cells | import DataTable to worksheet Aspose.Cells | shift existing rows down Aspose.Cells | write DataTable headers Aspose.Cells | save workbook after inserting rows Aspose.Cells
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, adds some initial rows, builds a DataTable, and then imports the table beginning at row index 5 using ImportTableOptions (InsertRows = true, IsFieldNameShown = false). This inserts new rows, pushing the original content down, and saves the result to an XLSX file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, inserts five rows at index 5 to make space, writes the DataTable column names as headers, fills the rows with the DataTable values, and saves the workbook as output.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet's cells collection
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // -----------------------------------------------------------------
-        // Existing data that will be shifted down when we import the table
-        // -----------------------------------------------------------------
-        cells["A1"].PutValue("Existing Header");
-        cells["A2"].PutValue("Existing Row 1");
-        cells["A3"].PutValue("Existing Row 2");
-
-        // --------------------------------------------------------------
-        // Build a sample DataTable that we want to import into the sheet
-        // --------------------------------------------------------------
-        DataTable table = new DataTable();
-        table.Columns.Add("Column1");
-        table.Columns.Add("Column2");
-        table.Rows.Add("Header1", "Header2");   // optional header row
-        table.Rows.Add("Data1", "Data2");
-        table.Rows.Add("Data3", "Data4");
-
-        // --------------------------------------------------------------
-        // Configure import options:
-        //   - InsertRows = true  => new rows are inserted, pushing existing rows down
-        //   - IsFieldNameShown = false (header already in the DataTable)
-        // --------------------------------------------------------------
-        ImportTableOptions importOptions = new ImportTableOptions
+        static void Main(string[] args)
         {
-            InsertRows = true,
-            IsFieldNameShown = false
-        };
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // --------------------------------------------------------------
-        // Import the DataTable starting at row index 5 (sixth row, zero‑based)
-        // --------------------------------------------------------------
-        cells.ImportData(table, 5, 0, importOptions);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook to a file
-        workbook.Save("ImportWithOffsetAndInsertRows.xlsx");
+                // Example DataTable to import (replace with actual data source)
+                DataTable dataTable = new DataTable();
+                dataTable.Columns.Add("ID", typeof(int));
+                dataTable.Columns.Add("Name", typeof(string));
+                dataTable.Rows.Add(1, "Alice");
+                dataTable.Rows.Add(2, "Bob");
+                dataTable.Rows.Add(3, "Charlie");
+
+                // Row offset where the import should start (zero‑based index)
+                int startRow = 5;
+
+                // Insert rows to make space for header + data
+                int rowsToInsert = dataTable.Rows.Count + 1; // +1 for column headers
+                sheet.Cells.InsertRows(startRow, rowsToInsert);
+
+                // Write column headers
+                for (int col = 0; col < dataTable.Columns.Count; col++)
+                {
+                    sheet.Cells[startRow, col].PutValue(dataTable.Columns[col].ColumnName);
+                }
+
+                // Write data rows
+                for (int row = 0; row < dataTable.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        sheet.Cells[startRow + 1 + row, col].PutValue(dataTable.Rows[row][col]);
+                    }
+                }
+
+                // Define output file path
+                string outputPath = "output.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (string.IsNullOrEmpty(outputDir))
+                {
+                    outputDir = Directory.GetCurrentDirectory();
+                }
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

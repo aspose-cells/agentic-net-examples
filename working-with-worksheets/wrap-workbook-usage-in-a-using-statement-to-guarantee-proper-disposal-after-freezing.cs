@@ -1,26 +1,38 @@
-// Title: Use a C# using statement to automatically dispose an Aspose.Cells Workbook after freezing the first row and column
-// AI Prompts: Generate C# code that creates an Aspose.Cells Workbook inside a using construct, applies FreezePanes to the top‑left cell, and saves the file. | Refactor existing Aspose.Cells workbook code so the Workbook object is wrapped in a using clause for automatic disposal after freezing panes.
-// Common Searches: how to ensure Aspose.Cells workbook is disposed after applying FreezePanes in C# | C# using statement for Aspose.Cells workbook cleanup after freezing panes | best practice for disposing Aspose.Cells Workbook when freezing first row and column
-// Tags: Aspose.Cells using statement for workbook disposal | FreezePanes API Aspose.Cells C# | automatic workbook cleanup with using block | C# resource management Aspose.Cells
+// Title: Use a using block to automatically dispose an Aspose.Cells Workbook after freezing the first row in C#
+// AI Prompts: Generate C# code that creates an Aspose.Cells Workbook, applies FreezePanes to the first row, saves the file, and wraps the workbook in a using statement for automatic disposal. | Provide a concise example demonstrating how a using block can manage the lifecycle of an Aspose.Cells Workbook while freezing panes in .NET.
+// Common Searches: C# Aspose.Cells apply FreezePanes to the top row and manage workbook lifecycle | using block for workbook disposal after FreezePanes in Aspose.Cells | best practice for handling Aspose.Cells workbook resources in .NET
+// Tags: using pattern Aspose.Cells workbook cleanup | freeze panes first row Aspose.Cells C# | auto dispose workbook after FreezePanes | save workbook with frozen rows Aspose.Cells
 
-using Aspose.Cells;
+using System;
+using Aspose.Cells; // Aspose.Cells namespace
 
-// // Demonstrates creating a Workbook inside a using block, freezing the first row and column via FreezePanes, saving to "output.xlsx", and relying on automatic disposal of the Workbook.
+// // Demonstrates creating a Workbook, freezing the first row, saving to "FrozenWorkbook.xlsx", and guaranteeing disposal via a using block.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook inside a using block to guarantee disposal after operations
-        using (var workbook = new Workbook())
+        try
         {
-            // Get the first worksheet
-            var sheet = workbook.Worksheets[0];
+            // Create a new workbook and ensure it is disposed properly
+            using (Workbook workbook = new Workbook())
+            {
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the first row and first column (freeze pane at cell A2)
-            sheet.FreezePanes(1, 1, 1, 1);
+                // Example: put some data into a cell
+                sheet.Cells["A1"].PutValue("Sample Data");
 
-            // Save the workbook to a file
-            workbook.Save("output.xlsx");
-        } // Workbook is automatically disposed here
+                // Freeze the first row (row index 1, column index 0)
+                // totalRows = 1 (freeze one row), totalColumns = 0 (no column freeze)
+                sheet.FreezePanes(1, 0, 1, 0);
+
+                // Save the workbook to a file
+                workbook.Save("FrozenWorkbook.xlsx");
+            } // Workbook is automatically disposed here after freezing and saving.
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,37 +1,37 @@
-// Title: Use Aspose.Cells Cell.Calculate to evaluate only a specific cell's formula in C#
-// AI Prompts: Write C# code that creates an in‑memory workbook, assigns values, sets a formula on a target cell, and calls Cell.Calculate with CalculationOptions to compute that cell alone. | Show how to perform an isolated formula evaluation on a single Excel cell using Aspose.Cells without triggering a full workbook recalculation.
-// Common Searches: Aspose.Cells C# calculate single cell formula without recalculating whole sheet | how to use Cell.Calculate for isolated cell evaluation in .NET | example of partial workbook calculation using CalculationOptions in Aspose.Cells | C# compute formula in one Excel cell only with Aspose.Cells API
-// Tags: Cell.Calculate isolated formula evaluation | partial workbook calculation Aspose.Cells | C# evaluate single Excel cell formula | Aspose.Cells CalculationOptions usage | in‑memory workbook formula computation
+// Title: Calculate a single cell formula using Cell.Calculate in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# calculate only cell A1 without full workbook recalculation | How to use Cell.Calculate with custom CalculationOptions in Aspose.Cells | Evaluate SUM formula in a specific cell using Aspose.Cells .NET API | Isolated cell formula evaluation example with Aspose.Cells for C# | Calculate a single cell value in an in‑memory workbook using Aspose.Cells
+// Tags: Cell.Calculate isolated formula evaluation | single cell calculation Aspose.Cells C# | custom CalculationOptions usage Aspose.Cells | in‑memory workbook formula computation | SUM function evaluation with Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a workbook in memory, puts numeric values into A1, A2, and B1, assigns the formula "=A1+A2*B1" to C1, and then calls Cell.Calculate with a CalculationOptions object to compute only C1's result. It prints the calculated value and optionally saves the workbook as SingleCellCalculation.xlsx.
+// The example creates an in‑memory Workbook, assigns the formula "=SUM(10, 20, 30)" to cell A1, and then calls Cell.Calculate with a CalculationOptions instance to compute only that cell's value, outputting the result to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (in-memory)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            // Create a new workbook (in-memory)
+            Workbook workbook = new Workbook();
 
-        // Populate cells that the formula will reference
-        cells["A1"].PutValue(5);
-        cells["A2"].PutValue(10);
-        cells["B1"].PutValue(3);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a formula in C1
-        Cell target = cells["C1"];
-        target.Formula = "=A1+A2*B1";
+            // Place a formula in cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.Formula = "=SUM(10, 20, 30)";
 
-        // Calculate only this cell's formula
-        target.Calculate(new CalculationOptions());
+            // Calculate only this cell's formula using default calculation options
+            CalculationOptions calcOptions = new CalculationOptions();
+            cell.Calculate(calcOptions);
 
-        // Display the result
-        Console.WriteLine("C1 calculated value: " + target.Value);
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("SingleCellCalculation.xlsx");
+            // Display the calculated result
+            Console.WriteLine("Calculated value of A1: " + cell.Value);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

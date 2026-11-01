@@ -1,50 +1,47 @@
-// Title: Hide column B in an Excel workbook using Aspose.Cells .NET EntireColumn property
-// AI Prompts: Write C# code that selects column B via the EntireColumn property and sets its IsHidden flag to true with Aspose.Cells. | Show how to toggle the visibility of a specific column (e.g., column B) in an Excel file using Aspose.Cells .NET APIs. | Provide an example that hides multiple columns (such as C and D) by iterating over their EntireColumn ranges in Aspose.Cells.
-// Common Searches: Aspose.Cells .NET hide column B using EntireColumn property | C# programmatically hide a specific Excel column with Aspose.Cells | How to set column visibility in an Aspose.Cells workbook | Using EntireColumn to hide columns in Aspose.Cells C# example | Save Excel file after hiding columns with Aspose.Cells
-// Tags: Aspose.Cells hide column using EntireColumn | C# set column IsHidden Aspose.Cells | Aspose.Cells column visibility .NET | Excel workbook hide column programmatically | Aspose.Cells save workbook after column hide
+// Title: Hide column B in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells hide specific column in Excel worksheet | How to programmatically hide column B with Aspose.Cells .NET | Aspose.Cells hide column by index example C# | Set column visibility to hidden using Aspose.Cells in C# | Hide Excel column using Cells.HideColumn method Aspose.Cells
+// Tags: Aspose.Cells hide column | C# hide Excel column programmatically | Cells.HideColumn method .NET | Excel column visibility Aspose.Cells | hide column B Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example creates a new Workbook, accesses the first Worksheet, and hides column B (zero‑based index 1) with sheet.Cells.HideColumn(1). It ensures the output directory exists, saves the file as output.xlsx, and handles any exceptions.
+class Program
 {
-    // The program creates a new workbook, accesses the first worksheet, selects column B via the Columns collection, hides it by setting IsHidden = true, ensures the output directory exists, saves the workbook as output.xlsx, and handles any exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Hide column B (zero‑based index 1)
+            // Use Cells collection to access column properties
+            sheet.Cells.HideColumn(1);
+
+            // Define output file path
+            string outputPath = "output.xlsx";
+
+            // Determine the output directory (handle case when there is no directory part)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook
-                var workbook = new Workbook();
-
-                // Get the first worksheet
-                var worksheet = workbook.Worksheets[0];
-
-                // Hide column B (zero‑based index 1) using the Column object's IsHidden property
-                var column = worksheet.Cells.Columns[1];
-                column.IsHidden = true;
-                // Alternatively: worksheet.Cells.HideColumn(1);
-
-                // Output file path
-                string outputPath = "output.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

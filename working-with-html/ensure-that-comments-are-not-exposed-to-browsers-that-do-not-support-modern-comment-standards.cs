@@ -1,48 +1,54 @@
-// Title: Remove all worksheet comments and export an Excel workbook to HTML using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, clears every comment on each worksheet, and saves the workbook as an HTML file using HtmlSaveOptions. | Show a C# example that verifies the source Excel file exists, deletes all worksheet comments, and exports the workbook to HTML with basic error handling using Aspose.Cells.
-// Common Searches: asp.net remove comments from Excel before exporting to HTML with Aspose.Cells | c# aspose.cells clear worksheet comments then save as html | how to hide Excel comments in HTML output using Aspose.Cells | export xlsx to html without comments asp.net
-// Tags: Aspose.Cells clear worksheet comments C# | Aspose.Cells export workbook to HTML C# | remove Excel comments before HTML conversion Aspose | C# HtmlSaveOptions without comments Aspose.Cells
+// Title: Hide Excel cell comments when exporting a workbook to HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates an Excel workbook, adds a hidden comment to a cell, and saves it as HTML using Aspose.Cells without including the comment in the output. | Show how to configure Aspose.Cells HtmlSaveOptions and set Comment.IsVisible to false so that comments are omitted from the generated HTML file. | Write a complete example that creates a worksheet, inserts data, adds a comment, hides it, ensures the output folder exists, and exports the workbook to HTML.
+// Common Searches: Aspose.Cells C# export to HTML without showing cell comments | How to prevent Excel comments from appearing in HTML output using Aspose.Cells | C# hide comment visibility when saving workbook as HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions hide comments example | Export Excel file to HTML and exclude comments in .NET
+// Tags: Aspose.Cells hide comment HTML export | HtmlSaveOptions comment visibility C# | export workbook to HTML without comments | Excel comment.IsVisible false Aspose.Cells | C# create workbook and hide cell comment
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for the input Excel file, loads it with Aspose.Cells, removes all comments from every worksheet, and saves the workbook as an HTML file using default HtmlSaveOptions, while handling potential exceptions.
+// The example creates a new workbook, adds data to cells A1 and B1, inserts a comment on A1, sets the comment's IsVisible property to false, configures HtmlSaveOptions for HTML format, ensures the output directory exists, and saves the workbook as an HTML file while suppressing the comment from the generated markup.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
+            // Get the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Add sample data
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["B1"].PutValue("World");
+
+            // Add a comment to cell A1
+            int commentIndex = sheet.Comments.Add("A1");
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Note = "This is a comment that should not appear in the HTML output.";
+            // Hide the comment so it won't be exported
+            comment.IsVisible = false;
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Determine output path and ensure directory exists
+            string outputPath = "output.html";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Load the workbook from the existing Excel file
-            var workbook = new Workbook(inputPath);
-
-            // Remove all comments so they are not rendered in the HTML output
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.Comments.Clear();
-            }
-
-            // Configure HTML save options (default settings are sufficient)
-            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-
-            // Save the workbook as HTML without comments
+            // Save the workbook as HTML
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook saved to '{outputPath}' without comments.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

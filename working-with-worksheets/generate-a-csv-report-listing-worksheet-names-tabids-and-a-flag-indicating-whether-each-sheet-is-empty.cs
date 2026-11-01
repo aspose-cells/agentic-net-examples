@@ -1,66 +1,68 @@
-// Title: Create a CSV report listing each worksheet’s name, TabId, and empty‑sheet status with Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# console program that loads an Excel file using Aspose.Cells, iterates all worksheets, and writes a CSV file containing the worksheet name, its TabId, and a true/false flag indicating whether the sheet is empty. | Add a utility method that correctly escapes commas, double quotes, and line breaks in worksheet names when generating CSV rows. | Modify the example to return the CSV data as a MemoryStream or string instead of saving it directly to disk, enabling further processing.
-// Common Searches: Aspose.Cells C# export worksheet names and TabId to CSV | How to check if a worksheet is empty using Aspose.Cells .NET | Generate Excel worksheet metadata report with Aspose.Cells and save as CSV | C# code to list all sheet TabIds in an Excel workbook using Aspose.Cells | CSV escaping rules for worksheet names when using Aspose.Cells
-// Tags: Aspose.Cells export worksheet metadata to CSV | C# retrieve worksheet TabId Aspose.Cells | detect empty worksheet Aspose.Cells .NET | CSV field escaping for Excel sheet names C# | generate worksheet report Aspose.Cells workbook
+// Title: Generate a CSV report of worksheet names, TabIds, and empty‑sheet status with Aspose.Cells in C#
+// AI Prompts: Create a C# console program that opens an Excel workbook using Aspose.Cells, loops through all worksheets, and writes a CSV line with the worksheet’s name, its TabId, and a boolean indicating if the sheet contains no data. | Add a helper method that correctly escapes commas, quotes, and line breaks in CSV fields, then save the assembled report to a user‑defined file path.
+// Common Searches: aspnet aspose.cells retrieve worksheet TabId and empty check | c# export worksheet list to csv with tab identifiers | how to determine if an Excel sheet is empty using Aspose.Cells | generate worksheet metadata csv file from workbook in .NET | c# Aspose.Cells iterate worksheets and write report
+// Tags: Aspose.Cells worksheet TabId extraction | detect empty worksheet Aspose.Cells | worksheet information CSV export C# | CSV special character handling C# | enumerate workbook worksheets Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// Generates a CSV file that lists each worksheet’s name, its TabId, and a boolean flag indicating if the sheet contains no data (MaxDataRow == -1), with proper CSV escaping for special characters in sheet names.
-class WorksheetReportGenerator
+namespace AsposeCellsCsvReport
 {
-    static void Main(string[] args)
+    // The example loads an Excel workbook with Aspose.Cells, iterates each worksheet to obtain its name and TabId, checks emptiness via MaxDataRow/MaxDataColumn, builds a CSV with proper escaping for special characters, and writes the report to a specified file.
+    class Program
     {
-        // Input Excel file path (change as needed)
-        string excelFilePath = "input.xlsx";
-
-        // Output CSV file path
-        string csvReportPath = "WorksheetReport.csv";
-
-        // Load the workbook
-        Workbook workbook = new Workbook(excelFilePath);
-
-        // Prepare a StringBuilder for CSV content
-        StringBuilder csvBuilder = new StringBuilder();
-
-        // Write CSV header
-        csvBuilder.AppendLine("WorksheetName,TabId,IsEmpty");
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // Get worksheet name
-            string sheetName = sheet.Name;
+            // Input Excel file path (change as needed)
+            string excelFilePath = "input.xlsx";
 
-            // Get TabId (unique identifier for the worksheet tab)
-            int tabId = sheet.TabId;
+            // Output CSV file path
+            string csvReportPath = "WorksheetReport.csv";
 
-            // Determine if the worksheet is empty.
-            // MaxDataRow returns -1 when there are no cells with data.
-            bool isEmpty = sheet.Cells.MaxDataRow == -1;
+            // Load the workbook using Aspose.Cells
+            Workbook workbook = new Workbook(excelFilePath);
 
-            // Build CSV line (escaping commas if necessary)
-            string csvLine = $"{EscapeCsv(sheetName)},{tabId},{isEmpty}";
-            csvBuilder.AppendLine(csvLine);
+            // Prepare a StringBuilder to build CSV content
+            StringBuilder csvBuilder = new StringBuilder();
+
+            // Write CSV header
+            csvBuilder.AppendLine("WorksheetName,TabId,IsEmpty");
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get worksheet name
+                string sheetName = sheet.Name;
+
+                // Get TabId (unique identifier for the worksheet tab)
+                int tabId = sheet.TabId;
+
+                // Determine if the worksheet is empty.
+                // A worksheet is considered empty when it has no data cells.
+                // MaxDataRow and MaxDataColumn return -1 when there are no data cells.
+                bool isEmpty = sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1;
+
+                // Append the information as a CSV line
+                csvBuilder.AppendLine($"{EscapeCsv(sheetName)},{tabId},{isEmpty}");
+            }
+
+            // Write the CSV content to the output file
+            File.WriteAllText(csvReportPath, csvBuilder.ToString(), Encoding.UTF8);
+
+            Console.WriteLine($"CSV report generated at: {Path.GetFullPath(csvReportPath)}");
         }
 
-        // Write the CSV content to file
-        File.WriteAllText(csvReportPath, csvBuilder.ToString(), Encoding.UTF8);
-
-        Console.WriteLine($"CSV report generated at: {csvReportPath}");
-    }
-
-    // Helper method to escape CSV fields that may contain commas or quotes
-    private static string EscapeCsv(string field)
-    {
-        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        private static string EscapeCsv(string field)
         {
-            // Escape double quotes by doubling them
-            string escaped = field.Replace("\"", "\"\"");
-            return $"\"{escaped}\"";
+            if (field.Contains("\""))
+                field = field.Replace("\"", "\"\"");
+
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n") || field.Contains("\r"))
+                field = $"\"{field}\"";
+
+            return field;
         }
-        return field;
     }
 }

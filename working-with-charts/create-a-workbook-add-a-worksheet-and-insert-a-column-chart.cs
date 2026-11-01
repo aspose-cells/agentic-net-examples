@@ -1,43 +1,78 @@
-// Title: Create an Excel workbook and add a column chart with sample data using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to create a new workbook, fill cells A1:B6 with category and value data, and insert a column chart spanning rows 5‑25 and columns 2‑11. | Demonstrate how to set the data range and assign a title to a column chart in an Aspose.Cells worksheet. | Explain the steps to save the workbook as an .xlsx file after the chart has been added with Aspose.Cells.
-// Common Searches: Aspose.Cells .NET example for adding a column chart to a worksheet | C# code to set chart data range and title in Aspose.Cells | How to save an Excel file with a chart using Aspose.Cells in C# | Create sample data and column chart programmatically with Aspose.Cells | Aspose.Cells chart positioning rows columns C#
-// Tags: aspocells create column chart c# | aspocells set chart data range | aspocells add worksheet sample data | aspocells save workbook as xlsx | aspocells chart positioning rows columns | aspocells column chart title
+// Title: Generate an Excel workbook with a worksheet and a column chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to create a new workbook, add a worksheet named "DataSheet", fill cells A1:B5 with sample data, and insert a column chart that references the populated range. | Show how to configure the NSeries data range and category labels for a column chart in Aspose.Cells, and set a custom chart title. | Demonstrate saving the workbook to a specific file path after the chart is added, creating the output directory if it does not exist.
+// Common Searches: Aspose.Cells C# create column chart from range B2:B5 with categories A2:A5 | how to add a chart to a worksheet using Aspose.Cells for .NET | saving an Aspose.Cells workbook to a custom folder in C# | set chart title and position for column chart in Aspose.Cells | programmatically generate Excel file with monthly sales chart using Aspose.Cells
+// Tags: Aspose.Cells create workbook with column chart C# | Aspose.Cells set NSeries data range column chart | Aspose.Cells add worksheet and populate data for chart | Aspose.Cells save Excel file to custom path | Aspose.Cells configure chart title and position
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program creates a new workbook, populates cells A1:B6 with category and numeric values, adds a column chart positioned from row 5, column 2 to row 25, column 11, sets the chart's data range to A1:B6, assigns the title "Sample Column Chart", and saves the file as ColumnChartOutput.xlsx.
-public class CreateWorkbookWithColumnChart
+namespace AsposeCellsExample
 {
-    public static void Main()
+    // The program creates a new workbook, adds a worksheet named DataSheet, populates cells A1:B5 with monthly sales data, inserts a column chart positioned between rows 7‑20 and columns A‑H, assigns the data and category ranges, sets a chart title, ensures the output directory exists, and saves the file as ColumnChartWorkbook.xlsx.
+    class Program
     {
-        // Initialize a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 1; i <= 5; i++)
+        static void Main(string[] args)
         {
-            sheet.Cells[$"A{i + 1}"].PutValue($"Item {i}");
-            sheet.Cells[$"B{i + 1}"].PutValue(i * 10);
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet (added by default)
+                Worksheet worksheet = workbook.Worksheets[0];
+                worksheet.Name = "DataSheet";
+
+                // Populate sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["A2"].PutValue("Jan");
+                worksheet.Cells["A3"].PutValue("Feb");
+                worksheet.Cells["A4"].PutValue("Mar");
+                worksheet.Cells["A5"].PutValue("Apr");
+                worksheet.Cells["B2"].PutValue(120);
+                worksheet.Cells["B3"].PutValue(150);
+                worksheet.Cells["B4"].PutValue(180);
+                worksheet.Cells["B5"].PutValue(200);
+
+                // Add a column chart to the worksheet
+                int chartUpperLeftRow = 7;
+                int chartUpperLeftColumn = 0;
+                int chartLowerRightRow = 20;
+                int chartLowerRightColumn = 7;
+
+                // Add returns the index of the newly created chart
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, chartUpperLeftRow, chartUpperLeftColumn, chartLowerRightRow, chartLowerRightColumn);
+                Chart chart = worksheet.Charts[chartIndex];
+
+                // Set the data range for the chart series (values in column B)
+                chart.NSeries.Add("B2:B5", false);
+
+                // Set the category axis labels (categories in column A)
+                chart.NSeries.CategoryData = "A2:A5";
+
+                // Optional: set chart title
+                chart.Title.Text = "Monthly Sales";
+
+                // Determine output path and ensure directory exists
+                string outputFile = "ColumnChartWorkbook.xlsx";
+                string outputPath = Path.GetFullPath(outputFile);
+                string outputDir = Path.GetDirectoryName(outputPath);
+
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Add a column chart to the worksheet (rows 5‑25, columns 2‑11)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 2, 25, 11);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Define the data range for the chart (including headers)
-        chart.SetChartDataRange("A1:B6", true);
-
-        // Set a title for the chart
-        chart.Title.Text = "Sample Column Chart";
-
-        // Save the workbook to a file
-        workbook.Save("ColumnChartOutput.xlsx", SaveFormat.Xlsx);
     }
 }

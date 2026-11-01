@@ -1,40 +1,58 @@
-// Title: Delete blank worksheets from an Excel workbook before converting to PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that scans a Workbook, removes any worksheet that has no used cells, and then saves the remaining sheets as a PDF using Aspose.Cells. | Show how to use MaxDataRow and MaxDataColumn to detect empty sheets, delete them, and export the cleaned workbook to PDF in C#.
-// Common Searches: aspnet remove empty worksheets before PDF export Aspose.Cells | c# detect and delete blank Excel sheets using MaxDataRow | skip blank worksheets when saving Excel as PDF with Aspose.Cells | avoid extra blank pages in PDF generated from Excel workbook | how to programmatically clean up workbook sheets prior to PDF conversion
-// Tags: delete empty worksheets Aspose.Cells | export non‑empty sheets to PDF Aspose.Cells | MaxDataRow empty sheet detection C# | skip blank worksheets during PDF conversion | clean workbook before PDF export Aspose.Cells
+// Title: Remove blank worksheets from an Excel file before converting to PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans each worksheet, filters out those that have no data, and then exports the remaining sheets to a PDF file. | Create a method in C# that identifies worksheets without any content in an Aspose.Cells workbook and excludes them from the PDF conversion process.
+// Common Searches: how to skip blank sheets when converting Excel to PDF with Aspose.Cells | remove empty worksheets before saving workbook as PDF using Aspose.Cells for .NET | Aspose.Cells detect empty worksheet and exclude from PDF output | C# Aspose.Cells delete worksheets with no data | skip sheets without data during Aspose.Cells PDF export
+// Tags: Aspose.Cells workbook remove empty sheets | Aspose.Cells PDF conversion ignore blank worksheets | C# identify blank worksheet Aspose.Cells | Aspose.Cells clean up workbook before PDF export | Aspose.Cells skip sheets without data
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 
-// Loads an Excel file, checks each worksheet’s MaxDataRow and MaxDataColumn to find sheets without data, removes those empty worksheets, and saves the remaining content as a PDF.
+// The program loads an Excel workbook, detects worksheets that contain no data, removes those blank sheets, and then saves the cleaned workbook as a PDF using Aspose.Cells.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from an existing Excel file
+        // Load the Excel workbook (load rule)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Identify indexes of worksheets that contain no data
+        // Identify empty worksheets
         List<int> emptySheetIndexes = new List<int>();
         for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
             Worksheet sheet = workbook.Worksheets[i];
 
-            // MaxDataRow/MaxDataColumn are -1 when the sheet has no used cells
-            if (sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0)
+            // If there are no data rows/columns, the sheet is empty
+            if (sheet.Cells.MaxDataRow < 0 || sheet.Cells.MaxDataColumn < 0)
             {
                 emptySheetIndexes.Add(i);
+                continue;
             }
+
+            // Verify that all cells are actually empty
+            bool hasData = false;
+            for (int row = 0; row <= sheet.Cells.MaxDataRow && !hasData; row++)
+            {
+                for (int col = 0; col <= sheet.Cells.MaxDataColumn; col++)
+                {
+                    if (!string.IsNullOrEmpty(sheet.Cells[row, col].StringValue))
+                    {
+                        hasData = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasData)
+                emptySheetIndexes.Add(i);
         }
 
-        // Remove empty worksheets starting from the highest index to avoid shifting
+        // Remove empty worksheets starting from the highest index
         for (int i = emptySheetIndexes.Count - 1; i >= 0; i--)
         {
             workbook.Worksheets.RemoveAt(emptySheetIndexes[i]);
         }
 
-        // Save the workbook as PDF; only non‑empty worksheets will be rendered
+        // Save the workbook as PDF (save rule)
         workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

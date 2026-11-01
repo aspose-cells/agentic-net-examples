@@ -1,134 +1,89 @@
-// Title: Extract OData and WebQuery connection URLs from an Excel workbook using Aspose.Cells DataMashup and export them to a JSON configuration (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, iterates over workbook.DataConnections, identifies connections of type OData or WebQuery, and collects their Url values. | Extend the program to scan workbook.DataMashup.PowerQueryFormulas, extract any HTTP/HTTPS URLs from the formula definitions, and add them to the OData URL collection. | Add logic to serialize the distinct URL list into a formatted odata-config.json file and include error handling that logs warnings for missing Url properties or unsupported DataMashup features.
-// Common Searches: C# Aspose.Cells extract OData service URLs from Excel workbook | How to retrieve Power Query URLs from an .xlsx file using Aspose.Cells DataMashup | Save extracted OData and WebQuery connection URLs to JSON with .NET | Enumerate DataConnections of type OData or WebQuery in Aspose.Cells | Parse Power Query formula definitions for URLs in C#
-// Tags: DataConnections OData URL extraction | DataMashup Power Query URL parsing | C# write URLs to formatted JSON | Excel workbook OData service list generation | Aspose.Cells unique URL aggregation
+// Title: Extract OData service URLs from an Excel workbook using Aspose.Cells Workbook.DataMashup and write them to a JSON configuration file (C#)
+// AI Prompts: Create a C# console application that loads an .xlsx file with Aspose.Cells, uses Workbook.DataMashup (via reflection) to gather all ODataConnectionInfos ServiceUrl values, and outputs the list to a formatted JSON file. | Write a method that iterates over the ODataConnectionInfos collection of a workbook's DataMashup and returns a List<string> containing each OData service URL. | Generate code that serializes a collection of OData URLs into an indented JSON document using System.Text.Json and saves it to a specified path.
+// Common Searches: how to read ODataConnectionInfos ServiceUrl from an Excel file using Aspose.Cells C# | Aspose.Cells Workbook.DataMashup reflection example for extracting OData URLs | C# code to export OData service URLs from an Excel workbook to JSON | save OData connection URLs to a configuration file with System.Text.Json | enumerate OData connections in an .xlsx using Aspose.Cells DataMashup
+// Tags: Aspose.Cells Workbook.DataMashup ODataConnectionInfos extraction | C# reflection OData URLs from Excel workbook | serialize OData service URLs to JSON with System.Text.Json | export OData connection URLs to config file | extract OData URLs from .xlsx using Aspose.Cells
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace ExtractODataUrlsApp
+namespace ODataExtractorApp
 {
-    // The program loads an Excel workbook with Aspose.Cells, gathers unique OData and WebQuery connection URLs from DataConnections, optionally extracts additional URLs from Power Query formulas via DataMashup, and writes the collected URLs to a formatted JSON configuration file named odata-config.json.
-    class ExtractODataUrls
+    // Loads an Excel workbook, uses reflection to read ODataConnectionInfos from Workbook.DataMashup, collects each ServiceUrl, and writes the URLs to an indented JSON configuration file.
+    class ODataExtractor
     {
         static void Main()
         {
-            // Path to the workbook that contains Power Query (OData) connections
-            string sourcePath = "source.xlsx";
-
-            // Verify the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(sourcePath);
+                const string inputPath = "input.xlsx";
+                const string outputPath = "config.json";
 
-                // List to store extracted OData URLs
-                List<string> odataUrls = new List<string>();
-
-                // -----------------------------------------------------------------
-                // Extract URLs from data connections (OData, Web query, etc.)
-                // -----------------------------------------------------------------
-                foreach (var conn in workbook.DataConnections)
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    try
-                    {
-                        string url = null;
-
-                        // Determine connection type via reflection (avoids direct enum dependency)
-                        var typeProp = conn.GetType().GetProperty("Type");
-                        var typeValue = typeProp?.GetValue(conn);
-                        string typeName = typeValue?.ToString();
-
-                        if (typeName == "OData" || typeName == "WebQuery")
-                        {
-                            // Access the Url property via reflection
-                            var urlProp = conn.GetType().GetProperty("Url");
-                            if (urlProp != null)
-                            {
-                                url = urlProp.GetValue(conn) as string;
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(url) && !odataUrls.Contains(url))
-                        {
-                            odataUrls.Add(url);
-                        }
-                    }
-                    catch (Exception exConn)
-                    {
-                        // Log connection‑specific issues and continue processing other connections
-                        Console.WriteLine($"Warning: Unable to process a connection – {exConn.Message}");
-                    }
+                    Console.WriteLine($"Error: Input file '{inputPath}' was not found.");
+                    return;
                 }
 
-                // -----------------------------------------------------------------
-                // Optional: Scan Power Query formulas for URLs (if DataMashup is available)
-                // -----------------------------------------------------------------
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Collect all OData service URLs from the workbook's DataMashup using reflection
+                List<string> odataUrls = new List<string>();
                 try
                 {
                     var mashup = workbook.DataMashup;
-                    if (mashup != null && mashup.PowerQueryFormulas != null)
+                    if (mashup != null)
                     {
-                        Regex urlRegex = new Regex(@"https?://[^\s""]+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                        foreach (var formula in mashup.PowerQueryFormulas)
+                        var collectionProp = mashup.GetType().GetProperty("ODataConnectionInfos");
+                        if (collectionProp != null)
                         {
-                            string definition = formula.FormulaDefinition;
-                            if (!string.IsNullOrEmpty(definition))
+                            var collection = collectionProp.GetValue(mashup) as IEnumerable;
+                            if (collection != null)
                             {
-                                foreach (Match match in urlRegex.Matches(definition))
+                                foreach (var connection in collection)
                                 {
-                                    string foundUrl = match.Value.TrimEnd(')', ';');
-                                    if (!odataUrls.Contains(foundUrl))
+                                    var urlProp = connection.GetType().GetProperty("ServiceUrl");
+                                    if (urlProp != null)
                                     {
-                                        odataUrls.Add(foundUrl);
+                                        var url = urlProp.GetValue(connection) as string;
+                                        if (!string.IsNullOrEmpty(url))
+                                        {
+                                            odataUrls.Add(url);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // DataMashup not supported – ignore and continue
+                    Console.WriteLine($"Warning: Unable to extract OData URLs via reflection. {ex.Message}");
                 }
 
-                // Build a simple JSON configuration object
+                // Prepare a simple configuration object to hold the URLs
                 var config = new
                 {
                     ODataServiceUrls = odataUrls
                 };
 
-                // Serialize the configuration to formatted JSON
-                string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+                // Serialize the configuration to formatted JSON using System.Text.Json
+                var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(config, jsonOptions);
 
-                // Write JSON to a file
-                string jsonPath = "odata-config.json";
-                File.WriteAllText(jsonPath, json);
+                // Write the JSON to a configuration file
+                File.WriteAllText(outputPath, json);
 
-                // Save the workbook (no modifications made, but follows lifecycle rule)
-                try
-                {
-                    workbook.Save("output.xlsx");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Warning: Unable to save workbook – {saveEx.Message}");
-                }
-
-                Console.WriteLine($"Extracted {odataUrls.Count} OData URLs and saved to {jsonPath}");
+                Console.WriteLine($"OData service URLs have been extracted to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

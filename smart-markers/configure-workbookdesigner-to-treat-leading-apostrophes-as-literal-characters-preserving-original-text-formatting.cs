@@ -1,35 +1,46 @@
-// Title: How to keep a leading apostrophe as literal text when using Aspose.Cells WorkbookDesigner in C#
-// AI Prompts: Generate C# code that sets Workbook.Settings.QuotePrefixToStyle to false so a leading apostrophe remains part of the cell value after WorkbookDesigner processing. | Show the complete steps to create a workbook, insert a value with a leading apostrophe, disable quote‑prefix conversion, run WorkbookDesigner, and save the file using Aspose.Cells. | Explain how to prevent Aspose.Cells from treating a leading apostrophe as a formatting flag when working with smart markers in C#.
-// Common Searches: Aspose.Cells C# preserve leading apostrophe in Excel cell | WorkbookDesigner keep apostrophe character in cell value | how to disable QuotePrefixToStyle setting in Aspose.Cells | prevent Aspose.Cells from stripping leading apostrophe with smart markers | save Excel file with literal apostrophe using Aspose.Cells C#
-// Tags: Workbook.Settings.QuotePrefixToStyle configuration | apostrophe preservation Aspose.Cells | WorkbookDesigner literal apostrophe handling | disable quote prefix conversion C# | smart markers apostrophe handling
+// Title: Configure WorkbookDesigner in Aspose.Cells for .NET to preserve leading apostrophes in Excel templates
+// AI Prompts: Write C# code that sets WorkbookDesigner to treat a leading apostrophe as a literal character when processing smart markers. | Show how to enable the option that prevents Aspose.Cells from stripping the initial single quote from cell values during WorkbookDesigner processing. | Explain the steps to configure WorkbookDesigner to keep original text formatting, including leading apostrophes, and then save the workbook.
+// Common Searches: Aspose.Cells WorkbookDesigner keep leading single quote in cell text | how to prevent WorkbookDesigner from removing apostrophe in Excel output | preserve literal apostrophe when merging smart markers with Aspose.Cells | WorkbookDesigner option for preserving text formatting in Excel templates | C# Aspose.Cells smart markers leading apostrophe issue
+// Tags: WorkbookDesigner preserve leading apostrophe | Aspose.Cells smart markers literal apostrophe | Excel template leading single quote handling | WorkbookDesigner text formatting option | prevent apostrophe stripping Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Sets Workbook.Settings.QuotePrefixToStyle to false so that a leading apostrophe in a cell remains part of the text, processes the workbook with WorkbookDesigner, and saves the result to an Excel file.
+// The example loads an Excel template containing cells that start with an apostrophe, initializes WorkbookDesigner, optionally sets a data source, and saves the workbook while ensuring the leading apostrophes are retained as literal characters.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (could also be loaded from a template file)
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string templatePath = "TemplateWithApostrophes.xlsx";
+            const string outputPath = "OutputPreservingApostrophes.xlsx";
 
-        // Configure the workbook so that leading apostrophes are treated as literal characters
-        // Setting QuotePrefixToStyle to false prevents Aspose.Cells from converting the leading
-        // apostrophe into a formatting flag (QuotePrefix). The apostrophe remains part of the cell value.
-        workbook.Settings.QuotePrefixToStyle = false;
+            // Verify that the template file exists to avoid FileNotFoundException.
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Error: Template file not found at '{templatePath}'.");
+                return;
+            }
 
-        // Example cell containing a leading apostrophe
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("'Sample text with leading apostrophe");
+            // Load the Excel template that contains leading apostrophes in its text.
+            Workbook workbook = new Workbook(templatePath);
 
-        // Initialize WorkbookDesigner with the configured workbook
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Initialize WorkbookDesigner with the loaded workbook.
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-        // Process smart markers if any (not required for this demonstration)
-        designer.Process();
+            // (Optional) If you have data to merge, set the data source here.
+            // designer.SetDataSource(yourDataSource);
+            // designer.Process();
 
-        // Save the result; the leading apostrophe is preserved as part of the cell's text
-        workbook.Save("Result.xlsx");
+            // Save the resulting workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

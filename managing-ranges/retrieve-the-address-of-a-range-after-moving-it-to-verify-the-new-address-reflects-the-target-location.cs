@@ -1,12 +1,12 @@
-// Title: Move a cell range to a new location and read its updated RefersTo address using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells Range.MoveTo to relocate the range A1:B2 to C3 and then output the Range.RefersTo string in C#. | After moving a range with Range.MoveTo, retrieve the RefersTo property to confirm the new address in a .NET workbook.
-// Common Searches: Aspose.Cells C# get address of a range after moving it | How to retrieve new range reference after Range.MoveTo in .NET | C# Aspose.Cells move range to another cell and verify RefersTo | Updated range address after relocating cells with Aspose.Cells
-// Tags: Range.MoveTo method Aspose.Cells | RefersTo property after moving range | relocating cell range .NET | updated range address C# Aspose.Cells | move range and verify address
+// Title: How to get the updated address of a moved range with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# retrieve new range address after using MoveTo | Get updated RefersTo value after moving a range with Aspose.Cells | C# example to verify moved range address in an Excel workbook using Aspose.Cells | How to obtain the new location of a range after MoveTo in Aspose.Cells .NET | Aspose.Cells range relocation address verification code sample
+// Tags: Aspose.Cells MoveTo range address | C# Aspose.Cells RefersTo property | Excel range relocation with Aspose.Cells | .NET Aspose.Cells range address verification | Aspose.Cells moved range address retrieval
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// // Demonstrates creating a workbook, filling A1:B2, moving that range to C3 with Range.MoveTo, and reading the RefersTo property to display the range's new address.
+// The example creates a workbook, fills cells A1:C3, defines a range, moves it to E5 using the MoveTo method, and then reads the RefersTo property to obtain the new address (e.g., "E5:G7").
 class Program
 {
     static void Main()
@@ -17,27 +17,34 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill some data in the source range A1:B2
+            // Populate a sample range A1:C3 with data
             sheet.Cells["A1"].PutValue(1);
-            sheet.Cells["A2"].PutValue(2);
-            sheet.Cells["B1"].PutValue(3);
-            sheet.Cells["B2"].PutValue(4);
+            sheet.Cells["B1"].PutValue(2);
+            sheet.Cells["C1"].PutValue(3);
+            sheet.Cells["A2"].PutValue(4);
+            sheet.Cells["B2"].PutValue(5);
+            sheet.Cells["C2"].PutValue(6);
+            sheet.Cells["A3"].PutValue(7);
+            sheet.Cells["B3"].PutValue(8);
+            sheet.Cells["C3"].PutValue(9);
 
-            // Define the source range (use fully qualified Aspose.Cells.Range to avoid ambiguity)
-            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("A1:B2");
+            // Define the source range (A1:C3)
+            AsposeRange sourceRange = sheet.Cells.CreateRange("A1:C3");
 
-            // Move the range to target location C3 (row index 2, column index 2 – zero‑based)
-            sourceRange.MoveTo(2, 2);
+            // Move the range to a new location, e.g., starting at E5 (row 4, column 4 in zero‑based indices)
+            sourceRange.MoveTo(4, 4);
 
             // Retrieve the new address of the moved range
-            string newAddress = sourceRange.RefersTo;
+            string newAddress = sourceRange.RefersTo; // e.g., "E5:G7"
 
-            // Output the new address
+            // Output the new address to verify the move
             Console.WriteLine("New address of the moved range: " + newAddress);
+
+            // Save the workbook to inspect the result
+            workbook.Save("MovedRangeOutput.xlsx");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine("An error occurred: " + ex.Message);
         }
     }

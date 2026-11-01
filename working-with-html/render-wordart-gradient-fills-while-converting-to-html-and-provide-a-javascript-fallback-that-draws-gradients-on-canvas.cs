@@ -1,147 +1,176 @@
-// Title: Extract WordArt Gradient Fill Information from Excel and Render It on HTML Canvas Using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, finds all WordArt shapes that use gradient fills, and collects each shape’s width, height, rotation angle, and gradient stop colors with positions. | Create a JavaScript routine that receives the extracted shape data and draws a matching linear gradient on a <canvas> element, then embed this routine into the HTML produced by Aspose.Cells. | Extend the C# program to also handle radial gradient fills from WordArt shapes and output the corresponding canvas drawing commands.
-// Common Searches: how to preserve Excel WordArt gradient fills when converting to HTML with Aspose.Cells | c# extract gradient stop data from WordArt shapes using Aspose.Cells | render Excel WordArt gradients on HTML canvas after saving as HTML | aspnet generate canvas fallback for WordArt gradient fills in exported HTML
-// Tags: Aspose.Cells extract WordArt gradient fills | C# export Excel to HTML with canvas fallback | HTML canvas linear gradient from shape properties | gradient stop collection using Fill property | render WordArt gradients on canvas | radial gradient support in Aspose.Cells HTML export
+// Title: Export Excel WordArt with gradient fill to HTML and render it via Canvas and JavaScript using Aspose.Cells for .NET
+// Common Searches: aspnet export excel wordart gradient fill to html using aspose.cells | replace wordart image tag with canvas element in aspose.cells html conversion | extract gradient stops from excel shape with aspose.cells c# | draw linear gradient on html canvas from excel wordart using javascript | convert excel worksheet to html preserving wordart gradients as canvas
+// Tags: Aspose.Cells WordArt gradient HTML export | C# gradient stop extraction from Excel shape | HTML canvas placeholder for Excel WordArt | JavaScript linear gradient rendering from Excel data | Base64 image replacement with canvas in Aspose.Cells output
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an Excel workbook with Aspose.Cells, identifies WordArt shapes that use gradient fills, extracts each shape’s dimensions, angle, and gradient stop data, saves the workbook as HTML, and injects <canvas> elements plus JavaScript that redraws the gradients on page load, providing a visual fallback for browsers that cannot render the original WordArt.
-class Program
+namespace WordArtGradientHtmlExport
 {
-    static void Main()
+    // Helper class to store gradient information for a WordArt shape
+    // The sample loads an Excel workbook, finds WordArt shapes that use gradient fills, extracts each gradient stop and the shape size, then saves the workbook as HTML with images embedded as Base64. It replaces the generated <img> tags for those WordArt shapes with uniquely‑identified <canvas> elements sized to the original shapes and injects JavaScript that draws the same linear gradient on each canvas using the extracted color stops. The final HTML preserves the visual appearance of WordArt gradients without relying on static images.
+    class WordArtInfo
     {
-        try
+        public string CanvasId { get; set; } = string.Empty;          // Unique canvas element id
+        public int Width { get; set; }                                 // Shape width in pixels
+        public int Height { get; set; }                                // Shape height in pixels
+        public List<GradientStopInfo> Stops { get; set; } = new();    // Gradient stops
+    }
+
+    // Represents a single gradient stop (wrapper for Aspose.Cells.Drawing.GradientStop)
+    class GradientStopInfo
+    {
+        public Color Color { get; set; } = Color.Empty;              // Stop color
+        public double Position { get; set; }                          // Position (0.0 - 1.0)
+    }
+
+    class Program
+    {
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input file exists before loading
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
-
-            // Collect information about WordArt shapes that use gradient fills
-            var wordArtInfos = new List<WordArtInfo>();
-
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    // Identify WordArt shapes
-                    if (shape.IsWordArt)
-                    {
-                        // Use the modern Fill property
-                        var fill = shape.Fill;
-                        if (fill != null && fill.FillType == FillType.Gradient && fill.GradientFill != null)
-                        {
-                            var gradientStops = new List<GradientStopInfo>();
-                            foreach (var stopObj in fill.GradientFill.GradientStops)
-                            {
-                                // Use dynamic to access Color property (covers API variations)
-                                dynamic stop = stopObj;
-                                Color color = stop.Color;
-                                double position = stop.Position;
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.html";
 
-                                gradientStops.Add(new GradientStopInfo
+                // ---------- Load workbook ----------
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                Workbook workbook = new Workbook(inputPath);
+
+                // ---------- Collect WordArt gradient data ----------
+                List<WordArtInfo> wordArtInfos = new();
+                int canvasCounter = 0;
+
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Shape shape in sheet.Shapes)
+                    {
+                        // Identify WordArt shapes via TextEffect property and gradient fill
+                        if (shape.TextEffect != null && shape.Fill != null && shape.Fill.FillType == FillType.Gradient)
+                        {
+                            GradientFill gradientFill = shape.Fill.GradientFill;
+                            if (gradientFill == null) continue;
+
+                            List<GradientStopInfo> stops = new();
+                            foreach (var stopObj in gradientFill.GradientStops)
+                            {
+                                // Use dynamic to access properties (avoids compile‑time binding issues)
+                                dynamic aspStop = stopObj;
+                                Color stopColor = aspStop.Color;
+                                double position = aspStop.Position;
+
+                                stops.Add(new GradientStopInfo
                                 {
-                                    Color = color,
+                                    Color = stopColor,
                                     Position = position
                                 });
                             }
 
+                            // Unique canvas id
+                            string canvasId = $"wordart_canvas_{canvasCounter++}";
+
+                            // Convert shape size from points to pixels (1 point ≈ 1.3333 pixels)
+                            int widthPx = (int)Math.Round(shape.Width * 1.3333);
+                            int heightPx = (int)Math.Round(shape.Height * 1.3333);
+
                             wordArtInfos.Add(new WordArtInfo
                             {
-                                Id = $"wordart_{wordArtInfos.Count}",
-                                Width = shape.Width,
-                                Height = shape.Height,
-                                Angle = fill.GradientFill.Angle,
-                                GradientStops = gradientStops
+                                CanvasId = canvasId,
+                                Width = widthPx,
+                                Height = heightPx,
+                                Stops = stops
                             });
                         }
                     }
                 }
-            }
 
-            // Save workbook as HTML (in-memory)
-            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            string html;
-            using (var ms = new MemoryStream())
-            {
-                workbook.Save(ms, htmlOptions);
-                ms.Position = 0;
-                using var reader = new StreamReader(ms);
-                html = reader.ReadToEnd();
-            }
-
-            // Build canvas elements for each WordArt shape
-            var canvasBuilder = new StringBuilder();
-            foreach (var info in wordArtInfos)
-            {
-                canvasBuilder.AppendLine(
-                    $"<canvas id=\"{info.Id}\" width=\"{info.Width}\" height=\"{info.Height}\" style=\"display:block;margin:10px 0;\"></canvas>");
-            }
-
-            // Build JavaScript to render gradients on the canvases
-            var scriptBuilder = new StringBuilder();
-            scriptBuilder.AppendLine("<script>");
-            scriptBuilder.AppendLine("function drawWordArtGradients(){");
-            foreach (var info in wordArtInfos)
-            {
-                scriptBuilder.AppendLine($"  var canvas = document.getElementById('{info.Id}');");
-                scriptBuilder.AppendLine("  if (canvas && canvas.getContext){");
-                scriptBuilder.AppendLine("    var ctx = canvas.getContext('2d');");
-                scriptBuilder.AppendLine(
-                    $"    var grad = ctx.createLinearGradient(0,0,canvas.width*Math.cos({info.Angle}*Math.PI/180),canvas.height*Math.sin({info.Angle}*Math.PI/180));");
-
-                foreach (var stop in info.GradientStops)
+                // ---------- Convert workbook to HTML ----------
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
                 {
-                    string hex = $"#{stop.Color.R:X2}{stop.Color.G:X2}{stop.Color.B:X2}";
-                    scriptBuilder.AppendLine($"    grad.addColorStop({stop.Position}, '{hex}');");
+                    ExportImagesAsBase64 = true,
+                    ExportActiveWorksheetOnly = true
+                };
+
+                using (MemoryStream htmlStream = new MemoryStream())
+                {
+                    workbook.Save(htmlStream, htmlOptions);
+                    htmlStream.Position = 0;
+                    string htmlContent = new StreamReader(htmlStream).ReadToEnd();
+
+                    // ---------- Replace WordArt images with canvas placeholders ----------
+                    foreach (WordArtInfo info in wordArtInfos)
+                    {
+                        string canvasTag = $"<canvas id=\"{info.CanvasId}\" width=\"{info.Width}\" height=\"{info.Height}\"></canvas>";
+
+                        int imgStart = htmlContent.IndexOf("<img", StringComparison.OrdinalIgnoreCase);
+                        if (imgStart >= 0)
+                        {
+                            int imgEnd = htmlContent.IndexOf('>', imgStart);
+                            if (imgEnd > imgStart)
+                            {
+                                htmlContent = htmlContent.Remove(imgStart, imgEnd - imgStart + 1)
+                                                         .Insert(imgStart, canvasTag);
+                            }
+                        }
+                    }
+
+                    // ---------- Append JavaScript to draw gradients ----------
+                    StringBuilder scriptBuilder = new StringBuilder();
+                    scriptBuilder.AppendLine("<script type=\"text/javascript\">");
+                    scriptBuilder.AppendLine("window.addEventListener('load', function() {");
+
+                    foreach (WordArtInfo info in wordArtInfos)
+                    {
+                        scriptBuilder.AppendLine($"  var canvas = document.getElementById('{info.CanvasId}');");
+                        scriptBuilder.AppendLine("  if (canvas && canvas.getContext) {");
+                        scriptBuilder.AppendLine("    var ctx = canvas.getContext('2d');");
+                        scriptBuilder.AppendLine("    var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);");
+
+                        foreach (GradientStopInfo stop in info.Stops)
+                        {
+                            string rgba = $"rgba({stop.Color.R}, {stop.Color.G}, {stop.Color.B}, {stop.Color.A / 255.0})";
+                            scriptBuilder.AppendLine($"    grad.addColorStop({stop.Position.ToString(CultureInfo.InvariantCulture)}, '{rgba}');");
+                        }
+
+                        scriptBuilder.AppendLine("    ctx.fillStyle = grad;");
+                        scriptBuilder.AppendLine("    ctx.fillRect(0, 0, canvas.width, canvas.height);");
+                        scriptBuilder.AppendLine("  }");
+                    }
+
+                    scriptBuilder.AppendLine("});");
+                    scriptBuilder.AppendLine("</script>");
+
+                    // Insert script before closing </body>
+                    int bodyCloseIdx = htmlContent.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
+                    if (bodyCloseIdx >= 0)
+                    {
+                        htmlContent = htmlContent.Insert(bodyCloseIdx, scriptBuilder.ToString());
+                    }
+                    else
+                    {
+                        htmlContent += scriptBuilder.ToString();
+                    }
+
+                    // ---------- Save final HTML ----------
+                    File.WriteAllText(outputPath, htmlContent, Encoding.UTF8);
+                    Console.WriteLine($"HTML exported successfully to {outputPath}");
                 }
-
-                scriptBuilder.AppendLine("    ctx.fillStyle = grad;");
-                scriptBuilder.AppendLine("    ctx.fillRect(0,0,canvas.width,canvas.height);");
-                scriptBuilder.AppendLine("  }");
-                scriptBuilder.AppendLine("}");
             }
-            scriptBuilder.AppendLine("window.onload = drawWordArtGradients;");
-            scriptBuilder.AppendLine("</script>");
-
-            // Insert canvases and script before </body>
-            string insertion = canvasBuilder.ToString() + scriptBuilder.ToString();
-            html = html.Replace("</body>", insertion + "\n</body>");
-
-            // Write final HTML
-            File.WriteAllText(outputPath, html);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
-}
-
-// Helper class to store shape information
-class WordArtInfo
-{
-    public string Id { get; set; } = string.Empty;
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public double Angle { get; set; } // In degrees
-    public List<GradientStopInfo> GradientStops { get; set; } = new();
-}
-
-// Helper class for gradient stop details
-class GradientStopInfo
-{
-    public Color Color { get; set; }
-    public double Position { get; set; } // 0.0 to 1.0
 }

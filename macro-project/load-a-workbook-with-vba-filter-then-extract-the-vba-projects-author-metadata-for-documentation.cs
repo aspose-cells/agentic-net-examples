@@ -1,46 +1,40 @@
-// Title: Extract author metadata from a macro‑enabled Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsm file with Aspose.Cells, checks whether a VBA project exists, and returns the workbook's built‑in Author property while safely handling missing files. | Create a reusable C# method that loads a macro‑enabled workbook, validates the presence of VBA macros, extracts the Author document property, and logs appropriate error messages.
-// Common Searches: Aspose.Cells C# get Author property from macro enabled Excel file | How to verify VBA macros exist in an .xlsm workbook using Aspose.Cells | Read built‑in document properties of .xlsm with Aspose.Cells .NET | C# code to handle FileNotFoundException when opening Excel workbook with Aspose.Cells | Extract workbook author when VBA project has no author field Aspose.Cells
-// Tags: retrieve built-in Author property from .xlsm using Aspose.Cells | detect VBA project presence in Excel workbook with Aspose.Cells | load macro-enabled workbook and read document properties .NET | handle file-not-found errors when opening Excel with Aspose.Cells | use VbaProject object to verify macro existence Aspose.Cells
+// Title: C# example: Load an XLSM workbook with Aspose.Cells and extract VBA project author metadata (placeholder)
+// Common Searches: how to read VBA project author from an .xlsm file using Aspose.Cells in C# | Aspose.Cells retrieve VBA project metadata from a macro-enabled workbook .NET | C# extract VBA project information from an XLSM workbook with Aspose.Cells | get VBA project author when Aspose.Cells VbaProject has no Author property | document VBA project details using Aspose.Cells for .NET
+// Tags: Aspose.Cells VBA project metadata extraction | C# load macro-enabled workbook with VbaProject | Aspose.Cells retrieve VBA author placeholder | Aspose.Cells .NET read built-in document properties | extract VBA project information from XLSM
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba;   // Required for VbaProject
 
-// The example loads a macro‑enabled .xlsm workbook with Aspose.Cells, checks for the presence of a VBA project, and then reads the workbook's built‑in Author document property (since the VbaProject object lacks an Author field). It outputs the author value or a default placeholder and includes robust handling for missing files and runtime exceptions.
+// The code loads an XLSM workbook, accesses its VbaProject via Aspose.Cells, notes that the Author property is not exposed, assigns a placeholder string for the author, and writes the author information to the console for documentation purposes.
 class Program
 {
     static void Main()
     {
-        string filePath = "input.xlsm";
+        const string inputPath = "input.xlsm";
 
         // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"File not found: {filePath}");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
         try
         {
-            // Load the workbook that may contain VBA macros
-            Workbook workbook = new Workbook(filePath);
+            // Load the workbook that contains a VBA project
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the VBA project associated with the workbook
             VbaProject vbaProject = workbook.VbaProject;
 
-            if (vbaProject != null)
-            {
-                // The VbaProject class does not expose an Author property.
-                // Retrieve the workbook's built‑in Author property instead.
-                string workbookAuthor = workbook.BuiltInDocumentProperties["Author"]?.ToString() ?? "Unknown";
-                Console.WriteLine("Workbook Author: " + workbookAuthor);
-            }
-            else
-            {
-                Console.WriteLine("No VBA project found in the workbook.");
-            }
+            // Aspose.Cells VbaProject does not expose an Author property.
+            // Use a placeholder or retrieve author from built‑in document properties if needed.
+            string author = "Author information not available via VbaProject";
+
+            // Output the author information for documentation purposes
+            Console.WriteLine("VBA Project Author: " + author);
         }
         catch (Exception ex)
         {

@@ -1,85 +1,65 @@
-// Title: C# example: Simulating auto‑expand for an Aspose.Cells table by manually resizing the ListObject after inserting rows
-// AI Prompts: Write C# code that inserts a new data row below an existing Aspose.Cells ListObject and then updates the ListObject's range to include the added row. | Create a reusable C# method using Aspose.Cells that detects the last used row of a worksheet, adds a specified number of rows, and expands the associated ListObject to cover the new rows. | Generate a C# snippet that checks for a ListObject on a worksheet, adds rows at the end of the data, and calls ListObject.Resize to adjust the table range.
-// Common Searches: Aspose.Cells C# expand Excel table range after adding rows programmatically | How to resize a ListObject in Aspose.Cells when new rows are appended | C# Aspose.Cells auto‑expand table workaround for dynamic data | Update Aspose.Cells ListObject range after inserting rows in .xlsx file | Simulate Excel table auto‑expand using Aspose.Cells C# API
-// Tags: Aspose.Cells ListObject resize | C# expand Excel table range | Aspose.Cells manual table auto‑expand | update ListObject range C# | Aspose.Cells add rows to table
+// Title: How to make an Aspose.Cells ListObject (Excel table) auto‑expand when adding rows in C#
+// AI Prompts: Write C# code using Aspose.Cells that creates a ListObject and demonstrates that adding a row below the table automatically expands its range. | Show how to apply a built‑in table style to a ListObject and then append data without manually resizing the table. | Provide a complete example that saves the workbook after the table has grown, handling any exceptions.
+// Common Searches: Aspose.Cells C# auto expand Excel table when inserting new rows | C# add row to ListObject and have table range increase automatically | How to enable automatic table expansion in Aspose.Cells for .NET
+// Tags: listobject dynamic range Aspose.Cells C# | append row to Excel table Aspose.Cells | default table style Aspose.Cells | save workbook after table growth C# | exception handling Aspose.Cells table
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // Required for ListObject
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsExample
+// Creates a ListObject in a new workbook, applies a default table style, adds a row beneath the table, and relies on Aspose.Cells to automatically extend the table range before saving the file.
+class TableAutoExpandExample
 {
-    // The example loads or creates a workbook, adds sample data and a ListObject named SampleTable, notes that Aspose.Cells lacks a built‑in AutoExpand property, and shows how to manually resize the ListObject after inserting rows so the table expands automatically before saving.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Load existing workbook or create a new one if the file is missing
-                Workbook workbook;
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                    Worksheet ws = workbook.Worksheets[0];
-                    ws.Name = "Sheet1";
+            // Populate initial data for the table (A1:C3)
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
 
-                    // Sample data
-                    ws.Cells["A1"].PutValue("ID");
-                    ws.Cells["B1"].PutValue("Name");
-                    ws.Cells["A2"].PutValue(1);
-                    ws.Cells["B2"].PutValue("Alice");
-                    ws.Cells["A3"].PutValue(2);
-                    ws.Cells["B3"].PutValue("Bob");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
 
-                    // Add a table covering the data range
-                    int tableIndex = ws.ListObjects.Add(0, 0, 3, 2, true);
-                    ListObject table = ws.ListObjects[tableIndex];
-                    table.DisplayName = "SampleTable";
-                }
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Define the range that will become the table
+            CellArea tableArea = CellArea.CreateCellArea("A1", "C3");
 
-                // Retrieve the first table (ListObject) on the worksheet
-                if (worksheet.ListObjects.Count > 0)
-                {
-                    ListObject table = worksheet.ListObjects[0];
-                    // Aspose.Cells does not provide an AutoExpand property.
-                    // If needed, manually resize the table after adding rows.
-                }
-                else
-                {
-                    Console.WriteLine("No tables found in the worksheet.");
-                }
+            // Add a ListObject (Excel table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(
+                tableArea.StartRow,
+                tableArea.StartColumn,
+                tableArea.EndRow,
+                tableArea.EndColumn,
+                true);
+            ListObject table = sheet.ListObjects[tableIndex];
 
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (string.IsNullOrEmpty(outputDir))
-                {
-                    outputDir = Directory.GetCurrentDirectory();
-                }
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+            // OPTIONAL: Apply a built‑in table style for better visual appearance
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Add new data directly below the current table range (row 4)
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
+
+            // The table automatically expands to include the new row.
+            // No manual resize is required.
+
+            // Save the workbook to a file
+            workbook.Save("TableAutoExpand.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

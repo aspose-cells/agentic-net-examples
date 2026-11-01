@@ -1,57 +1,56 @@
-// Title: Conditionally freeze the header row in Excel worksheets that exceed 100 rows using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet and invokes sheet.FreezePanes(1,0,1,0) only when the sheet’s MaxDataRow is 100 or greater. | Update an existing Aspose.Cells program to add a row‑count check before applying FreezePanes, ensuring the header stays visible only on large worksheets.
-// Common Searches: Aspose.Cells C# freeze top row when worksheet has more than 100 rows | Conditional FreezePanes based on row count in .NET Excel library | How to keep header visible for large Excel sheets using Aspose.Cells | C# example to apply freeze panes only to sheets with over a hundred rows
-// Tags: conditional pane freeze Aspose.Cells .NET | freeze header Excel Aspose.Cells | MaxDataRow row count check Aspose.Cells | freeze panes large worksheets C# | Excel sheet row threshold Aspose.Cells
+// Title: Automatically freeze the first 100 rows in Excel worksheets that contain more than 100 rows using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook, checks each worksheet’s row count, and applies FreezePanes to lock the top 100 rows when the sheet exceeds 100 rows. | Generate a method that iterates through all worksheets in an Aspose.Cells workbook and conditionally calls FreezePanes(100,0,…) for sheets with more than 100 data rows. | Create a script that validates the existence of an input Excel file, freezes the first hundred rows on large sheets, and saves the modified file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze top 100 rows only if worksheet has more than 100 rows | How to apply conditional freeze panes in a .NET Excel workbook with Aspose | C# iterate all worksheets and set FreezePanes based on row count using Aspose.Cells | Freeze first hundred rows in Excel file programmatically with Aspose.Cells for .NET
+// Tags: conditional freeze panes Aspose.Cells C# | freeze top rows Excel Aspose.Cells | apply FreezePanes based on row count | Aspose.Cells workbook row limit handling | C# iterate worksheets set freeze panes
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an existing workbook or creates a new one, iterates through each worksheet, checks the maximum used row index, and if a sheet contains 101 or more rows it freezes the first row with FreezePanes(1,0,1,0). The modified workbook is then saved as output.xlsx.
+// Loads input.xlsx, checks each worksheet’s data rows, freezes the first 100 rows on sheets with more than 100 rows using FreezePanes, and saves the result to output.xlsx.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Workbook workbook;
-
-            // Ensure the input file exists; if not, create a new workbook.
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Sheet1";
-            }
-
-            // Iterate through all worksheets in the workbook
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine the last used row index (0‑based). -1 means the sheet is empty.
-                int lastUsedRow = sheet.Cells.MaxDataRow;
+                // Get the index of the last row that contains data (zero‑based)
+                int lastDataRow = sheet.Cells.MaxDataRow;
+                int totalRows = lastDataRow + 1; // Convert to 1‑based count
 
-                // If the worksheet contains more than 100 rows (i.e., index >= 100)
-                if (lastUsedRow >= 100)
+                // If the worksheet has more than 100 rows, apply freeze panes
+                if (totalRows > 100)
                 {
-                    // Apply freeze panes. Freeze the first row (row index 0) so the header stays visible.
-                    // Parameters: row index to start scrolling, column index to start scrolling,
-                    // number of rows to freeze, number of columns to freeze.
-                    sheet.FreezePanes(1, 0, 1, 0);
+                    // Freeze the first 100 rows (rows 0‑99). No column freeze.
+                    // Using the overload that requires row, column, totalRows, totalColumns.
+                    sheet.FreezePanes(100, 0, 100, 0);
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

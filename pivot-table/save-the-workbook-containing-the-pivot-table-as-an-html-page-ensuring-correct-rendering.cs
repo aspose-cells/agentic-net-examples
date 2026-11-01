@@ -1,30 +1,29 @@
-// Title: Save an Excel workbook that contains a pivot table as an HTML page with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a .xlsx file containing a pivot table and saves it to an .html file, using Aspose.Cells and configuring HtmlSaveOptions to export all worksheets and keep full‑path resource links. | Show how to set HtmlSaveOptions properties ExportActiveWorksheetOnly and IsFullPathLink in Aspose.Cells to control HTML output of a workbook with pivot tables.
-// Common Searches: Aspose.Cells C# export workbook with pivot tables to HTML preserving external links | How to use HtmlSaveOptions to save all worksheets as a single HTML file in Aspose.Cells | Convert .xlsx containing a pivot table to .html with full path links using Aspose.Cells | Example of HtmlSaveOptions ExportActiveWorksheetOnly false in Aspose.Cells C#
-// Tags: Aspose.Cells export workbook to html | HtmlSaveOptions ExportActiveWorksheetOnly false | HtmlSaveOptions IsFullPathLink true | pivot table html rendering Aspose.Cells | C# convert xlsx to html Aspose.Cells
+// Title: Save an Excel workbook with a pivot table as an HTML page using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells export workbook containing pivot table to HTML | How to save Excel file with pivot tables as a single HTML file in .NET | How to embed images as Base64 when exporting Excel to HTML with Aspose.Cells | Export all worksheets to HTML preserving pivot table layout using Aspose.Cells | Convert Excel workbook to HTML with pivot tables and base64 images in C#
+// Tags: HtmlSaveOptions ExportActiveWorksheetOnly false Aspose.Cells | pivot table HTML export Aspose.Cells | embed images as Base64 Aspose.Cells HTML | combine multiple worksheets into one HTML file Aspose.Cells | preserve pivot table layout during Excel to HTML conversion C#
 
 using System;
 using System.IO;
+using System.Drawing.Imaging;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The program checks for the input .xlsx file, loads it with Aspose.Cells, configures HtmlSaveOptions to include all worksheets and retain full‑path links, then saves the workbook as an .html file while handling any exceptions.
-class Program
+// The example loads an existing workbook that contains a pivot table, configures HtmlSaveOptions to export all worksheets and embed images as Base64 strings, and then saves the workbook as a single HTML page, handling missing files and runtime exceptions.
+class PivotTableHtmlExport
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
             // Load the workbook that contains the pivot table.
             Workbook workbook = new Workbook(inputPath);
 
@@ -34,17 +33,19 @@ class Program
                 // Export all worksheets.
                 ExportActiveWorksheetOnly = false,
 
-                // Preserve full path links for any external resources (optional).
-                IsFullPathLink = true
+                // Preserve images as Base64 strings.
+                ExportImagesAsBase64 = true
+
+                // Note: ExportChartImageFormat is not required; default format is PNG.
             };
 
-            // Save the workbook as an HTML page with the specified options.
+            // Save the workbook as an HTML page.
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors.
+            // Handle any unexpected errors.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

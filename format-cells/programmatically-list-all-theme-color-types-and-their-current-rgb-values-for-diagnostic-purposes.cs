@@ -1,27 +1,25 @@
-// Title: Enumerate every Aspose.Cells ThemeColorType and output its RGB components in C#
-// AI Prompts: Generate C# code that iterates over the ThemeColorType enum and prints each theme color's R, G, B values using Workbook.GetThemeColor. | Show how to create a dictionary that maps ThemeColorType to System.Drawing.Color for diagnostic inspection in Aspose.Cells. | Provide a method that returns a formatted list of strings like "ThemeColorType: R=..., G=..., B=..." from a newly created Workbook.
-// Common Searches: how to get RGB values of all theme colors in Aspose.Cells .NET | C# code to list ThemeColorType enum with corresponding colors | diagnostic script for workbook theme palette using Aspose.Cells | retrieve theme color palette programmatically Aspose.Cells C#
-// Tags: GetThemeColor enumeration C# | ThemeColorType RGB extraction Aspose.Cells | workbook theme palette inspection .NET | Aspose.Cells theme color diagnostics | list theme colors programmatically
+// Title: C# code to enumerate all ThemeColorType values and display their RGB components with Aspose.Cells
+// Common Searches: C# enumerate ThemeColorType enum and get RGB values using Aspose.Cells | how to retrieve workbook theme colors programmatically in Aspose.Cells .NET | list theme palette colors and RGB in Aspose.Cells for .NET | Aspose.Cells GetThemeColor example for all theme colors | diagnostic output of theme color RGB values in a new workbook Aspose.Cells
+// Tags: Aspose.Cells GetThemeColor enumeration C# | list ThemeColorType RGB values Aspose.Cells | retrieve workbook theme palette programmatically | diagnostic theme color extraction .NET | enumerate theme colors using Aspose.Cells API
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // For ThemeColorType enumeration
 
-// // Creates a Workbook, loops through every ThemeColorType enum value, obtains each theme color via GetThemeColor, and writes the type together with its R, G, B components to the console.
+// The sample creates a new Workbook, loops through every ThemeColorType enum member, calls Workbook.GetThemeColor to obtain the actual Color, and prints each type with its R, G, B values to the console, with error handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (no external file needed)
+            // Create a new workbook (no need to load an existing file)
             Workbook workbook = new Workbook();
 
-            // Iterate through all defined theme color types
+            // Iterate through all defined ThemeColorType values and retrieve their colors
             foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
             {
-                // Retrieve the theme color for the current type
+                // Get the actual color for the current theme color type
                 Color color = workbook.GetThemeColor(colorType);
 
                 // Output the theme color type and its RGB components
@@ -30,7 +28,7 @@ class Program
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Log or display any unexpected errors
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

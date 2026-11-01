@@ -1,64 +1,61 @@
-// Title: Build a case‑insensitive dictionary that maps worksheet names to their SheetId (zero‑based index) using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and creates a Dictionary<string,int> where each key is the worksheet name (case‑insensitive) and each value is the worksheet's Index. | Show how to retrieve a worksheet's Index from the dictionary by name and handle the situation when the name does not exist. | Add comprehensive error handling for missing input file, workbook load failures, and unexpected exceptions while populating the name‑to‑index map.
-// Common Searches: aspnet c# create dictionary of worksheet names to sheet indexes using Aspose.Cells | case insensitive lookup of Excel sheet index by name Aspose.Cells | how to map worksheet Name to Index in Aspose.Cells workbook | retrieve sheet Id from worksheet name Aspose.Cells .NET example | error handling when loading workbook and building sheet name dictionary Aspose.Cells
-// Tags: worksheet name to index dictionary Aspose.Cells | case‑insensitive sheet lookup C# | Aspose.Cells workbook sheet mapping | Excel sheet index retrieval Aspose.Cells | robust workbook load error handling Aspose.Cells
+// Title: Create a C# dictionary that maps worksheet names to their internal SheetId indexes using Aspose.Cells
+// AI Prompts: Write a C# function that loads an Excel workbook with Aspose.Cells and returns a Dictionary<string, int> where each key is a worksheet name and each value is the worksheet's SheetId. | Enhance the worksheet‑to‑SheetId mapper to also capture hidden worksheets and log any loading exceptions to a file. | Develop a console app that accepts a file path, uses Aspose.Cells to generate the name‑to‑SheetId map, and prints each worksheet and its SheetId to the console.
+// Common Searches: C# Aspose.Cells get worksheet index by name | How to create a name-to-SheetId map for Excel worksheets in .NET | Retrieve internal SheetId of each sheet using Aspose.Cells | Dictionary of worksheet names and their indexes with Aspose.Cells C# example
+// Tags: aspocells map worksheet name to sheetid | c# dictionary of excel sheet indexes | load workbook and enumerate worksheets aspocells | include hidden worksheets aspocells | exception handling for workbook load aspocells
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-// // Loads an Excel file with Aspose.Cells, iterates through all worksheets, and builds a case‑insensitive Dictionary<string,int> that maps each worksheet's Name to its zero‑based Index. Demonstrates safe retrieval of a sheet's Index and includes error handling for missing files and load failures.
-class Program
+// Provides a C# method that loads an Excel file with Aspose.Cells, iterates through all worksheets, and builds a Dictionary<string,int> mapping each worksheet's name to its internal SheetId (index). Includes file‑existence verification and basic exception logging.
+class WorksheetIdMapper
 {
-    static void Main()
+    // Returns a dictionary where the key is the worksheet name
+    // and the value is the worksheet's internal SheetId (index).
+    public static Dictionary<string, int> GetWorksheetIdMap(string filePath)
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        // Map worksheet name to its index (zero‑based)
-        var sheetIdByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var sheetIdMap = new Dictionary<string, int>();
 
         try
         {
+            // Verify that the file exists before attempting to load.
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"File not found: {filePath}");
+
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(filePath);
+
+            // Iterate through all worksheets in the workbook.
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Worksheet.Index uniquely identifies the sheet within the workbook
-                sheetIdByName[sheet.Name] = sheet.Index;
+                // Store the sheet name as the key and its SheetId (index) as the value.
+                sheetIdMap[sheet.Name] = sheet.Index;
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error while processing worksheets: {ex.Message}");
-            return;
+            // Log the error and continue with an empty map.
+            Console.Error.WriteLine($"Error loading workbook: {ex.Message}");
         }
 
-        // Example: retrieve index for a given worksheet name
-        if (sheetIdByName.TryGetValue("Sheet1", out int sheetId))
+        return sheetIdMap;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Use the first argument as the file path, or a default placeholder.
+        string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+
+        var worksheetMap = WorksheetIdMapper.GetWorksheetIdMap(filePath);
+
+        // Output the mapping.
+        foreach (var kvp in worksheetMap)
         {
-            Console.WriteLine($"Sheet1 has Index = {sheetId}");
-        }
-        else
-        {
-            Console.WriteLine("Sheet1 not found.");
+            Console.WriteLine($"Worksheet: {kvp.Key}, SheetId: {kvp.Value}");
         }
     }
 }

@@ -1,47 +1,110 @@
-// Title: Apply a custom yellow background and red bold font style to the 'Customer_Name' named range (mapped to /Customer/Name) using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a Style with a solid yellow fill, red bold font, and applies it to the named range 'Customer_Name' in a workbook loaded with Aspose.Cells. | Write a C# snippet that loads an existing Excel template, defines a custom highlight style, uses StyleFlag.All, applies the style to the XML‑mapped range for Customer Name, and saves the workbook.
-// Common Searches: Aspose.Cells C# apply custom style to named range linked to XML element | highlight cells mapped to /Customer/Name in Excel using Aspose.Cells | C# set yellow background and red bold font for Customer_Name range with Aspose.Cells | how to use StyleFlag.All when styling XML mapped cells in Aspose.Cells .NET | apply formatting to XML mapped range Aspose.Cells C#
-// Tags: apply custom style to named range Aspose.Cells | highlight XML mapped cells C# | StyleFlag.All usage Aspose.Cells | yellow background red font style Aspose.Cells | Customer_Name range styling Aspose.Cells
+// Title: Apply a yellow bold highlight to Excel cells mapped to the /Customer/Name XML element using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook, uses Aspose.Cells to locate cells mapped to the '/Customer/Name' XML path, creates a yellow solid background with bold font style, and applies it to those cells. | Write a C# snippet that accesses the XmlMaps collection via reflection in Aspose.Cells, retrieves the CellArea array for a specific XML element, and sets a custom style on each cell in the area.
+// Common Searches: how to use Aspose.Cells to style cells mapped to an XML element in C# | apply background color to XML mapped cells in an Excel file using Aspose.Cells | retrieve cell areas for /Customer/Name XML map with Aspose.Cells .NET | highlight customer name fields in Excel via XML map using Aspose.Cells | C# reflection to access XmlMaps collection in Aspose.Cells
+// Tags: apply style to XML mapped cells Aspose.Cells | highlight customer name cells Excel Aspose.Cells | retrieve mapped cell areas XmlMap C# | reflection access XmlMaps Aspose.Cells | custom yellow background style Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 
-// The program loads a template workbook (or creates a new one), creates a Style with a solid yellow fill and red bold font, sets a StyleFlag with All=true, applies the style to the named range "Customer_Name" (mapped to the /Customer/Name XML element), and saves the modified workbook as Output.xlsx.
+// The example loads an Excel workbook, uses reflection to obtain its XmlMaps collection, fetches the cell areas mapped to the '/Customer/Name' XML element, creates a yellow solid background with bold font style, applies this style to each mapped cell, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string templatePath = "Template.xlsx";
-            const string outputPath = "Output.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load existing template or create a new workbook if the file is missing
-            Workbook workbook = File.Exists(templatePath) ? new Workbook(templatePath) : new Workbook();
+            // Attempt to access XML maps via reflection (compatible with all Aspose.Cells versions)
+            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+            if (xmlMapsProp != null)
+            {
+                object xmlMapsObj = xmlMapsProp.GetValue(workbook);
+                if (xmlMapsObj != null)
+                {
+                    // Get the Count property of the XmlMapCollection
+                    PropertyInfo countProp = xmlMapsObj.GetType().GetProperty("Count");
+                    int mapCount = countProp != null ? (int)countProp.GetValue(xmlMapsObj) : 0;
 
-            // Create a custom style to highlight customer names
-            Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.ForegroundColor = Color.Yellow;
-            highlightStyle.Pattern = BackgroundType.Solid;
-            highlightStyle.Font.Color = Color.Red;
-            highlightStyle.Font.IsBold = true;
+                    if (mapCount > 0)
+                    {
+                        // Retrieve the first XmlMap (indexer property "Item")
+                        PropertyInfo itemProp = xmlMapsObj.GetType().GetProperty("Item");
+                        object xmlMapObj = itemProp?.GetValue(xmlMapsObj, new object[] { 0 });
 
-            // Apply all style attributes
-            StyleFlag flag = new StyleFlag { All = true };
+                        if (xmlMapObj != null)
+                        {
+                            dynamic xmlMap = xmlMapObj; // Use dynamic to call members
 
-            // Apply the style to the named range "Customer_Name"
-            Worksheet sheet = workbook.Worksheets[0];
-            Aspose.Cells.Range nameRange = sheet.Cells.CreateRange("Customer_Name");
-            nameRange.ApplyStyle(highlightStyle, flag);
+                            // Retrieve all cell areas mapped to the specified XML element
+                            CellArea[] mappedAreas = xmlMap.GetMappedCells("/Customer/Name");
+
+                            // Get the worksheet associated with this XML map
+                            Worksheet sheet = xmlMap.Worksheet;
+
+                            // Create a style to highlight the mapped cells
+                            Style highlightStyle = workbook.CreateStyle();
+                            highlightStyle.ForegroundColor = Color.Yellow;          // Background color
+                            highlightStyle.Pattern = BackgroundType.Solid;          // Apply solid fill
+                            highlightStyle.Font.IsBold = true;                      // Bold font
+
+                            // Apply the style to each cell within the mapped areas
+                            foreach (CellArea area in mappedAreas)
+                            {
+                                for (int row = area.StartRow; row <= area.EndRow; row++)
+                                {
+                                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                                    {
+                                        Cell cell = sheet.Cells[row, col];
+                                        cell.SetStyle(highlightStyle);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No XML maps found in the workbook.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Workbook does not contain XML maps.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("The loaded Aspose.Cells version does not support XML maps.");
+            }
+
+            // Ensure the output directory exists (if a directory part is present)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

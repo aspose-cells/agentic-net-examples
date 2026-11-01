@@ -1,93 +1,106 @@
-// Title: Protect an Excel VBA project with a password using Aspose.Cells for .NET and confirm protection by attempting to read the macro code
-// AI Prompts: Open an existing .xlsm file with Aspose.Cells, call Workbook.VbaProject.Protect(true, "myPassword"), and save the workbook as a new protected file. | Load the protected workbook, locate the first VbaModule, and try to retrieve its SourceCode via reflection, catching the exception that indicates the macro is locked. | Log the result, confirming that accessing SourceCode throws an exception when the VBA project is password‑protected.
-// Common Searches: Aspose.Cells example for password protecting VBA project in C# | how to test VBA macro protection after saving with Aspose.Cells | exception thrown when reading protected VBA module source code Aspose.Cells | using reflection to get VbaModule SourceCode property in protected workbook | C# verify that VBA project is locked in an XLSM file
-// Tags: Aspose.Cells VBA project password protection | C# read protected VBA module source code | reflection access VbaModule SourceCode Aspose.Cells | load and save XLSM workbook with macro lock | handle VBA protection exception Aspose.Cells
+// Title: C# example: protect an XLSM VBA project with a password using Aspose.Cells and verify enforcement by attempting to read its code
+// Common Searches: c# protect vba project in xlsm using aspose.cells | asp.net read vba module source code after workbook protection | how to test if vba project password protection is active with aspose.cells | example of Workbook.VbaProject.Protect and verification in C# | retrieve vba source code from protected workbook using reflection
+// Tags: Aspose.Cells VBA project password protection C# | Aspose.Cells VBA module source retrieval via reflection | Workbook.VbaProject.Protect method usage | detect protected VBA project exception handling | verify VBA protection after saving workbook
 
 using System;
 using System.IO;
 using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba; // For VbaProject and VbaModule
 
-// The sample loads an existing .xlsm workbook, applies password protection to its VBA project with Aspose.Cells, saves the file, then reloads it and attempts to read the SourceCode of the first VBA module via reflection. The expected exception is caught and logged, confirming that the VBA project protection is enforced.
-class Program
+namespace AsposeCellsVbaProtectionDemo
 {
-    static void Main()
+    // The sample loads an XLSM workbook, applies password protection to its VBA project with Workbook.VbaProject.Protect, saves the file, reloads it, and iterates through each VbaModule. It attempts to obtain the SourceCode property via reflection; successful retrieval indicates protection is not enforced, while an exception confirms that the password protection is active.
+    class Program
     {
-        const string inputPath = "input.xlsm";
-        const string outputPath = "protected.xlsm";
-        const string password = "myPassword";
-
-        // Ensure the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
+            const string inputPath = "input.xlsm";
+            const string protectedPath = "protected.xlsm";
+            const string vbaPassword = "MySecretPassword";
 
-        try
-        {
-            // Load an existing workbook that contains a VBA project
-            Workbook workbook = new Workbook(inputPath);
-
-            // Verify that the workbook actually contains a VBA project
-            if (workbook.VbaProject == null)
+            // Verify the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("The workbook does not contain a VBA project.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Protect the VBA project with a password (read‑only flag set to true)
-            workbook.VbaProject.Protect(true, password);
-
-            // Save the workbook after protection
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved as '{outputPath}' with VBA protection.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error during workbook processing: " + ex.Message);
-            return;
-        }
-
-        // Attempt to read VBA code to confirm that protection is enforced
-        try
-        {
-            // Reload the protected workbook
-            Workbook protectedWb = new Workbook(outputPath);
-
-            // Access the first VBA module (if any)
-            if (protectedWb.VbaProject != null && protectedWb.VbaProject.Modules.Count > 0)
+            try
             {
-                VbaModule vbaModule = protectedWb.VbaProject.Modules[0];
+                // Load an existing workbook that contains a VBA project
+                Workbook workbook = new Workbook(inputPath);
 
-                // Use reflection to get the SourceCode property (avoids compile‑time dependency)
-                PropertyInfo sourceProp = typeof(VbaModule).GetProperty("SourceCode",
-                    BindingFlags.Public | BindingFlags.Instance);
-
-                if (sourceProp != null)
+                // Ensure the workbook actually has a VBA project
+                if (workbook.VbaProject == null)
                 {
-                    // This line should throw an exception because the project is protected
-                    string code = sourceProp.GetValue(vbaModule) as string;
+                    Console.WriteLine("The workbook does not contain a VBA project.");
+                    return;
+                }
 
-                    // If no exception, protection is not enforced (unexpected)
-                    Console.WriteLine("VBA code was read (unexpected):");
+                // Protect the VBA project with a password (first argument: isReadOnly flag)
+                workbook.VbaProject.Protect(true, vbaPassword);
+
+                // Save the workbook after protection
+                workbook.Save(protectedPath);
+                Console.WriteLine($"Workbook saved as '{protectedPath}' with VBA protection.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error during protection/saving:");
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
+            // Attempt to read VBA code after protection
+            try
+            {
+                // Verify the protected workbook exists
+                if (!File.Exists(protectedPath))
+                {
+                    Console.WriteLine($"Protected file '{protectedPath}' not found.");
+                    return;
+                }
+
+                // Reload the protected workbook to simulate a fresh read
+                Workbook protectedWorkbook = new Workbook(protectedPath);
+
+                // Access the VBA project
+                var vbaProject = protectedWorkbook.VbaProject;
+                if (vbaProject == null)
+                {
+                    Console.WriteLine("Protected workbook does not contain a VBA project.");
+                    return;
+                }
+
+                // Iterate through all VBA modules
+                foreach (VbaModule module in vbaProject.Modules)
+                {
+                    // Retrieve source code via reflection (avoids compile‑time dependency on the property)
+                    string code = null;
+                    PropertyInfo srcProp = typeof(VbaModule).GetProperty("SourceCode", BindingFlags.Public | BindingFlags.Instance);
+                    if (srcProp != null)
+                    {
+                        code = srcProp.GetValue(module) as string;
+                    }
+                    else
+                    {
+                        code = "[SourceCode property not available in this Aspose.Cells version]";
+                    }
+
+                    Console.WriteLine($"Module: {module.Name}");
                     Console.WriteLine(code);
                 }
-                else
-                {
-                    Console.WriteLine("SourceCode property not available in this Aspose.Cells version.");
-                }
+
+                // If we reach this point without exception, the protection may not be enforced
+                Console.WriteLine("VBA code was read successfully. Protection may not be active.");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No VBA modules found in the protected workbook.");
+                // Expected path: an exception is thrown because the VBA project is protected
+                Console.WriteLine("Failed to read VBA code as expected. Protection is enforced.");
+                Console.WriteLine($"Exception message: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            // Expected outcome: an exception indicating the VBA project is protected
-            Console.WriteLine("Failed to read VBA code as expected: " + ex.Message);
         }
     }
 }

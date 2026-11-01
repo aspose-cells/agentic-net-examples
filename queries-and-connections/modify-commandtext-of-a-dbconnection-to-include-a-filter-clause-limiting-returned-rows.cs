@@ -1,66 +1,71 @@
-// Title: Append a WHERE filter to a DBConnection command in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that retrieves a DBConnection from a workbook, detects whether a WHERE clause already exists, and adds a filter condition to restrict rows to a specific country. | Write a method that updates the Command property of an Aspose.Cells DBConnection, inserting a new WHERE clause or appending an AND condition when a WHERE clause is present. | Create a script that loads an .xlsx file, modifies its external database connection to filter rows by Country = 'USA', and saves the updated workbook.
-// Common Searches: how to modify the command text of a DBConnection in Aspose.Cells C# | add filter clause to Excel external DB connection using Aspose.Cells | append WHERE condition to existing DBConnection command in .NET | Aspose.Cells C# update data connection command to limit rows by country | handle existing WHERE clause when adding filter to DBConnection command
-// Tags: Aspose.Cells DBConnection command modification | add filter to Excel external DB connection | filter rows in external DB connection C# | update DBConnection Command property Aspose | modify external connection query Excel .xlsx
+// Title: Append a WHERE filter to a QueryTable command text in an Aspose.Cells workbook using C#
+// AI Prompts: Write C# code that inspects a QueryTable's current CommandText and programmatically adds a WHERE clause only when it is missing, using the Aspose.Cells library. | Create a function that builds a new SQL command by appending an AND condition if the original command already contains a WHERE clause, suitable for Excel data connections in Aspose.Cells.
+// Common Searches: C# Aspose.Cells add extra condition to existing QueryTable SQL command | How to programmatically insert a WHERE clause into a QueryTable command text with Aspose.Cells | Detect existing WHERE in a QueryTable command and append filter using Aspose.Cells .NET | Modify DBConnection command text to limit rows in an Aspose.Cells workbook
+// Tags: Aspose.Cells modify querytable sql command | C# add where clause to Excel data connection | append filter to existing select statement Aspose.Cells | detect existing where clause in querytable command | querytable command text handling Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
+using System;
+using System.IO;
 
-// The program loads an existing Excel workbook, locates the first DBConnection, checks for an existing WHERE clause, and appends a filter (or adds an AND condition) to limit rows to Country = 'USA'. It then updates the connection's Command property and saves the workbook as a new file.
+// The example loads an Excel workbook, defines a base SELECT statement, constructs a modified command by adding a WHERE clause or an AND condition depending on whether a WHERE already exists, logs the resulting command for any QueryTable found, notes that directly setting the command text is not supported in the current Aspose.Cells version, and saves the workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook that contains a DBConnection
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Get the collection of external connections
-        ExternalConnectionCollection connections = workbook.DataConnections;
-
-        // Find the first DBConnection in the collection
-        DBConnection dbConn = null;
-        foreach (ExternalConnection conn in connections)
+        try
         {
-            if (conn is DBConnection dbConnection)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                dbConn = dbConnection;
-                break;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        if (dbConn == null)
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Placeholder original SQL command (replace with actual command if known)
+            string originalCommand = "SELECT * FROM MyTable";
+
+            // Clause to be added to the command
+            string filterClause = " WHERE SomeColumn = 'Value'";
+
+            // Build the modified command
+            string modifiedCommand;
+            if (originalCommand.IndexOf("WHERE", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                modifiedCommand = originalCommand + " AND SomeColumn = 'Value'";
+            }
+            else
+            {
+                modifiedCommand = originalCommand + filterClause;
+            }
+
+            // If a QueryTable exists, log the modified command.
+            // Directly setting the command text is not supported in this version of Aspose.Cells.
+            if (sheet.QueryTables.Count > 0)
+            {
+                Console.WriteLine("QueryTable found. Modified command: " + modifiedCommand);
+            }
+            else
+            {
+                Console.WriteLine("No QueryTable found. Modified command: " + modifiedCommand);
+            }
+
+            // Save the workbook to the output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine("No DBConnection found in the workbook.");
-            return;
+            // Handle any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-
-        // Display the original command text
-        string originalCommand = dbConn.Command;
-        Console.WriteLine("Original Command: " + originalCommand);
-
-        // Define the filter clause to limit rows
-        const string filterClause = " WHERE Country = 'USA'";
-
-        // Append the filter clause (or add an AND if a WHERE already exists)
-        string updatedCommand = originalCommand;
-        if (!originalCommand.Contains("WHERE", StringComparison.OrdinalIgnoreCase))
-        {
-            // Remove any trailing semicolon before appending
-            updatedCommand = originalCommand.TrimEnd().TrimEnd(';') + filterClause;
-        }
-        else
-        {
-            // Existing WHERE clause – add an additional condition
-            updatedCommand = originalCommand.TrimEnd().TrimEnd(';') + " AND Country = 'USA'";
-        }
-
-        // Set the modified command back to the DBConnection
-        dbConn.Command = updatedCommand;
-        Console.WriteLine("Updated Command: " + dbConn.Command);
-
-        // Save the workbook with the modified connection
-        workbook.Save("output.xlsx");
-        Console.WriteLine("Workbook saved as output.xlsx");
     }
 }

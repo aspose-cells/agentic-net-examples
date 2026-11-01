@@ -1,45 +1,44 @@
-// Title: How to export Excel IconSet conditional formatting to HTML using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx workbook, sets HtmlSaveOptions.ExportIconSet = true, and saves the workbook as an HTML file that displays the IconSet icons. | Show how to configure Aspose.Cells HtmlSaveOptions to preserve IconSet conditional‑formatting rules when converting a workbook to HTML in a .NET application.
-// Common Searches: Aspose.Cells C# export IconSet conditional formatting to HTML | Enable ExportIconSet option in HtmlSaveOptions for Excel to HTML conversion | Convert Excel workbook with icon sets to HTML using Aspose.Cells .NET | Preserve conditional formatting icons when saving Excel as HTML in C# | How to show Excel IconSet icons in HTML output with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions ExportIconSet | C# export IconSet conditional formatting to HTML | preserve Excel conditional formatting icons in HTML | convert workbook with IconSet rules to HTML | load Excel workbook save as HTML with icons
+// Title: Export an Excel workbook with IconSet conditional formatting to HTML while preserving icons using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that opens an .xlsx workbook containing IconSet conditional formatting and saves it as an HTML file where the icons are rendered, using Aspose.Cells. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to include IconSet icons during HTML conversion. | Create error‑handling code that verifies the source Excel file exists before exporting it to HTML with IconSet icons using Aspose.Cells.
+// Common Searches: asp.net export excel file containing icons set conditional formatting to html with Aspose.Cells | preserve conditional formatting icons when converting workbook to html in c# | how to use HtmlSaveOptions to keep icon set rules in html output | c# example for exporting excel with icon sets to html using aspose.cells
+// Tags: Aspose.Cells HtmlSaveOptions IconSet export | C# Excel to HTML conversion preserving conditional formatting icons | IconSet conditional formatting HTML output .NET | handle missing workbook file Aspose.Cells | export workbook with icons to html using Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Loads an Excel workbook that contains IconSet conditional formatting, applies HtmlSaveOptions, and saves it as an HTML file where the icons are rendered, with basic file‑existence error handling.
+class IconSetHtmlExport
 {
-    // The example loads an existing Excel file, creates HtmlSaveOptions with ExportIconSet enabled, and saves the workbook as an HTML page that retains IconSet conditional‑formatting icons. It includes basic error handling and console output indicating success or failure.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputFile = "InputWithIconSet.xlsx";
+            const string outputFile = "IconSetExported.html";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                string inputFile = "input.xlsx";
-                string outputFile = "output.html";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Configure HTML save options (default settings export conditional formatting)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-                // Save the workbook as HTML
-                workbook.Save(outputFile, htmlOptions);
-                Console.WriteLine($"Workbook successfully saved to {outputFile}");
+                Console.WriteLine($"Error: Input file \"{inputFile}\" was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook that contains IconSet conditional formatting rules
+            Workbook workbook = new Workbook(inputFile);
+
+            // Configure HTML save options (conditional formatting is exported by default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Save the workbook as HTML; the resulting file will display the icons
+            workbook.Save(outputFile, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully exported to \"{outputFile}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

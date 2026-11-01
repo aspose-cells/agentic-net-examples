@@ -1,80 +1,79 @@
-// Title: Create 1x and 2x PNG files from an Excel worksheet with Aspose.Cells in C# for responsive web images
-// AI Prompts: Generate C# code that loads an Excel workbook, picks a worksheet, and renders PNG files at standard (96 dpi) and high‑density (192 dpi) resolutions using Aspose.Cells rendering options. | Write a reusable C# method that takes a Worksheet, an output path, and a DPI value, then saves the sheet as a PNG with a solid white background. | Add robust error handling to a C# Aspose.Cells script that verifies the source XLSX file, creates the destination folder, and logs any failures during multi‑resolution PNG rendering.
-// Common Searches: c# aspocells export worksheet to png with 96 dpi and 2x resolution | how to generate retina png from excel sheet using Aspose.Cells | save excel sheet as responsive images for web design c# | Aspose.Cells render first worksheet to png with custom dpi settings | C# example creating multiple resolution pngs from an Excel workbook
-// Tags: Aspose.Cells worksheet to PNG with custom DPI | render Excel sheet as high‑density PNG | C# generate responsive PNG images from workbook | image rendering options for Excel to PNG | save worksheet as 1x and 2x PNG files
+// Title: Export an Excel worksheet to 1x and 2x PNG files for responsive design using Aspose.Cells for .NET
+// AI Prompts: Create C# code that loads a workbook, selects the first worksheet, and saves it as a 96 DPI PNG and a 192 DPI PNG using Aspose.Cells rendering. | Show how to configure ImageOrPrintOptions with different DPI values to produce standard and retina PNG assets from an Excel sheet. | Add robust error handling to a C# Aspose.Cells routine that exports multiple PNG resolutions and logs missing file or rendering exceptions.
+// Common Searches: C# Aspose.Cells export worksheet to PNG with custom DPI for retina displays | How to generate low and high resolution PNG images from Excel using Aspose.Cells | Aspose.Cells generate both 96 DPI and 192 DPI PNG files from a worksheet | Responsive web design assets from Excel sheet using Aspose.Cells .NET
+// Tags: Aspose.Cells render PNG with custom DPI | C# generate retina PNG from Excel worksheet | custom DPI settings in Aspose.Cells | export Excel to multiple PNG sizes .NET | responsive PNG assets from Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example loads an XLSX file, renders the first worksheet to two PNG images—standard 96 dpi (1x) and high‑density 192 dpi (2x)—and saves them in an output folder using Aspose.Cells rendering options.
+// The example loads input.xlsx, accesses the first worksheet, and uses Aspose.Cells SheetRender with ImageOrPrintOptions set to 96 DPI and 192 DPI to create worksheet_1x.png and worksheet_2x.png. It includes file‑existence checks and try‑catch blocks for rendering errors.
 class GenerateResponsivePng
 {
     static void Main()
     {
         try
         {
-            // Path to the source workbook
-            string workbookPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            using (Workbook workbook = new Workbook(inputPath))
+            {
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet (or specify by name/index)
-            Worksheet sheet = workbook.Worksheets[0];
+                // -------------------- 1x PNG (standard resolution) --------------------
+                ImageOrPrintOptions options1x = new ImageOrPrintOptions
+                {
+                    SaveFormat = SaveFormat.Png,          // Output format
+                    HorizontalResolution = 96,           // 1x horizontal DPI
+                    VerticalResolution = 96              // 1x vertical DPI
+                };
 
-            // Define and create the output folder
-            string outputFolder = "output_images";
-            Directory.CreateDirectory(outputFolder);
+                try
+                {
+                    // Render and save the 1x PNG
+                    SheetRender sr1 = new SheetRender(sheet, options1x);
+                    sr1.ToImage(0, "worksheet_1x.png");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error generating 1x PNG: {ex.Message}");
+                }
 
-            // 1x resolution (standard 96 DPI)
-            SaveWorksheetAsPng(sheet, Path.Combine(outputFolder, "sheet_1x.png"), 96);
+                // -------------------- 2x PNG (high‑resolution) --------------------
+                ImageOrPrintOptions options2x = new ImageOrPrintOptions
+                {
+                    SaveFormat = SaveFormat.Png,          // Output format
+                    HorizontalResolution = 192,          // 2x horizontal DPI
+                    VerticalResolution = 192             // 2x vertical DPI
+                };
 
-            // 2x resolution (high‑density 192 DPI)
-            SaveWorksheetAsPng(sheet, Path.Combine(outputFolder, "sheet_2x.png"), 192);
+                try
+                {
+                    // Render and save the 2x PNG
+                    SheetRender sr2 = new SheetRender(sheet, options2x);
+                    sr2.ToImage(0, "worksheet_2x.png");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error generating 2x PNG: {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("PNG images generated: worksheet_1x.png, worksheet_2x.png");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-        }
-    }
-
-    /// <param name="sheet">Worksheet to render.</param>
-    /// <param name="outputPath">Full path of the PNG file to create.</param>
-    /// <param name="dpi">Resolution in dots per inch (e.g., 96 for 1x, 192 for 2x).</param>
-    private static void SaveWorksheetAsPng(Worksheet sheet, string outputPath, int dpi)
-    {
-        try
-        {
-            // Configure rendering options
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                // Set the resolution (DPI) for the output image
-                HorizontalResolution = dpi,
-                VerticalResolution = dpi,
-
-                // Fit the entire sheet on one page
-                OnePagePerSheet = true,
-
-                // Set background to white (transparent by default)
-                Transparent = false
-            };
-
-            // Render the first page (index 0) to the specified PNG file
-            SheetRender sheetRender = new SheetRender(sheet, options);
-            sheetRender.ToImage(0, outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to render worksheet to PNG: {ex.Message}");
         }
     }
 }

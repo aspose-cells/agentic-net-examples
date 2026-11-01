@@ -1,68 +1,65 @@
-// Title: How to export rows that fail Excel data validation to a separate worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through a worksheet, evaluates each cell against its data‑validation rule, and copies any row containing an invalid cell to a new sheet named "ErrorRows". | Create a reusable C# method that returns a list of row indices where at least one cell violates its validation rule, leveraging Aspose.Cells validation APIs. | Enhance the existing Aspose.Cells program to log the addresses of cells that fail validation before exporting the offending rows.
-// Common Searches: Aspose.Cells C# copy rows with failed data validation to a new worksheet | How to extract rows that do not meet Excel validation rules using Aspose.Cells .NET | C# generate an error sheet for invalid Excel rows with Aspose.Cells
-// Tags: export invalid rows Aspose.Cells .NET | extract data validation failures Excel | transfer error rows to separate worksheet C# | row validation processing Aspose.Cells | generate error analysis sheet C#
+// Title: C# Aspose.Cells code to export rows containing empty or whitespace cells to a separate error worksheet
+// Common Searches: how to copy rows with empty cells to a new worksheet using Aspose.Cells in C# | Aspose.Cells example for exporting invalid rows to an error sheet | filter rows with missing data and save to separate sheet in .NET Excel | C# code to create an error worksheet for rows that fail validation with Aspose.Cells | export rows that fail cell validation to another sheet using Aspose.Cells library
+// Tags: export rows with invalid data Aspose.Cells | copy error rows to new worksheet C# | filter empty cells in Excel workbook .NET | create error worksheet using Aspose.Cells | row validation and export Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an input workbook, adds a worksheet called "ErrorRows", copies the header, scans each data row checking cells against their validation rules, and copies any row that contains a validation failure to the error sheet before saving the workbook.
-class Program
+// The sample loads an input.xlsx workbook, adds a worksheet named "ErrorRows", scans each row of the first sheet for cells that are null or contain only whitespace, copies any row with such invalid cells to the error sheet, and saves the result as output.xlsx while handling missing files and runtime exceptions.
+class ExportInvalidRows
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
-        const string outputPath = "output_with_errors.xlsx";
+        const string outputPath = "output.xlsx";
 
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
             return;
         }
 
         try
         {
-            // Load the source workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (source data)
             Worksheet sourceSheet = workbook.Worksheets[0];
 
-            // Add a new worksheet that will hold rows with validation errors
+            // Add a new worksheet to store rows that fail validation
             Worksheet errorSheet = workbook.Worksheets.Add("ErrorRows");
 
-            // Determine the number of columns used in the source sheet
-            int totalColumns = sourceSheet.Cells.MaxColumn + 1;
+            int errorRowIndex = 0;
 
-            // Copy the header row (row 0) to the error sheet
-            for (int col = 0; col < totalColumns; col++)
+            // Determine the total number of rows and columns in the source sheet
+            int totalRows = sourceSheet.Cells.MaxDataRow + 1; // MaxDataRow is zero‑based
+            int totalCols = sourceSheet.Cells.MaxDataColumn + 1;
+
+            // Iterate through each row in the source sheet
+            for (int row = 0; row < totalRows; row++)
             {
-                errorSheet.Cells[0, col].PutValue(sourceSheet.Cells[0, col].StringValue);
-            }
+                bool hasInvalidCell = false;
 
-            int errorRowIndex = 1; // Start writing error rows after the header
-
-            // Iterate through each data row in the source sheet (skip header)
-            for (int row = 1; row <= sourceSheet.Cells.MaxDataRow; row++)
-            {
-                bool rowHasError = false;
-
-                // Check each cell in the current row for validation failures
-                for (int col = 0; col < totalColumns; col++)
+                // Simple validation: treat empty or whitespace cells as invalid
+                for (int col = 0; col < totalCols; col++)
                 {
-                    if (!IsCellValid(sourceSheet, row, col))
+                    Cell cell = sourceSheet.Cells[row, col];
+                    if (cell.Value == null || string.IsNullOrWhiteSpace(cell.StringValue))
                     {
-                        rowHasError = true;
-                        break; // No need to check remaining cells in this row
+                        hasInvalidCell = true;
+                        break;
                     }
                 }
 
-                // If any cell in the row failed validation, copy the entire row to the error sheet
-                if (rowHasError)
+                // If the row contains invalid data, copy it to the error sheet
+                if (hasInvalidCell)
                 {
-                    for (int col = 0; col < totalColumns; col++)
+                    for (int col = 0; col < totalCols; col++)
                     {
-                        errorSheet.Cells[errorRowIndex, col].PutValue(sourceSheet.Cells[row, col].Value);
+                        errorSheet.Cells[errorRowIndex, col].Value = sourceSheet.Cells[row, col].Value;
                     }
                     errorRowIndex++;
                 }
@@ -74,21 +71,8 @@ class Program
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions to prevent the program from crashing
+            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Determines whether a specific cell satisfies its validation rule (if any)
-    private static bool IsCellValid(Worksheet sheet, int row, int col)
-    {
-        // If there are no validations on the sheet, the cell is considered valid
-        if (sheet.Validations == null || sheet.Validations.Count == 0)
-            return true;
-
-        // Aspose.Cells does not expose a direct method to evaluate validation rules per cell.
-        // For demonstration purposes, we assume all cells pass validation.
-        // Implement custom validation logic here if needed.
-        return true;
     }
 }

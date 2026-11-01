@@ -1,78 +1,73 @@
-// Title: Convert multiple Excel workbooks to CSV with progress output using Aspose.Cells in a C# console app
-// AI Prompts: Write a C# console program that takes source and destination folder arguments, scans the source for .xls, .xlsx, .xlsm, and .xlsb files, and saves each workbook as a CSV using Aspose.Cells. | Add a progress counter that prints "[current/total]" for each file conversion and logs any exceptions while allowing the loop to continue. | Include logic to create the destination directory automatically if it does not exist before writing any CSV files.
-// Common Searches: aspocells c# batch convert excel files to csv with progress indicator | how to convert all xls and xlsx files in a folder to csv using Aspose.Cells | c# console app report conversion status for multiple Excel workbooks to csv
-// Tags: Aspose.Cells convert Excel to CSV batch | C# console enumerate Excel files | progress reporting during file conversion | error handling for Aspose.Cells workbook save | auto‑create destination folder for CSV output
+// Title: Convert a folder of Excel workbooks (xls, xlsx, xlsm) to CSV with Aspose.Cells for .NET and show console progress
+// Common Searches: C# Aspose.Cells batch convert all Excel files in a directory to CSV with progress output | How to iterate through .xls .xlsx .xlsm files and export the first worksheet as CSV using Aspose.Cells | Aspose.Cells console application displaying percentage progress while converting Excel to CSV | Sample code for converting multiple Excel workbooks to CSV in .NET with error handling | Read Excel files from a folder and save as CSV using Aspose.Cells SaveFormat.Csv
+// Tags: batch Excel to CSV conversion Aspose.Cells | save first worksheet as CSV SaveFormat.Csv | console progress reporting C# file conversion | process multiple workbooks in a directory Aspose.Cells | exception handling during Excel to CSV conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console utility that receives source and destination folder paths, enumerates .xls, .xlsx, .xlsm, and .xlsb files in the source directory, converts each workbook to CSV with Aspose.Cells, creates the output folder if needed, and displays a running progress counter while handling conversion errors gracefully.
-class ExcelToCsvBatchConverter
+// The example scans a specified input directory for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, saves the first worksheet of each workbook as a CSV file in an output folder, and writes a percentage‑based progress message to the console while handling missing files and runtime exceptions.
+class Program
 {
     static void Main(string[] args)
     {
-        // Validate arguments: source folder and destination folder
-        if (args.Length < 2)
+        // Define source and destination folders
+        string inputFolder = @"C:\InputExcel";
+        string outputFolder = @"C:\OutputCsv";
+
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine("Usage: ExcelToCsvBatchConverter <sourceFolder> <destinationFolder>");
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
             return;
         }
 
-        string sourceFolder = args[0];
-        string destinationFolder = args[1];
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
 
-        if (!Directory.Exists(sourceFolder))
-        {
-            Console.WriteLine($"Source folder does not exist: {sourceFolder}");
-            return;
-        }
+        // Retrieve all Excel files (xls, xlsx, xlsm) from the input folder
+        string[] allFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+        string[] excelFiles = Array.FindAll(allFiles, f =>
+            f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
+            f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
+            f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
 
-        // Ensure destination folder exists
-        Directory.CreateDirectory(destinationFolder);
-
-        // Get all Excel files (xls, xlsx, xlsm) in the source folder (non‑recursive)
-        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-        var supportedExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb" };
-        var filesToConvert = new System.Collections.Generic.List<string>();
-
-        foreach (var file in excelFiles)
-        {
-            if (Array.Exists(supportedExtensions, ext => ext.Equals(Path.GetExtension(file), StringComparison.OrdinalIgnoreCase)))
-                filesToConvert.Add(file);
-        }
-
-        int totalFiles = filesToConvert.Count;
+        int totalFiles = excelFiles.Length;
         if (totalFiles == 0)
         {
-            Console.WriteLine("No Excel files found to convert.");
+            Console.WriteLine("No Excel files found in the specified folder.");
             return;
         }
 
-        Console.WriteLine($"Found {totalFiles} Excel file(s). Starting conversion...");
-
-        // Process each file with progress reporting
+        // Process each Excel file
         for (int i = 0; i < totalFiles; i++)
         {
-            string excelPath = filesToConvert[i];
-            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
-            string csvPath = Path.Combine(destinationFolder, fileNameWithoutExt + ".csv");
+            string excelPath = excelFiles[i];
+            string fileBaseName = Path.GetFileNameWithoutExtension(excelPath);
+            string csvPath = Path.Combine(outputFolder, fileBaseName + ".csv");
 
             try
             {
-                // Load the workbook (Aspose.Cells)
+                // Ensure the Excel file still exists before loading
+                if (!File.Exists(excelPath))
+                {
+                    Console.WriteLine($"File not found, skipping: {excelPath}");
+                    continue;
+                }
+
+                // Load the workbook from the Excel file
                 Workbook workbook = new Workbook(excelPath);
 
-                // Save as CSV (default options)
+                // Save the first worksheet as CSV using the built‑in CSV format
                 workbook.Save(csvPath, SaveFormat.Csv);
 
-                // Report success for this file
-                Console.WriteLine($"[{i + 1}/{totalFiles}] Converted: {Path.GetFileName(excelPath)} -> {Path.GetFileName(csvPath)}");
+                // Report progress to the console
+                int percentComplete = (i + 1) * 100 / totalFiles;
+                Console.WriteLine($"[{percentComplete}%] Converted: {Path.GetFileName(excelPath)} → {Path.GetFileName(csvPath)}");
             }
             catch (Exception ex)
             {
-                // Report error but continue with next file
-                Console.WriteLine($"[{i + 1}/{totalFiles}] ERROR converting {Path.GetFileName(excelPath)}: {ex.Message}");
+                Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
             }
         }
 

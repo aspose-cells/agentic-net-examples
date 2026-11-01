@@ -1,56 +1,51 @@
-// Title: Apply the workbook's Accent1 theme color as a solid background to all used cells in the first worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a style with the workbook's Accent1 theme color and applies it to every used cell in the first worksheet via Aspose.Cells. | Show how to retrieve a theme color with GetThemeColor and set it as the foreground color of a solid‑fill style for a cell range in Aspose.Cells. | Provide a snippet that loops through the used range of the first sheet and assigns the Accent1‑based style to each cell.
-// Common Searches: Aspose.Cells C# set background of all cells to workbook Accent1 theme color | How to use GetThemeColor to fill cells with theme accent in Aspose.Cells .NET | Apply solid theme accent fill to used range of first worksheet Aspose.Cells | C# code example for styling entire worksheet with workbook theme color Aspose.Cells
-// Tags: set cell background using GetThemeColor Aspose.Cells | apply Accent1 theme color to worksheet cells C# | solid fill style with workbook theme color Aspose.Cells | format used range with theme accent Aspose.Cells .NET | create style from workbook theme color Aspose.Cells
+// Title: Set the Accent1 theme color as the background fill for all cells in the first worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply Accent1 theme color to entire worksheet background | How to fill all cells in first sheet with a solid theme color using Aspose.Cells .NET | Apply style flag for cell shading to whole worksheet in Aspose.Cells C# | Set solid fill color of a worksheet using Aspose.Cells style and StyleFlag | Create workbook and set Accent1 background for first sheet with Aspose.Cells
+// Tags: accent1 theme background style Aspose.Cells | cell shading styleflag Aspose.Cells | solid fill color worksheet Aspose.Cells | apply style to all cells Aspose.Cells | theme color formatting Aspose.Cells .NET
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new workbook, builds a style whose foreground color is the workbook's Accent1 theme color with a solid fill, iterates over the used cells of the first worksheet to apply this style, and saves the workbook as Output.xlsx.
+    // The example creates a new workbook, accesses the first worksheet, defines a style with a solid fill using the Accent1 theme RGB value, enables only cell shading via a StyleFlag, applies the style to every cell in the sheet, and saves the file as FirstWorksheet_Accent1Background.xlsx.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // {CreateWorkbook}
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-                // Access the first worksheet
+                // Get the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Determine the used range of the worksheet
-                int maxRow = worksheet.Cells.MaxDataRow;
-                int maxColumn = worksheet.Cells.MaxDataColumn;
-
-                // Create a style that uses the custom Accent1 theme color for the background
+                // Create a style with a solid fill using a color similar to the Accent1 theme color
                 Style accentStyle = workbook.CreateStyle();
-                // Use GetThemeColor to obtain the Accent1 theme color
-                accentStyle.ForegroundColor = workbook.GetThemeColor(ThemeColorType.Accent1);
-                accentStyle.Pattern = BackgroundType.Solid;
+                accentStyle.Pattern = BackgroundType.Solid;                 // Solid fill
+                accentStyle.ForegroundColor = Color.FromArgb(0, 112, 192);   // Approximate Accent1 color
+                // No tint needed for solid fill
 
-                // Apply the style to every used cell in the first worksheet
-                for (int row = 0; row <= maxRow; row++)
+                // Apply the style to all cells in the first worksheet
+                // The StyleFlag ensures only the cell shading (background) is affected
+                StyleFlag flag = new StyleFlag
                 {
-                    for (int col = 0; col <= maxColumn; col++)
-                    {
-                        Cell cell = worksheet.Cells[row, col];
-                        cell.SetStyle(accentStyle);
-                    }
-                }
+                    CellShading = true
+                };
+                worksheet.Cells.ApplyStyle(accentStyle, flag);
+
+                // Define output file path
+                string outputPath = "FirstWorksheet_Accent1Background.xlsx";
 
                 // Save the workbook
-                string outputPath = "Output.xlsx";
-                workbook.Save(outputPath); // {SaveWorkbook}
+                workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

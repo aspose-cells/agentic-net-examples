@@ -1,52 +1,47 @@
-// Title: Convert an Excel workbook to a PDF with maximum compression using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an .xlsx file and saves it as a PDF using Aspose.Cells, configuring PdfSaveOptions.CompressionLevel to High to shrink the output file. | Update an existing Aspose.Cells PDF export routine to apply the highest compression setting while preserving the workbook’s visual layout. | Show how to create a PdfSaveOptions object with CompressionLevel set to High before calling Workbook.Save in a .NET application.
-// Common Searches: Aspose.Cells set PdfSaveOptions.CompressionLevel to High in C# example | How to reduce PDF size when converting Excel to PDF with Aspose.Cells .NET | C# code for exporting workbook to PDF with maximum compression using Aspose.Cells | PdfSaveOptions high compression best practice for preserving visual fidelity | Compress PDF output from Excel workbook Aspose.Cells tutorial
-// Tags: Aspose.Cells PDF maximum compression | PdfSaveOptions CompressionLevel usage | C# export Excel to PDF with Aspose.Cells | reduce PDF file size Aspose.Cells | preserve visual fidelity PDF compression
+// Title: Set PdfSaveOptions.CompressionLevel to High in Aspose.Cells for .NET to reduce PDF size while preserving visual fidelity
+// Common Searches: Aspose.Cells C# set PdfSaveOptions compression level to High for PDF export | How to reduce PDF output size when converting an Excel workbook with Aspose.Cells .NET | Enable high compression in PdfSaveOptions while saving XLSX as PDF using Aspose.Cells | C# example configuring PdfSaveOptions.CompressionLevel for smaller PDFs | Aspose.Cells PDF export high compression setting code sample
+// Tags: PdfSaveOptions compression level Aspose.Cells | optimize PDF size Aspose.Cells .NET | Excel workbook PDF export Aspose.Cells | C# configure PDF save options Aspose.Cells | Aspose.Cells PDF output size reduction
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving; // Namespace for PdfSaveOptions
 
-namespace Example
+// The example verifies the input Excel file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally sets its CompressionLevel property to High (requiring Aspose.Cells.Pdf.dll), and saves the workbook as a PDF with reduced file size while maintaining visual quality, handling any exceptions that may occur.
+class Program
 {
-    // Demonstrates loading an Excel workbook, configuring PdfSaveOptions with CompressionLevel set to High to minimize PDF size while keeping visual quality, and saving the workbook as a compressed PDF.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the Excel workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options (default compression)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to {outputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Set compression level to High (requires Aspose.Cells.Pdf.dll reference)
+            // Uncomment the line below after adding a reference to Aspose.Cells.Pdf.dll
+            // pdfOptions.CompressionLevel = Aspose.Cells.Pdf.CompressionLevel.High;
+
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,38 +1,56 @@
-// Title: Load an XLSX workbook with French (fr-FR) CultureInfo using Aspose.Cells LoadOptions while preserving original thread cultures in C#
-// AI Prompts: Use Aspose.Cells LoadOptions to load a .xlsx file with the French locale (fr-FR) in C#, then restore the thread's original CultureInfo settings. | Show how to temporarily set Thread.CurrentThread culture to French for workbook loading with Aspose.Cells and revert to the saved cultures after the load.
-// Common Searches: C# Aspose.Cells load xlsx with French CultureInfo without affecting global thread culture | How to set LoadOptions.CultureInfo to fr-FR when opening an Excel file in Aspose.Cells | Preserve original thread culture while changing CultureInfo for Aspose.Cells workbook loading | Aspose.Cells LoadOptions French locale example for .xlsx files in .NET
-// Tags: Aspose.Cells LoadOptions CultureInfo French | C# load XLSX with specific locale | preserve thread culture Aspose.Cells | globalization Excel parsing Aspose.Cells | temporary thread culture change .NET
+// Title: How to load an XLSX workbook with French (fr-FR) CultureInfo using Aspose.Cells LoadOptions while preserving the original thread culture in C#
+// Common Searches: C# load Excel file with French locale using Aspose.Cells LoadOptions | preserve original thread culture when changing CultureInfo for Aspose.Cells workbook loading | example of Aspose.Cells LoadOptions setting CultureInfo to fr-FR | set thread culture to fr-FR before loading an XLSX workbook in C# | restore thread culture after loading an Excel workbook with Aspose.Cells
+// Tags: Aspose.Cells LoadOptions CultureInfo fr-FR | load XLSX workbook with specific locale | preserve thread culture during Excel load | C# globalization Aspose.Cells | Excel file loading culture settings
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using Aspose.Cells;
 
-// The program saves the current thread's CultureInfo, switches the thread to French (fr-FR), creates LoadOptions with that CultureInfo, loads an XLSX workbook using those options, and finally restores the original thread cultures.
+// The code saves the current thread culture, switches the thread to French (fr-FR), configures LoadOptions with the same CultureInfo, loads an XLSX workbook using those options, optionally processes the workbook, saves it, and finally restores the original thread culture.
 class Program
 {
     static void Main()
     {
-        // Preserve the original thread cultures
+        // Preserve the original thread culture
         CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
-        CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
 
-        // Set thread culture to French (France) for loading
-        CultureInfo frenchCulture = new CultureInfo("fr-FR");
-        Thread.CurrentThread.CurrentCulture = frenchCulture;
-        Thread.CurrentThread.CurrentUICulture = frenchCulture;
+        try
+        {
+            // Set the thread culture to French (France)
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
 
-        // Create LoadOptions and assign the French culture
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.CultureInfo = frenchCulture; // ensures parsing respects French locale
+            // Configure LoadOptions with French culture
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                CultureInfo = new CultureInfo("fr-FR")
+            };
 
-        // Load the workbook using the specified LoadOptions
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // TODO: work with the workbook as needed
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-        // Restore the original thread cultures
-        Thread.CurrentThread.CurrentCulture = originalCulture;
-        Thread.CurrentThread.CurrentUICulture = originalUICulture;
+            // Load the XLSX workbook using the configured LoadOptions
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // (Optional) Process the workbook here
+
+            // Save the workbook if needed
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            // Log or handle exceptions as appropriate
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            // Restore the original thread culture
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+        }
     }
 }

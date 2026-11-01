@@ -1,23 +1,23 @@
-// Title: Hide the header row and apply a compact dashboard style to an Excel ListObject with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing workbook, access the first ListObject, set ShowHeaderRow to false, turn off ShowTableStyleFirstColumn, ShowTableStyleLastColumn, ShowTableStyleRowStripes, and ShowTableStyleColumnStripes, then save the workbook. | Programmatically remove table decorations (header row, first/last column highlights, row and column stripes) to create a minimal dashboard view using Aspose.Cells in C#.
-// Common Searches: asp.net hide ListObject header row using Aspose.Cells | create compact dashboard table layout in Excel with Aspose.Cells C# | disable first and last column style for Excel table Aspose.Cells | remove row and column stripe formatting from Excel table Aspose.Cells | how to turn off table style elements in Aspose.Cells .NET
-// Tags: hide ListObject header Aspose.Cells | compact dashboard table styling Aspose.Cells | disable first column table style Aspose.Cells | remove row stripe formatting Aspose.Cells | modify Excel table properties C# | Aspose.Cells table style customization
+// Title: Hide an Excel table’s header row for a compact dashboard layout using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, accesses the first ListObject, sets ShowHeaderRow to false, and saves the file. | Generate a program that removes the header row from an Excel table to produce a tighter view in a dashboard using Aspose.Cells for .NET. | Create a script that checks for tables in a worksheet and disables their header rows for a compact presentation with Aspose.Cells.
+// Common Searches: aspnet hide excel table header row Aspose.Cells | how to remove table header for dashboard view using Aspose.Cells C# | set ShowHeaderRow false Aspose.Cells example | compact Excel table layout without header Aspose.Cells .NET | disable ListObject header row programmatically Aspose.Cells
+// Tags: Aspose.Cells ListObject ShowHeaderRow false | C# hide Excel table header using Aspose | compact dashboard table layout Aspose.Cells | modify Excel table properties programmatically .NET | disable table header row in workbook Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// The sample loads an existing Excel workbook, accesses the first worksheet's first ListObject, disables the header row and all table style decorations (first/last column indicators and row/column stripes) to produce a compact dashboard appearance, and saves the modified workbook to a new file.
+// The example loads an existing workbook, verifies that a table (ListObject) exists on the first worksheet, sets its ShowHeaderRow property to false to hide the header row for a more compact dashboard appearance, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
         try
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             // Verify input file exists
             if (!File.Exists(inputPath))
             {
@@ -32,31 +32,20 @@ class Program
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one table (ListObject)
-            if (sheet.ListObjects.Count == 0)
+            if (sheet.ListObjects.Count > 0)
             {
-                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
-                return;
+                // Access the first table in the worksheet
+                ListObject table = sheet.ListObjects[0];
+
+                // Hide the header row for a compact layout
+                table.ShowHeaderRow = false;
+
+                // Style adjustments are optional and may not be supported in older versions.
+                // If needed, they can be applied using the TableStyleInfo property in newer releases.
             }
-
-            // Access the first table
-            ListObject table = sheet.ListObjects[0];
-
-            // Hide the header row
-            table.ShowHeaderRow = false;
-
-            // Compact layout: hide first/last column style indicators
-            table.ShowTableStyleFirstColumn = false;
-            table.ShowTableStyleLastColumn = false;
-
-            // Dashboard view: hide row/column stripes
-            table.ShowTableStyleRowStripes = false;
-            table.ShowTableStyleColumnStripes = false;
-
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            else
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine("No tables found in the worksheet.");
             }
 
             // Save the modified workbook

@@ -1,75 +1,61 @@
-// Title: How to keep user‑applied cell formatting when refreshing a PivotTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an existing .xlsx workbook with Aspose.Cells, sets PivotTable.PreserveCellFormattingOnUpdate to true, refreshes the pivot data, and saves the file. | Show how to update the first PivotTable in a worksheet while preserving all custom cell styles after calling RefreshData and CalculateData with Aspose.Cells. | Demonstrate enabling PreserveCellFormattingOnUpdate for a PivotTable, then refreshing and recalculating the pivot to maintain formatting in a .NET application.
-// Common Searches: Aspose.Cells C# preserve pivot table formatting after RefreshData | How to retain cell styles in a PivotTable when updating data source with Aspose.Cells | Set PreserveCellFormattingOnUpdate property in Aspose.Cells .NET example | Refresh PivotTable without losing custom formatting using Aspose.Cells for .NET
-// Tags: Aspose.Cells pivot formatting preservation | PivotTable PreserveCellFormattingOnUpdate usage | Aspose.Cells refresh pivot data | Aspose.Cells recalculate pivot | Aspose.Cells .NET pivot table update
+// Title: How to keep user‑applied formatting when refreshing an Excel PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# preserve pivot table formatting after RefreshData | set PreserveFormatting property on PivotTable before RefreshData in .NET | refresh Excel pivot table without losing custom styles using Aspose.Cells | C# example to enable PreserveFormatting for PivotTable and recalculate data | Aspose.Cells keep user formatting when updating pivot cache
+// Tags: Aspose.Cells PreserveFormatting for PivotTable | C# refresh PivotTable data source | maintain custom pivot formatting Aspose.Cells | PivotTable CalculateData usage | load workbook modify pivot settings .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable class
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, accesses the first PivotTable, enables the PreserveFormatting flag to retain user‑applied styles, refreshes and recalculates the pivot data, and saves the workbook to a new file.
+class Program
 {
-    // The example loads 'source.xlsx', checks for a PivotTable, enables PreserveCellFormattingOnUpdate to keep user‑applied styles, refreshes and recalculates the pivot, and saves the result as 'output.xlsx' using Aspose.Cells for .NET.
-    public class PivotTablePreserveFormattingDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            string inputPath = "source.xlsx";
-            string outputPath = "output.xlsx";
+            // Load the workbook containing the PivotTable
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Get the worksheet that holds the PivotTable (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine("No PivotTables found in the worksheet.");
                 return;
             }
 
-            try
-            {
-                // Load the workbook containing the pivot table
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first PivotTable in the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Ensure there is at least one pivot table
-                if (worksheet.PivotTables.Count > 0)
-                {
-                    PivotTable pivotTable = worksheet.PivotTables[0];
+            // Enable PreserveFormatting so that user‑applied styles are retained after refresh
+            pivotTable.PreserveFormatting = true;
 
-                    // Preserve cell formatting when the pivot table is refreshed
-                    pivotTable.PreserveCellFormattingOnUpdate = true;
+            // Refresh the PivotTable data from its source
+            pivotTable.RefreshData();
 
-                    // Refresh the pivot table data source
-                    pivotTable.RefreshData();
+            // Recalculate the PivotTable (optional but ensures data is up‑to‑date)
+            pivotTable.CalculateData();
 
-                    // Recalculate the pivot table to apply refreshed data
-                    pivotTable.CalculateData();
-                }
-                else
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Runtime error: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

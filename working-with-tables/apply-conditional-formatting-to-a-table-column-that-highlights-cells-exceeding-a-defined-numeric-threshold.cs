@@ -1,13 +1,13 @@
-// Title: How to use Aspose.Cells for .NET to apply conditional formatting that highlights cells in a column exceeding a numeric threshold (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a workbook, fills column B with numeric data, defines a threshold value, and applies a solid light‑salmon style to any cell whose value is greater than the threshold. | Write a C# program using Aspose.Cells to iterate through a specific worksheet column, evaluate each cell's numeric value against a given limit, and set a custom background color when the condition is met. | Produce an example that saves an .xlsx file where Aspose.Cells applies a style to automatically highlight values above 100 in column B with a solid color.
-// Common Searches: Aspose.Cells C# highlight cells greater than a specific number in a column | conditional formatting column based on numeric threshold using Aspose.Cells for .NET | C# Aspose.Cells apply style to cells where value exceeds 100 | programmatically set background color for cells over a limit in Excel with Aspose.Cells | how to iterate through worksheet cells and apply conditional formatting in Aspose.Cells C#
-// Tags: Aspose.Cells value‑based cell styling | C# highlight Excel cells over threshold | apply background color to cells exceeding limit Aspose | generate .xlsx with value‑driven cell style | programmatic Excel cell formatting using Aspose.Cells
+// Title: Apply conditional formatting to a worksheet column to highlight cells greater than a numeric threshold with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add conditional formatting to column based on value | highlight cells greater than 50 in Excel using Aspose.Cells .NET | set red background for cells exceeding threshold with Aspose.Cells C# | create conditional formatting rule for numeric values in a specific column using Aspose.Cells | conditional formatting B1:B10 Aspose.Cells example
+// Tags: apply conditional format to worksheet column Aspose.Cells | greater than numeric threshold condition Aspose.Cells | solid red fill style for conditional format .NET | format condition type CellValue operator GreaterThan | excel .xlsx conditional formatting using C# Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// // Creates a workbook, populates column B with multiples of 20, defines a threshold of 100, builds a light‑salmon style, iterates the first ten rows, applies the style to cells with values > threshold, and saves the file as ConditionalFormatting.xlsx.
+// The sample creates a new workbook, fills column B (B1:B10) with values 0‑90, defines a threshold of 50, and adds a conditional formatting rule that applies a solid red background to any cell in that column whose value exceeds the threshold, then saves the file as an .xlsx workbook.
 class Program
 {
     static void Main()
@@ -21,34 +21,61 @@ class Program
             // Populate sample numeric data in column B (index 1)
             for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[i, 1].PutValue(i * 20); // 0, 20, 40, ... 180
+                sheet.Cells[i, 1].PutValue(i * 10); // Values: 0,10,20,...,90
             }
 
             // Define the numeric threshold
-            double threshold = 100;
+            double threshold = 50;
 
-            // Create the style to apply when the condition is met (light salmon background)
-            Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.ForegroundColor = Color.LightSalmon;
-            highlightStyle.Pattern = BackgroundType.Solid;
+            // Define the range for the conditional formatting (B1:B10)
+            int startRow = 0;
+            int endRow = 9;
+            int columnIndex = 1; // Column B
 
-            // Apply the style manually to cells that meet the condition
-            for (int row = 0; row < 10; row++)
+            // Add a new conditional formatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            var conditionalFormatting = sheet.ConditionalFormattings[cfIndex];
+
+            // Set the area that the formatting will apply to
+            CellArea area = new CellArea
             {
-                Cell cell = sheet.Cells[row, 1];
-                if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double cellValue))
-                {
-                    if (cellValue > threshold)
-                    {
-                        cell.SetStyle(highlightStyle);
-                    }
-                }
+                StartRow = startRow,
+                StartColumn = columnIndex,
+                EndRow = endRow,
+                EndColumn = columnIndex
+            };
+            conditionalFormatting.AddArea(area);
+
+            // Create a condition: cell value greater than the threshold
+            // The AddCondition method requires two formula strings; the second can be empty for this case
+            int conditionIndex = conditionalFormatting.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                threshold.ToString(),
+                string.Empty);
+
+            // Retrieve the created condition
+            FormatCondition condition = conditionalFormatting[conditionIndex];
+
+            // Define the style to apply when the condition is met (red background)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
+
+            // Prepare output path
+            string outputFile = "ConditionalFormattingExample.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile)) ?? Directory.GetCurrentDirectory();
+
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
-            string outputPath = "ConditionalFormatting.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook to a file
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
         }
         catch (Exception ex)
         {

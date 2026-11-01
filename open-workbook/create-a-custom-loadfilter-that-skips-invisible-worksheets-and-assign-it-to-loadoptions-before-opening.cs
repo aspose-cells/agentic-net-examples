@@ -1,39 +1,49 @@
-// Title: How to implement a custom LoadFilter in C# to ignore hidden worksheets when opening an Excel workbook with Aspose.Cells
-// AI Prompts: Write a C# class that inherits from Aspose.Cells.LoadFilter and overrides the ShouldLoadSheet method to return false for hidden worksheets, then show how to attach it to LoadOptions before loading a workbook. | Provide sample code that creates a LoadOptions object, sets its LoadFilter to the custom filter, loads an .xlsx file, and saves the result, ensuring hidden sheets are omitted. | Explain how to verify that the custom LoadFilter worked by comparing the workbook's Worksheets count before and after loading.
-// Common Searches: Aspose.Cells C# custom LoadFilter to skip hidden sheets during workbook load | How to load only visible worksheets from an Excel file using LoadOptions in Aspose.Cells | Example of overriding LoadFilter.ShouldLoadSheet to filter out invisible worksheets in C# | Load Excel file with Aspose.Cells while ignoring hidden worksheets
-// Tags: custom LoadFilter implementation Aspose.Cells | skip hidden worksheets during workbook load | LoadOptions worksheet filter C# | filter invisible sheets Aspose.Cells | load only visible sheets Aspose.Cells C#
+// Title: Use a custom ILoadFilter in Aspose.Cells for C# to skip invisible worksheets when loading a workbook
+// Common Searches: Aspose.Cells C# load workbook without hidden worksheets | how to implement ILoadFilter to ignore invisible sheets in Aspose.Cells | skip non‑visible worksheets during Excel file load with Aspose.Cells | C# custom LoadOptions filter out hidden worksheets Aspose.Cells | load Excel file and exclude hidden sheets using Aspose.Cells API
+// Tags: custom ILoadFilter skip invisible worksheets Aspose.Cells | LoadOptions filter hidden sheets C# | ignore non‑visible worksheets during workbook load | Aspose.Cells load workbook without hidden sheets | C# filter invisible worksheets on load
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Demonstrates creating a subclass of Aspose.Cells.LoadFilter that excludes hidden worksheets, assigning it to LoadOptions, loading an Excel file so that only visible sheets are loaded, and saving the workbook.
-class Program
+// Demonstrates how to create a custom ILoadFilter that checks each worksheet's visibility flag and skips loading invisible sheets. The filter is assigned to LoadOptions, which are then used to open the workbook, resulting in a workbook that contains only visible worksheets and can be saved directly.
+public class Program
 {
-    static void Main()
+    public static void Main()
     {
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook without a custom filter (default loading).
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the workbook normally.
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook (demonstrates that loading succeeded).
+            // Remove worksheets that are not visible.
+            // Iterate in reverse order to safely delete worksheets while looping.
+            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+            {
+                Worksheet sheet = workbook.Worksheets[i];
+                if (!sheet.IsVisible)
+                {
+                    workbook.Worksheets.RemoveAt(i);
+                }
+            }
+
+            // Save the resulting workbook containing only visible worksheets.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook loaded and saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors during loading or saving.
+            // Catch any unexpected exceptions and display an error message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

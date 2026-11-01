@@ -1,61 +1,76 @@
-// Title: Compare PDF output file sizes when exporting an Excel workbook with Aspose.Cells using AllColumnsInOnePagePerSheet versus default settings in C#
-// AI Prompts: Generate a C# console program that loads an .xlsx file, saves it to PDF twice—once with default SaveFormat.Pdf and once with PdfSaveOptions.AllColumnsInOnePagePerSheet set to true—and prints the byte size of each PDF. | Modify existing Aspose.Cells PDF export code to record the size difference between the default PDF and the AllColumnsInOnePagePerSheet PDF, then output a summary indicating which file is larger. | Create a C# script that iterates over multiple Excel workbooks, exports each to PDF using both default settings and the AllColumnsInOnePagePerSheet option, and logs a table of file size comparisons.
-// Common Searches: how does PdfSaveOptions.AllColumnsInOnePagePerSheet affect PDF file size in Aspose.Cells C# | C# Aspose.Cells compare default PDF export size with AllColumnsInOnePagePerSheet option | measure generated PDF size after exporting Excel workbook with Aspose.Cells | Aspose.Cells PDF export size differences between default and AllColumnsInOnePagePerSheet | C# code to get file size of PDFs created by Aspose.Cells
-// Tags: Aspose.Cells PDF export AllColumnsInOnePagePerSheet | C# PDF size comparison Aspose.Cells | PdfSaveOptions file size impact | Excel to PDF size analysis Aspose.Cells | PDF size measurement C#
+// Title: How to compare PDF file sizes when using AllColumnsInOnePagePerSheet versus default export with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# compare PDF file size with AllColumnsInOnePagePerSheet option | measure difference between default PDF export and AllColumnsInOnePagePerSheet in .NET | C# code to get size of PDFs generated from Excel using PdfSaveOptions
+// Tags: AllColumnsInOnePagePerSheet PDF export size impact | PdfSaveOptions default configuration size effect | Aspose.Cells Excel to PDF file size analysis | C# PDF generation size measurement using Aspose.Cells | Aspose.Cells PDF export performance metrics
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// // Loads an Excel workbook, saves it to PDF using default settings and using PdfSaveOptions with AllColumnsInOnePagePerSheet=true, then outputs and compares the resulting file sizes.
+// The example loads an Excel workbook, saves it twice as PDF—once with default PdfSaveOptions and once with AllColumnsInOnePagePerSheet enabled—then reads the resulting file sizes, prints both sizes, and indicates whether the AllColumnsInOnePage PDF is larger, smaller, or equal to the default PDF, with exception handling.
 class PdfSizeComparison
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        string excelPath = "input.xlsx";
-        Workbook workbook = new Workbook(excelPath);
-
-        // Define output PDF file names
-        string defaultPdfPath = "default.pdf";
-        string allColumnsPdfPath = "AllColumnsInOnePagePerSheet.pdf";
-
-        // ---------- Default PDF export ----------
-        // Save the workbook to PDF using default settings
-        workbook.Save(defaultPdfPath, SaveFormat.Pdf);
-
-        // Get file size of the default PDF
-        long defaultSize = new FileInfo(defaultPdfPath).Length;
-
-        // ---------- PDF export with AllColumnsInOnePagePerSheet ----------
-        // Configure PDF save options to fit all columns on one page per sheet
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            AllColumnsInOnePagePerSheet = true
-        };
+            // Path to the source Excel file
+            string excelPath = "input.xlsx";
 
-        // Save the workbook to PDF with the specified option
-        workbook.Save(allColumnsPdfPath, pdfOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
+                return;
+            }
 
-        // Get file size of the PDF with AllColumnsInOnePagePerSheet option
-        long allColumnsSize = new FileInfo(allColumnsPdfPath).Length;
+            // Paths for the generated PDF files
+            string defaultPdfPath = "default.pdf";
+            string allColumnsPdfPath = "AllColumnsInOnePage.pdf";
 
-        // ---------- Comparison ----------
-        Console.WriteLine($"Default PDF size: {defaultSize} bytes");
-        Console.WriteLine($"AllColumnsInOnePagePerSheet PDF size: {allColumnsSize} bytes");
+            // Load the workbook from the Excel file
+            Workbook workbook = new Workbook(excelPath);
 
-        if (defaultSize == allColumnsSize)
-        {
-            Console.WriteLine("Both PDFs have the same file size.");
+            // -------------------------------------------------
+            // Export with default PDF settings
+            // -------------------------------------------------
+            PdfSaveOptions defaultOptions = new PdfSaveOptions();
+            workbook.Save(defaultPdfPath, defaultOptions);
+
+            // -------------------------------------------------
+            // Export with AllColumnsInOnePagePerSheet enabled
+            // -------------------------------------------------
+            PdfSaveOptions allColumnsOptions = new PdfSaveOptions
+            {
+                AllColumnsInOnePagePerSheet = true
+            };
+            workbook.Save(allColumnsPdfPath, allColumnsOptions);
+
+            // -------------------------------------------------
+            // Compare file sizes
+            // -------------------------------------------------
+            long defaultSize = new FileInfo(defaultPdfPath).Length;
+            long allColumnsSize = new FileInfo(allColumnsPdfPath).Length;
+
+            Console.WriteLine($"Default PDF size: {defaultSize} bytes");
+            Console.WriteLine($"AllColumnsInOnePage PDF size: {allColumnsSize} bytes");
+
+            if (allColumnsSize > defaultSize)
+            {
+                Console.WriteLine("The AllColumnsInOnePage PDF is larger than the default PDF.");
+            }
+            else if (allColumnsSize < defaultSize)
+            {
+                Console.WriteLine("The AllColumnsInOnePage PDF is smaller than the default PDF.");
+            }
+            else
+            {
+                Console.WriteLine("Both PDFs have the same file size.");
+            }
         }
-        else if (defaultSize > allColumnsSize)
+        catch (Exception ex)
         {
-            Console.WriteLine("The default PDF is larger.");
-        }
-        else
-        {
-            Console.WriteLine("The AllColumnsInOnePagePerSheet PDF is larger.");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

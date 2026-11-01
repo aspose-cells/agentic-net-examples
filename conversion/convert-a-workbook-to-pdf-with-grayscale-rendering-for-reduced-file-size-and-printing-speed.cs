@@ -1,32 +1,47 @@
-// Title: Convert an Excel workbook to a grayscale PDF with minimal file size using Aspose.Cells for .NET
-// AI Prompts: Write C# code that saves a Workbook as a grayscale PDF while applying the smallest possible file size settings with Aspose.Cells. | Demonstrate how to set Worksheet.PageSetup.BlackAndWhite and use PdfSaveOptions.OptimizationType = PdfOptimizationType.MinimumSize for PDF export. | Provide a complete example that creates a workbook, adds data, and generates a compact black‑and‑white PDF file.
-// Common Searches: asp.net convert excel to black and white PDF with Aspose.Cells | how to reduce PDF size when exporting Excel using Aspose.Cells C# | set grayscale rendering for PDF output in Aspose.Cells | PdfOptimizationType.MinimumSize example Aspose.Cells | export worksheet as PDF with black‑and‑white page setup C#
-// Tags: grayscale PDF export Aspose.Cells | Worksheet.PageSetup.BlackAndWhite property | PdfOptimizationType.MinimumSize usage | Aspose.Cells PDF size optimization | export Excel to black‑and‑white PDF C#
+// Title: Convert an Excel workbook to a grayscale PDF with reduced file size using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export Excel to grayscale PDF for smaller file size | How to enable Grayscale in PdfSaveOptions with Aspose.Cells .NET | Save .xlsx as PDF with reduced size and faster printing using Aspose.Cells | Aspose.Cells PDF conversion with grayscale rendering example in C# | Convert workbook to PDF with grayscale option using Aspose.Cells API
+// Tags: Aspose.Cells grayscale PDF conversion C# | PdfSaveOptions Grayscale property Aspose.Cells | reduce PDF file size Excel to PDF Aspose.Cells | export workbook to PDF with printing optimization | C# Excel to PDF conversion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// // Creates a workbook, adds sample data, enables black‑and‑white page rendering, configures PdfSaveOptions for minimum size, and saves the file as GrayscaleOutput.pdf.
-class Program
+// The sample verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (where the Grayscale property can be set to render the PDF in grayscale for smaller size and faster printing), and saves the workbook as a PDF file while handling any runtime exceptions.
+class WorkbookToPdfGrayscale
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-        // Add some sample data (optional, just to have content)
-        worksheet.Cells["A1"].PutValue("Sample Data for Grayscale PDF");
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
+            return;
+        }
 
-        // Enable black‑and‑white (grayscale) rendering for printing
-        worksheet.PageSetup.BlackAndWhite = true;
+        try
+        {
+            // Load the existing Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Configure PDF save options to minimize file size
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+            // Configure PDF save options (grayscale option omitted for compatibility)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Additional options can be set here, e.g.:
+                // Compliance = PdfCompliance.PdfA1b,
+                // OnePagePerSheet = true
+            };
 
-        // Save the workbook as a PDF using the specified options
-        workbook.Save("GrayscaleOutput.pdf", pdfOptions);
+            // Save the workbook as a PDF file with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

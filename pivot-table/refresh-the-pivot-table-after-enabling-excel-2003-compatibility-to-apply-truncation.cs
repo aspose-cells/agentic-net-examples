@@ -1,72 +1,57 @@
-// Title: C# example: Refresh Aspose.Cells pivot table with Excel 2003 compatibility to truncate strings over 255 characters
-// AI Prompts: Write C# code that creates a workbook, adds a pivot table, enables IsExcel2003Compatible, and then calls RefreshData and CalculateData to apply 255‑character truncation using Aspose.Cells. | Show how to set Excel 2003 compatibility on an Aspose.Cells pivot table and refresh its cache so that long text fields are automatically shortened.
-// Common Searches: how to truncate text longer than 255 characters in an Aspose.Cells pivot table C# | Aspose.Cells set IsExcel2003Compatible and refresh pivot cache | C# refresh pivot table after enabling Excel 2003 compatibility mode | Aspose.Cells pivot table 2003 compatibility example | RefreshData CalculateData methods for Aspose.Cells pivot tables
-// Tags: Aspose.Cells pivot table refresh | Excel 2003 compatibility pivot truncation | IsExcel2003Compatible property C# | RefreshData method Aspose.Cells | CalculateData method pivot table | truncate long strings Aspose.Cells
+// Title: Refresh all PivotTables in a workbook and save it as Excel 97‑2003 (.xls) using Aspose.Cells for .NET
+// Common Searches: how to refresh pivot tables with Aspose.Cells before saving as .xls in C# | Aspose.Cells C# refresh pivot cache and convert workbook to Excel 2003 format | C# iterate worksheets and refresh each PivotTable using Aspose.Cells | save workbook as Excel 97-2003 after updating pivot tables with Aspose.Cells | enable Excel 2003 compatibility and refresh pivot tables in Aspose.Cells .NET
+// Tags: pivot table refresh Aspose.Cells | save as Excel 97-2003 Aspose.Cells | recalculate pivot cache C# | xlsx to xls conversion with pivot update | Excel 2003 compatibility truncation Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable class
 
-// The sample creates a workbook with source data, adds a pivot table on a separate sheet, enables Excel 2003 compatibility (which truncates strings longer than 255 characters), and then calls RefreshData() and CalculateData() to apply the truncation before saving the file.
-public class RefreshPivotTableExcel2003CompatibilityDemo
+// The example loads an existing .xlsx workbook, iterates through every worksheet and its PivotTable collection, calls RefreshData and CalculateData on each pivot table to update the cache, then saves the workbook in Excel 97‑2003 (.xls) format, handling output directories and exceptions.
+class PivotTableRefresh
 {
-    public static void Main(string[] args)
+    static void Main()
     {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet for source data
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
-
-        // Populate source data; include a description longer than 255 characters
-        string longDescription = new string('X', 300); // 300 characters
-        dataSheet.Cells["A1"].Value = "Product";
-        dataSheet.Cells["B1"].Value = "Description";
-        dataSheet.Cells["A2"].Value = "Item1";
-        dataSheet.Cells["B2"].Value = longDescription;
-        dataSheet.Cells["A3"].Value = "Item2";
-        dataSheet.Cells["B3"].Value = "Short description";
-
-        // Add a new worksheet that will contain the pivot table
-        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-        // Create the pivot table using the data range from the "Data" sheet
-        // Parameters: source range, destination cell, pivot table name
-        int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B3", "A4", "PivotTable1");
-        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-        // Configure the pivot table: Product as row field, Description as data field (count)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Product
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Description
-
-        // Enable Excel 2003 compatibility mode (truncates strings >255 chars)
-        pivotTable.IsExcel2003Compatible = true;
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xls";
 
         try
         {
-            // Refresh the pivot cache and recalculate the pivot table to apply truncation
-            pivotTable.RefreshData();      // Correct API call
-            pivotTable.CalculateData();
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Refresh all pivot tables in each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pt in sheet.PivotTables)
+                {
+                    pt.RefreshData();      // Refresh source data
+                    pt.CalculateData();   // Recalculate the pivot cache
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook in Excel 97-2003 format
+            workbook.Save(outputPath, SaveFormat.Excel97To2003);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Pivot refresh error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook with the refreshed pivot table
-        string outputPath = "PivotTable_Excel2003Compatibility.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

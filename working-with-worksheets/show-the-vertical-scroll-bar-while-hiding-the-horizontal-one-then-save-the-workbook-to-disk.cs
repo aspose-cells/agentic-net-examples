@@ -1,13 +1,13 @@
-// Title: Hide the horizontal scroll bar, show only the vertical scroll bar in an Aspose.Cells worksheet, then save as XLSX using C#
-// AI Prompts: Set the worksheet's ShowHorizontalScrollBar property to false and ShowVerticalScrollBar property to true before saving the workbook. | Create a new Workbook, configure the first worksheet to hide the horizontal scroll bar and display the vertical scroll bar, then save the file to a specified path in XLSX format.
-// Common Searches: how to hide horizontal scroll bar in Aspose.Cells C# worksheet | display only vertical scroll bar Aspose.Cells .NET example | Aspose.Cells set scroll bar visibility before saving workbook | C# save workbook as XLSX after customizing worksheet scrollbars Aspose.Cells
-// Tags: hide horizontal scroll bar Aspose.Cells | show vertical scroll bar Aspose.Cells | save workbook as xlsx Aspose.Cells C# | worksheet scroll bar visibility Aspose.Cells | Aspose.Cells workbook creation C#
+// Title: Hide the horizontal scroll bar and keep the vertical scroll bar visible in an Aspose.Cells worksheet before saving as XLSX (C#)
+// AI Prompts: Set Worksheet.ViewOptions.ShowHorizontalScrollBar = false and Worksheet.ViewOptions.ShowVerticalScrollBar = true, then call Workbook.Save to write the file to a specified path using Aspose.Cells for .NET. | Add a check for the ViewOptions property, configure scroll‑bar visibility accordingly, and persist the workbook as an .xlsx file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# hide horizontal scrollbar only vertical scrollbar visible | set worksheet view options scrollbars Aspose.Cells .NET | disable horizontal scroll bar in generated Excel file using Aspose.Cells | save workbook after configuring scroll bar visibility Aspose.Cells C# | vertical scrollbar only Aspose.Cells worksheet example
+// Tags: worksheet viewoptions hide horizontal scrollbar | show vertical scrollbar aspocells | configure worksheet scrollbars .net | save workbook as xlsx aspocells c# | excel scroll bar visibility aspocells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// Creates a new Workbook, accesses the first Worksheet, hides the horizontal scroll bar, shows the vertical scroll bar, and saves the file as output.xlsx while handling any exceptions.
+// The example creates a new Workbook, accesses its first Worksheet, uses the Worksheet.ViewOptions API to hide the horizontal scroll bar while keeping the vertical scroll bar visible, ensures the output directory exists, and saves the workbook as an XLSX file. Exception handling reports any errors during the process.
 class Program
 {
     static void Main()
@@ -17,18 +17,29 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook to disk
+            // NOTE: In some older versions of Aspose.Cells the ViewOptions property may not be available.
+            // If needed, adjust scroll bar visibility using the appropriate API for your version.
+
+            // Define output path
             string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to disk
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log any errors that occur
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

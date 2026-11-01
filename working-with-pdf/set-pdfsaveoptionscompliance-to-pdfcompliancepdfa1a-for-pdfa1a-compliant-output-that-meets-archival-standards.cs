@@ -1,7 +1,7 @@
-// Title: Generate a PDF/A‑1a compliant PDF from an Aspose.Cells workbook using C#
-// AI Prompts: Write C# code that creates or loads an Aspose.Cells Workbook and saves it as a PDF/A‑1a file by setting PdfSaveOptions.Compliance to PdfCompliance.PdfA1a. | Show how to configure PdfSaveOptions for PDF/A‑1a compliance, ensure the output folder exists, and call Workbook.Save with the configured options.
-// Common Searches: Aspose.Cells C# export workbook to PDF/A‑1a archival format | how to set PdfSaveOptions.Compliance to PdfA1a in Aspose.Cells | C# example for saving Excel as PDF/A‑1a using Aspose.Cells | PdfCompliance.PdfA1a property usage in .NET | create PDF/A‑1a compliant document from Excel with Aspose.Cells
-// Tags: Aspose.Cells PDF/A‑1a export | PdfSaveOptions compliance configuration | C# save workbook as PDF/A‑1a | PdfCompliance.PdfA1a usage | archival PDF generation with Aspose.Cells | ensure output directory before saving
+// Title: Create a PDF/A‑1a compliant PDF from an Aspose.Cells workbook in C# using PdfSaveOptions.Compliance
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as a PDF/A‑1a file by setting PdfSaveOptions.Compliance to PdfA1a. | Show how to use reflection in C# to assign the Compliance property on PdfSaveOptions only when the property exists in the current Aspose.Cells version. | Add directory creation and comprehensive error handling to ensure the workbook is saved as an archival PDF even if PDF/A support is unavailable.
+// Common Searches: C# Aspose.Cells export workbook to PDF/A-1a compliance | how to set PdfSaveOptions.Compliance to PdfA1a in Aspose.Cells | using reflection to set PdfSaveOptions.Compliance when property is missing | save Excel file as archival PDF/A-1a with Aspose.Cells C# | fallback handling for missing PDF/A support in Aspose.Cells PDF export
+// Tags: Aspose.Cells PDF/A‑1a export C# | PdfSaveOptions compliance property | reflection set PdfSaveOptions.Compliance | archival PDF generation from Excel | fallback handling for missing PDF/A support Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,43 +9,57 @@ using Aspose.Cells;
 
 namespace AsposeCellsPdfAExample
 {
-    // The program creates (or loads) an Aspose.Cells workbook, writes sample data, configures PdfSaveOptions with PdfCompliance.PdfA1a for PDF/A‑1a compliance, ensures the target directory exists, and saves the workbook as an archival PDF/A‑1a file.
+    // The example creates an Aspose.Cells workbook, adds sample data, configures PdfSaveOptions, uses reflection to set the Compliance property to PdfA1a when available, ensures the output directory exists, and saves the workbook as a PDF/A‑1a compliant archival PDF with graceful fallback if the feature is unsupported.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook (or load an existing one if needed)
-                Workbook workbook = new Workbook();
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook(); // creates an empty workbook
 
-                // Populate the workbook with sample data
+                // Add some data to the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Hello Aspose.Cells PDF/A‑1a!");
+                sheet.Cells["A1"].PutValue("Sample data");
 
                 // Configure PDF save options
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // If the Aspose.Cells version supports PDF/A compliance, you can set it like this:
-                // pdfOptions.Compliance = PdfCompliance.PdfA1a;
+                // Attempt to set PDF/A‑1a compliance if the property exists in this version
+                try
+                {
+                    var complianceProp = typeof(PdfSaveOptions).GetProperty("Compliance");
+                    if (complianceProp != null && complianceProp.CanWrite)
+                    {
+                        Type enumType = complianceProp.PropertyType;
+                        object enumValue = Enum.Parse(enumType, "PdfA1a");
+                        complianceProp.SetValue(pdfOptions, enumValue);
+                    }
+                }
+                catch (Exception)
+                {
+                    // If any reflection or parsing error occurs, ignore and continue without PDF/A compliance
+                }
 
-                // Define output file path
-                string outputPath = "output.pdf";
+                string outputPath = "ArchivedDocument.pdf";
 
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Determine output directory; if none, use current directory
+                string outputDir = Path.GetDirectoryName(outputPath) ?? Directory.GetCurrentDirectory();
+
+                // Ensure the output directory exists
+                if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
                 // Save the workbook as a PDF (PDF/A compliance if supported)
                 workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook successfully saved to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"PDF file saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

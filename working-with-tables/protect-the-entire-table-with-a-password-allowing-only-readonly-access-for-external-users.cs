@@ -1,40 +1,44 @@
-// Title: Apply read‑only password protection to an entire worksheet table with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to protect all cells of a worksheet with a password that grants only view (read‑only) rights. | Show how to call Worksheet.Protect with ProtectionType.All and a custom password, then save the workbook as an .xlsx file. | Adapt an existing Aspose.Cells workbook to add read‑only protection for external users without altering the existing data.
-// Common Searches: Aspose.Cells C# protect entire worksheet read only password example | How to set ProtectionType.All with a password in Aspose.Cells .NET | Make Excel sheet view‑only for external users using Aspose.Cells | C# code to apply password protection to a table in an Excel workbook with Aspose.Cells | Save a password‑protected workbook using Aspose.Cells for .NET
-// Tags: worksheet password protection Aspose.Cells | read‑only worksheet protection C# | ProtectionType.All Aspose.Cells example | save password‑protected Excel file .NET | apply password to Excel table Aspose.Cells
+// Title: Password‑protect an entire Excel workbook for read‑only external access with Aspose.Cells in C#
+// AI Prompts: Create C# code that loads an .xlsx file, checks its existence, applies workbook‑level protection using ProtectionType.All with a password, and saves the result with Aspose.Cells. | Demonstrate how to use Aspose.Cells' Workbook.Protect method to enforce read‑only access for external users in a .NET application. | Write a robust C# snippet that handles missing input files and exceptions while password‑protecting an Excel workbook using Aspose.Cells.
+// Common Searches: how to use Aspose.Cells to set a password for an entire workbook in C# | Aspose.Cells protect Excel file read only for external users .NET example | C# workbook.Protect with ProtectionType.All and password Aspose | prevent editing of an Excel workbook by external users using Aspose.Cells | save password‑protected .xlsx using Aspose.Cells C# code sample
+// Tags: Aspose.Cells workbook password protection | C# protect entire Excel workbook | ProtectionType.All Aspose.Cells example | read‑only Excel file external users .NET | Workbook.Protect method C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, optionally adds sample data, protects the entire worksheet with a password using Worksheet.Protect(ProtectionType.All,…), and saves the file as ProtectedTable.xlsx via Aspose.Cells for .NET.
+// // Loads input.xlsx, verifies its presence, applies workbook‑level protection (ProtectionType.All) with password "SecurePassword123" to make the file read‑only for external users, and saves the protected workbook as output_protected.xlsx while handling errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output_protected.xlsx";
+        const string password = "SecurePassword123";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook
-            var workbook = new Workbook();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (the table to protect)
-            var sheet = workbook.Worksheets[0];
-
-            // Example data – can be omitted if the sheet already contains data
-            sheet.Cells["A1"].PutValue("Sample Data");
-
-            // Protect the worksheet with a password.
-            // The third argument (oldPassword) is required; pass an empty string when not changing it.
-            sheet.Protect(ProtectionType.All, "YourPasswordHere", string.Empty);
+            // Protect the entire workbook with a password (read‑only for external users)
+            workbook.Protect(ProtectionType.All, password);
 
             // Save the protected workbook
-            string outputPath = "ProtectedTable.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook successfully protected and saved as \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

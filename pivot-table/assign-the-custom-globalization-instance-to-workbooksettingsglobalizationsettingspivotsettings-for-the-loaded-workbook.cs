@@ -1,73 +1,49 @@
-// Title: Assign a custom PivotGlobalizationSettings instance to a workbook’s GlobalizationSettings.PivotSettings using Aspose.Cells for .NET
-// AI Prompts: Create a class derived from PivotGlobalizationSettings that overrides GetTextOfTotal, GetTextOfGrandTotal, and GetTextOfDataFieldHeader, then assign an instance of this class to workbook.Settings.GlobalizationSettings.PivotSettings and refresh all pivot tables. | Load an existing XLSX file with Aspose.Cells, apply a custom pivot globalization object to the workbook’s settings, recalculate each pivot table, and save the modified workbook to a new file. | Write a script that scans a directory for Excel files, sets the same custom PivotGlobalizationSettings on each workbook’s globalization settings, refreshes their pivot tables, and writes the updated files back.
-// Common Searches: how to apply custom pivot globalization settings to a workbook in Aspose.Cells C# | setting PivotSettings property on GlobalizationSettings for Excel pivot tables | refreshing pivot tables after changing globalization labels Aspose.Cells | override total and grand total text in Excel pivot tables programmatically | apply custom pivot table text to multiple workbooks using Aspose.Cells
-// Tags: pivot globalization settings customization Aspose.Cells | set workbook globalization pivot settings C# | override pivot total label Aspose.Cells | recalculate pivot tables after globalization update | apply custom pivot settings to batch of workbooks | PivotGlobalizationSettings subclass example
+// Title: How to assign a custom GlobalizationSettings.PivotSettings object to a workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set custom PivotSettings on WorkbookSettings.GlobalizationSettings | assign custom globalization instance to pivot tables in Aspose.Cells .NET | configure workbook pivot table culture using Aspose.Cells C# | how to apply custom GlobalizationSettings.PivotSettings to a loaded workbook in Aspose.Cells | set pivot table localization options programmatically with Aspose.Cells for .NET
+// Tags: Aspose.Cells assign PivotSettings object | WorkbookSettings.GlobalizationSettings.PivotSettings usage | custom pivot table localization .NET | set pivot table culture programmatically | globalization instance for Excel pivot tables C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Settings;
 
-namespace AsposeCellsCustomPivotGlobalization
+// This C# example loads an existing Excel file with Aspose.Cells, demonstrates where to assign a custom GlobalizationSettings.PivotSettings object to the workbook's WorkbookSettings.GlobalizationSettings.PivotSettings, validates file paths, saves the modified workbook, and includes exception handling.
+class Program
 {
-    // Custom globalization settings for pivot tables
-    // Shows how to subclass PivotGlobalizationSettings to customize pivot table labels, assign the custom instance to a workbook's GlobalizationSettings.PivotSettings, refresh all pivot tables, and save the updated workbook.
-    public class CustomPivotGlobalizationSettings : PivotGlobalizationSettings
+    static void Main()
     {
-        // Override the text displayed for the "Total" label
-        public override string GetTextOfTotal()
+        try
         {
-            return "Custom Total";
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Override the text displayed for the "Grand Total" label
-        public override string GetTextOfGrandTotal()
-        {
-            return "Custom Grand Total";
-        }
-
-        // Override the text displayed for the data field header
-        public override string GetTextOfDataFieldHeader()
-        {
-            return "Custom Data Header";
-        }
-
-        // Override the text displayed for protected names (example)
-        public override string GetTextOfProtectedName(string protectedName)
-        {
-            return protectedName + "_Protected";
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your actual file path)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-            // Create a new GlobalizationSettings instance if not already set
-            GlobalizationSettings globalization = new GlobalizationSettings();
-
-            // Assign the custom pivot globalization settings
-            globalization.PivotSettings = new CustomPivotGlobalizationSettings();
-
-            // Apply the globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = globalization;
-
-            // Refresh all pivot tables in the workbook to apply the new settings
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                foreach (PivotTable pivot in sheet.PivotTables)
-                {
-                    pivot.RefreshData();
-                    pivot.CalculateData();
-                }
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx");
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // NOTE: Custom PivotTable options are not available in this version of Aspose.Cells.
+            // If needed, configure pivot tables using the PivotTable class after they are created.
+
+            // Ensure the output directory exists
+            var outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,74 +1,80 @@
-// Title: C# script using Aspose.Cells to validate that all shapes in an Excel workbook stay within specified width and height limits
-// AI Prompts: Write a C# console program with Aspose.Cells that opens a given .xlsx file, iterates through every worksheet, and prints the names and dimensions of shapes whose Width or Height exceed user‑defined thresholds. | Enhance the shape‑validation code to export the list of oversized shapes to a CSV file, including worksheet name, shape name, width, and height. | Add command‑line arguments to the validator so that the workbook path, maximum width, and maximum height can be supplied at runtime, and return a non‑zero exit code when any violations are detected.
-// Common Searches: c# check if any shape in an Excel workbook exceeds max width or height using Aspose.Cells | how to list oversized shapes in a .xlsx file with Aspose.Cells .NET | asp.net cells shape size validation script for Excel files | automate enforcement of shape dimension limits in Excel via C# Aspose.Cells
-// Tags: Aspose.Cells shape dimension validation | C# iterate worksheet shapes | Excel shape size limit enforcement | Aspose.Cells shape width height check | C# console shape validator for .xlsx
+// Title: C# script to validate that every shape in an Excel workbook stays within a maximum width and height using Aspose.Cells
+// AI Prompts: Write a C# console program that loads an Excel workbook with Aspose.Cells, iterates all worksheets and their Shapes collections, and prints any shape whose Width or Height exceeds specified point limits. | Adapt the shape‑validation tool to accept custom max width and max height values via command‑line arguments and output the validation results to a log file. | Enhance the validator to skip hidden shapes (IsVisible = false) while still checking the dimensions of visible shapes.
+// Common Searches: aspocells c# check shape size limits in workbook | how to iterate over all shapes in an Excel file using Aspose.Cells | C# program to find oversized shapes in .xlsx with Aspose.Cells | validate shape dimensions against max width height in Aspose.Cells .NET | log shape dimension violations in Excel using Aspose.Cells API
+// Tags: Aspose.Cells iterate worksheet shapes | Aspose.Cells shape dimension validation | C# validate Excel shape size limits | Aspose.Cells shape size check .xlsx | console shape validation script .NET
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an Excel workbook with Aspose.Cells, walks through each worksheet's Shapes collection, and reports any shape whose Width or Height exceeds the defined maximum values (e.g., 200 pt width, 150 pt height). Violations are output to the console, and the script can be extended to log results or accept configurable thresholds.
-class ShapeValidator
+// A C# console application that receives an Excel file path, loads the workbook with Aspose.Cells, walks through each worksheet and its Shapes collection, and reports any shape whose Width exceeds 500 points or Height exceeds 300 points. If no violations are found, it confirms all shapes meet the defined size constraints.
+class ShapeSizeValidator
 {
-    static void Main()
-    {
-        // Path to the workbook to validate
-        string workbookPath = "input.xlsx";
+    // Maximum allowed dimensions (in points)
+    const double MaxWidth = 500.0;
+    const double MaxHeight = 300.0;
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(workbookPath))
+    static void Main(string[] args)
+    {
+        // Expect the workbook file path as the first argument
+        if (args.Length == 0)
         {
-            Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
+            Console.WriteLine("Usage: ShapeSizeValidator <workbook_path>");
             return;
         }
 
-        // Maximum allowed dimensions (in points)
-        double maxWidth = 200.0;
-        double maxHeight = 150.0;
+        string workbookPath = args[0];
 
+        // Verify that the file exists before attempting to load
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Error: File not found – \"{workbookPath}\"");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            workbook = new Workbook(workbookPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-            // Collect any shape violations
-            List<string> violations = new List<string>();
+        bool anyViolation = false;
 
+        try
+        {
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all shapes on the worksheet
+                // Iterate through all shapes on the current worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Check if the shape exceeds width or height limits
-                    if (shape.Width > maxWidth || shape.Height > maxHeight)
+                    // Check width and height against the thresholds
+                    if (shape.Width > MaxWidth || shape.Height > MaxHeight)
                     {
-                        string message = $"Sheet '{sheet.Name}', Shape '{shape.Name}' exceeds limits: Width={shape.Width}, Height={shape.Height}";
-                        violations.Add(message);
+                        anyViolation = true;
+                        Console.WriteLine(
+                            $"Violation in sheet \"{sheet.Name}\": Shape \"{shape.Name}\" " +
+                            $"has size {shape.Width}x{shape.Height} points, " +
+                            $"exceeds allowed {MaxWidth}x{MaxHeight} points.");
                     }
                 }
             }
 
-            // Output validation results
-            if (violations.Count == 0)
+            if (!anyViolation)
             {
-                Console.WriteLine("No shapes exceed the specified width and height thresholds.");
-            }
-            else
-            {
-                Console.WriteLine("Shapes exceeding the specified dimensions:");
-                foreach (string v in violations)
-                {
-                    Console.WriteLine(v);
-                }
+                Console.WriteLine("All shapes are within the specified size limits.");
             }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing shapes: {ex.Message}");
         }
     }
 }

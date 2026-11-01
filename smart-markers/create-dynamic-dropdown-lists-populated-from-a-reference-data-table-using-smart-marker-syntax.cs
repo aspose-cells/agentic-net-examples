@@ -1,83 +1,106 @@
-// Title: Generate an Excel file with a dynamic dropdown list populated from a DataTable using Aspose.Cells smart markers (C#)
-// AI Prompts: Create a workbook where a data sheet is filled using smart markers from a DataTable and apply a list‑type validation on another sheet that references the filled column. | Change the example to use the Value column as the dropdown source and move the validation to cell B5, keeping the same WorkbookDesigner workflow.
-// Common Searches: how to use Aspose.Cells WorkbookDesigner to fill a sheet and create a dropdown list in C# | dynamic Excel data validation list from DataTable using smart markers Aspose.Cells | populate Excel dropdown with values from a DataTable via smart markers in C# example
-// Tags: Aspose.Cells smart markers populate reference sheet | list validation range from smart marker output | dynamic dropdown from DataTable Aspose.Cells | WorkbookDesigner set data source for Excel validation | C# generate Excel dropdown using smart markers
+// Title: Generate an Excel file with a smart‑marker driven dropdown list using Aspose.Cells in C#
+// AI Prompts: Write C# code that creates a reference worksheet, loads categories into a DataTable, replaces a ${Category} smart marker with WorkbookDesigner, and attaches a list‑type validation to cell B1. | Show how to set up ValidationCollection so the dropdown list reads its items from a range on the Data sheet. | Provide a complete example that saves the workbook as DynamicDropdown.xlsx and includes basic exception handling.
+// Common Searches: C# Aspose.Cells create dropdown list that references another sheet | how to use smart markers with data validation in Aspose.Cells | Aspose.Cells example for populating a list validation from a DataTable | generate Excel file with dynamic dropdown using Aspose.Cells designer | Excel dropdown list from Data sheet using Aspose.Cells C#
+// Tags: Aspose.Cells WorkbookDesigner smart marker processing | list validation referencing external worksheet Aspose.Cells | C# generate Excel dropdown via ValidationCollection | populate dropdown values from DataTable Aspose.Cells | dynamic list validation implementation Aspose.Cells
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDynamicDropdown
+// The sample creates a new workbook, adds a 'Data' sheet with a category list, binds the list to a DataTable, processes a ${Category} smart marker on a 'Form' sheet using WorkbookDesigner, then applies a list‑type data validation to cell B1 that points to the category range on the Data sheet, and finally saves the file as DynamicDropdown.xlsx.
+class DynamicDropdownWithSmartMarkers
 {
-    // The sample builds a template workbook, uses a DataTable as a smart‑marker data source to fill a reference worksheet, creates a list‑type data validation on Form!A2 that points to the populated Category column, and saves the file as DynamicDropdown.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // -------------------------------------------------
+            // 1. Create reference data table on sheet "Data"
+            // -------------------------------------------------
+            Worksheet dataSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            dataSheet.Name = "Data";
+
+            // Header
+            dataSheet.Cells["A1"].PutValue("Category");
+
+            // Sample reference data
+            string[] categories = { "Fruit", "Vegetable", "Dairy", "Meat", "Grain" };
+            for (int i = 0; i < categories.Length; i++)
             {
-                // -------------------- 1. Create template workbook --------------------
-                Workbook template = new Workbook();
-
-                // Sheet that will hold the reference data (populated via smart markers)
-                Worksheet dataSheet = template.Worksheets[0];
-                dataSheet.Name = "ReferenceData";
-
-                // Header row
-                dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("Value");
-
-                // Smart markers for data rows (will be repeated for each DataTable row)
-                dataSheet.Cells["A2"].PutValue("&=RefTable.Category");
-                dataSheet.Cells["B2"].PutValue("&=RefTable.Value");
-
-                // Sheet where the dropdown will appear
-                Worksheet formSheet = template.Worksheets.Add("Form");
-                // Target cell for dropdown
-                formSheet.Cells["A2"].PutValue("Select Category");
-
-                // -------------------- 2. Prepare data source --------------------
-                DataTable dt = new DataTable("RefTable");
-                dt.Columns.Add("Category", typeof(string));
-                dt.Columns.Add("Value", typeof(int));
-
-                dt.Rows.Add("Apple", 10);
-                dt.Rows.Add("Banana", 20);
-                dt.Rows.Add("Cherry", 30);
-                dt.Rows.Add("Date", 40);
-
-                // -------------------- 3. Process smart markers --------------------
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = template
-                };
-                designer.SetDataSource(dt); // DataTable name matches smart marker table name
-                designer.Process(); // Populate the reference data
-
-                // -------------------- 4. Create dynamic dropdown list --------------------
-                // Determine the range that now contains the populated categories
-                int lastDataRow = dataSheet.Cells.MaxDataRow; // zero‑based index, includes header
-                // Build address like: ReferenceData!$A$2:$A${lastDataRow+1}
-                string listRange = $"ReferenceData!$A$2:$A${lastDataRow + 1}";
-
-                // Add validation to the target cell (Form!A2) using CellArea overload
-                CellArea targetArea = CellArea.CreateCellArea("A2", "A2");
-                int validationIndex = formSheet.Validations.Add(targetArea);
-                Validation validation = formSheet.Validations[validationIndex];
-                validation.Type = ValidationType.List;   // set validation type
-                validation.Formula1 = listRange;          // reference to the populated list
-                validation.InCellDropDown = true;         // enable dropdown arrow
-
-                // -------------------- 5. Save result --------------------
-                string outputPath = "DynamicDropdown.xlsx";
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                dataSheet.Cells[i + 1, 0].PutValue(categories[i]); // A2, A3, ...
             }
-            catch (Exception ex)
+
+            // -------------------------------------------------
+            // 2. Prepare the form sheet with a smart marker
+            // -------------------------------------------------
+            Worksheet formSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            formSheet.Name = "Form";
+
+            // Header for the dropdown column
+            formSheet.Cells["A1"].PutValue("Select Category");
+
+            // Smart marker that will be replaced by a value from the data source
+            formSheet.Cells["B1"].PutValue("${Category}");
+
+            // -------------------------------------------------
+            // 3. Set up the data source for the smart marker
+            // -------------------------------------------------
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Category", typeof(string));
+            foreach (string cat in categories)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                dt.Rows.Add(cat);
             }
+
+            // Process the smart marker
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dt);
+            designer.Process(); // Replaces ${Category} with the first row value
+
+            // -------------------------------------------------
+            // 4. Add a dynamic dropdown list to the cell B1
+            // -------------------------------------------------
+            // Define the range for the dropdown list (e.g., Data!A2:A6)
+            int firstRow = 2; // Excel rows are 1‑based, A2 is row 2
+            int lastRow = firstRow + categories.Length - 1;
+            string listRange = $"Data!$A${firstRow}:$A${lastRow}";
+
+            ValidationCollection validations = formSheet.Validations;
+
+            // Create a CellArea for B1 (row 0, column 1)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 1,
+                EndRow = 0,
+                EndColumn = 1
+            };
+
+            // Add validation for the specified area
+            validations.Add(area);
+            Validation validation = validations[validations.Count - 1];
+            validation.Type = ValidationType.List;
+            validation.Operator = OperatorType.None;
+            validation.Formula1 = $"={listRange}";
+            validation.InCellDropDown = true;
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid selection";
+            validation.ErrorMessage = "Please select a value from the list.";
+
+            // -------------------------------------------------
+            // 5. Save the workbook
+            // -------------------------------------------------
+            string outputPath = "DynamicDropdown.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,11 +1,12 @@
-// Title: Automatically adjust worksheet row heights to fit cell content with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads a workbook, calls the AutoFitRows method on a worksheet, and saves the file. | Show how to enable automatic row‑height scaling for all rows in an Aspose.Cells worksheet using .NET. | Create a minimal program that creates a new Excel file, applies AutoFitRows to the first sheet, and outputs output.xlsx.
-// Common Searches: Aspose.Cells C# how to auto fit row height for entire worksheet | Set Excel rows to automatically adjust height based on content using Aspose.Cells .NET | AutoFitRows method example for adjusting row heights in a .xlsx file | C# code to auto‑scale row heights in Aspose.Cells workbook | Make worksheet rows auto‑height in Aspose.Cells for .NET
-// Tags: row height auto‑fit with Aspose.Cells | C# auto‑fit worksheet rows | Excel row height auto‑adjust Aspose.Cells | auto‑fit rows based on cell content .NET | set default row height to auto Aspose.Cells
+// Title: Auto‑fit worksheet row heights to cell content using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates or loads an Aspose.Cells workbook, fills cells with varying text lengths, invokes the method that automatically adjusts each row’s height to fit its content, and saves the workbook. | Show how to call Aspose.Cells' AutoFitRows function in a .NET project to dynamically set row heights based on the data inside the cells.
+// Common Searches: Aspose.Cells C# auto fit rows after inserting multiline text | How to make Excel row height adjust automatically with Aspose.Cells .NET | C# example for AutoFitRows method in Aspose.Cells workbook | Set default row height to fit content using Aspose.Cells for .NET | Adjust Excel row height programmatically with Aspose.Cells C#
+// Tags: Aspose.Cells AutoFitRows C# | auto adjust Excel row height Aspose | dynamic row height based on cell content .NET | worksheet row height auto‑fit Aspose.Cells | C# Excel row height automation Aspose
 
 using Aspose.Cells;
+using System;
 
-// // This program creates a new workbook, retrieves the first worksheet, automatically adjusts all row heights to fit their content using AutoFitRows, and saves the result as output.xlsx.
+// // Creates a workbook, writes short and long strings to cells A1 and A2, calls sheet.AutoFitRows() to automatically resize each row’s height to fit the cell contents, and saves the file as Result.xlsx.
 class Program
 {
     static void Main()
@@ -16,10 +17,14 @@ class Program
         // Get the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Automatically adjust the height of all rows based on their cell content
+        // Example data to demonstrate auto‑adjusted row height
+        sheet.Cells["A1"].PutValue("Short text");
+        sheet.Cells["A2"].PutValue("This is a longer piece of text that should cause the row height to increase automatically based on its content.");
+
+        // Adjust all rows so their height fits the cell contents
         sheet.AutoFitRows();
 
         // Save the workbook
-        workbook.Save("output.xlsx");
+        workbook.Save("Result.xlsx");
     }
 }

@@ -1,92 +1,85 @@
-// Title: Modify all chart subtitles in an Excel workbook loaded from a MemoryStream and save the updated file to a new MemoryStream using Aspose.Cells for .NET
-// AI Prompts: Write C# code that reads an XLSX workbook from a MemoryStream, iterates over every worksheet and chart, sets each chart's Title.Text to a given subtitle string, and returns the modified workbook as a new MemoryStream with Aspose.Cells. | Show how to use Aspose.Cells to load an Excel file from a MemoryStream, update chart subtitles, and save the workbook back to another MemoryStream in XLSX format.
-// Common Searches: Aspose.Cells C# change chart subtitle in workbook loaded from MemoryStream | How to update all chart titles in an Excel file using Aspose.Cells without saving to disk | Save modified Excel workbook to a new MemoryStream after editing chart properties | Iterate through worksheets and charts in Aspose.Cells to set a common subtitle | Load XLSX from stream, modify chart titles, and get output stream in .NET
-// Tags: Aspose.Cells update chart subtitle from MemoryStream | C# iterate worksheets charts Aspose.Cells | save modified workbook to MemoryStream XLSX | chart title text replacement Aspose.Cells | in‑memory Excel processing Aspose.Cells
+// Title: Update all chart titles in an Excel workbook loaded from a Stream and save the result to a new MemoryStream using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a Workbook from a Stream with Aspose.Cells, iterates through every worksheet and chart, makes the chart title visible, sets a specified subtitle text, and returns the modified workbook as a MemoryStream. | Generate a method that accepts an input Stream and a subtitle string, updates each chart's title in the workbook, and saves the workbook in its original format to an output MemoryStream. | Create a console example that reads an Excel file from disk, calls the subtitle‑updating method, and writes the resulting MemoryStream to a new file.
+// Common Searches: Aspose.Cells C# change chart title text for all charts in a workbook loaded from a stream | How to set chart subtitle programmatically when using a MemoryStream with Aspose.Cells | Save modified Excel workbook to MemoryStream while preserving original file format Aspose.Cells | Iterate through worksheets and charts to update titles using Aspose.Cells .NET
+// Tags: Aspose.Cells update chart titles from stream | C# modify chart subtitle memory stream | save workbook to MemoryStream preserving format Aspose.Cells | iterate worksheets charts Aspose.Cells .NET | chart title visibility Aspose.Cells API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ChartSubtitleModifierApp
+// Loads an Excel workbook from a Stream, makes each chart title visible, sets a new subtitle text for all charts, and saves the updated workbook into a new MemoryStream while preserving the original file format.
+public class ChartSubtitleModifier
 {
-    // Loads an XLSX workbook from an input MemoryStream, loops through each worksheet and its charts to set the chart Title.Text to the supplied subtitle, then saves the workbook into a new MemoryStream in XLSX format.
-    public class ChartSubtitleModifier
+    /// <param name="inputStream">Stream containing the original workbook.</param>
+    /// <param name="newSubtitle">The text to set as the subtitle for every chart.</param>
+    /// <returns>A MemoryStream with the updated workbook.</returns>
+    public static MemoryStream ModifyChartSubtitles(Stream inputStream, string newSubtitle)
     {
-        public static MemoryStream ModifyChartSubtitles(MemoryStream inputStream, string newSubtitle)
+        try
         {
-            try
-            {
-                // Load workbook from memory stream
-                Workbook workbook = new Workbook(inputStream);
+            // Load the workbook from the provided stream.
+            Workbook workbook = new Workbook(inputStream);
 
-                // Iterate through worksheets and charts
-                foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through all worksheets.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts in the worksheet.
+                foreach (Chart chart in sheet.Charts)
                 {
-                    foreach (Chart chart in sheet.Charts)
+                    // Ensure the title is visible.
+                    if (!chart.Title.IsVisible)
                     {
-                        // Update the chart title (used here as subtitle)
-                        if (chart.Title != null)
-                        {
-                            chart.Title.Text = newSubtitle;
-                        }
+                        chart.Title.IsVisible = true;
                     }
-                }
 
-                // Save modified workbook to a new memory stream
-                MemoryStream outputStream = new MemoryStream();
-                workbook.Save(outputStream, SaveFormat.Xlsx);
-                outputStream.Position = 0;
-                return outputStream;
+                    // Set the new subtitle text (using the title text property as Aspose.Cells does not expose a separate subtitle object).
+                    chart.Title.Text = newSubtitle;
+                }
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error modifying chart subtitles: {ex.Message}");
-                throw;
-            }
+
+            // Save the modified workbook into a memory stream.
+            MemoryStream outputStream = new MemoryStream();
+            workbook.Save(outputStream, SaveFormat.Xlsx);
+            outputStream.Position = 0;
+            return outputStream;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error modifying chart subtitles: {ex.Message}");
+            throw;
         }
     }
 
-    class Program
+    // Entry point for the console application.
+    public static void Main(string[] args)
     {
-        static void Main(string[] args)
+        try
         {
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
-            string newSubtitle = "Updated Subtitle";
 
-            // Ensure the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.Error.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            using (FileStream inputFs = File.OpenRead(inputPath))
             {
-                // Load input file into a memory stream
-                using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-                using (MemoryStream inputMs = new MemoryStream())
+                MemoryStream modifiedStream = ModifyChartSubtitles(inputFs, "New Subtitle");
+
+                using (FileStream outputFs = File.Create(outputPath))
                 {
-                    fs.CopyTo(inputMs);
-                    inputMs.Position = 0;
-
-                    // Modify chart subtitles
-                    MemoryStream resultMs = ChartSubtitleModifier.ModifyChartSubtitles(inputMs, newSubtitle);
-
-                    // Write the result to the output file
-                    using (FileStream outFs = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        resultMs.CopyTo(outFs);
-                    }
-
-                    Console.WriteLine($"Modified workbook saved to {outputPath}");
+                    modifiedStream.CopyTo(outputFs);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-            }
+
+            Console.WriteLine($"Chart subtitles updated and saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled error: {ex.Message}");
         }
     }
 }

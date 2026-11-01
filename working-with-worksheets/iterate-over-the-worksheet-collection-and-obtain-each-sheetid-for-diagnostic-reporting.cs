@@ -1,50 +1,72 @@
-// Title: How to loop through all worksheets in an Excel workbook and get each worksheet's Index (SheetId) using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates over workbook.Worksheets, and prints each worksheet's Name together with its zero‑based Index. | Create a C# console program that uses Aspose.Cells to enumerate every worksheet in a workbook and output the sheet's diagnostic identifier for logging.
-// Common Searches: C# Aspose.Cells get worksheet index for each sheet in a workbook | list worksheet IDs in an Excel file using Aspose.Cells .NET | how to display sheet order numbers with Aspose.Cells in C# | diagnostic printing of worksheet indexes Aspose.Cells example | retrieve zero based sheet index Aspose.Cells C# loop
-// Tags: Aspose.Cells enumerate worksheets C# | retrieve worksheet Index property Aspose.Cells | Excel workbook sheet IDs Aspose.Cells | diagnostic worksheet enumeration .NET | loop over workbook worksheets Aspose.Cells
+// Title: How to loop through all worksheets in an Excel file using Aspose.Cells for .NET and log each sheet’s name and index
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, iterates over workbook.Worksheets, and prints each worksheet’s Name and zero‑based Index to the console. | Show a robust example that verifies the input file exists, loads the workbook, and uses a foreach loop to output worksheet identifiers for diagnostic logging. | Provide a method that returns a List<int> containing all worksheet indexes after enumerating the Worksheets collection with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET get worksheet index and name while iterating | C# enumerate worksheets in a workbook and log sheet IDs using Aspose.Cells | How to perform diagnostic logging of sheet identifiers in Aspose.Cells | Loop through workbook.Worksheets collection Aspose.Cells example | Retrieve zero‑based worksheet indexes in Aspose.Cells for .NET
+// Tags: Aspose.Cells iterate worksheets .NET | Aspose.Cells get worksheet index | Aspose.Cells log sheet names and IDs | Aspose.Cells load workbook and enumerate sheets | Aspose.Cells diagnostic worksheet iteration
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Loads an Excel workbook (creating a default one if missing), iterates through each worksheet using Aspose.Cells, writes the worksheet name and its zero‑based Index to the console for diagnostics, and saves the workbook to an output file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an Excel workbook with Aspose.Cells, safely checks the file, iterates through each worksheet, and writes the worksheet name and its zero‑based index to the console for diagnostic reporting.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists before loading
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                // Create a new workbook with a default worksheet
-                var newWorkbook = new Workbook();
-                newWorkbook.Worksheets[0].Name = "Sheet1";
-                newWorkbook.Save(inputPath);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through each worksheet and retrieve its index (zero‑based)
-            foreach (Worksheet sheet in workbook.Worksheets)
+            Workbook workbook;
+            try
             {
-                int sheetIndex = sheet.Index; // Diagnostic identifier
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" has Index: {sheetIndex}");
+                // Load the workbook from the specified file
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
             }
 
-            // Save the workbook (even if unchanged) to the output file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            try
+            {
+                // Iterate over all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Use the worksheet's Index as its identifier (zero‑based)
+                    int sheetIndex = sheet.Index;
+
+                    // Diagnostic reporting
+                    Console.WriteLine($"Worksheet Name: {sheet.Name}, Index: {sheetIndex}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while processing worksheets: {ex.Message}");
+                return;
+            }
+
+            // (Optional) Save the workbook if any modifications were made
+            // Uncomment the following lines if you need to save changes
+            /*
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+            */
         }
     }
 }

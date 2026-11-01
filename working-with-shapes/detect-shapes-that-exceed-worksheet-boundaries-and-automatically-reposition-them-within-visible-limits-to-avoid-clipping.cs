@@ -1,88 +1,110 @@
-// Title: C# Aspose.Cells: Detect and Reposition Shapes That Exceed Worksheet Used Range to Prevent Clipping
-// AI Prompts: Write C# code using Aspose.Cells that iterates over all Shape objects in a worksheet, checks if their UpperLeftRow or UpperLeftColumn are beyond the worksheet's MaxDataRow/MaxDataColumn, and moves the shape back inside the used range. | Create a method that recalculates a shape's Height and Width in points so its bottom‑right corner does not extend past the last used row or column, then apply this adjustment to each shape in the workbook. | Generate a complete console program that loads an Excel file, automatically corrects out‑of‑bounds shapes, and saves the modified workbook.
-// Common Searches: aspnet aspose.cells how to move shapes that are outside the used range of an Excel sheet | c# adjust Excel shape size to fit within last used row and column using Aspose.Cells | prevent shape clipping in generated workbook Aspose.Cells .NET | detect shapes positioned beyond worksheet boundaries and reposition them programmatically | auto resize Aspose.Cells Shape objects to stay inside visible area of worksheet
-// Tags: detect out-of-bounds shapes Aspose.Cells | reposition Excel shapes within used range .NET | adjust shape dimensions based on worksheet limits | prevent shape clipping in Aspose.Cells workbook | shape coordinate correction Aspose.Cells
+// Title: C# code to automatically detect and reposition shapes that exceed worksheet boundaries using Aspose.Cells
+// Common Searches: C# Aspose.Cells move shape that is outside the used range of a worksheet | How to adjust shape position to prevent clipping in Excel with Aspose.Cells .NET | Detect shapes extending beyond max row or column and reposition them using Aspose.Cells | Aspose.Cells shape UpperLeftRow UpperLeftColumn correction for out‑of‑bounds shapes in C# | Programmatically ensure Excel shapes stay within visible area with Aspose.Cells
+// Tags: Aspose.Cells shape boundary adjustment | C# detect out-of-bounds Excel shapes | reposition Excel shapes programmatically | prevent shape clipping Aspose.Cells | shape coordinate correction .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads a workbook, determines the maximum used row and column, iterates through every Shape on the first worksheet, moves any shape whose top‑left cell lies outside the used range back inside, and shrinks its height or width when the shape would extend beyond the worksheet limits, then saves the corrected file.
-class ShapeRepositioner
+// The example loads an Excel workbook, iterates through each worksheet and its shapes, checks each shape's UpperLeftRow/Column and LowerRightRow/Column against the sheet's maximum used row and column, and automatically repositions any shape that lies outside those limits, logging the changes before saving the updated file.
+class ShapeBoundaryAdjuster
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Work with the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Determine visible limits based on the used range
-            int maxRow = Math.Max(0, worksheet.Cells.MaxDataRow);
-            int maxColumn = Math.Max(0, worksheet.Cells.MaxDataColumn);
-
-            // Default row height and column width in points (approximate)
-            const double defaultRowHeightPoints = 15.0;
-            const double defaultColumnWidthPoints = 8.43;
-
-            // Iterate through all shapes on the worksheet
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                // ----- Reposition Top‑Left Corner -----
-                if (shape.UpperLeftRow > maxRow)
-                    shape.UpperLeftRow = maxRow;
-
-                if (shape.UpperLeftColumn > maxColumn)
-                    shape.UpperLeftColumn = maxColumn;
-
-                // ----- Adjust Bottom‑Right Corner -----
-                int heightInRows = (int)Math.Ceiling(shape.Height / defaultRowHeightPoints);
-                int widthInColumns = (int)Math.Ceiling(shape.Width / defaultColumnWidthPoints);
-
-                int bottomRow = shape.UpperLeftRow + heightInRows;
-                int rightColumn = shape.UpperLeftColumn + widthInColumns;
-
-                // Shrink height if shape exceeds the used range
-                if (bottomRow > maxRow + 1) // +1 because rows are zero‑based
-                {
-                    int allowedRows = (maxRow + 1) - shape.UpperLeftRow;
-                    shape.Height = (int)(allowedRows * defaultRowHeightPoints);
-                }
-
-                // Shrink width if shape exceeds the used range
-                if (rightColumn > maxColumn + 1) // +1 because columns are zero‑based
-                {
-                    int allowedColumns = (maxColumn + 1) - shape.UpperLeftColumn;
-                    shape.Width = (int)(allowedColumns * defaultColumnWidthPoints);
-                }
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Process each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Get the last used row/column (zero‑based indices)
+            int maxRow = sheet.Cells.MaxRow;
+            int maxColumn = sheet.Cells.MaxColumn;
+
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
+            {
+                try
+                {
+                    int ulRow = shape.UpperLeftRow;
+                    int ulCol = shape.UpperLeftColumn;
+                    int lrRow = shape.LowerRightRow;
+                    int lrCol = shape.LowerRightColumn;
+
+                    bool repositioned = false;
+
+                    // Ensure shape does not start before first row/column
+                    if (ulRow < 0)
+                    {
+                        shape.UpperLeftRow = 0;
+                        repositioned = true;
+                    }
+                    if (ulCol < 0)
+                    {
+                        shape.UpperLeftColumn = 0;
+                        repositioned = true;
+                    }
+
+                    // Shift upward if shape extends beyond last visible row
+                    if (lrRow > maxRow)
+                    {
+                        int overflowRows = lrRow - maxRow;
+                        int newUlRow = Math.Max(0, ulRow - overflowRows);
+                        shape.UpperLeftRow = newUlRow;
+                        repositioned = true;
+                    }
+
+                    // Shift leftward if shape extends beyond last visible column
+                    if (lrCol > maxColumn)
+                    {
+                        int overflowCols = lrCol - maxColumn;
+                        int newUlCol = Math.Max(0, ulCol - overflowCols);
+                        shape.UpperLeftColumn = newUlCol;
+                        repositioned = true;
+                    }
+
+                    // Log moved shapes
+                    if (repositioned)
+                    {
+                        Console.WriteLine($"Shape '{shape.Name}' on sheet '{sheet.Name}' was repositioned within visible limits.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing shape '{shape.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                }
+            }
+        }
+
+        // Save the modified workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

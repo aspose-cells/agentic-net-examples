@@ -1,115 +1,84 @@
-// Title: Measure performance of batch saving Excel workbooks with Aspose.Cells using ExcludeUnusedStyles and ExportGridLines settings
-// AI Prompts: Write a C# console program that iterates through all .xlsx files in a directory, loads each workbook with Aspose.Cells, saves it with the Workbook.Settings properties ExcludeUnusedStyles and ExportGridLines enabled via reflection, and records the total elapsed time. | Modify the batch processing loop to first save each workbook with default settings, then repeat the save using the custom settings, and output a side‑by‑side timing comparison. | Add robust error handling that logs the file path and exception message for any workbook that fails during the custom‑settings save while allowing the remaining files to continue processing.
-// Common Searches: how to benchmark Aspose.Cells workbook save speed with custom settings | c# batch convert xlsx files using Aspose.Cells and enable ExcludeUnusedStyles | using reflection to set ExportGridLines property in Aspose.Cells Workbook.Settings | compare default save time versus ExcludeUnusedStyles and ExportGridLines in Aspose.Cells
-// Tags: batch workbook save Aspose.Cells custom settings | exclude unused styles Aspose.Cells performance | export grid lines Aspose.Cells save option | reflection set Workbook.Settings C# | benchmark Aspose.Cells save time
+// Title: Batch process multiple Excel workbooks with Aspose.Cells, remove unused styles, and compare save performance against default settings
+// AI Prompts: Create a C# console application that scans a folder for .xlsx files, loads each workbook, saves it once with default options, then calls RemoveUnusedStyles and saves it again, logging the elapsed milliseconds for both saves. | Enhance the existing batch‑processing code to write the filename, default save time, and optimized save time to a CSV file for later performance analysis. | Add robust error handling and timing measurement to a routine that processes many workbooks, stores the default and optimized versions in separate directories, and prints a summary table of the timing results.
+// Common Searches: how to measure Aspose.Cells workbook save time in C# | remove unused styles from Excel files using Aspose.Cells batch processing | compare performance of default save versus RemoveUnusedStyles in Aspose.Cells | C# code to process all .xlsx files in a directory with Aspose.Cells | Aspose.Cells save performance optimization for multiple workbooks
+// Tags: batch removeunusedstyles Aspose.Cells | benchmark workbook save Aspose.Cells | default vs optimized save comparison Aspose.Cells | Aspose.Cells performance optimization Excel | C# folder iteration Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+// The program iterates over every .xlsx file in an InputWorkbooks folder, loads each workbook with Aspose.Cells, saves it using default settings, then calls RemoveUnusedStyles and saves a second copy. It records the elapsed milliseconds for both saves, outputs the timings to the console, and places the default and optimized files in separate output directories.
+class Program
 {
-    // // Scans a folder for .xlsx files, saves each workbook twice with Aspose.Cells—once using default options and once with ExcludeUnusedStyles and ExportGridLines enabled via reflection—while timing both batches and logging any errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Directories for input and output workbooks
+        string inputDir = "InputWorkbooks";
+        string outputDefaultDir = "OutputDefault";
+        string outputOptimizedDir = "OutputOptimized";
+
+        // Ensure output directories exist
+        Directory.CreateDirectory(outputDefaultDir);
+        Directory.CreateDirectory(outputOptimizedDir);
+
+        // Verify input directory exists
+        if (!Directory.Exists(inputDir))
         {
-            // Folder containing the workbooks to process
-            string inputFolder = @"C:\Workbooks\Input";
-            // Folder to save processed workbooks
-            string outputFolderDefault = @"C:\Workbooks\Output\Default";
-            string outputFolderCustom = @"C:\Workbooks\Output\Custom";
-
-            // Ensure input folder exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                return;
-            }
-
-            // Ensure output directories exist
-            Directory.CreateDirectory(outputFolderDefault);
-            Directory.CreateDirectory(outputFolderCustom);
-
-            // Gather all Excel files in the input folder
-            List<string> workbookFiles = new List<string>(Directory.GetFiles(inputFolder, "*.xlsx"));
-
-            // Measure processing time with default settings
-            Stopwatch swDefault = Stopwatch.StartNew();
-            foreach (string filePath in workbookFiles)
-            {
-                ProcessWorkbook(filePath, outputFolderDefault, applyCustomSettings: false);
-            }
-            swDefault.Stop();
-
-            // Measure processing time with custom settings (if supported)
-            Stopwatch swCustom = Stopwatch.StartNew();
-            foreach (string filePath in workbookFiles)
-            {
-                ProcessWorkbook(filePath, outputFolderCustom, applyCustomSettings: true);
-            }
-            swCustom.Stop();
-
-            // Output the timing results
-            Console.WriteLine($"Processing {workbookFiles.Count} workbooks with default settings took: {swDefault.Elapsed.TotalSeconds:F2} seconds.");
-            Console.WriteLine($"Processing {workbookFiles.Count} workbooks with custom settings took: {swCustom.Elapsed.TotalSeconds:F2} seconds.");
+            Console.WriteLine($"Input directory \"{inputDir}\" does not exist.");
+            return;
         }
 
-        /// <param name="inputPath">Full path to the source workbook.</param>
-        /// <param name="outputFolder">Folder where the processed workbook will be saved.</param>
-        /// <param name="applyCustomSettings">If true, attempts to set custom workbook options.</param>
-        private static void ProcessWorkbook(string inputPath, string outputFolder, bool applyCustomSettings)
+        // Process each .xlsx file in the input directory
+        foreach (string filePath in Directory.GetFiles(inputDir, "*.xlsx"))
         {
-            // Verify the source file exists
-            if (!File.Exists(inputPath))
+            // Guard against missing files (should not happen with GetFiles, but added for safety)
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {inputPath}");
-                return;
+                Console.WriteLine($"File not found: {filePath}");
+                continue;
             }
+
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                // ---------- Default processing (no special settings) ----------
+                Stopwatch swDefault = Stopwatch.StartNew();
 
-                if (applyCustomSettings)
-                {
-                    // Use reflection to set properties that may not exist in the current Aspose.Cells version
-                    SetWorkbookSettingIfExists(workbook.Settings, "ExcludeUnusedStyles", true);
-                    SetWorkbookSettingIfExists(workbook.Settings, "ExportGridLines", true);
-                }
+                // Load workbook (default load options)
+                Workbook wbDefault = new Workbook(filePath);
 
-                // Determine output file name and path
-                string fileName = Path.GetFileName(inputPath);
-                string outputPath = Path.Combine(outputFolder, fileName);
+                // Save workbook with default settings
+                string defaultOutputPath = Path.Combine(outputDefaultDir, fileName + "_default.xlsx");
+                wbDefault.Save(defaultOutputPath);
 
-                // Save the workbook
-                workbook.Save(outputPath);
+                swDefault.Stop();
+
+                // ---------- Optimized processing (exclude unused styles) ----------
+                Stopwatch swOptimized = Stopwatch.StartNew();
+
+                // Load workbook again for a fresh instance
+                Workbook wbOptimized = new Workbook(filePath);
+
+                // Remove unused styles to reduce file size
+                wbOptimized.RemoveUnusedStyles();
+
+                // Note: ExportGridLines setting is not available in this version of Aspose.Cells.
+                // Grid lines are exported by default; if needed, adjust via SaveOptions.
+
+                // Save optimized workbook
+                string optimizedOutputPath = Path.Combine(outputOptimizedDir, fileName + "_optimized.xlsx");
+                wbOptimized.Save(optimizedOutputPath);
+
+                swOptimized.Stop();
+
+                // Output processing times for comparison
+                Console.WriteLine($"{fileName}: Default = {swDefault.ElapsedMilliseconds} ms, Optimized = {swOptimized.ElapsedMilliseconds} ms");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
-            }
-        }
-
-        // Helper method to set a workbook setting via reflection if the property exists
-        private static void SetWorkbookSettingIfExists(object settingsObject, string propertyName, object value)
-        {
-            try
-            {
-                PropertyInfo prop = settingsObject.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-                if (prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(settingsObject, value);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log but ignore any reflection errors to keep processing robust
-                Console.WriteLine($"Unable to set '{propertyName}': {ex.Message}");
+                Console.WriteLine($"Error processing file \"{filePath}\": {ex.Message}");
             }
         }
     }

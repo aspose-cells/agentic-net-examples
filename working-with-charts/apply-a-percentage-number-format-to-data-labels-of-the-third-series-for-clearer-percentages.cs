@@ -1,83 +1,70 @@
-// Title: How to format the third series data labels as percentages in an Aspose.Cells column chart using C#
-// AI Prompts: Write C# code that adds data labels to the third series of an Aspose.Cells column chart and sets the number format to "0.00%". | Show how to enable percentage display for a specific series in an Aspose.Cells chart and customize the label format. | Provide a C# snippet that configures a column chart's third series to show both the raw value and its percentage with a custom number format.
-// Common Searches: Aspose.Cells C# set percentage number format for data labels of a specific chart series | How to display 0.00% format on third series data labels in an Aspose.Cells column chart | C# Aspose.Cells chart show value and percentage in data labels for one series | Apply custom number format to series data labels in Aspose.Cells workbook
-// Tags: Aspose.Cells chart series data label percentage format | C# set number format for chart data labels | column chart third series data labels Aspose.Cells | custom number format 0.00% Aspose.Cells | enable data labels for specific series Aspose.Cells
+// Title: Format the data labels of the third series as percentages in an Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Use the Aspose.Cells C# API to set the NumberFormat of the third series' DataLabels to "0%" and enable ShowValue. | Load an existing workbook, locate the first chart, access series index 2, apply a percentage number format to its data labels, and save the file. | Programmatically change the data label display of a specific chart series to show percentages with Aspose.Cells and persist the changes.
+// Common Searches: Aspose.Cells C# format third chart series data labels as percentage | set number format for a specific series data labels in Excel chart using Aspose.Cells | C# change data label display to 0% for a particular series in an Excel workbook | how to show percentage values on chart series data labels with Aspose.Cells .NET
+// Tags: Aspose.Cells chart series data label percentage format | C# set data label number format Aspose.Cells | apply 0% format to third series chart Aspose.Cells | Excel chart data labels show value Aspose.Cells | modify existing workbook chart series Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel workbook, accesses the first worksheet's first chart, verifies that at least three series exist, then sets the third series' data labels to display values with a "0%" number format and enables label visibility before saving the workbook.
+class Program
 {
-    // The example creates a workbook, adds three data series, builds a column chart, enables data labels for the third series, applies a "0.00%" number format to show percentages, and saves the file as an Excel workbook.
-    public class ApplyPercentageFormatToThirdSeriesDataLabels
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for three series
-                // Categories
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-
-                // Series 1 values
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-
-                // Series 2 values
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["C2"].PutValue(15);
-                sheet.Cells["C3"].PutValue(25);
-                sheet.Cells["C4"].PutValue(35);
-
-                // Series 3 values (to be shown as percentages)
-                sheet.Cells["D1"].PutValue("Series3");
-                sheet.Cells["D2"].PutValue(0.1);   // 10%
-                sheet.Cells["D3"].PutValue(0.2);   // 20%
-                sheet.Cells["D4"].PutValue(0.3);   // 30%
-
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Add the three series to the chart
-                chart.NSeries.Add("B2:B4", true); // Series 1
-                chart.NSeries.Add("C2:C4", true); // Series 2
-                chart.NSeries.Add("D2:D4", true); // Series 3
-
-                // Set category (X) data
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Enable data labels for the third series and apply percentage format
-                Series thirdSeries = chart.NSeries[2]; // zero‑based index
-                thirdSeries.DataLabels.ShowValue = true;          // show the value
-                thirdSeries.DataLabels.ShowPercentage = true;    // optional: display percentage
-                thirdSeries.DataLabels.NumberFormat = "0.00%";   // apply percentage number format
-
-                // Save the workbook
-                string outputPath = "ThirdSeriesPercentageDataLabels.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
             }
+
+            // Get the first chart
+            Chart chart = worksheet.Charts[0];
+
+            // Ensure there are at least three series in the chart
+            if (chart.NSeries.Count > 2)
+            {
+                // Access the third series (zero‑based index)
+                Series thirdSeries = chart.NSeries[2];
+
+                // Apply percentage number format to its data labels
+                thirdSeries.DataLabels.NumberFormat = "0%";
+
+                // Ensure data labels are displayed
+                thirdSeries.DataLabels.ShowValue = true;
+            }
+            else
+            {
+                Console.WriteLine("The chart does not contain at least three series.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

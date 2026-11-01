@@ -1,74 +1,78 @@
-// Title: Split an Excel workbook into individual CSV files per worksheet and generate a manifest.txt with each file’s byte size using Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that loads an .xlsx workbook with Aspose.Cells, iterates over all worksheets, saves each sheet as a separate CSV file, and writes a text file that records each CSV name and its size in bytes. | Write .NET code that uses Aspose.Cells to export every worksheet to CSV format and produces a summary file listing the generated CSV filenames alongside their byte counts.
-// Common Searches: Aspose.Cells C# export each worksheet to its own CSV and capture file size | How to produce a size report for CSV files created from Excel sheets using Aspose.Cells | C# split Excel workbook into multiple CSV files and list their byte lengths | Generate a manifest of CSV parts from an Excel workbook with Aspose.Cells | Save worksheets as CSV and create a file size manifest in .NET
-// Tags: Aspose.Cells worksheet to CSV conversion | CSV manifest generation with file sizes | SaveFormat.Csv per worksheet Aspose.Cells | Workbook split into multiple CSV files .NET | record CSV file byte length C#
+// Title: Convert each worksheet of an Excel workbook to separate CSV files and create a manifest with file names and sizes using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# split workbook into individual CSV files per worksheet | how to generate a manifest file with CSV part sizes using Aspose.Cells .NET | save each Excel sheet as CSV and record file size in a text file with Aspose.Cells | C# code to export worksheets to CSV and create a size manifest using Aspose.Cells | Aspose.Cells example for converting workbook to multiple CSV files and writing a manifest
+// Tags: worksheet to CSV conversion Aspose.Cells | split workbook into CSV parts .NET | generate CSV manifest file Aspose.Cells | record CSV file size C# | per-sheet CSV export Aspose.Cells
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads 'input.xlsx', creates an 'output' folder, iterates through each worksheet, saves each as a CSV file named after the sheet, captures the file size in bytes, and writes a 'manifest.txt' that lists every CSV filename with its corresponding size.
-class Program
+// The sample loads an XLSX workbook, iterates through its worksheets, creates a temporary workbook containing only the current sheet, saves each sheet as an individual CSV file in a designated folder, captures each CSV file's byte size, and writes a manifest.txt listing the CSV filenames with their corresponding sizes.
+class WorkbookToCsvSplitter
 {
-    static void Main()
+    static void Main(string[] args)
     {
+        // Input workbook path
+        string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file not found at path '{inputPath}'.");
+            return;
+        }
+
+        // Output directory for CSV parts
+        string outputDir = "CsvParts";
+        Directory.CreateDirectory(outputDir);
+
+        // List to hold manifest entries
+        List<string> manifestLines = new List<string>();
+
         try
         {
-            // Path to the source workbook
-            string sourcePath = "input.xlsx";
-
-            // Directory where CSV parts and the manifest will be saved
-            string outputDir = "output";
-            Directory.CreateDirectory(outputDir);
-
-            // Verify that the source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Prepare a list to hold manifest entries
-            var manifestLines = new List<string>();
+            // Load the source workbook
+            Workbook sourceWb = new Workbook(inputPath);
 
             // Iterate through each worksheet and save it as an individual CSV file
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            foreach (Worksheet sheet in sourceWb.Worksheets)
             {
-                try
-                {
-                    // Activate the current worksheet
-                    workbook.Worksheets.ActiveSheetIndex = i;
+                // Create a new workbook that will contain only the current sheet
+                Workbook partWb = new Workbook();
 
-                    // Build the CSV file name based on the worksheet name
-                    string csvFileName = $"{workbook.Worksheets[i].Name}.csv";
-                    string csvFilePath = Path.Combine(outputDir, csvFileName);
+                // Remove the default empty sheet created by the constructor
+                partWb.Worksheets.Clear();
 
-                    // Save the active worksheet as CSV (only the active sheet is exported)
-                    workbook.Save(csvFilePath, SaveFormat.Csv);
+                // Add a new (empty) worksheet to the part workbook and obtain its reference
+                int newSheetIndex = partWb.Worksheets.Add();
+                Worksheet newSheet = partWb.Worksheets[newSheetIndex];
 
-                    // Get the size of the generated CSV file
-                    long fileSize = new FileInfo(csvFilePath).Length;
+                // Copy the current sheet into the new worksheet
+                sheet.Copy(newSheet);
 
-                    // Add an entry to the manifest: file name and size in bytes
-                    manifestLines.Add($"{csvFileName},{fileSize}");
-                }
-                catch (Exception sheetEx)
-                {
-                    Console.WriteLine($"Error processing worksheet '{workbook.Worksheets[i].Name}': {sheetEx.Message}");
-                }
+                // Build the CSV file name (e.g., Sheet1.csv)
+                string csvFileName = $"{sheet.Name}.csv";
+                string csvFilePath = Path.Combine(outputDir, csvFileName);
+
+                // Save the part workbook as CSV
+                partWb.Save(csvFilePath, SaveFormat.Csv);
+
+                // Get the file size in bytes
+                long fileSize = new FileInfo(csvFilePath).Length;
+
+                // Add entry to manifest (format: FileName,SizeInBytes)
+                manifestLines.Add($"{csvFileName},{fileSize}");
             }
 
-            // Write the manifest file listing all CSV parts and their sizes
+            // Write the manifest file
             string manifestPath = Path.Combine(outputDir, "manifest.txt");
             File.WriteAllLines(manifestPath, manifestLines);
+
+            Console.WriteLine("Workbook split into CSV parts and manifest generated successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

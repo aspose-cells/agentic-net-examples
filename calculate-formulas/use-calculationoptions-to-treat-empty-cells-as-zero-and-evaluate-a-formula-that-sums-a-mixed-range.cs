@@ -1,37 +1,40 @@
-// Title: How to configure Aspose.Cells CalculationOptions to treat blank cells as zero and compute SUM(A1:A4) in C#
-// AI Prompts: Generate C# code that sets Workbook.CalculationOptions to treat empty cells as zero, inserts a SUM(A1:A4) formula, and evaluates it. | Show how to enable the TreatEmptyCellsAsZero option in Aspose.Cells, calculate a SUM across a range containing blanks, and read the result.
-// Common Searches: Aspose.Cells C# calculate sum of range with blank cells treated as zero | Set CalculationOptions TreatEmptyCellsAsZero in Aspose.Cells example | C# Aspose.Cells SUM formula includes empty cells | How to make Aspose.Cells consider empty cells as zero during formula evaluation
-// Tags: Aspose.Cells CalculationOptions TreatEmptyCellsAsZero | C# Workbook.CalculateFormula with blank cells | SUM formula evaluation Aspose.Cells | handling empty cells in Aspose.Cells calculations
+// Title: Use Aspose.Cells CalculationOptions in C# to treat blank cells as zero when evaluating a SUM formula over a mixed range
+// Common Searches: Aspose.Cells C# calculate SUM formula with empty cells treated as zero | How to set CalculationOptions to treat blanks as zero in Aspose.Cells workbook | C# sum range A1:B2 including blank cells using Aspose.Cells | Evaluate Excel formula with missing values using Aspose.Cells CalculationOptions | Aspose.Cells calculate formula ignoring empty cells in C#
+// Tags: Aspose.Cells CalculationOptions zero handling | C# SUM formula blank cells | evaluate mixed range formula Aspose.Cells | workbook.CalculateFormula empty cells | Aspose.Cells treat blanks as zero
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// // Demonstrates creating a workbook, leaving a cell empty, applying SUM(A1:A4) to another cell, configuring CalculationOptions so empty cells count as zero, evaluating the formula, and outputting the sum.
+// The program creates a new workbook, fills cells A1, A2, and B2 with numbers while leaving B1 empty, configures CalculationOptions to treat empty cells as zero, assigns the SUM(A1:B2) formula to C1, calculates all formulas, and prints the resulting sum to the console.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill some cells with numbers; leave others empty
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            // A3 is intentionally left empty
-            sheet.Cells["A4"].PutValue(30);
+            // Populate cells with numbers and leave some empty
+            sheet.Cells["A1"].PutValue(10);   // A1 = 10
+            // B1 is left empty
+            sheet.Cells["A2"].PutValue(20);   // A2 = 20
+            sheet.Cells["B2"].PutValue(30);   // B2 = 30
 
-            // Insert a formula that sums the mixed range
-            sheet.Cells["B1"].Formula = "SUM(A1:A4)";
+            // Insert the SUM formula into a cell
+            sheet.Cells["C1"].Formula = "SUM(A1:B2)";
 
-            // Evaluate all formulas in the workbook
+            // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Retrieve and display the result
-            double sumResult = sheet.Cells["B1"].DoubleValue;
-            Console.WriteLine("Sum (empty cells as zero): " + sumResult);
+            // Retrieve the calculated result
+            double sum = sheet.Cells["C1"].DoubleValue;
+
+            // Output the result
+            Console.WriteLine("Sum treating empty cells as zero: " + sum);
         }
         catch (Exception ex)
         {

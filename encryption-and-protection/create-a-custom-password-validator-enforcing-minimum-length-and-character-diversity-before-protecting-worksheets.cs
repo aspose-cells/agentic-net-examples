@@ -1,90 +1,85 @@
-// Title: Implement a custom password validator and protect Excel worksheets using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that checks a password for minimum length, uppercase, lowercase, digit, and special character, then use it to call Worksheet.Protect(ProtectionType.All, password, string.Empty). | Refactor the example to loop through every worksheet in a workbook, applying the same validated password protection, and expose the complexity rules (min length, required character sets) as configurable parameters. | Show how to catch the ArgumentException thrown by the validator and log a clear error message before attempting to protect the worksheet.
-// Common Searches: c# Aspose.Cells enforce password complexity before worksheet protection | how to validate Excel sheet password strength using Aspose.Cells .NET | protect multiple worksheets with a strong password in Aspose.Cells | custom password policy implementation for Aspose.Cells workbook protection | Aspose.Cells Protect method with custom validator example
-// Tags: custom password validator Aspose.Cells | worksheet protection with password policy .NET | Aspose.Cells Protect method password enforcement | Excel workbook password complexity .NET | C# password strength check for Excel sheets
+// Title: Create a custom password strength validator and apply worksheet protection with Aspose.Cells for Excel files in C#
+// Common Searches: how to enforce password complexity before protecting an Excel worksheet using Aspose.Cells C# | C# example for validating password length and required character types prior to workbook protection with Aspose.Cells | Aspose.Cells Protect method with custom password validator in .NET | validate password contains uppercase, lowercase, digit and special character before Excel file protection | sample code to protect all worksheets after password strength check using Aspose.Cells
+// Tags: custom password validator Aspose.Cells C# | worksheet protection password Aspose.Cells | Excel workbook protection password complexity | Aspose.Cells Protect method usage | validate password strength before Excel protection
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using Aspose.Cells;
 
-// The sample creates or loads an Excel workbook, validates each password using a custom method that enforces minimum length, uppercase, lowercase, digit, and special character requirements, then protects the worksheet(s) with Aspose.Cells' Protect method (ProtectionType.All) and saves the protected files.
+// The example creates a new Workbook, adds data, and defines a password. It runs a custom ValidatePassword method that checks for a minimum of eight characters, at least one uppercase letter, one lowercase letter, one digit, and one special character. If the password meets these criteria, each worksheet is secured with ws.Protect(ProtectionType.All, password, null). The protected workbook is saved to a specified path, with directory creation and exception handling included.
 class Program
 {
     static void Main()
     {
         try
         {
-            // ---------- Create a new workbook (create rule) ----------
-            var newWorkbook = new Workbook(); // create rule
-            var newSheet = newWorkbook.Worksheets[0];
-            string newPassword = "Str0ng!Pass";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Validate and protect the new worksheet
-            ValidatePassword(newPassword);
-            // Protect the worksheet with a password (all protection types)
-            // The third parameter is the old password; use empty string for a new protection
-            newSheet.Protect(ProtectionType.All, newPassword, string.Empty);
+            // Add sample data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Data");
 
-            // Save the newly created and protected workbook (save rule)
-            newWorkbook.Save("NewProtectedWorkbook.xlsx"); // save rule
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error creating new workbook: {ex.Message}");
-        }
+            // Password to protect the worksheets
+            string password = "P@ssw0rd123";
 
-        try
-        {
-            // Ensure the template file exists; create a simple one if missing
-            const string templatePath = "Template.xlsx";
-            if (!File.Exists(templatePath))
+            // Validate the password before applying protection
+            if (!ValidatePassword(password))
             {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Name = "TemplateSheet";
-                tempWb.Save(templatePath);
+                Console.WriteLine("Password does not meet the required security criteria.");
+                return;
             }
 
-            // ---------- Load an existing workbook (load rule) ----------
-            var loadedWorkbook = new Workbook(templatePath); // load rule
-            var loadedSheet = loadedWorkbook.Worksheets[0];
-            string loadedPassword = "An0ther#Pass";
+            // Protect each worksheet with the validated password
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                // The third parameter is the old password; not needed here, so pass null
+                ws.Protect(ProtectionType.All, password, null);
+            }
 
-            // Validate and protect the loaded worksheet
-            ValidatePassword(loadedPassword);
-            // Protect the worksheet with a password (all protection types)
-            loadedSheet.Protect(ProtectionType.All, loadedPassword, string.Empty);
+            // Determine output path and ensure directory exists
+            string outputPath = "ProtectedWorkbook.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the loaded and protected workbook (save rule)
-            loadedWorkbook.Save("LoadedProtectedWorkbook.xlsx"); // save rule
+            // Save the protected workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error processing loaded workbook: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Custom password validator enforcing minimum length and character diversity
-    static void ValidatePassword(string password)
+    // Custom password validator:
+    // - Minimum length: 8 characters
+    // - At least one uppercase letter
+    // - At least one lowercase letter
+    // - At least one digit
+    // - At least one special character
+    static bool ValidatePassword(string pwd)
     {
-        const int minLength = 8;
-        if (string.IsNullOrEmpty(password) || password.Length < minLength)
-            throw new ArgumentException($"Password must be at least {minLength} characters long.");
+        if (string.IsNullOrEmpty(pwd) || pwd.Length < 8)
+            return false;
 
-        // At least one uppercase letter
-        if (!Regex.IsMatch(password, @"[A-Z]"))
-            throw new ArgumentException("Password must contain at least one uppercase letter.");
+        bool hasUpper = false, hasLower = false, hasDigit = false, hasSpecial = false;
 
-        // At least one lowercase letter
-        if (!Regex.IsMatch(password, @"[a-z]"))
-            throw new ArgumentException("Password must contain at least one lowercase letter.");
+        foreach (char c in pwd)
+        {
+            if (char.IsUpper(c))
+                hasUpper = true;
+            else if (char.IsLower(c))
+                hasLower = true;
+            else if (char.IsDigit(c))
+                hasDigit = true;
+            else if (!char.IsWhiteSpace(c) && !char.IsLetterOrDigit(c))
+                hasSpecial = true;
+        }
 
-        // At least one digit
-        if (!Regex.IsMatch(password, @"\d"))
-            throw new ArgumentException("Password must contain at least one digit.");
-
-        // At least one special character (non-word character)
-        if (!Regex.IsMatch(password, @"[\W_]"))
-            throw new ArgumentException("Password must contain at least one special character.");
+        return hasUpper && hasLower && hasDigit && hasSpecial;
     }
 }

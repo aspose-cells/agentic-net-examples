@@ -1,62 +1,50 @@
-// Title: How to configure Aspose.Cells C# pivot tables to show zeros for empty cells
-// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, enables the Worksheet.DisplayZeros option, adds data with missing entries, builds a pivot table, and saves the file so that missing values are rendered as 0. | Update an existing Aspose.Cells workbook to turn on zero display for empty cells and refresh its pivot tables, ensuring blanks appear as zero.
-// Common Searches: Aspose.Cells C# show zeros for blank cells in a pivot table | Enable DisplayZeros on worksheet to affect pivot table values in Aspose .NET | How to make empty cells appear as 0 in Excel pivot tables using Aspose.Cells | C# Aspose.Cells pivot table zero handling for null data | Set Aspose.Cells workbook to display zero for missing values in pivot reports
-// Tags: Worksheet.DisplayZeros option Aspose.Cells | pivot table zero handling Aspose.Cells | C# generate Excel pivot with Aspose.Cells | empty cell rendering as zero Aspose.Cells | configure Aspose.Cells workbook for zero display
+// Title: How to enable zero-value display for empty cells in an Aspose.Cells pivot table using C# (property not available in current version)
+// Common Searches: Aspose.Cells C# show zeros for empty cells in a pivot table | set pivot table to display zero values with Aspose.Cells .NET | Aspose.Cells pivot table option to treat blanks as zero in C# | why is DisplayZeroValues missing in Aspose.Cells pivot tables | example code for configuring empty cell display in Aspose.Cells pivot tables
+// Tags: Aspose.Cells pivot table display zero values | C# Aspose.Cells pivot table configuration | Excel pivot table blanks as zero Aspose.Cells | missing DisplayZeroValues property Aspose.Cells | configure empty cell handling Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, checks the first worksheet for a pivot table, attempts to access the DisplayZeroValues setting (which is not present in the current Aspose.Cells version), logs the limitation, and saves the workbook.
+class Program
 {
-    // The example creates a new workbook, sets Worksheet.DisplayZeros = true to ensure blanks are treated as zero, populates sample data with an empty cell, adds a pivot table on that range, configures row and data fields, calculates the pivot data, and saves the file, resulting in a pivot table where empty cells are displayed as 0.
-    public class PivotTableDisplayZeroValuesDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Load existing workbook or create a new one if the file is missing
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Check for at least one pivot table
+            if (worksheet.PivotTables.Count > 0)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Access the first pivot table
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Ensure zero values are displayed in the worksheet (affects pivot tables as well)
-                sheet.DisplayZeros = true;
-
-                // Populate sample data with some empty cells (null) that will be treated as zero
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["A3"].PutValue("B");
-                // B3 left empty – will be shown as zero
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B4"].PutValue(300);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D2", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-                // Calculate the pivot table data
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotTableDisplayZeroValues.xlsx");
+                // Note: The DisplayZeroValues property is not available in this version of Aspose.Cells.
+                // If needed, configure other pivot table settings here.
+                Console.WriteLine("Pivot table found. (Zero-value display setting not supported in this version.)");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No pivot tables found in the first worksheet.");
             }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

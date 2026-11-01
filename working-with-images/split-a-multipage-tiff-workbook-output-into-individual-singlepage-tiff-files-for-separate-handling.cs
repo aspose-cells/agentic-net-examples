@@ -1,68 +1,49 @@
-// Title: How to split a multi‑page TIFF generated from an Excel workbook into separate single‑page TIFF files using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, determines the total number of pages in the first worksheet, and saves each page as an individual TIFF file with sequential names. | Show how to configure ImageOrPrintOptions and use SheetRender to export every worksheet page to its own TIFF image, including checks for the source file and per‑page exception handling. | Create a C# example that iterates over SheetRender.PageCount, calls ToImage for each index, and logs any rendering errors while producing files like Page_1.tiff, Page_2.tiff, etc.
-// Common Searches: Aspose.Cells C# split multi page tiff into separate files | render each worksheet page as individual tiff using SheetRender | C# export Excel worksheet pages to separate tiff images Aspose | how to get SheetRender page count and save each page as tiff | error handling when saving multiple tiff files with Aspose.Cells
-// Tags: Aspose.Cells SheetRender TIFF export | C# multi-page TIFF splitting | ImageOrPrintOptions OnePagePerSheet usage | per-page Excel to TIFF conversion | separate TIFF files generation Aspose
+// Title: How to split a multi‑page TIFF generated from an Excel worksheet into separate single‑page TIFF files using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, renders each printed page of a worksheet, and saves each page as an individual TIFF file. | Demonstrate using SheetRender and ImageOrPrintOptions to export every worksheet page to separate TIFF images with sequential filenames. | Create a console application that iterates over SheetRender.PageCount and calls ToImage for each page to produce Page_1.tiff, Page_2.tiff, etc.
+// Common Searches: Aspose.Cells C# split multi page TIFF into separate files per worksheet page | How to export each printed page of an Excel sheet as individual TIFF images using Aspose.Cells | C# code to render Excel worksheet pages to separate TIFF files with Aspose.Cells | Save multi‑page TIFF from Excel as separate page files using Aspose.Cells .NET
+// Tags: Aspose.Cells SheetRender export single-page TIFF | C# Aspose.Cells render worksheet pages to TIFF | ImageOrPrintOptions SaveFormat TIFF multi-page split | Aspose.Cells split multi-page TIFF files | Excel worksheet to separate TIFF pages Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The program loads an Excel workbook, uses Aspose.Cells SheetRender with ImageOrPrintOptions to determine the number of pages in the first worksheet, and saves each page as a separate TIFF file (Page_1.tiff, Page_2.tiff, …). It includes a check for the source file's existence and per‑page error handling.
-class Program
+// The example loads an Excel workbook, configures ImageOrPrintOptions for TIFF, uses SheetRender to determine page count, then iterates through each page and saves it as a separate TIFF file named Page_1.tiff, Page_2.tiff, and so on.
+class TiffSplitter
 {
     static void Main()
     {
-        try
+        // Load the source workbook (the workbook that will be rendered to a multi‑page TIFF)
+        // Replace "source.xlsx" with the path to your original Excel file.
+        Workbook workbook = new Workbook("source.xlsx");
+
+        // Choose the worksheet you want to split. Here we use the first worksheet.
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Configure rendering options for TIFF output.
+        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
         {
-            // Path to the source workbook.
-            string sourcePath = "SourceWorkbook.xlsx";
+            // Set the output format to TIFF.
+            SaveFormat = SaveFormat.Tiff,
+            // Each page will be rendered separately; we do not combine pages into one image.
+            OnePagePerSheet = false
+        };
 
-            // Verify that the source file exists to avoid FileNotFoundException.
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+        // Create a SheetRender object which provides page‑by‑page rendering capabilities.
+        SheetRender sheetRender = new SheetRender(sheet, renderOptions);
 
-            // Load the workbook that will be exported as a multi‑page TIFF.
-            Workbook workbook = new Workbook(sourcePath);
+        // Get the total number of pages that the worksheet will occupy when printed.
+        int pageCount = sheetRender.PageCount;
 
-            // Get the first worksheet (adjust index if needed).
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Configure image options for TIFF output.
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                // Allow multiple pages per worksheet (required for multi‑page TIFF).
-                OnePagePerSheet = false
-                // Note: In some Aspose.Cells versions the ImageFormat property may not be available.
-                // The default format (PNG) will be used if ImageFormat cannot be set.
-            };
-
-            // Use SheetRender to obtain the number of pages and render each page.
-            SheetRender render = new SheetRender(sheet, imgOptions);
-            int totalPages = render.PageCount;
-
-            // Iterate through each page and save it as an individual TIFF file.
-            for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
-            {
-                try
-                {
-                    string outputFile = $"Page_{pageIndex + 1}.tiff";
-                    render.ToImage(pageIndex, outputFile);
-                }
-                catch (Exception exPage)
-                {
-                    Console.WriteLine($"Error rendering page {pageIndex + 1}: {exPage.Message}");
-                }
-            }
-
-            Console.WriteLine("Splitting completed. Individual TIFF files have been created.");
-        }
-        catch (Exception ex)
+        // Iterate through each page and save it as an individual TIFF file.
+        for (int pageIndex = 0; pageIndex < pageCount; pageIndex++)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Build a file name for the current page (e.g., "Page_1.tiff", "Page_2.tiff", ...).
+            string outputFileName = $"Page_{pageIndex + 1}.tiff";
+
+            // Render the specific page to the file.
+            sheetRender.ToImage(pageIndex, outputFileName);
         }
+
+        Console.WriteLine("TIFF pages have been split into separate files successfully.");
     }
 }

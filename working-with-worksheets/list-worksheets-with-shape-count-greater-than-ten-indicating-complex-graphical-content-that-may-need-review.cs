@@ -1,12 +1,12 @@
-// Title: Identify Excel worksheets containing more than ten shapes with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that returns a list of worksheet names where the number of shapes exceeds ten. | Create a method that scans an Excel workbook with Aspose.Cells and logs each sheet's name and shape count when the count is greater than ten. | Generate a console application in C# that loads a workbook, iterates worksheets, and prints sheets that contain over ten graphical objects.
-// Common Searches: aspocells c# find worksheets with many shapes | how to list Excel sheets that have over 10 drawings using Aspose.Cells | C# count shapes in each worksheet Aspose.Cells example | filter workbook worksheets by number of shapes .NET | identify Excel worksheets with complex graphics Aspose.Cells
-// Tags: Aspose.Cells worksheet shape enumeration | filter Excel sheets by shape count .NET | detect high shape density in workbook | list worksheets with extensive graphics Aspose.Cells | C# shape count threshold for Excel worksheets
+// Title: Identify Excel worksheets with more than ten shapes using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that prints each worksheet name and its shape count when the count exceeds ten. | Create a method that returns a collection of worksheet names where the number of shapes is greater than ten using Aspose.Cells. | Adapt the sample to log the worksheet name together with the total shapes for all sheets that have more than ten drawings.
+// Common Searches: aspnet how to list worksheets that have over 10 shapes with Aspose.Cells | C# Aspose.Cells count drawings per worksheet and filter results | retrieve Excel sheet names where shape count is greater than ten using Aspose.Cells | filter worksheets by number of shapes in a workbook Aspose.Cells .NET | find complex graphical content in Excel sheets with Aspose.Cells C#
+// Tags: Aspose.Cells count worksheet shapes | C# filter worksheets by shape count | Aspose.Cells retrieve sheets with many drawings | Excel workbook shape analysis Aspose.Cells | list worksheets exceeding shape threshold .NET
 
 using System;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook, iterates through every worksheet, counts the shapes on each sheet, and outputs the names of worksheets that have more than ten shapes, highlighting sheets with complex graphical content.
+// // Loads an Excel workbook with Aspose.Cells, iterates through each worksheet, checks the Shapes collection count, and writes to the console the worksheet name and shape count for any sheet that contains more than ten shapes.
 class Program
 {
     static void Main()
@@ -14,16 +14,16 @@ class Program
         // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through each worksheet in the workbook
+        // Iterate through all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Count the number of shapes on the current worksheet
+            // Get the number of shapes on the current worksheet
             int shapeCount = sheet.Shapes.Count;
 
-            // If the worksheet has more than ten shapes, output its name
+            // If the worksheet has more than ten shapes, output its name and count
             if (shapeCount > 10)
             {
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" has {shapeCount} shapes (complex graphical content).");
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {shapeCount} shapes.");
             }
         }
     }

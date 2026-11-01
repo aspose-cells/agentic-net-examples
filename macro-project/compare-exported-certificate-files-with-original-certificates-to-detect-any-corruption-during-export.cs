@@ -1,67 +1,81 @@
-// Title: C# console utility to verify that an exported certificate matches the original by comparing SHA‑256 hashes
-// AI Prompts: Write a C# console program that accepts two file paths (original and exported certificate), computes their SHA256 hashes with System.Security.Cryptography, and outputs whether the files are identical. | Create a reusable C# method `string GetFileSha256(string path)` that returns the SHA256 hash of any file and throws FileNotFoundException for missing files. | Enhance a C# file‑comparison tool to display both SHA256 values and a clear message indicating a match or possible corruption. | Develop NUnit tests for a certificate export validator that checks hash equality and validates exception handling for nonexistent files.
-// Common Searches: how to compare two certificate files for integrity in C# | C# program to check if exported .pfx is corrupted | verify SHA256 hash of a certificate file using .NET | console app to validate exported certificate against original | detect file corruption after exporting certificates with C#
-// Tags: compute SHA256 hash of file C# | compare certificate files integrity .NET | file hash validation for exported certificates | C# console utility for certificate integrity check | System.Security.Cryptography SHA256 file comparison
+// Title: Validate an exported .cer certificate against the original file by comparing SHA256 hashes in C#
+// Common Searches: C# code to compare two .cer files for integrity using SHA256 | how to detect corruption in exported certificate with .NET hash | verify that exported certificate matches original using file hash in C# | compute SHA256 of a certificate file and compare in .NET | command line tool to check certificate export integrity C#
+// Tags: SHA256 hash comparison for .cer files | certificate integrity verification in .NET | compare certificate files using StructuralComparisons | detect export corruption of certificates C# | file hash validation for X509 certificates
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Collections;
 
-// The example provides a C# console application that computes SHA256 hashes of an original certificate and its exported copy, compares the hashes to detect corruption, prints diagnostic hash values, and includes robust error handling for missing files.
-class CertificateExportValidator
+// The CertificateComparer class provides a static method that validates whether an exported .cer certificate matches the original by computing SHA256 hashes for both files, comparing the resulting byte arrays with StructuralComparisons, and reporting the outcome. It includes a helper ComputeSha256 method and a Main entry point that accepts optional command‑line arguments for the file paths.
+class CertificateComparer
 {
-    // Computes SHA256 hash of a file
-    private static string ComputeFileHash(string filePath)
+    // Compare two certificate files by computing their SHA256 hashes.
+    // Returns true if the files are identical, false otherwise.
+    public static bool CompareCertificates(string originalPath, string exportedPath)
     {
-        using (FileStream stream = File.OpenRead(filePath))
-        using (SHA256 sha256 = SHA256.Create())
-        {
-            byte[] hashBytes = sha256.ComputeHash(stream);
-            return BitConverter.ToString(hashBytes).Replace("-", "").ToUpperInvariant();
-        }
-    }
-
-    // Compares two files by their SHA256 hashes and returns true if they are identical
-    public static bool AreFilesIdentical(string originalFilePath, string exportedFilePath)
-    {
-        if (!File.Exists(originalFilePath))
-            throw new FileNotFoundException("Original certificate file not found.", originalFilePath);
-        if (!File.Exists(exportedFilePath))
-            throw new FileNotFoundException("Exported certificate file not found.", exportedFilePath);
-
-        string originalHash = ComputeFileHash(originalFilePath);
-        string exportedHash = ComputeFileHash(exportedFilePath);
-
-        // Output hashes for diagnostic purposes
-        Console.WriteLine($"Original SHA256: {originalHash}");
-        Console.WriteLine($"Exported SHA256: {exportedHash}");
-
-        return string.Equals(originalHash, exportedHash, StringComparison.OrdinalIgnoreCase);
-    }
-
-    // Entry point for testing
-    static void Main(string[] args)
-    {
-        if (args.Length != 2)
-        {
-            Console.WriteLine("Usage: CertificateExportValidator <originalCertificatePath> <exportedCertificatePath>");
-            return;
-        }
-
-        string originalPath = args[0];
-        string exportedPath = args[1];
-
         try
         {
-            bool isIdentical = AreFilesIdentical(originalPath, exportedPath);
-            if (isIdentical)
-                Console.WriteLine("The exported certificate matches the original. No corruption detected.");
-            else
-                Console.WriteLine("The exported certificate differs from the original. Possible corruption detected.");
+            if (!File.Exists(originalPath))
+            {
+                Console.WriteLine($"Original file not found: {originalPath}");
+                return false;
+            }
+
+            if (!File.Exists(exportedPath))
+            {
+                Console.WriteLine($"Exported file not found: {exportedPath}");
+                return false;
+            }
+
+            byte[] originalHash = ComputeSha256(originalPath);
+            byte[] exportedHash = ComputeSha256(exportedPath);
+
+            bool areEqual = StructuralComparisons.StructuralEqualityComparer.Equals(originalHash, exportedHash);
+
+            Console.WriteLine(areEqual
+                ? "Certificates match. No corruption detected."
+                : "Certificates differ! Possible corruption during export.");
+
+            return areEqual;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during validation: {ex.Message}");
+            Console.WriteLine($"Error comparing certificates: {ex.Message}");
+            return false;
+        }
+    }
+
+    // Compute SHA256 hash of a file.
+    private static byte[] ComputeSha256(string filePath)
+    {
+        using (FileStream stream = File.OpenRead(filePath))
+        using (SHA256 sha = SHA256.Create())
+        {
+            return sha.ComputeHash(stream);
+        }
+    }
+
+    // Example usage.
+    static void Main(string[] args)
+    {
+        try
+        {
+            // Default file paths; can be overridden by command‑line arguments.
+            string originalCertificatePath = @"C:\Certificates\original.cer";
+            string exportedCertificatePath = @"C:\Certificates\exported.cer";
+
+            if (args.Length >= 2)
+            {
+                originalCertificatePath = args[0];
+                exportedCertificatePath = args[1];
+            }
+
+            CompareCertificates(originalCertificatePath, exportedCertificatePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

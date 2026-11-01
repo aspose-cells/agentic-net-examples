@@ -1,52 +1,64 @@
-// Title: Convert an Excel workbook to PDF with custom header and footer text using Aspose.Cells for .NET
-// AI Prompts: Write C# code that defines left, center, and right sections for both header and footer on a worksheet, then saves the workbook as a PDF with Aspose.Cells. | Show how to embed dynamic placeholders such as file name, current date, page number, and time into worksheet headers/footers before PDF conversion using Aspose.Cells. | Demonstrate configuring PdfSaveOptions to preserve document structure while exporting a workbook that contains custom headers and footers to PDF.
-// Common Searches: how to add custom header and footer in Aspose.Cells before saving as PDF | c# Aspose.Cells set worksheet page header left center right sections | export Excel to PDF with page numbers and date using Aspose.Cells .NET | include file name in PDF header when converting workbook with Aspose.Cells | Aspose.Cells PdfSaveOptions ExportDocumentStructure example
-// Tags: Aspose.Cells set header footer | worksheet page setup header sections | export workbook to PDF with custom header | PdfSaveOptions document structure Aspose.Cells | dynamic placeholders header footer .NET
+// Title: Convert an Excel workbook to PDF with custom header and footer using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add left header and center footer before saving workbook as PDF | How to set page header and footer for all worksheets in Aspose.Cells and export to PDF | C# export Excel to PDF with dynamic date footer using Aspose.Cells | Apply company confidential header to every page of PDF generated from Excel with Aspose.Cells | Aspose.Cells PDF conversion include page numbers and custom footer text
+// Tags: Aspose.Cells set worksheet header C# | Aspose.Cells add footer to PDF export | Excel to PDF conversion with custom page header | C# Aspose.Cells page setup header footer | PDF generation from workbook with header footer Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHeaderFooterPdfDemo
+// The example loads an Excel file, iterates through each worksheet to assign a left header and a centered footer via the PageSetup object, ensures the output folder exists, and then saves the workbook as a PDF that contains the custom header and footer on every page.
+class WorkbookToPdfWithHeaderFooter
 {
-    // The program creates a workbook, adds sample data, configures left/center/right header and footer sections with static text and dynamic fields (file name, date, page number, time), sets PdfSaveOptions to export document structure, and saves the workbook as a PDF containing the custom header and footer on every page.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            worksheet.Cells["A1"].PutValue("Sample Data");
-            worksheet.Cells["A2"].PutValue(DateTime.Now.ToString());
-
-            // Set custom header (left, center, right sections)
-            // Example: Left - file name, Center - custom text, Right - date
-            worksheet.PageSetup.SetHeader(0, "&F");                     // Left section: file name
-            worksheet.PageSetup.SetHeader(1, "My Custom Header Text"); // Center section: custom text
-            worksheet.PageSetup.SetHeader(2, "&D");                     // Right section: current date
-
-            // Set custom footer (left, center, right sections)
-            // Example: Left - page number, Center - custom text, Right - time
-            worksheet.PageSetup.SetFooter(0, "Page &P of &N");          // Left section: page numbering
-            worksheet.PageSetup.SetFooter(1, "My Custom Footer Text"); // Center section: custom text
-            worksheet.PageSetup.SetFooter(2, "&T");                    // Right section: current time
-
-            // Configure PDF save options if needed (e.g., export document structure)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                ExportDocumentStructure = true
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Save the workbook as PDF with the defined header/footer
-            string outputPath = "WorkbookWithHeaderFooter.pdf";
-            workbook.Save(outputPath, pdfOptions);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine($"Workbook saved to PDF with custom header/footer at: {outputPath}");
+            // Define custom header and footer text
+            string headerText = "Company Confidential - Report";
+            string footerText = "Generated on " + DateTime.Now.ToString("yyyy-MM-dd") + " - Page &P of &N";
+
+            // Apply header and footer to every worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Access the page setup of the worksheet
+                PageSetup pageSetup = sheet.PageSetup;
+
+                // Set the left header (section 0) and center footer (section 1)
+                pageSetup.SetHeader(0, headerText);   // Left header
+                pageSetup.SetFooter(1, footerText);   // Center footer
+
+                // Optional: ensure headings are printed (if required)
+                pageSetup.PrintHeadings = true;
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as PDF with the applied header/footer
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

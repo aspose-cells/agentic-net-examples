@@ -1,36 +1,119 @@
-// Title: How to convert an XLS workbook to a Markdown document with column-aligned tables using Aspose.Cells for .NET
-// AI Prompts: Write a C# snippet that opens an .xls file with Aspose.Cells, configures the Markdown export to use space characters for padding, and writes the result to a .md file. | Demonstrate exporting an Excel worksheet to Markdown where the top row becomes the table header and each column is spaced evenly. | Build a console program that reads an existing XLS workbook and generates a Markdown file with neatly padded tables using Aspose.Cells settings.
-// Common Searches: aspnet convert xls to markdown with aligned columns using Aspose.Cells | c# export excel sheet to markdown table preserving header row | how to set MarkdownSaveOptions AlignColumnPadding in Aspose.Cells | save workbook as markdown with space padding for columns c# | markdown table alignment from Excel using Aspose.Cells example
-// Tags: Aspose.Cells MarkdownSaveOptions column spacing | XLS workbook to markdown conversion Aspose.Cells | C# create markdown tables from Excel data | first worksheet row as markdown table header | aligned markdown tables via Aspose.Cells
+// Title: Convert an XLS workbook to a Markdown document with aligned tables using Aspose.Cells for .NET
+// Common Searches: C# convert .xls file to markdown table with column alignment using Aspose.Cells | How to export Excel worksheets as aligned markdown tables in .NET | Generate markdown from a workbook with padded cells using Aspose.Cells | Create a markdown file from multiple Excel sheets preserving table formatting in C# | Programmatically convert legacy XLS workbook to markdown document
+// Tags: Aspose.Cells XLS to Markdown conversion | aligned markdown tables from Excel data | C# compute column widths for markdown tables | export workbook worksheets as markdown | markdown table generation with Aspose.Cells
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Markdown;
 
-// The program loads an XLS workbook with Aspose.Cells, configures MarkdownSaveOptions to align columns using spaces and to treat the first row as the table header, then saves the workbook as a Markdown file with properly aligned tables.
-class Program
+namespace XlsToMarkdown
 {
-    static void Main()
+    // The example loads an input.xls workbook with Aspose.Cells, iterates each worksheet, calculates the maximum width of each column, and builds a Markdown document where each sheet is represented by a heading followed by an aligned table. Cells are padded based on column widths, a separator row is added after the header, and the resulting markdown is saved to output.md with basic error handling.
+    class Program
     {
-        // Source XLS workbook path
-        string sourcePath = "input.xls";
-
-        // Destination Markdown file path
-        string outputPath = "output.md";
-
-        // Load the workbook from the XLS file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Set up Markdown save options with column alignment enabled
-        MarkdownSaveOptions saveOptions = new MarkdownSaveOptions
+        static void Main(string[] args)
         {
-            AlignColumnPadding = ' ',                     // Align columns using spaces
-            TableHeaderType = MarkdownTableHeaderType.FirstRow // Use the first row as table header
-        };
+            const string inputPath = "input.xls";
+            const string outputPath = "output.md";
 
-        // Save the workbook as a Markdown document
-        workbook.Save(outputPath, saveOptions);
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        Console.WriteLine("Workbook successfully converted to Markdown with aligned tables.");
+            Workbook workbook;
+            try
+            {
+                // Load the XLS workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
+            }
+
+            var markdown = new StringBuilder();
+
+            try
+            {
+                // Process each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Add a heading for the worksheet
+                    markdown.AppendLine($"## {sheet.Name}");
+                    markdown.AppendLine();
+
+                    // Determine the used range of the sheet
+                    int maxRow = sheet.Cells.MaxDataRow;      // zero‑based index of the last row with data
+                    int maxCol = sheet.Cells.MaxDataColumn;   // zero‑based index of the last column with data
+
+                    // Skip empty sheets
+                    if (maxRow < 0 || maxCol < 0)
+                    {
+                        continue;
+                    }
+
+                    // Compute the maximum width of each column (for alignment)
+                    int[] colWidths = new int[maxCol + 1];
+                    for (int r = 0; r <= maxRow; r++)
+                    {
+                        for (int c = 0; c <= maxCol; c++)
+                        {
+                            string cellText = sheet.Cells[r, c].StringValue ?? string.Empty;
+                            colWidths[c] = Math.Max(colWidths[c], cellText.Length);
+                        }
+                    }
+
+                    // Local function to write a row to the markdown builder
+                    void AppendRow(int rowIndex, bool isHeader = false)
+                    {
+                        markdown.Append("|");
+                        for (int c = 0; c <= maxCol; c++)
+                        {
+                            string cellText = sheet.Cells[rowIndex, c].StringValue ?? string.Empty;
+                            string padded = cellText.PadRight(colWidths[c]);
+                            markdown.Append($" {padded} |");
+                        }
+                        markdown.AppendLine();
+
+                        // After the header row, add the separator line required by Markdown tables
+                        if (isHeader)
+                        {
+                            markdown.Append("|");
+                            for (int c = 0; c <= maxCol; c++)
+                            {
+                                string dashes = new string('-', colWidths[c]);
+                                markdown.Append($" {dashes} |");
+                            }
+                            markdown.AppendLine();
+                        }
+                    }
+
+                    // Write the header row (first row of the sheet)
+                    AppendRow(0, isHeader: true);
+
+                    // Write the remaining data rows
+                    for (int r = 1; r <= maxRow; r++)
+                    {
+                        AppendRow(r);
+                    }
+
+                    // Add an empty line after each table for readability
+                    markdown.AppendLine();
+                }
+
+                // Save the generated Markdown to a file
+                File.WriteAllText(outputPath, markdown.ToString());
+                Console.WriteLine($"Conversion completed. Markdown saved to \"{outputPath}\"");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
+        }
     }
 }

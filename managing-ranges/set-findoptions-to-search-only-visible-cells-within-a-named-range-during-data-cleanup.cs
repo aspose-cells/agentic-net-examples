@@ -1,79 +1,111 @@
-// Title: Configure FindOptions to search only visible cells within a named range and clear matching values using Aspose.Cells in C#
-// AI Prompts: Write C# code that creates a FindOptions instance, enables SearchInVisibleCellsOnly (using reflection for older Aspose.Cells versions), searches a named range for a specific text, and clears the cell value only if its row and column are visible. | Show how to detect at runtime whether the SearchInVisibleCellsOnly property exists on FindOptions before setting it, ensuring compatibility across different Aspose.Cells releases. | Demonstrate verifying row and column visibility after a Find operation and removing the found text exclusively from visible cells in an Excel worksheet with Aspose.Cells.
-// Common Searches: Aspose.Cells FindOptions search only visible cells in a named range C# | how to delete a cell value after finding text only in visible rows using Aspose.Cells | check for SearchInVisibleCellsOnly property in Aspose.Cells .NET before setting | C# data cleanup find and clear specific value in visible Excel cells Aspose.Cells | using reflection to set FindOptions.SearchInVisibleCellsOnly for older Aspose.Cells versions
-// Tags: FindOptions visible cells filter | clear cell value after find Aspose.Cells | reflection set SearchInVisibleCellsOnly | named range visibility handling | Excel cleanup visible rows C#
+// Title: Use FindOptions to locate and clear a string in a visible‑only named range with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# find a string in a named range and delete it | How to search only visible cells in a named range using FindOptions in Aspose.Cells | C# iterate through a named range to clear a specific cell value with Aspose.Cells | Aspose.Cells FindOptions case‑insensitive contains search within a named range | Remove target value from a named range in an Excel workbook using Aspose.Cells .NET
+// Tags: Aspose.Cells FindOptions visible cells | Aspose.Cells named range search | Aspose.Cells clear cell value | Aspose.Cells case-insensitive contains | Aspose.Cells data cleanup range iteration
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExample
+// The example loads or creates a workbook, retrieves the named range "MyRange", configures FindOptions for a case‑insensitive contains search, manually iterates over the visible cells in the range, clears the first cell that contains the target string, and saves the updated workbook.
+class Program
 {
-    // The example loads an Excel workbook, creates a FindOptions object, uses reflection to enable SearchInVisibleCellsOnly when supported, searches a named range for a target string, confirms the found cell's row and column are not hidden, clears the cell content, and saves the cleaned workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook or create a new one if the input file is missing.
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                // Input and output file paths
-                string inputPath = @"C:\Input\Sample.xlsx";
-                string outputPath = @"C:\Output\Sample_Cleaned.xlsx";
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Sheet1";
+                ws.Cells["A1"].PutValue("Sample");
+                ws.Cells.CreateRange("MyRange", "A1");
+            }
 
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
+            // Retrieve the named range "MyRange".
+            AsposeRange namedRange = workbook.Worksheets.GetRangeByName("MyRange");
+            if (namedRange == null)
+            {
+                Console.WriteLine("Named range 'MyRange' not found.");
+                return;
+            }
+
+            // Configure FindOptions (search in cell values, case‑insensitive, contains).
+            FindOptions findOptions = new FindOptions
+            {
+                LookInType = LookInType.Values,
+                LookAtType = LookAtType.Contains,
+                CaseSensitive = false
+            };
+
+            // Search manually within the named range because Range.Find is not available.
+            Cell foundCell = null;
+            int startRow = namedRange.FirstRow;
+            int startColumn = namedRange.FirstColumn;
+            int rowCount = namedRange.RowCount;
+            int columnCount = namedRange.ColumnCount;
+
+            for (int i = 0; i < rowCount && foundCell == null; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
                 {
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Configure find options (default LookIn = Values, LookAt = Contains)
-                FindOptions findOptions = new FindOptions();
-
-                // Restrict search to visible cells only if the property exists (older versions may lack it)
-                var searchInVisibleProp = typeof(FindOptions).GetProperty("SearchInVisibleCellsOnly");
-                if (searchInVisibleProp != null && searchInVisibleProp.CanWrite)
-                {
-                    searchInVisibleProp.SetValue(findOptions, true);
-                }
-
-                // Text to search for
-                string searchText = "TargetValue";
-
-                // Perform the search on the entire worksheet
-                Cell foundCell = worksheet.Cells.Find(searchText, null, findOptions);
-
-                // If a visible cell is found, clear its value
-                if (foundCell != null)
-                {
-                    // Ensure the cell is not hidden by row or column
-                    bool rowHidden = worksheet.Cells.Rows[foundCell.Row].IsHidden;
-                    bool columnHidden = worksheet.Cells.Columns[foundCell.Column].IsHidden;
-
-                    if (!rowHidden && !columnHidden)
+                    Cell cell = workbook.Worksheets[0].Cells[startRow + i, startColumn + j];
+                    if (cell.Type == CellValueType.IsString)
                     {
-                        foundCell.PutValue(string.Empty);
+                        // Apply case‑insensitivity if required.
+                        string cellText = cell.StringValue;
+                        string target = "TargetValue";
+
+                        if (!findOptions.CaseSensitive)
+                        {
+                            cellText = cellText.ToLowerInvariant();
+                            target = target.ToLowerInvariant();
+                        }
+
+                        if (cellText.Contains(target))
+                        {
+                            foundCell = cell;
+                            break;
+                        }
                     }
                 }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-            catch (Exception ex)
+
+            if (foundCell != null)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Clear the content of the found cell.
+                foundCell.PutValue(string.Empty);
+                Console.WriteLine($"Cleared cell {foundCell.Name}.");
             }
+            else
+            {
+                Console.WriteLine("Target value not found in the named range.");
+            }
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook after modifications.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

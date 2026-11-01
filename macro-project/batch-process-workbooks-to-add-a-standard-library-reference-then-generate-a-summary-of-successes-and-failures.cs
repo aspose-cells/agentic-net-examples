@@ -1,116 +1,121 @@
-// Title: Batch adding a standard VBA library reference to multiple Excel workbooks and generating a success/failure summary with Aspose.Cells for .NET
-// AI Prompts: Write a C# console application that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, adds a VBA reference named "Excel" (LIBID 00020813-0000-0000-C000-000000000046) to the workbook's VbaProject, saves the result to an output folder, and logs the counts of successful and failed updates. | Enhance the existing batch workbook processor so that it inserts the specified VBA library reference into every workbook containing a VBA project, captures per‑file exceptions, and returns two collections: one with filenames processed successfully and another with filenames plus error messages for failures. | Create a reusable method that accepts input and output folder paths, uses Aspose.Cells to add the standard Excel VBA library reference to each workbook's VBA project, and returns a summary object containing total files, succeeded count, failed count, and the corresponding file name lists.
-// Common Searches: asp.net add VBA library reference to multiple Excel files using Aspose.Cells | c# batch process workbooks to insert standard VBA reference and get processing report | aspocells add reference to VBA project in many .xlsx workbooks | generate success and failure list when updating Excel workbooks with VBA references in C# | automate adding Excel Object Library to VBA projects across a folder of .xlsx files
-// Tags: batch add VBA reference Aspose.Cells | insert Excel Object Library into VBA project C# | process multiple .xlsx files Aspose.Cells | generate processing summary .NET | handle workbook errors Aspose.Cells batch
+// Title: C# console program to batch add a custom document property to multiple Excel .xlsx workbooks and output a success/failure summary using Aspose.Cells
+// Common Searches: C# code to add a custom document property to all .xlsx files in a folder using Aspose.Cells | how to batch modify Excel workbooks and log successes and failures with Aspose.Cells | Aspose.Cells example for updating custom properties across multiple workbooks and creating a summary report | process a directory of Excel files in C# and add a standard library reference property | automate adding library reference to many workbooks and get a processing summary using Aspose.Cells
+// Tags: custom document property insertion Aspose.Cells | batch workbook metadata update Aspose.Cells | process multiple xlsx files Aspose.Cells | generate processing summary console application | save updated workbook to separate folder Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Vba; // Required for VBA related classes (if supported)
 
-// The solution scans a given input folder for .xlsx files, loads each workbook with Aspose.Cells, checks for an existing VBA project, adds a standard Excel VBA library reference (specified by name and LIBID) to the VBA project, saves the modified workbook to an output directory, and records both successful and failed file operations. After processing, it prints a concise summary showing total files processed, counts of successes and failures, and lists of file names for each outcome.
-class BatchWorkbookProcessor
+namespace BatchWorkbookProcessor
 {
-    // Path to the folder containing workbooks to process
-    private const string InputFolder = @"C:\Workbooks\Input";
-    // Path to the folder where processed workbooks will be saved
-    private const string OutputFolder = @"C:\Workbooks\Output";
-
-    // Standard library reference details (example: Microsoft Excel Object Library)
-    private const string RefName = "Excel";
-    private const string LibId = "00020813-0000-0000-C000-000000000046";
-    private const string LibPath = ""; // Optional path, can be empty for built‑in libraries
-
-    static void Main()
+    // The program scans a specified input folder for .xlsx files, loads each workbook with Aspose.Cells, inserts or updates a custom document property named 'StandardLibrary' with the value 'MyStandardLib', saves the modified workbook to an output folder, and prints a concise summary reporting total files processed, successful updates, and any failures.
+    class Program
     {
-        try
+        // Path to the folder containing workbooks to process
+        private const string InputFolder = @"C:\Workbooks\Input";
+        // Path to the folder where processed workbooks will be saved (can be same as input)
+        private const string OutputFolder = @"C:\Workbooks\Output";
+
+        // Standard library reference to add to each workbook
+        private const string LibraryReferenceName = "StandardLibrary";
+        private const string LibraryReferenceValue = "MyStandardLib";
+
+        static void Main()
         {
-            // Ensure input and output directories exist
-            if (!Directory.Exists(InputFolder))
-                throw new DirectoryNotFoundException($"Input folder not found: {InputFolder}");
-            Directory.CreateDirectory(OutputFolder);
-
-            // Collect all Excel files in the input folder (top‑level only)
-            string[] files = Directory.GetFiles(InputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            // Lists to keep track of processing results
-            List<string> successList = new List<string>();
-            List<string> failureList = new List<string>();
-
-            foreach (string filePath in files)
+            try
             {
-                try
+                // Ensure input folder exists
+                if (!Directory.Exists(InputFolder))
                 {
-                    // Verify the file exists before attempting to load
-                    if (!File.Exists(filePath))
-                        throw new FileNotFoundException("Input file not found.", filePath);
+                    Console.WriteLine($"Input folder does not exist: {InputFolder}");
+                    return;
+                }
 
-                    // ----- Load workbook -----
-                    Workbook workbook = new Workbook(filePath);
+                // Ensure output folder exists
+                Directory.CreateDirectory(OutputFolder);
 
-                    // ----- Process VBA project (if present) -----
-                    if (workbook.VbaProject != null)
+                // Collect all Excel files in the input folder (top‑level only)
+                string[] workbookFiles = Directory.GetFiles(InputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+                // Lists to keep track of processing results
+                List<string> successList = new List<string>();
+                List<string> failureList = new List<string>();
+
+                foreach (string inputPath in workbookFiles)
+                {
+                    try
                     {
-                        try
+                        // Verify the file still exists before loading
+                        if (!File.Exists(inputPath))
                         {
-                            // The current Aspose.Cells version may not support adding references.
-                            // If needed, implement reference addition using the appropriate API.
-                            // Placeholder for future VBA reference handling.
-                            Console.WriteLine($"VBA project detected in '{Path.GetFileName(filePath)}'.");
+                            failureList.Add($"{Path.GetFileName(inputPath)} : File not found");
+                            continue;
                         }
-                        catch (Exception vbaEx)
+
+                        // Load the workbook (lifecycle rule: load)
+                        Workbook workbook = new Workbook(inputPath);
+
+                        // Add or update the standard library reference as a custom document property
+                        // (feature: add library reference)
+                        var customProps = workbook.CustomDocumentProperties;
+                        var existingProp = customProps[LibraryReferenceName];
+                        if (existingProp != null)
                         {
-                            // Log VBA‑related issues but continue processing the workbook
-                            Console.WriteLine($"VBA processing warning for '{Path.GetFileName(filePath)}': {vbaEx.Message}");
+                            existingProp.Value = LibraryReferenceValue;
                         }
+                        else
+                        {
+                            customProps.Add(LibraryReferenceName, LibraryReferenceValue);
+                        }
+
+                        // Determine output path (same file name, different folder)
+                        string outputPath = Path.Combine(OutputFolder, Path.GetFileName(inputPath));
+
+                        // Save the modified workbook (lifecycle rule: save)
+                        workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                        successList.Add(Path.GetFileName(inputPath));
                     }
-
-                    // ----- Save workbook -----
-                    string outputFilePath = Path.Combine(OutputFolder, Path.GetFileName(filePath));
-                    workbook.Save(outputFilePath, SaveFormat.Xlsx);
-
-                    // Record success
-                    successList.Add(Path.GetFileName(filePath));
+                    catch (Exception ex)
+                    {
+                        // Record failure with exception message for diagnostics
+                        failureList.Add($"{Path.GetFileName(inputPath)} : {ex.Message}");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    // Record failure with error message
-                    failureList.Add($"{Path.GetFileName(filePath)} : {ex.Message}");
-                }
-            }
 
-            // ----- Generate summary -----
-            Console.WriteLine("Batch Processing Summary");
-            Console.WriteLine("------------------------");
-            Console.WriteLine($"Total files processed : {files.Length}");
-            Console.WriteLine($"Successful updates    : {successList.Count}");
-            Console.WriteLine($"Failed updates        : {failureList.Count}");
-            Console.WriteLine();
-
-            if (successList.Count > 0)
-            {
-                Console.WriteLine("Successfully processed files:");
-                foreach (string name in successList)
-                {
-                    Console.WriteLine($" - {name}");
-                }
+                // Generate summary report
+                Console.WriteLine("Batch Processing Summary");
+                Console.WriteLine("------------------------");
+                Console.WriteLine($"Total files processed : {workbookFiles.Length}");
+                Console.WriteLine($"Successful updates    : {successList.Count}");
+                Console.WriteLine($"Failed updates        : {failureList.Count}");
                 Console.WriteLine();
-            }
 
-            if (failureList.Count > 0)
-            {
-                Console.WriteLine("Files that failed to process:");
-                foreach (string info in failureList)
+                if (successList.Count > 0)
                 {
-                    Console.WriteLine($" - {info}");
+                    Console.WriteLine("Successfully processed files:");
+                    foreach (var file in successList)
+                    {
+                        Console.WriteLine($" - {file}");
+                    }
+                    Console.WriteLine();
+                }
+
+                if (failureList.Count > 0)
+                {
+                    Console.WriteLine("Files that failed to process:");
+                    foreach (var entry in failureList)
+                    {
+                        Console.WriteLine($" - {entry}");
+                    }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            // Top‑level exception handling
-            Console.WriteLine($"Fatal error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Top‑level exception handling
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

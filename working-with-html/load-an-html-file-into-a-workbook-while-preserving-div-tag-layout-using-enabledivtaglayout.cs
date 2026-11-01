@@ -1,41 +1,46 @@
-// Title: How to load an HTML file into an Aspose.Cells workbook while preserving DIV layout using HtmlLoadOptions.EnableDivTagLayout in C#
-// AI Prompts: Write C# code that loads an HTML document into an Aspose.Cells Workbook with HtmlLoadOptions.EnableDivTagLayout set to true, then saves it as an XLSX file. | Explain the steps to configure HtmlLoadOptions so that the original DIV positioning is retained when converting HTML to Excel with Aspose.Cells. | Provide a complete C# example that checks for the HTML file, loads it preserving DIV layout, and includes proper error handling.
-// Common Searches: Aspose.Cells C# preserve div positions when importing HTML | HtmlLoadOptions.EnableDivTagLayout usage example | Convert HTML with complex DIV layout to Excel using Aspose.Cells | Load HTML file into workbook while keeping DIV structure Aspose.Cells | C# Aspose.Cells HTML to XLSX preserving layout
-// Tags: Aspose.Cells HtmlLoadOptions.EnableDivTagLayout C# | HTML to Excel conversion preserving DIV layout | load HTML workbook Aspose.Cells C# | convert HTML with DIV tags to XLSX using Aspose.Cells | preserve DIV positioning Aspose.Cells HTML import
+// Title: Load HTML into an Aspose.Cells Workbook while preserving DIV tag layout using HtmlLoadOptions (C#)
+// AI Prompts: Write C# code that loads a local HTML file into an Aspose.Cells Workbook with DIV tag layout retained via HtmlLoadOptions. | Demonstrate how to set HtmlLoadOptions to enable DIV layout preservation when converting HTML to an XLSX workbook with Aspose.Cells for .NET. | Create a C# console application that checks for an HTML file, loads it into a Workbook preserving DIV elements, and saves it as an Excel file.
+// Common Searches: Aspose.Cells C# load html file preserve div layout | How to keep div tags when converting HTML to Excel with Aspose.Cells | HtmlLoadOptions EnableDivTagLayout example .NET | Convert HTML to XLSX while maintaining div structure using Aspose.Cells | C# Aspose.Cells load html with div layout enabled
+// Tags: Aspose.Cells HtmlLoadOptions preserve div layout | load html into workbook Aspose.Cells .NET | convert html to xlsx with div structure | EnableDivTagLayout Aspose.Cells C# | HTML to Excel conversion retaining layout
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // Demonstrates loading an existing HTML file into an Aspose.Cells Workbook (optionally enabling HtmlLoadOptions.EnableDivTagLayout to retain DIV layout) and saving it as an XLSX file, with file existence verification and exception handling.
-class Program
+// The sample checks that the specified HTML file exists, loads it into an Aspose.Cells Workbook using HtmlLoadOptions (which automatically preserves DIV tag layout), and saves the workbook as an XLSX file, handling any exceptions that may occur.
+class HtmlToWorkbook
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.html";
-            string outputPath = "output.xlsx";
+            // Path to the source HTML file
+            string htmlFilePath = "input.html";
 
-            // Ensure the input HTML file exists
-            if (!File.Exists(inputPath))
+            // Verify that the HTML file exists before attempting to load it
+            if (!File.Exists(htmlFilePath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{htmlFilePath}\" was not found.");
                 return;
             }
 
-            // Configure HTML load options (default options are sufficient)
+            // Configure HTML load options (default options are sufficient for DIV layout preservation)
             HtmlLoadOptions loadOptions = new HtmlLoadOptions();
 
-            // Load the HTML file into a workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the HTML file into a workbook using the specified options
+            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
 
-            // Save the workbook to an Excel file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Define the output Excel file path
+            string outputFilePath = "output.xlsx";
+
+            // Save the workbook to an Excel file (XLSX format)
+            workbook.Save(outputFilePath, SaveFormat.Xlsx);
+
+            Console.WriteLine("HTML file has been loaded and saved as Excel with DIV layout preserved.");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected exceptions and display an error message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

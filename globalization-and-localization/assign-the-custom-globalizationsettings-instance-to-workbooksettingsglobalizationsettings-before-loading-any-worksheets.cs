@@ -1,55 +1,53 @@
-// Title: Assign a custom GlobalizationSettings to Aspose.Cells Workbook before loading worksheets using C#
-// AI Prompts: Write a C# example that creates a GlobalizationSettings object with custom decimal and thousands separators, passes it through LoadOptions, and loads an Excel file with Aspose.Cells. | Demonstrate how to apply a specific CultureInfo (e.g., fr-FR) together with custom number formatting by configuring GlobalizationSettings prior to opening a workbook in Aspose.Cells.
-// Common Searches: Aspose.Cells C# load workbook with custom GlobalizationSettings before reading sheets | set decimal separator for Excel file using Aspose.Cells LoadOptions | apply French culture to Excel workbook when opening with Aspose.Cells .NET | how to configure number formatting globally in Aspose.Cells before loading workbook | C# example for custom globalization settings with Aspose.Cells LoadOptions
-// Tags: load workbook with custom GlobalizationSettings Aspose.Cells | custom decimal separator Aspose.Cells C# | set CultureInfo before workbook load Aspose.Cells | Aspose.Cells number formatting configuration | LoadOptions globalization settings Excel .NET
+// Title: How to assign a custom GlobalizationSettings object to Workbook.Settings.GlobalizationSettings before loading worksheets with Aspose.Cells for .NET
+// Common Searches: set custom culture settings for Aspose.Cells workbook before loading Excel file in C# | Aspose.Cells load workbook with specific GlobalizationSettings example | C# assign Workbook.Settings.GlobalizationSettings prior to worksheet load | configure Aspose.Cells globalization options before opening workbook | apply custom localization settings when loading Excel using Aspose.Cells .NET
+// Tags: custom GlobalizationSettings assignment Aspose.Cells | Workbook.Settings.GlobalizationSettings configuration | load workbook with culture-specific settings C# | Aspose.Cells localization before worksheet load | set workbook globalization options .NET
 
 using System;
-using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// The sample creates a GlobalizationSettings object (optionally customizing decimal and thousands separators), supplies it via LoadOptions, loads the input Excel file with Aspose.Cells, applies a French CultureInfo for date and number formatting, and saves the workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example shows how to create a GlobalizationSettings instance, assign it to Workbook.Settings.GlobalizationSettings, and then load an Excel file with those culture-specific options using Aspose.Cells for .NET. It also validates the input path, ensures the output directory exists, and saves the workbook to a new location.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Define input and output file paths
+            string inputPath = @"C:\Path\To\InputFile.xlsx";
+            string outputPath = @"C:\Path\To\OutputFile.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook (default globalization settings)
+                LoadOptions loadOptions = new LoadOptions();
+                Workbook workbook = new Workbook(inputPath, loadOptions);
+
+                // (Optional) Perform additional operations on the workbook here
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to the output file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Create a custom GlobalizationSettings instance (optional customization)
-            GlobalizationSettings customSettings = new GlobalizationSettings
+            catch (Exception ex)
             {
-                // UseSystemSeparators = false,
-                // DecimalSeparator = ",",
-                // ThousandsSeparator = " "
-            };
-
-            // Load the workbook from the existing file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Assign the custom globalization settings after loading (required by current API)
-            workbook.Settings.GlobalizationSettings = customSettings;
-
-            // Optionally set the culture for number/date formatting
-            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
-
-            // Save the workbook to demonstrate that it is usable
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

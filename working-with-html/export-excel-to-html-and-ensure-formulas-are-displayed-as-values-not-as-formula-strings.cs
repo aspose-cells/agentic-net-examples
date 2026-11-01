@@ -1,43 +1,42 @@
-// Title: Convert an Excel .xlsx file to HTML in C# with Aspose.Cells while rendering formulas as calculated values
-// AI Prompts: Generate C# code that loads a workbook using Aspose.Cells, configures HtmlSaveOptions to output evaluated cell values, and saves the result as an HTML file. | Show how to verify the existence of an input .xlsx file, handle possible errors, and export it to HTML with Aspose.Cells so that formula cells appear as their computed results. | Demonstrate setting Aspose.Cells HtmlSaveOptions to suppress formula strings and produce static HTML that displays only the calculated values.
-// Common Searches: aspnet convert xlsx to html using aspose.cells without showing formulas | c# export excel workbook to html with evaluated formula results | how to hide formula strings when saving Excel as HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions preserve calculated values in HTML output | save workbook as html showing only values not formulas c#
-// Tags: Aspose.Cells HtmlSaveOptions export evaluated values | C# convert xlsx to html Aspose.Cells | Excel to HTML conversion without formula strings | save workbook as html calculated cell values | Aspose.Cells HTML rendering of formulas as values
+// Title: Export an Excel workbook to HTML with calculated formula results using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions so that formulas are output as their calculated results, and writes the workbook to an HTML file. | Show how to verify the source Excel file exists, handle exceptions, and rely on Aspose.Cells default settings to export a sheet to HTML with formula results displayed.
+// Common Searches: Aspose.Cells C# export Excel to HTML showing formula results instead of formulas | How to save a workbook as HTML with calculated values using Aspose.Cells .NET | Convert .xlsx to HTML with formulas evaluated in Aspose.Cells | HtmlSaveOptions to display formula values in HTML output Aspose.Cells | C# Aspose.Cells HTML conversion without formula strings
+// Tags: Aspose.Cells HTML export formula values | C# HtmlSaveOptions render formulas as values | convert Excel to HTML using Aspose.Cells | save workbook as HTML without formula text | Aspose.Cells .NET HTML conversion evaluated formulas
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// A C# example that checks for an input.xlsx file, loads it with Aspose.Cells, uses HtmlSaveOptions (which defaults to writing evaluated values) to convert the workbook to output.html, and includes basic error handling for missing files and runtime exceptions.
+// The example loads an existing .xlsx file with Aspose.Cells, optionally checks that the file is present, uses HtmlSaveOptions (default behavior) to render formulas as their evaluated results, and saves the workbook as an HTML file while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the Excel workbook from the specified file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the Excel workbook from file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options (default exports evaluated values)
+            // Configure HTML save options (default behavior renders formulas as values)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
             // Save the workbook as an HTML file using the configured options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors during processing
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

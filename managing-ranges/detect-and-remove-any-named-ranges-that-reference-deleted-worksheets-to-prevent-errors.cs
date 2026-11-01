@@ -1,53 +1,84 @@
-// Title: Remove named ranges that reference missing worksheets in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates the workbook's Names collection, identifies entries whose RefersTo points to a non‑existent sheet, deletes those named ranges, and saves the file. | Show how to safely parse a defined name's RefersTo string, handle quoted sheet names, and remove invalid named ranges after worksheets have been deleted in a .NET application.
-// Common Searches: C# Aspose.Cells how to clean up defined names that point to deleted sheets | programmatically remove broken named ranges from Excel file using Aspose.Cells | detect and delete invalid named ranges after worksheet removal in .NET | Aspose.Cells iterate Names collection backwards to avoid index errors | remove named ranges referencing missing worksheets without throwing exceptions
-// Tags: Aspose.Cells remove invalid named ranges | C# delete defined names with missing worksheet | iterate workbook.Names collection reverse | parse RefersTo sheet reference Aspose.Cells | clean Excel workbook broken named ranges .NET
+// Title: Remove named ranges that reference deleted worksheets using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# remove named range that refers to a deleted sheet | How to clean up broken named ranges after deleting a worksheet with Aspose.Cells | Detect invalid named ranges in an Excel workbook using Aspose.Cells .NET | Iterate through named ranges and delete those with missing worksheet in Aspose.Cells | C# code to purge named ranges pointing to non‑existent worksheets
+// Tags: Aspose.Cells remove invalid named ranges | named range cleanup after worksheet deletion | C# detect broken named range references | Excel workbook range validation Aspose.Cells | iterate named ranges reverse order Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, walks the Names collection in reverse, extracts each defined name's RefersTo sheet reference (handling quoted names), checks if the worksheet exists, removes the named range when the sheet is absent, and saves the cleaned workbook.
-class Program
+namespace AsposeCellsNamedRangeCleanup
 {
-    static void Main()
+    // The example loads an Excel workbook with Aspose.Cells, iterates the named ranges in reverse, attempts to resolve each range, and removes any named range whose range or worksheet is null or throws an exception—indicating a reference to a deleted sheet—before saving the cleaned workbook.
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Get the collection of all defined names (named ranges)
-        var definedNames = workbook.Worksheets.Names;
-
-        // Iterate backwards so removal does not affect the loop index
-        for (int i = definedNames.Count - 1; i >= 0; i--)
+        static void Main(string[] args)
         {
-            Name name = definedNames[i];
-            string refersTo = name.RefersTo;
+            // Input and output file paths
+            string inputPath = @"C:\Path\To\InputWorkbook.xlsx";
+            string outputPath = @"C:\Path\To\CleanedWorkbook.xlsx";
 
-            // Skip if the reference string is empty
-            if (string.IsNullOrEmpty(refersTo))
-                continue;
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Remove leading '=' if present
-            if (refersTo.StartsWith("="))
-                refersTo = refersTo.Substring(1);
+            Workbook workbook;
+            try
+            {
+                // Load the workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
 
-            // Find the position of '!' which separates sheet name from cell address
-            int exclPos = refersTo.IndexOf('!');
-            if (exclPos <= 0)
-                continue; // Not a standard sheet reference
+            // Get the collection of named ranges in the workbook
+            var namedRanges = workbook.Worksheets.Names;
 
-            // Extract the sheet name part
-            string sheetName = refersTo.Substring(0, exclPos);
+            // Iterate backwards so that removal does not affect the loop index
+            for (int i = namedRanges.Count - 1; i >= 0; i--)
+            {
+                Name name = namedRanges[i];
+                bool remove = false;
 
-            // Remove surrounding single quotes (used when sheet name contains spaces)
-            if (sheetName.StartsWith("'") && sheetName.EndsWith("'"))
-                sheetName = sheetName.Substring(1, sheetName.Length - 2);
+                try
+                {
+                    // Attempt to retrieve the range the name refers to
+                    Aspose.Cells.Range range = name.GetRange();
 
-            // If the worksheet does not exist, remove the named range
-            if (workbook.Worksheets[sheetName] == null)
-                definedNames.RemoveAt(i);
+                    // If the range or its worksheet is null, the reference is invalid
+                    if (range == null || range.Worksheet == null)
+                    {
+                        remove = true;
+                    }
+                }
+                catch
+                {
+                    // An exception indicates the reference cannot be resolved (e.g., deleted sheet)
+                    remove = true;
+                }
+
+                // Remove the named range if it points to a non‑existent worksheet
+                if (remove)
+                {
+                    namedRanges.RemoveAt(i);
+                }
+            }
+
+            try
+            {
+                // Save the cleaned workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
-
-        // Save the cleaned workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
     }
 }

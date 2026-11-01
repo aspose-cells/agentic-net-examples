@@ -1,79 +1,66 @@
-// Title: Use Aspose.Cells for .NET to apply conditional formatting that highlights cells exceeding a threshold stored in another cell
-// AI Prompts: Write C# code with Aspose.Cells that creates a conditional formatting rule to color cells in a range when their value is greater than the value in cell B1. | Generate a snippet that sets a solid light‑coral background style for cells whose computed result surpasses a dynamic threshold defined in a worksheet cell.
-// Common Searches: aspnet aspose.cells conditional formatting cell value greater than reference cell B1 | c# apply conditional formatting based on another cell's value using Aspose.Cells | how to set dynamic threshold for conditional formatting in Excel with Aspose.Cells .NET | example of conditional formatting rule with cell reference in Aspose.Cells C# | color cells exceeding threshold stored in B1 using Aspose.Cells API
-// Tags: conditional formatting cell value reference Aspose.Cells | apply style based on dynamic threshold .NET Excel | format condition greater than cell Aspose.Cells | solid background color rule Aspose.Cells | Excel workbook conditional formatting C#
+// Title: How to use Aspose.Cells for .NET to apply conditional formatting that highlights cells exceeding a dynamic threshold value
+// Common Searches: Aspose.Cells C# conditional formatting with cell reference threshold | apply expression‑based conditional formatting to a range using Aspose.Cells .NET | highlight cells in an Excel workbook when value is greater than B1 using Aspose.Cells | dynamic threshold conditional formatting example in C# with Aspose.Cells | programmatically add a conditional formatting rule with a formula in Aspose.Cells
+// Tags: conditional formatting expression Aspose.Cells .NET | dynamic threshold formatting Excel Aspose | add conditional formatting to cell range Aspose.Cells | CellArea usage for conditional formatting Aspose | style customization for conditional formatting C#
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
+using System.IO;
 
-namespace ConditionalFormattingExample
+// The C# sample creates a workbook, fills A2:A10 with incremental numbers, stores a threshold in B1, and adds an expression‑based conditional formatting rule (A2>$B$1) to the range. Cells that exceed the threshold are highlighted with a light‑green background, and the file is saved as ConditionalFormattingDemo.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, populating column A, storing a threshold in B1, and adding a conditional formatting rule that colors cells A2:A10 light coral when their values exceed the dynamic threshold.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Fill sample data in A2:A10
+            for (int i = 0; i < 9; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data in column A (A2:A10)
-                for (int i = 1; i <= 9; i++) // rows are zero‑based; row 1 = A2
-                {
-                    sheet.Cells[i, 0].PutValue(10 * i); // 10,20,...,90
-                }
-
-                // Set a dynamic threshold value in cell B1
-                double threshold = 45.0;
-                sheet.Cells["B1"].PutValue(threshold);
-
-                // Define the range for conditional formatting (A2:A10)
-                CellArea formatArea = new CellArea
-                {
-                    StartRow = 1,   // A2
-                    StartColumn = 0,
-                    EndRow = 9,     // A10
-                    EndColumn = 0
-                };
-
-                // Get the conditional formatting collection
-                var cfCollection = sheet.ConditionalFormattings;
-
-                // Add a new conditional formatting rule
-                int cfIndex = cfCollection.Add();
-                var cf = cfCollection[cfIndex];
-
-                // Apply the rule to the defined range
-                cf.AddArea(formatArea);
-
-                // Add a condition: cell value > $B$1
-                int conditionIndex = cf.AddCondition(
-                    FormatConditionType.CellValue,
-                    OperatorType.GreaterThan,
-                    "=$B$1",
-                    string.Empty);
-
-                // Retrieve the created condition
-                FormatCondition condition = cf[conditionIndex];
-
-                // Define the style to apply when the condition is true
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = Color.LightCoral;
-                style.Pattern = BackgroundType.Solid;
-                condition.Style = style;
-
-                // Save the workbook
-                workbook.Save("ConditionalFormattingDemo.xlsx");
+                sheet.Cells[i + 1, 0].PutValue(i * 10); // A2 = 0, A3 = 10, ...
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Place a dynamic threshold value in B1
+            sheet.Cells["B1"].PutValue(30);
+
+            // Define the range to which the conditional formatting will be applied
+            string targetRange = "A2:A10";
+
+            // Create a CellArea for the target range (required by the Add method)
+            CellArea area = CellArea.CreateCellArea("A2", "A10");
+
+            // Add a new ConditionalFormatting object for the target range
+            int cfIndex = sheet.ConditionalFormattings.Add(); // create empty CF
+
+            // Use dynamic to avoid compile‑time dependency on ConditionalFormatting type
+            dynamic cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(area); // assign the range
+
+            // Add a condition based on an expression: cell value > $B$1
+            // The expression uses the top‑left cell of the range (A2) as a relative reference
+            FormatCondition condition = cf.AddCondition(FormatConditionType.Expression);
+            condition.Formula1 = "A2>$B$1";
+
+            // Create a style to highlight cells (e.g., light green background)
+            Style highlightStyle = workbook.CreateStyle();
+            highlightStyle.ForegroundColor = Color.LightGreen;
+            highlightStyle.Pattern = BackgroundType.Solid;
+            condition.Style = highlightStyle;
+
+            // Save the workbook
+            string outputPath = "ConditionalFormattingDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

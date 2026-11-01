@@ -1,68 +1,74 @@
-// Title: How to bring a specific shape to the front layer in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, locate a shape by its name (or fall back to the first shape), set its ZOrderPosition to the highest index, and save the file with Aspose.Cells in C#. | Programmatically adjust the Z‑order of a worksheet shape to the topmost layer using the Shape.ZOrderPosition property in Aspose.Cells for .NET. | Retrieve a shape from a worksheet, change its layering order to bring it forward, and write the updated workbook to a new file with the Aspose.Cells C# API.
-// Common Searches: aspnet c# set shape ZOrderPosition to bring shape to front in Excel file | Aspose.Cells move shape to top layer programmatically | how to change shape layering order in an Excel worksheet using Aspose.Cells | retrieve shape by name and adjust Z order with Aspose.Cells .NET
-// Tags: Aspose.Cells Shape.ZOrderPosition | C# set Excel shape Z-order | Aspose.Cells retrieve worksheet shape | Excel shape layering with Aspose.Cells | Aspose.Cells topmost shape positioning
+// Title: C# example: bring a named shape to the front layer in an Excel worksheet using Aspose.Cells
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to bring shape forward | How to change Z-order of a specific shape in an Excel file with Aspose.Cells | Move an Excel shape to the front layer programmatically using Aspose.Cells .NET | Retrieve a shape by name and adjust its Z-order in an Aspose.Cells workbook | C# code to bring a chart shape to the front in an Excel worksheet with Aspose.Cells
+// Tags: Aspose.Cells shape ZOrderPosition | C# Excel shape front layer | Aspose.Cells shape ordering API | Modify Excel shape Z-order with Aspose.Cells | Set shape Z-order position in worksheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // This example loads an existing workbook, obtains a shape named "MyShape" (or the first shape if not found), sets its ZOrderPosition to the highest index to bring it to the front, and saves the modified workbook to a new file.
-class ShapeZOrderExample
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The sample loads an existing Excel workbook, accesses the "Sheet1" worksheet, retrieves a shape by its name, sets its ZOrderPosition to 0 to place the shape on the front layer, and saves the modified workbook to the specified output path.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Define file paths and shape identifier (replace with actual values)
+            string inputFilePath = "{InputFilePath}";
+            string outputFilePath = "{OutputFilePath}";
+            string shapeName = "{ShapeName}";
+            // int shapeIndex = 0; // alternative if you prefer index
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Retrieve the shape by name; fallback to first shape if not found
-            Shape? shape = null;
             try
             {
-                shape = worksheet.Shapes["MyShape"];
+                // Ensure the input workbook exists
+                if (!File.Exists(inputFilePath))
+                {
+                    Console.WriteLine($"Input file not found: {inputFilePath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFilePath);
+
+                // Access the target worksheet (by name or index)
+                Worksheet worksheet = workbook.Worksheets["Sheet1"];
+                if (worksheet == null)
+                {
+                    Console.WriteLine("Worksheet 'Sheet1' not found.");
+                    return;
+                }
+
+                // Retrieve the shape by name (or use index if needed)
+                Shape shape = worksheet.Shapes[shapeName];
+                // Shape shape = worksheet.Shapes[shapeIndex]; // alternative
+
+                if (shape == null)
+                {
+                    Console.WriteLine($"Shape '{shapeName}' not found in worksheet.");
+                    return;
+                }
+
+                // Bring the shape to the front layer by setting its Z-order position
+                // Lower ZOrderPosition values are rendered in front of higher values
+                shape.ZOrderPosition = 0;
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFilePath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputFilePath);
+                Console.WriteLine($"Workbook saved successfully to {outputFilePath}");
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignored – will try alternative retrieval below
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            if (shape == null && worksheet.Shapes.Count > 0)
-            {
-                shape = worksheet.Shapes[0];
-            }
-
-            if (shape == null)
-            {
-                Console.WriteLine("No shapes available in the worksheet.");
-                return;
-            }
-
-            // Bring the shape to the front by setting its Z‑order to the highest position
-            shape.ZOrderPosition = worksheet.Shapes.Count - 1;
-
-            // Save the updated workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

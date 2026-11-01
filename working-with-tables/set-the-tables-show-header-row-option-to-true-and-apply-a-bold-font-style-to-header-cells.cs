@@ -1,78 +1,60 @@
-// Title: Show a table’s header row and apply bold formatting to header cells with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel workbook, sets ListObject.ShowHeaderRow = true, and applies a bold font style to the header row using Aspose.Cells. | Provide a reusable method that takes a worksheet and formats the first table’s header row as bold while ensuring the header row is visible with Aspose.Cells. | Write a snippet that creates a bold Style, applies it to the header range of a ListObject, and saves the workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# enable table header row and make header bold | How to set ShowHeaderRow true and apply bold style to Excel table header using Aspose.Cells | C# Aspose.Cells format ListObject header row with bold font | Make Excel table header visible and bold with Aspose.Cells .NET | Apply style to table header range Aspose.Cells C# example
-// Tags: listobject showheaderrow aspocells | apply bold style to table header aspocells | excel table header formatting c# | styleflag fontbold aspocells | create range header row aspocells
+// Title: Show Excel table header row and apply bold font to header cells using Aspose.Cells for .NET (C#)
+// Common Searches: how to enable ShowHeaderRow for a ListObject and make the header bold with Aspose.Cells C# | Aspose.Cells C# example to display table header row and set bold font on header cells | C# code to set Excel table header visibility and apply bold style using Aspose.Cells | formatting Excel table header row as bold with Aspose.Cells for .NET
+// Tags: Aspose.Cells set ListObject ShowHeaderRow true | Aspose.Cells apply bold style to table header | C# format Excel table header bold Aspose.Cells | Aspose.Cells ListObject header row formatting | Excel table header styling Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // For ListObject
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-// Loads an existing workbook, ensures the first ListObject’s header row is visible, creates a bold font style, applies it to the header range, and saves the result to a new file.
+// The sample loads an existing workbook, checks for a table on the first worksheet, enables the table's ShowHeaderRow property, creates a bold font style, applies the style only to the header row cells of the table, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
+        // Define input and output file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify input file exists
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
+            var workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one table (ListObject)
-            if (sheet.ListObjects.Count == 0)
-            {
-                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
-                return;
-            }
+            if (worksheet.ListObjects.Count == 0)
+                throw new InvalidOperationException("No tables (ListObjects) found in the worksheet.");
 
-            // Get the first table
-            ListObject table = sheet.ListObjects[0];
-            table.ShowHeaderRow = true; // Ensure header row is visible
+            var table = worksheet.ListObjects[0];
 
-            // Create a range that represents the header row of the table
-            int headerRow = table.StartRow;               // first row of the table (header)
-            int startColumn = table.StartColumn;
-            int columnCount = table.ListColumns.Count;   // correct way to get column count
+            // Ensure the header row is displayed
+            table.ShowHeaderRow = true;
 
-            AsposeRange headerRange = sheet.Cells.CreateRange(headerRow, startColumn, 1, columnCount);
-
-            // Define a bold font style
-            Style boldStyle = workbook.CreateStyle();
+            // Create a style with bold font
+            var boldStyle = workbook.CreateStyle();
             boldStyle.Font.IsBold = true;
 
-            // Apply the style to the header range
-            StyleFlag flag = new StyleFlag { FontBold = true, Font = true };
-            headerRange.ApplyStyle(boldStyle, flag);
+            // Specify that only the font bold attribute should be applied
+            var styleFlag = new StyleFlag { FontBold = true };
 
-            // Ensure output directory exists
-            try
-            {
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+            // Build a range that represents the header row of the table
+            int headerRow = table.StartRow;                     // Header row index
+            int startColumn = table.StartColumn;               // First column of the table
+            int columnCount = table.EndColumn - table.StartColumn + 1; // Number of columns in the table
+            var headerRange = worksheet.Cells.CreateRange(headerRow, startColumn, 1, columnCount);
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
-            }
+            // Apply the bold style to the header row cells of the table
+            headerRange.ApplyStyle(boldStyle, styleFlag);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

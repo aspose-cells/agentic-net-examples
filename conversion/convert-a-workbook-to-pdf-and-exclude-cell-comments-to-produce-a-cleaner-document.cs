@@ -1,43 +1,44 @@
-// Title: Convert an Excel workbook to PDF without rendering cell comments using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF while ensuring cell comments are not included in the output. | Show how to configure PdfSaveOptions in Aspose.Cells to suppress comments during Excel‑to‑PDF conversion. | Create a robust C# example that checks for the source workbook file, applies PdfSaveOptions, and handles exceptions when exporting to PDF without comments. | Demonstrate how to verify that the generated PDF excludes Excel comment annotations using Aspose.Cells.
-// Common Searches: aspnet convert excel file to pdf without comments using aspose.cells | c# export workbook to pdf hide cell comments | pdfsaveoptions commentvisibility false asp.net | how to prevent comment boxes from appearing in pdf generated from excel with aspose | skip annotations when saving xlsx as pdf in c#
-// Tags: Aspose.Cells PDF export exclude comments | C# PdfSaveOptions hide cell annotations | Excel to PDF conversion without comment rendering | file existence validation Aspose.Cells | exception handling workbook to pdf conversion
+// Title: Convert an Excel workbook to PDF and hide cell comments with Aspose.Cells for .NET (C#)
+// Common Searches: aspnet convert xlsx to pdf without comments using Aspose.Cells | c# hide cell comments when saving Excel as PDF with Aspose.Cells | PdfSaveOptions CommentsVisibility hide example Aspose.Cells | export workbook to PDF excluding annotations Aspose.Cells C# | how to remove Excel comments in PDF output using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions hide comments | C# Excel to PDF conversion without annotations | Workbook.Save PDF options Aspose.Cells | Excel comments exclusion in PDF export | Aspose.Cells PDF conversion settings C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies that the input .xlsx file exists, loads it with Aspose.Cells, uses PdfSaveOptions (which by default omit cell comments) to save the workbook as a PDF, and includes error handling for a reliable Excel‑to‑PDF conversion without comment annotations.
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (optionally setting CommentsVisibility to hide comments), and saves the workbook as a PDF, producing a clean document without cell comment markers.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (default settings do not render comments)
+            // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as a PDF file with the specified options
-            workbook.Save(outputPath, pdfOptions);
+            // Hide cell comments if the property is supported by your Aspose.Cells version.
+            // Uncomment the line below for versions that include CommentsVisibility.
+            // pdfOptions.CommentsVisibility = PdfCommentsVisibility.Hide;
 
-            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

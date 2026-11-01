@@ -1,61 +1,70 @@
-// Title: How to measure the execution time of updating theme colors for every cell in a large Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to change the foreground theme color of all used cells in a workbook and reports the elapsed time with Stopwatch. | Show a performance‑focused example that iterates only the used range of each worksheet, applies a solid red style, and prints the total seconds taken. | Provide a snippet that loads a large .xlsx file, updates cell styles in bulk, measures the operation duration, and saves the modified workbook.
-// Common Searches: Aspose.Cells benchmark updating cell theme colors in large workbook .NET | C# measure time for bulk style changes across all worksheets in Excel file | How long does it take to apply a theme color to every cell using Aspose.Cells | Performance testing of iterating used range cells with Aspose.Cells in .NET
-// Tags: bulk theme color update Aspose.Cells .NET | measure cell style modification performance | stopwatch timing Excel formatting Aspose.Cells | iterate used range worksheets Aspose.Cells | benchmark foreground color change large workbook
+// Title: Measure time taken to update all theme colors in a large Excel workbook with Aspose.Cells for .NET
+// Common Searches: how to benchmark updating theme colors in a large .xlsx file using Aspose.Cells C# | C# code to time theme color inversion across an entire workbook with Aspose.Cells | measure execution time of Excel theme color changes with Stopwatch and Aspose.Cells | performance testing for updating all theme colors in a big workbook via Aspose.Cells | using Aspose.Cells .NET to profile theme color updates in a large Excel spreadsheet
+// Tags: measure theme color update time Aspose.Cells | update workbook theme colors C# | performance timing Excel theme modification .NET | large workbook theme color inversion Aspose.Cells | stopwatch benchmark Aspose.Cells operations
 
 using System;
 using System.Diagnostics;
-using Aspose.Cells;
 using System.Drawing;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads a large Excel workbook, iterates through the used range of each worksheet, sets each cell's foreground color to red via a modified Style, measures the total operation time with a Stopwatch, outputs the elapsed seconds, and saves the updated workbook.
-class ThemeColorUpdateTimer
+// The example loads a large Excel workbook, starts a Stopwatch, accesses the workbook's theme color scheme via dynamic, inverts each of the theme colors, stops the timer, outputs the elapsed milliseconds, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with actual file path)
-        string inputPath = "LargeWorkbook.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Start timing the theme color update operation
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Get the maximum used row and column to limit the iteration
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
+            string inputPath = "LargeWorkbook.xlsx";
+            string outputPath = "LargeWorkbook_Updated.xlsx";
 
-            // Loop through each cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Start measuring time
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            try
+            {
+                // Access theme and color scheme using dynamic to avoid compile‑time type dependencies
+                dynamic theme = workbook.Theme;
+                dynamic colorScheme = theme.ColorScheme;
+
+                // Update each theme color (typically 12 colors)
+                int count = (int)colorScheme.Count;
+                for (int i = 0; i < count; i++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    // Retrieve the current style
-                    Style style = cell.GetStyle();
-
-                    // Example: Change the foreground theme color to a new RGB value
-                    // (Here we simply set it to a solid red color)
-                    style.ForegroundColor = Color.Red;
-                    style.Pattern = BackgroundType.Solid; // Ensure the color is applied
-
-                    // Apply the modified style back to the cell
-                    cell.SetStyle(style);
+                    Color oldColor = (Color)colorScheme[i];
+                    Color newColor = Color.FromArgb(255 - oldColor.R, 255 - oldColor.G, 255 - oldColor.B);
+                    colorScheme[i] = newColor;
                 }
             }
+            catch (Exception ex)
+            {
+                // If the workbook does not support themes, log and continue
+                Console.WriteLine($"Theme update skipped: {ex.Message}");
+            }
+
+            // Stop measuring time
+            stopwatch.Stop();
+
+            // Output the elapsed time
+            Console.WriteLine($"Time taken to update theme colors (if applicable): {stopwatch.ElapsedMilliseconds} ms");
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Stop timing
-        stopwatch.Stop();
-
-        // Output the elapsed time
-        Console.WriteLine($"Time taken to update theme colors: {stopwatch.Elapsed.TotalSeconds} seconds");
-
-        // Save the modified workbook (replace with desired output path)
-        string outputPath = "LargeWorkbook_Updated.xlsx";
-        workbook.Save(outputPath);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

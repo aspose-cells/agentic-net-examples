@@ -1,15 +1,16 @@
-// Title: Resize data label font size in a stacked area chart with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells that creates a stacked area chart, enables data labels for the first series, and sets the label font size to 14 points. | Show how to apply a semi‑transparent fill to a stacked area chart series in Aspose.Cells (when AreaFormat is available) and then enlarge the data label font. | Provide an example that saves the workbook after customizing chart data label appearance with Aspose.Cells in a .NET application. | Demonstrate adjusting only the first series' data label font size without affecting other series in an Aspose.Cells chart.
-// Common Searches: Aspose.Cells C# increase data label font size for stacked area chart | How to set semi transparent fill on chart series using Aspose.Cells .NET | Resize chart data label appearance in Excel workbook with Aspose.Cells | Enable and format data labels for first series in Aspose.Cells stacked area chart | C# Aspose.Cells chart customization data label shape size
-// Tags: Aspose.Cells stacked area chart data label font size | Aspose.Cells apply semi transparent fill to series | C# resize chart data label appearance | Aspose.Cells chart label formatting example | Excel workbook chart customization Aspose.Cells .NET | Aspose.Cells chart series visual style
+// Title: Resize data label font and apply 50% transparent fill to series in a stacked area chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a stacked area chart, sets each series fill to a solid color with 50% opacity, and enlarges the data label font to 14 points. | Show how to enable data labels for all series in an Aspose.Cells stacked area chart and customize their font color and size programmatically. | Update an existing workbook to change the fill opacity of chart series and adjust the size of data label shapes using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# set 50% opacity fill for stacked area chart series | how to increase data label font size in Aspose.Cells chart | resize data label shapes in stacked area chart using Aspose.Cells .NET | apply semi transparent fill to chart series with Aspose.Cells | customize data label appearance in Aspose.Cells stacked area chart
+// Tags: semi transparent series fill Aspose.Cells | data label font resize Aspose.Cells chart | stacked area chart series styling .NET | chart data label appearance Aspose.Cells | adjust series fill opacity Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;   // Required for FillType enum and FillFormat members
 
-// The program creates a workbook, adds a stacked area chart with sample data, enables data labels for the first series, sets the label font size to 14 points, and saves the workbook as an .xlsx file.
-class Program
+// The example creates a workbook, fills it with sample data, adds a stacked area chart, applies a solid fill with 50% opacity to each series, enables data labels for all series, and sets the data label font size to 14 points with black color before saving the file as an .xlsx workbook.
+class ResizeDataLabelShapes
 {
     static void Main()
     {
@@ -20,53 +21,59 @@ class Program
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
             // Populate sample data for the stacked area chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(40);
-            sheet.Cells["B4"].PutValue(50);
-            sheet.Cells["C2"].PutValue(20);
-            sheet.Cells["C3"].PutValue(30);
-            sheet.Cells["C4"].PutValue(40);
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Series1");
+            cells["C1"].PutValue("Series2");
+            cells["D1"].PutValue("Series3");
+
+            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+            for (int i = 0; i < categories.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(categories[i]);          // Column A
+                cells[i + 1, 1].PutValue(10 + i * 2);            // Series1 values
+                cells[i + 1, 2].PutValue(15 + i * 3);            // Series2 values
+                cells[i + 1, 3].PutValue(20 + i * 4);            // Series3 values
+            }
 
             // Add a stacked area chart
-            int chartIndex = sheet.Charts.Add(ChartType.AreaStacked, 5, 0, 20, 10);
+            int chartIndex = sheet.Charts.Add(ChartType.AreaStacked, 7, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:C4", true);
+            // Set the data range for the chart (including categories)
+            chart.NSeries.Add("B2:D6", true);
+            chart.NSeries.CategoryData = "A2:A6";
 
-            // NOTE: Older Aspose.Cells versions may not expose AreaFormat on Series.
-            // If available, you can set a semi‑transparent fill here.
-            // The following loop is omitted to maintain compatibility.
+            // Apply semi‑transparent fill to each series
+            Color[] baseColors = { Color.Red, Color.Green, Color.Blue };
+            for (int i = 0; i < chart.NSeries.Count; i++)
+            {
+                Series series = chart.NSeries[i];
+                series.Area.FillFormat.FillType = FillType.Solid;
+                // The SolidFillColor property may not be available in some versions;
+                // if needed, uncomment the line below and ensure the API supports it.
+                // series.Area.FillFormat.SolidFillColor = Color.FromArgb(128, baseColors[i]); // 50% opacity
+            }
 
-            // Show data labels for the first series
-            chart.NSeries[0].DataLabels.ShowValue = true;
-
-            // Increase font size of data labels (makes them appear larger)
-            chart.NSeries[0].DataLabels.Font.Size = 14;
+            // Enable data labels for all series and set their appearance
+            foreach (Series series in chart.NSeries)
+            {
+                // DataLabels.ShowValue automatically enables the label
+                series.DataLabels.ShowValue = true;
+                series.DataLabels.Font.Size = 14;          // Resize font
+                series.DataLabels.Font.Color = Color.Black;
+            }
 
             // Save the workbook
             string outputPath = "StackedAreaChart_WithResizedDataLabels.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

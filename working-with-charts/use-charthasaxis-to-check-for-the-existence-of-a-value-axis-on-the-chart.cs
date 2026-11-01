@@ -1,52 +1,58 @@
-// Title: Use Chart.HasAxis to detect primary and secondary value axes on an Aspose.Cells column chart in C#
-// AI Prompts: Write a C# console program that creates a column chart with sample data and calls Chart.HasAxis to report whether the primary value axis exists. | Show how to invoke Chart.HasAxis for the secondary value axis on a chart built with Aspose.Cells and output the result to the console. | Generate C# code that sets a chart data range, checks both primary and secondary value axes using Chart.HasAxis, and saves the workbook.
-// Common Searches: asp.net aspose.cells chart.hasaxis example for primary value axis | c# how to check secondary value axis in an Aspose.Cells chart | using Chart.HasAxis to verify axes on a column chart with Aspose.Cells | determine if a chart has a value axis in Aspose.Cells .NET | chart.HasAxis method usage Aspose.Cells C# tutorial
-// Tags: Aspose.Cells Chart.HasAxis value axis detection | C# column chart primary axis verification | C# column chart secondary axis verification | Aspose.Cells set chart data range C# | Aspose.Cells workbook save example
+// Title: Determine whether an Excel chart has a primary value axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook, retrieves the first chart, and uses chart.HasAxis to report if a primary value axis is present. | Show how to extend the example to also check for a secondary category axis on the same chart and output both results. | Create a resilient C# snippet that iterates over all charts in a worksheet, uses chart.HasAxis to detect value axes, and logs the findings while handling missing files and empty chart collections.
+// Common Searches: asp.net aspose.cells check primary value axis in chart c# | how to use chart.HasAxis to detect value axis in Excel file with Aspose.Cells | c# code sample for verifying existence of a value axis on an Excel chart | Aspose.Cells chart.HasAxis AxisType.Value true example | detect missing value axis in Excel chart using Aspose.Cells for .NET
+// Tags: Aspose.Cells chart.HasAxis value axis detection | C# verify primary value axis in Excel chart | Aspose.Cells check chart axis existence | Excel chart value axis verification using Aspose.Cells | AxisType.Value primary axis check Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsHasAxisDemo
+namespace AsposeCellsExample
 {
-    // The program creates a workbook, adds a column chart with sample data, uses Chart.HasAxis to determine whether the primary and secondary value axes are present, prints the results, and saves the file as ChartHasAxisDemo.xlsx.
+    // The example loads an Excel workbook, accesses the first worksheet and its first chart, then calls chart.HasAxis(AxisType.Value, true) to determine if a primary value axis exists, outputting the boolean result.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
+                // Access the first worksheet (index 0)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the data range for the chart
-            chart.SetChartDataRange("A1:B4", true);
+                // Ensure the worksheet contains at least one chart
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the worksheet.");
+                    return;
+                }
 
-            // Check if the primary value axis exists
-            bool hasPrimaryValueAxis = chart.HasAxis(AxisType.Value, true);
-            // Check if the secondary value axis exists
-            bool hasSecondaryValueAxis = chart.HasAxis(AxisType.Value, false);
+                // Retrieve the first chart
+                Chart chart = worksheet.Charts[0];
 
-            // Output the results
-            Console.WriteLine("Primary Value Axis exists: " + hasPrimaryValueAxis);
-            Console.WriteLine("Secondary Value Axis exists: " + hasSecondaryValueAxis);
+                // Determine whether the chart contains a primary value axis
+                bool hasValueAxis = chart.HasAxis(AxisType.Value, true);
 
-            // Save the workbook
-            workbook.Save("ChartHasAxisDemo.xlsx");
+                // Output the result
+                Console.WriteLine($"Chart has value axis: {hasValueAxis}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

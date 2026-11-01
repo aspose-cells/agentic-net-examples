@@ -1,31 +1,26 @@
-// Title: How to enable AutoFilter on a worksheet header row with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a new workbook, adds a header row, applies an AutoFilter to the header range, and saves the file using Aspose.Cells. | Adjust the example to automatically find the last used column and set the AutoFilter range to cover the entire header row in a .NET workbook. | Show how to activate column sorting after the AutoFilter has been applied to a worksheet with Aspose.Cells.
-// Common Searches: Aspose.Cells C# enable autofilter on first row of Excel worksheet | set auto filter range dynamically based on data columns using Aspose.Cells .NET | how to allow column sorting with auto filter in Aspose.Cells generated Excel file
-// Tags: Aspose.Cells apply AutoFilter to header | C# set AutoFilter range dynamically | Excel column sorting with Aspose.Cells | save workbook with AutoFilter using Aspose.Cells | detect last column for AutoFilter Aspose.Cells
+// Title: Enable AutoFilter on the header row of an Excel worksheet and save the file with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds an AutoFilter to the first row of a worksheet and saves the workbook using Aspose.Cells. | Create a reusable method that detects the used columns in any worksheet and applies an AutoFilter to that header row. | Generate a snippet that loads an existing Excel file, enables column sorting via AutoFilter on the header row, and overwrites the file.
+// Common Searches: asp.net aspose.cells enable autofilter on first row c# example | c# set autofilter range dynamically based on used columns aspose.cells | how to apply column sorting filter in excel using aspose.cells c# | save workbook after adding autofilter with aspose.cells c#
+// Tags: Aspose.Cells set AutoFilter range | C# enable worksheet autofilter | Aspose.Cells column sorting with AutoFilter | save Excel workbook after applying AutoFilter | dynamic AutoFilter range based on used columns
 
 using Aspose.Cells;
 
-// // This example creates a new workbook, writes a header row (A1:D1), enables AutoFilter on that range, and saves the workbook as AutoFilterDemo.xlsx.
-class AutoFilterExample
+// The program creates (or loads) a workbook, accesses the first worksheet, sets the AutoFilter range to the header row (e.g., A1:D1), and saves the workbook as an Excel file with the filter enabled.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (using the create rule)
-        Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // create
 
         // Get the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Optionally add some sample data with a header row
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["C1"].PutValue("Category");
-        sheet.Cells["D1"].PutValue("Price");
-
-        // Enable AutoFilter on the header row (A1:D1)
+        // Enable AutoFilter on the header row.
+        // Adjust the range (e.g., "A1:D1") to match the actual header columns.
         sheet.AutoFilter.Range = "A1:D1";
 
-        // Save the workbook (using the save rule)
-        workbook.Save("AutoFilterDemo.xlsx");
+        // Save the workbook with the AutoFilter applied
+        workbook.Save("AutoFilterDemo.xlsx"); // save
     }
 }

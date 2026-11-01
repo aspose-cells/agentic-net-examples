@@ -1,51 +1,48 @@
-// Title: Determine the encryption algorithm of an encrypted Excel workbook and log its strength using Aspose.Cells for .NET
-// AI Prompts: Load a password‑protected .xlsx file with Aspose.Cells and read Workbook.EncryptionInfo.Algorithm. | Create C# logic that classifies the retrieved algorithm as strong (e.g., AES‑256) or weak (e.g., RC4). | Add console output that prints the algorithm name and its security rating after the workbook is opened.
-// Common Searches: Aspose.Cells C# get encryption algorithm of password protected Excel file | how to evaluate if Excel workbook encryption is strong or weak in .NET | retrieve encryption metadata (algorithm, key length) from an encrypted .xlsx using Aspose.Cells
-// Tags: read Excel encryption algorithm Aspose.Cells | evaluate encryption strength .xlsx C# | Aspose.Cells workbook encryption metadata | log encryption type and security rating .NET | determine strong vs weak Excel encryption Aspose
+// Title: Attempt to detect Excel workbook encryption algorithm and evaluate its strength using Aspose.Cells for .NET (C#)
+// Common Searches: how to load a password‑protected XLSX file with Aspose.Cells in C# | does Aspose.Cells expose the encryption algorithm of an encrypted Excel workbook | determine if an Excel file uses strong or weak encryption with Aspose.Cells .NET | retrieve encryption type (AES‑128, AES‑256, etc.) of an XLSX file using C# | check workbook encryption strength after opening with Aspose.Cells LoadOptions
+// Tags: Aspose.Cells workbook encryption detection | C# load password protected XLSX | evaluate Excel encryption strength .NET | Aspose.Cells LoadOptions password usage | identify Excel file encryption algorithm | assess weak vs strong Excel encryption
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates how to open an encrypted Excel workbook with a password using Aspose.Cells LoadOptions, access the Workbook.EncryptionInfo to obtain the encryption algorithm, map the algorithm to a strength classification, and log the algorithm name together with a strong/weak rating.
+// The example shows how to open a password‑protected Excel workbook using Aspose.Cells LoadOptions in C#. While the workbook can be opened successfully, Aspose.Cells does not provide a property to reveal the underlying encryption algorithm, so the code can only confirm access, not classify the encryption as strong or weak.
 class Program
 {
     static void Main()
     {
         // Path to the encrypted workbook
-        string workbookPath = "encrypted.xlsx";
+        string filePath = "encrypted.xlsx";
 
-        // Password required to open the workbook
-        string password = "yourPassword";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(workbookPath))
+        // Ensure the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
             return;
         }
 
+        // Password required to open the workbook (if known)
+        string password = "yourPassword";
+
         try
         {
-            // Configure load options with the password for the encrypted file
+            // Load the workbook with password using LoadOptions
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = password
             };
 
-            // Load the workbook using the specified options
-            Workbook workbook = new Workbook(workbookPath, loadOptions);
+            // Open the workbook
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // If loading succeeds, the workbook is decrypted successfully
+            // Since Aspose.Cells does not expose the encryption algorithm after loading,
+            // we simply confirm that the workbook was opened successfully.
             Console.WriteLine("Workbook opened successfully with the provided password.");
-
-            // Note: Aspose.Cells does not expose the encryption algorithm directly via LoadOptions.
-            // If needed, additional logic can be implemented using other Aspose.Cells APIs or metadata.
         }
         catch (Exception ex)
         {
-            // Catch any exceptions (e.g., incorrect password, corrupted file) and display a friendly message
-            Console.WriteLine($"An error occurred while opening the workbook: {ex.Message}");
+            // Handle any runtime errors (e.g., incorrect password, corrupted file)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

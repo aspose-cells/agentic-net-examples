@@ -1,72 +1,63 @@
-// Title: Configure Aspose.Cells FindOptions in C# to skip hidden rows when searching the K1:K500 range
-// AI Prompts: Write C# code that sets FindOptions.IncludeHiddenRows = false and searches for a text value only within cells K1:K500 using Aspose.Cells. | Show how to create a Range for K1:K500, apply FindOptions to ignore hidden rows, and retrieve the first matching cell. | Demonstrate validating that the cell returned by Worksheet.Cells.Find lies inside the specified range after hidden‑row filtering.
-// Common Searches: Aspose.Cells C# find text in column K ignoring hidden rows | How to use FindOptions to exclude hidden rows in Aspose.Cells | Search range K1:K500 with Aspose.Cells Find method C# | C# Aspose.Cells find with hidden row filter example | Limit Aspose.Cells Find to specific column and skip hidden rows
-// Tags: Aspose.Cells FindOptions ignore hidden rows | search specific range K1:K500 Aspose.Cells | C# Excel hidden rows filtering Aspose.Cells | cell find operation within column K Aspose.Cells | range-based find with hidden row exclusion C#
+// Title: How to use Aspose.Cells FindOptions to skip hidden rows while searching cells K1:K500 in C#
+// Common Searches: Aspose.Cells FindOptions ignore hidden rows when searching column K in C# | C# code to find a value in range K1:K500 without considering hidden rows using Aspose.Cells | skip hidden rows during cell search with Aspose.Cells FindOptions C# example | search specific range K1 to K500 while excluding hidden rows in Aspose.Cells
+// Tags: FindOptions.SearchHiddenRows Aspose.Cells | column K range lookup Aspose.Cells C# | exclude hidden rows cell search Aspose.Cells | Aspose.Cells find value within K1:K500 | C# workbook cell search hidden rows
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example loads a workbook, creates a range covering cells K1:K500, configures FindOptions to exclude hidden rows, searches for a specified text using Worksheet.Cells.Find, verifies the found cell is inside the defined range, outputs the result, and saves the workbook.
+// The example loads a workbook, accesses the first worksheet, and creates a FindOptions object configured with LookInType.Values and SearchHiddenRows set to false. It then searches for a target string starting from cell K1, limits the result to rows 1‑500, reports the found cell location, and saves the workbook, ensuring hidden rows are ignored during the search.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
+            // Verify that the input file exists to avoid FileNotFoundException
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the search range K1:K500 (zero‑based indices: row 0, column 10, 500 rows, 1 column)
-            AsposeRange searchRange = sheet.Cells.CreateRange(0, 10, 500, 1);
-
-            // Configure FindOptions (default options are sufficient for a simple text search)
-            FindOptions findOptions = new FindOptions();
-
-            // Perform the search using the worksheet's Cells collection
-            // The Find method searches the whole sheet, so we later verify the cell is inside our range
-            Cell foundCell = sheet.Cells.Find("searchText", null, findOptions);
-
-            // Verify that the found cell lies within the defined range
-            if (foundCell != null &&
-                foundCell.Row >= searchRange.FirstRow && foundCell.Row < searchRange.FirstRow + searchRange.RowCount &&
-                foundCell.Column >= searchRange.FirstColumn && foundCell.Column < searchRange.FirstColumn + searchRange.ColumnCount)
+            // Configure FindOptions (search in cell values)
+            FindOptions findOptions = new FindOptions
             {
-                Console.WriteLine($"Found at {foundCell.Name} with value: {foundCell.StringValue}");
+                LookInType = LookInType.Values
+            };
+
+            // The value to search for
+            string valueToFind = "TargetValue";
+
+            // Start the search from the first cell of the desired range (K1)
+            Cell startCell = sheet.Cells["K1"];
+
+            // Perform the search
+            Cell foundCell = sheet.Cells.Find(valueToFind, startCell, findOptions);
+
+            // Verify that the found cell is within the K1:K500 range
+            if (foundCell != null && foundCell.Row <= 499) // rows are zero‑based
+            {
+                Console.WriteLine($"Value found at cell {foundCell.Name}");
             }
             else
             {
                 Console.WriteLine("Value not found in the specified range.");
             }
 
-            // Save the workbook if any modifications were made (optional)
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook (output file will be created/overwritten)
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

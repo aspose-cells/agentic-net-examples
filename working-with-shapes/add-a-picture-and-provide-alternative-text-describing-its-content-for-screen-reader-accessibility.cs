@@ -1,51 +1,60 @@
-// Title: Add a PNG picture to cell B2 in an Excel workbook and define AlternativeText for accessibility using Aspose.Cells for .NET
-// AI Prompts: Insert a PNG image from a file stream into cell B2 of a new workbook and set its AlternativeText property with Aspose.Cells in C#. | Create a workbook, add a picture shape at a specific cell, assign descriptive alt text for screen readers, and save the file using the Aspose.Cells .NET API. | Load an image file, place it as a picture on the first worksheet, configure the picture's AlternativeText for accessibility, and export the workbook.
-// Common Searches: how to set alt text for an inserted picture in Aspose.Cells C# | Aspose.Cells add image to specific cell with alternative description | C# example for adding PNG to Excel and providing accessibility text | using Aspose.Cells to insert picture and define AlternativeText property | save workbook with picture and alt text using Aspose.Cells for .NET
-// Tags: add picture shape to worksheet Aspose.Cells C# | configure picture AlternativeText Aspose.Cells | place image at specific cell Aspose.Cells | accessibility description for Excel picture Aspose.Cells | picture properties manipulation Aspose.Cells .NET
+// Title: Insert a JPEG picture into cell A1 of an Excel workbook and assign alternative text for screen‑reader accessibility with Aspose.Cells for .NET
+// AI Prompts: Insert an image from a local file into cell A1 of a new workbook and assign a descriptive AlternativeText property using Aspose.Cells in C#. | Update the code to place a picture in a custom cell range and assign its alternative text from a variable or resource file.
+// Common Searches: Aspose.Cells C# how to embed a picture in an Excel sheet and add alt description for screen readers | provide accessibility text for image inserted with Aspose.Cells .NET | add image to specific cell range in Excel using Aspose.Cells and ensure alt text is set | save Excel file with embedded JPEG and accessibility metadata using Aspose.Cells for .NET | check image file existence before adding picture with Aspose.Cells C#
+// Tags: insert picture into worksheet Aspose.Cells C# | assign alt description to Excel image Aspose.Cells | embed JPEG in Excel workbook Aspose.Cells | accessibility for Excel pictures Aspose.Cells | save workbook with images Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, loads a PNG file, inserts it as a picture at cell B2, assigns an AlternativeText description for screen‑reader accessibility, and saves the workbook as Workbook_With_Picture.xlsx.
-class AddPictureWithAltText
+// Shows how to create a new workbook, embed a JPEG picture into cell A1, set a meaningful AlternativeText for screen‑reader accessibility, and save the file as an .xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Path to the image file to be inserted
-        string imagePath = "sample_image.png";
-
-        // Ensure the image file exists
-        if (!File.Exists(imagePath))
+        try
         {
-            Console.WriteLine($"Image file not found: {imagePath}");
-            return;
-        }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Load the image into a stream
-        using (FileStream imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-        {
-            // Add the picture to the worksheet at cell B2 (row index 1, column index 1)
-            // Lifecycle rule: create picture via Pictures.Add
-            int pictureIndex = sheet.Pictures.Add(1, 1, imageStream);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Retrieve the inserted picture object
+            // Path to the image file
+            string imagePath = @"C:\Images\sample.jpg";
+
+            // Verify the image file exists to avoid FileNotFoundException
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
+
+            // Add a picture to cell A1 (row 0, column 0)
+            int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
+
+            // Retrieve the picture object
             Picture picture = sheet.Pictures[pictureIndex];
 
-            // Set alternative text for screen reader accessibility
-            picture.AlternativeText = "A scenic view of mountains during sunrise";
+            // Provide alternative text for screen reader accessibility
+            picture.AlternativeText = "A sample photograph showing a sunrise over mountains.";
 
-            // Optionally, adjust picture size or position here if needed
+            // Ensure the output directory exists
+            string outputPath = "OutputWithPicture.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Save the workbook (lifecycle rule: save)
-        workbook.Save("Workbook_With_Picture.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

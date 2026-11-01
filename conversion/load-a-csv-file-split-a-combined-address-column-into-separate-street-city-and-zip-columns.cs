@@ -1,62 +1,98 @@
-// Title: Import a CSV with a combined address field and split it into Street, City, and Zip columns using Aspose.Cells TextToColumns in C#
-// AI Prompts: Load a CSV file into an Aspose.Cells Workbook, configure TxtLoadOptions with a comma separator, apply the TextToColumns method to separate the address column into Street, City, and Zip, then save the workbook as an XLSX file. | Demonstrate creating a sample CSV, importing it via Workbook.Cells.ImportCSV, using TextToColumns on column A to split the address, and exporting the resulting worksheet to Excel with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# split address column from CSV into separate columns | How to use TextToColumns to parse combined address in a CSV with Aspose.Cells | Import CSV and separate street city zip using Aspose.Cells TextToColumns method | C# Aspose.Cells example for splitting address field into multiple columns | Convert CSV address list to Excel with street city zip columns using Aspose.Cells
-// Tags: Aspose.Cells CSV import and address column split | Configure TxtLoadOptions separator for TextToColumns | C# TextToColumns on first worksheet column | Save split address workbook as XLSX | Workbook.Cells.ImportCSV example in .NET
+// Title: C# example: Load a CSV with Aspose.Cells, split a combined address column into Street, City, and Zip columns, and save the result
+// Common Searches: how to split a combined address column into separate street, city, and zip fields using Aspose.Cells in C# | Aspose.Cells C# load CSV and insert new columns for address components | C# parse address string from CSV and write street, city, zip with Aspose.Cells | saving modified CSV after address splitting with Aspose.Cells .NET | example code for extracting street, city, zip from a CSV using Aspose.Cells LoadOptions
+// Tags: load csv with Aspose.Cells LoadOptions | split address column using Aspose.Cells Cells API | insert columns in worksheet Aspose.Cells | save modified csv Aspose.Cells SaveFormat | parse street city zip C# string manipulation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AddressSplitExample
+// The sample loads a CSV file into an Aspose.Cells Workbook, inserts three new columns for Street, City, and Zip after the combined address column, parses each address string (expected format "Street, City ZIP") into its components, writes the split values into the new columns, and saves the updated data as a new CSV file.
+class Program
 {
-    // The program creates a Workbook, imports a CSV containing a combined address field, sets TxtLoadOptions with a comma separator, uses TextToColumns to divide the address into Street, City, and Zip columns, and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Path to the source CSV file that contains a combined address column (e.g., "123 Main St,City,12345")
-                string csvPath = "addresses.csv";
+            const string inputPath = "input.csv";
+            const string outputPath = "output.csv";
 
-                // Ensure the CSV file exists; create a simple sample if it does not.
-                if (!File.Exists(csvPath))
+            // Verify that the input CSV file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the CSV file into a Workbook
+            var loadOptions = new LoadOptions(LoadFormat.Csv);
+            var workbook = new Workbook(inputPath, loadOptions);
+            var worksheet = workbook.Worksheets[0];
+
+            // Index of the combined address column (zero‑based). Adjust as needed.
+            int addressColIndex = 2; // e.g., column C
+            int headerRow = 0;       // assuming first row contains headers
+
+            // Determine the last row with data
+            int lastRow = worksheet.Cells.MaxDataRow;
+
+            // Insert three new columns for Street, City, and Zip after the address column
+            worksheet.Cells.InsertColumns(addressColIndex + 1, 3);
+
+            // Set header names for the new columns
+            worksheet.Cells[headerRow, addressColIndex + 1].PutValue("Street");
+            worksheet.Cells[headerRow, addressColIndex + 2].PutValue("City");
+            worksheet.Cells[headerRow, addressColIndex + 3].PutValue("Zip");
+
+            // Process each data row and split the address
+            for (int row = headerRow + 1; row <= lastRow; row++)
+            {
+                string address = worksheet.Cells[row, addressColIndex].StringValue;
+                string street = string.Empty;
+                string city = string.Empty;
+                string zip = string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(address))
                 {
-                    string sampleData = "Address\n\"123 Main St,CityA,12345\"\n\"456 Oak Rd,CityB,67890\"";
-                    File.WriteAllText(csvPath, sampleData);
+                    // Expected format: "Street, City ZIP"
+                    // Split on the first comma
+                    var parts = address.Split(new[] { ',' }, 2);
+                    street = parts[0].Trim();
+
+                    if (parts.Length > 1)
+                    {
+                        // Remaining part contains city and zip
+                        string cityZipPart = parts[1].Trim();
+
+                        // Find the last space to separate city and zip
+                        int lastSpace = cityZipPart.LastIndexOf(' ');
+                        if (lastSpace > -1)
+                        {
+                            city = cityZipPart.Substring(0, lastSpace).Trim();
+                            zip = cityZipPart.Substring(lastSpace + 1).Trim();
+                        }
+                        else
+                        {
+                            city = cityZipPart; // No zip found
+                        }
+                    }
                 }
 
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet and its cells collection
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Import the CSV data starting at cell A1 (row 0, column 0)
-                // Using comma as the delimiter and converting numeric data where possible
-                cells.ImportCSV(csvPath, ",", true, 0, 0); // lifecycle rule: load (ImportCSV)
-
-                // Determine how many rows were imported (including header if present)
-                int totalRows = sheet.Cells.MaxDataRow + 1;
-
-                // Configure split options: use comma as the separator for the address column
-                TxtLoadOptions splitOptions = new TxtLoadOptions
-                {
-                    Separator = ',' // or splitOptions.SeparatorString = ","
-                };
-
-                // Split the combined address column (column A, index 0) into separate columns:
-                // Street -> column A, City -> column B, Zip -> column C
-                cells.TextToColumns(0, 0, totalRows, splitOptions); // lifecycle rule: split (TextToColumns)
-
-                // Save the resulting workbook to an XLSX file (lifecycle rule: save)
-                workbook.Save("addresses_split.xlsx", SaveFormat.Xlsx);
+                // Write split values into the new columns
+                worksheet.Cells[row, addressColIndex + 1].PutValue(street);
+                worksheet.Cells[row, addressColIndex + 2].PutValue(city);
+                worksheet.Cells[row, addressColIndex + 3].PutValue(zip);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Optional: remove the original combined address column
+            // worksheet.Cells.DeleteColumn(addressColIndex);
+
+            // Save the modified data to a new CSV file using SaveFormat.Csv
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Processing complete. Output saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

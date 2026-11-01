@@ -1,37 +1,60 @@
-// Title: Programmatically calculate all formulas in an Excel workbook and retrieve updated cell values using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an .xlsx file with Aspose.Cells, invoke Workbook.CalculateFormula, then read and display the evaluated values of cells A1 and B2. | After recalculating all formulas, save the workbook preserving the computed results and output specific cell values to the console.
-// Common Searches: C# Aspose.Cells calculate all formulas in a workbook and get the new cell values | how to read cell A1 value after Workbook.CalculateFormula in .NET | save Excel file with evaluated formulas using Aspose.Cells C# | programmatically trigger formula recalculation in Aspose.Cells and retrieve results | Aspose.Cells example for updating formula results and accessing cells
-// Tags: calculate workbook formulas Aspose.Cells C# | read evaluated cell value Aspose.Cells | save workbook after formula calculation Aspose.Cells | programmatic Excel formula evaluation .NET | extract updated cell data Aspose.Cells
+// Title: Programmatically calculate all formulas in an Excel workbook and retrieve the results using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to evaluate all formulas in an Excel file with Aspose.Cells | How to get calculated values from cells after Workbook.CalculateFormula in .NET | Aspose.Cells example for loading, calculating, and saving an Excel workbook | Retrieve numeric and string cell values after formula evaluation using Aspose.Cells C# | Calculate workbook formulas and export the updated workbook with Aspose.Cells for .NET
+// Tags: calculate workbook formulas Aspose.Cells C# | read evaluated cell values Aspose.Cells .NET | save workbook with calculated results Aspose.Cells | load Excel file using LoadOptions Aspose.Cells | Workbook.CalculateFormula method usage | access cell values after formula evaluation C#
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, recalculates every formula using CalculateFormula, reads the updated values of cells A1 and B2, prints them, and optionally saves the workbook with the computed results.
+// The sample loads an existing Excel file with Aspose.Cells, runs Workbook.CalculateFormula() to evaluate every formula, accesses specific cells (A1 as string and B2 as numeric) to read the calculated results, prints them, and then saves the workbook containing the updated values to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Retrieve updated values from cells as needed
-        // Example: get the value of cell A1 from the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        Cell cellA1 = sheet.Cells["A1"];
-        Console.WriteLine("Updated value of A1: " + cellA1.Value);
-
-        // Example: get the value of cell B2 from the second worksheet (if it exists)
-        if (workbook.Worksheets.Count > 1)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            Worksheet sheet2 = workbook.Worksheets[1];
-            Cell cellB2 = sheet2.Cells["B2"];
-            Console.WriteLine("Updated value of B2 in second sheet: " + cellB2.Value);
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        // Save the workbook with the calculated results (optional)
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the workbook (no password supplied). If the file is password‑protected,
+            // a CellsException will be thrown and handled in the catch block.
+            var loadOptions = new LoadOptions(); // default options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve and display value from cell A1
+            Cell cellA1 = sheet.Cells["A1"];
+            Console.WriteLine("A1 = " + cellA1.StringValue);
+
+            // Retrieve and display value from cell B2 (numeric example)
+            Cell cellB2 = sheet.Cells["B2"];
+            Console.WriteLine("B2 = " + cellB2.DoubleValue);
+
+            // Save the workbook with calculated values
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handles errors related to loading, calculating, or saving the workbook
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

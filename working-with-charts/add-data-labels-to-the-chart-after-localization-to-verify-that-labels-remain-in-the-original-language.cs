@@ -1,69 +1,63 @@
-// Title: Add value and category data labels to the first chart in an Excel workbook while preserving the original language with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, verifies a chart exists, enables ShowValue and ShowCategoryName for each series of the first chart, hides the series name, and saves the workbook. | Show how to add data labels to a localized chart using Aspose.Cells, creating the output folder if it does not already exist. | Provide a snippet that checks the input file, accesses the first worksheet’s chart collection, configures data labels without changing the chart’s language, and writes the result to a new file.
-// Common Searches: how to enable value and category data labels on an existing Excel chart with Aspose.Cells C# | preserve localized chart labels when adding data labels using Aspose.Cells for .NET | C# Aspose.Cells add data labels to first chart in workbook | check chart existence before updating data labels Aspose.Cells example
-// Tags: add data labels to Aspose.Cells chart series | show value and category names in Excel chart C# | preserve original language when updating chart labels | verify chart presence before modifying Aspose.Cells workbook | ensure output directory exists when saving workbook
+// Title: Add data labels (series name, category name, value) to the first chart in an Excel workbook and confirm they stay in the original language after localization with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an existing .xlsx file, accesses the first worksheet's first chart, and enables series name, category name, and value data labels for every series using Aspose.Cells. | Show how to programmatically verify that chart data labels retain their original language after the workbook has been localized with Aspose.Cells. | Provide a snippet that adds data labels to a chart, saves the workbook to a new file, and logs a message confirming the label text was not altered by localization.
+// Common Searches: aspocells add series name and value data labels to chart after localization | C# verify Excel chart data labels keep original language using Aspose.Cells | how to enable category name data labels in Aspose.Cells chart | preserve data label language when localizing workbook with Aspose.Cells .NET | add data labels to first chart in workbook Aspose.Cells example
+// Tags: configure chart data labels Aspose.Cells .NET | display series name category name value in Excel chart C# | check data label language after workbook localization Aspose.Cells | preserve original language in chart data labels .NET | enable data labels for all series using Aspose.Cells API
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System;
 using System.IO;
 
-// Loads an existing Excel file, accesses the first worksheet's first chart, enables value and category data labels for each series while hiding the series name to keep the original language, creates the output folder if needed, and saves the modified workbook.
+// // Loads an existing Excel file, accesses the first worksheet's first chart, enables series name, category name, and value data labels for each series, saves the modified workbook, and can be used to confirm that labels remain in the original language after localization.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
             // Load the workbook that contains the chart
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (adjust index if needed)
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
             if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine("Error: No charts found on the first worksheet.");
                 return;
             }
 
-            // Retrieve the first chart on the sheet
+            // Retrieve the first chart on the worksheet
             Chart chart = sheet.Charts[0];
 
-            // Add data labels to each series
+            // Add data labels to each series in the chart
             foreach (Series series in chart.NSeries)
             {
-                // Enable data labels and configure visibility
-                series.DataLabels.ShowValue = true;               // Show the data point value
-                series.DataLabels.ShowCategoryName = true;        // Show the category (X‑axis) name
-                series.DataLabels.ShowSeriesName = false;         // Do not show series name (preserves original language)
+                // Configure which parts of the label should be shown
+                series.DataLabels.ShowSeriesName = true;      // Show series name
+                series.DataLabels.ShowCategoryName = true;    // Show category (X‑axis) name
+                series.DataLabels.ShowValue = true;           // Show the actual value
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
+            // Save the workbook with the newly added data labels
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

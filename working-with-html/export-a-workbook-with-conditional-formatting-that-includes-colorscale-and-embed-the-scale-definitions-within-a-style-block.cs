@@ -1,52 +1,65 @@
-// Title: Export an Excel workbook with a three‑color ColorScale conditional format to HTML using Aspose.Cells for .NET, embedding the CSS in a <style> tag
-// AI Prompts: Generate C# code that creates a workbook, applies a three‑color ColorScale (light green, yellow, red) to the range A1:A10, and saves it as HTML with the conditional formatting rendered inside a <style> block via Aspose.Cells. | Modify the example to use a custom ColorScale of LightBlue, Orange, and DarkRed, then verify that the produced HTML file contains the corresponding CSS rules in the <style> section. | Add a data‑bar conditional formatting rule to the same range while preserving the existing ColorScale, and export the workbook to HTML ensuring both formatting rules appear in the generated style block.
-// Common Searches: aspnet export excel with color scale conditional formatting to html using aspose.cells | how to embed conditional formatting CSS when saving workbook as html with aspose.cells | c# generate three color scale conditional format and save as html file | asp.net save workbook as html and include conditional formatting styles in style tag
-// Tags: Aspose.Cells HTMLSaveOptions conditional formatting | C# export Excel workbook to HTML | conditional formatting gradient Aspose.Cells | embed conditional formatting CSS in HTML output | add data bar rule to HTML export
+// Title: Export a .NET workbook to HTML with a three‑color scale conditional formatting embedded in a <style> block using Aspose.Cells
+// Common Searches: C# Aspose.Cells export workbook to HTML with three‑color scale conditional formatting | How to embed color scale conditional formatting CSS in HTML output using Aspose.Cells for .NET | Save Excel file as HTML with conditional formatting color scale in style tag Aspose.Cells | Aspose.Cells HtmlSaveOptions export conditional formatting as inline CSS C# | Generate HTML from workbook that includes red‑yellow‑green color scale using Aspose.Cells
+// Tags: Aspose.Cells HTML export conditional formatting | three‑color scale conditional formatting Aspose.Cells | inline CSS for color scale Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 C# | C# generate HTML from Excel workbook
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// // This program creates a new workbook, fills cells A1:A10 with values 1‑10, applies a three‑color ColorScale (light green → yellow → red) conditional formatting, and saves the workbook as an HTML file where Aspose.Cells emits the conditional‑formatting rules as CSS inside a <style> block.
+// The sample creates a workbook, fills column A with values 0‑90, applies a red‑yellow‑green three‑color scale conditional formatting to A1:A10, configures HtmlSaveOptions to embed images as Base64, and saves the workbook as an HTML file where the color‑scale definitions are emitted inside a <style> block.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook.
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Populate sample data in column A (A1:A10).
-            for (int row = 0; row < 10; row++)
+            // Populate sample data in column A (A1:A10)
+            for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[row, 0].PutValue(row + 1);
+                sheet.Cells[i, 0].PutValue(i * 10); // 0,10,20,...,90
             }
 
-            // Add a ColorScale conditional formatting to the range A1:A10.
+            // Add a three‑color scale conditional formatting (red → yellow → green)
             int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
-            cf.AddArea(new CellArea { StartRow = 0, StartColumn = 0, EndRow = 9, EndColumn = 0 });
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            int conditionIdx = cfCollection.AddCondition(FormatConditionType.ColorScale);
+            FormatCondition colorScaleCondition = cfCollection[conditionIdx];
 
-            // Add a three‑color scale condition.
-            int conditionIndex = cf.AddCondition(FormatConditionType.ColorScale);
-            var condition = cf[conditionIndex];
+            // Set colors for the scale (type defaults: Min, Percentile 50, Max)
+            colorScaleCondition.ColorScale.MinColor = Color.Red;
+            colorScaleCondition.ColorScale.MidColor = Color.Yellow;
+            colorScaleCondition.ColorScale.MaxColor = Color.Green;
 
-            // Set the colors for the scale. The default types are Min, Percentile (50), and Max.
-            condition.ColorScale.MinColor = Color.LightGreen;
-            condition.ColorScale.MidColor = Color.Yellow;
-            condition.ColorScale.MaxColor = Color.Red;
+            // Apply the formatting to the range A1:A10
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 9,
+                EndColumn = 0
+            };
+            cfCollection.AddArea(area);
 
-            // Save the workbook as an HTML file.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            workbook.Save("ConditionalColorScale.html", htmlOptions);
+            // Set HTML save options (basic)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportImagesAsBase64 = true
+            };
+
+            // Save the workbook as HTML
+            string outputPath = "ConditionalFormatting.html";
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

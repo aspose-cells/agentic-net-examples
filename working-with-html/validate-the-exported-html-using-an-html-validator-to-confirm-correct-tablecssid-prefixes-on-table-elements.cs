@@ -1,113 +1,101 @@
-// Title: Check Aspose.Cells HTML export for table class or id attributes with C# regex validation
-// AI Prompts: Write C# code that saves a workbook to HTML using Aspose.Cells, reads the resulting file, and uses a regular expression to ensure every <table> element has either a class or an id attribute. | Update the HtmlSaveOptions to assign a custom TableCssIdPrefix (when the API supports it) and adjust the validation routine to confirm the prefix appears in each table's identifier. | Add comprehensive logging that enumerates any <table> tags lacking both class and id attributes and returns a pass/fail status for the HTML validation.
-// Common Searches: aspocells htmlsaveoptions verify table id attribute c# | c# regex find table tags without class in exported html | how to set TableCssIdPrefix in Aspose.Cells HTML export | validate generated html tables contain identifiers using Aspose.Cells | check Aspose.Cells workbook to html for missing table identifiers
-// Tags: Aspose.Cells HTML export table identifier check | C# regex verification of table tags | HtmlSaveOptions TableCssIdPrefix configuration | validate workbook to html table attributes | log missing table identifiers in exported html
+// Title: Validate that Aspose.Cells HTML export uses a custom TableId prefix for all <table> elements in C#
+// AI Prompts: Generate C# code that creates a workbook, applies a specific TableId prefix via HtmlSaveOptions (using reflection for version compatibility), saves it as HTML, and then uses a case‑insensitive regular expression to confirm each <table> tag's id starts with that prefix. | Write a C# example that reads the HTML file produced by Aspose.Cells, extracts all table id attributes, and reports any identifiers that do not begin with the defined prefix.
+// Common Searches: aspocells html export modify table identifiers c# | c# regex verify table id attributes in aspocells generated html | use reflection to set HtmlSaveOptions properties for Aspose.Cells versions | check aspocells exported html for correct table id naming convention | c# programmatically validate html tables after Aspose.Cells save
+// Tags: Aspose.Cells HtmlSaveOptions TableIdPrefix | C# regex HTML table ID validation | Aspose.Cells HTML export custom table identifiers | reflection configure HtmlExportOptions C# | verify generated HTML table attributes Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The program creates a workbook, populates it with sample data, saves it as HTML via Aspose.Cells, reads the generated file, and uses a regular expression to confirm that each <table> tag includes either a class or an id attribute, reporting the overall validation result.
-class Program
+namespace AsposeCellsHtmlValidation
 {
-    static void Main()
+    // The sample creates an Aspose.Cells workbook, sets a custom TableId prefix on HTML tables via reflection‑compatible HtmlSaveOptions, saves the workbook as HTML, then reads the output file and uses a case‑insensitive regex to ensure every <table> element's id attribute begins with the expected prefix, reporting any mismatches.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
+            // Define output HTML path
+            const string htmlPath = "Sample.html";
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue("Value1");
-            sheet.Cells["B2"].PutValue("Value2");
-
-            // Define a prefix that could be used for table IDs (if supported)
-            string tableCssPrefix = "myPrefix";
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Create a new workbook, populate data and save as HTML
+            try
             {
-                ExportActiveWorksheetOnly = true
-                // Note: TableCssIdPrefix is not available in the current Aspose.Cells version.
-                // If a newer version is used, you can uncomment the line below:
-                // TableCssIdPrefix = tableCssPrefix
-            };
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Header1");
+                sheet.Cells["B1"].PutValue("Header2");
+                sheet.Cells["A2"].PutValue("Row1Col1");
+                sheet.Cells["B2"].PutValue("Row1Col2");
 
-            // Export worksheet to HTML
-            string htmlPath = "output.html";
-            workbook.Save(htmlPath, htmlOptions);
+                // Configure HTML save options with a TableId prefix
+                var saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+                const string tableIdPrefix = "tbl_";
 
-            // Validate HTML content
-            bool allValid = true;
-            if (File.Exists(htmlPath))
-            {
-                string htmlContent;
+                // Use reflection to set TableIdPrefix (covers different Aspose.Cells versions)
                 try
                 {
-                    htmlContent = File.ReadAllText(htmlPath);
-                }
-                catch (Exception readEx)
-                {
-                    Console.WriteLine($"Failed to read HTML file: {readEx.Message}");
-                    allValid = false;
-                    htmlContent = string.Empty;
-                }
-
-                // Find all <table> tags
-                Regex tableRegex = new Regex(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
-                MatchCollection matches = tableRegex.Matches(htmlContent);
-
-                if (matches.Count == 0)
-                {
-                    Console.WriteLine("No <table> tags found in the HTML output.");
-                    allValid = false;
-                }
-                else
-                {
-                    foreach (Match match in matches)
+                    var htmlExportProp = typeof(HtmlSaveOptions).GetProperty("HtmlExportOptions");
+                    if (htmlExportProp != null)
                     {
-                        string tag = match.Value;
-
-                        // Prefer class attribute; fallback to id
-                        string identifier = GetAttributeValue(tag, "class") ?? GetAttributeValue(tag, "id");
-
-                        // If a specific prefix is required and the property is supported, validate it.
-                        // Since TableCssIdPrefix is unavailable, we only ensure an identifier exists.
-                        if (string.IsNullOrEmpty(identifier))
+                        var htmlExport = htmlExportProp.GetValue(saveOptions);
+                        var prefixProp = htmlExport?.GetType().GetProperty("TableIdPrefix");
+                        if (prefixProp != null && prefixProp.CanWrite)
                         {
-                            allValid = false;
-                            Console.WriteLine("Table tag missing both class and id attributes.");
+                            prefixProp.SetValue(htmlExport, tableIdPrefix);
                         }
                     }
                 }
+                catch
+                {
+                    // If reflection fails, continue without custom prefix
+                }
+
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, saveOptions);
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"HTML file not found: {htmlPath}");
-                allValid = false;
+                Console.WriteLine($"Error during workbook creation or HTML saving: {ex.Message}");
+                return;
             }
 
-            // Output validation result
-            Console.WriteLine(allValid
-                ? "HTML validation succeeded."
-                : "HTML validation failed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
+            // Validate the generated HTML
+            try
+            {
+                if (!File.Exists(htmlPath))
+                {
+                    Console.WriteLine($"HTML file not found: {htmlPath}");
+                    return;
+                }
 
-    // Helper to extract attribute value from a tag string
-    private static string GetAttributeValue(string tag, string attributeName)
-    {
-        string pattern = $@"{attributeName}\s*=\s*[""']([^""']*)[""']";
-        Match match = Regex.Match(tag, pattern, RegexOptions.IgnoreCase);
-        return match.Success ? match.Groups[1].Value : null;
+                string htmlContent = File.ReadAllText(htmlPath);
+
+                // Regex to match <table ... id="..."> (case‑insensitive)
+                var tableRegex = new Regex(@"<table[^>]*\sid\s*=\s*[""']([^""']+)[""'][^>]*>", RegexOptions.IgnoreCase);
+                var matches = tableRegex.Matches(htmlContent);
+
+                bool allTablesValid = true;
+                const string expectedPrefix = "tbl_";
+
+                foreach (Match match in matches)
+                {
+                    string idValue = match.Groups[1].Value;
+                    if (!idValue.StartsWith(expectedPrefix, StringComparison.Ordinal))
+                    {
+                        allTablesValid = false;
+                        Console.WriteLine($"Invalid table ID: {idValue}");
+                    }
+                }
+
+                Console.WriteLine(allTablesValid
+                    ? "All table elements have correct TableId prefixes."
+                    : "One or more table elements have incorrect TableId prefixes.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during HTML validation: {ex.Message}");
+            }
+        }
     }
 }

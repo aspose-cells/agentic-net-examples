@@ -1,48 +1,36 @@
-// Title: Enable on-screen gridlines but suppress them in printed output with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code using Aspose.Cells that sets Worksheet.IsGridlinesVisible to true and PageSetup.PrintGridlines to false, then saves the workbook as XLSX. | Update an existing Aspose.Cells workbook so that gridlines appear in the Excel UI while they are omitted from the printed page, preserving all other worksheet data.
-// Common Searches: aspocells C# show gridlines in Excel view but not when printing | how to hide gridlines in printed Excel file using Aspose.Cells | set Worksheet.IsGridlinesVisible and PageSetup.PrintGridlines properties in .NET | save workbook with screen gridlines only Aspose.Cells example
-// Tags: gridlines visibility on screen Aspose.Cells | suppress printed gridlines Aspose.Cells | Worksheet gridlines visibility C# example | disable print gridlines Aspose.Cells | save workbook with custom gridline settings Aspose.Cells | Excel UI gridlines vs print gridlines Aspose.Cells
+// Title: Show worksheet gridlines on screen while preventing them from printing using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# display gridlines in Excel viewer but not in printed output | How to keep gridlines visible on screen and hide them when printing with Aspose.Cells | Set Worksheet.IsGridlinesVisible true and PageSetup.PrintGridlines false in C# | Disable printed gridlines while retaining on‑screen gridlines in an Aspose.Cells workbook | Configure screen vs print gridline visibility for Excel files using Aspose.Cells .NET
+// Tags: Worksheet.IsGridlinesVisible property C# | PageSetup.PrintGridlines setting Aspose.Cells | gridline visibility control Excel .NET | suppress printed gridlines Aspose.Cells | display gridlines in Excel viewer Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The sample creates a workbook, makes gridlines visible in the Excel UI via Worksheet.IsGridlinesVisible, disables gridlines for printed output using PageSetup.PrintGridlines, and saves the file as GridlinesDemo.xlsx.
+// The example creates a workbook, enables on‑screen gridlines with Worksheet.IsGridlinesVisible, disables gridlines in printed output via PageSetup.PrintGridlines, adds sample data, and saves the file as GridlinesDemo.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook (using the create rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook.
+        Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Access the first worksheet.
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Show gridlines on screen
-            sheet.IsGridlinesVisible = true;
+        // Enable gridlines for on‑screen display.
+        // This makes gridlines visible when the workbook is opened in the viewer.
+        sheet.IsGridlinesVisible = true;
 
-            // Hide gridlines when printing
-            sheet.PageSetup.PrintGridlines = false;
+        // Hide gridlines in the printed output.
+        // The PrintGridlines property controls whether gridlines are printed.
+        sheet.PageSetup.PrintGridlines = false;
 
-            // Define output file path
-            string outputPath = "GridlinesDemo.xlsx";
+        // (Optional) Add some sample data to visualize the gridlines.
+        sheet.Cells["A1"].PutValue("Header 1");
+        sheet.Cells["B1"].PutValue("Header 2");
+        sheet.Cells["A2"].PutValue(123);
+        sheet.Cells["B2"].PutValue(456);
 
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook (using the save rule)
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook to a file.
+        workbook.Save("GridlinesDemo.xlsx", SaveFormat.Xlsx);
     }
 }

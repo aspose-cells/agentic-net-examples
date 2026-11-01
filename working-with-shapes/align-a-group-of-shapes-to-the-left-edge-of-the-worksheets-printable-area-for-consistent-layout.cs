@@ -1,81 +1,60 @@
-// Title: Align all worksheet shapes to the left edge of the printable area using Aspose.Cells for .NET (C#)
-// AI Prompts: Move every shape on the first worksheet to the first printable column of the defined print area while preserving its row using Aspose.Cells in C#. | Set each shape's UpperLeftColumn to the leftmost column of the worksheet's print area based on PageSetup.PrintArea with Aspose.Cells API.
-// Common Searches: asp.net aspose.cells align shapes to left margin of print area c# | how to set shape UpperLeftColumn to first printable column aspose.cells | move all worksheet drawings to left edge of defined print area using Aspose.Cells | c# adjust shape positions according to page setup print area aspose.cells
-// Tags: align shapes left printable area Aspose.Cells | shape UpperLeftColumn positioning Aspose.Cells | worksheet print area column alignment C# | adjust shape column based on page setup Aspose.Cells
+// Title: Align all worksheet shapes to the printable area's left margin using Aspose.Cells for .NET
+// AI Prompts: Set each shape's Left property to the worksheet's left margin value with Aspose.Cells in C#. | Iterate over Worksheet.Shapes and align them to the printable left edge based on PageSetup. | Modify an existing workbook so that all drawing objects start at the page's left margin.
+// Common Searches: C# Aspose.Cells move all shapes to the printable left margin | How to align Excel shapes with page margins using Aspose.Cells | Set shape left position from worksheet PageSetup margins in .NET | Batch reposition worksheet drawings to the left printable area with Aspose.Cells
+// Tags: shape left alignment with PageSetup margin | Aspose.Cells batch shape repositioning | worksheet drawing objects left margin adjustment | C# align Excel shapes to printable area | Aspose.Cells set shape.Left from worksheet margins
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.IO;
 
-// The example loads a workbook, determines the worksheet's print area (or falls back to the used range), calculates the first printable column, iterates through all shapes on the first worksheet, sets each shape's UpperLeftColumn to that column while keeping its original row, and saves the updated file.
-class AlignShapesToPrintableArea
+// The example loads a workbook, reads the first worksheet's left margin from PageSetup, loops through all shapes on that sheet, sets each shape's Left property to the rounded left‑margin value, and saves the updated file.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Get the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Retrieve the defined print area; fallback to the used range if not set.
-            string printArea = sheet.PageSetup.PrintArea;
-            if (string.IsNullOrEmpty(printArea))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                AsposeRange used = sheet.Cells.MaxDisplayRange;
-                // Convert row/column indices to Excel A1 notation.
-                string firstCell = CellsHelper.CellIndexToName(used.FirstRow, used.FirstColumn);
-                string lastCell = CellsHelper.CellIndexToName(
-                    used.FirstRow + used.RowCount - 1,
-                    used.FirstColumn + used.ColumnCount - 1);
-                printArea = $"{firstCell}:{lastCell}";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Create a Range object from the print area string.
-            AsposeRange printRange = sheet.Cells.CreateRange(printArea);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Determine the first column index of the printable area (0‑based).
-            int firstPrintableColumn = printRange.FirstColumn;
+            // Access the first worksheet (or adjust index as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Align each shape to the left edge of the printable area.
+            // Retrieve the left margin of the printable area (in points)
+            double printableLeft = sheet.PageSetup.LeftMargin;
+
+            // Align each shape in the worksheet to the left edge of the printable area
             foreach (Shape shape in sheet.Shapes)
             {
                 try
                 {
-                    // Preserve the shape's current row position.
-                    int currentRow = shape.UpperLeftRow;
-
-                    // Align shape to the first printable column with no horizontal offset.
-                    shape.UpperLeftRow = currentRow;
-                    shape.UpperLeftColumn = firstPrintableColumn;
-                    // Offsets default to 0; no need to set UpperLeftColumnOffset if not supported.
+                    // Shape.Left expects an integer value; convert from double safely
+                    shape.Left = (int)Math.Round(printableLeft);
                 }
                 catch (Exception exShape)
                 {
-                    Console.WriteLine($"Failed to adjust shape '{shape.Name}': {exShape.Message}");
+                    Console.WriteLine($"Failed to align shape '{shape.Name}': {exShape.Message}");
                 }
             }
 
-            // Save the modified workbook.
+            // Save the updated workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

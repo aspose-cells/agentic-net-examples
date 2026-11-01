@@ -1,54 +1,98 @@
-// Title: Import a 2D DateTime array into an Aspose.Cells worksheet and sort rows by the earliest timestamp column (C#)
-// AI Prompts: Write C# code that imports a two‑dimensional array of DateTime objects into an Aspose.Cells worksheet and then sorts the rows in ascending order based on the first column. | Show how to configure Aspose.Cells DataSorter to sort a range that contains timestamp values without a header row. | Modify the example to sort the data by the second timestamp column in descending order and save the workbook.
-// Common Searches: c# aspocells import 2d datetime array and sort by earliest date | how to use DataSorter for timestamp columns in Aspose.Cells | sorting Excel rows by first date column using Aspose.Cells C# | importing multi‑column DateTime data into worksheet and ordering rows without headers
-// Tags: import two‑dimensional DateTime array Aspose.Cells | DataSorter sort rows by first column | sort timestamps without header Aspose.Cells | C# sort worksheet range by earliest date | export sorted timestamps to Excel using Aspose.Cells
+// Title: Import a two‑dimensional DateTime array into an Aspose.Cells worksheet and sort rows by the earliest timestamp in C#
+// Common Searches: C# Aspose.Cells import DateTime[,] array into worksheet | Sort worksheet rows by earliest date column with Aspose.Cells | Aspose.Cells ImportTwoDimensionArray with DateTime values and order rows | Clear and rewrite worksheet data after sorting timestamps in Aspose.Cells C# | Determine minimum timestamp per row and sort rows in Aspose.Cells workbook
+// Tags: ImportTwoDimensionArray DateTime Aspose.Cells | order rows by minimum DateTime Aspose.Cells | clear worksheet range Aspose.Cells | write sorted data to worksheet Aspose.Cells | C# Aspose.Cells timestamp sorting
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 
-// // Imports a 2D DateTime array into the first worksheet, defines the data range, uses DataSorter to order rows ascending by the earliest timestamp column, and saves the workbook as SortedTimestamps.xlsx.
-class Program
+namespace AsposeCellsTimestampSorting
 {
-    static void Main()
+    // The example creates a DateTime[,] array, converts it to object[,] for ImportTwoDimensionArray, imports the data into the first worksheet, computes the earliest timestamp in each row, sorts the rows ascending by that timestamp, clears the original range, writes the sorted rows back, and saves the workbook as SortedTimestamps.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Two‑dimensional array of timestamps (rows = records, columns = different times)
-        object[,] timestamps = new object[,]
+        static void Main()
         {
-            { new DateTime(2023, 5, 10, 8, 30, 0), new DateTime(2023, 5, 10, 12, 0, 0) },
-            { new DateTime(2023, 5, 9, 9, 15, 0),  new DateTime(2023, 5, 9, 13, 45, 0) },
-            { new DateTime(2023, 5, 11, 7, 0, 0),  new DateTime(2023, 5, 11, 11, 30, 0) }
-        };
+            try
+            {
+                // Sample two‑dimensional array of timestamps (DateTime)
+                DateTime[,] timestamps = new DateTime[,]
+                {
+                    { new DateTime(2023, 5, 10, 14, 30, 0), new DateTime(2023, 5, 12, 9, 15, 0), new DateTime(2023, 5, 11, 18, 45, 0) },
+                    { new DateTime(2023, 4, 20, 8, 0, 0),  new DateTime(2023, 4, 22, 10, 30, 0), new DateTime(2023, 4, 21, 16, 0, 0) },
+                    { new DateTime(2023, 6, 1, 12, 0, 0),  new DateTime(2023, 6, 3, 14, 0, 0),  new DateTime(2023, 6, 2, 9, 0, 0) }
+                };
 
-        // Import the array into the worksheet starting at cell A1 (row 0, column 0)
-        cells.ImportTwoDimensionArray(timestamps, 0, 0);
+                // Convert DateTime[,] to object[,] because ImportTwoDimensionArray expects object[,]
+                int rows = timestamps.GetLength(0);
+                int cols = timestamps.GetLength(1);
+                object[,] objArray = new object[rows, cols];
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        objArray[r, c] = timestamps[r, c];
+                    }
+                }
 
-        // Determine the size of the imported range
-        int rowCount = timestamps.GetLength(0);
-        int colCount = timestamps.GetLength(1);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure the DataSorter to sort rows by the earliest timestamp (first column)
-        DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = false;                     // No header row in this data set
-        sorter.AddKey(0, SortOrder.Ascending);        // Sort by column A (index 0)
+                // Import the two‑dimensional array starting at cell A1 (row 0, column 0)
+                sheet.Cells.ImportTwoDimensionArray(objArray, 0, 0);
 
-        // Define the area that contains the data to be sorted
-        CellArea sortArea = new CellArea
-        {
-            StartRow = 0,
-            StartColumn = 0,
-            EndRow = rowCount - 1,
-            EndColumn = colCount - 1
-        };
+                // Determine the used range dimensions
+                int totalRows = sheet.Cells.MaxDataRow + 1;      // rows count
+                int totalCols = sheet.Cells.MaxDataColumn + 1;   // columns count
 
-        // Perform the sort operation
-        sorter.Sort(cells, sortArea);
+                // Build a list of rows with their earliest timestamp
+                var rowsWithMin = new List<(int RowIndex, DateTime MinTimestamp, object[] Values)>();
 
-        // Save the workbook with the sorted data
-        workbook.Save("SortedTimestamps.xlsx");
+                for (int r = 0; r < totalRows; r++)
+                {
+                    var rowValues = new object[totalCols];
+                    DateTime min = DateTime.MaxValue;
+
+                    for (int c = 0; c < totalCols; c++)
+                    {
+                        var cell = sheet.Cells[r, c];
+                        object val = cell.Value;
+                        rowValues[c] = val;
+
+                        if (val is DateTime dt && dt < min)
+                        {
+                            min = dt;
+                        }
+                    }
+
+                    rowsWithMin.Add((r, min, rowValues));
+                }
+
+                // Sort rows by the earliest timestamp (ascending)
+                var sortedRows = rowsWithMin.OrderBy(item => item.MinTimestamp).ToList();
+
+                // Clear existing data in the used range
+                sheet.Cells.ClearContents(0, 0, totalRows, totalCols);
+
+                // Write sorted rows back to the worksheet
+                for (int r = 0; r < sortedRows.Count; r++)
+                {
+                    var values = sortedRows[r].Values;
+                    for (int c = 0; c < totalCols; c++)
+                    {
+                        sheet.Cells[r, c].Value = values[c];
+                    }
+                }
+
+                // Save the workbook to a file
+                workbook.Save("SortedTimestamps.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

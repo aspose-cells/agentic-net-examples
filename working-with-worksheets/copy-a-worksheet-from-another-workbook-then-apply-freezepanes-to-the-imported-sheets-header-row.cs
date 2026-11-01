@@ -1,57 +1,50 @@
-// Title: Copy a worksheet from an existing Excel file to a new workbook and freeze the header row with Aspose.Cells for .NET (C#)
-// AI Prompts: Load source.xlsx, add a new worksheet to a fresh workbook, copy the first sheet while preserving its name, and apply FreezePanes to the first row using Aspose.Cells in C#. | Create a destination workbook, import a worksheet from another workbook, optionally rename it, and set FreezePanes on the top row programmatically with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# copy worksheet from one workbook to another and keep original sheet name | How to freeze the first row after copying a sheet with Aspose.Cells for .NET | C# example for copying a worksheet and applying FreezePanes using Aspose.Cells | Copy sheet and set FreezePanes on header row in Aspose.Cells .NET library
-// Tags: copy worksheet between workbooks Aspose.Cells C# | freeze panes on copied sheet Aspose.Cells | preserve original sheet name Aspose.Cells | load and save Excel files Aspose.Cells .NET
+// Title: Copy a worksheet from one Excel workbook to another and freeze the header row using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy worksheet from one workbook to another | how to freeze the first row after copying a sheet with Aspose.Cells | using AddCopy to duplicate a sheet and apply FreezePanes in .NET | remove default worksheet before copying sheet in Aspose.Cells | set FreezePanes to A2 on copied worksheet using Aspose.Cells for .NET
+// Tags: Aspose.Cells AddCopy worksheet duplication | freeze panes after sheet copy Aspose.Cells | remove default sheet Aspose.Cells .NET | set frozen header row Aspose.Cells | copy Excel sheet between workbooks C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads a source Excel file, creates a new workbook, clears its default sheet, copies the first worksheet using the AddCopy method, applies FreezePanes to lock the first row (making A2 the top‑left scrollable cell), and saves the destination file, with error handling for missing files.
+class Program
 {
-    // The sample loads source.xlsx, creates a new workbook, copies the first worksheet into it while preserving the original sheet name, freezes the first row of the copied sheet, and saves the result as output.xlsx, with error handling for missing files.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new destination workbook (contains a default worksheet)
-                Workbook destWorkbook = new Workbook();
+            const string sourcePath = "Source.xlsx";
+            const string destinationPath = "Destination.xlsx";
 
-                // Verify that the source file exists before loading
-                string sourcePath = "source.xlsx";
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source file not found: {sourcePath}");
 
-                // Load the source workbook
-                Workbook srcWorkbook = new Workbook(sourcePath);
+            // Load the source workbook containing the worksheet to copy
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Get the first worksheet from the source workbook
-                Worksheet srcSheet = srcWorkbook.Worksheets[0];
+            // Create a new (empty) destination workbook
+            Workbook destinationWorkbook = new Workbook();
 
-                // Add a new worksheet to the destination workbook and copy the source sheet into it
-                int newSheetIndex = destWorkbook.Worksheets.Add();
-                Worksheet destSheet = destWorkbook.Worksheets[newSheetIndex];
-                destSheet.Copy(srcSheet);
-                destSheet.Name = srcSheet.Name; // Preserve original name
+            // Remove the default sheet that Aspose.Cells creates in a new workbook
+            destinationWorkbook.Worksheets.Clear();
 
-                // Freeze the header row (first row) in the copied worksheet
-                destSheet.FreezePanes(0, 0, 1, 0);
+            // Copy the first worksheet from the source workbook to the destination workbook
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            // AddCopy expects the sheet name, returns the index of the newly added sheet
+            int copiedIndex = destinationWorkbook.Worksheets.AddCopy(sourceSheet.Name);
+            Worksheet copiedSheet = destinationWorkbook.Worksheets[copiedIndex];
 
-                // Save the destination workbook
-                string outputPath = "output.xlsx";
-                destWorkbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Freeze the first row (header). FreezePanes(row, column, frozenRows, frozenColumns)
+            // Top‑left cell of the scrollable area is A2 (row 2, column 1)
+            copiedSheet.FreezePanes(2, 1, 1, 0);
+
+            // Save the destination workbook with the copied and frozen sheet
+            destinationWorkbook.Save(destinationPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,52 +1,49 @@
-// Title: Protect a single worksheet with a password in Aspose.Cells for .NET while allowing cell, row, and column formatting
-// AI Prompts: Write C# code using Aspose.Cells to apply password protection to a specific worksheet and enable formatting of cells, rows, and columns. | Show how to configure the Protection object (AllowFormattingCell, AllowFormattingRow, AllowFormattingColumn) for a worksheet in Aspose.Cells. | Create an example that creates a workbook, renames the first sheet, protects it with a password, and saves the file as an .xlsx.
-// Common Searches: Aspose.Cells C# protect worksheet with password but keep cell formatting enabled | How to allow row and column formatting on a locked Excel sheet using Aspose.Cells | Set worksheet protection options programmatically in Aspose.Cells for .NET | Example of protecting a single sheet while permitting formatting changes in Aspose.Cells
-// Tags: worksheet password protection Aspose.Cells | allow formatting on protected sheet C# | Aspose.Cells Protection object configuration | protect single Excel worksheet Aspose.Cells | C# Aspose.Cells worksheet protection example
+// Title: How to protect a specific worksheet with a password while still allowing cell, column, and row formatting using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# protect worksheet password allow formatting changes | Enable worksheet protection but keep cell formatting editable in Aspose.Cells .NET | Set AllowFormattingCell, AllowFormattingColumn, and AllowFormattingRow on a protected sheet with Aspose.Cells | C# code to protect an Excel sheet with a password and permit formatting using Aspose.Cells | Worksheet protection with formatting permissions example for Aspose.Cells
+// Tags: worksheet protection password Aspose.Cells | allow formatting on protected worksheet C# | Aspose.Cells Protect method with formatting permissions | set AllowFormattingCell property Aspose.Cells | save protected workbook Excel Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample creates a new workbook, renames the first worksheet, applies password protection to that sheet, enables cell, row, and column formatting while restricting other edits, ensures the output directory exists, and saves the workbook as ProtectedWorkbook.xlsx.
-class WorksheetProtectionExample
+// The example creates a workbook, names the first worksheet, applies password‑based protection using ProtectionType.All, enables cell, column, and row formatting while keeping cells locked, and saves the file as an Excel workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and rename it
+            // Access the first worksheet and give it a name
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "ProtectedSheet";
 
-            // Protect the worksheet with a password (oldPassword is empty for new protection)
-            sheet.Protect(ProtectionType.All, "MySecretPassword", string.Empty);
+            // Protect the worksheet with a password.
+            // The overload requires oldPassword; pass null when there is none.
+            sheet.Protect(ProtectionType.All, "SecurePassword123", null);
 
-            // Configure protection options (use correct property names)
-            Protection protection = sheet.Protection;
-            protection.AllowFormattingCell = true;    // Allow formatting cells
-            protection.AllowFormattingRow = true;     // Allow formatting rows
-            protection.AllowFormattingColumn = true;  // Allow formatting columns
+            // Allow formatting changes while keeping cells locked.
+            sheet.Protection.AllowFormattingCell = true;      // allow cell formatting
+            sheet.Protection.AllowFormattingColumn = true;    // allow column formatting
+            sheet.Protection.AllowFormattingRow = true;       // allow row formatting
 
-            // Define output file path
+            // Determine output path and ensure directory exists
             string outputPath = "ProtectedWorkbook.xlsx";
-
-            // Ensure the output directory exists
-            string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

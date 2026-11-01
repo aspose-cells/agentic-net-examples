@@ -1,77 +1,30 @@
-// Title: Populate worksheet cells with source data and generate a column chart in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that fills cells A1:C4 with headers and numeric values, adds a column chart referencing that range, sets the chart title, and saves the workbook as an .xlsx file using Aspose.Cells. | Show how to bind a column chart to a data range by column, including headers, with Aspose.Cells Chart.SetChartDataRange in C#. | Demonstrate positioning a column chart on rows 5‑15 and columns 0‑5 after loading source data into a worksheet using Aspose.Cells. | Provide a snippet that outputs the generated Excel file to the current working directory and logs the saved path.
-// Common Searches: Aspose.Cells C# fill worksheet cells and create column chart with data range by column | How to set chart data source including headers in Aspose.Cells .NET | Example of adding a column chart to an Excel sheet using Aspose.Cells in C# | Save generated Excel workbook with chart to current directory using Aspose.Cells
-// Tags: fill worksheet with chart source data Aspose.Cells C# | bind column chart to data range by column Aspose.Cells | position column chart on worksheet Aspose.Cells | set chart title Aspose.Cells | save workbook as .xlsx file Aspose.Cells
+// Title: How to fill an Excel worksheet with category and value arrays for chart source data using Aspose.Cells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells to create a new workbook, add a header row (Category, Value), populate columns A and B from a string[] and a double[] array, and save the file. | Generate a loop that iterates over parallel category and numeric arrays and inserts each pair into successive rows of the first worksheet with Aspose.Cells, keeping the header intact. | Modify the example to add extra columns for additional chart series (e.g., "Previous Year") while preserving the existing Category and Value columns, then save the workbook.
+// Common Searches: Aspose.Cells C# write array data to Excel cells for chart source | populate Excel sheet with category and numeric values using Aspose.Cells | C# Aspose.Cells create data table for column chart | how to save chart source data workbook with Aspose.Cells in .NET
+// Tags: Aspose.Cells fill worksheet from arrays | C# create chart source data Excel | Aspose.Cells write header and rows | save Excel workbook with chart data Aspose
 
-using System;
-using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-namespace AsposeCellsChartDataSource
+// Get the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
+
+// Populate header row
+sheet.Cells["A1"].PutValue("Category");
+sheet.Cells["B1"].PutValue("Value");
+
+// Sample source data for the chart
+string[] categories = { "Q1", "Q2", "Q3", "Q4" };
+double[] values = { 120.5, 150.0, 130.75, 160.25 };
+
+// Fill the data rows
+for (int i = 0; i < categories.Length; i++)
 {
-    // The example creates a new workbook, writes headers and sample numeric data to cells A1:C4, adds a column chart positioned on the sheet, binds the chart to the data range by column (including headers), sets a custom chart title, and saves the file as ChartWithDataSource.xlsx in the current directory.
-    public class PopulateDataForChart
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate header cells
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Series1");
-                worksheet.Cells["C1"].PutValue("Series2");
-
-                // Populate sample data rows
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["C2"].PutValue(20);
-
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["B3"].PutValue(30);
-                worksheet.Cells["C3"].PutValue(40);
-
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B4"].PutValue(50);
-                worksheet.Cells["C4"].PutValue(60);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the chart (including headers)
-                // The 'true' flag indicates that series are plotted by column
-                chart.SetChartDataRange("A1:C4", true);
-
-                // Optionally, set a chart title
-                chart.Title.Text = "Sample Column Chart";
-
-                // Determine output file path
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ChartWithDataSource.xlsx");
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PopulateDataForChart.Run();
-        }
-    }
+    // Category column (A)
+    sheet.Cells[i + 2, 0].PutValue(categories[i]);   // Row index is i+2 because rows are 1‑based in Excel
+    // Value column (B)
+    sheet.Cells[i + 2, 1].PutValue(values[i]);
 }
+
+// Save the workbook (adjust the path as needed)
+workbook.Save("ChartSourceData.xlsx");

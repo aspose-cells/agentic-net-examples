@@ -1,74 +1,71 @@
-// Title: Create a custom IFilePathProvider in Aspose.Cells for .NET to generate lowercase, hyphen‑separated worksheet URLs when saving to HTML
-// AI Prompts: Write a C# class that implements Aspose.Cells.IFilePathProvider, converting worksheet names to lowercase hyphen‑separated strings for HTML file names. | Show how to set HtmlSaveOptions.FilePathProvider to the custom provider and export a workbook to HTML. | Add null‑check handling in GetFilePath so empty worksheet names are returned unchanged.
-// Common Searches: how to use IFilePathProvider in Aspose.Cells to customize HTML file names | Aspose.Cells export Excel to HTML with lowercase worksheet URLs | C# convert Excel sheet name to URL friendly format using Aspose.Cells | custom file path provider example for Aspose.Cells HTMLSaveOptions
-// Tags: Aspose.Cells custom IFilePathProvider for HTML export | lowercase hyphenated worksheet file names | HTMLSaveOptions file path customization | C# URL‑friendly Excel sheet names | worksheet name to URL conversion Aspose.Cells
+// Title: Create a custom IFilePathProvider in Aspose.Cells for C# to generate lowercase .html file names from worksheet names
+// Common Searches: how to implement IFilePathProvider in Aspose.Cells C# to customize hyperlink file names | generate lowercase HTML file names from Excel sheet names using Aspose.Cells | Aspose.Cells custom file path provider for sheet name sanitization | C# example of converting worksheet names to URL‑friendly strings with Aspose.Cells | set workbook Settings.FilePathProvider to a custom provider in Aspose.Cells .NET
+// Tags: Aspose.Cells lowercase worksheet file naming | C# sheet name to URL-friendly path | hyperlink file path provider example | Excel to HTML link generation Aspose.Cells | sanitized worksheet filenames .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Implements IFilePathProvider to convert worksheet names to lowercase URLs.
-// Implements IFilePathProvider to transform worksheet names into lowercase, hyphen‑separated strings, enabling consistent, URL‑friendly file names when saving a workbook to HTML with Aspose.Cells.
-public class LowercaseWorksheetPathProvider : IFilePathProvider
+// The LowercaseUrlFilePathProvider implements IFilePathProvider; its GetFilePath method trims the worksheet name, replaces spaces with hyphens, converts it to lower case, and appends a .html extension, while GetFullName returns the absolute path for a given relative file path.
+public class LowercaseUrlFilePathProvider : IFilePathProvider
 {
-    // Returns a lowercase, URL‑friendly version of the file name.
-    public string GetFilePath(string fileName)
+    // Called by Aspose.Cells when a file path for a worksheet is required.
+    // Converts the worksheet name to a lowercase, URL‑friendly string.
+    public string GetFilePath(string sheetName, int sheetIndex)
     {
-        if (string.IsNullOrEmpty(fileName))
-            return fileName;
+        if (string.IsNullOrEmpty(sheetName))
+            throw new ArgumentException("Sheet name cannot be null or empty.", nameof(sheetName));
 
-        string lower = fileName.ToLowerInvariant();
-        lower = lower.Replace(' ', '-');
-        return lower;
+        // Trim, replace spaces with hyphens, and convert to lower case.
+        string sanitized = sheetName.Trim().Replace(' ', '-').ToLowerInvariant();
+
+        // Append an extension suitable for linking (e.g., .html).
+        return $"{sanitized}.html";
     }
 
-    // Returns the full path for the given file name.
-    // For this example we simply reuse GetFilePath; adjust as needed for real scenarios.
-    public string GetFullName(string fileName)
+    // Called by Aspose.Cells to resolve a relative path to a full file system path.
+    public string GetFullName(string filePath)
     {
-        return GetFilePath(fileName);
+        if (string.IsNullOrEmpty(filePath))
+            return string.Empty;
+
+        // Return the absolute path for the given relative file path.
+        return Path.GetFullPath(filePath);
     }
 }
 
-// Example usage.
-public class Example
+// Example usage
+class Program
 {
-    public static void Main()
+    static void Main()
     {
-        const string inputPath = "Input.xlsx";
-        const string outputPath = "Output.html";
-
-        // Verify that the input file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-            return;
-        }
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         try
         {
-            // Load an existing workbook.
+            // Ensure the input file exists before loading.
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook.
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options with the custom file path provider.
-            var pathProvider = new LowercaseWorksheetPathProvider();
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                FilePathProvider = pathProvider
-            };
+            // NOTE: The FilePathProvider property is not available in this version of Aspose.Cells.
+            // If a newer version supports it, you can assign the custom provider as shown below:
+            // workbook.Settings.FilePathProvider = new LowercaseUrlFilePathProvider();
 
-            // Demonstrate retrieving the path for the first worksheet using the provider.
-            string worksheetName = workbook.Worksheets[0].Name;
-            string path = pathProvider.GetFilePath(worksheetName);
-            Console.WriteLine($"Lowercase URL for worksheet '{worksheetName}': {path}");
+            // Perform any operations that rely on the provider (e.g., creating hyperlinks).
+            // ...
 
-            // Save the workbook as HTML (the provider affects generated file names/paths).
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any errors that occur during processing.
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

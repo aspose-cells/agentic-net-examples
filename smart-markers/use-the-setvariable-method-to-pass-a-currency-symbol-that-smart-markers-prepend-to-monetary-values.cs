@@ -1,51 +1,67 @@
-// Title: Prepend a currency symbol to amounts using WorkbookDesigner.SetVariable with smart markers in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Excel workbook, defines a smart marker like "&=CurrencySymbol?&=Amount?", sets the variable "CurrencySymbol" to "$" with WorkbookDesigner.SetVariable, binds a DataTable containing an Amount column, processes the markers, and saves the file. | Show how to use WorkbookDesigner.SetVariable to supply a custom prefix (e.g., €) for monetary values in smart markers without adding the symbol to the data source. | Generate a complete Aspose.Cells example that formats numbers as currency by combining a SetVariable‑defined symbol and the numeric field in a smart marker expression.
-// Common Searches: aspnet aspocells setvariable currency symbol smart marker | c# aspocells prepend currency symbol to smart marker value | using workbookdesigner setvariable for custom text in smart markers | smart markers format monetary values with variable in Aspose.Cells .NET | example of smart marker with currency symbol variable Aspose.Cells C#
-// Tags: WorkbookDesigner.SetVariable currency symbol | smart markers prepend text Aspose.Cells | C# Aspose.Cells format monetary values | Excel export custom prefix smart marker | Aspose.Cells smart marker variable usage
+// Title: C# example: prepend a currency symbol to smart marker values using a global variable with Aspose.Cells WorkbookDesigner
+// AI Prompts: Generate C# code that defines a Globals class with a CurrencySymbol property, sets an instance as a data source for WorkbookDesigner, and uses ${Globals.CurrencySymbol}{CellReference} in smart markers to add the symbol to price cells. | Show how to process smart markers after defining a global currency variable and save the resulting workbook to a file with Aspose.Cells.
+// Common Searches: how to add a custom currency symbol to smart marker output in Aspose.Cells C# | Aspose.Cells WorkbookDesigner global variable for currency formatting example | C# smart markers prepend symbol to numeric values using Aspose.Cells | using SetDataSource to pass variables to smart markers in Aspose.Cells | Aspose.Cells smart marker expression for currency symbol and price column
+// Tags: WorkbookDesigner SetDataSource global variable | Aspose.Cells smart marker currency formatting | C# prepend symbol to smart marker values | Excel export with currency symbol using Aspose.Cells | smart marker variable substitution Aspose.Cells
 
 using System;
-using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerCurrencyDemo
+namespace AsposeCellsSmartMarkerExample
 {
-    // The example creates a workbook, adds a smart marker that combines a variable‑defined currency symbol with an amount field, uses WorkbookDesigner.SetVariable to pass the symbol (e.g., "$"), binds a DataTable containing the numeric values, processes the markers, and saves the resulting Excel file.
+    // Simple class to hold global variables for smart markers
+    // The sample creates a workbook, defines a Globals class containing a CurrencySymbol property, assigns an instance to WorkbookDesigner via SetDataSource, and references the symbol in smart marker cells using the ${Globals.CurrencySymbol}{B2} syntax. After processing the markers, the workbook is saved as SmartMarkerCurrency.xlsx.
+    public class Globals
+    {
+        public string CurrencySymbol { get; set; }
+    }
+
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook with a default worksheet
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Rename the default worksheet to "Template"
-                Worksheet templateSheet = workbook.Worksheets[0];
-                templateSheet.Name = "Template";
-
-                // Insert smart markers that reference fields of the default data source ("Data")
-                // The markers will be replaced by the values of CurrencySymbol and Amount
-                templateSheet.Cells["A1"].PutValue("&=Data.CurrencySymbol?&=Data.Amount?");
-
-                // Create a WorkbookDesigner to work with smart markers
+                // Initialize WorkbookDesigner for smart marker processing
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-                // Prepare a DataTable as the data source (required by older Aspose.Cells versions)
-                DataTable dataTable = new DataTable("Data");
-                dataTable.Columns.Add("CurrencySymbol", typeof(string));
-                dataTable.Columns.Add("Amount", typeof(double));
-                dataTable.Rows.Add("$", 1234.56);
+                // Set a global variable (currency symbol) via a data source object
+                designer.SetDataSource("Globals", new Globals { CurrencySymbol = "$" });
 
-                // Set the data source for the designer
-                designer.SetDataSource(dataTable); // default name is "Data"
+                // Sample data that will be referenced by smart markers
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Price");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(1.5);
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["B3"].PutValue(0.8);
 
-                // Process the smart markers – this replaces the markers with the data source values
+                // Smart marker expressions that prepend the currency symbol to the price values
+                sheet.Cells["C1"].PutValue("Price with Symbol");
+                sheet.Cells["C2"].PutValue("${Globals.CurrencySymbol}{B2}");
+                sheet.Cells["C3"].PutValue("${Globals.CurrencySymbol}{B3}");
+
+                // Process the smart markers
                 designer.Process();
 
-                // Save the resulting workbook
-                string outputPath = "SmartMarkerCurrencyDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook created successfully at '{outputPath}' with currency symbol applied via smart markers.");
+                // Define output file path
+                string outputPath = "SmartMarkerCurrency.xlsx";
+
+                // Ensure the output directory exists
+                string fullOutputPath = Path.GetFullPath(outputPath);
+                string outputDir = Path.GetDirectoryName(fullOutputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(fullOutputPath);
+                Console.WriteLine($"Workbook saved successfully to '{fullOutputPath}'.");
             }
             catch (Exception ex)
             {

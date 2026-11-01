@@ -1,42 +1,51 @@
-// Title: Delete blank columns on the first worksheet while updating cell references using DeleteOptions.UpdateReference in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that removes all empty columns from the first worksheet and automatically updates any formula references using DeleteOptions.UpdateReference. | Show how to call Cells.DeleteBlankColumns with a DeleteOptions object to preserve formulas after deleting blank columns in Aspose.Cells.
-// Common Searches: Aspose.Cells C# delete empty columns and keep formulas updated | How to use DeleteOptions.UpdateReference when removing blank columns in a workbook | DeleteBlankColumns method example for first worksheet in .NET | Remove blank columns from worksheet without breaking cell references Aspose.Cells
-// Tags: Aspose.Cells DeleteBlankColumns with UpdateReference | C# delete empty columns preserving formulas | DeleteOptions.UpdateReference usage in Aspose.Cells | remove blank columns first worksheet Aspose.Cells | Aspose.Cells workbook column cleanup .NET
+// Title: How to delete blank columns in the first worksheet of an Excel file using Aspose.Cells for .NET with UpdateReference enabled
+// Common Searches: Aspose.Cells C# delete empty columns and keep formulas updated | Delete blank columns on first sheet while updating cell references Aspose.Cells | C# example for Worksheet.Cells.DeleteBlankColumns with DeleteOptions.UpdateReference | Remove all blank columns from a workbook using Aspose.Cells and preserve formulas | How to use DeleteOptions.UpdateReference when cleaning up blank columns in .NET
+// Tags: Aspose.Cells DeleteBlankColumns UpdateReference | C# delete blank columns first worksheet | preserve formula references Aspose.Cells | Excel workbook cleanup using Aspose.Cells | DeleteOptions.UpdateReference .NET example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDeleteBlankColumnsExample
+// The sample loads an input.xlsx workbook, accesses the first worksheet, configures DeleteOptions with UpdateReference set to true, deletes all blank columns on that sheet, and saves the cleaned workbook to output.xlsx, handling any runtime errors.
+class Program
 {
-    // The example creates a workbook, places data in columns A and C leaving column B empty, configures DeleteOptions with UpdateReference set to true, deletes all blank columns on the first worksheet using Cells.DeleteBlankColumns, and saves the result as DeletedBlankColumns.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (index 0)
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Populate data with a blank column (column B will be blank)
-            cells["A1"].PutValue("Column A");
-            cells["C1"].PutValue("Column C");
-            cells["A2"].PutValue(1);
-            cells["C2"].PutValue(3);
-
-            // Set up DeleteOptions with UpdateReference = true
-            DeleteOptions options = new DeleteOptions
+            // Configure delete options to update references after deleting blank columns
+            DeleteOptions deleteOptions = new DeleteOptions
             {
                 UpdateReference = true
             };
 
-            // Delete all blank columns on the first worksheet
-            cells.DeleteBlankColumns(options);
+            // Delete all blank columns on this worksheet
+            worksheet.Cells.DeleteBlankColumns(deleteOptions);
 
             // Save the modified workbook
-            workbook.Save("DeletedBlankColumns.xlsx", SaveFormat.Xlsx);
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

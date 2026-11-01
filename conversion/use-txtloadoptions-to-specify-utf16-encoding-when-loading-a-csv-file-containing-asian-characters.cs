@@ -1,58 +1,30 @@
-// Title: Read a UTF-16 CSV containing Japanese and Korean characters using TxtLoadOptions in Aspose.Cells for .NET
-// AI Prompts: Configure TxtLoadOptions with Encoding.Unicode, load the CSV file, and output the value of cell A1. | Generate a Unicode-encoded CSV with Japanese and Korean text, then open it using Aspose.Cells specifying the Unicode encoding to verify correct rendering.
-// Common Searches: Aspose.Cells C# load CSV file with UTF-16 encoding for Asian characters | How to specify Unicode encoding when importing a CSV into Aspose.Cells workbook | Reading Japanese and Korean text from a UTF-16 CSV using Aspose.Cells TxtLoadOptions
-// Tags: Custom text encoding for CSV import | Aspose.Cells CSV loading with specific encoding | C# handling Asian characters in CSV files | Workbook load options for text files
+// Title: Load a CSV file with UTF‑16 (Unicode) encoding using TxtLoadOptions in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load CSV file encoded in UTF-16 | How to set TxtLoadOptions encoding to Unicode for CSV import in .NET | Reading Asian characters from a CSV using Aspose.Cells TxtLoadOptions | Specify UTF-16 encoding when loading a CSV workbook with Aspose.Cells | C# Aspose.Cells load CSV with Unicode characters without data loss
+// Tags: TxtLoadOptions set UTF-16 encoding | CSV import Unicode Aspose.Cells | Load CSV containing Asian characters .NET | Aspose.Cells workbook load options for text files | C# specify encoding for CSV import
 
 using System;
-using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsUtf16Example
+// The example creates a TxtLoadOptions object for CSV format, sets its Encoding property to Encoding.Unicode (UTF‑16), and loads the CSV file into an Aspose.Cells Workbook. It demonstrates handling Asian characters correctly and optionally saving the workbook as XLSX.
+class LoadCsvWithUtf16
 {
-    // The example creates a UTF-16 CSV file containing Japanese and Korean text if it does not exist, sets TxtLoadOptions.Encoding to Encoding.Unicode, loads the file into an Aspose.Cells Workbook, and prints the value of cell A1 to confirm that Asian characters are read correctly.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the CSV file
-            string csvPath = "asian_utf16.csv";
+        // Specify the path to the CSV file
+        string csvPath = "input.csv";
 
-            // Ensure the CSV file exists; create a sample UTF‑16 file if missing
-            if (!File.Exists(csvPath))
-            {
-                string[] sampleLines =
-                {
-                    "こんにちは,世界",   // Japanese
-                    "안녕하세요,세계"      // Korean
-                };
-                // Write the sample lines using UTF‑16 (Unicode) encoding
-                File.WriteAllLines(csvPath, sampleLines, Encoding.Unicode);
-            }
+        // Create TxtLoadOptions for CSV format
+        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.CSV);
 
-            try
-            {
-                // Set load options to use UTF‑16 encoding for text files
-                TxtLoadOptions loadOptions = new TxtLoadOptions
-                {
-                    Encoding = Encoding.Unicode // UTF‑16 LE
-                };
+        // Set the encoding to UTF‑16 (Unicode)
+        loadOptions.Encoding = Encoding.Unicode; // UTF-16
 
-                // Load the CSV file with the specified options
-                Workbook workbook = new Workbook(csvPath, loadOptions);
+        // Load the CSV file using the specified options
+        Workbook workbook = new Workbook(csvPath, loadOptions);
 
-                // Access the first worksheet and its cells
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Display a sample cell value to verify correct loading
-                Console.WriteLine("Cell A1 value: " + cells["A1"].StringValue);
-            }
-            catch (Exception ex)
-            {
-                // Handle any errors that occur during loading or processing
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // (Optional) Save the workbook to another format, e.g., XLSX
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

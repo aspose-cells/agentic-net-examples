@@ -1,58 +1,68 @@
-// Title: How to enumerate all pivot table fields and print their display names with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, adds a pivot table, refreshes it, and loops through the PivotTable.BaseFields collection to write each field's DisplayName to the console. | Provide a complete example that retrieves the list of pivot field names from an Aspose.Cells PivotTable and outputs them via Console.WriteLine after the pivot data is calculated.
-// Common Searches: aspnet c# get list of pivot table field names using Aspose.Cells | how to loop through BaseFields of a PivotTable in Aspose.Cells .NET | display pivot field display names in console with Aspose.Cells | sample code for iterating pivot fields in Aspose.Cells C#
-// Tags: Aspose.Cells iterate pivot BaseFields C# | pivot table field display name Aspose.Cells | C# console output pivot field names | create and refresh pivot table Aspose.Cells | Aspose.Cells PivotTable enumeration example
+// Title: Enumerate and print display names of all pivot fields (row, column, data, page) in every pivot table of an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, verifies the file exists, loops through all worksheets and their pivot tables, and writes each pivot field’s DisplayName (row, column, data, page) to the console with proper exception handling. | Create a reusable C# method that accepts a workbook path, loads it via Aspose.Cells, enumerates every pivot table’s fields, and returns or prints the list of field display names.
+// Common Searches: Aspose.Cells C# how to get names of all pivot fields in a workbook | list row column data and page field display names from pivot tables using Aspose.Cells | C# iterate over pivot tables in Excel and output field names to console | example code for enumerating pivot fields with Aspose.Cells for .NET
+// Tags: Aspose.Cells pivot field enumeration | C# console output Excel pivot field names | Aspose.Cells iterate workbook pivot tables | list pivot row column data page fields Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable and PivotField classes
 
-// The program creates a workbook, populates sample data, adds and refreshes a pivot table, then iterates over the PivotTable.BaseFields collection, writing each field's DisplayName to the console before saving the file.
+// The example loads an input.xlsx workbook, checks its existence, iterates each worksheet and each pivot table, and writes the DisplayName of every row, column, data, and page field to the console while handling errors.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].Value = "Category";
-        sheet.Cells["B1"].Value = "Product";
-        sheet.Cells["C1"].Value = "Sales";
-
-        sheet.Cells["A2"].Value = "Electronics";
-        sheet.Cells["B2"].Value = "Laptop";
-        sheet.Cells["C2"].Value = 1200;
-
-        sheet.Cells["A3"].Value = "Electronics";
-        sheet.Cells["B3"].Value = "Phone";
-        sheet.Cells["C3"].Value = 800;
-
-        sheet.Cells["A4"].Value = "Furniture";
-        sheet.Cells["B4"].Value = "Chair";
-        sheet.Cells["C4"].Value = 150;
-
-        // Add a pivot table to the worksheet
-        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-        // Add fields to the pivot table
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Refresh and calculate the pivot table data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Iterate over all pivot fields (BaseFields) and output each field's display name
-        foreach (PivotField field in pivotTable.BaseFields)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine(field.DisplayName);
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Save the workbook
-        workbook.Save("PivotFieldsDisplayNameDemo.xlsx");
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each pivot table on the worksheet
+                foreach (PivotTable pivotTable in sheet.PivotTables)
+                {
+                    // Output row fields
+                    foreach (PivotField field in pivotTable.RowFields)
+                    {
+                        Console.WriteLine(field.DisplayName);
+                    }
+
+                    // Output column fields
+                    foreach (PivotField field in pivotTable.ColumnFields)
+                    {
+                        Console.WriteLine(field.DisplayName);
+                    }
+
+                    // Output data fields
+                    foreach (PivotField field in pivotTable.DataFields)
+                    {
+                        Console.WriteLine(field.DisplayName);
+                    }
+
+                    // Output page fields
+                    foreach (PivotField field in pivotTable.PageFields)
+                    {
+                        Console.WriteLine(field.DisplayName);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,70 +1,77 @@
 // Title: Convert HTML to XLSX in C# using Aspose.Cells with only MemoryStream (no temporary files)
-// AI Prompts: Write a C# method that receives a byte[] of HTML, loads it into an Aspose.Cells Workbook via a MemoryStream, and returns the workbook as an XLSX byte array. | Show how to read an HTML file into a byte array, convert it to an Excel workbook with Aspose.Cells, and write the resulting XLSX bytes to disk, using only in‑memory streams. | Provide sample code that includes error handling for converting large HTML content to Excel with Aspose.Cells without creating any temporary files, employing MemoryStream for both input and output.
-// Common Searches: aspocells c# convert html string to xlsx using memory stream | how to load html into Aspose.Cells workbook from byte array | convert large html file to excel in C# without temporary files | save Aspose.Cells workbook to byte array instead of file | c# Aspose.Cells LoadOptions for html format memory stream
-// Tags: Aspose.Cells load HTML from MemoryStream | Aspose.Cells save workbook as XLSX byte array | C# in‑memory HTML to Excel conversion | Aspose.Cells LoadOptions HTML format | MemoryStream based Excel generation with Aspose.Cells
+// AI Prompts: Create a C# method that accepts an HTML Stream, loads it into an Aspose.Cells Workbook, and returns a MemoryStream with the workbook saved as XLSX. | Show how to perform an HTML‑to‑Excel conversion entirely in memory with Aspose.Cells, avoiding any file system writes. | Provide example code that reads HTML from a file or string, generates an XLSX workbook via Aspose.Cells, and streams the result to another MemoryStream for further processing.
+// Common Searches: aspnet core convert html stream to xlsx using aspose.cells without temporary files | c# load html into workbook from memory stream and save as excel in memory | how to process large html files to excel with aspose.cells using streams | convert html table to excel workbook in c# using only memory streams
+// Tags: Aspose.Cells load HTML stream | Aspose.Cells save workbook to MemoryStream | HTML to XLSX conversion in memory | C# in‑memory HTML to Excel | stream‑based large HTML to Excel processing
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates a ConvertHtmlToExcel method that loads HTML bytes into an Aspose.Cells Workbook via a MemoryStream, saves the workbook as an XLSX byte array, and shows a console example that reads an HTML file and writes the resulting Excel file—all without creating temporary files.
-public class HtmlToExcelConverter
+namespace HtmlToExcelApp
 {
-    /// <param name="htmlBytes">Byte array containing the HTML file.</param>
-    /// <returns>Byte array of the generated Excel file (XLSX format).</returns>
-    public byte[] ConvertHtmlToExcel(byte[] htmlBytes)
+    // The example defines a HtmlToExcelConverter with a ConvertHtmlToExcel method that takes a Stream containing HTML, loads it into an Aspose.Cells Workbook via LoadOptions(LoadFormat.Html), saves the workbook to a MemoryStream in XLSX format, and returns that stream. The program demonstrates reading HTML from a file path or a string, converting it, and writing the resulting Excel file to disk, all while avoiding temporary files.
+    public class HtmlToExcelConverter
     {
-        // Load the HTML from a memory stream without creating any temporary files.
-        using (var inputStream = new MemoryStream(htmlBytes))
+        /// <param name="htmlStream">Stream containing the HTML data.</param>
+        /// <returns>MemoryStream containing the generated Excel file (XLSX format).</returns>
+        public MemoryStream ConvertHtmlToExcel(Stream htmlStream)
         {
-            // Create a Workbook instance by loading the HTML stream.
-            var loadOptions = new LoadOptions(LoadFormat.Html);
-            var workbook = new Workbook(inputStream, loadOptions);
+            if (htmlStream == null) throw new ArgumentNullException(nameof(htmlStream));
 
-            // Save the workbook to another memory stream in XLSX format.
-            using (var outputStream = new MemoryStream())
-            {
-                workbook.Save(outputStream, SaveFormat.Xlsx);
-                // Return the Excel file as a byte array.
-                return outputStream.ToArray();
-            }
+            // Ensure the input stream is at the beginning
+            if (htmlStream.CanSeek)
+                htmlStream.Position = 0;
+
+            // Load HTML into a workbook
+            Workbook workbook = new Workbook(htmlStream, new LoadOptions(LoadFormat.Html));
+
+            // Save workbook to a memory stream in XLSX format
+            MemoryStream excelStream = new MemoryStream();
+            workbook.Save(excelStream, SaveFormat.Xlsx);
+            excelStream.Position = 0;
+            return excelStream;
         }
     }
-}
 
-public class Program
-{
-    // Entry point for the console application.
-    public static void Main(string[] args)
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Example usage: convert an HTML file to Excel.
-            string htmlPath = "sample.html";
-            string excelPath = "output.xlsx";
-
-            // Ensure the input HTML file exists.
-            if (!File.Exists(htmlPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {htmlPath}");
-                return;
+                Stream htmlInputStream;
+
+                if (args.Length > 0 && File.Exists(args[0]))
+                {
+                    // Load HTML from file if path is provided and exists
+                    htmlInputStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
+                }
+                else
+                {
+                    // Use sample HTML content
+                    string htmlContent = "<html><body><table><tr><td>Data</td></tr></table></body></html>";
+                    htmlInputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(htmlContent));
+                }
+
+                using (htmlInputStream)
+                {
+                    HtmlToExcelConverter converter = new HtmlToExcelConverter();
+                    using (MemoryStream excelOutput = converter.ConvertHtmlToExcel(htmlInputStream))
+                    {
+                        // Write the Excel file to disk
+                        string outputPath = "output.xlsx";
+                        using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                        {
+                            excelOutput.CopyTo(file);
+                        }
+                        Console.WriteLine($"Excel file saved to {Path.GetFullPath(outputPath)}");
+                    }
+                }
             }
-
-            // Read HTML file into a byte array.
-            byte[] htmlBytes = File.ReadAllBytes(htmlPath);
-
-            // Perform conversion.
-            var converter = new HtmlToExcelConverter();
-            byte[] excelBytes = converter.ConvertHtmlToExcel(htmlBytes);
-
-            // Write the resulting Excel file.
-            File.WriteAllBytes(excelPath, excelBytes);
-            Console.WriteLine($"Conversion successful. Excel file saved to: {excelPath}");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors.
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

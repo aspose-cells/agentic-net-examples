@@ -1,65 +1,56 @@
-// Title: Disable row grand totals in an Aspose.Cells pivot table using C#
-// AI Prompts: Generate C# code that creates a pivot table from a range and sets ShowRowGrandTotals = false with Aspose.Cells. | Write a C# example that adds row and data fields to a pivot table and suppresses the row grand total. | Provide a C# snippet that recalculates the pivot table and saves the workbook after turning off row grand totals.
-// Common Searches: Aspose.Cells C# how to hide row grand totals in a pivot table | C# pivot table without row grand total using Aspose.Cells library | disable row grand totals in Aspose.Cells pivot table example code
-// Tags: Aspose.Cells ShowRowGrandTotals property | C# pivot table row grand total suppression | Aspose.Cells pivot table configuration | turn off row grand totals Aspose.Cells | Aspose.Cells generate pivot without row totals
+// Title: How to turn off row grand totals in an Excel pivot table using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# hide row grand total in existing pivot table | disable row grand totals programmatically with Aspose.Cells .NET | remove row grand total from Excel pivot table using Aspose.Cells API | set PivotTable.RowGrand to false in C# Aspose.Cells example | Excel pivot table row grand total suppression using Aspose.Cells library
+// Tags: Aspose.Cells PivotTable.RowGrand property | C# disable row grand totals Excel | modify pivot table row totals Aspose.Cells | Excel workbook pivot table customization .NET | Aspose.Cells hide pivot row grand total
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+// The code loads an existing workbook, accesses the first pivot table, disables its row grand total by setting PivotTable.RowGrand to false, and saves the updated file.
+class Program
 {
-    // The example creates a new workbook, fills sample data, adds a pivot table on range A1:C6, places 'Product' as a row field and 'Sales' as a data field, disables row grand totals by setting ShowRowGrandTotals to false, recalculates the pivot, and saves the file as PivotTable_NoRowGrandTotals.xlsx.
-    class DisableRowGrandTotals
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Product";
-            sheet.Cells["B1"].Value = "Region";
-            sheet.Cells["C1"].Value = "Sales";
+            // Ensure there is at least one pivot table on the worksheet
+            if (sheet.PivotTables.Count > 0)
+            {
+                // Get the first pivot table
+                PivotTable pivot = sheet.PivotTables[0];
 
-            sheet.Cells["A2"].Value = "Product A";
-            sheet.Cells["B2"].Value = "North";
-            sheet.Cells["C2"].Value = 1000;
+                // Disable row grand totals
+                pivot.RowGrand = false;
+            }
+            else
+            {
+                Console.WriteLine("No pivot tables found on the worksheet.");
+            }
 
-            sheet.Cells["A3"].Value = "Product B";
-            sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 2000;
-
-            sheet.Cells["A4"].Value = "Product C";
-            sheet.Cells["B4"].Value = "East";
-            sheet.Cells["C4"].Value = 3000;
-
-            sheet.Cells["A5"].Value = "Product A";
-            sheet.Cells["B5"].Value = "West";
-            sheet.Cells["C5"].Value = 1500;
-
-            sheet.Cells["A6"].Value = "Product B";
-            sheet.Cells["B6"].Value = "North";
-            sheet.Cells["C6"].Value = 2500;
-
-            // Add a pivot table based on the data range
-            PivotTableCollection pivotTables = sheet.PivotTables;
-            int pivotIndex = pivotTables.Add("A1:C6", "E3", "PivotTable1");
-            PivotTable pivotTable = pivotTables[pivotIndex];
-
-            // Configure the pivot table: add row and data fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Disable row grand totals
-            pivotTable.ShowRowGrandTotals = false;
-
-            // Recalculate the pivot table to apply changes
-            pivotTable.CalculateData();
-
-            // Save the workbook to a file
-            workbook.Save("PivotTable_NoRowGrandTotals.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

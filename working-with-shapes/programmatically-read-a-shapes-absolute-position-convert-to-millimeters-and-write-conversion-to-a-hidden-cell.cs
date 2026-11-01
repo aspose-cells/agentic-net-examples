@@ -1,71 +1,108 @@
-// Title: Retrieve a worksheet shape's absolute coordinates, convert from points to millimeters, and store them in hidden cells using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook, obtains the Left and Top properties of the first shape on a worksheet, converts those point values to millimeters, writes the converted numbers into hidden cells, and saves the workbook with Aspose.Cells. | Demonstrate how to hide a specific column after inserting shape position data into cells in an Excel file using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# convert shape Left and Top from points to millimeters | how to read absolute position of a shape in an Excel worksheet with Aspose.Cells | store shape coordinates in hidden Excel cells using Aspose.Cells .NET | hide column after writing data with Aspose.Cells C# | convert Excel shape coordinates to metric units in C#
-// Tags: shape position metric conversion Aspose.Cells | write hidden cell values Aspose.Cells C# | hide column programmatically Aspose.Cells | retrieve shape absolute coordinates Aspose.Cells | excel shape coordinate conversion to metric units
+// Title: Read a shape's absolute position in points, convert to millimeters, and write the values to hidden cells using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# get shape left and top coordinates | convert shape position from points to millimeters in Aspose.Cells | write shape coordinates to a hidden column in Excel with Aspose.Cells | hide Excel column programmatically after inserting data using Aspose.Cells | retrieve shape by name with fallback to first shape Aspose.Cells C#
+// Tags: shape position points to millimeters Aspose.Cells | write shape coordinates to hidden Excel column | retrieve shape by name Aspose.Cells C# | hide column programmatically Aspose.Cells | points to millimeters conversion C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an existing workbook, reads the Left and Top coordinates (in points) of the first shape on the first worksheet, converts those values to millimeters, writes the results to hidden cells A1 and A2, hides column A, and saves the modified workbook.
-class ShapePositionToMillimeters
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, locates a shape by its name (or uses the first shape if not found), reads the shape's Left and Top properties expressed in points, converts those coordinates to millimeters, writes the X and Y values to hidden cells Z1 and Z2, hides column Z, and saves the updated workbook.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one shape on the sheet
-            if (sheet.Shapes.Count == 0)
+            try
             {
-                Console.WriteLine("No shapes found on the worksheet.");
-                return;
+                // Input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the shape (by name or first shape as fallback)
+                string shapeName = "MyShape";
+                Shape shape = null;
+
+                // Search for shape by name
+                foreach (Shape s in worksheet.Shapes)
+                {
+                    if (s.Name == shapeName)
+                    {
+                        shape = s;
+                        break;
+                    }
+                }
+
+                // Fallback to first shape if not found
+                if (shape == null && worksheet.Shapes.Count > 0)
+                {
+                    shape = worksheet.Shapes[0];
+                    Console.WriteLine($"Shape \"{shapeName}\" not found. Using first shape \"{shape.Name}\".");
+                }
+
+                if (shape == null)
+                {
+                    Console.WriteLine("No shapes found in the worksheet.");
+                    return;
+                }
+
+                // Get shape position in points (1 point = 1/72 inch)
+                double positionXPoints;
+                double positionYPoints;
+
+                try
+                {
+                    // Aspose.Cells provides Left and Top properties for position in points
+                    positionXPoints = shape.Left;
+                    positionYPoints = shape.Top;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to retrieve shape position: {ex.Message}");
+                    return;
+                }
+
+                // Convert points to millimeters (1 inch = 25.4 mm)
+                const double mmPerPoint = 25.4 / 72.0;
+                double positionXmm = positionXPoints * mmPerPoint;
+                double positionYmm = positionYPoints * mmPerPoint;
+
+                // Write converted values to hidden cells Z1 and Z2
+                worksheet.Cells["Z1"].PutValue(positionXmm);
+                worksheet.Cells["Z2"].PutValue(positionYmm);
+
+                // Hide column Z (zero‑based index 25)
+                worksheet.Cells.HideColumn(25);
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Get the first shape (replace index if you need a specific shape)
-            Shape shape = sheet.Shapes[0];
-
-            // Shape.Left and Shape.Top return coordinates in points (1 point = 1/72 inch)
-            double xPoints = shape.Left;
-            double yPoints = shape.Top;
-
-            // Convert points to millimeters: 1 point = 25.4 / 72 mm
-            const double pointsToMillimeters = 25.4 / 72.0;
-            double xMillimeters = xPoints * pointsToMillimeters;
-            double yMillimeters = yPoints * pointsToMillimeters;
-
-            // Write the converted values to hidden cells (A1 and A2)
-            Cell cellX = sheet.Cells["A1"];
-            Cell cellY = sheet.Cells["A2"];
-            cellX.PutValue(xMillimeters);
-            cellY.PutValue(yMillimeters);
-
-            // Hide column A (index 0) so the cells are not visible to the user
-            sheet.Cells.HideColumn(0);
-
-            // Save the workbook with the new hidden data
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

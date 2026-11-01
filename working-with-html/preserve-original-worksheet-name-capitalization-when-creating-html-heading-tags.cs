@@ -1,43 +1,50 @@
-// Title: How to preserve worksheet name capitalization in HTML heading tags when exporting with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to save a workbook as HTML and ensures the <h1> heading displays the worksheet name with its original capitalization. | Show how to configure HtmlSaveOptions in Aspose.Cells so that the generated HTML keeps the exact case of each worksheet title.
-// Common Searches: Aspose.Cells export to HTML keep original worksheet name case | C# HtmlSaveOptions preserve sheet name capitalization in HTML output | How to retain worksheet title casing when saving workbook as HTML with Aspose.Cells | HTML heading tags reflect worksheet name case Aspose.Cells .NET | Save workbook to HTML without changing sheet name case using Aspose.Cells
-// Tags: Aspose.Cells HTML export keep worksheet name case | HtmlSaveOptions heading tag case handling | C# save workbook as HTML original sheet title | maintain worksheet name case in generated HTML | Aspose.Cells heading tag case sensitivity
+// Title: Save an Excel workbook as HTML with original worksheet name capitalization preserved in heading tags (Aspose.Cells for .NET)
+// AI Prompts: Write C# code that checks for an existing .xlsx file, loads it with Aspose.Cells, and saves it as HTML so the worksheet name appears in the <h1> tag with exactly the same capitalization as in the source workbook. | Show how to set up Aspose.Cells HtmlSaveOptions to retain the sheet name's case when exporting a workbook to HTML. | Create a resilient example that handles missing input files, loads the workbook, and outputs an HTML file without altering the worksheet name's letter case.
+// Common Searches: how to keep worksheet name case when exporting Excel to HTML using Aspose.Cells C# | Aspose.Cells HtmlSaveOptions preserve sheet name capitalization in generated HTML | C# export .xlsx to .html with original sheet heading case
+// Tags: Aspose.Cells HTML export preserve sheet name case | C# HtmlSaveOptions worksheet heading capitalization | export Excel to HTML with original sheet name case | Aspose.Cells workbook.Save HTML case-sensitive heading | preserve worksheet name capitalization Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example creates a workbook, sets a worksheet name with specific capitalization, and saves the workbook as HTML using HtmlSaveOptions. The generated HTML heading tags (<h1>) retain the original case of the worksheet name.
+    // The example checks that the input XLSX file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions, and saves the workbook as an HTML file. By default Aspose.Cells exports the worksheet name as a heading, keeping the original capitalization intact.
     class Program
     {
         static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
             try
             {
-                // Create a new workbook
-                var workbook = new Workbook();
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
 
-                // Access the first worksheet and set its name with specific capitalization
-                var worksheet = workbook.Worksheets[0];
-                worksheet.Name = "MyCustomSheetName"; // original capitalization preserved
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
 
-                // Add some sample data (optional)
-                worksheet.Cells["A1"].PutValue("Sample Data");
-
-                // Configure HTML save options
+                // Configure HTML save options.
+                // The ExportWorksheetHeader property is not available in the current Aspose.Cells version,
+                // but the worksheet name is exported as a heading by default.
                 var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    // Export all worksheets (set to true if you want the active sheet only)
-                    ExportActiveWorksheetOnly = false
+                    // Additional options can be set here if needed, e.g.:
+                    // ExportActiveWorksheetOnly = false,
                 };
 
-                // Save the workbook as HTML; the heading tags will use the original worksheet name capitalization
-                workbook.Save("Output.html", htmlOptions);
-                Console.WriteLine("Workbook saved successfully as Output.html");
+                // Save the workbook as HTML while preserving the original worksheet name capitalization
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Catch any unexpected exceptions and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

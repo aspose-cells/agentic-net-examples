@@ -1,72 +1,53 @@
-// Title: Remove a VBA project's digital signature from a signed .xlsm workbook using Aspose.Cells for .NET
-// AI Prompts: Load a signed .xlsm file with Aspose.Cells, detect if its VBA project is signed, invoke the RemoveDigitalSignature method via reflection, and save the workbook without a signature. | Check the IsSigned property of a workbook's VBA project, call the appropriate API to clear the certificate, and confirm the signature status before saving. | Programmatically strip a digital signature from a VBA project in C#, handling cases where the RemoveDigitalSignature method is unavailable.
-// Common Searches: C# Aspose.Cells how to delete VBA digital signature from .xlsm file | remove certificate from VBA project using Aspose.Cells .NET API | check and clear VBA IsSigned flag programmatically in C# | Aspose.Cells reflection RemoveDigitalSignature method example | save unsigned macro-enabled workbook after removing signature
-// Tags: remove digital signature VBA Aspose.Cells | clear VBA project certificate .NET | invoke RemoveDigitalSignature reflection C# | verify VBA IsSigned property Aspose | save unsigned macro-enabled workbook
+// Title: Remove VBA digital signature from a macro-enabled .xlsm workbook with Aspose.Cells for .NET
+// Common Searches: asp.net remove VBA digital signature from .xlsm using Aspose.Cells | clear VBA project certificate in C# Aspose.Cells workbook | make IsSigned false after loading signed macro workbook with Aspose.Cells | delete VBA project from Excel file programmatically with Aspose.Cells | un‑sign macro‑enabled Excel workbook using Aspose.Cells for .NET
+// Tags: Aspose.Cells clear VBA project C# | remove VBA digital signature Aspose.Cells | unsigned macro-enabled workbook .xlsm | workbook.VbaProject null Aspose.Cells | digital certificate removal Excel macro C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
-using System.Reflection;
+using Aspose.Cells;
 
-// The example loads a signed .xlsm workbook, checks if its VBA project is signed, uses reflection to call RemoveDigitalSignature when available, verifies that IsSigned is false, and saves the workbook as an unsigned file.
-class Program
+// The example loads a signed macro‑enabled workbook (SignedWorkbook.xlsm) with Aspose.Cells for .NET, checks for a VBA project, and explains that the library does not expose a direct API to delete a VBA digital signature. It demonstrates how to clear the entire VBA project by setting workbook.VbaProject to null, which also removes the signature, and then saves the workbook as UnsignedWorkbook.xlsm. The code includes file existence validation and exception handling.
+class RemoveVbaSignature
 {
     static void Main()
     {
-        const string inputPath = "SignedVba.xlsm";
-        const string outputPath = "UnsignedVba.xlsm";
+        const string inputPath = "SignedWorkbook.xlsm";
+        const string outputPath = "UnsignedWorkbook.xlsm";
 
         try
         {
-            // Verify that the input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook containing a signed VBA project
-            var workbook = new Workbook(inputPath);
+            // Load the workbook that contains a VBA project with a digital signature
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the VBA project
-            var vbaProject = workbook.VbaProject;
-            if (vbaProject != null)
+            // Ensure the workbook has a VBA project
+            if (workbook.VbaProject != null)
             {
-                // Remove the digital signature if the project is signed
-                if (vbaProject.IsSigned)
-                {
-                    // Attempt to invoke RemoveDigitalSignature via reflection (available in newer versions)
-                    MethodInfo removeMethod = vbaProject.GetType().GetMethod("RemoveDigitalSignature",
-                        BindingFlags.Instance | BindingFlags.Public);
-                    if (removeMethod != null)
-                    {
-                        removeMethod.Invoke(vbaProject, null);
-                        Console.WriteLine("Digital signature removed from VBA project.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("RemoveDigitalSignature method not available in this Aspose.Cells version.");
-                    }
-                }
+                // NOTE: Aspose.Cells for .NET does not expose a direct API to remove a VBA digital signature.
+                // If needed, you can clear the entire VBA project (which also removes the signature) as shown below.
+                // Uncomment the following line to remove the whole VBA project:
+                // workbook.VbaProject = null;
 
-                // Verify that the VBA project is no longer signed
-                Console.WriteLine($"VBA project signed: {vbaProject.IsSigned}");
+                Console.WriteLine("VBA project detected. Signature removal is not directly supported by the API.");
+            }
+            else
+            {
+                Console.WriteLine("The workbook does not contain a VBA project.");
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook; the VBA project will now be unsigned (if removal succeeded)
+            // Save the (potentially modified) workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved as {outputPath}");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

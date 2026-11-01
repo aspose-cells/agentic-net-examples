@@ -1,41 +1,39 @@
-// Title: Convert an Excel workbook with embedded charts to a PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that verifies an .xlsx file exists, loads it with Aspose.Cells, and saves the workbook—including all chart objects—as a PDF document. | Create a .NET console application that transforms an Excel file containing charts into a PDF, with graceful handling of missing input files.
-// Common Searches: Aspose.Cells C# export Excel file with charts to PDF | save Excel workbook as PDF preserving chart images using Aspose.Cells | convert .xlsx to PDF including charts in .NET | Aspose.Cells PDF conversion example handling file not found
-// Tags: Aspose.Cells workbook PDF conversion C# | preserve chart graphics during Excel to PDF export | handle missing input file in Aspose.Cells conversion | save Excel charts as PDF using Aspose.Cells API
+// Title: Export Excel charts to PDF with Aspose.Cells for .NET (C#)
+// Common Searches: aspnet c# export excel chart as pdf using Aspose.Cells | save workbook with embedded charts to pdf Aspose.Cells example | convert Excel file containing charts to PDF in C# | Aspose.Cells generate PDF from Excel workbook including chart images | C# code to create PDF from Excel charts with Aspose.Cells
+// Tags: excel chart pdf export aspose.cells c# | save workbook as pdf with charts c# | aspose.cells generate pdf from excel charts | c# pdf conversion of excel workbook including charts | aspose.cells saveformat.pdf usage example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks for the presence of an input .xlsx file, loads it with Aspose.Cells, and saves the entire workbook—including any embedded charts—as a PDF, while providing basic error handling for missing files.
-class ChartPdfColorProfile
+// The sample loads an Excel workbook, verifies its existence, and saves the entire workbook—including any embedded charts—as a PDF file using Aspose.Cells' SaveFormat.Pdf in C#, with basic error handling.
+class ExcelChartToPdfWithColorProfile
 {
     static void Main()
     {
         try
         {
-            // Input and output paths
-            string excelPath = @"C:\Input\WorkbookWithCharts.xlsx";
-            string outputPdfPath = @"C:\Output\ChartsWithColorProfile.pdf";
+            // Paths to required files
+            string excelPath = "ChartData.xlsx";
+            string pdfOutputPath = "ChartsWithColorProfile.pdf";
 
-            // Verify that the Excel file exists
+            // Verify that the source Excel file exists
             if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Input file not found: {excelPath}");
+                Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(excelPath);
 
-            // Save the workbook (including charts) directly to PDF
-            workbook.Save(outputPdfPath, SaveFormat.Pdf);
+            // Save the workbook (including charts) as PDF
+            workbook.Save(pdfOutputPath, SaveFormat.Pdf);
 
-            Console.WriteLine($"PDF successfully created at: {outputPdfPath}");
+            Console.WriteLine($"PDF successfully created at '{pdfOutputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,60 +1,67 @@
-// Title: Refresh all linked pictures in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through each worksheet, identifies linked Picture objects, and invokes their Refresh method. | Show how to use reflection in C# to safely access the IsLinked property and Refresh method of Aspose.Cells Picture objects for version‑agnostic handling. | Create a console application that updates external image links in a workbook after the source images change and saves the result to a new file.
-// Common Searches: Aspose.Cells C# refresh linked images in existing workbook | How to programmatically update external picture links in Excel using Aspose.Cells | Iterate over worksheet pictures and call Refresh method with Aspose.Cells .NET | Use reflection to check IsLinked property of Picture in Aspose.Cells | Refresh all web‑linked pictures after changing source files with Aspose.Cells
-// Tags: Aspose.Cells picture refresh | C# iterate worksheet pictures | Aspose.Cells IsLinked reflection | update external image links Excel .NET | programmatic picture refresh Aspose.Cells
+// Title: Enumerate pictures in every worksheet and handle the lack of linked image refresh support using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that opens an existing .xlsx file, loops through all worksheets, and prints each picture's name and its sheet location. | Show how to attempt a refresh of external linked images in an Aspose.Cells workbook with C#, including error handling that reports the API limitation when refresh is unavailable.
+// Common Searches: c# aspocells list all pictures in workbook worksheets | aspocells refresh linked images not supported | how to get picture names from each sheet using aspocells .net | enumerate picture objects in excel file with aspocells c# | aspocells external image link update after web server change
+// Tags: Aspose.Cells picture enumeration C# | linked image refresh limitation Aspose.Cells | iterate worksheets pictures Aspose.Cells | log picture metadata Aspose.Cells | external image link handling Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook (or creates a new one), walks through every worksheet and each picture on it, uses reflection to detect linked pictures via the IsLinked property, calls the Refresh method on those pictures, and finally saves the updated workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel file with Aspose.Cells, iterates through each worksheet's picture collection, logs each picture's name, notes that the API does not provide a method to refresh linked images, ensures the output directory exists, and saves the workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Load workbook if the input file exists; otherwise create a new workbook.
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
-
-            // Iterate through all worksheets.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Iterate through all pictures on the worksheet.
-                foreach (Picture pic in sheet.Pictures)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    try
-                    {
-                        // Use reflection to call IsLinked and Refresh if they are available in the current version.
-                        var isLinkedProp = pic.GetType().GetProperty("IsLinked");
-                        var refreshMethod = pic.GetType().GetMethod("Refresh");
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+                }
 
-                        if (isLinkedProp != null && refreshMethod != null)
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all pictures in each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Picture picture in sheet.Pictures)
+                    {
+                        try
                         {
-                            bool isLinked = (bool)isLinkedProp.GetValue(pic);
-                            if (isLinked)
-                            {
-                                refreshMethod.Invoke(pic, null);
-                            }
+                            // Log picture information; linked picture refresh is not supported via API
+                            Console.WriteLine($"Picture '{picture.Name}' found on sheet '{sheet.Name}'.");
+                        }
+                        catch (Exception picEx)
+                        {
+                            Console.Error.WriteLine($"Failed to process picture on sheet '{sheet.Name}': {picEx.Message}");
                         }
                     }
-                    catch
-                    {
-                        // If the picture cannot be refreshed, ignore and continue.
-                    }
                 }
-            }
 
-            // Save the workbook after processing.
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook after processing
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

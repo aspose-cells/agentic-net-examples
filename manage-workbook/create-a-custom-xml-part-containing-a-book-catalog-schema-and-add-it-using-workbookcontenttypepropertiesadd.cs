@@ -1,12 +1,11 @@
-// Title: Add a custom XML part with a book catalog schema to an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a new Workbook, defines a book catalog XML string, adds it as a custom XML part named "bookCatalog.xml" via Workbook.ContentTypeProperties.Add, and saves the workbook as an .xlsx file with Aspose.Cells. | Demonstrate how to embed any custom XML schema (for example, an employee directory) into an Excel workbook by using Workbook.ContentTypeProperties.Add in Aspose.Cells for .NET.
-// Common Searches: asp.net add custom xml part to xlsx using Aspose.Cells ContentTypeProperties | how to embed book catalog XML into an Excel workbook with Aspose.Cells C# | store XML schema inside an Excel file using Aspose.Cells .NET example | using Workbook.ContentTypeProperties.Add to attach custom XML to a spreadsheet | Aspose.Cells custom XML part for Excel workbook tutorial
-// Tags: add custom xml part with Workbook.ContentTypeProperties.Add | embed book catalog schema in Excel workbook using Aspose.Cells | store xml data in .xlsx via Aspose.Cells .NET | custom xml part for Excel file Aspose.Cells | content type properties add example C#
+// Title: Embedding a Book Catalog XSD Schema as a Custom XML Part in an Excel Workbook with Aspose.Cells (C#)
+// Common Searches: C# Aspose.Cells add custom XML part to Excel workbook using ContentTypeProperties | How to embed an XSD schema into an .xlsx file with Aspose.Cells in .NET | Add a custom XML schema named bookCatalog.xsd to a workbook programmatically | Using Workbook.ContentTypeProperties.Add to store XML schema in Excel via Aspose.Cells | Aspose.Cells example for adding custom XML part for book catalog
+// Tags: Aspose.Cells ContentTypeProperties custom XML insertion | XSD schema embedding in Excel workbook C# | C# add XML part to .xlsx with Aspose | book catalog schema integration Aspose.Cells | Workbook.ContentTypeProperties Add usage example
 
 using Aspose.Cells;
 using System;
 
-// Creates a new Workbook, defines a book catalog XML string, adds it as a custom XML part named "bookCatalog.xml" using Workbook.ContentTypeProperties.Add, and saves the workbook as "BookCatalogWorkbook.xlsx".
+// The sample creates a new Workbook, defines a book catalog XSD schema, adds it as a custom XML part named "bookCatalog.xsd" via Workbook.ContentTypeProperties.Add, optionally creates a worksheet, and saves the file as BookCatalogWorkbook.xlsx.
 class Program
 {
     static void Main()
@@ -14,33 +13,39 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // XML content representing a simple book catalog schema
-        string bookCatalogXml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<catalog xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""
-         xsi:noNamespaceSchemaLocation=""bookCatalog.xsd"">
-  <book id=""bk101"">
-    <author>Gambardella, Matthew</author>
-    <title>XML Developer's Guide</title>
-    <genre>Computer</genre>
-    <price>44.95</price>
-    <publish_date>2000-10-01</publish_date>
-    <description>An in-depth look at creating applications with XML.</description>
-  </book>
-  <book id=""bk102"">
-    <author>Ralls, Kim</author>
-    <title>Midnight Rain</title>
-    <genre>Fantasy</genre>
-    <price>5.95</price>
-    <publish_date>2000-12-16</publish_date>
-    <description>A former architect battles corporate zombies.</description>
-  </book>
-</catalog>";
+        // Define the book catalog XSD schema as a string
+        string bookCatalogSchema = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"">
+  <xs:element name=""catalog"">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name=""book"" maxOccurs=""unbounded"">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name=""author"" type=""xs:string""/>
+              <xs:element name=""title"" type=""xs:string""/>
+              <xs:element name=""genre"" type=""xs:string""/>
+              <xs:element name=""price"" type=""xs:float""/>
+              <xs:element name=""publish_date"" type=""xs:date""/>
+              <xs:element name=""description"" type=""xs:string""/>
+            </xs:sequence>
+            <xs:attribute name=""id"" type=""xs:string"" use=""required""/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>";
 
-        // Add the custom XML part to the workbook.
-        // The first argument is the part name, the second is the XML string.
-        workbook.ContentTypeProperties.Add("bookCatalog.xml", bookCatalogXml);
+        // Add the custom XML part to the workbook using ContentTypeProperties
+        // The first argument is a unique name for the part, the second is the XML content.
+        workbook.ContentTypeProperties.Add("bookCatalog.xsd", bookCatalogSchema);
 
-        // Save the workbook to a file.
-        workbook.Save("BookCatalogWorkbook.xlsx", SaveFormat.Xlsx);
+        // (Optional) Add a worksheet for demonstration purposes
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Catalog";
+
+        // Save the workbook to a file
+        workbook.Save("BookCatalogWorkbook.xlsx");
     }
 }

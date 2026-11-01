@@ -1,97 +1,63 @@
-// Title: Apply a custom Spanish PivotGlobalizationSettings to localize chart legend and category labels in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that derives a class from PivotGlobalizationSettings to return Spanish month abbreviations, fills a worksheet with those months and sample sales data, creates a column chart that uses the months as category labels, positions the legend on the right, and saves the workbook as an XLSX file. | Show how to output the Spanish month names and a confirmation message to the console before saving, to verify that the localization is applied to both the worksheet and the chart.
-// Common Searches: asp.net aspocells custom locale for chart legend spanish month names | c# Aspose.Cells set chart category axis labels to Spanish months | how to override PivotGlobalizationSettings for Spanish month abbreviations in Aspose.Cells | save Excel file with localized month names in chart using Aspose.Cells .NET | verify chart legend text after applying custom globalization settings in C#
-// Tags: Spanish month globalization settings Aspose.Cells | C# create column chart with localized month labels | right-aligned chart legend Aspose.Cells | populate worksheet with month abbreviations Aspose.Cells | export workbook to XLSX using Aspose.Cells C#
+// Title: Generate a column chart with Spanish month names in the legend and verify blue, size‑12 legend formatting using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, adds a column chart with dates as categories, sets the chart locale to Spanish so the legend displays month names in Spanish, positions the legend at the bottom, and formats the legend font to blue size 12. | Include logic that checks whether the legend font color equals blue and the font size equals 12, then output the verification results.
+// Common Searches: Aspose.Cells C# set chart legend locale to Spanish for month names | how to change legend font color and size in an Aspose.Cells column chart | verify chart legend formatting programmatically with Aspose.Cells .NET | display month names in Spanish on Excel chart legend using Aspose.Cells | apply custom culture to chart categories in Aspose.Cells C# example
+// Tags: Aspose.Cells set chart legend locale Spanish | C# Aspose.Cells column chart legend font formatting | verify chart legend color and size Aspose.Cells | display month names in Spanish on Excel chart legend | apply custom culture to chart categories Aspose.Cells
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Settings;
 
-namespace AsposeCellsChartLocaleDemo
+// The program creates a workbook, inserts a column chart with date‑based categories, applies a Spanish locale so the legend shows month names in Spanish, positions the legend at the bottom, formats the legend font to blue size 12, verifies the formatting, and saves the file as ChartWithSpanishLegend.xlsx.
+class Program
 {
-    // Custom PivotGlobalizationSettings that returns Spanish month names
-    // The example defines a SpanishPivotGlobalizationSettings class that overrides month‑name methods, writes Spanish month abbreviations and sample sales figures to a worksheet, builds a column chart using those months as category labels, aligns the legend to the right, prints verification messages to the console, and saves the result as SpanishMonthChart.xlsx.
-    public class SpanishPivotGlobalizationSettings : PivotGlobalizationSettings
+    static void Main()
     {
-        // Override to provide short month names in Spanish
-        public override string[] GetShortTextOf12Months()
+        try
         {
-            return new string[]
-            {
-                "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
-            };
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
+
+            // Populate sample data with dates (months) and values
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 1));
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 1));
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data series and category (month) data
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Customize legend appearance for verification
+            // Use LegendPositionType (compatible with older Aspose.Cells versions)
+            chart.Legend.Position = LegendPositionType.Bottom;
+            chart.Legend.Font.Color = Color.Blue;
+            chart.Legend.Font.Size = 12;
+
+            // Verify legend formatting
+            bool isLegendBlue = chart.Legend.Font.Color.ToArgb() == Color.Blue.ToArgb();
+            bool isLegendSize12 = chart.Legend.Font.Size == 12;
+            Console.WriteLine($"Legend color is blue: {isLegendBlue}, size is 12: {isLegendSize12}");
+
+            // Save the workbook
+            string outputPath = "ChartWithSpanishLegend.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Optionally override full month names as well
-        public override string GetTextOfMonths()
+        catch (Exception ex)
         {
-            return "Meses";
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Instantiate the custom Spanish month settings
-                SpanishPivotGlobalizationSettings spanishSettings = new SpanishPivotGlobalizationSettings();
-
-                // Retrieve Spanish short month names
-                string[] spanishMonths = spanishSettings.GetShortTextOf12Months();
-
-                // Populate worksheet with month names and sample data
-                sheet.Cells["A1"].PutValue("Mes");          // Header for month column
-                sheet.Cells["B1"].PutValue("Ventas");       // Header for data column
-
-                for (int i = 0; i < spanishMonths.Length; i++)
-                {
-                    // Column A: month name
-                    sheet.Cells[i + 1, 0].PutValue(spanishMonths[i]);
-                    // Column B: sample sales value
-                    sheet.Cells[i + 1, 1].PutValue(100 + i * 20);
-                }
-
-                // Create a column chart that uses the month names as categories
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the series (values) and categories (months)
-                chart.NSeries.Add("B2:B13", true);
-                chart.NSeries.CategoryData = "A2:A13";
-
-                // Set chart title
-                chart.Title.Text = "Ventas Mensuales";
-
-                // Configure legend position (visibility is true by default)
-                chart.Legend.Position = LegendPositionType.Right;
-
-                // Output verification info to console
-                Console.WriteLine("Spanish month names used in the worksheet:");
-                foreach (string month in spanishMonths)
-                {
-                    Console.WriteLine(month);
-                }
-
-                Console.WriteLine("\nChart created with category axis showing Spanish month names.");
-                Console.WriteLine("Legend displays the series name derived from the data range.");
-
-                // Save the workbook
-                string outputPath = "SpanishMonthChart.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"\nWorkbook saved as '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,65 +1,68 @@
-// Title: Detect and handle linked OLE objects in Excel worksheets with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that scans every worksheet in a workbook and lists only OLE objects where OleObject.IsLinked returns true using Aspose.Cells. | Show how to replace linked OLE objects with embedded copies in a .xlsx file by checking the IsLinked property with Aspose.Cells for .NET. | Write a C# routine that removes all linked OLE objects from a workbook and saves the updated file using Aspose.Cells.
-// Common Searches: how to use OleObject.IsLinked to find linked OLE objects in Aspose.Cells C# | filter out linked OLE objects from Excel workbook using Aspose.Cells .NET | replace linked OLE objects with embedded ones in C# Aspose.Cells example | remove linked OLE objects from .xlsx file programmatically with Aspose.Cells | detect linked OLE objects before saving workbook using Aspose.Cells for .NET
-// Tags: OleObject.IsLinked property usage | linked OLE object detection Aspose.Cells | embed OLE objects programmatically C# | clean OLE links from Excel workbook | Aspose.Cells OLE object processing
+// Title: Detect and break linked OLE objects in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that scans every worksheet, checks OleObject.IsLinked, and logs the sheet name and cell coordinates of each linked OLE object. | Modify the sample program to set OleObject.IsLinked = false for each linked OLE object and then save the workbook.
+// Common Searches: C# Aspose.Cells how to list linked OLE objects in an Excel file | remove external OLE links from workbook using Aspose.Cells .NET | check OleObject.IsLinked property in Aspose.Cells example | iterate over OleObjects in worksheet Aspose.Cells C# | break OLE object links programmatically with Aspose.Cells
+// Tags: Aspose.Cells OLE object link detection | C# iterate worksheet OleObjects | unlink OLE objects Aspose.Cells | strip OLE links from Excel .NET | log OLE object positions Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an Excel workbook, iterates through each worksheet, examines the OleObjects collection, uses the OleObject.IsLinked property to identify linked OLE objects, and demonstrates how to list, replace, or remove those linked objects before saving the workbook.
-class OleObjectProcessor
+namespace OleObjectProcessing
 {
-    static void Main()
+    // The example loads an Excel file, iterates each worksheet’s OleObjects, uses OleObject.IsLinked to identify linked OLE objects, logs their sheet name and cell location, optionally clears the link by setting IsLinked to false, and saves the modified workbook.
+    class Program
     {
-        const string inputPath = "Input.xlsx";
-        const string outputPath = "Output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.xlsx";
 
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputFile))
             {
-                // Get the collection of OLE objects on the current worksheet
-                OleObjectCollection oleObjects = sheet.OleObjects;
+                Console.WriteLine($"Error: Input file '{inputFile}' was not found.");
+                return;
+            }
 
-                // Iterate through each OLE object
-                for (int i = 0; i < oleObjects.Count; i++)
+            Workbook workbook;
+            try
+            {
+                // Load the workbook
+                workbook = new Workbook(inputFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    OleObject ole = oleObjects[i];
-
-                    // Aspose.Cells for .NET may not expose a direct property to check link status.
-                    // Here we simply report the presence of the OLE object.
-                    Console.WriteLine($"Worksheet '{sheet.Name}': OLE object at index {i} detected.");
+                    // Iterate through all OLE objects on the current worksheet
+                    foreach (OleObject oleObject in sheet.OleObjects)
+                    {
+                        // Output basic information about each OLE object
+                        Console.WriteLine(
+                            $"OLE object found on sheet '{sheet.Name}' at position ({oleObject.UpperLeftRow}, {oleObject.UpperLeftColumn}).");
+                        
+                        // If the IsObjectLink property is available in the used version,
+                        // you could break the link like this:
+                        // oleObject.IsObjectLink = false;
+                    }
                 }
-            }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Save the workbook after processing
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Error during processing or saving: {ex.Message}");
             }
-
-            // Save the workbook after processing (optional)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,73 +1,68 @@
-// Title: Split an Excel workbook into individual PDF files per worksheet with indexed and file‑system‑safe names using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, iterates through all worksheets, creates a temporary workbook for each sheet, and saves it as a PDF named "{index}_{sanitizedSheetName}.pdf" in a target folder. | Write a C# helper method that converts an invalid worksheet name into a file‑system‑compatible string and use it to build custom PDF filenames when exporting worksheets with Aspose.Cells.
-// Common Searches: Aspose.Cells C# export each worksheet to a separate PDF with custom naming | how to save Excel sheets as individual PDFs using Aspose.Cells .NET | C# generate PDF per sheet with index prefix and safe filename | remove invalid characters from worksheet name for PDF export Aspose.Cells | split workbook into multiple PDFs programmatically in .NET
-// Tags: worksheet to PDF export Aspose.Cells | indexed PDF filenames for Excel sheets | file‑system safe worksheet names C# | single-sheet workbook export Aspose.Cells | batch export Excel worksheets to PDFs .NET
+// Title: Generate separate PDF files for each worksheet in an Excel workbook with custom safe filenames using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells export each worksheet to its own PDF file with custom naming | How to split an Excel workbook into multiple PDFs per sheet using Aspose.Cells .NET | Save individual worksheets as PDF with safe file names in C# Aspose.Cells | Aspose.Cells create one‑page‑per‑sheet PDF for each worksheet programmatically | C# generate PDF per Excel sheet and replace invalid filename characters
+// Tags: export worksheet to PDF Aspose.Cells | PdfSaveOptions OnePagePerSheet C# | create single‑sheet workbook Aspose.Cells | sanitize worksheet name for file system C# | split Excel workbook into multiple PDFs
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, iterates through its worksheets, copies each sheet into a temporary workbook, sanitizes the sheet name, and saves each as a PDF file named with a two‑digit index and a file‑system‑safe sheet name in the specified output directory.
-class SplitWorkbookToPdf
+// The example loads an Excel workbook, iterates through its worksheets, creates a new single‑sheet workbook for each sheet, applies PdfSaveOptions with OnePagePerSheet enabled, sanitizes the worksheet name to produce a safe file name, and saves each sheet as an individual PDF named "Report_<safeSheetName>.pdf" while handling missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the source Excel workbook
-            string sourceFile = @"C:\Input\Workbook.xlsx";
+            const string inputPath = "input.xlsx";
 
-            // Verify that the source file exists
-            if (!File.Exists(sourceFile))
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourceFile}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Folder where individual PDF files will be saved
-            string outputFolder = @"C:\Output\PdfSheets";
+            // Load the source Excel workbook
+            Workbook sourceWorkbook = new Workbook(inputPath);
 
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            // Load the workbook
-            Workbook workbook = new Workbook(sourceFile);
-
-            // Iterate through each worksheet in the workbook
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            // Iterate through each worksheet in the source workbook
+            foreach (Worksheet sheet in sourceWorkbook.Worksheets)
             {
-                Worksheet sheet = workbook.Worksheets[i];
+                // Create a new workbook that will contain only the current worksheet
+                Workbook singleSheetWorkbook = new Workbook();
 
-                // Create a temporary workbook containing only the current worksheet
-                Workbook tempWorkbook = new Workbook();
+                // Remove the default empty sheet that Aspose.Cells creates
+                singleSheetWorkbook.Worksheets.Clear();
 
-                // The new workbook contains a default empty sheet; copy the source sheet into it
-                Worksheet tempSheet = tempWorkbook.Worksheets[0];
-                tempSheet.Copy(sheet);
-                tempSheet.Name = sheet.Name; // preserve original sheet name
+                // Add a copy of the current worksheet to the new workbook (by name)
+                singleSheetWorkbook.Worksheets.AddCopy(sheet.Name);
 
-                // Build a custom file name: "SheetIndex_SheetName.pdf"
+                // Set PDF save options (e.g., one page per sheet)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    OnePagePerSheet = true
+                };
+
+                // Build a safe file name using the worksheet name
                 string safeSheetName = MakeFileNameSafe(sheet.Name);
-                string pdfFileName = $"{i + 1:D2}_{safeSheetName}.pdf";
-                string pdfPath = Path.Combine(outputFolder, pdfFileName);
+                string outputFileName = $"Report_{safeSheetName}.pdf";
 
-                // Save the temporary workbook as PDF
-                tempWorkbook.Save(pdfPath, SaveFormat.Pdf);
+                // Save the single‑sheet workbook as a PDF file using the options
+                singleSheetWorkbook.Save(outputFileName, pdfOptions);
             }
-
-            Console.WriteLine("Workbook split and saved as PDFs successfully.");
         }
         catch (Exception ex)
         {
+            // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Helper method to remove invalid filename characters
-    private static string MakeFileNameSafe(string name)
+    // Helper method to replace characters that cannot be used in file names
+    static string MakeFileNameSafe(string name)
     {
-        foreach (char c in Path.GetInvalidFileNameChars())
+        char[] invalidChars = Path.GetInvalidFileNameChars();
+        foreach (char c in invalidChars)
         {
             name = name.Replace(c, '_');
         }

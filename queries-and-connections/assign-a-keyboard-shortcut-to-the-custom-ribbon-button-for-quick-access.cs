@@ -1,42 +1,78 @@
-// Title: Assign a keytip keyboard shortcut to a custom ribbon button in an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code that creates a macro-enabled workbook, defines custom ribbon XML with a button that includes a keytip, and saves the file. | Demonstrate how to set the RibbonXml property in Aspose.Cells to embed a keytip for quick keyboard access to a custom ribbon UI element.
-// Common Searches: asp.net cells add keytip to custom ribbon button c# example | c# assign Alt+F shortcut to custom Excel ribbon button using Aspose.Cells | how to embed custom ribbon XML with keyboard shortcut in a macro-enabled workbook Aspose.Cells | set keytip attribute in RibbonXml for Aspose.Cells workbook c#
-// Tags: custom ribbon keytip Aspose.Cells C# | RibbonXml keyboard shortcut macro-enabled workbook | Aspose.Cells add custom UI button with keytip | C# set keytip attribute in RibbonXml | Excel ribbon shortcut via Aspose.Cells
+// Title: How to add a "ShortcutSheet" worksheet to an existing XLSX workbook only if it doesn't exist using Aspose.Cells for .NET
+// Common Searches: asp.net add worksheet to existing xlsx only if missing using Aspose.Cells | c# check if a worksheet exists before adding it with Aspose.Cells | load an existing workbook and overwrite the same file with Aspose.Cells C# | validate workbook file path before loading it in Aspose.Cells | create a new workbook automatically when the file is not found using Aspose.Cells
+// Tags: add worksheet if missing Aspose.Cells | load existing workbook C# Aspose.Cells | save workbook in place Aspose.Cells | validate workbook path C# | create workbook when file not found Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRibbonShortcutDemo
+namespace Example
 {
-    // The example creates a new Workbook, builds Ribbon XML that defines a custom tab, group, and a large button with the keytip "C" (triggered by Alt+F, then the tab, then C), assigns this XML to the workbook's RibbonXml property, and saves the result as a macro-enabled .xlsm file.
-    public class Program
+    // The example shows how to use Aspose.Cells for .NET to load an existing XLSX file, add a worksheet named "ShortcutSheet" only if it is absent, and save the changes back to the same file while handling missing files and invalid paths.
+    public class RibbonShortcutHandler
     {
-        public static void Main()
+        // Constructor (no Excel interop dependency)
+        public RibbonShortcutHandler()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        }
 
-            // Define Ribbon XML with a custom button that includes a keytip (keyboard shortcut)
-            // The keytip "C" means the user can press Alt+F, then the custom tab, then "C" to activate the button.
-            // Adjust the keytip value as needed for your shortcut.
-            string ribbonXml =
-                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-                "  <ribbon>" +
-                "    <tabs>" +
-                "      <tab id=\"customTab\" label=\"My Tab\">" +
-                "        <group id=\"customGroup\" label=\"My Group\">" +
-                "          <button id=\"customButton\" label=\"My Button\" size=\"large\" keytip=\"C\" />" +
-                "        </group>" +
-                "      </tab>" +
-                "    </tabs>" +
-                "  </ribbon>" +
-                "</customUI>";
+        // Adds a worksheet named "ShortcutSheet" to the specified workbook file.
+        public void AddShortcutSheet(string workbookPath)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(workbookPath))
+                    throw new ArgumentException("Workbook path must be provided.", nameof(workbookPath));
 
-            // Assign the Ribbon XML to the workbook
-            workbook.RibbonXml = ribbonXml;
+                if (!File.Exists(workbookPath))
+                    throw new FileNotFoundException("The specified workbook file does not exist.", workbookPath);
 
-            // Save the workbook as a macro-enabled file (required for custom ribbon UI)
-            workbook.Save("CustomRibbonWithShortcut.xlsm");
+                // Load the workbook using Aspose.Cells
+                var workbook = new Workbook(workbookPath);
+
+                // Add a new worksheet named "ShortcutSheet" if it doesn't already exist
+                if (workbook.Worksheets["ShortcutSheet"] == null)
+                {
+                    workbook.Worksheets.Add("ShortcutSheet");
+                }
+
+                // Save changes back to the original file
+                workbook.Save(workbookPath, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.Error.WriteLine($"Error in AddShortcutSheet: {ex.Message}");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Path to the workbook (adjust as needed)
+                string workbookPath = "Sample.xlsx";
+
+                // Ensure the workbook exists; create a new one if it doesn't
+                if (!File.Exists(workbookPath))
+                {
+                    var wb = new Workbook();
+                    wb.Save(workbookPath, SaveFormat.Xlsx);
+                }
+
+                var handler = new RibbonShortcutHandler();
+                handler.AddShortcutSheet(workbookPath);
+
+                Console.WriteLine("Shortcut sheet added successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unhandled exceptions
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

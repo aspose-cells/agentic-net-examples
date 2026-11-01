@@ -1,46 +1,64 @@
-// Title: Lock formula cells and protect worksheets in an Excel file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that iterates through every worksheet in a Workbook, sets the IsLocked style on cells that contain a formula, and then calls Protect on each sheet with Aspose.Cells. | Create a reusable method `LockFormulaCells(Workbook wb)` that locks all formula‑containing cells and applies full protection to each worksheet before saving. | Write a snippet that loads an existing .xlsx file, locks only the cells with formulas, protects the worksheets, and saves the result using Aspose.Cells for .NET.
-// Common Searches: asp.net lock cells that have formulas with Aspose.Cells | c# protect worksheet after locking formula cells using Aspose.Cells | how to set IsLocked property for formula cells in an Excel workbook with Aspose.Cells | iterate all worksheets and lock formula cells before saving in C# Aspose.Cells
-// Tags: apply IsLocked style to formula cells Aspose.Cells | worksheet protection with Aspose.Cells C# | formula detection and style update Aspose.Cells | secure Excel formulas via style locking C# | bulk cell style modification Aspose.Cells
+// Title: How to lock formula cells and protect worksheets with a password using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells lock cells that contain formulas and protect worksheet with password | programmatically set IsLocked style for formula cells in Excel using Aspose.Cells .NET | apply worksheet protection to all sheets after locking formula cells in Aspose.Cells | iterate through used cells to lock formulas in Aspose.Cells workbook | save workbook after applying password protection with Aspose.Cells C#
+// Tags: lock formula cells Aspose.Cells .NET | worksheet protection password Aspose.Cells | set cell IsLocked style based on formula Aspose.Cells | iterate used cells Aspose.Cells C# | save protected workbook Aspose.Cells
 
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The program loads an existing Excel workbook, walks through each worksheet and cell, applies the IsLocked flag to any cell that contains a formula, protects the worksheet so locked cells cannot be edited, and saves the modified workbook.
+// The C# program loads an Excel file with Aspose.Cells, iterates each worksheet and its used cells, sets the IsLocked style to true for cells containing formulas, protects each sheet with a specified password, ensures the output directory exists, and saves the modified workbook, handling any errors that occur.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string password = "YourPassword";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Get the cells collection of the current worksheet
-            Cells cells = sheet.Cells;
-
-            // Loop through each cell in the worksheet
-            foreach (Cell cell in cells)
+            // Ensure the input file exists; create a blank workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                // If the cell contains a formula, lock it
-                if (!string.IsNullOrEmpty(cell.Formula))
-                {
-                    // Retrieve the current style of the cell
-                    Style style = cell.GetStyle();
-
-                    // Set the IsLocked property to true
-                    style.IsLocked = true;
-
-                    // Apply the updated style back to the cell
-                    cell.SetStyle(style);
-                }
+                var tempWb = new Workbook();
+                tempWb.Save(inputPath);
             }
 
-            // Protect the worksheet so that locked cells cannot be edited
-            sheet.Protect(ProtectionType.All);
-        }
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Iterate through each worksheet.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                // Iterate through all used cells.
+                foreach (Cell cell in cells)
+                {
+                    // Lock cells that contain a formula; unlock others.
+                    Style style = cell.GetStyle();
+                    style.IsLocked = !string.IsNullOrEmpty(cell.Formula);
+                    cell.SetStyle(style);
+                }
+
+                // Protect the worksheet (oldPassword parameter is optional, pass empty string).
+                sheet.Protect(ProtectionType.All, password, string.Empty);
+            }
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

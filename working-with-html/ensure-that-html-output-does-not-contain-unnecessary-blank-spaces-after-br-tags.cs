@@ -1,37 +1,41 @@
-// Title: Export an Aspose.Cells workbook to HTML in C# while preventing extra blank <br> tags
-// AI Prompts: Write C# code that saves a Workbook as HTML using Aspose.Cells and sets the HTML save options to omit <br> tags for empty rows. | Show how to configure Aspose.Cells HTML export in .NET so that blank Excel rows do not generate line‑break tags.
-// Common Searches: how to stop Aspose.Cells from adding <br> tags for empty rows when saving to HTML in C# | Aspose.Cells HTML export blank line removal C# example | prevent extra line breaks in HTML output from Excel using Aspose.Cells .NET
-// Tags: Aspose.Cells HtmlSaveOptions suppress empty row line breaks | C# export Excel to HTML without extra <br> | prevent blank rows in Aspose.Cells HTML output | Excel to HTML conversion avoid unnecessary line breaks
+// Title: Remove trailing whitespace after <br> tags in HTML generated from an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, saves it as HTML, and then uses a regular expression to strip any whitespace characters that appear immediately after <br> elements. | Provide a Regex pattern and C# implementation to collapse spaces, tabs, or line breaks following <br> tags in an HTML string produced by Aspose.Cells. | Show how to read the HTML output from a MemoryStream, apply post‑processing to clean up <br> tag spacing, and write the sanitized HTML to a file.
+// Common Searches: aspocells c# remove spaces after <br> in saved html | how to clean up extra whitespace after line break tags when exporting Excel to HTML | regex to trim whitespace after <br> in Aspose.Cells HTML output | post processing Aspose.Cells HTML to eliminate blank characters after <br> | c# Aspose.Cells HtmlSaveOptions remove trailing spaces after br tag
+// Tags: Aspose.Cells HTML post‑processing | C# regex whitespace after br tag | remove trailing spaces in Aspose.Cells HTML output | HtmlSaveOptions cleanup of line break spacing | Excel to HTML conversion whitespace handling
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
-// Creates a workbook, adds a blank row, configures HTML save options (default behavior skips blank rows), and saves the file as HTML, ensuring no extra <br> tags are generated.
+// The example loads an Excel workbook with Aspose.Cells, saves it to a MemoryStream as HTML using HtmlSaveOptions, reads the HTML into a string, applies a case‑insensitive regular expression to replace any whitespace characters that follow <br> tags with a plain <br>, and writes the cleaned HTML to an output file.
 class Program
 {
     static void Main()
     {
-        try
+        // Load the workbook from an existing Excel file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Configure HTML save options as needed
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Example: export only the active worksheet
+        // htmlOptions.ExportActiveWorksheetOnly = true;
+
+        // Save the workbook to a memory stream in HTML format
+        using (MemoryStream htmlStream = new MemoryStream())
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            workbook.Save(htmlStream, htmlOptions);
+            htmlStream.Position = 0;
 
-            // Example data: add some content and a blank row
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("First line");
-            sheet.Cells["A2"].PutValue(string.Empty); // blank row that could generate a <br>
+            // Read the generated HTML into a string
+            string htmlContent = new StreamReader(htmlStream).ReadToEnd();
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: In recent Aspose.Cells versions the ExportBlankLines property is not available.
-            // The default behavior already avoids rendering blank rows as extra <br> tags.
+            // Remove unnecessary blank spaces after <br> tags
+            // This replaces any whitespace characters following a <br> with nothing
+            htmlContent = Regex.Replace(htmlContent, @"<br>\s+", "<br>", RegexOptions.IgnoreCase);
 
-            // Save the workbook as HTML using the configured options
-            workbook.Save("output.html", htmlOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Write the cleaned HTML to an output file
+            File.WriteAllText("output.html", htmlContent);
         }
     }
 }

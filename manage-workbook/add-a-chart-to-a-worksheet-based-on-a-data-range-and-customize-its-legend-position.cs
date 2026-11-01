@@ -1,51 +1,65 @@
-// Title: Add a column chart from a cell range and set its legend to the right side using Aspose.Cells for .NET
-// AI Prompts: Create a column chart from the range B2:B4 on the first worksheet and move the legend to the right using Aspose.Cells C#. | Generate a chart, bind it to a data range, and customize the legend position to the right side in a .NET workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells how to bind column chart to specific cells in C# | set legend position to right for chart in Aspose.Cells .NET | create chart from data range and customize legend location using Aspose.Cells for .NET | add column chart to worksheet programmatically with Aspose.Cells C# example
-// Tags: Aspose.Cells create column chart from range | Aspose.Cells set chart legend position | Aspose.Cells chart NSeries binding | Aspose.Cells .xlsx chart generation | Aspose.Cells customize chart legend
+// Title: Create a column chart from a data range and set the legend to the right side using Aspose.Cells for .NET
+// Common Searches: how to generate a column chart from a cell range with Aspose.Cells C# | Aspose.Cells set chart legend position to right in .NET | C# code to add a chart title and customize the legend using Aspose.Cells | create Excel column chart programmatically with Aspose.Cells and specify data source | Aspose.Cells chart placement and size parameters example
+// Tags: column chart creation Aspose.Cells | chart legend placement Aspose.Cells | chart data source range Aspose.Cells | chart title assignment Aspose.Cells | save workbook as xlsx Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
 
-// The sample creates a new workbook, fills month‑sales data, adds a column chart covering rows 5‑20, binds the series to cells B2:B4, positions the legend on the right side, and saves the file as ChartWithCustomLegend.xlsx.
-class Program
+namespace AsposeCellsChartExample
 {
-    static void Main()
+    // The example creates a new workbook, fills cells A1:B5 with category and value data, adds a column chart covering rows 7‑20 and columns 0‑10, links the chart to the data ranges, moves the legend to the right side, sets the chart title to "Monthly Sales", and saves the file as ChartWithCustomLegend.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(130);
+                // Populate sample data for the chart
+                // A1:A5 - Categories, B1:B5 - Values
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["A5"].PutValue("Apr");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["B5"].PutValue(40);
 
-            // Add a column chart (positioned from row 5, column 0 to row 20, column 7)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a column chart positioned at row 7, column 0 with size 15 rows x 10 columns
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series (values). Categories are taken from the first column by default.
-            chart.NSeries.Add("B2:B4", true);
+                // Set the data source for the chart (categories and values)
+                chart.NSeries.Add("B2:B5", true);
+                chart.NSeries.CategoryData = "A2:A5";
 
-            // Customize the legend position (place it on the right side of the chart)
-            chart.Legend.Position = LegendPositionType.Right;
+                // Place the legend on the right side
+                chart.Legend.Position = LegendPositionType.Right;
 
-            // Save the workbook to a file
-            workbook.Save("ChartWithCustomLegend.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Set a title for the chart
+                chart.Title.Text = "Monthly Sales";
+
+                // Define output file path
+                string outputPath = "ChartWithCustomLegend.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

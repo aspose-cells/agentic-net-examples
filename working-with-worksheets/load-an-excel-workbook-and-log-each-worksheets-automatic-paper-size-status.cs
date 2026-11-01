@@ -1,53 +1,45 @@
-// Title: Load an Excel workbook with Aspose.Cells for .NET and log each worksheet’s paper size setting
-// AI Prompts: Write C# code that opens a given .xlsx file using Aspose.Cells, iterates through all worksheets, and prints each worksheet’s name together with its PageSetup.PaperSize value. | Show how to add error handling for missing files and workbook‑load failures while retrieving and logging the paper size of every worksheet in a console application.
-// Common Searches: Aspose.Cells C# get worksheet paper size setting from an Excel workbook | Enumerate worksheets and display their paper size values using Aspose.Cells .NET | Console application to list each sheet’s name and paper size with Aspose.Cells | Detect automatic paper size for worksheets when loading an .xlsx file with Aspose.Cells
-// Tags: Aspose.Cells load workbook and read worksheet page setup | C# retrieve worksheet PaperSize using Aspose.Cells | enumerate worksheets and log paper size Aspose.Cells | handle missing Excel file Aspose.Cells .NET | error handling workbook loading Aspose.Cells
+// Title: Load an Excel workbook and log each worksheet’s Fit‑to‑Pages (automatic paper size) setting using Aspose.Cells for .NET
+// Common Searches: how to check FitToPagesWide and FitToPagesTall for each sheet with Aspose.Cells C# | C# read worksheet page setup to determine automatic paper size using Aspose.Cells | log fit‑to‑pages status of all worksheets in an Excel file with Aspose.Cells | Aspose.Cells detect if worksheets are set to fit to pages in .NET | verify worksheet fit‑to‑pages flag before printing with Aspose.Cells C#
+// Tags: Aspose.Cells workbook iteration C# | Aspose.Cells page setup FitToPages detection | C# determine worksheet automatic paper size | Aspose.Cells log fit-to-pages flag | Aspose.Cells file existence check
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks that 'input.xlsx' exists, loads it with Aspose.Cells, iterates through every worksheet, reads the PageSetup.PaperSize property, and writes each worksheet name and its paper size to the console, with robust error handling for missing files and load failures.
+// The example verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, iterates through each Worksheet, checks PageSetup.FitToPagesWide and FitToPagesTall to determine if the sheet is set to fit to pages (automatic paper size), and writes the worksheet name with a boolean status to the console while handling missing‑file and other exceptions.
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the input file exists before attempting to load it
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the Excel workbook from the specified file
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
             // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Retrieve the paper size setting for the worksheet
-                PaperSizeType paperSize = sheet.PageSetup.PaperSize;
+                // Determine if the worksheet is set to "Fit to pages"
+                // In Aspose.Cells, FitToPages is represented by non‑zero values for both FitToPagesWide and FitToPagesTall
+                bool isFitToPages = sheet.PageSetup.FitToPagesWide > 0 && sheet.PageSetup.FitToPagesTall > 0;
 
-                // Log the worksheet name and its paper size
-                Console.WriteLine($"Worksheet '{sheet.Name}': Paper Size = {paperSize}");
+                // Log the worksheet name and its "Fit to pages" status
+                Console.WriteLine($"Worksheet: {sheet.Name}, FitToPages: {isFitToPages}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Runtime error: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

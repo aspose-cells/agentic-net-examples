@@ -1,103 +1,112 @@
-// Title: Validate #REF! errors after merging Excel workbooks and deleting a referenced sheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that merges two Excel workbooks with Aspose.Cells, removes a worksheet that is referenced by a formula, recalculates all formulas, and outputs the addresses of any cells that contain a #REF! error. | Show how to iterate through every cell in an Aspose.Cells workbook, detect cells where CellValueType.IsError equals #REF! or where the string value is "#REF!", and log the worksheet and cell name.
-// Common Searches: C# Aspose.Cells find #REF! errors after merging workbooks | how to check for broken references in merged Excel file using Aspose.Cells | Aspose.Cells recalculate formulas after deleting a sheet and detect reference errors | detect #REF! error cells in a workbook with Aspose.Cells .NET | validate merged workbook formulas for missing worksheets Aspose.Cells
-// Tags: Aspose.Cells C# #REF! error detection | merge Excel workbooks formula validation Aspose.Cells | recalculate formulas after worksheet deletion Aspose.Cells | iterate workbook cells for error values Aspose.Cells | validate broken references in merged workbook Aspose.Cells
+// Title: C# code to merge multiple Excel workbooks with Aspose.Cells and validate that no #REF! errors remain
+// Common Searches: C# Aspose.Cells how to identify #REF! cells after merging several Excel files | verify formula references after copying worksheets with Aspose.Cells .NET | find broken references in a merged workbook using Aspose.Cells API | recalculate all formulas and report errors after workbook merge in C# | scan used range for error values after combining Excel workbooks with Aspose.Cells
+// Tags: merge worksheets Aspose.Cells .NET | detect #REF! errors after workbook merge | recalculate formulas merged workbook C# | validate cell error values Aspose.Cells | scan used range for reference errors
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRefValidation
+namespace WorkbookMergeValidation
 {
-    // The program creates two source workbooks, copies their worksheets into a destination workbook, removes a sheet that is referenced by a formula to provoke a #REF! error, recalculates all formulas, scans every cell for #REF! error values or literal "#REF!" strings, reports any findings, and saves the merged workbook.
+    // The example loads a set of Excel files, creates an empty workbook, copies each source worksheet into it, recalculates all formulas, then iterates through the used range of every worksheet to locate cells whose type is an error and whose string value equals "#REF!". It reports any found reference errors, confirms validation when none are present, and saves the merged workbook.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // -------------------------------------------------
-                // 1. Create two source workbooks with sample data
-                // -------------------------------------------------
-                Workbook srcWb1 = new Workbook();
-                Worksheet srcWs1 = srcWb1.Worksheets[0];
-                srcWs1.Name = "DataSheet1";
-                srcWs1.Cells["A1"].PutValue(10);
-                srcWs1.Cells["A2"].Formula = "=A1*2"; // valid formula
+                // List of source workbook file paths to be merged
+                string[] sourceFiles = { "Workbook1.xlsx", "Workbook2.xlsx", "Workbook3.xlsx" };
 
-                Workbook srcWb2 = new Workbook();
-                Worksheet srcWs2 = srcWb2.Worksheets[0];
-                srcWs2.Name = "DataSheet2";
-                srcWs2.Cells["B1"].PutValue(5);
-                // This formula will become invalid after we remove the referenced sheet later
-                srcWs2.Cells["B2"].Formula = "='DataSheet1'!A1+10";
+                // Create a new empty workbook that will hold the merged content
+                Workbook mergedWorkbook = new Workbook();
 
-                // -------------------------------------------------
-                // 2. Create a destination workbook and merge the source worksheets
-                // -------------------------------------------------
-                Workbook destWb = new Workbook(); // empty workbook
-
-                // Copy first source worksheet
-                int idx1 = destWb.Worksheets.Add(); // add empty sheet
-                Worksheet destWs1 = destWb.Worksheets[idx1];
-                srcWs1.Copy(destWs1);
-                destWs1.Name = srcWs1.Name;
-
-                // Copy second source worksheet
-                int idx2 = destWb.Worksheets.Add();
-                Worksheet destWs2 = destWb.Worksheets[idx2];
-                srcWs2.Copy(destWs2);
-                destWs2.Name = srcWs2.Name;
-
-                // -------------------------------------------------
-                // 3. (Optional) Simulate a situation that could cause #REF! errors
-                //    For demonstration, we delete the sheet that B2 references.
-                // -------------------------------------------------
-                destWb.Worksheets.RemoveAt(0); // removes "DataSheet1"
-
-                // -------------------------------------------------
-                // 4. Recalculate all formulas in the merged workbook
-                // -------------------------------------------------
-                destWb.CalculateFormula();
-
-                // -------------------------------------------------
-                // 5. Validate that no #REF! errors exist in any cell
-                // -------------------------------------------------
-                bool hasRefError = false;
-                foreach (Worksheet ws in destWb.Worksheets)
+                // Remove the default empty worksheet created by Aspose.Cells
+                if (mergedWorkbook.Worksheets.Count > 0)
                 {
-                    Cells cells = ws.Cells;
-                    // Iterate through all used cells
-                    foreach (Cell cell in cells)
+                    mergedWorkbook.Worksheets.RemoveAt(0);
+                }
+
+                // Load each source workbook and copy its worksheets into the merged workbook
+                foreach (string filePath in sourceFiles)
+                {
+                    if (!File.Exists(filePath))
                     {
-                        // Check for error cells. Aspose.Cells represents errors as type IsError.
-                        // Since GetErrorValue may not be available in some versions, compare the string representation.
-                        if (cell.Type == CellValueType.IsError && cell.Value != null && cell.Value.ToString() == "#REF!")
+                        Console.WriteLine($"Source file not found: {filePath}");
+                        continue; // Skip missing files
+                    }
+
+                    try
+                    {
+                        // Load source workbook
+                        Workbook sourceWorkbook = new Workbook(filePath);
+
+                        // Copy each worksheet from the source workbook
+                        foreach (Worksheet sheet in sourceWorkbook.Worksheets)
                         {
-                            hasRefError = true;
-                            Console.WriteLine($"#REF! error found at {ws.Name}!{cell.Name}");
+                            // Add a copy of the worksheet to the merged workbook using the sheet name
+                            mergedWorkbook.Worksheets.AddCopy(sheet.Name);
                         }
-                        // Also handle cells that contain the literal string "#REF!"
-                        else if (cell.Type == CellValueType.IsString && cell.StringValue == "#REF!")
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error loading or copying from '{filePath}': {ex.Message}");
+                    }
+                }
+
+                // Recalculate all formulas in the merged workbook to ensure up‑to‑date results
+                mergedWorkbook.CalculateFormula();
+
+                // Validate that no cell contains a #REF! error after merging
+                List<string> refErrorCells = new List<string>();
+
+                foreach (Worksheet sheet in mergedWorkbook.Worksheets)
+                {
+                    // Get the used range of the worksheet to limit iteration to populated cells
+                    var usedRange = sheet.Cells.MaxDisplayRange; // Aspose.Cells.Range
+
+                    // Iterate through each cell in the used range
+                    foreach (Cell cell in usedRange)
+                    {
+                        // Check if the cell contains an error value and specifically #REF!
+                        if (cell.Type == CellValueType.IsError && cell.StringValue == "#REF!")
                         {
-                            hasRefError = true;
-                            Console.WriteLine($"#REF! error found at {ws.Name}!{cell.Name}");
+                            // Record the cell address with the #REF! error
+                            refErrorCells.Add($"{sheet.Name}!{cell.Name}");
                         }
                     }
                 }
 
-                if (!hasRefError)
+                // Output validation result
+                if (refErrorCells.Count == 0)
                 {
-                    Console.WriteLine("No #REF! errors detected after merging workbooks.");
+                    Console.WriteLine("Validation passed: No #REF! errors found in the merged workbook.");
+                }
+                else
+                {
+                    Console.WriteLine("Validation failed: #REF! errors detected in the following cells:");
+                    foreach (string address in refErrorCells)
+                    {
+                        Console.WriteLine(address);
+                    }
                 }
 
-                // -------------------------------------------------
-                // 6. Save the merged workbook (optional)
-                // -------------------------------------------------
-                destWb.Save("MergedWorkbook.xlsx");
+                // Save the merged workbook (optional)
+                string outputPath = "MergedWorkbook.xlsx";
+                try
+                {
+                    mergedWorkbook.Save(outputPath);
+                    Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving merged workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

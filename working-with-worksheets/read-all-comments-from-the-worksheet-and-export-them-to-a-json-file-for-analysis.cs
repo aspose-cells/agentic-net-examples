@@ -1,7 +1,7 @@
-// Title: Extract all worksheet comments from an Excel file and save them as indented JSON using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, iterates through every worksheet's CommentCollection, captures each comment's author, cell address, and text, and writes the data to a pretty‑printed JSON file. | Create a reusable method that takes an input workbook path and an output JSON path, extracts comment details into a list of POCO objects, and serializes the list with System.Text.Json while ensuring the output directory exists.
-// Common Searches: how to read cell comments from all sheets with Aspose.Cells in C# and export to JSON | C# Aspose.Cells extract worksheet notes and generate a formatted JSON report | save Excel comments to JSON file using Aspose.Cells .NET library | export workbook comment author and text to JSON with Aspose.Cells
-// Tags: Aspose.Cells comment collection extraction | C# write Excel comments to JSON | System.Text.Json serialization of cell notes | export workbook comments as formatted JSON | iterate worksheets to gather comments Aspose.Cells
+// Title: Export all Excel worksheet comments to a formatted JSON file with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsx workbook using Aspose.Cells, iterates through every worksheet, extracts each comment's author, note, and cell address, and writes the data to an indented JSON file. | Create a method that converts comment row and column indices to Excel cell names via CellsHelper.CellIndexToName and builds a List of objects containing WorksheetName, CellName, Author, and Note for JSON serialization. | Add robust error handling that verifies the input file exists, catches exceptions during workbook loading or JSON writing, and logs the total number of exported comments.
+// Common Searches: how to extract comments from all sheets in an Excel file using Aspose.Cells C# | Aspose.Cells C# export cell comments to JSON file | read Excel comment author and note with Aspose.Cells in .NET | serialize Aspose.Cells comment collection to indented JSON | convert comment row column to cell address Aspose.Cells C#
+// Tags: export worksheet comments to JSON Aspose.Cells | extract comment author and note Aspose.Cells | convert comment indices to cell name Aspose.Cells | serialize comment list to indented JSON C# | Aspose.Cells comment extraction sample
 
 using System;
 using System.Collections.Generic;
@@ -11,84 +11,71 @@ using Aspose.Cells;
 
 namespace AsposeCellsCommentExport
 {
-    // Model representing a comment extracted from a worksheet
-    // The sample loads an Excel workbook via Aspose.Cells, loops through each worksheet's CommentCollection, records the worksheet name, cell address, author, and note into CellCommentInfo objects, aggregates them in a list, and then serializes the list to an indented JSON file, creating the output directory if it does not exist.
+    // Model to hold comment information; properties are nullable to satisfy non‑nullable warnings
+    // The program loads an Excel workbook, iterates through each worksheet, gathers every comment's worksheet name, cell address, author, and note, and writes the collected information as formatted JSON to an output file.
     public class CellCommentInfo
     {
         public string? WorksheetName { get; set; }
         public string? CellName { get; set; }
         public string? Author { get; set; }
-        public string? Text { get; set; }
+        public string? Note { get; set; }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            // Input Excel file path
-            string excelPath = @"C:\Path\To\InputWorkbook.xlsx";
-
-            // Output JSON file path
-            string jsonPath = @"C:\Path\To\CommentsExport.json";
+            string inputPath = "input.xlsx";
+            string outputPath = "comments.json";
 
             try
             {
-                // Verify input file exists
-                if (!File.Exists(excelPath))
+                // Ensure the input file exists before attempting to load it
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {excelPath}");
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
                     return;
                 }
 
-                // Load the workbook using Aspose.Cells
-                Workbook workbook = new Workbook(excelPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // List to hold all extracted comments
-                List<CellCommentInfo> comments = new List<CellCommentInfo>();
+                // Collect comments from all worksheets
+                List<CellCommentInfo> allComments = new List<CellCommentInfo>();
 
-                // Iterate through each worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Access the collection of comments for the current worksheet
-                    CommentCollection commentCollection = sheet.Comments;
+                    CommentCollection comments = sheet.Comments;
 
-                    // Iterate through each comment in the collection
-                    foreach (Comment comment in commentCollection)
+                    foreach (Comment comment in comments)
                     {
-                        // Build a comment info object
+                        // Convert row/column indices to Excel cell name (e.g., "B2")
+                        string cellName = CellsHelper.CellIndexToName(comment.Row, comment.Column);
+
                         CellCommentInfo info = new CellCommentInfo
                         {
                             WorksheetName = sheet.Name,
-                            CellName = CellsHelper.CellIndexToName(comment.Row, comment.Column),
+                            CellName = cellName,
                             Author = comment.Author,
-                            Text = comment.Note
+                            Note = comment.Note
                         };
 
-                        comments.Add(info);
+                        allComments.Add(info);
                     }
                 }
 
-                // Serialize the list of comments to JSON with indentation for readability
-                JsonSerializerOptions options = new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                };
-                string json = JsonSerializer.Serialize(comments, options);
+                // Serialize comments to formatted JSON
+                JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(allComments, options);
 
-                // Ensure output directory exists
-                string? outputDir = Path.GetDirectoryName(jsonPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Write JSON to output file
+                File.WriteAllText(outputPath, json);
 
-                // Write the JSON string to the output file
-                File.WriteAllText(jsonPath, json);
-
-                Console.WriteLine($"Exported {comments.Count} comments to '{jsonPath}'.");
+                Console.WriteLine($"Exported {allComments.Count} comments to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Catch any unexpected errors and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

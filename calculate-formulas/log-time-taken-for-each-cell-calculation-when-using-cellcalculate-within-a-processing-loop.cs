@@ -1,73 +1,70 @@
-// Title: Log per‑cell formula calculation time with a custom CalculationMonitor using Cell.Calculate in Aspose.Cells for .NET
-// AI Prompts: Create a subclass of AbstractCalculationMonitor that starts a Stopwatch in BeforeCalculate and writes the elapsed milliseconds together with the cell address in AfterCalculate. | Iterate over the worksheet’s used range, invoke Cell.Calculate on each formula cell with CalculationOptions that reference the custom monitor, and output the timing information. | Store each cell’s duration in a collection for later analysis or reporting, then save the workbook.
-// Common Searches: how to profile individual cell formula evaluation in Aspose.Cells C# | Aspose.Cells custom calculation monitor example for measuring performance | log execution time of each formula cell using Cell.Calculate .NET | track per‑cell calculation duration in an Excel workbook with Aspose.Cells | measure formula recalculation latency in Aspose.Cells for .NET
-// Tags: Cell.Calculate performance monitoring | Aspose.Cells custom AbstractCalculationMonitor | per‑cell formula timing .NET | measure Excel calculation duration Aspose | stopwatch timing for cell evaluation
+// Title: Log execution time for each cell’s formula calculation using Cell.Calculate in Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to measure time of Cell.Calculate for each cell | log per‑cell formula evaluation duration with Stopwatch in Aspose.Cells | benchmark individual cell calculations in a .NET Excel workbook | track performance of Cell.Calculate across a range of cells using Aspose.Cells | measure execution time of Excel cell formulas in C# with Aspose.Cells
+// Tags: cell calculation timing Aspose.Cells | per‑cell formula performance measurement .NET | stopwatch based Excel cell evaluation logging | benchmark individual cell calculations C# | Aspose.Cells performance logging for formulas
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, defines a TimingCalculationMonitor that uses a Stopwatch to record and print the elapsed milliseconds for each formula cell during calculation, configures CalculationOptions to use this monitor, loops through all used cells calling Cell.Calculate with those options, and finally saves the workbook.
-class CellCalculationTimer
+// The example loads an Excel workbook, defines a cell range (A1:D10), and iterates through each cell. For every cell it starts a Stopwatch, calls Cell.Calculate with default CalculationOptions, stops the timer, and writes the elapsed milliseconds to the console. After processing the range, the workbook is saved to a new file, providing a simple way to log per‑cell formula calculation times.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample data and formulas
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["A2"].PutValue(20);
-        worksheet.Cells["A3"].Formula = "=A1+A2";
-        worksheet.Cells["B1"].Formula = "=A3*2";
-        worksheet.Cells["C1"].Formula = "=NOW()"; // volatile function
-
-        // Create a custom calculation monitor that measures time per cell
-        var monitor = new TimingCalculationMonitor();
-
-        // Set calculation options with the monitor
-        CalculationOptions options = new CalculationOptions
+        try
         {
-            CalculationMonitor = monitor,
-            Recursive = true
-        };
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        // Iterate over all used cells and calculate each formula individually
-        var usedRange = worksheet.Cells.MaxDisplayRange;
-        for (int row = usedRange.FirstRow; row <= usedRange.FirstRow + usedRange.RowCount - 1; row++)
-        {
-            for (int col = usedRange.FirstColumn; col <= usedRange.FirstColumn + usedRange.ColumnCount - 1; col++)
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                Cell cell = worksheet.Cells[row, col];
-                if (cell.IsFormula)
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the range to process (example: A1 to D10)
+            CellArea range = CellArea.CreateCellArea("A1", "D10");
+
+            // Prepare calculation options (default settings)
+            CalculationOptions calcOptions = new CalculationOptions();
+
+            // Loop through each cell in the defined range
+            for (int row = range.StartRow; row <= range.EndRow; row++)
+            {
+                for (int col = range.StartColumn; col <= range.EndColumn; col++)
                 {
-                    // Calculate the cell using the options that contain our monitor
-                    cell.Calculate(options);
+                    Cell cell = sheet.Cells[row, col];
+
+                    // Start timing
+                    Stopwatch sw = Stopwatch.StartNew();
+
+                    // Perform calculation for the current cell with options
+                    cell.Calculate(calcOptions);
+
+                    // Stop timing
+                    sw.Stop();
+
+                    // Log the time taken
+                    Console.WriteLine($"Cell {cell.Name} calculated in {sw.Elapsed.TotalMilliseconds} ms");
                 }
             }
+
+            // Save the workbook after processing (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-
-        // Save the workbook
-        workbook.Save("TimedCalculations.xlsx");
-    }
-
-    // Custom monitor that logs the elapsed time for each cell calculation
-    private class TimingCalculationMonitor : AbstractCalculationMonitor
-    {
-        private Stopwatch _stopwatch = new Stopwatch();
-
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int colIndex)
+        catch (Exception ex)
         {
-            // Start timing before the cell is calculated
-            _stopwatch.Restart();
-        }
-
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
-        {
-            // Stop timing after calculation and output the result
-            _stopwatch.Stop();
-            Console.WriteLine($"Calculated cell (Sheet {sheetIndex}, Row {rowIndex}, Column {colIndex}) in {_stopwatch.Elapsed.TotalMilliseconds} ms. New Value: {CalculatedValue}");
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

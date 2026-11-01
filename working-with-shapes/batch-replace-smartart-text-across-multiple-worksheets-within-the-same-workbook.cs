@@ -1,75 +1,85 @@
-// Title: Batch replace text in non‑SmartArt shapes across all worksheets of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates every worksheet and each shape, replaces a given string in shape.Text, and saves the updated workbook. | Demonstrate how to use the IsSmartArt property to identify and skip SmartArt shapes while performing a bulk text replacement in Excel shapes. | Add a try‑catch block around each shape update to log errors and continue processing when modifying shape text with Aspose.Cells.
-// Common Searches: aspnet replace text in all shapes of an Excel file using Aspose.Cells | how to skip SmartArt when updating shape text in a workbook with C# | batch modify shape.Text property across multiple worksheets Aspose.Cells | C# iterate workbook shapes and replace specific string in Excel
-// Tags: bulk shape text replacement Aspose.Cells | skip SmartArt shapes .NET | iterate worksheets shapes Aspose.Cells | shape text find and replace Excel C# | per‑shape error handling Aspose.Cells
+// Title: Batch replace text in every SmartArt shape across all worksheets of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through each worksheet in a workbook and substitutes a given string in all SmartArt shapes with Aspose.Cells. | Show how to use dynamic typing to access SmartArt nodes and replace their paragraph portions in a .NET Excel automation scenario. | Provide an example that includes try‑catch blocks while updating SmartArt content across multiple sheets and then saves the workbook.
+// Common Searches: Aspose.Cells replace text in SmartArt across multiple worksheets | C# batch update SmartArt node text in an Excel file | How to iterate worksheets and modify SmartArt shapes programmatically with Aspose.Cells | Dynamic access to SmartArt objects in Aspose.Cells .NET example | Error handling when processing SmartArt shapes in a workbook using Aspose.Cells
+// Tags: batch replace smartart text aspocells | iterate worksheets smartart shapes c# | dynamic smartart node editing aspocells | excel workbook smartart text replacement | smartart processing error handling aspocells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Loads a workbook, loops through each worksheet and its shapes, skips SmartArt shapes, replaces occurrences of "OldText" with "NewText" in shape.Text, logs any shape‑level exceptions, and saves the modified workbook.
-class SmartArtBatchReplace
+// The program loads an Excel workbook, iterates through every worksheet and each shape, identifies SmartArt objects, recursively replaces occurrences of a specified old string with a new string in all SmartArt node portions using dynamic typing, handles any processing errors, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook from file
+            // Verify input file existence
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Text to find and its replacement
-            const string textToFind = "OldText";
-            const string replacementText = "NewText";
+            string oldText = "OldText";
+            string newText = "NewText";
 
-            // Iterate through all worksheets in the workbook
+            // Iterate worksheets and shapes
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all shapes on the current worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    try
+                    if (shape.IsSmartArt)
                     {
-                        // Aspose.Cells does not provide direct SmartArt manipulation.
-                        // If the shape is SmartArt, log and skip it.
-                        if (shape.IsSmartArt)
+                        try
                         {
-                            Console.WriteLine($"Skipping SmartArt shape on sheet '{sheet.Name}'.");
-                            continue;
+                            // Access SmartArt via dynamic to bypass compile‑time member check
+                            dynamic smartArt = ((dynamic)shape).SmartArt;
+                            if (smartArt != null)
+                            {
+                                ReplaceSmartArtText(smartArt, oldText, newText);
+                            }
                         }
-
-                        // Process regular shapes that contain text
-                        if (!string.IsNullOrEmpty(shape.Text) && shape.Text.Contains(textToFind))
+                        catch (Exception ex)
                         {
-                            shape.Text = shape.Text.Replace(textToFind, replacementText);
+                            Console.WriteLine($"Error processing SmartArt on sheet '{sheet.Name}': {ex.Message}");
                         }
-                    }
-                    catch (Exception exShape)
-                    {
-                        // Log shape‑level errors but continue processing other shapes
-                        Console.WriteLine($"Error processing shape on sheet '{sheet.Name}': {exShape.Message}");
                     }
                 }
             }
 
-            // Save the modified workbook to a new file
+            // Save modified workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Recursively replace text in all SmartArt nodes using dynamic typing
+    static void ReplaceSmartArtText(dynamic smartArt, string oldText, string newText)
+    {
+        foreach (dynamic node in smartArt.AllNodes)
+        {
+            foreach (dynamic paragraph in node.Paragraphs)
+            {
+                foreach (dynamic portion in paragraph.Portions)
+                {
+                    if (portion.Text != null && portion.Text.Contains(oldText))
+                    {
+                        portion.Text = portion.Text.Replace(oldText, newText);
+                    }
+                }
+            }
         }
     }
 }

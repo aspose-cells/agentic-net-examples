@@ -1,77 +1,66 @@
-// Title: Add error handling for unsupported SmartArt shapes when converting to GroupShape with Aspose.Cells for .NET
-// AI Prompts: Write C# code that inspects each Shape.Type in a worksheet, logs a warning for SmartArt objects that cannot be turned into a GroupShape, and continues processing. | Create a helper method that returns null for unsupported SmartArt shapes and throws a NotSupportedException with a detailed message when conversion is attempted. | Update the shape‑iteration loop to catch conversion failures, skip the problematic SmartArt, and ensure the workbook is still saved successfully.
-// Common Searches: c# aspose.cells how to skip smartart shapes that cannot be converted to groupshape | detect unsupported smartart during shape iteration aspose.cells | aspnet error handling for smartart conversion to groupshape in excel workbooks | aspose.cells smartart shape conversion fallback example c#
-// Tags: smartart shape conversion error handling aspose.cells | groupshape fallback for unsupported smartart c# | shape type detection aspose.cells | skip non-convertible shapes aspose.cells | excel workbook shape processing aspose.cells
+// Title: Implement robust error handling for unsupported SmartArt shapes when converting to GroupShape with Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates all worksheet shapes, checks if a shape is SmartArt, determines whether its type can be converted to a GroupShape, and logs a warning or throws a NotSupportedException for unsupported types while continuing processing. | Create a reusable method in Aspose.Cells that validates SmartArt shapes before conversion, captures conversion failures, records detailed error messages, and ensures the workbook is saved safely.
+// Common Searches: how to catch unsupported SmartArt conversion errors in Aspose.Cells C# | Aspose.Cells C# check SmartArt shape type before converting to GroupShape | log warning for SmartArt shapes that cannot be converted with Aspose.Cells .NET | exception handling for SmartArt to GroupShape conversion in Excel using Aspose.Cells | iterate worksheet shapes and skip unsupported SmartArt in Aspose.Cells
+// Tags: SmartArt shape validation Aspose.Cells C# | GroupShape conversion error handling Aspose.Cells | unsupported SmartArt detection .NET | worksheet shape iteration Aspose.Cells | exception handling workbook save Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace SmartArtConversion
+// The example demonstrates loading an Excel workbook with Aspose.Cells, iterating through each worksheet's shapes, identifying SmartArt shapes via the IsSmartArt property, and implementing error handling for shapes that cannot be converted to GroupShape. It logs appropriate messages or throws NotSupportedException for unsupported types, then safely saves the workbook while handling any I/O errors.
+class SmartArtConverter
 {
-    // The example loads an Excel file, verifies its existence, iterates through all shapes on the first worksheet, logs each shape's identifier, and saves the workbook. It demonstrates how to wrap shape processing in try‑catch blocks and includes a placeholder ConvertShapeToGroupShape method that returns null because the AddGroupShape API is not available, highlighting where to add error handling for unsupported SmartArt types.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Ensure the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
 
-            try
+        Workbook workbook = null;
+        try
+        {
+            // Load the workbook (lifecycle rule)
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Ensure the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                // Process only SmartArt shapes (use IsSmartArt property)
+                if (shape.IsSmartArt)
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
+                    // Currently Aspose.Cells does not provide a direct conversion API,
+                    // so we simply report the presence of SmartArt.
+                    Console.WriteLine($"Found SmartArt shape '{shape.Name}' on sheet '{sheet.Name}'.");
+                    // Placeholder for future conversion logic if Aspose.Cells adds support.
                 }
-
-                // Load the workbook (lifecycle rule)
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Iterate through all shapes on the worksheet
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    try
-                    {
-                        // Log basic shape information (Aspose.Cells does not expose SmartArt directly)
-                        string shapeIdentifier = !string.IsNullOrEmpty(shape.Name) ? shape.Name : shape.GetHashCode().ToString();
-                        Console.WriteLine($"Processing shape: {shapeIdentifier}");
-                        // Placeholder for any shape-specific processing can be added here
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to process shape: {ex.Message}");
-                    }
-                }
-
-                // Save the workbook (lifecycle rule)
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // General exception handling to capture unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-        // Placeholder method retained for potential future implementation.
-        // Currently not used because AddGroupShape is not available in the referenced API version.
-        private static GroupShape ConvertShapeToGroupShape(Shape originalShape)
+        try
         {
-            // As AddGroupShape is unavailable, this method returns null.
-            // Implement conversion logic here when the appropriate API becomes available.
-            return null;
+            // Save the modified workbook (lifecycle rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

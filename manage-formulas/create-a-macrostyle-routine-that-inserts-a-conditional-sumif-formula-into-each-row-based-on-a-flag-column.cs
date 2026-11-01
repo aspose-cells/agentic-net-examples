@@ -1,51 +1,62 @@
-// Title: Insert a conditional SUMIF formula into each data row using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to determine the data range, then writes a SUMIF formula into column D for every row, referencing a flag column in A and values in B. | Create a macro‑style routine with Aspose.Cells that loops through rows, builds a dynamic SUMIF expression based on the current row index, assigns it to the cell, and saves the workbook.
-// Common Searches: Aspose.Cells C# add SUMIF formula to each row based on flag column | How to programmatically set conditional SUMIF in Excel using Aspose.Cells .NET | C# loop through worksheet rows and insert dynamic SUMIF range with Aspose.Cells | Generate Excel file with conditional aggregation formula using Aspose.Cells for .NET | Save workbook after inserting formulas with Aspose.Cells C# example
-// Tags: Aspose.Cells insert SUMIF formula | C# loop assign Excel formulas | dynamic range calculation Aspose.Cells | conditional aggregation based on flag column | save workbook with Aspose.Cells .NET
+// Title: Programmatically add a conditional SUMIF formula to each row based on a flag column using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add SUMIF formula to each row using a flag column | Insert conditional SUMIF in Excel worksheet with Aspose.Cells .NET | C# loop to set SUMIF formula across rows in Aspose.Cells workbook | Generate dynamic range for SUMIF in Aspose.Cells based on last data row | Macro‑style routine for flag‑based aggregation in Excel using Aspose.Cells | How to apply SUMIF only when flag equals Yes in Aspose.Cells
+// Tags: SUMIF formula insertion Aspose.Cells | C# loop set Excel formula per row | dynamic range generation Aspose.Cells | flag column based SUMIF .NET | macro style Excel automation Aspose.Cells
 
 using Aspose.Cells;
+using System;
 
-// The example creates a workbook, optionally fills sample flag and value columns, calculates the data range, and inserts a SUMIF formula into column D for each row that sums values from column B where the flag in column A matches the current row, then saves the file as ConditionalSumIf.xlsx.
+// The example creates a workbook, populates sample data, determines the last used row, builds absolute ranges for the amount and flag columns, and loops through each data row to assign a SUMIF formula in column D that sums amounts only when the flag column equals "Yes". The workbook is then saved as ConditionalSum.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook (lifecycle rule)
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
+        // Set up headers (optional, for clarity)
+        sheet.Cells["A1"].PutValue("Item");
+        sheet.Cells["B1"].PutValue("Amount");
+        sheet.Cells["C1"].PutValue("Flag");
+        sheet.Cells["D1"].PutValue("ConditionalSum");
+
         // -------------------------------------------------
-        // Sample data setup (optional, can be removed)
-        // Column A: Flag column (e.g., "Yes"/"No")
-        // Column B: Values to be summed
+        // Example data population (can be omitted in real use)
         // -------------------------------------------------
-        sheet.Cells["A2"].PutValue("Yes");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["A3"].PutValue("No");
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["A4"].PutValue("Yes");
-        sheet.Cells["B4"].PutValue(30);
-        sheet.Cells["A5"].PutValue("No");
-        sheet.Cells["B5"].PutValue(40);
+        sheet.Cells["A2"].PutValue("Item1");
+        sheet.Cells["B2"].PutValue(100);
+        sheet.Cells["C2"].PutValue("Yes");
+
+        sheet.Cells["A3"].PutValue("Item2");
+        sheet.Cells["B3"].PutValue(200);
+        sheet.Cells["C3"].PutValue("No");
+
+        sheet.Cells["A4"].PutValue("Item3");
+        sheet.Cells["B4"].PutValue(150);
+        sheet.Cells["C4"].PutValue("Yes");
         // -------------------------------------------------
 
-        // Determine the range of data rows
-        int firstDataRow = 1; // zero‑based index for row 2 (header assumed at row 1)
-        int lastRow = sheet.Cells.MaxDataRow; // last row containing data
+        // Determine the last used row (zero‑based index)
+        int lastRowIndex = sheet.Cells.MaxDataRow; // includes header row
 
-        // If there is no data, define a default range (adjust as needed)
-        if (lastRow < firstDataRow)
-            lastRow = firstDataRow + 10; // placeholder range
+        // Build absolute range strings for SUMIF
+        // Excel rows are 1‑based, so add 1 to the zero‑based index
+        string amountRange = $"$B$2:$B${lastRowIndex + 1}";
+        string flagRange   = $"$C$2:$C${lastRowIndex + 1}";
+        string criteria    = "\"Yes\""; // flag value that triggers inclusion
 
-        // Insert a conditional SUMIF formula into column D for each data row
-        // Formula: =SUMIF($A$2:$A${lastRow+1}, A{currentRow+1}, $B$2:$B${lastRow+1})
-        for (int row = firstDataRow; row <= lastRow; row++)
+        // Insert the conditional SUMIF formula into each data row (column D)
+        // Row index starts at 1 (Excel row 2) to skip the header
+        for (int rowIdx = 1; rowIdx <= lastRowIndex; rowIdx++)
         {
-            string formula = $"SUMIF($A${firstDataRow + 1}:$A${lastRow + 1}, A{row + 1}, $B${firstDataRow + 1}:$B${lastRow + 1})";
-            sheet.Cells[row, 3].Formula = formula; // Column D (index 3)
+            // Formula: =SUMIF($C$2:$C${lastRow}, "Yes", $B$2:$B${lastRow})
+            string formula = $"SUMIF({flagRange}, {criteria}, {amountRange})";
+            sheet.Cells[rowIdx, 3].Formula = formula; // Column D has index 3 (0‑based)
         }
 
         // Save the workbook (lifecycle rule)
-        workbook.Save("ConditionalSumIf.xlsx");
+        workbook.Save("ConditionalSum.xlsx");
     }
 }

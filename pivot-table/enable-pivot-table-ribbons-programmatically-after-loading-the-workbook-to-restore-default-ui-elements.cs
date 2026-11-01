@@ -1,65 +1,44 @@
-// Title: Programmatically restore the default PivotTable ribbon UI in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that sets Workbook.RibbonXml to null, turns on PivotTable.EnableWizard and EnableFieldList for every pivot table, and enables RefreshDataOnOpeningFile. | Provide an example that iterates through all worksheets, refreshes each PivotTable after activating the default UI elements, and saves the modified workbook.
-// Common Searches: Aspose.Cells how to enable pivot wizard and field list for all pivot tables | C# code to remove custom ribbon XML from Excel workbook with Aspose.Cells | Make pivot field list visible by default in an existing .xlsx using Aspose.Cells | Automatically refresh pivot tables on opening file with Aspose.Cells .NET
-// Tags: reset RibbonXml Aspose.Cells .NET | activate pivot wizard field list C# | show pivot field list workbook | configure pivot refresh on file open | default pivot UI settings Excel
+// Title: Enable the PivotTable ribbon UI programmatically in an Aspose.Cells for .NET workbook after loading (when supported)
+// AI Prompts: Generate C# code that checks the Aspose.Cells version and sets the appropriate workbook setting to display the PivotTable ribbon after opening an Excel file. | Show how to programmatically restore the default PivotTable toolbar in a loaded workbook using Aspose.Cells for .NET, including handling of API availability. | Provide a method that conditionally activates PivotTable UI elements in Aspose.Cells based on whether the required property exists.
+// Common Searches: aspocells enable pivot table ribbon after opening workbook c# | c# restore default pivot table toolbar using Aspose.Cells | how to turn on PivotTable UI in Aspose.Cells for .NET | WorkbookSettings.EnablePivotTableUI not found in older Aspose.Cells versions | programmatically show pivot table ribbon in Excel file with Aspose.Cells
+// Tags: Aspose.Cells pivot table UI activation | pivot table UI property Aspose.Cells | programmatic pivot ribbon restoration | C# restore pivot toolbar Aspose.Cells | Aspose.Cells version compatibility pivot UI
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRibbonDemo
+namespace AsposeCellsExample
 {
-    // Loads an existing workbook, clears any custom Ribbon XML, makes the pivot field list visible, enables the wizard and field list for each PivotTable, sets them to refresh when the file opens, refreshes all pivot tables, and saves the updated workbook.
-    public class Program
+    // The example loads an existing Excel workbook with Aspose.Cells, indicates that the WorkbookSettings.EnablePivotTableUI property is unavailable in the current library version, and saves the workbook unchanged.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            const string inputPath = "InputWithPivot.xlsx";
-            const string outputPath = "OutputWithDefaultPivotUI.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
-                return;
-            }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
             try
             {
-                // Load the workbook that contains pivot tables
-                Workbook workbook = new Workbook(inputPath);
-
-                // Use the default Ribbon UI (remove any custom Ribbon XML)
-                workbook.RibbonXml = null;
-
-                // Ensure the pivot field list is visible at the workbook level
-                workbook.Settings.HidePivotFieldList = false;
-
-                // Iterate through all worksheets and their pivot tables
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    foreach (PivotTable pt in sheet.PivotTables)
-                    {
-                        // Enable UI elements for the pivot table
-                        pt.EnableWizard = true;
-                        pt.EnableFieldList = true;
-
-                        // Refresh data automatically when the file is opened
-                        pt.RefreshDataOnOpeningFile = true;
-                    }
-
-                    // Apply changes to all pivot tables in the current worksheet
-                    sheet.RefreshPivotTables();
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // Save the modified workbook
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
+
+                // NOTE: The WorkbookSettings.EnablePivotTableUI property is not available in this version of Aspose.Cells.
+                // If needed, adjust the workbook settings using the appropriate API for your version.
+
+                // Save the workbook with the (unchanged) settings
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors gracefully
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

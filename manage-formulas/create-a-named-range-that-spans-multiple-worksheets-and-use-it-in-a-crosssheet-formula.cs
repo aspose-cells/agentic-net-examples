@@ -1,13 +1,11 @@
-// Title: How to create a named range that spans multiple worksheets and use it in a cross‑sheet SUM formula with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to define a named range covering Sheet1!A1:A3 and Sheet2!B1:B3, then place a =SUM(MyRange) formula on a Summary worksheet and evaluate the result. | Demonstrate the steps to add a multi‑sheet named range, assign its RefersTo string, recalculate all formulas, and save the workbook as an .xlsx file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# create named range across two worksheets | C# Aspose.Cells sum values from multiple sheets using a named range | How to set RefersTo for a named range that includes cells on different worksheets in Aspose.Cells | Calculate workbook formulas after adding a cross‑sheet named range with Aspose.Cells .NET | Save workbook after using multi‑sheet named range in Aspose.Cells
-// Tags: Aspose.Cells multi‑worksheet named range | Aspose.Cells cross‑sheet SUM formula | Aspose.Cells RefersTo string | Aspose.Cells workbook calculation | Aspose.Cells .xlsx file saving
+// Title: Define a multi‑sheet named range and use it in a SUM formula with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# create named range that spans multiple worksheets | C# sum values across sheets using a named range in Aspose.Cells | Set RefersTo for a multi‑sheet named range in Aspose.Cells .NET | Apply SUM formula to a named range covering Sheet1 and Sheet2 with Aspose.Cells | Calculate workbook formulas after defining a cross‑sheet named range in Aspose.Cells C#
+// Tags: Aspose.Cells multi-sheet named range | Aspose.Cells cross-sheet SUM formula | Aspose.Cells RefersTo multiple worksheets | Aspose.Cells CalculateFormula example | Aspose.Cells named range across worksheets
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, adds three worksheets (Sheet1, Sheet2, Summary), fills Sheet1!A1:A3 and Sheet2!B1:B3 with numbers, defines a named range called MyRange that references both areas via a comma‑separated RefersTo string, inserts a =SUM(MyRange) formula on the Summary sheet, calculates all formulas, prints the sum, and saves the file as NamedRangeCrossSheet.xlsx.
+// The example creates a new workbook, adds two worksheets (Sheet1 and Sheet2), fills cells A1:A2 on each sheet with numbers, defines a named range "MyRange" that references A1:A2 on both sheets via the RefersTo property, inserts a SUM formula that uses this named range into cell B1, calculates all formulas, and saves the file as CrossSheetNamedRange.xlsx.
 class Program
 {
     static void Main()
@@ -15,55 +13,41 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook wb = new Workbook();
+            Workbook workbook = new Workbook();
 
-            // Rename the default sheet to Sheet1
-            Worksheet sheet1 = wb.Worksheets[0];
+            // Access the first worksheet and rename it
+            Worksheet sheet1 = workbook.Worksheets[0];
             sheet1.Name = "Sheet1";
 
-            // Add a second worksheet named Sheet2
-            Worksheet sheet2 = wb.Worksheets.Add("Sheet2");
+            // Add a second worksheet
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
-            // Add a third worksheet for the summary formula
-            Worksheet summary = wb.Worksheets.Add("Summary");
-
-            // Populate Sheet1!A1:A3 with sample data
+            // Populate some sample data in both sheets
             sheet1.Cells["A1"].PutValue(10);
             sheet1.Cells["A2"].PutValue(20);
-            sheet1.Cells["A3"].PutValue(30);
+            sheet2.Cells["A1"].PutValue(30);
+            sheet2.Cells["A2"].PutValue(40);
 
-            // Populate Sheet2!B1:B3 with sample data
-            sheet2.Cells["B1"].PutValue(5);
-            sheet2.Cells["B2"].PutValue(15);
-            sheet2.Cells["B3"].PutValue(25);
+            // Create a named range that spans cells A1:A2 on both worksheets
+            // Names.Add returns the index of the newly added name; retrieve the Name object using that index
+            int rangeIndex = workbook.Worksheets.Names.Add("MyRange");
+            Name multiSheetRange = workbook.Worksheets.Names[rangeIndex];
+            multiSheetRange.RefersTo = "Sheet1!A1:A2,Sheet2!A1:A2";
 
-            // Define a named range that spans both worksheets
-            // The reference string uses a comma to separate the two areas
-            string refString = "Sheet1!A1:A3,Sheet2!B1:B3";
+            // Use the named range in a cross‑sheet formula (e.g., sum all values)
+            sheet1.Cells["B1"].Formula = "SUM(MyRange)";
 
-            // Add the named range and obtain the Name object
-            int nameIndex = wb.Worksheets.Names.Add("MyRange");
-            Name myRange = wb.Worksheets.Names[nameIndex];
-            myRange.RefersTo = refString;
+            // Calculate formulas so the result is stored in the cell
+            workbook.CalculateFormula();
 
-            // Use the named range in a cross‑sheet formula on the Summary sheet
-            // Example: sum all values in the named range
-            summary.Cells["A1"].Formula = "=SUM(MyRange)";
-
-            // Calculate formulas in the workbook
-            wb.CalculateFormula();
-
-            // Output the result to the console
-            Console.WriteLine("Sum of MyRange: " + summary.Cells["A1"].StringValue);
-
-            // Save the workbook to a file (ensure the directory exists)
-            string outputPath = "NamedRangeCrossSheet.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            // Save the workbook to a file
+            string outputPath = "CrossSheetNamedRange.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

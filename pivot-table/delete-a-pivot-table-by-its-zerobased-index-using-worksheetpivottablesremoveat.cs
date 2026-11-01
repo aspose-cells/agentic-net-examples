@@ -1,59 +1,60 @@
-// Title: How to delete a pivot table by zero‑based index from a worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, checks the number of pivot tables on the first worksheet, removes the pivot table at index 2 using Worksheet.PivotTables.RemoveAt, and saves the workbook. | Show a C# example that safely deletes a pivot table by verifying the provided zero‑based index against Worksheet.PivotTables.Count before calling RemoveAt. | Demonstrate how to log a friendly message when the requested pivot table index is out of range and continue processing.
-// Common Searches: aspnet remove pivot table at specific index using Aspose.Cells | c# Aspose.Cells delete pivot table from worksheet by index | how to check pivot table count before removing with Worksheet.PivotTables.RemoveAt | example of Worksheet.PivotTables.RemoveAt in Aspose.Cells .NET | error handling for out‑of‑range pivot table index Aspose.Cells
-// Tags: Aspose.Cells Worksheet.PivotTables.RemoveAt | remove pivot table at specific index | pivot table index validation Aspose.Cells | delete pivot table from .xlsx using .NET | exception handling for pivot table removal
+// Title: Delete a pivot table at a specific zero‑based index using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# remove pivot table by its zero based index | Worksheet.PivotTables.RemoveAt example code for .NET | How to delete the first pivot table in an Excel worksheet with Aspose.Cells | Check pivot table count before calling RemoveAt in C# | Programmatically delete a pivot table and save the workbook using Aspose.Cells
+// Tags: Aspose.Cells pivot table removal by index | Worksheet.PivotTables.RemoveAt usage | Excel workbook pivot table deletion .NET | validate pivot table index Aspose.Cells | remove pivot table and save workbook C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample loads an existing Excel file (or creates a new workbook if missing), accesses the first worksheet, verifies that a zero‑based pivot table index is within the collection bounds, removes the pivot table at that index with Worksheet.PivotTables.RemoveAt, and saves the modified workbook, handling Aspose.Cells‑specific and generic exceptions.
+class Program
 {
-    // The sample loads 'input.xlsx' with Aspose.Cells, confirms the file exists, accesses the first worksheet, validates that a given zero‑based pivot table index is within the collection bounds, removes the pivot table using Worksheet.PivotTables.RemoveAt, and saves the updated workbook to 'output.xlsx' while handling possible errors and logging actions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
+        try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
+            if (File.Exists(inputPath))
             {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Zero‑based index of the pivot table to delete
-                int pivotIndex = 0; // change as required
-
-                // Ensure the pivot table index is valid
-                if (pivotIndex >= 0 && pivotIndex < worksheet.PivotTables.Count)
-                {
-                    worksheet.PivotTables.RemoveAt(pivotIndex);
-                    Console.WriteLine($"Pivot table at index {pivotIndex} removed.");
-                }
-                else
-                {
-                    Console.WriteLine($"No pivot table found at index {pivotIndex}.");
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Load the workbook. If the file is password‑protected, set the password in LoadOptions.
+                var loadOptions = new LoadOptions();
+                // loadOptions.Password = "yourPassword"; // uncomment and set if needed
+                workbook = new Workbook(inputPath, loadOptions);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Create a new workbook when the input file is missing.
+                workbook = new Workbook();
+                workbook.Worksheets.Add("Sheet1");
             }
+
+            // Get the first worksheet (adjust index or name as required).
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Zero‑based index of the pivot table to delete.
+            int pivotIndex = 0;
+
+            // Delete the pivot table if the index is valid.
+            if (pivotIndex >= 0 && pivotIndex < worksheet.PivotTables.Count)
+            {
+                worksheet.PivotTables.RemoveAt(pivotIndex);
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

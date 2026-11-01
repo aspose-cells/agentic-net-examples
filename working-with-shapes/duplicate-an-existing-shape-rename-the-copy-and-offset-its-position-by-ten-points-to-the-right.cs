@@ -1,85 +1,64 @@
-// Title: Duplicate a worksheet shape, rename the copy, and offset it 10 points to the right using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to copy an existing shape on a worksheet, assign a new name to the duplicate, and move it 10 points horizontally. | Show how to call Worksheet.Shapes.AddCopy, set the duplicated shape's Name property, and increase its Left property by 10 points in a .NET workbook.
-// Common Searches: C# Aspose.Cells copy shape and change its name on the same worksheet | How to move a duplicated shape 10 points to the right with Aspose.Cells | Worksheet.Shapes.AddCopy example with offset in Aspose.Cells for .NET | Rename copied shape in Aspose.Cells C# code | Shift shape position programmatically using Aspose.Cells Left property
-// Tags: Worksheet.Shapes.AddCopy shape duplication | set duplicated shape Name property | modify shape Left offset points | Aspose.Cells shape copy and reposition | C# workbook shape manipulation example
+// Title: Duplicate a shape, rename the copy, and offset it by 10 points in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that uses Aspose.Cells to locate a shape named "OriginalShape" on a worksheet, duplicate it with AddCopy, rename the duplicate to "OriginalShape_Copy", and shift its left position by 10 points. | Write a reusable C# method for Aspose.Cells that accepts a source shape name, a new name, and a horizontal offset, then copies the shape, assigns the new name, and moves it right by the specified points.
+// Common Searches: Aspose.Cells C# duplicate shape and change its name on the same worksheet | C# offset copied Excel shape by specific points using Aspose.Cells | How to use AddCopy to clone a shape and move it in Aspose.Cells | Rename and reposition a shape copy in an Aspose.Cells workbook with C#
+// Tags: addcopy shape Aspose.Cells C# | rename duplicated shape worksheet | horizontal offset shape Aspose.Cells | shape cloning Excel Aspose.Cells | shape positioning points Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// The example loads a workbook, finds the shape "OriginalShape", creates a copy with AddCopy, renames the copy to "OriginalShape_Copy", moves it 10 points to the right, and saves the result as output.xlsx.
+class ShapeDuplicationExample
 {
-    // Loads a workbook, locates a shape named "OriginalShape", creates a copy on the same worksheet using Worksheet.Shapes.AddCopy, renames the copy by appending "_Copy", shifts it 10 points to the right by increasing its Left property, and saves the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
 
-            try
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Load existing workbook or create a new one if the file is missing.
-                Workbook workbook;
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Retrieve the shape named "OriginalShape".
-                Shape originalShape = worksheet.Shapes["OriginalShape"];
-                if (originalShape == null)
-                {
-                    Console.WriteLine("Shape \"OriginalShape\" not found. No duplication performed.");
-                }
-                else
-                {
-                    try
-                    {
-                        // Duplicate the shape on the same worksheet using AddCopy overload.
-                        Shape duplicatedShape = worksheet.Shapes.AddCopy(
-                            originalShape,
-                            originalShape.UpperLeftRow,
-                            originalShape.UpperLeftColumn,
-                            originalShape.LowerRightRow,
-                            originalShape.LowerRightColumn);
-
-                        // Rename the duplicated shape.
-                        duplicatedShape.Name = originalShape.Name + "_Copy";
-
-                        // Offset the duplicated shape 10 points to the right.
-                        duplicatedShape.Left = originalShape.Left + 10;
-                    }
-                    catch (Exception dupEx)
-                    {
-                        Console.WriteLine($"Failed to duplicate shape: {dupEx.Message}");
-                    }
-                }
-
-                // Ensure the directory for the output file exists.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the shape named "OriginalShape"
+            Shape originalShape = sheet.Shapes["OriginalShape"];
+            if (originalShape == null)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Shape 'OriginalShape' not found.");
+                return;
             }
+
+            // Duplicate the shape and add the copy to the same worksheet
+            Shape copiedShape = sheet.Shapes.AddCopy(
+                originalShape,
+                originalShape.UpperLeftRow,
+                originalShape.UpperLeftColumn,
+                originalShape.LowerRightRow,
+                originalShape.LowerRightColumn);
+
+            copiedShape.Name = "OriginalShape_Copy";
+
+            // Offset the copied shape 10 points to the right
+            copiedShape.Left = originalShape.Left + 10;
+
+            // Save the workbook with the duplicated shape
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,66 +1,85 @@
-// Title: Apply a built‑in TableStyleMedium2 to an Aspose.Cells ListObject while preserving existing cell formatting in C#
-// AI Prompts: Generate C# code that creates a worksheet, fills cells A1:B3 with sample data, converts the range into a ListObject, and sets its TableStyleType to TableStyleMedium2 using Aspose.Cells. | Write a C# snippet that applies a predefined Excel table style to an Aspose.Cells ListObject without altering the original cell formats. | Provide C# code to save the styled workbook as an .xlsx file, ensuring the output directory is created if it does not already exist.
-// Common Searches: how to set TableStyleMedium2 for an Excel table created with Aspose.Cells in C# | preserving cell formatting when applying a table style with Aspose.Cells | Aspose.Cells C# add ListObject and apply built‑in table style | save Aspose.Cells workbook to a specific folder and create folder if missing | apply predefined table style to ListObject without losing header formatting Aspose
-// Tags: apply TableStyleMedium2 to ListObject Aspose.Cells | preserve cell formatting when styling Excel table C# | create ListObject from range Aspose.Cells | save workbook to .xlsx with directory creation Aspose.Cells | use TableStyleType enum Aspose.Cells C#
+// Title: Apply a built‑in table style to an Aspose.Cells ListObject while preserving custom header formatting in C#
+// Common Searches: Aspose.Cells C# apply TableStyleLight1 to a ListObject without overwriting header style | preserve custom header formatting when setting TableStyleType in Aspose.Cells | create Excel table with predefined style using Aspose.Cells .NET | how to keep header cell colors after applying a built‑in table style in Aspose.Cells | C# add ListObject to worksheet and retain header formatting with Aspose.Cells
+// Tags: apply built‑in table style Aspose.Cells | C# ListObject custom header formatting | TableStyleType TableStyleLight1 usage | Excel table styling with Aspose.Cells .NET | preserve cell style after applying table style
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates creating a workbook, adding sample data, converting range A1:B3 into a ListObject, applying the built‑in TableStyleMedium2 style while keeping original cell formatting, and saving the file with automatic output folder creation.
+// The example creates a workbook, fills it with sample data, applies a bold light‑gray style to the header row, adds a ListObject covering the data range, sets the predefined TableStyleLight1 on the table, and preserves the custom header formatting before saving the file as TableWithStyle.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            var workbook = new Workbook();
-
-            // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("Alice");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Bob");
-            sheet.Cells["B3"].PutValue(25);
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
 
-            // Define the range that will become a table (A1:B3)
-            var tableRange = sheet.Cells.CreateRange("A1:B3");
+            // Apply custom formatting to header row (preserve this formatting)
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.ForegroundColor = Color.LightGray;
+            headerStyle.Pattern = BackgroundType.Solid;
+            StyleFlag headerFlag = new StyleFlag { All = true };
+            sheet.Cells.CreateRange("A1:C1").ApplyStyle(headerStyle, headerFlag);
 
-            // Add a ListObject (Excel table) based on the defined range, indicating that the first row has headers
+            // Define the range that will become a table (zero‑based indices)
+            CellArea tableArea = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 3,
+                EndColumn = 2
+            };
+
+            // Add a ListObject (table) to the worksheet
             int tableIndex = sheet.ListObjects.Add(
-                tableRange.FirstRow,
-                tableRange.FirstColumn,
-                tableRange.RowCount,
-                tableRange.ColumnCount,
+                tableArea.StartRow,
+                tableArea.StartColumn,
+                tableArea.EndRow,
+                tableArea.EndColumn,
                 true);
+            ListObject table = sheet.ListObjects[tableIndex];
 
-            var table = sheet.ListObjects[tableIndex];
+            // Set a display name for the table
+            table.DisplayName = "SampleTable";
 
-            // Apply a predefined table style (e.g., TableStyleMedium2)
-            table.TableStyleType = TableStyleType.TableStyleMedium2;
+            // Apply a predefined table style (choose an existing style)
+            table.TableStyleType = TableStyleType.TableStyleLight1;
 
-            // Save the workbook to a file
-            string outputFile = "StyledTable.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
+            // Determine output path and ensure the directory exists
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "TableWithStyle.xlsx");
+            string? outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputFile)}");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

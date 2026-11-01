@@ -1,77 +1,57 @@
-// Title: Count cells with custom number formats in each worksheet of an Excel file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, iterates all worksheets, and counts cells whose Style.Custom property contains a custom number format. | Extend the sample to gather and print the distinct custom number format strings present in each worksheet. | Add robust try‑catch handling so that cells causing exceptions are skipped while still contributing to the custom‑format count.
-// Common Searches: aspnet count cells with custom number format per worksheet using Aspose.Cells | how to detect custom number formats in Excel with Aspose.Cells C# | enumerate used range and find custom number format strings Aspose.Cells .NET | C# Aspose.Cells get count of cells that have a custom number format in each sheet
-// Tags: custom number format detection Aspose.Cells | worksheet cell enumeration Aspose.Cells | Style.Custom property usage .NET | count custom formatted cells per sheet | error‑tolerant cell scanning Aspose.Cells
+// Title: Count cells with custom number formats per worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet and prints the count of cells whose Style.Custom property is defined. | Create a reusable C# method that returns a Dictionary<string, int> mapping each worksheet name to the number of cells using a custom number format. | Extend the sample to collect the addresses (e.g., A1, B2) of cells that have a custom number format and output them grouped by worksheet.
+// Common Searches: Aspose.Cells C# count cells with custom number format in each sheet | How to get number of cells using custom number formats with Aspose.Cells for .NET | Enumerate cells that have a custom Style.Custom value in an Excel workbook using Aspose.Cells | C# Aspose.Cells report custom number format usage per worksheet | Find cells with custom number format in Excel using Aspose.Cells API
+// Tags: custom number format counting Aspose.Cells | enumerate cell styles .NET | worksheet custom format statistics C# | Aspose.Cells Style.Custom detection | C# Excel custom format cell enumeration
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, iterates each worksheet's used range, checks the Style.Custom property of every cell, counts cells with a non‑empty custom number format, and prints the count per worksheet while handling missing files and cell‑level exceptions.
+// Loads an Excel workbook, iterates each worksheet, counts cells where the Style.Custom property is set, and prints the count (and optionally the cell addresses) for every sheet.
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the input file exists before attempting to load it
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
             return;
         }
 
-        Workbook workbook = null;
         try
         {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int customFormatCount = 0;
+
+                // Enumerate only the cells that actually contain data
+                foreach (Cell cell in sheet.Cells)
+                {
+                    // Retrieve the cell's style
+                    Style style = cell.GetStyle();
+
+                    // Check if a custom number format string is defined
+                    if (!string.IsNullOrEmpty(style.Custom))
+                    {
+                        customFormatCount++;
+                    }
+                }
+
+                // Report the count for the current worksheet
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {customFormatCount} cells with custom number formats.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading workbook: {ex.Message}");
-            return;
-        }
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
-        {
-            int customFormatCount = 0;
-
-            // Determine the used range of the sheet
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-
-            // Scan cells only if the sheet contains data
-            if (maxRow >= 0 && maxCol >= 0)
-            {
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        try
-                        {
-                            Cell cell = sheet.Cells[row, col];
-                            Style style = cell.GetStyle();
-
-                            // A custom number format is indicated by a non‑empty Custom string
-                            string customFormat = style.Custom;
-                            if (!string.IsNullOrEmpty(customFormat))
-                            {
-                                customFormatCount++;
-                            }
-                        }
-                        catch (Exception cellEx)
-                        {
-                            // Log cell‑level errors but continue processing
-                            Console.WriteLine($"Warning: Unable to process cell [{row}, {col}] in sheet \"{sheet.Name}\": {cellEx.Message}");
-                        }
-                    }
-                }
-            }
-
-            // Report the count for the current worksheet
-            Console.WriteLine($"Worksheet \"{sheet.Name}\": {customFormatCount} cells with custom number formats.");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

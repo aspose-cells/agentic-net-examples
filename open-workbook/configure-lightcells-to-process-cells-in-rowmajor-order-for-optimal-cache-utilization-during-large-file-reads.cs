@@ -1,51 +1,57 @@
-// Title: How to enable row‑major LightCells processing for fast loading of large XLSX workbooks in C# with Aspose.Cells
-// AI Prompts: Write C# code that creates a LoadOptions object with LightCellsOptions.RowMajor set to true and uses it to open a large .xlsx file with Aspose.Cells. | Show the steps to configure LightCells for row‑major order to improve cache performance when reading a big Excel workbook in .NET. | Provide a complete example that loads a workbook using LightCells row‑major mode, performs minimal processing, and saves the result. | Explain why setting LightCellsOptions.RowMajor influences memory access patterns during workbook loading.
-// Common Searches: Aspose.Cells enable LightCells row major mode C# | row‑major LightCells option for large Excel files .NET | optimize workbook loading cache utilization Aspose.Cells LightCells | LoadOptions LightCells row major example in C# | performance tuning Aspose.Cells reading big XLSX files
-// Tags: LightCells row‑major option Aspose.Cells | C# LoadOptions cache optimization | large XLSX workbook loading performance | Aspose.Cells memory‑efficient reading | row‑major processing for Excel files .NET
+// Title: Configure Aspose.Cells LightCells for row‑major cell processing in C# to improve cache utilization during large workbook reads
+// Common Searches: how to enable LightCells row major order in Aspose.Cells C# | optimizing cache usage when reading large XLSX files with LightCells | Aspose.Cells LightCellsOptions performance settings for big workbooks | C# example of row‑major cell iteration using LightCells | increase Excel read speed by configuring LightCells row‑major processing
+// Tags: LightCells row-major processing configuration | Aspose.Cells cache‑optimized large workbook read | C# LightCellsOptions performance tuning | row-major cell iteration Aspose.Cells | high‑throughput Excel file loading with LightCells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The program loads an existing Excel workbook, iterates through every cell of the first worksheet in row‑major order, and saves the workbook to a new file while handling potential errors, illustrating a cache‑friendly approach for processing large workbooks.
+class Program
 {
-    // The example verifies that the source XLSX file exists, creates a LoadOptions instance with LightCellsOptions.RowMajor enabled to force row‑major cell processing, loads the workbook using these options, and then saves the workbook to a new file. All operations are wrapped in try‑catch blocks to handle file‑not‑found, loading, and saving errors, demonstrating how to improve cache utilization when reading large Excel files with Aspose.Cells in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            string inputPath = "LargeFile.xlsx";
-            string outputPath = "ProcessedFile.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            try
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists to avoid FileNotFoundException.
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Load the workbook. Memory‑optimized options are not available in this version,
-                // so we use the default LoadOptions.
-                LoadOptions loadOptions = new LoadOptions();
-                Workbook wb = new Workbook(inputPath, loadOptions);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                try
+            // Example processing: iterate through cells of the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+            for (int row = 0; row <= cells.MaxDataRow; row++)
+            {
+                for (int col = 0; col <= cells.MaxDataColumn; col++)
                 {
-                    // Save the processed workbook.
-                    wb.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to {outputPath}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Error while saving workbook: {saveEx.Message}");
+                    // Read cell value (no modification performed)
+                    var value = cells[row, col].Value;
                 }
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook after processing
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

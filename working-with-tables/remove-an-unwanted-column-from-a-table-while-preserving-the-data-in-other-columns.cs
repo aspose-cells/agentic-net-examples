@@ -1,78 +1,80 @@
-// Title: Remove an unwanted column from an Excel ListObject table using Aspose.Cells for .NET while keeping other data intact
-// AI Prompts: Generate C# code that locates a ListObject column by its header name and deletes it with Aspose.Cells, leaving the rest of the table unchanged. | Show how to programmatically drop a specific column from an Excel table (ListObject) in a workbook using Aspose.Cells for .NET. | Create a reusable method that accepts a worksheet and column header, then removes that column from the first table using Aspose.Cells without affecting other columns.
-// Common Searches: aspnet remove column from Excel table ListObject Aspose.Cells example | c# delete specific column in an Excel worksheet table using Aspose.Cells | how to drop a table column while preserving other columns in Aspose.Cells for .NET | remove unwanted column from first ListObject in workbook with Aspose.Cells C# | Aspose.Cells delete table column by header name programmatically
-// Tags: Aspose.Cells delete ListObject column C# | preserve other columns when dropping Excel table column Aspose.Cells | C# Aspose.Cells delete column by header name | modify worksheet table column removal Aspose.Cells | programmatic column deletion in Excel table .NET
+// Title: How to delete a specific column from an Excel ListObject table using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# remove column from Excel table by column name | Delete unwanted column from ListObject without affecting other data in .NET | C# code to drop a column from an Excel table using Aspose.Cells | How to remove a column from a worksheet table and save workbook with Aspose.Cells | Remove column from Excel table programmatically in C# Aspose.Cells example
+// Tags: Aspose.Cells ListObject column deletion C# | Excel table column removal using Aspose | C# ListColumns.RemoveAt method Aspose.Cells | preserve other columns when dropping table column | save workbook after modifying table structure Aspose
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// // Loads an existing workbook, accesses the first worksheet and its first ListObject, finds the column named 'UnwantedColumn', deletes that column while leaving all other columns untouched, and saves the updated workbook to a new file.
-class Program
+// The example loads an XLSX workbook, accesses the first worksheet's first ListObject (Excel table), locates a column named "UnwantedColumn", removes that column via the ListColumns collection while leaving remaining data intact, and saves the updated workbook to a new file, with error handling for missing files and other exceptions.
+class RemoveColumnFromTable
 {
     static void Main()
     {
         try
         {
+            // Input and output file paths
             string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Ensure the input file exists before loading
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (change index if needed)
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Verify that the worksheet contains at least one table (list object)
+            // Ensure the worksheet contains at least one table (ListObject)
             if (worksheet.ListObjects.Count == 0)
             {
-                Console.WriteLine("No tables found in the worksheet.");
+                Console.WriteLine("No tables found on the worksheet.");
                 return;
             }
 
-            // Get the first table in the worksheet
+            // Assume the first table is the target
             ListObject table = worksheet.ListObjects[0];
 
-            // Name of the column to be removed
-            string columnNameToRemove = "UnwantedColumn";
+            // Name of the column to remove
+            string unwantedColumnName = "UnwantedColumn";
 
-            // Locate the column index within the table (0‑based)
+            // Find the zero‑based index of the column within the table
             int columnIndex = -1;
             for (int i = 0; i < table.ListColumns.Count; i++)
             {
-                if (table.ListColumns[i].Name.Equals(columnNameToRemove, StringComparison.OrdinalIgnoreCase))
+                if (table.ListColumns[i].Name.Equals(unwantedColumnName, StringComparison.OrdinalIgnoreCase))
                 {
                     columnIndex = i;
                     break;
                 }
             }
 
-            if (columnIndex >= 0)
+            // Delete the column if it exists
+            if (columnIndex != -1)
             {
-                // Remove the column while preserving data in other columns
+                // Remove the column from the table's ListColumns collection
                 table.ListColumns.RemoveAt(columnIndex);
-                Console.WriteLine($"Column '{columnNameToRemove}' removed successfully.");
+                Console.WriteLine($"Column \"{unwantedColumnName}\" removed successfully.");
             }
             else
             {
-                Console.WriteLine($"Column '{columnNameToRemove}' not found in the table.");
+                Console.WriteLine($"Column \"{unwantedColumnName}\" not found in the table.");
             }
 
             // Save the modified workbook
-            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

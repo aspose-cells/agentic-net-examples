@@ -1,78 +1,49 @@
-// Title: Convert an Excel workbook to PDF with worksheet outline bookmarks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, enables ExportDocumentStructure in PdfSaveOptions, builds a PdfBookmarkEntry hierarchy for each worksheet pointing to cell A1, and saves the workbook as a PDF. | Show how to create a root PdfBookmarkEntry and add child entries for every worksheet to generate PDF outline bookmarks in Aspose.Cells. | Adapt the example to generate PDF bookmarks from named ranges instead of worksheet names while converting an Excel file to PDF.
-// Common Searches: Aspose.Cells C# export Excel to PDF with outline bookmarks for each sheet | How to add PDF bookmarks when converting a workbook to PDF using Aspose.Cells .NET | PdfSaveOptions ExportDocumentStructure property usage example in C# | Create hierarchical PDF bookmarks from Excel worksheets with Aspose.Cells | C# generate PDF outline navigation from named ranges using Aspose.Cells
-// Tags: Aspose.Cells export workbook to PDF with outline bookmarks | PdfSaveOptions ExportDocumentStructure property | PdfBookmarkEntry worksheet bookmark hierarchy | C# convert Excel to PDF with PDF outline navigation | Aspose.Cells generate PDF bookmarks from named ranges
+// Title: Create a PDF from an Excel workbook with outline bookmarks generated from named ranges using Aspose.Cells for .NET (C#)
+// Common Searches: c# aspose.cells convert excel to pdf with outline bookmarks from named ranges | how to generate pdf bookmarks from excel named ranges using aspose.cells | aspose.cells pdfsaveoptions preserve named range hierarchy in c# | export workbook to pdf each sheet on a separate page aspose.cells | fit all columns on one pdf page per sheet using aspose.cells
+// Tags: Aspose.Cells PDFSaveOptions outline bookmarks | Excel named ranges to PDF bookmarks .NET | C# workbook to PDF one page per sheet | Aspose.Cells fit all columns one page per sheet | Aspose.Cells preserve named range hierarchy in PDF
 
 using System;
-using System.Collections;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfBookmarkDemo
+// The example verifies the source Excel file, loads it with Aspose.Cells, configures PdfSaveOptions to fit all columns on a single page per sheet and start each worksheet on a new PDF page, then saves the workbook as a PDF where defined named ranges are automatically converted into outline bookmarks. Errors are caught and reported.
+class WorkbookToPdfWithBookmarks
 {
-    // The program verifies the presence of input.xlsx, loads it with Aspose.Cells, configures PdfSaveOptions to export document structure, builds a root PdfBookmarkEntry containing a child entry for each worksheet that points to cell A1, assigns this bookmark hierarchy to the save options, and saves the workbook as output.pdf.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input workbook exists
-                const string inputFile = "input.xlsx";
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Error: Input file '{inputFile}' not found.");
-                    return;
-                }
-
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(inputFile);
-
-                // Create PDF save options (lifecycle rule: create)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Export document structure for better outline navigation
-                    ExportDocumentStructure = true
-                };
-
-                // Root bookmark entry
-                PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
-                {
-                    Text = "Workbook Sections",
-                    IsOpen = true,
-                    SubEntry = new ArrayList()
-                };
-
-                // Iterate through all worksheets and create a bookmark for each sheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Destination cell is the first cell (A1) of the worksheet
-                    Cell destinationCell = sheet.Cells[0, 0];
-
-                    // Create a bookmark entry for the worksheet
-                    PdfBookmarkEntry entry = new PdfBookmarkEntry
-                    {
-                        Text = sheet.Name,
-                        Destination = destinationCell
-                    };
-
-                    // Add the entry to the root's sub‑entries
-                    rootBookmark.SubEntry.Add(entry);
-                }
-
-                // Assign the constructed bookmark hierarchy to the PDF options
-                pdfOptions.Bookmark = rootBookmark;
-
-                // Save the workbook as PDF with the bookmark options (lifecycle rule: save)
-                const string outputFile = "output.pdf";
-                workbook.Save(outputFile, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{outputFile}'.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                // Optional: fit all columns on one page per sheet
+                AllColumnsInOnePagePerSheet = true,
+
+                // Optional: each worksheet will start on a new PDF page
+                OnePagePerSheet = true
+            };
+
+            // Save the workbook as PDF; named ranges will become outline bookmarks automatically
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully created at '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

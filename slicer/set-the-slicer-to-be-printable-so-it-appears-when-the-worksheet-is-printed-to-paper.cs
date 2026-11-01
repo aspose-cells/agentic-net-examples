@@ -1,64 +1,60 @@
-// Title: How to make a pivot table slicer printable in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a pivot table slicer and enable its IsPrintable property with Aspose.Cells for .NET. | Mark both the slicer and its underlying shape as printable so the slicer shows up on printed pages in C#.
-// Common Searches: Aspose.Cells C# set slicer printable when exporting to Excel | make pivot table slicer appear on printed worksheet using Aspose.Cells | C# Aspose.Cells how to enable printing for slicer shape | set slicer IsPrintable flag Aspose.Cells .NET example
-// Tags: Aspose.Cells slicer printable property | C# Aspose.Cells set slicer IsPrintable | Aspose.Cells pivot table slicer printing | Aspose.Cells shape IsPrintable for slicer | generate printable slicer Excel Aspose.Cells
+// Title: Make an Excel slicer printable using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the IsPrintable property of a specific slicer in a loaded workbook with Aspose.Cells C#. | Enable printing for all slicers on a worksheet by iterating the SlicerCollection via Aspose.Cells .NET API. | Update an existing Excel file so its slicer appears in print output, using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# how to set slicer printable property | Make Excel slicer appear when printing using Aspose.Cells .NET | C# example to enable slicer printing in an existing workbook | Set IsPrintable flag on slicer with Aspose.Cells API
+// Tags: Aspose.Cells set slicer printable | C# slicer IsPrintable property | Excel slicer print visibility .NET | modify slicer print option Aspose.Cells | load workbook adjust slicer print
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Slicers;   // Required for Slicer and SlicerCollection classes
 
-namespace AsposeCellsSlicerPrintableDemo
+// The code loads an existing workbook, accesses the first worksheet’s slicer collection, sets the slicer’s IsPrintable property to true, and saves the workbook, ensuring the slicer is included when the sheet is printed.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, inserts a slicer linked to the pivot, sets both the slicer and its shape to printable, and saves the file as SlicerPrintableDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (or specify the desired worksheet index/name)
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data for a pivot table
-            cells["A1"].PutValue("Fruit");
-            cells["B1"].PutValue("Year");
-            cells["C1"].PutValue("Amount");
+            // Get the collection of slicers on the worksheet
+            SlicerCollection slicers = sheet.Slicers;
 
-            string[] fruits = { "Apple", "Banana", "Apple", "Banana", "Apple", "Banana" };
-            int[] years = { 2020, 2020, 2021, 2021, 2022, 2022 };
-            int[] amounts = { 50, 70, 60, 80, 55, 75 };
-
-            for (int i = 0; i < fruits.Length; i++)
+            if (slicers.Count > 0)
             {
-                cells[i + 1, 0].PutValue(fruits[i]);
-                cells[i + 1, 1].PutValue(years[i]);
-                cells[i + 1, 2].PutValue(amounts[i]);
+                // Use the first slicer; alternatively locate by name: slicers["MySlicerName"]
+                Slicer slicer = slicers[0];
+
+                // Make the slicer printable so it appears when printing the sheet
+                slicer.IsPrintable = true;
+            }
+            else
+            {
+                Console.WriteLine("No slicers found on the worksheet.");
             }
 
-            // Add a pivot table based on the data range
-            PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIdx = pivots.Add("=Sheet1!A1:C7", "E2", "FruitPivot");
-            PivotTable pivot = pivots[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Year");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a slicer linked to the pivot table
-            SlicerCollection slicers = sheet.Slicers;
-            int slicerIdx = slicers.Add(pivot, "G2", "Fruit");
-            Slicer slicer = slicers[slicerIdx];
-
-            // Set the slicer to be printable (using the obsolete Slicer.IsPrintable property)
-            slicer.IsPrintable = true;
-
-            // Additionally, ensure the underlying shape is printable (using Shape.IsPrintable)
-            slicer.Shape.IsPrintable = true;
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("SlicerPrintableDemo.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

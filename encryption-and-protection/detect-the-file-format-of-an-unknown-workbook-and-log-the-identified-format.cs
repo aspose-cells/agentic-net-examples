@@ -1,43 +1,43 @@
-// Title: Detect the file format of an unknown Excel workbook using Aspose.Cells LoadOptions in C#
-// AI Prompts: Write a C# console program that accepts a file path, loads the workbook with LoadOptions.Auto, and outputs the detected LoadFormat. | Show how to use Aspose.Cells LoadOptions to automatically identify the spreadsheet format of any workbook and log the result. | Demonstrate error handling when the file cannot be loaded while still retrieving the detected format.
-// Common Searches: how to automatically identify Excel file type with Aspose.Cells in C# | C# Aspose.Cells detect workbook format without knowing extension | using LoadOptions.Auto to get spreadsheet format before processing | retrieve LoadFormat after loading workbook with Aspose.Cells | log unknown workbook file format in a C# console app
-// Tags: Aspose.Cells LoadOptions auto format detection | C# detect workbook file type Aspose.Cells | retrieve LoadFormat after workbook load | log detected spreadsheet format C# | handle unknown Excel extension with Aspose.Cells
+// Title: Identify and log the file format of an unknown Excel workbook using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells detect unknown Excel workbook format programmatically | How to retrieve workbook file format type with Aspose.Cells .NET | Log the detected Excel file format after loading with Aspose.Cells | Determine if a file is XLS, XLSX, CSV, or ODS using Aspose.Cells in C# | Example of using Workbook.FileFormat property to identify Excel file type
+// Tags: Aspose.Cells workbook file format detection | Workbook.FileFormat property C# | detect Excel file type Aspose.Cells | log workbook format .NET console | auto-detect spreadsheet format Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// A C# console application that receives a workbook path, uses Aspose.Cells LoadOptions with LoadFormat.Auto to let the library infer the file type, loads the workbook, reads loadOptions.LoadFormat to determine the format, writes the detected format to the console, and includes robust error handling.
-class WorkbookFormatDetector
+// The sample verifies the file exists, loads it with Aspose.Cells (which auto‑detects the spreadsheet format), reads the Workbook.FileFormat property to get the identified format, and writes that format to the console while handling any loading errors.
+class Program
 {
     static void Main(string[] args)
     {
-        // Validate input arguments
-        if (args.Length == 0)
+        // Path to the workbook whose format is unknown.
+        // If a path is provided as a command‑line argument it will be used,
+        // otherwise a default placeholder path is used.
+        string filePath = args.Length > 0 ? args[0] : "unknownWorkbook";
+
+        // Verify that the file exists before attempting to load it.
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine("Please provide the path to the workbook file.");
+            Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
-        string filePath = args[0];
-
-        // Use LoadOptions with Auto detection to let Aspose.Cells determine the format
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-
         try
         {
-            // Load the workbook using the detection options
-            Workbook workbook = new Workbook(filePath, loadOptions);
+            // Load the workbook. Aspose.Cells automatically detects the format.
+            Workbook workbook = new Workbook(filePath);
 
-            // After loading, LoadOptions.LoadFormat contains the detected format
-            LoadFormat detectedFormat = loadOptions.LoadFormat;
+            // Retrieve the detected file format.
+            FileFormatType detectedFormat = workbook.FileFormat;
 
-            // Log the identified format
-            Console.WriteLine($"Detected workbook format: {detectedFormat}");
+            // Log the identified format.
+            Console.WriteLine($"Detected file format: {detectedFormat}");
         }
         catch (Exception ex)
         {
-            // Log any errors that occur during loading
-            Console.WriteLine($"Error detecting workbook format: {ex.Message}");
+            // Handle any unexpected errors during loading or processing.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

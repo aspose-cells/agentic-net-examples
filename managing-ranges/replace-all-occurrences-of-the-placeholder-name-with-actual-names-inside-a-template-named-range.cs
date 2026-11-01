@@ -1,64 +1,64 @@
-// Title: Replace {{Name}} placeholder in a named range of an Excel template using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, retrieve the named range "TemplateRange", substitute all "{{Name}}" tokens with a given string, and persist the changes with Aspose.Cells in C#. | Loop through each cell within the specified named range and replace placeholder strings using Aspose.Cells methods. | Detect missing template file or absent named range and handle those cases while performing placeholder replacement.
-// Common Searches: Aspose.Cells C# replace placeholder text in a named range of an Excel file | How to update all {{Name}} tokens in a named range using Aspose.Cells for .NET | C# code to iterate over cells in a named range and substitute values with Aspose.Cells | Saving workbook after modifying named range with Aspose.Cells | Check if named range exists before replacing text in Aspose.Cells C#
-// Tags: named-range placeholder replacement Aspose.Cells C# | iterate cells in named range Aspose.Cells | update Excel template range Aspose.Cells | save modified workbook Aspose.Cells | handle missing named range Aspose.Cells
+// Title: Replace {{Name}} placeholders in a named range of an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to replace {{Name}} placeholder inside a named range with Aspose.Cells | How to update template range cells in an Excel file using Aspose.Cells .NET | Aspose.Cells replace text in a specific named range programmatically | Iterate over cells of a named range and modify values with Aspose.Cells in C# | Replace placeholder values in an Excel template using the Aspose.Cells workbook API
+// Tags: Aspose.Cells named range text replacement | C# iterate cells in Excel named range Aspose.Cells | Excel template placeholder update using Aspose.Cells | modify cell values in named range .NET | Aspose.Cells workbook placeholder substitution
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads "TemplateWorkbook.xlsx", accesses the named range "TemplateRange", replaces every occurrence of the {{Name}} placeholder with a concrete value such as "John Doe", and saves the updated workbook as "ResultWorkbook.xlsx" using Aspose.Cells for .NET.
+// The example loads an Excel workbook, retrieves the named range "TemplateRange", iterates through each cell within that range, and replaces any occurrence of the "{{Name}}" placeholder with "John Doe". It then saves the modified workbook, handling file existence checks and exceptions.
 class Program
 {
     static void Main()
     {
+        // Define input and output file paths (replace placeholders with actual paths)
+        string inputPath = "{InputPath}";
+        string outputPath = "{OutputPath}";
+
         try
         {
-            const string templatePath = "TemplateWorkbook.xlsx";
-            const string resultPath = "ResultWorkbook.xlsx";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Ensure the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Retrieve the named range "TemplateRange"
+            var range = workbook.Worksheets.GetRangeByName("TemplateRange");
+            if (range != null)
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
-                return;
-            }
+                // Access the cells of the worksheet where the named range resides
+                var cells = range.Worksheet.Cells;
 
-            // Load the workbook that contains the template named range
-            Workbook workbook = new Workbook(templatePath);
+                // Determine the start and end rows/columns of the named range
+                int startRow = range.FirstRow;
+                int endRow = range.FirstRow + range.RowCount - 1;
+                int startColumn = range.FirstColumn;
+                int endColumn = range.FirstColumn + range.ColumnCount - 1;
 
-            // Retrieve the range associated with the named range "TemplateRange"
-            // GetRangeByName returns an Aspose.Cells.Range object
-            Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName("TemplateRange");
-
-            if (range == null)
-            {
-                Console.WriteLine("Named range 'TemplateRange' was not found in the workbook.");
-                return;
-            }
-
-            // Replace all occurrences of the placeholder "{{Name}}" with the actual name
-            foreach (Cell cell in range)
-            {
-                if (cell?.Value != null)
+                // Iterate through each cell inside the named range
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    string cellText = cell.Value.ToString();
-                    if (cellText.Contains("{{Name}}"))
+                    for (int col = startColumn; col <= endColumn; col++)
                     {
-                        // Replace placeholder with desired value (e.g., "John Doe")
-                        cell.PutValue(cellText.Replace("{{Name}}", "John Doe"));
+                        Cell cell = cells[row, col];
+                        // Replace placeholder "{{Name}}" with actual value
+                        if (cell.Value != null && cell.StringValue.Contains("{{Name}}"))
+                        {
+                            cell.PutValue(cell.StringValue.Replace("{{Name}}", "John Doe"));
+                        }
                     }
                 }
             }
 
             // Save the modified workbook
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            // Log or display any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log or handle exceptions as needed
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

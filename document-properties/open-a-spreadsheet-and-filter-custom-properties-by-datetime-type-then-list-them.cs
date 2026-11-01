@@ -1,67 +1,46 @@
-// Title: Read and display DateTime custom document properties from an Excel file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, iterates through its CustomDocumentProperties collection, and prints only the properties whose Type is DateTime, including handling for missing files and runtime errors. | Generate a .NET example that filters custom document properties by DateTime type, retrieves each property's name and value, and writes the results to the console using Aspose.Cells.
-// Common Searches: Aspose.Cells C# filter custom document properties by DateTime | How to get DateTime custom properties from an Excel workbook using Aspose.Cells | C# code to list DateTime type custom properties in an .xlsx file with Aspose.Cells | Retrieve custom document properties of type DateTime in .NET Excel processing
-// Tags: filter DateTime custom document properties Aspose.Cells | enumerate custom properties Excel .NET | read custom document properties from .xlsx using Aspose.Cells | list DateTime type properties C# Aspose.Cells
+// Title: Filter and list custom document properties of DateTime type in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# filter custom document properties by DateTime | How to retrieve only DateTime custom properties from an XLSX file in .NET | List Excel custom document properties that contain DateTime values using Aspose.Cells | C# code example for enumerating DateTime custom properties in a workbook | Extract DateTime metadata from custom properties with Aspose.Cells API
+// Tags: filter DateTime custom properties Aspose.Cells | enumerate Excel custom document properties C# | retrieve DateTime metadata from workbook | list custom properties by type Aspose.Cells | Aspose.Cells custom property DateTime extraction
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook (input.xlsx) with Aspose.Cells, accesses the CustomDocumentProperties collection, uses reflection to identify properties whose Type equals "DateTime", and prints each matching property's name and value. It includes checks for file existence and robust error handling for individual property processing.
+// The example loads an Excel workbook with Aspose.Cells, accesses its CustomDocumentProperties collection, and prints the name and DateTime value of each property whose value is a DateTime, including error handling for missing files.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file
-        string filePath = "input.xlsx";
+        const string inputPath = "input.xlsx";
 
-        // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"File not found: {filePath}");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(filePath);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access custom document properties collection
+            // Access the collection of custom document properties
             var customProps = workbook.CustomDocumentProperties;
 
             // Iterate through all custom properties
             foreach (var prop in customProps)
             {
-                try
+                // Output only properties whose value is a DateTime
+                if (prop.Value is DateTime dateValue)
                 {
-                    // Use reflection to avoid direct dependency on specific types
-                    var typeProp = prop.GetType().GetProperty("Type");
-                    var nameProp = prop.GetType().GetProperty("Name");
-                    var valueProp = prop.GetType().GetProperty("Value");
-
-                    if (typeProp == null || nameProp == null || valueProp == null)
-                        continue;
-
-                    var typeValue = typeProp.GetValue(prop)?.ToString();
-                    // Check if the property type is DateTime
-                    if (typeValue == "DateTime")
-                    {
-                        var name = nameProp.GetValue(prop);
-                        var value = valueProp.GetValue(prop);
-                        Console.WriteLine($"Name: {name}, Value: {value}");
-                    }
-                }
-                catch (Exception innerEx)
-                {
-                    // Handle any errors while processing an individual property
-                    Console.WriteLine($"Error processing a property: {innerEx.Message}");
+                    Console.WriteLine($"{prop.Name}: {dateValue}");
                 }
             }
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

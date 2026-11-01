@@ -1,53 +1,43 @@
-// Title: Protect workbook structure and all worksheets with a strong password using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an existing Excel file (or creates a new workbook), sets a strong password, protects the workbook structure, applies full protection to every worksheet, and saves the result as an XLSX using Aspose.Cells. | Show how to use Aspose.Cells ProtectionType.Structure and ProtectionType.All to enforce workbook‑level and sheet‑level password protection in a .NET application. | Demonstrate proper error handling while applying password protection to a workbook and saving the protected file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# protect entire workbook structure with password | How to apply password protection to all sheets in an Excel file using Aspose.Cells .NET | Set strong password for workbook and sheet protection in Aspose.Cells example | Prevent adding or deleting worksheets programmatically with Aspose.Cells
-// Tags: Aspose.Cells workbook-level protection API | Aspose.Cells sheet-level protection API | Aspose.Cells generate encrypted XLSX | Aspose.Cells disable sheet modifications .NET
+// Title: How to protect an Excel workbook’s structure and disable sheet editing with a strong password using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# protect workbook structure with password | C# code to disable editing of all worksheets in an Excel file using Aspose.Cells | set a strong password for workbook and worksheet protection in Aspose.Cells .NET | prevent adding, deleting, renaming sheets in Excel via Aspose.Cells protect method | apply full worksheet protection programmatically with Aspose.Cells in C#
+// Tags: Aspose.Cells workbook structure protection | worksheet full protection Aspose.Cells | strong password Excel protection .NET | prevent sheet modifications Aspose.Cells | C# protect Excel workbook with password
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example demonstrates loading or creating a workbook, defining a strong password, protecting the workbook structure, applying full protection to each worksheet, and saving the file as a password‑protected XLSX using Aspose.Cells for .NET.
-class WorkbookProtectionExample
+// The example creates a new Workbook, adds optional data, defines a strong password, protects the workbook's structure to block sheet addition, deletion, and renaming, applies full protection to each worksheet to stop cell editing, and saves the file as ProtectedWorkbook.xlsx, with error handling.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one if the file exists)
-            Workbook workbook;
-            string inputPath = "input.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a new blank workbook
-            }
+            // Add sample data (optional)
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Data");
 
-            // Define a strong password
+            // Strong password for protection
             string password = "Str0ngP@ssw0rd!2026";
 
-            // Protect the workbook structure to prevent adding, deleting, or renaming sheets
+            // Protect the workbook structure (prevent adding, deleting, renaming sheets)
             workbook.Protect(ProtectionType.Structure, password);
 
-            // Disable editing on all worksheets by applying full protection
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Protect each worksheet to disable cell editing
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // The third parameter is the old password (empty because the sheet is not yet protected)
-                sheet.Protect(ProtectionType.All, password, string.Empty);
+                // The third parameter is the old password (not needed here), pass null or empty string
+                ws.Protect(ProtectionType.All, password, null);
             }
 
             // Save the protected workbook
-            string outputPath = "ProtectedWorkbook.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("ProtectedWorkbook.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

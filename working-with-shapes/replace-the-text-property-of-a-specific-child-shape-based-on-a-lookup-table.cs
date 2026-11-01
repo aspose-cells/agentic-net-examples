@@ -1,7 +1,7 @@
-// Title: Update child shape Text values in an Excel worksheet using Aspose.Cells and a C# dictionary lookup
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, loops through every shape on a worksheet, and substitutes the shape's Text property using a provided Dictionary<string,string> mapping. | Demonstrate how to catch missing workbook files and individual shape processing errors while performing bulk text replacement on Excel shapes with Aspose.Cells. | Adapt the sample to modify only TextBox shapes, leave other shapes untouched, and save the result to a new workbook.
-// Common Searches: how to replace shape text in Excel using Aspose.Cells C# | c# bulk update of textbox content in .xlsx based on key value pairs | iterate over worksheet shapes and change Text property with Aspose.Cells | Aspose.Cells replace specific child shape text using dictionary lookup | C# example for updating Excel shape text programmatically
-// Tags: Aspose.Cells shape text replacement | C# dictionary lookup for Excel shapes | update child shape Text property Aspose.Cells | bulk modify Excel shape content .NET | iterate worksheet shapes Aspose.Cells
+// Title: Replace text of specific child shapes in an Excel worksheet using Aspose.Cells for .NET with a lookup dictionary
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates over all shapes on a worksheet, and substitutes each shape's Text property using a supplied Dictionary<string,string> mapping. | Demonstrate how to handle both individual and grouped shapes when updating their Text values based on a lookup table in Aspose.Cells for .NET. | Create a reusable method that accepts a ShapeCollection and a dictionary, replaces matching shape text, and saves the modified workbook to a new file.
+// Common Searches: Aspose.Cells C# replace shape text using dictionary lookup | How to update text of grouped shapes in an Excel file with Aspose.Cells | Iterate over worksheet shapes and change Text property based on mapping in .NET
+// Tags: shape text replacement Aspose.Cells | lookup dictionary for shape text Excel | process ShapeCollection replace text .NET | grouped shape text modification Aspose.Cells | bulk shape Text property change workbook
 
 using System;
 using System.Collections.Generic;
@@ -9,57 +9,66 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Loads an Excel workbook, iterates through all shapes on the first worksheet, replaces each shape's Text with a new value from a Dictionary lookup, and saves the modified file.
-class Program
+// The example loads an Excel workbook, defines a dictionary that maps old shape text to new values, walks through all shapes on the first worksheet, replaces the Text property of any shape whose current text matches a dictionary key, and saves the updated workbook to a new file.
+class ReplaceShapeText
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Define input and output file paths
+            string inputPath = @"C:\Input\Sample.xlsx";
+            string outputPath = @"C:\Output\Sample_Modified.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Define the lookup table: old text -> new text
-            var lookup = new Dictionary<string, string>()
+            // Get the first worksheet (or specify the desired one)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Lookup table: old text -> new text
+            Dictionary<string, string> lookup = new Dictionary<string, string>()
             {
-                { "OldText1", "NewText1" },
-                { "OldText2", "NewText2" },
+                { "OldValue1", "NewValue1" },
+                { "OldValue2", "NewValue2" },
                 // add more mappings as needed
             };
 
-            // Get the first worksheet (adjust index or name as required)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Iterate through all shapes on the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            // Process a collection of shapes (including possible group shapes)
+            void ProcessShapes(ShapeCollection shapes)
             {
-                try
+                foreach (Shape shape in shapes)
                 {
-                    // Process shape text replacement
-                    if (!string.IsNullOrEmpty(shape.Text) && lookup.TryGetValue(shape.Text, out string newText))
+                    // If the shape is a group, we can still replace its own text (if any)
+                    // Recursion into child shapes is omitted to avoid API compatibility issues
+                    string currentText = shape.Text;
+                    if (!string.IsNullOrEmpty(currentText) && lookup.ContainsKey(currentText))
                     {
-                        shape.Text = newText;
+                        shape.Text = lookup[currentText];
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing shape: {ex.Message}");
-                }
+            }
+
+            // Start processing shapes on the worksheet
+            ProcessShapes(sheet.Shapes);
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {

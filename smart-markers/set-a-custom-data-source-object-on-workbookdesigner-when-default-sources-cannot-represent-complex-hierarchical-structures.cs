@@ -1,105 +1,104 @@
-// Title: Use a custom ICellsDataTable to bind hierarchical Department and Employee objects to WorkbookDesigner smart markers in Aspose.Cells for .NET
-// AI Prompts: Generate a data table from a List<Department> and bind it to WorkbookDesigner using SetDataSource for smart marker processing. | Insert smart markers that reference &Dept.Name, &Dept.Employees.FirstName, and &Dept.Employees.LastName, then run WorkbookDesigner.Process to produce the final Excel file. | Demonstrate how CellsDataTableFactory automatically flattens nested collections so that hierarchical objects can be used with smart markers.
-// Common Searches: asp.net core generate Excel with smart markers from hierarchical object list | how to bind nested collections to WorkbookDesigner in Aspose.Cells | using CellsDataTableFactory to flatten department employee data for smart markers | set custom data source for smart markers with complex objects Aspose.Cells .NET | example of smart markers using &Dept.Employees.FirstName in Aspose.Cells
-// Tags: WorkbookDesigner custom data source for smart markers | smart markers hierarchical object binding Aspose.Cells | flatten nested collections with CellsDataTableFactory | generate Excel from Department and Employee classes | Aspose.Cells .NET hierarchical data example
+// Title: Bind a hierarchical Company‑Department‑Employee object to WorkbookDesigner using SetDataSource for Aspose.Cells smart markers (C#)
+// AI Prompts: Generate C# code that loads an Excel template, creates a Company object with nested Department and Employee collections, assigns it to WorkbookDesigner via SetDataSource, processes smart markers, and saves the output file. | Show how to handle a missing template workbook by creating a fallback workbook before binding a complex data source with Aspose.Cells WorkbookDesigner.
+// Common Searches: Aspose.Cells WorkbookDesigner SetDataSource hierarchical object example C# | How to bind nested collections to Excel smart markers using Aspose.Cells | C# generate Excel report from Company-Department-Employee model with Aspose.Cells | Process smart markers with custom data source when template file is absent | Using WorkbookDesigner to populate Excel template from complex object graph
+// Tags: WorkbookDesigner SetDataSource hierarchical object | Aspose.Cells smart markers nested collections | C# generate Excel from company department model | fallback workbook creation Aspose.Cells | process Excel template with custom data source
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The sample defines Department and Employee classes, creates a list of departments, adds smart markers that reference the hierarchy, builds an ICellsDataTable via CellsDataTableFactory, binds it to WorkbookDesigner with SetDataSource, processes the markers, and saves the resulting workbook as an XLSX file.
-public class Department
-{
-    public string Name { get; set; }
-    public List<Employee> Employees { get; set; }
-
-    public Department(string name, List<Employee> employees)
-    {
-        Name = name;
-        Employees = employees;
-    }
-}
-
-public class Employee
-{
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-
-    public Employee(string first, string last)
-    {
-        FirstName = first;
-        LastName = last;
-    }
-}
-
-public class CustomDataSourceDemo
-{
-    public static void Run()
-    {
-        try
-        {
-            // 1. Prepare complex hierarchical data
-            var departments = new List<Department>
-            {
-                new Department(
-                    "Sales",
-                    new List<Employee>
-                    {
-                        new Employee("John", "Doe"),
-                        new Employee("Jane", "Smith")
-                    }),
-                new Department(
-                    "IT",
-                    new List<Employee>
-                    {
-                        new Employee("Mike", "Brown"),
-                        new Employee("Emily", "White")
-                    })
-            };
-
-            // 2. Create a new workbook (or load a template if needed)
-            Workbook workbook = new Workbook();
-
-            // 3. Insert smart markers that reflect the hierarchy.
-            //    Example:
-            //    A1: &Dept.Name
-            //    B1: &Dept.Employees.FirstName
-            //    C1: &Dept.Employees.LastName
-            Worksheet ws = workbook.Worksheets[0];
-            ws.Cells["A1"].PutValue("&Dept.Name");
-            ws.Cells["B1"].PutValue("&Dept.Employees.FirstName");
-            ws.Cells["C1"].PutValue("&Dept.Employees.LastName");
-
-            // 4. Create a WorkbookDesigner and assign the workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // 5. Build an ICellsDataTable from the custom object list using the factory.
-            //    The factory automatically flattens hierarchical collections for smart markers.
-            ICellsDataTable dataTable = workbook.CellsDataTableFactory.GetInstance(departments);
-
-            // 6. Bind the custom data source to a name used in the smart markers.
-            designer.SetDataSource("Dept", dataTable);
-
-            // 7. Process the smart markers
-            designer.Process();
-
-            // 8. Save the result
-            string outputPath = "CustomHierarchicalDataOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook generated successfully: {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error generating workbook: {ex.Message}");
-        }
-    }
-}
-
+// The program loads an Excel template (or creates a new workbook if the template is missing), builds a hierarchical Company object containing Departments and Employees, sets this object as a custom data source on WorkbookDesigner via SetDataSource, processes smart markers in the template, and saves the populated workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        CustomDataSourceDemo.Run();
+        try
+        {
+            // Create a WorkbookDesigner instance
+            WorkbookDesigner designer = new WorkbookDesigner();
+
+            // Load the template workbook (ensure template.xlsx exists in the executable directory)
+            string templatePath = "template.xlsx";
+            Workbook workbook;
+
+            if (File.Exists(templatePath))
+            {
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                // Fallback: create a new workbook if the template is missing
+                workbook = new Workbook();
+                workbook.Worksheets[0].Cells["A1"].PutValue("Template not found. Created new workbook.");
+            }
+
+            designer.Workbook = workbook;
+
+            // Prepare a complex hierarchical data source
+            Company dataSource = GetCompanyData();
+
+            // Set the custom data source object on the designer (named data source)
+            designer.SetDataSource("Company", dataSource);
+
+            // Process the template with the provided data source
+            designer.Process();
+
+            // Save the resulting workbook
+            designer.Workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
+
+    // Generates sample hierarchical data representing a company with departments and employees
+    static Company GetCompanyData()
+    {
+        return new Company
+        {
+            Name = "Tech Corp",
+            Departments = new List<Department>
+            {
+                new Department
+                {
+                    Name = "Research",
+                    Employees = new List<Employee>
+                    {
+                        new Employee { Name = "Alice", Age = 30 },
+                        new Employee { Name = "Bob", Age = 35 }
+                    }
+                },
+                new Department
+                {
+                    Name = "Development",
+                    Employees = new List<Employee>
+                    {
+                        new Employee { Name = "Charlie", Age = 28 },
+                        new Employee { Name = "Diana", Age = 32 }
+                    }
+                }
+            }
+        };
+    }
+}
+
+// Hierarchical data model classes
+public class Company
+{
+    public string Name { get; set; } = string.Empty;
+    public List<Department> Departments { get; set; } = new();
+}
+
+public class Department
+{
+    public string Name { get; set; } = string.Empty;
+    public List<Employee> Employees { get; set; } = new();
+}
+
+public class Employee
+{
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; }
 }

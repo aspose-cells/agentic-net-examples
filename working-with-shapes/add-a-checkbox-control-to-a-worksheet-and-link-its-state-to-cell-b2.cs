@@ -1,33 +1,46 @@
-// Title: Insert a CheckBox form control at B2 and bind its state to cell B2 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that adds a CheckBox shape to the first worksheet at cell B2, links it to cell B2, sets the linked cell to FALSE, and saves the workbook as an .xlsx file with Aspose.Cells. | Create an Aspose.Cells workbook in C# containing a linked CheckBox positioned at B2, initializing the checkbox as unchecked and persisting the file.
-// Common Searches: Aspose.Cells C# add a checkbox form control to a specific cell | How to link a checkbox to a cell in an Excel file using Aspose.Cells .NET | Set default state of a linked checkbox to false with Aspose.Cells C# | Save an Excel workbook that includes a checkbox shape using Aspose.Cells for .NET
-// Tags: Aspose.Cells add checkbox shape C# | link checkbox to cell Aspose.Cells | initialize linked cell false Aspose.Cells | save workbook with checkbox Aspose.Cells Xlsx | form control checkbox Aspose.Cells .NET
+// Title: Create a CheckBox form control in an Excel worksheet and link it to cell B2 using Aspose.Cells for .NET (C#)
+// Common Searches: asp.net add checkbox shape to Excel worksheet with Aspose.Cells C# | how to bind a checkbox control to a specific cell in an Excel file using Aspose.Cells | programmatically insert a form control checkbox and set linked cell B2 in C# | Aspose.Cells example linking CheckBox state to worksheet cell | C# code to add a CheckBox shape and associate it with cell B2 in .xlsx
+// Tags: Aspose.Cells AddCheckBox shape C# | checkbox linked cell B2 Aspose.Cells | Excel form control insertion .NET | bind checkbox state to worksheet cell | create checkbox shape in .xlsx using Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, inserts a CheckBox form control at cell B2, links the CheckBox to cell B2, initializes the linked cell to FALSE (unchecked), and saves the file as CheckBoxExample.xlsx.
-class Program
+namespace AsposeCellsDemo
 {
-    static void Main()
+    // The sample creates a new Workbook, adds a CheckBox shape to the first worksheet, sets its display text, links the CheckBox's state to cell B2, and saves the file as CheckBoxDemo.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                var workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Get the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-        // Add a CheckBox control at cell B2 (row index 1, column index 1)
-        // Parameters: upperLeftRow, upperLeftColumn, top, left, width, height
-        CheckBox checkBox = sheet.Shapes.AddCheckBox(1, 1, 0, 0, 100, 20);
+                // Add a CheckBox shape: upper left row, upper left column, top offset, left offset, width, height
+                var checkBox = worksheet.Shapes.AddCheckBox(0, 0, 0, 0, 100, 20);
 
-        // Link the CheckBox state to cell B2
-        checkBox.LinkedCell = "B2";
+                // Set the text displayed next to the CheckBox (optional)
+                checkBox.Text = "Check me";
 
-        // Set the initial value of B2 (FALSE = unchecked, TRUE = checked)
-        sheet.Cells["B2"].PutValue(false);
+                // Link the CheckBox state to cell B2
+                checkBox.LinkedCell = "B2";
 
-        // Save the workbook
-        workbook.Save("CheckBoxExample.xlsx", SaveFormat.Xlsx);
+                // Define output file path
+                string outputPath = "CheckBoxDemo.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

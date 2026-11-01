@@ -1,78 +1,61 @@
-// Title: Validate empty destination cells and move range H1:H5 to I1:I5 using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that checks whether cells I1:I5 are empty before copying the values from H1:H5 and then clears the original range. | Create a reusable C# method that detects existing data in a target range, copies a source range to it, and removes the source cells using Aspose.Cells.
-// Common Searches: Aspose.Cells how to ensure destination range is empty before moving cells in C# | C# copy Excel range H1:H5 to I1:I5 without overwriting existing data using Aspose.Cells | detect overlapping data when moving a column range with Aspose.Cells .NET | validate empty cells in Excel before transferring a range with Aspose.Cells library | move column data to adjacent column safely Aspose.Cells C#
-// Tags: Aspose.Cells validate empty destination range | move range without overlap Aspose.Cells | copy range and clear source Aspose.Cells | check destination cells empty C# | range overlap detection Aspose.Cells
+// Title: How to verify that moving cells H1:H5 to I1:I5 won't overwrite existing data using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# check if destination range I1:I5 is empty before moving cells | C# validate no data overlap when copying range H1:H5 to I1:I5 with Aspose.Cells | detect existing values in target cells before moving a range in Aspose.Cells .NET | prevent cell overwrite when shifting columns using Aspose.Cells in C# | ensure safe range move without collision in an Aspose.Cells workbook
+// Tags: Aspose.Cells range overlap validation | C# check empty destination cells Aspose.Cells | prevent data collision moving cells Aspose.Cells | validate range move safety .NET | Aspose.Cells detect existing cell values
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Alias to avoid conflict with System.Range (C# 8+)
-using AsposeRange = Aspose.Cells.Range;
-
-// The example loads an Excel workbook, checks that the target cells I1:I5 contain no data, copies the values from H1:H5 to I1:I5 with Aspose.Cells, clears the original H1:H5 range, and saves the file, reporting an error if the destination is not empty.
+// The example loads an Excel workbook, creates source (H1:H5) and destination (I1:I5) ranges, iterates through the destination cells to detect any non‑null values, flags an overlap if data exists, and reports whether the target range is empty and safe for moving.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Source range H1:H5 (zero‑based indices)
-            int srcStartRow = 0;      // Row 1
-            int srcStartColumn = 7;   // Column H
-            int srcRowCount = 5;      // Rows 1‑5
-            int srcColumnCount = 1;   // Single column
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Destination range I1:I5
-            int destStartRow = 0;     // Row 1
-            int destStartColumn = 8;  // Column I
+            // Use fully qualified type to avoid ambiguity with System.Range
+            Aspose.Cells.Range sourceRange = worksheet.Cells.CreateRange("H1", "H5");
+            Aspose.Cells.Range destinationRange = worksheet.Cells.CreateRange("I1", "I5");
 
-            // Ensure destination cells are empty
-            bool overlap = false;
-            for (int r = 0; r < srcRowCount; r++)
+            // Validate that the destination range does not contain existing data
+            bool overlapDetected = false;
+            foreach (Cell cell in destinationRange)
             {
-                Cell destCell = sheet.Cells[destStartRow + r, destStartColumn];
-                if (destCell.Value != null && !string.IsNullOrEmpty(destCell.StringValue))
+                // If any cell in the destination range has a non‑null value, overlap exists
+                if (cell.Value != null)
                 {
-                    overlap = true;
+                    overlapDetected = true;
                     break;
                 }
             }
 
-            if (overlap)
+            // Output the validation result
+            if (overlapDetected)
             {
-                Console.WriteLine("Cannot move range H1:H5 to I1:I5 because destination overlaps existing data.");
+                Console.WriteLine("Overlap detected: destination range I1:I5 contains data.");
             }
             else
             {
-                // Copy source range to destination
-                AsposeRange srcRange = sheet.Cells.CreateRange(srcStartRow, srcStartColumn, srcRowCount, srcColumnCount);
-                AsposeRange destRange = sheet.Cells.CreateRange(destStartRow, destStartColumn, srcRowCount, srcColumnCount);
-                destRange.Copy(srcRange);
-
-                // Clear the original source range
-                sheet.Cells.ClearRange(srcStartRow, srcStartColumn, srcRowCount, srcColumnCount);
-
-                Console.WriteLine("Range moved successfully.");
+                Console.WriteLine("No overlap: destination range I1:I5 is empty and safe for moving.");
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Optional: save the workbook if modifications are made
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {

@@ -1,7 +1,7 @@
-// Title: How to send a named shape to the back of the Z‑order in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, finds a shape by its name, and sets its ZOrderPosition to 0 to place it behind all other objects. | Generate a .NET snippet that moves a specific shape to the back of the Z‑order so the cells underneath become visible, using the Shape.ZOrderPosition property. | Create a C# example that checks for a shape named 'MyShape' in the first worksheet and changes its Z‑order to the lowest level before saving the file.
-// Common Searches: aspnet aspocells move shape to back of z-order c# | c# Aspose.Cells set shape behind cells in worksheet | how to change shape layering order in Excel file using Aspose.Cells .NET | retrieve shape by name and send to back Aspose.Cells example | make cells visible through shape Aspose.Cells C#
-// Tags: Aspose.Cells shape Z‑order control | C# send Excel shape to back with Aspose.Cells | worksheet object layering using Aspose.Cells | expose cells hidden by shape in .xlsx | adjust shape order in Aspose.Cells workbook
+// Title: Send a worksheet shape to the back of the Z‑order hierarchy using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# example that uses Aspose.Cells to move a specific worksheet shape to the back of the Z‑order so the cells underneath become visible. | Generate code that retrieves the first shape on a worksheet and sets its Z‑order index to zero with the Aspose.Cells .NET API. | Show how to reorder shapes in an Excel file by sending a rectangle shape behind all other objects using Aspose.Cells in C#.
+// Common Searches: asp.net aspose.cells move shape to back of z-order | c# set excel shape behind cells using aspose.cells | how to change shape layering in an Excel worksheet with aspose.cells .net | aspose.cells example for sending a shape to the back of the stack
+// Tags: Aspose.Cells shape ZOrderPosition | C# send Excel shape to back | Aspose.Cells worksheet shape layering | Excel shape behind cells Aspose.Cells | Aspose.Cells Z-order manipulation
 
 using System;
 using System.IO;
@@ -10,57 +10,51 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads 'input.xlsx', accesses the first worksheet, retrieves the shape named 'MyShape', sets its ZOrderPosition to 0 to move it to the back of the Z‑order so underlying cells become visible, and saves the result as 'output.xlsx'.
+    // The code loads (or creates) a workbook, ensures a shape exists on the first worksheet, retrieves the first shape, sets its Z‑order index to zero to move it behind all other objects, and saves the workbook, making underlying cells visible.
     class Program
     {
         static void Main(string[] args)
         {
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
-            string shapeName = "MyShape";
 
             try
             {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
+                // Load existing workbook or create a new one if the input file is missing.
+                Workbook workbook;
+                if (File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Retrieve the shape by name
-                Shape shape = sheet.Shapes[shapeName];
-
-                if (shape == null)
-                {
-                    Console.WriteLine($"Shape '{shapeName}' not found in the worksheet.");
+                    workbook = new Workbook(inputPath);
                 }
                 else
                 {
-                    // Send the shape to the back of the Z‑order by setting its position to 0
+                    workbook = new Workbook();
+                    // Add a sample shape so the example can demonstrate Z‑order manipulation.
+                    Worksheet ws = workbook.Worksheets[0];
+                    Shape sampleShape = ws.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+                    sampleShape.Name = "SampleShape";
+                }
+
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure there is at least one shape to manipulate.
+                if (worksheet.Shapes.Count > 0)
+                {
+                    Shape shape = worksheet.Shapes[0];
+                    // Move the shape to the back of the Z‑order hierarchy.
                     shape.ZOrderPosition = 0;
                 }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                else
                 {
-                    Directory.CreateDirectory(outputDir);
+                    Console.WriteLine("No shapes found in the worksheet.");
                 }
 
-                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

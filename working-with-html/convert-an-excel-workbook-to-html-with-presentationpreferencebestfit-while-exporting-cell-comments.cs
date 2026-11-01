@@ -1,14 +1,13 @@
-// Title: Convert an Excel workbook to HTML with column auto‑fit (PresentationPreference.BestFit) and preserve cell comments using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx workbook, sets HtmlSaveOptions.PresentationPreference to BestFit, enables comment export, and saves the result as an HTML file. | Show a .NET console example that validates the source file, configures column auto‑fit and comment preservation, then writes the HTML output with Aspose.Cells. | Explain the steps to configure Aspose.Cells HtmlSaveOptions for preserving Excel comments and applying best‑fit column sizing during HTML conversion.
-// Common Searches: Aspose.Cells C# best fit column width when saving workbook as HTML | How to export Excel cell comments to HTML using Aspose.Cells | HtmlSaveOptions PresentationPreference BestFit usage example | Convert .xlsx to .html with comments retained Aspose.Cells | Auto‑fit columns in HTML output from Aspose.Cells .NET
-// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference | HTML export preserve cell comments Aspose.Cells | BestFit column auto‑fit Aspose.Cells HTML | C# Excel to HTML conversion using Aspose.Cells | Aspose.Cells auto‑fit columns during HTML conversion
+// Title: Convert an Excel workbook to HTML and include cell comments using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export Excel cell comments to HTML | how to save a workbook as HTML with comments using Aspose.Cells .NET | C# code example for converting .xlsx to HTML preserving comments | Aspose.Cells HtmlSaveOptions include cell comments in HTML output | convert Excel file to HTML with Aspose.Cells while keeping comments
+// Tags: Aspose.Cells HtmlSaveOptions include comments | export Excel cell comments to HTML C# | convert workbook to HTML Aspose.Cells .NET | C# Aspose.Cells HTML conversion preserving comments | save Excel as HTML with cell annotations
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample program verifies that the input.xlsx file exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions with PresentationPreference set to BestFit and ExportCellComments enabled, then saves the workbook as output.html. It includes exception handling to report any errors during the conversion.
-class Program
+// The program verifies the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, creates default HtmlSaveOptions, and saves the workbook as output.html, handling any exceptions and reporting success or errors to the console.
+class ExcelToHtmlConverter
 {
     static void Main()
     {
@@ -17,28 +16,26 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source Excel workbook
+            // Load the Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Set up HTML save options with default settings
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Configure HTML save options (default options are sufficient)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-            // Save the workbook as an HTML file using the specified options
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+            // Save the workbook as HTML
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

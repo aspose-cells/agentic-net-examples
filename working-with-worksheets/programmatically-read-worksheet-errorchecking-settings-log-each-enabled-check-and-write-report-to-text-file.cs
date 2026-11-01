@@ -1,57 +1,85 @@
-// Title: Create a C# program that reads worksheet error‑checking information with Aspose.Cells and writes a summary report to a text file
-// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, iterates each worksheet, checks whether error‑checking settings are accessible, appends a line describing the availability to a StringBuilder, and saves the accumulated text to a .txt file. | Enhance the sample to detect the Aspose.Cells version at runtime; if a newer version exposes specific error‑checking flags (e.g., NumberStoredAsText, InconsistentFormula), retrieve those flags and log which checks are enabled for each worksheet. | Add robust error handling so that missing input files, unavailable error‑checking data, or unexpected exceptions are caught, logged, and do not stop the generation of the final report.
-// Common Searches: aspnet read worksheet error checking settings with Aspose.Cells | how to export Excel error checking flags to a text file using C# | Aspose.Cells worksheet validation options not exposed in .NET | C# generate report of Excel data validation and error checking per sheet | list enabled error checks for each worksheet in a workbook using Aspose.Cells
-// Tags: Aspose.Cells read worksheet error checking | C# export worksheet validation summary to text | Aspose.Cells generate error checking report | iterate Excel worksheets log validation settings | Aspose.Cells .NET write text report
+// Title: Read worksheet error‑checking options with Aspose.Cells for .NET and export enabled checks to a text report
+// Common Searches: how to retrieve enabled error checking rules from an Excel worksheet using Aspose.Cells in C# | using reflection to access the ErrorCheckingOptions object in Aspose.Cells .NET | generate a text file that lists worksheet error‑checking settings with Aspose.Cells | enumerate boolean properties of ErrorCheckingOptions for each sheet in a workbook | log Excel worksheet validation options to a report using C# and Aspose.Cells
+// Tags: Aspose.Cells read ErrorCheckingOptions via reflection | enumerate enabled error checks in Excel worksheet | export worksheet validation settings to text file C# | log worksheet error checking configuration Aspose.Cells | C# iterate worksheets error checking options
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, iterates through all worksheets, notes that detailed error‑checking settings are not exposed by the current API, and writes a placeholder summary for each sheet to a text file while handling missing files and runtime exceptions.
+// The example loads an Excel workbook, iterates through all worksheets, uses reflection to obtain each sheet's ErrorCheckingOptions object, enumerates its boolean properties, records the names of checks that are enabled, and writes a formatted report of these settings to a text file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "ErrorCheckingReport.txt";
-
-        // Ensure the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
+            const string inputPath = "input.xlsx";
+            const string reportPath = "ErrorCheckingReport.txt";
+
+            // Ensure the input workbook exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             StringBuilder reportBuilder = new StringBuilder();
 
-            // Iterate through each worksheet in the workbook
+            // Iterate through each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 reportBuilder.AppendLine($"Worksheet: {sheet.Name}");
 
-                // NOTE: Aspose.Cells does not expose detailed error‑checking options
-                // via a public API in all versions. If needed, this section can be
-                // extended with version‑specific calls. For now we indicate that
-                // error‑checking details are unavailable.
-                reportBuilder.AppendLine("  - Error checking details are not available via the current API.");
+                // Try to obtain the ErrorCheckingOptions property via reflection
+                PropertyInfo optionsProp = sheet.GetType().GetProperty(
+                    "ErrorCheckingOptions",
+                    BindingFlags.Public | BindingFlags.Instance);
 
-                // Add a blank line after each worksheet's report
+                if (optionsProp != null)
+                {
+                    object options = optionsProp.GetValue(sheet);
+                    if (options != null)
+                    {
+                        // Enumerate all boolean properties of the options object
+                        PropertyInfo[] optionProperties = options.GetType().GetProperties(
+                            BindingFlags.Public | BindingFlags.Instance);
+
+                        foreach (PropertyInfo prop in optionProperties)
+                        {
+                            if (prop.PropertyType == typeof(bool))
+                            {
+                                bool isEnabled = (bool)prop.GetValue(options);
+                                if (isEnabled)
+                                {
+                                    reportBuilder.AppendLine($"  Enabled check: {prop.Name}");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        reportBuilder.AppendLine("  ErrorCheckingOptions instance is null.");
+                    }
+                }
+                else
+                {
+                    reportBuilder.AppendLine("  ErrorCheckingOptions property not available in this Aspose.Cells version.");
+                }
+
                 reportBuilder.AppendLine();
             }
 
-            // Write the compiled report to a text file
-            File.WriteAllText(outputPath, reportBuilder.ToString());
-            Console.WriteLine($"Report generated successfully at \"{outputPath}\".");
+            // Write the report to a text file
+            File.WriteAllText(reportPath, reportBuilder.ToString());
+            Console.WriteLine($"Report generated: {reportPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected runtime errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

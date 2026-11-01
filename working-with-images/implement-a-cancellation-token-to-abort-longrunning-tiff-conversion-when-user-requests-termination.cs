@@ -1,7 +1,6 @@
-// Title: Implement a CancellationToken to abort a long‑running Aspose.Cells Excel‑to‑TIFF conversion in C#
-// AI Prompts: Add a CancellationToken argument to the async ConvertToTiffAsync method and invoke token.ThrowIfCancellationRequested before calling workbook.Save. | In Main, create a CancellationTokenSource, start a helper task that cancels after a user‑defined timeout or input, and wrap the conversion call in a try‑catch for OperationCanceledException. | Execute the workbook.Save operation inside Task.Run, passing the cancellation token so the save can be interrupted safely.
-// Common Searches: how to use CancellationToken with Aspose.Cells SaveFormat.Tiff in .NET | cancel long running Excel to TIFF conversion using Aspose.Cells | abort Aspose.Cells workbook.Save when user presses cancel button | async Excel to TIFF export with timeout and cancellation token C# | handle OperationCanceledException during Aspose.Cells image export
-// Tags: cancellation support Aspose.Cells TIFF export | async workbook.Save with token .NET | user‑initiated abort of long running conversion | background task cancellation for Excel to image | operationcanceledexception handling Aspose.Cells
+// Title: Implement CancellationToken to abort Excel-to-TIFF conversion with Aspose.Cells in C#
+// Common Searches: how to cancel Aspose.Cells workbook.Save to TIFF in a .NET application | C# example for using CancellationToken with Aspose.Cells image export | abort long running Excel to TIFF conversion using Aspose.Cells and CancellationToken | remove partially created TIFF file when conversion is cancelled in Aspose.Cells | using Task.Run and CancellationToken to stop Aspose.Cells TIFF export
+// Tags: Aspose.Cells cancellation token for TIFF export | C# workbook.Save cancellation handling | Excel to TIFF conversion abort | partial TIFF file cleanup Aspose.Cells | asynchronous image export with Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,69 +8,92 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook with Aspose.Cells, converts it to a TIFF image on a background thread, and uses a CancellationTokenSource that can be triggered by user input or a timeout. The conversion respects the token, allowing the operation to be cancelled and handling OperationCanceledException along with other possible errors.
-class Program
+namespace AsposeCellsExample
 {
-    static async Task Main(string[] args)
+    // The ConvertToTiff method validates file paths, checks the supplied CancellationToken before and after loading the workbook, runs workbook.Save to TIFF on a background task, waits with the token, and on cancellation deletes any partially written TIFF file while ensuring the workbook is disposed.
+    public class TiffConverter
     {
-        // Paths for source workbook and target TIFF file
-        string inputPath = "input.xlsx";
-        string outputPath = "output.tiff";
+        /// <param name="inputPath">Full path to the source Excel file.</param>
+        /// <param name="outputPath">Full path where the TIFF file will be saved.</param>
+        /// <param name="cancellationToken">Token used to request cancellation.</param>
+        public void ConvertToTiff(string inputPath, string outputPath, CancellationToken cancellationToken)
+        {
+            // Validate arguments
+            if (string.IsNullOrEmpty(inputPath))
+                throw new ArgumentException("Input path must be provided.", nameof(inputPath));
+            if (string.IsNullOrEmpty(outputPath))
+                throw new ArgumentException("Output path must be provided.", nameof(outputPath));
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException("Input file not found.", inputPath);
 
-        // Ensure the source file exists before proceeding
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Source file not found: {inputPath}");
-            return;
-        }
+            Workbook workbook = null;
+            try
+            {
+                // Check for cancellation before loading
+                cancellationToken.ThrowIfCancellationRequested();
 
-        // Create a cancellation token source that can be triggered by the user
-        using var cts = new CancellationTokenSource();
+                // Load workbook (potentially long‑running)
+                workbook = new Workbook(inputPath);
 
-        // Example: automatically cancel after 5 seconds (replace with real user input handling)
-        _ = Task.Run(() =>
-        {
-            Thread.Sleep(5000);
-            cts.Cancel(); // user requested termination
-        });
+                // Check again after loading
+                cancellationToken.ThrowIfCancellationRequested();
 
-        try
-        {
-            // Perform the conversion respecting the cancellation token
-            await ConvertToTiffAsync(inputPath, outputPath, cts.Token);
-            Console.WriteLine("TIFF conversion completed successfully.");
-        }
-        catch (OperationCanceledException)
-        {
-            Console.WriteLine("TIFF conversion was cancelled by the user.");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File not found: {ex.FileName}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save as TIFF on a separate task to observe cancellation
+                var saveTask = Task.Run(() =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    workbook.Save(outputPath, SaveFormat.Tiff);
+                }, cancellationToken);
+
+                // Wait for completion, propagating cancellation if requested
+                saveTask.Wait(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // Clean up partially written file on cancellation
+                if (File.Exists(outputPath))
+                    File.Delete(outputPath);
+                throw;
+            }
+            finally
+            {
+                // Ensure resources are released
+                workbook?.Dispose();
+            }
         }
     }
 
-    static Task ConvertToTiffAsync(string sourceFile, string targetFile, CancellationToken token)
+    public class Program
     {
-        // Run the conversion on a background thread so it can be cancelled
-        return Task.Run(() =>
+        public static void Main(string[] args)
         {
-            // Verify source file exists
-            if (!File.Exists(sourceFile))
-                throw new FileNotFoundException("Source workbook not found.", sourceFile);
+            // Input and output paths can be supplied via command‑line arguments
+            string inputPath = args.Length > 0 ? args[0] : "sample.xlsx";
+            string outputPath = args.Length > 1 ? args[1] : "output.tiff";
 
-            // Load the workbook (lifecycle rule: load)
-            var workbook = new Workbook(sourceFile);
+            // Verify the input file exists before proceeding
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Check for cancellation before the potentially long save operation
-            token.ThrowIfCancellationRequested();
+            var converter = new TiffConverter();
+            using var cts = new CancellationTokenSource();
 
-            // Save the workbook as TIFF (lifecycle rule: save)
-            workbook.Save(targetFile, SaveFormat.Tiff);
-        }, token);
+            try
+            {
+                converter.ConvertToTiff(inputPath, outputPath, cts.Token);
+                Console.WriteLine($"TIFF file saved to: {outputPath}");
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Conversion was cancelled.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

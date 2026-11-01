@@ -4,8 +4,8 @@ description: Combine XLS and XLSX workbooks or copy selected worksheets between 
 product: Aspose.Cells for .NET
 category: workbook-merger
 language: C#
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 ---
 
 # Merge Excel Workbooks in C# with Aspose.Cells for .NET

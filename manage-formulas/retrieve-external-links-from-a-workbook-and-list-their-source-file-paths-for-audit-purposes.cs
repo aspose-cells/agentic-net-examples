@@ -1,63 +1,67 @@
-// Title: How to list external link source file paths in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates through each worksheet, and prints the SourceFilePath of every external link. | Show how to use reflection to safely access the ExternalLinks collection across different Aspose.Cells versions and retrieve each link's source file path. | Create a console utility that counts external references in an Excel workbook and outputs each reference's source file location using Aspose.Cells for .NET. | Provide robust error handling for missing workbook files while auditing external links with Aspose.Cells.
-// Common Searches: aspocells c# get external link source file path from workbook | list all external references in an Excel file using Aspose.Cells .NET | how to enumerate external links in Excel with Aspose.Cells and reflection | audit external link paths in .xlsx using Aspose.Cells C# console app | retrieve source file paths of external links in Excel via Aspose.Cells API
-// Tags: Aspose.Cells external links enumeration | C# retrieve external link source path | Excel workbook audit external references .NET | reflection access ExternalLinks Aspose.Cells | count external links in .xlsx using Aspose.Cells
+// Title: Identify and list external workbook references in an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: how to find external workbook references in an Excel file with Aspose.Cells C# | C# code to enumerate external links and their source file paths in a .xlsx using Aspose.Cells | Aspose.Cells detect formulas that reference other workbooks in .NET | list cells containing external links in a workbook with Aspose.Cells for .NET | audit external formula references in Excel using the Aspose.Cells library in C#
+// Tags: enumerate external workbook links Aspose.Cells | detect external formula references .NET | list source file paths from Excel formulas C# | audit external links in .xlsx using Aspose.Cells | iterate worksheets cells Aspose.Cells C#
 
 using System;
 using System.IO;
-using System.Collections;
 using Aspose.Cells;
 
-// // Loads an Excel workbook, uses reflection to access each worksheet's ExternalLinks collection, extracts the SourceFilePath of each external link, prints the paths with incremental numbering, and reports the total count of external links found.
-class Program
+// The example verifies the presence of an input .xlsx file, loads it with Aspose.Cells, iterates through each worksheet and cell, checks formulas for bracketed workbook names (e.g., [Book1.xlsx]Sheet1!A1), and prints the worksheet name, cell address, and formula for every external reference found, reporting when none exist and handling runtime exceptions.
+class ExternalLinksAudit
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Path to the workbook to be audited
-            string workbookPath = "input.xlsx";
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+            bool anyLinksFound = false;
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
-            {
-                Console.WriteLine($"File not found: {workbookPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            int totalLinks = 0;
-            int linkNumber = 1;
-
-            // Iterate through worksheets and use reflection to access external links (compatible with multiple Aspose.Cells versions)
+            // Iterate through each worksheet and inspect formulas for external references
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                var externalLinksProp = sheet.GetType().GetProperty("ExternalLinks");
-                if (externalLinksProp == null) continue; // Property not available in this version
+                bool sheetHasLinks = false;
 
-                var externalLinks = externalLinksProp.GetValue(sheet) as IEnumerable;
-                if (externalLinks == null) continue;
-
-                foreach (var linkObj in externalLinks)
+                // Scan all cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
                 {
-                    totalLinks++;
+                    if (cell.IsFormula)
+                    {
+                        string formula = cell.Formula;
 
-                    // Retrieve the source file path via reflection
-                    var sourcePathProp = linkObj.GetType().GetProperty("SourceFilePath");
-                    string sourcePath = sourcePathProp?.GetValue(linkObj) as string ?? "N/A";
+                        // Simple detection of external workbook reference (e.g., [Book1.xlsx]Sheet1!A1)
+                        if (formula.Contains("[") && formula.Contains("]"))
+                        {
+                            if (!sheetHasLinks)
+                            {
+                                Console.WriteLine($"External links in worksheet \"{sheet.Name}\":");
+                                sheetHasLinks = true;
+                            }
 
-                    Console.WriteLine($"Link {linkNumber}: {sourcePath}");
-                    linkNumber++;
+                            Console.WriteLine($"Cell {cell.Name}: {formula}");
+                            anyLinksFound = true;
+                        }
+                    }
                 }
             }
 
-            // Output the total number of external links found
-            Console.WriteLine($"External links count: {totalLinks}");
+            if (!anyLinksFound)
+            {
+                Console.WriteLine("No external links found in the workbook.");
+            }
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

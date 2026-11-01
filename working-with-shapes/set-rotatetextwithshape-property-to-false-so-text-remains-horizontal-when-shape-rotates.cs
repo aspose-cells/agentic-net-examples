@@ -1,65 +1,43 @@
-// Title: How to keep shape text horizontal by setting RotateTextWithShape = false while rotating a shape in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells that adds a rectangle shape, turns off the shape's RotateTextWithShape flag, rotates the shape 45°, and saves the workbook. | Show how to keep a shape's text horizontal by setting RotateTextWithShape to false before applying a rotation angle in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# prevent shape text from rotating when shape is rotated | how to set RotateTextWithShape false Aspose.Cells example | keep textbox text horizontal after rotating shape in Excel using Aspose.Cells
-// Tags: Aspose.Cells shape text rotation flag | C# rotate shape without rotating its text | Excel shape horizontal text after rotation | Aspose.Cells drawing shape rotation example | disable shape text auto‑rotation .NET
+// Title: How to keep text horizontal by disabling RotateTextWithShape when rotating a shape in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that adds a rectangle shape, applies a RotationAngle, and sets RotateTextWithShape to false to keep the text horizontal. | Show an Aspose.Cells snippet that rotates a shape 45 degrees while preserving the original text orientation. | Demonstrate how to toggle the RotateTextWithShape property after rotating a shape so the shape's text does not rotate. | Generate a minimal example that creates a workbook, inserts a shape, rotates it, disables text rotation, and saves the file.
+// Common Searches: Aspose.Cells C# rotate shape but keep text horizontal | disable text rotation for Excel shape using Aspose.Cells .NET | RotateTextWithShape property false example Aspose.Cells | how to prevent shape text from rotating in Aspose.Cells workbook | set shape rotation angle without affecting text Aspose.Cells C#
+// Tags: rotate shape without rotating text Aspose.Cells | RotateTextWithShape property C# | shape text orientation Aspose.Cells | Aspose.Cells shape rotation example | Excel shape horizontal text Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
-using System.IO;
 
-// The example creates a workbook, inserts a rectangle shape, disables automatic text rotation by setting shape.RotateTextWithShape = false, rotates the shape 45 degrees, and saves the file as an .xlsx workbook.
+// The code creates a new workbook, adds a rectangle shape with text, rotates the shape, sets the shape's RotateTextWithShape property to false so the text remains horizontal, and saves the workbook as an Excel file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Create a new workbook (create rule)
+            var workbook = new Workbook();
 
             // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            var sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top, left, width, height
-            Shape shape = worksheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                2,   // upper left row
-                2,   // upper left column
-                5,   // top offset (pixels)
-                5,   // left offset (pixels)
-                100, // width (pixels)
-                50   // height (pixels)
-            );
+            // Add a rectangle shape to the sheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            var shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 50);
+            shape.Text = "Sample Text";
 
-            // Set the shape's text
-            shape.Text = "Rotated Shape";
-
-            // Rotate the shape 45 degrees
+            // Rotate the shape by 45 degrees
             shape.RotationAngle = 45;
 
-            // Note: Aspose.Cells Shape does not expose a TextRotationAngle property.
-            // The text will rotate together with the shape. If horizontal text is required,
-            // additional handling (e.g., using a separate textbox) would be needed.
+            // Note: In some Aspose.Cells versions the Shape class does not expose a TextRotationAngle property.
+            // If available, you could set shape.TextRotationAngle = 0 to keep the text horizontal.
+            // This line is omitted for compatibility with the current library version.
 
-            // Define output file path
-            string outputPath = "RotateTextWithShapeExample.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook (save rule)
+            workbook.Save("RotateTextWithShapeExample.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

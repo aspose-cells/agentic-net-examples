@@ -1,58 +1,56 @@
-// Title: Serialize workbook custom XML parts to a UTF‑8 string and log their content using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, enumerates Workbook.CustomXmlParts, converts each part's Data byte[] to a UTF‑8 string, and prints the part name and XML to the console with proper error handling. | Show how to add file‑existence verification and exception handling while extracting and debugging custom XML parts from an Excel workbook using Aspose.Cells.
-// Common Searches: C# Aspose.Cells how to extract custom XML part from an existing XLSX file | log XML content of workbook custom XML parts for debugging Aspose.Cells | convert custom XML part byte array to string in Aspose.Cells .NET | iterate through Workbook.CustomXmlParts and display XML using Aspose.Cells | handle missing Excel file when reading custom XML parts with Aspose.Cells C#
-// Tags: Aspose.Cells serialize custom XML part | C# read workbook custom XML parts | debug Excel custom XML with Aspose.Cells | convert custom XML byte array to UTF-8 string | iterate Workbook.CustomXmlParts Aspose
+// Title: Read and log the first custom XML part from an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to get custom xml part data from an Excel file using Aspose.Cells C# | Aspose.Cells read custom XML part and output as string | debug custom xml content in workbook with Aspose.Cells .NET | retrieve first custom XML part from .xlsx using Aspose.Cells | convert custom XML part bytes to UTF8 string Aspose.Cells
+// Tags: read custom xml part Aspose.Cells | convert xml part bytes to UTF8 string | log workbook custom xml for debugging | load excel workbook with Aspose.Cells .NET | handle password protected workbook Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.Text;
-using Aspose.Cells;
 
-// The example loads an existing XLSX file, checks that the file exists, iterates over the workbook's CustomXmlParts collection, converts each part's byte[] Data to a UTF‑8 string, and writes the part name and XML content to the console while handling file‑not‑found and processing exceptions.
+// The example loads an Excel workbook with Aspose.Cells, checks for custom XML parts, converts the first part's binary data to a UTF‑8 string, and writes the XML to the console for debugging, while also handling password‑protected files and general errors.
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Ensure the input file exists before attempting to load it
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"File not found: {inputPath}");
             return;
         }
 
         try
         {
-            // Load the workbook
+            // Load the workbook (no password supplied). If the file is password‑protected,
+            // a CellsException will be thrown and handled in the catch block.
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all custom XML parts in the workbook
-            foreach (var customXmlObj in workbook.CustomXmlParts)
+            // Check for custom XML parts
+            if (workbook.CustomXmlParts.Count > 0)
             {
-                try
-                {
-                    // Use dynamic to avoid compile‑time dependency on the exact type name
-                    dynamic customXml = customXmlObj;
+                // Serialize the first custom XML part to a string
+                var customXmlPart = workbook.CustomXmlParts[0];
+                string xmlContent = Encoding.UTF8.GetString(customXmlPart.Data);
 
-                    // Convert the XML data (byte array) to a UTF‑8 string
-                    string xmlContent = Encoding.UTF8.GetString((byte[])customXml.Data);
-
-                    // Log the name of the custom XML part and its XML content
-                    Console.WriteLine($"Custom XML Part Name: {customXml.Name}");
-                    Console.WriteLine("XML Content:");
-                    Console.WriteLine(xmlContent);
-                    Console.WriteLine(new string('-', 80));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to process a custom XML part: {ex.Message}");
-                }
+                // Output the XML content for debugging purposes
+                Console.WriteLine("Custom XML Part Content:");
+                Console.WriteLine(xmlContent);
             }
+            else
+            {
+                Console.WriteLine("No custom XML parts found in the workbook.");
+            }
+        }
+        catch (CellsException ex) when (ex.Message.Contains("Please provide password"))
+        {
+            Console.WriteLine("The workbook is password protected. Please provide a valid password.");
+            // Optionally, you could prompt the user for a password and reload with LoadOptions.
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

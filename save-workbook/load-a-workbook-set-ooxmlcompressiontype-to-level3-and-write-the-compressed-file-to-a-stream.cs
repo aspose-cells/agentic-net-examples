@@ -1,38 +1,68 @@
-// Title: Save an Excel workbook with OOXML Level 3 compression to a MemoryStream using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an existing .xlsx file, configures OoxmlSaveOptions to use Level3 compression, and saves the workbook into a MemoryStream with Aspose.Cells. | Show how to copy the compressed workbook from a MemoryStream to a physical file after saving with OoxmlCompressionType.Level3 in .NET.
-// Common Searches: Aspose.Cells how to set OoxmlCompressionType Level3 when saving a workbook | C# save Excel file to MemoryStream with OOXML compression using Aspose.Cells | Compress XLSX output to Level3 using Aspose.Cells .NET API | Write compressed workbook stream to file after using OoxmlSaveOptions
-// Tags: OoxmlSaveOptions Level3 compression | save workbook to MemoryStream Aspose.Cells | compress XLSX with Aspose.Cells .NET | copy compressed stream to file C# | Aspose.Cells workbook compression settings
+// Title: Save an Excel workbook with OOXML Level‑3 compression to a MemoryStream and write it to a file using Aspose.Cells for .NET
+// AI Prompts: Load a workbook, configure OoxmlSaveOptions with CompressionType Level3, and save it directly into a MemoryStream using Aspose.Cells. | Transfer the compressed MemoryStream to a FileStream to generate a Level‑3 compressed XLSX file on disk. | Check for the source file, create the destination folder if missing, and handle exceptions while saving the compressed workbook.
+// Common Searches: how to compress an XLSX file with OOXML Level3 using Aspose.Cells in C# | Aspose.Cells save workbook to MemoryStream with compression options | C# example for OoxmlCompressionType.Level3 when exporting Excel | write compressed workbook stream to a file with Aspose.Cells .NET | reduce size of generated XLSX by setting OoxmlSaveOptions compression
+// Tags: OOXML Level3 compression Aspose.Cells | memory stream export Aspose.Cells | OoxmlSaveOptions compression C# | compressed XLSX output .NET | ensure output directory exists C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an existing .xlsx workbook, sets OoxmlSaveOptions.CompressionType to Level3, saves the workbook into a MemoryStream, resets the stream position, and then copies the compressed data to a new file.
+// The code loads an existing XLSX file, sets OoxmlSaveOptions.CompressionType to Level3, saves the workbook into a MemoryStream, and then copies the compressed stream to a new file, creating the output folder if necessary and handling errors.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook from a file
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
-
-        // Create OOXML save options and set compression to Level3
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-        saveOptions.CompressionType = OoxmlCompressionType.Level3;
-
-        // Save the workbook to a memory stream using the specified options
-        using (MemoryStream stream = new MemoryStream())
+        try
         {
-            workbook.Save(stream, saveOptions);
+            // Path to the source workbook
+            string sourcePath = "input.xlsx";
 
-            // Reset stream position if further processing is needed
-            stream.Position = 0;
-
-            // Example: write the compressed stream to a file
-            using (FileStream file = new FileStream("output_compressed.xlsx", FileMode.Create, FileAccess.Write))
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                stream.CopyTo(file);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
+
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Configure OOXML compression via save options (Level3)
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
+            {
+                CompressionType = OoxmlCompressionType.Level3
+            };
+
+            // Save the workbook to a memory stream with the specified compression
+            using (MemoryStream stream = new MemoryStream())
+            {
+                workbook.Save(stream, saveOptions);
+
+                // Reset the stream position if you need to read from it later
+                stream.Position = 0;
+
+                // Write the compressed stream to an output file
+                string outputPath = "output_compressed.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                {
+                    stream.CopyTo(file);
+                }
+
+                Console.WriteLine($"Compressed workbook saved to: {outputPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

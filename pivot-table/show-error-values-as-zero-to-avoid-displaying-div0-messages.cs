@@ -1,58 +1,54 @@
-// Title: Replace all Excel error values (e.g., #DIV/0!) with zero using Aspose.Cells GlobalizationSettings in C#
-// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, inserts a formula causing a division‑by‑zero error, and applies a custom GlobalizationSettings subclass so that any error is displayed as "0" before saving the file. | Write a C# class inheriting from Aspose.Cells.GlobalizationSettings that overrides GetErrorValueString to return "0", and demonstrate how to assign this class to Workbook.Settings.GlobalizationSettings. | Show how to calculate formulas in an Aspose.Cells workbook and save it as an .xlsx file where cells containing errors are rendered as zero.
-// Common Searches: how to show zero instead of #DIV/0! in Excel files generated with Aspose.Cells C# | Aspose.Cells custom GlobalizationSettings to replace all error values with 0 | C# Aspose.Cells example for overriding GetErrorValueString for error handling | save workbook with error cells displayed as 0 using Aspose.Cells | replace Excel error strings with numeric zero using Aspose.Cells API
-// Tags: Aspose.Cells error value globalization | C# custom GetErrorValueString implementation | replace Excel error strings with zero | save workbook with zeroed error cells | globalization settings for error handling
+// Title: Replace #DIV/0! and other Excel error values with zero in an Aspose.Cells workbook using C#
+// AI Prompts: Write C# code that calculates all formulas in an Aspose.Cells workbook and then changes every cell of type IsError to 0 before saving the file. | Show how to iterate over the used range of a worksheet with Aspose.Cells, detect error values such as #DIV/0! and replace them with zero.
+// Common Searches: Aspose.Cells C# replace #DIV/0! error with 0 | how to set error cells to zero after formula calculation using Aspose.Cells | clean Excel error values in .NET workbook Aspose.Cells | iterate over used cells and fix errors Aspose.Cells C#
+// Tags: replace error values Aspose.Cells | Aspose.Cells set error cells to zero | C# Aspose.Cells error handling | Aspose.Cells calculate formulas then clean errors | Excel #DIV/0! replacement Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The example creates an Aspose.Cells workbook, adds a formula that generates a division‑by‑zero error, calculates the formulas, applies a custom GlobalizationSettings class that returns "0" for any error via GetErrorValueString, and saves the workbook so error cells display zero.
-public class Program
+// The example creates a workbook, inserts values that cause a division‑by‑zero error, calculates formulas to generate the #DIV/0! value, then scans all populated cells, replaces any cell whose type is IsError with 0, and saves the cleaned workbook as Result.xlsx.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            ShowErrorAsZero.Run();
-            Console.WriteLine("Workbook saved successfully.");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Sample data: A1 = 10, B1 = 0, C1 = =A1/B1 (will cause #DIV/0!)
+            cells["A1"].PutValue(10);
+            cells["B1"].PutValue(0);
+            cells["C1"].Formula = "A1/B1";
+
+            // Calculate formulas so that the error value is generated
+            workbook.CalculateFormula();
+
+            // Replace all error values (e.g., #DIV/0!) with zero
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+            for (int i = 0; i <= maxRow; i++)
+            {
+                for (int j = 0; j <= maxCol; j++)
+                {
+                    Cell cell = cells[i, j];
+                    if (cell.Type == CellValueType.IsError)
+                    {
+                        cell.PutValue(0);
+                    }
+                }
+            }
+
+            // Save the workbook
+            workbook.Save("Result.xlsx");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-}
-
-public class ShowErrorAsZero
-{
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Cell with a formula that generates a division by zero error
-        Cell errorCell = worksheet.Cells["A1"];
-        errorCell.Formula = "=1/0";
-
-        // Calculate formulas so the error value is produced
-        workbook.CalculateFormula();
-
-        // Apply custom globalization settings to replace any error string with "0"
-        workbook.Settings.GlobalizationSettings = new ZeroErrorGlobalizationSettings();
-
-        // Save the workbook; cells with errors will now display 0
-        string outputPath = "ErrorAsZero.xlsx";
-        workbook.Save(outputPath);
-    }
-}
-
-// Custom globalization settings that maps all error values to zero
-public class ZeroErrorGlobalizationSettings : GlobalizationSettings
-{
-    public override string GetErrorValueString(string err)
-    {
-        // Return "0" for any error (e.g., #DIV/0!, #VALUE!, etc.)
-        return "0";
     }
 }

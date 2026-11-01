@@ -1,52 +1,61 @@
-// Title: How to position a chart legend at the bottom and display its border using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new workbook, add sample data, generate a column chart, set the legend position to Bottom, and make the legend border visible with a black color using Aspose.Cells in C#. | Modify an existing Aspose.Cells chart to move the legend to the bottom of the chart area and enable the border visibility. | Write C# code that configures a chart's Legend.Position = LegendPositionType.Bottom and sets Legend.Border.IsVisible = true with a specified color.
-// Common Searches: Aspose.Cells C# set chart legend to bottom and show border | How to enable legend border visibility in Aspose.Cells chart using .NET | C# Aspose.Cells move chart legend to bottom and change border color | Aspose.Cells chart legend positioning and border styling example | Set Legend.Position = Bottom and Legend.Border.IsVisible in Aspose.Cells
-// Tags: chart legend position bottom Aspose.Cells | legend border visibility Aspose.Cells C# | column chart legend styling Aspose.Cells | Aspose.Cells set legend border color | Aspose.Cells chart formatting legend bottom
+// Title: Place the chart legend at the bottom and show its border with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to move chart legend to the bottom of an Excel chart | Aspose.Cells example to enable legend border visibility in a .NET workbook | code to set legend position and border color for an Excel chart using Aspose.Cells | programmatically change chart legend formatting with Aspose.Cells C# | Aspose.Cells chart legend bottom placement and border styling tutorial
+// Tags: Aspose.Cells chart legend position bottom | Aspose.Cells enable legend border visibility | C# modify Excel chart legend formatting | Aspose.Cells LegendPositionType enum usage | Aspose.Cells set legend border color
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsLegendDemo
+// The sample loads an existing Excel file, accesses the first chart, moves its legend to the bottom, makes the legend border visible with a black color, and saves the workbook to a new file using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, positions the legend at the bottom, makes the legend border visible with a black color, and saves the file as ChartLegendBottomWithBorder.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-            // Position the legend at the bottom of the chart
+            // Access the first chart
+            Chart chart = worksheet.Charts[0];
+
+            // Set the legend to appear at the bottom of the chart
+            // Use LegendPositionType enum (compatible with current Aspose.Cells versions)
             chart.Legend.Position = LegendPositionType.Bottom;
 
-            // Enable the legend border visibility (optional: set color for clarity)
+            // Enable the border of the legend and set its color (optional)
             chart.Legend.Border.IsVisible = true;
-            chart.Legend.Border.Color = Color.Black; // make the border visible
+            chart.Legend.Border.Color = Color.Black;
 
-            // Save the workbook
-            workbook.Save("ChartLegendBottomWithBorder.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

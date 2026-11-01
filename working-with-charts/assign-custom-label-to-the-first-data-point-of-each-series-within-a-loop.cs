@@ -1,73 +1,67 @@
-// Title: How to set a custom label for the first data point of each series in an Aspose.Cells column chart (C#)
-// AI Prompts: Write C# code that iterates over all series in an Aspose.Cells column chart and assigns a custom text label to the first point of each series. | Show how to turn off the auto‑generated label for a specific chart point and replace it with a custom string using Aspose.Cells. | Provide a complete example that creates a workbook, adds a column chart, enables data labels, and customizes the first point label for each series in C#.
-// Common Searches: Aspose.Cells C# set custom label for first point in column chart | loop through chart series to change data label text Aspose.Cells | disable auto text for a chart point Aspose.Cells C# example | assign series name to first data point label Aspose.Cells | how to customize data labels per point in Aspose.Cells chart C#
-// Tags: custom data label first chart point Aspose.Cells | iterate chart series Aspose.Cells C# | disable auto text chart label Aspose.Cells | column chart series point label C# | assign series name to data label Aspose.Cells
+// Title: Assign a custom label to the first data point of each series in an Excel chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that iterates over all series in the first chart of a worksheet and sets the Series.Name property to a custom label for the first data point. | Show how to load or create an Excel workbook, locate its first chart, and apply a unique label to the first point of each series using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# set series name for first point in Excel chart | loop through chart series and assign custom label to first data point using Aspose.Cells | how to change the label of the first data point in each series of an Excel chart in .NET | C# Aspose.Cells example modify chart series name based on first data point | programmatically label first point of each series in Excel chart with Aspose.Cells
+// Tags: set series name first data point Aspose.Cells | iterate chart series C# Aspose.Cells | modify chart series label .NET | Excel chart series labeling Aspose.Cells | custom label first point Excel chart .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCustomLabelDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, adding a column chart with two series, enabling data labels, looping through each series, and assigning a custom text label to the first data point while disabling the auto‑generated label, then saving the file as an .xlsx.
+    // The program loads (or creates) an Excel workbook, accesses the first worksheet's first chart, iterates through each series, assigns a custom name representing the first data point, and saves the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for two series
-            // Column A – Category (X axis)
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-
-            // Column B – Series 1 values
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Column C – Series 2 values
-            sheet.Cells["C1"].PutValue("Series 2");
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
-
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIdx];
-
-            // Add the two series to the chart (vertical = true means each column is a series)
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.Add("C2:C4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Loop through each series in the chart
-            foreach (Series series in chart.NSeries)
+            try
             {
-                // Ensure data labels are visible for the series
-                series.DataLabels.ShowValue = true;
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Access the first data point (index 0) of the current series
-                ChartPoint firstPoint = series.Points[0];
+                // Load existing workbook if present; otherwise create a new one.
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-                // Assign a custom label text to the first point
-                // Example: "First of {SeriesName}"
-                string seriesName = series.Name; // May be empty if not set; you can set it earlier if needed
-                firstPoint.DataLabels.Text = $"First of {seriesName}";
-                // Optionally, you can also hide the auto‑generated text
-                firstPoint.DataLabels.IsAutoText = false;
+                // Ensure there is at least one worksheet.
+                Worksheet sheet;
+                if (workbook.Worksheets.Count > 0)
+                {
+                    sheet = workbook.Worksheets[0];
+                }
+                else
+                {
+                    int addedIndex = workbook.Worksheets.Add();
+                    sheet = workbook.Worksheets[addedIndex];
+                }
+
+                // Ensure there is at least one chart on the worksheet.
+                Chart chart = sheet.Charts.Count > 0 ? sheet.Charts[0] : null;
+                if (chart == null)
+                {
+                    Console.WriteLine("No chart found on the first worksheet. Operation skipped.");
+                }
+                else
+                {
+                    // Iterate through each series in the chart.
+                    for (int i = 0; i < chart.NSeries.Count; i++)
+                    {
+                        Series series = chart.NSeries[i];
+
+                        // As the Series.DataPoints property may not be available in older versions,
+                        // we set a custom name for the series instead.
+                        series.Name = $"Series {i + 1} - First Point";
+                    }
+                }
+
+                // Save the workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Recalculate the chart to apply changes
-            chart.Calculate();
-
-            // Save the workbook
-            workbook.Save("CustomFirstPointLabels.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

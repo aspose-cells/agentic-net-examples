@@ -1,47 +1,57 @@
-// Title: Insert a Win/Loss sparkline in cell E2 from data range F2:F12 using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, fills F2:F12 with alternating 1 and -1 values, and adds a Win/Loss sparkline to cell E2. | Show how to adjust the line weight of a Win/Loss sparkline group after it has been added to a worksheet in Aspose.Cells for .NET. | Demonstrate creating a SparklineGroup that references a specific range and places the sparkline at a single-cell location using Aspose.Cells.
-// Common Searches: Aspose.Cells C# add win loss sparkline to a single cell | how to set sparkline source range F2:F12 in Aspose.Cells | customize win loss sparkline line weight Aspose.Cells .NET example | populate alternating positive and negative values for sparkline using Aspose.Cells | save workbook with sparkline as xlsx using Aspose.Cells
-// Tags: win loss sparkline insertion Aspose.Cells | sparkline data range F2:F12 Aspose.Cells | set sparkline line weight .NET | populate alternating values for sparkline Aspose.Cells | save workbook with sparkline xlsx Aspose.Cells
+// Title: Create a win/loss column sparkline in cell E2 from range F2:F12 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that inserts a win/loss column sparkline at E2 referencing the data range F2:F12 with Aspose.Cells. | Write a script to add a column sparkline group for a win/loss chart in an Excel workbook, placing it in cell E2 using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells how to add a win/loss sparkline to a single cell in C# | C# example for creating a column sparkline from F2 to F12 with Aspose.Cells | Insert a win/loss sparkline at E2 in an .xlsx file using Aspose.Cells for .NET | Programmatically add a sparkline group for win/loss data in Excel with Aspose.Cells
+// Tags: win/loss column sparkline Aspose.Cells .NET | add sparkline to cell E2 Aspose.Cells | sparkline group creation C# Aspose.Cells | Excel sparkline generation .NET | save workbook with sparkline Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
+using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts; // Required for Sparkline types
 
-// Creates a workbook, fills F2:F12 with 1/-1 values, adds a Win/Loss sparkline at E2, sets its line weight, and saves the file as WinLossSparkline.xlsx.
-class Program
+namespace SparklineExample
 {
-    static void Main()
+    // The example creates a new workbook, adds a win/loss column sparkline that visualizes values in F2:F12, places it in cell E2, and saves the file as SparklineOutput.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the win/loss sparkline (optional)
-            // F2:F12 will contain alternating positive and negative values
-            for (int i = 0; i < 11; i++)
+            try
             {
-                // Row index 1 = row 2, column index 5 = column F
-                sheet.Cells[1 + i, 5].PutValue((i % 2 == 0) ? 1 : -1);
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Define data range and location for the sparkline
+                string dataRange = "F2:F12";
+                // Sparkline location is a single cell (E2)
+                CellArea location = CellArea.CreateCellArea("E2", "E2");
+
+                // Add a Column sparkline group; Add returns the index of the created group
+                int groupIndex = worksheet.SparklineGroups.Add(SparklineType.Column, dataRange, false, location);
+                SparklineGroup sparklineGroup = worksheet.SparklineGroups[groupIndex];
+
+                // (Optional) Configure sparkline appearance here using sparklineGroup if needed
+
+                // Define output file path
+                string outputPath = "SparklineOutput.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Define the location cell (E2) where the sparkline will be placed
-            CellArea location = CellArea.CreateCellArea("E2", "E2");
-
-            // Add a Win/Loss sparkline group with the data range F2:F12
-            int groupIndex = sheet.SparklineGroups.Add(SparklineType.WinLoss, "F2:F12", false, location);
-            SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-            // Optional: customize the sparkline appearance
-            group.LineWeight = 1.0;
-
-            // Save the workbook
-            workbook.Save("WinLossSparkline.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

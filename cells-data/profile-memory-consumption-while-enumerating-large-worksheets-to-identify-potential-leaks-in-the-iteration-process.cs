@@ -1,66 +1,92 @@
-// Title: How to profile memory usage while iterating over used cells in large Excel worksheets with Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that loads an Excel workbook using Aspose.Cells, iterates through the used range of every worksheet, and logs memory usage to the console after a configurable number of rows. | Adjust the enumeration code to capture a memory snapshot after each worksheet finishes processing and display the total memory delta compared with the baseline. | Add a configurable memory‑threshold check that aborts the iteration and reports the worksheet name when the memory increase exceeds the specified limit.
-// Common Searches: aspnet memory profiling while reading large Excel files with Aspose.Cells | how to detect memory leaks during worksheet iteration in C# using Aspose.Cells | measure heap growth when enumerating used cells of an Excel workbook in .NET | C# code to log memory usage every 1000 rows while processing large worksheets with Aspose.Cells
-// Tags: memory profiling Aspose.Cells cell enumeration | heap usage monitoring worksheet iteration .NET | used range iteration performance Aspose.Cells | periodic GC snapshot large Excel processing | memory leak detection Aspose.Cells workbook traversal
+// Title: How to profile memory usage while enumerating large worksheets with Aspose.Cells in C#
+// AI Prompts: Write a C# console program that loads a .xlsx file using Aspose.Cells, iterates through each worksheet's MaxDisplayRange, and prints memory usage before the loop, after every N rows, and after completion. | Modify the iteration to invoke GC.Collect after processing each worksheet and display the memory difference in megabytes. | Extend the sample to accept the row‑interval for intermediate memory reporting and the file path as command‑line arguments, handling missing arguments gracefully.
+// Common Searches: C# how to measure memory consumption while looping through cells with Aspose.Cells | detect memory leaks in large Excel workbook processing using Aspose.Cells .NET | log GC.GetTotalMemory every 1000 rows Aspose.Cells example | profile memory usage of worksheet enumeration in Aspose.Cells for .NET
+// Tags: memory profiling Aspose.Cells C# | worksheet enumeration memory usage | GC.GetTotalMemory Aspose.Cells | large Excel workbook processing .NET | used range cell iteration Aspose.Cells
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to measure memory consumption while walking through the used cells of each worksheet in a large Excel workbook with Aspose.Cells, reporting baseline, periodic (e.g., every 1,000 rows) and final memory usage.
-class Program
+// The example loads a large .xlsx workbook with Aspose.Cells, iterates each worksheet's used range, logs initial memory, reports memory every 1000 rows, forces garbage collection per worksheet, and outputs final memory usage and processing time using GC.GetTotalMemory.
+class MemoryProfilingExample
 {
     static void Main(string[] args)
     {
-        // Path to the large workbook to be analyzed.
-        string inputPath = "largeWorkbook.xlsx"; // TODO: replace with actual file path.
+        // Path to the large Excel file to be processed
+        string filePath = @"C:\Data\LargeWorkbook.xlsx";
 
-        // Load the workbook using Aspose.Cells.
-        Workbook workbook = new Workbook(inputPath);
-
-        // Force a full garbage collection and capture the baseline memory usage.
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        long baselineMemory = GC.GetTotalMemory(true);
-        Console.WriteLine($"Baseline memory: {baselineMemory / 1024.0 / 1024.0:F2} MB");
-
-        // Iterate through each worksheet in the workbook.
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Processing worksheet: {sheet.Name}");
-
-            // Obtain the used range to limit iteration to populated cells.
-            Cells cells = sheet.Cells;
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
-
-            // Iterate rows.
-            for (int row = 0; row <= maxRow; row++)
-            {
-                // Iterate columns within the current row.
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    // Access the cell value. This forces Aspose.Cells to materialize the cell object.
-                    object value = cells[row, col].Value;
-                    // (Optional) Process the value here if needed.
-                }
-
-                // Periodically report memory usage to spot leaks during long iterations.
-                if (row % 1000 == 0) // Adjust the interval based on worksheet size.
-                {
-                    long currentMemory = GC.GetTotalMemory(true);
-                    Console.WriteLine($"Row {row}/{maxRow} - Memory: {currentMemory / 1024.0 / 1024.0:F2} MB");
-                }
-            }
+            Console.WriteLine($"Error: File not found at '{filePath}'.");
+            return;
         }
 
-        // Final memory snapshot after full enumeration.
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        long finalMemory = GC.GetTotalMemory(true);
-        Console.WriteLine($"Final memory: {finalMemory / 1024.0 / 1024.0:F2} MB");
-        Console.WriteLine($"Memory delta: {(finalMemory - baselineMemory) / 1024.0 / 1024.0:F2} MB");
+        try
+        {
+            // Load the workbook (using Aspose.Cells) inside a using block for proper disposal
+            using (Workbook workbook = new Workbook(filePath))
+            {
+                // Force a full garbage collection before starting the measurement
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                // Record initial memory usage (in bytes)
+                long initialMemory = GC.GetTotalMemory(forceFullCollection: true);
+                Console.WriteLine($"Initial memory usage: {initialMemory / (1024 * 1024)} MB");
+
+                // Stopwatch to measure elapsed time (optional, but useful for performance profiling)
+                Stopwatch sw = Stopwatch.StartNew();
+
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Console.WriteLine($"Processing sheet: {sheet.Name}");
+
+                    // Get the used range of the worksheet to avoid iterating over empty cells
+                    Cells cells = sheet.Cells;
+                    Aspose.Cells.Range usedRange = cells.MaxDisplayRange; // Fully qualified to avoid ambiguity
+
+                    // Determine start and end indices from the Range object
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startColumn = usedRange.FirstColumn;
+                    int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                    // Iterate row by row within the used range
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        // Optional: measure memory after each N rows to spot gradual increase
+                        if (row % 1000 == 0)
+                        {
+                            long intermediateMemory = GC.GetTotalMemory(forceFullCollection: false);
+                            Console.WriteLine($"Row {row}: Memory usage = {intermediateMemory / (1024 * 1024)} MB");
+                        }
+
+                        // Iterate through columns in the current row
+                        for (int col = startColumn; col <= endColumn; col++)
+                        {
+                            // Access the cell value (this is the typical operation that could cause leaks if mishandled)
+                            Cell cell = cells[row, col];
+                            object value = cell.Value; // Replace with actual processing logic as needed
+                        }
+                    }
+                }
+
+                sw.Stop();
+
+                // Record final memory usage after iteration
+                long finalMemory = GC.GetTotalMemory(forceFullCollection: true);
+                Console.WriteLine($"Final memory usage: {finalMemory / (1024 * 1024)} MB");
+                Console.WriteLine($"Memory delta: {(finalMemory - initialMemory) / (1024 * 1024)} MB");
+                Console.WriteLine($"Total processing time: {sw.Elapsed}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

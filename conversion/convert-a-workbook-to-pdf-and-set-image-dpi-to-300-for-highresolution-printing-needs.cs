@@ -1,13 +1,12 @@
-// Title: Export an Excel workbook to PDF with 300 DPI images using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, configures PdfSaveOptions to render images at 300 DPI (using reflection if the ImageDPI property is missing), and saves the workbook as a PDF with Aspose.Cells. | Show how to add file‑existence verification and comprehensive exception handling to an Aspose.Cells Excel‑to‑PDF conversion routine that requires high‑resolution images. | Demonstrate creating a print‑ready PDF from a workbook where charts and pictures are embedded at 300 DPI by leveraging PdfSaveOptions in Aspose.Cells.
-// Common Searches: how to set image DPI to 300 when converting Excel to PDF with Aspose.Cells C# | Aspose.Cells export workbook to high resolution PDF using PdfSaveOptions ImageDPI | C# reflection to set PdfSaveOptions.ImageDPI property only if it exists | check if input Excel file exists before saving as PDF with Aspose.Cells | exception handling pattern for Excel to PDF conversion using Aspose.Cells .NET
-// Tags: PdfSaveOptions high DPI images | Aspose.Cells high‑resolution PDF export | C# reflection optional property | file existence validation before conversion | exception handling Aspose.Cells workflow
+// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET (default image DPI)
+// Common Searches: how to convert an .xlsx file to PDF with Aspose.Cells in C# | Aspose.Cells PdfSaveOptions default image DPI when exporting Excel to PDF | C# code example for Excel to PDF conversion handling missing file errors | is it possible to set image resolution for PDF export in Aspose.Cells .NET | export workbook to PDF for high‑resolution printing using Aspose.Cells
+// Tags: Aspose.Cells PDF conversion C# | PdfSaveOptions image DPI limitation | Excel to PDF high‑resolution export | Workbook.Save PDF Aspose.Cells | file existence validation Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates PdfSaveOptions, uses reflection to set the ImageDPI property to 300 DPI when the property is available, and saves the workbook as a high‑resolution PDF while handling any runtime errors.
+// The sample loads an existing Excel file (input.xlsx) into an Aspose.Cells Workbook, creates a PdfSaveOptions object (noting that custom image DPI is not supported in the current version), and saves the workbook as a PDF (output.pdf) while checking for file existence and handling exceptions.
 class Program
 {
     static void Main()
@@ -17,7 +16,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Error: The file '{inputPath}' was not found.");
@@ -27,24 +26,17 @@ class Program
             // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (high‑resolution images)
+            // Configure PDF save options (high‑resolution image DPI is not supported in this version)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // The ImageDPI property may not be available in older versions of Aspose.Cells.
-            // If it exists, set it to 300 DPI; otherwise, proceed without setting it.
-            var imageDpiProperty = typeof(PdfSaveOptions).GetProperty("ImageDPI");
-            if (imageDpiProperty != null && imageDpiProperty.CanWrite)
-            {
-                imageDpiProperty.SetValue(pdfOptions, 300);
-            }
-
-            // Save the workbook as a PDF file with the specified options
+            // Save the workbook as a PDF using the specified options
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
+
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

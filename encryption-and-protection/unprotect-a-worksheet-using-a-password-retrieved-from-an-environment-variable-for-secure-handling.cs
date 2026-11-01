@@ -1,37 +1,33 @@
-// Title: Unprotect an Excel worksheet using a password stored in an environment variable with Aspose.Cells for .NET
-// AI Prompts: Write C# code that reads the worksheet password from the WORKSHEET_PASSWORD environment variable and calls Worksheet.Unprotect in Aspose.Cells. | Show how to fall back to Worksheet.Unprotect() when the environment variable is missing or empty. | Demonstrate unprotecting multiple worksheets where each sheet's password is retrieved from a separate environment variable. | Explain how to integrate environment‑based password retrieval into an existing Aspose.Cells workbook processing pipeline.
-// Common Searches: asp.net unprotect Excel sheet using password from environment variable Aspose.Cells | c# read env variable for worksheet password and remove protection with Aspose.Cells | how to programmatically unprotect a protected worksheet when password is stored in OS environment variable | Aspose.Cells unprotect sheet without hard‑coding password in code | example of conditional worksheet unprotection based on environment variable in C#
-// Tags: worksheet unprotect with environment variable Aspose.Cells | Aspose.Cells read password from env in .NET | C# remove Excel sheet protection programmatically | secure worksheet unprotection using env variable | load workbook and unprotect sheet Aspose.Cells | conditional unprotect worksheet C#
+// Title: Unprotect an Excel worksheet in C# using Aspose.Cells with a password from an environment variable
+// Common Searches: C# Aspose.Cells unprotect worksheet using password stored in environment variable | How to read worksheet password from environment variable and unprotect Excel file with Aspose | Aspose.Cells unprotect Excel sheet programmatically with .NET environment variable | Securely unprotect protected Excel worksheet in .NET without hard‑coding password | Retrieve SHEET_PASSWORD env variable and call Worksheet.Unprotect in Aspose.Cells
+// Tags: Aspose.Cells worksheet unprotect with environment variable | C# load password from env variable for Excel protection | secure Excel sheet unprotection .NET | environment variable password handling Aspose.Cells | unprotect Excel workbook using Aspose.Cells API
 
 using System;
 using Aspose.Cells;
 
-// // Loads "input.xlsx", obtains the worksheet password from the WORKSHEET_PASSWORD environment variable, unprotects the first worksheet (using the password if present or falling back to password‑less unprotect), and saves the result as "output.xlsx".
+// The example reads the password from the SHEET_PASSWORD environment variable, loads an Excel workbook with Aspose.Cells, accesses the target worksheet, calls Worksheet.Unprotect with the retrieved password, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
+        // Retrieve the worksheet password from an environment variable
+        string password = Environment.GetEnvironmentVariable("SHEET_PASSWORD");
+        if (string.IsNullOrEmpty(password))
+        {
+            Console.WriteLine("Error: Environment variable 'SHEET_PASSWORD' is not set.");
+            return;
+        }
+
+        // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (adjust index as needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Retrieve the password from an environment variable for secure handling
-        string password = Environment.GetEnvironmentVariable("WORKSHEET_PASSWORD");
+        // Access the worksheet you want to unprotect (e.g., the first sheet)
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Unprotect the worksheet using the retrieved password
-        if (!string.IsNullOrEmpty(password))
-        {
-            sheet.Unprotect(password);
-        }
-        else
-        {
-            // If no password is set, attempt to unprotect without a password
-            sheet.Unprotect();
-        }
+        worksheet.Unprotect(password);
 
-        // Save the modified workbook
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

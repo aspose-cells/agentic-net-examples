@@ -1,110 +1,124 @@
-// Title: Convert an HTML file to Excel and generate dropdown lists from <select> elements using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an HTML document into an Aspose.Cells Workbook, extracts each <select> element's option values, and adds a list‑type data validation to successive cells. | Demonstrate how to parse <select> tags with regular expressions in C# and use the extracted options to create Excel dropdown lists via Aspose.Cells validations. | Provide a complete example that saves the modified workbook as an XLSX file after adding data‑validation lists derived from HTML select elements.
-// Common Searches: aspocells c# convert html to xlsx with dropdown validation from select tags | how to add list validation to cells after loading html with Aspose.Cells .NET | extract option values from html select and create excel dropdown using Aspose.Cells | load html string into Aspose.Cells workbook via MemoryStream c# example
-// Tags: Aspose.Cells HTML to XLSX conversion | C# data validation list creation | extract select options with regex | apply list validation to Excel cells | load HTML via MemoryStream in Aspose.Cells
+// Title: Convert an HTML file to an Excel workbook and generate in‑cell drop‑down lists from <select> elements using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load HTML file and add list validation from select tags | How to extract option values from HTML and create Excel data‑validation dropdowns with Aspose.Cells | Convert input.html to output.xlsx with in‑cell dropdowns using Aspose.Cells .NET | C# generate Excel list validation from HTML <select> elements via Aspose.Cells | Parse HTML select elements and apply Excel data validation using Aspose.Cells
+// Tags: Aspose.Cells HTML to XLSX conversion | Aspose.Cells create list‑type data validation | Excel dropdown from HTML select using Aspose.Cells | HtmlLoadOptions workbook loading C# | Regex extraction of option values for Excel validation
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using Aspose.Cells;
 
-// The program reads an HTML file, loads it into an Aspose.Cells Workbook using a memory stream, extracts option texts from each <select> element with regular expressions, adds a list‑type data validation (dropdown) to consecutive cells in column A, and saves the result as an XLSX workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example reads an HTML file, loads it into an Aspose.Cells Workbook with HtmlLoadOptions, uses regular expressions to locate each <select> element and collect its <option> texts, writes a placeholder into successive rows, and adds a list‑type data validation (in‑cell drop‑down) populated with the extracted values. The workbook is then saved as an XLSX file, with error handling for missing files and load/save failures.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
-
-            // Ensure the HTML file exists
-            if (!File.Exists(htmlPath))
+            try
             {
-                Console.WriteLine($"Error: File '{htmlPath}' not found.");
-                return;
-            }
+                // Path to the source HTML file
+                string htmlPath = "input.html";
 
-            // Read the HTML content
-            string html = File.ReadAllText(htmlPath);
-
-            // -------------------------------------------------
-            // Load HTML into an Aspose.Cells workbook
-            // -------------------------------------------------
-            Workbook workbook;
-            // Load from HTML string via a memory stream
-            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(html)))
-            {
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-                workbook = new Workbook(ms, loadOptions);
-            }
-
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // -------------------------------------------------
-            // Parse the HTML to find <select> elements and their <option> values
-            // -------------------------------------------------
-            var selectMatches = Regex.Matches(html, @"<select[^>]*>(.*?)</select>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            if (selectMatches.Count > 0)
-            {
-                int currentRow = 0; // start placing validations from the first row
-
-                foreach (Match selectMatch in selectMatches)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(htmlPath))
                 {
-                    string selectInnerHtml = selectMatch.Groups[1].Value;
+                    Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
+                    return;
+                }
 
-                    // Gather all option texts for the current <select>
-                    List<string> optionTexts = new List<string>();
-                    var optionMatches = Regex.Matches(selectInnerHtml, @"<option[^>]*>(.*?)</option>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-                    foreach (Match optionMatch in optionMatches)
+                // Read the entire HTML content
+                string html = File.ReadAllText(htmlPath);
+
+                // ---------- Load HTML into workbook ----------
+                Workbook workbook;
+                try
+                {
+                    var loadOptions = new HtmlLoadOptions();
+                    using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(html)))
                     {
-                        string text = optionMatch.Groups[1].Value.Trim();
-                        if (!string.IsNullOrEmpty(text))
-                            optionTexts.Add(text);
+                        // Use the Workbook constructor that accepts a stream and load options
+                        workbook = new Workbook(ms, loadOptions);
                     }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load HTML into workbook: {ex.Message}");
+                    return;
+                }
 
-                    // Build a comma‑separated list for the validation formula
-                    string listFormula = "\"" + string.Join(",", optionTexts) + "\"";
+                // ---------- Parse HTML to locate <select> elements ----------
+                var selectMatches = Regex.Matches(html, @"<select[^>]*?>(.*?)</select>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                if (selectMatches.Count > 0)
+                {
+                    // Work with the first worksheet (adjust if needed)
+                    Worksheet sheet = workbook.Worksheets[0];
 
-                    // -------------------------------------------------
-                    // Add a data‑validation list to a cell (column A, current row)
-                    // -------------------------------------------------
-                    Cell targetCell = sheet.Cells[currentRow, 0]; // A1, A2, ...
+                    // Starting row for placing validation cells (0‑based index)
+                    int currentRow = 0;
 
-                    // Define the cell area for the validation (single cell)
-                    CellArea area = new CellArea
+                    foreach (Match selectMatch in selectMatches)
                     {
-                        StartRow = currentRow,
-                        EndRow = currentRow,
-                        StartColumn = 0,
-                        EndColumn = 0
-                    };
+                        // Extract option texts within the current <select>
+                        var optionMatches = Regex.Matches(selectMatch.Groups[1].Value, @"<option[^>]*?>(.*?)</option>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                        List<string> items = new List<string>();
 
-                    int validationIndex = sheet.Validations.Add(area);
-                    Validation validation = sheet.Validations[validationIndex];
-                    validation.Type = ValidationType.List;
-                    validation.Operator = OperatorType.None;
-                    validation.Formula1 = listFormula;
-                    validation.ShowError = true;
-                    validation.ErrorTitle = "Invalid selection";
-                    validation.ErrorMessage = "Please select a value from the list.";
+                        foreach (Match optionMatch in optionMatches)
+                        {
+                            string text = optionMatch.Groups[1].Value.Trim();
+                            if (!string.IsNullOrEmpty(text))
+                                items.Add(text);
+                        }
 
-                    currentRow++; // move to the next row for the next <select>
+                        // Place a placeholder value in the target cell (column A)
+                        Cell targetCell = sheet.Cells[currentRow, 0];
+                        targetCell.PutValue("Select");
+
+                        // Define the cell area for validation (single cell)
+                        CellArea area = new CellArea
+                        {
+                            StartRow = currentRow,
+                            StartColumn = 0,
+                            EndRow = currentRow,
+                            EndColumn = 0
+                        };
+
+                        // ---------- Create data‑validation list ----------
+                        int validationIndex = sheet.Validations.Add(area);
+                        Validation validation = sheet.Validations[validationIndex];
+                        validation.Type = ValidationType.List;
+                        validation.Operator = OperatorType.None;
+                        validation.InCellDropDown = true;
+                        validation.ShowError = true;
+                        validation.ErrorTitle = "Invalid selection";
+                        validation.ErrorMessage = "Please choose a value from the list.";
+                        validation.AlertStyle = ValidationAlertType.Stop;
+
+                        // Build the comma‑separated list for the formula
+                        validation.Formula1 = string.Join(",", items);
+
+                        // Move to the next row for the next <select>
+                        currentRow++;
+                    }
+                }
+
+                // ---------- Save workbook ----------
+                string outputPath = "output.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
                 }
             }
-
-            // -------------------------------------------------
-            // Save the workbook to an Excel file
-            // -------------------------------------------------
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }

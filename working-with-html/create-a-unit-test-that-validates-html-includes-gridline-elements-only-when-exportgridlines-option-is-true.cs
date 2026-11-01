@@ -1,67 +1,80 @@
-// Title: C# unit test to verify Aspose.Cells HTML export includes gridline borders only when ExportGridLines is enabled
-// AI Prompts: Generate a C# NUnit test that creates a workbook, saves it to HTML with HtmlSaveOptions.ExportGridLines set to true, and asserts that the resulting HTML contains a border style. | Write a C# test method that exports the same workbook to HTML with ExportGridLines set to false and confirms that the HTML does not contain any border CSS. | Provide code that uses a MemoryStream to capture the HTML output from Aspose.Cells and checks for the presence or absence of the word "border" based on the ExportGridLines flag.
-// Common Searches: aspocells html export unit test for gridlines in C# | how to assert border CSS in HTML output from Aspose.Cells | C# test ExportGridLines option produces gridline borders | verify Aspose.Cells HtmlSaveOptions ExportGridLines behavior with memory stream | unit testing Aspose.Cells HTML export without visual inspection
-// Tags: Aspose.Cells HTML export gridlines unit test | HtmlSaveOptions ExportGridLines verification | C# memory stream HTML output testing | border CSS detection Aspose.Cells | gridline styling validation in HTML
+// Title: Write a C# unit test that confirms Aspose.Cells HTML export adds gridline CSS only when ExportGridLines is true
+// AI Prompts: Generate an MSTest or NUnit test method that saves a workbook to HTML with HtmlSaveOptions.ExportGridLines set to true and asserts that the output contains a "border:" style. | Create a second test case that saves the same workbook with ExportGridLines set to false and asserts that the generated HTML does not contain any "border:" CSS.
+// Common Searches: c# unit test Aspose.Cells HtmlSaveOptions ExportGridLines true false | how to assert border CSS in HTML produced by Aspose.Cells | testing gridline rendering in Aspose.Cells HTML export | verify Aspose.Cells HTML output includes gridline styles only when enabled | write NUnit test for Aspose.Cells HTML export gridlines option
+// Tags: Aspose.Cells HTML gridline unit test | HtmlSaveOptions ExportGridLines verification C# | C# test for Aspose.Cells HTML border CSS | validate gridline rendering in HTML export | unit testing Aspose.Cells HTML output
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // The example creates a workbook, exports it to HTML twice—once with HtmlSaveOptions.ExportGridLines true and once false—captures the HTML via MemoryStream, and asserts that the HTML contains the word "border" only when gridlines are enabled, demonstrating how to unit‑test gridline rendering in Aspose.Cells.
-    public class HtmlExportGridLinesTests
+    // Demonstrates how to create a C# unit test that exports a workbook to HTML with HtmlSaveOptions.ExportGridLines toggled, then checks the resulting HTML for the presence or absence of "border:" CSS to ensure gridlines are rendered only when the option is enabled.
+    class HtmlExportGridLinesDemo
     {
-        public static void Main()
+        // Creates a simple workbook with a few cells populated.
+        private static Workbook CreateSampleWorkbook()
+        {
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B2"].PutValue(456);
+            return workbook;
+        }
+
+        // Exports the given workbook to an HTML string using the specified ExportGridLines setting.
+        private static string ExportToHtml(Workbook workbook, bool exportGridLines)
+        {
+            var options = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportGridLines = exportGridLines
+            };
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.Save(stream, options);
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        // Checks whether the generated HTML contains border styles when ExportGridLines is true.
+        private static void VerifyExportGridLinesTrue()
+        {
+            var workbook = CreateSampleWorkbook();
+            string html = ExportToHtml(workbook, true);
+            if (html.Contains("border:"))
+                Console.WriteLine("PASS: HTML contains border styles when ExportGridLines is true.");
+            else
+                Console.WriteLine("FAIL: HTML does NOT contain border styles when ExportGridLines is true.");
+        }
+
+        // Checks whether the generated HTML does NOT contain border styles when ExportGridLines is false.
+        private static void VerifyExportGridLinesFalse()
+        {
+            var workbook = CreateSampleWorkbook();
+            string html = ExportToHtml(workbook, false);
+            if (!html.Contains("border:"))
+                Console.WriteLine("PASS: HTML does NOT contain border styles when ExportGridLines is false.");
+            else
+                Console.WriteLine("FAIL: HTML contains border styles when ExportGridLines is false.");
+        }
+
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and add some data
-                var workbook = new Workbook();
-                var worksheet = workbook.Worksheets[0];
-                worksheet.Cells["A1"].PutValue("Sample");
-                worksheet.Cells["B2"].PutValue(12345);
-
-                // Export to HTML with ExportGridLines = true
-                var optionsWithGridLines = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    ExportGridLines = true
-                };
-                string htmlWithGridLines;
-                using (var streamWithGridLines = new MemoryStream())
-                {
-                    workbook.Save(streamWithGridLines, optionsWithGridLines);
-                    htmlWithGridLines = Encoding.UTF8.GetString(streamWithGridLines.ToArray());
-                }
-
-                // Export to HTML with ExportGridLines = false
-                var optionsWithoutGridLines = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    ExportGridLines = false
-                };
-                string htmlWithoutGridLines;
-                using (var streamWithoutGridLines = new MemoryStream())
-                {
-                    workbook.Save(streamWithoutGridLines, optionsWithoutGridLines);
-                    htmlWithoutGridLines = Encoding.UTF8.GetString(streamWithoutGridLines.ToArray());
-                }
-
-                // Verify presence or absence of border styling
-                bool containsBorder = htmlWithGridLines.Contains("border", StringComparison.OrdinalIgnoreCase);
-                bool containsBorderWithout = htmlWithoutGridLines.Contains("border", StringComparison.OrdinalIgnoreCase);
-
-                Console.WriteLine(containsBorder
-                    ? "PASS: HTML with grid lines contains border style."
-                    : "FAIL: HTML with grid lines should contain border style.");
-
-                Console.WriteLine(!containsBorderWithout
-                    ? "PASS: HTML without grid lines does not contain border style."
-                    : "FAIL: HTML without grid lines should not contain border style.");
+                VerifyExportGridLinesTrue();
+                VerifyExportGridLinesFalse();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

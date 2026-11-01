@@ -1,35 +1,44 @@
-// Title: How to log original and updated FitToPagesWide values for each worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a workbook with Aspose.Cells, iterates every worksheet, prints the current PageSetup.FitToPagesWide, sets it to a new value, and prints the updated value. | Create a C# example that records the original FitToPagesWide setting of each sheet, changes it to 1, and logs both values to the console using Aspose.Cells.
-// Common Searches: Aspose.Cells C# log FitToPagesWide before and after changing page setup | How to read and modify FitToPagesWide for each worksheet in a .xlsx file using Aspose.Cells | C# example to iterate worksheets and output original FitToPagesWide value with Aspose.Cells | Saving workbook after updating FitToPagesWide property in Aspose.Cells .NET
-// Tags: Aspose.Cells page setup FitToPagesWide logging | C# iterate worksheets Aspose.Cells | modify worksheet scaling Aspose.Cells | record original page setup values .NET | save workbook after FitToPagesWide change
+// Title: C# example to log original and updated FitToPagesWide values for each worksheet using Aspose.Cells
+// Common Searches: how to print original and new FitToPagesWide values for each sheet with Aspose.Cells in C# | Aspose.Cells C# log page setup FitToPagesWide before and after change | record FitToPagesWide property changes for worksheets using Aspose.Cells .NET | C# console output of FitToPagesWide modifications in Excel workbook with Aspose.Cells | detect and log FitToPagesWide differences across worksheets using Aspose.Cells
+// Tags: Aspose.Cells FitToPagesWide property logging | C# worksheet page setup scaling update | detect and record page setup changes Aspose.Cells | Excel print scaling modification tracking .NET | monitor worksheet FitToPagesWide value changes
 
 using Aspose.Cells;
 using System;
 
-// Loads 'input.xlsx', iterates each worksheet, writes the original PageSetup.FitToPagesWide value to the console, sets the property to 1, logs the updated value, and saves the workbook as 'output.xlsx' using Aspose.Cells for .NET.
+// The code loads an Excel workbook, iterates through each worksheet, captures the current PageSetup.FitToPagesWide value, sets a new value when it differs, logs both the original and updated values to the console, and saves the workbook.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (load rule)
+        // Load the workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets
+        // Iterate through each worksheet to monitor FitToPagesWide changes
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             PageSetup pageSetup = sheet.PageSetup;
 
-            // Log the original FitToPagesWide value
-            Console.WriteLine($"Worksheet '{sheet.Name}' original FitToPagesWide: {pageSetup.FitToPagesWide}");
+            // Store the original value
+            int originalFitToPagesWide = pageSetup.FitToPagesWide;
 
-            // Change the FitToPagesWide value (example: set to 1)
-            pageSetup.FitToPagesWide = 1;
+            // Define the new value you want to set (example: 1)
+            int newFitToPagesWide = 1;
 
-            // Log the updated FitToPagesWide value
-            Console.WriteLine($"Worksheet '{sheet.Name}' updated FitToPagesWide: {pageSetup.FitToPagesWide}");
+            // Only proceed if the value is actually changing
+            if (originalFitToPagesWide != newFitToPagesWide)
+            {
+                // Log the original value
+                Console.WriteLine($"Worksheet '{sheet.Name}': Original FitToPagesWide = {originalFitToPagesWide}");
+
+                // Apply the new value
+                pageSetup.FitToPagesWide = newFitToPagesWide;
+
+                // Log the updated value
+                Console.WriteLine($"Worksheet '{sheet.Name}': Updated FitToPagesWide = {pageSetup.FitToPagesWide}");
+            }
         }
 
-        // Save the modified workbook (save rule)
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

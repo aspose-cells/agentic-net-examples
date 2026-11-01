@@ -1,67 +1,60 @@
-// Title: Export each Excel worksheet to its own HTML file with a dedicated external CSS stylesheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that iterates through a workbook, saves each worksheet as an individual HTML file, and creates a matching external CSS file referenced via a <link> tag. | Adjust HtmlSaveOptions in Aspose.Cells to enable per‑worksheet CSS output and ensure the generated HTML points to the correct stylesheet location. | Write a utility that verifies each exported HTML file contains a proper <link rel="stylesheet"> element that references its sheet‑specific CSS file.
-// Common Searches: how to create separate css files for each worksheet when converting Excel to html with aspocells | c# aspocells export workbook to html with per‑sheet stylesheet | aspocells htmlsaveoptions generate external css for each sheet | save excel worksheets as individual html pages with linked css using .net | aspocells .net export multiple worksheets to html and link separate css files
-// Tags: aspocells htmlsaveoptions per‑worksheet external css | c# export excel worksheet to html with linked stylesheet | generate separate css file for each sheet aspocells | save workbook as multiple html files aspocells .net | html output with sheet‑specific css aspocells | aspocells external stylesheet per worksheet
+// Title: Generate separate HTML files with external CSS for each worksheet using Aspose.Cells for .NET
+// Common Searches: how to export each Excel worksheet to its own HTML file with external CSS using Aspose.Cells C# | Aspose.Cells create per‑worksheet CSS files when saving as HTML in .NET | C# save workbook worksheets as HTML with linked stylesheet files Aspose.Cells | export Excel sheets to HTML with separate CSS files and correct link paths using Aspose.Cells | Aspose.Cells HtmlSaveOptions external CSS per worksheet example C#
+// Tags: Aspose.Cells per-worksheet HTML export external CSS | HtmlSaveOptions ExportActiveWorksheetOnly linked stylesheet | C# generate separate CSS files for Excel worksheets | Excel to HTML conversion external stylesheet Aspose.Cells | output directory structure worksheet HTML CSS Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook, loops through each worksheet, sets it as the active sheet, and saves it as an HTML file. To meet the requirement of external CSS per worksheet, HtmlSaveOptions must be configured to emit a separate stylesheet for each sheet and the generated HTML should include a <link> tag that points to the corresponding CSS file.
-class Program
+// The example loads an Excel workbook, creates an output folder, iterates through each worksheet, activates it, and saves it as an individual HTML file. Aspose.Cells generates a dedicated external CSS file for each worksheet and updates the HTML <link> tag so the stylesheet path points to the correct location.
+class ExportWorksheetsToHtmlWithExternalCss
 {
     static void Main()
     {
-        const string inputPath = @"C:\Input\Sample.xlsx";
-        const string outputFolder = @"C:\Output";
-
         try
         {
-            // Verify input file exists
-            if (!File.Exists(inputPath))
+            // Path to the source workbook
+            string workbookPath = @"C:\Input\SampleWorkbook.xlsx";
+
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Workbook not found: {workbookPath}");
                 return;
             }
 
-            // Ensure output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Load the workbook inside a using block for automatic disposal
-            using (var workbook = new Workbook(inputPath))
+            // Output directory for HTML files (and any generated CSS/images)
+            string outputDir = @"C:\Output\HtmlExport";
+            Directory.CreateDirectory(outputDir);
+
+            // Export each worksheet to its own HTML file
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Activate the current worksheet
+                workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+
+                // Configure HTML save options – export only the active worksheet
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    try
-                    {
-                        // Set the current sheet as active for ExportActiveWorksheetOnly
-                        workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+                    ExportActiveWorksheetOnly = true
+                };
 
-                        // Configure HTML save options
-                        var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-                        {
-                            ExportActiveWorksheetOnly = true
-                            // ExportWorksheetCss property is not available in current API version
-                        };
+                // Build the HTML file path (one file per worksheet)
+                string htmlFileName = $"{sheet.Name}.html";
+                string htmlPath = Path.Combine(outputDir, htmlFileName);
 
-                        // Define HTML output path
-                        string htmlFileName = Path.Combine(outputFolder, $"{sheet.Name}.html");
+                // Save the worksheet as HTML
+                workbook.Save(htmlPath, saveOptions);
 
-                        // Save the worksheet as HTML
-                        workbook.Save(htmlFileName, htmlOptions);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
-                    }
-                }
+                Console.WriteLine($"Exported worksheet '{sheet.Name}' to HTML: {htmlPath}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

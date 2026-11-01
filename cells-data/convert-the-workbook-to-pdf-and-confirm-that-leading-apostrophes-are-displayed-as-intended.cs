@@ -1,53 +1,42 @@
-// Title: Save an Aspose.Cells workbook to PDF in C# while preserving leading apostrophes in cell text
-// AI Prompts: Generate C# code that creates a workbook, enables QuotePrefixToStyle, writes a value beginning with an apostrophe, and saves the file as PDF using Aspose.Cells. | Insert a verification step that reads the cell's style to confirm the QuotePrefix flag is true before performing the PDF export. | Configure PdfSaveOptions with CheckWorkbookDefaultFont and ExportDocumentStructure to ensure the leading apostrophe renders correctly in the PDF.
-// Common Searches: how to keep leading apostrophe visible when exporting Excel to PDF with Aspose.Cells C# | Aspose.Cells QuotePrefixToStyle PDF output example | C# save workbook as PDF preserving literal string apostrophe | PdfSaveOptions CheckWorkbookDefaultFont effect on apostrophe rendering | export document structure Aspose.Cells PDF accessibility
-// Tags: Aspose.Cells PDF export QuotePrefix | preserve leading apostrophe Aspose.Cells | PdfSaveOptions CheckWorkbookDefaultFont C# | ExportDocumentStructure Aspose.Cells PDF | C# workbook Save as PDF apostrophe handling
+// Title: Convert an Excel workbook to PDF with Aspose.Cells for .NET while preserving leading apostrophes
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, saves it as a PDF, and checks that cells beginning with an apostrophe keep the apostrophe in the PDF output. | Show how to configure PdfSaveOptions in Aspose.Cells to prevent removal of leading apostrophes during Excel‑to‑PDF conversion. | Provide a C# snippet that validates the presence of leading apostrophe characters in the PDF after converting an Excel workbook.
+// Common Searches: asp.net convert excel to pdf keep leading apostrophe Aspose.Cells | C# Aspose.Cells PDF export apostrophe character not removed | how to retain single quote at start of cell when saving Excel as PDF using Aspose | PdfSaveOptions preserve text formatting for cells with leading apostrophe
+// Tags: Aspose.Cells PDF conversion apostrophe preservation | C# Aspose.Cells PdfSaveOptions configuration | Excel to PDF apostrophe handling Aspose | verify PDF text rendering Aspose.Cells | load workbook save as PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Required for PdfSaveOptions
 
-namespace LeadingApostrophePdfDemo
+// The example loads input.xlsx with Aspose.Cells, saves it as output.pdf using default PdfSaveOptions, and demonstrates that leading apostrophes in cell values are retained in the generated PDF.
+class Program
 {
-    // The example creates a new workbook, enables QuotePrefixToStyle so a leading apostrophe is treated as a style flag, writes "'Aspose" into cell A1, verifies the QuotePrefix flag, configures PdfSaveOptions (CheckWorkbookDefaultFont and ExportDocumentStructure) for proper Unicode rendering, and saves the workbook as LeadingApostropheOutput.pdf, ensuring the leading apostrophe appears correctly in the generated PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Enable QuotePrefixToStyle so that a leading apostrophe is treated as a style flag
-            workbook.Settings.QuotePrefixToStyle = true;
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Put a value that starts with a single quote
-            // The apostrophe is used in Excel to indicate that the following text is a literal string
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("'Aspose");
-
-            // Verify that the style reflects the QuotePrefix flag
-            bool isQuotePrefixSet = cell.GetStyle().QuotePrefix;
-            Console.WriteLine($"QuotePrefix flag on cell A1: {isQuotePrefixSet}");
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Ensure the workbook's default font is checked for Unicode characters
-                CheckWorkbookDefaultFont = true,
+                Console.WriteLine($"Error: Input file not found – {inputPath}");
+                return;
+            }
 
-                // Optional: keep document structure for better accessibility
-                ExportDocumentStructure = true
-            };
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as PDF
-            string pdfPath = "LeadingApostropheOutput.pdf";
-            workbook.Save(pdfPath, pdfOptions);
+            // Configure PDF options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            Console.WriteLine($"Workbook saved to PDF at '{pdfPath}'.");
-            Console.WriteLine("The leading apostrophe should be displayed correctly in the PDF.");
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,15 +1,15 @@
-// Title: Read chart reflection blur values from an Excel workbook and store them in a C# Dictionary using Aspose.Cells
-// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet and each chart, obtains the chart's reflection blur (or assigns a default when the property is unavailable) and adds the result to a Dictionary<string, double> keyed by a unique chart identifier. | Show how to gracefully handle the missing Reflection property on Aspose.Cells Chart objects by using a fallback blur value while still collecting blur information for all chart shapes.
-// Common Searches: Aspose.Cells get reflection blur of chart shape in .NET | C# read visual effect properties of Excel charts using Aspose.Cells | store Excel chart properties in a dictionary with Aspose.Cells | workaround for unsupported chart reflection property in Aspose.Cells C# | retrieve chart effect parameters from a workbook using Aspose.Cells
-// Tags: Aspose.Cells retrieve chart reflection blur | C# dictionary store chart blur values | iterate worksheets and charts Aspose.Cells | fallback for missing chart reflection property Aspose.Cells | generate unique chart key C#
+// Title: How to read the reflection blur setting of each chart shape and store it in a C# dictionary using Aspose.Cells
+// Common Searches: Aspose.Cells get chart shape reflection blur value in C# | C# read reflection blur property of Excel chart shapes with Aspose.Cells | store chart reflection blur amounts in a dictionary using Aspose.Cells .NET | iterate worksheets and charts to extract shape reflection settings Aspose.Cells | retrieve Excel chart reflection blur using Aspose.Cells API
+// Tags: Aspose.Cells chart shape reflection extraction | C# dictionary of chart blur values | iterate worksheets and charts Aspose.Cells | read shape reflection settings .NET | Excel chart reflection property Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-// The example loads an Excel file with Aspose.Cells, iterates over each worksheet and its charts, attempts to read a reflection blur value (using a default of 0.0 because the API lacks a direct property), creates a unique identifier for each chart, stores the blur value in a Dictionary<string, double>, and prints the collected results.
+// The example loads an Excel workbook, loops through every worksheet and its charts, obtains the Shape object for each chart, reads the Reflection.Blur property when present, and saves the blur amount in a Dictionary keyed by worksheet name and chart index before printing the results.
 class Program
 {
     static void Main()
@@ -23,50 +23,69 @@ class Program
             return;
         }
 
+        Workbook workbook;
         try
         {
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            // Dictionary to store each chart's reflection blur value (placeholder if not supported)
-            Dictionary<string, double> chartReflectionBlur = new Dictionary<string, double>();
+        // Dictionary to store each chart's reflection blur value
+        // Key: worksheet name + chart index, Value: blur amount
+        var chartReflectionBlur = new Dictionary<string, double>();
 
-            // Iterate through all worksheets in the workbook
+        try
+        {
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all charts on the worksheet
+                int chartIdx = 0; // local index for charts in this sheet
+
+                // Iterate through all charts in the current worksheet
                 foreach (Chart chart in sheet.Charts)
                 {
+                    // Attempt to get the shape that represents the chart by name
+                    Shape chartShape = null;
                     try
                     {
-                        // Aspose.Cells Chart does not expose a Reflection property directly.
-                        // Use a placeholder value (0.0) for blur.
-                        double blur = 0.0;
+                        chartShape = sheet.Shapes[chart.Name];
+                    }
+                    catch
+                    {
+                        // Shape not found; continue without throwing
+                    }
+
+                    // Ensure the shape and its reflection settings exist
+                    if (chartShape != null && chartShape.Reflection != null)
+                    {
+                        double blurValue = chartShape.Reflection.Blur;
 
                         // Build a unique key for the chart
-                        string key = !string.IsNullOrEmpty(chart.Name)
-                            ? chart.Name
-                            : $"{sheet.Name}_Chart_{chart.GetHashCode()}";
+                        string key = $"{sheet.Name}_Chart{chartIdx}";
 
-                        chartReflectionBlur[key] = blur;
+                        // Store the blur value in the dictionary
+                        chartReflectionBlur[key] = blurValue;
                     }
-                    catch (Exception exChart)
-                    {
-                        Console.WriteLine($"Error processing chart on sheet \"{sheet.Name}\": {exChart.Message}");
-                    }
+
+                    chartIdx++;
                 }
-            }
-
-            // Output the collected blur values
-            foreach (var kvp in chartReflectionBlur)
-            {
-                Console.WriteLine($"Chart: {kvp.Key}, Reflection Blur: {kvp.Value}");
             }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error while processing charts: {ex.Message}");
+            return;
+        }
+
+        // Output the collected values
+        foreach (var kvp in chartReflectionBlur)
+        {
+            Console.WriteLine($"Chart: {kvp.Key}, Reflection Blur: {kvp.Value}");
         }
     }
 }

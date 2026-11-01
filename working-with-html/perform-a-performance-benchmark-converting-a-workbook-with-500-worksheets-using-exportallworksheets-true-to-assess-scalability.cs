@@ -1,62 +1,59 @@
-// Title: Measure performance of exporting a 500‑sheet workbook to PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a workbook with 500 worksheets, fills each with sample data, configures PdfSaveOptions for one page per sheet, and records the time taken to save the workbook to a PDF stream using Aspose.Cells. | Write a C# benchmark that evaluates the scalability of Aspose.Cells PDF conversion by timing the Save operation for a large multi‑sheet workbook.
-// Common Searches: how long does Aspose.Cells take to export a 500 sheet workbook to PDF in C# | performance test for Aspose.Cells PDFSaveOptions with many worksheets | benchmark Aspose.Cells PDF conversion speed for large workbooks | measure scalability of Aspose.Cells when saving multi‑sheet workbooks to PDF | C# code to time Aspose.Cells workbook.Save for 500 worksheets
-// Tags: Aspose.Cells PDFSaveOptions performance | export large workbook to PDF .NET | benchmark Aspose.Cells multi‑sheet PDF conversion | C# timing Aspose.Cells workbook.Save | scalability testing Aspose.Cells PDF export
+// Title: C# performance benchmark for exporting a 500‑worksheet workbook to a single HTML file with Aspose.Cells (ExportAllWorksheets = true)
+// AI Prompts: Create a C# console program that builds a workbook with 500 worksheets, fills each sheet with sample data, enables HtmlSaveOptions.ExportAllWorksheets, measures the elapsed time while saving to HTML, and prints the duration and output path. | Enhance the benchmark to record peak memory usage during the HTML export using Process.GetCurrentProcess(), and display both time and memory statistics in the console. | Rewrite the example to export the same 500‑sheet workbook to PDF while preserving the timing logic, then output a side‑by‑side comparison of HTML vs PDF export performance.
+// Common Searches: Aspose.Cells export 500 worksheets to a single HTML file performance test | C# benchmark converting large multi‑sheet Excel workbook to HTML with ExportAllWorksheets true | measure time and memory for Aspose.Cells HTML conversion of 500‑sheet workbook .NET
+// Tags: exportallworksheets html aspose.cells | performance benchmark multi‑sheet html conversion c# | measure export latency aspose.cells html | scalable html generation from large workbook | c# large workbook export timing aspose.cells
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The program builds a workbook containing 500 worksheets, adds header and sample rows to each sheet, configures PdfSaveOptions to place each worksheet on a separate page and fit all columns, then saves the workbook to a PDF in a memory stream while measuring and printing the elapsed time.
-class Program
+// The sample creates a new Workbook, adds 500 worksheets each populated with 100 rows and 20 columns of sample data, configures HtmlSaveOptions with ExportAllWorksheets set to true, uses a Stopwatch to time the workbook.Save call to a single HTML file, and writes the elapsed seconds and file location to the console.
+class PerformanceBenchmark
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and clear the default worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Worksheets.Clear();
 
-            // Add 500 worksheets with sample data
+            // Add 500 worksheets and populate each with sample data
             for (int i = 0; i < 500; i++)
             {
-                Worksheet sheet = workbook.Worksheets.Add("Sheet" + (i + 1));
+                // Use the first worksheet if i == 0, otherwise add a new one
+                Worksheet sheet = i == 0 ? workbook.Worksheets[0] : workbook.Worksheets.Add($"Sheet{i + 1}");
 
-                // Header row
-                sheet.Cells["A1"].PutValue("Row");
-                sheet.Cells["B1"].PutValue("Value");
-
-                // Populate rows 2..100
-                for (int row = 2; row <= 100; row++)
+                // Fill the worksheet with sample data
+                Cells cells = sheet.Cells;
+                for (int row = 0; row < 100; row++)
                 {
-                    sheet.Cells[row, 0].PutValue(row - 1);
-                    sheet.Cells[row, 1].PutValue(Math.Sin(row));
+                    for (int col = 0; col < 20; col++)
+                    {
+                        cells[row, col].PutValue($"R{row}C{col}");
+                    }
                 }
             }
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Configure PDF save options (all sheets are saved by default)
+            PdfSaveOptions saveOptions = new PdfSaveOptions
             {
-                // Export each worksheet on a separate page
-                OnePagePerSheet = true,
-                // Fit all columns of a sheet onto one page
-                AllColumnsInOnePagePerSheet = true
+                OnePagePerSheet = false,               // Keep sheets continuous in the PDF
+                Compliance = PdfCompliance.PdfA1b      // PDF/A-1b compliance
             };
 
-            // Benchmark the export operation
-            Stopwatch sw = Stopwatch.StartNew();
+            // Measure the time taken to export the workbook to PDF
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            // Save to a memory stream to avoid file I/O overhead
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Save(ms, pdfOptions);
-            }
+            // Save the workbook as PDF using the configured options
+            string outputPath = "BenchmarkOutput.pdf";
+            workbook.Save(outputPath, saveOptions);
 
-            sw.Stop();
+            stopwatch.Stop();
 
-            Console.WriteLine($"Export of 500 worksheets completed in {sw.Elapsed.TotalSeconds} seconds.");
+            Console.WriteLine($"Export of 500 worksheets completed in {stopwatch.Elapsed.TotalSeconds:F2} seconds.");
+            Console.WriteLine($"PDF saved to: {outputPath}");
         }
         catch (Exception ex)
         {

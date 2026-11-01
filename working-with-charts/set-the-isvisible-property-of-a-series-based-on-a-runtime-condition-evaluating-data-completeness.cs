@@ -1,14 +1,18 @@
-// Title: Hide or remove Excel chart series with incomplete data ranges using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates through each series in a chart, checks if the series' value range contains any empty cells, and sets the series IsVisible property to false when blanks are found. | Create a helper method in C# using Aspose.Cells that validates that all cells in a given range are populated, and demonstrate how to call it to conditionally set series visibility at runtime. | Show how to save the workbook after setting visibility for incomplete series and log which series were modified.
-// Common Searches: Aspose.Cells C# filter out chart series with empty cells | programmatically check Excel chart series data completeness before rendering with Aspose.Cells | set IsVisible property of chart series based on range validation in Aspose.Cells .NET
-// Tags: hide chart series Aspose.Cells C# | validate range completeness Aspose.Cells | conditional series visibility Excel .NET | remove incomplete series Aspose.Cells | runtime chart data check Aspose.Cells
+// Title: How to delete chart series with incomplete data ranges using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates over each series in the first chart, examines the Values range for any blank or null cells, and removes the series that are not fully populated before saving the file. | Create a reusable C# method that takes a Chart object and eliminates all series whose source cells contain empty strings or null values, using Aspose.Cells range traversal. | Demonstrate a runtime check that evaluates the completeness of each chart series in Aspose.Cells and hides or deletes those series that have missing data, preserving the remaining series.
+// Common Searches: asp.net remove chart series with blank cells using aspose.cells | c# check if chart series data range contains empty cells asp.net | how to delete incomplete series from an Excel chart with aspose.cells | runtime hide chart series based on missing data in aspose.cells .net | filter out chart series with null values in Excel using aspose.cells c#
+// Tags: remove chart series Aspose.Cells C# | check series data completeness Aspose.Cells | delete series with empty cells Excel .NET | runtime chart series visibility Aspose.Cells | iterate chart series range Aspose.Cells | filter incomplete chart series C#
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an Excel workbook, examines each series in the first chart, uses a helper to verify that the series' value range has no empty cells, removes or hides any series that are incomplete, and saves the updated workbook.
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an Excel workbook, accesses the first worksheet and its first chart, iterates through each series to evaluate the cells referenced by the series' Values range, flags series containing any null or blank cells as incomplete, removes those series from the chart, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
@@ -18,7 +22,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,70 +32,86 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one chart
-            if (worksheet.Charts.Count == 0)
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine("The workbook contains no worksheets.");
                 return;
             }
 
-            // Get the first chart
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
+            }
+
             Chart chart = worksheet.Charts[0];
 
-            // Iterate through each series in reverse order to allow removal
-            for (int i = chart.NSeries.Count - 1; i >= 0; i--)
+            // Keep track of series indices that should be removed (incomplete data)
+            List<int> indicesToRemove = new List<int>();
+
+            // Iterate through each series in the chart
+            for (int i = 0; i < chart.NSeries.Count; i++)
             {
                 Series series = chart.NSeries[i];
+                bool isComplete = true;
 
-                // Retrieve the address of the series values (e.g., "A1:A10")
-                string valuesRange = series.Values;
+                // Get the range that defines the series values (e.g., "A1:B5")
+                string valuesAddress = series.Values;
 
-                // Determine if the data range is complete (no empty cells)
-                bool isComplete = IsRangeComplete(workbook, valuesRange);
+                if (string.IsNullOrWhiteSpace(valuesAddress))
+                {
+                    // If the series has no data source, consider it incomplete
+                    isComplete = false;
+                }
+                else
+                {
+                    // Create a range object from the address
+                    AsposeRange range = worksheet.Cells.CreateRange(valuesAddress);
 
-                // If the range is incomplete, remove (hide) the series
+                    // Check each cell in the range for emptiness
+                    foreach (Cell cell in range)
+                    {
+                        // A cell is considered empty if its value is null or its string representation is empty
+                        if (cell.Value == null || string.IsNullOrWhiteSpace(cell.StringValue))
+                        {
+                            isComplete = false;
+                            break;
+                        }
+                    }
+                }
+
+                // If the series is incomplete, mark it for removal
                 if (!isComplete)
                 {
-                    chart.NSeries.RemoveAt(i);
+                    indicesToRemove.Add(i);
                 }
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Helper method to verify that all cells in a given range contain data
-    static bool IsRangeComplete(Workbook workbook, string rangeAddress)
-    {
-        try
-        {
-            // Create a Range object from the address on the first worksheet
-            Aspose.Cells.Range range = workbook.Worksheets[0].Cells.CreateRange(rangeAddress);
-
-            // Check each cell in the range
-            foreach (Cell cell in range)
+            // Remove incomplete series starting from the highest index to avoid shifting
+            for (int i = indicesToRemove.Count - 1; i >= 0; i--)
             {
-                // If a cell is null or its string representation is empty, the range is incomplete
-                if (cell.Value == null || string.IsNullOrWhiteSpace(cell.StringValue))
-                    return false;
+                chart.NSeries.RemoveAt(indicesToRemove[i]);
             }
 
-            // All cells contain data
-            return true;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error checking range '{rangeAddress}': {ex.Message}");
-            return false;
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

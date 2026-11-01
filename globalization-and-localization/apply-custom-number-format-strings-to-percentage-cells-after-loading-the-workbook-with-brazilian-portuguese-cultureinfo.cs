@@ -1,47 +1,103 @@
-// Title: Apply Brazilian Portuguese custom percentage format (0,00%) to all percent cells using Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook with Aspose.Cells, set workbook.Settings.CultureInfo to "pt-BR", and replace every cell where style.IsPercent is true with the custom format string "0,00%". | Create a reusable method that takes a Workbook and a format string, then applies that format to all percentage‑styled cells while keeping the pt‑BR culture settings. | Write a snippet that iterates only the used range of each worksheet, updates percentage cells to a locale‑aware format, and saves the modified workbook to a new file.
-// Common Searches: how to set Brazilian Portuguese culture for an Aspose.Cells workbook in C# | change percentage number format to use comma decimal separator with Aspose.Cells | apply custom number format to all percent cells in an Excel file using Aspose.Cells .NET | iterate through used range and modify style.IsPercent cells in Aspose.Cells | save workbook after applying locale‑specific percentage format Aspose.Cells
-// Tags: set workbook culture pt-BR Aspose.Cells | custom percentage format 0,00% Aspose.Cells | iterate cells and modify style.IsPercent C# | locale-aware number formatting Excel Aspose.Cells | apply custom number format to percent cells .NET
+// Title: Apply a custom 0.00% number format to percentage cells in an Excel workbook using Aspose.Cells for .NET with Brazilian Portuguese culture
+// Common Searches: how to apply a custom 0.00% number format to percent cells with Aspose.Cells in C# | set Brazilian Portuguese locale for Excel formatting using Aspose.Cells .NET | change existing percent styled cells to two‑decimal percentage format in Aspose.Cells | load an Excel file with optional password and format percentages in pt‑BR culture | iterate worksheets and update percent cell style with Aspose.Cells C#
+// Tags: custom percentage format Aspose.Cells .NET | Brazilian Portuguese locale Excel formatting | apply style to percent cells C# | password protected workbook loading Aspose.Cells | set custom number format string Excel C# | culture‑specific number formatting Aspose.Cells
 
+using System;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads input.xlsx, assigns the Brazilian Portuguese (pt-BR) CultureInfo to the workbook, scans every cell, and for cells flagged as percentages replaces their style with the custom format "0,00%" before saving to output.xlsx.
+// The example sets the thread culture to pt-BR, loads an Excel workbook (prompting for a password if required), scans all worksheets for cells whose style is marked as percent, assigns the custom number format "0.00%" to those cells, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        // Set Brazilian Portuguese culture for the current thread
+        CultureInfo brazil = new CultureInfo("pt-BR");
+        CultureInfo.CurrentCulture = brazil;
+        CultureInfo.CurrentUICulture = brazil;
 
-        // Apply Brazilian Portuguese culture (pt-BR) to the workbook settings
-        workbook.Settings.CultureInfo = new CultureInfo("pt-BR");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets and cells
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook = null;
+
+        // First attempt: load without password
+        try
+        {
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            // If loading fails, assume it may be password protected and request password
+            Console.Write("The workbook may be password protected. Enter password (or leave empty to abort): ");
+            string password = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(password))
+            {
+                Console.WriteLine("No password provided. Exiting.");
+                return;
+            }
+
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+            try
+            {
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception innerEx)
+            {
+                Console.WriteLine($"Failed to load workbook with password: {innerEx.Message}");
+                return;
+            }
+        }
+
+        // Ensure workbook was loaded
+        if (workbook == null)
+        {
+            Console.WriteLine("Workbook could not be loaded.");
+            return;
+        }
+
+        // Iterate through all worksheets and apply a custom percentage format
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-            // Loop through each cell in the used range
-            foreach (Cell cell in cells)
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Get the current style of the cell
-                Style style = cell.GetStyle();
-
-                // Check if the cell is formatted as a percentage
-                if (style.IsPercent)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    // Apply a custom number format string for percentages
-                    // Using comma as decimal separator according to pt-BR culture
-                    style.Custom = "0,00%";
-
-                    // Assign the modified style back to the cell
-                    cell.SetStyle(style);
+                    Cell cell = cells[row, col];
+                    // Check if the cell is already formatted as a percentage
+                    if (cell.GetStyle().IsPercent)
+                    {
+                        Style style = cell.GetStyle();
+                        // Apply custom number format string for percentages
+                        style.Custom = "0.00%";
+                        cell.SetStyle(style);
+                    }
                 }
             }
         }
 
         // Save the modified workbook
-        workbook.Save("output.xlsx");
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

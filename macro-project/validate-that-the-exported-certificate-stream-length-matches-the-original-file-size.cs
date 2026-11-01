@@ -1,41 +1,66 @@
-// Title: Validate that a workbook saved to a MemoryStream with Aspose.Cells .NET has the same byte size as the original XLSX file
-// AI Prompts: Write C# code that loads an existing .xlsx file using Aspose.Cells, saves the workbook to a MemoryStream with SaveFormat.Xlsx, and prints whether the stream length equals the original file size. | Create a method that takes a file path, exports the workbook to a MemoryStream via Aspose.Cells, compares MemoryStream.Length to the source file length, and returns a boolean indicating a size match.
-// Common Searches: how to verify that Aspose.Cells saved workbook size matches original file in C# | C# compare original Excel file length with MemoryStream length after SaveFormat.Xlsx | Aspose.Cells .NET check for size mismatch when exporting to memory stream | determine if exported XLSX stream is identical in size to source file using Aspose.Cells | validate workbook byte size after saving to MemoryStream with Aspose.Cells
-// Tags: Aspose.Cells compare exported stream size | C# memory stream length verification for XLSX | SaveFormat.Xlsx size check with Aspose.Cells | validate workbook byte size after save | detect Excel file size mismatch in .NET
+// Title: Check that an exported XLSX MemoryStream size matches the original file size using Aspose.Cells for .NET
+// Common Searches: how to verify that a MemoryStream saved with Aspose.Cells has the same byte length as the source XLSX file | C# compare original Excel file size with exported workbook stream size using Aspose.Cells | Aspose.Cells .NET validate exported workbook size equals input file size | detect size mismatch after saving workbook to MemoryStream with Aspose.Cells | handle password protected workbook when checking exported stream length in C#
+// Tags: Aspose.Cells workbook export MemoryStream | validate exported XLSX byte length | original vs exported Excel file size comparison | password protected workbook loading Aspose.Cells | file existence check C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads "input.xlsx", records its original byte size, saves the workbook to a MemoryStream in XLSX format using Aspose.Cells, compares the stream length to the original size, and outputs whether the sizes match.
-class Program
+// The example loads an XLSX file with Aspose.Cells, obtains its byte length, saves the workbook to a MemoryStream using SaveFormat.Xlsx, and compares the stream length to the original file size, reporting success or mismatch while handling missing files, password‑protected workbooks, and unexpected errors.
+class CertificateExportValidator
 {
     static void Main()
     {
         // Path to the original Excel file
         string filePath = "input.xlsx";
 
-        // Get the original file size in bytes
-        long originalSize = new FileInfo(filePath).Length;
-
-        // Load the workbook from the file
-        Workbook workbook = new Workbook(filePath);
-
-        // Export the workbook to a memory stream using the same format
-        using (MemoryStream exportedStream = new MemoryStream())
+        // Verify that the input file exists
+        if (!File.Exists(filePath))
         {
-            workbook.Save(exportedStream, SaveFormat.Xlsx);
-            long exportedSize = exportedStream.Length;
+            Console.WriteLine($"Error: File not found – \"{filePath}\"");
+            return;
+        }
 
-            // Validate that the exported stream length matches the original file size
-            if (exportedSize == originalSize)
+        try
+        {
+            // Get original file size in bytes
+            long originalFileSize = new FileInfo(filePath).Length;
+
+            // Load the workbook (handle possible password protection)
+            Workbook workbook;
+            try
             {
-                Console.WriteLine("Exported stream length matches the original file size.");
+                workbook = new Workbook(filePath);
             }
-            else
+            catch (CellsException ex) when (ex.Message.Contains("password"))
             {
-                Console.WriteLine($"Size mismatch: original = {originalSize} bytes, exported = {exportedSize} bytes.");
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password to load it.");
+                return;
             }
+
+            // Export the workbook to a memory stream in the same format
+            using (MemoryStream exportStream = new MemoryStream())
+            {
+                workbook.Save(exportStream, SaveFormat.Xlsx);
+
+                // Length of the exported stream
+                long exportedStreamLength = exportStream.Length;
+
+                // Validate that the exported stream length matches the original file size
+                if (exportedStreamLength == originalFileSize)
+                {
+                    Console.WriteLine("Validation succeeded: exported stream length matches the original file size.");
+                }
+                else
+                {
+                    Console.WriteLine($"Validation failed: original size = {originalFileSize} bytes, exported size = {exportedStreamLength} bytes.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: Verify an encrypted Excel workbook's password with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells LoadOptions with a given password and returns a boolean indicating whether the password is correct. | Create a method that attempts to open a protected workbook, catches CellsException, and logs a success or failure message to the console. | Write a reusable function that accepts a file path and password, validates the password using Aspose.Cells, and outputs the verification result.
-// Common Searches: Aspose.Cells C# check if Excel file password is correct | How to validate password for encrypted .xlsx using LoadOptions in Aspose.Cells | C# detect wrong password when opening protected workbook with Aspose.Cells | Example of catching CellsException for invalid Excel password Aspose.Cells | Verify workbook encryption password programmatically with Aspose.Cells .NET
-// Tags: load encrypted xlsx with LoadOptions.Password Aspose.Cells | password validation for Excel workbook Aspose.Cells | catch CellsException invalid password | console logging password verification result | encrypted workbook handling Aspose.Cells .NET
+// Title: Verify the password of an encrypted Excel workbook with Aspose.Cells LoadOptions in C#
+// Common Searches: C# Aspose.Cells check if an encrypted Excel file password is correct | how to catch CellsException for wrong password when loading a protected workbook | validate encrypted XLSX password using LoadOptions.Password in .NET | determine whether an Excel workbook is password protected with Aspose.Cells | log the result of Excel password verification in a C# console app
+// Tags: Aspose.Cells password verification | LoadOptions.Password usage | CellsException invalid password handling | encrypted XLSX loading C# | console log verification result
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an encrypted "encrypted.xlsx" file using Aspose.Cells LoadOptions.Password. If the Workbook loads without throwing a CellsException, the supplied password is reported as valid; otherwise, the code logs that the password is incorrect.
+// The example loads an encrypted XLSX file using Aspose.Cells LoadOptions with a supplied password. If the workbook loads without throwing a CellsException indicating an invalid password, the password is confirmed as correct; otherwise it is flagged as incorrect. The verification outcome is written to the console.
 class Program
 {
     static void Main()
@@ -15,44 +14,53 @@ class Program
         // Path to the encrypted workbook
         string filePath = "encrypted.xlsx";
 
-        // Verify that the file exists to avoid FileNotFoundException
+        // Ensure the file exists to avoid FileNotFoundException
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
-        // The password to verify
-        string passwordToCheck = "myPassword";
+        // Password to test
+        string passwordToTest = "MySecretPassword";
 
-        bool isPasswordValid = false;
+        bool isPasswordCorrect = false;
 
         try
         {
-            // Attempt to load the workbook using the supplied password
+            // Load the workbook with the supplied password
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Password = passwordToCheck
+                Password = passwordToTest
             };
 
             // If loading succeeds, the password is correct
             Workbook workbook = new Workbook(filePath, loadOptions);
-            isPasswordValid = true;
+            isPasswordCorrect = true;
         }
-        catch (CellsException)
+        catch (CellsException ex)
         {
-            // Loading failed – most likely due to an incorrect password
-            isPasswordValid = false;
+            // Aspose.Cells throws CellsException for invalid password.
+            // Older versions may not expose ErrorCode, so inspect the message.
+            if (ex.Message != null && ex.Message.IndexOf("Invalid password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                isPasswordCorrect = false;
+            }
+            else
+            {
+                Console.WriteLine($"CellsException: {ex.Message}");
+                return;
+            }
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected errors
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            // Handle other possible errors (e.g., corrupted file)
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
             return;
         }
 
         // Log the verification result
-        if (isPasswordValid)
+        if (isPasswordCorrect)
         {
             Console.WriteLine("Password verification succeeded: the password is correct.");
         }

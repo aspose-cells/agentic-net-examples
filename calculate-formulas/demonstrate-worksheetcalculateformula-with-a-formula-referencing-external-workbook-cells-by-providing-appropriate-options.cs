@@ -1,45 +1,61 @@
-// Title: Calculate formulas that reference an external workbook using Worksheet.CalculateFormula and LinkedDataSources in Aspose.Cells for .NET
-// AI Prompts: Show C# code that creates a secondary workbook, adds it to CalculationOptions.LinkedDataSources, and calls Worksheet.CalculateFormula to evaluate a direct external cell reference. | Demonstrate evaluating an INDIRECT formula that points to a cell in another workbook by configuring CalculationOptions with linked data sources in Aspose.Cells.
-// Common Searches: asp.net aspose.cells calculate formula that points to another workbook | using CalculationOptions.LinkedDataSources to evaluate external cell reference in C# | Worksheet.CalculateFormula example with external workbook and INDIRECT function | how to compute external workbook formulas without opening the source file in Aspose.Cells
-// Tags: Worksheet.CalculateFormula external workbook reference | Aspose.Cells linked data sources formula evaluation | calculate INDIRECT function with external workbook in .NET | external workbook cell value calculation using CalculationOptions
+// Title: Calculate a formula that references an external workbook using Worksheet.CalculateFormula and CalculationOptions in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# calculate formula that points to another workbook file | Using CalculationOptions to ignore errors when evaluating external references in Aspose.Cells | Worksheet.CalculateFormula example with external workbook reference in .NET | How to reference a cell from a different Excel file in Aspose.Cells formula calculation | C# code to evaluate external workbook formulas with Aspose.Cells
+// Tags: external workbook formula calculation Aspose.Cells | Worksheet.CalculateFormula with CalculationOptions C# | ignore errors during formula evaluation Aspose.Cells | C# external cell reference Excel workbook Aspose.Cells | Aspose.Cells external reference formula example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates an external workbook containing a value in cell A2, sets up a main workbook with formulas that reference that external cell directly and via the INDIRECT function, configures CalculationOptions.LinkedDataSources to include the external workbook, and uses Worksheet.CalculateFormula to compute both formulas, outputting the results.
-class Program
+// The sample creates a source workbook, writes a numeric value to A1, saves it, then builds a target workbook where cell B2 contains a formula that references the source workbook's A1 cell. It sets up CalculationOptions to ignore errors, runs Worksheet.CalculateFormula on the target workbook, reads the computed result from B2, prints it, and saves the target workbook.
+class ExternalFormulaCalculationDemo
 {
     static void Main()
     {
-        // Create an external workbook that will serve as the data source
-        Workbook externalWb = new Workbook();
-        Worksheet externalSheet = externalWb.Worksheets[0];
-        externalSheet.Name = "Sheet1";
-        // Put a sample value in cell A2 of the external workbook
-        externalSheet.Cells["A2"].PutValue(12345);
-
-        // Create the main workbook where formulas will reference the external workbook
-        Workbook mainWb = new Workbook();
-        Worksheet mainSheet = mainWb.Worksheets[0];
-
-        // Set formulas that reference the external workbook
-        // Direct external reference
-        mainSheet.Cells["A1"].Formula = "=[External.xlsx]Sheet1!$A$2";
-        // INDIRECT function referencing the external workbook
-        mainSheet.Cells["A2"].Formula = "=INDIRECT(\"[External.xlsx]Sheet1!$A$2\")";
-
-        // Prepare calculation options and link the external workbook as a data source
-        CalculationOptions calcOptions = new CalculationOptions
+        try
         {
-            LinkedDataSources = new Workbook[] { externalWb }
-        };
+            // Create the source workbook and add a numeric value in A1
+            Workbook sourceWb = new Workbook();
+            Worksheet sourceWs = sourceWb.Worksheets[0];
+            sourceWs.Name = "DataSheet";
+            sourceWs.Cells["A1"].PutValue(123.45);
 
-        // Calculate the formulas using Worksheet.CalculateFormula with the provided options
-        object directResult = mainSheet.CalculateFormula("=[External.xlsx]Sheet1!$A$2", calcOptions);
-        object indirectResult = mainSheet.CalculateFormula("=INDIRECT(\"[External.xlsx]Sheet1!$A$2\")", calcOptions);
+            // Save the source workbook (required for external reference)
+            string sourcePath = "SourceWorkbook.xlsx";
+            sourceWb.Save(sourcePath);
 
-        // Output the calculated results
-        Console.WriteLine("Direct external reference result: " + directResult);
-        Console.WriteLine("INDIRECT external reference result: " + indirectResult);
+            // Verify the source file was saved successfully
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+
+            // Create the target workbook that will contain the external formula
+            Workbook targetWb = new Workbook();
+            Worksheet targetWs = targetWb.Worksheets[0];
+            targetWs.Name = "CalcSheet";
+
+            // Set a formula that references the external workbook's A1 cell
+            targetWs.Cells["B2"].Formula = $"='[{sourcePath}]DataSheet'!A1";
+
+            // Prepare calculation options (optional settings)
+            CalculationOptions calcOptions = new CalculationOptions
+            {
+                // Example option: ignore errors during calculation
+                IgnoreError = true
+            };
+
+            // Calculate all formulas in the target workbook using the options
+            targetWb.CalculateFormula(calcOptions);
+
+            // Retrieve and display the calculated result
+            object result = targetWs.Cells["B2"].Value;
+            Console.WriteLine($"Calculated value in B2: {result}");
+
+            // Save the target workbook (optional, just to verify the result)
+            string targetPath = "TargetWorkbook.xlsx";
+            targetWb.Save(targetPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

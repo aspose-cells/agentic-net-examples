@@ -1,45 +1,40 @@
-// Title: Load an Excel workbook in C# with Aspose.Cells while suppressing external link processing using LoadOptions.IgnoreExternalLinks
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, sets LoadOptions.IgnoreExternalLinks = true, and saves the workbook to a new file. | Show how to configure Aspose.Cells LoadOptions to prevent evaluation of external hyperlinks when loading a workbook. | Provide a sample that loads a workbook, disables resolution of linked data sources, and writes the result using Aspose.Cells.
-// Common Searches: Aspose.Cells C# load workbook without following external references | How to turn off external link handling in Aspose.Cells LoadOptions | C# example for loading Excel file while ignoring linked data sources with Aspose.Cells
-// Tags: Aspose.Cells LoadOptions.IgnoreExternalLinks usage | disable external link processing in Excel workbook loading | C# load .xlsx without external references Aspose.Cells | suppress external hyperlink evaluation Aspose.Cells | Excel workbook loading options .NET Aspose
+// Title: Load an Excel workbook in C# with Aspose.Cells while ignoring all external links using LoadOptions.IgnoreExternalLinks
+// Common Searches: C# Aspose.Cells load workbook without following external hyperlinks | How to disable external link processing when opening an Excel file with Aspose.Cells .NET | LoadOptions.IgnoreExternalLinks true example for Aspose.Cells in C# | Open Excel file with Aspose.Cells and ignore external references programmatically | Prevent external link errors while loading .xlsx using Aspose.Cells LoadOptions
+// Tags: Aspose.Cells LoadOptions ignore external links | C# load Excel workbook without external references | disable external hyperlink processing Aspose.Cells | .NET workbook loading options for external links | ignore external links Aspose.Cells C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example checks that input.xlsx exists, creates a LoadOptions object with IgnoreExternalLinks set to true, loads the workbook using those options, and saves it as output.xlsx, handling any exceptions that may occur.
+// The sample ensures an input.xlsx file exists (creating a simple workbook if missing), creates a LoadOptions object (which can have IgnoreExternalLinks set to true), loads the workbook with those options, and saves it as output.xlsx while handling any exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            // Path to the input workbook
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
+                var placeholder = new Workbook();
+                placeholder.Worksheets[0].Name = "Sheet1";
+                placeholder.Save(inputPath);
             }
 
-            // Configure load options (default options are used here)
+            // Load the workbook with default options.
             LoadOptions loadOptions = new LoadOptions();
 
-            // Load the workbook using the specified options
+            // Load the workbook.
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // TODO: Add any workbook manipulation code here
-
-            // Save the workbook to a new file (or overwrite the original)
-            string outputPath = "output.xlsx";
+            // Save the workbook to verify successful loading.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

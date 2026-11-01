@@ -1,52 +1,55 @@
-// Title: Identify if an Excel workbook uses Aspose.Cells default encryption and log a recommendation to use stronger protection (C# .NET)
-// AI Prompts: Generate C# code using Aspose.Cells that opens an encrypted .xlsx file, checks the WorkbookEncryptionInfo for the default algorithm, and writes a warning to the console if the default is detected. | Update the provided program to evaluate the encryption algorithm of the loaded workbook and output a recommendation to upgrade to a stronger encryption method.
-// Common Searches: Aspose.Cells how to determine if an Excel file uses default encryption algorithm | C# check encryption strength of password-protected workbook with Aspose.Cells | log warning when Excel workbook encryption is weak using Aspose.Cells .NET | retrieve encryption algorithm from loaded workbook in Aspose.Cells | recommend stronger encryption for encrypted .xlsx in C#
-// Tags: detect workbook encryption algorithm Aspose.Cells | log encryption upgrade recommendation C# | load password protected Excel file Aspose.Cells | detect default workbook encryption .NET | strengthen Excel file protection Aspose.Cells
+// Title: Check if an Excel workbook is encrypted and log a recommendation to use stronger AES256 encryption with Aspose.Cells for .NET
+// Common Searches: how to determine if an Excel file is password protected using Aspose.Cells C# | Aspose.Cells C# detect encrypted workbook and suggest stronger encryption | C# read workbook encryption status with Aspose.Cells LoadOptions | log recommendation for upgrading Excel encryption to AES256 in .NET | using workbook.Settings.IsEncrypted property to check Excel protection
+// Tags: Aspose.Cells encrypted workbook detection | LoadOptions usage for encrypted Excel files | C# recommendation for AES256 Excel encryption | Workbook.Settings.IsEncrypted property example | log encryption upgrade advice .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook with Aspose.Cells LoadOptions, checks the Settings.IsEncrypted flag, and writes a console message recommending a stronger encryption algorithm such as AES256 when the file is encrypted. It also includes file‑existence validation and exception handling.
+class Program
 {
-    // This example shows how to load a password‑protected .xlsx workbook with Aspose.Cells in C#. It demonstrates checking the workbook’s EncryptionInfo (when available) to see if the default algorithm is used and writes a console message recommending a stronger encryption method. The code also includes file‑existence validation and error handling.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the workbook to be inspected
+        string workbookPath = "encrypted.xlsx";
+
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            // Path to the encrypted workbook
-            string filePath = "encrypted.xlsx";
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            return;
+        }
 
-            // Password required to open the workbook
-            string password = "yourPassword";
+        try
+        {
+            // Prepare load options – this allows us to read encryption information
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-            // Verify that the file exists before attempting to load
-            if (!File.Exists(filePath))
+            // If the workbook is password‑protected, set the password here
+            // loadOptions.Password = "yourPassword";
+
+            // Load the workbook using the load options
+            Workbook workbook = new Workbook(workbookPath, loadOptions);
+
+            // Determine whether the workbook is encrypted
+            bool isEncrypted = workbook.Settings.IsEncrypted;
+
+            if (isEncrypted)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
+                // Note: Aspose.Cells does not expose the specific encryption algorithm.
+                // Recommend using a strong algorithm when creating/encrypting workbooks.
+                Console.WriteLine("The workbook is encrypted. Consider using a strong encryption algorithm (e.g., AES256) when protecting workbooks.");
             }
-
-            try
+            else
             {
-                // Configure load options with the password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    Password = password
-                };
-
-                // Load the workbook using the specified options
-                Workbook workbook = new Workbook(filePath, loadOptions);
-                Console.WriteLine("Workbook loaded successfully.");
-
-                // Note: Retrieval of the encryption algorithm may not be supported in all
-                // versions of Aspose.Cells. If needed, consult the documentation for the
-                // specific version you are using.
+                Console.WriteLine("The workbook is not encrypted.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

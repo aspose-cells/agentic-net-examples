@@ -1,26 +1,52 @@
-// Title: How to refresh all pivot tables in an XLSX workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing .xlsx file, calls Workbook.Worksheets.RefreshPivotTables(), and saves the result to a new file. | Show a step‑by‑step example of using Aspose.Cells to programmatically refresh every pivot table in a workbook and write the updated workbook to disk. | Provide a minimal console application that demonstrates loading a workbook, refreshing its pivot tables, and persisting the changes with Aspose.Cells.
-// Common Searches: aspnet refresh all pivot tables in existing excel file using aspose.cells | c# code to refresh pivot tables in an xlsx workbook with aspose.cells library | how to programmatically update pivot cache after data change using aspose.cells | example of RefreshPivotTables method in Aspose.Cells for .NET | refresh pivot tables in workbook and save as new file using C# Aspose.Cells
-// Tags: Aspose.Cells pivot table refresh API | C# load XLSX and refresh pivot caches | programmatic Excel pivot refresh .NET | save workbook after pivot update Aspose.Cells | update all pivot tables in workbook
+// Title: Refresh all pivot tables and recalculate formulas in an XLSX workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells refresh pivot tables in existing workbook | How to programmatically update pivot cache and recalculate data with Aspose.Cells .NET | Refresh pivot tables and recalculate formulas in Excel file using Aspose.Cells C# example | Iterate through worksheets to refresh all pivot tables Aspose.Cells .NET | Load XLSX, refresh pivot data and save with Aspose.Cells in C#
+// Tags: Aspose.Cells pivot data refresh method | C# recalculate workbook formulas Aspose.Cells | Update XLSX pivot cache programmatically | Loop worksheets to process pivots Aspose.Cells | Export workbook after pivot update .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefresh
+// The C# program verifies the input XLSX file, loads it with Aspose.Cells, iterates over each worksheet and its PivotTables to call RefreshData and CalculateData, optionally recalculates all workbook formulas, and saves the modified workbook to a new file, handling any exceptions that occur.
+class Program
 {
-    // // This program loads an existing XLSX workbook, refreshes all pivot tables using the RefreshPivotTables method, and saves the refreshed workbook to a new file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Load the existing workbook that contains a pivot table
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Refresh all pivot tables in the workbook
-            workbook.Worksheets.RefreshPivotTables();
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Save the workbook after refreshing the pivot tables
-            workbook.Save("output.xlsx");
+            // Load the workbook containing pivot tables
+            Workbook workbook = new Workbook(inputPath);
+
+            // Refresh all pivot tables in all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pivot in sheet.PivotTables)
+                {
+                    pivot.RefreshData();   // Refresh source data
+                    pivot.CalculateData(); // Recalculate pivot values
+                }
+            }
+
+            // Recalculate any formulas in the workbook (optional)
+            workbook.CalculateFormula();
+
+            // Save the workbook with refreshed pivot tables
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

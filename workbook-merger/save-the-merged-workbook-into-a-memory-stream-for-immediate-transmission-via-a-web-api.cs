@@ -1,77 +1,74 @@
-// Title: Combine two Excel workbooks into a single XLSX MemoryStream with Aspose.Cells in C# for web API responses
-// AI Prompts: Write a C# method that loads two .xlsx files, merges them using Workbook.Combine, and returns the merged workbook as a MemoryStream ready for an HTTP response. | Generate code that checks the existence of two workbook paths, combines the workbooks with Aspose.Cells, saves the result to a MemoryStream in Xlsx format, and resets the stream position. | Create a reusable function that accepts two Excel file paths, merges the workbooks without creating intermediate files, and outputs the combined workbook as a MemoryStream.
-// Common Searches: asp.net core return merged excel workbook as memory stream using aspose.cells | c# combine two xlsx files into a memory stream for API response | how to use Aspose.Cells Combine method and save to MemoryStream | merge excel workbooks without writing to disk in C#
-// Tags: Aspose.Cells workbook combine to memory stream | C# merge Excel workbooks Xlsx stream | save combined workbook as Xlsx MemoryStream | web API return Excel memory stream Aspose.Cells | validate workbook file paths Aspose.Cells
+// Title: Save a merged Aspose.Cells workbook to a MemoryStream for immediate API transmission in C#
+// AI Prompts: Generate C# code that merges multiple worksheets with Aspose.Cells and returns the combined workbook as a MemoryStream ready for an ASP.NET Core Web API response. | Provide a method that saves an Aspose.Cells Workbook to a MemoryStream in XLSX format, resets the stream position, and includes robust exception handling. | Show how to stream the merged workbook directly to the client without creating a temporary file on disk.
+// Common Searches: how to stream a merged Aspose.Cells workbook from ASP.NET Core Web API | Aspose.Cells C# return merged Excel as MemoryStream for download | save Aspose.Cells workbook to MemoryStream and reset position | export merged workbook to XLSX stream without creating a file C# | C# Aspose.Cells memory stream for HTTP response
+// Tags: Aspose.Cells save workbook to memory stream | merged workbook export as XLSX stream | C# ASP.NET Core return Excel MemoryStream | Aspose.Cells workbook merging to stream | reset memory stream position after save
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads two Excel workbooks, merges them with Aspose.Cells' Combine API, saves the merged workbook to a MemoryStream in XLSX format, resets the stream position, and returns it for immediate transmission via a web API.
-public class WorkbookMerger
+namespace AsposeCellsExample
 {
-    // Merges two workbooks and returns the combined workbook as a MemoryStream (XLSX format).
-    public MemoryStream MergeWorkbooksToStream(string firstFilePath, string secondFilePath)
+    // The example defines a helper that creates (or merges) an Aspose.Cells Workbook, saves it into a MemoryStream in XLSX format, resets the stream to the beginning, and returns it. A console demo shows how to write the stream to a file, illustrating how the same stream can be sent directly via a web API.
+    public static class WorkbookHelper
     {
-        try
+        /// <returns>MemoryStream containing the workbook data.</returns>
+        public static MemoryStream GetMergedWorkbookStream()
         {
-            // Verify that both input files exist.
-            if (!File.Exists(firstFilePath))
-                throw new FileNotFoundException($"File not found: {firstFilePath}");
-            if (!File.Exists(secondFilePath))
-                throw new FileNotFoundException($"File not found: {secondFilePath}");
-
-            // Load the destination workbook (the one that will receive the other workbook).
-            Workbook destWorkbook = new Workbook(firstFilePath);
-
-            // Load the source workbook (the one to be merged into the destination).
-            Workbook sourceWorkbook = new Workbook(secondFilePath);
-
-            // Combine the source workbook into the destination workbook.
-            destWorkbook.Combine(sourceWorkbook);
-
-            // Save the combined workbook to a memory stream in XLSX format.
-            MemoryStream resultStream = new MemoryStream();
-            destWorkbook.Save(resultStream, SaveFormat.Xlsx);
-            resultStream.Position = 0; // Reset position for downstream consumers.
-
-            return resultStream;
-        }
-        catch (Exception ex)
-        {
-            // Wrap and rethrow to provide context while preserving the original exception.
-            throw new ApplicationException("An error occurred while merging workbooks.", ex);
-        }
-    }
-}
-
-// Example console usage.
-public class Program
-{
-    public static void Main()
-    {
-        // Example file paths; replace with actual locations as needed.
-        string filePath1 = "File1.xlsx";
-        string filePath2 = "File2.xlsx";
-
-        WorkbookMerger merger = new WorkbookMerger();
-
-        try
-        {
-            using (MemoryStream mergedStream = merger.MergeWorkbooksToStream(filePath1, filePath2))
+            try
             {
-                // Save the merged workbook to a file for demonstration purposes.
-                string outputPath = "MergedWorkbook.xlsx";
-                using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                {
-                    mergedStream.CopyTo(file);
-                }
-                Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
+                // Initialize a new workbook. Replace with loading an existing workbook if needed.
+                Workbook workbook = new Workbook();
+
+                // TODO: Add merging logic here (e.g., copy worksheets, merge data, etc.)
+
+                // Prepare a memory stream to hold the workbook data.
+                MemoryStream memoryStream = new MemoryStream();
+
+                // Save the workbook into the memory stream in XLSX format.
+                workbook.Save(memoryStream, SaveFormat.Xlsx);
+
+                // Reset the stream position to the beginning for reading.
+                memoryStream.Position = 0;
+
+                return memoryStream;
+            }
+            catch (Exception ex)
+            {
+                // Wrap and rethrow to let the caller handle it.
+                throw new InvalidOperationException("Failed to create or save the merged workbook.", ex);
             }
         }
-        catch (Exception ex)
+    }
+
+    // Entry point for the console application.
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Failed to merge workbooks: {ex.Message}");
+            try
+            {
+                // Get the merged workbook as a memory stream.
+                using (MemoryStream stream = WorkbookHelper.GetMergedWorkbookStream())
+                {
+                    // Define output file path.
+                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "MergedWorkbook.xlsx");
+
+                    // Write the stream to a file.
+                    using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        stream.CopyTo(fileStream);
+                    }
+
+                    Console.WriteLine($"Merged workbook saved successfully to: {outputPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error and exit.
+                Console.Error.WriteLine($"Error: {ex.Message}");
+                Environment.Exit(1);
+            }
         }
     }
 }

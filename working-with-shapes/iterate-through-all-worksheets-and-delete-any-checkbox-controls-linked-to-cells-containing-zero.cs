@@ -1,7 +1,7 @@
-// Title: Remove all CheckBox form controls linked to cells with value zero from every worksheet using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that loops through each worksheet, finds CheckBox shapes whose LinkedCell contains the numeric value 0, and deletes those shapes. | Show how to collect CheckBox controls whose linked cells evaluate to zero into a list and remove them from the ShapeCollection in an Excel workbook using Aspose.Cells. | Provide a method that safely checks for a linked cell, parses its value, and eliminates the corresponding CheckBox shape across all sheets in a .xlsx file.
-// Common Searches: aspnet aspose.cells delete checkbox form control when linked cell equals 0 | c# iterate all worksheets and remove checkboxes linked to zero values | how to programmatically remove Excel checkboxes based on linked cell content using Aspose.Cells | remove form control checkboxes with zero linked cell in .xlsx via Aspose.Cells .NET
-// Tags: delete checkbox shapes linked cell zero Aspose.Cells | iterate worksheets shape collection .NET | form control removal based on cell value | Aspose.Cells conditional shape deletion | C# Excel checkbox linked cell processing
+// Title: Remove all CheckBox form controls linked to zero-valued cells from every worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, scans each worksheet for CheckBox shapes, evaluates the LinkedCell value, and deletes the shape when the cell contains numeric zero. | Create a reusable method that collects CheckBox shapes whose LinkedCell points to a zero cell, then removes them from the worksheet's Shapes collection without altering the collection during iteration. | Provide an example that logs the addresses of removed CheckBox controls while processing all worksheets in a workbook using Aspose.Cells.
+// Common Searches: asp.net aspose.cells delete checkbox shape linked to zero cell | c# remove form control checkbox when linked cell equals 0 using Aspose.Cells | how to iterate all worksheets and delete specific checkbox controls in Excel with Aspose.Cells | safe removal of shapes collection in Aspose.Cells C# | filter checkbox controls by linked cell value Aspose.Cells example
+// Tags: Aspose.Cells remove checkbox shapes | C# delete form controls based on linked cell value | Iterate worksheets to filter shapes Aspose.Cells | Safe shape collection modification Aspose.Cells | CheckBox LinkedCell zero removal
 
 using System;
 using System.Collections.Generic;
@@ -9,69 +9,75 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Loads an Excel workbook, iterates through each worksheet, identifies CheckBox form controls whose LinkedCell contains the numeric value 0, removes those shapes from the worksheet's ShapeCollection, and saves the updated workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an Excel workbook, iterates through every worksheet, finds CheckBox shapes whose LinkedCell points to a numeric cell equal to 0, collects those shapes, removes them safely from the Shapes collection, and saves the updated file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
+            // Define input and output file paths
+            string inputPath = "{InputPath}";
+            string outputPath = "{OutputPath}";
 
-        try
-        {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ShapeCollection shapes = sheet.Shapes;
-                List<Shape> shapesToDelete = new List<Shape>();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Examine each shape
-                foreach (Shape shape in shapes)
+            try
+            {
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
                 {
-                    // Process only CheckBox form controls
-                    if (shape is CheckBox checkBox)
+                    // Collect shapes to remove to avoid modifying the collection while iterating
+                    var shapesToRemove = new List<Shape>();
+
+                    // Iterate through all shapes in the worksheet
+                    foreach (Shape shape in worksheet.Shapes)
                     {
-                        string linkedCellAddress = checkBox.LinkedCell;
-                        if (string.IsNullOrEmpty(linkedCellAddress))
-                            continue;
-
-                        // Access the linked cell
-                        Cell linkedCell = sheet.Cells[linkedCellAddress];
-                        if (linkedCell?.Value == null)
-                            continue;
-
-                        // Check if the linked cell contains numeric zero
-                        if (double.TryParse(linkedCell.Value.ToString(), out double cellValue) && cellValue == 0)
+                        // Check if the shape is a CheckBox
+                        if (shape is CheckBox checkBox)
                         {
-                            shapesToDelete.Add(shape);
+                            // Get the cell address linked to the CheckBox (e.g., "A1")
+                            string linkedCellAddress = checkBox.LinkedCell;
+
+                            if (!string.IsNullOrEmpty(linkedCellAddress))
+                            {
+                                // Retrieve the linked cell
+                                Cell linkedCell = worksheet.Cells[linkedCellAddress];
+
+                                // Determine if the cell contains numeric zero
+                                if (linkedCell.Type == CellValueType.IsNumeric && linkedCell.IntValue == 0)
+                                {
+                                    // Mark this CheckBox for removal
+                                    shapesToRemove.Add(shape);
+                                }
+                            }
                         }
+                    }
+
+                    // Remove the identified CheckBox shapes
+                    foreach (Shape shape in shapesToRemove)
+                    {
+                        worksheet.Shapes.Remove(shape);
                     }
                 }
 
-                // Remove identified CheckBox controls
-                foreach (Shape shape in shapesToDelete)
-                {
-                    shapes.Remove(shape);
-                }
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

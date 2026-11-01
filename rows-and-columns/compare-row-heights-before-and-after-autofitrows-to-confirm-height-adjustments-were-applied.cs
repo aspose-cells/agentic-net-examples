@@ -1,56 +1,82 @@
-// Title: How to compare original and adjusted row heights after using AutoFitRows with Aspose.Cells in C#
-// AI Prompts: Write C# code that reads a row's height, calls worksheet.AutoFitRows(), then outputs the before and after heights using Aspose.Cells. | Show an example that determines whether the row height changed by more than a small tolerance after AutoFitRows in Aspose.Cells. | Provide a snippet that accesses the IsHeightMatched flag for a row after AutoFitRows to verify the adjustment.
-// Common Searches: C# Aspose.Cells get row height before AutoFitRows and after | how to detect row height change after worksheet.AutoFitRows in .NET | Aspose.Cells IsHeightMatched property example for row height verification | compare original and new row heights using Aspose.Cells AutoFitRows
-// Tags: Aspose.Cells AutoFitRows row height comparison | C# retrieve row height Aspose.Cells | Aspose.Cells IsHeightMatched usage | verify row height adjustment Aspose.Cells | record original row height points
+// Title: How to compare row heights before and after Worksheet.AutoFitRows in Aspose.Cells for .NET
+// AI Prompts: Provide C# code that records each row's Height, invokes Worksheet.AutoFitRows, and logs the original and new heights to confirm adjustments using Aspose.Cells. | Generate a snippet that wraps long text, auto‑fits rows, captures row heights before and after AutoFitRows, and outputs a summary indicating which rows were resized.
+// Common Searches: Aspose.Cells C# check if AutoFitRows changed row height | record original row height then auto fit rows Aspose.Cells example | compare worksheet row heights before and after AutoFitRows in .NET | detect row height adjustment after applying AutoFitRows with Aspose.Cells
+// Tags: Aspose.Cells AutoFitRows row height verification | C# capture worksheet row heights Aspose.Cells | compare pre‑post AutoFitRows heights | log row height changes Aspose.Cells | auto‑fit rows with text wrapping Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace RowHeightComparisonDemo
+// The example creates a workbook, writes short and long wrapped text into cells A1‑A3, records each row’s initial Height, calls Worksheet.AutoFitRows(0,2), records the new heights, compares them, outputs whether each row was adjusted, and saves the file as AutoFitRowsResult.xlsx.
+class Program
 {
-    // Demonstrates capturing a row's original height, applying AutoFitRows, retrieving the new height, comparing the values with a tolerance, checking the IsHeightMatched flag, and saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate a cell with long wrapped text to cause row height change
-            cells["A1"].PutValue("This is a very long text that should wrap into multiple lines when AutoFitRows is applied.");
-            Style style = cells["A1"].GetStyle();
-            style.IsTextWrapped = true;               // Enable text wrapping
-            cells["A1"].SetStyle(style);
+            // Populate cells with text that will require row height adjustment
+            sheet.Cells["A1"].PutValue("Short");
+            sheet.Cells["A2"].PutValue("This is a very long text that should wrap and increase row height after AutoFitRows.");
+            sheet.Cells["A3"].PutValue("Another long text that will need more height after autofit.");
 
-            // Record the original row height (before AutoFitRows)
-            double originalHeight = cells.GetRowHeight(0); // height in points
-            Console.WriteLine($"Original row height (points): {originalHeight}");
+            // Enable text wrapping for the cells that contain long text
+            Style wrapStyle = workbook.CreateStyle();
+            wrapStyle.IsTextWrapped = true;
+            StyleFlag wrapFlag = new StyleFlag();
+            wrapFlag.WrapText = true; // correct flag for text wrapping
+            sheet.Cells["A2"].SetStyle(wrapStyle, wrapFlag);
+            sheet.Cells["A3"].SetStyle(wrapStyle, wrapFlag);
 
-            // Perform AutoFitRows on the entire worksheet
-            worksheet.AutoFitRows();
-
-            // Record the new row height (after AutoFitRows)
-            double newHeight = cells.GetRowHeight(0);
-            Console.WriteLine($"New row height after AutoFitRows (points): {newHeight}");
-
-            // Compare the heights to confirm that an adjustment occurred
-            if (Math.Abs(originalHeight - newHeight) > 0.01)
+            // Record original row heights (default is -1, meaning "auto")
+            double[] originalHeights = new double[3];
+            for (int i = 0; i < 3; i++)
             {
-                Console.WriteLine("Row height was adjusted by AutoFitRows.");
-            }
-            else
-            {
-                Console.WriteLine("Row height remained unchanged.");
+                originalHeights[i] = sheet.Cells.Rows[i].Height;
             }
 
-            // Additional check using the IsHeightMatched property
-            bool isMatched = worksheet.Cells.Rows[0].IsHeightMatched;
-            Console.WriteLine($"IsHeightMatched after AutoFitRows: {isMatched}");
+            // Apply AutoFitRows to rows 0 through 2
+            sheet.AutoFitRows(0, 2); // use overload without options
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("RowHeightComparisonDemo.xlsx");
+            // Record new row heights after AutoFitRows
+            double[] newHeights = new double[3];
+            for (int i = 0; i < 3; i++)
+            {
+                newHeights[i] = sheet.Cells.Rows[i].Height;
+            }
+
+            // Compare and output the results
+            for (int i = 0; i < 3; i++)
+            {
+                bool adjusted = Math.Abs(originalHeights[i] - newHeights[i]) > 0.0001;
+                Console.WriteLine($"Row {i + 1}: Original Height = {originalHeights[i]}, New Height = {newHeights[i]}, Adjusted = {adjusted}");
+            }
+
+            // Save the workbook (optional, just to verify the changes visually)
+            string outputPath = "AutoFitRowsResult.xlsx";
+            try
+            {
+                // Ensure the directory exists before saving
+                string directory = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

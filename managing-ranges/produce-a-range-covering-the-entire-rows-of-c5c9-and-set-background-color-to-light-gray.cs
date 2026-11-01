@@ -1,44 +1,38 @@
-// Title: Apply a light gray background to rows C5:C9 across all columns with Aspose.Cells in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to create a range covering rows 5 to 9 (C5:C9) across the whole worksheet and apply a solid light gray fill. | Show how to define a style with a light gray background and apply it to a multi‑row range in a new workbook using Aspose.Cells for .NET. | Provide a step‑by‑step example of creating a range for rows C5‑C9, setting the ForegroundColor to LightGray, and saving the workbook.
-// Common Searches: Aspose.Cells C# how to set background color for rows C5 to C9 | Create a range that spans rows 5‑9 across all columns and apply a solid fill with Aspose.Cells | C# Aspose.Cells style entire row range and save workbook | Apply light gray fill to multiple rows using Aspose.Cells .NET API
-// Tags: Aspose.Cells apply style to row range | Aspose.Cells create range across all columns | Aspose.Cells set background color light gray | C# Aspose.Cells format rows C5 to C9 | Aspose.Cells style entire worksheet rows
+// Title: How to apply a light gray solid background to rows 5 through 9 in an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set solid fill color for rows 5 to 9 | apply background color to a range of rows in Excel with Aspose.Cells .NET | create row range 5-9 and style it using Aspose.Cells API | C# code to color multiple rows light gray in an Excel file with Aspose.Cells | range.ApplyStyle example for row range in Aspose.Cells
+// Tags: apply style to row range Aspose.Cells | solid fill for Excel rows using Aspose.Cells | create range by row numbers Aspose.Cells | StyleFlag All property Aspose.Cells | background color rows Aspose.Cells .NET
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a new workbook, determines the total column count, defines a range that covers rows 5 through 9 across all columns, builds a style with a solid light gray background, applies the style to the entire range, and saves the file as output.xlsx.
+// The example creates a new workbook, defines a range covering rows 5 to 9, builds a style with a LightGray solid background, applies the style to the entire range using StyleFlag.All, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the total number of columns in the sheet
-            int totalColumns = sheet.Cells.MaxColumn + 1; // MaxColumn is zero‑based
-            if (totalColumns == 0)
-                totalColumns = 1; // Ensure at least one column exists for the range
+            // Create a range that covers rows 5 to 9 (address "5:9")
+            // Use fully qualified name to avoid conflict with System.Range
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("5:9");
 
-            // Create a range that covers rows 5 to 9 (zero‑based rows 4‑8)
-            // firstRow = 4, firstColumn = 0, totalRows = 5, totalColumns = all columns in the sheet
-            Aspose.Cells.Range range = sheet.Cells.CreateRange(4, 0, 5, totalColumns);
-
-            // Create a style with light gray background
+            // Create a style and set background color
             Style style = workbook.CreateStyle();
             style.ForegroundColor = Color.LightGray;
             style.Pattern = BackgroundType.Solid;
 
-            // Apply the style to the whole range
-            StyleFlag flag = new StyleFlag() { All = true };
+            // Apply the style to the entire range
+            StyleFlag flag = new StyleFlag { All = true };
             range.ApplyStyle(style, flag);
 
-            // Save the workbook (lifecycle save)
+            // Save the workbook
             workbook.Save("output.xlsx");
         }
         catch (Exception ex)

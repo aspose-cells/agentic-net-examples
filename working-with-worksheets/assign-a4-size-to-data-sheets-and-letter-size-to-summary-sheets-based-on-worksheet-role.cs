@@ -1,35 +1,45 @@
-// Title: Assign A4 paper size to data worksheets and Letter size to summary worksheets using Aspose.Cells for .NET
-// AI Prompts: Set the PageSetup.PaperSize to A4 for every worksheet whose name includes "Data" and to Letter for worksheets whose name includes "Summary" in a C# Aspose.Cells workbook. | Write C# code that loops through all sheets in an Excel file and applies different paper sizes based on each sheet's role with Aspose.Cells. | Programmatically change the page setup of an existing workbook so that data sheets use A4 and summary sheets use Letter paper size using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells set A4 paper size for sheets containing Data | How to apply Letter paper size to summary worksheets with Aspose.Cells C# | Change page setup per worksheet based on name using Aspose.Cells .NET | C# example for conditional paper size assignment in Excel with Aspose.Cells
-// Tags: set worksheet paper size Aspose.Cells | conditional page setup by sheet name | A4 paper size for data sheets Aspose.Cells | Letter paper size for summary sheets Aspose.Cells | iterate worksheets C# Aspose.Cells | apply different page sizes per sheet
+// Title: Set A4 paper size for data worksheets and Letter paper size for summary worksheets using Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# set A4 paper size for data worksheets only | How to apply Letter paper size to summary sheets with Aspose.Cells .NET | Conditional worksheet page setup based on sheet name using Aspose.Cells | Programmatically change paper size per worksheet in Aspose.Cells C# | Assign different paper sizes to worksheets by role in .NET workbook
+// Tags: conditional worksheet paper size Aspose.Cells | A4 paper size for data sheets .NET | Letter paper size for summary sheets Aspose.Cells | page setup by worksheet name C# | set paper size per worksheet Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Loads 'input.xlsx', iterates through each worksheet, assigns A4 paper size to sheets whose name contains "Data" and Letter size to sheets whose name contains "Summary", then saves the workbook as 'output.xlsx'.
+// The example creates a workbook, adds data and summary worksheets, then iterates through each sheet. It sets PageSetup.PaperSize to A4 for sheets whose names do not contain "Summary" and to Letter for sheets that do, finally saving the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load existing workbook (using provided load rule)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Iterate through all worksheets
+        // Add sample worksheets (in real scenario worksheets may already exist)
+        Worksheet dataSheet1 = workbook.Worksheets[workbook.Worksheets.Add()];
+        dataSheet1.Name = "Data_January";
+
+        Worksheet dataSheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
+        dataSheet2.Name = "Data_February";
+
+        Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+        summarySheet.Name = "Summary_Report";
+
+        // Set paper size based on worksheet role
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // If worksheet name indicates a data sheet, set A4 size
-            if (sheet.Name.IndexOf("Data", StringComparison.OrdinalIgnoreCase) >= 0)
+            // Treat sheets whose name contains "Summary" as summary sheets
+            if (sheet.Name.IndexOf("Summary", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-            }
-            // If worksheet name indicates a summary sheet, set Letter size
-            else if (sheet.Name.IndexOf("Summary", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
+                // Letter size for summary sheets
                 sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
+            }
+            else
+            {
+                // A4 size for data sheets
+                sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
             }
         }
 
-        // Save the modified workbook (using provided save rule)
-        workbook.Save("output.xlsx");
+        // Save the workbook
+        workbook.Save("Output.xlsx", SaveFormat.Xlsx);
     }
 }

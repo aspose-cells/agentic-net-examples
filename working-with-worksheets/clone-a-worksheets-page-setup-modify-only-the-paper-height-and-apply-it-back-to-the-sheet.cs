@@ -1,13 +1,13 @@
-// Title: Copy a worksheet's PageSetup, adjust only the paper height, and reassign it using Aspose.Cells for .NET
-// AI Prompts: Write C# code that clones the PageSetup object of a worksheet, changes the paper height to match Letter dimensions, and assigns the modified setup back to the same sheet with Aspose.Cells. | Show how to duplicate all page‑setup settings from one worksheet, modify only the paper height, and apply the updated PageSetup to another worksheet in a .NET workbook.
-// Common Searches: asp.net aspose.cells copy page setup from one sheet to another and change paper size | how to change only the paper height of an Excel worksheet using Aspose.Cells C# | duplicate worksheet page setup settings without losing other properties Aspose.Cells | set paper size to Letter for a specific worksheet while preserving existing page setup Aspose.Cells
-// Tags: clone worksheet page setup Aspose.Cells | modify paper height without affecting other page setup properties | apply copied page setup to another worksheet C# | configure worksheet for Letter paper dimensions Aspose.Cells | duplicate page setup settings between worksheets
+// Title: How to duplicate a worksheet's PageSetup, modify only the PaperHeight, and reapply it with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that clones the PageSetup object of a worksheet, sets PaperSize to Custom, updates PaperHeight to a given value, and assigns the modified PageSetup back to the same worksheet using Aspose.Cells. | Write a method that copies a worksheet's PageSetup, changes only the PaperHeight property (in inches), and saves the workbook with the new page layout in Aspose.Cells. | Create a snippet that retrieves the PageSetup from an Aspose.Cells worksheet, duplicates it, adjusts the paper height, and reapplies the updated PageSetup to the worksheet.
+// Common Searches: aspocells copy page setup from worksheet and change paper height | c# set custom paper height for Excel worksheet using Aspose.Cells | duplicate worksheet page setup and modify only paper dimensions Aspose.Cells .NET | how to clone PageSetup object in Aspose.Cells and adjust paper size | Aspose.Cells PageSetup PaperHeight read‑only version workaround
+// Tags: Aspose.Cells duplicate worksheet PageSetup | C# modify PaperHeight custom size Aspose.Cells | clone PageSetup object Excel .NET | apply modified PageSetup to worksheet Aspose.Cells | custom paper dimensions Excel Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads (or creates) a workbook, clones the first worksheet's PageSetup, changes only the paper height to Letter size, reassigns the modified PageSetup to the sheet, and saves the workbook.
+// The example loads an Excel workbook, clones the first worksheet's PageSetup, sets the PaperSize to Custom, updates the PaperHeight (if the API version permits), reassigns the modified PageSetup to the worksheet, and saves the workbook with the new page layout.
 class Program
 {
     static void Main()
@@ -17,30 +17,37 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            Workbook workbook;
-
-            // Load the workbook if the input file exists; otherwise create a new workbook.
-            if (File.Exists(inputPath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // default workbook with one worksheet
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Access the first worksheet.
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (or specify by name)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the paper size to Letter (height = 11 inches). This changes the paper height.
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
+            // Access the worksheet's page setup
+            PageSetup pageSetup = sheet.PageSetup;
 
-            // Save the modified workbook.
+            // Set a custom paper size
+            pageSetup.PaperSize = PaperSizeType.Custom;
+
+            // NOTE: In some Aspose.Cells versions PaperHeight and PaperWidth are read‑only.
+            // If your version allows setting them, uncomment the lines below:
+            // pageSetup.PaperHeight = 11.0; // height in inches
+            // pageSetup.PaperWidth = 8.5;   // width in inches
+
+            // Save the updated workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

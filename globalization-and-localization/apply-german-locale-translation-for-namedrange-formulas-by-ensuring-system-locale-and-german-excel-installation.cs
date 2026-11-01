@@ -1,7 +1,6 @@
-// Title: Apply German (de-DE) locale to Excel workbook formulas with Aspose.Cells for .NET
-// AI Prompts: Set the current thread's CultureInfo to de‑DE, load the workbook, assign workbook.Settings.CultureInfo to the German culture, and save the file. | Configure Aspose.Cells to parse formulas using German regional settings by updating the workbook's culture before exporting.
-// Common Searches: Aspose.Cells set German de-DE culture for formula evaluation in C# | How to localize Excel formulas to German using Aspose.Cells .NET | C# load workbook and apply German locale for named‑range formulas with Aspose | Change formula parsing language to German in Aspose.Cells workbook | Set workbook.Settings.CultureInfo to de-DE for Excel localization in .NET
-// Tags: set workbook cultureinfo de-de Aspose.Cells | German formula locale Aspose.Cells .NET | C# Excel workbook localization Aspose | apply regional settings to workbook formulas | Aspose.Cells cultureinfo configuration
+// Title: Apply German (de-DE) locale to named‑range formulas and recalculate workbook with Aspose.Cells for .NET (C#)
+// Common Searches: how to set workbook culture to de-DE in Aspose.Cells C# | recalculate Excel formulas using German locale with Aspose.Cells .NET | Aspose.Cells example for translating named range formulas to German | set thread culture to German for Excel processing in C# using Aspose.Cells | convert Excel workbook formulas to German language with Aspose.Cells
+// Tags: workbook culture de-DE Aspose.Cells | formula recalculation German locale Aspose.Cells | named range translation Aspose.Cells | thread culture de-DE C# Excel processing | save workbook with German settings Aspose.Cells
 
 using System;
 using System.Globalization;
@@ -11,43 +10,44 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example sets the thread's culture to German (de-DE), loads an input.xlsx workbook, assigns the German CultureInfo to workbook.Settings.CultureInfo for locale‑specific formula handling, and saves the modified workbook as output.xlsx.
+    // The C# program loads an existing Excel file, sets the current thread and the workbook's Settings.CultureInfo to the German locale (de-DE), recalculates all formulas—including those in named ranges—under this culture, and saves the result as a new workbook. It includes checks for missing input files and generic exception handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_de.xlsx";
+
             try
             {
-                // Set thread culture to German (de-DE)
-                CultureInfo germanCulture = new CultureInfo("de-DE");
-                Thread.CurrentThread.CurrentCulture = germanCulture;
-                Thread.CurrentThread.CurrentUICulture = germanCulture;
-
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Ensure the input file exists
+                // Verify that the input workbook exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
+                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                     return;
                 }
 
-                // Load the workbook
+                // Load the existing workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Apply German locale for formula parsing
-                workbook.Settings.CultureInfo = germanCulture;
-                // Note: UseFormulaLocale property is not available in the current Aspose.Cells version.
-                // Setting CultureInfo is sufficient for locale‑specific formula handling.
+                // Simulate German locale for the current thread
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("de-DE");
 
-                // Save the workbook
+                // Apply German locale to the workbook for formula translation
+                workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+                // Recalculate formulas using the German locale
+                workbook.CalculateFormula();
+
+                // Save the workbook with the desired output name
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

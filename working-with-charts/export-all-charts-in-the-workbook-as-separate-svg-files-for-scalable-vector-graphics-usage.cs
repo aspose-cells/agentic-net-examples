@@ -1,50 +1,67 @@
 // Title: Export every chart from an Excel workbook to individual SVG files using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, iterates through all worksheets and their charts, and saves each chart as an SVG image. | Create a C# helper method that sanitizes worksheet names to produce safe file names for exported chart SVGs. | Show how to invoke Chart.ToImage with ImageType.Svg to generate scalable vector graphics from Excel charts.
-// Common Searches: aspnet export excel chart as svg file using aspose.cells | c# loop through workbook charts and save each as svg | how to sanitize worksheet name for file output in aspose.cells | batch export all charts from an xlsx to separate svg images
-// Tags: Aspose.Cells generate SVG from chart objects | C# loop over workbook chart collection | Chart.ToImage method for scalable graphics | safe filename creation for Excel chart exports | automated batch conversion of charts to SVG
+// AI Prompts: Write C# code that loads a workbook, iterates over all worksheets and their charts, and saves each chart as a separate SVG file with Aspose.Cells. | Show how to configure ImageOrPrintOptions for SVG output when calling Chart.ToImage in Aspose.Cells .NET. | Create a reusable method that returns the file paths of SVG images generated from all charts in a specified Excel file using Aspose.Cells.
+// Common Searches: C# Aspose.Cells export each worksheet chart to SVG | How to save Excel charts as separate SVG files with Aspose.Cells .NET | Iterate through workbook charts and generate SVG images using Aspose.Cells | Aspose.Cells Chart.ToImage example for SVG output in C#
+// Tags: Aspose.Cells chart export to SVG | C# iterate workbook charts Aspose.Cells | ImageOrPrintOptions SVG configuration Aspose.Cells | multiple chart SVG files generation Aspose.Cells | export Excel charts as scalable vector graphics .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// The program loads an Excel workbook, iterates through each worksheet and its charts, sanitizes worksheet names for safe file naming, and exports every chart as a separate SVG file using Aspose.Cells' Chart.ToImage method with ImageType.Svg.
-class ExportChartsToSvg
+// The example loads an Excel workbook, loops through each worksheet and its charts, and uses Aspose.Cells' ImageOrPrintOptions with the Chart.ToImage method to export every chart as an individual SVG file named by sheet and chart indices, while handling missing files and export errors.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate through each chart on the current worksheet
-            for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Build a safe file name for the SVG output
-                string safeSheetName = SanitizeFileName(sheet.Name);
-                string svgFileName = $"{safeSheetName}_Chart{chartIndex + 1}.svg";
-
-                // Export the chart to an SVG file
-                chart.ToImage(svgFileName, ImageType.Svg);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
+
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
+
+            int sheetIndex = 0;
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int chartIndex = 0;
+                // Iterate through each chart on the current worksheet
+                foreach (Chart chart in sheet.Charts)
+                {
+                    try
+                    {
+                        // Configure image options (format inferred from file extension)
+                        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+
+                        // Build a unique file name for each chart
+                        string svgFileName = $"Chart_Sheet{sheetIndex}_Chart{chartIndex}.svg";
+
+                        // Export the chart as an SVG file
+                        chart.ToImage(svgFileName, imgOptions);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to export chart {chartIndex} on sheet {sheetIndex}: {ex.Message}");
+                    }
+
+                    chartIndex++;
+                }
+                sheetIndex++;
+            }
+
+            Console.WriteLine("Chart export completed successfully.");
         }
-
-        Console.WriteLine("All charts have been exported as separate SVG files.");
-    }
-
-    // Helper method to replace invalid filename characters with an underscore
-    static string SanitizeFileName(string name)
-    {
-        foreach (char invalidChar in Path.GetInvalidFileNameChars())
+        catch (Exception ex)
         {
-            name = name.Replace(invalidChar, '_');
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-        return name;
     }
 }

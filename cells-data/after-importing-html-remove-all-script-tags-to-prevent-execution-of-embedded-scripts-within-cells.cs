@@ -1,54 +1,83 @@
-// Title: How to remove <script> tags from HTML cells after loading an HTML file into an Aspose.Cells workbook using C#
-// AI Prompts: Write C# code that loads an HTML document with HtmlLoadOptions, iterates through every worksheet and cell, strips <script> elements from each cell's HtmlString using a regular expression, and saves the workbook as XLSX. | Create a reusable C# method that accepts a Workbook object, cleans all HtmlString values by removing script tags with Regex, and returns the sanitized workbook ready for export.
-// Common Searches: C# Aspose.Cells remove script tags from imported HTML | How to strip JavaScript from cells after loading HTML in Aspose.Cells | Cleaning HtmlString in Excel cells using Aspose.Cells C# | Prevent script execution when converting HTML to XLSX with Aspose.Cells | Regex to delete <script> elements from workbook cells in C#
-// Tags: Aspose.Cells HTMLLoadOptions script tag removal | C# regex clean HtmlString in workbook cells | sanitize cell content after HTML import Aspose.Cells | remove embedded JavaScript from Excel cells C# | Aspose.Cells export HTML to XLSX without scripts
+// Title: Import an HTML file into an Aspose.Cells workbook and strip all <script> tags from cell values using C#
+// AI Prompts: Load an HTML document into a Workbook, iterate over every string cell, and remove any <script>...</script> blocks with a case‑insensitive regex before saving as XLSX. | Validate the source HTML file’s existence, catch exceptions, and apply RegexOptions.Singleline|IgnoreCase to clean script elements in cell contents across all worksheets. | Update cells only when the cleaned text differs from the original, then export the sanitized workbook to a new XLSX file using Aspose.Cells.
+// Common Searches: c# aspocells remove script tags after loading html file | how to sanitize html content in excel cells using aspocells c# | aspocells regex strip <script> elements from imported html workbook | remove javascript from cells when importing html with aspocells | aspocells load html and clean script tags before saving as xlsx
+// Tags: remove script tags from HTML cells Aspose.Cells | sanitize imported HTML Aspose.Cells C# | regex based script removal Excel cells | load HTML workbook Aspose.Cells C# | export cleaned workbook to XLSX Aspose.Cells
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlScriptRemoval
 {
-    // The program loads an HTML file into an Aspose.Cells workbook, walks through each worksheet and cell, removes any <script> tags from the cell's HtmlString using a regular expression, and saves the cleaned workbook as an XLSX file.
+    // The example loads an HTML file into an Aspose.Cells Workbook, scans each string cell for <script>...</script> blocks, removes them using a case‑insensitive regular expression, updates only modified cells, and saves the sanitized workbook as an XLSX file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the HTML file into a workbook using HtmlLoadOptions
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-            Workbook workbook = new Workbook("input.html", loadOptions);
+            // Path to the source HTML file
+            string htmlPath = "input.html";
 
-            // Regular expression to match <script> tags (including their content)
-            string scriptPattern = @"<script\b[^>]*?>.*?</script>";
-            Regex scriptRegex = new Regex(scriptPattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-
-            // Iterate through all worksheets and cells to clean script tags
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists
+            if (!File.Exists(htmlPath))
             {
-                Cells cells = sheet.Cells;
-                // Get the maximum used row and column to limit the iteration
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
+                Console.WriteLine($"Error: Input file '{htmlPath}' not found.");
+                return;
+            }
 
-                for (int row = 0; row <= maxRow; row++)
+            try
+            {
+                // Load the HTML content into a workbook (Aspose.Cells can directly load HTML files)
+                Workbook workbook = new Workbook(htmlPath);
+
+                // Regular expression to match <script> tags (case‑insensitive, multiline)
+                string scriptPattern = @"<script.*?>.*?</script>";
+                Regex scriptRegex = new Regex(scriptPattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+                // Iterate through all worksheets and cells
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Get the used range to limit iteration to populated cells
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                    for (int row = startRow; row <= endRow; row++)
                     {
-                        Cell cell = cells[row, col];
-                        // Process only if the cell contains an HTML string
-                        if (!string.IsNullOrEmpty(cell.HtmlString))
+                        for (int col = startCol; col <= endCol; col++)
                         {
-                            // Remove all <script> tags from the HTML content
-                            string cleanedHtml = scriptRegex.Replace(cell.HtmlString, string.Empty);
-                            // Update the cell with the cleaned HTML
-                            cell.HtmlString = cleanedHtml;
+                            Cell cell = sheet.Cells[row, col];
+
+                            // Process only string cells that may contain HTML
+                            if (cell.Type == CellValueType.IsString)
+                            {
+                                string originalText = cell.StringValue;
+
+                                // Remove any <script>...</script> blocks
+                                string cleanedText = scriptRegex.Replace(originalText, string.Empty);
+
+                                // Update the cell only if changes were made
+                                if (!string.Equals(originalText, cleanedText, StringComparison.Ordinal))
+                                {
+                                    cell.PutValue(cleanedText);
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the cleaned workbook to an Excel file
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+                // Save the cleaned workbook to a new file (e.g., XLSX)
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"HTML imported and script tags removed. Saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,71 +1,47 @@
-// Title: Create a reusable C# helper to add a custom content‑type property to an Aspose.Cells worksheet (nillable flag placeholder)
-// AI Prompts: Write a static method that validates its arguments, adds a custom document property to the worksheet's workbook, and accepts a boolean parameter for a future nillable flag implementation. | Demonstrate how to instantiate a Workbook, call the helper to add a property, and save the workbook to a specified file path.
-// Common Searches: asp.net add custom content type property to worksheet using Aspose.Cells | c# Aspose.Cells custom document property with optional nillable parameter | how to build a reusable Excel helper for adding custom properties in .NET | fallback to CustomDocumentProperties when CustomXmlMappings are not supported Aspose.Cells
-// Tags: add custom document property Aspose.Cells | custom content type property worksheet | nillable flag placeholder Aspose.Cells | reusable Excel helper .NET | fallback CustomDocumentProperties Aspose.Cells
+// Title: Reusable C# method to add a custom property to an Excel worksheet using Aspose.Cells
+// Common Searches: how to add a custom worksheet property with Aspose.Cells in C# | Aspose.Cells reusable helper for adding custom properties to a worksheet | C# example of adding a custom property to an Excel workbook using Aspose.Cells | add custom property to first worksheet Aspose.Cells .NET | ExcelHelper class for worksheet custom properties Aspose.Cells
+// Tags: add custom worksheet property Aspose.Cells | Aspose.Cells reusable property helper C# | worksheet custom properties .NET | Excel workbook add custom property C# | Aspose.Cells custom property utility
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Provides a static ExcelHelper.AddContentTypeProperty method that validates inputs, adds a custom document property to the workbook as a fallback for content‑type properties, accepts a boolean for a future nillable flag, and includes a sample program that creates a workbook, uses the helper, and saves the file.
+// The example defines a static ExcelHelper class with an AddCustomProperty method that inserts a custom property into a worksheet's CustomProperties collection. It shows how to create a new Workbook, retrieve the first worksheet, call the helper to add a property, and save the workbook to an output file.
 public static class ExcelHelper
 {
-    /// <param name="worksheet">Target worksheet.</param>
-    /// <param name="name">Name of the custom property.</param>
-    /// <param name="value">Value of the custom property.</param>
-    /// <param name="isNillable">If true, the property will be marked as nillable (not used in this fallback implementation).</param>
-    public static void AddContentTypeProperty(Worksheet worksheet, string name, string value, bool isNillable)
+    // Adds a custom property to the specified worksheet.
+    public static void AddCustomProperty(Worksheet worksheet, string propertyName, string propertyValue)
     {
-        if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
-        if (string.IsNullOrEmpty(name)) throw new ArgumentException("Property name cannot be null or empty.", nameof(name));
-
-        try
-        {
-            // Aspose.Cells versions prior to supporting CustomXmlMappings use CustomDocumentProperties.
-            // Add a custom document property as a fallback for the content‑type property.
-            var workbook = worksheet.Workbook;
-            workbook.CustomDocumentProperties.Add(name, value);
-        }
-        catch (Exception ex)
-        {
-            // Wrap any exception to provide context.
-            throw new InvalidOperationException("Failed to add content type property.", ex);
-        }
+        // Add the property to the worksheet's custom properties collection.
+        worksheet.CustomProperties.Add(propertyName, propertyValue);
     }
 }
 
-public class Program
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            // Create a new workbook (in‑memory, no template file required).
-            var workbook = new Workbook();
+            // Create a new workbook (or load an existing one if needed).
+            Workbook workbook = new Workbook();
 
             // Get the first worksheet.
-            var worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a custom content type property.
-            ExcelHelper.AddContentTypeProperty(worksheet, "MyProperty", "SomeValue", true);
+            // Add a custom property to the worksheet.
+            ExcelHelper.AddCustomProperty(sheet, "MyProperty", "SomeValue");
 
             // Define output path.
             string outputPath = "output.xlsx";
 
-            // Ensure the directory exists.
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

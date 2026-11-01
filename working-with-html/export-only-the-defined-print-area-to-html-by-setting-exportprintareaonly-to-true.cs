@@ -1,24 +1,46 @@
-// Title: Export only the defined print area of an Excel workbook to HTML with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions.ExportPrintAreaOnly to true, and saves the workbook as an HTML document using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to export just the worksheet's print area when converting Excel to HTML in a .NET application.
-// Common Searches: asp.net export excel print area to html using aspose.cells | c# Aspose.Cells HtmlSaveOptions ExportPrintAreaOnly example | how to save only the defined print area of a worksheet as html with Aspose.Cells | convert workbook to html limited to print area Aspose.Cells C#
-// Tags: Aspose.Cells HtmlSaveOptions ExportPrintAreaOnly | export Excel print area to HTML C# | convert worksheet print area to HTML Aspose.Cells | C# Aspose.Cells HTML conversion print area
+// Title: Export defined print area of an Excel workbook to HTML using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportPrintAreaOnly to true, and saves the result as an HTML file. | Write error‑handling logic that verifies the source Excel file exists before converting it to HTML with a print‑area‑only export. | Show how to customize additional HtmlSaveOptions (such as page title or encoding) while exporting only the defined print area to HTML using Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert Excel workbook to HTML limited to the set print area | How to enable ExportPrintAreaOnly in HtmlSaveOptions when saving as HTML in .NET | Sample code for saving an .xlsx file as HTML with only the print region using Aspose.Cells | C# Aspose.Cells HTML export with print area restriction example | Using HtmlSaveOptions to generate HTML from Excel with print area constraints
+// Tags: Aspose.Cells HtmlSaveOptions ExportPrintAreaOnly | C# export Excel print area to HTML | Aspose.Cells HTML conversion with print area restriction | save workbook as HTML using Aspose.Cells | print area only HTML output Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads 'input.xlsx', enables HtmlSaveOptions.ExportPrintAreaOnly to restrict output to the defined print area, and saves the result as 'output.html' using Aspose.Cells.
-class ExportPrintAreaToHtml
+// Loads an Excel workbook, configures HtmlSaveOptions with ExportPrintAreaOnly = true, and saves the workbook as an HTML file containing only the defined print area, including basic file‑existence error handling.
+class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Create HTML save options and enable exporting only the defined print area
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportPrintAreaOnly = true; // Export only the print area
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Save the workbook as an HTML file using the specified options
-        workbook.Save("output.html", htmlOptions);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options to export only the defined print area
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportPrintAreaOnly = true
+            };
+
+            // Save the workbook as HTML
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

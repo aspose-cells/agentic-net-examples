@@ -1,42 +1,72 @@
-// Title: Hide blank worksheets in multiple Excel workbooks and overwrite the files using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a collection of .xlsx file paths, iterates each workbook's worksheets, hides any sheet whose MaxDataRow and MaxDataColumn indicate no data, and saves the workbook back to the same location. | Create a reusable method that accepts a workbook, checks every worksheet for content using MaxDataRow/MaxDataColumn, toggles the IsVisible property accordingly, and overwrites the original Excel file.
-// Common Searches: Aspose.Cells C# hide worksheets with no data in a batch of Excel files | how to programmatically hide empty sheets and save the workbook using Aspose.Cells | check worksheet emptiness with MaxDataRow and MaxDataColumn Aspose.Cells | overwrite original .xlsx after changing sheet visibility Aspose.Cells | process multiple workbooks and hide blank worksheets using Aspose.Cells for .NET
-// Tags: hide empty worksheets Aspose.Cells | batch process Excel workbooks C# | detect worksheet data presence MaxDataRow Aspose.Cells | set worksheet visibility programmatically Aspose.Cells | overwrite workbook after sheet visibility change Aspose.Cells
+// Title: Batch hide empty worksheets in multiple Excel workbooks and overwrite files using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that receives an IEnumerable of Excel file paths, loads each workbook with Aspose.Cells, evaluates each worksheet’s Cells.MaxDataRow and Cells.MaxDataColumn to determine emptiness, sets Worksheet.IsVisible to false for empty sheets, and saves the workbook back to its original location. | Create a reusable method in C# that iterates through all worksheets of a workbook, hides any sheet that contains no data, and overwrites the source .xlsx file using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# hide blank sheets in a batch of Excel files | programmatically set worksheet visibility based on MaxDataRow MaxDataColumn Aspose.Cells | overwrite original workbook after changing sheet visibility with Aspose.Cells .NET | how to iterate through worksheets and conceal empty ones using Aspose.Cells | C# process multiple .xlsx files to remove empty worksheets automatically
+// Tags: conceal empty worksheets Aspose.Cells C# | batch process Excel workbooks Aspose.Cells | Worksheet.IsVisible based on Cells.MaxDataRow MaxDataColumn | overwrite original .xlsx file Aspose.Cells | detect blank sheet using Cells.MaxDataRow Cells.MaxDataColumn
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Aspose.Cells;
 
-// The program loads each Excel file from a predefined list, examines every worksheet with Aspose.Cells, determines if the sheet contains any data by checking MaxDataRow and MaxDataColumn, hides sheets that are empty (or ensures they remain visible when data exists), and then saves the workbook back to the original .xlsx file, effectively overwriting it.
-class Program
+namespace WorkbookProcessor
 {
-    static void Main()
+    // // Loads each workbook from a list of file paths, checks every worksheet for data using MaxDataRow/MaxDataColumn, hides worksheets that are empty, and saves the workbook back, overwriting the original file.
+    public class WorksheetHider
     {
-        // Collection of workbook file paths to process
-        var workbookFiles = new List<string>
+        /// <param name="workbookPaths">Full paths to the workbook files to process.</param>
+        public void ProcessWorkbooks(IEnumerable<string> workbookPaths)
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx"
-            // Add additional workbook paths as needed
-        };
-
-        foreach (var filePath in workbookFiles)
-        {
-            // Load the workbook from file
-            var workbook = new Workbook(filePath);
-
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            foreach (var path in workbookPaths)
             {
-                // Check if the worksheet contains any data
-                bool hasData = sheet.Cells.MaxDataRow >= 0 && sheet.Cells.MaxDataColumn >= 0;
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"File not found: {path}");
+                    continue;
+                }
 
-                // Hide the worksheet if it has no data; otherwise ensure it is visible
-                sheet.IsVisible = hasData;
+                try
+                {
+                    // Load the workbook from the file system
+                    var workbook = new Workbook(path);
+
+                    // Iterate through all worksheets in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Determine if the worksheet contains any data
+                        // MaxDataRow and MaxDataColumn return -1 when the sheet is empty
+                        bool hasData = sheet.Cells.MaxDataRow >= 0 && sheet.Cells.MaxDataColumn >= 0;
+
+                        // Hide the worksheet if it has no data
+                        sheet.IsVisible = hasData;
+                    }
+
+                    // Save the modified workbook back to the original file (overwrite)
+                    workbook.Save(path);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{path}': {ex.Message}");
+                }
             }
+        }
+    }
 
-            // Save the workbook back to the original file (overwrite)
-            workbook.Save(filePath, SaveFormat.Xlsx);
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            var processor = new WorksheetHider();
+
+            // List of workbook file paths to process
+            var workbooks = new List<string>
+            {
+                @"C:\Data\Report1.xlsx",
+                @"C:\Data\Report2.xlsx",
+                @"C:\Data\Report3.xlsx"
+            };
+
+            processor.ProcessWorkbooks(workbooks);
         }
     }
 }

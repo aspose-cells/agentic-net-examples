@@ -1,72 +1,65 @@
-// Title: Hide a specific series in a stacked bar chart with Aspose.Cells for .NET (C#)
-// AI Prompts: Remove the second data series from a stacked bar chart in an existing Excel file using Aspose.Cells C#. | Set a chart series' visibility to false in a stacked bar chart and save the workbook with Aspose.Cells for .NET. | Programmatically delete a chosen series from the first chart of a workbook and export the updated file using Aspose.Cells C#.
-// Common Searches: Aspose.Cells C# hide series in stacked bar chart | remove specific series from Excel chart using Aspose.Cells .NET | how to make a chart series invisible in Aspose.Cells C# | delete a data series from a stacked bar chart programmatically Aspose.Cells | Aspose.Cells hide chart series without deleting data
-// Tags: chart series visibility Aspose.Cells C# | remove series from stacked bar chart Aspose.Cells | Aspose.Cells hide chart series .NET | Excel chart series manipulation Aspose.Cells | stacked bar chart series removal C#
+// Title: How to hide a specific series in a stacked bar chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Set chart.NSeries[1].IsVisible = false to hide the second series in a BarStacked chart before saving the workbook. | Modify the Aspose.Cells C# code to programmatically hide Series2 in the stacked bar chart by toggling its IsVisible property. | Update the example so that the chosen data series is not displayed in the generated Excel file by disabling its visibility.
+// Common Searches: Aspose.Cells C# hide series in stacked bar chart example | set chart series visibility false Aspose.Cells .NET | how to programmatically hide a data series in an Excel bar chart using Aspose.Cells | C# Aspose.Cells hide specific series from BarStacked chart
+// Tags: Aspose.Cells hide chart series C# | BarStacked series visibility Aspose.Cells | Excel stacked bar chart IsVisible .NET | programmatic chart series hiding Aspose.Cells | C# Aspose.Cells chart manipulation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads 'input.xlsx', verifies the first worksheet contains a chart, removes the series at index 1 (effectively hiding it) from a stacked bar chart, and saves the modified workbook as 'output.xlsx', with comprehensive error handling for missing files and absent charts.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // This C# example creates a new workbook, populates sample data, adds a stacked bar chart, and demonstrates how to hide the second data series by setting its IsVisible property to false before saving the file as 'StackedBar_HideSeries.xlsx'.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Load the workbook that contains the stacked bar chart
-            Workbook workbook = new Workbook(inputPath);
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+                // Populate sample data for the stacked bar chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["A2"].PutValue("Item1");
+                sheet.Cells["A3"].PutValue("Item2");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["C2"].PutValue(30);
+                sheet.Cells["C3"].PutValue(40);
 
-            // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count == 0)
-            {
-                Console.WriteLine("Error: No charts found on the first worksheet.");
-                return;
-            }
+                // Add a stacked bar chart (BarStacked) to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 15, 7);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Get the first chart on the worksheet (adjust index if needed)
-            Chart chart = sheet.Charts[0];
+                // Set the data range for the series (B2:C3) and categories (A2:A3)
+                chart.NSeries.Add("B2:C3", true);
+                chart.NSeries.CategoryData = "A2:A3";
 
-            // Hide (remove) the series you want (e.g., the second series, index 1)
-            int seriesIndexToHide = 1;
-            if (seriesIndexToHide < chart.NSeries.Count)
-            {
-                try
+                // Define output file path
+                string outputPath = "StackedBar_HideSeries.xlsx";
+
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    // Removing the series effectively hides it from the chart
-                    chart.NSeries.RemoveAt(seriesIndexToHide);
+                    Directory.CreateDirectory(outputDir);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to hide series at index {seriesIndexToHide}: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Warning: Series index {seriesIndexToHide} is out of range.");
-            }
 
-            // Save the workbook with the updated chart
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

@@ -1,14 +1,11 @@
-// Title: Add a future‑date validation rule to cell M2 in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that applies a date validation to cell M2, allowing only dates later than the current day and displaying a custom error message. | Create an Aspose.Cells workbook where the validation for M2 uses the GreaterThan operator with today's date as the lower bound. | Write a C# snippet that adds a ValidationType.Date rule to M2, sets OperatorType.GreaterThan, assigns Formula1 to DateTime.Today, and saves the file.
-// Common Searches: Aspose.Cells C# how to set date validation for a specific cell to only accept future dates | C# add data validation to Excel cell M2 that restricts input to dates after today using Aspose.Cells | example of using OperatorType.GreaterThan with ValidationType.Date in Aspose.Cells | Aspose.Cells create custom error message for a date validation rule
-// Tags: Aspose.Cells date validation future dates | C# Aspose.Cells ValidationType.Date | OperatorType.GreaterThan Excel validation | custom error message Aspose.Cells validation | CellArea M2 Aspose.Cells
+// Title: Create a date‑validation rule that only allows dates after today in cell M2 with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set data validation for future dates in a specific cell | How to restrict Excel cell M2 to dates later than today using Aspose.Cells | Add date greater than TODAY() validation to cell M2 in a .NET workbook | C# Aspose.Cells validation operator GreaterThan with formula TODAY() example | Apply input and error messages for date validation in Aspose.Cells
+// Tags: Aspose.Cells date validation after today | C# set validation on cell M2 with Aspose.Cells | ValidationType.Date with OperatorType.GreaterThan example | Aspose.Cells custom error title and message for validation | Saving workbook after applying cell validation in .NET
 
-using Aspose.Cells;
 using System;
-using System.Globalization;
-using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, defines a CellArea for M2, adds a date‑type validation that only permits dates greater than today, configures a custom error title and message, ensures the output directory exists, and saves the workbook as Output.xlsx.
+// The example creates a new workbook, defines cell M2 using a CellArea, adds a date validation rule that requires the entered date to be greater than TODAY(), configures custom error and input prompts, and saves the workbook as Output.xlsx, all implemented in C# with Aspose.Cells.
 class Program
 {
     static void Main()
@@ -21,38 +18,37 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a data validation rule for cell M2
+            // Define the cell area for M2 (column 12, row 1 in zero‑based indexing)
+            CellArea area = new CellArea
+            {
+                StartRow = 1,
+                EndRow = 1,
+                StartColumn = 12,
+                EndColumn = 12
+            };
+
+            // Add a data validation rule for the defined area
             ValidationCollection validations = sheet.Validations;
+            int validationIndex = validations.Add(area); // use the overload that accepts CellArea
+            Validation validation = validations[validationIndex];
 
-            // Create CellArea for M2 (row index 1, column index 12)
-            // Use overload that accepts start and end cell addresses
-            CellArea area = CellArea.CreateCellArea("M2", "M2");
-            int index = validations.Add(area);
-            Validation validation = validations[index];
-
-            // Set validation type to Date and restrict to dates greater than today
+            // Configure validation: date greater than TODAY()
             validation.Type = ValidationType.Date;
             validation.Operator = OperatorType.GreaterThan;
-            validation.Formula1 = DateTime.Today.ToOADate().ToString(CultureInfo.InvariantCulture);
+            validation.Formula1 = "=TODAY()";
 
-            // Optional: configure error message
+            // Configure error message
             validation.ShowError = true;
             validation.ErrorTitle = "Invalid Date";
             validation.ErrorMessage = "Please enter a date after today.";
 
-            // Define output file path
-            string outputPath = "Output.xlsx";
-
-            // Ensure the output directory exists (handle case when outputPath has no directory)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Configure input (prompt) message
+            validation.ShowInput = true;
+            validation.InputTitle = "Date Required";
+            validation.InputMessage = "Enter a date later than today.";
 
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {

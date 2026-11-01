@@ -1,7 +1,6 @@
-// Title: Generate a JSON locale configuration file in C# by mapping culture identifiers to custom GlobalizationSettings objects
-// AI Prompts: Create a C# program that builds a Dictionary<string, GlobalizationSettings> for multiple cultures and writes the content to an indented JSON file using System.Text.Json. | Add a new locale entry (e.g., es-ES) with its date format, decimal separator, and currency symbol, then regenerate the LocaleSettings.json file. | Configure JsonSerializerOptions to produce camel‑case property names while preserving dictionary keys, and serialize the locale mapping to a formatted JSON file.
-// Common Searches: how to serialize a dictionary of custom objects to a formatted JSON file in C# | C# create locale settings JSON file with culture codes and custom date/number formats | example of writing a globalization configuration file per culture using System.Text.Json | store date format decimal separator and currency symbol per locale in a .NET JSON config
-// Tags: dictionary to JSON serialization System.Text.Json C# | locale configuration file generation .NET | custom GlobalizationSettings class JSON output | write indented JSON file to application base directory | add culture-specific formatting settings C#
+// Title: Generate and use a JSON file that maps locale codes to custom GlobalizationSettings objects in C#
+// Common Searches: C# serialize a dictionary of custom objects to JSON with System.Text.Json preserving keys | How to store culture-specific date and number formats in a JSON configuration file in .NET | Load locale-specific globalization settings from a JSON file using C# | Create a case-insensitive dictionary of locale identifiers to formatting settings in .NET | Read and write custom GlobalizationSettings per culture with System.Text.Json | Save and retrieve currency format settings for multiple cultures in a .NET application
+// Tags: dictionary serialization to JSON with System.Text.Json | culture to formatting settings mapping .NET | custom GlobalizationSettings class C# | locale identifier JSON configuration file | case-insensitive dictionary for culture codes | currency and date format configuration .NET
 
 using System;
 using System.Collections.Generic;
@@ -9,81 +8,127 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LocaleConfiguration
+namespace LocalizationConfig
 {
     // Custom settings for globalization per locale
-    // The example defines a GlobalizationSettings class containing DateFormat, DecimalSeparator, and CurrencySymbol properties. It creates a Dictionary<string, GlobalizationSettings> that maps locale identifiers (e.g., "en-US", "fr-FR") to corresponding settings, serializes the dictionary to a pretty‑printed JSON string with System.Text.Json, and writes the result to a LocaleSettings.json file placed in the application's base directory.
+    // The example defines a GlobalizationSettings class and builds a case‑insensitive Dictionary that maps locale identifiers (e.g., "en-US", "fr-FR") to formatting settings. It demonstrates saving this dictionary to an indented JSON file using System.Text.Json with camelCase property names, and loading the file back into a dictionary while handling missing files and case‑insensitive property names.
     public class GlobalizationSettings
     {
-        // Example: date format pattern
         public string DateFormat { get; set; }
-
-        // Example: decimal separator
-        public string DecimalSeparator { get; set; }
-
-        // Example: currency symbol
+        public string NumberDecimalSeparator { get; set; }
+        public string NumberGroupSeparator { get; set; }
         public string CurrencySymbol { get; set; }
-
-        // Additional custom settings can be added here
+        public string CurrencyFormat { get; set; }
     }
 
     class Program
     {
+        // Path to the configuration file
+        private const string ConfigFilePath = "globalizationConfig.json";
+
         static void Main(string[] args)
         {
-            // Build the mapping of locale identifiers to their settings
-            var localeSettings = new Dictionary<string, GlobalizationSettings>
+            // Create sample configuration
+            var config = CreateSampleConfiguration();
+
+            // Save configuration to file
+            SaveConfiguration(config, ConfigFilePath);
+            Console.WriteLine($"Configuration saved to {ConfigFilePath}");
+
+            // Load configuration from file
+            var loadedConfig = LoadConfiguration(ConfigFilePath);
+            Console.WriteLine("Loaded configuration:");
+            foreach (var kvp in loadedConfig)
             {
-                // English - United States
-                ["en-US"] = new GlobalizationSettings
-                {
-                    DateFormat = "MM/dd/yyyy",
-                    DecimalSeparator = ".",
-                    CurrencySymbol = "$"
-                },
+                Console.WriteLine($"Locale: {kvp.Key}");
+                Console.WriteLine($"  DateFormat: {kvp.Value.DateFormat}");
+                Console.WriteLine($"  DecimalSeparator: {kvp.Value.NumberDecimalSeparator}");
+                Console.WriteLine($"  GroupSeparator: {kvp.Value.NumberGroupSeparator}");
+                Console.WriteLine($"  CurrencySymbol: {kvp.Value.CurrencySymbol}");
+                Console.WriteLine($"  CurrencyFormat: {kvp.Value.CurrencyFormat}");
+            }
+        }
 
-                // French - France
-                ["fr-FR"] = new GlobalizationSettings
+        // Creates a dictionary mapping locale identifiers to their settings
+        private static Dictionary<string, GlobalizationSettings> CreateSampleConfiguration()
+        {
+            var dict = new Dictionary<string, GlobalizationSettings>(StringComparer.OrdinalIgnoreCase)
+            {
                 {
-                    DateFormat = "dd/MM/yyyy",
-                    DecimalSeparator = ",",
-                    CurrencySymbol = "€"
+                    "en-US", new GlobalizationSettings
+                    {
+                        DateFormat = "MM/dd/yyyy",
+                        NumberDecimalSeparator = ".",
+                        NumberGroupSeparator = ",",
+                        CurrencySymbol = "$",
+                        CurrencyFormat = "¤#,##0.00"
+                    }
                 },
-
-                // German - Germany
-                ["de-DE"] = new GlobalizationSettings
                 {
-                    DateFormat = "dd.MM.yyyy",
-                    DecimalSeparator = ",",
-                    CurrencySymbol = "€"
+                    "en-GB", new GlobalizationSettings
+                    {
+                        DateFormat = "dd/MM/yyyy",
+                        NumberDecimalSeparator = ".",
+                        NumberGroupSeparator = ",",
+                        CurrencySymbol = "£",
+                        CurrencyFormat = "¤#,##0.00"
+                    }
                 },
-
-                // Japanese - Japan
-                ["ja-JP"] = new GlobalizationSettings
                 {
-                    DateFormat = "yyyy/MM/dd",
-                    DecimalSeparator = ".",
-                    CurrencySymbol = "¥"
+                    "fr-FR", new GlobalizationSettings
+                    {
+                        DateFormat = "dd/MM/yyyy",
+                        NumberDecimalSeparator = ",",
+                        NumberGroupSeparator = " ",
+                        CurrencySymbol = "€",
+                        CurrencyFormat = "#,##0.00 ¤"
+                    }
+                },
+                {
+                    "de-DE", new GlobalizationSettings
+                    {
+                        DateFormat = "dd.MM.yyyy",
+                        NumberDecimalSeparator = ",",
+                        NumberGroupSeparator = ".",
+                        CurrencySymbol = "€",
+                        CurrencyFormat = "#,##0.00 ¤"
+                    }
                 }
             };
 
-            // Serialize the dictionary to JSON with indented formatting
-            var jsonOptions = new JsonSerializerOptions
+            return dict;
+        }
+
+        // Serializes the configuration dictionary to a JSON file
+        private static void SaveConfiguration(Dictionary<string, GlobalizationSettings> config, string filePath)
+        {
+            var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
-                // Preserve the dictionary keys as they are
-                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+                // Preserve dictionary keys as they are
+                DictionaryKeyPolicy = null,
+                // Ensure property names are camelCase in JSON (optional)
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-            string json = JsonSerializer.Serialize(localeSettings, jsonOptions);
+            string json = JsonSerializer.Serialize(config, options);
+            File.WriteAllText(filePath, json);
+        }
 
-            // Define the output configuration file path
-            string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LocaleSettings.json");
+        // Deserializes the configuration dictionary from a JSON file
+        private static Dictionary<string, GlobalizationSettings> LoadConfiguration(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"Configuration file not found: {filePath}");
 
-            // Write the JSON content to the file
-            File.WriteAllText(configFilePath, json);
+            string json = File.ReadAllText(filePath);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
 
-            Console.WriteLine($"Locale configuration file created at: {configFilePath}");
+            var config = JsonSerializer.Deserialize<Dictionary<string, GlobalizationSettings>>(json, options);
+            return config ?? new Dictionary<string, GlobalizationSettings>();
         }
     }
 }

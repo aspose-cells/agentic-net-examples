@@ -1,18 +1,25 @@
-// Title: Enable black‑and‑white printing for every worksheet in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file, iterates through all worksheets, sets PageSetup.BlackAndWhite to true, and saves the workbook. | Show how to apply grayscale printing mode to each sheet in a workbook using the Aspose.Cells API. | Provide a loop example that configures black‑and‑white page setup for every worksheet in a workbook and writes the output file.
-// Common Searches: Aspose.Cells C# set black and white printing for all worksheets in a workbook | how to configure grayscale page setup for every sheet using Aspose.Cells | C# code to reduce ink usage by enabling black‑and‑white printing in Excel files | apply black and white printing mode to entire workbook with Aspose.Cells .NET | bulk update worksheet page setup to black and white using Aspose.Cells library
-// Tags: set worksheet black and white page setup Aspose.Cells | apply grayscale printing to workbook C# | bulk page setup configuration Aspose.Cells | reduce ink consumption Excel Aspose.Cells | activate black and white printing across workbook | Aspose.Cells PageSetup.BlackAndWhite property
+// Title: Set black‑and‑white printing for all worksheets in an Excel file using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set black and white print mode for every sheet | How to reduce ink usage by enabling monochrome printing in a workbook with Aspose.Cells | C# code to apply PageSetup.BlackAndWhite to all worksheets in an XLSX file | Bulk configure print settings across worksheets using Aspose.Cells .NET | Programmatically turn on black‑and‑white printing for an entire workbook in C#
+// Tags: Aspose.Cells BlackAndWhite page setup | set monochrome printing for workbook | bulk worksheet print configuration .NET | ink saving print settings Excel | C# PageSetup BlackAndWhite usage
 
 using Aspose.Cells;
+using System;
 
-// Load the workbook (replace with your actual file path)
-Workbook workbook = new Workbook("input.xlsx");
-
-// Enable black‑and‑white printing for every worksheet in the workbook
-foreach (Worksheet sheet in workbook.Worksheets)
+// Loads an existing XLSX file, iterates through each worksheet, sets the PageSetup.BlackAndWhite property to true to enable monochrome printing, and saves the workbook.
+class Program
 {
-    sheet.PageSetup.BlackAndWhite = true;
-}
+    static void Main()
+    {
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-// Save the workbook (replace with your desired output path)
-workbook.Save("output.xlsx");
+        // Enable black‑and‑white printing for every worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            sheet.PageSetup.BlackAndWhite = true;
+        }
+
+        // Save the workbook with the updated printing settings
+        workbook.Save("output.xlsx");
+    }
+}

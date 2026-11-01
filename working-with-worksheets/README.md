@@ -4,8 +4,8 @@ description: C# examples for adding, accessing, copying, moving, hiding, freezin
 product: Aspose.Cells for .NET
 category: working-with-worksheets
 language: C#
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 ---
 
 # Work with Excel Worksheets in C# using Aspose.Cells for .NET

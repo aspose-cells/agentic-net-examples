@@ -1,44 +1,56 @@
-// Title: Delete blank rows on the first worksheet while preserving formulas using DeleteOptions.UpdateReference in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that removes all empty rows from the first worksheet of a workbook and updates any cell references by setting DeleteOptions.UpdateReference = true. | Show how to configure DeleteOptions in Aspose.Cells to delete blank rows and keep formulas correct in a .NET application. | Provide a step‑by‑step example that creates a workbook, inserts data with gaps, deletes blank rows with reference updates, and saves the result.
-// Common Searches: asp.net delete blank rows first worksheet deleteoptions.updatereference true | c# aspocells remove empty rows and keep formulas intact | how to use DeleteBlankRows with UpdateReference option in Aspose.Cells | preserve cell references when deleting rows in Aspose.Cells .NET
-// Tags: Aspose.Cells DeleteBlankRows with UpdateReference | C# delete empty rows preserving formulas | DeleteOptions.UpdateReference usage Aspose.Cells | first worksheet blank row removal .NET | Aspose.Cells row deletion reference update
+// Title: Remove all empty rows from the first worksheet of an XLSX file using Aspose.Cells for .NET with DeleteOptions.UpdateReference enabled
+// AI Prompts: Generate C# code that opens an XLSX workbook with Aspose.Cells, deletes blank rows on the first sheet while keeping formulas updated, and saves the result. | Show how to configure DeleteOptions.UpdateReference = true and pass it to Cells.DeleteBlankRows in a .NET application. | Create a robust C# example that checks for the input file, removes empty rows from the first worksheet, handles exceptions, and writes the output file.
+// Common Searches: Aspose.Cells C# delete blank rows first worksheet update references | How to keep formulas intact when removing empty rows with Aspose.Cells .NET | DeleteBlankRows with DeleteOptions.UpdateReference true example in C# | Remove empty rows from an Excel sheet using Aspose.Cells and preserve cell references | C# code to delete blank rows in the first worksheet of an XLSX file using Aspose.Cells
+// Tags: Aspose.Cells DeleteBlankRows with DeleteOptions | update references after row deletion .NET | remove empty rows first worksheet XLSX | preserve formulas Aspose.Cells DeleteBlankRows | C# Aspose.Cells blank row removal
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDeleteBlankRowsExample
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, adds data with intermittent blank rows, configures DeleteOptions with UpdateReference=true, deletes all blank rows on the first worksheet while updating formula references, and saves the file as DeletedBlankRows.xlsx.
+    // Loads input.xlsx, deletes all blank rows on the first worksheet with DeleteOptions.UpdateReference set to true to keep formulas and references correct, saves the modified workbook as output.xlsx, and includes file‑existence checking and exception handling.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate data with some blank rows
-            cells["A1"].PutValue("Header");
-            cells["A2"].PutValue("Data1");
-            // Row 3 will be blank
-            cells["A4"].PutValue("Data2");
-            // Row 5 will be blank
-            cells["A6"].PutValue("Data3");
-
-            // Set up DeleteOptions with UpdateReference = true
-            DeleteOptions options = new DeleteOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                UpdateReference = true
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Delete all blank rows on the first worksheet using the options
-            cells.DeleteBlankRows(options);
+            try
+            {
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook
-            workbook.Save("DeletedBlankRows.xlsx", SaveFormat.Xlsx);
+                // Get the first worksheet (index 0)
+                Worksheet firstSheet = workbook.Worksheets[0];
+
+                // Configure delete options to update references after deletion
+                DeleteOptions deleteOptions = new DeleteOptions
+                {
+                    UpdateReference = true
+                };
+
+                // Delete all blank rows on the first worksheet using the specified options
+                firstSheet.Cells.DeleteBlankRows(deleteOptions);
+
+                // Save the modified workbook to the output file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

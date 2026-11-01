@@ -1,38 +1,43 @@
-// Title: Convert an Excel workbook to PDF while substituting missing fonts using Aspose.Cells LoadOptions in C#
-// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells LoadOptions, sets a font substitute for a missing font, and saves the workbook as PDF. | Demonstrate how to configure IndividualFontConfigs in LoadOptions to replace a specific unavailable font with Arial during a workbook-to-PDF conversion. | Show how to use ConversionUtility.Convert together with LoadOptions and PdfSaveOptions to perform an Excel‑to‑PDF conversion that ignores missing fonts.
-// Common Searches: Aspose.Cells C# ignore missing fonts when converting XLSX to PDF | How to set font substitution in LoadOptions for Excel to PDF conversion using Aspose.Cells | Replace unavailable font with Arial during workbook conversion Aspose.Cells .NET | LoadOptions FontConfigs SetFontSubstitutes example for PDF output
-// Tags: Excel to PDF conversion with custom font mapping | LoadOptions IndividualFontConfigs usage | Aspose.Cells missing font handling | PdfSaveOptions configuration for workbook conversion | ConversionUtility custom load and save options
+// Title: Load an XLSX workbook with LoadOptions.IgnoreMissingFonts and convert it to PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load Excel file with IgnoreMissingFonts option | how to avoid missing font errors when exporting XLSX to PDF with Aspose.Cells | C# example of using LoadOptions to skip missing fonts during PDF conversion | using LoadOptions.IgnoreMissingFonts property in Aspose.Cells .NET
+// Tags: LoadOptions.IgnoreMissingFonts usage | XLSX to PDF conversion with Aspose.Cells | skip missing fonts during Excel to PDF export | C# Aspose.Cells load options for PDF generation | handling missing fonts in Aspose.Cells conversion
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
+using System.IO;
 
-// // Loads an XLSX workbook with Aspose.Cells LoadOptions, configures IndividualFontConfigs to replace a missing font (e.g., "MissingFont") with Arial, and converts the workbook to PDF using ConversionUtility and PdfSaveOptions.
+// The sample checks for the source XLSX file, creates a LoadOptions object with the IgnoreMissingFonts flag enabled, loads the workbook using these options, and then saves it as a PDF, all wrapped in error handling to report any issues.
 class Program
 {
     static void Main()
     {
-        // Source Excel file that may contain fonts not installed on the system
-        string sourceFile = "input.xlsx";
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Destination file after conversion (e.g., PDF)
-        string destinationFile = "output.pdf";
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Create LoadOptions instance
-        LoadOptions loadOptions = new LoadOptions();
+            // Create load options for XLSX format.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-        // Configure font substitution to handle missing fonts.
-        // Any occurrence of a font named "MissingFont" will be replaced with "Arial".
-        // Adjust the original font name as needed for your scenario.
-        loadOptions.FontConfigs = new IndividualFontConfigs();
-        loadOptions.FontConfigs.SetFontSubstitutes("MissingFont", new string[] { "Arial" });
+            // Load the workbook with the specified options.
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Optional: set additional save options (here we use PDF format)
-        PdfSaveOptions saveOptions = new PdfSaveOptions();
+            // Save the workbook as PDF.
+            workbook.Save(outputPath, SaveFormat.Pdf);
 
-        // Perform conversion using the custom load options.
-        // This utilizes the provided ConversionUtility.Convert method that accepts
-        // both LoadOptions and SaveOptions, complying with the lifecycle rules.
-        ConversionUtility.Convert(sourceFile, loadOptions, destinationFile, saveOptions);
+            Console.WriteLine($"Conversion successful. PDF saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

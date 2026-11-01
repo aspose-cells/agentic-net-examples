@@ -1,64 +1,55 @@
-// Title: Render an Excel workbook loaded from a MemoryStream to a 300 DPI PNG image using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an XLSX workbook from a MemoryStream, configures ImageOrPrintOptions for 300 dpi PNG, and uses WorkbookRender to export the entire workbook to an image stream. | Show how to set horizontal and vertical resolution in ImageOrPrintOptions and save the rendered PNG to a file after loading the workbook from a stream.
-// Common Searches: Aspose.Cells C# render workbook from MemoryStream to high‑resolution PNG | how to set DPI when exporting Excel to PNG with Aspose.Cells | convert in‑memory Excel file to 300 dpi PNG using WorkbookRender
-// Tags: render workbook to PNG with custom DPI | load Excel from MemoryStream C# | ImageOrPrintOptions DPI configuration | WorkbookRender export entire workbook as image | high‑resolution Excel to PNG conversion
+// Title: Convert an Excel workbook loaded from a MemoryStream to a 300 DPI PNG image using Aspose.Cells for .NET
+// Common Searches: c# load excel file from byte array and save first sheet as 300 dpi png using Aspose.Cells | how to set horizontal and vertical resolution to 300 DPI when exporting worksheet to PNG with Aspose.Cells | Aspose.Cells render worksheet to high resolution PNG from memory stream in .NET | export Excel worksheet to PNG image with custom DPI in C# Aspose.Cells | convert in‑memory Excel workbook to PNG image using SheetRender and ImageOrPrintOptions
+// Tags: memory stream workbook loading Aspose.Cells | ImageOrPrintOptions DPI configuration | SheetRender export worksheet to PNG | high resolution Excel to PNG conversion .NET | one page per sheet image rendering
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// Creates a sample workbook, saves it to a MemoryStream as XLSX, reloads it, sets ImageOrPrintOptions to PNG with 300 dpi, and uses WorkbookRender to render all worksheets to a PNG image stream.
-class WorkbookToPngWithDpi
+// The example reads an Excel file into a byte array, creates a MemoryStream, loads it into an Aspose.Cells Workbook, configures ImageOrPrintOptions for PNG format with 300 DPI horizontal and vertical resolution and one page per sheet, then uses SheetRender to render the first worksheet to a PNG file.
+class Program
 {
     static void Main()
     {
-        // -------------------------------------------------
-        // 1. Create a sample workbook and add some data
-        // -------------------------------------------------
-        Workbook originalWorkbook = new Workbook();
-        Worksheet sheet = originalWorkbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Aspose.Cells");
-        sheet.Cells["A2"].PutValue("Render to PNG with 300 DPI");
-
-        // -------------------------------------------------
-        // 2. Save the workbook to a memory stream (XLSX format)
-        // -------------------------------------------------
-        MemoryStream sourceStream = new MemoryStream();
-        originalWorkbook.Save(sourceStream, SaveFormat.Xlsx);
-        sourceStream.Position = 0; // reset for reading
-
-        // -------------------------------------------------
-        // 3. Load the workbook from the memory stream
-        // -------------------------------------------------
-        Workbook loadedWorkbook = new Workbook(sourceStream);
-
-        // -------------------------------------------------
-        // 4. Configure image rendering options (PNG, 300 DPI)
-        // -------------------------------------------------
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        try
         {
-            ImageType = ImageType.Png,
-            HorizontalResolution = 300,
-            VerticalResolution = 300
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.png";
 
-        // -------------------------------------------------
-        // 5. Render the whole workbook to an image stream
-        // -------------------------------------------------
-        WorkbookRender renderer = new WorkbookRender(loadedWorkbook, imgOptions);
-        using (MemoryStream imageStream = new MemoryStream())
-        {
-            // Render entire workbook (all pages) to the stream
-            renderer.ToImage(imageStream);
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Optionally, save the image stream to a file for verification
-            File.WriteAllBytes("WorkbookRendered.png", imageStream.ToArray());
+            // Read the Excel file bytes
+            byte[] excelBytes = File.ReadAllBytes(inputPath);
+
+            // Load the workbook from a memory stream
+            using (MemoryStream memoryStream = new MemoryStream(excelBytes))
+            {
+                Workbook workbook = new Workbook(memoryStream);
+
+                // Configure image options: PNG format, 300 DPI resolution
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    // Default format is PNG; explicit setting omitted to avoid API mismatch
+                    HorizontalResolution = 300,
+                    VerticalResolution = 300,
+                    OnePagePerSheet = true // Export each sheet as a single image page
+                };
+
+                // Render the first worksheet to an image
+                SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+                sheetRender.ToImage(0, outputPath);
+                Console.WriteLine($"Worksheet rendered to image: {outputPath}");
+            }
         }
-
-        // Clean up
-        sourceStream.Dispose();
-        // No need to dispose renderer explicitly; it will be collected
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

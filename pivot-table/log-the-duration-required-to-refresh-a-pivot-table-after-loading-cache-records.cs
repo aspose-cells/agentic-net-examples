@@ -1,55 +1,70 @@
-// Title: Log execution time of Aspose.Cells PivotTable RefreshData and CalculateData in C#
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, starts a Stopwatch, calls PivotTable.RefreshData() and PivotTable.CalculateData(), stops the Stopwatch, and prints the elapsed milliseconds to the console. | Show how to output the PivotTable.RefreshDate after measuring the refresh duration and then persist the updated workbook under a different filename.
-// Common Searches: C# how to measure time taken by Aspose.Cells pivot table refresh | Aspose.Cells log pivot cache refresh duration in milliseconds | benchmark RefreshData and CalculateData performance for Excel pivot tables using .NET | retrieve and display pivot table last refreshed date with Aspose.Cells | save workbook after pivot table refresh Aspose.Cells C# example
-// Tags: Aspose.Cells pivot table refresh timing | C# measure RefreshData duration | log pivot cache refresh milliseconds | benchmark PivotTable.CalculateData performance | persist workbook after pivot refresh .NET
+// Title: Log the duration of a pivot table refresh after loading cache records with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that opens an XLSX workbook, calls PivotTable.RefreshData, measures the elapsed time with Stopwatch, prints the milliseconds to the console, and saves the file. | Add comprehensive try‑catch error handling to the pivot refresh routine and redirect the measured refresh duration to a log file instead of the console. | Extend the example to iterate over all pivot tables in a workbook, refresh each one, calculate formulas, and write each table's refresh time to a CSV performance report.
+// Common Searches: Aspose.Cells C# how to measure pivot table refresh time after loading cache | log execution time of PivotTable.RefreshData in a .NET application | benchmark Excel pivot refresh performance using Stopwatch and Aspose.Cells | record pivot table refresh duration and save to a log file with Aspose.Cells | C# example for timing pivot table refresh and saving the workbook
+// Tags: Aspose.Cells pivot table refresh timing | C# Stopwatch measurement Aspose.Cells | log pivot refresh duration .NET | refreshdata calculateformula performance | measure Excel pivot refresh Aspose.Cells | pivot table performance logging C#
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable class
 
-namespace AsposeCellsPivotRefreshTiming
+// Opens an Excel workbook, refreshes the first pivot table, measures the refresh time with Stopwatch, logs the elapsed milliseconds, recalculates formulas, and saves the updated file.
+class Program
 {
-    // The example loads an Excel workbook, accesses the first worksheet's pivot table, uses a Stopwatch to time the RefreshData and CalculateData calls, writes the elapsed milliseconds and the pivot table's RefreshDate to the console, and then saves the modified workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source workbook containing a pivot table
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Assume the pivot table is in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            if (sheet.PivotTables.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No pivot tables found in the worksheet.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Get the first pivot table
-            PivotTable pivotTable = sheet.PivotTables[0];
+            // Load the workbook that contains the pivot table
+            Workbook workbook = new Workbook(inputPath);
 
-            // Measure the time taken to refresh the pivot table data
-            Stopwatch sw = Stopwatch.StartNew();
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Refresh the pivot cache and calculate the pivot table
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                return;
+            }
+
+            // Retrieve the first pivot table on the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Start measuring the refresh duration
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            // Refresh the pivot table data
             pivotTable.RefreshData();
-            pivotTable.CalculateData();
 
-            sw.Stop();
+            // Recalculate all formulas in the workbook (which also updates the pivot table)
+            workbook.CalculateFormula();
 
-            // Log the duration
-            Console.WriteLine($"Pivot table refresh duration: {sw.Elapsed.TotalMilliseconds} ms");
+            // Stop the timer
+            stopwatch.Stop();
 
-            // Optionally display the refresh date set by the operation
-            Console.WriteLine($"Pivot table last refreshed on: {pivotTable.RefreshDate}");
+            // Log the elapsed time (in milliseconds)
+            Console.WriteLine($"Pivot table refresh duration: {stopwatch.ElapsedMilliseconds} ms");
 
-            // Save the workbook after refresh
+            // Save the workbook if further processing is required
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

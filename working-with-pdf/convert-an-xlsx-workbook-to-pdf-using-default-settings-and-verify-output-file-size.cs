@@ -1,38 +1,34 @@
-// Title: Convert an XLSX workbook to PDF with Aspose.Cells for .NET and validate the generated file size
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells and saves it as a PDF with the default SaveFormat.Pdf option. | Add logic to the conversion program that checks whether the resulting PDF file exists and prints its size in bytes. | Modify the sample to accept source and destination file paths as command‑line arguments while preserving the file‑size verification step.
-// Common Searches: Aspose.Cells C# example for converting Excel to PDF with default settings | How to check PDF file size after saving workbook using Aspose.Cells .NET | Command line tool to convert XLSX to PDF using Aspose.Cells and report output size | Validate that PDF generated from Excel is not empty with Aspose.Cells in C#
-// Tags: Aspose.Cells XLSX to PDF conversion | C# verify generated PDF size | default PDF save options Aspose.Cells | command‑line file path parameters Aspose.Cells | PDF output existence check Aspose.Cells
+// Title: Convert an XLSX workbook to PDF with Aspose.Cells for .NET and check the generated file size
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, saves it as a PDF with the default SaveFormat.Pdf, and prints the PDF file size in bytes. | Show how to obtain the size of a PDF file created from an Excel workbook after conversion using .NET file I/O.
+// Common Searches: asp.net core convert xlsx to pdf with aspose.cells and get file size | c# Aspose.Cells save workbook as PDF default options example | how to read PDF file size after converting Excel to PDF in C# | Aspose.Cells PDF conversion verify output size programmatically | sample code to export Excel to PDF and check file length using Aspose.Cells
+// Tags: Aspose.Cells XLSX to PDF conversion | default PDF save options Aspose.Cells | retrieve generated PDF file size .NET | C# workbook export to PDF example | validate PDF output size programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads an XLSX workbook with Aspose.Cells, saves it as a PDF using default settings, then confirms the PDF file exists and outputs its byte size.
-class XlsxToPdfConverter
+// The program loads an XLSX workbook with Aspose.Cells, saves it as a PDF using the default SaveFormat.Pdf, then reads and displays the resulting PDF file's size in bytes.
+class Program
 {
     static void Main()
     {
-        // Path to the source XLSX file
+        // Path to the source XLSX workbook
         string inputPath = "input.xlsx";
 
-        // Path for the generated PDF file
+        // Path where the PDF will be saved
         string outputPath = "output.pdf";
 
-        // Load the XLSX workbook (default load options)
+        // Load the XLSX workbook
         Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as PDF using default save options
+        // Convert and save the workbook to PDF using default settings
         workbook.Save(outputPath, SaveFormat.Pdf);
 
-        // Verify that the PDF file was created and check its size
+        // Verify the size of the generated PDF file
         FileInfo pdfInfo = new FileInfo(outputPath);
-        if (pdfInfo.Exists && pdfInfo.Length > 0)
-        {
-            Console.WriteLine($"PDF successfully created. File size: {pdfInfo.Length} bytes.");
-        }
-        else
-        {
-            Console.WriteLine("PDF creation failed or file is empty.");
-        }
+        long pdfSize = pdfInfo.Length;
+
+        Console.WriteLine($"PDF file created at: {outputPath}");
+        Console.WriteLine($"PDF file size: {pdfSize} bytes");
     }
 }

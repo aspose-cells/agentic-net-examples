@@ -1,53 +1,45 @@
-// Title: Generate a password‑protected Excel workbook and embed a QR‑code image at cell B2 using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new .xlsx file, protect its structure and windows with a password, insert a QR‑code PNG into cell B2, set the image size to 150 × 150 pixels, and save the workbook using Aspose.Cells in C#. | Load a QR‑code image file, add it to a protected worksheet at a specific cell, adjust the picture dimensions, and export the password‑protected workbook with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# protect workbook structure and windows with password and add QR code image to cell B2 | How to insert a PNG picture into a specific cell after protecting an Excel file using Aspose.Cells | Set picture width and height in an Aspose.Cells worksheet C# | Save a password‑protected Excel file with an embedded QR code using Aspose.Cells .NET
-// Tags: Aspose.Cells protect workbook with password C# | Aspose.Cells insert QR code image into worksheet | Aspose.Cells add picture to cell B2 | Aspose.Cells set picture size 150x150 | Aspose.Cells save protected workbook as xlsx
+// Title: Generate a QR code for the workbook protection password and embed it in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# create QR code image from password string | how to protect an Excel workbook and add a QR code with Aspose.Cells | Worksheet.Pictures.Add QR code example in .NET | set custom size for QR code picture in Aspose.Cells workbook
+// Tags: Aspose.Cells QR code generation from string | Workbook.Protect password protection C# | Worksheet.Pictures.Add embedding QR code | adjust QR code image dimensions Aspose.Cells | save protected workbook as Xlsx Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, applies password protection to its structure and windows, attempts to load a QR‑code PNG from "qr.png" and places it at cell B2 with a size of 150 × 150 pixels (or writes a placeholder if missing), and saves the result as "ProtectedWorkbookWithQR.xlsx" using Aspose.Cells for .NET.
-class GenerateQrProtectedWorkbook
+// The sample creates a new Workbook, applies password protection with Workbook.Protect, generates a QR code picture that encodes the password using Worksheet.Pictures.Add, customizes the QR code image size, and saves the protected workbook as an Xlsx file.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Define the protection password
-            string protectionPassword = "SecurePass123";
-
-            // Create a new workbook and protect it (protect structure and windows)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Protect(ProtectionType.All, protectionPassword);
+
+            // Define the protection password
+            string password = "SecretPassword123";
+
+            // Protect the entire workbook with the password
+            workbook.Protect(ProtectionType.All, password);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Optional: path to a pre‑generated QR code image
-            string qrImagePath = "qr.png";
-
-            if (File.Exists(qrImagePath))
-            {
-                // Add the QR code image to the worksheet at cell B2 (row 1, column 1)
-                int pictureIndex = sheet.Pictures.Add(1, 1, qrImagePath);
-                Picture qrPicture = sheet.Pictures[pictureIndex];
-                qrPicture.Width = 150;
-                qrPicture.Height = 150;
-            }
-            else
-            {
-                // Indicate that the QR image is missing
-                sheet.Cells["B2"].PutValue("QR image not found.");
-            }
+            // Add a QR code picture that contains the password.
+            // The overload that takes a string creates a QR code automatically.
+            int pictureIndex = sheet.Pictures.Add(0, 0, password);
+            Picture qrPicture = sheet.Pictures[pictureIndex];
+            qrPicture.Width = 150;   // Set desired width
+            qrPicture.Height = 150;  // Set desired height
 
             // Save the workbook to a file
-            string outputPath = "ProtectedWorkbookWithQR.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            string outputPath = "ProtectedWorkbook.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

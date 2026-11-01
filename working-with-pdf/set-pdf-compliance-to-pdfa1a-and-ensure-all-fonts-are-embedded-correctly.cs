@@ -1,45 +1,53 @@
-// Title: Convert an Excel workbook to a PDF/A‑1a file with full font embedding using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, configures PdfSaveOptions for PDF/A‑1a compliance and enables embedding of all fonts, then saves the workbook as a PDF with Aspose.Cells. | Demonstrate how to set the compliance level to PdfA1a and turn on font embedding before calling Workbook.Save to produce a PDF/A‑1a document.
-// Common Searches: Aspose.Cells C# export Excel to PDF/A-1a with embedded fonts | How to enable full font embedding when saving a workbook as PDF/A-1a in Aspose.Cells | PdfSaveOptions settings for PDF/A-1a compliance and font embedding in .NET | Convert .xlsx to PDF/A-1a using Aspose.Cells and ensure all fonts are embedded | C# code sample for PDF/A-1a compliant PDF generation from Excel with Aspose.Cells
-// Tags: Aspose.Cells PDF/A-1a export C# | PdfSaveOptions font embedding Aspose.Cells | Excel to PDF/A-1a conversion .NET | embed all fonts Aspose.Cells PDF output | PDF/A-1a compliance setting Aspose.Cells
+// Title: Generate a PDF/A‑1a compliant PDF with embedded fonts from an Aspose.Cells workbook using C#
+// AI Prompts: Write C# code that sets PdfSaveOptions.Compliance to PdfA1a and saves an Aspose.Cells workbook as a PDF/A‑1a file with all fonts embedded. | Show how to check for the existence of the target directory and create it if necessary before calling Workbook.Save with PDF/A‑1a options. | Demonstrate loading an existing Excel file, applying PDF/A‑1a compliance, and exporting it to a PDF while ensuring automatic font embedding.
+// Common Searches: C# Aspose.Cells export Excel to PDF/A-1a with embedded fonts | PdfSaveOptions.Compliance PdfA1a example for Aspose.Cells .NET | how to create output folder before saving PDF using Aspose.Cells | automatic font embedding when saving PDF/A-1a with Aspose.Cells
+// Tags: Aspose.Cells PDF/A-1a export C# | PdfSaveOptions compliance setting PDF/A-1a | automatic font embedding PDF/A Aspose.Cells | save workbook as PDF/A-1a | create output folder before saving PDF
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExample
+namespace AsposeCellsPdfAExample
 {
-    // The example loads an existing Excel workbook (or creates a new one), configures PdfSaveOptions to enforce PDF/A‑1a compliance and to embed every font used in the workbook, and then saves the result as a PDF file using Aspose.Cells for .NET.
+    // The program creates (or loads) an Aspose.Cells workbook, configures PdfSaveOptions with PdfCompliance.PdfA1a (which automatically embeds all fonts), ensures the destination directory exists, and saves the workbook as a PDF/A‑1a compliant document.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                string inputPath = "input.xlsx";
-                Workbook workbook;
+                // Create a new workbook (or load an existing one if needed)
+                Workbook workbook = new Workbook();
 
-                // Load existing workbook if it exists; otherwise create a new workbook
-                if (File.Exists(inputPath))
+                // Add sample content to demonstrate PDF/A‑1a compliance
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample text for PDF/A‑1a compliance");
+
+                // Configure PDF save options for PDF/A‑1a compliance
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                }
+                    Compliance = PdfCompliance.PdfA1a
+                    // Fonts are embedded automatically for PDF/A; no explicit property needed
+                };
 
-                // Configure PDF save options (no need to set SaveFormat; it's implicit)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Save the workbook as PDF
+                // Define output file path
                 string outputPath = "output.pdf";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as a PDF/A‑1a file
                 workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+                Console.WriteLine($"PDF/A‑1a file saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

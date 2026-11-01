@@ -1,54 +1,63 @@
-// Title: Import a CSV file into an Excel workbook as a ListObject table with automatic column type detection using Aspose.Cells for .NET
-// AI Prompts: Load a CSV file into a Workbook with LoadOptions(LoadFormat.Csv) so Aspose.Cells infers column data types, then obtain the worksheet's used range. | Create a ListObject on the first worksheet covering the used range, mark the first row as headers, assign a display name, and save the workbook as an .xlsx file.
-// Common Searches: how to import csv into excel as a table with Aspose.Cells C# | Aspose.Cells automatically detect column types when loading CSV | create ListObject from CSV data in Aspose.Cells .NET | save imported CSV as Excel table with headers using Aspose.Cells | C# load CSV to workbook and convert to Excel table with type inference
-// Tags: load csv with automatic type detection Aspose.Cells | create ListObject table from worksheet range C# | save workbook as xlsx after csv import Aspose.Cells | detect column data types during csv load Aspose.Cells | add table with headers from csv using Aspose.Cells
+// Title: Import a CSV file into an Excel worksheet as a ListObject table with auto-detected column types using Aspose.Cells for .NET
+// AI Prompts: Load a CSV file with LoadOptions(LoadFormat.Csv) into a Workbook, calculate the used range, and add a ListObject that automatically infers each column's data type. | Assign a display name to the ListObject, enable the header row and stripe styling, then save the workbook as an XLSX file.
+// Common Searches: how to convert csv to excel table with Aspose.Cells .NET and keep data types | Aspose.Cells create ListObject from CSV file automatically detecting column types | apply built-in table style when importing CSV into Excel using Aspose.Cells
+// Tags: Aspose.Cells CSV to ListObject conversion | auto detect column data types Aspose.Cells | apply TableStyleMedium9 ListObject | use LoadOptions for CSV import Aspose.Cells | save workbook as XLSX Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// The example checks for the CSV file, loads it into an Aspose.Cells Workbook using LoadOptions so column data types are auto‑detected, creates a ListObject that spans the used range with the first row as headers, names the table "ImportedTable", and saves the result as an .xlsx workbook.
-class Program
+// The example checks for the existence of input.csv, loads it into a Workbook using LoadFormat.Csv, determines the used range, creates a ListObject covering that range with automatically detected column types, configures table properties and a built-in style, and finally saves the result as output.xlsx.
+class CsvToExcelTable
 {
     static void Main()
     {
+        // Paths for input CSV and output Excel files
+        string csvPath = "input.csv";
+        string excelPath = "output.xlsx";
+
+        // Verify that the CSV file exists to avoid FileNotFoundException
+        if (!File.Exists(csvPath))
+        {
+            Console.WriteLine($"Error: CSV file not found at '{csvPath}'.");
+            return;
+        }
+
         try
         {
-            // Path to the source CSV file
-            string csvPath = "data.csv";
-
-            // Ensure the CSV file exists to avoid FileNotFoundException
-            if (!File.Exists(csvPath))
-            {
-                Console.WriteLine($"Error: The file '{csvPath}' was not found.");
-                return;
-            }
-
-            // Load the CSV file into a new workbook.
-            // Aspose.Cells automatically detects column data types while loading CSV.
+            // Load the CSV file using the correct LoadFormat enum value
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
             Workbook workbook = new Workbook(csvPath, loadOptions);
 
-            // The CSV data is placed in the first worksheet.
+            // The CSV data is loaded into the first worksheet by default
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the used range of the worksheet.
+            // Determine the used range that contains the imported data
             int firstRow = sheet.Cells.MinRow;
             int firstColumn = sheet.Cells.MinColumn;
-            int lastRow = sheet.Cells.MaxDataRow;
-            int lastColumn = sheet.Cells.MaxDataColumn;
+            int totalRows = sheet.Cells.MaxRow - firstRow + 1;
+            int totalColumns = sheet.Cells.MaxColumn - firstColumn + 1;
 
-            // Create a table (ListObject) that covers the used range.
-            // The 'true' argument indicates that the first row contains column headers.
-            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
+            // Add a new table (ListObject) covering the used range.
+            // The Add method returns the index of the created table.
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
             ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "ImportedTable";
 
-            // Save the workbook with the new table to an Excel file.
-            string outputPath = "ImportedTable.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Set table properties
+            table.DisplayName = "ImportedData";
+            table.ShowHeaderRow = true;
+            table.ShowTableStyleFirstColumn = false;
+            table.ShowTableStyleLastColumn = false;
+            table.ShowTableStyleRowStripes = true;
+            table.ShowTableStyleColumnStripes = false;
+
+            // Apply a built‑in table style for better visual appearance
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
+
+            // Save the workbook as an Excel file
+            workbook.Save(excelPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Successfully converted '{csvPath}' to '{excelPath}'.");
         }
         catch (Exception ex)
         {

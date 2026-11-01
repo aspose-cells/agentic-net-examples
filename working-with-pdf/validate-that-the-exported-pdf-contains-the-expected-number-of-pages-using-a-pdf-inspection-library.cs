@@ -1,73 +1,75 @@
-// Title: Validate the page count of a PDF generated from an Excel workbook using Aspose.Cells in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to export an Excel workbook to PDF and then employs Aspose.Pdf (or PdfSharp) to read the PDF's page count and assert it matches a specified expected value. | Refactor the validation block to throw a custom exception when the actual number of pages in the generated PDF differs from the expected count, and log the discrepancy.
-// Common Searches: how to check PDF page count after converting Excel to PDF with Aspose.Cells in .NET | C# unit test for verifying number of pages in PDF generated from workbook | using Aspose.Pdf to read page numbers of a PDF created by Aspose.Cells | automated validation of PDF page count from Excel export in C# | sample code to assert PDF page count after Excel to PDF conversion
-// Tags: Aspose.Cells export Excel to PDF C# | Aspose.Pdf read PDF page count .NET | C# validate generated PDF pages | automated PDF page count test | Excel workbook PDF verification
+// Title: How to verify the page count of a PDF generated from an Excel workbook using Aspose.Cells in C#
+// Common Searches: C# get number of pages from Excel to PDF conversion with Aspose.Cells | Aspose.Cells WorkbookRender page count before saving PDF | Validate expected PDF page count after exporting workbook in .NET | Check if generated PDF has correct number of pages using Aspose.Cells API | Compare actual and expected PDF pages after saving Excel as PDF in C#
+// Tags: Aspose.Cells WorkbookRender page count | Excel to PDF page verification C# | Aspose.Cells PDF export page count validation | C# PDF generation from workbook with page count check | ImageOrPrintOptions PDF rendering Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example creates an Excel workbook, populates a few cells, saves it as a PDF using Aspose.Cells, then checks that the PDF file exists and validates its page count (or file size) against an expected value, reporting success or failure.
-class PdfPageValidator
+// The example loads an Excel file, creates a WorkbookRender with ImageOrPrintOptions to obtain the workbook's page count, saves the workbook as a PDF, and then compares the retrieved page count to an expected value, reporting success or failure and confirming the PDF file was created.
+class Program
 {
     static void Main()
     {
-        // Define file paths
-        string excelPath = "sample.xlsx";
-        string pdfPath = "sample.pdf";
-
-        // Expected number of pages in the exported PDF (approximation)
-        int expectedPageCount = 1;
-
         try
         {
-            // ------------------------------
-            // Create an Excel workbook
-            // ------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Input Excel file that will be exported to PDF
+            string excelPath = "input.xlsx";
 
-            // Populate some data to ensure at least one printable page
-            cells["A1"].PutValue("Header");
-            cells["A2"].PutValue("Row 1");
-            cells["A3"].PutValue("Row 2");
-            cells["A4"].PutValue("Row 3");
-
-            // Save the workbook as PDF
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during Excel to PDF conversion: {ex.Message}");
-            return;
-        }
-
-        // ------------------------------
-        // Validate the generated PDF file
-        // ------------------------------
-        try
-        {
-            if (!File.Exists(pdfPath))
+            // Verify that the Excel file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine("PDF file was not created.");
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
                 return;
             }
 
-            // Simple validation: check that the file size is greater than zero
-            FileInfo pdfInfo = new FileInfo(pdfPath);
-            if (pdfInfo.Length > 0)
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
+
+            // Define PDF output path
+            string pdfPath = "output.pdf";
+
+            // Set rendering options (required for page count calculation)
+            ImageOrPrintOptions printOptions = new ImageOrPrintOptions
             {
-                Console.WriteLine($"PDF validation succeeded. File size: {pdfInfo.Length} bytes (expected at least one page).");
+                // Although SaveFormat is obsolete for image rendering, it does not affect PDF saving
+                SaveFormat = SaveFormat.Pdf
+            };
+
+            // Create renderer to obtain page count
+            WorkbookRender renderer = new WorkbookRender(workbook, printOptions);
+            int actualPageCount = renderer.PageCount;
+
+            // Export workbook to PDF using the proper API
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+
+            // Expected number of pages (adjust as needed)
+            int expectedPageCount = 3;
+
+            // Validate page count
+            if (actualPageCount == expectedPageCount)
+            {
+                Console.WriteLine("PDF page count validation passed.");
             }
             else
             {
-                Console.WriteLine("PDF validation failed. File is empty.");
+                Console.WriteLine($"PDF page count validation failed. Expected {expectedPageCount}, but found {actualPageCount}.");
+            }
+
+            // Confirm that the PDF file was created
+            if (File.Exists(pdfPath))
+            {
+                Console.WriteLine($"PDF file generated at: {Path.GetFullPath(pdfPath)}");
+            }
+            else
+            {
+                Console.WriteLine("Error: PDF file was not created.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during PDF validation: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

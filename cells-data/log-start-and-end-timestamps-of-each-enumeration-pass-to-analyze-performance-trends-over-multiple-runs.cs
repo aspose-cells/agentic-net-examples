@@ -1,82 +1,51 @@
-// Title: Log enumeration start/end timestamps to benchmark rows, cells, and range iteration in Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates over Worksheet.Cells.Rows, Worksheet.Cells, and a specific Range while printing ISO‑8601 start and end timestamps and the elapsed milliseconds for each enumeration using Aspose.Cells. | Create a reusable method that accepts any IEnumerator from Aspose.Cells, records DateTime.Now before and after the loop, and returns the elapsed time in milliseconds. | Demonstrate how to save the workbook after the enumeration passes and display the logged timing information in the console.
-// Common Searches: how to measure enumeration time of rows in Aspose.Cells C# | log start and end timestamps for cell range iteration using Aspose.Cells .NET | benchmark Worksheet.Cells.GetEnumerator performance Aspose.Cells | record enumeration duration for Aspose.Cells range A1:B100 in C# | track performance of Aspose.Cells enumeration across multiple passes
-// Tags: Aspose.Cells enumeration timing | row iteration performance measurement | cell collection duration logging | range enumeration benchmark .NET | C# Aspose.Cells performance logging
+// Title: Capture start and end timestamps for each worksheet enumeration pass using Aspose.Cells in C#
+// AI Prompts: Insert DateTime.Now calls before and after the inner cell loop of each worksheet and add the values to a List<(string sheet, DateTime start, DateTime end)>. | Create a console output that formats the sheet name, start time, end time, and elapsed milliseconds for every entry in the performance list. | Modify the enumeration code to record timing information without altering any cell values or saving changes.
+// Common Searches: how to measure worksheet enumeration time with Aspose.Cells in C# | record start and end DateTime for each sheet loop using Aspose.Cells .NET | performance logging of cell traversal per worksheet in Excel file via Aspose.Cells | benchmark sheet processing duration with Aspose.Cells API in C#
+// Tags: sheet loop timing Aspose.Cells | cell iteration duration measurement .NET | worksheet processing time logging C# | excel workbook timestamp tracking Aspose.Cells | performance analysis of sheet enumeration
 
 using System;
-using System.Collections;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The sample creates a workbook, fills 100 rows with data, and uses a helper method to log ISO‑8601 start and end timestamps plus elapsed milliseconds for enumerating rows, all cells, and the A1:B100 range, then saves the workbook.
-class EnumerationPerformanceLogger
+// The example records DateTime.Now before and after iterating each worksheet's cells, stores the sheet name with start and end timestamps in a list, and prints the duration in milliseconds for performance analysis.
+class Program
 {
     static void Main()
     {
-        try
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // List to store start and end timestamps for each enumeration pass
+        List<(string SheetName, DateTime Start, DateTime End)> performanceLog = new List<(string, DateTime, DateTime)>();
+
+        // Enumerate each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data (100 rows, 2 columns)
-            for (int i = 0; i < 100; i++)
-            {
-                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
-                worksheet.Cells[i, 1].PutValue(i);
-            }
-
-            // First enumeration: iterate over all rows
-            LogEnumeration("Rows", worksheet.Cells.Rows.GetEnumerator());
-
-            // Second enumeration: iterate over all cells in the worksheet
-            LogEnumeration("Cells", worksheet.Cells.GetEnumerator());
-
-            // Third enumeration: iterate over a specific range (A1:B100)
-            AsposeRange range = worksheet.Cells.CreateRange("A1:B100");
-            LogEnumeration("Range", range.GetEnumerator());
-
-            // Save the workbook (standard save operation)
-            string outputPath = "EnumerationPerformance.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Helper method that logs start/end timestamps and duration of an enumeration pass
-    static void LogEnumeration(string collectionName, IEnumerator enumerator)
-    {
-        try
-        {
+            // Record the start time of the enumeration pass
             DateTime startTime = DateTime.Now;
-            Console.WriteLine($"{collectionName} enumeration started at {startTime:O}");
 
-            while (enumerator.MoveNext())
+            // Example enumeration: iterate through all used cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                // Access the current element to ensure the enumerator advances
-                var current = enumerator.Current;
+                // Perform a lightweight operation (e.g., read the cell value)
+                var value = cell.Value;
             }
 
+            // Record the end time of the enumeration pass
             DateTime endTime = DateTime.Now;
-            Console.WriteLine($"{collectionName} enumeration ended at {endTime:O}");
 
-            double durationMs = (endTime - startTime).TotalMilliseconds;
-            Console.WriteLine($"{collectionName} duration: {durationMs} ms");
-            Console.WriteLine(); // Blank line for readability
+            // Store the timestamps along with the sheet name
+            performanceLog.Add((sheet.Name, startTime, endTime));
         }
-        catch (Exception ex)
+
+        // Output the performance log
+        foreach (var entry in performanceLog)
         {
-            Console.WriteLine($"Enumeration error for {collectionName}: {ex.Message}");
+            TimeSpan duration = entry.End - entry.Start;
+            Console.WriteLine($"Sheet: {entry.SheetName}, Start: {entry.Start:O}, End: {entry.End:O}, Duration: {duration.TotalMilliseconds} ms");
         }
+
+        // Save the workbook if any modifications were made
+        workbook.Save("output.xlsx");
     }
 }

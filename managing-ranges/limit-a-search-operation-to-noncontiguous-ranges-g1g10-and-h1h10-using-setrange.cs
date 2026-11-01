@@ -1,67 +1,73 @@
-// Title: Limit Aspose.Cells Find search to non‑contiguous ranges G1:G10 and H1:H10 in C#
-// AI Prompts: Use FindOptions.SetRange to locate the cell containing "G5" only within the ranges G1:G10 and H1:H10 in a C# worksheet. | Adapt the sample to search for any text across an array of CellArea objects that represent multiple disjoint ranges. | Write a reusable method that accepts a list of CellArea objects and a search string, then returns the first matching cell using Aspose.Cells Find.
-// Common Searches: asp.net find value in specific non‑adjacent ranges using Aspose.Cells C# | how to restrict Aspose.Cells Find to multiple cell areas in C# | search only columns G and H with Aspose.Cells FindOptions SetRange | C# Aspose.Cells find across two separate ranges example
-// Tags: Aspose.Cells FindOptions SetRange usage | non‑adjacent cell range search C# | search multiple CellArea objects Aspose.Cells | limit Excel find to specific columns Aspose | C# workbook find across disjoint ranges
+// Title: How to search for a value in non‑contiguous ranges G1:G10 and H1:H10 using Aspose.Cells FindOptions SetRange in C#
+// Common Searches: Aspose.Cells FindOptions SetRange example for searching multiple separate ranges in C# | C# code to locate a cell value only within G1:G10 and H1:H10 with Aspose.Cells | How to limit Aspose.Cells Find method to specific cell areas like column G and column H | Search Excel workbook for a string in two non‑adjacent columns using Aspose.Cells C# | Find value in non‑contiguous ranges using Aspose.Cells Find with SetRange
+// Tags: Aspose.Cells FindOptions SetRange C# | search non‑contiguous cell ranges Aspose.Cells | limit Find to specific columns G H Aspose.Cells | C# Excel find value across multiple ranges | Aspose.Cells find across separate cell areas
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example creates a workbook, fills columns G and H (rows 1‑10) with data, places the string "Target" in G5, and demonstrates how to use FindOptions with SetRange to search for "Target" first in the G1:G10 range and then in the H1:H10 range. It outputs the address of the found cell and saves the workbook as SearchResult.xlsx.
+class Program
 {
-    // The example creates a workbook, fills columns G and H with sample data, defines two CellArea ranges (G1:G10 and H1:H10), and uses FindOptions.SetRange to search for the value "G5" first in the G column range and then in the H column range. It outputs the found cell address or a not‑found message and saves the file as SearchResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data in G1:G10 and H1:H10
+            for (int i = 0; i < 10; i++)
+            {
+                sheet.Cells[i, 6].PutValue($"G{i + 1}"); // Column G (index 6)
+                sheet.Cells[i, 7].PutValue($"H{i + 1}"); // Column H (index 7)
+            }
+
+            // Place the target value somewhere within the defined ranges
+            sheet.Cells["G5"].PutValue("Target");
+
+            // Prepare FindOptions for the first range G1:G10
+            FindOptions options = new FindOptions();
+            CellArea rangeG = CellArea.CreateCellArea("G1", "G10");
+            options.SetRange(rangeG);
+
+            // Search in the first range
+            Cell foundCell = sheet.Cells.Find("Target", null, options);
+
+            // If not found, search in the second range H1:H10
+            if (foundCell == null)
+            {
+                CellArea rangeH = CellArea.CreateCellArea("H1", "H10");
+                options.SetRange(rangeH);
+                foundCell = sheet.Cells.Find("Target", null, options);
+            }
+
+            // Output result
+            if (foundCell != null)
+            {
+                Console.WriteLine($"Found at {foundCell.Name}");
+            }
+            else
+            {
+                Console.WriteLine("Not found in the specified ranges.");
+            }
+
+            // Save the workbook (ensure the directory exists)
+            string outputPath = "SearchResult.xlsx";
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Fill sample data in columns G and H (indexes 6 and 7)
-                for (int i = 0; i < 10; i++)
-                {
-                    sheet.Cells[i, 6].PutValue($"G{i + 1}");
-                    sheet.Cells[i, 7].PutValue($"H{i + 1}");
-                }
-
-                // Define two separate areas: G1:G10 and H1:H10
-                CellArea areaG = CellArea.CreateCellArea("G1", "G10");
-                CellArea areaH = CellArea.CreateCellArea("H1", "H10");
-
-                // Configure FindOptions
-                FindOptions findOptions = new FindOptions();
-
-                // Search in the first area
-                findOptions.SetRange(areaG);
-                // The Find method requires a start cell; passing null uses the default start cell
-                Cell foundCell = sheet.Cells.Find("G5", null, findOptions);
-
-                // If not found, search in the second area
-                if (foundCell == null)
-                {
-                    findOptions.SetRange(areaH);
-                    foundCell = sheet.Cells.Find("G5", null, findOptions);
-                }
-
-                // Output the result
-                if (foundCell != null)
-                {
-                    Console.WriteLine($"Found at: {foundCell.Name}");
-                }
-                else
-                {
-                    Console.WriteLine("Value not found in the specified ranges.");
-                }
-
-                // Save the workbook (optional)
-                workbook.Save("SearchResult.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Runtime error: {ex.Message}");
         }
     }
 }

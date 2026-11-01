@@ -1,82 +1,92 @@
-// Title: Ungroup a named GroupShape in an Excel workbook using Aspose.Cells for .NET, reposition each resulting shape, and save the file
-// AI Prompts: Generate C# code with Aspose.Cells that opens an Excel file, locates a GroupShape by its name on the first worksheet, calls Ungroup(), shifts every new shape 10 points right and 5 points down, and saves the workbook to a specified output path. | Implement a C# method that takes inputPath, outputPath, and groupShapeName, loads the workbook, ungroups the identified GroupShape, updates the Left and Top properties of each resulting shape, and writes the modified workbook.
-// Common Searches: Aspose.Cells C# ungroup GroupShape by name and move shapes | C# example to ungroup Excel shape group and adjust individual shape positions with Aspose.Cells | How to change Left and Top of shapes after ungrouping using Aspose.Cells for .NET | Saving an Excel workbook after modifying shape coordinates with Aspose.Cells
-// Tags: Aspose.Cells ungroup GroupShape .NET | adjust shape Left Top Aspose.Cells | modify individual shapes Excel Aspose.Cells | save workbook after shape manipulation Aspose.Cells | retrieve GroupShape by name Aspose.Cells
+// Title: Ungroup a GroupShape in an Excel workbook and reposition each individual shape using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells example to ungroup an Excel shape group and move each shape | How to extract shapes from a GroupShape and change their Left and Top values with Aspose.Cells | Ungroup shapes in a worksheet and adjust positions before saving using Aspose.Cells .NET | Aspose.Cells C# code to ungroup MyGroup and shift shapes horizontally and vertically | Programmatically modify shape coordinates after ungrouping in an Excel file with Aspose.Cells
+// Tags: ungroup groupshape aspocells | adjust shape left top aspocells | worksheet shapes collection aspocells | save workbook after shape changes aspocells | c# aspocells shape handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an existing Excel workbook, finds a GroupShape by its name on the first worksheet, ungroups it, moves each newly created shape 10 points to the right and 5 points down, and saves the updated workbook to the designated output file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an Excel workbook, finds a GroupShape named "MyGroup", ungroups it to create individual shapes, offsets each new shape's Left and Top properties, and saves the modified workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Define file paths (replace placeholders with actual paths)
-            string inputPath = "{InputFilePath}";
-            string outputPath = "{OutputFilePath}";
-            string groupShapeName = "{GroupShapeName}";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Retrieve the group shape by its name
-            GroupShape groupShape = sheet.Shapes[groupShapeName] as GroupShape;
-            if (groupShape == null)
-            {
-                Console.WriteLine($"Group shape \"{groupShapeName}\" not found or is not a group.");
-                return;
-            }
-
-            // Record the number of shapes before ungrouping
-            int originalShapeCount = sheet.Shapes.Count;
-
-            // Ungroup the shape (method returns void)
             try
             {
-                groupShape.Ungroup();
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Find the group shape by name
+                GroupShape? targetGroup = null;
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape is GroupShape group && shape.Name == "MyGroup") // replace "MyGroup" with your group's name
+                    {
+                        targetGroup = group;
+                        break;
+                    }
+                }
+
+                if (targetGroup != null)
+                {
+                    // Record current shape count to identify newly created shapes after ungrouping
+                    int originalCount = worksheet.Shapes.Count;
+
+                    try
+                    {
+                        // Ungroup the shape group; this adds individual shapes to the worksheet
+                        targetGroup.Ungroup();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to ungroup shape: {ex.Message}");
+                        return;
+                    }
+
+                    // Adjust positions of the newly created individual shapes
+                    int newCount = worksheet.Shapes.Count;
+                    for (int i = originalCount; i < newCount; i++)
+                    {
+                        Shape individual = worksheet.Shapes[i];
+                        individual.Left += 10; // shift horizontally
+                        individual.Top += 5;   // shift vertically
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Shape group named 'MyGroup' was not found.");
+                }
+
+                // Ensure output directory exists
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to ungroup shape: {ex.Message}");
-                return;
+                // Handle unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Adjust positions of the newly created individual shapes
-            for (int i = originalShapeCount; i < sheet.Shapes.Count; i++)
-            {
-                Shape shape = sheet.Shapes[i];
-                shape.Left += 10; // move 10 points to the right
-                shape.Top += 5;   // move 5 points down
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the changes
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

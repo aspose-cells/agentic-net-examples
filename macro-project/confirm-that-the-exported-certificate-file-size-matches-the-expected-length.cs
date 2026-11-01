@@ -1,38 +1,49 @@
-// Title: Check that a PDF exported from an Excel workbook using Aspose.Cells matches a specific byte size in C#
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, saves it as a PDF into a MemoryStream, and validates that the stream length equals a predefined byte count. | Show how to compare the actual size of a PDF generated from a workbook with an expected size and output a success or mismatch message.
-// Common Searches: C# Aspose.Cells verify PDF file size after saving workbook | How to assert exported PDF byte length matches expected value in .NET | Compare generated PDF size with predefined length using Aspose.Cells | Check PDF output size from Excel conversion Aspose.Cells C# example
-// Tags: Aspose.Cells PDF export size validation | C# memory stream length check for PDF | compare expected and actual file size Aspose | assert exported document byte count .NET | verify workbook to PDF size Aspose.Cells
+// Title: Validate exported .pfx certificate file size against an expected byte count using C#
+// Common Searches: c# verify exported pfx certificate file size matches expected bytes | how to compare actual certificate file length with a predefined size in .NET | check if exported certificate file size is correct using File.ReadAllBytes in C#
+// Tags: File.ReadAllBytes length validation for certificates | Validate .pfx byte count against expected value | Check existence and size of exported certificate in C# | Actual vs expected certificate file length comparison
 
-using Aspose.Cells;
 using System;
 using System.IO;
 
-// The program loads an Excel workbook, saves it as a PDF into a MemoryStream using Aspose.Cells, then compares the stream's byte length to a predefined expected size and prints whether the sizes match.
-class Program
+// The CertificateValidator class offers a static method that confirms a certificate file exists, reads it into a byte array with File.ReadAllBytes, and compares the actual byte length to a supplied expected size, reporting success or mismatch.
+class CertificateValidator
 {
+    /// <param name="certificatePath">Full path to the exported certificate file.</param>
+    /// <param name="expectedLength">The expected file size in bytes.</param>
+    public static void ValidateCertificateSize(string certificatePath, long expectedLength)
+    {
+        // Ensure the file exists before attempting to read it.
+        if (!File.Exists(certificatePath))
+        {
+            Console.WriteLine($"Error: Certificate file not found at '{certificatePath}'.");
+            return;
+        }
+
+        // Load the file into a byte array.
+        byte[] fileBytes = File.ReadAllBytes(certificatePath);
+
+        // Compare the actual length with the expected length.
+        long actualLength = fileBytes.Length;
+
+        if (actualLength == expectedLength)
+        {
+            Console.WriteLine($"Success: Certificate size is as expected ({actualLength} bytes).");
+        }
+        else
+        {
+            Console.WriteLine($"Failure: Certificate size mismatch. Expected {expectedLength} bytes, but got {actualLength} bytes.");
+        }
+    }
+
+    // Example usage
     static void Main()
     {
-        // Define the expected file size in bytes
-        long expectedLength = 123456; // replace with the actual expected size
+        // Path to the exported certificate file.
+        string certPath = @"C:\ExportedCertificates\myCertificate.pfx";
 
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Expected file size in bytes (example value).
+        long expectedSize = 2048;
 
-        // Export the workbook to a PDF file (as an example of a certificate export)
-        using (MemoryStream stream = new MemoryStream())
-        {
-            workbook.Save(stream, SaveFormat.Pdf);
-            long actualLength = stream.Length;
-
-            // Compare the exported file size with the expected length
-            if (actualLength == expectedLength)
-            {
-                Console.WriteLine("Exported file size matches the expected length.");
-            }
-            else
-            {
-                Console.WriteLine($"File size mismatch. Expected: {expectedLength} bytes, Actual: {actualLength} bytes.");
-            }
-        }
+        ValidateCertificateSize(certPath, expectedSize);
     }
 }

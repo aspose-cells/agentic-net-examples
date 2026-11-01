@@ -1,26 +1,25 @@
-// Title: How to clear a worksheet’s background image in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets the worksheet’s BackgroundImage property to null, and saves the updated workbook. | Show a step‑by‑step example of removing a sheet’s background picture programmatically in Aspose.Cells without affecting other sheet data.
-// Common Searches: asp.net aspose.cells remove background picture from a specific worksheet | c# code to delete worksheet background image in an existing Excel file | how to set worksheet BackgroundImage to null using Aspose.Cells library | example of clearing sheet background image before saving workbook with Aspose.Cells | programmatically remove Excel sheet background graphic in .NET
-// Tags: remove worksheet background graphic Aspose.Cells | set BackgroundImage property null C# | Aspose.Cells delete sheet background picture | save workbook after removing background image | excel background image removal .NET
+// Title: How to clear a worksheet’s background image by setting BackgroundImage to null with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# clear worksheet background image | set worksheet.BackgroundImage = null to remove background picture in Excel | remove Excel sheet background image using Aspose.Cells .NET API | programmatically delete worksheet background picture in a .xlsx file | how to erase worksheet background image with C# Aspose.Cells
+// Tags: set BackgroundImage to null Aspose.Cells | remove worksheet background picture .NET | save workbook after clearing background Aspose.Cells | background image deletion Excel C# | worksheet background image property manipulation Aspose.Cells
 
 using Aspose.Cells;
 using System.IO;
 
-// Loads an Excel workbook, accesses the first worksheet, clears its background image by assigning null to the BackgroundImage property, and saves the modified file as a new workbook.
+// The example loads an existing Excel workbook, accesses the first worksheet, clears its background image by assigning null to the BackgroundImage property, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
+        // Load an existing workbook (lifecycle rule: load)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the worksheet you want to modify (e.g., the first worksheet)
+        // Get the target worksheet (e.g., the first sheet)
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Clear the worksheet's background image by assigning null to the BackgroundImage stream
+        // Clear the worksheet's background image by assigning a null stream (feature rule)
         sheet.BackgroundImage = null;
 
-        // Save the changes to a new file
+        // Save the modified workbook (lifecycle rule: save)
         workbook.Save("output.xlsx");
     }
 }

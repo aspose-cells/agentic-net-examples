@@ -1,52 +1,62 @@
-// Title: Implement a three‑attempt retry loop for saving an Excel workbook as a TIFF image with Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells and saves it as a TIFF, retrying the Save operation up to three times while logging each failure. | Add error handling that repeats the save operation up to three times before propagating the error.
-// Common Searches: Aspose.Cells C# retry save as TIFF when exception occurs | How to add retry logic to workbook.Save with SaveFormat.Tiff in .NET | C# loop to attempt Excel to TIFF conversion multiple times using Aspose.Cells | Best practice for handling failed TIFF export with Aspose.Cells in C#
-// Tags: Aspose.Cells retry save TIFF | C# workbook.Save exception handling | Excel to TIFF conversion retry loop | Aspose.Cells SaveFormat.Tiff error handling
+// Title: Add three‑attempt retry logic to Excel‑to‑TIFF conversion using Aspose.Cells in C#
+// Common Searches: c# Aspose.Cells retry saving workbook as TIFF when an error occurs | how to implement a retry loop for Excel to TIFF conversion with Aspose.Cells | Aspose.Cells export Excel file to TIFF with multiple attempts in .NET | handle transient failures during workbook.Save to TIFF in C# | retry mechanism for SaveFormat.Tiff in Aspose.Cells applications
+// Tags: Aspose.Cells retry logic for TIFF export | C# workbook.Save error handling | Excel to TIFF conversion with retry | SaveFormat.Tiff retry implementation | transient failure handling in Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// // Loads an Excel workbook and attempts to save it as a TIFF file. If the save fails, the code retries up to three times, logs each error, and rethrows after the final unsuccessful attempt.
+// Demonstrates how to wrap the Aspose.Cells workbook.Save call in a three‑attempt retry loop, loading an Excel file and exporting it to TIFF while handling exceptions, pausing between attempts, and rethrowing a detailed error if all retries fail.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputFile = "input.xlsx";
+        string outputFile = "output.tiff";
 
-        string outputPath = "output.tiff";
-        int maxAttempts = 3;
+        try
+        {
+            ConvertToTiff(inputFile, outputFile);
+            Console.WriteLine("Conversion succeeded.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Conversion failed after retries: {ex.Message}");
+        }
+    }
+
+    static void ConvertToTiff(string inputPath, string outputPath)
+    {
+        const int maxAttempts = 3;
         int attempt = 0;
         bool success = false;
+        Exception lastException = null;
 
         while (attempt < maxAttempts && !success)
         {
+            attempt++;
             try
             {
-                // Save the workbook as TIFF (using the provided save rule)
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(inputPath);
+
+                // Save as TIFF (lifecycle rule: save)
                 workbook.Save(outputPath, SaveFormat.Tiff);
-                success = true;
+
+                success = true; // conversion succeeded
             }
             catch (Exception ex)
             {
-                attempt++;
-                if (attempt >= maxAttempts)
-                {
-                    // All attempts failed – rethrow or handle as needed
-                    Console.WriteLine($"TIFF conversion failed after {attempt} attempts: {ex.Message}");
-                    throw;
-                }
-                else
-                {
-                    // Log and retry
-                    Console.WriteLine($"Attempt {attempt} failed: {ex.Message}. Retrying...");
-                }
+                lastException = ex;
+                Console.WriteLine($"Attempt {attempt} failed: {ex.Message}");
+                // Optionally add a short delay before retrying
+                System.Threading.Thread.Sleep(500);
             }
         }
 
-        if (success)
+        if (!success && lastException != null)
         {
-            Console.WriteLine("TIFF conversion succeeded.");
+            // Propagate the last exception after all retries have been exhausted
+            throw new InvalidOperationException($"Failed to convert '{inputPath}' to TIFF after {maxAttempts} attempts.", lastException);
         }
     }
 }

@@ -1,14 +1,13 @@
-// Title: Convert the first worksheet of an Excel file to a scalable SVG that includes a viewBox using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, sets ImageOrPrintOptions for SVG output, and uses SheetRender to generate an SVG file that contains a viewBox for flexible scaling. | Adapt an existing Aspose.Cells example so the produced SVG includes a viewBox attribute, enabling responsive resizing, and save it to a specified path.
-// Common Searches: aspacells c# generate svg from excel sheet including viewbox | how to create responsive svg from excel using aspose.cells | c# convert excel worksheet to scalable svg for web | sheetrender produce svg with viewbox attribute aspose.cells | imageorprintoptions settings for svg export .net
-// Tags: Aspose.Cells SVG export with viewBox | C# SheetRender to scalable SVG | ImageOrPrintOptions SVG configuration .NET | Excel worksheet to responsive SVG | Aspose.Cells rendering for web graphics
+// Title: Convert an Excel worksheet to a scalable SVG with viewBox using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export worksheet to SVG with viewBox attribute | Generate single-page SVG from an Excel sheet using Aspose.Cells | C# code example for converting .xlsx to .svg with Aspose.Cells | Enable viewBox when saving Excel as SVG in .NET | How to render an Excel worksheet as scalable SVG using Aspose.Cells
+// Tags: Aspose.Cells worksheet SVG export | ImageOrPrintOptions SaveFormat Svg setting | OnePagePerSheet option for SVG output | SheetRender ToImage method for SVG | viewBox enabled SVG rendering Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example checks for an input.xlsx file, creates a simple workbook if missing, loads the workbook, configures ImageOrPrintOptions for one-page-per-sheet SVG rendering, and uses SheetRender to save the first worksheet as output.svg. The generated SVG includes a viewBox attribute, allowing the image to scale responsively, and any errors are caught and reported.
+// The sample verifies the input .xlsx file, loads it into a Workbook, selects the first worksheet, configures ImageOrPrintOptions with SaveFormat.Svg and OnePagePerSheet=true to enable viewBox, and uses SheetRender.ToImage to generate a single‑page, scalable SVG file, handling any exceptions that may occur.
 class Program
 {
     static void Main()
@@ -18,33 +17,40 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.svg";
 
-            // Ensure the input file exists; create a simple workbook if it does not.
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                tempWb.Save(inputPath);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Load the workbook.
-            var workbook = new Workbook(inputPath);
-            var worksheet = workbook.Worksheets[0];
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set up rendering options for SVG output.
-            var options = new ImageOrPrintOptions
+            // Access the first worksheet (or modify the index/name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Configure rendering options for SVG output
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
-                OnePagePerSheet = true // Render the whole sheet on one page.
-                // No need to set ImageFormat; the format is inferred from the file extension.
+                // Set the output format to SVG
+                SaveFormat = SaveFormat.Svg,
+
+                // Render the entire sheet on a single page (required for SVG)
+                OnePagePerSheet = true
             };
 
-            // Render the worksheet to SVG.
-            var sheetRender = new SheetRender(worksheet, options);
+            // Create a SheetRender object for the worksheet with the specified options
+            SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
+
+            // Render the first page of the worksheet to an SVG file
             sheetRender.ToImage(0, outputPath);
 
-            Console.WriteLine($"SVG file saved to: {outputPath}");
+            Console.WriteLine($"Worksheet rendered successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

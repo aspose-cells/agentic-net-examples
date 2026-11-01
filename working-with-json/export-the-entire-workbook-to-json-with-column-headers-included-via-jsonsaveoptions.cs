@@ -1,43 +1,44 @@
-// Title: Export a complete Excel workbook to JSON with column headers using Aspose.Cells JsonSaveOptions in C#
-// AI Prompts: Generate C# code that loads an .xlsx workbook, configures JsonSaveOptions to retain column headers, and saves the entire workbook as a JSON file with Aspose.Cells. | Show how to use Aspose.Cells JsonSaveOptions in .NET to export all worksheets of an Excel file to a single JSON document while preserving header rows.
-// Common Searches: how to export all sheets from an Excel file to JSON with headers using Aspose.Cells C# | Aspose.Cells JsonSaveOptions include column names when saving workbook to JSON | C# convert multi-sheet Excel workbook to JSON preserving column headers Aspose
-// Tags: Aspose.Cells JsonSaveOptions export workbook to JSON | C# export Excel to JSON with column headers | save entire workbook as JSON using Aspose.Cells | include header rows in JSON output Aspose.Cells | convert multi-sheet Excel to JSON .NET
+// Title: Export a full Excel workbook to JSON including column headers with Aspose.Cells JsonSaveOptions (C#)
+// AI Prompts: Write a C# program that loads an .xlsx file, configures JsonSaveOptions to keep the first row as field names, and saves the workbook as a .json file using Aspose.Cells. | Show how to use Aspose.Cells Workbook.Save together with JsonSaveOptions to serialize all worksheets into a single JSON document while preserving header rows.
+// Common Searches: C# Aspose.Cells export whole workbook to JSON with column headers | How to keep first row as keys when converting Excel to JSON using Aspose | Aspose.Cells JsonSaveOptions default includes headers example | Convert multi‑sheet Excel file to JSON preserving headers in .NET | Save Excel workbook as JSON file with Aspose.Cells library
+// Tags: Aspose.Cells JsonSaveOptions JSON export | C# workbook.Save JSON with headers | Excel to JSON conversion Aspose.Cells | preserve column headers JSON export | full workbook serialization to JSON C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The program verifies the presence of the source Excel file, loads it with Aspose.Cells, creates a JsonSaveOptions instance (which includes column headers by default), and saves the entire workbook—including all worksheets—to a JSON file, handling any runtime exceptions.
-class ExportWorkbookToJson
+// // This C# example verifies that input.xlsx exists, loads it with Aspose.Cells, applies the default JsonSaveOptions (which retain column headers), and saves the entire workbook—including all worksheets—to output.json, with graceful error handling.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.json";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.json";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure JSON save options (default behavior includes column headers)
+            // Configure JSON save options (default includes column headers)
             JsonSaveOptions jsonOptions = new JsonSaveOptions();
 
-            // Export the entire workbook to a JSON file
+            // Export the entire workbook to JSON
             workbook.Save(outputPath, jsonOptions);
 
-            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved as JSON to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors during processing
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,70 +1,74 @@
-// Title: C# console app using Aspose.Cells to scan a folder and assign sequential TabId values to worksheets in .xlsx workbooks
-// AI Prompts: Create a C# console application that enumerates all .xlsx files in a specified folder, loads each workbook with Aspose.Cells, assigns a unique TabId to every worksheet, and saves the changes. | Enhance the program to write the last used TabId to a JSON file and read it on startup so the counter continues across multiple executions. | Extend the solution to also process .xls files, preserving their original format while updating worksheet TabId values.
-// Common Searches: how to batch update worksheet TabId in Excel files using Aspose.Cells C# | C# program to monitor a folder and assign sequential TabId to each sheet in .xlsx workbooks | persist TabId counter between runs when processing Excel files with Aspose.Cells | set up Windows Task Scheduler to run a C# Excel TabId updater
-// Tags: Aspose.Cells batch TabId update | C# scan directory for .xlsx workbooks | worksheet TabId auto-increment implementation | persist TabId state to JSON file | Windows Task Scheduler for Excel automation
+// Title: C# program using Aspose.Cells to monitor a folder and assign sequential TabId values to worksheets in new .xlsx files
+// Common Searches: how to monitor a directory for new .xlsx files and update worksheet TabId with Aspose.Cells in C# | C# timer to periodically scan a folder and set sequential TabId for each worksheet using Aspose.Cells | automate worksheet TabId assignment for Excel workbooks added to a folder with Aspose.Cells | using Aspose.Cells to assign incremental TabId to worksheets during batch processing in C# | C# code example for folder watch and worksheet TabId update with Aspose.Cells
+// Tags: folder monitoring with Aspose.Cells C# | sequential worksheet TabId assignment Aspose.Cells | periodic Excel file processing timer C# | batch update worksheet TabId Aspose.Cells | in‑memory processed file tracking C#
 
 using System;
 using System.IO;
+using System.Threading;
 using Aspose.Cells;
 
 namespace ExcelTabIdUpdater
 {
-    // A C# console utility that scans a given directory for .xlsx files, loads each workbook with Aspose.Cells, assigns a sequential TabId to every worksheet, and saves the workbook back, optionally persisting the counter and supporting scheduled execution.
+    // The example defines a folder path and a 5‑minute interval, then uses System.Threading.Timer to repeatedly scan the directory for *.xlsx files. For each unprocessed workbook, it loads the file with Aspose.Cells, assigns incremental TabId values to every worksheet, saves the workbook back to the same file, and records the file path in a HashSet to avoid re‑processing.
     class Program
     {
-        // Simple counter to generate unique TabIds within a single run.
-        // In a real scenario you might persist the last used value.
-        private static int _nextTabId = 1;
+        // Folder to monitor
+        private static readonly string FolderPath = @"C:\ExcelFiles";
+
+        // Interval for scanning (e.g., every 5 minutes)
+        private static readonly TimeSpan ScanInterval = TimeSpan.FromMinutes(5);
+
+        // Simple in‑memory store to remember processed files
+        private static readonly HashSet<string> ProcessedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         static void Main(string[] args)
         {
-            // Folder to monitor – adjust as needed.
-            string folderPath = @"C:\ExcelFiles";
+            // Initial scan
+            ScanAndUpdate();
 
-            // Process all .xlsx files in the folder.
-            ProcessFolder(folderPath);
+            // Set up a timer to run the scan periodically
+            Timer timer = new Timer(_ => ScanAndUpdate(), null, ScanInterval, ScanInterval);
+
+            // Prevent the application from exiting
+            Console.WriteLine("Excel TabId updater is running. Press Enter to exit.");
+            Console.ReadLine();
         }
 
-        private static void ProcessFolder(string folderPath)
+        private static void ScanAndUpdate()
         {
-            if (!Directory.Exists(folderPath))
+            try
             {
-                Console.WriteLine($"Folder does not exist: {folderPath}");
-                return;
-            }
+                // Get all Excel files in the folder (including subfolders if needed)
+                var excelFiles = Directory.GetFiles(FolderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            // Get all Excel files (you can add .xls if required).
-            string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            foreach (string filePath in excelFiles)
-            {
-                try
+                foreach (var filePath in excelFiles)
                 {
-                    // Load the workbook.
+                    // Skip files that have already been processed
+                    if (ProcessedFiles.Contains(filePath))
+                        continue;
+
+                    // Load the workbook (using the provided load rule)
                     Workbook workbook = new Workbook(filePath);
 
-                    // Update TabId for each worksheet.
+                    // Update TabId for each worksheet
+                    int nextTabId = 1;
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        sheet.TabId = GetNextTabId();
+                        sheet.TabId = nextTabId++;
                     }
 
-                    // Save the workbook back to the same file.
+                    // Save the workbook (using the provided save rule)
                     workbook.Save(filePath, SaveFormat.Xlsx);
 
-                    Console.WriteLine($"Updated TabIds in: {Path.GetFileName(filePath)}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                    // Mark file as processed
+                    ProcessedFiles.Add(filePath);
                 }
             }
-        }
-
-        // Generates a sequential TabId.
-        private static int GetNextTabId()
-        {
-            return _nextTabId++;
+            catch (Exception ex)
+            {
+                // Log or handle exceptions as appropriate
+                Console.WriteLine($"Error during scan: {ex.Message}");
+            }
         }
     }
 }

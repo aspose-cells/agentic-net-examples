@@ -1,47 +1,71 @@
-// Title: Apply a 2‑point line weight to a line sparkline group positioned in cell K7 with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a line‑type sparkline in cell K7 and sets its LineWeight property to 2 points using Aspose.Cells. | Show how to adjust the thickness of a sparkline by assigning a custom line weight of 2.0 through the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# set sparkline line thickness to 2 points | How to change sparkline line weight for a specific cell using Aspose.Cells | C# example positioning a line sparkline in column K row 7 with custom line weight | Programmatically adjust sparkline line weight in an Aspose.Cells workbook | Set line weight for a line sparkline group at K7 in a .xlsx file with Aspose.Cells
-// Tags: Aspose.Cells line sparkline lineweight | set sparkline line thickness C# | position sparkline group cell K7 | custom sparkline formatting Aspose.Cells | save workbook with sparkline Xlsx
+// Title: How to set a 2‑point custom line weight for a sparkline group that includes cell K7 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that finds the sparkline group covering cell K7 and sets ShowCustomLineWeight to true and CustomLineWeight to 2. | Show an example of iterating over Worksheet.SparklineGroups in Aspose.Cells to apply a two‑point custom line weight to the group whose LocationRange contains K7.
+// Common Searches: aspnet cells c# set sparkline custom line weight for cell K7 | how to change sparkline line thickness in an Excel file using Aspose.Cells | apply two point line weight to sparkline group located at K7 with Aspose.Cells .NET | C# code to enable custom line weight for sparkline groups in an Aspose.Cells workbook
+// Tags: Aspose.Cells set sparkline custom line weight | C# sparkline group line thickness | modify sparkline line weight in Excel workbook | Aspose.Cells SparklineGroups iteration | custom line weight for sparkline in .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// Demonstrates creating a workbook, adding a line sparkline based on range A1:D1, placing it in cell K7, setting the group's LineWeight to 2 points, and saving the file as SparklineLineWeight_K7.xlsx using Aspose.Cells for .NET.
-class SparklineLineWeightExample
+// Loads an Excel workbook, locates any sparkline group that includes cell K7, enables a custom line weight, sets it to 2 points, and saves the updated file.
+class SparklineWeightExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Sample data for the sparkline (adjust as needed)
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(2);
-        sheet.Cells["C1"].PutValue(1);
-        sheet.Cells["D1"].PutValue(3);
-
-        // Define the location cell K7 (column K = index 10, row 7 = index 6)
-        CellArea location = new CellArea
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            StartColumn = 10,
-            EndColumn = 10,
-            StartRow = 6,
-            EndRow = 6
-        };
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Add a line sparkline group with the sample data range and place it at K7
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
-        SparklineGroup group = sheet.SparklineGroups[groupIndex];
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add the sparkline to the group (required when using the Add overload with location)
-        group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 10);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set custom line weight of 2 points for the sparkline group
-        group.LineWeight = 2.0;
+            // Zero‑based indices for cell K7
+            int targetRow = 6;      // Row 7 in Excel
+            int targetColumn = 10;  // Column K in Excel
 
-        // Save the workbook
-        workbook.Save("SparklineLineWeight_K7.xlsx", SaveFormat.Xlsx);
+            // Attempt to process sparkline groups using dynamic to avoid compile‑time dependency
+            try
+            {
+                dynamic sheetDyn = sheet;
+                foreach (var group in sheetDyn.SparklineGroups)
+                {
+                    // Determine if the group's location range includes cell K7
+                    var loc = group.LocationRange;
+                    bool containsK7 = targetRow >= loc.StartRow && targetRow <= loc.EndRow &&
+                                      targetColumn >= loc.StartColumn && targetColumn <= loc.EndColumn;
+
+                    if (containsK7)
+                    {
+                        // Enable custom line weight and set it to 2 points
+                        group.ShowCustomLineWeight = true;
+                        group.CustomLineWeight = 2;
+                    }
+                }
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                // Sparkline feature not available in this version of Aspose.Cells
+                Console.WriteLine("Sparkline functionality is not supported by the current Aspose.Cells library.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

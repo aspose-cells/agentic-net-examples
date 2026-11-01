@@ -1,34 +1,30 @@
-// Title: Export an Aspose.Cells workbook to HTML with UTF-8 encoding and a custom TableCssId in C#
-// AI Prompts: Write C# that saves a Workbook as an HTML file, setting HtmlSaveOptions.Encoding to UTF-8 and HtmlSaveOptions.TableCssId to a user-defined value. | Show how to configure Aspose.Cells HtmlSaveOptions to apply a specific CSS ID to the generated HTML table while ensuring the output uses UTF-8 character encoding.
-// Common Searches: c# aspose.cells export excel to html with utf-8 encoding and custom table css id | how to set TableCssId in HtmlSaveOptions when saving workbook as html using Aspose.Cells | Aspose.Cells HtmlSaveOptions example for UTF8 output and table identifier in C#
-// Tags: Aspose.Cells HtmlSaveOptions UTF-8 encoding | Aspose.Cells custom TableCssId for HTML export | C# export workbook to HTML with specific CSS identifier | HTML table styling using Aspose.Cells HtmlSaveOptions | set HTML file encoding Aspose.Cells C#
+// Title: Save an Excel workbook as HTML with UTF-8 encoding and a custom TableCssId using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file and exports it to HTML with UTF-8 encoding and a user-defined TableCssId using Aspose.Cells. | Show how to set HtmlSaveOptions.Encoding and HtmlSaveOptions.TableCssId before calling Workbook.Save in a .NET application.
+// Common Searches: Aspose.Cells C# set HTML export character set to UTF-8 | How to assign a custom CSS ID to the generated HTML table with HtmlSaveOptions | Export Excel to HTML with specific table identifier using Aspose.Cells .NET | HtmlSaveOptions Encoding property example for UTF-8 in Aspose.Cells | Define TableCssId when saving workbook as HTML in C#
+// Tags: Aspose.Cells HtmlSaveOptions UTF-8 encoding | Aspose.Cells HtmlSaveOptions custom TableCssId | C# export Excel to HTML Aspose.Cells | HTML table CSS identifier Aspose.Cells | UTF-8 character set Aspose.Cells HTML export
 
 using System.Text;
 using Aspose.Cells;
 
-// Creates a workbook, adds sample data, configures HtmlSaveOptions with UTF-8 encoding and a custom TableCssId, and saves the workbook as an HTML file.
+// Loads an Excel workbook, configures HtmlSaveOptions to use UTF-8 encoding and a custom TableCssId, then saves the workbook as an HTML file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Example data – you can replace this with your own content
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample Text");
-
-        // Configure HTML export options
+        // Configure HTML save options
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            // Set the HTML file encoding to UTF-8
+            // Set the HTML encoding to UTF-8
             Encoding = Encoding.UTF8,
 
-            // Apply a custom CSS ID to the generated HTML table for consistent styling
+            // Apply a custom CSS ID for the generated HTML table
             TableCssId = "customTableId"
         };
 
-        // Save the workbook as an HTML file using the specified options
-        workbook.Save("ExportedDocument.html", htmlOptions);
+        // Save the workbook as HTML using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }

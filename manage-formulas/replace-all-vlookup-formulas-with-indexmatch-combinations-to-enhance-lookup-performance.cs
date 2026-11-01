@@ -1,66 +1,76 @@
-// Title: Bulk replace VLOOKUP formulas with INDEX‑MATCH in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that iterates through every worksheet, detects cells containing VLOOKUP, and rewrites each as an equivalent INDEX‑MATCH formula. | Extend the sample to handle VLOOKUP calls that omit the optional range_lookup argument, assuming an exact match by default. | Add error handling that skips cells whose VLOOKUP pattern cannot be parsed, logs the cell address, and continues processing the workbook.
-// Common Searches: c# aspocells replace vlookup with index match across all sheets | how to convert VLOOKUP to INDEX-MATCH using Aspose.Cells .NET | bulk edit Excel formulas programmatically with Aspose.Cells C# | optimize Excel lookup performance by swapping VLOOKUP for INDEX-MATCH in C# | regex parse VLOOKUP formula Aspose.Cells example
-// Tags: aspocells formula substitution vlookup | c# index-match conversion aspocells | bulk excel formula update .net | excel lookup speed improvement aspocells | regex parsing vlookup aspocells
+// Title: Bulk replace VLOOKUP formulas with INDEX‑MATCH in an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells replace VLOOKUP formulas with INDEX MATCH in all worksheets | how to bulk convert VLOOKUP to INDEX-MATCH in an Excel workbook using Aspose.Cells | Aspose.Cells .NET code to update formulas from VLOOKUP to INDEX MATCH | optimize Excel lookup performance by swapping VLOOKUP for INDEX-MATCH with C#
+// Tags: Aspose.Cells bulk formula replacement | convert VLOOKUP to INDEX-MATCH C# | Excel lookup performance optimization .NET | regex driven formula transformation Aspose | update Excel workbook formulas programmatically
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, walks through every worksheet and cell, identifies formulas that contain VLOOKUP, extracts the arguments with a regular expression, builds an equivalent INDEX‑MATCH expression, replaces the original formula, and saves the updated workbook.
-class Program
+// The example loads an input.xlsx workbook with Aspose.Cells, iterates through every worksheet and cell, detects VLOOKUP formulas using a regular expression, builds equivalent INDEX‑MATCH formulas, replaces the original formulas, and saves the modified workbook as output.xlsx, improving lookup performance.
+class VlookupToIndexMatchConverter
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Get all cells in the current worksheet
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Loop through each cell that contains a formula
-            foreach (Cell cell in cells)
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                if (cell.IsFormula && cell.Formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Regex to capture VLOOKUP arguments: lookup, table, column index, optional range_lookup
+            Regex vlookupRegex = new Regex(
+                @"VLOOKUP\s*\(\s*(?<lookup>[^,]+)\s*,\s*(?<table>[^,]+)\s*,\s*(?<col>\d+)\s*(?:,\s*(?<range>[^)]+))?\s*\)",
+                RegexOptions.IgnoreCase);
+
+            // Iterate through all worksheets and cells
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Cell cell in sheet.Cells)
                 {
-                    // Example VLOOKUP syntax:
-                    // VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
-                    // We'll replace it with an INDEX‑MATCH equivalent.
-
-                    string formula = cell.Formula;
-
-                    // Use a regular expression to capture the four VLOOKUP arguments.
-                    // This simple pattern works for most straightforward cases.
-                    Match vlookupMatch = Regex.Match(
-                        formula,
-                        @"VLOOKUP\(\s*(?<lookup>[^,]+)\s*,\s*(?<table>[^,]+)\s*,\s*(?<col>\d+)\s*,\s*(?<range>\w+)\s*\)",
-                        RegexOptions.IgnoreCase);
-
-                    if (vlookupMatch.Success)
+                    // Check if the cell contains a formula and includes VLOOKUP
+                    if (cell.IsFormula && cell.Formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string lookupValue = vlookupMatch.Groups["lookup"].Value.Trim();
-                        string tableArray   = vlookupMatch.Groups["table"].Value.Trim();
-                        string colIndexNum  = vlookupMatch.Groups["col"].Value.Trim();
-                        string rangeLookup  = vlookupMatch.Groups["range"].Value.Trim();
+                        string originalFormula = cell.Formula;
 
-                        // Determine match type: FALSE = exact match (0), TRUE or omitted = approximate (1)
-                        int matchType = rangeLookup.Equals("FALSE", StringComparison.OrdinalIgnoreCase) ? 0 : 1;
+                        // Try to match the VLOOKUP pattern
+                        Match match = vlookupRegex.Match(originalFormula);
+                        if (match.Success)
+                        {
+                            // Extract and trim captured groups
+                            string lookupValue = match.Groups["lookup"].Value.Trim();
+                            string tableRange = match.Groups["table"].Value.Trim();
+                            string colIndex = match.Groups["col"].Value.Trim();
 
-                        // Build the INDEX‑MATCH formula.
-                        // INDEX(table, MATCH(lookup, INDEX(table,0,1), match_type), col_index)
-                        string indexMatchFormula = $"=INDEX({tableArray}, MATCH({lookupValue}, INDEX({tableArray},0,1), {matchType}), {colIndexNum})";
+                            // Build the INDEX‑MATCH formula
+                            // =INDEX(tableRange, MATCH(lookupValue, INDEX(tableRange,0,1),0), colIndex)
+                            string newFormula = $"=INDEX({tableRange}, MATCH({lookupValue}, INDEX({tableRange},0,1),0), {colIndex})";
 
-                        // Replace the original VLOOKUP formula with the new one.
-                        cell.Formula = indexMatchFormula;
+                            // Replace the cell's formula
+                            cell.Formula = newFormula;
+                        }
+                        // If the pattern does not match, leave the formula unchanged
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

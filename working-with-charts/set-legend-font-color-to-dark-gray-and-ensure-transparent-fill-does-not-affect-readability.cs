@@ -1,54 +1,85 @@
-// Title: Set chart legend entry font to dark gray and make legend background opaque using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a column chart and changes every legend entry’s font color to DarkGray while keeping the text fill enabled. | Update an existing Aspose.Cells chart so the legend text is non‑transparent and the legend’s background mode is set to Opaque for improved readability.
-// Common Searches: how to change legend entry font color to dark gray in Aspose.Cells .NET | Aspose.Cells make chart legend background opaque | prevent transparent legend text in Excel chart using Aspose.Cells C# | set legend entry formatting dark gray font Aspose.Cells example
-// Tags: legend entry font color Aspose.Cells | opaque legend background Aspose.Cells | chart legend text fill Aspose.Cells | disable legend transparency Aspose.Cells | column chart legend formatting .NET
+// Title: How to set a chart legend's font color to dark gray and make its background transparent using Aspose.Cells for .NET
+// AI Prompts: Update the first chart in an Excel workbook so its legend text uses DarkGray and the legend area has no fill using Aspose.Cells C#. | Apply a transparent fill to a chart legend while changing the legend text color to dark gray with Aspose.Cells for .NET. | Programmatically change a chart legend's text color to dark gray and remove its background fill, then save the workbook using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# set chart legend text color to dark gray | make chart legend background transparent Aspose.Cells .NET | remove legend fill type in Excel chart using Aspose.Cells | change legend text color and hide legend background in C# Excel library | how to format chart legend appearance with Aspose.Cells
+// Tags: chart legend font color Aspose.Cells | transparent legend fill Aspose.Cells | set legend fill type none .NET | Excel chart legend styling C# | Aspose.Cells chart legend formatting
 
+using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, enables the legend, then iterates through each LegendEntry to set the font color to DarkGray, ensures the text fill is not transparent, and makes the legend background opaque before saving the file as LegendFontDarkGray.xlsx.
-class SetLegendFontColor
+// Loads an Excel workbook, checks for a chart on the first worksheet, sets the legend's text color to DarkGray, removes the legend's background fill by setting FillType to None, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["A4"].PutValue("Q3");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(90);
-
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Ensure the legend is visible
-        chart.ShowLegend = true;
-
-        // Iterate through all legend entries and apply the required formatting
-        foreach (LegendEntry entry in chart.Legend.LegendEntries)
+        // Ensure the input file exists; create a placeholder workbook if it does not.
+        if (!File.Exists(inputPath))
         {
-            // Set the font color to dark gray
-            entry.Font.Color = Color.DarkGray;
-
-            // Ensure the text has a fill (not transparent) so it remains readable
-            entry.IsTextNoFill = false;
-
-            // Make the background opaque to avoid transparency issues
-            entry.BackgroundMode = BackgroundMode.Opaque;
+            try
+            {
+                var placeholder = new Workbook();
+                placeholder.Save(inputPath);
+                Console.WriteLine($"Created placeholder workbook at '{inputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to create placeholder workbook: {ex.Message}");
+                return;
+            }
         }
 
-        // Save the workbook
-        workbook.Save("LegendFontDarkGray.xlsx");
+        Workbook workbook;
+        try
+        {
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook '{inputPath}': {ex.Message}");
+            return;
+        }
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Modify the first chart's legend if a chart exists
+        if (sheet.Charts.Count > 0)
+        {
+            try
+            {
+                Chart chart = sheet.Charts[0];
+
+                // Set legend font color to dark gray
+                chart.Legend.Font.Color = Color.DarkGray;
+
+                // Make legend background transparent by setting no fill
+                chart.Legend.Area.FillFormat.FillType = FillType.None;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error modifying chart: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No charts found on the first worksheet.");
+        }
+
+        // Save the modified workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
+        }
     }
 }

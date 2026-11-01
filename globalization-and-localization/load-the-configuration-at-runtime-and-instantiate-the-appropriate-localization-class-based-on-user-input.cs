@@ -1,14 +1,12 @@
-// Title: Load localization mappings from a JSON file at runtime and instantiate the appropriate ILocalization implementation using reflection in C#
-// AI Prompts: Write C# code that reads a JSON file containing language‑code to fully‑qualified class name mappings, asks the user for a language code, and creates the matching ILocalization object via reflection. | Update the sample to log an error and automatically fall back to EnglishLocalization when the requested language code is absent or the target type cannot be instantiated. | Enhance the program to scan a folder for additional assemblies, load them at runtime, and instantiate localization classes defined in the JSON mapping.
-// Common Searches: how to map language codes to class names using a JSON file in .NET | create a localization instance from user input at runtime c# | default fallback localization when configuration entry is missing c# | load external localization assemblies dynamically based on a config file
-// Tags: load localization mapping from JSON in C# | instantiate interface implementation via reflection | default language fallback strategy | dynamic assembly discovery for localization | handle missing configuration file errors
+// Title: Load a JSON localization configuration at runtime and instantiate the appropriate language class using reflection in C#
+// Common Searches: how to read a JSON localization config file at runtime and create language objects with reflection in .NET | C# example for mapping language codes to fully qualified type names and instantiating them dynamically | fallback to default language mappings when localization JSON file is missing in a console app | using Type.GetType to load a class by name from a configuration and cast to an interface in C# | create ILocalization implementation based on user input language code with Activator.CreateInstance
+// Tags: runtime JSON localization mapping with reflection | dynamic language class instantiation using Type.GetType | default language fallback configuration C# | ILocalization interface implementation pattern | activator createinstance for localization classes
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.Json;
-using Aspose.Cells; // Aspose.Cells namespace (required by the project)
+using System.Reflection;
 
 // Interface that all localization classes must implement
 public interface ILocalization
@@ -17,22 +15,22 @@ public interface ILocalization
 }
 
 // Example localization implementations
-// Demonstrates loading a JSON configuration that maps language codes to fully‑qualified localization class names, prompting the user for a language, resolving the class with reflection, creating an ILocalization instance, and displaying its greeting. Includes error handling for missing files, JSON parsing issues, and type mismatches, and shows how to add a default fallback and extend to dynamic assembly loading.
+// The example reads a JSON file that maps language codes to fully‑qualified type names, ensures default mappings for English and French, prompts the user for a language code, and uses reflection (Type.GetType and Activator.CreateInstance) to create an ILocalization instance for the selected language, handling missing files or invalid mappings gracefully.
 public class EnglishLocalization : ILocalization
 {
     public string GetGreeting() => "Hello!";
 }
 
-public class SpanishLocalization : ILocalization
+public class FrenchLocalization : ILocalization
 {
-    public string GetGreeting() => "¡Hola!";
+    public string GetGreeting() => "Bonjour!";
 }
 
-// Class representing the configuration file structure
+// Model representing the configuration file structure
 public class LocalizationConfig
 {
-    // Maps a language key (e.g., "en", "es") to the fully‑qualified class name
-    public Dictionary<string, string> Mappings { get; set; }
+    // Maps a language code (e.g., "en", "fr") to the fully‑qualified type name of the class
+    public Dictionary<string, string> LanguageMap { get; set; } = new Dictionary<string, string>();
 }
 
 public class Program
@@ -44,80 +42,97 @@ public class Program
     {
         try
         {
-            // 1. Load configuration at runtime
+            // Load configuration at runtime (fallback to defaults if file missing)
             LocalizationConfig config = LoadConfiguration(ConfigFilePath);
 
-            // 2. Prompt user for language selection
-            Console.WriteLine("Enter language code (e.g., en, es):");
-            string userInput = Console.ReadLine()?.Trim().ToLower();
+            // Prompt user for language selection
+            Console.WriteLine("Enter language code (e.g., en, fr):");
+            string? userInput = Console.ReadLine()?.Trim().ToLower();
 
-            // 3. Resolve the appropriate localization class name
-            if (string.IsNullOrEmpty(userInput) || !config.Mappings.TryGetValue(userInput, out string className))
+            if (string.IsNullOrEmpty(userInput))
             {
-                Console.WriteLine("Unsupported language. Falling back to English.");
-                className = typeof(EnglishLocalization).FullName;
+                Console.WriteLine("No language code entered.");
+                return;
             }
 
-            // 4. Instantiate the localization class using reflection
-            ILocalization localizationInstance = CreateLocalizationInstance(className);
+            // Instantiate the appropriate localization class based on user input
+            ILocalization? localization = CreateLocalizationInstance(config, userInput);
 
-            // 5. Use the instantiated class
-            Console.WriteLine(localizationInstance.GetGreeting());
-
-            // Example of using Aspose.Cells after localization (optional)
-            // Workbook wb = new Workbook(); // create a new workbook
-            // // ... further Aspose.Cells operations ...
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-        catch (JsonException ex)
-        {
-            Console.WriteLine($"Error parsing configuration: {ex.Message}");
+            // Use the localization instance
+            if (localization != null)
+            {
+                Console.WriteLine(localization.GetGreeting());
+            }
+            else
+            {
+                Console.WriteLine("Unsupported language or configuration error.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Catch any unexpected errors to prevent the application from crashing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Loads the JSON configuration file and deserializes it into LocalizationConfig
+    // Loads the JSON configuration file and deserializes it into a LocalizationConfig object.
+    // If the file does not exist or cannot be parsed, returns a config with default mappings.
     private static LocalizationConfig LoadConfiguration(string path)
     {
-        if (!File.Exists(path))
+        var config = new LocalizationConfig();
+
+        if (File.Exists(path))
         {
-            throw new FileNotFoundException($"Configuration file not found: {path}");
+            try
+            {
+                string json = File.ReadAllText(path);
+                var deserialized = JsonSerializer.Deserialize<LocalizationConfig>(json);
+                if (deserialized?.LanguageMap != null)
+                {
+                    config.LanguageMap = deserialized.LanguageMap;
+                }
+            }
+            catch
+            {
+                // If deserialization fails, fall back to defaults.
+            }
         }
 
-        string json = File.ReadAllText(path);
-        var options = new JsonSerializerOptions
+        // Ensure default mappings are present (use fully‑qualified type names)
+        if (!config.LanguageMap.ContainsKey("en"))
         {
-            PropertyNameCaseInsensitive = true
-        };
-        return JsonSerializer.Deserialize<LocalizationConfig>(json, options);
+            config.LanguageMap["en"] = typeof(EnglishLocalization).FullName!;
+        }
+        if (!config.LanguageMap.ContainsKey("fr"))
+        {
+            config.LanguageMap["fr"] = typeof(FrenchLocalization).FullName!;
+        }
+
+        return config;
     }
 
-    // Creates an instance of the class identified by its fully‑qualified name
-    private static ILocalization CreateLocalizationInstance(string fullyQualifiedName)
+    // Creates an instance of the localization class mapped to the supplied language code.
+    private static ILocalization? CreateLocalizationInstance(LocalizationConfig config, string languageCode)
     {
-        // Load the current assembly (assuming the classes are in the same assembly)
-        Assembly assembly = Assembly.GetExecutingAssembly();
-
-        // Get the Type object for the class name
-        Type type = assembly.GetType(fullyQualifiedName);
-        if (type == null)
+        if (config.LanguageMap == null || !config.LanguageMap.TryGetValue(languageCode, out string? typeName))
         {
-            throw new InvalidOperationException($"Type '{fullyQualifiedName}' not found in assembly.");
+            return null; // No mapping found for the requested language
         }
 
-        // Ensure the type implements ILocalization
-        if (!typeof(ILocalization).IsAssignableFrom(type))
+        // Attempt to locate the type using the fully‑qualified name
+        Type? targetType = Type.GetType(typeName);
+        if (targetType == null)
         {
-            throw new InvalidOperationException($"Type '{fullyQualifiedName}' does not implement ILocalization.");
+            return null; // Type not found (could be missing assembly reference)
         }
 
-        // Create an instance using the default constructor
-        return (ILocalization)Activator.CreateInstance(type);
+        // Ensure the type implements ILocalization and has a parameterless constructor
+        if (!typeof(ILocalization).IsAssignableFrom(targetType))
+        {
+            return null; // Type does not implement the required interface
+        }
+
+        // Create an instance via reflection
+        return Activator.CreateInstance(targetType) as ILocalization;
     }
 }

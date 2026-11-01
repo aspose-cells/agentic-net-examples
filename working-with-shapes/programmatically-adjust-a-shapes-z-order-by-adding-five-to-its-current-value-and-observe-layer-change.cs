@@ -1,15 +1,14 @@
-// Title: How to increase a worksheet shape's Z-order by five using Aspose.Cells for .NET
-// AI Prompts: Retrieve the first shape on a worksheet, add 5 to its ZOrderPosition, and save the workbook with Aspose.Cells in C#. | Read a shape's current Z-order, apply an offset of five layers, and persist the change to a new Excel file using the Aspose.Cells API. | Programmatically move an Excel shape forward five layers by updating its ZOrderPosition property in a .NET application.
-// Common Searches: Aspose.Cells C# increase shape Z-order by specific number | set ZOrderPosition of an Excel shape using Aspose.Cells .NET | move worksheet shape forward multiple layers Aspose.Cells example | how to change layer order of shapes in an Excel file with Aspose.Cells | C# code to adjust Z-order of a shape in an existing workbook
-// Tags: adjust shape Z-order Aspose.Cells | increase shape layer position .NET | modify ZOrderPosition Excel workbook | move Excel shape forward Aspose.Cells | shape ordering manipulation C#
+// Title: Programmatically increase a shape's Z-order by five positions in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to a higher value | how to move an Excel shape forward by multiple layers with Aspose.Cells | increase Z-order of a shape in a .xlsx file using Aspose.Cells API | C# code to adjust shape layering in an Excel workbook with Aspose.Cells | retrieve and modify shape ZOrderPosition in Aspose.Cells for .NET
+// Tags: shape ZOrderPosition adjustment Aspose.Cells | increase shape layer order .xlsx C# | modify Excel shape stacking Aspose.Cells | programmatic shape ordering in workbook | Aspose.Cells shape layering manipulation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing Excel workbook, accesses the first worksheet, verifies that a shape exists, reads the shape's current ZOrderPosition, adds five to move it forward in the layer stack, outputs the change, and saves the modified workbook to a new file.
-class Program
+// The example loads an existing .xlsx workbook, accesses the first worksheet, selects the first shape, reads its current ZOrderPosition, adds five to bring the shape forward in the layer stack, prints the before/after values, and saves the workbook. It includes file existence verification and basic exception handling.
+class AdjustShapeZOrder
 {
     static void Main()
     {
@@ -18,7 +17,7 @@ class Program
 
         try
         {
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -31,39 +30,37 @@ class Program
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape
-            if (worksheet.Shapes.Count == 0)
+            // Get the collection of shapes on the worksheet
+            ShapeCollection shapes = worksheet.Shapes;
+
+            // Ensure there is at least one shape to work with
+            if (shapes.Count > 0)
             {
-                Console.WriteLine("No shapes found in the worksheet.");
-                return;
+                // Select the first shape (or any shape by index)
+                Shape shape = shapes[0];
+
+                // Retrieve the current Z-order (layer position) of the shape
+                int currentZOrder = shape.ZOrderPosition;
+
+                // Increase the Z-order by five to bring the shape forward in the layer stack
+                shape.ZOrderPosition = currentZOrder + 5;
+
+                // Output the new Z-order to verify the change
+                Console.WriteLine($"Shape '{shape.Name}' Z-order changed from {currentZOrder} to {shape.ZOrderPosition}");
+            }
+            else
+            {
+                Console.WriteLine("No shapes found on the worksheet.");
             }
 
-            // Retrieve the first shape
-            Shape shape = worksheet.Shapes[0];
-
-            // Get current Z-order position
-            int currentZOrder = shape.ZOrderPosition;
-
-            // Increase Z-order by five
-            shape.ZOrderPosition = currentZOrder + 5;
-
-            // Output the change
-            Console.WriteLine($"Shape Z-order changed from {currentZOrder} to {shape.ZOrderPosition}");
-
-            // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook with the updated shape Z-order
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

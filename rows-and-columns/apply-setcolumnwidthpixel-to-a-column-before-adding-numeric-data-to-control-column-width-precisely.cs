@@ -1,12 +1,12 @@
-// Title: How to set a worksheet column width in pixels before writing numeric values using Aspose.Cells for .NET (C#)
-// AI Prompts: Set column B to 150 pixels with cells.SetColumnWidthPixel, then fill rows 0‑4 with incremental numbers and save the workbook. | Create a new Workbook, adjust the pixel width of a specific column, populate it with calculated numeric data, and export to an .xlsx file using Aspose.Cells C#. | Show how to apply SetColumnWidthPixel to define exact pixel width, then write numeric entries and persist the file.
-// Common Searches: Aspose.Cells C# set column width in pixels before adding data to worksheet | SetColumnWidthPixel example for numeric data insertion in .NET | How to control column width in pixels with Aspose.Cells and then write numbers | C# Aspose.Cells set column B width 150px then populate values | Precise column sizing using SetColumnWidthPixel in Aspose.Cells
-// Tags: SetColumnWidthPixel pixel column sizing | Aspose.Cells column width pre‑population | C# define column width in pixels | populate numeric values after column sizing | save workbook .xlsx Aspose.Cells
+// Title: Setting a column’s width in pixels with Aspose.Cells for .NET before inserting numeric values
+// AI Prompts: Write C# code that uses Aspose.Cells to define a column’s pixel width and then populate the column with numbers. | Show an example of applying SetColumnWidthPixel to column B, adding several numeric cells, and saving the workbook. | Demonstrate how to control Excel column width in pixels prior to writing data using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# SetColumnWidthPixel column B before adding numbers | how to specify Excel column width in pixels with Aspose.Cells .NET | set column width to 120 pixels then write numeric data using Aspose.Cells | C# example for adjusting column width before populating cells in Aspose.Cells | pixel column sizing in Aspose.Cells prior to data insertion
+// Tags: column width pixel method Aspose.Cells | pixel‑based column sizing C# | pre‑data column width adjustment | numeric values insertion after column sizing | Excel column B width configuration | save workbook after column formatting
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a new Workbook, accesses the first worksheet, sets column B's width to 150 pixels using SetColumnWidthPixel, fills rows 0‑4 of that column with multiples of 10, and saves the file as ColumnWidthPixelDemo.xlsx.
+// // Creates a workbook, sets column B to 120 pixels with SetColumnWidthPixel, writes three numeric values into B1‑B3, and saves the file as ColumnWidthExample.xlsx.
 class Program
 {
     static void Main()
@@ -15,19 +15,17 @@ class Program
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the width of column B (index 1) to 150 pixels
-        cells.SetColumnWidthPixel(1, 150);
+        // Set column width for column B (index 1) to 120 pixels
+        sheet.Cells.SetColumnWidthPixel(1, 120);
 
-        // Populate column B with numeric data
-        for (int row = 0; row < 5; row++)
-        {
-            cells[row, 1].PutValue(row * 10); // Example values: 0,10,20,30,40
-        }
+        // Add numeric data to cells in column B
+        sheet.Cells["B1"].PutValue(123);
+        sheet.Cells["B2"].PutValue(456.78);
+        sheet.Cells["B3"].PutValue(0.00123);
 
-        // Save the workbook
-        workbook.Save("ColumnWidthPixelDemo.xlsx");
+        // Save the workbook to a file
+        workbook.Save("ColumnWidthExample.xlsx");
     }
 }

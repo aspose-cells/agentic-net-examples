@@ -1,61 +1,51 @@
-// Title: Export Aspose.Cells formula evaluation order to a text file for debugging Excel dependencies (C#)
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, calls CalculateFormula, and writes each formula cell's address, zero‑based row and column to a .txt file in the order they are evaluated. | Create a method that iterates through all worksheets in an Aspose.Cells Workbook, detects cells where IsFormula is true, and logs their name, row, column, and optionally the formula text to a plain‑text report. | Modify the exporter to include the evaluated value of each formula alongside its address and coordinates in the output file using Aspose.Cells APIs.
-// Common Searches: how to get the order of formula calculation in Aspose.Cells C# | export list of formula cells with row and column indices from an Excel workbook using Aspose.Cells | debugging Excel formula dependencies with Aspose.Cells .NET example | write formula evaluation sequence to a text file using Aspose.Cells library
-// Tags: aspocells export formula order txt | c# iterate worksheets formula cells | aspocells calculate workbook formulas | debug excel formula dependency aspocells | write cell address row column to file c#
+// Title: Export Excel formula evaluation order to a text file using Aspose.Cells for .NET
+// Common Searches: how to list all formula cells in an Excel workbook with Aspose.Cells C# | export Aspose.Cells formula evaluation sequence to txt for debugging | C# write formula evaluation order of workbook to a text file using Aspose.Cells | retrieve formula dependency order from Excel file with Aspose.Cells .NET
+// Tags: Aspose.Cells export formula order to text | enumerate formula cells Aspose.Cells .NET | write Excel formula list to txt C# | debug formula dependency chain Aspose.Cells | iterate worksheets cells Aspose.Cells API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads 'input.xlsx' with Aspose.Cells, calculates all formulas, iterates through each worksheet and cell, and writes each formula cell's address, zero‑based row and column to 'FormulaEvaluationOrder.txt' in the evaluation order.
-class FormulaEvaluationOrderExporter
+// The example loads an existing Excel workbook with Aspose.Cells, iterates through each worksheet and cell, detects cells that contain formulas, and writes the worksheet name and cell reference to a text file (FormulaEvaluationOrder.txt) to help debug complex formula dependency chains.
+class ExportFormulaEvaluationOrder
 {
     static void Main()
     {
         try
         {
-            // Path to the input workbook
-            string workbookPath = "input.xlsx";
+            // Input workbook path
+            string inputPath = "input.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // Prepare the output file path
+            // Output file path
             string outputPath = "FormulaEvaluationOrder.txt";
 
+            // Write the evaluation order (cells containing formulas) to the text file
             using (StreamWriter writer = new StreamWriter(outputPath))
             {
-                writer.WriteLine("Formula Evaluation Order:");
-                writer.WriteLine("--------------------------");
+                writer.WriteLine("Formula Evaluation Order (cells containing formulas):");
+                writer.WriteLine("------------------------------------------------------");
 
                 int index = 1;
-
-                // Iterate through each worksheet and its cells to collect formula cells
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Cells cells = sheet.Cells;
-
-                    // Loop through all used cells
-                    foreach (Cell cell in cells)
+                    // Iterate through all cells in the worksheet
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        if (cell.IsFormula)
+                        // Check if the cell contains a formula
+                        if (!string.IsNullOrEmpty(cell.Formula))
                         {
-                            // Cell.Name gives the address (e.g., "B2")
-                            string cellName = cell.Name;
-                            int row = cell.Row;       // zero‑based
-                            int column = cell.Column; // zero‑based
-
-                            writer.WriteLine($"{index}. Cell: {cellName} (Row: {row}, Column: {column})");
+                            string line = $"{index}: Worksheet=\"{sheet.Name}\", Cell=\"{cell.Name}\"";
+                            writer.WriteLine(line);
                             index++;
                         }
                     }
@@ -66,7 +56,7 @@ class FormulaEvaluationOrderExporter
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

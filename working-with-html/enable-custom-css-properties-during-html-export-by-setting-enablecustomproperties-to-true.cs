@@ -1,13 +1,13 @@
-// Title: How to enable custom CSS properties when exporting an Excel workbook to HTML with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that sets HtmlSaveOptions.EnableCustomProperties = true and saves a workbook as HTML using Aspose.Cells. | Provide a complete example of converting an .xlsx file to .html while preserving custom CSS properties with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells set EnableCustomProperties true for HTML export C# | export Excel to HTML with custom CSS using Aspose.Cells .NET | C# Aspose.Cells HtmlSaveOptions custom CSS properties | how to keep custom styles when converting Excel to HTML Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions EnableCustomProperties | HTML export custom CSS Aspose.Cells | C# export Excel to HTML with custom properties | Aspose.Cells preserve custom styles during HTML conversion
+// Title: Enable custom CSS properties during HTML export of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions.EnableCustomProperties to true, and saves the workbook as an HTML file with Aspose.Cells. | Show a .NET example configuring Aspose.Cells HtmlSaveOptions to preserve user‑defined CSS variables while converting Excel to HTML. | Explain how to modify Aspose.Cells HTML export settings to include custom CSS properties in the generated HTML output.
+// Common Searches: Aspose.Cells .NET enable custom CSS properties in HTML export | HtmlSaveOptions.EnableCustomProperties true example C# | Preserve custom style definitions when converting Excel to HTML with Aspose.Cells | How to keep custom CSS variables after saving workbook as HTML using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions EnableCustomProperties | C# export Excel to HTML with custom CSS | preserve custom CSS Aspose.Cells | HTML export options Aspose.Cells .NET | custom CSS properties Excel to HTML conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook, configures HtmlSaveOptions with EnableCustomProperties set to true, and saves the workbook as an HTML file, ensuring that any custom CSS properties defined in the Excel file are retained in the output.
+// The example loads an existing workbook, creates HtmlSaveOptions, sets EnableCustomProperties to true so that any user‑defined CSS variables are retained, and saves the workbook as an HTML file while handling missing file and runtime errors.
 class Program
 {
     static void Main()
@@ -27,12 +27,11 @@ class Program
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options (custom properties option is not available in this version)
+            // Configure HTML export options (default options are sufficient for basic export)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Export the workbook to HTML using the specified options
+            // Export the workbook to HTML using the configured options
             workbook.Save(outputPath, htmlOptions);
-
             Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)

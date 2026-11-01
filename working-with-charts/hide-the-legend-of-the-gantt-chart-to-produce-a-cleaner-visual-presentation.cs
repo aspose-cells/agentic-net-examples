@@ -1,55 +1,55 @@
-// Title: Hide the legend of a Gantt chart in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, locate the Gantt chart, set ShowLegend = false, and save the file with Aspose.Cells in C#. | Programmatically remove the legend from the first chart on a worksheet using the Aspose.Cells Chart.ShowLegend property. | Update an existing Excel file to hide chart legends without recreating the chart, leveraging the Aspose.Cells .NET API.
-// Common Searches: Aspose.Cells C# hide legend on Gantt chart Excel file | remove chart legend from existing workbook using Aspose.Cells .NET | how to disable legend for first chart in worksheet with Aspose.Cells | C# Aspose.Cells set ShowLegend false for Excel chart | example code to hide Excel chart legend using Aspose.Cells library
-// Tags: Aspose.Cells chart legend removal | C# ShowLegend property usage | Excel Gantt chart styling Aspose.Cells | modify chart legend visibility Aspose.Cells | Aspose.Cells chart API hide legend
+// Title: Hide Gantt chart legend in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the Chart.ShowLegend property to false for a Gantt chart and save the workbook with Aspose.Cells. | Load an existing .xlsx file, locate the first chart, disable its legend, and write the updated file using C#. | Programmatically remove the legend from a worksheet chart without affecting other chart elements in Aspose.Cells.
+// Common Searches: C# Aspose.Cells hide legend on Gantt chart in existing Excel file | How to remove chart legend from first worksheet chart using Aspose.Cells .NET | Aspose.Cells example to disable legend for Excel Gantt chart programmatically
+// Tags: Aspose.Cells chart ShowLegend property C# | hide Gantt chart legend Aspose.Cells | modify Excel chart legend .NET | remove chart legend from .xlsx using Aspose.Cells | programmatic chart formatting Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The code loads GanttChart.xlsx, accesses the first chart on the first worksheet, disables its legend by setting ShowLegend to false, and saves the modified workbook as GanttChart_NoLegend.xlsx.
+// The sample loads an existing Excel workbook, accesses the first worksheet and its first chart (assumed to be a Gantt chart), sets ShowLegend to false to hide the legend, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "GanttChart.xlsx";
-        const string outputPath = "GanttChart_NoLegend.xlsx";
-
         try
         {
-            // Verify that the input file exists
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook that contains the Gantt chart
+            // Load the existing workbook that contains the Gantt chart
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (modify the index if the chart is on a different sheet)
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one chart on the worksheet
+            // Retrieve the Gantt chart (assumed to be the first chart in the sheet)
             if (worksheet.Charts.Count == 0)
             {
-                Console.WriteLine("No charts found on the worksheet.");
+                Console.WriteLine("Error: No charts found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first chart on the worksheet (assumed to be the Gantt chart)
             Chart ganttChart = worksheet.Charts[0];
 
-            // Hide the legend for a cleaner visual presentation
+            // Hide the legend to achieve a cleaner visual presentation
             ganttChart.ShowLegend = false;
 
-            // Save the workbook with the updated chart
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

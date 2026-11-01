@@ -1,16 +1,16 @@
-// Title: C# example: Remove Excel chart series whose maximum value is below a threshold using Aspose.Cells
-// AI Prompts: Write C# code with Aspose.Cells that iterates over a chart's NSeries, calculates each series' maximum cell value, and deletes the series if the max is less than a specified threshold. | Show how to create a column chart from a data range in Aspose.Cells and then filter out any series that do not meet a minimum value requirement. | Provide a C# snippet that loads an existing workbook, adds a chart, and programmatically removes series whose highest data point is under 50 using Aspose.Cells.
-// Common Searches: Aspose.Cells C# filter chart series by maximum cell value | Remove low-value series from an Excel column chart using Aspose.Cells | Loop through chart series in Aspose.Cells and delete those below a threshold | C# keep only chart series with values greater than 50 in an Excel workbook
-// Tags: filter chart series based on value Aspose.Cells C# | remove chart series by threshold Aspose.Cells | process NSeries Aspose.Cells | max value condition for chart series Aspose.Cells | column chart data range Aspose.Cells
+// Title: How to filter out Excel chart series that never exceed a numeric threshold using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, scans each chart series, and removes any series whose data values are all ≤ 50. | Show how to retrieve a series' data range, evaluate each cell against a threshold, and delete the series from the chart using Aspose.Cells. | Provide a complete Aspose.Cells example that filters chart series by a numeric limit and saves the modified workbook.
+// Common Searches: Aspose.Cells C# filter chart series by value threshold | remove Excel chart series that do not exceed a certain number using Aspose.Cells | iterate over NSeries in Aspose.Cells and delete series based on cell values | C# code to hide chart series with low values in an Excel file with Aspose.Cells | how to programmatically prune chart data in Aspose.Cells .NET
+// Tags: Aspose.Cells chart series filtering C# | delete low-value series Excel Aspose.Cells | NSeries iteration Aspose.Cells | threshold-based chart pruning .NET | save workbook after chart changes Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The program loads Input.xlsx, adds a column chart on the 'Data' worksheet, evaluates the maximum value of each series, removes any series whose maximum does not exceed 50, and saves the modified workbook as Output.xlsx.
-class Program
+// The example loads Input.xlsx, checks the first worksheet for a chart, iterates each series to see if any numeric cell exceeds 50, removes series that never exceed the threshold, and saves the result as Output.xlsx.
+class ChartDataFilter
 {
     static void Main()
     {
@@ -19,91 +19,75 @@ class Program
             const string inputPath = "Input.xlsx";
             const string outputPath = "Output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the worksheet that contains the source data
-            Worksheet dataSheet = workbook.Worksheets["Data"];
-            if (dataSheet == null)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("Worksheet \"Data\" not found.");
+                Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Add a column chart to the worksheet
-            int chartIdx = dataSheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = dataSheet.Charts[chartIdx];
+            // Get the first chart (adjust index if needed)
+            Chart chart = sheet.Charts[0];
 
-            // Define the data ranges
-            chart.NSeries.Add("Data!$B$2:$D$10", true);               // series values
-            chart.NSeries.CategoryData = "Data!$A$2:$A$10";          // categories
-
-            // Threshold: only series whose maximum value exceeds this will be kept
             double threshold = 50.0;
+            List<int> seriesToRemove = new List<int>();
 
-            // Iterate through the series in reverse order so we can safely remove items
-            for (int i = chart.NSeries.Count - 1; i >= 0; i--)
+            // Iterate through all series in the chart
+            for (int i = 0; i < chart.NSeries.Count; i++)
             {
-                var series = chart.NSeries[i];
+                Series series = chart.NSeries[i];
 
-                // Get the cell range that holds the series values (strip sheet name if present)
-                string seriesRange = series.Values; // e.g., "Data!$B$2:$B$10"
-                string address = seriesRange.Contains("!") ? seriesRange.Split('!')[1] : seriesRange;
+                // Address of the data range for this series (e.g., "B2:B10")
+                string valuesRangeAddress = series.Values;
 
-                AsposeRange range;
-                try
-                {
-                    range = dataSheet.Cells.CreateRange(address);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to create range \"{address}\": {ex.Message}");
-                    continue;
-                }
+                // Obtain the range object from the worksheet
+                Aspose.Cells.Range valuesRange = sheet.Cells.CreateRange(valuesRangeAddress);
 
-                // Determine the maximum value in the series
-                double maxValue = double.MinValue;
-                foreach (Cell cell in range)
+                bool exceedsThreshold = false;
+
+                // Scan each cell in the range
+                foreach (Cell cell in valuesRange)
                 {
-                    if (cell.Value is double d)
+                    if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue > threshold)
                     {
-                        if (d > maxValue) maxValue = d;
-                    }
-                    else if (cell.Value is int iVal)
-                    {
-                        double d2 = iVal;
-                        if (d2 > maxValue) maxValue = d2;
+                        exceedsThreshold = true;
+                        break; // No need to continue scanning this series
                     }
                 }
 
-                // Remove the series if its maximum does not exceed the threshold
-                if (maxValue <= threshold)
+                // Mark series for removal if it does not exceed the threshold
+                if (!exceedsThreshold)
                 {
-                    chart.NSeries.RemoveAt(i);
+                    seriesToRemove.Add(i);
                 }
             }
 
-            // Save the workbook with the filtered chart
-            try
+            // Remove unwanted series starting from the highest index
+            for (int i = seriesToRemove.Count - 1; i >= 0; i--)
             {
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                chart.NSeries.RemoveAt(seriesToRemove[i]);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

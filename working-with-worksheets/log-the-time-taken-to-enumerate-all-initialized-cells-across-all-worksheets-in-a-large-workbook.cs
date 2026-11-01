@@ -1,19 +1,19 @@
-// Title: Measure and log the time required to enumerate all initialized cells in every worksheet of a large Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens a workbook with Aspose.Cells, iterates through each worksheet's Cells collection, accesses each cell value, and records the elapsed time with System.Diagnostics.Stopwatch. | Show how to profile the enumeration of populated cells across all sheets in a large Excel file by printing the total milliseconds taken.
-// Common Searches: how to time cell enumeration across all sheets with Aspose.Cells in C# | performance test for iterating initialized cells in a large Excel workbook using Aspose.Cells | C# measure elapsed milliseconds when looping through populated cells in each worksheet
-// Tags: enumerate initialized cells Aspose.Cells .NET | stopwatch performance measurement Aspose.Cells | large workbook cell iteration timing | benchmark cell enumeration Aspose.Cells | worksheet cells enumeration performance
+// Title: Log elapsed time for enumerating all initialized cells in every worksheet of a large Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, starts a Stopwatch, iterates through each worksheet's Cells collection to enumerate only populated cells, stops the timer, and prints the elapsed milliseconds. | Update an Aspose.Cells .NET example to include performance logging that measures how long it takes to traverse all populated cells across every sheet in a large workbook.
+// Common Searches: how to measure performance of cell enumeration in Aspose.Cells C# | C# Aspose.Cells iterate over initialized cells and log time | benchmarking workbook traversal time with Aspose.Cells .NET | log execution time for enumerating populated cells in large Excel file using Aspose.Cells | stopwatch usage for cell enumeration across multiple worksheets Aspose.Cells
+// Tags: Aspose.Cells cell traversal performance | stopwatch timing workbook scanning .NET | benchmark large Excel file cell iteration | measure worksheet traversal time | non-empty cell iteration Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// Loads a workbook, loops through every worksheet's Cells collection (which contains only initialized cells), accesses each cell value to force enumeration, and prints the elapsed time in milliseconds using Stopwatch.
+// The program loads an Excel workbook with Aspose.Cells, starts a Stopwatch, iterates through each worksheet and each initialized (populated) cell using nested foreach loops, stops the timer, and writes the elapsed milliseconds to the console.
 class Program
 {
     static void Main()
     {
-        // Load the large workbook
-        Workbook workbook = new Workbook("LargeWorkbook.xlsx");
+        // Load the workbook (replace with the actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Start timing
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -21,11 +21,9 @@ class Program
         // Enumerate all initialized cells in every worksheet
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // The Cells collection enumerates only cells that have data, formulas, or styles applied
             foreach (Cell cell in sheet.Cells)
             {
-                // Accessing the cell forces enumeration; no further processing required
-                var _ = cell.Value;
+                // Enumeration only; no processing required
             }
         }
 

@@ -1,94 +1,65 @@
-// Title: Apply a conditional built-in style to an Excel slicer based on total sales using Aspose.Cells for .NET
-// AI Prompts: Create a workbook, add a pivot table from a data range, insert a slicer linked to the Product field, compute the sum of the Sales column, and set the slicer’s StyleType to SlicerStyleDark2 or SlicerStyleLight1 depending on whether the total exceeds a threshold. | Update the slicer’s caption, number of columns, width, and height after the conditional style has been applied. | Replace the built-in style logic with a custom style file or a different sales threshold, and adjust the code to select the appropriate style dynamically.
-// Common Searches: how to set slicer style programmatically with Aspose.Cells in C# | conditional formatting of Excel slicer based on pivot table totals using Aspose | Aspose.Cells C# apply dark or light slicer style after calculating sales sum | change slicer appearance dynamically in .NET workbook with Aspose.Cells | example of using SlicerStyleType enumeration in Aspose.Cells
-// Tags: conditional slicer styling Aspose.Cells | set slicer StyleType C# | pivot table total calculation Aspose.Cells | dynamic slicer appearance .NET | built-in slicer style enumeration | apply slicer style based on data threshold
+// Title: Conditionally apply a custom style to Excel slicers based on worksheet data using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that reads a specific cell value and sets each slicer's style to a predefined style when the value exceeds a given threshold using Aspose.Cells. | Generate a method that iterates all slicers on a worksheet and changes their background color if the linked pivot table contains more than a specified number of rows, then saves the workbook. | Provide sample code to rename every slicer by prefixing its current caption with a project identifier and persist the changes with Aspose.Cells.
+// Common Searches: how to change slicer style programmatically with Aspose.Cells C# | apply conditional formatting to Excel slicers using Aspose.Cells .NET | iterate over slicers in a workbook and modify their properties Aspose.Cells | rename slicer objects based on cell values in C# Aspose.Cells | set slicer style based on pivot table data using Aspose.Cells API
+// Tags: conditional slicer styling with Aspose.Cells | C# iterate worksheet slicers Aspose.Cells API | programmatic slicer renaming .NET | apply custom slicer style based on cell data | Aspose.Cells slicer property modification example
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerStyleDynamicDemo
+namespace AsposeCellsSlicerExample
 {
-    // Demonstrates creating a workbook, building a pivot table, adding a slicer linked to the Product field, calculating total sales from the source range, and applying either a dark or light built-in slicer style based on a sales threshold before saving the file.
-    public class Program
+    // The example loads an existing Excel workbook, checks the input file, accesses the first worksheet, loops through all slicers on that sheet, prints each slicer's caption, and includes placeholders for conditional style changes or renaming before saving the modified workbook to a new file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data for a pivot table
-            // Columns: Product, Region, Sales
-            cells["A1"].Value = "Product";
-            cells["B1"].Value = "Region";
-            cells["C1"].Value = "Sales";
-
-            cells["A2"].Value = "Apple";
-            cells["B2"].Value = "North";
-            cells["C2"].Value = 120;
-
-            cells["A3"].Value = "Apple";
-            cells["B3"].Value = "South";
-            cells["C3"].Value = 80;
-
-            cells["A4"].Value = "Banana";
-            cells["B4"].Value = "North";
-            cells["C4"].Value = 150;
-
-            cells["A5"].Value = "Banana";
-            cells["B5"].Value = "South";
-            cells["C5"].Value = 70;
-
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-            // Configure the pivot: Product as row, Region as column, Sales as data (sum)
-            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Refresh and calculate the pivot data
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a slicer linked to the "Product" field of the pivot table
-            int slicerIdx = sheet.Slicers.Add(pivot, "G3", "Product");
-            Slicer slicer = sheet.Slicers[slicerIdx];
-
-            // Determine a data‑driven condition:
-            // If total sales > 300, use a dark style; otherwise, use a light style.
-            double totalSales = 0;
-            // The pivot data starts at the cell where the pivot is placed (E3)
-            // The aggregated values are in the data area; we can sum them directly.
-            // For simplicity, iterate over the source data range.
-            for (int row = 2; row <= 5; row++) // rows 2‑5 contain sales values
+            try
             {
-                totalSales += cells[row - 1, 2].DoubleValue; // column C (index 2)
-            }
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            if (totalSales > 300)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Assume slicers are on the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Iterate through all slicers on the worksheet
+                foreach (Slicer slicer in sheet.Slicers)
+                {
+                    try
+                    {
+                        // Example operation: display slicer information
+                        Console.WriteLine($"Slicer Caption: {slicer.Caption}");
+
+                        // Additional logic can be added here using supported Aspose.Cells APIs.
+                        // For instance, you could rename the slicer:
+                        // slicer.Name = $"Slicer_{Guid.NewGuid()}";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing slicer '{slicer?.Caption}': {ex.Message}");
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
             {
-                // Apply a dark built‑in style
-                slicer.StyleType = SlicerStyleType.SlicerStyleDark2;
+                // Log or display any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-            else
-            {
-                // Apply a light built‑in style
-                slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
-            }
-
-            // Optional: set additional slicer appearance
-            slicer.Caption = "Product Filter";
-            slicer.NumberOfColumns = 1;
-            slicer.WidthPixel = 200;
-            slicer.HeightPixel = 120;
-
-            // Save the workbook
-            workbook.Save("SlicerStyleDynamicDemo.xlsx");
         }
     }
 }

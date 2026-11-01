@@ -1,14 +1,13 @@
-// Title: Group three WordArt shapes, lock the group, and save the worksheet as an XLSX file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that adds three WordArt shapes to a worksheet, sets each shape's font size, groups them into a GroupShape, locks the group, and saves the workbook as an XLSX file. | Explain the steps to lock a GroupShape containing WordArt objects before exporting the workbook with Aspose.Cells for .NET. | Show how to adjust WordArt positioning, apply a preset style, and protect the grouped shapes when saving an Excel file using Aspose.Cells.
-// Common Searches: Aspose.Cells C# group WordArt shapes and lock them before saving | how to lock a GroupShape with WordArt in an Excel workbook using Aspose.Cells | saving an Excel file with grouped WordArt objects as XLSX in .NET | set font size for multiple WordArt shapes with Aspose.Cells
-// Tags: group WordArt shapes Aspose.Cells .NET | lock GroupShape Aspose.Cells | save workbook as XLSX with grouped shapes | set WordArt font size Aspose.Cells | add WordArt to worksheet Aspose.Cells
+// Title: Group and lock WordArt shapes then export the worksheet to XLSX with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds three WordArt text effects, groups them into a single shape, locks the group, and saves the workbook as an XLSX file using Aspose.Cells. | Show a complete example of creating WordArt shapes, combining them into a locked group, and exporting the worksheet to an XLSX file with Aspose.Cells for .NET.
+// Common Searches: aspacells c# combine WordArt objects and prevent editing | export Excel file with locked shape collection using Aspose.Cells | add text effect WordArt to worksheet and protect it in C# | C# Aspose.Cells example for grouping and locking shapes before saving
+// Tags: WordArt shape grouping Aspose.Cells | locking shape groups in Excel C# | saving workbook as XLSX with Aspose.Cells | adding text effect shapes programmatically | protecting grouped shapes Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, inserts three WordArt shapes with distinct preset styles and positions, sets each shape's font size, groups them into a single GroupShape, locks the group to prevent editing, and saves the workbook as 'GroupedWordArt.xlsx' in XLSX format.
+// The sample creates a workbook, inserts three WordArt text‑effect shapes, groups them, locks the group to prevent editing, and saves the worksheet as GroupedWordArt.xlsx.
 class Program
 {
     static void Main()
@@ -16,61 +15,50 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Add three WordArt shapes with different positions and texts (using positional arguments)
-            Shape wordArt1 = sheet.Shapes.AddWordArt(
-                (PresetWordArtStyle)0,               // First preset style
-                "First WordArt",
-                2,    // upperLeftRow
-                2,    // upperLeftColumn
-                20,   // top (or row offset depending on API version)
-                20,   // left (or column offset depending on API version)
-                100,  // height
-                200); // width
+            // Add three WordArt shapes to the worksheet.
+            // The AddTextEffect method requires width and height parameters after the cell range.
+            var shape1 = worksheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1, // preset effect
+                "Hello",                         // text
+                "Arial",                         // font name
+                36,                              // font size
+                false,                           // bold
+                false,                           // italic
+                2, 2, 5, 5,                      // upper-left row/col, lower-right row/col
+                200, 50);                        // width, height (in points)
 
-            Shape wordArt2 = sheet.Shapes.AddWordArt(
-                (PresetWordArtStyle)1,               // Second preset style
-                "Second WordArt",
-                5,    // upperLeftRow
-                5,    // upperLeftColumn
-                120,  // top / row offset
-                20,   // left / column offset
-                100,
-                200);
+            var shape2 = worksheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect2,
+                "World",
+                "Calibri",
+                36,
+                false,
+                false,
+                6, 2, 9, 5,
+                200, 50);
 
-            Shape wordArt3 = sheet.Shapes.AddWordArt(
-                (PresetWordArtStyle)2,               // Third preset style
-                "Third WordArt",
-                8,    // upperLeftRow
-                8,    // upperLeftColumn
-                220,  // top / row offset
-                20,   // left / column offset
-                100,
-                200);
-
-            // Set font size for each WordArt
-            wordArt1.Font.Size = 24;
-            wordArt2.Font.Size = 24;
-            wordArt3.Font.Size = 24;
+            var shape3 = worksheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect3,
+                "Aspose",
+                "Times New Roman",
+                36,
+                false,
+                false,
+                10, 2, 13, 5,
+                200, 50);
 
             // Group the three WordArt shapes
-            Shape[] shapesToGroup = { wordArt1, wordArt2, wordArt3 };
-            GroupShape group = sheet.Shapes.Group(shapesToGroup);
+            Shape[] shapesToGroup = new Shape[] { shape1, shape2, shape3 };
+            var groupShape = worksheet.Shapes.Group(shapesToGroup);
 
-            // Save the workbook as an XLSX file
-            const string outputPath = "GroupedWordArt.xlsx";
+            // Lock the group to prevent editing
+            groupShape.IsLocked = true;
 
-            // Ensure the output directory exists (if any)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Export the worksheet as an XLSX file
+            workbook.Save("GroupedWordArt.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

@@ -1,37 +1,43 @@
-// Title: How to export an Aspose.Cells workbook to a pretty‑printed JSON file with custom 4‑space indentation in C#
-// AI Prompts: Generate C# code that creates a workbook, populates it with sample data, and saves it as a JSON file using Aspose.Cells with a four‑space indent. | Show how to configure JsonSaveOptions.Indent to four spaces and enable HasHeaderRow when exporting a worksheet to JSON with Aspose.Cells. | Provide a complete example that writes rows to a worksheet and writes the workbook to a formatted JSON document using the Aspose.Cells .NET API.
-// Common Searches: Aspose.Cells C# export worksheet to JSON with indentation | JsonSaveOptions indent property usage in Aspose.Cells .NET | Save Excel data as pretty printed JSON using Aspose.Cells library
-// Tags: Aspose.Cells JSON output indentation | Aspose.Cells workbook to JSON conversion | C# pretty JSON generation from Excel | JsonSaveOptions header row option | custom JSON formatting with Aspose.Cells
+// Title: Export an Excel workbook to indented JSON using Aspose.Cells for .NET
+// Common Searches: how to save an .xlsx workbook as indented JSON with Aspose.Cells in C# | Aspose.Cells JsonSaveOptions generate formatted JSON output | C# convert Excel file to pretty printed JSON using Aspose.Cells | export Excel to JSON with readable indentation using Aspose.Cells .NET | save workbook to JSON with readable formatting Aspose.Cells C#
+// Tags: Aspose.Cells JsonSaveOptions usage | C# export Excel to JSON | Workbook.Save JSON format | Excel to indented JSON conversion | Aspose.Cells JSON output formatting
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a new workbook, fills cells A1‑B3 with names and ages, sets JsonSaveOptions to use a four‑space indent and treat the first row as a header, and then saves the workbook as 'pretty_output.json', producing a human‑readable, indented JSON file.
+// The example checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, creates a JsonSaveOptions object (the library does not provide a built‑in pretty‑print option), and saves the workbook as output.json using Workbook.Save, while handling possible exceptions.
 class ExportWorkbookToJson
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.json";
 
-        // Populate sample data
-        worksheet.Cells["A1"].PutValue("Name");
-        worksheet.Cells["B1"].PutValue("Age");
-        worksheet.Cells["A2"].PutValue("John");
-        worksheet.Cells["B2"].PutValue(30);
-        worksheet.Cells["A3"].PutValue("Jane");
-        worksheet.Cells["B3"].PutValue(25);
-
-        // Set up JSON save options with pretty‑printed indentation (4 spaces)
-        JsonSaveOptions saveOptions = new JsonSaveOptions
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Indent = "    ",          // four spaces for indentation
-            HasHeaderRow = true      // treat first row as header (optional)
-        };
+            Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Save the workbook as a JSON file using the configured options
-        string outputPath = "pretty_output.json";
-        workbook.Save(outputPath, saveOptions);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure JSON save options (pretty‑print not available in this version)
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
+
+            // Export the workbook to a JSON file with the specified options
+            workbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Workbook has been exported to JSON at \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

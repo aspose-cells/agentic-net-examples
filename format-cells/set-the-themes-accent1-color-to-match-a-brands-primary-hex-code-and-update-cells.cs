@@ -1,14 +1,13 @@
-// Title: How to set the Accent1 theme color to a brand hex value and style a cell range in Aspose.Cells for .NET
-// AI Prompts: Set the workbook's Accent1 theme color to a specific hex code and apply that color as background and font to cells A1:B2 using Aspose.Cells in C#. | Create a custom style from a brand hex color, assign it to ThemeColorType.Accent1, and apply only shading and font color to a defined range with StyleFlag in a .NET workbook.
-// Common Searches: Aspose.Cells C# change theme Accent1 color to hex | apply brand color to specific cells using Aspose.Cells .NET | set workbook theme color programmatically Aspose.Cells | use StyleFlag to apply only background and font color in Aspose.Cells | convert hex string to System.Drawing.Color for Aspose.Cells styling
-// Tags: set theme accent1 color Aspose.Cells C# | apply brand hex color to cell range Aspose.Cells | create custom style with foreground color Aspose.Cells | use StyleFlag shading fontcolor Aspose.Cells | save workbook after theme update Aspose.Cells
+// Title: How to apply a brand’s primary hex color to an Excel cell’s foreground using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set cell foreground color from HTML hex value | Convert hex color string to System.Drawing.Color for Excel styling with Aspose.Cells | Apply solid fill pattern with custom color to a cell using Aspose.Cells .NET | Write text and style a cell with brand color in a new workbook using Aspose.Cells | Save workbook after applying custom cell style with brand primary color in C#
+// Tags: custom cell color Aspose.Cells | hex to System.Drawing.Color conversion C# | solid fill pattern Aspose.Cells style | brand-themed cell styling .NET | create workbook apply cell style Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a new workbook, converts a brand hex string to a System.Drawing.Color, sets ThemeColorType.Accent1 to that color, builds a style using the same color for background and font, applies the style to range A1:B2 with shading and font color flags, and saves the workbook as output.xlsx.
-class ThemeAccentUpdater
+// The example creates a new workbook, converts a brand's primary hex code to a System.Drawing.Color, writes text to cell A1, applies a style with the converted color as the foreground and a solid fill pattern, and saves the workbook as an .xlsx file.
+class Program
 {
     static void Main()
     {
@@ -17,38 +16,27 @@ class ThemeAccentUpdater
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Brand primary color in hex
-            string brandHex = "#1A73E8";
+            // Brand's primary color in hex
+            string brandPrimaryHex = "#1A73E8"; // replace with actual brand hex code
 
-            // Convert hex to Color
-            Color brandColor = ColorTranslator.FromHtml(brandHex);
-
-            // Set the theme's Accent1 color to the brand color
-            // Use SetThemeColor because Theme property may be a string in some versions
-            workbook.SetThemeColor(ThemeColorType.Accent1, brandColor);
+            // Convert the hex color to a System.Drawing.Color
+            Color brandPrimaryColor = ColorTranslator.FromHtml(brandPrimaryHex);
 
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style that uses the brand color for background and font
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = brandColor;
-            style.Pattern = BackgroundType.Solid;
-            style.Font.Color = brandColor;
+            // Example: update cell A1 with some text
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Brand Primary Color");
 
-            // Define which cells to update (e.g., A1:B2)
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:B2");
-
-            // Apply the style to the range (only shading and font color flags are set)
-            StyleFlag flag = new StyleFlag
-            {
-                CellShading = true,
-                FontColor = true
-            };
-            range.ApplyStyle(style, flag);
+            // Apply a style that uses the brand's primary color for the foreground
+            Style style = cell.GetStyle();
+            style.ForegroundColor = brandPrimaryColor;          // set foreground color directly
+            style.Pattern = BackgroundType.Solid;               // solid fill to show the color
+            cell.SetStyle(style);
 
             // Save the workbook
-            string outputPath = "output.xlsx";
+            string outputPath = "BrandStyledWorkbook.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }

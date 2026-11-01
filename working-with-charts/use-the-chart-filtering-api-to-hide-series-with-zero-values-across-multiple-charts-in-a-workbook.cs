@@ -1,101 +1,102 @@
-// Title: Hide chart series that contain only zero values across all worksheets using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to walk through every chart in a workbook and set Series.IsFiltered = true when the series' data range consists exclusively of zeros. | Demonstrate how to apply the Aspose.Cells chart filtering API to automatically conceal zero‑value series in multiple worksheets.
-// Common Searches: Aspose.Cells hide chart series with all zeros in C# | how to filter out zero‑value series in Excel charts using Aspose.Cells | iterate over all charts in a workbook and hide empty series Aspose.Cells | set Series.IsFiltered programmatically for zero data series in .NET
-// Tags: chart series zero-value filtering Aspose.Cells | use Aspose.Cells API to hide series | iterate workbook charts C# | hide empty data series Excel | evaluate chart series data range Aspose.Cells
+// Title: Use Aspose.Cells for .NET to hide or delete chart series that contain only zero values across all worksheets in an Excel workbook
+// AI Prompts: Generate C# code that iterates through every worksheet and chart, checks each series' data range, and removes the series if all cells are zero using Aspose.Cells. | Show how to create a method that evaluates a chart series' value range for numeric and string cells and filters out zero‑only series from multiple charts in a .NET application. | Provide a snippet that uses the Aspose.Cells chart filtering API to clean up Excel charts by deleting empty or zero‑valued series before saving the workbook.
+// Common Searches: aspnet remove zero-valued series from Excel charts using Aspose.Cells | c# iterate all charts in workbook and delete series with all zeros | how to hide chart series with only zero data in multiple worksheets Aspose.Cells | filter out empty series from Excel chart programmatically .NET | Aspose.Cells chart series cleanup based on data values
+// Tags: Aspose.Cells chart series zero-value removal | filter zero-valued series .NET Excel | iterate worksheets chart cleanup Aspose.Cells | chart series value range evaluation Aspose.Cells | remove empty series from Excel charts C#
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.IO;
 
-// The example loads an Excel workbook, loops through each worksheet and its charts, checks every series' value range, marks the series as filtered when all cells are zero or empty, and saves the updated workbook.
-class HideZeroSeries
+// The example loads an Excel workbook, walks through each worksheet and its charts, examines the data range of every series, determines if all numeric or parsable string cells are zero, removes such series from the chart, and saves the cleaned workbook.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
-            // Verify input file exists
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook that contains the charts
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate through each worksheet
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                // Iterate through all charts on the worksheet
-                foreach (Chart chart in sheet.Charts)
+                // Iterate through each chart on the worksheet
+                foreach (Chart chart in worksheet.Charts)
                 {
-                    // Process each series in the chart
-                    for (int i = 0; i < chart.NSeries.Count; i++)
+                    // Process series in reverse order so we can safely remove them
+                    for (int s = chart.NSeries.Count - 1; s >= 0; s--)
                     {
-                        Series series = chart.NSeries[i];
+                        Series series = chart.NSeries[s];
 
-                        // Get the range string that contains the series values (e.g., "Sheet1!$B$2:$B$5")
-                        string valuesRange = series.Values;
-                        if (string.IsNullOrEmpty(valuesRange))
-                            continue; // No values defined for this series
+                        // Get the address of the range that provides the series values
+                        string valueRange = series.Values;
 
-                        // Create a Range object from the values string
-                        AsposeRange range = sheet.Cells.CreateRange(valuesRange);
+                        // Skip series without a value range
+                        if (string.IsNullOrEmpty(valueRange))
+                            continue;
 
+                        // Create a Range object for the series values (the chart resides on this worksheet)
+                        Aspose.Cells.Range range = worksheet.Cells.CreateRange(valueRange);
+
+                        // Determine whether all numeric cells in the range are zero
                         bool allZero = true;
-
-                        // Examine each cell in the range
                         foreach (Cell cell in range)
                         {
-                            object valObj = cell.Value;
-                            if (valObj == null)
-                                continue; // Treat empty cells as zero
-
-                            // Try to parse the cell value as a double
-                            if (double.TryParse(valObj.ToString(), out double d))
+                            if (cell.Type == CellValueType.IsNumeric)
                             {
-                                if (d != 0.0)
+                                if (cell.DoubleValue != 0)
                                 {
                                     allZero = false;
-                                    break; // Found a non‑zero value
+                                    break;
                                 }
                             }
-                            else
+                            else if (cell.Type == CellValueType.IsString)
                             {
-                                // Non‑numeric value – treat as non‑zero
-                                allZero = false;
-                                break;
+                                if (double.TryParse(cell.StringValue, out double d))
+                                {
+                                    if (d != 0)
+                                    {
+                                        allZero = false;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    // Non‑numeric string means the series is not all zero
+                                    allZero = false;
+                                    break;
+                                }
                             }
+                            // Blank or other cell types are treated as zero
                         }
 
-                        // Hide the series if all its values are zero
+                        // Remove the series if every value is zero
                         if (allZero)
                         {
-                            series.IsFiltered = true; // Hides the series in the chart
+                            chart.NSeries.RemoveAt(s);
                         }
                     }
                 }
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
+            // Save the workbook with the filtered charts
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

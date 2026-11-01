@@ -1,77 +1,63 @@
-// Title: Add a custom PDF attachment containing a summary report to a workbook PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a PDF from an existing Excel file and attach a separate summary PDF created from workbook data with Aspose.Cells in C#. | Create a temporary workbook, export it to PDF in a memory stream, and embed that PDF as a custom attachment when saving the main workbook as PDF. | Demonstrate using the Aspose.Cells.Pdf assembly to include an additional PDF file as an attachment in the exported workbook PDF.
-// Common Searches: asp.net convert Excel to PDF and add extra PDF attachment with Aspose.Cells | c# generate summary PDF from workbook and embed it in exported PDF using Aspose | how to use Aspose.Cells.Pdf to attach additional PDF files during Excel to PDF conversion | save workbook as PDF with embedded summary document using Aspose.Cells .NET
-// Tags: Aspose.Cells PDF attachment API | create summary PDF from workbook C# | embed additional PDF in exported workbook | use Aspose.Cells.Pdf assembly | memory stream PDF export Aspose.Cells
+// Title: Create a PDF summary from Excel data and embed it as an OLE object using Aspose.Cells for .NET
+// Common Searches: how to generate a PDF report from worksheet data and embed it in an Excel file using Aspose.Cells C# | Aspose.Cells C# add PDF as OLE object to existing .xlsx workbook | embed custom PDF attachment into Excel workbook programmatically with Aspose.Cells .NET | save PDF bytes as OLE object in Excel using Aspose.Cells API | calculate column total and attach summary PDF to workbook with Aspose.Cells
+// Tags: PDF generation from Excel data Aspose.Cells | OLE object insertion of PDF in .xlsx | Workbook.Save with embedded PDF Aspose.Cells | OleObjects.Add method for PDF attachment | column sum calculation and PDF summary Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, builds a temporary workbook with a simple summary, saves that summary as a PDF in a memory stream, and then saves the original workbook as a PDF while attaching the generated summary PDF using the Aspose.Cells.Pdf assembly.
-class WorkbookWithPdfAttachment
+// The example loads an existing workbook, computes the sum of the first column, creates a one‑cell PDF containing a summary report with that total, converts the PDF to a byte array, embeds it as an OLE object on the first worksheet, and saves the workbook with the PDF attachment.
+class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "InputWorkbook.xlsx";
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook_WithPdfAttachment.xlsx";
 
-            // Verify that the input workbook exists
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            var workbook = new Workbook(inputPath);
+            var sheet = workbook.Worksheets[0];
+            var cells = sheet.Cells;
 
-            // ------------------------------------------------------------
-            // Generate a summary PDF using a temporary workbook
-            // ------------------------------------------------------------
-            using (MemoryStream summaryPdfStream = new MemoryStream())
+            // Calculate total of the first column (skip header row)
+            int lastRow = cells.MaxDataRow;
+            double total = 0;
+            for (int row = 1; row <= lastRow; row++)
             {
-                try
-                {
-                    Workbook summaryWb = new Workbook();
-                    Worksheet ws = summaryWb.Worksheets[0];
-
-                    ws.Cells["A1"].PutValue("Summary Report");
-                    ws.Cells["A2"].PutValue("Total Sheets: " + workbook.Worksheets.Count);
-                    ws.Cells["A3"].PutValue("Created on: " + DateTime.Now);
-
-                    // Save the summary workbook as PDF into the memory stream
-                    summaryWb.Save(summaryPdfStream, SaveFormat.Pdf);
-                    summaryPdfStream.Position = 0; // Reset for reading
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to generate summary PDF: " + ex.Message);
-                    return;
-                }
-
-                // ------------------------------------------------------------
-                // Save the original workbook as PDF.
-                // Note: Custom PDF attachments require Aspose.Cells.Pdf assembly,
-                // which may not be available in the current environment.
-                // Therefore, we save the workbook without attachments.
-                // ------------------------------------------------------------
-                try
-                {
-                    workbook.Save("WorkbookWithAttachment.pdf", SaveFormat.Pdf);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to save workbook as PDF: " + ex.Message);
-                    return;
-                }
+                total += cells[row, 0].DoubleValue;
             }
 
-            Console.WriteLine("Workbook saved as PDF successfully.");
+            // Generate a PDF containing the summary using Aspose.Cells
+            var pdfWorkbook = new Workbook();
+            var pdfSheet = pdfWorkbook.Worksheets[0];
+            pdfSheet.Cells[0, 0].PutValue($"Summary Report\r\nTotal of Column A: {total}");
+
+            byte[] pdfBytes;
+            using (var ms = new MemoryStream())
+            {
+                pdfWorkbook.Save(ms, SaveFormat.Pdf);
+                pdfBytes = ms.ToArray();
+            }
+
+            // Embed the PDF as an OLE object in the original worksheet
+            sheet.OleObjects.Add(0, 0, 100, 100, pdfBytes, "Summary.pdf");
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

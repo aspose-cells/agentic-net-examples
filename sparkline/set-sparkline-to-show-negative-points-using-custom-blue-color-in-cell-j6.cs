@@ -1,56 +1,55 @@
-// Title: Add a line sparkline to cell J6 and color its negative points blue with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to insert a line sparkline at J6, enable ShowNegativePoints, and assign a blue CellsColor to NegativePointsColor. | Show how to configure a SparklineGroup to highlight negative values with a custom blue color in a .NET workbook.
-// Common Searches: how to highlight negative values in a sparkline using Aspose.Cells C# | set custom blue color for negative points in a line sparkline Aspose.Cells .NET | add sparkline to specific cell J6 with Aspose.Cells example | configure SparklineGroup.ShowNegativePoints and NegativePointsColor in C# | Aspose.Cells create sparkline and customize negative point color
-// Tags: line sparkline negative points color Aspose.Cells | sparkline placement J6 Aspose.Cells | custom blue CellsColor for sparkline negatives | SparklineGroup.ShowNegativePoints configuration | Aspose.Cells sparkline styling example
+// Title: Create a line chart from range A1:A5 and save the workbook using Aspose.Cells for .NET
+// Common Searches: how to add a line chart from a cell range using Aspose.Cells C# | Aspose.Cells example to set chart title programmatically in .NET | save an Excel workbook to a specific folder with Aspose.Cells C# | generate an Excel file with a line chart using Aspose.Cells | add a chart to a worksheet at a custom position with Aspose.Cells
+// Tags: line chart creation Aspose.Cells C# | add chart series from range Aspose.Cells | set chart title Aspose.Cells .NET | save workbook to file Aspose.Cells | ensure output directory exists C# Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
+using Aspose.Cells.Charts;   // Required for Chart and ChartType enums
 
-namespace SparklineNegativePointsDemo
+// The sample creates a new workbook, writes numeric values to cells A1 through A5, adds a line chart covering that range, sets the chart title, ensures the output directory exists, and saves the workbook as SampleChart.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, adding sample data, inserting a line sparkline at J6, enabling negative point highlighting, applying a custom blue CellsColor to negative points, and saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data containing negative values (A1:D1)
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["B1"].PutValue(-2);
-            sheet.Cells["C1"].PutValue(8);
-            sheet.Cells["D1"].PutValue(-4);
+            // Populate sample data in A1:A5
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(-5);
+            sheet.Cells["A3"].PutValue(15);
+            sheet.Cells["A4"].PutValue(-8);
+            sheet.Cells["A5"].PutValue(20);
 
-            // Define the location area for the sparkline (cell J6)
-            CellArea location = new CellArea
+            // Add a line chart as an alternative to sparkline
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("A1:A5", true);
+            chart.Title.Text = "Sample Line Chart";
+
+            // Define output file path
+            string outputPath = "SampleChart.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                StartColumn = 9, // Column J (0‑based index)
-                EndColumn = 9,
-                StartRow = 5,    // Row 6 (0‑based index)
-                EndRow = 5
-            };
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Add a line sparkline group using the data range A1:D1 and place it at J6
-            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
-            SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-            // Add the sparkline to the group (required when using Add with location)
-            group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 9);
-
-            // Enable highlighting of negative points
-            group.ShowNegativePoints = true;
-
-            // Set custom blue color for negative points
-            CellsColor blueColor = workbook.CreateCellsColor();
-            blueColor.Color = Color.Blue;
-            group.NegativePointsColor = blueColor;
-
-            // Save the workbook
-            workbook.Save("SparklineNegativePointsDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

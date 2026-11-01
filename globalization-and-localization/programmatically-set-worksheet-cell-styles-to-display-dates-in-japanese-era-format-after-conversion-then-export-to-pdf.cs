@@ -1,38 +1,58 @@
-// Title: Create a Japanese era date style for Excel cells and save the worksheet as a PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that defines a custom number format using "ggge\"年\"m\"月\"d\"日\"" to display dates in the Japanese era, applies the style to a specific cell, and saves the workbook as a PDF. | Show how to use Aspose.Cells Style and StyleFlag objects to apply only the number format for a date cell, then export the worksheet to a PDF file. | Provide a step‑by‑step example that creates a workbook, inserts the current DateTime into cell A1, formats it with the Reiwa era pattern, and writes the result to JapaneseEraDate.pdf.
-// Common Searches: aspnet format excel cell with japanese era (ggge) and export to pdf | c# aspose.cells custom number format for reiwa era date | how to apply japanese era date style to a worksheet cell using asp.net | save excel workbook as pdf while preserving localized date formats in asp.net | asp.net set styleflag numberformat true for date cell in aspose.cells
-// Tags: Japanese era custom number format Aspose.Cells | apply styleflag numberformat to date cell C# | export workbook to pdf with localized date format | ggge date pattern Aspose.Cells | create style for era name in Aspose.Cells
+// Title: Format worksheet cells with Japanese era dates and export the workbook to PDF using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set Japanese era (ggge) custom number format for date cells | How to apply ja-JP locale date style to a range and save as PDF in Aspose.Cells | Export Excel dates in Reiwa/Heisei era to PDF with Aspose.Cells .NET | Apply StyleFlag number format only to date cells before PDF conversion using Aspose.Cells
+// Tags: ggge custom number format c# | styleflag numberformat only range | culture aware date cell style | pdf export after cell formatting | aspocells era date conversion
 
 using System;
 using Aspose.Cells;
 
-// The sample creates a new workbook, writes the current date into cell A1, defines a custom style with the Japanese era format "ggge\"年\"m\"月\"d\"日\"", applies the style using a StyleFlag that targets only the number format, and saves the workbook as JapaneseEraDate.pdf.
+// The example creates a workbook, writes several DateTime values, defines a style with a Japanese era custom number format using the ja-JP locale (ggge"年"m"月"d"日"), applies the style to the date range via a StyleFlag that targets only the number format, and then saves the workbook as a PDF.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Dates";
 
-        // Set a date value in cell A1 (example: today)
-        Cell dateCell = sheet.Cells["A1"];
-        dateCell.PutValue(DateTime.Now);
+            // Sample dates to demonstrate Japanese era formatting
+            DateTime[] dates = new DateTime[]
+            {
+                new DateTime(2023, 5, 1),   // Reiwa 5
+                new DateTime(1995, 12, 15),// Heisei 7
+                new DateTime(1989, 1, 8),  // Showa 64 (last day)
+                new DateTime(1989, 1, 9)   // Heisei 1 (first day)
+            };
 
-        // Create a style for Japanese era date format
-        Style eraStyle = workbook.CreateStyle();
-        // Custom number format: era name (gg), era year (e), month (m), day (d)
-        // Example output: "令和3年9月10日"
-        eraStyle.Custom = "ggge\"年\"m\"月\"d\"日\"";
+            // Write dates into column A (cells A1:A4)
+            for (int i = 0; i < dates.Length; i++)
+            {
+                Cell cell = sheet.Cells[i, 0];
+                cell.PutValue(dates[i]);
+            }
 
-        // Apply the style to the cell
-        StyleFlag flag = new StyleFlag();
-        flag.NumberFormat = true; // Apply only number format
-        dateCell.SetStyle(eraStyle, flag);
+            // Create a style with Japanese era custom number format
+            Style eraStyle = workbook.CreateStyle();
+            // Custom format: era name (gg), era year (e), followed by Japanese characters for year, month, day
+            // Locale identifier for Japanese (Japan) is 0x0411 (ja-JP)
+            eraStyle.Custom = "[$-ja-JP]ggge\"年\"m\"月\"d\"日\"";
 
-        // Export the worksheet to PDF
-        workbook.Save("JapaneseEraDate.pdf", SaveFormat.Pdf);
+            // Apply the style to the range containing the dates
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true; // Apply only the number format part of the style
+            Aspose.Cells.Range dateRange = sheet.Cells.CreateRange(0, 0, dates.Length, 1);
+            dateRange.ApplyStyle(eraStyle, flag);
+
+            // Save the workbook as PDF
+            workbook.Save("JapaneseEraDates.pdf", SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,30 +1,51 @@
-// Title: Convert numeric strings to true numbers only on the first worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel file with Aspose.Cells, call Cells.ConvertStringToNumericValue on the first worksheet, and save the workbook without altering other sheets. | Use the ConvertStringToNumericValue method on Worksheet[0] to transform string representations of numbers into numeric cells while keeping remaining worksheets intact. | Demonstrate how to apply numeric string conversion to a single sheet in a multi‑sheet workbook and write the result to a new file with Aspose.Cells C#.
-// Common Searches: Aspose.Cells C# convert string numbers to numeric on first sheet only | How to use ConvertStringToNumericValue for a specific worksheet in a workbook | Preserve other worksheets while converting numeric strings in Aspose.Cells | C# example converting numeric strings in sheet index 0 with Aspose.Cells | Apply numeric conversion to one worksheet and save workbook Aspose.Cells
-// Tags: Aspose.Cells ConvertStringToNumericValue first worksheet | numeric string conversion C# Aspose.Cells | preserve other sheets during numeric conversion Aspose | load and save workbook after numeric conversion Aspose.Cells | single sheet numeric conversion Excel Aspose.Cells
+// Title: Convert string‑formatted numbers to numeric values only in the first worksheet using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook, iterate the used range of the first worksheet, and replace any cell that holds a numeric string with a double value via Aspose.Cells. | Process only the first sheet of a workbook, detect string cells that can be parsed as numbers, convert them to numeric type, and save the file while leaving all other worksheets untouched.
+// Common Searches: Aspose.Cells C# convert numeric text to numbers in first worksheet only | How to change string numbers to numeric values on the first sheet with Aspose.Cells .NET | Iterate used range of first worksheet and replace text numbers with doubles in C#
+// Tags: convert string to numeric Aspose.Cells | first worksheet only processing | replace string cell with double | iterate used range cells Aspose.Cells | preserve other worksheets Aspose.Cells
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsStringToNumericDemo
+// The example loads an Excel file, scans the used range of the first worksheet, converts cells containing numeric text strings to double values, saves the workbook, and ensures all other worksheets remain unchanged.
+class ConvertStringNumbersInFirstSheet
 {
-    // Loads an Excel workbook, applies Cells.ConvertStringToNumericValue to the first worksheet to turn numeric strings into real numbers, leaves all other worksheets unchanged, and saves the result to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook (replace with your actual input file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (index 0)
+        Worksheet firstSheet = workbook.Worksheets[0];
+        Cells cells = firstSheet.Cells;
+
+        // Determine the used range to limit iteration
+        int maxRow = cells.MaxDataRow;
+        int maxCol = cells.MaxDataColumn;
+
+        // Iterate through each cell in the used range
+        for (int row = 0; row <= maxRow; row++)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            for (int col = 0; col <= maxCol; col++)
+            {
+                Cell cell = cells[row, col];
 
-            // Access the first worksheet (index 0)
-            Worksheet firstSheet = workbook.Worksheets[0];
+                // Process only cells that currently contain a string
+                if (cell.Type == CellValueType.IsString)
+                {
+                    string text = cell.StringValue;
 
-            // Convert all string values that can be interpreted as numbers to numeric values
-            // This operation is performed only on the first worksheet
-            firstSheet.Cells.ConvertStringToNumericValue();
-
-            // Save the workbook to a new file (replace with desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+                    // Try to parse the string as a double using invariant culture
+                    if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out double numericValue))
+                    {
+                        // Replace the string with the numeric value
+                        cell.PutValue(numericValue);
+                    }
+                }
+            }
         }
+
+        // Save the modified workbook (replace with your desired output file path)
+        workbook.Save("output.xlsx");
     }
 }

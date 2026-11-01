@@ -1,81 +1,85 @@
-// Title: Batch convert XLS workbooks to HTML with grid lines only on worksheets that contain tables using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that scans a folder for .xls files, loads each workbook with Aspose.Cells, sets IsGridlinesVisible on worksheets that have ListObjects, enables ExportGridLines, and saves each workbook as an HTML file. | Create a C# utility that performs bulk XLS‑to‑HTML conversion, applying grid‑line visibility conditionally based on the presence of tables in each worksheet.
-// Common Searches: how to export grid lines only for worksheets that contain tables using Aspose.Cells C# | batch convert multiple .xls files to html with conditional gridlines in .NET | detect ListObjects in a worksheet before saving as HTML with Aspose.Cells | C# Aspose.Cells hide gridlines on sheets without tables during HTML export | convert folder of Excel .xls to HTML preserving table formatting Aspose.Cells
-// Tags: batch xls to html conversion Aspose.Cells | conditional gridlines per worksheet Aspose.Cells | detect listobjects worksheet Aspose.Cells | htmlsaveoptions exportgridlines true | isgridlinesvisible per sheet C#
+// Title: Batch convert multiple XLS workbooks to HTML with grid lines only on worksheets that contain tables using Aspose.Cells for .NET
+// Common Searches: c# aspnet convert all xls files in a folder to html with aspose.cells | how to export gridlines only for sheets that have tables when saving workbook as html using aspose.cells | batch processing excel to html with conditional gridline visibility in c# | aspose.cells htmlsaveoptions exportimagesasbase64 example c#
+// Tags: batch xls to html conversion aspose.cells | conditional worksheet gridlines aspose.cells | detect tables listobjects aspose.cells | htmlsaveoptions embed images base64 c# | c# iterate workbooks save as html aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program iterates over all .xls files in a specified input directory, loads each workbook with Aspose.Cells, toggles IsGridlinesVisible on worksheets that contain ListObjects, configures HtmlSaveOptions to export grid lines, and saves each workbook as an .html file in an output folder, handling missing files and exceptions.
-class BatchXlsToHtmlConverter
+namespace BatchXlsToHtml
 {
-    static void Main()
+    // The C# program scans a specified input directory for .xls files, loads each workbook with Aspose.Cells, and configures HtmlSaveOptions to embed images as Base64. It iterates through every worksheet, checks the ListObjects collection to determine if a table exists, and sets IsGridlinesVisible accordingly—enabling grid lines only on sheets that contain tables. Each workbook is then saved as an HTML file with the same base name in an output folder, with comprehensive error handling and console logging for batch processing.
+    class Program
     {
-        // Folder containing the source XLS files
-        string inputFolder = @"C:\InputXls";
-        // Folder where the HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input folder not found: {inputFolder}");
-            return;
-        }
+            // Folder containing the source XLS files
+            string sourceFolder = @"C:\InputXls";
+            // Folder where the HTML files will be saved
+            string outputFolder = @"C:\OutputHtml";
 
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Get all XLS files in the input folder
-        string[] xlsFiles = Directory.GetFiles(inputFolder, "*.xls");
-
-        foreach (string xlsPath in xlsFiles)
-        {
-            // Verify the file still exists before processing
-            if (!File.Exists(xlsPath))
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                Console.WriteLine($"File not found (skipped): {xlsPath}");
-                continue;
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
             }
 
-            try
+            // Ensure output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Get all .xls files in the source folder (including .xlsx if needed)
+            string[] xlsFiles = Directory.GetFiles(sourceFolder, "*.xls", SearchOption.TopDirectoryOnly);
+
+            foreach (string xlsPath in xlsFiles)
             {
-                // Load the workbook from the XLS file
-                Workbook workbook = new Workbook(xlsPath);
-
-                // Iterate through each worksheet in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Guard against missing files (should not happen with GetFiles, but added for safety)
+                if (!File.Exists(xlsPath))
                 {
-                    // Determine if the worksheet contains any tables (ListObjects)
-                    bool containsTable = sheet.ListObjects.Count > 0;
-
-                    // Apply grid line visibility only when a table exists
-                    // ExportGridLines is a global option, so we control per‑sheet visibility via IsGridlinesVisible
-                    sheet.IsGridlinesVisible = containsTable;
+                    Console.WriteLine($"File not found: {xlsPath}");
+                    continue;
                 }
 
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                try
                 {
-                    // Enable grid line export globally; per‑sheet visibility is handled above
-                    ExportGridLines = true
-                };
+                    // Load the workbook
+                    Workbook workbook = new Workbook(xlsPath);
 
-                // Build the output HTML file path
-                string htmlFileName = Path.GetFileNameWithoutExtension(xlsPath) + ".html";
-                string htmlPath = Path.Combine(outputFolder, htmlFileName);
+                    // Prepare HTML save options
+                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                    {
+                        // Export grid lines globally; per‑worksheet visibility will be controlled via IsGridlinesVisible
+                        ExportGridLines = true,
+                        // Embed images as base64 to avoid external files
+                        ExportImagesAsBase64 = true
+                        // Note: SingleFile option is not available in this version of Aspose.Cells
+                    };
 
-                // Save the workbook as HTML
-                workbook.Save(htmlPath, htmlOptions);
-                Console.WriteLine($"Converted: {Path.GetFileName(xlsPath)} -> {htmlFileName}");
+                    // Iterate through each worksheet to set grid line visibility based on presence of tables
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // A worksheet contains tables if its ListObjects collection has any items
+                        bool hasTable = sheet.ListObjects.Count > 0;
+
+                        // Enable grid lines only for worksheets that contain tables
+                        sheet.IsGridlinesVisible = hasTable;
+                    }
+
+                    // Determine output HTML file name (same base name as the XLS file)
+                    string htmlFileName = Path.GetFileNameWithoutExtension(xlsPath) + ".html";
+                    string htmlPath = Path.Combine(outputFolder, htmlFileName);
+
+                    // Save the workbook as HTML using the configured options
+                    workbook.Save(htmlPath, htmlOptions);
+                    Console.WriteLine($"Converted: {xlsPath} -> {htmlPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{xlsPath}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{xlsPath}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch conversion completed.");
         }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

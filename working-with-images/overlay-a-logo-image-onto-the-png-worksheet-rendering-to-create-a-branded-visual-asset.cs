@@ -1,57 +1,57 @@
-// Title: Overlay a PNG logo onto the first worksheet and export it as a branded PNG image using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook, inserts a PNG logo at the calculated bottom‑right cell, and saves the sheet as a single PNG with 96 dpi using Aspose.Cells. | Write a script that checks for the workbook and logo files, adds the logo picture to the worksheet, configures ImageOrPrintOptions for PNG output, and renders the worksheet to a branded image.
-// Common Searches: Aspose.Cells C# add picture to worksheet before rendering to PNG | how to place a logo in the bottom right corner of an Excel sheet and export as PNG using Aspose.Cells | render Excel worksheet as a single PNG image with custom logo Aspose.Cells .NET
-// Tags: insert image into Excel worksheet Aspose.Cells | export worksheet as PNG with Aspose.Cells | configure ImageOrPrintOptions 96dpi | place logo at bottom right cell | render single-page PNG from Excel
+// Title: Add a PNG logo to an Excel worksheet and export the sheet as a branded PNG image using Aspose.Cells for .NET
+// AI Prompts: Insert a logo.png picture at cell A1 of the first worksheet and render the sheet to output.png with Aspose.Cells. | Place a PNG watermark in the top‑left corner of a worksheet, then generate a PNG snapshot of the sheet using ImageOrPrintOptions. | Implement graceful handling for missing logo files while adding a picture to a worksheet before exporting it as a PNG image.
+// Common Searches: Aspose.Cells C# add picture to worksheet before rendering to PNG | How to embed a logo in an Excel sheet image using Aspose.Cells .NET | Render Excel worksheet as PNG with custom picture overlay Aspose.Cells | C# Aspose.Cells picture insertion error handling when file not found
+// Tags: worksheet picture insertion Aspose.Cells | worksheet PNG rendering Aspose.Cells | logo overlay Excel Aspose.Cells | handling missing picture file Aspose.Cells | ImageOrPrintOptions PNG output Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// The program loads an Excel workbook, verifies the logo file, inserts a PNG logo at the bottom‑right corner of the first worksheet, configures ImageOrPrintOptions for 96 dpi PNG output, and renders the sheet to a single branded PNG image.
+// The example loads 'input.xlsx', adds 'logo.png' to the first worksheet at the top‑left corner, and renders the worksheet to 'output.png' as a PNG image using Aspose.Cells, with basic error handling for missing files.
 class Program
 {
     static void Main()
     {
-        // Input workbook and logo file paths
-        string workbookPath = "input.xlsx";
-        string logoPath = "logo.png";
-
-        // Output path for the branded PNG image
-        string outputPath = "branded_output.png";
-
         try
         {
-            // Verify required files exist
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
-            if (!File.Exists(logoPath))
-                throw new FileNotFoundException($"Logo file not found: {logoPath}");
+            const string inputPath = "input.xlsx";
+            const string logoPath = "logo.png";
+            const string outputPath = "output.png";
+
+            // Verify input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-            Worksheet sheet = workbook.Worksheets[0]; // use the first worksheet
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine approximate position for the logo (bottom‑right corner)
-            int lastRow = sheet.Cells.MaxDataRow + 5;
-            int lastColumn = sheet.Cells.MaxDataColumn + 5;
-
-            // Add the logo picture to the worksheet; size is set automatically
-            sheet.Pictures.Add(lastRow, lastColumn, logoPath);
-
-            // Configure rendering options for PNG output
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            // Add logo picture if the file exists
+            if (File.Exists(logoPath))
             {
-                OnePagePerSheet = true,    // render the whole sheet as a single image
-                HorizontalResolution = 96,
-                VerticalResolution = 96
-                // Default image format is PNG; no need to set explicitly
-            };
+                try
+                {
+                    // Adds the picture at the top‑left corner (adjust positioning as needed)
+                    sheet.Pictures.Add(0, 0, logoPath);
+                }
+                catch (Exception picEx)
+                {
+                    Console.WriteLine($"Failed to add logo picture: {picEx.Message}");
+                }
+            }
 
-            // Render the worksheet directly to a PNG file
-            SheetRender sheetRender = new SheetRender(sheet, renderOptions);
+            // Set rendering options (default format inferred from output file extension)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+
+            // Render the worksheet to a PNG file
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
             sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Branded image saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {

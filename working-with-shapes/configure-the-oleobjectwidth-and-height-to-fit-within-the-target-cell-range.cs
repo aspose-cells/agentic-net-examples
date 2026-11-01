@@ -1,86 +1,86 @@
-// Title: Resize an OleObject to exactly fit the B2:D5 cell range using Aspose.Cells for .NET (C#)
-// AI Prompts: Calculate the pixel width and height of a specified Excel cell range and assign those values to OleObject.Width and OleObject.Height so the embedded Word document fills the range. | Add a Word document as an OLE object at cell B2 and programmatically adjust its size to match the combined column widths and row heights of cells B2 through D5 with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# set OleObject dimensions to match a cell range | how to compute pixel size from Excel column width and row height for OLE objects | fit embedded Word document to specific cells using Aspose.Cells .NET | resize OleObject to cover B2:D5 range programmatically | convert Excel column width to pixels Aspose.Cells example
-// Tags: oleobject size adjustment based on cell range | pixel dimension calculation from column width Aspose.Cells | embed word document as oleobject in worksheet c# | set oleobject width and height programmatically | fit oleobject to specific excel range asp.net
+// Title: Resize an OleObject to match a cell range size with Aspose.Cells for .NET
+// Common Searches: how to programmatically set OleObject width and height based on a worksheet range in Aspose.Cells C# | Aspose.Cells calculate pixel width of B2:D5 range for OLE object sizing | C# resize embedded OLE object to fit specific cells using Aspose.Cells | adjust OleObject dimensions to match cell range dimensions in .NET workbook | determine total pixel size of a cell range for OleObject scaling with Aspose.Cells
+// Tags: OleObject resize based on cell range Aspose.Cells | calculate range pixel dimensions C# | set OleObject width height programmatically | fit embedded OLE object within worksheet cells | Aspose.Cells adjust OLE object size .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
+using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-namespace Example
+// The example loads or creates a workbook, defines a target range (e.g., B2:D5), computes the total pixel width and height of that range, and then sets the first OleObject's Width and Height properties to those values before saving the file.
+class Program
 {
-    // The example creates a workbook, computes the total column width and row height of the B2:D5 range in pixels, loads a Word file, adds it as an OLE object at the start cell, sets OleObject.Width and OleObject.Height to the calculated pixel values, and saves the worksheet as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Console.WriteLine($"Input file not found. Created a new workbook.");
+            }
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the target cell range for the OLE object
+            string targetRange = "B2:D5";
+            AsposeRange range = sheet.Cells.CreateRange(targetRange);
+
+            // Calculate total width of the range in pixels
+            double totalWidth = 0;
+            int firstCol = range.FirstColumn;
+            int lastCol = range.FirstColumn + range.ColumnCount - 1;
+            for (int col = firstCol; col <= lastCol; col++)
+            {
+                totalWidth += sheet.Cells.GetColumnWidthPixel(col);
+            }
+
+            // Calculate total height of the range in pixels
+            double totalHeight = 0;
+            int firstRow = range.FirstRow;
+            int lastRow = range.FirstRow + range.RowCount - 1;
+            for (int row = firstRow; row <= lastRow; row++)
+            {
+                totalHeight += sheet.Cells.GetRowHeightPixel(row);
+            }
+
+            // Adjust the first OLE object's size if it exists
+            if (sheet.OleObjects.Count > 0)
+            {
+                OleObject ole = sheet.OleObjects[0];
+                ole.Width = (int)totalWidth;   // OleObject.Width expects int
+                ole.Height = (int)totalHeight; // OleObject.Height expects int
+            }
+            else
+            {
+                Console.WriteLine("No OLE objects found on the worksheet.");
+            }
+
+            // Save the modified workbook
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Define the target cell range (e.g., B2:D5)
-                string startCellName = "B2";
-                string endCellName = "D5";
-
-                Cell startCell = sheet.Cells[startCellName];
-                Cell endCell = sheet.Cells[endCellName];
-
-                int startRow = startCell.Row;
-                int endRow = endCell.Row;
-                int startCol = startCell.Column;
-                int endCol = endCell.Column;
-
-                // Calculate total column width in characters for the range
-                double totalColumnWidth = 0;
-                for (int col = startCol; col <= endCol; col++)
-                {
-                    totalColumnWidth += sheet.Cells.GetColumnWidth(col);
-                }
-                // Approximate conversion: 1 character width ≈ 7 pixels
-                int widthInPixels = (int)Math.Round(totalColumnWidth * 7);
-
-                // Calculate total row height in points for the range
-                double totalRowHeight = 0;
-                for (int row = startRow; row <= endRow; row++)
-                {
-                    totalRowHeight += sheet.Cells.GetRowHeight(row);
-                }
-                // Approximate conversion: 1 point ≈ 1.33 pixels
-                int heightInPixels = (int)Math.Round(totalRowHeight * 1.33);
-
-                // Load OLE object data (sample.docx) if the file exists
-                string oleFilePath = "sample.docx";
-                byte[] oleData;
-                if (File.Exists(oleFilePath))
-                {
-                    oleData = File.ReadAllBytes(oleFilePath);
-                }
-                else
-                {
-                    Console.WriteLine($"File '{oleFilePath}' not found. OLE object will be empty.");
-                    oleData = new byte[0];
-                }
-
-                // Add an OLE object (Word document) to the worksheet
-                // Note: overload expects data first, then the ProgID
-                int oleIndex = sheet.OleObjects.Add(startRow, startCol, heightInPixels, widthInPixels, oleData, "Word.Document");
-
-                // Configure the OLE object's size to fit the target cell range
-                OleObject ole = sheet.OleObjects[oleIndex];
-                ole.Width = widthInPixels;
-                ole.Height = heightInPixels;
-
-                // Save the workbook
-                workbook.Save("output.xlsx");
-                Console.WriteLine("Workbook saved as output.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

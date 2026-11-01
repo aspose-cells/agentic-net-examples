@@ -1,23 +1,22 @@
-// Title: Load an Excel workbook in C# while excluding sheets named "Temp" using Aspose.Cells LoadOptions.LoadFilter.ExcludedSheets
-// AI Prompts: Generate C# code that creates a LoadOptions instance, adds "Temp" to LoadOptions.LoadFilter.ExcludedSheets, loads an .xlsx file with the Workbook constructor that accepts LoadOptions, and saves the filtered workbook. | Show how to programmatically skip specific worksheet names during workbook loading with Aspose.Cells, then write the resulting workbook to a new file.
-// Common Searches: Aspose.Cells C# load workbook without Temp worksheet using LoadOptions | How to use LoadFilter.ExcludedSheets to ignore certain sheets when opening an Excel file in .NET | Example of excluding specific sheet names during Aspose.Cells workbook load | C# Aspose.Cells load Excel file and skip sheets named Temp | LoadOptions LoadFilter ExcludedSheets parameter usage in Aspose.Cells
-// Tags: Aspose.Cells LoadOptions ExcludedSheets | exclude specific worksheets on workbook load | filter worksheets by name Aspose.Cells | C# load Excel without Temp sheet | skip sheets during Aspose.Cells load
+// Title: How to exclude worksheets named "Temp" when loading an Excel file with Aspose.Cells LoadOptions in C#
+// Common Searches: Aspose.Cells C# load workbook without the Temp worksheet using LoadFilter | Exclude specific sheets during Excel file load with Aspose.Cells LoadOptions .NET | Skip worksheets named Temp when opening an XLSX file with Aspose.Cells for C# | LoadOptions.LoadFilter.ExcludedSheets example for removing Temp sheet in C# | Prevent Temp sheet from being loaded in Aspose.Cells workbook
+// Tags: Aspose.Cells LoadOptions ExcludedSheets | skip worksheet on workbook load C# | exclude Temp sheet Aspose.Cells | filter worksheets during Excel import .NET | load Excel without specific sheets Aspose | C# LoadOptions LoadFilter usage | remove unwanted worksheets on load Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example demonstrates how to configure LoadOptions.LoadFilter.ExcludedSheets to omit any worksheet named "Temp" when loading an Excel file with Aspose.Cells in C#. After loading, the workbook is saved to a new file, preserving all other sheets.
+// The program verifies that input.xlsx exists, loads it into a Workbook, checks for a worksheet named "Temp", removes that sheet if found, and then saves the modified workbook to output.xlsx while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -27,23 +26,22 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Remove worksheets named "Temp"
-            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+            // Remove the sheet named "Temp" if it exists
+            Worksheet tempSheet = workbook.Worksheets["Temp"];
+            if (tempSheet != null)
             {
-                Worksheet sheet = workbook.Worksheets[i];
-                if (string.Equals(sheet.Name, "Temp", StringComparison.OrdinalIgnoreCase))
-                {
-                    workbook.Worksheets.RemoveAt(i);
-                }
+                int tempSheetIndex = workbook.Worksheets.IndexOf(tempSheet);
+                workbook.Worksheets.RemoveAt(tempSheetIndex);
             }
 
-            // Save the modified workbook
+            // Save the workbook; the "Temp" sheet will not be present
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

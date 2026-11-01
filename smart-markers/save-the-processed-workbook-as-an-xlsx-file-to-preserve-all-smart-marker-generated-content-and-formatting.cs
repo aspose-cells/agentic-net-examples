@@ -1,45 +1,38 @@
-// Title: Save a workbook with processed smart markers to XLSX while retaining all generated data and formatting using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that builds a workbook, places smart markers, assigns a List<Person> as the data source, executes WorkbookDesigner.Process, and writes the result to an XLSX file while keeping all cell formatting. | Show the steps to export the output of Aspose.Cells smart marker processing to an .xlsx document without losing any generated values or visual formatting in a .NET project.
-// Common Searches: how to retain smart marker generated values when saving to .xlsx using Aspose.Cells in C# | C# Aspose.Cells save workbook after smart marker processing with original formatting | example code for exporting processed smart markers to an Excel file without formatting loss | Aspose.Cells WorkbookDesigner Process save as XLSX preserving styles
-// Tags: Aspose.Cells WorkbookDesigner Process to XLSX | smart markers export with formatting | C# save processed workbook as XLSX | preserve generated smart marker content | binding collection to smart markers Aspose.Cells
+// Title: Use Aspose.Cells WorkbookDesigner in C# to process smart markers and save the workbook as XLSX with formatting preserved
+// AI Prompts: Write C# code that loads an Excel file containing smart markers, binds a DataSet to WorkbookDesigner, processes the markers, and saves the result as an XLSX file while keeping all formatting intact. | Show how to populate a DataSet with employee data, apply it to smart markers using Aspose.Cells WorkbookDesigner, and export the processed workbook to a new .xlsx file.
+// Common Searches: Aspose.Cells C# bind DataSet to smart markers and export to xlsx | preserve formatting when saving processed smart markers with WorkbookDesigner | C# example for processing smart markers and saving workbook as XLSX using Aspose.Cells | save smart marker populated Excel file as .xlsx with Aspose.Cells .NET | WorkbookDesigner process smart markers and keep generated content in output.xlsx
+// Tags: WorkbookDesigner process smart markers | save workbook as XLSX Aspose.Cells | bind DataSet to smart markers C# | preserve formatting Aspose.Cells XLSX export | smart markers data source Aspose.Cells
 
 using System;
-using System.Collections;
+using System.Data;
 using Aspose.Cells;
 
-// The program creates a workbook, defines smart markers, binds a list of Person objects as the data source, processes the markers with WorkbookDesigner, and saves the resulting workbook as an XLSX file, preserving all generated content and cell formatting.
+// The sample loads an input.xlsx workbook that contains smart markers, creates a DataSet with an Employees table, assigns the DataSet to WorkbookDesigner, processes the smart markers, and saves the resulting workbook as output.xlsx in XLSX format, preserving all generated content and formatting.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (template)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook that contains smart markers.
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Define smart markers in the worksheet
-        sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Age");
-        sheet.Cells["A2"].PutValue("&=$Name");
-        sheet.Cells["B2"].PutValue("&=$Age");
+        // Prepare the data source for the smart markers.
+        // In a real scenario, populate the DataSet with the actual data.
+        DataSet dataSet = new DataSet();
 
-        // Prepare a data source for the smart markers
-        ArrayList persons = new ArrayList();
-        persons.Add(new Person { Name = "John Doe", Age = 30 });
-        persons.Add(new Person { Name = "Jane Smith", Age = 25 });
+        DataTable employees = new DataTable("Employees");
+        employees.Columns.Add("Name", typeof(string));
+        employees.Columns.Add("Age", typeof(int));
 
-        // Set the data source and process the smart markers
+        employees.Rows.Add("John Doe", 30);
+        employees.Rows.Add("Jane Smith", 28);
+        dataSet.Tables.Add(employees);
+
+        // Process the smart markers using WorkbookDesigner.
         WorkbookDesigner designer = new WorkbookDesigner(workbook);
-        designer.SetDataSource("Data", persons);
+        designer.SetDataSource(dataSet);
         designer.Process();
 
-        // Save the processed workbook as XLSX, preserving all generated content and formatting
-        workbook.Save("SmartMarkersResult.xlsx", SaveFormat.Xlsx);
-    }
-
-    // Simple POCO class used as a data source
-    public class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        // Save the processed workbook as XLSX, preserving all generated content and formatting.
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

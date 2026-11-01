@@ -1,12 +1,12 @@
-// Title: How to set A3 paper size on the second worksheet of an XLSX file and export the workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an existing XLSX workbook, changes the page setup of the second worksheet to A3 paper size, and saves the entire workbook as a PDF with Aspose.Cells. | Show a step‑by‑step example of adjusting the paper size of a specific worksheet before converting the workbook to PDF in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set A3 paper size on second sheet before PDF conversion | How to change page setup of a particular worksheet in Aspose.Cells | Convert XLSX to PDF with A3 paper size using Aspose.Cells .NET | Set custom paper size for a worksheet when saving workbook as PDF in C#
-// Tags: worksheet page setup paper size Aspose.Cells | second worksheet A3 paper size C# | export workbook to PDF custom paper size Aspose.Cells | C# Aspose.Cells set paper size for specific sheet | save XLSX as PDF with A3 layout Aspose.Cells
+// Title: Set A3 paper size on the second worksheet of an XLSX file and export it to PDF with Aspose.Cells for .NET
+// AI Prompts: Load an existing XLSX workbook, change the PaperSize of the second worksheet to A3, and save the result as a PDF using Aspose.Cells in C#. | Adjust the page setup of a specific worksheet to A3 and then convert the workbook to PDF format with Aspose.Cells for .NET. | Use Aspose.Cells to apply an A3 paper size to worksheet index 1 before generating a PDF file.
+// Common Searches: Aspose.Cells C# set paper size for worksheet index 1 | Convert second sheet of Excel to PDF with A3 page size using Aspose.Cells | How to change page setup of a specific worksheet before PDF export in Aspose.Cells .NET | C# Aspose.Cells export selected worksheet to PDF with custom paper size | Aspose.Cells set A3 page size on worksheet and save as PDF
+// Tags: set worksheet paper size Aspose.Cells | export specific worksheet to PDF C# | A3 page setup Aspose.Cells | convert XLSX to PDF custom page size | modify page setup before PDF conversion Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads 'input.xlsx', sets the page setup of the second worksheet to A3 paper size, and saves the workbook as 'output.pdf' using Aspose.Cells for .NET.
+// The example loads 'input.xlsx', sets the PaperSize of the second worksheet (index 1) to A3, and saves the workbook as 'output.pdf' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -14,10 +14,8 @@ class Program
         // Load the existing XLSX file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the second worksheet (index 1)
+        // Access the second worksheet (index 1) and set its paper size to A3
         Worksheet sheet = workbook.Worksheets[1];
-
-        // Set the paper size to A3 for the worksheet
         sheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
 
         // Save the workbook as a PDF file

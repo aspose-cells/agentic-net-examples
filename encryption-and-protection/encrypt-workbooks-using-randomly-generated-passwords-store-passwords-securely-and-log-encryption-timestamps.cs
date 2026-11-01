@@ -1,115 +1,185 @@
-// Title: Encrypt an Excel workbook with a randomly generated password using Aspose.Cells for .NET, store the password with a timestamp, and log the encryption time
-// AI Prompts: Write a C# method that generates a cryptographically strong random password, assigns it to Workbook.Settings.Password, and saves the workbook as a password‑protected XLSX file using Aspose.Cells. | Create a routine that appends the generated password together with the current UTC timestamp to a secure text file and records the encryption event with a timestamp in a separate log, handling any I/O exceptions gracefully.
-// Common Searches: Aspose.Cells .NET generate random password for workbook protection | how to save a password‑protected Excel file and keep a password log in C# | store workbook passwords with timestamps using C# | log encryption timestamp for an Aspose.Cells workbook | C# encrypt Excel file with random password and record operation time
-// Tags: Aspose.Cells workbook password generation | Workbook.Settings.Password usage | password archive with UTC timestamp | encryption event logging for Excel | C# cryptographic password generator for XLSX
+// Title: Encrypt an Excel workbook with a random password using Aspose.Cells for .NET, securely store the password, and log the encryption timestamp
+// Common Searches: C# Aspose.Cells encrypt workbook with random password and save as Xlsx | How to generate a strong random password for Excel file protection using Aspose.Cells .NET | Store generated workbook passwords securely in a file with Aspose.Cells example | Log encryption timestamp and password hash when protecting an Excel workbook in C# | Aspose.Cells encrypt Excel workbook and maintain password log for audit
+// Tags: Aspose.Cells random password workbook encryption | secure password storage for encrypted Excel files .NET | encryption timestamp logging Aspose.Cells | cryptographically strong password generation C# | save encrypted workbook as Xlsx using Aspose.Cells
 
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
+using System.Security.Cryptography;
+using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The example loads or creates an Excel workbook, generates a 12‑character cryptographically random password, applies it via Workbook.Settings.Password, saves the workbook as a protected XLSX file, appends the password with a UTC timestamp to a password archive, and writes an encryption timestamp to a log file, all with robust error handling for file operations.
-class WorkbookEncryption
+namespace WorkbookEncryptionDemo
 {
-    static void Main()
+    // Helper class for password generation, secure storage and logging
+    // The sample loads an Excel file with Aspose.Cells, generates a cryptographically random password, applies it via Workbook.Settings.Password, saves the workbook as an encrypted Xlsx, stores the password in a simple encoded file, and appends a log entry with the UTC timestamp and SHA‑256 hash of the password.
+    public static class EncryptionHelper
     {
-        // Paths for input workbook, encrypted output, password store, and log file
-        string inputPath = "input.xlsx";
-        string encryptedPath = "encrypted.xlsx";
-        string passwordStorePath = "passwords.dat";
-        string logPath = "encryption.log";
+        // Path to the file that stores encrypted passwords (simple key‑value store)
+        private static readonly string PasswordStorePath = "encrypted_passwords.dat";
 
-        try
+        // Path to the encryption log file
+        private static readonly string LogFilePath = "encryption_log.txt";
+
+        // In‑memory cache of file‑to‑encrypted‑password mappings
+        private static readonly Dictionary<string, byte[]> PasswordCache = LoadPasswordCache();
+
+        // Generate a random password of the specified length (default 12 characters)
+        public static string GenerateRandomPassword(int length = 12)
         {
-            // Ensure input workbook exists; create a simple one if missing
-            if (!File.Exists(inputPath))
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+            var password = new StringBuilder();
+            using (var rng = RandomNumberGenerator.Create())
             {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                tempWb.Save(inputPath, SaveFormat.Xlsx);
+                byte[] uintBuffer = new byte[4];
+                while (password.Length < length)
+                {
+                    rng.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    password.Append(validChars[(int)(num % (uint)validChars.Length)]);
+                }
             }
-
-            // Load the workbook
-            Workbook wb = new Workbook(inputPath);
-
-            // Generate a random password
-            string password = GenerateRandomPassword(12);
-
-            // Apply password protection to the workbook
-            wb.Settings.Password = password;
-            wb.Save(encryptedPath, SaveFormat.Xlsx); // Save encrypted workbook
-
-            // Store the password securely (plain text with timestamp for simplicity)
-            StorePasswordSecurely(password, passwordStorePath);
-
-            // Log the encryption timestamp
-            LogEncryption(encryptedPath, logPath);
+            return password.ToString();
         }
-        catch (Exception ex)
+
+        // Store the password for a given workbook file name (simple reversible encoding for demo)
+        public static void StorePassword(string workbookFileName, string password)
         {
-            // Log any unexpected errors
+            // Encode password bytes (replace with real DPAPI or other secure method in production)
+            byte[] encoded = Encoding.UTF8.GetBytes(password);
+            PasswordCache[workbookFileName] = encoded;
+            SavePasswordCache();
+        }
+
+        // Retrieve a stored password (if needed)
+        public static string RetrievePassword(string workbookFileName)
+        {
+            if (PasswordCache.TryGetValue(workbookFileName, out byte[] encoded))
+            {
+                return Encoding.UTF8.GetString(encoded);
+            }
+            return null;
+        }
+
+        // Log the encryption event with timestamp
+        public static void LogEncryption(string workbookFileName, string password)
+        {
+            string logEntry = $"{DateTime.UtcNow:O}\t{workbookFileName}\tPasswordHash:{ComputeHash(password)}";
             try
             {
-                File.AppendAllText(logPath, $"{DateTime.Now:O} - Error: {ex.Message}{Environment.NewLine}");
+                File.AppendAllText(LogFilePath, logEntry + Environment.NewLine);
             }
             catch
             {
-                // Suppress any logging failures
+                // Swallow logging errors to avoid breaking the main flow
             }
         }
-    }
 
-    // Generates a random alphanumeric password of specified length
-    static string GenerateRandomPassword(int length)
-    {
-        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-        var sb = new StringBuilder();
-        using (var rng = RandomNumberGenerator.Create())
+        // Compute a SHA‑256 hash of the password for logging (do not store plain text)
+        private static string ComputeHash(string input)
         {
-            byte[] buffer = new byte[4];
-            while (sb.Length < length)
+            using (var sha = SHA256.Create())
             {
-                rng.GetBytes(buffer);
-                uint num = BitConverter.ToUInt32(buffer, 0);
-                sb.Append(chars[(int)(num % (uint)chars.Length)]);
+                byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }
-        return sb.ToString();
-    }
 
-    // Stores the password with a UTC timestamp (plain text for demonstration)
-    static void StorePasswordSecurely(string password, string storePath)
-    {
-        try
+        // Load existing encrypted passwords from disk (if file exists)
+        private static Dictionary<string, byte[]> LoadPasswordCache()
         {
-            using (var fs = new FileStream(storePath, FileMode.Append, FileAccess.Write, FileShare.None))
-            using (var writer = new StreamWriter(fs, Encoding.UTF8))
+            var dict = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
+            if (File.Exists(PasswordStorePath))
             {
-                // Write UTC timestamp and password separated by a delimiter
-                string entry = $"{DateTime.UtcNow:O}|{password}";
-                writer.WriteLine(entry);
+                foreach (var line in File.ReadAllLines(PasswordStorePath))
+                {
+                    // Each line format: filename|base64(encodedPassword)
+                    var parts = line.Split('|');
+                    if (parts.Length == 2)
+                    {
+                        string fileName = parts[0];
+                        byte[] encoded = Convert.FromBase64String(parts[1]);
+                        dict[fileName] = encoded;
+                    }
+                }
             }
+            return dict;
         }
-        catch (Exception ex)
+
+        // Persist the in‑memory password cache to disk
+        private static void SavePasswordCache()
         {
-            // Optionally handle storage errors (e.g., log to console)
-            Console.Error.WriteLine($"Failed to store password: {ex.Message}");
+            var sb = new StringBuilder();
+            foreach (var kvp in PasswordCache)
+            {
+                sb.AppendLine($"{kvp.Key}|{Convert.ToBase64String(kvp.Value)}");
+            }
+            try
+            {
+                File.WriteAllText(PasswordStorePath, sb.ToString());
+            }
+            catch
+            {
+                // Swallow persistence errors; in production handle appropriately
+            }
         }
     }
 
-    // Appends an entry with the current timestamp to a log file
-    static void LogEncryption(string workbookPath, string logPath)
+    public class WorkbookEncryptor
     {
-        try
+        // Encrypts the workbook at inputPath, saves to outputPath, stores password securely and logs the operation
+        public static void EncryptWorkbook(string inputPath, string outputPath)
         {
-            string entry = $"{DateTime.Now:O} - Encrypted workbook: {workbookPath}";
-            File.AppendAllText(logPath, entry + Environment.NewLine);
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+
+            try
+            {
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Generate a random password
+                string password = EncryptionHelper.GenerateRandomPassword();
+
+                // Apply password protection using WorkbookSettings
+                workbook.Settings.Password = password;
+
+                // Save the encrypted workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                // Store the password securely
+                EncryptionHelper.StorePassword(Path.GetFileName(outputPath), password);
+
+                // Log the encryption timestamp and password hash
+                EncryptionHelper.LogEncryption(Path.GetFileName(outputPath), password);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error encrypting workbook: {ex.Message}");
+                throw;
+            }
         }
-        catch (Exception ex)
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Optionally handle logging errors
-            Console.Error.WriteLine($"Failed to write log: {ex.Message}");
+            // Paths can be adjusted as needed
+            string sourceFile = "Sample.xlsx";
+            string encryptedFile = "Sample_Encrypted.xlsx";
+
+            try
+            {
+                WorkbookEncryptor.EncryptWorkbook(sourceFile, encryptedFile);
+                Console.WriteLine("Workbook encrypted successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Operation failed: {ex.Message}");
+            }
         }
     }
 }

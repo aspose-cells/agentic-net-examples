@@ -1,23 +1,22 @@
-// Title: Replace negative numbers with zero in the 'ProfitMargins' named range using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, locate the named range "ProfitMargins", and set any numeric cell whose value is less than 0 to 0 with Aspose.Cells in C#. | Iterate through all cells of a named range, clamp negative numeric values to zero, and save the modified workbook using Aspose.Cells for .NET.
-// Common Searches: C# Aspose.Cells how to set negative values to zero in a specific named range | replace values less than zero in Excel named range using Aspose.Cells .NET | iterate over cells in a named range and modify numeric values with Aspose.Cells C# | Aspose.Cells example correcting negative numbers in ProfitMargins range
-// Tags: Aspose.Cells set negative cells to zero | C# named range value clamping Aspose.Cells | ProfitMargins range numeric correction Aspose.Cells | Excel workbook modify cells Aspose.Cells C# | iterate over Aspose.Cells range cells
+// Title: How to set negative numbers to zero in the "ProfitMargins" named range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# replace negative values with zero in a specific named range | set cells less than 0 to 0 in Excel named range using Aspose.Cells .NET | iterate over ProfitMargins named range and modify numeric cells with Aspose.Cells | C# code to sanitize negative profit margins in an Excel workbook via Aspose.Cells | Aspose.Cells workbook save after correcting negative numbers in a named range
+// Tags: zero out negative numbers in named range Aspose.Cells | cell value correction below zero C# Aspose.Cells | iterate over named range cells Aspose.Cells .NET | numeric cell processing in Excel workbook Aspose.Cells | ProfitMargins range adjustment Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program loads 'input.xlsx', retrieves the named range 'ProfitMargins', changes any numeric cell values below zero to zero, and saves the updated workbook as 'output.xlsx' using Aspose.Cells for .NET.
+// The example loads an Excel workbook, accesses the "ProfitMargins" named range, iterates through its cells, replaces any numeric value less than zero with zero, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,46 +27,48 @@ class Program
             Workbook workbook = new Workbook(inputPath);
 
             // Retrieve the named range "ProfitMargins"
-            // Use the Names collection to get the named range (compatible with all versions)
-            Name profitMargins = workbook.Worksheets.Names["ProfitMargins"];
-            if (profitMargins == null)
+            Aspose.Cells.Range profitMarginsRange = workbook.Worksheets.GetRangeByName("ProfitMargins");
+            if (profitMarginsRange == null)
             {
                 Console.WriteLine("Named range 'ProfitMargins' not found.");
                 return;
             }
 
-            // Get the actual cell range represented by the named range
-            Aspose.Cells.Range range = profitMargins.GetRange();
+            // Get the worksheet that contains the range
+            Worksheet ws = profitMarginsRange.Worksheet;
 
             // Iterate through each cell in the range
-            foreach (Cell cell in range)
+            for (int r = 0; r < profitMarginsRange.RowCount; r++)
             {
-                // Process only numeric cells
-                if (cell.Type == CellValueType.IsNumeric)
+                for (int c = 0; c < profitMarginsRange.ColumnCount; c++)
                 {
-                    double value = cell.DoubleValue;
-                    // Replace negative values with zero
-                    if (value < 0)
+                    // Calculate absolute row/column indices
+                    int rowIndex = profitMarginsRange.FirstRow + r;
+                    int colIndex = profitMarginsRange.FirstColumn + c;
+
+                    Cell cell = ws.Cells[rowIndex, colIndex];
+
+                    // Process only numeric cells
+                    if (cell.Type == CellValueType.IsNumeric)
                     {
-                        cell.PutValue(0);
+                        double value = cell.DoubleValue;
+
+                        // Replace negative values with zero
+                        if (value < 0)
+                        {
+                            cell.PutValue(0);
+                        }
                     }
                 }
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,79 +1,61 @@
-// Title: Set custom minimum and maximum Y‑axis values for a column chart using Aspose.Cells in C#
-// AI Prompts: Write C# code that creates a workbook, adds a column chart, and turns off automatic Y‑axis range calculation using Aspose.Cells. | Show how to assign specific MinValue, MaxValue, and MajorUnit to the chart's ValueAxis in Aspose.Cells for .NET. | Provide a complete example that configures a fixed Y‑axis range and saves the workbook as an XLSX file.
-// Common Searches: Aspose.Cells C# set Y axis min value for column chart | disable automatic Y axis scaling Aspose.Cells .NET example | how to specify custom major unit on chart value axis using Aspose.Cells | fixed Y axis range for Excel chart generated with Aspose.Cells | set minimum and maximum values for chart axis programmatically in C#
-// Tags: value axis manual limits Aspose.Cells | chart major unit configuration .NET | column chart Y axis customization C# | Aspose.Cells axis scaling control | Excel chart axis settings Aspose.Cells
+// Title: Set custom minimum and maximum values for a chart Y‑axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart from worksheet data and configure the value axis with MinValue = 0, MaxValue = 100, and MajorUnit = 20 using Aspose.Cells in C#. | Adjust an existing Aspose.Cells chart to enforce specific Y‑axis scaling by setting the axis minimum, maximum, and major tick interval programmatically. | Generate a workbook, populate sample data, add a column chart, and programmatically set the Y‑axis range and tick spacing with Aspose.Cells for .NET.
+// Common Searches: how to set y axis minimum and maximum in Aspose.Cells chart c# | Aspose.Cells chart value axis scaling example | C# Aspose.Cells set major unit for chart axis | custom y axis range for column chart using Aspose.Cells .NET | control chart y axis range programmatically Aspose.Cells
+// Tags: Aspose.Cells chart y-axis min max | set chart value axis range .NET | column chart axis scaling Aspose.Cells | major unit configuration Aspose.Cells | Excel workbook y-axis scaling C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The program creates a workbook, adds sample data, inserts a column chart, and customizes the chart's Y‑axis by setting MinValue to 0, MaxValue to 100, and MajorUnit to 20 before saving the file as ChartWithCustomYAxis.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, adding a column chart with sample data, disabling automatic Y‑axis scaling, setting explicit MinValue, MaxValue, and MajorUnit on the ValueAxis, and saving the result as YAxisMinMaxDemo.xlsx.
-    public class SetYAxisMinMaxDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(20);
+            sheet.Cells["B3"].PutValue(55);
+            sheet.Cells["B4"].PutValue(80);
 
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(30);
-                worksheet.Cells["B4"].PutValue(50);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
+            // Set the data source for the chart series
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+            // Access the value (Y) axis
+            Axis valueAxis = chart.ValueAxis;
 
-                // Access the Y‑axis (value axis)
-                Axis valueAxis = chart.ValueAxis;
+            // Define minimum and maximum values for the Y‑axis
+            valueAxis.MinValue = 0;    // Minimum value
+            valueAxis.MaxValue = 100;  // Maximum value
 
-                // Disable automatic min/max calculation
-                valueAxis.IsAutomaticMinValue = false;
-                valueAxis.IsAutomaticMaxValue = false;
+            // Optional: set major unit for better tick spacing
+            valueAxis.MajorUnit = 20;
 
-                // Define custom minimum and maximum values
-                valueAxis.MinValue = 5;   // Minimum Y‑axis value
-                valueAxis.MaxValue = 60;  // Maximum Y‑axis value
-
-                // Optionally set a major unit for clearer tick spacing
-                valueAxis.IsAutomaticMajorUnit = false;
-                valueAxis.MajorUnit = 10;
-
-                // Save the workbook to a file
-                string outputPath = "YAxisMinMaxDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook to a file
+            string outputPath = "ChartWithCustomYAxis.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetYAxisMinMaxDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

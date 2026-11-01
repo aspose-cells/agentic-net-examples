@@ -1,68 +1,59 @@
-// Title: Add a default header row to Excel tables missing headers using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates through each worksheet and ListObject, checks if ShowHeaderRow is false, sets it to true, and writes generic headers such as Column1, Column2 into the newly created header row. | Update the example so it accepts a custom header prefix (e.g., "Field") and an output file path via command‑line arguments, while still adding default headers to tables that lack a header row.
-// Common Searches: how to programmatically add missing header rows to Excel tables with Aspose.Cells in C# | Aspose.Cells C# detect ListObject without header and insert default column names | C# iterate worksheets and ListObjects to enable ShowHeaderRow property | add generic column headers to Excel tables that lack a header using Aspose.Cells | set ShowHeaderRow = true and populate header cells in Aspose.Cells
-// Tags: add default header to Excel ListObject Aspose.Cells | detect tables missing header row C# | enable ShowHeaderRow for ListObject programmatically | populate generic column names in Excel table | iterate worksheets and tables Aspose.Cells .NET
+// Title: Programmatically add default column headers to Excel tables lacking a header row using Aspose.Cells for .NET
+// Common Searches: c# aspnet add generic column names to Excel ListObject tables that have hidden headers | detect Excel tables without visible header row and insert Column1 Column2 using Aspose.Cells | show header row for tables in a workbook and assign default names with Aspose.Cells C# | iterate worksheets and listobjects to set missing table headers in .NET | how to automatically create column headers for tables that hide the header in Aspose.Cells
+// Tags: add default column headers to ListObject tables | detect tables with hidden header rows using Aspose.Cells | show header row and set generic column names in C# | iterate worksheets to fix missing table headers | Aspose.Cells table header row handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook, loops through each worksheet and its ListObject tables, reveals any hidden header rows, assigns generic names like Column1, Column2, etc., and saves the updated file.
+class Program
 {
-    // The program loads an input XLSX workbook, scans every worksheet and its ListObjects, enables the header row for any table where ShowHeaderRow is false, inserts generic column names (Column1, Column2, …) into the new header row, and saves the modified workbook to the specified output file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Input workbook path
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputFile}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Process each table (ListObject) in the worksheet
+                foreach (ListObject table in sheet.ListObjects)
                 {
-                    // Iterate through all tables (ListObjects) in the worksheet
-                    foreach (ListObject table in sheet.ListObjects)
+                    // If header row is hidden, show it and assign generic column names
+                    if (!table.ShowHeaderRow)
                     {
-                        // If the table does not have a header row, add one
-                        if (!table.ShowHeaderRow)
+                        table.ShowHeaderRow = true;
+
+                        int columnCount = table.ListColumns.Count;
+                        for (int i = 0; i < columnCount; i++)
                         {
-                            table.ShowHeaderRow = true;
-
-                            int headerRowIndex = table.StartRow;          // Row where the header will be placed
-                            int firstColumnIndex = table.StartColumn;    // First column of the table
-                            int columnCount = table.EndColumn - table.StartColumn + 1; // Number of columns in the table
-
-                            // Insert generic column names (Column1, Column2, ...) into the header row
-                            for (int col = 0; col < columnCount; col++)
-                            {
-                                string headerName = $"Column{col + 1}";
-                                sheet.Cells[headerRowIndex, firstColumnIndex + col].PutValue(headerName);
-                            }
+                            string headerName = $"Column{i + 1}";
+                            table.ListColumns[i].Name = headerName;
                         }
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

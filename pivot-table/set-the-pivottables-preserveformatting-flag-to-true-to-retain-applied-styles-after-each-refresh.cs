@@ -1,78 +1,60 @@
-// Title: How to retain pivot table cell formatting after refresh using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing .xlsx workbook, set PivotTable.PreserveCellFormattingOnUpdate = true, call RefreshData and CalculateData, then save the file with Aspose.Cells in C#. | Enable formatting preservation for a pivot table, refresh its source data, recalculate the pivot, and write the updated workbook to a new Excel file using Aspose.Cells for .NET. | Programmatically prevent style loss when updating a PivotTable by toggling PreserveCellFormattingOnUpdate, invoking RefreshData and CalculateData, and saving the workbook in C#.
-// Common Searches: Aspose.Cells C# keep pivot table styles after RefreshData | Set PreserveCellFormattingOnUpdate flag for pivot table in .NET | C# example to save Excel workbook with pivot table formatting preserved using Aspose | How to avoid losing cell formatting when refreshing a pivot table with Aspose.Cells | Refresh pivot table without resetting custom formatting Aspose.Cells .NET
-// Tags: Aspose.Cells PreserveCellFormattingOnUpdate | C# refresh pivot table retain formatting | Aspose.Cells pivot table formatting preservation | Save Excel workbook with unchanged pivot styles | PivotTable RefreshData CalculateData Aspose
+// Title: How to enable PreserveFormatting on an Aspose.Cells PivotTable in C# to retain styles after refresh
+// AI Prompts: Load an Excel workbook with Aspose.Cells, locate the first PivotTable, set its PreserveFormatting property to true, and save the workbook. | Write C# code that iterates through all PivotTables in a worksheet and enables PreserveFormatting to keep formatting after each refresh. | Show how to verify a PivotTable exists before applying PreserveFormatting using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set PreserveFormatting on PivotTable to keep cell styles after refresh | How to retain pivot table formatting when refreshing data with Aspose.Cells .NET | C# example for enabling PreserveFormatting flag on Excel PivotTable using Aspose.Cells | Preserve formatting of PivotTable after refresh in Aspose.Cells workbook
+// Tags: Aspose.Cells PivotTable PreserveFormatting property | C# enable formatting retention for Excel PivotTable | set PreserveFormatting flag in Aspose.Cells workbook | retain pivot table styles after refresh .NET | modify PivotTable formatting behavior Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Loads a workbook, sets PreserveCellFormattingOnUpdate on the first PivotTable, refreshes and recalculates the pivot, and saves the workbook to a new XLSX file.
-    public class PivotTablePreserveFormattingDemo
+    // The program loads an existing Excel workbook, accesses the first worksheet's first PivotTable, sets its PreserveFormatting property to true so that applied styles persist after each refresh, and saves the modified workbook to a new file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                const string inputPath = "source.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Ensure the source file exists
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    throw new FileNotFoundException($"Input file '{inputPath}' not found.");
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
                 }
 
-                // Load the workbook containing a PivotTable
+                // Load the existing workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Access the first worksheet
+                // Access the first worksheet (assumed to contain the PivotTable)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Verify a PivotTable exists
+                // Ensure there is at least one PivotTable on the worksheet
                 if (worksheet.PivotTables.Count == 0)
                 {
-                    throw new InvalidOperationException("No PivotTable found in the first worksheet.");
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
                 }
 
-                // Access the first PivotTable
+                // Retrieve the first PivotTable
                 PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Preserve cell formatting during refresh
-                pivotTable.PreserveCellFormattingOnUpdate = true;
-
-                // Refresh the PivotTable data from its source
-                pivotTable.RefreshData();
-
-                // Recalculate the PivotTable data
-                pivotTable.CalculateData();
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Preserve formatting after each refresh
+                pivotTable.PreserveFormatting = true;
 
                 // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+                workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Handle any unexpected errors gracefully
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PivotTablePreserveFormattingDemo.Run();
         }
     }
 }

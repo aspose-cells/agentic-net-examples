@@ -1,53 +1,91 @@
-// Title: Hide confidential row items in an Aspose.Cells PivotTable (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to hide specific row field values in a PivotTable and refresh the report. | Show how to programmatically exclude "Finance" and "Legal" items from a PivotTable row field using the PivotField.HideItem method. | Demonstrate saving a workbook after hiding selected pivot items with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# hide specific row values in pivot table | exclude finance and legal departments from pivot report using Aspose.Cells | programmatically hide pivot table items in .NET workbook | how to use PivotField.HideItem method in Aspose.Cells | refresh pivot table after hiding items Aspose.Cells C#
-// Tags: Aspose.Cells PivotField.HideItem usage | hide pivot row items C# | confidential data exclusion Aspose.Cells | refresh pivot table after item hide .NET | save workbook with hidden pivot items
+// Title: Hide confidential row and column items in an Excel pivot table with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# hide specific row items in a pivot table | How to exclude confidential regions from an Excel pivot using Aspose.Cells | Programmatically hide column field items in a pivot table with Aspose.Cells .NET | Set PivotItem.IsHidden to true in Aspose.Cells example | Hide pivot items based on name in C# Aspose.Cells workbook
+// Tags: Aspose.Cells hide pivot row items C# | Aspose.Cells hide pivot column items .NET | set PivotItem.IsHidden property Aspose.Cells | exclude confidential data from Excel pivot Aspose.Cells | programmatic pivot item visibility C# | Aspose.Cells pivot table item filtering
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The example creates a workbook, adds department and expense data, builds a PivotTable, hides the "Finance" and "Legal" entries in the Department row field using PivotField.HideItem, refreshes and recalculates the PivotTable, and saves the file as HiddenPivotItems.xlsx.
-class HidePivotItemsDemo
+namespace PivotItemHider
 {
-    public static void Main()
+    // The example loads an existing workbook, accesses the first pivot table, and hides selected row and column items (e.g., "ConfidentialRegion" and "ClassifiedProduct") by setting each PivotItem's IsHidden property to true, then saves the modified workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Department");
-        sheet.Cells["B1"].PutValue("Expense");
-        sheet.Cells["A2"].PutValue("HR");
-        sheet.Cells["B2"].PutValue(5000);
-        sheet.Cells["A3"].PutValue("Finance");
-        sheet.Cells["B3"].PutValue(12000);
-        sheet.Cells["A4"].PutValue("IT");
-        sheet.Cells["B4"].PutValue(8000);
-        sheet.Cells["A5"].PutValue("Legal");
-        sheet.Cells["B5"].PutValue(3000);
+                // Verify that the input file exists to avoid FileNotFoundException.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Load the workbook that contains the pivot table.
+                Workbook workbook = new Workbook(inputPath);
 
-        // Add the Department field as a row field and Expense as a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Department");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Expense");
+                // Access the first worksheet (adjust if needed).
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Retrieve the row field (Department) to manipulate its items
-        PivotField departmentField = pivotTable.RowFields[0];
+                // Ensure the worksheet contains at least one pivot table.
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
+                }
 
-        // Hide confidential items (Finance and Legal) so they do not appear in the report
-        departmentField.HideItem("Finance", true);
-        departmentField.HideItem("Legal", true);
+                // Retrieve the first pivot table.
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Refresh the pivot table to apply the changes
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+                // Hide specific row field items (e.g., confidential regions).
+                PivotField rowField = pivotTable.RowFields["Region"];
+                if (rowField != null)
+                {
+                    // Use PivotItems collection to access PivotItem objects.
+                    foreach (PivotItem item in rowField.PivotItems)
+                    {
+                        if (item.Name == "ConfidentialRegion")
+                        {
+                            item.IsHidden = true;
+                        }
+                        // Additional conditions can be added here.
+                    }
+                }
 
-        // Save the workbook with hidden pivot items
-        workbook.Save("HiddenPivotItems.xlsx");
+                // Hide specific column field items (e.g., classified products).
+                PivotField columnField = pivotTable.ColumnFields["Product"];
+                if (columnField != null)
+                {
+                    foreach (PivotItem item in columnField.PivotItems)
+                    {
+                        if (item.Name == "ClassifiedProduct")
+                        {
+                            item.IsHidden = true;
+                        }
+                    }
+                }
+
+                // Save the modified workbook.
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

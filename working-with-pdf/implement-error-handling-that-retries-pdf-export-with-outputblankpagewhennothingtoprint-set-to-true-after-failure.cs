@@ -1,62 +1,61 @@
-// Title: Implement retry logic for PDF export with OutputBlankPageWhenNothingToPrint using Aspose.Cells in C#
-// AI Prompts: Create C# code that catches a failed workbook.Save to PDF, sets workbook.Settings.OutputBlankPageWhenNothingToPrint = true, and retries the save operation. | Generate an error‑handling wrapper for Aspose.Cells that attempts PDF export, and on exception reconfigures the PDF save options to include the blank‑page‑when‑nothing‑to‑print flag before a second attempt. | Write a method that logs the first export error, applies OutputBlankPageWhenNothingToPrint, and returns a success status after retrying the PDF conversion.
-// Common Searches: Aspose.Cells retry PDF export after exception with OutputBlankPageWhenNothingToPrint in C# | set OutputBlankPageWhenNothingToPrint true on PDF save when workbook has no printable area Aspose.Cells | C# handle Aspose.Cells PDF conversion failure and enable blank page option on retry | how to use OutputBlankPageWhenNothingToPrint for PDF export fallback in Aspose.Cells | Aspose.Cells PDF save error handling and retry logic example
-// Tags: Aspose.Cells PDF export retry logic | OutputBlankPageWhenNothingToPrint setting | C# workbook.Save PDF exception handling | Excel to PDF blank page option | Aspose.Cells error handling for PDF conversion | PDF export fallback Aspose.Cells
+// Title: Add retry logic for PDF export in Aspose.Cells C# by enabling OutputBlankPageWhenNothingToPrint after a failure
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook to PDF, catches any exception, sets PdfSaveOptions.OutputBlankPageWhenNothingToPrint = true, and retries the save operation. | Write a C# method that attempts to export a workbook to PDF with Aspose.Cells, and on failure automatically re‑exports using the blank‑page fallback option.
+// Common Searches: Aspose.Cells C# handle exception on PDF conversion and perform a second save with blank page option | Enable OutputBlankPageWhenNothingToPrint on second PDF export attempt using Aspose.Cells | C# catch workbook.Save error and perform fallback export to PDF with blank page in Aspose.Cells
+// Tags: Aspose.Cells PDF export with OutputBlankPageWhenNothingToPrint | C# exception handling for workbook.Save PDF conversion | PdfSaveOptions OutputBlankPageWhenNothingToPrint | Aspose.Cells PDF conversion error handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example loads an Excel workbook, attempts to save it as a PDF, and if the first export fails, it catches the exception, enables the OutputBlankPageWhenNothingToPrint option, and retries the PDF save while handling any subsequent errors.
-class PdfExportWithRetry
+// Loads or creates a workbook, tries to save it as PDF, and if the first save fails, sets OutputBlankPageWhenNothingToPrint to true and retries, logging any errors.
+class Program
 {
     static void Main()
     {
-        // Define input and output file paths
-        string inputPath = "input.xlsx";
-        string pdfPath = "output.pdf";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        Workbook workbook = null;
+        // Create or load a workbook.
+        Workbook workbook;
+        string templatePath = "template.xlsx";
 
         try
         {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception loadEx)
-        {
-            Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-            return;
-        }
-
-        // First attempt to export PDF with default settings
-        try
-        {
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-            Console.WriteLine("PDF exported successfully on first attempt.");
+            if (File.Exists(templatePath))
+            {
+                // Load existing workbook if the template file is present.
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                // Create a new workbook with a default worksheet.
+                workbook = new Workbook();
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"First export failed: {ex.Message}");
+            Console.WriteLine($"Failed to load or create workbook: {ex.Message}");
+            return;
+        }
 
-            // Retry exporting PDF (additional settings can be applied here if needed)
+        // Prepare PDF save options with default settings.
+        var pdfOptions = new PdfSaveOptions();
+
+        try
+        {
+            // Attempt to export PDF with the initial options.
+            workbook.Save("output.pdf", pdfOptions);
+        }
+        catch (Exception)
+        {
+            // If export fails, enable OutputBlankPageWhenNothingToPrint and retry.
+            pdfOptions.OutputBlankPageWhenNothingToPrint = true;
+
             try
             {
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-                Console.WriteLine("PDF exported successfully on retry.");
+                workbook.Save("output.pdf", pdfOptions);
             }
-            catch (Exception retryEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Retry export also failed: {retryEx.Message}");
-                // Rethrow or handle as appropriate
-                throw;
+                Console.WriteLine($"PDF export failed: {ex.Message}");
             }
         }
     }

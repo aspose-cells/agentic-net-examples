@@ -1,79 +1,74 @@
-// Title: Generate a PDF from an Aspose.Cells workbook using MinimumSize optimization and compare its size to a standard PDF in C#
-// AI Prompts: Create a new Workbook, populate it with rows and a column chart, then save it twice as PDF – first with default PdfSaveOptions and second with PdfSaveOptions configured for minimum‑size optimization (e.g., set Compression to Standard, ImageCompression to Jpeg, JpegQuality to 50) – and output the byte length of each file. | Read the file sizes of the two PDFs, display them, and programmatically verify that the minimum‑size PDF is smaller than the standard PDF, printing a success or failure message.
-// Common Searches: how to reduce PDF size when exporting an Aspose.Cells workbook in C# | Aspose.Cells MinimumSize PDF optimization example .NET | compare default and compressed PDF output using PdfSaveOptions in C# | enable JPEG image compression for PDF export with Aspose.Cells | verify that a compressed PDF is smaller than the original using C# file info
-// Tags: minimum size PDF optimization Aspose.Cells C# | PdfSaveOptions compression settings Aspose.Cells | compare PDF file sizes Aspose.Cells | image compression JPEG PDF export Aspose.Cells | verify PDF size reduction C#
+// Title: Save Excel workbook as PDF with MinimumSize optimization using Aspose.Cells for .NET and compare file size to StandardSize
+// Common Searches: Aspose.Cells C# how to enable MinimumSize PDF optimization when saving a workbook | compare PDF output size using StandardSize vs MinimumSize in Aspose.Cells .NET | set PdfSaveOptions OptimizationOptions property via reflection in C# Aspose.Cells | reduce Excel to PDF file size with MinimumSize option in Aspose.Cells | verify PDF size reduction after applying MinimumSize optimization in .NET
+// Tags: Aspose.Cells PDF save with MinimumSize setting | Reflection set PdfSaveOptions OptimizationOptions C# | Excel workbook PDF size reduction Aspose.Cells | StandardSize PDF output Aspose.Cells comparison | File size measurement Aspose.Cells PDF export
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// The sample creates a workbook with 200 rows and a column chart, saves it to PDF twice – once with default options and once with minimum‑size optimization (compression and JPEG image settings) – then reads both files, prints their byte sizes, and confirms that the optimized PDF is smaller.
+// The example loads or creates an Excel workbook, saves it to PDF twice—first with the default StandardSize settings and then with MinimumSize optimization by configuring PdfSaveOptions.OptimizationOptions via reflection, measures both file sizes, and reports whether the MinimumSize option produced a smaller PDF.
 class MinimumSizeOptimizationDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Path to the source Excel file
+            string excelPath = "input.xlsx";
 
-            // Populate cells with sample data to increase PDF size
-            for (int row = 0; row < 200; row++)
+            // Load the workbook; create a simple one if the file does not exist
+            Workbook workbook;
+            if (File.Exists(excelPath))
             {
-                for (int col = 0; col < 10; col++)
-                {
-                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
-
-            // Add a simple chart to further enlarge the PDF
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 12, 25, 22);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("A1:A200", true);
-            chart.NSeries[0].Name = "Sample Series";
-
-            // Define file paths
-            string standardPdfPath = "StandardSize.pdf";
-            string minimumPdfPath = "MinimumSize.pdf";
-
-            // Save PDF with standard size (default options)
-            PdfSaveOptions standardOptions = new PdfSaveOptions();
-            workbook.Save(standardPdfPath, standardOptions);
-
-            // Save PDF with minimum size optimization (higher compression)
-            PdfSaveOptions minimumOptions = new PdfSaveOptions();
-
-            // The following properties are not available in older Aspose.Cells versions.
-            // If your version supports them, you can uncomment and adjust as needed.
-            // minimumOptions.Compression = PdfCompressionType.Standard;
-            // minimumOptions.ImageCompression = PdfImageCompressionType.Jpeg;
-            // minimumOptions.JpegQuality = 50;
-
-            workbook.Save(minimumPdfPath, minimumOptions);
-
-            // Verify that the minimum size PDF is smaller than the standard size PDF
-            long standardSize = new FileInfo(standardPdfPath).Length;
-            long minimumSize = new FileInfo(minimumPdfPath).Length;
-
-            Console.WriteLine($"Standard PDF size : {standardSize} bytes");
-            Console.WriteLine($"Minimum PDF size  : {minimumSize} bytes");
-
-            if (minimumSize < standardSize)
-            {
-                Console.WriteLine("Verification passed: MinimumSize PDF is smaller than StandardSize PDF.");
+                workbook = new Workbook(excelPath);
             }
             else
             {
-                Console.WriteLine("Verification failed: MinimumSize PDF is not smaller than StandardSize PDF.");
+                workbook = new Workbook();
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
+            }
+
+            // Save PDF with default (StandardSize) optimization
+            string standardPdfPath = "standard.pdf";
+            workbook.Save(standardPdfPath, SaveFormat.Pdf);
+
+            // Save PDF with MinimumSize optimization (if supported)
+            string minimumPdfPath = "minimum.pdf";
+            PdfSaveOptions minSizeOptions = new PdfSaveOptions();
+
+            // Attempt to set the OptimizationOptions property via reflection
+            PropertyInfo optProp = typeof(PdfSaveOptions).GetProperty("OptimizationOptions");
+            if (optProp != null && optProp.CanWrite)
+            {
+                Type enumType = optProp.PropertyType; // Expected: PdfOptimizationOptions
+                object minSizeEnum = Enum.Parse(enumType, "MinimumSize");
+                optProp.SetValue(minSizeOptions, minSizeEnum);
+            }
+
+            workbook.Save(minimumPdfPath, minSizeOptions);
+
+            // Get file sizes
+            long standardSize = new FileInfo(standardPdfPath).Length;
+            long minimumSize = new FileInfo(minimumPdfPath).Length;
+
+            // Output results
+            Console.WriteLine($"Standard PDF size: {standardSize} bytes");
+            Console.WriteLine($"MinimumSize PDF size: {minimumSize} bytes");
+
+            if (minimumSize < standardSize)
+            {
+                Console.WriteLine("Success: MinimumSize optimization reduced the PDF file size.");
+            }
+            else
+            {
+                Console.WriteLine("Warning: MinimumSize optimization did not reduce the PDF file size.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

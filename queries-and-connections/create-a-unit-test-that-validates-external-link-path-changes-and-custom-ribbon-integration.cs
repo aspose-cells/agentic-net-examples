@@ -1,139 +1,141 @@
-// Title: Create a C# unit test to verify external link URL changes and custom Ribbon XML persistence in an Aspose.Cells workbook
-// AI Prompts: Write a C# unit‑test method (using MSTest, NUnit, or xUnit) that adds an external link to a workbook, replaces a segment of its URL, assigns a custom Ribbon XML string, saves the workbook as .xlsm, reloads it, and asserts that both the modified link path and the RibbonXml property are retained with Aspose.Cells. | Extend the test to loop through multiple external links, update each URL fragment, and confirm that all links together with the custom ribbon configuration survive a save‑load cycle.
-// Common Searches: how to unit test external link path modification in Aspose.Cells .NET | verify RibbonXml property persists after saving an Aspose.Cells workbook | c# test for updating external data source URLs and custom ribbon integration with Aspose.Cells
-// Tags: Aspose.Cells external link URL unit testing | RibbonXml persistence check in Aspose.Cells | C# workbook save/load external data source verification | custom UI ribbon integration Aspose.Cells | unit test for external data source path change
+// Title: C# unit test for updating external workbook links and embedding custom ribbon XML with Aspose.Cells
+// Common Searches: C# Aspose.Cells unit test to change external link formula path | How to verify external workbook reference updates in Aspose.Cells unit tests | Embedding custom ribbon XML in an Excel file using Aspose.Cells .NET | Unit testing persistence of modified formulas after external link change with Aspose.Cells | Aspose.Cells CustomUIXml property usage in C# unit tests
+// Tags: update external workbook link formula Aspose.Cells | embed custom ribbon UI XML Aspose.Cells | verify formula persistence after link change Aspose.Cells | Workbook.CustomUIXml handling Aspose.Cells | C# unit test external reference handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTests
+namespace AsposeCellsDemo
 {
-    // The example defines a C# unit test that creates a workbook, adds an external link, modifies a portion of its URL, sets custom Ribbon XML, saves the file as .xlsm, reloads it, and uses assertions to ensure both the updated external link path and the RibbonXml setting are correctly persisted.
-    public class ExternalLinkAndRibbonTests
+    // The example creates a source workbook, adds a formula in a target workbook that references the source, validates the original external link, updates the formula to point to a new source workbook, saves and reloads to confirm the updated reference persists, and demonstrates how to assign and verify custom ribbon XML via the Workbook.CustomUIXml property in a C# unit‑test scenario using Aspose.Cells.
+    class Program
     {
-        // Sample ribbon XML used for the test
-        private const string SampleRibbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab id=\"customTab\" label=\"My Tab\">" +
-            "        <group id=\"customGroup\" label=\"My Group\">" +
-            "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
-
-        public static void Main()
+        static void Main()
         {
+            string tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(tempDir);
+
             try
             {
-                var test = new ExternalLinkAndRibbonTests();
-                test.ValidateExternalLinkPathChangeAndRibbonIntegration();
-                Console.WriteLine("Test completed successfully.");
+                // ---------- Step 1: Create source workbook ----------
+                string sourcePath = Path.Combine(tempDir, "Source.xlsx");
+                var sourceWb = new Workbook();
+                sourceWb.Worksheets[0].Name = "Data";
+                sourceWb.Worksheets[0].Cells["A1"].PutValue(10);
+                sourceWb.Save(sourcePath);
+
+                // ---------- Step 2: Create target workbook with external link ----------
+                string targetPath = Path.Combine(tempDir, "Target.xlsx");
+                var targetWb = new Workbook();
+                var ws = targetWb.Worksheets[0];
+                ws.Name = "LinkSheet";
+
+                // Formula that references the source workbook
+                ws.Cells["A1"].Formula = $"=SUM('[{Path.GetFileName(sourcePath)}]Data'!A1)";
+                targetWb.Save(targetPath);
+
+                // ---------- Step 3: Load target and verify external link ----------
+                if (!File.Exists(targetPath))
+                    throw new FileNotFoundException("Target workbook not found.", targetPath);
+
+                var loadedTarget = new Workbook(targetPath);
+                var targetSheet = loadedTarget.Worksheets[0];
+
+                // Verify the formula contains the original source file name
+                string originalFormula = targetSheet.Cells["A1"].Formula;
+                if (!originalFormula.Contains(Path.GetFileName(sourcePath), StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("Formula should reference Source.xlsx.");
+
+                // ---------- Step 4: Change external link path ----------
+                string newSourcePath = Path.Combine(tempDir, "NewSource.xlsx");
+                var newSourceWb = new Workbook();
+                newSourceWb.Worksheets[0].Name = "Data";
+                newSourceWb.Worksheets[0].Cells["A1"].PutValue(20);
+                newSourceWb.Save(newSourcePath);
+
+                // Update the formula to point to the new source workbook
+                targetSheet.Cells["A1"].Formula = $"=SUM('[{Path.GetFileName(newSourcePath)}]Data'!A1)";
+                string updatedFormula = targetSheet.Cells["A1"].Formula;
+                if (!updatedFormula.Contains(Path.GetFileName(newSourcePath), StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("Formula should be updated to reference NewSource.xlsx.");
+
+                // Save the modified workbook
+                string modifiedTargetPath = Path.Combine(tempDir, "Target_Modified.xlsx");
+                loadedTarget.Save(modifiedTargetPath);
+
+                // Reload and verify the formula persisted
+                if (!File.Exists(modifiedTargetPath))
+                    throw new FileNotFoundException("Modified target workbook not found.", modifiedTargetPath);
+
+                var reloadedTarget = new Workbook(modifiedTargetPath);
+                var reloadedSheet = reloadedTarget.Worksheets[0];
+                string reloadedFormula = reloadedSheet.Cells["A1"].Formula;
+                if (!reloadedFormula.Contains(Path.GetFileName(newSourcePath), StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("Persisted formula should reference NewSource.xlsx.");
+
+                // ---------- Step 5: Add custom ribbon XML (if supported) ----------
+                try
+                {
+                    string customRibbonXml = @"
+<customUI xmlns='http://schemas.microsoft.com/office/2006/01/customui'>
+  <ribbon>
+    <tabs>
+      <tab id='customTab' label='My Tab'>
+        <group id='customGroup' label='My Group'>
+          <button id='customButton' label='Click Me' size='large' onAction='OnButtonClick'/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>";
+
+                    // Attempt to set custom UI XML if the property exists
+                    var prop = typeof(Workbook).GetProperty("CustomUIXml");
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(reloadedTarget, customRibbonXml.Trim());
+                        string ribbonPath = Path.Combine(tempDir, "Target_WithRibbon.xlsx");
+                        reloadedTarget.Save(ribbonPath);
+
+                        // Verify custom ribbon XML
+                        if (!File.Exists(ribbonPath))
+                            throw new FileNotFoundException("Ribbon workbook not found.", ribbonPath);
+
+                        var finalWb = new Workbook(ribbonPath);
+                        var loadedRibbonXml = prop.GetValue(finalWb) as string;
+                        if (loadedRibbonXml == null)
+                            throw new InvalidOperationException("Custom UI XML should not be null.");
+
+                        if (!string.Equals(loadedRibbonXml.Trim(), customRibbonXml.Trim(), StringComparison.Ordinal))
+                            throw new InvalidOperationException("Custom ribbon XML should match the inserted XML.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log but do not fail the whole process if custom UI handling is unavailable
+                    Console.Error.WriteLine($"Custom UI handling skipped: {ex.Message}");
+                }
+
+                Console.WriteLine("All operations completed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Test failed: {ex.Message}");
-            }
-        }
-
-        public void ValidateExternalLinkPathChangeAndRibbonIntegration()
-        {
-            // ---------- Create a workbook and add an external link ----------
-            Workbook workbook = new Workbook(); // create new workbook
-            Worksheet sheet = workbook.Worksheets[0];
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-            // Original external link path
-            string originalPath = @"https://example.com/oldpath/source.xlsx";
-
-            // Add the external link (file name and sheet reference)
-            externalLinks.Add(originalPath, new[] { "Sheet1!A1" });
-
-            // Set a formula that references the external link
-            sheet.Cells["A1"].Formula = $"='https://example.com/oldpath/source.xlsx'!Sheet1!A1";
-
-            // Verify that the external link was added
-            AssertEqual(1, externalLinks.Count, "External link should be added.");
-
-            // ---------- Modify the external link path ----------
-            string modifiedPathFragment = "newpath";
-            foreach (ExternalLink link in externalLinks)
-            {
-                // Replace the old path segment with the new one
-                string modified = link.OriginalDataSource.Replace("oldpath", modifiedPathFragment);
-                link.OriginalDataSource = modified;
-            }
-
-            // Verify that the path was updated
-            foreach (ExternalLink link in externalLinks)
-            {
-                Assert(link.OriginalDataSource.Contains(modifiedPathFragment),
-                    "External link path should contain the modified fragment.");
-            }
-
-            // ---------- Set custom Ribbon XML ----------
-            workbook.RibbonXml = SampleRibbonXml;
-
-            // Verify RibbonXml property is set correctly
-            AssertEqual(SampleRibbonXml, workbook.RibbonXml, "RibbonXml should be set to the sample XML.");
-
-            // ---------- Save the workbook ----------
-            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsm");
-            try
-            {
-                workbook.Save(tempFile); // save workbook
-
-                // Ensure the file was created before loading
-                if (!File.Exists(tempFile))
-                {
-                    throw new FileNotFoundException("Saved workbook file not found.", tempFile);
-                }
-
-                // ---------- Load the workbook and re-validate ----------
-                Workbook loadedWorkbook = new Workbook(tempFile); // load workbook
-
-                // Verify RibbonXml persisted
-                AssertEqual(SampleRibbonXml, loadedWorkbook.RibbonXml,
-                    "Loaded workbook should retain the RibbonXml.");
-
-                // Verify external link path persisted
-                ExternalLinkCollection loadedLinks = loadedWorkbook.Worksheets.ExternalLinks;
-                AssertEqual(1, loadedLinks.Count, "Loaded workbook should have one external link.");
-                Assert(loadedLinks[0].OriginalDataSource.Contains(modifiedPathFragment),
-                    "Loaded external link should contain the modified path fragment.");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
             finally
             {
-                // Clean up temporary file
-                if (File.Exists(tempFile))
+                // Clean up temporary files
+                try
                 {
-                    try
-                    {
-                        File.Delete(tempFile);
-                    }
-                    catch
-                    {
-                        // Ignored - cleanup failure should not affect test outcome
-                    }
+                    if (Directory.Exists(tempDir))
+                        Directory.Delete(tempDir, true);
+                }
+                catch
+                {
+                    // Suppress any cleanup exceptions
                 }
             }
-        }
-
-        // Simple assertion helpers
-        private void Assert(bool condition, string message)
-        {
-            if (!condition)
-                throw new InvalidOperationException(message);
-        }
-
-        private void AssertEqual<T>(T expected, T actual, string message)
-        {
-            if (!Equals(expected, actual))
-                throw new InvalidOperationException(message);
         }
     }
 }

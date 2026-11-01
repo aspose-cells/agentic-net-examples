@@ -1,59 +1,43 @@
-// Title: Convert an Excel workbook to PDF and embed auto‑print JavaScript using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to include a JavaScript snippet that calls this.print(true) when the PDF opens, and saves the result as a PDF. | Show how to use reflection in C# to detect the JavaScript (or Javascript) property on PdfSaveOptions and assign an auto‑print script before exporting the workbook to PDF.
-// Common Searches: how to embed auto‑print JavaScript in PDF created from Excel with Aspose.Cells C# | Aspose.Cells PdfSaveOptions JavaScript property for printing on open | C# convert .xlsx to .pdf and add print script using Aspose.Cells | using reflection to set JavaScript on PdfSaveOptions in Aspose.Cells | check Aspose.Cells version support for JavaScript in PDF export
-// Tags: Aspose.Cells PDF auto‑print JavaScript | PdfSaveOptions JavaScript property | C# Excel to PDF conversion with script | reflection set PdfSaveOptions property | Aspose.Cells PDF export embedded script
+// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET (C#) with robust error handling
+// Common Searches: Aspose.Cells C# convert .xlsx to PDF with PdfSaveOptions example | C# verify Excel file exists before saving as PDF using Aspose.Cells | How to handle exceptions when exporting Excel to PDF in .NET with Aspose.Cells | Programmatic Excel to PDF conversion code sample for Aspose.Cells in C# | Save workbook as PDF in C# using Aspose.Cells and check for missing input file
+// Tags: Aspose.Cells PDF conversion C# | PdfSaveOptions Aspose.Cells | Excel to PDF export .NET | file existence validation Aspose.Cells | exception handling Aspose.Cells PDF save
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfWithJavaScript
+// The example checks for the presence of an input.xlsx file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions, and saves the workbook as output.pdf while gracefully handling any runtime errors.
+class Program
 {
-    // The example loads an input.xlsx workbook, creates PdfSaveOptions, uses reflection to locate the JavaScript (or Javascript) property, assigns the script "this.print(true);" for automatic printing, saves the workbook as output.pdf, and handles errors gracefully.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Attempt to embed JavaScript for auto‑print (property name may vary by version)
-                var jsProperty = typeof(PdfSaveOptions).GetProperty("JavaScript") ??
-                                 typeof(PdfSaveOptions).GetProperty("Javascript");
-
-                if (jsProperty != null && jsProperty.CanWrite)
-                {
-                    jsProperty.SetValue(pdfOptions, "this.print(true);");
-                }
-                else
-                {
-                    Console.WriteLine("JavaScript embedding is not supported in this Aspose.Cells version.");
-                }
-
-                // Save the workbook as PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook has been converted to PDF: {outputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Initialize PDF save options (no constructor arguments needed)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

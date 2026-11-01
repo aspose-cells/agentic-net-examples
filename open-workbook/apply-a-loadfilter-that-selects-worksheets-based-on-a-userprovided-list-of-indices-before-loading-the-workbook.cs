@@ -1,55 +1,54 @@
-// Title: Use Aspose.Cells .NET LoadFilter to load only worksheets with specified zero‑based indices
-// AI Prompts: Write C# code that implements an ILoadFilter to load an Excel workbook with Aspose.Cells, keeping only the worksheets whose indices are listed in a user‑provided collection. | Generate a method that accepts a list of worksheet indices, applies a LoadFilter when opening the file, and returns a Workbook containing only those sheets. | Create an example that demonstrates removing unwanted sheets after loading a workbook by iterating the Worksheets collection in reverse based on a given index list.
-// Common Searches: aspocells loadfilter keep specific worksheets by index c# | how to open an Excel file with only selected sheets using Aspose.Cells .NET | c# filter worksheets during workbook load based on a list of indices | load only certain sheets from large Excel workbook Aspose.Cells performance
-// Tags: loadfilter select worksheets by index Aspose.Cells | c# load specific Excel sheets .NET | aspocells workbook load selected worksheets | filter Excel worksheets during load using index list | remove unwanted sheets after workbook load c#
+// Title: C# example: Remove unwanted worksheets by index list using Aspose.Cells and save a filtered workbook
+// Common Searches: how to keep only specific worksheets by index when processing an Excel file with Aspose.Cells in C# | C# Aspose.Cells remove sheets not in a given index array | filter Excel worksheets using a list of zero‑based indices before saving with Aspose.Cells | programmatically prune Excel workbook sheets by index using Aspose.Cells .NET | Aspose.Cells load workbook then delete sheets based on user supplied indices C#
+// Tags: Aspose.Cells worksheet removal by index C# | filter Excel sheets using index list Aspose.Cells | selective worksheet pruning .NET Excel | load workbook and delete sheets Aspose.Cells | C# Excel workbook sheet filtering Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The sample defines a zero‑based list of worksheet indices to retain, verifies that the source Excel file exists, loads the workbook with Aspose.Cells, iterates the Worksheets collection in reverse to delete any sheet whose index is not in the list, saves the filtered workbook to a new file, and prints status or error messages.
+// The sample verifies the source file, defines a zero‑based list of worksheet indices to retain, loads the workbook with Aspose.Cells, iterates the worksheets in reverse order removing any sheet whose index is not in the list, and saves the resulting filtered workbook to a new file while handling exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // List of worksheet indices to keep (0‑based)
-            List<int> worksheetsToKeep = new List<int> { 0, 2, 4 };
+            // Path to the source workbook
+            const string inputPath = "input.xlsx";
 
-            // Input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Ensure the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the workbook without any filter
+            // User‑provided list of worksheet indices to keep (0‑based)
+            List<int> sheetsToKeep = new List<int> { 0, 2, 4 };
+
+            // Load the workbook normally
             Workbook workbook = new Workbook(inputPath);
 
-            // Remove worksheets whose indices are not in the keep list
-            // Iterate in reverse to avoid index shifting issues
+            // Remove worksheets whose indices are NOT in the allowed list
+            // Iterate in reverse order to avoid index shifting when removing sheets
             for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
             {
-                if (!worksheetsToKeep.Contains(i))
+                if (!sheetsToKeep.Contains(i))
                 {
                     workbook.Worksheets.RemoveAt(i);
                 }
             }
 
-            // Save the resulting workbook
+            // Save the filtered workbook to a new file
+            const string outputPath = "filtered_output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Filtered workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

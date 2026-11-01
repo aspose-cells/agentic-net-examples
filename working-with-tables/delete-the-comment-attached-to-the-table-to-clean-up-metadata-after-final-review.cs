@@ -1,53 +1,56 @@
-// Title: How to delete a comment from an Excel table (ListObject) using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that opens a workbook, locates a ListObject by name, clears its Comment property, and saves the file. | Show an example that validates the existence of the input file, worksheet, and table before removing the table comment in Aspose.Cells. | Provide a snippet that demonstrates error handling for missing files or invalid table names while clearing a ListObject comment.
-// Common Searches: C# Aspose.Cells clear comment on a ListObject table | example code to remove Excel table comment using Aspose.Cells .NET | how to delete metadata comment from an Excel table programmatically | Aspose.Cells delete table comment after loading workbook
-// Tags: Aspose.Cells clear ListObject comment | C# remove Excel table comment | Aspose.Cells delete table comment | programmatic Excel table metadata cleanup .NET
+// Title: Delete a comment from an Excel table (ListObject) using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells remove comment from ListObject table | how to clear table comment in an .xlsx file with Aspose.Cells | programmatically delete Excel table comment using Aspose.Cells .NET | Aspose.Cells delete ListObject comment before saving workbook | remove metadata comment from Excel table in C# Aspose.Cells
+// Tags: Aspose.Cells ListObject comment removal | C# clear Excel table comment | Aspose.Cells delete table comment .xlsx | programmatic comment cleanup Aspose.Cells | remove ListObject metadata comment C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-// This example loads an existing Excel workbook with Aspose.Cells, accesses a specified worksheet and ListObject (table) by name, clears the table's Comment property if present, and saves the workbook to a new file. It includes robust error handling for missing files, worksheets, or tables.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates over each ListObject (table) on the first worksheet, clears the Comment property when it contains text, and saves the updated workbook to a new file.
+    class Program
     {
-        // Define file paths and identifiers (replace with actual values)
-        string inputFilePath = "{InputFilePath}";
-        string outputFilePath = "{OutputFilePath}";
-        string sheetName = "{SheetName}";
-        string tableName = "{TableName}";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(inputFilePath))
-                throw new FileNotFoundException("Input workbook not found.", inputFilePath);
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputFilePath);
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Access the specified worksheet
-            Worksheet sheet = workbook.Worksheets[sheetName];
-            if (sheet == null)
-                throw new ArgumentException($"Worksheet \"{sheetName}\" does not exist.");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the table (ListObject) by its name
-            ListObject table = sheet.ListObjects[tableName];
-            if (table == null)
-                throw new ArgumentException($"Table \"{tableName}\" does not exist in worksheet \"{sheetName}\".");
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Delete the comment attached to the table, if it exists
-            if (!string.IsNullOrEmpty(table.Comment))
-                table.Comment = string.Empty; // clears the comment
+                // Iterate through all tables (ListObjects) on the worksheet
+                foreach (var table in sheet.ListObjects)
+                {
+                    // If the table has a comment, clear it to delete the comment
+                    if (!string.IsNullOrEmpty(table.Comment))
+                    {
+                        table.Comment = string.Empty;
+                    }
+                }
 
-            // Save the workbook after removing the comment
-            workbook.Save(outputFilePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

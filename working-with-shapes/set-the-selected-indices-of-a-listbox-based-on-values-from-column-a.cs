@@ -1,102 +1,150 @@
-// Title: How to set WinForms ListBox selected indices from Excel column A using Aspose.Cells in C#
-// AI Prompts: Write a C# method that opens an Excel workbook with Aspose.Cells, reads every non‑empty cell in column A, and returns a List<int> of indices where the cell values match strings in a supplied IList<string>. | Generate code that takes the list of matching indices and assigns them to the SelectedIndices collection of a WinForms ListBox.
-// Common Searches: c# aspose.cells read column a and get matching list indices | winforms listbox select items based on excel column values | map excel column data to listbox selectedindices using aspose.cells | retrieve row numbers from column a that match a list of strings in c#
-// Tags: Aspose.Cells column A extraction in C# | ListBox SelectedIndices assignment from Excel data | C# workbook row matching with string list | WinForms ListBox population using spreadsheet values | Excel-to-UI index mapping with Aspose.Cells
+// Title: Select ListBox items in C# by matching values from column A of an Excel workbook using Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, iterates through each non‑empty cell in column A, and marks the matching entries as selected in a ListBox‑like collection. | Update the selection routine to perform case‑insensitive matching and correctly handle duplicate values when syncing Excel column A data with ListBox items. | Create a console utility that accepts an Excel file path as a command‑line argument, uses Aspose.Cells to read column A, and outputs the indices of ListBox items that match the spreadsheet values.
+// Common Searches: c# aspose.cells read column a and select matching items in a listbox control | how to sync excel column values with listbox selections in a .net console application | select multiple items in a ListBox based on values from an xlsx file using Aspose.Cells
+// Tags: Aspose.Cells read column A from XLSX | C# select ListBox items by matching Excel values | listbox selection based on spreadsheet data | console app Excel to ListBox synchronization | case-insensitive matching ListBox Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook via Aspose.Cells, iterates through used rows in column A, trims each cell value, and checks for its presence in a provided list of strings. Matching item indices are collected and returned, enabling those indices to be applied to a WinForms ListBox's SelectedIndices collection. Includes file‑existence validation and basic exception handling.
-public static class ExcelListBoxHelper
+namespace AsposeCellsExample
 {
-    /// <param name="excelFilePath">Full path to the Excel workbook.</param>
-    /// <param name="items">A list of items (e.g., ListBox items) to match against the Excel values.</param>
-    /// <returns>A list of indices that correspond to items found in column A.</returns>
-    public static List<int> GetMatchingIndicesFromColumnA(string excelFilePath, IList<string> items)
+    // Minimal ListBox replacement for console applications
+    // Loads an Excel workbook with Aspose.Cells, walks down column A until a blank cell, finds exact (or case‑insensitive) matches in a SimpleListBox, and marks those indices as selected.
+    public class SimpleListBox
     {
-        var matchingIndices = new List<int>();
+        public List<string> Items { get; } = new List<string>();
+        private readonly HashSet<int> _selectedIndices = new HashSet<int>();
 
-        try
+        public const int NoMatches = -1;
+
+        // Finds the exact string in Items and returns its index or NoMatches
+        public int FindStringExact(string value)
         {
-            // Verify that the Excel file exists to avoid FileNotFoundException.
-            if (!File.Exists(excelFilePath))
-                throw new FileNotFoundException($"The file '{excelFilePath}' was not found.");
-
-            // Load the workbook using Aspose.Cells.
-            var workbook = new Workbook(excelFilePath);
-
-            // Access the first worksheet (index 0).
-            var worksheet = workbook.Worksheets[0];
-
-            // Get the cells collection for easier access.
-            var cells = worksheet.Cells;
-
-            // Determine the last row that contains data in column A (zero‑based index).
-            int lastRow = cells.MaxDataRow;
-
-            // Iterate through each used row in column A.
-            for (int row = 0; row <= lastRow; row++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                // Retrieve the cell value as a trimmed string (may be null).
-                string? cellValue = cells[row, 0].StringValue?.Trim();
+                if (string.Equals(Items[i], value, StringComparison.Ordinal))
+                    return i;
+            }
+            return NoMatches;
+        }
 
-                // Skip empty cells.
-                if (string.IsNullOrEmpty(cellValue))
-                    continue;
+        // Marks the item at index as selected
+        public void SetSelected(int index, bool selected)
+        {
+            if (selected)
+                _selectedIndices.Add(index);
+            else
+                _selectedIndices.Remove(index);
+        }
 
-                // Find the index of the item in the provided list that matches the cell value.
-                int itemIndex = items.IndexOf(cellValue);
+        // Clears all selections
+        public void ClearSelected()
+        {
+            _selectedIndices.Clear();
+        }
 
-                // If the item exists, add its index to the result list.
-                if (itemIndex >= 0 && !matchingIndices.Contains(itemIndex))
+        // Returns the currently selected items
+        public IEnumerable<string> GetSelectedItems()
+        {
+            foreach (int idx in _selectedIndices)
+            {
+                if (idx >= 0 && idx < Items.Count)
+                    yield return Items[idx];
+            }
+        }
+    }
+
+    // Handles selection of ListBox items based on Excel column A values
+    public class ListBoxSelector
+    {
+        private readonly SimpleListBox _listBox;
+        private readonly string _excelFilePath;
+
+        public ListBoxSelector(SimpleListBox listBox, string excelFilePath)
+        {
+            _listBox = listBox;
+            _excelFilePath = excelFilePath;
+        }
+
+        public void SelectItemsFromColumnA()
+        {
+            try
+            {
+                // Verify that the Excel file exists
+                if (!File.Exists(_excelFilePath))
                 {
-                    matchingIndices.Add(itemIndex);
+                    Console.WriteLine($"Error: File not found - {_excelFilePath}");
+                    return;
+                }
+
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(_excelFilePath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Clear any previous selections
+                _listBox.ClearSelected();
+
+                // Iterate through column A until a blank cell is encountered
+                int row = 0;
+                while (true)
+                {
+                    Cell cell = cells[row, 0];
+                    // Stop when the cell is null, has a null value, or its string representation is empty/whitespace
+                    if (cell == null ||
+                        cell.Type == CellValueType.IsNull ||
+                        string.IsNullOrWhiteSpace(cell.StringValue))
+                    {
+                        break;
+                    }
+
+                    string cellValue = cell.StringValue?.Trim();
+                    if (!string.IsNullOrEmpty(cellValue))
+                    {
+                        int index = _listBox.FindStringExact(cellValue);
+                        if (index != SimpleListBox.NoMatches)
+                        {
+                            _listBox.SetSelected(index, true);
+                        }
+                    }
+
+                    row++;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during selection: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            // Log or handle the exception as needed.
-            Console.Error.WriteLine($"Error processing Excel file: {ex.Message}");
-            // Optionally rethrow or return an empty list.
-        }
-
-        return matchingIndices;
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    // Console application entry point
+    public static class Program
     {
-        try
+        [STAThread]
+        public static void Main()
         {
-            // Example usage:
-            // Provide the path to the Excel file and a sample list of items.
-            string excelPath = "SampleData.xlsx";
+            // Initialize a simple ListBox with sample items
+            var listBox = new SimpleListBox();
+            listBox.Items.AddRange(new[] { "Apple", "Banana", "Cherry", "Date", "Elderberry" });
 
-            // Ensure the file exists before proceeding.
-            if (!File.Exists(excelPath))
+            // Path to the Excel file containing values in column A
+            string excelPath = @"C:\Data\Values.xlsx";
+
+            // Perform selection based on Excel data
+            var selector = new ListBoxSelector(listBox, excelPath);
+            selector.SelectItemsFromColumnA();
+
+            // Output selected items
+            Console.WriteLine("Selected items:");
+            foreach (var item in listBox.GetSelectedItems())
             {
-                Console.Error.WriteLine($"Excel file not found: {excelPath}");
-                return;
+                Console.WriteLine($"- {item}");
             }
-
-            var items = new List<string> { "Item1", "Item2", "Item3", "Item4" };
-
-            List<int> matchingIndices = ExcelListBoxHelper.GetMatchingIndicesFromColumnA(excelPath, items);
-
-            Console.WriteLine("Matching indices:");
-            foreach (int index in matchingIndices)
-            {
-                Console.WriteLine(index);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

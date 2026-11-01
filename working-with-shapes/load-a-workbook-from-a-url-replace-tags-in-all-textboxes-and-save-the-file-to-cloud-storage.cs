@@ -1,103 +1,102 @@
-// Title: Download an Excel workbook from a URL, replace placeholder tags in all TextBox shapes, and upload the updated file to cloud storage with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses HttpClient to fetch an XLSX file from a web URL, loads it into an Aspose.Cells Workbook, and substitutes defined placeholder tokens inside every TextBox shape. | Demonstrate how to save the modified Workbook to a MemoryStream in Xlsx format and upload the stream to a cloud storage endpoint (e.g., Azure Blob, Amazon S3) using an HTTP PUT request. | Create a reusable method that takes a byte array of an Excel file and a dictionary of tag replacements, applies the replacements to all TextBox shapes, and returns the updated workbook as a stream.
-// Common Searches: Aspose.Cells replace placeholder text in TextBox shapes after downloading workbook from URL | C# download Excel file, modify TextBox tags, and upload to Azure Blob storage | How to iterate over worksheet shapes and update TextBox content with Aspose.Cells .NET | Save Aspose.Cells workbook to MemoryStream and send via HTTP PUT to cloud storage
-// Tags: download Excel workbook via HttpClient Aspose.Cells | replace tags in TextBox shapes .NET | upload workbook stream to cloud storage HTTP PUT | iterate worksheet shapes Aspose.Cells | save workbook to MemoryStream Xlsx format
+// Title: Download an Excel workbook from a URL, replace placeholders in all TextBox shapes, and upload the modified file to cloud storage using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells replace {{Name}} placeholder in TextBox shapes after loading workbook from HTTP stream | C# download Excel file from URL, edit TextBox text, and upload back to cloud storage | How to iterate over worksheet shapes and modify TextBox content with Aspose.Cells in .NET | Upload modified Excel workbook to REST endpoint using HttpClient and Aspose.Cells | Process Excel workbook in memory stream to replace tags in shapes with Aspose.Cells
+// Tags: replace text in Excel TextBox shapes Aspose.Cells | download and load Excel workbook via HttpClient Aspose.Cells | upload Excel file via HTTP PUT C# | iterate worksheet shapes Aspose.Cells | memory stream Excel processing Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example downloads an XLSX file from a specified URL using HttpClient, loads it into an Aspose.Cells Workbook, iterates through each worksheet's shapes to locate TextBox objects, replaces configured placeholder tags within their text, saves the modified workbook to a MemoryStream in Xlsx format, and uploads the stream to a cloud storage endpoint via an HTTP PUT request.
+// The example downloads an Excel workbook from a remote URL into a memory stream, uses Aspose.Cells to iterate through each worksheet and its shapes, replaces {{Name}} and {{Date}} placeholders in TextBox shapes, saves the updated workbook back to a memory stream, and uploads the result to a cloud storage endpoint with an HTTP PUT request.
 class Program
 {
-    static async Task Main()
+    // Entry point
+    static async Task Main(string[] args)
     {
+        // URLs for source workbook and destination upload
+        string sourceUrl = "https://example.com/source.xlsx";
+        string destinationUrl = "https://cloudstorage.example.com/upload/modified.xlsx";
+
         try
         {
-            // URL of the source workbook
-            const string workbookUrl = "https://example.com/sample.xlsx";
-
-            // Download the workbook into a byte array
-            byte[] workbookBytes;
+            // Download the workbook into a memory stream
             using (HttpClient httpClient = new HttpClient())
+            using (Stream downloadStream = await httpClient.GetStreamAsync(sourceUrl))
+            using (MemoryStream workbookStream = new MemoryStream())
             {
-                workbookBytes = await httpClient.GetByteArrayAsync(workbookUrl);
-            }
+                await downloadStream.CopyToAsync(workbookStream);
+                workbookStream.Position = 0; // Reset stream position for reading
 
-            // Ensure we actually received data
-            if (workbookBytes == null || workbookBytes.Length == 0)
-                throw new InvalidDataException("Downloaded workbook is empty.");
+                // Load workbook from the memory stream
+                Workbook workbook = new Workbook(workbookStream);
 
-            // Load the workbook from the downloaded bytes
-            using (MemoryStream inputStream = new MemoryStream(workbookBytes))
-            {
-                Workbook workbook = new Workbook(inputStream);
-
-                // Define tag replacements (adjust as needed)
-                var tagReplacements = new Dictionary<string, string>
-                {
-                    { "{CustomerName}", "Acme Corp" },
-                    { "{ReportDate}", DateTime.Today.ToString("yyyy-MM-dd") }
-                    // Add more tag/value pairs here
-                };
-
-                // Iterate through all worksheets and their shapes
+                // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
+                    // Iterate through all shapes in the worksheet
                     foreach (Shape shape in sheet.Shapes)
                     {
-                        // Process only TextBox shapes
-                        if (shape.Type == AutoShapeType.TextBox) // Adjusted to correct enum
+                        try
                         {
-                            string text = shape.Text;
-
-                            // Replace each tag with its corresponding value
-                            foreach (var kvp in tagReplacements)
+                            // Process shapes that contain text (e.g., TextBox)
+                            if (!string.IsNullOrEmpty(shape.Text))
                             {
-                                text = text.Replace(kvp.Key, kvp.Value);
-                            }
+                                // Get current text
+                                string originalText = shape.Text;
 
-                            // Update the TextBox content
-                            shape.Text = text;
+                                // Example tag replacement
+                                string replacedText = originalText
+                                    .Replace("{{Name}}", "John Doe")
+                                    .Replace("{{Date}}", DateTime.Now.ToShortDateString());
+
+                                // Update the TextBox text if any changes were made
+                                if (!originalText.Equals(replacedText))
+                                {
+                                    shape.Text = replacedText;
+                                }
+                            }
+                        }
+                        catch (Exception shapeEx)
+                        {
+                            Console.Error.WriteLine($"Shape processing error in sheet '{sheet.Name}': {shapeEx.Message}");
                         }
                     }
                 }
 
-                // Save the modified workbook to a memory stream
+                // Save the modified workbook into a new memory stream
                 using (MemoryStream outputStream = new MemoryStream())
                 {
                     workbook.Save(outputStream, SaveFormat.Xlsx);
-                    outputStream.Position = 0;
+                    outputStream.Position = 0; // Reset for reading
 
-                    // Upload the stream to cloud storage.
-                    // Replace the following placeholder code with the actual SDK/API calls
-                    // for the target cloud provider (e.g., Azure Blob Storage, Amazon S3, Google Cloud Storage).
-
-                    // Example placeholder using HttpClient PUT to a pre‑signed URL:
-                    const string uploadUrl = "https://your-cloud-storage.com/upload/path/output.xlsx"; // TODO: set actual upload URL
-                    if (!string.IsNullOrWhiteSpace(uploadUrl))
+                    // Upload the modified workbook to cloud storage via HTTP PUT
+                    using (HttpContent content = new StreamContent(outputStream))
                     {
-                        using (HttpClient uploadClient = new HttpClient())
-                        {
-                            var content = new StreamContent(outputStream);
-                            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                        content.Headers.ContentType = new MediaTypeHeaderValue(
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-                            HttpResponseMessage response = await uploadClient.PutAsync(uploadUrl, content);
-                            response.EnsureSuccessStatusCode();
-                        }
+                        HttpResponseMessage response = await httpClient.PutAsync(destinationUrl, content);
+                        response.EnsureSuccessStatusCode();
                     }
                 }
             }
+
+            Console.WriteLine("Workbook processed and uploaded successfully.");
+        }
+        catch (HttpRequestException httpEx)
+        {
+            Console.Error.WriteLine($"HTTP error: {httpEx.Message}");
+        }
+        catch (IOException ioEx)
+        {
+            Console.Error.WriteLine($"I/O error: {ioEx.Message}");
         }
         catch (Exception ex)
         {
-            // Log or handle exceptions as needed
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

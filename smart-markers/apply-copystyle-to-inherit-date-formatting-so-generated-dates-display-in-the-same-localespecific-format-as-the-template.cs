@@ -1,62 +1,46 @@
-// Title: Use Aspose.Cells CopyStyle to transfer locale‑specific date formatting from a template cell to generated date cells in C#
-// AI Prompts: Copy the date format from cell A1 of a template workbook and apply it to a range of new date cells using Aspose.Cells CopyStyle in .NET. | Transfer a locale‑specific date style from a source worksheet to multiple destination cells after inserting DateTime values with Aspose.Cells.
-// Common Searches: Aspose.Cells copy date cell style from template workbook to another workbook in C# | C# how to inherit locale specific date format using CopyStyle method Aspose.Cells | apply template date formatting to generated dates with Aspose.Cells .NET | example of copying cell style between ranges for date formatting in Aspose.Cells
-// Tags: CopyStyle date formatting Aspose.Cells | inherit locale date style C# | transfer cell style between workbooks Aspose.Cells | apply template formatting to generated dates .NET | date cell style copy range Aspose.Cells
+// Title: Copy a template cell's locale‑specific date format to generated date cells with Aspose.Cells for .NET
+// AI Prompts: Retrieve the style from a template date cell and apply it to a range of new cells while inserting DateTime values using Aspose.Cells. | Use Aspose.Cells to inherit the locale‑specific date format from cell A1 and set it on dynamically created date cells in C#. | Programmatically apply a source cell's number format to multiple cells in a workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells copy date format from one cell to another in C# | How to preserve locale specific date formatting when writing dates with Aspose.Cells .NET | Apply template cell style to generated cells using Aspose.Cells workbook | Set number format for multiple cells based on a source cell in Aspose.Cells | C# Aspose.Cells inherit date style from template worksheet
+// Tags: copy cell style Aspose.Cells C# | inherit locale date format Aspose.Cells | apply template date style to generated cells | set number format from source cell Aspose.Cells | Aspose.Cells date formatting example
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsCopyDateStyleDemo
+// The example loads a template workbook, extracts the style (including locale‑specific date format) from cell A1, writes three DateTime values into column B, applies the extracted style to each new cell, and saves the result as Result.xlsx.
+class Program
 {
-    // The example loads a template workbook, extracts the date style from cell A1, writes three DateTime values to a new workbook, copies the template's style to the range A1:C1 using CopyStyle, and saves the result as Result.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the template workbook (using the provided load rule)
+        Workbook workbook = new Workbook("Template.xlsx");
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Assume cell A1 in the template contains the desired date format
+        Cell templateDateCell = sheet.Cells["A1"];
+        Style dateStyle = templateDateCell.GetStyle();
+
+        // Sample dates to write
+        DateTime[] dates = new DateTime[]
         {
-            const string templatePath = "Template.xlsx";
-            const string resultPath = "Result.xlsx";
+            DateTime.Now,
+            DateTime.Now.AddDays(1),
+            DateTime.Now.AddDays(2)
+        };
 
-            try
-            {
-                // Verify that the template file exists before loading
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file \"{templatePath}\" not found.");
-                    return;
-                }
+        // Write dates to column B and copy the date style from the template
+        for (int i = 0; i < dates.Length; i++)
+        {
+            // Row i, column 1 corresponds to B{i+1}
+            Cell newCell = sheet.Cells[i, 1];
+            newCell.PutValue(dates[i]);
 
-                // Load the template workbook that contains the desired date format in cell A1
-                Workbook templateWorkbook = new Workbook(templatePath);
-                Worksheet templateSheet = templateWorkbook.Worksheets[0];
-
-                // Define the source range that holds the date style (single cell A1)
-                Aspose.Cells.Range sourceDateRange = templateSheet.Cells.CreateRange("A1");
-
-                // Create a new workbook where dates will be generated
-                Workbook resultWorkbook = new Workbook();
-                Worksheet resultSheet = resultWorkbook.Worksheets[0];
-
-                // Populate some date values in the result sheet
-                resultSheet.Cells["A1"].PutValue(DateTime.Now);
-                resultSheet.Cells["B1"].PutValue(DateTime.Now.AddDays(1));
-                resultSheet.Cells["C1"].PutValue(DateTime.Now.AddDays(2));
-
-                // Define the destination range that should inherit the date formatting
-                Aspose.Cells.Range destinationDateRange = resultSheet.Cells.CreateRange("A1:C1");
-
-                // Copy the style (including date format) from the template range to the destination range
-                destinationDateRange.CopyStyle(sourceDateRange);
-
-                // Save the resulting workbook
-                resultWorkbook.Save(resultPath);
-                Console.WriteLine($"Result workbook saved to \"{resultPath}\".");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Apply the same style (including locale‑specific date format)
+            newCell.SetStyle(dateStyle);
         }
+
+        // Save the workbook (using the provided save rule)
+        workbook.Save("Result.xlsx");
     }
 }

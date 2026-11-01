@@ -1,72 +1,71 @@
-// Title: Identify and suggest fixes for Excel formulas that reference deleted rows or columns using Aspose.Cells in C#
-// AI Prompts: Generate C# code with Aspose.Cells that iterates all worksheets, detects formulas returning #REF! errors, and prints a summary of affected cells. | Update the example to replace each #REF! token in a formula with a placeholder such as "A1" and save the modified workbook. | Create a reusable method that returns a collection of cell addresses and their original formulas where the result is #REF! for further custom processing.
-// Common Searches: C# Aspose.Cells find cells with #REF! error after deleting rows | how to programmatically locate broken formula references in an .xlsx file using Aspose.Cells | Aspose.Cells example to list formulas that contain #REF! in a workbook | detect and correct invalid cell references caused by row deletion with Aspose.Cells C#
-// Tags: detect #REF! formulas with Aspose.Cells | list cells containing invalid references in .xlsx | correct broken formula references in C# using Aspose.Cells | Aspose.Cells formula validation for deleted rows | scan workbook for #REF! errors in C#
+// Title: Find and report Excel formulas that return #REF! after rows are deleted using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# detect #REF! errors caused by deleted rows | list cells with broken references after removing rows using Aspose.Cells | how to programmatically identify formulas that reference missing rows in .NET | C# example to scan workbook for #REF! formula errors with Aspose.Cells | detect invalid cell references after row deletion in Excel via Aspose.Cells API
+// Tags: Aspose.Cells detect #REF! formulas | C# scan Excel workbook for broken references | identify deleted row references in Excel formulas | Aspose.Cells iterate worksheets cells errors | handle #REF! errors with Aspose.Cells .NET | Excel formula validation using Aspose.Cells
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace FormulaReferenceChecker
+// The sample loads an Excel file with Aspose.Cells, iterates through all worksheets and cells, checks each formula for a #REF! result caused by deleted rows or columns, and prints the sheet name, cell address, offending formula, and a suggestion to replace the invalid reference.
+class FormulaReferenceChecker
 {
-    // // Uses Aspose.Cells to load a workbook, scans every worksheet, checks each formula cell for a #REF! result indicating a reference to a deleted row or column, and builds suggestion messages describing the problematic cell and formula.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Load the workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // List to hold correction suggestions
-            List<string> suggestions = new List<string>();
+        Workbook workbook = null;
 
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the cells collection
                 Cells cells = sheet.Cells;
 
-                // Iterate through all cells that contain formulas
+                // Iterate through all cells in the worksheet
                 foreach (Cell cell in cells)
                 {
+                    // Determine if the cell contains a formula
                     if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        // If the formula result is a #REF! error, the formula references a deleted row/column
-                        if (cell.Value != null && cell.Value.ToString() == "#REF!")
+                        // Check if the formula result is a #REF! error
+                        // When a formula evaluates to an error, the cell's value is a string like "#REF!"
+                        if (cell.Value != null && cell.Value.ToString().Equals("#REF!", StringComparison.OrdinalIgnoreCase))
                         {
-                            string formula = cell.Formula;
-
-                            // Simple detection of #REF! token inside the formula
-                            if (formula.Contains("#REF!"))
-                            {
-                                // Build a suggestion message
-                                string suggestion = $"Sheet '{sheet.Name}', Cell {cell.Name}: " +
-                                                    $"Formula \"{formula}\" contains a reference to a deleted row/column. " +
-                                                    $"Consider removing or updating the #REF! part.";
-
-                                suggestions.Add(suggestion);
-                            }
+                            Console.WriteLine($"Sheet: {sheet.Name}, Cell: {cell.Name}");
+                            Console.WriteLine($"  Formula: {cell.Formula}");
+                            Console.WriteLine("  Issue: Formula references a deleted row/column (produces #REF! error).");
+                            Console.WriteLine("  Suggestion: Review the formula and replace the #REF! reference with a valid cell/range.");
+                            Console.WriteLine();
                         }
                     }
                 }
             }
 
-            // Output the suggestions
-            Console.WriteLine("=== Formula Reference Issues ===");
-            if (suggestions.Count == 0)
-            {
-                Console.WriteLine("No formulas referencing deleted rows/columns were found.");
-            }
-            else
-            {
-                foreach (string s in suggestions)
-                {
-                    Console.WriteLine(s);
-                }
-            }
-
-            // (Optional) Save the workbook if you made any modifications
+            // Optionally, save the workbook after manual corrections (uncomment if needed)
             // workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 }

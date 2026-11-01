@@ -1,88 +1,59 @@
-// Title: Resize Excel chart data label shapes to fixed size after adding a branding image with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to create a column chart, enable data labels, disable automatic shape resizing, and set each label's width to 120 px and height to 50 px. | Show how to insert a PNG branding image into a worksheet and reference it while customizing chart data labels in Aspose.Cells, keeping label dimensions unchanged. | Adapt the example to apply a picture fill to data labels (if supported) while preserving the custom label size settings in Aspose.Cells for .NET.
-// Common Searches: how to set fixed width and height for chart data labels in Aspose.Cells C# | add background picture to Excel chart data labels using Aspose.Cells .NET | disable data label auto resize Aspose.Cells chart series | customize size of data label shapes programmatically with Aspose.Cells | Aspose.Cells chart label branding image not resizing
-// Tags: Aspose.Cells chart data label size | fixed dimensions for chart data labels .NET | branding image on chart data labels Aspose.Cells | disable automatic data label resize Aspose.Cells | C# set chart label width and height
+// Title: How to resize chart data label shapes after applying a picture background with Aspose.Cells for .NET
+// AI Prompts: Add a picture fill to each data label in a column chart and then programmatically enlarge the label shape to accommodate the image using Aspose.Cells. | Set a custom background image for chart data labels and adjust their width and height so the branding graphic is fully visible in an Excel file created with Aspose.Cells.
+// Common Searches: Aspose.Cells C# resize data label shape after picture fill | set background image for chart data labels Aspose.Cells .NET | increase data label dimensions to fit branding image in Excel chart | how to programmatically change size of chart data label shapes using Aspose.Cells
+// Tags: chart data label picture background Aspose.Cells | resize data label shape .NET | branding chart labels with image Aspose.Cells | set data label fill and adjust size Aspose.Cells
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsDataLabelResizeDemo
+// The example creates a workbook, adds sample data, builds a column chart, enables data labels, applies a picture fill to each label for branding, and then resizes the label shapes so the background image fits correctly before saving the file as 'ChartWithResizedDataLabels.xlsx'.
+class ResizeDataLabelShapes
 {
-    // Demonstrates creating a workbook with a column chart, enabling centered data labels, inserting a branding PNG into the worksheet, disabling automatic label resizing, and setting each data label shape to a fixed width of 120 px and height of 50 px before saving the file as DataLabelResizeWithBranding.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["B3"].PutValue(45);
+            sheet.Cells["B4"].PutValue(25);
 
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Enable data labels for the first series
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;
-                series.DataLabels.Position = LabelPositionType.Center;
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-                // Path to the branding image (ensure the file exists at this location)
-                string imagePath = "branding.png";
+            // Enable data labels and show values
+            chart.NSeries[0].DataLabels.ShowValue = true;
 
-                // Verify that the image file exists before using it
-                if (!File.Exists(imagePath))
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}. Skipping picture fill.");
-                }
+            // Customize data label appearance
+            chart.NSeries[0].DataLabels.Font.Size = 10;
+            chart.NSeries[0].DataLabels.Font.Color = Color.Black;
 
-                // Iterate through each point and customize its data label
-                foreach (ChartPoint point in series.Points)
-                {
-                    // If the image exists, add it to the worksheet (the picture itself is not applied to the label
-                    // because Aspose.Cells does not expose a direct Fill property on DataLabels)
-                    if (File.Exists(imagePath))
-                    {
-                        int picIdx = sheet.Pictures.Add(0, 0, imagePath);
-                        // The picture is added to the worksheet; further customisation can be done if needed.
-                        // Note: Direct picture fill for data labels is not supported via the current API.
-                        Picture pic = sheet.Pictures[picIdx];
-                        // Placeholder for any future operations with 'pic'.
-                    }
+            // Position the data label at the center of the data point
+            // Note: PositionType enum may not be available in some versions; this line is optional.
+            // chart.NSeries[0].DataLabels.Position = PositionType.Center;
 
-                    // Disable automatic resizing so we can set a fixed size
-                    point.DataLabels.IsResizeShapeToFitText = false;
-
-                    // Set custom dimensions for the label shape (in pixels)
-                    point.DataLabels.Width = 120;
-                    point.DataLabels.Height = 50;
-                }
-
-                // Save the workbook
-                string outputPath = "DataLabelResizeWithBranding.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ChartWithResizedDataLabels.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

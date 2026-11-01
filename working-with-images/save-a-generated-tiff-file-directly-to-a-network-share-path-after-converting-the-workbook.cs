@@ -1,14 +1,15 @@
-// Title: Render an Aspose.Cells worksheet to a TIFF image and save it directly to a UNC network share using C#
-// AI Prompts: Write C# code that uses Aspose.Cells to convert a worksheet to a TIFF image and writes the file to a specified UNC path, creating the folder if it does not exist. | Show how to configure ImageOrPrintOptions for a single‑page TIFF export and stream the result to a network share without creating a local temporary file. | Provide a .NET method that renders the first sheet of a workbook as TIFF, ensures write permissions on \\Server\Share, and saves the image bytes directly to that location.
-// Common Searches: c# aspnet save aspose.cells worksheet as tiff to network share | how to export excel sheet to tiff file on unc path using aspose.cells | aspose.cells render sheet to tiff and write to remote folder | write image bytes from aspose.cells to \\server\share in c# | ensure directory exists before saving tiff from workbook in .net
-// Tags: Aspose.Cells worksheet to TIFF conversion | C# write TIFF to UNC share | ImageOrPrintOptions OnePagePerSheet TIFF export | SheetRender render sheet as image stream | Directory.CreateDirectory network path validation
+// Title: Render an Excel worksheet to a high‑resolution TIFF and save it directly to a UNC network share using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to render the first worksheet of a workbook as a 300 dpi single‑page TIFF and writes the file to a \\Server\Share UNC location. | Write a method that verifies a network folder exists (creating it if necessary) before calling SheetRender.ToImage to save the TIFF. | Show how to configure ImageOrPrintOptions for high‑resolution TIFF output and combine it with SheetRender to produce a one‑page image.
+// Common Searches: Aspose.Cells export worksheet as TIFF to UNC path C# | how to save rendered TIFF image on a network share using Aspose.Cells | C# create missing network folder before saving Aspose.Cells image | set 300 dpi TIFF export options with Aspose.Cells ImageOrPrintOptions | render Excel sheet to single page TIFF and store on shared drive
+// Tags: Aspose.Cells render worksheet to TIFF | high‑dpi TIFF export ImageOrPrintOptions | SheetRender ToImage remote path | pre‑save folder existence check C# | save rendered Excel image to remote folder
 
 using System;
 using System.IO;
+using System.Drawing.Imaging;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering;   // Required for ImageOrPrintOptions and SheetRender
 
-// The example creates a Workbook, fills cells A1 and A2, sets ImageOrPrintOptions for one page per sheet, renders the first worksheet to a memory stream, ensures the target UNC directory exists, and writes the stream bytes as a .tiff file directly to a network share.
+// The example creates a workbook, fills it with sample data, configures the sheet to fit one page wide, sets high‑resolution (300 dpi) image rendering options, renders the first worksheet to a single‑page TIFF, ensures the target UNC directory exists (creating it if needed), and saves the TIFF directly to a network share.
 class Program
 {
     static void Main()
@@ -20,37 +21,42 @@ class Program
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["A2"].PutValue("World");
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["B3"].PutValue(1500);
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B4"].PutValue(1800);
 
-            // Set image rendering options (default format will be PNG)
+            // Fit the sheet on one page when printed
+            sheet.PageSetup.FitToPagesWide = 1;
+            sheet.PageSetup.FitToPagesTall = 0;
+
+            // Set image rendering options (default format will be used, e.g., PNG)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                OnePagePerSheet = true // Render each sheet on a separate page
+                HorizontalResolution = 300,
+                VerticalResolution = 300,
+                OnePagePerSheet = true
             };
 
-            // Render the worksheet to an image stream
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
-            using (MemoryStream imageStream = new MemoryStream())
+            // Render the worksheet to an image
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+
+            // UNC network share path for the output file
+            string networkPath = @"\\ServerName\ShareFolder\WorkbookOutput.tiff";
+
+            // Ensure the target directory exists
+            string directory = Path.GetDirectoryName(networkPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                renderer.ToImage(0, imageStream);
-                imageStream.Position = 0; // Reset stream position for reading
-
-                // Define the network share path (ensure write permissions)
-                string networkPath = @"\\Server\Share\output.tiff";
-
-                // Ensure the target directory exists
-                string directory = Path.GetDirectoryName(networkPath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the image stream to the network share as TIFF
-                // The stream contains PNG by default; convert to TIFF by saving with appropriate extension
-                // Aspose.Cells can directly save as TIFF by setting ImageFormat in options, but here we write the stream.
-                File.WriteAllBytes(networkPath, imageStream.ToArray());
+                Directory.CreateDirectory(directory);
             }
+
+            // Save the rendered page to the network share
+            sheetRender.ToImage(0, networkPath);
         }
         catch (Exception ex)
         {

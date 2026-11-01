@@ -1,104 +1,104 @@
-// Title: Batch convert Excel .xlsx files and toggle ExportGridLines based on detected cell borders using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that enumerates all .xlsx files in a folder, loads each workbook with Aspose.Cells, scans every worksheet for any cell border, sets Workbook.Settings.ExportGridLines to false when a border is found, and saves the result to an output directory. | Create a .NET script that processes a collection of Excel workbooks, determines whether any worksheet contains borders, flips the ExportGridLines setting accordingly, and writes the modified workbooks back as .xlsx files.
-// Common Searches: Aspose.Cells batch processing hide grid lines when worksheet has borders | C# loop through Excel files and set ExportGridLines based on border detection | how to disable ExportGridLines in Aspose.Cells if a workbook contains borders | detect any cell border in a workbook using Aspose.Cells .NET
-// Tags: batch workbook conversion Aspose.Cells .NET | conditional ExportGridLines toggle | cell border detection Aspose.Cells | process multiple .xlsx files C# | grid line export based on borders
+// Title: Batch convert multiple Excel workbooks to PDF in C# with Aspose.Cells while detecting cell borders to control gridline export
+// Common Searches: c# Aspose.Cells batch convert all .xlsx files in a folder to PDF | how to detect any cell border in an Excel workbook using Aspose.Cells before PDF export | conditionally export gridlines when converting Excel to PDF with Aspose.Cells based on border presence | iterate used range of worksheets to find borders in Aspose.Cells C# example | process multiple workbooks and save PDFs to an output directory using Aspose.Cells
+// Tags: batch excel to pdf conversion Aspose.Cells C# | cell border detection Aspose.Cells workbook | conditional ExportGridLines PdfSaveOptions | scan used range for borders Aspose.Cells | folder based workbook processing Aspose.Cells | error handling during bulk pdf conversion C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The C# utility scans every .xlsx file in a specified input folder, loads each workbook with Aspose.Cells, checks all worksheets for the presence of any cell border, optionally sets the workbook's Settings.ExportGridLines flag opposite to the border detection result, and saves the processed workbook to an output folder.
-class BatchConvert
+// The sample loads each .xlsx file from a specified input directory, scans every worksheet's used range to determine if any cell has a border, and then saves the workbook as a PDF using Aspose.Cells. Gridline export can be toggled via PdfSaveOptions based on the border detection result, and all PDFs are written to an output folder with basic error handling and logging.
+class Program
 {
     static void Main()
     {
-        // Define input and output directories
-        string inputDir = @"C:\InputWorkbooks";
-        string outputDir = @"C:\OutputWorkbooks";
+        // Input and output directories
+        string inputDir = @"C:\Input";
+        string outputDir = @"C:\Output";
 
-        try
+        // Verify input directory exists
+        if (!Directory.Exists(inputDir))
         {
-            // Verify input directory exists
-            if (!Directory.Exists(inputDir))
+            Console.WriteLine($"Input directory does not exist: {inputDir}");
+            return;
+        }
+
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputDir);
+
+        // Process each Excel workbook in the input folder
+        foreach (string filePath in Directory.GetFiles(inputDir, "*.xlsx"))
+        {
+            // Verify the file exists before attempting to load
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Input directory does not exist: {inputDir}");
-                return;
+                Console.WriteLine($"File not found: {filePath}");
+                continue;
             }
 
-            // Ensure output directory exists
-            Directory.CreateDirectory(outputDir);
-
-            // Get all workbook files (e.g., .xlsx) in the input directory
-            string[] files = Directory.GetFiles(inputDir, "*.xlsx");
-
-            foreach (string inputPath in files)
+            try
             {
-                // Verify the file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"File not found, skipping: {inputPath}");
-                    continue;
-                }
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
+                bool hasBorders = false;
 
-                try
+                // Scan worksheets for any cell that has a border
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Load the source workbook
-                    Workbook srcWorkbook = new Workbook(inputPath);
+                    Cells cells = sheet.Cells;
+                    // Determine the used range to limit iteration
+                    AsposeRange usedRange = cells.MaxDisplayRange;
 
-                    // Determine if any worksheet contains borders
-                    bool hasBorders = false;
-                    foreach (Worksheet ws in srcWorkbook.Worksheets)
+                    if (usedRange != null)
                     {
-                        // Get the used range of the worksheet
-                        Aspose.Cells.Range usedRange = ws.Cells.MaxDisplayRange;
-                        int firstRow = usedRange.FirstRow;
-                        int firstColumn = usedRange.FirstColumn;
-                        int rowCount = usedRange.RowCount;
-                        int columnCount = usedRange.ColumnCount;
+                        int startRow = usedRange.FirstRow;
+                        int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                        int startCol = usedRange.FirstColumn;
+                        int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-                        // Scan cells for borders
-                        for (int r = firstRow; r < firstRow + rowCount && !hasBorders; r++)
+                        for (int row = startRow; row <= endRow && !hasBorders; row++)
                         {
-                            for (int c = firstColumn; c < firstColumn + columnCount && !hasBorders; c++)
+                            for (int col = startCol; col <= endCol && !hasBorders; col++)
                             {
-                                Style style = ws.Cells[r, c].GetStyle();
-
-                                // Iterate through all possible border types
-                                foreach (BorderType bt in Enum.GetValues(typeof(BorderType)))
+                                Style style = cells[row, col].GetStyle();
+                                if (HasAnyBorder(style))
                                 {
-                                    if (style.Borders[bt].LineStyle != CellBorderType.None)
-                                    {
-                                        hasBorders = true;
-                                        break;
-                                    }
+                                    hasBorders = true;
                                 }
                             }
                         }
-
-                        if (hasBorders) break;
                     }
 
-                    // NOTE: ExportGridLines property may not be available in older Aspose.Cells versions.
-                    // If needed, uncomment the following line when the property exists:
-                    // srcWorkbook.Settings.ExportGridLines = !hasBorders;
-
-                    // Prepare output path
-                    string fileName = Path.GetFileNameWithoutExtension(inputPath);
-                    string outputPath = Path.Combine(outputDir, fileName + ".xlsx");
-
-                    // Save the workbook
-                    srcWorkbook.Save(outputPath, SaveFormat.Xlsx);
-                    Console.WriteLine($"Processed and saved: {outputPath}");
+                    if (hasBorders) break;
                 }
-                catch (Exception exFile)
-                {
-                    Console.WriteLine($"Error processing file '{inputPath}': {exFile.Message}");
-                }
+
+                // Configure PDF save options (default gridlines are exported)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Build output file path
+                string outputFile = Path.Combine(outputDir,
+                    Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+
+                // Save the workbook as PDF with the configured options
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"Converted: {filePath} -> {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
-        catch (Exception ex)
+    }
+
+    // Helper method to determine if a style contains any border
+    static bool HasAnyBorder(Style style)
+    {
+        // Iterate through all BorderType values and check line style
+        foreach (BorderType bt in Enum.GetValues(typeof(BorderType)))
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            if (style.Borders[bt].LineStyle != CellBorderType.None)
+                return true;
         }
+        return false;
     }
 }

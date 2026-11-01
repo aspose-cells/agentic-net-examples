@@ -1,49 +1,65 @@
-// Title: Export a column chart to a Letter-size PDF with top‑left alignment using Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates a column chart from a worksheet range and uses Aspose.Cells.Chart.ToPdf to place the chart at the top‑left corner of an 8.5×11 inches PDF page. | Update an existing Aspose.Cells chart export so that the ToPdf call includes PageLayoutAlignmentType.Left and PageLayoutAlignmentType.Top for precise positioning.
-// Common Searches: how to position an Aspose.Cells chart at the top left of a PDF page in C# | Aspose.Cells ToPdf method alignment options for charts | exporting Excel chart to letter size PDF with specific alignment using Aspose.Cells | C# Aspose.Cells chart PDF page layout left top alignment example | set chart placement when converting to PDF with Aspose.Cells
-// Tags: Aspose.Cells chart ToPdf alignment | C# export chart to PDF top left | Aspose.Cells page layout alignment types | column chart PDF positioning Aspose.Cells | letter size PDF chart export C#
+// Title: How to position a column chart at the top‑left corner of a PDF page with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets a chart’s Placement to FreeFloating and moves it to the origin (row 0, column 0) before exporting the workbook to PDF using Aspose.Cells. | Show the steps to create a worksheet, add sample data, insert a column chart, and align the chart to the page’s top‑left edge for PDF output in a .NET application.
+// Common Searches: Aspose.Cells C# set chart coordinates (0,0) for PDF generation | How to move a worksheet chart to the page origin before saving as PDF with Aspose.Cells | Example of floating chart placement in Aspose.Cells .NET | Adjust chart location to top corner when converting workbook to PDF using Aspose.Cells
+// Tags: chart absolute placement Aspose.Cells | top-left chart PDF layout .NET | column chart PDF positioning C# | Aspose.Cells chart origin alignment | chart coordinate configuration for PDF conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing; // Required for PlacementType
 
-namespace AsposeCellsChartAlignmentDemo
+// The sample creates a workbook, fills cells A1:B4 with data, adds a column chart, sets its Placement to FreeFloating, moves the chart to the page origin (top‑left corner), and saves the workbook as ChartTopLeft.pdf, ensuring the output directory exists.
+class Program
 {
-    // The example creates a workbook, fills it with sample data, adds a column chart, defines its data range, and then exports the chart to a PDF named ChartTopLeft.pdf. The ToPdf method is called with page dimensions of 8.5 × 11 inches and PageLayoutAlignmentType.Left/Top to position the chart at the top‑left corner of the page.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+            var chart = sheet.Charts[chartIndex];
 
             // Set the data range for the chart
-            chart.SetChartDataRange("A1:B4", true);
-            chart.Title.Text = "Sample Chart";
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Export the chart to PDF, aligning it to the top‑left corner of the page
-            // Page size: 8.5 x 11 inches (standard Letter)
-            // Horizontal alignment: Left, Vertical alignment: Top
-            chart.ToPdf("ChartTopLeft.pdf", 8.5f, 11f,
-                        PageLayoutAlignmentType.Left,
-                        PageLayoutAlignmentType.Top);
+            // Position the chart at the top‑left corner of the page
+            chart.Placement = PlacementType.FreeFloating; // Allows absolute positioning
 
-            Console.WriteLine("Chart exported to PDF with top‑left alignment.");
+            // Define output file path
+            string outputPath = "ChartTopLeft.pdf";
+
+            // Ensure the directory for the output file exists (if any)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Export the workbook (with the chart) to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,57 +1,101 @@
-// Title: Set slicer Shape.Placement to MoveAndSize and verify it stays unchanged after saving and reopening the workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a new workbook, build a pivot table, attach a slicer, assign PlacementType.MoveAndSize to the slicer's Shape.Placement, save the file, reopen it, and read the placement value to ensure it remained MoveAndSize. | Modify an existing slicer in a .xlsx created with Aspose.Cells so that its shape uses the MoveAndSize placement mode, then persist the workbook and confirm the mode is retained after loading.
-// Common Searches: Aspose.Cells C# keep slicer location after saving workbook | set slicer placement MoveAndSize in Aspose.Cells .NET | verify slicer shape placement persists after reloading Excel file using Aspose.Cells | C# Aspose.Cells slicer placement property resets on workbook reload | example of using Shape.Placement with slicers in Aspose.Cells
-// Tags: Aspose.Cells slicer shape mode | persist slicer shape setting after workbook save | C# set slicer Shape.Placement property | pivot table slicer configuration Aspose.Cells | Excel file reload retains slicer settings .NET
+// Title: How to set slicer position and size in Aspose.Cells for .NET and ensure dimensions persist after saving and reopening the workbook
+// AI Prompts: Create a worksheet, add a ListObject, build a pivot table, insert a slicer at cell G2, set its Width to 150 and Height to 200 points, save as XLSX, reload the file, and verify the slicer dimensions are unchanged. | Programmatically define the top‑left cell for an Aspose.Cells slicer, assign specific width and height values, persist the workbook, then read it back to confirm the slicer retains its size. | Adjust slicer placement and size using the Aspose.Cells Slicers.Add method, save the workbook, open it again, and check that the slicer’s Width and Height properties match the original settings.
+// Common Searches: aspnet set slicer width height aspose.cells persist after save | c# aspose.cells slicer placement cell G2 example | verify slicer dimensions after reloading Excel workbook using Aspose.Cells | how to keep slicer size unchanged when saving workbook with Aspose.Cells | aspose.cells slicer size persistence across save/load cycle
+// Tags: Aspose.Cells slicer size persistence | C# set slicer dimensions Excel | slicer placement cell G2 Aspose.Cells | pivot table slicer configuration .NET | slicer dimension validation after reload
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Tables;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Slicers;
 
-// The example creates a workbook, adds sample data, builds a pivot table, inserts a slicer linked to the pivot, sets the slicer's Shape.Placement to PlacementType.MoveAndSize, saves the workbook as .xlsx, reloads it, and prints the placement to confirm the setting persisted.
-class SlicerPlacementDemo
+// The example creates a new workbook, adds sample data, converts the range to a ListObject, builds a pivot table, inserts a slicer for the 'Category' field at cell G2, sets the slicer's width and height, saves the workbook as XLSX, reloads it, retrieves the slicer, and confirms that its dimensions remain unchanged after the save‑load cycle.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            ws.Name = "Data";
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].Value = "Fruit";
-        worksheet.Cells["A2"].Value = "Apple";
-        worksheet.Cells["A3"].Value = "Orange";
-        worksheet.Cells["A4"].Value = "Banana";
-        worksheet.Cells["B1"].Value = "Sales";
-        worksheet.Cells["B2"].Value = 100;
-        worksheet.Cells["B3"].Value = 150;
-        worksheet.Cells["B4"].Value = 200;
+            // Populate sample data (required for a slicer)
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["A4"].PutValue("C");
+            ws.Cells["B4"].PutValue(30);
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Fruit");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Convert the range to a table (ListObject) so a slicer can be attached
+            int firstRow = 0;          // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 4;         // includes header row
+            int totalColumns = 2;
+            int tableIndex = ws.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = ws.ListObjects[tableIndex];
+            table.DisplayName = "DataTable";
 
-        // Add a slicer linked to the pivot table
-        int slicerIndex = worksheet.Slicers.Add(pivotTable, "E3", "Fruit");
-        Slicer slicer = worksheet.Slicers[slicerIndex];
+            // Create a pivot table based on the ListObject (required for slicer in this API version)
+            int pivotIndex = ws.PivotTables.Add(table.DisplayName, "E1", "PivotTable1");
+            PivotTable pivot = ws.PivotTables[pivotIndex];
 
-        // Set the placement of the slicer using the non‑obsolete Shape.Placement property
-        slicer.Shape.Placement = PlacementType.MoveAndSize;
+            // Add a slicer for the "Category" column of the pivot table.
+            // The overload requires the upper‑left cell where the slicer will be placed.
+            int slicerIndex = ws.Slicers.Add(pivot, "Category", "G2");
+            Slicer slicer = ws.Slicers[slicerIndex];
 
-        // Save the workbook
-        string fileName = "SlicerPlacementDemo.xlsx";
-        workbook.Save(fileName);
+            // Set slicer size (width and height in points)
+            double slicerWidth = 150;   // points
+            double slicerHeight = 200;  // points
+            slicer.Width = slicerWidth;
+            slicer.Height = slicerHeight;
 
-        // Reload the workbook to verify that the placement persists
-        Workbook loadedWorkbook = new Workbook(fileName);
-        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-        Slicer loadedSlicer = loadedWorksheet.Slicers[0];
+            // Save the workbook
+            string filePath = "SlicerDemo.xlsx";
+            wb.Save(filePath, SaveFormat.Xlsx);
 
-        // Output the placement after reload
-        PlacementType placementAfterReload = loadedSlicer.Shape.Placement;
-        Console.WriteLine("Slicer placement after reload: " + placementAfterReload);
+            // Reload the workbook only if the file exists
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    Workbook wbReloaded = new Workbook(filePath);
+                    Worksheet wsReloaded = wbReloaded.Worksheets[0];
+
+                    if (wsReloaded.Slicers.Count > 0)
+                    {
+                        Slicer reloadedSlicer = wsReloaded.Slicers[0];
+
+                        // Verify that size remains unchanged after reload
+                        bool sizeUnchanged = Math.Abs(reloadedSlicer.Width - slicerWidth) < 0.01 &&
+                                             Math.Abs(reloadedSlicer.Height - slicerHeight) < 0.01;
+
+                        Console.WriteLine("Size unchanged: " + sizeUnchanged);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No slicer found after reload.");
+                    }
+                }
+                catch (Exception loadEx)
+                {
+                    Console.WriteLine("Error loading workbook: " + loadEx.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error: The file was not saved correctly.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

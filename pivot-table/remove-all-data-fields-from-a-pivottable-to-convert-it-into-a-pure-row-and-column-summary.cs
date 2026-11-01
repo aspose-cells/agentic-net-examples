@@ -1,78 +1,58 @@
-// Title: Remove all data fields from an Aspose.Cells PivotTable in C# to produce a row‑column summary
-// AI Prompts: Write C# code using Aspose.Cells that iterates through a PivotTable's DataFields collection, removes each field, and then recalculates the pivot. | Show how to clear the data area of a PivotTable while keeping row and column fields intact with Aspose.Cells for .NET. | Provide a complete example that refreshes the pivot cache, deletes every data field, and saves the workbook as a summary‑only file.
-// Common Searches: C# Aspose.Cells how to clear data fields from a pivot table | remove data area from pivot table using Aspose.Cells .NET | Aspose.Cells pivot table without values only rows and columns | example code to delete all data fields in a PivotTable with Aspose.Cells | convert Aspose.Cells pivot table to plain row column summary
-// Tags: Aspose.Cells pivot table purge data fields | C# clear pivot data area Aspose.Cells | Aspose.Cells refresh pivot cache after field removal | row column summary pivot Aspose.Cells | iterate PivotTable DataFields C#
+// Title: How to clear all data fields from the first PivotTable in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that loads an .xlsx file with Aspose.Cells, checks the first worksheet for a PivotTable, removes every DataField from that PivotTable, and saves the result to a new file. | Generate Aspose.Cells code that validates the existence of a PivotTable, calls the DataFields.Clear() method to strip all aggregated values, and outputs a cleaned workbook.
+// Common Searches: Aspose.Cells C# remove data fields from a pivot table in an existing workbook | How to delete all values from a PivotTable using Aspose.Cells .NET | Clear pivot table data fields programmatically with Aspose.Cells for Excel files | Convert a pivot table to only row and column labels using Aspose.Cells C#
+// Tags: Aspose.Cells clear pivot data fields | C# Aspose.Cells remove pivot values | Aspose.Cells pivot table cleanup | Excel pivot table row column summary Aspose | Aspose.Cells DataFields.Clear example
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Ensure PivotTable type is available
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, verifies that the first worksheet contains a PivotTable, clears the PivotTable's DataFields collection to leave only row and column headings, and saves the modified workbook to a new file.
+class PivotTableCleaner
 {
-    // The example creates a workbook, adds sample data, builds a PivotTable with a row field, then loops through and removes all data fields, recalculates the pivot, and saves the result as a row‑column summary workbook.
-    public class RemoveAllDataFieldsFromPivotTable
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Amount");
-                worksheet.Cells["A2"].PutValue("Fruit");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("Fruit");
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["A4"].PutValue("Vegetable");
-                worksheet.Cells["B4"].PutValue(15);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Add fields: Category as Row, Amount as Data
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-                // Refresh the pivot cache and calculate data
-                pivotTable.RefreshData();          // Correct API to refresh the cache
-                pivotTable.CalculateData();
-
-                // ---- Remove all data fields ----
-                // Loop until no data fields remain
-                while (pivotTable.DataFields.Count > 0)
-                {
-                    // Remove the first data field in the collection by its name
-                    string fieldName = pivotTable.DataFields[0].Name;
-                    pivotTable.RemoveField(PivotFieldType.Data, fieldName);
-                }
-
-                // Recalculate after removal to reflect the changes
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotTable_NoDataFields.xlsx");
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Run error: {ex.Message}");
-            }
+
+            // Get the first pivot table on the sheet
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // Remove all data fields from the pivot table
+            // This converts it into a pure row/column summary without any aggregated values
+            pivotTable.DataFields.Clear();
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

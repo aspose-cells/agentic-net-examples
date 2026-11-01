@@ -1,91 +1,86 @@
-// Title: Validate custom slice colors in an Aspose.Cells pie chart by comparing ChartPoint.Area.ForegroundColor to expected RGB values in C#
-// AI Prompts: Generate C# code that creates a pie chart with Aspose.Cells, assigns specific RGB colors to each slice via ChartPoint.Area.ForegroundColor, saves the workbook, reloads it, and verifies that each slice’s foreground color matches the predefined RGB array. | Write a C# routine that loads an existing Excel file containing a pie chart, iterates through its ChartPoint objects, compares their Area.ForegroundColor to an expected Color list, and logs any mismatches.
-// Common Searches: asp.net verify pie chart slice colors Aspose.Cells C# | compare ChartPoint foreground color with expected RGB Aspose.Cells | how to check custom slice colors after saving workbook using Aspose.Cells .NET | C# read ChartPoint.Area.ForegroundColor from Excel pie chart
-// Tags: Aspose.Cells pie chart custom slice colors | ChartPoint Area ForegroundColor verification C# | validate RGB colors in Excel chart Aspose.Cells | load workbook inspect chart point colors Aspose.Cells
+// Title: Verify Excel chart slice colors with Aspose.Cells for .NET by comparing ChartPoint.Area.ForegroundColor to expected RGB values
+// AI Prompts: Write C# code using Aspose.Cells that opens a workbook, locates the first chart, iterates through each series point, reads point.Area.ForegroundColor, and checks it against a dictionary of expected Color values, printing match or mismatch results. | Update the sample to ignore points that have no predefined expected color, log a warning for those slices, and continue reporting matches for the defined colors.
+// Common Searches: aspocells c# read pie chart slice color | how to compare chart point foreground color with expected RGB in Aspose.Cells | validate custom colors of Excel chart slices using Aspose.Cells .NET | retrieve ChartPoint.Area.ForegroundColor in C# Aspose.Cells | check if Excel chart slice colors match predefined palette Aspose
+// Tags: Aspose.Cells chart slice color verification | C# ChartPoint foreground color comparison | Excel pie chart color validation Aspose | read chart point area color .NET | compare chart point RGB Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace VerifyCustomSliceColors
+// The example loads an Excel workbook, accesses the first chart on the first worksheet, defines expected RGB colors for each slice index, iterates through all series points, reads each point's Area.ForegroundColor, compares it to the expected color, and writes match or mismatch information to the console.
+class VerifyChartSliceColors
 {
-    // The example creates a workbook, adds data, and inserts a pie chart. It assigns specific RGB colors to each slice using ChartPoint.Area.ForegroundColor, saves the file, then reloads it. After loading, it iterates through the chart points, compares each slice's actual foreground color with the expected RGB values, outputs match/mismatch results, and saves a verified copy of the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputFile = "InputChart.xlsx";
 
-            // Populate sample data for a pie chart (Category and Value)
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Cherry");
-            sheet.Cells["A5"].PutValue("Date");
-
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(25);
-            sheet.Cells["B5"].PutValue(25);
-
-            // Add a pie chart
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 6, 0, 20, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set data range for the series
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.CategoryData = "A2:A5";
-
-            // Define expected colors for each slice (RGB)
-            Color[] expectedColors = new Color[]
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                Color.FromArgb(255, 0, 0),      // Red for Apple
-                Color.FromArgb(0, 255, 0),      // Green for Banana
-                Color.FromArgb(0, 0, 255),      // Blue for Cherry
-                Color.FromArgb(255, 255, 0)     // Yellow for Date
+                Console.WriteLine($"Error: File \"{inputFile}\" not found.");
+                return;
+            }
+
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputFile);
+
+            // Assume the chart is on the first worksheet and is the first chart object
+            Worksheet sheet = workbook.Worksheets[0];
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
+
+            Chart chart = sheet.Charts[0];
+
+            // Expected colors for each slice (point index -> expected RGB color)
+            Dictionary<int, Color> expectedColors = new Dictionary<int, Color>()
+            {
+                { 0, Color.FromArgb(255, 255, 0, 0) },   // Red
+                { 1, Color.FromArgb(255, 0, 255, 0) },   // Green
+                { 2, Color.FromArgb(255, 0, 0, 255) }    // Blue
+                // Add more expected colors as needed
             };
 
-            // Apply custom colors to each chart point (slice)
-            for (int i = 0; i < chart.NSeries[0].Points.Count; i++)
+            // Iterate through each series in the chart
+            foreach (Series series in chart.NSeries)
             {
-                ChartPoint point = chart.NSeries[0].Points[i];
-                point.Area.ForegroundColor = expectedColors[i];
-            }
-
-            // Save the workbook (creation phase)
-            string filePath = "CustomSliceColors.xlsx";
-            workbook.Save(filePath);
-
-            // ---------- Load the workbook and verify colors ----------
-            Workbook loadedWorkbook = new Workbook(filePath);
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Chart loadedChart = loadedSheet.Charts[chartIndex]; // same index as before
-
-            // Verify each slice's foreground color against the expected RGB values
-            for (int i = 0; i < loadedChart.NSeries[0].Points.Count; i++)
-            {
-                ChartPoint point = loadedChart.NSeries[0].Points[i];
-                Color actual = point.Area.ForegroundColor;
-                Color expected = expectedColors[i];
-
-                bool match = actual.R == expected.R && actual.G == expected.G && actual.B == expected.B;
-
-                if (match)
+                // Iterate through each point (slice) in the series
+                for (int i = 0; i < series.Points.Count; i++)
                 {
-                    Console.WriteLine($"Slice {i + 1} color matches expected RGB({expected.R},{expected.G},{expected.B}).");
-                }
-                else
-                {
-                    Console.WriteLine($"Slice {i + 1} color mismatch. Expected RGB({expected.R},{expected.G},{expected.B}) but got RGB({actual.R},{actual.G},{actual.B}).");
+                    ChartPoint point = series.Points[i];
+
+                    // Retrieve the actual foreground color of the slice via the point's Area
+                    Color actualColor = point.Area.ForegroundColor;
+
+                    // Determine the expected color for this point index
+                    if (expectedColors.TryGetValue(i, out Color expectedColor))
+                    {
+                        bool colorsMatch = actualColor.ToArgb() == expectedColor.ToArgb();
+
+                        Console.WriteLine($"Slice {i}: " +
+                                          $"Actual = #{actualColor.ToArgb():X8}, " +
+                                          $"Expected = #{expectedColor.ToArgb():X8} => " +
+                                          (colorsMatch ? "Match" : "Mismatch"));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Slice {i}: No expected color defined for this index.");
+                    }
                 }
             }
 
-            // Optionally, save again after verification (no changes made)
-            loadedWorkbook.Save("CustomSliceColors_Verified.xlsx");
+            // No need to save the workbook as we are only verifying colors
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

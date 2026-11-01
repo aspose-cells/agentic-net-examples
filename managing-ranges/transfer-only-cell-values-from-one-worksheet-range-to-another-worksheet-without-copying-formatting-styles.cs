@@ -1,90 +1,69 @@
-// Title: Copy only cell values from a source range to a destination range on another worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Read the values from A1:E10 on Sheet1 and write them to the range starting at C6 on Sheet2 using Cell.PutValue in C#. | Open source.xlsx, ensure destination.xlsx contains Sheet2, then iterate through the source CellArea and transfer only the cell values to the target worksheet while preserving its existing formatting. | Use Aspose.Cells to copy data between two workbooks by looping over rows and columns and calling PutValue for each cell to achieve a values‑only paste.
-// Common Searches: asp.net aspose.cells copy only values between worksheets c# | c# aspose.cells transfer range values without formatting | how to paste values only from one workbook to another using Aspose.Cells | aspose.cells putvalue example for copying data between sheets
-// Tags: value-only range copy Aspose.Cells C# | transfer cell values between worksheets Aspose.Cells | copy values without formatting Aspose.Cells | Cell.PutValue method range transfer C# | worksheet value transfer Aspose.Cells .NET
+// Title: Copy only cell values from a source range to a destination range in another worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: how to copy only the values of a range to another worksheet using Aspose.Cells in C# | Aspose.Cells copy range data without formatting between workbooks | C# code to transfer Excel cells A1:C10 to E1 without styles using Aspose.Cells | skip cell formatting when moving data between worksheets with Aspose.Cells .NET | programmatically copy Excel range values only with Aspose.Cells API
+// Tags: copy cell values Aspose.Cells C# | range value transfer without formatting | Aspose.Cells copy values between worksheets | Excel range data migration C# Aspose.Cells | PutValue method Aspose.Cells example | transfer worksheet data programmatically
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsValueTransfer
+// The example loads a source workbook, defines a source range (A1:C10), creates or opens a destination workbook, and iterates through the range copying each cell's value with PutValue to a target range starting at E1. No formatting, formulas, or comments are transferred, and the result is saved as a new Excel file.
+class Program
 {
-    // The program loads a source workbook, creates or opens a destination workbook, ensures Sheet2 exists, and then copies only the cell values from the source range A1:E10 on Sheet1 to the destination range starting at C6 on Sheet2 using Cell.PutValue, preserving any existing formatting in the destination before saving the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string sourcePath = "source.xlsx";
+            const string destinationPath = "destination.xlsx";
+
+            // Verify source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                // Verify source file exists
-                const string sourcePath = "source.xlsx";
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file \"{sourcePath}\" not found.");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Verify destination file exists; if not, create a new workbook
-                const string destinationPath = "destination.xlsx";
-                Workbook destinationWorkbook;
-                if (File.Exists(destinationPath))
-                {
-                    destinationWorkbook = new Workbook(destinationPath);
-                }
-                else
-                {
-                    destinationWorkbook = new Workbook(); // creates a default workbook with one sheet
-                }
-
-                // Get the source worksheet (fallback to first sheet if name not found)
-                Worksheet sourceSheet = sourceWorkbook.Worksheets["Sheet1"] ??
-                                        sourceWorkbook.Worksheets[0];
-
-                // Get the destination worksheet; add if missing
-                Worksheet destinationSheet = destinationWorkbook.Worksheets["Sheet2"];
-                if (destinationSheet == null)
-                {
-                    int index = destinationWorkbook.Worksheets.Add();
-                    destinationSheet = destinationWorkbook.Worksheets[index];
-                    destinationSheet.Name = "Sheet2";
-                }
-
-                // Define the source range (A1:E10)
-                CellArea sourceRange = new CellArea
-                {
-                    StartRow = 0,      // Row 1 (0‑based)
-                    StartColumn = 0,   // Column A (0‑based)
-                    EndRow = 9,        // Row 10
-                    EndColumn = 4      // Column E
-                };
-
-                // Destination top‑left cell (C6)
-                int destStartRow = 5;      // Row 6 (0‑based)
-                int destStartColumn = 2;   // Column C (0‑based)
-
-                // Transfer only values from source range to destination range
-                for (int i = 0; i <= sourceRange.EndRow - sourceRange.StartRow; i++)
-                {
-                    for (int j = 0; j <= sourceRange.EndColumn - sourceRange.StartColumn; j++)
-                    {
-                        Cell srcCell = sourceSheet.Cells[sourceRange.StartRow + i, sourceRange.StartColumn + j];
-                        Cell destCell = destinationSheet.Cells[destStartRow + i, destStartColumn + j];
-                        destCell.PutValue(srcCell.Value);
-                    }
-                }
-
-                // Save the updated destination workbook
-                const string outputPath = "destination_updated.xlsx";
-                destinationWorkbook.Save(outputPath);
-                Console.WriteLine($"Values transferred successfully. Saved as \"{outputPath}\".");
+                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook containing the data to copy
+            Workbook srcWorkbook = new Workbook(sourcePath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet srcWorksheet = srcWorkbook.Worksheets[0];
+
+            // Define the source range to copy (e.g., cells A1:C10)
+            Aspose.Cells.Range srcRange = srcWorksheet.Cells.CreateRange("A1", "C10");
+
+            // Create a new workbook for the destination (or load an existing one)
+            Workbook destWorkbook = new Workbook(); // starts with a default worksheet
+            Worksheet destWorksheet = destWorkbook.Worksheets[0];
+
+            // Define the top‑left cell of the destination range (e.g., cell E1)
+            int destStartRow = 0;      // Row index for E1 (zero‑based)
+            int destStartColumn = 4;   // Column index for E (A=0, B=1, ...)
+
+            // Transfer only the cell values from source to destination
+            for (int i = 0; i < srcRange.RowCount; i++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                for (int j = 0; j < srcRange.ColumnCount; j++)
+                {
+                    // Get source cell
+                    Cell srcCell = srcRange[i, j];
+
+                    // Get corresponding destination cell
+                    Cell destCell = destWorksheet.Cells[destStartRow + i, destStartColumn + j];
+
+                    // Copy only the value (no formatting, formulas, comments, etc.)
+                    destCell.PutValue(srcCell.Value);
+                }
             }
+
+            // Save the destination workbook
+            destWorkbook.Save(destinationPath);
+            Console.WriteLine($"Data copied successfully to \"{destinationPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

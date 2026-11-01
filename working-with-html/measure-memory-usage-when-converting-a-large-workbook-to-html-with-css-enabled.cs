@@ -1,72 +1,73 @@
-// Title: Measure managed and private memory usage when converting a large .xlsx workbook to HTML with default CSS using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a large Excel file, captures GC.GetTotalMemory and Process.PrivateMemorySize64 before and after calling Workbook.Save with HtmlSaveOptions, and outputs the memory differences in kilobytes. | Demonstrate how to invoke GC.Collect and GC.WaitForPendingFinalizers around an Aspose.Cells HTML export to obtain accurate memory measurements.
-// Common Searches: C# how to benchmark memory usage of Aspose.Cells HTML conversion for big Excel files | track managed memory increase during Aspose.Cells workbook.Save to HTML | measure private memory consumption when exporting large .xlsx to HTML with Aspose.Cells | Aspose.Cells HTML export memory profiling example in .NET | record memory usage before and after converting Excel to HTML using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions memory profiling | C# managed memory measurement Aspose.Cells | private memory usage workbook to HTML conversion | large Excel workbook HTML export performance | default CSS styling Aspose.Cells HTML output
+// Title: How to measure managed memory usage while converting a large Excel workbook to HTML with CSS using Aspose.Cells for .NET
+// AI Prompts: Show C# code that records GC.GetTotalMemory before and after saving a Workbook to HTML with CSS enabled using Aspose.Cells. | Demonstrate how to profile memory consumption of a large .xlsx to HTML conversion with HtmlSaveOptions in a .NET console application. | Provide an example that outputs the memory delta of an Aspose.Cells HTML export, including error handling and output directory preparation.
+// Common Searches: C# measure memory before and after Aspose.Cells HTML export of a large workbook | how to profile heap usage when converting Excel to HTML with CSS in .NET | Aspose.Cells memory consumption example for large .xlsx to HTML conversion | track .NET managed memory during Excel to HTML conversion using HtmlSaveOptions | benchmark memory usage of Aspose.Cells HTMLSaveOptions with CSS enabled
+// Tags: Aspose.Cells HTMLSaveOptions memory measurement | C# managed heap profiling Aspose.Cells conversion | large workbook to HTML performance Aspose.Cells | export Excel to HTML with CSS memory usage | GC.GetTotalMemory Aspose.Cells example
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads a large Excel workbook, records managed and private memory before and after saving it as HTML with default CSS using Aspose.Cells, forces garbage collection to improve measurement accuracy, and prints the memory increase in kilobytes.
+// The sample loads a large .xlsx file, captures the managed heap size before and after converting the workbook to HTML with CSS using HtmlSaveOptions, and prints the memory usage delta, illustrating how to monitor memory consumption during an Aspose.Cells HTML export.
 class Program
 {
     static void Main()
     {
         // Paths for input workbook and output HTML
-        string inputPath = "largeWorkbook.xlsx";
-        string outputPath = "output.html";
+        string workbookPath = @"C:\Data\LargeWorkbook.xlsx";
+        string htmlOutputPath = @"C:\Data\LargeWorkbook.html";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+            return;
+        }
 
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Ensure a clean memory baseline
+            // Force garbage collection to obtain a clean memory baseline
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            // Record memory usage before conversion
-            long managedBefore = GC.GetTotalMemory(true);
-            long privateBefore = Process.GetCurrentProcess().PrivateMemorySize64;
+            // Record memory usage before conversion (bytes)
+            long memoryBefore = GC.GetTotalMemory(true);
 
-            // Load the workbook (large file)
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
             // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                // Export all worksheets (default is true, but set explicitly)
-                ExportActiveWorksheetOnly = false
-                // Note: ExportCssClass property is not available in the current Aspose.Cells version.
-                // CSS styling will be applied using the default behavior.
+                // Export CSS is enabled by default; no explicit property needed
+                ExportImagesAsBase64 = false,          // Keep images as separate files
+                ExportActiveWorksheetOnly = false      // Export all worksheets
             };
 
-            // Perform the conversion to HTML
-            workbook.Save(outputPath, saveOptions);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(htmlOutputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Force garbage collection again to get accurate post‑conversion memory
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+            // Convert the workbook to HTML
+            workbook.Save(htmlOutputPath, saveOptions);
 
-            // Record memory usage after conversion
-            long managedAfter = GC.GetTotalMemory(true);
-            long privateAfter = Process.GetCurrentProcess().PrivateMemorySize64;
+            // Record memory usage after conversion (bytes)
+            long memoryAfter = GC.GetTotalMemory(true);
 
-            // Output the memory consumption results
-            Console.WriteLine($"Managed memory increase: {(managedAfter - managedBefore) / 1024} KB");
-            Console.WriteLine($"Private memory increase: {(privateAfter - privateBefore) / 1024} KB");
+            // Calculate memory consumed by the conversion
+            long memoryUsed = memoryAfter - memoryBefore;
+
+            // Output the results
+            Console.WriteLine($"Memory before conversion: {memoryBefore:N0} bytes");
+            Console.WriteLine($"Memory after conversion:  {memoryAfter:N0} bytes");
+            Console.WriteLine($"Memory used for conversion: {memoryUsed:N0} bytes");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred during conversion: {ex.Message}");
         }
     }
 }

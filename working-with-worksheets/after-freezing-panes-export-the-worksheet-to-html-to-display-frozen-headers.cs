@@ -1,28 +1,45 @@
-// Title: Freeze the first row of an Excel worksheet and export to HTML with a persistent header using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells to freeze the top header row of a worksheet and then save the workbook as an HTML file that retains the frozen pane. | Generate HTML from an Excel file in C# where the header row stays fixed while scrolling, leveraging Worksheet.FreezePanes and SaveFormat.Html.
-// Common Searches: C# Aspose.Cells freeze top row before exporting to HTML | How to keep header row static in HTML output from Excel using Aspose.Cells | Export Excel worksheet to HTML with frozen panes in .NET | Aspose.Cells preserve frozen panes when saving as HTML | Freeze panes in Excel and generate HTML with fixed header using C#
-// Tags: Worksheet.FreezePanes for HTML rendering | HTML export with fixed header using Aspose.Cells | preserve frozen pane state in HTML output | Aspose.Cells SaveFormat.Html with frozen rows | C# generate HTML from Excel with locked header
+// Title: Freeze the top row and left column in an Aspose.Cells worksheet and export to HTML with persistent headers (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to apply FreezePanes on the first row and column, then saves the workbook as an HTML file with those panes rendered as static headers. | Show a complete example of freezing header rows/columns in a worksheet and exporting it to HTML using Aspose.Cells for .NET, ensuring the HTML view keeps the headers fixed.
+// Common Searches: Aspose.Cells C# export to HTML while preserving frozen panes as header rows | How to keep frozen rows and columns visible after saving Excel as HTML with Aspose.Cells | C# example of FreezePanes followed by HTML output using Aspose.Cells library | Saving an Excel worksheet as HTML with fixed header using Aspose.Cells .NET
+// Tags: header row freezing Aspose.Cells C# | HTML export with static headers Aspose.Cells | Aspose.Cells FreezePanes API usage | SaveFormat.Html with frozen headers Aspose.Cells | preserve worksheet frozen panes in HTML Aspose.Cells
 
 using Aspose.Cells;
+using System;
 
-// Loads input.xlsx, freezes the first row of the first worksheet, and saves the workbook as output.html where the header remains fixed in the generated HTML.
+// The program creates a workbook, fills it with sample data, freezes the first row and column using FreezePanes, and saves the worksheet as an HTML file where the frozen panes appear as fixed header rows and columns.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (using the provided load rule)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Freeze the first row (header) so it stays visible in HTML
-        // Parameters: totalRows, totalColumns, rows, columns
-        // Freeze 1 row, 0 columns; the scrollable area starts at cell A2 (row index 1)
-        sheet.FreezePanes(1, 0, 1, 0);
+            // Fill the worksheet with sample data (optional)
+            for (int row = 0; row < 20; row++)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
+            }
 
-        // Export the worksheet to HTML (using the provided save rule)
-        // The frozen pane information is preserved in the generated HTML
-        workbook.Save("output.html", SaveFormat.Html);
+            // Freeze the first row and first column (headers)
+            // FreezePanes(row, column, totalRows, totalColumns)
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(1, 1, totalRows, totalColumns);
+
+            // Export the worksheet to HTML; frozen panes appear as fixed headers
+            workbook.Save("FrozenHeaders.html", SaveFormat.Html);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,69 +1,89 @@
-// Title: Convert HTML to XLSX asynchronously with Aspose.Cells in C# and receive a completion callback
-// AI Prompts: Implement an async C# routine that receives paths for an HTML source and an XLSX target, creates a LoadOptions object for HTML, opens the file with Aspose.Cells Workbook, saves it as Xlsx, and triggers a supplied Action delegate once the operation finishes. | Demonstrate invoking the async routine from Main, checking that the HTML file exists, handling exceptions, and passing a lambda that prints a completion message.
-// Common Searches: aspocells async html to xlsx conversion with completion handler c# | c# load html file into Aspose.Cells workbook on background thread | example using Action callback after Aspose.Cells save operation | how to wrap Aspose.Cells HTML import in Task.Run | convert html to excel asynchronously in a .NET console application
-// Tags: Aspose.Cells HTML import to XLSX async | C# Action callback after workbook save | LoadOptions LoadFormat.Html usage Aspose.Cells | Task.Run pattern for Aspose.Cells operations | saving workbook as Xlsx with Aspose.Cells
+// Title: Convert an HTML string to XLSX asynchronously with Aspose.Cells and receive a callback on completion (C#)
+// AI Prompts: Write a C# async method that accepts an HTML string, loads it into an Aspose.Cells Workbook using HtmlLoadOptions, saves the workbook as an XLSX file, and invokes an Action<Exception?> callback after the operation finishes. | Create a console application that calls the asynchronous HTML‑to‑Excel conversion, awaits its completion, and implements a callback method to log success or error information.
+// Common Searches: c# aspocells async html to xlsx conversion with callback | how to load html from string into workbook using Aspose.Cells .NET | save workbook as xlsx from memory stream aspnet core async | aspocells HtmlLoadOptions example converting html tables to excel | run html to excel conversion in background task and handle errors c#
+// Tags: asynchronous conversion of HTML to XLSX with Aspose.Cells | HtmlLoadOptions for loading HTML from memory stream | callback pattern using Action<Exception?> after async operation | programmatic creation of output directory before workbook save | saving Aspose.Cells Workbook as SaveFormat.Xlsx
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace HtmlToExcelAsyncDemo
+// The example defines an async ConvertAsync method that validates an HTML string, loads it into an Aspose.Cells Workbook via a MemoryStream and HtmlLoadOptions, ensures the output folder exists, saves the workbook as an XLSX file, and calls a provided Action<Exception?> callback to report success (null) or any exception.
+public class HtmlToExcelConverter
 {
-    // The example defines ConvertHtmlToExcelAsync, which validates the HTML file, loads it into an Aspose.Cells Workbook using LoadOptions for HTML, saves the workbook as an XLSX file, and then invokes an optional Action callback. The Main method shows how to call this async method with file existence checks, exception handling, and a completion message.
-    public static class Converter
+    // Asynchronously converts an HTML string to an Excel file and invokes a callback upon completion.
+    public static async Task ConvertAsync(string htmlContent, string outputFilePath, Action<Exception?> callback)
     {
-        /// <param name="htmlFilePath">Full path to the source HTML file.</param>
-        /// <param name="excelFilePath">Full path where the resulting Excel file will be saved.</param>
-        /// <param name="onCompleted">Callback invoked after successful conversion.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task ConvertHtmlToExcelAsync(string htmlFilePath, string excelFilePath, Action onCompleted)
+        try
         {
             await Task.Run(() =>
             {
-                // Verify the source HTML file exists.
-                if (!File.Exists(htmlFilePath))
-                    throw new FileNotFoundException("HTML source file not found.", htmlFilePath);
+                if (string.IsNullOrEmpty(htmlContent))
+                    throw new ArgumentException("HTML content cannot be null or empty.", nameof(htmlContent));
 
-                // Load the HTML content into a workbook using HTML load options.
-                var loadOptions = new LoadOptions(LoadFormat.Html);
-                var workbook = new Workbook(htmlFilePath, loadOptions);
+                // Load the HTML content from a memory stream using HtmlLoadOptions.
+                var loadOptions = new HtmlLoadOptions();
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(htmlContent)))
+                {
+                    // Workbook constructor can accept a stream and load options.
+                    var workbook = new Workbook(stream, loadOptions);
 
-                // Save the workbook in XLSX format.
-                workbook.Save(excelFilePath, SaveFormat.Xlsx);
+                    // Ensure the output directory exists.
+                    var outputDir = Path.GetDirectoryName(outputFilePath);
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    // Save the workbook to the desired Excel format (XLSX in this case).
+                    workbook.Save(outputFilePath, SaveFormat.Xlsx);
+                }
             });
 
-            // Invoke the callback after the conversion completes.
-            onCompleted?.Invoke();
+            // Conversion succeeded; invoke callback with null exception.
+            callback?.Invoke(null);
+        }
+        catch (Exception ex)
+        {
+            // An error occurred; pass the exception to the callback.
+            callback?.Invoke(ex);
         }
     }
+}
 
-    class Program
+// Example usage.
+class Program
+{
+    static void Main()
     {
-        static async Task Main(string[] args)
+        string html = @"
+            <html>
+                <body>
+                    <table border='1'>
+                        <tr><th>Name</th><th>Age</th></tr>
+                        <tr><td>Alice</td><td>30</td></tr>
+                        <tr><td>Bob</td><td>25</td></tr>
+                    </table>
+                </body>
+            </html>";
+
+        string outputPath = "ConvertedFromHtml.xlsx";
+
+        // Start the asynchronous conversion and wait for it to finish.
+        HtmlToExcelConverter.ConvertAsync(html, outputPath, ConversionFinished).Wait();
+    }
+
+    // Callback method invoked after conversion completes.
+    static void ConversionFinished(Exception? ex)
+    {
+        if (ex == null)
         {
-            // Example usage: adjust paths as needed.
-            string htmlPath = "input.html";
-            string excelPath = "output.xlsx";
-
-            // Ensure the HTML file exists before attempting conversion.
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
-                return;
-            }
-
-            try
-            {
-                await Converter.ConvertHtmlToExcelAsync(htmlPath, excelPath, () =>
-                {
-                    Console.WriteLine("Conversion completed.");
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Conversion failed: {ex.Message}");
-            }
+            Console.WriteLine("HTML successfully converted to Excel.");
+        }
+        else
+        {
+            Console.WriteLine($"Conversion failed: {ex.Message}");
         }
     }
 }

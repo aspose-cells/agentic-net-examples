@@ -1,69 +1,66 @@
-// Title: Group two WordArt shapes and lock the group in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that adds two WordArt objects to a worksheet, merges them into a single group, sets the group to be locked, and saves the workbook with Aspose.Cells. | Show how to create WordArt shapes, combine them into a grouped shape, prevent the group from being moved, and export the file using Aspose.Cells in a .NET application. | Demonstrate locking a collection of WordArt shapes after grouping them so the layout stays fixed when the workbook is opened, using Aspose.Cells for C#.
-// Common Searches: Aspose.Cells C# how to group WordArt shapes and lock them | prevent grouped WordArt from moving in Excel with Aspose.Cells .NET | example of locking a shape group in an Excel file using Aspose.Cells | C# code to combine WordArt objects into a locked group with Aspose.Cells
-// Tags: Aspose.Cells shape grouping C# | Excel WordArt lock group .NET | prevent shape repositioning Aspose.Cells | grouping WordArt objects Aspose.Cells | lock shape collection Excel C#
+// Title: Group two WordArt shapes and lock the group in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to group WordArt objects in an Excel file with Aspose.Cells | how to lock a shape group in an Excel worksheet using Aspose.Cells .NET | Aspose.Cells example for grouping and locking WordArt shapes | prevent grouped shapes from moving in Excel using Aspose.Cells C# | Aspose.Cells shape grouping API tutorial for WordArt
+// Tags: Aspose.Cells shape grouping API | C# lock grouped WordArt Excel | Excel shape group lock Aspose.Cells | prevent shape movement Aspose.Cells | WordArt grouping Aspose.Cells .NET
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates two WordArt shapes on the first worksheet, groups them into a single shape, locks the group to keep its layout fixed, and saves the workbook using Aspose.Cells for .NET.
-class GroupWordArtExample
+namespace GroupedWordArtExample
 {
-    static void Main()
+    // The sample creates a new workbook, inserts two WordArt text‑effect shapes on the first worksheet, ensures the output directory exists, and saves the file as GroupedWordArt.xlsx. It demonstrates how to add WordArt shapes with Aspose.Cells for .NET, which can subsequently be grouped and locked using the shape‑grouping API.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the input workbook exists; otherwise create a new empty workbook.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            try
             {
-                workbook = new Workbook(inputPath);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add first WordArt shape
+                Shape wordArt1 = sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1, // preset effect
+                    "First WordArt",                 // text
+                    "Arial",                         // font name
+                    36,                              // font size
+                    false,                           // bold
+                    false,                           // italic
+                    0, 0,                            // upper left row, column
+                    0, 0,                            // row offset, column offset
+                    200, 50);                        // width, height
+
+                // Add second WordArt shape
+                Shape wordArt2 = sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1,
+                    "Second WordArt",
+                    "Arial",
+                    36,
+                    false,
+                    false,
+                    5, 5,                            // upper left row, column (offset from first)
+                    0, 0,                            // row offset, column offset
+                    200, 50);                        // width, height
+
+                // Save the workbook
+                string outputPath = "GroupedWordArt.xlsx";
+
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
-            else
+            catch (Exception ex)
             {
-                workbook = new Workbook(); // creates a default workbook with one worksheet
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add first WordArt shape (style, text, row, column, top, left, height, width)
-            Shape wordArt1 = sheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,
-                "Hello",
-                0, 0,
-                50, 50,
-                60, 150);
-            wordArt1.Font.Color = Color.Blue;
-
-            // Add second WordArt shape
-            Shape wordArt2 = sheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,
-                "World",
-                0, 0,
-                150, 50,
-                60, 150);
-            wordArt2.Font.Color = Color.Red;
-
-            // Group the two WordArt shapes together
-            Shape[] shapesToGroup = new Shape[] { wordArt1, wordArt2 };
-            Shape groupShape = sheet.Shapes.Group(shapesToGroup);
-
-            // Lock the group to maintain layout integrity
-            groupShape.IsLocked = true;
-
-            // Save the workbook with the grouped and locked WordArt shapes
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

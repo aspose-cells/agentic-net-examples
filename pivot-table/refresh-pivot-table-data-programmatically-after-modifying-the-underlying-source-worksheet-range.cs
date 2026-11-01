@@ -1,65 +1,74 @@
-// Title: Programmatically refresh an Aspose.Cells PivotTable after updating source worksheet cells in C#
-// AI Prompts: Generate C# code that changes cell values in a worksheet and then calls Worksheet.RefreshPivotTables to update the PivotTable using Aspose.Cells. | Show how to recalculate a PivotTable after modifying its source data by invoking PivotTable.CalculateData followed by Worksheet.RefreshPivotTables in a .NET application. | Provide an example that creates a workbook, adds a PivotTable, edits the source range, and refreshes all pivot tables to reflect the new values.
-// Common Searches: Aspose.Cells C# refresh pivot table after changing cell values | how to update pivot table data programmatically with Aspose.Cells .NET | Worksheet.RefreshPivotTables method example for recalculating pivot tables | refresh all pivot tables in a workbook using Aspose.Cells C# | recalculate pivot table after source data edit Aspose.Cells
-// Tags: Aspose.Cells refresh pivot tables C# | Worksheet.RefreshPivotTables usage | update source data recalculate pivot Aspose.Cells | programmatic pivot table refresh .NET | PivotTable.CalculateData after cell edit
+// Title: Refresh all pivot tables after updating source worksheet data with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that changes a cell value in a source worksheet, then iterates through every PivotTable in the workbook to call RefreshData and CalculateData using Aspose.Cells. | Generate a robust Aspose.Cells example that loads an Excel file, validates the presence of specific worksheets, updates source data, refreshes all pivot tables, and saves the result with error handling. | Create a C# snippet that programmatically refreshes pivot table caches after modifying the underlying range, including handling missing files and worksheets.
+// Common Searches: Aspose.Cells C# refresh pivot table cache after editing source cells | How to programmatically update pivot tables in an Excel workbook using Aspose.Cells for .NET | C# example to call RefreshData and CalculateData on all pivot tables in a workbook | Error handling for missing worksheets when refreshing pivot tables with Aspose.Cells
+// Tags: Aspose.Cells RefreshData CalculateData pivot tables | C# update source worksheet cell Aspose.Cells | programmatic pivot cache refresh Excel .NET | validate worksheet existence Aspose.Cells | save workbook after pivot refresh Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable classes
 
-// The sample creates a workbook, fills source data, adds a PivotTable, modifies the source cells, calls Worksheet.RefreshPivotTables (and optionally PivotTable.CalculateData) to recalculate the PivotTable, and saves the result as RefreshedPivot.xlsx.
-public class RefreshPivotTableDemo
+// The example loads an existing workbook, updates a cell in the 'SourceData' worksheet, verifies required worksheets, iterates through each PivotTable on the 'PivotSheet' worksheet calling RefreshData and CalculateData, and then saves the modified workbook. It includes checks for file existence and missing worksheets to ensure reliable pivot cache refresh.
+class RefreshPivotTableExample
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook.xlsx";
 
-            // Populate source data for the pivot table
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["B3"].PutValue(200);
-            worksheet.Cells["A4"].PutValue("Orange");
-            worksheet.Cells["B4"].PutValue(300);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Add a pivot table based on the source range A1:B4, place it at D1
-            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Load the workbook that contains the source data and the pivot table
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure the pivot table: Product as row field, Sales as data field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // -------------------------------------------------
+            // Modify the underlying source data range
+            // -------------------------------------------------
+            // Assume the source data is on a worksheet named "SourceData"
+            Worksheet sourceSheet = workbook.Worksheets["SourceData"];
+            if (sourceSheet == null)
+                throw new InvalidOperationException("Worksheet 'SourceData' does not exist.");
 
-            // Calculate the initial pivot data
-            pivotTable.CalculateData();
+            // Example: change the value in cell B2
+            sourceSheet.Cells["B2"].PutValue(12345);
+            // Additional modifications can be performed here
 
-            // Modify the underlying source data
-            worksheet.Cells["B2"].PutValue(150); // Update Apple sales
-            worksheet.Cells["B3"].PutValue(250); // Update Banana sales
+            // -------------------------------------------------
+            // Refresh all pivot tables that depend on the source data
+            // -------------------------------------------------
+            // Assume the pivot table is on a worksheet named "PivotSheet"
+            Worksheet pivotSheet = workbook.Worksheets["PivotSheet"];
+            if (pivotSheet == null)
+                throw new InvalidOperationException("Worksheet 'PivotSheet' does not exist.");
 
-            // Refresh all pivot tables in the worksheet to reflect the changes
-            worksheet.RefreshPivotTables();
+            PivotTableCollection pivotTables = pivotSheet.PivotTables;
 
+            foreach (PivotTable pivotTable in pivotTables)
+            {
+                // Refresh the pivot table's data cache from the modified source range
+                pivotTable.RefreshData();
+
+                // Recalculate the pivot table (e.g., totals, subtotals, calculated fields)
+                pivotTable.CalculateData();
+
+                // Note: RefreshDataOnLoad property is not available in this version of Aspose.Cells.
+                // The pivot table will reflect the refreshed data after saving.
+            }
+
+            // -------------------------------------------------
             // Save the workbook with the refreshed pivot table
-            workbook.Save("RefreshedPivot.xlsx");
+            // -------------------------------------------------
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Log or display the error details for troubleshooting
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        RefreshPivotTableDemo.Run();
     }
 }

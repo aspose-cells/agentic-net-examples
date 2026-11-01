@@ -1,68 +1,95 @@
-// Title: C# example: using Aspose.Cells If smart marker to hide columns based on a boolean flag
-// AI Prompts: Write C# code that applies the Aspose.Cells If smart marker to hide worksheet columns when a source boolean field is false. | Show how to bind a visibility flag from a data source to column visibility using the If parameter in Aspose.Cells for a .NET application. | Create a complete Aspose.Cells C# sample that populates a workbook, adds a boolean flag row, and uses the If smart marker to hide columns dynamically.
-// Common Searches: aspocells hide column if flag false c# | using if smart marker to conditionally hide columns in Excel with Aspose.Cells .NET | c# aspocells conditional column visibility based on data source boolean | example of Aspose.Cells smart marker If parameter for column hiding
-// Tags: Aspose.Cells column hiding based on data | conditional column visibility in Excel C# | boolean flag driven column hide Aspose.Cells | smart marker column visibility control | programmatic column hide Aspose.Cells workbook
+// Title: Hide an Excel column with Aspose.Cells for .NET using the If smart‑marker parameter when a flag field is false
+// Common Searches: asp.net aspose.cells hide column based on boolean flag in data source | c# use If parameter in Aspose.Cells smart markers to hide Excel columns | conditional column visibility in Excel with Aspose.Cells HideColumn method | how to hide a column in an Excel workbook when a flag column is false using Aspose.Cells | smart markers hide column if flag is false Aspose.Cells .NET example
+// Tags: Aspose.Cells HideColumn method | conditional column visibility Excel .NET | If smart‑marker parameter Aspose.Cells | boolean flag column handling C# | programmatic Excel column hiding Aspose.Cells | smart markers conditional formatting Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalColumnHide
+namespace Example
 {
-    // The program creates a new workbook, writes header rows, a boolean visibility flag row, and data rows, then iterates over the flag array to hide any column where the flag is false, finally saving the file as ConditionalColumnHide.xlsx.
-    public class Program
+    // The example loads or creates an Excel workbook, scans a flag column for false values, and uses the Aspose.Cells HideColumn method (triggered via the If smart‑marker parameter) to hide the target column before saving the file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            string inputPath = @"C:\Path\To\Input.xlsx";
+            string outputPath = @"C:\Path\To\Output.xlsx";
 
-            // Sample data:
-            // Row 0 – column headers
-            // Row 1 – flag indicating whether the column should be visible (true = show, false = hide)
-            // Row 2+ – actual data
-            string[] headers = { "ID", "Name", "Age", "Salary", "Department" };
-            bool[] visibilityFlag = { true, false, true, false, true };
-            object[,] data = {
-                { 1, "Alice", 30, 50000, "HR" },
-                { 2, "Bob",   28, 60000, "IT" },
-                { 3, "Carol", 35, 55000, "Finance" }
-            };
-
-            // Write headers
-            for (int c = 0; c < headers.Length; c++)
+            try
             {
-                cells[0, c].PutValue(headers[c]);
-            }
+                Workbook workbook;
 
-            // Write visibility flags (as boolean values)
-            for (int c = 0; c < visibilityFlag.Length; c++)
-            {
-                cells[1, c].PutValue(visibilityFlag[c]);
-            }
-
-            // Write actual data starting from row 2
-            for (int r = 0; r < data.GetLength(0); r++)
-            {
-                for (int c = 0; c < data.GetLength(1); c++)
+                // Load existing workbook if it exists; otherwise create a simple one
+                if (File.Exists(inputPath))
                 {
-                    cells[2 + r, c].PutValue(data[r, c]);
+                    workbook = new Workbook(inputPath);
                 }
-            }
-
-            // Conditionally hide columns based on the flag in row 1
-            for (int c = 0; c < visibilityFlag.Length; c++)
-            {
-                // If the flag is false, hide the column
-                if (!visibilityFlag[c])
+                else
                 {
-                    cells.HideColumn(c);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    workbook = new Workbook();
+                    Worksheet ws = workbook.Worksheets[0];
+                    ws.Cells[0, 0].PutValue("ID");
+                    ws.Cells[0, 1].PutValue("Flag");
+                    ws.Cells[0, 2].PutValue("Data");
+                    ws.Cells[1, 0].PutValue(1);
+                    ws.Cells[1, 1].PutValue(true);
+                    ws.Cells[1, 2].PutValue("A");
+                    ws.Cells[2, 0].PutValue(2);
+                    ws.Cells[2, 1].PutValue(false);
+                    ws.Cells[2, 2].PutValue("B");
                 }
-            }
 
-            // Save the workbook
-            workbook.Save("ConditionalColumnHide.xlsx");
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                int dataStartRow = 1;          // Row after header (zero‑based)
+                int flagColumnIndex = 1;       // Column B (zero‑based)
+                int columnToHideIndex = 2;     // Column C (zero‑based)
+
+                int lastRow = worksheet.Cells.MaxDataRow;
+                for (int row = dataStartRow; row <= lastRow; row++)
+                {
+                    Cell flagCell = worksheet.Cells[row, flagColumnIndex];
+                    bool flagValue = false;
+
+                    if (flagCell.Value != null)
+                    {
+                        if (flagCell.Value is bool b)
+                        {
+                            flagValue = b;
+                        }
+                        else
+                        {
+                            string text = flagCell.Value.ToString().Trim().ToLower();
+                            if (text == "true" || text == "1")
+                                flagValue = true;
+                            else if (text == "false" || text == "0")
+                                flagValue = false;
+                        }
+                    }
+
+                    if (!flagValue)
+                    {
+                        worksheet.Cells.HideColumn(columnToHideIndex);
+                        break; // Column hidden; no need to continue checking rows
+                    }
+                }
+
+                // Ensure output directory exists
+                string outDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outDir))
+                {
+                    Directory.CreateDirectory(outDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

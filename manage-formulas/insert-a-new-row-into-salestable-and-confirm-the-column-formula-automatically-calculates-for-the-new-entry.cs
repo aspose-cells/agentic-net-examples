@@ -1,73 +1,102 @@
-// Title: Insert a new row into an Excel ListObject and automatically recalculate its formula column using Aspose.Cells for .NET
-// AI Prompts: Add a data row to the 'SalesTable' ListObject, set Product, Quantity, and UnitPrice values, then invoke Workbook.CalculateFormula so the Total column is computed for the new entry. | Programmatically insert a row after the last record of an Excel table, let the table expand automatically, and fetch the calculated result of the formula column with Aspose.Cells in C#.
-// Common Searches: C# Aspose.Cells add row to ListObject and keep calculated columns updated | How to expand an Excel table and recalculate formulas after inserting a row with Aspose.Cells | Retrieve formula result for newly inserted row in Excel table using Aspose.Cells .NET | Insert new record into SalesTable and get Total column value programmatically
-// Tags: insert row ListObject Aspose.Cells | auto expand Excel table C# | recalculate formulas workbook.CalculateFormula | retrieve calculated column value Aspose.Cells | populate SalesTable new record
+// Title: Insert a new row into an Excel ListObject and automatically recalculate column formulas with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells insert new row into ListObject and keep existing formulas | how to expand an Excel table after adding a physical row with Aspose.Cells | recalculate column formulas automatically after adding data to a ListObject in .NET | retrieve calculated total value from a newly added row using Aspose.Cells
+// Tags: insert row and resize ListObject Aspose.Cells | auto recalculate formulas after table row addition Aspose.Cells | get column index by header name C# Aspose.Cells | populate ListObject columns programmatically Aspose.Cells | save updated workbook to new file Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using System;
 using System.IO;
 
-// The example loads an existing workbook, locates the ListObject named 'SalesTable', inserts a new data row after the current rows, assigns values for Product, Quantity, and UnitPrice, triggers Workbook.CalculateFormula to compute the Total column for the new row, prints the calculated result, and saves the updated file.
+// The example loads a workbook, locates the ListObject named "SalesTable", inserts a physical row at the end of the table, expands the ListObject to include the new row, fills the Product, Quantity, and UnitPrice columns, triggers a full formula recalculation, optionally reads the calculated Total value, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "SalesData.xlsx";
-            const string outputPath = "SalesData_Updated.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists.
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook that contains the SalesTable
+            // Load the workbook.
             Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (assumed to hold the table)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Retrieve the ListObject (table) named "SalesTable"
+            // Get the table named "SalesTable".
             ListObject salesTable = sheet.ListObjects["SalesTable"];
             if (salesTable == null)
             {
-                Console.WriteLine("Table 'SalesTable' not found in the worksheet.");
+                Console.WriteLine("Table 'SalesTable' not found.");
                 return;
             }
 
-            // Determine the row index where the new row will be inserted (after the last data row)
-            int insertRowIndex = salesTable.DataRange.FirstRow + salesTable.DataRange.RowCount;
+            // Determine the index of the new row (after the current data rows).
+            int newRowIndex = salesTable.DataRange.FirstRow + salesTable.DataRange.RowCount;
 
-            // Insert a single new row into the worksheet at the calculated position.
-            // The table will automatically expand to include the new row.
-            sheet.Cells.InsertRows(insertRowIndex, 1);
+            // Insert a physical row in the worksheet.
+            sheet.Cells.InsertRows(newRowIndex, 1);
 
-            // Set values for the newly inserted row (except the formula column)
-            // Example column order: Product (0), Quantity (1), UnitPrice (2), Total (3 - formula)
-            int firstDataCol = salesTable.DataRange.FirstColumn;
-            sheet.Cells[insertRowIndex, firstDataCol + 0].PutValue("NewProduct");
-            sheet.Cells[insertRowIndex, firstDataCol + 1].PutValue(10);          // Quantity
-            sheet.Cells[insertRowIndex, firstDataCol + 2].PutValue(15.75);      // UnitPrice
+            // Expand the table to include the new row (hasHeaders = true).
+            salesTable.Resize(
+                salesTable.DataRange.FirstRow,
+                salesTable.DataRange.FirstColumn,
+                salesTable.DataRange.RowCount + 1,
+                salesTable.DataRange.ColumnCount,
+                true);
 
-            // Recalculate all formulas so that the formula column (e.g., Total) updates automatically
+            // Helper to find column index by header name.
+            int GetColumnIndex(string columnName)
+            {
+                int headerRow = salesTable.DataRange.FirstRow - 1; // header is just above data range
+                int firstCol = salesTable.DataRange.FirstColumn;
+                int lastCol = firstCol + salesTable.DataRange.ColumnCount - 1;
+
+                for (int col = firstCol; col <= lastCol; col++)
+                {
+                    if (sheet.Cells[headerRow, col].StringValue.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                        return col;
+                }
+
+                throw new ArgumentException($"Column '{columnName}' not found in table.");
+            }
+
+            // Set values for the new row.
+            int productCol = GetColumnIndex("Product");
+            int quantityCol = GetColumnIndex("Quantity");
+            int unitPriceCol = GetColumnIndex("UnitPrice");
+
+            sheet.Cells[newRowIndex, productCol].PutValue("New Product");
+            sheet.Cells[newRowIndex, quantityCol].PutValue(10);
+            sheet.Cells[newRowIndex, unitPriceCol].PutValue(5.5);
+
+            // Recalculate formulas.
             workbook.CalculateFormula();
 
-            // Verify that the formula column has been calculated for the new row
-            int formulaColIndex = firstDataCol + salesTable.DataRange.ColumnCount - 1; // last column in the table
-            object calculatedValue = sheet.Cells[insertRowIndex, formulaColIndex].Value;
-            Console.WriteLine("Calculated formula result for the new row: " + calculatedValue);
+            // Retrieve the calculated total (if a "Total" column exists).
+            try
+            {
+                int totalCol = GetColumnIndex("Total");
+                object totalValue = sheet.Cells[newRowIndex, totalCol].Value;
+                Console.WriteLine($"Calculated Total for the new row: {totalValue}");
+            }
+            catch (ArgumentException)
+            {
+                // "Total" column not present; ignore.
+            }
 
-            // Save the modified workbook
+            // Save the updated workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved as '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

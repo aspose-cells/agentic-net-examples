@@ -1,84 +1,67 @@
-// Title: C# utility to switch Aspose.Cells memory setting and calculation mode based on workbook cell count
-// AI Prompts: Write a C# method that loads an Excel file with Aspose.Cells, counts the total used cells across all worksheets, and changes the workbook's MemorySetting to low‑memory mode and its CalculationMode to Manual when the count exceeds a configurable limit. | Add logging that reports whether the workbook was saved with low‑memory/manual calculation or normal/automatic settings, and ensure CalculateOnSave and CalculateOnOpen are disabled for large files and enabled for small ones. | Refactor the optimizer so the cell‑count threshold is passed as a parameter and the method returns the applied memory and calculation configuration.
-// Common Searches: how to set manual calculation mode in Aspose.Cells for large Excel files c# | Aspose.Cells low memory setting based on workbook size | C# count total used cells in an Excel workbook with Aspose.Cells | optimize memory usage for big Excel workbooks using Aspose.Cells .NET | toggle CalculateOnSave and CalculateOnOpen flags in Aspose.Cells depending on file size
-// Tags: Aspose.Cells low‑memory mode for large workbooks | Aspose.Cells manual formula calculation toggle | C# workbook cell count threshold for optimization | Aspose.Cells disable auto calculation on save/open | Aspose.Cells automatic calculation for small workbooks
+// Title: C# utility to toggle Aspose.Cells calculation mode based on Excel workbook size for memory optimization
+// Common Searches: how to switch calculation mode in Aspose.Cells when Excel file exceeds a size limit | C# code to recalculate formulas only for small Excel workbooks using Aspose.Cells | disable automatic formula recalculation for large Excel files in .NET with Aspose.Cells | set calculation mode conditionally based on workbook file size in Aspose.Cells | optimize memory usage by toggling Aspose.Cells calculation mode in C#
+// Tags: Aspose.Cells conditional calculation mode | Excel workbook size threshold calculation toggle | C# memory optimization large workbooks | CalculateFormula for small Excel files | disable automatic recalculation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUtilities
+// The CalculationModeToggler class checks that the Excel file exists, loads it with Aspose.Cells, measures its size, and forces a full formula recalculation only when the file size is at or below a specified byte threshold. For larger files the default (non‑automatic) calculation mode is retained, reducing memory consumption. The workbook is then saved back, with robust error handling for missing files and runtime exceptions.
+public class CalculationModeToggler
 {
-    // The WorkbookOptimizer class loads a workbook, computes the total number of used cells across all worksheets, and if the count exceeds a predefined threshold it switches the workbook to Aspose.Cells low‑memory mode with manual calculation and disables automatic calculation on save/open; otherwise it keeps normal memory usage with automatic calculation, performs an immediate formula calculation, and saves the optimized file.
-    public static class WorkbookOptimizer
+    /// <param name="filePath">Full path to the Excel file.</param>
+    /// <param name="sizeThresholdInBytes">Size threshold in bytes to decide the mode.</param>
+    public static void ToggleCalculationMode(string filePath, long sizeThresholdInBytes)
     {
-        // Threshold for number of used cells to switch to memory‑optimized mode.
-        private const long CellCountThreshold = 200_000; // adjust as needed
-
-        /// <summary>
-        /// Loads a workbook, toggles settings based on its size, and saves it.
-        /// </summary>
-        /// <param name="inputPath">Path to the source workbook.</param>
-        /// <param name="outputPath">Path where the optimized workbook will be saved.</param>
-        public static void Optimize(string inputPath, string outputPath)
+        // Verify that the file exists before attempting to load it.
+        if (!File.Exists(filePath))
         {
-            // Load the workbook with default load options.
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-            // Use Normal memory setting initially; will be overridden after size check.
-            loadOptions.MemorySetting = MemorySetting.Normal;
+            Console.WriteLine($"Error: File not found – {filePath}");
+            return;
+        }
 
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+        try
+        {
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(filePath);
 
-            // Determine approximate used cell count across all worksheets.
-            long totalUsedCells = 0;
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // MaxDataRow/Column are zero‑based indices of the last used cell.
-                int lastRow = sheet.Cells.MaxDataRow;
-                int lastCol = sheet.Cells.MaxDataColumn;
-                // If the sheet is empty MaxDataRow/Column return -1.
-                if (lastRow >= 0 && lastCol >= 0)
-                {
-                    totalUsedCells += ((long)lastRow + 1) * ((long)lastCol + 1);
-                }
-            }
+            // Determine the actual file size on disk.
+            long fileSize = new FileInfo(filePath).Length;
 
-            // Toggle memory setting and calculation mode based on size.
-            if (totalUsedCells > CellCountThreshold)
+            // For large workbooks we avoid automatic recalculations.
+            // For smaller workbooks we perform a full recalculation to ensure data consistency.
+            if (fileSize <= sizeThresholdInBytes)
             {
-                // Large workbook: prefer lower memory usage and manual calculation.
-                workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-                // Optionally disable automatic calculation on save/open.
-                workbook.Settings.FormulaSettings.CalculateOnSave = false;
-                workbook.Settings.FormulaSettings.CalculateOnOpen = false;
-            }
-            else
-            {
-                // Small workbook: normal memory usage and automatic calculation.
-                workbook.Settings.MemorySetting = MemorySetting.Normal;
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-                workbook.Settings.FormulaSettings.CalculateOnSave = true;
-                workbook.Settings.FormulaSettings.CalculateOnOpen = true;
-                // Perform a quick calculation to keep values up‑to‑date.
+                // Force a full recalculation for smaller workbooks.
                 workbook.CalculateFormula();
             }
 
-            // Save the workbook using the default save format inferred from the file extension.
-            workbook.Save(outputPath);
+            // Save the workbook back to the same file (overwrites the original).
+            workbook.Save(filePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 
-    // Example usage
-    class Program
+    // Example usage.
+    public static void Main(string[] args)
     {
-        static void Main()
+        if (args.Length < 2)
         {
-            string inputFile = "input.xlsx";
-            string outputFile = "optimized_output.xlsx";
-
-            WorkbookOptimizer.Optimize(inputFile, outputFile);
-
-            Console.WriteLine("Workbook optimization completed.");
+            Console.WriteLine("Usage: CalculationModeToggler <excelFilePath> <sizeThresholdInBytes>");
+            return;
         }
+
+        string excelFilePath = args[0];
+        if (!long.TryParse(args[1], out long threshold))
+        {
+            Console.WriteLine("Invalid size threshold.");
+            return;
+        }
+
+        ToggleCalculationMode(excelFilePath, threshold);
+        Console.WriteLine("Calculation mode toggled based on workbook size.");
     }
 }

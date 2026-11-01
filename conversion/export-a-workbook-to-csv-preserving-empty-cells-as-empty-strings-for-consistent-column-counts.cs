@@ -1,56 +1,40 @@
-// Title: Export a C# Aspose.Cells workbook to CSV while preserving empty cells as empty strings for consistent column alignment
-// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as a CSV file, writing blank cells as empty strings so every row retains the same number of columns. | Configure TxtSaveOptions in Aspose.Cells to disable trimming of leading, trailing, and blank rows/columns during CSV export. | Demonstrate exporting a workbook to a CSV string via MemoryStream while keeping separators for completely blank rows.
-// Common Searches: Aspose.Cells C# export to CSV keep empty cells | prevent Aspose.Cells from removing blank columns when saving as CSV | TxtSaveOptions KeepSeparatorsForBlankRow example C# | CSV output with consistent column count using Aspose.Cells | how to preserve trailing blank cells in Aspose.Cells CSV export
-// Tags: Aspose.Cells CSV export preserve empty cells | TxtSaveOptions KeepSeparatorsForBlankRow | TrimLeadingBlankRowAndColumn false Aspose.Cells | TrimTailingBlankCells false CSV Aspose.Cells | MemoryStream CSV generation C# Aspose.Cells
+// Title: Convert an Excel .xlsx workbook to CSV while keeping empty cells as empty strings using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export .xlsx to .csv preserving blank cells | How to keep empty cells when converting Excel workbook to CSV with Aspose.Cells | C# save Excel file as CSV without dropping empty columns using Aspose.Cells | Maintain column count during .xlsx to .csv conversion in .NET Aspose.Cells | Aspose.Cells SaveFormat.Csv keep empty strings in output file
+// Tags: Aspose.Cells CSV export blank cell handling | C# workbook to CSV conversion SaveFormat.Csv | retain empty cells during Excel to CSV conversion | ensure column consistency when converting .xlsx to .csv | Aspose.Cells .NET CSV output empty string handling
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvExport
+// The sample verifies that the input.xlsx file exists, loads it into an Aspose.Cells Workbook, and saves it as output.csv using SaveFormat.Csv. Aspose.Cells automatically writes empty cells as empty strings, preserving column counts, and the code includes basic exception handling.
+class Program
 {
-    // Creates a workbook, adds data with intentional blanks, sets TxtSaveOptions (KeepSeparatorsForBlankRow = true, TrimLeadingBlankRowAndColumn = false, TrimTailingBlankCells = false, Encoding = ASCII) to retain empty cells, saves to a MemoryStream as CSV, and prints the CSV string where blank cells appear as empty strings, ensuring each row has the same column count.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.csv";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Populate some data with intentional empty cells
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Price");
-            cells["A2"].PutValue("Apple");
-            // B2 is left empty on purpose
-            cells["B3"].PutValue(2.99);
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create CSV save options
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-            {
-                // Keep separators for completely blank rows so that column count stays consistent
-                KeepSeparatorsForBlankRow = true,
-                // Do not trim leading blank rows/columns; keep them as empty strings
-                TrimLeadingBlankRowAndColumn = false,
-                // Ensure trailing blank cells are not removed
-                TrimTailingBlankCells = false,
-                // Use ASCII encoding for simplicity (can be changed as needed)
-                Encoding = Encoding.ASCII
-            };
+            // Save the workbook as CSV. Aspose.Cells automatically preserves empty cells.
+            workbook.Save(outputPath, SaveFormat.Csv);
 
-            // Save the workbook to a memory stream using the CSV options
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Save(ms, csvOptions);
-                // Convert the stream to a string for display or further processing
-                string csvContent = Encoding.ASCII.GetString(ms.ToArray());
-
-                // Output the CSV content
-                Console.WriteLine("CSV output with empty cells preserved:");
-                Console.WriteLine(csvContent);
-            }
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

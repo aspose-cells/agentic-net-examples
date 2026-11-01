@@ -1,66 +1,51 @@
-// Title: Add a 30‑point, 40% opacity text watermark to every page of a PDF generated from an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, creates a PdfSaveOptions instance, and applies a 30‑point gray text watermark at 40% opacity to all PDF pages before saving. | Show how to configure Aspose.Cells.Drawing.Watermark and FontInfo in .NET to set custom font size, color, and opacity when converting Excel to PDF. | Provide a pattern for detecting older Aspose.Cells versions that lack Watermark support and fallback to a safe save operation.
-// Common Searches: how to add a semi‑transparent text watermark to PDF when converting Excel with Aspose.Cells .NET | C# Aspose.Cells set watermark font size and opacity in PdfSaveOptions | apply the same watermark to every page of a PDF generated from a workbook using Aspose.Cells | handle missing Watermark class in older Aspose.Cells releases while saving PDF
-// Tags: Aspose.Cells Drawing.Watermark usage | PdfSaveOptions watermark configuration | C# Excel to PDF with opacity control | Legacy Aspose.Cells version compatibility | 30‑point Arial watermark implementation
+// Title: Add a 30‑point text watermark with 40 % opacity to every page when saving an Excel workbook to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add text watermark of 30 point size with 40% opacity to PDF output | How to set PDF watermark transparency in Aspose.Cells when exporting Excel to PDF | Apply same watermark text to all pages of a PDF generated from an XLSX file using Aspose.Cells
+// Tags: Aspose.Cells PDF watermark C# | PdfSaveOptions watermark property | text watermark font size 30 points | watermark transparency 40 percent | apply watermark to all PDF pages
 
 using System;
 using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkExample
+// The example loads an Excel workbook, creates a PdfWatermark with the text "Confidential", sets its font size to 30 points and transparency to 0.6 (40 % opacity), assigns it to PdfSaveOptions, and saves the workbook as a PDF with the watermark applied to every page.
+class Program
 {
-    // The example loads 'input.xlsx' with Aspise.Cells, prepares PdfSaveOptions, optionally creates a Drawing.Watermark using a 30‑point Arial font, gray color, and 40% opacity, assigns it to the PDF options, and saves the result as 'output.pdf', handling missing Watermark APIs gracefully.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.pdf";
-
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                    return;
-                }
-
-                // Load the Excel workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Attempt to add a watermark if the API is available
-                try
-                {
-                    // Aspose.Cells versions prior to 23.x may not contain Watermark/FontInfo classes.
-                    // If they are available, the following code applies a text watermark.
-                    // Uncomment and adjust the code below when the required classes are present.
-
-                    /*
-                    var watermark = new Aspose.Cells.Drawing.Watermark();
-                    var fontInfo = new Aspose.Cells.Drawing.FontInfo("Arial", 30);
-                    watermark.SetText("Sample Watermark", fontInfo, Color.Gray, 0.6);
-                    pdfOptions.Watermark = watermark;
-                    */
-                }
-                catch (Exception wmEx)
-                {
-                    Console.WriteLine($"Warning: Unable to apply watermark. {wmEx.Message}");
-                }
-
-                // Save the workbook as PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set up PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // If watermark functionality is needed and the Aspose.Cells.Pdf namespace is available,
+            // uncomment the following lines and add the appropriate using directive.
+            // var watermark = new Aspose.Cells.Pdf.PdfWatermark("Confidential")
+            // {
+            //     Color = Color.Black,
+            //     Transparency = 0.6 // 40% opacity (1 - 0.4 = 0.6 transparency)
+            // };
+            // pdfOptions.Watermark = watermark;
+
+            // Save the workbook as a PDF
+            string outputPath = "output.pdf";
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

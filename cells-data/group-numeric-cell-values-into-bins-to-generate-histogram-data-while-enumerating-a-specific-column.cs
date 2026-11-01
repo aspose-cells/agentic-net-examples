@@ -1,67 +1,105 @@
-// Title: Generate a histogram chart with custom bin width, overflow/underflow settings and enumerate numeric column values using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that fills a worksheet column with numeric values, prints each cell’s value to the console, and adds a histogram chart with custom bin width, count, overflow, and underflow using Aspose.Cells. | Modify the example to read data from a different column range and configure the histogram bins by specifying the number of bins instead of the bin width. | Implement a reusable method that accepts a worksheet, a data range address, and bin parameters (width, count, overflow, underflow) and inserts a histogram chart with those settings.
-// Common Searches: aspacells c# create histogram chart with custom bin intervals and overflow | how to enumerate cells in a specific column using Aspose.Cells for .NET | configure overflow and underflow bins for a histogram in Aspose.Cells | custom bin count vs width Aspose.Cells histogram example | generate histogram from column B values Aspose.Cells C#
-// Tags: Aspose.Cells histogram custom bins | C# enumerate worksheet column values | Aspose.Cells set bin width | Aspose.Cells overflow underflow bins | Aspose.Cells chart from data range | Aspose.Cells save workbook as xlsx
+// Title: Create histogram bins from numeric values in a specific Excel column using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read numeric values from a column and build histogram bins | How to calculate bin counts for a column of numbers using Aspose.Cells .NET | Aspose.Cells generate histogram worksheet from source data in C# | Enumerate Excel column values and group into equal‑width bins with Aspose.Cells | Create histogram data table in a new sheet using Aspose.Cells in C#
+// Tags: numeric column extraction Aspose.Cells C# | equal-width bin calculation Aspose.Cells | histogram worksheet creation Aspose.Cells | bin count aggregation Aspose.Cells .NET | Excel data binning Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsHistogramExample
+namespace HistogramGenerator
 {
-    // // Creates a new workbook, populates column B (B2:B11) with numeric data, prints each value to the console, adds a histogram chart with custom bin width, count, overflow, and underflow settings, and saves the workbook as 'HistogramWithCustomBins.xlsx'.
+    // The example loads an existing Excel workbook, extracts all numeric values from a chosen column, determines the data range, divides it into a configurable number of equal‑width bins, counts the values per bin, creates a new worksheet named "Histogram" with columns for bin start, bin end, and count, writes the histogram data, and saves the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Input and output file paths
+            string inputPath = @"C:\Data\SourceWorkbook.xlsx";
+            string outputPath = @"C:\Data\HistogramWorkbook.xlsx";
 
-            // Populate numeric data in column B (B2:B11)
-            double[] values = { 5, 12, 18, 22, 27, 33, 38, 45, 51, 60 };
-            for (int i = 0; i < values.Length; i++)
+            // Load the workbook (lifecycle rule)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Choose the worksheet that contains the data
+            Worksheet dataSheet = workbook.Worksheets[0]; // first sheet
+
+            // Column index to enumerate (0 = A, 1 = B, etc.)
+            int targetColumnIndex = 0;
+
+            // Collect numeric values from the target column
+            List<double> values = new List<double>();
+            // Assuming data starts at row 0 and continues until an empty cell is found
+            for (int row = 0; row <= dataSheet.Cells.MaxDataRow; row++)
             {
-                // Row index is i+1 because row 0 is header
-                worksheet.Cells[i + 1, 1].PutValue(values[i]);
+                var cell = dataSheet.Cells[row, targetColumnIndex];
+                if (cell.Value == null) continue;
+
+                // Try to parse the cell value as double
+                if (double.TryParse(cell.Value.ToString(), out double numericValue))
+                {
+                    values.Add(numericValue);
+                }
             }
 
-            // Optional: add a header for the column
-            worksheet.Cells[0, 1].PutValue("Values");
-
-            // Enumerate the specific column and output values to console
-            Console.WriteLine("Enumerating column B values:");
-            for (int row = 1; row <= values.Length; row++)
+            if (values.Count == 0)
             {
-                Console.WriteLine($"Row {row + 1}: {worksheet.Cells[row, 1].DoubleValue}");
+                Console.WriteLine("No numeric data found in the specified column.");
+                return;
             }
 
-            // Add a histogram chart to the worksheet
-            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
-            int chartIndex = worksheet.Charts.Add(ChartType.Histogram, 5, 3, 25, 13);
-            Chart chart = worksheet.Charts[chartIndex];
+            // Determine histogram parameters
+            int numberOfBins = 10; // you can adjust this as needed
+            double min = double.MaxValue;
+            double max = double.MinValue;
 
-            // Add the data series (numeric values) to the chart
-            // The second argument 'true' indicates that the range is a category (X) axis data
-            chart.NSeries.Add("B2:B11", true);
+            foreach (double v in values)
+            {
+                if (v < min) min = v;
+                if (v > max) max = v;
+            }
 
-            // Configure the bins on the value axis (the axis that holds the numeric data)
-            Axis valueAxis = chart.ValueAxis;
-            AxisBins bins = valueAxis.Bins;
+            // Edge case: all values are the same
+            if (min == max)
+            {
+                max = min + 1;
+            }
 
-            // Disable automatic bin calculation to define custom bins
-            bins.IsAutomatic = false;
+            double binSize = (max - min) / numberOfBins;
 
-            // Set custom bin properties
-            bins.Width = 10;      // Width of each bin
-            bins.Count = 6;       // Number of bins (optional, can be omitted if Width is set)
-            bins.Overflow = 70;   // Values greater than the last bin go to overflow bin
-            bins.Underflow = 0;   // Values less than the first bin go to underflow bin
+            // Initialize bin counters
+            int[] binCounts = new int[numberOfBins];
 
-            // Save the workbook to a file
-            workbook.Save("HistogramWithCustomBins.xlsx");
+            // Assign each value to a bin
+            foreach (double v in values)
+            {
+                int binIndex = (int)((v - min) / binSize);
+                // Ensure the max value falls into the last bin
+                if (binIndex == numberOfBins) binIndex = numberOfBins - 1;
+                binCounts[binIndex]++;
+            }
 
-            Console.WriteLine("Histogram chart created and workbook saved as 'HistogramWithCustomBins.xlsx'.");
+            // Create a new worksheet to store histogram data
+            Worksheet histogramSheet = workbook.Worksheets.Add("Histogram");
+
+            // Write header
+            histogramSheet.Cells[0, 0].PutValue("Bin Start");
+            histogramSheet.Cells[0, 1].PutValue("Bin End");
+            histogramSheet.Cells[0, 2].PutValue("Count");
+
+            // Populate histogram rows
+            for (int i = 0; i < numberOfBins; i++)
+            {
+                double binStart = min + i * binSize;
+                double binEnd = binStart + binSize;
+
+                histogramSheet.Cells[i + 1, 0].PutValue(binStart);
+                histogramSheet.Cells[i + 1, 1].PutValue(binEnd);
+                histogramSheet.Cells[i + 1, 2].PutValue(binCounts[i]);
+            }
+
+            // Save the workbook (lifecycle rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Histogram data saved to {outputPath}");
         }
     }
 }

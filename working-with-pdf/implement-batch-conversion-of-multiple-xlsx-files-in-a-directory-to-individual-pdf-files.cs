@@ -1,76 +1,68 @@
-// Title: Convert all XLSX files in a folder to separate PDF documents with Aspose.Cells for .NET (C# batch example)
-// AI Prompts: Write a C# console program that enumerates every .xlsx file in a specified directory, loads each workbook with Aspose.Cells, and saves it as a PDF using SaveFormat.Pdf. | Enhance the batch converter to catch missing files, load failures, or save errors, log the details, and continue processing the remaining workbooks. | Update the script so it automatically creates the output folder when it does not already exist before writing PDF files.
-// Common Searches: c# Aspose.Cells batch convert multiple xlsx files to pdf in a single folder | how to loop through a directory of Excel workbooks and export each to PDF using Aspose.Cells | sample code for converting all .xlsx files in a folder to PDF with Aspose.Cells .NET | Aspose.Cells SaveFormat.Pdf batch processing example c#
-// Tags: Aspose.Cells batch conversion XLSX → PDF | C# file system enumeration for Excel to PDF | Workbook.Save with SaveFormat.Pdf in loop | auto-create output directory C# | robust error handling for batch workbook conversion
+// Title: Convert every XLSX workbook in a folder to a separate PDF using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a specified directory for *.xlsx files, loads each workbook with Aspose.Cells, and saves it as a PDF with the same base name in an output folder. | Add per‑file try/catch logic so that a conversion failure logs the file name and error message while the batch continues processing the remaining workbooks. | Extend the script to recreate the source directory’s sub‑folder structure inside the destination folder when writing the PDF files.
+// Common Searches: aspocells c# batch convert excel files in a directory to pdf | how to loop through all .xlsx files and export each to pdf using Aspose.Cells | c# program to convert multiple Excel workbooks to PDF and keep original filenames
+// Tags: Aspose.Cells multiple workbook PDF export | C# enumerate .xlsx files in folder | Workbook.Save with SaveFormat.Pdf | individual file error logging in conversion loop | maintain source directory hierarchy for PDF output
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example scans a given input folder for .xlsx files, loads each workbook with Aspose.Cells, and saves it as an individual PDF in an output folder. It creates the output directory if missing and includes error handling to log and skip problematic files while continuing the batch operation.
+// A C# console application that enumerates every .xlsx file in a given input folder, loads each workbook with Aspose.Cells, and saves it as a PDF with the same filename in a designated output folder. The program creates the output directory if needed, logs conversion errors per file, and can be extended to preserve the original sub‑directory layout.
 class BatchXlsxToPdfConverter
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Define the directories for input XLSX files and output PDFs.
-        string inputDirectory = @"C:\InputXlsx";
-        string outputDirectory = @"C:\OutputPdf";
+        // Define the source directory containing XLSX files
+        string sourceDirectory = @"C:\InputXlsxFiles";
 
-        // Verify that the input directory exists; if not, inform the user and exit.
-        if (!Directory.Exists(inputDirectory))
+        // Define the target directory where PDF files will be saved
+        string targetDirectory = @"C:\OutputPdfFiles";
+
+        // Verify source directory exists
+        if (!Directory.Exists(sourceDirectory))
         {
-            Console.WriteLine($"Input directory not found: {inputDirectory}");
+            Console.WriteLine($"Source directory not found: {sourceDirectory}");
             return;
         }
 
-        // Ensure the output directory exists.
-        if (!Directory.Exists(outputDirectory))
+        // Ensure the target directory exists
+        if (!Directory.Exists(targetDirectory))
         {
-            Directory.CreateDirectory(outputDirectory);
+            Directory.CreateDirectory(targetDirectory);
         }
 
-        string[] xlsxFiles;
         try
         {
-            // Retrieve all .xlsx files in the input directory (non‑recursive).
-            xlsxFiles = Directory.GetFiles(inputDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
+            // Get all XLSX files in the source directory
+            string[] xlsxFiles = Directory.GetFiles(sourceDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            foreach (string xlsxPath in xlsxFiles)
+            {
+                try
+                {
+                    // Load the XLSX workbook
+                    Workbook workbook = new Workbook(xlsxPath);
+
+                    // Build the PDF file path (same name, .pdf extension)
+                    string pdfFileName = Path.GetFileNameWithoutExtension(xlsxPath) + ".pdf";
+                    string pdfPath = Path.Combine(targetDirectory, pdfFileName);
+
+                    // Save the workbook as PDF
+                    workbook.Save(pdfPath, SaveFormat.Pdf);
+                }
+                catch (Exception ex)
+                {
+                    // Log errors for individual files without stopping the batch
+                    Console.WriteLine($"Error converting '{xlsxPath}': {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Batch conversion completed.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error accessing input directory: {ex.Message}");
-            return;
+            // Log unexpected errors that may occur during enumeration
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
-
-        foreach (string xlsxPath in xlsxFiles)
-        {
-            try
-            {
-                // Verify the file still exists before loading.
-                if (!File.Exists(xlsxPath))
-                {
-                    Console.WriteLine($"File not found (skipped): {Path.GetFileName(xlsxPath)}");
-                    continue;
-                }
-
-                // Load the workbook from the XLSX file.
-                Workbook workbook = new Workbook(xlsxPath);
-
-                // Determine the output PDF file name.
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
-                string pdfPath = Path.Combine(outputDirectory, fileNameWithoutExt + ".pdf");
-
-                // Save the workbook as PDF.
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-
-                Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} -> {Path.GetFileName(pdfPath)}");
-            }
-            catch (Exception ex)
-            {
-                // Log any errors but continue processing other files.
-                Console.WriteLine($"Error converting '{Path.GetFileName(xlsxPath)}': {ex.Message}");
-            }
-        }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

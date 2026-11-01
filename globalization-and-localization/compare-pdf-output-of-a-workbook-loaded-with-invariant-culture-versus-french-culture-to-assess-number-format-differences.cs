@@ -1,60 +1,68 @@
-// Title: Compare PDF output of an Excel workbook when exported with InvariantCulture versus French (fr-FR) culture using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets Workbook.Settings.CultureInfo to CultureInfo.InvariantCulture, saves the workbook as PDF, then changes CultureInfo to fr-FR, saves a second PDF, and compares the two PDF files byte‑by‑byte to determine if any formatting differences exist. | Extend the sample to output a log that records each numeric cell's formatted value in the invariant‑culture PDF and the French‑culture PDF, highlighting differences such as decimal separators or grouping symbols.
-// Common Searches: aspnet compare pdf files generated from Excel with different CultureInfo settings | Aspose.Cells export to PDF using invariant culture vs French locale | detect number format changes in PDF when changing workbook culture in C# | how to set workbook.Settings.CultureInfo for PDF conversion in Aspose.Cells | byte array comparison of two PDFs created by Aspose.Cells
-// Tags: Aspose.Cells culture‑specific PDF generation | C# workbook.Settings.CultureInfo configuration | byte‑wise PDF difference detection Aspose.Cells | locale number formatting in Excel to PDF | French (fr-FR) PDF output with Aspose.Cells
+// Title: Export an Excel workbook to PDF with Aspose.Cells using InvariantCulture and French (fr-FR) cultures and compare the results
+// Common Searches: how to export an Excel workbook to PDF with a specific CultureInfo using Aspose.Cells C# | Aspose.Cells PDF export number formatting differences between invariant and fr-FR cultures | compare PDF files generated from the same workbook under different cultures in .NET | set thread culture before saving workbook as PDF with Aspose.Cells | detect locale-specific formatting changes in PDF output from Aspose.Cells
+// Tags: Aspose.Cells PDF export using specific CultureInfo | C# thread CultureInfo impact on PDF rendering | locale-aware number format in Aspose.Cells PDF | binary comparison of PDFs generated under different cultures | InvariantCulture versus French culture PDF generation Aspose.Cells
 
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-// The program loads an Excel workbook with Aspose.Cells, saves it as PDF twice—first using InvariantCulture and then using French (fr-FR) culture—reads both PDFs into byte arrays, and performs a byte‑wise comparison to report whether the outputs differ, illustrating locale‑dependent number formatting.
-class Program
+// The example loads an Excel file with Aspose.Cells, switches the thread's CurrentCulture to InvariantCulture and saves the workbook as a PDF, then switches to the French (fr-FR) culture and saves another PDF. It restores the original culture and compares the two PDFs by size and byte content, reporting whether they are identical while handling Aspose.Cells‑specific and general exceptions.
+class WorkbookPdfCultureComparison
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string excelPath = "input.xlsx";
+        // Paths for the source Excel file and output PDFs
+        const string sourceFile = "input.xlsx";
+        const string pdfInvariant = "output_invariant.pdf";
+        const string pdfFrench = "output_french.pdf";
 
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook(excelPath);
-
-        // ---------- Invariant Culture ----------
-        // Set culture to invariant for number formatting
-        workbook.Settings.CultureInfo = CultureInfo.InvariantCulture;
-
-        // Save as PDF using invariant culture (lifecycle rule: save)
-        string pdfInvariantPath = "output_invariant.pdf";
-        workbook.Save(pdfInvariantPath, SaveFormat.Pdf);
-
-        // ---------- French Culture ----------
-        // Change culture to French (France) for number formatting
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
-
-        // Save as PDF using French culture
-        string pdfFrenchPath = "output_french.pdf";
-        workbook.Save(pdfFrenchPath, SaveFormat.Pdf);
-
-        // ---------- Comparison ----------
-        // Load both PDF files into byte arrays
-        byte[] invariantBytes = File.ReadAllBytes(pdfInvariantPath);
-        byte[] frenchBytes = File.ReadAllBytes(pdfFrenchPath);
-
-        // Simple byte‑wise comparison to detect differences
-        bool areIdentical = invariantBytes.Length == frenchBytes.Length;
-        if (areIdentical)
+        try
         {
-            for (int i = 0; i < invariantBytes.Length; i++)
+            // Ensure the source file exists; create a simple workbook if it does not.
+            if (!File.Exists(sourceFile))
             {
-                if (invariantBytes[i] != frenchBytes[i])
-                {
-                    areIdentical = false;
-                    break;
-                }
+                var tempWb = new Workbook();
+                var ws = tempWb.Worksheets[0];
+                ws.Cells["A1"].PutValue("Sample data");
+                tempWb.Save(sourceFile);
+                Console.WriteLine($"Created placeholder workbook: {sourceFile}");
             }
-        }
 
-        // Output the result
-        Console.WriteLine("PDFs are {0}.", areIdentical ? "identical" : "different");
+            // Load the workbook (no password required for the placeholder file)
+            var loadOptions = new LoadOptions(); // default options
+            Workbook workbook = new Workbook(sourceFile, loadOptions);
+
+            // Preserve the original culture to restore later
+            CultureInfo originalCulture = CultureInfo.CurrentCulture;
+
+            // ---------- Invariant Culture ----------
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            workbook.Save(pdfInvariant, SaveFormat.Pdf);
+
+            // ---------- French Culture ----------
+            CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
+            workbook.Save(pdfFrench, SaveFormat.Pdf);
+
+            // Restore the original culture
+            CultureInfo.CurrentCulture = originalCulture;
+
+            // ---------- Comparison ----------
+            bool filesAreIdentical = File.ReadAllBytes(pdfInvariant).Length == File.ReadAllBytes(pdfFrench).Length &&
+                                     File.ReadAllBytes(pdfInvariant).SequenceEqual(File.ReadAllBytes(pdfFrench));
+
+            Console.WriteLine($"PDF files are {(filesAreIdentical ? "identical" : "different")}.");
+            Console.WriteLine($"Invariant PDF size: {new FileInfo(pdfInvariant).Length} bytes");
+            Console.WriteLine($"French PDF size:    {new FileInfo(pdfFrench).Length} bytes");
+        }
+        catch (CellsException cex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {cex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

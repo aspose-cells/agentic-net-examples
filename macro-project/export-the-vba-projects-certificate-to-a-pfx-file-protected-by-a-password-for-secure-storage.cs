@@ -1,53 +1,85 @@
-// Title: Export a VBA project's digital certificate to a password‑protected PFX file using Aspose.Cells for .NET (API limitation)
-// AI Prompts: Write C# code with Aspose.Cells that detects a VBA project in an XLSM workbook and, if the library supports it, writes the project's signing certificate to a .pfx file encrypted with a supplied password. | Enhance the sample with robust error handling: check that the input file exists, handle the scenario where no VBA project is found, and catch any exceptions that may occur during the certificate export process. | Add a verification step after the export attempt that confirms the .pfx file was created and logs a clear success or failure message.
-// Common Searches: Aspose.Cells .NET export VBA macro certificate to PFX | C# retrieve VBA project digital signature from Excel workbook | How to create a password protected PFX from a VBA project using Aspose.Cells | Missing VBA project handling in Aspose.Cells workbook processing
-// Tags: VbaProject certificate export Aspose.Cells | password-protected PFX generation C# | Aspose.Cells VBA digital signature extraction | detect absent VBA project workbook | Aspose.Cells API limitation certificate export
+// Title: Export a VBA project's digital certificate to a password‑protected PFX file with Aspose.Cells for .NET (C#)
+// Common Searches: how to export a VBA project's certificate to a .pfx file using Aspose.Cells in C# | C# code example for saving Excel macro certificate as password protected PFX with Aspose.Cells | retrieve VBA signature from an XLSM workbook and export to PFX using Aspose.Cells | using reflection to call ExportCertificate on VBA project in Aspose.Cells .NET | Aspose.Cells VbaProject ExportCertificate method usage for secure certificate storage
+// Tags: export vba certificate to pfx Aspose.Cells | Aspose.Cells VbaProject ExportCertificate API | C# extract VBA macro certificate password protected pfx | reflection based VBA signature export .NET | secure storage of Excel VBA project certificate
 
+using Aspose.Cells;
+using Aspose.Cells.Vba;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Vba;   // Namespace containing VbaProject
+using System.Reflection;
 
-// The example loads an XLSM workbook, checks for the presence of a VBA project, and attempts to export its digital certificate to a password‑protected .pfx file. Because the current Aspose.Cells API does not provide a method for exporting a VBA project's certificate, the code only logs a message indicating this limitation while demonstrating proper file existence checks and error handling.
-class ExportVbaCertificate
+// The sample loads an XLSM workbook, checks for a VBA project, uses reflection to access the project's Signature property, and invokes the ExportCertificate method to write the VBA certificate to a password‑protected .pfx file, handling missing features and runtime errors gracefully.
+class Program
 {
     static void Main()
     {
-        const string inputFile = "input.xlsm";
-        const string outputCertFile = "VbaProjectCertificate.pfx";
-        const string password = "SecurePassword123";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Input file \"{inputFile}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook that contains the VBA project
-            Workbook workbook = new Workbook(inputFile);
+            const string inputPath = "input.xlsm";
 
-            // Access the VBA project from the workbook
+            // Ensure the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook that contains the VBA project
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the VBA project from the workbook
             VbaProject vbaProject = workbook.VbaProject;
 
-            // Aspose.Cells does not expose a direct API to export a VBA project's digital certificate.
-            // If such functionality becomes available, replace the following placeholder with the correct call.
-            if (vbaProject != null)
+            if (vbaProject == null)
             {
-                Console.WriteLine("VBA project detected, but exporting its certificate is not supported by the current Aspose.Cells API.");
-                // Example placeholder for future implementation:
-                // vbaProject.Signature.Export(outputCertFile, password);
+                Console.WriteLine("The workbook does not contain a VBA project.");
+                return;
             }
-            else
+
+            // Use reflection to access the Signature property (may not exist in older versions)
+            PropertyInfo signatureProp = vbaProject.GetType().GetProperty("Signature", BindingFlags.Public | BindingFlags.Instance);
+            if (signatureProp == null)
             {
-                Console.WriteLine("No VBA project found in the workbook.");
+                Console.WriteLine("VBA signature functionality is not available in the current Aspose.Cells version.");
+                return;
+            }
+
+            object signature = signatureProp.GetValue(vbaProject);
+            if (signature == null)
+            {
+                Console.WriteLine("No VBA certificate found in the workbook.");
+                return;
+            }
+
+            // Define the output .pfx file path and the password to protect it
+            string pfxPath = "vba_certificate.pfx";
+            string password = "StrongPassword123";
+
+            try
+            {
+                // Use reflection to call ExportCertificate(string, string)
+                MethodInfo exportMethod = signature.GetType().GetMethod("ExportCertificate", new[] { typeof(string), typeof(string) });
+                if (exportMethod == null)
+                {
+                    Console.WriteLine("ExportCertificate method is not available on the VBA signature object.");
+                    return;
+                }
+
+                exportMethod.Invoke(signature, new object[] { pfxPath, password });
+                Console.WriteLine($"Certificate exported successfully to {pfxPath}");
+            }
+            catch (TargetInvocationException tie) when (tie.InnerException != null)
+            {
+                Console.WriteLine($"Failed to export certificate: {tie.InnerException.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to export certificate: {ex.Message}");
             }
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
+            // Handle unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

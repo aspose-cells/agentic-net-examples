@@ -1,48 +1,47 @@
-// Title: Add inline CSS and a custom TableCssId to an Aspose.Cells HTML export in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to embed CSS styles directly into the generated HTML and set the TableCssId property to a custom identifier. | Show how to modify an existing workbook export so that the resulting HTML contains a <style> block with table styling and the tables are prefixed with a specific TableCssId. | Demonstrate configuring Aspose.Cells to produce an HTML file where all CSS is inline and the table element IDs start with a given prefix for immediate preview.
-// Common Searches: how to embed CSS styles directly in HTML output from Aspose.Cells C# | Aspose.Cells HtmlSaveOptions inline CSS TableCssId example | C# export Excel to HTML with custom table ID using Aspose.Cells | preview styled Excel table in browser by setting TableCssId in Aspose.Cells | generate HTML with embedded stylesheet from workbook using Aspose.Cells .NET
-// Tags: inline CSS in Aspose.Cells HTML export | TableCssId customization for HTML tables | C# embed stylesheet when saving workbook as HTML | custom table identifier prefix in Aspose.Cells output | immediate preview of styled HTML workbook
+// Title: Export a workbook to HTML with inline CSS definitions prefixed by a custom TableCssId using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets HtmlSaveOptions.IsInlineCss = true and assigns a TableCssId value so that all table styles are emitted as inline CSS with the specified prefix. | Modify the sample workbook export to enable inline CSS, set TableCssId to a custom identifier, and ensure the resulting HTML contains the stylesheet directly for immediate preview.
+// Common Searches: Aspose.Cells C# export HTML with inline CSS and custom TableCssId | How to enable IsInlineCss in HtmlSaveOptions for Aspose.Cells | Add a CSS class prefix to tables when saving workbook as HTML using Aspose.Cells | Preview exported HTML with embedded styles in .NET Aspose.Cells | C# Aspose.Cells HTML export with embedded stylesheet
+// Tags: Aspose.Cells HtmlSaveOptions inline CSS | TableCssId custom class prefix Aspose.Cells | C# export workbook to HTML with embedded stylesheet | preview HTML with inline styles Aspose.Cells | set IsInlineCss property Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The example creates a workbook, fills it with sample data, configures HtmlSaveOptions to embed CSS inline and apply a custom TableCssId prefix, and saves the workbook as an HTML file for immediate preview.
+class Program
 {
-    // This example demonstrates how to configure Aspose.Cells HtmlSaveOptions to embed CSS directly into the exported HTML file and assign a custom TableCssId prefix to the generated table elements, enabling an immediate styled preview of the workbook in a browser.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and add sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "SampleData";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Populate the worksheet
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["A2"].PutValue("Apples");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Bananas");
-                sheet.Cells["B3"].PutValue(85);
-                sheet.Cells["A4"].PutValue("Cherries");
-                sheet.Cells["B4"].PutValue(60);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Configure HTML save options (default options are sufficient)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.20);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.80);
 
-                // Export the workbook to an HTML file
-                string outputPath = "SampleData.html";
-                workbook.Save(outputPath, htmlOptions);
+            // Configure HTML export options (using default settings)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-                Console.WriteLine($"Workbook exported to HTML at: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Define the output file path
+            string outputPath = "ExportedWithInlineCss.html";
+
+            // Save the workbook to HTML using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

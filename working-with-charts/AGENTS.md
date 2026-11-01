@@ -7,8 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 primary_intent: Create, customize, inspect, and render Excel charts in C#
 primary_apis: [Worksheet.Charts, ChartCollection.Add, Chart, Chart.NSeries, Series, Axis, DataLabels]
 search_intents: [create Excel chart C#, add chart series Aspose.Cells, combo chart secondary axis, export Excel chart to PNG]

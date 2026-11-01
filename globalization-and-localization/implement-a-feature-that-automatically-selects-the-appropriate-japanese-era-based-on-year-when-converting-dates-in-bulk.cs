@@ -1,43 +1,14 @@
-// Title: Automatically replace Gregorian dates with Japanese era strings in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, scans every cell for DateTime values, converts each date to the appropriate Japanese era (Meiji, Taisho, Showa, Heisei, Reiwa) using a lookup of era start dates, writes the era string back as text, and saves the workbook. | Create a reusable C# method that receives a DateTime and returns a formatted Japanese era string (e.g., "R3/04/01"), then apply this method to all date cells in a worksheet loaded with Aspose.Cells while preserving text formatting.
-// Common Searches: Aspose.Cells C# bulk convert Excel dates to Japanese era format | How to map Gregorian dates to Japanese era in a spreadsheet using .NET | Replace date cells with era strings in an Excel file programmatically | C# iterate over used range in Aspose.Cells and change date format to era | Japanese era conversion for Excel dates with Aspose.Cells library
-// Tags: bulk date conversion to Japanese era using Aspose.Cells | Japanese era formatting for Excel cells in .NET | replace DateTime cells with era strings Aspose.Cells | era lookup based on Gregorian year C# | text style assignment for converted dates Aspose.Cells
+// Title: Bulk convert Excel DateTime cells to Japanese era strings using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells bulk replace DateTime cells with Japanese era format | How to automatically select Japanese era based on year when converting Excel dates | Iterate through Excel worksheet cells and format dates as Meiji, Taisho, Showa, Heisei, Reiwa using Aspose.Cells | Convert Excel dates to Japanese calendar strings in a .NET application | Aspose.Cells example for Japanese era localization of Excel dates
+// Tags: bulk japanese era conversion aspocells | excel datetime to japanese calendar c# | aspocells date formatting japanese era | iterate worksheet cells replace datetime with era | japanese era localization aspocells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an input.xlsx workbook with Aspose.Cells, iterates through the used range, detects DateTime cells, converts each date to the correct Japanese era string (e.g., "R3/04/01") based on predefined era start dates, writes the result back as text with a text number format, and saves the modified workbook to output.xlsx.
-class JapaneseEraDateConverter
+// The sample loads an Excel workbook, scans every used cell, detects DateTime values, determines the correct Japanese era (Meiji, Taisho, Showa, Heisei, Reiwa) based on the year, replaces the original date with a formatted era string, and saves the updated workbook.
+class Program
 {
-    // Mapping of Japanese eras with their start dates
-    private static readonly (string Era, DateTime Start)[] Eras = new (string, DateTime)[]
-    {
-        ("M", new DateTime(1868, 9, 8)),   // Meiji
-        ("T", new DateTime(1912, 7, 30)),  // Taisho
-        ("S", new DateTime(1926, 12, 25)), // Showa
-        ("H", new DateTime(1989, 1, 8)),   // Heisei
-        ("R", new DateTime(2019, 5, 1))    // Reiwa
-    };
-
-    // Convert a Gregorian date to Japanese era string (e.g., "R3/04/01")
-    private static string ConvertToJapaneseEra(DateTime date)
-    {
-        // Find the era that the date belongs to (latest start date <= date)
-        for (int i = Eras.Length - 1; i >= 0; i--)
-        {
-            if (date >= Eras[i].Start)
-            {
-                int eraYear = date.Year - Eras[i].Start.Year + 1;
-                // Japanese era year 1 is often written as "1" (not "0")
-                return $"{Eras[i].Era}{eraYear}/{date.Month:D2}/{date.Day:D2}";
-            }
-        }
-
-        // If date is before Meiji era, return the original Gregorian representation
-        return date.ToString("yyyy/MM/dd");
-    }
-
     static void Main()
     {
         try
@@ -52,34 +23,39 @@ class JapaneseEraDateConverter
                 return;
             }
 
-            // Load the workbook (load rule)
+            // Load the workbook (lifecycle rule: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Assume processing the first worksheet; adjust as needed
+            // Process the first worksheet (adjust as needed)
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Get the used range of cells
-            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-            // Iterate through each cell in the used range
-            foreach (Cell cell in usedRange)
+            // Iterate through all used cells
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Check if the cell contains a date value
-                if (cell.Type == CellValueType.IsDateTime)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    DateTime originalDate = cell.DateTimeValue;
-                    // Convert to Japanese era format
-                    string eraString = ConvertToJapaneseEra(originalDate);
-                    // Replace cell value with the era string
-                    cell.PutValue(eraString);
-                    // Set the style to Text to preserve formatting
-                    Style style = cell.GetStyle();
-                    style.Number = 49; // Text format
-                    cell.SetStyle(style);
+                    Cell cell = cells[row, col];
+
+                    // Check if the cell contains a DateTime value
+                    if (cell.Type == CellValueType.IsDateTime)
+                    {
+                        DateTime dt = cell.DateTimeValue; // Correct property for Aspose.Cells
+
+                        // Convert the date to the appropriate Japanese era string
+                        string eraDate = ConvertToJapaneseEra(dt);
+
+                        // Replace the cell value with the era formatted string
+                        cell.PutValue(eraDate);
+                    }
                 }
             }
 
-            // Save the modified workbook (save rule)
+            // Save the modified workbook (lifecycle rule: save)
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
@@ -87,6 +63,48 @@ class JapaneseEraDateConverter
         {
             // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Returns a formatted string with the correct Japanese era based on the year
+    static string ConvertToJapaneseEra(DateTime dt)
+    {
+        // Era boundaries (inclusive start year)
+        // Meiji:   1868‑1912
+        // Taisho:  1912‑1926
+        // Showa:   1926‑1989
+        // Heisei:  1989‑2019
+        // Reiwa:   2019‑present
+
+        if (dt.Year >= 2019) // Reiwa
+        {
+            int eraYear = dt.Year - 2018; // Reiwa 1 started in 2019
+            return $"Reiwa {eraYear}年{dt.Month}月{dt.Day}日";
+        }
+        else if (dt.Year >= 1989) // Heisei
+        {
+            int eraYear = dt.Year - 1988;
+            return $"Heisei {eraYear}年{dt.Month}月{dt.Day}日";
+        }
+        else if (dt.Year >= 1926) // Showa
+        {
+            int eraYear = dt.Year - 1925;
+            return $"Showa {eraYear}年{dt.Month}月{dt.Day}日";
+        }
+        else if (dt.Year >= 1912) // Taisho
+        {
+            int eraYear = dt.Year - 1911;
+            return $"Taisho {eraYear}年{dt.Month}月{dt.Day}日";
+        }
+        else if (dt.Year >= 1868) // Meiji
+        {
+            int eraYear = dt.Year - 1867;
+            return $"Meiji {eraYear}年{dt.Month}月{dt.Day}日";
+        }
+        else
+        {
+            // Dates before Meiji are returned in a standard format
+            return dt.ToString("yyyy/MM/dd");
         }
     }
 }

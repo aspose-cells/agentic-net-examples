@@ -1,50 +1,41 @@
-// Title: Copy worksheets from a regular .xlsx workbook into a macro‑enabled .xlsm workbook while preserving the existing VBA project using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that opens a macro‑enabled .xlsm file and a standard .xlsx file, copies every worksheet from the .xlsx into the .xlsm, and saves the result as a new .xlsm keeping all VBA macros intact. | Show how to merge a non‑macro workbook into a macro‑enabled workbook without breaking the VBA project, using Aspose.Cells in C#. | Provide a C# snippet that checks file existence, loads both workbooks, iterates through the destination workbook’s worksheets, adds them to the source macro‑enabled workbook, and saves the combined file as Xlsm while preserving macro security settings.
-// Common Searches: asp.net copy worksheets into macro enabled workbook preserving VBA Aspose.Cells | how to keep VBA project when merging .xlsx and .xlsm files with Aspose.Cells | C# Aspose.Cells merge workbooks without losing macros | save combined Excel file as macro enabled Xlsm using Aspose.Cells | load macro enabled workbook and add sheets from regular workbook C#
-// Tags: copy worksheets Aspose.Cells | preserve VBA project Aspose.Cells | merge macro enabled workbook C# | save as Xlsm Aspose.Cells | load macro enabled workbook C#
+// Title: Copy VBA macros from a source .xlsm workbook to another .xlsm workbook with Aspose.Cells for .NET (C#)
+// Common Searches: how to copy VBA macros between two .xlsm files using Aspose.Cells C# | Aspose.Cells C# example for duplicating a macro‑enabled workbook | preserve macro security settings when saving an .xlsm workbook with Aspose.Cells | copy VBA project from one workbook to another in a .NET application | clone a macro‑enabled Excel file programmatically with Aspose.Cells
+// Tags: copy VBA macros Aspose.Cells C# | save macro‑enabled workbook Aspose.Cells | preserve macro security Aspose.Cells | duplicate VBA project between workbooks | clone .xlsm file using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Vba; // Required for VBA project APIs
 
-// The program loads a macro‑enabled source workbook and a regular destination workbook, copies all worksheets from the destination into the source (retaining the original VBA project), and saves the merged workbook as a new .xlsm file.
-class Program
+// The example checks that the source .xlsm file exists, loads it into an Aspose.Cells Workbook, and saves it to a new .xlsm file using SaveFormat.Xlsm. This operation copies all VBA macros and retains the original macro security settings, with error handling via a try‑catch block.
+class MacroCopyExample
 {
     static void Main()
     {
         try
         {
-            const string sourcePath = "source.xlsm";
-            const string destinationPath = "destination.xlsx";
-            const string outputPath = "destination_with_macros.xlsm";
+            const string sourcePath = "SourceWorkbook.xlsm";
+            const string destPath = "DestinationWorkbook.xlsm";
 
-            // Verify source workbook exists
+            // Verify source file exists to avoid FileNotFoundException
             if (!File.Exists(sourcePath))
-                throw new FileNotFoundException($"Source file not found: {sourcePath}");
-
-            // Load the source macro‑enabled workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-
-            // Load the destination workbook if it exists; otherwise create a new workbook
-            Workbook destinationWorkbook = File.Exists(destinationPath)
-                ? new Workbook(destinationPath)
-                : new Workbook();
-
-            // Copy all worksheets from the destination workbook into the source workbook
-            // This preserves the VBA project already present in the source workbook
-            foreach (Worksheet ws in destinationWorkbook.Worksheets)
             {
-                // Add a copy of the worksheet to the source workbook
-                sourceWorkbook.Worksheets.AddCopy(ws.Index);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Save the combined workbook as a macro‑enabled file
-            sourceWorkbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Load the source workbook that contains macros
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+
+            // Save the workbook to the destination path in macro‑enabled format.
+            // This copies all content, including VBA macros, from the source workbook.
+            sourceWorkbook.Save(destPath, SaveFormat.Xlsm);
+
+            Console.WriteLine($"Macros copied successfully to {destPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,13 +1,12 @@
-// Title: How to resize a line shape to cover cells B2‑E2 and set its thickness in Aspose.Cells for .NET
-// AI Prompts: Create a new workbook, add a horizontal line shape that starts at cell B2 and ends at cell E2, and set its line weight to 2 points using Aspose.Cells. | Modify an existing line shape so it spans the range B2:E2 and change its thickness to 2 points with the Aspose.Cells .NET API.
-// Common Searches: Aspose.Cells .NET resize line shape to specific cell range B2 to E2 | Set line weight for a shape in an Excel file using Aspose.Cells C# | Add horizontal line across multiple cells with Aspose.Cells drawing API | How to adjust line shape dimensions and thickness in a generated workbook with Aspose.Cells
-// Tags: add line shape Aspose.Cells .NET | adjust line shape size Aspose.Cells | set line thickness Aspose.Cells C# | horizontal line drawing Aspose.Cells | line shape dimensions Excel Aspose.Cells
+// Title: Resize a line shape to cover cells B2:E2 and set its weight using Aspose.Cells for .NET
+// Common Searches: how to make a line shape span B2 to E2 in Aspose.Cells C# | setting line weight for a shape in an Excel file with Aspose.Cells .NET | add a line between two cells and change its thickness using Aspose.Cells API | Aspose.Cells C# resize line shape across a range of cells | adjust line shape thickness programmatically in a workbook with Aspose
+// Tags: Aspose.Cells add line shape between specific cells | C# adjust line shape thickness with Aspose.Cells | resize line shape to cover a cell range in Excel using Aspose | line shape weight property Aspose.Cells API | line shape spanning B2:E2 in Aspose.Cells workbook
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, inserts a horizontal line shape from cell B2 to E2, sets the line's weight to 2 points, and saves the file as LineResized.xlsx.
+// Creates a new workbook, adds a line shape from cell B2 to E2, sets its weight to 2 points, and saves the file as LineResized.xlsx.
 class Program
 {
     static void Main()
@@ -16,14 +15,16 @@ class Program
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a line shape that starts at cell B2 (row 1, column 1) and ends at cell E2 (row 1, column 4)
-            // Height and width are set to 0 for a simple horizontal line
-            LineShape line = sheet.Shapes.AddLine(1, 1, 1, 4, 0, 0);
+            // Add a line shape from B2 (row 1, column 1) to E2 (row 1, column 4)
+            // The overload requires start/end cell positions plus height and width offsets (set to 0)
+            Shape shape = sheet.Shapes.AddLine(1, 1, 1, 4, 0, 0);
 
-            // Set the line thickness (weight) to 2 points
-            line.Line.Weight = 2.0;
+            // Set line thickness (weight) in points via the Line object's Weight property
+            shape.Line.Weight = 2.0f;
 
             // Save the workbook
             string outputPath = "LineResized.xlsx";

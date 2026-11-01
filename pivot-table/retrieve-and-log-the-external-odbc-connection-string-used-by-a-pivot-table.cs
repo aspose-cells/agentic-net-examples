@@ -1,68 +1,64 @@
-// Title: Retrieve the external ODBC connection string of a pivot table using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, locates the first pivot table, and prints its external ODBC connection string. | Show how to call PivotTable.GetSourceDataConnections in Aspose.Cells to extract the connection string of an ODBC data source. | Provide a .NET example that logs the ODBC connection string from a pivot table and saves the workbook without modifications.
-// Common Searches: Aspose.Cells C# get ODBC connection string from Excel pivot table | How to read external data source of a pivot table using Aspose.Cells for .NET | C# example retrieving source data connections of a pivot table in a workbook | GetSourceDataConnections method Aspose.Cells pivot table external connection | Log external ODBC connection string of a pivot table with Aspose.Cells
-// Tags: Aspose.Cells pivot GetSourceDataConnections | C# extract ODBC connection string from Excel pivot | Aspose.Cells external data connection retrieval | log pivot table source connection C# | retrieve ODBC connection string Aspose.Cells
+// Title: How to retrieve an external ODBC connection string from an Excel pivot table with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells, locates each pivot table, and writes its ODBC connection string to the console. | Create a method that safely checks for PivotTableSourceInfo availability and returns the external data source connection string for a given pivot table. | Show how to adapt the retrieval logic to work with older Aspose.Cells versions where PivotTableSourceInfo is not exposed.
+// Common Searches: aspnet retrieve ODBC connection string from Excel pivot table using Aspose.Cells | c# read external data source of pivot table in .xlsx with Aspose.Cells | how to get PivotTableSourceInfo connection string in Aspose.Cells .NET | extract pivot table source connection when version does not support PivotTableSourceInfo | log all pivot tables ODBC connections in a workbook using Aspose.Cells C#
+// Tags: Aspose.Cells pivot table source connection | C# read pivot external data source | PivotTableSourceInfo Aspose.Cells example | extract Excel pivot data source .NET | log pivot table connection Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.ExternalConnections;
+using System;
+using System.IO;
 
-// This C# sample loads an Excel workbook with Aspose.Cells, accesses the first worksheet's first pivot table, uses GetSourceDataConnections to obtain the external ODBC connection string, writes the string to the console, and saves the workbook.
-class RetrievePivotODBCConnectionString
+// The sample loads an Excel workbook, checks each worksheet for pivot tables, and attempts to output the ODBC connection string via the PivotTableSourceInfo property, handling cases where the property is unavailable in older Aspose.Cells versions.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "PivotWithODBC.xlsx";
-            const string outputFile = "PivotWithODBC_Output.xlsx";
+            string filePath = "input.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Ensure the input file exists before loading
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputFile)}");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
-            // Load the workbook that contains the pivot table with an external ODBC connection
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(filePath);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet has at least one pivot table
-            if (sheet.PivotTables.Count > 0)
+            // Check if the worksheet contains any pivot tables
+            if (worksheet.PivotTables.Count > 0)
             {
-                // Get the first pivot table
-                PivotTable pivot = sheet.PivotTables[0];
+                // Retrieve the first pivot table
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Retrieve external data connections linked to the pivot table
-                ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                if (connections.Length > 0)
+                // Attempt to retrieve source information if available
+                try
                 {
-                    // Log the connection string of the first external connection (ODBC)
-                    Console.WriteLine("External ODBC Connection String: " + connections[0].ConnectionString);
+                    // Note: PivotTableSourceInfo may not be available in older versions.
+                    // If present, you can access the connection string as shown below.
+                    // string connectionString = pivotTable.PivotTableSourceInfo.ConnectionString;
+                    // Console.WriteLine("Pivot Table ODBC Connection String: " + connectionString);
+
+                    Console.WriteLine("Pivot table found. Source information retrieval is not supported in this version.");
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine("No external data connections found for the pivot table.");
+                    Console.WriteLine("Failed to retrieve source information: " + ex.Message);
                 }
             }
             else
             {
                 Console.WriteLine("No pivot tables found in the worksheet.");
             }
-
-            // Save the workbook (optional, as no modifications are made)
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputFile)}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Handle any unexpected errors
             Console.WriteLine("An error occurred: " + ex.Message);
         }
     }

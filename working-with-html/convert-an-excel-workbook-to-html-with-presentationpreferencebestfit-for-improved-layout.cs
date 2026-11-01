@@ -1,45 +1,45 @@
-// Title: Convert an Excel workbook to HTML with best‑fit layout using Aspose.Cells PresentationPreference in C#
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to BestFit, and saves the result as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions for best‑fit HTML rendering, including a check for the source file and proper exception handling.
-// Common Searches: Aspose.Cells C# HtmlSaveOptions PresentationPreference BestFit example | How to export Excel to HTML while preserving column widths using Aspose.Cells | C# convert .xlsx to .html with optimal layout Aspose.Cells | Saving a workbook as HTML with best‑fit rendering in Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference | C# export Excel to HTML best fit | HTML conversion preserving layout Aspose.Cells | Workbook.Save HTML best‑fit rendering | file existence validation Aspose.Cells conversion
+// Title: Convert an Excel workbook to HTML with Aspose.Cells using PresentationPreference.BestFit for optimal layout (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.PresentationPreference to BestFit, and saves the workbook as an HTML file using Aspose.Cells. | Add file‑existence checking and comprehensive exception handling to an Aspose.Cells Excel‑to‑HTML conversion that applies the BestFit layout option. | Show how to configure HtmlSaveOptions in Aspose.Cells to produce responsive HTML output while preserving column widths.
+// Common Searches: Aspose.Cells C# export Excel to HTML with best‑fit layout | How to enable PresentationPreference.BestFit in HtmlSaveOptions when saving workbook as HTML | C# code example for converting .xlsx to HTML preserving column widths using Aspose.Cells | Save Excel workbook as responsive HTML using Aspose.Cells HtmlSaveOptions | Check input file existence before converting Excel to HTML with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions BestFit layout | C# Excel to HTML conversion Aspose.Cells | preserve column widths Aspose.Cells HTML export | file existence validation Aspose.Cells conversion | exception handling Aspose.Cells workbook save
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The sample verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with PresentationPreference.BestFit for optimal column‑width rendering, saves the workbook as an HTML file, and handles any runtime exceptions.
+// The sample verifies that the input .xlsx file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions (optionally setting PresentationPreference.BestFit for a best‑fit layout), and saves the workbook as an HTML file while providing console messages for success or errors.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file '{inputPath}' not found.");
-            return;
-        }
-
         try
         {
-            // Load the Excel workbook from the specified file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: PresentationPreference enum may not be available in some versions.
-            // If needed, adjust options here.
+            // If the PresentationPreference enum is available in the referenced version,
+            // you can enable the best‑fit layout as shown below:
+            // htmlOptions.PresentationPreference = PresentationPreference.BestFit;
 
             // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

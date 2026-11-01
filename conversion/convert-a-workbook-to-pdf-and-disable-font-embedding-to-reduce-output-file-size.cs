@@ -1,41 +1,47 @@
-// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET while acknowledging that font embedding cannot be turned off in the current release
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF, explicitly showing that PdfSaveOptions does not expose a font‑embedding toggle. | Demonstrate how to use Aspose.Cells PdfSaveOptions to create a PDF from a workbook and explain the impact on file size when font embedding cannot be disabled. | Provide a complete example with error handling that converts a workbook to PDF, logs the limitation of font‑embedding control, and suggests alternative size‑reduction techniques.
-// Common Searches: Aspose.Cells .NET how to disable font embedding when saving PDF | reduce PDF file size when converting Excel to PDF with Aspose.Cells | PdfSaveOptions missing font embedding option Aspose.Cells version | convert .xlsx to PDF without embedding fonts using Aspose.Cells | Aspose.Cells PDF conversion size optimization tips
-// Tags: Aspose.Cells PDF conversion options .NET | PdfSaveOptions font embedding limitation | Excel to PDF size reduction Aspose.Cells | disable font embedding Aspose.Cells PDF | workbook to PDF without embedded fonts
+// Title: Convert an Excel workbook to PDF without embedding fonts using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# convert XLSX to PDF without embedding standard fonts | How to reduce PDF size when saving Excel with Aspose.Cells | PdfSaveOptions EmbedStandardWindowsFonts false example in C# | Disable font embedding in Excel to PDF conversion using Aspose.Cells | C# code to save workbook as PDF with no embedded fonts Aspose
+// Tags: Aspose.Cells PdfSaveOptions EmbedStandardWindowsFonts false | Excel to PDF conversion without font embedding C# | reduce PDF output size Aspose.Cells | disable standard Windows fonts embedding Aspose | C# workbook to PDF with custom save options
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The sample checks for the existence of input.xlsx, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions instance (which in this version does not provide a font‑embedding switch), and saves the workbook as output.pdf. Basic exception handling reports missing files or runtime errors, and the code comments clarify that font embedding cannot be disabled in the current Aspose.Cells release.
-class Program
+// The example loads an Excel file (input.xlsx) with Aspose.Cells, configures PdfSaveOptions to set EmbedStandardWindowsFonts to false, and saves the workbook as a PDF (output.pdf). This disables embedding of standard Windows fonts, resulting in a smaller PDF file.
+class WorkbookToPdf
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
         try
         {
-            // Verify that the source workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Load the source workbook
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the existing workbook from the file
             Workbook workbook = new Workbook(inputPath);
 
-            // Create PDF save options (font embedding control is not available in this version)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options to avoid embedding standard Windows fonts
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Do not embed standard Windows fonts into the PDF to reduce file size
+                EmbedStandardWindowsFonts = false
+            };
 
-            // Save the workbook as a PDF file with the specified options
+            // Save the workbook as a PDF using the configured options
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF file saved successfully to '{outputPath}'.");
+            Console.WriteLine($"PDF successfully created at '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log or display the error details
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

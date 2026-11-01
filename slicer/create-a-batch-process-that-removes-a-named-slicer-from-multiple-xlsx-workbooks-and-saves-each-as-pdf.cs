@@ -1,101 +1,78 @@
-// Title: Batch remove a specific slicer from multiple XLSX workbooks and save each as PDF with Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that loads a list of .xlsx files, deletes the slicer named 'FruitSlicer1' from every worksheet, and converts the modified workbook to PDF using Aspose.Cells ConversionUtility. | Generate C# code that iterates through a collection of Excel workbooks, removes a targeted slicer on all sheets, saves each workbook to a temporary file, and exports it to PDF in a designated output folder. | Create a C# script that validates each input workbook, removes a named slicer, handles missing files gracefully, and cleans up temporary files after PDF conversion with Aspose.Cells.
-// Common Searches: asp.net remove slicer from multiple excel files programmatically | batch delete specific slicer in Aspose.Cells and export to PDF | C# code to loop through XLSX workbooks, remove slicer and convert to PDF | how to use ConversionUtility to convert modified workbook to PDF after slicer removal | automate slicer removal and PDF generation for many Excel reports in .NET
-// Tags: Aspose.Cells remove slicer batch processing | C# delete slicer from worksheets | XLSX to PDF conversion with ConversionUtility | temporary workbook handling Aspose.Cells | bulk Excel slicer removal .NET
+// Title: Batch remove a named slicer from multiple XLSX workbooks and save each as PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# console application that scans a folder for .xlsx files, deletes a slicer with a given name from every worksheet using the Aspose.Cells.Slicers API, and writes the result as a PDF to an output directory. | Generate C# code that loads each Excel workbook in a directory, removes the slicer called "MySlicer" from all sheets via Aspose.Cells, and exports the cleaned workbook to a PDF file with the same base name.
+// Common Searches: aspnet remove slicer from excel files in bulk using Aspose.Cells | c# batch process to delete a specific slicer and convert workbooks to pdf | how to programmatically remove a named slicer from all worksheets with Aspose.Cells | convert multiple xlsx to pdf after removing slicer using Aspose.Cells C# | automate slicer cleanup and pdf export for a folder of Excel workbooks
+// Tags: Aspose.Cells slicer removal C# | batch convert xlsx to pdf Aspose.Cells | delete specific slicer from worksheets | automate Excel workbook PDF export | process multiple workbooks with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Slicers; // Correct namespace for Slicer
 
-namespace BatchSlicerRemoval
+// The C# utility iterates through every .xlsx file in a specified input folder, loads each workbook with Aspose.Cells, removes a slicer named "MySlicer" from all worksheets, and saves the modified workbook as a PDF in an output folder, handling missing directories and errors gracefully.
+class BatchSlicerRemoval
 {
-    // // This C# console application iterates over a predefined array of .xlsx files, removes the slicer named 'FruitSlicer1' from every worksheet using the Aspose.Cells SlicerCollection, saves the edited workbook to a temporary file, converts it to PDF with ConversionUtility, writes the PDF to an output folder, and deletes the temporary file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Folder containing the source XLSX workbooks
+        string inputFolder = @"C:\Input";
+
+        // Folder where the resulting PDF files will be saved
+        string outputFolder = @"C:\Output";
+
+        // Name of the slicer to be removed from each workbook
+        string slicerName = "MySlicer";
+
+        // Ensure the output directory exists
+        if (!Directory.Exists(outputFolder))
         {
-            // Define the slicer name to remove
-            string slicerNameToRemove = "FruitSlicer1";
-
-            // Input workbook files (XLSX) – adjust the paths as needed
-            string[] workbookFiles = new string[]
-            {
-                @"C:\Input\Report1.xlsx",
-                @"C:\Input\Report2.xlsx",
-                @"C:\Input\Report3.xlsx"
-            };
-
-            // Output folder for the generated PDFs
-            string outputFolder = @"C:\Output";
-
-            // Ensure the output directory exists
             Directory.CreateDirectory(outputFolder);
+        }
 
-            // Process each workbook
-            foreach (string workbookPath in workbookFiles)
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
+        {
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
+        }
+
+        // Process each XLSX file in the input folder
+        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+        {
+            // Guard against missing files (should not happen in GetFiles loop)
+            if (!File.Exists(filePath))
             {
-                // Verify the input file exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"File not found: {workbookPath}");
-                    continue;
-                }
+                Console.WriteLine($"File not found: {filePath}");
+                continue;
+            }
 
-                try
-                {
-                    // Load the workbook
-                    Workbook wb = new Workbook(workbookPath);
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                    // Iterate through all worksheets
-                    foreach (Worksheet ws in wb.Worksheets)
+                // Iterate through all worksheets to locate and remove the slicer
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Attempt to retrieve the slicer by its name
+                    Slicer slicer = sheet.Slicers[slicerName];
+
+                    // If the slicer exists, remove it from the worksheet
+                    if (slicer != null)
                     {
-                        // Get the slicer collection for the current worksheet
-                        SlicerCollection slicers = ws.Slicers;
-
-                        // Find the slicer with the specified name
-                        Slicer targetSlicer = null;
-                        foreach (Slicer s in slicers)
-                        {
-                            if (s.Name.Equals(slicerNameToRemove, StringComparison.OrdinalIgnoreCase))
-                            {
-                                targetSlicer = s;
-                                break;
-                            }
-                        }
-
-                        // If found, remove it using the collection's Remove method
-                        if (targetSlicer != null)
-                        {
-                            slicers.Remove(targetSlicer);
-                        }
+                        sheet.Slicers.Remove(slicer);
                     }
-
-                    // Save the modified workbook to a temporary XLSX file
-                    string tempXlsxPath = Path.Combine(Path.GetTempPath(),
-                        Guid.NewGuid().ToString() + ".xlsx");
-                    wb.Save(tempXlsxPath, SaveFormat.Xlsx);
-
-                    // Determine the PDF output path (same name as original workbook)
-                    string pdfFileName = Path.GetFileNameWithoutExtension(workbookPath) + ".pdf";
-                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
-
-                    // Convert the temporary XLSX to PDF using ConversionUtility
-                    ConversionUtility.Convert(tempXlsxPath, pdfPath);
-
-                    // Clean up the temporary XLSX file
-                    if (File.Exists(tempXlsxPath))
-                    {
-                        File.Delete(tempXlsxPath);
-                    }
-
-                    Console.WriteLine($"Processed '{workbookPath}' → '{pdfPath}'");
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing '{workbookPath}': {ex.Message}");
-                }
+
+                // Construct the PDF file name (same base name as the source workbook)
+                string pdfPath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+
+                // Save the modified workbook as a PDF document
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+                Console.WriteLine($"Processed and saved PDF: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
     }

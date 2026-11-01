@@ -1,49 +1,28 @@
-// Title: Export an Excel workbook with a Gantt chart to PDF while preserving the chart layout using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a workbook containing a Gantt chart and saves it as a PDF with the original chart layout using Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to disable scaling and keep charts unchanged during PDF export.
-// Common Searches: Aspose.Cells export Gantt chart to PDF without changing size | C# save Excel workbook as PDF preserving chart layout Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet false for chart export | How to keep Excel chart appearance when converting to PDF with Aspose.Cells | Export Excel Gantt chart to PDF using .NET SDK Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions chart layout preservation | C# export Excel Gantt chart to PDF | Workbook.Save PDF with chart integrity Aspose.Cells | Excel to PDF conversion maintaining charts .NET | Aspose.Cells PDF export settings for Gantt diagrams
+// Title: Export an Excel workbook with a Gantt chart to PDF while preserving chart layout using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsx file containing a Gantt chart and saves it as a PDF with the original layout using Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to disable one‑page‑per‑sheet scaling and keep charts and shapes intact during PDF conversion. | Provide a complete example that converts an Excel workbook to PDF without altering the positioning of Gantt chart elements.
+// Common Searches: Aspose.Cells C# export Excel Gantt chart to PDF without losing layout | How to keep chart positions when saving Excel as PDF with Aspose.Cells | PdfSaveOptions OnePagePerSheet false example for preserving sheet design | Convert Excel workbook with Gantt diagram to PDF preserving shapes Aspose .NET
+// Tags: Aspose.Cells preserve chart layout PDF | PdfSaveOptions disable one page per sheet | C# convert Gantt chart workbook to PDF | Excel workbook PDF conversion keeping shapes | Aspose.Cells PDF conversion settings .NET
 
 using Aspose.Cells;
 using System;
-using System.IO;
 
-namespace AsposeCellsExample
+// Loads an Excel workbook that contains a Gantt chart and saves it as a PDF using Aspose.Cells, configuring PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = false) to retain the original chart layout and shapes.
+class Program
 {
-    // The example loads a GanttChart.xlsx workbook, configures PdfSaveOptions with AllColumnsInOnePagePerSheet and OnePagePerSheet set to false to avoid scaling, and saves the workbook as GanttChart.pdf, ensuring the Gantt chart retains its original layout.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook that already contains the Gantt chart
+        Workbook workbook = new Workbook("GanttChart.xlsx");
+
+        // Configure PDF save options to keep the original layout (charts, shapes, etc.)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            try
-            {
-                const string inputFile = "GanttChart.xlsx";
-                const string outputFile = "GanttChart.pdf";
+            // Preserve the sheet layout as it appears in Excel
+            OnePagePerSheet = false,
+            AllColumnsInOnePagePerSheet = false
+        };
 
-                // Ensure the source workbook exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Source file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the workbook containing the Gantt chart
-                Workbook workbook = new Workbook(inputFile);
-
-                // Configure PDF save options to preserve layout
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    AllColumnsInOnePagePerSheet = false,
-                    OnePagePerSheet = false
-                };
-
-                // Export the workbook to PDF using the configured options
-                workbook.Save(outputFile, pdfOptions);
-                Console.WriteLine($"PDF generated successfully: {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Export the workbook to PDF while preserving the Gantt chart layout
+        workbook.Save("GanttChart.pdf", pdfOptions);
     }
 }

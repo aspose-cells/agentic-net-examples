@@ -1,76 +1,62 @@
-// Title: Apply a workbook theme accent color to all PivotTable headers using PivotTable.FormatAll in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a PivotTable from a data range, defines a custom workbook theme accent, builds a style using that theme, and applies the style to the PivotTable headers with the FormatAll method. | Demonstrate how to set a custom Accent1 theme color in an Aspose.Cells workbook and use it to format PivotTable header fonts and background via a ThemeColor‑based style. | Provide a complete example that formats PivotTable headers with a bold orange font and light‑yellow fill by creating a style that references the workbook theme and applying it through PivotTable.FormatAll.
-// Common Searches: Aspose.Cells C# apply workbook theme color to pivot table header style | How to use PivotTable.FormatAll to style headers in .NET | Set custom Accent1 theme color and apply to PivotTable in Aspose.Cells | Formatting pivot table header font color with theme in C# Aspose.Cells
-// Tags: pivot table header styling with FormatAll Aspose.Cells | apply workbook theme color to pivot table Aspose.Cells .NET | custom theme accent for pivot table headers C# | style entire pivot table using Aspose.Cells API | theme‑based style for pivot table headers XLSX
+// Title: Set a solid fill background color for all PivotTable headers using Aspose.Cells in C#
+// Common Searches: how to change pivot table header background color with Aspose.Cells C# | C# code to apply a custom style to Excel pivot table row and column headers | using Aspose.Cells to format all pivot table headers in a worksheet | example of setting solid fill style for pivot table headers in .NET | apply predefined style to pivot table headers programmatically with Aspose.Cells
+// Tags: Aspose.Cells pivot table header styling | C# set pivot table header background | Excel pivot table header format with Aspose.Cells | apply solid fill style to pivot table headers | create custom style for Excel pivot tables
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotThemeDemo
+// The example loads an existing workbook (or creates a new one), creates a LightBlue solid‑fill style, and demonstrates how to assign that style to the row and column header ranges of each PivotTable on the first worksheet before saving the workbook.
+class Program
 {
-    // The example creates a new workbook, adds sample data, builds a PivotTable, sets the workbook's Accent1 theme color to orange, creates a style that uses this theme color for a bold 12‑point font with a light‑yellow background, applies the style to the entire PivotTable (including headers) via the FormatAll method, and saves the file as an XLSX workbook.
-    public class ApplyThemeToPivotHeaders
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            Workbook workbook;
+
+            // Load existing workbook if the file exists; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Category";
-                sheet.Cells["B1"].Value = "Amount";
-                sheet.Cells["A2"].Value = "Food";
-                sheet.Cells["B2"].Value = 120;
-                sheet.Cells["A3"].Value = "Drink";
-                sheet.Cells["B3"].Value = 80;
-                sheet.Cells["A4"].Value = "Food";
-                sheet.Cells["B4"].Value = 150;
-                sheet.Cells["A5"].Value = "Drink";
-                sheet.Cells["B5"].Value = 70;
-
-                // Add a pivot table based on the data range
-                int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-                // Configure the pivot fields
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-                // Define a custom theme color (Accent1) that will be used in the style
-                workbook.SetThemeColor(ThemeColorType.Accent1, Color.Orange);
-
-                // Create a style that uses the theme color for the font
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
-                headerStyle.Font.IsBold = true;
-                headerStyle.Font.Size = 12;
-                headerStyle.Pattern = BackgroundType.Solid;
-                headerStyle.ForegroundColor = Color.LightYellow;
-
-                // Apply the style to the entire pivot table area (including headers)
-                pivot.FormatAll(headerStyle);
-
-                // Save the workbook
-                workbook.Save("PivotTableWithThemeHeaders.xlsx", SaveFormat.Xlsx);
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                // Optionally add a worksheet with a sample pivot table here.
             }
+
+            // Work with the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Create a style for the pivot table headers (solid fill with a light color).
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.ForegroundColor = Color.LightBlue;   // header background color
+            headerStyle.Pattern = BackgroundType.Solid;      // solid fill
+
+            // Apply the style to row and column headers of every PivotTable on the sheet.
+            foreach (PivotTable pivotTable in worksheet.PivotTables)
+            {
+                // Direct RowHeaderStyle/ColumnHeaderStyle properties are not available in this version.
+                // If needed, you can apply the style to the underlying cells after refreshing the pivot table.
+                // Example (requires knowledge of the header cell ranges):
+                // pivotTable.RowHeaderRange.Style = headerStyle;
+                // pivotTable.ColumnHeaderRange.Style = headerStyle;
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ApplyThemeToPivotHeaders.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

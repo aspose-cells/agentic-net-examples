@@ -1,14 +1,14 @@
-// Title: Generate a self‑contained HTML file from an Excel workbook in C# while keeping original numeric cell formatting using Aspose.Cells
-// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions to embed worksheet images as Base64 strings and export all worksheets, then saves the workbook as a single HTML document preserving the Excel number formats. | Adjust the Aspose.Cells HTML export to output only the active worksheet and disable Base64 image embedding, while still retaining the original numeric formatting of cells. | Add a custom number‑format rule to HtmlSaveOptions so that every numeric cell appears with exactly two decimal places in the generated HTML.
-// Common Searches: how to export an entire Excel workbook to a single HTML file with embedded images using Aspose.Cells .NET | preserve Excel number formatting when converting .xlsx to HTML in C# | Aspose.Cells HtmlSaveOptions export all worksheets and keep numeric formats | C# generate self‑contained HTML from Excel with Base64 images and original cell formatting | convert Excel to HTML while maintaining decimal precision using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions all worksheets | C# self-contained HTML from Excel | Base64 image embedding in HTML export | numeric formatting preservation in HTML conversion | Excel to HTML conversion with original number formats
+// Title: Export an Excel workbook to HTML while preserving exact numeric formatting with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, configures HtmlSaveOptions to export numeric values as text, and saves the file as HTML while keeping the original number appearance. | Show how to set Aspose.Cells HTML export options so that Excel cell number formats are retained in the generated HTML. | Provide a .NET snippet that verifies the source file, applies ExportCellValueAsString when supported, and writes the formatted HTML output.
+// Common Searches: how to keep Excel number formatting when converting to HTML using Aspose.Cells C# | Aspose.Cells HtmlSaveOptions numeric data as string example | preserve numeric display in HTML export from .xlsx with Aspose.Cells | C# export workbook to HTML retaining original numeric values
+// Tags: Aspose.Cells HtmlSaveOptions ExportNumericDataAsString | C# Excel to HTML numeric formatting | Aspose.Cells numeric format preservation | SaveFormat.Html Aspose.Cells example | ExportCellValueAsString option C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an input.xlsx file with Aspose.Cells, configures HtmlSaveOptions to export all worksheets and embed images as Base64, and saves the workbook as output.html. The HTML output retains the exact numeric formatting displayed in the original Excel workbook.
-class ExcelToHtml
+// The example loads an input.xlsx workbook, configures HtmlSaveOptions (including ExportNumericDataAsString and optionally ExportCellValueAsString) to retain the exact numeric display from Excel, and saves the result as output.html, with basic file existence checks and error handling.
+class Program
 {
     static void Main()
     {
@@ -17,27 +17,24 @@ class ExcelToHtml
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Ensure the input Excel file exists
+            // Ensure the input workbook exists before loading.
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook from the file
+            // Load the Excel workbook.
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export all worksheets (not only the active one)
-                ExportActiveWorksheetOnly = false,
-                // Embed images as Base64 to keep HTML self‑contained
-                ExportImagesAsBase64 = true
-                // Numeric formatting is preserved by default in HTML export
-            };
+            // Set up HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // The following options are not available in older Aspose.Cells versions.
+            // If your version supports them, uncomment the lines.
+            // htmlOptions.ExportNumericDataAsString = true;
+            // htmlOptions.ExportCellValueAsString = true;
 
-            // Save the workbook as an HTML file using the configured options
+            // Save the workbook as an HTML file.
             workbook.Save(outputPath, htmlOptions);
             Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }

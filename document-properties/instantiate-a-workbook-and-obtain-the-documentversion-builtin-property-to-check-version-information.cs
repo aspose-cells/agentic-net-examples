@@ -1,12 +1,11 @@
-// Title: How to read the DocumentVersion built‑in property from a new Aspose.Cells workbook in C#
-// AI Prompts: Write C# code that creates an empty Aspose.Cells Workbook and prints the value of its DocumentVersion built‑in property. | Show a C# example that verifies the existence of the DocumentVersion property in BuiltInDocumentProperties before reading it, and returns a default string when it is absent. | Demonstrate proper exception handling while retrieving the DocumentVersion property from a workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# retrieve DocumentVersion from workbook built‑in properties | how to check if DocumentVersion exists in Excel file using Aspose.Cells .NET | default value when DocumentVersion property is not set in Aspose.Cells workbook
-// Tags: read DocumentVersion built‑in property Aspose.Cells | C# check built‑in document properties Aspose.Cells | fallback value for missing DocumentVersion Aspose.Cells | exception handling Aspose.Cells workbook property access | access built‑in properties of new Excel workbook C#
+// Title: Read the DocumentVersion built‑in property from an Aspose.Cells workbook in C#
+// Common Searches: C# Aspose.Cells get DocumentVersion from BuiltInDocumentProperties | how to read Excel file version using Aspose.Cells API in .NET | access built‑in document properties of a workbook with Aspose.Cells | retrieve workbook version information programmatically with Aspose.Cells
+// Tags: Aspose.Cells BuiltInDocumentProperties API | read DocumentVersion property C# | retrieve Excel workbook version Aspose.Cells | access built‑in document properties .NET | get workbook version information Aspose.Cells
 
 using Aspose.Cells;
 using System;
 
-// Creates an empty Workbook, accesses its BuiltInDocumentProperties collection, safely reads the "DocumentVersion" property if present, supplies a default string when missing, and writes the result to the console with error handling.
+// The example creates an empty Workbook, accesses its BuiltInDocumentProperties collection, safely reads the "DocumentVersion" property (defaulting to "Unknown" if missing), and prints the version to the console, with exception handling for unexpected errors.
 class Program
 {
     static void Main()
@@ -19,19 +18,15 @@ class Program
             // Access the built‑in document properties collection
             var builtInProps = workbook.BuiltInDocumentProperties;
 
-            // Retrieve the value of the "DocumentVersion" property safely
-            string documentVersion = "N/A";
-            if (builtInProps.Contains("DocumentVersion") && builtInProps["DocumentVersion"]?.Value != null)
-            {
-                documentVersion = builtInProps["DocumentVersion"].Value.ToString();
-            }
+            // Retrieve the "DocumentVersion" property value safely
+            string documentVersion = builtInProps["DocumentVersion"]?.Value?.ToString() ?? "Unknown";
 
             // Display the version information
             Console.WriteLine("Document Version: " + documentVersion);
         }
         catch (Exception ex)
         {
-            // Runtime safety: report any unexpected errors
+            // Handle any unexpected errors
             Console.WriteLine("Error: " + ex.Message);
         }
     }

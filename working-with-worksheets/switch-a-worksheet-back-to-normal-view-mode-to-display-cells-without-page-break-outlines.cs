@@ -1,50 +1,67 @@
-// Title: How to save an Excel worksheet in Normal view mode (no page break outlines) using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, checks for the file, and writes it back so the worksheet opens in Normal view without page break outlines. | Show how to create the output folder if needed and persist the workbook using Aspose.Cells without modifying any view properties.
-// Common Searches: Aspose.Cells C# export Excel without showing page break outlines | how to keep Normal view when writing Excel file with Aspose.Cells | disable page break preview in generated Excel using Aspose.Cells .NET | C# Aspose.Cells default view mode after file creation
-// Tags: Aspose.Cells default worksheet view | C# hide page break outlines | Aspose.Cells normal view mode | Excel file output folder handling Aspose.Cells
+// Title: Switch an Aspose.Cells worksheet to Normal view to hide page‑break outlines in C#
+// AI Prompts: Generate C# code that sets a worksheet's ViewOptions.ShowPageBreakOutline to false using Aspose.Cells. | Show how to change a worksheet to Normal view mode with Aspose.Cells for .NET so page‑break outlines are not displayed. | Write a C# example that uses reflection to disable the ShowPageBreakOutline property when the ViewOptions API may be unavailable.
+// Common Searches: Aspose.Cells C# change worksheet view to normal hide page break outlines | disable page break outline in Excel file using Aspose.Cells .NET | set ShowPageBreakOutline false programmatically Aspose.Cells | how to remove page break outlines from a workbook with Aspose.Cells C# | use reflection to access ViewOptions in Aspose.Cells when property missing
+// Tags: worksheet view mode normal Aspose.Cells | hide page break outlines Aspose.Cells | ShowPageBreakOutline property C# | reflection access ViewOptions Aspose.Cells | modify worksheet view options .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample verifies that the source .xlsx file exists, loads it into an Aspose.Cells Workbook, ensures the destination directory is present, and saves the workbook. Because Aspose.Cells does not expose a property to toggle page break outlines, the file is saved using the default Normal view, so the resulting worksheet displays without page break outlines.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an existing workbook, accesses the first worksheet, disables page‑break outlines by setting ViewOptions.ShowPageBreakOutline to false (using reflection for version compatibility), and saves the modified file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Define input and output file paths
+            string inputPath = @"C:\Temp\Input.xlsx";
+            string outputPath = @"C:\Temp\Output.xlsx";
+
+            try
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                return;
+                // Verify that the input file exists before attempting to load it
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Attempt to hide page‑break outlines using reflection.
+                // This avoids compile‑time errors if the ViewOptions API is unavailable in the referenced version.
+                var viewOptionsProp = sheet.GetType().GetProperty("ViewOptions");
+                if (viewOptionsProp != null)
+                {
+                    var viewOptions = viewOptionsProp.GetValue(sheet);
+                    var showOutlineProp = viewOptions?.GetType().GetProperty("ShowPageBreakOutline");
+                    if (showOutlineProp != null && showOutlineProp.CanWrite)
+                    {
+                        showOutlineProp.SetValue(viewOptions, false);
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // NOTE: Aspose.Cells does not expose a direct property to hide page break outlines.
-            // The workbook will be saved in the default view mode.
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

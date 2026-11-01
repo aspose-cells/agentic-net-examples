@@ -1,34 +1,38 @@
-// Title: Log a warning in C# when trying to change the immutable Author property of an Aspose.Cells workbook
-// AI Prompts: Write C# code that outputs a console alert before assigning a value to WorkbookSettings.Author. | Implement a reusable method in Aspose.Cells that detects attempts to modify immutable workbook metadata and prints a console alert. | Show how to keep the Author field unchanged while still saving the workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# warning when setting workbook author property | how to prevent changing Author metadata in Aspose.Cells workbook | detect immutable Excel metadata modification with Aspose.Cells in C# | example of warning message for workbook settings author in Aspose.Cells .NET
-// Tags: Aspose.Cells log warning on immutable metadata | C# prevent Author property change in WorkbookSettings | Aspose.Cells WorkbookSettings immutable application metadata | Excel workbook metadata read-only Aspose.Cells | C# console alert for Excel author modification
+// Title: Log a warning in C# when attempting to modify immutable built‑in document properties with Aspose.Cells
+// Common Searches: C# Aspose.Cells log warning for attempted change of built‑in document property | how to prevent modification of Excel built‑in properties using Aspose.Cells .NET | read‑only document properties handling in Aspose.Cells workbook | Aspose.Cells .NET warning when setting Author property on workbook | detect and log immutable metadata changes in Aspose.Cells C#
+// Tags: log warning on immutable document property Aspose.Cells | prevent modification of built‑in workbook metadata C# | Aspose.Cells read‑only built‑in properties handling | C# workbook property immutability Aspose.Cells | Excel metadata immutability Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 
-// // Demonstrates creating a Workbook with Aspose.Cells, attempting to set the Author metadata, outputting a warning because the application metadata is immutable, and saving the file without modifying the property.
+// The example creates a Workbook, calls a helper method that logs a warning whenever code tries to change built‑in document properties such as Author or Title, leaves the properties unchanged because they are immutable, and then saves the workbook to an XLSX file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
+        // Create a new workbook (lifecycle rule)
         Workbook workbook = new Workbook();
 
-        // Attempt to modify application metadata (e.g., Author)
-        SetWorkbookAuthor(workbook, "John Doe");
+        // Attempt to modify application metadata.
+        // In this scenario we treat built‑in document properties as immutable.
+        // Instead of changing them directly, we log a warning.
+        SetImmutableMetadata(workbook, "Author", "John Doe");
+        SetImmutableMetadata(workbook, "Title", "Sample Report");
 
-        // Save the workbook (lifecycle rule: save)
+        // Save the workbook (lifecycle rule)
         workbook.Save("output.xlsx");
     }
 
-    // Helper method that logs a warning before attempting to change immutable metadata
-    static void SetWorkbookAuthor(Workbook wb, string author)
+    // Helper method that logs a warning whenever code tries to modify metadata.
+    // The actual modification is intentionally omitted because the metadata is immutable.
+    static void SetImmutableMetadata(Workbook wb, string propertyName, string newValue)
     {
-        // Log a warning because application metadata is considered immutable
-        Console.WriteLine("Warning: Attempt to modify immutable application metadata 'Author'.");
-
-        // If you still want to allow the change, uncomment the line below.
-        // Otherwise, leave it commented to keep the metadata unchanged.
-        // wb.WorkbookSettings.Author = author;
+        // Log a warning indicating that an attempt was made to change immutable metadata.
+        Console.WriteLine($"Warning: Attempt to modify immutable application metadata '{propertyName}'. Change ignored.");
+        
+        // If you still need to read the current value, you can do so safely:
+        // Example for built‑in properties:
+        // string currentValue = wb.BuiltInDocumentProperties[propertyName]?.ToString();
+        // Console.WriteLine($"Current value of '{propertyName}': {currentValue}");
     }
 }

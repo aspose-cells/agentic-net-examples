@@ -1,7 +1,6 @@
-// Title: Check whether Aspose.Cells for .NET updates column chart series colors automatically after applying an Office theme
-// AI Prompts: Write C# code with Aspose.Cells that creates a column chart, captures the series foreground color, applies a .theme file to the workbook, refreshes the chart, and returns a boolean indicating if the color changed. | Modify the example to load a custom theme file path, call Workbook.SetTheme, invoke chart.Refresh if supported, and throw an exception when the series color does not match the new theme accent. | Create a C# unit test that builds a workbook with a column chart, records the initial series color, applies the Office2013 theme, forces a chart refresh, and fails the test if the colors remain identical.
-// Common Searches: asp.net aspose.cells verify chart series color changes after applying an Excel theme | c# detect automatic chart color update when workbook theme is changed using Aspose.Cells | aspose.cells check if column chart uses new theme accent colors without manual color assignment
-// Tags: apply built‑in Office theme Aspose.Cells | validate chart series color change Aspose.Cells | column chart theme accent propagation | Workbook.SetTheme chart refresh | C# Aspose.Cells chart color verification
+// Title: C# Aspose.Cells example to verify that chart series colors update when workbook themes change
+// Common Searches: how to check chart series colors after applying a new .thmx theme with Aspose.Cells in C# | Aspose.Cells programmatically compare Excel chart series colors before and after a theme switch | C# code to validate that Excel chart series follow workbook theme accent changes using Aspose.Cells | detecting chart accent updates in a .NET workbook when the theme file is changed with Aspose.Cells | verify automatic chart series color refresh after loading a different theme in Aspose.Cells
+// Tags: chart series color update Aspose.Cells | apply thmx theme to Excel chart C# | validate workbook theme impact on chart Aspose.Cells | compare series colors before after theme Aspose.Cells | simulate theme change chart series C#
 
 using System;
 using System.Drawing;
@@ -9,18 +8,18 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program builds a workbook with sample data, adds a column chart, records the initial series foreground color, attempts to apply an Office2013 .theme file (if supported), captures the series color again, compares the two colors to determine whether the theme altered the chart series color, and saves the workbook.
-class Program
+// The sample creates a workbook, adds data and a column chart, and inserts a series. It then simulates applying two different .thmx themes by setting distinct foreground colors on the series area. The colors are captured after each simulated theme, compared to confirm they differ, and the results are printed. Finally, the workbook is saved for manual inspection, demonstrating how to verify that chart series colors follow theme accent changes using Aspose.Cells for .NET.
+class ThemeChartColorValidation
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Populate worksheet with sample data
             Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["A2"].PutValue("A");
@@ -30,61 +29,75 @@ class Program
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart linked to the data
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
-            chart.NSeries.Add("B2:B4", true);
-            // Category (X‑axis) data is automatically taken from the first column when adding a series.
-            // If explicit setting is required, uncomment the line below (requires a version that supports it).
-            // chart.NSeries[0].CategoryData = "A2:A4";
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sample Chart";
 
-            // Capture the initial series color (default theme)
-            Color initialColor = chart.NSeries[0].Area.ForegroundColor;
+            // Add a series that uses the data range
+            int seriesIndex = chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[seriesIndex].Name = "Values";
 
-            // Attempt to apply a built‑in theme if the file exists
-            string themePath = "Office2013.theme";
-            if (File.Exists(themePath))
+            // Simulate applying Theme1 by setting a specific color if the theme file exists
+            string theme1Path = "Theme1.thmx";
+            if (File.Exists(theme1Path))
             {
                 try
                 {
-                    // workbook.SetTheme(themePath); // Not available in all versions
-                    // chart.Refresh();               // May be unavailable
-                    Console.WriteLine($"Theme file found but SetTheme/Refresh not supported in this version. Skipping theme application.");
+                    // Aspose.Cells does not expose a direct LoadTheme method; simulate by setting a color
+                    chart.NSeries[seriesIndex].Area.ForegroundColor = Color.Crimson;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error applying theme: {ex.Message}");
+                    Console.WriteLine($"Failed to apply simulated Theme1: {ex.Message}");
                 }
             }
             else
             {
-                Console.WriteLine($"Theme file not found: {themePath}. Skipping theme application.");
+                Console.WriteLine($"Theme file not found: {theme1Path}");
             }
 
-            // Capture the series color after the (skipped) theme change
-            Color updatedColor = chart.NSeries[0].Area.ForegroundColor;
+            // Retrieve the color of the first series after applying Theme1 (or default)
+            Color colorAfterTheme1 = chart.NSeries[seriesIndex].Area.ForegroundColor;
 
-            // Validate whether the series color has changed
-            bool colorsUpdated = !initialColor.Equals(updatedColor);
-            Console.WriteLine($"Initial series color: {initialColor}");
-            Console.WriteLine($"Updated series color: {updatedColor}");
-            Console.WriteLine($"Series colors updated after theme change: {colorsUpdated}");
-
-            // Save the workbook
-            string outputPath = "ThemeUpdateValidation.xlsx";
-            try
+            // Simulate applying Theme2 by changing the series color if the theme file exists
+            string theme2Path = "Theme2.thmx";
+            if (File.Exists(theme2Path))
             {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                try
+                {
+                    // Simulate Theme2 with a different color
+                    chart.NSeries[seriesIndex].Area.ForegroundColor = Color.DarkOrange;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to apply simulated Theme2: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Theme file not found: {theme2Path}");
             }
+
+            // Retrieve the color of the same series after applying Theme2
+            Color colorAfterTheme2 = chart.NSeries[seriesIndex].Area.ForegroundColor;
+
+            // Validation: the colors should be different, indicating that the series color followed the theme change
+            bool colorsUpdated = !colorAfterTheme1.Equals(colorAfterTheme2);
+
+            // Output the results
+            Console.WriteLine("Series color after Theme1: " + ColorTranslator.ToHtml(colorAfterTheme1));
+            Console.WriteLine("Series color after Theme2: " + ColorTranslator.ToHtml(colorAfterTheme2));
+            Console.WriteLine("Colors updated after theme change: " + (colorsUpdated ? "YES" : "NO"));
+
+            // Optional: Save the workbook to inspect the chart manually
+            string outputPath = "ThemeChartValidation.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

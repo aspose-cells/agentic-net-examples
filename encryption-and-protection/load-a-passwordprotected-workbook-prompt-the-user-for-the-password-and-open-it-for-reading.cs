@@ -1,27 +1,26 @@
-// Title: Prompt user for password and open a protected Excel workbook with Aspose.Cells in C#
-// AI Prompts: Write C# code that asks the user for an Excel file path and password, then loads the encrypted workbook using Aspose.Cells LoadOptions. | Show how to handle missing file and incorrect password errors when opening a password‑protected .xlsx with Aspose.Cells.
-// Common Searches: C# how to read a password protected .xlsx file using Aspose.Cells LoadOptions | Aspose.Cells open encrypted Excel workbook after prompting user for password | example code to validate Excel file path before loading with Aspose.Cells in .NET | retrieve first worksheet name from a protected workbook using Aspose.Cells C#
-// Tags: Aspose.Cells LoadOptions.Password for encrypted XLSX | C# collect workbook path and decryption key | open password protected workbook with Aspose.Cells | extract first sheet title from encrypted workbook | manage absent Excel file errors in Aspose.Cells
+// Title: Prompt user for password and load a password‑protected Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# code to ask for workbook password and open encrypted Excel file using Aspose.Cells | How to read worksheets from a password‑protected Excel file with Aspose.Cells LoadOptions | Load a protected .xlsx file in .NET by providing password at runtime | Aspose.Cells example for opening Excel workbook with user‑supplied password | Validate file path and open encrypted Excel workbook in C# console application
+// Tags: Aspose.Cells LoadOptions password protection | extract worksheet names from protected Excel workbook | validate Excel file existence C# | console user input for workbook password | open .xlsx with password using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The console app asks for the workbook location and password, verifies the file exists, applies the password via LoadOptions, opens the protected Excel file with Aspose.Cells, and prints the name of the first worksheet while handling missing‑file and password errors.
+// The console program asks the user for the full path of a password‑protected Excel file and its password, checks that the file exists, creates a LoadOptions object with the supplied password, loads the workbook via Aspose.Cells, and then displays the total worksheet count and the name of the first sheet, handling any errors gracefully.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Prompt for workbook path
-            Console.Write("Enter the full path to the workbook: ");
+            // Prompt the user for the workbook file path
+            Console.Write("Enter the full path to the password‑protected workbook: ");
             string filePath = Console.ReadLine()?.Trim();
 
-            // Validate the path
+            // Validate the file path
             if (string.IsNullOrEmpty(filePath))
             {
-                Console.WriteLine("No path was entered. Exiting.");
+                Console.WriteLine("File path cannot be empty.");
                 return;
             }
 
@@ -31,28 +30,38 @@ class Program
                 return;
             }
 
-            // Prompt for password
-            Console.Write("Enter the password to open the workbook (leave empty if none): ");
+            // Prompt the user for the password
+            Console.Write("Enter the password to open the workbook: ");
             string password = Console.ReadLine();
 
-            // Set load options with password (if any)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            if (!string.IsNullOrEmpty(password))
-                loadOptions.Password = password;
+            // Set load options with the provided password (null or empty password is allowed)
+            LoadOptions loadOptions = new LoadOptions
+            {
+                Password = password
+            };
 
-            // Load the workbook
+            // Load the workbook using the provided password
             Workbook workbook = new Workbook(filePath, loadOptions);
-            Console.WriteLine("Workbook opened successfully.");
 
-            // Display first worksheet name, if present
+            // Workbook loaded successfully
+            Console.WriteLine($"Workbook loaded successfully. Number of worksheets: {workbook.Worksheets.Count}");
+
+            // Example: read the name of the first worksheet
             if (workbook.Worksheets.Count > 0)
-                Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
-            else
-                Console.WriteLine("The workbook contains no worksheets.");
+            {
+                Console.WriteLine($"First worksheet name: {workbook.Worksheets[0].Name}");
+            }
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+        finally
+        {
+            // Keep console window open
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
     }
 }

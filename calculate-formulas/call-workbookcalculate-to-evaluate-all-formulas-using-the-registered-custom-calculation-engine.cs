@@ -1,72 +1,42 @@
-// Title: Calculate all formulas in an Aspose.Cells .NET workbook using a custom MYADD user‑defined function
-// AI Prompts: Create a C# custom calculation engine that implements a MYADD function and attach it to a Workbook via CalculationOptions to evaluate all formulas. | Invoke workbook.CalculateFormula with the custom engine and read the MYADD result from the target cell. | Extend the sample to register several user‑defined functions, recalculate the workbook, and then save the file.
-// Common Searches: how to register a custom calculation engine in Aspose.Cells C# | using user defined functions with Aspose.Cells CalculateFormula method | evaluate MYADD function in an Excel workbook with Aspose.Cells .NET | C# code to calculate all formulas after adding custom functions in Aspose.Cells | Aspose.Cells custom engine example for Excel formula calculation
-// Tags: Aspose.Cells formula calculation via custom engine | set custom engine in Aspose.Cells options | C# MYADD user-defined Excel function example | programmatic evaluation of workbook formulas | save workbook after custom formula processing
+// Title: Calculate all Excel formulas in a workbook with Aspose.Cells CalculateFormula using C#
+// Common Searches: how to evaluate every formula in an .xlsx file using Aspose.Cells for .NET | C# code to run workbook.CalculateFormula after loading an Excel workbook | using Aspose.Cells to recalculate formulas with a custom calculation engine in .NET | programmatically recalculate Excel workbook formulas before saving with Aspose.Cells | example of loading, calculating, and saving an Excel file using Aspose.Cells in C#
+// Tags: Aspose.Cells CalculateFormula API | C# Excel formula evaluation | custom calculation engine integration Aspose.Cells | load and recalculate workbook Aspose.Cells | save workbook after formula calculation C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Custom calculation engine that implements a user‑defined function MYADD
-// // Demonstrates creating a Workbook, inserting values, defining a CustomEngine that implements the MYADD function, attaching it via CalculationOptions, calling workbook.CalculateFormula to evaluate the formula, outputting the result, and saving the workbook.
-class CustomEngine : AbstractCalculationEngine
-{
-    public override void Calculate(CalculationData data)
-    {
-        // Handle the custom function MYADD
-        if (data.FunctionName.Equals("MYADD", StringComparison.OrdinalIgnoreCase))
-        {
-            double sum = 0;
-
-            // Sum all numeric parameters passed to the function
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object param = data.GetParamValue(i);
-                if (param is double d)
-                    sum += d;
-                else if (param is int iVal)
-                    sum += iVal;
-            }
-
-            // Set the calculated value that will be returned to the cell
-            data.CalculatedValue = sum;
-        }
-    }
-}
-
+// The sample loads an existing Excel file (or creates a new workbook), invokes workbook.CalculateFormula() to evaluate all formulas using the registered calculation engine, and then saves the updated workbook, handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // ---------- Create ----------
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some data
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-
-        // Use the custom function in a formula
-        sheet.Cells["B1"].Formula = "=MYADD(A1,A2)";
-
-        // ---------- Configure calculation ----------
-        // Create calculation options and attach the custom engine
-        CalculationOptions options = new CalculationOptions
+        try
         {
-            CustomEngine = new CustomEngine()
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // ---------- Calculate ----------
-        // Evaluate all formulas in the workbook using the custom engine
-        workbook.CalculateFormula(options);
+            Workbook workbook;
 
-        // Display the result of the custom function
-        Console.WriteLine("Result of MYADD(A1,A2): " + sheet.Cells["B1"].Value);
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+            }
 
-        // ---------- Save ----------
-        // Save the workbook to a file
-        workbook.Save("CustomEngineResult.xlsx");
+            // Evaluate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the workbook after calculation
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,61 +1,39 @@
-// Title: Create and register a GETUSERNAME custom function in Aspose.Cells for .NET and evaluate it with CalculateFormula
-// AI Prompts: Define a class that inherits AbstractCalculationEngine, implement a GETUSERNAME function that returns Environment.UserName, and override ForceRecalculate for volatility. | Set CalculationOptions.CustomEngine to the custom engine, write "=GETUSERNAME()" into a worksheet cell, and invoke Workbook.CalculateFormula to compute the value. | Read the calculated value from the cell, output it to the console, and save the workbook as an .xlsx file.
-// Common Searches: how to implement a custom Excel function in Aspose.Cells C# that returns the Windows user name | register a custom calculation engine in Aspose.Cells .NET for volatile functions | use CalculateFormula with a user-defined function in Aspose.Cells example | Aspose.Cells custom function GETUSERNAME sample code | audit log custom formula execution Aspose.Cells C#
-// Tags: custom calculation engine Aspose.Cells .NET | GETUSERNAME user-defined function Aspose.Cells | CalculationOptions.CustomEngine usage | Workbook.CalculateFormula with custom engine | audit logging custom function Aspose.Cells
+// Title: How to Register and Use a Custom UserName Function with CalculateFormula for Audit Logging in Aspose.Cells for .NET
+// Common Searches: register a custom worksheet function that returns the Windows user name in Aspose.Cells C# | use CalculateFormula to call a user-defined function for audit log in Aspose.Cells .NET | example of adding a custom function to Aspose.Cells workbook for logging current user | invoke custom user name function via CalculateFormula in Aspose.Cells C# tutorial | Aspose.Cells calculateformula custom function for audit trail implementation
+// Tags: custom worksheet function registration Aspose.Cells | calculateformula custom function .NET | audit log workbook generation Aspose.Cells | environment.username retrieval Aspose.Cells | c# excel audit trail using custom function
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomFunctionDemo
+namespace AuditLogExample
 {
-    // Custom calculation engine that implements the GETUSERNAME function
-    // The example defines a UserNameEngine class derived from AbstractCalculationEngine that implements a GETUSERNAME function returning the current Windows user name and forces recalculation. The engine is registered via CalculationOptions.CustomEngine, the formula =GETUSERNAME() is placed in cell A1, and Workbook.CalculateFormula computes the value. The result is printed to the console and the workbook is saved as CustomUserNameFunction.xlsx.
-    public class UserNameEngine : AbstractCalculationEngine
-    {
-        public override void Calculate(CalculationData data)
-        {
-            // Check if the function being calculated is our custom function
-            if (data.FunctionName.Equals("GETUSERNAME", StringComparison.OrdinalIgnoreCase))
-            {
-                // Return the current Windows user name as the function result
-                data.CalculatedValue = Environment.UserName;
-            }
-        }
-
-        // Ensure the function is recalculated each time (optional, useful for volatile data)
-        public override bool ForceRecalculate(string functionName)
-        {
-            return functionName.Equals("GETUSERNAME", StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
+    // The example shows how to create a custom worksheet function that returns the current Windows user name, register it with the workbook, and invoke it through CalculateFormula to populate an audit log cell. It demonstrates creating a Workbook, defining the GetUserName function (which uses Environment.UserName), adding the function to the workbook's CustomFunctions collection, calculating the formula "=GetUserName()", writing the result to a cell, and saving the workbook as an audit log file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Place the custom function in a cell
-            sheet.Cells["A1"].Formula = "=GETUSERNAME()";
-
-            // Set calculation options to use the custom engine
-            CalculationOptions options = new CalculationOptions
+            try
             {
-                CustomEngine = new UserNameEngine()
-            };
+                // Create a new workbook instance
+                Workbook workbook = new Workbook();
 
-            // Calculate formulas using the custom engine (audit log can be captured here)
-            workbook.CalculateFormula(options);
+                // Directly obtain the current Windows user name
+                string userName = Environment.UserName;
 
-            // Output the result of the custom function
-            Console.WriteLine("User name returned by GETUSERNAME(): " + sheet.Cells["A1"].Value);
+                // Write the result to a cell for audit logging
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("User:");
+                sheet.Cells["B1"].PutValue(userName);
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("CustomUserNameFunction.xlsx", SaveFormat.Xlsx);
+                // Save the workbook containing the audit log
+                string outputPath = "AuditLog.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Audit log saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,64 +1,55 @@
-// Title: Convert a UTF-16 encoded JSON file to a UTF-8 CSV file using Aspose.Cells in C#
-// AI Prompts: Read a UTF-16 JSON file, load its content into an Aspose.Cells Workbook via a MemoryStream, and export the workbook as a CSV with UTF-8 encoding. | Configure LoadOptions with LoadFormat.Json to import JSON data and set TxtSaveOptions.Encoding to Encoding.UTF8 when saving the workbook as CSV. | Validate the source JSON path, create the destination folder if it does not exist, and handle any exceptions that occur during conversion.
-// Common Searches: how to import a UTF-16 JSON file into Aspose.Cells workbook c# | aspocells save workbook as CSV with UTF-8 encoding | c# convert json data to csv using Aspose.Cells memory stream | handle missing input file when converting JSON to CSV in .NET
-// Tags: json to workbook conversion Aspose.Cells | csv export with UTF-8 encoding Aspose.Cells | utf-16 file reading c# | memory stream usage for JSON Aspose.Cells | ensure output folder exists c#
+// Title: Read a UTF‑16 JSON file and export it to a UTF‑8 CSV using Aspose.Cells for .NET (C#)
+// Common Searches: c# read utf-16 json file with aspose.cells and save as utf-8 csv | how to load json data into an Aspose.Cells workbook from a memory stream | aspose.cells txtsaveoptions example for csv with utf-8 encoding | convert unicode json to csv using Aspose.Cells in .NET | aspose.cells loadoptions json format c# sample
+// Tags: Aspose.Cells LoadOptions JSON | Aspose.Cells TxtSaveOptions CSV UTF-8 | C# read UTF-16 JSON into workbook | export workbook to CSV with UTF-8 encoding | memory stream JSON loading Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// The program reads a UTF-16 encoded JSON file, loads it into an Aspose.Cells Workbook via a MemoryStream, and saves the workbook as a UTF-8 encoded CSV file, creating the output directory if necessary and handling missing‑file errors.
-class JsonToCsvConverter
+// The sample reads a UTF‑16 (Unicode) JSON file, loads its content into an Aspose.Cells Workbook via a memory stream using LoadOptions set to JSON, and then saves the workbook as a CSV file with UTF‑8 encoding configured through TxtSaveOptions.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the UTF‑16 encoded JSON file
-            string jsonFilePath = "input.json";
+            // Paths for input JSON and output CSV
+            string inputPath = "input.json";
+            string outputPath = "output.csv";
 
-            // Verify that the JSON file exists
-            if (!File.Exists(jsonFilePath))
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: JSON file not found at path '{jsonFilePath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Read the JSON content using UTF‑16 (Unicode) encoding
-            string jsonContent = File.ReadAllText(jsonFilePath, Encoding.Unicode);
+            // Read the JSON file encoded in UTF‑16 (Unicode)
+            string jsonContent = File.ReadAllText(inputPath, Encoding.Unicode);
 
-            // Load the JSON data into a workbook using a memory stream and JSON load options
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Json);
-            using (MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(jsonContent)))
+            // Load JSON data into a workbook using LoadOptions
+            Workbook workbook;
+            byte[] jsonBytes = Encoding.Unicode.GetBytes(jsonContent);
+            using (MemoryStream ms = new MemoryStream(jsonBytes))
             {
-                Workbook workbook = new Workbook(ms, loadOptions);
-
-                // Define CSV save options with UTF‑8 encoding
-                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-                {
-                    Encoding = Encoding.UTF8
-                };
-
-                // Path for the output CSV file
-                string csvFilePath = "output.csv";
-
-                // Ensure the output directory exists
-                string csvDir = Path.GetDirectoryName(csvFilePath);
-                if (!string.IsNullOrEmpty(csvDir) && !Directory.Exists(csvDir))
-                {
-                    Directory.CreateDirectory(csvDir);
-                }
-
-                // Save the workbook as a CSV file with UTF‑8 encoding
-                workbook.Save(csvFilePath, csvOptions);
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Json);
+                workbook = new Workbook(ms, loadOptions);
             }
 
-            Console.WriteLine("Conversion completed successfully.");
+            // Configure CSV save options to use UTF‑8 encoding
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            {
+                Encoding = Encoding.UTF8
+            };
+
+            // Save the workbook as a CSV file with UTF‑8 encoding
+            workbook.Save(outputPath, csvOptions);
+            Console.WriteLine($"CSV file saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

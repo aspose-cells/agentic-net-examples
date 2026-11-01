@@ -1,13 +1,12 @@
-// Title: Check if an Excel worksheet is password‑protected before modifying cells using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that determines whether a worksheet is locked with a password and only writes to a cell when the sheet is unprotected. | Show how to catch protection‑related exceptions in Aspose.Cells and conditionally skip cell updates for a protected worksheet.
-// Common Searches: C# Aspose.Cells how to know if a worksheet is password protected before editing | detect protected sheet in Excel using Aspose.Cells .NET | skip cell update when worksheet is locked with Aspose.Cells | handle protected worksheet exception Aspose.Cells C# example | check sheet protection status programmatically Aspose.Cells
-// Tags: worksheet protection detection Aspose.Cells C# | conditional cell write based on sheet lock | Aspose.Cells protected worksheet handling | Excel sheet password check .NET | exception handling for locked worksheet Aspose
+// Title: Check worksheet protection status and unprotect an Excel sheet before editing with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to determine if a worksheet is password protected | Aspose.Cells unprotect Excel worksheet programmatically before modifying cells | Detect worksheet protection status using Aspose.Cells .NET API | Remove password protection from a sheet with Aspose.Cells C# example | Verify and unprotect protected worksheet in Aspose.Cells before saving
+// Tags: worksheet protection detection Aspose.Cells | worksheet unprotect method Aspose.Cells | edit protected Excel sheet C# Aspose.Cells | worksheet password status query .NET | Aspose.Cells unprotect operation example
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program loads an Excel workbook with Aspose.Cells, attempts to modify a cell inside a try‑catch block, interprets any exception as an indication that the worksheet is password‑protected, reports the outcome, and saves the workbook to a new file.
+// The sample loads an Excel workbook, checks if the first worksheet is password‑protected, attempts to unprotect it with a supplied password (ignoring errors if it is already unprotected or the password is incorrect), updates cell A1, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
@@ -16,54 +15,44 @@ class Program
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
+            const string password = "yourPassword";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception loadEx)
-            {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
-            }
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Attempt to modify a cell; if the sheet is protected an exception will be thrown
+            // Attempt to unprotect the worksheet (if it is protected)
             try
             {
-                worksheet.Cells["A1"].PutValue("Modified value");
-                Console.WriteLine("Cell A1 updated successfully.");
+                // Unprotect using the password (if required). If the sheet is not protected, this call has no effect.
+                sheet.Unprotect(password);
+                Console.WriteLine("Worksheet unprotected (if it was protected).");
             }
-            catch (Exception modifyEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Worksheet may be protected; no changes were made. Details: {modifyEx.Message}");
+                // Log any issues (e.g., wrong password) and continue
+                Console.WriteLine($"Unprotect operation skipped or failed: {ex.Message}");
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Perform data modifications
+            sheet.Cells["A1"].PutValue("Modified data");
 
-            // Save the modified workbook
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors
+            // General exception handling for unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

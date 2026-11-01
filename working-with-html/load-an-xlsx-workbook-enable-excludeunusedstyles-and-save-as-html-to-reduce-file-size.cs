@@ -1,52 +1,24 @@
-// Title: Convert an XLSX workbook to lightweight HTML in C# with Aspose.Cells by exporting the active sheet and excluding unused styles
-// AI Prompts: Generate C# code that loads an XLSX file with Aspose.Cells, sets HtmlSaveOptions.ExportActiveWorksheetOnly = true and HtmlSaveOptions.ExcludeUnusedStyles = true, then saves the workbook as an HTML file. | Explain how enabling ExcludeUnusedStyles together with exporting only the active worksheet reduces the size of the HTML output when converting Excel to HTML using Aspose.Cells.
-// Common Searches: Aspose.Cells C# export only the active worksheet to HTML | How to minimize HTML file size when converting Excel with Aspose.Cells | Enable ExcludeUnusedStyles in Aspose.Cells HTML conversion C# | C# Aspose.Cells convert XLSX to HTML lightweight output | Reduce HTML output size from Excel workbook using Aspose.Cells options
-// Tags: aspose.cells htmlsaveoptions exportactiveworksheetonly | aspose.cells htmlsaveoptions excludeunusedstyles | aspose.cells convert xlsx to html csharp | aspose.cells reduce html output size | aspose.cells lightweight html export
+// Title: Convert an XLSX workbook to HTML with Aspose.Cells for .NET while excluding unused styles to shrink output size
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, sets HtmlSaveOptions.ExcludeUnusedStyles = true, and saves the workbook as a compact HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions to prune unused CSS when exporting Excel to HTML in a .NET application. | Demonstrate reducing the HTML file size generated from an Excel workbook by disabling unused style generation with Aspose.Cells.
+// Common Searches: convert excel to html minimal css Aspose.Cells | C# Aspose.Cells reduce html file size | how to export xlsx as html without extra styles | Aspose.Cells HtmlSaveOptions shrink html output | save workbook as html with compact css using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExcludeUnusedStyles | C# Excel to HTML conversion optimization | remove unused CSS Aspose.Cells | minimize HTML payload from workbook export | export XLSX as HTML with style pruning
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
+using System;
 
-// The program verifies that 'input.xlsx' exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to export only the active worksheet and to exclude unused styles, and then saves the result as 'output.html' while handling any exceptions.
+// This C# example loads an XLSX workbook, enables HtmlSaveOptions.ExcludeUnusedStyles to omit unused CSS, and saves the workbook as a smaller HTML file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLSX file
-        string inputPath = "input.xlsx";
+        // Load the XLSX workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Path for the resulting HTML file
-        string outputPath = "output.html";
+        // Configure HTML save options to exclude unused styles (reduces file size)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExcludeUnusedStyles = true;
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
-            return;
-        }
-
-        try
-        {
-            // Load the workbook from the XLSX file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure HTML save options (optional settings can be added as needed)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export only the active worksheet to keep the HTML lightweight
-                ExportActiveWorksheetOnly = true
-            };
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

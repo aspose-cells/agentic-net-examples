@@ -1,49 +1,33 @@
-// Title: How to remove a worksheet’s embedded printer settings by setting PageSetup.PrinterSettings to null with Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook, assign null to worksheet.PageSetup.PrinterSettings, and save the file using Aspose.Cells in C#. | Programmatically clear the printer configuration of a specific worksheet before exporting the workbook with Aspose.Cells. | Reset the PageSetup printer settings of the first worksheet to default by assigning null in a .NET application.
-// Common Searches: asp.net remove printer settings from Excel worksheet using Aspose.Cells | set PageSetup.PrinterSettings to null in C# Aspose.Cells example | delete embedded printer configuration in an .xlsx file programmatically | how to reset worksheet printer setup before saving with Aspose.Cells
-// Tags: Aspose.Cells clear worksheet printer settings | PageSetup.PrinterSettings null assignment | remove embedded printer configuration from Excel | programmatic worksheet printer setup reset | C# Aspose.Cells printer settings removal
+// Title: Remove a worksheet's embedded printer configuration in Aspose.Cells (C#) by setting PageSetup.PrinterSettings to null
+// AI Prompts: Generate C# code that creates a workbook, accesses the first worksheet, clears its printer configuration by assigning null to PageSetup.PrinterSettings, and saves the file. | Demonstrate how to nullify the PageSetup.PrinterSettings property to prevent printer data from being stored in an Aspose.Cells workbook. | Provide a snippet that nullifies Worksheet.PageSetup.PrinterSettings in Aspose.Cells to remove printer metadata before saving.
+// Common Searches: Aspose.Cells C# how to clear printer settings on a worksheet before saving | set worksheet PageSetup.PrinterSettings to null Aspose.Cells example | remove embedded printer configuration from Excel workbook using Aspose.Cells API | C# code to delete printer configuration from Aspose.Cells worksheet
+// Tags: reset worksheet printer settings Aspose.Cells C# | disable PageSetup.PrinterSettings Aspose.Cells | clear printer metadata workbook Aspose.Cells | disable printer settings in Excel workbook Aspose.Cells | Aspose.Cells worksheet printer setup cleanup
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// The example creates a new Workbook, accesses the first Worksheet, sets its PageSetup.PrinterSettings property to null to clear any embedded printer configuration, and saves the workbook as output.xlsx.
+class Program
 {
-    // The example loads input.xlsx, sets the first worksheet's PageSetup.PrinterSettings property to null to strip any embedded printer configuration, and saves the modified workbook as output.xlsx while handling missing files and exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Remove the embedded printer configuration by setting PrinterSettings to null
+            sheet.PageSetup.PrinterSettings = null;
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Remove embedded printer configuration (set to null if supported)
-                worksheet.PageSetup.PrinterSettings = null;
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook to a file
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

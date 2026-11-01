@@ -1,67 +1,74 @@
-// Title: Create a C# IEnumerable<Row> to enumerate only visible rows in an Aspose.Cells worksheet
-// AI Prompts: Write a C# class that implements IEnumerable<Row> and yields rows from a RowCollection only when Row.IsHidden is false. | Demonstrate using the custom visible‑row enumerable to loop through a worksheet and print the first cell value of each non‑hidden row.
-// Common Searches: C# iterate visible rows Aspose.Cells worksheet | filter hidden rows RowCollection Aspose.Cells .NET | custom iterator for non‑hidden rows in Aspose.Cells | skip hidden rows when reading Excel with Aspose.Cells C#
-// Tags: enumerable visible rows Aspose.Cells | filter RowCollection by IsHidden C# | skip hidden rows Aspose.Cells .NET | custom iterator RowCollection Aspose.Cells | enumerate non‑hidden rows Excel Aspose.Cells
+// Title: C# custom iterator to enumerate only visible rows in an Aspose.Cells worksheet
+// AI Prompts: Generate a C# GetVisibleRows method that yields each Row from a Worksheet where Row.IsHidden is false using Aspose.Cells. | Write code that creates a VisibleRowEnumerator class for an Aspose.Cells worksheet and prints the index of every non‑hidden row. | Show how to implement an iterator that skips hidden rows while looping through Worksheet.Cells.Rows in a .NET Excel processing routine.
+// Common Searches: how to iterate over only visible rows in an Aspose.Cells worksheet using C# | C# example for filtering out hidden rows with Aspose.Cells | enumerate non‑hidden rows in Excel file with Aspose.Cells for .NET | custom iterator to skip hidden rows in Aspose.Cells workbook | retrieve visible row indices from a worksheet using Aspose.Cells API
+// Tags: enumerate visible rows Aspose.Cells | skip hidden rows iterator C# | filter worksheet rows by IsHidden | custom Excel row enumerator .NET | process non‑hidden rows Aspose.Cells
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Defines a VisibleRowEnumerable class that implements IEnumerable<Row> and yields only rows where Row.IsHidden is false, hides specific rows in a worksheet, then uses the enumerable to output values from visible rows before saving the workbook.
-class VisibleRowEnumerable : IEnumerable<Row>
+// The example defines a VisibleRowEnumerator class with a GetVisibleRows method that yields only rows whose IsHidden property is false from a given Worksheet. It loads an Excel workbook, creates the enumerator, and writes each visible row's index to the console.
+public class VisibleRowEnumerator
 {
-    private readonly RowCollection _rows;
+    private readonly Worksheet _worksheet;
 
-    public VisibleRowEnumerable(RowCollection rows)
+    public VisibleRowEnumerator(Worksheet worksheet)
     {
-        _rows = rows;
+        _worksheet = worksheet;
     }
 
-    public IEnumerator<Row> GetEnumerator()
+    // Iterator that yields rows which are not hidden
+    public IEnumerable<Row> GetVisibleRows()
     {
-        foreach (Row row in _rows)
+        // Iterate through all rows in the worksheet
+        foreach (Row row in _worksheet.Cells.Rows)
         {
-            if (!row.IsHidden)
-                yield return row;
-        }
-    }
+            // Skip rows that are hidden
+            if (row.IsHidden)
+                continue;
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
+            yield return row;
+        }
     }
 }
 
-class Program
+public class Program
 {
-    static void Main()
+    public static void Main(string[] args)
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Path to the input workbook
+        string inputPath = "input.xlsx";
 
-        // Populate sample data in column A
-        for (int i = 0; i < 10; i++)
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            cells[i, 0].PutValue($"Row {i + 1}");
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
         }
 
-        // Hide rows 3, 6 and 9 (zero‑based indices)
-        worksheet.Cells.HideRow(2);
-        worksheet.Cells.HideRow(5);
-        worksheet.Cells.HideRow(8);
-
-        // Iterate only over visible rows using the custom iterator
-        var visibleRows = new VisibleRowEnumerable(worksheet.Cells.Rows);
-        foreach (Row row in visibleRows)
+        try
         {
-            // Output the value of the first cell in each visible row
-            Console.WriteLine($"Visible Row {row.Index + 1}: {row[0].StringValue}");
-        }
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook (optional)
-        workbook.Save("VisibleRowsDemo.xlsx");
+            // Get the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create the visible row enumerator
+            var enumerator = new VisibleRowEnumerator(sheet);
+
+            // Process each visible row
+            foreach (Row visibleRow in enumerator.GetVisibleRows())
+            {
+                // Example processing: output the row index
+                Console.WriteLine($"Visible Row Index: {visibleRow.Index}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display an error message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

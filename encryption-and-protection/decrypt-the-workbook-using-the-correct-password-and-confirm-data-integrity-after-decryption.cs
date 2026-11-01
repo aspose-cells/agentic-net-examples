@@ -1,54 +1,58 @@
-// Title: Decrypt a password‑protected Excel (.xlsx) workbook with Aspose.Cells for .NET and verify cell A1 value
-// AI Prompts: Use Aspose.Cells LoadOptions.Password to open an encrypted .xlsx file, read a specific cell, and save the workbook without a password. | Check the existence of the source file, load it with the provided password, output the value of cell A1 to confirm decryption, and write the unprotected workbook to a new file. | Implement try‑catch blocks for CellsException and generic Exception to handle decryption errors and report meaningful messages.
-// Common Searches: how to open a password protected Excel file using Aspose.Cells C# | Aspose.Cells decrypt workbook and remove password programmatically | verify cell content after loading encrypted .xlsx with Aspose.Cells | C# load encrypted Excel with password and save as unprotected file | Aspose.Cells LoadOptions Password property example
-// Tags: Aspose.Cells password decryption via LoadOptions | C# remove password from Excel workbook | read cell after workbook decryption Aspose.Cells | save unprotected .xlsx with Aspose.Cells | handle CellsException during decryption
+// Title: Decrypt a password‑protected XLSX workbook and validate its contents using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells load encrypted XLSX with password and read cell A1 | how to remove password protection from an Excel file using Aspose.Cells .NET | verify workbook data after decryption with Aspose.Cells in C# | calculate checksum of numeric cells after opening a protected Excel workbook | save decrypted workbook without password using Aspose.Cells
+// Tags: password protected workbook loading Aspose.Cells | excel decryption C# Aspose.Cells | post‑decryption cell verification Aspose.Cells | numeric cell checksum calculation Aspose.Cells | saving workbook without password Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example checks for the encrypted Excel file, configures LoadOptions with the correct password, loads the workbook, reads cell A1 to confirm successful decryption, and saves the workbook as an unprotected .xlsx file while handling Aspose.Cells‑specific and generic exceptions.
+// The example demonstrates how to open an encrypted XLSX file with a password using Aspose.Cells LoadOptions, read a known cell to confirm successful decryption, optionally compute a checksum of all numeric cells in the first worksheet, and then save the workbook as an unprotected file.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "EncryptedWorkbook.xlsx";
-        const string outputFile = "DecryptedWorkbook.xlsx";
-        const string password = "MySecretPassword"; // replace with actual password
+        // Paths and password
+        string encryptedPath = "encrypted.xlsx";
+        string decryptedPath = "decrypted.xlsx";
+        string password = "myPassword";
 
-        // Verify that the encrypted workbook exists
-        if (!File.Exists(inputFile))
+        // Verify the encrypted file exists
+        if (!File.Exists(encryptedPath))
         {
-            Console.WriteLine($"Error: File \"{inputFile}\" not found.");
+            Console.WriteLine($"Error: File \"{encryptedPath}\" not found.");
             return;
         }
 
         try
         {
-            // Set load options with the correct password
+            // Load the encrypted workbook using the password
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = password
             };
+            Workbook workbook = new Workbook(encryptedPath, loadOptions);
 
-            // Load the encrypted workbook
-            Workbook workbook = new Workbook(inputFile, loadOptions);
+            // Confirm data integrity: read a known cell value
+            Worksheet sheet = workbook.Worksheets[0];
+            string cellValue = sheet.Cells["A1"].StringValue;
+            Console.WriteLine($"Cell A1 value after decryption: {cellValue}");
 
-            // Read a known cell to confirm successful decryption
-            string decryptedValue = workbook.Worksheets[0].Cells["A1"].StringValue;
-            Console.WriteLine("Decrypted cell A1 value: " + decryptedValue);
+            // Optional: compute a simple checksum of all numeric cells
+            double checksum = 0;
+            foreach (Cell cell in sheet.Cells)
+            {
+                if (cell.Type == CellValueType.IsNumeric)
+                    checksum += cell.DoubleValue;
+            }
+            Console.WriteLine($"Checksum of numeric values: {checksum}");
 
-            // Save the decrypted workbook to a new file
-            workbook.Save(outputFile);
-            Console.WriteLine($"Decrypted workbook saved as \"{outputFile}\".");
-        }
-        catch (CellsException ex)
-        {
-            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            // Save the workbook without a password to verify it is decrypted
+            workbook.Save(decryptedPath, SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved decrypted successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

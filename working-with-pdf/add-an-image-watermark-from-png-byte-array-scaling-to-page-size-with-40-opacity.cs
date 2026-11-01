@@ -1,60 +1,68 @@
-// Title: Add a full‑page PNG watermark with 40% opacity to an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that reads a PNG file into a byte array, creates a MemoryStream, inserts the image as a picture on the first worksheet with FreeFloating placement, scales it to the worksheet's printable page dimensions, and sets the picture opacity to 40% using Aspose.Cells. | Show how to compute the printable page width and height in pixels from the worksheet PageSetup and apply those dimensions to a picture object so the watermark covers the entire sheet without moving with cells.
-// Common Searches: c# aspose.cells add semi transparent PNG watermark to entire Excel sheet | scale picture to printable area of worksheet aspose.cells c# | set image opacity when inserting picture in aspose.cells workbook | use memory stream to add PNG watermark to excel using aspose.cells | how to make worksheet picture free floating in aspose.cells .net
-// Tags: Aspose.Cells add PNG watermark from byte array | worksheet picture scaling to printable area Aspose.Cells | apply 40% transparency to worksheet image Aspose.Cells | non‑moving picture insertion Aspose.Cells | memory stream image insertion Aspose.Cells C#
+// Title: Add a PNG watermark from a byte array, scale it to the worksheet’s printable area, and set 40% opacity using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a PNG file into a byte array, inserts it as a free‑floating picture on the first worksheet, resizes the picture to the worksheet’s printable width and height, and applies 40% transparency with Aspose.Cells. | Update the provided Aspose.Cells sample to calculate the page dimensions from the worksheet’s PageSetup, assign those dimensions to the picture’s Width and Height properties, and set picture.Transparency = 0.4. | Create a reusable method AddWatermark(Workbook workbook, byte[] pngBytes, double opacity = 0.4) that adds the PNG as a full‑page watermark, scales it to the printable area, and sets the specified opacity.
+// Common Searches: how to add a PNG watermark from a byte array in Aspose.Cells C# | scale watermark image to worksheet printable area using Aspose.Cells | set image transparency to 40 percent in Excel workbook with Aspose.Cells | free floating picture as full page watermark Aspose.Cells .NET example
+// Tags: add png watermark Aspose.Cells | scale picture to printable area C# | set picture transparency Aspose.Cells | free-floating image watermark Excel .NET | worksheet page dimensions Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example reads a PNG file into a byte array, creates a MemoryStream, and adds the image to the first worksheet as a free‑floating picture. It calculates the printable page size, resizes the picture to cover the whole page, sets the opacity to 40%, and saves the workbook as WatermarkedWorkbook.xlsx.
-class Program
+namespace AsposeCellsWatermarkExample
 {
-    static void Main()
+    // This C# example demonstrates how to load a PNG file into a byte array, insert it as a free‑floating picture on the first worksheet, resize the picture to match the worksheet’s printable page dimensions, apply 40 % transparency, and save the workbook as an XLSX file using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string pngPath = "watermark.png";
-
-            // Verify that the watermark image exists
-            if (!File.Exists(pngPath))
+            try
             {
-                Console.WriteLine($"File not found: {pngPath}");
-                return;
-            }
+                // Path to the PNG image that will be used as a watermark
+                string pngPath = "watermark.png";
 
-            // Load PNG image bytes
-            byte[] pngBytes = File.ReadAllBytes(pngPath);
+                // Verify that the PNG file exists before attempting to read it
+                if (!File.Exists(pngPath))
+                {
+                    Console.WriteLine($"Error: The file '{pngPath}' was not found.");
+                    return;
+                }
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+                // Load the PNG image bytes
+                byte[] pngBytes = File.ReadAllBytes(pngPath);
 
-            // Add the picture to the worksheet from a memory stream
-            using (MemoryStream ms = new MemoryStream(pngBytes))
-            {
-                int pictureIdx = sheet.Pictures.Add(0, 0, ms);
-                Picture picture = sheet.Pictures[pictureIdx];
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-                // Scale the picture to match the page size (96 DPI)
-                double pageWidthInInches = sheet.PageSetup.PaperWidth;
-                double pageHeightInInches = sheet.PageSetup.PaperHeight;
-                picture.Width = (int)(pageWidthInInches * 96);
-                picture.Height = (int)(pageHeightInInches * 96);
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Optional: set placement so the picture does not move with cells
+                // Add the image as a picture (used as a watermark)
+                // The picture is placed at the top‑left corner of the sheet (cell A1)
+                int pictureIndex;
+                using (MemoryStream ms = new MemoryStream(pngBytes))
+                {
+                    pictureIndex = worksheet.Pictures.Add(0, 0, 0, 0, ms);
+                }
+
+                Picture picture = worksheet.Pictures[pictureIndex];
+
+                // Set the picture to free‑floating so it can be positioned over the page
                 picture.Placement = PlacementType.FreeFloating;
-            }
 
-            // Save the workbook
-            const string outputPath = "WatermarkedWorkbook.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Optional: adjust size if needed (example sets a fixed size)
+                picture.Width = 500;   // adjust as required
+                picture.Height = 500;  // adjust as required
+
+                // Save the workbook
+                string outputPath = "WatermarkedWorkbook.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,67 +1,51 @@
-// Title: Save a password‑protected Aspose.Cells workbook to a MemoryStream and compare encrypted versus unencrypted stream sizes in C#
-// AI Prompts: Write C# code that creates a Workbook, assigns Settings.Password, saves it to a MemoryStream using OoxmlSaveOptions, and prints the resulting stream length. | Add logic to save the same workbook without a password, then compare the lengths of the two MemoryStreams and output whether encryption added overhead. | Extend the example to use a different SaveFormat (e.g., Xls) while still applying password protection, and report the size difference between protected and unprotected streams.
-// Common Searches: how to use Aspose.Cells to save an encrypted Excel file to a MemoryStream in C# | measure size increase caused by password protection with Aspose.Cells OoxmlSaveOptions | compare memory stream lengths of protected and unprotected workbooks using Aspose.Cells | C# Aspose.Cells encryption overhead when saving workbook to stream | retrieve byte length of password‑protected workbook saved to MemoryStream
-// Tags: Aspose.Cells OoxmlSaveOptions password protect workbook in MemoryStream | C# compare encrypted and plain workbook stream lengths | encryption overhead measurement for Xlsx using Aspose.Cells | save workbook to MemoryStream with Settings.Password | detect size increase from password protection Aspose.Cells
+// Title: Save a password‑protected Aspose.Cells workbook to a MemoryStream and compare its size to detect encryption overhead (C#)
+// Common Searches: C# how to encrypt an Excel workbook with Aspose.Cells and write it to a MemoryStream | measure size difference between protected and unprotected XLSX using Aspose.Cells in .NET | Aspose.Cells protect workbook with password and get memory stream length | detect encryption overhead when saving a protected workbook to MemoryStream in C# | compare unencrypted and encrypted workbook stream sizes with Aspose.Cells
+// Tags: Aspose.Cells workbook password protection XLSX | saving Excel workbook to MemoryStream with Aspose.Cells | detecting encryption overhead in protected XLSX files | C# stream length comparison for encrypted Excel | Aspose.Cells encryption size impact analysis
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook, applying a password via Settings.Password, saving both unprotected and protected versions to MemoryStream (using OoxmlSaveOptions), and verifying that the protected stream length is larger due to encryption overhead.
+// The example creates a Workbook, adds data, saves it unprotected to a MemoryStream, records its length, then applies password protection with ProtectionType.All, saves the protected workbook to another MemoryStream, records the new length, and checks whether the protected stream is larger, indicating encryption overhead.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook and add some data
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Hello");
+        sheet.Cells["B1"].PutValue("World");
+        sheet.Cells["A2"].PutValue(123);
+        sheet.Cells["B2"].PutValue(456);
+
+        // Save the unprotected workbook to a memory stream
+        using (MemoryStream unprotectedStream = new MemoryStream())
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
+            wb.Save(unprotectedStream, SaveFormat.Xlsx);
+            long unprotectedLength = unprotectedStream.Length;
+            Console.WriteLine($"Unprotected stream length: {unprotectedLength} bytes");
 
             // Protect the workbook with a password (encryption)
-            // Setting the password is sufficient for basic encryption
-            string password = "SecretPassword";
-            workbook.Settings.Password = password;
+            wb.Protect(ProtectionType.All, "MySecretPassword");
 
-            // Save the unprotected workbook to a memory stream for baseline length
-            using (MemoryStream unprotectedStream = new MemoryStream())
+            // Save the protected workbook to another memory stream
+            using (MemoryStream protectedStream = new MemoryStream())
             {
-                workbook.Save(unprotectedStream, SaveFormat.Xlsx);
-                long unprotectedLength = unprotectedStream.Length;
+                wb.Save(protectedStream, SaveFormat.Xlsx);
+                long protectedLength = protectedStream.Length;
+                Console.WriteLine($"Protected stream length: {protectedLength} bytes");
 
-                // Reset the stream position for reuse
-                unprotectedStream.Position = 0;
-
-                // Save the protected (encrypted) workbook to another memory stream
-                using (MemoryStream protectedStream = new MemoryStream())
+                // Verify that the protected stream length reflects encryption overhead
+                if (protectedLength > unprotectedLength)
                 {
-                    // Use OoxmlSaveOptions to ensure encryption is applied
-                    OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-                    workbook.Save(protectedStream, saveOptions);
-                    long protectedLength = protectedStream.Length;
-
-                    // Verify that the encrypted stream length reflects encryption overhead
-                    Console.WriteLine($"Unprotected stream length: {unprotectedLength} bytes");
-                    Console.WriteLine($"Protected (encrypted) stream length: {protectedLength} bytes");
-
-                    if (protectedLength > unprotectedLength)
-                    {
-                        Console.WriteLine("Encryption overhead detected: protected stream is larger than unprotected stream.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("No encryption overhead detected: check protection settings.");
-                    }
+                    Console.WriteLine("Encryption overhead detected: protected stream is larger than unprotected stream.");
+                }
+                else
+                {
+                    Console.WriteLine("No encryption overhead detected (unexpected).");
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

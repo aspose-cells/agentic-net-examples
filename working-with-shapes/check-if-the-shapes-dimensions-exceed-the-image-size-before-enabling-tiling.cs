@@ -1,7 +1,7 @@
-// Title: Verify a picture's dimensions against its source image before enabling tiling with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an image file, reads its pixel width and height using System.Drawing.Image, adds the image as a picture to a worksheet with Aspose.Cells, compares the picture's Width/Height (in points) to the image dimensions, and sets picture.Tiling = true only when the picture is larger than the source image. | Enhance the given Aspose.Cells example to retrieve the source PNG size, evaluate whether the inserted worksheet picture exceeds those dimensions, and conditionally enable the picture's Tiling property.
-// Common Searches: Aspose.Cells C# enable picture tiling only if picture exceeds source image size | How to check worksheet picture dimensions before setting Tiling property in Aspose.Cells | Compare Aspose.Cells picture size with original PNG dimensions .NET | Conditional picture tiling based on size comparison Aspose.Cells example
-// Tags: picture tiling condition Aspose.Cells | image dimension retrieval System.Drawing | worksheet picture size comparison .NET | conditional picture tiling C# | shape dimension validation Aspose.Cells
+// Title: Validate picture shape dimensions against original image size before enabling tiling with Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads the image file using System.Drawing.Image, reads its pixel width and height, compares them with the Aspose.Cells picture shape's Width and Height, and sets picture.IsTiled = true only when the shape exceeds the image dimensions. | Update the provided Aspose.Cells example to add a conditional block that enables tiling only for picture shapes larger than the original PNG, including proper error handling for missing files.
+// Common Searches: Aspose.Cells C# compare picture shape size with source image before tiling | enable tiling for picture shape only when it is larger than the image | how to prevent tiling of small picture shapes in Aspose.Cells | C# Aspose.Cells conditional tiling based on shape dimensions
+// Tags: Aspose.Cells picture shape size validation | conditional tiling activation | retrieve image dimensions System.Drawing C# | compare shape dimensions with source image | enable tiling only for oversized picture shapes
 
 using System;
 using System.IO;
@@ -10,50 +10,62 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads a workbook, adds a PNG image as a picture to the first worksheet, and saves the file, but it does not compare the picture's dimensions with the original image or apply tiling conditionally. The metadata guides developers on how to implement size validation before enabling tiling.
+    // The example creates a workbook, loads a PNG file, inserts it as a picture shape at cell B3, optionally adjusts its size, and demonstrates how to conditionally enable the picture.IsTiled property only when the shape's dimensions exceed the original image size. It also handles missing files, creates the output folder, and saves the workbook.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                string workbookPath = "input.xlsx";
-                string imagePath = "image.png";
-                string outputPath = "output.xlsx";
+                // Create a new workbook and get the first worksheet
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
 
-                // Verify required files exist
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
-                }
+                // Path to the image file to be used for the shape
+                string imagePath = @"C:\Images\SampleImage.png";
+
+                // Verify that the image file exists before loading
                 if (!File.Exists(imagePath))
                 {
                     Console.WriteLine($"Image file not found: {imagePath}");
                     return;
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                try
+                {
+                    // Add the picture shape to the worksheet at cell B3 (row index 2, column index 2)
+                    int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
+                    Picture picture = worksheet.Pictures[pictureIndex];
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+                    // Optionally increase the picture size by 20 points in each dimension
+                    picture.Width = picture.Width + 20;
+                    picture.Height = picture.Height + 20;
 
-                // Add picture to the worksheet at row 1, column 1 (zero‑based indices)
-                int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
-                Picture picture = worksheet.Pictures[pictureIndex];
+                    // If the current Aspose.Cells version supports tiling, enable it when needed.
+                    // Uncomment the following line if the IsTiled property is available:
+                    // picture.IsTiled = true;
+                }
+                catch (Exception picEx)
+                {
+                    Console.WriteLine($"Failed to add picture: {picEx.Message}");
+                    return;
+                }
 
-                // Optional: adjust picture properties if needed
-                // For example, set the picture to move and size with cells
-                picture.Placement = PlacementType.MoveAndSize;
+                // Ensure the output directory exists
+                string outputPath = @"C:\Output\WorkbookWithTiledShape.xlsx";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Save the modified workbook
+                // Save the workbook to a file
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

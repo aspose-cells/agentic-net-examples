@@ -1,44 +1,47 @@
-// Title: Read the Title built‑in document property from an Excel workbook using Aspose.Cells in C#
-// AI Prompts: Generate C# code that opens a given .xlsx file with Aspose.Cells, verifies the file exists, and prints the workbook's built‑in Title property. | Show how to access the BuiltInDocumentProperties of a Workbook and extract the Title value while handling possible exceptions. | Provide a snippet that loads an Excel file with Aspose.Cells and outputs its Title metadata to the console.
-// Common Searches: c# aspocells get title built-in document property from excel file | how to read built-in document properties like Title using Aspose.Cells .NET | example code to retrieve Excel workbook Title with Aspose.Cells and handle missing file | Aspose.Cells read Title property from .xlsx workbook in C# | retrieve Excel file metadata Title using Aspose.Cells and exception handling
-// Tags: Aspose.Cells read built‑in document properties | C# retrieve Excel workbook Title property | load .xlsx workbook and access BuiltInDocumentProperties | exception handling for Aspose.Cells workbook loading | verify Excel file existence with Aspose.Cells | output workbook Title metadata to console
+// Title: How to read the Title built‑in document property from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read Excel built‑in Title property from workbook | Retrieve document title from .xlsx using Aspose.Cells API in .NET | Get built‑in document properties of an Excel file with Aspose.Cells C# | Load password‑protected Excel file and access Title property using Aspose.Cells | Aspose.Cells example for reading workbook BuiltInDocumentProperties.Title in C#
+// Tags: Aspose.Cells read built‑in document properties C# | load Excel workbook with Aspose.Cells .NET | extract Title metadata from .xlsx using Aspose.Cells | password protected workbook loading Aspose.Cells | access BuiltInDocumentProperties.Title C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads 'input.xlsx' with Aspose.Cells, checks for the file's existence, accesses the BuiltInDocumentProperties collection, reads the Title property, prints it to the console, and gracefully handles any runtime exceptions.
+// The sample verifies the existence of an input.xlsx file, loads it into an Aspose.Cells Workbook (optionally supplying a password via LoadOptions), reads the Title built‑in document property through workbook.BuiltInDocumentProperties.Title, and prints the value to the console while handling CellsException and generic exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "input.xlsx";
+        // Path to the Excel file
+        string filePath = "input.xlsx";
 
-        // Ensure the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputFile))
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+            Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
         try
         {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook (add password here if required)
+            var loadOptions = new LoadOptions(); // Password can be set via loadOptions.Password = "yourPassword";
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Access the built‑in document properties collection
-            var properties = workbook.BuiltInDocumentProperties;
+            // Retrieve the Title built‑in property
+            string title = workbook.BuiltInDocumentProperties.Title;
 
-            // Retrieve the Title property
-            string title = properties.Title;
-
-            // Output the title to verify
-            Console.WriteLine("Title: " + title);
+            // Output the title for verification
+            Console.WriteLine("Title property: " + title);
+        }
+        catch (CellsException ex)
+        {
+            // Handles Aspose.Cells specific errors (e.g., password required)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Handles any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

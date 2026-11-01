@@ -1,48 +1,47 @@
-// Title: Remove a VBA module from an Excel workbook using Aspose.Cells for .NET and save the updated file
-// AI Prompts: Write C# code that loads an Excel workbook, removes a VBA module at a specified zero‑based index with workbook.VbaProject.Modules.RemoveAt, and saves the file. | Create a script that checks for a VBA project, deletes a macro module by index, and persists the changes using Aspose.Cells in .NET.
-// Common Searches: aspocells c# delete vba module by index | how to remove a macro module from an Excel file using Aspose.Cells .NET | save workbook after removing VBA module with Aspose.Cells | example of workbook.VbaProject.Modules.RemoveAt in C# | handling missing VBA project when deleting modules Aspose.Cells
-// Tags: VBA module removal Aspose.Cells .NET | Workbook.VbaProject.Modules.RemoveAt example | delete macro module Excel C# | save workbook after VBA changes Aspose.Cells | handle missing VBA project Aspose.Cells
+// Title: Remove a VBA module by index from an Excel workbook using Aspose.Cells for .NET and save the updated file
+// Common Searches: C# how to delete a VBA module from an Excel file using Aspose.Cells | Aspose.Cells remove VBA module by index example | remove specific VBA module from workbook with Aspose.Cells .NET | save Excel workbook after removing VBA module using Aspose.Cells | Modules.RemoveAt usage for VBA projects in Aspose.Cells
+// Tags: VBA module removal Aspose.Cells | Modules.RemoveAt method C# | Aspose.Cells VbaProject manipulation | delete Excel VBA module programmatically | save workbook after VBA changes Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads an existing Excel file, verifies that it contains a VBA project, removes the module at the specified zero‑based index using workbook.VbaProject.Modules.RemoveAt, and then saves the modified workbook to a new file.
+// The example loads an existing Excel workbook, checks for a VBA project, validates the zero‑based module index, removes the specified module using the Modules.RemoveAt method, and then saves the modified workbook to a new file.
 class RemoveModuleExample
 {
     static void Main()
     {
+        // Path to the source workbook
+        string inputPath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        // Index of the VBA module to remove (zero‑based)
+        int moduleIndex = 2; // change as needed
+
         try
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
+            // Load the workbook (lifecycle rule: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Index of the module to remove (0‑based)
-            int moduleIndex = 2; // change as needed
-
-            // Ensure the workbook contains a VBA project with modules
+            // Ensure the workbook contains a VBA project
             if (workbook.VbaProject == null || workbook.VbaProject.Modules == null)
             {
                 Console.WriteLine("The workbook does not contain any VBA modules.");
                 return;
             }
 
-            // Ensure the index is within the collection bounds
+            // Ensure the index is within the valid range
             if (moduleIndex >= 0 && moduleIndex < workbook.VbaProject.Modules.Count)
             {
-                // Remove the specified module
+                // Remove the specified module (feature rule: Modules.RemoveAt)
                 workbook.VbaProject.Modules.RemoveAt(moduleIndex);
-                Console.WriteLine($"Module at index {moduleIndex} removed.");
+                Console.WriteLine($"Module at index {moduleIndex} removed successfully.");
             }
             else
             {
@@ -50,12 +49,10 @@ class RemoveModuleExample
                 return;
             }
 
-            // Path to save the modified workbook
+            // Save the modified workbook (lifecycle rule: save)
             string outputPath = "output.xlsx";
-
-            // Save the workbook to apply changes
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

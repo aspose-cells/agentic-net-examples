@@ -1,66 +1,74 @@
-// Title: Replace HLOOKUP formulas with XLOOKUP across all worksheets using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, scans every worksheet, finds cells whose formula contains the HLOOKUP function (case‑insensitive), replaces it with XLOOKUP while keeping the original arguments, and saves the workbook to a new file. | Create a version of the script that logs the address, original formula, and updated formula for each replaced cell to the console before saving. | Modify the program to accept input and output file paths as command‑line arguments and perform the HLOOKUP‑to‑XLOOKUP conversion without hard‑coded filenames.
-// Common Searches: Aspose.Cells C# replace HLOOKUP with XLOOKUP in all sheets | how to update Excel formulas programmatically using Aspose.Cells .NET | convert deprecated Excel lookup functions to XLOOKUP with C# | iterate through every cell in a workbook and change formulas Aspose.Cells | case‑insensitive search and replace in Excel formulas using Aspose.Cells
-// Tags: convert HLOOKUP to XLOOKUP Aspose.Cells | bulk formula replacement Excel .NET | iterate worksheets cells Aspose.Cells C# | case-insensitive formula search Aspose.Cells | save updated workbook Aspose.Cells
+// Title: Replace HLOOKUP formulas with XLOOKUP in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to replace HLOOKUP with XLOOKUP in a workbook using Aspose.Cells C# | Aspose.Cells bulk update of Excel formulas from HLOOKUP to XLOOKUP | iterate through all worksheets and cells to change HLOOKUP to XLOOKUP in .NET | programmatically convert deprecated HLOOKUP functions to XLOOKUP with Aspose.Cells | C# replace HLOOKUP formulas across an entire Excel file using Aspose API
+// Tags: replace HLOOKUP with XLOOKUP Aspose.Cells | bulk formula modification .NET | iterate worksheets cells Aspose.Cells | update deprecated Excel functions C# | programmatic Excel formula conversion Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, iterates through all worksheets and used cells, detects formulas containing the deprecated HLOOKUP function (case‑insensitive), replaces each occurrence with XLOOKUP while preserving the original arguments, and saves the modified workbook to a new file, handling missing files and runtime errors.
+// The example loads an Excel workbook with Aspose.Cells, checks for password protection, iterates through every worksheet and cell, replaces any HLOOKUP function in cell formulas with XLOOKUP (case‑insensitive), and saves the updated workbook to a new file.
 class ReplaceHlookupWithXlookup
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook;
 
-            // Iterate through all worksheets in the workbook
+            try
+            {
+                // Load the workbook (no password). If the file is password‑protected,
+                // Aspose.Cells will throw a CellsException.
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException ex)
+            {
+                // Simple detection of a password‑protected file based on the exception message
+                if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine("The workbook is password protected. Please provide a password.");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                }
+                return;
+            }
+
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the cells collection of the current worksheet
                 Cells cells = sheet.Cells;
 
-                // Iterate through all used cells to check for formulas
+                // Iterate through all cells in the worksheet
                 foreach (Cell cell in cells)
                 {
-                    // Process only cells that contain a formula
-                    if (cell.IsFormula)
+                    // Replace HLOOKUP with XLOOKUP in formulas (case‑insensitive)
+                    if (!string.IsNullOrEmpty(cell.Formula) &&
+                        cell.Formula.IndexOf("HLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string formula = cell.Formula;
-
-                        // Check if the formula uses the deprecated HLOOKUP function
-                        if (formula.IndexOf("HLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            // Replace HLOOKUP with XLOOKUP.
-                            // Note: This simple replacement keeps the original arguments.
-                            // For more accurate conversion, adjust the argument order as needed.
-                            string updatedFormula = formula.Replace("HLOOKUP", "XLOOKUP", StringComparison.OrdinalIgnoreCase);
-                            cell.Formula = updatedFormula;
-                        }
+                        string newFormula = cell.Formula.Replace("HLOOKUP", "XLOOKUP", StringComparison.OrdinalIgnoreCase);
+                        cell.Formula = newFormula;
                     }
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

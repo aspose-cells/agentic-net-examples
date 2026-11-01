@@ -1,50 +1,44 @@
-// Title: Determine whether a worksheet is read‑only protected using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, checks the IsProtected property of a specific worksheet, and outputs the protection status. | Create a reusable method in C# that accepts a worksheet name and returns true if the worksheet is protected, using Aspose.Cells. | Modify the example to skip saving the workbook and only display the protection type for each worksheet in the workbook.
-// Common Searches: aspocells c# check worksheet read only protection | how to use Aspose.Cells to detect if an Excel sheet is locked | C# Aspose.Cells IsProtected property example for .xlsx files
-// Tags: Aspose.Cells IsProtected worksheet check | C# read‑only Excel worksheet detection | Excel .xlsx worksheet protection status .NET | Aspose.Cells workbook load protection query | determine worksheet protection type Aspose.Cells
+// Title: C# example: Detect read‑only protection on an Excel worksheet using Aspose.Cells
+// Common Searches: how to determine if an Excel sheet is protected with Aspose.Cells in C# | C# Aspose.Cells check worksheet IsProtected property | detect read‑only worksheet protection in a .xlsx file using Aspose.Cells | verify Excel worksheet protection status programmatically with Aspose.Cells | sample code to test worksheet protection in Aspose.Cells for .NET
+// Tags: Aspose.Cells worksheet protection detection C# | read‑only Excel sheet check using Aspose.Cells | IsProtected property usage Aspose.Cells | C# assess worksheet protection state | load workbook and assess sheet protection Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// Loads an Excel workbook with Aspose.Cells, examines the first worksheet's IsProtected flag, prints whether it is read‑only protected, and optionally saves the file.
+// The sample loads an .xlsx file with Aspose.Cells, accesses the first worksheet, and uses the Worksheet.IsProtected property to report whether the sheet is read‑only protected, including file‑existence validation and exception handling.
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
         try
         {
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Determine if the worksheet is protected
-            if (sheet.IsProtected)
+            if (worksheet.IsProtected)
             {
-                // Granular edit permissions are not exposed in all versions,
-                // so we treat any protection as a generic protected state.
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" is protected. Protection type: Protected");
+                // Aspose.Cells does not expose granular permission flags in older versions.
+                // For demonstration, we simply report that the worksheet is protected.
+                Console.WriteLine("Worksheet is protected.");
             }
             else
             {
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" is not protected.");
+                Console.WriteLine("Worksheet is not protected.");
             }
-
-            // Save the workbook (optional if no changes were made)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

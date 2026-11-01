@@ -1,41 +1,35 @@
-// Title: Set narrow 0.25‑inch margins and landscape printing orientation for an Excel workbook with Aspose.Cells in C#
-// AI Prompts: Generate C# code that creates a workbook, sets all page margins to 0.25 inches, switches the sheet to landscape mode, and saves as XLSX using Aspose.Cells. | Demonstrate setting the PageSetup orientation to landscape and defining narrow margins in a C# Aspose.Cells project.
-// Common Searches: Aspose.Cells C# how to apply 0.25 inch margins to a worksheet | set worksheet to landscape printing mode with Aspose.Cells .NET | custom page margins for Excel export using Aspose.Cells in C# | configure page setup for narrow margins and landscape orientation in Aspose.Cells | C# Aspose.Cells print layout settings example
-// Tags: Aspose.Cells set worksheet margins inches | Aspose.Cells landscape page orientation | C# configure Excel print layout Aspose.Cells | Aspose.Cells narrow margin printing | Aspose.Cells PageSetup example .NET
+// Title: Set narrow 0.25‑inch margins and landscape orientation for every worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells set 0.25 inch margins for all worksheets C# | C# Aspose.Cells change workbook page orientation to landscape | Apply identical page setup to each worksheet in Aspose.Cells .NET | Programmatically set narrow top and bottom margins in Aspose.Cells | Configure page layout margins and orientation for an Aspose.Cells workbook
+// Tags: worksheet margin configuration Aspose.Cells | landscape orientation page setup Aspose.Cells | apply page setup to all worksheets .NET | narrow worksheet margins Aspose.Cells | C# workbook print settings Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// // Creates a new workbook, applies 0.25‑inch margins on all sides, sets the first worksheet to landscape orientation, and saves the file as output.xlsx.
+// The example creates a workbook, iterates through all worksheets, sets every margin (top, bottom, left, right, header, footer) to 18 points (0.25 inch), changes the page orientation to landscape, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook (or load an existing one)
+        var workbook = new Workbook();
+
+        // Apply page setup to each worksheet in the workbook
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            PageSetup pageSetup = ws.PageSetup;
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Set narrow margins (0.25 inch = 18 points)
+            pageSetup.TopMargin = 18;      // points
+            pageSetup.BottomMargin = 18;   // points
+            pageSetup.LeftMargin = 18;     // points
+            pageSetup.RightMargin = 18;    // points
+            pageSetup.HeaderMargin = 18;   // points
+            pageSetup.FooterMargin = 18;   // points
 
-            // Set the page orientation to landscape
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
-
-            // Set narrow margins (values are in inches)
-            sheet.PageSetup.LeftMargin = 0.25;
-            sheet.PageSetup.RightMargin = 0.25;
-            sheet.PageSetup.TopMargin = 0.25;
-            sheet.PageSetup.BottomMargin = 0.25;
-            sheet.PageSetup.HeaderMargin = 0.25;
-            sheet.PageSetup.FooterMargin = 0.25;
-
-            // Save the workbook
-            workbook.Save("output.xlsx");
+            // Set orientation to landscape
+            pageSetup.Orientation = PageOrientationType.Landscape;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+
+        // Save the workbook with the new page settings
+        workbook.Save("output.xlsx");
     }
 }

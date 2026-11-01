@@ -1,54 +1,117 @@
-// Title: Create a custom Ribbon button in Aspose.Cells for .NET that prompts for an external workbook path and adds selected sheet links
-// AI Prompts: Write C# code using Aspose.Cells to embed Ribbon XML with a button that requests the external workbook file path and a comma‑separated list of sheet names via console input, then adds those sheets as external links to the workbook. | Show how to save the workbook as a macro‑enabled .xlsm file so the custom Ribbon UI and the added external links persist after closing.
-// Common Searches: how to embed a custom ribbon button in Aspose.Cells .NET to add external workbook links | prompt user for external Excel file path and sheet names when creating external links with Aspose.Cells | save Aspose.Cells workbook with RibbonXml as macro enabled file | Aspose.Cells C# add external links from UI input | configure RibbonXml property to launch a macro that adds external links in Aspose.Cells
-// Tags: Aspose.Cells custom ribbon XML button | ExternalLinks.Add workbook path C# | macro-enabled .xlsm save Aspose.Cells | console input external link Aspose.Cells | add external sheet links Aspose.Cells .NET
+// Title: Prompt user for workbook and new link paths, then update the first external link and save a backup using Aspose.Cells for .NET
+// Common Searches: how to update the first external link in an Excel workbook with Aspose.Cells C# console application | Aspose.Cells C# prompt user for new external link file path before changing the link | replace external link source and create a backup copy of the workbook using Aspose.Cells .NET | using dynamic ExternalLinks collection to modify external links in a .xlsx file with Aspose.Cells | save backup workbook after changing external link with Aspose.Cells C#
+// Tags: Aspose.Cells update external link source | C# dynamic ExternalLinks collection | Excel workbook backup save Aspose.Cells | console prompt for file path C# | replace first external link .xlsx Aspose.Cells
 
 using System;
+using System.IO;
+using System.Collections;
 using Aspose.Cells;
+using Microsoft.CSharp.RuntimeBinder;
 
-// The example creates a new Workbook, assigns custom Ribbon XML containing a button, reads an external workbook path and a comma‑separated list of sheet names from the console, adds those sheets as external links via Worksheets.ExternalLinks.Add, and saves the file as a macro‑enabled .xlsm so the Ribbon UI and links are retained.
-class Program
+namespace AsposeCellsRibbonDemo
 {
-    static void Main()
+    // Console application that updates the first external link in a workbook.
+    // A C# console program that asks the user to enter the paths of an Excel workbook and a new external link file, loads the workbook with Aspose.Cells, accesses the first external link via the dynamic ExternalLinks collection, changes its source to the supplied path, and writes a backup copy of the workbook.
+    static class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Define Ribbon XML with a button that would invoke a macro (placeholder name)
-        string ribbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab id=\"customTab\" label=\"External Links\">" +
-            "        <group id=\"linkGroup\" label=\"Links\">" +
-            "          <button id=\"addLinkBtn\" label=\"Add External Link\" size=\"large\" onAction=\"AddExternalLink\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
-
-        // Set the RibbonXml property (rule usage)
-        workbook.RibbonXml = ribbonXml;
-
-        // Prompt the user for the external workbook file path
-        Console.WriteLine("Enter the full path of the external workbook:");
-        string externalFilePath = Console.ReadLine();
-
-        // Prompt the user for sheet names to link (comma‑separated)
-        Console.WriteLine("Enter sheet names to link (comma separated, e.g., Sheet1,Sheet2):");
-        string sheetsInput = Console.ReadLine();
-        string[] sheetNames = sheetsInput.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        for (int i = 0; i < sheetNames.Length; i++)
+        [STAThread]
+        static void Main()
         {
-            sheetNames[i] = sheetNames[i].Trim();
+            try
+            {
+                Console.WriteLine("=== Aspose.Cells External Link Updater ===");
+
+                // Prompt for the workbook path
+                Console.Write("Enter the full path of the workbook (e.g., C:\\Temp\\SampleWithExternalLinks.xlsx): ");
+                string workbookPath = Console.ReadLine()?.Trim('"');
+
+                if (string.IsNullOrWhiteSpace(workbookPath) || !File.Exists(workbookPath))
+                {
+                    Console.WriteLine("Error: Workbook file not found.");
+                    return;
+                }
+
+                // Prompt for the new external link file path
+                Console.Write("Enter the full path of the new external link file: ");
+                string newLinkPath = Console.ReadLine()?.Trim('"');
+
+                if (string.IsNullOrWhiteSpace(newLinkPath) || !File.Exists(newLinkPath))
+                {
+                    Console.WriteLine("Error: New external link file not found.");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook wb;
+                try
+                {
+                    wb = new Workbook(workbookPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                    return;
+                }
+
+                // Use dynamic to access ExternalLinks (may not exist in older versions)
+                dynamic worksheet = wb.Worksheets[0];
+                dynamic externalLinks;
+                try
+                {
+                    externalLinks = worksheet.ExternalLinks;
+                }
+                catch (RuntimeBinderException)
+                {
+                    Console.WriteLine("External links are not supported in the loaded Aspose.Cells version.");
+                    return;
+                }
+
+                // Ensure we have a collection with at least one link
+                if (externalLinks == null || ((ICollection)externalLinks).Count == 0)
+                {
+                    Console.WriteLine("No external links found in the workbook.");
+                    return;
+                }
+
+                // Replace the first external link
+                dynamic firstLink = externalLinks[0];
+                string oldLink = firstLink.SourceFullName;
+
+                try
+                {
+                    firstLink.ChangeExternalLink(newLinkPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to change external link: {ex.Message}");
+                    return;
+                }
+
+                // Prepare backup path
+                string backupPath = Path.Combine(
+                    Path.GetDirectoryName(workbookPath) ?? string.Empty,
+                    Path.GetFileNameWithoutExtension(workbookPath) + "_backup.xlsx");
+
+                // Save the workbook as a backup
+                try
+                {
+                    wb.Save(backupPath, SaveFormat.Xlsx);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save backup workbook: {ex.Message}");
+                    return;
+                }
+
+                Console.WriteLine("External link updated successfully.");
+                Console.WriteLine($"Old link: {oldLink}");
+                Console.WriteLine($"New link: {newLinkPath}");
+                Console.WriteLine($"Backup saved to: {backupPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
-
-        // Add the external link using the ExternalLinkCollection.Add method (rule usage)
-        int linkIndex = workbook.Worksheets.ExternalLinks.Add(externalFilePath, sheetNames);
-        Console.WriteLine($"External link added at index {linkIndex}.");
-
-        // Save the workbook (macro‑enabled to retain Ribbon XML)
-        workbook.Save("WorkbookWithRibbon.xlsm");
     }
 }

@@ -1,15 +1,14 @@
 // Title: Generate a column pivot chart from an existing pivot table in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing .xlsx file, finds the first pivot table, adds a column chart linked to that pivot table on the same worksheet, sets the chart title to "Aggregated Sales", enables the legend, and saves the workbook. | Show how to create a pivot chart in Aspose.Cells by calling PivotTable.NSeries.Add, customize its type, title, and legend, then persist the changes to a new file. | Adapt the example to place the pivot chart on a separate worksheet and switch the chart type to a line chart while keeping the data source linked to the original pivot table.
-// Common Searches: Aspose.Cells C# add pivot chart to existing worksheet from pivot table | How to link a column chart to a pivot table using Aspose.Cells for .NET | C# example for creating a pivot chart with title and legend in an Excel file | Save workbook with new pivot chart using Aspose.Cells API | Change pivot chart type to line chart on a new sheet Aspose.Cells C#
-// Tags: add pivot chart Aspose.Cells | column chart from PivotTable C# | chart title legend Aspose.Cells | save workbook with chart C# | pivot chart on new worksheet Aspose.Cells
+// Common Searches: how to programmatically add a pivot chart to an Excel worksheet with Aspose.Cells C# | Aspose.Cells create column chart based on pivot table data in .NET | link pivot table to chart series using Aspose.Cells API | set chart title and move legend to the right with Aspose.Cells | save an Excel file after adding a pivot chart using Aspose.Cells for .NET
+// Tags: Aspose.Cells create pivot chart | C# column chart from pivot table | Aspose.Cells link chart series to pivot data | Excel workbook save with added chart Aspose.Cells | Aspose.Cells set chart legend position
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot;   // Required for PivotTable class
 
-// Loads an existing workbook, retrieves the first pivot table, adds a column chart linked to that pivot table on the same sheet, sets a title and legend, and saves the workbook as a new file.
+// The example loads an existing Excel workbook, checks for a pivot table, adds a column chart linked to that pivot table, customizes the chart title and legend placement, and saves the updated file.
 class PivotChartExample
 {
     static void Main()
@@ -19,49 +18,55 @@ class PivotChartExample
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook that already contains a pivot table with aggregated sales data
+            // Load workbook containing a pivot table
             Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Assume the pivot table is on the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Retrieve the first pivot table (adjust index if needed)
-            if (sheet.PivotTables.Count == 0)
+            // Ensure at least one pivot table is present
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                Console.WriteLine("No pivot tables found in the worksheet.");
                 return;
             }
-            PivotTable pivot = sheet.PivotTables[0];
 
-            // Add a new chart to the same worksheet (position and size can be adjusted)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Get the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 1, 5, 20, 15);
+            Chart chart = worksheet.Charts[chartIndex];
 
             // Set chart title
             chart.Title.Text = "Aggregated Sales";
 
-            // Use the pivot table as the source for the chart series
-            // The second parameter (true) indicates that the series are plotted by categories
-            chart.NSeries.Add(pivot.Name, true);
+            // Link chart to pivot table data
+            // The first parameter is the source data name (pivot table name), second indicates whether to use categories
+            chart.NSeries.Add(pivotTable.Name, true);
 
-            // Optional: display legend
-            chart.ShowLegend = true;
+            // Position legend on the right
+            chart.Legend.Position = LegendPositionType.Right;
 
-            // Save the workbook with the new pivot chart
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

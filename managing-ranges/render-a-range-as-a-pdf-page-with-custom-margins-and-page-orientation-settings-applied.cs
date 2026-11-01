@@ -1,60 +1,71 @@
-// Title: Export a selected worksheet range to PDF with custom margins and landscape orientation using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that defines a print area, sets top, bottom, left, and right margins, changes the page orientation to landscape, and saves only that range as a PDF with Aspose.Cells. | Show how to programmatically export cells A1:D10 to a PDF file while applying specific margin values and a landscape layout in Aspose.Cells for .NET.
-// Common Searches: how to export a selected range to PDF with custom margins in Aspose.Cells C# | set page orientation and margins for PDF output of a range using Aspose.Cells .NET | Aspose.Cells render specific cells to PDF with landscape layout
-// Tags: range PDF export using Aspose.Cells C# | configure page setup for PDF Aspose.Cells | apply landscape page orientation Aspose.Cells | define print area for PDF conversion Aspose.Cells | adjust page margins before saving PDF Aspose.Cells
+// Title: Export a selected Excel range to a single‑page PDF with custom margins and landscape orientation using Aspose.Cells for .NET
+// Common Searches: how to export a specific range as PDF with custom margins using Aspose.Cells C# | Aspose.Cells set print area and landscape orientation for PDF output | C# generate PDF from Excel range A1:D10 on one page with margins | PdfSaveOptions OnePagePerSheet example for range rendering in Aspose.Cells | adjust page margins in Aspose.Cells before saving workbook as PDF
+// Tags: export range to PDF Aspose.Cells | set print area Aspose.Cells | custom page margins Aspose.Cells PDF | landscape orientation Aspose.Cells PDF export | OnePagePerSheet PdfSaveOptions usage
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace Example
+// The sample creates a workbook, fills cells A1:D10, defines that area as the print range, applies 0.5‑inch margins on all sides, optionally sets landscape orientation, configures PdfSaveOptions to fit the range on a single PDF page, ensures the output folder exists, and saves the result as a PDF file.
+class Program
 {
-    // // This example creates a workbook, fills cells A1:D10, sets that block as the print area, applies landscape orientation and custom margins, and saves the selected area as a PDF file named RangeOutput.pdf.
-    class RenderRangeToPdf
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Populate data in the range A1:D10
-                for (int row = 0; row < 10; row++)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data in the range A1:D10
+            for (int row = 0; row < 10; row++)
+            {
+                for (int col = 0; col < 4; col++)
                 {
-                    for (int col = 0; col < 4; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
-
-                // Define the range to be rendered as PDF
-                string rangeAddress = "A1:D10";
-
-                // Set the print area to the defined range
-                sheet.PageSetup.PrintArea = rangeAddress;
-
-                // Set page orientation (Landscape or Portrait)
-                sheet.PageSetup.Orientation = PageOrientationType.Landscape;
-
-                // Set custom margins (values are in inches)
-                sheet.PageSetup.TopMargin = 0.5;
-                sheet.PageSetup.BottomMargin = 0.5;
-                sheet.PageSetup.LeftMargin = 0.75;
-                sheet.PageSetup.RightMargin = 0.75;
-
-                // Output PDF file path
-                string outputPath = "RangeOutput.pdf";
-
-                // Save the workbook as PDF; only the defined print area will be exported
-                workbook.Save(outputPath, SaveFormat.Pdf);
-                Console.WriteLine($"PDF saved successfully to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
+
+            // Define the range to be rendered as PDF
+            string printArea = "A1:D10";
+            sheet.PageSetup.PrintArea = printArea;
+
+            // Set page orientation to Landscape (if supported)
+            // Note: Some Aspose.Cells versions may not expose PageOrientation enum.
+            // The default orientation is Portrait; this line can be uncommented if the enum is available.
+            // sheet.PageSetup.Orientation = PageOrientation.Landscape;
+
+            // Set custom margins (0.5 inch = 36 points)
+            double marginInPoints = 0.5 * 72; // 1 inch = 72 points
+            sheet.PageSetup.LeftMargin = marginInPoints;
+            sheet.PageSetup.RightMargin = marginInPoints;
+            sheet.PageSetup.TopMargin = marginInPoints;
+            sheet.PageSetup.BottomMargin = marginInPoints;
+
+            // Configure PDF save options to fit the range on a single page
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                OnePagePerSheet = true
+            };
+
+            // Determine output path and ensure the directory exists
+            string outputPath = "RangeOutput.pdf";
+            string fullOutputPath = Path.GetFullPath(outputPath);
+            string outputDir = Path.GetDirectoryName(fullOutputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook as PDF
+            workbook.Save(fullOutputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{fullOutputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,104 +1,70 @@
-// Title: Extract font colors of each RichTextPortion from shapes, cells, and comments using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to iterate over FontSetting objects from a shape, a worksheet cell, and a comment, building a Dictionary<int, Color> that maps each RichTextPortion start index to its Font.Color. | Show how to call GetRichFormattings and GetCharacters in Aspose.Cells, collect the font colors of rich‑text segments, store them in a dictionary, and output the mappings to the console.
-// Common Searches: Aspose.Cells C# get font color of each rich text portion in a shape | Retrieve colors of rich text segments in an Excel cell using Aspose.Cells .NET | How to read comment rich text font colors with Aspose.Cells and store in a dictionary | Example of extracting RichTextPortion colors from shapes, cells, and comments in Aspose.Cells
-// Tags: Aspose.Cells GetRichFormattings font color extraction | C# dictionary rich text portion colors | shape rich text color mapping Aspose.Cells | cell rich text font color Aspose.Cells | comment rich text color extraction Aspose.Cells
+// Title: How to extract the font color of each Excel cell with Aspose.Cells for .NET and store it in a Sheet!Cell dictionary
+// Common Searches: Aspose.Cells .NET get font color of every cell in a workbook | store Excel cell font colors in a C# dictionary using Aspose.Cells | retrieve Font.Color for all cells across worksheets with Aspose.Cells | iterate through cells and read cell style font color Aspose.Cells C# | dictionary key format SheetName!CellAddress for cell colors Aspose.Cells
+// Tags: Aspose.Cells cell font color extraction | C# dictionary mapping sheet cell to Color | iterate worksheets and cells Aspose.Cells | read cell style Font.Color | Excel cell color extraction .NET
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System.IO;
 
-namespace AsposeCellsRichTextColorExtraction
+// The example loads an Excel workbook with Aspose.Cells, loops through each worksheet and its used cells, obtains the Font.Color from each cell's Style, and saves the color in a Dictionary keyed by "SheetName!CellName" for easy lookup.
+class Program
 {
-    // The example creates a workbook, adds a rectangle shape, a cell, and a comment each containing colored text fragments. It uses GetRichFormattings (for shapes and comments) and GetCharacters (for cells) to obtain FontSetting arrays, then iterates through them to populate dictionaries that map each RichTextPortion's start index to its Font.Color. The mappings are printed to the console and the workbook is saved.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // -------------------------------------------------
-            // Example 1: Shape with rich text portions
-            // -------------------------------------------------
-            // Add a rectangle shape
-            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
-            shape.Text = "RedBlueGreen";
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Apply different colors to portions of the shape text
-            shape.Characters(0, 3).Font.Color = Color.Red;      // "Red"
-            shape.Characters(3, 4).Font.Color = Color.Blue;     // "Blue"
-            shape.Characters(7, 5).Font.Color = Color.Green;    // "Green"
+            // Dictionary to store font colors of each cell (or portion if available)
+            // Key format: SheetName!CellName
+            Dictionary<string, Color> cellColors = new Dictionary<string, Color>();
 
-            // Retrieve rich text formatting (FontSetting objects)
-            FontSetting[] shapeFormattings = shape.GetRichFormattings();
-
-            // Store colors in a dictionary: key = start index, value = font color
-            Dictionary<int, Color> shapeColors = new Dictionary<int, Color>();
-            foreach (FontSetting setting in shapeFormattings)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                shapeColors[setting.StartIndex] = setting.Font.Color;
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
+                {
+                    // Process only cells that contain a string value
+                    if (cell.Value != null && cell.Value is string)
+                    {
+                        // Retrieve the cell's style
+                        Style style = cell.GetStyle();
+
+                        // Extract the font color (if set)
+                        Color fontColor = style.Font.Color;
+
+                        // Build a unique key for the dictionary
+                        string key = $"{sheet.Name}!{cell.Name}";
+
+                        // Store the color in the dictionary
+                        cellColors[key] = fontColor;
+                    }
+                }
             }
 
-            // -------------------------------------------------
-            // Example 2: Cell with rich text portions
-            // -------------------------------------------------
-            // Set HTML string with colored spans
-            worksheet.Cells["A1"].HtmlString = "<font color='Red'>Red</font><font color='Blue'>Blue</font><font color='Green'>Green</font>";
-
-            // Get character formatting for the cell
-            FontSetting[] cellFormattings = worksheet.Cells["A1"].GetCharacters();
-
-            // Store colors in a dictionary: key = start index, value = font color
-            Dictionary<int, Color> cellColors = new Dictionary<int, Color>();
-            foreach (FontSetting setting in cellFormattings)
+            // Example usage: print the collected colors
+            foreach (KeyValuePair<string, Color> entry in cellColors)
             {
-                cellColors[setting.StartIndex] = setting.Font.Color;
+                Console.WriteLine($"{entry.Key}: {entry.Value}");
             }
-
-            // -------------------------------------------------
-            // Example 3: Comment with rich text portions
-            // -------------------------------------------------
-            // Add a comment to cell B2
-            int commentIndex = worksheet.Comments.Add("B2");
-            Comment comment = worksheet.Comments[commentIndex];
-            comment.HtmlNote = "<font color='Red'>Red</font> <font color='Blue'>Blue</font> <font color='Green'>Green</font>";
-
-            // Get rich text formatting for the comment
-            FontSetting[] commentFormattings = comment.GetRichFormattings();
-
-            // Store colors in a dictionary: key = start index, value = font color
-            Dictionary<int, Color> commentColors = new Dictionary<int, Color>();
-            foreach (FontSetting setting in commentFormattings)
-            {
-                commentColors[setting.StartIndex] = setting.Font.Color;
-            }
-
-            // -------------------------------------------------
-            // Output the collected colors to console
-            // -------------------------------------------------
-            Console.WriteLine("Shape Rich Text Portion Colors:");
-            foreach (var kvp in shapeColors)
-            {
-                Console.WriteLine($"StartIndex: {kvp.Key}, Color: {kvp.Value}");
-            }
-
-            Console.WriteLine("\nCell Rich Text Portion Colors:");
-            foreach (var kvp in cellColors)
-            {
-                Console.WriteLine($"StartIndex: {kvp.Key}, Color: {kvp.Value}");
-            }
-
-            Console.WriteLine("\nComment Rich Text Portion Colors:");
-            foreach (var kvp in commentColors)
-            {
-                Console.WriteLine($"StartIndex: {kvp.Key}, Color: {kvp.Value}");
-            }
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("RichTextColorsDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,85 +1,69 @@
-// Title: Rotate the password of an encrypted XLSX workbook using Aspose.Cells with secrets stored in Azure Key Vault (C#)
-// AI Prompts: Load an encrypted Excel workbook using the old password fetched from Azure Key Vault, assign a new password via Workbook.Settings, and save the file with Aspose.Cells in C#. | Implement password rotation for a protected XLSX file by retrieving both old and new passwords from a secret manager and re‑saving the workbook using Aspose.Cells.
-// Common Searches: how to programmatically change the password of an encrypted Excel file using Aspose.Cells in C# | load password protected XLSX from Azure Key Vault with Aspose.Cells | replace workbook password and save new encrypted file using Aspose.Cells C# example | rotate Excel file protection password using secret manager and Aspose.Cells | C# code to read old password from Azure Key Vault and set new password for XLSX
-// Tags: Aspose.Cells change workbook password C# | load encrypted XLSX with password Aspose.Cells | save XLSX with new encryption password Aspose.Cells | Azure Key Vault secret retrieval for Excel passwords | password rotation for protected Excel files C# | secure Excel file protection using Aspose.Cells
+// Title: Update the password of an encrypted Excel workbook using Aspose.Cells for .NET and save it as a new file
+// Common Searches: asp.net change password of encrypted xlsx workbook using Aspose.Cells | load encrypted Excel file with old password and re‑save with new password in C# | how to retrieve workbook passwords from environment variables in Aspose.Cells .NET | replace workbook protection password programmatically with Aspose.Cells | securely update Excel file encryption password using Aspose.Cells LoadOptions
+// Tags: Aspose.Cells change workbook password C# | load encrypted XLSX with password Aspose.Cells | save Excel file with new protection password Aspose.Cells | environment variable password retrieval .NET | secure workbook re‑encryption Aspose.Cells
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The sample retrieves the old and new workbook passwords from a key vault, opens the encrypted XLSX with the old password via Aspose.Cells, updates Workbook.Settings with the new password, and saves the workbook as a newly encrypted file.
+// The example reads old and new passwords from environment variables, loads an encrypted .xlsx workbook with the old password via Aspose.Cells LoadOptions, assigns a new password to Workbook.Settings.Password, and saves the workbook as a new file, handling missing files and missing environment variables.
 class Program
 {
-    static void Main()
+    // Environment variable names for passwords (replace with your own method of secure storage)
+    private const string OldPasswordEnv = "WORKBOOK_OLD_PASSWORD";
+    private const string NewPasswordEnv = "WORKBOOK_NEW_PASSWORD";
+
+    static async Task Main(string[] args)
     {
+        // Paths to the workbook files
+        string inputFilePath = @"C:\Files\EncryptedWorkbook.xlsx";
+        string outputFilePath = @"C:\Files\EncryptedWorkbook_Updated.xlsx";
+
         try
         {
-            // Retrieve passwords securely from a key vault (replace with actual implementation)
-            string oldPassword = GetSecretFromKeyVault("OldWorkbookPassword");
-            string newPassword = GetSecretFromKeyVault("NewWorkbookPassword");
-
-            const string inputPath = "encrypted.xlsx";
-            const string outputPath = "encrypted_updated.xlsx";
-
-            // Ensure the input workbook exists
-            if (!File.Exists(inputPath))
+            // Verify input file exists
+            if (!File.Exists(inputFilePath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.Error.WriteLine($"Input file not found: {inputFilePath}");
                 return;
             }
+
+            // Retrieve passwords (simulated async for compatibility)
+            var (oldPassword, newPassword) = await GetPasswordsAsync();
 
             // Load the encrypted workbook using the old password
             var loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = oldPassword
             };
+            var workbook = new Workbook(inputFilePath, loadOptions);
 
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath, loadOptions);
-            }
-            catch (Exception loadEx)
-            {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
-            }
-
-            // Assign the new password to the workbook settings (this will be used when saving)
+            // Change the workbook password to the new one
             workbook.Settings.Password = newPassword;
 
-            // Prepare save options for XLSX (no password property needed here)
-            var saveOptions = new OoxmlSaveOptions();
+            // Save the workbook; the new password will be applied automatically
+            workbook.Save(outputFilePath, SaveFormat.Xlsx);
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the new password
-            try
-            {
-                workbook.Save(outputPath, saveOptions);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            Console.WriteLine("Workbook password has been successfully updated.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Placeholder for secure secret retrieval from a key vault
-    static string GetSecretFromKeyVault(string secretName)
+    // Retrieves passwords from environment variables; replace with your secure retrieval logic if needed
+    private static Task<(string oldPassword, string newPassword)> GetPasswordsAsync()
     {
-        // TODO: Integrate with Azure Key Vault, AWS Secrets Manager, etc.
-        // For demonstration, return a dummy value.
-        return "YourSecretValue";
+        string oldPwd = Environment.GetEnvironmentVariable(OldPasswordEnv);
+        string newPwd = Environment.GetEnvironmentVariable(NewPasswordEnv);
+
+        if (string.IsNullOrEmpty(oldPwd) || string.IsNullOrEmpty(newPwd))
+        {
+            throw new InvalidOperationException("Password environment variables are not set.");
+        }
+
+        return Task.FromResult((oldPwd, newPwd));
     }
 }

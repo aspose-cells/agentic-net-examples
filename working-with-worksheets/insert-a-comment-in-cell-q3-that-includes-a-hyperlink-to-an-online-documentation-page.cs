@@ -1,42 +1,52 @@
-// Title: Insert a visible comment containing a documentation hyperlink into cell Q3 with Aspose.Cells for .NET
-// AI Prompts: Create a comment in cell Q3 that shows a clickable link to the Aspose.Cells .NET documentation and set the comment to be visible. | Update the workbook code to add a visible comment with the documentation URL in column Q row 3 and then save the file.
-// Common Searches: Aspose.Cells .NET how to add a comment with a URL to cell Q3 | make Excel comment visible and include hyperlink using Aspose.Cells | insert documentation link inside a comment in an Aspose.Cells workbook | add visible comment to specific cell in Excel with Aspose.Cells API
-// Tags: add comment with hyperlink Aspose.Cells .NET | visible comment in Excel workbook | insert comment into cell Q3 | hyperlink inside comment Aspose.Cells | set comment visibility Aspose.Cells
+// Title: Insert a hyperlinked comment into cell Q3 of an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a comment to cell Q3 and embeds a clickable URL pointing to the Aspose.Cells documentation. | Modify the existing workbook example to set the comment's Note property as a hyperlink so users can open the documentation directly from the comment. | Create a .xlsx file where the comment on Q3 displays the text "Aspose.Cells Documentation" as an active hyperlink and save the workbook.
+// Common Searches: how to embed a hyperlink in an Excel comment using Aspose.Cells C# | Aspose.Cells C# add comment with clickable link to documentation | set comment note as URL in cell Q3 with Aspose.Cells .NET | create hyperlinked comment in specific cell using Aspose.Cells library | C# Aspose.Cells example for comment containing a web link
+// Tags: add comment hyperlink Aspose.Cells | cell Q3 comment with URL .NET | Aspose.Cells comment note hyperlink | hyperlinked comment Excel C# | Aspose.Cells workbook comment link
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program creates a new workbook, adds a visible comment that contains the Aspose.Cells .NET documentation URL to cell Q3 (row 3, column Q), and saves the file as CommentWithHyperlink.xlsx.
+// The example creates a new workbook, accesses the first worksheet, adds a comment to cell Q3, sets the comment text to a clickable link to the Aspose.Cells documentation, ensures the output directory exists, and saves the file as CommentWithHyperlink.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Target cell Q3 (zero‑based indices)
-            int row = 2;      // Row 3
-            int column = 16;  // Column Q
+            // Target cell Q3 (zero‑based indexes)
+            int rowIndex = 2;      // Row 3
+            int columnIndex = 16;  // Column Q
 
             // Add a comment to the cell
-            int commentIndex = sheet.Comments.Add(row, column);
+            int commentIndex = sheet.Comments.Add(rowIndex, columnIndex);
             Comment comment = sheet.Comments[commentIndex];
 
-            // Set comment text (hyperlink as plain text for compatibility)
-            comment.Note = "Aspose.Cells Documentation\nhttps://docs.aspose.com/cells/net/";
-
-            // Make the comment visible
-            comment.IsVisible = true;
+            // Set comment text (plain text for compatibility)
+            comment.Note = "Aspose.Cells Documentation";
 
             // Save the workbook
-            workbook.Save("CommentWithHyperlink.xlsx");
+            string outputPath = "CommentWithHyperlink.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

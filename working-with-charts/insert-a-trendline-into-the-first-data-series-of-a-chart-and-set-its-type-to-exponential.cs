@@ -1,19 +1,19 @@
-// Title: Add an exponential trendline to the first series of an Excel chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing .xlsx workbook, locate the first chart, and programmatically insert an exponential trendline into its first data series with Aspose.Cells. | When the Trendlines property is not exposed, use .NET reflection to invoke Trendlines.Add passing TrendlineType.Exponential. | Assign a custom name to the created trendline and save the modified workbook to a new file.
-// Common Searches: how to add an exponential trendline to a chart series with Aspose.Cells C# | Aspose.Cells .NET reflection example for adding trendlines | set trendline type to exponential programmatically in Excel using Aspose.Cells | C# code to rename a trendline added to an Aspose.Cells chart | check for chart and series before adding a trendline Aspose.Cells
-// Tags: exponential trendline insertion Aspose.Cells | reflection based trendline addition .NET | custom trendline naming Aspose.Cells | chart series manipulation Aspose.Cells | fallback handling for missing Trendlines API
+// Title: Insert an exponential trendline into the first series of an Excel chart using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add exponential trendline to first chart series | How to set an exponential trendline on a chart series with Aspose.Cells .NET | Insert a trendline into an existing Excel chart using Aspose.Cells API | Aspose.Cells example for adding regression line to chart data series | Programmatically add exponential regression to Excel chart in C#
+// Tags: trendline insertion Aspose.Cells | chart series manipulation .NET | Aspose.Cells chart editing API | Excel chart programmatic modification C# | add regression line Aspose.Cells
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The sample loads an existing workbook, checks that the first worksheet contains a chart with at least one data series, adds an exponential trendline named "Exponential Trendline" to the first series, ensures the output directory exists, and saves the modified workbook to a new file.
+class Program
 {
-    // The example loads an existing workbook, verifies a chart and its first series, uses reflection to add an exponential trendline with a custom name when the API is unavailable, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
@@ -21,74 +21,56 @@ namespace AsposeCellsExample
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one chart
-                if (sheet.Charts.Count == 0)
-                {
-                    Console.WriteLine("Error: No charts found on the first worksheet.");
-                    return;
-                }
-
-                // Get the first chart on the worksheet
-                Chart chart = sheet.Charts[0];
-
-                // Ensure the chart has at least one data series
-                if (chart.NSeries.Count == 0)
-                {
-                    Console.WriteLine("Error: The chart does not contain any data series.");
-                    return;
-                }
-
-                // Attempt to add an exponential trendline using reflection (covers versions without direct API)
-                try
-                {
-                    Series series = chart.NSeries[0];
-                    var trendlinesProp = series.GetType().GetProperty("Trendlines");
-                    if (trendlinesProp != null)
-                    {
-                        object trendlines = trendlinesProp.GetValue(series);
-                        var addMethod = trendlines.GetType().GetMethod("Add", new[] { typeof(TrendlineType) });
-                        if (addMethod != null)
-                        {
-                            object trendline = addMethod.Invoke(trendlines, new object[] { TrendlineType.Exponential });
-                            var nameProp = trendline.GetType().GetProperty("Name");
-                            nameProp?.SetValue(trendline, "Exponential Trendline");
-                            Console.WriteLine("Exponential trendline added successfully.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Add method for trendlines not found.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Trendlines property not available in this Aspose.Cells version.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to add trendline via reflection: {ex.Message}");
-                }
-
-                // Save the workbook with the (potential) new trendline
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
-            catch (Exception ex)
+
+            // Access the first chart on the worksheet
+            Chart chart = worksheet.Charts[0];
+
+            // Ensure the chart has at least one data series
+            if (chart.NSeries.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("The chart does not contain any data series.");
+                return;
             }
+
+            // Get the first data series of the chart
+            Series series = chart.NSeries[0];
+
+            // Add an exponential trendline to the first series
+            Trendline trendline = series.AddTrendline(TrendlineType.Exponential);
+            trendline.Name = "Exponential Trendline";
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the new trendline
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

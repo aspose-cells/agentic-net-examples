@@ -1,51 +1,54 @@
-// Title: Create a count subtotal for column B rows 5‑200 with outline grouping using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a C# program that defines a CellArea covering rows 5‑200 in column B, applies a Count aggregation as a subtotal, and enables an outline with grouped rows, placing the summary row after the detail rows using Aspose.Cells. | Add code to set Worksheet.Outline.SummaryRowBelow = true after creating the subtotal so the total appears beneath the grouped rows. | Save the workbook as an .xlsx file named SubtotalOutline.xlsx after configuring the subtotal and outline settings.
-// Common Searches: Aspose.Cells how to add a count subtotal for a specific column range in C# | C# subtotal rows 5 to 200 column B with outline grouping Aspose.Cells | set summary row below detail rows after subtotal Aspose.Cells .NET | using range definition to apply subtotal function in Aspose.Cells example | outline grouping subtotal count non‑empty cells Aspose.Cells C#
-// Tags: Aspose.Cells C# column B subtotal | outline hierarchy total row placement | range for rows 5 through 200 subtotal | ConsolidationFunction.Count example | Excel workbook subtotal outline C#
+// Title: Count non‑empty cells in column B rows 5‑200 and write subtotal to B201 using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# count non‑empty cells in column B between rows 5 and 200 | how to write a subtotal to cell B201 after counting cells with Aspose.Cells | C# iterate specific row range in Excel and save result using Aspose.Cells | save workbook as Output.xlsx after processing data with Aspose.Cells .NET | example of counting cells and inserting total in Excel using Aspose.Cells C#
+// Tags: non‑empty cell counting Aspose.Cells .NET | write subtotal to specific cell Aspose.Cells | iterate row range column B Aspose.Cells C# | save workbook Output.xlsx Aspose.Cells | exception handling Aspose.Cells C# example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalExample
+// The C# program creates a new workbook, iterates rows 5‑200 in column B counting cells that contain a non‑empty string, writes the total count to cell B201, and saves the file as Output.xlsx, with basic exception handling.
+class Program
 {
-    // The program creates a new workbook, defines a CellArea covering rows 5‑200 in column B, adds a Count subtotal for that range, configures the outline to place the summary row after the detail rows, and saves the file as SubtotalOutline.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // ------------------------------------------------------------
-            // Assume that column B (index 1) already contains data from
-            // row 5 (zero‑based index 4) to row 200 (zero‑based index 199).
-            // The following code adds a subtotal that counts the entries
-            // in column B and creates an outline grouping.
-            // ------------------------------------------------------------
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range that contains the data to be subtotaled.
-            // Here we use only column B, but the range can be expanded if needed.
-            CellArea area = new CellArea
+            // Define the range for which we want to count non‑empty entries in column B (zero‑based index 1)
+            int startRow = 5;   // zero‑based index (row 6 in Excel)
+            int endRow = 200;   // zero‑based index (row 201 in Excel)
+            int columnIndex = 1; // column B
+
+            // Count non‑empty cells in the specified range
+            int count = 0;
+            for (int row = startRow; row <= endRow; row++)
             {
-                StartRow = 4,      // Row 5 (zero‑based)
-                EndRow = 199,      // Row 200 (zero‑based)
-                StartColumn = 1,   // Column B (zero‑based)
-                EndColumn = 1      // Column B
-            };
+                var cell = sheet.Cells[row, columnIndex];
+                if (cell != null && !string.IsNullOrEmpty(cell.StringValue))
+                {
+                    count++;
+                }
+            }
 
-            // Apply subtotal:
-            // - groupBy = 0 because within the defined area the grouping column is the first (and only) column.
-            // - ConsolidationFunction.Count counts the number of non‑empty cells.
-            // - totalList = new int[] { 0 } adds the subtotal for the same column.
-            cells.Subtotal(area, 0, ConsolidationFunction.Count, new int[] { 0 });
+            // Write the count result below the range (e.g., cell B201)
+            int resultRow = endRow + 1;
+            sheet.Cells[resultRow, columnIndex].PutValue(count);
 
-            // Configure outline to place the summary row below the detail rows.
-            worksheet.Outline.SummaryRowBelow = true;
+            // Prepare output file path
+            string outputPath = "Output.xlsx";
 
             // Save the workbook
-            workbook.Save("SubtotalOutline.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

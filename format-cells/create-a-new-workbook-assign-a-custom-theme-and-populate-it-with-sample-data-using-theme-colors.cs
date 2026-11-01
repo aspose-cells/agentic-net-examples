@@ -1,15 +1,13 @@
-// Title: Create an Excel workbook with a custom theme and apply accent colors to header and alternating rows using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to generate a new workbook, define a dictionary of ThemeColorType accent colors, and style the first row as a header with those colors. | Provide a C# example that applies alternating row background colors based on custom theme accents in an Aspose.Cells worksheet and saves the file.
-// Common Searches: Aspose.Cells C# how to set custom theme accent colors for a worksheet | C# apply header style with custom theme colors using Aspose.Cells | Aspose.Cells alternating row shading with custom theme colors in .NET | Create Excel file with custom theme colors programmatically using Aspose.Cells
-// Tags: custom theme accent colors Aspose.Cells .NET | header formatting using ThemeColorType Aspose.Cells | alternating row background Aspose.Cells workbook | dictionary of ThemeColorType to Color C# | save workbook as .xlsx Aspose.Cells
+// Title: Create a new Excel workbook with a custom theme and style header and data rows using Aspose.Cells for .NET (C#)
+// Common Searches: how to define and apply a custom theme with accent colors in Aspose.Cells C# | Aspose.Cells example for styling header row with custom theme colors | populate sample data and apply row background colors using Aspose.Cells .NET | C# code to auto‑fit columns after applying a custom theme in Aspose.Cells | save workbook with custom theme colors using Aspose.Cells for .NET
+// Tags: theme color palette definition Aspose.Cells | cell background styling with accent colors C# | header row formatting Excel Aspose.Cells | sample data insertion into workbook C# | auto fit columns after styling Aspose.Cells | export workbook to .xlsx using Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, defines a set of custom ThemeColorType accent colors in a dictionary, writes sample category/value data, styles the header row with the first accent color, applies alternating row background colors using other accents, and saves the result as CustomThemeSample.xlsx.
+// The sample creates a new Workbook, defines six custom accent colors, adds a header row styled with the first accent (teal), inserts three rows of sample items styled with the second accent (orange), auto‑fits the columns, and saves the file as CustomThemeSample.xlsx.
 class Program
 {
     static void Main()
@@ -19,65 +17,74 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Define custom theme colors using a dictionary (Aspose.Cells Theme class not available in this version)
-            var customColors = new Dictionary<ThemeColorType, Color>
-            {
-                { ThemeColorType.Accent1, Color.FromArgb(91, 155, 213) },   // Light blue
-                { ThemeColorType.Accent2, Color.FromArgb(237, 125, 49) },   // Orange
-                { ThemeColorType.Accent3, Color.FromArgb(165, 165, 165) }, // Gray
-                { ThemeColorType.Accent4, Color.FromArgb(255, 192, 0) },   // Gold
-                { ThemeColorType.Accent5, Color.FromArgb(112, 173, 71) },  // Green
-                { ThemeColorType.Accent6, Color.FromArgb(68, 114, 196) }   // Dark blue
-            };
+            // -------------------- Define custom accent colors --------------------
+            Color accent1 = Color.FromArgb(0, 128, 128);   // Teal
+            Color accent2 = Color.FromArgb(255, 165, 0);   // Orange
+            Color accent3 = Color.FromArgb(128, 0, 128);   // Purple
+            Color accent4 = Color.FromArgb(0, 0, 255);     // Blue
+            Color accent5 = Color.FromArgb(255, 0, 0);     // Red
+            Color accent6 = Color.FromArgb(0, 255, 0);     // Green
 
-            // Get the first worksheet and rename it
+            // -------------------- Populate sample data --------------------
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "SampleData";
+            Cells cells = sheet.Cells;
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
+            // Header row
+            cells["A1"].PutValue("Item");
+            cells["B1"].PutValue("Quantity");
+            cells["C1"].PutValue("Price");
 
-            string[] categories = { "A", "B", "C", "D", "E" };
-            double[] values = { 10, 20, 30, 40, 50 };
-
-            for (int i = 0; i < categories.Length; i++)
-            {
-                sheet.Cells[i + 1, 0].PutValue(categories[i]); // Column A
-                sheet.Cells[i + 1, 1].PutValue(values[i]);   // Column B
-            }
-
-            // Apply theme colors to header style
+            // Style for header using Accent1 background
             Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.Color = customColors[ThemeColorType.Accent1];
-            headerStyle.Font.IsBold = true;
-            headerStyle.ForegroundColor = customColors[ThemeColorType.Accent2];
+            headerStyle.ForegroundColor = accent1; // Teal background
             headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.Color = Color.White;
+            headerStyle.Font.IsBold = true;
 
-            // Apply the header style
-            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange("A1:B1");
-            headerRange.ApplyStyle(headerStyle, new StyleFlag { Font = true, CellShading = true });
+            StyleFlag flag = new StyleFlag { All = true };
+            cells.CreateRange("A1:C1").ApplyStyle(headerStyle, flag);
 
-            // Apply alternating row colors using theme accents
-            for (int row = 2; row <= categories.Length + 1; row++)
+            // Sample data rows
+            string[] items = { "Apple", "Banana", "Cherry" };
+            int[] quantities = { 10, 20, 15 };
+            double[] prices = { 0.5, 0.3, 0.8 };
+
+            for (int i = 0; i < items.Length; i++)
             {
-                Style rowStyle = workbook.CreateStyle();
-                Color bgColor = (row % 2 == 0)
-                    ? customColors[ThemeColorType.Accent3]
-                    : customColors[ThemeColorType.Accent4];
-                rowStyle.ForegroundColor = bgColor;
-                rowStyle.Pattern = BackgroundType.Solid;
+                int row = i + 1; // Data starts at row 2 (index 1)
 
-                Aspose.Cells.Range dataRange = sheet.Cells.CreateRange(row - 1, 0, 1, 2);
-                dataRange.ApplyStyle(rowStyle, new StyleFlag { CellShading = true });
+                cells[row, 0].PutValue(items[i]);
+                cells[row, 1].PutValue(quantities[i]);
+                cells[row, 2].PutValue(prices[i]);
+
+                // Row style using Accent2 background
+                Style rowStyle = workbook.CreateStyle();
+                rowStyle.ForegroundColor = accent2; // Orange background
+                rowStyle.Pattern = BackgroundType.Solid;
+                rowStyle.Font.Color = Color.Black;
+
+                cells.CreateRange(row, 0, 1, 3).ApplyStyle(rowStyle, flag);
             }
 
-            // Save the workbook
-            workbook.Save("CustomThemeSample.xlsx");
+            // Adjust column widths
+            sheet.AutoFitColumns();
+
+            // -------------------- Save the workbook --------------------
+            string outputPath = "CustomThemeSample.xlsx";
+
+            // Ensure the directory exists (useful if a path is provided)
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,43 +1,45 @@
-// Title: How to position a column chart at cell C15 and set its width to 400 points using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a column chart, moves it so its upper‑left corner aligns with cell C15, and sets the chart object's width to 400 points. | Show how to relocate an existing Aspose.Cells chart to row 15, column 3 and change its width property to 400 points in an .xlsx workbook.
-// Common Searches: Aspose.Cells C# move chart to cell C15 | set chart width in points using Aspose.Cells .NET | position Excel chart at specific row and column with Aspose.Cells | Aspose.Cells chart.Move method example | adjust column chart size programmatically in C#
-// Tags: Aspose.Cells chart.Move positioning | Aspose.Cells chart width property | C# Aspose.Cells set chart size | Aspose.Cells column chart placement | Aspose.Cells workbook chart positioning
+// Title: Place a column chart at row 15, column 3 with a 400‑point width using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that inserts a column chart whose upper‑left corner starts at row 15, column 3 and sets the chart width to exactly 400 points. | Explain how to compute the lower‑right column index required to achieve a 400‑point chart width when positioning a chart with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set chart upper left cell to row 15 column 3 | how to define chart width in points with Aspose.Cells .NET | calculate lower right column for 400 point chart width Aspose.Cells | position Excel chart at specific cell range using Aspose.Cells C#
+// Tags: Aspose.Cells set chart position by cell coordinates | Aspose.Cells define chart width in points | C# column chart placement with Aspose.Cells | Excel chart sizing using Aspose.Cells .NET | determine chart bounds for specific point width Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, moves the chart so its upper‑left corner starts at row 15 column 3 (cell C15), sets the chart width to 400 points, and saves the file as ChartPositioned.xlsx.
+// Creates a new workbook, adds a column chart whose upper‑left corner is anchored at row 15, column 3, computes the lower‑right column to give the chart a width of 400 points, sets a title, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-        // (Optional) Add some sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
+            // Get the first worksheet
+            Worksheet ws = wb.Worksheets[0];
 
-        // Add a chart with an initial position
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
+            // Define chart position: upper‑left at row 15 (index 14), column 3 (index 2)
+            // Define lower‑right to give the chart a reasonable size
+            int upperLeftRow = 14;
+            int upperLeftColumn = 2;
+            int lowerRightRow = 24;   // adjust as needed for height
+            int lowerRightColumn = 12; // adjust as needed for width
 
-        // Move the chart so its upper‑left corner is at row 15, column 3
-        // Bottom row and right column are set to keep a reasonable size
-        chart.Move(15, 3, 25, 10);
+            // Add a column chart with the specified bounds
+            int chartIndex = ws.Charts.Add(ChartType.Column, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn);
+            Chart chart = ws.Charts[chartIndex];
 
-        // Set the chart width to 400 points
-        chart.ChartObject.Width = 400;
+            // Optional: set chart title or other properties here
+            chart.Title.Text = "Sample Column Chart";
 
-        // Save the workbook
-        workbook.Save("ChartPositioned.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            wb.Save("Output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

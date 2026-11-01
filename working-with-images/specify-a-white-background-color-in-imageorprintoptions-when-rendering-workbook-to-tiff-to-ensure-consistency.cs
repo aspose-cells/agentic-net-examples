@@ -1,13 +1,12 @@
-// Title: How to set a white background in ImageOrPrintOptions when exporting a workbook to multi‑page TIFF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook, creates ImageOrPrintOptions with BackgroundColor set to white, and saves the workbook as a multi‑page TIFF using Aspose.Cells. | Show how to configure ImageOrPrintOptions for TIFF export to enforce a white canvas, then call Workbook.Save with SaveFormat.Tiff in a .NET application.
-// Common Searches: Aspose.Cells C# set white background for TIFF export | ImageOrPrintOptions BackgroundColor property TIFF Aspose.Cells .NET | export Excel to multi page TIFF with white background using Aspose.Cells | force white background when saving workbook as TIFF in Aspose.Cells
-// Tags: ImageOrPrintOptions white background TIFF | Aspose.Cells TIFF export options | C# set background color Aspose.Cells | multi-page TIFF rendering Aspose.Cells | Workbook.Save TIFF background color
+// Title: How to set a white background with ImageOrPrintOptions when saving a workbook as TIFF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set white background for TIFF export using ImageOrPrintOptions | Specify background color when rendering Excel to TIFF in .NET | ImageOrPrintOptions background color property for TIFF output Aspose.Cells | Save workbook to TIFF with consistent white background in C# | C# Aspose.Cells render workbook to TIFF with custom background color
+// Tags: ImageOrPrintOptions background color TIFF | Aspose.Cells set TIFF background white | C# render workbook to TIFF with white background | Aspose.Cells TIFF export background configuration | Excel to TIFF conversion white background .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates loading an Excel file, creating an ImageOrPrintOptions object, setting its BackgroundColor to white, assigning the options to the workbook, and saving the workbook as a multi‑page TIFF. This ensures every page of the generated TIFF has a consistent white background.
+// The example loads an Excel file, configures ImageOrPrintOptions to use a white background, and saves the workbook as a TIFF image, ensuring consistent background color with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,24 +16,24 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.tiff";
 
-            // Verify that the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as a multi‑page TIFF image
+            // Save the workbook as a TIFF file
             workbook.Save(outputPath, SaveFormat.Tiff);
-
-            Console.WriteLine($"Workbook successfully saved as TIFF to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved as TIFF to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Runtime error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

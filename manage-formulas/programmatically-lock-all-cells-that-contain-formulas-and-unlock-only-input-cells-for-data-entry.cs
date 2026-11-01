@@ -1,59 +1,69 @@
-// Title: How to lock formula cells and unlock input cells in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through each worksheet, locks cells that contain formulas, unlocks all other cells, and then protects the sheet before saving. | Show how to create an unlocked style, apply it to non‑formula cells, and enforce worksheet protection while keeping formula cells locked using Aspose.Cells.
-// Common Searches: Aspose.Cells C# lock cells that contain formulas while allowing user entry in other cells | protect Excel worksheet but keep data entry cells editable with Aspose.Cells .NET | set IsLocked property for formula cells only using Aspose.Cells C# | unlock all non‑formula cells in an existing workbook and protect the sheet with Aspose.Cells
-// Tags: Aspose.Cells formula cell locking | Aspose.Cells non‑formula cell unlocking | Aspose.Cells worksheet protection with styles | Aspose.Cells IsLocked property usage | Aspose.Cells iterate used range C#
+// Title: Lock formula cells and unlock data entry cells in an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells lock cells that contain formulas while leaving other cells editable | How to protect an Excel worksheet without a password using Aspose.Cells in .NET | Set IsLocked property for formula cells only with Aspose.Cells C# example | Unlock user input cells and lock calculated cells in a workbook using Aspose.Cells | Iterate through all cells in Aspose.Cells to apply protection based on formula presence
+// Tags: lock formula cells Aspose.Cells .NET | unlock data entry cells Aspose.Cells | worksheet protection without password Aspose.Cells | set cell IsLocked property C# | iterate cells to apply protection Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads an existing workbook, walks through each worksheet's used range, applies a locked style to cells that contain formulas, applies an unlocked style to all other cells, protects the worksheet, and saves the modified file.
+// The example loads an existing workbook, loops through each worksheet and every used cell, sets the IsLocked style flag to true for cells containing formulas and false for all other cells, reapplies the style, protects each sheet without a password, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Determine the used range of the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Prepare a style that marks cells as unlocked
-            Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;
-
-            // Loop through each cell in the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
+                Cells cells = sheet.Cells;
 
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in cells)
+                {
+                    // Retrieve the current style
+                    Style style = cell.GetStyle();
+
+                    // Lock formula cells, unlock others
                     if (cell.IsFormula)
                     {
-                        // Cells containing formulas should remain locked (default is locked)
-                        // Ensure the style explicitly sets IsLocked = true
-                        Style lockedStyle = cell.GetStyle();
-                        lockedStyle.IsLocked = true;
-                        cell.SetStyle(lockedStyle);
+                        style.IsLocked = true;   // Lock formula cells
                     }
                     else
                     {
-                        // Unlock all other cells for data entry
-                        cell.SetStyle(unlockedStyle);
+                        style.IsLocked = false;  // Unlock input cells
                     }
+
+                    // Apply the modified style back to the cell
+                    cell.SetStyle(style);
                 }
+
+                // Protect the worksheet (no password)
+                // The overload requires both password and oldPassword parameters
+                sheet.Protect(ProtectionType.All, null, null);
             }
 
-            // Protect the worksheet so that locked cells cannot be edited
-            sheet.Protect(ProtectionType.All);
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,131 +1,95 @@
-// Title: Merge multiple Excel template files into a single WorkbookDesigner and assign different smart‑marker data sources per worksheet with Aspose.Cells for .NET
-// AI Prompts: Load two Excel template workbooks, copy their worksheets into one WorkbookDesigner instance, bind a List<Employee> to the 'Employees' smart markers on the first sheet and a List<Product> to the 'Products' smart markers on the second sheet, then process and save the combined workbook. | Add additional template worksheets to an existing WorkbookDesigner, set unique data sources for each sheet’s smart markers, and generate a consolidated Excel file without modifying the original templates. | Create a placeholder worksheet when a template file is missing, merge it with available templates in a WorkbookDesigner, bind appropriate data collections, and produce the final output workbook.
-// Common Searches: asp.net aspocells merge multiple template workbooks with smart markers | bind separate data collections to smart markers on different sheets using WorkbookDesigner | copy worksheets from other Excel files into a WorkbookDesigner workbook in C# | handle missing template files by creating placeholder sheets in Aspose.Cells | process smart markers across several worksheets in a combined workbook
-// Tags: WorkbookDesigner merge template workbooks Aspose.Cells | smart markers distinct data source per sheet | add copy of worksheet to designer workbook C# | generate placeholder workbook when template not found | employee list data source for smart markers | product list data source for smart markers
+// Title: Combine multiple Excel templates into a single WorkbookDesigner and assign distinct smart‑marker data sources per worksheet (Aspose.Cells for .NET)
+// AI Prompts: Load two Excel template files, copy all their worksheets into one WorkbookDesigner instance, bind a List<Person> to Sheet1 and a List<Product> to Sheet2, process the smart markers, and save the merged workbook. | Merge any number of smart‑marker templates by copying their sheets into a shared WorkbookDesigner, set a different POCO collection as the data source for each sheet, run Process(), and output the combined result.
+// Common Searches: how to merge several Excel templates with different smart marker data sources using Aspose.Cells | Aspose.Cells set separate data source for each worksheet in WorkbookDesigner | combine multiple smart marker templates into one workbook .NET | copy worksheets from multiple workbooks into a single WorkbookDesigner Aspose.Cells | process smart markers after merging Excel templates Aspose.Cells
+// Tags: merge worksheets WorkbookDesigner Aspose.Cells | worksheet‑specific smart marker data source | process smart markers combined workbook | copy template sheets between workbooks | use POCO collections with smart markers Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMultipleTemplates
+// Shows how to load two Excel template files, copy their worksheets into a single WorkbookDesigner, assign List<Person> to Sheet1 and List<Product> to Sheet2 as separate smart‑marker data sources, process all markers, and save the merged result as MergedResult.xlsx.
+class Program
 {
-    // Sample data classes for demonstration
-    // The example loads two Excel template files (or creates placeholder workbooks if they are missing), initializes a WorkbookDesigner with the first template, copies additional template worksheets into the designer's workbook, assigns separate List<Employee> and List<Product> data sources to the corresponding smart‑marker names on each sheet, processes all smart markers across the combined sheets, and saves the result as CombinedOutput.xlsx.
-    public class Employee
+    static void Main()
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public Employee(string name, int age) { Name = name; Age = age; }
-    }
-
-    public class Product
-    {
-        public string Title { get; set; }
-        public decimal Price { get; set; }
-        public Product(string title, decimal price) { Title = title; Price = price; }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        try
         {
-            // Paths to the template files (each template contains smart markers for its own data source)
-            string[] templateFiles = { "TemplateEmployees.xlsx", "TemplateProducts.xlsx" };
+            // Verify template files exist to avoid FileNotFoundException
+            const string templatePath1 = "Template1.xlsx";
+            const string templatePath2 = "Template2.xlsx";
 
-            Workbook firstTemplate = LoadOrCreatePlaceholder(templateFiles[0], "Employees template not found");
-            if (firstTemplate == null) return; // abort if loading failed unexpectedly
+            if (!File.Exists(templatePath1))
+                throw new FileNotFoundException($"Template file not found: {templatePath1}");
+            if (!File.Exists(templatePath2))
+                throw new FileNotFoundException($"Template file not found: {templatePath2}");
 
-            // Initialize WorkbookDesigner with the first template workbook
-            WorkbookDesigner designer = new WorkbookDesigner(firstTemplate);
-
-            // Load remaining templates and copy their worksheets into the designer's workbook
-            for (int i = 1; i < templateFiles.Length; i++)
+            // Create a WorkbookDesigner instance
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook temp = LoadOrCreatePlaceholder(templateFiles[i], $"Template {i + 1} not found");
-                if (temp == null) continue; // skip this template but continue processing others
+                // Initialize an empty workbook that will hold all templates
+                Workbook = new Workbook()
+            };
 
-                // Prepare source worksheet array and destination names
-                Worksheet[] sourceSheets = new Worksheet[] { temp.Worksheets[0] };
-                string[] destNames = new string[] { $"SheetFromTemplate{i + 1}" };
-
-                // Copy the worksheet from the temporary workbook into the designer's workbook
-                designer.Workbook.Worksheets.AddCopy(sourceSheets, destNames);
+            // ---------- Load first template ----------
+            Workbook template1 = new Workbook(templatePath1);
+            // Copy all worksheets from the first template into the designer's workbook
+            foreach (Worksheet ws in template1.Worksheets)
+            {
+                designer.Workbook.Worksheets.AddCopy(ws.Name);
             }
 
-            // -----------------------------------------------------------------
-            // Prepare distinct data sources for each sheet
-            // -----------------------------------------------------------------
-
-            // Data source for the first sheet (employees)
-            List<Employee> employees = new List<Employee>
+            // ---------- Load second template ----------
+            Workbook template2 = new Workbook(templatePath2);
+            // Copy all worksheets from the second template into the designer's workbook
+            foreach (Worksheet ws in template2.Worksheets)
             {
-                new Employee("John Doe", 30),
-                new Employee("Jane Smith", 28)
-            };
-            // The smart markers in the first template should reference the name "Employees"
-            designer.SetDataSource("Employees", employees);
+                designer.Workbook.Worksheets.AddCopy(ws.Name);
+            }
 
-            // Data source for the second sheet (products)
+            // ---------- Prepare data sources ----------
+            // Data for the first sheet (assumed to be named "Sheet1" in Template1.xlsx)
+            List<Person> persons = new List<Person>
+            {
+                new Person { Name = "John", Age = 30 },
+                new Person { Name = "Jane", Age = 25 }
+            };
+
+            // Data for the second sheet (assumed to be named "Sheet2" in Template2.xlsx)
             List<Product> products = new List<Product>
             {
-                new Product("Laptop", 1200.50m),
-                new Product("Smartphone", 799.99m)
+                new Product { Id = 1, Name = "Apple",  Price = 0.5 },
+                new Product { Id = 2, Name = "Banana", Price = 0.3 }
             };
-            // The smart markers in the second template should reference the name "Products"
-            designer.SetDataSource("Products", products);
 
-            // -----------------------------------------------------------------
-            // Process all smart markers across all worksheets
-            // -----------------------------------------------------------------
-            try
-            {
-                designer.Process();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during smart marker processing: {ex.Message}");
-                return;
-            }
+            // ---------- Set data sources for each sheet ----------
+            designer.SetDataSource("Sheet1", persons);
+            designer.SetDataSource("Sheet2", products);
 
-            // -----------------------------------------------------------------
-            // Save the combined workbook
-            // -----------------------------------------------------------------
-            try
-            {
-                designer.Workbook.Save("CombinedOutput.xlsx");
-                Console.WriteLine("Combined workbook saved as 'CombinedOutput.xlsx'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            // Process all smart markers in the combined workbook
+            designer.Process();
+
+            // Save the final workbook containing both processed sheets
+            designer.Workbook.Save("MergedResult.xlsx");
         }
-
-        // Loads a workbook from file if it exists; otherwise creates a placeholder workbook.
-        private static Workbook LoadOrCreatePlaceholder(string filePath, string placeholderMessage)
+        catch (Exception ex)
         {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    return new Workbook(filePath);
-                }
-                else
-                {
-                    Console.WriteLine($"File not found: {filePath}. Creating placeholder workbook.");
-                    Workbook wb = new Workbook();
-                    Worksheet ws = wb.Worksheets[0];
-                    ws.Name = "Placeholder";
-                    ws.Cells["A1"].PutValue(placeholderMessage);
-                    return wb;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load or create workbook for '{filePath}': {ex.Message}");
-                return null;
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Sample data class for the first sheet
+    public class Person
+    {
+        public string Name { get; set; } = null!;
+        public int Age { get; set; }
+    }
+
+    // Sample data class for the second sheet
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public double Price { get; set; }
     }
 }

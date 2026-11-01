@@ -1,7 +1,7 @@
-// Title: How to retrieve all worksheet shapes, sort them by Z‑order, and display the sorted list using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, iterates through every worksheet, collects each shape's name, sheet name, and ZOrderPosition, sorts the collection by ZOrderPosition ascending, and prints the results to the console. | Modify the shape enumeration to include only picture shapes, sort them by ZOrderPosition descending, and output the sorted information to the console. | Extend the example to write the sorted shape details (sheet, shape name, Z-order) to a CSV file instead of the console.
-// Common Searches: aspnet retrieve shape Z-order from Excel using Aspose.Cells | c# list all shapes in workbook and sort by Z-order Aspose.Cells | how to get shape name and Z-order position across worksheets with Aspose.Cells for .NET | sorting Excel shapes by Z-order programmatically in C# | display sorted shape information from multiple sheets using Aspose.Cells
-// Tags: Aspose.Cells enumerate worksheet shapes | C# sort shapes by ZOrderPosition | Aspose.Cells retrieve shape Z-order | console output sorted Excel shapes | export shape list to CSV Aspose.Cells
+// Title: How to retrieve all shapes from an Excel worksheet, sort them by Z‑order, and print the sorted list using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, extracts every Shape from the first worksheet, sorts the shapes by their ZOrderPosition property, and writes each shape's name and Z‑order index to the console. | Create a C# method using Aspose.Cells that returns a List<Shape> ordered by Z‑order for a given worksheet and show how to iterate the list to display shape names and Z‑order values.
+// Common Searches: aspocells c# list worksheet shapes sorted by Z-order | how to get shape ZOrderPosition in Aspose.Cells .NET | sort Excel drawing objects by Z-index using Aspose.Cells | retrieve and display shape names and Z-order from an Excel file in C# | Aspose.Cells example for enumerating and ordering shapes on a worksheet
+// Tags: Aspose.Cells shape enumeration C# | sort shapes by ZOrderPosition Aspose.Cells | list worksheet drawing objects .NET | retrieve shape names Excel Aspose.Cells | order Excel shapes by Z-index C#
 
 using System;
 using System.Collections.Generic;
@@ -10,54 +10,52 @@ using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook with Aspose.Cells, gathers each shape's sheet name, shape name, and ZOrderPosition from all worksheets, sorts the entries by Z-order ascending, and writes the sorted list to the console.
+// The sample loads an Excel file, accesses the first worksheet, collects all Shape objects, sorts them by their ZOrderPosition (ascending), and prints each shape's name and Z‑order index to the console, with error handling for missing files and runtime exceptions.
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        const string inputPath = "input.xlsx";
+        // Path to the input workbook
+        string filePath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
             return;
         }
 
         try
         {
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(filePath);
 
-            // Collect information about every shape in the workbook
-            List<(string SheetName, string ShapeName, int ZOrder)> shapeInfos = new List<(string, string, int)>();
+            // Work with the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Retrieve all shapes from the worksheet
+            ShapeCollection shapeCollection = sheet.Shapes;
+
+            // Copy shapes to a list for sorting
+            List<Shape> shapes = new List<Shape>();
+            foreach (Shape shape in shapeCollection)
             {
-                // Iterate through all shapes on the current worksheet
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    // Store sheet name, shape name and its Z-order position
-                    shapeInfos.Add((sheet.Name, shape.Name, shape.ZOrderPosition));
-                }
+                shapes.Add(shape);
             }
 
-            // Sort the shapes by their Z-order (ascending)
-            List<(string SheetName, string ShapeName, int ZOrder)> sortedShapes = shapeInfos
-                .OrderBy(info => info.ZOrder)
-                .ToList();
+            // Sort shapes by their Z-order position (ascending)
+            List<Shape> sortedShapes = shapes.OrderBy(s => s.ZOrderPosition).ToList();
 
-            // Output the sorted list to the console
+            // Output sorted list to console
             Console.WriteLine("Shapes sorted by Z-order:");
-            foreach (var info in sortedShapes)
+            foreach (Shape shape in sortedShapes)
             {
-                Console.WriteLine($"Sheet: {info.SheetName}, Shape: {info.ShapeName}, Z-Order: {info.ZOrder}");
+                Console.WriteLine($"Name: {shape.Name}, Z-Order: {shape.ZOrderPosition}");
             }
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

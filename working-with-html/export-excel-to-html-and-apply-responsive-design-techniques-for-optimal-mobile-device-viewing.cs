@@ -1,48 +1,45 @@
-// Title: Convert an Excel workbook to responsive HTML5 with embedded Base64 images using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to generate HTML5, embeds all worksheet images as Base64, and saves a mobile‑optimized HTML file. | Show how to set Aspose.Cells HtmlSaveOptions to export every worksheet and produce responsive HTML suitable for smartphones.
-// Common Searches: Aspose.Cells .NET export all worksheets to a single responsive HTML page | How to embed Excel images as Base64 when saving to HTML with Aspose.Cells | Generate mobile‑friendly HTML5 from an .xlsx file using C# | Set HtmlSaveOptions for responsive design in Aspose.Cells export
-// Tags: Aspose.Cells HtmlSaveOptions responsive export | export excel to html5 with base64 images | C# generate mobile‑friendly HTML from .xlsx | save all worksheets as single HTML using Aspose.Cells | embed worksheet images as base64 in HTML output
+// Title: Export an Excel worksheet to HTML with Base64‑embedded images using Aspose.Cells for .NET (prepare for mobile‑friendly styling)
+// AI Prompts: Generate C# code that loads a .xlsx file, verifies its existence, and saves the active worksheet as an HTML file with images embedded as Base64 strings using Aspose.Cells HtmlSaveOptions. | Demonstrate how to inject a viewport meta tag and minimal responsive CSS into the HTML produced by Aspose.Cells while preserving the Base64 image embedding. | Provide robust error‑handling patterns for the Excel‑to‑HTML conversion, covering file‑not‑found and generic exceptions.
+// Common Searches: how to export only the active sheet to html with aspose.cells c# | aspose.cells embed images as base64 in html output | generate mobile friendly html from excel using asp.net and aspose.cells | add responsive meta viewport to html saved from workbook aspose.cells | c# save workbook as html with base64 images and custom css
+// Tags: Aspose.Cells HtmlSaveOptions Base64 images | export active worksheet to HTML .NET | mobile‑optimized HTML from Excel workbook | responsive CSS for Aspose.Cells HTML output | C# Excel to HTML conversion with embedded images
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// // This program checks for input.xlsx, loads it with Aspose.Cells, configures HtmlSaveOptions to produce HTML5, exports all worksheets, embeds images as Base64 strings for mobile friendliness, and saves the result to output.html while handling exceptions.
+// The program checks for input.xlsx, loads it with Aspose.Cells, and saves the active worksheet as an HTML file that embeds worksheet images as Base64 strings using HtmlSaveOptions, ready for additional responsive styling.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the source Excel file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the source Excel workbook
+            // Load the source Excel file
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML export options for responsive design
+            // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Generate HTML5 markup
-                HtmlVersion = HtmlVersion.Html5,
-
-                // Export all worksheets (set to true to export only the active sheet)
-                ExportActiveWorksheetOnly = false,
-
-                // Embed images directly as Base64 strings to avoid external image files on mobile devices
+                // Export only the active worksheet
+                ExportActiveWorksheetOnly = true,
+                // Embed images as Base64 strings for easier mobile rendering
                 ExportImagesAsBase64 = true
+                // Note: Responsive layout is not available in this version of Aspose.Cells.
             };
 
-            // Save the workbook as a responsive HTML file
+            // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+            Console.WriteLine($"HTML file successfully saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

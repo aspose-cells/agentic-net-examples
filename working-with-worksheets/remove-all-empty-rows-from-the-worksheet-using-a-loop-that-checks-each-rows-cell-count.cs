@@ -1,13 +1,13 @@
-// Title: Remove blank rows from an Excel worksheet with Aspose.Cells for .NET by iterating rows and checking cell values
-// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, scans each row from the bottom up, and deletes rows that contain only empty cells. | Demonstrate how to use Worksheet.Cells.DeleteRow in a loop to clean an Excel sheet by removing rows without any data with Aspose.Cells.
-// Common Searches: C# Aspose.Cells delete rows that have no data in an Excel file | how to programmatically remove empty rows from a worksheet using Aspose.Cells .NET | iterate through rows bottom-up and delete blank rows with Aspose.Cells | Aspose.Cells example for cleaning up blank rows in a workbook
-// Tags: Aspose.Cells delete empty rows | Worksheet.Cells.DeleteRow usage | scan rows for null values Aspose.Cells | clean Excel worksheet Aspose.Cells .NET | max data row loop Aspose.Cells
+// Title: Remove blank rows from an Excel worksheet with Aspose.Cells for .NET using a reverse‑order loop
+// AI Prompts: Write C# code that uses Aspose.Cells to scan a worksheet from the last row upward and delete any rows that contain only empty cells. | Provide a method that checks each cell in a row for null or empty values and removes the row via Aspose.Cells when no data is found. | Show how to safely delete multiple empty rows in an Excel file with Aspose.Cells without affecting row indices.
+// Common Searches: C# Aspose.Cells how to delete rows that have no data in an Excel sheet | remove blank rows from .xlsx using Aspose.Cells library | loop through rows in reverse and delete empty rows Aspose.Cells .NET example | Aspose.Cells delete rows with only null values without shifting remaining rows
+// Tags: Aspose.Cells delete blank rows | reverse row traversal Aspose.Cells | MaxDataRow based row removal .NET | Excel worksheet empty row cleanup | cell null detection Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The sample loads input.xlsx with Aspose.Cells, determines the last data row, iterates from that row upward, checks each cell in the row for a non‑null value, deletes rows that contain no data, and saves the cleaned workbook to output.xlsx.
+// The example loads an Excel workbook, determines the last used row and column via MaxDataRow/MaxDataColumn, iterates from the bottom row upward, checks each cell for a non‑null value, deletes rows that contain no data, and saves the cleaned workbook to a new file.
 class Program
 {
     static void Main()
@@ -17,58 +17,55 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists before loading
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook from the input file
             Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the last row that contains data
-            int maxRow = sheet.Cells.MaxDataRow;
+            // Determine the last row and column that contain data
+            int lastRow = sheet.Cells.MaxDataRow;
+            int lastCol = sheet.Cells.MaxDataColumn;
 
-            // Iterate from the bottom up to avoid index shifting when deleting rows
-            for (int row = maxRow; row >= 0; row--)
+            // Loop from the last row upwards to avoid index shifting after deletions
+            for (int row = lastRow; row >= 0; row--)
             {
-                // Use the sheet's maximum data column as an upper bound for scanning
-                int maxCol = sheet.Cells.MaxDataColumn;
-                if (maxCol < 0)
-                {
-                    // No data in the sheet; delete the row
-                    sheet.Cells.DeleteRow(row);
-                    continue;
-                }
-
                 bool hasData = false;
 
-                // Scan cells in the row to see if any cell has a non‑null value
-                for (int col = 0; col <= maxCol; col++)
+                // Check each cell in the current row up to the last used column
+                for (int col = 0; col <= lastCol; col++)
                 {
                     Cell cell = sheet.Cells[row, col];
+
+                    // If any cell in the row has a non‑null value, the row is not empty
                     if (cell.Value != null)
                     {
                         hasData = true;
-                        break;
+                        break; // No need to check further cells in this row
                     }
                 }
 
-                // If the row has no data, delete it
+                // Delete the row if it contains no data
                 if (!hasData)
                 {
-                    sheet.Cells.DeleteRow(row);
+                    sheet.Cells.DeleteRows(row, 1);
                 }
             }
 
-            // Save the modified workbook
+            // Save the modified workbook to the output file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Processing complete. Output saved to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log or display any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

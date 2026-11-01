@@ -1,62 +1,62 @@
-// Title: Enable drill‑through (drilldown) for a PivotTable using Aspose.Cells in C#
-// AI Prompts: Create a workbook, add sample data, insert a PivotTable, set EnableDrilldown to true, invoke RefreshData and CalculateData, then save the file with Aspose.Cells for .NET. | Update an existing PivotTable by turning on drill‑through, recompute its values, and export the workbook as an .xlsx file using C#. | Programmatically activate drilldown on a PivotTable, call its refresh and calculation methods, and write the result to disk with Aspose.Cells.
-// Common Searches: aspnet example of enabling pivot table drillthrough with Aspose.Cells | c# code to turn on EnableDrilldown property for Aspose.Cells PivotTable | how to refresh and calculate pivot data after enabling drilldown in Aspose.Cells | saving a workbook with drill‑through enabled using Aspose.Cells for .NET | sample Aspose.Cells pivot table with drilldown functionality in C#
-// Tags: Aspose.Cells pivot drilldown activation | C# configure pivot table drillthrough | invoke RefreshData and CalculateData on pivot | save workbook with drilldown enabled | populate source data for Aspose.Cells pivot
+// Title: Enable drill‑through for an Aspose.Cells PivotTable in C# by setting the EnableDrillThrough property
+// Common Searches: C# Aspose.Cells how to turn on drill through for a pivot table | set EnableDrillThrough true in Aspose.Cells pivot table example | Aspose.Cells .NET enable pivot table drill‑through option | create Excel pivot table with drill through using Aspose.Cells C# | Aspose.Cells enable drill through for pivot table programmatically
+// Tags: Aspose.Cells pivot table enable drill-through | C# set EnableDrillThrough property | Excel pivot table drill-through configuration with Aspose | Aspose.Cells workbook save with drill-through enabled
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotDrillthroughDemo
+// The sample creates a workbook, populates a data sheet, adds a pivot sheet, builds a PivotTable from the data range, enables the EnableDrillThrough option, and saves the file as PivotWithDrillThrough.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, adding sample data, inserting a PivotTable, enabling drill‑through via the EnableDrilldown property, refreshing and calculating the pivot data, and saving the workbook as an .xlsx file using Aspose.Cells for .NET.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet to hold source data
+            // Add sample data for the pivot table
             Worksheet dataSheet = workbook.Worksheets[0];
             dataSheet.Name = "Data";
 
-            // Populate sample data for the pivot table
-            dataSheet.Cells["A1"].Value = "Category";
-            dataSheet.Cells["B1"].Value = "Amount";
-            dataSheet.Cells["A2"].Value = "Food";
-            dataSheet.Cells["B2"].Value = 120;
-            dataSheet.Cells["A3"].Value = "Food";
-            dataSheet.Cells["B3"].Value = 80;
-            dataSheet.Cells["A4"].Value = "Beverage";
-            dataSheet.Cells["B4"].Value = 150;
-            dataSheet.Cells["A5"].Value = "Beverage";
-            dataSheet.Cells["B5"].Value = 200;
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+            dataSheet.Cells["A2"].PutValue("A");
+            dataSheet.Cells["B2"].PutValue(100);
+            dataSheet.Cells["A3"].PutValue("B");
+            dataSheet.Cells["B3"].PutValue(200);
+            dataSheet.Cells["A4"].PutValue("A");
+            dataSheet.Cells["B4"].PutValue(150);
+            dataSheet.Cells["A5"].PutValue("B");
+            dataSheet.Cells["B5"].PutValue(250);
 
-            // Add a new worksheet that will contain the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            // Add a worksheet to host the pivot table
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "Pivot";
 
-            // Add a pivot table based on the source range A1:B5
-            // Destination top‑left cell is C3
-            int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B5", "C3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Create the pivot table using the data range A1:B5
+            int pivotTableIndex = pivotSheet.PivotTables.Add("=Data!A1:B5", "C3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Retrieve the source fields (automatically created for each column)
+            PivotField categoryField = pivotTable.RowFields[0]; // first source field corresponds to "Category"
+            PivotField amountField = pivotTable.DataFields[0]; // first source field corresponds to "Amount"
 
-            // Enable drill‑through (drilldown) functionality
-            pivotTable.EnableDrilldown = true;
+            // Add the fields to the appropriate collections
+            pivotTable.RowFields.Add(categoryField);
+            pivotTable.DataFields.Add(amountField);
 
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("PivotTableDrillthroughDemo.xlsx");
-
-            // Optional: output confirmation
-            Console.WriteLine("Workbook saved with drill‑through enabled.");
+            // Save the workbook to a file
+            string outputPath = "PivotWithDrillThrough.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

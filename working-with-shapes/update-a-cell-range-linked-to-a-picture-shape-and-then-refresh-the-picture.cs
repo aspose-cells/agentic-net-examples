@@ -1,121 +1,72 @@
-// Title: How to update cells linked to a picture shape and refresh the picture in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that reads a picture's LinkToCell range, iterates through the referenced cells, writes new values, and calls the picture's Refresh method with Aspose.Cells. | Create a C# console program that loads an .xlsx file, finds the first picture shape, parses its linked cell range, updates each cell with a calculated value, and refreshes the picture using dynamic invocation in Aspose.Cells.
-// Common Searches: Aspose.Cells C# update linked cell range of a picture and refresh image | Refresh Excel picture after modifying linked cells using Aspose.Cells | How to use LinkToCell property of a picture shape in Aspose.Cells .NET | C# example for parsing picture LinkToCell range and updating cells with Aspose.Cells | Dynamic invocation of Refresh method on picture shape Aspose.Cells
-// Tags: Aspose.Cells picture linked cells | invoke picture Refresh method dynamically | C# update cells from picture LinkToCell | parse cell area from string Aspose.Cells | save workbook after picture refresh Aspose.Cells
+// Title: How to update a linked cell range and refresh a picture shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that changes the values of cells A1:B2 in a worksheet and then refreshes the picture shape named "Picture 1" with Aspose.Cells, including fallback handling if the Update method is unavailable. | Demonstrate how to invoke Picture.Update dynamically on a shape after modifying its linked cells, with error handling for older Aspose.Cells versions.
+// Common Searches: Aspose.Cells C# refresh picture shape after editing linked cells | programmatically update a picture linked to a cell range in an Excel file using Aspose.Cells | dynamic call to Picture.Update when method is missing in Aspose.Cells .NET
+// Tags: refresh picture shape Aspose.Cells C# | update linked cell range Aspose.Cells | dynamic Picture.Update invocation | handle missing Picture.Update Aspose.Cells | modify cells and refresh picture Excel .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, locates the first picture shape, retrieves its optional LinkToCell range, converts the range string to a CellArea, updates each cell in that area with a computed value, attempts to refresh the picture via dynamic method invocation, and saves the modified workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an existing workbook, updates cells A1‑B2, retrieves the shape named "Picture 1", attempts to refresh the picture by calling Picture.Update via dynamic invocation (with fallback for older versions), and saves the workbook to a new file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Locate the first picture on the sheet
-            Picture? picture = null;
-            foreach (Shape shape in sheet.Shapes)
-            {
-                if (shape is Picture pic)
-                {
-                    picture = pic;
-                    break;
-                }
-            }
-
-            if (picture != null)
-            {
-                // Use dynamic to access members that may not exist in older versions
-                dynamic dynPic = picture;
-                string? linkedRange = null;
-
-                try
-                {
-                    linkedRange = dynPic.LinkToCell as string;
-                }
-                catch
-                {
-                    // Property not available; ignore linking logic
-                }
-
-                if (!string.IsNullOrEmpty(linkedRange))
-                {
-                    // Convert the linked cell range string (e.g., "A1:B2") to a CellArea object
-                    CellArea linkedArea;
-                    try
-                    {
-                        string[] parts = linkedRange.Split(':');
-                        if (parts.Length == 2)
-                        {
-                            linkedArea = CellArea.CreateCellArea(parts[0], parts[1]);
-                        }
-                        else
-                        {
-                            // Single cell reference
-                            linkedArea = CellArea.CreateCellArea(linkedRange, linkedRange);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to parse linked range '{linkedRange}': {ex.Message}");
-                        return;
-                    }
-
-                    // Update each cell in the linked range
-                    for (int row = linkedArea.StartRow; row <= linkedArea.EndRow; row++)
-                    {
-                        for (int col = linkedArea.StartColumn; col <= linkedArea.EndColumn; col++)
-                        {
-                            // Example update: set the cell value to row * 10 + column index
-                            sheet.Cells[row, col].PutValue(row * 10 + col);
-                        }
-                    }
-
-                    // Refresh the picture so it reflects the updated cell values
-                    try
-                    {
-                        dynPic.Refresh();
-                    }
-                    catch
-                    {
-                        // Refresh method not available; continue without it
-                    }
-                }
-            }
-
-            // Save the workbook
             try
             {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index or name as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Update the cell range that is linked to the picture
+                sheet.Cells["A1"].PutValue("Updated Value 1");
+                sheet.Cells["A2"].PutValue("Updated Value 2");
+                sheet.Cells["B1"].PutValue("Updated Value 3");
+                sheet.Cells["B2"].PutValue("Updated Value 4");
+
+                // Retrieve the picture shape that is linked to the above range
+                Shape shape = sheet.Shapes["Picture 1"];
+                if (shape is Picture picture)
+                {
+                    // Attempt to refresh the picture; use dynamic to avoid compile‑time dependency on Update()
+                    try
+                    {
+                        ((dynamic)picture).Update();
+                    }
+                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+                    {
+                        // Update method not available in this version of Aspose.Cells; ignore
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The specified shape is not a picture or does not exist.");
+                }
+
+                // Save the workbook with the refreshed picture (if possible)
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

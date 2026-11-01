@@ -1,51 +1,16 @@
 // Title: Save a modified Excel workbook as a new .xlsx file while preserving all original formatting using Aspose.Cells for .NET
-// AI Prompts: Load an existing .xlsx file, update a cell value, and employ OoxmlSaveOptions to write the workbook to a separate file while retaining all styles and layout. | Generate C# code that copies an Excel workbook, applies changes, and saves it to a new .xlsx file without losing any original formatting using Aspose.Cells.
-// Common Searches: Aspose.Cells .NET how to save a modified workbook to a new file without losing formatting | C# copy Excel file, change a cell, preserve styles using Aspose.Cells | use OoxmlSaveOptions to keep original formatting when saving an Excel workbook in C# | save workbook as new .xlsx while retaining cell styles Aspose.Cells example
-// Tags: save workbook with OoxmlSaveOptions .NET | preserve Excel formatting when copying file Aspose.Cells | modify cell and write new .xlsx using Aspose.Cells | Aspose.Cells workbook save preserving styles | C# Aspose.Cells save to new file with original layout
+// AI Prompts: Load an existing .xlsx with Aspose.Cells, apply any cell changes, and write it to a different file name without altering styles or formatting. | Create a copy of an Excel workbook, make updates, and export it as a new .xlsx while keeping every original cell format intact.
+// Common Searches: Aspose.Cells C# save workbook to new file keep original cell styles | How to copy an Excel file and preserve formatting after modifications with Aspose.Cells | Saving modified workbook as separate .xlsx without losing formatting in .NET | C# Aspose.Cells retain workbook formatting when saving to another file
+// Tags: Aspose.Cells save workbook preserving formatting | C# copy Excel file with original styles | save modified workbook as new xlsx Aspose.Cells | retain cell formatting when exporting workbook .NET
 
-using System;
-using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Saving;
+// Load the existing workbook (original formatting is retained upon loading)
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("OriginalWorkbook.xlsx");
 
-namespace AsposeCellsExample
-{
-    // // Loads 'original.xlsx', updates cell A1, and saves the workbook as 'modified.xlsx' using OoxmlSaveOptions to retain all original formatting.
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Define source and destination file paths
-            string sourceFile = "original.xlsx";
-            string destinationFile = "modified.xlsx";
+// -------------------------------------------------
+// Perform any modifications to the workbook here
+// Example: change the value of cell A1 in the first worksheet
+// workbook.Worksheets[0].Cells["A1"].PutValue("Modified Value");
+// -------------------------------------------------
 
-            try
-            {
-                // Verify that the source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourceFile))
-                {
-                    Console.WriteLine($"Source file not found: {sourceFile}");
-                    return;
-                }
-
-                // Load the original workbook
-                Workbook workbook = new Workbook(sourceFile);
-
-                // Example modification: change a cell value
-                workbook.Worksheets[0].Cells["A1"].PutValue("Updated Value");
-
-                // Prepare save options for .xlsx format
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-
-                // Save the modified workbook to a new file
-                workbook.Save(destinationFile, saveOptions);
-                Console.WriteLine($"Workbook saved successfully to {destinationFile}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-}
+// Save the modified workbook to a new file while preserving the original formatting
+workbook.Save("ModifiedWorkbook.xlsx", Aspose.Cells.SaveFormat.Xlsx);

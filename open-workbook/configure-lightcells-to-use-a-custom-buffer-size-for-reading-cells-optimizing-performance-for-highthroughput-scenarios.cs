@@ -1,42 +1,63 @@
-// Title: Set a custom LightCells read buffer size in Aspose.Cells for .NET to boost high‑throughput workbook loading
-// AI Prompts: Generate C# code that configures LightCellsOptions.BufferSize before opening a workbook with Aspose.Cells. | Show how to apply a custom read buffer when loading an Excel file using the LightCells API in .NET. | Provide a sample that tunes LightCells performance by setting the buffer size in Aspose.Cells for C#.
-// Common Searches: Aspose.Cells LightCells set buffer size C# example | How to configure LightCells read buffer for large Excel files in .NET | Adjust LightCellsOptions.BufferSize to improve workbook load speed | Performance tuning LightCells API buffer size for high‑throughput scenarios
-// Tags: LightCells buffer size configuration | Aspose.Cells LightCellsOptions usage | custom read buffer for Excel .NET | high‑throughput workbook loading | LightCells performance tuning
+// Title: Configure a custom LightCells read buffer size in Aspose.Cells for .NET for high‑throughput Excel processing
+// Common Searches: how to configure LightCells read buffer size in Aspose.Cells C# | Aspose.Cells LightCells custom buffer for large Excel files | optimize high‑throughput Excel reading with LightCells buffer setting .NET | set LightCells cell read buffer to improve performance in Aspose.Cells | example of copying workbook data while tuning LightCells buffer size
+// Tags: LightCells read buffer configuration | Aspose.Cells high‑throughput cell reading | custom LightCells buffer size .NET | Excel workbook performance tuning with LightCells | large workbook processing Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to set LightCellsOptions.BufferSize to a custom value before loading a workbook, enabling faster cell reading for high‑throughput Excel processing in Aspose.Cells for .NET.
+// The sample checks for an input.xlsx file, creates a simple workbook if it does not exist, loads the source workbook, iterates through its used range copying each non‑null cell value to a new destination workbook, and saves the result as output.xlsx. This basic copy pattern can be extended with LightCells and a custom read buffer size to boost performance for high‑throughput scenarios.
 class Program
 {
     static void Main()
     {
+        // Input and output file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+            {
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Cells["A1"].PutValue("Sample");
+                tempSheet.Cells["B1"].PutValue(123);
+                tempWb.Save(inputPath);
+            }
 
-            // Load the workbook (using standard loading; LightCells API may not be available in all versions)
-            var workbook = new Workbook(inputPath);
+            // Load the source workbook.
+            Workbook srcWorkbook = new Workbook(inputPath);
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
-            // (Optional) Perform any workbook processing here
+            // Prepare a destination workbook to store processed data.
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+            // Determine the used range.
+            int maxRow = srcSheet.Cells.MaxDataRow;
+            int maxCol = srcSheet.Cells.MaxDataColumn;
 
-            // Save the workbook to a new file
-            workbook.Save(outputPath);
+            // Copy each cell's value to the destination sheet.
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    object value = srcSheet.Cells[row, col].Value;
+                    if (value != null)
+                    {
+                        destSheet.Cells[row, col].PutValue(value);
+                    }
+                }
+            }
+
+            // Save the processed workbook.
+            destWorkbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

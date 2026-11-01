@@ -1,63 +1,53 @@
-// Title: Handle incorrect password and corrupted encrypted Excel files separately with Aspose.Cells in C#
-// AI Prompts: Generate C# code that opens an encrypted .xlsx using Aspose.Cells, verifies the file exists, and prints a distinct message for an invalid password versus a corrupted workbook. | Write a try‑catch structure for Aspose.Cells Workbook loading that catches CellsException and uses the exception message to differentiate password errors from file corruption. | Show how to add a fallback catch for unexpected exceptions when loading a password‑protected Excel file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# detect wrong password when opening encrypted .xlsx | How to identify corrupted encrypted Excel file using Aspose.Cells .NET | C# differentiate CellsException password error from file corruption in Aspose.Cells | Load encrypted workbook with Aspose.Cells and handle invalid password separately | Aspose.Cells error handling for password‑protected Excel files in C#
-// Tags: Aspose.Cells load encrypted xlsx with password | CellsException password error handling | encrypted workbook corruption detection Aspose.Cells | C# file existence check before loading Aspose.Cells | Aspose.Cells distinct error messages for password vs corruption
+// Title: C# error handling to distinguish wrong password from corrupted encrypted Excel workbook with Aspose.Cells
+// Common Searches: how to catch wrong password error when opening an encrypted .xlsx using Aspose.Cells in C# | detect corrupted encrypted Excel file versus invalid password with Aspose.Cells LoadOptions | Aspose.Cells CellsException message check for password mismatch in .NET | C# load encrypted workbook and differentiate password mismatch from file corruption | handle encrypted Excel file errors and provide specific messages with Aspose.Cells
+// Tags: Aspose.Cells load encrypted workbook error handling | CellsException password mismatch detection | encrypted .xlsx file corruption handling Aspose.Cells | C# differentiate password error from file corruption | LoadOptions password validation Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Demonstrates loading an encrypted Excel file with Aspose.Cells in C#, checking file existence, applying LoadOptions with a password, and using CellsException message analysis to distinguish an incorrect password from a corrupted or unreadable workbook.
+// The example loads an encrypted Excel workbook using Aspose.Cells LoadOptions with a user‑supplied password, then catches CellsException to examine its message. If the message contains the word "password" a specific wrong‑password error is reported; otherwise a corrupted or unreadable file error is shown, with a generic catch for any other exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the encrypted Excel file
+        // Path to the encrypted workbook
         string filePath = "encrypted.xlsx";
 
-        // Password supplied by the user
-        string password = "userPassword";
+        // The password supplied by the user (could be wrong)
+        string suppliedPassword = "UserSuppliedPassword";
 
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
-            return;
-        }
-
-        // LoadOptions with the password for opening encrypted files
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-        {
-            Password = password
-        };
+        // Prepare load options with the supplied password
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        loadOptions.Password = suppliedPassword;
 
         try
         {
-            // Attempt to load the workbook using the provided password
+            // Attempt to load the encrypted workbook
             Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // If loading succeeds, continue processing the workbook here
+            // If we reach this point the password is correct and the file is not corrupted
             Console.WriteLine("Workbook loaded successfully.");
+            // Further processing can be done here...
         }
         catch (CellsException ex)
         {
-            // Aspose.Cells throws CellsException for both wrong password and corrupted files.
-            // Distinguish based on the error message.
+            // Aspose.Cells throws CellsException for both incorrect password and corrupted file scenarios.
+            // Distinguish based on the exception message or error code.
 
-            // Wrong password scenario (message typically contains "Password")
-            if (ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
+            // Incorrect password typically contains this phrase in the message.
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                Console.WriteLine("Error: Incorrect password provided.");
+                Console.WriteLine("Error: The supplied password is incorrect.");
             }
+            // Corrupted or unreadable file will have a different message.
             else
             {
-                // Any other CellsException is treated as a corrupted or unreadable file
-                Console.WriteLine("Error: The file appears to be corrupted or unreadable.");
+                Console.WriteLine("Error: The encrypted file appears to be corrupted or unreadable.");
             }
         }
         catch (Exception ex)
         {
-            // Catch any other unexpected exceptions
+            // Catch any other unexpected exceptions.
             Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }

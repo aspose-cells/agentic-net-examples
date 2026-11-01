@@ -1,60 +1,52 @@
-// Title: Export a worksheet to XML with Aspose.Cells in C# while preserving dates, numbers and formatting
-// AI Prompts: Write C# code that creates a workbook, applies date and currency styles to cells, and saves it as XML using Aspose.Cells XmlSaveOptions configured to retain data types and number formats. | Demonstrate how to set XmlSaveOptions so that the first row is treated as a header and the worksheet name becomes the XML element name during export. | Adapt the sample to export only selected worksheet indexes to XML, ensuring that all applied cell styles are kept in the output.
-// Common Searches: Aspose.Cells C# export worksheet to XML preserving cell formatting | How to keep date and currency formats when saving Excel as XML with Aspose.Cells | XmlSaveOptions DataAsAttribute false keep data types Aspose.Cells | Export Excel sheet with header row as XML elements using Aspose.Cells .NET | Save specific worksheets to XML with Aspose.Cells C#
-// Tags: export worksheet to XML with XmlSaveOptions | preserve cell data types in XML output Aspose.Cells | apply date and currency number formats before XML export | include header row as XML elements Aspose.Cells | selective worksheet export to XML Aspose.Cells
+// Title: Export a single worksheet from an .xlsx file to Excel 2003 XML while keeping data types and formatting using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, copies the first worksheet into a new workbook, and saves it as Excel 2003 XML preserving data types and formatting with Aspose.Cells. | Show how to maintain the original worksheet name after copying and exporting to XML in Aspose.Cells. | Add robust error handling for missing input files and exceptions during the XML export process in C#.
+// Common Searches: Aspose.Cells export first sheet to Excel 2003 XML preserving formatting | C# save worksheet as XML with original data types using Aspose.Cells | How to keep worksheet name when converting .xlsx to XML in .NET | Error handling for missing Excel file during Aspose.Cells XML export
+// Tags: export worksheet to XML Aspose.Cells | preserve cell data types Aspose.Cells | retain original sheet name C# | copy worksheet to new workbook Aspose.Cells | SaveFormat.Xml usage .NET | Excel 2003 XML conversion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, adds date and currency values with appropriate number formats, configures XmlSaveOptions to output data as elements, use the sheet name as the XML element, treat the first row as a header, and saves the workbook to an XML file while preserving cell data types and formatting.
+// The program loads 'input.xlsx', copies its first worksheet into a new workbook, retains the original sheet name, and saves the result as Excel 2003 XML ('output.xml') using Aspose.Cells, with file existence checks and basic exception handling.
 class ExportWorksheetToXml
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "SampleData";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xml";
 
-            // Populate cells with different data types
-            sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["A2"].PutValue(DateTime.Now);   // DateTime value
-            sheet.Cells["B2"].PutValue(1234.56);        // Numeric value
-
-            // Apply formatting to preserve data types in the XML output
-            // Date format
-            Style dateStyle = sheet.Cells["A2"].GetStyle();
-            dateStyle.Number = 14; // Short date format
-            sheet.Cells["A2"].SetStyle(dateStyle);
-
-            // Currency format
-            Style currencyStyle = sheet.Cells["B2"].GetStyle();
-            currencyStyle.Number = 10; // Currency format
-            sheet.Cells["B2"].SetStyle(currencyStyle);
-
-            // Configure XML save options to retain formatting and data types
-            XmlSaveOptions saveOptions = new XmlSaveOptions
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                DataAsAttribute = false,          // Export data as elements (preserves types)
-                SheetNameAsElementName = true,    // Use sheet name as XML element name
-                HasHeaderRow = true,              // First row is a header
-                SheetIndexes = null               // Export all sheets
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Define output file path
-            string outputPath = "ExportedData.xml";
+            // Load the source workbook
+            Workbook srcWorkbook = new Workbook(inputPath);
+            Worksheet srcWorksheet = srcWorkbook.Worksheets[0]; // first worksheet
 
-            // Save the workbook as an XML file using the configured options
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook successfully exported to '{Path.GetFullPath(outputPath)}'.");
+            // Create a new workbook and remove its default empty sheet
+            Workbook destWorkbook = new Workbook();
+            destWorkbook.Worksheets.Clear();
+
+            // Copy the source worksheet into the destination workbook
+            // AddCopy returns the index of the newly added worksheet
+            int copiedIndex = destWorkbook.Worksheets.AddCopy(srcWorksheet.Name);
+            Worksheet copiedWorksheet = destWorkbook.Worksheets[copiedIndex];
+            // Preserve the original name (AddCopy may append a suffix)
+            copiedWorksheet.Name = srcWorksheet.Name;
+
+            // Save as Excel 2003 XML
+            destWorkbook.Save(outputPath, SaveFormat.Xml);
+
+            Console.WriteLine($"Worksheet exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

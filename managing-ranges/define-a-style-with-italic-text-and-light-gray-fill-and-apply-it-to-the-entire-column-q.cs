@@ -1,40 +1,47 @@
-// Title: How to style column Q with italic text and light gray fill using Aspose.Cells for .NET
-// AI Prompts: Create a Style with IsItalic = true and a solid LightGray background, then apply it to column Q via Worksheet.Cells.Columns[16].ApplyStyle. | Configure a StyleFlag with All = true and use it to apply the defined style to the entire column Q in an Aspose.Cells workbook.
-// Common Searches: Aspose.Cells C# apply italic font and gray background to a whole column | set style for column Q in Excel using Aspose.Cells .NET API | apply style to column by index in Aspose.Cells workbook C# example | how to use StyleFlag to format an entire column with Aspose.Cells
-// Tags: apply style to column Aspose.Cells | italic font with solid gray fill C# | StyleFlag all attributes Aspose.Cells | column Q formatting Aspose.Cells .NET
+// Title: Apply italic font and light gray fill style to column Q using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply italic style to an entire column | Set light gray background for column Q in Excel using Aspose.Cells | How to use StyleFlag to format a whole column with Aspose.Cells .NET | Create and apply a custom style to column Q programmatically | Apply font and fill formatting to column Q with Aspose.Cells for .NET
+// Tags: column-wide style application Aspose.Cells | italic font with solid gray fill Aspose.Cells | StyleFlag All attribute usage Aspose.Cells | formatting column Q Excel Aspose.Cells | custom style creation Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
 using System.Drawing;
 
-// Creates a new workbook, defines a style with italic font and a solid light‑gray fill, prepares a StyleFlag that applies all style attributes, applies the style to the entire column Q (index 16), and saves the workbook as StyledColumnQ.xlsx.
+// The example creates a workbook, defines a style with italic font and a solid light‑gray fill, sets a StyleFlag with All=true, and applies the style to column Q (index 16) via the Columns collection, then saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define a new style
-        Style italicGrayStyle = workbook.CreateStyle();
-        italicGrayStyle.Font.IsItalic = true;                 // Italic text
-        italicGrayStyle.ForegroundColor = Color.LightGray;   // Light gray fill
-        italicGrayStyle.Pattern = BackgroundType.Solid;      // Apply solid fill
+            // Create a new style
+            Style style = workbook.CreateStyle();
 
-        // Prepare a StyleFlag to apply all style attributes
-        StyleFlag styleFlag = new StyleFlag();
-        styleFlag.All = true;
+            // Set the font to italic
+            style.Font.IsItalic = true;
 
-        // Column Q is the 17th column (zero‑based index 16)
-        int columnIndex = 16;
+            // Set the fill to light gray
+            style.ForegroundColor = Color.LightGray;
+            style.Pattern = BackgroundType.Solid;
 
-        // Apply the style to the entire column Q
-        worksheet.Cells.Columns[columnIndex].ApplyStyle(italicGrayStyle, styleFlag);
+            // Define a style flag to apply all style attributes
+            StyleFlag flag = new StyleFlag { All = true };
 
-        // Save the workbook
-        workbook.Save("StyledColumnQ.xlsx");
+            // Apply the style to the entire column Q (zero‑based index 16)
+            // Use the Columns collection from the Cells object
+            sheet.Cells.Columns[16].ApplyStyle(style, flag);
+
+            // Save the workbook
+            workbook.Save("Output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

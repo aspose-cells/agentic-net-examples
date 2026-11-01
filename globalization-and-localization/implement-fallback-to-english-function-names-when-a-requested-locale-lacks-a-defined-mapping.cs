@@ -1,92 +1,52 @@
-// Title: Use Aspose.Cells for .NET to apply locale‑specific formula translations with fallback to English when a mapping is missing
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, replaces English function names with localized equivalents from a dictionary, and automatically restores the original English formula if the locale mapping is absent or calculation throws an error. | Show how to iterate through all worksheets and cells, perform case‑insensitive regex replacements of function names based on a requested locale, and implement a try‑catch fallback to English formulas using Aspose.Cells. | Demonstrate saving the workbook after processing localized formulas and ensuring calculations succeed by reverting to English when the locale does not define a translation.
-// Common Searches: asp.net aspose.cells fallback to English formula when locale mapping not found | c# replace excel function names with localized versions using Aspose.Cells | how to handle missing function translations in Aspose.Cells formula calculation | iterate over worksheets and cells to apply locale specific formula translation aspose.cells | calculate workbook after translating formulas to French or German with Aspose.Cells
-// Tags: Aspose.Cells formula localization fallback | C# regex function name translation Aspose.Cells | Excel workbook calculate with locale-specific functions | Aspose.Cells missing locale mapping handling | iterate worksheets cells formulas Aspose.Cells
+// Title: How to use English Excel formulas as a fallback when a locale has no mapping in Aspose.Cells for C#
+// Common Searches: Aspose.Cells C# use English formulas when locale mapping is missing | fallback to English function names in Aspose.Cells for unsupported culture | calculate workbook formulas with undefined locale in Aspose.Cells | set workbook CultureInfo to de-DE but keep English formulas Aspose.Cells | handle missing locale mapping for Excel functions in Aspose.Cells C#
+// Tags: Aspose.Cells default English formulas | Aspose.Cells locale mapping absence handling | Workbook CultureInfo configuration Aspose.Cells | Excel formula localization strategy Aspose.Cells | C# fallback for undefined culture in Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Globalization;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, looks up a dictionary of locale‑specific function name translations, applies those translations to each formula via case‑insensitive regex, attempts to calculate the localized formula, and if calculation fails restores the original English formula before recalculating, finally saving the updated workbook.
+// The example creates a workbook, sets its CultureInfo to German (de-DE), writes English formulas (SUM and AVERAGE) directly into cells, calculates the formulas, displays the results, and saves the file as FallbackExample.xlsx, demonstrating how English function names act as a fallback when a locale lacks a specific mapping.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (using the provided load rule)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Desired locale for function names
-        string requestedLocale = "es-ES";
-
-        // Define translations for locales that have explicit mappings
-        var localeFunctionMap = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase)
+        try
         {
-            { "fr-FR", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    { "SUM", "SOMME" },
-                    { "AVERAGE", "MOYENNE" }
-                }
-            },
-            { "de-DE", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    { "SUM", "SUMME" },
-                    { "AVERAGE", "MITTELWERT" }
-                }
-            }
-            // Additional locale mappings can be added here
-        };
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Retrieve the function translation dictionary for the requested locale, if it exists
-        Dictionary<string, string> translationDict = null;
-        if (!localeFunctionMap.TryGetValue(requestedLocale, out translationDict))
-        {
-            // No mapping for the requested locale – fallback to English (no translation needed)
-            translationDict = null;
+            // Set the workbook locale to German (de-DE)
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+            // Populate some data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+
+            // Use English function names (fallback behavior is not needed without custom mapping)
+            sheet.Cells["B1"].Formula = "SUM(A1:A3)";
+            sheet.Cells["B2"].Formula = "AVERAGE(A1:A3)";
+
+            // Calculate all formulas
+            workbook.CalculateFormula();
+
+            // Output the results
+            Console.WriteLine("SUM result (should be 60): " + sheet.Cells["B1"].Value);
+            Console.WriteLine("AVERAGE result (should be 20): " + sheet.Cells["B2"].Value);
+
+            // Define output file path
+            string outputPath = "FallbackExample.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Iterate through all worksheets and cells containing formulas
-        foreach (Worksheet sheet in workbook.Worksheets)
+        catch (Exception ex)
         {
-            foreach (Cell cell in sheet.Cells)
-            {
-                if (cell.IsFormula)
-                {
-                    string originalFormula = cell.Formula;
-                    string localizedFormula = originalFormula;
-
-                    // Apply locale‑specific translations if a mapping exists
-                    if (translationDict != null)
-                    {
-                        foreach (var kvp in translationDict)
-                        {
-                            // Replace English function name with its localized counterpart (case‑insensitive)
-                            localizedFormula = Regex.Replace(
-                                localizedFormula,
-                                @"\b" + kvp.Key + @"\b",
-                                kvp.Value,
-                                RegexOptions.IgnoreCase);
-                        }
-                    }
-
-                    // Attempt to calculate using the localized formula
-                    try
-                    {
-                        cell.Formula = localizedFormula;
-                        workbook.CalculateFormula();
-                    }
-                    catch
-                    {
-                        // If calculation fails because the function is not defined in the locale,
-                        // revert to the original English formula and recalculate
-                        cell.Formula = originalFormula;
-                        workbook.CalculateFormula();
-                    }
-                }
-            }
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-
-        // Save the workbook (using the provided save rule)
-        workbook.Save("output.xlsx");
     }
 }

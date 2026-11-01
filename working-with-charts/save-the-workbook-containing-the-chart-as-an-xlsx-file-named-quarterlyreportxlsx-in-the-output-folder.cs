@@ -1,69 +1,60 @@
-// Title: Save a workbook with a column chart as QuarterlyReport.xlsx in an output folder using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a worksheet, fills quarter and revenue data, adds a column chart linked to those ranges, and saves the file as QuarterlyReport.xlsx in a specified output directory with Aspose.Cells. | Generate a .NET snippet that ensures an "output" folder exists, builds a column chart from cells A2:A5 and B2:B5, and writes the workbook to the folder in XLSX format using Aspose.Cells.
-// Common Searches: asp.net how to add a column chart to an Excel workbook and save it to a custom folder with Aspose.Cells | c# Aspose.Cells generate quarterly revenue chart and export as QuarterlyReport.xlsx | save workbook containing chart to output directory using Aspose.Cells for .NET | create Excel file with chart from range B2:B5 and A2:A5 in C#
-// Tags: Aspose.Cells create column chart | Aspose.Cells save workbook as xlsx | Aspose.Cells chart data source range | C# generate quarterly revenue Excel | Aspose.Cells ensure output directory
+// Title: Generate a column chart in a new Excel workbook and save it as QuarterlyReport.xlsx using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a worksheet, fills month and sales data, adds a column chart, and saves the file as QuarterlyReport.xlsx in an output folder. | Change the chart type to a line chart and rename the output file to SalesTrend.xlsx while preserving the data range and folder logic. | Add a parameter to set the chart title at runtime and allow the caller to specify the destination directory for the saved workbook.
+// Common Searches: aspnet c# how to add a column chart to a workbook and export as xlsx with Aspose.Cells | save Aspose.Cells workbook with chart to a custom folder in .NET | example code for creating quarterly sales chart using Aspose.Cells and saving as QuarterlyReport.xlsx | Aspose.Cells C# set chart data range and export workbook to specific directory | create Excel file with chart and specify output path using Aspose.Cells for .NET
+// Tags: Aspose.Cells create column chart in workbook | save workbook as XLSX to custom directory | Aspose.Cells set chart data range | C# generate quarterly sales chart with Aspose.Cells | Aspose.Cells output folder handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The program creates a new workbook, adds a worksheet named "Data", populates month and sales values, inserts a column chart titled "Quarterly Sales" using that data, ensures an "output" directory exists, and saves the workbook as "QuarterlyReport.xlsx" in that folder.
+class Program
 {
-    // The example creates a new workbook, populates cells A1:B5 with quarter and revenue values, adds a column chart that references those ranges, ensures an "output" folder exists, and saves the workbook as QuarterlyReport.xlsx in that folder using Aspose.Cells for .NET.
-    public class SaveWorkbookWithChart
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet and name it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Quarter");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-            worksheet.Cells["A5"].PutValue("Q4");
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
 
-            worksheet.Cells["B1"].PutValue("Revenue");
-            worksheet.Cells["B2"].PutValue(15000);
-            worksheet.Cells["B3"].PutValue(20000);
-            worksheet.Cells["B4"].PutValue(18000);
-            worksheet.Cells["B5"].PutValue(22000);
+            string[] months = { "Jan", "Feb", "Mar", "Apr" };
+            double[] sales = { 1200, 1500, 1800, 1600 };
+
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A
+                sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B
+            }
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 15);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Quarterly Sales";
 
-            // Set the data source for the chart
+            // Set the data range for the chart
             chart.NSeries.Add("B2:B5", true);
             chart.NSeries.CategoryData = "A2:A5";
 
-            // Ensure the output directory exists
-            string outputFolder = "output";
-            Directory.CreateDirectory(outputFolder);
-
-            // Save the workbook as an XLSX file named QuarterlyReport.xlsx
+            // Define the output path (output folder relative to the current directory)
+            string outputFolder = Path.Combine(Environment.CurrentDirectory, "output");
+            Directory.CreateDirectory(outputFolder); // Ensure the folder exists
             string outputPath = Path.Combine(outputFolder, "QuarterlyReport.xlsx");
-            workbook.Save(outputPath, SaveFormat.Xlsx);
 
-            Console.WriteLine($"Workbook with chart saved to: {outputPath}");
+            // Save the workbook as an XLSX file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

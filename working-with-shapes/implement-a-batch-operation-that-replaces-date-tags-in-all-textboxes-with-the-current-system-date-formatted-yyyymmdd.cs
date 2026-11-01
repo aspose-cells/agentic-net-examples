@@ -1,42 +1,67 @@
-// Title: Batch replace <DATE> placeholder in all TextBox shapes of an Excel workbook with the current date (yyyy‑MM‑dd) using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet and updates each TextBox shape by substituting the <DATE> tag with DateTime.Now formatted as yyyy-MM-dd. | Create a reusable method in C# that accepts a Workbook object and replaces any <DATE> markers inside TextBox objects across all sheets, then saves the workbook.
-// Common Searches: how to programmatically update text inside Excel TextBox shapes using Aspose.Cells C# | replace custom placeholder in all Excel textboxes with today's date in .NET | Aspose.Cells iterate through shapes and modify textbox content batch | C# example for bulk editing of TextBox text in an Excel file | set system date in Excel textbox placeholders using Aspose.Cells library
-// Tags: Aspose.Cells batch textbox text replacement | C# replace placeholder in Excel TextBox shapes | update TextBox content with system date Aspose.Cells | iterate worksheet shapes Aspose.Cells .NET | format yyyy-MM-dd in Excel textbox using Aspose | process all TextBox objects in workbook Aspose.Cells
+// Title: How to replace <DATE> tokens in all TextBox shapes of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates through every worksheet and each Shape, detects TextBox shapes containing the <DATE> token, and substitutes it with DateTime.Now formatted as yyyy-MM-dd. | Create a C# routine using Aspose.Cells to batch‑process an Excel file, updating the Text property of all TextBox shapes that include <DATE> with the current system date in yyyy‑MM‑dd format.
+// Common Searches: aspocells c# substitute <DATE> token in textbox shapes across all worksheets | batch update text in Excel TextBox shapes using Aspose.Cells .NET | how to insert current date into shape text with Aspose.Cells C# | iterate through workbook shapes and modify placeholder text Aspose.Cells example | replace token in Excel shape text with system date Aspose.Cells tutorial
+// Tags: Aspose.Cells batch shape text replacement | Excel TextBox shape date insertion C# | Iterate workbook shapes Aspose.Cells .NET | Update shape Text property with system date | Format yyyy-MM-dd in Excel using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, iterates through each worksheet and every TextBox shape, replaces any <DATE> tag with the current system date formatted as yyyy‑MM‑dd, and saves the updated file.
-class ReplaceDateInTextBoxes
+// The program loads an Excel workbook, loops through each worksheet and its shapes, finds TextBox shapes containing the <DATE> token, replaces the token with the current system date formatted yyyy-MM-dd, and saves the updated file.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Current system date formatted as yyyy-MM-dd
-        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate through all shapes on the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Process only TextBox shapes
-                if (shape is TextBox textBox)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Prepare the current date string in the required format
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Replace <DATE> tag if present
-                    if (textBox.Text != null && textBox.Text.Contains("<DATE>"))
+                    // Process shapes that contain text (e.g., TextBox)
+                    string text = shape.Text;
+                    if (!string.IsNullOrEmpty(text) && text.Contains("<DATE>"))
                     {
-                        textBox.Text = textBox.Text.Replace("<DATE>", currentDate);
+                        string newText = text.Replace("<DATE>", currentDate);
+                        shape.Text = newText;
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

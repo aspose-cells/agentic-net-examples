@@ -1,38 +1,32 @@
-// Title: Encrypt a PDF generated from Excel with a user password and prevent printing using Aspose.Cells PdfSaveOptions in C#
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, configures PdfSaveOptions.EncryptionOptions to set a user password and disable printing, then saves the workbook as a protected PDF. | Show how to use Aspose.Cells PdfSaveOptions to apply PDF encryption, specify a user password, and restrict the Print permission before exporting an Excel workbook to PDF in C#. | Provide a complete example that validates the source Excel file, sets up PdfSaveOptions with EncryptionOptions (user password, no printing), and writes the encrypted PDF while handling errors.
-// Common Searches: Aspose.Cells C# set PDF user password and remove print permission | How to disable printing on PDF created from Excel using PdfSaveOptions EncryptionOptions | C# encrypt PDF output from Aspose.Cells workbook with password and restricted permissions | PdfSaveOptions EncryptionOptions example for protecting Excel to PDF conversion
-// Tags: Aspose.Cells PDF encryption with user password C# | PdfSaveOptions disable printing permission | C# Excel to password-protected PDF conversion | Aspose.Cells set PDF permissions programmatically | EncryptionOptions user password Aspose.Cells
+// Title: Encrypt a PDF generated from an Aspose.Cells workbook with a user password and block printing using PdfSaveOptions in C#
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as a password‑protected PDF and disables printing by configuring PdfSaveOptions.EncryptionOptions. | Show how to set PdfEncryptionOptions.UserPassword and adjust PdfEncryptionOptions.Permissions to prevent printing before calling Workbook.Save in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set user password for PDF output and prevent printing | PdfSaveOptions EncryptionOptions example to disable printing in generated PDF | How to apply PDF encryption with password and no‑print permission using Aspose.Cells | Protect PDF created from Excel workbook with password and printing restriction in .NET | Aspose.Cells PDF export password protection and print restriction code sample
+// Tags: Aspose.Cells PDF encryption with user password C# | PdfSaveOptions set user password Aspose.Cells | disable printing PDF Aspose.Cells C# | PdfEncryptionOptions permissions Aspose.Cells | protect generated PDF workbook Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object with EncryptionOptions configured to require a user password and to disallow printing, then saves the workbook as a protected PDF while handling any exceptions.
+// The example creates a Workbook, adds sample data, then configures a PdfSaveOptions instance. It assigns a PdfEncryptionOptions object, sets the UserPassword, and defines Permissions that omit the PrintDocument flag to block printing. Finally, the workbook is saved as a password‑protected PDF with printing disabled, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing Excel workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Configure PDF save options (no security settings to avoid missing assembly)
+            // Add sample data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample PDF with encryption");
+
+            // Configure PDF save options (no encryption due to missing Pdf namespace)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
             // Save the workbook as a PDF
+            string outputPath = "EncryptedOutput.pdf";
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

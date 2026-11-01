@@ -1,12 +1,12 @@
-// Title: Set worksheet printer paper size to A4 and export as XLSX with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells PageSetup.PaperSize to assign PaperA4 to a worksheet, then save the workbook as an XLSX file in C#. | Modify the example to change the printer paper size to Letter and export the workbook to CSV using Aspose.Cells. | Add robust exception handling while configuring worksheet print layout and saving the file with a custom filename.
-// Common Searches: C# code to apply A4 paper size to an Aspose.Cells worksheet prior to export | save Excel file with specific printer settings using Aspose.Cells .NET | how to change page setup paper size in Aspose.Cells workbook | C# example for configuring PageSetup.PaperSize and exporting to XLSX | Aspose.Cells set print layout for worksheet programmatically
-// Tags: Aspose.Cells worksheet PageSetup configuration | C# set printer paper size A4 | save workbook as XLSX with custom print layout | Aspose.Cells export with specific paper size | configure Excel print settings programmatically
+// Title: Set worksheet printer paper size to A4 and save the workbook as XLSX using Aspose.Cells in C#
+// Common Searches: how to set A4 paper size for an Excel worksheet with Aspose.Cells C# | Aspose.Cells C# preserve page setup settings when saving a workbook | C# set worksheet PageSetup PaperSize before exporting to XLSX | save Excel file with specific printer paper size using Aspose.Cells | Aspose.Cells retain printer layout after saving workbook in C#
+// Tags: Aspose.Cells set worksheet paper size | C# Aspose.Cells PageSetup PaperSize | save workbook with printer settings Aspose.Cells | Aspose.Cells export Excel A4 layout | C# configure Excel print paper size Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a new Workbook, accesses the first worksheet, sets its PageSetup.PaperSize to A4, writes sample data to cells A1 and B1, and saves the workbook as Output.xlsx while handling any exceptions.
+// The example creates a new Workbook, accesses the first Worksheet, sets its PageSetup.PaperSize to PaperA4, fills sample data cell by cell, ensures the output directory exists, and saves the file as an XLSX while preserving the printer paper size setting.
 class Program
 {
     static void Main()
@@ -16,18 +16,44 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Set the printer paper size (e.g., A4) for the worksheet
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            worksheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
 
-            // (Optional) Add some sample data
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["B1"].PutValue("Data");
+            // Sample data to be written
+            object[,] data = new object[,]
+            {
+                { "Name", "Age", "City" },
+                { "John", 30, "New York" },
+                { "Anna", 25, "London" },
+                { "Mike", 35, "Sydney" }
+            };
 
-            // Save the workbook in XLSX format
-            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+            // Fill the worksheet cell by cell (compatible with all Aspose.Cells versions)
+            int rows = data.GetLength(0);
+            int cols = data.GetLength(1);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    worksheet.Cells[i, j].PutValue(data[i, j]);
+                }
+            }
+
+            // Determine output path
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists (handle case where outputPath has no directory)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook; the printer paper size setting is retained
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

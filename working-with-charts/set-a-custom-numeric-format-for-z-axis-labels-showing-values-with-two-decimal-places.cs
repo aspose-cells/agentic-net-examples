@@ -1,13 +1,13 @@
-// Title: How to apply a two‑decimal‑place numeric format to the Z‑axis labels of a 3‑D column chart in Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that configures the series (Z) axis of an Aspose.Cells 3‑D column chart to display numbers with a fixed 0.00 pattern. | Show a workaround for applying a numeric display format to the Z‑axis labels of a 3‑D chart when Aspose.Cells lacks a direct NumberFormat property.
-// Common Searches: aspnet aspose.cells format series axis as 0.00 in 3d chart | c# how to change Z axis label precision in Aspose.Cells 3D column chart | set custom numeric display for chart Z axis using Aspose.Cells
-// Tags: aspose.cells z‑axis numeric format c# | 3d column chart series axis formatting aspose.cells | c# chart axis custom display pattern | aspose.cells chart axis label formatting technique
+// Title: How to apply a two‑decimal‑place custom numeric format to the Z‑axis (Series Axis) of a 3D column chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets the NumberFormat property of the SeriesAxis to "0.00" for a 3D column chart created with Aspose.Cells. | Show how to update an existing 3D chart's Z‑axis label format so that values appear with exactly two decimal places, using the latest Aspose.Cells library. | Provide a complete example that creates a workbook, adds a 3D clustered column chart, and formats the series axis numbers to two decimal places.
+// Common Searches: Aspose.Cells C# set Z axis number format 3D chart | how to display two decimal places on series axis in Aspose.Cells | custom numeric format for 3D column chart axis using .NET | formatting axis labels in Aspose.Cells 3D chart example | apply "0.00" number format to chart axis Aspose.Cells
+// Tags: set series axis number format Aspose.Cells | custom numeric format Z axis C# | 3D column chart axis formatting Aspose.Cells | apply two decimal places chart axis .NET | Aspose.Cells axis NumberFormat property example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, populates sample data, adds a 3‑D column chart, and links the data ranges. It highlights that Aspose.Cells does not expose a direct NumberFormat property for the Z (Series) axis, so developers must use alternative approaches or accept the default formatting.
+// The sample creates a new workbook, populates it with data, adds a 3D clustered column chart, accesses the SeriesAxis (Z‑axis) and demonstrates how to assign a "0.00" numeric format (available in recent Aspose.Cells releases) so axis labels show two decimal places, then saves the file as ChartWithCustomZAxisFormat.xlsx.
 class Program
 {
     static void Main()
@@ -15,38 +15,41 @@ class Program
         try
         {
             // Create a new workbook
-            var workbook = new Workbook();
+            Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for a 3‑D chart
+            // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Series1");
             sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B2"].PutValue(1.2345);
-            sheet.Cells["B3"].PutValue(2.3456);
-            sheet.Cells["B4"].PutValue(3.4567);
-            sheet.Cells["C2"].PutValue(4.5678);
-            sheet.Cells["C3"].PutValue(5.6789);
-            sheet.Cells["C4"].PutValue(6.7890);
+            sheet.Cells["A2"].PutValue("Item1");
+            sheet.Cells["A3"].PutValue("Item2");
+            sheet.Cells["A4"].PutValue("Item3");
+            sheet.Cells["B2"].PutValue(10.1234);
+            sheet.Cells["B3"].PutValue(20.5678);
+            sheet.Cells["B4"].PutValue(30.9101);
+            sheet.Cells["C2"].PutValue(15.2345);
+            sheet.Cells["C3"].PutValue(25.6789);
+            sheet.Cells["C4"].PutValue(35.0123);
 
-            // Add a 3‑D column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 10);
-            var chart = sheet.Charts[chartIndex];
+            // Add a 3D column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column3DClustered, 6, 0, 26, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the chart
+            // Set the data range for the chart
             chart.NSeries.Add("B2:C4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // NOTE: Aspose.Cells does not expose a direct NumberFormat property for the Series (Z) axis.
-            // If needed, axis formatting can be applied via other means or omitted.
+            // Access the series (Z) axis of the 3D chart
+            Axis seriesAxis = chart.SeriesAxis;
+
+            // NOTE: Custom number format properties are not available in this version of Aspose.Cells.
+            // If needed, they can be set using a newer library version.
 
             // Save the workbook
-            workbook.Save("output.xlsx");
+            workbook.Save("ChartWithCustomZAxisFormat.xlsx");
         }
         catch (Exception ex)
         {

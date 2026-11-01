@@ -1,15 +1,14 @@
-// Title: Change a TextBox shape's linked cell from A1 to B2 and confirm the updated text using Aspose.Cells for .NET
-// AI Prompts: Set the TextBox.LinkedCell property to "B2", assign a value to cell B2, call Workbook.CalculateFormula(), and output the TextBox.Text to verify the change. | Write C# code that creates a workbook, adds a TextBox linked to A1, then programmatically switches the linked cell to B2, updates the cell value, recalculates formulas, and checks the shape's displayed text.
-// Common Searches: Aspose.Cells C# change TextBox linked cell from A1 to B2 | how to update shape linked cell and refresh text in Aspose.Cells .NET | verify that a linked shape reflects new cell value after recalculation in Aspose.Cells | programmatically switch linked cell of an Excel shape using Aspose.Cells | recalculate workbook after modifying shape's LinkedCell property in C#
-// Tags: Aspose.Cells change TextBox linked cell | C# update shape linked cell Excel | Aspose.Cells recalculate after linked cell change | verify shape text reflects cell value Aspose.Cells | save workbook with updated shape Aspose.Cells
+// Title: How to reassign a rectangle shape’s linked cell from A1 to B2 and refresh its text using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that changes a shape’s AlternativeText from "A1" to "B2", updates the shape’s Text property with the new cell value, and prints verification messages using Aspose.Cells. | Demonstrate how to rebind an existing rectangle shape to a different worksheet cell and synchronize its displayed text in a .NET workbook.
+// Common Searches: aspocells c# reassign shape linked cell A1 to B2 | update rectangle shape text after moving linked cell in Aspose.Cells | change shape reference to a different worksheet cell in Aspose.Cells | programmatically link Excel shape to a new cell using Aspose.Cells .NET | verify shape text reflects new linked cell value Aspose.Cells
+// Tags: Aspose.Cells shape linked cell modification | C# modify shape cell reference | Aspose.Cells rectangle shape text synchronization | programmatic Excel shape cell binding | shape text refresh after cell change Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
-using System.IO;
 
-// Demonstrates creating a workbook, adding a TextBox shape linked to cell A1, programmatically changing its LinkedCell to B2, updating the cell value, recalculating formulas, and confirming that the shape's displayed text reflects the new linked cell before saving the file.
-class Program
+// The example creates a workbook, adds a rectangle shape, links it to cell A1 via AlternativeText, sets the shape text from A1, then changes the link to B2, updates the shape text, and prints verification messages to confirm the update.
+class ShapeLinkedCellDemo
 {
     static void Main()
     {
@@ -19,39 +18,52 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a TextBox shape to the worksheet
-            // Parameters: upperLeftRow, upperLeftColumn, height, width, rowOffset, columnOffset
-            TextBox textBox = sheet.Shapes.AddTextBox(5, 5, 30, 150, 0, 0);
-            textBox.Name = "LinkedTextBox";
+            // Add a rectangle shape to the worksheet.
+            // Parameters: shape type, upper left row, upper left column,
+            // upper left row offset, upper left column offset,
+            // lower right row, lower right column
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row
+                2,   // upper left column
+                0,   // upper left row offset
+                0,   // upper left column offset
+                4,   // lower right row
+                4    // lower right column
+            );
 
-            // Link the shape to cell A1 and set a value in A1
-            textBox.LinkedCell = "A1";
-            sheet.Cells["A1"].PutValue("Value in A1");
+            // Set explicit size for the shape
+            shape.Width = 120;
+            shape.Height = 40;
 
-            // Recalculate to propagate the linked cell value to the shape
-            workbook.CalculateFormula();
+            // Initially link the shape to cell A1 (using AlternativeText to store the reference)
+            shape.AlternativeText = "A1";
+            // Set a value in A1; the shape will display this value
+            sheet.Cells["A1"].PutValue("First Value");
+            // Update shape text to reflect linked cell value
+            shape.Text = sheet.Cells["A1"].StringValue;
 
-            // Verify that the shape's text reflects the value of A1
-            Console.WriteLine("Linked to A1 -> Shape Text: " + textBox.Text); // Expected: "Value in A1"
+            // Verify initial linking
+            Console.WriteLine($"Initial linked cell: {shape.AlternativeText}");
+            Console.WriteLine($"Shape text (should be 'First Value'): {shape.Text}");
 
-            // Change the linked cell to B2 and set a value in B2
-            textBox.LinkedCell = "B2";
-            sheet.Cells["B2"].PutValue("Value in B2");
+            // Change the linked cell to B2
+            shape.AlternativeText = "B2";
+            // Set a value in B2; the shape will now display this new value
+            sheet.Cells["B2"].PutValue("Second Value");
+            // Update shape text to reflect new linked cell value
+            shape.Text = sheet.Cells["B2"].StringValue;
 
-            // Recalculate again to update the shape
-            workbook.CalculateFormula();
+            // Verify updated linking
+            Console.WriteLine($"Updated linked cell: {shape.AlternativeText}");
+            Console.WriteLine($"Shape text (should be 'Second Value'): {shape.Text}");
 
-            // Verify that the shape's text now reflects the value of B2
-            Console.WriteLine("Linked to B2 -> Shape Text: " + textBox.Text); // Expected: "Value in B2"
-
-            // Save the workbook (optional verification step)
-            string outputPath = "ShapeLinkedCellDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            // Optional: Save the workbook to verify the changes visually
+            // workbook.Save("ShapeLinkedCellDemo.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

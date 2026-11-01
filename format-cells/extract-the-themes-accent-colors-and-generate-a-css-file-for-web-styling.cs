@@ -1,23 +1,22 @@
-// Title: Create a CSS file with Excel theme accent colors using Aspose.Cells in C#
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, reads the six theme accent colors via Workbook.GetThemeColor, converts them to hex, and writes them as CSS custom properties in a .css file. | Add error handling to verify the input workbook exists and output a clear message before attempting to generate the CSS stylesheet. | Encapsulate the accent‑color extraction into a reusable method that returns a dictionary mapping "--accent1" … "--accent6" to their hex values.
-// Common Searches: how to read Excel theme accent colors with Aspose.Cells in C# | C# generate CSS variables from workbook theme colors | Aspose.Cells GetThemeColor example for creating a stylesheet | export Excel theme colors to a .css file using .NET | convert Excel theme colors to hex for web styling in C#
-// Tags: Aspose.Cells GetThemeColor C# | export workbook theme colors to CSS | generate CSS custom properties from workbook theme | C# extract workbook theme colors for web styling | write CSS root variables using Aspose.Cells
+// Title: Generate a CSS stylesheet from Excel workbook theme accent colors using Aspose.Cells for .NET
+// Common Searches: how to read Excel theme accent colors with Aspose.Cells in C# | convert workbook theme colors to hex and create CSS classes using Aspose.Cells | C# code to export Excel theme colors to a CSS file | Aspose.Cells GetThemeColor example for generating CSS stylesheet | extract six accent colors from an Excel file and write a .css file in .NET
+// Tags: Aspose.Cells GetThemeColor to hex conversion | generate CSS from Excel theme colors C# | export workbook accent colors as CSS classes | theme accent color extraction Aspose.Cells .NET | create stylesheet from Excel theme using Aspose.Cells | C# write CSS file from Excel theme palette
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Aspose.Cells;
 
-// Loads an Excel workbook, retrieves its six theme accent colors via Workbook.GetThemeColor, converts each to a hex string, and writes them as CSS custom properties inside a :root selector in a generated .css file.
-class Program
+// The example loads an Excel workbook with Aspose.Cells, retrieves the six theme accent colors via GetThemeColor, converts each color to a hexadecimal string, builds .accentN and .accentN-bg CSS class definitions, and writes the resulting stylesheet to a .css file.
+class ThemeToCss
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputPath = "theme-colors.css";
+            const string outputPath = "theme.css";
 
             // Verify that the input workbook exists
             if (!File.Exists(inputPath))
@@ -26,33 +25,48 @@ class Program
                 return;
             }
 
-            // Load the workbook
+            // Load the workbook from file
             Workbook workbook = new Workbook(inputPath);
 
-            // Build CSS content with theme accent colors
-            StringBuilder cssBuilder = new StringBuilder();
-            cssBuilder.AppendLine(":root {");
+            // Retrieve the six accent colors from the workbook theme
+            Color[] accentColors = new Color[6];
+            accentColors[0] = workbook.GetThemeColor(ThemeColorType.Accent1);
+            accentColors[1] = workbook.GetThemeColor(ThemeColorType.Accent2);
+            accentColors[2] = workbook.GetThemeColor(ThemeColorType.Accent3);
+            accentColors[3] = workbook.GetThemeColor(ThemeColorType.Accent4);
+            accentColors[4] = workbook.GetThemeColor(ThemeColorType.Accent5);
+            accentColors[5] = workbook.GetThemeColor(ThemeColorType.Accent6);
 
-            // Aspose.Cells provides up to 6 accent colors in a theme.
-            // Use Workbook.GetThemeColor to retrieve each accent color.
-            for (int i = 0; i < 6; i++)
+            // Build CSS definitions for each accent color
+            StringBuilder cssBuilder = new StringBuilder();
+
+            for (int i = 0; i < accentColors.Length; i++)
             {
-                ThemeColorType accentType = (ThemeColorType)Enum.Parse(typeof(ThemeColorType), $"Accent{i + 1}");
-                Color accentColor = workbook.GetThemeColor(accentType);
-                string hex = ColorTranslator.ToHtml(accentColor);
-                cssBuilder.AppendLine($"  --accent{i + 1}: {hex};");
+                Color color = accentColors[i];
+                string hex = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+
+                // Text color class
+                cssBuilder.AppendLine($".accent{i + 1} {{ color: {hex}; }}");
+
+                // Background color class
+                cssBuilder.AppendLine($".accent{i + 1}-bg {{ background-color: {hex}; }}");
             }
 
-            cssBuilder.AppendLine("}");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Write the CSS content to a file
+            // Write the generated CSS to a file
             File.WriteAllText(outputPath, cssBuilder.ToString());
 
-            Console.WriteLine($"CSS file '{outputPath}' has been generated successfully.");
+            Console.WriteLine($"CSS file '{outputPath}' has been created.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

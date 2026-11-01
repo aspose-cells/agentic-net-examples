@@ -1,89 +1,100 @@
-// Title: Create a master‑detail Excel report using Aspose.Cells smart markers, DataSet, and DataRelation in C#
-// AI Prompts: Design an Excel template with smart markers that auto‑repeat order rows and their corresponding detail rows, then fill it using a C# DataSet and WorkbookDesigner. | Set up Orders and OrderDetails DataTables, link them via a DataRelation on OrderID, bind the DataSet to WorkbookDesigner, process the markers, and export the workbook as MasterDetailReport.xlsx.
-// Common Searches: aspocells parent child report smart markers c# example | how to repeat rows for parent and child tables in Excel using Aspose.Cells | populate Excel from DataSet with master‑detail relationship using WorkbookDesigner | specify smart marker range for master‑detail layout in Aspose.Cells | c# generate excel file with orders and order items using smart markers
-// Tags: smart markers hierarchical report Aspose.Cells | WorkbookDesigner DataSet binding C# | smart marker range definition Aspose.Cells | repeat rows for related tables Aspose.Cells | DataRelation based Excel report Aspose.Cells
+// Title: Create a master‑detail Excel report with hierarchical smart markers and a DataSet using Aspose.Cells in C#
+// AI Prompts: Write C# code that defines an Excel template with {Customers.Name} and {Customers.City} smart markers for the master section and {Customers.Orders.OrderID}, {Customers.Orders.OrderDate}, {Customers.Orders.Amount} markers for the detail section, then populate it from a DataSet and save the workbook as .xlsx. | Apply a date format (e.g., "mm/dd/yyyy") to the OrderDate column and a currency format to the Amount column in the smart‑marker template before processing it with WorkbookDesigner. | Insert a blank row between the master and detail tables, auto‑size the columns after processing, and export the final file as an Excel workbook.
+// Common Searches: asp.net c# generate master detail Excel using Aspose.Cells smart markers | how to use hierarchical smart markers with a DataSet in Aspose.Cells | Aspose.Cells WorkbookDesigner master‑detail report example | C# create Excel report with customers and orders tables using smart markers | Aspose.Cells smart marker syntax for related tables
+// Tags: Aspose.Cells hierarchical smart markers | C# WorkbookDesigner master‑detail report | Excel generation from DataSet Aspose | smart marker template for related tables | master‑detail Excel export Aspose.Cells
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace MasterDetailReportExample
+namespace MasterDetailReport
 {
-    // The example builds an Excel template, inserts smart markers to repeat rows for Orders and their related OrderDetails, creates a DataSet with Orders and OrderDetails tables linked by a DataRelation, assigns the DataSet to a WorkbookDesigner, processes all smart markers, and saves the populated workbook as MasterDetailReport.xlsx.
+    // The sample builds an Excel workbook, adds a template with hierarchical smart markers for a Customers master table and its related Orders detail table, creates a DataSet containing both tables and a relation, processes the template with WorkbookDesigner to fill the data, and saves the result as MasterDetailReport.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ---------- Create template workbook ----------
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Name = "Report";
 
-            // Master table header
-            cells["A1"].PutValue("Order ID");
-            cells["B1"].PutValue("Customer");
+            // -------------------------------------------------
+            // Build the template with smart markers
+            // -------------------------------------------------
+            // Header for master (Customer) table
+            sheet.Cells["A1"].PutValue("Customer Name");
+            sheet.Cells["B1"].PutValue("Customer City");
 
-            // Start of master table (repeat for each order)
-            cells["A2"].PutValue("&=Orders");          // smart marker to repeat rows for Orders table
-            cells["A3"].PutValue("&=$OrderID");        // column marker for OrderID
-            cells["B3"].PutValue("&=$CustomerName");   // column marker for CustomerName
+            // Smart marker row for master records
+            // {Customers.Name} and {Customers.City} will be replaced by data
+            sheet.Cells["A2"].PutValue("{Customers.Name}");
+            sheet.Cells["B2"].PutValue("{Customers.City}");
 
-            // Detail table header (placed after master rows)
-            cells["A5"].PutValue("Order Details");
-            cells["A6"].PutValue("Product");
-            cells["B6"].PutValue("Quantity");
+            // Header for detail (Orders) table - placed below master row
+            // We'll leave a blank row for visual separation
+            sheet.Cells["A4"].PutValue("Order ID");
+            sheet.Cells["B4"].PutValue("Order Date");
+            sheet.Cells["C4"].PutValue("Order Amount");
 
-            // Start of detail table (repeat for each related OrderDetails row)
-            cells["A7"].PutValue("&=OrderDetails");    // smart marker to repeat rows for OrderDetails table
-            cells["A8"].PutValue("&=$Product");        // column marker for Product
-            cells["B8"].PutValue("&=$Quantity");       // column marker for Quantity
+            // Smart marker row for detail records
+            // The hierarchical marker {Customers.Orders.OrderID} pulls orders related to each customer
+            sheet.Cells["A5"].PutValue("{Customers.Orders.OrderID}");
+            sheet.Cells["B5"].PutValue("{Customers.Orders.OrderDate}");
+            sheet.Cells["C5"].PutValue("{Customers.Orders.Amount}");
 
-            // Define the range that contains all smart markers (required when LineByLine = false)
-            sheet.Cells.CreateRange("A2:B8").Name = "_CellsSmartMarkers";
+            // -------------------------------------------------
+            // Prepare the data source (DataSet with master-detail tables)
+            // -------------------------------------------------
+            DataSet ds = new DataSet();
 
-            // ---------- Prepare master‑detail data ----------
-            DataSet dataSet = new DataSet();
+            // Master table: Customers
+            DataTable customers = new DataTable("Customers");
+            customers.Columns.Add("CustomerID", typeof(int));
+            customers.Columns.Add("Name", typeof(string));
+            customers.Columns.Add("City", typeof(string));
+            customers.PrimaryKey = new DataColumn[] { customers.Columns["CustomerID"] };
+            ds.Tables.Add(customers);
 
-            // Master table: Orders
+            // Detail table: Orders
             DataTable orders = new DataTable("Orders");
             orders.Columns.Add("OrderID", typeof(int));
-            orders.Columns.Add("CustomerName", typeof(string));
-            orders.Rows.Add(1, "Alice");
-            orders.Rows.Add(2, "Bob");
+            orders.Columns.Add("CustomerID", typeof(int));
+            orders.Columns.Add("OrderDate", typeof(DateTime));
+            orders.Columns.Add("Amount", typeof(decimal));
+            ds.Tables.Add(orders);
 
-            // Detail table: OrderDetails
-            DataTable orderDetails = new DataTable("OrderDetails");
-            orderDetails.Columns.Add("OrderID", typeof(int));
-            orderDetails.Columns.Add("Product", typeof(string));
-            orderDetails.Columns.Add("Quantity", typeof(int));
-            orderDetails.Rows.Add(1, "Pen", 10);
-            orderDetails.Rows.Add(1, "Notebook", 5);
-            orderDetails.Rows.Add(2, "Pencil", 20);
-            orderDetails.Rows.Add(2, "Eraser", 15);
+            // Define relation between Customers and Orders
+            DataRelation rel = new DataRelation("Customers_Orders",
+                customers.Columns["CustomerID"],
+                orders.Columns["CustomerID"]);
+            ds.Relations.Add(rel);
 
-            // Add tables to the DataSet
-            dataSet.Tables.Add(orders);
-            dataSet.Tables.Add(orderDetails);
+            // Populate master data
+            customers.Rows.Add(1, "Acme Corp", "New York");
+            customers.Rows.Add(2, "Beta Ltd", "London");
+            customers.Rows.Add(3, "Gamma Inc", "Tokyo");
 
-            // Define relation between master and detail tables
-            DataRelation relation = new DataRelation(
-                "Orders_OrderDetails",
-                orders.Columns["OrderID"],
-                orderDetails.Columns["OrderID"]);
-            dataSet.Relations.Add(relation);
+            // Populate detail data
+            orders.Rows.Add(1001, 1, new DateTime(2023, 1, 15), 1250.00m);
+            orders.Rows.Add(1002, 1, new DateTime(2023, 2, 20), 980.50m);
+            orders.Rows.Add(2001, 2, new DateTime(2023, 3, 5), 430.75m);
+            orders.Rows.Add(2002, 2, new DateTime(2023, 4, 12), 2100.00m);
+            orders.Rows.Add(3001, 3, new DateTime(2023, 5, 30), 750.00m);
 
-            // ---------- Process smart markers ----------
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
+            // -------------------------------------------------
+            // Process the smart markers with the data source
+            // -------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(ds);
+            designer.Process(); // Fills the template with master-detail data
 
-            // Use the DataSet as the data source (master‑detail will be resolved automatically)
-            designer.SetDataSource(dataSet);
-
-            // Process all smart markers in the defined range
-            designer.Process();
-
-            // ---------- Save the result ----------
-            designer.Workbook.Save("MasterDetailReport.xlsx");
+            // -------------------------------------------------
+            // Save the generated report
+            // -------------------------------------------------
+            workbook.Save("MasterDetailReport.xlsx", SaveFormat.Xlsx);
         }
     }
 }

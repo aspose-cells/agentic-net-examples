@@ -1,7 +1,6 @@
-// Title: Add a rotated semi‑transparent WordArt rectangle watermark to an Excel workbook and save as XLSX using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a rectangle shape, assigns custom text, font, color, 80% fill transparency, -45° rotation, hides the border, and saves the workbook as an XLSX file. | Show how to programmatically verify and create the output directory before invoking Workbook.Save when generating an Excel file that contains a WordArt watermark using Aspose.Cells. | Demonstrate applying WordArt formatting (font name, size, style, color) and shape properties (transparency, rotation) to produce a diagonal watermark in an Excel worksheet with Aspose.Cells for .NET.
-// Common Searches: aspnet add word art watermark to excel worksheet using aspose.cells | c# create rotated transparent shape as excel watermark with aspose.cells | save excel file with shape watermark ensuring output directory exists in .net | how to set shape fill transparency and rotation in aspose.cells c#
-// Tags: Aspose.Cells add diagonal watermark shape | Aspose.Cells set shape fill transparency | Aspose.Cells hide shape line weight | Aspose.Cells save workbook as xlsx with shapes | C# create output folder before Workbook.Save
+// Title: Create and save an Excel workbook with a diagonal WordArt watermark while retaining all shape attributes using Aspose.Cells for .NET
+// Common Searches: how to add a diagonal WordArt watermark to an Excel worksheet with Aspose.Cells C# | save Excel file as XLSX preserving WordArt shape attributes using Aspose.Cells | Aspose.Cells set TextEffect shape transparency and rotation before saving | place WordArt behind cells as a watermark in Aspose.Cells .NET | C# Aspose.Cells add TextEffect shape with custom font size and style
+// Tags: add TextEffect shape Aspose.Cells | diagonal WordArt watermark Excel | retain shape properties when saving XLSX | configure shape transparency and rotation Aspose.Cells | send shape behind cells free-floating placement
 
 using System;
 using System.Drawing;
@@ -9,8 +8,8 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // This example creates a new workbook, inserts a rectangular WordArt shape with the text "CONFIDENTIAL" (Arial, 72pt, red), applies 80% transparency, rotates it -45° for a diagonal effect, removes the border, ensures the target folder exists, and saves the file as WordArtWatermark.xlsx using Aspose.Cells for .NET.
-class WordArtWatermarkExample
+// The example creates a new workbook, inserts a TextEffect WordArt shape with the text "CONFIDENTIAL", applies 50% fill transparency, rotates it -45 degrees, sets free‑floating placement and a negative Z‑order to position it behind cells, and then saves the workbook as an XLSX file while preserving all shape attributes.
+class Program
 {
     static void Main()
     {
@@ -22,54 +21,56 @@ class WordArtWatermarkExample
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape that will hold the watermark text
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width (all in points)
-            Shape watermark = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // Rectangle shape
-                0,   // Upper left row
-                0,   // Upper left column
-                0,   // Top offset (points)
-                0,   // Left offset (points)
-                200, // Height (points)
-                500  // Width (points)
-            );
+            // Add WordArt (TextEffect) as a watermark
+            // Parameters: preset effect, text, font name, font size, bold, italic,
+            // upper left row/column, lower right row/column, width, height
+            Shape wordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,   // preset effect
+                "CONFIDENTIAL",                    // watermark text
+                "Arial",                           // font name
+                72,                                // font size (int)
+                true,                              // bold
+                false,                             // italic
+                5,                                 // upper left row
+                1,                                 // upper left column
+                20,                                // lower right row
+                10,                                // lower right column
+                300,                               // width
+                100);                              // height
 
-            // Set the watermark text and its formatting
-            watermark.Text = "CONFIDENTIAL";
-            watermark.Font.Name = "Arial";
-            watermark.Font.Size = 72;
-            watermark.Font.IsBold = false;
-            watermark.Font.IsItalic = false;
-            watermark.Font.Color = Color.Red;
+            // Set fill transparency (50% transparent)
+            wordArt.Fill.Transparency = 0.5;
 
-            // Make the shape semi‑transparent
-            watermark.Fill.Transparency = 0.8; // 80% transparent
+            // Rotate the WordArt to appear as a diagonal watermark
+            wordArt.RotationAngle = -45;
 
-            // Rotate the shape for diagonal appearance
-            watermark.RotationAngle = -45;
+            // Send the shape behind the cells (so it behaves like a watermark)
+            wordArt.Placement = PlacementType.FreeFloating;
+            wordArt.ZOrderPosition = -1; // negative Z-order places it behind other objects
 
-            // Hide the shape border (if supported)
-            // Note: Some versions of Aspose.Cells may not expose a direct property to hide the border.
-            // The line can be made invisible by setting its weight to 0.
-            watermark.Line.Weight = 0;
+            // Optional: hide the shape's border line
+            // (If the API version supports it, uncomment the line below)
+            // wordArt.Line.IsVisible = false;
 
-            // Define output file path
-            string outputPath = "WordArtWatermark.xlsx";
+            // Optional: set a light gray fill color if the API version supports it
+            // (If the API version supports it, uncomment the line below)
+            // wordArt.Fill.SolidFillColor = Color.LightGray;
 
             // Ensure the output directory exists
+            string outputPath = "WatermarkedWorkbook.xlsx";
             string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
+            // Save the workbook as XLSX preserving all shape attributes
             workbook.Save(outputPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

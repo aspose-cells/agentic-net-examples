@@ -1,58 +1,57 @@
-// Title: Apply ChartStyleType.Style1 to all charts in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Iterate through workbook.Worksheets and set each chart's Style property to ChartStyleType.Style1, then save the workbook. | Add a runtime check for ChartStyleType support before assigning Style1 to each chart to avoid compatibility issues. | Write a helper method that receives input and output paths, loads the workbook, applies Style1 to every chart, and returns a success flag.
-// Common Searches: Aspose.Cells set same chart style for all charts in a workbook .NET | C# apply predefined chart style to multiple worksheets using Aspose.Cells | How to use ChartStyleType.Style1 with Aspose.Cells when loading an existing Excel file | Bulk update chart formatting in Excel with Aspose.Cells .NET API
-// Tags: Aspose.Cells chart style Style1 assignment | bulk chart style update Aspose.Cells | worksheet chart iteration Aspose.Cells | ChartStyleType compatibility check | set chart style programmatically .NET
+// Title: Apply the built‑in Style1 chart style to every chart in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, iterates through all worksheets and charts, sets each chart's Style property to 1 (Style1), and saves the workbook. | Show how to bulk‑apply a predefined chart style to all charts in a workbook using the Aspose.Cells Chart.Style API. | Create a script that checks for the input file, creates missing output directories, and updates every chart to Style1 before writing the result.
+// Common Searches: asp.net aspose.cells apply built‑in chart style to all charts in workbook | c# set chart.Style = 1 for multiple charts using Aspose.Cells | how to programmatically change Excel chart appearance to Style1 with Aspose.Cells
+// Tags: apply predefined chart style Aspose.Cells C# | set chart.Style property for all charts .NET | bulk update Excel chart appearance using Aspose.Cells | iterate worksheets and charts Aspose.Cells API | use chart style index 1 in Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an Excel workbook, loops through every worksheet and its charts, and shows where to assign the predefined ChartStyleType.Style1 to each chart before saving the modified file.
+// The example loads input.xlsx with Aspose.Cells, loops through each worksheet and its charts, assigns chart.Style = 1 (the built‑in Style1), ensures the output folder exists, and saves the modified workbook as output.xlsx while handling missing files and exceptions.
 class ApplyChartStyle
 {
     static void Main()
     {
-        string inputPath = "{InputFile}";
-        string outputPath = "{OutputFile}";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         try
         {
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Ensure output directory exists
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets and apply chart style
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Apply a predefined chart style (Style1 corresponds to index 1)
+                    chart.Style = 1;
+                }
+            }
+
+            // Ensure the output directory exists
             string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Apply predefined style to all charts in all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Chart chart in sheet.Charts)
-                {
-                    // Note: ChartStyleType may not be available in older Aspose.Cells versions.
-                    // If supported, you can set a style like:
-                    // chart.Style = ChartStyleType.Style1;
-                    // For compatibility, the style setting is omitted here.
-                }
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

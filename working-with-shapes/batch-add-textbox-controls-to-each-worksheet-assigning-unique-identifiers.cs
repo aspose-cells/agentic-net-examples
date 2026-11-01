@@ -1,53 +1,68 @@
-// Title: Add uniquely named TextBox shapes to every worksheet in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, iterates all worksheets, inserts a TextBox shape at a given cell location, and assigns a distinct Name to each TextBox. | Adjust the TextBox insertion logic to compute row, column, and pixel offsets based on each worksheet's layout while ensuring sequential identifiers are applied without overwriting existing shapes.
-// Common Searches: aspnet c# add textbox shape to each worksheet aspose.cells example | assign incremental names to shapes when looping through worksheets in Aspose.Cells | batch create text boxes in all sheets of an Excel workbook using Aspose.Cells for .NET | set textbox size and position programmatically with Aspose.Cells C#
-// Tags: bulk shape insertion aspose.cells | sequential shape identifiers .net | worksheet loop shape creation c# | textbox geometry parameters aspose.cells | excel workbook shape handling .net
+// Title: How to batch add uniquely named TextBox shapes to every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through all worksheets in an Aspose.Cells Workbook and inserts a TextBox shape with a sequential Name and Text at a fixed cell location. | Create a reusable method that receives a Workbook object, adds a numbered TextBox to each sheet at row 0, column 0, and saves the workbook to a specified file path.
+// Common Searches: aspnet c# add textbox shape to each sheet in existing Excel file using Aspose.Cells | batch insert TextBox controls with unique identifiers across all worksheets Aspose.Cells .NET | how to assign sequential names to Excel TextBox shapes programmatically with Aspose.Cells | loop through worksheets and add TextBox at specific cell coordinates Aspose.Cells C# example
+// Tags: add textbox shape Aspose.Cells .NET | batch insert shapes Excel workbook | assign sequential names to textbox Aspose.Cells | iterate worksheets add shapes C# | text box positioning Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample loads an existing Excel file, loops through every worksheet, adds a TextBox shape at a fixed cell with defined pixel dimensions, sets its displayed text, assigns a unique Name using an incrementing counter, and saves the updated workbook.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example loads an existing Excel file (or creates a new workbook), loops through every worksheet, and adds a TextBox shape at a predefined location. Each TextBox receives a unique Name and Text based on a global counter, ensuring distinct identifiers across sheets. The modified workbook is then saved to the designated output file.
+    class BatchAddTextBoxes
     {
-        // Paths to the source and destination Excel files
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook(inputPath);
-
-        // Counter to generate unique identifiers for each TextBox
-        int textboxCounter = 0;
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Define position and size for the TextBox (row, column, top, left, height, width)
-            int upperLeftRow = 1;          // Row index (0‑based)
-            int upperLeftColumn = 1;       // Column index (0‑based)
-            int top = 0;                   // Pixels from the top of the cell
-            int left = 0;                  // Pixels from the left of the cell
-            int height = 100;              // Height in pixels
-            int width = 200;               // Width in pixels
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Add a TextBox shape to the current worksheet
-            TextBox textBox = sheet.Shapes.AddTextBox(
-                upperLeftRow, upperLeftColumn, top, left, height, width);
+                Workbook workbook;
 
-            // Set the displayed text (optional)
-            textBox.Text = $"TextBox on sheet \"{sheet.Name}\"";
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook(); // creates a workbook with a default sheet
+                }
 
-            // Assign a unique identifier using the Name property
-            textBox.Name = $"TextBox_{textboxCounter}";
+                int globalTextBoxCounter = 1;
 
-            // Increment the counter for the next TextBox
-            textboxCounter++;
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Position and size for the TextBox (in points)
+                    int upperLeftRow = 0;      // 0‑based row index
+                    int upperLeftColumn = 0;   // 0‑based column index
+                    int top = 5;               // offset from top of the cell
+                    int left = 5;              // offset from left of the cell
+                    int width = 150;
+                    int height = 50;
+
+                    // Add a TextBox shape; the method returns a TextBox object
+                    TextBox textBox = sheet.Shapes.AddTextBox(upperLeftRow, upperLeftColumn, top, left, width, height);
+
+                    // Assign a unique name and default text
+                    textBox.Name = $"TextBox_{globalTextBoxCounter}";
+                    textBox.Text = $"Box {globalTextBoxCounter}";
+
+                    globalTextBoxCounter++;
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-
-        // Save the modified workbook (lifecycle rule: save)
-        workbook.Save(outputPath);
     }
 }

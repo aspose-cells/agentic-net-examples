@@ -1,13 +1,11 @@
-// Title: Create a shared formula for cells C3:C12 in an Excel worksheet using Aspose.Cells SetSharedFormula in C#
-// AI Prompts: Generate C# code that creates a new Workbook, calls Cell.SetSharedFormula on cell C3 with the formula "=A3+B3" to share it across the range C3:C12, and saves the file as an .xlsx. | Write a method using Aspose.Cells that defines a shared formula for column C rows 3‑12 via SetSharedFormula on the first cell, then writes the workbook to disk.
-// Common Searches: Aspose.Cells SetSharedFormula C# example for range C3:C12 | How to share a formula across multiple cells using Aspose.Cells .NET | C# apply same Excel formula to column C rows 3 to 12 with Aspose.Cells | Create shared formula in Excel workbook using Aspose.Cells SetSharedFormula method
-// Tags: Aspose.Cells SetSharedFormula C# | shared formula range C3:C12 Aspose.Cells | apply shared formula Excel .NET | column C formula assignment Aspose.Cells | save workbook with shared formulas Aspose.Cells
+// Title: Create a shared formula for cells C3:C12 using Cell.SetSharedFormula in Aspose.Cells for .NET (C#)
+// Common Searches: asp.net aspose.cells set shared formula for column C range C3:C12 | c# example using Cell.SetSharedFormula to copy formula across rows | how to define a shared formula owner in Aspose.Cells .NET | apply the same Excel formula to multiple cells with Aspose.Cells API | shared formula implementation in Aspose.Cells workbook using C#
+// Tags: shared-formula SetSharedFormula Aspose.Cells | apply-shared-formula to range C3:C12 C# | Aspose.Cells shared-formula owner flag | Excel workbook shared-formula .NET | Cell.SetSharedFormula usage example
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, defines a shared formula "=A3+B3" on cell C3 using Cell.SetSharedFormula, propagates it to the range C3:C12, and saves the workbook as SharedFormula.xlsx.
+// The example creates a new Workbook, defines the range C3:C12, sets a shared formula "=A3+B3" on the first cell (C3) with Cell.SetSharedFormula (owner flag = 0), then applies the same shared formula to the remaining cells in the column, and saves the file as SharedFormula.xlsx.
 class Program
 {
     static void Main()
@@ -15,32 +13,34 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Set formula for the first cell in the range C3:C12
-            Cell firstCell = cells["C3"];
-            firstCell.Formula = "=A3+B3";
+            // Define the range C3:C12 (zero‑based indices)
+            int startRow = 2;   // Row 3
+            int endRow = 11;    // Row 12
+            int column = 2;     // Column C
 
-            // Apply the same pattern to the remaining cells in the range
-            for (int row = 4; row <= 12; row++)
+            // Set a shared formula on the first cell (C3)
+            // The third parameter (0) indicates a shared formula owner in current API version
+            var firstCell = worksheet.Cells[startRow, column];
+            firstCell.SetSharedFormula("=A3+B3", 0, 0);
+
+            // Apply the same shared formula to the remaining cells in the range
+            for (int row = startRow + 1; row <= endRow; row++)
             {
-                // Column C has index 2 (zero‑based)
-                Cell cell = cells[row, 2];
-                cell.Formula = $"=A{row}+B{row}";
+                var cell = worksheet.Cells[row, column];
+                // The third parameter (0) indicates this cell uses the shared formula defined earlier
+                cell.SetSharedFormula(null, 0, 0);
             }
 
-            // Define output file path
-            string outputPath = "SharedFormula.xlsx";
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook to a file
+            workbook.Save("SharedFormula.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

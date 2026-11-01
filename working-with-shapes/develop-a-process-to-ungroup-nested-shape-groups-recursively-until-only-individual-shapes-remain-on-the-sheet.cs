@@ -1,70 +1,71 @@
-// Title: Recursively ungroup nested GroupShape objects on all worksheets using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates through each worksheet, and recursively ungroups every GroupShape until only individual shapes remain. | Create a method for Aspose.Cells that safely scans a worksheet's Shapes collection, detects GroupShape instances, calls Ungroup(), and repeats the scan to handle deeper nesting.
-// Common Searches: how to recursively ungroup GroupShape objects in an Excel file using Aspose.Cells C# | flatten nested shape groups across all worksheets with Aspose.Cells .NET | Aspose.Cells C# ungroup all shapes in workbook without losing inner shapes | remove shape groups from Excel workbook programmatically using Aspose.Cells | iterate worksheet shapes and ungroup groups in C# Aspose.Cells example
-// Tags: ungroup GroupShape Aspose.Cells | recursive shape group removal C# | remove Excel shape groups Aspose.Cells | iterate worksheet shapes Aspose.Cells | handle shape collection changes Aspose.Cells
+// Title: How to recursively ungroup nested shape groups in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates through a worksheet's Shapes collection and repeatedly calls Ungroup on each GroupShape until no grouped shapes remain. | Extend the sample to loop through every worksheet in a workbook and ungroup nested shape groups on each sheet before saving the workbook.
+// Common Searches: Aspose.Cells C# ungroup nested group shapes in Excel worksheet | recursive shape ungrouping in Excel using Aspose.Cells .NET API | remove all shape groups from an Excel file with Aspose.Cells programmatically | how to iterate over Shapes collection and ungroup groups in Aspose.Cells
+// Tags: Aspose.Cells recursive shape ungrouping | C# Ungroup method for GroupShape in Excel | process all worksheets shape groups Aspose.Cells | Excel shape collection iteration Aspose.Cells | remove nested group shapes .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an input Excel file, loops through each worksheet, and repeatedly scans the Shapes collection to find GroupShape objects. Each found group is ungrouped with GroupShape.Ungroup(), and the scan restarts to ensure nested groups are also flattened. After all groups are removed, the workbook is saved to the specified output path.
-class Program
+namespace AsposeCellsUngroupShapes
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses each worksheet, and repeatedly scans the Shapes collection. Whenever a GroupShape is found, its Ungroup method is invoked. The loop continues until no grouped shapes remain, ensuring only individual shapes are left, after which the workbook is saved.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Process each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                UngroupAllShapes(sheet);
-            }
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Recursively ungroup all nested groups on the given worksheet
-    private static void UngroupAllShapes(Worksheet sheet)
-    {
-        bool groupFound;
-        do
-        {
-            groupFound = false;
-
-            // Snapshot of current shapes to avoid collection modification issues
-            Shape[] currentShapes = new Shape[sheet.Shapes.Count];
-            sheet.Shapes.CopyTo(currentShapes, 0);
-
-            foreach (Shape shape in currentShapes)
-            {
-                if (shape is GroupShape groupShape)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Ungroup the shape; inner shapes are automatically added to the worksheet
-                    groupShape.Ungroup();
-
-                    // A group was processed; another pass may be needed for nested groups
-                    groupFound = true;
-                    break; // Restart scanning as the collection has changed
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (or any specific worksheet)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Recursively ungroup all shape groups until only individual shapes remain
+                bool groupFound;
+                do
+                {
+                    groupFound = false;
+
+                    // Iterate over the shapes collection.
+                    // The collection may change during ungrouping, so break after each ungroup
+                    // and restart the loop to get an updated collection.
+                    foreach (Shape shape in sheet.Shapes)
+                    {
+                        if (shape.IsGroup)
+                        {
+                            // Cast to GroupShape to access Ungroup method
+                            if (shape is GroupShape groupShape)
+                            {
+                                groupShape.Ungroup();   // Ungroup the current group shape
+                                groupFound = true;      // Need another pass after modification
+                                break;                  // Restart enumeration with updated collection
+                            }
+                        }
+                    }
+                } while (groupFound);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-        } while (groupFound);
+            catch (Exception ex)
+            {
+                // Handle unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

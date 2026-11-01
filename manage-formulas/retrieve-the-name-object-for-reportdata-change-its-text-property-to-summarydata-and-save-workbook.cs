@@ -1,52 +1,58 @@
-// Title: Change a defined name from ReportData to SummaryData in an Excel workbook using Aspose.Cells for .NET and save the file
-// AI Prompts: Load an existing .xlsx workbook with Aspose.Cells, locate the defined name "ReportData", set its Text property to "SummaryData", and write the workbook to a new file. | Create C# code that verifies a named range exists, updates its reference string, and persists the changes using Aspose.Cells.
-// Common Searches: aspnet rename defined name ReportData to SummaryData using Aspose.Cells | C# update Excel named range Text property with Aspose.Cells | how to change a defined name in an Excel file programmatically Aspose.Cells .NET | Aspose.Cells modify name reference and save workbook
-// Tags: Aspose.Cells modify defined name Text property | C# rename Excel defined name Aspose.Cells | update named range reference .NET | save workbook after editing defined name Aspose.Cells | Excel defined name manipulation Aspose.Cells
+// Title: Rename a named range from ReportData to SummaryData in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# change named range reference text | how to update the RefersTo property of a Name object in Excel with Aspose | rename Excel named range programmatically using Aspose.Cells .NET | set named range to new reference and save workbook Aspose.Cells | C# example for modifying a named range and saving the workbook
+// Tags: Aspose.Cells modify named range reference | C# Name.RefersTo property usage | update Excel named range Aspose.Cells | save workbook after named range change | Aspose.Cells .NET Excel named range handling
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads input.xlsx, retrieves the defined name "ReportData", changes its Text property to "SummaryData", and saves the updated workbook as output.xlsx, including checks for file existence and error handling.
+// The example loads an Excel file, retrieves the named range "ReportData", changes its RefersTo text to "SummaryData", and saves the updated workbook to a new file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
+            // Load workbook using the provided load rule
+            Workbook workbook = LoadWorkbook("input.xlsx");
 
-            // Retrieve the defined name "ReportData"
-            var name = workbook.Worksheets.Names["ReportData"];
-            if (name != null)
+            // Retrieve the named range "ReportData"
+            Name reportName = workbook.Worksheets.Names["ReportData"];
+            if (reportName != null)
             {
-                // Change its Text property to "SummaryData"
-                name.Text = "SummaryData";
-            }
-            else
-            {
-                Console.WriteLine("Defined name \"ReportData\" not found.");
+                // Change its reference text to "SummaryData"
+                reportName.RefersTo = "SummaryData";
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            // Save workbook using the provided save rule
+            SaveWorkbook(workbook, "output.xlsx");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Load workbook with file existence check
+    static Workbook LoadWorkbook(string path)
+    {
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"The file '{path}' was not found.");
+
+        return new Workbook(path);
+    }
+
+    // Save workbook with basic error handling
+    static void SaveWorkbook(Workbook wb, string path)
+    {
+        try
+        {
+            wb.Save(path);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            throw;
         }
     }
 }

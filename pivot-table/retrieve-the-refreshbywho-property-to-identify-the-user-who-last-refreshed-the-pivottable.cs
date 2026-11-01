@@ -1,49 +1,55 @@
-// Title: How to read the RefreshedByWho and RefreshDate properties of a PivotTable with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, adds a pivot table, calls RefreshData and CalculateData, then prints pivotTable.RefreshedByWho and pivotTable.RefreshDate. | Show how to access pivot table refresh metadata (user name and timestamp) using the Aspose.Cells PivotTable API in a .NET console application. | Generate a minimal Aspose.Cells example that demonstrates retrieving the last refreshed user and date from a PivotTable after refreshing it.
-// Common Searches: Aspose.Cells C# get the user who refreshed a pivot table | How to obtain RefreshDate from a PivotTable using Aspose.Cells .NET | C# example for reading RefreshedByWho property of Aspose.Cells PivotTable | Retrieve pivot table refresh metadata with Aspose.Cells for .NET | Aspose.Cells PivotTable RefreshData and RefreshDate usage in C#
-// Tags: Aspose.Cells PivotTable refresh metadata | C# read RefreshedByWho Aspose.Cells | Aspose.Cells get pivot refresh date | PivotTable RefreshData usage Aspose.Cells | Aspose.Cells .NET pivot user info
+// Title: Retrieve the last refresh date of an Excel PivotTable with Aspose.Cells for .NET (RefreshByWho not available)
+// Common Searches: Aspose.Cells C# get pivot table last refresh date | how to read pivot table refresh metadata using Aspose.Cells .NET | C# code to obtain Excel pivot table refresh information with Aspose | Aspose.Cells retrieve who refreshed a pivot table | pivot table audit details Aspose.Cells .NET
+// Tags: Aspose.Cells PivotTable RefreshDate | C# read pivot table refresh metadata | Aspose.Cells .NET pivot table audit information | Excel pivot table last refresh user limitation | Aspose.Cells missing RefreshByWho property
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Provides PivotTable type
 
-// The example creates a workbook, populates sample data, adds a pivot table, refreshes it, and then outputs the RefreshedByWho and RefreshDate properties to show who last refreshed the pivot and when, before saving the file.
+// The example loads an Excel workbook with Aspose.Cells, accesses the first worksheet's first PivotTable, and reads its RefreshDate property. It also clarifies that the RefreshByWho property (the user who performed the last refresh) is not exposed by the Aspose.Cells API.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Fruit");
-        worksheet.Cells["B1"].PutValue("Quantity");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["B3"].PutValue(15);
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B4"].PutValue(8);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "FruitPivot");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+        try
+        {
+            // Load the workbook that contains the PivotTable
+            Workbook workbook = new Workbook(inputPath);
 
-        // Configure the pivot table (row field and data field)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Fruit column
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Quantity column
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Refresh the pivot table to populate RefreshedByWho and RefreshDate
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Ensure the worksheet has at least one PivotTable
+            if (sheet.PivotTables.Count > 0)
+            {
+                // Get the first PivotTable
+                PivotTable pivot = sheet.PivotTables[0];
 
-        // Retrieve and display the user who last refreshed the pivot table
-        Console.WriteLine("Refreshed By: " + pivotTable.RefreshedByWho);
-        Console.WriteLine("Refresh Date: " + pivotTable.RefreshDate);
+                // Retrieve the last refresh date of the PivotTable (user info not available via API)
+                DateTime refreshDate = pivot.RefreshDate;
 
-        // Save the workbook (optional, demonstrates persistence)
-        string outputPath = "PivotRefreshInfo.xlsx";
-        workbook.Save(outputPath);
+                // Output the result
+                Console.WriteLine($"PivotTable last refreshed on: {refreshDate}");
+            }
+            else
+            {
+                Console.WriteLine("No PivotTable found in the worksheet.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

@@ -1,66 +1,54 @@
-// Title: Create a list‑based data validation drop‑down for cells A2:A20 in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that adds a List validation to range A2:A20, includes an input prompt, and saves the workbook. | Write a method that builds the quoted, comma‑separated string required for a list validation and applies it to a column using Aspose.Cells. | Show how to configure an error alert for a list‑type data validation in an Aspose.Cells worksheet and ensure the output folder exists before saving.
-// Common Searches: Aspose.Cells C# how to add a drop‑down list validation to a specific column range | C# create list data validation for Excel cells A2 to A20 with Aspose.Cells | Set input message and error alert for Excel data validation using Aspose.Cells .NET | Save Excel workbook after applying list validation with Aspose.Cells in C#
-// Tags: Aspose.Cells list validation C# | Excel drop-down validation Aspose.Cells | validation input message Aspose.Cells | error alert list validation .NET | save workbook after validation Aspose.Cells
+// Title: Add a list‑type data validation with drop‑down to column A (rows 2‑100) using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to create a list data validation for a column range | C# add in‑cell drop‑down list validation to Excel column using Aspose.Cells | Set predefined values for cells in column A rows 2 to 100 with Aspose.Cells | Configure input and error messages for list validation in Aspose.Cells C# | Apply data validation list with Apple, Banana, Cherry using Aspose.Cells .NET
+// Tags: list data validation Aspose.Cells .NET | in‑cell dropdown Aspose.Cells C# | validation range CellArea Aspose.Cells | custom input message Aspose.Cells validation | error message configuration Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, defines the range A2:A20 on the first worksheet, adds a List‑type validation containing "Apple, Banana, Cherry", sets an input message and an error alert, ensures the output directory exists, and saves the file as DataValidationExample.xlsx.
-class Program
+// The example creates a new workbook, defines a CellArea covering column A rows 2‑100, adds a list‑type validation with the values Apple, Banana, and Cherry, enables the in‑cell drop‑down, sets custom input and error messages, and saves the workbook as DataValidationExample.xlsx.
+class DataValidationExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range for data validation (A2:A20)
-            // CellArea uses zero‑based indexes: row 1 = A2, row 19 = A20, column 0 = A
-            CellArea validationArea = new CellArea
+            // Define the range for the validation (column A, rows 2 to 100).
+            CellArea validationRange = new CellArea
             {
-                StartRow = 1,
-                StartColumn = 0,
-                EndRow = 19,
-                EndColumn = 0
+                StartRow = 1,      // Row index is zero‑based (1 = second row)
+                StartColumn = 0,   // Column A
+                EndRow = 99,       // Row 100
+                EndColumn = 0      // Column A
             };
 
-            // List of allowed values
-            string[] allowedValues = { "Apple", "Banana", "Cherry" };
-            // Aspose.Cells expects the list as a quoted, comma‑separated string
-            string list = $"\"{string.Join(",", allowedValues)}\"";
+            // Add a new validation for the defined range and retrieve the Validation object.
+            int validationIndex = sheet.Validations.Add(validationRange);
+            Validation validation = sheet.Validations[validationIndex];
 
-            // Add a new validation object for the specified area
-            ValidationCollection validations = sheet.Validations;
-            int validationIndex = validations.Add(validationArea);
-            Validation validation = validations[validationIndex];
-
-            // Set validation type and allowed values
+            // Set validation type to List and provide allowed values.
             validation.Type = ValidationType.List;
-            validation.Formula1 = list;
+            validation.Operator = OperatorType.Equal;
+            validation.Formula1 = "\"Apple,Banana,Cherry\"";
 
-            // Optional: display input message and error alert
-            validation.InputMessage = "Select a fruit from the list.";
-            validation.ErrorMessage = "Invalid entry. Choose a value from the list.";
-            validation.ShowError = true; // show error alert when validation fails
+            // Enable the drop‑down list in the cells.
+            validation.InCellDropDown = true;
 
-            // Save the workbook
-            string outputPath = "DataValidationExample.xlsx";
+            // Configure input (prompt) message.
+            validation.InputTitle = "Select a fruit";
+            validation.InputMessage = "Please choose a fruit from the list.";
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Configure error message.
+            validation.ErrorTitle = "Invalid entry";
+            validation.ErrorMessage = "The value must be one of the predefined options.";
 
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook.
+            workbook.Save("DataValidationExample.xlsx");
         }
         catch (Exception ex)
         {

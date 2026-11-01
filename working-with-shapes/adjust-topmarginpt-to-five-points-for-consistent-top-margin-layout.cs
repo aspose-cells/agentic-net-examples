@@ -1,25 +1,43 @@
-// Title: Set the worksheet top margin to 5 points using Aspose.Cells in C#
-// AI Prompts: Load an Excel workbook, assign PageSetup.TopMargin = 5 (points), and save the file with Aspose.Cells in C#. | Programmatically change the top margin of a worksheet to exactly five points via the Aspose.Cells PageSetup API. | Write a .NET script that opens a .xlsx file, updates the top margin to 5 points, and writes the modified workbook.
-// Common Searches: Aspose.Cells C# set worksheet top margin to 5 points | How to change Excel page setup top margin in points using Aspose.Cells .NET | C# example for adjusting worksheet top margin with Aspose.Cells | Set top margin measurement in points for Excel file via Aspose.Cells API
-// Tags: Aspose.Cells page setup top margin points | C# adjust worksheet top margin | Excel top margin modification using Aspose.Cells | set worksheet top margin .NET
+// Title: How to set a worksheet's top margin to 5 points with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set worksheet top margin to 5 points | programmatically change Excel top margin using Aspose.Cells .NET | PageSetup.TopMargin property example for 5 point margin | adjust Excel page layout margins in C# with Aspose.Cells | set top margin points for first worksheet in Aspose.Cells workbook
+// Tags: worksheet top margin points Aspose.Cells | page setup top margin .NET | adjust Excel top margin programmatically | set worksheet page margins C# | modify worksheet top margin using Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an existing workbook, sets the first worksheet's top margin to 5 points via PageSetup.TopMargin, and saves the updated file.
+// The example loads an existing Excel file with Aspose.Cells, sets the first worksheet's top margin to 5 points via the PageSetup.TopMargin property, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Access the first worksheet (or any specific worksheet)
-        Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Adjust the top margin to 5 points for consistent layout
-        sheet.PageSetup.TopMargin = 5; // TopMargin is measured in points
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Set the top margin (in points) for the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.TopMargin = 5; // points
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

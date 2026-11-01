@@ -1,55 +1,73 @@
-// Title: Apply a custom font family to every chart title in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that opens an existing .xlsx file, loops through all worksheets and their charts, checks if a chart title exists, and sets the title's Font.Name to a specified brand font before saving. | Show how to safely handle missing chart titles while applying a consistent custom font to all chart titles in a workbook and then export the modified file.
-// Common Searches: c# aspose.cells change font of all chart titles in a workbook | how to set a custom font for Excel chart titles programmatically using Aspose.Cells | loop through worksheets and charts to apply branding font to chart titles in .xlsx | Aspose.Cells bulk update chart title style across multiple sheets | apply corporate font to chart titles with Aspose.Cells C# example
-// Tags: Aspose.Cells chart title font customization | C# loop through workbook charts | set corporate font for Excel chart titles | bulk update chart title appearance Aspose.Cells | customize chart title style in .xlsx
+// Title: How to apply a custom branding font family to every chart title in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, iterates all worksheets and charts, creates a visible title if missing, and sets the title's Font.Name to a specified brand font. | Write a C# method that takes a workbook path and a font family string, then updates all chart titles in the workbook to use that font via Aspose.Cells. | Provide a C# snippet that demonstrates changing the font family, size, and style of chart titles across multiple sheets with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set chart title font family for all charts in a workbook | How to change Excel chart title font using Aspose.Cells .NET | Iterate through worksheets and charts to apply branding font with Aspose.Cells | Ensure chart titles are visible and assign a custom font in Aspose.Cells C# example
+// Tags: Aspose.Cells chart title font customization | C# apply branding font to Excel chart titles | iterate worksheets charts Aspose.Cells | set chart title visibility Aspose.Cells | custom font family Excel chart titles .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an existing Excel file, iterates over each worksheet and each chart, checks for a chart title, applies the custom font "MyCustomFont" to the title's Font.Name, and saves the workbook to a new file.
-class Program
+namespace ChartTitleFontExample
 {
-    static void Main()
+    // The program loads an existing Excel workbook, loops through each worksheet and its charts, ensures every chart has a visible title, applies a specified custom font family to each chart title, and saves the updated workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Paths for input and output workbooks
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through each chart on the worksheet
-                foreach (Chart chart in sheet.Charts)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Apply custom font name to the chart title if it exists
-                    if (chart.Title != null)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Custom font family to apply to chart titles
+                string customFontFamily = "MyBrandFont";
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all charts on the worksheet
+                    foreach (Chart chart in sheet.Charts)
                     {
-                        chart.Title.Font.Name = "MyCustomFont";
+                        try
+                        {
+                            // Ensure the chart has a visible title; create one if missing
+                            if (!chart.Title.IsVisible)
+                            {
+                                chart.Title.IsVisible = true;
+                                chart.Title.Text = "Chart Title";
+                            }
+
+                            // Apply the custom font family to the chart title
+                            chart.Title.Font.Name = customFontFamily;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error processing chart on sheet '{sheet.Name}': {ex.Message}");
+                        }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

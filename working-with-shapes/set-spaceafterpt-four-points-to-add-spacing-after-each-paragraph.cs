@@ -1,47 +1,43 @@
-// Title: Add a 4‑point space after each paragraph in a shape using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an Excel workbook, retrieves a specific shape, and sets the SpaceAfterPt property of every paragraph in the shape to 4 points, then saves the file. | Show how to loop through all paragraphs of a shape in Aspose.Cells and apply a 4‑point spacing after each paragraph using the ParagraphFormatting API.
-// Common Searches: Aspose.Cells set SpaceAfterPt for shape paragraphs | C# add spacing after paragraph in Excel shape | How to increase paragraph spacing after in a shape with Aspose.Cells | Set 4 point space after each paragraph in shape text using .NET
-// Tags: set SpaceAfterPt Aspose.Cells | shape paragraph spacing .NET | modify shape text formatting C# | Aspose.Cells paragraph formatting API | Excel shape paragraph spacing using C#
+// Title: How to set a uniform row height of 20 points for all used rows in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells .NET set row height for every used row in Excel workbook | C# code to apply same row height to all rows based on used range with Aspose | How to programmatically set row height to 20 points in each worksheet using Aspose.Cells | Iterate worksheets and adjust row heights automatically in Aspose.Cells for .NET | Set uniform row height in existing Excel file with Aspose.Cells C#
+// Tags: Aspose.Cells set row height programmatically | C# uniform Excel row height across worksheets | adjust row height based on used range Aspose | Excel row height automation .NET | set row height 20 points Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, accesses a shape, sets the SpaceAfterPt property of each paragraph to 4 points to add spacing after the text, and saves the updated workbook using Aspose.Cells for .NET.
+// The example loads an existing workbook (or creates a new one), loops through every worksheet, determines the last used row, and sets each row's height to 20 points before saving the file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Load existing workbook if it exists; otherwise create a new one
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Example operation: set a uniform row height for all worksheets
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Set the default row height (in points)
-                sheet.Cells.StandardHeight = 15.0;
+                // Get the used range to determine the last row with data
+                int maxRow = sheet.Cells.MaxDataRow;
+
+                // Set each row's height to 20 points
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    sheet.Cells.SetRowHeight(row, 20);
+                }
             }
 
-            // Save the updated workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

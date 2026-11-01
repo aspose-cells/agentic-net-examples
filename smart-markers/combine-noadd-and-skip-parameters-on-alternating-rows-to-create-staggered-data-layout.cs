@@ -1,45 +1,51 @@
-// Title: Create staggered column layout in Excel with Aspose.Cells ImportObjectArray using alternating skip values in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells Workbook and Worksheet to import object arrays with a skip of 1 column for the first and third rows and a skip of 0 for the second row, then save the file. | Show how to call Cells.ImportObjectArray with different skip arguments to produce a staggered data pattern across multiple rows. | Provide a step‑by‑step example that creates a workbook, imports three rows with alternating column gaps, and writes the result to an .xlsx file.
-// Common Searches: Aspose.Cells C# import object array with column skip parameter | How to create alternating spaced rows in an Excel sheet using Aspose.Cells | ImportObjectArray skip argument for staggered layout in C# | C# Aspose.Cells place data with gaps between columns | Save workbook after importing rows with different skip values Aspose.Cells
-// Tags: ImportObjectArray column skip Aspose.Cells | staggered row layout Excel C# | alternating skip parameter worksheet | Aspose.Cells export to XLSX with spaced cells | C# create gap between columns using ImportObjectArray
+// Title: Create a staggered Excel column by inserting values into every other row with a skip parameter and stop at a maximum row count using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to write a list of strings into a worksheet column, placing each entry one row apart and halting when a predefined row limit is reached. | Show how to apply a skip interval and a no‑add stop condition in Aspose.Cells to produce a staggered data layout in an Excel file.
+// Common Searches: how to write data to every other row in Excel using Aspose.Cells C# | Aspose.Cells example for skipping rows and limiting insertion count | C# create staggered column layout with row limit in Aspose.Cells | insert values with gaps between rows using Aspose.Cells .NET | prevent adding rows after reaching maximum index with Aspose.Cells
+// Tags: row skipping insertion Aspose.Cells | row limit enforcement Aspose.Cells | alternating row placement Excel .NET | staggered data layout using Aspose.Cells | conditional row addition C# Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace StaggeredDataLayoutDemo
+// // This program creates a new workbook, writes a list of strings into every other row of the first column while respecting a maximum row limit, and saves the result as StaggeredDataLayout.xlsx.
+class Program
 {
-    // Demonstrates using Aspose.Cells Cells.ImportObjectArray in C# to insert rows with and without column gaps, creating a staggered layout and saving the workbook as StaggeredDataLayout.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Sample data to be placed in the worksheet
+        string[] values = { "Item1", "Item2", "Item3", "Item4", "Item5", "Item6" };
+
+        // Parameters:
+        //   skip   – number of rows to skip between each entry (staggered layout)
+        //   noAdd  – stop adding when the target row exceeds a predefined limit
+        int skip = 1;               // skip one row between entries
+        int maxRows = 12;           // maximum rows allowed (noAdd condition)
+        int startRow = 0;           // first row to start inserting
+        int columnIndex = 0;        // column where data will be placed
+
+        bool noAdd = false;         // flag indicating whether further addition is prohibited
+
+        for (int i = 0; i < values.Length; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Calculate the row index taking the skip into account
+            int targetRow = startRow + i * (skip + 1);
 
-            // Sample data to be placed in alternating rows
-            // Row 0 will have a skip (blank column) between each entry
-            // Row 1 will have no skip (continuous entries)
-            object[] rowWithSkip = new object[] { "A1", "B1", "C1", "D1" };
-            object[] rowWithoutSkip = new object[] { "A2", "B2", "C2", "D2" };
+            // Apply the noAdd logic: if the target row exceeds the limit, stop inserting
+            if (targetRow >= maxRows)
+            {
+                noAdd = true;
+                break;
+            }
 
-            // Import first row starting at A1 (row 0, column 0) horizontally with a skip of 1 column
-            // This creates a staggered layout: A1, C1, E1, G1 ...
-            cells.ImportObjectArray(rowWithSkip, 0, 0, false, 1);
-
-            // Import second row starting at A2 (row 1, column 0) horizontally with no skip (skip = 0)
-            // This places data in consecutive cells: A2, B2, C2, D2
-            cells.ImportObjectArray(rowWithoutSkip, 1, 0, false, 0);
-
-            // Demonstrate a third row that again uses the skip pattern to continue the alternating effect
-            object[] thirdRow = new object[] { "A3", "B3", "C3", "D3" };
-            cells.ImportObjectArray(thirdRow, 2, 0, false, 1);
-
-            // Save the workbook to a file
-            workbook.Save("StaggeredDataLayout.xlsx");
-
-            Console.WriteLine("Staggered data layout created successfully.");
+            // Insert the value into the calculated cell
+            cells[targetRow, columnIndex].PutValue(values[i]);
         }
+
+        // Save the workbook (lifecycle rule)
+        workbook.Save("StaggeredDataLayout.xlsx");
     }
 }

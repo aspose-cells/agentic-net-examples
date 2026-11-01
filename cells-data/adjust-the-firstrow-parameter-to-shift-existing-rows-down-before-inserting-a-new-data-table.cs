@@ -1,56 +1,41 @@
-// Title: Shift existing worksheet rows down before importing a DataTable using Aspose.Cells for .NET (C#)
-// AI Prompts: Configure the import options to shift the worksheet's top row and enable row insertion before importing a DataTable at the beginning of a sheet. | Generate C# code that imports a DataTable into an Excel worksheet while preserving the original first row by moving it down one position. | Demonstrate setting ImportData parameters to keep existing worksheet content intact when adding a new table with Aspose.Cells.
-// Common Searches: Aspose.Cells move original first row down when importing a DataTable in C# | C# code to import a DataTable without overwriting existing cells using Aspose.Cells | How to preserve existing worksheet data while adding a new table with Aspose.Cells | Example of using InsertRows with ImportData in Aspose.Cells .NET | ImportData options to keep original rows intact in Excel using Aspose.Cells
-// Tags: shift first row import Aspose.Cells | InsertRows option Aspose.Cells | ImportData preserve existing rows | DataTable import without overwriting | shift worksheet rows before import
+// Title: Insert blank rows and create a data table at a specific row with Aspose.Cells for .NET (C#)
+// AI Prompts: Insert three empty rows at row index 5 in an existing workbook, then write a header row and two data rows starting at that position using Aspose.Cells for .NET. | Adjust the firstRow variable to shift existing rows down before adding a new table, and save the workbook with Aspose.Cells in C#. | Programmatically add a new data table after inserting rows in a worksheet and persist the changes to a new Excel file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# insert rows at specific index and then add table | How to shift rows down before creating a table in Excel with Aspose.Cells | C# code to add blank rows and populate a data table using Aspose.Cells | Insert rows and write header row in Aspose.Cells workbook example
+// Tags: insert rows Aspose.Cells C# | shift worksheet rows down Aspose.Cells | add data table to worksheet Aspose.Cells | save modified workbook Aspose.Cells | firstRow parameter usage Aspose.Cells
 
-using System;
-using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsShiftFirstRowDemo
+// The example loads an existing workbook, inserts three empty rows at zero‑based row index 5 on the first worksheet, writes a header row and two data rows starting at the adjusted position, and saves the result as a new file using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a workbook, writes initial data to cells A1‑A3, builds a DataTable, and sets ImportTableOptions to shift the first row down and insert new rows. ImportData then adds the DataTable starting at the top, moving the original first row to the next row, and the workbook is saved as ShiftFirstRowDownResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Load an existing workbook (load rule)
+        var workbook = new Workbook("input.xlsx");
 
-            // Existing data that will be shifted down
-            cells["A1"].PutValue("Existing Header");
-            cells["A2"].PutValue("Existing Value 1");
-            cells["A3"].PutValue("Existing Value 2");
+        // Get the first worksheet
+        var sheet = workbook.Worksheets[0];
 
-            // Prepare a DataTable to be imported as a new data table
-            DataTable table = new DataTable();
-            table.Columns.Add("Column1");
-            table.Columns.Add("Column2");
-            // First row of the table (will become the first row after shifting)
-            table.Rows.Add("NewHeader1", "NewHeader2");
-            table.Rows.Add("NewData1", "NewData2");
-            table.Rows.Add("NewData3", "NewData4");
+        // Define the row where the new data table should start
+        int firstRow = 5;          // original position (0‑based index)
+        int rowsToInsert = 3;      // number of rows the new table will occupy
 
-            // Configure import options to shift the first row down
-            ImportTableOptions importOptions = new ImportTableOptions
-            {
-                // Do not show field names separately; they are part of the DataTable rows
-                IsFieldNameShown = false,
-                // This property causes the existing first row (A1) to move down by one row
-                ShiftFirstRowDown = true,
-                // Insert new rows so existing data is not overwritten
-                InsertRows = true
-            };
+        // Shift existing rows down by inserting empty rows at firstRow (firstRow parameter adjusted)
+        sheet.Cells.InsertRows(firstRow, rowsToInsert);
 
-            // Import the DataTable starting at row 0, column 0
-            // Because ShiftFirstRowDown is true, the original A1 cell will move to A2,
-            // and the imported data will start at A2 (first row shifted down)
-            cells.ImportData(table, 0, 0, importOptions);
+        // Insert the new data table starting at the adjusted firstRow
+        // Header row
+        sheet.Cells[firstRow, 0].PutValue("Header1");
+        sheet.Cells[firstRow, 1].PutValue("Header2");
 
-            // Save the workbook to verify the result
-            workbook.Save("ShiftFirstRowDownResult.xlsx");
-        }
+        // Data rows
+        sheet.Cells[firstRow + 1, 0].PutValue("Data1");
+        sheet.Cells[firstRow + 1, 1].PutValue("Data2");
+
+        sheet.Cells[firstRow + 2, 0].PutValue("Data3");
+        sheet.Cells[firstRow + 2, 1].PutValue("Data4");
+
+        // Save the modified workbook (save rule)
+        workbook.Save("output.xlsx");
     }
 }

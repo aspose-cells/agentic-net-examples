@@ -1,26 +1,26 @@
-// Title: How to retrieve and filter shape connection points in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, obtains the first shape's connection points, and prints only the points where the X coordinate exceeds 100. | Create a method that safely invokes Shape.GetConnectionPoints, iterates the returned points, and returns a collection of points with X > 100 while handling missing X/Y properties. | Add robust error handling to a C# Aspose.Cells example that checks file existence, shape presence, and unsupported GetConnectionPoints, and logs a friendly message when no qualifying points are found.
-// Common Searches: Aspose.Cells C# get connection points of a shape and filter by X coordinate | filter Excel shape connection points where X > 100 using Aspose.Cells | C# example for retrieving shape connection points with Aspose.Cells and handling unsupported methods | how to check if GetConnectionPoints is supported in Aspose.Cells for .NET | log shape connection points from first worksheet shape in Aspose.Cells C#
-// Tags: Aspose.Cells shape GetConnectionPoints C# | filter connection points by X coordinate .NET | handle unsupported GetConnectionPoints Aspose.Cells | log shape connection points Excel workbook C# | retrieve first shape connection points Aspose.Cells
+// Title: Retrieve and filter shape connection points in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, obtains the connection points of the first shape on the first worksheet, and prints only the points whose X coordinate exceeds 100. | Extend the shape‑connection‑point extraction to also apply a Y‑coordinate filter (e.g., Y < 50) and output the matching coordinates. | Add comprehensive error handling to the Aspose.Cells shape processing routine to gracefully manage missing files, worksheets without shapes, and null or empty connection‑point arrays.
+// Common Searches: Aspose.Cells C# get shape connection points from worksheet | filter shape connection points where X > 100 using Aspose.Cells | GetConnectionPoints example code Aspose.Cells for .NET | handle missing shapes when reading Excel with Aspose.Cells | C# retrieve first shape connection points in an Excel file
+// Tags: Aspose.Cells GetConnectionPoints C# | filter shape connection points by X coordinate | error handling missing shape Aspose.Cells | load workbook access first shape Aspose.Cells | log connection point coordinates C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# example that loads an Excel workbook with Aspose.Cells, accesses the first shape, retrieves its connection points via GetConnectionPoints, filters points where the X coordinate is greater than 100, and writes those coordinates to the console, including comprehensive error handling for missing files, shapes, or unsupported methods.
+// The program loads input.xlsx, accesses the first worksheet and its first shape, calls GetConnectionPoints() to obtain X/Y pairs, filters out points with an X value greater than 100, and writes those coordinates to the console while handling missing files, absent shapes, and null data gracefully.
 class Program
 {
     static void Main()
     {
-        string inputPath = @"C:\Path\To\YourWorkbook.xlsx";
-
         try
         {
-            // Verify that the workbook file exists
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"File not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
@@ -28,61 +28,48 @@ class Program
             Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet contains at least one shape
-            if (sheet.Shapes.Count == 0)
+            // Ensure there is at least one shape on the worksheet
+            if (worksheet.Shapes.Count == 0)
             {
                 Console.WriteLine("No shapes found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first shape
-            Shape shape = sheet.Shapes[0];
+            // Get the first shape (adjust index as needed)
+            Shape shape = worksheet.Shapes[0];
 
-            // Attempt to get connection points (may not be supported in older versions)
-            dynamic points = null;
-            try
+            // Retrieve connection points (returns float[][] where each inner array is X,Y)
+            float[][] connectionPoints = shape.GetConnectionPoints();
+
+            // If the returned array is null or empty, exit gracefully
+            if (connectionPoints == null || connectionPoints.Length == 0)
             {
-                points = shape.GetConnectionPoints();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unable to retrieve connection points: {ex.Message}");
+                Console.WriteLine("The shape does not contain any connection points.");
+                return;
             }
 
-            if (points != null)
+            // Iterate through each point (X,Y pair)
+            foreach (float[] point in connectionPoints)
             {
-                // Iterate through the connection points and log those with X > 100
-                foreach (dynamic point in points)
+                if (point == null || point.Length < 2)
+                    continue; // skip malformed entries
+
+                float x = point[0];
+                float y = point[1];
+
+                // Filter points with X coordinate greater than 100 and log them
+                if (x > 100)
                 {
-                    try
-                    {
-                        double x = point.X;
-                        double y = point.Y;
-                        if (x > 100)
-                        {
-                            Console.WriteLine($"Connection Point - X: {x}, Y: {y}");
-                        }
-                    }
-                    catch
-                    {
-                        // Skip points that do not expose X/Y properties
-                    }
+                    Console.WriteLine($"Connection Point - X: {x}, Y: {y}");
                 }
             }
-            else
-            {
-                Console.WriteLine("No connection points available for this shape.");
-            }
-
-            // (Optional) Save the workbook if any changes were made
-            // workbook.Save(@"C:\Path\To\ModifiedWorkbook.xlsx");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

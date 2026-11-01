@@ -1,13 +1,12 @@
-// Title: Unmerge the merged range B2:C2 in an Excel workbook, copy its original value to D2, and save the file with Aspose.Cells for .NET
-// AI Prompts: Locate the merged range that includes B2, unmerge it, read the original cell value, write that value into D2, and save the workbook. | Using Aspose.Cells, programmatically break a merged cell, duplicate its content to a neighboring cell, and export the updated spreadsheet.
-// Common Searches: Aspose.Cells C# unmerge a specific merged range and copy its value to another cell | how to retrieve value from a merged cell after unmerging with Aspose.Cells .NET | save a modified Excel file to a new location after changing merged cells using Aspose.Cells | C# code to unmerge B2:C2 and duplicate its content to D2 in an existing workbook
-// Tags: unmerge merged range Aspose.Cells .NET | duplicate cell value after unmerge Aspose.Cells | save updated workbook Aspose.Cells | handle merged cells programmatically C#
+// Title: Unmerge cells B2:C2 and transfer its original value to D2 using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells unmerge a merged range while preserving the original value | Copy value from merged cells B2:C2 to another cell after unmerging with Aspose.Cells | Read value from a merged Excel cell before unmerging using Aspose.Cells .NET | Programmatically unmerge cells in an Excel workbook and write original content to an adjacent cell in C# | Aspose.Cells keep data from merged cells when performing an unmerge operation
+// Tags: Aspose.Cells unmerge range C# | retrieve merged cell value Aspose.Cells | assign cell value D2 Aspose.Cells | Excel workbook manipulation Aspose.Cells .NET | preserve original data after unmerge Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program loads an existing Excel file, finds and unmerges the merged range B2:C2, copies the original value to cell D2, ensures the output directory exists, and saves the modified workbook to a new file.
+// The C# program verifies the input file, loads it with Aspose.Cells, reads the value from the top‑left cell of the merged range B2:C2, unmerges that range, writes the captured value to cell D2, and saves the workbook as output.xlsx while handling exceptions.
 class Program
 {
     static void Main()
@@ -19,54 +18,38 @@ class Program
 
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the merged range B2:C2 (zero‑based indices: row 1, columns 1‑2)
-            int startRow = 1;      // B2 row index
-            int startColumn = 1;   // B2 column index
-
-            // Find the merged range that contains the specified cell
-            Aspose.Cells.Range mergedRange = null;
-            foreach (CellArea area in sheet.Cells.MergedCells)
             {
-                if (area.StartRow <= startRow && startRow <= area.EndRow &&
-                    area.StartColumn <= startColumn && startColumn <= area.EndColumn)
-                {
-                    int totalRows = area.EndRow - area.StartRow + 1;
-                    int totalColumns = area.EndColumn - area.StartColumn + 1;
-                    mergedRange = sheet.Cells.CreateRange(area.StartRow, area.StartColumn, totalRows, totalColumns);
-                    break;
-                }
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Unmerge the range if it exists
-            mergedRange?.UnMerge();
+            // Load the existing spreadsheet
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the original value from the former merged cell (now B2)
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the merged range B2:C2 (row 2, columns B and C)
+            // Use fully qualified name to avoid ambiguity with System.Range
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("B2:C2");
+
+            // Retrieve the original value from the merged cell (top‑left cell B2)
             object originalValue = sheet.Cells["B2"].Value;
 
-            // Copy the value to the adjacent cell on the right (D2)
-            sheet.Cells["D2"].Value = originalValue;
+            // Unmerge the cells B2:C2
+            mergedRange.UnMerge();
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+            // Copy the original value to the adjacent cell D2
+            sheet.Cells["D2"].Value = originalValue;
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log the exception details for debugging
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

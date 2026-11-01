@@ -1,13 +1,13 @@
-// Title: Check each worksheet for dialog sheet type in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells and prints the name and dialog‑sheet status of every worksheet. | Show how to use the Worksheet.Type property together with SheetType.Dialog to filter dialog sheets in a .NET application. | Write a reusable C# method that returns a list of worksheet names that are dialog sheets from a given workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to determine if a worksheet is a dialog sheet | C# code sample for detecting dialog sheets in an Excel workbook with Aspose.Cells | Using SheetType.Dialog enumeration to list dialog worksheets in .NET | Identify dialog sheet type in Excel file using Aspose.Cells library
-// Tags: Aspose.Cells worksheet type detection | C# SheetType.Dialog usage | list dialog sheets Aspose.Cells | Excel dialog sheet identification .NET | filter worksheets by type Aspose.Cells
+// Title: How to determine if a worksheet is a dialog sheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells and returns true if the first worksheet’s Type equals SheetType.Dialog. | Show how to use the Worksheet.Type property and SheetType enumeration to verify a dialog sheet in Aspose.Cells. | Create a console program that prints the dialog‑sheet status of a specified worksheet in an .xlsx file using Aspose.Cells.
+// Common Searches: aspocells c# check if worksheet is a dialog sheet | how to use SheetType.Dialog to identify dialog sheets in Excel files | determine worksheet type dialog Aspose.Cells .NET example | C# program to read Excel and detect dialog sheet with Aspose | isdialogsheet property Aspose.Cells usage tutorial
+// Tags: dialog sheet detection Aspose.Cells | worksheet type check SheetType.Dialog C# | use Worksheet.Type property Aspose.Cells | identify dialog sheet in .xlsx with Aspose | console app worksheet dialog status Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads 'input.xlsx' with Aspose.Cells, iterates through all worksheets, checks each worksheet's Type against SheetType.Dialog, and prints the worksheet name along with a boolean indicating whether it is a dialog sheet, while handling missing files and runtime exceptions.
+// Loads an Excel workbook with Aspose.Cells, accesses a worksheet, checks if its Type equals SheetType.Dialog, and outputs the result to the console.
 class Program
 {
     static void Main()
@@ -26,19 +26,18 @@ class Program
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Determine whether the worksheet is a dialog sheet
-                bool isDialog = sheet.Type == SheetType.Dialog;
+            // Access the first worksheet (by index or name)
+            Worksheet sheet = workbook.Worksheets[0]; // or workbook.Worksheets["Sheet1"]
 
-                // Output the result
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" is a dialog sheet: {isDialog}");
-            }
+            // Determine if the worksheet is a dialog sheet using the SheetType enumeration
+            bool isDialogSheet = sheet.Type == SheetType.Dialog;
+
+            // Output the result
+            Console.WriteLine($"Worksheet \"{sheet.Name}\" IsDialogSheet: {isDialogSheet}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

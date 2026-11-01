@@ -5,8 +5,8 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-09-14
-last_updated: 2026-09-21
+last_reviewed: 2026-09-23
+last_updated: 2026-09-23
 primary_intent: Convert Excel workbooks to PDF, HTML, CSV, images, text, ODS, XPS, and other formats in C#
 primary_apis: [Workbook.Save, SaveFormat, PdfSaveOptions, HtmlSaveOptions, TxtSaveOptions, ImageOrPrintOptions]
 related_categories: [../open-workbook/, ../save-workbook/, ../working-with-pdf/, ../working-with-html/, ../working-with-images/]

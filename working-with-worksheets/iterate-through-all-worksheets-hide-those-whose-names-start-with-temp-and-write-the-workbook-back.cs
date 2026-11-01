@@ -1,30 +1,30 @@
-// Title: Hide Excel worksheets whose names start with "Temp" and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, iterates over each worksheet, hides any sheet whose Name begins with "Temp", and saves the modified workbook to a new file. | Write a method in C# using Aspose.Cells for .NET that sets the IsVisible property to false for all worksheets whose names have the prefix "Temp" and then writes the workbook out. | Create a C# example demonstrating how to programmatically hide temporary worksheets (named with "Temp") and export the updated workbook with Aspose.Cells.
-// Common Searches: C# Aspose.Cells hide worksheets that start with Temp and save file | how to set worksheet visibility based on name prefix using Aspose.Cells .NET | iterate through workbook worksheets and hide Temp sheets in C# | Aspose.Cells hide temporary Excel sheets before exporting | filter out worksheets with Temp* prefix using Aspose.Cells API
-// Tags: hide worksheets by name prefix Aspose.Cells C# | set worksheet IsVisible property Aspose.Cells | iterate workbook worksheets collection Aspose.Cells | save modified Excel workbook Aspose.Cells .NET | temporary sheet visibility Aspose.Cells
+// Title: Hide all worksheets whose names start with "Temp" and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, loop through each Worksheet, set IsVisible = false when the worksheet name begins with "Temp" (case‑insensitive), then save the workbook to a new file. | Using Aspose.Cells for .NET, programmatically hide every sheet whose name matches a given prefix and write the updated workbook back to disk.
+// Common Searches: Aspose.Cells C# hide worksheets that start with Temp | How to programmatically hide Excel sheets with a specific prefix using Aspose.Cells | Save workbook after changing worksheet visibility in C# Aspose.Cells | Iterate through worksheets and set IsVisible false based on name in Aspose.Cells | C# Aspose.Cells hide temporary sheets and save file
+// Tags: hide worksheets by name prefix Aspose.Cells | set worksheet IsVisible property C# | iterate workbook worksheets Aspose.Cells | save modified Excel workbook Aspose.Cells | filter temporary sheets programmatically
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The program loads input.xlsx with Aspose.Cells, iterates all worksheets, hides any worksheet whose name starts with "Temp" (case‑insensitive) by setting IsVisible to false, and saves the result as output.xlsx.
+// The code loads 'input.xlsx', iterates over all worksheets, hides any sheet whose name starts with "Temp" (case‑insensitive) by setting IsVisible to false, and saves the updated workbook as 'output.xlsx' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load the workbook from a file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Hide worksheets whose names start with "Temp"
+            // Hide the worksheet if its name starts with "Temp"
             if (sheet.Name.StartsWith("Temp", StringComparison.OrdinalIgnoreCase))
             {
                 sheet.IsVisible = false;
             }
         }
 
-        // Save the modified workbook
+        // Save the modified workbook back to a file
         workbook.Save("output.xlsx");
     }
 }

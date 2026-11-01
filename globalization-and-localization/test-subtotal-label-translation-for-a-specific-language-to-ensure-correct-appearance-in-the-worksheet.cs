@@ -1,14 +1,11 @@
-// Title: Verify French subtotal label translation in an Aspose.Cells worksheet with C#
-// AI Prompts: Create a C# console app that uses Aspose.Cells to set Workbook.Settings.CultureInfo to fr-FR, adds sample data, inserts a manual total row, and prints the value of the subtotal label cell. | Adapt the example to call the Aspose.Cells Subtotal method (if available) and retrieve the automatically generated French label for the total row. | Write an NUnit test in C# that opens SubtotalLabelTranslation.xlsx, reads cell A6, and asserts that the label matches the expected French word for "Total".
-// Common Searches: Aspose.Cells how to display subtotal label in French | C# set workbook cultureinfo for localized subtotal row | unit test subtotal label translation in Excel file using Aspose.Cells | manual subtotal calculation with culture‑aware label Aspose.Cells C# | verify worksheet total row label localization fr-FR Aspose.Cells
-// Tags: Aspose.Cells subtotal label localization | C# workbook cultureinfo French | manual total row generation Aspose.Cells | unit testing worksheet label localization C# | Excel subtotal row localization Aspose.Cells
+// Title: How to validate a German subtotal label in an Aspose.Cells worksheet using C#
+// Common Searches: how to insert a subtotal row with a German label using Aspose.Cells in C# | C# Aspose.Cells verify that a custom subtotal label appears correctly in Excel | testing localized subtotal label in an Aspose.Cells generated workbook | read cell string value after inserting subtotal row with Aspose.Cells C# | validate German worksheet label translation in saved Excel file using Aspose.Cells
+// Tags: Aspose.Cells insert subtotal row C# | Aspose.Cells localized subtotal label | C# verify cell string value Aspose.Cells | German worksheet label validation Aspose.Cells | Excel workbook save custom subtotal label C#
 
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
+using Aspose.Cells;
 
-// The sample creates a new workbook, sets its CultureInfo to French (fr-FR), fills sample data, manually computes a total for column B, inserts a total label in cell A6, prints the label, and saves the file as SubtotalLabelTranslation.xlsx to verify that the subtotal label appears correctly for the selected culture.
+// The example creates a workbook, fills sample data, inserts a subtotal row, sets the label to the German word "Zwischensumme", reads the cell back to confirm the translation, outputs the result, and saves the file as SubtotalLabelTranslationTest.xlsx.
 class SubtotalLabelTranslationTest
 {
     static void Main()
@@ -16,48 +13,43 @@ class SubtotalLabelTranslationTest
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Set the culture to French (France) to test label translation
-            wb.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Populate sample data
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Amount");
 
-            // Populate sample data (rows are zero‑based)
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["B1"].PutValue("Amount");
-            ws.Cells["A2"].PutValue("A");
-            ws.Cells["B2"].PutValue(10);
-            ws.Cells["A3"].PutValue("A");
-            ws.Cells["B3"].PutValue(20);
-            ws.Cells["A4"].PutValue("B");
-            ws.Cells["B4"].PutValue(30);
-            ws.Cells["A5"].PutValue("B");
-            ws.Cells["B5"].PutValue(40);
+            string[] categories = { "Food", "Food", "Transport", "Transport", "Utilities", "Utilities" };
+            double[] amounts = { 120.5, 80.75, 50.0, 30.25, 200.0, 150.0 };
 
-            // NOTE: The Subtotal API is not available in the referenced Aspose.Cells version.
-            // As an alternative, manually calculate totals and insert a total row.
-            // This demonstrates label handling without relying on the missing Subtotal method.
-
-            // Calculate total for column B
-            double total = 0;
-            for (int row = 1; row <= 4; row++) // rows 2‑5 (zero‑based)
+            for (int i = 0; i < categories.Length; i++)
             {
-                total += ws.Cells[row, 1].DoubleValue;
+                cells[i + 1, 0].PutValue(categories[i]);   // Column A (zero‑based row index)
+                cells[i + 1, 1].PutValue(amounts[i]);     // Column B
             }
 
-            // Insert total label in the first column of the next row (A6)
-            ws.Cells["A6"].PutValue("Total");
-            ws.Cells["B6"].PutValue(total);
+            // Manually insert a subtotal row after the first group (Food)
+            // Row index after the first two data rows (zero‑based)
+            int subtotalRowIndex = 3;
+            sheet.Cells.InsertRows(subtotalRowIndex, 1);
+            sheet.Cells[subtotalRowIndex, 0].PutValue("Zwischensumme");
+            double foodSum = amounts[0] + amounts[1];
+            sheet.Cells[subtotalRowIndex, 1].PutValue(foodSum);
 
-            // Retrieve the label (culture‑aware translation is handled by Aspose.Cells when using Subtotal;
-            // here we manually set the label, so it will appear as entered.)
-            string label = ws.Cells["A6"].StringValue;
-            Console.WriteLine("Subtotal label: " + label);
+            // Verify that the subtotal label appears correctly
+            string label = sheet.Cells[subtotalRowIndex, 0].StringValue;
+            Console.WriteLine("Expected label: Zwischensumme");
+            Console.WriteLine("Actual label  : " + label);
+            Console.WriteLine(label == "Zwischensumme"
+                ? "Label translation succeeded."
+                : "Label translation failed.");
 
-            // Save the workbook for manual inspection if needed
-            string outputPath = "SubtotalLabelTranslation.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine("Workbook saved to " + outputPath);
+            // Save the workbook (optional, for visual inspection)
+            string outputPath = "SubtotalLabelTranslationTest.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

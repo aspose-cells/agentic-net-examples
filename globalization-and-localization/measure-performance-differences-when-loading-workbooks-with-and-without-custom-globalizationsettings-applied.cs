@@ -1,64 +1,71 @@
-// Title: Measure and compare Aspose.Cells workbook load performance with default settings versus custom GlobalizationSettings in C#
-// AI Prompts: Create a C# console application that loads an XLSX file with Aspose.Cells, uses Stopwatch to record the load time, then reloads the same file using a LoadOptions instance and sets Workbook.Settings.CultureInfo to a chosen culture, printing both timings. | Enhance the benchmark to loop through several CultureInfo values (e.g., en-US, fr-FR, ja-JP) and output a formatted table showing load duration for each culture. | Add comprehensive error handling that verifies the file path, catches Aspose.Cells exceptions, and logs the worksheet count after each load to confirm successful parsing.
-// Common Searches: aspnet measure Aspose.Cells workbook load time with custom culture | how to benchmark Excel file loading speed using LoadOptions in Aspose.Cells | performance impact of setting Workbook.Settings.CultureInfo in Aspose.Cells | compare default and custom globalization settings when loading XLSX with Aspose.Cells | C# timing of Aspose.Cells workbook load with and without LoadOptions
-// Tags: benchmark Aspose.Cells workbook loading | custom GlobalizationSettings performance .NET | LoadOptions culture load time measurement | Workbook.Settings.CultureInfo impact on load speed | Excel XLSX load performance Aspose.Cells
+// Title: Measure Aspose.Cells workbook loading performance with and without custom GlobalizationSettings in C#
+// Common Searches: C# how to benchmark Aspose.Cells workbook load time using Stopwatch | compare load speed of Excel file in Aspose.Cells when applying custom CultureInfo | measure impact of GlobalizationSettings on Aspose.Cells workbook opening time | performance test default vs custom number format culture in Aspose.Cells | Aspose.Cells load time difference after setting Settings.CultureInfo in C#
+// Tags: Aspose.Cells workbook load performance | custom GlobalizationSettings load latency | C# Stopwatch timing Aspose.Cells | apply CultureInfo to workbook Settings | Excel loading speed with custom number format
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
+using System.Globalization;
 using Aspose.Cells;
 
-// The program loads 'Sample.xlsx' twice—first with default Aspose.Cells settings and then with a LoadOptions object followed by setting Workbook.Settings.CultureInfo to French—measuring and printing the elapsed milliseconds for each load and displaying the worksheet counts to verify successful loading.
+// The example creates a sample XLSX file, then loads it twice: first with the default settings and second after assigning a cloned invariant CultureInfo with modified decimal, group, and currency symbols to Workbook.Settings.CultureInfo. Each load is timed with Stopwatch, and the elapsed milliseconds are printed to compare the performance impact of custom GlobalizationSettings.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook to be loaded for the test
-        string workbookPath = "Sample.xlsx";
-
-        // Ensure the input file exists to avoid FileNotFoundException
-        if (!File.Exists(workbookPath))
-        {
-            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
-            return;
-        }
+        // Path to the workbook used for testing
+        string filePath = "sample.xlsx";
 
         try
         {
-            // -----------------------------------------------------------------
-            // Measure loading time with default settings (no custom globalization)
-            // -----------------------------------------------------------------
+            // Create a sample workbook if it does not exist
+            if (!File.Exists(filePath))
+            {
+                Workbook wb = new Workbook();
+                Worksheet ws = wb.Worksheets[0];
+                ws.Name = "Data";
+
+                // Populate with data to make loading non‑trivial
+                for (int row = 0; row < 1000; row++)
+                {
+                    for (int col = 0; col < 50; col++)
+                    {
+                        ws.Cells[row, col].PutValue(row * col);
+                    }
+                }
+
+                wb.Save(filePath);
+            }
+
+            // ------------------------------
+            // Load with default settings
+            // ------------------------------
             Stopwatch swDefault = Stopwatch.StartNew();
-
-            // Load workbook using default settings
-            Workbook wbDefault = new Workbook(workbookPath);
-
+            Workbook wbDefault = new Workbook(filePath);
             swDefault.Stop();
-            Console.WriteLine($"Loading time with default settings: {swDefault.ElapsedMilliseconds} ms");
 
-            // -----------------------------------------------------------------
-            // Measure loading time with custom globalization settings applied
-            // -----------------------------------------------------------------
-            // Create LoadOptions (custom settings can be added here if supported by the version)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-
+            // ------------------------------
+            // Load and apply custom globalization settings
+            // ------------------------------
             Stopwatch swCustom = Stopwatch.StartNew();
+            Workbook wbCustom = new Workbook(filePath);
 
-            // Load workbook using the LoadOptions
-            Workbook wbCustom = new Workbook(workbookPath, loadOptions);
+            // Clone the invariant culture and modify its number format settings
+            CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ",";
+            customCulture.NumberFormat.NumberGroupSeparator = ".";
+            customCulture.NumberFormat.CurrencySymbol = "€";
 
-            // Apply custom culture after loading (affects parsing/formatting)
-            wbCustom.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Apply the custom culture to the workbook
+            wbCustom.Settings.CultureInfo = customCulture;
 
             swCustom.Stop();
-            Console.WriteLine($"Loading time with custom globalization settings: {swCustom.ElapsedMilliseconds} ms");
 
-            // -----------------------------------------------------------------
-            // Optional: Verify that both workbooks are loaded correctly
-            // -----------------------------------------------------------------
-            Console.WriteLine($"Default workbook worksheets count: {wbDefault.Worksheets.Count}");
-            Console.WriteLine($"Custom workbook worksheets count: {wbCustom.Worksheets.Count}");
+            // ------------------------------
+            // Output the measured times
+            // ------------------------------
+            Console.WriteLine($"Load time with default settings: {swDefault.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Load time with custom globalization settings: {swCustom.ElapsedMilliseconds} ms");
         }
         catch (Exception ex)
         {

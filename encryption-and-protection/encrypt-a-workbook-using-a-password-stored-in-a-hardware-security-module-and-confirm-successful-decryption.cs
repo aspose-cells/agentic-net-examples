@@ -1,15 +1,14 @@
-// Title: Encrypt an Excel workbook with a password fetched from a hardware security module and validate decryption using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells to assign Workbook.Settings.Password with the password obtained from an HSM and save the workbook as an encrypted .xlsx file. | Open the encrypted workbook by providing LoadOptions.Password set to the HSM‑derived password, then read a known cell to confirm decryption succeeded. | Swap the placeholder GetPasswordFromHSM method for a real HSM SDK call while preserving the same encryption/decryption workflow.
-// Common Searches: asp.net retrieve password from hardware security module to encrypt Excel with Aspose.Cells | how to open password protected .xlsx using Aspose.Cells when password is stored in HSM | verify decryption of an encrypted workbook created with Aspose.Cells by reading a cell value | c# example for workbook encryption using dynamic password from external source
-// Tags: workbook encryption with Aspose.Cells C# | load password protected Excel using LoadOptions Aspose.Cells | HSM password integration Aspose.Cells .NET | validate decryption by reading cell Aspose.Cells | dynamic password workbook protection Aspose.Cells
+// Title: Encrypt an Excel workbook with a password from a hardware security module and validate decryption using Aspose.Cells for .NET
+// Common Searches: how to protect an Excel file with a password retrieved from an HSM using Aspose.Cells C# | Aspose.Cells C# load encrypted .xlsx with LoadOptions password | verify that a workbook encrypted with Settings.Password can be decrypted in Aspose.Cells | C# example of using a hardware security module to set workbook password in Aspose.Cells
+// Tags: encrypt workbook with HSM password Aspose.Cells | Aspose.Cells workbook password protection C# | LoadOptions password decryption Aspose.Cells | hardware security module password retrieval C# | validate Excel decryption Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 
-// The sample program simulates obtaining a password from a hardware security module, creates a workbook with sample data, encrypts it by setting Workbook.Settings.Password, saves it as EncryptedWorkbook.xlsx, then reloads the file using LoadOptions.Password and reads cell B2 to confirm that decryption was successful.
+// The sample creates a new workbook, obtains a password from a mock HSM method, encrypts the workbook by assigning Settings.Password, saves it as an XLSX file, then reloads the file using LoadOptions with the same password and confirms successful decryption by checking the value of cell A1.
 class Program
 {
-    // Simulated method that retrieves the password from a hardware security module (HSM)
+    // Mock method representing retrieval of a password from a hardware security module (HSM)
     static string GetPasswordFromHSM()
     {
         // In a real scenario, this method would interface with the HSM SDK/API
@@ -19,43 +18,39 @@ class Program
 
     static void Main()
     {
-        // Retrieve the encryption password from the HSM
-        string password = GetPasswordFromHSM();
-
-        // ------------------- Create Workbook -------------------
-        // Create a new workbook and add some sample data
+        // Step 1: Create a new workbook and add some data
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "DataSheet";
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Alice");
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Bob");
+        sheet.Cells["A1"].PutValue("Hello, Aspose!");
+        sheet.Name = "DemoSheet";
 
-        // ------------------- Encrypt Workbook -------------------
-        // Set the password for encryption
-        workbook.Settings.Password = password;
+        // Step 2: Retrieve the encryption password from the HSM
+        string hsmPassword = GetPasswordFromHSM();
 
-        // Save the encrypted workbook to a file
+        // Step 3: Encrypt the workbook using the retrieved password
+        workbook.Settings.Password = hsmPassword; // Set workbook password
         string encryptedFilePath = "EncryptedWorkbook.xlsx";
         workbook.Save(encryptedFilePath, SaveFormat.Xlsx);
 
         Console.WriteLine($"Workbook encrypted and saved to '{encryptedFilePath}'.");
 
-        // ------------------- Load and Decrypt Workbook -------------------
-        // Load the workbook using the same password
+        // Step 4: Load the encrypted workbook using the same password
         LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
         {
-            Password = password
+            Password = hsmPassword // Provide password for decryption
         };
         Workbook loadedWorkbook = new Workbook(encryptedFilePath, loadOptions);
 
-        // Verify decryption by reading a known cell value
-        Worksheet loadedSheet = loadedWorkbook.Worksheets["DataSheet"];
-        string nameInCellB2 = loadedSheet.Cells["B2"].StringValue;
-
-        Console.WriteLine($"Decryption successful. Value in B2: {nameInCellB2}");
+        // Step 5: Verify successful decryption by reading the cell value
+        string cellValue = loadedWorkbook.Worksheets[0].Cells["A1"].StringValue;
+        if (cellValue == "Hello, Aspose!")
+        {
+            Console.WriteLine("Decryption successful. Cell A1 contains expected value:");
+            Console.WriteLine(cellValue);
+        }
+        else
+        {
+            Console.WriteLine("Decryption failed or data corrupted.");
+        }
     }
 }

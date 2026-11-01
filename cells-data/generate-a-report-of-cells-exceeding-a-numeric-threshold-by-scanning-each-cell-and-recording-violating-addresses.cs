@@ -1,69 +1,99 @@
-// Title: Create an Excel threshold violation report by scanning numeric cells with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate through every cell in a worksheet, detect numeric values greater than a specified threshold, and collect their addresses. | Generate a new worksheet named "ThresholdReport" and fill it with two columns – the violating cell address and its numeric value – then save the workbook. | Implement a reusable method that accepts a Workbook object and a double threshold, returns a list of Cell objects whose DoubleValue exceeds the threshold, and optionally writes the results to a report sheet.
-// Common Searches: asp.net c# Aspose.Cells find cells with values above 50 and export to new sheet | how to list addresses of numeric cells exceeding a threshold using Aspose.Cells | create threshold based report in Excel with Aspose.Cells .NET | scan entire worksheet for high numeric values Aspose.Cells C# example
-// Tags: scan numeric cells Aspose.Cells | generate Excel threshold report C# | collect cell addresses exceeding limit Aspose.Cells | populate report worksheet Aspose.Cells | filter worksheet values by threshold .NET
+// Title: Generate an Excel threshold violation report of numeric cells using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to list cells with values greater than a specific number | Create a summary worksheet for out-of-range numeric values in an Excel file using Aspose.Cells | C# code to scan all worksheets and report cells exceeding a threshold with Aspose.Cells | Generate a threshold breach report in Excel programmatically with Aspose.Cells .NET | Find and export cell addresses that exceed a numeric limit using Aspose.Cells in C#
+// Tags: threshold violation report Aspose.Cells C# | scan numeric cells Aspose.Cells | create summary worksheet out-of-range values | iterate MaxDisplayRange Aspose.Cells | export violating cell addresses to new sheet
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThresholdReportDemo
+namespace ThresholdReport
 {
-    // The program creates a workbook, fills it with sample numeric data, scans every cell for values greater than a defined threshold, records the addresses of those cells, writes each address and its value to a new worksheet called "ThresholdReport", and saves the file as "ThresholdReport.xlsx" using Aspose.Cells for .NET.
+    // The example defines a numeric threshold, loads an existing workbook, iterates through each worksheet's used range via MaxDisplayRange, checks every cell for a numeric value exceeding the limit, records the full sheet!cell address, adds a new worksheet named "ThresholdReport", writes headers and the violating addresses with their values, and saves the workbook as output.xlsx while handling missing files and runtime errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample numeric data (replace with your own data as needed)
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(75);
-            worksheet.Cells["B1"].PutValue(55);
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["C3"].PutValue(120);
-            worksheet.Cells["D4"].PutValue(45);
-
-            // Define the numeric threshold
-            double threshold = 50.0;
-
-            // List to hold addresses of cells that exceed the threshold
-            List<string> violatingAddresses = new List<string>();
-
-            // Scan each cell in the worksheet
-            foreach (Cell cell in worksheet.Cells)
+            try
             {
-                // Check if the cell contains a numeric value and exceeds the threshold
-                if (cell.IsNumericValue && cell.DoubleValue > threshold)
+                // Define the numeric threshold
+                double threshold = 100.0;
+
+                // Verify input file exists
+                const string inputPath = "input.xlsx";
+                if (!File.Exists(inputPath))
                 {
-                    violatingAddresses.Add(cell.Name);
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
                 }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // List to store addresses of cells that exceed the threshold
+                List<string> violatingAddresses = new List<string>();
+
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Get the used range of the worksheet (fully qualified to avoid ambiguity)
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // Loop through each cell in the used range
+                    foreach (Cell cell in usedRange)
+                    {
+                        // Check if the cell contains a numeric value
+                        if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double numericValue))
+                        {
+                            // If the numeric value exceeds the threshold, record its address
+                            if (numericValue > threshold)
+                            {
+                                // cell.Name returns the address in A1 style (e.g., "B3")
+                                violatingAddresses.Add($"{sheet.Name}!{cell.Name}");
+                            }
+                        }
+                    }
+                }
+
+                // Create a new worksheet to hold the report
+                int reportIndex = workbook.Worksheets.Add();
+                Worksheet reportSheet = workbook.Worksheets[reportIndex];
+                reportSheet.Name = "ThresholdReport";
+
+                // Write header
+                reportSheet.Cells[0, 0].PutValue("Cell Address");
+                reportSheet.Cells[0, 1].PutValue("Value");
+
+                // Populate the report with violating cell addresses and their values
+                int rowIndex = 1;
+                foreach (string address in violatingAddresses)
+                {
+                    // Split sheet name and cell address
+                    string[] parts = address.Split('!');
+                    if (parts.Length != 2) continue; // safety check
+
+                    string sheetName = parts[0];
+                    string cellAddress = parts[1];
+
+                    // Retrieve the actual cell to get its value
+                    Worksheet sourceSheet = workbook.Worksheets[sheetName];
+                    Cell sourceCell = sourceSheet.Cells[cellAddress];
+
+                    // Write address and value to the report sheet
+                    reportSheet.Cells[rowIndex, 0].PutValue(address);
+                    reportSheet.Cells[rowIndex, 1].PutValue(sourceCell.Value);
+                    rowIndex++;
+                }
+
+                // Save the workbook with the report
+                const string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Report generated and saved to \"{outputPath}\".");
             }
-
-            // Create a new worksheet to hold the report
-            int reportIndex = workbook.Worksheets.Add();
-            Worksheet reportSheet = workbook.Worksheets[reportIndex];
-            reportSheet.Name = "ThresholdReport";
-
-            // Write header
-            reportSheet.Cells["A1"].PutValue("Cell Address");
-            reportSheet.Cells["B1"].PutValue("Value");
-
-            // Populate the report with violating cell information
-            for (int i = 0; i < violatingAddresses.Count; i++)
+            catch (Exception ex)
             {
-                string address = violatingAddresses[i];
-                Cell violCell = worksheet.Cells[address];
-                int row = i + 2; // Start from row 2 (after header)
-
-                reportSheet.Cells[row, 0].PutValue(address);               // Column A
-                reportSheet.Cells[row, 1].PutValue(violCell.DoubleValue); // Column B
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook with the report
-            workbook.Save("ThresholdReport.xlsx");
         }
     }
 }

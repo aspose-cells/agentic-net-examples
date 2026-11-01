@@ -1,14 +1,13 @@
-// Title: Insert a multi‑line string into a ListObject table cell and enable text wrapping using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells ListObject.PutCellValue to write a newline‑separated string into a specific table cell and apply a wrapped‑text style in C#. | Create a ListObject table, add multi‑line text to a cell, set IsTextWrapped = true on the corresponding worksheet cell, then save the workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to add newline characters to a ListObject table cell | Insert multi line text into an Aspose.Cells table cell example | Enable text wrapping for a cell after inserting multi‑line string in Aspose.Cells | Saving an XLSX workbook after writing multi‑line data to a ListObject in C# | Aspose.Cells ListObject insert multi‑line string with text wrap
-// Tags: Aspose.Cells ListObject multi-line cell | Aspose.Cells text wrap style C# | C# insert newline string into table cell | Aspose.Cells create and style table | Aspose.Cells save workbook xlsx
+// Title: How to insert a multi‑line string into a ListObject table cell and enable text wrapping with Aspose.Cells for C#
+// AI Prompts: Insert a newline‑separated string into a specific ListObject cell using PutCellValue and apply a wrapped style in C#. | Write C# code that adds multi‑line text to a table cell in Aspose.Cells and turns on text wrapping via StyleFlag. | Demonstrate setting text wrap for a ListObject data cell after putting a multi‑line value with the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# put multi line text into ListObject cell with newline characters | Enable text wrap for a table cell after using PutCellValue in Aspose.Cells | How to use StyleFlag to wrap text in an Excel table cell with Aspose.Cells C# | Insert multi‑line string into Excel table using Aspose.Cells ListObject PutCellValue | C# Aspose.Cells example for multiline cell content in a ListObject
+// Tags: Aspose.Cells ListObject PutCellValue multiline | Aspose.Cells text wrap StyleFlag C# | Excel table cell multiline Aspose.Cells | C# insert newline string into ListObject cell | Aspose.Cells table cell style wrapping
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
 
-// The sample creates a new workbook, adds a ListObject table, defines a multi‑line string using '\n', inserts it into the second row‑second column of the table with PutCellValue, applies a style with IsTextWrapped set to true to the corresponding worksheet cell, and saves the file as MultiLineTable.xlsx.
+// The example creates a workbook, adds a ListObject table, inserts a newline‑separated string into the first data cell using PutCellValue, applies a text‑wrapped style with StyleFlag, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
@@ -18,47 +17,45 @@ class Program
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
 
-            // Define the range for the ListObject (table) – starts at A1, 3 rows x 2 columns
-            int firstRow = 0;          // A1 row index (zero‑based)
-            int firstColumn = 0;       // A1 column index (zero‑based)
-            int totalRows = 3;
-            int totalColumns = 2;
+            // Define the range for the table (A1:B2) – includes header row
+            int firstRow = 0;      // A1 row index
+            int firstColumn = 0;   // A1 column index
+            int totalRows = 2;     // header + 1 data row
+            int totalColumns = 2;  // two columns
 
-            // Add the ListObject (table) to the worksheet
-            int listObjectIndex = sheet.ListObjects.Add(firstRow, firstColumn,
-                                                        firstRow + totalRows,
-                                                        firstColumn + totalColumns, true);
-            ListObject table = sheet.ListObjects[listObjectIndex];
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn,
+                                                   firstRow + totalRows,
+                                                   firstColumn + totalColumns, true);
+            ListObject table = sheet.ListObjects[tableIndex];
             table.DisplayName = "MyTable";
 
             // Multi‑line string to insert (use \n for line breaks)
-            string multiLineText = "Line 1\nLine 2\nLine 3";
+            string multiLine = "Line 1\nLine 2\nLine 3";
 
-            // Put the multi‑line string into the second row, second column of the table
-            // (row and column indices are zero‑based relative to the table)
-            table.PutCellValue(1, 1, multiLineText);
+            // Put the value into the first data row, first column of the table
+            // Row and column are zero‑based relative to the data range (excluding header)
+            int dataRow = 0;   // first data row inside the table
+            int dataColumn = 0;
+            table.PutCellValue(dataRow, dataColumn, multiLine);
 
-            // Enable text wrapping for the target cell so the newlines are visible
+            // Enable text wrapping for the target cell so newlines are visible
+            Cell targetCell = sheet.Cells[table.DataRange.FirstRow + dataRow,
+                                         table.DataRange.FirstColumn + dataColumn];
             Style wrapStyle = workbook.CreateStyle();
             wrapStyle.IsTextWrapped = true;
 
-            // Calculate the absolute cell address within the worksheet
-            int targetRow = table.StartRow + 1;      // table.StartRow is the first row of the table
-            int targetColumn = table.StartColumn + 1;
-            sheet.Cells[targetRow, targetColumn].SetStyle(wrapStyle);
-
-            // Define output file path
-            string outputPath = "MultiLineTable.xlsx";
+            // Apply the style to the cell (apply all style attributes)
+            StyleFlag flag = new StyleFlag { All = true };
+            targetCell.SetStyle(wrapStyle, flag);
 
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

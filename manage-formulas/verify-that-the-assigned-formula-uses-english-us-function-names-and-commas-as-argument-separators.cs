@@ -1,92 +1,84 @@
-// Title: Verify Excel formulas use US English function names and commas as separators with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that scans every worksheet, identifies formula cells, and lists any formulas that contain semicolons or function names not in a US‑English list. | Create a reusable method that accepts a Workbook object and returns a collection of Cell objects whose formulas violate US English naming or comma‑separator rules, without altering the workbook. | Generate a console‑application script that logs each invalid formula with its cell address, sheet name, and the specific issue (semicolon separator or localized function) using Aspose.Cells in .NET.
-// Common Searches: aspocells c# check formula for semicolon separator | detect localized Excel function names in workbook using Aspose.Cells | validate that Excel formulas use US English functions in .NET | programmatically ensure commas are used as argument separators in Excel formulas with Aspose.Cells | list cells with invalid formulas across all sheets using Aspose.Cells C#
-// Tags: Aspose.Cells formula validation US English | detect semicolon separators in Excel formulas C# | verify English function names in workbook formulas | scan all worksheets for invalid formulas Aspose.Cells | report cells with non‑US Excel functions .NET
+// Title: Verify English (US) function names and comma separators in Excel formulas with Aspose.Cells for .NET
+// Common Searches: C# code to check Excel formulas for English function names using Aspose.Cells | How to detect semicolon argument separators in Excel formulas with Aspose.Cells .NET | Identify localized function names in a workbook programmatically with Aspose.Cells | Validate all formulas in an Excel file for US English syntax using Aspose.Cells | Iterate through cells and flag non‑English formulas in C# with Aspose.Cells
+// Tags: Aspose.Cells English function name verification | semicolon separator detection in Excel formulas C# | lowercase function regex validation Aspose.Cells | worksheet cell iteration for formula checks .NET | save workbook after formula validation Aspose.Cells
 
-using System;
-using System.Collections.Generic;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
-// Loads an Excel workbook, iterates through every cell in each worksheet, checks each formula for semicolon argument separators and for function names outside a predefined US English list, outputs validation results with cell address and issue, and saves the workbook unchanged.
+// The sample loads an Excel workbook, iterates over every cell in the first worksheet, and flags any formula that uses a semicolon or a function name beginning with a lowercase letter, indicating non‑English (US) syntax; it then reports the overall result and optionally saves the workbook.
 class FormulaVerifier
 {
-    // List of common English (US) function names.
-    private static readonly HashSet<string> EnglishFunctions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-    {
-        "SUM","AVERAGE","COUNT","MAX","MIN","IF","AND","OR","NOT","VLOOKUP","HLOOKUP",
-        "INDEX","MATCH","LEFT","RIGHT","MID","LEN","TRIM","CONCATENATE","ROUND",
-        "ROUNDUP","ROUNDDOWN","ABS","POWER","SQRT","DATE","TIME","NOW","TODAY",
-        "YEAR","MONTH","DAY","TEXT","VALUE","ISNUMBER","ISTEXT","ISBLANK"
-        // Add more functions as needed.
-    };
-
     static void Main()
     {
-        // Load an existing workbook (replace with your file path).
-        Workbook workbook = new Workbook("Input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets.
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            // Get the used range to limit iteration.
-            var cells = sheet.Cells;
-            var maxRow = cells.MaxDataRow;
-            var maxCol = cells.MaxDataColumn;
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            for (int row = 0; row <= maxRow; row++)
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        bool allFormulasValid = true;
+
+        // Iterate through all cells in the worksheet
+        foreach (Cell cell in worksheet.Cells)
+        {
+            // Process only cells that contain a formula
+            if (!string.IsNullOrEmpty(cell.Formula))
             {
-                for (int col = 0; col <= maxCol; col++)
+                string formula = cell.Formula;
+
+                // 1. Verify that commas are used as argument separators (no semicolons)
+                if (formula.Contains(";"))
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.IsFormula)
-                    {
-                        string formula = cell.Formula; // e.g. "=SUM(A1:A5, B1:B5)"
-                        bool isValid = true;
-                        List<string> issues = new List<string>();
+                    Console.WriteLine($"Cell {cell.Name} uses semicolon as argument separator: {formula}");
+                    allFormulasValid = false;
+                }
 
-                        // 1. Verify commas are used as argument separators (no semicolons).
-                        if (formula.Contains(";"))
-                        {
-                            isValid = false;
-                            issues.Add("Uses semicolon ';' as argument separator.");
-                        }
-
-                        // 2. Verify that function names are English (US).
-                        // Extract tokens that appear before '('.
-                        int index = 0;
-                        while ((index = formula.IndexOf('(', index)) != -1)
-                        {
-                            // Find the start of the function name.
-                            int start = index - 1;
-                            while (start >= 0 && (char.IsLetter(formula[start]) || formula[start] == '_'))
-                                start--;
-                            start++; // Move to first letter.
-
-                            string funcName = formula.Substring(start, index - start);
-                            if (!EnglishFunctions.Contains(funcName))
-                            {
-                                isValid = false;
-                                issues.Add($"Non‑English function name detected: '{funcName}'.");
-                            }
-                            index++; // Move past '(' for next search.
-                        }
-
-                        // Output verification result.
-                        Console.WriteLine($"Cell {cell.Name} (Sheet: {sheet.Name})");
-                        Console.WriteLine($"  Formula: {formula}");
-                        Console.WriteLine($"  Valid: {isValid}");
-                        if (!isValid)
-                        {
-                            foreach (string issue in issues)
-                                Console.WriteLine($"  Issue: {issue}");
-                        }
-                        Console.WriteLine();
-                    }
+                // 2. Verify that function names are English (US) – they are typically uppercase.
+                // Flag any function name that starts with a lowercase letter (common in localized names).
+                var lowerCaseFunctionMatches = Regex.Matches(formula, @"([a-z]+)\s*\(");
+                if (lowerCaseFunctionMatches.Count > 0)
+                {
+                    Console.WriteLine($"Cell {cell.Name} may contain non‑English function names: {formula}");
+                    allFormulasValid = false;
                 }
             }
         }
 
-        // Optionally, save the workbook after verification (no changes made here).
-        workbook.Save("VerifiedOutput.xlsx");
+        // Output overall verification result
+        Console.WriteLine(allFormulasValid
+            ? "All formulas use English (US) function names and commas."
+            : "Some formulas need correction.");
+
+        // Save the workbook (optional)
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

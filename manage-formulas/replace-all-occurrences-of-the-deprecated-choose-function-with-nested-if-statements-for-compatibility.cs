@@ -1,14 +1,14 @@
-// Title: Convert deprecated CHOOSE formulas to nested IF statements in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets, finds formulas containing the CHOOSE function, and replaces each occurrence with an equivalent nested IF expression. | Implement a C# helper method that receives the argument list from a CHOOSE call and returns a properly formatted nested IF formula string for Aspose.Cells. | Add logging to the conversion script to output the original formula and the generated IF formula for every modified cell.
-// Common Searches: aspnet replace CHOOSE function with IF in Excel using Aspose.Cells | how to transform CHOOSE formulas to nested IF in a .xlsx file programmatically | C# regex to locate and rewrite CHOOSE formulas in Aspose.Cells workbook | update deprecated Excel functions automatically with Aspose.Cells .NET
-// Tags: CHOOSE to IF formula conversion Aspose.Cells | nested IF generation C# Aspose.Cells | regex formula replacement Excel .NET | deprecated Excel function migration Aspose.Cells | batch formula update workbook C#
+// Title: Replace deprecated CHOOSE function with nested IF formulas in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to replace CHOOSE with IF statements in Aspose.Cells C# | convert Excel CHOOSE formulas to nested IF using Aspose.Cells .NET | regex replace CHOOSE function in workbook cells with Aspose.Cells C# | migrate old CHOOSE formulas to IF logic in Excel using Aspose.Cells | split CHOOSE arguments and generate nested IF in C# with Aspose.Cells
+// Tags: replace CHOOSE with nested IF Aspose.Cells | convert Excel CHOOSE formula .NET | regex based formula transformation Aspose.Cells | handle deprecated Excel functions C# | parse function arguments with nested parentheses C#
 
 using Aspose.Cells;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-// Loads an input .xlsx file with Aspose.Cells, iterates through every worksheet and cell, detects formulas that contain the CHOOSE function, converts each CHOOSE call to an equivalent nested IF expression using a helper method, updates the cell formula, and saves the workbook as output.xlsx.
+// The example loads an existing or new workbook, iterates through all cells, detects CHOOSE functions with a regular expression, converts each occurrence to an equivalent nested IF expression while correctly handling nested parentheses, updates the cell formulas, and saves the modified workbook.
 class Program
 {
     static void Main()
@@ -18,71 +18,95 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // LoadOptions can be used to specify a password if needed; here we assume none
+                var loadOptions = new LoadOptions();
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one sheet
             }
 
-            // Load the workbook
-            var workbook = new Workbook(inputPath);
+            // Regex to locate CHOOSE functions: CHOOSE(index, value1, value2, ...)
+            Regex chooseRegex = new Regex(@"CHOOSE\s*\(\s*([^,]+)\s*,\s*(.+?)\)", RegexOptions.IgnoreCase);
 
-            // Regex to locate CHOOSE functions in formulas
-            var choosePattern = new Regex(@"CHOOSE\s*\(([^)]*)\)", RegexOptions.IgnoreCase);
-
-            // Iterate through all worksheets and cells
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                var cells = sheet.Cells;
-                foreach (Cell cell in cells)
+                // Iterate through all cells that contain formulas
+                foreach (Cell cell in sheet.Cells)
                 {
-                    // Process only cells that contain a formula with CHOOSE
-                    if (cell.IsFormula && cell.Formula.IndexOf("CHOOSE", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        string originalFormula = cell.Formula;
+                        string formula = cell.Formula;
 
-                        // Replace each CHOOSE occurrence with an equivalent nested IF formula
-                        string newFormula = choosePattern.Replace(originalFormula, m => ConvertChooseToIf(m.Groups[1].Value));
+                        // Replace each CHOOSE occurrence with nested IF statements
+                        while (chooseRegex.IsMatch(formula))
+                        {
+                            formula = chooseRegex.Replace(formula, m => ConvertChooseToIf(m.Groups[1].Value, m.Groups[2].Value));
+                        }
 
                         // Assign the transformed formula back to the cell
-                        cell.Formula = newFormula;
+                        cell.Formula = formula;
                     }
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    /// <param name="args">The comma‑separated arguments inside CHOOSE()</param>
-    /// <returns>Nested IF formula string</returns>
-    static string ConvertChooseToIf(string args)
+    // Converts CHOOSE(index, val1, val2, ...) into IF(index=1,val1,IF(index=2,val2,...))
+    static string ConvertChooseToIf(string indexPart, string valuesPart)
     {
-        // Split arguments by commas (assumes no commas inside individual arguments)
-        var parts = args.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length < 2)
-            return "0"; // Fallback for malformed CHOOSE
+        // Split the value arguments while respecting nested parentheses
+        string[] values = SplitArguments(valuesPart);
 
-        string indexExpression = parts[0].Trim(); // The index argument (e.g., A1)
+        // Start with the last value as the default else part
+        string nestedIf = values[values.Length - 1];
 
-        // Start with the last value as the default "else" part
-        string nestedIf = parts[parts.Length - 1].Trim();
-
-        // Build nested IFs from the second‑last value back to the first value
-        for (int i = parts.Length - 2; i >= 1; i--)
+        // Build nested IFs from the end towards the beginning
+        for (int i = values.Length - 2; i >= 0; i--)
         {
-            string value = parts[i].Trim();
-            // i corresponds to the position (1‑based) after the index argument
-            nestedIf = $"IF({indexExpression}={i}, {value}, {nestedIf})";
+            // i+1 corresponds to the CHOOSE position (1‑based)
+            nestedIf = $"IF({indexPart}={i + 1},{values[i]},{nestedIf})";
         }
 
         return nestedIf;
+    }
+
+    // Splits a comma‑separated argument list, handling nested parentheses
+    static string[] SplitArguments(string args)
+    {
+        var list = new List<string>();
+        int depth = 0;
+        int start = 0;
+
+        for (int i = 0; i < args.Length; i++)
+        {
+            char c = args[i];
+            if (c == '(') depth++;
+            else if (c == ')') depth--;
+            else if (c == ',' && depth == 0)
+            {
+                list.Add(args.Substring(start, i - start).Trim());
+                start = i + 1;
+            }
+        }
+
+        // Add the final argument
+        list.Add(args.Substring(start).Trim());
+
+        return list.ToArray();
     }
 }

@@ -1,39 +1,54 @@
-// Title: Auto‑fit all rows after inserting new rows in an Aspose.Cells worksheet using C#
-// AI Prompts: Insert rows at a specific index in a worksheet and then call worksheet.AutoFitRows to adjust every row height in C# with Aspose.Cells. | Create code that populates newly inserted rows and applies AutoFitRows before saving the workbook.
-// Common Searches: aspocells c# auto fit rows after inserting rows | how to keep row heights uniform after adding rows in Excel with Aspose.Cells | c# insert rows and auto‑fit row height using Aspose.Cells | example of worksheet.AutoFitRows after InsertRows in C#
-// Tags: auto‑fit rows after row insertion Aspose.Cells | insert rows with worksheet.AutoFitRows C# | adjust row height after adding rows Aspose.Cells | Aspose.Cells AutoFitRows usage C# | maintain consistent row height in Excel Aspose.Cells
+// Title: Insert rows at the end of a worksheet and auto‑fit all row heights using Aspose.Cells for .NET (C#)
+// AI Prompts: Load or create a workbook, locate the final populated row, add two new rows, write sample data, then invoke sheet.AutoFitRows(startRow, totalRows) to resize every row. | With Aspose.Cells in C#, programmatically extend the data range by inserting rows and automatically calibrate the height of all rows in the sheet.
+// Common Searches: c# aspocells insert rows after last data row and autofit row heights | how to use AutoFitRows on a dynamic range in Aspose.Cells .NET | adjust all row heights after adding new rows with Aspose.Cells for .NET | Aspose.Cells C# example for inserting rows and applying AutoFitRows | auto fit rows in newly inserted rows in Excel using Aspose.Cells
+// Tags: InsertRows method Aspose.Cells C# | AutoFitRows overload Aspose.Cells | adjust row heights .xlsx Aspose.Cells | dynamic worksheet row insertion Aspose.Cells | maintain uniform row height Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook, insert rows at a given index, fill the new rows with data, call worksheet.AutoFitRows to ensure uniform row heights, and save the file.
-class AutoFitRowsAfterInsertDemo
+// The example loads or creates a workbook, determines the last used row, inserts two rows, populates them with sample values, and calls sheet.AutoFitRows(0, sheet.Cells.MaxDataRow + 1) to automatically adjust the height of every row before saving the file.
+class AutoFitRowsExample
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add some initial data
-        cells["A1"].PutValue("Header");
-        cells["A2"].PutValue("Original Row 1");
-        cells["A3"].PutValue("Original Row 2");
+            // Load existing workbook if it exists; otherwise create a new one.
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-        // Insert two new rows at index 2 (between the original rows)
-        // Uses the InsertRows(int rowIndex, int totalRows) rule
-        cells.InsertRows(2, 2);
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate the newly inserted rows
-        cells["A3"].PutValue("Inserted Row 1");
-        cells["A4"].PutValue("Inserted Row 2");
+            // Determine the row after the last used row.
+            int insertRowIndex = sheet.Cells.MaxDataRow + 1;
 
-        // Auto‑fit all rows in the worksheet to ensure uniform row height
-        // Uses the AutoFitRows() rule
-        worksheet.AutoFitRows();
+            // Insert two new rows at the determined position.
+            sheet.Cells.InsertRows(insertRowIndex, 2);
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("AutoFitRowsAfterInsert.xlsx");
+            // Populate the newly inserted rows with sample data.
+            sheet.Cells[insertRowIndex, 0].PutValue("New Data Row 1");
+            sheet.Cells[insertRowIndex, 1].PutValue(123);
+            sheet.Cells[insertRowIndex + 1, 0].PutValue("New Data Row 2");
+            sheet.Cells[insertRowIndex + 1, 1].PutValue(456);
+
+            // Apply AutoFitRows to all rows that contain data.
+            int startRow = 0;
+            int totalRows = sheet.Cells.MaxDataRow + 1; // number of rows to autofit
+
+            // AutoFitRows overload with start row and total rows.
+            sheet.AutoFitRows(startRow, totalRows);
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

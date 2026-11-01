@@ -1,39 +1,80 @@
-// Title: Disable text wrapping for all chart data labels in every worksheet of an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an Excel file, iterates through each worksheet and each chart, and sets DataLabels.IsTextWrapped = false for every series. | Show how to batch process an Excel workbook to turn off text wrap on chart data labels across all sheets and save the modified file. | Provide a step‑by‑step example of disabling data label text wrapping for multiple charts in a multi‑sheet workbook using Aspose.Cells.
-// Common Searches: aspnet aspocells disable chart data label wrap for all worksheets | c# loop through worksheets and charts to turn off data label text wrapping | batch modify chart data labels in Excel using Aspose.Cells .NET | how to set IsTextWrapped false for chart series data labels in a workbook | remove text wrapping from chart labels in every sheet with Aspose.Cells
-// Tags: chart data label wrap property Aspose.Cells | batch update chart settings across worksheets C# | chart data label wrap flag Aspose.Cells | traverse workbook charts Aspose.Cells | programmatic Excel chart label adjustment
+// Title: Disable text wrapping for all chart data labels across every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through each worksheet and chart, enables data labels, and sets DataLabels.IsTextWrapped = false for every series. | Update an existing Excel file so that all chart series show data labels without text wrap, then save the modified workbook to a new location using Aspose.Cells. | Create a resilient C# routine that verifies the input file, processes all charts in all sheets to turn off label wrapping, and handles any errors during the operation.
+// Common Searches: aspnet aspocells disable chart data label wrap for all worksheets | c# loop through all charts in a workbook and turn off data label text wrapping | batch update Excel chart series data labels to not wrap text using Aspose.Cells | how to set DataLabels.IsTextWrapped false for every chart in an Excel file with Aspose.Cells | process multiple worksheets to modify chart label wrapping in C#
+// Tags: disable chart data label wrapping Aspose.Cells | iterate all worksheets and charts C# | set DataLabels.IsTextWrapped false | enable data labels for chart series Aspose.Cells | save workbook after chart label changes
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // Loads an Excel workbook, iterates through each worksheet, each chart, and each series, disables text wrapping for the series' data labels, and saves the updated workbook.
+// The example loads an existing Excel workbook, checks that the file exists, then iterates through every worksheet, each chart, and each series to ensure data labels are displayed and disables text wrapping for those labels before saving the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Loop through all worksheets in the workbook
-        foreach (Worksheet worksheet in workbook.Worksheets)
+        try
         {
-            // Loop through all charts on the current worksheet
-            foreach (Chart chart in worksheet.Charts)
-            {
-                // Loop through each series in the chart
-                foreach (Series series in chart.NSeries)
-                {
-                    // Access the data labels of the series
-                    DataLabels dataLabels = series.DataLabels;
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-                    // Disable text wrapping for the data labels
-                    dataLabels.IsTextWrapped = false;
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts on the worksheet
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Iterate through all series of the chart
+                    foreach (Series series in chart.NSeries)
+                    {
+                        try
+                        {
+                            // Enable data labels for the series if not already enabled
+                            if (!series.DataLabels.ShowValue)
+                                series.DataLabels.ShowValue = true;
+
+                            // Disable text wrap for all data labels in the series
+                            series.DataLabels.IsTextWrapped = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Warning: Unable to modify series in chart '{chart.Name}'. {ex.Message}");
+                        }
+                    }
                 }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

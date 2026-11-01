@@ -1,14 +1,12 @@
-// Title: How to retrieve and log the address of a dynamic named range "SalesData" with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that opens an Excel workbook, fetches the dynamic named range "SalesData", obtains its address, and prints it to the console. | Show C# error‑handling patterns for when the file "input.xlsx" or the named range "SalesData" cannot be found while using Aspose.Cells. | Adapt the sample to write the resolved range address to a log file instead of the console, employing standard .NET logging facilities.
-// Common Searches: Aspose.Cells C# get address of a dynamic named range from workbook | C# example for reading named range SalesData address using Aspose.Cells | How to handle missing named range when using Aspose.Cells in .NET | Log Excel named range address to a file with Aspose.Cells C#
-// Tags: Aspose.Cells retrieve named range location | C# resolve named range to Range object | Excel workbook named range extraction .NET | Aspose.Cells missing named range handling | log range location using .NET
+// Title: Retrieve the address of the dynamic named range "SalesData" from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: how to obtain the RefersTo address of a named range with Aspose.Cells in C# | C# code to read the address of a dynamic named range from an .xlsx file using Aspose.Cells | example of using GetRangeByName to get a named range address in Aspose.Cells for .NET | log the full cell reference of a named range in an Excel workbook with Aspose.Cells | retrieve and display the sheet and cell range of a named range called SalesData in C#
+// Tags: Aspose.Cells GetRangeByName RefersTo address | dynamic named range address extraction .NET | named range address logging C# | Excel workbook named range lookup Aspose.Cells | retrieve named range cell reference C# | SalesData named range address retrieval
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// // Loads 'input.xlsx', accesses the workbook's Names collection to locate the dynamic named range 'SalesData', resolves it to a Range object, reads its address (e.g., "A2:C15"), and outputs the address to the console while gracefully handling missing files or missing named ranges.
+// The sample loads 'input.xlsx', checks that the file exists, uses Workbook.Worksheets.GetRangeByName to locate the dynamic named range "SalesData", reads its RefersTo property to obtain the full address (e.g., Sheet1!A1:B10), and writes that address to the console while handling missing files, absent ranges, and other exceptions.
 class Program
 {
     static void Main()
@@ -18,7 +16,7 @@ class Program
         // Ensure the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
@@ -27,27 +25,25 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the dynamic named range "SalesData"
-            // Named ranges are stored in the Names collection of the worksheet collection
-            Name salesDataName = workbook.Worksheets.Names["SalesData"];
-            if (salesDataName == null)
+            // Retrieve the named range "SalesData"
+            // Use GetRangeByName to obtain the Aspose.Cells.Range object
+            Aspose.Cells.Range salesRange = workbook.Worksheets.GetRangeByName("SalesData");
+
+            if (salesRange == null)
             {
-                Console.WriteLine("Named range 'SalesData' not found.");
+                Console.WriteLine("The named range \"SalesData\" does not exist in the workbook.");
                 return;
             }
 
-            // Resolve the named range to an actual Range object based on current data
-            AsposeRange salesDataRange = salesDataName.GetRange();
-
-            // Get the address of the resolved range (e.g., "A2:C15")
-            string address = salesDataRange.Address;
+            // Get the address of the resolved range (e.g., Sheet1!A1:B10)
+            string address = salesRange.RefersTo;
 
             // Log the result
             Console.WriteLine($"SalesData address: {address}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
+            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

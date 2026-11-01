@@ -1,111 +1,105 @@
-// Title: Expand an existing named range by one column using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, retrieves a named range, parses its RefersTo address, extends the range one column to the right, updates the RefersTo property, and saves the file. | Show how to programmatically modify the RefersTo string of a named range to include an additional column in a .NET application using Aspose.Cells.
-// Common Searches: aspnet expand named range column Aspose.Cells C# example | update RefersTo property of a named range programmatically Aspose.Cells | add extra column to existing Excel named range using Aspose.Cells for .NET | C# code to change named range boundaries in an Excel workbook with Aspose.Cells | how to parse and modify RefersTo address of a named range in Aspose.Cells
-// Tags: extend named range column Aspose.Cells | modify RefersTo address C# | named range boundary update .NET | Aspose.Cells range expansion example | Excel named range manipulation Aspose.Cells
+// Title: How to expand an existing named range's RefersTo formula to include an additional column using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add column D to an existing named range RefersTo | update named range formula to extend range in Excel with Aspose.Cells .NET | programmatically modify RefersTo property of a named range in a workbook using Aspose.Cells | extend Excel named range to new column while preserving row count using Aspose.Cells C# | parse and rebuild RefersTo string for a named range with Aspose.Cells example
+// Tags: Aspose.Cells named range RefersTo modification | C# extend Excel named range column | Aspose.Cells workbook range expansion | update RefersTo property programmatically | Excel named range column addition .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-// The sample loads a workbook, locates a named range, parses its RefersTo address to determine current limits, calculates a new end column one column to the right, builds a new RefersTo string, assigns it back to the named range, and saves the updated workbook.
-class UpdateNamedRange
+namespace MyApp
 {
-    // Helper to convert zero‑based column index to Excel column letter (e.g., 0 -> "A")
-    static string ColumnIndexToName(int index)
+    // The example loads an Excel workbook, retrieves the named range "MyRange", parses its RefersTo string to identify the sheet, start cell, and end row, constructs a new end cell in column D while keeping the same row number, rebuilds the RefersTo expression to include the new column, assigns the updated RefersTo back to the named range, and saves the workbook.
+    class Program
     {
-        const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        string result = "";
-        while (index >= 0)
+        static void Main()
         {
-            result = letters[index % 26] + result;
-            index = index / 26 - 1;
-        }
-        return result;
-    }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-    static void Main()
-    {
-        // Paths – adjust as needed
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        // Name of the existing named range to modify
-        string namedRangeName = "MyRange";
-
-        try
-        {
-            // Ensure the input file exists
+            // Verify that the input file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Retrieve the named range object
-            Name namedRange = workbook.Worksheets.Names[namedRangeName];
-            if (namedRange == null)
+            try
             {
-                Console.WriteLine($"Named range \"{namedRangeName}\" not found.");
-                return;
-            }
+                // Load the workbook (no password supplied)
+                Workbook workbook = new Workbook(inputPath);
 
-            // Parse the RefersTo string to obtain sheet name and cell addresses
-            // Example RefersTo: Sheet1!$A$1:$C$5
-            string refersTo = namedRange.RefersTo;
-            int exclPos = refersTo.IndexOf('!');
-            if (exclPos < 0)
+                // Retrieve the named range by its name
+                Name namedRange = workbook.Worksheets.Names["MyRange"];
+                if (namedRange == null)
+                {
+                    Console.WriteLine("Named range 'MyRange' not found.");
+                    return;
+                }
+
+                // Example RefersTo: Sheet1!$A$1:$C$10
+                string oldRefersTo = namedRange.RefersTo;
+
+                // Split the RefersTo into sheet part and range part
+                int exclPos = oldRefersTo.IndexOf('!');
+                if (exclPos < 0)
+                {
+                    Console.WriteLine("Invalid RefersTo format.");
+                    return;
+                }
+
+                string sheetPart = oldRefersTo.Substring(0, exclPos);          // e.g., Sheet1
+                string rangePart = oldRefersTo.Substring(exclPos + 1);         // e.g., $A$1:$C$10
+
+                // Separate start and end cells of the range
+                string[] cells = rangePart.Split(':');
+                if (cells.Length != 2)
+                {
+                    Console.WriteLine("RefersTo does not contain a start and end cell.");
+                    return;
+                }
+
+                string startCell = cells[0];   // e.g., $A$1
+                string endCell = cells[1];     // e.g., $C$10
+
+                // Extract the row number from the end cell
+                string rowNumber = Regex.Match(endCell, @"\d+").Value; // e.g., 10
+                if (string.IsNullOrEmpty(rowNumber))
+                {
+                    Console.WriteLine("Unable to extract row number from end cell.");
+                    return;
+                }
+
+                // Define the new column to add (e.g., column D)
+                string newEndCell = "$D$" + rowNumber; // e.g., $D$10
+
+                // Construct the new RefersTo string
+                string newRefersTo = $"{sheetPart}!{startCell}:{newEndCell}";
+
+                // Update the RefersTo property of the named range
+                namedRange.RefersTo = newRefersTo;
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (CellsException ex)
             {
-                Console.WriteLine("Invalid RefersTo format.");
-                return;
+                // Handle password-protected workbook or other Cells-specific errors
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
             }
-
-            string sheetName = refersTo.Substring(0, exclPos);
-            string addressPart = refersTo.Substring(exclPos + 1); // "$A$1:$C$5"
-            string[] cells = addressPart.Split(':');
-            if (cells.Length != 2)
+            catch (Exception ex)
             {
-                Console.WriteLine("Invalid address format in RefersTo.");
-                return;
+                // General exception handling
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Get the worksheet that contains the named range
-            Worksheet sheet = workbook.Worksheets[sheetName];
-            if (sheet == null)
-            {
-                Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
-                return;
-            }
-
-            // Create a Range object from the start and end cells
-            Aspose.Cells.Range range = sheet.Cells.CreateRange(cells[0], cells[1]);
-
-            // Determine current boundaries
-            int firstRow = range.FirstRow;
-            int firstColumn = range.FirstColumn;
-            int lastRow = range.RowCount > 0 ? firstRow + range.RowCount - 1 : firstRow;
-            int lastColumn = range.ColumnCount > 0 ? firstColumn + range.ColumnCount - 1 : firstColumn;
-
-            // Extend the range by one column to the right
-            int newLastColumn = lastColumn + 1;
-
-            // Build the new RefersTo address (e.g., Sheet1!$A$1:$D$10)
-            string startCell = $"${ColumnIndexToName(firstColumn)}${firstRow + 1}";
-            string endCell = $"${ColumnIndexToName(newLastColumn)}${lastRow + 1}";
-            string newRefersTo = $"{sheet.Name}!{startCell}:{endCell}";
-
-            // Update the RefersTo property
-            namedRange.RefersTo = newRefersTo;
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Named range \"{namedRangeName}\" updated to \"{newRefersTo}\" and saved to {outputPath}.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

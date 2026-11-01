@@ -1,70 +1,65 @@
-// Title: How to render an Excel worksheet to PNG with Aspose.Cells and perform a pixel‑by‑pixel comparison against a baseline image in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet as a PNG file and then compares the PNG to a reference image pixel by pixel, returning the count of differing pixels. | Create a method that reads two PNG files into byte arrays, iterates through the bytes, counts mismatches, and reports whether the images are identical. | Add robust error handling for missing files, size mismatches, and I/O exceptions when validating rendered worksheet images in automated tests.
-// Common Searches: Aspose.Cells C# render worksheet to PNG and compare with expected image | pixel level regression test for Excel sheet image output using Aspose.Cells | C# byte array comparison of two PNG files generated from Excel | how to verify visual output of Aspose.Cells worksheet rendering in automated tests | detect differences between generated and baseline PNG images in .NET
-// Tags: Aspose.Cells worksheet PNG rendering | C# pixel‑by‑pixel image comparison | baseline PNG verification for Excel export | byte array PNG diff in .NET | visual regression testing Aspose.Cells
+// Title: Generate a PNG image of a worksheet with Aspose.Cells in C# and compare it pixel‑by‑pixel to a baseline file
+// AI Prompts: Render the first page of a workbook to a PNG file using Aspose.Cells SheetRender, then load the PNG and a reference PNG and count differing bytes to confirm visual equality. | Create a C# method that takes two image paths, checks for length mismatches, iterates through their byte arrays, and returns a boolean plus the number of mismatched bytes indicating whether the images are identical.
+// Common Searches: how to render an Excel worksheet to PNG with Aspose.Cells and verify the output in C# | C# compare generated worksheet image to baseline PNG pixel by pixel | Aspose.Cells SheetRender compare rendered image with reference file | byte level comparison of two PNG files produced from Excel in .NET | detect visual differences between Excel sheet screenshots using Aspose.Cells
+// Tags: worksheet to PNG rendering Aspose.Cells | byte‑by‑byte PNG comparison C# | image equality verification Aspose.Cells | pixel level diff of Excel sheet image | SheetRender PNG output validation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example creates a workbook, fills cells, renders the first worksheet to a PNG file using Aspose.Cells, then loads a baseline PNG and performs a byte‑wise pixel comparison, reporting whether the images match and the number of differing pixels.
-class Program
+// The example creates a workbook, adds sample data, and uses Aspose.Cells SheetRender with ImageOrPrintOptions to save the first worksheet page as a PNG file. It then ensures both the generated PNG and a baseline PNG exist, reads their byte arrays, and performs a byte‑by‑byte comparison (treating length differences as a mismatch) to determine if the images are identical, reporting the result and the count of mismatched bytes.
+class WorksheetImageComparer
 {
-    static void Main(string[] args)
+    static void Main()
     {
         try
         {
-            // Paths for generated image and baseline reference image
-            string generatedImagePath = "generated.png";
-            string baselineImagePath = "baseline.png";
-
-            // -------------------------------------------------
-            // 1. Create a workbook and populate some data
-            // -------------------------------------------------
+            // Create a workbook and add some sample data
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sample";
+            sheet.Name = "SampleSheet";
+            sheet.Cells["A1"].PutValue("Aspose");
+            sheet.Cells["B2"].PutValue(12345);
+            sheet.Cells["C3"].PutValue(DateTime.Now);
 
-            // Fill sample data
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
-            sheet.Cells["C2"].PutValue(789);
+            // Path for the generated image
+            string generatedImagePath = "generated.png";
 
-            // -------------------------------------------------
-            // 2. Render the first worksheet to a PNG image
-            // -------------------------------------------------
+            // Configure rendering options (resolution only; format inferred from file extension)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // Default image format is PNG; explicit setting omitted for compatibility
-                OnePagePerSheet = true,
-                Transparent = false
+                HorizontalResolution = 96,
+                VerticalResolution = 96
             };
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
-            // Render page 0 (the only page) to the specified file
-            renderer.ToImage(0, generatedImagePath);
 
-            // -------------------------------------------------
-            // 3. Compare the generated image with the baseline
-            // -------------------------------------------------
-            if (!File.Exists(baselineImagePath))
+            // Render the first page of the worksheet to an image file
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            renderer.ToImage(0, generatedImagePath); // 0 = first page
+
+            // Verify that the generated image was created
+            if (!File.Exists(generatedImagePath))
             {
-                Console.WriteLine($"Baseline image not found at path: {baselineImagePath}");
+                Console.WriteLine($"Failed to generate image at '{generatedImagePath}'.");
                 return;
             }
 
-            int differingPixels;
-            bool imagesAreIdentical = CompareImagesPixelByPixel(generatedImagePath, baselineImagePath, out differingPixels);
+            // Path to the baseline reference image
+            string baselineImagePath = "baseline.png";
 
-            if (imagesAreIdentical)
+            // Ensure baseline image exists
+            if (!File.Exists(baselineImagePath))
             {
-                Console.WriteLine("Images are identical.");
+                Console.WriteLine($"Baseline image not found at '{baselineImagePath}'.");
+                return;
             }
-            else
-            {
-                Console.WriteLine($"Images differ. Number of differing bytes: {differingPixels}");
-            }
+
+            // Perform byte‑by‑byte comparison (approximates pixel comparison)
+            bool imagesAreEqual = CompareImagesByteByByte(generatedImagePath, baselineImagePath, out int mismatchedBytes);
+
+            // Output the result
+            Console.WriteLine($"Images are equal: {imagesAreEqual}");
+            Console.WriteLine($"Mismatched byte count: {mismatchedBytes}");
         }
         catch (Exception ex)
         {
@@ -72,25 +67,23 @@ class Program
         }
     }
 
-    // Simple byte‑wise comparison of two image files
-    static bool CompareImagesPixelByPixel(string pathA, string pathB, out int diffCount)
+    /// <param name="pathA">Path to the first image.</param>
+    /// <param name="pathB">Path to the second image.</param>
+    /// <param name="mismatchedBytes">Number of bytes that differ.</param>
+    /// <returns>True if images are identical; otherwise false.</returns>
+    static bool CompareImagesByteByByte(string pathA, string pathB, out int mismatchedBytes)
     {
-        diffCount = 0;
+        mismatchedBytes = 0;
 
         try
         {
-            if (!File.Exists(pathA) || !File.Exists(pathB))
-            {
-                Console.WriteLine("One of the image files does not exist.");
-                return false;
-            }
-
             byte[] bytesA = File.ReadAllBytes(pathA);
             byte[] bytesB = File.ReadAllBytes(pathB);
 
+            // Different lengths mean images differ
             if (bytesA.Length != bytesB.Length)
             {
-                Console.WriteLine("Image file sizes differ.");
+                mismatchedBytes = -1; // indicate length mismatch
                 return false;
             }
 
@@ -98,15 +91,16 @@ class Program
             {
                 if (bytesA[i] != bytesB[i])
                 {
-                    diffCount++;
+                    mismatchedBytes++;
                 }
             }
 
-            return diffCount == 0;
+            return mismatchedBytes == 0;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error during image comparison: {ex.Message}");
+            mismatchedBytes = -1;
             return false;
         }
     }

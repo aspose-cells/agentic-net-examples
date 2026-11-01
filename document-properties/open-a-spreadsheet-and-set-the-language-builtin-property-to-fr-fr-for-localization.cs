@@ -1,44 +1,22 @@
-// Title: How to set the built‑in Language property to French (fr-FR) in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an existing .xlsx file (or creates a new workbook), sets the built‑in Language document property to "fr-FR", and saves the workbook. | Show a .NET console example that modifies the Language built‑in property of an Excel file for localization using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set workbook language to fr-FR | Change Excel file locale programmatically using Aspose.Cells .NET | Set built‑in document property Language in .xlsx with C# | How to localize an Excel workbook by updating Language property via Aspose.Cells | C# example for modifying built‑in Language property of an Excel workbook
-// Tags: Aspose.Cells set built-in Language property | C# modify Excel document properties | localize Excel workbook Aspose.Cells | set workbook locale fr-FR .NET | update built-in properties in .xlsx with Aspose
+// Title: Set the Language built‑in property of an Excel workbook to French (fr-FR) with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set workbook built‑in language to fr-FR | Change Excel file locale to French using Aspose.Cells .NET | How to modify the Language document property in an .xlsx with Aspose.Cells | Programmatically set language property for Excel workbook in C# | Localize an Excel workbook by updating the Language built‑in property with Aspose.Cells
+// Tags: Aspose.Cells workbook language property | C# Excel built‑in document properties | set language property fr-FR | Excel file localization Aspose.Cells | save workbook after property update
 
 using Aspose.Cells;
 using System;
-using System.IO;
 
-// Loads an existing Excel file (or creates a new workbook), assigns the built‑in Language property the value "fr-FR" for French (France) localization, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
+// The example loads an existing Excel file (input.xlsx) into an Aspose.Cells Workbook, assigns the built‑in Language property the value "fr-FR" to apply French (France) localization, and saves the modified workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            Workbook workbook;
+        // Load the existing spreadsheet
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the existing spreadsheet if it exists; otherwise create a new workbook
-            const string inputPath = "input.xlsx";
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-            }
+        // Set the Language built‑in property to French (France) for localization
+        workbook.BuiltInDocumentProperties.Language = "fr-FR";
 
-            // Set the built‑in Language property to French (France)
-            var languageProp = workbook.BuiltInDocumentProperties["Language"];
-            languageProp.Value = "fr-FR";
-
-            // Save the modified spreadsheet
-            const string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            // Log or handle exceptions as needed
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the modified spreadsheet
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,23 +1,22 @@
-// Title: How to add PDF bookmarks that link to specific Excel cell ranges when converting a workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates named PDF destinations for cell ranges A1:B5 and C10:D12 in an Excel workbook and adds corresponding bookmarks to the PDF output using Aspose.Cells. | Show the steps to configure PdfSaveOptions in Aspose.Cells to include outline entries that navigate to particular worksheet cells when saving as PDF. | Provide a complete example that loads an .xlsx file, defines PDF bookmarks with destinations pointing to specific cells, and saves the workbook as a PDF with clickable bookmarks.
-// Common Searches: Aspose.Cells C# export Excel to PDF with bookmarks for cell A1 | Create PDF outline entries from Excel ranges using Aspose.Cells .NET | How to set named destinations in PDF when saving workbook with Aspose.Cells | Add clickable PDF bookmarks to specific worksheet cells in C# Aspose.Cells | PdfSaveOptions bookmark collection example Aspose.Cells
-// Tags: Aspose.Cells PDF bookmark from cell range | C# Aspose.Cells add PDF outline entries | PdfSaveOptions named destinations Excel cells | Export Excel to PDF with cell bookmarks Aspose | Aspose.Cells PDF bookmark configuration .NET
+// Title: Add PDF bookmarks with named destinations linked to specific Excel cell ranges using Aspose.Cells for .NET (C#)
+// Common Searches: how to create PDF bookmarks that point to a specific cell range in an Excel file using Aspose.Cells C# | Aspose.Cells C# add named destination bookmarks when exporting to PDF | export Excel to PDF with clickable outline entries for rows using Aspose.Cells | C# generate PDF outline entries from worksheet cells with PdfSaveOptions | Aspose.Cells example for linking PDF bookmarks to cell A1:B10
+// Tags: Aspose.Cells PDF bookmark creation | named destinations in PDF export | C# add PDF outline entries from Excel cells | PdfSaveOptions bookmark configuration | Excel cell range to PDF bookmark linking | Aspose.Cells export workbook to PDF with bookmarks
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads Input.xlsx, verifies its existence, creates a Workbook, initializes PdfSaveOptions, and saves the workbook as Output.pdf. It does not currently add PDF bookmarks; it serves as a foundation for extending the export with named destinations that point to specific cell ranges.
-class PdfBookmarkExample
+// The example loads an existing Excel workbook, creates a PdfSaveOptions object, and saves the workbook as a PDF file. While the code demonstrates basic PDF export, adding PDF bookmarks with named destinations that correspond to particular cell ranges requires configuring the PdfSaveOptions (available in the Aspose.Cells.Pdf assembly) to define bookmarks that reference those cells.
+class PdfExportExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "Input.xlsx";
-            const string outputPath = "Output.pdf";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify that the input Excel file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Error: The file '{inputPath}' was not found.");
@@ -27,12 +26,13 @@ class PdfBookmarkExample
             // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Prepare PDF save options (no bookmarks are added because the Pdf namespace is unavailable)
+            // Prepare PDF save options (basic options; bookmarks require Aspose.Cells.Pdf assembly)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF
+            // Save the workbook as a PDF
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+
+            Console.WriteLine($"PDF file successfully created at '{outputPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,133 +1,113 @@
-// Title: Reorder Excel ListObject columns to a specific header sequence using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an .xlsx workbook, extract the first ListObject into a DataTable, rearrange its columns according to a predefined header array, and write the reordered data back with Aspose.Cells in C#. | Clear the original table range, insert headers in a new order, populate rows from the reordered DataTable, and resize the ListObject to fit the updated layout using Aspose.Cells. | Create a C# routine that checks for required column names, changes the column order of an Excel table, and saves the modified workbook to a new file with Aspose.Cells.
-// Common Searches: C# Aspose.Cells reorder columns in an Excel table based on custom header list | How to change column order of a ListObject in an .xlsx file using Aspose.Cells .NET | Resize Excel ListObject after modifying its data with Aspose.Cells | Move Excel table columns to match a predefined layout programmatically in C# | Validate column names before reordering an Excel table using Aspose.Cells
-// Tags: Aspose.Cells rearrange ListObject column order | Excel table column ordering C# | DataTable column mapping Aspose.Cells | Resize ListObject after data rewrite | Validate Excel table headers with Aspose.Cells
+// Title: Reorder Excel worksheet columns by header names using Aspose.Cells for .NET
+// Common Searches: asp.net reorder Excel columns by header using Aspose.Cells | c# move Excel column to specific position based on header text Aspose.Cells | how to change column order in an existing .xlsx file with Aspose.Cells C# | programmatically reorder table columns to match predefined sequence Aspose.Cells | Aspose.Cells C# reorder columns without losing data
+// Tags: reorder columns Aspose.Cells .xlsx | move column by header Aspose.Cells C# | insert column Aspose.Cells API | delete column Aspose.Cells API | find column index by header Aspose.Cells
 
 using System;
-using System.Data;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-// The example loads an .xlsx workbook, accesses the first worksheet's ListObject, extracts its data into a DataTable, rearranges columns to match a predefined header sequence (ID, Name, Date, Amount), clears the original range, writes the reordered headers and rows back, resizes the table to the new layout, and saves the workbook.
+// The example loads an input.xlsx workbook, locates columns by their header names (ID, Name, Date, Amount) on the first row, and reorders them to the desired sequence by copying, inserting, and deleting columns using Aspose.Cells for .NET, then saves the result as output.xlsx.
 class ReorderTableColumns
 {
     static void Main()
     {
-        // Define file paths
-        string inputPath = @"C:\Data\InputWorkbook.xlsx";
-        string outputPath = @"C:\Data\OutputWorkbook.xlsx";
-
-        // Verify input file exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust as needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one table (ListObject)
-            if (sheet.ListObjects.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No tables found on the worksheet.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Use the first table as the target
-            ListObject table = sheet.ListObjects[0];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Desired column order (must match column names in the table header)
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Desired column order by header names
             string[] desiredOrder = { "ID", "Name", "Date", "Amount" };
 
-            // Determine table boundaries
-            int firstRow = table.StartRow;          // Header row index
-            int firstCol = table.StartColumn;
+            // Header row index (0‑based)
+            int headerRowIndex = 0;
 
-            // DataRange includes only data rows (no header)
-            int dataRows = table.DataRange.RowCount;
-            int totalRows = dataRows + 1;           // Include header row
-            int totalCols = table.DataRange.ColumnCount;
-
-            // Load the table data into a DataTable
-            DataTable sourceTable = new DataTable();
-
-            // Add columns using header values
-            for (int c = 0; c < totalCols; c++)
+            int targetPosition = 0;
+            foreach (string header in desiredOrder)
             {
-                string header = sheet.Cells[firstRow, firstCol + c].StringValue;
-                sourceTable.Columns.Add(header);
-            }
-
-            // Add rows (skip header)
-            for (int r = 1; r < totalRows; r++)
-            {
-                DataRow row = sourceTable.NewRow();
-                for (int c = 0; c < totalCols; c++)
+                int currentColumn = FindColumnIndex(worksheet, headerRowIndex, header);
+                if (currentColumn == -1)
                 {
-                    row[c] = sheet.Cells[firstRow + r, firstCol + c].Value;
+                    // Header not found; skip
+                    continue;
                 }
-                sourceTable.Rows.Add(row);
-            }
 
-            // Create a new DataTable with columns in the desired order
-            DataTable reorderedTable = new DataTable();
-
-            foreach (string colName in desiredOrder)
-            {
-                if (!sourceTable.Columns.Contains(colName))
+                if (currentColumn != targetPosition)
                 {
-                    Console.WriteLine($"Column '{colName}' not found in source table.");
-                    return;
+                    // Move the column manually (copy → insert → delete)
+                    MoveColumn(worksheet, currentColumn, targetPosition);
                 }
-                reorderedTable.Columns.Add(colName, sourceTable.Columns[colName].DataType);
+
+                // After moving, the column is at targetPosition
+                targetPosition++;
             }
 
-            // Populate rows according to the new column order
-            foreach (DataRow srcRow in sourceTable.Rows)
-            {
-                DataRow newRow = reorderedTable.NewRow();
-                foreach (string colName in desiredOrder)
-                {
-                    newRow[colName] = srcRow[colName];
-                }
-                reorderedTable.Rows.Add(newRow);
-            }
-
-            // Clear the original table range (including header)
-            sheet.Cells.CreateRange(firstRow, firstCol, totalRows, totalCols).ClearContents();
-
-            // Write the reordered data back to the worksheet (headers first)
-            for (int c = 0; c < desiredOrder.Length; c++)
-            {
-                sheet.Cells[firstRow, firstCol + c].PutValue(desiredOrder[c]);
-            }
-
-            // Then write data rows
-            for (int r = 0; r < reorderedTable.Rows.Count; r++)
-            {
-                for (int c = 0; c < desiredOrder.Length; c++)
-                {
-                    sheet.Cells[firstRow + 1 + r, firstCol + c].PutValue(reorderedTable.Rows[r][c]);
-                }
-            }
-
-            // Resize the table to match the new layout (hasHeaders = true)
-            table.Resize(firstRow, firstCol, totalRows, totalCols, true);
-
-            // Save the workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine("Columns reordered and workbook saved successfully.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Locate a column index by header text in a specific row
+    static int FindColumnIndex(Worksheet sheet, int headerRow, string headerText)
+    {
+        int maxColumn = sheet.Cells.MaxColumn;
+        for (int col = 0; col <= maxColumn; col++)
+        {
+            Cell cell = sheet.Cells[headerRow, col];
+            if (cell != null && cell.Type == CellValueType.IsString &&
+                cell.StringValue.Equals(headerText, StringComparison.OrdinalIgnoreCase))
+            {
+                return col;
+            }
+        }
+        return -1; // Not found
+    }
+
+    // Manually move a column from sourceIndex to destinationIndex
+    static void MoveColumn(Worksheet sheet, int sourceIndex, int destinationIndex)
+    {
+        // Determine the number of rows that contain data
+        int maxRow = sheet.Cells.MaxDataRow;
+
+        // Store source column values
+        object[] columnData = new object[maxRow + 1];
+        for (int row = 0; row <= maxRow; row++)
+        {
+            Cell srcCell = sheet.Cells[row, sourceIndex];
+            columnData[row] = srcCell?.Value;
+        }
+
+        // Insert a new column at the destination index
+        sheet.Cells.InsertColumn(destinationIndex);
+
+        // Paste stored values into the new column
+        for (int row = 0; row <= maxRow; row++)
+        {
+            sheet.Cells[row, destinationIndex].PutValue(columnData[row]);
+        }
+
+        // Adjust the index of the original column after insertion
+        int deleteIndex = sourceIndex > destinationIndex ? sourceIndex + 1 : sourceIndex;
+
+        // Delete the original column
+        sheet.Cells.DeleteColumn(deleteIndex);
     }
 }

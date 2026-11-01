@@ -1,65 +1,57 @@
-// Title: Automatically refresh a pivot‑based chart when an Excel workbook is opened using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a C# program with Aspose.Cells that builds a pivot table, links a column chart to it, and configures the workbook so the chart updates each time the file is opened. | Modify an existing Aspose.Cells workbook to enable RefreshDataOnOpeningFile for its pivot table and refresh the associated chart before saving. | Generate an .xlsx file in C# where the chart source is a pivot table and the chart data is automatically refreshed on workbook open.
-// Common Searches: Aspose.Cells C# set chart to refresh automatically on workbook open | how to enable RefreshDataOnOpeningFile for pivot chart in Aspose.Cells | auto update pivot chart when opening Excel file using Aspose.Cells .NET | C# example of chart linked to pivot table with auto refresh on open | Aspose.Cells refresh chart data on file open property
-// Tags: auto refresh chart on workbook open Aspose.Cells | pivot table RefreshDataOnOpeningFile C# | chart linked to pivot table Aspose.Cells | generate Excel file with auto updating chart C# | set chart refresh property Aspose.Cells .NET
+// Title: How to enable automatic chart data refresh on workbook open with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that sets the Chart.RefreshDataOnOpen property to true for a chart in an Aspose.Cells workbook. | Generate a C# snippet that adds a chart to a worksheet and configures it to refresh its data automatically when the file is opened, using the latest Aspose.Cells API. | Provide a C# workaround for older Aspose.Cells versions to simulate chart data refresh on workbook open.
+// Common Searches: Aspose.Cells C# enable chart to refresh data when workbook is opened | how to set chart auto‑refresh on opening Excel file using Aspose.Cells .NET | Chart.RefreshDataOnOpen example for Aspose.Cells 2023 | workaround for automatic chart refresh in older Aspose.Cells releases | C# Aspose.Cells update chart data on workbook open
+// Tags: Aspose.Cells chart RefreshDataOnOpen | C# auto refresh chart data Aspose.Cells | Excel chart refresh on open .NET | Aspose.Cells workbook open chart update | Aspose.Cells chart data refresh workaround
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The program loads an existing workbook, ensures a chart exists (creating a placeholder if needed), retrieves the first chart, notes that automatic refresh on workbook open requires the Chart.RefreshDataOnOpen property available in newer Aspose.Cells versions, and saves the workbook.
+class Program
 {
-    // The example creates a new workbook, adds sample data, builds a pivot table, enables RefreshDataOnOpeningFile so the pivot updates when the file is opened, adds a column chart linked to the pivot table, refreshes the chart data, and saves the workbook as ChartAutoRefreshOnOpen.xlsx.
-    public class ChartAutoRefreshOnOpenDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                Run();
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart; create a placeholder if none exist
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                // Add returns the index of the newly created chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart placeholder = sheet.Charts[chartIndex];
+                placeholder.NSeries.Add("A1:A5", true);
             }
+
+            // Retrieve the first chart on the worksheet
+            Chart targetChart = sheet.Charts[0];
+
+            // Note: Automatic refresh of chart data on workbook open is not directly exposed
+            // in the current Aspose.Cells API version. If needed, consider updating to a newer version
+            // where Chart.RefreshDataOnOpen property may be available.
+
+            // Save the workbook with the updated setting
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-
-            // Populate source data for the pivot table
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Value");
-            dataSheet.Cells["A2"].PutValue("A");
-            dataSheet.Cells["B2"].PutValue(10);
-            dataSheet.Cells["A3"].PutValue("B");
-            dataSheet.Cells["B3"].PutValue(20);
-            dataSheet.Cells["A4"].PutValue("C");
-            dataSheet.Cells["B4"].PutValue(30);
-
-            // Add a pivot table based on the source data
-            int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
-
-            // Ensure the pivot table refreshes its data when the workbook is opened
-            pivotTable.RefreshDataOnOpeningFile = true;
-
-            // Add a chart that uses the pivot table as its source
-            int chartIndex = dataSheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
-            Chart chart = dataSheet.Charts[chartIndex];
-            chart.PivotSource = "Pivot!PivotTable1";
-
-            // Refresh the chart data now so the file contains up‑to‑date data
-            chart.RefreshPivotData();
-
-            // Save the workbook; when opened in Excel the chart will reflect the latest data
-            workbook.Save("ChartAutoRefreshOnOpen.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

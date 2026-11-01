@@ -1,12 +1,11 @@
-// Title: Apply a custom number format with thousand separators and parentheses for negative values using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a style in Aspose.Cells using the custom format "#,##0;(#,##0)" and applies it to specific cells to display commas and parentheses for negatives. | Write a snippet that sets positive and negative numeric values in a worksheet, assigns the custom numeric style, and saves the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells C# custom numeric format with commas and parentheses for negative numbers | How to display negative numbers in parentheses using Aspose.Cells .NET | C# apply thousand separator format to cells in Aspose.Cells workbook | Define and use custom number style "#,##0;(#,##0)" in Aspose.Cells | Saving a workbook after applying custom number format in Aspose.Cells C#
-// Tags: custom numeric format commas Aspose.Cells | parentheses negative number style C# | cell style for thousand separators Aspose.Cells | apply custom format to worksheet cells .NET | export workbook with styled numbers Aspose.Cells
+// Title: Apply a custom numeric format with thousand separators and parentheses for negative numbers using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set custom number format with thousand separator and parentheses for negatives | How to display negative values in parentheses in an Excel file using Aspose.Cells .NET | C# code to apply "#,##0;(#,##0)" format to cells with Aspose.Cells | Formatting numbers with commas and parentheses for negatives in Aspose.Cells workbook | Create and apply custom style for numeric formatting in Aspose.Cells for .NET
+// Tags: custom numeric format Aspose.Cells | thousand separator formatting C# | negative numbers parentheses Aspose.Cells | cell style custom number format .NET | Excel custom number format Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook, inserting positive and negative values, defining a custom number format "#,##0;(#,##0)" that adds thousand separators and encloses negatives in parentheses, applying the style to the cells, and saving the file as CustomNumberFormat.xlsx.
+// The example creates a workbook, writes a positive and a negative integer to cells A1 and A2, defines the custom format "#,##0;(#,##0)" to add thousand separators and show negatives in parentheses, applies this style to both cells, and saves the file as CustomNumberFormat.xlsx.
 class Program
 {
     static void Main()
@@ -17,24 +16,24 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a positive and a negative value for demonstration
-        Cell positiveCell = sheet.Cells["A1"];
-        positiveCell.PutValue(1234567.89);
-
-        Cell negativeCell = sheet.Cells["A2"];
-        negativeCell.PutValue(-1234567.89);
+        // Put a positive and a negative number in cells A1 and A2
+        sheet.Cells["A1"].PutValue(1234567);
+        sheet.Cells["A2"].PutValue(-1234567);
 
         // Define a custom number format:
-        // "#,##0;(#,##0)" adds thousand separators and encloses negative numbers in parentheses
+        //   - "#,##0" adds thousand separators for positive numbers
+        //   - "(#,##0)" displays negative numbers in parentheses
         string customFormat = "#,##0;(#,##0)";
 
-        // Apply the custom format to both cells
-        Style style = workbook.CreateStyle();
-        style.Custom = customFormat;
+        // Apply the custom format to cell A1
+        Style stylePos = workbook.CreateStyle();
+        stylePos.Custom = customFormat;
+        sheet.Cells["A1"].SetStyle(stylePos);
 
-        // Assign the style to the cells
-        positiveCell.SetStyle(style);
-        negativeCell.SetStyle(style);
+        // Apply the same custom format to cell A2
+        Style styleNeg = workbook.CreateStyle();
+        styleNeg.Custom = customFormat;
+        sheet.Cells["A2"].SetStyle(styleNeg);
 
         // Save the workbook to a file
         workbook.Save("CustomNumberFormat.xlsx");

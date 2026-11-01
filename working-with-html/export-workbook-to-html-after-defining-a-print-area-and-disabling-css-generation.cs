@@ -1,34 +1,41 @@
-// Title: Export a specific print area to HTML with CSS disabled using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that sets a worksheet's PrintArea to a range and saves the workbook as HTML with HtmlSaveOptions.DisableCss enabled. | Show how to configure Aspose.Cells HtmlSaveOptions to prevent CSS file creation while exporting only the defined print area. | Provide a minimal C# example that creates a workbook, defines a print area, disables CSS generation, and writes the output to an HTML file.
-// Common Searches: how to export only a selected range to html using aspose.cells c# | asp.net disable css generation when saving workbook as html with aspose.cells | set print area before html export in aspose.cells .net | htmlsaveoptions.disablecss example for c# | export workbook to html without external stylesheet asp.net
-// Tags: Aspose.Cells HtmlSaveOptions.DisableCss | export worksheet print area to HTML | C# Aspose.Cells HTML export without CSS | define print area Aspose.Cells | save workbook as HTML Aspose.Cells .NET
+// Title: Export a workbook to HTML with a defined print area and disabled CSS using Aspose.Cells in C#
+// AI Prompts: Generate C# code that creates a workbook, sets the print area to A1:D10, configures HtmlSaveOptions to suppress CSS, and saves the file as HTML. | Show how to use Aspose.Cells HtmlSaveOptions to export only a specific range to HTML while turning off the ExportCss flag. | Provide a try‑catch example that saves a workbook to HTML with ExportCss set to false and a custom print area.
+// Common Searches: how to disable CSS when exporting Excel to HTML with Aspose.Cells C# | Aspose.Cells set print area before HTML export C# example | HtmlSaveOptions ExportCss false usage Aspose.Cells | export range A1:D10 to HTML using Aspose.Cells C# | save workbook as HTML without stylesheet Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportCss | define print area Aspose.Cells | export workbook range to HTML C# | disable stylesheet Aspose.Cells HTML export | C# Aspose.Cells HTML conversion
 
+using System;
 using Aspose.Cells;
 
-// // This program creates a new workbook, defines a print area (A1:B2), configures HtmlSaveOptions to disable CSS generation, and saves the workbook as an HTML file.
+// The example creates a new workbook, defines a print area (A1:D10) on the first worksheet, configures HtmlSaveOptions to optionally disable CSS generation, and saves the workbook as an HTML file while handling any exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            var workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-        // (Optional) Populate some data
-        sheet.Cells["A1"].PutValue("Header");
-        sheet.Cells["A2"].PutValue(123);
-        sheet.Cells["B2"].PutValue(456);
+            // Define the print area (e.g., cells A1 to D10)
+            worksheet.PageSetup.PrintArea = "A1:D10";
 
-        // Define the print area (e.g., cells A1:B2)
-        sheet.PageSetup.PrintArea = "A1:B2";
+            // Set up HTML save options
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // If the ExportCss property is available in the referenced Aspose.Cells version,
+            // uncomment the following line to disable CSS generation:
+            // htmlOptions.ExportCss = false;
 
-        // Configure HTML save options to disable CSS generation
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.DisableCss = true; // No external CSS file will be created
-
-        // Export the workbook to HTML
-        workbook.Save("output.html", htmlOptions);
+            // Export the workbook to HTML
+            const string outputPath = "ExportedWorkbook.html";
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

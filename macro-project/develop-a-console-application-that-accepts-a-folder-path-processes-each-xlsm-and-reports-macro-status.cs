@@ -1,7 +1,6 @@
-// Title: Create a C# console tool that scans a folder for .xlsm workbooks and reports whether each file contains VBA macros using Aspose.Cells
-// AI Prompts: Write a .NET console program that accepts a directory path, loads every *.xlsm file with Aspose.Cells, and prints the file name with "Contains macros" or "No macros" based on the Workbook.VbaProject.Modules collection. | Add comprehensive exception handling so that any workbook that cannot be opened outputs the file name followed by the error message. | Enhance the utility to optionally traverse subfolders recursively and display the full file path together with the macro status.
-// Common Searches: how to list macro status of multiple xlsm files using Aspose.Cells in C# | C# program to detect VBA macros in Excel workbooks in a specific folder | Aspose.Cells check workbook.VbaProject.Modules for macros in batch | console application to report macro presence for all .xlsm files in a directory
-// Tags: scan folder for xlsm files with Aspose.Cells | detect VBA macros using Workbook.VbaProject | report macro presence in Excel workbooks C# | batch macro detection Aspose.Cells .NET | console utility for macro status enumeration
+// Title: C# console program to scan a folder for .xlsm files and report VBA macro presence with Aspose.Cells
+// Common Searches: how to list macro status of multiple XLSM workbooks in C# using Aspose.Cells | C# code to detect VBA modules in Excel macro-enabled files | batch process XLSM files to check for macros with Aspose.Cells | console application that reports if an .xlsm file contains macros in .NET | using Aspose.Cells Workbook.VbaProject to determine macro presence
+// Tags: Aspose.Cells VBA macro detection | C# console batch XLSM processing | Workbook.VbaProject modules enumeration | report macro presence in Excel files | enumerate .xlsm files in folder .NET
 
 using System;
 using System.IO;
@@ -9,7 +8,7 @@ using Aspose.Cells;
 
 namespace MacroStatusReporter
 {
-    // A .NET console application that receives a folder path, iterates over each .xlsm file, loads it with Aspose.Cells, checks the VbaProject.Modules collection to determine if VBA macros exist, and writes the file name with a status message or error details to the console.
+    // A console application that receives a folder path, enumerates all .xlsm files in that directory, loads each workbook with Aspose.Cells, checks the Workbook.VbaProject.Modules collection to determine if VBA macros exist, and outputs each file name with "Macros present", "No macros", or an error message.
     class Program
     {
         static void Main(string[] args)
@@ -23,45 +22,55 @@ namespace MacroStatusReporter
 
             string folderPath = args[0];
 
-            // Validate folder existence
+            // Check if the folder exists
             if (!Directory.Exists(folderPath))
             {
                 Console.WriteLine($"Error: The folder \"{folderPath}\" does not exist.");
                 return;
             }
 
-            // Get all XLSM files in the folder (non‑recursive)
-            string[] files = Directory.GetFiles(folderPath, "*.xlsm", SearchOption.TopDirectoryOnly);
+            // Get all .xlsm files in the folder (non‑recursive)
+            string[] xlsmFiles = Directory.GetFiles(folderPath, "*.xlsm", SearchOption.TopDirectoryOnly);
 
-            if (files.Length == 0)
+            if (xlsmFiles.Length == 0)
             {
                 Console.WriteLine("No XLSM files found in the specified folder.");
                 return;
             }
 
-            Console.WriteLine($"Processing {files.Length} XLSM file(s) in \"{folderPath}\":");
+            Console.WriteLine($"Processing {xlsmFiles.Length} XLSM file(s) in \"{folderPath}\":");
             Console.WriteLine();
 
-            foreach (string filePath in files)
+            foreach (string filePath in xlsmFiles)
             {
                 try
                 {
-                    // Load the workbook
+                    // Load the workbook using Aspose.Cells
                     Workbook workbook = new Workbook(filePath);
 
                     // Determine macro presence
-                    bool hasMacros = workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0;
+                    bool hasMacros = false;
 
-                    string status = hasMacros ? "Contains macros" : "No macros";
+                    // Aspose.Cells exposes the VBA project; if it exists and contains modules, macros are present
+                    if (workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0)
+                    {
+                        hasMacros = true;
+                    }
 
-                    Console.WriteLine($"{Path.GetFileName(filePath)}: {status}");
+                    // Output the result for the current file
+                    string fileName = Path.GetFileName(filePath);
+                    Console.WriteLine($"{fileName}: {(hasMacros ? "Macros present" : "No macros")}");
                 }
                 catch (Exception ex)
                 {
-                    // Report any errors while processing the file
-                    Console.WriteLine($"{Path.GetFileName(filePath)}: Error - {ex.Message}");
+                    // Report any errors encountered while processing the file
+                    string fileName = Path.GetFileName(filePath);
+                    Console.WriteLine($"{fileName}: Error - {ex.Message}");
                 }
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Processing completed.");
         }
     }
 }

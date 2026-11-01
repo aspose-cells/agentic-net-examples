@@ -1,13 +1,12 @@
-// Title: Load an Excel workbook from a FileStream and autofill a numeric series in column A using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file via FileStream, writes the value 1 to cell A1, creates a source range for A1, defines a destination range A1:A10, applies AutoFill with AutoFillType.Series, and writes the result to a new file. | Show how to use Aspose.Cells Workbook, Worksheet, and Range objects to programmatically fill a column with a sequential number series after loading the workbook from a stream.
-// Common Searches: aspnet c# load excel file from filestream aspose.cells autofill series | how to use AutoFillType.Series in Aspose.Cells to fill a column | c# example creating numeric series A1:A10 after opening workbook from stream | aspose.cells load workbook from filestream and generate sequential numbers in column
-// Tags: filestream workbook import Aspose.Cells | autofill sequential numbers Aspose.Cells | range definition for autofill Aspose.Cells | export modified workbook Aspose.Cells | input file existence validation Aspose.Cells
+// Title: Load an Excel workbook from a FileStream and write a sequential numeric series to cells A1:A10 using Aspose.Cells for .NET
+// Common Searches: how to read an existing .xlsx file from a FileStream with Aspose.Cells in C# | Aspose.Cells C# example to write numbers 1 to 10 into a column range | C# code to autofill a numeric series in Excel using Aspose.Cells Workbook | saving a modified workbook to a new file after populating cells with Aspose.Cells | loop through rows and put values in Aspose.Cells cells collection C#
+// Tags: load workbook from filestream Aspose.Cells | write sequential numbers to cell range Aspose.Cells | populate column A with numeric series C# | save workbook to new file Aspose.Cells | iterate rows putvalue Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook via a FileStream, writes 1 to cell A1, defines source and destination ranges (A1 and A1:A10), uses AutoFill with AutoFillType.Series to generate a numeric series down column A, and saves the updated workbook as output.xlsx.
+// The sample opens an existing Excel file via a FileStream, creates a Workbook object, accesses the first worksheet, writes the numbers 1 through 10 into cells A1 to A10, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
@@ -18,38 +17,34 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
             // Load the workbook from a file stream
-            using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+            using (FileStream fileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
             {
-                Workbook workbook = new Workbook(fs);
+                Workbook workbook = new Workbook(fileStream);
 
-                // Get the first worksheet
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the first cell of the series
-                Cell startCell = sheet.Cells["A1"];
-                startCell.PutValue(1);
+                // Fill the numeric series manually (1, 2, 3, …, 10) in cells A1:A10
+                for (int row = 0; row < 10; row++)
+                {
+                    sheet.Cells[row, 0].PutValue(row + 1); // Column 0 corresponds to column A
+                }
 
-                // Define the source (starting cell) and the destination range to fill
-                Aspose.Cells.Range source = sheet.Cells.CreateRange("A1");
-                Aspose.Cells.Range destination = sheet.Cells.CreateRange("A1:A10");
-
-                // Autofill a numeric series down the column
-                source.AutoFill(destination, AutoFillType.Series);
-
-                // Save the updated workbook
+                // Save the modified workbook to a new file
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

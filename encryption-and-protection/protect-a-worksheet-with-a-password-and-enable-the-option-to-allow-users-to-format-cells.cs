@@ -1,49 +1,48 @@
-// Title: How to password‑protect an Excel worksheet while still allowing cell formatting using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that uses Aspose.Cells to protect a worksheet with a password and enables the AllowFormattingCells option so users can still format cells. | Show how to verify and create the output directory if it does not exist before saving the protected workbook with Aspose.Cells. | Add try‑catch error handling around worksheet protection and workbook saving in a C# Aspose.Cells example.
-// Common Searches: Aspose.Cells C# protect worksheet password but keep formatting enabled | How to allow cell formatting on a protected sheet using Aspose.Cells .NET | Create folder if missing before saving Excel file with Aspose.Cells in C# | Worksheet.Protect with ProtectionType.All and custom password example Aspose.Cells
-// Tags: worksheet protection password Aspose.Cells .NET | allow formatting cells on protected sheet Aspose.Cells | create output directory before saving Excel Aspose.Cells | exception handling workbook save Aspose.Cells C# | ProtectionType.All usage Aspose.Cells
+// Title: Protect an Excel worksheet with a password and allow cell formatting using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells protect worksheet with password and allow cell formatting | How to enable AllowFormattingCell while protecting an Excel sheet using Aspose.Cells | Set password protection on Excel worksheet but keep formatting options enabled in .NET | Aspose.Cells protect sheet and still let users change cell styles | Example code for protecting Excel worksheet with password and formatting permission in C#
+// Tags: worksheet protection password Aspose.Cells | allow formatting cells on protected sheet C# | AllowFormattingCell property usage Aspose.Cells | protect Excel worksheet while permitting formatting | save protected workbook Aspose.Cells .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a new Workbook, enables the AllowFormattingCell option on the first worksheet, assigns a password to the sheet's Protection, ensures the output directory exists, and saves the workbook as a password‑protected Excel file.
+class Program
 {
-    // Creates a new workbook, protects the first worksheet with the password "MySecurePassword" while allowing cell formatting, ensures the output directory exists, and saves the file as ProtectedWorksheet.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Allow users to format cells while protecting the sheet
+            sheet.Protection.AllowFormattingCell = true;
+
+            // Protect the worksheet with a password (use the Password property)
+            sheet.Protection.Password = "MySecretPassword";
+
+            // Define output file path
+            string outputPath = "ProtectedWorkbook.xlsx";
+
+            // Ensure the directory exists (handle possible null from GetDirectoryName)
+            string fullPath = Path.GetFullPath(outputPath);
+            string? directory = Path.GetDirectoryName(fullPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Protect the worksheet with a password.
-                // The third parameter is the old password (empty string for new protection).
-                sheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
-
-                // Define output file path
-                string outputPath = "ProtectedWorksheet.xlsx";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the protected workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(directory);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,14 +1,13 @@
-// Title: Remove all named ranges beginning with 'Temp_' from every worksheet in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, finds every named range whose name starts with 'Temp_', and deletes them from all worksheets. | Create a C# method using Aspose.Cells that iterates through workbook names, filters by a prefix, removes the matching named ranges, and saves the file.
-// Common Searches: Aspose.Cells C# delete named ranges that start with a prefix | How to programmatically remove temporary named ranges from an Excel file using .NET | C# iterate workbook names and delete those matching 'Temp_' with Aspose.Cells | Clean up Excel named ranges across all sheets in Aspose.Cells
-// Tags: aspocells delete named ranges by prefix | c# remove workbook names Aspose.Cells | filter excel named ranges Aspose.Cells | named range cleanup .NET | global and worksheet level name removal Aspose.Cells
+// Title: How to delete all named ranges that start with 'Temp_' from every worksheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells remove named ranges with prefix Temp_ from workbook | Delete temporary named ranges across all sheets using Aspose.Cells .NET | Aspose.Cells iterate workbook names collection to filter and delete Temp_* ranges | Programmatically clear named ranges beginning with Temp_ in Excel via Aspose.Cells | Bulk delete of prefixed named ranges in Aspose.Cells C# example
+// Tags: named range prefix removal Aspose.Cells | workbook names collection filtering C# | bulk delete of Excel named ranges .NET | temporary named range cleanup Aspose.Cells | Aspose.Cells named range management
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, gathers all global and worksheet‑level named ranges whose names start with "Temp_", removes each of them, and saves the updated workbook.
+// The example loads an Excel workbook with Aspose.Cells, collects all defined names whose text starts with "Temp_", removes those named ranges from the workbook's Names collection, and saves the modified file.
 class Program
 {
     static void Main()
@@ -19,38 +18,44 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
             return;
         }
 
         try
         {
-            // Load the workbook from the input file
-            var workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Collect all named ranges (global and worksheet‑level) that start with 'Temp_'
-            var namesToDelete = new List<string>();
+            // Collect names that start with the prefix "Temp_"
+            List<string> namesToDelete = new List<string>();
             foreach (Name name in workbook.Worksheets.Names)
             {
-                if (name.Text.StartsWith("Temp_", StringComparison.OrdinalIgnoreCase))
+                if (name.Text.StartsWith("Temp_", StringComparison.Ordinal))
                 {
                     namesToDelete.Add(name.Text);
                 }
             }
 
-            // Remove the collected named ranges
+            // Delete the collected named ranges
             foreach (string name in namesToDelete)
             {
                 workbook.Worksheets.Names.Remove(name);
             }
 
-            // Save the modified workbook to the output file
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handles Aspose.Cells specific errors (e.g., password protection)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handles any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

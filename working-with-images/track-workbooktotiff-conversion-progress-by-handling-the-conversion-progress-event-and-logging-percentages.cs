@@ -1,41 +1,44 @@
-// Title: How to monitor Excel to multi‑page TIFF conversion progress using Aspose.Cells SaveProgress event in C#
-// AI Prompts: Write C# code that subscribes to Workbook.SaveProgress, saves an .xlsx as a multi‑page TIFF, and prints the percentage completed to the console. | Show an Aspose.Cells example that converts a workbook to TIFF while displaying real‑time progress updates using the SaveProgress event. | Generate a snippet that handles the conversion progress callback during workbook.Save to Tiff and logs incremental percentages in .NET.
-// Common Searches: aspnet track progress of workbook.Save when exporting to TIFF with Aspose.Cells | c# get conversion percentage while saving Excel as multi page TIFF using Aspose.Cells | how to use SaveProgress event for TIFF export in Aspose.Cells .NET
-// Tags: Aspose.Cells SaveProgress event for TIFF export | C# monitor Excel to TIFF conversion percentage | Workbook.Save with progress callback Aspose.Cells | multi‑page TIFF generation progress .NET | real‑time conversion feedback Aspose.Cells
+// Title: How to monitor workbook‑to‑TIFF conversion progress in C# with Aspose.Cells SaveProgress event
+// AI Prompts: Generate C# code that subscribes to Workbook.SaveProgress and writes the percentage completed to the console while saving an Excel file as a TIFF using Aspose.Cells. | Show an example of implementing a console‑based progress bar that updates from the SaveProgress event during a multi‑page TIFF export with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to get save progress percentage when exporting to TIFF | track Excel to TIFF conversion progress using Workbook.SaveProgress event | display console progress bar during Aspose.Cells TIFF export in .NET | log conversion status of workbook to multi‑page TIFF with Aspose.Cells
+// Tags: Workbook.SaveProgress event Aspose.Cells C# | TIFF export progress logging Aspose.Cells | console percentage display Aspose.Cells conversion | Excel to multi-page TIFF progress handling | Aspose.Cells conversion event handling C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads an .xlsx workbook, subscribes to the Workbook.SaveProgress event, saves it as a multi‑page TIFF, and writes conversion percentages to the console while handling errors.
-class WorkbookToTiffConverter
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Demonstrates loading an Excel workbook, attaching a handler to the Workbook.SaveProgress event to log conversion percentages, and saving the workbook as a multi‑page TIFF using Aspose.Cells, with console output for both progress updates and final status.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.tiff";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the source workbook exists
-            if (!File.Exists(inputPath))
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.tiff";
+
+            try
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the source workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Save the workbook as a TIFF image
+                workbook.Save(outputPath, SaveFormat.Tiff);
+
+                Console.WriteLine($"Workbook successfully saved as TIFF to: {outputPath}");
             }
-
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Save the workbook as a multi‑page TIFF file
-            workbook.Save(outputPath, SaveFormat.Tiff);
-
-            Console.WriteLine($"Workbook successfully converted to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

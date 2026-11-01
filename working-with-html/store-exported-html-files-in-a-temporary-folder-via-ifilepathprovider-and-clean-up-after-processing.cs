@@ -1,23 +1,24 @@
-// Title: Export an Excel workbook to HTML using Aspose.Cells, store the file in a temporary folder via IFilePathProvider, and clean up the folder afterward
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, saves it as an HTML file in a temporary directory obtained from an IFilePathProvider implementation, and returns the generated HTML path. | Add a method that removes the temporary directory and all its contents after the HTML file has been processed. | Show how to inject a mock IFilePathProvider to unit‑test the HTML export and cleanup logic.
-// Common Searches: aspnet core export excel to html using aspose.cells and temporary directory | c# how to delete temporary directory after aspose.cells html conversion | implement IFilePathProvider for temporary file storage with Aspose.Cells | unit test Aspose.Cells HTML export with mock IFilePathProvider
-// Tags: Aspose.Cells HTML export to temp location | IFilePathProvider custom temp directory | C# cleanup temp folder after Aspose.Cells save | unit testing Aspose.Cells HTML conversion | manage transient files with Aspose.Cells
+// Title: Export a Workbook to HTML in a temporary folder with Aspose.Cells and clean up the files using C#
+// Common Searches: how to save Aspose.Cells workbook as HTML to a temporary directory in C# | using a custom IFilePathProvider to obtain a temp folder for Aspose.Cells HTML export | delete temporary folder after exporting workbook to HTML with Aspose.Cells | Aspose.Cells export active worksheet only to HTML5 in a temp folder | retry deleting a temp folder when files are locked after Aspose.Cells HTML save
+// Tags: Aspose.Cells export workbook to HTML in temp directory | custom IFilePathProvider for temporary file paths in .NET | HtmlSaveOptions configure HTML5 output and separate image files | cleanup temporary folder after Aspose.Cells HTML export | retry delete temporary directory on IOException C#
 
 using Aspose.Cells;
 using System;
 using System.IO;
+using System.Threading;
 
 // Interface to provide temporary folder paths
 public interface IFilePathProvider
 {
-    string GetTemporaryFolder();
+    // Returns a unique temporary folder path that already exists
+    string GetTempFolderPath();
 }
 
-// Simple implementation that creates a unique temp folder
-// // Demonstrates an IFilePathProvider that creates a unique temporary folder, uses Aspose.Cells to load an Excel workbook and save it as HTML inside that folder, returns the HTML file path, and provides a CleanUp method to delete the temporary folder and its contents after processing.
-public class TempFolderProvider : IFilePathProvider
+// Simple implementation that creates a GUID‑named folder under the system temp directory
+// The example defines an IFilePathProvider interface and a TempFilePathProvider that creates a unique GUID‑named folder under the system temp path. HtmlExporter uses this provider to save a Workbook as HTML with HtmlSaveOptions (HTML5, active worksheet only, images as separate files) into the temporary folder, returns the HTML file path, and provides a Cleanup method that safely removes the folder, retrying on IOException or UnauthorizedAccessException.
+public class TempFilePathProvider : IFilePathProvider
 {
-    public string GetTemporaryFolder()
+    public string GetTempFolderPath()
     {
         string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         Directory.CreateDirectory(tempPath);
@@ -25,7 +26,7 @@ public class TempFolderProvider : IFilePathProvider
     }
 }
 
-// Handles exporting a workbook to HTML and cleaning up the temp folder
+// Handles exporting a Workbook to HTML stored in a temporary location
 public class HtmlExporter
 {
     private readonly IFilePathProvider _pathProvider;
@@ -35,56 +36,86 @@ public class HtmlExporter
         _pathProvider = pathProvider;
     }
 
-    // Exports the workbook located at workbookPath to an HTML file in a temporary folder
-    // Returns the full path of the generated HTML file
-    public string ExportWorkbookToHtml(string workbookPath)
+    // Exports the given workbook to an HTML file inside a temporary folder.
+    // Returns the full path to the generated HTML file.
+    public string ExportToHtml(Workbook workbook)
     {
-        // Load the workbook using Aspose.Cells
-        Workbook workbook = new Workbook(workbookPath);
+        // Obtain a unique temporary folder
+        string tempFolder = _pathProvider.GetTempFolderPath();
 
-        // Obtain a temporary folder from the provider
-        string tempFolder = _pathProvider.GetTemporaryFolder();
+        // Define the HTML file name inside that folder
+        string htmlFilePath = Path.Combine(tempFolder, "output.html");
 
-        // Define the output HTML file name and full path
-        string htmlFilePath = Path.Combine(tempFolder, "exported.html");
+        // Configure HTML save options
+        HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html)
+        {
+            ExportImagesAsBase64 = false,          // Save images as separate files
+            ExportActiveWorksheetOnly = true,      // Export only the active sheet
+            HtmlVersion = HtmlVersion.Html5        // Use HTML5 output
+        };
 
         // Save the workbook as HTML
-        workbook.Save(htmlFilePath, SaveFormat.Html);
+        workbook.Save(htmlFilePath, options);
 
-        // Return the path for further processing
+        // Return the path so the caller can use the file and later clean it up
         return htmlFilePath;
     }
 
-    // Deletes the temporary folder and all its contents
-    public void CleanUp(string folderPath)
+    // Deletes the temporary folder that contains the HTML file and any related resources.
+    public void Cleanup(string htmlFilePath)
     {
-        if (Directory.Exists(folderPath))
+        if (string.IsNullOrEmpty(htmlFilePath))
+            return;
+
+        string folder = Path.GetDirectoryName(htmlFilePath);
+        if (folder == null || !Directory.Exists(folder))
+            return;
+
+        // Attempt to delete the folder; retry after a short pause if files are locked
+        try
         {
-            Directory.Delete(folderPath, true);
+            Directory.Delete(folder, true);
+        }
+        catch (IOException)
+        {
+            Thread.Sleep(500);
+            Directory.Delete(folder, true);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            Thread.Sleep(500);
+            Directory.Delete(folder, true);
         }
     }
 }
 
-// Example usage
-class Program
+// Demonstrates usage of the HtmlExporter with temporary storage and cleanup
+public class Program
 {
-    static void Main()
+    public static void Main()
     {
-        // Initialize the provider and exporter
-        IFilePathProvider provider = new TempFolderProvider();
-        HtmlExporter exporter = new HtmlExporter(provider);
+        // Create or load a workbook
+        Workbook workbook = new Workbook();
+        workbook.Worksheets[0].Cells["A1"].PutValue("Hello Aspose.Cells!");
 
-        // Path to the source Excel file
-        string sourceExcel = @"C:\Data\sample.xlsx";
+        // Set up the temporary path provider and exporter
+        IFilePathProvider pathProvider = new TempFilePathProvider();
+        HtmlExporter exporter = new HtmlExporter(pathProvider);
 
-        // Export the workbook to HTML in a temporary folder
-        string htmlPath = exporter.ExportWorkbookToHtml(sourceExcel);
+        string htmlPath = null;
+        try
+        {
+            // Export the workbook to HTML stored in a temporary folder
+            htmlPath = exporter.ExportToHtml(workbook);
 
-        // Use the HTML file as needed (e.g., display, send, etc.)
-        Console.WriteLine("HTML exported to: " + htmlPath);
-
-        // After processing, clean up the temporary folder
-        string tempFolder = Path.GetDirectoryName(htmlPath);
-        exporter.CleanUp(tempFolder);
+            // Example processing: read and display the HTML content
+            string htmlContent = File.ReadAllText(htmlPath);
+            Console.WriteLine(htmlContent);
+        }
+        finally
+        {
+            // Ensure temporary files are removed regardless of success or failure
+            exporter.Cleanup(htmlPath);
+        }
     }
 }

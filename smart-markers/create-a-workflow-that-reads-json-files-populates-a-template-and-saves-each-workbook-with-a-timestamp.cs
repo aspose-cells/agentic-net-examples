@@ -1,46 +1,45 @@
-// Title: Batch generate timestamped Excel workbooks from JSON files using Aspose.Cells smart markers in C#
-// AI Prompts: Create a C# console program that iterates over every .json file in a directory, loads each file as a JSON data source for a WorkbookDesigner, processes smart markers in a supplied Excel template, and saves the populated workbook as an .xlsx file whose name combines the original JSON filename with the current date‑time. | Extend the batch workflow so the desired output format (e.g., XLSX or PDF) can be selected at runtime while preserving the same date‑time based naming convention for the generated files. | Add robust error handling that catches JSON parsing or processing exceptions, writes the offending file path and exception details to a log, and then continues processing the remaining files.
-// Common Searches: how to use Aspose.Cells WorkbookDesigner to populate an Excel template from multiple JSON files in C# | c# batch process json files into excel workbooks with smart markers and timestamped filenames | aspocells setjsondatasource example for generating reports from json data | save Aspose.Cells workbook with dynamic datetime in filename c# | convert populated Excel template to PDF using Aspose.Cells while keeping timestamped output name
-// Tags: Aspose.Cells WorkbookDesigner JSON data source | batch Excel generation with JSON data C# | date-time based workbook naming Aspose.Cells | configurable output format Aspose.Cells | JSON parsing error logging Aspose.Cells
+// Title: Batch convert JSON files to timestamped Excel workbooks using an Aspose.Cells template in C#
+// AI Prompts: Write C# code that iterates over every *.json file in a directory, deserializes each file into a Dictionary<string,object>, loads a given .xlsx template with Aspose.Cells, writes keys to column A and values to column B starting at row 2, and saves the workbook with a filename that appends the current yyyyMMdd_HHmmss timestamp. | Create a C# routine that checks that the JSON input folder and template file exist, creates the output folder if needed, processes each JSON file while logging success or failure, and catches any exceptions thrown by Aspose.Cells during workbook generation. | Implement a helper method that generates a timestamp string in the format yyyyMMdd_HHmmss, combines it with the original JSON file name, and uses Aspose.Cells SaveFormat.Xlsx to write the populated workbook to the output directory.
+// Common Searches: c# read multiple json files and fill an Aspose.Cells template with key value pairs | how to add timestamp to Excel file name when saving with Aspose.Cells | batch processing json to xlsx using Aspose.Cells smart markers | generate Excel reports from a folder of json files in .NET | Aspose.Cells populate worksheet from dictionary and save with unique name
+// Tags: populate worksheet from dictionary using Aspose.Cells | save workbook with timestamped filename C# | batch json to xlsx conversion Aspose.Cells | validate input and template paths Aspose.Cells | exception handling during Excel generation Aspose.Cells
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsJsonWorkflow
+namespace JsonToExcelWorkflow
 {
-    // The example scans a folder for .json files, loads each file as a JSON data source for a WorkbookDesigner, processes smart markers in a predefined Excel template, and saves the resulting workbook to an output directory. Each generated file is named using the source JSON filename plus a current timestamp, ensuring unique, date‑time based filenames.
+    // The program scans a configured directory for .json files, deserializes each into a Dictionary<string,object>, loads a predefined Excel template with Aspose.Cells, writes each key/value pair to columns A and B starting at row 2 of the first worksheet, and saves the populated workbook to an output folder using a filename that combines the original JSON name with a yyyyMMdd_HHmmss timestamp, while handling missing paths and runtime errors.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the folder containing JSON files
-            string jsonFolder = @"C:\Data\JsonFiles";
+            // Paths configuration
+            string jsonInputFolder = @"C:\Data\JsonFiles";                     // Folder containing JSON files
+            string templatePath = @"C:\Data\Template\Template.xlsx";          // Path to the Excel template
+            string outputFolder = @"C:\Data\Output";                          // Folder to save generated workbooks
 
-            // Path to the Excel template that contains smart markers
-            string templatePath = @"C:\Data\Template.xlsx";
-
-            // Output folder for the generated workbooks
-            string outputFolder = @"C:\Data\GeneratedWorkbooks";
-
-            // Verify required directories and files exist
-            if (!Directory.Exists(jsonFolder))
+            // Verify input folder
+            if (!Directory.Exists(jsonInputFolder))
             {
-                Console.WriteLine($"JSON folder not found: {jsonFolder}");
+                Console.WriteLine($"Input folder not found: {jsonInputFolder}");
                 return;
             }
 
+            // Verify template file
             if (!File.Exists(templatePath))
             {
                 Console.WriteLine($"Template file not found: {templatePath}");
                 return;
             }
 
-            // Ensure the output directory exists
+            // Ensure output directory exists
             Directory.CreateDirectory(outputFolder);
 
-            // Get all JSON files in the source folder
-            string[] jsonFiles = Directory.GetFiles(jsonFolder, "*.json");
+            // Get all JSON files in the input folder
+            string[] jsonFiles = Directory.GetFiles(jsonInputFolder, "*.json");
 
             foreach (string jsonFilePath in jsonFiles)
             {
@@ -49,36 +48,46 @@ namespace AsposeCellsJsonWorkflow
                     // Read JSON content
                     string jsonContent = File.ReadAllText(jsonFilePath);
 
-                    // Load the template workbook
+                    // Deserialize to a dictionary for flexible key/value handling
+                    Dictionary<string, object> data = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent);
+
+                    // Load the Excel template
                     Workbook workbook = new Workbook(templatePath);
+                    Worksheet sheet = workbook.Worksheets[0]; // Assuming data goes to the first worksheet
 
-                    // Create a WorkbookDesigner and assign the workbook
-                    WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                    // Simple population logic:
+                    // Write each key/value pair starting from row 2 (row 1 can be headers)
+                    int startRow = 1; // zero‑based index (row 2 in Excel)
+                    int keyColumn = 0; // Column A
+                    int valueColumn = 1; // Column B
 
-                    // Use the file name (without extension) as the data source name
-                    string dataSourceName = Path.GetFileNameWithoutExtension(jsonFilePath);
+                    foreach (var kvp in data)
+                    {
+                        // Write the key
+                        sheet.Cells[startRow, keyColumn].PutValue(kvp.Key);
+                        // Write the value (convert to string to avoid type issues)
+                        sheet.Cells[startRow, valueColumn].PutValue(kvp.Value?.ToString() ?? string.Empty);
+                        startRow++;
+                    }
 
-                    // Set the JSON data source for smart markers
-                    designer.SetJsonDataSource(dataSourceName, jsonContent);
-
-                    // Process the smart markers to populate data
-                    designer.Process();
-
-                    // Build output file name with timestamp
+                    // Create a timestamp for the filename
                     string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                    string outputFileName = $"{dataSourceName}_{timestamp}.xlsx";
+                    string jsonFileNameWithoutExt = Path.GetFileNameWithoutExtension(jsonFilePath);
+                    string outputFileName = $"{jsonFileNameWithoutExt}_{timestamp}.xlsx";
                     string outputPath = Path.Combine(outputFolder, outputFileName);
 
                     // Save the populated workbook
                     workbook.Save(outputPath, SaveFormat.Xlsx);
 
-                    Console.WriteLine($"Generated workbook: {outputPath}");
+                    Console.WriteLine($"Processed '{jsonFilePath}' -> '{outputPath}'");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{jsonFilePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing '{jsonFilePath}': {ex.Message}");
                 }
             }
+
+            Console.WriteLine("All files have been processed.");
         }
     }
 }

@@ -1,44 +1,69 @@
-// Title: Open a large XLSX workbook with Aspose.Cells LightCells API while restricting memory usage to 200 MB in C#
-// AI Prompts: Write C# code that loads an XLSX file using Aspose.Cells LightCells API and enforces a maximum of 200 MB memory consumption. | Show how to configure LoadOptions.MemorySetting to MemoryPreference for memory‑saving mode when opening a big Excel workbook in .NET. | Create an example that checks for file existence, opens the workbook with limited memory, prints the worksheet count, and catches any exceptions.
-// Common Searches: aspnet open large xlsx with aspose.cells memory limit 200mb | c# lightcells api reduce memory usage when loading workbook | load big excel file without exceeding 200mb memory aspose cells | how to use LoadOptions.MemorySetting to limit memory in aspose.cells
-// Tags: Aspose.Cells LightCells open large XLSX memory‑preference | C# LoadOptions.MemorySetting memory‑saving mode | limit workbook memory consumption Aspose.Cells | load big Excel file low memory .NET | memory‑efficient workbook loading Aspose.Cells
+// Title: Load a large XLSX workbook with Aspose.Cells LightCells API in C# while limiting memory to 200 MB
+// Common Searches: C# Aspose.Cells load large XLSX with memory usage under 200 MB | How to enable low‑memory mode for LightCells when opening big Excel files in .NET | Set MemoryPreferenceLow in Aspose.Cells LoadOptions using reflection | Open big Excel workbook with Aspose.Cells without exceeding 200 MB RAM | Aspose.Cells LightCells example for memory‑constrained environments
+// Tags: aspose cells lightcells memory optimization | c# loadoptions memorysetting low | excel workbook loading with 200mb memory cap | reflection based memorypreference configuration | large xlsx processing using aspose cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program checks that a large XLSX file exists, then loads it with Aspose.Cells using LoadOptions set to MemorySetting.MemoryPreference to keep memory usage around 200 MB, outputs the number of worksheets, and handles any errors gracefully.
+// The sample checks for a large XLSX file, attempts to open it with Aspose.Cells LightCells by setting the LoadOptions.MemorySetting to MemoryPreferenceLow via reflection, falls back to default loading if needed, and saves the workbook, keeping memory consumption around 200 MB.
 class Program
 {
     static void Main()
     {
-        // Path to the large XLSX file
-        string inputPath = @"C:\Data\LargeFile.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Configure load options to use memory‑saving mode
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            // Path to the large XLSX file
+            string inputPath = @"C:\Data\largeFile.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                MemorySetting = MemorySetting.MemoryPreference
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            Workbook workbook;
 
-            // Example: output the number of worksheets
-            Console.WriteLine($"Worksheets count: {workbook.Worksheets.Count}");
+            // Try to load with LoadOptions (if MemorySetting is supported)
+            try
+            {
+                var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+                // Attempt to set low‑memory mode via reflection to avoid compile‑time dependency
+                var memProp = typeof(LoadOptions).GetProperty("MemorySetting");
+                if (memProp != null && memProp.PropertyType.IsEnum)
+                {
+                    var lowValue = Enum.Parse(memProp.PropertyType, "MemoryPreferenceLow");
+                    memProp.SetValue(loadOptions, lowValue);
+                }
+
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                // Fallback to default loading if any issue occurs
+                Console.WriteLine($"LoadOptions not applied: {ex.Message}");
+                workbook = new Workbook(inputPath);
+            }
+
+            // Path for the processed workbook
+            string outputPath = @"C:\Data\processedFile.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook processed and saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

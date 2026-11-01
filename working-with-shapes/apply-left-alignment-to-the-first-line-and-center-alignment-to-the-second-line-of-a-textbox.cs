@@ -1,7 +1,7 @@
-// Title: How to left‑align the first line and center‑align the second line of a TextBox shape in an Excel file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates an Excel workbook with Aspose.Cells, adds a TextBox shape containing two lines, and applies left alignment to the first line and center alignment to the second line. | Provide a C# workaround for simulating per‑paragraph alignment inside a single Aspose.Cells TextBox when the library does not expose a paragraph‑level alignment property.
-// Common Searches: Aspose.Cells C# set first line left aligned second line centered in textbox | How to apply different paragraph alignments in an Excel TextBox using Aspose.Cells | C# Aspose.Cells textbox alignment per line workaround | Excel shape textbox mixed alignment Aspose.Cells .NET example
-// Tags: Aspose.Cells textbox line alignment C# | Excel shape text alignment Aspose.Cells | C# per‑paragraph alignment workaround Aspose.Cells | Aspose.Cells mixed alignment textbox
+// Title: How to left-align the first line and center-align the second line in an Aspose.Cells TextBox using C#
+// AI Prompts: Generate C# code that adds a TextBox shape to a worksheet and uses HTML <div> tags to left‑align the first line and center‑align the second line. | Create an Excel workbook with Aspose.Cells where a TextBox contains two lines of text, each with a different alignment, and save the file.
+// Common Searches: Aspose.Cells C# set left alignment for first line and center alignment for second line in a TextBox shape | using HTML div tags to format multiline text alignment in Aspose.Cells TextBox | how to apply different text alignments within the same TextBox in an Excel workbook with Aspose.Cells | C# Aspose.Cells example of mixed alignment inside a shape
+// Tags: Aspose.Cells TextBox HTML alignment | C# Aspose.Cells multiline TextBox formatting | Excel shape mixed text alignment Aspose.Cells | Aspose.Cells set per-line alignment in TextBox | Aspose.Cells create TextBox with custom HTML
 
 using System;
 using Aspose.Cells;
@@ -9,7 +9,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new workbook, adds a TextBox shape with two lines of text, explains that Aspose.Cells lacks direct per‑paragraph alignment, and demonstrates how to align the first line left and the second line center using available properties or a workaround, then saves the file as AlignedTextBox.xlsx.
+    // C# program that creates a workbook, adds a TextBox shape, sets its Text property with HTML <div> elements to left‑align the first line and center‑align the second line, and saves the result as AlignedTextBox.xlsx.
     class Program
     {
         static void Main(string[] args)
@@ -17,28 +17,31 @@ namespace AsposeCellsExample
             try
             {
                 // Create a new workbook
-                var workbook = new Workbook();
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                var worksheet = workbook.Worksheets[0];
+                // Define position and size for the TextBox
+                int upperLeftRow = 2;
+                int upperLeftColumn = 2;
+                int upperLeftRowOffset = 0;   // pixel offset from the upper‑left row
+                int upperLeftColumnOffset = 0; // pixel offset from the upper‑left column
+                int height = 100; // height in points
+                int width = 200;  // width in points
 
-                // Add a TextBox shape to the worksheet (row, column, top, left, height, width)
-                // The AddTextBox method returns the TextBox object directly.
-                var textBox = worksheet.Shapes.AddTextBox(5, 5, 20, 20, 100, 200) as TextBox;
+                // Add a TextBox shape to the worksheet
+                TextBox textBox = sheet.Shapes.AddTextBox(
+                    upperLeftRow, upperLeftColumn,
+                    upperLeftRowOffset, upperLeftColumnOffset,
+                    height, width);
 
-                if (textBox != null)
-                {
-                    // Set the TextBox text with two lines
-                    textBox.Text = "First line left aligned\nSecond line centered";
-
-                    // Aspose.Cells TextBox does not support per‑paragraph alignment directly.
-                    // As a simple alternative, you could set the overall alignment if the API supports it.
-                    // If the Alignment property is unavailable in the current version, this step is omitted.
-                }
+                // Set HTML content with alignment
+                textBox.Text = "<div style='text-align:left'>First line</div>" +
+                               "<div style='text-align:center'>Second line</div>";
 
                 // Save the workbook
-                workbook.Save("AlignedTextBox.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                string outputPath = "AlignedTextBox.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

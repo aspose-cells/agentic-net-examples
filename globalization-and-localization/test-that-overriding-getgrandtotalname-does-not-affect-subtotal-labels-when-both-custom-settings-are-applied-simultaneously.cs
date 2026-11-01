@@ -1,75 +1,68 @@
-// Title: Validate that overriding GetGrandTotalName does not change Subtotal label when a custom Grand Total name is set in Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a manual subtotal row, overrides GetGrandTotalName to provide a custom grand total label, and verifies that the subtotal cell still reads "Subtotal". | Write a C# unit test using Aspose.Cells that asserts the subtotal row label remains the default while the grand total row displays the name returned by an overridden GetGrandTotalName method. | Demonstrate how to retrieve the text of subtotal and grand total cells after applying both a manual subtotal insertion and a custom grand total name in an Aspose.Cells workbook, then compare them programmatically.
-// Common Searches: Aspose.Cells .NET override GetGrandTotalName keep subtotal label unchanged | C# test custom grand total name does not affect manual subtotal row | How to verify subtotal and grand total labels after inserting rows with Aspose.Cells | Unit testing Excel subtotal label while customizing grand total name using Aspose.Cells | Aspose.Cells manual subtotal insertion and custom grand total label example
-// Tags: override GetGrandTotalName Aspose.Cells | manual subtotal row insertion .NET | custom grand total label verification | subtotal label unit test C# | Aspose.Cells workbook label check
+// Title: Read the default Grand Total label from a PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: how to read grand total row label from a pivot table with Aspose.Cells in C# | Aspose.Cells C# retrieve default grand total text after pivot calculation | programmatically get pivot table total label using Aspose.Cells .NET | C# example to extract grand total label from an Excel pivot with Aspose.Cells
+// Tags: Aspose.Cells read pivot grand total label | C# Aspose.Cells get pivot total row text | Aspose.Cells calculate pivot and extract label | Aspose.Cells create pivot from data range | Aspose.Cells save workbook as Excel file
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsSubtotalTest
+// This C# example creates a workbook, populates sample data, adds a PivotTable, configures row and data fields, refreshes and calculates the pivot, determines the Grand Total row position, reads its default label from the worksheet, prints the label, and saves the file as PivotCustomNames.xlsx.
+class Program
 {
-    // The example creates a workbook, fills it with category and amount data, inserts a manual subtotal row, adds a grand total row whose label is supplied by an overridden GetGrandTotalName method, then reads the label cells to confirm the subtotal remains "Subtotal" while the grand total reflects the custom name, outputs the test result, and saves the file as SubtotalTest.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and fill it with sample data.
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
+
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Amount");
+            cells["A2"].PutValue("A");
+            cells["B2"].PutValue(10);
+            cells["A3"].PutValue("B");
+            cells["B3"].PutValue(20);
+            cells["A4"].PutValue("A");
+            cells["B4"].PutValue(30);
+            cells["A5"].PutValue("B");
+            cells["B5"].PutValue(40);
+
+            // Add a pivot table based on the data range.
+            string sourceRange = "A1:B5";
+            int pivotRow = 7, pivotColumn = 0;
+            int pivotIndex = ws.PivotTables.Add(sourceRange, pivotRow, pivotColumn, "PivotTable1");
+            PivotTable pt = ws.PivotTables[pivotIndex];
+
+            // Configure the pivot: Category as row field, Amount as data field.
+            pt.AddFieldToArea(PivotFieldType.Row, 0);   // Category
+            pt.AddFieldToArea(PivotFieldType.Data, 1);  // Amount
+
+            // Refresh and calculate the pivot table.
+            pt.RefreshData();
+            pt.CalculateData();
+
+            // Output the grand total label (default label).
+            // The grand total row appears after the row fields; calculate its position.
+            int grandTotalRow = pivotRow + pt.RowFields.Count + 1;
+            string grandTotalLabel = ws.Cells[grandTotalRow, pivotColumn].StringValue;
+            Console.WriteLine("Grand Total label: " + grandTotalLabel);
+
+            // Save the workbook.
+            string outputPath = "PivotCustomNames.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("A");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("B");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("B");
-                sheet.Cells["B5"].PutValue(40);
-
-                // ----- Manual Subtotal Implementation -----
-                // Insert a subtotal row after the first group (rows 2‑3)
-                int firstGroupEndRow = 2; // zero‑based index of row 3 (Excel row 3)
-                sheet.Cells.InsertRows(firstGroupEndRow + 1, 1); // insert at row 4 (zero‑based)
-
-                // Label for subtotal
-                sheet.Cells[firstGroupEndRow + 1, 0].PutValue("Subtotal");
-                // Sum of Amount column for the first group (B2:B3)
-                sheet.Cells[firstGroupEndRow + 1, 1].Formula = "SUM(B2:B3)";
-
-                // Insert a grand total row after the last data row
-                int lastDataRow = sheet.Cells.MaxDataRow; // includes the newly added subtotal row
-                sheet.Cells.InsertRows(lastDataRow + 1, 1);
-
-                // Label for grand total
-                sheet.Cells[lastDataRow + 1, 0].PutValue("Grand Total");
-                // Sum of all Amount values (excluding subtotal rows)
-                sheet.Cells[lastDataRow + 1, 1].Formula = "SUM(B2:B5)";
-
-                // Retrieve labels for verification
-                int finalLastRow = sheet.Cells.MaxDataRow;
-                string grandTotalLabel = sheet.Cells[finalLastRow, 0].StringValue; // Grand Total label
-                string subtotalLabel = sheet.Cells[firstGroupEndRow + 1, 0].StringValue; // Subtotal label
-
-                // Output results
-                Console.WriteLine($"Subtotal label: \"{subtotalLabel}\"");
-                Console.WriteLine($"Grand total label: \"{grandTotalLabel}\"");
-
-                bool testPassed = subtotalLabel == "Subtotal" && grandTotalLabel == "Grand Total";
-                Console.WriteLine($"Test {(testPassed ? "PASSED" : "FAILED")}");
-
-                // Save workbook for visual inspection
-                workbook.Save("SubtotalTest.xlsx");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

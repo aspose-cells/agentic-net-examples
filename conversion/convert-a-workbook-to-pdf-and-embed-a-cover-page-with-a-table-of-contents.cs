@@ -1,82 +1,82 @@
-// Title: Create a cover worksheet with a table of contents and export an Excel workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that inserts a cover sheet, builds a simple table of contents listing each worksheet, and saves the workbook as a PDF with Aspose.Cells. | Demonstrate how to configure PdfSaveOptions to export an Excel file to PDF after adding a formatted cover page and applying AutoFit to columns.
-// Common Searches: how to add a cover page to an Excel file before converting to PDF with Aspose.Cells C# | Aspose.Cells generate table of contents worksheet for PDF export | C# export workbook to PDF with custom cover sheet using PdfSaveOptions | placeholder page numbers in TOC worksheet Aspose.Cells
-// Tags: cover worksheet insertion Aspose.Cells | table of contents generation Excel PDF | PdfSaveOptions configuration Aspose.Cells | auto fit columns before PDF conversion | placeholder page numbers TOC Aspose.Cells
+// Title: Generate a PDF from an Excel workbook with a custom cover sheet and hyperlinked table of contents using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells .NET add a cover worksheet and TOC before saving Excel as PDF | C# create PDF from Excel with clickable table of contents using Aspose.Cells | How to insert a title page and sheet hyperlinks when converting XLSX to PDF in Aspose.Cells | Generate PDF with a title page and navigation links from an Excel file in C# | Aspose.Cells PDFSaveOptions example with cover page and table of contents
+// Tags: Aspose.Cells add cover worksheet for PDF export | Excel to PDF with clickable table of contents using C# | PdfSaveOptions OnePagePerSheet false Aspose.Cells | hyperlink sheet names in PDF generated from Excel | auto-fit columns on cover sheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example checks for the source .xlsx file, inserts a new worksheet at the beginning as a cover page, writes a title and a table of contents with placeholder page numbers for each subsequent sheet, auto‑fits columns, sets PdfSaveOptions, and saves the complete workbook as a PDF.
+// The example loads an existing XLSX file, inserts a new worksheet as a cover page, writes a report title and a table of contents that lists each subsequent sheet with hyperlinks to their A1 cells, auto‑fits the cover columns, and saves the workbook as a PDF using PdfSaveOptions with OnePagePerSheet disabled and PDF/A‑1b compliance.
 class WorkbookToPdfWithCover
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputDocument.pdf";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists
+            // Verify that the source workbook exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Load the source workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Insert a new worksheet at the beginning to serve as the cover page
             Worksheet coverSheet = workbook.Worksheets.Insert(0, SheetType.Worksheet);
             coverSheet.Name = "Cover";
 
-            // Prepare the cover page content
-            Cells cells = coverSheet.Cells;
-
+            // ----- Build Cover Page -----
             // Title
-            cells["A1"].PutValue("Document Title");
-            Style titleStyle = workbook.CreateStyle();
+            Cell titleCell = coverSheet.Cells["A1"];
+            titleCell.PutValue("Report Title");
+            Style titleStyle = titleCell.GetStyle();
+            titleStyle.Font.Size = 24;
             titleStyle.Font.IsBold = true;
-            titleStyle.Font.Size = 20;
-            cells["A1"].SetStyle(titleStyle);
+            titleCell.SetStyle(titleStyle);
 
             // Table of Contents header
-            cells["A3"].PutValue("Table of Contents");
-            Style headerStyle = workbook.CreateStyle();
+            Cell tocHeader = coverSheet.Cells["A3"];
+            tocHeader.PutValue("Table of Contents");
+            Style headerStyle = tocHeader.GetStyle();
+            headerStyle.Font.Size = 16;
             headerStyle.Font.IsBold = true;
-            headerStyle.Font.Size = 14;
-            cells["A3"].SetStyle(headerStyle);
+            tocHeader.SetStyle(headerStyle);
 
-            // List each worksheet (excluding the cover) as an entry in the TOC
-            int row = 4;
-            for (int i = 1; i < workbook.Worksheets.Count; i++) // start from 1 to skip cover
+            // ----- Populate Table of Contents -----
+            int tocStartRow = 4; // Row where TOC entries begin
+            for (int i = 1; i < workbook.Worksheets.Count; i++) // start from 1 to skip the cover sheet
             {
-                Worksheet ws = workbook.Worksheets[i];
-                // Entry format: Sheet Name .......... Page #
-                // Page numbers are not known before rendering; placeholder used.
-                cells[row, 0].PutValue(ws.Name);
-                cells[row, 1].PutValue("Page ..."); // placeholder
-                row++;
+                Worksheet sheet = workbook.Worksheets[i];
+                string sheetName = sheet.Name;
+
+                // Write sheet name in the TOC
+                Cell tocEntry = coverSheet.Cells[tocStartRow + i - 1, 0]; // Column A
+                tocEntry.PutValue(sheetName);
+
+                // Add hyperlink to the first cell of the target sheet
+                // The hyperlink format: 'SheetName'!A1
+                string hyperlinkAddress = $"'{sheetName}'!A1";
+                coverSheet.Hyperlinks.Add(tocEntry.Row, tocEntry.Column, 1, 1, hyperlinkAddress);
             }
 
-            // Adjust column widths for better appearance
+            // Optional: Adjust column width for better appearance
             coverSheet.AutoFitColumns();
 
-            // Set PDF save options (optional: one page per sheet, etc.)
+            // ----- Save as PDF -----
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                OnePagePerSheet = false // allow sheets to span multiple pages if needed
+                OnePagePerSheet = false,               // Allow multiple pages per sheet if needed
+                Compliance = PdfCompliance.PdfA1b      // Example compliance setting
             };
 
-            // Save the workbook (including the cover page) as a PDF
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

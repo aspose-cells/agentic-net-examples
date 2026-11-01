@@ -1,63 +1,55 @@
-// Title: Change the second data series to a line type in a combo chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a combo chart with a column series and then set the second series to a line chart using Aspose.Cells in C#. | Update an existing Aspose.Cells chart by changing the ChartType of a specific series to Line after the series has been added. | Add two data series to a workbook chart and convert the second series to a line series, optionally assigning it to a secondary axis with Aspose.Cells.
-// Common Searches: Aspose.Cells C# change series type to line in a combo chart after creation | How to convert second series to line chart in Aspose.Cells .NET example | C# Aspose.Cells mixed column and line chart (combo) tutorial | Set secondary axis for line series in Aspose.Cells combo chart C#
-// Tags: Aspose.Cells set series chart type | C# combo chart column line series | Aspose.Cells modify series after creation | Excel mixed chart Aspose.Cells .NET | Aspose.Cells secondary axis line series
+// Title: How to change the second series to a line type in a combo chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a workbook with sample data, add a column combo chart, then set the second series to ChartType.Line using Aspose.Cells in C#. | Programmatically modify an existing Aspose.Cells chart to change the second data series from column to line after the chart has been created. | Generate a mixed column‑line combo chart in C# by adding two series and converting the second series to a line series post‑creation.
+// Common Searches: Aspose.Cells C# change series type to line in combo chart after adding series | set second series as line in mixed column line chart using Aspose.Cells .NET | how to convert a column series to line in Aspose.Cells chart programmatically
+// Tags: Aspose.Cells change series type programmatically | combo chart column to line Aspose.Cells | C# Aspose.Cells mixed chart series conversion | modify chart series type after creation .NET | Aspose.Cells chart customization line series
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// Demonstrates creating a workbook, populating sample data, adding a combo chart with a column series, inserting two data series, converting the second series to a line type (and optionally assigning it to a secondary axis), and saving the workbook as an .xlsx file.
-class ComboChartExample
+// The example creates a new workbook, fills it with sample data, adds a combo chart initially as a column chart with two series, then changes the second series' type to a line chart, and saves the workbook as ComboChart.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
             // Populate sample data
-            // A column: categories, B column: first series, C column: second series
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["C1"].PutValue("Series2");
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Series1");
+            ws.Cells["C1"].PutValue("Series2");
+            ws.Cells["A2"].PutValue("Jan");
+            ws.Cells["A3"].PutValue("Feb");
+            ws.Cells["A4"].PutValue("Mar");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["B4"].PutValue(30);
+            ws.Cells["C2"].PutValue(15);
+            ws.Cells["C3"].PutValue(25);
+            ws.Cells["C4"].PutValue(35);
 
-            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
-            double[] series1 = { 10, 20, 30, 25, 15 };
-            double[] series2 = { 5, 15, 25, 20, 10 };
+            // Add a combo chart (initially a column chart)
+            int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = ws.Charts[chartIndex];
 
-            for (int i = 0; i < categories.Length; i++)
-            {
-                sheet.Cells[i + 1, 0].PutValue(categories[i]);   // A column
-                sheet.Cells[i + 1, 1].PutValue(series1[i]);    // B column
-                sheet.Cells[i + 1, 2].PutValue(series2[i]);    // C column
-            }
+            // Add first series (column)
+            chart.NSeries.Add("B2:B4", true);
+            // Add second series (column initially)
+            chart.NSeries.Add("C2:C4", true);
 
-            // Add a combo chart (initially a Column chart)
-            // Position: from row 7, column 0 to row 25, column 7
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 7);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set chart title
-            chart.Title.Text = "Combo Chart Example";
-
-            // Add first series (Column) using data from B2:B6, categories from A2:A6
-            chart.NSeries.Add("=Sheet1!$B$2:$B$6", true);
-            // Add second series (will be changed to Line) using data from C2:C6
-            chart.NSeries.Add("=Sheet1!$C$2:$C$6", true);
-
-            // Change the second series type from Column to Line
+            // Change the second series type from column to line
             chart.NSeries[1].Type = ChartType.Line;
 
-            // Optional: set the second series to use secondary axis if desired
-            // chart.NSeries[1].IsSecondaryAxis = true;
+            // Define output file path
+            string outputPath = "ComboChart.xlsx";
 
             // Save the workbook
-            string outputPath = "ComboChart_Output.xlsx";
-            workbook.Save(outputPath);
+            wb.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)

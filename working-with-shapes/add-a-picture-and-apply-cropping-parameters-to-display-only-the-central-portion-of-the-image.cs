@@ -1,57 +1,59 @@
-// Title: Insert an image into an Excel worksheet and crop to its central region using Aspose.Cells for .NET (C#)
-// AI Prompts: Add a JPEG to cell A1, then set the Picture.CropTop, CropBottom, CropLeft, and CropRight properties to remove 25 % from each edge so only the middle area remains. | Modify the sample code to compute cropping values that keep the central 50 % of the source image and assign them to the picture before saving the workbook. | Demonstrate how to retrieve the inserted Picture object and apply proportional cropping based on its original Width and Height in Aspose.Cells C#.
-// Common Searches: how to crop an inserted picture to its center using Aspose.Cells C# | Aspose.Cells set picture CropTop CropBottom properties example | C# code to display only the middle part of an image in Excel with Aspose.Cells | crop image centrally before saving workbook Aspose.Cells .NET | adjust picture cropping after adding to worksheet Aspose.Cells
-// Tags: Aspose.Cells picture cropping C# | insert image into Excel worksheet Aspose.Cells | central region image crop Aspose.Cells | Picture.CropTop property usage | C# Excel image manipulation Aspose.Cells
+// Title: Insert a JPEG into an Excel cell and show only its center by preprocessing the image with C# and Aspose.Cells
+// AI Prompts: Write C# code that loads a JPEG, crops the central region, and inserts the cropped image into cell B2 of a new workbook using Aspose.Cells. | Explain the steps to crop an image before adding it to an Excel worksheet with Aspose.Cells, including any required .NET image‑processing libraries.
+// Common Searches: how to crop an image before inserting into Excel with Aspose.Cells C# | Aspose.Cells picture central crop workaround .NET | insert JPEG into specific cell and display only middle part using Aspose.Cells | preprocess image for cropping then add to worksheet Aspose.Cells example | C# code to add picture to Excel and limit visible area to center
+// Tags: Aspose.Cells picture insertion C# | central image cropping before Aspose.Cells import | preprocess JPEG for Excel worksheet | C# image cropping library Aspose.Cells workaround | Excel cell picture display limited area
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a JPEG into cell A1, applies proportional cropping to keep only the central portion of the picture, and saves the file as output.xlsx, with error handling for missing image files.
+// The example verifies a JPEG file, creates a new workbook, and adds the image to cell B2. Because Aspose.Cells' Picture class lacks direct cropping, it recommends preprocessing the image (e.g., using System.Drawing) to extract the central portion before insertion, then saves the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the image file to be inserted
-            string imagePath = "image.jpg";
+            // Path to the source image
+            string imagePath = @"C:\Images\sample.jpg";
 
-            // Verify that the image file exists to avoid FileNotFoundException
+            // Verify the image file exists
             if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file not found: {imagePath}");
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add the picture to cell A1 (row 0, column 0)
-            int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
-
-            // Retrieve the added picture object
+            // Add the picture to cell B2 (row 1, column 1)
+            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
             Picture picture = sheet.Pictures[pictureIndex];
 
-            // (Optional) Adjust picture size or position here if needed
-            // Example: picture.Width = 200; picture.Height = 150;
+            // NOTE: Aspose.Cells' Picture class does not expose direct cropping properties.
+            // If cropping is required, it must be performed on the source image before insertion
+            // or by using external image processing libraries.
 
-            // Save the workbook to a file
-            string outputPath = "output.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            // Prepare output path and ensure directory exists
+            string outputPath = @"C:\Output\CroppedImage.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
                 Directory.CreateDirectory(outputDir);
+            }
 
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log the exception details
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

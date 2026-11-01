@@ -1,80 +1,71 @@
-// Title: How to use ReferredArea.GetValues to read a 2‑D array of cell values from a formula's precedent range in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that obtains the first ReferredArea of a cell containing a SUM formula and calls GetValues() to return the range values as an object[,] array. | Write a C# snippet that iterates over the object[][] jagged array returned by ReferredArea.GetValues() and prints each cell value. | Provide an example that calculates formulas, extracts the precedent values, and then saves the workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# get values from a referenced range using ReferredArea.GetValues | How to retrieve a two dimensional array from a formula precedent in .NET | Example of object[,] vs object[][] returned by ReferredArea.GetValues in Aspose.Cells | Read cell values of SUM formula range programmatically with Aspose.Cells | Calculate formulas then access precedent cell values Aspose.Cells C#
-// Tags: Aspose.Cells ReferredArea.GetValues example | retrieve 2D array from precedent range C# | calculate formulas then read cell values Aspose.Cells | object[,] handling in Aspose.Cells | object[][] handling in Aspose.Cells
+// Title: How to retrieve a two‑dimensional object[,] array from a worksheet range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# get values from range A1:C3 as object[,] array | Read Excel range into 2D object array with Aspose.Cells for .NET | C# extract worksheet range data as two dimensional matrix using Aspose.Cells | Convert Excel range to object[,] in C# with Aspose.Cells API | Retrieve cell values from a specified range as object matrix in Aspose.Cells
+// Tags: Aspose.Cells range Value to object matrix | C# extract Excel cells into two dimensional object array | Aspose.Cells CreateRange API usage | reading worksheet range as object[,] in .NET | Aspose.Cells workbook load and range iteration
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ReferredAreaGetValuesDemo
+namespace AsposeCellsExample
 {
-    // The sample creates a workbook, fills cells A1:B2 with numbers, sets C1 to =SUM(A1:B2), calculates formulas, obtains the first ReferredArea from C1's precedents, calls GetValues() to retrieve the range values as either an object[,] or object[][] array, iterates and prints the values, and finally saves the workbook.
+    // The example loads an Excel file, accesses a worksheet, creates a range (A1:C3), casts the range's Value property to a two‑dimensional object[,] array, iterates the array to display each cell, and saves the workbook, demonstrating error handling for missing files and worksheets.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate a 2x2 range with sample data
-            sheet.Cells["A1"].PutValue(1);
-            sheet.Cells["A2"].PutValue(2);
-            sheet.Cells["B1"].PutValue(3);
-            sheet.Cells["B2"].PutValue(4);
-
-            // Create a formula that references the range A1:B2
-            Cell formulaCell = sheet.Cells["C1"];
-            formulaCell.Formula = "=SUM(A1:B2)";
-
-            // Calculate formulas so that any dependent values are up‑to‑date
-            workbook.CalculateFormula();
-
-            // Get the collection of areas that the formula cell refers to
-            ReferredAreaCollection precedents = formulaCell.GetPrecedents();
-
-            if (precedents != null && precedents.Count > 0)
+            try
             {
-                // Take the first referred area (A1:B2 in this case)
-                ReferredArea area = precedents[0];
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Retrieve all values from the area
-                object valuesObj = area.GetValues();
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // The returned object can be a 2‑D array (object[,]) or a jagged array (object[][])
-                if (valuesObj is object[,] multiArray)
+                // Access the worksheet
+                Worksheet sheet = workbook.Worksheets["Sheet1"];
+                if (sheet == null)
                 {
-                    Console.WriteLine("Values retrieved via object[,]:");
-                    for (int r = 0; r < multiArray.GetLength(0); r++)
+                    Console.WriteLine("Worksheet 'Sheet1' not found.");
+                    return;
+                }
+
+                // Create a range object for the specified area (use fully qualified type to avoid ambiguity)
+                Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:C3");
+
+                // Retrieve the values as a two‑dimensional object array
+                object[,] values = range.Value as object[,];
+                if (values == null)
+                {
+                    Console.WriteLine("No data found in the specified range.");
+                    return;
+                }
+
+                // Iterate and print the retrieved values
+                for (int row = 0; row < values.GetLength(0); row++)
+                {
+                    for (int col = 0; col < values.GetLength(1); col++)
                     {
-                        for (int c = 0; c < multiArray.GetLength(1); c++)
-                        {
-                            Console.Write(multiArray[r, c] + "\t");
-                        }
-                        Console.WriteLine();
+                        Console.Write(values[row, col] + "\t");
                     }
+                    Console.WriteLine();
                 }
-                else if (valuesObj is object[][] jaggedArray)
-                {
-                    Console.WriteLine("Values retrieved via object[][]:");
-                    foreach (object[] row in jaggedArray)
-                    {
-                        foreach (object val in row)
-                        {
-                            Console.Write(val + "\t");
-                        }
-                        Console.WriteLine();
-                    }
-                }
-                else
-                {
-                    // Single cell case
-                    Console.WriteLine("Single value: " + valuesObj);
-                }
+
+                // Save the workbook if any modifications were made (optional)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Save the workbook (optional, just to demonstrate the save rule)
-            workbook.Save("ReferredAreaGetValuesDemo.xlsx");
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

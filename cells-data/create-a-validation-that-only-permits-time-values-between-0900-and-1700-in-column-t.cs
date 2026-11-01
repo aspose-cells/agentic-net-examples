@@ -1,45 +1,60 @@
-// Title: Create a time‑range data validation (09:00‑17:00) for column T in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that adds a Validation object to column T (rows 1‑1000) allowing only times from 09:00 to 17:00 and shows custom input and error alerts. | Generate a snippet that changes the validation to a different column index and modifies the lower and upper time bounds while preserving the message settings. | Provide an example of applying the Between operator for time values in Aspose.Cells and exporting the workbook to a file.
-// Common Searches: aspocells c# how to restrict a column to business hours 09:00-17:00 | set time validation for specific column in Excel using Aspose.Cells .NET | apply between operator for time values in Aspose.Cells validation | custom input and error messages for data validation in Aspose.Cells workbook
-// Tags: Aspose.Cells time validation between operator | Excel column T validation Aspose.Cells | C# set time range validation Aspose.Cells | custom validation messages Aspose.Cells | apply validation rows 1-1000 Aspose.Cells
+// Title: Create a time‑range data validation (09:00‑17:00) for the entire column T using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells set time validation for a whole column in Excel | How to restrict Excel column T to business hours (09:00 to 17:00) with Aspose.Cells | Aspose.Cells add between operator time validation programmatically in .NET | Create data validation for time values in column T using Aspose.Cells API | Set allowed time range 09:00‑17:00 for cells in column T with C#
+// Tags: aspocells time range validation c# | excel column t validation aspocells | between operator validation aspocells | c# workbook business hours restriction | set allowed time values aspocells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, defines a CellArea for column T rows 1‑1000, adds a Validation of type Time with the Between operator and bounds 09:00:00‑17:00:00, sets custom input and error titles/messages, and saves the file as TimeValidation.xlsx.
+// The example creates a new workbook, defines a CellArea that covers the entire column T, adds a Time validation with the Between operator, limits acceptable entries to 09:00‑17:00, configures an error title and message, and saves the file as TimeValidation.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define the validation area for column T (column index 19)
-        // Here we apply it to rows 1 through 1000 (zero‑based indices 0‑999)
-        CellArea area = CellArea.CreateCellArea(0, 19, 999, 19);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a validation object for the defined area
-        ValidationCollection validations = sheet.Validations;
-        int validationIndex = validations.Add(area);
-        Validation validation = validations[validationIndex];
+            // Define the range for the validation (entire column T)
+            int firstRow = 0;
+            int lastRow = 1048575; // Excel's maximum row index (zero‑based)
+            int columnIndex = 19;  // Column T (zero‑based)
 
-        // Configure the validation to allow only time values between 09:00 and 17:00
-        validation.Type = ValidationType.Time;               // Time validation
-        validation.Operator = OperatorType.Between;          // Between operator
-        validation.Formula1 = "09:00:00";                    // Lower bound
-        validation.Formula2 = "17:00:00";                    // Upper bound
+            // Create a CellArea representing the target range
+            CellArea area = new CellArea
+            {
+                StartRow = firstRow,
+                StartColumn = columnIndex,
+                EndRow = lastRow,
+                EndColumn = columnIndex
+            };
 
-        // Optional user‑friendly messages
-        validation.InputTitle = "Time Entry";
-        validation.InputMessage = "Enter a time between 09:00 and 17:00.";
-        validation.ErrorTitle = "Invalid Time";
-        validation.ErrorMessage = "The time must be between 09:00 and 17:00.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
-        validation.AlertStyle = ValidationAlertType.Stop;    // Stop alert on error
+            // Add a new validation rule for the specified area (returns the index)
+            int validationIndex = sheet.Validations.Add(area);
+            Validation validation = sheet.Validations[validationIndex];
 
-        // Save the workbook with the validation applied
-        workbook.Save("TimeValidation.xlsx");
+            // Set validation type to Time and operator to Between
+            validation.Type = ValidationType.Time;
+            validation.Operator = OperatorType.Between;
+
+            // Define the allowed time range: 09:00 to 17:00
+            validation.Formula1 = "09:00";
+            validation.Formula2 = "17:00";
+
+            // Optional: configure error message
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Time";
+            validation.ErrorMessage = "Please enter a time between 09:00 and 17:00.";
+
+            // Save the workbook
+            workbook.Save("TimeValidation.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

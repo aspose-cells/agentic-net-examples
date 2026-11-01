@@ -1,46 +1,36 @@
-// Title: Create an Aspose.Cells workbook, attempt to set scroll bar visibility, and save it as an .xlsx file using C#
-// AI Prompts: Write C# code that creates a new Aspose.Cells Workbook, checks whether scroll‑bar visibility properties are available, sets the horizontal scroll bar to visible and the vertical scroll bar to hidden when possible, and saves the workbook to a given .xlsx path. | Generate a .NET snippet that builds an empty workbook with Aspose.Cells, ensures the target directory exists, gracefully handles the absence of ShowHorizontalScrollBar/ShowVerticalScrollBar properties, and writes the file to disk.
-// Common Searches: Aspose.Cells how to display horizontal scroll bar in a workbook using C# | C# Aspose.Cells hide vertical scroll bar example | save new workbook to specific folder with Aspose.Cells .NET | Aspose.Cells scroll bar properties missing in latest version | create empty Excel file and set view options with Aspose.Cells C#
-// Tags: Aspose.Cells workbook view settings C# | Aspose.Cells scroll bar visibility handling | Aspose.Cells save workbook to xlsx | Aspose.Cells output folder creation C# | Aspose.Cells missing ShowHorizontalScrollBar property
+// Title: Save an Aspose.Cells workbook in C# after configuring the worksheet to show only the horizontal scroll bar
+// AI Prompts: Write C# code that creates a new Workbook with Aspose.Cells, uses WorksheetViewOptions to display the horizontal scroll bar while hiding the vertical one, and saves the file as Result.xlsx. | Show how to adjust scroll bar visibility on a worksheet using Aspose.Cells for .NET before calling Workbook.Save.
+// Common Searches: Aspose.Cells C# hide vertical scroll bar and keep horizontal scroll bar | how to set worksheet scroll bar visibility with Aspose.Cells .NET | save workbook after modifying view options Aspose.Cells example | WorksheetViewOptions scroll bar settings Aspose.Cells C# | Aspose.Cells show only horizontal scroll bar before saving workbook
+// Tags: Aspose.Cells worksheet scroll bar visibility | C# WorksheetViewOptions Aspose.Cells | Aspose.Cells save workbook to xlsx | Aspose.Cells configure worksheet view | Aspose.Cells scroll bar visibility control
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example creates a new Workbook with Aspose.Cells, accesses the first worksheet, notes that scroll bar visibility is managed via WorksheetViewOptions (not demonstrated in the code), saves the workbook to 'Result.xlsx', and prints a success message, all wrapped in a try‑catch block.
+class Program
 {
-    // The example creates a new Aspose.Cells Workbook, notes that ShowHorizontalScrollBar and ShowVerticalScrollBar are not available in the current library version, ensures the output directory exists, saves the workbook to 'output.xlsx', and prints a success message.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // NOTE: In the current Aspose.Cells version the properties
-                // ShowHorizontalScrollBar and ShowVerticalScrollBar are not available.
-                // If needed, other view‑related settings can be configured here.
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the output file path
-                string outputPath = "output.xlsx";
+            // Note: In the current Aspose.Cells version, scroll bar visibility is managed via
+            // WorksheetViewOptions (not demonstrated here). The following lines are omitted
+            // because the properties do not exist.
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook to disk
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook to disk
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

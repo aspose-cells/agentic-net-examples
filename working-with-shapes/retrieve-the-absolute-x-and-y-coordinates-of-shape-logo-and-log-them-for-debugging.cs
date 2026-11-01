@@ -1,45 +1,53 @@
-// Title: Get absolute X and Y coordinates of a named shape (Logo) in an Excel worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, locates the shape named "Logo" on the first worksheet, and prints its Left and Top values to the console. | Show how to read the absolute X (Left) and Y (Top) coordinates of a specific shape in a workbook for debugging purposes using the Aspose.Cells .NET API.
-// Common Searches: how to read the horizontal and vertical coordinates of a shape called Logo in an Excel workbook using Aspose.Cells C# | Aspose.Cells example to output absolute position of a worksheet shape for debugging | C# code to get shape location in points from an .xlsx file with Aspose.Cells | retrieve worksheet shape placement coordinates using Aspose.Cells .NET
-// Tags: Aspose.Cells get shape absolute position | C# extract shape left top coordinates | Excel worksheet shape location debugging | named shape coordinate retrieval .NET | Aspose.Cells shape placement logging
+// Title: Get the absolute X and Y coordinates of a named shape (Logo) in an Excel file using Aspose.Cells for .NET
+// Common Searches: how to read the X and Y position of a shape named Logo with Aspose.Cells in C# | Aspose.Cells retrieve absolute coordinates of a worksheet shape | C# code to log shape location in an Excel workbook using Aspose | find shape position in points using Aspose.Cells API | debugging shape placement coordinates in .xlsx with Aspose.Cells
+// Tags: Aspose.Cells shape position extraction | C# read shape X Y values | worksheet shape named lookup Aspose | Excel shape coordinate logging | Aspose.Cells shape placement debugging
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 
-// The example loads input.xlsx, accesses the first worksheet, finds the shape named "Logo", reads its absolute X (Left) and Y (Top) coordinates in points, and writes the values to the console for debugging.
+// The example loads an Excel workbook, searches the first worksheet for a shape named "Logo", reads its X and Y properties (absolute coordinates in points), and writes the coordinates to the console while handling missing files and runtime errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            string filePath = "input.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
+            // Access the first worksheet (or specify the appropriate one)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Locate the shape named "Logo"
+            Shape logoShape = null;
+            foreach (Shape shape in sheet.Shapes)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
+                if (shape.Name == "Logo")
+                {
+                    logoShape = shape;
+                    break;
+                }
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(filePath);
-
-            // Access the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Retrieve the shape named "Logo"
-            Shape logoShape = worksheet.Shapes["Logo"];
             if (logoShape != null)
             {
-                // Get absolute X (Left) and Y (Top) coordinates in points
-                float x = logoShape.Left;
-                float y = logoShape.Top;
+                // Retrieve absolute X and Y coordinates (in points)
+                double x = logoShape.X;
+                double y = logoShape.Y;
 
-                // Output the coordinates
-                Console.WriteLine($"Logo shape coordinates - X: {x}, Y: {y}");
+                // Log the coordinates for debugging
+                Console.WriteLine($"Logo shape position - X: {x}, Y: {y}");
             }
             else
             {
@@ -48,8 +56,8 @@ class Program
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

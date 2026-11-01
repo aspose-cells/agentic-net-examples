@@ -1,14 +1,13 @@
-// Title: Export formulas from every worksheet in an Excel workbook to a combined LaTeX document using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, iterates all worksheets, extracts each cell's formula, escapes LaTeX special characters, and writes the formulas with cell references into a single .tex file. | Demonstrate how to concatenate formulas from multiple sheets into one LaTeX file, adding worksheet comments and wrapping each formula in math mode, using the Aspose.Cells API.
-// Common Searches: C# Aspose.Cells export all cell formulas to LaTeX file | How to write Excel formulas to a .tex document with Aspose.Cells | Iterate worksheets and extract formulas for LaTeX output in .NET | Escape underscores when converting Excel formulas to LaTeX using C# | Combine formulas from multiple Excel sheets into one LaTeX file
-// Tags: export formulas to LaTeX Aspose.Cells | iterate worksheets Aspose.Cells C# | write .tex file from Excel formulas | LaTeX escaping for Excel formulas C# | concatenate sheet formulas into single LaTeX document
+// Title: Export formulas from all worksheets to a single LaTeX document with Aspose.Cells for .NET (C#)
+// Common Searches: c# export all worksheet formulas to a .tex file using Aspose.Cells | how to convert Excel formulas to LaTeX align environment in a .NET application | generate combined LaTeX document from multiple Excel sheets with Aspose.Cells | Aspose.Cells iterate through worksheets and write formulas as LaTeX equations
+// Tags: Aspose.Cells export formulas to LaTeX | C# create LaTeX document from Excel data | iterate Excel worksheets extract formulas Aspose.Cells | escape special characters for LaTeX in C# | replace Excel operators with LaTeX syntax
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// // Loads an Excel workbook, walks through each worksheet and cell containing a formula, escapes LaTeX characters, wraps formulas in math mode with cell references, and writes the aggregated output to a single .tex file.
+// The example loads an Excel workbook with Aspose.Cells, loops through each worksheet, extracts cells that contain formulas, converts each formula to a simple LaTeX representation while escaping special characters and mapping common Excel operators, and appends the results as aligned equations inside a LaTeX document. All worksheet sections are concatenated and written to a single .tex file.
 class ExportFormulasToLatex
 {
     static void Main()
@@ -19,36 +18,90 @@ class ExportFormulasToLatex
         // StringBuilder to accumulate LaTeX content
         StringBuilder latexBuilder = new StringBuilder();
 
+        // Optional: add LaTeX document preamble
+        latexBuilder.AppendLine(@"\documentclass{article}");
+        latexBuilder.AppendLine(@"\usepackage{amsmath}");
+        latexBuilder.AppendLine(@"\begin{document}");
+
         // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Add a comment indicating the worksheet name
-            latexBuilder.AppendLine($"% Worksheet: {sheet.Name}");
+            // Add a section header for the worksheet
+            latexBuilder.AppendLine($@"\section*{{{EscapeLatex(sheet.Name)}}}");
+            latexBuilder.AppendLine(@"\begin{align*}");
 
-            // Iterate through all cells that contain formulas
+            // Iterate over all cells that contain formulas
             foreach (Cell cell in sheet.Cells)
             {
-                if (!string.IsNullOrEmpty(cell.Formula))
+                if (cell.IsFormula)
                 {
-                    // Retrieve the formula string
+                    // Get the cell address (e.g., A1) and the formula string
+                    string address = cell.Name;
                     string formula = cell.Formula;
 
-                    // Basic LaTeX escaping (underscore is common in formulas)
-                    formula = formula.Replace("_", "\\_");
+                    // Simple conversion of the formula to LaTeX:
+                    // - Escape backslashes and special LaTeX characters
+                    // - Wrap the formula in math mode
+                    string latexFormula = ConvertFormulaToLatex(formula);
 
-                    // Append the formula wrapped in math mode, with cell reference for clarity
-                    latexBuilder.AppendLine($"Cell {cell.Name}: ${formula}$");
+                    // Append the formula as an aligned equation: address = formula
+                    latexBuilder.AppendLine($@"{EscapeLatex(address)} &= {latexFormula} \\");
                 }
             }
 
-            // Add a blank line between worksheets
-            latexBuilder.AppendLine();
+            latexBuilder.AppendLine(@"\end{align*}");
+            latexBuilder.AppendLine(); // Add a blank line between worksheets
         }
 
-        // Write the concatenated LaTeX to a .tex file
-        File.WriteAllText("output.tex", latexBuilder.ToString());
+        // End of LaTeX document
+        latexBuilder.AppendLine(@"\end{document}");
 
-        // Optional: inform the user that the operation completed
-        Console.WriteLine("Formulas exported to LaTeX successfully.");
+        // Write the concatenated LaTeX content to a .tex file
+        File.WriteAllText("FormulasOutput.tex", latexBuilder.ToString(), Encoding.UTF8);
+    }
+
+    // Helper method to escape LaTeX special characters in plain text
+    private static string EscapeLatex(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        return text
+            .Replace(@"\", @"\textbackslash ")
+            .Replace("{", @"\{")
+            .Replace("}", @"\}")
+            .Replace("#", @"\#")
+            .Replace("$", @"\$")
+            .Replace("%", @"\%")
+            .Replace("&", @"\&")
+            .Replace("^", @"\^{}")
+            .Replace("_", @"\_")
+            .Replace("~", @"\~{}");
+    }
+
+    // Very basic conversion of an Excel formula to LaTeX syntax
+    private static string ConvertFormulaToLatex(string formula)
+    {
+        if (string.IsNullOrEmpty(formula))
+            return string.Empty;
+
+        // Remove leading '=' if present
+        if (formula.StartsWith("="))
+            formula = formula.Substring(1);
+
+        // Escape LaTeX special characters inside the formula
+        string escaped = EscapeLatex(formula);
+
+        // Replace common Excel operators with LaTeX equivalents
+        escaped = escaped
+            .Replace("^", @"\hat{}")          // exponentiation (very simplistic)
+            .Replace("*", @"\times ")
+            .Replace("/", @"\div ")
+            .Replace("<>", @"\neq ")
+            .Replace("<=", @"\leq ")
+            .Replace(">=", @"\geq ");
+
+        // Wrap the result in math mode
+        return "$" + escaped + "$";
     }
 }

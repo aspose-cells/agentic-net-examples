@@ -1,75 +1,59 @@
-// Title: Set bubble chart data label shape to ellipse in Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, adds a bubble chart, enables data labels to show values and bubble size, and applies an ellipse shape to the data labels using Aspose.Cells. | Write a C# snippet that assigns DataLabelShapeType.Ellipse to a bubble chart series' data labels, including version‑check logic for Aspose.Cells.
-// Common Searches: asp.net aspose.cells how to apply ellipse shape to bubble chart data labels | c# example of setting DataLabelShapeType to Ellipse for bubble charts | aspose.cells bubble chart data labels show value and size with ellipse shape
-// Tags: custom data label geometry for bubble chart Aspose.Cells | set DataLabelShapeType for series C# | show bubble size on data labels Aspose.Cells | create bubble chart with advanced label formatting .NET
+// Title: Create a bubble chart in Aspose.Cells for .NET and understand why ellipse-shaped data labels are not supported
+// AI Prompts: Write C# code that uses Aspose.Cells to generate a bubble chart and attempts to set the data label shape to ellipse, including handling for the unsupported API. | Describe the limitation of Aspose.Cells regarding custom data label shapes on bubble charts and propose alternative styling methods. | Show how to modify font, color, and border of bubble chart data labels in Aspose.Cells when an ellipse shape cannot be applied.
+// Common Searches: aspnet cells set bubble chart data label shape to ellipse | c# aspose.cells bubble chart custom data label appearance | why Aspose.Cells does not support ellipse data labels in Excel charts | alternative ways to style bubble chart data labels using Aspose.Cells .NET | example code for creating bubble chart with Aspose.Cells and handling unsupported label shapes
+// Tags: bubble chart data label shape aspose.cells | ellipse data label limitation .NET Excel | customize bubble chart label appearance aspose.cells | c# aspose.cells chart label styling | unsupported chart label shape aspose.cells | excel bubble chart label formatting c#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, populates cells with X, Y, and size values, adds a bubble chart, assigns the series data, and notes that Aspose.Cells does not provide an API to set data label shapes such as an ellipse. The workbook is saved as BubbleChartWithEllipseLabels.xlsx.
+class Program
 {
-    // The example creates a new workbook, fills columns with X, Y, and size data, adds a bubble chart, binds a series to the data ranges, enables data labels to display Y values and bubble sizes, optionally sets the data label shape to an ellipse via DataLabelShapeType.Ellipse, and saves the file as BubbleChartWithEllipseDataLabels.xlsx.
-    public class BubbleChartDataLabelEllipse
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Create a new workbook
+            Workbook wb = new Workbook();
+
+            // Access the first worksheet
+            Worksheet ws = wb.Worksheets[0];
+
+            // Populate sample data for the bubble chart
+            ws.Cells["A1"].PutValue("X");
+            ws.Cells["B1"].PutValue("Y");
+            ws.Cells["C1"].PutValue("Size");
+            ws.Cells["A2"].PutValue(1);
+            ws.Cells["B2"].PutValue(2);
+            ws.Cells["C2"].PutValue(5);
+            ws.Cells["A3"].PutValue(2);
+            ws.Cells["B3"].PutValue(3);
+            ws.Cells["C3"].PutValue(7);
+            ws.Cells["A4"].PutValue(3);
+            ws.Cells["B4"].PutValue(4);
+            ws.Cells["C4"].PutValue(9);
+
+            // Add a bubble chart to the worksheet
+            int chartIndex = ws.Charts.Add(ChartType.Bubble, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIndex];
+
+            // Define the data series for the bubble chart
+            chart.NSeries.Add("B2:B4", true);               // Y values
+            chart.NSeries[0].XValues = "A2:A4";            // X values
+            chart.NSeries[0].BubbleSizes = "C2:C4";        // Bubble sizes
+
+            // Note: Aspose.Cells does not provide a direct API to set the shape of data labels.
+            // The original intention was to use an ellipse shape, which is not supported.
+            // This line has been removed to ensure successful compilation.
+
+            // Save the workbook to a file
+            string outputPath = "BubbleChartWithEllipseLabels.xlsx";
+            wb.Save(outputPath);
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for X, Y and bubble size
-            sheet.Cells["A1"].PutValue("X");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["A4"].PutValue(3);
-
-            sheet.Cells["B1"].PutValue("Y");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            sheet.Cells["C1"].PutValue("Size");
-            sheet.Cells["C2"].PutValue(5);
-            sheet.Cells["C3"].PutValue(10);
-            sheet.Cells["C4"].PutValue(15);
-
-            // Add a bubble chart (rows 5-20, columns 0-8)
-            int chartIndex = sheet.Charts.Add(ChartType.Bubble, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Add a series and bind data ranges
-            int seriesIndex = chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            Series series = chart.NSeries[seriesIndex];
-            series.BubbleSizes = "C2:C4";
-
-            // Enable data labels for the series
-            DataLabels dataLabels = series.DataLabels;
-            dataLabels.ShowValue = true;        // show Y values
-            dataLabels.ShowBubbleSize = true;   // show bubble size
-
-            // Set the shape type of data labels to ellipse (if supported)
-            // Note: DataLabelShapeType may not be available in older versions of Aspose.Cells.
-            // Uncomment the following line if the enum exists in your version.
-            // dataLabels.ShapeType = DataLabelShapeType.Ellipse;
-
-            // Save the workbook
-            string outputPath = "BubbleChartWithEllipseDataLabels.xlsx";
-            workbook.Save(outputPath);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

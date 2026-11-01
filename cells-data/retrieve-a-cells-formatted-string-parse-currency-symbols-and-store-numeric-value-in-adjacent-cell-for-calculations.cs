@@ -1,77 +1,87 @@
-// Title: Parse formatted currency strings in a column and write numeric values to the adjacent column using Aspose.Cells for .NET
-// AI Prompts: Read each cell in column A, strip currency symbols, convert the displayed text to a double, and store the result in column B with Aspose.Cells. | Implement a reusable method that cleans a formatted currency string and parses it using invariant and current culture settings in C#. | Enhance the example to support additional symbols and custom number formats while preserving the original workbook.
-// Common Searches: asp.net parse currency formatted cell to numeric value using Aspose.Cells | c# extract numeric amount from Excel cell showing $ or € with Aspose.Cells | how to write parsed double to adjacent column in an Aspose.Cells workbook | culture-aware currency parsing example for Aspose.Cells .NET
-// Tags: currency string to double Aspose.Cells | parse formatted cell value C# | write numeric result to adjacent column Aspose.Cells | culture-aware number parsing Aspose.Cells | remove currency symbols Aspose.Cells
+// Title: Read formatted currency strings from Excel cells and write parsed numeric values to the adjacent column using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells get displayed string of a cell in C# | C# parse currency symbols from Excel formatted values with Aspose.Cells | Convert Excel currency formatted text to decimal and store in next column using Aspose.Cells | Handle parentheses for negative numbers when extracting values from Excel in .NET | Batch process rows to extract numeric values from formatted currency cells with Aspose.Cells
+// Tags: GetStringValue display string Aspose.Cells | regex strip currency symbols C# | parse formatted currency to decimal Aspose.Cells | write numeric value to adjacent cell Excel Aspose.Cells | handle parentheses negative numbers Aspose.Cells
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace CurrencyParsingExample
+// The example loads an XLSX workbook with Aspose.Cells, iterates through each row of the first worksheet, retrieves each cell's displayed (formatted) string using GetStringValue with the DisplayString strategy, removes currency symbols and whitespace via a regular expression, converts parentheses‑enclosed values to negatives, parses the cleaned text to a decimal using invariant culture, writes the numeric result into the neighboring column, and saves the modified workbook.
+class CurrencyParser
 {
-    // The program loads an Excel workbook, iterates through each row in column A, retrieves the cell's displayed string, removes common currency symbols and whitespace, attempts to parse the cleaned text to a double using invariant and current culture formats, writes the numeric value to the neighboring cell in column B, and saves the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input and output file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Define the range to process (e.g., column A)
-            int maxRow = cells.MaxDataRow;
-            for (int row = 0; row <= maxRow; row++)
+            // Define source (A) and target (B) columns
+            int sourceColumn = 0; // A
+            int targetColumn = 1; // B
+
+            // Determine the range of rows that contain data
+            int startRow = 0;
+            int endRow = sheet.Cells.MaxDataRow; // last row with any data
+
+            for (int row = startRow; row <= endRow; row++)
             {
-                // Get the cell in column A
-                Cell sourceCell = cells[row, 0];
+                Cell sourceCell = sheet.Cells[row, sourceColumn];
 
-                // Retrieve the formatted string value (as seen in Excel)
-                string formattedText = sourceCell.StringValue;
+                // Skip empty or null cells
+                if (sourceCell == null || sourceCell.Type == CellValueType.IsNull)
+                    continue;
 
-                // Attempt to parse currency values (e.g., "$1,234.56", "€1.234,56")
-                // Remove common currency symbols and whitespace
-                string cleaned = formattedText.Replace("$", "")
-                                             .Replace("€", "")
-                                             .Replace("£", "")
-                                             .Replace("¥", "")
-                                             .Replace(" ", "")
-                                             .Trim();
+                // Get the displayed (formatted) string value of the cell
+                string formattedValue = sourceCell.GetStringValue(CellValueFormatStrategy.DisplayString);
 
-                // Remove grouping separators (commas or periods depending on culture)
-                // First try invariant culture (comma as thousands, dot as decimal)
-                double numericValue;
-                bool parsed = double.TryParse(cleaned,
-                                             NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-                                             CultureInfo.InvariantCulture,
-                                             out numericValue);
+                // Remove currency symbols and whitespace
+                string cleaned = Regex.Replace(formattedValue, @"[\p{Sc}\s]", "");
 
-                // If invariant parsing fails, try current culture (handles cases like "1.234,56")
-                if (!parsed)
+                // Handle parentheses for negative numbers (e.g., (123.45) => -123.45)
+                bool isNegative = false;
+                if (cleaned.StartsWith("(") && cleaned.EndsWith(")"))
                 {
-                    parsed = double.TryParse(cleaned,
-                                            NumberStyles.Any,
-                                            CultureInfo.CurrentCulture,
-                                            out numericValue);
+                    isNegative = true;
+                    cleaned = cleaned.Trim('(', ')');
                 }
 
-                // If parsing succeeded, store the numeric value in the adjacent cell (column B)
-                if (parsed)
+                // Parse the numeric part using invariant culture
+                if (decimal.TryParse(cleaned, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal numericValue))
                 {
-                    Cell targetCell = cells[row, 1];
+                    if (isNegative)
+                        numericValue = -numericValue;
+
+                    // Store the numeric value in the adjacent cell
+                    Cell targetCell = sheet.Cells[row, targetColumn];
                     targetCell.PutValue(numericValue);
                 }
-                else
-                {
-                    // Optionally, you can leave the target cell empty or write an indicator
-                    // cells[row, 1].PutValue("N/A");
-                }
+                // If parsing fails, the target cell is left blank
             }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Processing completed. Output saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

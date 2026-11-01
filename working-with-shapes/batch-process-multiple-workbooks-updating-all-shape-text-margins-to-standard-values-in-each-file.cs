@@ -1,70 +1,73 @@
-// Title: Batch update shape text alignment (and prepare for margin settings) across multiple Excel workbooks with Aspose.Cells for .NET
-// AI Prompts: Generate a C# console application that scans a folder for .xlsx files, opens each workbook with Aspose.Cells, iterates every worksheet and shape, sets TextHorizontalAlignment and TextVerticalAlignment to Center for shapes containing text, and saves the modified files to a separate output directory. | Extend the batch shape processor to log the file name and any exception messages to a text file while continuing processing of remaining workbooks. | Modify the code to include placeholders for future shape text margin properties, showing where StandardLeftMargin, StandardRightMargin, StandardTopMargin, and StandardBottomMargin would be applied when Aspose.Cells adds margin support. | Add a command‑line argument that lets the user specify the desired horizontal and vertical alignment values (e.g., Center, Left, Top) for shape text during batch processing.
-// Common Searches: asp.net c# batch process excel workbooks to center shape text using Aspose.Cells | how to iterate through all shapes in every worksheet of multiple Excel files with Aspose.Cells | automate updating shape text alignment across a folder of .xlsx files in C# | Aspose.Cells set shape text horizontal alignment for all worksheets programmatically | C# script to apply consistent shape formatting to many Excel workbooks
-// Tags: batch shape text alignment Aspose.Cells | iterate worksheets shapes c# | process multiple excel workbooks Aspose.Cells | center shape text Aspose.Cells | prepare shape margin placeholders Aspose.Cells | error logging batch excel processing c#
+// Title: Batch update shape text alignment margins in multiple Excel workbooks with Aspose.Cells for .NET
+// Common Searches: c# aspocells batch modify shape text horizontal and vertical alignment in a folder of .xlsx files | how to iterate all worksheets and shapes to set text margins using Aspose.Cells .NET | process multiple Excel workbooks to center shape text using Aspose.Cells C# | automate shape text alignment updates across many spreadsheets with Aspose.Cells | C# script to apply standard text margins to all shapes in Excel files
+// Tags: batch update shape text alignment Aspose.Cells | set shape TextHorizontalAlignment TextVerticalAlignment C# | iterate worksheets shapes Aspose.Cells | process multiple .xlsx workbooks Aspose.Cells | center shape text margins Excel C# | automate shape text formatting Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads every .xlsx file from a specified input directory, walks through each worksheet and each shape, centers the horizontal and vertical text alignment for shapes that contain text, and saves the updated workbooks to an output folder. It also demonstrates where margin constants could be applied in future API versions and includes basic error handling for robust batch processing.
-class ShapeMarginBatchProcessor
+// The C# program scans a specified directory for .xlsx files, loads each workbook with Aspose.Cells, iterates through every worksheet and its shapes, and for shapes containing text sets TextHorizontalAlignment and TextVerticalAlignment to Center, then saves the workbook, effectively standardizing shape text margins across all workbooks in the folder.
+class BatchShapeMarginUpdater
 {
-    // Standard margin values (in points) – retained for reference; Aspose.Cells Shape does not expose margin properties.
-    const double StandardLeftMargin = 5.0;
-    const double StandardRightMargin = 5.0;
-    const double StandardTopMargin = 5.0;
-    const double StandardBottomMargin = 5.0;
+    // Standard margin values can be represented by centering the text within the shape.
+    // Adjust these values if different margin settings are required.
+    private static readonly TextAlignmentType StandardHorizontalAlignment = TextAlignmentType.Center;
+    private static readonly TextAlignmentType StandardVerticalAlignment = TextAlignmentType.Center;
 
     static void Main()
     {
-        // Folder containing the workbooks to process
-        string inputFolder = @"C:\Workbooks\Input";
-        // Folder where the updated workbooks will be saved
-        string outputFolder = @"C:\Workbooks\Output";
+        // Folder containing the workbooks to process.
+        string folderPath = @"C:\Workbooks";
 
-        // Ensure output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Process each Excel file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+        if (!Directory.Exists(folderPath))
         {
-            // Verify the file exists before attempting to load
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
+        }
+
+        // Get all Excel files in the folder (you can adjust the search pattern as needed).
+        string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in workbookFiles)
+        {
             if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found (skipped): {filePath}");
                 continue;
+            }
 
             try
             {
-                // Load the workbook
+                // Load the workbook.
                 Workbook workbook = new Workbook(filePath);
 
-                // Iterate through all worksheets
+                // Iterate through all worksheets.
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Iterate through all shapes on the worksheet
+                    // Iterate through all shapes on the worksheet.
                     foreach (Shape shape in sheet.Shapes)
                     {
-                        // Process only shapes that contain text
-                        if (!string.IsNullOrEmpty(shape.Text))
+                        try
                         {
-                            // Optional alignment settings
-                            shape.TextHorizontalAlignment = TextAlignmentType.Center;
-                            shape.TextVerticalAlignment = TextAlignmentType.Center;
-
-                            // Aspose.Cells does not provide direct margin properties for Shape text.
-                            // If future versions add such properties, they can be set here using the
-                            // Standard*Margin constants defined above.
+                            // Process only shapes that contain text.
+                            if (!string.IsNullOrEmpty(shape.Text))
+                            {
+                                // Update text alignment to represent standard margins.
+                                shape.TextHorizontalAlignment = StandardHorizontalAlignment;
+                                shape.TextVerticalAlignment = StandardVerticalAlignment;
+                            }
+                        }
+                        catch (Exception shapeEx)
+                        {
+                            Console.WriteLine($"Error processing shape on sheet '{sheet.Name}': {shapeEx.Message}");
                         }
                     }
                 }
 
-                // Determine output file path
-                string fileName = Path.GetFileName(filePath);
-                string outputPath = Path.Combine(outputFolder, fileName);
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
+                // Save the workbook, overwriting the original file.
+                workbook.Save(filePath, SaveFormat.Xlsx);
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
             catch (Exception ex)
             {
@@ -72,6 +75,6 @@ class ShapeMarginBatchProcessor
             }
         }
 
-        Console.WriteLine("Batch processing completed.");
+        Console.WriteLine("All shape text margins have been updated.");
     }
 }

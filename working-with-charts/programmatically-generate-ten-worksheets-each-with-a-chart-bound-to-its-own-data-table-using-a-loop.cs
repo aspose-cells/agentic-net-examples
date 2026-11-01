@@ -1,71 +1,66 @@
-// Title: Create ten Excel worksheets each containing a column chart with Aspose.Cells for .NET using a loop
-// AI Prompts: Generate a workbook, add worksheets named Sheet1 through Sheet10, fill each with a two‑column table of sample data, and insert a column chart bound to that table using Aspose.Cells for .NET. | Write a helper method that receives a Worksheet and an index, populates cells A1:B6 with category/value rows, creates a Column chart referencing the data range, and call this method inside a for‑loop to produce charts on ten sheets.
-// Common Searches: asp.net how to add a column chart to each worksheet in a loop with Aspose.Cells | c# generate multiple Excel sheets each with its own chart using Aspose.Cells | sample code for creating ten worksheets with individual charts in Aspose.Cells | loop to populate worksheets and bind charts in Aspose.Cells C# | programmatically add charts to many sheets Aspose.Cells .NET example
-// Tags: Aspose.Cells create multiple worksheets with charts | C# loop add column chart per worksheet | populate worksheet data range for Aspose.Cells chart | Excel column chart generation using Aspose.Cells .NET | programmatic chart binding in Aspose.Cells workbook
+// Title: Generate a workbook with ten worksheets, each containing its own column chart bound to a data table using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a Workbook, loops to add ten worksheets, populates a small data table on each sheet, and inserts a column chart linked to that table with Aspose.Cells. | Produce a C# example that assigns a unique chart title and series name per worksheet while positioning the chart below the data range in a ten‑sheet workbook using Aspose.Cells.
+// Common Searches: how to add a column chart to each worksheet in a loop with Aspose.Cells C# | create multiple sheets with individual charts using Aspose.Cells for .NET | Aspose.Cells generate ten worksheets each with its own chart programmatically | C# loop to add worksheets and bind charts to data ranges in an Excel file | set chart title per worksheet Aspose.Cells example
+// Tags: Aspose.Cells create worksheets with column charts | C# loop add chart to each sheet | bind chart series to data range Aspose.Cells | generate Excel workbook with multiple charts .NET | set chart title per worksheet Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartLoopDemo
+// The sample creates a Workbook, iterates from 1 to 10 (using the default sheet for the first iteration and adding new sheets for the rest), fills cells A1:A5 with item labels and B1:B5 with values offset by the sheet index, adds a column chart positioned below the data, sets a sheet‑specific title and series name, and saves the file as TenSheetsWithCharts.xlsx.
+class Program
 {
-    // // This C# program creates a new workbook, adds ten worksheets named Sheet1‑Sheet10, fills each with a simple two‑column data table, adds a column chart bound to that data, and saves the workbook as TenSheetsWithCharts.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (default contains one worksheet)
+            // Create a new workbook (contains one default worksheet)
             Workbook workbook = new Workbook();
 
-            // Rename the default worksheet to "Sheet1"
-            Worksheet firstSheet = workbook.Worksheets[0];
-            firstSheet.Name = "Sheet1";
-
-            // Populate data and add a chart to the first sheet
-            PopulateSheetWithDataAndChart(firstSheet, 1);
-
-            // Create additional 9 worksheets (total 10) and add charts
-            for (int i = 2; i <= 10; i++)
+            // Generate 10 worksheets, each with its own data table and chart
+            for (int i = 1; i <= 10; i++)
             {
-                // Add a new worksheet with a specific name
-                Worksheet sheet = workbook.Worksheets.Add($"Sheet{i}");
+                Worksheet sheet;
 
-                // Fill the worksheet with sample data and attach a chart
-                PopulateSheetWithDataAndChart(sheet, i);
+                // Use the default worksheet for the first iteration, otherwise add a new one
+                if (i == 1)
+                {
+                    sheet = workbook.Worksheets[0];
+                    sheet.Name = $"Sheet{i}";
+                }
+                else
+                {
+                    sheet = workbook.Worksheets.Add($"Sheet{i}");
+                }
+
+                // Populate sample data in columns A (categories) and B (values) for rows 1‑5
+                for (int row = 0; row < 5; row++)
+                {
+                    sheet.Cells[row, 0].PutValue($"Item {row + 1}"); // Column A
+                    sheet.Cells[row, 1].PutValue(row + i);          // Column B (different per sheet)
+                }
+
+                // Add a column chart positioned below the data table
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 7);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set chart title
+                chart.Title.Text = $"Chart for Sheet{i}";
+
+                // Add a series: values from B1:B5 (categories are taken automatically)
+                int seriesIndex = chart.NSeries.Add("B1:B5", true);
+                // Set series name
+                chart.NSeries[seriesIndex].Name = $"Series {i}";
             }
 
             // Save the workbook to a file
-            workbook.Save("TenSheetsWithCharts.xlsx");
+            string outputPath = "TenSheetsWithCharts.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        /// <param name="sheet">Worksheet to populate.</param>
-        /// <param name="sheetIndex">Index used to generate distinct data values.</param>
-        private static void PopulateSheetWithDataAndChart(Worksheet sheet, int sheetIndex)
+        catch (Exception ex)
         {
-            // Add header labels
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-
-            // Add sample rows (5 categories)
-            for (int row = 2; row <= 6; row++)
-            {
-                sheet.Cells[row - 1, 0].PutValue($"Item {row - 1}");
-                // Generate distinct numeric values per sheet
-                sheet.Cells[row - 1, 1].PutValue((row - 1) * 10 * sheetIndex);
-            }
-
-            // Add a column chart positioned within the sheet
-            // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 25, 7);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Define the data range for the series (values) and categories (labels)
-            // Using A1-style notation; the sheet name is optional because the chart resides on the same sheet
-            chart.NSeries.Add("B2:B6", true);
-            chart.NSeries.CategoryData = "A2:A6";
-
-            // Optional: set a title for clarity
-            chart.Title.Text = $"Chart for {sheet.Name}";
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

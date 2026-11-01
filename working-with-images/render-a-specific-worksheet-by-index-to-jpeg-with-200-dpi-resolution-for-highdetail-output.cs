@@ -1,79 +1,60 @@
-// Title: Export a worksheet by zero‑based index to a 200 DPI JPEG image using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, selects a worksheet at index 2, and saves it as a JPEG image at 200 DPI. | Demonstrate how to configure ImageOrPrintOptions for 200 DPI horizontal and vertical resolution and use SheetRender to export a single worksheet page to JPEG. | Create a C# snippet that checks the worksheet index range, creates the output folder if missing, and handles errors while rendering the sheet to a high‑resolution JPEG.
-// Common Searches: Aspose.Cells C# export specific worksheet to JPEG with 200 DPI resolution | How to render an Excel sheet by index as a high‑resolution image in .NET | Set horizontal and vertical DPI when converting Excel worksheet to JPEG using Aspose.Cells | C# code to save the third sheet of an Excel workbook as a 200 DPI JPEG file | Validate worksheet index before exporting to image with Aspose.Cells
-// Tags: Aspose.Cells SheetRender JPEG export | ImageOrPrintOptions DPI configuration | C# high‑resolution Excel to image conversion | Check worksheet range before rendering | Create output directory for image export
+// Title: Render a worksheet by zero‑based index to a high‑resolution PNG image at 200 DPI using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# render specific sheet index to PNG with custom DPI | how to set 200 DPI when converting Excel worksheet to image using Aspose.Cells | C# SheetRender export first worksheet as high‑resolution PNG | ImageOrPrintOptions horizontal and vertical resolution settings for Excel to image conversion | save Excel worksheet as detailed PNG file using Aspose.Cells .NET API
+// Tags: worksheet index to PNG Aspose.Cells | 200 DPI image export Excel | SheetRender high resolution PNG | ImageOrPrintOptions resolution configuration | C# export specific sheet as image
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example loads a workbook, verifies the source file and output folder, ensures the requested zero‑based worksheet index is valid, sets ImageOrPrintOptions to 200 DPI horizontal and vertical resolution, creates a SheetRender for the selected worksheet, and renders the first page to a JPEG file.
-class WorksheetToJpeg
+// The example checks for the input Excel file, loads it into a Workbook, selects a worksheet by its zero‑based index, configures ImageOrPrintOptions with 200 dpi horizontal and vertical resolution, and uses SheetRender to render the first page of that worksheet to a PNG file, handling any loading or rendering errors.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.png";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            // Path to the source Excel file
-            string sourceFile = @"C:\Input\Workbook.xlsx";
-
-            // Verify that the source file exists
-            if (!File.Exists(sourceFile))
-            {
-                Console.WriteLine($"Source file not found: {sourceFile}");
-                return;
-            }
-
-            // Index of the worksheet to render (0‑based)
-            int worksheetIndex = 2; // example: third worksheet
-
-            // Path for the output JPEG image
-            string outputFile = @"C:\Output\Worksheet3.jpg";
-
-            // Ensure the output directory exists
-            string? outputDir = Path.GetDirectoryName(outputFile);
-            if (string.IsNullOrEmpty(outputDir))
-            {
-                Console.WriteLine("Invalid output path.");
-                return;
-            }
-
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(sourceFile);
-
-            // Ensure the requested index is within range
-            if (worksheetIndex < 0 || worksheetIndex >= workbook.Worksheets.Count)
-            {
-                Console.WriteLine("Worksheet index out of range.");
-                return;
-            }
-
-            // Configure rendering options with 200 DPI resolution
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                HorizontalResolution = 200,
-                VerticalResolution = 200
-                // Image format is inferred from the output file extension (JPEG)
-                // OnePagePerSheet = true // uncomment to fit the whole sheet on one page
-            };
-
-            // Create a SheetRender object for the target worksheet
-            SheetRender sheetRender = new SheetRender(workbook.Worksheets[worksheetIndex], options);
-
-            // Render the first (and only) page of the worksheet to an image
-            sheetRender.ToImage(0, outputFile);
-
-            Console.WriteLine($"Worksheet {worksheetIndex} rendered to JPEG at {outputFile}");
+            // Load the workbook from the file
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Index of the worksheet to render (0‑based)
+        int sheetIndex = 0;
+        Worksheet worksheet = workbook.Worksheets[sheetIndex];
+
+        // Configure image options: 200 DPI resolution (default format is PNG)
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        {
+            HorizontalResolution = 200,
+            VerticalResolution = 200
+        };
+
+        try
+        {
+            // Render the worksheet to an image (page 0)
+            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
+            sheetRender.ToImage(0, outputPath);
+            Console.WriteLine($"Worksheet rendered successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during rendering: {ex.Message}");
         }
     }
 }

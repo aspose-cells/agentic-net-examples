@@ -1,45 +1,55 @@
-// Title: Determine if an Excel .xlsx workbook is digitally signed using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells and returns true when the workbook contains at least one digital signature. | Create a function that safely checks the Workbook.DigitalSignatureCollection and handles missing files or absent signature collection. | Provide a C# example that prints "Workbook signed: true/false" after loading an Excel file and evaluating its digital signature status with error handling.
-// Common Searches: C# Aspose.Cells verify if an Excel file is signed | how to detect a signed workbook using Aspose.Cells .NET | read digital signatures from .xlsx with Aspose.Cells API | handle absent DigitalSignatureCollection in Aspose.Cells example
-// Tags: Aspose.Cells access signature data | C# verify Excel workbook signature presence | load .xlsx and inspect workbook signatures with Aspose.Cells | handle missing Excel file errors Aspose.Cells | detect signature existence in Excel workbook .NET
+// Title: How to detect a digital signature in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells check if .xlsx file has a digital signature | read digital signature count from workbook using Aspose.Cells .NET | use reflection to access DigitalSignatureCollection in Aspose.Cells | determine signed status of an Excel file programmatically with Aspose.Cells | verify workbook signature existence in C# Aspose.Cells example
+// Tags: Aspose.Cells signature collection size | C# workbook signed status detection | reflection access DigitalSignatureCollection | load Excel file and verify signature | check IsSigned property Aspose.Cells
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook via Aspose.Cells, safely accesses its DigitalSignatureCollection to determine whether any digital signatures are present, and outputs the signed status while handling missing files and unavailable properties.
+// The sample loads an Excel workbook from a specified path, safely checks for file existence, and uses reflection to retrieve the DigitalSignatureCollection count. It sets a boolean flag based on whether the count is greater than zero, indicating a digital signature, and prints the signed status while handling any runtime or reflection errors.
 class Program
 {
     static void Main()
     {
-        const string filePath = "input.xlsx";
+        const string inputPath = "input.xlsx";
 
         // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: File not found - {filePath}");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
         try
         {
-            // Load the Excel workbook from the specified file
-            // Use dynamic to access DigitalSignatureCollection without compile‑time binding
-            dynamic workbook = new Workbook(filePath);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            bool isSigned = false;
-
+            // Attempt to retrieve digital signature count via reflection
+            int signatureCount = 0;
             try
             {
-                // Attempt to read the digital signature collection
-                var signatureCollection = workbook.DigitalSignatureCollection;
-                isSigned = signatureCollection != null && signatureCollection.Count > 0;
+                PropertyInfo dsProp = workbook.GetType().GetProperty("DigitalSignatureCollection", BindingFlags.Public | BindingFlags.Instance);
+                if (dsProp != null)
+                {
+                    object dsCollection = dsProp.GetValue(workbook);
+                    if (dsCollection != null)
+                    {
+                        PropertyInfo countProp = dsCollection.GetType().GetProperty("Count", BindingFlags.Public | BindingFlags.Instance);
+                        if (countProp != null)
+                        {
+                            signatureCount = (int)countProp.GetValue(dsCollection);
+                        }
+                    }
+                }
             }
-            catch
+            catch (Exception reflEx)
             {
-                // If the property is unavailable, treat the workbook as unsigned
-                isSigned = false;
+                Console.WriteLine($"Reflection error while checking signatures: {reflEx.Message}");
             }
+
+            bool isSigned = signatureCount > 0;
 
             // Output the signature status
             Console.WriteLine($"Workbook signed: {isSigned}");

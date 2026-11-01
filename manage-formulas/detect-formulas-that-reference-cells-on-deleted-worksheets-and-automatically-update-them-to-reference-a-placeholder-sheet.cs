@@ -1,78 +1,94 @@
-// Title: Replace #REF! errors with a placeholder worksheet in Excel using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that adds a worksheet named "Placeholder" if it does not exist, then scans every cell in the workbook and rewrites any formula containing "#REF!" to reference the placeholder sheet. | Create a .NET routine that loads an existing .xlsx file, ensures a fallback sheet is present, updates formulas with broken sheet references (#REF!) to point to that fallback sheet, and saves the workbook.
-// Common Searches: Aspose.Cells C# replace #REF! errors after deleting a sheet | How to automatically fix broken worksheet references in an Excel file using Aspose.Cells | C# code to change formulas containing #REF! to point to a placeholder sheet | Detect and correct invalid sheet references in .xlsx with Aspose.Cells .NET
-// Tags: Aspose.Cells replace broken sheet references | C# update #REF! formulas in Excel | placeholder worksheet for invalid references | scan workbook cells for formula errors Aspose.Cells | auto-correct Excel formulas after sheet deletion .NET
+// Title: C# code to detect #REF! formulas caused by deleted worksheets and replace them with a placeholder sheet using Aspose.Cells
+// Common Searches: Aspose.Cells C# replace #REF! errors after deleting a worksheet | how to fix broken formulas referencing removed sheets in .NET Excel workbook | detect and update formulas containing #REF! using Aspose.Cells for .xlsx files | C# iterate cells to change #REF! to placeholder sheet in Excel workbook | automate placeholder sheet creation for broken references with Aspose.Cells
+// Tags: Aspose.Cells replace #REF! formulas | C# placeholder worksheet for broken references | detect deleted sheet references in Excel | iterate cells to fix formulas Aspose.Cells | update Excel #REF! errors .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook (or creates a new one), ensures a worksheet named "Placeholder" exists, scans every non‑placeholder sheet for formulas containing "#REF!", replaces the broken reference with "Placeholder!A1", and saves the updated workbook.
+class UpdateFormulasAfterSheetDeletion
 {
-    // The program loads an Excel workbook (or creates a new one), guarantees a worksheet named "Placeholder" exists, iterates through all used cells of each non‑placeholder sheet, replaces any formula containing "#REF!" with a reference to the placeholder sheet, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string placeholderName = "Placeholder";
+
+        Workbook workbook;
+
+        // Load workbook if it exists; otherwise create a new one
+        if (File.Exists(inputPath))
         {
             try
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-                const string placeholderSheetName = "Placeholder";
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException ex)
+            {
+                // Handle password‑protected or corrupted files gracefully
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                Console.WriteLine("Creating a new workbook instead.");
+                workbook = new Workbook();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Input file not found. Creating a new workbook.");
+            workbook = new Workbook();
+        }
 
-                // Load existing workbook if the file exists; otherwise create a new workbook
-                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
-
-                // Ensure a placeholder worksheet exists
-                bool placeholderExists = false;
-                foreach (Worksheet ws in workbook.Worksheets)
+        try
+        {
+            // Ensure a placeholder sheet exists (create if missing)
+            Worksheet placeholderSheet = null;
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                if (ws.Name.Equals(placeholderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (ws.Name.Equals(placeholderSheetName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        placeholderExists = true;
-                        break;
-                    }
+                    placeholderSheet = ws;
+                    break;
                 }
-                if (!placeholderExists)
+            }
+
+            if (placeholderSheet == null)
+            {
+                placeholderSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+                placeholderSheet.Name = placeholderName;
+                placeholderSheet.Cells["A1"].PutValue("Placeholder");
+            }
+
+            // Iterate through all worksheets and cells to fix formulas containing #REF!
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Name.Equals(placeholderName, StringComparison.OrdinalIgnoreCase))
+                    continue; // skip placeholder sheet
+
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    workbook.Worksheets.Add(placeholderSheetName);
-                }
-
-                // Iterate through worksheets (skip the placeholder) and fix formulas containing #REF!
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    if (sheet.Name.Equals(placeholderSheetName, StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    // Get the used range of the sheet
-                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
-                    if (usedRange == null)
-                        continue;
-
-                    foreach (Cell cell in usedRange)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        // Check if the cell contains a formula
-                        if (cell.IsFormula)
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula) && cell.Formula.Contains("#REF!"))
                         {
-                            string formula = cell.Formula;
-                            if (!string.IsNullOrEmpty(formula) && formula.Contains("#REF!"))
-                            {
-                                // Replace broken reference with placeholder sheet name
-                                string updatedFormula = formula.Replace("#REF!", placeholderSheetName + "!");
-                                cell.Formula = updatedFormula;
-                            }
+                            // Replace broken reference with placeholder cell reference
+                            string updatedFormula = cell.Formula.Replace("#REF!", $"{placeholderName}!A1");
+                            cell.Formula = updatedFormula;
                         }
                     }
                 }
+            }
 
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

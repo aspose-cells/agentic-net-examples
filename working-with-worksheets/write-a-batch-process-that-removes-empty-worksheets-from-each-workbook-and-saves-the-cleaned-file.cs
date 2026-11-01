@@ -1,67 +1,57 @@
-// Title: C# batch program to delete empty worksheets from all Excel workbooks in a folder using Aspose.Cells
-// AI Prompts: Write a C# console application that scans a given directory for .xlsx files, loads each workbook with Aspose.Cells, removes worksheets whose MaxDataRow and MaxDataColumn are negative, adds a placeholder sheet if the workbook becomes empty, and saves the cleaned files to an output folder. | Update the removal logic so that worksheets containing only formatting (no cell values) are also treated as empty before the workbook is saved.
-// Common Searches: how to programmatically delete blank sheets from multiple Excel files using Aspose.Cells in C# | batch remove empty worksheets from a folder of .xlsx files with Aspose.Cells .NET | C# code to clean Excel workbooks by removing sheets that have no data rows | Aspose.Cells remove worksheets with only formatting and no values | ensure at least one worksheet remains after deleting empty sheets in Aspose.Cells
-// Tags: remove empty worksheets Aspose.Cells .NET | batch clean Excel workbooks C# | delete blank sheets programmatically Aspose.Cells | add placeholder worksheet if none remain Aspose.Cells | filter worksheets by MaxDataRow Aspose.Cells | process multiple .xlsx files Aspose.Cells
+// Title: C# batch program to delete empty worksheets from multiple .xlsx workbooks using Aspose.Cells
+// AI Prompts: Write C# code that iterates over every .xlsx file in a directory, loads each workbook with Aspose.Cells, removes worksheets that contain no used cells, and saves the cleaned workbook to a separate output folder. | Create a reusable C# method that determines whether an Aspose.Cells Worksheet is empty by checking MaxDataRow and MaxDataColumn, and use it inside a loop that processes a batch of Excel files.
+// Common Searches: aspocells c# delete blank worksheets from a folder of excel files | how to programmatically delete empty sheets in multiple workbooks using Aspose.Cells | batch clean Excel workbooks by removing worksheets with no data in .NET | c# script to iterate over .xlsx files and drop worksheets that contain no cells | detect and delete empty worksheets in Aspose.Cells before saving
+// Tags: Aspose.Cells batch worksheet removal | C# delete blank sheets .xlsx | detect empty worksheet MaxDataRow Aspose | automated Excel workbook cleanup .NET | process multiple workbooks Aspose.Cells
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Linq;
 
-namespace WorkbookCleaner
+// The program scans a specified input folder for .xlsx files, loads each workbook with Aspose.Cells, identifies worksheets that have no data (MaxDataRow/MaxDataColumn < 0), removes those empty worksheets, and saves the cleaned workbooks to an output directory.
+class Program
 {
-    // A C# console utility that iterates over every .xlsx file in a source folder, uses Aspose.Cells to identify and delete worksheets with no data (or only formatting), guarantees at least one sheet remains, and writes the cleaned workbooks to a target directory.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Folder containing the original workbooks
+        string inputFolder = @"C:\InputWorkbooks";
+
+        // Folder where cleaned workbooks will be saved
+        string outputFolder = @"C:\CleanedWorkbooks";
+        Directory.CreateDirectory(outputFolder);
+
+        // Process each .xlsx file in the input folder
+        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            // Folder containing the workbooks to process
-            string inputFolder = @"C:\InputWorkbooks";
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-            // Folder where cleaned workbooks will be saved
-            string outputFolder = @"C:\CleanedWorkbooks";
+            // Identify indexes of worksheets that have no data
+            var emptySheetIndexes = workbook.Worksheets
+                .Cast<Worksheet>()
+                .Select((sheet, idx) => new { sheet, idx })
+                .Where(x => IsWorksheetEmpty(x.sheet))
+                .Select(x => x.idx)
+                .OrderByDescending(i => i) // delete from highest index to keep remaining indexes valid
+                .ToList();
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Process each Excel file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Remove each empty worksheet
+            foreach (int idx in emptySheetIndexes)
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Collect indexes of worksheets that are empty
-                List<int> emptySheetIndexes = new List<int>();
-
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // A worksheet is considered empty when it has no data rows and no data columns
-                    if (sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0)
-                    {
-                        emptySheetIndexes.Add(sheet.Index);
-                    }
-                }
-
-                // Remove empty worksheets starting from the highest index to avoid shifting issues
-                emptySheetIndexes.Sort();
-                emptySheetIndexes.Reverse();
-                foreach (int index in emptySheetIndexes)
-                {
-                    workbook.Worksheets.RemoveAt(index);
-                }
-
-                // Aspose.Cells requires at least one worksheet; add a blank one if all were removed
-                if (workbook.Worksheets.Count == 0)
-                {
-                    workbook.Worksheets.Add();
-                }
-
-                // Save the cleaned workbook to the output folder (overwrites if exists)
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                workbook.Save(outputPath);
+                workbook.Worksheets.RemoveAt(idx);
             }
 
-            Console.WriteLine("Processing complete. Cleaned workbooks are saved in: " + outputFolder);
+            // Save the cleaned workbook (overwrites if same name exists in output folder)
+            string fileName = Path.GetFileName(filePath);
+            string outputPath = Path.Combine(outputFolder, fileName);
+            workbook.Save(outputPath);
         }
+    }
+
+    // Returns true if the worksheet contains no used cells
+    static bool IsWorksheetEmpty(Worksheet sheet)
+    {
+        // MaxDataRow/Column are -1 when the sheet has no data
+        return sheet.Cells.MaxDataRow < 0 || sheet.Cells.MaxDataColumn < 0;
     }
 }

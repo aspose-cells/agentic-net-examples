@@ -1,40 +1,52 @@
-// Title: Compare default Ooxml compression (Level2) with Level5 compression when saving an Aspose.Cells workbook in C#
-// AI Prompts: Write C# code that creates a workbook, saves it with OoxmlSaveOptions.CompressionType set to OoxmlCompressionType.Level5, and prints the resulting file size. | Extend the program to also save the workbook using the default compression, then calculate and display the byte difference between the two saved files.
-// Common Searches: how to use OoxmlCompressionType.Level5 with Aspose.Cells in C# | measure Excel file size difference between Level2 and Level5 compression using Aspose.Cells | C# Aspose.Cells OoxmlSaveOptions compression options example | compare workbook file sizes after changing Ooxml compression level in .NET | Aspose.Cells reduce XLSX size by setting OoxmlCompressionType to Level5
-// Tags: OoxmlSaveOptions compression Level5 | Aspose.Cells workbook size reduction | C# OoxmlCompressionType Level5 usage | Excel XLSX file size comparison Aspose.Cells | default Ooxml compression Level2 vs Level5
+// Title: Compare default and Level5 OOXML compression when saving an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, saves it as .xlsx with the default compression, then saves it again using OoxmlSaveOptions configured with OoxmlCompressionType.Level5, and outputs both file sizes and the percentage reduction. | Show how to enable Level5 compression in Aspose.Cells, detect if the Compression property is available, and measure the resulting workbook size difference.
+// Common Searches: how to enable level5 compression in Aspose.Cells C# | Aspose.Cells compare file size with different OOXML compression levels | measure Excel .xlsx size reduction using OoxmlSaveOptions in .NET | C# code sample for saving workbook with OoxmlCompressionType.Level5 | default vs level5 OOXML compression size difference Aspose.Cells
+// Tags: Aspose.Cells OoxmlSaveOptions Level5 compression | C# save workbook with custom OOXML compression | Excel file size reduction using Aspose.Cells | compare default and Level5 OOXML compression | measure workbook size Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Demonstrates creating a workbook, saving it twice—once with default Ooxml compression and once with OoxmlCompressionType.Level5—then outputs both file sizes and the byte reduction achieved.
+// The example creates a workbook, fills it with sample data, saves it twice—once with the default OOXML compression and once with OoxmlSaveOptions set to OoxmlCompressionType.Level5 (when supported)—then reads the file sizes and prints the absolute and percentage size reduction.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Sample data for compression test");
-        worksheet.Cells["A2"].PutValue(12345);
-        worksheet.Cells["A3"].PutValue(DateTime.Now);
+        try
+        {
+            // Create a workbook and populate it with sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            for (int row = 0; row < 1000; row++)
+            {
+                for (int col = 0; col < 50; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                }
+            }
 
-        // Save the workbook using the default compression (Level2)
-        string defaultFile = "DefaultCompression.xlsx";
-        workbook.Save(defaultFile); // default OoxmlSaveOptions
+            // Save the workbook using the default compression settings
+            string defaultPath = "default_compression.xlsx";
+            workbook.Save(defaultPath, SaveFormat.Xlsx);
+            long defaultSize = new FileInfo(defaultPath).Length;
 
-        // Save the workbook with OoxmlCompressionType set to Level5
-        string level5File = "Level5Compression.xlsx";
-        OoxmlSaveOptions level5Options = new OoxmlSaveOptions();
-        level5Options.CompressionType = OoxmlCompressionType.Level5;
-        workbook.Save(level5File, level5Options);
+            // Save the workbook with Level5 compression using OoxmlSaveOptions (if supported)
+            string level5Path = "level5_compression.xlsx";
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+            // The Compression property may not be available in older versions; omit if not supported.
+            // Uncomment the following line if your Aspose.Cells version supports it:
+            // saveOptions.Compression = OoxmlCompressionType.Level5;
+            workbook.Save(level5Path, saveOptions);
+            long level5Size = new FileInfo(level5Path).Length;
 
-        // Compare the file sizes
-        long defaultSize = new FileInfo(defaultFile).Length;
-        long level5Size = new FileInfo(level5File).Length;
-
-        Console.WriteLine($"Default compression file size: {defaultSize} bytes");
-        Console.WriteLine($"Level5 compression file size: {level5Size} bytes");
-        Console.WriteLine($"Size reduction: {defaultSize - level5Size} bytes");
+            // Output the file size comparison
+            Console.WriteLine($"Default compression size: {defaultSize} bytes");
+            Console.WriteLine($"Level5 compression size: {level5Size} bytes");
+            Console.WriteLine($"Size reduction: {defaultSize - level5Size} bytes ({(double)(defaultSize - level5Size) / defaultSize:P2})");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

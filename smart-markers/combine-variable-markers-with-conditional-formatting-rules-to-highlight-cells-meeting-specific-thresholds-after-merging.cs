@@ -1,75 +1,94 @@
-// Title: How to merge a header row and apply three value‑based conditional formatting rules to a column using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that merges cells A1:B1, writes a title, populates A2:A10 with numbers, and creates three conditional formatting rules: values >70 red, 40‑70 yellow, <40 green. | Demonstrate saving the workbook as an XLS file with the MergeAreas option enabled after the conditional formats are applied.
-// Common Searches: Aspose.Cells C# merge cells and add conditional formatting based on numeric thresholds | example of multiple cell value conditions (greater than, between, less than) in Aspose.Cells | how to enable MergeAreas when saving an XLS workbook with Aspose.Cells | apply red, yellow, green background colors to an Excel column using Aspose.Cells conditional formatting | C# code to create a header row and conditional formatting after merging cells in Aspose.Cells
-// Tags: Aspose.Cells merge header cells C# | Aspose.Cells conditional formatting multiple rules | conditional formatting cellvalue thresholds Aspose.Cells | Save workbook with MergeAreas option Aspose.Cells | C# Excel XLS output Aspose.Cells
+// Title: Apply smart markers and conditional formatting to merged cells with threshold‑based highlighting using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a smart marker to a merged cell and apply conditional formatting with Aspose.Cells C# | Aspose.Cells C# conditional formatting based on another cell's value for a merged header | set red fill for cells greater than 100 using Aspose.Cells .NET | highlight merged header yellow when B3 exceeds 150 with Aspose.Cells C# | combine smart markers with expression‑based conditional formatting in Aspose.Cells
+// Tags: smart marker insertion merged cell Aspose.Cells | conditional formatting expression based on another cell Aspose.Cells | red fill rule for values greater than 100 Aspose.Cells | yellow fill rule for merged header when B3>150 Aspose.Cells | C# Aspose.Cells example creating output.xlsx
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingAfterMerge
+// The code creates a workbook, merges cells B2:D2, inserts a smart marker {Total} into the merged range, populates column B with incremental numbers, adds a red fill conditional format for cells with values >100, adds a yellow fill conditional format for the merged header when B3 >150, and saves the file as output.xlsx.
+class Program
 {
-    // The example creates a workbook, merges A1:B1 as a centered header, fills A2:A10 with values 10‑90, and adds three conditional formatting rules (red for >70, yellow for 40‑70, light green for <40) to that column. The file is saved as an XLS with MergeAreas enabled to handle merged cells efficiently.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data in column A (rows 2 to 10)
-            for (int i = 1; i <= 9; i++) // zero‑based index, row 1 = A2
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Merge cells B2:D2 (zero‑based indices: row 1, column 1 to row 1, column 3)
+            sheet.Cells.Merge(1, 1, 1, 3);
+
+            // Insert a variable marker into the merged cell
+            Cell mergedCell = sheet.Cells[1, 1];
+            mergedCell.PutValue("Total: {Total}");
+
+            // Populate sample data in column B (rows 3‑12) for conditional formatting demo
+            for (int i = 2; i < 12; i++) // rows 2‑11 (zero‑based)
             {
-                cells[i, 0].PutValue(i * 10); // Values: 10,20,...,90
+                sheet.Cells[i, 1].PutValue((i - 1) * 20); // values: 20,40,...200
             }
 
-            // Merge header cells A1:B1 and set a title
-            cells.Merge(0, 0, 1, 2);
-            cells[0, 0].PutValue("Sales Data");
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-            headerStyle.Font.IsBold = true;
-            headerStyle.Font.Size = 14;
-            cells[0, 0].SetStyle(headerStyle);
+            // -------------------------------------------------
+            // Conditional Formatting #1: Highlight cells > 100
+            // -------------------------------------------------
+            // Add a new conditional formatting collection
+            int cfIndex1 = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection1 = sheet.ConditionalFormattings[cfIndex1];
 
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+            // Define the target range B3:B12 (rows 2‑11, column 1)
+            CellArea range1 = new CellArea { StartRow = 2, StartColumn = 1, EndRow = 11, EndColumn = 1 };
+            cfCollection1.AddArea(range1);
 
-            // Define the range to which the formatting will be applied (A2:A10)
-            CellArea dataArea = new CellArea
-            {
-                StartRow = 1,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            fcc.AddArea(dataArea);
+            // Add a condition: cell value greater than 100
+            int conditionIdx1 = cfCollection1.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                "100",
+                null);
+            FormatCondition condition1 = cfCollection1[conditionIdx1];
 
-            // Condition 1: Values greater than 70 -> Red background
-            int condIdx1 = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "70", null);
-            FormatCondition fc1 = fcc[condIdx1];
-            fc1.Style.BackgroundColor = Color.Red;
-            fc1.Style.Font.Color = Color.White;
+            // Set the style for the condition (solid red fill)
+            Style style1 = workbook.CreateStyle();
+            style1.ForegroundColor = Color.Red;
+            style1.Pattern = BackgroundType.Solid;
+            condition1.Style = style1;
 
-            // Condition 2: Values between 40 and 70 -> Yellow background
-            int condIdx2 = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.Between, "40", "70");
-            FormatCondition fc2 = fcc[condIdx2];
-            fc2.Style.BackgroundColor = Color.Yellow;
-            fc2.Style.Font.Color = Color.Black;
+            // -------------------------------------------------
+            // Conditional Formatting #2: Highlight merged cell if B3 > 150
+            // -------------------------------------------------
+            int cfIndex2 = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection2 = sheet.ConditionalFormattings[cfIndex2];
 
-            // Condition 3: Values less than 40 -> Green background
-            int condIdx3 = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "40", null);
-            FormatCondition fc3 = fcc[condIdx3];
-            fc3.Style.BackgroundColor = Color.LightGreen;
-            fc3.Style.Font.Color = Color.Black;
+            // Target range is the merged cell B2:D2
+            CellArea mergedArea = new CellArea { StartRow = 1, StartColumn = 1, EndRow = 1, EndColumn = 3 };
+            cfCollection2.AddArea(mergedArea);
 
-            // Save the workbook with MergeAreas enabled to optimize merged cells handling
-            XlsSaveOptions saveOptions = new XlsSaveOptions();
-            saveOptions.MergeAreas = true;
-            workbook.Save("ConditionalFormattingAfterMerge.xls", saveOptions);
+            // Add an expression condition referencing B3 (cell B3 is row 2, column 1)
+            int conditionIdx2 = cfCollection2.AddCondition(
+                FormatConditionType.Expression,
+                OperatorType.None,
+                "B3>150",
+                null);
+            FormatCondition condition2 = cfCollection2[conditionIdx2];
+
+            // Set the style for the condition (solid yellow fill)
+            Style style2 = workbook.CreateStyle();
+            style2.ForegroundColor = Color.Yellow;
+            style2.Pattern = BackgroundType.Solid;
+            condition2.Style = style2;
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

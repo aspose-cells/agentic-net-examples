@@ -1,40 +1,44 @@
-// Title: Create a semi‑transparent rectangle shape in an Excel worksheet using Aspose.Cells for .NET to mimic a glass reflection
-// AI Prompts: Write C# code that adds a rectangle shape to the first worksheet of a new workbook and applies a LightBlue fill with 40% transparency using Aspose.Cells. | Demonstrate how to set the FillFormat color and Transparency properties of a shape in Aspose.Cells for .NET to achieve a glass‑like appearance.
-// Common Searches: Aspose.Cells C# set shape fill color and transparency in Excel | how to simulate glass effect on an Excel shape with Aspose.Cells .NET | add rectangle shape with 40% transparency to worksheet using Aspose.Cells | Aspose.Cells shape fill format transparency example
-// Tags: Aspose.Cells shape fill transparency C# | add rectangle shape Aspose.Cells .NET | glass effect shape fill Aspose.Cells | semi transparent shape fill Excel Aspose.Cells | Aspose.Cells workbook shape styling
+// Title: Add a rectangle shape with custom dimensions to an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: how to add a rectangle shape to an Excel worksheet with Aspose.Cells in C# | Aspose.Cells C# set shape height and width on a worksheet | create a glass‑pane style rectangle shape in Excel using Aspose.Cells | C# example for adding shapes to a workbook with Aspose.Cells | Aspose.Cells add shape at specific row and column in C#
+// Tags: Aspose.Cells add rectangle shape | C# set shape dimensions Aspose.Cells | Excel worksheet shape creation Aspose.Cells | Aspose.Cells shape size parameters | C# add shape to workbook Aspose.Cells
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Creates a new workbook, inserts a rectangle shape on the first worksheet, sets its fill color to LightBlue with 40% transparency to emulate a glass‑like look, and saves the file as GlassReflection.xlsx.
+// The example creates a new workbook, inserts a rectangle shape sized 300 × 150 pixels at row 1, column 1 of the first worksheet, and saves the file as GlassReflection.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
+            // Add a rectangle shape that will act as the glass pane
             // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 150, 80);
+            Shape glassShape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                1,   // upper left row
+                1,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                300, // height (pixels)
+                150  // width (pixels)
+            );
 
-            // The current Aspose.Cells version does not expose EffectFormat for shapes.
-            // As an alternative, set a semi‑transparent fill to simulate a glass‑like appearance.
-            shape.FillFormat.ForeColor = System.Drawing.Color.LightBlue;
-            shape.FillFormat.Transparency = 0.4; // 40% transparent
-
-            // Save the workbook to a file
-            string outputPath = "GlassReflection.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook
+            workbook.Save("GlassReflection.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

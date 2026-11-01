@@ -1,68 +1,77 @@
-// Title: C# – Validate that the 'Invoice' and 'Summary' worksheets exist in an Aspose.Cells workbook after loading
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells and throws an InvalidOperationException when either the 'Invoice' or 'Summary' worksheet is missing. | Create a reusable C# helper method using Aspose.Cells that receives a Workbook and a list of sheet names, checks each for presence, and raises an exception for any absent sheet.
-// Common Searches: asp.net load excel with Aspose.Cells and ensure Invoice sheet exists | c# Aspose.Cells validate presence of Summary worksheet after opening workbook | how to throw error if required worksheet not found in Aspose.Cells workbook | check multiple required worksheets in an Aspose.Cells workbook using C#
-// Tags: Aspose.Cells worksheet existence check | C# validate required Excel sheets | Aspose.Cells InvalidOperationException missing sheet | Excel workbook required sheet verification C# | Aspose.Cells load workbook with default sheets
+// Title: How to validate that "Invoice" and "Summary" worksheets exist in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# check if worksheet named Invoice exists in workbook | C# validate required sheets Invoice and Summary before processing Excel file | Throw exception when mandatory worksheet is missing using Aspose.Cells .NET | How to ensure specific worksheets are present in an Excel file with Aspose.Cells | Load Excel workbook and verify required sheet names with Aspose.Cells API
+// Tags: Aspose.Cells worksheet existence validation | C# required worksheet check Excel | Aspose.Cells missing sheet exception handling | validate mandatory sheets Aspose.Cells .NET | load workbook verify sheet names Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The program loads an Excel file using Aspose.Cells, creates it with 'Invoice' and 'Summary' sheets if it does not exist, and then validates that both worksheets are present, throwing an InvalidOperationException if either is missing.
-class Program
+// The example demonstrates loading an Excel workbook with Aspose.Cells in C#, checking for the presence of the "Invoice" and "Summary" worksheets, and throwing a detailed exception if either is missing. It also includes file‑not‑found handling and wraps other errors, confirming successful validation with a console message.
+public class WorkbookValidator
 {
-    static void Main()
+    /// <param name="filePath">Path to the Excel file to validate.</param>
+    public void ValidateRequiredSheets(string filePath)
     {
+        // Ensure the file exists before attempting to load.
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"The file \"{filePath}\" was not found.");
+        }
+
         try
         {
-            // Path to the Excel file to be loaded
-            string filePath = "input.xlsx";
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(filePath);
 
-            Workbook workbook;
+            // Attempt to retrieve the required worksheets by name.
+            Worksheet invoiceSheet = workbook.Worksheets["Invoice"];
+            Worksheet summarySheet = workbook.Worksheets["Summary"];
 
-            // Ensure the input file exists; if not, create a new workbook with required sheets
-            if (File.Exists(filePath))
+            // If either worksheet is not found, throw an informative exception.
+            if (invoiceSheet == null || summarySheet == null)
             {
-                // Load the workbook from the specified file
-                workbook = new Workbook(filePath);
-            }
-            else
-            {
-                // Create a new workbook and add the required worksheets
-                workbook = new Workbook();
-                workbook.Worksheets.Clear(); // Remove the default sheet
-                workbook.Worksheets.Add("Invoice");
-                workbook.Worksheets.Add("Summary");
-                // Optionally save the newly created workbook for future runs
-                workbook.Save(filePath);
-                Console.WriteLine($"Input file not found. A new workbook with required sheets has been created at \"{filePath}\".");
+                string missingSheets = "";
+                if (invoiceSheet == null) missingSheets += "\"Invoice\" ";
+                if (summarySheet == null) missingSheets += "\"Summary\" ";
+                throw new Exception($"The workbook is missing required worksheet(s): {missingSheets.Trim()}.");
             }
 
-            // Validate that the required worksheets exist
-            ValidateWorksheets(workbook, new[] { "Invoice", "Summary" });
+            // Both required worksheets are present.
+            Console.WriteLine("Validation succeeded: Required worksheets are present.");
+        }
+        catch (Exception ex) when (!(ex is FileNotFoundException))
+        {
+            // Wrap any loading or processing errors.
+            throw new Exception($"An error occurred while validating the workbook: {ex.Message}", ex);
+        }
+    }
+}
 
-            // Further processing can continue here
-            Console.WriteLine("All required worksheets are present.");
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Example usage: provide the Excel file path as the first argument.
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Please provide the path to the Excel file as a command-line argument.");
+            return;
+        }
+
+        string filePath = args[0];
+        WorkbookValidator validator = new WorkbookValidator();
+
+        try
+        {
+            validator.ValidateRequiredSheets(filePath);
+        }
+        catch (FileNotFoundException fnfEx)
+        {
+            Console.WriteLine($"File error: {fnfEx.Message}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Checks for the presence of each required worksheet name
-    static void ValidateWorksheets(Workbook workbook, string[] requiredSheets)
-    {
-        foreach (string sheetName in requiredSheets)
-        {
-            // Attempt to retrieve the worksheet by name
-            Worksheet sheet = workbook.Worksheets[sheetName];
-
-            // If the worksheet is not found, throw an exception
-            if (sheet == null)
-            {
-                throw new InvalidOperationException($"Required worksheet \"{sheetName}\" is missing.");
-            }
+            Console.WriteLine($"Validation error: {ex.Message}");
         }
     }
 }

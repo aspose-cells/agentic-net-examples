@@ -1,51 +1,42 @@
-// Title: Load only the VBA project from an .xlsm workbook using Aspose.Cells LoadDataFilterOptions.VBA in C#
-// AI Prompts: Write C# code that opens an .xlsm file with Aspose.Cells using LoadDataFilterOptions.VBA to load only the VBA project and enumerate its modules. | Show how to check for a VBA project in a workbook and print each module name while preventing worksheet data from being loaded with Aspose.Cells. | Demonstrate using Aspose.Cells LoadDataFilterOptions to retrieve only macro code from an Excel file and list the module names in C#.
-// Common Searches: Aspose.Cells C# load only VBA project from xlsm without loading worksheets | How to use LoadDataFilterOptions.VBA to read macro modules in Aspose.Cells | Retrieve VBA modules from Excel file using Aspose.Cells LoadDataFilterOptions | C# example for loading VBA project only with Aspose.Cells
-// Tags: load VBA project with LoadDataFilterOptions | Aspose.Cells VBA module extraction C# | filter workbook loading to VBA only | read Excel macro project Aspose.Cells | C# load .xlsm VBA project without worksheets
+// Title: How to load an Excel workbook and access its VBA project with Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells load workbook and read VBA project without opening Excel | retrieve macro code from XLSX using Aspose.Cells LoadOptions in .NET | access VbaProject object after loading Excel file with Aspose.Cells C# example | read VBA project from Excel file programmatically using Aspose.Cells library | save workbook after extracting VBA project using Aspose.Cells in C#
+// Tags: Aspose.Cells load workbook VBA project C# | VbaProject access using LoadOptions | extract macro data from XLSX Aspose.Cells | programmatic VBA project retrieval .NET | save workbook after VBA extraction Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 using System;
 using System.IO;
 
-// The example checks for the existence of an .xlsm file, loads it with Aspose.Cells using LoadDataFilterOptions.VBA to load only the VBA project, accesses the VbaProject, iterates through its Modules collection, and prints each module name while handling errors.
+// The example demonstrates loading an XLSX workbook with Aspose.Cells LoadOptions in C#, accessing the workbook's VbaProject to work with macro code, and optionally saving the workbook to a new file.
 class Program
 {
     static void Main()
     {
-        string inputPath = "input.xlsm";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"File not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook; VBA project is loaded automatically if present
-            Workbook workbook = new Workbook(inputPath);
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the VBA project
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook (VBA project will be loaded automatically if present)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Access the VBA project (if needed)
             VbaProject vbaProject = workbook.VbaProject;
 
-            if (vbaProject != null)
-            {
-                // List all VBA modules in the project
-                foreach (VbaModule module in vbaProject.Modules)
-                {
-                    Console.WriteLine($"Module Name: {module.Name}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No VBA project found in the workbook.");
-            }
+            // Save the workbook (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

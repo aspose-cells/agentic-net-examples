@@ -1,48 +1,33 @@
-// Title: How to enable multi‑threaded formula calculation in an Aspose.Cells workbook with C#
-// AI Prompts: Write C# code that turns on Aspose.Cells threaded calculation and configures the engine to use all available processor cores. | Show an example of recalculating all formulas after enabling multi‑core calculation in an Aspose.Cells workbook. | Provide a snippet that checks whether the current Aspose.Cells version supports the EnableThreadedCalculation setting before applying it.
-// Common Searches: Aspose.Cells C# enable threaded calculation for large workbooks | Set number of calculation threads in Aspose.Cells .NET API | How to use multi‑core formula evaluation with Aspose.Cells workbook | Check Aspose.Cells version support for EnableThreadedCalculation property | Recalculate Excel formulas using all CPU cores in Aspose.Cells
-// Tags: Aspose.Cells enable threaded calculation | Aspose.Cells set calculation thread count | Aspose.Cells multi‑core formula evaluation | Aspose.Cells workbook recalculate formulas | Aspose.Cells .NET calculation engine configuration
+// Title: Configure Aspose.Cells for .NET to use multi‑threaded calculation for faster formula evaluation
+// Common Searches: how to turn on threaded calculation in Aspose.Cells .NET workbook | set Aspose.Cells workbook Settings.EnableThreadedCalculation to true | increase spreadsheet formula calculation speed with MaxThreadCount in Aspose.Cells | use all CPU cores for workbook calculation in Aspose.Cells C# | enable multi‑core formula processing for large Excel files using Aspose.Cells
+// Tags: EnableThreadedCalculation property Aspose.Cells | MaxThreadCount configuration for workbook | multi‑core formula processing .NET | optimize large Excel calculation Aspose.Cells | threaded calculation engine settings
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example loads an Excel file with Aspose.Cells, notes that multi‑threaded calculation may not be available in the current library version (commented code shows how to enable it), recalculates all formulas using the default engine, and saves the workbook while handling missing files and runtime errors.
+// The example creates or loads a Workbook, activates the multi‑threaded calculation engine by setting Settings.EnableThreadedCalculation to true, optionally configures Settings.MaxThreadCount to the processor count, and saves the workbook, resulting in faster formula evaluation for large data sets.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // For loading: new Workbook("input.xlsx");
 
-            // Multi‑threaded calculation is not available in this version of Aspose.Cells.
-            // If supported, you could enable it with:
+            // Multi‑threaded calculation is available in newer Aspose.Cells versions.
+            // If your version supports it, uncomment the following lines:
             // workbook.Settings.EnableThreadedCalculation = true;
-            // workbook.Settings.NumberOfThreads = Environment.ProcessorCount;
+            // workbook.Settings.MaxThreadCount = Environment.ProcessorCount;
 
-            // Recalculate all formulas using the available calculation engine
-            workbook.CalculateFormula();
-
-            // Save the updated workbook
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook processed and saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

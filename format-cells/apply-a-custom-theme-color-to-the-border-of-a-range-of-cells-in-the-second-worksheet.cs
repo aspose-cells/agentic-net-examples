@@ -1,59 +1,39 @@
-// Title: Apply a custom teal theme color to the borders of a cell range in the second worksheet using Aspose.Cells for .NET
-// AI Prompts: Create a thin teal border around cells B2:D5 on the second worksheet and save the workbook as Output.xlsx. | Instantiate a System.Drawing.Color and set it as the border color for all sides of a range using an Aspose.Cells style object. | Apply a style with thin borders and a custom color to a specific range by configuring a StyleFlag to apply all style elements.
-// Common Searches: Aspose.Cells C# set a unique border hue for a range on a specific sheet | How to apply a theme color to cell borders on the second sheet with Aspose.Cells .NET | Using StyleFlag to apply border formatting to a range in Aspose.Cells for .NET | Apply teal border to B2:D5 in an Aspose.Cells workbook
-// Tags: border color customization Aspose.Cells .NET | apply style to worksheet range Aspose.Cells | thin border line style C# | StyleFlag All=true border style application | color object for Excel styling Aspose.Cells
+// Title: Set a custom theme color for the borders of a cell range on the second worksheet using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set custom theme color for range borders on second worksheet | How to apply thin blue borders to B2:D5 in a specific worksheet with Aspose.Cells | Using StyleFlag to modify only border colors in an Aspose.Cells workbook | Apply custom RGB border color to a cell range in Aspose.Cells .NET | Create and style borders for a range on a newly added worksheet in C#
+// Tags: custom theme border color Aspose.Cells | apply style to range borders C# | second worksheet border styling Aspose.Cells | StyleFlag borders only .NET | RGB border color Aspose.Cells
 
-using System;
-using Aspose.Cells;
-using System.Drawing;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// // This program creates a new workbook, adds a second worksheet, defines the range B2:D5, creates a style with thin borders, sets a custom teal color for all four borders, applies the style to the range using a StyleFlag, and saves the file as Output.xlsx.
-class Program
+// Add a second worksheet (index 1)
+Aspose.Cells.Worksheet sheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
+sheet2.Name = "SecondSheet";
+
+// Define the range to which the border will be applied (e.g., B2:D5)
+Aspose.Cells.Range range = sheet2.Cells.CreateRange("B2", "D5");
+
+// Create a style object
+Aspose.Cells.Style style = workbook.CreateStyle();
+
+// Set the border style (continuous line)
+style.Borders[Aspose.Cells.BorderType.BottomBorder].LineStyle = Aspose.Cells.CellBorderType.Thin;
+style.Borders[Aspose.Cells.BorderType.TopBorder].LineStyle = Aspose.Cells.CellBorderType.Thin;
+style.Borders[Aspose.Cells.BorderType.LeftBorder].LineStyle = Aspose.Cells.CellBorderType.Thin;
+style.Borders[Aspose.Cells.BorderType.RightBorder].LineStyle = Aspose.Cells.CellBorderType.Thin;
+
+// Apply a custom theme color to the borders (e.g., a shade of blue)
+System.Drawing.Color customThemeColor = System.Drawing.Color.FromArgb(0, 112, 192); // Custom theme color
+style.Borders[Aspose.Cells.BorderType.BottomBorder].Color = customThemeColor;
+style.Borders[Aspose.Cells.BorderType.TopBorder].Color = customThemeColor;
+style.Borders[Aspose.Cells.BorderType.LeftBorder].Color = customThemeColor;
+style.Borders[Aspose.Cells.BorderType.RightBorder].Color = customThemeColor;
+
+// Apply the style to the entire range
+range.ApplyStyle(style, new Aspose.Cells.StyleFlag()
 {
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook
-            var workbook = new Workbook();
+    // Apply border settings only
+    Borders = true
+});
 
-            // Add a second worksheet (index 1)
-            workbook.Worksheets.Add("SecondSheet");
-            var sheet = workbook.Worksheets[1];
-
-            // Define the range whose borders will be styled (e.g., B2:D5)
-            var range = sheet.Cells.CreateRange("B2:D5");
-
-            // Create a new style object
-            var style = workbook.CreateStyle();
-
-            // Set thin border lines for all four sides
-            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-
-            // Define a custom theme color (example: teal)
-            var customColor = Color.FromArgb(0, 128, 128);
-
-            // Apply the custom color to each border side
-            style.Borders[BorderType.LeftBorder].Color = customColor;
-            style.Borders[BorderType.RightBorder].Color = customColor;
-            style.Borders[BorderType.TopBorder].Color = customColor;
-            style.Borders[BorderType.BottomBorder].Color = customColor;
-
-            // Define which style elements to apply (all in this case)
-            var styleFlag = new StyleFlag { All = true };
-
-            // Apply the modified style to the range
-            range.ApplyStyle(style, styleFlag);
-
-            // Save the workbook to a file
-            workbook.Save("Output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-}
+// Save the workbook to a file
+workbook.Save("Output.xlsx");

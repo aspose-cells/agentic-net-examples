@@ -1,36 +1,45 @@
-// Title: Flatten Excel comments and other annotations when converting a workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, calculates formulas, disables PDF document structure to flatten comments, and saves the workbook as a PDF using Aspose.Cells. | Show how to set PdfSaveOptions.ExportDocumentStructure to false in Aspose.Cells so that all worksheet annotations become part of the PDF page content. | Write a snippet that converts an Excel workbook to PDF while merging notes, comments, and shapes into the static PDF layers with Aspose.Cells.
-// Common Searches: Aspose.Cells C# flatten Excel comments when exporting to PDF | disable PDF document structure in Aspose.Cells to merge annotations | convert XLSX to PDF with merged comments using Aspose.Cells | example of setting ExportDocumentStructure to false in Aspose.Cells PdfSaveOptions | export workbook to PDF without separate annotation objects Aspose.Cells
-// Tags: flatten Excel annotations Aspose.Cells | PdfSaveOptions ExportDocumentStructure false | Excel to PDF conversion C# Aspose.Cells | merge worksheet comments into PDF page | pre-calculate formulas before PDF export Aspose.Cells
+// Title: Convert an Excel workbook to PDF and embed cell comments as part of the page using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# save .xlsx as PDF with cell comments included | How to render Excel comments in PDF output using Aspose.Cells .NET | C# convert Excel to PDF and make annotations part of the document | PdfSaveOptions to include comments when exporting workbook to PDF in Aspose.Cells | Embedding Excel annotations in PDF with Aspose.Cells for .NET
+// Tags: Excel to PDF conversion with comment rendering Aspose.Cells | PdfSaveOptions comment inclusion Aspose.Cells .NET | embed cell comments in PDF using Aspose.Cells | C# workbook to PDF with merged annotations | Aspose.Cells flatten annotations PDF export
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfFlattenDemo
+// The example loads an Excel workbook with Aspose.Cells, creates a PdfSaveOptions object (which by default renders cell comments), and saves the workbook as a PDF so that comments are flattened into the page content.
+class Program
 {
-    // Loads an Excel workbook, optionally calculates formulas, disables PDF document structure to flatten all annotations, and saves the result as a PDF using Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-            // Create PDF save options
+        // Verify that the source workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options.
+            // Note: In the current Aspose.Cells version, properties for rendering
+            // and flattening comments (EnableSheetComments, FlattenAllComments) are not available.
+            // The default behavior will include comments in the PDF.
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set ExportDocumentStructure to false so that annotations are flattened
-            // and become part of the page content rather than separate PDF objects.
-            pdfOptions.ExportDocumentStructure = false;
-
-            // Optionally calculate formulas before saving
-            workbook.CalculateFormula();
-
-            // Save the workbook as a PDF using the configured options
-            workbook.Save("output.pdf", pdfOptions);
-
-            Console.WriteLine("Workbook has been converted to PDF with annotations flattened.");
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

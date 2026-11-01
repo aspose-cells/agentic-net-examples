@@ -1,116 +1,141 @@
-// Title: Batch synchronize mismatched Excel theme colors across workbooks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a reference .xlsx workbook with Aspose.Cells, iterates over all other .xlsx files in a folder, compares each ThemeColorType (Accent1‑Accent6, Hyperlink, etc.) to the reference, updates any differing colors using SetThemeColor, and saves the modified files. | Generate a method that takes a source workbook path and a collection of target workbook paths, copies the full theme palette from the source to each target with GetThemeColor and SetThemeColor, and returns a list of files that were changed. | Create a console application that logs which workbooks required theme synchronization versus those already matching, using Aspose.Cells theme APIs and handling missing or corrupted files gracefully.
-// Common Searches: aspnet batch update Excel theme colors with Aspose.Cells | c# compare workbook theme palette and copy missing colors | how to ensure consistent theme colors across multiple .xlsx files using Aspose.Cells | automate Excel theme synchronization for a folder of workbooks in .NET | detect theme color differences between Excel files programmatically
-// Tags: Aspose.Cells batch theme palette update | C# GetThemeColor SetThemeColor usage | Excel workbook theme consistency check | Automated Excel theme color copy | Programmatic Excel theme alignment across multiple files
+// Title: Programmatically synchronize Excel workbook theme colors across multiple files using Aspose.Cells for .NET
+// Common Searches: how to copy theme colors from a reference Excel workbook to other workbooks with Aspose.Cells C# | batch update mismatched theme colors in multiple .xlsx files using Aspose.Cells .NET | detect and align Excel workbook theme colors across a project in C# | Aspose.Cells set specific ThemeColorType programmatically in .NET | C# code to ensure consistent Excel themes in a set of workbooks
+// Tags: Aspose.Cells set theme color programmatically | synchronize Excel workbook themes batch | detect mismatched Excel theme colors .NET | copy theme colors between workbooks Aspose | align Excel theme across multiple files C#
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // For ThemeColorType enum
 
-// The example scans a directory for .xlsx files, treats the first workbook as the reference theme source, compares each defined ThemeColorType (Accent1‑Accent6, Hyperlink, etc.) with the reference, updates any mismatched colors using SetThemeColor, overwrites the original files, and logs the synchronization results.
-class ThemeSynchronizer
+namespace ThemeSyncDemo
 {
-    // Define which theme colors to compare/synchronize.
-    private static readonly ThemeColorType[] ThemeColorsToCheck = new ThemeColorType[]
+    // The example defines a ThemeSynchronizer class that loads a reference workbook, extracts its theme colors via GetThemeColor, and then iterates through additional workbooks. For each workbook it compares every ThemeColorType with the reference, applies any differing colors using SetThemeColor, and saves the file only when changes are needed, handling missing files and exceptions while logging the process.
+    public static class ThemeSynchronizer
     {
-        ThemeColorType.Accent1,
-        ThemeColorType.Accent2,
-        ThemeColorType.Accent3,
-        ThemeColorType.Accent4,
-        ThemeColorType.Accent5,
-        ThemeColorType.Accent6,
-        ThemeColorType.Hyperlink,
-        ThemeColorType.FollowedHyperlink,
-        ThemeColorType.Text1,
-        ThemeColorType.Background1,
-        ThemeColorType.Text2,
-        ThemeColorType.Background2
-    };
-
-    static void Main()
-    {
-        try
+        /// <param name="workbookPaths">Full paths of the workbooks to process.</param>
+        public static void SynchronizeThemes(IEnumerable<string> workbookPaths)
         {
-            // Folder containing the workbooks to process.
-            string folderPath = @"C:\Workbooks";
+            if (workbookPaths == null) throw new ArgumentNullException(nameof(workbookPaths));
 
-            if (!Directory.Exists(folderPath))
+            var paths = new List<string>(workbookPaths);
+            if (paths.Count == 0) return; // Nothing to do
+
+            // Ensure the reference workbook exists
+            string referencePath = paths[0];
+            if (!File.Exists(referencePath))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
+                Console.WriteLine($"Reference file not found: {referencePath}");
                 return;
             }
 
-            // Load all Excel files in the folder.
-            string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-            if (files.Length == 0)
+            // Load the reference workbook and capture its theme colors
+            Dictionary<ThemeColorType, Color> referenceColors;
+            try
             {
-                Console.WriteLine("No workbooks found.");
+                var referenceWorkbook = new Workbook(referencePath);
+                referenceColors = GetThemeColors(referenceWorkbook);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load reference workbook '{referencePath}': {ex.Message}");
                 return;
             }
 
-            // Load the first workbook and treat its theme as the reference.
-            if (!File.Exists(files[0]))
+            // Process remaining workbooks
+            for (int i = 1; i < paths.Count; i++)
             {
-                Console.WriteLine($"Reference file not found: {files[0]}");
-                return;
-            }
-
-            Workbook referenceWb = new Workbook(files[0]);
-
-            // Process remaining workbooks.
-            for (int i = 1; i < files.Length; i++)
-            {
-                string file = files[i];
-
-                if (!File.Exists(file))
+                string path = paths[i];
+                if (!File.Exists(path))
                 {
-                    Console.WriteLine($"File not found, skipping: {file}");
+                    Console.WriteLine($"File not found: {path}");
                     continue;
                 }
 
                 try
                 {
-                    Workbook wb = new Workbook(file);
-                    bool mismatched = false;
+                    var wb = new Workbook(path);
+                    var currentColors = GetThemeColors(wb);
 
-                    // Compare each defined theme color.
-                    foreach (ThemeColorType type in ThemeColorsToCheck)
+                    bool needsSave = false;
+                    foreach (var kvp in referenceColors)
                     {
-                        Color refColor = referenceWb.GetThemeColor(type);
-                        Color curColor = wb.GetThemeColor(type);
+                        ThemeColorType type = kvp.Key;
+                        Color refColor = kvp.Value;
+                        Color curColor = currentColors.ContainsKey(type) ? currentColors[type] : Color.Empty;
 
-                        if (!refColor.Equals(curColor))
+                        if (curColor.ToArgb() != refColor.ToArgb())
                         {
-                            mismatched = true;
-                            // Synchronize the color to the reference.
+                            // Apply the reference color to the workbook
                             wb.SetThemeColor(type, refColor);
+                            needsSave = true;
                         }
                     }
 
-                    if (mismatched)
+                    if (needsSave)
                     {
-                        // Save the workbook with synchronized theme (overwrite original).
-                        wb.Save(file);
-                        Console.WriteLine($"Synchronized theme for: {Path.GetFileName(file)}");
+                        try
+                        {
+                            wb.Save(path, SaveFormat.Xlsx);
+                            Console.WriteLine($"Synchronized theme for: {path}");
+                        }
+                        catch (Exception saveEx)
+                        {
+                            Console.WriteLine($"Failed to save workbook '{path}': {saveEx.Message}");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine($"Theme already matches for: {Path.GetFileName(file)}");
+                        Console.WriteLine($"Theme already synchronized: {path}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(file)}': {ex.Message}");
+                    Console.WriteLine($"Error processing '{path}': {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all theme colors defined in a workbook.
+        /// </summary>
+        /// <param name="workbook">The workbook to inspect.</param>
+        /// <returns>Dictionary of theme colors.</returns>
+        private static Dictionary<ThemeColorType, Color> GetThemeColors(Workbook workbook)
+        {
+            var dict = new Dictionary<ThemeColorType, Color>();
+
+            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+            {
+                try
+                {
+                    // Use Workbook.GetThemeColor to obtain the color for the given type
+                    Color clr = workbook.GetThemeColor(type);
+                    dict[type] = clr;
+                }
+                catch
+                {
+                    // Ignore unsupported types
                 }
             }
 
-            Console.WriteLine("Theme synchronization completed.");
+            return dict;
         }
-        catch (Exception ex)
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main()
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            var workbookFiles = new List<string>
+            {
+                @"C:\Projects\Workbook1.xlsx",
+                @"C:\Projects\Workbook2.xlsx",
+                @"C:\Projects\Workbook3.xlsx"
+            };
+
+            ThemeSynchronizer.SynchronizeThemes(workbookFiles);
         }
     }
 }

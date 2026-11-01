@@ -1,27 +1,47 @@
-// Title: Unhide column B, set width to 50 points, and export worksheet to PDF with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook, reveal column B, set its width to 50 points, and save the worksheet as a PDF using Aspose.Cells in C#. | Using Aspose.Cells for .NET, unhide column B, assign a 50‑point width, and export the workbook to PDF. | In C#, programmatically display column B, set column width to 50 points, then convert the first worksheet to a PDF with Aspose.Cells.
-// Common Searches: how to make hidden columns visible and set width in Aspose.Cells before PDF conversion | adjust column width in points with Aspose.Cells and generate PDF output | Aspose.Cells .NET export Excel to PDF after column formatting
-// Tags: column B visibility Aspose.Cells | column width 50 points Aspose.Cells | PDF export of worksheet Aspose.Cells | Excel column formatting C# Aspose.Cells | convert Excel to PDF Aspose.Cells .NET
+// Title: Unhide column B, set its width to 50 points, and export the worksheet to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# unhide column B and set column width before saving as PDF | set column width to 50 points with Aspose.Cells and export worksheet to PDF | C# code to make a hidden column visible using Aspose.Cells | how to adjust column visibility and width in an Excel workbook then convert to PDF with Aspose.Cells | Aspose.Cells .NET export worksheet to PDF after column formatting
+// Tags: unhide column B Aspose.Cells | set column width 50 Aspose.Cells | column formatting for PDF export Aspose.Cells | worksheet to PDF conversion Aspose.Cells | C# Aspose.Cells column visibility
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example loads 'input.xlsx', unhides column B (index 1) and sets its width to 50 points, then saves the workbook as 'output.pdf' using the PDF save format.
+// The example loads an Excel workbook (creating a blank file if missing), unhides column B, sets its width to 50 character units, and then saves the worksheet as a PDF using Aspose.Cells for .NET, with error handling.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Ensure the input file exists; create a blank workbook if it does not.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+                workbook.Save(inputPath);   // optionally save the placeholder file
+            }
 
-        // Unhide column B (zero‑based index 1) and set its width to 50 points
-        worksheet.Cells.UnhideColumn(1, 50);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Unhide column B (index 1) and set its width
+            Column columnB = sheet.Cells.Columns[1];
+            columnB.IsHidden = false;               // Ensure the column is visible
+            columnB.Width = 50;                      // Set width (in character units)
+
+            // Export the worksheet to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

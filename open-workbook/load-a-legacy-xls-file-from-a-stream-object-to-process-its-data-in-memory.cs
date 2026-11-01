@@ -1,79 +1,73 @@
-// Title: Load an Excel 97‑2003 (.xls) workbook from a Stream with Aspose.Cells for .NET and read its cells in memory
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions to open an .xls file from a Stream and prints every used cell value. | Show how to catch and log exceptions when loading a legacy XLS workbook from a Stream with Aspose.Cells. | Provide an example that iterates over the used range of the first worksheet after loading an Excel 97‑2003 file from a Stream.
-// Common Searches: aspnet load xls from memory stream using aspose.cells | c# read legacy Excel 97-2003 workbook without saving to disk | how to use LoadOptions Excel97To2003 with Aspose.Cells | iterate over used cells in an XLS workbook loaded from a stream | exception handling for loading XLS stream Aspose.Cells .NET
-// Tags: load xls stream Aspose.Cells | LoadOptions Excel97To2003 | iterate used cells Aspose.Cells worksheet | in‑memory processing of legacy XLS | exception handling Aspose.Cells load
+// Title: Load a legacy XLS workbook from a Stream and iterate its cells using Aspose.Cells for .NET
+// Common Searches: how to open an old .xls file from a MemoryStream with Aspose.Cells in C# | reading cell values from a legacy Excel workbook without saving to disk using Aspose.Cells | Aspose.Cells LoadOptions auto-detect XLS format from a stream | enumerate used range of a workbook loaded from a stream in Aspose.Cells .NET | process in‑memory Excel 97‑2003 file with Aspose.Cells C#
+// Tags: load xls workbook from stream Aspose.Cells | auto-detect xls format with LoadOptions | enumerate used cells Aspose.Cells | read first worksheet cell values C# | in-memory legacy Excel processing Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example demonstrates loading a legacy Excel 97‑2003 (.xls) file directly from a Stream using Aspose.Cells LoadOptions, accessing the first worksheet, determining its used range, and printing each cell's value to the console while handling potential errors.
-public class ExcelProcessor
+namespace AsposeCellsExample
 {
-    // Loads a legacy XLS file from a Stream and processes its data in memory
-    public void ProcessXlsFromStream(Stream xlsStream)
+    // Demonstrates loading a legacy XLS workbook directly from a Stream using Aspose.Cells' Workbook constructor with LoadOptions, accessing the first worksheet, determining the used range via MaxDataRow/MaxDataColumn, iterating each cell to output its address and value, and handling errors with try‑catch.
+    public class ExcelProcessor
     {
-        try
+        public void ProcessXls(Stream xlsStream)
         {
-            // Set load options to explicitly treat the stream as an Excel 97-2003 file
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Excel97To2003);
-
-            // Load the workbook from the provided stream using the load options
-            Workbook workbook = new Workbook(xlsStream, loadOptions);
-
-            // Access the first worksheet (you can change the index as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Determine the used range of the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Example processing: iterate through all used cells and output their values
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Load the workbook from the provided stream (auto-detect format)
+                LoadOptions loadOptions = new LoadOptions();
+                Workbook workbook = new Workbook(xlsStream, loadOptions);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Determine the used range
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                // Iterate through the used cells and output values
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    object value = cells[row, col].Value;
-                    Console.Write($"{value}\t");
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        object value = cells[row, col].Value;
+                        Console.WriteLine($"R{row + 1}C{col + 1}: {value}");
+                    }
                 }
-                Console.WriteLine();
             }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error processing XLS stream: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error processing XLS stream: {ex.Message}");
+            }
         }
     }
-}
 
-public class Program
-{
-    // Entry point for the application
-    public static void Main(string[] args)
+    public class Program
     {
-        // Expect a file path as the first argument; fallback to a default name
-        string filePath = args.Length > 0 ? args[0] : "sample.xls";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
+        public static void Main(string[] args)
         {
-            Console.Error.WriteLine($"File not found: {filePath}");
-            return;
-        }
+            string filePath = args.Length > 0 ? args[0] : "sample.xls";
 
-        try
-        {
-            // Open the file as a read‑only stream and process it
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            if (!File.Exists(filePath))
             {
-                ExcelProcessor processor = new ExcelProcessor();
-                processor.ProcessXlsFromStream(fs);
+                Console.Error.WriteLine($"File not found: {filePath}");
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+
+            try
+            {
+                using (FileStream stream = File.OpenRead(filePath))
+                {
+                    ExcelProcessor processor = new ExcelProcessor();
+                    processor.ProcessXls(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

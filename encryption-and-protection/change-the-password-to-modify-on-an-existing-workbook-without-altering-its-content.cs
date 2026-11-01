@@ -1,52 +1,44 @@
-// Title: Replace the modify‑only password of an existing XLSX workbook using Aspose.Cells for .NET without changing its data
-// AI Prompts: Load an existing .xlsx file with Aspose.Cells, apply a new modify‑only password via Workbook.Protect, and save the workbook unchanged. | Use C# and Aspose.Cells to change the protection password that restricts modifications on an Excel file while preserving all worksheets. | Programmatically update the modify password of a protected workbook without altering its content using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# change modify password of existing Excel file | How to set a new modify‑only password on an XLSX workbook using Aspose.Cells | Replace workbook protection password without modifying data in .NET | Update Excel file modify password programmatically with Aspose.Cells | Change protection password type All for existing workbook Aspose.Cells
-// Tags: Aspose.Cells workbook.Protect modify password | replace modify password XLSX C# | set protection type all Aspose.Cells | preserve worksheet data while protecting workbook | load workbook with LoadOptions Aspose.Cells | save workbook unchanged Aspose.Cells
+// Title: Change the modify (write‑protection) password of an existing Excel workbook with Aspose.Cells for .NET without affecting its data
+// Common Searches: Aspose.Cells C# replace workbook write protection password while keeping content | how to set a new modify password on an existing .xlsx using Aspose.Cells .NET | programmatically update Excel file write‑protect password without re‑saving data in C# | change existing workbook's modify password with Aspose.Cells LoadOptions example | C# code to change Excel file's write‑protection password using Aspose.Cells API
+// Tags: Aspose.Cells write protection password update | C# change Excel modify password | Aspose.Cells LoadOptions workbook loading | preserve workbook content during protection change | Aspose.Cells set new write‑protect password
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example loads an existing XLSX workbook using Aspose.Cells, assigns a new modify‑only password with Workbook.Protect(ProtectionType.All, newPassword), and saves the file to a new location while leaving all worksheet content untouched.
+// The example loads an existing XLSX file (creating a blank workbook if it does not exist), assigns a new write‑protection password via Workbook.Settings.WriteProtection.Password, and saves the file, leaving all worksheet data and formatting untouched.
 class Program
 {
     static void Main()
     {
-        // Path to the existing workbook
-        string inputPath = "input.xlsx";
-
-        // New password that will be required to modify the workbook
-        string newModifyPassword = "newPassword";
-
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Path to the workbook
+            string filePath = "input.xlsx";
+
+            // Ensure the file exists; create an empty workbook if it does not.
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
+                var newWb = new Workbook();
+                newWb.Save(filePath, SaveFormat.Xlsx);
             }
 
-            // Load the workbook (no opening password is assumed)
+            // Load options (set opening password if required)
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            // If the workbook has an opening password, set it here:
-            // loadOptions.Password = "openingPassword";
+            // loadOptions.Password = "oldOpenPassword"; // uncomment and set if needed
 
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Set the password required to modify the workbook.
-            // Use Protect with ProtectionType.All to require a modify password.
-            workbook.Protect(ProtectionType.All, newModifyPassword);
+            // Set a new password for write‑protection
+            workbook.Settings.WriteProtection.Password = "NewModifyPassword";
 
-            // Save the workbook without altering its content
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook with the updated protection
+            workbook.Save(filePath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

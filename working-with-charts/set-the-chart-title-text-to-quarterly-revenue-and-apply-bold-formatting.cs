@@ -1,60 +1,62 @@
-// Title: Set a bold, visible title for a column chart in Aspose.Cells using C#
-// AI Prompts: Create a new workbook, populate it with quarterly revenue data, add a column chart, set the chart title to "Quarterly Revenue", make the title visible, and apply bold font styling with Aspose.Cells for .NET. | Modify an existing Aspose.Cells chart by changing its title text, enabling title visibility, and configuring the title font to be bold, size 14, and black in C#. | Generate an Excel file that contains a column chart whose title is formatted with custom font properties (bold, specific size, color) using the Aspose.Cells API in C#.
-// Common Searches: C# code to make an Aspose.Cells chart title bold and visible | how to change font style of a chart title in Aspose.Cells .NET | set custom title text and formatting for column chart using Aspose.Cells C# | Aspose.Cells example for formatting chart title font properties
-// Tags: Aspose.Cells chart title bold formatting | column chart title font customization Aspose.Cells | set chart title visibility Aspose.Cells .NET | apply custom font size color to Excel chart title C# | Aspose.Cells set chart title text programmatically
+// Title: Set a bold chart title "Quarterly Revenue" in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing workbook or create a new one with Aspose.Cells, ensure a column chart exists on the first worksheet, assign the title text "Quarterly Revenue" to the chart, enable bold styling for the title font, and save the file. | Using C#, retrieve the first chart in the first worksheet of an Excel file with Aspose.Cells, change its title to "Quarterly Revenue", set the title font weight to bold, and write the updated workbook to disk.
+// Common Searches: Aspose.Cells C# set chart title text to Quarterly Revenue | how to make chart title bold with Aspose.Cells for .NET | C# Aspose.Cells change column chart title and apply bold formatting | programmatically add a chart title and style it in an Excel file using Aspose.Cells | Aspose.Cells example for updating chart title font weight
+// Tags: modify chart title Aspose.Cells | apply bold font to chart title Aspose.Cells | ensure column chart exists Aspose.Cells | access first worksheet chart Aspose.Cells | save workbook after chart changes Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates creating a workbook, adding quarterly revenue data, inserting a column chart, setting the chart title to "Quarterly Revenue", making the title visible, and applying bold, size‑14, black font before saving the Excel file.
-    public class SetChartTitleBoldDemo
+    // The code loads an existing workbook or creates a new one, guarantees a column chart is present on the first worksheet, sets the chart's title to "Quarterly Revenue", makes the title bold, and saves the updated workbook as output.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Ensure the input file exists; otherwise create a minimal workbook with a chart.
+                Workbook workbook;
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    // Create a new workbook with one worksheet.
+                    workbook = new Workbook();
+                    Worksheet ws = workbook.Worksheets[0];
+                    ws.Name = "Sheet1";
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+                    // Add a simple chart to avoid index errors later.
+                    int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+                    Chart placeholderChart = ws.Charts[chartIndex];
+                    placeholderChart.Title.Text = "Placeholder";
+                }
 
-                // Add sample data for the chart
-                sheet.Cells["A1"].PutValue("Quarter");
-                sheet.Cells["A2"].PutValue("Q1");
-                sheet.Cells["A3"].PutValue("Q2");
-                sheet.Cells["A4"].PutValue("Q3");
-                sheet.Cells["A5"].PutValue("Q4");
+                // Get the first worksheet.
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                sheet.Cells["B1"].PutValue("Revenue");
-                sheet.Cells["B2"].PutValue(15000);
-                sheet.Cells["B3"].PutValue(20000);
-                sheet.Cells["B4"].PutValue(18000);
-                sheet.Cells["B5"].PutValue(22000);
+                // Ensure there is at least one chart; add one if none exist.
+                if (worksheet.Charts.Count == 0)
+                {
+                    int chartIdx = worksheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+                    worksheet.Charts[chartIdx].Title.Text = "New Chart";
+                }
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 15);
-                Chart chart = sheet.Charts[chartIndex];
+                // Access the first chart.
+                Chart chart = worksheet.Charts[0];
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // Set chart title text and make it visible
+                // Set the chart title and apply bold formatting.
                 chart.Title.Text = "Quarterly Revenue";
-                chart.Title.IsVisible = true;
-
-                // Apply bold formatting and other font properties to the title
                 chart.Title.Font.IsBold = true;
-                chart.Title.Font.Size = 14;
-                chart.Title.Font.Color = Color.Black;
 
-                // Save the workbook
-                string outputPath = "QuarterlyRevenueChart.xlsx";
+                // Save the modified workbook.
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
@@ -62,14 +64,6 @@ namespace AsposeCellsExamples
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetChartTitleBoldDemo.Run();
         }
     }
 }

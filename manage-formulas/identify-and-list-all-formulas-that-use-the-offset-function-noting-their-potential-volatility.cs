@@ -1,57 +1,88 @@
-// Title: Find and list all Excel formulas that use the OFFSET function and mark them as volatile with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells to scan every worksheet in a workbook, detect formulas containing the OFFSET function, and output each cell’s address, formula, and a volatility label. | Extend the sample to count how many OFFSET formulas appear on each worksheet and display a summary after listing the individual cells. | Create a reusable C# method that accepts any function name (e.g., OFFSET, INDIRECT) and returns a collection of cell addresses and formulas that include that function, leveraging Aspose.Cells.
-// Common Searches: aspnet find OFFSET formulas in an Excel workbook using Aspose.Cells | c# list volatile Excel functions with Aspose.Cells library | how to detect OFFSET function in cell formulas with Aspose.Cells .NET | enumerate formulas that contain OFFSET in all sheets using Aspose.Cells | retrieve cell address and formula for volatile functions in Excel via C#
-// Tags: scan worksheets for OFFSET formulas Aspose.Cells | detect volatile functions in Excel .NET | list cell formulas containing specific function C# | Aspose.Cells formula analysis offset | enumerate volatile Excel functions programmatically
+// Title: Find and list all Excel formulas that use the OFFSET function and flag them as volatile with Aspose.Cells for .NET (C#)
+// Common Searches: C# code to locate volatile OFFSET formulas in an .xlsx using Aspose.Cells | how to enumerate cells containing OFFSET function with Aspose.Cells .NET | retrieve formulas that include OFFSET and mark them volatile in a workbook via Aspose.Cells | list all OFFSET formulas in each worksheet of an Excel file using Aspose.Cells C# | detect volatile functions like OFFSET in Excel with Aspose.Cells library
+// Tags: enumerate OFFSET formulas Aspose.Cells | identify volatile Excel functions C# | iterate worksheet used range Aspose.Cells | list formulas with OFFSET Aspose.Cells | flag volatile formulas in .xlsx C#
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
+using System.IO;
 
-// Loads an Excel workbook, iterates through each worksheet and cell, checks each formula for the OFFSET function (case‑insensitive), records the sheet name, cell address, formula and notes that OFFSET is volatile, then prints the collected information.
-class Program
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook with Aspose.Cells, walks through every worksheet's used range, checks each formula cell for the OFFSET function (case‑insensitive), records the sheet name, cell address, and formula with a '(Volatile)' label, and outputs the collected list of OFFSET formulas.
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // List to hold information about formulas using OFFSET
-        List<string> offsetFormulas = new List<string>();
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Get the cells collection of the current worksheet
-            Cells cells = sheet.Cells;
-
-            // Iterate through all used cells
-            foreach (Cell cell in cells)
+            try
             {
-                // Check if the cell contains a formula
-                if (!string.IsNullOrEmpty(cell.Formula))
+                string inputPath = "input.xlsx";
+
+                // Ensure the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    // Determine if the formula uses the OFFSET function (case‑insensitive)
-                    if (cell.Formula.IndexOf("OFFSET(", StringComparison.OrdinalIgnoreCase) >= 0)
+                    Console.WriteLine($"File not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Collection to hold formulas that use OFFSET
+                List<string> offsetFormulas = new List<string>();
+
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Determine the used range of the worksheet
+                    AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // Skip empty sheets
+                    if (usedRange == null)
+                        continue;
+
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                    // Loop through all cells in the used range
+                    for (int row = startRow; row <= endRow; row++)
                     {
-                        // Build a description including sheet name, cell address, formula and volatility note
-                        string info = $"Sheet: {sheet.Name}, Cell: {cell.Name}, Formula: {cell.Formula}, Volatility: Volatile (OFFSET is a volatile function)";
-                        offsetFormulas.Add(info);
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
+
+                            // Process only cells that contain a formula
+                            if (cell.IsFormula)
+                            {
+                                string formula = cell.Formula;
+
+                                // Check for the OFFSET function (case‑insensitive)
+                                if (formula.IndexOf("OFFSET", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    // OFFSET is a volatile function, so we note its volatility
+                                    string entry = $"{sheet.Name}!{cell.Name}: {formula} (Volatile)";
+                                    offsetFormulas.Add(entry);
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
 
-        // Output the results
-        Console.WriteLine("Formulas that use the OFFSET function:");
-        if (offsetFormulas.Count == 0)
-        {
-            Console.WriteLine("None found.");
-        }
-        else
-        {
-            foreach (string entry in offsetFormulas)
+                // Output the identified formulas
+                Console.WriteLine("Formulas that use the OFFSET function:");
+                foreach (string item in offsetFormulas)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(entry);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

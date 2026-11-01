@@ -1,60 +1,73 @@
-// Title: Enumerate merged cells and retrieve their ranges in an Aspose.Cells workbook with C#
-// AI Prompts: Write C# code using Aspose.Cells to loop through all used cells in a worksheet, detect cells where IsMerged is true, and output each cell's address together with its merged range. | Show how to invoke the GetMergedRange method on a merged cell in Aspose.Cells .NET and extract the range reference for further processing. | Provide an example that saves the workbook after handling merged cells, including proper exception handling and resource cleanup.
-// Common Searches: C# Aspose.Cells find all merged cells in a worksheet | How to get merged range address for a cell using Aspose.Cells .NET | Iterate over used cells and check IsMerged property in Aspose.Cells | Save Excel file after processing merged cells with Aspose.Cells C#
-// Tags: Aspose.Cells C# merged cell enumeration | merged range extraction Aspose.Cells | IsMerged property usage Aspose.Cells | processing merged ranges Aspose.Cells | save workbook after merged cell handling
+// Title: Highlight merged cells with a yellow background using Aspose.Cells for .NET
+// Common Searches: how to detect merged cells in an Excel worksheet with Aspose.Cells C# | apply a solid background color to a merged range using Aspose.Cells .NET | enumerate worksheet cells and check the IsMerged property in Aspose.Cells | retrieve the full merged range of a cell with Aspose.Cells C# example | set style for merged cells in an Excel file using Aspose.Cells
+// Tags: detect merged cells Aspose.Cells | apply style to merged range Aspose.Cells | highlight merged cells Excel .NET | enumerate cells IsMerged Aspose.Cells | set background color merged range C#
 
 using Aspose.Cells;
 using System;
+using System.Drawing;
+using System.IO;
 
-// The sample creates a workbook, merges two ranges, adds values, then iterates over the used cells. For each cell it checks the IsMerged flag, obtains the merged range via GetMergedRange, prints the cell address and range, and finally saves the file as MergedCellsProcessed.xlsx.
-class IdentifyMergedCells
+// The example loads an existing Excel workbook, iterates through each worksheet and all populated cells, identifies cells that belong to merged ranges via the IsMerged flag, obtains the complete merged range, applies a yellow solid background style to the entire range, and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Merge some sample ranges
-            cells.Merge(0, 0, 2, 2); // A1:B2
-            cells.Merge(3, 2, 3, 2); // C4:D6
-
-            // Add values to demonstrate merged and normal cells
-            cells["A1"].PutValue("Merged A1");
-            cells["C4"].PutValue("Merged C4");
-            cells["E1"].PutValue("Normal");
-
-            // Determine the used range of the sheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Enumerate all cells and process those that are part of a merged range
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
-                    if (cell.IsMerged)
-                    {
-                        // Retrieve the merged range that this cell belongs to
-                        Aspose.Cells.Range mergedRange = cell.GetMergedRange();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                        // Example processing: output merged cell information
-                        Console.WriteLine($"Cell {cell.Name} is merged. Merged range: {mergedRange.RefersTo}");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                // Loop through all cells that contain data
+                for (int row = 0; row <= cells.MaxDataRow; row++)
+                {
+                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    {
+                        Cell cell = cells[row, col];
+
+                        // Identify cells that are part of a merged range
+                        if (cell.IsMerged)
+                        {
+                            Console.WriteLine($"Merged cell at {cell.Name} in sheet '{sheet.Name}'");
+
+                            // Retrieve the entire merged range (use fully qualified type to avoid ambiguity)
+                            Aspose.Cells.Range mergedRange = cell.GetMergedRange();
+
+                            // Apply a yellow background to the whole merged range
+                            Style style = workbook.CreateStyle();
+                            style.ForegroundColor = Color.Yellow;
+                            style.Pattern = BackgroundType.Solid;
+
+                            StyleFlag flag = new StyleFlag();
+                            flag.CellShading = true;
+
+                            mergedRange.ApplyStyle(style, flag);
+                        }
                     }
                 }
             }
 
-            // Save the workbook
-            workbook.Save("MergedCellsProcessed.xlsx");
-            Console.WriteLine("Workbook saved as MergedCellsProcessed.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

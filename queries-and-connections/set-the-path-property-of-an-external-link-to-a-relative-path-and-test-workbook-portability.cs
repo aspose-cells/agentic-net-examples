@@ -1,106 +1,84 @@
-// Title: Set a relative Path for external links in an Excel workbook and verify portability using Aspose.Cells for .NET
-// AI Prompts: Iterate over the workbook’s external links, assign each Link.Path to "Data\LinkedWorkbook.xlsx", and save the file as a portable version. | Load an existing workbook, use reflection to locate the ExternalLinks collection, modify the Path property to a relative location, then reload the saved workbook to print the updated paths. | Create a placeholder workbook if it does not exist, adjust any external link paths to a relative folder, save the result, and confirm the changes by reading back the Path values.
-// Common Searches: Aspose.Cells how to set external link path to a relative folder in C# | verify that external links remain functional after saving workbook with Aspose.Cells | make Excel workbook portable by changing linked file paths using Aspose.Cells .NET | using reflection to modify external link Path property in Aspose.Cells workbook
-// Tags: Aspose.Cells external link path adjustment | C# relative location for linked Excel workbooks | reflection-based ExternalLinks modification | portable Excel workbook with linked files | validate linked file references after saving workbook
+// Title: How to set a relative path for an external workbook link and test portability with Aspose.Cells for .NET
+// AI Prompts: Create a source workbook, fill cells A1:A5 with numbers 1‑5, save it in a subfolder, then build a target workbook that inserts a SUM formula referencing the source workbook using a relative path (Data/Source.xlsx) and save the target file. | Reload the target workbook, read the formula in B2 to confirm the relative path is retained, and evaluate the formula to verify the external link works after reload.
+// Common Searches: Aspose.Cells set external link to relative file path in C# | verify external workbook reference remains after saving with Aspose.Cells | C# example for using relative paths in Excel formulas with Aspose.Cells | how to calculate a formula that references another workbook using a relative path in Aspose.Cells | make Excel workbook portable by using relative external links in Aspose.Cells .NET
+// Tags: Aspose.Cells external link relative path | C# set workbook external reference | Aspose.Cells calculate formula with external workbook | Excel workbook portability Aspose.Cells | relative file path in Excel formula C#
 
 using System;
 using System.IO;
-using System.Collections;
 using Aspose.Cells;
 
-namespace ExternalLinkPathExampleApp
+namespace AsposeCellsExternalLinkDemo
 {
-    // The example loads InputWorkbook.xlsx (creating a simple placeholder if missing), uses reflection to access any external links on the first worksheet, sets each link's Path to the relative location "Data\LinkedWorkbook.xlsx", saves the modified workbook as PortableWorkbook.xlsx, then reloads the saved file and prints the updated link paths or reports if the external‑link API is unavailable.
-    class ExternalLinkPathExample
+    // The sample creates a source workbook with values 1‑5, saves it under a Data folder, then creates a target workbook that uses a SUM formula referencing the source workbook via a relative path (Data/Source.xlsx). After saving, the target workbook is reloaded to confirm the formula retains the relative path and evaluates correctly, demonstrating workbook portability.
+    class Program
     {
         static void Main()
         {
             try
             {
-                const string inputFile = "InputWorkbook.xlsx";
-                const string portableFile = "PortableWorkbook.xlsx";
+                // Define paths
+                string baseFolder = Path.Combine(Directory.GetCurrentDirectory(), "WorkbookDemo");
+                string sourceFolder = Path.Combine(baseFolder, "Data");
+                string sourceFile = Path.Combine(sourceFolder, "Source.xlsx");
+                string targetFile = Path.Combine(baseFolder, "Target.xlsx");
 
-                // Ensure the input workbook exists; create a simple placeholder if missing
-                if (!File.Exists(inputFile))
+                // Ensure directories exist
+                Directory.CreateDirectory(sourceFolder);
+                Directory.CreateDirectory(baseFolder);
+
+                // -----------------------------------------------------------------
+                // Step 1: Create a source workbook that will be referenced externally
+                // -----------------------------------------------------------------
+                Workbook sourceWb = new Workbook();
+                Worksheet sourceWs = sourceWb.Worksheets[0];
+                sourceWs.Name = "Sheet1";
+
+                // Populate some data in the source workbook (A1:A5)
+                for (int i = 0; i < 5; i++)
                 {
-                    var placeholder = new Workbook();
-                    placeholder.Worksheets[0].Name = "Sheet1";
-                    placeholder.Save(inputFile);
+                    sourceWs.Cells[i, 0].PutValue(i + 1); // Values 1..5
                 }
 
-                // Load the workbook (may contain external links)
-                var workbook = new Workbook(inputFile);
+                // Save the source workbook
+                sourceWb.Save(sourceFile);
 
-                // Attempt to process external links via reflection (API may be unavailable)
-                try
-                {
-                    var ws = workbook.Worksheets[0];
-                    var externalLinksProp = ws.GetType().GetProperty("ExternalLinks");
-                    if (externalLinksProp != null)
-                    {
-                        var externalLinks = externalLinksProp.GetValue(ws) as IEnumerable;
-                        if (externalLinks != null)
-                        {
-                            foreach (var link in externalLinks)
-                            {
-                                var pathProp = link.GetType().GetProperty("Path");
-                                if (pathProp != null && pathProp.CanWrite)
-                                {
-                                    pathProp.SetValue(link, Path.Combine("Data", "LinkedWorkbook.xlsx"));
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning while processing external links: {ex.Message}");
-                }
+                // -----------------------------------------------------------------
+                // Step 2: Create the target workbook that will contain an external link
+                // -----------------------------------------------------------------
+                Workbook targetWb = new Workbook();
+                Worksheet targetWs = targetWb.Worksheets[0];
+                targetWs.Name = "Main";
 
-                // Save the modified workbook
-                workbook.Save(portableFile);
+                // Build a relative path to the source workbook
+                string relativePath = Path.Combine("Data", "Source.xlsx").Replace("\\", "/");
 
-                // Reload the saved workbook to verify external link handling (if supported)
-                var testWorkbook = new Workbook(portableFile);
+                // Insert a formula that references the source workbook using the relative path
+                targetWs.Cells["B2"].Formula = $"=SUM('[" + relativePath + "]Sheet1'!A1:A5)";
 
-                Console.WriteLine("External link paths after saving:");
-                try
-                {
-                    var ws = testWorkbook.Worksheets[0];
-                    var externalLinksProp = ws.GetType().GetProperty("ExternalLinks");
-                    if (externalLinksProp != null)
-                    {
-                        var externalLinks = externalLinksProp.GetValue(ws) as IEnumerable;
-                        if (externalLinks != null)
-                        {
-                            foreach (var link in externalLinks)
-                            {
-                                var pathProp = link.GetType().GetProperty("Path");
-                                if (pathProp != null && pathProp.CanRead)
-                                {
-                                    var pathValue = pathProp.GetValue(link) as string;
-                                    Console.WriteLine(pathValue);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No external links found.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("External link API not available in this Aspose.Cells version.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error while reading external links: {ex.Message}");
-                }
+                // -----------------------------------------------------------------
+                // Step 3: Save the target workbook
+                // -----------------------------------------------------------------
+                targetWb.Save(targetFile);
+
+                // -----------------------------------------------------------------
+                // Step 4: Load the saved workbook to verify that the relative path is retained
+                // -----------------------------------------------------------------
+                if (!File.Exists(targetFile))
+                    throw new FileNotFoundException("Target workbook not found.", targetFile);
+
+                Workbook loadedWb = new Workbook(targetFile);
+                Worksheet loadedWs = loadedWb.Worksheets[0];
+
+                // Output the formula to confirm the relative path
+                Console.WriteLine("Formula in B2 after reload: " + loadedWs.Cells["B2"].Formula);
+
+                // Evaluate the formula (requires the source file to be accessible)
+                loadedWb.CalculateFormula();
+                Console.WriteLine("Calculated value in B2: " + loadedWs.Cells["B2"].Value);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }

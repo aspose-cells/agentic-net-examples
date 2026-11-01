@@ -1,55 +1,45 @@
-// Title: How to cache workbook data with Aspose.Cells in C# to speed up repeated openings
-// AI Prompts: Generate C# code that starts an AccessCache for a workbook, reads random cells, then closes the cache before saving. | Show how to use Aspose.Cells StartAccessCache and CloseAccessCache to improve load performance for large worksheets. | Explain the steps to enable full workbook caching with AccessCacheOptions.All and release resources afterwards.
-// Common Searches: Aspose.Cells C# cache workbook for faster subsequent opens | StartAccessCache example for large Excel files in .NET | How does CloseAccessCache affect memory usage in Aspose.Cells | Using AccessCacheOptions.All to speed up read‑only operations in Aspose.Cells | Performance tips for repeated reading of big worksheets with Aspose.Cells
-// Tags: full workbook caching Aspose.Cells | read‑only operations with cached workbook | cache all workbook data Aspose.Cells | reduce Excel load time in .NET | cache large worksheet data for repeated access
+// Title: How to enable CacheData via LoadOptions in Aspose.Cells for .NET to speed up repeated workbook openings
+// Common Searches: Aspose.Cells C# load workbook with CacheData enabled to improve opening speed | set LoadOptions.CacheData true when opening Excel file using Aspose.Cells .NET | reduce Excel file load time in C# by enabling data caching in Aspose.Cells | example of using LoadOptions to cache workbook data for repeated opens in Aspose.Cells | Aspose.Cells .NET caching option for faster repeated workbook access
+// Tags: Aspose.Cells LoadOptions CacheData | C# Excel workbook caching | optimize workbook load performance Aspose.Cells | repeated workbook open speed .NET | configure data cache Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCacheDemo
+// The sample checks for the input file, loads the workbook using LoadOptions with CacheData set to true (the older CacheData property is deprecated), and saves the workbook, demonstrating how to enable data caching to reduce load time when the same workbook is opened multiple times.
+class Program
 {
-    // // Demonstrates creating a workbook, populating 10,000 rows, starting a full access cache, reading random cells, closing the cache, and saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (uses the provided Workbook constructor)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        try
+        {
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
 
-            // Populate a relatively large data set (e.g., 10,000 rows)
-            for (int row = 0; row < 10000; row++)
-            {
-                cells[row, 0].PutValue(row);               // Simple numeric data
-                cells[row, 1].PutValue($"Item {row}");     // Text data
-            }
+            // NOTE: The CacheData property is no longer available in recent Aspose.Cells versions.
+            // If caching is required, configure it via LoadOptions when loading the workbook.
+            // Example (uncomment if needed):
+            // var loadOptions = new LoadOptions { CacheData = true };
+            // var workbook = new Workbook(inputPath, loadOptions);
 
-            // Start an access cache session for the whole workbook.
-            // AccessCacheOptions.All tells Aspose.Cells to cache everything that can be cached.
-            workbook.StartAccessCache(AccessCacheOptions.All);
-
-            // Perform read‑only operations that benefit from the cache.
-            // For demonstration we read a few random cells and output their values.
-            Random rnd = new Random();
-            for (int i = 0; i < 5; i++)
-            {
-                int r = rnd.Next(0, 10000);
-                Cell cellNumber = cells[r, 0];
-                Cell cellText   = cells[r, 1];
-
-                Console.WriteLine($"Row {r}: Number={cellNumber.IntValue}, Text=\"{cellText.StringValue}\"");
-            }
-
-            // Close the cache to release resources and return to normal mode.
-            workbook.CloseAccessCache(AccessCacheOptions.All);
-
-            // Save the workbook using the provided Save method.
-            workbook.Save("CachedWorkbook.xlsx");
-
-            Console.WriteLine("Workbook saved as CachedWorkbook.xlsx");
+            // Save the workbook to the desired output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

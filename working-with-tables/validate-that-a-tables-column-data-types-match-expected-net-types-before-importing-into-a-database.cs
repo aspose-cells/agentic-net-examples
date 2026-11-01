@@ -1,7 +1,6 @@
-// Title: How to validate Excel ListObject column data types against expected .NET types using Aspose.Cells in C#
-// AI Prompts: Write a C# method that opens an Excel workbook with Aspose.Cells, locates a ListObject by its name, and checks each cell in the defined columns against a dictionary of expected .NET types, returning detailed mismatch information. | Update the validation routine to treat numeric cells as integers when the expected type is int, handling Excel's double storage, and generate error messages for rows containing non‑integer values. | Extend the validator to accept custom type converters so that string values can be mapped to enums or nullable types during column validation, and include these conversions in the result report.
-// Common Searches: aspocells c# validate excel table column data types before importing to database | check if excel ListObject column values match .net types using Aspose.Cells | c# how to ensure integer columns are whole numbers when reading Excel with Aspose.Cells | validate date and boolean columns in an Excel table with Aspose.Cells C# | aspocells schema validation for Excel tables in .net application
-// Tags: Aspose.Cells column type validation | Excel ListObject schema verification C# | validate .NET data types in Excel table | integer detection in Excel numeric cells | custom type converters for Excel validation | validation result pattern Aspose.Cells
+// Title: How to validate column data types of an Excel ListObject table against .NET types using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells validate Excel table column data types before importing to database | Check if Excel ListObject column values match expected .NET types with Aspose.Cells | Validate data types of rows in an Excel table using Aspose.Cells in C# | Aspose.Cells column type verification for int, double, DateTime, and string columns | Report mismatched Excel column values when processing with Aspose.Cells
+// Tags: Aspose.Cells column type validation | Excel ListObject data type verification C# | C# .NET type checking for Excel tables | pre‑import Excel data type validation | detect column type mismatches Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,51 +8,138 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace ExcelTableValidator
+namespace AsposeCellsValidation
 {
-    // Provides a C# example that loads an Excel workbook with Aspose.Cells, locates a ListObject, and validates each column's cell values against a dictionary of expected .NET types, handling integer detection, custom converters, and returning a ValidationResult with any mismatches.
+    // The example loads an Excel workbook with Aspose.Cells, accesses a specified ListObject table, maps expected .NET types to column names, iterates through each data row, validates each cell against its expected type (int, double, DateTime, string), collects any mismatches, and outputs either a success message or detailed validation errors.
     class Program
     {
         static void Main(string[] args)
         {
+            // Path to the Excel file to be validated
+            string excelPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Error: File '{excelPath}' not found.");
+                return;
+            }
+
             try
             {
-                // Path to the Excel file
-                string filePath = @"C:\Data\Sample.xlsx";
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
-                // Verify that the file exists to avoid FileNotFoundException
-                if (!File.Exists(filePath))
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Name of the table (ListObject) inside the worksheet
+                string tableName = "Table1";
+
+                // Retrieve the table; if not found, abort
+                ListObject table = worksheet.ListObjects[tableName];
+                if (table == null)
                 {
-                    Console.WriteLine($"File not found: {filePath}");
+                    Console.WriteLine($"Table '{tableName}' not found in the worksheet.");
                     return;
                 }
 
-                // Name of the worksheet and the table (ListObject) to validate
-                string sheetName = "Sheet1";
-                string tableName = "MyTable";
-
-                // Define expected .NET types for each column (column name -> expected Type)
+                // Define the expected .NET types for each column (key = column name, value = expected Type)
                 var expectedColumnTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
                 {
                     { "Id", typeof(int) },
                     { "Name", typeof(string) },
                     { "BirthDate", typeof(DateTime) },
-                    { "IsActive", typeof(bool) },
-                    { "Score", typeof(double) }
+                    { "Salary", typeof(double) }
                 };
 
-                // Perform validation
-                var validationResult = ValidateTableColumnTypes(filePath, sheetName, tableName, expectedColumnTypes);
-
-                // Output results
-                if (validationResult.IsValid)
+                // Build a map of column index -> expected Type based on the table header row
+                var columnIndexToExpectedType = new Dictionary<int, Type>();
+                int headerRow = table.DataRange.FirstRow - 1; // Header is one row above the data range
+                for (int col = table.DataRange.FirstColumn; col < table.DataRange.FirstColumn + table.DataRange.ColumnCount; col++)
                 {
-                    Console.WriteLine("All column data types match the expected .NET types.");
+                    string columnName = worksheet.Cells[headerRow, col].StringValue?.Trim();
+                    if (string.IsNullOrEmpty(columnName))
+                        continue;
+
+                    if (expectedColumnTypes.TryGetValue(columnName, out Type expectedType))
+                    {
+                        columnIndexToExpectedType[col] = expectedType;
+                    }
+                    else
+                    {
+                        // Column not defined in expected types; you may choose to ignore or treat as error
+                        Console.WriteLine($"Warning: Column '{columnName}' has no expected type defined.");
+                    }
+                }
+
+                // List to collect validation errors
+                var validationErrors = new List<string>();
+
+                // Iterate through each data row in the table
+                int firstDataRow = table.DataRange.FirstRow;
+                int lastDataRow = table.DataRange.FirstRow + table.DataRange.RowCount - 1;
+
+                for (int row = firstDataRow; row <= lastDataRow; row++)
+                {
+                    foreach (var kvp in columnIndexToExpectedType)
+                    {
+                        int col = kvp.Key;
+                        Type expectedType = kvp.Value;
+
+                        Cell cell = worksheet.Cells[row, col];
+                        object cellValue = cell.Value;
+
+                        // Treat empty cells as null (you may adjust this rule)
+                        if (cellValue == null || string.IsNullOrWhiteSpace(cellValue.ToString()))
+                            continue;
+
+                        bool isValid = false;
+
+                        if (expectedType == typeof(int))
+                        {
+                            if (cellValue is int) isValid = true;
+                            else if (cellValue is double d && d % 1 == 0) isValid = true;
+                            else if (int.TryParse(cellValue.ToString(), out _)) isValid = true;
+                        }
+                        else if (expectedType == typeof(double))
+                        {
+                            if (cellValue is double) isValid = true;
+                            else if (double.TryParse(cellValue.ToString(), out _)) isValid = true;
+                        }
+                        else if (expectedType == typeof(DateTime))
+                        {
+                            if (cellValue is DateTime) isValid = true;
+                            else if (DateTime.TryParse(cellValue.ToString(), out _)) isValid = true;
+                        }
+                        else if (expectedType == typeof(string))
+                        {
+                            // Anything can be represented as string
+                            isValid = true;
+                        }
+                        else
+                        {
+                            // Fallback to direct type check
+                            isValid = expectedType.IsInstanceOfType(cellValue);
+                        }
+
+                        if (!isValid)
+                        {
+                            string columnName = worksheet.Cells[headerRow, col].StringValue;
+                            validationErrors.Add($"Row {row + 1}, Column '{columnName}': Value '{cellValue}' is not of expected type {expectedType.Name}.");
+                        }
+                    }
+                }
+
+                // Output validation results
+                if (validationErrors.Count == 0)
+                {
+                    Console.WriteLine("All data rows match the expected .NET types.");
                 }
                 else
                 {
-                    Console.WriteLine("Data type mismatches found:");
-                    foreach (var error in validationResult.Errors)
+                    Console.WriteLine("Data type validation errors found:");
+                    foreach (string error in validationErrors)
                     {
                         Console.WriteLine(error);
                     }
@@ -61,128 +147,9 @@ namespace ExcelTableValidator
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // Catch any unexpected errors to prevent the application from crashing
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        /// <param name="excelFilePath">Full path to the Excel workbook.</param>
-        /// <param name="worksheetName">Name of the worksheet containing the table.</param>
-        /// <param name="tableName">Name of the ListObject (table) to validate.</param>
-        /// <param name="expectedTypes">Dictionary mapping column names to expected .NET types.</param>
-        /// <returns>A ValidationResult indicating success or a list of error messages.</returns>
-        public static ValidationResult ValidateTableColumnTypes(
-            string excelFilePath,
-            string worksheetName,
-            string tableName,
-            Dictionary<string, Type> expectedTypes)
-        {
-            var result = new ValidationResult();
-
-            try
-            {
-                // Load the workbook
-                var workbook = new Workbook(excelFilePath);
-
-                // Get the worksheet
-                var worksheet = workbook.Worksheets[worksheetName];
-                if (worksheet == null)
-                {
-                    result.Errors.Add($"Worksheet '{worksheetName}' not found.");
-                    return result;
-                }
-
-                // Retrieve the table (ListObject) by name
-                var table = worksheet.ListObjects[tableName];
-                if (table == null)
-                {
-                    result.Errors.Add($"Table '{tableName}' not found in worksheet '{worksheetName}'.");
-                    return result;
-                }
-
-                // Map column names to their index within the table
-                var columnNameToIndex = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-                for (int col = 0; col < table.ListColumns.Count; col++)
-                {
-                    string colName = table.ListColumns[col].Name;
-                    columnNameToIndex[colName] = col;
-                }
-
-                // Validate each expected column
-                foreach (var kvp in expectedTypes)
-                {
-                    string columnName = kvp.Key;
-                    Type expectedType = kvp.Value;
-
-                    if (!columnNameToIndex.TryGetValue(columnName, out int colIndex))
-                    {
-                        result.Errors.Add($"Expected column '{columnName}' not found in table '{tableName}'.");
-                        continue;
-                    }
-
-                    // Iterate through each data row in the table
-                    for (int row = 0; row < table.DataRange.RowCount; row++)
-                    {
-                        // Get the cell value
-                        var cell = table.DataRange[row, colIndex];
-                        object value = cell.Value;
-
-                        // Treat empty cells as valid (skip validation)
-                        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
-                            continue;
-
-                        // Determine the actual .NET type of the cell value
-                        Type actualType = GetUnderlyingType(value);
-
-                        // Special handling for integer expectations (Excel stores numbers as double)
-                        if (expectedType == typeof(int) && actualType == typeof(double))
-                        {
-                            double d = (double)value;
-                            if (d % 1 != 0)
-                            {
-                                result.Errors.Add($"Row {row + 2} column '{columnName}': value '{value}' is not an integer.");
-                            }
-                            continue;
-                        }
-
-                        // For expected double, accept double (Excel stores numbers as double)
-                        if (expectedType == typeof(double) && actualType == typeof(double))
-                            continue;
-
-                        // Direct type comparison
-                        if (actualType != expectedType)
-                        {
-                            result.Errors.Add($"Row {row + 2} column '{columnName}': expected type {expectedType.Name}, but found {actualType.Name} with value '{value}'.");
-                        }
-                    }
-                }
-
-                result.IsValid = result.Errors.Count == 0;
-            }
-            catch (Exception ex)
-            {
-                result.Errors.Add($"Validation failed: {ex.Message}");
-            }
-
-            return result;
-        }
-
-        private static Type GetUnderlyingType(object value)
-        {
-            // Aspose.Cells may return types such as double, string, bool, DateTime.
-            // For formulas that return numeric results, the type is double.
-            // For dates, the type is DateTime.
-            // For boolean, the type is bool.
-            // For text, the type is string.
-            return value.GetType();
-        }
-    }
-
-    /// <summary>
-    /// Simple container for validation results.
-    /// </summary>
-    public class ValidationResult
-    {
-        public bool IsValid { get; set; } = false;
-        public List<string> Errors { get; } = new List<string>();
     }
 }

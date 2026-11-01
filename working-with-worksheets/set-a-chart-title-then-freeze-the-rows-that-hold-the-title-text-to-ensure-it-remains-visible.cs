@@ -1,14 +1,14 @@
-// Title: Add a column chart with a custom title and freeze the title row in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate an Excel workbook, populate sample data, insert a column chart, set its Title.Text to "Sales Comparison", write the same text into cell A1, and apply FreezePanes to keep the first row visible using Aspose.Cells for .NET. | Using C# and Aspose.Cells, create a worksheet, add a column chart with a custom title, copy the title into a worksheet cell, then freeze the top row so the title remains on screen.
-// Common Searches: c# aspose.cells set chart title and freeze header row | how to keep chart title row visible with freeze panes in Aspose.Cells | example of column chart with title and frozen first row using Aspose.Cells for .NET | asp.net freeze first worksheet row after adding a chart title
-// Tags: set chart title Aspose.Cells C# | freeze first row Aspose.Cells | column chart creation Aspose.Cells | write chart title to worksheet cell Aspose.Cells | apply FreezePanes after chart insertion Aspose.Cells
+// Title: Create a column chart with a cell‑derived title and freeze the title row using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that inserts a column chart, reads the title text from cell A1, assigns it to the chart, makes the title visible, and freezes row 1 with Aspose.Cells. | Generate a .NET snippet that binds a worksheet cell value to a chart title, defines the series range, applies FreezePanes to keep the header row static, and saves the workbook. | Provide an Aspose.Cells example that updates an existing workbook to use a cell value as the chart title and locks the first row in place while scrolling.
+// Common Searches: aspocells set chart title from a worksheet cell c# | how to freeze the header row in an Excel file using Aspose.Cells .NET | c# create column chart with dynamic title from cell using Aspose.Cells | aspocells freeze panes first row while scrolling chart
+// Tags: use cell value as chart title Aspose.Cells C# | freeze panes on first row Aspose.Cells | create column chart Aspose.Cells .NET | bind worksheet cell to chart title Aspose.Cells | Aspose.Cells freeze row example
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System;
 using System.IO;
 
-// The program creates a workbook, adds sample data, inserts a column chart titled "Sales Comparison", writes the title into cell A1, freezes the first row, and saves the file as ChartWithTitleAndFrozenRow.xlsx.
+// The sample creates a new workbook, writes "Sales Report" to cell A1, adds a column chart, sets the chart title to the cell's text, defines series and category data, freezes the first row so the title stays visible while scrolling, and saves the file as ChartWithTitleAndFrozenRow.xlsx.
 class Program
 {
     static void Main()
@@ -21,45 +21,40 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample data for the chart
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["A3"].PutValue(20);
-            sheet.Cells["A4"].PutValue(30);
-            sheet.Cells["B2"].PutValue(15);
-            sheet.Cells["B3"].PutValue(25);
-            sheet.Cells["B4"].PutValue(35);
+            // Put title text in cell A1
+            sheet.Cells["A1"].PutValue("Sales Report");
 
-            // Insert a column chart
+            // Add a column chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart series
-            chart.NSeries.Add("A2:A4", true);
-            // Category data (optional). If the API version does not support CategoryData, this line can be omitted.
-            // chart.NSeries[0].CategoryData = "B2:B4";
+            // Set the chart title using the text from cell A1
+            chart.Title.Text = sheet.Cells["A1"].StringValue;
+            chart.Title.IsVisible = true;
 
-            // Set the chart title
-            chart.Title.Text = "Sales Comparison";
+            // Sample data for the chart
+            sheet.Cells["B2"].PutValue("Q1");
+            sheet.Cells["C2"].PutValue(120);
+            sheet.Cells["B3"].PutValue("Q2");
+            sheet.Cells["C3"].PutValue(150);
+            sheet.Cells["B4"].PutValue("Q3");
+            sheet.Cells["C4"].PutValue(130);
+            sheet.Cells["B5"].PutValue("Q4");
+            sheet.Cells["C5"].PutValue(170);
 
-            // Optionally write the same title text into a cell (e.g., A1) for visual reference
-            sheet.Cells["A1"].PutValue("Sales Comparison");
+            // Define the series and category data ranges
+            chart.NSeries.Add("C2:C5", true);
+            chart.NSeries.CategoryData = "B2:B5";
 
-            // Freeze the first row (freeze rows above row index 1)
-            sheet.FreezePanes(1, 0, 1, 0);
+            // Freeze the first row (where the title resides) so it stays visible while scrolling
+            sheet.FreezePanes(1, 0, 1, 0); // Freeze rows above row 2 (i.e., row 1)
 
             // Determine output file path
-            string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ChartWithTitleAndFrozenRow.xlsx");
+            string outputPath = "ChartWithTitleAndFrozenRow.xlsx";
 
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(outputFile);
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook to a file
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to: {outputFile}");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

@@ -1,42 +1,30 @@
-// Title: Identify Excel file format using Aspose.Cells LoadOptions without loading the full workbook in C#
-// AI Prompts: Show how to use Aspose.Cells LoadOptions to read only the file header and obtain the FileFormatType in C#. | Provide a C# snippet that determines whether an Excel file is XLS, XLSX, CSV, etc., using LoadOptions without loading worksheet data. | Generate code that safely checks an Excel file's format, includes file‑existence validation and exception handling with Aspose.Cells.
-// Common Searches: how to get Excel file type with Aspose.Cells LoadOptions in C# | detect workbook format without opening full file Aspose.Cells | C# identify XLSX vs XLS using Aspose.Cells without loading data | Aspose.Cells loadoptions file format detection example
-// Tags: Aspose.Cells LoadOptions format identification | detect Excel workbook type without full load | retrieve FileFormatType from Excel file C# | handle missing Excel file Aspose.Cells | exception handling for format detection Aspose.Cells
+// Title: Identify Excel workbook format with Aspose.Cells LoadOptions without fully loading the file (C#)
+// Common Searches: how to determine the Excel file type using Aspose.Cells LoadOptions in C# | detect spreadsheet format without opening the entire workbook with Aspose.Cells | Aspose.Cells LoadFormat Unknown to get file format from header | C# get Excel file format without loading worksheets Aspose.Cells | identify whether a file is XLS, XLSX, or CSV using Aspose.Cells LoadOptions
+// Tags: Aspose.Cells LoadOptions format detection | Excel file type identification using LoadFormat | header based workbook format detection C# | detect spreadsheet format without full parsing | LoadFormat Unknown usage Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The example validates the presence of an Excel file, uses Aspose.Cells LoadOptions to inspect only the file header, reads the Workbook.FileFormat property to obtain the detected FileFormatType, and prints the result while gracefully handling missing files and runtime exceptions.
+// The example creates a LoadOptions object with LoadFormat set to Unknown, loads the workbook only enough to inspect the file header, reads the detected format from LoadOptions.LoadFormat, and prints the identified Excel file type without fully parsing worksheets or formulas.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file to be inspected
+        // Path to the Excel file whose format we want to detect
         string filePath = "sample.xlsx";
 
-        // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Error: File not found at path '{filePath}'.");
-            return;
-        }
+        // Create LoadOptions with LoadFormat set to Unknown.
+        // Aspose.Cells will inspect the file header and determine the actual format.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Unknown);
 
-        try
-        {
-            // Load the workbook; Aspose.Cells automatically detects the format
-            Workbook workbook = new Workbook(filePath);
+        // Load the workbook using the LoadOptions.
+        // This operation reads only the necessary parts to identify the format,
+        // avoiding full parsing of all worksheets, formulas, etc.
+        Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Retrieve the detected format from the loaded workbook
-            FileFormatType detectedFormat = workbook.FileFormat;
+        // After loading, the LoadOptions.LoadFormat property holds the detected format.
+        LoadFormat detectedFormat = loadOptions.LoadFormat;
 
-            // Display the identified file format
-            Console.WriteLine($"Detected format: {detectedFormat}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        Console.WriteLine($"Detected file format: {detectedFormat}");
     }
 }

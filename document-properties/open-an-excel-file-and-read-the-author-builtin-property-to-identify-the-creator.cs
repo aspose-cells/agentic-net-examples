@@ -1,36 +1,32 @@
-// Title: Read the Author built‑in document property from an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, checks if the file exists, and returns the value of the built‑in Author property. | Show a complete example that loads a workbook, accesses BuiltInDocumentProperties, extracts the creator name, and includes exception handling. | Provide a snippet that prints the Author metadata of an Excel file using Aspose.Cells, handling missing‑file scenarios.
-// Common Searches: aspnet read author property from excel using Aspose.Cells | C# Aspose.Cells get built‑in document properties Author | how to retrieve creator name from .xlsx with Aspose.Cells library | example code for checking file existence before reading Excel metadata Aspose.Cells | Aspose.Cells built‑in properties read Author value C#
-// Tags: Aspose.Cells read built-in document properties | C# retrieve Excel Author metadata | load workbook and access BuiltInDocumentProperties | handle missing file with Aspose.Cells | extract creator name from .xlsx
+// Title: Read the Author built-in document property from an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells read Author property from .xlsx file | how to retrieve Excel file creator using Aspose.Cells API | get built-in document properties author in Aspose.Cells C# | load workbook and access author metadata with Aspose.Cells | Aspose.Cells example for reading Excel author name in .NET
+// Tags: Aspose.Cells read built-in document property | C# get Excel author metadata | Workbook BuiltInDocumentProperties Author example | extract creator name from .xlsx using Aspose | load Excel workbook and read author property
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// // This C# program verifies that input.xlsx exists, loads it with Aspose.Cells, accesses the workbook's BuiltInDocumentProperties, reads the "Author" property (the creator), prints the author name, and catches any exceptions.
+// The sample verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, reads the Author built-in document property via workbook.BuiltInDocumentProperties.Author, outputs the author name, and handles any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
+            string filePath = "input.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
             // Load the Excel workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(filePath);
 
-            // Access built‑in document properties
-            var builtInProps = workbook.BuiltInDocumentProperties;
-
-            // Retrieve the Author property (creator of the file)
-            string author = builtInProps["Author"]?.ToString();
+            // Retrieve the Author built‑in document property
+            string author = workbook.BuiltInDocumentProperties.Author;
 
             // Display the author name
             Console.WriteLine("Author: " + author);
@@ -38,7 +34,7 @@ class Program
         catch (Exception ex)
         {
             // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

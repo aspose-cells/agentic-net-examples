@@ -1,61 +1,53 @@
-// Title: Identify Excel cells with numeric values above 1000 and export their addresses using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, scans every cell in a worksheet, and returns a list of cell names where the numeric value exceeds 1000. | Enhance the solution to accept a configurable numeric limit and handle decimal numbers, then write the matching cell addresses to a newly added worksheet. | Create a reusable method that takes input and output file paths plus a numeric threshold, extracts addresses of cells greater than that threshold, and saves them to a separate sheet using Aspose.Cells.
-// Common Searches: Aspose.Cells C# find cell addresses where value is greater than 1000 | How to list Excel cells with numbers over a certain threshold using Aspose.Cells | Export addresses of large numeric values from a worksheet with Aspose.Cells .NET | C# Aspose.Cells filter cells by numeric limit and write results to new sheet
-// Tags: find cells with numeric value exceeding threshold Aspose.Cells | collect cell addresses from Excel using Aspose.Cells C# | write address list to new worksheet Aspose.Cells | iterate all worksheet cells Aspose.Cells .NET | filter large numbers in Excel with Aspose.Cells
+// Title: Find and list cell addresses with numeric values greater than 1000 using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates over all populated cells in a worksheet and returns a collection of cell names where the numeric value exceeds 1000. | Adjust the example to also capture cells whose value equals 1000 and output their references together with the >1000 cells.
+// Common Searches: aspnet aspose.cells how to get addresses of cells with values over 1000 | c# iterate through worksheet used range and filter numbers greater than 1000 | retrieve list of Excel cell references where numeric value exceeds 1000 using Aspose.Cells | example code to collect high-value cell addresses from an .xlsx file in C#
+// Tags: scan worksheet cells Aspose.Cells | filter numeric cells >1000 C# | collect cell references Aspose.Cells | numeric threshold extraction Excel .NET | iterate cells by value Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
 
-// Loads an Excel workbook, iterates through every cell in the first worksheet, records the addresses of numeric values (int, long, double) greater than 1000, writes those addresses to a new worksheet named "LargeValues", and saves the updated file.
-class FindLargeValues
+// The sample loads an Excel workbook, iterates through every populated cell in the first worksheet, checks if the cell contains a numeric value greater than 1000, adds the cell's address (e.g., "B5") to a list, prints the collected addresses, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Work with the first worksheet (you can loop through all worksheets if needed)
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // List to store addresses of cells whose numeric value is greater than 1000
-        List<string> largeValueAddresses = new List<string>();
+        // List to store addresses of numeric values greater than 1000
+        List<string> addresses = new List<string>();
 
-        // Iterate through all cells in the worksheet
-        foreach (Cell cell in worksheet.Cells)
+        // Determine the used range of the worksheet
+        int maxRow = cells.MaxDataRow;
+        int maxColumn = cells.MaxDataColumn;
+
+        // Iterate through all cells in the used range
+        for (int row = 0; row <= maxRow; row++)
         {
-            // Skip cells that have no value
-            if (cell.Value == null) continue;
-
-            // Check for double values
-            if (cell.Value is double d && d > 1000)
+            for (int col = 0; col <= maxColumn; col++)
             {
-                largeValueAddresses.Add(cell.Name);
-                continue;
-            }
-
-            // Check for integer values (Aspose may store integers as int or long)
-            if (cell.Value is int i && i > 1000)
-            {
-                largeValueAddresses.Add(cell.Name);
-                continue;
-            }
-
-            if (cell.Value is long l && l > 1000)
-            {
-                largeValueAddresses.Add(cell.Name);
-                continue;
+                Cell cell = cells[row, col];
+                // Check if the cell contains a numeric value > 1000
+                if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue > 1000)
+                {
+                    // Add the cell address (e.g., "B5") to the list
+                    addresses.Add(cell.Name);
+                }
             }
         }
 
-        // Write the collected addresses to a new worksheet for reference
-        Worksheet resultSheet = workbook.Worksheets.Add("LargeValues");
-        for (int i = 0; i < largeValueAddresses.Count; i++)
+        // Output the collected addresses (can be replaced with other handling)
+        foreach (string address in addresses)
         {
-            resultSheet.Cells[i, 0].PutValue(largeValueAddresses[i]);
+            Console.WriteLine(address);
         }
 
-        // Save the workbook with the results (replace with your desired output path)
+        // Save the workbook if any modifications were made (optional)
         workbook.Save("output.xlsx");
     }
 }

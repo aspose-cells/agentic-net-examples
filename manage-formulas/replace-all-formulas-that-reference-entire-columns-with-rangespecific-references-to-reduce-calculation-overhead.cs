@@ -1,54 +1,83 @@
-// Title: Replace whole‑column references with row‑bounded ranges in Excel formulas using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that scans every worksheet, detects formulas containing whole‑column references (e.g., A:A), and rewrites them to use a range from row 1 to the sheet's last used row. | Write a method that applies a regular expression to locate column‑only references in cell formulas and substitutes them with explicit row limits derived from the worksheet's MaxDataRow property.
-// Common Searches: convert A:A formulas to A1:A500 with Aspose.Cells C# | limit Excel formula range to used rows for faster calculation in .NET | C# iterate over all formulas in a workbook and change whole column references | regex replace column‑only references in Excel formulas using Aspose.Cells | optimize Excel calculation speed by bounding column references in Aspose.Cells
-// Tags: Aspose.Cells column‑range optimization | C# bound formula ranges | regex based formula transformation .NET | Excel calculation performance improvement | programmatic formula editing Aspose
+// Title: How to replace whole‑column references with specific range formulas in Excel using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# replace A:A column reference with A1:A1000 range | programmatically limit Excel formula ranges to used rows with Aspose.Cells | C# code to convert whole column formulas to bounded ranges in a workbook | optimize Excel calculation speed by changing column references via Aspose.Cells API | detect and modify column‑wide formulas in .xlsx using Aspose.Cells .NET
+// Tags: replace whole column references Aspose.Cells | convert column formulas to bounded ranges C# | limit formula range to last used row .NET | optimize Excel calculation performance Aspose.Cells | regex based formula update C#
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, determines each worksheet's last used row, uses a regex to find whole‑column references in formulas, replaces them with explicit row‑bounded ranges (e.g., A1:A{lastRow}), updates the cells, and saves the modified file.
+// The example loads an Excel workbook with Aspose.Cells, determines the last used row for each worksheet, and uses a regular expression to find whole‑column references (e.g., A:A) in formula cells. Each match is replaced with a bounded range (e.g., A1:A1000), the cell formula is updated only when changed, and the workbook is saved. The code also handles missing files, password‑protected workbooks, and other exceptions.
 class ReplaceColumnFormulas
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Determine the last used row in the current sheet (1‑based index)
-            int lastRowIndex = sheet.Cells.MaxDataRow + 1;
-            if (lastRowIndex == 0) continue; // Skip empty sheets
-
-            // Regular expression to find whole‑column references like A:A, B:B, AA:AA, etc.
-            Regex columnRefRegex = new Regex(@"([A-Z]+):\1", RegexOptions.IgnoreCase);
-
-            // Loop through all cells that contain formulas
-            foreach (Cell cell in sheet.Cells)
-            {
-                if (!cell.IsFormula) continue;
-
-                string originalFormula = cell.Formula;
-
-                // Replace each whole‑column reference with a range‑specific reference
-                string updatedFormula = columnRefRegex.Replace(originalFormula, match =>
-                {
-                    string column = match.Groups[1].Value.ToUpper(); // Column letters
-                    // Build a range from the first row to the last used row
-                    return $"{column}1:{column}{lastRowIndex}";
-                });
-
-                // If any replacement occurred, assign the new formula back to the cell
-                if (!originalFormula.Equals(updatedFormula, StringComparison.Ordinal))
-                {
-                    cell.Formula = updatedFormula;
-                }
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the workbook; if the file is password‑protected, an exception will be thrown
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Determine the last used row (1‑based index)
+                int lastRow = sheet.Cells.MaxDataRow + 1;
+                if (lastRow < 1) lastRow = 1; // Ensure at least row 1 exists
+
+                // Regex to match whole‑column references like A:A, AB:AB, etc.
+                Regex wholeColumnRegex = new Regex(@"([A-Z]+):\1", RegexOptions.IgnoreCase);
+
+                // Iterate over all cells that contain formulas
+                foreach (Cell cell in sheet.Cells)
+                {
+                    if (!cell.IsFormula) continue;
+
+                    string originalFormula = cell.Formula;
+
+                    // Replace whole‑column references with a specific range (e.g., A1:A1000)
+                    string newFormula = wholeColumnRegex.Replace(originalFormula, match =>
+                    {
+                        string column = match.Groups[1].Value;
+                        return $"{column}1:{column}{lastRow}";
+                    });
+
+                    // Update the cell only if the formula changed
+                    if (!originalFormula.Equals(newFormula, StringComparison.Ordinal))
+                    {
+                        cell.Formula = newFormula;
+                    }
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handle password‑protected workbook or other Cells-specific errors
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password to load it.");
+            }
+            else
+            {
+                Console.WriteLine($"CellsException: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

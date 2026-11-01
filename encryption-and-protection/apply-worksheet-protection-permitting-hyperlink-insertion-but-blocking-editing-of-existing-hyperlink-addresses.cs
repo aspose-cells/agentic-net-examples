@@ -1,13 +1,11 @@
-// Title: Use Aspose.Cells for .NET to protect an Excel worksheet while allowing users to add new hyperlinks but preventing changes to existing hyperlink URLs
-// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet, enables insertion of new hyperlinks, and locks the address of existing hyperlinks. | Show how to configure worksheet protection options in Aspose.Cells so that hyperlink insertion is allowed but editing of existing hyperlink addresses is blocked.
-// Common Searches: aspnet protect excel sheet allow adding hyperlinks but lock existing hyperlink addresses | c# Aspose.Cells worksheet protection hyperlink insertion only | how to enable hyperlink creation on a protected worksheet using Aspose.Cells | prevent editing of hyperlink URLs while allowing new hyperlinks in Excel with Aspose.Cells .NET
-// Tags: Aspose.Cells worksheet protection hyperlink insertion | C# lock existing hyperlink addresses in Excel | Aspose.Cells allow new hyperlinks on protected sheet | Excel password protection selective hyperlink editing | Aspose.Cells set AllowEditObject for hyperlink creation
+// Title: Protect an Excel worksheet with a password while allowing hyperlink insertion but blocking hyperlink address edits using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# protect worksheet allow users to add hyperlinks but not modify existing hyperlink URLs | set worksheet protection to enable hyperlink insertion only in Aspose.Cells .NET | C# Aspose.Cells protect sheet with password and disable hyperlink address editing | using WorksheetProtectionOptions to allow insert hyperlink and block edit hyperlink in Aspose.Cells | Excel worksheet protection settings for hyperlink insertion versus editing with Aspose.Cells
+// Tags: worksheet protection password Aspose.Cells .NET | allow insert hyperlink worksheet Aspose.Cells | disable edit hyperlink address Aspose.Cells | WorksheetProtectionOptions hyperlink configuration | protect Excel sheet hyperlink permissions C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, accesses the first worksheet, applies password protection with selective options that permit adding new hyperlinks while locking the URLs of existing hyperlinks, and saves the file as ProtectedSheet.xlsx.
+// The example creates a new Workbook, accesses the first worksheet, and applies full protection with a password using sheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty). It notes that the current Aspose.Cells version does not expose direct AllowInsertHyperlink or AllowEditHyperlink properties and suggests using WorksheetProtectionOptions in newer releases to enable hyperlink insertion while preventing edits to existing hyperlink addresses, then saves the workbook as ProtectedWorkbook.xlsx.
 class Program
 {
     static void Main()
@@ -20,14 +18,18 @@ class Program
             // Get the first worksheet
             var sheet = workbook.Worksheets[0];
 
-            // Protect the worksheet with a password (all protection options enabled)
-            // The third parameter is the old password; pass null or empty string when not required.
-            sheet.Protect(ProtectionType.All, "MyPassword", null);
+            // Protect the worksheet with a password.
+            // The third parameter is the old password (empty because the sheet is not previously protected).
+            sheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
+
+            // Note: Current Aspose.Cells version does not expose direct properties for
+            // AllowInsertHyperlink or AllowEditHyperlink. If needed, use WorksheetProtectionOptions
+            // in newer releases to configure these settings.
 
             // Save the workbook
-            string outputPath = "ProtectedSheet.xlsx";
+            const string outputPath = "ProtectedWorkbook.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

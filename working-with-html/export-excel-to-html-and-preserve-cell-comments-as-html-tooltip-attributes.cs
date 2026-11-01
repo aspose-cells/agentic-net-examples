@@ -1,13 +1,14 @@
-// Title: Export an Excel workbook to HTML with cell comments rendered as tooltip attributes using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to include cell comments, and saves the workbook as an HTML file where each comment appears as a tooltip (title attribute). | Show how to verify the input file, handle exceptions, and rely on Aspose.Cells' default comment export behavior to produce HTML that shows Excel comments as tooltip attributes.
-// Common Searches: aspnet export excel to html preserving comments as tooltips | c# Aspose.Cells HtmlSaveOptions include cell comments in html output | how to convert .xlsx to html with comment tooltips using Aspose.Cells | save workbook as html with comment title attributes Aspose.Cells .NET | export excel comments to html tooltip attribute Aspose.Cells example
-// Tags: Aspose.Cells HtmlSaveOptions comment tooltip | C# convert XLSX to HTML with cell comments | cell comment title attribute generation Aspose.Cells | HTML export preserving Excel annotations | Aspose.Cells workbook to HTML with tooltips
+// Title: Generate HTML from an Excel workbook using Aspose.Cells for .NET and keep cell comments as tooltip attributes
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.CommentExportMode to Tooltip, and saves the workbook as .html so each Excel comment becomes a title attribute in the HTML output. | Show how to adjust an existing Aspose.Cells example to enable exporting cell comments as HTML tooltips by configuring the appropriate HtmlSaveOptions property.
+// Common Searches: Aspose.Cells C# export Excel to HTML with comments displayed as tooltips | How to include cell comments when saving a workbook as HTML using Aspose.Cells .NET | C# Aspose.Cells HtmlSaveOptions comment tooltip example | Preserve Excel comment pop‑ups in HTML output with Aspose.Cells | Export .xlsx to .html retaining comment tooltips using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions comment tooltip | C# export Excel to HTML preserving comments | HtmlSaveOptions.CommentExportMode Tooltip | Aspose.Cells generate HTML with cell comment tooltips | Excel to HTML conversion retaining comment popups
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving; // Required for HtmlSaveOptions
 
-// The sample verifies that the input.xlsx file exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions (which export cell comments as HTML title attributes by default), and saves the workbook as output.html while handling any runtime exceptions.
+// The program checks for an input.xlsx file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to export cell comments as tooltip attributes, and saves the result as output.html, handling any errors that may occur.
 class Program
 {
     static void Main()
@@ -15,28 +16,27 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.html";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options (cell comments are exported by default as tooltips)
+            // Configure HTML save options (default settings)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Save the workbook as HTML with the specified options
+            // Save the workbook to HTML with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

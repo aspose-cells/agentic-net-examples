@@ -1,34 +1,44 @@
-// Title: Load an OTS template, replace {Name} placeholder, and save as ODS using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an OTS file with Aspose.Cells, substitutes the token {Name} with a real value, and writes the workbook out as an ODS document. | Illustrate setting the OdsSaveOptions.GeneratorType property to LibreOffice while saving a modified workbook to ODS format. | Explain the steps to programmatically edit an OTS template and generate an ODS spreadsheet using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# replace token in OTS spreadsheet template | save modified OTS workbook as ODS with LibreOffice generator | example of OdsSaveOptions usage in .NET for ODS export | programmatically convert OTS to ODS using Aspose.Cells library
-// Tags: replace token in OTS template Aspose.Cells | save workbook as ODS with OdsSaveOptions | C# ODS export using LibreOffice generator | load OTS file Aspose.Cells .NET | programmatic OTS to ODS conversion
+// Title: Load an OTS spreadsheet template, replace placeholders, and save as ODS using Aspose.Cells for .NET
+// AI Prompts: Load an OTS file with Aspose.Cells, replace the {Name} placeholder with a custom value, and export the workbook to ODS. | Extend the example to replace multiple placeholders such as {Name} and {Date} in an OTS template before saving it as ODS. | Add robust error handling that verifies the template file exists, logs a friendly warning if it is missing, and catches exceptions during OTS‑to‑ODS conversion.
+// Common Searches: Aspose.Cells C# replace placeholder text in OTS template and save as ODS | How to edit an OpenDocument spreadsheet template (OTS) with Aspose.Cells .NET | Convert OTS file to ODS after performing text substitution using Aspose.Cells | C# example for loading OTS workbook, replacing {Name}, and exporting to ODS
+// Tags: placeholder replacement in OTS workbook Aspose.Cells | export edited OTS to ODS Aspose.Cells | load OTS template with Aspose.Cells C# | text substitution in OpenDocument spreadsheet Aspose.Cells | file existence check for OTS template Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// The example loads an OTS template into a Workbook, replaces the {Name} placeholder with "John Doe", configures OdsSaveOptions to use the LibreOffice generator, and saves the updated workbook as an ODS file.
+// The program verifies that a template.ots file exists, loads it into an Aspose.Cells Workbook, replaces the {Name} placeholder with "John Doe", and then saves the modified workbook as result.ods using the ODS save format, while handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // Path to the OTS template file
-        string templatePath = "template.ots";
-
-        // Load the OTS template into a Workbook instance
-        Workbook workbook = new Workbook(templatePath);
-
-        // Replace placeholder text (e.g., {Name}) with actual value
-        workbook.Replace("{Name}", "John Doe");
-
-        // Configure ODS save options (optional: set generator type)
-        OdsSaveOptions saveOptions = new OdsSaveOptions
+        try
         {
-            GeneratorType = OdsGeneratorType.LibreOffice
-        };
+            const string templatePath = "template.ots";
+            const string resultPath = "result.ods";
 
-        // Save the modified workbook as an ODS file
-        string outputPath = "result.ods";
-        workbook.Save(outputPath, saveOptions);
+            // Verify that the template file exists before attempting to load it
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Template file \"{templatePath}\" not found.");
+                return;
+            }
+
+            // Load the OTS template workbook
+            Workbook workbook = new Workbook(templatePath);
+
+            // Replace placeholders throughout the workbook
+            workbook.Replace("{Name}", "John Doe");
+            // Additional replacements can be added similarly:
+            // workbook.Replace("{Date}", DateTime.Today.ToShortDateString());
+
+            // Save the modified workbook as ODS
+            workbook.Save(resultPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved successfully to \"{resultPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

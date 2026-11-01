@@ -1,45 +1,47 @@
-// Title: Rename the active worksheet to QuarterlyReport while preserving all cell data using Aspose.Cells for .NET
-// AI Prompts: Assign "QuarterlyReport" to the Name property of the workbook's active Worksheet. | Refresh the workbook's ActiveSheetName property to reflect the new sheet title. | Persist the changes by saving the workbook as an .xlsx file.
-// Common Searches: Aspose.Cells C# change name of current worksheet without affecting data | how to keep cell values when renaming a sheet in Aspose.Cells | set ActiveSheetName after renaming worksheet Aspose.Cells .NET | save workbook after worksheet rename using Aspose.Cells
-// Tags: active worksheet name assignment Aspose.Cells | ActiveSheetName synchronization Aspose.Cells | saving workbook as xlsx after sheet rename Aspose.Cells | worksheet rename example C# Aspose.Cells
+// Title: How to rename the active worksheet to "QuarterlyReport" in an Excel file using Aspose.Cells for .NET while keeping all cell data intact
+// AI Prompts: Use Aspose.Cells in C# to load a workbook, obtain the currently active sheet, assign "QuarterlyReport" to its Name property, and save the workbook without modifying any cell values. | Programmatically change the name of the active worksheet in an existing .xlsx file with Aspose.Cells, ensuring that all existing data remains unchanged after saving.
+// Common Searches: C# Aspose.Cells rename the active sheet to QuarterlyReport without losing data | How to change the name of the current worksheet in a loaded workbook using Aspose.Cells .NET | Preserve cell contents while renaming a worksheet with Aspose.Cells API | Get active worksheet index and rename it in Aspose.Cells C# example
+// Tags: Aspose.Cells programmatic worksheet renaming | retrieve active sheet index Aspose.Cells C# | save workbook preserving data after sheet rename | maintain cell values when renaming worksheet | worksheet Name property Aspose.Cells .NET
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel file with Aspose.Cells, retrieves the active worksheet via the ActiveSheetIndex, sets its Name to "QuarterlyReport", and saves the workbook as a new file, ensuring that all original cell data is retained.
+class Program
 {
-    // Shows how to retrieve the active worksheet in an Aspose.Cells workbook, rename it to "QuarterlyReport", synchronize the ActiveSheetName property, and save the workbook as an .xlsx file while retaining all existing cell data.
-    class RenameActiveWorksheet
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created and worksheet renamed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // lifecycle: create
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the currently active worksheet
-            Worksheet activeSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
+            // Retrieve the active worksheet using the Worksheets collection's ActiveSheetIndex
+            int activeIndex = workbook.Worksheets.ActiveSheetIndex;
+            Worksheet activeSheet = workbook.Worksheets[activeIndex];
 
-            // Rename the active worksheet to "QuarterlyReport"
+            // Rename the active worksheet
             activeSheet.Name = "QuarterlyReport";
 
-            // Keep the ActiveSheetName property in sync (optional but recommended)
-            workbook.Worksheets.ActiveSheetName = "QuarterlyReport";
-
-            // Save the workbook; all existing cell data remains unchanged
-            workbook.Save("RenamedWorkbook.xlsx", SaveFormat.Xlsx); // lifecycle: save
+            // Save the workbook, preserving all existing cell data
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

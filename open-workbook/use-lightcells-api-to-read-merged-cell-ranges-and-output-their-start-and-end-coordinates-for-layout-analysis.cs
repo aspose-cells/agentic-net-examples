@@ -1,53 +1,62 @@
-// Title: Read merged cell ranges with Aspose.Cells LightCells API in C# and output their start and end coordinates per worksheet
-// AI Prompts: Generate a C# console program that loads an Excel file using Aspose.Cells LightCells API, iterates every worksheet, and prints the start row/column and end row/column of each merged cell range. | Show how to use Worksheet.Cells.GetMergedAreas() in C# to retrieve merged areas and output their row/column bounds for layout analysis.
-// Common Searches: how to list merged cell positions using Aspose.Cells in C# | C# Aspose.Cells LightCells get merged ranges from each worksheet | retrieve start and end rows of merged cells with Aspose.Cells API | enumerate merged areas in an Excel workbook using Aspose.Cells C# | Aspose.Cells read merged cell ranges for layout processing
-// Tags: Aspose.Cells LightCells merged area enumeration | C# read merged cell coordinates Excel | Worksheet.Cells.GetMergedAreas usage | merged cell range extraction Aspose.Cells | layout analysis merged cells C#
+// Title: Read merged cell ranges from an Excel worksheet using Aspose.Cells LightCells API in C# and output their start and end coordinates
+// Common Searches: Aspose.Cells LightCells example to read merged cells in C# | How to enumerate merged ranges with LightCells API | C# code to list merged cell start and end rows and columns from an .xlsx file | Retrieve merged cell areas for layout analysis using Aspose.Cells | Extract merged cell boundaries from the first worksheet with LightCells
+// Tags: LightCells merged area extraction | Aspose.Cells merged range coordinates | C# enumerate merged cells Excel | Excel merged cell boundaries Aspose | layout analysis with LightCells merged cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, iterates each worksheet, uses Worksheet.Cells.GetMergedAreas() to obtain all merged cell ranges, and writes the sheet name together with the start and end row/column indices of each range to the console.
-class MergedCellReader
+// The sample loads an Excel file, accesses the first worksheet, uses Cells.GetMergedAreas() via the LightCells API to obtain all merged cell ranges, converts zero‑based indices to 1‑based Excel coordinates, and prints each range's start and end row/column positions.
+class Program
 {
     static void Main()
     {
-        // Path to the Excel file to be processed
-        string inputPath = "input.xlsx";
+        // Path to the Excel file to be analyzed
+        string filePath = "input.xlsx";
 
         // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
             return;
         }
 
         try
         {
             // Load the workbook using Aspose.Cells
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(filePath);
 
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet worksheet in workbook.Worksheets)
+            // Index of the worksheet to inspect (0 = first worksheet)
+            int sheetIndex = 0;
+
+            // Ensure the worksheet index is within range
+            if (sheetIndex < 0 || sheetIndex >= workbook.Worksheets.Count)
             {
-                string sheetName = worksheet.Name;
+                Console.WriteLine($"Error: Worksheet index {sheetIndex} is out of range.");
+                return;
+            }
 
-                // Retrieve all merged cell ranges for the current worksheet
-                CellArea[] mergedRanges = worksheet.Cells.GetMergedAreas();
+            // Retrieve the worksheet
+            Worksheet sheet = workbook.Worksheets[sheetIndex];
 
-                // Output each merged range's start and end coordinates
-                foreach (CellArea area in mergedRanges)
-                {
-                    Console.WriteLine(
-                        $"Sheet: {sheetName}, " +
-                        $"Start: (Row {area.StartRow}, Column {area.StartColumn}), " +
-                        $"End: (Row {area.EndRow}, Column {area.EndColumn})");
-                }
+            // Get all merged cell ranges in the specified worksheet (new API)
+            CellArea[] mergedRanges = sheet.Cells.GetMergedAreas();
+
+            // Output the start and end coordinates of each merged range
+            foreach (CellArea area in mergedRanges)
+            {
+                // Convert zero‑based indices to 1‑based Excel coordinates for readability
+                int startRow = area.StartRow + 1;
+                int startColumn = area.StartColumn + 1;
+                int endRow = area.EndRow + 1;
+                int endColumn = area.EndColumn + 1;
+
+                Console.WriteLine($"Merged Range: Start=({startRow},{startColumn}) End=({endRow},{endColumn})");
             }
         }
         catch (Exception ex)
         {
-            // Handle any runtime exceptions gracefully
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

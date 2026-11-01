@@ -1,47 +1,127 @@
-// Title: Convert HTML to XLSX with Aspose.Cells for .NET while preserving CSS‑based conditional formatting
-// AI Prompts: Generate C# code that loads a local HTML file using Aspose.Cells HtmlLoadOptions, maps CSS classes containing conditional‑formatting rules to Excel style objects, and saves the workbook as an XLSX file. | Show how to add robust error handling that verifies the HTML file exists and gracefully handles conversion exceptions in a C# Aspose.Cells application. | Demonstrate customizing HtmlLoadOptions to retain CSS styling—including conditional formatting—when importing HTML into an Aspose.Cells Workbook.
-// Common Searches: asp.net c# convert html table with css conditional formatting to xlsx using aspose.cells | how to keep css style rules when importing html into excel workbook with aspose.cells | example of HtmlLoadOptions preserving conditional formatting from html to excel | map css classes to Excel conditional formatting in a C# Aspose.Cells project | load html file into workbook and export as xlsx while retaining styling in .NET
-// Tags: html-to-xlsx conversion Aspose.Cells C# | css conditional formatting mapping to Excel styles | Aspose.Cells HtmlLoadOptions HTML import | preserve css styling during HTML to Excel conversion | c# load html workbook and save as xlsx | excel conditional formatting from css classes
+// Title: Convert HTML tables with CSS background‑color classes to Excel while preserving cell colors using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads an HTML file, extracts CSS class background‑color definitions, loads the HTML into an Aspose.Cells Workbook, and applies those colors as solid fills to the matching worksheet cells. | Extend the sample to also detect inline style background‑color attributes on <td> or <th> elements and map them to Excel cell formatting. | Implement a reusable method that takes a Dictionary<string,string> of CSS class names to hex colors and a Worksheet, then applies the colors to cells based on each cell's class attribute.
+// Common Searches: aspocells c# convert html table to xlsx preserving css background colors | how to map css class background-color to excel cell style using Aspose.Cells | load html with css styling into workbook and keep cell colors in .NET | extract css class colors from html and apply to excel cells programmatically
+// Tags: html to xlsx conversion with css background colors Aspose.Cells | apply css class colors to worksheet cells C# | HtmlLoadOptions preserve styling Aspose.Cells | regex parse css background-color for excel formatting | set cell style foreground color from hex Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The program reads 'input.html', extracts CSS class background‑color rules via regex, loads the HTML into an Aspose.Cells Workbook using HtmlLoadOptions, iterates over table rows and cells, applies the extracted colors as solid foreground fills to the corresponding worksheet cells, and saves the result as 'output.xlsx'.
+class HtmlToExcelWithConditionalFormatting
 {
-    // The example loads an input.html file into an Aspose.Cells Workbook using HtmlLoadOptions, then saves the workbook as output.xlsx. It includes basic file‑existence checking and exception handling, and can be extended to map CSS classes that define conditional formatting into equivalent Excel style rules, ensuring the visual formatting from the HTML is retained in the generated XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Paths for input HTML and output Excel files
+        string htmlPath = "input.html";
+        string excelPath = "output.xlsx";
+
+        try
         {
+            // -----------------------------------------------------------------
+            // 1. Verify input HTML file exists and load its content into a string
+            // -----------------------------------------------------------------
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException($"Input HTML file not found: {htmlPath}");
+
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // -----------------------------------------------------------------
+            // 2. Load the HTML into an Aspose.Cells Workbook
+            //    HtmlLoadOptions preserves most of the CSS styling.
+            // -----------------------------------------------------------------
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
+            string tempHtmlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".html");
+            File.WriteAllText(tempHtmlPath, htmlContent);
+
+            Workbook workbook;
             try
             {
-                const string inputPath = "input.html";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input HTML file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                    return;
-                }
-
-                // Initialize HTML load options (additional options can be set if supported by the library version)
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-                // Load the HTML file into a new workbook using the specified options
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook to an Excel file (XLSX format)
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Conversion completed successfully. Output saved to '{outputPath}'.");
+                workbook = new Workbook(tempHtmlPath, loadOptions);
             }
-            catch (Exception ex)
+            finally
             {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Clean up the temporary HTML file
+                if (File.Exists(tempHtmlPath))
+                {
+                    try { File.Delete(tempHtmlPath); } catch { /* ignore cleanup errors */ }
+                }
             }
+
+            // -----------------------------------------------------------------
+            // 3. Parse CSS classes that define background colors.
+            //    Pattern extracts the class name and the hex color value.
+            // -----------------------------------------------------------------
+            var cssClassToColor = new Dictionary<string, string>();
+            var cssMatches = Regex.Matches(
+                htmlContent,
+                @"\.([a-zA-Z0-9_-]+)\s*\{\s*background-color\s*:\s*(#[0-9A-Fa-f]{6})\s*;?\s*\}",
+                RegexOptions.Multiline);
+
+            foreach (Match match in cssMatches)
+            {
+                string className = match.Groups[1].Value;
+                string colorHex = match.Groups[2].Value;
+                cssClassToColor[className] = colorHex;
+            }
+
+            // -----------------------------------------------------------------
+            // 4. Walk through the HTML table rows/cells using regex (no external HTML parser).
+            //    Apply the corresponding background color to each cell.
+            // -----------------------------------------------------------------
+            var worksheet = workbook.Worksheets[0];
+            int startRow = 0; // zero‑based index for the first row of the table
+
+            var rowMatches = Regex.Matches(
+                htmlContent,
+                @"<tr[^>]*>(.*?)</tr>",
+                RegexOptions.Singleline | RegexOptions.IgnoreCase);
+
+            for (int r = 0; r < rowMatches.Count; r++)
+            {
+                string rowInnerHtml = rowMatches[r].Groups[1].Value;
+
+                var cellMatches = Regex.Matches(
+                    rowInnerHtml,
+                    @"<(td|th)[^>]*>",
+                    RegexOptions.IgnoreCase);
+
+                for (int c = 0; c < cellMatches.Count; c++)
+                {
+                    string cellTag = cellMatches[c].Value;
+
+                    var classAttrMatch = Regex.Match(
+                        cellTag,
+                        @"class\s*=\s*[""']([^""']+)[""']",
+                        RegexOptions.IgnoreCase);
+
+                    if (classAttrMatch.Success)
+                    {
+                        string classAttr = classAttrMatch.Groups[1].Value;
+                        if (cssClassToColor.TryGetValue(classAttr, out string colorHex))
+                        {
+                            // Create a style with the background color defined in CSS
+                            Style style = worksheet.Cells[startRow + r, c].GetStyle();
+                            style.ForegroundColor = ColorTranslator.FromHtml(colorHex);
+                            style.Pattern = BackgroundType.Solid;
+                            worksheet.Cells[startRow + r, c].SetStyle(style);
+                        }
+                    }
+                }
+            }
+
+            // -----------------------------------------------------------------
+            // 5. Save the workbook to an Excel file.
+            // -----------------------------------------------------------------
+            workbook.Save(excelPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Excel file saved successfully to '{excelPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

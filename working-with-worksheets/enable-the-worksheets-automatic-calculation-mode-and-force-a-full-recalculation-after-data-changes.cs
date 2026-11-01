@@ -1,35 +1,37 @@
-// Title: Set worksheet calculation mode to Automatic and force a full formula recalculation with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a workbook, sets each worksheet's CalculationMode to Automatic, and then calls CalculateFormula to recompute all formulas before saving. | Show how to enable automatic calculation for a worksheet in Aspose.Cells and trigger a complete formula refresh after modifying cell values. | Provide a step‑by‑step example of switching a workbook to Automatic calculation mode and forcing a full formula recalculation using Aspose.Cells in C#.
-// Common Searches: Aspose.Cells how to enable automatic calculation for a worksheet in C# | force full formula recalculation after updating cells using Aspose.Cells .NET | set calculation mode to Automatic and recalculate all formulas Aspose.Cells example | C# Aspose.Cells recalculate workbook after data changes
-// Tags: worksheet calculation mode automatic Aspose.Cells | force full formula recalculation Aspose.Cells | calculate formulas after data change C# | Aspose.Cells workbook calculation settings | automatic calculation with CalculateFormula .NET
+// Title: Enable automatic calculation mode and trigger a full workbook recalculation with Aspose.Cells in C#
+// AI Prompts: Generate C# code that sets Workbook.Settings.CalcMode to Automatic and then calls Workbook.CalculateFormula to recompute all formulas after updating cells using Aspose.Cells. | Show me how to turn on auto‑calculate for an Aspose.Cells workbook and force a complete formula recompute in .NET. | Write a C# snippet that enables automatic calculation for a worksheet, modifies a cell value, and then runs a full recalculation with Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable auto calculate and recalculate workbook after cell update | Set CalcMode to Automatic and force full formula recalculation in Aspose.Cells .NET | How to trigger CalculateFormula after changing data in an Aspose.Cells workbook | Automatic calculation mode Aspose.Cells C# example
+// Tags: Workbook.Settings.CalcMode Automatic Aspose.Cells | full formula recompute Aspose.Cells .NET | auto‑calculate setup C# Aspose.Cells | force CalculateFormula execution .NET | Aspose.Cells calculation mode configuration example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates loading or creating a workbook, switching its worksheets to Automatic calculation mode, invoking CalculateFormula to perform a complete formula recomputation, and then saving the workbook, with proper exception handling.
+// The example loads an existing workbook (or creates a new one), accesses the first worksheet, forces a complete formula recalculation with Workbook.CalculateFormula (which respects the workbook's calculation settings), and saves the updated file as Result.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one if needed)
-            Workbook workbook = new Workbook();
+            // Load an existing template if it exists; otherwise create a new workbook
+            string templatePath = "Template.xlsx";
+            Workbook workbook = File.Exists(templatePath) ? new Workbook(templatePath) : new Workbook();
 
-            // Perform immediate calculation of all formulas
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Recalculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Define output file path
-            string outputPath = "Result.xlsx";
-
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved to {resultPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,57 +1,103 @@
-// Title: How to apply a custom descending alphabetical sort to a row field in an Aspose.Cells pivot table using C#
-// AI Prompts: Write C# code that creates a workbook, adds a pivot table from a range, and uses PivotField.SortBy to sort the row field labels from Z to A with Aspose.Cells. | Show the steps to refresh and recalculate a pivot table after applying a descending alphabetical sort to its row items in .NET. | Demonstrate how to save the workbook after sorting pivot table categories in descending order using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to sort pivot table row items alphabetically descending | programmatically set Z‑to‑A sort on pivot table category field using Aspose.Cells | C# example for custom descending sort of pivot table row field labels Aspose.Cells
-// Tags: pivot field SortBy descending Aspose.Cells | C# Aspose.Cells row field alphabetical ordering | custom pivot table sorting .NET | Excel workbook save after pivot sort Aspose | pivot table refresh post sort Aspose.Cells
+// Title: C# example: Sort Product Category pivot field items in descending alphabetical order using Aspose.Cells for .NET
+// Common Searches: how to sort pivot table row items alphabetically descending with Aspose.Cells in C# | Aspose.Cells C# change order of pivot field items programmatically | reorder product category items in an Excel pivot table using Aspose.Cells .NET | set custom position for pivot items in a workbook with Aspose.Cells C# | refresh pivot table after modifying item positions using Aspose.Cells
+// Tags: Aspose.Cells pivot item descending sort | C# pivot field position manipulation | Excel pivot table custom order Aspose.Cells | refresh pivot table after sorting Aspose.Cells | product category field sorting C#
 
 using System;
+using System.IO;
+using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable, PivotField, PivotItem
 
-namespace AsposeCellsPivotCustomSort
+// The sample loads an existing Excel workbook, locates the first pivot table, finds the "Product Category" field in row or column fields, retrieves its pivot items, sorts them by name in descending alphabetical order, updates each item's Position to reflect the new order, refreshes and recalculates the pivot table, and saves the modified workbook.
+class Program
 {
-    // The program creates a workbook, fills it with sample category‑sales data, adds a pivot table, places the Category field in the row area, applies a descending alphabetical sort to the Category pivot items using PivotField.SortBy, refreshes and calculates the pivot table, and finally saves the workbook as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Populate sample data with product categories
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Sales";
-            sheet.Cells["A2"].Value = "Electronics";
-            sheet.Cells["B2"].Value = 1200;
-            sheet.Cells["A3"].Value = "Furniture";
-            sheet.Cells["B3"].Value = 800;
-            sheet.Cells["A4"].Value = "Clothing";
-            sheet.Cells["B4"].Value = 450;
-            sheet.Cells["A5"].Value = "Books";
-            sheet.Cells["B5"].Value = 300;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIdx];
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add the Category field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
+            }
 
-            // Add the Sales field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Assume the pivot table to modify is the first one on the sheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Apply a custom descending alphabetical sort to the Category pivot items
-            // -1 indicates sorting by the field's own labels (i.e., alphabetical order)
-            // SortOrder.Descending makes it descending (Z → A)
-            PivotField categoryField = pivotTable.RowFields[0];
-            categoryField.SortBy(SortOrder.Descending, -1);
+            // Locate the pivot field named "Product Category"
+            PivotField productCategoryField = null;
 
-            // Refresh and calculate the pivot table to apply sorting
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+            // Search in row fields
+            foreach (PivotField field in pivotTable.RowFields)
+            {
+                if (field.Name == "Product Category")
+                {
+                    productCategoryField = field;
+                    break;
+                }
+            }
 
-            // Save the workbook
-            workbook.Save("PivotTable_CustomDescendingAlphabeticalSort.xlsx");
+            // If not found in row fields, search in column fields
+            if (productCategoryField == null)
+            {
+                foreach (PivotField field in pivotTable.ColumnFields)
+                {
+                    if (field.Name == "Product Category")
+                    {
+                        productCategoryField = field;
+                        break;
+                    }
+                }
+            }
+
+            // Proceed only if the field exists
+            if (productCategoryField != null)
+            {
+                // Retrieve all pivot items for the field
+                var items = productCategoryField.PivotItems.Cast<PivotItem>();
+
+                // Sort the item names in descending alphabetical order
+                var sortedItems = items.OrderByDescending(item => item.Name).ToList();
+
+                // Reassign positions to reflect the new order
+                for (int i = 0; i < sortedItems.Count; i++)
+                {
+                    sortedItems[i].Position = i;
+                }
+
+                // Refresh the pivot table to apply changes
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+            }
+            else
+            {
+                Console.WriteLine("Pivot field 'Product Category' not found.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

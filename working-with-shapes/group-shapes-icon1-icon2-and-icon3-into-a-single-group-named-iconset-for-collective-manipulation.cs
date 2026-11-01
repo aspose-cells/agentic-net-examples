@@ -1,7 +1,7 @@
-// Title: How to group shapes Icon1, Icon2, and Icon3 into a ShapeGroup named IconSet with Aspose.Cells for .NET (grouping not supported)
-// AI Prompts: Generate C# code that loads an Excel workbook, retrieves shapes named Icon1, Icon2, and Icon3, and attempts to create a ShapeGroup called IconSet using Aspose.Cells, with proper handling when grouping is unavailable. | Provide a C# example that checks for the presence of shapes Icon1‑Icon3 and applies identical formatting to them as a fallback when the ShapeGroup feature is not supported in Aspose.Cells. | Write a C# snippet that assembles Icon1, Icon2, and Icon3 into a logical collection for batch operations in Aspose.Cells, including comments on the current API limitation.
-// Common Searches: aspose.cells create shape group from existing shapes c# | c# group multiple Excel shapes using Aspose.Cells API | aspose.cells shape grouping limitation and workaround | retrieve shapes by name and apply batch formatting aspose.cells | how to simulate shape grouping in Aspose.Cells .NET
-// Tags: shape group creation Aspose.Cells .NET | retrieve Excel shapes by name C# | Aspose.Cells shape grouping limitation | collective shape formatting Aspose.Cells | Excel shape manipulation Aspose.Cells API | workaround for shape grouping Aspose.Cells
+// Title: How to group three named shapes (Icon1, Icon2, Icon3) into a single shape group called IconSet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, retrieves shapes named Icon1, Icon2, and Icon3, groups them into a shape named IconSet, and saves the file. | Write a .NET snippet that uses Aspose.Cells to create a shape group from existing worksheet shapes, assign a custom group name, and persist the changes.
+// Common Searches: Aspose.Cells C# group multiple shapes into one shape group | How to name a shape group in an Excel file using Aspose.Cells | Retrieve shapes by name and create a group with Aspose.Cells .NET | Save workbook after grouping shapes with Aspose.Cells | C# example for grouping Icon1 Icon2 Icon3 in Excel using Aspose.Cells
+// Tags: group shapes Aspose.Cells .NET | shape grouping Excel workbook Aspose.Cells | named shape retrieval Aspose.Cells C# | assign custom name to shape group Aspose.Cells | save workbook after shape manipulation Aspose.Cells
 
 using System;
 using System.IO;
@@ -10,40 +10,54 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads an existing or new workbook, attempts to locate shapes named Icon1, Icon2, and Icon3 on the first worksheet, notes that the current Aspose.Cells version does not support ShapeGroup creation, and saves the workbook. It serves as a basis for handling shape grouping limitations and implementing alternative batch‑formatting strategies.
+    // Loads an existing Excel workbook, fetches shapes named Icon1, Icon2, and Icon3 from the first worksheet, groups them into a new shape called IconSet, and saves the updated file.
     class Program
     {
         static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
             try
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Load workbook if the input file exists; otherwise create a new workbook.
-                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                Worksheet sheet = workbook.Worksheets[0];
+                // Retrieve shapes by their names
+                Shape icon1 = worksheet.Shapes["Icon1"];
+                Shape icon2 = worksheet.Shapes["Icon2"];
+                Shape icon3 = worksheet.Shapes["Icon3"];
 
-                // Retrieve shapes by their names.
-                Shape icon1 = null;
-                Shape icon2 = null;
-                Shape icon3 = null;
+                // Ensure all shapes were found before proceeding
+                if (icon1 == null || icon2 == null || icon3 == null)
+                {
+                    Console.WriteLine("Error: One or more specified shapes were not found in the worksheet.");
+                    return;
+                }
 
-                try { icon1 = sheet.Shapes["Icon1"]; } catch { /* shape may not exist */ }
-                try { icon2 = sheet.Shapes["Icon2"]; } catch { /* shape may not exist */ }
-                try { icon3 = sheet.Shapes["Icon3"]; } catch { /* shape may not exist */ }
+                // Group the shapes
+                Shape[] iconsToGroup = new Shape[] { icon1, icon2, icon3 };
+                Shape iconSetGroup = worksheet.Shapes.Group(iconsToGroup);
+                iconSetGroup.Name = "IconSet";
 
-                // Grouping shapes is not supported in this version of Aspose.Cells.
-                // If needed, you can implement alternative logic here.
-
-                // Save the modified workbook.
+                // Save the workbook with the new grouped shape
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

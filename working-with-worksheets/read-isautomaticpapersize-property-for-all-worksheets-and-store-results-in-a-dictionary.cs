@@ -1,38 +1,34 @@
-// Title: How to read the IsAutomaticPaperSize flag for every worksheet in an Excel workbook using Aspose.Cells for .NET and store the results in a dictionary
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates through all worksheets, extracts the PageSetup.IsAutomaticPaperSize property, and returns a Dictionary<string,bool> mapping worksheet names to their automatic paper size setting. | Generate a method that takes a Workbook instance and produces a Dictionary where each key is a worksheet name and each value is the IsAutomaticPaperSize boolean from that sheet's PageSetup.
-// Common Searches: Aspose.Cells .NET get automatic paper size flag for each worksheet in a workbook | C# read PageSetup.IsAutomaticPaperSize for all sheets using Aspose.Cells | store worksheet name and IsAutomaticPaperSize in a dictionary Aspose.Cells | enumerate worksheets and retrieve printing settings with Aspose.Cells
-// Tags: read worksheet page setup IsAutomaticPaperSize Aspose.Cells | dictionary mapping worksheet names to printing flags .NET | iterate workbook worksheets Aspose.Cells C# | extract sheet-level printing settings Excel Aspose.Cells | load Excel file and access PageSetup properties Aspose.Cells
+// Title: Collect IsAutomaticPaperSize setting for every worksheet into a C# dictionary using Aspose.Cells
+// Common Searches: how to get worksheet page setup IsAutomaticPaperSize value with Aspose.Cells in C# | read automatic paper size flag for all sheets in an Excel file using Aspose.Cells | store worksheet names and their IsAutomaticPaperSize property in a dictionary in .NET | Aspose.Cells iterate worksheets and retrieve page setup automatic paper size | C# example to extract IsAutomaticPaperSize from each worksheet
+// Tags: Aspose.Cells worksheet page setup property extraction | read IsAutomaticPaperSize flag C# | iterate workbook worksheets Aspose.Cells | dictionary mapping worksheet name to bool | automatic paper size detection Excel Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
 
-// The example loads an Excel file with Aspose.Cells, loops through each worksheet, reads the PageSetup.IsAutomaticPaperSize property, stores the boolean values in a Dictionary keyed by worksheet name, and prints the results.
+// The sample loads an Excel workbook with Aspose.Cells, creates a Dictionary<string, bool>, loops through each Worksheet, reads the PageSetup.IsAutomaticPaperSize property, stores the boolean value keyed by the worksheet name, and then prints the collected name‑value pairs.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file
-        string filePath = "input.xlsx";
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook
-        Workbook workbook = new Workbook(filePath);
-
-        // Dictionary to hold worksheet name and its IsAutomaticPaperSize value
-        Dictionary<string, bool> automaticPaperSizeMap = new Dictionary<string, bool>();
+        // Dictionary to store worksheet name and its IsAutomaticPaperSize value
+        Dictionary<string, bool> isAutomaticPaperSizeMap = new Dictionary<string, bool>();
 
         // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Retrieve the IsAutomaticPaperSize property from the sheet's PageSetup
+            // Read the IsAutomaticPaperSize property from the worksheet's PageSetup
             bool isAuto = sheet.PageSetup.IsAutomaticPaperSize;
 
-            // Store the result in the dictionary using the sheet name as the key
-            automaticPaperSizeMap[sheet.Name] = isAuto;
+            // Store the result in the dictionary using the worksheet name as the key
+            isAutomaticPaperSizeMap[sheet.Name] = isAuto;
         }
 
-        // Example usage: print the results
-        foreach (var kvp in automaticPaperSizeMap)
+        // Example: display the collected values
+        foreach (var kvp in isAutomaticPaperSizeMap)
         {
             Console.WriteLine($"Worksheet: {kvp.Key}, IsAutomaticPaperSize: {kvp.Value}");
         }

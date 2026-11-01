@@ -1,53 +1,73 @@
-// Title: Rename Excel named ranges that start with "Temp" by adding an "Archive_" prefix using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates over workbook.Worksheets.Names, and prepends "Archive_" to any Name.Text that begins with "Temp", then saves the file. | Generate a loop that examines each defined name in a workbook and updates its Text property to add an "Archive_" prefix when the name starts with "Temp" using the Aspose.Cells API. | Create a console application that accepts input and output Excel paths, renames temporary named ranges by prefixing them with "Archive_" via Aspose.Cells, and includes error handling for missing files.
-// Common Searches: Aspose.Cells C# rename defined names that start with Temp | Add prefix to Excel named ranges using Aspose.Cells .NET | Loop through workbook.Worksheets.Names and change Name.Text in C# | How to archive temporary named ranges in an Excel file with Aspose.Cells | Programmatically rename multiple named ranges in a .NET Excel library
-// Tags: rename named ranges Aspose.Cells | prefix defined names C# | modify Name.Text property Aspose.Cells | batch update Excel named ranges .NET | archive temporary ranges Aspose.Cells
+// Title: Rename Excel named ranges that start with 'Temp' to 'Archive_' using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to rename Excel defined names that begin with Temp using Aspose.Cells | How to add a prefix to specific named ranges in a workbook with Aspose.Cells | Loop through workbook Names collection and change Name.Text in Aspose.Cells C# | Batch rename temporary named ranges to archive format in .NET Excel processing | Rename named ranges with a certain prefix in an existing XLSX file using Aspose.Cells
+// Tags: rename defined names Aspose.Cells C# | prefix named ranges Excel Aspose.Cells | iterate workbook names collection .NET | modify Name.Text property Aspose.Cells | batch rename temporary ranges XLSX
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an Excel workbook, iterates through all defined names, and prefixes any name starting with "Temp" with "Archive_" using Aspose.Cells for .NET, then saves the updated workbook.
+// The example loads an Excel workbook with Aspose.Cells, iterates over all defined names, and for each name that starts with "Temp" it replaces the prefix with "Archive_" by setting the Name.Text property, then saves the updated file.
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Determine input and output file paths (use command‑line arguments or defaults)
-        string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
-        string outputPath = args.Length > 1 ? args[1] : "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Verify that the input file exists
-        if (!File.Exists(inputPath))
+        Workbook workbook = null;
+
+        // Ensure the input file exists; otherwise create a new workbook.
+        if (File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file not found: {inputPath}");
-            return;
+            try
+            {
+                // Try loading the workbook normally.
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    // Attempt to load with an empty password (for password‑protected files).
+                    var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = "" };
+                    workbook = new Workbook(inputPath, loadOptions);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error loading workbook: {ex.Message}");
+                    return;
+                }
+            }
+        }
+        else
+        {
+            // Create a new workbook with a default worksheet.
+            workbook = new Workbook();
+            workbook.Worksheets[0].Name = "Sheet1";
         }
 
         try
         {
-            // Load the workbook from the specified input file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all defined names in the workbook
-            int nameCount = workbook.Worksheets.Names.Count;
-            for (int i = 0; i < nameCount; i++)
+            // Iterate over all defined names in the workbook.
+            for (int i = 0; i < workbook.Worksheets.Names.Count; i++)
             {
                 Name definedName = workbook.Worksheets.Names[i];
 
-                // If the name starts with "Temp", prefix it with "Archive_"
+                // Rename names that start with "Temp" by prefixing "Archive_".
                 if (definedName.Text.StartsWith("Temp", StringComparison.Ordinal))
                 {
-                    definedName.Text = "Archive_" + definedName.Text;
+                    string newName = "Archive_" + definedName.Text.Substring(4);
+                    definedName.Text = newName;
                 }
             }
 
-            // Save the modified workbook to the specified output file
+            // Save the updated workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 }

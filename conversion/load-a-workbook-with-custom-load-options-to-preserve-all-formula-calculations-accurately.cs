@@ -1,35 +1,49 @@
-// Title: Load an Excel workbook with custom LoadOptions to preserve formula padding and auto‑parse formulas on open using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells LoadOptions to enable ParsingFormulaOnOpen and PreservePaddingSpacesInFormula, then open an .xlsx file, recalculate its formulas, and save the result. | Create a Workbook with LoadOptions that turn off KeepUnparsedData, keep formula whitespace, force formula parsing at load time, and perform a full formula calculation before saving.
-// Common Searches: Aspose.Cells how to keep spaces inside Excel formulas when loading a workbook | load workbook with ParsingFormulaOnOpen option in C# | disable KeepUnparsedData for faster loading in Aspose.Cells | recalculate all formulas after opening an Excel file with Aspose.Cells | preserve formula line breaks using LoadOptions in Aspose.Cells .NET
-// Tags: custom LoadOptions for workbook loading Aspose.Cells | enable ParsingFormulaOnOpen in LoadOptions | preserve padding spaces in Excel formulas | disable KeepUnparsedData for faster load | recalculate formulas after workbook load
+// Title: Load an Excel workbook with Aspose.Cells in C# while preserving original formula results
+// Common Searches: C# Aspose.Cells load workbook without recalculating formulas | how to keep original formula values when opening an XLSX with Aspose.Cells | prevent automatic calculation on workbook load using Aspose.Cells .NET | preserve formula results while saving Excel file with Aspose.Cells | custom load options to retain formula calculations in Aspose.Cells C#
+// Tags: load workbook preserve formulas Aspose.Cells | manual calculation mode Aspose.Cells C# | excel file load without recalculation .NET | save workbook keep formula values Aspose.Cells | custom load options formula retention Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates configuring LoadOptions to parse formulas on opening, preserve whitespace inside formulas, skip storing unparsed data, loading an Excel workbook, recalculating all formulas, and saving the updated file.
-class LoadWorkbookWithCustomOptions
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook using default options that retain formulas and their calculated values, optionally switches the calculation mode to manual to stop automatic recalculation, ensures the output directory exists, saves the workbook, and handles any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Create custom load options
-        LoadOptions loadOptions = new LoadOptions();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Parse all formulas when the workbook is opened
-        loadOptions.ParsingFormulaOnOpen = true;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Preserve any padding spaces or line breaks inside formulas
-        loadOptions.PreservePaddingSpacesInFormula = true;
+            // Load the workbook (default options preserve formulas and values)
+            Workbook workbook = new Workbook(inputPath);
 
-        // Do not keep unparsed data in memory (optional, improves performance)
-        loadOptions.KeepUnparsedData = false;
+            // Optional: prevent automatic recalculation if you want to keep original values
+            // Note: In some Aspose.Cells versions the property is CalcMode; if unavailable, this step can be omitted.
+            // workbook.Settings.CalcMode = CalculationMode.Manual;
 
-        // Load the workbook using the custom options
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Recalculate formulas to ensure values are up‑to‑date after loading
-        workbook.CalculateFormula();
-
-        // Save the workbook (can be the same file or a new one)
-        workbook.Save("output.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

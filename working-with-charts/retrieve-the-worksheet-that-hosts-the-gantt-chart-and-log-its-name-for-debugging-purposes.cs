@@ -1,14 +1,14 @@
-// Title: Find the worksheet that contains a Gantt‑style bar chart and log its name using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that opens an Excel workbook, scans every worksheet for a Bar chart configured as a Gantt chart, and prints the worksheet name to the console. | Extend the example to also write the detected worksheet name to a log file while preserving the existing error‑handling logic.
-// Common Searches: how to locate the worksheet of a specific chart type with Aspose.Cells C# | c# Aspose.Cells find bar chart that represents a Gantt chart | retrieve parent worksheet name for a chart in an Excel workbook using Aspose.Cells | debug chart placement Aspose.Cells .NET | search all worksheets for Gantt chart Aspose.Cells example
-// Tags: Aspose.Cells locate worksheet by chart type | detect Gantt‑style bar chart in Excel with Aspose.Cells | record worksheet name of detected chart Aspose.Cells | debug chart detection Aspose.Cells .NET | retrieve parent worksheet of chart Aspose.Cells
+// Title: Find the worksheet that hosts a Gantt chart and log its name using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans every worksheet in a workbook, identifies a chart whose Type is Gantt, and writes the worksheet name to the console. | Update an existing Aspose.Cells routine to exit loops once a Gantt chart is detected and output its parent worksheet for debugging.
+// Common Searches: Aspose.Cells C# how to locate the worksheet containing a Gantt chart | retrieve sheet name of a specific chart type using Aspose.Cells .NET | debugging Aspose.Cells workbook by printing the parent worksheet of a Gantt chart | C# iterate through worksheets and charts to find Gantt chart in Excel file
+// Tags: Aspose.Cells find worksheet by chart type | C# iterate worksheets and charts Aspose.Cells | log Gantt chart parent worksheet Aspose.Cells | debug Excel workbook chart location Aspose.Cells | detect Gantt chart type fallback Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// Loads an Excel workbook, iterates through each worksheet and its chart collection, treats a Bar chart as a potential Gantt chart, and writes the name of the worksheet containing such a chart to the console (or a log file).
+// The example loads an Excel workbook, loops through each worksheet and its charts, checks for a chart whose Type string equals "Gantt", captures the containing worksheet's name, and writes it to the console, with safeguards for missing files and runtime exceptions.
 class Program
 {
     static void Main()
@@ -27,36 +27,32 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            bool ganttFound = false;
+            // Variable to hold the name of the worksheet containing the Gantt chart
+            string? ganttWorksheetName = null;
 
-            // Iterate through all worksheets to locate a Gantt-like chart
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Access the charts collection of the current worksheet
-                ChartCollection charts = sheet.Charts;
-
-                foreach (Chart chart in charts)
+                // Iterate through all charts in the current worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    // Aspose.Cells does not expose a dedicated Gantt chart type in this version.
-                    // As a workaround, treat a Bar chart that is configured as a Gantt chart as a match.
-                    if (chart.Type == ChartType.Bar)
+                    // Detect Gantt chart by name (fallback when ChartType.Gantt is unavailable)
+                    if (chart.Type.ToString().Equals("Gantt", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Additional checks could be added here to verify Gantt-specific settings.
-                        Console.WriteLine($"Bar chart (potential Gantt) is located in worksheet: {sheet.Name}");
-                        ganttFound = true;
+                        ganttWorksheetName = sheet.Name;
+                        Console.WriteLine($"Gantt chart is located in worksheet: {ganttWorksheetName}");
                         break; // Exit inner loop
                     }
                 }
 
-                if (ganttFound)
-                {
-                    break; // Exit outer loop if a Gantt-like chart was found
-                }
+                if (ganttWorksheetName != null)
+                    break; // Exit outer loop
             }
 
-            if (!ganttFound)
+            // If no Gantt chart was found, log a message
+            if (ganttWorksheetName == null)
             {
-                Console.WriteLine("No Gantt-like chart was found in the workbook.");
+                Console.WriteLine("No Gantt chart found in the workbook.");
             }
         }
         catch (Exception ex)

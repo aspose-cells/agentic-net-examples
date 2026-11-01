@@ -1,67 +1,65 @@
-// Title: Populate Excel smart markers from a List<EmployeeDto> using Aspose.Cells WorkbookDesigner.SetDataSource(IEnumerable) in C#
-// AI Prompts: Write C# code that creates an Excel workbook, adds smart marker cells for employee fields, binds a List<EmployeeDto> to the "Employee" marker with WorkbookDesigner.SetDataSource, processes the markers, and saves the file. | Show how to use Aspose.Cells to expand rows automatically based on an IEnumerable collection of DTO objects and output the result as an .xlsx workbook.
-// Common Searches: how to bind a List<T> to smart markers in Aspose.Cells C# | Aspose.Cells SetDataSource with IEnumerable example | populate Excel template using smart markers from a DTO collection | C# generate rows dynamically with smart markers Aspose.Cells | export employee data to XLSX using smart markers
-// Tags: Aspose.Cells SetDataSource IEnumerable binding | C# smart markers Excel generation | dynamic rows from DTO collection | Excel export of employee list using Aspose.Cells | populate worksheet with object collection
+// Title: Bind a List of PersonDto objects to Aspose.Cells smart markers with WorkbookDesigner.SetDataSource(IEnumerable) in C#
+// AI Prompts: Generate C# code that loads an Excel template, creates a List<PersonDto>, sets it as a smart‑marker data source using WorkbookDesigner.SetDataSource("persons", persons), processes the markers, recalculates formulas, and saves the workbook. | Show how to replace the DTO class and data source identifier in the smart‑marker example while still using the IEnumerable overload of SetDataSource. | Explain step‑by‑step how Aspose.Cells WorkbookDesigner can populate smart markers from any IEnumerable collection and then trigger formula recalculation.
+// Common Searches: aspnet aspocells setdatasource ienumerable smart markers example | how to populate smart markers from a List<T> using Aspose.Cells in C# | WorkbookDesigner SetDataSource with custom DTO collection | recalculate formulas after processing smart markers Aspose.Cells | using Aspose.Cells smart markers with a list of objects in .NET
+// Tags: WorkbookDesigner SetDataSource with IEnumerable | Aspose.Cells smart markers using DTO list | populate smart markers from List<T> | recalculate workbook formulas Aspose.Cells | process Excel template smart markers C#
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerDemo
+namespace AsposeCellsSmartMarkerExample
 {
-    // DTO class representing an employee
-    // // Demonstrates creating a workbook, defining smart marker cells for Name, Department, and Age, binding a List<EmployeeDto> to the "Employee" marker via WorkbookDesigner.SetDataSource, processing the markers to expand rows for each employee, and saving the result as EmployeesSmartMarkers.xlsx.
-    public class EmployeeDto
+    // DTO class representing the data for smart markers
+    // The example loads an Excel template, creates a List<PersonDto>, binds it to smart markers via WorkbookDesigner.SetDataSource("persons", persons), processes the markers, recalculates all formulas, and saves the populated workbook.
+    public class PersonDto
     {
-        public string Name { get; set; }
-        public string Department { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
-
-        public EmployeeDto(string name, string department, int age)
-        {
-            Name = name;
-            Department = department;
-            Age = age;
-        }
+        public double Salary { get; set; }
     }
 
     public class Program
     {
         public static void Main()
         {
-            // Prepare a list of DTO objects
-            List<EmployeeDto> employees = new List<EmployeeDto>
+            try
             {
-                new EmployeeDto("Alice", "HR", 30),
-                new EmployeeDto("Bob", "IT", 28),
-                new EmployeeDto("Charlie", "Finance", 35)
-            };
+                const string templatePath = "SmartMarkerTemplate.xlsx";
+                const string resultPath = "SmartMarkerResult.xlsx";
 
-            // Create a new workbook (template) and add smart markers
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+                // Verify that the template file exists to avoid FileNotFoundException
+                if (!File.Exists(templatePath))
+                    throw new FileNotFoundException($"Template file not found: {templatePath}");
 
-            // Header row
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Department");
-            sheet.Cells["C1"].PutValue("Age");
+                // Load a workbook that contains smart markers (template)
+                Workbook workbook = new Workbook(templatePath);
 
-            // Smart marker rows – they will be expanded for each item in the list
-            sheet.Cells["A2"].PutValue("&=$Employee.Name");
-            sheet.Cells["B2"].PutValue("&=$Employee.Department");
-            sheet.Cells["C2"].PutValue("&=$Employee.Age");
+                // Create a list of DTO objects to serve as the data source
+                List<PersonDto> persons = new List<PersonDto>
+                {
+                    new PersonDto { Name = "John", Age = 30, Salary = 50000 },
+                    new PersonDto { Name = "Jane", Age = 28, Salary = 55000 },
+                    new PersonDto { Name = "Bob", Age = 35, Salary = 60000 }
+                };
 
-            // Initialize the designer with the workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                // Initialize the WorkbookDesigner (smart marker processor) and set the data source
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                // Provide a name for the data source collection (e.g., "persons")
+                designer.SetDataSource("persons", persons);
+                designer.Process(); // Populate smart markers
 
-            // Bind the IEnumerable (list) to the smart marker variable "Employee"
-            designer.SetDataSource("Employee", employees);
+                // Recalculate formulas after processing smart markers
+                workbook.CalculateFormula();
 
-            // Process the smart markers and populate data
-            designer.Process();
-
-            // Save the populated workbook
-            workbook.Save("EmployeesSmartMarkers.xlsx");
+                // Save the workbook with the populated data
+                workbook.Save(resultPath);
+                Console.WriteLine($"Smart marker processing completed. Result saved to '{resultPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

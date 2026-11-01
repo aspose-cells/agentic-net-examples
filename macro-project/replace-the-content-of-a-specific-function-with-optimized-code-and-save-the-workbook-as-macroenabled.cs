@@ -1,93 +1,98 @@
-// Title: Programmatically replace a VBA function in a chosen module and export the workbook as a macro‑enabled XLSM with Aspose.Cells for .NET
-// AI Prompts: Insert an optimized implementation for a specified VBA function inside a selected module of an .xlsm workbook and persist the changes using the Aspose.Cells API in C#. | Locate a VBA module by name, substitute its target function's code block with new logic, and save the workbook as a macro‑enabled file via Aspose.Cells.
-// Common Searches: how to programmatically swap a VBA function in an xlsm file using Aspose.Cells C# | update VBA module code and save macro-enabled workbook with Aspose.Cells .NET | edit VBA project to change a specific function using Aspose.Cells API | save changes to VBA macros after editing code with Aspose.Cells for .NET
-// Tags: Aspose.Cells edit VBA module code | Aspose.Cells modify VBA function definition | Aspose.Cells save macro-enabled Xlsm workbook | C# update VBA project with Aspose.Cells | optimize VBA logic using Aspose.Cells API
+// Title: Replace a VBA function with optimized code in a macro-enabled Excel workbook and save as .xlsm using Aspose.Cells for .NET
+// Common Searches: how to update a VBA function in an existing .xlsm file using Aspose.Cells C# | replace specific VBA module code with new implementation in Aspose.Cells .NET | save modified macro-enabled workbook as .xlsm after VBA code change with Aspose.Cells | using regex to replace a VBA function in an Aspose.Cells workbook C# example | optimize VBA routine in a macro-enabled Excel workbook programmatically with Aspose.Cells
+// Tags: modify VBA module code Aspose.Cells | enhance VBA performance Aspose.Cells | save workbook as xlsm using Aspose.Cells | regex replace VBA code in Aspose.Cells | update VbaProject modules C#
 
 using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// The example loads an existing .xlsm workbook, finds a designated VBA module and function, replaces the function's source with optimized code, updates the module, and saves the workbook as a macro‑enabled XLSM file using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsMacroOptimization
 {
-    static void Main()
+    // The example loads a macro-enabled Excel file, locates a specific VBA function across all VBA modules, replaces the entire function definition with optimized code using a regular‑expression pattern, updates the module, and then saves the workbook as a new .xlsm file—all performed with Aspose.Cells for .NET.
+    class Program
     {
-        // Load an existing workbook that contains VBA macros
-        Workbook workbook = new Workbook("input.xlsm");
-
-        // Access the VBA project
-        VbaProject vbaProject = workbook.VbaProject;
-        if (vbaProject == null)
+        static void Main(string[] args)
         {
-            Console.WriteLine("No VBA project found in the workbook.");
-            return;
-        }
-
-        // Define the target module and function name
-        string targetModuleName = "Module1";   // change as needed
-        string targetFunctionName = "MyFunction"; // change as needed
-
-        // Locate the module
-        VbaModule targetModule = null;
-        foreach (VbaModule module in vbaProject.Modules)
-        {
-            if (module.Name.Equals(targetModuleName, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                targetModule = module;
-                break;
+                const string inputPath = "input.xlsm";
+                const string outputPath = "output.xlsm";
+
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+                // Load the existing macro‑enabled workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Optimize the VBA function named "MyFunction"
+                OptimizeVbaFunction(workbook, "MyFunction", GetOptimizedFunctionCode());
+
+                // Save the workbook as macro‑enabled (.xlsm)
+                workbook.Save(outputPath, SaveFormat.Xlsm);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
-        if (targetModule == null)
+        /// <param name="workbook">The workbook containing the VBA project.</param>
+        /// <param name="functionName">The name of the VBA function to replace.</param>
+        /// <param name="optimizedCode">The full optimized function code (including Function/End Function).</param>
+        private static void OptimizeVbaFunction(Workbook workbook, string functionName, string optimizedCode)
         {
-            Console.WriteLine($"Module '{targetModuleName}' not found.");
-            return;
+            try
+            {
+                // Ensure the workbook has a VBA project
+                if (workbook.VbaProject == null)
+                    throw new InvalidOperationException("The workbook does not contain a VBA project.");
+
+                // Iterate through all VBA modules to locate the function
+                foreach (dynamic module in workbook.VbaProject.Modules)
+                {
+                    string originalCode = module.Codes as string ?? string.Empty;
+
+                    // Build a regex pattern that matches the entire function definition (including its body)
+                    string pattern = $@"Function\s+{Regex.Escape(functionName)}\b[^\r\n]*\r?\n([\s\S]*?)End\s+Function";
+
+                    // Replace the matched function with the optimized version
+                    string updatedCode = Regex.Replace(
+                        originalCode,
+                        pattern,
+                        optimizedCode,
+                        RegexOptions.IgnoreCase);
+
+                    // If a replacement occurred, update the module's code and exit
+                    if (!originalCode.Equals(updatedCode, StringComparison.Ordinal))
+                    {
+                        module.Codes = updatedCode;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error optimizing VBA function '{functionName}': {ex.Message}");
+                throw;
+            }
         }
 
-        // Get the current VBA code
-        string code = targetModule.Codes;
-
-        // Build the optimized function code
-        string optimizedFunction = $@"
-Public Function {targetFunctionName}() As Variant
+        /// <summary>
+        /// Returns the optimized VBA function code.
+        /// </summary>
+        private static string GetOptimizedFunctionCode()
+        {
+            // Example of an optimized function; replace with real optimized logic.
+            return
+@"Function MyFunction()
     ' Optimized implementation starts here
-    ' ... (insert optimized logic) ...
-    {targetFunctionName} = ""Optimized Result""
-End Function
-";
-
-        // Replace the existing function definition with the optimized one
-        // Simple approach: locate the function by its signature and replace the block
-        string patternStart = $"Public Function {targetFunctionName}";
-        int startIdx = code.IndexOf(patternStart, StringComparison.OrdinalIgnoreCase);
-        if (startIdx >= 0)
-        {
-            int endIdx = code.IndexOf("End Function", startIdx, StringComparison.OrdinalIgnoreCase);
-            if (endIdx >= 0)
-            {
-                // Include the length of "End Function"
-                endIdx = code.IndexOf("\n", endIdx);
-                if (endIdx == -1) endIdx = code.Length;
-                string before = code.Substring(0, startIdx);
-                string after = code.Substring(endIdx);
-                code = before + optimizedFunction + after;
-                targetModule.Codes = code;
-                Console.WriteLine($"Function '{targetFunctionName}' replaced with optimized version.");
-            }
-            else
-            {
-                Console.WriteLine("End Function keyword not found for the target function.");
-                return;
-            }
+    Dim result As Long
+    result = 42  ' Placeholder for actual optimized calculation
+    MyFunction = result
+End Function";
         }
-        else
-        {
-            Console.WriteLine($"Function '{targetFunctionName}' not found in module '{targetModuleName}'.");
-            return;
-        }
-
-        // Save the workbook as a macro‑enabled file
-        workbook.Save("output.xlsm", SaveFormat.Xlsm);
-        Console.WriteLine("Workbook saved as macro‑enabled file 'output.xlsm'.");
     }
 }

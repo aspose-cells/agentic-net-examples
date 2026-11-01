@@ -1,12 +1,12 @@
-// Title: Freeze the first two columns (A and B) in an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to lock columns A and B while allowing all rows to scroll. | Show how to invoke Worksheet.FreezePanes to apply a column‑only freeze in a newly created workbook and export it as an Xlsx file. | Provide a concise example that creates a worksheet, populates header cells, and freezes the first two columns with Aspose.Cells.
-// Common Searches: Aspose.Cells C# freeze only the first two columns in an Excel workbook | How to apply FreezePanes to lock columns A and B with Aspose.Cells for .NET | Prevent horizontal scrolling of identifier columns in Excel using Aspose.Cells | C# example for column‑only freeze panes with Aspose.Cells | Freeze columns without freezing rows Aspose.Cells .NET
-// Tags: Aspose.Cells FreezePanes column only | C# freeze first two Excel columns | Aspose.Cells worksheet column freeze example | Excel Xlsx column freeze Aspose.Cells | prevent horizontal scrolling identifier columns Aspose.Cells
+// Title: How to freeze the first two columns (A and B) in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to freeze only columns A and B while keeping all rows scrollable. | Show how to determine the used range of a worksheet and apply the FreezePanes method to lock the first two columns in a .NET workbook. | Provide a complete example that creates a workbook, adds header rows, freezes the first two columns, and saves the result as an .xlsx file.
+// Common Searches: Aspose.Cells C# freeze columns A and B without freezing rows | How to use FreezePanes to lock the first two columns in an Excel file with .NET | Programmatically set frozen panes for columns only using Aspose.Cells | C# example for freezing specific columns in an Excel worksheet with Aspose | Freeze first two columns in generated Excel workbook using Aspose.Cells API
+// Tags: Aspose.Cells FreezePanes column freezing | C# Excel column freeze with Aspose | set frozen panes for columns .NET | Aspose.Cells worksheet FreezePanes usage | generate .xlsx with frozen columns using Aspose
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, adds header values to cells A1‑D1, freezes columns A and B using Worksheet.FreezePanes(0, 2, 0, 0) (rows remain unfrozen), and saves the file as FrozenColumns.xlsx.
+// The sample creates a new workbook, writes header values, computes the worksheet's used range, and calls FreezePanes(0, 2, totalRows, totalColumns) to lock columns A and B while leaving rows unfrozen, then saves the file as FrozenColumns.xlsx.
 class Program
 {
     static void Main()
@@ -14,29 +14,33 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Optional: add some sample data
-            sheet.Cells["A1"].PutValue("ID");
+            // Sample header data
+            sheet.Cells["A1"].PutValue("Identifier");
             sheet.Cells["B1"].PutValue("Code");
             sheet.Cells["C1"].PutValue("Name");
             sheet.Cells["D1"].PutValue("Description");
 
             // Freeze the first two columns (A and B)
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns
-            // Setting firstRow and totalRows to 0 means no rows are frozen.
-            // Setting firstColumn to 2 freezes columns A and B.
-            sheet.FreezePanes(0, 2, 0, 0);
+            // FreezePanes(row, column, totalRows, totalColumns)
+            // row = 0 (no rows frozen), column = 2 (freeze first two columns)
+            // totalRows/totalColumns define the pane size; using max data range ensures full sheet is considered
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(0, 2, totalRows, totalColumns);
 
             // Save the workbook
-            workbook.Save("FrozenColumns.xlsx", SaveFormat.Xlsx);
+            string outputPath = "FrozenColumns.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

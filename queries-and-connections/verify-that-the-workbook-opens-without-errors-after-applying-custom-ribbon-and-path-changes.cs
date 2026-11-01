@@ -1,47 +1,74 @@
-// Title: Verify that a workbook saved with custom Ribbon XML opens without errors using Aspose.Cells for .NET
-// AI Prompts: Write a C# console app that creates a new Workbook, assigns a custom Ribbon XML definition, saves it as an .xlsm file, reloads the file, and asserts that the RibbonXml property is still populated. | Generate code that demonstrates how to persist a custom UI ribbon in an Aspose.Cells workbook, then load the workbook to confirm no exceptions and that the ribbon definition is retained.
-// Common Searches: how to persist custom ribbon xml in an Aspose.Cells .xlsm workbook and reload it | Aspose.Cells C# verify RibbonXml property after saving and opening workbook | example of saving and loading a workbook with custom UI ribbon using Aspose.Cells for .NET | check if custom ribbon definition is retained in saved Excel macro-enabled file with Aspose.Cells | C# load workbook with RibbonXml without throwing errors Aspose.Cells
-// Tags: custom ribbon xml Aspose.Cells | save workbook with ribbon xml .xlsm | load workbook and verify RibbonXml | C# Aspose.Cells ribbon persistence validation | macro-enabled workbook custom UI verification
+// Title: Validate that an Excel workbook opens correctly after embedding a custom ribbon UI with Aspose.Cells for .NET (C#)
+// Common Searches: how to embed a custom ribbon UI in an Excel file using Aspose.Cells C# and verify it opens | Aspose.Cells C# add custom XML part for ribbon and test workbook loading | check if modified Excel workbook saves and loads without errors after custom ribbon injection | C# code to add custom ribbon UI to .xlsx and confirm successful opening with Aspose.Cells | validate workbook integrity after adding custom UI XML using Aspose.Cells .NET
+// Tags: add custom ribbon UI Aspose.Cells C# | custom XML part injection Excel workbook | save workbook with custom UI Aspose.Cells | verify workbook opens after modification | error handling workbook loading Aspose.Cells
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Creates a new workbook, applies custom Ribbon XML, saves it as an .xlsm file, reloads the file, and confirms that the RibbonXml property remains intact.
-class VerifyWorkbookRibbon
+// The example loads an existing .xlsx file, injects a custom ribbon UI XML via the CustomXmlParts.Add method, saves the workbook as a new file, and then reopens the modified workbook to confirm it loads without exceptions, demonstrating proper error handling and validation of the custom UI integration.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        // Paths for the original and modified workbooks
+        string originalPath = "original.xlsx";
+        string modifiedPath = "modified.xlsx";
 
-        // Define custom Ribbon XML
-        string ribbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab id=\"customTab\" label=\"My Tab\">" +
-            "        <group id=\"customGroup\" label=\"My Group\">" +
-            "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
+        // Ensure the original workbook exists before loading
+        if (!File.Exists(originalPath))
+        {
+            Console.WriteLine($"Error: The file \"{originalPath}\" was not found.");
+            return;
+        }
 
-        // Apply the Ribbon XML to the workbook
-        workbook.RibbonXml = ribbonXml;
+        try
+        {
+            // Load the original workbook
+            Workbook workbook = new Workbook(originalPath);
 
-        // Specify the file path for saving
-        string filePath = "CustomRibbonWorkbook.xlsm";
+            // Define custom ribbon UI XML
+            string customUiXml = @"<customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
+                                    <ribbon>
+                                        <tabs>
+                                            <tab id='CustomTab' label='My Tab'>
+                                                <group id='CustomGroup' label='My Group'>
+                                                    <button id='CustomButton' label='Click Me' size='large' onAction='OnButtonClick'/>
+                                                </group>
+                                            </tab>
+                                        </tabs>
+                                    </ribbon>
+                                  </customUI>";
 
-        // Save the workbook to disk
-        workbook.Save(filePath);
+            // Add the custom UI part to the workbook.
+            // The Add method requires the XML data and optional schema data; schema can be null.
+            workbook.CustomXmlParts.Add(Encoding.UTF8.GetBytes(customUiXml), null);
 
-        // Load the saved workbook to verify it opens without errors
-        Workbook loadedWorkbook = new Workbook(filePath);
+            // Save the workbook with the custom ribbon
+            workbook.Save(modifiedPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            return;
+        }
 
-        // Check that the RibbonXml property is retained after loading
-        bool ribbonIsSet = !string.IsNullOrEmpty(loadedWorkbook.RibbonXml);
-        Console.WriteLine("RibbonXml loaded successfully: " + ribbonIsSet);
+        // Verify that the modified workbook opens without errors
+        try
+        {
+            if (!File.Exists(modifiedPath))
+            {
+                Console.WriteLine($"Error: The modified file \"{modifiedPath}\" was not created.");
+                return;
+            }
+
+            Workbook verifyWorkbook = new Workbook(modifiedPath);
+            Console.WriteLine("Workbook opened successfully after applying custom ribbon.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error opening modified workbook: {ex.Message}");
+        }
     }
 }

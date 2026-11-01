@@ -1,65 +1,73 @@
-// Title: Create a stacked column chart with three series and assign red, green, and blue colors to each series using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that builds a ColumnStacked chart with three data series, binds category labels from column A, and sets the first series fill to red, the second to green, and the third to blue using Aspose.Cells. | Show how to add multiple series to a stacked column chart from worksheet ranges and customize each series' foreground color programmatically in Aspose.Cells. | Provide a complete example that saves the workbook containing the customized stacked column chart to an .xlsx file with Aspose.Cells.
-// Common Searches: asp.net aspose.cells create stacked column chart with three series custom colors | c# set individual series colors in a ColumnStacked chart using Aspose.Cells | how to bind category data and multiple series to a stacked column chart in Aspose.Cells | asp.net example for customizing series fill color in Aspose.Cells chart | save workbook with stacked column chart as .xlsx using Aspose.Cells C#
-// Tags: stacked column chart creation Aspose.Cells C# | custom series fill color Aspose.Cells | bind worksheet range to chart series Aspose.Cells | add multiple series to ColumnStacked chart Aspose.Cells | save workbook as .xlsx Aspose.Cells | set series foreground color Aspose.Cells chart
+// Title: Create a stacked column chart with three series and assign individual colors using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that builds a stacked column chart, adds three data series, and sets a unique foreground color for each series. | Show how to populate worksheet cells with category labels and three series values, then bind them to a stacked column chart in Aspose.Cells. | Demonstrate saving the workbook containing the customized stacked column chart to an XLSX file using Aspose.Cells.
+// Common Searches: aspnet aspose.cells create stacked column chart with three series and custom colors | c# set different colors for each series in an Aspose.Cells stacked column chart | how to bind category axis and multiple series to a stacked column chart using Aspose.Cells | example of using NSeries.Area.ForegroundColor to color stacked columns in Aspose.Cells | save stacked column chart to xlsx file using Aspose.Cells for .NET
+// Tags: Aspose.Cells stacked column chart creation | C# set series foreground color Aspose.Cells | populate worksheet data for chart series Aspose.Cells | save workbook as XLSX Aspose.Cells | NSeries.Area.ForegroundColor usage
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, fills columns A‑D with category labels and three data series, adds a ColumnStacked chart, binds the series and category ranges, sets the first series fill to red, second to green, third to blue, and saves the file as StackedColumnChartWithCustomColors.xlsx.
-class StackedColumnChartExample
+// // Creates a workbook, fills categories and three series values, adds a stacked column chart, assigns red, green, and blue colors to each series via NSeries.Area.ForegroundColor, and saves the file as StackedColumnChart.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data
-        // Column A – Category labels
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["A4"].PutValue("Q3");
+            // Populate data for three series
+            // Column A: Categories, Columns B-D: Series values
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series1");
+            sheet.Cells["C1"].PutValue("Series2");
+            sheet.Cells["D1"].PutValue("Series3");
 
-        // Column B – Series 1 values
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            string[] categories = { "Q1", "Q2", "Q3", "Q4" };
+            int[,] values = {
+                { 10, 20, 30 },
+                { 15, 25, 35 },
+                { 20, 30, 40 },
+                { 25, 35, 45 }
+            };
 
-        // Column C – Series 2 values
-        sheet.Cells["C1"].PutValue("Series2");
-        sheet.Cells["C2"].PutValue(15);
-        sheet.Cells["C3"].PutValue(25);
-        sheet.Cells["C4"].PutValue(35);
+            for (int i = 0; i < categories.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(categories[i]);   // A column
+                sheet.Cells[i + 1, 1].PutValue(values[i, 0]);   // B column (Series1)
+                sheet.Cells[i + 1, 2].PutValue(values[i, 1]);   // C column (Series2)
+                sheet.Cells[i + 1, 3].PutValue(values[i, 2]);   // D column (Series3)
+            }
 
-        // Column D – Series 3 values
-        sheet.Cells["D1"].PutValue("Series3");
-        sheet.Cells["D2"].PutValue(12);
-        sheet.Cells["D3"].PutValue(22);
-        sheet.Cells["D4"].PutValue(32);
+            // Add a stacked column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Stacked Column Chart";
 
-        // Add a stacked column chart
-        int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 6, 0, 20, 12);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add three series to the chart
+            chart.NSeries.Add("B2:B5", true); // Series1
+            chart.NSeries.Add("C2:C5", true); // Series2
+            chart.NSeries.Add("D2:D5", true); // Series3
 
-        // Add the three series (by column) and set category data
-        // The first Add call adds all three series because the range includes B:D rows 2-4
-        chart.NSeries.Add("B2:D4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Set category (X‑axis) data
+            chart.NSeries.CategoryData = "A2:A5";
 
-        // Customize each series color individually
-        // Series 0 – red
-        chart.NSeries[0].Area.ForegroundColor = Color.Red;
-        // Series 1 – green
-        chart.NSeries[1].Area.ForegroundColor = Color.Green;
-        // Series 2 – blue
-        chart.NSeries[2].Area.ForegroundColor = Color.Blue;
+            // Customize each series color individually
+            chart.NSeries[0].Area.ForegroundColor = Color.Red;    // Series1 color
+            chart.NSeries[1].Area.ForegroundColor = Color.Green;  // Series2 color
+            chart.NSeries[2].Area.ForegroundColor = Color.Blue;   // Series3 color
 
-        // Save the workbook
-        workbook.Save("StackedColumnChartWithCustomColors.xlsx");
+            // Save the workbook with the chart
+            string outputPath = "StackedColumnChart.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

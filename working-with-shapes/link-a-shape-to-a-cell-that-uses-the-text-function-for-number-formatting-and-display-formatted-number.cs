@@ -1,13 +1,14 @@
-// Title: How to link a rectangle shape to a cell formatted with the TEXT function in Aspose.Cells for .NET
-// AI Prompts: Create a rectangle shape on a worksheet and assign its Text property to the string value of a cell that contains a TEXT formula, then save the workbook. | Calculate worksheet formulas, retrieve the formatted result from a cell, and bind that result to a shape’s displayed text with custom alignment and font styling using Aspose.Cells.
-// Common Searches: Aspose.Cells set shape text to result of TEXT formula in another cell | C# link rectangle shape to formatted number using TEXT function Aspose.Cells | How to display a cell's TEXT function output inside a shape with Aspose.Cells .NET
-// Tags: Aspose.Cells shape text binding to cell value | rectangle shape linked to TEXT function output | set shape text from formatted cell Aspose.Cells | C# calculate formulas and bind result to shape | Aspose.Cells formatted number display in shape
+// Title: How to link a rectangle shape to a cell that uses the TEXT function for currency formatting in Aspose.Cells for .NET (C#)
+// AI Prompts: Create an Excel workbook, write a raw number to A1, apply the TEXT formula in B1 for currency formatting, add a rectangle shape, and set its Text property to "=B1" using Aspose.Cells in C#. | Generate a .xlsx file where a rectangle shape displays the result of a TEXT function applied to a numeric cell by linking the shape's text to the formula cell with the Aspose.Cells API. | Programmatically bind a shape's displayed text to a cell containing a TEXT formula that formats a number as currency, using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# link shape text to cell with TEXT formula for currency | How to display formatted number from TEXT function inside an Excel shape using Aspose.Cells | Set rectangle shape text to reference a formula cell in Aspose.Cells .NET | C# Aspose.Cells example linking shape to cell that uses TEXT function | Display TEXT function result in shape text property Aspose.Cells
+// Tags: link shape text to formula cell Aspose.Cells | rectangle shape TEXT function binding C# | currency formatting with TEXT function Aspose.Cells | Aspose.Cells shape text reference .xlsx | C# Aspose.Cells bind shape to cell
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
-// The example creates a workbook, writes a raw number to A1, formats it as currency in B1 using the TEXT function, calculates formulas, adds a rectangle shape, sets the shape's text to the formatted string from B1, applies center alignment and bold styling, and saves the file as LinkedShapeWithFormattedNumber.xlsx.
+// The example creates a workbook, stores a raw number in A1, formats it as currency in B1 using the TEXT function, adds a rectangle shape, links the shape's text to B1 so it shows the formatted value, and saves the file as an .xlsx workbook.
 class Program
 {
     static void Main()
@@ -17,35 +18,31 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a raw number in cell A1
-            Cell rawNumberCell = sheet.Cells["A1"];
-            rawNumberCell.PutValue(12345.6789);
+            // Put a raw number into cell A1
+            Cell cellA1 = sheet.Cells["A1"];
+            cellA1.PutValue(12345.6789);
 
-            // In cell B1, use the TEXT function to format the number as currency
-            Cell formattedCell = sheet.Cells["B1"];
-            formattedCell.Formula = @"=TEXT(A1,""$#,##0.00"")";
-
-            // Calculate formulas so that B1 contains the formatted string
-            workbook.CalculateFormula();
+            // In cell B1 use the TEXT function to format the number as currency
+            Cell cellB1 = sheet.Cells["B1"];
+            cellB1.Formula = @"=TEXT(A1,""$#,##0.00"")";
 
             // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, row offset, column offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 60, 200);
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 0, 0, 0, 60, 200);
 
-            // Link the shape's displayed text to the formatted value in B1
-            shape.Text = formattedCell.StringValue;
+            // Link the shape's text to cell B1 so it displays the formatted number
+            shape.Text = "=B1";
 
-            // Optionally, set the shape's text alignment and style
-            shape.TextHorizontalAlignment = TextAlignmentType.Center;
-            shape.TextVerticalAlignment = TextAlignmentType.Center;
-            shape.Font.Size = 12;
-            shape.Font.IsBold = true;
+            // Optional: set shape appearance
+            shape.Line.Weight = 0.75;
+            shape.Line.DashStyle = MsoLineDashStyle.Solid;
+            // Line color and fill color properties may not be available in all versions; they are omitted for compatibility.
 
             // Save the workbook
-            workbook.Save("LinkedShapeWithFormattedNumber.xlsx");
+            workbook.Save("LinkedShapeWithTextFunction.xlsx");
         }
         catch (Exception ex)
         {

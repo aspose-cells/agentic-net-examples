@@ -1,7 +1,6 @@
-// Title: Change worksheet protection password while retaining existing protection settings in an Excel file using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an existing .xlsx workbook with Aspose.Cells, updates the worksheet's protection password, and saves the file without altering any other protection flags. | Show how to modify only the password of a protected worksheet in Aspose.Cells while preserving its current allowed actions such as editing objects or formatting cells. | Provide a step‑by‑step example that loads a workbook, sets a new worksheet protection password, and writes the result to a new file using Aspose.Cells for .NET.
-// Common Searches: aspnet change worksheet protection password without resetting allowed actions Aspose.Cells | c# update Excel worksheet password keep existing protection options | how to preserve worksheet protection settings when changing password using Aspose.Cells | Aspose.Cells set new worksheet password while keeping protection flags
-// Tags: worksheet protection password change Aspose.Cells | retain existing worksheet protection flags .NET | Excel worksheet password modification Aspose.Cells | Aspose.Cells preserve protection settings on password update | C# set new worksheet protection password
+// Title: Change a protected worksheet’s password while retaining all protection options with Aspose.Cells for .NET (C#)
+// Common Searches: how to update worksheet password in Aspose.Cells C# without resetting protection settings | change Excel sheet protection password programmatically using Aspose.Cells .NET | preserve worksheet protection options when changing password with Aspose.Cells | unprotect and re‑protect a worksheet with a new password using Aspose.Cells API | replace old worksheet password with new one while keeping protection flags in C#
+// Tags: worksheet password change Aspose.Cells | retain worksheet protection settings C# | unprotect worksheet old password Aspose.Cells | protect worksheet with new password all options .NET | Excel worksheet protection password update Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,18 +8,19 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example loads an existing XLSX workbook, assigns a new password to the first worksheet's protection while keeping all other protection options unchanged, and saves the result to a new file using Aspose.Cells for .NET.
+    // The example loads an existing workbook, unprotects the first worksheet using the current password, then re‑applies protection with the same options but a new password, and saves the result to a new file.
     class Program
     {
         static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
-            const string newPassword = "NewSecurePassword123";
+            const string oldPassword = "oldPassword";
+            const string newPassword = "newPassword";
 
             try
             {
-                // Verify that the input file exists
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
@@ -30,11 +30,14 @@ namespace AsposeCellsExample
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Access the first worksheet
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the worksheet password while preserving existing protection settings
-                sheet.Protection.Password = newPassword;
+                // Unprotect the worksheet using the old password
+                sheet.Unprotect(oldPassword);
+
+                // Protect the worksheet again with the new password (all options)
+                sheet.Protect(ProtectionType.All, newPassword, null);
 
                 // Save the updated workbook
                 workbook.Save(outputPath);
@@ -42,7 +45,7 @@ namespace AsposeCellsExample
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors
+                // Catch any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

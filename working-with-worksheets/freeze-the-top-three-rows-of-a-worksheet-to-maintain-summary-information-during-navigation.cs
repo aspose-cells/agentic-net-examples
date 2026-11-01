@@ -1,48 +1,34 @@
 // Title: How to freeze the top three rows of an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates an Excel workbook with Aspose.Cells, fills it with sample data, and freezes rows 1‑3 while keeping columns scrollable. | Demonstrate using Worksheet.FreezePanes to lock the first three rows in a .xlsx file with Aspose.Cells for .NET. | Show how to apply FreezePanes(3,0,0,0) and then save the workbook so header rows stay visible during navigation.
-// Common Searches: Aspose.Cells C# freeze first three rows of worksheet example | How to keep header rows static while scrolling in Excel using Aspose.Cells .NET | Worksheet.FreezePanes parameters to freeze top rows in C# Aspose.Cells
-// Tags: Aspose.Cells FreezePanes top rows | C# freeze header rows Excel | Aspose.Cells worksheet freeze rows example | Excel .xlsx freeze panes using Aspose.Cells | programmatic row freeze Aspose.Cells .NET
+// AI Prompts: Generate C# code that applies Worksheet.FreezePanes to lock the first three rows of an Excel sheet and saves the file with Aspose.Cells. | Show the implementation steps for creating a workbook, freezing rows 0‑2, and exporting the result as a frozen‑pane Excel file in C#. | Provide a concise example that demonstrates using Aspose.Cells to keep three header rows static while the user scrolls.
+// Common Searches: aspnet cells freeze top three rows example c# | using Aspose.Cells to lock header rows in an Excel workbook | C# Worksheet.FreezePanes rows 0-2 Aspose.Cells tutorial | how to keep the first few rows visible when scrolling with Aspose.Cells | save Excel file with frozen rows using Aspose.Cells .NET
+// Tags: freeze panes Aspose.Cells C# | lock top rows worksheet Aspose.Cells | Aspose.Cells FreezePanes method example | freeze header rows Excel .NET | save workbook with frozen panes Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using System.IO;
 
-// The example creates a new workbook, populates cells with sample data, freezes the first three rows using Worksheet.FreezePanes(3,0,0,0) to keep header rows visible, and saves the file as FrozenTopThreeRows.xlsx.
-class FreezeTopRowsExample
+// The example creates a workbook, accesses the first worksheet, freezes rows 0‑2 using Worksheet.FreezePanes(3,0,3,0), and saves the file as FrozenTopRows.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // creates a new workbook with a default worksheet
+            Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Report";
 
-            // Populate some data to visualize the freeze effect
-            for (int row = 0; row < 20; row++)
-            {
-                for (int col = 0; col < 5; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
-
-            // Freeze the top three rows (rows 0,1,2) while keeping all columns scrollable
-            // FreezePanes(row, column, totalRows, totalColumns)
-            // Setting totalRows and totalColumns to 0 freezes everything above 'row' and left of 'column'
-            sheet.FreezePanes(3, 0, 0, 0); // freezes rows 0-2
+            // Freeze the top three rows (rows 0,1,2).
+            // Parameters: split row index, split column index, number of rows to freeze, number of columns to freeze
+            sheet.FreezePanes(3, 0, 3, 0);
 
             // Save the workbook to a file
-            string outputPath = "FrozenTopThreeRows.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("FrozenTopRows.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,45 @@
-// Title: Convert an Excel workbook to CSV without exporting cell hyperlinks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a CSV while ensuring hyperlinks are not included. | Show how to check for the source file, handle exceptions, and export to CSV with hyperlink suppression using Aspose.Cells. | Demonstrate converting an Excel workbook to CSV in C# and verify that hyperlink data is omitted in the resulting file.
-// Common Searches: Aspose.Cells C# save workbook as CSV without hyperlinks | How to ignore hyperlinks when exporting Excel to CSV using Aspose.Cells | C# convert .xlsx to .csv exclude hyperlink data | SaveFormat.Csv does not export hyperlinks Aspose.Cells example | Prevent hyperlink URLs from appearing in CSV output from Aspose.Cells
-// Tags: Aspose.Cells CSV export without hyperlinks | C# workbook to CSV conversion | hyperlink exclusion in CSV output | SaveFormat.Csv usage Aspose.Cells | Excel to CSV conversion error handling
+// Title: Convert an Excel workbook to CSV while excluding hyperlinks with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export Excel to CSV without including hyperlink URLs | How to ignore hyperlinks when saving a workbook as CSV using Aspose.Cells | C# code to convert .xlsx to .csv and strip hyperlink data with Aspose.Cells | Save workbook as CSV with TxtSaveOptions while omitting hyperlink information in Aspose.Cells | Prevent hyperlink export in CSV output using Aspose.Cells .NET library
+// Tags: Aspose.Cells CSV export without hyperlinks | TxtSaveOptions SaveFormat.Csv C# | Excel to CSV conversion ignoring hyperlink data | C# workbook to CSV using Aspose.Cells | exclude external links in CSV output Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// The program verifies that the input Excel file exists, loads it with Aspose.Cells, and saves it as a CSV using SaveFormat.Csv, which by default omits cell hyperlinks. It includes try‑catch error handling to report any runtime issues.
-class Program
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook, configures TxtSaveOptions with SaveFormat.Csv, notes that the ExportHyperlinks property is unavailable, and saves the workbook as a CSV file while handling any runtime exceptions.
+class WorkbookToCsvConverter
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.csv";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.csv";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as CSV (hyperlinks are not exported by default)
-            workbook.Save(outputPath, SaveFormat.Csv);
+            // Configure CSV save options (use TxtSaveOptions for CSV format)
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
+            // Note: ExportHyperlinks property is not available in this version of Aspose.Cells.
+            // If needed, use CsvSaveOptions (inherits TxtSaveOptions) which may expose additional settings.
 
-            Console.WriteLine($"Workbook successfully saved as CSV to '{outputPath}'.");
+            // Save the workbook as CSV using the configured options
+            workbook.Save(outputPath, csvOptions);
+
+            Console.WriteLine($"Workbook successfully converted to CSV: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

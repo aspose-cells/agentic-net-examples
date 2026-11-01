@@ -1,42 +1,43 @@
-// Title: Create deterministic Worksheet TabId values by hashing sheet names with Aspose.Cells for .NET
-// AI Prompts: Write a C# method that iterates through all worksheets in a workbook, computes a stable 32‑bit integer hash of each sheet's Name using SHA‑256, and assigns the result to Worksheet.TabId via Aspose.Cells. | Generate code that loads an Excel file, applies a hash‑based TabId to every worksheet for consistent identification across workbooks, and saves the updated file.
-// Common Searches: C# Aspose.Cells set TabId from worksheet name hash | deterministic TabId generation for Excel sheets using SHA256 | how to assign stable integer IDs to worksheets in Aspose.Cells | consistent worksheet identifiers across multiple workbooks .NET | hash sheet name to 32‑bit integer for TabId property
-// Tags: set worksheet TabId using hash Aspose.Cells | deterministic TabId generation C# | SHA256 hash for worksheet identifier | hash sheet name to int32 | consistent TabId across workbooks
+// Title: Set a deterministic TabId for each worksheet by hashing the sheet name with SHA‑256 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through all worksheets in a workbook, computes a 32‑bit SHA‑256 hash of each sheet's Name, and assigns the result to the Worksheet.TabId property with Aspose.Cells. | Create a reusable method that converts a string to an int via the first four bytes of a SHA‑256 hash and demonstrate its use to give stable TabId values across multiple Excel files.
+// Common Searches: how to generate stable TabId values for Excel worksheets in Aspose.Cells C# | C# compute 32‑bit hash from worksheet name for consistent sheet identifiers | using SHA256 to create deterministic worksheet IDs with Aspose.Cells .NET | assign integer TabId to each sheet based on its name in a .xlsx file | deterministic worksheet identifiers across multiple workbooks Aspose.Cells example
+// Tags: deterministic worksheet TabId assignment Aspose.Cells | SHA256 string to int conversion C# | stable Excel sheet identifiers .NET | hash based TabId generation for worksheets | worksheet name hashing for consistent IDs
 
 using System;
 using System.Security.Cryptography;
 using System.Text;
 using Aspose.Cells;
 
-// The example loads a workbook, iterates through each worksheet, computes a 32‑bit integer hash of the worksheet name using SHA‑256, assigns this value to the Worksheet.TabId property, and saves the modified workbook, ensuring the same TabId is reproduced for identical sheet names across different files.
+// The program loads an Excel workbook, computes a 32‑bit SHA‑256 hash of each worksheet's name, assigns that hash to the worksheet's TabId property, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Load the workbook (replace with your actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets and assign a deterministic TabId
+        // Iterate through all worksheets and set a deterministic TabId
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Compute a stable hash from the worksheet name
-            int tabId = ComputeDeterministicHash(sheet.Name);
-            // Set the TabId property
-            sheet.TabId = tabId;
+            // Compute a stable 32‑bit hash from the worksheet name
+            int hash = ComputeDeterministicHash(sheet.Name);
+
+            // Assign the hash to the worksheet's TabId (assumes TabId property exists)
+            sheet.TabId = hash;
         }
 
-        // Save the modified workbook (replace with your desired output path)
+        // Save the modified workbook
         workbook.Save("output.xlsx");
     }
 
-    // Generates a deterministic 32‑bit integer hash from a string using SHA‑256
-    static int ComputeDeterministicHash(string input)
+    // Generates a 32‑bit integer hash from a string using SHA256 (first 4 bytes)
+    private static int ComputeDeterministicHash(string input)
     {
-        using (SHA256 sha256 = SHA256.Create())
+        using (SHA256 sha = SHA256.Create())
         {
             byte[] data = Encoding.UTF8.GetBytes(input);
-            byte[] hash = sha256.ComputeHash(data);
-            // Use the first 4 bytes of the hash to form an int (little‑endian)
+            byte[] hash = sha.ComputeHash(data);
+            // Convert first 4 bytes to an int (little‑endian)
             return BitConverter.ToInt32(hash, 0);
         }
     }

@@ -1,90 +1,97 @@
 // Title: Generate an HTML documentation table of all named ranges in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# using Aspose.Cells to open an .xlsx workbook, iterate through workbook.Worksheets.Names, and build an HTML markup that lists each named range's name, RefersTo formula, and scope in a tabular layout. | Apply WebUtility.HtmlEncode to every field before inserting it into the markup and write the result to a file using UTF‑8 encoding. | Add validation that the source file exists and surround workbook loading and file writing with try‑catch blocks that output error details to the console.
-// Common Searches: aspocells c# export excel named ranges as html report | generate html documentation of workbook named ranges using Aspose.Cells | list all named ranges with scope from an xlsx file in c# | how to create an html table of excel named ranges with Aspose.Cells .NET | save named range definitions to html using Aspose.Cells library
-// Tags: Aspose.Cells export named ranges to HTML | C# generate named range documentation | Aspose.Cells list workbook named ranges | HTML markup generation from Excel named ranges | named range scope extraction Aspose.Cells
+// Common Searches: C# code to list Excel named ranges and export them to an HTML file with Aspose.Cells | How to create an HTML report of named ranges from an .xlsx using Aspose.Cells | Aspose.Cells .NET example for exporting workbook names to an HTML table | Retrieve the first cell value of each named range and save as HTML using C# | Document Excel named ranges as an HTML table programmatically with Aspose.Cells
+// Tags: Aspose.Cells named range HTML export | C# HTML report of Excel named ranges | extract first cell value from named range Aspose.Cells | iterate workbook names .NET Aspose.Cells | generate documentation for Excel named ranges
 
 using System;
 using System.IO;
-using System.Text;
 using System.Net;
+using System.Text;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, iterates through its defined named ranges, HTML‑encodes each name, reference formula, and scope, and writes them into a UTF‑8 encoded HTML file containing a table for documentation purposes.
-class Program
+// The sample loads an Excel workbook, iterates through all defined names, captures each name, its reference address, and the value of the first cell in the range, then builds a UTF‑8 HTML document containing a table with these details and writes it to a file.
+class ExportNamedRangesToHtml
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "NamedRanges.html";
+        const string inputFile = "input.xlsx";
+        const string outputFile = "NamedRanges.html";
 
         // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
+        if (!File.Exists(inputFile))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
             return;
         }
 
         Workbook workbook;
         try
         {
-            // Load the workbook
-            workbook = new Workbook(inputPath);
+            // Load the workbook from the file
+            workbook = new Workbook(inputFile);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
             return;
         }
 
-        // Build an HTML document that contains a table of named ranges
-        var html = new StringBuilder();
+        // StringBuilder to build the HTML content
+        StringBuilder html = new StringBuilder();
 
+        // Start of the HTML document
+        html.AppendLine("<!DOCTYPE html>");
         html.AppendLine("<html>");
-        html.AppendLine("<head>");
-        html.AppendLine("<meta charset=\"UTF-8\">");
-        html.AppendLine("<title>Workbook Named Ranges</title>");
-        html.AppendLine("</head>");
+        html.AppendLine("<head><meta charset='UTF-8'><title>Named Ranges Documentation</title></head>");
         html.AppendLine("<body>");
-        html.AppendLine("<h2>Named Ranges Documentation</h2>");
-        html.AppendLine("<table border=\"1\" cellpadding=\"5\" cellspacing=\"0\">");
-        html.AppendLine("<tr><th>Name</th><th>Refers To</th><th>Scope</th></tr>");
+        html.AppendLine("<h2>Workbook Named Ranges</h2>");
+        html.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+        html.AppendLine("<tr><th>Name</th><th>Refers To</th><th>First Cell Value</th></tr>");
 
-        // Iterate through all named ranges defined in the workbook
+        // Iterate through all named ranges in the workbook
         foreach (Name namedRange in workbook.Worksheets.Names)
         {
-            // The formula that defines the range (e.g., =Sheet1!$A$1:$B$5)
+            // Address the name refers to (e.g., Sheet1!$A$1:$B$2)
             string refersTo = namedRange.RefersTo;
 
-            // Scope: older Aspose.Cells versions may not expose IsWorkbookScoped/Worksheet.
-            // Default to "Workbook" when scope information is unavailable.
-            string scope = "Workbook";
-
-            // Encode values for safe HTML output
-            string nameEncoded = WebUtility.HtmlEncode(namedRange.Text);
-            string refersToEncoded = WebUtility.HtmlEncode(refersTo);
-            string scopeEncoded = WebUtility.HtmlEncode(scope);
+            // Retrieve the value of the first cell in the range, if possible
+            string firstValue = string.Empty;
+            try
+            {
+                Aspose.Cells.Range range = namedRange.GetRange();
+                if (range != null && range.RowCount > 0 && range.ColumnCount > 0)
+                {
+                    object val = range[0, 0].Value;
+                    firstValue = val?.ToString() ?? string.Empty;
+                }
+            }
+            catch
+            {
+                // If the name does not refer to a valid range, leave the value empty
+                firstValue = string.Empty;
+            }
 
             // Append a row for the current named range
             html.AppendLine("<tr>");
-            html.AppendLine($"<td>{nameEncoded}</td>");
-            html.AppendLine($"<td>{refersToEncoded}</td>");
-            html.AppendLine($"<td>{scopeEncoded}</td>");
+            html.AppendLine($"<td>{WebUtility.HtmlEncode(namedRange.Text)}</td>");
+            html.AppendLine($"<td>{WebUtility.HtmlEncode(refersTo)}</td>");
+            html.AppendLine($"<td>{WebUtility.HtmlEncode(firstValue)}</td>");
             html.AppendLine("</tr>");
         }
 
+        // End of the HTML document
         html.AppendLine("</table>");
         html.AppendLine("</body>");
         html.AppendLine("</html>");
 
         try
         {
-            // Save the generated HTML to a file
-            File.WriteAllText(outputPath, html.ToString(), Encoding.UTF8);
-            Console.WriteLine($"Named ranges documentation saved to \"{outputPath}\".");
+            // Write the HTML content to a file
+            File.WriteAllText(outputFile, html.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Named ranges exported successfully to \"{outputFile}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to write HTML file: {ex.Message}");
+            Console.WriteLine($"Error writing HTML file: {ex.Message}");
         }
     }
 }

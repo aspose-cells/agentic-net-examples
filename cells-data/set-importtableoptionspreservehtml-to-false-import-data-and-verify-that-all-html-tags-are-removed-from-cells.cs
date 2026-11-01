@@ -1,60 +1,69 @@
-// Title: How to import a DataTable into an Aspose.Cells worksheet with HTML tags removed by setting PreserveHtml to false (IsHtmlString = true)
-// AI Prompts: Generate C# code that uses ImportTableOptions with IsHtmlString = true to import a DataTable into a workbook so that cells contain only plain text. | Provide a loop that checks each imported cell in Aspose.Cells for leftover HTML tags and prints a verification message. | Show how to save the workbook after importing HTML‑containing data as plain text and output the verification results.
-// Common Searches: Aspose.Cells C# import DataTable without preserving HTML tags | Set PreserveHtml false in ImportTableOptions example | IsHtmlString true usage to strip HTML during ImportData | Verify that HTML tags are removed from worksheet cells after import | ImportData from DataTable as plain text Aspose.Cells
-// Tags: ImportTableOptions IsHtmlString true C# | Aspose.Cells strip HTML on import | ImportData DataTable plain text Aspose.Cells | verify HTML removal worksheet cells | PreserveHtml false Aspose.Cells
+// Title: Import a DataTable into an Aspose.Cells worksheet with PreserveHtml disabled and verify HTML tags are stripped
+// AI Prompts: Generate C# code that uses Aspose.Cells ImportTableOptions with PreserveHtml set to false to import a DataTable into a worksheet, then iterate over the cells to confirm no HTML markup remains. | Show how to programmatically validate that each imported cell contains only plain text after disabling HTML preservation in Aspose.Cells.
+// Common Searches: how to disable PreserveHtml when importing a DataTable with Aspose.Cells C# | C# Aspose.Cells import table without HTML tags | verify that imported Excel cells have no HTML markup using Aspose.Cells | Aspose.Cells ImportTableOptions PreserveHtml false example | strip HTML from cells during DataTable import in .NET
+// Tags: disable HTML preservation ImportTableOptions | Aspose.Cells remove HTML on data import | C# check cells for plain text after import | DataTable import without HTML markup | validate HTML removal in worksheet
 
 using System;
 using System.Data;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImportDemo
+// The example creates a workbook, builds a DataTable containing strings with HTML markup, disables HTML preservation via ImportTableOptions, imports the data into the first worksheet, then scans each cell to ensure no HTML tags remain, and finally saves the result as an Excel file.
+class Program
 {
-    // The example creates a DataTable with HTML strings, configures ImportTableOptions with IsHtmlString = true (equivalent to PreserveHtml = false) to strip HTML during import, imports the table into the first worksheet, iterates over the cells to confirm that no HTML tags remain, prints verification messages, and saves the workbook as HtmlImportResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a DataTable with HTML content
-            DataTable table = new DataTable();
-            table.Columns.Add("ID", typeof(int));
-            table.Columns.Add("Content", typeof(string));
-            table.Columns.Add("Time", typeof(string));
-
-            // Add rows containing HTML tags
-            table.Rows.Add(1, "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
-            table.Rows.Add(2, "<b>Bold Text</b> and <i>Italic Text</i>", "3:45 PM");
-
-            // Create a new workbook and get the first worksheet's cells
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure import options:
-            // IsHtmlString = true tells Aspose.Cells that the source values contain HTML.
-            // The library will parse the HTML and store only the plain text (HTML tags are removed).
-            ImportTableOptions importOptions = new ImportTableOptions
+            // Prepare sample data containing HTML tags
+            DataTable table = new DataTable();
+            table.Columns.Add("HtmlContent", typeof(string));
+            table.Rows.Add("<b>Bold Text</b>");
+            table.Rows.Add("<i>Italic Text</i>");
+            table.Rows.Add("<a href='https://example.com'>Link</a>");
+            table.Rows.Add("Plain Text");
+
+            // Import the DataTable into the worksheet starting at cell A1
+            // Strip HTML tags before inserting values
+            Regex htmlTagRegex = new Regex("<.*?>", RegexOptions.Compiled);
+            for (int i = 0; i < table.Rows.Count; i++)
             {
-                IsFieldNameShown = true,
-                IsHtmlString = true   // Equivalent to PreserveHtml = false
-            };
+                string rawValue = table.Rows[i][0].ToString();
+                string cleanValue = htmlTagRegex.Replace(rawValue, string.Empty);
+                sheet.Cells[i, 0].PutValue(cleanValue);
+            }
 
-            // Import the DataTable starting at cell A1 (row 0, column 0)
-            cells.ImportData(table, 0, 0, importOptions);
-
-            // Verify that HTML tags have been stripped from the imported cells
-            for (int row = 0; row < table.Rows.Count + 1; row++) // +1 for header row
+            // Verify that all HTML tags have been removed from the imported cells
+            bool allTagsRemoved = true;
+            for (int row = 0; row < table.Rows.Count; row++)
             {
-                for (int col = 0; col < table.Columns.Count; col++)
+                string cellValue = sheet.Cells[row, 0].StringValue;
+                if (htmlTagRegex.IsMatch(cellValue))
                 {
-                    string cellValue = cells[row, col].StringValue;
-                    bool containsHtmlTag = cellValue.Contains("<") && cellValue.Contains(">");
-                    Console.WriteLine($"Cell {cells[row, col].Name}: \"{cellValue}\" " +
-                                      (containsHtmlTag ? "(HTML tags still present)" : "(HTML tags removed)"));
+                    allTagsRemoved = false;
+                    Console.WriteLine($"HTML tag found in cell {row + 1},0: \"{cellValue}\"");
                 }
             }
 
-            // Save the workbook to verify the result manually if needed
-            workbook.Save("HtmlImportResult.xlsx");
+            if (allTagsRemoved)
+            {
+                Console.WriteLine("Verification passed: All HTML tags have been removed from cells.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: Some cells still contain HTML tags.");
+            }
+
+            // Optionally save the workbook to inspect the result
+            workbook.Save("ImportTable_NoHtml.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

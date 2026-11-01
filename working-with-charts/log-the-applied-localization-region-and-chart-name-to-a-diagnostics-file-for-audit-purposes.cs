@@ -1,7 +1,7 @@
-// Title: Append workbook localization region and chart identifiers to a diagnostics log using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, reads the workbook's CultureInfo, and appends the region name to a diagnostics file. | Develop a method that walks through every worksheet and chart, supplies a fallback name for unnamed charts, and writes worksheet name, chart index, and chart name to a log file.
-// Common Searches: Aspose.Cells how to write workbook culture info to a log file in C# | C# log all chart names from an Excel workbook using Aspose.Cells | record Excel chart index and worksheet name for audit with Aspose.Cells .NET | append diagnostics log with localization region and chart details Aspose.Cells | handle empty chart names when exporting chart information using Aspose.Cells
-// Tags: append workbook cultureinfo to log Aspose.Cells | iterate worksheets and charts Aspose.Cells | log chart index and name .NET | fallback chart name generation Aspose.Cells | create diagnostics file for Excel audit
+// Title: Log workbook localization region and chart titles to a diagnostics file with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing Excel workbook using Aspose.Cells, sets the workbook's CultureInfo, and appends the culture name and each chart's title to a diagnostics log with timestamps. | Create a diagnostic logger in C# that iterates through all worksheets and charts in a workbook loaded by Aspose.Cells, then writes the applied localization region and chart names to a log file. | Generate a C# example that saves the workbook after logging, includes error handling for missing input files, and ensures the log file is opened in append mode.
+// Common Searches: aspnet aspose.cells log workbook culture info and chart names | c# write excel chart titles to a diagnostics log file | how to record localization region of an Excel workbook using Aspose.Cells | append timestamps and chart details to a log while processing Excel with Aspose.Cells | save workbook after logging chart information in C# Aspose.Cells
+// Tags: Aspose.Cells log workbook localization | C# write chart titles to file | Aspose.Cells iterate worksheets charts | diagnostics logging with timestamps C# | set workbook CultureInfo Aspose.Cells
 
 using System;
 using System.Globalization;
@@ -9,84 +9,64 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example demonstrates how to load an Excel workbook with Aspose.Cells, retrieve the workbook's applied CultureInfo, and write that region together with each chart's identifier (using a generated fallback when the name is empty) to a diagnostics log file, creating the log directory if necessary.
-class ChartAuditLogger
+// The example checks for the presence of input.xlsx, loads it with Aspose.Cells, sets the workbook's CultureInfo to en-US, opens diagnostics.log in append mode, writes a timestamped entry for the applied localization region, iterates through each worksheet and its charts to log each chart's title (or a placeholder if none), adds a separator line, saves the workbook to output.xlsx, and handles any runtime exceptions.
+class DiagnosticsLogger
 {
-    // Path to the Excel file to be processed
-    private const string InputFilePath = @"C:\Data\Report.xlsx";
-
-    // Path to the diagnostics log file
-    private const string LogFilePath = @"C:\Logs\ChartAudit.log";
-
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string diagnosticsFilePath = "diagnostics.log";
+
+        // Verify input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(InputFilePath))
-            {
-                Console.Error.WriteLine($"Input file not found: {InputFilePath}");
-                return;
-            }
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure the log directory exists
-            string logDir = Path.GetDirectoryName(LogFilePath);
-            if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
-            {
-                Directory.CreateDirectory(logDir);
-            }
+            // Apply a localization region (e.g., English - United States)
+            workbook.Settings.CultureInfo = new CultureInfo("en-US");
 
-            // Load the workbook inside a safe block
-            Workbook workbook;
-            try
+            // Open the diagnostics file for appending
+            using (StreamWriter writer = new StreamWriter(diagnosticsFilePath, true))
             {
-                workbook = new Workbook(InputFilePath);
-            }
-            catch (Exception loadEx)
-            {
-                Console.Error.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
-            }
+                // Log the applied localization region
+                writer.WriteLine($"[{DateTime.Now}] Localization Region: {workbook.Settings.CultureInfo.Name}");
 
-            // Determine the applied localization region (culture)
-            CultureInfo culture = workbook.Settings.CultureInfo;
-            string region = culture?.Name ?? "Invariant";
-
-            // Prepare the log file (append if it exists)
-            using (StreamWriter logWriter = new StreamWriter(LogFilePath, append: true))
-            {
-                // Write a header with timestamp
-                logWriter.WriteLine($"--- Audit Log: {DateTime.UtcNow:u} ---");
-                logWriter.WriteLine($"Applied Localization Region: {region}");
-                logWriter.WriteLine();
-
-                // Iterate through all worksheets and their charts
+                // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
+                    // Iterate through all charts in the current worksheet
                     foreach (Chart chart in sheet.Charts)
                     {
-                        // Obtain chart index via collection since Chart.Index may not be available
-                        int chartIndex = sheet.Charts.IndexOf(chart);
+                        // Retrieve the chart name; if no title is set, use a placeholder
+                        string chartName = chart.Title != null && !string.IsNullOrEmpty(chart.Title.Text)
+                            ? chart.Title.Text
+                            : "Unnamed Chart";
 
-                        // Chart name may be empty; provide a fallback identifier
-                        string chartName = string.IsNullOrEmpty(chart.Name)
-                            ? $"Chart_{chartIndex}"
-                            : chart.Name;
-
-                        // Log the chart name together with its worksheet
-                        logWriter.WriteLine($"Worksheet: {sheet.Name}, Chart Index: {chartIndex}, Chart Name: {chartName}");
+                        // Log the chart name
+                        writer.WriteLine($"[{DateTime.Now}] Chart Name: {chartName}");
                     }
                 }
 
-                logWriter.WriteLine(); // Blank line for readability
+                // Add a separator for readability
+                writer.WriteLine(new string('-', 50));
             }
 
-            Console.WriteLine("Chart audit information has been logged successfully.");
+            // Save the workbook after any modifications
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log unexpected errors to console (could be extended to log file)
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

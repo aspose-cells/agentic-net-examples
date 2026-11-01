@@ -1,47 +1,95 @@
-// Title: Replace all occurrences of the named range 'OldRange' with 'NewRange' in formulas across an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet in a workbook and substitutes the named range 'OldRange' with 'NewRange' in any formula, then saves the file. | Generate a method that updates formulas containing a specific named range to a new name across all sheets using Aspose.Cells. | Create a script that loads an .xlsx file, replaces 'OldRange' references in formulas with 'NewRange', and writes the result to a new file.
-// Common Searches: how to rename a named range in all formulas using Aspose.Cells C# | replace specific range name in Excel formulas programmatically .NET | bulk update named range references across worksheets Aspose.Cells | C# Aspose.Cells change formula text OldRange to NewRange
-// Tags: replace named range in formulas Aspose.Cells | bulk formula text substitution .NET | iterate worksheets Aspose.Cells | named range rename Excel C# | update formula references Aspose.Cells
+// Title: Replace named range references from 'OldRange' to 'NewRange' in all formulas of an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# replace named range in all worksheet formulas | how to change OldRange to NewRange in Excel formulas using .NET | bulk update formula text across workbook with Aspose.Cells | C# code to rename a named range inside cell formulas | iterate through cells and modify formula strings Aspose.Cells
+// Tags: replace named range references Aspose.Cells | bulk formula text update C# | iterate worksheets modify formulas Aspose.Cells | rename Excel named range in formulas .NET | cell formula string replacement Aspose.Cells | update workbook formulas programmatically C#
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// The program loads an Excel workbook, iterates through every worksheet and cell, replaces any formula that references the named range 'OldRange' with 'NewRange', and saves the modified workbook to a new file.
+// The example loads an Excel file with Aspose.Cells, walks through every worksheet and cell, replaces any occurrence of the named range "OldRange" in cell formulas with "NewRange", and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            // Get the cells collection for the current worksheet
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Loop through each cell in the worksheet
-            foreach (Cell cell in cells)
+        Workbook workbook = null;
+
+        try
+        {
+            // Load the workbook (no password supplied)
+            LoadOptions loadOptions = new LoadOptions();
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (CellsException ex)
+        {
+            // Detect password‑protected workbook via message inspection
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                // Process only cells that contain a formula
-                if (cell.IsFormula)
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password.");
+            }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Ensure workbook was loaded before proceeding
+        if (workbook == null)
+        {
+            Console.WriteLine("Error: Workbook could not be loaded.");
+            return;
+        }
+
+        try
+        {
+            // Iterate through all worksheets and update formulas
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                foreach (Cell cell in cells)
                 {
-                    string formula = cell.Formula;
-
-                    // Check if the formula references the old range name
-                    if (!string.IsNullOrEmpty(formula) && formula.Contains("OldRange"))
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        // Replace "OldRange" with "NewRange" in the formula
-                        string updatedFormula = formula.Replace("OldRange", "NewRange");
-
-                        // Assign the updated formula back to the cell
-                        cell.Formula = updatedFormula;
+                        string updatedFormula = cell.Formula.Replace("OldRange", "NewRange");
+                        if (!updatedFormula.Equals(cell.Formula, StringComparison.Ordinal))
+                        {
+                            cell.Formula = updatedFormula;
+                        }
                     }
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing worksheets: {ex.Message}");
+            return;
+        }
 
-        // Save the modified workbook to a new file (replace with your desired output path)
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
+        }
     }
 }

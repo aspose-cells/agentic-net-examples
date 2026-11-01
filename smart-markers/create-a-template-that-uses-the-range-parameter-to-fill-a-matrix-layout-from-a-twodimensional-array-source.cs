@@ -1,67 +1,65 @@
-// Title: Fill a matrix layout in an Excel worksheet by assigning a 2D object array to an Aspose.Cells Range in C#
-// AI Prompts: Assign a two‑dimensional object[,] array directly to an Aspose.Cells Range using the Range.Value property. | Create a range that matches the dimensions of a source matrix and populate it with the array data in a single step. | Generate an .xlsx file where a specified cell block is filled from a C# 2D array via Aspose.Cells.
-// Common Searches: how to assign a 2d object array to an Aspose.Cells range in C# | Aspose.Cells fill Excel cells from multidimensional array | create range with same size as matrix Aspose.Cells .NET | populate Excel worksheet matrix using Range.Value property | C# example for writing object[,] to Excel with Aspose.Cells
-// Tags: set Range.Value with 2d object array | create range matching matrix dimensions | populate worksheet cells via Range.Value | matrix layout fill using Aspose.Cells C# | write object[,] data to Excel range
+// Title: Use Aspose.Cells Range to populate a matrix layout from a 2D object array in C#
+// AI Prompts: Generate C# code that creates a Workbook, defines a Range sized to a two‑dimensional object[,] and assigns the array to the Range's Value property with Aspose.Cells. | Provide a C# snippet that formats the first row of the filled Range with bold text and a light gray background using Aspose.Cells styling APIs. | Write C# code to persist the workbook containing the populated matrix range to an Excel file named MatrixLayout.xlsx via Aspose.Cells.
+// Common Searches: how to fill an Excel range with a 2d object array using Aspose.Cells C# | Aspose.Cells create matrix layout from object[,] example | apply header formatting to first row of a range in Aspose.Cells | save workbook after populating range Aspose.Cells C# | determine range size from two dimensional array Aspose.Cells
+// Tags: populate range from 2d object array Aspose.Cells | define matrix range dimensions C# | header row styling Aspose.Cells | save workbook as Excel file Aspose.Cells | matrix layout using Aspose.Cells Range
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// The example creates a new workbook, defines a 3×4 object[,] matrix, builds a matching range starting at cell A1, assigns the array directly to the range's Value property, and saves the workbook as MatrixFromArray.xlsx.
-public class MatrixFiller
+// // Demonstrates creating a workbook, defining a Range that matches a 2D object array, assigning the array to the Range, styling the header row with bold font and gray background, and saving the result as MatrixLayout.xlsx using Aspose.Cells for .NET.
+class MatrixLayoutExample
 {
-    // Fills the provided range with the values from a two‑dimensional array.
-    public static void FillMatrix(AsposeRange targetRange, object[,] data)
-    {
-        // Directly assign the 2D array to the range's Value property.
-        // The range must have the same dimensions as the array.
-        targetRange.Value = data;
-    }
-
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet.
+            // Create a new workbook.
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Example source data: a 3x4 matrix.
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Two‑dimensional source array.
             object[,] sourceData = new object[,]
             {
-                { "R1C1", "R1C2", "R1C3", "R1C4" },
-                { "R2C1", "R2C2", "R2C3", "R2C4" },
-                { "R3C1", "R3C2", "R3C3", "R3C4" }
+                { "Item", "Qty", "Price" },
+                { "Apple", 10, 0.5 },
+                { "Banana", 5, 0.3 },
+                { "Cherry", 20, 0.2 }
             };
 
-            // Determine the size of the source matrix.
-            int rowCount = sourceData.GetLength(0);
-            int columnCount = sourceData.GetLength(1);
+            // Determine the size of the source array.
+            int rows = sourceData.GetLength(0);
+            int cols = sourceData.GetLength(1);
 
-            // Create a range that matches the matrix size, starting at cell A1 (row 0, column 0).
-            AsposeRange matrixRange = cells.CreateRange(0, 0, rowCount, columnCount);
+            // Define a range where the matrix will be placed (starting at cell A1).
+            // Parameters: startRow, startColumn, totalRows, totalColumns.
+            AsposeRange matrixRange = sheet.Cells.CreateRange(0, 0, rows, cols);
 
-            // Fill the created range with the source data.
-            FillMatrix(matrixRange, sourceData);
+            // Fill the defined range with the two‑dimensional array.
+            matrixRange.Value = sourceData;
+
+            // Optionally, apply a simple style to the header row.
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.ForegroundColor = Color.LightGray;
+            headerStyle.Pattern = BackgroundType.Solid;
+
+            // Apply the style to the first row of the range (header).
+            for (int c = 0; c < cols; c++)
+            {
+                Cell headerCell = sheet.Cells[0, c];
+                headerCell.SetStyle(headerStyle);
+            }
 
             // Save the workbook to a file.
-            string outputPath = "MatrixFromArray.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("MatrixLayout.xlsx");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-}
-
-// Entry point for demonstration.
-class Program
-{
-    static void Main()
-    {
-        MatrixFiller.Run();
     }
 }

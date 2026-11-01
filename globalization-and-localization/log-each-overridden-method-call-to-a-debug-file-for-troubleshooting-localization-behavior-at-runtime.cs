@@ -1,117 +1,94 @@
-// Title: Logging Aspose.Cells workbook load, save, and culture info operations to a debug file for runtime localization troubleshooting in C#
-// AI Prompts: Generate a C# DebugLogger class that writes timestamped entries for each Aspose.Cells workbook opening, saving, and GetString invocation to a specified log file, handling directory creation and silent failures. | Extend the sample program to automatically log every localization provider method (e.g., GetString) called by Aspose.Cells, preserving existing error handling and allowing the log file path to be configured at runtime. | Create a helper method that wraps Aspose.Cells workbook operations with try‑catch blocks and logs success or exception details together with the current CultureInfo.
-// Common Searches: c# write timestamped entries for Aspose.Cells workbook open and save actions | how to capture GetString calls from Aspose.Cells localization provider in a log file | debugging runtime localization problems in Aspose.Cells using a custom logger | log workbook processing steps with culture information when using Aspose.Cells .NET | configure debug log path for Aspose.Cells operations in a C# application
-// Tags: Aspose.Cells load operation logging C# | Aspose.Cells save operation logging C# | Aspose.Cells GetString call logging C# | runtime localization troubleshooting Aspose.Cells | C# debug logger for Excel file handling
+// Title: Log IFormatProvider and ICustomFormatter method calls to a debug file for Aspose.Cells localization troubleshooting in C#
+// Common Searches: how to trace GetFormat and Format calls of a custom IFormatProvider in .NET | debug localization provider in Aspose.Cells by writing method calls to a log file | C# example of logging ICustomFormatter usage while formatting Excel cell values | record custom format provider activity to a file when generating an Excel workbook with Aspose.Cells | troubleshoot Aspose.Cells localization by capturing format provider method invocations
+// Tags: custom IFormatProvider logging for Aspose.Cells | ICustomFormatter method tracing in C# | Aspose.Cells localization debug log | write format provider calls to file .NET | debugging localization with custom formatter | Excel workbook formatting using custom provider
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// The example defines a DebugLogger that appends UTC‑timestamped messages to a configurable log file, ensures the log directory exists, and silently ignores logging failures. In Main, it attempts to open an Excel workbook with Aspose.Cells, logs success or failure, creates a new workbook if needed, logs a sample GetString call with the current CultureInfo, ensures the output directory, saves the workbook, and logs the save operation. Any unexpected exceptions are also recorded, providing a complete runtime trace for localization troubleshooting.
-public class DebugLogger
+namespace AsposeCellsLocalizationDebug
 {
-    private readonly string _logPath;
-
-    public DebugLogger(string logPath)
+    // Custom format provider that logs each method call for troubleshooting.
+    // The sample defines a DebugLocalizationProvider that implements IFormatProvider and ICustomFormatter, logging each GetFormat and Format invocation to a specified file. The provider is passed to string.Format to format a date and a number, which are then written to cells of an Aspose.Cells workbook. Saving the workbook produces an Excel file while the debug log captures the localization provider's runtime behavior for troubleshooting.
+    public class DebugLocalizationProvider : IFormatProvider, ICustomFormatter
     {
-        _logPath = logPath;
-        // Ensure the directory for the log file exists
-        try
+        private readonly string _logFilePath;
+
+        public DebugLocalizationProvider(string logFilePath)
         {
-            string dir = Path.GetDirectoryName(_logPath);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+            _logFilePath = logFilePath;
+            // Ensure the log file exists.
+            File.WriteAllText(_logFilePath, $"DebugLocalizationProvider initialized at {DateTime.Now}{Environment.NewLine}");
         }
-        catch
+
+        // IFormatProvider implementation.
+        public object GetFormat(Type formatType)
         {
-            // Swallow any exception while preparing log directory; logging will fail silently.
+            Log($"GetFormat called with formatType = {formatType}");
+            // Return this instance if the requested format is ICustomFormatter.
+            if (formatType == typeof(ICustomFormatter))
+                return this;
+            // Otherwise defer to the default provider.
+            return CultureInfo.CurrentCulture.GetFormat(formatType);
+        }
+
+        // ICustomFormatter implementation.
+        public string Format(string format, object arg, IFormatProvider formatProvider)
+        {
+            Log($"Format called with format = \"{format}\", arg = {arg}, formatProvider = {formatProvider?.GetType().Name ?? "null"}");
+            // Use the default formatting behavior.
+            if (arg is IFormattable formattable)
+                return formattable.ToString(format, CultureInfo.CurrentCulture);
+            return arg?.ToString() ?? string.Empty;
+        }
+
+        // Helper method to write log entries.
+        private void Log(string message)
+        {
+            string entry = $"{DateTime.Now:O} - {message}{Environment.NewLine}";
+            File.AppendAllText(_logFilePath, entry);
+            Debug.WriteLine(entry);
         }
     }
 
-    // Helper method to write log entries with a timestamp
-    public void Log(string message)
+    class Program
     {
-        try
+        static void Main()
         {
-            File.AppendAllText(_logPath, $"{DateTime.UtcNow:O} - {message}{Environment.NewLine}");
-        }
-        catch
-        {
-            // Ignore logging failures to avoid breaking the main flow
-        }
-    }
-}
+            // Path for the debug log.
+            string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "localization_debug.log");
 
-class Program
-{
-    static void Main()
-    {
-        // Path to the debug log file
-        string logFilePath = "localization_debug.log";
-        var logger = new DebugLogger(logFilePath);
+            // Instantiate the custom provider.
+            var debugProvider = new DebugLocalizationProvider(logPath);
 
-        try
-        {
-            Workbook workbook;
+            // Create a new workbook using Aspose.Cells lifecycle rule.
+            var workbook = new Workbook(); // create
 
-            // Attempt to load an existing workbook (loading rule)
-            string inputPath = "input.xlsx";
-            if (File.Exists(inputPath))
-            {
-                try
-                {
-                    workbook = new Workbook(inputPath);
-                    logger.Log($"Successfully opened \"{inputPath}\".");
-                }
-                catch (Exception ex)
-                {
-                    // Log loading errors but continue with a new empty workbook
-                    logger.Log($"Failed to open \"{inputPath}\": {ex.Message}");
-                    workbook = new Workbook();
-                }
-            }
-            else
-            {
-                // Log that the input file was not found; create a new empty workbook
-                logger.Log($"Input file \"{inputPath}\" not found. Created a new workbook.");
-                workbook = new Workbook();
-            }
+            // Access the first worksheet.
+            var sheet = workbook.Worksheets[0];
 
-            // Example of using CultureInfo (no custom localization provider needed)
-            string sampleId = "SampleId";
-            string localizedString = sampleId; // fallback to the id itself
-            logger.Log($"GetString called: id=\"{sampleId}\", culture=\"{CultureInfo.CurrentCulture.Name}\", result=\"{localizedString}\"");
+            // Add some data that will be formatted using the custom provider.
+            // Example: a date and a number.
+            DateTime now = DateTime.Now;
+            double number = 12345.6789;
 
-            // Ensure the output directory exists
-            string outputPath = "output.xlsx";
-            try
-            {
-                string outDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
-                    Directory.CreateDirectory(outDir);
-            }
-            catch
-            {
-                // Ignore directory creation errors; Save will throw if it fails.
-            }
+            // Use string.Format with the custom provider to generate formatted strings.
+            string dateString = string.Format(debugProvider, "{0:D}", now);
+            string numberString = string.Format(debugProvider, "{0:N2}", number);
 
-            // Save the workbook (saving rule)
-            workbook.Save(outputPath);
-            logger.Log($"Workbook saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected exceptions
-            try
-            {
-                logger.Log($"Exception: {ex.GetType().Name} - {ex.Message}");
-            }
-            catch
-            {
-                // If logging fails, write to console as a last resort
-                Console.Error.WriteLine($"Exception: {ex}");
-            }
+            // Write the formatted strings into cells.
+            sheet.Cells["A1"].PutValue(dateString);
+            sheet.Cells["A2"].PutValue(numberString);
+
+            // Save the workbook (using the provided save rule).
+            string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LocalizedOutput.xlsx");
+            workbook.Save(outputPath); // save
+
+            // Indicate completion.
+            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Debug log written to {logPath}");
         }
     }
 }

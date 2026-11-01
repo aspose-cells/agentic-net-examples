@@ -1,7 +1,6 @@
-// Title: C# command‑line utility to apply FitToPagesWide and FitToPagesTall per worksheet from a JSON configuration using Aspose.Cells
-// AI Prompts: Generate C# code that reads a JSON file mapping worksheet names to FitToPagesWide and FitToPagesTall values, opens an Excel workbook with Aspose.Cells, updates each sheet's PageSetup, and saves the file. | Create a console application that accepts two arguments (Excel file path and JSON config path) and programmatically sets the print scaling for each worksheet based on the supplied configuration.
-// Common Searches: how to programmatically set FitToPagesWide for each sheet in Aspose.Cells C# | apply different FitToPagesTall values to multiple worksheets using a JSON file | C# console app to batch modify Excel page setup with Aspose.Cells | load external configuration to change print scaling of Excel sheets in .NET | Aspose.Cells command line tool for per‑sheet page layout settings
-// Tags: Aspose.Cells set worksheet FitToPagesWide | JSON driven page setup update Aspose.Cells | C# batch modify Excel print scaling | command line utility Aspose.Cells page layout | per sheet print scaling automation .NET
+// Title: C# utility to apply worksheet‑specific FitToPagesWide and FitToPagesTall values from a JSON file using Aspose.Cells
+// Common Searches: how to programmatically set FitToPagesWide and FitToPagesTall for each sheet with Aspose.Cells in C# | read Excel page‑setup configuration from JSON and apply it using Aspose.Cells .NET | apply per‑worksheet page fit settings from a JSON configuration file in a .NET application | Aspose.Cells example for updating worksheet PageSetup based on external JSON data | C# code to load JSON list of worksheets and set FitToPagesWide/FitToPagesTall in an Excel workbook
+// Tags: Aspose.Cells set worksheet FitToPagesWide | Aspose.Cells set worksheet FitToPagesTall | C# deserialize JSON to configure Excel page setup | apply per‑sheet page fit settings with Aspose.Cells | Excel workbook page layout automation using Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,82 +8,99 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-namespace FitToPagesUtility
+namespace AsposeCellsFitToPagesUtility
 {
-    // Represents the configuration for a single worksheet.
-    // A C# console utility that reads a JSON configuration mapping worksheet names to FitToPagesWide and FitToPagesTall values, loads the specified Excel workbook with Aspose.Cells, applies the defined page‑setup settings to each matching worksheet, and saves the workbook.
+    // Model representing configuration for a worksheet
+    // The sample loads an Excel workbook with Aspose.Cells, deserializes a JSON file that maps worksheet names to FitToPagesWide and FitToPagesTall values, updates each matching worksheet's PageSetup accordingly, and saves the modified workbook while handling missing files or worksheets.
     public class WorksheetFitConfig
     {
+        public string WorksheetName { get; set; }
         public int FitToPagesWide { get; set; }
         public int FitToPagesTall { get; set; }
     }
 
-    // Represents the overall configuration mapping worksheet names to their settings.
-    public class FitConfig
+    public static class FitToPagesApplier
     {
-        public Dictionary<string, WorksheetFitConfig> Worksheets { get; set; } = new Dictionary<string, WorksheetFitConfig>();
+        /// <param name="inputWorkbookPath">Path to the source Excel file.</param>
+        /// <param name="configJsonPath">Path to the JSON configuration file.</param>
+        /// <param name="outputWorkbookPath">Path where the modified Excel file will be saved.</param>
+        public static void ApplyFitToPages(string inputWorkbookPath, string configJsonPath, string outputWorkbookPath)
+        {
+            try
+            {
+                // Verify input files exist
+                if (!File.Exists(inputWorkbookPath))
+                {
+                    Console.WriteLine($"Input workbook not found: {inputWorkbookPath}");
+                    return;
+                }
+
+                if (!File.Exists(configJsonPath))
+                {
+                    Console.WriteLine($"Configuration file not found: {configJsonPath}");
+                    return;
+                }
+
+                // Load the workbook (using Aspose.Cells)
+                Workbook workbook = new Workbook(inputWorkbookPath);
+
+                // Read and deserialize the JSON configuration
+                string jsonContent = File.ReadAllText(configJsonPath);
+                List<WorksheetFitConfig> configs = JsonSerializer.Deserialize<List<WorksheetFitConfig>>(jsonContent);
+
+                if (configs == null)
+                {
+                    Console.WriteLine("No configuration data found in the JSON file.");
+                    return;
+                }
+
+                // Apply settings per worksheet
+                foreach (WorksheetFitConfig cfg in configs)
+                {
+                    // Find the worksheet by name; if not found, skip to next config
+                    Worksheet sheet = workbook.Worksheets[cfg.WorksheetName];
+                    if (sheet == null)
+                    {
+                        Console.WriteLine($"Worksheet \"{cfg.WorksheetName}\" not found. Skipping.");
+                        continue;
+                    }
+
+                    // Apply FitToPagesWide and FitToPagesTall
+                    sheet.PageSetup.FitToPagesWide = cfg.FitToPagesWide;
+                    sheet.PageSetup.FitToPagesTall = cfg.FitToPagesTall;
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputWorkbookPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputWorkbookPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while applying FitToPages settings: {ex.Message}");
+            }
+        }
     }
 
+    // Example usage
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect two arguments: path to the Excel file and path to the JSON config file.
-            if (args.Length != 2)
+            try
             {
-                Console.WriteLine("Usage: FitToPagesUtility <excelFilePath> <configJsonPath>");
-                return;
+                // Paths can be adjusted as needed
+                string inputPath = "input.xlsx";
+                string configPath = "fitConfig.json";
+                string outputPath = "output.xlsx";
+
+                FitToPagesApplier.ApplyFitToPages(inputPath, configPath, outputPath);
+
+                Console.WriteLine("FitToPages settings applied successfully.");
             }
-
-            string excelPath = args[0];
-            string configPath = args[1];
-
-            // Load configuration from JSON.
-            FitConfig config = LoadConfig(configPath);
-
-            // Load the workbook using Aspose.Cells.
-            Workbook workbook = new Workbook(excelPath);
-
-            // Apply FitToPages settings per worksheet as defined in the config.
-            foreach (var kvp in config.Worksheets)
+            catch (Exception ex)
             {
-                string sheetName = kvp.Key;
-                WorksheetFitConfig sheetConfig = kvp.Value;
-
-                // Find the worksheet by name; skip if not found.
-                Worksheet sheet = workbook.Worksheets[sheetName];
-                if (sheet == null)
-                {
-                    Console.WriteLine($"Worksheet \"{sheetName}\" not found in the workbook. Skipping.");
-                    continue;
-                }
-
-                // Apply the FitToPages settings.
-                sheet.PageSetup.FitToPagesWide = sheetConfig.FitToPagesWide;
-                sheet.PageSetup.FitToPagesTall = sheetConfig.FitToPagesTall;
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
-
-            // Save the modified workbook (overwrites the original file).
-            workbook.Save(excelPath);
-            Console.WriteLine("FitToPages settings applied and workbook saved successfully.");
-        }
-
-        // Helper method to deserialize the JSON configuration file.
-        private static FitConfig LoadConfig(string configPath)
-        {
-            string json = File.ReadAllText(configPath);
-            // The JSON structure should match FitConfig, e.g.:
-            // {
-            //   "Worksheets": {
-            //     "Sheet1": { "FitToPagesWide": 1, "FitToPagesTall": 2 },
-            //     "Sheet2": { "FitToPagesWide": 0, "FitToPagesTall": 1 }
-            //   }
-            // }
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            return JsonSerializer.Deserialize<FitConfig>(json, options) ?? new FitConfig();
         }
     }
 }

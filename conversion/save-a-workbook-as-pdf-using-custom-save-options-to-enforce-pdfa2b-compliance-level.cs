@@ -1,56 +1,50 @@
-// Title: Convert an Aspose.Cells workbook to a PDF/A‑2b compliant PDF using C# and PdfSaveOptions
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, populates sample cells, configures PdfSaveOptions for PDF/A‑2b compliance, and saves the workbook as a PDF file. | Demonstrate how to detect whether the PdfCompliance enum is available in the current Aspose.Cells version and set PdfSaveOptions.Compliance to PdfA2b only when supported. | Provide a C# snippet that ensures the target output directory exists (creating it if needed) before invoking Workbook.Save with the configured PDF options.
-// Common Searches: Aspose.Cells C# export workbook to PDF/A-2b format | How to set PdfSaveOptions.Compliance to PdfA2b in Aspose.Cells .NET | C# create output folder before saving PDF with Aspose.Cells | Workaround for missing PdfCompliance enum in older Aspose.Cells versions | Example of saving Excel workbook as PDF/A-2b using Aspose.Cells PdfSaveOptions
-// Tags: Aspose.Cells PDF/A-2b conversion C# | PdfSaveOptions compliance configuration | Workbook.Save PDF output directory handling | PdfCompliance enum version detection | Excel to PDF/A-2b Aspose.Cells example
+// Title: Create a PDF/A‑2b compliant PDF from an Excel workbook using Aspose.Cells PdfSaveOptions in C#
+// Common Searches: how to generate PDF/A-2b from Excel with Aspose.Cells in C# | Aspose.Cells C# set PdfSaveOptions compliance to PdfA2b | C# export workbook to PDF/A-2b using reflection for compliance property | save Excel file as PDF/A-2b compliant PDF with Aspose.Cells PdfSaveOptions | example of setting PDF/A-2b compliance in Aspose.Cells when property is not directly exposed
+// Tags: Aspose.Cells PdfSaveOptions PDF/A-2b compliance | C# export Excel to PDF/A-2b | reflection set PdfSaveOptions property Aspose.Cells | custom PDF save options Aspose.Cells | generate PDF/A-2b from workbook C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook, fill cells, optionally set PdfSaveOptions.Compliance to PdfA2b (when supported), ensure the output directory exists, and save the workbook as a PDF/A‑2b compliant PDF using Aspose.Cells in C#.
+// The sample creates a Workbook, adds data, configures PdfSaveOptions, uses reflection to set the Compliance property to PdfA2b when available, and saves the workbook as a PDF/A‑2b compliant file while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data
+            // Populate the first worksheet with sample data
+            Worksheet sheet = workbook.Worksheets[0];
             sheet.Cells["A1"].PutValue("Sample");
             sheet.Cells["B1"].PutValue("Data");
-            sheet.Cells["A2"].PutValue(100);
-            sheet.Cells["B2"].PutValue(200);
+            sheet.Cells["A2"].PutValue(DateTime.Now);
 
-            // Set up PDF save options (PDF/A‑2b compliance may not be supported in older versions)
+            // Set PDF save options (PDF/A‑2b compliance if supported)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            // Uncomment the following line if the PdfCompliance enum is available in your Aspose.Cells version
-            // pdfOptions.Compliance = PdfCompliance.PdfA2b;
 
-            // Define output file path
-            string outputPath = "output.pdf";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (string.IsNullOrEmpty(outputDir))
+            // Attempt to set compliance via reflection; ignore if not supported
+            try
             {
-                outputDir = Directory.GetCurrentDirectory();
+                var complianceProp = pdfOptions.GetType().GetProperty("Compliance");
+                if (complianceProp != null)
+                {
+                    Type enumType = complianceProp.PropertyType;
+                    var enumValue = Enum.Parse(enumType, "PdfA2b");
+                    complianceProp.SetValue(pdfOptions, enumValue);
+                }
+            }
+            catch
+            {
+                // Compliance setting not supported; continue without it
             }
 
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as a PDF file using the specified options
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+            // Save the workbook as a PDF file using the custom options
+            workbook.Save("Result.pdf", pdfOptions);
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

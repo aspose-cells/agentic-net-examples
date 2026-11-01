@@ -1,24 +1,28 @@
-// Title: Load an Excel workbook from a file path with Aspose.Cells for .NET to prepare for pivot table creation
-// AI Prompts: Generate C# code that reads a specified .xlsx file using Aspose.Cells and returns a Workbook instance. | Write a console program that opens an existing Excel workbook with Aspose.Cells, then prints the number of worksheets to confirm the load. | Show how to instantiate an Aspose.Cells Workbook from a file path and verify successful loading before manipulating pivot tables.
-// Common Searches: how to open an existing .xlsx file with Aspose.Cells in a C# console app | Aspose.Cells load workbook from local path for pivot table generation | C# example to read Excel file and get worksheet count using Aspose.Cells | initialize Aspose.Cells workbook before creating pivot tables in .NET
-// Tags: Aspose.Cells retrieve workbook from file | C# prepare workbook for pivot table creation | access Excel worksheets count with Aspose.Cells | validate workbook loading Aspose.Cells
+// Title: Load an Excel workbook from a file path with Aspose.Cells for .NET to enable pivot table creation
+// Common Searches: Aspose.Cells C# load workbook from local file for pivot table | how to open an existing .xlsx file using Aspose.Cells in .NET | C# example reading Excel workbook by path before creating pivot tables | using Aspose.Cells to initialize workbook for pivot table operations | load Excel file into Aspose.Cells Workbook object from file system
+// Tags: Aspose.Cells load workbook from file path | C# Aspose.Cells open .xlsx workbook | initialize workbook for pivot tables Aspose.Cells | read Excel file with Aspose.Cells .NET | prepare worksheet for pivot table creation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// // Loads "input.xlsx" into an Aspose.Cells Workbook object and prints the total worksheet count, establishing a base for subsequent pivot table operations.
-class LoadWorkbookForPivot
+// The example demonstrates creating an Aspose.Cells Workbook by loading a .xlsx file from a specified path, accessing the first worksheet, and confirming the workbook is ready for further pivot table manipulation.
+class Program
 {
     static void Main()
     {
-        // Path to the existing Excel file
-        string filePath = "input.xlsx";
+        // Specify the path to the Excel file
+        string filePath = @"C:\Data\SampleWorkbook.xlsx";
 
-        // Load the workbook from the specified file path
+        // Load the workbook from the file
         Workbook workbook = new Workbook(filePath);
 
-        // The workbook is now ready for pivot table operations
-        // Example: display basic information
-        Console.WriteLine($"Workbook loaded. Worksheets count: {workbook.Worksheets.Count}");
+        // At this point the workbook is ready for pivot table operations
+        // Example: access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // (Further pivot table code would go here)
+
+        // Optional: keep the console open
+        Console.WriteLine("Workbook loaded successfully.");
     }
 }

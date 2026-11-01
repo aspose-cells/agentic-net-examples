@@ -1,73 +1,66 @@
-// Title: Localize numeric cell formatting to French (fr-FR) culture in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, sets the workbook CultureInfo to a given locale, scans all used cells, and applies a built‑in number format (e.g., format ID 4) to cells that contain numeric values while keeping their existing styles intact. | Create a reusable method ApplyLocalizedNumberFormat(string inputPath, string outputPath, string cultureCode) that loads a workbook, configures CultureInfo, iterates the used range, detects numeric cells via IsNumericValue, and updates only the number‑format portion of each cell's style. | Generate a snippet that uses a regular expression to confirm that a cell's DisplayStringValue contains digits before assigning the localized number format, ensuring text cells remain unchanged.
-// Common Searches: Aspose.Cells C# set French number format for all numeric cells in an existing workbook | How to preserve cell formatting while changing number format with Aspose.Cells .NET | Detect numeric values in Excel cells and apply culture‑specific format using Aspose.Cells | Apply built‑in number format ID 4 to numeric cells after setting workbook CultureInfo | Iterate used range and update only number format of cells in Aspose.Cells C#
-// Tags: localized number format assignment Aspose.Cells | numeric cell identification Aspose.Cells C# | style flag number‑format update Aspose.Cells | workbook culture configuration Aspose.Cells | used‑range traversal Aspose.Cells
+// Title: Localize numeric substrings in Excel cell text using Aspose.Cells and C# (e.g., German number format)
+// AI Prompts: Generate C# code with Aspose.Cells that iterates over all used cells, extracts the displayed string, finds numeric patterns with a regular expression, and rewrites each number using a given CultureInfo. | Demonstrate how to change decimal separators from '.' to ',' only in the numeric parts of mixed‑content Excel cells while leaving surrounding text untouched, using Aspose.Cells. | Create a reusable method that parses invariant numbers inside cell text, formats them with a target locale, assigns the result back as a string, clears existing number formats, and saves the workbook.
+// Common Searches: aspnet aspose.cells replace decimal separator in cell text german locale | c# regex find numbers in Excel cell string and format with cultureinfo using aspose | how to localize numbers inside mixed text cells in Excel with Aspose.Cells .NET | convert invariant numeric values to locale‑specific format in Aspose.Cells worksheet | apply German number formatting to numbers embedded in Excel cell strings c#
+// Tags: Aspose.Cells replace numbers in cell strings | C# regex numeric detection in Excel cells | culture-specific number formatting with Aspose.Cells | localize decimal separator in Excel worksheet | update cell value as string Aspose.Cells
 
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example loads an .xlsx workbook, sets its CultureInfo to a target locale (e.g., fr-FR), iterates the used range, identifies numeric cells, checks the displayed string for numeric characters, and applies built‑in number format ID 4 using a StyleFlag so only the number‑format part changes, then saves the workbook.
+// The example loads an Excel workbook, walks through each used cell, reads the cell's displayed text, uses a regular expression to locate numeric substrings, parses them with invariant culture, formats them according to a specified CultureInfo (e.g., German), replaces the original numbers while preserving surrounding text, writes the result back as a plain string, clears any existing number format to avoid double formatting, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Set the desired culture for number formatting (e.g., French - France)
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+        // Choose the worksheet to process (first worksheet in this example)
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Work with the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Define a regex to detect numeric patterns (integers and decimals, optional sign)
+        Regex numberRegex = new Regex(@"-?\d+(\.\d+)?", RegexOptions.Compiled);
 
-        // Determine the used range of the worksheet
-        int maxRow = sheet.Cells.MaxDataRow;
-        int maxCol = sheet.Cells.MaxDataColumn;
+        // Define the culture you want to use for localized formatting
+        // For example, German (Germany) uses comma as decimal separator
+        CultureInfo targetCulture = new CultureInfo("de-DE");
 
-        // Regular expression to identify numeric content in the formatted string
-        Regex numericRegex = new Regex(@"[\d.,]+", RegexOptions.Compiled);
-
-        // Iterate through all cells in the used range
-        for (int row = 0; row <= maxRow; row++)
+        // Iterate through all used cells in the worksheet
+        foreach (Cell cell in cells)
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Retrieve the cell's formatted (display) text
+            string formattedText = cell.StringValue;
+
+            // If the cell is empty, skip processing
+            if (string.IsNullOrEmpty(formattedText))
+                continue;
+
+            // Replace each numeric occurrence with its localized representation
+            string localizedText = numberRegex.Replace(formattedText, match =>
             {
-                Cell cell = sheet.Cells[row, col];
-
-                // Skip empty cells
-                if (cell == null || cell.Type == CellValueType.IsNull)
-                    continue;
-
-                // Process only cells that contain a numeric value (int, double, DateTime, etc.)
-                if (cell.IsNumericValue)
+                // Try to parse the matched number using invariant culture (dot as decimal separator)
+                if (double.TryParse(match.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
                 {
-                    // Get the cell's current display string (already formatted by Excel style)
-                    string displayValue = cell.DisplayStringValue;
-
-                    // If the display string contains a numeric pattern, apply a localized format
-                    if (numericRegex.IsMatch(displayValue))
-                    {
-                        // Retrieve the existing style
-                        Style style = cell.GetStyle();
-
-                        // Use a built‑in number format that will be localized automatically.
-                        // Format 4 corresponds to "#,##0.00" (two decimal places).
-                        style.Number = 4;
-
-                        // Apply only the number format part of the style to preserve other formatting
-                        StyleFlag flag = new StyleFlag();
-                        flag.NumberFormat = true;
-
-                        // Set the updated style back to the cell
-                        cell.SetStyle(style, flag);
-                    }
+                    // Format the number using the target culture's number format (e.g., "N" for numeric)
+                    return number.ToString("N", targetCulture);
                 }
+                // If parsing fails, return the original match unchanged
+                return match.Value;
+            });
+
+            // If any changes were made, update the cell's value with the new localized string
+            if (!localizedText.Equals(formattedText, StringComparison.Ordinal))
+            {
+                // Set the cell's value as a string to preserve the exact display text
+                cell.PutValue(localizedText);
+                // Optionally, you can clear any number format to avoid double formatting
+                cell.GetStyle().Number = 0;
             }
         }
 
-        // Save the workbook with the localized number formats applied
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

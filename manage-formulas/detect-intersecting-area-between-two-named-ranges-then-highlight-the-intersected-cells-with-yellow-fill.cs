@@ -1,70 +1,124 @@
-// Title: Highlight the intersecting cells of two named ranges with a yellow fill using Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook, retrieve the named ranges "Range1" and "Range2", compute their intersection with Range.Intersect, create a solid yellow style, and apply it to the intersected cells using Aspose.Cells. | In C#, get two named ranges from a workbook, determine the overlapping area, build a yellow background style, apply the style to the intersected range, and save the updated file.
-// Common Searches: c# aspocells find intersection of two named ranges | how to apply yellow fill to overlapping cells in Excel using Aspose.Cells | Aspose.Cells .NET highlight intersecting area of named ranges | range.Intersect example in Aspose.Cells C# | retrieve named range by name and style intersected cells Aspose
-// Tags: range.Intersect method Aspose.Cells | named range retrieval Aspose.Cells | apply solid fill style to range Aspose.Cells | highlight overlapping cells Excel C# | cell shading with Aspose.Cells .NET
+// Title: Highlight intersecting cells of two named ranges with yellow fill using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# find overlapping cells of two named ranges | how to calculate intersection of named ranges in an Excel workbook with Aspose.Cells | C# code to apply yellow background to intersected range using Aspose.Cells | retrieve worksheet from a named range reference in Aspose.Cells | Aspose.Cells create style with solid fill and apply to a range
+// Tags: named range intersection Aspose.Cells | apply yellow fill style Aspose.Cells | CellArea overlap calculation C# | retrieve worksheet from Name object Aspose.Cells | create solid background style Aspose.Cells | Excel range intersection C#
 
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 using System;
 using System.Drawing;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The example loads input.xlsx, obtains the named ranges "Range1" and "Range2", determines their intersecting area, applies a solid yellow background style to the intersected cells, and saves the result as output.xlsx.
-class IntersectAndHighlight
+// The example loads an Excel workbook, obtains two named ranges, parses their references into CellArea objects, computes the intersecting rectangle, creates a solid yellow style, applies the style to the intersected cells on the appropriate worksheet, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
-            // Verify that the input workbook exists
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook from the input file
+            var workbook = new Workbook(inputPath);
 
-            // Retrieve the two named ranges by their names
-            // GetRangeByName returns an Aspose.Cells.Range object or null if not found
-            AsposeRange range1 = workbook.Worksheets.GetRangeByName("Range1");
-            AsposeRange range2 = workbook.Worksheets.GetRangeByName("Range2");
+            // Retrieve the two named ranges from the workbook's Names collection
+            var namedRange1 = workbook.Worksheets.Names["Range1"];
+            var namedRange2 = workbook.Worksheets.Names["Range2"];
 
-            if (range1 == null || range2 == null)
+            if (namedRange1 == null || namedRange2 == null)
             {
-                Console.WriteLine("One or both named ranges (Range1, Range2) were not found in the workbook.");
+                Console.WriteLine("One or both named ranges were not found.");
                 return;
             }
 
-            // Find the intersecting area between the two ranges
-            AsposeRange intersectRange = range1.Intersect(range2);
+            // Convert the reference strings of the named ranges into CellArea structures
+            CellArea area1 = GetCellAreaFromName(namedRange1);
+            CellArea area2 = GetCellAreaFromName(namedRange2);
 
-            // If there is an intersection, apply a yellow fill to the intersected cells
-            if (intersectRange != null && intersectRange.RowCount > 0 && intersectRange.ColumnCount > 0)
+            // Compute the intersecting rectangle
+            int intersectStartRow = Math.Max(area1.StartRow, area2.StartRow);
+            int intersectStartCol = Math.Max(area1.StartColumn, area2.StartColumn);
+            int intersectEndRow   = Math.Min(area1.EndRow,   area2.EndRow);
+            int intersectEndCol   = Math.Min(area1.EndColumn,area2.EndColumn);
+
+            // Verify that an intersection exists
+            if (intersectStartRow <= intersectEndRow && intersectStartCol <= intersectEndCol)
             {
-                // Create a style with solid yellow background
+                // Get the worksheet that contains the first named range
+                Worksheet worksheet = GetWorksheetFromName(namedRange1, workbook);
+
+                // Create a style with solid yellow fill
                 Style yellowStyle = workbook.CreateStyle();
                 yellowStyle.ForegroundColor = Color.Yellow;
                 yellowStyle.Pattern = BackgroundType.Solid;
 
-                // Define which style attributes to apply (only cell shading)
                 StyleFlag styleFlag = new StyleFlag { CellShading = true };
 
-                // Apply the style to the intersected range
+                // Define the intersecting range and apply the style
+                int rows = intersectEndRow - intersectStartRow + 1;
+                int cols = intersectEndCol - intersectStartCol + 1;
+                AsposeRange intersectRange = worksheet.Cells.CreateRange(intersectStartRow, intersectStartCol, rows, cols);
                 intersectRange.ApplyStyle(yellowStyle, styleFlag);
+            }
+            else
+            {
+                Console.WriteLine("The named ranges do not intersect.");
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Parses a Name.RefersTo string and returns a CellArea representing the range.
+    private static CellArea GetCellAreaFromName(Name name)
+    {
+        // RefersTo format: SheetName!$A$1:$C$5 (or a single cell)
+        string refersTo = name.RefersTo;
+        int exclPos = refersTo.IndexOf('!');
+        string rangePart = exclPos >= 0 ? refersTo.Substring(exclPos + 1) : refersTo;
+
+        // Remove any leading '$' characters
+        rangePart = rangePart.Replace("$", string.Empty);
+
+        // Split start and end cells
+        string[] cells = rangePart.Split(':');
+        if (cells.Length == 1)
+        {
+            // Single cell range
+            return CellArea.CreateCellArea(cells[0], cells[0]);
+        }
+        else
+        {
+            return CellArea.CreateCellArea(cells[0], cells[1]);
+        }
+    }
+
+    // Retrieves the worksheet referenced by a Name object.
+    private static Worksheet GetWorksheetFromName(Name name, Workbook workbook)
+    {
+        string refersTo = name.RefersTo;
+        int exclPos = refersTo.IndexOf('!');
+        if (exclPos > 0)
+        {
+            string sheetName = refersTo.Substring(0, exclPos);
+            // Trim possible surrounding single quotes
+            sheetName = sheetName.Trim('\'');
+            return workbook.Worksheets[sheetName];
+        }
+        // Fallback to the first worksheet if the sheet name cannot be determined
+        return workbook.Worksheets[0];
     }
 }

@@ -1,7 +1,6 @@
-// Title: Add a column chart in Aspose.Cells for .NET and color its series with the workbook’s Accent5 theme color
-// AI Prompts: Generate C# code using Aspose.Cells to create a column chart and set each series’ fill and marker colors to the workbook’s Accent5 theme color. | Show how to retrieve a workbook’s Accent5 theme color with GetThemeColor and apply it to chart series in Aspose.Cells. | Provide a complete example that builds sample data, adds a column chart, applies the Accent5 theme color to series, and saves the workbook as an .xlsx file.
-// Common Searches: aspnet aspocells how to set chart series color to workbook accent5 theme | c# Aspose.Cells get theme color Accent5 for chart series | apply workbook theme colors to column chart series using Aspose.Cells .NET | set marker and fill color of chart series from workbook theme in Aspose.Cells | example of using GetThemeColor with chart series in Aspose.Cells
-// Tags: Aspose.Cells set chart series theme color | C# GetThemeColor Accent5 | column chart series fill color Aspose.Cells | apply workbook theme to chart Aspose.Cells | save workbook as xlsx Aspose.Cells
+// Title: Create a column chart and apply the workbook’s Accent5 theme color to all series using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set chart series fill color to workbook theme Accent5 | C# Aspose.Cells apply workbook theme color to column chart series | How to retrieve Accent5 theme color from workbook in Aspose.Cells | Set series border and marker colors from workbook theme using Aspose.Cells .NET | Create column chart with theme-based series styling in Aspose.Cells C#
+// Tags: chart series theme color Aspose.Cells | series fill color using workbook theme | workbook theme color extraction C# | column chart series theme styling | theme-based series coloring Aspose.Cells
 
 using System;
 using System.Drawing;
@@ -9,74 +8,78 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, populates sample data, inserts a column chart, retrieves the workbook's Accent5 theme color via GetThemeColor, applies that color to each series' fill and marker, and saves the file as an .xlsx workbook.
-class Program
+namespace AsposeCellsChartExample
 {
-    static void Main()
+    // The example creates a new workbook, fills it with sample data, adds a column chart, retrieves the workbook's Accent5 theme color, and applies that color to each series' fill, border, and marker settings before saving the file as an Excel workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            var workbook = new Workbook();
-
-            // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value1");
-            sheet.Cells["C1"].PutValue("Value2");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
-
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            var chart = sheet.Charts[chartIndex];
-
-            // Add series for the two value columns
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.Add("C2:C4", true);
-
-            // Retrieve the workbook's Accent5 theme color
-            Color accent5 = workbook.GetThemeColor(ThemeColorType.Accent5);
-
-            // Apply Accent5 color to each series
-            foreach (Series series in chart.NSeries)
+            try
             {
-                // Set the fill color of the series
-                series.Area.ForegroundColor = accent5;
-                // Set the marker color (if markers are used)
-                series.Marker.ForegroundColor = accent5;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Data";
+
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["C1"].PutValue("Series2");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["C2"].PutValue(15);
+                sheet.Cells["C3"].PutValue(25);
+                sheet.Cells["C4"].PutValue(35);
+
+                // Add a column chart to the worksheet
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+                Chart chart = sheet.Charts[chartIdx];
+                chart.Title.Text = "Sample Chart";
+
+                // Define the series and category data
+                chart.NSeries.Add("B2:B4", true); // Series1 values
+                chart.NSeries.Add("C2:C4", true); // Series2 values
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Retrieve the workbook's Accent5 theme color
+                Color accent5Color = workbook.GetThemeColor(ThemeColorType.Accent5);
+
+                // Apply the Accent5 color to each series (fill, border, markers)
+                foreach (Series series in chart.NSeries)
+                {
+                    // Fill color for the series area (bars/columns)
+                    series.Area.ForegroundColor = accent5Color;
+
+                    // Outline/border color (relevant for line charts, safe for column charts)
+                    series.Border.Color = accent5Color;
+
+                    // Marker colors (relevant for scatter/line charts)
+                    series.Marker.ForegroundColor = accent5Color;
+                    series.Marker.BackgroundColor = accent5Color;
+                }
+
+                // Save the workbook with the chart
+                string outputPath = "ChartWithAccent5.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Define output file path
-            string outputPath = "ChartWithAccent5.xlsx";
-
-            // Ensure the output directory exists
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (string.IsNullOrEmpty(directory))
+            catch (Exception ex)
             {
-                directory = Directory.GetCurrentDirectory();
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,74 +1,143 @@
-// Title: Export an Aspose.Cells worksheet to a formatted JSON file with custom value conversion and per‑cell style information in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells JsonSaveOptions to save an entire worksheet as an indented JSON document, converting every cell value to a string and embedding each cell's style data. | Write C# that extracts a specific range from a worksheet and returns its JSON representation using JsonUtility.ExportRangeToJson with options for empty cells, string conversion, and Excel structure. | Show how to adjust JsonSaveOptions to produce a compact JSON output that omits per‑cell style information while preserving header rows.
-// Common Searches: how to use Aspose.Cells JsonSaveOptions to export a worksheet as JSON with cell styles in C# | C# Aspose.Cells export selected range to JSON string including formatting | save Excel workbook to a pretty printed JSON file using Aspose.Cells .NET | Aspose.Cells export empty cells as null and values as strings in JSON | customize JSON output from Aspose.Cells to include Excel structure
-// Tags: Aspose.Cells JsonSaveOptions export worksheet to JSON | C# export Excel range to JSON with style data | serialize cell values as strings using Aspose.Cells | include per‑cell formatting in JSON output Aspose | pretty‑printed JSON export from workbook Aspose.Cells
+// Title: Export Excel worksheet cells to JSON with values, data types and style details using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates over all used cells in a worksheet, captures each cell's raw value, its data type, and selected style properties (font name, size, bold, italic, font color, background color, horizontal and vertical alignment), and serializes the result to a formatted JSON file. | Extend the export to also include each cell's formula text and a flag indicating whether the cell belongs to a merged range, while preserving the existing JSON structure. | Replace the color conversion routine so that exported colors are CSS‑compatible RGB strings (e.g., "rgb(17,34,51)") instead of ARGB hex values.
+// Common Searches: how to convert Excel worksheet to JSON with cell formatting using Aspose.Cells C# | Aspose.Cells export cell style information to JSON file | C# serialize Excel cell data type and font attributes to JSON | include merged cells and formulas in Aspose.Cells JSON export | convert System.Drawing.Color to CSS rgb string in Aspose.Cells JSON output
+// Tags: Aspose.Cells JSON export of cell styles | C# serialize Excel cell values and types | extract font and background colors Aspose.Cells | include cell alignment data in JSON | handle merged cells Aspose.Cells export
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using AsposeRange = Aspose.Cells.Range;
+using System.Drawing;
 
-// The example creates a workbook, adds sample data, applies header and numeric styles, configures JsonSaveOptions to serialize all values as strings, include empty cells, embed per‑cell style information, treat the first row as a header, and pretty‑print the JSON with indentation. It then saves the whole worksheet to a JSON file and demonstrates exporting a defined range to a JSON string.
-class ExportWorksheetToJson
+namespace AsposeCellsJsonExport
 {
-    static void Main()
+    // Represents the serialized information of a single cell.
+    // The program loads an Excel workbook with Aspose.Cells, iterates through the used range of the first worksheet, captures each cell's value, data type, and a subset of style attributes (font name, size, bold, italic, font and background colors, horizontal and vertical alignment), converts colors to ARGB hex, and writes the collected rows as an indented JSON array to a specified file.
+    public class CellInfo
     {
-        try
+        // The raw value of the cell.
+        public object Value { get; set; }
+
+        // The data type of the cell (e.g., String, Double, DateTime, Boolean, etc.).
+        public string DataType { get; set; }
+
+        // A simplified representation of the cell's style.
+        public CellStyleInfo Style { get; set; }
+    }
+
+    // Represents a subset of style properties we want to include in the JSON.
+    public class CellStyleInfo
+    {
+        public string FontName { get; set; }
+        public double FontSize { get; set; }
+        public bool Bold { get; set; }
+        public bool Italic { get; set; }
+        public string FontColor { get; set; }          // ARGB hex string
+        public string BackgroundColor { get; set; }    // ARGB hex string
+        public string HorizontalAlignment { get; set; }
+        public string VerticalAlignment { get; set; }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["C1"].PutValue("InStock");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(1.2);
-            worksheet.Cells["C2"].PutValue(true);
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["B3"].PutValue(0.8);
-            worksheet.Cells["C3"].PutValue(false);
-
-            // Apply a header style
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.IsBold = true;
-            headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
-            headerStyle.Pattern = BackgroundType.Solid;
-            worksheet.Cells["A1:C1"].SetStyle(headerStyle);
-
-            // Apply a numeric style to price column
-            Style priceStyle = workbook.CreateStyle();
-            priceStyle.Number = 2; // two decimal places
-            worksheet.Cells["B2:B3"].SetStyle(priceStyle);
-
-            // Configure JSON export options for custom serialization
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            try
             {
-                ExportAsString = true,      // serialize all cell values as strings
-                ExportEmptyCells = true,    // include empty cells as null
-                ExportStylePool = false,    // export style information per cell
-                HasHeaderRow = true,        // first row is treated as header
-                Indent = "    ",            // pretty‑print JSON with 4‑space indentation
-                ToExcelStruct = true        // include Excel structure (styles) in JSON
-            };
+                // Path to the source Excel file.
+                string excelPath = @"C:\Data\Sample.xlsx";
 
-            // Export the entire worksheet to a JSON file using the configured options
-            string outputPath = "WorksheetExport.json";
-            workbook.Save(outputPath, jsonOptions);
-            Console.WriteLine($"Workbook exported to JSON file: {Path.GetFullPath(outputPath)}");
+                // Path where the resulting JSON will be saved.
+                string jsonPath = @"C:\Data\SampleExport.json";
 
-            // Obtain the JSON string for a specific range
-            AsposeRange range = worksheet.Cells.CreateRange("A1:C3");
-            string jsonString = JsonUtility.ExportRangeToJson(range, jsonOptions);
-            Console.WriteLine("JSON for selected range:");
-            Console.WriteLine(jsonString);
+                // Verify that the source file exists.
+                if (!File.Exists(excelPath))
+                {
+                    Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
+                    return;
+                }
+
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(jsonPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Load the workbook.
+                Workbook workbook = new Workbook(excelPath);
+
+                // Get the first worksheet (you can change the index or name as needed).
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Determine the used range.
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+
+                // Prepare a list to hold rows; each row is a list of CellInfo objects.
+                var rows = new List<List<CellInfo>>();
+
+                // Iterate through each row.
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    var currentRow = new List<CellInfo>();
+
+                    // Iterate through each column in the current row.
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Build the style information.
+                        Style style = cell.GetStyle();
+                        var styleInfo = new CellStyleInfo
+                        {
+                            FontName = style.Font.Name,
+                            FontSize = style.Font.Size,
+                            Bold = style.Font.IsBold,
+                            Italic = style.Font.IsItalic,
+                            FontColor = ColorToHex(style.Font.Color),
+                            BackgroundColor = ColorToHex(style.BackgroundColor),
+                            HorizontalAlignment = style.HorizontalAlignment.ToString(),
+                            VerticalAlignment = style.VerticalAlignment.ToString()
+                        };
+
+                        // Build the cell information.
+                        var cellInfo = new CellInfo
+                        {
+                            Value = cell.Value,
+                            DataType = cell.Type.ToString(),
+                            Style = styleInfo
+                        };
+
+                        currentRow.Add(cellInfo);
+                    }
+
+                    rows.Add(currentRow);
+                }
+
+                // Serialize the rows collection to JSON with indentation for readability.
+                string json = JsonSerializer.Serialize(rows, new JsonSerializerOptions { WriteIndented = true });
+
+                // Write the JSON string to the output file.
+                File.WriteAllText(jsonPath, json);
+
+                Console.WriteLine($"Worksheet data exported to JSON at: {jsonPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Helper method to convert a System.Drawing.Color to an ARGB hex string (e.g., "#FF112233").
+        private static string ColorToHex(Color color)
         {
-            Console.WriteLine("An error occurred:");
-            Console.WriteLine(ex.Message);
+            // If the color is empty (no color), return null.
+            if (color.IsEmpty)
+                return null;
+
+            return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
         }
     }
 }

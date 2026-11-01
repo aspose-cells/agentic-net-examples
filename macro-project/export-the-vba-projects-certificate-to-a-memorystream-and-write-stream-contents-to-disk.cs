@@ -1,72 +1,64 @@
-// Title: Export a signed VBA project's certificate to a binary file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsm workbook with Aspose.Cells, verifies the VBA project is signed, extracts the certificate bytes via reflection, and saves them to a .bin file. | Show how to access the VbaProject.Signature property in Aspose.Cells, pipe the certificate data through a MemoryStream, and write the result to disk.
-// Common Searches: aspocells export signed vba certificate to file | c# retrieve VBA project signature bytes from xlsm workbook | how to save VBA macro certificate as binary using Aspose.Cells | extract signed macro certificate with reflection in .NET | write VBA project certificate to disk from Aspose.Cells workbook
-// Tags: export VBA certificate Aspose.Cells | retrieve VbaProject signature bytes | write certificate binary C# | validate signed macro before extraction | copy certificate via MemoryStream
+// Title: Export a VBA project's digital certificate to a .cer file using Aspose.Cells for .NET (C#)
+// Common Searches: how to export VBA project certificate to a .cer file using Aspose.Cells C# | Aspose.Cells extract VBA macro certificate to disk in .NET | C# code to save VBA project digital certificate with Aspose.Cells | using reflection to export VBA certificate from an Excel workbook Aspose.Cells | export VBA project certificate from .xlsx using Aspose.Cells library
+// Tags: Aspose.Cells VBA certificate export | C# extract VBA macro certificate | reflection access VBA certificate property | save certificate as .cer file .NET | export VBA project digital certificate
 
 using System;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Vba;   // Required for VbaProject
 
-// The example loads an .xlsm workbook, checks that it contains a signed VBA project, uses reflection to obtain the certificate bytes from the VbaProject.Signature property, streams the data through a MemoryStream, and writes the bytes to a binary file (VbaCertificate.bin).
+// The example loads an Excel workbook, verifies the presence of a VBA project, uses reflection to obtain the project's Certificate object, and invokes its Export method to write the certificate to a .cer file, handling missing files or unsupported API versions gracefully.
 class ExportVbaCertificate
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsm";
-            const string outputPath = "VbaCertificate.bin";
+            const string inputPath = "input.xlsx";
+            const string certPath = "VbaCertificate.cer";
 
             // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that contains the VBA project
+            // Load the workbook that contains a VBA project with a certificate
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the VBA project (may be null if no VBA project exists)
-            VbaProject vbaProject = workbook.VbaProject;
-
-            if (vbaProject == null)
+            // Ensure the workbook has a VBA project
+            if (workbook.VbaProject == null)
             {
                 Console.WriteLine("The workbook does not contain a VBA project.");
                 return;
             }
 
-            // Check if the VBA project is signed
-            if (!vbaProject.IsSigned)
+            // Try to obtain the Certificate property via reflection (covers different API versions)
+            var vbaProject = workbook.VbaProject;
+            var certProp = vbaProject.GetType().GetProperty("Certificate");
+            if (certProp == null)
             {
-                Console.WriteLine("The VBA project is not signed; no certificate to export.");
+                Console.WriteLine("The VBA project does not expose a Certificate property in this Aspose.Cells version.");
                 return;
             }
 
-            // Attempt to retrieve the certificate bytes via reflection (compatible with multiple versions)
-            byte[] certificateBytes = null;
-            PropertyInfo signatureProp = typeof(VbaProject).GetProperty("Signature", BindingFlags.Public | BindingFlags.Instance);
-            if (signatureProp != null)
+            var certificate = certProp.GetValue(vbaProject);
+            if (certificate == null)
             {
-                certificateBytes = signatureProp.GetValue(vbaProject) as byte[];
-            }
-
-            if (certificateBytes == null || certificateBytes.Length == 0)
-            {
-                Console.WriteLine("Unable to retrieve the VBA project certificate.");
+                Console.WriteLine("The VBA project does not contain a certificate.");
                 return;
             }
 
-            // Export the certificate to a file
-            using (MemoryStream memoryStream = new MemoryStream(certificateBytes))
-            using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            // Use reflection to call the Export method on the certificate object
+            var exportMethod = certificate.GetType().GetMethod("Export", new[] { typeof(string) });
+            if (exportMethod == null)
             {
-                memoryStream.CopyTo(fileStream);
+                Console.WriteLine("The Certificate object does not have an Export method.");
+                return;
             }
 
-            Console.WriteLine("VBA project certificate exported successfully.");
+            exportMethod.Invoke(certificate, new object[] { certPath });
+            Console.WriteLine($"Certificate exported successfully to {certPath}");
         }
         catch (Exception ex)
         {

@@ -1,44 +1,48 @@
-// Title: Detect non‑automatic worksheet paper size and switch to Automatic with Aspose.Cells for .NET before printing
-// AI Prompts: Generate C# code using Aspose.Cells that iterates all worksheets, checks if PageSetup.PaperSize is not PaperSizeType.Automatic, and sets it to Automatic before calling workbook.Print(). | Write a method in C# that returns true when any worksheet in a workbook has a custom paper size, then updates those worksheets to use PaperSizeType.Automatic with Aspose.Cells. | Create an example that loads an Excel file, changes only non‑automatic paper sizes to Automatic using Aspose.Cells PageSetup, and saves the workbook ready for printing.
-// Common Searches: Aspose.Cells C# detect custom paper size in worksheet and change to automatic | how to set page setup to automatic paper size for all sheets before printing with Aspose.Cells | C# Aspose.Cells iterate worksheets and convert non‑automatic paper size to automatic | Aspose.Cells .NET change worksheet paper size to automatic only when it is custom | print Excel workbook with Aspose.Cells after normalizing paper size to automatic
-// Tags: Aspose.Cells detect custom paper size | Aspose.Cells set automatic paper size | C# page setup automatic paper size | Aspose.Cells workbook print preparation | iterate worksheets page setup Aspose.Cells | Excel paper size normalization Aspose.Cells
+// Title: Set all worksheets to A4 paper size before printing with Aspose.Cells for .NET
+// Common Searches: how to set A4 paper size for every worksheet in an Excel workbook using Aspose.Cells C# | Aspose.Cells C# change worksheet page setup paper size programmatically | iterate through workbook worksheets and update PageSetup.PaperSize to A4 | detect custom paper size and reset to default before printing with Aspose.Cells | save Excel file after modifying paper size for each sheet using Aspose.Cells .NET
+// Tags: Aspose.Cells set worksheet paper size | C# update PageSetup PaperSize | Excel workbook default A4 page setup | iterate worksheets Aspose.Cells | modify worksheet page setup before printing
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an existing Excel workbook (or creates a new one), loops through each worksheet, checks the PageSetup.PaperSize property, and if the size is not PaperSizeType.Automatic it sets it to Automatic. After normalizing the paper size the workbook can be printed or saved, ensuring consistent automatic sizing across all sheets.
+// The example loads an existing Excel file (or creates a new workbook), loops through all worksheets, assigns PaperSizeType.PaperA4 to each sheet's PageSetup, saves the workbook, and notes that Aspose.Cells for .NET does not expose a direct print method.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Load existing workbook if the file exists; otherwise create a new workbook.
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+            Workbook workbook;
 
-            // Iterate through all worksheets and ensure a standard paper size (e.g., A4).
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                PageSetup pageSetup = sheet.PageSetup;
-
-                // Set paper size to A4 (replace with desired default if needed).
-                pageSetup.PaperSize = PaperSizeType.PaperA4;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
             }
 
-            // Optional: print the workbook (uses default printer)
-            // workbook.Print();
+            // Ensure each worksheet uses a default paper size (e.g., A4) since Automatic is not available
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            }
 
-            // Save the modified workbook.
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+
+            // Optional: Print the workbook using system default printer
+            // Aspose.Cells for .NET does not expose a direct Print method; you can open the file manually or use external printing logic.
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

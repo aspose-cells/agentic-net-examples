@@ -1,58 +1,54 @@
-// Title: Changing a ListObject table header cell with PutCellValue row/column offsets in Aspose.Cells for .NET (C#)
-// AI Prompts: Use ListObject.PutCellValue to set the header of the second column in an Aspose.Cells table by specifying row offset 0 and column offset 1. | Create a worksheet, add a ListObject, and modify its header row using row and column offsets in C# with Aspose.Cells. | Replace an existing table column header in an Excel file by calling ListObject.PutCellValue with offset parameters in Aspose.Cells for .NET.
-// Common Searches: asp.net aspose.cells how to update table column header using PutCellValue offsets | c# set ListObject header cell by row and column offset Aspose.Cells example | changing Excel table header programmatically with Aspose.Cells ListObject PutCellValue | Aspose.Cells PutCellValue row offset column offset for table header in .NET | modify ListObject column names after creation using C# Aspose.Cells
-// Tags: ListObject.PutCellValue header offset | Aspose.Cells modify table column header | C# Aspose.Cells table header update | Excel ListObject header cell change | Aspose.Cells row column offset example
+// Title: How to set Excel table header cells using ListObject.PutCellValue with offsets in Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set table header using ListObject.PutCellValue row offset | populate ListObject header row in Excel workbook with Aspose.Cells .NET | use PutCellValue to write header values in an Aspose.Cells table | Aspose.Cells .NET example adding header to ListObject table programmatically | write Excel table column headers with ListObject.PutCellValue offsets
+// Tags: ListObject.PutCellValue header assignment | Aspose.Cells table header creation | C# Excel table cell offset writing | Aspose.Cells .xlsx table population | Set ListObject header values programmatically
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates creating a workbook, adding a ListObject table, and using ListObject.PutCellValue with row and column offsets to change the second column header to "Surname" before saving the file.
+// The example creates a new workbook, adds a ListObject table spanning five rows and three columns, and uses ListObject.PutCellValue with row and column offsets (0,0), (0,1), and (0,2) to assign values to the three header cells before saving the file as TableWithHeader.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some initial data to define the table range
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("John");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Jane");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the range for the ListObject (table) – includes header row
-            int firstRow = 0;          // zero‑based index for row 1 (A1)
-            int firstColumn = 0;       // zero‑based index for column A
-            int totalRows = 3;         // rows A1:B3
-            int totalColumns = 2;      // columns A and B
+            // Define the range for the ListObject (table)
+            // Table starts at cell A1 (row 0, column 0) and spans 5 rows and 3 columns (including header)
+            int firstRow = 0;
+            int firstColumn = 0;
+            int totalRows = 5;      // includes header row
+            int totalColumns = 3;
 
-            // Add the ListObject to the worksheet
-            int listObjectIndex = sheet.ListObjects.Add(
+            // Add a ListObject to the worksheet (the table)
+            int listObjectIndex = worksheet.ListObjects.Add(
                 firstRow,
                 firstColumn,
-                firstRow + totalRows - 1,
-                firstColumn + totalColumns - 1,
+                firstRow + totalRows,
+                firstColumn + totalColumns,
                 true);
 
-            ListObject table = sheet.ListObjects[listObjectIndex];
-            table.DisplayName = "MyTable";
+            ListObject table = worksheet.ListObjects[listObjectIndex];
 
-            // Use PutCellValue with row and column offsets to set a header cell.
-            // Row offset 0 = header row, column offset 1 = second column header.
-            table.PutCellValue(0, 1, "Surname");
+            // Populate header cells using PutCellValue (row offset, column offset, value)
+            table.PutCellValue(0, 0, "Header1");
+            table.PutCellValue(0, 1, "Header2");
+            table.PutCellValue(0, 2, "Header3");
 
-            // Save the workbook to a file
-            workbook.Save("output.xlsx");
+            // Save the workbook
+            string outputPath = "TableWithHeader.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

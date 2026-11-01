@@ -1,33 +1,42 @@
-// Title: How to Catch CellsException When Saving a Workbook to PDF with Aspose.Cells for .NET
-// AI Prompts: Write C# code that saves a Workbook as PDF inside a try‑catch block and logs the CellsException message when the workbook has no printable content. | Show how to differentiate a CellsException caused by an empty workbook from other exceptions during PDF export using Aspose.Cells. | Provide a pattern for wrapping Aspose.Cells PDF conversion in a reusable method that returns a success flag and captures CellsException details.
-// Common Searches: Aspose.Cells how to handle CellsException when exporting to PDF in C# | C# catch empty workbook error during PDF conversion with Aspose.Cells | PDF save fails with no printable area Aspose.Cells .NET exception handling | try‑catch pattern for Aspose.Cells PDF export errors | detect and log CellsException for PDF generation in Aspose.Cells applications
-// Tags: CellsException handling for PDF export Aspose.Cells | C# try‑catch Aspose.Cells PDF conversion | empty workbook detection before PDF save Aspose.Cells | Aspose.Cells PDF generation error handling .NET | logging CellsException message during PDF save
+// Title: Catch Aspose.Cells CellsException when saving a workbook to PDF to handle 'nothing was printed' errors in C#
+// AI Prompts: Generate C# code that saves an Excel workbook as PDF with Aspose.Cells inside a try‑catch block and checks the CellsException message for the phrase "nothing was printed". | Provide a C# example that logs a custom warning and optionally creates a placeholder PDF page when Aspose.Cells throws a CellsException indicating no printable content.
+// Common Searches: asp.net catch CellsException during Excel to PDF conversion when workbook has no printable area | how to detect 'nothing was printed' error in Aspose.Cells PDF export C# | handle empty worksheet PDF save exception Aspose.Cells | C# Aspose.Cells save as PDF returns CellsException with no content message
+// Tags: catch CellsException PDF export Aspose.Cells | handle empty printable area exception | Aspose.Cells PDF save error handling | C# exception handling for no printable content | detect missing printable content Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The example creates a Workbook, optionally adds data, attempts to save it as a PDF, and catches CellsException to manage situations where the PDF generation fails—such as when the workbook contains no printable content—while outputting the exception details for further handling.
+// The program loads an Excel workbook, attempts to save it as a PDF using Aspose.Cells, and catches a CellsException to specifically handle cases where the exception message indicates that nothing was printed (e.g., empty workbook or no printable area).
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (could also be loaded from a file)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Example: add a worksheet with some data (optional)
-        // Worksheet sheet = workbook.Worksheets[0];
-        // sheet.Cells["A1"].PutValue("Sample");
+        // Define the output PDF file path
+        string pdfPath = "output.pdf";
 
         try
         {
             // Attempt to save the workbook as PDF
-            workbook.Save("output.pdf", SaveFormat.Pdf);
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+            Console.WriteLine("PDF saved successfully.");
         }
         catch (CellsException ex)
         {
-            // Handle cases where nothing was printed (e.g., empty workbook)
-            Console.WriteLine("PDF save failed: " + ex.Message);
-            // Additional error handling can be placed here
+            // Handle the case where nothing was printed (e.g., empty workbook or no printable area)
+            if (ex.Message != null && ex.Message.Contains("nothing was printed", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Save failed: No printable content was found in the workbook.");
+                // Additional handling logic can be placed here (e.g., create a placeholder page, log, etc.)
+            }
+            else
+            {
+                // Re-throw or handle other CellsException types as needed
+                Console.WriteLine($"An unexpected CellsException occurred: {ex.Message}");
+                throw;
+            }
         }
     }
 }

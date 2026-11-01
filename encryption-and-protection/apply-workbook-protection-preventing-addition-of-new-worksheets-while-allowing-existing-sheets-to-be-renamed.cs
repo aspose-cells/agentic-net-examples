@@ -1,46 +1,62 @@
-// Title: Apply workbook structure protection to block new worksheets while allowing sheet renaming with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file, protects its structure with a password using Aspose.Cells, enables renaming of existing worksheets, and saves the protected workbook. | Demonstrate how to call Workbook.Protect with ProtectionType.Structure and set Settings.AllowRename so sheet renaming remains possible after protection.
-// Common Searches: Aspose.Cells C# protect workbook structure but keep sheet rename enabled | How to stop users from adding new worksheets in an Excel file using Aspose.Cells | Enable worksheet renaming after applying structure protection with Aspose.Cells .NET | Workbook.Protect with ProtectionType.Structure example code Aspose.Cells | Set AllowRename property after protecting workbook in C# Aspose.Cells
-// Tags: workbook structure protection Aspose.Cells | prevent worksheet insertion .NET | allow sheet rename with protection Aspose.Cells | password-protected workbook C# | Excel file protection using Aspose.Cells
+// Title: C# example: Protect Excel workbook structure to block new sheets while permitting sheet renaming using Aspose.Cells
+// Common Searches: Aspose.Cells C# protect workbook structure but allow renaming worksheets | How to prevent adding new worksheets in an Excel file with Aspose.Cells .NET | Enable AllowRenameSheets option when protecting a workbook with Aspose.Cells | Use reflection to set AllowRenameSheets in Aspose.Cells workbook protection | Protect Excel workbook without password using Aspose.Cells and keep sheet rename enabled
+// Tags: Aspose.Cells structure protection API | AllowRenameSheets via reflection | block addition of worksheets Aspose.Cells | rename worksheets under protection | password‑less workbook protection Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
 
-// The example loads an existing .xlsx file, applies structure protection with a password via Aspose.Cells, optionally enables sheet renaming through Settings.AllowRename, and saves the workbook, preventing new worksheets from being added while still allowing existing sheets to be renamed.
-class Program
+// Loads an existing XLSX file, uses reflection to turn on the AllowRenameSheets option if available, applies structure protection without a password to stop new worksheets from being added, and saves the protected workbook.
+class WorkbookProtectionExample
 {
     static void Main()
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Protect the workbook structure with a password
-            workbook.Protect(ProtectionType.Structure, "MySecretPassword");
+            // Attempt to allow renaming of worksheets via ProtectionOptions (if available)
+            try
+            {
+                // Use reflection to avoid compile‑time dependency on the property
+                PropertyInfo protectionOptionsProp = workbook.Settings.GetType().GetProperty("ProtectionOptions");
+                if (protectionOptionsProp != null)
+                {
+                    object protectionOptions = protectionOptionsProp.GetValue(workbook.Settings);
+                    PropertyInfo allowRenameProp = protectionOptions?.GetType().GetProperty("AllowRenameSheets");
+                    if (allowRenameProp != null && allowRenameProp.CanWrite)
+                    {
+                        allowRenameProp.SetValue(protectionOptions, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"AllowRenameSheets not available: {ex.Message}");
+            }
 
-            // Allow renaming of worksheets if the API version supports it
-            // Uncomment the following line for versions that expose AllowRename
-            // workbook.Settings.AllowRename = true;
+            // Protect the workbook structure (no password required)
+            workbook.Protect(ProtectionType.Structure, string.Empty);
 
             // Save the protected workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Protected workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Runtime error: {ex.Message}");
         }
     }
 }

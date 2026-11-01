@@ -1,7 +1,6 @@
-// Title: Ungroup grouped shapes in an Excel worksheet and retain original formatting with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, finds every GroupShape on the first worksheet, calls Ungroup() on each, and saves the workbook while preserving each shape's original formatting. | Show how to safely iterate over a worksheet's ShapeCollection, detect GroupShape instances, and ungroup them without modifying the collection during enumeration. | Provide a complete example that checks for the input file, processes the workbook, and outputs a new file where all grouped shapes are separated but keep their visual appearance.
-// Common Searches: aspnet ungroup Excel shapes while keeping formatting | Aspose.Cells C# ungroup GroupShape preserve appearance | how to separate grouped shapes in a workbook using Aspose.Cells | C# code to ungroup shapes in an .xlsx file with Aspose.Cells | remove shape groups from worksheet without losing style Aspose
-// Tags: ungroup GroupShape Aspose.Cells | preserve shape formatting Aspose.Cells | iterate ShapeCollection C# | process first worksheet Aspose.Cells | separate grouped shapes .NET
+// Title: How to ungroup Excel shapes while preserving their formatting using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to ungroup grouped shapes in an Excel workbook with Aspose.Cells and keep original style | Aspose.Cells .NET ungroup GroupShape objects without losing shape formatting | Remove shape groups from a worksheet using Aspose.Cells while retaining colors and borders | Example of iterating ShapeCollection to ungroup shapes in Aspose.Cells C# | How to save an Excel file after ungrouping shapes with Aspose.Cells
+// Tags: Aspose.Cells ungroup GroupShape C# | preserve shape formatting Aspose.Cells | Excel worksheet shape collection manipulation Aspose.Cells | iterate shapes to ungroup Aspose.Cells | save workbook after ungrouping shapes Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -9,19 +8,20 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsUngroupExample
+namespace AsposeCellsUngroupShapes
 {
-    // Loads an existing .xlsx workbook, iterates through the first worksheet's ShapeCollection, calls Ungroup() on any GroupShape to split it while retaining each child shape's original formatting, and saves the result to a new file.
+    // The example loads an Excel workbook, accesses the first worksheet, collects all GroupShape objects from the worksheet's Shapes collection, calls Ungroup() on each group to restore the individual shapes while automatically preserving their original formatting, and finally saves the modified workbook to a new file.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                string inputPath = "Input.xlsx";
-                string outputPath = "Output.xlsx";
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Verify that the input file exists
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
@@ -31,35 +31,50 @@ namespace AsposeCellsUngroupExample
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Get the first worksheet (adjust index if needed)
-                Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
                 // Get the collection of shapes on the worksheet
-                ShapeCollection shapes = sheet.Shapes;
+                ShapeCollection shapes = worksheet.Shapes;
 
-                // Copy shapes to a list to avoid modifying the collection while iterating
-                List<Shape> shapeList = new List<Shape>();
-                foreach (Shape shp in shapes)
+                // Collect all group shapes first to avoid modifying the collection while iterating
+                List<GroupShape> groupShapes = new List<GroupShape>();
+                foreach (Shape shape in shapes)
                 {
-                    shapeList.Add(shp);
-                }
-
-                // Iterate through the copied list and ungroup any GroupShape found
-                foreach (Shape shp in shapeList)
-                {
-                    if (shp is GroupShape groupShape)
+                    if (shape.IsGroup && shape is GroupShape groupShape)
                     {
-                        // Ungroup the shape; the original GroupShape is removed automatically
-                        groupShape.Ungroup();
+                        groupShapes.Add(groupShape);
                     }
                 }
 
-                // Save the workbook with the shapes now ungrouped
+                // Ungroup each group shape; the ungrouped shapes retain their original formatting automatically
+                foreach (GroupShape groupShape in groupShapes)
+                {
+                    try
+                    {
+                        // Ungroup adds the inner shapes back to the worksheet; no return value.
+                        groupShape.Ungroup();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to ungroup a shape: {ex.Message}");
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the ungrouped shapes
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
+                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

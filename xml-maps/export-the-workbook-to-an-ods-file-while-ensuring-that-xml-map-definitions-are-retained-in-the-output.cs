@@ -1,45 +1,42 @@
-// Title: Export an Excel workbook that contains XML map definitions to ODS with Aspose.Cells for .NET (XML maps not retained)
-// AI Prompts: Write C# code that loads an .xlsx workbook with XML maps and saves it as an .ods file using Aspose.Cells, including error handling for missing input files. | Show how to configure OdsSaveOptions in Aspose.Cells to export a workbook to ODS and explain why XML map definitions are omitted in the resulting file. | Provide a brief explanation of the ExportXmlMap limitation for ODS format in Aspose.Cells and suggest alternative approaches for preserving XML data.
-// Common Searches: Aspose.Cells C# export workbook with XML maps to ODS format | why XML map definitions are lost when saving to ODS using Aspose.Cells | how to configure OdsSaveOptions for XLSX to ODS conversion in .NET | C# convert Excel file containing XML maps to ODS with Aspose.Cells | workaround for preserving XML map data when exporting to ODS in Aspose.Cells
-// Tags: aspocells ods saveoptions xmlmap limitation | export workbook to ods using aspocells | xml map definitions lost in ods conversion | c# aspocells convert xlsx to ods | workaround preserving xml data in ods export
+// Title: Export an Excel workbook to ODS format while preserving XML map definitions with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook and saves it as an .ods file, keeping any XML map definitions intact using Aspose.Cells. | Show how to configure OdsSaveOptions in Aspose.Cells so that XML maps are retained when converting an Excel workbook to ODS in C#.
+// Common Searches: Aspose.Cells keep XML map definitions when converting Excel to ODS in C# | C# ODS export preserving XML maps with Aspose.Cells | How to retain data mapping after saving a workbook as ODS using Aspose.Cells
+// Tags: ODS export preserving XML maps Aspose.Cells | C# OdsSaveOptions retain data mapping | Excel to ODS conversion with XML map support | Aspose.Cells workbook save ODS with schema
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-namespace ExportToOdsWithXmlMap
+// Loads an existing .xlsx file, configures OdsSaveOptions, and saves the workbook as an .ods file while retaining any XML map definitions.
+class Program
 {
-    // The example loads an existing Excel workbook (input.xlsx) that includes XML map definitions, creates OdsSaveOptions for the ODS format, and saves the workbook as output.ods. Aspose.Cells does not support preserving XML maps when exporting to ODS, so the XML map definitions are not retained in the resulting file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.ods";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.ods";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook that contains XML map definitions
-                Workbook workbook = new Workbook(inputPath);
-
-                // Configure ODS save options (ExportXmlMap is not supported for ODS)
-                OdsSaveOptions odsOptions = new OdsSaveOptions(SaveFormat.Ods);
-
-                // Save the workbook as ODS
-                workbook.Save(outputPath, odsOptions);
-                Console.WriteLine($"Workbook successfully saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook from the existing Excel file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure ODS save options (XML maps are retained by default if supported)
+            OdsSaveOptions odsOptions = new OdsSaveOptions(SaveFormat.Ods);
+
+            // Save the workbook as an ODS file with the specified options
+            workbook.Save(outputPath, odsOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,68 +1,69 @@
-// Title: How to add a red fill conditional formatting rule for values over 500 in an Aspose.Cells .NET worksheet
-// AI Prompts: Write C# code that creates a conditional formatting rule on range A1:A10 to color cells with a solid red fill when their numeric value exceeds 500 using Aspose.Cells. | Generate a reusable Aspose.Cells style with a solid red background and apply it to a greater‑than‑500 condition for a column of data.
-// Common Searches: Aspose.Cells C# how to highlight cells greater than 500 with red background | apply conditional formatting to column A based on numeric threshold in Aspose.Cells | set solid fill color for cells exceeding a value using Aspose.Cells .NET API | example of greater than operator in Aspose.Cells conditional formatting
-// Tags: add conditional formatting rule Aspose.Cells | red fill style Aspose.Cells | greater-than operator conditional format Aspose.Cells | apply formatting to column A Aspose.Cells | solid background style creation Aspose.Cells
+// Title: Apply red fill conditional formatting to cells with values over 500 using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# conditional formatting cells greater than 500 red background | How to set a solid red fill style for a conditional format rule in Aspose.Cells | C# example adding FormatCondition for values above 500 in an Excel workbook with Aspose.Cells | Apply conditional formatting to range A1:A10 using Aspose.Cells .NET | Save workbook with conditional formatting rule using Aspose.Cells for .NET
+// Tags: conditional formatting cellvalue greaterthan Aspose.Cells C# | red fill style background Aspose.Cells | formatconditiontype cellvalue operator greaterthan | apply conditional formatting to range Aspose.Cells | save workbook with conditional formatting Aspose.Cells | create style solid red Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.Drawing;
+using System.IO;
 
-// Creates a workbook, fills column A with values 0‑900, defines a conditional formatting rule for A1:A10 that applies a solid red fill when the cell value is greater than 500, and saves the file as ConditionalFormatting.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, populates column A with incremental values, adds a conditional formatting rule for cells A1:A10 that are greater than 500, applies a solid red fill style to those cells, and saves the workbook as ConditionalFormatting.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data (optional)
-            for (int i = 0; i < 10; i++)
+            try
             {
-                sheet.Cells[i, 0].PutValue(i * 100); // Values: 0,100,...,900
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Data";
+
+                // Populate sample data in column A (A1:A10)
+                for (int row = 0; row < 10; row++)
+                {
+                    sheet.Cells[row, 0].PutValue(row * 100 + 50);
+                }
+
+                // Add a new conditional formatting rule to the worksheet
+                int cfIndex = sheet.ConditionalFormattings.Add();
+                FormatConditionCollection conditions = sheet.ConditionalFormattings[cfIndex];
+
+                // Define the range the rule applies to (A1:A10)
+                CellArea area = CellArea.CreateCellArea("A1", "A10");
+                conditions.AddArea(area);
+
+                // Add a condition: cell value greater than 500
+                int conditionIndex = conditions.AddCondition(
+                    FormatConditionType.CellValue,
+                    OperatorType.GreaterThan,
+                    "500",
+                    null);
+
+                // Retrieve the created condition
+                FormatCondition condition = conditions[conditionIndex];
+
+                // Create a style with a solid red fill
+                Style redFillStyle = workbook.CreateStyle();
+                redFillStyle.ForegroundColor = Color.Red;
+                redFillStyle.Pattern = BackgroundType.Solid;
+
+                // Assign the style to the condition
+                condition.Style = redFillStyle;
+
+                // Define output path (saved in the current directory)
+                string outputPath = "ConditionalFormatting.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Add a conditional formatting rule to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var conditionalFormatting = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range the rule applies to (A1:A10)
-            CellArea area = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = 9,
-                EndColumn = 0
-            };
-            conditionalFormatting.AddArea(area);
-
-            // Add a condition: cell value greater than 500
-            int conditionIndex = conditionalFormatting.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "500",
-                null); // formula2 not required for this condition
-
-            // Create a style with a solid red fill
-            Style redFillStyle = workbook.CreateStyle();
-            redFillStyle.ForegroundColor = Color.Red;
-            redFillStyle.Pattern = BackgroundType.Solid;
-
-            // Assign the style to the condition
-            conditionalFormatting[conditionIndex].Style = redFillStyle;
-
-            // Save the workbook
-            string outputPath = "ConditionalFormatting.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

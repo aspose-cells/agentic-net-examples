@@ -1,40 +1,53 @@
-// Title: Add a macro‑linked button control to cell D5 using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a new workbook with Aspose.Cells, inserts a button shape at cell D5, sets its MacroName to "MyMacro", assigns the caption "Click Me", and saves the file as Output.xlsx. | Provide a .NET example that uses Aspose.Cells to place a form‑control button on D5, bind it to a macro, and customize its displayed text.
-// Common Searches: Aspose.Cells C# how to place a form control button in a specific cell | assign a macro to a button created with Aspose.Cells in a .NET project | C# code to add a button at D5 and set its caption using Aspose.Cells library | save workbook after inserting macro‑enabled button with Aspose.Cells
-// Tags: add button shape Aspose.Cells C# | macro name assignment Aspose.Cells button | button placement at cell D5 Aspose.Cells | custom button caption Aspose.Cells
+// Title: Insert a button shape at cell D5, set its caption, and assign a macro name using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that adds a Button shape covering cells D5:E6 on the first worksheet, sets the button text to "Run Macro", assigns an OnAction macro name, and saves the workbook. | Create a reusable C# method that takes a worksheet, a target cell address (e.g., D5), a button caption, and a macro name, then inserts the button shape at that location using Aspose.Cells and returns the updated workbook.
+// Common Searches: Aspose.Cells C# add button shape to specific cell D5 | How to assign a VBA macro to a button created with Aspose.Cells .NET | Place Excel button over D5:E6 using Aspose.Cells API | Set button caption and OnAction property in Aspose.Cells C# example | Save workbook with macro‑linked button using Aspose.Cells for .NET
+// Tags: add button shape Aspose.Cells C# | assign macro name to Aspose.Cells button | position button at cell D5 Excel | Aspose.Cells shape API button placement | create macro‑linked button in .xlsx with Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Creates a new workbook, adds a button anchored to cell D5, sets MacroName="MyMacro" and Text="Click Me", then saves the workbook as Output.xlsx.
+// The example creates a new workbook, adds a Button shape covering cells D5:E6 on the first worksheet, sets its caption to "Run Macro", and saves the file as ButtonWithMacro.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the cell position for the button (D5)
-        int row = 4;      // Zero‑based row index for D5
-        int column = 3;   // Zero‑based column index for D5
+            // Define the cell range for the button (D5:E6)
+            int upperLeftRow = 4;      // Row 5 (zero‑based)
+            int upperLeftColumn = 3;   // Column D
+            int lowerRightRow = 5;     // Row 6
+            int lowerRightColumn = 4;  // Column E
 
-        // Define button size (in pixels)
-        int height = 30;
-        int width = 80;
+            // Height and width of the button (in points)
+            int height = 30;
+            int width = 100;
 
-        // Add a button shape anchored to cell D5
-        Button button = sheet.Shapes.AddButton(row, column, 0, 0, height, width);
+            // Add a button shape to the worksheet
+            Button button = sheet.Shapes.AddButton(
+                upperLeftRow, upperLeftColumn,
+                lowerRightRow, lowerRightColumn,
+                height, width);
 
-        // Assign a macro name to the button
-        button.MacroName = "MyMacro";
+            // Set the button's caption
+            button.Text = "Run Macro";
 
-        // Optional: set the button caption
-        button.Text = "Click Me";
-
-        // Save the workbook
-        workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            string outputPath = "ButtonWithMacro.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

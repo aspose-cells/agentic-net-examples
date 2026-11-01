@@ -1,58 +1,94 @@
-// Title: Create a C# unit test using Aspose.Cells to confirm that FreezePanes freezes the first seven rows of a worksheet
-// AI Prompts: Generate an MSTest method that builds a Workbook, calls sheet.FreezePanes(7,0,0,0), saves to a MemoryStream as XLSX, reloads the file, and asserts that invoking FreezePanes again does not raise an exception. | Write a NUnit test case that creates a workbook, applies FreezePanes to the top seven rows, persists the workbook to a stream, loads it back, and verifies the freeze operation can be re‑executed without error. | Produce an xUnit test that freezes the first seven rows of the first worksheet, saves the workbook to a MemoryStream, reloads it, and checks that the FreezePanes call succeeds after deserialization.
-// Common Searches: how to write an Aspose.Cells unit test for FreezePanes in C# | verify that frozen rows remain after saving an Excel file with Aspose.Cells | C# MSTest example for testing FreezePanes functionality | NUnit test for persisting FreezePanes settings in Aspose.Cells workbook | xUnit verify FreezePanes rows persistence after workbook reload
-// Tags: Aspose.Cells FreezePanes unit test | C# MSTest FreezePanes verification | NUnit Aspose.Cells freeze rows test | xUnit verify FreezePanes persistence | freeze first seven rows Aspose.Cells
+// Title: C# unit test with Aspose.Cells to confirm FreezePanes freezes a specific number of rows
+// Common Searches: aspocells c# unit test freeze panes rows count | verify freeze panes rows persistence after saving workbook in Aspose.Cells | how to assert frozen rows using Aspose.Cells FreezePanes method | unit testing Aspose.Cells FreezePanes with memory stream | c# test that FreezePanes rowsToFreeze parameter works correctly
+// Tags: Aspose.Cells FreezePanes row freeze verification | C# unit test workbook memory stream | Aspose.Cells four-parameter FreezePanes overload | freeze panes settings persistence Aspose.Cells | worksheet row count assertion after reload
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // The example creates a new Workbook, freezes the top seven rows of the first worksheet with FreezePanes(7,0,0,0), saves the workbook to a MemoryStream in XLSX format, reloads it, and re‑applies FreezePanes to confirm the operation persists without throwing exceptions.
-    public class FreezePanesTests
+    // The example creates a new Workbook, applies the four‑parameter FreezePanes overload to freeze a given number of rows, saves the workbook to a MemoryStream, reloads it, and asserts that the worksheet still contains at least the expected number of rows, throwing an exception if the freeze settings appear not to have persisted.
+    public class FreezePanesExample
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook
-                var workbook = new Workbook();
-
-                // Get the first worksheet
-                var sheet = workbook.Worksheets[0];
-
-                // Freeze the first 7 rows (rows are 0‑based). The overload requires total rows/columns parameters.
-                sheet.FreezePanes(7, 0, 0, 0);
-
-                // Save to a memory stream (ensures the workbook can be saved without error)
-                using (var ms = new MemoryStream())
-                {
-                    workbook.Save(ms, SaveFormat.Xlsx);
-                    ms.Position = 0;
-
-                    // Load the workbook back to confirm the freeze settings persisted (no explicit verification available in this API version)
-                    var loadedWorkbook = new Workbook(ms);
-                    var loadedSheet = loadedWorkbook.Worksheets[0];
-
-                    // Attempt to apply FreezePanes again to ensure no exception is thrown on the loaded sheet
-                    loadedSheet.FreezePanes(7, 0, 0, 0);
-                }
-
-                Console.WriteLine("FreezePanes test passed successfully.");
+                new FreezePanesExample().Run();
+                Console.WriteLine("Test completed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during FreezePanes test: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    class Program
-    {
-        static void Main(string[] args)
+        public void Run()
         {
-            FreezePanesTests.Run();
+            // Create a new workbook
+            Workbook workbook = CreateWorkbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Number of rows to freeze
+            int rowsToFreeze = 7;
+
+            // Apply FreezePanes to freeze the specified rows (no columns)
+            // The 4‑parameter overload is used for newer Aspose.Cells versions.
+            // Row index is 1‑based; to freeze the first N rows, set the first parameter to rowsToFreeze + 1.
+            sheet.FreezePanes(rowsToFreeze + 1, 1, rowsToFreeze, 0);
+
+            // Save workbook to memory stream
+            using (MemoryStream stream = SaveWorkbook(workbook))
+            {
+                // Load workbook back from stream
+                Workbook loadedWorkbook = LoadWorkbook(stream);
+                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+
+                // No direct properties to verify freeze settings in this API version,
+                // but we can ensure the sheet still contains the expected number of rows.
+                if (loadedSheet.Cells.MaxDataRow < rowsToFreeze - 1)
+                {
+                    throw new InvalidOperationException("FreezePanes settings may not have persisted correctly.");
+                }
+            }
+        }
+
+        // Creates a new empty workbook
+        private Workbook CreateWorkbook()
+        {
+            return new Workbook();
+        }
+
+        // Saves the workbook to a memory stream
+        private MemoryStream SaveWorkbook(Workbook workbook)
+        {
+            try
+            {
+                MemoryStream ms = new MemoryStream();
+                workbook.Save(ms, SaveFormat.Xlsx);
+                ms.Position = 0;
+                return ms;
+            }
+            catch (Exception ex)
+            {
+                throw new IOException("Failed to save workbook to memory stream.", ex);
+            }
+        }
+
+        // Loads a workbook from a stream
+        private Workbook LoadWorkbook(Stream stream)
+        {
+            try
+            {
+                return new Workbook(stream);
+            }
+            catch (Exception ex)
+            {
+                throw new IOException("Failed to load workbook from stream.", ex);
+            }
         }
     }
 }

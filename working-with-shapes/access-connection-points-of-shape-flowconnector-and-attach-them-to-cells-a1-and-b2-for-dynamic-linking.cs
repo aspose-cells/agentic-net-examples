@@ -1,44 +1,40 @@
-// Title: Add a line connector between cells A1 and B2 and link its start/end points in an Aspose.Cells .NET workbook
-// AI Prompts: Write C# code that uses Aspose.Cells to insert a straight line shape whose start anchor is cell A1 and end anchor is cell B2, then set the line weight to 2 points. | Demonstrate how to access a line shape's connection points in Aspose.Cells and bind them to specific worksheet cells so the connector moves with the cells. | Provide code that saves the workbook containing the linked connector as FlowConnectorDemo.xlsx and outputs the full file path.
-// Common Searches: Aspose.Cells C# add line shape anchored to two cells | how to bind a connector shape to worksheet cells in Aspose.Cells .NET | set line thickness and save workbook with shape using Aspose.Cells
-// Tags: Aspose.Cells add line shape to worksheet | C# bind shape connection points to cells | set line weight Aspose.Cells | save workbook with connector Aspose.Cells | dynamic connector positioning Excel .NET
+// Title: Position a FlowConnector line shape between cells A1 and B2 with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set FlowConnector start cell A1 and end cell B2 | How to attach a line connector to specific worksheet cells using Aspose.Cells | C# code to bind a FlowConnector shape to Excel cells dynamically | Using Aspose.Cells API to align connector shape with cells A1 and B2 | Set UpperLeftRow UpperLeftColumn LowerRightRow LowerRightColumn for line shape in Aspose.Cells
+// Tags: flowconnector connection points Aspose.Cells | line shape positioning worksheet cells C# | connector shape cell anchoring Aspose.Cells | Aspose.Cells shape coordinate properties | dynamic cell‑linked connector Aspose.Cells
 
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Creates a new workbook, inserts a straight line shape connecting cell A1 to B2, sets the line weight to 2 points, and saves the file as FlowConnectorDemo.xlsx.
+// The example creates a new workbook, adds a straight line (FlowConnector) shape, sets its UpperLeftRow/Column to cell A1 and LowerRightRow/Column to cell B2, and saves the file as 'FlowConnector.xlsx', demonstrating how to anchor a connector shape to specific cells using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a straight line shape between cell A1 (row 0, column 0) and B2 (row 1, column 1)
-            // The last two parameters are the offsets (in pixels) for the start point; set to 0.
-            Shape connector = sheet.Shapes.AddLine(0, 0, 1, 1, 0, 0);
+            // Add a straight line shape (acts as a connector) to the worksheet
+            // Parameters: upper left row, upper left column, lower right row, lower right column, height, width
+            Shape line = sheet.Shapes.AddLine(0, 0, 1, 1, 0, 0);
 
-            // Customize the connector line
-            connector.Line.Weight = 2.0;
-            // Note: In some Aspose.Cells versions the LineFormat does not expose a Color property.
-            // If needed, you can set the line color using the appropriate API for your version.
+            // Position the line: start at cell A1 and end at cell B2
+            line.UpperLeftRow = 0;
+            line.UpperLeftColumn = 0;
+            line.LowerRightRow = 1;
+            line.LowerRightColumn = 1;
 
             // Save the workbook
-            string outputPath = "FlowConnectorDemo.xlsx";
+            string outputPath = "FlowConnector.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

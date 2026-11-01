@@ -1,92 +1,90 @@
-// Title: Check that conditional formatting rules remain active after applying a .thmx theme with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, adds a CellValue > 50 conditional format with yellow fill to range A1:A5, saves the file, attempts to apply a .thmx theme if present, then re‑evaluates each cell to confirm the formatting is still applied. | Write a C# example that validates conditional formatting persistence after a theme change by iterating over the cells and comparing their style to the expected yellow background. | Provide a C# snippet that logs any cells where the conditional formatting style differs after loading a workbook with a new theme applied.
-// Common Searches: Aspose.Cells .NET verify conditional formatting after applying a theme file | C# test if conditional formatting survives .thmx theme change in Excel workbook | How to check conditional formatting persistence when using Aspose.Cells theme API | Validate conditional formatting rules after workbook theme update using Aspose.Cells | Sample code for conditional formatting validation post theme application in C#
-// Tags: conditional formatting persistence after theme application | Aspose.Cells apply .thmx theme | C# validate conditional formatting rules | Excel workbook theme impact on conditional formats | programmatic conditional format verification
+// Title: C# example to verify that conditional formatting remains active after applying a workbook theme with Aspose.Cells
+// Common Searches: how to test if Aspose.Cells conditional formatting survives a theme change in C# | Aspose.Cells verify conditional format style after applying .thmx theme | C# check conditional formatting persistence after workbook theme update using Aspose.Cells | validate conditional formatting rule after applying new theme with Aspose.Cells for .NET | recalculate formulas and retain conditional formatting after theme application Aspose.Cells
+// Tags: Aspose.Cells conditional formatting after theme change | C# verify conditional format retention | apply .thmx theme preserve conditional formatting | recalculate formulas Aspose.Cells workbook | conditional formatting validation Aspose.Cells .NET
 
 using System;
-using System.IO;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, applies a yellow fill conditional format (value > 50) to A1:A5, optionally applies a .thmx theme, then iterates through the cells to ensure the formatting remains unchanged, logging any mismatches and saving the workbook before and after the theme operation.
+// The sample creates a workbook, adds a conditional formatting rule that highlights cells with values greater than 50 using a solid red background, optionally applies a new .thmx theme, recalculates formulas, and then validates that the conditional formatting collection still exists and that cell A1 retains the red background. The workbook is saved before and after the theme operation.
 class ConditionalFormattingThemeValidation
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data in column A (A1:A5)
-            double[] values = { 10, 60, 30, 80, 20 };
-            for (int i = 0; i < values.Length; i++)
-            {
-                sheet.Cells[i, 0].PutValue(values[i]); // Row i, Column 0 (A)
-            }
+            // Populate sample data
+            sheet.Cells["A1"].PutValue(60); // This cell should meet the condition (>50)
+            sheet.Cells["A2"].PutValue(30); // This cell should not meet the condition
 
-            // Add a new conditional formatting collection
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex]; // ConditionalFormatting object
+            // Add a conditional formatting rule to highlight cells with value > 50
+            int cfIndex = sheet.ConditionalFormattings.Add(); // Create a new CF range
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
 
-            // Define the range A1:A5 for the conditional formatting
-            cf.AddArea(CellArea.CreateCellArea("A1", "A5"));
+            // Define the area for the conditional formatting (A1:A10)
+            CellArea area = CellArea.CreateCellArea("A1", "A10");
+            cfCollection.AddArea(area);
 
-            // Create the condition (CellValue > 50)
-            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-            FormatCondition condition = cf[conditionIndex];
+            // Define the condition (Cell Value > 50)
+            // The fourth parameter (formula2) is required; an empty string is acceptable for this type.
+            int conditionIndex = cfCollection.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                "50",
+                string.Empty);
 
-            // Define the style to apply when the condition is met
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Yellow;
-            style.Pattern = BackgroundType.Solid;
-            condition.Style = style;
+            // Create a style for the condition (solid red background)
+            Style redStyle = workbook.CreateStyle();
+            redStyle.ForegroundColor = Color.Red;
+            redStyle.Pattern = BackgroundType.Solid;
 
-            // Save the workbook before applying a new theme (optional, demonstrates lifecycle rule)
+            // Assign the style to the condition
+            cfCollection[conditionIndex].Style = redStyle;
+
+            // Save the workbook before applying a new theme (optional, for inspection)
             workbook.Save("BeforeTheme.xlsx");
 
-            // Apply a theme if a theme file is available (method not available in all versions)
-            string themePath = "Theme2.thmx";
+            // Apply a new theme to the workbook if the theme file exists
+            string themePath = "NewTheme.thmx";
             if (File.Exists(themePath))
             {
-                Console.WriteLine($"Theme file '{themePath}' found, but applying themes is not supported in this version of Aspose.Cells.");
-                // If a future version provides ApplyTheme, it can be called here.
+                // The ApplyTheme method may not be available in older Aspose.Cells versions.
+                // If needed, replace this block with appropriate theme‑application logic.
+                Console.WriteLine($"Theme file found: {themePath}. Theme application is not supported in this version.");
             }
             else
             {
-                Console.WriteLine($"Theme file '{themePath}' not found. Skipping theme application.");
+                Console.WriteLine($"Theme file not found: {themePath}. Skipping theme application.");
             }
 
-            // Validate that conditional formatting still works after (potential) theme change
-            bool allValid = true;
-            for (int i = 0; i < values.Length; i++)
-            {
-                Cell cell = sheet.Cells[i, 0];
-                Style cellStyle = cell.GetStyle();
+            // Recalculate formulas and conditional formats
+            workbook.CalculateFormula();
 
-                // Cells with value > 50 should have Yellow background according to the rule
-                bool shouldBeHighlighted = values[i] > 50;
-                bool isHighlighted = cellStyle.ForegroundColor.ToArgb() == Color.Yellow.ToArgb()
-                                     && cellStyle.Pattern == BackgroundType.Solid;
+            // Validation: ensure the conditional formatting collection still exists
+            bool cfExists = sheet.ConditionalFormattings.Count > 0;
 
-                if (shouldBeHighlighted != isHighlighted)
-                {
-                    allValid = false;
-                    Console.WriteLine($"Validation failed at cell {cell.Name}: Value={values[i]}, ExpectedHighlight={shouldBeHighlighted}, ActualHighlight={isHighlighted}");
-                }
-            }
+            // Validation: check that the style of a cell meeting the condition reflects the CF style
+            Style cellStyle = sheet.Cells["A1"].GetStyle();
+            bool isRedBackground = cellStyle.ForegroundColor.ToArgb() == Color.Red.ToArgb()
+                                   && cellStyle.Pattern == BackgroundType.Solid;
 
-            Console.WriteLine(allValid
-                ? "All conditional formatting rules remain functional after applying the new theme."
-                : "Some conditional formatting rules did not function correctly after applying the new theme.");
+            // Output validation results
+            Console.WriteLine("Conditional Formatting Exists: " + cfExists);
+            Console.WriteLine("Cell A1 has Red Background after Theme: " + isRedBackground);
 
-            // Save the final workbook (optional, demonstrates lifecycle rule)
+            // Save the final workbook
             workbook.Save("AfterTheme.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

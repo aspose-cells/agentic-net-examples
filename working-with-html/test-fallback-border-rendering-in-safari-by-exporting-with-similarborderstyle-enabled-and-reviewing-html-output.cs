@@ -1,90 +1,58 @@
-// Title: C# Aspose.Cells export workbook to HTML with custom cell borders for Safari fallback rendering test
-// AI Prompts: Write C# code that builds a workbook, sets thin black, double red, dashed green, and medium blue borders on specific cells, and saves the file as HTML using Aspose.Cells. | Enable the fallback rendering feature for Safari in Aspose.Cells HtmlSaveOptions and generate the HTML output for visual verification.
-// Common Searches: how to turn on Safari border fallback when saving Excel to HTML with Aspose.Cells .NET | C# example exporting workbook to HTML with multiple cell border styles using Aspose.Cells | testing thin, double, dashed, medium borders in HTML output for Safari compatibility | Aspose.Cells HtmlSaveOptions settings for border rendering differences in Safari | verify cell border appearance in Safari after converting Excel to HTML with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions border compatibility Safari | C# set CellBorderType styles Aspose.Cells | export workbook to HTML with custom cell borders | Safari HTML rendering of Excel borders | SimilarBorderStyle option Aspose.Cells | cell border line style HTML output
+// Title: Export an Aspose.Cells workbook to HTML with SimilarBorderStyle enabled to verify thick border fallback in Safari
+// AI Prompts: Write C# code that creates a workbook, applies a thick border style to a range, sets HtmlSaveOptions.SimilarBorderStyle to true, and saves the result as an HTML file. | Modify existing Aspose.Cells HTML export logic to enable the SimilarBorderStyle option and output the HTML so that Safari's border fallback can be inspected.
+// Common Searches: how to enable SimilarBorderStyle in Aspose.Cells HTML export C# | Aspose.Cells export to HTML with thick cell borders for Safari compatibility | C# generate HTML from workbook and test border rendering in Safari | Aspose.Cells HtmlSaveOptions border fallback issue in Safari
+// Tags: Aspose.Cells HTML export SimilarBorderStyle | C# thick cell borders HTML output | Safari border rendering fallback Aspose.Cells | HtmlSaveOptions border style handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The sample creates a workbook, applies thin black, double red, dashed green, and medium blue borders to cells A1, B1, A2, and B2, and saves the workbook as HTML. It demonstrates how to configure HtmlSaveOptions to activate Safari's border fallback rendering for visual testing.
-class SafariBorderFallbackTest
+// The example creates a new Workbook, adds sample data, defines a style with thick borders on all sides, applies the style to range A1:C2, configures HtmlSaveOptions with SimilarBorderStyle enabled, and saves the workbook as FallbackBorderSafari.html to test how Safari renders the exported borders.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            var workbook = new Workbook();
 
-            // Populate some cells with sample data
-            sheet.Cells["A1"].PutValue("Header 1");
-            sheet.Cells["B1"].PutValue("Header 2");
-            sheet.Cells["A2"].PutValue("Data 1");
-            sheet.Cells["B2"].PutValue("Data 2");
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Apply different border styles to demonstrate fallback rendering
-            // Cell A1: Thin black border
-            Style styleA1 = workbook.CreateStyle();
-            styleA1.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            styleA1.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            styleA1.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            styleA1.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-            styleA1.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Black;
-            styleA1.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Black;
-            styleA1.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Black;
-            styleA1.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Black;
-            sheet.Cells["A1"].SetStyle(styleA1);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(10);
+            sheet.Cells["B2"].PutValue(20);
+            sheet.Cells["C2"].PutValue(30);
 
-            // Cell B1: Double red border
-            Style styleB1 = workbook.CreateStyle();
-            styleB1.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Double;
-            styleB1.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Double;
-            styleB1.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Double;
-            styleB1.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Double;
-            styleB1.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Red;
-            styleB1.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Red;
-            styleB1.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Red;
-            styleB1.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Red;
-            sheet.Cells["B1"].SetStyle(styleB1);
+            // Define a style with thick borders on all sides
+            var style = workbook.CreateStyle();
+            var borders = style.Borders;
+            borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
+            borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+            borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+            borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
 
-            // Cell A2: Dashed green border
-            Style styleA2 = workbook.CreateStyle();
-            styleA2.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Dashed;
-            styleA2.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Dashed;
-            styleA2.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Dashed;
-            styleA2.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Dashed;
-            styleA2.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Green;
-            styleA2.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Green;
-            styleA2.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Green;
-            styleA2.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Green;
-            sheet.Cells["A2"].SetStyle(styleA2);
+            // Apply the style to the range A1:C2
+            var range = sheet.Cells.CreateRange("A1:C2");
+            var styleFlag = new StyleFlag { All = true };
+            range.ApplyStyle(style, styleFlag);
 
-            // Cell B2: Medium blue border
-            Style styleB2 = workbook.CreateStyle();
-            styleB2.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Medium;
-            styleB2.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Medium;
-            styleB2.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Medium;
-            styleB2.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Medium;
-            styleB2.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Blue;
-            styleB2.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Blue;
-            styleB2.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Blue;
-            styleB2.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Blue;
-            sheet.Cells["B2"].SetStyle(styleB2);
+            // Configure HTML export options
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Configure HTML save options (SimilarBorderStyle not available in this version)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Define output file path
+            string outputPath = "FallbackBorderSafari.html";
 
-            // Export the workbook to HTML
-            string outputPath = "SafariBorderFallback.html";
+            // Save the workbook to HTML
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"HTML file generated at: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

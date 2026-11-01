@@ -1,14 +1,14 @@
-// Title: Set a picture to move and resize with its linked cell in Aspose.Cells for .NET and verify the change after adjusting row height and column width
-// AI Prompts: Insert a PNG image into cell C3 of a worksheet and set its Placement property to MoveAndSize using Aspose.Cells for .NET. | Modify the row height and column width of the cell linked to the picture, then read and output the picture's Width and Height properties. | Save the workbook before and after resizing the linked cell to demonstrate that the picture scales automatically.
-// Common Searches: Aspose.Cells C# set picture placement to MoveAndSize so it follows cell resizing | how to link an image to a specific cell and have it resize with the cell in Aspose.Cells | verify picture dimensions after adjusting row height and column width with Aspose.Cells for .NET | sample code for moving and sizing pictures with cells using Aspose.Cells in C# | Aspose.Cells picture auto resize when row height changes example
-// Tags: picture placement movandsize Aspose.Cells | link image to worksheet cell Aspose.Cells | auto resize picture with cell dimensions C# | row height column width affect picture Aspose.Cells | save workbook after picture resize Aspose.Cells
+// Title: How to set a picture to move and size with its linked cell and verify the effect after resizing the cell using Aspose.Cells for .NET
+// AI Prompts: Create a MemoryStream from PNG bytes, insert the image as a picture anchored at cell B2, and set its Placement so the picture follows the cell when the cell moves or resizes. | Capture the picture's initial Width and Height, change the row height and column width of the linked cell, then read and output the picture's new dimensions.
+// Common Searches: Aspose.Cells picture placement move and size with linked cell example | C# resize Excel cell and automatically adjust anchored image size | Add in‑memory PNG to worksheet and bind it to a cell using Aspose.Cells | Verify image size after adjusting row height and column width in .NET
+// Tags: picture placement MoveAndSize Aspose.Cells | anchor image to worksheet cell .NET | cell dimension change updates picture size | insert PNG via MemoryStream into Excel worksheet | measure picture dimensions after cell resize
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Demonstrates adding a PNG picture to cell C3, configuring its Placement to MoveAndSize, saving the workbook, then changing the linked cell's row height and column width and printing the updated picture Width and Height to confirm automatic scaling.
+// The sample creates a workbook, inserts a PNG image into cell B2 via a MemoryStream, sets the picture's Placement to MoveAndSize so it moves and resizes with the cell, records the original picture size, enlarges the row height and column width of the linked cell, then reads and prints the updated picture dimensions before saving the file.
 class Program
 {
     static void Main()
@@ -19,48 +19,56 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the cell that will be linked to the picture (C3 -> row index 2, column index 2)
-            int pictureRow = 2;      // Row 3 (zero‑based)
-            int pictureColumn = 2;   // Column C (zero‑based)
+            // Put some text in the cell that will be linked to the picture (B2)
+            sheet.Cells["B2"].PutValue("Linked Cell");
 
-            // Path to an existing image file
-            string imagePath = "sample.png";
+            // A minimal 1x1 PNG image (transparent) encoded in Base64
+            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XcZcAAAAASUVORK5CYII=";
+            byte[] pngBytes = Convert.FromBase64String(base64Png);
 
-            // Ensure the image file exists before attempting to add it
-            if (!File.Exists(imagePath))
+            // Add the picture anchored to cell B2 (row index 1, column index 1)
+            using (MemoryStream ms = new MemoryStream(pngBytes))
             {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
+                // Pictures.Add returns the index of the newly added picture
+                int pictureIndex = sheet.Pictures.Add(1, 1, ms);
+                Picture picture = sheet.Pictures[pictureIndex];
+                // Configure the picture to move and size with its linked cell
+                picture.Placement = PlacementType.MoveAndSize;
             }
 
-            // Add the picture to the worksheet; Add returns the picture index
-            int pictureIndex = sheet.Pictures.Add(pictureRow, pictureColumn, imagePath);
-            Picture picture = sheet.Pictures[pictureIndex];
+            // Capture the picture's original dimensions
+            Picture linkedPic = sheet.Pictures[0];
+            double originalWidth = linkedPic.Width;
+            double originalHeight = linkedPic.Height;
 
-            // Configure the picture to move and resize together with its linked cell
-            picture.Placement = PlacementType.MoveAndSize;
+            // Resize the linked cell (B2) by changing row height and column width
+            sheet.Cells.SetRowHeight(1, 100);   // Row 2 height = 100 points
+            sheet.Cells.SetColumnWidth(1, 30); // Column B width = 30 characters
 
-            // Set an initial size for the linked cell
-            sheet.Cells.SetRowHeight(pictureRow, 30);      // Height in points
-            sheet.Cells.SetColumnWidth(pictureColumn, 20); // Width in characters
+            // After resizing the cell, the picture should have updated dimensions
+            double newWidth = linkedPic.Width;
+            double newHeight = linkedPic.Height;
 
-            // Save the workbook with the initial configuration
-            workbook.Save("PictureMoveAndSize_initial.xlsx");
+            // Output verification results
+            Console.WriteLine($"Original picture size: {originalWidth} x {originalHeight}");
+            Console.WriteLine($"After cell resize picture size: {newWidth} x {newHeight}");
 
-            // Resize the linked cell to verify that the picture follows the change
-            sheet.Cells.SetRowHeight(pictureRow, 60);      // New height
-            sheet.Cells.SetColumnWidth(pictureColumn, 40); // New width
+            // Save the workbook (optional, for manual inspection)
+            string outputPath = "PictureLinkDemo.xlsx";
 
-            // Output the picture's dimensions after the cell resize
-            Console.WriteLine("Picture Width after cell resize: " + picture.Width);
-            Console.WriteLine("Picture Height after cell resize: " + picture.Height);
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook after resizing
-            workbook.Save("PictureMoveAndSize_resized.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

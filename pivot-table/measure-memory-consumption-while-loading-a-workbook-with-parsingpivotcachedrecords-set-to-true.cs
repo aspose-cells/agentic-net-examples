@@ -1,47 +1,45 @@
-// Title: Measure memory consumption and load time of an Excel workbook with ParsingPivotCachedRecords enabled using Aspose.Cells for .NET
-// AI Prompts: Write C# code that sets LoadOptions.ParsingPivotCachedRecords to true, captures memory before and after creating a Workbook, and prints the memory difference. | Provide a snippet that records elapsed milliseconds with Stopwatch and memory delta with GC.GetTotalMemory while loading an .xlsx using Aspose.Cells with pivot cache parsing turned on. | Demonstrate how to force a full garbage collection, establish a baseline memory reading, load a workbook with pivot cache records parsed, and output the consumed memory in KB.
-// Common Searches: how to benchmark memory usage of Aspose.Cells workbook load with ParsingPivotCachedRecords | C# measure memory consumption when loading Excel file with pivot cache parsing enabled | Aspose.Cells load options parsingpivotcachedrecords impact on performance | profile workbook loading time and memory in .NET using GC.GetTotalMemory and Stopwatch
-// Tags: memory measurement Aspose.Cells LoadOptions | ParsingPivotCachedRecords performance analysis | workbook load time profiling C# | GC.GetTotalMemory Excel load profiling | Stopwatch timing Aspose.Cells workbook
+// Title: Measure memory usage when loading an Excel workbook with ParsingPivotCachedRecords enabled using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with LoadOptions.ParsingPivotCachedRecords set to true and prints the memory delta using GC.GetTotalMemory. | Create a reusable method that accepts a file path, loads the workbook with pivot cache parsing turned on, and returns the memory consumption in bytes. | Adapt the example to log the before‑and‑after memory values to a file with timestamps instead of writing to the console.
+// Common Searches: Aspose.Cells .NET how to benchmark memory consumption of loading a workbook with pivot cache parsing | C# measure memory usage of Workbook constructor when ParsingPivotCachedRecords is true | GC.GetTotalMemory usage example with Aspose.Cells load options | memory impact of ParsingPivotCachedRecords option in Aspose.Cells
+// Tags: measure memory usage Aspose.Cells LoadOptions | ParsingPivotCachedRecords memory impact .NET | benchmark workbook loading memory Aspose.Cells | GC.GetTotalMemory Aspose.Cells example | pivot cache parsing performance Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// The example loads an .xlsx file with LoadOptions.ParsingPivotCachedRecords set to true, measures memory before and after loading using GC.GetTotalMemory, times the operation with Stopwatch, outputs load time and memory used, and saves the workbook.
-class MemoryMeasurementDemo
+// Demonstrates how to capture memory consumption before and after loading an Excel workbook with the ParsingPivotCachedRecords option enabled, using forced garbage collections and GC.GetTotalMemory to calculate the delta.
+class MemoryMeasurement
 {
     static void Main()
     {
-        // Path to the workbook to be loaded
-        string inputPath = "input.xlsx";
-        // Optional output path to verify successful load/save
-        string outputPath = "output.xlsx";
+        // Path to the Excel file to be loaded
+        string filePath = "sample.xlsx";
 
-        // Ensure a clean memory baseline
+        // Force a full garbage collection and get the initial memory usage (in bytes)
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
-
-        // Record memory before loading
         long memoryBefore = GC.GetTotalMemory(true);
-        Stopwatch timer = Stopwatch.StartNew();
 
-        // Create load options and enable parsing of pivot cached records
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.ParsingPivotCachedRecords = true;
+        // Configure load options to parse pivot cached records
+        LoadOptions loadOptions = new LoadOptions
+        {
+            ParsingPivotCachedRecords = true
+        };
 
         // Load the workbook with the specified options
-        Workbook workbook = new Workbook(inputPath, loadOptions);
+        Workbook workbook = new Workbook(filePath, loadOptions);
 
-        timer.Stop();
-        // Record memory after loading
+        // Force a garbage collection again and get the memory usage after loading
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
         long memoryAfter = GC.GetTotalMemory(true);
-        long memoryUsed = memoryAfter - memoryBefore;
 
-        Console.WriteLine($"Load time: {timer.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Memory consumed during load: {memoryUsed / 1024} KB");
+        // Calculate the memory consumed by the loading operation
+        long memoryConsumed = memoryAfter - memoryBefore;
 
-        // Save the workbook (optional, demonstrates normal lifecycle)
-        workbook.Save(outputPath);
+        // Output the result
+        Console.WriteLine($"Memory consumed while loading workbook: {memoryConsumed} bytes");
     }
 }

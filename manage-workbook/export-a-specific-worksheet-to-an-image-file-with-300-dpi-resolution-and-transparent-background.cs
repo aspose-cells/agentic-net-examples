@@ -1,54 +1,56 @@
-// Title: Export a single worksheet to a 300 DPI transparent PNG image using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook, checks the file existence, and saves a chosen worksheet as a 300 DPI transparent PNG using Aspose.Cells. | Show how to configure ImageOrPrintOptions.HorizontalResolution, VerticalResolution, and Transparent properties to render a worksheet to a high‑resolution PNG in C#. | Write a robust method that catches exceptions while converting a specific sheet to a PNG image with custom DPI and transparency using Aspose.Cells.
-// Common Searches: how to render an Excel worksheet to a 300‑dpi image with a transparent background in C# Aspose.Cells | Aspose.Cells export specific sheet as high resolution PNG image | C# set image resolution and enable transparency when saving a worksheet as an image | save first worksheet of workbook to PNG with 300 DPI using Aspose.Cells | image rendering options for transparent background in Aspose.Cells .NET
-// Tags: worksheet to PNG conversion with custom DPI Aspose.Cells | transparent image rendering using ImageOrPrintOptions | C# Aspose.Cells set horizontal and vertical resolution | high‑resolution sheet image export using Aspose.Cells | file existence check before workbook load Aspose.Cells
+// Title: Export a specific worksheet to a PNG image at 300 DPI with a transparent background using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells export Sheet1 to PNG with 300 DPI and transparent background | How to render an Excel worksheet as a high‑resolution PNG using Aspose.Cells .NET | Set transparent background when saving an Excel sheet as an image with Aspose.Cells | ImageOrPrintOptions 300 DPI transparent PNG example in C# | Export a single Excel worksheet to PNG file using SheetRender in C#
+// Tags: export worksheet to PNG with 300 DPI Aspose.Cells | transparent background image export ImageOrPrintOptions | SheetRender render Excel sheet as high‑resolution PNG | Aspose.Cells C# save specific sheet as PNG image | set horizontal and vertical resolution 300 DPI Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// // Loads input.xlsx, verifies the file, and renders the first worksheet to output.png as a 300 DPI PNG with a transparent background using ImageOrPrintOptions.
-class ExportWorksheetToImage
+// The example verifies the input Excel file, loads it into a Workbook, selects a specific worksheet, configures ImageOrPrintOptions to enable a transparent background and set both horizontal and vertical resolutions to 300 DPI, then uses SheetRender to export the worksheet as a single PNG image to the designated output path, with error handling for missing files or runtime exceptions.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.png";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.png";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the existing workbook
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Select the first worksheet (index 0)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Select the worksheet to export (by name or index)
+            Worksheet sheet = workbook.Worksheets["Sheet1"]; // change name or use workbook.Worksheets[0] as needed
 
-            // Configure image rendering options (default format is PNG)
+            // Configure image export options
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                HorizontalResolution = 300,
-                VerticalResolution = 300,
-                Transparent = true
-                // ImageFormat defaults to PNG; explicit setting omitted to avoid API mismatch
+                // ImageFormat property removed because it may not be available in some versions;
+                // the default format is PNG, which supports transparency.
+                OnePagePerSheet = true,   // Export the whole sheet as one image
+                Transparent = true,       // Enable transparent background
+                HorizontalResolution = 300, // 300 DPI horizontal
+                VerticalResolution = 300    // 300 DPI vertical
             };
 
-            // Render the worksheet to an image file
+            // Render the worksheet to an image using the specified options
             SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+
+            // Export the first (and only) page to a PNG file
             sheetRender.ToImage(0, outputPath);
 
-            Console.WriteLine($"Worksheet exported successfully to '{outputPath}'.");
+            Console.WriteLine($"Worksheet exported successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

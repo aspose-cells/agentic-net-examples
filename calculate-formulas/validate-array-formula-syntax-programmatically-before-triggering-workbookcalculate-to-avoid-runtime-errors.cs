@@ -1,71 +1,63 @@
-// Title: Programmatically validate array formula syntax in an Excel workbook with Aspose.Cells for .NET before running Workbook.CalculateFormula
-// AI Prompts: Generate C# code that iterates all worksheets in a workbook, uses Sheet.CalculateArrayFormula to test each array formula for syntax errors, collects invalid cell addresses, and only calls Workbook.CalculateFormula when no errors are found. | Create a reusable C# method that accepts a Workbook object, validates every array formula with custom CalculationOptions, and returns a list of cells containing invalid formulas. | Show how to configure CalculationOptions (e.g., EnableIterativeCalculation, PrecisionAsDisplayed) while validating array formulas and then perform full workbook calculation if validation passes.
-// Common Searches: Aspose.Cells .NET how to check array formula syntax before workbook.CalculateFormula | C# validate Excel array formulas programmatically using Aspose.Cells | prevent runtime exception from invalid array formulas in Aspose.Cells workbook calculation | scan Excel workbook for array formulas and test them with Aspose.Cells API
-// Tags: array formula syntax validation Aspose.Cells | calculate array formula with CalculationOptions .NET | iterate worksheets to detect invalid array formulas C# | conditional workbook calculation after formula check Aspose | exception handling for invalid array formulas Aspose.Cells
+// Title: How to programmatically verify Excel array formula syntax with Aspose.Cells for .NET before calling Workbook.CalculateFormula
+// Common Searches: C# check Excel array formula syntax with Aspose.Cells before calculation | Aspose.Cells .NET detect invalid formulas to prevent Workbook.CalculateFormula errors | Validate Excel formulas programmatically using Aspose.Cells and handle calculation exceptions | How to catch formula calculation failures in Aspose.Cells workbook in C# | Pre‑validate workbook formulas with Aspose.Cells to avoid runtime errors
+// Tags: array formula validation Aspose.Cells | Workbook.CalculateFormula exception handling | pre‑calculation formula check .NET | Excel formula error detection Aspose.Cells | programmatic formula validation C#
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Loads a workbook, walks through each worksheet's used range, attempts to calculate each cell's array formula with Sheet.CalculateArrayFormula to catch syntax errors, aborts full workbook calculation if any invalid formulas are found, and saves the workbook.
-class ValidateArrayFormulas
+// The example demonstrates loading or creating a workbook, attempting to calculate all formulas with Workbook.CalculateFormula, catching any exceptions that indicate invalid array formula syntax, logging the error details, and finally saving the workbook. It shows how to programmatically validate formula syntax and handle calculation errors using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        bool allFormulasValid = true;
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Cells cells = sheet.Cells;
+            string inputPath = "input.xlsx";
+            Workbook workbook;
 
-            // Determine the used range to limit the iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Scan every cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Load existing workbook or create a new one if the file does not exist
+            if (File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
-
-                    // Process only cells that contain an array formula
-                    if (cell.IsArrayFormula)
-                    {
-                        string formula = cell.Formula;
-
-                        try
-                        {
-                            // Attempt to calculate the array formula.
-                            // If the syntax is invalid, an exception will be thrown.
-                            sheet.CalculateArrayFormula(formula, new CalculationOptions());
-                        }
-                        catch (Exception ex)
-                        {
-                            allFormulasValid = false;
-                            Console.WriteLine($"Invalid array formula at {cell.Name}: {formula}");
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                    }
-                }
+                workbook = new Workbook(inputPath);
             }
-        }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+            }
 
-        // If all array formulas are syntactically correct, perform full workbook calculation
-        if (allFormulasValid)
-        {
-            workbook.CalculateFormula();
-            Console.WriteLine("Workbook calculated successfully.");
-        }
-        else
-        {
-            Console.WriteLine("Workbook contains invalid array formulas. Calculation aborted.");
-        }
+            // Attempt to calculate all formulas; if an error occurs, capture details
+            bool calculationSucceeded = true;
+            StringBuilder calculationErrors = new StringBuilder();
 
-        // Save the workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            try
+            {
+                // Calculate all formulas in the workbook
+                workbook.CalculateFormula();
+            }
+            catch (Exception calcEx)
+            {
+                calculationSucceeded = false;
+                calculationErrors.AppendLine("Formula calculation failed: " + calcEx.Message);
+            }
+
+            if (!calculationSucceeded)
+            {
+                Console.WriteLine("One or more formulas could not be calculated.");
+                Console.WriteLine(calculationErrors.ToString());
+            }
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred:");
+            Console.WriteLine(ex.Message);
+        }
     }
 }

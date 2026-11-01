@@ -1,69 +1,70 @@
-// Title: Check if an Excel workbook is password‑protected using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method that takes a file path, attempts to open the workbook with Aspose.Cells without a password, and returns true when a CellsException indicates the file is password‑protected. | Create a utility that validates the existence of an Excel file, loads it via Aspose.Cells, and determines programmatically whether the workbook requires a password.
-// Common Searches: how to programmatically detect password protection on an .xlsx file using Aspose.Cells C# | C# Aspose.Cells determine if a workbook requires a password before opening | catch CellsException to identify encrypted Excel workbook with Aspose.Cells | check if Excel file is encrypted without opening it using Aspose.Cells .NET | validate Excel file path and detect protection using Aspose.Cells
-// Tags: Aspose.Cells detect password protection | C# check encrypted Excel workbook | load workbook without password Aspose.Cells | handle CellsException for protected files | validate Excel file path Aspose.Cells
+// Title: How to detect password protection on an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to verify if an .xlsx file is password protected with Aspose.Cells | Aspose.Cells load workbook without password to test encryption status | Determine if Excel file requires a password before opening in .NET | Check Excel file encryption using LoadOptions and exception handling in C# | Identify password‑protected Excel workbook programmatically with Aspose.Cells
+// Tags: aspocells detect excel password protection | c# check encrypted xlsx workbook | loadoptions auto without password aspocells | exception handling protected excel file aspocells | excel workbook encryption detection .net
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The IsPasswordProtected method verifies the provided file path, attempts to load the workbook with Aspose.Cells without supplying a password, returns false if loading succeeds, and returns true when a CellsException is caught, indicating the Excel file is password‑protected.
-public static class ExcelProtectionHelper
+namespace Example
 {
-    /// <param name="filePath">Full path to the Excel file.</param>
-    /// <returns>True if the file requires a password; otherwise, false.</returns>
-    public static bool IsPasswordProtected(string filePath)
+    // The IsPasswordProtected method confirms the file exists, then attempts to load the workbook with LoadOptions set to Auto and no password. If loading succeeds, the workbook is not password‑protected. If Aspose.Cells throws an exception containing keywords such as "password" or "encrypted", the method returns true, indicating the file is protected. Other exceptions are treated as non‑protected and result in false.
+    public static class ExcelPasswordChecker
     {
-        if (string.IsNullOrWhiteSpace(filePath))
-            throw new ArgumentException("File path must be provided.", nameof(filePath));
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <returns>True if the file is password protected; otherwise false.</returns>
+        public static bool IsPasswordProtected(string filePath)
+        {
+            // Ensure the file exists before attempting to load it.
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Excel file not found.", filePath);
 
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException($"The file '{filePath}' was not found.", filePath);
+            try
+            {
+                // Attempt to load the workbook without providing a password.
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+                Workbook workbook = new Workbook(filePath, loadOptions);
 
-        try
-        {
-            // Attempt to load the workbook without a password.
-            // If loading succeeds, the file is not password‑protected.
-            Workbook workbook = new Workbook(filePath);
-            return false;
-        }
-        catch (CellsException)
-        {
-            // Loading failed due to protection (or other Cells‑related issue).
-            // Assume the workbook is password‑protected.
-            return true;
-        }
-        catch (Exception)
-        {
-            // Re‑throw any other unexpected exceptions.
-            throw;
+                // If loading succeeds, the file is not password protected (or uses an empty password).
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Aspose.Cells throws an exception when a password is required.
+                // Check the message for typical password‑related keywords.
+                if (ex.Message != null &&
+                    (ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     ex.Message.IndexOf("encrypted", StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    return true;
+                }
+
+                // For other exceptions, assume the file is not password protected.
+                return false;
+            }
         }
     }
-}
 
-// Optional entry point to satisfy console‑app projects.
-public class Program
-{
-    public static void Main(string[] args)
+    class Program
     {
-        // Example usage (adjust the path as needed).
-        try
+        static void Main(string[] args)
         {
-            string path = args.Length > 0 ? args[0] : "sample.xlsx";
+            // Example usage: provide the Excel file path as a command‑line argument or use a default.
+            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
 
-            // Ensure the example file exists before checking.
-            if (!File.Exists(path))
+            try
             {
-                Console.WriteLine($"File not found: {path}");
-                return;
+                bool isProtected = ExcelPasswordChecker.IsPasswordProtected(filePath);
+                Console.WriteLine($"File \"{filePath}\" password protected: {isProtected}");
             }
-
-            bool protectedFile = ExcelProtectionHelper.IsPasswordProtected(path);
-            Console.WriteLine($"File '{path}' password protected: {protectedFile}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine(fnfEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

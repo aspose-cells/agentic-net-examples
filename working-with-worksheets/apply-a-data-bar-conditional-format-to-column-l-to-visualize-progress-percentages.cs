@@ -1,92 +1,68 @@
-// Title: Add a green data‑bar conditional format to column L for progress percentages using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a DataBar conditional formatting rule for column L, set the bar color to green, and display the cell value using Aspose.Cells in C#. | Apply a 0‑100 % length data bar to the range L1:L{lastRow} and configure its appearance with the Aspose.Cells API. | Programmatically add a DataBar format to column L of an existing workbook and save the modified file.
-// Common Searches: how to add a green data bar to column L in Excel with Aspose.Cells C# | Aspose.Cells conditional formatting data bar for progress percentage column | C# code to apply data bar conditional formatting to a specific column using Aspose.Cells | set data bar min and max length 0 100 in Aspose.Cells workbook | apply conditional formatting to column L range in existing Excel file Aspose.Cells
-// Tags: Aspose.Cells DataBar API | Excel column L conditional formatting | green progress bar in workbook | set data bar min max length Aspose | conditional formatting range definition Aspose.Cells
+// Title: Create a green data bar conditional format for column L to display progress percentages with Aspose.Cells in C#
+// Common Searches: how to add a green data bar conditional format to column L using Aspose.Cells C# | Aspose.Cells C# set data bar minimum and maximum values for progress percentages | apply data bar conditional formatting to range L1:L100 in an Excel workbook with Aspose.Cells | visualize percentage progress in Excel using data bars via Aspose.Cells .NET API | C# example for data bar conditional formatting on a specific column with Aspose.Cells
+// Tags: Aspose.Cells data bar formatting C# | Excel column L conditional formatting Aspose | set data bar min/max values Aspose.Cells | CellArea range for conditional formatting Aspose | visualize progress percentages with data bars Aspose
 
 using System;
-using System.IO;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // The example loads an existing Excel workbook, determines the last used row, defines a range covering column L, adds a DataBar conditional formatting rule, sets the bar color to green, shows the cell value, configures the bar length from 0 % to 100 %, and saves the updated workbook.
-    class Program
+    // The example creates a new workbook, populates column L with random values from 0 to 100 to represent progress percentages, defines the L1:L100 range, adds a conditional formatting collection, inserts a green DataBar condition with minimum 0 and maximum 100, and saves the file as DataBarProgress.xlsx.
+    class DataBarConditionalFormattingExample
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Define input and output file paths (replace placeholders with actual paths)
-            string inputFilePath = "{InputFilePath}";
-            string outputFilePath = "{OutputFilePath}";
-
             try
             {
-                // Verify that the input workbook exists
-                if (string.IsNullOrWhiteSpace(inputFilePath) || !File.Exists(inputFilePath))
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Fill column L (index 11) with random progress percentages (0‑100)
+                Random rnd = new Random();
+                for (int row = 0; row < 100; row++)
                 {
-                    throw new FileNotFoundException($"Input file not found: {inputFilePath}");
+                    sheet.Cells[row, 11].PutValue(rnd.Next(0, 101));
                 }
 
-                // Load the existing workbook
-                var workbook = new Workbook(inputFilePath);
-
-                // Get the first worksheet (adjust index if needed)
-                var sheet = workbook.Worksheets[0];
-
-                // Determine the last used row in the sheet
-                int lastRow = sheet.Cells.MaxDataRow;
-
-                // Define the range that covers column L (zero‑based index 11) from the first to the last used row
-                var range = new CellArea
+                // Define the range L1:L100
+                CellArea area = new CellArea
                 {
                     StartRow = 0,
-                    EndRow = lastRow,
-                    StartColumn = 11,   // Column L
+                    EndRow = 99,
+                    StartColumn = 11,
                     EndColumn = 11
                 };
 
-                // Add a new Conditional Formatting collection to the worksheet
+                // Add a conditional formatting collection to the worksheet
                 int cfIndex = sheet.ConditionalFormattings.Add();
-                var cf = sheet.ConditionalFormattings[cfIndex];
+                FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+                cfCollection.AddArea(area);
 
-                // Associate the defined range with the conditional formatting
-                cf.AddArea(range);
+                // Add a DataBar condition
+                cfCollection.AddCondition(FormatConditionType.DataBar);
+                FormatCondition dataBarCondition = cfCollection[0];
 
-                // Add a Data Bar condition (no operator needed for DataBar)
-                int conditionIndex = cf.AddCondition(
-                    FormatConditionType.DataBar,
-                    OperatorType.None,
-                    null,
-                    null);
+                // Configure the DataBar
+                DataBar dataBar = dataBarCondition.DataBar;
+                dataBar.Color = Color.Green;
 
-                // Retrieve the condition object
-                var condition = cf[conditionIndex];
+                // Set minimum and maximum values (0% – 100%)
+                // The default type is numeric, so setting the values is sufficient
+                dataBar.MinCfvo.Value = "0";
+                dataBar.MaxCfvo.Value = "100";
 
-                // Configure the Data Bar appearance
-                var dataBar = condition.DataBar;
-                dataBar.Color = Color.FromArgb(0, 176, 80); // Green bar
-                dataBar.ShowValue = true;          // Show the cell value next to the bar
-                dataBar.MinLength = 0;             // Minimum length percentage
-                dataBar.MaxLength = 100;           // Maximum length percentage
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputFilePath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputFilePath);
-                Console.WriteLine($"Workbook saved successfully to: {outputFilePath}");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.Error.WriteLine($"File error: {ex.Message}");
+                // Save the workbook
+                string outputPath = "DataBarProgress.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

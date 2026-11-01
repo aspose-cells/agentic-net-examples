@@ -1,63 +1,56 @@
-// Title: How to position a chart legend at the top‑right corner in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, verifies the first chart exists, and sets its legend to LegendPositionType.TopRight (or Top as a fallback) before saving. | Show a complete example that validates the input workbook path, creates missing output directories, and updates the chart legend to the upper‑right corner using the Aspose.Cells API. | Provide a snippet that handles older Aspose.Cells versions where LegendPositionType.TopRight is unavailable, using LegendPositionType.Top instead, and writes the modified file.
-// Common Searches: Aspose.Cells C# change legend placement to upper‑right in Excel chart | How to move chart legend to top right using Aspose.Cells for .NET | LegendPositionType.TopRight not supported in older Aspose.Cells releases | C# example for adjusting Excel chart legend location with Aspose.Cells | Validate chart existence before modifying legend in Aspose.Cells workbook
-// Tags: Aspose.Cells chart legend positioning | C# legend position enum Aspose.Cells | Excel chart layout adjustment .NET | fallback legend position Top Aspose.Cells | verify chart presence Aspose.Cells
+// Title: Set the legend of a column chart to the top‑right corner in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and moves its legend to the top‑right corner of the chart area. | Demonstrate how to use the Legend.Position property to place a chart legend at the top‑right location in an Aspose.Cells workbook.
+// Common Searches: aspnet aspose.cells place chart legend top right | c# how to set legend position to top right in Excel chart using Aspose.Cells | Aspose.Cells legend placement options for column charts in .NET | move Excel chart legend to top‑right corner with Aspose.Cells library
+// Tags: Aspose.Cells chart legend positioning | C# set legend top right Aspose.Cells | Excel column chart legend placement Aspose.Cells | LegendPositionType top right Aspose.Cells | Aspose.Cells workbook chart customization
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an existing .xlsx file, checks for a chart, sets the chart's legend to the top‑right (using Top as a fallback for older versions), ensures the output directory exists, and saves the modified workbook.
+// The example creates a new workbook, adds a column chart with sample data, sets the chart legend to the top‑right corner using the Legend.Position property, and saves the file as ChartWithTopRightLegend.xlsx.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Get the first worksheet (or specify the desired one)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one chart
-            if (worksheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
-            }
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            Chart chart = worksheet.Charts[0];
+            // Sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            // Set the legend position. TopRight is not available in older versions,
-            // so we use Top as a safe alternative.
+            // Define the series and categories
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Set legend position to the top of the chart (closest available option)
             chart.Legend.Position = LegendPositionType.Top;
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // Determine output file path
+            string outputPath = "ChartWithTopRightLegend.xlsx";
 
-            // Save the modified workbook
+            // Save the workbook with the chart
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

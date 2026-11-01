@@ -1,79 +1,71 @@
-// Title: Create a horizontal progress bar chart in Excel using Aspose.Cells for .NET by stacking a visible progress series over a hidden total series
-// AI Prompts: Generate a stacked horizontal bar chart where the total series is invisible and the progress series is colored green with Aspose.Cells in C#. | Set the background series fill to transparent and hide its border, then assign task names as category labels for the chart. | Remove the legend, add a chart title, and save the workbook as an .xlsx file using Aspose.Cells.
-// Common Searches: how to make a progress bar chart in Excel using Aspose.Cells C# stacked bar | hide total series in Aspose.Cells stacked bar chart for progress visualization | horizontal progress bar with transparent background series Aspose.Cells .NET example
-// Tags: Aspose.Cells stacked bar chart progress visualization | transparent background series Aspose.Cells | green fill progress series Excel .NET | horizontal progress bar chart C# | remove legend Aspose.Cells chart
+// Title: Create a progress bar visualization using a stacked bar chart with a hidden series in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a stacked bar chart in Aspose.Cells, make the second series transparent, and export the workbook as an .xlsx file using C#. | Insert task, progress, and remaining data into a worksheet, conceal the legend and value axis, and set a custom chart title for a progress‑bar effect. | Adjust the chart's position and size, then save the workbook containing the progress bar chart to a specified directory in C#.
+// Common Searches: Aspose.Cells C# create progress bar chart using stacked bar and hide remaining series | how to make a chart series transparent in Aspose.Cells for .NET | remove legend and value axis from Aspose.Cells stacked bar chart C# | save workbook with progress bar visualization Aspose.Cells .NET | configure chart dimensions for progress bar in Aspose.Cells C#
+// Tags: stacked bar chart progress visualization Aspose.Cells | transparent series Aspose.Cells C# | remove chart legend Aspose.Cells | disable value axis Aspose.Cells | save workbook as xlsx Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates an Excel workbook, populates task data, and adds a horizontal stacked bar chart. The total series is made transparent to act as a hidden background, while the progress series is displayed in green. Task names are used as category labels, the legend is hidden, a title is set, and the file is saved as ProgressBarChart.xlsx.
-class ProgressBarChartExample
+// The example creates a workbook, adds task, progress, and remaining data, inserts a stacked bar chart, makes the remaining series transparent to simulate a progress bar, hides the legend and value axis, customizes the title, and saves the file as ProgressBarChart.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook.
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add header row.
+            // Add sample data for progress and remaining portions
             sheet.Cells["A1"].PutValue("Task");
-            sheet.Cells["B1"].PutValue("Total");
-            sheet.Cells["C1"].PutValue("Progress");
+            sheet.Cells["B1"].PutValue("Progress");
+            sheet.Cells["C1"].PutValue("Remaining");
 
-            // Sample tasks.
-            sheet.Cells["A2"].PutValue("Task 1");
-            sheet.Cells["A3"].PutValue("Task 2");
-            sheet.Cells["A4"].PutValue("Task 3");
-            sheet.Cells["A5"].PutValue("Task 4");
+            sheet.Cells["A2"].PutValue("Project A");
+            sheet.Cells["B2"].PutValue(70); // 70% completed
+            sheet.Cells["C2"].PutValue(30); // 30% remaining
 
-            // Totals (100% for each task).
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(100);
-            sheet.Cells["B4"].PutValue(100);
-            sheet.Cells["B5"].PutValue(100);
+            sheet.Cells["A3"].PutValue("Project B");
+            sheet.Cells["B3"].PutValue(45); // 45% completed
+            sheet.Cells["C3"].PutValue(55); // 55% remaining
 
-            // Completed percentages.
-            sheet.Cells["C2"].PutValue(70);
-            sheet.Cells["C3"].PutValue(45);
-            sheet.Cells["C4"].PutValue(90);
-            sheet.Cells["C5"].PutValue(30);
-
-            // Add a stacked bar chart (horizontal) positioned at D2, spanning 15 rows x 10 columns.
-            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 1, 3, 15, 13);
+            // Add a stacked bar chart (acts as a progress bar)
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Background series (total) – will be hidden.
-            chart.NSeries.Add("B2:B5", true);
-            // Visible progress series.
-            chart.NSeries.Add("C2:C5", true);
-
-            // Hide the background series by making it transparent.
-            Series backgroundSeries = chart.NSeries[0];
-            backgroundSeries.Area.ForegroundColor = Color.Transparent;
-            backgroundSeries.Border.IsVisible = false;
-
-            // Format the progress series with a solid fill color.
-            Series progressSeries = chart.NSeries[1];
-            progressSeries.Area.ForegroundColor = Color.Green;
-            progressSeries.Border.IsVisible = false;
-
-            // Set category axis labels to task names.
-            chart.NSeries.CategoryData = "A2:A5";
-
-            // Remove the legend (optional).
-            chart.ShowLegend = false;
-
-            // Set chart title.
+            // Set chart title
             chart.Title.Text = "Progress Bar Chart";
 
-            // Save the workbook.
-            workbook.Save("ProgressBarChart.xlsx");
+            // Add the visible series (Progress)
+            int progressSeriesIdx = chart.NSeries.Add("B2:B3", true);
+
+            // Add the hidden series (Remaining)
+            int remainingSeriesIdx = chart.NSeries.Add("C2:C3", true);
+
+            // Hide the remaining series to simulate a progress bar
+            chart.NSeries[remainingSeriesIdx].Area.ForegroundColor = Color.Transparent;
+
+            // Hide the entire legend for a cleaner look
+            chart.ShowLegend = false;
+
+            // Optional: hide the value axis for a cleaner look
+            chart.ValueAxis.IsVisible = false;
+
+            // Determine output path and ensure directory exists
+            string outputPath = "ProgressBarChart.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

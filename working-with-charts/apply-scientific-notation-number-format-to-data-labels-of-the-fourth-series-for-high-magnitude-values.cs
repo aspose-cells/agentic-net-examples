@@ -1,71 +1,77 @@
-// Title: How to display fourth series data labels in scientific notation on a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Set the NumberFormat of the fourth series' data labels to "0.00E+00" in an Aspose.Cells column chart. | Enable data labels only for the last series and apply an exponential format to those labels in C#. | Create a multi‑series column chart and format series 4 labels so they appear as 1.23E+06.
-// Common Searches: Aspose.Cells C# column chart format data labels of a specific series as scientific notation | How to apply a custom number format to only one series in an Aspose.Cells chart | Show large numbers in chart labels using exponential format with Aspose.Cells .NET | C# example for setting scientific notation on fourth series data labels in an Excel workbook
-// Tags: column chart data labels exponential format Aspose.Cells | set series-specific number format .NET | fourth series label formatting Excel Aspose | exponential number format chart labels C# | high‑value chart series formatting Aspose.Cells
+// Title: Apply scientific notation number format to the fourth series data labels in an Excel chart with Aspose.Cells for .NET
+// AI Prompts: Enable data labels for the fourth series (index 3) of a chart and set its NumberFormat to "0.00E+00" using Aspose.Cells in C#. | Load an existing workbook, locate the first chart, and format the fourth series' data labels to display values in scientific notation. | Modify an Excel file so that only the fourth chart series shows its values with the 0.00E+00 scientific format via the Aspose.Cells API.
+// Common Searches: Aspose.Cells how to set scientific notation for specific chart series data labels in C# | format fourth series data labels as 0.00E+00 in an Excel chart using Aspose.Cells | C# code to apply number format to chart series labels in an existing workbook | change data label display for series index 3 in Aspose.Cells chart | apply scientific number format to Excel chart series with Aspose.Cells .NET
+// Tags: set chart series data label number format Aspose.Cells | apply scientific notation to Excel chart labels C# | fourth series data label formatting Aspose.Cells | chart series number format 0.00E+00 Aspose.Cells | enable data labels for specific series .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsScientificNotationDemo
+// The example loads an existing workbook, accesses the first chart, verifies it contains at least four series, enables data labels on the fourth series, applies the scientific notation format "0.00E+00" to those labels, and saves the updated workbook.
+class Program
 {
-    // The sample creates a workbook with four data series, adds a column chart, enables data labels only for the fourth series, sets its NumberFormat to "0.00E+00" so the labels render in scientific (exponential) notation, and saves the file as ScientificNotationDataLabels.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Populate sample data with high magnitude values for four series
-            // Categories (X‑axis)
-            sheet.Cells["A2"].PutValue("Category 1");
-            sheet.Cells["A3"].PutValue("Category 2");
-            sheet.Cells["A4"].PutValue("Category 3");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Series 1
-            sheet.Cells["B2"].PutValue(1_200_000);
-            sheet.Cells["B3"].PutValue(2_500_000);
-            sheet.Cells["B4"].PutValue(3_800_000);
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Series 2
-            sheet.Cells["C2"].PutValue(4_100_000);
-            sheet.Cells["C3"].PutValue(5_600_000);
-            sheet.Cells["C4"].PutValue(6_900_000);
+            // Access the first chart on the worksheet (adjust index if needed)
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("Error: No charts found on the first worksheet.");
+                return;
+            }
 
-            // Series 3
-            sheet.Cells["D2"].PutValue(7_200_000);
-            sheet.Cells["D3"].PutValue(8_500_000);
-            sheet.Cells["D4"].PutValue(9_800_000);
+            Chart chart = worksheet.Charts[0];
 
-            // Series 4 (the one we will format)
-            sheet.Cells["E2"].PutValue(10_100_000);
-            sheet.Cells["E3"].PutValue(11_400_000);
-            sheet.Cells["E4"].PutValue(12_700_000);
+            // Verify that the chart has at least four series
+            if (chart.NSeries.Count >= 4)
+            {
+                // The fourth series has zero‑based index 3
+                Series fourthSeries = chart.NSeries[3];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 15);
-            Chart chart = sheet.Charts[chartIndex];
+                // Ensure data labels are displayed
+                fourthSeries.DataLabels.ShowValue = true;
 
-            // Add the four series to the chart
-            // Series are added by specifying the values range; the category range is shared
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.Add("C2:C4", true);
-            chart.NSeries.Add("D2:D4", true);
-            chart.NSeries.Add("E2:E4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Apply scientific notation number format to the data labels
+                // Format string "0.00E+00" displays numbers like 1.23E+04
+                fourthSeries.DataLabels.NumberFormat = "0.00E+00";
+            }
+            else
+            {
+                Console.WriteLine("Warning: Chart does not contain at least four series. No changes applied.");
+            }
 
-            // Enable data labels for the fourth series only
-            Series fourthSeries = chart.NSeries[3]; // zero‑based index
-            fourthSeries.DataLabels.ShowValue = true;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Apply scientific notation format to the data labels of the fourth series
-            // Example format: 1.23E+06
-            fourthSeries.DataLabels.NumberFormat = "0.00E+00";
-
-            // Save the workbook
-            workbook.Save("ScientificNotationDataLabels.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

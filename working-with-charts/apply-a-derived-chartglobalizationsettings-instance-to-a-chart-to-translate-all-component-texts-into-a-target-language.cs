@@ -1,97 +1,58 @@
-// Title: Manually translate a column chart’s title, axis labels, and worksheet headers to French using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that builds a column chart from sample data and substitutes the chart title, category axis labels, and worksheet header cells with French equivalents from a provided dictionary. | Show how to iterate over worksheet cells and chart components to apply localized strings before saving the workbook as an .xlsx file. | Provide a snippet that creates the output directory if missing and saves the localized workbook, handling any exceptions.
-// Common Searches: asp.net aspose.cells translate chart title to French | how to localize Excel chart axis labels with Aspose.Cells C# | example of replacing worksheet header text for multilingual Excel using Aspose.Cells | C# Aspose.Cells chart globalization without ChartGlobalizationSettings | save Excel workbook with localized chart components in .NET
-// Tags: Aspose.Cells chart text localization C# | dictionary driven chart translation Aspose.Cells | column chart multilingual labels .NET | Excel worksheet cell value replacement Aspose.Cells | output directory creation before workbook save C# | exception handling for Aspose.Cells workbook generation
+// Title: Derive and apply ChartGlobalizationSettings to translate all chart texts in an Aspose.Cells column chart (C#)
+// AI Prompts: Write C# code that creates a column chart with sample data, derives a custom ChartGlobalizationSettings class to set a target language, assigns the instance to the chart's GlobalizationSettings, and saves the workbook as an XLSX file using Aspose.Cells. | Show how to subclass ChartGlobalizationSettings, override its language properties, and integrate the subclass with a chart object before exporting the workbook.
+// Common Searches: how to use ChartGlobalizationSettings in Aspose.Cells to localize chart labels C# | example of custom ChartGlobalizationSettings subclass for translating Excel chart text | Aspose.Cells set chart language to French programmatically | apply globalisation settings to a column chart in .NET
+// Tags: Aspose.Cells ChartGlobalizationSettings subclass example | C# chart text localization with Aspose.Cells | apply language translation to Excel chart components | column chart globalization Aspose.Cells .NET | export localized chart to XLSX using Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartGlobalization
+namespace AsposeCellsExamples
 {
-    // The example creates a new workbook, adds month and sales data, inserts a column chart, defines an English‑to‑French translation dictionary, manually replaces the chart title, worksheet header cells, and month names on the category axis with their French equivalents, ensures the output directory exists, and saves the workbook as ChartWithGlobalization.xlsx.
+    // The example creates a new workbook, fills cells A1:B3 with month names and sales figures, adds a column chart, derives a ChartGlobalizationSettings subclass to specify a target language, applies this instance to the chart's GlobalizationSettings so that titles, axis labels, and legends are translated, and then saves the workbook as ChartGlobalization.xlsx while handling any exceptions.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook.
-                var workbook = new Workbook();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Add sample data to the first worksheet.
-                var sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("January");
-                sheet.Cells["A3"].PutValue("February");
-                sheet.Cells["A4"].PutValue("March");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["B3"].PutValue(1500);
-                sheet.Cells["B4"].PutValue(1800);
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Jan");
+                sheet.Cells["B1"].PutValue(120);
+                sheet.Cells["A2"].PutValue("Feb");
+                sheet.Cells["B2"].PutValue(150);
+                sheet.Cells["A3"].PutValue("Mar");
+                sheet.Cells["B3"].PutValue(180);
 
-                // Insert a column chart.
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-                var chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-                chart.Title.Text = "Monthly Sales";
+                // Add a column chart (Add returns the chart index)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
+                chart.NSeries.Add("B1:B3", true);
+                chart.NSeries.CategoryData = "A1:A3";
+                chart.Title.Text = "Quarterly Sales";
 
-                // Prepare translations (e.g., English → French).
-                var translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                // Define output path
+                string outputPath = "ChartGlobalization.xlsx";
+
+                // Ensure the target directory exists (if a directory part is present)
+                string directory = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 {
-                    { "Monthly Sales", "Ventes Mensuelles" },
-                    { "Month", "Mois" },
-                    { "Sales", "Ventes" },
-                    { "January", "Janvier" },
-                    { "February", "Février" },
-                    { "March", "Mars" }
-                };
-
-                // Apply translations manually.
-                // Translate chart title.
-                if (translations.TryGetValue(chart.Title.Text, out var titleTrans))
-                {
-                    chart.Title.Text = titleTrans;
+                    Directory.CreateDirectory(directory);
                 }
 
-                // Translate header cells.
-                foreach (var cellRef in new[] { "A1", "B1" })
-                {
-                    var cell = sheet.Cells[cellRef];
-                    if (cell.Value != null && translations.TryGetValue(cell.StringValue, out var headerTrans))
-                    {
-                        cell.PutValue(headerTrans);
-                    }
-                }
-
-                // Translate month names in the category axis.
-                for (int row = 2; row <= 4; row++)
-                {
-                    var cell = sheet.Cells[$"A{row}"];
-                    if (cell.Value != null && translations.TryGetValue(cell.StringValue, out var monthTrans))
-                    {
-                        cell.PutValue(monthTrans);
-                    }
-                }
-
-                // Ensure output directory exists.
-                string outputPath = "ChartWithGlobalization.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook.
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

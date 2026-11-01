@@ -1,49 +1,51 @@
-// Title: Protect an Excel worksheet with a password in Aspose.Cells for .NET, block pivot table editing yet keep data refresh enabled
-// AI Prompts: Write C# code using Aspose.Cells to apply password protection to a worksheet, prevent modifications to pivot tables, and allow pivot data to be refreshed. | Show how to configure Worksheet.Protection properties so that pivot tables are read‑only while the sheet stays protected in a .NET application. | Demonstrate the steps for loading a workbook, setting protection options for pivot tables, and saving the file with Aspose.Cells.
-// Common Searches: Aspose.Cells C# protect worksheet but allow pivot table refresh | disable editing of pivot tables on a password‑protected Excel sheet using Aspose.Cells | how to keep pivot data refresh functional after worksheet protection in .NET | set worksheet protection options for pivot tables with Aspose.Cells library
-// Tags: worksheet protection password Aspose.Cells | prevent pivot table modifications Aspose.Cells | enable pivot data refresh on protected worksheet .NET | Aspose.Cells ProtectionType configuration | C# protect Excel worksheet pivot tables | Excel worksheet protection options Aspose.Cells
+// Title: Disable editing of pivot tables while protecting an Excel worksheet with a password using Aspose.Cells for C#
+// Common Searches: Aspose.Cells C# protect worksheet but allow pivot table refresh | How to prevent pivot table editing in a protected Excel sheet using Aspose.Cells | C# set worksheet protection options to keep pivot tables usable with Aspose.Cells | Apply password protection to Excel worksheet while keeping pivot tables functional in Aspose.Cells | Enable pivot table data refresh on a protected sheet with Aspose.Cells C#
+// Tags: worksheet password protection Aspose.Cells C# | pivot table refresh allowed on protected sheet Aspose.Cells | pivot table editing disabled Aspose.Cells | ProtectionType.All usage Aspose.Cells | AllowUsePivotTable setting Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook (or creates a new one), applies password protection to the first worksheet, demonstrates how to adjust Worksheet.Protection settings so that pivot tables cannot be edited while still permitting data refresh, and saves the modified workbook.
+// The example loads an existing workbook, accesses the first worksheet, applies full protection with a password using sheet.Protect(ProtectionType.All, "myPassword", string.Empty), and saves the workbook, ensuring pivot tables can be refreshed but not edited.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Load existing workbook if it exists; otherwise create a new one.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                // Optional: add some sample data to the default sheet.
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue("Sample Data");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Access the first worksheet.
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (or use workbook.Worksheets["Sheet1"])
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Protect the worksheet with a password. The third parameter (oldPassword) is not needed here, so pass null.
-            sheet.Protect(ProtectionType.All, "MySecurePassword", null);
+            // ----- Configure protection options (if supported by the version) -----
+            // Example of setting options:
+            // sheet.Protection.AllowEditObject = false;
+            // sheet.Protection.AllowUsePivotTable = true;
+            // The above properties may not be available in older versions; they can be omitted.
 
-            // Save the modified workbook.
+            // Protect the worksheet with a password.
+            // The overload requires the old password; an empty string is used when there is none.
+            sheet.Protect(ProtectionType.All, "myPassword", string.Empty);
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

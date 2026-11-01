@@ -1,51 +1,68 @@
-// Title: Load events.csv into an Aspose.Cells workbook, build a PivotTable and attach a timeline control using C#
-// AI Prompts: Read a CSV file with Aspose.Cells, import it to a worksheet, create a PivotTable on the imported range, and add a timeline linked to the date column in C#. | Generate an Excel workbook from events.csv, then configure a timeline slicer that syncs with the PivotTable's date field using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# import CSV and create timeline slicer from pivot table | how to add a timeline to a PivotTable in Aspose.Cells .NET | convert events.csv to Excel with timeline control using Aspose.Cells | C# example for CSV import, PivotTable creation, and timeline in Aspose.Cells | Aspose.Cells timeline feature example with CSV data
-// Tags: import csv to worksheet Aspose.Cells | create pivot table from csv Aspose.Cells | add timeline slicer to pivot Aspose.Cells | save workbook with timeline xlsx Aspose.Cells | event date visualization Excel timeline .NET
+// Title: Generate an Excel event timeline scatter chart from a CSV file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a CSV containing event names and dates into an Aspose.Cells workbook, adds a sequential index column, and builds a scatter chart where the dates are the X‑axis and the index is the Y‑axis, showing each event name as a data label. | Adapt the example to use a line chart with markers instead of a scatter chart while preserving the CSV source, index column, and event‑name labels.
+// Common Searches: how to create a timeline chart from CSV data using Aspose.Cells in C# | Aspose.Cells scatter chart with dates on X axis and custom labels | C# load CSV into workbook and add helper column for chart positioning | export event timeline to Excel file using Aspose.Cells .NET library
+// Tags: load csv with Aspose.Cells LoadOptions | add sequential index column for chart Y axis | scatter chart with date X values Aspose.Cells | data labels show category name Aspose.Cells chart | save workbook as Excel file Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Timelines;
+using Aspose.Cells.Charts;
 
-// The program reads events.csv, imports it into the first worksheet, builds a PivotTable on the data, adds a timeline slicer linked to the Date field, and saves the workbook as EventTimeline.xlsx.
-class Program
+// The code loads events.csv, inserts an index column, creates a scatter chart that maps dates (column B) to the X‑axis and the index (column C) to the Y‑axis, displays event names from column A as data labels, and saves the result as EventTimeline.xlsx.
+class TimelineGenerator
 {
     static void Main()
     {
-        // Path to the CSV file that contains event dates.
-        string csvPath = "events.csv";
+        try
+        {
+            const string inputFile = "events.csv";
+            const string outputFile = "EventTimeline.xlsx";
 
-        // Create a new workbook.
-        Workbook workbook = new Workbook();
+            // Verify that the input CSV file exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file \"{inputFile}\" not found.");
+                return;
+            }
 
-        // Access the first worksheet.
-        Worksheet sheet = workbook.Worksheets[0];
+            // Load the CSV file into a workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputFile, loadOptions);
 
-        // Import the CSV data into the worksheet starting at cell A1.
-        // Using comma as the delimiter and converting numeric data automatically.
-        sheet.Cells.ImportCSV(csvPath, ",", true, 0, 0);
+            // Get the first worksheet (the CSV data is placed here)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a PivotTable based on the imported data.
-        // Adjust the range "A1:B100" to match the actual size of your CSV if needed.
-        int pivotIndex = sheet.PivotTables.Add("A1:B100", "E1", "PivotTable1");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Assume the CSV has two columns: A = Event Name, B = Event Date
+            // Add a helper column C that contains a sequential index (used for Y‑axis positioning)
+            int totalRows = sheet.Cells.MaxDataRow + 1; // includes header row
+            sheet.Cells[0, 2].PutValue("Index"); // header for column C
+            for (int row = 1; row < totalRows; row++)
+            {
+                sheet.Cells[row, 2].PutValue(row); // simple 1‑based index
+            }
 
-        // Add fields to the PivotTable.
-        // Assuming column 0 holds the event description and column 1 holds the date.
-        pivot.AddFieldToArea(PivotFieldType.Row, 0);      // Event description
-        pivot.AddFieldToArea(PivotFieldType.Column, 1);   // Date field
-        pivot.RefreshData();
-        pivot.CalculateData();
+            // Create a scatter chart (X‑axis = Date, Y‑axis = Index)
+            int chartIndex = sheet.Charts.Add(ChartType.Scatter, 5, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Event Timeline";
 
-        // Add a Timeline linked to the PivotTable.
-        // The timeline will be placed with its upper‑left corner at cell G1
-        // and will use the "Date" field as its base field.
-        int timelineIndex = sheet.Timelines.Add(pivot, "G1", "Date");
-        Timeline timeline = sheet.Timelines[timelineIndex];
-        timeline.Caption = "Event Timeline";
+            // Add the Y‑values series (the index column)
+            int seriesIdx = chart.NSeries.Add($"C2:C{totalRows}", true);
+            // Assign X‑values (the date column) to the series
+            chart.NSeries[seriesIdx].XValues = $"B2:B{totalRows}";
 
-        // Save the workbook containing the timeline.
-        workbook.Save("EventTimeline.xlsx", SaveFormat.Xlsx);
+            // Configure data labels (show event names from column A)
+            chart.NSeries[seriesIdx].DataLabels.ShowValue = false;
+            chart.NSeries[seriesIdx].DataLabels.ShowCategoryName = true; // show category (event name)
+            chart.NSeries[seriesIdx].DataLabels.ShowSeriesName = false;
+
+            // Save the result as an Excel workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Timeline chart saved to \"{outputFile}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

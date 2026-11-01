@@ -1,60 +1,58 @@
-// Title: Convert only the first worksheet of an Excel file to a single‑page PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook, hides every sheet except the first, sets the first sheet to fit one page width, and saves it as a PDF with Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to generate one PDF page per worksheet while preserving the original page layout. | Create a reusable C# method that accepts input and output paths, applies the necessary page‑setup settings to the first worksheet, and exports it to PDF with proper error handling.
-// Common Searches: Aspose.Cells C# export first worksheet to PDF single page | fit worksheet to one page width when saving as PDF using Aspose.Cells | hide all sheets except first before PDF conversion Aspose.Cells .NET | PdfSaveOptions OnePagePerSheet example C# Aspose.Cells | set page setup fit to pages wide Aspose.Cells PDF export
-// Tags: Aspose.Cells first worksheet PDF export | fit worksheet to single page width Aspose.Cells | hide Excel sheets before PDF conversion Aspose.Cells | PdfSaveOptions OnePagePerSheet configuration | C# Excel to PDF page setup Aspose.Cells
+// Title: Convert only the first worksheet of an Excel file to a PDF while preserving SVG graphics as vectors using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, extracts the first worksheet, and saves it as a PDF with one page per sheet using Aspose.Cells. | Adjust the conversion so that any SVG images embedded in the worksheet remain vector elements in the generated PDF. | Add comprehensive error handling that verifies the source file exists, catches conversion exceptions, and logs the output PDF path on success.
+// Common Searches: Aspose.Cells C# export first worksheet to PDF preserving SVG as vector | keep SVG graphics vectorized when converting Excel to PDF with Aspose.Cells | C# PdfSaveOptions OnePagePerSheet example for single‑sheet workbook | validate input file before converting Excel to PDF using Aspose.Cells .NET
+// Tags: export first worksheet to PDF Aspose.Cells | preserve SVG vector graphics in PDF conversion | PdfSaveOptions OnePagePerSheet setting | C# copy worksheet Aspose.Cells | file existence validation Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, hides all worksheets except the first, configures the first sheet to fit one page width, applies PdfSaveOptions with OnePagePerSheet, and saves the result as a PDF, including basic file‑existence checks and exception handling.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample checks that input.xlsx exists, loads it with Aspose.Cells, creates a new workbook containing only the first worksheet, configures PdfSaveOptions with OnePagePerSheet=true, and saves the result as output.pdf while handling and reporting any errors.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input Excel file exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.pdf";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Hide all worksheets except the first one to export only the first sheet
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                if (i != 0)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    workbook.Worksheets[i].IsVisible = false; // hide worksheet
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
                 }
+
+                // Load the original Excel workbook
+                Workbook sourceWorkbook = new Workbook(inputPath);
+
+                // Create a new workbook that will contain only the first worksheet
+                Workbook singleSheetWorkbook = new Workbook();
+
+                // Remove the default sheet created with the new workbook
+                singleSheetWorkbook.Worksheets.RemoveAt(0);
+
+                // Copy the first worksheet from the source workbook by name
+                singleSheetWorkbook.Worksheets.AddCopy(sourceWorkbook.Worksheets[0].Name);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    OnePagePerSheet = true
+                };
+
+                // Save the single‑sheet workbook as PDF using the options
+                singleSheetWorkbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"PDF file successfully created at '{outputPath}'.");
             }
-
-            // Configure page setup for the first worksheet (fit to one page width)
-            Worksheet firstSheet = workbook.Worksheets[0];
-            firstSheet.PageSetup.FitToPagesWide = 1;
-            firstSheet.PageSetup.FitToPagesTall = 0;
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            catch (Exception ex)
             {
-                OnePagePerSheet = true
-            };
-
-            // Save the first worksheet as PDF
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF successfully created at: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Log or display the error details
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

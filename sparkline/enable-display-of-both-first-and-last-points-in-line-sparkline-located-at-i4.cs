@@ -1,54 +1,57 @@
-// Title: Show first and last point markers in a line sparkline placed in cell I4 using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a line sparkline from A1:D1, positions it in cell I4, and enables first and last point markers. | Set the SparklineGroup to color the first point purple and the last point yellow. | Save the workbook as SparklineFirstLastPoint.xlsx after configuring the sparkline settings.
-// Common Searches: Aspose.Cells C# how to display first and last markers in a line sparkline at a specific cell | set custom colors for sparkline first and last points using Aspose.Cells .NET | add a line sparkline to cell I4 based on range A1:D1 with Aspose.Cells
-// Tags: Aspose.Cells sparkline first point marker | Aspose.Cells sparkline last point marker | SparklineGroup ShowFirstPoint property | SparklineGroup ShowLastPoint property | Aspose.Cells sparkline point color customization | place sparkline in specific cell Aspose.Cells
+// Title: Enable first and last point markers on a line sparkline in cell I4 using Aspose.Cells for .NET
+// AI Prompts: Set the ShowFirstPoint and ShowLastPoint properties of the sparkline group that contains the line sparkline in cell I4, then save the workbook. | Load an existing Excel file, locate the sparkline group for cell I4, turn on first and last point markers for the line sparkline, and write the changes to a new file with C# and Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to show first point on a line sparkline in a specific cell | enable both first and last markers for a sparkline at I4 using Aspose.Cells .NET | modify sparkline group properties to display end points in Excel with Aspose.Cells
+// Tags: Aspose.Cells sparkline first point marker | Aspose.Cells sparkline last point marker | C# edit sparkline group properties Excel | line sparkline end point markers .NET
 
-using System.Drawing;
+using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// The example creates a workbook, inserts sample data, adds a line sparkline at cell I4 sourced from A1:D1, enables first and last point markers, applies purple and yellow colors to those markers, and saves the file as SparklineFirstLastPoint.xlsx.
-class Program
+// The example loads an existing workbook, accesses the first worksheet, finds the sparkline group, enables ShowFirstPoint and ShowLastPoint to display the first and last markers on the line sparkline in cell I4, and saves the modified workbook.
+class SparklineExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data for the sparkline (row 1, columns A‑D)
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(2);
-        sheet.Cells["C1"].PutValue(1);
-        sheet.Cells["D1"].PutValue(3);
-
-        // Define the location of the sparkline: cell I4 (zero‑based column 8, row 3)
-        CellArea location = new CellArea
+        try
         {
-            StartRow = 3,
-            EndRow = 3,
-            StartColumn = 8,
-            EndColumn = 8
-        };
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Add a line sparkline group with the data range A1:D1 and place it at I4
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
-        SparklineGroup group = sheet.SparklineGroups[groupIndex];
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Enable highlighting of the first and last points
-        group.ShowFirstPoint = true;
-        group.ShowLastPoint = true;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Optional: set colors for the first and last points
-        CellsColor firstPointColor = workbook.CreateCellsColor();
-        firstPointColor.Color = Color.Purple;
-        group.FirstPointColor = firstPointColor;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        CellsColor lastPointColor = workbook.CreateCellsColor();
-        lastPointColor.Color = Color.Yellow;
-        group.LastPointColor = lastPointColor;
+            // Check for existing sparkline groups
+            if (sheet.SparklineGroups.Count > 0)
+            {
+                // Get the first sparkline group
+                var sparklineGroup = sheet.SparklineGroups[0];
 
-        // Save the workbook
-        workbook.Save("SparklineFirstLastPoint.xlsx");
+                // Enable display of first and last points
+                sparklineGroup.ShowFirstPoint = true;
+                sparklineGroup.ShowLastPoint = true;
+            }
+            else
+            {
+                Console.WriteLine("No sparkline groups found in the worksheet.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

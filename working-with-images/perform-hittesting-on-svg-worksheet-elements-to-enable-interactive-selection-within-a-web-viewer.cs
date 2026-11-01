@@ -1,152 +1,178 @@
-// Title: Perform pixel‑accurate hit testing on an Aspose.Cells worksheet to map mouse clicks to Excel cell addresses in C#
-// AI Prompts: Generate C# code that builds cumulative column and row pixel offset lists from a Worksheet and returns the Excel cell reference for a given mouse X/Y coordinate using Aspose.Cells. | Create a binary‑search method that receives the pixel offset lists and a coordinate pair, finds the matching column and row indices, and converts the column index to its letter representation. | Demonstrate how to export a worksheet to SVG with Aspose.Cells for visual verification before applying the hit‑testing logic.
-// Common Searches: Aspose.Cells C# convert mouse click position to Excel cell reference | pixel based hit test for worksheet cells using Aspose.Cells | retrieve column width in pixels and row height in pixels with Aspose.Cells | binary search column index from pixel coordinate Aspose.Cells example | export worksheet to SVG for hit testing Aspose.Cells C#
-// Tags: pixel hit testing Aspose.Cells C# | worksheet column width pixel Aspose.Cells | worksheet row height pixel Aspose.Cells | binary search cell index Aspose.Cells | export worksheet to SVG Aspose.Cells
+// Title: How to add hit‑testing to SVG elements generated from an Excel worksheet using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells render worksheet to SVG and detect which shape was clicked | Parse SVG rect and text nodes from Aspose.Cells output for hit testing | Implement point‑in‑rectangle hit test on SVG elements produced by Aspose.Cells | Interactive selection of Excel cells in a web viewer using SVG hit detection in C# | Extract bounding boxes from Aspose.Cells SVG and perform click hit test
+// Tags: Aspose.Cells SVG hit testing | C# parse SVG rect nodes | SVG text bounding box approximation C# | SheetRender SVG element extraction | interactive Excel worksheet selection SVG
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsSvgHitTest
 {
-    // The sample loads an Excel workbook with Aspose.Cells, optionally renders the first worksheet to SVG for visual checks, builds cumulative pixel positions for each column and row using GetColumnWidthPixel and GetRowHeightPixel, and then performs hit testing by binary‑searching these lists to locate the column and row that contain a given mouse X/Y coordinate, finally returning the corresponding cell address such as "B3".
+    // Represents a simple SVG element with a rectangular bounding box.
+    // The example loads an Excel workbook, uses Aspose.Cells SheetRender to convert the first worksheet to SVG, parses <rect> and <text> elements to build bounding‑box objects, stores them in a list, and provides a HitTest method that returns the element ID or type when a given SVG coordinate falls inside any element's bounds.
+    public class SvgElementInfo
+    {
+        public string Id { get; set; } = string.Empty;   // Optional identifier (e.g., shape name)
+        public string Type { get; set; } = string.Empty; // e.g., "rect", "text"
+        public double X { get; set; }                    // Upper‑left X
+        public double Y { get; set; }                    // Upper‑left Y
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        // Determines whether a point (px,py) lies inside the element's bounding box.
+        public bool Contains(double px, double py)
+        {
+            return px >= X && px <= X + Width && py >= Y && py <= Y + Height;
+        }
+    }
+
+    public class SvgHitTester
+    {
+        private readonly List<SvgElementInfo> _elements = new List<SvgElementInfo>();
+
+        // Load workbook, render the first worksheet to SVG and parse hit‑testable elements.
+        public void LoadAndParse(string workbookPath)
+        {
+            try
+            {
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+                    return;
+                }
+
+                // Load workbook
+                Workbook wb = new Workbook(workbookPath);
+
+                // Render first worksheet to SVG
+                Worksheet sheet = wb.Worksheets[0];
+                ImageOrPrintOptions options = new ImageOrPrintOptions
+                {
+                    SaveFormat = SaveFormat.Svg,   // Correct property for SVG output
+                    OnePagePerSheet = true
+                };
+                SheetRender sr = new SheetRender(sheet, options);
+
+                using (MemoryStream svgStream = new MemoryStream())
+                {
+                    sr.ToImage(0, svgStream);
+                    svgStream.Position = 0;
+                    ParseSvg(svgStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during LoadAndParse: {ex.Message}");
+            }
+        }
+
+        // Parse SVG stream and extract rectangular elements (rect, text with bounding box approximations).
+        private void ParseSvg(Stream svgStream)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(svgStream);
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+                nsmgr.AddNamespace("svg", "http://www.w3.org/2000/svg");
+
+                // Parse <rect> elements
+                XmlNodeList? rectNodes = doc.SelectNodes("//svg:rect", nsmgr);
+                if (rectNodes != null)
+                {
+                    foreach (XmlNode node in rectNodes)
+                    {
+                        var elem = new SvgElementInfo
+                        {
+                            Id = node.Attributes?["id"]?.Value ?? string.Empty,
+                            Type = "rect",
+                            X = ParseDouble(node.Attributes?["x"]?.Value),
+                            Y = ParseDouble(node.Attributes?["y"]?.Value),
+                            Width = ParseDouble(node.Attributes?["width"]?.Value),
+                            Height = ParseDouble(node.Attributes?["height"]?.Value)
+                        };
+                        _elements.Add(elem);
+                    }
+                }
+
+                // Parse <text> elements – approximate bounding box using font size (if present)
+                XmlNodeList? textNodes = doc.SelectNodes("//svg:text", nsmgr);
+                if (textNodes != null)
+                {
+                    foreach (XmlNode node in textNodes)
+                    {
+                        double x = ParseDouble(node.Attributes?["x"]?.Value);
+                        double y = ParseDouble(node.Attributes?["y"]?.Value);
+                        double fontSize = 12; // default fallback
+                        if (node.Attributes?["font-size"] != null)
+                            fontSize = ParseDouble(node.Attributes?["font-size"]?.Value);
+                        string text = node.InnerText ?? string.Empty;
+                        double width = text.Length * fontSize * 0.6;
+                        double height = fontSize;
+
+                        var elem = new SvgElementInfo
+                        {
+                            Id = node.Attributes?["id"]?.Value ?? string.Empty,
+                            Type = "text",
+                            X = x,
+                            Y = y - height, // SVG y refers to baseline; shift to top
+                            Width = width,
+                            Height = height
+                        };
+                        _elements.Add(elem);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception during ParseSvg: {ex.Message}");
+            }
+        }
+
+        // Helper to safely parse double values; returns 0 on failure.
+        private static double ParseDouble(string? s)
+        {
+            if (double.TryParse(s, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out double result))
+                return result;
+            return 0;
+        }
+
+        // Perform hit‑testing given a point in SVG coordinate space.
+        // Returns the Id of the first element that contains the point, or null if none.
+        public string? HitTest(double svgX, double svgY)
+        {
+            foreach (var elem in _elements)
+            {
+                if (elem.Contains(svgX, svgY))
+                    return string.IsNullOrEmpty(elem.Id) ? elem.Type : elem.Id;
+            }
+            return null;
+        }
+    }
+
+    // Entry point demonstrating the workflow.
     class Program
     {
         static void Main(string[] args)
         {
-            try
-            {
-                // Path to the input workbook
-                string workbookPath = "input.xlsx";
+            // Path to the Excel file (use provided load rule if applicable)
+            string excelPath = "input.xlsx";
 
-                // Verify that the workbook file exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Error: Workbook file \"{workbookPath}\" not found.");
-                    return;
-                }
+            SvgHitTester tester = new SvgHitTester();
+            tester.LoadAndParse(excelPath);
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+            // Simulated click coordinates (replace with actual client coordinates transformed to SVG space)
+            double clickX = 120.0;
+            double clickY = 80.0;
 
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Export the worksheet to SVG (optional – for visual verification)
-                string svgPath = "output.svg";
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    SaveFormat = SaveFormat.Svg,
-                    HorizontalResolution = 96,
-                    VerticalResolution = 96
-                };
-                SheetRender render = new SheetRender(sheet, imgOptions);
-                render.ToImage(0, svgPath);
-
-                // Build cumulative pixel positions for columns and rows
-                List<double> columnPositions = BuildColumnPositions(sheet);
-                List<double> rowPositions = BuildRowPositions(sheet);
-
-                // Example hit‑test coordinates (replace with actual mouse coordinates)
-                double mouseX = 150; // pixel from left of the worksheet area
-                double mouseY = 80;  // pixel from top of the worksheet area
-
-                // Perform hit‑testing
-                string cellAddress = HitTest(mouseX, mouseY, columnPositions, rowPositions);
-                Console.WriteLine($"Mouse at ({mouseX}, {mouseY}) hits cell: {cellAddress ?? "outside range"}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
-        // Builds a list where each entry is the X‑pixel position of the left edge of a column.
-        // Includes an extra entry for the rightmost edge (total width).
-        private static List<double> BuildColumnPositions(Worksheet sheet)
-        {
-            List<double> positions = new List<double>();
-            double current = 0.0;
-            positions.Add(current); // left edge of column 0
-
-            int totalCols = sheet.Cells.MaxColumn + 1; // cover all used columns
-            for (int col = 0; col < totalCols; col++)
-            {
-                double widthPx = sheet.Cells.GetColumnWidthPixel(col);
-                current += widthPx;
-                positions.Add(current); // left edge of next column
-            }
-            return positions;
-        }
-
-        // Builds a list where each entry is the Y‑pixel position of the top edge of a row.
-        // Includes an extra entry for the bottommost edge (total height).
-        private static List<double> BuildRowPositions(Worksheet sheet)
-        {
-            List<double> positions = new List<double>();
-            double current = 0.0;
-            positions.Add(current); // top edge of row 0
-
-            int totalRows = sheet.Cells.MaxRow + 1; // cover all used rows
-            for (int row = 0; row < totalRows; row++)
-            {
-                double heightPx = sheet.Cells.GetRowHeightPixel(row);
-                current += heightPx;
-                positions.Add(current); // top edge of next row
-            }
-            return positions;
-        }
-
-        // Performs hit‑testing given a point (x, y) in pixel coordinates.
-        // Returns the cell address (e.g., "B3") or null if the point is outside the used range.
-        private static string HitTest(double x, double y, List<double> columnPositions, List<double> rowPositions)
-        {
-            int colIndex = FindIndex(columnPositions, x);
-            int rowIndex = FindIndex(rowPositions, y);
-
-            if (colIndex == -1 || rowIndex == -1)
-                return null;
-
-            string columnName = GetColumnName(colIndex);
-            return $"{columnName}{rowIndex + 1}";
-        }
-
-        // Binary search to locate the interval that contains the coordinate.
-        // Returns the zero‑based index of the interval, or -1 if out of bounds.
-        private static int FindIndex(List<double> positions, double coordinate)
-        {
-            int low = 0;
-            int high = positions.Count - 2; // last valid interval start index
-
-            while (low <= high)
-            {
-                int mid = (low + high) / 2;
-                if (coordinate >= positions[mid] && coordinate < positions[mid + 1])
-                    return mid;
-                if (coordinate < positions[mid])
-                    high = mid - 1;
-                else
-                    low = mid + 1;
-            }
-            return -1; // outside range
-        }
-
-        // Converts a zero‑based column index to its Excel column letter(s).
-        private static string GetColumnName(int index)
-        {
-            const int letters = 26;
-            string name = string.Empty;
-            int dividend = index + 1;
-
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % letters;
-                name = Convert.ToChar('A' + modulo) + name;
-                dividend = (dividend - modulo) / letters;
-            }
-            return name;
+            string? hitResult = tester.HitTest(clickX, clickY);
+            Console.WriteLine(hitResult != null
+                ? $"Hit element: {hitResult}"
+                : "No SVG element was hit at the given coordinates.");
         }
     }
 }

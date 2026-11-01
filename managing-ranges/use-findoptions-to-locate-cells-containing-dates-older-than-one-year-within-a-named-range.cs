@@ -1,69 +1,67 @@
-// Title: Locate Excel cells with dates older than one year inside a named range using Aspose.Cells FindOptions in C#
-// AI Prompts: Write C# code that employs Aspose.Cells FindOptions to search a named range for cells whose DateTime values are earlier than a date calculated as one year before today, and return their addresses. | Show how to configure a FindOptions object with a custom date predicate for a named range in Aspose.Cells, then list or highlight the cells that contain dates older than the one‑year cutoff.
-// Common Searches: how to use Aspose.Cells FindOptions to filter dates in a specific named range | C# Aspose.Cells find cells with dates before a given cutoff in Excel | search for old dates within a named range using Aspose.Cells .NET | Aspose.Cells date comparison inside named range example | retrieve cell addresses of dates older than one year with Aspose.Cells FindOptions
-// Tags: Aspose.Cells FindOptions date filter | C# locate old dates in named range | Excel named range date search Aspose.Cells | Aspose.Cells date cutoff comparison | find cells before specific date .NET
+// Title: Locate Excel cells with dates older than one year inside a named range using Aspose.Cells for .NET
+// Common Searches: aspnet find Excel cells older than one year in a named range using Aspose.Cells | c# iterate through a named range and filter dates before today minus 1 year with Aspose.Cells | how to read date values from a named range and compare to a threshold date in Aspose.Cells .NET | search for DateTime cells older than 12 months in an Excel named range with Aspose.Cells | retrieve cells containing past dates from a named range in a workbook using Aspose.Cells C#
+// Tags: Aspose.Cells iterate named range cells | Aspose.Cells date threshold comparison | C# filter Excel dates older than one year | named range cell type detection Aspose | Excel workbook date validation using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel workbook, obtains the named range "MyDateRange", iterates through each cell in that range, checks whether the cell holds a DateTime value, compares it to a cutoff date set to one year ago, outputs the address of any cell containing an older date, and finally saves the workbook.
+// The example loads an Excel workbook, obtains a named range, iterates each cell in that range, checks for DateTime values, compares each date to a one‑year‑old threshold, and outputs the address and value of any dates older than the threshold.
 class FindOldDatesInNamedRange
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Retrieve the named range
-            AsposeRange namedRange = workbook.Worksheets.GetRangeByName("MyDateRange");
+            string rangeName = "MyRange";
+            AsposeRange namedRange = workbook.Worksheets.GetRangeByName(rangeName);
             if (namedRange == null)
             {
-                Console.WriteLine("Named range 'MyDateRange' not found.");
+                Console.WriteLine($"Named range \"{rangeName}\" not found.");
                 return;
             }
 
-            // Determine the bounds of the range
-            int firstRow = namedRange.FirstRow;
-            int firstColumn = namedRange.FirstColumn;
+            int startRow = namedRange.FirstRow;
+            int startColumn = namedRange.FirstColumn;
             int rowCount = namedRange.RowCount;
             int columnCount = namedRange.ColumnCount;
-            Worksheet sheet = namedRange.Worksheet;
 
-            // Scan each cell in the range for dates older than one year
-            DateTime cutoffDate = DateTime.Now.AddYears(-1);
+            DateTime threshold = DateTime.Now.AddYears(-1);
+
+            // Scan each cell within the named range
             for (int i = 0; i < rowCount; i++)
             {
                 for (int j = 0; j < columnCount; j++)
                 {
-                    Cell cell = sheet.Cells[firstRow + i, firstColumn + j];
+                    Cell cell = worksheet.Cells[startRow + i, startColumn + j];
                     if (cell.Type == CellValueType.IsDateTime)
                     {
                         DateTime cellDate = cell.DateTimeValue;
-                        if (cellDate < cutoffDate)
+                        if (cellDate < threshold)
                         {
-                            Console.WriteLine($"Found old date at: {cell.Name}");
+                            Console.WriteLine($"Found old date at {cell.Name}: {cellDate:d}");
                         }
                     }
                 }
             }
 
-            // Save the workbook (optional)
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // (Optional) Save the workbook if modifications were made
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {

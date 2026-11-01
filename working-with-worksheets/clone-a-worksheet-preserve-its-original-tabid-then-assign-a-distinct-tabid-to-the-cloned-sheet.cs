@@ -1,13 +1,12 @@
-// Title: Clone an Excel worksheet with Aspose.Cells for .NET while preserving its original TabId and assigning a unique new TabId
-// AI Prompts: Create a C# function that uses Aspose.Cells to copy a worksheet, retains the original TabId, and assigns a non‑conflicting TabId to the new sheet. | Develop a reusable utility that clones any worksheet in a .NET workbook and automatically finds the next available TabId.
-// Common Searches: Aspose.Cells C# clone worksheet preserving TabId | set new TabId for copied Excel sheet with Aspose | avoid TabId collisions when duplicating worksheets in .NET | how to generate a free TabId for a cloned worksheet using Aspose.Cells
-// Tags: Aspose.Cells AddCopy worksheet cloning | preserve original TabId on worksheet copy | generate unique TabId for cloned sheet | C# workbook duplicate sheet TabId handling | Aspose.Cells TabId conflict resolution
+// Title: How to clone an Excel worksheet and assign a unique TabId using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells .NET clone worksheet and change TabId | C# duplicate Excel sheet with new TabId using Aspose.Cells | preserve original TabId while copying worksheet in Aspose.Cells | assign different TabId to copied worksheet Aspose.Cells C# | AddCopy worksheet TabId handling Aspose.Cells .NET
+// Tags: Aspose.Cells worksheet duplication API | C# set distinct TabId on duplicated worksheet | handle TabId conflict after worksheet copy | prevent duplicate sheet name in Aspose.Cells | retrieve worksheet index after AddCopy
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an Excel file, clones the first worksheet using AddCopy, keeps the source TabId, computes a non‑conflicting TabId for the clone, renames the cloned sheet, and saves the workbook.
+// Loads a workbook, stores the original worksheet's TabId, clones the sheet with AddCopy, assigns a new distinct TabId to the cloned sheet, optionally renames it to avoid name clashes, and saves the updated workbook.
 class Program
 {
     static void Main()
@@ -24,27 +23,26 @@ class Program
                 return;
             }
 
-            // Load the workbook from the input file
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Select the worksheet to clone (e.g., the first worksheet)
+            // Access the first worksheet (or any desired worksheet)
             Worksheet originalSheet = workbook.Worksheets[0];
 
             // Preserve the original TabId
             int originalTabId = originalSheet.TabId;
 
-            // Clone the worksheet using AddCopy (returns the index of the new sheet)
-            int clonedIndex = workbook.Worksheets.AddCopy(originalSheet.Index);
-            Worksheet clonedSheet = workbook.Worksheets[clonedIndex];
-            clonedSheet.Name = "Cloned_" + originalSheet.Name;
+            // Clone the worksheet; AddCopy returns the index of the new sheet
+            int clonedSheetIndex = workbook.Worksheets.AddCopy(originalSheet.Index);
 
-            // Assign a distinct TabId to the cloned sheet, ensuring no conflict
-            int newTabId = originalTabId + 1;
-            while (TabIdExists(workbook, newTabId))
-            {
-                newTabId++;
-            }
-            clonedSheet.TabId = newTabId;
+            // Retrieve the cloned worksheet using its index
+            Worksheet clonedSheet = workbook.Worksheets[clonedSheetIndex];
+
+            // Assign a distinct TabId to the cloned sheet
+            clonedSheet.TabId = originalTabId + 1;
+
+            // Optionally rename the cloned sheet to avoid name conflicts
+            clonedSheet.Name = originalSheet.Name + "_Clone";
 
             // Save the modified workbook
             workbook.Save(outputPath);
@@ -52,19 +50,8 @@ class Program
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors gracefully
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Helper method to check if a TabId already exists in the workbook
-    static bool TabIdExists(Workbook wb, int tabId)
-    {
-        foreach (Worksheet ws in wb.Worksheets)
-        {
-            if (ws.TabId == tabId)
-                return true;
-        }
-        return false;
     }
 }

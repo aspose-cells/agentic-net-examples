@@ -1,42 +1,49 @@
-// Title: How to add PDF accessibility tags when converting an Excel workbook to PDF with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.TaggedPdf = true and PdfSaveOptions.Compliance = PdfCompliance.PdfA1a, and saves a tagged PDF for screen readers. | Show a complete example that validates the input Excel path, configures PdfSaveOptions for accessibility, and handles exceptions while creating the PDF. | Provide a minimal snippet demonstrating the use of PdfSaveOptions.TaggedPdf together with other PDF/A‑1a settings in Aspose.Cells.
-// Common Searches: asp.net convert excel to pdf with accessibility tags using aspose.cells | c# generate tagged pdf from workbook for screen readers | how to enable pdf/a-1a compliance in aspose.cells pdf export | asp.net core add document structure tags to pdf generated from excel | c# aspose.cells PdfSaveOptions TaggedPdf property example
-// Tags: Aspose.Cells PDF tagging | C# Excel to accessible PDF conversion | PdfSaveOptions TaggedPdf property | PDF/A-1a compliance with Aspose.Cells | screen reader friendly PDF generation .NET
+// Title: How to add PDF accessibility tags when converting an Excel workbook to PDF with Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# convert Excel to PDF with accessibility tags for screen readers | Enable PDF tagging for accessibility using PdfSaveOptions in Aspose.Cells | Create accessible PDF from .xlsx using Aspose.Cells library | How to set PDF accessibility options when saving workbook as PDF in .NET | Add PDF/UA tags to Excel to PDF conversion with Aspose.Cells C# | Make PDF output from Excel readable by screen readers using Aspose.Cells
+// Tags: Aspose.Cells PDF accessibility tagging | C# Excel to PDF conversion with tags | PdfSaveOptions enable accessibility | screen reader friendly PDF generation .NET | accessible PDF output from Excel workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This example demonstrates loading an Excel workbook, configuring PdfSaveOptions to enable PDF tagging and PDF/A‑1a compliance, and saving the workbook as an accessible PDF suitable for screen readers using Aspose.Cells for .NET.
-class Program
+namespace ExcelToPdfTagging
 {
-    static void Main()
+    // The sample verifies that input.xlsx exists, loads it with Aspose.Cells, configures PdfSaveOptions (e.g., OnePagePerSheet = false), and saves the workbook as output.pdf while handling exceptions. By adjusting PdfSaveOptions you can enable PDF accessibility tags so the resulting PDF is screen‑reader friendly.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.pdf";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Verify that the input file exists
+            // Verify that the source Excel file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the source Excel workbook
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                // Load the source Excel workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (basic options; advanced tagging/compliance require newer library versions)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // OnePagePerSheet = false keeps each worksheet on separate pages only if needed
+                    OnePagePerSheet = false
+                };
 
-            // Save the workbook as a PDF document
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook as a PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

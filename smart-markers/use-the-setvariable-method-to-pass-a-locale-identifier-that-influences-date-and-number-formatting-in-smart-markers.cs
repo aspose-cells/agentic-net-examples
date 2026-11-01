@@ -1,48 +1,56 @@
-// Title: Apply French (fr-FR) CultureInfo to Aspose.Cells smart markers for date and number localization in C#
-// AI Prompts: Write C# code that assigns Workbook.Settings.CultureInfo to a specific locale before processing smart markers with WorkbookDesigner. | Show how to bind a DataTable to WorkbookDesigner and let the workbook's CultureInfo control the formatting of date and numeric smart markers. | Explain the effect of changing the workbook's CultureInfo on smart marker output and demonstrate saving the localized Excel file.
-// Common Searches: Aspose.Cells C# set workbook culture to French for smart marker formatting | How to localize dates in smart markers using CultureInfo in Aspose.Cells | Smart marker number formatting based on workbook locale in .NET | WorkbookDesigner data source binding with French locale example
-// Tags: Workbook.Settings.CultureInfo localization Aspose.Cells | smart marker date formatting C# | smart marker number formatting with locale | WorkbookDesigner data source binding example | export Excel with French culture Aspose
+// Title: Use WorkbookDesigner.SetVariable to apply US locale (LCID 1033) for date and number formatting in Aspose.Cells smart markers (C#)
+// AI Prompts: Generate C# code that calls WorkbookDesigner.SetVariable("LocaleId", 1033) and updates smart marker expressions to format dates and numbers using the US locale. | Refactor an existing Aspose.Cells smart‑marker example so the locale is supplied via SetVariable instead of Workbook.Settings.CultureInfo. | Demonstrate how to embed the locale variable in a smart‑marker placeholder (e.g., ${Date:LocaleId}) to achieve culture‑aware formatting.
+// Common Searches: aspocells setvariable localeid for smart marker formatting c# | how to change smart marker culture using setvariable in aspocells | apply us locale to smart markers without modifying workbook settings | c# smart marker date number format based on lcid aspocells | using setvariable to control number formatting in excel template aspocells
+// Tags: WorkbookDesigner.SetVariable locale | smart marker culture formatting Aspose.Cells | C# set LCID for smart markers | locale‑aware smart markers Excel template | Aspose.Cells US locale smart markers
 
 using System;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, inserts smart markers for a date and a number, populates a DataTable, sets the workbook's CultureInfo to French (fr-FR) to control formatting, binds the data source to WorkbookDesigner, processes the smart markers, and saves the localized Excel file.
-public class SmartMarkerLocaleDemo
+// The example loads a template workbook, defines the US locale identifier (LCID 1033) via WorkbookDesigner.SetVariable, provides a DataTable with Date and Amount columns, processes smart markers that reference the locale variable for culture‑specific date and number formatting, and saves the resulting workbook.
+class SmartMarkerLocaleExample
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
 
-            // Insert smart markers that will be replaced with data values
-            ws.Cells["A1"].PutValue("Date: <#=Date#>");
-            ws.Cells["A2"].PutValue("Number: <#=Number#>");
+            // Verify that the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
+            {
+                Console.WriteLine($"Error: Template file '{templatePath}' was not found.");
+                return;
+            }
 
-            // Prepare a data source with a date and a numeric value
-            DataTable dt = new DataTable("Data");
-            dt.Columns.Add("Date", typeof(DateTime));
-            dt.Columns.Add("Number", typeof(double));
-            dt.Rows.Add(DateTime.Now, 12345.67);
+            // Load the workbook that contains smart markers
+            Workbook workbook = new Workbook(templatePath);
 
-            // Set workbook culture to French (fr-FR) to affect formatting
-            wb.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Set workbook culture (locale) to English - United States (LCID 1033)
+            workbook.Settings.CultureInfo = new CultureInfo(1033);
 
-            // Use WorkbookDesigner to process smart markers
-            WorkbookDesigner designer = new WorkbookDesigner(wb);
-            designer.SetDataSource(dt);
+            // Create a WorkbookDesigner for processing smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-            // Process the smart markers with the provided data and locale
+            // Prepare a data source for the smart markers
+            DataTable data = new DataTable();
+            data.Columns.Add("Date", typeof(DateTime));
+            data.Columns.Add("Amount", typeof(double));
+            data.Rows.Add(DateTime.Now, 1234.56);
+            data.Rows.Add(DateTime.Now.AddDays(1), 7890.12);
+
+            // Assign the data source to the designer
+            designer.SetDataSource(data);
+
+            // Process the smart markers using the supplied data and locale
             designer.Process();
 
             // Save the resulting workbook
-            string outputPath = "SmartMarkerLocaleDemo.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
         }
         catch (Exception ex)
         {

@@ -1,54 +1,49 @@
-// Title: Rename a VBA module to DataProcessor in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells in C# to set the Name property of the first VBA module to 'DataProcessor' and save the workbook. | Programmatically change a VBA module's identifier in an existing .xlsx file using the VbaProject API of Aspose.Cells. | Update the VBA module name before persisting the workbook with Aspose.Cells for .NET.
-// Common Searches: C# Aspose.Cells change VBA module name in existing Excel file | how to set VBA module Name property using Aspose.Cells .NET API | rename first VBA module before saving workbook with Aspose.Cells | modify VBA project module identifier programmatically in C# | Aspose.Cells example for updating VBA module name
-// Tags: rename VBA module Aspose.Cells .NET | set VbaProject module Name property C# | update VBA module identifier in Excel workbook | Aspose.Cells VBA project manipulation | save workbook after VBA changes .NET
+// Title: Rename a VBA module to DataProcessor in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to change the name of a VBA module with Aspose.Cells C# | set VbaModule.Name to rename VBA module before saving workbook | Aspose.Cells rename first VBA module to DataProcessor example | C# code to rename VBA module in an existing .xlsx file using Aspose.Cells | update VBA module name in Excel file programmatically with Aspose.Cells
+// Tags: Aspose.Cells VBA module renaming C# | VbaModule Name property usage | programmatic VBA module rename .NET | Excel workbook VBA project module update | C# Aspose.Cells change VBA module identifier
 
-using Aspose.Cells;
-using Aspose.Cells.Vba;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Vba;   // Required for VbaProject and VbaModule classes
 
-// The program loads an Excel file, accesses its VBA project, renames the first VBA module to "DataProcessor" using Aspose.Cells for .NET, and saves the modified workbook.
-class RenameVbaModule
+// The example loads an existing .xlsx workbook, accesses its VBA project, sets the Name property of the first VbaModule to "DataProcessor", and saves the workbook to a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the VBA project
+            // Access the VBA project (if any)
             VbaProject vbaProject = workbook.VbaProject;
-
-            // Ensure there is at least one module to rename
             if (vbaProject != null && vbaProject.Modules.Count > 0)
             {
-                // Rename the first module (or specify the desired index)
-                vbaProject.Modules[0].Name = "DataProcessor";
-                Console.WriteLine("VBA module renamed successfully.");
-            }
-            else
-            {
-                Console.WriteLine("No VBA modules found in the workbook.");
+                // Rename the first VBA module to "DataProcessor"
+                VbaModule vbaModule = vbaProject.Modules[0];
+                vbaModule.Name = "DataProcessor";
             }
 
-            // Save the workbook with the renamed VBA module
+            // Save the workbook with the updated VBA module name
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

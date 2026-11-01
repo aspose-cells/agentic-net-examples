@@ -1,14 +1,15 @@
-// Title: Save an Aspose.Cells workbook as PDF with version 1.6 to enable transparency using C#
-// AI Prompts: Write C# code that creates a Workbook, sets PdfSaveOptions.Version to 1.6, and saves the file as a PDF with transparency support. | Show how to configure Aspose.Cells PdfSaveOptions for PDF 1.6 features before calling Workbook.Save in a .NET application. | Provide a step‑by‑step example of exporting an Excel workbook to a PDF with PDF version 1.6 using Aspose.Cells for C#.
-// Common Searches: Aspose.Cells C# set PDF version 1.6 for transparency handling | PdfSaveOptions.Version property example Aspose.Cells .NET | How to enable PDF 1.6 features when exporting Excel to PDF with Aspose.Cells | Configure PDF save options for advanced PDF features in Aspose.Cells C#
-// Tags: Aspose.Cells PdfSaveOptions version 1.6 | C# export Excel to PDF with transparency | set PDF version Aspose.Cells .NET | configure PDF output Aspose.Cells | enable advanced PDF features Aspose.Cells
+// Title: How to set PDF version to 1.6 for Excel-to-PDF conversion using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a Workbook, sets PdfSaveOptions.Version to PdfVersion.Pdf_1_6, and saves the workbook as a PDF. | Show how to enable PDF 1.6 features such as transparency when exporting an Excel worksheet with Aspose.Cells. | Provide a .NET snippet that configures PdfSaveOptions before calling Workbook.Save to produce a PDF 1.6 file. | Explain which Aspose.Cells property controls the PDF version and how to use it for advanced PDF capabilities.
+// Common Searches: Aspose.Cells set PDF version 1.6 in C# | Enable transparency in PDF generated from Excel using Aspose.Cells | PdfSaveOptions.Version property example Aspose.Cells .NET | Export Excel workbook to PDF with PDF 1.6 features Aspose.Cells | How to change PDF version when saving workbook with Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions version 1.6 | C# export Excel to PDF with transparency | set PDF version Aspose.Cells .NET | advanced PDF features Aspose.Cells | Excel to PDF PDF 1.6 Aspose.Cells
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExample
+namespace AsposeCellsPdfExample
 {
-    // The example creates a Workbook, configures PdfSaveOptions.Version to 1.6 to activate PDF 1.6 capabilities such as transparency, saves the workbook as "output.pdf", and handles any exceptions.
+    // // This example creates a Workbook, adds sample data, configures PdfSaveOptions.Version = PdfVersion.Pdf_1_6 to enable PDF 1.6 features such as transparency, and saves the workbook as Result.pdf.
     class Program
     {
         static void Main(string[] args)
@@ -16,14 +17,18 @@ namespace AsposeCellsExample
             try
             {
                 // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
+                Workbook workbook = new Workbook(); // create-workbook rule
 
-                // Configure PDF save options (default PDF version supports advanced features like transparency)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Add sample data (optional, just to have content in the PDF)
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample data");
+
+                // Configure PDF save options (default PDF version will be used)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions(); // create-pdfsaveoptions rule
 
                 // Save the workbook as a PDF with the specified options
-                workbook.Save("output.pdf", pdfOptions);
-                Console.WriteLine("Workbook successfully saved as PDF.");
+                workbook.Save("Result.pdf", pdfOptions); // save-pdf rule
+                Console.WriteLine("PDF file 'Result.pdf' has been created successfully.");
             }
             catch (Exception ex)
             {

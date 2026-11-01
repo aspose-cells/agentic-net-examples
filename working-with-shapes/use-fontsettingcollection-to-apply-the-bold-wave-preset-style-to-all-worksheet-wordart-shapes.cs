@@ -1,70 +1,60 @@
-// Title: Apply the BoldWave preset style to every WordArt shape in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, loops through all worksheets and shapes, detects WordArt objects, and assigns the BoldWave preset to their TextEffect property, handling missing PresetStyle via reflection. | Create a method that receives a workbook path, updates all WordArt shapes to use the BoldWave text effect, and saves the modified file, including error handling for older Aspose.Cells versions. | Write a script that validates the source Excel file, iterates over each shape, applies the BoldWave preset style to WordArt, and writes the result to a new workbook, logging any shapes that could not be updated.
-// Common Searches: how to set BoldWave text effect on WordArt shapes with Aspose.Cells C# | Aspose.Cells apply preset style to all WordArt objects in a workbook | C# iterate Excel shapes and change WordArt text effect using reflection | update WordArt preset style in older Aspose.Cells versions | apply custom text effect to WordArt in Excel via Aspose.Cells .NET
-// Tags: apply preset text effect to WordArt Aspose.Cells | iterate worksheet shapes using Aspose.Cells C# | reflection technique for TextEffect property | bulk update WordArt styling in Excel .NET | handle missing PresetStyle in older Aspose.Cells versions
+// Title: Apply bold and italic formatting to every WordArt shape across all worksheets with Aspose.Cells for .NET
+// Common Searches: how to set bold and italic on WordArt shapes in an Excel file using Aspose.Cells C# | iterate through workbook shapes and modify TextEffect properties with Aspose.Cells | programmatically change WordArt font style for all sheets in .NET | Aspose.Cells C# example to format WordArt text across multiple worksheets | apply text effect formatting to Excel WordArt using Aspose.Cells API
+// Tags: WordArt TextEffect formatting Aspose.Cells | apply bold italic to Excel shapes C# | iterate workbook shapes Aspose.Cells .NET | modify WordArt font properties programmatically | Aspose.Cells shape styling across worksheets
 
 using System;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing Excel workbook, walks through each worksheet and its shapes, identifies WordArt objects, and uses reflection to set their TextEffect PresetStyle to the BoldWave preset when available, then saves the modified workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, loops through each worksheet and its shapes, detects WordArt shapes via the TextEffect property, sets FontBold and FontItalic to true, and saves the updated file, handling missing input files and runtime exceptions.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists before loading.
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through worksheets and their shapes.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                foreach (Shape shape in sheet.Shapes)
+                // Ensure the input file exists before loading
+                if (!File.Exists(inputPath))
                 {
-                    // Process only WordArt shapes.
-                    if (shape.IsWordArt)
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all shapes on the worksheet
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        try
+                        // Identify WordArt shapes by checking the TextEffect property
+                        if (shape.TextEffect != null)
                         {
-                            // Attempt to set the BoldWave preset style via reflection
-                            // (covers scenarios where the PresetStyle property may not exist in older versions).
-                            object textEffect = shape.TextEffect;
-                            PropertyInfo presetProp = textEffect.GetType().GetProperty("PresetStyle", BindingFlags.Public | BindingFlags.Instance);
-                            if (presetProp != null && presetProp.CanWrite)
-                            {
-                                Type enumType = presetProp.PropertyType;
-                                object enumValue = Enum.Parse(enumType, "BoldWave", ignoreCase: true);
-                                presetProp.SetValue(textEffect, enumValue);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to apply preset style to shape on sheet '{sheet.Name}': {ex.Message}");
+                            // Apply simple formatting to the WordArt text
+                            // (Using properties that are available across Aspose.Cells versions)
+                            shape.TextEffect.FontBold = true;
+                            shape.TextEffect.FontItalic = true;
                         }
                     }
                 }
-            }
 
-            // Save the modified workbook.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

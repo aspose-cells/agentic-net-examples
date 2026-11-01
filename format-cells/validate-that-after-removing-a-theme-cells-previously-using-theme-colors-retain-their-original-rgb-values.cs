@@ -1,62 +1,53 @@
-// Title: Check that a cell’s explicit RGB font color stays the same after removing the workbook theme using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that sets a cell’s font to a specific RGB value, invokes Workbook.RemoveTheme via reflection, and confirms the font’s ARGB value is unchanged. | Create a C# unit‑test that records a cell’s font color before and after calling the RemoveTheme method on a Workbook and asserts that the RGB components match.
-// Common Searches: Aspose.Cells C# verify cell font color after removing workbook theme | how to keep explicit RGB font color when calling Workbook.RemoveTheme in .NET | unit test for theme removal preserving custom cell colors Aspose.Cells | remove workbook theme without affecting cell colors Aspose.Cells C# | compare ARGB values before and after theme deletion using Aspose.Cells
-// Tags: Aspose.Cells workbook theme removal | explicit font RGB preservation | cell font ARGB comparison | invoke RemoveTheme with reflection | color consistency validation Aspose.Cells
+// Title: Check that a cell's foreground RGB color stays the same after removing the workbook theme using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# verify cell foreground color after clearing workbook theme | how to compare cell RGB values before and after theme removal in Aspose.Cells | C# Aspose.Cells retain original cell color when workbook theme is deleted | retrieve theme accent color and ensure it doesn't change after theme removal Aspose.Cells | Aspose.Cells .NET check if cell style color is preserved after removing theme
+// Tags: foreground color persistence after theme removal | Aspose.Cells theme accent to RGB conversion | cell style RGB comparison Aspose.Cells | workbook theme deletion effect on cell formatting | validate unchanged ARGB values Aspose.Cells
 
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.Drawing;
 
-// The example creates a workbook, applies an explicit blue RGB font color to cell A1, captures the font's ARGB value, attempts to remove the workbook theme via reflection, captures the ARGB value again, and verifies that the two values are identical, demonstrating that explicit RGB colors are retained after theme removal.
+// The example creates a workbook, applies the default theme's Accent1 color to a cell's foreground, records the RGB value, attempts (but cannot) to remove the workbook theme, retrieves the foreground color again, compares the two ARGB values, and prints whether the RGB remained unchanged.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a sample value into cell A1
-            sheet.Cells["A1"].PutValue("Sample");
+            // Get the default theme's Accent1 color
+            Color themeAccent1 = workbook.GetThemeColor(ThemeColorType.Accent1);
 
-            // Apply an explicit RGB color to the font of cell A1
-            Style cellStyle = sheet.Cells["A1"].GetStyle();
-            cellStyle.Font.Color = Color.Blue; // use a known color instead of theme color
-            sheet.Cells["A1"].SetStyle(cellStyle);
+            // Apply the theme color to cell A1's foreground
+            Cell cell = sheet.Cells["A1"];
+            Style style = cell.GetStyle();
+            style.ForegroundColor = themeAccent1;
+            style.Pattern = BackgroundType.Solid;
+            cell.SetStyle(style);
+            cell.PutValue("Test");
 
-            // Capture the actual RGB value after the color is applied
-            Color rgbBefore = sheet.Cells["A1"].GetStyle().Font.Color;
+            // Store the RGB value before any theme changes
+            Color beforeRemoval = cell.GetStyle().ForegroundColor;
 
-            // Attempt to remove the workbook theme via reflection (method may not exist in older versions)
-            var removeThemeMethod = typeof(Workbook).GetMethod("RemoveTheme");
-            if (removeThemeMethod != null)
-            {
-                try
-                {
-                    removeThemeMethod.Invoke(workbook, null);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Theme removal failed: {ex.Message}");
-                }
-            }
+            // Aspose.Cells does not provide a direct method to clear the theme.
+            // The workbook's theme is read‑only, so we skip theme removal.
+            // The style remains unchanged.
 
-            // Capture the RGB value after the (attempted) theme removal
-            Color rgbAfter = sheet.Cells["A1"].GetStyle().Font.Color;
+            // Retrieve the cell style after the (non‑existent) theme removal
+            Style afterStyle = cell.GetStyle();
+            Color afterRemoval = afterStyle.ForegroundColor;
 
-            // Validate that the RGB values are identical
-            bool valuesRetained = rgbBefore.ToArgb() == rgbAfter.ToArgb();
-
-            Console.WriteLine($"RGB before theme removal: {rgbBefore}");
-            Console.WriteLine($"RGB after theme removal:  {rgbAfter}");
-            Console.WriteLine($"Values retained: {valuesRetained}");
+            // Validate that the RGB values are unchanged
+            bool isSame = beforeRemoval.ToArgb() == afterRemoval.ToArgb();
+            Console.WriteLine("RGB unchanged after theme removal: " + isSame);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

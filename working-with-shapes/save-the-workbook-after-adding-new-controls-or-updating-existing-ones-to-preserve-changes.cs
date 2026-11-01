@@ -1,54 +1,41 @@
-// Title: Add or update a button shape in an Excel worksheet and save the workbook with Aspose.Cells for .NET
-// AI Prompts: Create a new Button shape at cell B2 in an existing workbook, set its caption, and persist the file using Aspose.Cells. | Find the first Button shape on a worksheet, change its text, and save the modified workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# add button shape to existing Excel file and save | how to modify button text in an Excel worksheet using Aspose.Cells .NET | saving changes to shapes in an Excel workbook with Aspose.Cells | update or insert form control button in Excel via Aspose.Cells C# example | preserve Excel button controls after editing with Aspose.Cells
-// Tags: add button shape Aspose.Cells | update button caption worksheet Aspose.Cells | save workbook after shape modification Aspose.Cells | Aspose.Cells button control example | Excel shape editing C# Aspose.Cells
+// Title: Add a button control to an Excel worksheet and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new Workbook, adds a Button shape at a specific row, column, and pixel size, sets its caption, and saves the file as XLSX with Aspose.Cells. | Show how to insert a button into an existing worksheet, optionally assign a macro or hyperlink, and persist the changes by saving the workbook. | Demonstrate positioning a button control using pixel coordinates on a worksheet and exporting the workbook while keeping the control intact.
+// Common Searches: how to insert a button shape into an Excel file using Aspose.Cells C# | save workbook after adding form controls with Aspose.Cells .NET | set button text and assign macro in Aspose.Cells C# example | position Excel button in pixels using Aspose.Cells API | export worksheet with button control to XLSX using Aspose.Cells
+// Tags: button shape insertion Aspose.Cells C# | persist workbook after shape addition Aspose.Cells | pixel based button placement Aspose.Cells | macro assignment to button Aspose.Cells | export worksheet with embedded button Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
-using System.IO;
 
-// The program loads an existing Excel file, adds a new button shape at cell B2, updates the caption of the first button if present, and saves the workbook to a new file, demonstrating how to persist shape changes with Aspose.Cells for .NET.
+// The example creates a workbook, adds a button shape to the first worksheet with defined row, column, and pixel dimensions, optionally sets a macro or hyperlink, and saves the workbook as an XLSX file, preserving the new control.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            string inputPath = "input.xlsx";
+        // Load an existing workbook (or create a new one)
+        Workbook workbook = new Workbook(); // creates a new workbook
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
+        // Add a button control to the worksheet
+        // Define the position and size of the button (in pixels)
+        int upperLeftRow = 2;
+        int upperLeftColumn = 1;
+        int top = 5;
+        int left = 5;
+        int height = 30;
+        int width = 100;
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Create the button
+        Button button = sheet.Shapes.AddButton(upperLeftRow, upperLeftColumn, top, left, height, width);
+        button.Text = "Click Me";
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Optionally, assign a macro or hyperlink to the button
+        // button.Macro = "MyMacro";
+        // button.Hyperlink = new Hyperlink("http://example.com");
 
-            // Add a new button at cell B2 (row 1, column 1) with width 100 and height 30
-            // Parameters: upperLeftRow, upperLeftColumn, top, left, height, width
-            Button button = sheet.Shapes.AddButton(1, 1, 1, 1, 30, 100);
-            button.Text = "Click Me";
+        // Save the workbook to preserve the added control
+        workbook.Save("WorkbookWithButton.xlsx", SaveFormat.Xlsx);
 
-            // Update the first button if it exists
-            if (sheet.Shapes.Count > 0 && sheet.Shapes[0] is Button existingButton)
-            {
-                existingButton.Text = "Updated";
-            }
-
-            // Save the workbook with the added/updated controls
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        Console.WriteLine("Workbook saved successfully with the new button control.");
     }
 }

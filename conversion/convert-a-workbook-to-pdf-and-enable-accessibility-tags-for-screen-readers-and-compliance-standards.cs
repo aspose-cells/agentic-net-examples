@@ -1,36 +1,42 @@
-// Title: Convert an Excel workbook to PDF/A‑2u with accessibility tags using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file and saves it as a PDF/A‑2u document with accessibility tags using Aspose.Cells. | Show how to configure PdfSaveOptions to set PDF/A‑2u compliance and include document structure for screen readers during Excel‑to‑PDF conversion.
-// Common Searches: how to create an accessible PDF/A-2u from Excel using Aspose.Cells C# | Aspose.Cells set PDF compliance to PDF/A-2u with document structure | C# convert .xlsx to PDF with accessibility tags Aspose | enable PDF/A-2u compliance in Aspose.Cells PDF conversion
-// Tags: Aspose.Cells PDF/A-2u conversion | C# generate accessible PDF from Excel | PdfSaveOptions compliance option | Enable document structure in PDF export | ExportDocumentStructure property Aspose.Cells
+// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET – handling file checks and accessibility tag limitations
+// Common Searches: how to save an .xlsx file as PDF with Aspose.Cells in C# | Aspose.Cells PDFSaveOptions example for .NET projects | C# code to convert Excel to PDF and verify input file existence | does Aspose.Cells support accessibility tags when exporting to PDF | error handling while saving a workbook to PDF with Aspose.Cells
+// Tags: Aspose.Cells PDFSaveOptions usage | Excel to PDF conversion .NET | C# workbook.Save PDF example | accessibility tag limitation Aspose.Cells | input file existence check C#
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-// The sample loads an input.xlsx workbook, configures PdfSaveOptions to export document structure for screen readers and to use PDF/A‑2u compliance, then saves the workbook as an accessible PDF file.
+// The sample verifies that the source XLSX file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (noting that accessibility tags are not supported in the current version), and saves the workbook as a PDF while providing basic exception handling.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string sourcePath = "input.xlsx";
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-        // Desired output PDF file path
-        string pdfPath = "output.pdf";
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(sourcePath);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options (accessible tags not supported in this version)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Enable accessibility tags (document structure) for screen readers
-        pdfOptions.ExportDocumentStructure = true;
-
-        // Set a PDF/A compliance level that includes accessibility (PDF/A-2u)
-        pdfOptions.Compliance = PdfCompliance.PdfA2u;
-
-        // Save the workbook as a PDF with the configured options
-        workbook.Save(pdfPath, pdfOptions);
+            // Save the workbook as a PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

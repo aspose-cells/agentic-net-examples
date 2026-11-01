@@ -1,67 +1,73 @@
-// Title: Use Aspose.Cells for .NET to apply formula‑based conditional formatting that highlights values above 150 in red and below 30 in light blue in column A
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, fills cells A1:A10 with numeric values, defines a CellArea for that range, adds two expression‑type FormatCondition objects ("=A1>150" and "=A1<30"), sets the first condition’s background to red and the second to light blue, and saves the file. | Generate a complete Aspose.Cells example that demonstrates adding multiple conditional formatting rules based on formulas to a single column, including configuring style colors and persisting the workbook.
-// Common Searches: aspnet apply conditional formatting with formula >150 red using Aspose.Cells | c# Aspose.Cells conditional formatting multiple expression conditions column A | how to set background color for cells less than 30 in Aspose.Cells | example of adding formula based conditional formatting to Excel with Aspose.Cells .NET
-// Tags: Aspose.Cells expression conditional formatting | C# set cell background based on value | Excel conditional formatting formula thresholds Aspose | Aspose.Cells multiple format conditions | save workbook with conditional formats .NET
+// Title: Apply expression‑based conditional formatting in Aspose.Cells for .NET to highlight cells exceeding a numeric threshold
+// Common Searches: Aspose.Cells C# apply conditional formatting with an expression formula | How to set red background for cells greater than 100 using Aspose.Cells | Create conditional formatting range A1:A10 in a .NET Excel workbook | Using Aspose.Cells to highlight values above a threshold in C# | Add expression condition to conditional formatting collection Aspose.Cells
+// Tags: expression conditional formatting Aspose.Cells | conditional formatting range specification .NET | apply style on formula condition Excel C# | threshold based cell highlighting Aspose.Cells | red background style for conditional format
 
 using System;
-using Aspose.Cells;
+using System.IO;
 using System.Drawing;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Demonstrates creating a workbook, populating column A with multiples of 30, defining the range A1:A10, adding two expression‑type conditional formatting rules (value >150 with red background, value <30 with light blue background), and saving the result as ThresholdConditionalFormatting.xlsx.
-class ConditionalFormattingDemo
+// The example creates a workbook, fills cells A1‑A10 with incremental values, defines a conditional formatting range, adds an expression condition (A1>100), applies a red solid background style when the condition is true, and saves the file as ConditionalFormattingResult.xlsx.
+class ConditionalFormattingExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate sample numeric data in column A (A1:A10)
-        for (int i = 0; i < 10; i++)
+        try
         {
-            cells[i, 0].PutValue(i * 30); // 0, 30, 60, ... 270
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data in column A (A1:A10)
+            for (int i = 0; i < 10; i++)
+            {
+                sheet.Cells[i, 0].PutValue(i * 20); // Values: 0,20,40,...,180
+            }
+
+            // Define the range to which the conditional formatting will be applied (A1:A10)
+            CellArea range = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 9,
+                EndColumn = 0
+            };
+
+            // Add a conditional formatting collection for the specified range
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+            fcc.AddArea(range);
+
+            // Define a threshold value
+            double threshold = 100;
+
+            // Create an expression condition: cell value > threshold
+            string formula = $"A1>{threshold}";
+
+            // Add the condition to the collection
+            FormatCondition condition = fcc[0];
+            condition.Type = FormatConditionType.Expression;
+            condition.Formula1 = formula;
+
+            // Define the style to apply when the condition is true (e.g., red background)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
+
+            // Determine output file path
+            string outputPath = "ConditionalFormattingResult.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Define the cell area to which the conditional formatting will be applied (A1:A10)
-        CellArea area = new CellArea
+        catch (Exception ex)
         {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-
-        // Add a new conditional formatting collection to the worksheet
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
-        fcc.AddArea(area);
-
-        // -------------------------------------------------
-        // Condition 1: Highlight cells with value > 150 (red background)
-        // -------------------------------------------------
-        int conditionIdx1 = fcc.AddCondition(
-            FormatConditionType.Expression,
-            OperatorType.None,
-            "=A1>150",   // Formula evaluates to TRUE when the cell value exceeds 150
-            null);       // No second formula needed for Expression type
-
-        FormatCondition condition1 = fcc[conditionIdx1];
-        condition1.Style.BackgroundColor = Color.Red;
-
-        // -------------------------------------------------
-        // Condition 2: Highlight cells with value < 30 (light blue background)
-        // -------------------------------------------------
-        int conditionIdx2 = fcc.AddCondition(
-            FormatConditionType.Expression,
-            OperatorType.None,
-            "=A1<30",    // Formula evaluates to TRUE when the cell value is below 30
-            null);
-
-        FormatCondition condition2 = fcc[conditionIdx2];
-        condition2.Style.BackgroundColor = Color.LightBlue;
-
-        // Save the workbook with the applied conditional formatting
-        workbook.Save("ThresholdConditionalFormatting.xlsx");
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

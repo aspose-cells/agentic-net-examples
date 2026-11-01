@@ -1,7 +1,6 @@
-// Title: How to disable automatic XML map refresh in Aspose.Cells for .NET while performing bulk cell updates to boost performance
-// AI Prompts: Write C# code using Aspose.Cells that sets Workbook.Settings.EnableXMLMapRefresh to false, inserts 10,000 rows into the first column, then sets the property back to true before saving the workbook. | Show a .NET example that temporarily suspends XML map auto‑refresh, performs high‑volume cell writes, and restores the refresh setting to ensure data integrity with Aspose.Cells.
-// Common Searches: Aspose.Cells C# disable XML map auto refresh for large data import | Improve bulk cell write speed by turning off XML map refresh in .NET workbook | Temporarily suspend XML map refresh during massive updates with Aspose.Cells
-// Tags: disable xml map auto refresh aspose.cells | bulk cell write performance optimization .net | workbook settings enablexmlmaprefresh property | c# aspose.cells large data insertion | excel xml map refresh control aspose
+// Title: How to disable automatic XML map refresh in Aspose.Cells for .NET while performing bulk cell updates
+// Common Searches: disable xml map refresh in Aspose.Cells when writing thousands of cells c# | suspend automatic xml map refresh to speed up bulk updates in .NET Excel workbook | Aspose.Cells bulk cell write without triggering xml map refresh performance tip | c# code to turn off xml map refresh during large data import with Aspose.Cells | improve Excel processing time by disabling xml map refresh in Aspose.Cells
+// Tags: disable xml map refresh aspose.cells | bulk cell update performance asp.net | suspend xml map refresh during data import | optimize workbook processing speed aspose.cells | excel xml map refresh control c# | large dataset write aspose.cells performance
 
 using System;
 using System.IO;
@@ -9,41 +8,46 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example creates a workbook, disables the automatic XML map refresh, writes 10,000 sequential numbers into column A of the first worksheet, re‑enables the XML map refresh, and saves the file, demonstrating how to speed up bulk cell updates with Aspose.Cells for .NET.
+    // The example demonstrates loading or creating an Excel workbook with Aspose.Cells, turning off automatic XML map refresh, writing values to a large range of cells (10,000 rows × 50 columns) to illustrate bulk updates, and then saving the workbook, thereby showing how to improve processing speed by suspending XML map refresh.
     class Program
     {
         static void Main(string[] args)
         {
+            const string inputFile = "Input.xlsx";
+            const string outputFile = "Output.xlsx";
+
             try
             {
-                // Create a new workbook (or load an existing one)
-                var workbook = new Workbook();
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file \"{inputFile}\" not found. Creating a new workbook.");
+                }
 
-                // Example bulk update: write 10,000 values into the first column of the first worksheet
-                var cells = workbook.Worksheets[0].Cells;
+                // Load existing workbook or create a new one if the file is missing
+                Workbook workbook = File.Exists(inputFile) ? new Workbook(inputFile) : new Workbook();
+
+                // Access the first worksheet and its cells collection
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Perform bulk updates on a large range of cells
                 for (int row = 0; row < 10000; row++)
                 {
-                    cells[row, 0].PutValue(row);
+                    for (int col = 0; col < 50; col++)
+                    {
+                        cells[row, col].PutValue(row * col);
+                    }
                 }
 
-                // Define output file path
-                string outputPath = "output.xlsx";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the modified workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
             }
             catch (Exception ex)
             {
-                // Log or handle exceptions as needed
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

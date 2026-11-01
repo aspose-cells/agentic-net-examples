@@ -1,49 +1,51 @@
-// Title: Unprotect an Excel workbook’s structure with a recovered password and record the audit log using Aspose.Cells for .NET
-// AI Prompts: Load a password‑protected .xlsx file with Aspose.Cells, call Workbook.Unprotect with the recovered password, and save the result to a new workbook. | Insert code that writes an audit entry containing the UTC timestamp, file name, and unprotection action to the console or a log file after the workbook is unprotected. | Refactor the sample to accept input and output file paths as parameters and ensure the original protected workbook remains unchanged.
-// Common Searches: asp.net unprotect workbook structure using Aspose.Cells with known password | c# log excel workbook unprotection timestamp for audit | how to remove workbook windows protection programmatically with Aspose.Cells | save unprotected Excel file to a different folder using Aspose.Cells .NET
-// Tags: Aspose.Cells workbook.Unprotect method C# | remove workbook structure protection programmatically | audit logging for Excel workbook unprotection | save unprotected Excel workbook Aspose.Cells | recover password for Excel protection .NET
+// Title: How to unprotect an Excel workbook’s structure with a recovered password and log the action using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# unprotect workbook structure with known password | log Excel workbook unprotection timestamp using Aspose.Cells | remove workbook protection and save unprotected file in .NET | verify file exists before unprotecting Excel workbook with Aspose.Cells | audit trail for Excel workbook unprotect operation in C#
+// Tags: Aspose.Cells workbook.Unprotect password | C# audit logging Excel unprotection | Excel workbook structure protection removal Aspose.Cells | save unprotected workbook Aspose.Cells C# | file existence check before loading workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads a protected Excel workbook, uses a recovered password to unprotect its structure and windows via Aspose.Cells, logs the unprotection event with a UTC timestamp for audit, and saves the unprotected workbook to a new file.
+// The example checks for the Excel file’s existence, loads it with Aspose.Cells, removes structure and window protection using the recovered password via Workbook.Unprotect, records a UTC timestamped audit log, saves the unprotected workbook to a new file, and handles any errors with detailed logging.
 class WorkbookUnprotector
 {
     static void Main()
     {
         // Path to the workbook to be unprotected
         string inputPath = "ProtectedWorkbook.xlsx";
+        // Path where the unprotected workbook will be saved
+        string outputPath = "UnprotectedWorkbook.xlsx";
 
-        // Recovered password for the workbook structure
+        // Recovered password for the workbook structure protection
         string recoveredPassword = "MyRecoveredPassword";
-
-        // Verify the input file exists
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
 
         try
         {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"[{DateTime.UtcNow:u}] ERROR: Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Unprotect the workbook (structure and windows) using the recovered password
+            // Aspose.Cells provides a direct Unprotect method on Workbook for this purpose
             workbook.Unprotect(recoveredPassword);
 
-            // Log the unprotection event for audit purposes
-            Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook structure unprotected for file '{inputPath}' using recovered password.");
+            // Log the successful unprotection event for audit
+            Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook unprotected successfully. File: {inputPath}");
 
-            // Save the workbook (optionally to a new file to preserve the original)
-            string outputPath = "UnprotectedWorkbook.xlsx";
+            // Save the unprotected workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"[{DateTime.UtcNow:u}] Unprotected workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any errors that occur during the process
+            Console.WriteLine($"[{DateTime.UtcNow:u}] ERROR: Failed to unprotect workbook. Details: {ex.Message}");
         }
     }
 }

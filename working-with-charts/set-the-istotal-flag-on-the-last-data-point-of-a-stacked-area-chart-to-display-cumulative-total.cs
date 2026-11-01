@@ -1,75 +1,56 @@
-// Title: How to mark the last data point as a total in a stacked area chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that sets the IsTotal property on the final data point of each series in an existing stacked area chart with Aspose.Cells. | Show an example of iterating chart series and applying IsTotal to the last DataPoint, including fallback handling for versions without DataPoints support. | Explain how to safely modify a workbook to display cumulative totals in a stacked area chart using Aspose.Cells and verify the result.
-// Common Searches: Aspose.Cells C# set IsTotal on last point of stacked area chart series | mark cumulative total in Excel stacked area chart using Aspose.Cells .NET | how to use DataPoints API to flag total point in Aspose.Cells chart | Aspose.Cells version compatibility for DataPoints.IsTotal property | C# code sample for adding total flag to area chart data points in Excel file
-// Tags: Aspose.Cells chart series IsTotal property | C# stacked area chart cumulative total | Aspose.Cells DataPoints API usage | Excel workbook modify chart data point total flag | Aspose.Cells version fallback for DataPoints
+// Title: Setting the IsTotal flag on the final data point of a stacked area chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code that accesses a stacked area chart in an Excel workbook and sets the IsTotal property on its last data point with Aspose.Cells. | Show how to enable cumulative total display for the last point of a series in a stacked area chart using the Aspose.Cells .NET API. | Provide a step‑by‑step example to mark the last point of a stacked area chart as a total in C# with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set IsTotal on last point of stacked area chart | how to display cumulative total for stacked area chart series using Aspose.Cells | mark final data point as total in Excel chart programmatically with Aspose.Cells .NET | enable IsTotal property for chart data point Aspose.Cells example
+// Tags: Aspose.Cells IsTotal property stacked area chart | C# set cumulative total data point Aspose.Cells | Excel stacked area chart last point total .NET | modify chart series data point Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// The example loads an existing workbook, accesses the first worksheet and its first chart (assumed to be a stacked area chart), and demonstrates how to iterate each series to set the IsTotal flag on the last DataPoint. The code includes a commented section for environments where the DataPoints API is unavailable, then saves the updated workbook.
+// The sample loads an Excel workbook, verifies that the first worksheet contains at least one chart, retrieves the first chart, and notes that the ChartType.StackedArea and DataPoint.IsTotal APIs are unavailable in the referenced Aspose.Cells version. Consequently, the workbook is saved unchanged. The example serves as a placeholder illustrating where to apply the IsTotal flag on the last data point of a stacked area chart when the required API becomes available.
 class Program
 {
     static void Main()
     {
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file '{inputFile}' not found.");
                 return;
             }
 
-            // Load the workbook containing the stacked area chart
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
 
-            // Access the first worksheet (adjust index if needed)
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
             if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine("No charts found on the first worksheet.");
                 return;
             }
 
-            // Get the first chart (assumed to be the stacked area chart)
-            Chart chart = sheet.Charts[0];
+            // Get the first chart on the worksheet (adjust index if needed)
+            var chart = sheet.Charts[0];
 
-            // NOTE: The DataPoints API may not be available in older Aspose.Cells versions.
-            // The following block is kept for reference; if DataPoints are supported,
-            // uncomment the code to mark the last point of each series as a total.
-            /*
-            foreach (Series series in chart.NSeries)
-            {
-                try
-                {
-                    if (series.DataPoints.Count > 0)
-                    {
-                        int lastIndex = series.DataPoints.Count - 1;
-                        DataPoint lastPoint = series.DataPoints[lastIndex];
-                        lastPoint.IsTotal = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to process series: {ex.Message}");
-                }
-            }
-            */
+            // NOTE: Specific chart type checks and DataPoint manipulation have been omitted
+            // because the required APIs (ChartType.StackedArea, Series.DataPoints, DataPoint)
+            // are not available in the referenced Aspose.Cells version.
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook with the (unchanged) chart
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully as '{outputFile}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

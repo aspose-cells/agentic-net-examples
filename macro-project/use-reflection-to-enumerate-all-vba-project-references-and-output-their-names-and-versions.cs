@@ -1,72 +1,61 @@
-// Title: Enumerate VBA project references in an .xlsm workbook and display their names and version numbers using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a macro‑enabled Excel file with Aspose.Cells, accesses the workbook’s VbaProject, and prints each VBA reference’s Name together with its MajorVersion and MinorVersion using reflection or dynamic typing. | Extend the sample to also retrieve and output the GUID and FullPath properties of each VBA reference in the workbook.
-// Common Searches: aspocells c# list vba references and their versions in xlsm | how to get VBA reference names from a macro-enabled workbook using Aspose.Cells | C# reflection to read VBA project reference version numbers with Aspose.Cells | retrieve VBA reference GUID from Excel file programmatically in .NET
-// Tags: enumerate vba references Aspose.Cells | read vba reference version .NET | list macro project references C# | access vba project references using reflection | extract vba reference guid Aspose.Cells
+// Title: Use reflection in C# with Aspose.Cells to enumerate VBA project references and show each reference’s name and version in an .xlsm workbook
+// Common Searches: c# how to list VBA references and their versions from an .xlsm file using Aspose.Cells | using .net reflection to read VBA project reference names in Excel workbook | retrieve VBA reference major and minor version numbers with Aspose.Cells C# example | enumerate VBA project references programmatically in a macro-enabled workbook | Aspose.Cells C# code to display VBA reference details via reflection
+// Tags: csharp reflection enumerate vba references | aspose.cells vba project reference version extraction | xlsm workbook vba reference enumeration | list vba references using .net reflection | retrieve vba reference name and version c#
 
 using System;
-using System.IO;
-using System.Collections;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-// The example verifies an .xlsm file exists, loads it with Aspose.Cells, obtains its VbaProject, iterates over the References collection via dynamic reflection, and prints each reference’s Name and version (MajorVersion.MinorVersion), handling missing data and errors.
+// The sample loads an .xlsm workbook with Aspose.Cells, accesses its VbaProject, uses .NET reflection to obtain the public References collection, iterates through each reference, and prints the reference name together with its major and minor version numbers.
 class Program
 {
     static void Main()
     {
-        const string filePath = "input.xlsm";
+        // Load the workbook that contains a VBA project (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsm");
 
-        // Verify that the input file exists.
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
-        }
-
-        Workbook workbook;
-        try
-        {
-            // Load the workbook that contains a VBA project.
-            workbook = new Workbook(filePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        // Retrieve the VBA project from the workbook.
-        VbaProject vbaProject = workbook.VbaProject;
+        // Access the VBA project
+        var vbaProject = workbook.VbaProject;
         if (vbaProject == null)
         {
             Console.WriteLine("No VBA project found in the workbook.");
             return;
         }
 
-        // Get the collection of VBA references (use non‑specific types to avoid missing assemblies).
-        var references = vbaProject.References;
-        if (references == null || ((ICollection)references).Count == 0)
+        // Use reflection to obtain the 'References' property of the VBA project
+        PropertyInfo referencesProp = vbaProject.GetType()
+                                                .GetProperty("References", BindingFlags.Public | BindingFlags.Instance);
+        if (referencesProp == null)
         {
-            Console.WriteLine("No VBA references found.");
+            Console.WriteLine("Unable to locate the References property via reflection.");
             return;
         }
 
-        // Enumerate each reference and output its name and version.
-        foreach (object refObj in (IEnumerable)references)
+        // Retrieve the collection of references
+        object referencesObj = referencesProp.GetValue(vbaProject, null);
+        if (referencesObj == null)
         {
-            try
-            {
-                // Use dynamic to access members without needing the concrete type at compile time.
-                dynamic reference = refObj;
-                string name = reference.Name ?? "Unnamed";
-                int major = reference.MajorVersion;
-                int minor = reference.MinorVersion;
-                Console.WriteLine($"{name} - Version {major}.{minor}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing a reference: {ex.Message}");
-            }
+            Console.WriteLine("The VBA project contains no references.");
+            return;
+        }
+
+        // Enumerate the references using reflection
+        var enumerable = referencesObj as System.Collections.IEnumerable;
+        foreach (object reference in enumerable)
+        {
+            Type refType = reference.GetType();
+
+            // Get the reference name
+            PropertyInfo nameProp = refType.GetProperty("Name");
+            string name = nameProp?.GetValue(reference, null)?.ToString() ?? "Unnamed";
+
+            // Get the major and minor version numbers
+            PropertyInfo majorProp = refType.GetProperty("Major");
+            PropertyInfo minorProp = refType.GetProperty("Minor");
+            int major = majorProp != null ? (int)majorProp.GetValue(reference, null) : 0;
+            int minor = minorProp != null ? (int)minorProp.GetValue(reference, null) : 0;
+
+            Console.WriteLine($"Reference: {name}, Version: {major}.{minor}");
         }
     }
 }

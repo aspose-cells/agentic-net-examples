@@ -1,34 +1,61 @@
-// Title: How to select a worksheet by its name and retrieve its Cells collection using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates or loads a Workbook, renames the first worksheet to a custom name, selects that worksheet by its name, and returns the Cells object for further manipulation. | Show an example of accessing a worksheet by name, obtaining its Cells collection, and writing a value to a specific cell with Aspose.Cells in a .NET application.
-// Common Searches: Aspose.Cells .NET retrieve cells from a named worksheet | C# code to rename first worksheet and access it via its new name in Aspose.Cells | Write to cell A1 after selecting worksheet by custom name using Aspose.Cells | Save workbook as XLSX after modifying cells in a specific sheet with Aspose.Cells C#
-// Tags: worksheet name lookup Aspose.Cells | cells collection retrieval Aspose.Cells | default sheet rename Aspose.Cells | write value to cell A1 Aspose.Cells | save workbook as xlsx Aspose.Cells
+// Title: Select a worksheet by name, create it if missing, and obtain its Cells collection using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an existing Excel file or creates a new workbook, selects a worksheet by its name (adding the sheet when it does not exist), and returns the Worksheet.Cells object. | Show how to read the current value of cell A1 and then write a new string to that cell after acquiring the Cells collection from a named worksheet with Aspose.Cells.
+// Common Searches: Aspose.Cells C# get worksheet by name and add it if not present | C# retrieve Cells collection from a specific sheet using Aspose.Cells | How to read and write a cell after selecting a worksheet by name in Aspose.Cells .NET | Load existing Excel file or create new one then access cells of a named worksheet Aspose.Cells | Aspose.Cells example for checking worksheet existence and accessing cell A1
+// Tags: worksheet name selection Aspose.Cells | auto-create missing sheet Aspose.Cells | cells collection access Aspose.Cells | cell A1 read write Aspose.Cells | excel workbook initialization Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, renames the default sheet to "DataSheet", selects that worksheet by its name, obtains its Cells collection, writes a string to cell A1, and saves the workbook as SelectedWorksheetDemo.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing workbook or creates a new one, ensures a worksheet named "MyWorksheet" exists (adding it if necessary), obtains its Cells collection, reads the value of cell A1, writes "Hello Aspose!" to A1, and saves the workbook.
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                string filePath = "input.xlsx";
+                Workbook workbook;
 
-        // Ensure a worksheet with the desired name exists
-        const string targetSheetName = "DataSheet";
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.Name = targetSheetName; // rename the default sheet
+                // Load existing workbook if present; otherwise create a new one.
+                if (File.Exists(filePath))
+                {
+                    workbook = new Workbook(filePath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    workbook.Save(filePath);
+                }
 
-        // Select the worksheet by its name
-        Worksheet selectedWorksheet = workbook.Worksheets[targetSheetName];
+                // Select worksheet by name; create it if it does not exist.
+                string sheetName = "MyWorksheet";
+                Worksheet sheet = workbook.Worksheets[sheetName];
+                if (sheet == null)
+                {
+                    int idx = workbook.Worksheets.Add();
+                    sheet = workbook.Worksheets[idx];
+                    sheet.Name = sheetName;
+                }
 
-        // Obtain the Cells collection for further operations
-        Cells cells = selectedWorksheet.Cells;
+                // Obtain the Cells collection.
+                Cells cells = sheet.Cells;
 
-        // Example operation: write a value to cell A1
-        cells["A1"].PutValue("Hello from the selected worksheet!");
+                // Read value from A1 (empty if not set).
+                string value = cells["A1"].StringValue;
+                Console.WriteLine($"Value in A1: '{value}'");
 
-        // Save the workbook (using the standard save method)
-        workbook.Save("SelectedWorksheetDemo.xlsx", SaveFormat.Xlsx);
+                // Write a value to A1 and save the workbook.
+                cells["A1"].PutValue("Hello Aspose!");
+                workbook.Save(filePath);
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

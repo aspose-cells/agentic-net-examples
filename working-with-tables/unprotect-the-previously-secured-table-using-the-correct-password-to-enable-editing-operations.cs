@@ -1,28 +1,28 @@
-// Title: How to unprotect a password‑protected Excel table using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, calls Worksheet.Unprotect with a supplied password to remove protection from the sheet and its tables, and saves the result as a new file. | Show an example of editing a previously protected list object after calling Worksheet.Unprotect in Aspose.Cells, including loading, unprotecting, modifying cells, and saving the workbook.
-// Common Searches: asp.net aspose.cells unprotect worksheet with password c# example | remove protection from Excel table (list object) using Aspose.Cells .NET | c# code to edit a protected Excel table after unprotecting with Aspose.Cells | how to call Worksheet.Unprotect to unlock tables in an .xlsx file | aspose.cells unprotect protected list object and save workbook
-// Tags: unprotect worksheet Aspose.Cells C# | remove table protection Aspose.Cells .NET | worksheet.unprotect password example | edit unprotected Excel list object Aspose.Cells | save unprotected workbook Aspose.Cells
+// Title: Unprotect a password‑protected Excel worksheet with Aspose.Cells for .NET (C#) and edit its contents
+// Common Searches: Aspose.Cells C# unprotect worksheet with password example | remove worksheet protection programmatically using Aspose.Cells .NET | how to edit a protected Excel sheet after unprotecting with Aspose.Cells | C# code to unprotect Excel table and modify a cell using Aspose.Cells | Aspose.Cells unprotect method usage for password‑protected workbook | unprotect Excel worksheet and save changes with Aspose.Cells for .NET
+// Tags: Aspose.Cells unprotect worksheet password | C# remove Excel sheet protection Aspose.Cells | edit cell after worksheet unprotect Aspose.Cells | Aspose.Cells password protected workbook handling | unprotect Excel table using Aspose.Cells .NET
 
 using Aspose.Cells;
+using System;
 
-// Loads a password‑protected workbook, uses Worksheet.Unprotect with the known password to clear protection from the sheet and any embedded tables, then saves the workbook as an unprotected file ready for further editing.
-class UnprotectTableExample
+// Loads an existing workbook, calls Worksheet.Unprotect with the correct password, modifies a cell, and saves the workbook, demonstrating how to remove protection from a worksheet/table and edit its data using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook that contains the protected table
-        Workbook workbook = new Workbook("ProtectedTable.xlsx");
+        // Load the existing workbook that contains the protected table/worksheet
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the worksheet that holds the table (assuming the first worksheet)
-        Worksheet sheet = workbook.Worksheets[0];
+        // Access the worksheet that holds the table (adjust index or name as needed)
+        Worksheet worksheet = workbook.Worksheets[0]; // or workbook.Worksheets["Sheet1"]
 
-        // Unprotect the worksheet using the known password
-        // This also removes protection from any tables (list objects) on the sheet
-        sheet.Unprotect("YourPasswordHere");
+        // Unprotect the worksheet using the correct password
+        worksheet.Unprotect("YourPassword");
 
-        // At this point the table can be edited (e.g., rows added, cells modified, etc.)
+        // The worksheet is now editable; example of an edit operation
+        worksheet.Cells["A1"].PutValue("Edited after unprotect");
 
-        // Save the workbook after unprotecting
-        workbook.Save("UnprotectedTable.xlsx");
+        // Save the workbook with the changes
+        workbook.Save("output.xlsx");
     }
 }

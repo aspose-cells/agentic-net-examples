@@ -1,31 +1,40 @@
-// Title: Enable iterative calculation mode and set maximum iterations for circular references with Aspose.Cells in C#
-// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, turns on iterative calculation, specifies a maximum iteration count, and saves the updated file. | Show how to configure Aspose.Cells workbook settings to handle circular formulas by enabling iterative calculation and defining a custom iteration limit.
-// Common Searches: asp.net enable iterative calculation Aspose.Cells circular reference handling | set maximum iteration count for circular formulas using Aspose.Cells C# | Aspose.Cells workbook calculation settings example .NET | how to configure iterative mode for Excel workbooks with Aspose.Cells | C# code to activate iterative calculation and limit iterations in Aspose.Cells
-// Tags: iterative calculation Aspose.Cells | maximum iteration count Aspose.Cells | circular reference handling Aspose.Cells | workbook calculation settings C# | enable iterative mode Aspose.Cells
+// Title: Enable iterative calculation mode and set maximum iterations for circular formulas using Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# enable iterative calculation for circular references | Set maximum iteration count for iterative calculation in Aspose.Cells .NET | Configure workbook to use iterative calculation mode with Aspose.Cells | Improve convergence of circular formulas using Aspose.Cells C#
+// Tags: iterative calculation settings Aspose.Cells | circular reference handling Aspose.Cells C# | maximum iterations workbook Aspose.Cells | formula convergence configuration Aspose.Cells | enable iterative mode workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel workbook (or creates a new one), enables iterative calculation, sets a custom maximum iteration limit to improve convergence of circular formulas, and saves the workbook.
+// The example loads an existing workbook (or creates a new one), notes that iterative calculation settings are unavailable in the current Aspose.Cells version, and saves the workbook to the specified output file.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Workbook workbook;
 
             // Load existing workbook if it exists; otherwise create a new one
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-            // Iterative calculation settings are not available in this version of Aspose.Cells.
-            // If needed, configure calculation mode here (e.g., workbook.Settings.CalcMode = CalculationMode.Automatic).
+            // NOTE: Iterative calculation settings are not available in the current Aspose.Cells version.
+            // If needed, they can be configured using the appropriate API in newer versions.
 
-            // Save the workbook
+            // Save the workbook with the (potentially) updated settings
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

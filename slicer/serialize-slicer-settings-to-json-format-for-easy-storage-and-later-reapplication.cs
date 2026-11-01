@@ -1,114 +1,150 @@
-// Title: Serialize and restore Aspose.Cells slicer settings to JSON in C# (fallback when slicer API unavailable)
-// AI Prompts: Generate a C# method that iterates through all slicers in an Aspose.Cells workbook, captures their properties into a SlicerInfo DTO, and returns a formatted JSON string. | Write a C# routine that reads a JSON array of slicer configurations and applies each to a workbook, handling cases where the Aspose.Cells version lacks slicer manipulation support. | Add comprehensive error handling to the slicer serialization and deserialization methods, ensuring FileNotFoundException for missing files and wrapping other errors in InvalidOperationException.
-// Common Searches: how to export slicer properties to JSON with Aspose.Cells .NET | c# code to save Excel slicer layout using Aspose.Cells | apply previously saved slicer configuration to a workbook with Aspose.Cells | fallback approach for slicer serialization when Aspose.Cells API is missing | store and reload Excel slicer settings as JSON in a .NET application
-// Tags: Aspose.Cells slicer JSON serialization | C# export slicer settings to JSON | Aspose.Cells restore slicer configuration from JSON | fallback slicer handling Aspose.Cells .NET | Excel slicer persistence using Aspose.Cells
+// Title: How to serialize Excel slicer settings to JSON and restore them using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export slicer selections to a JSON file | load slicer configuration from JSON and apply to an Excel workbook with Aspose.Cells | save slicer caption and selected items as JSON using the Aspose.Cells API | deserialize slicer cache items from JSON and update slicer state in .NET | persist Excel slicer settings to JSON for later reuse with Aspose.Cells
+// Tags: Aspose.Cells serialize slicer settings to JSON | C# export slicer cache items JSON | Aspose.Cells deserialize slicer configuration | apply slicer selections from JSON .NET | Excel slicer state persistence Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Linq;
 using Aspose.Cells;
+using Aspose.Cells.Slicers;   // Slicer related classes
 
 namespace SlicerSerializationDemo
 {
-    // DTO representing slicer settings (kept for compatibility)
-    // The example defines a SlicerInfo DTO and two static methods—SerializeSlicers and ApplySlicers. SerializeSlicers loads a workbook, checks file existence, and returns an indented empty JSON array when the Aspose.Cells version does not expose slicer APIs. ApplySlicers reads a JSON string, deserializes it to a list of SlicerInfo objects, and if the list is empty (or APIs missing) simply saves the workbook unchanged. Both methods include robust file‑existence validation and wrap unexpected errors in InvalidOperationException, demonstrating a safe fallback pattern for persisting slicer settings as JSON.
-    public class SlicerInfo
+    // POCO classes that represent slicer settings for JSON serialization
+    // The example loads an existing workbook, extracts each slicer's name, caption, and selected cache items, serializes this information into an indented JSON file, then reads the JSON back, deserializes it, finds the matching slicers by name, restores their captions and item selection states, and finally saves the workbook with the re‑applied slicer settings.
+    public class SlicerItemSetting
     {
         public string Name { get; set; } = string.Empty;
-        public string Caption { get; set; } = string.Empty;
-        public int TopRow { get; set; }
-        public int TopColumn { get; set; }
-        public double Height { get; set; }
-        public double Width { get; set; }
-        public string Style { get; set; } = string.Empty;
-        public string TableName { get; set; } = string.Empty;
-        public string ColumnName { get; set; } = string.Empty;
-        public List<string> SelectedItems { get; set; } = new List<string>();
+        public bool Selected { get; set; }
     }
 
-    public static class SlicerSerializer
+    public class SlicerSetting
     {
-        // Serialize slicer settings – returns empty JSON if slicer API is unavailable
-        public static string SerializeSlicers(string workbookPath)
-        {
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException("Workbook file not found.", workbookPath);
+        public string Name { get; set; } = string.Empty;      // Slicer name (unique identifier)
+        public string Caption { get; set; } = string.Empty;   // Display caption
+        public List<SlicerItemSetting> Items { get; set; } = new List<SlicerItemSetting>();
+    }
 
+    class Program
+    {
+        static void Main(string[] args)
+        {
             try
             {
-                // Load workbook (lifecycle rule)
-                Workbook wb = new Workbook(workbookPath);
+                // ---------- Load existing workbook ----------
+                string workbookPath = "InputWorkbook.xlsx";
 
-                // NOTE: Aspose.Cells version used may not expose slicer APIs.
-                // Return an empty JSON array to keep the contract valid.
-                var emptyList = new List<SlicerInfo>();
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                return JsonSerializer.Serialize(emptyList, options);
-            }
-            catch (Exception ex)
-            {
-                // Propagate any unexpected errors
-                throw new InvalidOperationException("Failed to serialize slicers.", ex);
-            }
-        }
-
-        // Apply slicer settings – copies workbook unchanged if slicer API is unavailable
-        public static void ApplySlicers(string workbookPath, string json, string outputPath)
-        {
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException("Workbook file not found.", workbookPath);
-
-            try
-            {
-                // Load workbook (lifecycle rule)
-                Workbook wb = new Workbook(workbookPath);
-
-                // Attempt to deserialize JSON (may be empty)
-                var slicerInfos = JsonSerializer.Deserialize<List<SlicerInfo>>(json);
-                if (slicerInfos == null || slicerInfos.Count == 0)
+                if (!File.Exists(workbookPath))
                 {
-                    // No slicer info to apply – simply save the workbook
-                    wb.Save(outputPath);
+                    Console.WriteLine($"Workbook file not found: {workbookPath}");
                     return;
                 }
 
-                // NOTE: Slicer manipulation APIs are not available in the current Aspose.Cells version.
-                // Therefore, we skip applying slicer settings and just save the workbook.
-                wb.Save(outputPath);
+                Workbook workbook = new Workbook(workbookPath);
+
+                // ---------- Serialize slicer settings ----------
+                List<SlicerSetting> slicerSettings = new List<SlicerSetting>();
+
+                // Iterate through all worksheets and collect slicer information
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Slicer slicer in sheet.Slicers)
+                    {
+                        var setting = new SlicerSetting
+                        {
+                            Name = slicer.Name,
+                            Caption = slicer.Caption
+                        };
+
+                        // Retrieve item states from the slicer cache
+                        SlicerCache cache = slicer.SlicerCache;
+                        foreach (SlicerCacheItem cacheItem in cache.SlicerCacheItems)
+                        {
+                            // Use the cache item's displayed value as its identifier
+                            string itemName = cacheItem.Value?.ToString() ?? string.Empty;
+
+                            setting.Items.Add(new SlicerItemSetting
+                            {
+                                Name = itemName,
+                                Selected = cacheItem.Selected
+                            });
+                        }
+
+                        slicerSettings.Add(setting);
+                    }
+                }
+
+                // Convert the collected settings to JSON
+                var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(slicerSettings, jsonOptions);
+
+                // Save JSON to a file
+                string jsonPath = "SlicerSettings.json";
+                File.WriteAllText(jsonPath, json);
+                Console.WriteLine($"Slicer settings serialized to {jsonPath}");
+
+                // ---------- Re‑apply slicer settings from JSON ----------
+                if (!File.Exists(jsonPath))
+                {
+                    Console.WriteLine($"JSON file not found: {jsonPath}");
+                    return;
+                }
+
+                string loadedJson = File.ReadAllText(jsonPath);
+                List<SlicerSetting>? loadedSettings = JsonSerializer.Deserialize<List<SlicerSetting>>(loadedJson, jsonOptions);
+
+                if (loadedSettings == null)
+                {
+                    Console.WriteLine("Failed to deserialize slicer settings.");
+                    return;
+                }
+
+                // Apply settings to the workbook
+                foreach (SlicerSetting setting in loadedSettings)
+                {
+                    // Find the slicer by name across all worksheets
+                    Slicer? targetSlicer = null;
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        targetSlicer = sheet.Slicers.FirstOrDefault(s => s.Name == setting.Name);
+                        if (targetSlicer != null)
+                            break;
+                    }
+
+                    if (targetSlicer == null)
+                    {
+                        Console.WriteLine($"Slicer '{setting.Name}' not found in workbook.");
+                        continue;
+                    }
+
+                    // Apply caption
+                    targetSlicer.Caption = setting.Caption;
+
+                    // Apply item selection states
+                    SlicerCache cache = targetSlicer.SlicerCache;
+                    foreach (SlicerItemSetting itemSetting in setting.Items)
+                    {
+                        // Find the cache item whose displayed value matches the stored name
+                        SlicerCacheItem? cacheItem = cache.SlicerCacheItems
+                            .FirstOrDefault(ci => (ci.Value?.ToString() ?? string.Empty) == itemSetting.Name);
+
+                        if (cacheItem != null)
+                        {
+                            cacheItem.Selected = itemSetting.Selected;
+                        }
+                    }
+                }
+
+                // Save the workbook after re‑applying slicer settings
+                string outputPath = "Workbook_With_SlicerSettings.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved with re‑applied slicer settings to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Wrap any unexpected errors
-                throw new InvalidOperationException("Failed to apply slicer settings.", ex);
-            }
-        }
-    }
-
-    // Example usage
-    class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                string inputFile = @"C:\Temp\SampleWithSlicers.xlsx";
-                string jsonFile = @"C:\Temp\SlicerSettings.json";
-                string outputFile = @"C:\Temp\SampleWithSlicers_Restored.xlsx";
-
-                // Serialize slicer settings to JSON and write to file
-                string json = SlicerSerializer.SerializeSlicers(inputFile);
-                File.WriteAllText(jsonFile, json);
-                Console.WriteLine("Slicer settings saved to JSON.");
-
-                // Later, re-apply slicer settings from JSON
-                string loadedJson = File.ReadAllText(jsonFile);
-                SlicerSerializer.ApplySlicers(inputFile, loadedJson, outputFile);
-                Console.WriteLine("Slicer settings re-applied and workbook saved.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

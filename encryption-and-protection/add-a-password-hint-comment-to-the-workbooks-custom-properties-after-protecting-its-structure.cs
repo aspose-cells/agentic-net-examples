@@ -1,50 +1,30 @@
-// Title: Add a password hint as a custom document property after protecting an Excel workbook's structure with Aspose.Cells for .NET
-// AI Prompts: Create a custom document property named "PasswordHint" containing a hint string immediately after calling Workbook.Protect for structure protection. | Check whether the directory for the output Excel file exists and create it if it does not before invoking workbook.Save. | Save the workbook to a new file while preserving the structure protection and the added custom document property.
-// Common Searches: how to add a password hint to an Excel file using Aspose.Cells .NET | store custom document property in a protected workbook Aspose.Cells C# example | protect workbook structure and add metadata with Aspose.Cells | ensure output folder exists before saving workbook Aspose.Cells C# | Aspose.Cells protect structure and add custom property tutorial
-// Tags: protect workbook structure Aspose.Cells | add custom document property password hint | save workbook with custom metadata C# | create output directory before workbook.Save | Aspose.Cells workbook protection example
+// Title: Add a password hint to an Excel workbook’s custom document properties after protecting its structure with Aspose.Cells for .NET (C#)
+// Common Searches: how to store a password hint in a custom document property after protecting an Excel workbook structure using Aspose.Cells C# | Aspose.Cells protect workbook structure and add custom property for password hint in .NET | C# code to add a password hint to a protected Excel file with Aspose.Cells custom document properties
+// Tags: protect workbook structure Aspose.Cells | add custom document property Aspose.Cells | password hint custom property Excel | Aspose.Cells workbook protection C# | Excel custom properties password hint .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The sample loads an existing Excel file, protects its structure with a password, adds a custom document property called "PasswordHint" containing a user-defined hint, ensures the output directory exists, and saves the modified workbook to a new file.
+// The example creates a new Workbook, protects its structure with a password, adds a custom document property named "PasswordHint" containing a hint, and saves the workbook as an Excel file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-            const string password = "MySecretPassword";
-            const string hint = "Use your favorite pet's name";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
             // Protect the workbook's structure with a password
-            workbook.Protect(ProtectionType.Structure, password);
+            workbook.Protect(ProtectionType.Structure, "StrongPassword123");
 
-            // Add a custom property to store the password hint
-            workbook.CustomDocumentProperties.Add("PasswordHint", hint);
+            // Add a custom document property as a password hint
+            workbook.CustomDocumentProperties.Add("PasswordHint", "Your favorite color");
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the modified workbook
+            // Save the workbook
+            string outputPath = "ProtectedWorkbook.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

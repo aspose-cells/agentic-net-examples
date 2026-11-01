@@ -1,7 +1,7 @@
-// Title: Extract and concatenate text from every shape, including grouped shapes, in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, walks through all worksheets, extracts the Text property from each shape (including TextBox and grouped shapes), and returns a single concatenated string. | Create a reusable method that accepts a Shape object and a StringBuilder, appends any available text from TextBox or generic shapes, and correctly processes shapes inside a group. | Generate a console application example that demonstrates how to collect shape texts from multiple worksheets, combine them using StringBuilder, and output the result.
-// Common Searches: how to get text from all shapes in an Excel file using Aspose.Cells C# | concatenate grouped shape text in Aspose.Cells .NET workbook | C# iterate over worksheet shapes and read their Text property Aspose.Cells | extract textbox and autoshape contents from Excel with Aspose.Cells | combine shape texts from multiple sheets into one string Aspose.Cells
-// Tags: shape text extraction Aspose.Cells | concatenate Excel shape contents .NET | grouped shape text retrieval C# | iterate worksheet shapes Aspose.Cells | StringBuilder aggregation of shape text
+// Title: Concatenate text from all worksheet shapes into a single string with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, iterates over every Shape on the first worksheet, and appends each Shape.Text to a StringBuilder to produce one combined string. | Add error handling so that shapes without text or shapes that raise exceptions are skipped while the concatenation continues uninterrupted. | Modify the example to write the final concatenated shape text to a UTF‑8 file instead of outputting it to the console.
+// Common Searches: aspocells .net read all shape texts from an Excel worksheet | how to merge captions of multiple shapes in an Excel file using C# | C# Aspose.Cells concatenate shape.Text values from a worksheet | skip null shape text when iterating Excel shapes with Aspose.Cells | save concatenated shape text to a file using Aspose.Cells in C#
+// Tags: concatenate shape text Aspose.Cells | iterate worksheet shapes .NET | extract shape captions Excel | shape text aggregation C# | Aspose.Cells read Shape.Text property
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
@@ -9,59 +9,54 @@ using System;
 using System.IO;
 using System.Text;
 
-// // Loads an Excel workbook, iterates through each worksheet and its shapes, extracts text from TextBox and other shapes (including those inside groups), appends the texts to a StringBuilder, and prints the concatenated result.
+// The program loads 'input.xlsx', loops through every Shape on the first worksheet, appends each non‑empty Shape.Text to a StringBuilder, and outputs the combined string, with error handling for missing files and shape‑specific exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
-            var workbook = new Workbook(inputPath);
-            var sb = new StringBuilder();
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            StringBuilder sb = new StringBuilder();
+
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Iterate through each shape on the worksheet
-                foreach (Shape shape in sheet.Shapes)
+                try
                 {
-                    // Append text from the shape (including group shapes if they contain text)
-                    AppendShapeText(shape, sb);
+                    // Append text from the shape if it exists
+                    if (!string.IsNullOrEmpty(shape.Text))
+                    {
+                        sb.Append(shape.Text);
+                    }
+                }
+                catch (Exception innerEx)
+                {
+                    // Log shape‑specific errors but continue processing other shapes
+                    Console.WriteLine($"Error processing a shape: {innerEx.Message}");
                 }
             }
 
-            // Concatenated result
+            // Output the concatenated text
             string concatenatedText = sb.ToString();
             Console.WriteLine(concatenatedText);
         }
         catch (Exception ex)
         {
+            // Report any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Extracts text from supported shape types and appends it to the StringBuilder
-    static void AppendShapeText(Shape shape, StringBuilder sb)
-    {
-        // TextBox shapes contain a Text property
-        if (shape is TextBox textbox)
-        {
-            sb.Append(textbox.Text);
-        }
-        // Other shapes (e.g., AutoShape) expose text via the generic Text property
-        else if (!string.IsNullOrEmpty(shape.Text))
-        {
-            sb.Append(shape.Text);
         }
     }
 }

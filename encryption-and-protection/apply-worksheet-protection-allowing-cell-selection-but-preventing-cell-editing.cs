@@ -1,39 +1,40 @@
-// Title: How to protect an Excel worksheet with Aspose.Cells for .NET so users can select cells but cannot edit them
-// AI Prompts: Generate C# using Aspose.Cells that locks a sheet for editing while keeping both locked and unlocked cells selectable, without requiring a password. | Outline the steps to configure worksheet protection options in Aspose.Cells so cell selection remains enabled but all editing actions are blocked, then save the workbook.
-// Common Searches: Aspose.Cells C# protect worksheet allow cell selection but prevent editing | How to enable selection of locked cells in an Excel file using Aspose.Cells .NET | Save Excel workbook with protection that blocks edits yet lets users select cells in C#
-// Tags: Aspose.Cells worksheet.Protect selection options | C# disable editing on Excel sheet Aspose.Cells | Excel protection without password using Aspose.Cells | Set ProtectionType.SelectLockedCells in Aspose.Cells | Aspose.Cells configure worksheet protection C#
+// Title: Protect an Excel worksheet with a password while still allowing cell selection using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells protect worksheet with password but keep cells selectable | How to enable cell selection on a password‑protected sheet using Aspose.Cells | Aspose.Cells set worksheet protection allow cell selection .NET | Protect Excel sheet with password in C# without disabling cell selection | Aspose.Cells worksheet protection options for selecting cells
+// Tags: Aspose.Cells worksheet protection with password | enable cell selection on protected sheet C# | prevent editing of cells using Aspose.Cells Protect | ProtectionType.All usage Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample creates a new Workbook, retrieves the first worksheet, applies full protection via worksheet.Protect(ProtectionType.All) which permits selection of both locked and unlocked cells while preventing any modifications, ensures the output directory exists, and saves the workbook as ProtectedWorksheet.xlsx, with exception handling for robustness.
+// The example creates a new Workbook, accesses the first Worksheet, applies full protection with a password via sheet.Protect(ProtectionType.All, "myPassword", null) which blocks editing while still permitting cell selection, ensures the output directory exists, saves the file as ProtectedWorksheet.xlsx, and includes basic exception handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Protect the worksheet without a password (protect all options)
-            worksheet.Protect(ProtectionType.All);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define output path
+            // Protect the entire sheet with a password.
+            // The third argument (oldPassword) is not required, so pass null.
+            sheet.Protect(ProtectionType.All, "myPassword", null);
+
+            // Determine output path and ensure the directory exists
             string outputPath = "ProtectedWorksheet.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
-            if (!Directory.Exists(outputDir))
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the protected workbook
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

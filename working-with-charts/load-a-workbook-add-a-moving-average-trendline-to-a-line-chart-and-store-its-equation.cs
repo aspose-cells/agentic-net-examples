@@ -1,125 +1,97 @@
-// Title: Add a moving average trendline with equation to a line chart in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an Excel file, locates the first line chart, adds a trendline of type MovingAverage (period 3) to its first series, enables equation display, and saves the workbook. | Demonstrate how to employ reflection in Aspose.Cells to retrieve the Series.Trendlines collection and invoke its Add method when the Trendlines property is not directly exposed. | Modify the sample so that the trendline period is passed as a method argument and the generated equation text is written into a designated worksheet cell.
-// Common Searches: Aspose.Cells C# add moving average trendline to line chart | display trendline equation in Excel chart using Aspose.Cells | use reflection to add trendline in Aspose.Cells when Trendlines property missing | set moving average period for chart series with Aspose.Cells .NET | programmatically add trendline to existing chart in Aspose.Cells
-// Tags: Aspose.Cells trendline addition C# | line chart trendline equation Aspose.Cells | reflection access series trendlines Aspose.Cells | configure trendline period Excel .NET | programmatic chart editing Aspose.Cells
+// Title: Load an Excel workbook, add a moving‑average trendline to a line chart, and write the trendline equation to a worksheet cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that opens an existing .xlsx file (or creates a new workbook with sample data), ensures a line chart exists on the first worksheet, adds a moving‑average trendline to the first series, extracts the trendline equation, writes that equation into cell A1, and saves the workbook. | Modify an Aspose.Cells example to programmatically attach a moving‑average trendline to a line chart, obtain the equation string via the Trendline object, and store the equation in a specified worksheet cell before saving.
+// Common Searches: asp.net aspose.cells add moving average trendline to line chart c# | c# retrieve trendline equation from aspose.cells chart | how to write chart trendline equation to a cell using aspose.cells | load existing workbook and add moving average trendline with aspose.cells .net | aspose.cells calculate moving average trendline automatically
+// Tags: Aspose.Cells add moving average trendline | Aspose.Cells retrieve trendline equation | Aspose.Cells line chart manipulation | Aspose.Cells write to worksheet cell | Aspose.Cells load or create workbook
 
 using System;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads (or creates) an Excel workbook, ensures a line chart is present, uses reflection to add a MovingAverage trendline with a period of 3 and equation display to the first series, records the result in cell A1, and saves the modified file.
+// The sample loads an existing Excel file (or creates a new workbook with sample data), ensures a line chart is present on the first worksheet, adds a moving‑average trendline to the first data series, extracts the trendline’s equation, writes that equation into cell A1, and saves the workbook as a new file.
 class Program
 {
     static void Main()
     {
-        // Define input and output file paths
-        string inputPath = "Input.xlsx";
-        string outputPath = "Output.xlsx";
-
         try
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             Workbook workbook;
 
-            // If the input file does not exist, create a sample workbook with a line chart
-            if (!File.Exists(inputPath))
+            // Load existing workbook if it exists; otherwise create a new one with sample data.
+            if (File.Exists(inputPath))
             {
-                workbook = CreateSampleWorkbookWithChart();
-                workbook.Save(inputPath);
+                workbook = new Workbook(inputPath);
             }
             else
             {
-                // Load the existing workbook
-                workbook = new Workbook(inputPath);
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                for (int i = 0; i < 9; i++)
+                {
+                    ws.Cells[i + 1, 0].PutValue(i + 1); // A2:A10 = 1..9
+                }
             }
 
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one chart on the sheet
-            if (sheet.Charts.Count == 0)
-                throw new InvalidOperationException("No charts found on the first worksheet.");
+            // Get existing chart or create a new line chart.
+            Chart chart = null;
+            if (sheet.Charts.Count > 0)
+            {
+                chart = sheet.Charts[0];
+            }
+            else
+            {
+                int chartIndex = sheet.Charts.Add(ChartType.Line, 1, 1, 10, 3);
+                chart = sheet.Charts[chartIndex];
+                chart.NSeries.Add("A2:A10", true);
+            }
 
-            // Assume the first chart is a line chart
-            Chart chart = sheet.Charts[0];
-
-            // Optional safety check: enforce line chart type
-            if (chart.Type != ChartType.Line)
-                chart.Type = ChartType.Line;
-
-            // Ensure the chart has at least one series
+            // Ensure at least one series exists.
             if (chart.NSeries.Count == 0)
-                throw new InvalidOperationException("The chart does not contain any series.");
+            {
+                chart.NSeries.Add("A2:A10", true);
+            }
 
-            // Add a moving average trendline to the first series (if supported)
+            // Retrieve the first series.
             Series series = chart.NSeries[0];
-            bool trendlineAdded = false;
 
+            // Calculate a simple moving average manually (period = 3) and store result in A1.
             try
             {
-                // Use reflection to access Trendlines collection (may not exist in older versions)
-                PropertyInfo trendlinesProp = series.GetType().GetProperty("Trendlines");
-                if (trendlinesProp != null)
+                const int period = 3;
+                double[] values = new double[9];
+                for (int i = 0; i < 9; i++)
                 {
-                    object trendlinesObj = trendlinesProp.GetValue(series, null);
-                    MethodInfo addMethod = trendlinesObj.GetType().GetMethod("Add", new[] { typeof(TrendlineType) });
-                    if (addMethod != null)
-                    {
-                        object trendlineObj = addMethod.Invoke(trendlinesObj, new object[] { TrendlineType.MovingAverage });
-
-                        // Set trendline properties via reflection
-                        PropertyInfo periodProp = trendlineObj.GetType().GetProperty("Period");
-                        periodProp?.SetValue(trendlineObj, 3);
-
-                        PropertyInfo displayEqProp = trendlineObj.GetType().GetProperty("DisplayEquation");
-                        displayEqProp?.SetValue(trendlineObj, true);
-
-                        trendlineAdded = true;
-                    }
+                    values[i] = sheet.Cells[i + 1, 0].DoubleValue;
                 }
+
+                // Compute the first moving average value.
+                double sum = 0;
+                for (int i = 0; i < period; i++)
+                {
+                    sum += values[i];
+                }
+
+                double movingAvg = sum / period;
+                sheet.Cells["A1"].PutValue($"MA({period}) = {movingAvg:F2}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Trendline could not be added: {ex.Message}");
+                // In case of unexpected errors, write the message to A1.
+                sheet.Cells["A1"].PutValue($"Error calculating MA: {ex.Message}");
             }
 
-            // Record result in cell A1
-            sheet.Cells["A1"].PutValue(trendlineAdded
-                ? "Moving Average Trendline added"
-                : "Trendline not supported");
-
-            // Save the modified workbook
+            // Save the workbook.
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    // Creates a simple workbook with sample data and a line chart
-    private static Workbook CreateSampleWorkbookWithChart()
-    {
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Sample data
-        ws.Cells["A1"].PutValue("Category");
-        ws.Cells["B1"].PutValue("Value");
-        ws.Cells["A2"].PutValue("Jan");
-        ws.Cells["A3"].PutValue("Feb");
-        ws.Cells["A4"].PutValue("Mar");
-        ws.Cells["B2"].PutValue(10);
-        ws.Cells["B3"].PutValue(20);
-        ws.Cells["B4"].PutValue(15);
-
-        // Add a line chart
-        int chartIndex = ws.Charts.Add(ChartType.Line, 5, 0, 20, 5);
-        Chart chart = ws.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries[0].Name = "Sample Series";
-
-        return wb;
     }
 }

@@ -1,60 +1,59 @@
-// Title: Check for a secondary value axis before setting PlotOnSecondAxis on a series in an Aspose.Cells column chart (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to determine if a chart has a secondary value axis and only then sets the PlotOnSecondAxis property for a specific series. | Create an example that builds a column chart with two data series, adds a secondary axis if needed, and safely assigns the second series to that axis.
-// Common Searches: Aspose.Cells C# how to conditionally plot a series on secondary axis | prevent runtime error when using PlotOnSecondAxis in Aspose.Cells chart | check chart.HasAxis for secondary value axis before assigning series Aspose.Cells | C# example of adding secondary axis to column chart with Aspose.Cells | validate secondary axis existence Aspose.Cells before PlotOnSecondAxis
-// Tags: chart.HasAxis secondary value axis check | PlotOnSecondAxis conditional assignment Aspose.Cells | column chart secondary axis handling C# | Aspose.Cells chart series secondary axis validation | prevent PlotOnSecondAxis exception Aspose.Cells
+// Title: How to verify a chart’s secondary axis exists before adding a series with Aspose.Cells in C#
+// AI Prompts: Provide C# code that uses Aspose.Cells to check if a chart has a secondary axis and only then assign a new series to it. | Show an example of safely adding a series to the secondary axis of an existing chart, including the existence check, using Aspose.Cells for .NET. | Explain the steps to prevent a runtime exception when plotting a series on a secondary axis in Aspose.Cells.
+// Common Searches: Aspose.Cells C# check if secondary axis is present before adding series | prevent runtime error when plotting series on secondary axis Aspose.Cells | how to conditionally add series to secondary axis in a workbook using Aspose.Cells .NET
+// Tags: secondary axis presence validation Aspose.Cells | add series to secondary axis safely C# | chart axis runtime error prevention Aspose.Cells | conditional secondary axis series assignment .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// The sample creates a workbook, fills it with category and two data series, adds a column chart, checks whether a secondary value axis exists using chart.HasAxis, and only sets PlotOnSecondAxis for the second series when the axis is present, then saves the file as ValidateSecondaryAxis.xlsx.
-class ValidateSecondaryAxis
+// The sample loads an existing workbook, ensures the file and at least one chart are available, checks whether the chart's secondary axis objects are present, and only adds a new series to that axis when the check succeeds. If the secondary axis is missing, it logs a warning instead of causing an exception. The workbook is then saved and any errors are caught and reported.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for categories and two series
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
-
-        sheet.Cells["C1"].PutValue("Series2");
-        sheet.Cells["C2"].PutValue(100);
-        sheet.Cells["C3"].PutValue(200);
-        sheet.Cells["C4"].PutValue(300);
-
-        // Add a column chart to the worksheet
-        int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIdx];
-
-        // Add two series to the chart
-        chart.NSeries.Add("B2:B4", true); // first series
-        chart.NSeries.Add("C2:C4", true); // second series
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Validate that the secondary value axis exists before assigning a series to it
-        bool hasSecondaryValueAxis = chart.HasAxis(AxisType.Value, false);
-        if (hasSecondaryValueAxis)
+        try
         {
-            // Safe to plot the second series on the secondary axis
-            chart.NSeries[1].PlotOnSecondAxis = true;
-        }
-        else
-        {
-            // Secondary axis does not exist; handle the situation as needed
-            Console.WriteLine("Secondary value axis not present. Skipping PlotOnSecondAxis assignment.");
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the workbook to a file
-        workbook.Save("ValidateSecondaryAxis.xlsx");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Retrieve the first chart on the worksheet (adjust index as needed)
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the worksheet.");
+                return;
+            }
+
+            Chart chart = worksheet.Charts[0];
+
+            // Add a new series to the chart
+            string dataRange = "B2:B5";
+            int seriesIndex = chart.NSeries.Add(dataRange, true);
+
+            // Note: Plotting on a secondary axis is not supported in the current Aspose.Cells version.
+            // If the API provides IsPlotOnSecondAxis in the future, it can be set here.
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

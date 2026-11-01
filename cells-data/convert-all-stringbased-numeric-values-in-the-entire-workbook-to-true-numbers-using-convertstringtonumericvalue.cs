@@ -1,36 +1,65 @@
-// Title: Convert string‑based numeric cells to true numbers in every worksheet of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an XLSX file, iterates through all worksheets, calls ConvertStringToNumericValue on each sheet's Cells collection, and saves the workbook to a new file. | Describe the steps to batch‑convert numeric text values to actual numbers across all sheets of an Excel workbook with Aspose.Cells in C#.
-// Common Searches: Aspose.Cells .NET convert numeric text to numbers in all worksheets | C# batch convert string numbers to numeric values in Excel workbook | How to use ConvertStringToNumericValue on every sheet with Aspose.Cells | Change text‑formatted numbers to real numbers in an XLSX file using Aspose.Cells C# | ConvertStringToNumericValue method example for whole workbook
-// Tags: ConvertStringToNumericValue across worksheets | numeric text to number conversion Aspose.Cells | batch numeric conversion Excel .NET | Aspose.Cells workbook numeric string handling | save workbook after numeric conversion Aspose
+// Title: Convert string‑based numeric values to true numbers in every cell of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that walks through all worksheets and changes cells containing numeric strings into actual numeric types. | Enhance the conversion logic to handle numeric strings with commas or other thousand separators before saving the workbook. | Add a reporting feature that counts and prints the number of cells converted from string to numeric during processing.
+// Common Searches: asp.net convert numeric strings to numbers in all Excel cells using Aspose.Cells | c# iterate over entire workbook replace string numbers with doubles | bulk conversion of string cells to numeric values Aspose.Cells | change cell type from string to numeric Aspose.Cells .NET example | process Excel workbook to transform text numbers into real numbers with Aspose.Cells
+// Tags: convert string cells to numeric Aspose.Cells | bulk numeric conversion Excel workbook C# | parse numeric strings with thousand separators Aspose.Cells | replace text numbers with double values in Excel | save workbook after type conversion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsStringToNumberConversion
+// The program loads an Excel workbook, iterates through each worksheet and every cell, checks for cells of type string, attempts to parse the string as a double, and if successful replaces the cell content with the numeric value before saving the modified workbook to the specified output path.
+class Program
 {
-    // Loads an Excel workbook, loops through each worksheet, applies ConvertStringToNumericValue to turn numeric strings into true numeric cells, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        string inputPath = "{InputPath}";
+        string outputPath = "{OutputPath}";
+
+        // Ensure the input file exists before loading
+        if (!File.Exists(inputPath))
         {
-            // Path to the source workbook (replace with actual file path)
-            string inputPath = "input.xlsx";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Path to the destination workbook after conversion
-            string outputPath = "output_converted.xlsx";
+        try
+        {
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Convert all string values that can be interpreted as numbers to true numeric values
-                sheet.Cells.ConvertStringToNumericValue();
+                // Iterate through all cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
+                {
+                    // Process only string cells
+                    if (cell.Type == CellValueType.IsString)
+                    {
+                        // Try to parse the string as a double
+                        if (double.TryParse(cell.StringValue, out double numericValue))
+                        {
+                            // Replace the string with a numeric value
+                            cell.PutValue(numericValue);
+                        }
+                    }
+                }
             }
 
-            // Save the modified workbook to the output file
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

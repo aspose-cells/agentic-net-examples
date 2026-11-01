@@ -1,26 +1,38 @@
-// Title: Set a workbook’s default style to an integer‑only number format and export it as HTML with Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to assign the custom number format "0" to the workbook’s DefaultStyle and then save the workbook as HTML. | Configure HtmlSaveOptions after applying a whole‑number display format to all cells to generate an HTML file without decimal or scientific notation.
-// Common Searches: Aspose.Cells C# export Excel to HTML with integer only number format | How to set default number format to 0 for HTML conversion using Aspose.Cells .NET | Prevent decimals and scientific notation when saving workbook as HTML with Aspose.Cells | Apply custom number format to entire workbook before HTML export in Aspose.Cells | C# Aspose.Cells default style number format for HTML output
-// Tags: default style custom number format Aspose.Cells | HTML export integer number format C# | Aspose.Cells prevent scientific notation HTML | set workbook default style Aspose.Cells .NET | custom number format 0 Aspose.Cells
+// Title: Force full integer display when exporting a workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a style with Custom = "0" to show integers without scientific notation, applies it to a cell range, and saves the workbook as HTML using Aspose.Cells. | Write a method that sets the NumberFormat of selected cells to an integer‑only format and then exports the workbook to HTML in Aspose.Cells .NET.
+// Common Searches: Aspose.Cells C# export to HTML keep integer formatting | prevent scientific notation in HTML output using Aspose.Cells | set custom number format 0 for cells before saving as HTML Aspose.Cells | apply integer number format to a range in Aspose.Cells .NET | how to force full integer values in Aspose.Cells HTML export
+// Tags: integer number format Aspose.Cells | HTML export number format .NET | apply style to cell range Aspose.Cells | custom number format 0 Aspose.Cells | prevent scientific notation HTML Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// The example loads an Excel workbook, changes its DefaultStyle to use the custom number format "0" (displaying whole integers only), and then saves the workbook as an HTML file with HtmlSaveOptions, ensuring numbers appear without decimals or scientific notation.
+// Creates a workbook, writes integer values, defines a style with Custom = "0" to force integer‑only display, applies the style to cells A1:A3, and saves the workbook as an HTML file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Configure the default style to use a custom number format that shows full integers
-        Style defaultStyle = workbook.DefaultStyle;
-        defaultStyle.Custom = "0"; // Displays numbers without decimals or scientific notation
-        workbook.DefaultStyle = defaultStyle;
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as HTML with the applied number format
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        workbook.Save("output.html", htmlOptions);
+        // Populate some integer values
+        sheet.Cells["A1"].PutValue(123456);
+        sheet.Cells["A2"].PutValue(987654321);
+        sheet.Cells["A3"].PutValue(-42);
+
+        // Define a style that forces full integer display (no scientific notation)
+        Style intStyle = workbook.CreateStyle();
+        // Custom number format "0" displays the number as an integer without decimals
+        intStyle.Custom = "0";
+
+        // Apply the style to the range containing the integers
+        StyleFlag flag = new StyleFlag();
+        flag.NumberFormat = true; // Apply only the number format part of the style
+        sheet.Cells.CreateRange("A1:A3").ApplyStyle(intStyle, flag);
+
+        // Export the workbook to HTML
+        workbook.Save("output.html", SaveFormat.Html);
     }
 }

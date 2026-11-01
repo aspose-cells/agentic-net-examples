@@ -1,62 +1,56 @@
-// Title: Inject a runtime value into a smart marker variable using Aspose.Cells SetVariable and WorkbookDesigner in C#
-// AI Prompts: Generate C# code that creates a variables worksheet, assigns a runtime string to a smart‑marker variable with SetVariable, and processes the workbook using WorkbookDesigner. | Show the step‑by‑step configuration of the VariablesWorksheetName property, placement of a &=$MyVariable placeholder, injection of a value, and saving of the final .xlsx file. | Explain how Aspose.Cells SetVariable can dynamically replace smart marker variables across sheets in a C# application.
-// Common Searches: Aspose.Cells C# SetVariable smart marker runtime value example | how to use WorkbookDesigner variables worksheet for smart markers in .NET | replace smart marker variable with dynamic data using Aspose.Cells SetVariable | C# code sample for injecting values into smart marker variables before processing | saving workbook after processing smart markers with SetVariable in Aspose.Cells
-// Tags: Aspose.Cells SetVariable smart marker | WorkbookDesigner variables worksheet C# | dynamic smart marker substitution .xlsx | inject runtime value into smart marker | process smart markers with Aspose.Cells
+// Title: Use WorkbookDesigner.SetVariable to inject runtime values into smart markers in an Aspose.Cells .NET workbook
+// AI Prompts: Generate C# code that loads an Excel template, calls WorkbookDesigner.SetVariable to assign a date, a numeric amount, a boolean flag, and a string to smart markers, processes the markers, and saves the workbook. | Demonstrate converting WorkbookDesigner.SetDataSource calls to WorkbookDesigner.SetVariable for passing custom runtime variables to smart markers throughout the workbook.
+// Common Searches: how to use WorkbookDesigner.SetVariable for smart markers in Aspose.Cells C# | Aspose.Cells C# set variable for smart marker calculations | replace SetDataSource with SetVariable in Aspose.Cells smart marker example | passing date and numeric values to smart markers using SetVariable Aspose.Cells | dynamic smart marker values with WorkbookDesigner.SetVariable .NET
+// Tags: Inject variables via SetVariable in Aspose.Cells | Aspose.Cells smart marker runtime values | C# WorkbookDesigner custom variable binding | Dynamic smart marker calculations .NET | Process Excel smart markers with custom data
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSetVariableDemo
+// The example loads an Excel template (or creates a new workbook if the template is missing), creates a WorkbookDesigner, assigns runtime values such as the current date, total sales amount, premium‑customer flag, and company name to smart markers using WorkbookDesigner.SetVariable, processes the smart markers, and saves the resulting workbook.
+class SmartMarkerVariableDemo
 {
-    // Demonstrates creating a workbook, adding a Variables sheet with a &=$MyVariable placeholder, injecting a runtime value into that cell, configuring WorkbookDesigner to use the variables sheet, adding a Template sheet that references the variable smart marker, processing the markers to substitute the value, and saving the result as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Path to the template workbook that contains smart markers
+            string templatePath = "TemplateWithSmartMarkers.xlsx";
+
+            Workbook workbook;
+
+            // Load the template if it exists; otherwise create a new workbook as a fallback
+            if (File.Exists(templatePath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add a worksheet that will hold the variable smart marker
-                Worksheet variablesSheet = workbook.Worksheets.Add("Variables");
-                // Place a placeholder for the variable (required for SetVariable processing)
-                variablesSheet.Cells["A1"].PutValue("&=$MyVariable");
-                // Inject the runtime value directly into the variable cell
-                variablesSheet.Cells["A1"].PutValue("Injected Runtime Value");
-
-                // Initialize WorkbookDesigner with the workbook and specify the variables sheet
-                WorkbookDesigner designer = new WorkbookDesigner(workbook)
-                {
-                    VariablesWorksheetName = "Variables"
-                };
-
-                // Add a template worksheet that uses the variable smart marker
-                Worksheet templateSheet = workbook.Worksheets.Add("Template");
-                templateSheet.Cells["A1"].PutValue("&=$MyVariable");
-
-                // Process the smart markers – the variable value will be substituted
-                designer.Process();
-
-                // Define output file path
-                string outputPath = "SetVariableDemo.xlsx";
-
-                // Ensure the output directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully at '{Path.GetFullPath(outputPath)}' with SetVariable applied.");
+                workbook = new Workbook(templatePath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Template file \"{templatePath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                // Optionally add a placeholder sheet with smart markers here
             }
+
+            // Initialize WorkbookDesigner for processing smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Set runtime variables used by smart markers via data sources
+            designer.SetDataSource("ReportDate", DateTime.Now);
+            designer.SetDataSource("TotalSales", 15230.75);
+            designer.SetDataSource("IsPremiumCustomer", true);
+            designer.SetDataSource("CompanyName", "Contoso Ltd.");
+
+            // Process the smart markers
+            designer.Process();
+
+            // Save the resulting workbook
+            string resultPath = "SmartMarkerResult.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to \"{resultPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

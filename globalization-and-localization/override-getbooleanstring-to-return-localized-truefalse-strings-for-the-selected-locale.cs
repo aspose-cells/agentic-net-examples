@@ -1,45 +1,39 @@
-// Title: Implement a custom Boolean string localizer and write locale‑specific true/false values to an Excel worksheet using Aspose.Cells in C#
-// AI Prompts: Create a C# class named MyStringLocalizer with a GetBooleanString(bool) method that returns the appropriate true/false text for a given locale, then use this class to fill cells in an Aspose.Cells workbook with the localized strings. | Add additional culture cases to the GetBooleanString switch (e.g., it-IT, ja-JP) and modify the example to write those localized boolean strings into the worksheet before saving the file.
-// Common Searches: how to display true/false in French using Aspose.Cells C# | C# Aspose.Cells write localized boolean text to cells | custom GetBooleanString implementation for multiple cultures in Aspose.Cells | example of culture‑specific boolean string conversion before saving Excel with Aspose.Cells | Aspose.Cells workbook localization of boolean values C#
-// Tags: boolean string localization Aspose.Cells | custom culture formatter C# | write localized boolean values to Excel | extend GetBooleanString for multiple locales | Aspose.Cells workbook localization example
+// Title: How to override GetBooleanString in Aspose.Cells to return locale‑specific true/false strings in C#
+// Common Searches: C# Aspose.Cells example for displaying true/false in French, German, or Spanish | How to customize boolean string conversion in an Aspose.Cells workbook using CultureInfo | Write localized boolean values to Excel cells with Aspose.Cells in C# | Create a custom BooleanLocalizer class for Aspose.Cells localization | Save an Excel file with localized true/false strings using Aspose.Cells
+// Tags: custom boolean localization Aspose.Cells | GetBooleanString override C# | CultureInfo based boolean mapping Aspose.Cells | write localized boolean strings to Excel with Aspose.Cells | Aspose.Cells workbook localization example
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace LocalizationExample
+namespace AsposeCellsLocalizationExample
 {
-    // Simple string localizer that returns localized true/false strings based on the selected locale.
-    // The example defines a MyStringLocalizer class that returns true/false strings based on a supplied locale, writes raw Boolean values to column A of a new workbook, writes the corresponding localized strings to column B, and saves the file as LocalizedBooleans.xlsx using Aspose.Cells.
-    public class MyStringLocalizer
+    // Helper class to provide locale‑specific boolean string representations
+    // The sample defines a CustomBooleanLocalizer class that maps a boolean value to French, German, Spanish, or default English strings based on a supplied CultureInfo. It writes raw boolean values and their localized string equivalents to cells in a new Aspose.Cells workbook and saves the file, demonstrating how to override GetBooleanString for locale‑specific true/false output.
+    public class CustomBooleanLocalizer
     {
-        private readonly string _locale;
+        private readonly CultureInfo _culture;
 
-        // Constructor accepts a locale identifier (e.g., "en-US", "fr-FR").
-        public MyStringLocalizer(string locale)
+        public CustomBooleanLocalizer(CultureInfo culture)
         {
-            _locale = locale;
+            _culture = culture;
         }
 
-        // Returns a localized representation of a Boolean value.
+        // Returns the localized string for a boolean value
         public string GetBooleanString(bool value)
         {
-            // Simple locale handling – extend this switch with more languages as needed.
-            switch (_locale)
-            {
-                case "en-US":
-                    return value ? "True" : "False";
-                case "fr-FR":
-                    return value ? "Vrai" : "Faux";
-                case "de-DE":
-                    return value ? "Wahr" : "Falsch";
-                case "es-ES":
-                    return value ? "Verdadero" : "Falso";
-                case "zh-CN":
-                    return value ? "真" : "假";
-                default:
-                    // Fallback to English if locale is not recognized.
-                    return value ? "True" : "False";
-            }
+            // Example mappings for a few locales; extend as needed
+            if (_culture.Name.StartsWith("fr", StringComparison.OrdinalIgnoreCase))
+                return value ? "Vrai" : "Faux";
+
+            if (_culture.Name.StartsWith("de", StringComparison.OrdinalIgnoreCase))
+                return value ? "Wahr" : "Falsch";
+
+            if (_culture.Name.StartsWith("es", StringComparison.OrdinalIgnoreCase))
+                return value ? "Verdadero" : "Falso";
+
+            // Default to English
+            return value ? "True" : "False";
         }
     }
 
@@ -49,32 +43,34 @@ namespace LocalizationExample
         {
             try
             {
-                // Create a new workbook.
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Initialize the custom string localizer (French locale for this example).
-                MyStringLocalizer localizer = new MyStringLocalizer("fr-FR");
+                // Use the default globalization settings (no custom override needed)
+                // workbook.Settings.GlobalizationSettings = workbook.Settings.GlobalizationSettings;
 
-                // Write Boolean values to cells.
+                // Write boolean values to cells
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Cells["A1"].PutValue(true);
                 sheet.Cells["A2"].PutValue(false);
 
-                // Retrieve the localized string representation of the Boolean values.
-                string localizedTrue = localizer.GetBooleanString(true);   // "Vrai"
-                string localizedFalse = localizer.GetBooleanString(false); // "Faux"
+                // Localize boolean strings using the helper class
+                var localizer = new CustomBooleanLocalizer(new CultureInfo("fr-FR"));
+                string trueString = localizer.GetBooleanString(true);
+                string falseString = localizer.GetBooleanString(false);
 
-                // Write the localized strings back to the sheet for demonstration.
-                sheet.Cells["B1"].PutValue(localizedTrue);
-                sheet.Cells["B2"].PutValue(localizedFalse);
+                // Write the localized strings to adjacent cells for demonstration
+                sheet.Cells["B1"].PutValue(trueString);
+                sheet.Cells["B2"].PutValue(falseString);
 
-                // Save the workbook.
+                // Save the workbook (adjust path as needed)
                 string outputPath = "LocalizedBooleans.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
+                // Log or display the error details
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

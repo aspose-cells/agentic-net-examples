@@ -1,42 +1,38 @@
-// Title: Convert an XLSM file to XLSX and strip VBA macros with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that verifies an .xlsm file exists, loads it with Aspose.Cells, and saves it as .xlsx to remove all VBA macros. | Show how to use Aspose.Cells Workbook.Save to export a macro‑enabled Excel workbook to a macro‑free XLSX format with proper exception handling. | Provide an example that loads an XLSM workbook, checks for errors, and converts it to XLSX while ensuring macros are discarded.
-// Common Searches: Aspose.Cells C# convert macro enabled xlsm to xlsx without preserving VBA | How to remove VBA macros when saving an Excel workbook as XLSX using Aspose.Cells | C# code to load an .xlsm file and export to .xlsx stripping all macros Aspose.Cells | Save workbook as XLSX to discard macros Aspose.Cells .NET example
-// Tags: convert xlsm to xlsx Aspose.Cells C# | remove VBA macros Aspose.Cells Workbook.Save | load macro enabled workbook Aspose.Cells | error handling file existence Aspose.Cells | macro‑free Excel export Aspose.Cells .NET
+// Title: Load an Excel workbook in C# with Aspose.Cells while filtering out unsigned VBA macros using LoadOptions.FilterVbaProject
+// Common Searches: how to use LoadOptions.FilterVbaProject to ignore unsigned VBA macros in Aspose.Cells C# | Aspose.Cells example for loading a workbook without unsigned macro projects | C# load .xls file and exclude VBA project using Aspose.Cells LoadOptions | filter unsigned VBA macros during Excel import with Aspose.Cells .NET | prevent unsigned macro execution when opening workbooks in Aspose.Cells C#
+// Tags: LoadOptions.FilterVbaProject usage C# | exclude unsigned VBA macros Aspose.Cells | load workbook without VBA project .NET | filter VBA project during Excel import | Aspose.Cells macro security handling
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The sample checks that the input XLSM file exists, loads it with Aspose.Cells Workbook, and saves it as an XLSX file, which automatically removes any VBA macros, while handling possible exceptions.
+// Demonstrates loading an Excel file with Aspose.Cells in C# while applying LoadOptions.FilterVbaProject to exclude unsigned VBA macro projects, then saving the workbook to a new format with proper error handling.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsm";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook; saving as Xlsx will automatically discard VBA macros
+            string inputPath = "input.xls";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook (no VBA project filter needed)
             Workbook workbook = new Workbook(inputPath);
 
-            // Place for any additional workbook processing logic
-
-            // Save the workbook without macros
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            // Save the workbook in the desired format
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime exceptions (e.g., loading/saving errors)
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,88 +1,104 @@
-// Title: How to replace deprecated DATEVALUE calls with DATE literals in Excel formulas using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, scans all formula cells, and swaps DATEVALUE("yyyy-mm-dd") with DATE(year,month,day) literals. | Write a method that uses a case‑insensitive regular expression to find DATEVALUE patterns in workbook formulas and rewrites them as DATE function calls. | Create a console application that processes an Excel workbook, converts each DATEVALUE formula to a DATE literal, and saves the result to a new file.
-// Common Searches: Aspose.Cells replace DATEVALUE function with DATE literal in C# | C# regex to convert DATEVALUE("2023-01-01") to DATE(2023,1,1) in Excel formulas | How to update deprecated DATEVALUE formulas using Aspose.Cells workbook API | Programmatically change Excel date functions from DATEVALUE to DATE in .NET | Iterate through cells and modify formulas with Aspose.Cells C# example
-// Tags: replace DATEVALUE with DATE literal Aspose.Cells | regex formula conversion Aspose.Cells C# | update Excel date functions programmatically .NET | convert DATEVALUE to DATE function Aspose.Cells | formula editing workbook cells C#
+// Title: How to replace DATEVALUE formulas with literal dates in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# replace DATEVALUE("2023-01-01") formula with actual date value | Convert DATEVALUE function to a date literal in Excel using Aspose.Cells .NET | Remove DATEVALUE formulas from all sheets in a password‑protected workbook with Aspose.Cells | Update Excel formulas containing DATEVALUE to DateTime values via Aspose.Cells API | Regex replace DATEVALUE in workbook formulas using Aspose.Cells C# example
+// Tags: replace DATEVALUE formula Aspose.Cells | convert DATEVALUE to date literal .NET | regex based formula modification Aspose.Cells | load password protected workbook Aspose.Cells | update Excel formulas across worksheets C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Aspose.Cells;
 
-// The program loads an Excel workbook via Aspose.Cells, iterates through all used cells, detects DATEVALUE("yyyy-mm-dd") patterns in formulas using a case‑insensitive regex, parses the date string, replaces each occurrence with a DATE(year,month,day) literal, and saves the modified workbook to a new file.
-class Program
+namespace ReplaceDateValueApp
 {
-    static void Main()
+    // The C# program loads an Excel workbook (prompting for a password when required), scans every worksheet for formulas that use the DATEVALUE("…") pattern, parses the extracted date strings into DateTime objects, replaces the formulas with the corresponding literal date values, and saves the updated workbook to a new file.
+    class ReplaceDateValue
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = null;
 
-            // Regex to find DATEVALUE("yyyy-mm-dd") patterns (case‑insensitive)
-            Regex dateValueRegex = new Regex(@"DATEVALUE\(\s*""([^""]+)""\s*\)", RegexOptions.IgnoreCase);
-
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
+                // Attempt to load the workbook without a password
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException)
+            {
+                // If a password is required, ask the user and retry loading
+                Console.WriteLine("The workbook is password protected.");
+                Console.Write("Enter password: ");
+                string password = Console.ReadLine();
 
-                // Loop through all cells in the used range
-                for (int row = 0; row <= maxRow; row++)
+                var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+                try
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    workbook = new Workbook(inputPath, loadOptions);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load workbook with password: {ex.Message}");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Regex to match DATEVALUE("yyyy-mm-dd") patterns
+                Regex dateValueRegex = new Regex(@"DATEVALUE\(\s*""([^""]+)""\s*\)", RegexOptions.IgnoreCase);
+
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    var cells = sheet.Cells;
+                    int maxRow = cells.MaxDataRow;
+                    int maxCol = cells.MaxDataColumn;
+
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        Cell cell = cells[row, col];
-
-                        // Process only formula cells
-                        if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula))
+                        for (int col = 0; col <= maxCol; col++)
                         {
-                            string originalFormula = cell.Formula;
+                            Cell cell = cells[row, col];
 
-                            // Replace DATEVALUE("2023-01-01") with DATE(2023,1,1)
-                            string updatedFormula = dateValueRegex.Replace(originalFormula, match =>
+                            // Process only cells that contain a formula
+                            if (!string.IsNullOrEmpty(cell.Formula))
                             {
-                                string dateText = match.Groups[1].Value;
-
-                                // Try to parse the date string
-                                if (DateTime.TryParse(dateText, out DateTime dt))
+                                Match match = dateValueRegex.Match(cell.Formula);
+                                if (match.Success)
                                 {
-                                    // Build DATE(year, month, day) literal
-                                    return $"DATE({dt.Year},{dt.Month},{dt.Day})";
+                                    string dateString = match.Groups[1].Value;
+
+                                    // Convert the extracted string to a DateTime and replace the formula
+                                    if (DateTime.TryParse(dateString, out DateTime parsedDate))
+                                    {
+                                        cell.PutValue(parsedDate);
+                                    }
                                 }
-
-                                // If parsing fails, keep the original DATEVALUE call
-                                return match.Value;
-                            });
-
-                            // Apply the new formula if it changed
-                            if (!updatedFormula.Equals(originalFormula, StringComparison.Ordinal))
-                            {
-                                cell.Formula = updatedFormula;
                             }
                         }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
     }
 }

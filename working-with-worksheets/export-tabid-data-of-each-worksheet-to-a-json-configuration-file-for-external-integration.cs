@@ -1,49 +1,51 @@
-// Title: Export worksheet names and TabId values to a JSON file using Aspose.Cells for .NET
-// AI Prompts: Write a C# program that loads an Excel workbook with Aspose.Cells, extracts each worksheet's Name and TabId, and saves the collection as a formatted JSON file. | Create a .NET snippet that iterates through Workbook.Worksheets, builds a list of objects containing Name and TabId, and uses System.Text.Json to write the data to a configuration file.
-// Common Searches: how to get worksheet TabId with Aspose.Cells in C# | export Excel sheet names and TabId to JSON using .NET | serialize Aspose.Cells worksheet metadata to a JSON configuration file | C# code to write worksheet identifiers from a workbook to JSON
-// Tags: aspocells export worksheet tabid to json | c# serialize worksheet metadata with system.text.json | aspocells retrieve worksheet identifiers | json configuration file from excel workbook c# | aspocells worksheet tabid extraction
+// Title: Export each worksheet's name and TabId (index) to a JSON configuration file using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that loads an Excel workbook with Aspose.Cells, extracts each worksheet's Name and Index, and saves the data as an indented JSON file using System.Text.Json. | Generate code that iterates through Workbook.Worksheets, builds a list of objects containing worksheet Name and TabId, and writes the list to a JSON configuration file for external integration. | Modify the example to include additional worksheet properties (e.g., visibility, tab color) while exporting the metadata to JSON with Aspose.Cells and System.Text.Json.
+// Common Searches: how to get worksheet index with Aspose.Cells and export to json in C# | c# Aspose.Cells serialize worksheet names and tab ids to json file | export Excel sheet metadata to json configuration using Aspose.Cells .NET | write worksheet name and index to json for external integration in .NET
+// Tags: Aspose.Cells generate JSON configuration for worksheets | C# serialize worksheet index and name | Workbook.Worksheets JSON export | System.Text.Json Excel sheet config output | Extract worksheet TabId with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
 using System.Text.Json;
+using Aspose.Cells;
 
-// // Loads an Excel workbook via Aspose.Cells, collects each worksheet's Name and TabId into a list, serializes the list to indented JSON using System.Text.Json, and writes the result to a specified file.
-class Program
+namespace ExportWorksheetTabIds
 {
-    static void Main()
+    // Model for JSON serialization
+    // The sample loads an Excel workbook with Aspose.Cells, collects each worksheet's Name and its Index (used as TabId), and writes the collection to a formatted JSON configuration file using System.Text.Json.
+    public class WorksheetInfo
     {
-        // Path to the source Excel workbook
-        string excelPath = "input.xlsx";
+        public string Name { get; set; }
+        public int TabId { get; set; }   // Using worksheet index as TabId
+    }
 
-        // Path where the JSON configuration will be saved
-        string jsonPath = "worksheet_tabids.json";
-
-        // Load the workbook from the file system
-        Workbook workbook = new Workbook(excelPath);
-
-        // Collection to hold each worksheet's name and TabId
-        var worksheetsInfo = new List<Dictionary<string, object>>();
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Capture the worksheet name and its TabId
-            var info = new Dictionary<string, object>
+            // Load the Excel workbook (replace with your file path)
+            string excelPath = "input.xlsx";
+            Workbook workbook = new Workbook(excelPath);
+
+            // Collect TabId information for each worksheet
+            List<WorksheetInfo> sheetsInfo = new List<WorksheetInfo>();
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                { "Name", sheet.Name },
-                { "TabId", sheet.TabId }
-            };
+                sheetsInfo.Add(new WorksheetInfo
+                {
+                    Name = sheet.Name,
+                    TabId = sheet.Index   // Index serves as the TabId
+                });
+            }
 
-            worksheetsInfo.Add(info);
+            // Serialize the collection to JSON
+            string json = JsonSerializer.Serialize(sheetsInfo, new JsonSerializerOptions { WriteIndented = true });
+
+            // Save JSON to a configuration file
+            string jsonPath = "worksheets_config.json";
+            File.WriteAllText(jsonPath, json);
+
+            Console.WriteLine($"Worksheet TabId data exported to '{jsonPath}'.");
         }
-
-        // Serialize the collection to a formatted JSON string
-        var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-        string json = JsonSerializer.Serialize(worksheetsInfo, jsonOptions);
-
-        // Write the JSON string to the output file
-        File.WriteAllText(jsonPath, json);
     }
 }

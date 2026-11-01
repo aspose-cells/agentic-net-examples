@@ -1,97 +1,61 @@
-// Title: How to add adjustment guides to a RightArrowCallout AutoShape and draw a rectangular freeform shape with ShapePath using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a workbook, inserts a RightArrowCallout auto shape, defines four adjustment guides (adj1‑adj4), updates each guide’s value, and saves the workbook. | Show C# steps to construct a rectangular freeform shape using ShapePath methods (MoveTo, LineTo, Close) and add it to a worksheet with AddFreeform. | Provide a C# snippet that iterates over a ShapeGuideCollection to print each guide’s value before and after modification.
-// Common Searches: Aspose.Cells .NET example for setting guide values on a callout shape | How to draw a rectangular freeform shape with ShapePath in Aspose.Cells | Changing auto shape adjustment parameters programmatically using Aspose.Cells C# | Saving an Excel file after adding custom shapes with Aspose.Cells
-// Tags: add adjustment guides AutoShape Aspose.Cells | modify shape guide values C# | create rectangular freeform shape ShapePath Aspose.Cells | insert freeform shape worksheet Aspose.Cells | save workbook after shape modifications Aspose.Cells
+// Title: C# step‑by‑step guide to create, save, load, and modify an Excel workbook with Aspose.Cells (.NET)
+// AI Prompts: Generate C# code that uses Aspose.Cells to create a new workbook, write "Hello Aspose.Cells" to cell A1, save it as an XLSX file, then reopen the file, insert the current date into cell B2, and save the changes. | Write a reusable C# method that opens an Excel workbook with Aspose.Cells, updates a specified cell to a given value, and saves the workbook back to its original location.
+// Common Searches: c# aspocells create workbook and write to cell A1 then save as xlsx | how to load an existing Excel file with Aspose.Cells and update cell B2 in .NET | aspocells example for modifying a workbook after loading it in C# | saving a modified workbook to a new file using Aspose.Cells .NET | step by step tutorial aspocells create and edit workbook c#
+// Tags: Aspose.Cells create workbook C# | Aspose.Cells save workbook as XLSX | Aspose.Cells open workbook .NET | Aspose.Cells update cell value C# | Aspose.Cells modify workbook after load
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System;
 
-namespace AsposeCellsDeveloperGuide
+// Demonstrates a complete C# workflow with Aspose.Cells: creating a new workbook, writing text to A1, saving as XLSX, loading the saved file, inserting the current date into B2, and saving the modified workbook.
+public class AsposeCellsGuide
 {
-    // Demonstrates creating a workbook, inserting a RightArrowCallout auto shape, adding and updating its adjustment guides, building a rectangular freeform shape with ShapePath, adding it to the worksheet, and saving the file.
-    public class ShapeGuideAndPathDemo
+    // Step 1: Create a new workbook
+    public static Workbook CreateWorkbook()
     {
-        public static void Run()
-        {
-            try
-            {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();                     // create workbook
-                Worksheet worksheet = workbook.Worksheets[0];           // get first worksheet
+        // Create a new workbook with a default worksheet
+        Workbook workbook = new Workbook();
 
-                // 2. Add an AutoShape that supports adjustment guides (e.g., RightArrowCallout)
-                Shape shape = worksheet.Shapes.AddAutoShape(
-                    AutoShapeType.RightArrowCallout, // shape type
-                    2, 0, 2, 0,                      // upper-left row, column, offsetX, offsetY
-                    200, 150);                       // width, height
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // 3. Access the ShapeGuideCollection via the shape's geometry
-                ShapeGuideCollection guides = shape.Geometry.ShapeAdjustValues;
+        // Set a value in cell A1
+        sheet.Cells["A1"].PutValue("Hello Aspose.Cells");
 
-                // 4. Add adjustment guides using the Add(string name, double value) method
-                guides.Add("adj1", 25.5);
-                guides.Add("adj2", 30.0);
-                guides.Add("adj3", 25.5);
-                guides.Add("adj4", 35.0);
-
-                // 5. Read and display the values of the added guides
-                Console.WriteLine("Initial guide values:");
-                for (int i = 0; i < guides.Count; i++)
-                {
-                    Console.WriteLine($"Guide {i + 1}: {guides[i].Value}");
-                }
-
-                // 6. Modify guide values via the Value property
-                guides[0].Value = 20.0;
-                guides[1].Value = 20.0;
-                guides[2].Value = 20.0;
-                guides[3].Value = 20.0;
-
-                // 7. Verify the updated values
-                Console.WriteLine("Updated guide values:");
-                for (int i = 0; i < guides.Count; i++)
-                {
-                    Console.WriteLine($"Guide {i + 1}: {guides[i].Value}");
-                }
-
-                // 8. Create a custom ShapePath to define a freeform shape
-                ShapePath customPath = new ShapePath();                 // instantiate ShapePath
-                customPath.MoveTo(100, 100);                            // start point
-                customPath.LineTo(200, 100);                            // line to (200,100)
-                customPath.LineTo(200, 200);                            // line to (200,200)
-                customPath.LineTo(100, 200);                            // line to (100,200)
-                customPath.Close();                                     // close the path
-
-                // 9. Add the freeform shape to the worksheet using the custom path
-                worksheet.Shapes.AddFreeform(
-                    1,          // upper-left row
-                    0,          // upper-left column
-                    1,          // top offset
-                    0,          // left offset
-                    200,        // width
-                    200,        // height
-                    new ShapePath[] { customPath } // array of ShapePath objects
-                );
-
-                // 10. Save the workbook to a file
-                string outputPath = "ShapeGuideAndPathDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        return workbook;
     }
 
-    // Entry point for the application
-    public class Program
+    // Step 2: Load an existing workbook from file
+    public static Workbook LoadWorkbook(string filePath)
     {
-        public static void Main(string[] args)
-        {
-            ShapeGuideAndPathDemo.Run();
-        }
+        // Load workbook from the specified file path
+        Workbook workbook = new Workbook(filePath);
+        return workbook;
+    }
+
+    // Step 3: Save the workbook to a file
+    public static void SaveWorkbook(Workbook workbook, string outputPath)
+    {
+        // Save the workbook in the desired format (e.g., XLSX)
+        workbook.Save(outputPath, SaveFormat.Xlsx);
+    }
+
+    // Example usage demonstrating the sequence
+    public static void Main()
+    {
+        // Create a new workbook
+        Workbook newWb = CreateWorkbook();
+
+        // Save the newly created workbook
+        SaveWorkbook(newWb, "CreatedWorkbook.xlsx");
+
+        // Load the workbook we just saved
+        Workbook loadedWb = LoadWorkbook("CreatedWorkbook.xlsx");
+
+        // Modify the loaded workbook (optional)
+        Worksheet sheet = loadedWb.Worksheets[0];
+        sheet.Cells["B2"].PutValue(DateTime.Now);
+
+        // Save the modified workbook
+        SaveWorkbook(loadedWb, "ModifiedWorkbook.xlsx");
     }
 }

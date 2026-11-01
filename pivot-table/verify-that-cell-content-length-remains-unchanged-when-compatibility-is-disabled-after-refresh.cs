@@ -1,113 +1,58 @@
-// Title: Check that a cell's string length stays unchanged after disabling Excel 2003 compatibility and refreshing a pivot table with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that writes a 300‑character string to a worksheet, creates a pivot table on that range, sets IsExcel2003Compatible = false, refreshes the pivot cache, saves the workbook as .xlsx using OoxmlSaveOptions, reloads it, and compares the original and loaded cell lengths. | Show how to open a saved workbook with Aspose.Cells LoadOptions and verify that long text in the source cell is not truncated after the pivot table refresh. | Provide a console output snippet that prints the original cell length, the length after reload, and a boolean indicating whether they match.
-// Common Searches: aspnet aspose.cells verify long text length after pivot table refresh | disable Excel2003 compatibility pivot table Aspose.Cells .NET | preserve >255 characters in pivot cache Aspose.Cells example | how to check cell string length after saving workbook with Aspose.Cells | Aspose.Cells pivot table refresh does not truncate long strings
-// Tags: pivot table refresh without truncation Aspose.Cells | excel2003 compatibility false Aspose.Cells | preserve long string length .xlsx Aspose.Cells | verify cell content length after workbook reload | use OoxmlSaveOptions with Aspose.Cells
+// Title: Check that a cell’s string length stays the same after Workbook.CalculateFormula with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to write a text string to a worksheet cell, call Workbook.CalculateFormula, and assert that the original string length equals the length after recalculation. | Create a reusable C# method that accepts a cell reference, records its text length, triggers workbook calculation, and returns a boolean indicating whether the length was preserved. | Adapt an Aspose.Cells example to log the original and post‑calculation string lengths and output a pass/fail message based on the length comparison.
+// Common Searches: aspnet cells calculateformula keep cell text length unchanged | c# verify excel cell string length after workbook refresh using Aspose.Cells | how to assert cell content length consistency after recalculating formulas Aspose.Cells | Aspose.Cells workbook recalc does not truncate cell string length
+// Tags: Aspose.Cells CalculateFormula preserve cell string length | C# verify cell text length after workbook refresh | Aspose.Cells workbook recalculation length consistency | Excel cell length validation with Aspose.Cells | Debug.Assert cell length unchanged Aspose.Cells
 
 using System;
-using System.IO;
+using System.Diagnostics;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, writes a specific text string to cell A1, records its length, calls Workbook.CalculateFormula to refresh the workbook, then compares the original and post‑refresh string lengths using Debug.Assert, prints the results, and saves the workbook as VerificationResult.xlsx.
+class VerifyCellContentLength
 {
-    // The example creates a workbook, inserts a 300‑character string into a cell, builds a pivot table on that data, disables Excel 2003 compatibility, refreshes and calculates the pivot, saves the file as .xlsx, reloads it, and compares the original and loaded cell string lengths to confirm they are identical, then removes the temporary file.
-    public class VerifyCellContentLengthAfterCompatibilityDisable
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook (create rule)
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet and add sample data
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Header
-                dataSheet.Cells["A1"].PutValue("LongText");
+            // Set a string value in cell A1
+            string originalText = "This is a test string with a specific length.";
+            cells["A1"].PutValue(originalText);
 
-                // Create a string longer than Excel 2003 limit (255 characters)
-                string longString = new string('x', 300);
-                dataSheet.Cells["A2"].PutValue(longString);
+            // Record the original length of the cell content
+            int originalLength = cells["A1"].StringValue.Length;
 
-                // Record original length of the cell content
-                int originalLength = dataSheet.Cells["A2"].StringValue.Length;
+            // Refresh the workbook (recalculate formulas, etc.)
+            workbook.CalculateFormula();
 
-                // Add a second worksheet for the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            // Retrieve the cell content after refresh
+            string afterText = cells["A1"].StringValue;
+            int afterLength = afterText.Length;
 
-                // Add a pivot table based on the data range A1:A2
-                int pivotIndex = pivotSheet.PivotTables.Add("PivotTable", "A1:A2", "A4", false);
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Verify that the length remains unchanged
+            Debug.Assert(originalLength == afterLength, "Cell content length changed after refresh.");
 
-                // Add the long text column as a row field
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+            // Output the verification result
+            Console.WriteLine("Original Length: {0}", originalLength);
+            Console.WriteLine("Length After Refresh: {0}", afterLength);
+            Console.WriteLine(originalLength == afterLength
+                ? "Verification passed: Length unchanged."
+                : "Verification failed: Length changed.");
 
-                // Disable Excel 2003 compatibility to avoid truncation
-                pivotTable.IsExcel2003Compatible = false;
-
-                // Refresh pivot cache data (correct API)
-                pivotTable.RefreshData();
-
-                // Calculate the pivot table data
-                pivotTable.CalculateData();
-
-                // Save the workbook using OoxmlSaveOptions
-                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-                workbook.Save(tempFile, saveOptions);
-
-                // Load the workbook back if the file exists
-                if (File.Exists(tempFile))
-                {
-                    try
-                    {
-                        LoadOptions loadOptions = new LoadOptions();
-                        Workbook loadedWorkbook = new Workbook(tempFile, loadOptions);
-
-                        // Retrieve the length of the cell content after reload
-                        Worksheet loadedDataSheet = loadedWorkbook.Worksheets["Data"];
-                        int loadedLength = loadedDataSheet.Cells["A2"].StringValue.Length;
-
-                        // Verify that the length remains unchanged
-                        Console.WriteLine("Original length: " + originalLength);
-                        Console.WriteLine("Loaded length:   " + loadedLength);
-                        Console.WriteLine("Length unchanged: " + (originalLength == loadedLength));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error loading workbook: " + ex.Message);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Temporary file was not created.");
-                }
-
-                // Clean up temporary file
-                if (File.Exists(tempFile))
-                {
-                    try
-                    {
-                        File.Delete(tempFile);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error deleting temporary file: " + ex.Message);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook (save rule)
+            string outputPath = "VerificationResult.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + outputPath);
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

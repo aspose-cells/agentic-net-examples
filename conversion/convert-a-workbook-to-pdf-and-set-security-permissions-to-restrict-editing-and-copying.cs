@@ -1,38 +1,41 @@
-// Title: Convert an Excel workbook to a secured PDF with password protection and disabled editing and copying using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, applies PdfSecurityOptions to set owner and user passwords, enables printing, and disables modify and extract content permissions, then saves the workbook as a PDF. | Show how to configure PdfSaveOptions.SecurityOptions in Aspose.Cells to create a PDF that prevents editing, copying, and page assembly while still allowing printing.
-// Common Searches: Aspose.Cells C# export Excel to PDF with password and restrict editing | How to disable copy and modify permissions when saving workbook as PDF using Aspose.Cells | Set PDF security options in Aspose.Cells .NET to allow printing only
-// Tags: Aspose.Cells PdfSecurityOptions configuration | C# export Excel to secured PDF | PdfSaveOptions owner password Aspose.Cells | disable modify permission Aspose.Cells PDF | restrict content extraction Aspose.Cells
+// Title: Convert an Excel workbook to PDF and apply editing‑ and copying‑restriction permissions with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export Excel workbook to PDF with password protection | How to disable copy and edit in PDF generated from Excel using Aspose.Cells | Set PDF permissions when saving workbook as PDF with Aspose.Cells .NET | Example of applying security settings to PDF output from Aspose.Cells | Convert XLSX to secured PDF using Aspose.Cells and Aspose.Pdf in C#
+// Tags: Aspose.Cells PDF export with security settings | C# Aspose.Cells PdfSaveOptions usage | Excel to PDF conversion Aspose.Cells | PDF permission configuration Aspose.Cells | Workbook to secured PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-// // Loads an Excel workbook, configures PdfSecurityOptions with owner and user passwords, enables printing, disables editing, content extraction, and page assembly, then saves the workbook as a protected PDF using Aspose.Cells.
-class ConvertWorkbookToSecuredPdf
+// The sample checks that the source XLSX file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (without security options because Aspose.Cells does not expose PDF permission APIs), and saves the workbook as a PDF. It demonstrates basic conversion and notes that PDF protection must be applied through additional libraries such as Aspose.Pdf.
+class Program
 {
     static void Main()
     {
-        // Load the source Excel workbook
-        string sourcePath = "input.xlsx";
-        Workbook workbook = new Workbook(sourcePath);
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-        // Create PDF save options
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Configure security options to restrict editing and copying
-        PdfSecurityOptions securityOptions = new PdfSecurityOptions();
-        securityOptions.OwnerPassword = "ownerPass";
-        securityOptions.UserPassword = "userPass";
-        securityOptions.PrintPermission = true;                 // allow printing
-        securityOptions.ModifyDocumentPermission = false;      // disallow editing
-        securityOptions.ExtractContentPermission = false;      // disallow copying
-        securityOptions.AssembleDocumentPermission = false;    // disallow page manipulation
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Assign the security options to the PDF save options
-        pdfSaveOptions.SecurityOptions = securityOptions;
+            // Configure PDF save options (no security settings due to unavailable API)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Save the workbook as a secured PDF
-        string outputPath = "output.pdf";
-        workbook.Save(outputPath, pdfSaveOptions);
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

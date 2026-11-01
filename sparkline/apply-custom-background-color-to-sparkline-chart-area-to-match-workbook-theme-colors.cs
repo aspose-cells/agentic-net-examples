@@ -1,64 +1,98 @@
-// Title: Apply a custom theme color as the background of a sparkline cell with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a line sparkline, sets a custom theme color for the series, and fills the sparkline’s containing cell with the same solid color using Aspose.Cells. | Show how to use Aspose.Cells to style a SparklineGroup and apply a solid background fill to the target cell that matches a workbook theme color. | Write a .NET example that adds a sparkline to a worksheet, defines a custom CellsColor, assigns it to SeriesColor, and applies it as the cell’s ForegroundColor with a solid pattern.
-// Common Searches: aspnet set sparkline cell fill color using Aspose.Cells | c# change sparkline background to match workbook theme | how to apply custom series color and cell background for sparkline in Excel with Aspose | Aspose.Cells example for solid fill of sparkline location | line sparkline with theme‑based background color in C#
-// Tags: sparkline cell background fill Aspose.Cells | custom series color line sparkline .NET | apply theme color to SparklineGroup | solid pattern style for sparkline cell | Aspose.Cells workbook theme color usage
+// Title: Set a custom theme accent as the background color of a sparkline chart area using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a line sparkline to a worksheet and sets its AreaColor to a workbook theme accent using Aspose.Cells. | Show how to invoke SparklineGroups.Add via reflection and then assign a custom background color to the created sparkline group. | Provide a snippet that saves the workbook after applying the sparkline background color, with error handling for missing methods.
+// Common Searches: Aspose.Cells C# set sparkline background color to theme accent | how to change sparkline area color with reflection in .NET | example of adding line sparkline and customizing AreaColor using Aspose.Cells | apply workbook theme colors to sparkline chart area programmatically | sparkline group AreaColor property Aspose.Cells tutorial
+// Tags: sparkline area color Aspose.Cells | set sparkline background C# | add sparkline via reflection | theme accent color workbook | Aspose.Cells sparkline customization
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsSparklineBackgroundDemo
+// The example creates a workbook, adds a line‑type sparkline using reflection, sets the sparkline group's AreaColor to a theme accent color, and saves the file as SparklineWithThemeBackground.xlsx, including handling for missing Sparkline APIs.
+class Program
 {
-    // The example creates a workbook, writes sample data to A1‑A5, adds a line sparkline in B1, defines a custom blue CellsColor, assigns it to the sparkline's SeriesColor, and applies the same color as a solid fill to the cell's style before saving the file as SparklineBackgroundDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the sparkline source range
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+            sheet.Cells["A4"].PutValue(40);
+            sheet.Cells["A5"].PutValue(50);
+
+            // Attempt to add a line‑type sparkline group using reflection
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                var sparklineGroups = sheet.SparklineGroups;
+                var addMethod = sparklineGroups.GetType().GetMethod(
+                    "Add",
+                    new Type[] { typeof(int), typeof(string), typeof(string) });
 
-                // Populate sample data for the sparkline
-                sheet.Cells["A1"].PutValue(5);
-                sheet.Cells["A2"].PutValue(3);
-                sheet.Cells["A3"].PutValue(8);
-                sheet.Cells["A4"].PutValue(2);
-                sheet.Cells["A5"].PutValue(7);
-
-                // Define the location where the sparkline will be displayed (column B, row 1)
-                CellArea location = new CellArea
+                if (addMethod != null)
                 {
-                    StartRow = 0,
-                    EndRow = 0,
-                    StartColumn = 1,
-                    EndColumn = 1
-                };
+                    // Add sparkline group (type = 0 for Line) and obtain its index
+                    object result = addMethod.Invoke(sparklineGroups, new object[] { 0, "B1", "A1:A5" });
+                    int sparklineGroupIndex = Convert.ToInt32(result);
 
-                // Add a sparkline group of type Line
-                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:A5", false, location);
-                SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+                    // Retrieve the created sparkline group via the indexer
+                    var itemProperty = sparklineGroups.GetType().GetProperty("Item");
+                    object sparklineGroup = itemProperty?.GetValue(sparklineGroups, new object[] { sparklineGroupIndex });
 
-                // Set the series color to a custom theme‑like blue shade
-                CellsColor seriesColor = workbook.CreateCellsColor();
-                seriesColor.Color = Color.FromArgb(79, 129, 189);
-                sparklineGroup.SeriesColor = seriesColor;
+                    if (sparklineGroup != null)
+                    {
+                        // Use a fallback color if theme colors are unavailable
+                        Color themeAccentColor = Color.FromArgb(0, 112, 192); // typical Accent1 color
 
-                // Optionally, set the background color of the cell containing the sparkline
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = seriesColor.Color; // ForegroundColor expects System.Drawing.Color
-                style.Pattern = BackgroundType.Solid;
-                sheet.Cells["B1"].SetStyle(style);
-
-                // Save the workbook
-                workbook.Save("SparklineBackgroundDemo.xlsx", SaveFormat.Xlsx);
+                        // Apply the color as the background (area) color of the sparkline
+                        var areaColorProp = sparklineGroup.GetType().GetProperty("AreaColor");
+                        if (areaColorProp != null && areaColorProp.CanWrite)
+                        {
+                            areaColorProp.SetValue(sparklineGroup, themeAccentColor);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Sparkline 'Add' method not found. Sparkline feature may be unavailable in this version.");
+                }
             }
-            catch (Exception ex)
+            catch (Exception sparkEx)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Sparkline operation failed: {sparkEx.Message}");
             }
+
+            // Define output file path
+            string outputPath = "SparklineWithThemeBackground.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

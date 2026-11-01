@@ -1,15 +1,15 @@
-// Title: Validate unique ActiveX control names across all worksheets before saving an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that iterates through every worksheet, collects each ActiveX OleObject's Name, and throws an exception if any duplicate names are found before calling Workbook.Save. | Enhance the given Aspose.Cells example to log the worksheet name and duplicate ActiveX control name for each conflict, then abort the save operation. | Create a reusable C# method that accepts a Workbook, checks case‑insensitive duplicate ActiveX control names, and returns a list of duplicates or raises an error.
-// Common Searches: c# aspocells check for duplicate ActiveX control names before saving workbook | how to prevent saving Excel file with duplicate OLE object names using Aspose.Cells | detect non‑unique ActiveX control names in an Excel workbook with Aspose.Cells .NET | validate unique control names in all sheets Aspose.Cells example
-// Tags: Aspose.Cells duplicate ActiveX detection | C# check OleObject name uniqueness | prevent workbook save on name conflict | case‑insensitive ActiveX name verification | iterate worksheets OleObjects Aspose.Cells
+// Title: Check for duplicate ActiveX (OLE) control names in an Aspose.Cells workbook before saving (C#)
+// AI Prompts: Write a C# method with Aspose.Cells that iterates all worksheets and throws an exception when two OleObject controls share the same Name. | Add a pre‑save validation step to an Aspose.Cells workbook that verifies each ActiveX control has a unique Name across the entire file. | Generate code that loads an Excel file, validates unique OleObject names case‑insensitively, and saves only if no duplicates are found.
+// Common Searches: Aspose.Cells C# how to ensure ActiveX control names are unique before saving workbook | detect duplicate OleObject names in Excel using Aspose.Cells library | C# validate unique ActiveX control Name property across all worksheets with Aspose.Cells | throw exception for duplicate OLE object names in Aspose.Cells workbook
+// Tags: validate unique OleObject names Aspose.Cells | duplicate ActiveX control detection C# | pre‑save workbook validation Aspose.Cells | case‑insensitive control name check Excel | throw exception on duplicate OLE objects
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-// The program loads an Excel workbook, walks through each worksheet and its OleObjects, treats each as an ActiveX control, and uses a case‑insensitive HashSet to track control names. When a name appears twice, it logs the duplicate with the sheet name and aborts the save by throwing an InvalidOperationException. If no duplicates exist, the workbook is saved to the specified output file.
+// The example loads an Excel workbook with Aspose.Cells, scans every worksheet for OleObject (ActiveX) controls, tracks their Name properties in a case‑insensitive HashSet, and throws an InvalidOperationException if a duplicate name is found, ensuring the workbook is saved only after name uniqueness is confirmed.
 class Program
 {
     static void Main()
@@ -17,61 +17,26 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Track ActiveX control names (case‑insensitive)
-            HashSet<string> controlNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            bool duplicateFound = false;
+            // Validate that each ActiveX (OLE) control has a unique Name property
+            ValidateActiveXControlNames(workbook);
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Iterate through all OLE objects in the worksheet
-                foreach (OleObject oleObject in sheet.OleObjects)
-                {
-                    // Process only ActiveX controls if the Type property is available.
-                    // If the Type enum is not present in the referenced version, treat all OLE objects.
-                    bool isActiveX = true;
-                    try
-                    {
-                        // Attempt to use the Type property; if unavailable, the catch will keep isActiveX true.
-                        // This block ensures compatibility with different Aspose.Cells versions.
-                        // Uncomment the following line if OleObjectType enum is supported:
-                        // isActiveX = oleObject.Type == OleObjectType.ActiveX;
-                    }
-                    catch
-                    {
-                        // Fallback: assume the object is an ActiveX control.
-                    }
-
-                    if (isActiveX)
-                    {
-                        string name = oleObject.Name;
-
-                        // Detect duplicate names
-                        if (!controlNames.Add(name))
-                        {
-                            Console.WriteLine($"Duplicate ActiveX control name detected: \"{name}\" in sheet \"{sheet.Name}\".");
-                            duplicateFound = true;
-                        }
-                    }
-                }
-            }
-
-            // Abort save if duplicates exist
-            if (duplicateFound)
-            {
-                throw new InvalidOperationException("Workbook contains duplicate ActiveX control names. Resolve the duplicates before saving.");
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook
@@ -81,6 +46,33 @@ class Program
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    static void ValidateActiveXControlNames(Workbook workbook)
+    {
+        // Track encountered control names (case‑insensitive)
+        HashSet<string> controlNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all OLE objects (ActiveX controls) on the worksheet
+            foreach (OleObject ole in sheet.OleObjects)
+            {
+                string name = ole.Name;
+
+                // Skip objects without a name
+                if (string.IsNullOrEmpty(name))
+                    continue;
+
+                // Detect duplicate names
+                if (!controlNames.Add(name))
+                {
+                    throw new InvalidOperationException(
+                        $"Duplicate ActiveX control name detected: '{name}' in worksheet '{sheet.Name}'.");
+                }
+            }
         }
     }
 }

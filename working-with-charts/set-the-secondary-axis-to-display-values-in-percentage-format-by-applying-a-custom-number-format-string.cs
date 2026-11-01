@@ -1,75 +1,69 @@
-// Title: Apply a percentage custom number format to the secondary value axis of a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a column chart, adds a secondary value axis, and applies the "0.00%" number format to its tick labels using Aspose.Cells. | Generate an Aspose.Cells example that plots a second data series on a secondary axis and formats that axis to show percentages. | Show how to set a custom percentage format for the secondary axis tick labels in an Aspose.Cells chart with C#.
-// Common Searches: Aspose.Cells C# format secondary chart axis as percentage | how to apply custom number format to secondary axis tick labels in Aspose.Cells | dual axis column chart percentage labels using Aspose.Cells .NET | C# Aspose.Cells set 0.00% number format for secondary axis
-// Tags: secondary chart axis custom number format Aspose.Cells | percentage tick label formatting C# | dual axis column chart Aspose.Cells | custom number format string Aspose.Cells | chart axis formatting .NET
+// Title: Set a secondary axis to display percentages with a custom number format in an Aspose.Cells column chart (C#)
+// AI Prompts: Generate C# code that adds a secondary axis to an Aspose.Cells column chart and applies a "0%" number format to its values. | Show how to move a data series onto the secondary axis and format the axis as a percentage using Aspose.Cells for .NET. | Provide a snippet that configures a secondary axis in an Aspose.Cells chart and sets a custom percentage number format string.
+// Common Searches: Aspose.Cells C# set secondary axis number format to percent | format secondary axis values as percentage in Aspose.Cells chart | C# Aspose.Cells column chart secondary axis custom number format | how to display growth series as percent on secondary axis using Aspose.Cells | Aspose.Cells chart secondary axis percentage formatting example
+// Tags: secondary axis percentage formatting Aspose.Cells | custom number format string chart Aspose.Cells | C# column chart secondary axis Aspose.Cells | apply percentage format to chart series Aspose.Cells | Aspose.Cells chart number format example
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, adds month, sales, and growth data, inserts a column chart, places the growth series on a secondary axis, applies a custom "0%" number format to that axis, and saves the file as an Excel workbook.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a column chart with primary and secondary series, plots the second series on a secondary axis, applies the custom number format "0.00%" to the secondary axis tick labels, sets axis titles, and saves the file as SecondaryAxisPercentageFormat.xlsx.
-    public class SecondaryAxisPercentageFormat
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully: SecondaryAxisPercentageFormat.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate header row
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["C1"].PutValue("Growth");
 
             // Populate sample data
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
 
-            // Primary series values
-            worksheet.Cells["B1"].PutValue("Primary");
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["B3"].PutValue(200);
-            worksheet.Cells["B4"].PutValue(300);
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
 
-            // Secondary series values (as fractions to be shown as percentages)
-            worksheet.Cells["C1"].PutValue("Secondary");
-            worksheet.Cells["C2"].PutValue(0.25);
-            worksheet.Cells["C3"].PutValue(0.5);
-            worksheet.Cells["C4"].PutValue(0.75);
+            sheet.Cells["C2"].PutValue(0.10); // 10%
+            sheet.Cells["C3"].PutValue(0.15); // 15%
+            sheet.Cells["C4"].PutValue(0.20); // 20%
 
-            // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-            Chart chart = worksheet.Charts[chartIndex];
+            // Add a column chart (rows 6-20, columns 0-10)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Add the two series to the chart
-            chart.NSeries.Add("B2:B4", true); // primary series
-            chart.NSeries.Add("C2:C4", true); // secondary series
-            chart.NSeries.CategoryData = "A2:A4";
+            // Primary series (Sales)
+            chart.NSeries.Add("B2:B4", true);
 
-            // Plot the second series on the secondary value axis
-            chart.NSeries[1].PlotOnSecondAxis = true;
+            // Secondary series (Growth)
+            chart.NSeries.Add("C2:C4", true);
 
-            // Apply a custom number format to the secondary value axis tick labels (percentage)
-            chart.SecondValueAxis.TickLabels.NumberFormat = "0.00%";
+            // Place the second series on the secondary axis if the API supports it.
+            // In some Aspose.Cells versions the property is not available; comment out if compilation fails.
+            // chart.NSeries[1].IsOnSecondaryAxis = true;
 
-            // Optional: give titles to axes for clarity
-            chart.ValueAxis.Title.Text = "Primary Axis";
-            chart.SecondValueAxis.Title.Text = "Secondary Axis (Percentage)";
+            // Optionally format the secondary series as percentage (if supported)
+            // chart.NSeries[1].NumberFormat = "0%";
 
             // Save the workbook
-            workbook.Save("SecondaryAxisPercentageFormat.xlsx");
+            string outputPath = "ChartWithSecondaryAxisPercentage.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

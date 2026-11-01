@@ -1,66 +1,66 @@
-// Title: Open an encrypted .xlsx workbook with a primary password and automatically retry using an alternate password in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads a password‑protected Excel file with Aspose.Cells LoadOptions, catches CellsException, and retries the load using a second password. | Add logic to write the successfully opened workbook to a new .xlsx file without any password after either password succeeds. | Include a file‑existence check and clear console messages for both password attempts and for any save errors.
-// Common Searches: Aspose.Cells load encrypted Excel file with fallback password C# | Retry opening a password‑protected workbook using a second password in .NET | Decrypt .xlsx when first password fails using Aspose.Cells | Save unprotected copy of an encrypted workbook after successful decryption Aspose.Cells
-// Tags: fallback password handling Aspose.Cells | loadoptions password retry .NET | decrypt encrypted workbook alternate password C# | save workbook without password Aspose.Cells | exception handling encrypted Excel Aspose.Cells
+// Title: Implement fallback password handling to open a password‑protected Excel workbook with Aspose.Cells in C#
+// Common Searches: c# Aspose.Cells load encrypted Excel file with secondary password after first password fails | how to catch wrong password exception and retry with another password using Aspose.Cells | Aspose.Cells LoadOptions password fallback example in C# | open password protected workbook using Aspose.Cells and try alternate password | C# code to attempt opening encrypted XLSX with primary then secondary password
+// Tags: fallback password decryption Aspose.Cells | load encrypted workbook with alternate password C# | Aspose.Cells LoadOptions password retry | exception handling for encrypted Excel Aspose.Cells | C# try-catch secondary password Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace Example
+// The sample checks that the XLSX file exists, then tries to load it with a primary password using Aspose.Cells LoadOptions. If an exception occurs (e.g., wrong password), the code catches the error and retries loading the same file with an alternate password, logging both errors when both attempts fail and confirming successful load otherwise.
+class Program
 {
-    // The program checks for an encrypted Excel file, attempts to open it with a primary password, retries with an alternate password if the first fails, and saves an unprotected copy of the workbook.
-    class DecryptWorkbook
+    static void Main()
     {
-        static void Main()
+        // Paths and passwords (replace with actual values or pass as arguments)
+        string filePath = "input.xlsx";
+        string primaryPassword = "FirstPassword";
+        string alternatePassword = "SecondPassword";
+
+        Workbook workbook = null;
+
+        // Ensure the input file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Path to the encrypted workbook
-            string filePath = "encrypted.xlsx";
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
-            // First and alternate passwords
-            string primaryPassword = "FirstPassword";
-            string alternatePassword = "AlternatePassword";
-
-            // Verify that the input file exists
-            if (!File.Exists(filePath))
+        try
+        {
+            // First attempt: load workbook using the primary password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            Workbook workbook = null;
-
+                Password = primaryPassword
+            };
+            workbook = new Workbook(filePath, loadOptions);
+        }
+        catch (Exception exPrimary)
+        {
+            // If loading fails (e.g., wrong password), try the alternate password
             try
             {
-                // Attempt to load with the primary password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = primaryPassword };
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = alternatePassword
+                };
                 workbook = new Workbook(filePath, loadOptions);
             }
-            catch (CellsException)
+            catch (Exception exAlternate)
             {
-                try
-                {
-                    // Primary password failed – retry with the alternate password
-                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = alternatePassword };
-                    workbook = new Workbook(filePath, loadOptions);
-                }
-                catch (CellsException ex)
-                {
-                    Console.WriteLine($"Failed to open workbook with both passwords: {ex.Message}");
-                    return;
-                }
+                // Log the failure of both attempts
+                Console.WriteLine("Failed to open the workbook with both passwords.");
+                Console.WriteLine($"Primary attempt error: {exPrimary.Message}");
+                Console.WriteLine($"Alternate attempt error: {exAlternate.Message}");
             }
+        }
 
-            try
-            {
-                // Save a copy without password
-                workbook.Save("decrypted_copy.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved as decrypted_copy.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+        // At this point 'workbook' is loaded (or null if both attempts failed)
+        if (workbook != null)
+        {
+            // Continue processing the workbook as needed
+            // Example: save a copy (using the provided save rule)
+            // workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook loaded successfully.");
         }
     }
 }

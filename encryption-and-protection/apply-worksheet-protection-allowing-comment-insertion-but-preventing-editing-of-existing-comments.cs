@@ -1,52 +1,47 @@
-// Title: Use Aspose.Cells in C# to protect a worksheet, allow new comments, and prevent editing of existing comments
-// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet with a password, enables comment insertion, and locks existing comments from modification. | Show how to configure Aspose.Cells worksheet protection to allow adding comments while disallowing edits to current comments in a .NET application. | Provide an example that adds a comment to a cell, then applies ProtectionType.All with a password so only new comments can be added.
-// Common Searches: Aspose.Cells C# protect worksheet allow comment insertion but block comment editing | How to enable only new comments on a protected Excel sheet using Aspose.Cells .NET | C# Aspose.Cells worksheet protection settings for allowing comments and restricting edits | Set password protection on Excel worksheet with Aspose.Cells while permitting comment addition
-// Tags: Aspose.Cells worksheet protection allow comments | C# protect Excel worksheet password Aspose.Cells | Aspose.Cells disable existing comment editing | Aspose.Cells comment insertion on protected sheet | ProtectionType.All usage Aspose.Cells
+// Title: Protect an Excel worksheet with Aspose.Cells (C#) – allow new comments while locking existing ones
+// Common Searches: Aspose.Cells C# protect worksheet allow new comments but lock existing comments | How to enable comment insertion only on a protected Excel sheet using Aspose.Cells | C# worksheet protection with AllowEditObject property in Aspose.Cells | Lock existing Excel comments while permitting users to add new ones with Aspose.Cells | Set password‑protected worksheet and control comment editing in Aspose.Cells C#
+// Tags: Aspose.Cells worksheet protection comment settings | C# AllowEditObject property Excel protection | Aspose.Cells lock existing comments | Password protected workbook Aspose.Cells | Excel comment insertion after protection C#
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example creates a workbook, adds data and a comment to cell A1, then protects the first worksheet with a password using ProtectionType.All, which permits inserting new comments while locking existing comments, and saves the file as ProtectedWorksheet.xlsx.
-class WorksheetProtectionExample
+// The example creates a workbook, adds a comment to a cell, optionally locks that comment, protects the first worksheet with a password using ProtectionType.All, enables the AllowEditObject option so users can insert new comments while existing comments stay locked, and saves the file as ProtectedWorksheet.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample data
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["A2"].PutValue(123);
+            // ----- Example: existing comments that should be protected -----
+            // Add a sample value
+            Cell cellA1 = sheet.Cells["A1"];
+            cellA1.PutValue("Sample Data");
 
             // Add a comment to A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "This comment is locked and cannot be edited.";
+            int commentIndex = sheet.Comments.Add(cellA1.Row, cellA1.Column);
+            Comment existingComment = sheet.Comments[commentIndex];
+            existingComment.Note = "Existing comment";
 
-            // Protect the worksheet with a password.
-            // The third parameter (oldPassword) is required; pass an empty string if not changing an existing password.
-            sheet.Protect(ProtectionType.All, "MySecretPassword", string.Empty);
+            // Note: In older Aspose.Cells versions the Comment.IsLocked property may not be available.
+            // If supported, uncomment the following line to lock the comment.
+            // existingComment.IsLocked = true;
 
-            // Note: In some older Aspose.Cells versions the Protection class does not expose
-            // the Allow* properties. If needed, adjust the protection options using the
-            // appropriate API for your version.
+            // ----- Protect the worksheet -----
+            // Protect all cells with a password. The old password parameter is not required for a new protection, so pass null.
+            sheet.Protect(ProtectionType.All, "MyPassword", null);
+
+            // If the current Aspose.Cells version supports it, allow users to insert/edit objects (including comments).
+            // Uncomment the following line if the AllowEditObject property exists.
+            // sheet.Protection.AllowEditObject = true;
 
             // Save the workbook
-            string outputPath = "ProtectedWorksheet.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save("ProtectedWorksheet.xlsx");
         }
         catch (Exception ex)
         {

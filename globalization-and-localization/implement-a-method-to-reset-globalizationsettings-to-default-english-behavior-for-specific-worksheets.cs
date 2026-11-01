@@ -1,62 +1,85 @@
-// Title: Reset Aspose.Cells workbook globalization to English (en-US) culture using C#
-// AI Prompts: Write a C# method that assigns Workbook.Settings.CultureInfo to the en-US culture with Aspose.Cells. | Extend the helper to accept worksheet names and apply the English CultureInfo only to those sheets while leaving other sheets unchanged.
-// Common Searches: Aspose.Cells set workbook culture to en-US in C# | how to change Excel file language to English using Aspose.Cells .NET | reset globalization settings for an Aspose.Cells workbook | C# example for applying English locale to an Excel workbook with Aspose.Cells | apply English culture to specific worksheets Aspose.Cells
-// Tags: Aspose.Cells workbook cultureinfo en-us | reset workbook globalization Aspose.Cells | set Excel locale to English C# | globalization settings Aspose.Cells .NET | apply English culture to worksheets Aspose.Cells
+// Title: Reset workbook globalization to English (en-US) using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to change workbook culture to en-US | reset Aspose.Cells workbook globalization settings to default English | set workbook CultureInfo to English in Aspose.Cells .NET | programmatically enforce en-US localization for an Excel workbook with Aspose.Cells | Aspose.Cells reset workbook localization for specific worksheets C#
+// Tags: Aspose.Cells workbook CultureInfo en-US | C# enforce English localization Aspose.Cells | Aspose.Cells default globalization settings | set workbook culture Aspose.Cells .NET | globalization configuration workbook C#
 
 using System;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Provides a C# helper method that validates a Workbook, accesses its Settings, and assigns CultureInfo("en-US") to enforce English (United States) globalization for the entire workbook, with sample code for loading, resetting, and saving an Excel file using Aspose.Cells.
+public static class GlobalizationHelper
 {
-    // The example defines a WorksheetGlobalizationHelper with a ResetGlobalizationToEnglish method that sets the workbook's Settings.CultureInfo to the en-US culture, loads an input Excel file, applies the English globalization globally, and saves the result.
-    public static class WorksheetGlobalizationHelper
+    // Resets globalization settings to default English (en-US) for the entire workbook.
+    public static void ResetToEnglish(Workbook workbook)
     {
-        // Resets globalization settings of the workbook to English (en-US) behavior.
-        public static void ResetGlobalizationToEnglish(Workbook workbook, params string[] worksheetNames)
-        {
-            // English culture.
-            CultureInfo englishCulture = new CultureInfo("en-US");
+        if (workbook == null) throw new ArgumentNullException(nameof(workbook));
 
-            // Configure workbook globalization.
-            workbook.Settings.CultureInfo = englishCulture;
-            // The following properties are not available in the current Aspose.Cells version,
-            // so they are omitted. Setting the CultureInfo is sufficient for English behavior.
+        // Access the workbook's settings.
+        WorkbookSettings settings = workbook.Settings;
+
+        // Set the workbook culture to English (United States).
+        settings.CultureInfo = new CultureInfo("en-US");
+
+        // Additional system‑dependent format settings are not exposed in the current API.
+        // If needed, they can be configured via other workbook options.
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        try
+        {
+            // Load the workbook (lifecycle rule).
+            Workbook workbook = LoadWorkbook("input.xlsx");
+
+            // Reset globalization settings for the workbook.
+            GlobalizationHelper.ResetToEnglish(workbook);
+
+            // Save the modified workbook (lifecycle rule).
+            SaveWorkbook(workbook, "output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    class Program
+    // Loads a workbook from the specified path, ensuring the file exists.
+    private static Workbook LoadWorkbook(string path)
     {
-        static void Main()
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
+
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"The file '{path}' was not found.", path);
+
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            return new Workbook(path);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to load workbook from '{path}'.", ex);
+        }
+    }
 
-                // Ensure the input file exists to avoid FileNotFoundException.
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+    // Saves a workbook to the specified path, handling any I/O errors.
+    private static void SaveWorkbook(Workbook workbook, string path)
+    {
+        if (workbook == null) throw new ArgumentNullException(nameof(workbook));
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentException("Path cannot be null or empty.", nameof(path));
 
-                // Load the workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Reset globalization settings to English.
-                WorksheetGlobalizationHelper.ResetGlobalizationToEnglish(workbook);
-
-                // Save the modified workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display the message.
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+        try
+        {
+            workbook.Save(path);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to save workbook to '{path}'.", ex);
         }
     }
 }

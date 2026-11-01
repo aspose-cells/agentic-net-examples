@@ -1,51 +1,39 @@
-// Title: Generate an animated GIF from a series of worksheet PNG images with Aspose.Cells in C#
-// AI Prompts: Export every worksheet in an Excel workbook to PNG files using Aspose.Cells, then stitch the PNGs into a looping animated GIF with a custom frame delay in C#. | Write C# code that loads a workbook, saves each sheet as a PNG image, creates a System.Drawing.Bitmap for each PNG, sets the GIF frame duration, and saves the final animated GIF.
-// Common Searches: Aspose.Cells export each worksheet to PNG then create animated GIF C# example | C# generate time‑lapse GIF from Excel sheet images using Aspose.Cells | how to set frame delay when building an animated GIF from worksheet screenshots in .NET | combine multiple worksheet PNG files into a looping GIF with Aspose.Cells and System.Drawing
-// Tags: export worksheets to png Aspose.Cells | assemble png sequence into animated gif C# | configure gif frame delay .NET | time‑lapse gif from Excel worksheets | looping gif from worksheet screenshots
+// Title: Create an animated GIF from all worksheets in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: how to export each worksheet as a frame in an animated GIF with Aspose.Cells C# | Aspose.Cells save workbook as animated GIF each sheet becomes a frame | C# generate animated GIF from multiple Excel worksheets using Aspose.Cells | convert Excel workbook to animated GIF using Aspose.Cells .NET API | sample code to create GIF animation from Excel sheets in C#
+// Tags: export workbook to animated GIF Aspose.Cells | worksheet to GIF frame Aspose.Cells | save Excel as GIF animation C# | Aspose.Cells multi-sheet GIF creation | C# generate animated GIF from Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel file, verifies its presence, and uses Aspose.Cells to save the entire workbook as an animated GIF where each worksheet is rendered as a separate frame, with error handling for robustness.
+class AnimatedGifCreator
 {
-    // The example loads an Excel workbook, iterates through its worksheets, saves each sheet as a PNG image using Aspose.Cells, then uses System.Drawing to create a Bitmap for each PNG, adds the frames to an animated GIF with a specified delay, and writes the resulting GIF to disk.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.gif";
+
+        try
         {
-            // Define input and output file paths
-            string inputPath = "Template.xlsx";
-            string outputPath = "Result.xlsx";
-
-            try
+            // Verify that the input workbook exists.
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input template exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook from the template
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Write a sample value to cell A1
-                Cell cell = sheet.Cells["A1"];
-                cell.PutValue("Hello Aspose.Cells!");
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Save the workbook as an animated GIF. Each worksheet becomes a frame.
+            workbook.Save(outputPath, SaveFormat.Gif);
+
+            Console.WriteLine($"Animated GIF created successfully at: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

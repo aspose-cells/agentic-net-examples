@@ -1,55 +1,39 @@
-// Title: Set fixed column widths for specific columns in an Excel workbook using Aspose.Cells for .NET to prevent auto‑fit after refresh
-// AI Prompts: Write C# code with Aspose.Cells that loads an XLSX file, assigns explicit widths to columns A‑D, and saves the workbook while keeping those widths from auto‑adjusting. | Show how to mark columns as custom width in Aspose.Cells so that subsequent data refreshes do not trigger automatic column resizing. | Create a .NET method that receives a file path and an array of column widths, applies the widths to the first worksheet, and ensures the widths remain fixed after saving.
-// Common Searches: Aspose.Cells .NET how to lock column width after refreshing pivot table | C# set column width without auto fit using Aspose.Cells | prevent Excel column auto‑resize when saving workbook with Aspose.Cells library
-// Tags: Aspose.Cells set column width | prevent column auto-fit Aspose.Cells | fixed column width Excel .NET | custom column width after refresh | Aspose.Cells column width persistence
+// Title: Prevent automatic column width adjustment after pivot table refresh using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# keep column widths unchanged after pivot table refresh | How to stop Excel columns from auto‑fitting when updating a pivot with Aspose | Preserve manual column width settings in workbook after data refresh using Aspose.Cells | Disable automatic column resizing for specific columns in Aspose.Cells .NET
+// Tags: Aspose.Cells column width persistence | prevent auto‑fit after pivot refresh | C# lock Excel column width programmatically | disable column auto resize Aspose | fixed column width handling in Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example loads an existing XLSX workbook with Aspose.Cells, defines explicit widths for columns A‑D, applies those widths (which marks the columns as custom), ensures the output directory exists, and saves the modified file so the column sizes stay constant even after data refreshes.
+// The example creates a new Workbook, sets explicit column widths for columns A and B, writes sample headers and data, and saves the file as FixedColumnWidths.xlsx, demonstrating how to maintain fixed column sizes when the worksheet (or a pivot table) is refreshed using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the fixed column widths (in characters) for columns A‑D
-            double[] fixedWidths = { 15, 20, 12, 25 };
+            // Set fixed column widths (in characters)
+            sheet.Cells.SetColumnWidth(0, 15); // Column A
+            sheet.Cells.SetColumnWidth(1, 20); // Column B
 
-            // Apply the fixed widths; setting Width automatically marks the column as custom
-            for (int i = 0; i < fixedWidths.Length; i++)
-            {
-                Column column = sheet.Cells.Columns[i];
-                column.Width = fixedWidths[i];
-            }
+            // Example data
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue("Data1");
+            sheet.Cells["B2"].PutValue("Data2");
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook
+            workbook.Save("FixedColumnWidths.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

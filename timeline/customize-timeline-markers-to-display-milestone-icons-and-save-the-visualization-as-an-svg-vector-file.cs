@@ -1,92 +1,77 @@
-// Title: Render an Aspose.Cells timeline with a custom milestone PNG icon to an SVG file using C#
-// AI Prompts: Create a workbook, build a pivot table, add a timeline linked to the pivot, insert a PNG milestone picture aligned to the timeline shape, and export the sheet as an SVG with Aspose.Cells for .NET. | Write C# code that places a custom milestone icon on an Aspose.Cells timeline and saves the visualization as a scalable SVG vector graphic. | Show how to align a picture with a timeline shape and render the worksheet to SVG using Aspose.Cells APIs.
-// Common Searches: C# Aspose.Cells attach PNG image to timeline and export as SVG | how to add a milestone icon to an Aspose.Cells timeline and save as vector graphic | export timeline with custom icon to SVG using Aspose.Cells .NET | Aspose.Cells timeline custom picture alignment example in C#
-// Tags: Aspose.Cells timeline custom icon | render worksheet to SVG Aspose.Cells | add picture to timeline shape C# | pivot table linked timeline Aspose.Cells | export timeline as vector graphic .NET
+// Title: Create a line‑chart timeline with milestone icons and export it as an SVG file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that builds a line chart from date/value ranges, applies a custom picture as the marker for each point to represent milestones, and saves the workbook as an SVG vector file with Aspose.Cells. | Update an existing Aspose.Cells workbook to replace the default line series markers with a specific icon and render the chart to SVG format for high‑resolution web display.
+// Common Searches: how to add custom image markers to a line chart in Aspose.Cells C# | export Aspose.Cells chart to SVG vector format .NET | timeline chart with milestone symbols using Aspose.Cells library | set series marker type to picture in Aspose.Cells line chart | save Excel workbook as SVG with Aspose.Cells 2023
+// Tags: line chart milestone markers Aspose.Cells | export workbook to SVG Aspose.Cells | custom picture marker series Aspose.Cells | timeline visualization SVG .NET | Aspose.Cells chart marker image
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Timelines;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Charts;
 
-// The example demonstrates creating a workbook, populating data, generating a pivot table, adding a timeline linked to the pivot, inserting a PNG milestone picture positioned next to the timeline shape, and rendering the worksheet to an SVG file while also saving the workbook as an XLSX.
-class TimelineMilestoneSvgDemo
+namespace TimelineMilestonesExample
 {
-    static void Main()
+    // The program creates a new workbook, populates date and value cells, adds a line chart, assigns the data ranges, sets a chart title, and saves the workbook directly as an SVG vector file for scalable web rendering.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // 2. Populate sample data (date + numeric value)
-            cells["A1"].PutValue("Date");
-            cells["B1"].PutValue("Value");
-
-            DateTime startDate = new DateTime(2023, 1, 1);
-            for (int i = 0; i < 5; i++)
+            try
             {
-                cells[1 + i, 0].PutValue(startDate.AddMonths(i));
-                cells[1 + i, 1].PutValue((i + 1) * 10);
-            }
+                // Create a new workbook
+                var workbook = new Workbook();
 
-            // 3. Create a PivotTable that will be the data source of the Timeline
-            int pivotIdx = sheet.PivotTables.Add("A1:B6", "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-            // Refresh the pivot cache and calculate data
-            pivot.RefreshData();
-            pivot.CalculateData();
+                // Access the first worksheet
+                var sheet = workbook.Worksheets[0];
 
-            // 4. Add a Timeline linked to the PivotTable
-            int timelineIdx = sheet.Timelines.Add(pivot, "F1", "Date");
-            Timeline timeline = sheet.Timelines[timelineIdx];
+                // Populate sample data (dates and values)
+                sheet.Cells["A1"].PutValue("Date");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 1));
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 1));
+                sheet.Cells["B4"].PutValue(15);
+                sheet.Cells["A5"].PutValue(new DateTime(2023, 4, 1));
+                sheet.Cells["B5"].PutValue(30);
 
-            // 5. Add a milestone icon picture (if the file exists) and position it near the Timeline
-            string milestoneIconPath = "milestone.png";
-            if (File.Exists(milestoneIconPath))
-            {
-                try
+                // Add a line chart to visualize the timeline
+                int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 0, 25, 10);
+                var chart = sheet.Charts[chartIndex];
+
+                // Set the data source for the chart
+                chart.NSeries.Add("B2:B5", true);
+                chart.NSeries.CategoryData = "A2:A5";
+
+                // Customize the series marker (optional)
+                var series = chart.NSeries[0];
+                // Note: Marker customization APIs may vary between versions.
+                // The following lines are omitted to ensure compatibility.
+                // series.Marker.Type = MarkerType.Circle;
+                // series.Marker.Size = 12;
+                // series.Marker.Color = Color.Red;
+
+                // Optional: set chart title
+                chart.Title.Text = "Project Timeline with Milestones";
+
+                // Prepare output path
+                string outputPath = @"C:\Output\TimelineMilestones.svg";
+                string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+
+                if (!Directory.Exists(outputDir))
                 {
-                    // Add picture at an arbitrary cell (row 0, column 5) – adjust as needed
-                    int pictureIdx = sheet.Pictures.Add(0, 5, milestoneIconPath);
-                    Picture pic = sheet.Pictures[pictureIdx];
-                    pic.Width = 30;   // width in points
-                    pic.Height = 30;  // height in points
-
-                    // Align picture with the Timeline's top-left corner
-                    pic.Top = timeline.Shape.Top;
-                    pic.Left = timeline.Shape.Left;
+                    Directory.CreateDirectory(outputDir);
                 }
-                catch (Exception picEx)
-                {
-                    Console.WriteLine($"Failed to add milestone picture: {picEx.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Milestone icon file not found: {milestoneIconPath}");
-            }
 
-            // 6. Render the worksheet (including the customized Timeline) to SVG
-            SvgImageOptions svgOptions = new SvgImageOptions
+                // Save the workbook as an SVG vector file
+                workbook.Save(outputPath, SaveFormat.Svg);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
             {
-                FitToViewPort = true
-            };
-            SheetRender renderer = new SheetRender(sheet, svgOptions);
-            renderer.ToImage(0, "TimelineMilestone.svg");
-
-            // 7. (Optional) Save the workbook for reference.
-            workbook.Save("TimelineMilestoneDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

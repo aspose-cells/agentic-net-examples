@@ -1,71 +1,95 @@
-// Title: Programmatically toggle data label visibility on an Aspose.Cells column chart using a configuration flag in C#
-// AI Prompts: Write C# code that builds an Excel workbook, adds a column chart, and sets series.DataLabels.ShowValue based on a boolean read from a configuration source. | Demonstrate disabling category name, percentage, series name, and legend key for chart data labels when the visibility flag is false. | Show how to retrieve a setting from appsettings.json (or environment variables) and apply it to chart label visibility with Aspose.Cells.
-// Common Searches: how to control Aspose.Cells chart data labels with a config setting in .NET | C# Aspose.Cells hide data labels conditionally based on appsettings | set series.DataLabels.ShowValue dynamically in Aspose.Cells workbook | disable chart label components Aspose.Cells column chart C# example
-// Tags: Aspose.Cells conditional data label visibility | C# Aspose.Cells series.DataLabels.ShowValue | Aspose.Cells column chart label configuration | Excel workbook chart label toggle C# | Aspose.Cells read config for chart settings
+// Title: Programmatically toggle Excel chart data label visibility with Aspose.Cells for .NET using a configuration flag
+// Common Searches: C# Aspose.Cells hide chart data labels based on environment variable | set data label visibility for each series in an Excel chart using Aspose.Cells | conditional formatting of chart data labels in Aspose.Cells .NET | read config flag to show or hide chart series labels with Aspose.Cells | toggle Excel chart data labels at runtime in a .NET application
+// Tags: Aspose.Cells chart series label toggle | C# conditional chart label visibility | Excel chart data labels API Aspose | environment variable driven chart settings | runtime chart label control .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDataLabelToggle
+namespace AsposeCellsExample
 {
-    // The example creates a new workbook, populates sample data, adds a column chart, and uses a boolean configuration flag to control the series.DataLabels.ShowValue property. When the flag is false, it also turns off category name, percentage, series name, and legend key, then saves the workbook as an XLSX file.
+    // The example loads an existing workbook, checks for a chart on the first worksheet, reads a configuration flag (e.g., from an environment variable), and then shows or hides each series' data labels by setting ShowValue and ShowSeriesName accordingly before saving the workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            // Configuration flag that determines whether data labels should be visible
-            bool showDataLabels = GetShowDataLabelsFromConfig();
-
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Access the first series of the chart
-            Series series = chart.NSeries[0];
-
-            // Toggle data label visibility based on the configuration flag
-            // ShowValue controls whether the value part of the data label is displayed.
-            series.DataLabels.ShowValue = showDataLabels;
-
-            // Optionally, hide other label components when disabling labels
-            if (!showDataLabels)
+            try
             {
-                series.DataLabels.ShowCategoryName = false;
-                series.DataLabels.ShowPercentage = false;
-                series.DataLabels.ShowSeriesName = false;
-                series.DataLabels.ShowLegendKey = false;
-            }
+                // Input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Save the workbook to a file
-            workbook.Save("DataLabelToggleDemo.xlsx");
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one chart
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found on the first worksheet.");
+                    return;
+                }
+
+                // Access the first chart on the worksheet (adjust index as needed)
+                Chart chart = worksheet.Charts[0];
+
+                // Retrieve the configuration flag that determines whether data labels should be visible
+                bool showDataLabels = GetShowDataLabelsFlag();
+
+                // Toggle data label visibility based on the flag
+                if (showDataLabels)
+                {
+                    // Show data labels for each series in the chart
+                    foreach (Series series in chart.NSeries)
+                    {
+                        // Enable value and series name in the data label
+                        series.DataLabels.ShowValue = true;
+                        series.DataLabels.ShowSeriesName = true;
+                    }
+                }
+                else
+                {
+                    // Hide data labels for each series
+                    foreach (Series series in chart.NSeries)
+                    {
+                        series.DataLabels.ShowValue = false;
+                        series.DataLabels.ShowSeriesName = false;
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log or display the exception details for troubleshooting
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
-        // Placeholder for retrieving the configuration flag.
-        // In a real scenario this could read from appsettings, environment variable, etc.
-        static bool GetShowDataLabelsFromConfig()
+        // Helper method to retrieve the configuration flag.
+        // Replace the implementation with your actual configuration retrieval logic.
+        private static bool GetShowDataLabelsFlag()
         {
-            // For demonstration, toggle the flag here.
-            // Set to true to show data labels, false to hide them.
-            return true;
+            // Example: Read from an environment variable
+            string envValue = Environment.GetEnvironmentVariable("SHOW_DATA_LABELS");
+            if (!string.IsNullOrEmpty(envValue) && bool.TryParse(envValue, out bool result))
+            {
+                return result;
+            }
+
+            // Default value if the configuration is missing or invalid
+            return false;
         }
     }
 }

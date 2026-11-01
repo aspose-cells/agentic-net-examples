@@ -1,53 +1,45 @@
-// Title: Hide all worksheet comments in an Excel file with Aspose.Cells for .NET while ensuring privacy compliance
-// AI Prompts: Generate C# code using Aspose.Cells that loops through every worksheet, accesses each Comment object, sets its IsVisible property to false, and saves the workbook to a new file. | Enhance the previous code to encrypt the workbook with a password using Aspose.Cells after comments have been hidden.
-// Common Searches: Aspose.Cells C# hide all comments in workbook for GDPR compliance | set comment IsVisible false across all sheets using Aspose.Cells | apply password encryption to Excel file after modifying comments with Aspose.Cells .NET | example code to hide worksheet comments and protect workbook in C# | loop through each sheet in an Excel workbook using Aspose.Cells
-// Tags: Aspose.Cells comment visibility control | C# iterate worksheets Aspose.Cells | Excel comment privacy handling Aspose.Cells | Aspose.Cells workbook password encryption | batch update comment properties .NET
+// Title: Add a hidden comment with a generic author to an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to insert a comment into a specific cell, set its IsVisible property to false, assign a non‑identifying author, and save the workbook. | Show how to create an Excel file with Aspose.Cells where the comment is invisible to users and the author field is anonymized for privacy compliance.
+// Common Searches: Aspose.Cells hide comment visibility C# example | set generic author for Excel comment using Aspose.Cells .NET | create Excel file with invisible comment Aspose.Cells | privacy compliant comment handling in Aspose.Cells workbook | how to prevent comment display in generated Excel with Aspose.Cells
+// Tags: Aspose.Cells comment visibility off | Aspose.Cells comment author anonymization | Aspose.Cells generate workbook with hidden comment | C# Aspose.Cells comment privacy controls | Excel comment anonymity Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample loads an existing Excel workbook, verifies the file exists, iterates over every worksheet and each comment within, sets each comment's IsVisible flag to false to hide it, and then saves the modified workbook. It also demonstrates how to add password protection to the workbook after hiding comments, with error handling for file operations.
+// // Creates a new Excel workbook, adds a comment containing sensitive text to cell A1, hides the comment (IsVisible = false), sets the author to a generic value ("System") to protect user identity, and saves the file as PrivacyProtected.xlsx.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through all comments on the worksheet
-                foreach (Comment comment in sheet.Comments)
-                {
-                    // Hide the comment so it is not visible to end users
-                    comment.IsVisible = false;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                    // Locking comments is not supported directly in the current Aspose.Cells API version.
-                    // If needed, additional protection can be applied to the worksheet/workbook.
-                }
-            }
+            // Add a comment to cell A1
+            int commentIndex = sheet.Comments.Add("A1");
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Note = "Sensitive information";
 
-            // Save the modified workbook
+            // Ensure the specific comment is not visible
+            comment.IsVisible = false;
+
+            // Set a generic author to avoid exposing user identity
+            comment.Author = "System";
+
+            // Define output file path
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "PrivacyProtected.xlsx");
+
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions (e.g., loading/saving errors)
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,40 +1,47 @@
-// Title: Enumerate chart names and types on every worksheet of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that loads an .xlsx file with Aspose.Cells, loops through all worksheets, and prints each chart’s Name and Type. | Show how to access the ChartCollection of each Worksheet in Aspose.Cells and output the chart properties to the console. | Provide sample code that saves the workbook after enumerating charts without modifying the file, using Aspose.Cells for .NET.
-// Common Searches: asp.net aspose.cells list chart name and chart type for each sheet | c# iterate all worksheets and get chart information using Aspose.Cells | how to retrieve chart type from worksheet charts in Aspose.Cells .NET | example code to print chart details from an Excel workbook with Aspose.Cells
-// Tags: enumerate worksheet chart properties Aspose.Cells C# | retrieve chart name and type Aspose.Cells .NET | loop through chart collection per worksheet Aspose.Cells | output Excel chart metadata console Aspose.Cells | read-only chart enumeration Aspose.Cells workbook
+// Title: How to enumerate all charts in every worksheet of an Excel workbook and display their names and types using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that uses Aspose.Cells to open an .xlsx file, loops through each worksheet, and prints the worksheet name together with each chart's Name property and its ChartType enumeration value. | Provide sample code that demonstrates retrieving the Name and Type of every chart on all sheets of a workbook with Aspose.Cells, including handling missing files and runtime exceptions.
+// Common Searches: Aspose.Cells C# list chart names and chart types for all worksheets | How to get chart type from each chart in an Excel file using Aspose.Cells .NET | Iterate through worksheets and retrieve chart information with Aspose.Cells | C# code example to enumerate charts in a workbook using Aspose.Cells | Display worksheet name, chart name, and chart type using Aspose.Cells
+// Tags: enumerate charts Aspose.Cells .NET | retrieve chart name and type C# | loop worksheets Aspose.Cells chart extraction | Aspose.Cells chart enumeration example | Excel workbook chart metadata extraction
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartInfo
+// The example loads an existing Excel workbook with Aspose.Cells, iterates over every worksheet, and for each chart prints the worksheet name, the chart's Name, and its ChartType, while safely handling missing files and runtime errors.
+class Program
 {
-    // The sample loads 'input.xlsx', iterates over every worksheet, accesses each sheet's ChartCollection, and writes the worksheet name, chart name, and chart type to the console before optionally saving the workbook as 'output.xlsx'.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Load an existing workbook (load rule)
-            Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-            // Iterate through each worksheet in the workbook
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Access the chart collection of the current worksheet
-                ChartCollection charts = sheet.Charts;
-
-                // Iterate through each chart in the collection
-                for (int i = 0; i < charts.Count; i++)
+                // Iterate through all charts on the current worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Chart chart = charts[i];
-
-                    // Output worksheet name, chart name and chart type
+                    // Output the worksheet name, chart name, and chart type
                     Console.WriteLine($"Worksheet: {sheet.Name}, Chart Name: {chart.Name}, Chart Type: {chart.Type}");
                 }
             }
-
-            // Save the workbook (save rule) – optional if no changes were made
-            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

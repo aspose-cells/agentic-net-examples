@@ -1,68 +1,27 @@
-// Title: Set a dashed 2‑point line style for the 'Divider' shape in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, finds the shape named 'Divider' on the first worksheet, and changes its Line.DashStyle to Dash with a weight of 2 points using Aspose.Cells. | Generate a script that updates the border of a specific shape in Excel to a dashed line of 2‑point thickness via the Aspose.Cells Shape.Line properties. | Create a method that searches a worksheet for a shape by name and applies a dashed line style and 2‑point weight using the Aspose.Cells Drawing API in C#.
-// Common Searches: Aspose.Cells C# change shape line dash style to dashed | How to set line weight of a specific shape in Excel with Aspose.Cells | C# code to modify border thickness of a named shape in a workbook | Find shape by name and update its line properties using Aspose.Cells .NET
-// Tags: Aspose.Cells modify shape line style | Aspose.Cells set shape dash pattern | C# adjust Excel shape border thickness | Aspose.Cells Drawing API line properties
+// Title: Apply a dashed line style with 2‑point thickness to the 'Divider' shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: In C#, use Aspose.Cells to locate the shape named 'Divider' on the first worksheet and set its Line.DashStyle to Dash with a Line.Weight of 2 points. | Programmatically give a specific worksheet shape a 2‑point dashed border by configuring the Shape.Line properties through Aspose.Cells.
+// Common Searches: Aspose.Cells C# set dashed line style for a worksheet shape | How to change shape line weight to 2 points using Aspose.Cells | Modify border dash pattern of a named shape in Excel with Aspose.Cells .NET | C# example for setting Shape.Line.DashStyle and Weight in Aspose.Cells | Apply custom line formatting to Excel shapes using Aspose.Cells API
+// Tags: Aspose.Cells shape line dash formatting | Aspose.Cells shape border thickness setting | C# Excel shape line property modification | Aspose.Cells Shape.Line API usage | Excel shape custom line style Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// Load the workbook (use the provided load rule)
+Workbook workbook = new Workbook("input.xlsx");
+
+// Access the first worksheet (adjust index if needed)
+Worksheet worksheet = workbook.Worksheets[0];
+
+// Find the shape named "Divider"
+Shape dividerShape = worksheet.Shapes["Divider"];
+if (dividerShape != null)
 {
-    // The example loads an Excel workbook, locates the shape called 'Divider' on the first worksheet, sets its line dash style to dashed and its weight to 2 points, and then saves the updated file.
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Define input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
-            {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Locate the shape named "Divider"
-                Shape dividerShape = null;
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape.Name == "Divider")
-                    {
-                        dividerShape = shape;
-                        break;
-                    }
-                }
-
-                // If the shape is found, modify its line style and thickness
-                if (dividerShape != null)
-                {
-                    // Set the line dash style to dashed
-                    dividerShape.Line.DashStyle = MsoLineDashStyle.Dash;
-
-                    // Set the line weight (thickness) to 2 points
-                    dividerShape.Line.Weight = 2.0;
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log or display the exception details
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+    // Set line style to dashed
+    dividerShape.Line.DashStyle = MsoLineDashStyle.Dash;
+    
+    // Set line thickness to two points
+    dividerShape.Line.Weight = 2.0;
 }
+
+// Save the workbook (use the provided save rule)
+workbook.Save("output.xlsx");

@@ -1,37 +1,30 @@
-// Title: Set worksheet to landscape orientation and freeze the top header row using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that creates a workbook, sets the first worksheet to landscape page orientation, freezes the first row, and saves the file as .xlsx. | Write a C# snippet that applies a custom page layout (landscape) to a worksheet, then locks the header row with FreezePanes before exporting the workbook.
-// Common Searches: Aspose.Cells C# set worksheet page orientation to landscape and freeze header row | how to freeze top row after changing page setup with Aspose.Cells .NET | C# example for landscape orientation and frozen panes using Aspose.Cells
-// Tags: Aspose.Cells set worksheet landscape orientation | Aspose.Cells freeze first row panes | Aspose.Cells page setup orientation C# | Aspose.Cells freeze panes header row .NET | Aspose.Cells export workbook to xlsx custom layout
+// Title: Set landscape page orientation and freeze the header row in an Excel worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set worksheet to landscape orientation and keep header row visible | How to freeze the first row after changing page orientation with Aspose.Cells for .NET | C# example for setting page orientation to landscape and freezing panes in Excel using Aspose.Cells | Freeze panes on header row when using custom page layout in Aspose.Cells | Aspose.Cells .NET code to apply landscape page setup and freeze top row
+// Tags: landscape orientation worksheet Aspose.Cells | freeze header row panes Aspose.Cells C# | page setup orientation Aspose.Cells .NET | freeze panes first row Excel Aspose.Cells | custom page layout Excel Aspose.Cells
 
 using Aspose.Cells;
 using System;
 
-// Creates a new workbook, changes the first worksheet to landscape orientation, freezes the first row, and saves the result as Output.xlsx using Aspose.Cells for .NET.
+// Creates a new workbook, sets the first worksheet's page orientation to landscape, freezes the top header row so it remains visible while scrolling, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set custom page orientation (Landscape)
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
+        // Set a custom page orientation (Landscape)
+        sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-            // Freeze the header row (first row)
-            // FreezePanes(row, column, totalRows, totalColumns) freezes rows above and columns left of the specified cell.
-            sheet.FreezePanes(1, 0, 1, 0); // Freeze first row
+        // Freeze the first row (header) so it stays visible when scrolling
+        // Parameters: (row, column, totalRows, totalColumns)
+        // Freeze rows above row index 1 (i.e., first row)
+        sheet.FreezePanes(1, 0, 1, 0);
 
-            // Save the workbook
-            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook to a file
+        workbook.Save("Output.xlsx", SaveFormat.Xlsx);
     }
 }

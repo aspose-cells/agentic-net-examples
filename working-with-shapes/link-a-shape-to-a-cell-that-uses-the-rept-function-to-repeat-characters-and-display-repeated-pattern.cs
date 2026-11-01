@@ -1,13 +1,13 @@
-// Title: Link a textbox shape to a cell containing a REPT formula using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new workbook, write the formula =REPT("AB",5) into cell A1, add a textbox shape at C3, and set the shape's Text property to "=A1" with Aspose.Cells in C#. | Adjust the added textbox shape to hide its border while keeping the linked REPT result visible in the shape. | Produce an Excel file named LinkedShapeWithRept.xlsx where the textbox automatically updates to reflect any changes to the REPT formula in the linked cell.
-// Common Searches: asp.net c# link textbox shape to cell formula using Aspose.Cells | display REPT function output in an Excel shape with Aspose.Cells .NET | how to bind shape text to a cell that contains a REPT formula in C# | Aspose.Cells hide shape border while linking shape text to a cell
-// Tags: Aspose.Cells textbox shape linked to cell | C# insert REPT formula programmatically | Aspose.Cells hide shape border | Excel shape text reference cell .NET | link shape to REPT function output
+// Title: How to bind a rectangle shape’s text to a cell containing a REPT formula using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, writes =REPT("*",10) into cell A1, adds a rectangle shape, and sets the shape's Text property to =A1 so the shape shows the repeated asterisks. | Write an Aspose.Cells example that links a shape's displayed text to the result of a REPT function in a worksheet cell by assigning a formula to Shape.Text.
+// Common Searches: Aspose.Cells C# bind shape text to cell formula REPT | display REPT function output inside a rectangle shape using Aspose.Cells | link Excel shape to cell value with Aspose.Cells .NET example | set shape text to =A1 after using REPT in a worksheet cell
+// Tags: Aspose.Cells shape text formula binding | C# rectangle shape REPT function | link shape to cell value Aspose.Cells | Excel shape text from cell formula .NET | Aspose.Cells create shape linked to REPT result
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, sets cell A1 to a REPT formula (e.g., =REPT("AB",5)), adds a textbox shape at C3, links the shape's text to A1 so it displays the repeated pattern, hides the shape border, and saves the file as LinkedShapeWithRept.xlsx.
+// The sample creates a new workbook, assigns the REPT("*",10) formula to cell A1, adds a rectangle shape, links the shape's text to cell A1 by setting Shape.Text to "=A1", and saves the file as LinkedShapeWithRept.xlsx.
 class Program
 {
     static void Main()
@@ -20,30 +20,31 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a formula in cell A1 that repeats a character pattern using REPT
-            // Example: repeat the string "AB" 5 times -> "ABABABABAB"
-            Cell targetCell = sheet.Cells["A1"];
-            targetCell.Formula = @"=REPT(""AB"",5)";
+            // Set a formula in cell A1 that repeats a character using REPT function
+            // Example: repeat the asterisk (*) 10 times
+            Cell cell = sheet.Cells["A1"];
+            cell.Formula = "=REPT(\"*\",10)";
 
-            // Add a textbox shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, height, width
-            // Here we place it at row 2, column 2 (C3) with arbitrary size
-            int upperLeftRow = 2;
-            int upperLeftColumn = 2;
-            int top = 0;
-            int left = 0;
-            int height = 100;
-            int width = 200;
-            Shape shape = sheet.Shapes.AddTextBox(upperLeftRow, upperLeftColumn, top, left, height, width);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,    // upper left row (zero-based)
+                0,    // upper left column (zero-based)
+                0,    // top offset in points
+                0,    // left offset in points
+                100,  // height in points
+                200   // width in points
+            );
 
-            // Link the shape's text to the cell A1 so it displays the repeated pattern
+            // Link the shape's text to cell A1 so it displays the repeated pattern
+            // In Aspose.Cells, linking is achieved by setting the shape's text to a formula referencing the cell.
             shape.Text = "=A1";
 
-            // Optionally, format the shape (e.g., remove border)
-            shape.Line.Weight = 0; // Set line weight to 0 to hide border
-
             // Save the workbook to a file
-            workbook.Save("LinkedShapeWithRept.xlsx");
+            string outputPath = "LinkedShapeWithRept.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

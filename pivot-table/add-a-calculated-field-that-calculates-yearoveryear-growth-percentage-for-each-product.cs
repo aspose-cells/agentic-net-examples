@@ -1,13 +1,13 @@
-// Title: Insert a Year‑Over‑Year Growth % Column into an Excel Sheet Using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that adds a new column named "YoY Growth %" and fills each cell with a formula that computes the percentage change between the current year's sales and the previous year's sales for the same product. | Generate an IFERROR‑wrapped SUMIFS expression in Aspose.Cells to calculate year‑over‑year growth and assign it to the newly created column for every data row.
-// Common Searches: asp.net add YoY growth column to existing Excel file using Aspose.Cells | Aspose.Cells C# formula for year over year sales growth per product | how to use SUMIFS in Aspose.Cells to reference previous year values | set cell formula dynamically for each row with Aspose.Cells C#
-// Tags: insert calculated column Aspose.Cells C# | YoY growth percentage formula Aspose.Cells | SUMIFS IFERROR expression Aspose.Cells | set cell formula programmatically .NET Excel | calculate year over year sales growth C#
+// Title: How to add a Year‑over‑Year growth calculated field to an existing Excel PivotTable using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add YoY growth calculated field to pivot table programmatically | Create year over year percentage field in Excel pivot table with Aspose.Cells .NET | Add custom calculated field to existing pivot table using Aspose.Cells API | C# code to insert a YoY growth % field into a pivot table in an XLSX workbook | Aspose.Cells example for adding calculated field to first worksheet pivot table
+// Tags: Aspose.Cells add calculated field pivot table | C# pivot table YoY growth percentage | Excel workbook modify pivot table Aspose.Cells | Calculated field formula sales prev sales | Aspose.Cells .NET pivot table data area field
 
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 using System;
 using System.IO;
 
-// The example loads an existing workbook, inserts a "YoY Growth %" header in a new column, and for each data row assigns an IFERROR‑wrapped SUMIFS formula that calculates the year‑over‑year sales growth for the product, then saves the updated workbook.
+// The sample loads an XLSX workbook, checks that the first worksheet contains a pivot table, then adds a calculated field named "YoY Growth %" with the formula "=('Sales' - 'Prev Sales') / 'Prev Sales'" to the data area of that pivot table, and saves the modified file.
 class Program
 {
     static void Main()
@@ -17,55 +17,44 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define column indexes (zero‑based)
-            int productCol = 0; // Column A
-            int yearCol = 1;    // Column B
-            int salesCol = 2;   // Column C
-            int growthCol = 3;  // Column D (new column)
-
-            // Add header for the YoY Growth % column
-            cells[0, growthCol].PutValue("YoY Growth %");
-
-            // Determine the last row with data (zero‑based)
-            int lastRow = cells.MaxDataRow;
-
-            // Loop through each data row and set the YoY growth formula
-            for (int row = 1; row <= lastRow; row++)
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
             {
-                // Build cell addresses (e.g., A2, B2, C2) using the Cells collection
-                string productCell = cells[row, productCol].Name; // e.g., A2
-                string yearCell = cells[row, yearCol].Name;       // e.g., B2
-                string salesCell = cells[row, salesCol].Name;     // e.g., C2
-
-                // Formula:
-                // IFERROR((CurrentSales - SUMIFS(C:C, A:A, Product, B:B, Year-1)) /
-                //         SUMIFS(C:C, A:A, Product, B:B, Year-1), 0)
-                string formula = $"IFERROR(({salesCell}-SUMIFS(C:C, A:A, {productCell}, B:B, {yearCell}-1))/SUMIFS(C:C, A:A, {productCell}, B:B, {yearCell}-1),0)";
-
-                // Assign the formula to the YoY Growth % cell
-                cells[row, growthCol].Formula = formula;
+                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                return;
             }
+
+            // Assume the pivot table we want to modify is the first one on the sheet
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // Define a calculated field formula for Year‑over‑Year growth percentage
+            // Adjust field names ("Sales", "Prev Sales") to match your data source.
+            string yoyFormula = "=('Sales' - 'Prev Sales') / 'Prev Sales'";
+
+            // Add the calculated field named "YoY Growth %"
+            // The third parameter (true) indicates that the field should be added to the data area.
+            pivotTable.AddCalculatedField("YoY Growth %", yoyFormula, true);
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

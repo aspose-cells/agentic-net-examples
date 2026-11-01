@@ -1,43 +1,45 @@
-// Title: Create a list data validation that automatically expands when inserting rows using CellArea in Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a list validation for column A and automatically extends its range after a new row is inserted with InsertRange. | Demonstrate how to combine CellArea.CreateCellArea with Validation.AddArea to keep a dropdown list validation dynamic as rows are added. | Provide a complete example that saves the workbook after expanding the validation to include the newly inserted row.
-// Common Searches: aspocells keep dropdown validation range updated after inserting rows c# | dynamic list validation using CellArea in Aspose.Cells example | c# expand data validation when adding new rows with InsertRange | how to extend validation area after row insertion Aspose.Cells
-// Tags: Aspose.Cells dynamic list validation | CellArea validation range expansion | InsertRange shift down update validation | C# data validation dropdown growth
+// Title: Add whole-number data validation to a dynamically expanding column B range using CellArea in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add data validation that automatically includes newly inserted rows in column B | How to use CellArea to create a dynamic validation range in Aspose.Cells .NET | C# Aspose.Cells whole number validation for a column that grows when rows are added | Set up expandable data validation range with CellArea in an Aspose.Cells workbook | Apply between operator validation to a dynamic column range using Aspose.Cells API
+// Tags: CellArea dynamic validation range Aspose.Cells | whole number between validation Aspose.Cells C# | expandable column B validation Aspose.Cells | add data validation to worksheet Aspose.Cells | C# Aspose.Cells validation for inserted rows
 
 using Aspose.Cells;
+using System;
 
-// The example creates a list validation for cells A2:A5, inserts a new row at position 3, expands the validation to include the new row using Validation.AddArea, and saves the workbook as an XLSX file.
-class DynamicValidationDemo
+// Creates a new workbook, defines a CellArea covering column B from row 1 to row 1000, adds a whole-number (1‑100) validation rule that applies to the dynamic range, and saves the file as DynamicValidation.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Fill column A with sample data (A1:A5)
-        for (int i = 0; i < 5; i++)
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define a dynamic range using CellArea.
+        // This range starts at row 1 (index 0), column B (index 1) and extends to a large row number.
+        // When new rows are inserted within this column, they fall inside the defined area.
+        CellArea dynamicArea = new CellArea
         {
-            cells[i, 0].PutValue($"Item {i + 1}");
-        }
+            StartRow = 0,      // Row 1
+            StartColumn = 1,   // Column B
+            EndRow = 999,      // Row 1000 (adjust as needed for expected data size)
+            EndColumn = 1      // Column B
+        };
 
-        // Create a validation that initially covers A2:A5 (rows 1‑4, column 0)
-        CellArea initialArea = CellArea.CreateCellArea(1, 0, 4, 0);
-        int validationIndex = ws.Validations.Add(initialArea);
-        Validation validation = ws.Validations[validationIndex];
-        validation.Type = ValidationType.List;
-        validation.InCellDropDown = true;
-        validation.Formula1 = "\"Option1,Option2,Option3\"";
-
-        // Insert a new row at position 3 (zero‑based row index 2) and shift cells down
-        CellArea insertArea = CellArea.CreateCellArea(2, 0, 2, 0);
-        cells.InsertRange(insertArea, ShiftType.Down);
-
-        // Expand the validation to include the newly inserted row (row 3, column A)
-        CellArea newRowArea = CellArea.CreateCellArea(2, 0, 2, 0);
-        validation.AddArea(newRowArea, false, false);
+        // Add a data validation rule to the dynamic range.
+        // Example: whole number between 1 and 100.
+        int validationIndex = sheet.Validations.Add(dynamicArea);
+        Validation validation = sheet.Validations[validationIndex];
+        validation.Type = ValidationType.WholeNumber;
+        validation.Operator = OperatorType.Between;
+        validation.Formula1 = "1";
+        validation.Formula2 = "100";
+        validation.ShowError = true;
+        validation.ErrorTitle = "Invalid Input";
+        validation.ErrorMessage = "Please enter a whole number between 1 and 100.";
 
         // Save the workbook
-        wb.Save("DynamicValidationDemo.xlsx", SaveFormat.Xlsx);
+        workbook.Save("DynamicValidation.xlsx");
     }
 }

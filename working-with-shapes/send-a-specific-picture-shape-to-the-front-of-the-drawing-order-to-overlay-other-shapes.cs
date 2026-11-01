@@ -1,7 +1,7 @@
-// Title: Place a PNG picture shape over cells B2:C3 and bring it to the front of the drawing order with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that inserts a PNG image into cells B2:C3 of a worksheet and sets its ZOrderPosition to the topmost shape using Aspose.Cells. | Write a C# snippet that adds a picture shape from a file stream, positions it over a specific cell range, and moves it to the front of all other shapes in an Excel workbook with Aspose.Cells. | Create a C# program that loads an image, adds it as a picture shape to a worksheet, and adjusts the shape's Z‑order so it overlays any existing drawings.
-// Common Searches: how to set picture ZOrderPosition in Aspose.Cells C# | Aspose.Cells bring image shape to front of other shapes | add PNG picture to specific cell range and overlay other shapes using Aspose.Cells .NET | move picture shape to top of drawing order in Excel with Aspose.Cells | C# Aspose.Cells picture shape Z‑order example
-// Tags: Aspose.Cells add picture shape PNG | C# set picture ZOrderPosition | worksheet shape drawing order Aspose.Cells | overlay image over existing shapes Excel | add picture to cell range B2:C3 Aspose.Cells
+// Title: How to bring a picture shape to the front of the drawing order in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a PNG image into cell B2 of a worksheet and set its ZOrderPosition to the highest index using Aspose.Cells in C#. | Reorder an existing picture shape to the top of the drawing stack in an Aspose.Cells workbook and save the file. | Load or create an Excel workbook, add a picture, adjust its Z-order so it overlays all other shapes, then export as XLSX with Aspose.Cells.
+// Common Searches: Aspose.Cells C# bring picture shape to front of other shapes | set ZOrderPosition for picture in Aspose.Cells worksheet | how to change drawing order of images in Excel using Aspose.Cells .NET | move Excel picture to top layer programmatically with Aspose.Cells | C# Aspose.Cells picture overlay other worksheet shapes
+// Tags: Aspose.Cells picture ZOrderPosition | C# adjust drawing order of worksheet shapes | Excel image layering with Aspose.Cells | Aspose.Cells shape front layering | C# add image to worksheet cell Aspose.Cells
 
 using System;
 using System.IO;
@@ -10,67 +10,60 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // // Demonstrates creating a workbook, inserting a PNG image as a picture shape covering cells B2:C3, setting its ZOrderPosition to the highest index to bring it to the front, and saving the file.
+    // The example loads (or creates) an Excel workbook, inserts a PNG picture into cell B2, sets its ZOrderPosition to the total picture count to move it to the front of all shapes, and saves the workbook as output.xlsx.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Path to the image file
+                // Define file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
                 string imagePath = "image.png";
 
-                // Verify that the image file exists before adding it
-                if (!File.Exists(imagePath))
+                // Load existing workbook or create a new one if the file does not exist
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+                // Ensure there is at least one worksheet
+                if (workbook.Worksheets.Count == 0)
                 {
-                    Console.WriteLine($"Image file not found: {imagePath}");
+                    workbook.Worksheets.Add();
+                }
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add picture only if the image file exists
+                if (File.Exists(imagePath))
+                {
+                    // Add picture at cell B2 (row index 1, column index 1) and retrieve its index
+                    int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
+
+                    // Get the picture object
+                    Picture picture = sheet.Pictures[pictureIndex];
+
+                    // Bring the picture to the front by setting a high Z-order position
+                    picture.ZOrderPosition = sheet.Pictures.Count;
                 }
                 else
                 {
-                    try
-                    {
-                        // Open the image as a stream (required by AddPicture overload)
-                        using (FileStream imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-                        {
-                            // Add a picture shape to the worksheet covering cells B2:C3 (zero‑based indices)
-                            Picture picture = worksheet.Shapes.AddPicture(
-                                1, // upperLeftRow (B2)
-                                1, // upperLeftColumn (B2)
-                                2, // lowerRightRow (C3)
-                                2, // lowerRightColumn (C3)
-                                imageStream);
-
-                            // Bring the picture to the front by setting its Z‑order to the highest value
-                            picture.ZOrderPosition = worksheet.Shapes.Count - 1;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to add picture: {ex.Message}");
-                    }
+                    Console.WriteLine($"Image file not found: {imagePath}");
                 }
 
-                // Save the workbook to a file
-                string outputPath = "Output.xlsx";
-                try
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                    Directory.CreateDirectory(outputDir);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                }
+
+                // Save the workbook with the updated drawing order
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

@@ -1,68 +1,47 @@
-// Title: Combine two Excel workbooks and export the merged workbook to PDF while preserving chart and image fidelity using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads two .xlsx files, merges them with Workbook.Combine, and saves the result as a PDF using Aspose.Cells. | Generate a .NET console application that verifies visual fidelity of charts and images after combining workbooks and exporting to PDF. | Create a C# example that checks for missing source files, creates empty workbooks if needed, combines them, and outputs a single PDF document.
-// Common Searches: Aspose.Cells combine two workbooks and save as PDF C# | How to merge multiple Excel files and export to PDF with chart preservation using Aspose.Cells | C# code to load two .xlsx files, combine them, and generate a single PDF document | Export combined workbook to PDF while keeping images intact Aspose.Cells .NET
-// Tags: Workbook.Combine merge workbooks Aspose.Cells | save workbook as PDF Aspose.Cells C# | preserve chart fidelity PDF Aspose.Cells | handle missing Excel file Aspose.Cells | export combined workbook to PDF .NET
+// Title: Convert a merged Excel workbook containing charts and images to a single‑page‑per‑sheet PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a merged .xlsx file, verifies the file exists, and saves it as a PDF with Aspose.Cells while applying PdfSaveOptions to fit all columns on one page per sheet. | Show how to configure Aspose.Cells PdfSaveOptions so that charts and images retain their layout during Excel‑to‑PDF export. | Demonstrate adding robust try‑catch handling to report FileNotFoundException and other errors when converting an Excel workbook to PDF in C#.
+// Common Searches: c# aspose.cells convert combined workbook with charts to pdf | aspose.cells pdfsaveoptions allcolumnsinonepagepersheet example | how to keep images and charts when exporting excel to pdf in .net | check file existence before saving workbook as pdf using aspose.cells | export merged excel file to pdf with single page per sheet asp.net
+// Tags: Aspose.Cells PdfSaveOptions all columns one page | C# Excel to PDF conversion with charts preservation | verify workbook file existence before PDF export | combined workbook PDF generation Aspose.Cells | preserve images during Excel to PDF conversion .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportCombinedPdf
+// The program checks that a combined Excel workbook exists, loads it with Aspose.Cells, configures PdfSaveOptions to fit all columns on one page per sheet, and saves the workbook as a PDF while preserving charts and images.
+class Program
 {
-    // The program loads two Excel files (creating new workbooks if they are missing), merges the second workbook into the first using Workbook.Combine, and saves the combined workbook as a PDF, ensuring charts and images retain their visual fidelity.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            const string firstPath = "source1.xlsx";
-            const string secondPath = "source2.xlsx";
-            const string outputPdf = "CombinedOutput.pdf";
+            const string inputPath = "CombinedWorkbook.xlsx";
+            const string outputPath = "CombinedWorkbook.pdf";
 
-            Workbook firstWorkbook = null;
-            Workbook secondWorkbook = null;
-
-            try
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Load or create the first workbook.
-                if (File.Exists(firstPath))
-                {
-                    firstWorkbook = new Workbook(firstPath);
-                }
-                else
-                {
-                    Console.WriteLine($"File '{firstPath}' not found. Creating a new workbook.");
-                    firstWorkbook = new Workbook();
-                }
-
-                // Load or create the second workbook.
-                if (File.Exists(secondPath))
-                {
-                    secondWorkbook = new Workbook(secondPath);
-                }
-                else
-                {
-                    Console.WriteLine($"File '{secondPath}' not found. Creating a new workbook.");
-                    secondWorkbook = new Workbook();
-                }
-
-                // Combine the second workbook into the first one.
-                firstWorkbook.Combine(secondWorkbook);
-
-                // Save the combined workbook as PDF.
-                firstWorkbook.Save(outputPdf, SaveFormat.Pdf);
-
-                Console.WriteLine($"Combined workbook exported to PDF successfully: {outputPdf}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the combined workbook that contains charts and images
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (e.g., fit all columns on one page)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up resources.
-                firstWorkbook?.Dispose();
-                secondWorkbook?.Dispose();
-            }
+                AllColumnsInOnePagePerSheet = true
+            };
+
+            // Export the workbook to PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

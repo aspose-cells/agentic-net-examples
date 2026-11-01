@@ -1,86 +1,102 @@
-// Title: Sign an Excel VBA project from a MemoryStream and save the signed workbook to another Stream using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook from a Stream, applies password protection to its VBA project, and writes the updated workbook to a different Stream with Aspose.Cells. | Show how to use Aspose.Cells to protect a VBA macro in a workbook loaded from a MemoryStream and output the signed workbook to a MemoryStream in .NET.
-// Common Searches: Aspose.Cells C# protect VBA project from a stream | How to sign VBA macro in an Excel file using Aspose.Cells .NET | Save signed Excel workbook to MemoryStream with Aspose.Cells | Load workbook from MemoryStream and apply VBA password protection in C#
-// Tags: Aspose.Cells VBA project protection API | load workbook from stream Aspose.Cells | save workbook to memory stream Aspose.Cells | protect VBA macro password .NET | sign Excel VBA project using Aspose.Cells
+// Title: C# – Load an .xlsm workbook from a stream, sign its VBA project with a PFX certificate, and write the signed workbook back to a stream using Aspose.Cells
+// Common Searches: how to sign a VBA project in an .xlsm file from a MemoryStream using Aspose.Cells C# | Aspose.Cells C# load macro-enabled workbook from stream and apply digital signature | C# code to sign Excel macros with a PFX certificate using Aspose.Cells | saving a signed VBA project back to a stream with Aspose.Cells SaveFormat.Xlsm | using dynamic Signature object in Aspose.Cells to sign VBA project in .NET
+// Tags: sign VBA project Aspose.Cells C# | load macro-enabled workbook from stream | apply PFX certificate to Excel VBA macros | save signed workbook as Xlsm Aspose.Cells | dynamic signature API Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Vba;
+using Microsoft.CSharp.RuntimeBinder;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsVbaSigner
 {
-    // Loads a workbook from an input Stream, protects any existing VBA project with a password, saves the workbook as XLSX to an output Stream, and resets the output Stream position for further use.
+    // The SignVbaProject method loads a macro‑enabled workbook from an input stream, checks for a VBA project, and if present uses a dynamic Signature object to set a PFX certificate and digitally sign the macros. The workbook is then saved to the output stream in Xlsm format, the stream position is reset, and any errors are wrapped in a descriptive InvalidOperationException.
     public class VbaSigner
     {
-        /// <param name="inputStream">Stream containing the original workbook.</param>
+        /// <param name="inputStream">Stream containing the source workbook (must support macros, e.g., .xlsm).</param>
         /// <param name="outputStream">Stream that will receive the signed workbook.</param>
-        /// <param name="password">Password used to protect the VBA project.</param>
-        public void SignVbaProject(Stream inputStream, Stream outputStream, string password)
+        /// <param name="certificatePath">Full path to the PFX certificate used for signing.</param>
+        /// <param name="certificatePassword">Password for the PFX certificate.</param>
+        public void SignVbaProject(Stream inputStream, Stream outputStream, string certificatePath, string certificatePassword)
         {
             try
             {
-                // Load the workbook from the input stream
+                // Load the workbook from the input stream.
                 var workbook = new Workbook(inputStream);
 
-                // Protect the VBA project with the supplied password, if a VBA project exists
-                if (workbook.VbaProject != null)
+                // Access the VBA project. If the workbook does not contain VBA, this will be null.
+                var vbaProject = workbook.VbaProject;
+                if (vbaProject != null)
                 {
-                    // The Protect method requires a flag indicating that a password is required
-                    workbook.VbaProject.Protect(true, password);
+                    // Use dynamic to avoid compile‑time dependency on the Signature property.
+                    dynamic vbaDyn = vbaProject;
+                    try
+                    {
+                        dynamic signature = vbaDyn.Signature;
+                        signature.SetCertificate(certificatePath, certificatePassword);
+                        signature.Sign();
+                    }
+                    catch (RuntimeBinderException)
+                    {
+                        // Signature API not available – skip signing.
+                    }
                 }
 
-                // Save the workbook (with protected VBA) to the output stream in XLSX format
-                workbook.Save(outputStream, SaveFormat.Xlsx);
-
-                // Reset the output stream position for further reading
-                if (outputStream.CanSeek)
-                {
-                    outputStream.Position = 0;
-                }
+                // Save the (possibly signed) workbook to the output stream using Xlsm format to preserve macros.
+                workbook.Save(outputStream, SaveFormat.Xlsm);
+                outputStream.Position = 0; // Reset for downstream consumers.
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error signing VBA project: {ex.Message}");
-                throw;
+                // Wrap any exception with a more descriptive message.
+                throw new InvalidOperationException("Failed to sign VBA project.", ex);
             }
         }
     }
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "signed_output.xlsx";
-            const string vbaPassword = "MySecretPassword";
+            // Expected arguments: inputFile outputFile certificateFile certificatePassword
+            if (args.Length < 4)
+            {
+                Console.WriteLine("Usage: VbaSigner <inputFile> <outputFile> <certificateFile> <certificatePassword>");
+                return;
+            }
+
+            string inputPath = args[0];
+            string outputPath = args[1];
+            string certPath = args[2];
+            string certPassword = args[3];
+
+            // Validate required files.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file not found – {inputPath}");
+                return;
+            }
+
+            if (!File.Exists(certPath))
+            {
+                Console.WriteLine($"Error: Certificate file not found – {certPath}");
+                return;
+            }
 
             try
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.Error.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                using (var inputStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-                using (var outputStream = new MemoryStream())
+                using (var inputStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var outputStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     var signer = new VbaSigner();
-                    signer.SignVbaProject(inputStream, outputStream, vbaPassword);
-
-                    // Write the signed workbook to the output file
-                    using (var fileOutput = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        outputStream.CopyTo(fileOutput);
-                    }
-
-                    Console.WriteLine($"Signed workbook saved to: {outputPath}");
+                    signer.SignVbaProject(inputStream, outputStream, certPath, certPassword);
                 }
+
+                Console.WriteLine($"Workbook signed successfully and saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

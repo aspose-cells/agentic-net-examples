@@ -1,29 +1,42 @@
-// Title: Encrypt a newly created Excel workbook with a custom password using Aspose.Cells for .NET and save as .xlsx
-// AI Prompts: Generate a C# program that creates a Workbook, assigns a user‑provided string to workbook.Settings.Password, and saves the file as an encrypted .xlsx with Aspose.Cells. | Update the example to read the password from console input, apply it to workbook.Settings.Password, and then write the protected workbook to disk. | Adapt the code to encrypt the workbook as a binary .xlsb file while preserving password protection using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to set a password for opening an Excel file | Encrypt newly created workbook with user defined password using Aspose.Cells .NET | Programmatically save a .xlsx file that requires a password to open using Aspose.Cells | C# example for workbook.Settings.Password property in Aspose.Cells
-// Tags: Aspose.Cells workbook password protection | C# set workbook.Settings.Password | save password protected .xlsx Aspose.Cells | create encrypted Excel file .NET | protect Excel workbook with user password
+// Title: Encrypt a new workbook with a custom password and save it as a protected XLSX using Aspose.Cells for .NET
+// Common Searches: how to set an open password for a new Excel workbook using Aspose.Cells C# | Aspose.Cells C# encrypt workbook and protect its structure before saving | save workbook with password protection and encryption in Aspose.Cells .NET | C# example for workbook.Settings.Password and workbook.Protect in Aspose.Cells | prevent modifications to an Excel file with password using Aspose.Cells
+// Tags: Aspose.Cells workbook password encryption | C# set workbook open password | protect workbook structure Aspose.Cells | save encrypted XLSX with Aspose.Cells | Aspose.Cells workbook protection API
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// // This example creates a new Workbook, adds sample data, assigns a user‑specified password via workbook.Settings.Password to encrypt the file, and saves the protected workbook as ProtectedWorkbook.xlsx in Xlsx format.
+// The example creates a new Workbook, writes sample data to cells A1 and B1, assigns an open password via workbook.Settings.Password, applies full protection (structure and windows) with workbook.Protect, and saves the encrypted and protected file as 'ProtectedWorkbook.xlsx' in XLSX format using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // (Optional) Add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample");
-        sheet.Cells["B1"].PutValue("Data");
+            // Add some sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["B1"].PutValue("Data");
 
-        // Set the password that will be required to open the file
-        // This encrypts the workbook using the specified password
-        workbook.Settings.Password = "UserSpecifiedPassword";
+            // Set the password required to open the file
+            workbook.Settings.Password = "UserSpecifiedPassword";
 
-        // Save the encrypted workbook to disk
-        workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Protect the workbook from modifications (structure and windows)
+            workbook.Protect(ProtectionType.All, "UserSpecifiedPassword");
+
+            // Define output file path
+            string outputPath = "ProtectedWorkbook.xlsx";
+
+            // Save the encrypted and protected workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

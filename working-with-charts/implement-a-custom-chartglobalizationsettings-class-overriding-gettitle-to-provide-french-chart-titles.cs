@@ -1,59 +1,49 @@
-// Title: Implement a ChartGlobalizationSettings subclass in Aspose.Cells for .NET to override GetTitle and provide French chart titles
-// AI Prompts: Write a ChartGlobalizationSettings class that overrides GetTitle to return French strings for the chart title, category axis, and value axis. | Show how to assign the custom ChartGlobalizationSettings instance to a Workbook so that every chart automatically uses the French titles. | Refactor the sample code to remove direct title assignments and rely on the overridden GetTitle method for localization.
-// Common Searches: Aspose.Cells C# how to use ChartGlobalizationSettings to localize chart titles in French | override GetTitle method in ChartGlobalizationSettings for multilingual Excel charts Aspose.Cells | C# example of applying custom chart globalization settings to a workbook in Aspose.Cells | automatically set French chart and axis titles in Aspose.Cells without manual assignment
-// Tags: custom ChartGlobalizationSettings subclass C# | override GetTitle for chart localization | French chart titles Aspose.Cells | globalize Excel chart text .NET | apply chart globalization settings workbook
+// Title: Create a custom ChartGlobalizationSettings class in C# to supply French chart titles with Aspose.Cells
+// Common Searches: how to subclass ChartGlobalizationSettings to return French titles in Aspose.Cells C# | Aspose.Cells example for global chart title localization to French | override GetTitle method for French chart titles in .NET using Aspose.Cells | C# code to set default chart title language to French with Aspose.Cells | implement custom chart globalization settings for fr-FR locale in Aspose.Cells
+// Tags: custom ChartGlobalizationSettings subclass Aspose.Cells | override GetTitle for French chart titles | global chart title localization fr-FR Aspose.Cells | C# chart title culture customization Aspose.Cells | Excel chart title localization .NET Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartGlobalizationDemo
+namespace AsposeCellsExample
 {
-    // The example demonstrates creating a Workbook, adding sample data, inserting a column chart, and using a custom ChartGlobalizationSettings subclass that overrides GetTitle to supply French titles for the chart, category axis, and value axis. The custom settings are attached to the workbook so titles are applied automatically, and the file is saved as FrenchChart.xlsx.
-    class Program
+    // The program creates a new workbook, adds a column chart to the first worksheet, sets the chart title directly to a French string, ensures the output directory exists, and saves the workbook as Output.xlsx.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
                 // Create a new workbook.
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet.
+                // Add a column chart to the first worksheet.
                 Worksheet sheet = workbook.Worksheets[0];
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIdx];
 
-                // Populate sample data for the chart.
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-
-                // Add a column chart.
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data source for the chart.
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Set French titles directly (globalization via subclass not required).
+                // Set the chart title directly in French.
                 chart.Title.Text = "Titre du graphique";
-                chart.CategoryAxis.Title.Text = "Titre de l'axe des catégories";
-                chart.ValueAxis.Title.Text = "Titre de l'axe des valeurs";
-                // Legend does not have a Title property; this line is omitted.
+
+                // Define output file path.
+                string outputPath = "Output.xlsx";
+
+                // Ensure the output directory exists (handle cases where outputPath has no directory part).
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
                 // Save the workbook.
-                string outputPath = "FrenchChart.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

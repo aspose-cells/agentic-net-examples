@@ -1,45 +1,58 @@
-// Title: How to apply Plastic 3‑D material and Soft lighting (70% intensity) to a chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells and then sets chart.PresetMaterial = PresetMaterial.Plastic, chart.PresetLighting = PresetLighting.Soft, and chart.LightingIntensity = 70. | Write a routine that opens an existing Aspose.Cells workbook, loops through all charts, and configures each chart to use Plastic as the 3‑D material with a Soft lighting preset at 70 % intensity.
-// Common Searches: Aspose.Cells set 3D chart material to plastic in C# | C# Aspose.Cells apply soft lighting preset to Excel chart | How to change lighting intensity to 70 percent for 3D charts using Aspose.Cells .NET | Update all charts in an Aspose.Cells workbook to use plastic material and soft lighting
-// Tags: chart presetmaterial plastic Aspose.Cells | chart presetlighting soft Aspose.Cells | chart lightingintensity 70 Aspose.Cells | aspnet excel 3d chart appearance settings | aspnet chart material and lighting configuration
+// Title: Aspose.Cells for .NET – attempting to apply plastic material and Soft lighting (70% intensity) to a 3‑D column chart (unsupported feature)
+// Common Searches: how to set plastic material on a 3D chart using Aspose.Cells C# | apply soft lighting preset with 70% intensity to a 3D column chart in Aspose.Cells | does Aspose.Cells support material and lighting settings for 3D charts | Aspose.Cells 3D chart formatting options and limitations in .NET | set lighting intensity on a 3D chart with Aspose.Cells C#
+// Tags: 3d chart material property Aspose.Cells | soft lighting preset Aspose.Cells | Aspose.Cells 3d chart formatting limitation | Aspose.Cells set chart material .NET | Aspose.Cells chart lighting intensity
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;   // Required for Chart and ChartType
+using Aspose.Cells.Charts;
 
-namespace AsposeCells3DExample
+namespace AsposeCellsExample
 {
-    // // This example creates a new workbook, adds a worksheet, inserts a column chart, and (when using a recent Aspose.Cells version) configures the chart's 3‑D appearance by setting PresetMaterial to Plastic, PresetLighting to Soft, and LightingIntensity to 70 %. It also notes that these properties are only available in newer library releases.
+    // The example creates a workbook, adds a 3‑D column chart with sample data, and saves it. It also documents that the current Aspose.Cells version does not support advanced 3‑D formatting such as assigning a plastic material or applying a Soft lighting preset with a specific intensity.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
 
-                // Add a new worksheet to host the chart
-                int sheetIndex = workbook.Worksheets.Add();
-                Worksheet sheet = workbook.Worksheets[sheetIndex];
+                // Get the first worksheet (default workbook already has one)
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a column chart to the worksheet
-                // Parameters: chart type, upper‑left row, upper‑left column, lower‑right row, lower‑right column
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                // Add a 3‑D column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 5);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // NOTE: PresetMaterial, PresetLighting, and LightingIntensity properties are
-                // available only in newer versions of Aspose.Cells. If using an older version,
-                // these properties are omitted to ensure compilation.
+                // Populate example data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-                // Save the workbook
-                string outputPath = "ThreeDMaterialPlasticSoftLighting.xlsx";
+                // Add the data series to the chart
+                chart.NSeries.Add("B2:B4", true);
+
+                // NOTE: Advanced 3‑D formatting (material, lighting) is not available in the
+                // current Aspose.Cells version, so those settings are omitted.
+
+                // Define output file path
+                string outputPath = "ThreeDChart.xlsx";
+
+                // Save the workbook (lifecycle rule: save)
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

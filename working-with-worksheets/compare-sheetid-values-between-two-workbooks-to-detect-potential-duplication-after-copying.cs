@@ -1,74 +1,72 @@
-// Title: Identify duplicate worksheet Index values across two Excel workbooks with Aspose.Cells in C#
-// AI Prompts: Generate a C# console application that uses Aspose.Cells to load two .xlsx files, collect the Index of each worksheet from the first workbook, and print the names of any worksheets in the second workbook that share the same Index. | Write .NET code that iterates through the Worksheet.Index property of all sheets in two Excel workbooks and outputs a list of potential duplicate sheet IDs.
-// Common Searches: C# Aspose.Cells how to compare worksheet indexes between two workbooks | detect duplicate sheet IDs after copying Excel files using Aspose.Cells | find worksheet index collisions in .NET Excel processing | list worksheets with same Index in two Excel workbooks Aspose.Cells
-// Tags: Aspose.Cells compare worksheet indexes | detect duplicate sheet IDs .NET | worksheet index collision detection Excel | C# compare worksheet Index property
+// Title: Detect duplicate worksheets by comparing SheetId (Index) values across two Excel workbooks with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that loads two .xlsx files, extracts each worksheet's Index, and prints the names of sheets whose Index appears in both workbooks. | Create a reusable C# method that takes two Excel file paths and returns a list of worksheet names that share the same SheetId when processed with Aspose.Cells.
+// Common Searches: aspnet compare worksheet indexes between two Excel files to find copied sheets | c# Aspose.Cells detect duplicate sheet IDs after workbook copy | how to check if worksheets have the same SheetId in two workbooks using Aspose.Cells | find overlapping worksheet indexes in source and target Excel workbooks with Aspose.Cells .NET
+// Tags: compare worksheet indexes Aspose.Cells .NET | detect duplicate SheetId across workbooks | worksheet index collision after copy | Aspose.Cells sheet duplication check
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads two Excel workbooks with Aspose.Cells, gathers the Index values of all worksheets from the first workbook, then scans the second workbook for worksheets whose Index already exists, reporting any matching sheet names as potential duplicates.
+// The example loads a source and a target Excel workbook, stores the Index values of all worksheets from the source in a HashSet, then iterates the target workbook's worksheets to flag any whose Index matches, outputting potential duplicate sheet names.
 class SheetIdComparer
 {
     static void Main()
     {
-        // Paths to the two workbooks to compare
-        string workbookPath1 = "Workbook1.xlsx";
-        string workbookPath2 = "Workbook2.xlsx";
-
-        // Ensure the input files exist
-        if (!File.Exists(workbookPath1))
-        {
-            Console.WriteLine($"File not found: {workbookPath1}");
-            return;
-        }
-        if (!File.Exists(workbookPath2))
-        {
-            Console.WriteLine($"File not found: {workbookPath2}");
-            return;
-        }
-
         try
         {
-            // Load the workbooks
-            Workbook wb1 = new Workbook(workbookPath1);
-            Workbook wb2 = new Workbook(workbookPath2);
+            const string sourcePath = "SourceWorkbook.xlsx";
+            const string targetPath = "TargetWorkbook.xlsx";
 
-            // Collect all worksheet indexes from the first workbook
-            HashSet<int> sheetIndexesInFirst = new HashSet<int>();
-            foreach (Worksheet ws in wb1.Worksheets)
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
             {
-                sheetIndexesInFirst.Add(ws.Index);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Find worksheets in the second workbook that have duplicate indexes
-            List<string> duplicateSheets = new List<string>();
-            foreach (Worksheet ws in wb2.Worksheets)
+            // Verify that the target file exists
+            if (!File.Exists(targetPath))
             {
-                if (sheetIndexesInFirst.Contains(ws.Index))
+                Console.WriteLine($"Target file not found: {targetPath}");
+                return;
+            }
+
+            // Load the first workbook
+            Workbook wbSource = new Workbook(sourcePath);
+
+            // Load the second workbook (the one that may contain copied sheets)
+            Workbook wbTarget = new Workbook(targetPath);
+
+            // Collect all worksheet indexes from the source workbook
+            HashSet<int> sourceSheetIndexes = new HashSet<int>();
+            foreach (Worksheet ws in wbSource.Worksheets)
+            {
+                sourceSheetIndexes.Add(ws.Index);
+            }
+
+            // Compare worksheet indexes in the target workbook against the source set
+            bool duplicationFound = false;
+            foreach (Worksheet ws in wbTarget.Worksheets)
+            {
+                if (sourceSheetIndexes.Contains(ws.Index))
                 {
-                    duplicateSheets.Add(ws.Name);
+                    duplicationFound = true;
+                    Console.WriteLine($"Potential duplicate sheet detected: \"{ws.Name}\" (Index={ws.Index})");
                 }
             }
 
-            // Report the results
-            if (duplicateSheets.Count > 0)
-            {
-                Console.WriteLine("Potential duplicate worksheet indexes detected in the following sheets of the second workbook:");
-                foreach (string sheetName in duplicateSheets)
-                {
-                    Console.WriteLine("- " + sheetName);
-                }
-            }
-            else
+            if (!duplicationFound)
             {
                 Console.WriteLine("No duplicate worksheet indexes were found between the two workbooks.");
             }
+
+            // Optionally, save any changes or results (not required for comparison)
+            // wbTarget.Save("TargetWorkbook_Analyzed.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred while processing the workbooks: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

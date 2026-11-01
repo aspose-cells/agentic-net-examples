@@ -1,20 +1,21 @@
-// Title: Use a custom IFilePathProvider with HtmlSaveOptions to keep worksheet hyperlinks intact when exporting Excel to HTML in Aspose.Cells for .NET
-// AI Prompts: Create a class that implements IFilePathProvider returning the original file name, assign it to HtmlSaveOptions.FilePathProvider, and export a Workbook to HTML so that hyperlinks are preserved. | Modify an existing HTML export routine to inject a custom file path provider, ensuring linked resources resolve correctly in the generated HTML file.
-// Common Searches: Aspose.Cells how to maintain hyperlink URLs when saving workbook as HTML | C# set HtmlSaveOptions.FilePathProvider to custom implementation for Excel to HTML conversion | example of IFilePathProvider for preserving links in Aspose.Cells HTML export | fix broken worksheet hyperlinks after exporting Excel to HTML with Aspose.Cells .NET
-// Tags: custom IFilePathProvider implementation Aspose.Cells | HtmlSaveOptions FilePathProvider C# | preserve hyperlinks during Excel to HTML export | Aspose.Cells HTML export hyperlink handling | C# Excel workbook to HTML with custom file path provider
+// Title: Use a custom IFilePathProvider with HtmlSaveOptions to repair worksheet hyperlink URLs during Excel-to-HTML export in Aspose.Cells for .NET
+// AI Prompts: Implement a class that inherits IFilePathProvider, override GetFullName to prepend a virtual folder (e.g., "files/"), and assign this instance to HtmlSaveOptions.FilePathProvider before saving the workbook as HTML. | Update the HTML export routine to supply a custom file‑path provider so that all worksheet hyperlinks in the generated HTML point to the desired relative location.
+// Common Searches: Aspose.Cells how to change hyperlink URLs in HTML export using IFilePathProvider | C# set HtmlSaveOptions.FilePathProvider to fix broken links in exported HTML | custom file path provider for Excel to HTML conversion Aspose.Cells .NET | adjust relative hyperlink paths when saving workbook as HTML with Aspose.Cells | example of implementing IFilePathProvider for HTML export in Aspose.Cells
+// Tags: HtmlSaveOptions FilePathProvider usage | fix broken hyperlinks in HTML export | Aspose.Cells hyperlink path customization | Excel to HTML conversion hyperlink handling | custom IFilePathProvider implementation
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Shows how to implement a simple IFilePathProvider that returns the file name unchanged, assign it to HtmlSaveOptions.FilePathProvider, and save an Excel workbook as HTML while keeping worksheet hyperlinks functional.
+// Custom implementation of IFilePathProvider to control hyperlink file paths during HTML export
+// Shows how to create a CustomFilePathProvider that prefixes hyperlink file names with a virtual folder, assign it to HtmlSaveOptions.FilePathProvider, and save a workbook as HTML so that worksheet hyperlinks reference the corrected paths.
 public class CustomFilePathProvider : IFilePathProvider
 {
-    // Returns the full path for a given file name during HTML export.
-    // This simple implementation returns the file name unchanged.
+    // Returns the path that should be used in the generated HTML for a given file name.
     public string GetFullName(string fileName)
     {
-        return fileName;
+        // Example logic: prepend a virtual folder or modify the path as needed.
+        return $"files/{fileName}";
     }
 }
 
@@ -22,35 +23,36 @@ public class HtmlExportWithCustomFilePathProvider
 {
     public static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
         try
         {
-            // Verify that the input workbook exists.
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook.
+            // Load the source workbook.
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options.
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Assign the custom file path provider to handle hyperlinks.
+                // Assign the custom IFilePathProvider to fix broken worksheet hyperlinks.
                 FilePathProvider = new CustomFilePathProvider()
             };
 
-            // Save the workbook as HTML.
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+            const string outputPath = "output.html";
+
+            // Save the workbook as HTML using the configured options.
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors.
+            // Catch any unexpected errors and display a friendly message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

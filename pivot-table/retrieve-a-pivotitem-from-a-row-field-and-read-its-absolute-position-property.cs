@@ -1,59 +1,78 @@
-// Title: How to get the absolute Position of a PivotItem in a row field using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a pivot table with Aspose.Cells, accesses the first PivotItem of a row field, and reads its Position property. | Show how to output the absolute Position of a PivotItem after calling RefreshData and CalculateData on the pivot table in Aspose.Cells.
-// Common Searches: Aspose.Cells C# read PivotItem.Position property | Get index of first row field item in Aspose.Cells pivot table | How to retrieve absolute position of a pivot item in .NET | C# Aspose.Cells pivot table row field item order | Access PivotItem.Position after RefreshData and CalculateData
-// Tags: Aspose.Cells pivot item position | C# read PivotItem.Position | Aspose.Cells get row field item index | pivot table item order Aspose.Cells | Aspose.Cells refresh calculate pivot data
+// Title: C# example: read the absolute Position of the first PivotItem in a row field using Aspose.Cells
+// Common Searches: how to get the Position of a PivotItem in a row field with Aspose.Cells C# | Aspose.Cells example for reading pivot item absolute index in .NET | retrieve first row field PivotItem position from an Excel pivot table using C# | C# code to access PivotItem.Position property in Aspose.Cells | read pivot item index from a row field in an Excel workbook with Aspose.Cells
+// Tags: Aspose.Cells read pivot item position | retrieve pivot item from row field .NET | C# get pivot item absolute index | pivot table row field item Aspose.Cells | Excel pivot item Position property C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotItemPositionDemo
+// The sample loads an Excel workbook, checks for a pivot table and a row field, retrieves the first PivotItem from that row field, reads its absolute Position property, prints the value, and saves the workbook.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, assigns the Product column as a row field, refreshes and calculates the pivot table, then retrieves the first PivotItem of that row field, reads its absolute Position property, prints the value, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1000);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(2000);
-            sheet.Cells["A4"].PutValue("Orange");
-            sheet.Cells["B4"].PutValue(3000);
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            int ptIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[ptIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add the "Product" column as a row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add the "Sales" column as a data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Ensure a pivot table exists
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            // Refresh and calculate the pivot table so that PivotItems are generated
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+            // Access the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Retrieve the first row field (Product) and its first PivotItem
+            // Ensure a row field exists
+            if (pivotTable.RowFields.Count == 0)
+            {
+                Console.WriteLine("Pivot table has no row fields.");
+                return;
+            }
+
+            // Get the first row field
             PivotField rowField = pivotTable.RowFields[0];
-            PivotItem firstItem = rowField.PivotItems[0];
 
-            // Read the absolute Position property of the PivotItem
-            int absolutePosition = firstItem.Position;
+            // Ensure a pivot item exists
+            if (rowField.PivotItems.Count == 0)
+            {
+                Console.WriteLine("Row field has no pivot items.");
+                return;
+            }
 
-            // Output the position to the console
-            Console.WriteLine($"Absolute Position of PivotItem \"{firstItem.Name}\": {absolutePosition}");
+            // Retrieve the first pivot item
+            PivotItem pivotItem = rowField.PivotItems[0];
 
-            // Save the workbook (optional, demonstrates lifecycle rule)
-            workbook.Save("PivotItemPositionDemo_out.xlsx");
+            // Read the absolute position of the pivot item
+            int absolutePosition = pivotItem.Position;
+
+            // Display the position
+            Console.WriteLine("PivotItem absolute position: " + absolutePosition);
+
+            // Save the workbook (if any changes were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,63 +1,73 @@
-// Title: Extract formulas from a named range in an Excel workbook and write them to a text file with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, retrieves a specific named range, iterates over its cells, and outputs each cell's Formula string as a new line in a .txt file. | Generate a method that takes a workbook path, a named‑range identifier, and an output file path, then extracts all formulas from that range with Aspose.Cells and saves them line‑by‑line. | Create robust error‑handling logic for loading a workbook, locating a named range, and exporting its formulas to a text file, ensuring graceful messages when the file or range is missing.
-// Common Searches: Aspose.Cells C# export formulas from a named range to a .txt file | how to retrieve formula strings of a named range using Aspose.Cells | save Excel named range formulas as plain text with Aspose.Cells .NET | C# extract formulas from specific named range in workbook | Aspose.Cells get formula text from range and write to file
-// Tags: named range formula extraction Aspose.Cells | cell.Formula property usage C# | write Excel formulas to text file .NET | range traversal for formula export Aspose.Cells | error handling for named range access Aspose.Cells
+// Title: Extract cell formulas from a named range and save them to a text file with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells extract formulas from a specific named range to a .txt file | How to write Excel cell formulas to a text file using Aspose.Cells .NET | Retrieve formula text for each cell in a named range with Aspose.Cells in C# | Save named range cell addresses and formulas to a plain text file using Aspose.Cells | Aspose.Cells iterate over named range cells and export formulas in C#
+// Tags: named range formula extraction Aspose.Cells | export Excel formulas to text file C# | iterate cells in Aspose.Cells range | cell.IsFormula property Aspose.Cells | write cell address and formula to file C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads input.xlsx, locates the named range "MyRange", iterates each cell in the range, reads the Cell.Formula value (empty if none), and writes each formula line‑by‑line to output.txt using Aspose.Cells for .NET.
+// The example loads an Excel workbook, locates a named range, iterates through each cell in that range, captures the formula text (or the cell value if no formula), and writes the cell address together with the extracted formula to a specified text file, creating the output directory when necessary.
 class ExtractFormulasFromNamedRange
 {
     static void Main()
     {
+        // Path to the Excel workbook
+        string workbookPath = "input.xlsx";
+
+        // Name of the named range to process
+        string rangeName = "MyRange";
+
+        // Path to the output text file
+        string outputPath = "formulas.txt";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.txt";
-
             // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file \"{workbookPath}\" not found.");
                 return;
             }
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Retrieve the named range by its name (replace "MyRange" with your actual range name)
-            Name namedRange = workbook.Worksheets.Names["MyRange"];
+            // Retrieve the named range collection
+            NameCollection names = workbook.Worksheets.Names;
+
+            // Find the specific named range
+            Name namedRange = names[rangeName];
             if (namedRange == null)
             {
-                Console.WriteLine("Named range \"MyRange\" not found.");
+                Console.WriteLine($"Named range \"{rangeName}\" not found.");
                 return;
             }
 
-            // Get the actual cell range that the name refers to
+            // Get the cells area of the named range (use fully qualified type to avoid ambiguity)
             Aspose.Cells.Range range = namedRange.GetRange();
-            if (range == null)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("The named range does not refer to a valid cell range.");
-                return;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Write formulas to the output text file
-            using (StreamWriter writer = new StreamWriter(outputPath))
+            // Prepare a StreamWriter for the output file
+            using (StreamWriter writer = new StreamWriter(outputPath, false))
             {
-                for (int row = 0; row < range.RowCount; row++)
+                // Iterate through each cell in the range
+                foreach (Cell cell in range)
                 {
-                    for (int col = 0; col < range.ColumnCount; col++)
-                    {
-                        Cell cell = range[row, col];
-                        string formulaText = cell.Formula; // Empty string if no formula
-                        writer.WriteLine(formulaText);
-                    }
+                    // Retrieve the formula text; if the cell has no formula, use its value as a fallback
+                    string formula = cell.IsFormula ? cell.Formula : cell.Value?.ToString() ?? string.Empty;
+
+                    // Write the cell address and its formula/value to the file
+                    writer.WriteLine($"{cell.Name}: {formula}");
                 }
             }
 
-            Console.WriteLine($"Formulas have been extracted to \"{outputPath}\"");
+            Console.WriteLine($"Formulas extracted to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

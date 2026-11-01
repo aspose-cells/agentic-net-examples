@@ -1,89 +1,56 @@
-// Title: Log row and column indices of each cell in a named XML-mapped range using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, retrieves a named range, and writes each cell's row and column numbers to the Debug output. | Show how to calculate the first and last row/column of a named XML-mapped range and iterate through the cells for logging in Aspose.Cells.
-// Common Searches: how to debug cells in a named range with Aspose.Cells C# | Aspose.Cells get row and column of each cell in XML mapped range | enumerate cells of a named range and log coordinates using Aspose.Cells .NET | retrieve start and end indices of a named range in Excel with Aspose.Cells
-// Tags: Aspose.Cells named range iteration | C# debug cell indices Aspose.Cells | XML map range logging Aspose.Cells | range start end calculation Aspose.Cells | cell coordinate extraction .NET
+// Title: How to iterate merged cell areas and log each cell’s row and column indices with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that loads a workbook, retrieves all merged cell ranges from a worksheet, and prints the start and end row/column of each range together with the row and column of every cell inside the range. | Modify the example to output the merged area coordinates and individual cell indices to a CSV file instead of the console. | Extend the solution to loop through all worksheets in the workbook and generate a separate log for each sheet showing merged area details.
+// Common Searches: Aspose.Cells C# enumerate merged cells and get individual cell positions | How to get row and column numbers of cells inside merged ranges using Aspose.Cells | C# example for GetMergedAreas and iterating over each cell in the range | Log merged area coordinates to a file with Aspose.Cells .NET | Iterate through all worksheets and list merged cell areas Aspose.Cells
+// Tags: Aspose.Cells GetMergedAreas iteration | log merged cell coordinates C# | enumerate cells within merged range Aspose.Cells | process merged areas across worksheets .NET | output merged area details to CSV Aspose.Cells
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.IO;
 
-namespace AsposeCellsDebug
+// Loads an Excel workbook, uses Worksheet.Cells.GetMergedAreas() to obtain merged cell ranges, iterates each range to output its start/end row and column and the row/column of every cell inside, with optional file existence check and exception handling.
+class Program
 {
-    // The example loads an Excel workbook, accesses the first worksheet, creates a range named "MyMappedRange", computes its start and end rows and columns, logs the overall range boundaries, iterates through each cell within the range writing its row and column indices to the Debug output, and finally saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            string filePath = "input.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(filePath))
             {
-                // Load the workbook (implementation checks file existence).
-                Workbook workbook = LoadWorkbook();
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-                // Retrieve the named range that represents the mapped cell areas.
-                AsposeRange mappedRange = worksheet.Cells.CreateRange("MyMappedRange");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Determine the boundaries of the range.
-                int startRow = mappedRange.FirstRow;
-                int startColumn = mappedRange.FirstColumn;
-                int endRow = startRow + mappedRange.RowCount - 1;
-                int endColumn = startColumn + mappedRange.ColumnCount - 1;
+            // Retrieve merged cell areas (returns CellArea[])
+            CellArea[] mergedAreas = worksheet.Cells.GetMergedAreas();
 
-                // Log the overall range boundaries.
-                Debug.WriteLine(
-                    $"Range StartRow={startRow}, StartColumn={startColumn}, " +
-                    $"EndRow={endRow}, EndColumn={endColumn}");
+            // Iterate through each merged area
+            foreach (CellArea area in mergedAreas)
+            {
+                Console.WriteLine($"Mapped Area - StartRow: {area.StartRow}, StartColumn: {area.StartColumn}, EndRow: {area.EndRow}, EndColumn: {area.EndColumn}");
 
-                // Iterate through each cell within the range.
-                for (int row = startRow; row <= endRow; row++)
+                // Optionally, log each individual cell within the area
+                for (int row = area.StartRow; row <= area.EndRow; row++)
                 {
-                    for (int col = startColumn; col <= endColumn; col++)
+                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
                     {
-                        Debug.WriteLine($"Cell at Row={row}, Column={col}");
+                        Console.WriteLine($"Cell - Row: {row}, Column: {col}");
                     }
                 }
-
-                // Save the workbook if needed.
-                SaveWorkbook(workbook);
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors.
-                Debug.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Loads a workbook from a predefined file path, ensuring the file exists.
-        static Workbook LoadWorkbook()
+        catch (Exception ex)
         {
-            const string inputPath = "input.xlsx";
-
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"The input workbook '{inputPath}' was not found.");
-
-            // Load the workbook from the file.
-            return new Workbook(inputPath);
-        }
-
-        // Saves the workbook to a predefined output file path.
-        static void SaveWorkbook(Workbook workbook)
-        {
-            const string outputPath = "output.xlsx";
-
-            try
-            {
-                workbook.Save(outputPath);
-                Debug.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to save workbook: {ex.Message}");
-                throw;
-            }
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

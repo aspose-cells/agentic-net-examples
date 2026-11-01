@@ -1,64 +1,59 @@
-// Title: Enable background refresh for WebQuery tables in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Iterate through all WebQueryTables in a worksheet using Aspose.Cells and set each table's BackgroundRefresh property to true via reflection, then save the workbook. | Configure Excel WebQuery connections to refresh data asynchronously to prevent UI blocking, employing C# and Aspose.Cells.
-// Common Searches: C# Aspose.Cells set web query background refresh to avoid UI freeze | How to use reflection to access WebQueryTables in Aspose.Cells when the API is unavailable | Enable asynchronous data retrieval for Excel WebQuery tables with Aspose.Cells .NET | Aspose.Cells example for setting BackgroundRefresh on WebQueryTables | Prevent Excel UI blocking during web query refresh using Aspose.Cells
-// Tags: Aspose.Cells WebQueryTables BackgroundRefresh | C# enable background refresh Excel web query | Aspose.Cells reflection access WebQueryTables | non‑blocking web query data retrieval Aspose.Cells | update workbook WebQueryTables setting Aspose.Cells
+// Title: Enable BackgroundRefresh for WebQuery tables in an Excel workbook with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells set BackgroundRefresh true for WebQueryTables to prevent UI freeze | C# load workbook and enable asynchronous web query refresh using Aspose.Cells | How to use reflection to access WebQueryTables BackgroundRefresh property in Aspose.Cells | Avoid blocking UI when refreshing web data connections in Excel via Aspose.Cells | Enable background data retrieval for web queries in .NET Excel automation
+// Tags: Aspose.Cells background refresh web query | C# enable asynchronous web query Excel | reflection access WebQueryTables property Aspose.Cells | prevent UI blocking Excel data connection .NET | set BackgroundRefresh property Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example loads an existing Excel workbook with Aspose.Cells, iterates through each worksheet, uses reflection to locate the WebQueryTables collection, and sets each table's BackgroundRefresh property to true. This enables asynchronous data retrieval for web queries, preventing UI blocking, and then saves the modified workbook.
+class Program
 {
-    // The sample loads an existing Excel file, uses reflection to locate any WebQueryTables in the first worksheet, sets each table's BackgroundRefresh property to true so data is fetched in the background, and saves the modified workbook, preventing UI blocking during web query refresh.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "Input.xlsx";
-                const string outputPath = "Output.xlsx";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Ensure the input file exists before loading
-                if (!File.Exists(inputPath))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate over worksheets and enable background refresh for any web query tables (using reflection for compatibility)
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                var webQueryTablesProp = sheet.GetType().GetProperty("WebQueryTables");
+                if (webQueryTablesProp == null) continue; // Property not available in this version
+
+                var webQueryTables = webQueryTablesProp.GetValue(sheet) as IEnumerable;
+                if (webQueryTables == null) continue;
+
+                foreach (var webQueryObj in webQueryTables)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook (creates a new one if the file is missing)
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Use reflection to handle WebQueryTables in case the API is unavailable in the current version
-                var webQueryTablesProp = typeof(Worksheet).GetProperty("WebQueryTables");
-                if (webQueryTablesProp != null)
-                {
-                    var webQueryTables = webQueryTablesProp.GetValue(sheet) as System.Collections.IEnumerable;
-                    if (webQueryTables != null)
+                    var bgRefreshProp = webQueryObj.GetType().GetProperty("BackgroundRefresh");
+                    if (bgRefreshProp != null && bgRefreshProp.CanWrite)
                     {
-                        foreach (var webQueryObj in webQueryTables)
-                        {
-                            var bgRefreshProp = webQueryObj.GetType().GetProperty("BackgroundRefresh");
-                            if (bgRefreshProp != null && bgRefreshProp.CanWrite)
-                            {
-                                // Enable background refresh to avoid blocking the UI during data retrieval
-                                bgRefreshProp.SetValue(webQueryObj, true);
-                            }
-                        }
+                        bgRefreshProp.SetValue(webQueryObj, true);
                     }
                 }
+            }
 
-                // Save the workbook with the updated setting
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Output exception details for troubleshooting
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

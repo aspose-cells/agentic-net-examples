@@ -1,26 +1,24 @@
-// Title: Hide rows with negative values in column A using Aspose.Cells for .NET and save the workbook
-// AI Prompts: Write C# code with Aspose.Cells that loads an Excel file, hides every row where column A contains a value less than zero, and saves the result to a new file. | Create a .NET method that iterates through a worksheet's rows, sets the IsHidden property on rows meeting a numeric predicate, and persists the workbook using Aspose.Cells.
-// Common Searches: aspnet hide rows in excel where column value is negative using aspose.cells | c# aspose.cells hide rows based on cell condition and save workbook | how to programmatically hide rows with negative numbers in column A with Aspose.Cells | Aspose.Cells hide rows with predicate and export to new Excel file | filter out rows by value and hide them in Excel using Aspose.Cells .NET
-// Tags: hide rows based on cell value Aspose.Cells | set IsHidden property C# Excel | filter rows by numeric predicate Aspose.Cells | save modified workbook Aspose.Cells .NET | use MaxDataRow to determine last row Aspose.Cells
+// Title: Hide rows with negative numbers in column A using Aspose.Cells for .NET and save the workbook
+// AI Prompts: Load an Excel file with Aspose.Cells, hide every row where column A contains a value less than zero, and write the result to a new file. | Iterate through all used rows in a worksheet, evaluate a numeric predicate on a specific cell, set the row's IsHidden property, and save the workbook. | Create a workbook if it doesn't exist, apply a custom row‑hiding rule based on cell values, and export the modified workbook using Aspose.Cells for C#.
+// Common Searches: Aspose.Cells hide rows where column A value is negative C# | C# hide Excel rows based on cell value using Aspose.Cells | How to programmatically hide rows in an Excel worksheet with Aspose.Cells .NET | Save workbook after hiding rows with Aspose.Cells in C# | Iterate rows and set IsHidden property in Aspose.Cells example
+// Tags: hide rows based on numeric condition Aspose.Cells | Row.IsHidden property C# | filter worksheet rows by cell value Aspose.Cells | save modified workbook Aspose.Cells .NET | load or create workbook Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example loads an existing workbook (or creates a new one), iterates through all rows up to the last populated row, checks the numeric value in column A, hides rows where the value is less than zero by setting the IsHidden property, ensures the output directory exists, and saves the modified workbook to a specified path while handling potential errors.
-class HideRowsExample
+// The program loads an existing Excel file (or creates a new one), scans each used row in the first worksheet, hides any row where the value in column A is negative by setting the row's IsHidden property, and then saves the updated workbook to output.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Paths for input and output workbooks
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
+            // Load existing workbook or create a new one if the file is missing
             Workbook workbook;
-
-            // Load existing workbook if it exists; otherwise create a new one
             if (File.Exists(inputPath))
             {
                 workbook = new Workbook(inputPath);
@@ -28,37 +26,30 @@ class HideRowsExample
             else
             {
                 workbook = new Workbook();
-                // Optional: add sample data to the default sheet
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue(10);
-                ws.Cells["A2"].PutValue(-5);
-                ws.Cells["A3"].PutValue(15);
+                workbook.Worksheets[0].Name = "Sheet1";
             }
 
+            // Work with the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Find the last row that contains data
-            int lastDataRow = worksheet.Cells.MaxDataRow;
+            // Column index to evaluate (0 = column A)
+            int columnIndex = 0;
 
-            // Hide rows where the value in column A is less than 0
-            for (int rowIndex = 0; rowIndex <= lastDataRow; rowIndex++)
+            // Determine the last row that contains data
+            int lastRow = cells.MaxDataRow;
+
+            // Iterate through each used row
+            for (int row = 0; row <= lastRow; row++)
             {
-                Cell cell = worksheet.Cells[rowIndex, 0];
-                if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double numericValue))
+                Cell cell = cells[row, columnIndex];
+
+                // Hide the row if the cell contains a numeric value less than 0
+                if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue < 0)
                 {
-                    if (numericValue < 0)
-                    {
-                        // Use IsHidden property to hide the row
-                        worksheet.Cells.Rows[rowIndex].IsHidden = true;
-                    }
+                    // Use Row.IsHidden property to hide the row
+                    worksheet.Cells.Rows[row].IsHidden = true;
                 }
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook

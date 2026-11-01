@@ -1,113 +1,105 @@
-// Title: Generate a summary Excel file with workbook names, worksheet titles, and SmartArt shape counts using Aspose.Cells in C#
-// AI Prompts: Write a C# console application that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, iterates through every worksheet, counts shapes where IsSmartArt is true, and records the workbook name, worksheet title, and SmartArt count in a new Excel report. | Update the SmartArt counting utility to skip hidden worksheets, log any files that fail to load, and still produce the consolidated summary workbook. | Enhance the program to export the SmartArt summary as a CSV file and optionally add a column showing the total number of shapes per worksheet.
-// Common Searches: how to count SmartArt objects in each worksheet with Aspose.Cells C# | C# Aspose.Cells generate report of SmartArt shapes across multiple Excel files | list worksheet names and SmartArt count using Aspose.Cells .NET | batch process Excel workbooks to summarize SmartArt shapes in C#
-// Tags: Aspose.Cells SmartArt shape counting | C# Excel workbook summary generation | batch processing of .xlsx files with Aspose | detect SmartArt objects in worksheets .NET | export analysis results to CSV using Aspose.Cells
+// Title: Generate a SmartArt shape count report for multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a list of .xlsx files with Aspose.Cells, iterates each worksheet, counts SmartArt shapes using ShapeType.SmartArt, and writes workbook name, worksheet name, and count to a new Excel report. | Modify the SmartArt report generator to add a summary row that shows the total number of SmartArt shapes per workbook. | Add functionality to export the SmartArt count report to a CSV file in addition to the Excel workbook, using Aspose.Cells or standard .NET I/O.
+// Common Searches: how to count SmartArt objects in each worksheet with Aspose.Cells C# | Aspose.Cells enumerate shapes and get SmartArt count per sheet | create a summary Excel file that lists workbook and worksheet names with SmartArt counts | C# generate report of SmartArt shapes across multiple Excel workbooks using Aspose.Cells | detect SmartArt shapes in Excel files using Aspose.Cells ShapeType enumeration
+// Tags: Aspose.Cells SmartArt shape counting | C# create SmartArt summary workbook | multiple workbook shape analysis Aspose.Cells | ShapeType.SmartArt detection C# | export SmartArt statistics CSV Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// A C# console program that traverses a folder of .xlsx files, loads each workbook with Aspose.Cells, iterates through its worksheets, counts shapes flagged as SmartArt, and writes the workbook name, worksheet title, and SmartArt count into a new Excel summary workbook (or optionally a CSV).
+// The example loads a predefined array of Excel file paths, opens each workbook with Aspose.Cells, iterates through every worksheet, counts shapes whose type is SmartArt (using the ShapeType enumeration), and records the workbook name, worksheet name, and SmartArt count. It then creates a new workbook named "SmartArt Report", writes headers and the collected data, auto‑fits columns, and saves the report as SmartArtReport.xlsx, handling missing files and runtime errors gracefully.
 class SmartArtReportGenerator
 {
     static void Main()
     {
-        try
+        // List of workbook file paths to process
+        string[] workbookFiles = new string[]
         {
-            // Folder containing the workbooks to analyze
-            string sourceFolder = @"C:\Workbooks";
+            "Workbook1.xlsx",
+            "Workbook2.xlsx",
+            // Add more workbook paths as needed
+        };
 
-            // Verify source folder exists
-            if (!Directory.Exists(sourceFolder))
+        // Prepare a list to hold report rows
+        var reportRows = new List<(string WorkbookName, string WorksheetName, int SmartArtCount)>();
+
+        foreach (string filePath in workbookFiles)
+        {
+            try
             {
-                Console.WriteLine($"Source folder not found: {sourceFolder}");
-                return;
-            }
-
-            // Output report workbook path
-            string reportPath = @"C:\Reports\SmartArtReport.xlsx";
-
-            // Ensure the report directory exists
-            string? reportDir = Path.GetDirectoryName(reportPath);
-            if (string.IsNullOrEmpty(reportDir))
-            {
-                Console.WriteLine("Invalid report path.");
-                return;
-            }
-            if (!Directory.Exists(reportDir))
-                Directory.CreateDirectory(reportDir);
-
-            // Create a new workbook for the report
-            Workbook reportWorkbook = new Workbook();
-            Worksheet reportSheet = reportWorkbook.Worksheets[0];
-            reportSheet.Name = "SmartArt Summary";
-
-            // Write header row
-            reportSheet.Cells[0, 0].PutValue("Workbook Name");
-            reportSheet.Cells[0, 1].PutValue("Worksheet Title");
-            reportSheet.Cells[0, 2].PutValue("SmartArt Count");
-
-            int currentRow = 1; // Start after header
-
-            // Get all Excel files in the source folder (including subfolders)
-            string[] workbookFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.AllDirectories);
-
-            foreach (string filePath in workbookFiles)
-            {
-                // Verify the file still exists before loading
+                // Ensure the workbook file exists before loading
                 if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
                     continue;
+                }
 
-                Workbook wb;
-                try
-                {
-                    wb = new Workbook(filePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to load workbook '{filePath}': {ex.Message}");
-                    continue;
-                }
+                // Load the workbook
+                Workbook wb = new Workbook(filePath);
+
+                // Get the workbook name (file name without path)
+                string workbookName = Path.GetFileName(filePath);
 
                 // Iterate through each worksheet
                 foreach (Worksheet ws in wb.Worksheets)
                 {
                     int smartArtCount = 0;
 
-                    // Count SmartArt shapes in the worksheet
+                    // Iterate through all shapes in the worksheet
                     foreach (Shape shape in ws.Shapes)
                     {
-                        // Use IsSmartArt property for compatibility across versions
-                        if (shape.IsSmartArt)
+                        // Count shapes whose type string equals "SmartArt"
+                        if (shape.Type.ToString() == "SmartArt")
+                        {
                             smartArtCount++;
+                        }
                     }
 
-                    // Write the data to the report sheet
-                    reportSheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
-                    reportSheet.Cells[currentRow, 1].PutValue(ws.Name);
-                    reportSheet.Cells[currentRow, 2].PutValue(smartArtCount);
-                    currentRow++;
+                    // Add the result to the report collection
+                    reportRows.Add((workbookName, ws.Name, smartArtCount));
                 }
-            }
-
-            // Auto‑fit columns for better readability
-            reportSheet.AutoFitColumns();
-
-            // Save the report workbook
-            try
-            {
-                reportWorkbook.Save(reportPath);
-                Console.WriteLine($"Report saved to: {reportPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save report: {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
+        }
+
+        try
+        {
+            // Create a new workbook for the report
+            Workbook reportWorkbook = new Workbook();
+            Worksheet reportSheet = reportWorkbook.Worksheets[0];
+            reportSheet.Name = "SmartArt Report";
+
+            // Write headers
+            reportSheet.Cells[0, 0].PutValue("Workbook Name");
+            reportSheet.Cells[0, 1].PutValue("Worksheet Name");
+            reportSheet.Cells[0, 2].PutValue("SmartArt Count");
+
+            // Write data rows
+            int rowIndex = 1;
+            foreach (var row in reportRows)
+            {
+                reportSheet.Cells[rowIndex, 0].PutValue(row.WorkbookName);
+                reportSheet.Cells[rowIndex, 1].PutValue(row.WorksheetName);
+                reportSheet.Cells[rowIndex, 2].PutValue(row.SmartArtCount);
+                rowIndex++;
+            }
+
+            // Auto-fit columns for better readability
+            reportSheet.AutoFitColumns();
+
+            // Save the report workbook
+            string reportPath = "SmartArtReport.xlsx";
+            reportWorkbook.Save(reportPath);
+            Console.WriteLine($"Report saved to {reportPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error generating report: {ex.Message}");
         }
     }
 }

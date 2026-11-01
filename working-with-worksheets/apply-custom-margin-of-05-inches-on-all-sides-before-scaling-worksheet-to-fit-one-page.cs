@@ -1,36 +1,57 @@
-// Title: Apply 0.5‑inch margins on all sides and fit a worksheet to a single page with Aspose.Cells for .NET (C#)
-// AI Prompts: Set the worksheet’s left, right, top, and bottom margins to 0.5 inches (36 points) and configure FitToPagesWide = 1 and FitToPagesTall = 1 using Aspose.Cells in C#. | Create a new workbook, apply half‑inch margins, scale the sheet to one page, add sample cells, and save the file as an XLSX with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set half‑inch page margins | Fit an Excel worksheet to one page using Aspose.Cells .NET | Convert inches to points for margins in Aspose.Cells C# | Scale worksheet to single page with custom margins Aspose.Cells | PageSetup margin values in points Aspose.Cells C# example
-// Tags: set page margins Aspose.Cells C# | worksheet fit-to-page Aspose.Cells | custom margin points Excel .NET | page setup scaling Aspose.Cells | margin conversion inches to points C# | worksheet layout configuration Aspose.Cells
+// Title: Set 0.5‑inch margins and fit a worksheet to a single printed page with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set 0.5 inch left and right margins before printing | How to configure PageSetup to fit an Excel worksheet on one page using Aspose.Cells | Aspose.Cells .NET example for custom page margins and fit‑to‑page scaling | Apply uniform margins and fit-to-page in Aspose.Cells workbook C# code | Print layout settings for Excel sheet with 0.5 inch margins in Aspose.Cells
+// Tags: Aspose.Cells set page margins C# | fit worksheet to one page Aspose.Cells | PageSetup margin configuration .NET | scale worksheet to fit printed page Aspose.Cells | custom margins inches Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, sets all page margins to 0.5 inches (36 points), configures the sheet to fit on a single page (both width and height), adds a couple of sample cells, and saves the result as Result.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, accesses the first worksheet, sets all margins (left, right, top, bottom) to 0.5 inches via the PageSetup object, configures FitToPagesWide and FitToPagesTall to 1 to scale the sheet to a single printed page, and saves the file as output.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set custom margins (0.5 inches = 36 points)
-        sheet.PageSetup.LeftMargin = 36;   // Left margin
-        sheet.PageSetup.RightMargin = 36;  // Right margin
-        sheet.PageSetup.TopMargin = 36;    // Top margin
-        sheet.PageSetup.BottomMargin = 36; // Bottom margin
+                // Get the PageSetup object to configure printing options
+                PageSetup pageSetup = worksheet.PageSetup;
 
-        // Scale the worksheet to fit one page
-        sheet.PageSetup.FitToPagesWide = 1;
-        sheet.PageSetup.FitToPagesTall = 1;
+                // Set custom margins of 0.5 inches on all sides
+                pageSetup.LeftMargin = 0.5;   // inches
+                pageSetup.RightMargin = 0.5;  // inches
+                pageSetup.TopMargin = 0.5;    // inches
+                pageSetup.BottomMargin = 0.5; // inches
 
-        // (Optional) Add some data to demonstrate the layout
-        sheet.Cells["A1"].PutValue("Demo");
-        sheet.Cells["B2"].PutValue(12345);
+                // Scale the worksheet to fit one page (both width and height)
+                pageSetup.FitToPagesWide = 1;
+                pageSetup.FitToPagesTall = 1;
 
-        // Save the workbook
-        workbook.Save("Result.xlsx");
+                // Define output file path
+                string outputPath = "output.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

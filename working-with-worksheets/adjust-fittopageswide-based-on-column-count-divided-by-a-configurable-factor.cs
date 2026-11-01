@@ -1,29 +1,40 @@
-// Title: Set worksheet FitToPagesWide dynamically from column count using a configurable divisor with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that reads the used column range of a worksheet, divides it by a user‑defined factor, rounds up, and assigns the result to PageSetup.FitToPagesWide while keeping FitToPagesTall set to zero. | Show how to expose the page‑width scaling factor as a runtime parameter when printing an Excel file with Aspose.Cells. | Create a reusable method that takes a Workbook and a divisor, computes the required pages wide based on MaxColumn, updates the worksheet's page setup, and saves the file.
-// Common Searches: how to calculate FitToPagesWide from column count in Aspose.Cells C# | Aspose.Cells set print scaling based on number of columns and custom factor | C# dynamic page width for Excel printing using divisor Aspose.Cells | adjust worksheet FitToPagesWide automatically according to used columns .NET
-// Tags: Aspose.Cells FitToPagesWide calculation | worksheet page setup scaling factor | C# column count based print layout | dynamic page width divisor Aspose.Cells | Excel printing FitToPagesTall zero .NET
+// Title: Set worksheet FitToPagesWide dynamically from column count with a configurable factor using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set FitToPagesWide based on number of used columns | calculate pages wide for Excel print layout using a factor in Aspose.Cells | dynamic print scaling in .NET workbook by dividing column count by custom factor | how to automatically adjust FitToPagesWide in Aspose.Cells according to column count | C# Aspose.Cells fit worksheet to pages wide using column count and factor
+// Tags: fit-to-pages-wide calculation Aspose.Cells | worksheet print scaling by column count | configurable factor for Excel page layout | dynamic page fit for .xlsx using C# | Aspose.Cells workbook print setup automation
 
 using Aspose.Cells;
 using System;
 
-// Load the workbook (replace with your actual file path)
-var workbook = new Workbook("input.xlsx");
+// The example loads an existing workbook, determines the count of used columns in the first worksheet, computes the required pages wide by dividing that count by a configurable factor and rounding up, sets the worksheet's FitToPagesWide to this value while keeping FitToPagesTall at zero for automatic height adjustment, and saves the updated workbook.
+class Program
+{
+    static void Main()
+    {
+        // Configurable factor that determines how many columns fit on one page
+        int factor = 5; // Adjust this value as needed
 
-// Configurable factor to divide the column count
-double factor = 2.0; // Adjust this value as needed
+        // Load an existing workbook (replace with actual path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-// Access the first worksheet (or specify the desired index)
-var worksheet = workbook.Worksheets[0];
+        // Work with the first worksheet (modify as required)
+        Worksheet sheet = workbook.Worksheets[0];
 
-// Determine the number of columns that contain data
-int columnCount = worksheet.Cells.MaxColumn + 1; // MaxColumn is zero‑based
+        // Get the index of the last column that contains data (0‑based)
+        int lastColumnIndex = sheet.Cells.MaxDataColumn;
 
-// Calculate the number of pages wide, rounding up to ensure all columns fit
-int pagesWide = (int)Math.Ceiling(columnCount / factor);
+        // Calculate total number of used columns (1‑based count)
+        int columnCount = lastColumnIndex + 1;
 
-// Apply the FitToPagesWide setting; set FitToPagesTall to 0 to let height adjust automatically
-worksheet.PageSetup.FitToPagesWide = pagesWide;
-worksheet.PageSetup.FitToPagesTall = 0;
+        // Determine how many pages wide the sheet should be.
+        // Divide column count by the factor and round up to the next whole page.
+        int pagesWide = (int)Math.Ceiling((double)columnCount / factor);
+        if (pagesWide < 1) pagesWide = 1; // Ensure at least one page
 
-// Save the modified workbook (replace with your desired output path)
-workbook.Save("output.xlsx");
+        // Apply the FitToPagesWide setting; set FitToPagesTall to 0 to let height adjust automatically
+        sheet.PageSetup.FitToPagesWide = pagesWide;
+        sheet.PageSetup.FitToPagesTall = 0;
+
+        // Save the modified workbook (replace with desired output path)
+        workbook.Save("output.xlsx");
+    }
+}

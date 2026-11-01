@@ -1,11 +1,12 @@
-// Title: Export an XLSX workbook to HTML with Aspose.Cells for .NET using default settings
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as an .html file using the library's default export options. | Show how to convert an Excel workbook to a fully formatted HTML page in a .NET application with Aspose.Cells without customizing any save parameters.
-// Common Searches: aspnet convert xlsx file to html using Aspose.Cells default configuration | c# how to save Excel workbook as html preserving styles with Aspose.Cells | Aspose.Cells export workbook to html without specifying HtmlSaveOptions | default HTML output from Aspose.Cells for .NET example | save spreadsheet as web page using Aspose.Cells C#
-// Tags: Aspose.Cells workbook.Save to Html | C# XLSX to HTML conversion Aspose.Cells | default HTML export Aspose.Cells .NET | preserve Excel formatting HTML Aspose.Cells | Aspose.Cells SaveFormat.Html usage
+// Title: Export an XLSX workbook to HTML using Aspose.Cells in C# with default HtmlSaveOptions
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as .html using the default HtmlSaveOptions. | Show how to convert an Excel workbook to an HTML page in .NET without customizing any save options. | Provide a minimal C# snippet that reads a spreadsheet and writes it to HTML while preserving all content.
+// Common Searches: asp.net how to export an xlsx workbook to html using aspose.cells default settings | c# Aspose.Cells save workbook as html preserving formulas and images | convert Excel file to web page with Aspose.Cells without specifying HtmlSaveOptions | default HTML export options in Aspose.Cells for .NET | sample code to load input.xlsx and generate output.html with Aspose.Cells
+// Tags: Aspose.Cells HTML export default options | C# convert XLSX to HTML Aspose.Cells | preserve Excel content when saving as HTML .NET | Workbook.Save HTML example Aspose.Cells | export workbook to web page using Aspose.Cells
 
+using System;
 using Aspose.Cells;
 
-// The sample loads "input.xlsx" into an Aspose.Cells Workbook object and calls workbook.Save with SaveFormat.Html, producing "output.html" using the library's default HTML export settings while retaining all workbook content and formatting.
+// Loads 'input.xlsx' into a Workbook, creates a default HtmlSaveOptions object, and saves the workbook as 'output.html', preserving all worksheet content.
 class Program
 {
     static void Main()
@@ -13,7 +14,10 @@ class Program
         // Load the XLSX workbook from file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Export the workbook to HTML using default settings (preserves all content)
-        workbook.Save("output.html", SaveFormat.Html);
+        // Use default HTML save options (preserves all content)
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+        // Export the workbook to an HTML file
+        workbook.Save("output.html", htmlOptions);
     }
 }

@@ -1,64 +1,80 @@
-// Title: Apply the Light2 theme background color to all cells in a specific data table using Aspose.Cells for .NET
-// AI Prompts: Create a C# routine that builds a Style with BackgroundColor = Color.LightGray, Pattern = BackgroundType.Solid, and applies it to the range A1:D10 using StyleFlag.All = true in Aspose.Cells. | Write code that loads a workbook, selects a worksheet, defines a range for a data table, applies a LightGray background style to every cell in that range, and saves the updated file.
-// Common Searches: Aspose.Cells C# how to set Light2 theme background for a selected range | C# apply solid background style to an Excel table using Aspose.Cells | Using StyleFlag.All to format entire data table in Aspose.Cells .NET | Change background color of cells A1:D10 with Aspose.Cells for .NET | Apply theme color to worksheet range programmatically with Aspose.Cells
-// Tags: light2 theme color Aspose.Cells | styleflag all attributes C# | format data table range Aspose.Cells | solid background style Excel C# | apply style to range Aspose.Cells | create workbook style Aspose.Cells
+// Title: Apply the Light2 theme background color to a specific data table range in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to apply Light2 theme color to a range of cells | set solid background using GetThemeColor for a data table in Excel with Aspose.Cells | apply theme color with fallback Accent1 Accent2 to a cell range in .NET | format A1:D10 with Light2 background using Aspose.Cells style flag | Aspose.Cells example for applying theme background to a table range
+// Tags: apply Light2 theme background Aspose.Cells | solid background style flag C# | retrieve theme color Accent1 fallback Aspose.Cells | format Excel data table range Aspose.Cells | create and apply style to cell range .NET
 
 using System;
-using System.IO;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook, defines the A1:D10 range, retrieves the Light2 theme color (using Accent1 with a fallback to Accent2), creates a solid background style, applies it to all cells in the range with a StyleFlag that sets all attributes, and saves the modified workbook.
+class Program
 {
-    // Loads an existing workbook, creates a solid LightGray style, applies it to the A1:D10 data table range with a StyleFlag that enables all style attributes, and saves the modified workbook as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the data table range (A1:D10)
+            int startRow = 0;      // Row 1 (zero‑based)
+            int startColumn = 0;   // Column A
+            int endRow = 9;        // Row 10
+            int endColumn = 3;     // Column D
+
+            // Retrieve a theme color (using Accent1 as primary, fallback to Accent2)
+            Color themeColor;
             try
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+                themeColor = workbook.GetThemeColor(ThemeColorType.Accent1);
+            }
+            catch (Exception)
+            {
+                // Fallback to another known theme color
+                themeColor = workbook.GetThemeColor(ThemeColorType.Accent2);
+            }
 
-                // Get the first worksheet (or specify by name/index)
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a style that uses the retrieved background color
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = themeColor;
+            style.Pattern = BackgroundType.Solid;
 
-                // Define the data table range you want to format (adjust as needed)
-                AsposeRange dataTable = worksheet.Cells.CreateRange("A1:D10");
+            // Apply all style attributes
+            StyleFlag flag = new StyleFlag { All = true };
 
-                // Create a new style
-                Style themeStyle = workbook.CreateStyle();
-
-                // Apply a solid background color (using a light theme-like color)
-                themeStyle.BackgroundColor = Color.LightGray;
-                themeStyle.Pattern = BackgroundType.Solid;
-
-                // Prepare a flag to apply all style attributes
-                StyleFlag flag = new StyleFlag { All = true };
-
-                // Apply the style to the entire data table range
-                dataTable.ApplyStyle(themeStyle, flag);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            // Apply the style to the defined range
+            int rowCount = endRow - startRow + 1;
+            int columnCount = endColumn - startColumn + 1;
+            try
+            {
+                sheet.Cells.CreateRange(startRow, startColumn, rowCount, columnCount).ApplyStyle(style, flag);
             }
             catch (Exception ex)
             {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to apply style: {ex.Message}");
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

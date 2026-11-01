@@ -1,33 +1,56 @@
-// Title: Retrieve the RGB components of the Hyperlink theme color from an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, calls GetThemeColor for ThemeColorType.Hyperlink, and prints the red, green, and blue values. | Show how to combine the three RGB components of a theme color into a single 0xRRGGBB integer in C# using bitwise operations.
-// Common Searches: Aspose.Cells C# get hyperlink theme color RGB values | How to read Excel Hyperlink theme color with Aspose.Cells | Convert Aspose.Cells ThemeColor to hex code in .NET | Extract R G B components from workbook theme color using C# | GetThemeColor Hyperlink example Aspose.Cells
-// Tags: Aspose.Cells GetThemeColor Hyperlink RGB | C# extract Excel theme color components | Workbook theme color to hex conversion | Hyperlink theme color retrieval Aspose.Cells | Bitwise combine RGB values C#
+// Title: How to retrieve the RGB values of the Hyperlink theme color from an Excel workbook using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells get hyperlink theme color RGB from workbook | retrieve Excel hyperlink theme color components with Aspose.Cells .NET | Aspose.Cells Workbook.GetThemeColor Hyperlink RGB example | read theme color for hyperlinks in a loaded Excel file using Aspose.Cells | extract hyperlink theme color values from an .xlsx file in C#
+// Tags: Workbook.GetThemeColor Hyperlink | Aspose.Cells theme color extraction | Excel hyperlink theme RGB Aspose | C# retrieve theme color from workbook | Aspose.Cells GetThemeColor usage
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, uses Workbook.GetThemeColor(ThemeColorType.Hyperlink) to obtain the hyperlink theme color, extracts its R, G, B channels, optionally combines them into a 0xRRGGBB integer, and outputs the results.
+// The code loads an Excel workbook (creating a simple one if it doesn't exist), optionally handling password‑protected files, then uses Workbook.GetThemeColor with ThemeColorType.Hyperlink to obtain the hyperlink theme color as a System.Drawing.Color and outputs its red, green, and blue components.
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Load the workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string filePath = "input.xlsx";
 
-        // Retrieve the Hyperlink theme color
-        Color hyperlinkColor = workbook.GetThemeColor(ThemeColorType.Hyperlink);
+        try
+        {
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(filePath))
+            {
+                var wb = new Workbook();
+                wb.Worksheets[0].Name = "Sheet1";
+                wb.Save(filePath);
+            }
 
-        // Extract RGB components
-        int red   = hyperlinkColor.R;
-        int green = hyperlinkColor.G;
-        int blue  = hyperlinkColor.B;
+            Workbook workbook = null;
 
-        // Combine into a single RGB integer if needed
-        int rgb = (red << 16) | (green << 8) | blue;
+            // Try to load the workbook without a password.
+            try
+            {
+                workbook = new Workbook(filePath);
+            }
+            catch (Exception)
+            {
+                // If loading fails (e.g., password‑protected), retry with an empty password.
+                var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = "" };
+                workbook = new Workbook(filePath, loadOptions);
+            }
 
-        // Output the result
-        Console.WriteLine($"Hyperlink Theme Color RGB: ({red}, {green}, {blue})");
-        Console.WriteLine($"Combined RGB value: 0x{rgb:X6}");
+            // Retrieve the Hyperlink theme color.
+            Color hyperlinkColor = workbook.GetThemeColor(ThemeColorType.Hyperlink);
+
+            // Extract RGB components.
+            int red = hyperlinkColor.R;
+            int green = hyperlinkColor.G;
+            int blue = hyperlinkColor.B;
+
+            Console.WriteLine($"Hyperlink Theme Color RGB: ({red}, {green}, {blue})");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+        }
     }
 }

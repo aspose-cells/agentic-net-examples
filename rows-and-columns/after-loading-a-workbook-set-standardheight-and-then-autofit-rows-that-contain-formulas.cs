@@ -1,79 +1,71 @@
-// Title: How to set a default row height and auto‑fit only rows that contain formulas using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing workbook (or create a new one), set worksheet.Cells.StandardHeight to 15 points, iterate through each row, use IsFormula to find rows with formulas, call worksheet.AutoFitRow for those rows, and save the file as Xlsx with Aspose.Cells. | Write C# code that opens an Excel file, applies a default row height, identifies rows containing at least one formula cell, auto‑fits only those rows, and writes the result to a new workbook using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# set default row height and auto‑fit rows with formulas | auto fit rows that contain formulas only Aspose.Cells .NET example | detect formula cells and auto‑fit specific rows in a workbook using Aspose.Cells | how to apply StandardHeight then auto‑fit selected rows in Aspose.Cells for C#
-// Tags: Aspose.Cells set StandardHeight property | Aspose.Cells AutoFitRow for formula rows | C# iterate worksheet rows to detect formulas | Aspose.Cells save workbook as Xlsx | default row height Excel Aspose.Cells .NET
+// Title: How to set a default row height and auto‑fit only rows containing formulas in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file with Aspose.Cells, assign a fixed value to Worksheet.Cells.StandardHeight, iterate through each Row to find any Cell with a non‑empty Formula, call worksheet.AutoFitRow for those rows, and save the workbook. | Write C# code that checks every row in a worksheet for formula cells, applies AutoFitRow only to rows that contain formulas after setting a standard row height, and persists the changes.
+// Common Searches: Aspose.Cells set standard row height and auto fit rows with formulas in C# | C# auto fit only rows that have formulas using Aspose.Cells | detect formula cells in a worksheet and adjust row height with Aspose.Cells .NET | conditional AutoFitRow for rows containing formulas after setting default height Aspose.Cells | iterate rows and apply AutoFitRow conditionally in Aspose.Cells .NET
+// Tags: set worksheet default row height Aspose.Cells | auto‑fit rows with formulas Aspose.Cells | detect formula cells in worksheet Aspose.Cells | conditional AutoFitRow usage Aspose.Cells | C# iterate rows adjust height Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The example loads an existing Excel workbook (or creates a new one), sets the worksheet's default row height to 15 points, scans each row for any formula cells, auto‑fits only those rows, and saves the modified workbook as output.xlsx using Aspose.Cells for .NET.
-    public class AutoFitRowsWithFormulasDemo
+    // The example loads an Excel workbook, sets a fixed StandardHeight for all rows, scans each row to identify any cell containing a formula, auto‑fits only those rows using AutoFitRow, and then saves the modified workbook.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
+            // Determine input and output file paths
+            string inputPath = args.Length > 0 ? args[0] : "Input.xlsx";
+            string outputPath = args.Length > 1 ? args[1] : "Output.xlsx";
+
             try
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            string inputPath = "input.xlsx";
-            Workbook workbook;
-
-            // Load workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                // Add a sample formula to demonstrate auto‑fit
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].Formula = "=SUM(1,2)";
-                ws.Cells["A2"].Value = "Sample text";
-            }
-
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Set default row height (points)
-            worksheet.Cells.StandardHeight = 15;
-
-            int maxRow = worksheet.Cells.MaxDataRow;
-            int maxCol = worksheet.Cells.MaxDataColumn;
-
-            // Auto‑fit rows that contain at least one formula
-            for (int row = 0; row <= maxRow; row++)
-            {
-                bool containsFormula = false;
-                for (int col = 0; col <= maxCol; col++)
+                // Verify that the input file exists before loading
+                if (!File.Exists(inputPath))
                 {
-                    if (worksheet.Cells[row, col].IsFormula)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load workbook (rule)
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Set the standard row height (default height for rows)
+                worksheet.Cells.StandardHeight = 15; // adjust as needed
+
+                // Auto‑fit rows that contain formulas
+                foreach (Row row in worksheet.Cells.Rows)
+                {
+                    bool containsFormula = false;
+
+                    foreach (Cell cell in row)
                     {
-                        containsFormula = true;
-                        break;
+                        if (!string.IsNullOrEmpty(cell.Formula))
+                        {
+                            containsFormula = true;
+                            break;
+                        }
+                    }
+
+                    if (containsFormula)
+                    {
+                        // Auto‑fit the specific row
+                        worksheet.AutoFitRow(row.Index);
                     }
                 }
 
-                if (containsFormula)
-                {
-                    worksheet.AutoFitRow(row);
-                }
+                // Save workbook (rule)
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Save the modified workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

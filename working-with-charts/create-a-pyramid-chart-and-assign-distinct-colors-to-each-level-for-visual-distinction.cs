@@ -1,78 +1,65 @@
-// Title: Generate a Pyramid chart with individual colors for each level using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a new workbook, add sample category and series data, insert a Pyramid chart, set the first series fill to red, the second to green, the third to blue, and save the file as an .xlsx using the Aspose.Cells C# API. | Apply solid fill colors to each series of a Pyramid chart in Aspose.Cells, then export the workbook with distinct level colors.
-// Common Searches: C# Aspose.Cells how to color each series in a pyramid chart separately | set custom fill colors for pyramid chart levels using Aspose.Cells .NET | example of creating a pyramid chart with red, green, blue series in C# | Aspose.Cells pyramid chart distinct colors per level tutorial
-// Tags: pyramid chart series fill Aspose.Cells C# | assign solid fill color to chart series .NET | Aspose.Cells create colored pyramid chart | export workbook with pyramid chart .xlsx
+// Title: Create a pyramid chart with distinct colors for each level using Aspose.Cells for .NET
+// AI Prompts: Generate a pyramid chart in a new workbook, bind it to three data rows, and set each pyramid level to a different color with Aspose.Cells. | Programmatically add level data, insert a Pyramid chart, and apply red, green, and blue colors to each chart point using Aspose.Cells for .NET.
+// Common Searches: how to assign individual colors to pyramid chart points in Aspose.Cells C# | Aspose.Cells example for creating a pyramid chart with custom level colors | C# code to color each level of a pyramid chart differently in Excel | set foreground color for chart series points Aspose.Cells .NET | save pyramid chart with colored levels as XLSX using Aspose.Cells
+// Tags: pyramid chart color customization Aspose.Cells | set point foreground color Aspose.Cells C# | add pyramid chart to worksheet Aspose.Cells | assign distinct colors to chart series points .NET | save pyramid chart as XLSX Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace PyramidChartDemo
+// The program creates an Excel workbook, populates three rows of level data, inserts a Pyramid chart, and assigns red, green, and blue colors to each chart point before saving the file as an XLSX document.
+class Program
 {
-    // The example creates a new workbook, populates category and series data, adds a Pyramid chart, assigns red, green, and blue solid fill colors to the three series representing pyramid levels, and saves the workbook as PyramidChartDistinctColors.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet's cells collection
+            var workbook = new Workbook();
+            var cells = workbook.Worksheets[0].Cells;
+
+            // Populate data for the pyramid chart
+            cells["A1"].PutValue("Level");
+            cells["B1"].PutValue("Value");
+            cells["A2"].PutValue("Level 1");
+            cells["B2"].PutValue(30);
+            cells["A3"].PutValue("Level 2");
+            cells["B3"].PutValue(20);
+            cells["A4"].PutValue("Level 3");
+            cells["B4"].PutValue(10);
+
+            // Add a pyramid chart to the worksheet (returns the chart index)
+            int chartIndex = workbook.Worksheets[0].Charts.Add(ChartType.Pyramid, 5, 0, 20, 7);
+            Chart chart = workbook.Worksheets[0].Charts[chartIndex];
+
+            // Set the series data range and category labels
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Assign distinct colors to each level (point) in the pyramid
+            Color[] levelColors = { Color.Red, Color.Green, Color.Blue };
+            for (int i = 0; i < chart.NSeries[0].Points.Count; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data
-                // Categories (levels of the pyramid)
-                cells["A1"].PutValue("Category");
-                cells["A2"].PutValue("Level 1");
-                cells["A3"].PutValue("Level 2");
-                cells["A4"].PutValue("Level 3");
-
-                // Series data – each series will become a distinct color slice
-                cells["B1"].PutValue("Series 1");
-                cells["B2"].PutValue(30);
-                cells["B3"].PutValue(20);
-                cells["B4"].PutValue(10);
-
-                cells["C1"].PutValue("Series 2");
-                cells["C2"].PutValue(20);
-                cells["C3"].PutValue(15);
-                cells["C4"].PutValue(5);
-
-                cells["D1"].PutValue("Series 3");
-                cells["D2"].PutValue(10);
-                cells["D3"].PutValue(5);
-                cells["D4"].PutValue(2);
-
-                // Add a Pyramid chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Pyramid, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart (all series)
-                chart.NSeries.Add("B2:D4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Assign distinct colors to each series (level)
-                // For Pyramid charts each series represents a level, so set the series area color.
-                Series series0 = chart.NSeries[0];
-                series0.Area.FillFormat.SolidFill.Color = Color.Red;      // Series 1 – Red
-
-                Series series1 = chart.NSeries[1];
-                series1.Area.FillFormat.SolidFill.Color = Color.Green;    // Series 2 – Green
-
-                Series series2 = chart.NSeries[2];
-                series2.Area.FillFormat.SolidFill.Color = Color.Blue;     // Series 3 – Blue
-
-                // Save the workbook with the pyramid chart
-                string outputPath = "PyramidChartDistinctColors.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                chart.NSeries[0].Points[i].Area.ForegroundColor = levelColors[i % levelColors.Length];
             }
-            catch (Exception ex)
+
+            // Determine output path and ensure the directory exists
+            string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "PyramidChart.xlsx");
+            string outputDir = Path.GetDirectoryName(outputFile);
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook with the chart
+            workbook.Save(outputFile, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,94 +1,76 @@
-// Title: Show data inconsistencies when reading Excel cells concurrently without enabling MultiThreadReading in Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that creates a workbook, fills column A with OADate dates, then launches several threads that each read the cell.Value of a range of rows without setting cells.MultiThreadReading, logging the thread ID and the retrieved value. | Enhance the multithreaded reading loop with try‑catch blocks, collect any exceptions in a thread‑safe StringBuilder, and display a summary of errors after all threads have completed.
-// Common Searches: Aspose.Cells read cells from multiple threads without MultiThreadReading example | C# Aspose.Cells concurrent reading causing inconsistent values | how to reproduce thread safety issue in Aspose.Cells workbook reading | disable MultiThreadReading Aspose.Cells and observe data anomalies | multithreaded Excel cell access Aspose.Cells .NET tutorial
-// Tags: concurrent cell reading Aspose.Cells | disable MultiThreadReading Aspose.Cells | thread safety Aspose.Cells workbook | raw cell value access parallel | C# multithreaded Excel read example
+// Title: Demonstrate race‑condition data inconsistencies when reading Aspose.Cells worksheet cells concurrently without MultiThreadReading in C#
+// AI Prompts: Write C# code that creates a workbook, fills a column with deterministic values, starts several threads that read the same cells without enabling workbook.Settings.MultiThreadReading, and logs any rows where the values differ between threads. | Show how to capture each thread's read results from an Aspose.Cells worksheet and compare them to identify race‑condition errors when MultiThreadReading is disabled.
+// Common Searches: Aspose.Cells multithreaded read without MultiThreadReading example C# | detect inconsistent cell values when reading Excel with multiple threads .NET | C# race condition reading Aspose.Cells worksheet concurrently | why Aspose.Cells returns different values in parallel reads | how to test thread safety of Aspose.Cells cell access
+// Tags: concurrent cell reading without MultiThreadReading Aspose.Cells | race condition detection in worksheet read C# | Aspose.Cells multi‑thread read safety test | cell value inconsistency detection .NET | disable MultiThreadReading Aspose.Cells example
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsMultiThreadDemo
+// The program creates a workbook, populates the first column with values 0‑999, launches multiple threads that read those cells without enabling MultiThreadReading, stores each thread's results, and then scans for any row where the values differ, reporting detected inconsistencies.
+class Program
 {
-    // The sample creates a new workbook, populates column A with OADate dates, and starts multiple threads that read the raw cell values concurrently while MultiThreadReading remains disabled. Each thread logs its ID and the value read, and any exceptions are captured and reported after all threads finish, illustrating potential data inconsistencies.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate the first column with deterministic values (0..999)
+        for (int i = 0; i < 1000; i++)
         {
-            // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
+            sheet.Cells[i, 0].PutValue(i);
+        }
 
-            // Populate the first column with sample data (dates)
-            int totalRows = 1000;
-            for (int i = 0; i < totalRows; i++)
+        // Number of concurrent reader threads
+        int threadCount = 10;
+        Thread[] threads = new Thread[threadCount];
+
+        // Store read values per thread for later comparison
+        int[,] readValues = new int[threadCount, 1000];
+
+        // Launch threads WITHOUT enabling MultiThreadReading
+        for (int t = 0; t < threadCount; t++)
+        {
+            int threadIndex = t; // capture loop variable
+            threads[t] = new Thread(() =>
             {
-                // Store dates as OADate numbers to avoid formatting issues
-                cells[i, 0].PutValue(DateTime.Now.AddDays(i).ToOADate());
-            }
-
-            // NOTE: We deliberately do NOT enable MultiThreadReading.
-            // cells.MultiThreadReading = true; // <-- omitted on purpose
-
-            // Prepare multithreading variables
-            int threadCount = 5;
-            int rowsPerThread = totalRows / threadCount;
-            int[] finished = new int[1]; // shared counter
-            StringBuilder errors = new StringBuilder();
-
-            // Launch threads that read cell values concurrently
-            for (int t = 0; t < threadCount; t++)
-            {
-                int startRow = t * rowsPerThread;
-                int endRow = (t == threadCount - 1) ? totalRows : startRow + rowsPerThread;
-
-                Thread thread = new Thread(() =>
+                // Each thread reads all 1000 rows
+                for (int row = 0; row < 1000; row++)
                 {
-                    try
-                    {
-                        for (int row = startRow; row < endRow; row++)
-                        {
-                            // Read the raw value (object) from the cell
-                            object value = cells[row, 0].Value;
+                    // Directly read the cell value
+                    object val = sheet.Cells[row, 0].Value;
 
-                            // Output the thread ID and the read value
-                            Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{row},0] = {value}");
-                        }
+                    // Convert to int (use -1 if null for safety)
+                    readValues[threadIndex, row] = val == null ? -1 : Convert.ToInt32(val);
+                }
+            });
+            threads[t].Start();
+        }
 
-                        // Signal successful completion
-                        Interlocked.Increment(ref finished[0]);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Capture any exception that occurs during reading
-                        lock (errors)
-                        {
-                            errors.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
-                        }
-                    }
-                });
+        // Wait for all threads to finish
+        foreach (Thread th in threads)
+            th.Join();
 
-                thread.Start();
-            }
-
-            // Wait until all threads have reported completion
-            while (finished[0] < threadCount)
+        // Detect any inconsistencies among the threads' reads
+        bool inconsistencyFound = false;
+        for (int row = 0; row < 1000; row++)
+        {
+            int reference = readValues[0, row];
+            for (int t = 1; t < threadCount; t++)
             {
-                Thread.Sleep(200);
+                if (readValues[t, row] != reference)
+                {
+                    inconsistencyFound = true;
+                    Console.WriteLine($"Inconsistency detected at row {row}: Thread0={reference}, Thread{t}={readValues[t, row]}");
+                    break;
+                }
             }
+        }
 
-            // Report any errors that were captured
-            if (errors.Length > 0)
-            {
-                Console.WriteLine("Errors occurred during multithreaded reading:");
-                Console.WriteLine(errors.ToString());
-            }
-            else
-            {
-                Console.WriteLine("All threads completed without throwing exceptions.");
-                Console.WriteLine("Note: Even though no exception was thrown, reading without MultiThreadReading may produce inconsistent or unexpected values in real scenarios.");
-            }
+        if (!inconsistencyFound)
+        {
+            Console.WriteLine("No inconsistency detected in this run (but reading without MultiThreadReading can cause race conditions).");
         }
     }
 }

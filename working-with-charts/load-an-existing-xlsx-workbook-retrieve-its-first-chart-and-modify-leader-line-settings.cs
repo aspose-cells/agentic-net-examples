@@ -1,15 +1,15 @@
-// Title: Load an XLSX workbook using Aspose.Cells for .NET, access the first chart’s series, and turn on data label leader lines with custom font color
-// AI Prompts: Write C# code with Aspose.Cells that opens a specified XLSX file, verifies a chart exists on the first worksheet, and activates leader lines for the data labels of the chart’s first series. | Show how to change the font color of data labels in the first series of a chart after loading a workbook with Aspose.Cells, then save the updated file. | Create a robust routine that checks for a chart and at least one series before applying data label settings such as showing values and setting font color, handling missing elements gracefully.
-// Common Searches: aspnet load existing xlsx and enable chart data label leader lines using Aspose.Cells | c# Aspose.Cells how to set data label font color for first chart series | check if worksheet contains chart before modifying series Aspose.Cells | enable data labels on chart series Aspose.Cells .NET example | Aspose.Cells chart leader lines workaround for .xlsx files
-// Tags: Aspose.Cells enable chart data label leader lines | C# load existing XLSX workbook Aspose.Cells | modify first chart series data label properties .NET | set data label font color Aspose.Cells chart | validate chart existence before editing Aspose.Cells | chart series data label customization Aspose.Cells
+// Title: Load an XLSX workbook and enable blue leader lines with custom width for each chart series using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a specified XLSX file with Aspose.Cells, accesses the first chart, and sets LeaderLineFormat.IsVisible to true, LeaderLineFormat.Color to blue, and LeaderLineFormat.Width to 2 points for every series before saving the workbook. | Show how to loop through Chart.NSeries in Aspose.Cells and apply leader line formatting (visibility, color, width) to each series in a .NET application.
+// Common Searches: Aspose.Cells how to show leader lines on chart series in an existing Excel file | C# set blue leader line color and width for all series of the first chart using Aspose.Cells | Modify chart series leader line visibility with Aspose.Cells .NET after loading workbook | Example of iterating over NSeries to change leader line format in Aspose.Cells | Save changes to chart formatting after enabling leader lines in XLSX with Aspose.Cells
+// Tags: Aspose.Cells set chart series leader line visibility | Aspose.Cells configure chart series leader line color | Aspose.Cells adjust chart series leader line width | Aspose.Cells load workbook and edit chart formatting | Aspose.Cells retrieve first chart from XLSX
 
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 using System;
 using System.Drawing;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// The example loads an existing XLSX file, confirms that the first worksheet contains a chart, accesses the chart’s first series, enables data labels (as a proxy for leader lines), changes the label font color to red, and saves the workbook to a new file while safely handling missing files, charts, or series.
+// The example loads input.xlsx, accesses the first worksheet's first chart, iterates over each series to enable leader lines, sets them to blue with a 2‑point width, and saves the modified workbook to output.xlsx.
 class Program
 {
     static void Main()
@@ -19,61 +19,68 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing XLSX workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Load the existing workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
 
-            // Get the first worksheet (index 0)
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure the worksheet contains at least one chart
+            // Ensure there is at least one chart
             if (worksheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first chart on the worksheet
+            // Retrieve the first chart
             Chart chart = worksheet.Charts[0];
 
-            // Ensure the chart has at least one series before modifying
-            if (chart.NSeries.Count > 0)
+            // Modify leader line settings for each series (using dynamic to stay compatible with all versions)
+            foreach (var seriesObj in chart.NSeries)
             {
-                // Access the first series of the chart
-                Series series = chart.NSeries[0];
-
                 try
                 {
-                    // Enable data labels (as leader lines are not directly supported in this version)
-                    series.DataLabels.ShowValue = true;
-
-                    // Example: set the data label font color to red
-                    series.DataLabels.Font.Color = Color.Red;
+                    dynamic series = seriesObj;
+                    series.LeaderLineFormat.IsVisible = true;          // Show leader lines
+                    series.LeaderLineFormat.Color = Color.Blue;       // Set line color
+                    series.LeaderLineFormat.Width = 2.0;              // Set line width (points)
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error modifying series data labels: {ex.Message}");
+                    Console.WriteLine($"Leader line format not applied to a series: {ex.Message}");
                 }
             }
-            else
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("The chart does not contain any series.");
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the modified workbook to a new file
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

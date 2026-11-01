@@ -1,55 +1,37 @@
-// Title: Create a C# Dictionary of Excel Cell Addresses and Their Values by Enumerating Aspose.Cells Worksheet Cells
-// AI Prompts: Generate C# code that iterates over worksheet.Cells with Aspose.Cells, captures each cell's Name and non‑null Value, and stores them in a Dictionary<string, object>. | Show how to build a lookup table of cell addresses to values from an Aspose.Cells workbook for subsequent processing.
-// Common Searches: how to iterate over all populated cells in Aspose.Cells and collect their addresses and values in C# | C# Aspose.Cells example for converting worksheet data to a Dictionary<string, object> | retrieve non‑empty cell names and values from an Excel file using Aspose.Cells enumeration
-// Tags: Aspose.Cells enumerate worksheet cells to dictionary | C# extract cell address and value Aspose.Cells | dictionary mapping Excel cell names to values using Aspose | non‑null cell value extraction Aspose.Cells C# | store worksheet data in Dictionary<string, object>
+// Title: Create a C# Dictionary Mapping Excel Cell Addresses to Their Values by Enumerating Aspose.Cells Worksheet Cells
+// AI Prompts: Generate C# code that opens an .xlsx workbook with Aspose.Cells, loops through worksheet.Cells, and adds each cell's Name and Value to a Dictionary<string, object>. | Provide a .NET console example that reads all cells from the first worksheet using Aspose.Cells and returns a dictionary where keys are cell addresses like "B2" and values are the corresponding cell contents.
+// Common Searches: aspocells c# enumerate all cells and get address-value pairs | how to build dictionary of Excel cell names and values using Aspose.Cells | C# Aspose.Cells read worksheet cells into key value collection | extract cell address and content from .xlsx with Aspose.Cells in .NET | loop through Cells collection Aspose.Cells and store results in Dictionary
+// Tags: Aspose.Cells enumerate worksheet cells | C# dictionary of Excel cell addresses | extract cell name and value Aspose.Cells | map cell address to content .NET | read all cells from .xlsx using Aspose.Cells
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
 
-namespace AsposeCellsDictionaryExample
+// // Loads an Excel workbook with Aspose.Cells, iterates over every cell in the first worksheet, builds a Dictionary<string, object> that maps each cell's address (e.g., "A1") to its value, and prints the resulting key/value pairs.
+class Program
 {
-    // The sample creates a workbook, optionally adds data, then uses worksheet.Cells.GetEnumerator() to loop through all instantiated cells. For each cell with a non‑null value, it adds the cell's Name and Value to a Dictionary<string, object>. The dictionary is printed and the workbook can be saved as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (or any specific worksheet)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Dictionary to map cell addresses (e.g., "A1") to their values
+        Dictionary<string, object> cellAddressToValue = new Dictionary<string, object>();
+
+        // Enumerate all cells in the worksheet's Cells collection
+        foreach (Cell cell in worksheet.Cells)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // create
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Store the cell's address and its value in the dictionary
+            cellAddressToValue[cell.Name] = cell.Value;
+        }
 
-            // Sample data – this part can be omitted if loading an existing file
-            worksheet.Cells["A1"].PutValue("Name");
-            worksheet.Cells["B1"].PutValue("Age");
-            worksheet.Cells["A2"].PutValue("Alice");
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["A3"].PutValue("Bob");
-            worksheet.Cells["B3"].PutValue(25);
-
-            // Dictionary to hold cell address (e.g., "A1") and its value
-            Dictionary<string, object> cellValues = new Dictionary<string, object>();
-
-            // Enumerate through all instantiated cells in the worksheet
-            IEnumerator enumerator = worksheet.Cells.GetEnumerator(); // GetEnumerator
-            while (enumerator.MoveNext())
-            {
-                Cell cell = (Cell)enumerator.Current;
-                // Store the cell name and its value (null values are ignored)
-                if (cell.Value != null)
-                {
-                    cellValues[cell.Name] = cell.Value;
-                }
-            }
-
-            // Example usage: print the dictionary contents
-            foreach (KeyValuePair<string, object> kvp in cellValues)
-            {
-                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-            }
-
-            // Save the workbook (optional, demonstrates the save rule)
-            workbook.Save("DictionaryExample.xlsx"); // save
+        // Example usage: print the dictionary contents
+        foreach (var kvp in cellAddressToValue)
+        {
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
         }
     }
 }

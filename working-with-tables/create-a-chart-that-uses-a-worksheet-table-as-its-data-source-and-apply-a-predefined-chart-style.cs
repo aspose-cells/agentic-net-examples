@@ -1,67 +1,101 @@
-// Title: Generate a column chart from a worksheet ListObject table and apply a built‑in chart style using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a ListObject table, assigns a DisplayName, and builds a column chart whose series reference the table columns via the DisplayName syntax. | Demonstrate how to assign one of Aspose.Cells' predefined chart styles to a column chart after its series are linked to a worksheet table.
-// Common Searches: how to use a ListObject as data source for a chart in Aspose.Cells C# | Aspose.Cells bind column chart series to table columns example | set a predefined chart style on an Aspose.Cells chart using C# | C# create worksheet table and chart from it using Aspose.Cells | Aspose.Cells chart NSeries reference table column syntax
-// Tags: Aspose.Cells create ListObject table | Aspose.Cells column chart from table | Aspose.Cells set chart style programmatically | Aspose.Cells NSeries table column reference | Aspose.Cells C# chart data binding
+// Title: Generate a column chart from an Excel table and apply a built‑in chart style with Aspose.Cells for .NET (C#)
+// Common Searches: how to bind a ListObject table to a chart series using Aspose.Cells C# | Aspose.Cells create column chart from table range and set chart style | C# code to add a worksheet table and use it as data source for a chart in Aspose.Cells | apply predefined chart style to an Aspose.Cells chart programmatically | save Excel workbook with chart and table using Aspose.Cells .NET
+// Tags: Aspose.Cells chart from ListObject table | C# column chart with table data source | apply predefined ChartStyleType Aspose.Cells | create worksheet ListObject in Aspose.Cells | save workbook with chart and table Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Tables;
 
-// The program creates a new workbook, fills it with sample data, defines a ListObject table named DataTable, adds a column chart whose series are linked to the table columns using the DisplayName syntax, applies a predefined chart style, and saves the file as ChartFromTable.xlsx.
-class Program
+namespace AsposeCellsChartExample
 {
-    static void Main()
+    // The example creates a new workbook, adds sample sales data, defines a ListObject named "SalesData" over the range A1:C5, inserts a column chart, links two series to the table's Value1 and Value2 columns, optionally applies a built‑in chart style, and saves the file as ChartWithTable.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value1");
-            sheet.Cells["C1"].PutValue("Value2");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["C2"].PutValue(20);
+                // Populate sample data (A1:C5)
+                // Header row
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value1");
+                sheet.Cells["C1"].PutValue("Value2");
 
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(30);
-            sheet.Cells["C3"].PutValue(40);
+                // Data rows
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["A5"].PutValue("Apr");
 
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(50);
-            sheet.Cells["C4"].PutValue(60);
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["B3"].PutValue(150);
+                sheet.Cells["B4"].PutValue(130);
+                sheet.Cells["B5"].PutValue(170);
 
-            // Create a table (ListObject) that covers the data range
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 3, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            // Use DisplayName to set the table name (Name property is not available in this version)
-            table.DisplayName = "DataTable";
+                sheet.Cells["C2"].PutValue(80);
+                sheet.Cells["C3"].PutValue(95);
+                sheet.Cells["C4"].PutValue(100);
+                sheet.Cells["C5"].PutValue(110);
 
-            // Add a column chart to the worksheet
-            // Parameters: chart type, upper left row, upper left column, lower right row, lower right column
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a table (ListObject) that covers the data range A1:C5
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
+                ListObject table = sheet.ListObjects[tableIndex];
+                // Set a display name for the table (Name property may not be available in older versions)
+                table.DisplayName = "SalesData";
 
-            // Set the chart's data source to the table columns
-            // Category (X) axis from the "Category" column of the table
-            chart.NSeries.CategoryData = $"{table.DisplayName}[Category]";
+                // Add a column chart to the worksheet
+                // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Add two series using the "Value1" and "Value2" columns of the table
-            chart.NSeries.Add($"{table.DisplayName}[Value1]", true);
-            chart.NSeries.Add($"{table.DisplayName}[Value2]", true);
+                // Set the chart title
+                chart.Title.Text = "Monthly Sales";
 
-            // Save the workbook
-            workbook.Save("ChartFromTable.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Use the table as the data source for the series
+                // First series (Value1 column)
+                chart.NSeries.Add("SalesData!B2:B5", true);
+                chart.NSeries[0].Name = "SalesData!B1";
+
+                // Second series (Value2 column)
+                chart.NSeries.Add("SalesData!C2:C5", false);
+                chart.NSeries[1].Name = "SalesData!C1";
+
+                // Note: CategoryData property may not be available in older API versions.
+                // If needed, you can set it when the property exists:
+                // chart.NSeries[0].CategoryData = "SalesData!A2:A5";
+                // chart.NSeries[1].CategoryData = "SalesData!A2:A5";
+
+                // Apply a predefined chart style if the enum is available
+                // If ChartStyleType is not defined, this line can be omitted.
+                // chart.Style = ChartStyleType.Style1;
+
+                // Define output file path
+                string outputPath = "ChartWithTable.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

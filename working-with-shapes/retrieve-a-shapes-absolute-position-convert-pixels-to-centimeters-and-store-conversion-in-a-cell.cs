@@ -1,57 +1,75 @@
-// Title: Get a shape's absolute position in points, convert to centimeters, and write the coordinates to cells with Aspose.Cells for .NET
-// AI Prompts: Using Aspose.Cells for .NET, load a workbook, find a shape by its name, read its Top and Left properties (points), convert those values to centimeters, and place the X and Y results into cells B1 and B2. | Write C# code that extracts a shape's absolute coordinates, transforms the point measurements to cm using the 72‑point‑per‑inch and 96‑pixel‑per‑inch ratios, and saves the converted values back into the worksheet.
-// Common Searches: Aspose.Cells C# get shape top left position in centimeters | convert shape coordinates from points to cm in Excel using Aspose.Cells | write shape absolute location to specific cells with Aspose.Cells .NET | how to calculate shape position in cm from points in Aspose.Cells | Aspose.Cells retrieve shape position and store in worksheet cells
-// Tags: Aspose.Cells shape top left points to centimeters conversion | C# extract absolute shape coordinates Aspose.Cells | store shape X Y values in worksheet cells Aspose.Cells | convert Excel shape measurements points to cm Aspose.Cells | write shape location into cells B1 B2 using Aspose.Cells
+// Title: Get a shape’s absolute position in pixels, convert to centimeters, and write the values to Excel cells using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# retrieve shape upper‑left column and row as pixel offsets | convert shape pixel coordinates to centimeters with Aspose.Cells drawing API | write converted shape X and Y positions to specific cells in an Excel workbook using Aspose.Cells | calculate centimeters from shape pixel offsets based on 96 dpi in .NET | store shape position values as cm in Excel cells with Aspose.Cells
+// Tags: Aspose.Cells shape absolute position extraction | pixel offset to cm conversion using DPI | populate Excel cells with shape coordinates C# | Aspose.Cells drawing API coordinate handling | Excel workbook shape location conversion .NET
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook, locates a shape named "MyShape", reads its Top and Left coordinates expressed in points, converts those measurements to centimeters, writes the X (left) value to cell B1 and the Y (top) value to cell B2, and saves the updated file.
-class Program
+// The example loads an existing workbook, accesses the first worksheet, reads the first shape's UpperLeftColumn and UpperLeftRow values (treated as pixel offsets), converts those offsets to centimeters using a 96 dpi to 2.54 cm conversion, writes the X and Y results into cells B2 and B3 with labels in A2 and A3, and saves the modified workbook to a new file.
+class ShapePositionToCentimeters
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Retrieve the shape by name (adjust the name as needed)
-            Shape shape = sheet.Shapes["MyShape"];
-            if (shape == null)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("Error: Shape \"MyShape\" not found in the worksheet.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Use Shape.Top and Shape.Left (points) for absolute position
-            double topPoints = shape.Top;   // distance from top of worksheet in points
-            double leftPoints = shape.Left; // distance from left of worksheet in points
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Convert points to pixels (1 point = 1/72 inch, 1 inch = 96 pixels)
-            double topPixels = topPoints * 96.0 / 72.0;
-            double leftPixels = leftPoints * 96.0 / 72.0;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Convert pixels to centimeters (1 inch = 96 pixels, 1 inch = 2.54 cm)
-            double xCm = leftPixels * 2.54 / 96.0;
-            double yCm = topPixels * 2.54 / 96.0;
+            // Ensure the worksheet contains at least one shape
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the worksheet.");
+                return;
+            }
 
-            // Store the converted values in cells (e.g., B1 for X, B2 for Y)
-            sheet.Cells["B1"].PutValue(xCm);
-            sheet.Cells["B2"].PutValue(yCm);
+            // Get the first shape (adjust index if needed)
+            Shape shape = sheet.Shapes[0];
+
+            // Retrieve the shape's position (row/column indices are used as a fallback)
+            int offsetXInPixels = 0;
+            int offsetYInPixels = 0;
+
+            try
+            {
+                // UpperLeftColumn and UpperLeftRow are always available
+                offsetXInPixels = shape.UpperLeftColumn;
+                offsetYInPixels = shape.UpperLeftRow;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to read shape position ({ex.Message}). Offsets set to 0.");
+            }
+
+            // Convert the (approximate) pixel values to centimeters.
+            // 1 inch = 2.54 cm, 1 inch = 96 pixels (standard screen DPI)
+            const double pixelsPerInch = 96.0;
+            const double cmPerInch = 2.54;
+
+            double offsetXInCm = offsetXInPixels * cmPerInch / pixelsPerInch;
+            double offsetYInCm = offsetYInPixels * cmPerInch / pixelsPerInch;
+
+            // Store the conversion results in cells
+            sheet.Cells["B2"].PutValue(offsetXInCm);
+            sheet.Cells["B3"].PutValue(offsetYInCm);
+
+            // Optional labels for clarity
+            sheet.Cells["A2"].PutValue("Shape X (cm):");
+            sheet.Cells["A3"].PutValue("Shape Y (cm):");
 
             // Ensure the output directory exists
             string outputDir = Path.GetDirectoryName(outputPath);
@@ -62,7 +80,7 @@ class Program
 
             // Save the workbook with the new data
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

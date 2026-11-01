@@ -1,32 +1,52 @@
-// Title: Automatically adjust non‑custom row heights when loading an Excel workbook with Aspose.Cells LoadOptions.AutoFitterOptions.OnlyAuto (C#)
-// AI Prompts: Load an .xlsx file using Aspose.Cells, set LoadOptions.AutoFitterOptions.OnlyAuto to true, and let the library auto‑fit rows that have default heights during the load. | Create a LoadOptions object, enable the OnlyAuto flag for row auto‑fit, open the workbook with these options, and save the modified file to a new location. | Modify the sample to also auto‑fit columns on load while preserving the OnlyAuto row‑height behavior.
-// Common Searches: Aspose.Cells C# load workbook with automatic row height adjustment only for default rows | How to enable OnlyAuto in AutoFitterOptions when loading an Excel file with Aspose.Cells | Auto‑fit rows on workbook load using LoadOptions in .NET | Load Excel file and auto‑fit row heights without affecting manually set heights Aspose.Cells | C# example for LoadOptions.AutoFitterOptions OnlyAuto true
-// Tags: Aspose.Cells LoadOptions AutoFitterOptions OnlyAuto | row height auto‑adjust during load | exclude custom row heights from auto‑fit | C# load Excel with automatic row height handling | default row height auto‑fit Aspose.Cells
+// Title: Load an Excel workbook with automatic row height autofit using Aspose.Cells LoadOptions.AutoFitterOptions.OnlyAuto in C#
+// Common Searches: C# Aspose.Cells load workbook with AutoFitterOptions to autofit row heights | How to enable automatic row height adjustment when opening an Excel file with Aspose.Cells | Using LoadOptions.AutoFitterOptions.OnlyAuto true to fit rows on workbook load in .NET | Aspose.Cells load existing .xlsx and auto‑fit all rows without calling AutoFitRows | Create a workbook that automatically adjusts row heights on load with Aspose.Cells
+// Tags: Aspose.Cells LoadOptions AutoFitterOptions | automatic row height autofit on load | C# load Excel workbook with OnlyAuto | row height adjustment during workbook import | Excel file loading with auto‑fit rows
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// // Loads an Excel workbook with LoadOptions.AutoFitterOptions.OnlyAuto = true, causing rows that use the default height to be auto‑fitted automatically, then saves the workbook.
-class AutoFitRowsOnLoad
+// The example demonstrates how to configure LoadOptions with AutoFitterOptions.OnlyAuto set to true so that Aspose.Cells automatically adjusts all row heights when an existing Excel workbook is loaded, then saves the workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Paths to the source and destination files
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Create LoadOptions and configure AutoFitterOptions
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.AutoFitterOptions = new AutoFitterOptions
+        try
         {
-            // Only rows whose height is not customed will be auto‑fitted
-            OnlyAuto = true
-        };
+            Workbook workbook;
 
-        // Load the workbook with the specified options (rows are auto‑fitted during load)
-        Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Check if the input file exists; if not, create a new workbook.
+            if (File.Exists(inputPath))
+            {
+                // Configure load options to automatically adjust all row heights on load.
+                LoadOptions loadOptions = new LoadOptions
+                {
+                    AutoFitterOptions = new AutoFitterOptions
+                    {
+                        OnlyAuto = true
+                    }
+                };
 
-        // Save the workbook after loading
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+                // Load the workbook with the specified options.
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            else
+            {
+                // Input file not found – create an empty workbook.
+                workbook = new Workbook();
+            }
+
+            // Save the workbook (row heights are already adjusted if loaded).
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors (e.g., password protection, I/O issues).
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

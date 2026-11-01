@@ -1,20 +1,19 @@
-// Title: Reset all shape visual effects to defaults in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Write a C# routine that iterates through every worksheet and shape in an Aspose.Cells Workbook and restores each shape's EffectFormat properties (Type, Blur, Glow, Shadow, ThreeDFormat, Reflection, SoftEdges) to their default values. | Create a helper method that uses reflection to clear all visual effects from shapes in a workbook, handling different Aspose.Cells versions, and integrate it into a console application that loads, modifies, and saves an Excel file.
-// Common Searches: Aspose.Cells C# reset shape effects for entire workbook | How to clear blur and shadow from all shapes in an Excel file using Aspose.Cells | C# code to remove 3D and reflection effects from shapes in every worksheet | Set shape EffectFormat.Type to None across all worksheets with Aspose.Cells | Utility method to reset visual effects of shapes in an Aspose.Cells workbook
-// Tags: reset shape EffectFormat Aspose.Cells | clear blur glow shadow from Excel shapes .NET | iterate worksheets to reset shape properties C# | Aspose.Cells default shape visual effects | reflection soft edges removal Aspose.Cells
+// Title: Reset all shape visual effects to default values in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to reset every shape's visual effects in an Excel file | Remove shadows, glow, and reflection from all shapes across worksheets using Aspose.Cells | Clear 3D formatting and line borders on shapes in a workbook with Aspose.Cells .NET | C# utility to iterate through worksheets and disable shape effects with Aspose.Cells | Programmatically reset shape formatting to defaults in Excel using Aspose.Cells API
+// Tags: reset shape visual effects Aspose.Cells | clear shape shadows Aspose.Cells | disable shape glow Aspose.Cells | remove shape reflection Aspose.Cells | reset three‑d format shapes Aspose.Cells | hide shape line borders Aspose.Cells | iterate workbook shapes Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Loads a workbook, walks through each worksheet and its shapes, and via reflection resets the EffectFormat (type, blur, glow, shadow, 3D, reflection, soft edges) of every shape to default values before saving the file.
+// The example loads an Excel workbook, loops through each worksheet and its shapes, and uses reflection to turn off shadow, glow, soft edges, reflection, 3‑D format, and line visibility properties when they exist, then saves the workbook with all shape effects reset to their defaults.
 class Program
 {
     static void Main()
     {
-        // Define input and output file paths
-        string inputPath = "{InputFilePath}";
-        string outputPath = "{OutputFilePath}";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         try
         {
@@ -25,16 +24,12 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Reset shape effects across the workbook
+            // Reset all shape effects in the workbook
             ResetAllShapeEffects(workbook);
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Save the modified workbook
+            // Save the workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
@@ -42,51 +37,75 @@ class Program
         }
     }
 
-    // Utility method to reset all shape effects in the entire workbook
-    static void ResetAllShapeEffects(Workbook wb)
+    // Utility method to reset shape effects to their defaults
+    static void ResetAllShapeEffects(Workbook workbook)
     {
-        // Iterate through each worksheet
-        foreach (Worksheet sheet in wb.Worksheets)
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Iterate through each shape on the worksheet
-            foreach (Aspose.Cells.Drawing.Shape shape in sheet.Shapes)
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Use reflection to access EffectFormat if it exists (covers different library versions)
-                var effectProp = shape.GetType().GetProperty("EffectFormat");
-                if (effectProp != null && effectProp.CanRead && effectProp.CanWrite)
+                try
                 {
-                    var effect = effectProp.GetValue(shape);
-                    if (effect != null)
+                    // Disable shadow effect if available
+                    var shadow = shape.GetType().GetProperty("Shadow")?.GetValue(shape);
+                    if (shadow != null)
                     {
-                        // Reset the effect type to None
-                        var typeProp = effect.GetType().GetProperty("Type");
-                        var effectTypeEnum = effect.GetType().Assembly.GetType("Aspose.Cells.Drawing.EffectType");
-                        if (typeProp != null && effectTypeEnum != null)
-                        {
-                            var noneValue = Enum.Parse(effectTypeEnum, "None");
-                            typeProp.SetValue(effect, noneValue);
-                        }
+                        var isEnabledProp = shadow.GetType().GetProperty("IsEnabled");
+                        if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            isEnabledProp.SetValue(shadow, false);
+                    }
 
-                        // Reset numeric and object properties to defaults if they exist
-                        SetIfExists(effect, "Blur", 0);
-                        SetIfExists(effect, "Glow", null);
-                        SetIfExists(effect, "Shadow", null);
-                        SetIfExists(effect, "ThreeDFormat", null);
-                        SetIfExists(effect, "Reflection", null);
-                        SetIfExists(effect, "SoftEdges", null);
+                    // Disable glow effect if available
+                    var glow = shape.GetType().GetProperty("Glow")?.GetValue(shape);
+                    if (glow != null)
+                    {
+                        var isEnabledProp = glow.GetType().GetProperty("IsEnabled");
+                        if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            isEnabledProp.SetValue(glow, false);
+                    }
+
+                    // Disable soft edges effect if available
+                    var softEdges = shape.GetType().GetProperty("SoftEdges")?.GetValue(shape);
+                    if (softEdges != null)
+                    {
+                        var isEnabledProp = softEdges.GetType().GetProperty("IsEnabled");
+                        if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            isEnabledProp.SetValue(softEdges, false);
+                    }
+
+                    // Disable reflection effect if available
+                    var reflection = shape.GetType().GetProperty("Reflection")?.GetValue(shape);
+                    if (reflection != null)
+                    {
+                        var isEnabledProp = reflection.GetType().GetProperty("IsEnabled");
+                        if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            isEnabledProp.SetValue(reflection, false);
+                    }
+
+                    // Disable 3‑D format if available
+                    var threeD = shape.GetType().GetProperty("ThreeDFormat")?.GetValue(shape);
+                    if (threeD != null)
+                    {
+                        var isEnabledProp = threeD.GetType().GetProperty("IsEnabled");
+                        if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            isEnabledProp.SetValue(threeD, false);
+                    }
+
+                    // Disable line format (border) if available
+                    var line = shape.GetType().GetProperty("Line")?.GetValue(shape);
+                    if (line != null)
+                    {
+                        var isVisibleProp = line.GetType().GetProperty("IsVisible");
+                        if (isVisibleProp != null && isVisibleProp.CanWrite)
+                            isVisibleProp.SetValue(line, false);
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Log but continue processing other shapes
+                    Console.WriteLine($"Warning: Unable to reset effects for a shape on sheet '{sheet.Name}'. Details: {ex.Message}");
+                }
             }
-        }
-    }
-
-    // Helper method to set a property via reflection if it exists
-    static void SetIfExists(object obj, string propertyName, object value)
-    {
-        var prop = obj.GetType().GetProperty(propertyName);
-        if (prop != null && prop.CanWrite)
-        {
-            prop.SetValue(obj, value);
         }
     }
 }

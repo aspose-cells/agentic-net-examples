@@ -1,55 +1,68 @@
-// Title: C# Aspose.Cells example to generate an Excel report of all named ranges with their RefersTo formulas
-// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, loops through every defined name, and writes the name and its RefersTo formula into a new worksheet. | Enhance the program to also capture whether each named range is scoped to a specific worksheet or the whole workbook and add a column for the scope in the report. | Convert the output format to CSV, producing a file that lists the named range, its RefersTo formula, and its scope.
-// Common Searches: how to list all named ranges and their formulas with Aspose.Cells in C# | Aspose.Cells C# export defined names to a separate Excel file | C# generate documentation of Excel named ranges using Aspose.Cells | retrieve RefersTo property of named ranges Aspose.Cells example | create a named range report workbook programmatically with Aspose.Cells
-// Tags: Aspose.Cells enumerate defined names | export named ranges to Excel report C# | retrieve RefersTo formula Aspose.Cells | named range scope detection Aspose.Cells | generate CSV from named ranges Aspose.Cells
+// Title: Create a C# program with Aspose.Cells to generate an Excel report listing all named ranges and their RefersTo formulas
+// Common Searches: C# Aspose.Cells list all defined names with their formulas and export to a new workbook | how to generate a named range documentation sheet using Aspose.Cells for .NET | export named ranges and RefersTo expressions from an existing Excel file with Aspose.Cells | Aspose.Cells iterate NameCollection to create a report of named ranges | save named range definitions to a separate Excel file using Aspose.Cells C#
+// Tags: Aspose.Cells named range documentation | C# extract named range RefersTo | export NameCollection to new workbook | list defined names Aspose.Cells | generate Excel report of named ranges
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace NamedRangeReport
+// The example loads a source workbook, iterates through its NameCollection to retrieve each named range's Text and RefersTo formula, writes these details into a new worksheet with headers, and saves the result as a separate Excel file, handling missing files and runtime errors.
+class NamedRangeReport
 {
-    // // Loads a source workbook, iterates through its defined names, records each name, its RefersTo formula (and optionally its scope) into a new worksheet, auto‑fits columns, and saves the result as a separate report file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Input and output file paths (adjust as needed)
-            string inputFilePath = "input.xlsx";
-            string outputFilePath = "NamedRangesReport.xlsx";
+            const string sourcePath = "source.xlsx";
+            const string reportPath = "NamedRangeReport.xlsx";
 
-            // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(inputFilePath);
-
-            // Create a new workbook for the report
-            Workbook reportWorkbook = new Workbook();
-            Worksheet reportSheet = reportWorkbook.Worksheets[0];
-
-            // Write header row
-            reportSheet.Cells["A1"].PutValue("Named Range");
-            reportSheet.Cells["B1"].PutValue("Refers To (Formula)");
-
-            // Start writing data from the second row
-            int currentRow = 1; // zero‑based index (row 2 in Excel)
-
-            // Iterate through all defined names (named ranges) in the source workbook
-            foreach (Name namedRange in sourceWorkbook.Worksheets.Names)
+            // Verify that the source workbook exists before attempting to load it
+            if (!File.Exists(sourcePath))
             {
-                // Get the name and the formula it refers to
-                string name = namedRange.Text;          // e.g., "MyRange"
-                string formula = namedRange.RefersTo;   // e.g., "=Sheet1!$A$1:$A$10"
-
-                // Write the data into the report sheet
-                reportSheet.Cells[currentRow, 0].PutValue(name);
-                reportSheet.Cells[currentRow, 1].PutValue(formula);
-
-                currentRow++;
+                Console.WriteLine($"Error: The source file \"{sourcePath}\" was not found.");
+                return;
             }
 
-            // Auto‑fit columns for better readability
-            reportSheet.AutoFitColumns();
+            // Load the source workbook containing the named ranges
+            Workbook srcWorkbook = new Workbook(sourcePath);
 
-            // Save the report workbook
-            reportWorkbook.Save(outputFilePath);
+            // Create a new workbook that will hold the report
+            Workbook reportWorkbook = new Workbook();
+
+            // Use the first worksheet for the report and give it a meaningful name
+            Worksheet reportSheet = reportWorkbook.Worksheets[0];
+            reportSheet.Name = "NamedRanges";
+
+            // Write column headers
+            reportSheet.Cells[0, 0].PutValue("Named Range");
+            reportSheet.Cells[0, 1].PutValue("Refers To (Formula)");
+
+            // Retrieve the collection of named ranges from the source workbook
+            NameCollection namedRanges = srcWorkbook.Worksheets.Names;
+
+            int rowIndex = 1; // Start writing data from the second row
+            foreach (Name namedRange in namedRanges)
+            {
+                // The name of the defined range (use Text property)
+                string rangeName = namedRange.Text;
+
+                // The formula that the name refers to (e.g., =Sheet1!$A$1:$B$5)
+                string refersToFormula = namedRange.RefersTo;
+
+                // Populate the report sheet
+                reportSheet.Cells[rowIndex, 0].PutValue(rangeName);
+                reportSheet.Cells[rowIndex, 1].PutValue(refersToFormula);
+
+                rowIndex++;
+            }
+
+            // Save the report workbook to a file
+            reportWorkbook.Save(reportPath);
+            Console.WriteLine($"Report generated successfully: {reportPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,24 +1,26 @@
-// Title: How to merge cells M5:N6, apply an accounting number format, set PDF margins, and export a worksheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook, merges the range M5:N6, applies an accounting number format to the merged cells, configures left/right/top/bottom PDF margins, and saves the worksheet as a PDF with Aspose.Cells. | Generate a .NET program that loads or creates a workbook, merges cells M5 through N6, sets a custom accounting style, adjusts page‑setup margins, and exports the sheet to a PDF file using Aspose.Cells.
-// Common Searches: Aspose.Cells C# merge cells M5 N6 and export to PDF with custom margins | apply accounting number format to a merged range in Aspose.Cells .NET | set PDF page margins when saving Excel to PDF using Aspose.Cells | how to create a merged cell with accounting style and PDF output in C# | Aspose.Cells save worksheet as PDF with specific left and right margins
-// Tags: merge range M5:N6 Aspose.Cells | apply accounting style merged cells Aspose.Cells | configure PDF margins Aspose.Cells | export worksheet to PDF C# Aspose.Cells | custom number format StyleFlag Aspose.Cells
+// Title: C# – Merge cells M5:N6, apply accounting number format, set PDF page margins, and export workbook to PDF using Aspose.Cells
+// Common Searches: how to merge cells M5:N6 with Aspose.Cells in C# before PDF export | apply accounting number format to a merged range using Aspose.Cells .NET | set custom PDF page margins when saving an Excel workbook with Aspose.Cells | export a worksheet to PDF with OnePagePerSheet option in Aspose.Cells C# | Aspose.Cells example for merging cells and formatting numbers for PDF output
+// Tags: merge cells Aspose.Cells C# | accounting number format style Aspose.Cells | set PDF page margins Aspose.Cells | PdfSaveOptions OnePagePerSheet Aspose.Cells | export workbook to PDF Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// C# example that loads or creates an Excel workbook, merges cells M5:N6, applies a custom accounting number format to the merged range, sets left/right/top/bottom PDF margins, and saves the worksheet as a PDF using Aspose.Cells.
+// The C# program loads an existing Excel file (or creates a new workbook if missing), merges cells M5:N6 on the first worksheet, applies a custom accounting number format to the merged range, sets all PDF page margins to 0.5 inches, and saves the workbook as a PDF using PdfSaveOptions with OnePagePerSheet enabled.
 class Program
 {
     static void Main()
     {
+        // Paths for input Excel and output PDF
+        string inputPath = "input.xlsx";
+        string outputPdf = "output.pdf";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Ensure the input workbook exists; create a blank one if missing
             Workbook workbook;
+
+            // Load existing workbook or create a new one if the file is missing
             if (File.Exists(inputPath))
             {
                 workbook = new Workbook(inputPath);
@@ -26,31 +28,48 @@ class Program
             else
             {
                 workbook = new Workbook();
-                workbook.Worksheets[0].Name = "Sheet1";
-                workbook.Save(inputPath); // optional: persist the placeholder file
+                // Ensure at least one worksheet exists
+                workbook.Worksheets.Add();
             }
 
-            // Get the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells M5:N6 (use fully qualified Aspose.Cells.Range to avoid ambiguity)
-            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("M5", "N6");
-            mergedRange.Merge();
+            // -------------------------------------------------
+            // Merge cells M5:N6 (zero‑based indices)
+            // Column M = 12, Column N = 13
+            // Row 5   = 4,   Row 6   = 5
+            // -------------------------------------------------
+            sheet.Cells.Merge(12, 4, 2, 2); // startColumn, startRow, totalColumns, totalRows
 
-            // Apply accounting number format to the merged range
-            Style accountingStyle = mergedRange[0, 0].GetStyle();
-            accountingStyle.Custom = "$#,##0.00_);[Red]($#,##0.00)";
-            mergedRange.ApplyStyle(accountingStyle, new StyleFlag { NumberFormat = true });
+            // Create a range that covers the merged cells
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("M5:N6");
 
-            // Set page margins (in inches)
+            // -------------------------------------------------
+            // Apply Accounting number format to the merged range
+            // -------------------------------------------------
+            Style accountingStyle = workbook.CreateStyle();
+            accountingStyle.Custom = "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)";
+
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
+            mergedRange.ApplyStyle(accountingStyle, flag);
+
+            // -------------------------------------------------
+            // Set page margins (in inches) for PDF export
+            // -------------------------------------------------
+            sheet.PageSetup.TopMargin = 0.5;
+            sheet.PageSetup.BottomMargin = 0.5;
             sheet.PageSetup.LeftMargin = 0.5;
             sheet.PageSetup.RightMargin = 0.5;
-            sheet.PageSetup.TopMargin = 0.7;
-            sheet.PageSetup.BottomMargin = 0.7;
 
-            // Export the worksheet to PDF
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            workbook.Save(outputPath, pdfOptions);
+            // Export the workbook to PDF with custom options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = true
+            };
+
+            workbook.Save(outputPdf, pdfOptions);
         }
         catch (Exception ex)
         {

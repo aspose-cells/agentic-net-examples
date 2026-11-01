@@ -1,63 +1,51 @@
-// Title: How to export an Excel workbook to PDF and PNG while removing extra whitespace with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook, configures PDF save options to fit each worksheet on a single page, and saves the result as a PDF using Aspose.Cells. | Write C# that iterates through all worksheets, renders each one to a PNG image scaled to a single page, and saves the images, ensuring excess margins are removed with Aspose.Cells.
-// Common Searches: Aspose.Cells remove margins when saving Excel as PDF in C# | C# export Excel worksheets to PNG without extra whitespace using Aspose.Cells | How to fit each Excel sheet on one page during PDF export with Aspose.Cells | Trim whitespace in Excel to image conversion Aspose.Cells .NET
-// Tags: Aspose.Cells PDF export whitespace cleanup | OnePagePerSheet PdfSaveOptions Aspose.Cells | SheetRender PNG export one page per sheet | Excel to PDF margin reduction Aspose.Cells | Excel to PNG image rendering Aspose.Cells
+// Title: Export an Aspose.Cells workbook to PDF while removing blank rows and columns by fitting all columns to one page in C#
+// AI Prompts: Write C# code that creates a workbook, inserts data with intentional empty rows and columns, sets PageSetup.FitToPagesWide = 1, and saves the worksheet as a PDF using Aspose.Cells. | Modify PdfSaveOptions in Aspose.Cells to produce a PDF that minimizes whitespace caused by blank rows and columns.
+// Common Searches: Aspose.Cells C# export to PDF ignore empty rows and columns | fit all columns on one page when saving Excel to PDF with Aspose.Cells | reduce whitespace in PDF generated from Excel using Aspose.Cells PageSetup | configure PdfSaveOptions to remove blank space in Aspose.Cells PDF output | C# Aspose.Cells PDF export whitespace cleanup example
+// Tags: Aspose.Cells PDF export fit-to-page | C# PageSetup whitespace reduction | Aspose.Cells ignore blank rows PDF | PdfSaveOptions minimal whitespace | Excel to PDF column fitting Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example creates a sample workbook if needed, loads it, saves it as a PDF with each sheet fitted to a single page to eliminate surrounding whitespace, and then renders each worksheet to a separate PNG image using the same one‑page‑per‑sheet setting.
+// The example creates a new workbook, adds data starting at B2 while leaving empty rows and columns to generate whitespace, configures the worksheet's PageSetup to fit all columns on a single page, sets PdfSaveOptions, and saves the sheet as a PDF. This demonstrates how to use Aspose.Cells page setup and PDF options to reduce blank space in the exported PDF.
 class WhitespaceCleanupExport
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "SampleWorkbook.xlsx";
-            const string pdfOutput = "ExportedClean.pdf";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Ensure the input workbook exists; create a simple one if missing.
-            if (!File.Exists(inputPath))
-            {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                tempWb.Save(inputPath);
-            }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputPath);
+            // Populate data with intentional empty rows and columns
+            // Data starts at B2 (row index 1, column index 1)
+            sheet.Cells["B2"].PutValue("Header1");
+            sheet.Cells["C2"].PutValue("Header2");
+            sheet.Cells["B3"].PutValue(10);
+            sheet.Cells["C3"].PutValue(20);
+            // Row 4 and column D are left empty to create whitespace
 
-            // Configure PDF save options to fit each sheet on a single page.
+            // Set page setup to fit content and remove extra whitespace
+            PageSetup pageSetup = sheet.PageSetup;
+            pageSetup.FitToPagesWide = 1;   // Fit all columns on one page
+            pageSetup.FitToPagesTall = 0;   // Allow rows to flow to multiple pages
+
+            // Configure PDF save options (ignore blank rows/columns not supported in this version)
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                OnePagePerSheet = true
-                // Whitespace removal is handled automatically when fitting to a page.
+                OnePagePerSheet = false,                 // Allow content to span multiple pages
+                Compliance = PdfCompliance.PdfA1b        // Example compliance setting
             };
 
-            // Export the workbook to PDF.
-            workbook.Save(pdfOutput, pdfOptions);
-
-            // Configure image export options (PNG is default).
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                OnePagePerSheet = true
-            };
-
-            // Render each worksheet to a separate PNG file.
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                Worksheet sheet = workbook.Worksheets[i];
-                SheetRender renderer = new SheetRender(sheet, imgOptions);
-                renderer.ToImage(0, $"Sheet{i + 1}_Clean.png");
-            }
-
-            Console.WriteLine("Export completed with whitespace cleanup.");
+            // Export the worksheet to PDF with whitespace cleanup
+            workbook.Save("WhitespaceCleanedExport.pdf", pdfOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,39 +1,44 @@
-// Title: Export a workbook’s formula audit trail with calculation timestamps to an XML file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, forces a full formula recalculation, and creates an XML document listing each formula’s sheet name, cell address, expression, evaluated value, and the timestamp of calculation. | Develop a .NET method that scans all worksheets in a workbook, captures every formula cell’s details together with the current UTC time, and saves the collection as a structured XML report via Aspose.Cells.
-// Common Searches: Aspose.Cells C# export all formulas with timestamps to XML | How to generate a formula audit XML report from an Excel file using Aspose.Cells | C# retrieve formula expression, value and calculation date from workbook | Save Excel formula audit trail as XML using Aspose.Cells for .NET | Export workbook formula audit log with timestamps in C#
-// Tags: export formula audit trail to XML with Aspose.Cells | extract cell formulas and timestamps C# | calculate workbook formulas before XML export | Aspose.Cells generate formula audit XML report | C# workbook formula audit logging
+// Title: Generate an XML report of an Excel workbook's formula audit trail with timestamps using Aspose.Cells for .NET
+// Common Searches: how to create a formula audit log with timestamps in Aspose.Cells C# | export Excel cell formulas and calculation results to XML using Aspose.Cells | Aspose.Cells C# generate XML report of workbook formulas after recalculation | C# retrieve formula, result and evaluation time from Excel with Aspose.Cells | save formula audit trail to XML file in .NET using Aspose.Cells
+// Tags: Aspose.Cells export formula audit trail to XML | C# generate formula calculation log with timestamps | Excel workbook formula audit XML report | Aspose.Cells recalculate formulas and capture results | XML audit report for Excel formulas using .NET
 
 using System;
 using System.IO;
 using System.Xml.Linq;
 using Aspose.Cells;
 
-// // Loads an existing Excel workbook, forces a full formula recalculation, iterates through every worksheet and cell to collect each formula's sheet name, address, expression, evaluated value, and the current timestamp, then writes these details into an XML document named FormulaAuditReport.xml.
-class FormulaAuditExport
+// The example loads an Excel workbook with Aspose.Cells, forces a full formula recalculation, iterates through all worksheets and cells to collect each formula, its evaluated result, and a UTC timestamp, and writes these entries into an XML document (<FormulaAuditTrail>) that includes a generation timestamp. The XML file is saved as FormulaAuditTrail.xml, with error handling for missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Input and output file paths
-            const string inputPath = "input.xlsx";
-            const string outputPath = "FormulaAuditReport.xml";
+            // Path to the input workbook
+            string workbookPath = "input.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Error: Input file not found – {inputPath}");
+                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Ensure all formulas are calculated
+            // Recalculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Root element for the XML report
-            XElement root = new XElement("FormulaAuditTrail");
+            // Prepare the XML document for the audit trail
+            XDocument xmlReport = new XDocument(
+                new XElement("FormulaAuditTrail",
+                    new XAttribute("GeneratedOn", DateTime.UtcNow.ToString("o")),
+                    new XElement("Entries") // container for individual log entries
+                )
+            );
+
+            XElement entriesElement = xmlReport.Root.Element("Entries");
 
             // Iterate through all worksheets and cells to collect formula information
             foreach (Worksheet sheet in workbook.Worksheets)
@@ -43,33 +48,32 @@ class FormulaAuditExport
                 {
                     if (cell.IsFormula)
                     {
-                        // Build an XML element for each formula cell
-                        XElement formulaElement = new XElement("Formula",
-                            new XAttribute("Sheet", sheet.Name),
-                            new XAttribute("Address", cell.Name),
-                            new XAttribute("Expression", cell.Formula),
-                            new XAttribute("Value", cell.Value?.ToString() ?? string.Empty),
-                            // Use the current time as the calculation timestamp
-                            new XAttribute("CalculatedOn", DateTime.Now.ToString("o"))
-                        );
+                        string cellName = cell.Name;
+                        string formula = cell.Formula;
+                        string result = cell.Value?.ToString() ?? string.Empty;
+                        string timestamp = DateTime.UtcNow.ToString("o");
 
-                        root.Add(formulaElement);
+                        entriesElement.Add(
+                            new XElement("Entry",
+                                new XElement("Worksheet", sheet.Name),
+                                new XElement("Cell", cellName),
+                                new XElement("Formula", formula),
+                                new XElement("Result", result),
+                                new XElement("Timestamp", timestamp)
+                            )
+                        );
                     }
                 }
             }
 
-            // Create the final XML document
-            XDocument auditReport = new XDocument(
-                new XDeclaration("1.0", "utf-8", "yes"),
-                root
-            );
-
-            // Save the XML report
-            auditReport.Save(outputPath);
-            Console.WriteLine($"Formula audit report saved to {outputPath}");
+            // Save the XML report to a file
+            string xmlPath = "FormulaAuditTrail.xml";
+            xmlReport.Save(xmlPath);
+            Console.WriteLine($"Audit trail saved to '{xmlPath}'.");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

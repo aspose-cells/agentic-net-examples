@@ -1,45 +1,53 @@
-// Title: Style the header row with bold white text on dark blue and freeze it in an Excel sheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a style with bold white font on a dark‑blue background, applies it to the first worksheet row, and freezes that row at cell A2. | Show how to use StyleFlag to copy all formatting attributes to a header row and then call FreezePanes to keep the header visible while scrolling. | Provide a complete Aspose.Cells example that formats the header row, freezes the pane, and saves the workbook as HeaderStyleAndFreeze.xlsx.
-// Common Searches: Aspose.Cells C# how to apply a custom style to the first row and freeze the header | freeze top row after styling header with Aspose.Cells .NET | using StyleFlag to copy full row formatting and FreezePanes in Aspose.Cells
-// Tags: header row styling with Aspose.Cells C# | freeze first row using FreezePanes Aspose.Cells | StyleFlag apply full row format Aspose.Cells | bold white font on dark blue background Excel | create and save workbook HeaderStyleAndFreeze.xlsx
+// Title: Apply a light‑gray bold header style to the first row and freeze it using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, defines a solid light‑gray background style with bold centered text, applies it to cells A1‑E1, and freezes the first row using the FreezePanes method in Aspose.Cells. | Generate a .NET example that sets a custom header style on the initial worksheet row and locks that row in place while scrolling by calling Worksheet.FreezePanes.
+// Common Searches: Aspose.Cells C# apply background color to header row and keep the row visible while scrolling | How to style the first row and freeze the top row in Excel using Aspose.Cells for .NET | C# example for setting bold centered header style and locking the header row with Aspose.Cells
+// Tags: header style application Aspose.Cells | worksheet freeze panes Aspose.Cells | solid background color style Aspose.Cells | bold centered header font Aspose.Cells | xlsx file generation Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example creates a new workbook, defines a bold white‑on‑dark‑blue style, applies it to the first row, freezes that row at cell A2, and saves the file as HeaderStyleAndFreeze.xlsx.
-class HeaderStyleAndFreezeDemo
+// Creates a new workbook, defines a solid light‑gray background style with bold centered text, applies it to cells A1‑E1 as a header, freezes the top row using FreezePanes, and saves the file as HeaderStyledAndFrozen.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add sample header values
-        cells[0, 0].PutValue("ID");
-        cells[0, 1].PutValue("Name");
-        cells[0, 2].PutValue("Score");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define a style for the header row
-        Style headerStyle = workbook.CreateStyle();
-        headerStyle.Font.IsBold = true;
-        headerStyle.Font.Color = Color.White;
-        headerStyle.ForegroundColor = Color.DarkBlue;
-        headerStyle.Pattern = BackgroundType.Solid;
+            // Define a style for the header row
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.ForegroundColor = Color.LightGray;
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Color = Color.Black;
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-        // Create a flag to apply all style attributes
-        StyleFlag flag = new StyleFlag { All = true };
+            // Apply the style to the first row (header)
+            // Assuming the header spans columns A to E (0 to 4)
+            for (int col = 0; col <= 4; col++)
+            {
+                Cell cell = sheet.Cells[0, col];
+                cell.PutValue($"Header{col + 1}");
+                cell.SetStyle(headerStyle);
+            }
 
-        // Apply the style to the first row (row index 0)
-        cells.ApplyRowStyle(0, headerStyle, flag);
+            // Freeze the header row so it stays visible while scrolling
+            // Freeze rows above row 1 (i.e., row 0) and no columns
+            // Parameters: row, column, totalRows, totalColumns
+            sheet.FreezePanes(1, 0, 1, 0);
 
-        // Freeze the header row so it remains visible while scrolling
-        // Freeze at cell A2 (row index 1) with 1 frozen row and 0 frozen columns
-        worksheet.FreezePanes("A2", 1, 0);
-
-        // Save the workbook
-        workbook.Save("HeaderStyleAndFreeze.xlsx");
+            // Save the workbook
+            workbook.Save("HeaderStyledAndFrozen.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

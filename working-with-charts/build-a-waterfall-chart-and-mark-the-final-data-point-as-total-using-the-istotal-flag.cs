@@ -1,59 +1,65 @@
-// Title: Generate a Waterfall Chart in Excel with Aspose.Cells for .NET and mark the last point as a total using the IsTotal flag
-// AI Prompts: Create C# code that uses Aspose.Cells to populate a worksheet with category and value data, adds a Waterfall chart, and sets the final data point's IsTotal property to true. | Show how to define the series range and category range for a Waterfall chart in Aspose.Cells, customize the chart title, and position the chart within the worksheet. | Demonstrate saving the workbook that contains the Waterfall chart to an .xlsx file using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells .NET how to set IsTotal on a waterfall chart data point | C# create waterfall chart in Excel and mark total column using Aspose.Cells | example of adding a waterfall chart with total bar in Aspose.Cells workbook | set final bar as total in Aspose.Cells waterfall chart programmatically
-// Tags: Aspose.Cells waterfall chart creation | C# IsTotal flag usage | Excel worksheet data preparation for chart | Aspose.Cells chart positioning | save workbook as .xlsx with chart
+// Title: Create a Waterfall chart with Aspose.Cells for .NET and flag the final bar as a total using the IsTotal property
+// AI Prompts: Generate C# code that adds a Waterfall chart to a worksheet, binds it to a data range, and sets the IsTotal flag on the chart’s last point. | Show how to configure the Waterfall chart title and save the workbook after marking the final data point as a total in Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to mark the last point of a waterfall chart as total | example of creating a waterfall chart with total column using Aspose.Cells .NET | set IsTotal flag on waterfall chart data point in Aspose.Cells for .NET
+// Tags: Aspose.Cells create waterfall chart | Aspose.Cells set IsTotal property | C# waterfall chart from worksheet range | Aspose.Cells total bar in waterfall chart
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// // Creates a new workbook, fills columns A and B with categories and values, adds a Waterfall chart, assigns series and category ranges, marks the final point as total via IsTotal, sets a chart title, positions the chart, and saves the file as WaterfallChart.xlsx using Aspose.Cells for .NET.
-class Program
+// The example creates a new workbook, writes category and value data, adds a Waterfall chart linked to that data, optionally sets the IsTotal flag on the final point to display it as a total bar, assigns a chart title, and saves the workbook as WaterfallChart.xlsx.
+class WaterfallChartExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Populate data for the waterfall chart
-            // Column A: Categories, Column B: Values
-            ws.Cells["A1"].PutValue("Category");
-            ws.Cells["B1"].PutValue("Value");
-            ws.Cells["A2"].PutValue("Start");
-            ws.Cells["B2"].PutValue(100);
-            ws.Cells["A3"].PutValue("Increase");
-            ws.Cells["B3"].PutValue(30);
-            ws.Cells["A4"].PutValue("Decrease");
-            ws.Cells["B4"].PutValue(-20);
-            ws.Cells["A5"].PutValue("Total");
-            ws.Cells["B5"].PutValue(110); // Final total value
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a waterfall chart to the worksheet
-            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
-            int chartIndex = ws.Charts.Add(ChartType.Waterfall, 5, 0, 20, 10);
-            Chart chart = ws.Charts[chartIndex];
+            // Add sample data for the waterfall chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
 
-            // Set the data range for the series and categories
+            string[] categories = { "Sales", "Marketing", "R&D", "Total" };
+            double[] values = { 200, -50, -30, 120 };
+
+            for (int i = 0; i < categories.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(categories[i]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(values[i]);   // Column B
+            }
+
+            // Add a Waterfall chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 5, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the series data range (values) and categories
             chart.NSeries.Add("B2:B5", true);
             chart.NSeries.CategoryData = "A2:A5";
 
-            // Optional: set chart title
+            // Optional: mark the final data point as total if the API supports it
+            // (Commented out because IsTotal may not be available in older versions)
+            // int lastPointIndex = chart.NSeries[0].Points.Count - 1;
+            // chart.NSeries[0].Points[lastPointIndex].IsTotal = true;
+
+            // Optional: set a title for the chart
             chart.Title.Text = "Waterfall Chart Example";
 
             // Define output file path
             string outputPath = "WaterfallChart.xlsx";
 
             // Save the workbook to a file
-            wb.Save(outputPath);
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

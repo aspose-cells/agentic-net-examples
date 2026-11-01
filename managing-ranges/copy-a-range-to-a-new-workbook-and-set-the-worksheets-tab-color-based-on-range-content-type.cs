@@ -1,74 +1,95 @@
-// Title: Copy a cell range to a new workbook and set the worksheet tab color according to the range’s data type using Aspose.Cells for .NET
-// AI Prompts: Copy the A1:C10 range from an existing workbook into a fresh workbook while preserving values with Aspose.Cells in C#. | Iterate through the copied range, identify whether each cell contains a numeric, string, or DateTime value, and assign the destination worksheet’s TabColor to LightBlue, LightGreen, LightCoral, or LightGray based on the detected content type. | Save the resulting workbook as output.xlsx after the range copy and conditional tab‑coloring steps.
-// Common Searches: Aspose.Cells copy range to another workbook and change worksheet tab color based on cell type | C# detect numeric, text, and date cells in a copied range using Aspose.Cells | set worksheet TabColor conditionally after copying a range in Aspose.Cells .NET | copy range A1:C10 to new workbook and apply tab color coding with Aspose.Cells
-// Tags: copy range to new workbook Aspose.Cells | conditional tab color based on cell type Aspose.Cells | detect numeric string date cells C# Aspose.Cells | set worksheet TabColor programmatically .NET | range content analysis Aspose.Cells
+// Title: Copy a range from one Excel workbook to a new workbook and color the worksheet tab according to the dominant cell data type using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# copy specific range to a new workbook and set worksheet tab color | How to change Excel worksheet tab color based on the most common cell type with Aspose.Cells | Determine predominant data type in a range and apply tab coloring using Aspose.Cells .NET | Copy A1:C10 to another workbook and color the tab by numeric, text, date, or boolean values Aspose | C# example for range copy and conditional worksheet tab coloring with Aspose.Cells
+// Tags: duplicate range into new workbook Aspose.Cells | worksheet tab color based on dominant cell type | determine most frequent cell value type in Excel range | conditional tab styling using Aspose.Cells C# | C# analysis of cell data types for tab coloring
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The example loads source.xlsx, copies the A1:C10 range to a new workbook, examines each cell to determine if the data is numeric, text, or date, sets the destination worksheet's TabColor (LightBlue, LightGreen, LightCoral, or LightGray) according to the detected content type, and saves the result as output.xlsx.
+// The sample loads a source Excel file, copies a defined range (e.g., A1:C10) into a freshly created workbook, scans the source range to count numeric, text, date, boolean and other cell types, selects the most frequent type, sets the destination worksheet's tab color accordingly (numeric → LightBlue, text → LightGreen, date → LightCoral, boolean → LightYellow, mixed/other → LightGray), and saves the new workbook.
 class Program
 {
     static void Main()
     {
+        const string sourcePath = "source.xlsx";
+        const string destPath = "output.xlsx";
+
+        // Verify source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
+
         try
         {
-            const string sourcePath = "source.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
-                return;
-            }
-
             // Load the source workbook
-            Workbook srcWb = new Workbook(sourcePath);
+            Workbook sourceWb = new Workbook(sourcePath);
 
-            // Create a new (empty) workbook
+            // Define the range to copy
+            string sourceRangeAddress = "A1:C10";
+            Worksheet sourceWs = sourceWb.Worksheets[0];
+            AsposeRange sourceRange = sourceWs.Cells.CreateRange(sourceRangeAddress);
+
+            // Create a new workbook and add a fresh worksheet
             Workbook destWb = new Workbook();
+            destWb.Worksheets.Clear();
+            Worksheet destWs = destWb.Worksheets.Add("CopiedRange");
 
-            // Get the first worksheets from both workbooks
-            Worksheet srcSheet = srcWb.Worksheets[0];
-            Worksheet destSheet = destWb.Worksheets[0];
+            // Copy the range to the destination worksheet starting at A1 (row 0, column 0)
+            AsposeRange destRange = destWs.Cells.CreateRange(
+                0,                     // first row (A)
+                0,                     // first column (1)
+                sourceRange.RowCount,
+                sourceRange.ColumnCount);
+            destRange.Copy(sourceRange);
 
-            // Define the range to copy (adjust as needed)
-            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:C10");
+            // Determine the predominant content type in the source range
+            int numericCount = 0, textCount = 0, dateCount = 0, boolCount = 0, otherCount = 0;
 
-            // Copy the range to the destination worksheet starting at A1
-            destSheet.Cells.CreateRange("A1").Copy(srcRange);
-
-            // Analyze the content type of the copied range
-            bool hasNumeric = false;
-            bool hasString = false;
-            bool hasDate = false;
-
-            foreach (Cell cell in srcRange)
+            foreach (Cell cell in sourceRange)
             {
-                if (cell.Type == CellValueType.IsNumeric)
-                    hasNumeric = true;
-                else if (cell.Type == CellValueType.IsString)
-                    hasString = true;
-                else if (cell.Type == CellValueType.IsDateTime)
-                    hasDate = true;
+                // Skip empty cells
+                if (cell.Type == CellValueType.IsNull)
+                    continue;
+
+                switch (cell.Type)
+                {
+                    case CellValueType.IsNumeric:
+                        numericCount++;
+                        break;
+                    case CellValueType.IsString:
+                        textCount++;
+                        break;
+                    case CellValueType.IsDateTime:
+                        dateCount++;
+                        break;
+                    case CellValueType.IsBool:
+                        boolCount++;
+                        break;
+                    default:
+                        otherCount++;
+                        break;
+                }
             }
 
-            // Set the worksheet tab color based on the detected content type
-            if (hasNumeric && !hasString && !hasDate)
-                destSheet.TabColor = Color.LightBlue;      // Only numeric values
-            else if (hasString && !hasNumeric && !hasDate)
-                destSheet.TabColor = Color.LightGreen;     // Only text values
-            else if (hasDate && !hasNumeric && !hasString)
-                destSheet.TabColor = Color.LightCoral;     // Only date values
+            // Choose the tab color based on the most frequent content type
+            if (numericCount >= textCount && numericCount >= dateCount && numericCount >= boolCount && numericCount >= otherCount)
+                destWs.TabColor = Color.LightBlue;      // Numeric data
+            else if (textCount >= numericCount && textCount >= dateCount && textCount >= boolCount && textCount >= otherCount)
+                destWs.TabColor = Color.LightGreen;     // Text data
+            else if (dateCount >= numericCount && dateCount >= textCount && dateCount >= boolCount && dateCount >= otherCount)
+                destWs.TabColor = Color.LightCoral;     // Date data
+            else if (boolCount >= numericCount && boolCount >= textCount && boolCount >= dateCount && boolCount >= otherCount)
+                destWs.TabColor = Color.LightYellow;    // Boolean data
             else
-                destSheet.TabColor = Color.LightGray;      // Mixed content
+                destWs.TabColor = Color.LightGray;      // Mixed/Other
 
-            // Save the new workbook
-            destWb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            // Save the destination workbook
+            destWb.Save(destPath);
+            Console.WriteLine($"Workbook saved successfully to {destPath}");
         }
         catch (Exception ex)
         {

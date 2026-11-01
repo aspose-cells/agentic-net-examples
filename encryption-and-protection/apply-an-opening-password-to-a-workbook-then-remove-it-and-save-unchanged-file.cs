@@ -1,33 +1,44 @@
-// Title: How to set and then remove an opening password on an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a new workbook, assigns an opening password, saves it as XLSX, then opens the file using LoadOptions with the password, clears the password, and saves the workbook unchanged. | Provide a step‑by‑step C# example that protects an Excel file with an opening password and later removes that protection without altering any worksheet data using Aspose.Cells.
-// Common Searches: aspnet set opening password on Excel file with Aspose.Cells and later remove it | c# remove workbook opening password using Aspose.Cells LoadOptions | how to clear password protection from an XLSX file programmatically with Aspose.Cells | Aspose.Cells example for adding and deleting workbook password without changing content | load password protected workbook and save without password using C# Aspose.Cells
-// Tags: Aspose.Cells set workbook opening password C# | Aspose.Cells clear workbook password C# | LoadOptions password protected XLSX Aspose.Cells | Save workbook unchanged after password removal Aspose.Cells | Excel file protection handling Aspose.Cells .NET
+// Title: Open a password‑protected XLSX with Aspose.Cells for .NET and save it without a password
+// Common Searches: Aspose.Cells C# load an encrypted XLSX using a password and save it unprotected | remove opening password from Excel workbook programmatically with Aspose.Cells .NET | C# example to open password protected workbook and export without password using Aspose.Cells | how to use LoadOptions.Password in Aspose.Cells to decrypt and save an XLSX file | unprotect Excel file with Aspose.Cells while preserving original content
+// Tags: Aspose.Cells loadoptions password | remove workbook opening password Aspose.Cells | save unprotected XLSX Aspose.Cells | C# decrypt Excel file Aspose.Cells | open encrypted XLSX .NET Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Creates a new workbook, applies an opening password, saves it as XLSX, reloads the file with LoadOptions using the password, clears the password, and saves the workbook again without modifying its content.
+// The sample checks for the source file, creates LoadOptions with the opening password, loads the protected workbook, and then saves it to a new file without specifying any password, effectively removing the opening protection while keeping the workbook unchanged.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook file
-        string filePath = "ProtectedWorkbook.xlsx";
+        // Input and output file paths
+        string inputPath = "protected.xlsx";
+        string outputPath = "unprotected.xlsx";
 
-        // 1. Create a new workbook and apply an opening password
-        Workbook wb = new Workbook();
-        wb.Settings.Password = "Open123"; // set opening password
-        wb.Save(filePath, SaveFormat.Xlsx); // save the protected workbook
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // 2. Load the workbook using the opening password
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.Password = "Open123"; // provide password for opening
-        Workbook loadedWb = new Workbook(filePath, loadOptions);
+            // Load the workbook using the opening password
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = "myPassword" // opening password
+            };
+            var workbook = new Workbook(inputPath, loadOptions);
 
-        // 3. Remove the opening password
-        loadedWb.Settings.Password = null; // clearing the password removes protection
-
-        // 4. Save the workbook back (content remains unchanged)
-        loadedWb.Save(filePath, SaveFormat.Xlsx);
+            // Save the workbook without any password protection
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

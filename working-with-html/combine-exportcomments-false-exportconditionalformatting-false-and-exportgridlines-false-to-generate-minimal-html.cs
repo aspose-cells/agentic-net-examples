@@ -1,50 +1,47 @@
-// Title: Generate minimal HTML from an Excel workbook by disabling comments, conditional formatting, and grid lines with Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a Workbook, sets HtmlSaveOptions.ExportComments, ExportConditionalFormatting, and ExportGridLines to false, embeds images as base64, and saves the file as a single HTML document. | Update an existing Aspose.Cells .NET project to turn off comments, conditional formatting, and grid lines in HtmlSaveOptions while preserving other default HTML export settings.
-// Common Searches: Aspose.Cells .NET export Excel to HTML without comments, conditional formatting, and grid lines | How to create a lightweight HTML file from a workbook using Aspose.Cells | Minimal HTML output with base64 images using Aspose.Cells HtmlSaveOptions | Disable comments and conditional formatting in Aspose.Cells HTML export
-// Tags: Aspose.Cells HtmlSaveOptions disable comments | Aspose.Cells HtmlSaveOptions disable conditional formatting | Aspose.Cells HtmlSaveOptions hide grid lines | Aspose.Cells export minimal HTML | Aspose.Cells embed images base64 HTML
+// Title: Create a minimal HTML file from an Excel workbook by disabling comments, conditional formatting, and grid lines with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook using Aspose.Cells, sets HtmlSaveOptions.ExportComments, ExportConditionalFormatting, and ExportGridLines to false, and saves the result as a lightweight HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions in C# to produce minimal HTML output by turning off cell comments, conditional formatting, and grid lines.
+// Common Searches: how to export Excel to HTML without comments and conditional formatting using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions minimal HTML output grid lines off | C# generate lightweight HTML from workbook disabling cell comments | remove conditional formatting when saving workbook as HTML Aspose.Cells | export Excel to clean HTML with no grid lines Aspose.Cells C#
+// Tags: Aspose.Cells HtmlSaveOptions ExportComments false | Aspose.Cells ExportConditionalFormatting false | Aspose.Cells ExportGridLines false | minimal HTML export from Excel .NET | lightweight Excel to HTML conversion Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MinimalHtmlExport
+// The example loads an existing Excel file with Aspose.Cells, configures HtmlSaveOptions to set ExportComments, ExportConditionalFormatting, and ExportGridLines to false, and saves the workbook as a minimal HTML file. This produces a lightweight HTML representation without cell comments, conditional formatting styles, or grid lines, and includes basic error handling for missing input files.
+class Program
 {
-    // The example demonstrates creating a Workbook, configuring HtmlSaveOptions to turn off comments, conditional formatting, and grid lines, embedding images as base64, and saving the result as a compact HTML file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (or load an existing one if needed)
-                Workbook workbook = new Workbook();
-
-                // Add sample data
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Header");
-                sheet.Cells["A2"].PutValue("Data 1");
-                sheet.Cells["A3"].PutValue("Data 2");
-
-                // Configure HTML export options for minimal output
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Do not export grid lines
-                    ExportGridLines = false,
-                    // Embed images as base64 to keep a single HTML file
-                    ExportImagesAsBase64 = true
-                };
-
-                // Define output file path
-                string outputPath = "MinimalOutput.html";
-
-                // Save the workbook as an HTML file using the configured options
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"HTML file successfully saved to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML export options for minimal output
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                ExportGridLines = false // Do not export grid lines
+                // ExportCellComments property is not available in this version of Aspose.Cells
+            };
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

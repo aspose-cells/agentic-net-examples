@@ -1,7 +1,6 @@
-// Title: How to change the theme color of the second series in an Aspose.Cells pie chart with C#
-// AI Prompts: Generate C# code that creates a pie chart, adds a second series, and applies a custom Style object to set its fill color to a chosen theme color. | Update an existing Aspose.Cells workbook by retrieving the second series of a pie chart and assigning a Style instance to modify its area foreground color.
-// Common Searches: Aspose.Cells C# set fill color for second series in pie chart | change theme color of specific series in Excel chart using Aspose.Cells | apply custom Style to chart series Aspose.Cells .NET example | programmatically style second series of a pie chart in C# with Aspose | how to use Style object to color chart series in Aspose.Cells
-// Tags: Aspose.Cells pie chart series styling C# | set series fill color Aspose.Cells | apply Style object to chart series .NET | change theme color of Excel chart series programmatically | second series custom color Aspose.Cells
+// Title: Set a custom theme color for the second series of a pie chart using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# change color of second series in a pie chart | apply solid fill style to specific chart series with Aspose.Cells .NET | how to modify chart series style programmatically in Excel using Aspose.Cells | set red fill for second series of a pie chart in C# Aspose.Cells example | assign new Style object to chart series in Aspose.Cells workbook
+// Tags: modify chart series style Aspose.Cells .NET | set series fill color pie chart C# | apply custom Style object to Excel chart series | change second series theme color Aspose.Cells | programmatic chart series styling Aspose.Cells
 
 using System;
 using System.Drawing;
@@ -9,59 +8,80 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, fills cells A1:B5 with sample data, adds a pie chart with two series, retrieves the second series, sets its area foreground color to LightBlue via a Style object, and saves the file as Output.xlsx.
+// The code loads or creates a workbook, ensures a pie chart with at least two series exists, creates a Style with a solid red fill, assigns this Style to the second series, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add sample data for the pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(70);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(50);
-            sheet.Cells["A5"].PutValue("D");
-            sheet.Cells["B5"].PutValue(20);
-
-            // Add a pie chart
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the first series data range
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.CategoryData = "A2:A5";
-
-            // Add a second series (duplicate data for demonstration)
-            chart.NSeries.Add("B2:B5", true);
-
-            // Get the second series (index 1)
-            Series secondSeries = chart.NSeries[1];
-
-            // Apply fill color to the second series area (solid fill by default)
-            secondSeries.Area.ForegroundColor = Color.LightBlue;
-
-            // Ensure the output directory exists
-            string outputPath = "Output.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Verify that the input file exists; otherwise create a new workbook.
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+                // Add a default worksheet and a sample pie chart for demonstration.
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Sheet1";
+
+                // Sample data for the chart.
+                ws.Cells["A1"].PutValue("Category");
+                ws.Cells["B1"].PutValue("Value");
+                ws.Cells["A2"].PutValue("A");
+                ws.Cells["B2"].PutValue(30);
+                ws.Cells["A3"].PutValue("B");
+                ws.Cells["B3"].PutValue(70);
+
+                // Create a pie chart.
+                int chartIndex = ws.Charts.Add(ChartType.Pie, 5, 0, 25, 10);
+                Chart chart = ws.Charts[chartIndex];
+                chart.NSeries.Add("B2:B3", true);
+                chart.NSeries[0].CategoryData = "A2:A3";
             }
 
-            // Save the workbook
+            // Access the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart.
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Access the first chart (assumed to be a pie chart) and enforce its type.
+            Chart chartObj = worksheet.Charts[0];
+            chartObj.Type = ChartType.Pie;
+
+            // Ensure the chart has at least two series.
+            if (chartObj.NSeries.Count < 2)
+            {
+                Console.WriteLine("The chart does not contain a second series to style.");
+                return;
+            }
+
+            // Get the second series (index 1) of the chart.
+            ChartSeries secondSeries = chartObj.NSeries[1];
+
+            // Create a new style with a solid red fill.
+            Style newStyle = workbook.CreateStyle();
+            newStyle.ForegroundColor = Color.Red;
+            newStyle.Pattern = BackgroundType.Solid;
+
+            // Assign the new style to the second series.
+            secondSeries.Style = newStyle;
+
+            // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

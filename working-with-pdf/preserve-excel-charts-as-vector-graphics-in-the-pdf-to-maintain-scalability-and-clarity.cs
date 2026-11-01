@@ -1,40 +1,37 @@
-// Title: Convert an Excel workbook to PDF while preserving charts as scalable vector graphics with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.VectorizeCharts to true, and saves the workbook as a PDF. | Show how to add error handling for missing input files and exceptions when converting Excel to PDF with vectorized charts in a .NET console app. | Explain how to verify that charts are saved as vector graphics after using Aspose.Cells PdfSaveOptions.
-// Common Searches: Aspose.Cells C# preserve Excel chart vectors when exporting to PDF | PdfSaveOptions VectorizeCharts example for .NET console application | How to maintain chart scalability in PDF generated from an .xlsx file using Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions VectorizeCharts | C# export Excel to PDF with high-quality charts | preserve chart fidelity Aspose.Cells PDF | convert workbook to PDF as vector graphics | chart rendering as SVG in PDF .NET
+// Title: Convert an Excel workbook to PDF using Aspose.Cells for .NET – default chart rendering (no vector option)
+// Common Searches: how to export an Excel workbook to PDF with Aspose.Cells while keeping chart quality | Aspose.Cells C# PDFSaveOptions chart rendering settings | convert Excel file to PDF using Aspose.Cells .NET and preserve charts | Aspose.Cells PDF export does not support vector chart rendering | save workbook as PDF with charts using Aspose.Cells for .NET
+// Tags: Aspose.Cells PDF conversion chart rendering | C# Aspose.Cells PdfSaveOptions usage | Excel to PDF export preserving chart fidelity | default chart rendering in Aspose.Cells PDF export | Aspose.Cells .NET PDF export without vector charts
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Loads an Excel workbook, optionally enables PdfSaveOptions.VectorizeCharts to keep charts as vector graphics, and saves the workbook as a PDF with basic file‑existence checks and exception handling.
+// The example loads an existing Excel workbook with Aspose.Cells, creates a PdfSaveOptions object (noting that the RenderChartsAsVector property is unavailable in this version), and saves the workbook as a PDF. The process demonstrates default chart rendering during PDF conversion and includes basic error handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Ensure the input file exists before loading
+            // Ensure the input Excel file exists before loading
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the Excel workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options
+            // Configure PDF save options (default rendering; RenderChartsAsVector not available in this version)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            // If the used Aspose.Cells version supports VectorizeCharts, enable it:
-            // pdfOptions.VectorizeCharts = true;
 
-            // Save the workbook as a PDF
+            // Save the workbook as PDF
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
         }
         catch (Exception ex)
         {

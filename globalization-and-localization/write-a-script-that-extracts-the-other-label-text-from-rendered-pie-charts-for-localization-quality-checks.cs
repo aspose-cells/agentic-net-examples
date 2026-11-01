@@ -1,15 +1,14 @@
-// Title: C# script to extract the "Other" label from every pie or 3‑D pie chart in an Excel workbook using Aspose.Cells
-// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, loops through all worksheets, identifies pie and 3‑D pie charts, reads the XValues range of the first series, and prints the category text where the label equals "Other". | Extend the script to also retrieve the numeric value associated with the "Other" slice and display it alongside the label for each matching chart. | Add robust error handling that logs warnings for charts without XValues, missing "Other" categories, or empty ranges, and ensures processing continues for remaining charts.
-// Common Searches: how to read pie chart category names from Excel using Aspose.Cells in C# | C# extract specific slice label from Excel pie chart with Aspose.Cells | Aspose.Cells get XValues range of chart series for localization checks | iterate through all charts in a workbook and find "Other" label using Aspose.Cells | read category values of pie chart series in .NET Aspose.Cells
-// Tags: Aspose.Cells read pie chart XValues | C# extract chart category label | Excel pie chart "Other" slice detection | iterate worksheets charts Aspose.Cells | localization quality check Excel chart labels
+// Title: C# script to extract the “Other” slice label from pie charts in an Excel workbook with Aspose.Cells
+// Common Searches: how to get the 'Other' slice label from an Excel pie chart using Aspose.Cells in C# | C# extract category names from pie chart series with Aspose.Cells | read pie chart data point labels in an .xlsx file using Aspose.Cells | Aspose.Cells locate specific slice label in 2D or 3D pie chart | C# code to iterate Excel chart series and find 'Other' category | extract localization label from pie chart in Aspose.Cells workbook
+// Tags: Aspose.Cells extract pie chart slice label | C# iterate Excel chart series values | find specific category in Excel pie chart | read pie chart data points with Aspose.Cells | localization quality check Excel chart labels | process 2D and 3D pie charts using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The program loads an Excel workbook, iterates each worksheet and its charts, processes only pie and 3‑D pie charts, reads the XValues range of the first series, flattens the category array, searches for the "Other" label, and outputs the worksheet name, chart name, and the found label text.
-class Program
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and its charts, filters for 2‑D or 3‑D pie charts, and iterates over each series and data point to locate a category named "Other". When the slice is found, the script prints the worksheet name, chart title, and the label text (optionally including the point value). Comprehensive error handling reports missing files or chart‑specific issues without stopping the entire run.
+class ExtractOtherLabelFromPieCharts
 {
     static void Main()
     {
@@ -18,66 +17,64 @@ class Program
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
         try
         {
-            // Load the workbook containing the pie charts
-            var workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all charts on the worksheet
+                // Iterate through all charts in the worksheet
                 foreach (Chart chart in sheet.Charts)
                 {
-                    // Process only pie charts (2D or 3D)
+                    // Process only pie charts (2‑D or 3‑D)
                     if (chart.Type == ChartType.Pie || chart.Type == ChartType.Pie3D)
                     {
-                        // Ensure the chart has at least one series
-                        if (chart.NSeries.Count > 0)
+                        try
                         {
-                            // Use the first series (commonly the data source for pie charts)
-                            Series series = chart.NSeries[0];
-
-                            // XValues holds the address of the category range (e.g., "A1:A5")
-                            string xRange = series.XValues;
-                            if (string.IsNullOrEmpty(xRange))
-                                continue;
-
-                            // Retrieve the actual category values from the worksheet
-                            object[,] categoryArray = sheet.Cells.CreateRange(xRange).Value as object[,];
-                            if (categoryArray == null)
-                                continue;
-
-                            // Flatten the 2‑D array to a 1‑D array for easier processing
-                            int rows = categoryArray.GetLength(0);
-                            int cols = categoryArray.GetLength(1);
-                            object[] categories = new object[rows * cols];
-                            int idx = 0;
-                            for (int r = 0; r < rows; r++)
-                                for (int c = 0; c < cols; c++)
-                                    categories[idx++] = categoryArray[r, c];
-
-                            // Locate the index of the category named "Other"
-                            int otherIndex = -1;
-                            for (int i = 0; i < categories.Length; i++)
+                            // Iterate through each series in the chart using dynamic to avoid compile‑time type dependencies
+                            foreach (dynamic series in chart.NSeries)
                             {
-                                if (categories[i] != null && categories[i].ToString() == "Other")
+                                // Get the category (X) values source
+                                dynamic xValues = series.XValues;
+
+                                // Get the number of data points in the series
+                                int pointCount = series.Points.Count;
+
+                                // Loop through each data point to find the "Other" label
+                                for (int i = 0; i < pointCount; i++)
                                 {
-                                    otherIndex = i;
-                                    break;
+                                    // Retrieve the category name for the current point
+                                    object categoryObj = xValues.GetValue(i);
+                                    string category = categoryObj?.ToString() ?? string.Empty;
+
+                                    // Check if this point is the "Other" slice
+                                    if (category.Equals("Other", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        // Access the data point (optional, e.g., to get its value)
+                                        dynamic point = series.Points[i];
+
+                                        // Construct the label text (here we use the category name)
+                                        string labelText = category;
+
+                                        // Example: include the point value if needed
+                                        // labelText = $"{category} ({point.Value})";
+
+                                        Console.WriteLine($"Worksheet: {sheet.Name}, Chart: {chart.Title?.Text ?? "Untitled"}");
+                                        Console.WriteLine($"Found \"Other\" label: {labelText}");
+                                    }
                                 }
                             }
-
-                            // If "Other" was found, output its label (category name)
-                            if (otherIndex >= 0 && otherIndex < categories.Length)
-                            {
-                                string labelText = categories[otherIndex]?.ToString() ?? string.Empty;
-                                Console.WriteLine($"Worksheet: {sheet.Name}, Chart: {chart.Name}, \"Other\" label: {labelText}");
-                            }
+                        }
+                        catch (Exception exChart)
+                        {
+                            // Handle errors specific to chart processing without stopping the whole run
+                            Console.WriteLine($"Error processing chart \"{chart.Title?.Text ?? "Untitled"}\" on sheet \"{sheet.Name}\": {exChart.Message}");
                         }
                     }
                 }
@@ -85,7 +82,7 @@ class Program
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors to prevent the program from crashing
+            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

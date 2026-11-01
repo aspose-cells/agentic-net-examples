@@ -1,49 +1,45 @@
-// Title: Load an Excel workbook with British English (en-GB) CultureInfo using Aspose.Cells LoadOptions in C#
-// AI Prompts: Generate C# code that creates a LoadOptions object with CultureInfo set to en-GB, loads an .xlsx file with Aspose.Cells, and saves the workbook. | Show how to switch the LoadOptions CultureInfo to another locale (e.g., fr-FR) while loading an Excel file with Aspose.Cells in .NET. | Provide a C# example that validates the input file path, applies custom globalization settings via LoadOptions, and handles exceptions during workbook loading.
-// Common Searches: Aspose.Cells C# load workbook with specific CultureInfo en-GB | how to set locale for Excel import using LoadOptions in Aspose.Cells .NET | custom globalization settings for loading .xlsx files with Aspose.Cells | example of using LoadOptions.CultureInfo to load Excel in British English | error handling for missing Excel file when using Aspose.Cells LoadOptions
-// Tags: Aspose.Cells LoadOptions CultureInfo en-GB | C# load Excel workbook with locale | custom globalization settings for Excel import .NET | exception handling missing workbook Aspose.Cells | switch LoadOptions locale fr-FR Aspose.Cells
+// Title: Load an Excel workbook with French (fr-FR) culture using Aspose.Cells LoadOptions in C#
+// Common Searches: Aspose.Cells C# load workbook with French locale using LoadOptions | How to set CultureInfo to fr-FR when opening an Excel file with Aspose.Cells | C# example for loading Excel file with custom globalization settings in Aspose.Cells | LoadOptions CultureInfo parameter usage in Aspose.Cells for localized data | Reading cell values from a French‑culture workbook with Aspose.Cells in .NET
+// Tags: LoadOptions CultureInfo setup | Aspose.Cells French locale loading | C# Excel workbook load with custom globalization | handling file not found in Aspose.Cells | reading cell A1 after localized load
 
-using Aspose.Cells;
 using System;
 using System.Globalization;
 using System.IO;
+using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample verifies the Excel file exists, configures LoadOptions with a French (fr-FR) CultureInfo, loads the workbook using these options, prints the value of cell A1 from the first worksheet, and gracefully handles any exceptions that may occur.
+class Program
 {
-    // The example checks for the presence of Input.xlsx, configures a LoadOptions object with LoadFormat.Xlsx and CultureInfo set to British English (en-GB), loads the workbook using these options, saves it as Output.xlsx, and includes exception handling for missing files or load errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the Excel file to be loaded
+        string inputPath = @"C:\Data\Sample.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Configure load options with custom globalization settings (e.g., French culture)
+            LoadOptions loadOptions = new LoadOptions
             {
-                string inputPath = "Input.xlsx";
-                string outputPath = "Output.xlsx";
+                CultureInfo = new CultureInfo("fr-FR")
+            };
 
-                // Ensure the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Load the workbook using the specified load options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-                // Set custom culture (British English) for loading the workbook
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    CultureInfo = new CultureInfo("en-GB")
-                };
-
-                // Load the workbook with the specified culture
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Save the workbook to verify it was loaded correctly
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Example: display the value of cell A1 after loading
+            Console.WriteLine("A1 value: " + workbook.Worksheets[0].Cells["A1"].StringValue);
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

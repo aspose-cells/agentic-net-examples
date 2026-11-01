@@ -1,28 +1,54 @@
-// Title: Delete a specific PivotTable from an Excel worksheet by index using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that checks for existing PivotTables in a worksheet and removes the one at a given index using Aspose.Cells. | Show how to call worksheet.PivotTables.RemoveAt to delete a particular PivotTable and then save the workbook. | Provide a robust example that validates the PivotTable collection before invoking RemoveAt to avoid runtime errors.
-// Common Searches: asp.net aspose.cells how to remove a pivot table at index 0 | c# code sample for deleting a pivot table from an Excel file using Aspose.Cells | remove specific pivot table from worksheet without affecting other data aspose.cells | check pivot table count before calling RemoveAt in Aspose.Cells C# | save changes after deleting pivot table with Aspose.Cells
-// Tags: Aspose.Cells PivotTables.RemoveAt method | C# delete Excel pivot table programmatically | delete pivot table at given index | validate pivot table count before removal | save workbook after pivot table deletion
+// Title: Delete the first PivotTable from an Excel worksheet using Aspose.Cells PivotTables.RemoveAt in C#
+// Common Searches: C# code to remove a pivot table from an Excel worksheet with Aspose.Cells | Aspose.Cells PivotTables.RemoveAt example for deleting the first pivot table | How to check for and delete pivot tables in a workbook using Aspose.Cells .NET | Remove a specific pivot table by index in an Excel file with Aspose.Cells | Delete all pivot tables from a worksheet using Aspose.Cells C# API
+// Tags: Aspose.Cells PivotTables.RemoveAt method usage | C# delete pivot table from Excel worksheet | remove pivot table by index Aspose.Cells | Excel workbook pivot table removal with .NET | handling pivot tables in Aspose.Cells applications | Aspose.Cells worksheet pivot table management
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads 'input.xlsx', verifies that the first worksheet contains at least one PivotTable, removes the PivotTable at index 0 using worksheet.PivotTables.RemoveAt, and saves the updated workbook as 'output.xlsx'.
+// The sample loads an Excel file with Aspose.Cells, checks if the first worksheet contains any PivotTables, removes the first PivotTable using worksheet.PivotTables.RemoveAt(0), and saves the modified workbook, while handling CellsException and generic errors.
 class Program
 {
     static void Main()
     {
-        // Load the workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Get the target worksheet (e.g., the first one)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Delete the PivotTable at the desired index (e.g., index 0)
-        if (worksheet.PivotTables.Count > 0)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            worksheet.PivotTables.RemoveAt(0);
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the workbook (no password supplied). If the file is password‑protected,
+            // a CellsException will be thrown and handled in the catch block.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Remove the first PivotTable if any exist
+            if (worksheet.PivotTables.Count > 0)
+            {
+                worksheet.PivotTables.RemoveAt(0);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handles errors specific to Aspose.Cells (e.g., password protection)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

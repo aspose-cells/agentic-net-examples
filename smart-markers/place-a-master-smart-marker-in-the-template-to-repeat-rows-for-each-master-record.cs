@@ -1,85 +1,44 @@
-// Title: Add a master smart marker row in Aspose.Cells (C#) to automatically repeat rows for each item in a List<T>
-// AI Prompts: Write C# code that inserts a master smart marker in an Aspose.Cells worksheet, defines the _CellsSmartMarkers range, binds a List<MasterRecord> as the data source, and processes the template to generate repeated rows. | Show how to use WorkbookDesigner in Aspose.Cells to bind a collection of objects to a master smart marker and export the result to an Excel file.
-// Common Searches: Aspose.Cells C# master smart marker repeat rows for each list element | Define _CellsSmartMarkers range for master smart markers in Aspose.Cells | Binding a List of custom objects to a master smart marker in Aspose.Cells C# | Generate Excel rows from a collection using Aspose.Cells smart markers without LineByLine | Create master smart marker template row in Aspose.Cells workbook programmatically
-// Tags: row duplication using master smart marker Aspose.Cells | WorkbookDesigner bind collection to smart marker | smart marker range definition _CellsSmartMarkers | process smart markers with default linebyline | repeat Excel rows programmatically Aspose.Cells C#
+// Title: How to add a master smart marker in an Excel template to repeat rows for each master record using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells master smart marker repeat rows for each record in template | Using WorkbookDesigner to process master smart markers and duplicate rows in Excel with Aspose.Cells | SetDataSource with DataTable for master smart markers in Aspose.Cells .NET | Insert &=MasterRecords smart marker in Excel template using Aspose.Cells C# | Generate multiple rows from a DataTable using smart markers in Aspose.Cells
+// Tags: master smart marker row duplication Aspose.Cells | WorkbookDesigner SetDataSource DataTable | smart marker syntax &=MasterRecords .NET | repeat rows in Excel template using Aspose.Cells | process smart markers C#
 
 using System;
-using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerDemo
+// The example loads an Excel template, places master smart markers &=MasterRecords.Name and &=MasterRecords.Amount in cells A2 and B2, creates a DataTable named 'MasterRecords' with sample data, assigns it to a WorkbookDesigner via SetDataSource, processes the smart markers to automatically repeat the row for each record, and saves the populated workbook as Output.xlsx.
+class SmartMarkerExample
 {
-    // Sample master record class
-    // The example demonstrates how to create a new workbook, add header cells, place master smart markers in a template row, define the _CellsSmartMarkers range, bind a List<MasterRecord> as the data source named 'MasterData', process the markers with WorkbookDesigner to repeat the row for each record, and save the resulting workbook as an .xlsx file.
-    public class MasterRecord
+    static void Main()
     {
-        public string? Name { get; set; }   // Made nullable to satisfy non‑nullable warning
-        public int Age { get; set; }
-    }
+        // Load the template workbook (replace with your template path)
+        var workbook = new Workbook("Template.xlsx");
 
-    public class MasterSmartMarkerExample
-    {
-        public static void Run()
-        {
-            try
-            {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        var sheet = workbook.Worksheets[0];
+        var cells = sheet.Cells;
 
-                // 2. Set up header cells
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
+        // Place a master smart marker in the first row to repeat for each master record
+        // The smart marker syntax: &=MasterRecords.FieldName
+        // Here we assume the master record has fields "Name" and "Amount"
+        cells["A2"].PutValue("&=MasterRecords.Name");
+        cells["B2"].PutValue("&=MasterRecords.Amount");
 
-                // 3. Place master smart markers in the template row (these will be repeated)
-                //    The syntax "&=MasterData.Property" tells the designer to repeat this row
-                //    for each item in the data source named "MasterData".
-                sheet.Cells["A2"].PutValue("&=MasterData.Name");
-                sheet.Cells["B2"].PutValue("&=MasterData.Age");
+        // Prepare sample data for the master records
+        var dt = new DataTable("MasterRecords");
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Amount", typeof(double));
 
-                // 4. Define the range that contains the smart markers.
-                //    Naming the range "_CellsSmartMarkers" enables processing when LineByLine is false.
-                Aspose.Cells.Range smartMarkerRange = sheet.Cells.CreateRange("A2:B2");
-                smartMarkerRange.Name = "_CellsSmartMarkers";
+        dt.Rows.Add("Alice", 1200.50);
+        dt.Rows.Add("Bob", 950.75);
+        dt.Rows.Add("Charlie", 1430.00);
 
-                // 5. Prepare sample data source (a list of master records)
-                List<MasterRecord> masterData = new List<MasterRecord>
-                {
-                    new MasterRecord { Name = "John Doe", Age = 30 },
-                    new MasterRecord { Name = "Jane Smith", Age = 28 },
-                    new MasterRecord { Name = "Bob Johnson", Age = 45 }
-                };
+        // Set the data source for the smart markers
+        var designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource(dt);
+        designer.Process(); // Process the smart markers and repeat rows
 
-                // 6. Initialize WorkbookDesigner, bind the workbook and data source
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                    // LineByLine defaults to false; range smart markers will be used.
-                };
-                designer.SetDataSource("MasterData", masterData);
-
-                // 7. Process the smart markers – rows will be repeated for each master record
-                designer.Process();
-
-                // 8. Save the resulting workbook
-                string outputPath = "MasterSmartMarkerOutput.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during smart marker processing: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for demonstration
-    class Program
-    {
-        static void Main()
-        {
-            MasterSmartMarkerExample.Run();
-            Console.WriteLine("Workbook with master smart marker created successfully.");
-        }
+        // Save the resulting workbook (replace with your desired output path)
+        workbook.Save("Output.xlsx");
     }
 }

@@ -1,26 +1,42 @@
-// Title: How to insert a column at index 5 and shift existing columns right using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert a single column at zero‑based index 5 in an existing Excel workbook with Aspose.Cells for .NET and save the file. | Write C# code that adds three consecutive columns starting at column F while preserving formulas and formatting using Aspose.Cells. | Create a reusable C# method that accepts a worksheet and a column index, inserts a column at that position, and returns the updated workbook.
-// Common Searches: Aspose.Cells C# insert column at index 5 before column F | how to shift worksheet columns right after inserting a column with Aspose.Cells .NET | insert multiple columns at a specific position in Excel using Aspose.Cells C# example
-// Tags: Aspose.Cells InsertColumns method C# | add column to Excel worksheet .NET | shift worksheet columns right Aspose.Cells | insert column before column F Excel C# | modify worksheet structure programmatically Aspose.Cells
+// Title: Insert a column at index 5 and shift existing columns right in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Add a column at zero‑based position 5, shift all later columns right, and copy the style from the neighboring column using Aspose.Cells in C#. | Programmatically insert a new worksheet column at index five with style inheritance via the Aspose.Cells .NET library.
+// Common Searches: How to insert a column at index 5 in an Excel file using Aspose.Cells for .NET | Aspose.Cells C# shift columns right after inserting a new column | Copy style from adjacent column when adding a column with Aspose.Cells API
+// Tags: column insertion by index Aspose.Cells C# | shift columns right Aspose.Cells | copy adjacent column style Aspose.Cells | zero‑based column insertion .NET | add worksheet column Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel workbook, accesses the first worksheet, inserts one column at zero‑based index 5 (before column F) which shifts all subsequent columns to the right, and then saves the modified workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Creates a new workbook, accesses the first worksheet, inserts a column at zero‑based index 5 while copying the adjacent column's style, shifts existing columns to the right, saves the file as Result.xlsx, and prints the full output path.
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Access the first worksheet (you can change the index or name as needed)
-        Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Insert a new column at index 5 (zero‑based, i.e., before column F)
-        // The second parameter (1) specifies the number of columns to insert.
-        sheet.Cells.InsertColumns(5, 1);
+                // Insert one column at index 5 (zero‑based), shifting existing columns to the right
+                // The second parameter indicates whether to copy the style from the adjacent column
+                worksheet.Cells.InsertColumn(5, true);
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+                // Define the output file path
+                string outputPath = "Result.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

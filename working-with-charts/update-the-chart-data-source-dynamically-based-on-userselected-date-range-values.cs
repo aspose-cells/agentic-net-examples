@@ -1,81 +1,118 @@
-// Title: How to dynamically adjust an Aspose.Cells column chart’s data range based on a user‑selected date interval in C#
-// AI Prompts: Write a C# method that scans a worksheet for dates between two DateTime values, finds the first and last matching rows, and calls Chart.SetChartDataRange to refresh the chart source. | Show how to clear a chart’s series when no rows satisfy the date filter, then save the workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# filter chart data by date range | Update Excel chart source dynamically after workbook creation Aspose.Cells | SetChartDataRange with variable rows based on user input in .NET | How to programmatically change chart data range in Aspose.Cells using DateTime | C# example for adjusting column chart series to selected dates in Aspose.Cells
-// Tags: Aspose.Cells dynamic chart source | C# programmatic Excel chart series update | date range based chart adjustment Aspose.Cells | column chart data range modification .NET | worksheet date detection for chart C#
+// Title: Dynamically update an Excel chart's data range based on a user‑selected date interval using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, scans column A for dates, selects rows between two DateTime variables, and assigns the matching ranges to the XValues and Values of the first chart series. | Create a C# snippet that renames a chart series to show the chosen start and end dates while updating its data source in an existing worksheet using Aspose.Cells. | Add error handling in C# to verify the input Excel file exists, ensure at least one chart is present, and gracefully handle cases where no rows match the date filter before modifying the chart with Aspose.Cells.
+// Common Searches: aspnet c# filter Excel rows by date and update chart series using Aspose.Cells | change chart data source to a dynamic range based on start and end dates in Aspose.Cells | set chart series name to display selected date range programmatically with Aspose.Cells for .NET | validate chart existence before modifying series in Aspose.Cells C# example
+// Tags: dynamic chart source updating Aspose.Cells | date‑range row filtering C# Aspose | configure chart series data ranges Aspose.Cells | programmatic chart series naming Aspose.Cells | ensure chart presence prior to modification Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The sample creates a workbook, fills column A with dates and column B with numeric values, adds a column chart covering the full dataset, then recalculates the chart's data range to include only rows whose dates fall within a user‑specified start and end date, handling the case of no matching rows, and finally saves the workbook as DynamicChartUpdated.xlsx.
-class DynamicChartUpdate
+// The program loads an existing workbook, identifies rows where column A dates fall within a user‑provided start and end date, updates the first chart on the first worksheet to use those rows as the X (dates) and Y (values) ranges, renames the series to reflect the selected interval, and saves the modified workbook.
+class DynamicChartUpdater
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data: Column A = Date, Column B = Value
-        sheet.Cells["A1"].PutValue("Date");
-        sheet.Cells["B1"].PutValue("Value");
-        DateTime startDate = new DateTime(2023, 1, 1);
-        for (int i = 0; i < 12; i++)
+        try
         {
-            sheet.Cells[i + 2, 0].PutValue(startDate.AddMonths(i));   // Date
-            sheet.Cells[i + 2, 1].PutValue((i + 1) * 10);            // Value
-        }
+            // User‑selected date range
+            DateTime startDate = new DateTime(2023, 1, 1);
+            DateTime endDate   = new DateTime(2023, 12, 31);
 
-        // Add a column chart that initially covers the whole data range
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 10);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.SetChartDataRange("A1:B13", true); // true = series by column
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        // Simulate user‑selected date range
-        DateTime userStart = new DateTime(2023, 3, 1);
-        DateTime userEnd   = new DateTime(2023, 8, 31);
-
-        // Update the chart to reflect only data within the selected range
-        UpdateChartDataRange(sheet, chart, userStart, userEnd);
-
-        // Save the workbook
-        workbook.Save("DynamicChartUpdated.xlsx");
-    }
-
-    // Adjusts the chart's data range so that it includes only rows whose dates fall between startDate and endDate (inclusive)
-    static void UpdateChartDataRange(Worksheet sheet, Chart chart, DateTime startDate, DateTime endDate)
-    {
-        // Find the first and last rows that satisfy the date condition
-        int firstRow = -1;
-        int lastRow = -1;
-        int totalRows = sheet.Cells.MaxDataRow; // last row with data (0‑based)
-
-        for (int row = 1; row <= totalRows; row++) // start from row 1 (skip header)
-        {
-            object cellValue = sheet.Cells[row, 0].Value;
-            if (cellValue is DateTime dt)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                if (dt >= startDate && dt <= endDate)
-                {
-                    if (firstRow == -1) firstRow = row;
-                    lastRow = row;
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        // If no rows match, clear the chart series
-        if (firstRow == -1)
+            // Load existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume data is on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Determine the rows that fall within the selected date range.
+            // Data is assumed to start at row 2 (index 1) with dates in column A (index 0) and values in column B (index 1).
+            int firstDataRow = 1;                     // zero‑based index of the first data row
+            int lastDataRow  = cells.MaxDataRow;      // last row that contains data
+
+            int startRow = -1;
+            int endRow   = -1;
+
+            for (int row = firstDataRow; row <= lastDataRow; row++)
+            {
+                // Read the date from column A
+                object dateObj = cells[row, 0].Value;
+                if (dateObj == null) continue;
+
+                DateTime cellDate;
+                // Try to convert the cell value to DateTime
+                if (dateObj is DateTime)
+                    cellDate = (DateTime)dateObj;
+                else if (!DateTime.TryParse(dateObj.ToString(), out cellDate))
+                    continue; // skip non‑date cells
+
+                // Find the first row that meets the start condition
+                if (startRow == -1 && cellDate >= startDate)
+                    startRow = row;
+
+                // Update the last row that still meets the end condition
+                if (cellDate <= endDate)
+                    endRow = row;
+            }
+
+            // If no rows match the criteria, exit
+            if (startRow == -1 || endRow == -1 || endRow < startRow)
+            {
+                Console.WriteLine("No data found for the specified date range.");
+                return;
+            }
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No chart found on the worksheet.");
+                return;
+            }
+
+            // Access the first chart on the worksheet (adjust index if needed)
+            Chart chart = sheet.Charts[0];
+
+            // Update each series in the chart to use the new data range
+            foreach (Series series in chart.NSeries)
+            {
+                // Build the address strings for X (dates) and Y (values) ranges.
+                // Excel addresses are 1‑based, so add 1 to row indices.
+                string xRange = $"{sheet.Name}!A{startRow + 1}:A{endRow + 1}";
+                string yRange = $"{sheet.Name}!B{startRow + 1}:B{endRow + 1}";
+
+                // Set the new data source for the series
+                series.XValues = xRange;
+                series.Values = yRange;
+
+                // Optionally, update the series name (e.g., based on the date range)
+                series.Name = $"Data {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}";
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the updated chart
+            workbook.Save(outputPath);
+            Console.WriteLine("Chart data source updated successfully.");
+        }
+        catch (Exception ex)
         {
-            chart.NSeries.Clear();
-            return;
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Build the new range strings (Excel uses 1‑based row numbers)
-        int excelFirst = firstRow + 1; // convert to 1‑based
-        int excelLast  = lastRow + 1;
-
-        string newRange = $"A{excelFirst}:B{excelLast}";
-        // Apply the new range; true indicates series are organized by column (category in A, values in B)
-        chart.SetChartDataRange(newRange, true);
     }
 }

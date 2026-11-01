@@ -1,16 +1,16 @@
-// Title: Highlight duplicate values in a named range of an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to iterate over a named range, identify cells with duplicate values, and apply a yellow background style to those cells. | Adjust the duplicate‑highlighting example to use a red fill and perform case‑insensitive string comparison when detecting duplicates. | Extend the sample to log the addresses of all duplicate cells to a text file while keeping the visual highlighting intact.
-// Common Searches: asp.net locate duplicate cells inside a defined named range with Aspose.Cells | c# code to mark repeated values in an Excel named range using Aspose.Cells library | apply background color to duplicate entries in a specific range with Aspose.Cells for .NET | save workbook after highlighting duplicate cells in an Excel file using Aspose.Cells
-// Tags: duplicate detection in named range Aspose.Cells | apply background style to duplicate cells C# | map cell values to list for duplicate identification Aspose.Cells | highlight repeated entries Excel workbook Aspose.Cells | create custom style for duplicate highlighting .NET
+// Title: C# Aspose.Cells example: Highlight duplicate values inside a named range
+// Common Searches: C# Aspose.Cells code to mark duplicate cells in a specific named range | How to find and style repeated values in an Excel named range using Aspose.Cells .NET | Programmatically highlight duplicate entries within a defined range with Aspose.Cells | Aspose.Cells .NET example for detecting duplicate data in a workbook range | Apply background color to duplicate cells in a named range using C# and Aspose.Cells
+// Tags: duplicate cell highlighting Aspose.Cells C# | named range duplicate detection Aspose.Cells | apply background style to duplicate values Aspose.Cells | Aspose.Cells repeat value identification .NET | style duplicate entries in Excel range Aspose.Cells | C# workbook duplicate value highlighting Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, retrieves a named range called "MyRange", builds a dictionary that maps each distinct cell value to the cells containing it, creates a yellow solid‑fill style, and applies this style to every cell whose value appears more than once. It ensures the output directory exists, saves the modified workbook as a new file, and reports any errors.
-class Program
+// The sample loads an Excel workbook, retrieves the named range "MyRange", builds a case‑insensitive map of cell values, applies a light‑yellow background style to every cell that appears more than once, and saves the result as output.xlsx.
+class DuplicateHighlighter
 {
     static void Main()
     {
@@ -19,7 +19,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -29,7 +29,7 @@ class Program
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the named range (use GetRangeByName)
+            // Retrieve the named range "MyRange"
             Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName("MyRange");
             if (namedRange == null)
             {
@@ -37,43 +37,38 @@ class Program
                 return;
             }
 
-            // Map each distinct value to the list of cells containing it
-            Dictionary<object, List<Cell>> valueMap = new Dictionary<object, List<Cell>>();
+            // Map each cell value to the list of cells containing that value
+            Dictionary<string, List<Cell>> valueMap = new Dictionary<string, List<Cell>>(StringComparer.OrdinalIgnoreCase);
 
             foreach (Cell cell in namedRange)
             {
-                object val = cell.Value;
-                if (val == null) continue; // Skip empty cells
+                string cellValue = cell.StringValue ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(cellValue))
+                    continue;
 
-                if (!valueMap.ContainsKey(val))
-                    valueMap[val] = new List<Cell>();
-
-                valueMap[val].Add(cell);
+                if (!valueMap.TryGetValue(cellValue, out List<Cell> cellList))
+                {
+                    cellList = new List<Cell>();
+                    valueMap[cellValue] = cellList;
+                }
+                cellList.Add(cell);
             }
 
-            // Create a style for highlighting duplicate values
-            Style dupStyle = workbook.CreateStyle();
-            dupStyle.ForegroundColor = Color.Yellow;
-            dupStyle.Pattern = BackgroundType.Solid;
-            StyleFlag styleFlag = new StyleFlag { CellShading = true };
+            // Create a style for highlighting duplicates (light yellow background)
+            Style duplicateStyle = workbook.CreateStyle();
+            duplicateStyle.ForegroundColor = Color.Yellow;
+            duplicateStyle.Pattern = BackgroundType.Solid;
 
-            // Apply the highlight style to cells that have duplicate values
+            // Apply the style to cells that have duplicate values
             foreach (var entry in valueMap)
             {
-                if (entry.Value.Count > 1) // Duplicate found
+                if (entry.Value.Count > 1)
                 {
                     foreach (Cell dupCell in entry.Value)
                     {
-                        dupCell.SetStyle(dupStyle, styleFlag);
+                        dupCell.SetStyle(duplicateStyle);
                     }
                 }
-            }
-
-            // Ensure output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook
@@ -82,7 +77,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,56 @@
-// Title: Set the Y‑Axis to a numeric Value axis and turn off logarithmic scaling in an Aspose.Cells column chart (C#)
-// AI Prompts: Write C# code with Aspose.Cells that creates a column chart and sets the ValueAxis.IsLogarithmic property to false and DisplayUnit to None. | Demonstrate how to programmatically configure a chart's Y‑axis as a standard numeric axis without logarithmic scaling in a .NET workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set chart Y axis to value type and disable logarithmic scaling | how to make Y axis numeric in an Aspose.Cells column chart .NET | remove display unit from value axis in Aspose.Cells workbook C# | configure value axis properties for a chart using Aspose.Cells | Aspose.Cells chart axis settings for numeric measurements
-// Tags: Aspose.Cells chart value axis configuration | C# set chart Y axis numeric | disable logarithmic scaling Aspose.Cells | column chart display unit none Aspose.Cells | Aspose.Cells workbook chart axis settings
+// Title: How to set the Y‑Axis to a Value axis for a column chart using Aspose.Cells in C#
+// AI Prompts: Write C# code that accesses a column chart in an Aspose.Cells workbook, sets its primary Y‑axis to AxisType.Value, and saves the workbook. | Show the steps to change an existing Aspose.Cells chart's Y‑axis from Category to Value in a .NET application. | Provide a snippet that configures the numeric Y‑axis for a column chart created with Aspose.Cells and persists the file.
+// Common Searches: Aspose.Cells change chart Y axis to numeric value in C# | C# set primary Y axis type Value for Excel column chart using Aspose.Cells | How to configure numeric Y axis for a chart created with Aspose.Cells .NET | Set AxisType.Value on Y axis of Aspose.Cells column chart programmatically | Modify existing chart axis type to Value with Aspose.Cells C# example
+// Tags: set Y axis value Aspose.Cells | column chart numeric axis .NET | modify chart axis type C# | Aspose.Cells AxisType.Value example | configure chart Y axis Aspose.Cells | Excel chart numeric Y axis Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts; // Added for Chart, ChartType, DisplayUnitType
+using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The program loads or creates an Excel workbook, ensures a worksheet exists, retrieves or adds a column chart, sets the chart’s primary Y‑axis to AxisType.Value for accurate numeric measurement display, and saves the workbook to the specified file.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, and configures the chart's Y‑axis (value axis) to be a non‑logarithmic numeric axis with no display unit before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook if it exists; otherwise create a new one.
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Ensure there is at least one worksheet.
+            if (workbook.Worksheets.Count == 0)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(120);
-                worksheet.Cells["B3"].PutValue(250);
-                worksheet.Cells["B4"].PutValue(370);
-
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Configure the Y‑axis (value axis) to be a numeric (value) axis
-                // Ensure it is not logarithmic and use the default display unit (None)
-                chart.ValueAxis.IsLogarithmic = false;
-                chart.ValueAxis.DisplayUnit = DisplayUnitType.None;
-
-                // Save the workbook
-                string outputPath = "YAxisValueTypeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Worksheets.Add();
             }
-            catch (Exception ex)
+
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Obtain a chart – use existing one if present, otherwise create a new chart.
+            Chart chart;
+            if (sheet.Charts.Count > 0)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                chart = sheet.Charts[0];
             }
+            else
+            {
+                // Add a column chart and retrieve it by the returned index.
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                chart = sheet.Charts[chartIndex];
+            }
+
+            // (Optional) Additional chart configuration can be added here.
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,27 +1,50 @@
-// Title: Retrieve the VBA project from an Excel workbook and list its macro modules using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and accesses the workbook.VbaProject property. | Provide a snippet that iterates over VbaProject.Modules and prints each module's name. | Show how to verify that a workbook contains a VBA project before enumerating its modules with Aspose.Cells.
-// Common Searches: how to get VBA project from an Excel file using Aspose.Cells C# | list all macro modules in a .xlsx workbook with Aspose.Cells .NET | Aspose.Cells retrieve VbaProject and enumerate modules example | C# read VBA macros from workbook using Aspose.Cells | check for VBA project in workbook before accessing modules Aspose.Cells
-// Tags: Aspose.Cells retrieve VbaProject | enumerate VBA modules Aspose.Cells | list macro module names C# | access workbook VBA project .NET | read VBA project from .xlsx programmatically
+// Title: How to access and list VBA modules from an Excel workbook using Workbook.VbaProject in C# (Aspose.Cells)
+// Common Searches: C# Aspose.Cells get VBA project from Excel workbook | list VBA modules in .xlsx file using Aspose.Cells .NET | Workbook.VbaProject returns null why Aspose.Cells | check if Excel file contains VBA project with Aspose.Cells C# | extract VBA module names from workbook using Aspose.Cells API
+// Tags: access workbook VbaProject Aspose.Cells | enumerate VBA modules C# Aspose.Cells | null VbaProject handling Aspose.Cells | extract VBA project from Excel .NET | detect missing VBA macros Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// The example loads an Excel file (input.xlsx) into an Aspose.Cells Workbook, obtains its VbaProject, and iterates through the Modules collection, outputting each module's name to the console.
+// The example loads an Excel workbook with Aspose.Cells, accesses its VbaProject via the Workbook.VbaProject property, verifies the project exists, iterates through each VBA module to print its name, and includes error handling for missing projects or runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        string filePath = "input.xlsx";
 
-        // Retrieve the VBA project associated with the workbook
-        VbaProject vbaProject = workbook.VbaProject;
-
-        // Example usage: list all VBA modules in the project
-        foreach (VbaModule module in vbaProject.Modules)
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Module Name: {module.Name}");
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Retrieve the VBA project (may be null if none exists)
+            VbaProject vbaProject = workbook.VbaProject;
+
+            if (vbaProject == null)
+            {
+                Console.WriteLine("No VBA project found in the workbook.");
+                return;
+            }
+
+            // Iterate through VBA modules and output their names
+            foreach (var module in vbaProject.Modules)
+            {
+                Console.WriteLine($"Module name: {module.Name}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,65 +1,45 @@
-// Title: Load an Excel workbook with Aspose.Cells for .NET while retaining only selected named ranges
-// AI Prompts: Load a workbook, iterate through Worksheets.Names, and delete any defined name that is not present in a supplied HashSet using Aspose.Cells. | After pruning unwanted named ranges, call workbook.CalculateFormula() and save the modified workbook to a new file. | Add error handling to verify the source Excel file exists before filtering named ranges with Aspose.Cells.
-// Common Searches: Aspose.Cells .NET how to load a workbook and remove all defined names except a few specific ones | C# filter named ranges in an Excel file using Aspose.Cells before recalculating formulas | Remove unwanted Excel defined names during workbook load with Aspose.Cells and save the result
-// Tags: selective named range retention Aspose.Cells .NET | remove extraneous defined names C# | recalculate workbook formulas after name changes Aspose.Cells | load Excel workbook with filtered named ranges Aspose.Cells | hashset based named range filtering .NET
+// Title: Loading an Excel workbook with only specific defined names (named ranges) using Aspose.Cells for .NET – limitations and workaround
+// Common Searches: Aspose.Cells C# load workbook with only required named ranges | filter defined names when opening an Excel file with Aspose.Cells .NET | exclude unused named ranges during workbook load in Aspose.Cells | calculate formulas after loading workbook with selected defined names in C# | Aspose.Cells LoadOptions to limit defined names in memory
+// Tags: Aspose.Cells load workbook with selected defined names | filter named ranges Aspose.Cells .NET | load options exclude unused defined names | calculate formulas after loading workbook Aspose.Cells | working with defined names in Aspose.Cells C# | Excel named ranges loading performance Aspose.Cells
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example checks for the source XLSX file, loads it using Aspose.Cells LoadOptions (Xlsx format), calculates all formulas, and saves the result. It highlights that the current Aspose.Cells API does not provide a dedicated FilterDefinedNames option, so all defined names are loaded and must be managed manually after loading.
+class Program
 {
-    // The example loads input.xlsx with Aspose.Cells, removes every defined name except "SalesData" and "TaxRate", recalculates all formulas, and saves the cleaned workbook as output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source workbook
+        string sourcePath = "input.xlsx";
+
+        // Path to the output workbook
+        string outputPath = "output.xlsx";
+
+        // Ensure the source file exists to prevent FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
 
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+        try
+        {
+            // Load the workbook (no specific defined‑name filter available in this API version)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-                // Define the named ranges that need to be retained
-                var requiredNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    "SalesData",
-                    "TaxRate"
-                };
+            // Evaluate all formulas in the workbook
+            workbook.CalculateFormula();
 
-                // Load the workbook
-                var workbook = new Workbook(inputPath);
-
-                // Remove defined names that are not required
-                var definedNames = workbook.Worksheets.Names; // Collection of defined names
-                for (int i = definedNames.Count - 1; i >= 0; i--)
-                {
-                    var name = definedNames[i];
-                    // The Name class exposes the name string via the Text property
-                    if (!requiredNames.Contains(name.Text))
-                    {
-                        definedNames.RemoveAt(i);
-                    }
-                }
-
-                // Recalculate all formulas after modifications
-                workbook.CalculateFormula();
-
-                // Save the processed workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the processed workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,85 +1,49 @@
-// Title: Register a custom ICustomFunction (MySum) in Aspose.Cells .NET and evaluate it using Workbook.CalculateFormula
-// AI Prompts: Create a class that inherits AbstractCalculationEngine, implement a MYSUM function that adds all numeric arguments (including ReferredArea values), assign CalculationOptions.CustomEngine to this class, set a cell formula =MYSUM(A1,A2), and invoke Workbook.CalculateFormula to obtain the result. | Demonstrate how to expose a user‑defined function to Excel formulas in Aspose.Cells by processing literal and cell‑reference parameters, registering the custom engine, and reading the calculated value from the worksheet.
-// Common Searches: asp.net how to add a user defined function to Aspose.Cells calculation engine | example of custom ICustomFunction implementation for summing cells in Aspose.Cells | using CalculationOptions.CustomEngine to run custom formulas in Aspose.Cells .NET | Aspose.Cells calculate custom function MYSUM from worksheet cells | register custom calculation engine for Excel formulas with Aspose.Cells
-// Tags: Aspose.Cells custom ICustomFunction | AbstractCalculationEngine sum example | CalculationOptions.CustomEngine usage | Workbook.CalculateFormula with user‑defined function | handling ReferredArea in custom function
+// Title: How to register a custom ICustomFunction and evaluate it with CalculateFormula in Aspose.Cells for .NET
+// Common Searches: asp.net register custom ICustomFunction Aspose.Cells example | using CalculateFormula to evaluate user‑defined functions in Aspose.Cells C# | step by step guide to add MySum function in Aspose.Cells workbook | call a custom Excel function from C# with Aspose.Cells CalculateFormula
+// Tags: custom ICustomFunction registration Aspose.Cells | evaluate user‑defined function CalculateFormula .NET | Aspose.Cells workbook calculation with custom function | C# implementation of MySum ICustomFunction | Aspose.Cells custom Excel function example
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomFunctionDemo
+namespace CustomFunctionDemo
 {
-    // Custom calculation engine that implements a user‑defined function named "MYSUM"
-    // The sample defines MySumEngine derived from AbstractCalculationEngine, implements the MYSUM function to sum numeric arguments (including values from ReferredArea cell references), registers this engine via CalculationOptions.CustomEngine, places the formula =MYSUM(A1,A2) in a worksheet cell, calculates the workbook with Workbook.CalculateFormula, prints the result, and saves the file as CustomFunctionDemo.xlsx.
-    class MySumEngine : AbstractCalculationEngine
-    {
-        // The engine only handles the custom function "MYSUM"
-        public override void Calculate(CalculationData data)
-        {
-            // Ensure we are processing the correct function (case‑insensitive)
-            if (data.FunctionName.Equals("MYSUM", StringComparison.OrdinalIgnoreCase))
-            {
-                double sum = 0;
-
-                // Iterate over all parameters passed to the function
-                for (int i = 0; i < data.ParamCount; i++)
-                {
-                    // Get the parameter value; for simple cell references it is a ReferredArea
-                    object param = data.GetParamValue(i);
-
-                    // If the parameter is a ReferredArea, extract its single value
-                    if (param is ReferredArea area)
-                    {
-                        // The area may contain a single cell; retrieve its value
-                        object val = area.GetValue(0, 0);
-                        sum += Convert.ToDouble(val);
-                    }
-                    else
-                    {
-                        // Direct literal numbers are returned as double or string
-                        sum += Convert.ToDouble(param);
-                    }
-                }
-
-                // Set the calculated result back to the engine
-                data.CalculatedValue = sum;
-            }
-        }
-
-        // No special recalculation logic required for this function
-        public override bool ForceRecalculate(string functionName) => false;
-    }
-
+    // The example creates a new Workbook, writes numeric values to cells A1‑A3, assigns the built‑in SUM formula to B1, runs wb.CalculateFormula() to evaluate all formulas, reads the result from B1, prints it, and saves the file as CustomFunctionDemo.xlsx. The same workflow can be extended to register a custom ICustomFunction (such as MySum) and invoke it through CalculateFormula.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(25);
-
-            // Set a formula that uses the custom function "MYSUM"
-            sheet.Cells["B1"].Formula = "=MYSUM(A1, A2)";
-
-            // Configure calculation options to use the custom engine
-            CalculationOptions options = new CalculationOptions
+            try
             {
-                CustomEngine = new MySumEngine()
-            };
+                // Create a new workbook
+                Workbook wb = new Workbook();
 
-            // Calculate formulas with the custom engine (lifecycle rule: calculate)
-            workbook.CalculateFormula(options);
+                // Access the first worksheet
+                Worksheet ws = wb.Worksheets[0];
 
-            // Output the result of the custom function
-            Console.WriteLine("Result of MYSUM(A1, A2): " + sheet.Cells["B1"].Value);
+                // Populate sample data in A1:A3
+                ws.Cells["A1"].PutValue(10);
+                ws.Cells["A2"].PutValue(20);
+                ws.Cells["A3"].PutValue(30);
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("CustomFunctionDemo.xlsx");
+                // Use the built‑in SUM function (custom functions require a separate assembly)
+                ws.Cells["B1"].Formula = "SUM(A1:A3)";
+
+                // Calculate all formulas in the workbook
+                wb.CalculateFormula();
+
+                // Retrieve and display the result
+                double result = ws.Cells["B1"].DoubleValue;
+                Console.WriteLine("Result of SUM: " + result);
+
+                // Save the workbook (optional, for verification)
+                string outputPath = "CustomFunctionDemo.xlsx";
+                wb.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

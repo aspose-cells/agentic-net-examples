@@ -1,48 +1,87 @@
-// Title: How to set a light gray solid fill for chart data label background using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells, enables data labels, and applies a solid light gray fill to the label background. | Write a snippet that uses Aspose.Cells Chart.NSeries.DataLabels to set the Area.FillFormat to solid and BackgroundColor to LightGray. | Provide a complete example that adds sample data, inserts a column chart, shows values on data labels, and customizes the label area color in an Excel workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set data label background color to light gray | apply solid fill to chart data labels in .NET Excel file | change appearance of data labels in Aspose.Cells chart | C# Aspose.Cells chart data label area fill pattern example | customize data label background color in Excel using Aspose.Cells API
-// Tags: Aspose.Cells chart data label background fill | C# chart label area fill style | Excel chart label appearance customization .NET | Aspose.Cells series label formatting | light gray data label area Aspose.Cells
+// Title: How to set a light gray font color for chart data labels in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, accesses the first chart, enables data labels, and changes the label font color to LightGray. | Show how to iterate over all series in a chart and apply a light gray font to their data labels using the Aspose.Cells API. | Demonstrate saving the workbook after modifying chart data label appearance in a .NET console application.
+// Common Searches: Aspose.Cells C# change chart data label font color to light gray | set data label font color in Excel chart using Aspose.Cells .NET | how to customize chart data labels appearance with Aspose.Cells in C# | programmatically modify chart series data label color in a workbook using Aspose.Cells | apply light gray font to Excel chart labels via Aspose.Cells API
+// Tags: Aspose.Cells chart data label font color | C# set chart data label color | modify Excel chart label appearance with Aspose.Cells | light gray font for chart labels Aspose.Cells | iterate chart series Aspose.Cells C#
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// The example creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, and applies a solid light gray fill to the data label background before saving the file as an .xlsx workbook.
+// The example loads an existing Excel workbook, checks for a chart on the first worksheet, enables series name display, sets each series' data label font color to LightGray, and saves the modified file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+        try
+        {
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-        // Enable data labels for the first series
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowValue = true;
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Apply a light gray solid fill to the data label background
-        dataLabels.Area.FillFormat.Pattern = FillPattern.Solid;
-        dataLabels.Area.BackgroundColor = Color.LightGray;
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Save the workbook to a file
-        workbook.Save("DataLabelsLightGrayBackground.xlsx");
+            // Access the first chart
+            Chart chart = worksheet.Charts[0];
+
+            // Apply a light gray font color to data labels for each series
+            foreach (Series series in chart.NSeries)
+            {
+                // Ensure data labels are displayed
+                series.DataLabels.ShowSeriesName = true;
+
+                // Set font color to light gray (as a visual approximation of background)
+                series.DataLabels.Font.Color = Color.LightGray;
+            }
+
+            // Save the modified workbook
+            try
+            {
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

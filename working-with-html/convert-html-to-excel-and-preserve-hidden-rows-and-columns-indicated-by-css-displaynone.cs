@@ -1,53 +1,48 @@
-// Title: Convert HTML tables with CSS display:none hidden rows and columns to an XLSX file using Aspose.Cells for .NET
-// AI Prompts: Load an HTML file into an Aspose.Cells Workbook in C# while preserving rows and columns hidden by CSS display:none, then save it as XLSX. | Show how to configure HtmlLoadOptions.ImportHiddenRowsAndColumns to keep hidden elements during HTML‑to‑Excel conversion with Aspose.Cells. | Write C# code that checks the input HTML path, creates the output folder if missing, performs the conversion, and handles any exceptions.
-// Common Searches: Aspose.Cells preserve CSS display:none rows when converting HTML to Excel in C# | How to keep hidden columns from an HTML table during HTML to XLSX conversion using Aspose.Cells | C# HtmlLoadOptions ImportHiddenRowsAndColumns example for HTML to Excel | Convert HTML with hidden elements to Excel workbook while retaining visibility settings | Aspose.Cells HTML to XLSX conversion hidden rows not removed
-// Tags: Aspose.Cells HtmlLoadOptions import hidden rows | HTML to XLSX conversion preserving display:none | C# load HTML workbook hidden columns | Excel export hidden rows from HTML | convert HTML tables with hidden elements using Aspose.Cells
+// Title: Convert HTML with CSS display:none rows and columns to an Excel workbook while preserving hidden elements using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an HTML file with Aspose.Cells, retains rows and columns hidden by CSS display:none, and saves the result as an XLSX workbook. | Show how to configure HtmlLoadOptions in Aspose.Cells to keep CSS‑based hidden rows and columns during HTML‑to‑Excel conversion. | Write a robust C# snippet that verifies the input HTML file, converts it to Excel while preserving hidden elements, and includes proper exception handling.
+// Common Searches: Aspose.Cells C# preserve CSS display:none rows when converting HTML to XLSX | How to keep hidden columns from an HTML table in Excel output using Aspose.Cells | HtmlLoadOptions hide rows and columns based on CSS in .NET conversion | Convert HTML table with display:none cells to Excel while maintaining hidden state | C# Aspose.Cells convert HTML to Excel respecting CSS visibility rules
+// Tags: Aspose.Cells hidden rows conversion | HtmlLoadOptions display:none handling | C# preserve hidden columns in Excel export | HTML table to XLSX visibility retention | Aspose.Cells workbook import CSS visibility
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions (which can be set to import rows and columns hidden with CSS display:none), ensures the output directory exists, saves the workbook as an XLSX file, and handles any conversion errors.
-class HtmlToExcelConverter
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an HTML file with Aspose.Cells using HtmlLoadOptions, creates a Workbook, and saves it as an XLSX file while preserving rows and columns hidden via CSS display:none, with file existence checks and exception handling.
+    class Program
     {
-        // Path to the source HTML file
-        string htmlPath = "input.html";
-
-        // Path for the output Excel file
-        string excelPath = "output.xlsx";
-
-        // Verify that the input HTML file exists
-        if (!File.Exists(htmlPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input HTML file not found: {htmlPath}");
-            return;
-        }
+            // Define input and output paths
+            string inputPath = @"C:\Path\To\Input.html";
+            string outputPath = @"C:\Path\To\Output.xlsx";
 
-        try
-        {
-            // Configure HTML load options (default options are sufficient for most cases)
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-            // Load the HTML file into a workbook using the configured options
-            Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(excelPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
+                // Verify that the input HTML file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Set HTML load options (default options are used here)
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+
+                // Load the HTML file into a new workbook using the specified options
+                Workbook workbook = new Workbook(inputPath, loadOptions);
+
+                // Save the workbook as an Excel file (XLSX format)
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Workbook successfully saved to: {outputPath}");
             }
-
-            // Save the workbook to Excel format
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Conversion successful. Excel file saved to: {excelPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

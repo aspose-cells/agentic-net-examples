@@ -1,50 +1,55 @@
-// Title: Export the first chart from an Excel worksheet to a PNG image using Aspose.Cells in C#
-// AI Prompts: Write C# code that loads an .xlsx workbook, retrieves the first chart on the first worksheet, and saves it as a PNG file using Aspose.Cells Chart.ToImage. | Show how to add error handling for missing workbook files or absent charts when exporting an Excel chart to PNG with Aspose.Cells in a .NET console application.
-// Common Searches: asp.net console export excel chart to png using aspose.cells | c# example for Chart.ToImage method Aspose.Cells | how to save an Excel chart as an image file with Aspose.Cells library | render first worksheet chart to png without opening Excel | Aspose.Cells ChartRender API usage in C#
-// Tags: Aspose.Cells chart export to PNG | Chart.ToImage method C# | C# render Excel chart as image file | save first worksheet chart as PNG | error handling missing chart Aspose.Cells
+// Title: Render an Excel chart to a PNG file using Aspose.Cells Chart.ToImage in C#
+// Common Searches: C# Aspose.Cells export chart to PNG file | How to use Chart.ToImage to save an Excel chart as an image in .NET | Saving the first worksheet chart as PNG with Aspose.Cells library | Render an Excel chart to a bitmap image using Aspose.Cells C# example
+// Tags: Aspose.Cells chart to PNG conversion | Chart.ToImage method C# | export Excel chart as image .NET | render worksheet chart to bitmap using Aspose | save chart as PNG with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The sample loads an Excel workbook, checks for charts on the first worksheet, extracts the first chart, and uses the Chart.ToImage method to render and save it as a PNG image, with safeguards for missing files and absent charts.
-class Program
+// The sample loads a workbook, checks for a chart on the first worksheet, creates the output folder if needed, and uses the Chart.ToImage method to render the chart directly to a PNG file, handling any errors that may occur.
+class ChartToPngExample
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputImagePath = "chart.png";
+            const string outputPath = "chart.png";
 
-            // Ensure the input workbook exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook from the file
+            // Load the workbook containing the chart
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet (change index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify that the worksheet contains at least one chart
-            if (worksheet.Charts.Count == 0)
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first chart in the worksheet
-            Chart chart = worksheet.Charts[0];
+            // Access the first chart in the worksheet (change index if needed)
+            Chart chart = sheet.Charts[0];
 
-            // Render the chart directly to a PNG image file (default format is PNG)
-            chart.ToImage(outputImagePath);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine($"Chart image saved to: {outputImagePath}");
+            // Render the chart directly to a PNG file
+            chart.ToImage(outputPath);
+            Console.WriteLine($"Chart rendered to \"{outputPath}\" successfully.");
         }
         catch (Exception ex)
         {

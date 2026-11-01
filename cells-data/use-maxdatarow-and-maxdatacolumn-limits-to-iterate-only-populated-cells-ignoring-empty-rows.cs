@@ -1,62 +1,62 @@
-// Title: C# loop through only populated cells in an Aspose.Cells worksheet using MaxDataRow and MaxDataColumn
-// AI Prompts: Write a C# routine that uses Workbook.Worksheets[0].Cells.MaxDataRow and MaxDataColumn to traverse only cells that contain data and print each cell's address and value. | Show how to guard against an empty worksheet and skip null cells while iterating a bounded range in Aspose.Cells with C#. | Create a C# example that saves the workbook after enumerating non‑empty cells within the detected data rectangle.
-// Common Searches: aspnet c# iterate over non empty cells Aspose.Cells MaxDataRow | how to get last used row and column in Aspose.Cells C# | skip blank rows when reading Excel with Aspose.Cells C# | process only populated range in Aspose.Cells workbook using MaxDataColumn | C# Aspose.Cells loop through cells without checking every row
-// Tags: Aspose.Cells iterate populated range C# | MaxDataRow MaxDataColumn usage Aspose.Cells | skip empty rows Aspose.Cells C# | process non‑empty cells Aspose.Cells workbook | retrieve last data cell Aspose.Cells
+// Title: How to loop through only populated rows and columns in an Excel worksheet using Aspose.Cells MaxDataRow and MaxDataColumn in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, determines the last used row and column via MaxDataRow/MaxDataColumn, and iterates only over cells that contain data. | Show an example of skipping empty cells while reading a worksheet with Aspose.Cells, printing each non‑empty cell's address and value. | Create a C# console program that processes a workbook, uses MaxDataRow and MaxDataColumn to define the data bounds, and saves the file after optional modifications.
+// Common Searches: aspnet c# read only filled cells in excel using aspose.cells maxdatarow | c# aspocells iterate over used range without empty rows | determine last populated column in worksheet aspocells | skip blank cells when processing excel file with aspocells .net
+// Tags: Aspose.Cells iterate used range | MaxDataRow MaxDataColumn C# | skip empty cells Excel .NET | read populated cells Aspose.Cells | determine worksheet data bounds Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMaxDataIteration
+// Loads an Excel workbook, uses Worksheet.Cells.MaxDataRow and MaxDataColumn to find the last row and column that contain data, loops through that rectangular range, skips cells with null or empty values, prints each populated cell's address and value, and saves the workbook.
+class Program
 {
-    // The sample creates a workbook, adds data with intentional empty rows and columns, obtains the last populated row and column via MaxDataRow and MaxDataColumn, and then iterates over that bounded range, processing only instantiated cells that hold values before saving the result to an Excel file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (creation rule)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Populate sample data with some empty rows/columns
-            cells["A1"].PutValue("Header1");
-            cells["B1"].PutValue("Header2");
-            cells["A2"].PutValue("Item1");
-            cells["B2"].PutValue(10);
-            // Row 3 is intentionally left empty
-            cells["A4"].PutValue("Item2");
-            cells["B4"].PutValue(20);
-            // Column C is empty
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the limits of populated area (property rules)
-            int maxRow = cells.MaxDataRow;       // zero‑based index of last row containing data
-            int maxCol = cells.MaxDataColumn;    // zero‑based index of last column containing data
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Guard against empty worksheet
-            if (maxRow >= 0 && maxCol >= 0)
+            // Determine the populated data range
+            int maxDataRow = worksheet.Cells.MaxDataRow;       // zero‑based index of last row with data
+            int maxDataColumn = worksheet.Cells.MaxDataColumn; // zero‑based index of last column with data
+
+            // Iterate only through the populated range
+            for (int row = 0; row <= maxDataRow; row++)
             {
-                Console.WriteLine($"Iterating over populated range: Rows 0‑{maxRow}, Columns 0‑{maxCol}");
-                for (int row = 0; row <= maxRow; row++)
+                for (int col = 0; col <= maxDataColumn; col++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        // Get the cell; may be null if never instantiated
-                        Cell cell = cells[row, col];
-                        if (cell != null && cell.Value != null)
-                        {
-                            // Process the cell (example: output its address and value)
-                            Console.WriteLine($"{cell.Name}: {cell.Value}");
-                        }
-                    }
+                    Cell cell = worksheet.Cells[row, col];
+
+                    // Skip cells that have no value
+                    if (cell.Value == null || string.IsNullOrEmpty(cell.StringValue))
+                        continue;
+
+                    // Example processing: output cell address and value
+                    Console.WriteLine($"Cell[{row},{col}] = {cell.Value}");
                 }
             }
-            else
-            {
-                Console.WriteLine("Worksheet contains no data.");
-            }
 
-            // Save the workbook (save rule)
-            workbook.Save("MaxDataIterationResult.xlsx");
+            // Save the workbook if any modifications were made (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,43 +1,62 @@
-// Title: How to apply a built‑in Excel theme to a workbook and refresh all cell styles with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that calls Workbook.SetTheme to apply a predefined built‑in theme (e.g., "Office") and automatically updates the formatting of every cell in the workbook using Aspose.Cells. | Show an example that loads an existing .xlsx file, sets a built‑in theme, forces a style refresh for all cells, and saves the modified workbook with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# set built‑in theme and update cell formatting | Workbook.SetTheme example for .xlsx files in .NET | Refresh all cell styles after changing Excel theme with Aspose.Cells | Apply Office theme to existing workbook using Aspose.Cells for .NET | How to propagate theme changes to existing cells in Aspose.Cells
-// Tags: Workbook.SetTheme built-in theme | refresh cell styles Aspose.Cells | apply Excel theme .NET | update workbook formatting Aspose.Cells | theme management Aspose.Cells C#
+// Title: Apply a built‑in .thmx workbook theme and refresh all cell styles with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to apply an Office theme (.thmx) to an existing workbook | refresh Excel cell styles after changing workbook theme using Aspose.Cells | set built‑in workbook theme programmatically with Aspose.Cells .NET | reapply cell style to trigger theme update in Aspose.Cells C# | load .thmx file and apply to workbook with Aspose.Cells example
+// Tags: set workbook theme from .thmx file | refresh all cell styles Aspose.Cells | reapply existing style to trigger refresh | iterate worksheets and cells for style update | programmatic theme change .NET Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an existing Excel workbook, demonstrates how to use the Workbook.SetTheme method (available in newer Aspose.Cells releases) to apply a built‑in theme such as "Office", and ensures that all existing cell styles are refreshed to reflect the new theme before saving the workbook to a new file.
+// The example loads an existing XLSX workbook, optionally loads a .thmx theme file and applies it using Aspose.Cells, then iterates through every populated cell, reassigning each cell's current style to force a style refresh, and finally saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // NOTE: Applying a built‑in theme is not supported in the current Aspose.Cells version.
-            // If needed, use Workbook.SetTheme method available in newer versions.
+            // Apply a theme if a theme file is available (optional)
+            // Example:
+            // Theme theme = Theme.Load("Office2016.thmx");
+            // workbook.SetTheme(theme);
+            // Note: Aspose.Cells does not expose a ThemeType enum; a .thmx file must be supplied.
 
-            // Save the workbook
+            // Refresh cell styles so they pick up any theme changes
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxColumn; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        Style style = cell.GetStyle();
+                        cell.SetStyle(style); // reapply to trigger style refresh
+                    }
+                }
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

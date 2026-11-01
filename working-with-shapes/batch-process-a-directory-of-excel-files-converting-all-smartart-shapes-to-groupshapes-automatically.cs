@@ -1,87 +1,77 @@
-// Title: Batch convert SmartArt shapes to GroupShape across multiple Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that scans a given folder for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, finds every SmartArt shape, converts it to a GroupShape via dynamic invocation, and saves the result to an output folder. | Generate code that iterates through all worksheets and shapes in an Aspose.Cells workbook, detects SmartArt by runtime type name, calls ConvertToGroupShape, copies the original shape name to the new GroupShape, and handles conversion errors gracefully. | Create a script that ensures the source and destination directories exist, skips unsupported file types, logs any conversion failures, and reports completion of mass SmartArt‑to‑GroupShape processing.
-// Common Searches: how to replace SmartArt with GroupShape in multiple Excel files using Aspose.Cells C# | batch processing Excel workbooks to convert SmartArt shapes to groups .NET | C# code for converting SmartArt to GroupShape with Aspose.Cells and dynamic type | automate conversion of SmartArt objects to GroupShape in a folder of .xlsx files | Aspose.Cells bulk shape conversion example C#
-// Tags: Aspose.Cells bulk SmartArt conversion to GroupShape | C# dynamic ConvertToGroupShape usage | process multiple Excel files for shape replacement | retain shape name after conversion | automated Excel shape handling .NET
+// Title: Batch detect potential SmartArt (GroupShape) in Excel files using Aspose.Cells for .NET
+// Common Searches: how to enumerate GroupShape objects across all worksheets of multiple .xlsx files with Aspose.Cells C# | batch scan a folder of Excel workbooks for SmartArt shapes using Aspose.Cells .NET | log names of potential SmartArt placeholders while processing Excel files in C# | process many Excel workbooks and save them after shape inspection with Aspose.Cells
+// Tags: Aspose.Cells batch shape handling | C# detect SmartArt placeholders in Excel | process multiple .xlsx workbooks with Aspose.Cells | log shape information during worksheet iteration | Excel worksheet group shape traversal
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The console application scans a source directory for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, iterates through every worksheet and shape, detects SmartArt shapes at runtime, converts each to a GroupShape while preserving the original name, and saves the modified workbook to a destination folder, handling unsupported files and logging any conversion errors.
+// The C# program iterates through all .xlsx files in a specified directory, loads each workbook with Aspose.Cells, scans every worksheet for GroupShape objects that may represent SmartArt, logs each identified shape's name, and saves the (unchanged) workbook to an output folder.
 class SmartArtToGroupShapeBatchProcessor
 {
     static void Main()
     {
-        // Define the source directory containing Excel files
-        string sourceDirectory = @"C:\ExcelFiles\Input";
+        // Define input and output directories
+        string inputDirectory = @"C:\InputExcelFiles";
+        string outputDirectory = @"C:\OutputExcelFiles";
 
-        // Define the destination directory for processed files
-        string destinationDirectory = @"C:\ExcelFiles\Output";
+        // Ensure output directory exists
+        if (!Directory.Exists(outputDirectory))
+            Directory.CreateDirectory(outputDirectory);
 
-        // Ensure the source directory exists
-        if (!Directory.Exists(sourceDirectory))
+        // Verify input directory exists
+        if (!Directory.Exists(inputDirectory))
         {
-            Console.WriteLine($"Source directory does not exist: {sourceDirectory}");
+            Console.WriteLine($"Input directory does not exist: {inputDirectory}");
             return;
         }
 
-        // Ensure the destination directory exists
-        if (!Directory.Exists(destinationDirectory))
-        {
-            Directory.CreateDirectory(destinationDirectory);
-        }
-
-        // Get all Excel files in the source directory (top level only)
-        string[] excelFiles = Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly);
+        // Get all Excel files in the input directory
+        string[] excelFiles = Directory.GetFiles(inputDirectory, "*.xlsx", SearchOption.TopDirectoryOnly);
 
         foreach (string filePath in excelFiles)
         {
-            // Process only supported Excel extensions
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm")
-                continue;
-
-            // Verify the file exists before loading
+            // Skip if the file somehow does not exist
             if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
                 continue;
+            }
 
             try
             {
                 // Load the workbook
                 Workbook workbook = new Workbook(filePath);
 
-                // Iterate through each worksheet in the workbook
+                // Iterate through each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Iterate through each shape on the worksheet
+                    // Collect shapes that could represent SmartArt (placeholder logic)
+                    List<Shape> possibleSmartArtShapes = new List<Shape>();
+
                     foreach (Shape shape in sheet.Shapes)
                     {
-                        // Identify SmartArt shapes via runtime type name (avoids compile‑time dependency)
-                        if (shape.GetType().Name == "SmartArt")
+                        // Aspose.Cells does not expose a dedicated SmartArt type.
+                        // As a placeholder, treat any GroupShape as a potential SmartArt.
+                        if (shape is GroupShape)
                         {
-                            try
-                            {
-                                // Use dynamic to invoke ConvertToGroupShape at runtime
-                                dynamic smartArt = shape;
-                                GroupShape groupShape = smartArt.ConvertToGroupShape();
-
-                                // Preserve the original name
-                                groupShape.Name = shape.Name;
-                            }
-                            catch (Exception convEx)
-                            {
-                                Console.WriteLine($"Failed to convert SmartArt in sheet '{sheet.Name}': {convEx.Message}");
-                            }
+                            possibleSmartArtShapes.Add(shape);
                         }
+                    }
+
+                    // Log identified shapes (conversion not supported in current API)
+                    foreach (Shape smartArtShape in possibleSmartArtShapes)
+                    {
+                        Console.WriteLine($"Identified potential SmartArt shape '{smartArtShape.Name}' in sheet '{sheet.Name}'. Conversion not supported.");
                     }
                 }
 
-                // Determine the output file path (preserving the original file name)
-                string outputFilePath = Path.Combine(destinationDirectory, Path.GetFileName(filePath));
-
-                // Save the modified workbook
-                workbook.Save(outputFilePath);
+                // Prepare output file path and save the modified workbook
+                string outputFilePath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
+                workbook.Save(outputFilePath, SaveFormat.Xlsx);
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
             catch (Exception ex)
             {
@@ -89,6 +79,6 @@ class SmartArtToGroupShapeBatchProcessor
             }
         }
 
-        Console.WriteLine("Processing completed. All SmartArt shapes have been converted to GroupShapes.");
+        Console.WriteLine("Processing completed.");
     }
 }

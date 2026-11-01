@@ -1,31 +1,56 @@
-// Title: Save a workbook that contains slicers to Excel 2016 (XLSX) format with Aspose.Cells in C#
-// AI Prompts: Write C# code using Aspose.Cells that saves an existing workbook with slicers to the Excel 2016 XLSX format while keeping all slicer functionality intact. | Show how to export a workbook with slicers to Excel 2016 using the Aspose.Cells Save method in a .NET application.
-// Common Searches: Aspose.Cells C# preserve slicers when saving as Excel 2016 XLSX | How to keep slicer functionality after exporting workbook to XLSX with Aspose.Cells | Saving workbook with slicers to Excel 2016 format using Aspose.Cells .NET API | C# Aspose.Cells export workbook containing slicers to Excel 2016 file
-// Tags: save workbook with slicers Aspose.Cells | export to Excel2016 XLSX using Aspose.Cells | preserve slicer functionality C# | Aspose.Cells slicer support XLSX | C# workbook save format Excel2016
+// Title: Save an Excel workbook that contains slicers to Excel 2016 (XLSX) format while preserving slicer functionality using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with slicers using Aspose.Cells, then save it as an Excel 2016 XLSX file with OoxmlSaveOptions to keep the slicer objects intact. | After optionally modifying slicer properties in a worksheet, export the workbook with OoxmlSaveOptions so that all slicer features remain functional in the saved file.
+// Common Searches: how to keep slicers when converting an Excel file with Aspose.Cells C# | Aspose.Cells save workbook with slicers to Excel 2016 format | C# OoxmlSaveOptions preserve slicer objects in XLSX | export slicer-enabled worksheet using Aspose.Cells .NET | retain slicer functionality after saving Excel file with Aspose.Cells
+// Tags: save workbook with slicers using OoxmlSaveOptions | Aspose.Cells slicer preservation in XLSX | export slicer-enabled Excel file C# | Excel 2016 format retention of slicer objects | load and save workbook containing slicers Aspose
 
 using Aspose.Cells;
+using Aspose.Cells.Slicers;   // Required for slicer support
+using Aspose.Cells.Saving;    // Required for OoxmlSaveOptions
 using System;
+using System.IO;
 
-// This example demonstrates creating a workbook, adding sample data, and saving it as an Excel 2016 (XLSX) file with Aspose.Cells so that any existing slicers remain functional.
-class SaveWorkbookWithSlicers
+// The example checks for the input file, loads the workbook that includes slicers with Aspose.Cells, optionally accesses or modifies slicer properties, configures OoxmlSaveOptions for the XLSX format, and saves the workbook as output.xlsx, ensuring that all slicer objects are retained in the Excel 2016 file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Add some sample data (optional, slicers would be linked to this data)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Amount");
-        sheet.Cells["A2"].PutValue("Food");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["A3"].PutValue("Transport");
-        sheet.Cells["B3"].PutValue(80);
+        try
+        {
+            // Load the existing workbook that contains slicers
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook in Excel 2016 (XLSX) format to preserve slicers and other advanced features
-        workbook.Save("WorkbookWithSlicers.xlsx", SaveFormat.Xlsx);
+            // (Optional) Manipulate slicers here if needed
+            // Example: access the first slicer in the first worksheet
+            // Worksheet sheet = workbook.Worksheets[0];
+            // SlicerCollection slicers = sheet.Slicers;
+            // if (slicers.Count > 0)
+            // {
+            //     Slicer slicer = slicers[0];
+            //     slicer.Name = "MySlicer";
+            // }
+
+            // Prepare save options for Excel 2016 (XLSX) format
+            // OoxmlSaveOptions does not expose a Version property in all library versions,
+            // so we rely on the default behavior which preserves advanced features like slicers.
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+
+            // Save the workbook; slicers will be retained in the output file
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

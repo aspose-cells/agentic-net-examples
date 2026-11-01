@@ -1,32 +1,61 @@
-// Title: Add an external PDF hyperlink to cell A2 and freeze the first two rows in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a hyperlink to a PDF file in cell A2, sets a custom display text, freezes rows 1‑2, and saves the workbook. | Write a .NET example that creates an Excel file, adds an external document link to a worksheet cell, applies FreezePanes to keep the link row visible, and outputs HyperlinkWithFreeze.xlsx.
-// Common Searches: Aspose.Cells for .NET add PDF hyperlink to a cell and freeze top rows | C# code to keep a hyperlink row visible by freezing panes in Excel using Aspose.Cells | How to insert an external document link and apply FreezePanes with Aspose.Cells C#
-// Tags: add hyperlink to cell Aspose.Cells | freeze panes rows Aspose.Cells | external PDF link Excel C# | hyperlink display text Aspose.Cells | freeze top rows after hyperlink insertion
+// Title: Create an Excel file with a hyperlink to a local PDF in cell A1 and freeze the top row using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that generates a workbook, places a clickable link to a local PDF in cell A1, and saves the file. | Show how to use Aspose.Cells Hyperlinks.Add together with FreezePanes to add an external document link and keep the first row static. | Provide a C# snippet that verifies a PDF file exists before adding a hyperlink to cell A1 and then freezes the worksheet’s header row.
+// Common Searches: Aspose.Cells C# add hyperlink to local PDF and freeze first row | How to keep header row visible after inserting a hyperlink with Aspose.Cells | C# example for checking file existence before creating Excel hyperlink using Aspose.Cells
+// Tags: add hyperlink to cell Aspose.Cells C# | freeze top row Aspose.Cells | PDF file hyperlink Aspose.Cells | check PDF presence before hyperlink Aspose.Cells | create workbook with hyperlink Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example creates a new workbook, adds a hyperlink in cell A2 that points to an external PDF file, sets the link's display text, freezes the first two rows so the hyperlink remains visible while scrolling, and saves the file as HyperlinkWithFreeze.xlsx.
+// The program creates a new workbook, writes "Open External Document" in cell A1, adds a hyperlink to a local PDF file, freezes the first row to keep the link visible while scrolling, and saves the workbook as HyperlinkAndFreeze.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a hyperlink to cell A2 that points to an external document
-        // Overload: Add(string cellName, int totalRows, int totalColumns, string address)
-        worksheet.Hyperlinks.Add("A2", 1, 1, @"C:\Docs\ExternalDoc.pdf");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the display text for the hyperlink (optional)
-        worksheet.Hyperlinks[0].TextToDisplay = "Open External Document";
+            // Place a descriptive text in cell A1
+            Cell linkCell = sheet.Cells["A1"];
+            linkCell.PutValue("Open External Document");
 
-        // Freeze rows above row 3 (i.e., rows 1‑2) so the hyperlink row stays visible while scrolling
-        // Overload: FreezePanes(string cellName, int freezedRows, int freezedColumns)
-        worksheet.FreezePanes("A3", 2, 0);
+            // Path to the external document
+            string targetFile = @"C:\Docs\Report.pdf";
 
-        // Save the workbook
-        workbook.Save("HyperlinkWithFreeze.xlsx");
+            // Verify that the target file exists to avoid FileNotFoundException
+            if (!File.Exists(targetFile))
+            {
+                Console.WriteLine($"Warning: Target file not found: {targetFile}");
+            }
+
+            // Add a hyperlink to the local file (covers a single cell)
+            // The Add method expects the address as a string.
+            sheet.Hyperlinks.Add(0, 0, 1, 1, targetFile);
+
+            // Freeze the first row so the hyperlink stays visible while scrolling
+            sheet.FreezePanes(1, 0, 0, 0);
+
+            // Save the workbook
+            string outputPath = "HyperlinkAndFreeze.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

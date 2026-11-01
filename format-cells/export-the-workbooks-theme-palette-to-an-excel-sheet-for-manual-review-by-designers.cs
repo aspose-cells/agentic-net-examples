@@ -1,70 +1,68 @@
-// Title: Export an Excel workbook’s theme palette to a new worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, adds a sheet named "ThemePalette", and writes each ThemeColorType name together with its ARGB hex value. | Extend the export routine to include separate columns for the red, green, and blue components of every theme color. | Implement command‑line arguments for input and output paths and add error handling for missing files or invalid arguments.
-// Common Searches: Aspose.Cells C# export theme colors to a separate worksheet | How to list ThemeColorType values with ARGB codes in an Excel file using .NET | Create a ThemePalette sheet in an existing workbook with Aspose.Cells | Programmatically retrieve Excel theme palette for designer review in C# | Save Excel theme palette as hex values using Aspose.Cells API
-// Tags: export theme palette to worksheet Aspose.Cells | retrieve ThemeColorType ARGB values .NET | add ThemePalette sheet programmatically Excel | auto‑fit columns after data export Aspose.Cells | command line file path handling Aspose.Cells
+// Title: How to export an Excel workbook’s theme palette to a new worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to list all theme colors from an Excel file using Aspose.Cells | Export Excel theme palette to a separate sheet for designer review in .NET | Retrieve ThemeColorType values and their ARGB and hex representations with Aspose.Cells | Add a ThemePalette worksheet and auto‑fit columns via Aspose.Cells API | Save a workbook that includes extracted theme colors to a new file in C#
+// Tags: Aspose.Cells export theme colors to new sheet | GetThemeColor ThemeColorType enumeration C# | populate Excel sheet with ARGB and hex values | auto‑fit columns after data insertion Aspose.Cells | save workbook with added ThemePalette worksheet
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // For ThemeColorType enum
+using Aspose.Cells.Drawing; // Required for ThemeColorType enum
 
-// Loads a workbook, adds a "ThemePalette" sheet, writes each ThemeColorType name with its ARGB hex (and optionally RGB components), auto‑fits columns, and saves the result to a new file.
-class ExportThemePalette
+// The example loads an existing Excel workbook, creates a new worksheet named "ThemePalette", writes headers, iterates through every ThemeColorType enum value, obtains each theme color with Workbook.GetThemeColor, records the color name, ARGB integer, and hex string, auto‑fits the columns, and saves the updated workbook to a new file for designers to review.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "WorkbookWithThemePalette.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook whose theme palette you want to export
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Add a new worksheet to hold the theme palette information
-            int newSheetIndex = workbook.Worksheets.Add();
-            Worksheet paletteSheet = workbook.Worksheets[newSheetIndex];
+            // Add a new worksheet to hold the theme palette
+            int sheetIndex = workbook.Worksheets.Add();
+            Worksheet paletteSheet = workbook.Worksheets[sheetIndex];
             paletteSheet.Name = "ThemePalette";
 
             // Write header row
-            paletteSheet.Cells[0, 0].PutValue("Theme Color Type");
-            paletteSheet.Cells[0, 1].PutValue("ARGB Value");
+            paletteSheet.Cells[0, 0].PutValue("Theme Color");
+            paletteSheet.Cells[0, 1].PutValue("ARGB");
+            paletteSheet.Cells[0, 2].PutValue("Hex");
 
-            // Iterate through all ThemeColorType values and write their ARGB values
+            // Iterate through all ThemeColorType values and retrieve colors via Workbook API
             int row = 1;
             foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
             {
-                // Retrieve the color for the current theme color type using Workbook API
+                // Retrieve the color for the current theme element
                 Color color = workbook.GetThemeColor(colorType);
 
-                // Write the theme color type name
+                // Write the color information to the sheet
                 paletteSheet.Cells[row, 0].PutValue(colorType.ToString());
-
-                // Write the ARGB value as a hex string (e.g., #FF112233)
-                string argbHex = $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
-                paletteSheet.Cells[row, 1].PutValue(argbHex);
+                paletteSheet.Cells[row, 1].PutValue(color.ToArgb());
+                paletteSheet.Cells[row, 2].PutValue(ColorTranslator.ToHtml(color));
 
                 row++;
             }
 
-            // Auto-fit the columns for better readability
+            // Auto-fit columns for better readability
             paletteSheet.AutoFitColumns();
 
-            // Save the workbook with the added ThemePalette sheet
+            // Save the workbook with the new sheet
             workbook.Save(outputPath);
-            Console.WriteLine($"Theme palette exported successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,40 +1,50 @@
-// Title: Export an Excel workbook to PDF with English UI and document language for spell checking using Aspose.Cells in C#
-// AI Prompts: Write C# code that saves a Workbook as a PDF while setting the workbook UI language to USA and the PDF default edit language to English with Aspose.Cells. | Show how to assign the built‑in document property Language to "en-US" and configure PdfSaveOptions for English spell checking before exporting to PDF.
-// Common Searches: Aspose.Cells C# export workbook to PDF with English spell checking | how to set default edit language for PDF output in Aspose.Cells | C# set workbook UI language to USA before saving as PDF using Aspose | configure built‑in document property Language en-US in Aspose.Cells PDF conversion
-// Tags: Aspose.Cells PDF export English language | C# set workbook UI language USA | PdfSaveOptions DefaultEditLanguage English | Workbook built‑in document property Language en-US | Excel to PDF conversion with spell checking
+// Title: Convert Excel workbook to PDF and set document language to English with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set workbook built-in document property language before PDF conversion | Convert XLSX to PDF with English language setting for spell checking using Aspose.Cells | Aspose.Cells PDF conversion preserve spell‑checking language property in .NET | Set document language to English in Aspose.Cells workbook prior to saving as PDF | Aspose.Cells PdfSaveOptions default conversion example with language property
+// Tags: Aspose.Cells set built-in document property language | Excel to PDF conversion Aspose.Cells C# | PdfSaveOptions default usage Aspose.Cells | Workbook language property English Aspose.Cells | Spell checking language setting PDF conversion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsLanguagePdfDemo
+// The sample checks for the input XLSX file, loads it into an Aspose.Cells Workbook, assigns the built‑in "Language" property to "English" when available, and saves the workbook as a PDF using default PdfSaveOptions, with error handling for runtime exceptions.
+class WorkbookToPdf
 {
-    // The example creates a workbook, adds sample data, sets the UI language to USA, assigns the built‑in document property Language to "en-US", configures PdfSaveOptions.DefaultEditLanguage to English, and saves the workbook as a PDF, enabling proper English spell checking.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
-            sheet.Cells["A2"].PutValue("Sample text for spell checking.");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set the workbook UI language to English (United States)
-            workbook.Settings.LanguageCode = CountryCode.USA;
+            // Set the document language to English for proper spell checking
+            // Use the property name indexer as the enum may not be available in all versions
+            if (workbook.BuiltInDocumentProperties["Language"] != null)
+            {
+                workbook.BuiltInDocumentProperties["Language"].Value = "English";
+            }
 
-            // Set the built‑in document property "Language" to en‑US
-            workbook.BuiltInDocumentProperties.Language = "en-US";
-
-            // Configure PDF save options and set the default edit language to English
+            // Prepare PDF save options (default options are sufficient for conversion)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.DefaultEditLanguage = DefaultEditLanguage.English;
 
-            // Save the workbook as PDF using the configured options
-            workbook.Save("output.pdf", pdfOptions);
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully converted to PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

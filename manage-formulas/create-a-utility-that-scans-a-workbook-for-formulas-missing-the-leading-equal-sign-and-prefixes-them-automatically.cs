@@ -1,99 +1,61 @@
-// Title: C# utility to add missing leading '=' to formulas in an Excel workbook using Aspose.Cells
-// AI Prompts: Write a C# method that loads an .xlsx file with Aspose.Cells, iterates every cell in all worksheets, and prepends '=' to any formula string that does not already start with it, then saves the workbook. | Create a console application that accepts input and output file paths, uses Aspose.Cells to detect cells containing formulas without a leading equal sign, corrects them in place, and writes the fixed workbook.
-// Common Searches: aspnet c# scan excel workbook for formulas without leading equal sign using Aspose.Cells | how to automatically fix malformed formulas in .xlsx files with Aspose.Cells .NET | batch add leading '=' to Excel formulas that lack it via C# Aspose.Cells library | command line tool to correct missing leading equal sign in Excel formulas .NET
-// Tags: add leading equal sign Aspose.Cells | detect malformed Excel formulas C# | batch correct formulas in .xlsx using Aspose.Cells | automate formula fixing with Aspose.Cells .NET | iterate worksheets to fix formula syntax
+// Title: C# utility to prepend missing leading '=' to Excel formulas using Aspose.Cells
+// Common Searches: C# Aspose.Cells add missing equal sign to cell formulas in an existing workbook | how to fix formulas without leading '=' in Excel files with Aspose.Cells .NET | scan all worksheets and prepend '=' to formulas that lack it using Aspose.Cells | bulk correct Excel formulas missing '=' with Aspose.Cells in a console application | automate formula normalization for Excel workbooks using Aspose.Cells library
+// Tags: prepend missing equal sign to Excel formulas Aspose.Cells | detect formulas lacking leading '=' .NET | bulk update cell formulas Aspose.Cells C# | iterate worksheets and cells Aspose.Cells | normalize Excel formula syntax programmatically
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsUtilities
+// The example loads a workbook, iterates through each worksheet's used range, checks each cell's Formula property, and if the formula does not start with '=', it prefixes the missing equal sign before saving the corrected workbook.
+class FormulaFixer
 {
-    // The FormulaFixer class loads a workbook via Aspose.Cells, iterates through each worksheet's used range, checks each cell's Formula property, and if the formula is non‑empty and does not start with '=', prefixes it with '=', then saves the corrected workbook to the specified output path.
-    public static class FormulaFixer
+    static void Main(string[] args)
     {
-        /// <param name="inputPath">Path to the source workbook.</param>
-        /// <param name="outputPath">Path where the corrected workbook will be saved.</param>
-        public static void FixMissingEqualSign(string inputPath, string outputPath)
+        // Expect input and output file paths as arguments
+        if (args.Length < 2)
         {
-            // Verify that the input file exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
+            Console.WriteLine("Usage: FormulaFixer <input.xlsx> <output.xlsx>");
+            return;
+        }
 
-            try
+        string inputPath = args[0];
+        string outputPath = args[1];
+
+        // Load the workbook
+        Workbook workbook = new Workbook(inputPath);
+
+        // Process each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            Cells cells = sheet.Cells;
+
+            // Determine the used range to avoid scanning empty rows/columns
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Load the workbook from the specified file.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets in the workbook.
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    // Get the used range of the worksheet to limit the iteration.
-                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                    Cell cell = cells[row, col];
 
-                    // Iterate over each cell in the used range.
-                    foreach (Cell cell in usedRange)
+                    // Skip cells without a formula
+                    if (cell == null || string.IsNullOrEmpty(cell.Formula))
+                        continue;
+
+                    string formula = cell.Formula;
+
+                    // If the formula does not start with '=', it is missing the leading equal sign
+                    if (!formula.StartsWith("="))
                     {
-                        // Retrieve the formula string as stored in the cell.
-                        string formula = cell.Formula;
-
-                        // If the cell has a formula (non‑empty) and does not start with '=',
-                        // it is considered a missing leading equal sign.
-                        if (!string.IsNullOrEmpty(formula) && !formula.StartsWith("="))
-                        {
-                            // Prefix the formula with '=' and assign it back to the cell.
-                            cell.Formula = "=" + formula;
-                        }
+                        // Prefix the missing '=' and assign back as a proper formula
+                        cell.Formula = "=" + formula;
                     }
                 }
-
-                // Save the modified workbook to the output path.
-                workbook.Save(outputPath);
-            }
-            catch (Exception ex)
-            {
-                // Wrap and rethrow to provide context.
-                throw new ApplicationException($"Error processing workbook '{inputPath}'.", ex);
             }
         }
-    }
 
-    class Program
-    {
-        /// <summary>
-        /// Entry point for the console application.
-        /// </summary>
-        static void Main(string[] args)
-        {
-            // Example usage: provide input and output paths via command‑line arguments or defaults.
-            string inputFile;
-            string outputFile;
-
-            if (args.Length >= 2)
-            {
-                inputFile = args[0];
-                outputFile = args[1];
-            }
-            else
-            {
-                // Default paths for quick testing.
-                inputFile = @"C:\Temp\Sample.xlsx";
-                outputFile = @"C:\Temp\Sample_Fixed.xlsx";
-            }
-
-            try
-            {
-                FormulaFixer.FixMissingEqualSign(inputFile, outputFile);
-                Console.WriteLine($"Workbook processed successfully. Output saved to: {outputFile}");
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.Error.WriteLine(fnfEx.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the corrected workbook
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

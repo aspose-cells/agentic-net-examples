@@ -1,42 +1,41 @@
-// Title: Remove rows with an empty first column from a CSV file using Aspose.Cells for .NET and save the cleaned CSV
-// AI Prompts: Load a CSV into an Aspose.Cells Workbook, delete every row where column A is blank, and write the cleaned data to a new CSV file. | Create C# code that iterates from the last row upward, removes rows with an empty first‑column value using Aspose.Cells, and then exports the worksheet back to CSV.
-// Common Searches: Aspose.Cells C# delete rows where first column is empty in a CSV | How to filter out blank rows from a CSV using Aspose.Cells .NET | C# remove rows with empty column A from CSV with Aspose.Cells and save | Iterate worksheet rows bottom‑up to delete rows in Aspose.Cells | Save modified worksheet as CSV using Aspose.Cells SaveOptions
-// Tags: Aspose.Cells delete rows by column value | Aspose.Cells CSV row filtering | C# remove blank rows from CSV with Aspose.Cells | Aspose.Cells bottom‑up row deletion | Aspose.Cells save workbook as CSV | Aspose.Cells load CSV with LoadOptions
+// Title: C# – Remove rows with an empty first column from a CSV using Aspose.Cells and save the cleaned file
+// Common Searches: Aspose.Cells C# delete rows where first column is blank in a CSV file | How to filter out empty rows from a CSV using Aspose.Cells .NET | C# code to load a CSV, remove rows with a null first column, and export back to CSV with Aspose.Cells | Saving a modified CSV after row deletion with Aspose.Cells in .NET | Iterate rows backwards to safely delete rows in an Aspose.Cells workbook
+// Tags: delete blank rows Aspose.Cells CSV | Aspose.Cells row deletion C# | load CSV workbook Aspose.Cells .NET | save workbook as CSV Aspose.Cells | iterate rows backwards Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The program loads "input.csv" with Aspose.Cells, scans rows from the bottom up, deletes any row whose first column is empty, and saves the cleaned data as "output.csv" in CSV format.
-class Program
+// The example loads a CSV file into an Aspose.Cells Workbook, iterates the rows from the bottom up, deletes any row whose first column is null or whitespace, and then saves the cleaned data to a new CSV file.
+class CsvProcessor
 {
     static void Main()
     {
-        // Load the CSV file into a workbook
-        var loadOptions = new LoadOptions(LoadFormat.Csv);
-        Workbook workbook = new Workbook("input.csv", loadOptions);
+        // Load the CSV file into a workbook.
+        // Aspose.Cells automatically treats the CSV as a single worksheet.
+        Workbook workbook = new Workbook("input.csv");
 
-        // Get the first worksheet (CSV files are loaded into a single sheet)
+        // Get the first (and only) worksheet.
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Determine the used range to know how many rows to process
-        int maxRow = cells.MaxDataRow; // zero‑based index of the last row with data
-
-        // Iterate from the bottom up to safely delete rows
-        for (int row = maxRow; row >= 0; row--)
+        // Iterate from the last row upwards to safely delete rows.
+        for (int row = cells.MaxDataRow; row >= cells.MinDataRow; row--)
         {
-            // Get the value of the first column (column index 0)
-            var cellValue = cells[row, 0].StringValue?.Trim();
+            // Retrieve the value of the first column (index 0) in the current row.
+            object firstCellValue = cells[row, 0].Value;
 
-            // If the first column is empty or null, delete the entire row
-            if (string.IsNullOrEmpty(cellValue))
+            // Determine if the cell is empty (null or empty string after trimming).
+            bool isEmpty = firstCellValue == null ||
+                           string.IsNullOrWhiteSpace(firstCellValue.ToString());
+
+            // If the first column is empty, delete the entire row.
+            if (isEmpty)
             {
-                sheet.Cells.DeleteRows(row, 1);
+                cells.DeleteRow(row);
             }
         }
 
-        // Save the modified worksheet back to CSV format
-        var saveOptions = new OoxmlSaveOptions(SaveFormat.Csv);
-        workbook.Save("output.csv", saveOptions);
+        // Save the modified worksheet back to CSV format.
+        workbook.Save("output.csv", SaveFormat.Csv);
     }
 }

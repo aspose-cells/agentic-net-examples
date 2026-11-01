@@ -1,54 +1,58 @@
-// Title: Convert an HTML file to PDF using Aspose.Cells for .NET and insert a Roman‑numeral page number footer (alternative approach)
-// AI Prompts: Write C# code that loads an HTML document into an Aspose.Cells Workbook, exports it as a PDF, and adds a footer that displays page numbers in Roman numerals using the available footer APIs. | Describe a workaround for adding Roman‑numeral page numbers to a PDF generated from HTML with Aspose.Cells when the CenterFooter property is not present, including how to use PageSetup or custom drawing.
-// Common Searches: Aspose.Cells C# export HTML to PDF with Roman numeral page numbers in footer | How to add a custom footer with Roman numerals when converting HTML to PDF using Aspose.Cells .NET | Workaround for missing CenterFooter property in Aspose.Cells PDF export C# | Set page number format to Roman numerals in Aspose.Cells PDF output | Convert HTML to PDF and add page footer using Aspose.Cells for .NET
-// Tags: Aspose.Cells HTML to PDF conversion C# | Roman numeral footer Aspose.Cells PDF | custom PDF footer Aspose.Cells .NET | fallback CenterFooter Aspose.Cells workaround | page number format Roman numerals Aspose.Cells
+// Title: Convert an HTML file to PDF and add a page-number footer using Aspose.Cells in C#
+// Common Searches: how to convert HTML to PDF with a footer using Aspose.Cells C# | Aspose.Cells add page number footer when saving workbook as PDF | C# load HTML into Workbook and set footer before PDF export | set custom footer text in Aspose.Cells PDF output | Aspose.Cells page setup footer placeholder example C#
+// Tags: Aspose.Cells HTML to PDF conversion | C# workbook page setup footer | set page number footer Aspose.Cells | save workbook as PDF with footer | load HTML into workbook using LoadOptions
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies the input HTML file, loads it into an Aspose.Cells Workbook, ensures the output directory exists, and saves the workbook as a PDF. Because the current Aspose.Cells version lacks a CenterFooter property, the code does not directly apply a Roman‑numeral footer; a comment explains that a workaround (e.g., using PageSetup or custom drawing) is required for such footer customization.
-class Program
+namespace HtmlToPdfWithRomanFooter
 {
-    static void Main()
+    // The program verifies the existence of an input HTML file, creates the output directory if needed, loads the HTML into an Aspose.Cells Workbook via LoadOptions, accesses the first worksheet, includes a commented placeholder for configuring a page-number footer, and then saves the workbook as a PDF while handling any exceptions.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.html";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input HTML file exists before loading
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
-                return;
+                string inputPath = "input.html";
+                string outputPath = "output.pdf";
+
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Load the HTML file into an Aspose.Cells Workbook using LoadOptions
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                Workbook workbook = new Workbook(inputPath, loadOptions);
+
+                // Ensure there is at least one worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Configure footer with page numbers (standard placeholders)
+                PageSetup pageSetup = sheet.PageSetup;
+                // Note: CenterFooter property may not be available in some older versions of Aspose.Cells.
+                // If needed, use alternative methods or upgrade the library.
+                // pageSetup.CenterFooter = "Page &P of &N";
+
+                // Save the workbook as a PDF file
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
             }
-
-            // Load the HTML file into a workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (optional further processing)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // NOTE: The CenterFooter property is not available in the current Aspose.Cells version.
-            // If needed, footer settings can be applied using alternative APIs or a newer library version.
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook as a PDF file
-            workbook.Save(outputPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"PDF successfully created at \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

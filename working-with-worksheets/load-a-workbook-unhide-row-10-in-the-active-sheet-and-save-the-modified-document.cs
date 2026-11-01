@@ -1,29 +1,46 @@
-// Title: How to unhide row 10 in the active worksheet of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, reveals a hidden row in the active sheet, and saves the workbook. | Show the steps to change the IsHidden property of a specific row in Aspose.Cells and persist the changes to a new file. | Provide a minimal Aspose.Cells example that loads a workbook, accesses the active worksheet, makes a hidden row visible, and writes the result.
-// Common Searches: Aspose.Cells C# unhide hidden row in active worksheet | set Row.IsHidden false for a specific row using Aspose.Cells .NET | load Excel file, modify row visibility, and save with Aspose.Cells | how to make row 10 visible in an .xlsx file using Aspose.Cells | C# example for changing row visibility in Aspose.Cells workbook
-// Tags: unhide row Aspose.Cells .NET | Row.IsHidden property Aspose.Cells | active worksheet row manipulation Aspose.Cells | load and save Excel workbook Aspose.Cells | modify row visibility C# Aspose.Cells
+// Title: Unhide row 10 in the active worksheet of an Excel workbook using Aspose.Cells for .NET and save the result
+// AI Prompts: Write C# code that opens an existing XLSX file with Aspose.Cells, makes row 10 visible in the currently active sheet, and writes the changes to a new file. | Show how to verify the presence of an input Excel file, access the active worksheet, set the IsHidden property of row 10 to false, and save the workbook using Aspose.Cells for .NET with exception handling. | Provide a step‑by‑step example that loads a workbook, retrieves the active worksheet, unhides row index 9, and saves the updated workbook to a specified output path.
+// Common Searches: Aspose.Cells C# unhide specific row in active worksheet and save workbook | How to make row 10 visible in an Excel file using Aspose.Cells for .NET | C# code to load XLSX, change row hidden flag, and export to new file with Aspose.Cells | Unhide hidden rows programmatically with Aspose.Cells .NET API
+// Tags: Aspose.Cells unhide row | C# Aspose.Cells modify row visibility | Excel workbook row IsHidden property .NET | active worksheet row manipulation Aspose.Cells | save modified XLSX with Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The program loads 'input.xlsx' with Aspose.Cells, accesses the active worksheet, unhides row 10 by setting its IsHidden property to false, and saves the updated workbook as 'output.xlsx'.
+// Loads 'input.xlsx', unhides row 10 (zero‑based index 9) in the active worksheet, and saves the updated workbook as 'output.xlsx' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Get the active worksheet
-        Worksheet activeSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Row indices are zero‑based; row 10 is index 9
-        Row row10 = activeSheet.Cells.Rows[9];
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-        // Unhide the row
-        row10.IsHidden = false;
+            // Get the active worksheet
+            var worksheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Unhide row 10 (zero‑based index 9)
+            var row = worksheet.Cells.Rows[9];
+            row.IsHidden = false; // Correct property to control row visibility
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

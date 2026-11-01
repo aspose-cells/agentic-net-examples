@@ -1,11 +1,11 @@
-// Title: How to recalculate all formulas in an Excel workbook before exporting to PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an .xlsx file, trigger a full formula evaluation using Workbook.CalculateFormula, and then generate a PDF with Aspose.Cells in C#. | Write C# code that refreshes every Excel calculation before calling Workbook.Save with SaveFormat.Pdf. | Show how to force a complete formula refresh and export the workbook to PDF using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# recalculate workbook formulas prior to PDF conversion | Force formula update when saving Excel as PDF with Aspose.Cells | C# example for Workbook.CalculateFormula followed by PDF export | Ensure PDF output reflects latest Excel calculations using Aspose.Cells .NET
-// Tags: formula calculation API Aspose.Cells | refresh workbook calculations Aspose.Cells | Excel to PDF output with updated formulas | ensure formulas are evaluated prior to PDF generation | Aspose.Cells C# PDF generation after calculations
+// Title: Calculate workbook formulas with Aspose.Cells for .NET before exporting to PDF
+// AI Prompts: Generate C# code that loads an .xlsx file, runs Workbook.CalculateFormula, and saves the result as a PDF using Aspose.Cells. | Show how to force formula recalculation in a workbook prior to PDF conversion with Aspose.Cells in a .NET application. | Provide a .NET snippet that ensures all Excel formulas are evaluated before calling workbook.Save with SaveFormat.Pdf.
+// Common Searches: Aspose.Cells C# calculate formulas before PDF conversion | how to force formula recalculation when saving Excel as PDF using Aspose.Cells | Workbook.CalculateFormula usage example for PDF export in .NET | evaluate all formulas in an Excel workbook prior to PDF generation with Aspose.Cells | C# code to recalculate Excel formulas then convert to PDF using Aspose.Cells
+// Tags: calculate formulas before PDF export | evaluate Excel formulas Aspose.Cells C# | force formula recalculation for PDF conversion | Aspose.Cells PDF generation with updated cells | recalculate workbook prior to SaveFormat.Pdf
 
 using Aspose.Cells;
 
-// Loads an Excel workbook, forces full formula calculation with Workbook.CalculateFormula, and saves the workbook as a PDF.
+// The example loads an Excel workbook, forces evaluation of every formula with Workbook.CalculateFormula, and then saves the workbook as a PDF file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -13,10 +13,10 @@ class Program
         // Load the workbook from an existing Excel file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Ensure all formulas in the workbook are evaluated
+        // Ensure all formulas are evaluated
         workbook.CalculateFormula();
 
-        // Export the workbook to PDF after formulas have been calculated
+        // Export the workbook to PDF format
         workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

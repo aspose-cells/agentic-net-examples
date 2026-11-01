@@ -1,58 +1,55 @@
-// Title: Enumerate worksheet cells with Aspose.Cells in C# to locate the cell containing the highest numeric value
-// AI Prompts: Write C# code that uses Aspose.Cells Cells.GetEnumerator() to iterate all populated cells in a worksheet and returns the address of the cell with the greatest numeric value. | Adjust the enumeration loop to treat DateTime cells as OADate numbers when comparing values for the maximum.
-// Common Searches: Aspose.Cells C# find cell with maximum number in a worksheet | how to iterate over all cells in Aspose.Cells and get the highest numeric entry | C# enumerate Excel cells using Aspose.Cells to determine the largest value | retrieve address of the largest numeric cell with Aspose.Cells GetEnumerator
-// Tags: cells enumerator max numeric value Aspose.Cells | find highest numeric cell C# Aspose.Cells | enumerate worksheet cells Aspose.Cells C# | compare numeric cell values Aspose.Cells | retrieve cell address max value Aspose.Cells
+// Title: Locate and highlight the cell with the maximum numeric value in an Excel worksheet using Aspose.Cells Cells enumerator (C#)
+// AI Prompts: Write C# code with Aspose.Cells that iterates over all cells in the first worksheet, identifies the numeric cell with the greatest value, and outputs its address. | Enhance the previous code to set a solid yellow background on the identified cell and save the workbook to a new file.
+// Common Searches: aspocells c# find cell with highest number in worksheet | enumerate all cells in Excel using Aspose.Cells to get max numeric value | how to highlight the maximum numeric cell in an Excel file with Aspose.Cells C# | retrieve address of largest numeric entry in a spreadsheet using Aspose.Cells
+// Tags: cells enumerator maximum value Aspose.Cells | highlight cell background Aspose.Cells C# | numeric value detection Excel Aspose.Cells | cell address extraction max number Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
-using System.Collections;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, uses Cells.GetEnumerator() to walk through every instantiated cell in the first worksheet, checks each cell for a numeric value (including DateTime as OADate), tracks the largest numeric value and its cell, prints the maximum value with the cell address, and saves the workbook unchanged.
-class FindMaxNumericCell
+// The example loads an Excel file, uses a Cells enumerator to scan every cell in the first worksheet, tracks the highest numeric value and its cell address, prints the result, applies a yellow solid background to that cell, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load an existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Variables to keep track of the maximum numeric value and its cell
+        // Variables to keep track of the highest numeric value and its cell address
         double maxValue = double.MinValue;
-        Cell maxCell = null;
+        string maxCellAddress = string.Empty;
 
-        // Get the cells enumerator and iterate through all instantiated cells
-        IEnumerator enumerator = cells.GetEnumerator();
-        while (enumerator.MoveNext())
+        // Enumerate all cells in the worksheet
+        foreach (Cell cell in sheet.Cells)
         {
-            Cell cell = (Cell)enumerator.Current;
-
-            // Consider only cells that contain a numeric value
-            if (cell.IsNumericValue && cell.Value != null)
+            // Consider only numeric cells
+            if (cell.Type == CellValueType.IsNumeric)
             {
-                double currentValue = cell.DoubleValue; // Works for int, double, DateTime (as OADate)
-
+                double currentValue = cell.DoubleValue;
                 if (currentValue > maxValue)
                 {
                     maxValue = currentValue;
-                    maxCell = cell;
+                    maxCellAddress = cell.Name; // e.g., "C7"
                 }
             }
         }
 
         // Output the result
-        if (maxCell != null)
+        Console.WriteLine($"Highest numeric value: {maxValue} found at cell {maxCellAddress}");
+
+        // Optionally highlight the cell with the highest value
+        if (!string.IsNullOrEmpty(maxCellAddress))
         {
-            Console.WriteLine($"Maximum numeric value: {maxValue} found at cell {maxCell.Name}");
-        }
-        else
-        {
-            Console.WriteLine("No numeric cells were found in the worksheet.");
+            Cell maxCell = sheet.Cells[maxCellAddress];
+            Style style = maxCell.GetStyle();
+            style.ForegroundColor = System.Drawing.Color.Yellow;
+            style.Pattern = BackgroundType.Solid;
+            maxCell.SetStyle(style);
         }
 
-        // Save the workbook (unchanged) to a new file
+        // Save the workbook (if any modifications were made)
         workbook.Save("output.xlsx");
     }
 }

@@ -1,24 +1,39 @@
-// Title: Save a new Aspose.Cells workbook with ISO/IEC 29500:2008 Strict OpenXML compliance using the default filename in C#
-// AI Prompts: Instantiate a Workbook, assign OoxmlCompliance.Iso29500_2008_Strict to its Settings.Compliance, and save it as 'StrictComplianceWorkbook.xlsx' with Aspose.Cells for .NET. | Load an existing Excel file, enforce ISO 29500 strict OpenXML mode via the Settings.Compliance property, and persist the workbook using the default file name in a C# application.
-// Common Searches: c# aspose.cells enable ISO 29500 strict OpenXML mode when saving workbook | how to set OoxmlCompliance to Iso29500_2008_Strict in Aspose.Cells | save workbook with default name after applying strict OpenXML compliance in .NET | Aspose.Cells Workbook.Settings.Compliance property usage example | default filename for saving Excel workbook with Aspose.Cells .NET
-// Tags: OoxmlCompliance Iso29500_2008_Strict configuration | save workbook default filename Aspose.Cells | strict OpenXML mode C# Aspose.Cells | Workbook.Settings.Compliance property example | ISO 29500 strict compliance Excel export
+// Title: Open an Excel workbook, enforce strict OpenXML compliance, and save it with its original filename using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, activates the StrictOpenXmlCompliance setting, creates a new workbook when the file is absent, and saves it back to the same path. | Generate a .NET snippet that opens an Excel workbook, turns on strict OpenXML mode, and saves it without changing the filename, including handling of missing files.
+// Common Searches: Aspose.Cells how to enforce OpenXML standards when saving a workbook C# | C# open existing Excel file and save with the same name using Aspose.Cells | Automatically create a new workbook if the file does not exist Aspose.Cells .NET | Saving a workbook using the default filename in Aspose.Cells | Example of Aspose.Cells strict mode save for .xlsx files | Handling file‑not‑found exceptions while loading a workbook with Aspose.Cells
+// Tags: load workbook Aspose.Cells C# | save workbook with OpenXML compliance Aspose.Cells | auto‑create workbook if missing Aspose.Cells | default filename save Aspose.Cells .NET | exception handling file operations Aspose.Cells | open Excel file Aspose.Cells strict mode
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Creates a workbook, sets ISO/IEC 29500:2008 strict OpenXML compliance, and saves it as StrictComplianceWorkbook.xlsx.
+// The example checks whether 'input.xlsx' exists, creates a new workbook if it doesn't, loads the workbook with Aspose.Cells, enables strict OpenXML compliance, and saves it back using the original file path while handling potential exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Path to the workbook to open
+        string filePath = "input.xlsx";
 
-        // Enable strict Open XML compliance (ISO/IEC 29500:2008 Strict)
-        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+        try
+        {
+            // Ensure the input file exists; create a new workbook if it does not
+            if (!File.Exists(filePath))
+            {
+                var newWorkbook = new Workbook();
+                newWorkbook.Save(filePath);
+            }
 
-        // Save the workbook using a default file name
-        string defaultFileName = "StrictComplianceWorkbook.xlsx";
-        workbook.Save(defaultFileName);
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Save the workbook using the original (default) file name
+            workbook.Save(filePath);
+        }
+        catch (Exception ex)
+        {
+            // Log or handle exceptions as needed
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

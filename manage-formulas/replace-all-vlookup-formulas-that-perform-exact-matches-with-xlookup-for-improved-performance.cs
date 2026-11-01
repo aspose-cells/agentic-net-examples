@@ -1,91 +1,108 @@
-// Title: Bulk replace exact‑match VLOOKUP formulas with XLOOKUP in Excel files using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds VLOOKUP formulas where the fourth argument is FALSE or 0, and rewrites them as XLOOKUP expressions. | Create a helper method that parses a VLOOKUP formula string, verifies it uses exact match, and returns the equivalent XLOOKUP formula built with INDEX for the lookup and return arrays. | Show how to save the updated workbook after converting all matching formulas, preserving original formatting and calculation settings.
-// Common Searches: Aspose.Cells C# replace VLOOKUP FALSE with XLOOKUP in all sheets | how to convert exact match VLOOKUP to XLOOKUP programmatically .NET | bulk update Excel formulas from VLOOKUP to XLOOKUP using Aspose.Cells | detect and change VLOOKUP formulas in a workbook with C# Aspose.Cells
-// Tags: VLOOKUP to XLOOKUP conversion Aspose.Cells | exact-match VLOOKUP detection C# | bulk formula update Excel .NET | XLOOKUP formula generation Aspose.Cells | Excel workbook cell iteration Aspose.Cells
+// Title: Convert exact‑match VLOOKUP formulas to XLOOKUP in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to replace VLOOKUP FALSE lookup with XLOOKUP using Aspose.Cells | how to programmatically change Excel formulas from VLOOKUP to XLOOKUP in .NET | Aspose.Cells iterate all cells and update exact‑match VLOOKUP to XLOOKUP | bulk conversion of VLOOKUP formulas to XLOOKUP in a workbook with C# | replace VLOOKUP false range_lookup with XLOOKUP in an Excel file via Aspose API
+// Tags: exact‑match VLOOKUP to XLOOKUP conversion Aspose.Cells | bulk Excel formula update C# | programmatic XLOOKUP generation with INDEX Aspose | worksheet cell iteration for formula replacement .NET | Excel workbook formula migration using Aspose.Cells | replace false range_lookup VLOOKUP Aspose API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, iterates through each worksheet and cell, identifies VLOOKUP formulas that use FALSE or 0 for exact matching, converts them to equivalent XLOOKUP formulas using INDEX for lookup and return arrays, and saves the modified workbook.
+// The sample loads an Excel workbook, walks through every worksheet and cell, detects VLOOKUP formulas that use exact‑match (FALSE or 0), constructs an equivalent XLOOKUP formula using INDEX functions, replaces the original formula, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Iterate through all cells that contain formulas
-            foreach (Cell cell in sheet.Cells)
-            {
-                if (cell.IsFormula)
-                {
-                    string formula = cell.Formula;
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-                    // Identify VLOOKUP formulas that use exact match (FALSE or 0 as the fourth argument)
-                    if (IsExactMatchVlookup(formula))
+        Workbook workbook = null;
+
+        try
+        {
+            // Load the workbook; if the file is password‑protected, an exception will be thrown
+            var loadOptions = new LoadOptions();
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error while loading workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
+                {
+                    // Process only cells that contain a VLOOKUP formula
+                    if (cell.IsFormula && cell.Formula.Contains("VLOOKUP", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Convert the VLOOKUP formula to an equivalent XLOOKUP formula
-                        string newFormula = ConvertVlookupToXlookup(formula);
-                        cell.Formula = newFormula;
+                        string formula = cell.Formula;
+
+                        // Extract the argument list inside VLOOKUP(...)
+                        int startIdx = formula.IndexOf('(');
+                        int endIdx = formula.LastIndexOf(')');
+                        if (startIdx < 0 || endIdx < 0 || endIdx <= startIdx)
+                            continue; // malformed formula, skip
+
+                        string args = formula.Substring(startIdx + 1, endIdx - startIdx - 1);
+                        // Simple split on commas (works for most cases without nested commas)
+                        string[] parts = args.Split(',');
+
+                        // VLOOKUP requires at least 4 arguments
+                        if (parts.Length < 4)
+                            continue; // not a standard VLOOKUP, skip
+
+                        // Trim whitespace from each argument
+                        for (int i = 0; i < parts.Length; i++)
+                            parts[i] = parts[i].Trim();
+
+                        string rangeLookup = parts[3];
+
+                        // Replace only exact‑match lookups (FALSE or 0)
+                        if (rangeLookup.Equals("FALSE", StringComparison.OrdinalIgnoreCase) ||
+                            rangeLookup.Equals("0"))
+                        {
+                            string lookupValue = parts[0];
+                            string tableArray = parts[1];
+                            string colIndex = parts[2];
+
+                            // Build XLOOKUP formula:
+                            // =XLOOKUP(lookup_value, INDEX(table_array,0,1), INDEX(table_array,0,col_index), "#N/A", 0)
+                            string newFormula = $"=XLOOKUP({lookupValue}, INDEX({tableArray},0,1), INDEX({tableArray},0,{colIndex}), \"#N/A\", 0)";
+
+                            // Replace the VLOOKUP formula with the new XLOOKUP formula
+                            cell.Formula = newFormula;
+                        }
                     }
                 }
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
-    }
-
-    // Checks whether a formula is a VLOOKUP with an exact‑match flag
-    static bool IsExactMatchVlookup(string formula)
-    {
-        if (string.IsNullOrEmpty(formula) || !formula.StartsWith("="))
-            return false;
-
-        int vlookupPos = formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase);
-        if (vlookupPos < 0)
-            return false;
-
-        int openParen = formula.IndexOf('(', vlookupPos);
-        int closeParen = formula.LastIndexOf(')');
-        if (openParen < 0 || closeParen < 0 || closeParen <= openParen)
-            return false;
-
-        // Extract the argument list inside VLOOKUP(...)
-        string args = formula.Substring(openParen + 1, closeParen - openParen - 1);
-
-        // Simple split on commas (works for most cases without nested commas)
-        string[] parts = args.Split(',');
-        if (parts.Length < 4)
-            return false;
-
-        string fourthArg = parts[3].Trim().TrimEnd(')');
-        return string.Equals(fourthArg, "FALSE", StringComparison.OrdinalIgnoreCase) ||
-               fourthArg == "0";
-    }
-
-    // Converts a VLOOKUP(lookup_value, table_array, col_index_num, FALSE) to XLOOKUP
-    static string ConvertVlookupToXlookup(string formula)
-    {
-        int vlookupPos = formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase);
-        int openParen = formula.IndexOf('(', vlookupPos);
-        int closeParen = formula.LastIndexOf(')');
-
-        // Extract arguments
-        string args = formula.Substring(openParen + 1, closeParen - openParen - 1);
-        string[] parts = args.Split(',');
-
-        string lookupValue = parts[0].Trim();
-        string tableArray = parts[1].Trim();
-        string colIndexStr = parts[2].Trim();
-
-        // Build XLOOKUP:
-        // XLOOKUP(lookup_value, INDEX(table_array,0,1), INDEX(table_array,0,col_index_num))
-        string xlookup = $"=XLOOKUP({lookupValue},INDEX({tableArray},0,1),INDEX({tableArray},0,{colIndexStr}))";
-
-        return xlookup;
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error during processing: {ex.Message}");
+        }
     }
 }

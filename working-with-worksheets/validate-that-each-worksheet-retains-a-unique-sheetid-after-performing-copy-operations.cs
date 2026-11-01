@@ -1,61 +1,50 @@
-// Title: Verify that each worksheet retains a distinct Index after copying sheets with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that copies several worksheets using Aspose.Cells AddCopy and then iterates the Worksheets collection to confirm every worksheet's Index is unique. | Write a console application that adds new sheets, creates copies with AddCopy, and reports any duplicate Index values in an Aspose.Cells workbook. | Create a method that validates worksheet identifiers after copy operations by storing each worksheet's Index in a HashSet and flagging repeats.
-// Common Searches: asp.net how to verify worksheet index uniqueness after using AddCopy in Aspose.Cells | c# detect duplicate sheet indexes in a workbook created with Aspose.Cells | ensure copied worksheets have different IDs in Aspose.Cells .NET | Aspose.Cells AddCopy duplicate Index issue solution | programmatically check for repeated worksheet indices after copying sheets in C#
-// Tags: Aspose.Cells AddCopy unique Index validation | C# worksheet duplicate index detection | hashset sheet identifier check Aspose.Cells | validate worksheet IDs after copy operation | Aspose.Cells workbook sheet identifier uniqueness
+// Title: Verify that each worksheet keeps a unique Index (SheetId) after using AddCopy in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# check for duplicate worksheet indexes after AddCopy | how to confirm worksheet IDs are unique after copying a sheet in .NET | detect duplicate sheet indices in a workbook using Aspose.Cells API | C# code to validate unique worksheet Index values after copying worksheets | ensure worksheet Index remains distinct when duplicating sheets with Aspose.Cells
+// Tags: AddCopy worksheet index uniqueness Aspose.Cells | C# verify unique worksheet IDs | duplicate sheet index detection Aspose.Cells | HashSet validation of worksheet indices | Aspose.Cells workbook integrity check
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// A C# console program that creates a workbook, adds and copies worksheets with AddCopy, then uses a HashSet to ensure each worksheet's Index (used as SheetId) remains unique, outputting any duplicates found.
-class SheetIdValidator
+// The example creates a workbook, adds two worksheets, copies one with AddCopy, and then uses a HashSet to iterate through all worksheets, confirming that each worksheet's Index (used as SheetId) is unique and reporting any duplicates.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook with a default worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Rename the default worksheet
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "OriginalSheet";
+            // Add first worksheet and set a name
+            int sheet1Index = workbook.Worksheets.Add();
+            Worksheet sheet1 = workbook.Worksheets[sheet1Index];
+            sheet1.Name = "Sheet1";
 
-            // Add additional worksheets for testing
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
+            // Add second worksheet and set a name
+            int sheet2Index = workbook.Worksheets.Add();
+            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+            sheet2.Name = "Sheet2";
 
-            // Copy the first sheet and rename the copy
-            int copyIndex1 = workbook.Worksheets.AddCopy(sheet1.Index);
-            Worksheet copyOfOriginal = workbook.Worksheets[copyIndex1];
-            copyOfOriginal.Name = "CopyOfOriginal";
+            // Copy the first worksheet to a new worksheet
+            int copiedIndex = workbook.Worksheets.AddCopy(sheet1.Index);
+            Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
+            copiedSheet.Name = "Sheet1_Copy";
 
-            // Copy the second sheet and rename the copy
-            int copyIndex2 = workbook.Worksheets.AddCopy(sheet2.Index);
-            Worksheet copyOfSecond = workbook.Worksheets[copyIndex2];
-            copyOfSecond.Name = "CopyOfSecond";
-
-            // Validate that each worksheet retains a unique identifier (using Index)
-            HashSet<int> sheetIds = new HashSet<int>();
-            bool duplicateFound = false;
-
+            // Validate that each worksheet retains a unique Index (acts as SheetId)
+            HashSet<int> sheetIndices = new HashSet<int>();
             foreach (Worksheet ws in workbook.Worksheets)
             {
-                int id = ws.Index; // Index serves as a unique identifier
-                if (!sheetIds.Add(id))
+                int idx = ws.Index;
+                // If the Index already exists in the set, it's a duplicate
+                if (!sheetIndices.Add(idx))
                 {
-                    duplicateFound = true;
-                    Console.WriteLine($"Duplicate Index found: {id} in worksheet \"{ws.Name}\"");
+                    Console.WriteLine($"Duplicate worksheet Index detected: {idx} on worksheet '{ws.Name}'.");
+                    return;
                 }
             }
 
-            if (!duplicateFound)
-            {
-                Console.WriteLine("All worksheets have unique Index values after copy operations.");
-            }
-
-            // Optional: Save the workbook if needed
-            // workbook.Save("CopyValidationResult.xlsx");
+            Console.WriteLine("All worksheets have unique indices.");
         }
         catch (Exception ex)
         {

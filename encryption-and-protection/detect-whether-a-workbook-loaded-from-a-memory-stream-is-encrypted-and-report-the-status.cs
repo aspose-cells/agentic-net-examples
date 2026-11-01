@@ -1,63 +1,82 @@
-// Title: Detect if an Excel workbook loaded from a MemoryStream is encrypted using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that reads an XLSX file into a MemoryStream, attempts to open it with Aspose.Cells Workbook, and returns a Boolean indicating encryption without providing a password. | Show how to wrap the Workbook constructor in a try‑catch block that catches CellsException to identify password‑protected files. | Explain how to use LoadOptions with default settings to test workbook encryption status from a byte array.
-// Common Searches: Aspose.Cells C# check workbook encryption from byte array | how to know if an Excel file is password protected when loading from MemoryStream | detect encrypted XLSX using Aspose.Cells without password | C# determine if workbook requires a password before opening with Aspose.Cells | catch CellsException to identify protected Excel files in .NET
-// Tags: detect encrypted workbook Aspose.Cells | load Excel from MemoryStream Aspose.Cells | catch CellsException for encryption detection | password‑protected Excel detection C# | Workbook encryption check without password
+// Title: Check if an Excel workbook loaded from a MemoryStream is password‑protected using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells detect password protection when opening workbook from MemoryStream | how to determine if an Excel file is encrypted before loading with Aspose.Cells | using Aspose.Cells to test if workbook requires a password without providing one | catch CellsException to identify encrypted Excel workbook in .NET | verify encryption status of workbook read into MemoryStream with Aspose.Cells
+// Tags: detect encrypted workbook Aspose.Cells .NET | memory stream workbook password check | handle CellsException for encrypted Excel | load Excel without password Aspose.Cells | determine workbook encryption status C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example reads an XLSX file into a byte array, creates a MemoryStream, and attempts to load it with Aspose.Cells Workbook using default LoadOptions. A try‑catch block captures CellsException, which indicates the workbook is password‑protected, allowing the program to report the encryption status as a Boolean.
+// The example reads an .xlsx file into a MemoryStream, attempts to open it with Aspose.Cells, catches a CellsException, inspects the exception message for a password hint, and reports whether the workbook is encrypted.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        // Obtain the workbook data as a memory stream.
+        MemoryStream memoryStream = GetWorkbookMemoryStream();
+        if (memoryStream == null)
         {
-            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            // Stream could not be created (e.g., file missing).
             return;
         }
 
+        bool isEncrypted = false;
+
         try
         {
-            // Load the workbook bytes into a memory stream
-            byte[] workbookBytes = File.ReadAllBytes(inputPath);
-            using (MemoryStream memoryStream = new MemoryStream(workbookBytes))
+            // Attempt to load the workbook without a password.
+            // If the workbook is encrypted, Aspose.Cells will throw a CellsException.
+            Workbook workbook = new Workbook(memoryStream);
+            // Loaded successfully – assume it is not encrypted.
+            isEncrypted = false;
+        }
+        catch (CellsException ex)
+        {
+            // Check if the exception indicates a password is required.
+            // Different Aspose.Cells versions may have different messages,
+            // so we perform a case‑insensitive search for the word "password".
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                // Load options without specifying a password
-                LoadOptions loadOptions = new LoadOptions();
-
-                bool isEncrypted = false;
-                Workbook workbook = null;
-
-                try
-                {
-                    // Attempt to load the workbook; if it succeeds, the file is not encrypted
-                    workbook = new Workbook(memoryStream, loadOptions);
-                    isEncrypted = false;
-                }
-                catch (CellsException)
-                {
-                    // Loading failed – most likely because the workbook is password protected
-                    isEncrypted = true;
-                }
-                catch (Exception ex)
-                {
-                    // Unexpected error while loading the workbook
-                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                    return;
-                }
-
-                Console.WriteLine($"Workbook encrypted: {isEncrypted}");
+                isEncrypted = true;
+            }
+            else
+            {
+                // Unexpected CellsException – rethrow to surface the error.
+                Console.WriteLine($"CellsException: {ex.Message}");
+                return;
             }
         }
         catch (Exception ex)
         {
-            // General exception handling for file I/O or other runtime errors
-            Console.WriteLine($"Runtime error: {ex.Message}");
+            // Any other exception (e.g., I/O errors).
+            Console.WriteLine($"Error: {ex.Message}");
+            return;
+        }
+
+        Console.WriteLine(isEncrypted
+            ? "The workbook loaded from the memory stream is encrypted."
+            : "The workbook loaded from the memory stream is not encrypted.");
+    }
+
+    // Reads a workbook file into a memory stream after verifying its existence.
+    static MemoryStream GetWorkbookMemoryStream()
+    {
+        const string filePath = "example.xlsx";
+
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return null;
+        }
+
+        try
+        {
+            byte[] data = File.ReadAllBytes(filePath);
+            return new MemoryStream(data);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to read file '{filePath}': {ex.Message}");
+            return null;
         }
     }
 }

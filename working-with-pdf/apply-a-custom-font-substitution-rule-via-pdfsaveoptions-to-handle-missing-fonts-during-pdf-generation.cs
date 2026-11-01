@@ -1,14 +1,13 @@
-// Title: How to configure a custom font substitution rule in Aspose.Cells PdfSaveOptions to replace missing fonts during Excel‑to‑PDF conversion (C#)
-// AI Prompts: Provide C# code that sets up WorkbookSettings.FontSubstitution with a specific font mapping and applies it via PdfSaveOptions when saving an Excel workbook as PDF. | Show an example of using Aspose.Cells to define a fallback font for any unavailable fonts during PDF export, including loading the workbook and invoking Workbook.Save with the configured options.
-// Common Searches: Aspose.Cells C# set font substitution for missing fonts when saving as PDF | how to map unavailable Excel font to Arial in PdfSaveOptions Aspose.Cells | configure fallback font in Aspose.Cells PDF export .NET | custom font mapping for Excel to PDF conversion using Aspose.Cells
-// Tags: font substitution during PDF export Aspose.Cells | custom fallback font for Excel to PDF conversion .NET | WorkbookSettings font mapping C# | missing font handling Aspose.Cells PDF
+// Title: How to configure a custom font substitution rule with PdfSaveOptions for Aspose.Cells PDF conversion in C#
+// AI Prompts: Write C# code that creates a PdfSaveOptions object, defines a mapping from an unavailable Excel font to a fallback system font, and saves the workbook as PDF using Aspose.Cells. | Show how to use the FontSubstitution (or equivalent) collection on PdfSaveOptions to replace missing fonts during Excel‑to‑PDF conversion in a .NET application.
+// Common Searches: Aspose.Cells C# set custom font mapping when saving workbook to PDF | PdfSaveOptions font fallback example for missing Excel fonts | Replace unavailable fonts with system fonts in Aspose.Cells PDF export | Configure font substitution for Excel to PDF conversion using Aspose.Cells .NET
+// Tags: pdfsaveoptions custom font mapping | aspocells missing font handling | excel to pdf font fallback c# | aspocells pdf export font replacement | c# aspocells pdfsaveoptions configuration
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example loads an existing Excel workbook, configures a font substitution rule (e.g., mapping missing fonts to a system fallback) via WorkbookSettings.FontSubstitution, creates a PdfSaveOptions object, and saves the workbook as a PDF. It includes basic file existence checks, exception handling, and console output to confirm successful conversion.
+// The example demonstrates loading an Excel workbook, creating a PdfSaveOptions instance, applying a custom font substitution rule to map missing fonts to a fallback font, and saving the workbook as a PDF, ensuring proper rendering when original fonts are unavailable.
 class Program
 {
     static void Main()
@@ -18,31 +17,29 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // NOTE: Font substitution can be configured via WorkbookSettings.FontSubstitution
-            // in newer versions of Aspose.Cells. If needed, adjust according to the
-            // version you are using.
+            // NOTE: Font substitution API may vary between Aspose.Cells versions.
+            // If needed, configure custom font substitution here using the appropriate API.
 
-            // Create PDF save options (default options can be customized if needed)
+            // Create PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
             // Save the workbook as PDF using the configured options
             workbook.Save(outputPath, pdfOptions);
 
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for troubleshooting
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

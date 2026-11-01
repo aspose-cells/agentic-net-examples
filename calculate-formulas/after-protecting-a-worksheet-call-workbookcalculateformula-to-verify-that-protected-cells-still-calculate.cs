@@ -1,43 +1,37 @@
-// Title: Calculate formulas on a password‑protected worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, assigns formulas to cells, protects the worksheet with a password, and then calls Workbook.CalculateFormula to compute the results. | Show how to verify a worksheet's protection status and still evaluate its formulas using Aspose.Cells in a .NET application.
-// Common Searches: Aspose.Cells C# calculate formulas after protecting a worksheet with a password | How to run Workbook.CalculateFormula on a protected sheet in .NET | C# example for protecting Excel sheet and still evaluating cell formulas using Aspose.Cells | Retrieve calculated values from a password‑protected worksheet with Aspose.Cells
-// Tags: protect worksheet password Aspose.Cells C# | Workbook.CalculateFormula on protected sheet | evaluate Excel formulas after sheet protection | Aspose.Cells worksheet protection example | C# calculate formulas in protected workbook
+// Title: Recalculate formulas on a protected worksheet and verify results using Aspose.Cells for .NET (C#)
+// Common Searches: how to recalculate Excel formulas after protecting a worksheet with Aspose.Cells C# | Aspose.Cells calculate formula on protected sheet example | verify formula value in protected cells using Workbook.CalculateFormula C# | protect worksheet and still evaluate formulas with Aspose.Cells .NET | C# Aspose.Cells recalculate formulas after sheet protection
+// Tags: protect worksheet calculate formulas Aspose.Cells | Workbook.CalculateFormula on protected sheet | C# evaluate formula in protected Excel worksheet | Aspose.Cells protected sheet formula recalculation | Excel file protection formula evaluation .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The sample creates a new workbook, sets values and formulas in cells, protects the first worksheet with a password, confirms the protection state, invokes Workbook.CalculateFormula to evaluate the formulas despite protection, prints the calculated results, and saves the file as ProtectedCalc.xlsx.
-class ProtectAndCalculateDemo
+// The sample creates a new Workbook, writes values to A1 and A2, sets a formula in A3, protects the first worksheet with all protection types, calls Workbook.CalculateFormula to recompute the formula, reads the result from the protected cell, prints it, and saves the file as ProtectedSheet.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook workbook = new Workbook();
+        var workbook = new Workbook();
 
-        // Access the first worksheet and its cells
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        // Get the first worksheet
+        var sheet = workbook.Worksheets[0];
 
-        // Set initial values and formulas
-        cells["A1"].PutValue(5);
-        cells["B1"].Formula = "=A1*2";
-        cells["C1"].Formula = "=B1+10";
+        // Populate cells with data and a formula
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["A3"].Formula = "=A1+A2";
 
-        // Protect the worksheet with a password
-        sheet.Protect(ProtectionType.All, "pwd123", null);
+        // Protect the worksheet (all protection types)
+        sheet.Protect(ProtectionType.All);
 
-        // Verify that the worksheet is protected
-        Console.WriteLine("Worksheet protected: " + sheet.IsProtected);
-
-        // Calculate formulas even though the sheet is protected
+        // Recalculate all formulas in the workbook
         workbook.CalculateFormula();
 
-        // Output the calculated results
-        Console.WriteLine("A1 value: " + cells["A1"].IntValue);
-        Console.WriteLine("B1 calculated: " + cells["B1"].IntValue);
-        Console.WriteLine("C1 calculated: " + cells["C1"].IntValue);
+        // Verify that the protected cell still calculates
+        var result = sheet.Cells["A3"].Value;
+        Console.WriteLine("Result of A3 (expected 30): " + result);
 
-        // Save the workbook (optional)
-        workbook.Save("ProtectedCalc.xlsx");
+        // Save the workbook
+        workbook.Save("ProtectedSheet.xlsx");
     }
 }

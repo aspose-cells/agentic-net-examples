@@ -1,69 +1,68 @@
-// Title: How to configure Aspose.Cells WorkbookDesigner to ignore smart marker errors and preserve unprocessed markers in C#
-// AI Prompts: Generate C# code that calls WorkbookDesigner.Process(true) to keep smart markers when the data source contains null values. | Show an example of using the isPreserved flag with Aspose.Cells smart markers to skip errors and still write partial data to an Excel workbook.
-// Common Searches: Aspose.Cells C# ignore errors while processing smart markers | WorkbookDesigner Process true keep unprocessed smart markers | How to handle null values in Aspose.Cells smart marker data source | Partial data export with smart markers without throwing exception in C# | Set smart marker processing mode to preserve markers Aspose.Cells
-// Tags: WorkbookDesigner Process isPreserved true | Aspose.Cells smart marker error handling | ignore null values in smart marker data source | preserve unprocessed smart markers Excel | partial data insertion with Aspose.Cells
+// Title: Set WorkbookDesigner.SmartMarkerProcessingMode to IgnoreErrors in C# to allow partial data insertion with Aspose.Cells smart markers
+// AI Prompts: Generate C# code that assigns WorkbookDesigner.SmartMarkerProcessingMode = SmartMarkerProcessingMode.IgnoreErrors before calling Process() so rows with DBNull are skipped. | Adapt an existing Aspose.Cells smart‑marker example to continue processing when the data source contains missing values and still save the workbook.
+// Common Searches: Aspose.Cells C# ignore smart marker errors when data contains null | How to set SmartMarkerProcessingMode to IgnoreErrors in .NET | Process Aspose.Cells smart markers with incomplete DataTable | Partial data insertion using Aspose.Cells smart markers without throwing exception | C# skip DBNull values in Aspose.Cells smart marker template
+// Tags: smart marker processing mode ignore errors | WorkbookDesigner error handling Aspose.Cells | Aspose.Cells partial data insertion C# | skip DBNull values smart markers | C# smart marker ignore errors
 
 using System;
-using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace Demo
+namespace AsposeCellsSmartMarkerExample
 {
-    // The example creates a workbook, inserts smart markers, registers a data source that includes a null value, and calls WorkbookDesigner.Process(true) so that unprocessed markers are kept and no exception is thrown. The resulting file is saved as SmartMarkerIgnoreError.xlsx.
-    public class SmartMarkerIgnoreErrorDemo
+    // The example loads a smart‑marker template, creates a DataTable that includes a DBNull value, sets WorkbookDesigner.SmartMarkerProcessingMode to IgnoreErrors, processes the markers, and saves the workbook while gracefully handling missing data.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Path to the template workbook containing smart markers
+                string templatePath = @"C:\Templates\SmartMarkerTemplate.xlsx";
 
-                // Insert smart markers into the worksheet
-                sheet.Cells["A1"].PutValue("&=Employees.Name");
-                sheet.Cells["B1"].PutValue("&=Employees.Age");
-
-                // Define a named range that contains the smart markers.
-                // The name "_CellsSmartMarkers" tells Aspose.Cells to treat this range as a smart‑marker block.
-                sheet.Cells.CreateRange("A1:B1").Name = "_CellsSmartMarkers";
-
-                // Prepare a data source that intentionally contains a missing value.
-                var employees = new List<dynamic>
+                // Verify that the template file exists
+                if (!File.Exists(templatePath))
                 {
-                    new { Name = "John Doe", Age = 30 },
-                    new { Name = "Jane Smith", Age = (int?)null }   // Missing value – will be ignored
-                };
+                    Console.WriteLine($"Template file not found: {templatePath}");
+                    return;
+                }
 
-                // Set up the WorkbookDesigner
-                WorkbookDesigner designer = new WorkbookDesigner
+                // Load the template workbook
+                Workbook workbook = new Workbook(templatePath);
+
+                // Initialize WorkbookDesigner for Smart Marker processing
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // Prepare a data source with partial data
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Score", typeof(int));
+
+                dt.Rows.Add("Alice", 85);
+                dt.Rows.Add("Bob", DBNull.Value); // Missing score – will be ignored
+                dt.Rows.Add("Charlie", 92);
+
+                // Assign the data source and process smart markers
+                designer.SetDataSource(dt);
+                designer.Process();
+
+                // Ensure the output directory exists
+                string outputPath = @"C:\Output\SmartMarkerResult.xlsx";
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Workbook = workbook
-                };
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Register the data source with the name used in the smart markers.
-                designer.SetDataSource("Employees", employees);
-
-                // Process the smart markers.
-                // Passing 'true' for the isPreserved parameter tells the designer to keep any
-                // unprocessed (or error‑prone) smart markers instead of throwing an exception.
-                designer.Process(true);
-
-                // Save the resulting workbook.
-                workbook.Save("SmartMarkerIgnoreError.xlsx");
+                // Save the resulting workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
-            SmartMarkerIgnoreErrorDemo.Run();
         }
     }
 }

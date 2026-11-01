@@ -1,40 +1,58 @@
-// Title: Add a bold, red RichTextPortion to a specific substring in an Excel cell using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, writes "Hello Aspose.Cells!" to cell A1, and makes the first five characters bold and red using Aspose.Cells. | Write a reusable method that takes a cell reference, start index, length, and applies bold formatting with a custom color to that text segment via the Aspose.Cells API. | Show how to change the applied bold formatting to italic for a different character range in the same cell using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to format part of a cell's text as bold and colored | C# code to apply character-level formatting in Excel with Aspose.Cells | Set font style for a substring in an Excel cell using Aspose.Cells .NET API | Apply rich text formatting to specific characters in a worksheet cell Aspose.Cells
-// Tags: apply bold rich text portion Aspose.Cells C# | character-level font color Aspose.Cells .NET | partial text formatting Excel workbook Aspose.Cells | rich text substring styling Excel .NET | set characters formatting Aspose.Cells API
+// Title: Add a bold RichTextPortion to an existing cell using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells add bold text to part of a cell | How to use Characters method for partial formatting in Aspose.Cells | Append rich text with bold formatting to an Excel cell using Aspose.Cells .NET | Set mixed formatting (plain and bold) in a single cell with Aspose.Cells C# | Create a workbook and apply bold style to a substring of cell A1 in Aspose.Cells
+// Tags: add bold rich text portion Aspose.Cells | partial cell formatting using Characters method | mixed text styling Excel cell Aspose.Cells C# | append styled substring to worksheet cell | save workbook with formatted text Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
-// Demonstrates creating a workbook, inserting plain text into cell A1, and using the Characters method to apply bold and red formatting to a defined substring, then saving the file as BoldRichTextPortion.xlsx.
-class AddBoldRichTextPortion
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, writes plain text to cell A1, appends a bold segment, and uses the Characters(startIndex, length).Font.IsBold property to apply bold formatting only to the new portion before saving the file.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+                // Target cell that currently contains plain text
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("Plain text "); // set initial plain text
 
-        // Target cell
-        Cell cell = worksheet.Cells["A1"];
+                // Retrieve the existing plain text
+                string existingText = cell.StringValue;
 
-        // Set plain text value
-        cell.PutValue("Hello Aspose.Cells!");
+                // Append bold portion text
+                string boldText = "Bold portion";
+                cell.PutValue(existingText + boldText);
 
-        // Define the portion to make bold (e.g., "Hello")
-        int startIndex = 0;               // start at first character
-        int length = 5;                   // length of the portion
+                // Apply bold formatting to the newly added portion
+                int startIndex = existingText.Length;
+                // Use the Characters method (start index, length) to get the range
+                cell.Characters(startIndex, boldText.Length).Font.IsBold = true;
 
-        // Apply bold formatting to the specified portion
-        cell.Characters(startIndex, length).Font.IsBold = true;
+                // Define output file path
+                string outputPath = "Output.xlsx";
 
-        // Optionally, set a different color for visibility
-        cell.Characters(startIndex, length).Font.Color = Color.Red;
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Save the workbook
-        workbook.Save("BoldRichTextPortion.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

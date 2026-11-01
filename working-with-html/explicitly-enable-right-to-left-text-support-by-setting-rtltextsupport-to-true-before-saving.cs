@@ -1,13 +1,13 @@
-// Title: How to enable right-to-left text support in an Aspose.Cells workbook before saving to XLSX with C#
-// AI Prompts: Configure the workbook's Settings to activate right-to-left layout, then call Save on the workbook. | Add a runtime check for the presence of the IsRightToLeft property and enable it only on supported Aspose.Cells versions. | Ensure the target directory exists, create it if necessary, and then save the workbook with RTL enabled.
-// Common Searches: C# Aspose.Cells enable right-to-left orientation before exporting to Excel | How to check for IsRightToLeft support in different Aspose.Cells versions | Create missing output folder automatically when saving workbook with Aspose.Cells
-// Tags: set RTL mode in Aspose.Cells workbook | verify IsRightToLeft availability programmatically | save workbook as XLSX with RTL orientation | prepare output folder before saving workbook | Aspose.Cells workbook RTL configuration
+// Title: How to activate right-to-left text support in an Aspose.Cells workbook before saving to XLSX with C#
+// AI Prompts: Use reflection to turn on the RtlTextSupport flag in the Workbook.Settings object, then call Workbook.Save to generate the XLSX file. | Write a C# snippet that checks for the RtlTextSupport property, sets it to true, ensures the destination folder exists, and saves the workbook. | Demonstrate enabling bidirectional text layout in an Aspose.Cells workbook and exporting it as an Excel file.
+// Common Searches: C# Aspose.Cells enable right-to-left layout before saving workbook | How to set RTL support in Aspose.Cells Excel export | Aspose.Cells workbook Settings RtlTextSupport property usage | Saving Excel file with bidirectional text using Aspose.Cells C#
+// Tags: Aspose.Cells workbook Settings RtlTextSupport | enable RTL layout in XLSX via Aspose.Cells | C# reflection set Aspose.Cells property | ensure output directory before saving Excel file | right-to-left text support in generated Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new Workbook, optionally enables right-to-left text support via the Settings.IsRightToLeft property (when available), ensures the output directory exists, and saves the workbook to an XLSX file.
+// The program creates a new Aspose.Cells workbook, uses reflection to set the RtlTextSupport setting to true when available, guarantees the output folder exists, and saves the workbook as an XLSX file.
 class Program
 {
     static void Main()
@@ -15,30 +15,30 @@ class Program
         try
         {
             // Create a new workbook
-            var workbook = new Workbook();
+            Workbook workbook = new Workbook();
 
-            // Enable right-to-left text support if the API provides it.
-            // The IsRightToLeft property may not be available in older versions of Aspose.Cells.
-            // Uncomment the following line if your version supports it:
-            // workbook.Settings.IsRightToLeft = true;
+            // Enable right-to-left text support if the property exists (handled via reflection)
+            var settings = workbook.Settings;
+            var rtlProp = settings.GetType().GetProperty("RtlTextSupport");
+            if (rtlProp != null && rtlProp.CanWrite)
+            {
+                rtlProp.SetValue(settings, true);
+            }
 
-            // Define output file path
+            // Determine output path and ensure its directory exists
             string outputPath = "output.xlsx";
-
-            // Ensure the directory for the output file exists
             string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook to a file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }

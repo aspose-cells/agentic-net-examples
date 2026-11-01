@@ -1,53 +1,54 @@
-// Title: Insert a PNG picture into cell A6 and freeze the rows above it with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to place a PNG image at cell A6 and then freezes the first five rows so the picture stays visible while scrolling. | Create a .NET example that adds a picture to a worksheet, anchors it by freezing the rows above the image, and saves the workbook. | Show how to verify the image file exists, insert it, and apply FreezePanes in Aspose.Cells C#.
-// Common Searches: asp.net insert PNG into specific cell and freeze rows above with Aspose.Cells | C# Aspose.Cells freeze panes after adding a picture to Excel worksheet | keep inserted image fixed while scrolling in Excel using Aspose.Cells .NET | example code to anchor a picture by freezing top rows in Aspose.Cells | how to use FreezePanes to lock rows above an inserted image in C#
-// Tags: insert picture into worksheet Aspose.Cells | freeze top rows using FreezePanes Aspose.Cells | anchor PNG image in Excel .NET | Aspose.Cells picture placement at cell A6 | freeze rows above inserted image C# | save workbook with image Aspose.Cells
+// Title: Insert a PNG image into an Excel worksheet and freeze rows above it using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a PNG picture to cell A1 of a worksheet and then freezes every row above the picture using Aspose.Cells. | Create a method that reads a picture’s UpperLeftRow and applies FreezePanes so the image stays visible while scrolling.
+// Common Searches: Aspose.Cells C# insert image at A1 and freeze rows above picture | how to keep an inserted picture anchored while scrolling in Excel with Aspose.Cells | programmatically apply FreezePanes based on picture position in a .NET workbook | freeze rows above a picture using Aspose.Cells FreezePanes method
+// Tags: add PNG picture to worksheet Aspose.Cells | apply FreezePanes based on picture UpperLeftRow C# | anchor image with frozen rows Aspose.Cells | picture positioning and row freezing .NET | insert image and lock rows in Excel using Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example creates a new workbook, inserts a PNG picture at cell A6, freezes the first five rows so the image remains visible while scrolling, and saves the file as ImageWithFrozenRows.xlsx.
-class InsertImageAndFreezeRows
+// The example creates a new workbook, inserts a PNG image at cell A1, determines the picture's UpperLeftRow, freezes all rows above that row with FreezePanes, and saves the file as output.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Path to the image file to be inserted
-            string imagePath = @"C:\Images\SampleImage.png";
+            string imagePath = "sample.png";
 
-            // Verify that the image file exists
+            // Ensure the image file exists before attempting to insert
             if (!File.Exists(imagePath))
-                throw new FileNotFoundException("Image file not found.", imagePath);
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
-            // Insert the image at cell A6 (row index 5, column index 0)
-            int pictureRow = 5;      // zero‑based row index (A6)
-            int pictureColumn = 0;   // zero‑based column index (A)
-            sheet.Pictures.Add(pictureRow, pictureColumn, imagePath);
+            // Insert the image at cell A1 (row 0, column 0)
+            int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
+            Picture picture = sheet.Pictures[pictureIndex];
 
-            // Freeze the first 5 rows (rows 0‑4) so the image stays anchored visually.
-            // Use the overload that specifies the number of rows and columns to freeze.
-            sheet.FreezePanes(pictureRow, 0, pictureRow, 0);
+            // Determine the row index where the picture starts (UpperLeftRow)
+            // Freeze all rows above this row so the image stays anchored visually
+            int freezeRow = picture.UpperLeftRow; // rows with index < freezeRow will be frozen
 
-            // Ensure the output directory exists
-            string outputPath = @"C:\Output\ImageWithFrozenRows.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+            // Apply freeze panes: freeze rows above freezeRow, no columns are frozen
+            // Parameters: (freezeRows, freezeColumns, topRow, leftColumn)
+            sheet.FreezePanes(freezeRow, 0, freezeRow, 0);
 
             // Save the workbook to a file
-            workbook.Save(outputPath);
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

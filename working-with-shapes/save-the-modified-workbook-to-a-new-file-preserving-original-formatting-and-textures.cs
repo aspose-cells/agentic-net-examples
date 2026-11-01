@@ -1,13 +1,23 @@
-// Title: Save a modified Excel workbook to a new .xlsx file while preserving all formatting, shapes, and textures using Aspose.Cells for .NET
-// AI Prompts: Write C# that opens an .xlsx file with Aspose.Cells, changes cell data, and writes the result to a different filename without altering any existing styles, drawings, or texture fills. | Show how to duplicate a workbook, apply modifications, and persist the duplicate while all visual components stay unchanged. | Demonstrate using the Aspose.Cells Save method to export a workbook to a new location, ensuring that all formatting and shape objects are retained.
-// Common Searches: how to keep cell styles and shape formatting when saving an edited Excel file with Aspose.Cells .NET | Aspose.Cells preserve texture fills after modifying workbook and saving as new file | C# copy existing Excel workbook and retain all visual elements on save | saving a workbook to a new .xlsx using Aspose.Cells without losing formatting or drawings
-// Tags: Aspose.Cells save preserving formatting | retain shapes on workbook export .NET | maintain texture fills during Excel save | clone workbook keep visual elements Aspose.Cells | save modified Excel file without style loss
+// Title: Save a modified workbook to a new XLSX file while preserving all original formatting, styles, and textures with Aspose.Cells (C#)
+// AI Prompts: Create C# code that loads an existing .xlsx, applies optional changes, and writes it to a different file using Aspose.Cells, ensuring that cell styles, themes, and embedded images remain unchanged. | Write a function that copies an Excel workbook to a new location with Aspose.Cells, preserving formatting, conditional formatting, and texture fills.
+// Common Searches: asp.net c# aspose.cells save workbook to new file keep original cell styles | preserve background textures when saving modified Excel with Aspose.Cells | copy existing .xlsx and retain conditional formatting using Aspose.Cells C# | how to save workbook without losing embedded pictures aspose.cells | Aspose.Cells SaveFormat.Xlsx keep all formatting and images
+// Tags: save workbook preserving formatting Aspose.Cells | copy Excel file retain cell textures C# | Aspose.Cells SaveFormat.Xlsx keep styles | preserve embedded images when saving workbook | modify and save workbook without losing conditional formatting
 
-// Load the existing workbook (preserves all original formatting and textures)
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("OriginalWorkbook.xlsx");
+using Aspose.Cells;
 
-// Perform any required modifications here
-// Example: workbook.Worksheets[0].Cells["A1"].PutValue("Modified");
+// Loads an existing .xlsx with Aspose.Cells, optionally updates cells, and saves it as a new .xlsx file while preserving all formatting, styles, textures, and embedded images.
+class Program
+{
+    static void Main()
+    {
+        // Load the original workbook (all formatting and textures are retained on load)
+        Workbook workbook = new Workbook("original.xlsx");
 
-// Save the workbook to a new file while keeping the original formatting and textures intact
-workbook.Save("ModifiedWorkbook.xlsx", Aspose.Cells.SaveFormat.Xlsx);
+        // ---- Place any modifications here ----
+        // Example: workbook.Worksheets[0].Cells["A1"].PutValue("Updated value");
+        // -------------------------------------
+
+        // Save the workbook to a new file, preserving the original formatting and textures
+        workbook.Save("modified.xlsx", SaveFormat.Xlsx);
+    }
+}

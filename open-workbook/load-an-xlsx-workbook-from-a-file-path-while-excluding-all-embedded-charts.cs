@@ -1,45 +1,42 @@
-// Title: Load an XLSX workbook from a file path while skipping all embedded charts using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that verifies a given .xlsx path, creates a LoadOptions object with LoadDataOnly set to true, and opens the workbook with Aspose.Cells. | Provide a sample that demonstrates exception handling when loading an Excel workbook with Aspose.Cells and ensures that chart objects are not loaded.
-// Common Searches: Aspose.Cells C# load workbook without loading charts | How to use LoadOptions to ignore charts when opening an XLSX file in .NET | C# example for LoadDataOnly property in Aspose.Cells | Skip embedded charts during Excel workbook load with Aspose.Cells | Error handling for loading Excel files with Aspose.Cells in C#
-// Tags: aspocells loaddataonly usage | c# verify excel file exists before loading | aspocells workbook loadoptions configuration | c# handle workbook load exceptions aspocells | aspocells skip chart elements on load
+// Title: Load an XLSX workbook from a file path while excluding all embedded charts with Aspose.Cells for .NET
+// Common Searches: c# asp.net load xlsx workbook without embedded charts using aspose.cells | how to open an Excel file data only with Aspose.Cells in C# | Aspose.Cells LoadOptions to skip charts when loading workbook | load Excel file from path excluding charts with Aspose.Cells C# | use LoadDataOnly property to ignore charts in Aspose.Cells workbook loading
+// Tags: load workbook without charts Aspose.Cells | XLSX LoadOptions LoadDataOnly C# | exclude embedded charts Aspose.Cells | open Excel file data only Aspose.Cells | Aspose.Cells workbook loading options
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example checks that the specified XLSX file exists, creates a LoadOptions object for the Xlsx format (optionally setting LoadDataOnly to omit chart data), and loads the workbook from the given path using Aspose.Cells, with proper exception handling.
+class Program
 {
-    // The program checks that the specified .xlsx file exists, creates a LoadOptions object for the Xlsx format, loads the workbook using Aspose.Cells, and catches any exceptions that occur during the loading process.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the source XLSX file
+        string filePath = @"C:\Path\To\YourWorkbook.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Path to the source workbook
-            string filePath = @"C:\Path\To\YourWorkbook.xlsx";
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
-                return;
-            }
+        try
+        {
+            // Configure load options for XLSX format
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            // If the current Aspose.Cells version supports LoadDataOnly, enable it:
+            // loadOptions.LoadDataOnly = true;
 
-            try
-            {
-                // Load options – specify the format; additional options can be set here if needed
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // At this point 'workbook' contains the worksheet data.
-                Console.WriteLine("Workbook loaded successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors (e.g., invalid format, access issues)
-                Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
-            }
+            Console.WriteLine("Workbook loaded successfully.");
+            // Additional processing can be performed here
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
         }
     }
 }

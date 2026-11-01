@@ -1,21 +1,20 @@
-// Title: Unlock every shape in an Excel worksheet using Aspose.Cells for .NET by iterating the ShapeCollection
-// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, loops through all shapes on a worksheet, sets each Shape.IsLocked to false, and saves the updated file. | Show a step‑by‑step example of removing the locked flag from every shape on a specific worksheet using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# unlock all shapes in a worksheet | remove shape protection from an Excel file using Aspose.Cells .NET | iterate through ShapeCollection to set IsLocked false in Aspose.Cells | how to programmatically unlock shapes in an existing Excel workbook with C# | Aspose.Cells example for clearing shape locked property
-// Tags: unlock worksheet shapes Aspose.Cells | iterate ShapeCollection C# | clear Shape.IsLocked property | modify Excel shapes programmatically | save workbook after shape changes Aspose.Cells
+// Title: How to unlock every shape on an Excel worksheet using Aspose.Cells for .NET by iterating the Shape collection
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, loops through worksheet.Shapes, sets each shape's IsLocked property to false, and saves the modified file. | Update an existing Aspose.Cells .NET project to remove the locked flag from all shapes on a specific worksheet without altering other worksheet content. | Create a console utility that accepts input and output Excel file paths, unlocks all shapes on the first sheet using Aspose.Cells, and gracefully handles missing file errors.
+// Common Searches: Aspose.Cells C# unlock all shapes in a worksheet | remove shape protection from Excel file using Aspose.Cells .NET | iterate through ShapeCollection to set IsLocked false Aspose.Cells | batch unlock worksheet shapes programmatically in C# | how to disable shape locking in Aspose.Cells workbook
+// Tags: unlock worksheet shapes Aspose.Cells | iterate ShapeCollection C# | set IsLocked false Excel shape | Aspose.Cells shape protection removal | batch unlock shapes workbook
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// The example loads an existing workbook, iterates over every shape in the first worksheet, sets each shape's IsLocked property to false, and saves the modified workbook to a new file.
-class UnlockShapesExample
+// The example loads an Excel workbook with Aspose.Cells, accesses the first worksheet, iterates over its Shapes collection, clears the IsLocked flag for each shape, and saves the result to a new file while handling missing input files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Paths for input and output workbooks
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
@@ -26,24 +25,17 @@ class UnlockShapesExample
 
         try
         {
-            // Load the existing workbook
+            // Load the workbook from the input file
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet (or specify the desired worksheet name/index)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (or adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Iterate through all shapes in the worksheet and unlock them
-            foreach (Shape shape in sheet.Shapes)
+            // Unlock all shapes on the worksheet
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Use the correct property to unlock the shape
+                // Correct property to unlock a shape
                 shape.IsLocked = false;
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
             }
 
             // Save the modified workbook
@@ -52,6 +44,7 @@ class UnlockShapesExample
         }
         catch (Exception ex)
         {
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

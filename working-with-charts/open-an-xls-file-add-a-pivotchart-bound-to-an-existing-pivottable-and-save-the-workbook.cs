@@ -1,65 +1,66 @@
-// Title: Create and bind a PivotChart to an existing XLS workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xls file with Aspose.Cells, checks for a PivotTable, adds a column PivotChart linked to that PivotTable, sets a custom title, and saves the workbook. | Generate a .NET snippet that loads a legacy Excel file, creates a chart range (rows 10‑20, columns A‑H), binds the chart to the first PivotTable, and exports the result to a new .xls file. | Provide a C# example that validates the presence of a PivotTable, adds a Chart object of type Column, connects its series to the PivotTable name, and persists the changes using Aspose.Cells.
-// Common Searches: Aspose.Cells C# add PivotChart to existing .xls workbook | How to bind a chart to a PivotTable in a legacy Excel file using Aspose.Cells | Create a column chart from the first PivotTable in an .xls file with Aspose.Cells .NET | C# example for verifying PivotTable before adding chart with Aspose.Cells | Save modified workbook after adding PivotChart using Aspose.Cells
-// Tags: create column pivotchart in legacy xls via Aspose.Cells | associate chart series with pivot table using Aspose.Cells | load existing xls workbook and add chart C# | Aspose.Cells example for chart‑pivot binding | modify worksheet to include pivotchart .NET
+// Title: Create a PivotChart linked to an existing PivotTable in an XLS workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xls file with Aspose.Cells, locates the first PivotTable, adds a column PivotChart bound to that PivotTable, sets a chart title, and saves the workbook. | Show how to use Aspose.Cells Chart.NSeries.Add method to bind a chart series to a PivotTable name and configure the chart type in C#. | Demonstrate error handling in C# for scenarios where the input .xls file is missing or the worksheet contains no PivotTables before creating a PivotChart with Aspose.Cells.
+// Common Searches: aspnet how to add a pivotchart to an existing xls file using Aspose.Cells | c# bind chart series to a pivot table name with Aspose.Cells | create column chart from pivot table in an xls workbook Aspose.Cells example | asp.net check for pivot tables before adding chart with Aspose.Cells
+// Tags: add pivotchart to xls workbook Aspose.Cells | bind chart series to pivot table Aspose.Cells C# | column pivotchart creation Aspose.Cells | load and save xls with chart Aspose.Cells | missing pivot table error handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Charts;
 
-// The C# program loads 'input.xls', ensures at least one PivotTable exists, adds a column PivotChart positioned between rows 10‑20 and columns A‑H, binds the chart series to the first PivotTable, sets a visible title, and saves the updated workbook as 'output.xls', with error handling for missing files and exceptions.
-class PivotChartExample
+// The example loads an existing XLS workbook, retrieves the first PivotTable on the first worksheet, adds a column PivotChart bound to that PivotTable, sets a chart title, and saves the modified workbook as a new XLS file, including basic error handling for missing files or PivotTables.
+class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xls";
-            string outputPath = "output.xls";
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xls";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the existing XLS workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure a PivotTable exists
+            // Retrieve the first PivotTable on the worksheet
+            // (Assumes at least one PivotTable exists)
             if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("No PivotTable found in the worksheet.");
+                Console.WriteLine("No PivotTable found on the first worksheet.");
                 return;
             }
-
-            // Retrieve the first PivotTable
             PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Add a new chart (type, upper-left row/col, lower-right row/col)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 10, 0, 20, 7);
+            // Add a new chart to the worksheet
+            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = worksheet.Charts[chartIndex];
 
+            // Set a title for the chart
+            chart.Title.Text = "Pivot Chart";
+
             // Bind the chart to the PivotTable
+            // The first argument is the name of the PivotTable, the second indicates that the series are in columns
             chart.NSeries.Add(pivotTable.Name, true);
 
-            // Set chart title
-            chart.Title.Text = "PivotChart based on " + pivotTable.Name;
-            chart.Title.IsVisible = true;
-
-            // Save the modified workbook
+            // Save the workbook with the new PivotChart
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

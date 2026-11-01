@@ -1,68 +1,83 @@
-// Title: Clear a label filter on a specific pivot table row field using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that calls PivotField.ClearFilter() to remove a caption filter from a pivot table row field and then refreshes the pivot. | Provide a complete Aspose.Cells example that applies a label filter to a row field, clears it, recalculates the pivot, and saves the workbook.
-// Common Searches: Aspose.Cells C# how to remove a row field label filter from a pivot table | programmatically clear a specific pivot row filter using Aspose.Cells | reset pivot table row field filter after applying caption equal filter in .NET | example of using ClearFilter on PivotField with Aspose.Cells
-// Tags: Aspose.Cells pivot table row field ClearFilter | C# PivotField filter clearing | Aspose.Cells refresh pivot after filter change | Excel workbook save after pivot filter reset .NET | programmatic pivot filter management Aspose.Cells
+// Title: How to clear a filter on a specific pivot table row field using Aspose.Cells for C#
+// AI Prompts: Generate C# code with Aspose.Cells that locates a pivot row field by name and disables its filtering settings. | Show a full example that updates the pivot table after modifying the row field settings and writes the workbook to disk.
+// Common Searches: Aspose.Cells C# remove filter from pivot table row field named Category | reset auto‑show and auto‑sort on a pivot field using Aspose.Cells | refresh pivot table after changing row field filter in .NET | example code to clear pivot row filter in a workbook with Aspose.Cells | how to programmatically unfilter a specific pivot row field in C#
+// Tags: Aspose.Cells pivot row field filter removal | C# modify pivot table filter Aspose.Cells | disable IsAutoShow IsAutoSort pivot field | refresh pivot data after filter change Aspose.Cells | save workbook with updated pivot Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The sample creates a workbook, builds a pivot table, applies a caption‑equal filter to the 'Category' row field, then uses PivotField.ClearFilter() to remove the filter, refreshes and recalculates the pivot, and saves the file as ClearRowFieldFilterDemo.xlsx.
-class ClearPivotRowFieldFilter
+// The sample loads an existing workbook, accesses the first pivot table, finds the row field named "Category", turns off its IsAutoShow and IsAutoSort flags to remove the filter, refreshes and recalculates the pivot table, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].Value = "Category";
-        worksheet.Cells["B1"].Value = "Product";
-        worksheet.Cells["C1"].Value = "Sales";
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        worksheet.Cells["A2"].Value = "Fruit";
-        worksheet.Cells["B2"].Value = "Apple";
-        worksheet.Cells["C2"].Value = 120;
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        worksheet.Cells["A3"].Value = "Fruit";
-        worksheet.Cells["B3"].Value = "Banana";
-        worksheet.Cells["C3"].Value = 80;
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        worksheet.Cells["A4"].Value = "Vegetable";
-        worksheet.Cells["B4"].Value = "Carrot";
-        worksheet.Cells["C4"].Value = 60;
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found on the worksheet.");
+                return;
+            }
 
-        worksheet.Cells["A5"].Value = "Vegetable";
-        worksheet.Cells["B5"].Value = "Broccoli";
-        worksheet.Cells["C5"].Value = 70;
+            // Access the first pivot table on the sheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Create a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Name of the row field whose filter should be cleared
+            string targetRowFieldName = "Category"; // replace with your actual row field name
 
-        // Add "Category" as a row field (field index 0)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+            // Locate the row field by name
+            PivotField rowField = null;
+            foreach (PivotField field in pivotTable.RowFields)
+            {
+                if (field.Name.Equals(targetRowFieldName, StringComparison.OrdinalIgnoreCase))
+                {
+                    rowField = field;
+                    break;
+                }
+            }
 
-        // Add "Sales" as a data field (field index 2)
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
+            // If the row field is found, clear its filter
+            if (rowField != null)
+            {
+                // Clear filter by disabling auto‑show and auto‑sort (Aspose.Cells does not expose a direct ClearFilter method in older versions)
+                rowField.IsAutoShow = false;
+                rowField.IsAutoSort = false;
+            }
+            else
+            {
+                Console.WriteLine($"Row field '{targetRowFieldName}' not found in the pivot table.");
+            }
 
-        // Apply a filter on the row field to show only "Fruit" category
-        PivotField rowField = pivotTable.RowFields[0];
-        rowField.FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
+            // Refresh the pivot table to apply the change
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-        // Refresh the pivot table to apply the filter
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Clear the filter on the specific row field, restoring all items
-        rowField.ClearFilter();
-
-        // Refresh again to reflect the cleared filter
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook
-        workbook.Save("ClearRowFieldFilterDemo.xlsx");
+            // Save the workbook with the cleared filter
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,58 +1,53 @@
-// Title: Export an Aspose.Cells workbook to HTML with a relative CSS folder created automatically in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to save a workbook as an HTML file, generates an external stylesheet folder beside the HTML file, and configures HtmlSaveOptions to reference those stylesheets. | Generate a C# example that verifies the destination path, creates a CSS folder if missing, and exports only the active worksheet to HTML with Aspose.Cells.
-// Common Searches: how to generate HTML from Aspose.Cells workbook with external CSS folder in C# | c# Aspose.Cells save workbook as html and automatically create a css subfolder | Aspose.Cells HtmlSaveOptions export only the active sheet and avoid base64 images | programmatically prepare output folder and css subfolder before exporting to HTML using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions HTML export settings | C# generate CSS directory for Aspose.Cells HTML export | save workbook as HTML without base64 images Aspose.Cells | ensure target directory exists before workbook.Save C# | export only selected worksheet to HTML Aspose.Cells
+// Title: Export an Aspose.Cells workbook to HTML and automatically create a relative CSS folder using C#
+// AI Prompts: Generate C# code that saves a workbook with Aspose.Cells as an HTML file and creates a "css" subfolder next to the HTML file for external style sheets. | Show how to configure HtmlSaveOptions for Aspose.Cells HTML export while ensuring the required CSS directory is created relative to the output path. | Adapt the example to load an existing .xlsx workbook before exporting it to HTML and preparing a custom CSS folder beside the generated HTML file.
+// Common Searches: how to save an Aspose.Cells workbook as HTML and generate a css folder in C# | Aspose.Cells create external CSS directory when exporting to HTML using .NET | C# HtmlSaveOptions to export workbook to HTML with relative stylesheet folder | Aspose.Cells HTML export with custom CSS path example | automatically create assets folder for HTML output from Aspose.Cells workbook
+// Tags: Aspose.Cells HTML export with CSS assets directory | C# HtmlSaveOptions external stylesheet path | create CSS assets directory for Aspose.Cells HTML output | relative CSS assets path for workbook HTML export | Aspose.Cells generate css assets folder
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example builds a workbook, ensures the HTML output directory and a "css" subfolder exist, configures HtmlSaveOptions to export only the active worksheet without embedding images as Base64, and saves the workbook as an HTML file.
-class Program
+// The sample creates or loads a workbook, populates data, defines an HTML output path, computes a "css" subfolder path relative to that HTML file, ensures the folder exists, configures HtmlSaveOptions, and saves the workbook as HTML (embedding CSS by default). It logs the locations of the generated HTML file and the CSS folder, handling any exceptions that may occur.
+class ExportToHtmlWithCustomCss
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // creates a new workbook
+
+            // Add sample data to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "SampleData";
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Oranges");
-            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Score");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(85);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(92);
 
-            // Define the output HTML file path
-            string outputHtmlPath = "output/report.html";
+            // Define output HTML file path
+            string outputHtmlPath = Path.Combine(Environment.CurrentDirectory ?? string.Empty, "Report.html");
 
-            // Ensure the output directory exists
-            string outputDirectory = Path.GetDirectoryName(outputHtmlPath);
-            if (string.IsNullOrEmpty(outputDirectory))
-                outputDirectory = Directory.GetCurrentDirectory();
-            Directory.CreateDirectory(outputDirectory);
+            // Determine the CSS folder path relative to the HTML file
+            string cssFolderRelative = "css"; // folder name relative to HTML file
+            string cssFolderPath = Path.Combine(Path.GetDirectoryName(outputHtmlPath) ?? string.Empty, cssFolderRelative);
 
-            // Define the CSS folder relative to the HTML file
-            string cssFolderRelative = "css";
-            string cssFolderPath = Path.Combine(outputDirectory, cssFolderRelative);
-            Directory.CreateDirectory(cssFolderPath); // Ensure CSS folder exists
+            // Ensure the CSS folder exists
+            Directory.CreateDirectory(cssFolderPath);
 
-            // Configure HTML save options (default internal CSS)
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
-            {
-                ExportActiveWorksheetOnly = true,
-                ExportImagesAsBase64 = false
-                // External CSS options are omitted because they are not available in the current API version
-            };
+            // Configure HTML save options (default embeds CSS; external CSS options are not available in this version)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Save the workbook as HTML
+            // Save the workbook as HTML; the CSS will be embedded by default
             workbook.Save(outputHtmlPath, saveOptions);
+
+            Console.WriteLine($"Workbook exported to HTML at: {outputHtmlPath}");
+            Console.WriteLine($"CSS folder (created for potential external files) at: {cssFolderPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,61 +1,56 @@
-// Title: Create a rectangle shape linked to a cell with a nested SUM‑IF formula and verify the displayed value using Aspose.Cells for .NET (C#)
-// AI Prompts: Add a rectangle shape to a worksheet, set its Text property to "=B2", call workbook.CalculateFormula(), then read shape.Text and compare it to sheet.Cells["B2"].Value to confirm they are identical. | Populate cells A1‑A3, assign a nested SUM and IF formula to B2, link a shape’s text to that cell, force formula evaluation, and output a message indicating whether the shape reflects the final calculated result.
-// Common Searches: Aspose.Cells C# link rectangle shape text to a cell formula | display calculated cell value inside a shape using Aspose.Cells | verify shape text matches cell result after CalculateFormula in .NET | C# example adding shape linked to cell with SUM and IF formula Aspose.Cells
-// Tags: add rectangle shape linked to cell formula Aspose.Cells | nested SUM IF formula evaluation Aspose.Cells | shape text reflects cell value after CalculateFormula | C# workbook calculation before reading shape text | verify shape displays evaluated cell result Aspose.Cells
+// Title: Create a rectangle shape, bind its text to a cell with a SUM(A1:A3) formula, and verify the displayed value using Aspose.Cells for .NET
+// AI Prompts: Add a rectangle shape to a worksheet, set its Text property to "=B1" where B1 contains a SUM(A1:A3) formula, recalculate the workbook, and print both the cell and shape values. | Link a shape's text to a cell that holds a nested formula, invoke Workbook.CalculateFormula, then compare shape.Text with the cell's evaluated result in C# with Aspose.Cells.
+// Common Searches: Aspose.Cells how to bind shape text to a cell formula in C# | C# Aspose.Cells display result of SUM formula inside a shape | verify that a linked shape shows the evaluated value of a cell in Aspose.Cells | link rectangle shape to cell B1 containing SUM(A1:A3) using Aspose.Cells for .NET
+// Tags: rectangle shape linked to cell formula Aspose.Cells | shape text reference to worksheet cell C# | recalculate formulas before accessing shape text Aspose.Cells | display SUM(A1:A3) result inside shape .NET | validate shape text matches evaluated cell value
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, fills cells A1‑A3, sets a nested SUM/IF formula in B2, adds a rectangle shape whose Text is "=B2", forces formula calculation, then compares the shape's displayed text with the evaluated cell value and saves the file.
-class Program
+// The example creates a workbook, fills A1‑A3 with numbers, sets a SUM(A1:A3) formula in B1, adds a rectangle shape, links the shape's text to B1 using "=B1", calculates all formulas, retrieves and prints the evaluated cell value and the shape's displayed text, checks that they match, and saves the file as ShapeLinkedToFormula.xlsx.
+class ShapeLinkExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells used in the nested formula
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["A3"].PutValue(15);
+            // Populate cells A1:A3 with numeric values
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
 
-            // Cell B2 contains a nested formula: sum of A1:A3 plus conditional double of A1
-            sheet.Cells["B2"].Formula = "=SUM(A1:A3) + IF(A1>0, A1*2, 0)";
+            // Add a nested formula in B1: SUM of A1:A3
+            sheet.Cells["B1"].Formula = "SUM(A1:A3)";
 
-            // Add a rectangle shape and link its text to cell B2
-            // Parameters: type, upper left row, upper left column, top, left, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 1, 0, 0, 100, 30);
-            shape.Text = "=B2";
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 5, 0, 0, 100, 200);
 
-            // Force calculation of all formulas
+            // Link the shape's text to cell B1 using a formula reference
+            shape.Text = "=B1";
+
+            // Calculate all formulas so that the shape can reflect the evaluated result
             workbook.CalculateFormula();
 
             // Retrieve the evaluated value from the cell
-            var cellValue = sheet.Cells["B2"].Value;
+            string cellResult = sheet.Cells["B1"].StringValue;
 
-            // Retrieve the displayed text from the shape (will be the evaluated value after calculation)
-            var shapeText = shape.Text;
+            // Retrieve the text displayed by the shape (should be the same as cellResult)
+            string shapeResult = shape.Text;
 
-            // Output values for verification
-            Console.WriteLine($"Cell B2 value: {cellValue}");
-            Console.WriteLine($"Shape text: {shapeText}");
+            // Verify that the shape reflects the final result of the nested formula
+            Console.WriteLine($"Cell B1 evaluated value: {cellResult}");
+            Console.WriteLine($"Shape linked text: {shapeResult}");
+            Console.WriteLine($"Verification: {(cellResult == shapeResult ? "Success" : "Failure")}");
 
-            // Simple verification that the shape reflects the cell's final result
-            if (shapeText == cellValue?.ToString())
-            {
-                Console.WriteLine("Verification passed: Shape reflects the cell's final result.");
-            }
-            else
-            {
-                Console.WriteLine("Verification failed: Shape does not match the cell's result.");
-            }
-
-            // Save the workbook (optional)
-            workbook.Save("ShapeLinkedToCell.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("ShapeLinkedToFormula.xlsx");
         }
         catch (Exception ex)
         {

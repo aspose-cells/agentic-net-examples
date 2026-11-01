@@ -1,56 +1,32 @@
-// Title: Set the RefersTo property of a named range to an absolute address in Aspose.Cells for .NET
-// AI Prompts: Create a Name called MyAbsoluteRange and assign its RefersTo property the absolute range $A$1:$B$10 using Aspose.Cells. | Add a named range to the worksheet's Names collection and lock it with an absolute address so it does not move when rows or columns are inserted. | Ensure the output folder exists, then save the workbook and verify that the named range retains the absolute reference.
-// Common Searches: Aspose.Cells how to set a named range with an absolute address | prevent named range from shifting after inserting rows in .NET Excel library | RefersTo property absolute reference example for Aspose.Cells | save workbook with fixed named range using Aspose.Cells for C#
-// Tags: Aspose.Cells RefersTo absolute address | named range fixed reference .NET | add named range to worksheet Names collection | save workbook with named range Aspose.Cells | prevent range shift on row insert Aspose.Cells
+// Title: How to assign an absolute address to a named range in Aspose.Cells for .NET to keep it from shifting
+// Common Searches: Aspose.Cells C# set named range RefersTo to absolute address | prevent named range from moving after inserting rows or columns in Aspose.Cells | create fixed reference named range using worksheet name in Aspose.Cells | absolute address syntax for named ranges in Aspose.Cells .NET | Aspose.Cells example adding named range with $A$1:$B$10 reference
+// Tags: Aspose.Cells named range absolute RefersTo | fixed named range address Aspose.Cells | C# Aspose.Cells set RefersTo property | absolute cell reference in named range Aspose.Cells | prevent named range shift Aspose.Cells
 
 using Aspose.Cells;
-using System;
-using System.IO;
 
-// The example creates a workbook, adds sample data, defines an absolute address "$A$1:$B$10", adds a named range "MyAbsoluteRange" to the worksheet's Names collection, sets its RefersTo property to the absolute address, ensures the output directory exists, and saves the file as Output.xlsx.
+// Shows how to build a fully qualified absolute address, add a named range to the workbook's Names collection, assign the RefersTo property to that address, and save the file so the range remains unchanged when rows or columns are inserted or deleted.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Optional: put some sample data
-            sheet.Cells["A1"].PutValue(1);
-            sheet.Cells["B10"].PutValue(10);
+        // Get the first worksheet (default sheet)
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the absolute address for the named range
-            // The $ signs make the address absolute, preventing relative shifts
-            string absoluteAddress = "$A$1:$B$10";
+        // Define an absolute address for the named range (e.g., $A$1:$B$10)
+        // Using the worksheet name ensures the reference is fully qualified.
+        string absoluteAddress = $"{sheet.Name}!$A$1:$B$10";
 
-            // Add a named range to the workbook's Names collection
-            // Add returns the index of the newly added name
-            int nameIndex = workbook.Worksheets.Names.Add("MyAbsoluteRange");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
+        // Add a new named range to the workbook's Names collection
+        int nameIndex = workbook.Worksheets.Names.Add("MyAbsoluteRange");
 
-            // Set the RefersTo property using the absolute address
-            namedRange.RefersTo = absoluteAddress;
+        // Set the RefersTo property using the absolute address.
+        // This prevents the range from shifting when rows/columns are inserted or deleted.
+        workbook.Worksheets.Names[nameIndex].RefersTo = absoluteAddress;
 
-            // Determine output file path
-            string outputPath = "Output.xlsx";
-
-            // Ensure the directory exists (prevents FileNotFoundException on save)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook to a file
+        workbook.Save("Result.xlsx");
     }
 }

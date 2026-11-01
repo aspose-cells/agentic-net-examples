@@ -1,11 +1,10 @@
-// Title: How to limit shared formula rows to 50 in an Aspose.Cells workbook using C#
-// AI Prompts: Set workbook.Settings.MaxRowsOfSharedFormula = 50 and save the workbook with Aspose.Cells in C#. | Configure the Aspose.Cells workbook to restrict shared formula rows to fifty before exporting to Excel.
-// Common Searches: Aspose.Cells C# limit number of rows for shared formulas to 50 | Set MaxRowsOfSharedFormula property in Aspose.Cells workbook | Restrict shared formula rows count when generating Excel with Aspose.Cells | How to configure workbook settings to cap shared formula rows in C#
-// Tags: Aspose.Cells workbook Settings MaxRowsOfSharedFormula | C# limit shared formula rows Excel | configure shared formula row limit Aspose.Cells | set shared formula max rows Aspose.Cells C#
+// Title: How to limit shared formula rows to 50 using Aspose.Cells Workbook.Settings.MaxRowsOfSharedFormula in C#
+// Common Searches: Aspose.Cells C# set maximum rows for shared formulas | How to restrict shared formula rows to 50 in a .NET workbook | Workbook.Settings.MaxRowsOfSharedFormula example code | Limit number of rows that can use shared formulas with Aspose.Cells | C# Excel file shared formula row limit using Aspose.Cells
+// Tags: Workbook.Settings.MaxRowsOfSharedFormula usage | shared formula capacity setting Aspose.Cells | C# Excel workbook formula row restriction | Aspose.Cells configure formula settings | limit shared formula rows programmatically
 
 using Aspose.Cells;
 
-// The example creates a new Workbook, sets Settings.MaxRowsOfSharedFormula to 50 to cap shared formula rows, and saves the file as output.xlsx.
+// The example creates a new Workbook, sets the MaxRowsOfSharedFormula property to 50 to cap the number of rows that can contain shared formulas, and saves the file as SharedFormulaLimited.xlsx.
 class Program
 {
     static void Main()
@@ -17,6 +16,6 @@ class Program
         workbook.Settings.MaxRowsOfSharedFormula = 50;
 
         // Save the workbook
-        workbook.Save("output.xlsx");
+        workbook.Save("SharedFormulaLimited.xlsx");
     }
 }

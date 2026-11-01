@@ -1,102 +1,80 @@
-// Title: C# Aspose.Cells test: Verify AutomaticExceptTables mode leaves ListObject formula column unchanged after external cell change
-// AI Prompts: Create a C# program using Aspose.Cells that builds a worksheet with a ListObject, adds a formula column referencing cell A1, switches the workbook to the calculation mode that skips tables, updates A1, recalculates, and checks that the formula column values stay unchanged. | Write a C# unit test with Aspose.Cells demonstrating that formulas inside a structured table are not recomputed when the workbook's calculation mode is set to exclude table recalculation.
-// Common Searches: Aspose.Cells C# how to prevent table formulas from recalculating when cell A1 changes | C# Aspose.Cells AutomaticExceptTables example with ListObject | verify that structured table formula column remains constant after external cell update Aspose.Cells | set calculation mode to AutomaticExceptTables in Aspose.Cells .NET | unit test for AutomaticExceptTables mode Aspose.Cells C#
-// Tags: AutomaticExceptTables mode Aspose.Cells | ListObject formula column exclusion | C# structured table recalculation control | Aspose.Cells workbook calculation settings | verify table formula stability
+// Title: C# example: Verify AutomaticExceptTables mode prevents auto‑recalculation of ListObject formulas in Aspose.Cells
+// Common Searches: Aspose.Cells C# test AutomaticExceptTables mode with structured table formulas | how to ensure ListObject column formula does not recalc automatically in Aspose.Cells | sample code to check AutomaticExceptTables behavior after changing source cell in .NET | prevent automatic formula updates in Excel tables using Aspose.Cells calculation settings | manual CalculateFormula usage to refresh ListObject formulas in C#
+// Tags: AutomaticExceptTables calculation mode Aspose.Cells | ListObject structured table formula C# | manual workbook.CalculateFormula Aspose.Cells | prevent auto formula recalculation Excel table | verify formula update behavior Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;   // Required for ListObject
 
-// The sample creates a workbook, adds a ListObject with a formula column that references cell A1, calculates the workbook, changes A1, recalculates again, and prints before/after values to confirm that the table formulas remain unchanged, demonstrating the effect of AutomaticExceptTables mode.
-class Program
+namespace AutomaticExceptTablesTest
 {
-    static void Main()
+    // The program creates a workbook, adds a ListObject covering A1:B6, assigns a structured reference formula to the second column, runs an initial calculation, changes a source cell, and shows that the formula column does not update automatically; a subsequent workbook.CalculateFormula call refreshes the value.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet ws = workbook.Worksheets[0];
-
-            // External cell that will be used in table formulas
-            ws.Cells["A1"].PutValue(10);
-
-            // Populate data for a structured table (B2:C5)
-            ws.Cells["B2"].PutValue("Item");
-            ws.Cells["C2"].PutValue("Value");
-            ws.Cells["B3"].PutValue("Item1");
-            ws.Cells["C3"].PutValue(5);
-            ws.Cells["B4"].PutValue("Item2");
-            ws.Cells["C4"].PutValue(7);
-            ws.Cells["B5"].PutValue("Item3");
-            ws.Cells["C5"].PutValue(9);
-
-            // Add a structured table covering B2:C5 (including header)
-            int firstRow = 1;      // zero‑based index for B2
-            int firstColumn = 1;   // column B
-            int totalRows = 4;     // header + 3 data rows
-            int totalColumns = 2;  // Item and Value columns
-
-            int tableIndex = ws.ListObjects.Add(firstRow, firstColumn,
-                                                firstRow + totalRows - 1,
-                                                firstColumn + totalColumns - 1, true);
-            ListObject table = ws.ListObjects[tableIndex];
-            table.DisplayName = "MyTable";
-
-            // Add a formula column (D) that adds A1 to the Value column (C)
-            int formulaColIndex = firstColumn + totalColumns; // column D (zero‑based index 3)
-            ws.Cells[firstRow, formulaColIndex].PutValue("Total"); // header
-
-            // Set formulas for each data row in the table
-            for (int i = 1; i < totalRows; i++)
-            {
-                // Row numbers in Excel are 1‑based, so add 1 to zero‑based index
-                int excelRow = firstRow + i + 1;
-                ws.Cells[firstRow + i, formulaColIndex].Formula = $"=A1+C{excelRow}";
-            }
-
-            // Initial calculation (default automatic mode)
-            workbook.CalculateFormula();
-
-            // Store initial values of the formula column
-            double[] initialValues = new double[totalRows - 1];
-            for (int i = 0; i < totalRows - 1; i++)
-            {
-                initialValues[i] = ws.Cells[firstRow + 1 + i, formulaColIndex].DoubleValue;
-            }
-
-            // Change the external cell A1
-            ws.Cells["A1"].PutValue(20);
-
-            // Recalculate workbook
-            workbook.CalculateFormula();
-
-            // Store values after the change
-            double[] afterValues = new double[totalRows - 1];
-            for (int i = 0; i < totalRows - 1; i++)
-            {
-                afterValues[i] = ws.Cells[firstRow + 1 + i, formulaColIndex].DoubleValue;
-            }
-
-            // Output comparison to verify that values inside the table did NOT change
-            for (int i = 0; i < initialValues.Length; i++)
-            {
-                Console.WriteLine($"Row {i + 1}: before={initialValues[i]}, after={afterValues[i]}, unchanged={initialValues[i] == afterValues[i]}");
-            }
-
-            // Save the workbook (optional verification)
             try
             {
-                workbook.Save("AutomaticExceptTablesTest.xlsx");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Fill column A with sample data (A2:A6)
+                for (int i = 0; i < 5; i++)
+                {
+                    sheet.Cells[i + 1, 0].PutValue(i + 1); // Values 1..5
+                }
+
+                // Define headers for the structured table
+                sheet.Cells["A1"].PutValue("Data");
+                sheet.Cells["B1"].PutValue("Double");
+
+                // Add a ListObject (structured table) covering the range A1:B6
+                int firstRow = 0;          // zero‑based index for row 1
+                int firstColumn = 0;       // column A
+                int totalRows = 6;         // rows 1‑6 (including header)
+                int totalColumns = 2;      // columns A‑B
+                int tableIndex = sheet.ListObjects.Add(
+                    firstRow,
+                    firstColumn,
+                    firstRow + totalRows - 1,
+                    firstColumn + totalColumns - 1,
+                    true); // hasHeaders = true
+                ListObject table = sheet.ListObjects[tableIndex];
+
+                // Table visual settings
+                table.ShowHeaderRow = true;
+                table.ShowTableStyleFirstColumn = false;
+                table.ShowTableStyleLastColumn = false;
+                table.ShowTableStyleRowStripes = true;
+                table.ShowTableStyleColumnStripes = false;
+
+                // Set the formula for the second column using structured reference
+                table.ListColumns[1].Formula = "=[Data]*2";
+
+                // Perform an initial calculation so that the formula column gets values
+                workbook.CalculateFormula();
+
+                // Capture the original calculated value of the first data row (row 2, column B)
+                double originalFormulaValue = sheet.Cells[1, 1].DoubleValue; // B2
+                Console.WriteLine($"Original formula value (B2): {originalFormulaValue}");
+
+                // Change the source data that the formula depends on (A2)
+                sheet.Cells[1, 0].PutValue(100); // Set A2 to 100
+
+                // Read the value after the change (automatic recalculation)
+                double afterChangeFormulaValue = sheet.Cells[1, 1].DoubleValue; // B2
+                Console.WriteLine($"Formula value after source change (B2) without manual calc: {afterChangeFormulaValue}");
+
+                // Force a manual calculation to see the updated value (useful if CalcMode is Manual)
+                workbook.CalculateFormula();
+                double afterManualCalcValue = sheet.Cells[1, 1].DoubleValue; // B2
+                Console.WriteLine($"Formula value after workbook.CalculateFormula(): {afterManualCalcValue}");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

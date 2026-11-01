@@ -1,99 +1,88 @@
-// Title: Extract all shape hyperlinks from an Excel workbook and create a summary worksheet with source cells and target URLs using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method with Aspose.Cells that iterates through every worksheet, identifies shapes that have a Hyperlink, captures the worksheet name, shape name, the anchored cell address, and the hyperlink URL, then writes these details to a new worksheet named ShapeHyperlinkReport. | Create a C# console application that takes an input .xlsx file and an output path, extracts shape hyperlink data using Aspose.Cells, builds a report sheet with columns Worksheet, Shape Name, Source Cell, Target URL, and saves the modified workbook.
-// Common Searches: how to list shape hyperlinks and their anchor cells in an Excel file using Aspose.Cells C# | Aspose.Cells C# extract hyperlink address from shapes and generate a report sheet | C# code to create a summary worksheet of all shape hyperlinks in a workbook with Aspose.Cells | retrieve source cell of a shape with hyperlink in .xlsx using Aspose.Cells for .NET | generate Excel report of shape hyperlink URLs and anchor locations with Aspose.Cells
-// Tags: Aspose.Cells extract shape hyperlinks | C# generate hyperlink report worksheet | shape anchor cell address Aspose.Cells | Excel workbook shape hyperlink summary | Aspose.Cells iterate worksheets shapes
+// Title: Generate a report of Excel shape hyperlinks with their source cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, scans every worksheet for shapes, extracts each shape's Hyperlink.Address and the cell coordinates where the shape is anchored, and writes the worksheet name, cell address, and URL to a new worksheet in a separate workbook. | Create a routine in C# using Aspose.Cells that iterates through all shapes in a workbook, checks for non‑empty Hyperlink objects, captures the UpperLeftRow/UpperLeftColumn to form the cell reference, and saves a two‑column report (SourceCell, TargetUrl) to an output Excel file.
+// Common Searches: Aspose.Cells C# extract hyperlink from shape and get its cell address | How to list all shape hyperlinks in an Excel file using .NET | Create a hyperlink report for shapes in Excel with Aspose.Cells | Get source cell of a shape that contains a hyperlink in Aspose.Cells | Export shape hyperlink data to a new workbook using C#
+// Tags: Aspose.Cells extract shape links | C# get shape anchor cell address | create Excel hyperlink report with Aspose.Cells | iterate worksheets and shapes using Aspose.Cells | export hyperlink data to new workbook C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeHyperlinkExtractorApp
+namespace ShapeHyperlinkExtractor
 {
-    // The example loads an Excel workbook, adds a new worksheet called "ShapeHyperlinkReport", scans each worksheet for shapes that contain a Hyperlink, records the worksheet name, shape name, the cell where the shape is anchored, and the hyperlink URL, writes this information into the report sheet, auto‑fits the columns, and saves the workbook to the specified output file.
-    public class ShapeHyperlinkExtractor
-    {
-        /// <param name="inputFile">Path to the source workbook.</param>
-        /// <param name="outputFile">Path where the workbook with the report will be saved.</param>
-        public static void ExtractShapeHyperlinks(string inputFile, string outputFile)
-        {
-            try
-            {
-                // Verify input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Add a new worksheet for the report
-                int reportIndex = workbook.Worksheets.Add();
-                Worksheet reportSheet = workbook.Worksheets[reportIndex];
-                reportSheet.Name = "ShapeHyperlinkReport";
-
-                // Write header row
-                Cells reportCells = reportSheet.Cells;
-                reportCells["A1"].PutValue("Worksheet");
-                reportCells["B1"].PutValue("Shape Name");
-                reportCells["C1"].PutValue("Source Cell");
-                reportCells["D1"].PutValue("Target URL");
-
-                int reportRow = 1; // zero‑based index; start after header
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Skip the report sheet itself
-                    if (sheet == reportSheet) continue;
-
-                    // Iterate through all shapes in the current worksheet
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Check if the shape has a hyperlink defined
-                        if (shape.Hyperlink != null && !string.IsNullOrEmpty(shape.Hyperlink.Address))
-                        {
-                            // Determine the source cell address where the shape is anchored
-                            int row = shape.UpperLeftRow;
-                            int col = shape.UpperLeftColumn;
-                            string sourceCell = sheet.Cells[row, col].Name; // e.g., "B5"
-
-                            // Write the information into the report sheet
-                            reportCells[reportRow, 0].PutValue(sheet.Name);               // Worksheet
-                            reportCells[reportRow, 1].PutValue(shape.Name);               // Shape Name
-                            reportCells[reportRow, 2].PutValue(sourceCell);               // Source Cell
-                            reportCells[reportRow, 3].PutValue(shape.Hyperlink.Address); // Target URL
-
-                            reportRow++;
-                        }
-                    }
-                }
-
-                // Auto‑fit columns for better readability
-                reportSheet.AutoFitColumns();
-
-                // Save the workbook with the report
-                workbook.Save(outputFile);
-                Console.WriteLine($"Report saved to: {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
+    // The program loads an input Excel file, iterates through each worksheet and its shapes, identifies shapes that contain hyperlinks, records the worksheet name and cell address where each shape is anchored along with the hyperlink URL, and writes these pairs to a new workbook named "hyperlink_report.xlsx".
     class Program
     {
         static void Main(string[] args)
         {
-            // Example usage – adjust paths as needed
-            string inputPath = "Input.xlsx";
-            string outputPath = "Output_With_Report.xlsx";
+            // Input workbook containing shapes with hyperlinks
+            string inputFilePath = "input.xlsx";
 
-            ShapeHyperlinkExtractor.ExtractShapeHyperlinks(inputPath, outputPath);
+            // Output workbook that will hold the report
+            string reportFilePath = "hyperlink_report.xlsx";
+
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFilePath))
+                {
+                    Console.WriteLine($"Input file not found: {inputFilePath}");
+                    return;
+                }
+
+                // Load the source workbook (lifecycle rule: load)
+                Workbook sourceWorkbook = new Workbook(inputFilePath);
+
+                // Create a new workbook for the report (lifecycle rule: create)
+                Workbook reportWorkbook = new Workbook();
+
+                // Prepare the first worksheet of the report
+                Worksheet reportSheet = reportWorkbook.Worksheets[0];
+                reportSheet.Name = "Hyperlink Report";
+
+                // Write header row
+                reportSheet.Cells[0, 0].PutValue("Source Cell");
+                reportSheet.Cells[0, 1].PutValue("Target URL");
+
+                int reportRowIndex = 1; // start after header
+
+                // Iterate through all worksheets in the source workbook
+                foreach (Worksheet ws in sourceWorkbook.Worksheets)
+                {
+                    // Iterate through all shapes in the current worksheet
+                    foreach (Shape shape in ws.Shapes)
+                    {
+                        // Check if the shape contains a hyperlink
+                        if (shape.Hyperlink != null && !string.IsNullOrEmpty(shape.Hyperlink.Address))
+                        {
+                            // Determine the cell address where the shape is anchored
+                            int row = shape.UpperLeftRow;          // zero‑based row index
+                            int column = shape.UpperLeftColumn;   // zero‑based column index
+                            string cellAddress = CellsHelper.CellIndexToName(row, column);
+
+                            // Combine worksheet name and cell address for clarity
+                            string sourceCell = $"{ws.Name}!{cellAddress}";
+
+                            // Retrieve the target URL from the hyperlink
+                            string targetUrl = shape.Hyperlink.Address;
+
+                            // Write the information into the report worksheet
+                            reportSheet.Cells[reportRowIndex, 0].PutValue(sourceCell);
+                            reportSheet.Cells[reportRowIndex, 1].PutValue(targetUrl);
+                            reportRowIndex++;
+                        }
+                    }
+                }
+
+                // Save the report workbook (lifecycle rule: save)
+                reportWorkbook.Save(reportFilePath);
+                Console.WriteLine($"Hyperlink report saved to: {reportFilePath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

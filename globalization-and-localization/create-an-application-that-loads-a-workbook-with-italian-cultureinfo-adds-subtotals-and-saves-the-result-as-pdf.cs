@@ -1,106 +1,79 @@
-// Title: C# console app to load an Excel file with Italian CultureInfo, add subtotal rows via reflection, and export to PDF using Aspose.Cells
-// AI Prompts: Generate C# code that opens an .xlsx workbook with the Italian (it-IT) CultureInfo, inserts sum subtotals for the data range, and saves the result as a PDF using Aspose.Cells. | Demonstrate how to use .NET reflection to call the Worksheet.Subtotal method safely when the API may be absent in the current Aspose.Cells version. | Build a console program that validates the input Excel file, applies subtotals, gracefully handles missing Subtotal support, and writes the output as a PDF.
-// Common Searches: aspnet load excel with it-it cultureinfo using aspose.cells | how to add subtotal rows in aspose.cells when Subtotal method is missing | export excel to pdf after adding subtotals with aspose.cells c# | invoke Worksheet.Subtotal via reflection in older Aspose.Cells releases | c# program to convert localized excel workbook to pdf with subtotals
-// Tags: Italian CultureInfo loading Excel Aspose.Cells | reflection invoke Worksheet.Subtotal Aspose.Cells | add sum subtotals to worksheet Aspose.Cells | export workbook to PDF Aspose.Cells .NET | handle missing Subtotal API Aspose.Cells
+// Title: C# program to load an Excel workbook with Italian locale, add a subtotal row, and export it to PDF using Aspose.Cells
+// Common Searches: how to load an Excel workbook with Italian locale using Aspose.Cells in C# | add a total row to a worksheet and convert it to PDF with Aspose.Cells | set LoadOptions CultureInfo to it-IT when processing Excel files in .NET | calculate sum of a column and append a subtotal before saving as PDF using Aspose.Cells | export localized Excel data to PDF with Aspose.Cells for .NET
+// Tags: loadoptions italian culture aspnet cells | add subtotal row aspnet cells | excel to pdf conversion with localization aspnet cells | column sum calculation aspnet cells | export workbook pdf aspnet cells
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 
-// The console application checks for an input.xlsx file, loads it with Italian CultureInfo via LoadOptions, determines the data range, attempts to add sum subtotals using the Worksheet.Subtotal method through reflection (handling cases where the method is unavailable), and finally saves the workbook as output.pdf in PDF format.
+// The example checks for an input.xlsx file, creates a simple workbook if missing, loads it with LoadOptions specifying the Italian culture (it-IT), computes the sum of the 'Amount' column, inserts a 'Total' row, and saves the modified workbook as a PDF (output.pdf) using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Define Italian culture
-            CultureInfo italianCulture = new CultureInfo("it-IT");
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Verify that the input file exists
-            const string inputPath = "input.xlsx";
+            // Ensure the input file exists; create a simple workbook if it does not
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                return;
+                var sampleWb = new Workbook();
+                var ws = sampleWb.Worksheets[0];
+                ws.Cells["A1"].PutValue("Category");
+                ws.Cells["B1"].PutValue("Amount");
+                ws.Cells["A2"].PutValue("A");
+                ws.Cells["B2"].PutValue(10);
+                ws.Cells["A3"].PutValue("A");
+                ws.Cells["B3"].PutValue(20);
+                ws.Cells["A4"].PutValue("B");
+                ws.Cells["B4"].PutValue(30);
+                sampleWb.Save(inputPath);
             }
 
-            // Load the workbook using the Italian culture settings
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            // Set the Italian culture for loading the workbook
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                CultureInfo = italianCulture
+                CultureInfo = new CultureInfo("it-IT")
             };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Load the workbook
+            var workbook = new Workbook(inputPath, loadOptions);
+            var worksheet = workbook.Worksheets[0];
 
-            // Determine the range of data (assumes a header row at row 0)
-            int firstDataRow = 1; // data starts after header
-            int lastDataRow = sheet.Cells.MaxDataRow;
-            int lastDataColumn = sheet.Cells.MaxDataColumn;
+            // Determine the used range of the worksheet
+            int maxRow = worksheet.Cells.MaxDataRow;
+            int maxColumn = worksheet.Cells.MaxDataColumn;
 
-            // Attempt to add subtotals using reflection (method may not exist in older versions)
-            try
+            // ----- Subtotal logic (manual implementation) -----
+            // Compute sum of the "Amount" column (index 1) for all data rows
+            double total = 0;
+            for (int row = 1; row <= maxRow; row++) // start from 1 to skip header
             {
-                MethodInfo subtotalMethod = typeof(Worksheet).GetMethod(
-                    "Subtotal",
-                    BindingFlags.Instance | BindingFlags.Public,
-                    null,
-                    new Type[]
-                    {
-                        typeof(int), typeof(int), typeof(int), typeof(int),
-                        typeof(object), typeof(int[]), typeof(int[]), typeof(bool)
-                    },
-                    null);
-
-                if (subtotalMethod != null)
+                var cell = worksheet.Cells[row, 1];
+                if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double val))
                 {
-                    // Resolve SubtotalType enum (if present)
-                    Type subtotalEnum = typeof(Worksheet).Assembly.GetType("Aspose.Cells.SubtotalType");
-                    object sumEnumValue = subtotalEnum != null
-                        ? Enum.Parse(subtotalEnum, "Sum")
-                        : null;
-
-                    // Invoke the Subtotal method
-                    subtotalMethod.Invoke(
-                        sheet,
-                        new object[]
-                        {
-                            firstDataRow,
-                            0,
-                            lastDataRow,
-                            lastDataColumn,
-                            sumEnumValue,
-                            new int[] { 1 },
-                            new int[] { 0 },
-                            true
-                        });
-                }
-                else
-                {
-                    Console.WriteLine("Subtotal method is not supported in the current Aspose.Cells version.");
+                    total += val;
                 }
             }
-            catch (TargetInvocationException tie) when (tie.InnerException != null)
-            {
-                Console.WriteLine($"Error while adding subtotals: {tie.InnerException.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error while adding subtotals: {ex.Message}");
-            }
 
-            // Save the workbook as a PDF file
-            const string outputPath = "output.pdf";
+            // Add a total row after the last data row
+            int totalRowIndex = maxRow + 1;
+            worksheet.Cells[totalRowIndex, 0].PutValue("Total");
+            worksheet.Cells[totalRowIndex, 1].PutValue(total);
+            // --------------------------------------------------
+
+            // Save the result as PDF
             workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"PDF saved successfully to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

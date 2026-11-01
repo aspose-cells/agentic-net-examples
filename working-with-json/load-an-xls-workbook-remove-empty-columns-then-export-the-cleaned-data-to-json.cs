@@ -1,23 +1,22 @@
-// Title: Remove empty columns from an XLS workbook and export the cleaned data to JSON using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xls file with Aspose.Cells, scans each worksheet for columns that contain only blank or whitespace cells, deletes those columns, and then exports the workbook to a JSON file. | Adjust the column‑deletion routine to ignore hidden columns while still using JsonSaveOptions to write the cleaned workbook to JSON. | Add logging that records the indexes of removed columns for each worksheet before saving the workbook as JSON with Aspose.Cells.
-// Common Searches: Aspose.Cells C# remove columns that are completely empty from an XLS file | How to export a cleaned Excel sheet to JSON using Aspose.Cells .NET | C# code to delete blank columns in each worksheet before saving as JSON with Aspose.Cells | Using JsonSaveOptions to convert an XLS workbook to JSON after column cleanup | Detect and delete empty columns in Aspose.Cells workbook programmatically
-// Tags: delete empty columns Aspose.Cells | json export Aspose.Cells | xls workbook processing C# | column cleanup before JSON conversion | JsonSaveOptions usage
+// Title: Clean an XLS workbook by deleting fully empty columns and save the result as JSON with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xls file using Aspose.Cells, scans each worksheet, removes columns that contain only null cells, and writes the workbook to a JSON file. | Show how to safely verify the input file, iterate backwards through columns to avoid index shifts, and call Workbook.Save with SaveFormat.Json after the column removal process. | Provide a robust example that includes try‑catch exception handling and logs a confirmation message when the JSON export finishes successfully.
+// Common Searches: C# Aspose.Cells remove fully blank columns prior to JSON export | How to remove blank columns from every sheet in an XLS file using Aspose.Cells .NET | Save cleaned Excel workbook as JSON with Aspose.Cells after column pruning | Aspose.Cells .NET example for removing columns with no data and converting XLS to JSON
+// Tags: Aspose.Cells delete empty columns C# | XLS to JSON conversion after column cleanup | remove blank columns workbook Aspose.Cells | Aspose.Cells column pruning before JSON export | C# Aspose.Cells save workbook as JSON
 
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using Aspose.Cells;
 
-// // Loads an .xls workbook, removes any columns that consist solely of empty or whitespace cells from each worksheet, and saves the cleaned data to a JSON file using Aspose.Cells JsonSaveOptions.
+// // Loads an XLS workbook, removes any columns that consist solely of null values from each worksheet, and saves the cleaned data as a JSON file using Aspose.Cells.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xls";
+        const string outputPath = "output.json";
+
         try
         {
-            const string inputPath = "input.xls";
-            const string outputPath = "output.json";
-
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
@@ -33,45 +32,42 @@ class Program
             {
                 Cells cells = sheet.Cells;
 
-                // Determine the used range dimensions
-                int maxColumn = cells.MaxColumn + 1; // total number of columns used
-                int maxRow = cells.MaxRow + 1;       // total number of rows used
+                // Determine the maximum column index that contains data
+                int maxColumn = cells.MaxColumn;
 
-                List<int> emptyColumns = new List<int>();
-
-                // Identify columns where every cell is empty or whitespace
-                for (int col = 0; col < maxColumn; col++)
+                // Loop backwards to avoid index shift when deleting columns
+                for (int col = maxColumn; col >= 0; col--)
                 {
-                    bool isEmpty = true;
-                    for (int row = 0; row < maxRow; row++)
+                    bool isEmptyColumn = true;
+
+                    // Check each cell in the current column
+                    for (int row = 0; row <= cells.MaxRow; row++)
                     {
-                        object value = cells[row, col].Value;
-                        if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
+                        Cell cell = cells[row, col];
+
+                        // Determine if the cell contains any data
+                        if (cell.Type != CellValueType.IsNull)
                         {
-                            isEmpty = false;
+                            isEmptyColumn = false;
                             break;
                         }
                     }
-                    if (isEmpty)
-                    {
-                        emptyColumns.Add(col);
-                    }
-                }
 
-                // Delete empty columns starting from the rightmost to keep indices correct
-                for (int i = emptyColumns.Count - 1; i >= 0; i--)
-                {
-                    cells.DeleteColumn(emptyColumns[i]);
+                    // Delete the column if it is completely empty
+                    if (isEmptyColumn)
+                    {
+                        cells.DeleteColumn(col);
+                    }
                 }
             }
 
-            // Export the cleaned workbook to JSON format using JsonSaveOptions
-            JsonSaveOptions jsonOptions = new JsonSaveOptions();
-            workbook.Save(outputPath, jsonOptions);
+            // Export the cleaned workbook data to JSON format
+            workbook.Save(outputPath, SaveFormat.Json);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Handle unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

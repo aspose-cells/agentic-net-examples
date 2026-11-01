@@ -1,62 +1,71 @@
-// Title: Delete a TextBox shape from an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that finds the first TextBox shape in a worksheet and removes it using Aspose.Cells. | Create a method that iterates through all shapes in a workbook and deletes every TextBox shape with Aspose.Cells. | Show how to delete a TextBox by its name or index and then save the workbook using Aspose.Cells in C#.
-// Common Searches: aspnet delete textbox shape from excel file using aspose.cells | c# remove specific textbox from worksheet with aspose.cells library | how to programmatically delete all textboxes in an Excel workbook using aspose.cells | asp.net core find and delete textbox shape in existing xlsx with aspose.cells | remove shape by type textbox from worksheet using aspose.cells c# example
-// Tags: Aspose.Cells remove TextBox shape | C# worksheet.Shapes.RemoveAt textbox | Aspose.Cells delete shape by type | Excel file shape manipulation Aspose.Cells | C# delete textbox from xlsx
+// Title: Delete all TextBox shapes from an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: C# code to remove textbox shapes from an Excel worksheet with Aspose.Cells | How to iterate and delete specific shape types in an Aspose.Cells workbook | Aspose.Cells remove all TextBox objects from a sheet before saving | Delete shapes by type in Aspose.Cells .NET example | Remove unwanted text boxes from an Excel file using the Aspose.Cells API
+// Tags: Aspose.Cells delete textbox shapes | C# iterate worksheet shapes collection | remove specific shape type Aspose.Cells | save workbook after shape removal Aspose.Cells | Aspose.Cells shape removal example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook, searches the first worksheet for a TextBox shape, removes it with worksheet.Shapes.RemoveAt, and saves the updated file.
-class DeleteTextboxExample
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an existing Excel file with Aspose.Cells, iterates the worksheet's Shapes collection in reverse, checks each shape's Type for "TextBox", removes matching shapes, and saves the workbook to a new file, handling missing files and shape‑processing errors.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                const string inputFile = "input.xlsx";
+                const string outputFile = "output.xlsx";
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (or specify the required one)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Find the first textbox shape in the worksheet
-            int textboxIndex = -1;
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                // Compare shape type using its string representation to avoid enum dependency
-                if (shape.Type.ToString() == "TextBox")
+                // Verify input file exists
+                if (!File.Exists(inputFile))
                 {
-                    textboxIndex = worksheet.Shapes.IndexOf(shape);
-                    break; // Remove only the first found textbox; remove this break to delete all
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
                 }
-            }
 
-            // Delete the textbox if it was found
-            if (textboxIndex != -1)
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(inputFile);
+
+                // Get the target worksheet (adjust index or name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Delete all textbox shapes from the worksheet
+                // Iterate backwards because removing modifies the collection
+                for (int i = worksheet.Shapes.Count - 1; i >= 0; i--)
+                {
+                    try
+                    {
+                        Shape shape = worksheet.Shapes[i];
+                        // Use string comparison to avoid direct enum dependency
+                        if (shape.Type.ToString() == "TextBox")
+                        {
+                            worksheet.Shapes.RemoveAt(i);
+                        }
+                    }
+                    catch (Exception exShape)
+                    {
+                        Console.WriteLine($"Error processing shape at index {i}: {exShape.Message}");
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook (lifecycle rule: save)
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved to {outputFile}");
+            }
+            catch (Exception ex)
             {
-                worksheet.Shapes.RemoveAt(textboxIndex);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

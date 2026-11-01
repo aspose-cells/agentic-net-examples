@@ -1,22 +1,21 @@
-// Title: Load an XLSX workbook from a file path with Aspose.Cells Workbook in C#
-// AI Prompts: Write C# code that uses Aspose.Cells Workbook to open a .xlsx file from a given path and retrieve the first worksheet. | Show how to instantiate a Workbook object with a file name, then access a specific sheet using Aspose.Cells for .NET.
-// Common Searches: aspnet load xlsx file using Aspose.Cells Workbook constructor | c# read Excel workbook from disk with Aspose.Cells and get first sheet | example of opening an .xlsx file with Aspose.Cells in a console application | how to initialize Aspose.Cells Workbook with a file path in C# | retrieve worksheet after loading workbook using Aspose.Cells .NET
-// Tags: load workbook from file Aspose.Cells C# | read xlsx file Aspose.Cells .NET | access first worksheet Aspose.Cells | initialize Workbook with file path | open Excel workbook Aspose.Cells C#
+// Title: Load an XLSX workbook from a local file using Aspose.Cells Workbook class in C#
+// AI Prompts: Instantiate a Workbook object by supplying the file path of an existing .xlsx document to the Aspose.Cells constructor. | Open an Excel workbook stored on disk and obtain a ready‑to‑use Workbook instance for further processing with Aspose.Cells in .NET.
+// Common Searches: Aspose.Cells C# how to open an existing .xlsx file from a file path | Load Excel workbook from disk using Aspose.Cells Workbook constructor example | Read .xlsx file into Aspose.Cells Workbook object in a .NET console application
+// Tags: load xlsx workbook from local path Aspose.Cells | initialize Workbook from file path C# | open Excel workbook via Aspose.Cells constructor | read spreadsheet file using Aspose.Cells C#
 
 using Aspose.Cells;
 
-// The example shows how to create an Aspose.Cells Workbook object by providing the path to an .xlsx file, then optionally obtain the first worksheet for further processing.
+// Demonstrates loading an XLSX file (e.g., "input.xlsx") from the file system into an Aspose.Cells Workbook object for further manipulation in a C# application.
 class Program
 {
     static void Main()
     {
-        // Path to the XLSX file to load
+        // Path to the XLSX file on disk
         string filePath = "input.xlsx";
 
         // Load the workbook from the specified file
         Workbook workbook = new Workbook(filePath);
 
-        // Example: access the first worksheet (optional)
-        Worksheet firstSheet = workbook.Worksheets[0];
+        // The workbook is now loaded and can be manipulated as needed
     }
 }

@@ -1,45 +1,30 @@
-// Title: Generate a PDF from an Excel workbook with Aspose.Cells and then embed PDF, image, and CSV attachments using Aspose.Pdf in C#
-// AI Prompts: Write C# code that creates an Excel workbook, saves it as a PDF with Aspose.Cells PdfSaveOptions, and then uses Aspose.Pdf to attach a PDF file, an image file, and a CSV file to the same PDF document. | Show a step‑by‑step example of combining Aspose.Cells and Aspose.Pdf in .NET to produce a single PDF that contains embedded file attachments of different formats. | Implement a C# method that receives a PDF path and a collection of file paths and adds each file as an attachment to the PDF using Aspose.Pdf.
-// Common Searches: how to add multiple file attachments to a PDF generated from Excel using Aspose.Cells and Aspose.Pdf | C# attach PDF, JPG, and CSV files to a PDF created by Aspose.Cells | Aspose.Pdf embed attachments after saving workbook as PDF | workaround for PdfSaveOptions attachment limitation in Aspose.Cells | combine Aspose.Cells PDF export with Aspose.Pdf attachment API
-// Tags: Aspose.Cells save workbook to PDF | Aspose.Pdf add file attachments | C# embed multiple attachments in PDF | post‑process PDF with Aspose.Pdf | Excel to PDF with attached files .NET
+// Title: How to embed multiple file attachments (PDF, image, CSV) into a PDF generated with Aspose.Cells PdfSaveOptions in C# (feature not supported)
+// Common Searches: Can Aspose.Cells PdfSaveOptions add file attachments to a PDF in C#? | Embedding an image and a CSV as attachments in a PDF created by Aspose.Cells .NET | Workaround for attaching files to a PDF saved from an Aspose.Cells workbook | Why does Aspose.Cells not support PDF attachments when saving with PdfSaveOptions? | Adding multiple attachments to a PDF generated from an Excel workbook using Aspose.Cells
+// Tags: Aspose.Cells PDF attachment limitation | PdfSaveOptions unsupported attachment feature | C# embed files in PDF using Aspose.Cells | generate PDF without attachments Aspose.Cells | Aspose.Cells workbook to PDF attachment workaround
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates creating a new Workbook, populating it with sample data, and saving it as a PDF using Aspose.Cells PdfSaveOptions. Because Aspose.Cells does not provide a direct API for embedding file attachments, the workflow continues with Aspose.Pdf to attach a PDF, an image, and a CSV file to the generated PDF, delivering a single document that contains all required attachments.
+// The example creates a simple Workbook, writes data to cell A1, configures PdfSaveOptions, and saves the workbook as ResultWithAttachments.pdf. It also notes that Aspose.Cells does not currently provide a way to embed additional files (PDF, image, CSV) as attachments in the generated PDF.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook and add sample data
             Workbook workbook = new Workbook();
-
-            // Add some sample data to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["A3"].PutValue(DateTime.Now);
+            sheet.Cells["A1"].PutValue("Sample data for PDF");
 
-            // Prepare PDF save options (lifecycle rule: load/save options)
+            // Initialize PDF save options (no attachment support in Aspose.Cells)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // NOTE: Aspose.Cells does not provide a direct API to add file attachments to a PDF.
-            // If attachment functionality is required, consider using Aspose.Pdf after saving the PDF.
-
-            // Ensure output directory exists
-            string outputPath = @"C:\Output\CombinedDocument.pdf";
-            string? outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as a PDF (lifecycle rule: save)
+            // Save the workbook as a PDF
+            string outputPath = "ResultWithAttachments.pdf";
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to: {outputPath}");
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

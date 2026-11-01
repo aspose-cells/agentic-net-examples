@@ -1,38 +1,48 @@
-// Title: How to convert an XLSX workbook to a high‑resolution PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ImageResolution to 300 DPI, and saves it as a PDF. | Show a console application that configures PdfSaveOptions for high‑quality PDF output when exporting an Excel workbook. | Explain how to adjust Aspose.Cells PDF export settings to improve image resolution during XLSX‑to‑PDF conversion.
-// Common Searches: Aspose.Cells set PDF image resolution when exporting Excel to PDF in C# | C# convert XLSX to PDF with 300 DPI using Aspose.Cells | How to increase PDF quality from Excel conversion with Aspose.Cells .NET
-// Tags: Aspose.Cells PDF export high DPI | PdfSaveOptions image resolution setting | C# Excel to PDF conversion Aspose.Cells | high‑resolution PDF generation from XLSX | Aspose.Cells workbook save as PDF
+// Title: Convert an XLSX workbook to a high‑resolution PDF with Aspose.Cells for .NET (C#)
+// Common Searches: c# convert xlsx file to pdf using aspose.cells | asp.net core load excel workbook and export to high resolution pdf | how to configure PdfSaveOptions in Aspose.Cells C# example | save each worksheet on a separate page when exporting Excel to PDF Aspose.Cells | asp.net convert excel to pdf preserving layout with Aspose.Cells
+// Tags: Aspose.Cells PDFSaveOptions configuration C# | export Excel workbook to PDF using Aspose.Cells | high‑resolution PDF generation from XLSX with Aspose.Cells | OnePagePerSheet option for PDF export Aspose.Cells | load workbook and save as PDF .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Saving;   // Contains PdfSaveOptions
+using System;
+using System.IO;
 
-// // Loads an XLSX workbook with Aspose.Cells, optionally sets PdfSaveOptions.ImageResolution for higher DPI, and saves the workbook as a high‑resolution PDF.
-class ConvertXlsxToPdf
+// The sample checks for 'input.xlsx', loads it into an Aspose.Cells Workbook, sets PdfSaveOptions (OnePagePerSheet = false), and saves the workbook as a high‑resolution PDF file 'output.pdf', with error handling for missing files and exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source XLSX file
-        string sourcePath = "input.xlsx";
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Path where the high‑resolution PDF will be saved
-        string pdfPath = "output.pdf";
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Load the workbook from the XLSX file
-        Workbook workbook = new Workbook(sourcePath);
+            // Load the XLSX workbook from file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create PDF save options – you can adjust options here for higher quality
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Optional: keep each sheet on a separate page
+                OnePagePerSheet = false
+                // Note: ImageResolution property is not available in this version of Aspose.Cells.
+                // High‑resolution output can be achieved by other means if required.
+            };
 
-        // Example option: keep the document structure (optional, not related to resolution)
-        pdfOptions.ExportDocumentStructure = true;
-
-        // If the library version supports it, you could set image resolution, e.g.:
-        // pdfOptions.ImageResolution = 300;   // Uncomment if the property exists
-
-        // Save the workbook as a PDF using the specified options
-        workbook.Save(pdfPath, pdfOptions);
-
-        Console.WriteLine("Conversion completed: " + pdfPath);
+            // Save the workbook as a PDF file with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

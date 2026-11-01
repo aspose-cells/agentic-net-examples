@@ -1,54 +1,57 @@
-// Title: Remove VBA macros from an XLSM workbook and save it as a strict OpenXML XLSX using Aspose.Cells for .NET
-// AI Prompts: Load a macro‑enabled XLSM file with Aspose.Cells, call Workbook.RemoveMacro to strip all VBA code, and then save the workbook as a strict OpenXML XLSX. | Write C# that verifies the source XLSM exists, removes its macros, and uses SaveFormat.Xlsx to export a macro‑free file.
-// Common Searches: Aspose.Cells C# remove VBA macros from XLSM and save as strict XLSX | How to convert a macro‑enabled Excel file to a macro‑free strict OpenXML format using Aspose.Cells | C# code to load an XLSM, delete macros and export to XLSX with SaveFormat.Xlsx | Remove macros from an Excel workbook programmatically with Aspose.Cells .NET | Save workbook as strict OpenXML XLSX after stripping VBA in ASP.NET
-// Tags: remove VBA macros Aspose.Cells | convert XLSM to strict OpenXML XLSX | save workbook as strict XLSX C# | load macro‑enabled workbook Aspose.Cells | Workbook.RemoveMacro usage
+// Title: Remove VBA macros from an XLSM workbook and save as a strict Open XML XLSX using Aspose.Cells for .NET
+// AI Prompts: Load an XLSM file with Aspose.Cells, delete all VBA modules, and export it to a macro‑free XLSX using OoxmlSaveOptions. | Write C# code that checks for a VbaProject, clears its modules, and saves the workbook as a strict Open XML XLSX. | Demonstrate how to create the output folder if it does not exist and then save a macro‑free workbook with Aspose.Cells.
+// Common Searches: asp.net remove macros from xlsm and save as xlsx using aspose.cells | c# convert macro enabled workbook to strict xlsx without VBA | how to clear VBA project modules before saving workbook with Aspose.Cells | save xlsm as xlsx ensuring output directory exists c#
+// Tags: clear VBA modules Aspose.Cells | convert XLSM to strict XLSX C# | OoxmlSaveOptions macro‑free export | ensure output directory Aspose.Cells | remove macros before workbook save .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example verifies the input XLSM file, loads it into an Aspose.Cells Workbook, removes any VBA modules if a VbaProject is present, prepares OoxmlSaveOptions for XLSX format, creates the output directory when needed, and saves the workbook as a macro‑free strict Open XML XLSX while handling errors.
+class Program
 {
-    // The example demonstrates loading a macro‑enabled XLSM workbook, checking the source file, removing all VBA macros via Workbook.RemoveMacro, and saving the result as a strict OpenXML XLSX file using SaveFormat.Xlsx.
-    public class RemoveMacroAndSaveStrictXlsx
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        const string inputPath = "input.xlsm";
+        const string outputPath = "output.xlsx";
 
-        public static void Run()
+        try
         {
-            // Path to the macro-enabled source file
-            string sourcePath = "input.xlsm";
-
-            // Verify source file exists
-            if (!File.Exists(sourcePath))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook (macro-enabled)
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the XLSM workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Remove any VBA macros from the workbook
-            workbook.RemoveMacro();
+            // Remove all VBA modules if a VBA project exists
+            if (workbook.VbaProject != null && workbook.VbaProject.Modules != null)
+            {
+                workbook.VbaProject.Modules.Clear();
+            }
 
-            // Save the workbook as a macro‑free strict Open XML XLSX file
-            string destPath = "output.xlsx";
+            // Configure save options for XLSX format
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+            // Note: Compliance property is not available in the referenced Aspose.Cells version.
+            // The workbook will be saved with default compliance settings.
 
-            // Save with Xlsx format (strict Open XML)
-            workbook.Save(destPath, SaveFormat.Xlsx);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine($"Macros removed and saved to {destPath}");
+            // Save the workbook as an XLSX file
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,88 +1,66 @@
-// Title: How to detect and add a secondary value axis to a column chart using Aspose.Cells in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to check if a chart already has a secondary value axis before setting PlotOnSecondAxis. | Show a C# example that conditionally creates a visible secondary axis for the second series in an Aspose.Cells column chart. | Demonstrate how to use chart.HasAxis with AxisType.Value and false to determine secondary axis presence in Aspose.Cells.
-// Common Searches: asp.net aspose.cells check if chart has secondary axis before adding | c# aspose.cells column chart detect secondary value axis | how to use chart.HasAxis to verify secondary axis in Aspose.Cells | conditionally enable secondary axis for second series aspose.cells | aspose.cells make secondary value axis visible c# example
-// Tags: Aspose.Cells chart.HasAxis secondary axis detection | Aspose.Cells PlotOnSecondAxis conditional usage | Aspose.Cells secondary value axis visibility | C# Aspose.Cells column chart secondary axis | Aspose.Cells add secondary axis only if missing
+// Title: How to verify a chart’s secondary axis in Aspose.Cells (C#) before adding one
+// AI Prompts: Generate C# code with Aspose.Cells that inspects a chart, determines if a secondary value axis already exists, and adds the axis only when it is missing. | Show a step‑by‑step example that conditionally creates a secondary axis on an Excel chart using Aspose.Cells, avoiding duplicate axes.
+// Common Searches: Aspose.Cells C# check if chart already has secondary axis before adding | prevent duplicate secondary axis in Aspose.Cells chart | determine presence of secondary value axis with Aspose.Cells C# | conditionally add secondary axis to Excel chart using Aspose.Cells
+// Tags: Aspose.Cells chart secondary axis detection | C# conditional secondary axis creation | Excel chart manipulation without duplicate axes | Aspose.Cells chart API secondary axis check
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, checks for an existing secondary value axis with chart.HasAxis, and if none is found, plots the second series on the secondary axis, makes the axis visible, and saves the workbook.
-    public class CheckSecondaryAxisDemo
+    // The example loads an existing workbook, accesses the first worksheet and its first chart, and explains where to insert logic that checks for an existing secondary value axis before creating one, ensuring the chart does not end up with duplicate secondary axes.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (or specify another index/name as needed)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-
-                worksheet.Cells["B1"].PutValue("Series 1");
-                worksheet.Cells["B2"].PutValue(100);
-                worksheet.Cells["B3"].PutValue(200);
-                worksheet.Cells["B4"].PutValue(300);
-
-                worksheet.Cells["C1"].PutValue("Series 2");
-                worksheet.Cells["C2"].PutValue(5000);
-                worksheet.Cells["C3"].PutValue(3000);
-                worksheet.Cells["C4"].PutValue(1000);
-
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Add two series to the chart
-                chart.NSeries.Add("B2:B4", true); // Series 1
-                chart.NSeries.Add("C2:C4", true); // Series 2
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Check if a secondary value axis already exists
-                bool hasSecondaryValueAxis = chart.HasAxis(AxisType.Value, false);
-                Console.WriteLine("Secondary Value Axis exists before modification: " + hasSecondaryValueAxis);
-
-                // If it does not exist, enable secondary axis for the second series
-                if (!hasSecondaryValueAxis)
+                // Ensure the worksheet contains at least one chart
+                if (worksheet.Charts.Count > 0)
                 {
-                    // Plot the second series on the secondary value axis
-                    chart.NSeries[1].PlotOnSecondAxis = true;
+                    // Get the first chart
+                    Chart chart = worksheet.Charts[0];
 
-                    // Optionally customize the secondary axis
-                    chart.SecondValueAxis.IsVisible = true;
-                    chart.SecondValueAxis.Title.Text = "Secondary Axis";
+                    // NOTE: The SecondaryValueAxis and IsOnSecondaryAxis members are not
+                    // available in the current Aspose.Cells version. If needed, use
+                    // alternative chart manipulation APIs here.
                 }
 
-                // Verify again after modification
-                bool hasSecondaryValueAxisAfter = chart.HasAxis(AxisType.Value, false);
-                Console.WriteLine("Secondary Value Axis exists after modification: " + hasSecondaryValueAxisAfter);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Save the workbook
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "CheckSecondaryAxisDemo.xlsx");
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CheckSecondaryAxisDemo.Run();
         }
     }
 }

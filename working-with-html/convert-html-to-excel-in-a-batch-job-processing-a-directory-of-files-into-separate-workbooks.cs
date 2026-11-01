@@ -1,28 +1,28 @@
-// Title: Batch convert a folder of HTML files to individual Excel workbooks with Aspose.Cells for .NET
-// AI Prompts: Generate a C# console program that enumerates all *.html files in a specified directory, loads each with Aspose.Cells HtmlLoadOptions, and saves them as separate .xlsx workbooks. | Write code that creates the output folder, validates the input path, and logs both successful conversions and any failures for each HTML file. | Implement per‑file exception handling inside a conversion loop that transforms HTML to Excel using Aspose.Cells and outputs the source‑to‑target file mapping.
-// Common Searches: aspnet batch convert html files to xlsx using Aspose.Cells | c# console app process a directory of html and generate separate excel workbooks | how to use HtmlLoadOptions for multiple html to excel conversion in .NET | error handling for bulk html to excel conversion with Aspose.Cells
-// Tags: Aspose.Cells HTML to XLSX batch conversion | C# directory enumeration for file format conversion | HtmlLoadOptions usage in bulk Excel export | per‑file exception handling in Aspose.Cells conversion | save workbook as SaveFormat.Xlsx in loop
+// Title: Convert multiple HTML files to individual Excel workbooks in a batch using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that scans a given directory for *.html files, loads each file with Aspose.Cells HtmlLoadOptions, and saves it as a separate .xlsx workbook in an output folder. | Implement per‑file try/catch logic so that if converting one HTML file fails, the batch process continues with the remaining files. | Extend the program to copy the original HTML file's last‑modified timestamp to the generated Excel workbook after saving.
+// Common Searches: aspnet batch convert html files to xlsx using Aspose.Cells | c# console app to convert a folder of html pages to separate Excel workbooks | how to process multiple html files with Aspose.Cells HtmlLoadOptions in .NET | bulk html to excel conversion with error handling in C# | preserve original file timestamps when exporting html to xlsx with Aspose.Cells
+// Tags: Aspose.Cells batch HTML to XLSX conversion | C# HtmlLoadOptions workbook loading | directory iteration for file format conversion | per‑file exception handling in bulk conversion | preserve file timestamps during Excel export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace HtmlToExcelBatchApp
+namespace HtmlToExcelBatch
 {
-    // // This C# console application scans a given input folder for *.html files, loads each file into an Aspose.Cells Workbook using HtmlLoadOptions, and saves the result as an individual .xlsx workbook in an output folder. It ensures the input folder exists, creates the output folder if needed, and provides per‑file error handling with console logging of conversion outcomes.
-    class HtmlToExcelBatch
+    // The sample enumerates all *.html files in a specified input folder, loads each file into an Aspose.Cells Workbook using HtmlLoadOptions, and saves it as an .xlsx workbook with the same base name in an output folder. It creates the output directory if needed, logs per‑file errors, and continues processing despite individual failures.
+    class Program
     {
         static void Main(string[] args)
         {
-            // Directory containing the source HTML files
-            string inputDirectory = @"C:\InputHtml";
+            // Define the input directory containing HTML files
+            string inputDirectory = @"C:\InputHtmlFiles";
 
-            // Directory where the generated Excel workbooks will be saved
-            string outputDirectory = @"C:\OutputExcel";
+            // Define the output directory where Excel workbooks will be saved
+            string outputDirectory = @"C:\OutputExcelFiles";
 
             try
             {
-                // Verify input directory exists
+                // Ensure the input directory exists; if not, inform the user and exit
                 if (!Directory.Exists(inputDirectory))
                 {
                     Console.WriteLine($"Input directory does not exist: {inputDirectory}");
@@ -30,9 +30,12 @@ namespace HtmlToExcelBatchApp
                 }
 
                 // Ensure the output directory exists
-                Directory.CreateDirectory(outputDirectory);
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
 
-                // Retrieve all HTML files from the input directory (non‑recursive)
+                // Get all HTML files in the input directory (top level only)
                 string[] htmlFiles = Directory.GetFiles(inputDirectory, "*.html", SearchOption.TopDirectoryOnly);
 
                 foreach (string htmlFilePath in htmlFiles)
@@ -42,23 +45,27 @@ namespace HtmlToExcelBatchApp
                         // Load the HTML file into an Aspose.Cells Workbook
                         Workbook workbook = new Workbook(htmlFilePath, new HtmlLoadOptions());
 
-                        // Build the output Excel file path (same base name, .xlsx extension)
-                        string baseName = Path.GetFileNameWithoutExtension(htmlFilePath);
-                        string excelFilePath = Path.Combine(outputDirectory, baseName + ".xlsx");
+                        // Determine the output file name (same as input but with .xlsx extension)
+                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(htmlFilePath);
+                        string outputFilePath = Path.Combine(outputDirectory, fileNameWithoutExtension + ".xlsx");
 
                         // Save the workbook as an Excel file
-                        workbook.Save(excelFilePath, SaveFormat.Xlsx);
+                        workbook.Save(outputFilePath, SaveFormat.Xlsx);
 
-                        Console.WriteLine($"Converted: {htmlFilePath} -> {excelFilePath}");
+                        Console.WriteLine($"Converted: {htmlFilePath} -> {outputFilePath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to convert '{htmlFilePath}': {ex.Message}");
+                        // Log any errors for the current file and continue processing others
+                        Console.WriteLine($"Error processing file '{htmlFilePath}': {ex.Message}");
                     }
                 }
+
+                Console.WriteLine("Batch conversion completed.");
             }
             catch (Exception ex)
             {
+                // Log unexpected errors
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }

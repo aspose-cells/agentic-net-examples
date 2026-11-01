@@ -1,52 +1,53 @@
-// Title: Determine how workbook password encryption affects XLSX file size with Aspose.Cells for .NET
-// AI Prompts: Write a C# program using Aspose.Cells that creates a workbook, saves it as an unencrypted XLSX, then sets Workbook.Settings.Password, saves an encrypted copy, and outputs both file sizes. | Extend the program to compute and display the percentage growth of the XLSX file after password protection. | Refactor the example into a reusable method that accepts a password string and returns the size difference between the encrypted and original workbook.
-// Common Searches: how much does Aspose.Cells password encryption increase XLSX size in C# | C# code to get original and encrypted Excel file sizes with Aspose.Cells | measure percentage change of XLSX file after applying workbook password using Aspose.Cells | determine file size impact of Settings.Password on Excel workbook in .NET
-// Tags: Aspose.Cells workbook encryption size measurement | C# XLSX file size before and after encryption | measure encrypted Excel workbook size .NET | compare protected vs unprotected workbook file size
+// Title: Determine how workbook encryption affects XLSX file size with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells compare XLSX size before and after applying password protection | measure file size increase caused by workbook encryption using Aspose.Cells .NET | how to get encrypted workbook file length in Aspose.Cells C# | Aspose.Cells .NET check encryption overhead on generated Excel file | sample code to save encrypted Excel and read its size with Aspose.Cells
+// Tags: Aspose.Cells workbook password protection size impact | XLSX encryption overhead Aspose.Cells .NET | measure encrypted Excel file size C# | SaveFormat.Xlsx with password Aspose.Cells | file size comparison unencrypted encrypted workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates creating a workbook with sample data, saving it as an unencrypted XLSX, applying a password via Workbook.Settings.Password, saving the encrypted file, and printing the original size, encrypted size, and size increase in bytes.
+// The example creates a workbook with sample data, saves it as an unencrypted XLSX, records its size, applies a password via Workbook.Settings.Password to encrypt it, saves the encrypted file, records the new size, and writes both sizes to the console.
 class WorkbookEncryptionSizeTest
 {
     static void Main()
     {
-        // Path for the original (unencrypted) workbook
-        string originalPath = "original.xlsx";
-        // Path for the encrypted workbook
-        string encryptedPath = "encrypted.xlsx";
-
-        // Create a new workbook and add some sample data
+        // Create a new workbook and add some data to increase its size
         Workbook wb = new Workbook();
         Worksheet sheet = wb.Worksheets[0];
-        // Fill the sheet with data to make the file size noticeable
+        // Fill the sheet with sample data (e.g., 1000 rows x 10 columns)
         for (int row = 0; row < 1000; row++)
         {
-            for (int col = 0; col < 20; col++)
+            for (int col = 0; col < 10; col++)
             {
                 sheet.Cells[row, col].PutValue($"R{row}C{col}");
             }
         }
 
-        // Save the workbook without encryption
-        wb.Save(originalPath, SaveFormat.Xlsx);
+        // Define file paths for the unencrypted and encrypted workbooks
+        string unencryptedPath = Path.Combine(Path.GetTempPath(), "UnencryptedWorkbook.xlsx");
+        string encryptedPath = Path.Combine(Path.GetTempPath(), "EncryptedWorkbook.xlsx");
 
-        // Get file size of the unencrypted workbook
-        long originalSize = new FileInfo(originalPath).Length;
+        // Save the workbook without encryption
+        wb.Save(unencryptedPath, SaveFormat.Xlsx);
+
+        // Get file size before encryption
+        long sizeBefore = new FileInfo(unencryptedPath).Length;
 
         // Apply password protection (encryption)
         wb.Settings.Password = "SecretPassword";
 
-        // Save the encrypted workbook
+        // Save the workbook with encryption
         wb.Save(encryptedPath, SaveFormat.Xlsx);
 
-        // Get file size of the encrypted workbook
-        long encryptedSize = new FileInfo(encryptedPath).Length;
+        // Get file size after encryption
+        long sizeAfter = new FileInfo(encryptedPath).Length;
 
-        // Output the sizes for comparison
-        Console.WriteLine($"Original (unencrypted) size: {originalSize} bytes");
-        Console.WriteLine($"Encrypted size: {encryptedSize} bytes");
-        Console.WriteLine($"Size increase: {encryptedSize - originalSize} bytes");
+        // Output the results
+        Console.WriteLine($"File size before encryption:  {sizeBefore} bytes");
+        Console.WriteLine($"File size after encryption:   {sizeAfter} bytes");
+
+        // Clean up temporary files (optional)
+        // File.Delete(unencryptedPath);
+        // File.Delete(encryptedPath);
     }
 }

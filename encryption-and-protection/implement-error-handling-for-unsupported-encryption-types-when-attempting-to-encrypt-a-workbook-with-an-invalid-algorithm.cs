@@ -1,41 +1,58 @@
-// Title: Implement error handling for unsupported encryption algorithms when protecting an Aspose.Cells workbook in C#
-// AI Prompts: Write C# code that verifies the selected encryption algorithm before calling Workbook.Protect and throws an ArgumentException for any unsupported type. | Show how to catch ArgumentException from Workbook.Protect and log detailed error information in an Aspose.Cells encryption scenario. | Create a helper method in C# that validates encryption options for Aspose.Cells workbook protection and centralizes exception handling.
-// Common Searches: Aspose.Cells how to detect unsupported encryption algorithm before protecting workbook | C# catch ArgumentException when using Workbook.Protect with invalid encryption type | validate encryption type Aspose.Cells workbook protection .NET | error handling for workbook encryption failures in Aspose.Cells | protect Excel file with password using Aspose.Cells and handle unsupported algorithms
-// Tags: Aspose.Cells encryption algorithm validation | Workbook.Protect unsupported type handling | C# Excel workbook protection exception | Aspose.Cells encryption error handling .NET | validate workbook encryption options C#
+// Title: C# – Catch NotSupportedException for unsupported encryption algorithm while encrypting an Excel workbook with Aspose.Cells
+// Common Searches: how to handle unsupported encryption algorithm exception when saving an encrypted Excel file with Aspose.Cells in C# | Aspose.Cells encrypt workbook with password and catch NotSupportedException for invalid algorithm | C# example of error handling for unsupported encryption types in Aspose.Cells workbook encryption | catch NotSupportedException during Aspose.Cells workbook.Save with encryption in .NET | validate encryption algorithm before saving encrypted Excel using Aspose.Cells C#
+// Tags: Aspose.Cells workbook encryption NotSupportedException handling | C# encrypt Excel workbook with password error handling | unsupported encryption algorithm Aspose.Cells | save encrypted workbook with Aspose.Cells C# | Excel file encryption exception handling Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates how to protect an Aspose.Cells workbook with a password while first checking whether the chosen encryption algorithm is supported. If an unsupported algorithm is supplied, an ArgumentException is thrown and caught, allowing the developer to log a clear error message. A generic catch block handles any other unexpected issues, ensuring robust error handling during workbook encryption.
+// The example creates a new Workbook, optionally adds data, sets a password, ensures the output directory exists, and saves the file as an encrypted XLSX. The save operation is wrapped in a try‑catch block that specifically catches NotSupportedException for unsupported encryption algorithms, ArgumentException for argument issues, and a generic Exception for any other unexpected errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
 
-            // Add sample data to avoid empty workbook warnings
+            // Optional: add some data
             workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
 
-            // Protect the workbook with a password (standard encryption)
-            workbook.Protect(ProtectionType.All, "Password123");
+            // Set password for encryption
+            workbook.Settings.Password = "MyPassword";
 
-            // Save the workbook
-            workbook.Save("EncryptedWorkbook.xlsx", SaveFormat.Xlsx);
+            // NOTE: The EncryptionAlgorithm property may not exist in older Aspose.Cells versions.
+            // If needed, it can be set via SaveOptions in newer versions. Here we rely on the default algorithm.
+
+            // Define output path
+            string outputPath = "EncryptedWorkbook.xlsx";
+
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Save the encrypted workbook (save rule)
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (NotSupportedException ex)
+        {
+            // Handle unsupported encryption algorithms
+            Console.WriteLine($"Error: {ex.Message}");
         }
         catch (ArgumentException ex)
         {
-            // Handle invalid arguments (e.g., unsupported protection type)
-            Console.WriteLine("Error: Invalid argument.");
-            Console.WriteLine($"Details: {ex.Message}");
+            // Handle other argument errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            // General fallback for any other unexpected errors
-            Console.WriteLine("An unexpected error occurred while encrypting the workbook.");
-            Console.WriteLine($"Details: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

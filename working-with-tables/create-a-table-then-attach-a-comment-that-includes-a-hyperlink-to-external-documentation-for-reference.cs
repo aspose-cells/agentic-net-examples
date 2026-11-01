@@ -1,74 +1,78 @@
-// Title: Create an Excel ListObject table with a header comment that links to Aspose.Cells documentation using C#
-// AI Prompts: Generate C# code that adds a ListObject to the first worksheet, inserts a comment in cell A1, and sets a hyperlink on the comment shape pointing to the Aspose.Cells online docs. | Show how to configure the comment hyperlink's screen tip and enable row‑stripe styling for the table while saving the workbook as TableWithComment.xlsx. | Provide a C# example that creates sample data, defines a table range, adds a comment with a hyperlink, and applies custom table style options in Aspose.Cells.
-// Common Searches: Aspose.Cells C# add comment with hyperlink to documentation in table header | how to set hyperlink on comment shape in Aspose.Cells .NET | C# create ListObject and attach external link to comment in Excel file | apply row stripe style to Aspose.Cells table while preserving comment hyperlink
-// Tags: listobject table with comment hyperlink Aspose.Cells | set comment shape hyperlink C# | apply row stripe style Aspose.Cells .NET | add header comment linking to external docs Excel | save workbook with table and comment hyperlink Aspose.Cells
+// Title: Create an Excel ListObject table and add a visible comment containing a hyperlink using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# how to add a ListObject table and display a comment containing a URL | programmatically create an Excel table and attach a visible comment with a link using Aspose.Cells for .NET | C# example for saving a workbook that includes a table and a cell comment with a hyperlink | add a comment with a hyperlink to cell A1 in an Aspose.Cells worksheet | make a cell comment visible by default when generating Excel files with Aspose.Cells
+// Tags: create ListObject table Aspose.Cells | insert cell comment with URL C# | set comment visibility Aspose.Cells | populate worksheet range for table Aspose.Cells | save Excel file with table and comment Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsExample
+// The sample program creates a new workbook, fills cells A1:B3 with sample data, defines that range as a ListObject table named "SampleTable", adds a visible comment to cell A1 that includes a documentation hyperlink, ensures the output directory exists, saves the file as TableWithComment.xlsx, and writes a success message to the console.
+class Program
 {
-    // Demonstrates creating a workbook, adding a ListObject table with sample data, inserting a comment in the header cell, attaching a hyperlink to the comment shape that points to the Aspose.Cells documentation, applying row‑stripe styling, and saving the file as TableWithComment.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate data that will be converted into a table
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+
+            // Define the range for the table (A1:B3)
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 3;         // rows 1‑3
+            int totalColumns = 2;      // columns A‑B
+
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "SampleTable";
+            table.ShowHeaderRow = true;
+            // ShowTotalRow property is not available in this version; omitted.
+
+            // Add a comment to cell A1
+            int commentRow = 0;   // row 1
+            int commentColumn = 0; // column A
+            int commentIndex = sheet.Comments.Add(commentRow, commentColumn);
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Note = "For more information, see documentation: https://example.com/docs";
+            comment.IsVisible = true; // make the comment visible by default
+
+            // Determine output file path
+            string outputPath = "TableWithComment.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (string.IsNullOrEmpty(outputDir))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("ID");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["A2"].PutValue(1);
-                sheet.Cells["B2"].PutValue("Alice");
-                sheet.Cells["A3"].PutValue(2);
-                sheet.Cells["B3"].PutValue("Bob");
-
-                // Define the range for the table (including header)
-                int firstRow = 0;          // zero‑based index for row 1
-                int firstColumn = 0;       // zero‑based index for column A
-                int totalRows = 3;         // rows count (including header)
-                int totalColumns = 2;      // columns count
-
-                // Add a ListObject (table) to the worksheet
-                int tableIndex = sheet.ListObjects.Add(
-                    firstRow,
-                    firstColumn,
-                    firstRow + totalRows - 1,
-                    firstColumn + totalColumns - 1,
-                    true);
-
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "SampleTable";
-                table.ShowTableStyleFirstColumn = false;
-                table.ShowTableStyleLastColumn = false;
-                table.ShowTableStyleRowStripes = true;
-                table.ShowTableStyleColumnStripes = false;
-
-                // Add a comment to the top‑left cell of the table (A1)
-                int commentIndex = sheet.Comments.Add("A1");
-                Comment comment = sheet.Comments[commentIndex];
-                comment.Note = "See external documentation for details.";
-
-                // Attach a hyperlink to the comment shape
-                // The Hyperlink property is read‑only; modify its fields instead of assigning a new object
-                Hyperlink hl = comment.CommentShape.Hyperlink;
-                hl.Address = "https://docs.aspose.com/cells/net/";
-                hl.ScreenTip = "Aspose.Cells Documentation";
-
-                // Save the workbook
-                workbook.Save("TableWithComment.xlsx");
+                outputDir = Directory.GetCurrentDirectory();
             }
-            catch (Exception ex)
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,58 +1,55 @@
-// Title: Insert a JPEG into cell B2 of an Excel worksheet and remove its background with Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a new workbook, checks for a JPEG file, inserts it into cell B2, sets picture.IsBackgroundRemoved = true, and saves the file as XLSX using Aspose.Cells. | Generate a .NET example that validates an image path, adds the image to a worksheet at a specific cell, enables background removal on the picture shape, and writes the workbook to disk. | Provide a C# snippet that demonstrates how to embed an external image into an Excel sheet, apply transparent background removal, and handle missing file errors with Aspose.Cells.
-// Common Searches: Aspose.Cells C# insert image into specific cell and make background transparent | how to enable IsBackgroundRemoved for a picture in Aspose.Cells .NET | example code for adding JPEG to Excel worksheet with Aspose.Cells and removing background | C# check if image file exists before inserting into Excel using Aspose.Cells | save workbook with embedded picture after background removal Aspose.Cells
-// Tags: insert picture into Excel cell Aspose.Cells C# | background removal for picture shape Aspose.Cells | validate image file existence C# Aspose.Cells | save workbook with embedded image Aspose.Cells | use IsBackgroundRemoved property Aspose.Cells | add JPEG to worksheet cell B2 Aspose.Cells
+// Title: Insert a JPEG image into a specific Excel cell and save the workbook as XLSX using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that checks for the existence of a JPEG file, adds it to cell B2 of a new workbook with Aspose.Cells, and saves the file as Result.xlsx. | Adapt the example to place the picture at cell D5, set its width and height to 200 px, and mark it as a background image before saving.
+// Common Searches: how to add a JPEG picture to a particular cell in Excel with Aspose.Cells C# | Aspose.Cells C# insert image into worksheet and save as XLSX | C# verify image file path before inserting into Excel using Aspose.Cells | set picture size and position in Aspose.Cells workbook programmatically
+// Tags: add picture to worksheet cell Aspose.Cells | insert JPEG image into Excel C# | Aspose.Cells picture positioning example | verify image file existence C# Aspose.Cells | save workbook as XLSX Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The program creates a new workbook, verifies the JPEG file at the given path, inserts the image into cell B2, optionally enables background removal via the IsBackgroundRemoved property, and saves the workbook as Output.xlsx.
+// // Loads a JPEG, validates its path, creates a new workbook, inserts the image into cell B2, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Path to the image you want to insert
             string imagePath = @"C:\Images\sample.jpg";
+            string outputPath = @"C:\Output\Result.xlsx";
 
-            // Verify that the image file exists to avoid FileNotFoundException
+            // Verify the image file exists
             if (!File.Exists(imagePath))
             {
                 Console.WriteLine($"Image file not found: {imagePath}");
                 return;
             }
 
-            // Insert the picture at cell B2 (row index 1, column index 1)
-            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
-            Picture picture = sheet.Pictures[pictureIndex];
-
-            // If the API version supports background removal, uncomment the line below
-            // picture.IsBackgroundRemoved = true;
-
             // Ensure the output directory exists
-            string outputPath = "Output.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add picture at cell B2 (row index 1, column index 1)
+            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
+
+            // Retrieve the picture object (no need to set IsBackground; default is false)
+            Picture picture = sheet.Pictures[pictureIndex];
+
             // Save the workbook
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

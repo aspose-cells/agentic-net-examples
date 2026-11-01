@@ -1,77 +1,111 @@
-// Title: Select specific slicer items in C# with Aspose.Cells and verify the linked pivot table total
-// AI Prompts: Create C# code that builds a workbook, adds a pivot table on the Product column, links a slicer to that field, selects only the "Apple" item in the slicer, refreshes the slicer, and prints the resulting pivot total. | Write C# to modify the slicer selection to include both "Apple" and "Banana", refresh the associated pivot table, and output the combined sales sum. | Add verification logic in C# that reads the pivot table total cell after a slicer refresh and asserts the value equals the expected sum.
-// Common Searches: Aspose.Cells C# filter pivot table using slicer programmatically | set slicer selected items Aspose.Cells and refresh linked pivot | read pivot table total after slicer refresh Aspose.Cells .NET | verify slicer filter results in pivot table using Aspose.Cells API
-// Tags: programmatic slicer item selection Aspose.Cells | refresh linked pivot table after slicer update .NET | validate pivot total after slicer filter C# | slicer cache item selection property Aspose.Cells | pivot table data verification Aspose.Cells
+// Title: Check that a pivot table reflects updated slicer selections using Aspose.Cells for .NET (C#)
+// AI Prompts: Select the first two items of a slicer, deselect the remaining items, refresh the linked pivot table, and output a verification message with Aspose.Cells in C#. | Count the selected slicer cache items and compare the count to the number of visible row items in the pivot table to confirm filter synchronization. | Adapt the code to locate a slicer by its name, apply custom selections, refresh the associated pivot table, and validate the result.
+// Common Searches: Aspose.Cells C# how to programmatically change slicer items and refresh linked pivot table | verify slicer filter updates pivot table rows using Aspose.Cells .NET | count visible pivot items after applying slicer selections with Aspose.Cells | C# example for refreshing pivot table after slicer cache item selection Aspose.Cells | Aspose.Cells verify that slicer selections match pivot row items
+// Tags: update slicer cache items Aspose.Cells | refresh pivot table after slicer change .NET | verify slicer filter synchronization with pivot table | count visible pivot items C# Aspose.Cells | select slicer items programmatically Excel .NET | pivot table data refresh Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;
 
-// Demonstrates creating a workbook with product sales data, adding a pivot table, linking a slicer to the Product field, programmatically selecting only "Apple" in the slicer, refreshing both slicer and pivot, confirming the pivot total equals 250, and saving the workbook.
-class SlicerPivotRefreshDemo
+// The example loads an Excel workbook, accesses the first slicer on the first worksheet, selects the first two slicer items while deselecting the rest, refreshes the first pivot table on the sheet, counts both the selected slicer items and the visible row items in the pivot table, compares the counts to verify that the pivot reflects the slicer filter, outputs the verification result, and saves the workbook.
+class SlicerPivotVerification
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet for source data
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate source data (Product | Sales)
-            dataSheet.Cells["A1"].PutValue("Product");
-            dataSheet.Cells["B1"].PutValue("Sales");
-            dataSheet.Cells["A2"].PutValue("Apple");
-            dataSheet.Cells["B2"].PutValue(100);
-            dataSheet.Cells["A3"].PutValue("Banana");
-            dataSheet.Cells["B3"].PutValue(200);
-            dataSheet.Cells["A4"].PutValue("Apple");
-            dataSheet.Cells["B4"].PutValue(150);
-
-            // Add a worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B4", "C3", "Pivot1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Configure pivot: Product as row field, Sales as data field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
-            pivotTable.RefreshData();   // Gather data into cache
-            pivotTable.CalculateData(); // Calculate totals
-
-            // Add a worksheet for the slicer
-            Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
-            // Create slicer linked to the pivot table on the "Product" field
-            int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Product");
-            Slicer slicer = slicerSheet.Slicers[slicerIndex];
-
-            // ---- Update slicer items ----
-            // Select only the "Apple" item, deselect all others
-            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                item.Selected = item.Value.Equals("Apple", StringComparison.OrdinalIgnoreCase);
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Refresh the slicer; this also refreshes and recalculates the linked pivot table
-            slicer.Refresh();
+            // Load the workbook containing the slicer and pivot table
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure pivot data is up‑to‑date after slicer refresh
+            // Assume the slicer is on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one slicer
+            if (sheet.Slicers.Count == 0)
+            {
+                Console.WriteLine("No slicers found on the first worksheet.");
+                return;
+            }
+
+            // Access the first slicer
+            Slicer slicer = sheet.Slicers[0];
+
+            // Update slicer items: select the first two items and deselect the rest
+            SlicerCache slicerCache = slicer.SlicerCache;
+            var cacheItems = slicerCache.SlicerCacheItems;
+            for (int i = 0; i < cacheItems.Count; i++)
+            {
+                cacheItems[i].Selected = i < 2;
+            }
+
+            // Retrieve a linked pivot table (use the first pivot table on the sheet)
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
+            }
+
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // Refresh the pivot table to apply the slicer filter
             pivotTable.RefreshData();
-            pivotTable.CalculateData();
 
-            // ---- Verify pivot table reflects the new filter ----
-            // After filtering to "Apple", the pivot should show total sales = 250 (100 + 150)
-            // The total value is in the data column (D4) of the pivot table
-            double appleTotal = pivotSheet.Cells["D4"].DoubleValue;
-            Console.WriteLine("Apple total after slicer filter: " + appleTotal);
+            // Count selected slicer items
+            int selectedSlicerCount = 0;
+            foreach (SlicerCacheItem item in cacheItems)
+            {
+                if (item.Selected)
+                    selectedSlicerCount++;
+            }
 
-            // Save the workbook
-            workbook.Save("SlicerPivotRefreshDemo.xlsx");
+            // Ensure the pivot table has at least one row field
+            if (pivotTable.RowFields.Count == 0)
+            {
+                Console.WriteLine("Pivot table has no row fields to verify.");
+                return;
+            }
+
+            // Get the first row field of the pivot table
+            PivotField rowField = pivotTable.RowFields[0];
+
+            // Count visible items in the row field after filtering
+            int visibleRowItemCount = 0;
+            foreach (PivotItem pivotItem in rowField.PivotItems)
+            {
+                if (!pivotItem.IsHidden) // IsHidden = false means the item is visible after filter
+                    visibleRowItemCount++;
+            }
+
+            // Output verification result
+            if (selectedSlicerCount == visibleRowItemCount)
+            {
+                Console.WriteLine("Verification succeeded: Pivot table reflects slicer filter.");
+            }
+            else
+            {
+                Console.WriteLine($"Verification failed: Selected slicer items = {selectedSlicerCount}, " +
+                                  $"visible pivot items = {visibleRowItemCount}");
+            }
+
+            // Save the workbook if needed
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

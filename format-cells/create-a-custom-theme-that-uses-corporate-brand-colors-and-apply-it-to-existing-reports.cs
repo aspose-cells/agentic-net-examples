@@ -1,58 +1,65 @@
-// Title: Apply a corporate brand color theme to an existing Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing .xlsx file, defines five corporate brand colors, assigns them to ThemeColorType.Accent1‑Accent4 and Hyperlink using Workbook.SetThemeColor, and saves the modified workbook. | Show how to add file‑existence verification and try‑catch blocks around the theme‑application logic when using Aspose.Cells. | Demonstrate updating only the theme colors of a workbook without altering cell data or formatting, using the Aspose.Cells SetThemeColor method.
-// Common Searches: Aspose.Cells C# set custom theme accent colors in an existing workbook | how to replace Excel theme palette with corporate colors using Aspose.Cells | C# code example for applying a brand color scheme to a .xlsx file with Aspose.Cells | error handling when loading a workbook before applying a custom theme in Aspose.Cells | set hyperlink theme color programmatically with Aspose.Cells .NET
-// Tags: set custom theme colors Aspose.Cells | apply corporate palette to Excel workbook C# | Workbook.SetThemeColor usage example | load and save themed .xlsx with Aspose.Cells | file not found handling Aspose.Cells
+// Title: Apply a custom corporate color theme to an existing Excel workbook with Aspose.Cells for .NET
+// Common Searches: how to change Excel theme accent colors using Aspose.Cells in C# | set corporate brand palette for workbook theme with Aspose.Cells .NET | Aspose.Cells SetThemeColor example for customizing Excel themes | apply custom theme to existing .xlsx file using Aspose.Cells | C# code to modify Excel theme colors programmatically
+// Tags: Aspose.Cells SetThemeColor API | custom Excel theme colors .NET | programmatic workbook theme customization | apply corporate palette to Excel workbook | theme accent color modification using Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
 namespace AsposeCellsThemeExample
 {
-    // Loads an existing Excel file, defines corporate brand colors, assigns them to theme accents and hyperlink via Workbook.SetThemeColor, validates file existence, handles exceptions, and saves the themed workbook as a new .xlsx file.
+    // The sample loads an existing workbook, defines corporate brand colors, assigns them to the workbook's theme accents (Accent1‑Accent6, Hyperlink, FollowedHyperlink) via Workbook.SetThemeColor, and saves the file with the new custom theme applied.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Verify that the source report file exists to avoid FileNotFoundException
-                const string sourceFile = "ExistingReport.xlsx";
-                if (!File.Exists(sourceFile))
+                const string inputPath = "ReportInput.xlsx";
+                const string outputPath = "ReportOutput.xlsx";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    throw new FileNotFoundException($"The source workbook '{sourceFile}' was not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
                 // Define corporate brand colors
-                Color corporatePrimary   = Color.FromArgb(0, 112, 192);   // Brand Blue
-                Color corporateSecondary = Color.FromArgb(255, 192, 0);   // Brand Orange
-                Color corporateAccent1   = Color.FromArgb(0, 176, 80);    // Brand Green
-                Color corporateAccent2   = Color.FromArgb(192, 0, 0);     // Brand Red
-                Color corporateHyperlink = Color.FromArgb(0, 0, 255);    // Hyperlink Blue
+                Color brandPrimary   = ColorTranslator.FromHtml("#003366"); // Dark Blue
+                Color brandSecondary = ColorTranslator.FromHtml("#FFCC00"); // Gold
+                Color brandAccent1   = ColorTranslator.FromHtml("#0099CC"); // Light Blue
+                Color brandAccent2   = ColorTranslator.FromHtml("#66CC66"); // Green
+                Color brandAccent3   = ColorTranslator.FromHtml("#CC3333"); // Red
+                Color brandAccent4   = ColorTranslator.FromHtml("#9966CC"); // Purple
+                Color brandAccent5   = ColorTranslator.FromHtml("#FF6600"); // Orange
+                Color brandAccent6   = ColorTranslator.FromHtml("#CCCCCC"); // Light Gray
 
-                // Load the existing report workbook
-                Workbook reportWorkbook = new Workbook(sourceFile);
+                // Apply corporate colors to the workbook theme accents
+                workbook.SetThemeColor(ThemeColorType.Accent1, brandPrimary);
+                workbook.SetThemeColor(ThemeColorType.Accent2, brandSecondary);
+                workbook.SetThemeColor(ThemeColorType.Accent3, brandAccent1);
+                workbook.SetThemeColor(ThemeColorType.Accent4, brandAccent2);
+                workbook.SetThemeColor(ThemeColorType.Accent5, brandAccent3);
+                workbook.SetThemeColor(ThemeColorType.Accent6, brandAccent4);
 
-                // Apply the custom theme colors to the workbook
-                reportWorkbook.SetThemeColor(ThemeColorType.Accent1, corporatePrimary);
-                reportWorkbook.SetThemeColor(ThemeColorType.Accent2, corporateSecondary);
-                reportWorkbook.SetThemeColor(ThemeColorType.Accent3, corporateAccent1);
-                reportWorkbook.SetThemeColor(ThemeColorType.Accent4, corporateAccent2);
-                reportWorkbook.SetThemeColor(ThemeColorType.Hyperlink, corporateHyperlink);
+                // Optionally set hyperlink colors to match brand palette
+                workbook.SetThemeColor(ThemeColorType.Hyperlink, brandAccent5);
+                workbook.SetThemeColor(ThemeColorType.FollowedHyperlink, brandAccent6);
 
-                // Save the themed report
-                const string outputFile = "ExistingReport_Themed.xlsx";
-                reportWorkbook.Save(outputFile);
-                Console.WriteLine($"The themed workbook has been saved as '{outputFile}'.");
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.Error.WriteLine($"File error: {fnfEx.Message}");
+                // Save the workbook with the custom theme applied
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // Log or display the exception details for troubleshooting
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

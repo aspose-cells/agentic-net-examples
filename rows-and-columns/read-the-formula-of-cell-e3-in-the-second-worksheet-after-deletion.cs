@@ -1,12 +1,12 @@
-// Title: Read the formula in cell E3 of the second worksheet after deleting a row with Aspose.Cells for .NET
-// AI Prompts: Delete the first row of the second worksheet, let Aspose.Cells shift the cells, and then fetch the updated formula from cell E3 in C#. | Provide C# code that removes a row, updates all references, and returns the formula contained in E3 on the second sheet using Aspose.Cells.
-// Common Searches: Aspose.Cells C# read cell formula after row deletion | How to get updated formula in Excel when a row is removed using Aspose.Cells | Retrieve E3 formula after deleting first row in second worksheet Aspose.Cells .NET | C# Aspose.Cells preserve formulas while deleting rows | Read formula of a shifted cell after row removal with Aspose.Cells
-// Tags: delete row update formulas Aspose.Cells | read cell formula Aspose.Cells C# | second worksheet cell E3 retrieval | row deletion reference shift Aspose.Cells | C# workbook modify rows preserve formulas
+// Title: Retrieve the formula in cell E3 of the second worksheet after removing the first worksheet with Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook, delete the sheet at index 0, then extract the Formula property of cell E3 on the remaining second sheet using Aspose.Cells in C#. | Using Aspose.Cells for .NET, open a workbook, remove the first worksheet, and read the formula string stored in cell E3 of the next worksheet.
+// Common Searches: Aspose.Cells C# get formula from a cell after deleting a worksheet | read formula from E3 after removing first sheet in a .NET workbook | example code to delete first worksheet and retrieve cell formula with Aspose.Cells | how to access cell formula when worksheet indices change in Aspose.Cells
+// Tags: Aspose.Cells delete first sheet | Aspose.Cells read cell formula | C# worksheet index handling Aspose.Cells | cell.Formula property usage | Aspose.Cells workbook manipulation
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The program loads an Excel file, accesses the second worksheet, deletes the first row while shifting cells, reads the formula from cell E3 after the deletion, prints it, and saves the modified workbook.
+// The example loads an Excel file, removes the first worksheet, accesses the worksheet now at index 1, reads the formula from cell E3 using the Cell.Formula property, and prints the formula to the console.
 class Program
 {
     static void Main()
@@ -14,19 +14,19 @@ class Program
         // Load the workbook from a file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the second worksheet (index 1)
-        Worksheet sheet = workbook.Worksheets[1];
+        // Delete the first worksheet (index 0)
+        workbook.Worksheets.RemoveAt(0);
 
-        // Delete a row (example: first row) and update references
-        sheet.Cells.DeleteRow(0, true);
+        // Access the second worksheet (now at index 1)
+        Worksheet secondSheet = workbook.Worksheets[1];
 
-        // Read the formula from cell E3 after the deletion
-        string formula = sheet.Cells["E3"].Formula;
+        // Retrieve cell E3
+        Cell targetCell = secondSheet.Cells["E3"];
 
-        // Output the formula
-        Console.WriteLine($"Formula in E3 after deletion: {formula}");
+        // Read the formula stored in the cell
+        string formula = targetCell.Formula;
 
-        // Save the workbook if needed
-        workbook.Save("output.xlsx");
+        // Display the formula
+        Console.WriteLine("Formula in E3 of the second worksheet: " + formula);
     }
 }

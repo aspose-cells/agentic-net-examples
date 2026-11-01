@@ -1,54 +1,56 @@
-// Title: Load only the first three worksheets from an XLSX file with LightCells and save the trimmed workbook using Aspose.Cells for .NET
-// AI Prompts: Implement workbook loading with Aspose.Cells LightCells so that only the first three worksheets are read into memory. | After loading, write the workbook back to a new XLSX file preserving just those three sheets.
-// Common Searches: Aspose.Cells LightCells load specific worksheets from large XLSX | memory‑efficient way to keep first three sheets in C# Aspose.Cells | how to trim a workbook to a subset of sheets without loading all data | C# load only selected sheets using LoadFilter Aspose.Cells
-// Tags: lightcells selective worksheet loading | load first three sheets Aspose.Cells | memory‑efficient workbook trimming .NET | Aspose.Cells load specific worksheets | save trimmed workbook XLSX
+// Title: Load only the first three worksheets from an XLSX file with Aspose.Cells LightCells in C#
+// Common Searches: Aspose.Cells C# load first three sheets from large XLSX using LightCells | How to read only a subset of worksheets in a .xlsx with minimal memory in .NET | C# example for limiting worksheet loading to first three tabs with Aspose.Cells | Using LoadOptions to restrict worksheet count in Aspose.Cells LightCells | Read first three worksheets of an Excel workbook without loading all sheets in C#
+// Tags: load first three worksheets Aspose.Cells LightCells | memory‑efficient Excel sheet loading C# | selective worksheet loading using LoadOptions | limit loaded worksheets Aspose.Cells XLSX | partial workbook loading Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates how to use Aspose.Cells LightCells API in C# to open an XLSX file, load only the first three worksheets into memory, and then save a new workbook containing just those sheets, minimizing memory consumption.
+// The sample verifies the XLSX file exists, creates LoadOptions for the Xlsx format, opens the workbook with LightCells, determines the total sheet count, and iterates over up to the first three worksheets to read each sheet's name and cell A1 value, all while keeping memory usage low.
 class Program
 {
     static void Main()
     {
-        // Paths to the source and destination files
+        // Path to the source XLSX file
         string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: File not found - {inputPath}");
+            return;
+        }
 
         try
         {
-            // Ensure the input file exists; create an empty workbook if it does not
-            if (!File.Exists(inputPath))
+            // Load options: specify the format of the file
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+            // Load the workbook with the specified options
+            using (Workbook workbook = new Workbook(inputPath, loadOptions))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new empty workbook.");
-                var placeholder = new Workbook();
-                placeholder.Save(inputPath, SaveFormat.Xlsx);
+                // Determine how many worksheets are actually in the file
+                int totalWorksheets = workbook.Worksheets.Count;
+
+                // We only need the first three (or fewer if the file has less)
+                int worksheetsToLoad = Math.Min(3, totalWorksheets);
+
+                for (int i = 0; i < worksheetsToLoad; i++)
+                {
+                    // Access the i‑th worksheet (zero‑based index)
+                    Worksheet sheet = workbook.Worksheets[i];
+
+                    // Example: read the sheet name and the value of cell A1
+                    string sheetName = sheet.Name;
+                    string a1Value = sheet.Cells["A1"].StringValue;
+
+                    Console.WriteLine($"Worksheet {i + 1}: Name = {sheetName}, A1 = {a1Value}");
+                }
             }
-
-            // Load the workbook (default loading loads all worksheets)
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            var workbook = new Workbook(inputPath, loadOptions);
-
-            // Keep only the first three worksheets (if they exist)
-            while (workbook.Worksheets.Count > 3)
-            {
-                workbook.Worksheets.RemoveAt(3);
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the resulting workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

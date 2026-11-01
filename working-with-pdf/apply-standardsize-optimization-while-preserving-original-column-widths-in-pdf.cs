@@ -1,45 +1,47 @@
-// Title: Export Excel to PDF while preserving column widths and disabling fit‑to‑page scaling with Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx workbook using Aspose.Cells, disables automatic page scaling, and saves the workbook as a PDF. | Show how to configure PdfSaveOptions in Aspose.Cells to keep the original column layout when converting a worksheet to PDF. | Explain why the StandardSize optimization flag is unavailable in some Aspose.Cells releases and how to achieve a similar effect by turning off page scaling.
-// Common Searches: keep original column layout when exporting Excel to PDF using Aspose.Cells | Aspose.Cells PdfSaveOptions disable fit to page example | export worksheet to PDF without scaling columns in C# | StandardSize PDF optimization missing in Aspose.Cells version | Excel to PDF conversion maintaining column widths Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet false | preserve column widths Excel to PDF Aspose.Cells | PdfSaveOptions turn off page scaling C# | PDF optimization limitation Aspose.Cells | Excel workbook PDF conversion without column scaling
+// Title: Convert an Excel workbook to PDF with StandardSize optimization while preserving column widths using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets PdfSaveOptions.StandardSize = true, disables AllColumnsInOnePage, and saves the workbook as a PDF with Aspose.Cells. | Show how to programmatically detect the AllColumnsInOnePage property in PdfSaveOptions and set it to false before exporting to PDF. | Provide a complete example that converts an Excel file to PDF, keeps the original column widths, and enables the StandardSize optimization for better page layout.
+// Common Searches: Aspose.Cells PDF conversion keep original column widths | How to disable AllColumnsInOnePage when saving Excel as PDF in C# | Enable StandardSize option in PdfSaveOptions for Aspose.Cells | Convert XLSX to PDF without scaling columns to one page using Aspose.Cells | C# Aspose.Cells preserve layout during Excel to PDF export
+// Tags: Aspose.Cells PdfSaveOptions StandardSize | Aspose.Cells preserve column widths PDF | Aspose.Cells disable AllColumnsInOnePage | Excel to PDF layout preservation .NET | runtime check PdfSaveOptions property C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample loads an existing Excel workbook (or creates a simple one if missing), sets PdfSaveOptions.OnePagePerSheet to false to prevent fit‑to‑page scaling, and saves the workbook as a PDF while preserving the original column widths using Aspose.Cells for .NET.
+// Loads 'input.xlsx', configures PdfSaveOptions to enable StandardSize and preserve column widths by setting AllColumnsInOnePage to false (when the property exists), then saves the workbook as 'output.pdf' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            Workbook workbook;
-            const string inputPath = "input.xlsx";
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.pdf";
 
-            // Load existing workbook if present; otherwise create a simple one.
-            if (File.Exists(inputPath))
+            // Ensure the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
             }
 
-            // Configure PDF save options.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Do not force fit‑to‑page; keep original column widths.
-                OnePagePerSheet = false
-                // Note: PdfOptimizationOptions is not available in this version of Aspose.Cells.
-            };
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
 
-            // Save the workbook as PDF.
-            const string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Preserve original column widths (do not force all columns onto one page)
+            // The AllColumnsInOnePage property may not be present in all versions;
+            // if it exists, set it to false.
+            var allColsProp = typeof(PdfSaveOptions).GetProperty("AllColumnsInOnePage");
+            if (allColsProp != null && allColsProp.CanWrite)
+            {
+                allColsProp.SetValue(pdfOptions, false);
+            }
+
+            // Save the workbook as PDF
+            workbook.Save(outputFile, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputFile}'.");
         }
         catch (Exception ex)
         {

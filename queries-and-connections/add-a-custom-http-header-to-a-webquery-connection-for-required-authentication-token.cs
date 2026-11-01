@@ -1,61 +1,60 @@
-// Title: Add a Bearer authentication header to a WebQuery request and import the response into an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code that sets an Authorization: Bearer header on HttpClient, fetches JSON from a REST endpoint, and writes the result into cell A1 of a new Aspose.Cells workbook. | Show how to create a helper method that accepts a URL and token, performs an authenticated GET request, and returns the response string for use with Aspose.Cells. | Provide a complete example that saves the workbook after loading data from an API that requires a Bearer token, including error handling.
-// Common Searches: how to include a bearer token in Aspose.Cells WebQuery C# example | Aspose.Cells fetch data from secured API and write to Excel | C# HttpClient Authorization header with Aspose.Cells workbook import | sample code for authenticated web query using Aspose.Cells | retrieve protected REST data and populate Excel using Aspose.Cells C#
-// Tags: bearer token authentication Aspose.Cells WebQuery | C# HttpClient Authorization header Excel import | fetch API data into Aspose.Cells worksheet | save workbook after authenticated web request | custom HTTP header Aspose.Cells connection
+// Title: Add a custom Authorization header to a WebQuery connection in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# example for adding Authorization header to a WebQuery | How to send an authenticated HTTP GET request and import data into an Excel workbook using Aspose.Cells | C# code to fetch API data with bearer token and write response to a worksheet cell in Aspose.Cells | Using HttpClient with custom headers in Aspose.Cells WebQuery scenario | Save workbook after performing an authenticated web request with Aspose.Cells .NET
+// Tags: add Authorization header Aspose.Cells WebQuery | authenticated HttpClient request Aspose.Cells C# | write API response to Excel cell Aspose.Cells | custom header integration Aspose.Cells .NET | save workbook after web query Aspose.Cells
 
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The example creates a new Workbook, configures HttpClient with an optional Bearer token in the Authorization header, retrieves data from a protected web service, writes the response string to cell A1, and saves the workbook as WebQueryWithHeader.xlsx.
+// Demonstrates how to configure an HttpClient with a custom Authorization (Bearer) header, retrieve data from a protected web API, place the raw response into cell A1 of the first worksheet, and save the workbook as WebQueryWithAuth.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static async Task Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // URL of the web service providing data
-            string url = "https://api.example.com/data";
+            // Define the URL of the web request
+            string requestUrl = "https://api.example.com/data";
 
-            // Optional: add authentication header (replace with actual token)
-            string authToken = "YOUR_AUTH_TOKEN";
+            // Prepare HttpClient with custom Authorization header
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer your-auth-token");
 
-            // Retrieve data from the web service
-            string responseData = await GetWebDataAsync(url, authToken);
+                // Send GET request and read response as string
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
+                response.EnsureSuccessStatusCode();
+                string responseData = await response.Content.ReadAsStringAsync();
 
-            // Write the retrieved data to cell A1
-            sheet.Cells["A1"].PutValue(responseData);
+                // Write the raw response data to cell A1 (or process as needed)
+                sheet.Cells["A1"].PutValue(responseData);
+            }
 
-            // Save the workbook to a file
-            string outputPath = "WebQueryWithHeader.xlsx";
+            // Define output path
+            string outputPath = "WebQueryWithAuth.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Helper method to perform HTTP GET with optional Authorization header
-    private static async Task<string> GetWebDataAsync(string requestUrl, string bearerToken = null)
-    {
-        using (HttpClient client = new HttpClient())
-        {
-            if (!string.IsNullOrEmpty(bearerToken))
-            {
-                client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearerToken);
-            }
-
-            HttpResponseMessage response = await client.GetAsync(requestUrl);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

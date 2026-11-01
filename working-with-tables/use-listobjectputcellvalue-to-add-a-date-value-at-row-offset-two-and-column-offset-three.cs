@@ -1,50 +1,50 @@
-// Title: Add a DateTime to the fourth column of the third row in an Aspose.Cells ListObject using PutCellValue (C#)
-// AI Prompts: Insert a DateTime (e.g., 2023-12-25) into a ListObject at row offset 2 and column offset 3 with the PutCellValue method. | Verify the table has at least four columns and, if necessary, resize the ListObject before writing the date value. | Persist the changes by saving the workbook to an XLSX file after updating the table. | Wrap the insertion logic in a try‑catch block to handle potential runtime errors.
-// Common Searches: Aspose.Cells C# how to put a date into a table cell using row and column offsets | Resize ListObject to add extra column before inserting values Aspose.Cells | PutCellValue example with DateTime in an Aspose.Cells ListObject | Insert value at specific offset in Aspose.Cells table C#
-// Tags: Aspose.Cells ListObject PutCellValue DateTime | C# Aspose.Cells resize ListObject columns | Aspose.Cells insert value with row offset | Aspose.Cells save workbook to XLSX | Aspose.Cells table column expansion
+// Title: Add a DateTime to a specific cell in an Aspose.Cells ListObject using row and column offsets (C#)
+// AI Prompts: Write C# code that creates a workbook, defines a ListObject, and uses ListObject.DataRange.PutValue to insert a DateTime at row offset 2, column offset 3. | Demonstrate how to let the ListObject grow its data range when inserting a value beyond its current bounds using Aspose.Cells. | Provide a complete example that saves the workbook to a file after updating the table cell with a DateTime.
+// Common Searches: how to insert a datetime into an Aspose.Cells ListObject table cell at specific offset in C# | Aspose.Cells C# put date value in table using row offset and column offset | how to make a ListObject grow its data range when adding new rows with Aspose.Cells .NET | C# example of ListObject.DataRange.PutValue for date insertion | saving workbook after modifying ListObject cell Aspose.Cells
+// Tags: Aspose.Cells ListObject DataRange.PutValue date | C# insert DateTime into Excel table cell | ListObject expansion handling Aspose.Cells | save workbook after ListObject modification .NET | row offset column offset cell update Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// The program creates a new workbook, adds a ListObject table, expands it to ensure a fourth column exists, inserts a DateTime (2023‑12‑25) at row offset 2 and column offset 3 using PutCellValue, and saves the workbook as output.xlsx.
+// // Creates a workbook, adds a ListObject named 'MyTable' over range A1:D5, inserts a DateTime (2023-12-31) at row offset 2 and column offset 3 within the table using DataRange.PutValue (which expands the table if needed), and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define an initial range for the ListObject (e.g., A1:C5)
-            int startRow = 0;          // A1 row index
-            int startColumn = 0;       // A1 column index
-            int rows = 5;
-            int cols = 3;              // initially 3 columns (A, B, C)
+            // Define the range for the ListObject (e.g., A1:D5) as a string
+            string tableRange = "A1:D5";
 
-            // Add a ListObject (table) to the worksheet
-            int listObjectIndex = sheet.ListObjects.Add(startRow, startColumn, rows, cols, true);
-            ListObject table = sheet.ListObjects[listObjectIndex];
-            table.DisplayName = "MyTable";
+            // Add a ListObject (table) to the worksheet with a name
+            int listObjectIndex = sheet.ListObjects.Add("MyTable", tableRange, true);
+            ListObject listObject = sheet.ListObjects[listObjectIndex];
 
-            // Ensure the table has at least 4 columns (offset 3 = fourth column)
-            if (table.ListColumns.Count <= 3)
-            {
-                // Expand the table to include a fourth column (D)
-                // The last parameter indicates whether the table has headers
-                table.Resize(startRow, startColumn, rows, 4, true);
-            }
-
-            // Date value to insert
-            DateTime dateValue = new DateTime(2023, 12, 25);
-
-            // Put the date value at row offset 2 (third row) and column offset 3 (fourth column)
-            table.PutCellValue(2, 3, dateValue);
+            // Add a date value at row offset 2 and column offset 3 within the table's data range
+            DateTime dateValue = new DateTime(2023, 12, 31);
+            // Ensure the data range has enough rows/columns; Aspose.Cells will expand if needed
+            listObject.DataRange[2, 3].PutValue(dateValue);
 
             // Save the workbook
-            workbook.Save("output.xlsx");
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

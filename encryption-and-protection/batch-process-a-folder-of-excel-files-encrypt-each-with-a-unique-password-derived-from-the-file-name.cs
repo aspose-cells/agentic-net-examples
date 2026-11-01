@@ -1,16 +1,15 @@
-// Title: Encrypt a batch of Excel .xlsx files with passwords derived from their filenames using Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that scans a folder, loads each .xlsx workbook with Aspose.Cells, assigns the file name (without extension) as the opening password, and saves the workbook back to the same file. | Enhance the program to generate a SHA‑256 hash of each file name and use that hash string as the workbook password for stronger security. | Adapt the solution to also handle .xls and .xlsm files, preserving their original formats while applying the same filename‑based password logic.
-// Common Searches: Aspose.Cells C# encrypt multiple Excel files in a folder using filename as password | How to set opening password for each .xlsx file in a directory with Aspose.Cells | Batch protect Excel workbooks with unique passwords derived from file names in .NET | C# loop through folder and apply password protection to Excel files using Aspose.Cells API
-// Tags: batch workbook encryption Aspose.Cells | set opening password programmatically C# | derive password from filename Aspose.Cells | iterate over .xlsx files directory .NET | apply password protection to Excel files
+// Title: Encrypt a batch of Excel workbooks in a folder using filename‑derived passwords with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells encrypt every .xls and .xlsx file in a directory using the file name as the password | How to apply password protection to multiple Excel workbooks while preserving their original format with Aspose.Cells | Batch set Workbook.Settings.Password based on file name in a Windows folder using Aspose.Cells | Automate encryption of Excel files in a folder with unique passwords derived from filenames in .NET | Save encrypted Excel workbook in its original format after setting password with Aspose.Cells
+// Tags: Aspose.Cells workbook password encryption | filename derived Excel password .NET | preserve original SaveFormat when saving encrypted workbook | batch process .xls and .xlsx files C# | Workbook.Settings.Password programmatic setting | encrypt Excel files in folder Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program iterates through a specified directory, loads every .xlsx workbook with Aspose.Cells, sets the workbook's opening password to the file name (without extension), and saves the file, effectively encrypting each Excel file with a unique password based on its name.
-class Program
+// The example scans a specified directory for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, generates a password from the file name (without extension), assigns it to Workbook.Settings.Password, determines the original file format via a helper method, and saves the workbook back in the same format, overwriting the original file.
+class ExcelBatchEncryptor
 {
-    static void Main(string[] args)
+    static void Main()
     {
         // Path to the folder containing Excel files
         string folderPath = @"C:\Path\To\Folder";
@@ -22,38 +21,69 @@ class Program
             return;
         }
 
-        // Process all .xlsx files in the folder (add other extensions if needed)
-        string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx");
+        string[] excelFiles;
+        try
+        {
+            // Get all Excel files (both .xls and .xlsx) in the folder
+            excelFiles = Directory.GetFiles(folderPath, "*.xls*");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error accessing files in folder: {ex.Message}");
+            return;
+        }
 
         foreach (string filePath in excelFiles)
         {
+            // Ensure the file still exists before processing
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found (skipped): {filePath}");
+                continue;
+            }
+
             try
             {
-                // Ensure the file still exists before loading
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                // Derive a simple password from the file name (without extension)
-                string fileName = Path.GetFileNameWithoutExtension(filePath);
-                string password = fileName; // Replace with a hash for stronger security if needed
-
-                // Load the workbook from the file
+                // Load the workbook
                 Workbook workbook = new Workbook(filePath);
 
-                // Set the password that will be required to open the workbook
+                // Derive a unique password from the file name (without extension)
+                string password = Path.GetFileNameWithoutExtension(filePath);
+
+                // Apply the password to the workbook (this encrypts the file)
                 workbook.Settings.Password = password;
 
-                // Save the workbook back to the same file (overwrites the original)
-                workbook.Save(filePath, SaveFormat.Xlsx);
-                Console.WriteLine($"Processed: {filePath}");
+                // Determine the original file format to preserve it on save
+                SaveFormat saveFormat = GetSaveFormat(Path.GetExtension(filePath));
+
+                // Save the encrypted workbook, overwriting the original file
+                workbook.Save(filePath, saveFormat);
+
+                Console.WriteLine($"Encrypted '{Path.GetFileName(filePath)}' with password '{password}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
             }
+        }
+    }
+
+    // Helper method to map file extensions to Aspose.Cells SaveFormat values
+    private static SaveFormat GetSaveFormat(string extension)
+    {
+        switch (extension.ToLower())
+        {
+            case ".xls":
+                return SaveFormat.Excel97To2003;
+            case ".xlsx":
+                return SaveFormat.Xlsx;
+            case ".xlsm":
+                return SaveFormat.Xlsm;
+            case ".xlsb":
+                return SaveFormat.Xlsb;
+            default:
+                // Default to XLSX if the extension is unrecognized
+                return SaveFormat.Xlsx;
         }
     }
 }

@@ -1,58 +1,62 @@
-// Title: Copy a cell's style including border colors using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells Style.Copy to transfer all formatting, including border colors, from cell A1 to cell B2. | Provide a C# example that employs Aspose.Cells Range.CopyStyle to copy border styles from a source range to a destination range and then saves the file. | Write a C# snippet that applies the borders of a styled source cell to every cell in column C using Aspose.Cells style cloning methods.
-// Common Searches: Aspose.Cells C# copy cell style while keeping border colors | Preserve border formatting when copying styles with Aspose.Cells | Example of Range.CopyStyle that retains borders in Aspose.Cells | How to duplicate full cell formatting, including borders, in Aspose.Cells workbook
-// Tags: Aspose.Cells style copy with borders | C# Range.CopyStyle preserving borders | cell border formatting transfer Aspose.Cells | copy full cell formatting Aspose.Cells | save workbook with styled cells Aspose.Cells
+// Title: How to copy only the border formatting from one Excel cell to another while preserving other styles using Aspose.Cells for .NET (C#)
+// AI Prompts: Copy the border line style and color from cell A1 to cell B2 in an existing workbook using Aspose.Cells for .NET. | Transfer only the border properties of a source cell to a target cell without changing any other formatting in C# with Aspose.Cells. | Apply the source cell's border settings to another cell while keeping the target cell's existing style intact using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# copy border formatting between cells without affecting cell fill | preserve existing cell style while copying borders in Aspose.Cells workbook | how to clone border properties from one worksheet cell to another using Aspose.Cells for .NET | C# example to copy Excel cell borders using Aspose.Cells library
+// Tags: copy cell border style Aspose.Cells C# | preserve cell formatting while cloning borders .NET | Aspose.Cells border property transfer | Excel workbook border cloning C# | style copying without affecting fill Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
-// The example creates a workbook, styles cell A1 with distinct colored thin borders, copies the complete style—including those borders—to cell B2 using Style.Copy, optionally demonstrates copying via Range.CopyStyle, and saves the result as PreserveBorders.xlsx.
+// The example loads an existing Excel workbook, reads the border line style and color of every border side from a source cell (A1), copies those border properties to a target cell (B2) while leaving other formatting unchanged, and saves the modified workbook as Output.xlsx.
 class PreserveBordersExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            const string inputFile = "Input.xlsx";
+            const string outputFile = "Output.xlsx";
 
-        // ---------- Source cell ----------
-        // Set a value in the source cell
-        Cell srcCell = cells["A1"];
-        srcCell.PutValue("Source");
+            // Ensure the input workbook exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
+            }
 
-        // Create a style for the source cell and define borders
-        Style srcStyle = workbook.CreateStyle();
-        srcStyle.SetBorder(BorderType.TopBorder, CellBorderType.Thin, Color.Red);
-        srcStyle.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Green);
-        srcStyle.SetBorder(BorderType.LeftBorder, CellBorderType.Thin, Color.Blue);
-        srcStyle.SetBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Orange);
-        // Ensure border formatting is applied
-        srcStyle.IsBorderApplied = true;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFile);
 
-        // Apply the style to the source cell
-        srcCell.SetStyle(srcStyle);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // ---------- Destination cell ----------
-        // Set a value in the destination cell
-        Cell destCell = cells["B2"];
-        destCell.PutValue("Destination");
+            // Source cell (the cell whose border style we want to copy)
+            Cell sourceCell = sheet.Cells["A1"];
 
-        // Copy the entire style (including borders) from the source cell
-        Style destStyle = workbook.CreateStyle();
-        destStyle.Copy(srcCell.GetStyle());
+            // Target cell (the cell to which we want to apply the border style)
+            Cell targetCell = sheet.Cells["B2"];
 
-        // Apply the copied style to the destination cell
-        destCell.SetStyle(destStyle);
+            // Retrieve styles from source and target cells
+            Style sourceStyle = sourceCell.GetStyle();
+            Style targetStyle = targetCell.GetStyle();
 
-        // ---------- Alternative method using Range.CopyStyle ----------
-        // Uncomment the following lines to copy style via ranges instead of individual cells
-        // Range srcRange = cells.CreateRange("A1");
-        // Range destRange = cells.CreateRange("C3");
-        // destRange.CopyStyle(srcRange);
+            // Copy border properties from source to target (LineStyle and Color)
+            foreach (BorderType borderType in Enum.GetValues(typeof(BorderType)))
+            {
+                targetStyle.Borders[borderType].LineStyle = sourceStyle.Borders[borderType].LineStyle;
+                targetStyle.Borders[borderType].Color = sourceStyle.Borders[borderType].Color;
+            }
 
-        // Save the workbook
-        workbook.Save("PreserveBorders.xlsx");
+            // Apply the modified style to the target cell
+            targetCell.SetStyle(targetStyle);
+
+            // Save the modified workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

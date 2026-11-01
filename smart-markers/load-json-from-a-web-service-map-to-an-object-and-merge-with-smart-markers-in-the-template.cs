@@ -1,95 +1,97 @@
-// Title: Download JSON from a REST endpoint and populate an Excel template with smart markers using Aspose.Cells WorkbookDesigner in C#
-// AI Prompts: Fetch JSON from a specified URL using HttpClient, assign the JSON string to a WorkbookDesigner with the data source name "DataSource", process all smart markers in the .xlsx template, and save the resulting workbook. | Deserialize the retrieved JSON into a strongly‑typed C# object, then use the same JSON payload as the data source for Aspose.Cells smart markers to generate a filled Excel file.
-// Common Searches: C# Aspose.Cells WorkbookDesigner SetJsonDataSource from web service | How to fill Excel smart markers with JSON returned by a REST API | Aspose.Cells example loading JSON and merging into template.xlsx | Populate Excel template using smart markers and JSON data in .NET
-// Tags: Aspose.Cells JSON data source for smart markers | WorkbookDesigner smart marker population from web API | C# download and merge JSON into Excel template | Excel template processing with Aspose.Cells and JSON | Smart markers integration with REST JSON in .NET
+// Title: Retrieve JSON from a REST API, deserialize to C# objects, and merge into an Excel template using Aspose.Cells smart markers
+// AI Prompts: Call a web service to obtain JSON, deserialize it into a List<Person>, assign the list to the "People" data source of WorkbookDesigner, and process the smart markers to produce the merged workbook. | Write a C# program that loads an Excel file containing smart markers, binds data fetched from an HTTP endpoint, and saves the populated workbook using Aspose.Cells.
+// Common Searches: asp.net core fetch json and fill Aspose.Cells smart markers template | c# Aspose.Cells WorkbookDesigner populate smart markers from REST API response | how to bind a list of objects to smart markers in an Excel template using Aspose.Cells | merge json data into excel using Aspose.Cells smart markers c# example | load excel template with smart markers and replace with data from web service
+// Tags: Aspose.Cells WorkbookDesigner JSON data source | C# smart markers Excel template merge | deserialize REST API response to list for Excel | populate Excel smart markers from web service | process smart markers with dynamic data in .NET
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsJsonSmartMarkerDemo
+namespace AsposeCellsSmartMarkerExample
 {
-    // Sample data class that matches the JSON structure (optional mapping)
-    // The sample program downloads JSON from a web service, optionally deserializes it into a Person object, loads an Excel workbook that contains smart markers, sets the JSON string as a data source named "DataSource" via WorkbookDesigner, processes the markers, and saves the populated workbook to a new file.
+    // Data model matching the JSON structure.
+    // The program fetches JSON from a specified REST endpoint, deserializes it into a List<Person>, loads an Excel template that contains Aspose.Cells smart markers, sets the "People" data source for WorkbookDesigner, processes the markers to merge the data, and saves the resulting workbook while handling HTTP, JSON, and file errors.
     public class Person
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
-        public string City { get; set; }
+        // Add other properties as needed.
     }
 
-    public class Program
+    class Program
     {
-        // Entry point
-        public static async Task Main()
+        // Entry point – async to allow awaiting the web request.
+        static async Task Main(string[] args)
         {
+            // URL of the web service returning JSON.
+            const string jsonUrl = "https://example.com/api/people";
+
+            // Path to the Excel template that contains smart markers.
+            const string templatePath = @"C:\Templates\SmartMarkerTemplate.xlsx";
+
+            // Path where the merged workbook will be saved.
+            const string outputPath = @"C:\Output\MergedResult.xlsx";
+
             try
             {
-                // URL of the web service that returns JSON data
-                string jsonUrl = "https://example.com/api/person";
-
-                // Download JSON string from the web service (fallback to sample JSON on failure)
-                string jsonData = await DownloadJsonAsync(jsonUrl);
-
-                // (Optional) Map JSON to a strongly‑typed object – this step demonstrates deserialization
-                // If you only need to merge with smart markers you can skip this and use jsonData directly.
-                Person person = System.Text.Json.JsonSerializer.Deserialize<Person>(jsonData);
-
-                // Path to the Excel template that contains smart markers (e.g., &=$DataSource.Name)
-                string templatePath = "TemplateWithSmartMarkers.xlsx";
-
-                // Ensure the template file exists before loading
-                if (!File.Exists(templatePath))
+                // 1. Retrieve JSON from the web service.
+                string jsonContent;
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    Console.WriteLine($"Template file \"{templatePath}\" not found.");
-                    return;
+                    jsonContent = await httpClient.GetStringAsync(jsonUrl);
                 }
 
-                // Load the Excel template
+                // 2. Deserialize JSON into a list of Person objects.
+                List<Person> people = JsonSerializer.Deserialize<List<Person>>(jsonContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<Person>();
+
+                // 3. Verify that the template file exists before loading.
+                if (!File.Exists(templatePath))
+                {
+                    throw new FileNotFoundException($"Template file not found: {templatePath}");
+                }
+
+                // Load the Excel template.
                 Workbook workbook = new Workbook(templatePath);
 
-                // Create a WorkbookDesigner and assign the loaded workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // Set the JSON data source for the smart markers.
-                // The name "DataSource" must match the name used in the smart markers inside the template.
-                designer.SetJsonDataSource("DataSource", jsonData);
-
-                // Process all smart markers in the workbook
+                // 4. Use WorkbookDesigner to process smart markers.
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                // The data source name "People" must match the name used in the template.
+                designer.SetDataSource("People", people);
                 designer.Process();
 
-                // Save the populated workbook
-                string resultPath = "ResultFromWebService.xlsx";
-                workbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved to \"{resultPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+                // Ensure the output directory exists.
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Helper method to download JSON content using HttpClient
-        private static async Task<string> DownloadJsonAsync(string requestUri)
-        {
-            try
+                // 5. Save the merged workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook merged and saved to: {outputPath}");
+            }
+            catch (HttpRequestException httpEx)
             {
-                using HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync(requestUri);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
+                Console.Error.WriteLine($"Error retrieving JSON data: {httpEx.Message}");
+            }
+            catch (JsonException jsonEx)
+            {
+                Console.Error.WriteLine($"Error deserializing JSON: {jsonEx.Message}");
+            }
+            catch (FileNotFoundException fileEx)
+            {
+                Console.Error.WriteLine(fileEx.Message);
             }
             catch (Exception ex)
             {
-                // Log the error and provide a fallback JSON string
-                Console.WriteLine($"Failed to download JSON from \"{requestUri}\": {ex.Message}");
-                // Sample fallback JSON matching the Person class
-                return @"{ ""Name"": ""John Doe"", ""Age"": 30, ""City"": ""New York"" }";
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

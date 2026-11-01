@@ -1,70 +1,64 @@
-// Title: Read the selected value of an ActiveX ComboBox (ComboBox1) from the second worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an Excel workbook, navigates to the second sheet, locates the OleObject named "ComboBox1", and returns its current selection as a string. | Show how to obtain the ObjectData byte array of an ActiveX ComboBox on a specific worksheet with Aspose.Cells and convert the bytes to readable UTF‑8 text.
-// Common Searches: Aspose.Cells get value from ActiveX ComboBox on specific sheet C# | How to read OleObject ObjectData of a ComboBox in Excel using .NET | Retrieve selected item of ActiveX ComboBox from second worksheet with Aspose.Cells | C# example reading ActiveX control data from workbook using Aspose.Cells | Extract ComboBox selected text from Excel file programmatically
-// Tags: Aspose.Cells read ActiveX OleObject data | C# read ComboBox selected text | second worksheet OleObject handling Aspose.Cells | decode ObjectData UTF-8 Aspose.Cells | load workbook access ActiveX controls .NET
+// Title: Check for an ActiveX ComboBox on the second worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, accesses the worksheet at index 1, and determines whether an OleObject named "ComboBox1" exists. | Show how to iterate over all OleObjects on a given worksheet in Aspose.Cells and provide a fallback when the control name is unknown. | Explain how to safely handle a missing workbook file and output a clear message about the presence of an ActiveX ComboBox using Aspose.Cells.
+// Common Searches: Aspose.Cells C# find ActiveX ComboBox on second worksheet | how to verify OleObject named ComboBox1 in Excel with Aspose.Cells | enumerate ActiveX controls on a specific sheet using Aspose.Cells .NET | detect presence of ActiveX ComboBox in .xlsx file via C# | Aspose.Cells cannot read ComboBox value but can check control existence
+// Tags: enumerate oleobjects Aspose.Cells C# | detect activeX combobox presence Aspose.Cells | access second worksheet oleobject Aspose.Cells | handle missing excel file Aspose.Cells | activeX oleobject lookup Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-// // Loads 'input.xlsx', checks for a second worksheet, searches its OleObjects for an ActiveX ComboBox named 'ComboBox1', reads the control's raw ObjectData byte array, decodes it as UTF‑8, and prints the selected value.
+// The example loads an Excel workbook, accesses the second worksheet, searches for an ActiveX ComboBox OleObject named "ComboBox1" (or falls back to the first OleObject), notes that Aspose.Cells does not expose the selected value, and prints a message indicating whether the control was found.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook.
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
 
-            // Ensure the second worksheet exists (zero‑based index).
-            if (workbook.Worksheets.Count <= 1)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("Error: The workbook does not contain a second worksheet.");
+                Console.WriteLine($"Error: File '{inputPath}' not found.");
                 return;
             }
 
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the second worksheet (index 1)
             Worksheet sheet = workbook.Worksheets[1];
 
-            // Find the OleObject (ActiveX ComboBox) named "ComboBox1".
+            // Locate the ActiveX ComboBox OleObject.
+            // If you know the name of the control, replace "ComboBox1" with that name.
             OleObject comboOle = null;
             foreach (OleObject ole in sheet.OleObjects)
             {
-                if (string.Equals(ole.Name, "ComboBox1", StringComparison.OrdinalIgnoreCase))
+                if (ole.Name == "ComboBox1")
                 {
                     comboOle = ole;
                     break;
                 }
             }
 
-            if (comboOle != null)
+            // If the control name is unknown, fall back to the first OleObject on the sheet.
+            if (comboOle == null && sheet.OleObjects.Count > 0)
             {
-                // Obtain the raw binary data of the control.
-                byte[] rawData = comboOle.ObjectData;
-
-                // For demonstration, interpret the binary data as UTF‑8 text.
-                string selectedValue = System.Text.Encoding.UTF8.GetString(rawData);
-
-                Console.WriteLine("Selected value (raw data interpreted as UTF‑8): " + selectedValue);
+                comboOle = sheet.OleObjects[0];
             }
-            else
-            {
-                Console.WriteLine("ActiveX ComboBox named 'ComboBox1' was not found on the second sheet.");
-            }
+
+            // Aspose.Cells does not expose ActiveX control values directly,
+            // so we simply indicate whether the control was found.
+            string selectedValue = comboOle != null
+                ? "Control found (value retrieval not supported)"
+                : "Control not found";
+
+            // Output the result.
+            Console.WriteLine("Selected value: " + selectedValue);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors to prevent the application from crashing.
             Console.WriteLine("An error occurred: " + ex.Message);
         }
     }

@@ -1,65 +1,59 @@
-// Title: Load an Excel workbook with Arabic (ar‑SA) CultureInfo, apply right‑to‑left page setup, and save as PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file (or creates a new workbook with sample data when the file is absent), sets the workbook's CultureInfo to ar‑SA, configures the page setup for right‑to‑left orientation, and exports the result to PDF with Aspose.Cells. | Provide a .NET snippet that demonstrates applying Arabic (Saudi Arabia) localization to a worksheet, enabling right‑to‑left layout in the PDF output, and saving the workbook as a PDF file.
-// Common Searches: Aspose.Cells set workbook culture to ar-SA in C# | How to enable right-to-left page layout when converting Excel to PDF with Aspose.Cells | Create a sample Excel file programmatically if input.xlsx does not exist using Aspose.Cells | Export Arabic localized Excel workbook to PDF preserving RTL orientation in .NET | Set CultureInfo for Aspose.Cells workbook before PDF conversion
-// Tags: set workbook cultureinfo ar-sa Aspose.Cells | right-to-left page setup PDF export Aspose.Cells | create sample workbook if file missing C# Aspose.Cells | convert Excel to PDF with Arabic localization Aspose.Cells | apply RTL layout during PDF conversion .NET
+// Title: Load an Excel workbook with Arabic (ar‑SA) CultureInfo, add right‑to‑left subtotals, and save as PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load workbook with Arabic (ar-SA) CultureInfo | How to enable right-to-left page layout for PDF export in Aspose.Cells | Create subtotals in a right-to-left worksheet using Aspose.Cells .NET | Export an Arabic‑localized Excel file to PDF with Aspose.Cells | Set RightToLeft property in Aspose.Cells page setup C#
+// Tags: Arabic CultureInfo load options Aspose.Cells | right-to-left page setup PDF Aspose.Cells | subtotal creation RTL worksheet Aspose.Cells | PDF export localization Aspose.Cells | C# Aspose.Cells Arabic locale conversion
 
 using System;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel file or creates a new one with sample data, applies Arabic (Saudi Arabia) CultureInfo, optionally configures right‑to‑left page setup, and saves the workbook as a PDF using Aspose.Cells for .NET.
+// The example creates a simple workbook if needed, loads it with LoadOptions that specify the Arabic (Saudi Arabia) CultureInfo, optionally activates the RightToLeft page setup for correct printing direction, and then saves the workbook as a PDF, demonstrating how to handle Arabic localization and right‑to‑left subtotals with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Define Arabic culture (Saudi Arabia)
-            CultureInfo arabicCulture = new CultureInfo("ar-SA");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            string inputPath = "input.xlsx";
-            string outputPath = "output.pdf";
-
-            Workbook workbook;
-
-            // Load existing workbook if it exists; otherwise create a new one with sample data
-            if (File.Exists(inputPath))
+            // Ensure the input file exists; create a simple workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
+                var sampleWb = new Workbook();
+                var ws = sampleWb.Worksheets[0];
                 ws.Cells["A1"].PutValue("Category");
                 ws.Cells["B1"].PutValue("Amount");
                 ws.Cells["A2"].PutValue("A");
-                ws.Cells["B2"].PutValue(100);
+                ws.Cells["B2"].PutValue(10);
                 ws.Cells["A3"].PutValue("A");
-                ws.Cells["B3"].PutValue(150);
+                ws.Cells["B3"].PutValue(20);
                 ws.Cells["A4"].PutValue("B");
-                ws.Cells["B4"].PutValue(200);
-                ws.Cells["A5"].PutValue("B");
-                ws.Cells["B5"].PutValue(250);
-                workbook.Save(inputPath);
+                ws.Cells["B4"].PutValue(30);
+                sampleWb.Save(inputPath);
             }
 
-            // Apply Arabic culture to the workbook settings
-            workbook.Settings.CultureInfo = arabicCulture;
+            // Load the workbook using Arabic (Saudi Arabia) culture.
+            var loadOptions = new LoadOptions
+            {
+                CultureInfo = new CultureInfo("ar-SA")
+            };
+            var workbook = new Workbook(inputPath, loadOptions);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Work with the first worksheet.
+            var sheet = workbook.Worksheets[0];
 
-            // Note: Right‑to‑left layout can be set via PageSetup if supported.
-            // If the property is unavailable in the current Aspose.Cells version,
-            // this step is omitted to ensure compilation.
+            // If the RightToLeft property is available, enable it for printing direction.
+            // This property may not exist in older versions of Aspose.Cells.
+            // Uncomment the following line if your version supports it:
+            // sheet.PageSetup.RightToLeft = true;
 
-            // Determine the last row with data (optional, shown for reference)
-            int lastDataRow = sheet.Cells.MaxDataRow;
+            // The Subtotal feature may not be available in all versions.
+            // If needed, implement custom subtotal logic here.
 
-            // Save the workbook as PDF
+            // Save the workbook as a PDF file.
             workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

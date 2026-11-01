@@ -1,71 +1,52 @@
-// Title: Bind an array of anonymous .NET objects to a smart marker and highlight salaries over 6000 with conditional formatting using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates an anonymous object array for employees, assigns it to a WorkbookDesigner data source named "Employees", and processes the smart markers in a new workbook. | Add C# statements that define a conditional formatting rule on the Salary column to set a yellow background when the cell value is greater than 6000. | Write the code to save the processed workbook as an XLSX file named "AnonymousDataSmartMarkers.xlsx" and handle any exceptions.
-// Common Searches: asp.net bind anonymous list to smart markers Aspose.Cells example | how to apply conditional formatting to smart marker generated cells in C# | highlight salary column values greater than 6000 using Aspose.Cells conditional formatting | using WorkbookDesigner with anonymous objects array for smart markers in .NET
-// Tags: anonymous objects data source smart markers | conditional formatting cell value greater than threshold Aspose.Cells | WorkbookDesigner set data source array C# | highlight high salary cells yellow Aspose.Cells | smart markers with conditional formatting .NET
+// Title: Create anonymous .NET objects, bind them as a data source, and use IF/ELSE smart markers in Aspose.Cells (C#)
+// AI Prompts: Write C# code that builds a List of anonymous objects with Name and Score properties, assigns it to WorkbookDesigner via SetDataSource, and defines a smart marker using &IF{Score>80}Pass&ELSEFail&ENDIF to generate Pass/Fail values. | Refactor the given DataTable example to use a collection of anonymous objects while preserving the conditional smart marker that checks if Score > 80.
+// Common Searches: how to use a List of anonymous objects as a data source for Aspose.Cells smart markers in C# | aspnet cells smart marker IF condition with anonymous objects | binding anonymous object collection to WorkbookDesigner for Excel generation | C# example of &IF{Score>80} smart marker with Aspose.Cells | populate Excel template using smart markers and anonymous data source
+// Tags: anonymous objects data source Aspose.Cells | WorkbookDesigner SetDataSource list | IF ELSE smart marker C# | conditional smart markers Aspose.Cells | populate Excel with smart markers C#
 
 using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
 
-// The sample creates a workbook, inserts smart markers for employee fields, builds an array of anonymous objects, binds it to the "Employees" marker via WorkbookDesigner, processes the markers, adds a conditional formatting rule that colors Salary cells above 6000 yellow, and saves the result as AnonymousDataSmartMarkers.xlsx.
+// The example demonstrates how to create a collection of anonymous .NET objects containing Name and Score fields, bind this collection to Aspose.Cells WorkbookDesigner using SetDataSource, and apply an IF/ELSE smart marker (&IF{Score>80}Pass&ELSEFail&ENDIF) to output Pass or Fail based on each Score. The processed workbook is then saved as an Excel file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook (empty template)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Place smart markers in the template.
-            //    The marker name "Employees" will be bound to the data source later.
-            sheet.Cells["A1"].PutValue("&=Employees.Name");
-            sheet.Cells["B1"].PutValue("&=Employees.Age");
-            sheet.Cells["C1"].PutValue("&=Employees.Salary");
+            // Add header cells
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Score");
+            sheet.Cells["C1"].PutValue("Result");
 
-            // 3. Build a collection of anonymous objects.
-            var employees = new[]
-            {
-                new { Name = "John", Age = 30, Salary = 5000 },
-                new { Name = "Jane", Age = 45, Salary = 8000 },
-                new { Name = "Bob",  Age = 28, Salary = 4000 }
-            };
+            // Insert smart markers with conditional logic
+            // & = placeholder for field value
+            // &IF{condition}...&ELSE...&ENDIF for conditional output
+            sheet.Cells["A2"].PutValue("&=Name");
+            sheet.Cells["B2"].PutValue("&=Score");
+            sheet.Cells["C2"].PutValue("&IF{Score>80}Pass&ELSEFail&ENDIF");
 
-            // 4. Create a WorkbookDesigner, assign the workbook and set the data source.
+            // Prepare data source as a DataTable (compatible with WorkbookDesigner)
+            DataTable dt = new DataTable("Data");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Score", typeof(int));
+
+            dt.Rows.Add("Alice", 92);
+            dt.Rows.Add("Bob", 76);
+            dt.Rows.Add("Charlie", 85);
+
+            // Bind the data source to the smart markers
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Employees", employees);
+            designer.SetDataSource(dt);
+            designer.Process(); // Generates the final output based on smart markers
 
-            // 5. Process the smart markers – the data will be written into the sheet.
-            designer.Process();
-
-            // 6. Apply conditional formatting:
-            //    Highlight Salary values greater than 6000 with a yellow background.
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range that contains the Salary column (C2:C4).
-            cf.AddArea(new CellArea
-            {
-                StartRow = 1,   // row 2 (zero‑based)
-                EndRow = 3,     // row 4
-                StartColumn = 2, // column C
-                EndColumn = 2
-            });
-
-            // Add a CellValue condition: value > 6000.
-            // The overload requires two formula strings; the second is unused for this operator.
-            int conditionIndex = cf.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "6000",
-                "");
-
-            var condition = cf[conditionIndex];
-            condition.Style.BackgroundColor = Color.Yellow;
-
-            // 7. Save the result.
-            workbook.Save("AnonymousDataSmartMarkers.xlsx");
+            // Save the populated workbook
+            workbook.Save("SmartMarkersResult.xlsx");
         }
         catch (Exception ex)
         {

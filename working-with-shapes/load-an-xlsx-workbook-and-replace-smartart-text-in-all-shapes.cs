@@ -1,23 +1,23 @@
-// Title: Load an XLSX workbook with Aspose.Cells for .NET and enumerate shapes to detect and (where possible) replace SmartArt text
-// AI Prompts: Generate C# code that opens a .xlsx file using Aspose.Cells, iterates through all worksheets, finds shapes where IsSmartArt is true, and replaces each SmartArt node's text with a supplied string, providing a fallback notice when the API version lacks SmartArt support. | Show how to list every SmartArt shape in an Excel workbook with Aspose.Cells for .NET, outputting the worksheet name and shape identifier for each detected SmartArt object. | Create a method that saves the workbook after attempting SmartArt text replacement, ensures the output directory exists, and includes robust exception handling for file I/O and API limitations.
-// Common Searches: C# Aspose.Cells replace text in SmartArt shapes of an Excel file | How to enumerate worksheet shapes and identify SmartArt using Aspose.Cells .NET | Aspose.Cells IsSmartArt property example code | SmartArt text modification in XLSX with Aspose.Cells version limitations | Load Excel workbook and update SmartArt nodes using Aspose.Cells for .NET
-// Tags: Aspose.Cells replace SmartArt text C# | enumerate worksheet shapes Aspose.Cells | detect SmartArt shapes Excel Aspose.Cells | load and save XLSX workbook Aspose.Cells .NET | SmartArt manipulation limitation Aspose.Cells
+// Title: Replace text in all SmartArt and other text‑containing shapes of an XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with Aspose.Cells, loop through every worksheet and each Shape, set the Shape.Text property to a specified string, and save the workbook to a new file. | Create a reusable method that takes inputPath, outputPath, and replacementText, then updates the Text property of every shape that contains text (including SmartArt) in the workbook. | Modify the code to filter only SmartArt shapes before replacing their text, leaving other shape types unchanged.
+// Common Searches: aspnet replace smartart text in existing excel workbook using aspose.cells | c# iterate over worksheet shapes and modify text with Aspose.Cells | how to bulk update shape text in an xlsx file programmatically | asp.net read xlsx and change all smartart labels with Aspose.Cells | replace all shape text in excel using Aspose.Cells C#
+// Tags: replace shape text Aspose.Cells | smartart text modification .net | iterate worksheet shapes C# | bulk edit excel shapes Aspose | update xlsx shape content programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an input.xlsx workbook with Aspose.Cells, checks that the file exists, iterates over each worksheet and its ShapeCollection, identifies shapes flagged as SmartArt via the IsSmartArt property, logs a message for each SmartArt shape noting that current API versions do not support direct manipulation, ensures the output directory is present, saves the workbook as output.xlsx, and includes a placeholder recursive method for SmartArt node text replacement that can be activated when a supporting API version becomes available.
-class ReplaceSmartArtText
+// The example loads an existing XLSX workbook, iterates through each worksheet and every shape, replaces any non‑empty Text property with a new string, logs shape‑level errors, and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
             // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
@@ -25,68 +25,37 @@ class ReplaceSmartArtText
                 return;
             }
 
-            // Load the workbook
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through worksheets
+            // Iterate through each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get all shapes on the sheet
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Process each shape
-                foreach (Shape shape in shapes)
+                // Iterate through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Identify SmartArt shapes
-                    if (shape.IsSmartArt)
+                    try
                     {
-                        // Aspose.Cells version used does not expose a SmartArt API.
-                        // If a newer version is available, replace this block with proper SmartArt handling.
-                        Console.WriteLine($"SmartArt shape found on sheet \"{sheet.Name}\" but SmartArt manipulation is not supported in this version.");
+                        // Replace text in shapes that support text
+                        if (!string.IsNullOrEmpty(shape.Text))
+                        {
+                            shape.Text = "New Text";
+                        }
+                    }
+                    catch (Exception exShape)
+                    {
+                        Console.WriteLine($"Error processing shape on sheet '{sheet.Name}': {exShape.Message}");
                     }
                 }
             }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Placeholder for SmartArt node text replacement (not used with current API version)
-    private static void ReplaceTextInSmartArtNode(dynamic node)
-    {
-        if (node == null) return;
-
-        try
-        {
-            // Update the text of the current node if a TextFrame exists
-            if (node.TextFrame != null)
-            {
-                node.TextFrame.Text = "New Text";
-            }
-
-            // Process child nodes
-            foreach (var child in node.ChildNodes)
-            {
-                ReplaceTextInSmartArtNode(child);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error while replacing text in SmartArt node: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

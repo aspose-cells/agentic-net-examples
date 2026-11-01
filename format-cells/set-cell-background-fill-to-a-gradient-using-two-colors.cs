@@ -1,47 +1,48 @@
-// Title: Apply a two‑color background fill to a cell in Excel using Aspose.Cells for .NET (solid pattern fallback)
-// AI Prompts: Write C# code with Aspose.Cells that sets a blue foreground and light‑blue background on cell A1 and saves the workbook as GradientFill.xlsx. | Show how to simulate a gradient fill in Aspose.Cells by configuring foreground and background colors and using a solid pattern as a fallback. | Create a reusable C# method that accepts two System.Drawing.Color values and applies them as a gradient‑style fill to a specified worksheet cell using Aspose.Cells.
-// Common Searches: Aspose.Cells .NET how to set cell background with two colors | C# Aspose.Cells simulate gradient fill for Excel cell | apply foreground and background colors to a cell using Aspose.Cells style | workaround for missing gradient fill support in Aspose.Cells | save Excel file with custom cell background colors using Aspose.Cells C#
-// Tags: Aspose.Cells set cell background colors C# | gradient fill fallback Aspose.Cells | cell style foreground background Aspose.Cells | Excel workbook save Aspose.Cells C# | solid pattern as gradient workaround Aspose.Cells
+// Title: Apply a two‑color gradient background to an Excel cell with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set cell background gradient using two colors | C# example of applying gradient fill to an Excel cell with Aspose.Cells | How to use ForegroundColor and BackgroundColor for gradient effect in Aspose.Cells | Aspose.Cells gradient fill not supported version workaround | Set gradient degree for cell fill in Aspose.Cells .NET
+// Tags: Aspose.Cells cell gradient background C# | foregroundcolor backgroundcolor gradient Aspose.Cells | gradientdegree property usage Aspose.Cells | solid fill pattern fallback Aspose.Cells | Excel workbook creation Aspose.Cells C#
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
-// The program creates a new workbook, writes "Gradient Fill" to cell A1, defines a style with a blue foreground and light‑blue background, sets the pattern to Solid (since gradient fill isn’t directly supported), applies the style to the cell, and saves the file as GradientFill.xlsx.
+// The example creates a new workbook, writes "Gradient Fill" to cell A1, sets the foreground color to blue and the background color to light blue, applies a solid fill pattern because gradient fills are unavailable in this version, shows how the GradientDegree property could be used, and saves the workbook as GradientFill.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Access cell A1 and set a value
-            var cell = worksheet.Cells["A1"];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Get cell A1 and set its value
+            Cell cell = sheet.Cells["A1"];
             cell.PutValue("Gradient Fill");
 
-            // Create a new style
-            var style = workbook.CreateStyle();
+            // Retrieve the current style of the cell
+            Style style = cell.GetStyle();
 
-            // Set gradient colors (foreground and background)
-            style.ForegroundColor = Color.Blue;
-            style.BackgroundColor = Color.LightBlue;
+            // Set the start and end colors (used for gradient or solid fill)
+            style.ForegroundColor = Color.Blue;        // Start color
+            style.BackgroundColor = Color.LightBlue;   // End color
 
-            // Apply a solid pattern (gradient fill is not directly supported in this API version)
+            // Apply a solid fill pattern (gradient pattern not available in this version)
             style.Pattern = BackgroundType.Solid;
 
-            // Apply the style to the cell
+            // If a gradient pattern were supported, you could set the angle like this:
+            // style.GradientDegree = 45;
+
+            // Apply the modified style back to the cell
             cell.SetStyle(style);
 
-            // Define output file path
+            // Save the workbook to a file
             string outputPath = "GradientFill.xlsx";
-
-            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

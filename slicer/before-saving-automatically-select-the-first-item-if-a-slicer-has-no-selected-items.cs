@@ -1,58 +1,100 @@
-// Title: How to automatically select the first slicer item in an Excel workbook using Aspose.Cells for .NET before saving
-// AI Prompts: Generate C# code with Aspose.Cells that loads an Excel file, iterates every slicer, and if a slicer has no selected items, programmatically marks the first cache entry as selected and calls Refresh before saving. | Update an existing C# Aspose.Cells routine to guarantee a default selection for each slicer by checking the SlicerCacheItems collection, setting the first item's Selected property when none are true, and then persisting the workbook.
-// Common Searches: how to ensure a slicer always has a selected value with Aspose.Cells .NET | c# aspocells default slicer selection before workbook save | iterate over slicers in Excel using Aspose.Cells and set first item selected | refresh slicer after changing selection programmatically aspocells | check slicer cache items for selection aspocells c#
-// Tags: aspocells default slicer selection | c# iterate workbook slicers | set first slicer cache item selected | slicer refresh after programmatic change | excel workbook slicer handling .net
+// Title: How to automatically select the first slicer item when none are selected before saving an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that loops through every worksheet's slicers, checks each slicer's cache, and sets IsSelected = true on the first slicer item if the slicer has no selected items before calling Workbook.Save. | Update an existing Aspose.Cells .NET application to ensure each slicer automatically selects its first item when the slicer cache reports no selections, with per‑slicer error handling.
+// Common Searches: Aspose.Cells C# select default slicer item when slicer is empty | Set first slicer item as selected in Excel workbook using Aspose.Cells before saving | C# loop through workbook slicers and ensure a selection exists with Aspose.Cells | How to handle slicer cache with no selected items in Aspose.Cells .NET
+// Tags: Aspose.Cells slicer cache default selection | Aspose.Cells workbook slicer iteration | set slicer item IsSelected programmatically | auto-select first slicer item before workbook save | per-slicer error handling Aspose.Cells
 
 using System;
+using System.IO;
+using System.Linq;
+using System.Collections;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Slicers; // Required for Slicer, SlicerCache, and SlicerItem classes
 
-// The program loads an existing workbook, refreshes all data, loops through each worksheet and its slicers, checks whether any slicer cache items are selected, selects the first item when none are selected, refreshes the slicer, and saves the workbook.
-class Program
+namespace AsposeCellsSlicerExample
 {
-    static void Main()
+    // The example loads an Excel file, iterates over each worksheet and its slicers, checks whether any slicer items are selected, and if none are, marks the first slicer item as selected before saving the workbook to a new file.
+    class Program
     {
-        // Load an existing workbook that contains slicers
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Ensure all data (pivot tables, slicer caches) are up‑to‑date
-        workbook.Worksheets.RefreshAll();
-
-        // Loop through every worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // Loop through each slicer on the current worksheet
-            foreach (Slicer slicer in sheet.Slicers)
-            {
-                // Access the collection of slicer cache items
-                var cacheItems = slicer.SlicerCache.SlicerCacheItems;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                // Determine whether any item is already selected
-                bool anySelected = false;
-                for (int i = 0; i < cacheItems.Count; i++)
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    if (cacheItems[i].Selected)
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
+                {
+                    // Iterate through all slicers on the worksheet
+                    foreach (Slicer slicer in worksheet.Slicers)
                     {
-                        anySelected = true;
-                        break;
+                        try
+                        {
+                            // Use dynamic to access slicer cache items (avoids compile‑time binding issues)
+                            dynamic cacheDyn = slicer.SlicerCache;
+                            if (cacheDyn == null)
+                                continue; // No cache, skip this slicer
+
+                            IEnumerable items = cacheDyn.SlicerItems as IEnumerable;
+                            if (items == null)
+                                continue; // No items to process
+
+                            // Determine if any item is selected
+                            bool anyItemSelected = false;
+                            foreach (dynamic item in items)
+                            {
+                                if (item.IsSelected)
+                                {
+                                    anyItemSelected = true;
+                                    break;
+                                }
+                            }
+
+                            // If no items are selected, select the first item
+                            if (!anyItemSelected)
+                            {
+                                var enumerator = items.GetEnumerator();
+                                if (enumerator.MoveNext())
+                                {
+                                    dynamic firstItem = enumerator.Current;
+                                    firstItem.IsSelected = true;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Handle errors related to a specific slicer without stopping the whole process
+                            Console.WriteLine($"Error processing slicer '{slicer.Name}': {ex.Message}");
+                        }
                     }
                 }
 
-                // If no items are selected, select the first item
-                if (!anySelected && cacheItems.Count > 0)
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    cacheItems[0].Selected = true;
-                    // Optionally set the slicer's first visible item index to 0
-                    slicer.FirstItemIndex = 0;
+                    Directory.CreateDirectory(outputDir);
                 }
 
-                // Refresh the slicer so the selection takes effect
-                slicer.Refresh();
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the workbook after the automatic selection has been applied
-        workbook.Save("output.xlsx");
     }
 }

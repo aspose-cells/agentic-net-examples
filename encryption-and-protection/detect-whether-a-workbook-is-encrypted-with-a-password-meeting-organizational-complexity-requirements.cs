@@ -1,96 +1,78 @@
-// Title: Determine if an Excel workbook is password‑protected and validate the password against complexity requirements with Aspose.Cells for .NET
-// AI Prompts: Write a C# routine that uses Aspose.Cells to detect whether a given .xlsx file is encrypted and then checks the supplied password for length, uppercase, lowercase, digit, and special‑character criteria. | Create a method that returns true only when the workbook loads successfully with a password that satisfies organizational complexity rules, otherwise returns false. | Implement error handling to differentiate between unencrypted files, incorrect passwords, and passwords that fail complexity validation.
-// Common Searches: Aspose.Cells C# how to detect encrypted Excel file | C# verify password complexity for protected workbook using Aspose | Check if .xlsx is password protected and meets policy with .NET | Load encrypted Excel with password and enforce complexity rules Aspose.Cells | Determine if workbook requires password and validate strength in C#
-// Tags: detect encrypted workbook Aspose.Cells | validate password complexity C# | load protected XLSX with Aspose.Cells | encryption detection Excel .NET | password policy enforcement Aspose.Cells | workbook password verification C#
+// Title: Detect encrypted Excel workbook and validate password complexity using Aspose.Cells for .NET
+// Common Searches: how to determine if an Excel file is password protected with Aspose.Cells in C# | C# code to open an encrypted XLSX using Aspose.Cells LoadOptions password | validate Excel password meets corporate complexity rules after loading with Aspose.Cells | check workbook encryption status before applying password policy in .NET | Aspose.Cells exception handling for encrypted workbook detection
+// Tags: Aspose.Cells encrypted workbook detection | LoadOptions password for encrypted XLSX | C# password complexity validation Excel | Workbook encryption status Aspose.Cells | Corporate Excel password policy .NET
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 using Aspose.Cells;
 
-// The example provides a WorkbookEncryptionChecker class that first attempts to open an Excel file with Aspose.Cells without a password to see if it is encrypted. If encryption is detected, it reloads the file using the supplied password via LoadOptions. Upon successful load, the password is evaluated against typical organizational complexity rules (minimum 8 characters, uppercase, lowercase, digit, special character). The method returns true only when the workbook is encrypted and the password meets all complexity criteria.
-public class WorkbookEncryptionChecker
+// The example shows how to detect whether an XLSX workbook is password‑protected by attempting to load it without credentials and catching the resulting exception. If encrypted, it reloads the file using LoadOptions with the supplied password, then evaluates the password against typical organizational complexity requirements (minimum length, uppercase, lowercase, digit, special character) and prints both the encryption status and the complexity result.
+class WorkbookEncryptionChecker
 {
-    // Checks if a password meets typical organizational complexity requirements:
-    // - Minimum 8 characters
-    // - At least one uppercase letter
-    // - At least one lowercase letter
-    // - At least one digit
-    // - At least one special character
-    private static bool IsPasswordComplex(string password)
+    static void Main()
     {
-        if (string.IsNullOrEmpty(password) || password.Length < 8)
-            return false;
+        // Path to the workbook to be examined
+        string workbookPath = "encrypted.xlsx";
 
-        bool hasUpper = Regex.IsMatch(password, "[A-Z]");
-        bool hasLower = Regex.IsMatch(password, "[a-z]");
-        bool hasDigit = Regex.IsMatch(password, "[0-9]");
-        bool hasSpecial = Regex.IsMatch(password, "[^a-zA-Z0-9]");
+        // Password supplied for opening the workbook (could be obtained from user input)
+        string password = "P@ssw0rd!";
 
-        return hasUpper && hasLower && hasDigit && hasSpecial;
-    }
-
-    // Determines whether the workbook is encrypted and whether the supplied password
-    // satisfies the complexity rules.
-    // Returns true only if the workbook is encrypted AND the password is complex.
-    public static bool IsEncryptedWithComplexPassword(string workbookPath, string password)
-    {
-        // Ensure the file exists to avoid FileNotFoundException.
+        // Verify that the file exists to avoid FileNotFoundException
         if (!File.Exists(workbookPath))
-            return false;
-
-        // First, try loading without a password. If it succeeds, the workbook is not encrypted.
-        try
         {
-            var wb = new Workbook(workbookPath);
-            // Loaded successfully → not encrypted.
-            return false;
-        }
-        catch (Exception)
-        {
-            // Assume the failure is due to encryption; proceed to load with the supplied password.
-        }
-
-        // Attempt to load with the supplied password.
-        try
-        {
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
-            var wb = new Workbook(workbookPath, loadOptions);
-            // If we reach here, the password was correct and the workbook is encrypted.
-            return IsPasswordComplex(password);
-        }
-        catch (Exception)
-        {
-            // Loading failed (incorrect password or other issue) → does not meet requirements.
-            return false;
-        }
-    }
-}
-
-// Simple entry point for demonstration/testing purposes.
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        // Example usage:
-        // args[0] = path to workbook, args[1] = password to test.
-        if (args.Length < 2)
-        {
-            Console.WriteLine("Usage: <exe> <workbookPath> <password>");
+            Console.WriteLine($"File not found: {workbookPath}");
             return;
         }
 
-        string workbookPath = args[0];
-        string password = args[1];
+        bool isEncrypted = false;
+        Workbook workbook = null;
 
+        // Attempt to load without a password to determine if the workbook is encrypted
         try
         {
-            bool result = WorkbookEncryptionChecker.IsEncryptedWithComplexPassword(workbookPath, password);
-            Console.WriteLine($"Workbook encrypted with complex password: {result}");
+            workbook = new Workbook(workbookPath);
+            isEncrypted = false;
         }
-        catch (Exception ex)
+        catch (CellsException)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            // If an exception occurs, assume the workbook is encrypted
+            isEncrypted = true;
         }
+
+        // If encrypted, load it using the supplied password
+        if (isEncrypted)
+        {
+            try
+            {
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+                workbook = new Workbook(workbookPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to open workbook with the provided password: {ex.Message}");
+                return;
+            }
+        }
+
+        // Validate password against organizational complexity rules:
+        // - Minimum 8 characters
+        // - At least one uppercase letter
+        // - At least one lowercase letter
+        // - At least one digit
+        // - At least one special character
+        bool meetsComplexity = false;
+        if (!string.IsNullOrEmpty(password))
+        {
+            bool hasUpper = password.Any(char.IsUpper);
+            bool hasLower = password.Any(char.IsLower);
+            bool hasDigit = password.Any(char.IsDigit);
+            bool hasSpecial = password.Any(ch => !char.IsLetterOrDigit(ch));
+            meetsComplexity = password.Length >= 8 && hasUpper && hasLower && hasDigit && hasSpecial;
+        }
+
+        // Output the results
+        Console.WriteLine($"Workbook Encrypted: {isEncrypted}");
+        Console.WriteLine($"Password Meets Complexity: {meetsComplexity}");
     }
 }

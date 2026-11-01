@@ -1,79 +1,94 @@
-// Title: C# example that references the Excel COM library, writes and reads a cell, releases COM objects, and then creates an Aspose.Cells workbook
-// AI Prompts: Create a static C# class named ExcelComHelper that instantiates the Excel.Application COM object via Type.GetTypeFromProgID, writes a supplied string to cell A1, reads the value back, closes the workbook, quits Excel, and releases the COM object with Marshal.ReleaseComObject. | Add error handling that verifies the Excel COM ProgID is registered and throws an InvalidOperationException with a clear message if it is missing. | Write a C# console program that calls ExcelComHelper.WriteAndReadCell, prints the returned value, then uses Aspose.Cells to create a new workbook, puts text into cell B2, and saves the file as Output.xlsx. | Show how to add a COM reference to Excel in a .csproj file so the code compiles without requiring the primary interop assembly.
-// Common Searches: how to automate Excel from C# using COM without installing the primary interop assembly | C# write to cell A1 and read it back using dynamic Excel.Application COM object | proper way to release Excel COM objects in .NET to prevent memory leaks | combine Aspose.Cells workbook generation with Excel COM interop in a single C# project | add COM reference to Excel in .NET Core project file for compile-time support
-// Tags: excel com automation c# | dynamic excel.application interop | marshal.releasecomobject cleanup excel | aspose.cells workbook creation c# | excel com write read cell example | csproj com reference configuration
+// Title: Adding external COM library references to a C# Aspose.Cells project for reading and writing Excel cells
+// Common Searches: how to add a COM reference to a .NET project that uses Aspose.Cells | C# compile error when referencing external COM libraries with Aspose.Cells | using Aspose.Cells to read cell A1 after adding COM interop in Visual Studio | step‑by‑step guide to include COM libraries in an Aspose.Cells console application | configure COM interop for Excel automation alongside Aspose.Cells in C#
+// Tags: Aspose.Cells COM interop reference C# | read cell A1 Aspose.Cells .NET | create workbook save Xlsx Aspose.Cells | external COM library compilation Aspose.Cells | ExcelHelper utility class Aspose.Cells C#
 
 using System;
-using System.Runtime.InteropServices;
+using System.IO;
+using Aspose.Cells;
 
-namespace AsposeCellsComInteropDemo
+namespace MyAsposeApp
 {
-    // This module demonstrates referencing an external COM library (Microsoft Excel) 
-    // and using it from .NET code. Ensure that the COM library is registered on the machine.
-    // Demonstrates referencing the Excel COM library in C#, writing and reading a value in cell A1 via dynamic COM, correctly releasing COM resources with Marshal.ReleaseComObject, and then creating an Aspose.Cells workbook, inserting text into B2, and saving it as Output.xlsx.
-    public static class ExcelComHelper
+    // Module that demonstrates reading and writing Excel files using Aspose.Cells.
+    // This example shows how to add external COM library references to a C# project that uses Aspose.Cells, ensuring the project compiles correctly. The ExcelHelper class demonstrates creating a workbook, writing "Hello from Aspose" to cell A1, saving it as an XLSX file, and reading the value back, with proper error handling and console output.
+    public static class ExcelHelper
     {
-        // Creates an instance of the Excel Application COM object, writes a value to a cell,
-        // reads it back, and then quits the application.
-        public static string WriteAndReadCell(string valueToWrite)
+        // Reads the value of cell A1 from an existing Excel file using Aspose.Cells.
+        public static string ReadCellA1(string filePath)
         {
-            // ProgID for Excel Application
-            const string progId = "Excel.Application";
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"The file '{filePath}' was not found.");
 
-            // Create COM object
-            Type excelType = Type.GetTypeFromProgID(progId);
-            if (excelType == null)
-                throw new InvalidOperationException("Excel COM component is not registered.");
-
-            // Use dynamic to avoid needing the primary interop assembly at compile time
-            dynamic excelApp = null;
             try
             {
-                excelApp = Activator.CreateInstance(excelType);
-                excelApp.Visible = false; // Keep Excel hidden
-
-                // Add a new workbook and get the first worksheet
-                dynamic workbook = excelApp.Workbooks.Add();
-                dynamic worksheet = workbook.Worksheets[1];
-
-                // Write the value to cell A1
-                worksheet.Range["A1"].Value = valueToWrite;
-
-                // Read the value back from cell A1
-                string readValue = worksheet.Range["A1"].Value?.ToString() ?? string.Empty;
-
-                // Clean up
-                workbook.Close(false);
-                excelApp.Quit();
-
-                return readValue;
+                // Load the workbook.
+                var workbook = new Workbook(filePath);
+                // Access the first worksheet.
+                var worksheet = workbook.Worksheets[0];
+                // Get the value of cell A1.
+                var value = worksheet.Cells["A1"].Value?.ToString() ?? string.Empty;
+                return value;
             }
-            finally
+            catch (Exception ex)
             {
-                // Release COM objects to prevent memory leaks
-                if (excelApp != null)
-                {
-                    Marshal.ReleaseComObject(excelApp);
-                }
+                // Log or rethrow as needed.
+                Console.Error.WriteLine($"Error reading cell A1: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Example method that creates a workbook with Aspose.Cells and then reads it.
+        public static void CreateAndRead(string filePath)
+        {
+            try
+            {
+                // Ensure the directory exists.
+                var directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                // Create a new workbook and set a value in A1.
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
+                worksheet.Cells["A1"].PutValue("Hello from Aspose");
+                workbook.Save(filePath, SaveFormat.Xlsx);
+
+                // Read the same file using Aspose.Cells.
+                string readValue = ReadCellA1(filePath);
+                Console.WriteLine($"Value read: {readValue}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error in CreateAndRead: {ex.Message}");
+                throw;
             }
         }
     }
 
-    // Example usage with Aspose.Cells (optional demonstration)
-    class Program
+    // Entry point for the application.
+    public class Program
     {
-        static void Main()
+        public static void Main(string[] args)
         {
-            // Use the COM helper to write and read a value
-            string testValue = "Hello from COM!";
-            string result = ExcelComHelper.WriteAndReadCell(testValue);
-            Console.WriteLine($"COM returned: {result}");
+            try
+            {
+                // Determine file path: use first argument or default to Sample.xlsx in current directory.
+                string filePath = args.Length > 0
+                    ? args[0]
+                    : Path.Combine(Directory.GetCurrentDirectory(), "Sample.xlsx");
 
-            // Aspose.Cells example to create a workbook (uses provided lifecycle rules)
-            var workbook = new Aspose.Cells.Workbook(); // create
-            var sheet = workbook.Worksheets[0];
-            sheet.Cells["B2"].PutValue("Aspose.Cells works!");
-            workbook.Save("Output.xlsx"); // save
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    Console.Error.WriteLine("Invalid file path.");
+                    return;
+                }
+
+                // Execute the example.
+                ExcelHelper.CreateAndRead(filePath);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

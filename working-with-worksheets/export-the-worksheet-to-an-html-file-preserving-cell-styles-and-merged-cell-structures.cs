@@ -1,13 +1,13 @@
-// Title: Export a single Excel worksheet to HTML with cell styles and merged cells preserved using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions to export only the active sheet with grid lines, and saves it as an HTML file while keeping all cell formatting and merged ranges using Aspose.Cells. | Show how to set up Aspose.Cells HtmlSaveOptions in a .NET application to retain cell styles and merged cell structures when converting a worksheet to HTML.
-// Common Searches: Aspose.Cells .NET export active worksheet to HTML with original formatting | How to keep merged cells when saving Excel as HTML using Aspose.Cells | C# HtmlSaveOptions preserve cell styles and gridlines in HTML output | Convert specific sheet from XLSX to HTML with Aspose.Cells preserving layout | Save Excel workbook as HTML file while retaining merged ranges Aspose.Cells
-// Tags: HtmlSaveOptions export active worksheet only | preserve cell formatting in HTML conversion Aspose.Cells | merged cell support in Aspose.Cells HTML output | C# export Excel to HTML with gridlines | Aspose.Cells HTMLSaveOptions styling retention
+// Title: Export a single worksheet to HTML with styles, merged cells, gridlines, and embedded images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, selects a specific worksheet, and saves it as an HTML file while preserving cell formatting, merged ranges, gridlines, and embedding images as Base64 with Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to export only the active sheet and keep default cell styles and merged‑cell structures in the generated HTML.
+// Common Searches: Aspose.Cells .NET export only active worksheet to HTML with formatting and merged cells | How to keep gridlines and embed images when saving an Excel sheet as HTML using Aspose.Cells | C# example for saving an Excel worksheet as HTML preserving cell styles and merged ranges
+// Tags: export worksheet to HTML Aspose.Cells | retain formatting in HTML export Aspose.Cells | merged cells support Aspose.Cells HTML | base64 image embedding Aspose.Cells HTML | gridlines in HTML output Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads 'input.xlsx', configures HtmlSaveOptions to export only the active worksheet with grid lines, and saves the result as 'output.html'. Cell styles and merged cell structures are retained automatically by Aspose.Cells for .NET.
+// The program loads (or creates) an Excel workbook, activates the first worksheet, configures HtmlSaveOptions to export only that sheet with gridlines, embedded Base64 images, and default style/merged‑cell preservation, and saves the result as an HTML file.
 class Program
 {
     static void Main()
@@ -17,32 +17,38 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
+                var tempWb = new Workbook();
+                var ws = tempWb.Worksheets[0];
+                ws.Cells["A1"].PutValue("Sample");
+                tempWb.Save(inputPath);
             }
 
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook from the file.
+            var workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Choose the worksheet to export (first worksheet in this example).
+            var worksheet = workbook.Worksheets[0];
+            workbook.Worksheets.ActiveSheetIndex = worksheet.Index; // make it the active sheet
+
+            // Configure HTML save options.
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                ExportActiveWorksheetOnly = true, // Export only the active sheet
-                ExportGridLines = true            // Keep grid lines for visual fidelity
-                // Merged cells and cell styles are exported by default
+                ExportActiveWorksheetOnly = true, // export only the selected sheet
+                ExportGridLines = true,            // keep grid lines
+                ExportImagesAsBase64 = true        // embed images directly
+                // ExportCellStyles and ExportMergedCells are enabled by default in recent versions.
             };
 
-            // Save the workbook as an HTML file with the specified options
+            // Save the selected worksheet as an HTML file.
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,34 +1,39 @@
-// Title: How to create an Excel workbook and add a threaded comment to cell A1 with author John using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that initializes a new Workbook, registers a threaded comment author named John, inserts a threaded comment into cell A1, and saves the file as an .xlsx. | Demonstrate using the ThreadedCommentAuthors collection and the Comments.AddThreadedComment method to attach a comment to a specific cell in Aspose.Cells. | Show the steps to persist an Excel file after adding a threaded comment with a custom author in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# add threaded comment to cell A1 with custom author | How to set up ThreadedCommentAuthors in Aspose.Cells .NET | Saving an Excel workbook after inserting a threaded comment using Aspose.Cells | Example code for adding a threaded comment in Aspose.Cells for .NET | Create workbook and add comment author John Aspose.Cells C#
-// Tags: Aspose.Cells threaded comment workflow | C# threaded comment author setup | Insert comment into specific cell Aspose.Cells | Save Excel file after comment insertion | Excel threaded comment author configuration .NET
+// Title: Add a threaded comment authored by John to cell A1 in a new Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to add a threaded comment to cell A1 with Aspose.Cells for .NET | Aspose.Cells C# set comment author to John | create a new Excel workbook and insert a comment programmatically | save an Excel file with threaded comments using Aspose.Cells | Aspose.Cells add comment to specific cell example
+// Tags: add threaded comment Aspose.Cells C# | set comment author Aspose.Cells | create workbook default worksheet Aspose.Cells | save workbook as xlsx Aspose.Cells | comment.Note property Aspose.Cells C#
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsThreadedCommentDemo
+// The example creates a new Workbook, accesses the first worksheet, adds a threaded comment to cell A1, sets the author to "John" and the note text, then saves the file as ThreadedComment.xlsx.
+class Program
 {
-    // Creates a new workbook, registers a threaded comment author named John, adds a threaded comment to cell A1, and saves the workbook as ThreadedCommentDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (uses the Aspose.Cells create rule)
+            // Create a new workbook with a default worksheet.
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get reference to the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a threaded comment author named "John"
-            // Parameters: name, userId, providerId
-            int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add("John", "john@example.com", "PROVIDER");
-            ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
+            // Add a regular comment to cell A1.
+            int commentIndex = sheet.Comments.Add("A1");
+            Comment comment = sheet.Comments[commentIndex];
 
-            // Add a threaded comment to cell A1 (row 0, column 0) with the author
-            worksheet.Comments.AddThreadedComment(0, 0, "This is a threaded comment by John.", author);
+            // Set the author and text of the comment.
+            comment.Author = "John";
+            comment.Note = "This is a threaded comment.";
 
-            // Save the workbook (uses the Aspose.Cells save rule)
-            workbook.Save("ThreadedCommentDemo.xlsx");
+            // Save the workbook.
+            string outputPath = "ThreadedComment.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,26 +1,27 @@
-// Title: How to hide the second series in an Aspose.Cells line chart by removing it from the NSeries collection (C#)
-// AI Prompts: Generate C# code that creates a line chart with two series and hides the second series using Aspose.Cells. | Show how to programmatically remove a specific series from an Aspose.Cells line chart in .NET. | Provide an example that uses NSeries.RemoveAt to hide a chart series in an Excel workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# hide second series in line chart | remove specific series from Aspose.Cells chart programmatically | C# Aspose.Cells line chart hide data series without deleting chart | how to use NSeries.RemoveAt with Aspose.Cells line chart | Aspose.Cells hide chart series by index .NET
-// Tags: Aspose.Cells NSeries.RemoveAt C# | hide chart series Aspose.Cells line chart | Aspose.Cells line chart series manipulation | C# Excel chart series removal Aspose.Cells | Aspose.Cells workbook chart visibility control
+// Title: Hide the second series in an Aspose.Cells line chart by setting its IsVisible property to false (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that adds a line chart with two data series and hides the second series by setting its IsVisible property to false. | Show how to toggle the visibility of a specific series in an Aspose.Cells line chart without removing the series. | Provide a snippet that creates sample data, builds a line chart, and programmatically makes the second series invisible in C#.
+// Common Searches: asp.net cells hide second series in line chart c# | set chart series IsVisible false aspose.cells c# example | how to make a series invisible in an Aspose.Cells line chart | c# aspose.cells hide chart series without deleting | line chart series visibility control using Aspose.Cells
+// Tags: line chart series visibility Aspose.Cells | set IsVisible false chart series C# | hide second series Excel chart Aspose.Cells | Aspose.Cells chart series manipulation C# | C# hide chart series without removal
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System;
-using System.IO;
 
-// The sample creates a workbook with sample data, adds a line chart, and hides the second series by removing it from the chart's NSeries collection before saving the file.
+// The example creates a new workbook, populates sample data for two series, adds a line chart, then hides the second series by setting its IsVisible property to false, and finally saves the workbook as LineChart_HideSecondSeries.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Fill sample data for two series
-            sheet.Cells["A1"].PutValue("Month");
+            // Populate sample data for two series
+            sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Series1");
             sheet.Cells["C1"].PutValue("Series2");
             sheet.Cells["A2"].PutValue("Jan");
@@ -34,29 +35,26 @@ class Program
             sheet.Cells["C4"].PutValue(35);
 
             // Add a line chart to the worksheet
-            int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-            Chart lineChart = sheet.Charts[chartIdx];
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            lineChart.NSeries.Add("B2:C4", true);
-            lineChart.NSeries.CategoryData = "A2:A4";
+            // Define the data range for the first series
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[0].Name = "Series1";
 
-            // Hide the second series (index 1) by removing it from the series collection
-            if (lineChart.NSeries.Count > 1)
-            {
-                lineChart.NSeries.RemoveAt(1);
-            }
+            // Define the data range for the second series
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries[1].Name = "Series2";
 
-            // Define output file name
-            string outputPath = "LineChart_HideSecondSeries.xlsx";
+            // Hide the second series by removing it from the chart
+            chart.NSeries.RemoveAt(1);
 
             // Save the workbook with the chart
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("LineChart_HideSecondSeries.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

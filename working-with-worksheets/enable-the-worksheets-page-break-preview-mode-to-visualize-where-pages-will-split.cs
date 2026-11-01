@@ -1,16 +1,25 @@
-// Title: Enable Page Break Preview mode for a worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that sets a worksheet’s ViewType to PageBreakPreview using Aspose.Cells and saves the workbook. | Show how to switch an existing worksheet to page break preview view before exporting to Excel with Aspose.Cells. | Provide a snippet that toggles the view mode of a specific worksheet to PageBreakPreview and writes the file to disk.
-// Common Searches: Aspose.Cells C# set worksheet view to page break preview programmatically | How to display page break locations in an Excel file using Aspose.Cells .NET | C# change worksheet view type to PageBreakPreview before saving workbook | Enable page break preview mode for a specific sheet with Aspose.Cells API | Aspose.Cells ViewType PageBreakPreview example code
-// Tags: Aspose.Cells set worksheet view type | C# page break preview mode | Aspose.Cells ViewType PageBreakPreview | save workbook after view change | Excel page break visualization Aspose.Cells
+// Title: Enable Page Break Preview view for a worksheet in a new workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, sets the first worksheet's ViewType to PageBreakPreview with Aspose.Cells, and saves it as an .xlsx file. | Show how to switch an existing worksheet to Page Break Preview mode using the Aspose.Cells API in a .NET application. | Provide a snippet that demonstrates enabling page break visualization for a worksheet and exporting the result with Aspose.Cells for C#.
+// Common Searches: Aspose.Cells C# set worksheet view to page break preview | How to enable page break preview mode in an Excel file using Aspose.Cells for .NET | C# Aspose.Cells change worksheet view type to PageBreakPreview before saving | Page break preview viewtype example Aspose.Cells .NET | Visualize Excel page breaks with Aspose.Cells C# code
+// Tags: Aspose.Cells worksheet viewtype pagebreakpreview | C# Aspose.Cells enable page break preview | export workbook with page break preview Aspose | Excel page break visualization Aspose.Cells .NET | set worksheet view to pagebreakpreview C#
 
-// Create a new workbook (or load an existing one)
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook(); // create
+using Aspose.Cells;
 
-// Access the first worksheet (or any specific worksheet)
-Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
+// Creates a workbook, accesses the first worksheet, sets its ViewType to PageBreakPreview to show page break preview, and saves the file as PageBreakPreview.xlsx.
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-// Enable Page Break Preview mode for the worksheet
-sheet.ViewType = Aspose.Cells.ViewType.PageBreakPreview;
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-// Save the workbook to a file
-workbook.Save("PageBreakPreview.xlsx"); // save
+        // Enable Page Break Preview mode for the worksheet
+        worksheet.ViewType = ViewType.PageBreakPreview;
+
+        // Save the workbook to a file
+        workbook.Save("PageBreakPreview.xlsx");
+    }
+}

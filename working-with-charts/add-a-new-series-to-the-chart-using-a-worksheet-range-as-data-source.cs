@@ -1,52 +1,62 @@
-// Title: Add a second data series to a column chart in Aspose.Cells using worksheet ranges (C#)
-// AI Prompts: Create a new workbook, fill columns A‑C with category labels and two numeric series, add a column chart, bind the first series to B2:B5, set the category axis to A2:A5, then add a second series from C2:C5, and save the file as an .xlsx document. | Generate C# code that demonstrates how to call NSeries.Add with a worksheet range to attach an additional series to an existing Aspose.Cells column chart. | Write a snippet that shows how to assign both the series data range and the category data range for a column chart in Aspose.Cells, then export the workbook.
-// Common Searches: Aspose.Cells C# add another series to column chart from cell range | how to bind multiple data series to a chart using Aspose.Cells | set category axis range for Aspose.Cells chart programmatically C# | example of NSeries.Add with worksheet range in Aspose.Cells | create column chart with two series using Aspose.Cells C#
-// Tags: NSeries.Add range binding Aspose.Cells C# | column chart multiple series Aspose.Cells | set chart category data Aspose.Cells | chart data source worksheet range Aspose.Cells | save workbook with chart Aspose.Cells
+// Title: Add a new data series to an existing Excel chart from a worksheet range using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that loads an existing workbook, selects the first chart, adds a new series whose Y‑values come from a specified worksheet range, assigns a custom name to the series, and saves the workbook. | Update an Aspose.Cells chart to bind a new series to a dynamic cell range and change the series name without recreating the chart.
+// Common Searches: asp.net add series to existing chart using Aspose.Cells C# | how to use NSeries.Add with a worksheet range in Aspose.Cells | set custom name for chart series programmatically Aspose.Cells | bind multiple data series to Excel chart from cell ranges Aspose.Cells C# | load workbook, modify chart data source and save with Aspose.Cells
+// Tags: add chart series using NSeries.Add Aspose.Cells | bind chart series to worksheet range C# | set series name Aspose.Cells chart | update existing Excel chart data source Aspose.Cells | load and save workbook with modified chart Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// The program creates a workbook, populates columns A‑C with categories and two numeric series, adds a column chart, assigns the first series and category axis using cell ranges, adds a second series from another range, and saves the workbook as ChartWithMultipleSeries.xlsx.
+// The example loads an existing Excel file, accesses the first worksheet and its first chart, adds a new series using the cell range B2:B5 for Y‑values, sets the series name to "New Series", and saves the workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data:
-        // Column A – Category labels
-        // Column B – First data series
-        // Column C – Second data series
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["C1"].PutValue("Series2");
-
-        string[] categories = { "A", "B", "C", "D" };
-        int[] series1 = { 10, 20, 30, 40 };
-        int[] series2 = { 15, 25, 35, 45 };
-
-        for (int i = 0; i < categories.Length; i++)
+        try
         {
-            sheet.Cells[i + 2, 0].PutValue(categories[i]); // A column
-            sheet.Cells[i + 2, 1].PutValue(series1[i]);   // B column
-            sheet.Cells[i + 2, 2].PutValue(series2[i]);   // C column
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Get the first chart on the worksheet
+            Chart chart = worksheet.Charts[0];
+
+            // Define the range that holds the Y‑values for the new series (e.g., B2:B5)
+            string dataRange = $"{worksheet.Name}!$B$2:$B$5";
+
+            // Add a new series to the chart using the worksheet range as the data source.
+            // The Add method returns the index of the newly added series.
+            int seriesIndex = chart.NSeries.Add(dataRange, false);
+            Series newSeries = chart.NSeries[seriesIndex];
+            newSeries.Name = "New Series";
+
+            // Save the workbook with the updated chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Set the first series (Series1) using the range B2:B5
-        chart.NSeries.Add("=Sheet1!$B$2:$B$5", true);
-        // Define the category (X‑axis) data range
-        chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$5";
-
-        // Add a new series (Series2) using the range C2:C5
-        chart.NSeries.Add("=Sheet1!$C$2:$C$5", true);
-
-        // Save the workbook with the chart containing multiple series
-        workbook.Save("ChartWithMultipleSeries.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

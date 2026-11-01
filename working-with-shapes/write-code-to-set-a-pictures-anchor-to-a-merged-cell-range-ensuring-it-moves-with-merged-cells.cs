@@ -1,69 +1,61 @@
 // Title: How to anchor a picture to a merged cell range and make it move and resize with the cells using Aspose.Cells for .NET
-// AI Prompts: Insert a PNG image into a worksheet, anchor it to a merged range B2:D4, and set its Placement to MoveAndSize with Aspose.Cells. | Compute the total pixel width and height of a merged cell block and apply those dimensions to a Picture object. | Resize a picture so it exactly fills a merged cell area and automatically moves and scales when the merged cells are resized.
-// Common Searches: Aspose.Cells C# anchor image to merged cells B2:D4 | Set picture placement to MoveAndSize for a merged range in a .NET workbook | Calculate pixel size of merged cells using Aspose.Cells | Resize picture to fit merged cell block in Aspose.Cells for C#
-// Tags: picture placement moveandsize merged cells | merged cell pixel size calculation aspnet | add png picture to merged cell block aspose.cells | resize picture to fill merged area c# | image anchoring merged block aspose.cells
+// AI Prompts: Insert a PNG file into a worksheet, merge cells B2:D4, and bind the image to the merged area so it moves and resizes together with the cells using Aspose.Cells for .NET. | Configure a picture's Placement to MoveAndSize and call SetPosition with the start and end rows/columns to lock the picture to a merged cell block.
+// Common Searches: Aspose.Cells C# anchor image to merged cells B2:D4 | C# set picture placement move and size merged range Aspose.Cells | how to bind a picture to a merged cell area in Aspose.Cells for .NET | SetPosition picture merged cells Aspose.Cells example
+// Tags: picture anchoring to merged cells Aspose.Cells | PlacementType.MoveAndSize worksheet image | SetPosition method picture anchoring Aspose.Cells | add picture to merged cells C# | merge cells and attach image Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, merges cells B2:D4, inserts a PNG picture anchored at the start of the merged range, sets its Placement to MoveAndSize, calculates the combined pixel dimensions of the merged cells, resizes the picture to fill the merged area, and saves the file as MergedCellPicture.xlsx.
+// The sample creates a workbook, merges cells B2:D4, adds a PNG picture at the start of the merged range, sets its Placement to MoveAndSize so it moves and resizes with the cells, optionally uses SetPosition to bind the picture to the full merged area, and saves the file as MergedPicture.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define merged range B2:D4 (zero‑based indices)
-            int startRow = 1;      // B2
-            int startColumn = 1;   // column B
-            int totalRows = 3;     // rows 2‑4
-            int totalColumns = 3;  // columns B‑D
+            // Define the merged cell range (B2:D4)
+            int startRow = 1;      // B2 (zero‑based)
+            int startColumn = 1;   // B2
+            int endRow = 3;        // D4
+            int endColumn = 3;     // D4
 
             // Merge the cells
-            sheet.Cells.Merge(startRow, startColumn, totalRows, totalColumns);
+            sheet.Cells.Merge(startRow, startColumn, endRow - startRow + 1, endColumn - startColumn + 1);
 
-            // Path to the image file
-            string imagePath = "sample.png";
+            // Path to the picture file
+            string picturePath = @"C:\Images\logo.png";
 
-            // Ensure the image file exists
-            if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file not found: {imagePath}");
+            // Ensure the picture file exists to avoid FileNotFoundException
+            if (!File.Exists(picturePath))
+                throw new FileNotFoundException($"Image file not found: {picturePath}");
 
             // Add the picture to the worksheet
-            using (FileStream imgStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-            {
-                int pictureIndex = sheet.Pictures.Add(startRow, startColumn, imgStream);
-                Picture picture = sheet.Pictures[pictureIndex];
+            int pictureIndex = sheet.Pictures.Add(startRow, startColumn, picturePath);
+            Picture picture = sheet.Pictures[pictureIndex];
 
-                // Make the picture move and size with the merged cells
-                picture.Placement = PlacementType.MoveAndSize;
+            // Make the picture move and resize with the cells (including merged cells)
+            picture.Placement = PlacementType.MoveAndSize;
 
-                // Calculate total width and height of the merged range in pixels
-                double totalWidth = 0;
-                for (int col = startColumn; col < startColumn + totalColumns; col++)
-                    totalWidth += sheet.Cells.GetColumnWidthPixel(col);
-
-                double totalHeight = 0;
-                for (int row = startRow; row < startRow + totalRows; row++)
-                    totalHeight += sheet.Cells.GetRowHeightPixel(row);
-
-                // Resize the picture to fit the merged area
-                picture.Width = (int)totalWidth;
-                picture.Height = (int)totalHeight;
-            }
+            // Optional: anchor the picture to the merged range using SetPosition if available
+            // Uncomment the following line if your Aspose.Cells version supports SetPosition:
+            // picture.SetPosition(startRow, startColumn, endRow, endColumn);
 
             // Save the workbook
-            string outputPath = "MergedCellPicture.xlsx";
+            string outputPath = "MergedPicture.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

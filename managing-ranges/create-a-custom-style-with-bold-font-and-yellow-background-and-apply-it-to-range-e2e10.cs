@@ -1,14 +1,12 @@
-// Title: Apply a bold font and yellow background style to cells E2‑E10 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a style with bold text and a solid yellow fill in Aspose.Cells, then applies it to the range E2:E10. | Show how to configure a StyleFlag to apply only font boldness and cell shading when styling a specific range in an Aspose.Cells workbook. | Provide the steps to save the workbook after applying the custom style to the selected cells.
-// Common Searches: asp.net aspose.cells set bold font and yellow background for range E2:E10 | c# aspose.cells apply custom style to specific cells | using StyleFlag to limit style attributes in Aspose.Cells | create solid fill style with bold text in Aspose.Cells .NET | how to save workbook after styling cells with Aspose.Cells
-// Tags: apply custom style to cell range Aspose.Cells | bold font solid yellow fill Aspose.Cells | StyleFlag font bold cell shading .NET | create and apply style to E2:E10 Aspose.Cells | save workbook after styling Aspose.Cells
+// Title: How to create a bold font with yellow background style and apply it to cells E2:E10 using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply bold text and yellow fill to a range of cells | Create and use a custom style for cells E2 to E10 in Aspose.Cells .NET | Set font bold and background color for a specific range with Aspose.Cells API | Using StyleFlag to apply font and shading to a cell range in Aspose.Cells C# | How to style a column range with solid yellow background in Aspose.Cells
+// Tags: custom style creation Aspose.Cells .NET | apply style to specific range Aspose.Cells | font boldness with background color Aspose.Cells | StyleFlag configuration for cell shading Aspose.Cells | solid yellow background using Aspose.Cells style
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System.Drawing;
 
-// The program creates a new workbook, defines a custom style with bold text and a solid yellow background, uses a StyleFlag to apply only font boldness and cell shading, applies the style to cells E2 through E10 on the first worksheet, and saves the file as StyledRange.xlsx.
+// The example demonstrates creating a custom style with a bold font and yellow solid background, configuring a StyleFlag for font boldness and cell shading, applying the style to the range E2:E10, and saving the workbook as StyledWorkbook.xlsx.
 class Program
 {
     static void Main()
@@ -18,34 +16,29 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a custom style with bold font and yellow background
+            // Create a custom style
             Style customStyle = workbook.CreateStyle();
-            customStyle.Font.IsBold = true;
-            customStyle.ForegroundColor = Color.Yellow;
-            customStyle.Pattern = BackgroundType.Solid;
+            customStyle.Font.IsBold = true;                     // Bold font
+            customStyle.ForegroundColor = Color.Yellow;        // Yellow background
+            customStyle.Pattern = BackgroundType.Solid;        // Solid fill
 
-            // Define which style attributes to apply
-            StyleFlag flag = new StyleFlag
+            // Apply the style to the range E2:E10
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("E2", "E10");
+            range.ApplyStyle(customStyle, new StyleFlag
             {
                 FontBold = true,
                 CellShading = true
-            };
-
-            // Apply the style to the range E2:E10
-            AsposeRange range = sheet.Cells.CreateRange("E2", "E10");
-            range.ApplyStyle(customStyle, flag);
+            });
 
             // Save the workbook
-            string outputPath = "StyledRange.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("StyledWorkbook.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

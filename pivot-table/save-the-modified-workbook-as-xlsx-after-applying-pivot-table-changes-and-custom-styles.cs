@@ -1,89 +1,80 @@
-// Title: Apply custom cell style, preserve formatting, and save a modified Aspose.Cells pivot table as XLSX in C#
-// AI Prompts: Create a workbook, add a pivot table, set SaveData = false, enable PreserveFormatting, assign PivotStyleMedium9, format the data body range with a custom yellow background style, and save the file as ModifiedPivot.xlsx using Aspose.Cells for .NET. | Update an existing pivot table to stop embedding source data, keep its layout after refresh, apply both a built‑in pivot style and a custom Calibri bold style to the data area, then export the workbook to XLSX format with Aspose.Cells C#.
-// Common Searches: Aspose.Cells C# how to prevent embedding source data in a pivot table | C# preserve pivot table formatting after refresh with Aspose.Cells | Apply custom background color to pivot table data area using Aspose.Cells .NET | Export workbook containing styled pivot table to XLSX with Aspose.Cells | Set built‑in pivot style and custom cell style for a pivot table in C# Aspose.Cells
-// Tags: pivot table custom cell style Aspose.Cells | preserve pivot formatting Aspose.Cells .NET | disable source data embedding pivot Aspose.Cells | save workbook as XLSX Aspose.Cells C# | apply built‑in pivot style Aspose.Cells
+// Title: Apply a custom header style to a pivot table and save the workbook as XLSX using Aspose.Cells for .NET
+// Common Searches: how to add a data field to an existing pivot table using Aspose.Cells C# | C# code to style the header row of a pivot table with Aspose.Cells | refresh a pivot table after modifying fields in Aspose.Cells .NET | save a modified workbook as XLSX after pivot table changes with Aspose.Cells | apply custom header formatting to pivot table cells in Aspose.Cells for .NET
+// Tags: apply custom style to pivot table header Aspose.Cells | add data field to pivot table C# Aspose.Cells | refresh pivot table after modification Aspose.Cells | save workbook as XLSX Aspose.Cells .NET | pivot table styling workbook export Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotSaveDemo
+// The example loads an existing XLSX workbook, checks for a pivot table on the first worksheet, adds a data field, refreshes the pivot table, creates a light‑blue bold style, applies it to the pivot table's header row, and saves the updated workbook as a new XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a workbook, populates sample data, adds a pivot table, disables source data embedding, preserves formatting on refresh, applies a built‑in PivotStyleMedium9 and a custom yellow background style to the data body range, and finally saves the workbook as ModifiedPivot.xlsx in XLSX format using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (uses the Workbook() constructor rule)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Product");
-            sheet.Cells["C1"].PutValue("Sales");
+            // Get the first worksheet (index 0)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["B2"].PutValue("Apple");
-            sheet.Cells["C2"].PutValue(1200);
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["B3"].PutValue("Banana");
-            sheet.Cells["C3"].PutValue(800);
+            // Access the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["B4"].PutValue("Carrot");
-            sheet.Cells["C4"].PutValue(600);
+            // Example modification: add a data field (e.g., column index 2)
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
 
-            sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B5"].PutValue("Broccoli");
-            sheet.Cells["C5"].PutValue(700);
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Refresh and calculate the pivot data
+            // Refresh the pivot table to apply the changes
             pivotTable.RefreshData();
-            pivotTable.CalculateData();
 
-            // ----- Apply pivot table changes -----
-            // 1. Do not embed source data with the workbook
-            pivotTable.SaveData = false;
+            // Create a custom style for the pivot table header
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.ForegroundColor = Color.LightBlue;
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Color = Color.DarkBlue;
 
-            // 2. Preserve formatting when the pivot table is refreshed
-            pivotTable.PreserveFormatting = true;
+            // Determine the header row range of the pivot table
+            int headerRow = pivotTable.RowRange.StartRow;
+            int firstCol = pivotTable.ColumnRange.StartColumn;
+            int lastCol = pivotTable.ColumnRange.EndColumn;
 
-            // 3. Apply a built‑in pivot table style
-            pivotTable.PivotTableStyleName = "PivotStyleMedium9";
+            // Apply the custom style to each cell in the header row
+            for (int col = firstCol; col <= lastCol; col++)
+            {
+                Cell cell = worksheet.Cells[headerRow, col];
+                StyleFlag flag = new StyleFlag { All = true };
+                cell.SetStyle(headerStyle, flag);
+            }
 
-            // 4. Apply a custom style to the data body range
-            Style customStyle = workbook.CreateStyle();
-            customStyle.Font.Name = "Calibri";
-            customStyle.Font.Size = 11;
-            customStyle.Font.IsBold = true;
-            customStyle.ForegroundColor = Color.LightYellow;
-            customStyle.Pattern = BackgroundType.Solid;
-
-            // Format the entire data body area of the pivot table
-            CellArea dataArea = pivotTable.DataBodyRange;
-            pivotTable.Format(dataArea, customStyle);
-
-            // Save the modified workbook as XLSX (uses Workbook.Save(string, SaveFormat) rule)
-            workbook.Save("ModifiedPivot.xlsx", SaveFormat.Xlsx);
-
-            // Clean up
-            workbook.Dispose();
-
-            Console.WriteLine("Workbook saved successfully as ModifiedPivot.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

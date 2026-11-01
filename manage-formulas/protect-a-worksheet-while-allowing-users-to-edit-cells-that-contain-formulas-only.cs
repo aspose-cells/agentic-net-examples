@@ -1,60 +1,69 @@
-// Title: How to protect an Excel worksheet with Aspose.Cells for .NET while allowing only formula cells to be edited
-// AI Prompts: Write C# code using Aspose.Cells to lock all cells in a worksheet, unlock only those that contain formulas, and apply password protection. | Show how to mark formula cells as unlocked by modifying their style, then protect the worksheet with a password using Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# protect worksheet but keep formula cells editable | unlock only formula cells before worksheet protection Aspose.Cells | set cell IsLocked false for formulas in Aspose.Cells .NET | apply password to Excel sheet while allowing formula editing using Aspose.Cells | how to iterate cells and unlock formulas in Aspose.Cells workbook
-// Tags: worksheet password protection Aspose.Cells | unlock cells containing formulas Aspose.Cells C# | modify cell style to allow editing formulas | password protect sheet with formula edit access | iterate worksheet cells to set lock status Aspose
+// Title: Protect an Excel worksheet but keep only formula cells editable using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# protect worksheet while allowing edits only in cells that contain formulas | unlock cells with formulas before applying worksheet protection in Aspose.Cells .NET | C# code to protect Excel sheet and make formula cells editable using Aspose.Cells | how to set IsLocked false for formula cells and protect sheet with password in Aspose.Cells | selective worksheet protection based on formula presence Aspose.Cells C#
+// Tags: selective cell unlocking for formula cells Aspose.Cells | worksheet protection with password Aspose.Cells C# | cell style IsLocked manipulation Aspose.Cells | iterate used range to detect formulas Aspose.Cells | apply protection type All Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace WorksheetProtectionExample
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an existing workbook, scans the used range to find cells that contain formulas, unlocks those cells by setting their Style.IsLocked property to false, then protects the entire worksheet with a password so only the unlocked formula cells remain editable, and finally saves the updated file.
+class Program
 {
-    // The example creates a workbook, iterates through every cell in the first worksheet, unlocks cells that contain formulas by clearing their locked flag, then protects the worksheet with a password so only those formula cells remain editable, and finally saves the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (or load an existing one if needed)
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Unlock cells that contain formulas so they can be edited by users
-                foreach (Cell cell in worksheet.Cells)
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine the used range
+            AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            // Unlock cells that contain formulas
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
                 {
+                    Cell cell = sheet.Cells[row, col];
                     if (cell.IsFormula)
                     {
                         Style style = cell.GetStyle();
-                        style.IsLocked = false; // Allow editing
+                        style.IsLocked = false; // Unlock the cell
                         cell.SetStyle(style);
                     }
                 }
-
-                // Protect the worksheet. Only unlocked cells (the formula cells) can be edited.
-                // Provide the new password and an empty old password as required by the API.
-                worksheet.Protect(ProtectionType.All, "myPassword", string.Empty);
-
-                // Define output path
-                string outputPath = "WorksheetProtectionExample.xlsx";
-
-                // Ensure the directory exists (handle case where Path.GetDirectoryName returns null)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Protect the worksheet; only unlocked cells remain editable
+            sheet.Protect(ProtectionType.All, "myPassword", string.Empty);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

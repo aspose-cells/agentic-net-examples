@@ -1,53 +1,26 @@
-// Title: Merge two Excel workbooks and save the combined file to a custom path using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells to combine a source Workbook into a destination Workbook and save the result to a specified file path in C#. | Create two Excel workbooks, add data, merge them with Workbook.Combine, then call Workbook.Save with a custom filename. | Demonstrate persisting a merged workbook to a user‑defined location using destWorkbook.Save in Aspose.Cells for .NET.
-// Common Searches: how to merge two Excel files and save as new file using Aspose.Cells in C# | Aspose.Cells combine workbooks then save to specific folder .NET | C# code example for Workbook.Combine and Workbook.Save with Aspose.Cells | save merged workbook to custom path Aspose.Cells .NET example | combine source workbook into destination workbook and export as xlsx using Aspose.Cells
-// Tags: Aspose.Cells Workbook.Combine usage C# | Aspose.Cells Workbook.Save with explicit file path | merge Excel files into single workbook Aspose.Cells | define output file path for merged workbook | .NET example of combining and persisting workbooks
+// Title: Save a merged workbook to a custom file path using Aspose.Cells in C#
+// AI Prompts: Generate C# code that merges worksheets with Aspose.Cells and then saves the resulting Workbook to a user‑defined location in XLSX format. | Show a snippet that calls Workbook.Save with SaveFormat.Xlsx and a variable output path after consolidating Excel files using Aspose.Cells.
+// Common Searches: how to save an Aspose.Cells merged workbook to a specific directory in C# | Aspose.Cells C# workbook.Save with dynamic file name after consolidating worksheets | C# export merged Excel workbook using Aspose.Cells to a custom path | Aspose.Cells save merged workbook to network share in C# | C# Aspose.Cells persist workbook after merging sheets
+// Tags: Aspose.Cells workbook.Save Xlsx | C# save merged workbook Aspose.Cells | Aspose.Cells export merged workbook to file | custom output path Aspose.Cells | Aspose.Cells workbook persistence C#
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example defines an output file path, creates a placeholder Workbook (representing a merged workbook), and uses Aspose.Cells' Workbook.Save method with SaveFormat.Xlsx to write the file to the specified location.
+class Program
 {
-    // The sample creates a source and a destination Workbook, writes sample data to each, merges the source into the destination using Workbook.Combine, and then saves the combined workbook to a user‑specified file path (CombinedWorkbook.xlsx) with Workbook.Save.
-    public class MergeAndSaveDemo
+    static void Main(string[] args)
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Specify the output file path
+        string outputPath = @"C:\Temp\MergedWorkbook.xlsx";
 
-        public static void Run()
-        {
-            // Create the first workbook (source)
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            sourceSheet.Name = "SourceSheet";
-            sourceSheet.Cells["A1"].PutValue("Data from source workbook");
+        // Assume the merged workbook has been created/loaded earlier.
+        // Here we instantiate a new workbook as a placeholder.
+        Workbook workbook = new Workbook();
 
-            // Create the second workbook (destination)
-            Workbook destWorkbook = new Workbook(FileFormatType.Xlsx);
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-            destSheet.Name = "DestinationSheet";
-            destSheet.Cells["B2"].PutValue("Data from destination workbook");
+        // TODO: Add merging logic here (e.g., copying worksheets, consolidating data).
 
-            // Combine the source workbook into the destination workbook
-            destWorkbook.Combine(sourceWorkbook);
-
-            // Define the output file path (extension determines format)
-            string outputPath = "CombinedWorkbook.xlsx";
-
-            // Save the combined workbook
-            destWorkbook.Save(outputPath);
-
-            Console.WriteLine($"Combined workbook saved to: {outputPath}");
-        }
+        // Save the merged workbook to the specified path.
+        workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

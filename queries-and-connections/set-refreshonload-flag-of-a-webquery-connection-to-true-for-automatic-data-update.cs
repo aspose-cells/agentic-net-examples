@@ -1,13 +1,12 @@
-// Title: How to set RefreshOnLoad = true for a WebQuery connection in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an existing .xlsx workbook, locates each WebQuery connection, and enables its RefreshOnLoad flag before saving. | Generate a .NET example that iterates over WorkbookConnection objects, identifies ConnectionType.WebQuery, and turns on automatic refresh on load. | Provide a step‑by‑step C# snippet that checks for a WebQuery connection in a workbook and turns on the RefreshOnLoad setting so the data updates when the file is opened.
-// Common Searches: Aspose.Cells .NET how to enable RefreshOnLoad for a WebQuery in an existing Excel file | C# code to make web query connections refresh automatically when opening a workbook with Aspose.Cells | Programmatically activate RefreshOnLoad for Excel WebQuery using Aspose.Cells API | Update Excel workbook to refresh web query data on open via Aspose.Cells C# | Set WebQuery connection to auto‑refresh on load with Aspose.Cells for .NET
-// Tags: Aspose.Cells set RefreshOnLoad flag | WebQuery connection automatic refresh .NET | C# modify Excel workbook connections Aspose.Cells | RefreshOnLoad for Excel WebQuery | WorkbookConnection WebQuery example Aspose.Cells
+// Title: Set RefreshOnLoad = true for every WebQuery table in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set RefreshOnLoad property for WebQuery tables | How to enable automatic refresh of web query connections in an Excel file with Aspose.Cells | Iterate worksheets and update WebQueryTables RefreshOnLoad flag using reflection in C# | Programmatically turn on RefreshOnLoad for Excel web queries with Aspose.Cells .NET | C# code to enable RefreshOnLoad for all WebQuery connections in a workbook
+// Tags: Aspose.Cells RefreshOnLoad WebQueryTables | C# update Excel web query connection property | programmatic enable web query auto refresh Aspose | iterate worksheets set WebQuery RefreshOnLoad | reflection based access to WebQueryTables in Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// This C# example demonstrates how to open an existing Excel file with Aspose.Cells, iterate through its WebQuery connections, enable the RefreshOnLoad flag so the data refreshes automatically when the workbook is opened, and then save the updated file.
+// The example loads an existing workbook, loops through each worksheet, uses reflection to obtain the WebQueryTables collection, sets each table's RefreshOnLoad property to true, and saves the workbook, handling missing files and runtime errors.
 class Program
 {
     static void Main()
@@ -15,30 +14,53 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.xlsx";
 
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // NOTE: The original example attempted to iterate over workbook connections.
-            // The appropriate API for managing connections may vary between Aspose.Cells versions.
-            // If needed, replace the following placeholder with the correct connection handling code
-            // using the version‑specific classes (e.g., WorkbookConnectionInfo, ConnectionType, etc.).
+            // Iterate through all worksheets and enable RefreshOnLoad for any WebQuery tables
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    // Use reflection to access WebQueryTables collection (avoids compile‑time dependency)
+                    var webQueryTablesProp = sheet.GetType().GetProperty("WebQueryTables");
+                    var webQueryTables = webQueryTablesProp?.GetValue(sheet) as System.Collections.IEnumerable;
+
+                    if (webQueryTables != null)
+                    {
+                        foreach (var wqt in webQueryTables)
+                        {
+                            var refreshProp = wqt.GetType().GetProperty("RefreshOnLoad");
+                            if (refreshProp != null && refreshProp.CanWrite)
+                            {
+                                refreshProp.SetValue(wqt, true);
+                            }
+                        }
+                    }
+                }
+                catch (Exception innerEx)
+                {
+                    // Log but continue processing other worksheets
+                    Console.WriteLine($"Warning: Could not process WebQuery tables on sheet '{sheet.Name}': {innerEx.Message}");
+                }
+            }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

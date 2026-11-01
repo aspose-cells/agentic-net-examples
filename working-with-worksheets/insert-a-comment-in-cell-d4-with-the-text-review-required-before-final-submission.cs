@@ -1,28 +1,35 @@
-// Title: Add a comment with the text “Review required before final submission” to cell D4 of the first worksheet using Aspose.Cells for .NET
-// AI Prompts: Insert a comment containing 'Review required before final submission' into cell D4 and save the workbook as output.xlsx. | Change the target cell and comment text dynamically by using variables before adding the comment with Aspose.Cells. | After adding a comment, retrieve its index from the worksheet's Comments collection and output it to the console. | Add multiple comments to different cells in the same worksheet and verify each comment's note property.
-// Common Searches: how to add a note to cell D4 using Aspose.Cells C# | Aspose.Cells set comment text for a specific cell in .NET | retrieve comment index after adding a comment with Aspose.Cells | save Excel file after inserting comments with Aspose.Cells for .NET
-// Tags: worksheet.comments.add Aspose.Cells | set comment.note property C# | add comment to cell D4 Aspose.Cells | retrieve comment index Aspose.Cells | save workbook to xlsx Aspose.Cells
+// Title: Insert a comment into cell D4 of an Excel worksheet and save with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds the note "Review required before final submission" to the worksheet cell located at row 4, column D, removes any existing comment first, and saves the workbook as Output.xlsx using Aspose.Cells. | Show how to detect and delete a comment in a particular cell before creating a new comment with Aspose.Cells in a .NET application. | Provide a step‑by‑step example of adding a comment to a worksheet cell, handling existing comments, and persisting the file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# add comment to cell D4 and overwrite existing comment | how to remove a comment from a specific Excel cell using Aspose.Cells .NET | C# example for inserting a note into an Excel worksheet cell with Aspose.Cells | save Excel file with comments using Aspose.Cells for .NET | checking for existing comments before adding new comment Aspose.Cells C#
+// Tags: worksheet cell comment insertion Aspose.Cells | existing comment removal Aspose.Cells C# | comment management in Aspose.Cells .NET | saving workbook with comments Aspose.Cells | note insertion into specific worksheet cell
 
 using Aspose.Cells;
 
-// // Creates a new workbook, adds a comment with the text 'Review required before final submission' to cell D4 (row 4, column 4) of the first worksheet, and saves the file as output.xlsx.
+// Creates a new Workbook, ensures the target cell (row 4, column D) has no prior comment, adds a comment with the text "Review required before final submission", and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one if needed)
-        var workbook = new Workbook();
+        // Create a new workbook (lifecycle create)
+        Workbook workbook = new Workbook();
 
         // Get the first worksheet
-        var worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a comment to cell D4 (row index 3, column index 3)
-        // The Add method returns the index of the new comment in the Comments collection
-        int commentIndex = worksheet.Comments.Add(3, 3);
-        var comment = worksheet.Comments[commentIndex];
+        // Define the target cell (D4 => row 3, column 3, zero‑based indexing)
+        int row = 3;
+        int column = 3;
+
+        // Ensure no existing comment occupies the cell
+        if (sheet.Comments[row, column] != null)
+            sheet.Comments.RemoveAt(row, column);
+
+        // Add a new comment to the cell
+        int commentIndex = sheet.Comments.Add(row, column);
+        Comment comment = sheet.Comments[commentIndex];
         comment.Note = "Review required before final submission";
 
-        // Save the workbook to a file
-        workbook.Save("output.xlsx");
+        // Save the workbook (lifecycle save)
+        workbook.Save("Output.xlsx");
     }
 }

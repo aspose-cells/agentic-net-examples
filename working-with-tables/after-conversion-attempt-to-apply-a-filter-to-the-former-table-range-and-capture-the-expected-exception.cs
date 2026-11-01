@@ -1,14 +1,15 @@
-// Title: Capture the exception thrown when adding an AutoFilter after converting a ListObject to a regular range using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that creates a ListObject on a worksheet, calls ConvertToRange, then attempts to add an AutoFilter on a column and writes the caught exception type and message to the console. | Modify the example to apply the AutoFilter on a different column after the ListObject conversion and log the resulting exception details while still saving the workbook.
-// Common Searches: Aspose.Cells exception when applying AutoFilter after ListObject.ConvertToRange | how to catch filter error after converting Excel table to range in C# | Add filter to removed table using Aspose.Cells throws what exception | C# Aspose.Cells AutoFilter on converted ListObject example | handling AutoFilter failure after Excel table conversion with Aspose.Cells
-// Tags: ListObject ConvertToRange Aspose.Cells C# | AutoFilter exception after table conversion | capture Aspose.Cells filter error | Excel table to range conversion handling | Aspose.Cells remove ListObject filter operation
+// Title: Convert a ListObject to a regular range and capture the AutoFilter exception using Aspose.Cells in C#
+// AI Prompts: Write C# code that creates a worksheet, adds a ListObject, converts it to a normal range with ConvertToRange, then calls AutoFilter.Filter on the original ListObject and catches the resulting exception. | Show how to handle the exception thrown when applying an AutoFilter to a ListObject after it has been converted to a range in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# catch exception when filtering a ListObject after ConvertToRange | filtering a table after converting to range throws error Aspose.Cells | AutoFilter on removed ListObject exception handling Aspose.Cells .NET | convert ListObject to range then apply filter example Aspose.Cells C#
+// Tags: convert ListObject to range Aspose.Cells | AutoFilter exception after ListObject conversion | handling invalid ListObject Aspose.Cells C# | Aspose.Cells table to range conversion error handling | C# Aspose.Cells ListObject AutoFilter exception
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates creating a ListObject, converting it to a normal range, attempting to add an AutoFilter on the former table, catching the resulting exception, and saving the workbook.
-class ApplyFilterAfterTableConversion
+// The example creates a workbook, adds a ListObject covering A1:B4, converts the table to a normal range, attempts to apply an AutoFilter on the now‑invalid ListObject, catches the expected exception, and saves the workbook.
+class Program
 {
     static void Main()
     {
@@ -18,56 +19,52 @@ class ApplyFilterAfterTableConversion
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data (A1:C5)
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Score");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["C2"].PutValue(85);
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-            sheet.Cells["C3"].PutValue(92);
-            sheet.Cells["A4"].PutValue(3);
-            sheet.Cells["B4"].PutValue("Charlie");
-            sheet.Cells["C4"].PutValue(78);
-            sheet.Cells["A5"].PutValue(4);
-            sheet.Cells["B5"].PutValue("Diana");
-            sheet.Cells["C5"].PutValue(88);
+            // Fill the worksheet with sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Score");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(85);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(92);
+            sheet.Cells["A4"].PutValue("Charlie");
+            sheet.Cells["B4"].PutValue(78);
 
-            // Add a table (ListObject) over the data range A1:C5
-            int firstRow = 0;   // zero‑based index
-            int firstColumn = 0;
-            int totalRows = 5;
-            int totalColumns = 3;
+            // Add a table (ListObject) that covers the data range A1:B4
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 4;     // includes header row
+            int totalColumns = 2;
+
             int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn,
-                firstRow + totalRows - 1, firstColumn + totalColumns - 1, true);
+                                                   firstRow + totalRows,
+                                                   firstColumn + totalColumns, true);
             ListObject table = sheet.ListObjects[tableIndex];
             table.DisplayName = "SampleTable";
 
-            // Convert the table back to a normal range (removes the ListObject)
+            // Convert the table back to a normal range; the ListObject is removed from the worksheet
             table.ConvertToRange();
 
-            // Attempt to apply an AutoFilter to the former table range.
-            // Since the ListObject has been removed, accessing its AutoFilter will raise an exception.
+            // Attempt to apply a filter using the now‑invalid ListObject and capture the expected exception
             try
             {
-                table.AutoFilter.AddFilter(1, "Alice");
+                // This call should fail because the ListObject no longer exists after conversion
+                table.AutoFilter.Filter(0, "Alice");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Expected exception caught:");
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine($"Type: {ex.GetType().FullName}");
+                // Expected exception handling
+                Console.WriteLine("Expected exception caught: " + ex.Message);
             }
 
-            // Save the workbook (no filter applied)
-            workbook.Save("Result.xlsx");
+            // Save the workbook (optional, demonstrates that the file is still valid)
+            string outputPath = "FilteredResult.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception e)
         {
-            Console.WriteLine("An unexpected error occurred:");
-            Console.WriteLine(e.Message);
+            // General exception handling for unexpected errors
+            Console.WriteLine("An error occurred: " + e.Message);
         }
     }
 }

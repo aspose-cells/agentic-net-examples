@@ -1,144 +1,141 @@
-// Title: How to implement a custom IFilePathProvider that creates unique, filesystem‑safe filenames for worksheets with duplicate titles using Aspose.Cells for .NET
-// AI Prompts: Generate a C# class implementing IFilePathProvider that cleans worksheet titles and adds a numeric suffix when the same title appears more than once. | Write code that ensures the output directory exists, allows a configurable file extension, and returns the full path for each unique worksheet file. | Show how to use the custom provider to iterate through a Workbook and save each worksheet as an individual .xlsx file with Aspose.Cells.
-// Common Searches: aspocells example for saving each worksheet as a separate file with unique names | C# generate unique filenames for Excel sheets when exporting with Aspose.Cells | how to clean worksheet titles for Windows file system in Aspose.Cells .NET | save individual worksheets to separate files while avoiding filename collisions in Aspose.Cells | set custom file extension when exporting worksheets using Aspose.Cells
-// Tags: custom IFilePathProvider implementation Aspose.Cells | unique worksheet filename generation .NET | sanitize Excel sheet title for file system | export each worksheet as separate file | configurable file extension for worksheet export | handle duplicate sheet titles Aspose.Cells
+// Title: C# example: Export each worksheet to a separate .xlsx file with unique filenames using a custom IFilePathProvider in Aspose.Cells
+// Common Searches: how to export each sheet of an Excel workbook to its own file using Aspose.Cells C# | c# generate unique filenames for worksheets with duplicate names when saving with Aspose.Cells | implement IFilePathProvider to avoid filename collisions in Aspose.Cells worksheet export | sanitize worksheet names for file system when exporting with Aspose.Cells | save individual worksheets as separate workbooks Aspose.Cells C# example
+// Tags: Aspose.Cells custom IFilePathProvider implementation | unique worksheet filename generation C# | export worksheets to individual .xlsx files | sanitize worksheet name for file path Aspose.Cells | prevent duplicate sheet title file collisions | WorksheetExporter class Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetSaverApp
+namespace AsposeCellsWorksheetExport
 {
-    // Simple interface for file‑path providers.
+    // Provides a full file path for a worksheet, ensuring uniqueness.
     public interface IFilePathProvider
     {
-        string GetFullName(string fileName);
+        string GetFilePath(Worksheet worksheet, int index);
     }
 
-    // Generates unique file paths for worksheets, handling duplicate sheet titles.
-    // The example defines an IFilePathProvider and a UniqueWorksheetFilePathProvider that sanitizes worksheet names, tracks occurrences, and generates filesystem‑safe, unique file paths with optional numeric suffixes and configurable extensions. It ensures the target folder exists and demonstrates iterating through a Workbook to save each worksheet as an individual file using Aspose.Cells.
+    // Generates unique file names inside a base folder.
+    // Demonstrates how to implement a custom IFilePathProvider that sanitizes worksheet names, ensures the output directory exists, and generates unique .xlsx file paths to export each worksheet of a source workbook as a separate workbook using Aspose.Cells for .NET.
     public class UniqueWorksheetFilePathProvider : IFilePathProvider
     {
-        // Tracks usage count of each sanitized sheet name.
-        private readonly Dictionary<string, int> _nameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private readonly string _baseFolder;
+        private readonly HashSet<string> _usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        // Destination folder.
-        private readonly string _folderPath;
-
-        // Desired file extension (including the dot, e.g., ".xlsx").
-        private readonly string _extension;
-
-        public UniqueWorksheetFilePathProvider(string folderPath, string extension = "xlsx")
+        public UniqueWorksheetFilePathProvider(string baseFolder)
         {
-            _folderPath = folderPath;
-            _extension = extension.StartsWith(".") ? extension : "." + extension;
-            Directory.CreateDirectory(_folderPath); // Ensure the folder exists.
+            _baseFolder = baseFolder ?? throw new ArgumentNullException(nameof(baseFolder));
+            Directory.CreateDirectory(_baseFolder); // Ensure the folder exists.
         }
 
-        // Called by the caller to obtain a unique full file name.
-        public string GetFullName(string fileName)
+        public string GetFilePath(Worksheet worksheet, int index)
         {
-            // Make the sheet name safe for the file system.
-            string safeName = MakeValidFileName(fileName);
+            // Start with the worksheet name.
+            string baseName = worksheet.Name ?? $"Sheet{index + 1}";
 
-            // Update occurrence count.
-            if (_nameCounts.TryGetValue(safeName, out int count))
+            // Replace illegal file name characters.
+            foreach (char c in Path.GetInvalidFileNameChars())
             {
-                count++;
-                _nameCounts[safeName] = count;
-            }
-            else
-            {
-                count = 1;
-                _nameCounts[safeName] = count;
+                baseName = baseName.Replace(c.ToString(), "_");
             }
 
-            // First occurrence uses the plain name; later ones get a numeric suffix.
-            string uniqueFileName = count == 1
-                ? $"{safeName}{_extension}"
-                : $"{safeName}_{count}{_extension}";
+            // Initial candidate file name.
+            string fileName = $"{baseName}.xlsx";
 
-            return Path.Combine(_folderPath, uniqueFileName);
-        }
-
-        // Replaces invalid file‑system characters with underscores.
-        private static string MakeValidFileName(string name)
-        {
-            char[] invalidChars = Path.GetInvalidFileNameChars();
-            foreach (char c in invalidChars)
+            // Ensure uniqueness across this session and on disk.
+            int suffix = 1;
+            while (_usedNames.Contains(fileName) || File.Exists(Path.Combine(_baseFolder, fileName)))
             {
-                name = name.Replace(c.ToString(), "_");
+                fileName = $"{baseName}_{suffix}.xlsx";
+                suffix++;
             }
-            return name.TrimEnd(' ', '.');
+
+            _usedNames.Add(fileName);
+            return Path.Combine(_baseFolder, fileName);
         }
     }
 
-    // Demonstrates saving each worksheet as an individual file.
-    public class WorksheetSaverExample
+    // Handles exporting each worksheet to its own workbook file.
+    public class WorksheetExporter
     {
-        public void SaveWorksheetsIndividually()
+        private readonly IFilePathProvider _pathProvider;
+
+        public WorksheetExporter(IFilePathProvider pathProvider)
         {
-            const string inputPath = "input.xlsx";
+            _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
+        }
+
+        public void ExportWorksheets(string sourceWorkbookPath)
+        {
+            if (string.IsNullOrWhiteSpace(sourceWorkbookPath))
+                throw new ArgumentException("Source workbook path must be provided.", nameof(sourceWorkbookPath));
+
+            if (!File.Exists(sourceWorkbookPath))
+                throw new FileNotFoundException("Source workbook not found.", sourceWorkbookPath);
 
             try
             {
-                // Verify the input file exists.
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                // Load the source workbook.
+                Workbook sourceWorkbook = new Workbook(sourceWorkbookPath);
 
-                // Load the workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Provider that creates unique file names in the "Sheets" directory.
-                IFilePathProvider pathProvider = new UniqueWorksheetFilePathProvider("Sheets");
-
-                // Process each worksheet.
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
                 {
+                    Worksheet ws = sourceWorkbook.Worksheets[i];
+
                     try
                     {
-                        // Create a new workbook containing only the current sheet.
-                        Workbook singleSheetWorkbook = new Workbook();
-                        // Add a copy of the current sheet by name.
-                        singleSheetWorkbook.Worksheets.AddCopy(sheet.Name);
-                        // Remove the default empty sheet.
+                        // Create a new workbook containing only this worksheet.
+                        Workbook singleSheetWorkbook = new Workbook(); // contains a default empty sheet
+                        // Add a copy of the current worksheet by name (Aspose.Cells expects sheet name).
+                        singleSheetWorkbook.Worksheets.AddCopy(ws.Name);
+                        // Remove the default empty sheet created by the constructor.
                         singleSheetWorkbook.Worksheets.RemoveAt(0);
 
-                        // Get a unique file path for this sheet.
-                        string filePath = pathProvider.GetFullName(sheet.Name);
+                        // Determine a unique output path.
+                        string outputPath = _pathProvider.GetFilePath(ws, i);
 
                         // Save the single‑sheet workbook.
-                        singleSheetWorkbook.Save(filePath);
+                        singleSheetWorkbook.Save(outputPath, SaveFormat.Xlsx);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to save sheet \"{sheet.Name}\": {ex.Message}");
+                        Console.Error.WriteLine($"Failed to export worksheet '{ws.Name}': {ex.Message}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Log or handle top‑level exceptions.
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error during export: {ex.Message}");
+                throw;
             }
         }
     }
 
-    // Application entry point.
-    public class Program
+    // Entry point for the console application.
+    public static class Program
     {
         public static void Main(string[] args)
         {
+            // Expect two arguments: source workbook path and output folder.
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: AsposeCellsWorksheetExport <sourceWorkbookPath> <outputFolder>");
+                return;
+            }
+
+            string sourcePath = args[0];
+            string outputFolder = args[1];
+
             try
             {
-                WorksheetSaverExample example = new WorksheetSaverExample();
-                example.SaveWorksheetsIndividually();
-                Console.WriteLine("Worksheet saving completed.");
+                IFilePathProvider provider = new UniqueWorksheetFilePathProvider(outputFolder);
+                WorksheetExporter exporter = new WorksheetExporter(provider);
+                exporter.ExportWorksheets(sourcePath);
+                Console.WriteLine("Export completed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"Fatal error: {ex.Message}");
             }
         }
     }

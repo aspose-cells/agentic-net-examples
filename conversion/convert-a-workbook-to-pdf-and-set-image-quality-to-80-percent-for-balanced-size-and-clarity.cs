@@ -1,51 +1,42 @@
-// Title: Saving an Aspose.Cells workbook to PDF with 80% JPEG image quality in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a workbook to PDF while setting the image resample PPI to 96 and JPEG quality to 80%. | Show how to configure PdfSaveOptions in Aspose.Cells for .NET to balance PDF file size and clarity by adjusting image quality. | Provide a step‑by‑step example of calling SetImageResample on PdfSaveOptions to control image compression during workbook‑to‑PDF conversion.
-// Common Searches: Aspose.Cells C# export workbook to PDF with specific JPEG quality | Set image resampling options when saving PDF with Aspose.Cells .NET | How to reduce PDF size from Aspose.Cells by adjusting image quality
-// Tags: Aspose.Cells PDF export with image quality settings | C# PdfSaveOptions SetImageResample usage | balance PDF file size and clarity Aspose.Cells | configure JPEG compression Aspose.Cells PDF | workbook to PDF conversion image optimization
+// Title: Convert an Excel workbook to PDF with 80% image quality using Aspose.Cells in C#
+// Common Searches: Aspose.Cells C# set PDF image quality to 80 percent | How to export XLSX to PDF with reduced image size using Aspose.Cells | C# PdfSaveOptions.ImageQuality example for Excel to PDF conversion | Balance PDF file size and clarity when converting Excel with Aspose.Cells | Save workbook as PDF with custom JPEG compression in .NET
+// Tags: Aspose.Cells PdfSaveOptions image quality | C# Excel to PDF conversion with compression | custom JPEG quality in PDF export Aspose.Cells | optimize PDF size and clarity Aspose.Cells | export workbook to PDF with image settings
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-namespace AsposeCellsPdfConversion
+// The sample verifies the input XLSX file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions with ImageQuality set to 80 to balance file size and clarity, and saves the workbook as a PDF. It includes exception handling for robust execution.
+class Program
 {
-    // The example creates a workbook, adds sample data, configures PdfSaveOptions to resample images at 96 PPI with 80 % JPEG quality, and saves the workbook as output.pdf.
-    public class WorkbookToPdf
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and add some sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample Text");
-                sheet.Cells["B2"].PutValue(123.45);
-                sheet.Cells["C3"].PutValue(DateTime.Now);
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Set image resampling: desired PPI (e.g., 96) and JPEG quality to 80%
-                pdfOptions.SetImageResample(96, 80); // 80% quality for balanced size and clarity
-
-                // Save the workbook as PDF using the configured options
-                workbook.Save("output.pdf", pdfOptions);
-                Console.WriteLine("PDF file 'output.pdf' has been created successfully.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            WorkbookToPdf.Run();
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

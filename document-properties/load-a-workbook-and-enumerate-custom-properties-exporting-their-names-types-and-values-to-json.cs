@@ -1,7 +1,6 @@
-// Title: Read custom document properties from an Excel workbook and output them as formatted JSON using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, loops through workbook.CustomDocumentProperties, and builds a JSON array of each property's Name, Type, and Value with indentation. | Create a .NET snippet that verifies the Excel file exists, extracts all custom metadata from the workbook via Aspose.Cells, and serializes the collection to pretty‑printed JSON using System.Text.Json.
-// Common Searches: Aspose.Cells C# retrieve custom document properties from an Excel file | how to export Excel custom properties to JSON using Aspose.Cells | list custom metadata in .xlsx with Aspose.Cells .NET | C# code to serialize workbook custom properties to indented JSON | extract custom properties from Excel workbook via Aspose.Cells API
-// Tags: Aspose.Cells read custom properties | C# serialize Excel custom properties to JSON | workbook.CustomDocumentProperties loop | export Excel custom metadata as formatted JSON | Aspose.Cells .NET extract workbook properties
+// Title: Read Excel custom document properties and export them to JSON using Aspose.Cells for .NET (C#)
+// Common Searches: how to read custom document properties from an Excel workbook with Aspose.Cells in C# | export Excel custom properties to a JSON file using Aspose.Cells .NET | list all custom workbook properties and serialize to JSON in C# | Aspose.Cells example for enumerating custom document properties and saving as JSON | C# code to convert Excel custom document properties to JSON with Aspose.Cells
+// Tags: Aspose.Cells read custom document properties | export Excel custom properties to JSON C# | enumerate workbook custom properties Aspose.Cells | serialize custom document properties JSON .NET | C# Aspose.Cells custom properties extraction
 
 using System;
 using System.Collections.Generic;
@@ -9,54 +8,73 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-// The example checks for the presence of an input.xlsx file, loads it with Aspose.Cells, iterates over workbook.CustomDocumentProperties, gathers each property's Name, Type, and Value into a list, serializes the list to indented JSON using System.Text.Json, and writes the JSON to the console.
-class Program
+namespace AsposeCellsCustomPropertiesExport
 {
-    static void Main()
+    // Model representing a custom property for JSON serialization
+    // The sample loads an Excel workbook with Aspose.Cells, iterates through its CustomDocumentProperties collection, captures each property's name, type, and value into a DTO, and then serializes the DTO list to indented JSON using System.Text.Json, outputting the JSON to the console (or optionally to a file).
+    public class CustomPropertyInfo
     {
-        try
-        {
-            // Path to the input workbook
-            string workbookPath = "input.xlsx";
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public object Value { get; set; } = new object();
+    }
 
-            // Verify that the file exists to avoid FileNotFoundException
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Path to the Excel workbook (adjust as needed)
+            string workbookPath = @"C:\Path\To\YourWorkbook.xlsx";
+
+            // Verify that the workbook file exists to avoid FileNotFoundException
             if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // List to hold custom property information
-            var customProperties = new List<Dictionary<string, object>>();
-
-            // Iterate through custom document properties
-            for (int i = 0; i < workbook.CustomDocumentProperties.Count; i++)
+            try
             {
-                // Use dynamic to avoid compile‑time dependency on the exact type name
-                dynamic prop = workbook.CustomDocumentProperties[i];
+                // Load the workbook using Aspose.Cells
+                Workbook workbook = new Workbook(workbookPath);
 
-                var propInfo = new Dictionary<string, object>
+                // Collection to hold exported property information
+                List<CustomPropertyInfo> exportedProperties = new List<CustomPropertyInfo>();
+
+                // Iterate through all custom document properties
+                foreach (var prop in workbook.CustomDocumentProperties)
                 {
-                    { "Name", prop.Name },
-                    { "Type", prop.Type.ToString() },
-                    { "Value", prop.Value }
-                };
-                customProperties.Add(propInfo);
+                    // Create a DTO for each property
+                    var info = new CustomPropertyInfo
+                    {
+                        Name = prop.Name,
+                        // Convert the enum value to its string representation
+                        Type = prop.Type.ToString(),
+                        // Use the raw value; JsonSerializer will handle appropriate conversion
+                        Value = prop.Value
+                    };
+
+                    exportedProperties.Add(info);
+                }
+
+                // Serialize the list to JSON (indented for readability)
+                string jsonOutput = JsonSerializer.Serialize(exportedProperties, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                // Output JSON to console (or write to a file if desired)
+                Console.WriteLine(jsonOutput);
+
+                // Optional: write JSON to a file
+                // string jsonFilePath = @"C:\Path\To\CustomProperties.json";
+                // File.WriteAllText(jsonFilePath, jsonOutput);
             }
-
-            // Serialize the list to formatted JSON
-            string json = JsonSerializer.Serialize(customProperties, new JsonSerializerOptions { WriteIndented = true });
-
-            // Output JSON
-            Console.WriteLine(json);
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Catch any runtime exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

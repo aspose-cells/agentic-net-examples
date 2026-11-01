@@ -1,14 +1,14 @@
-// Title: Convert an Excel workbook to PDF after programmatically updating SmartArt shape text with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an .xlsx file, loop through each Shape on the first worksheet, set its Text property to a new value, and save the workbook as a PDF using Aspose.Cells. | Using Aspose.Cells in C#, replace the text of all SmartArt shapes in a worksheet and export the updated workbook to a PDF file. | Programmatically change shape text in an Excel file and generate a PDF output with Aspose.Cells SaveFormat.Pdf.
-// Common Searches: Aspose.Cells C# change SmartArt shape text before PDF conversion | How to iterate over worksheet shapes and modify text with Aspose.Cells .NET | Export Excel to PDF after updating shape text using Aspose.Cells API | C# example for saving modified workbook as PDF with Aspose.Cells | Update SmartArt shapes in Excel and convert to PDF programmatically
-// Tags: smartart text replacement aspose.cells | pdf export after shape edit aspose.cells | shape enumeration aspose.cells c# | excel smartart manipulation aspose.cells | c# convert modified workbook to pdf
+// Title: Resize SmartArt shapes in an Excel worksheet and export the workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, locates every SmartArt shape on the first worksheet, updates its Width, Height, Left, and Top properties, and then saves the workbook as a PDF. | Demonstrate how to iterate through Worksheet.Shapes, use Shape.IsSmartArt to identify SmartArt objects, modify their dimensions, and export the modified workbook to PDF with Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells resize SmartArt before converting Excel to PDF | how to detect and change SmartArt shape size using Aspose.Cells .NET | export modified Excel workbook to PDF after adjusting SmartArt dimensions | Aspose.Cells programmatically reposition SmartArt shapes in a worksheet
+// Tags: resize SmartArt shapes Aspose.Cells | export workbook to PDF Aspose.Cells | detect SmartArt programmatically C# | modify shape dimensions Aspose.Cells | adjust SmartArt position .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an existing Excel file, iterates through all shapes on the first worksheet to modify their text, and then saves the workbook as a PDF using Aspose.Cells for .NET.
+// The example loads an existing Excel file, iterates over all shapes on the first worksheet, identifies SmartArt objects via the IsSmartArt property, resizes and repositions each SmartArt, and finally saves the updated workbook as a PDF, with error handling for missing files and runtime exceptions.
 class Program
 {
     static void Main()
@@ -28,28 +28,32 @@ class Program
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
             // Iterate through all shapes on the worksheet
             foreach (Shape shape in sheet.Shapes)
             {
-                // Example modification: if the shape contains text, change it
-                if (!string.IsNullOrEmpty(shape.Text))
+                // Identify SmartArt shapes using the IsSmartArt property
+                if (shape.IsSmartArt)
                 {
-                    shape.Text = "Modified Text";
-                }
+                    // Example modification: resize and reposition the SmartArt
+                    shape.Width = 300;   // new width in points
+                    shape.Height = 200;  // new height in points
+                    shape.Left = 50;     // distance from the left edge
+                    shape.Top = 50;      // distance from the top edge
 
-                // Additional shape modifications can be performed here
+                    // Additional modifications can be added here if needed
+                }
             }
 
-            // Export the workbook to PDF
+            // Export the modified workbook to PDF
             workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+            Console.WriteLine($"Workbook saved as PDF: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Log or display the exception details for troubleshooting
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

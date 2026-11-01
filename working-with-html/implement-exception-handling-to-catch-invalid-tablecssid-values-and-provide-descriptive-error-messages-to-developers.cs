@@ -1,72 +1,95 @@
-// Title: How to add exception handling for invalid TableCssId when styling a ListObject table with Aspose.Cells in C#
-// AI Prompts: Write C# code that assigns a TableCssId to a ListObject in Aspose.Cells, wrapping the assignment in a try‑catch block that catches CellsException and logs a clear message if the ID is invalid. | Show how to verify that a TableCssId string conforms to CSS identifier rules before setting it on a ListObject, and throw an ArgumentException with a descriptive error when it does not. | Provide a modified version of the workbook‑creation example that includes custom TableCssId handling, catches both CellsException and generic Exception, and outputs user‑friendly error information.
-// Common Searches: Aspose.Cells C# catch CellsException for invalid TableCssId | validate TableCssId before applying to ListObject Aspose.Cells | how to handle invalid CSS ID in Aspose.Cells table styling | C# example of error handling when setting TableCssId in Aspose.Cells | Aspose.Cells ListObject custom CSS ID error message
-// Tags: Aspose.Cells ListObject custom style ID handling | C# error handling for table style identifiers | validate table CSS identifier Aspose.Cells | catch CellsException for invalid style ID | Aspose.Cells workbook creation error handling
+// Title: How to add exception handling for invalid ListObject TableCssId values in Aspose.Cells C#
+// AI Prompts: Create a C# method that validates a ListObject TableCssId using a regular expression and throws an ArgumentException with a detailed message for invalid inputs. | Show how to wrap the TableCssId validation call in a try‑catch block that logs the exception message before saving the workbook. | Refactor the validation to use a custom InvalidTableCssIdException and update the example to catch this specific exception type.
+// Common Searches: Aspose.Cells C# how to catch invalid TableCssId exception | validate ListObject identifier before saving workbook Aspose.Cells | C# regex pattern for TableCssId naming rules Aspose.Cells | exception handling example for ListObject display name in Aspose.Cells | what error is thrown for bad TableCssId in Aspose.Cells C#
+// Tags: Aspose.Cells ListObject identifier validation | C# regex TableCssId pattern | exception handling invalid TableCssId Aspose.Cells | try-catch ListObject display name Aspose.Cells | custom InvalidTableCssIdException C#
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // Required for ListObject and TableStyleType
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableCssIdExample
+// The example creates a workbook, adds a ListObject table, validates a custom TableCssId with a regular expression, throws a descriptive ArgumentException for invalid identifiers, and demonstrates try‑catch blocks for both identifier validation and workbook saving.
+class Program
 {
-    // The example creates a workbook, adds a ListObject table with sample data, applies a built‑in table style, and demonstrates how to safely set a custom TableCssId. It includes try‑catch blocks for CellsException and generic Exception, providing clear console messages that help developers diagnose invalid CSS identifiers or other issues during table styling.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the output Excel file
-            string outputPath = "TableWithCssId.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.2);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.8);
+
+            // Define the range for the table (including header row)
+            int firstRow = 0;      // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 3;     // header + 2 data rows
+            int totalColumns = 2;
+
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+
+            // Set Table identifier with validation
             try
             {
-                // Ensure the output directory exists (if a directory is specified)
-                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Create a new workbook and access the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate some data for the table
-                sheet.Cells["A1"].PutValue("ID");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["A2"].PutValue(1);
-                sheet.Cells["B2"].PutValue("Alice");
-                sheet.Cells["A3"].PutValue(2);
-                sheet.Cells["B3"].PutValue("Bob");
-
-                // Define the range for the table (A1:B3)
-                int firstRow = 0;      // Zero‑based index
-                int firstColumn = 0;   // Zero‑based index
-                int totalRows = 3;     // Number of rows in the range
-                int totalColumns = 2;  // Number of columns in the range
-                bool hasHeaders = true;
-
-                // Add the ListObject (table) and retrieve the created object
-                int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, hasHeaders);
-                ListObject table = sheet.ListObjects[tableIndex];
-
-                // Apply a built‑in table style (choose any available style)
-                table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (CellsException ex)
-            {
-                // Handle Aspose.Cells specific exceptions
-                Console.Error.WriteLine($"Aspose.Cells error: {ex.Message}");
+                SetTableIdentifier(table, "my-table-css"); // valid example
+                // SetTableIdentifier(table, "123-invalid"); // uncomment to test invalid case
             }
             catch (Exception ex)
             {
-                // Catch any other unexpected exceptions
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error setting table identifier: {ex.Message}");
+            }
+
+            // Save the workbook
+            string outputPath = "Result.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    /// <param name="table">The Aspose.Cells ListObject representing the table.</param>
+    /// <param name="identifier">The identifier to assign.</param>
+    static void SetTableIdentifier(ListObject table, string identifier)
+    {
+        // Validation rules:
+        // 1. Must not be null, empty, or whitespace.
+        // 2. Must start with a letter.
+        // 3. May contain letters, digits, hyphens, or underscores only.
+        if (string.IsNullOrWhiteSpace(identifier))
+        {
+            throw new ArgumentException("Identifier cannot be null, empty, or consist only of whitespace.");
+        }
+
+        if (!Regex.IsMatch(identifier, @"^[A-Za-z][A-Za-z0-9\-_]*$"))
+        {
+            throw new ArgumentException(
+                $"Identifier '{identifier}' is invalid. It must start with a letter and contain only letters, digits, hyphens, or underscores.");
+        }
+
+        // Assign the validated identifier to the table's display name (as a stand‑in for TableCssId)
+        table.DisplayName = identifier;
     }
 }

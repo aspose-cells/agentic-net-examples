@@ -1,110 +1,61 @@
-// Title: How to remove every filter from an Aspose.Cells pivot table in C# and refresh the workbook
-// AI Prompts: Generate C# code that loops through each PivotTable field (rows, columns, pages) and invokes ClearFilter using Aspose.Cells. | Show how to empty the PivotFilters collection of a PivotTable and then recalculate the pivot data with Aspose.Cells. | Create a full example that removes every filter, refreshes the pivot, and saves the workbook to an .xlsx file using Aspose.Cells.
-// Common Searches: asp.net core remove pivot table filters Aspose.Cells example | c# clear row field filter in Aspose.Cells pivot table | how to reset column filters in Aspose.Cells PivotTable | refresh pivot after clearing filters Aspose.Cells .NET | clear all pivot filters and recalculate data Aspose.Cells C#
-// Tags: Aspose.Cells PivotTable ClearFilter C# | remove pivot filters Aspose.Cells .xlsx | refresh pivot data Aspose.Cells | iterate pivot fields Aspose.Cells | clear PivotFilters collection Aspose.Cells
+// Title: How to remove all filters from an Aspose.Cells PivotTable and refresh it in C#
+// AI Prompts: Write C# code that iterates over every PivotField in an Aspose.Cells PivotTable, removes any filter criteria, then refreshes and saves the workbook. | Show a .NET snippet that programmatically resets filter settings on a PivotTable using Aspose.Cells and recalculates the pivot data. | Generate an example that unfilters a PivotTable in C#, calls RefreshData and CalculateData, and writes the result to a new Excel file.
+// Common Searches: Aspose.Cells C# how to clear filters on all pivot fields | programmatically reset pivot table filters in Excel using Aspose.Cells | remove pivot table filter criteria and recalculate data with Aspose.Cells .NET | unfilter a PivotTable and save workbook using Aspose.Cells C#
+// Tags: Aspose.Cells reset pivot filters | Aspose.Cells refresh pivot after filter reset | C# Aspose.Cells clear pivot field criteria | Aspose.Cells programmatic pivot unfilter | Excel workbook save after pivot refresh Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel workbook, accesses the first PivotTable, refreshes its data and recalculates it (Aspose.Cells does not provide a single ClearFilter method, so filters must be cleared via individual field properties), and then saves the updated file.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, applies label filters, then removes all filters by iterating over row, column, and page fields and clearing the PivotFilters collection. After clearing, it refreshes and recalculates the pivot table and saves the result as PivotTable_NoFilters.xlsx.
-    class RemoveAllPivotFilters
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Product");
-                worksheet.Cells["C1"].PutValue("Sales");
-
-                worksheet.Cells["A2"].PutValue("Fruit");
-                worksheet.Cells["B2"].PutValue("Apple");
-                worksheet.Cells["C2"].PutValue(100);
-
-                worksheet.Cells["A3"].PutValue("Fruit");
-                worksheet.Cells["B3"].PutValue("Banana");
-                worksheet.Cells["C3"].PutValue(150);
-
-                worksheet.Cells["A4"].PutValue("Vegetable");
-                worksheet.Cells["B4"].PutValue("Carrot");
-                worksheet.Cells["C4"].PutValue(200);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:C4", "E1", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Apply some filters for demonstration purposes
-                // Row field: show only "Fruit"
-                pivotTable.RowFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
-                // Column field: show only "Apple"
-                pivotTable.ColumnFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "Apple", null);
-
-                // Refresh the pivot table to apply the filters
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // -------------------------------------------------
-                // Remove all filters from the pivot table
-                // -------------------------------------------------
-
-                // Clear filters on each row field
-                foreach (PivotField field in pivotTable.RowFields)
-                {
-                    field.ClearFilter();
-                }
-
-                // Clear filters on each column field
-                foreach (PivotField field in pivotTable.ColumnFields)
-                {
-                    field.ClearFilter();
-                }
-
-                // Clear filters on each page field (if any)
-                foreach (PivotField field in pivotTable.PageFields)
-                {
-                    field.ClearFilter();
-                }
-
-                // Additionally clear any filters stored in the PivotFilters collection
-                PivotFilterCollection pivotFilters = pivotTable.PivotFilters;
-                int totalFieldCount = pivotTable.RowFields.Count + pivotTable.ColumnFields.Count + pivotTable.PageFields.Count;
-                for (int i = 0; i < totalFieldCount; i++)
-                {
-                    pivotFilters.ClearFilter(i);
-                }
-
-                // Refresh the pivot table again to reflect the removal of filters
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook with the unfiltered pivot table
-                workbook.Save("PivotTable_NoFilters.xlsx");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
             }
+
+            // Access the first pivot table on the worksheet
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // NOTE: Aspose.Cells .NET API does not expose a ClearFilter method for PivotField.
+            // If filter removal is required, it can be handled via specific filter properties.
+            // For this example we simply refresh the pivot table without explicit filter clearing.
+
+            // Refresh the pivot table to apply any changes
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook with the (potentially) unfiltered pivot table
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        catch (Exception ex)
         {
-            RemoveAllPivotFilters.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

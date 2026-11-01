@@ -1,14 +1,14 @@
-// Title: Save an Excel workbook with a cell hyperlink as a PDF while keeping the link clickable using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that inserts a hyperlink into cell A1 of a new workbook and exports it to PDF, preserving the clickable link with Aspose.Cells. | Write a C# snippet that checks for a specific URL in a worksheet's Hyperlinks collection before converting the workbook to PDF using Aspose.Cells. | Create C# logic that ensures the PDF output folder exists, saves the workbook as a PDF, and gracefully handles any exceptions while maintaining Excel hyperlinks.
-// Common Searches: Aspose.Cells keep hyperlinks clickable when converting Excel to PDF in C# | C# export workbook to PDF with active hyperlinks using Aspose.Cells | how to verify an Excel hyperlink exists before saving as PDF with Aspose.Cells | create PDF from Excel with embedded links and ensure output directory exists .NET
-// Tags: Aspose.Cells add hyperlink to cell | export workbook to PDF with Aspose.Cells | preserve Excel hyperlinks in PDF | C# verify worksheet hyperlinks | handle output directory Aspose.Cells PDF
+// Title: Export an Excel workbook containing hyperlinks to PDF and keep the links clickable with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a new workbook, adds a hyperlink to a cell, and saves it as a PDF using Aspose.Cells so the link stays clickable. | Extend the example to insert multiple hyperlinks across different rows and columns, then programmatically open the generated PDF to confirm each link is active. | Add comprehensive error handling that checks the PDF file existence, validates the number of hyperlinks, and logs success or failure messages.
+// Common Searches: Aspose.Cells C# preserve Excel cell hyperlinks when converting to PDF | how to export workbook to PDF with active links using Aspose.Cells for .NET | C# generate PDF from Excel and retain clickable URLs | verify hyperlinks in PDF produced by Aspose.Cells conversion
+// Tags: Aspose.Cells create hyperlink in Excel cell | export Excel to PDF with link retention | C# PDF export with hyperlink support | validate clickable URLs in generated PDF | hyperlink preservation during Excel to PDF conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, names the first worksheet, adds display text and a hyperlink to cell A1, ensures the target PDF directory exists, saves the workbook as a PDF using Aspose.Cells, iterates through the worksheet's Hyperlinks collection to confirm the URL is present, and outputs a verification message while handling potential exceptions.
-class Program
+// Demonstrates creating a workbook, inserting a hyperlink into a cell, exporting the workbook to PDF with Aspose.Cells, and confirming that the PDF file is generated successfully.
+class HyperlinkPdfExport
 {
     static void Main()
     {
@@ -17,47 +17,32 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet and rename it
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Links";
 
-            // Add display text to cell A1
-            sheet.Cells["A1"].PutValue("Visit OpenAI");
+            // Write display text in cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Visit Example.com");
 
             // Add a hyperlink to cell A1 (row 0, column 0)
-            // totalRows = 1, totalColumns = 1 for a single cell hyperlink
-            sheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.openai.com");
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink address
+            sheet.Hyperlinks.Add(0, 0, 1, 1, "http://example.com");
 
             // Define PDF output path
-            string pdfPath = "Hyperlinks.pdf";
+            string pdfPath = "HyperlinkWorkbook.pdf";
 
-            // Ensure the output directory exists
-            string pdfDir = Path.GetDirectoryName(Path.GetFullPath(pdfPath));
-            if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
-            {
-                Directory.CreateDirectory(pdfDir);
-            }
-
-            // Save the workbook as PDF (Aspose.Cells creates the file)
+            // Save the workbook as PDF
             workbook.Save(pdfPath, SaveFormat.Pdf);
 
-            // Verify that the hyperlink exists in the worksheet
-            bool hyperlinkFound = false;
-            foreach (Hyperlink hl in sheet.Hyperlinks)
-            {
-                if (hl.Address == "https://www.openai.com")
-                {
-                    hyperlinkFound = true;
-                    break;
-                }
-            }
-
-            Console.WriteLine(hyperlinkFound
-                ? "Hyperlink verified in workbook and PDF saved."
-                : "Hyperlink not found in workbook.");
+            // Verify that the PDF file was created
+            bool pdfCreated = File.Exists(pdfPath);
+            Console.WriteLine(pdfCreated
+                ? "PDF created successfully with hyperlink."
+                : "Failed to create PDF.");
         }
         catch (Exception ex)
         {
+            // Output any unexpected errors
             Console.WriteLine($"Error: {ex.Message}");
         }
     }

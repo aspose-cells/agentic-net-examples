@@ -1,11 +1,11 @@
-// Title: How to convert an XLSX workbook to PDF using Aspose.Cells in C# (.NET)
-// AI Prompts: Write C# code that loads an Excel .xlsx file with Aspose.Cells and saves it as a PDF using SaveFormat.Pdf. | Show how to batch convert multiple .xlsx files to PDFs in a C# loop using Aspose.Cells. | Explain how to configure PDF export options (e.g., page layout, image quality) when saving a workbook with Aspose.Cells in .NET.
-// Common Searches: Aspose.Cells C# convert single Excel file to PDF without opening Excel | programmatically export .xlsx to PDF using Aspose.Cells SaveFormat.Pdf | C# code sample for saving workbook as PDF with Aspose.Cells .NET library | how to set PDF export options when converting Excel to PDF with Aspose.Cells | convert Excel workbook to PDF in .NET Core using Aspose.Cells
-// Tags: Aspose.Cells xlsx to pdf conversion C# | Workbook.Save SaveFormat.Pdf usage | Aspose.Cells PDF export settings C# | Load workbook Aspose.Cells C# example | PDF generation from Excel Aspose.Cells .NET
+// Title: Convert an XLSX workbook to PDF in C# using Aspose.Cells
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF using SaveFormat.Pdf. | Show a concise Aspose.Cells example that reads an Excel workbook from a file path and exports it to a PDF document. | Provide a step‑by‑step C# snippet to convert a specific Excel file (input.xlsx) to output.pdf with Aspose.Cells.
+// Common Searches: aspocells c# convert specific xlsx file to pdf | how to export Excel workbook to PDF using Aspose.Cells SaveFormat.Pdf | c# code example for loading workbook from path and saving as pdf | Aspose.Cells PDF export from XLSX in a console application | convert input.xlsx to output.pdf programmatically with Aspose.Cells
+// Tags: Aspose.Cells convert XLSX to PDF C# | Load Excel workbook from file path Aspose.Cells | Save workbook as PDF using SaveFormat.Pdf | C# Excel to PDF conversion example | Export spreadsheet to PDF with Aspose.Cells
 
 using Aspose.Cells;
 
-// The example loads an XLSX workbook from a specified path using Aspose.Cells and saves it as a PDF file by calling Workbook.Save with the SaveFormat.Pdf option.
+// // Loads "input.xlsx" with Aspose.Cells and saves it as "output.pdf" by calling workbook.Save with SaveFormat.Pdf.
 class Program
 {
     static void Main()

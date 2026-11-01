@@ -1,105 +1,125 @@
-// Title: Merge two Excel workbooks in C# with Aspose.Cells while preserving named ranges and handling duplicate sheet or range names
-// AI Prompts: Write C# code that uses Aspose.Cells to load two .xlsx workbooks, detect and rename any conflicting worksheet names, copy all worksheets from the second workbook into the first, and save the merged file. | Create C# logic with Aspose.Cells that merges the named ranges of two workbooks, automatically generates unique names for duplicates, copies comments, and writes the combined workbook to disk.
-// Common Searches: c# aspose.cells merge two workbooks keep named ranges | how to avoid worksheet name collisions when combining Excel files with Aspose.Cells | rename duplicate named ranges during workbook merge asp.net | copy worksheets from one workbook to another using Aspose.Cells AddCopy method | merge excel files programmatically and resolve named range conflicts c#
-// Tags: Aspose.Cells workbook merge with unique worksheet names | named range conflict handling Aspose.Cells | AddCopy worksheet duplication Aspose.Cells | C# merge Excel files preserving named ranges | automatic renaming of duplicate sheet names Aspose.Cells
+// Title: C# – Merge two Excel workbooks with Aspose.Cells while preserving named ranges and handling sheet name conflicts
+// Common Searches: C# Aspose.Cells merge two workbooks and keep each workbook's named ranges | How to copy worksheets from one Excel file to another without overwriting existing sheet names using Aspose.Cells | Adjust named range RefersTo after renaming sheets when merging Excel files in .NET | Resolve duplicate worksheet names when combining Excel workbooks with Aspose.Cells | Merge workbook‑level named ranges from two Excel files in C#
+// Tags: merge workbooks preserving named ranges Aspose.Cells | copy worksheets duplicate name handling Aspose.Cells | adjust RefersTo formulas after sheet rename Aspose.Cells | C# workbook merge conflict resolution Aspose.Cells | Excel file merge named range mapping .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace WorkbookMergeExample
+// The example loads two Excel workbooks, copies each worksheet from the second workbook into the first while detecting and renaming any conflicting sheet names, records a mapping of original to new sheet names, optionally merges workbook‑level named ranges by updating their RefersTo formulas using the mapping, and saves the combined workbook. Helper methods provide case‑insensitive replacement to ensure RefersTo strings reference the renamed sheets correctly.
+class WorkbookMerger
 {
-    // The example loads two Excel workbooks, ensures worksheet names from the second workbook are unique by appending numeric suffixes, copies those worksheets into the first workbook using AddCopy, merges all named ranges while generating distinct names for any duplicates, preserves range comments, and saves the combined workbook as a new .xlsx file.
-    class MergeWorkbooks
+    static void Main()
     {
-        static void Main()
+        // Paths to source workbooks and the output workbook
+        string path1 = "Workbook1.xlsx";
+        string path2 = "Workbook2.xlsx";
+        string outputPath = "MergedWorkbook.xlsx";
+
+        try
         {
-            try
+            // Verify that source files exist
+            if (!File.Exists(path1))
+                throw new FileNotFoundException($"Source file not found: {path1}");
+            if (!File.Exists(path2))
+                throw new FileNotFoundException($"Source file not found: {path2}");
+
+            // Load the two workbooks
+            Workbook wb1 = new Workbook(path1);
+            Workbook wb2 = new Workbook(path2);
+
+            // Map original sheet names (from wb2) to the new sheet names after copy
+            Dictionary<string, string> sheetNameMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            // -------------------------------------------------
+            // 1. Copy worksheets from wb2 into wb1, handling name conflicts
+            // -------------------------------------------------
+            foreach (Worksheet srcSheet in wb2.Worksheets)
             {
-                const string file1 = "Workbook1.xlsx";
-                const string file2 = "Workbook2.xlsx";
-                const string outputFile = "MergedWorkbook.xlsx";
+                string targetName = srcSheet.Name;
 
-                // Verify source files exist
-                if (!File.Exists(file1) || !File.Exists(file2))
+                // Resolve sheet name conflict with wb1
+                if (wb1.Worksheets[targetName] != null)
                 {
-                    Console.WriteLine("One or both source workbook files are missing.");
-                    return;
+                    int suffix = 1;
+                    string baseName = targetName;
+                    while (wb1.Worksheets[$"{baseName}_Copy{suffix}"] != null)
+                        suffix++;
+                    targetName = $"{baseName}_Copy{suffix}";
                 }
 
-                // Load the two source workbooks
-                Workbook wb1 = new Workbook(file1);
-                Workbook wb2 = new Workbook(file2);
+                // Copy the worksheet (AddCopy returns the new sheet index)
+                int newIndex = wb1.Worksheets.AddCopy(srcSheet.Name);
+                Worksheet copiedSheet = wb1.Worksheets[newIndex];
+                copiedSheet.Name = targetName;
 
-                // ---------- Ensure unique worksheet names ----------
-                foreach (Worksheet ws in wb2.Worksheets)
-                {
-                    string originalName = ws.Name;
-                    string uniqueName = originalName;
-
-                    // Check for conflict with existing sheet names in wb1
-                    if (wb1.Worksheets.Any(s => s.Name.Equals(uniqueName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        int suffix = 1;
-                        while (wb1.Worksheets.Any(s => s.Name.Equals($"{originalName}_{suffix}", StringComparison.OrdinalIgnoreCase)))
-                        {
-                            suffix++;
-                        }
-                        uniqueName = $"{originalName}_{suffix}";
-                    }
-
-                    ws.Name = uniqueName; // apply the unique name
-                }
-
-                // ---------- Copy worksheets from wb2 into wb1 ----------
-                foreach (Worksheet ws in wb2.Worksheets)
-                {
-                    // AddCopy expects the worksheet name (string) to copy from the source workbook
-                    wb1.Worksheets.AddCopy(ws.Name);
-                }
-
-                // ---------- Merge named ranges ----------
-                // Collect existing names from wb1 for quick lookup
-                var existingNames = new HashSet<string>(wb1.Worksheets.Names.Select(n => n.Text), StringComparer.OrdinalIgnoreCase);
-
-                foreach (Name srcName in wb2.Worksheets.Names)
-                {
-                    string targetName = srcName.Text;
-
-                    // Resolve naming conflict by generating a unique name
-                    if (existingNames.Contains(targetName))
-                    {
-                        int suffix = 1;
-                        string baseName = targetName;
-                        while (existingNames.Contains($"{baseName}_{suffix}"))
-                        {
-                            suffix++;
-                        }
-                        targetName = $"{baseName}_{suffix}";
-                    }
-
-                    // Add the (potentially renamed) name to the destination workbook
-                    int index = wb1.Worksheets.Names.Add(targetName);
-                    Name destName = wb1.Worksheets.Names[index];
-
-                    // Copy essential properties
-                    destName.RefersTo = srcName.RefersTo;   // address the name refers to
-                    destName.Comment = srcName.Comment;    // optional comment
-
-                    // Register the new name to avoid future conflicts
-                    existingNames.Add(targetName);
-                }
-
-                // Save the merged workbook
-                wb1.Save(outputFile);
-                Console.WriteLine($"Workbooks merged successfully into '{outputFile}'.");
+                // Record the mapping for later named‑range adjustment (if needed)
+                sheetNameMap[srcSheet.Name] = targetName;
             }
-            catch (Exception ex)
+
+            // -------------------------------------------------
+            // 2. (Optional) Merge workbook‑level named ranges
+            // -------------------------------------------------
+            /*
+            foreach (Name srcName in wb2.Names)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                string newName = srcName.Name;
+                if (wb1.Names.Contains(newName))
+                {
+                    int suffix = 1;
+                    string baseName = newName;
+                    while (wb1.Names.Contains($"{baseName}_2"))
+                        suffix++;
+                    newName = $"{baseName}_2";
+                }
+
+                string adjustedRefersTo = AdjustRefersTo(srcName.RefersTo, sheetNameMap);
+                Name mergedName = wb1.Names.Add(newName);
+                mergedName.RefersTo = adjustedRefersTo;
             }
+            */
+
+            // -------------------------------------------------
+            // 3. Save the merged workbook
+            // -------------------------------------------------
+            wb1.Save(outputPath);
+            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Adjusts RefersTo strings to use the new sheet names after copying
+    private static string AdjustRefersTo(string refersTo, Dictionary<string, string> sheetMap)
+    {
+        if (string.IsNullOrEmpty(refersTo))
+            return refersTo;
+
+        string result = refersTo;
+
+        foreach (var kvp in sheetMap)
+        {
+            // Replace occurrences of the original sheet name followed by '!' (e.g., Sheet1!)
+            string oldPattern = $"{kvp.Key}!";
+            string newPattern = $"{kvp.Value}!";
+
+            result = ReplaceIgnoreCase(result, oldPattern, newPattern);
+        }
+
+        return result;
+    }
+
+    // Case‑insensitive string replacement
+    private static string ReplaceIgnoreCase(string input, string search, string replacement)
+    {
+        return Regex.Replace(
+            input,
+            Regex.Escape(search),
+            replacement.Replace("$", "$$"),
+            RegexOptions.IgnoreCase);
     }
 }

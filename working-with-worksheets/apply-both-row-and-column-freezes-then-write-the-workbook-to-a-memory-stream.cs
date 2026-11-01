@@ -1,60 +1,44 @@
-// Title: Freeze the first row and column in an Aspose.Cells workbook and retrieve the XLSX as a MemoryStream (C#)
-// AI Prompts: Write a C# method that creates a new Aspose.Cells Workbook, applies FreezePanes to lock the top row and leftmost column, and returns the workbook saved as an XLSX MemoryStream. | Demonstrate how to combine Aspose.Cells FreezePanes with Workbook.Save to output a frozen worksheet directly to a MemoryStream without writing a file.
-// Common Searches: how to freeze top row and left column with Aspose.Cells and get a MemoryStream in C# | Aspose.Cells C# save frozen worksheet to stream instead of file | example of using FreezePanes and SaveFormat.Xlsx to return a MemoryStream
-// Tags: Aspose.Cells FreezePanes row column lock | save workbook to XLSX MemoryStream C# | export frozen worksheet to stream Aspose.Cells | C# create workbook with frozen panes using Aspose | memory stream output for Aspose.Cells workbook
+// Title: Freeze rows and columns in an Excel worksheet and write the workbook to a MemoryStream using Aspose.Cells for .NET
+// AI Prompts: Freeze the first two rows and three columns of a worksheet, then save the workbook as an Xlsx stream with Aspose.Cells. | Update the example to accept variable row and column counts for FreezePanes and output the resulting workbook to a MemoryStream.
+// Common Searches: Aspose.Cells how to freeze specific rows and columns and get a memory stream | C# save Excel workbook to MemoryStream after applying FreezePanes with Aspose.Cells | example of using FreezePanes method and streaming the workbook in .NET
+// Tags: Aspose.Cells FreezePanes usage | freeze rows columns Aspose.Cells .NET | save workbook to MemoryStream Aspose.Cells | export frozen worksheet to Xlsx stream | dynamic FreezePanes parameters C#
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// Creates a new Workbook, freezes the first row and column (B2 as the top‑left scrollable cell), saves it in XLSX format to a MemoryStream, and returns the stream.
-public class FreezeAndSaveExample
+// Demonstrates creating a new workbook, freezing the first two rows and three columns on the first worksheet using FreezePanes, and saving the workbook into a MemoryStream in Xlsx format with Aspose.Cells for .NET.
+class Program
 {
-    public MemoryStream CreateWorkbookWithFreeze()
+    static void Main()
     {
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Freeze first row and first column (cell B2 is the top‑left of the scrollable area)
-            sheet.FreezePanes(1, 1, 0, 0);
-
-            // Save the workbook to a memory stream in XLSX format
-            MemoryStream stream = new MemoryStream();
-            workbook.Save(stream, SaveFormat.Xlsx);
-            stream.Position = 0;
-            return stream;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error creating workbook: {ex.Message}");
-            throw;
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        try
-        {
-            FreezeAndSaveExample example = new FreezeAndSaveExample();
-            using (MemoryStream ms = example.CreateWorkbookWithFreeze())
+            using (var workbook = new Workbook())
             {
-                // Write the stream to a file for verification
-                string outputPath = "FrozenWorkbook.xlsx";
-                File.WriteAllBytes(outputPath, ms.ToArray());
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Freeze the first 2 rows and the first 3 columns
+                // row = 2 (first row after frozen rows), column = 3 (first column after frozen columns)
+                // totalRows = 2, totalColumns = 3 specify how many rows/columns to freeze
+                sheet.FreezePanes(2, 3, 2, 3);
+
+                // Save the workbook to a memory stream
+                using (var memoryStream = new MemoryStream())
+                {
+                    workbook.Save(memoryStream, SaveFormat.Xlsx);
+                    memoryStream.Position = 0;
+
+                    // Example: write to a file (optional)
+                    // File.WriteAllBytes("output.xlsx", memoryStream.ToArray());
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

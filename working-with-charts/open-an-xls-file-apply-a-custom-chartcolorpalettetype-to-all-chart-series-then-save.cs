@@ -1,7 +1,7 @@
-// Title: Apply a custom color palette to every chart series in an XLS workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an existing XLS file with Aspose.Cells, creates an array of System.Drawing.Color values, and assigns each color to the fill, border, and marker of every chart series across all worksheets before saving the workbook. | Demonstrate how to loop through all worksheets and charts in Aspose.Cells, using the NSeries collection to set series.Area.ForegroundColor, series.Border.Color, and series.Marker.ForegroundColor from a repeating custom palette.
-// Common Searches: Aspose.Cells C# change colors of all chart series in an existing XLS workbook | how to set a custom palette for chart series programmatically in .NET using Aspose.Cells | apply the same color scheme to multiple charts in an XLS file with Aspose.Cells | C# iterate through worksheets and charts to modify series colors in Aspose.Cells | save modified XLS workbook after updating chart series colors Aspose.Cells
-// Tags: apply custom chart series palette Aspose.Cells | iterate worksheets charts Aspose.Cells C# | set series fill border marker color Aspose.Cells | custom RGB colors for chart series Aspose.Cells | save XLS workbook after chart modification Aspose.Cells
+// Title: Apply a custom color palette to all chart series in an XLS workbook using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xls workbook with Aspose.Cells, define a Color[] palette, iterate over every worksheet and its charts, assign each series' Area.ForegroundColor from the palette, and save the modified file. | Write a helper method that accepts input and output file paths plus a Color[] array, opens the workbook, and updates the foreground fill color of all chart series using Aspose.Cells. | Extend the sample to also set each series' marker fill color from the same palette and output a log of the charts and series that were processed.
+// Common Searches: Aspose.Cells set series foreground color for charts in existing XLS file C# | apply custom color palette to all chart series in a workbook using Aspose.Cells .NET | change chart series colors programmatically in an XLS workbook Aspose.Cells | iterate over worksheets and charts to update series colors with Aspose.Cells C# | save modified XLS workbook after updating chart colors using Aspose.Cells
+// Tags: apply custom series colors Aspose.Cells | set chart series foreground fill .NET | iterate worksheets and charts Aspose.Cells | custom color palette XLS workbook | update chart colors programmatically C#
 
 using System;
 using System.Drawing;
@@ -9,76 +9,65 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an existing XLS workbook (or creates a new one), defines a custom System.Drawing.Color array, iterates through every worksheet and each chart, and applies the colors to each series' area fill, border, and marker. Finally, it saves the updated workbook to a new XLS file.
+// The program loads an existing XLS workbook, defines a custom Color[] palette, walks through each worksheet and its charts, assigns each series' foreground fill color from the palette, ensures the output directory exists, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Input workbook path (replace with actual file path if needed)
-            string inputPath = "input.xls";
+            const string inputPath = "input.xls";
+            const string outputPath = "output.xls";
 
-            Workbook workbook;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Load existing workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                if (workbook.Worksheets.Count > 0)
-                {
-                    workbook.Worksheets[0].Name = "Sheet1";
-                }
-            }
+            // Load the existing XLS file
+            Workbook workbook = new Workbook(inputPath);
 
             // Define a custom color palette (example colors)
             Color[] customPalette = new Color[]
             {
-                Color.FromArgb(0xFF, 0x4E, 0x79, 0xA7), // Blue
-                Color.FromArgb(0xFF, 0xC0, 0x50, 0x4D), // Red
-                Color.FromArgb(0xFF, 0x9B, 0xC9, 0x5A), // Green
-                Color.FromArgb(0xFF, 0xFF, 0xC0, 0x00), // Yellow
-                Color.FromArgb(0xFF, 0x8E, 0x44, 0xAD)  // Purple
+                Color.FromArgb(255, 0, 0),      // Red
+                Color.FromArgb(0, 255, 0),      // Green
+                Color.FromArgb(0, 0, 255),      // Blue
+                Color.FromArgb(255, 165, 0),    // Orange
+                Color.FromArgb(128, 0, 128)     // Purple
             };
 
-            // Apply custom colors to chart series in all worksheets
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
+                // Iterate through all charts in the worksheet
                 foreach (Chart chart in sheet.Charts)
                 {
                     try
                     {
-                        var series = chart.NSeries;
-                        for (int i = 0; i < series.Count; i++)
+                        // Apply custom colors to each series in the chart
+                        int colorIdx = 0;
+                        // NSeries holds the collection of series for the chart
+                        foreach (Series series in chart.NSeries)
                         {
-                            Color paletteColor = customPalette[i % customPalette.Length];
-
-                            // Set fill color for the series area (works for column/bar charts)
-                            series[i].Area.ForegroundColor = paletteColor;
-
-                            // Set line color (works for line/area charts) via Border
-                            series[i].Border.Color = paletteColor;
-
-                            // Set marker color (works for scatter/line charts)
-                            series[i].Marker.ForegroundColor = paletteColor;
+                            // Cycle through the custom palette
+                            Color clr = customPalette[colorIdx % customPalette.Length];
+                            // Set the series fill (foreground) color
+                            series.Area.ForegroundColor = clr;
+                            colorIdx++;
                         }
                     }
                     catch (Exception exChart)
                     {
-                        Console.WriteLine($"Warning: Failed to apply colors to chart '{chart.Name}'. {exChart.Message}");
+                        Console.WriteLine($"Error processing chart '{chart.Name}': {exChart.Message}");
                     }
                 }
             }
 
-            // Output workbook path (replace with desired output path)
-            string outputPath = "output.xls";
-
             // Ensure the output directory exists
-            string? outputDir = Path.GetDirectoryName(outputPath);
+            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
@@ -86,10 +75,12 @@ class Program
 
             // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

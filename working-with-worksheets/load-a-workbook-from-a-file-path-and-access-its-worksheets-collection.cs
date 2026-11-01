@@ -1,49 +1,29 @@
 // Title: Load an Excel workbook from a file path and list all worksheet names with Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to open an Excel file from a specified path, creates a new workbook if the file does not exist, and prints each worksheet's name to the console. | Show how to safely load a workbook, handle missing files by initializing a default workbook, and iterate over the Worksheets collection to display sheet names using Aspose.Cells in .NET.
-// Common Searches: aspnet c# how to open an existing Excel file with Aspose.Cells and get worksheet names | aspose.cells load workbook from path and create new workbook when file missing | c# enumerate worksheets collection after loading workbook using Aspose.Cells | handle FileNotFoundException with Aspose.Cells by creating default workbook
-// Tags: load workbook from file path Aspose.Cells | create default workbook when file missing Aspose.Cells | iterate worksheets collection C# Aspose.Cells | list worksheet names Aspose.Cells .NET
+// AI Prompts: Generate C# code that opens a .xlsx file from a given path using Aspose.Cells and prints each worksheet's name to the console. | Show how to retrieve the Worksheets collection from a Workbook object loaded from disk with Aspose.Cells. | Provide a console application example that reads an Excel file path, loads the workbook, and iterates over worksheets to display their names.
+// Common Searches: C# Aspose.Cells how to read worksheet names from a specific file location | example code to load Excel workbook from path and enumerate worksheets using Aspose.Cells | list all sheet names in an .xlsx file with Aspose.Cells .NET library | Aspose.Cells load workbook from disk and get worksheet collection | retrieve worksheet names in a console app using Aspose.Cells for .NET
+// Tags: load workbook from file path Aspose.Cells | enumerate worksheet names C# | access Worksheets collection .NET | read Excel sheet names console | Aspose.Cells workbook iteration example
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace SampleApp
+// // Loads an Excel workbook from a specified path with Aspose.Cells, accesses its Worksheets collection, and prints each worksheet's name to the console.
+class Program
 {
-    // The sample loads an Excel workbook from a given file path using Aspose.Cells for .NET, creates a default workbook if the file is absent, then iterates through the Worksheets collection and writes each sheet name to the console, with basic exception handling.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Specify the path to the Excel file
+        string filePath = @"C:\Data\SampleWorkbook.xlsx";
+
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(filePath);
+
+        // Access the collection of worksheets in the workbook
+        WorksheetCollection worksheets = workbook.Worksheets;
+
+        // Example: iterate through the worksheets and print their names
+        foreach (Worksheet sheet in worksheets)
         {
-            string filePath = @"C:\Data\SampleWorkbook.xlsx";
-
-            try
-            {
-                Workbook workbook;
-
-                // Load existing workbook or create a new one if the file is missing
-                if (File.Exists(filePath))
-                {
-                    workbook = new Workbook(filePath);
-                }
-                else
-                {
-                    workbook = new Workbook(); // creates a default workbook with one sheet
-                    workbook.Save(filePath);   // optional: persist for future runs
-                }
-
-                // Access worksheets collection
-                WorksheetCollection worksheets = workbook.Worksheets;
-
-                // Output each worksheet name
-                foreach (Worksheet sheet in worksheets)
-                {
-                    Console.WriteLine(sheet.Name);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Worksheet name: {sheet.Name}");
         }
     }
 }

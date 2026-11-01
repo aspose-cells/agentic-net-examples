@@ -1,15 +1,14 @@
 // Title: Export an Excel workbook with overlapping conditional formatting rules to HTML using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that adds two overlapping conditional formatting rules to the same cell range and saves the workbook as an HTML file with Aspose.Cells. | Demonstrate how to keep both conditional formatting styles when converting an Excel workbook to HTML in a .NET application.
-// Common Searches: how to export Excel to HTML with multiple conditional formatting rules using Aspose.Cells C# | Aspose.Cells preserve overlapping conditional formats when saving as HTML | C# Aspose.Cells export conditional formatting range A1:A10 to HTML
-// Tags: export workbook with overlapping conditional formatting to HTML | Aspose.Cells conditional formatting HTML conversion | C# add multiple conditional format rules | save Excel as HTML preserving conditional styles | conditional formatting range A1:A10 Aspose.Cells
+// Common Searches: how to export Excel with multiple conditional formatting rules to HTML using Aspose.Cells C# | Aspose.Cells preserve overlapping conditional formats when saving as HTML | C# save workbook as HTML while keeping both >50 and <20 conditional styles | export range A1:A10 with two conditional formatting conditions to HTML with Aspose.Cells | HtmlSaveOptions retain all conditional formatting rules in generated HTML file
+// Tags: conditional formatting overlapping HTML export | Aspose.Cells HTMLSaveOptions preserve conditional formats | C# export Excel with multiple format conditions | Excel to HTML conversion retaining conditional styling | save workbook as HTML with dual conditional rules
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Creates a workbook, applies two overlapping conditional formatting rules (greater than 50 and less than 20) to cells A1:A10, and exports the workbook to HTML while retaining both formatting rules using Aspose.Cells for .NET.
-class ConditionalFormattingExport
+// The example creates a workbook, fills cells A1:A10 with numeric values, applies two overlapping conditional formatting rules (values > 50 → red background/white font, values < 20 → green background/black font) on the same range, and saves the workbook as an HTML file using Aspose.Cells' HtmlSaveOptions, ensuring both rules appear in the generated HTML.
+class Program
 {
     static void Main()
     {
@@ -18,50 +17,59 @@ class ConditionalFormattingExport
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data in range A1:A10
+            // Populate sample data in column A (values 0,10,...,90)
             for (int i = 0; i < 10; i++)
             {
-                cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
+                sheet.Cells[i, 0].PutValue(i * 10);
             }
 
-            // Define the range to which the conditional formats will be applied
-            CellArea formatRange = CellArea.CreateCellArea("A1", "A10");
+            // Define the cell area (A1:A10) for conditional formatting
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 9,
+                StartColumn = 0,
+                EndColumn = 0
+            };
 
-            // First conditional format: highlight cells > 50 with light green background
-            int index1 = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc1 = sheet.ConditionalFormattings[index1];
-            fcc1.AddArea(formatRange);
-            FormatCondition condition1 = fcc1[0];
-            condition1.Type = FormatConditionType.CellValue;
-            condition1.Operator = OperatorType.GreaterThan;
-            condition1.Formula1 = "50";
-            condition1.Style = workbook.CreateStyle();
-            condition1.Style.ForegroundColor = Color.LightGreen;
-            condition1.Style.Pattern = BackgroundType.Solid;
+            // ---------- First conditional formatting rule ----------
+            // Values greater than 50 -> red background, white font
+            int cfIndex1 = sheet.ConditionalFormattings.Add();
+            dynamic cf1 = sheet.ConditionalFormattings[cfIndex1];
+            cf1.AddArea(area);
+            int conditionIndex1 = cf1.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50");
+            dynamic condition1 = cf1[conditionIndex1];
+            condition1.Style.BackgroundColor = Color.Red;
+            condition1.Style.Font.Color = Color.White;
 
-            // Second conditional format: highlight cells < 20 with light coral background
-            int index2 = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc2 = sheet.ConditionalFormattings[index2];
-            fcc2.AddArea(formatRange);
-            FormatCondition condition2 = fcc2[0];
-            condition2.Type = FormatConditionType.CellValue;
-            condition2.Operator = OperatorType.LessThan; // Correct enum value
-            condition2.Formula1 = "20";
-            condition2.Style = workbook.CreateStyle();
-            condition2.Style.ForegroundColor = Color.LightCoral;
-            condition2.Style.Pattern = BackgroundType.Solid;
+            // ---------- Second conditional formatting rule ----------
+            // Values less than 20 -> green background, black font
+            int cfIndex2 = sheet.ConditionalFormattings.Add();
+            dynamic cf2 = sheet.ConditionalFormattings[cfIndex2];
+            cf2.AddArea(area);
+            int conditionIndex2 = cf2.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "20");
+            dynamic condition2 = cf2[conditionIndex2];
+            condition2.Style.BackgroundColor = Color.Green;
+            condition2.Style.Font.Color = Color.Black;
 
             // Save the workbook as HTML (conditional formatting is exported by default)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            workbook.Save("ConditionalFormatting.html", htmlOptions);
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            Console.WriteLine("Workbook exported to ConditionalFormatting.html with overlapping conditional formats.");
+            string outputPath = "ConditionalFormatting.html";
+            // Ensure the directory exists (if a path is provided)
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

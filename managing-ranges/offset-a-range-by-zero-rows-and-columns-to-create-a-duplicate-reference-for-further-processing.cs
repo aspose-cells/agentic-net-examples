@@ -1,68 +1,48 @@
-// Title: Create a zero‑offset duplicate of an existing cell range in Aspose.Cells for .NET and apply a yellow background style
-// AI Prompts: Generate a new Aspose.Cells range that references the same cells as an existing range without shifting its position, then set a solid yellow background. | Use the FirstRow, FirstColumn, RowCount, and ColumnCount properties of a range to clone it and apply a shading style in C#. | Call Worksheet.Cells.CreateRange with the original range's coordinates to create a duplicate range and style the duplicate cells.
-// Common Searches: Aspose.Cells how to copy a range without moving it in C# | Create a duplicate range using original range coordinates Aspose.Cells .NET | Apply background color to a cloned range in Aspose.Cells | Zero offset range creation from existing range Aspose.Cells example | C# Aspose.Cells duplicate range and style cells
-// Tags: duplicate range Aspose.Cells C# | zero offset range creation Aspose.Cells | apply background style to range Aspose.Cells | create range from coordinates Aspose.Cells | clone cell range .NET Aspose.Cells
+// Title: How to duplicate an Excel range by using CreateRange with zero offset in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# duplicate a range without moving it | Create a copy of an existing range using CreateRange with same size | Offset a range by 0 rows and 0 columns to get a duplicate reference | How to get a second reference to the same cell block in Aspose.Cells | Clone Excel range object in .NET with Aspose.Cells API
+// Tags: Aspose.Cells CreateRange zero offset | duplicate range reference Aspose.Cells | range cloning using Aspose.Cells API | Excel range copy without data duplication | C# Aspose.Cells range manipulation
 
 using Aspose.Cells;
 using System;
-using System.Drawing;
-using System.IO;
 
-// Alias to avoid conflict with System.Range introduced in C# 8.0
-using AsposeRange = Aspose.Cells.Range;
-
-// The example loads an Excel workbook, defines a range (A1:B2), creates a zero‑offset duplicate of that range using its coordinates, applies a solid yellow background style to the duplicate, and saves the modified workbook.
+// The example creates a workbook, fills cells A1‑B2, defines a source range, then obtains a second Range object by calling Worksheet.Cells.CreateRange with the source range's first row, first column, row count and column count—effectively an offset of zero rows and columns. The duplicate range is used to change a cell value and the file is saved as OffsetDuplicate.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create the original range (example: A1:B2)
-            AsposeRange originalRange = sheet.Cells.CreateRange("A1", "B2");
+            // Populate sample data
+            sheet.Cells["A1"].PutValue(1);
+            sheet.Cells["A2"].PutValue(2);
+            sheet.Cells["B1"].PutValue(3);
+            sheet.Cells["B2"].PutValue(4);
 
-            // Create a duplicate reference to the same range using its coordinates
-            AsposeRange duplicateRange = sheet.Cells.CreateRange(
+            // Create the original range A1:B2
+            Aspose.Cells.Range originalRange = sheet.Cells.CreateRange("A1:B2");
+
+            // Duplicate the range by creating a new range with the same dimensions
+            Aspose.Cells.Range duplicateRange = sheet.Cells.CreateRange(
                 originalRange.FirstRow,
                 originalRange.FirstColumn,
                 originalRange.RowCount,
                 originalRange.ColumnCount);
 
-            // Example operation on the duplicate range: set background color to yellow
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.Yellow;
-            style.Pattern = BackgroundType.Solid;
+            // Modify cell A1 through the duplicate range
+            duplicateRange[0, 0].PutValue(99);
 
-            StyleFlag flag = new StyleFlag
-            {
-                CellShading = true
-            };
-
-            duplicateRange.ApplyStyle(style, flag);
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            // Save the workbook
+            workbook.Save("OffsetDuplicate.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

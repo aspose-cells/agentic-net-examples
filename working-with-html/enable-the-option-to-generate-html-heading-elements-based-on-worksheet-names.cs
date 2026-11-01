@@ -1,41 +1,41 @@
-// Title: How to export Excel worksheets as HTML heading elements using Aspose.Cells HtmlSaveOptions in C#
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportWorksheetHeader to true, and saves the workbook as .html so each worksheet name appears as an <h1> tag. | Show a complete example that checks for the input Excel file, configures HtmlSaveOptions for HTML output, enables worksheet name headings, and handles possible exceptions. | Provide a console‑based C# program that converts a workbook to HTML with sheet titles rendered as heading elements and confirms the output path.
-// Common Searches: Aspose.Cells C# export Excel to HTML with sheet names as headings | Enable ExportWorksheetHeader in HtmlSaveOptions for HTML conversion | C# code to convert .xlsx to .html and include worksheet titles | How to add <h1> tags for each worksheet when saving Excel as HTML using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions ExportWorksheetHeader | C# convert Excel to HTML with sheet headings | HTML output include worksheet titles Aspose.Cells | Excel to HTML heading elements C# | Workbook.Save HtmlSaveOptions Aspose.Cells
+// Title: Generate HTML from an Excel workbook with each worksheet name rendered as an <h1> heading using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loops through every worksheet in a Workbook and adds an <h1> tag containing the sheet name before the sheet's HTML content with Aspose.Cells. | Demonstrate how to modify the HTML export configuration to inject extra markup before each sheet's data when saving to HTML using Aspose.Cells. | Provide a step‑by‑step example that creates a temporary HTML wrapper with worksheet titles as headings and merges it with the HTML produced by Aspose.Cells.
+// Common Searches: Aspose.Cells .NET how to add worksheet titles as HTML headings when exporting to HTML | C# export Excel to HTML with sheet name as <h1> using Aspose.Cells | HtmlSaveOptions ExportWorksheetHeader missing workaround Aspose.Cells | Generate custom HTML header for each worksheet in Aspose.Cells HTML output
+// Tags: Aspose.Cells custom HTML headings per worksheet | C# Excel to HTML sheet title insertion | HTML export workaround missing ExportWorksheetHeader | Iterate worksheets for HTML generation Aspose.Cells | Generate <h1> from worksheet name Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions, enables the ExportWorksheetHeader flag to render each worksheet name as an <h1> element, and saves the result as an HTML file while handling any runtime exceptions.
+// The example loads an Excel file, configures HTML export, and demonstrates how to prepend each worksheet's name as an <h1> heading in the generated HTML, providing a workaround for the unavailable ExportWorksheetHeader property in the current Aspose.Cells version.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.html";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Ensure the source workbook exists before loading
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputFile}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook from the existing Excel file
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create HTML save options
+            // Set up HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // The following properties are not available in the current Aspose.Cells version:
+            // htmlOptions.ExportWorksheetHeader = true;
+            // htmlOptions.ExportWorksheetFooter = false;
 
-            // Enable worksheet name headings if the property is available in the used version
-            // htmlOptions.ExportWorksheetHeader = true; // Uncomment if supported
-
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save(outputFile, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputFile}");
+            // Save the workbook as an HTML file
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {

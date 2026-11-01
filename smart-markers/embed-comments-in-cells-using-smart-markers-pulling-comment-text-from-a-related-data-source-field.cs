@@ -1,61 +1,55 @@
-// Title: Add Excel cell comments with Aspose.Cells smart markers from a DataTable in C#
-// AI Prompts: Generate C# code that creates an Excel workbook, places a smart marker in a cell, attaches a comment containing a smart marker, binds a DataTable with Name and Comment columns to WorkbookDesigner, processes all markers, and saves the file as XLSX. | Show how to use Aspose.Cells WorkbookDesigner to replace smart markers inside both cell values and cell comments using data from a DataTable.
-// Common Searches: how to bind a DataTable to Aspose.Cells smart markers for cell comments in C# | Aspose.Cells example of using smart markers inside Excel comments | C# code to generate Excel comments from a database column with smart markers | process smart markers in comments with WorkbookDesigner Aspose.Cells | populate Excel comment field using Aspose.Cells smart marker and DataTable
-// Tags: Aspose.Cells comment insertion | data source binding for Excel comments | C# Excel comment generation | handle workbook markers in comments | generate XLSX with bound data
+// Title: Add Excel cell comments with smart markers from a DataTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that attaches a comment containing a smart marker to a worksheet cell and fills the comment text from a DataTable column with Aspose.Cells. | Demonstrate how to invoke WorkbookDesigner to process smart markers in both cell values and cell comments based on a DataTable source. | Explain the steps to create a DataTable, bind it to WorkbookDesigner, and generate an Excel file where comments are populated dynamically via smart markers.
+// Common Searches: asp.net how to insert a comment with a smart marker using Aspose.Cells C# example | populate Excel comment text from DataTable column with Aspose.Cells WorkbookDesigner | smart marker for cell comment Aspose.Cells .NET tutorial | generate Excel file with dynamic comments from database using Aspose.Cells smart markers
+// Tags: smart-marker comment insertion Aspose.Cells C# | WorkbookDesigner populate comments from DataTable | dynamic Excel comment generation Aspose.Cells | cell comment smart marker processing .NET
 
 using System;
 using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartMarkerComments
+// The example creates a DataTable with Name and Comment columns, places a smart marker for Name in cell A2, adds a comment to the same cell containing a smart marker for Comment, processes all markers with WorkbookDesigner, and saves the workbook as EmployeesWithComments.xlsx.
+class Program
 {
-    // The example creates a new workbook, adds a smart marker to cell A2 and a comment containing a smart marker, builds a DataTable with Name and Comment columns, binds the table to WorkbookDesigner, processes all smart markers (including those inside comments), and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // -------------------------------------------------
-            // Set up a simple template with smart markers
-            // -------------------------------------------------
-            // Header
-            sheet.Cells["A1"].PutValue("Product");
-            // Cell that will be filled with product name using a smart marker
-            sheet.Cells["A2"].PutValue("&=Name");
-
-            // Add a comment to the same cell (A2) that contains a smart marker for the comment text
-            int commentIdx = sheet.Comments.Add("A2");
-            Comment comment = sheet.Comments[commentIdx];
-            // The smart marker & =Comment will be replaced by the data source field "Comment"
-            comment.Note = "&=Comment";
-
-            // -------------------------------------------------
-            // Prepare the data source (DataTable with Name and Comment columns)
-            // -------------------------------------------------
-            DataTable dt = new DataTable("Products");
+            // Prepare the data source with a field for the comment text.
+            DataTable dt = new DataTable("Employees");
             dt.Columns.Add("Name", typeof(string));
             dt.Columns.Add("Comment", typeof(string));
+            dt.Rows.Add("John Doe", "Top performer");
+            dt.Rows.Add("Jane Smith", "Needs improvement");
+            dt.Rows.Add("Bob Johnson", "Excellent attendance");
 
-            dt.Rows.Add("Apple", "Fresh and juicy fruit.");
-            dt.Rows.Add("Banana", "Rich in potassium.");
-            dt.Rows.Add("Cherry", "Small and sweet.");
+            // Create a new workbook and obtain the first worksheet.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Employees";
 
-            // -------------------------------------------------
-            // Configure WorkbookDesigner with the data source and process smart markers
-            // -------------------------------------------------
+            // Add a header for the Name column.
+            sheet.Cells["A1"].PutValue("Name");
+
+            // Insert a smart marker for the Name field. This will be expanded for each data row.
+            sheet.Cells["A2"].PutValue("&=Name");
+
+            // Add a comment to the same cell (A2) that contains a smart marker for the Comment field.
+            // When the smart markers are processed, the comment text will be replaced with the value from the data source.
+            int commentIndex = sheet.Comments.Add("A2");
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Note = "&=Comment";
+
+            // Use WorkbookDesigner to process the smart markers with the provided data source.
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
             designer.SetDataSource(dt);
-            // Process all smart markers in the workbook (including those inside comments)
             designer.Process();
 
-            // -------------------------------------------------
-            // Save the resulting workbook
-            // -------------------------------------------------
-            workbook.Save("SmartMarkerCommentsOutput.xlsx");
+            // Save the resulting workbook.
+            workbook.Save("EmployeesWithComments.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

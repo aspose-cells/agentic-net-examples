@@ -1,53 +1,59 @@
-// Title: Save an Aspose.Cells workbook as HTML with a separate CSS file for each worksheet using C#
-// AI Prompts: Generate C# code that creates a workbook with multiple sheets and saves it to HTML using HtmlSaveOptions with ExportWorksheetCSSSeparately set to true, producing a distinct .css file for each worksheet. | Write a C# snippet that scans the output folder after an Aspose.Cells HTML export and confirms that a .css file named after each worksheet exists. | Show how to adapt an existing Aspose.Cells HTML export routine to enable per‑worksheet CSS files and direct all output to a specified directory.
-// Common Searches: Aspose.Cells C# export workbook to html with separate css per worksheet example | how to enable ExportWorksheetCSSSeparately in Aspose.Cells and verify css files | C# Aspose.Cells HTML save options per‑worksheet css generation | checking css files for each sheet after Aspose.Cells HTML conversion
-// Tags: HtmlSaveOptions ExportWorksheetCSSSeparately C# | per‑worksheet css generation Aspose.Cells | save workbook as html with individual css files | verify generated css files Aspose.Cells | multiple worksheets html export Aspose.Cells
+// Title: Export each worksheet to a separate CSS file using HtmlSaveOptions.ExportWorksheetCSSSeparately in Aspose.Cells for .NET
+// AI Prompts: Write C# code that saves a multi‑sheet workbook as HTML with HtmlSaveOptions.ExportWorksheetCSSSeparately set to true and prints the paths of the generated CSS files. | Show how to programmatically check for the existence of the per‑worksheet CSS files after exporting a workbook to HTML with Aspose.Cells. | Demonstrate creating a workbook with two worksheets, exporting it to HTML with separate CSS per sheet, and logging which CSS file corresponds to each worksheet.
+// Common Searches: Aspose.Cells HtmlSaveOptions ExportWorksheetCSSSeparately example C# | how to generate separate CSS files for each worksheet when saving as HTML | verify per‑worksheet CSS files after HTML export Aspose.Cells | C# export multi‑sheet workbook to HTML with individual CSS files | Aspose.Cells separate CSS per sheet file naming convention
+// Tags: HtmlSaveOptions ExportWorksheetCSSSeparately Aspose.Cells | per‑worksheet CSS files HTML export Aspose.Cells | verify worksheet CSS file existence Aspose.Cells | multi‑sheet workbook HTML export separate CSS | C# Aspose.Cells separate CSS per sheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The program creates a workbook with two worksheets, configures HtmlSaveOptions to export each sheet's styling to its own .css file, saves the workbook as HTML, and then checks the output directory to ensure a CSS file exists for every worksheet.
+// The sample creates a workbook with two worksheets, enables HtmlSaveOptions.ExportWorksheetCSSSeparately, saves the workbook as HTML, and then confirms that CSS files named workbook.html_0.css and workbook.html_1.css exist for each worksheet.
 class Program
 {
     static void Main()
     {
         // Create a new workbook with two worksheets
         Workbook workbook = new Workbook();
+
+        // First worksheet
         Worksheet sheet1 = workbook.Worksheets[0];
         sheet1.Name = "FirstSheet";
-        sheet1.Cells["A1"].PutValue("Hello from Sheet 1");
+        sheet1.Cells["A1"].PutValue("Hello");
 
-        Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-        sheet2.Cells["A1"].PutValue("Hello from Sheet 2");
+        // Second worksheet
+        int sheet2Index = workbook.Worksheets.Add();
+        Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+        sheet2.Name = "SecondSheet";
+        sheet2.Cells["B2"].PutValue("World");
 
         // Configure HTML save options to export CSS separately for each worksheet
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-        htmlOptions.ExportWorksheetCSSSeparately = true; // each worksheet gets its own .css file
-        htmlOptions.ExportActiveWorksheetOnly = false;   // export all worksheets
+        htmlOptions.ExportWorksheetCSSSeparately = true;
 
-        // Define output folder and base file name
-        string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "HtmlOutput");
-        Directory.CreateDirectory(outputFolder);
-        string htmlFilePath = Path.Combine(outputFolder, "Workbook.html");
+        // Define output directory and ensure it exists
+        string outputDir = "output";
+        Directory.CreateDirectory(outputDir);
 
         // Save the workbook as HTML
+        string htmlFilePath = Path.Combine(outputDir, "workbook.html");
         workbook.Save(htmlFilePath, htmlOptions);
 
         // Verify that each worksheet has its own CSS file
+        // When ExportWorksheetCSSSeparately is true, Aspose.Cells creates files named:
+        //   workbook.html_0.css, workbook.html_1.css, ... (index corresponds to worksheet index)
         foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Aspose.Cells names the CSS file as "<WorksheetName>.css"
-            string cssFileName = ws.Name + ".css";
-            string cssFilePath = Path.Combine(outputFolder, cssFileName);
+            string cssFileName = $"workbook.html_{ws.Index}.css";
+            string cssFilePath = Path.Combine(outputDir, cssFileName);
 
             if (File.Exists(cssFilePath))
             {
-                Console.WriteLine($"CSS file found for worksheet \"{ws.Name}\": {cssFileName}");
+                Console.WriteLine($"CSS file for worksheet '{ws.Name}' exists: {cssFilePath}");
             }
             else
             {
-                Console.WriteLine($"CSS file NOT found for worksheet \"{ws.Name}\". Expected: {cssFileName}");
+                Console.WriteLine($"CSS file for worksheet '{ws.Name}' NOT found: {cssFilePath}");
             }
         }
     }

@@ -1,62 +1,64 @@
-// Title: Export the first worksheet of an Excel workbook to a PNG file with Aspose.Cells for use as a 3D texture in C#
-// AI Prompts: Generate C# code that loads a workbook, renders the first worksheet to a PNG image using Aspose.Cells, and returns the image path. | Show how to load the exported PNG as a texture in a Unity or OpenGL C# project after creating it with Aspose.Cells. | Create a robust C# snippet that verifies the Excel file exists, exports the worksheet to PNG with Aspose.Cells, handles exceptions, and prepares the image for a graphics engine.
-// Common Searches: how to save an Excel worksheet as a PNG image using Aspose.Cells in .NET | C# convert first sheet of Excel to PNG for Unity texture | Aspose.Cells SheetRender export worksheet to PNG for OpenGL texture mapping | sample code to render Excel sheet to PNG and load it as a texture in a C# 3D engine
-// Tags: Aspose.Cells PNG export of worksheet | SheetRender PNG generation in C# | Unity texture from Excel sheet PNG | OpenGL PNG texture loading C# | exception handling for Excel export Aspose.Cells
+// Title: Render an Excel worksheet to an in‑memory PNG for use as a 3D texture with Aspose.Cells in C#
+// AI Prompts: Write C# code that loads a .xlsx file, renders the first worksheet to a PNG image using Aspose.Cells, and returns the PNG as a MemoryStream. | Extend the example to iterate through all pages of a worksheet and produce a separate MemoryStream for each PNG, suitable for feeding into a 3D rendering engine. | Add comprehensive error handling that checks file existence, catches rendering exceptions, and logs the size of each generated PNG stream.
+// Common Searches: how to convert an Excel sheet to a PNG stream in C# with Aspose.Cells | using Aspose.Cells generate textures for Unity from Excel worksheets | render Excel worksheet to memory without saving image file C# | create PNG stream from worksheet for 3D engine using Aspose.Cells
+// Tags: Aspose.Cells SheetRender to PNG MemoryStream | C# generate in‑memory worksheet image | Excel worksheet texture mapping with Aspose.Cells | render multi‑page worksheet as separate PNG streams | avoid file I/O when converting Excel to image
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example loads Sample.xlsx, extracts the first worksheet, and uses Aspose.Cells' SheetRender to export it as Worksheet.png. It includes error handling for missing files and placeholders for integrating the PNG as a texture in OpenGL or Unity 3D rendering pipelines.
-class WorksheetTextureDemo
+// The program loads an Excel workbook, selects the first worksheet, renders it to a PNG image with Aspose.Cells' SheetRender, writes the image into a MemoryStream, and outputs the byte size, enabling the PNG to be used directly as a texture in 3D rendering pipelines.
+class WorksheetTextureExample
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string excelPath = "Sample.xlsx";
-
-        // Verify that the Excel file exists to avoid FileNotFoundException
-        if (!File.Exists(excelPath))
-        {
-            Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
-            return;
-        }
-
         try
         {
+            // Path to the source Excel file
+            string excelPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Error: The file '{excelPath}' was not found.");
+                return;
+            }
+
             // Load the workbook using Aspose.Cells
             Workbook workbook = new Workbook(excelPath);
 
-            // Get the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Choose the worksheet to render (e.g., the first worksheet)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure image export options – PNG format will be inferred from the output file extension
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Configure rendering options (default format is PNG)
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
             {
-                // Optional: set resolution, background, etc.
-                // HorizontalResolution = 300,
-                // VerticalResolution = 300
+                // One page per sheet is typical for worksheet images
+                OnePagePerSheet = true
             };
 
-            // Render the worksheet to an image (page index 0)
-            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
+            // Render the worksheet to a PNG image using SheetRender.
+            // The image is stored in a memory stream to avoid intermediate files.
+            using (MemoryStream pngStream = new MemoryStream())
+            {
+                // Create a SheetRender object for the selected worksheet
+                SheetRender sheetRender = new SheetRender(sheet, renderOptions);
 
-            // Export the worksheet as PNG directly to a file
-            string outputPath = "Worksheet.png";
-            sheetRender.ToImage(0, outputPath);
-            Console.WriteLine($"Worksheet exported to \"{outputPath}\".");
+                // Render the first page of the worksheet (most worksheets fit on a single page)
+                sheetRender.ToImage(0, pngStream);
 
-            // If OpenGL texture creation is required, it can be added here
-            // using an appropriate OpenGL wrapper library.
+                // Reset stream position to the beginning for any further processing
+                pngStream.Position = 0;
+
+                // For demonstration, report the size of the generated image.
+                Console.WriteLine($"Worksheet rendered to PNG. Image size: {pngStream.Length} bytes.");
+            }
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Keep console open
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
     }
 }

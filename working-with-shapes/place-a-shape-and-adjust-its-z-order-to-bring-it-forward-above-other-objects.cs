@@ -1,50 +1,49 @@
-// Title: Insert a rectangle shape into an Excel worksheet and bring it to the front by setting Z‑order with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to add a rectangle shape to the first worksheet, set its Left and Top coordinates, and assign a ZOrder value so the shape appears above all other objects. | Generate a .NET example that creates a workbook, inserts a rectangle shape, positions it, and modifies the Z‑order to make the shape the frontmost element in the saved Excel file.
-// Common Searches: Aspose.Cells C# how to set shape ZOrder to front | C# add rectangle shape to Excel and change layering with Aspose.Cells | move Excel shape to front using Aspose.Cells .NET API | adjust shape Z-order programmatically in Aspose.Cells workbook
-// Tags: Aspose.Cells shape order control | C# insert geometric shape into Excel worksheet | Aspose.Cells adjust shape layering | Excel workbook shape positioning .NET | Aspose.Cells frontmost shape configuration
+// Title: Add a rectangle shape and set its Z‑order to bring it to the front in an Excel file using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add rectangle shape and change ZOrderPosition | how to set shape Z-order in Excel with Aspose.Cells .NET | bring a worksheet shape to front using Aspose.Cells API | C# code to layer shapes in an Excel workbook with Aspose.Cells | Aspose.Cells shape layering example C#
+// Tags: add rectangle shape Aspose.Cells | set shape ZOrderPosition Aspose.Cells | worksheet shape front ordering | C# Excel shape layering | Aspose.Cells shape Z-order example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new Workbook, inserts a rectangle shape onto the first worksheet, sets its Left and Top positions, optionally changes its ZOrder to control layering, and saves the file as ShapeZOrder.xlsx.
+// The example creates a new workbook, adds a rectangle shape to the first worksheet, assigns its ZOrderPosition to the highest value to bring it forward, and saves the workbook as ShapeZOrder.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            // Add a rectangle shape (row index 1, column index 0, offsetX 0, offsetY 0, width 100, height 50)
+            // The AddShape method returns the created Shape object
             Shape shape = sheet.Shapes.AddShape(
                 MsoDrawingType.Rectangle, // shape type
                 1,    // upper left row
                 0,    // upper left column
-                200,  // top offset (in points)
-                100,  // left offset (in points)
-                100,  // height (in points)
-                200   // width (in points)
-            );
+                0,    // top offset (in pixels)
+                0,    // left offset (in pixels)
+                50,   // height (in pixels)
+                100); // width (in pixels)
 
-            // Position the shape on the sheet
-            shape.Left = 50; // distance from the left edge (in points)
-            shape.Top = 50;  // distance from the top edge (in points)
+            // Bring the shape to the front by setting a high Z‑order position
+            shape.ZOrderPosition = sheet.Shapes.Count; // highest Z‑order
 
-            // Optional: set Z-order if needed (lower values are behind higher values)
-            // shape.ZOrder = 0;
-
-            // Save the workbook to a file
+            // Define output file path
             string outputPath = "ShapeZOrder.xlsx";
+
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,51 +1,43 @@
-// Title: Convert HTML to PDF with maximum image compression using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF while setting PdfSaveOptions.ImageCompression to the highest level. | Show how to adjust PdfSaveOptions in Aspose.Cells to compress embedded images and shrink the PDF size during HTML-to-PDF conversion.
-// Common Searches: Aspose.Cells C# convert HTML file to PDF with high image compression | How to reduce PDF size when exporting HTML using PdfSaveOptions in .NET | Set maximum image compression for PDF output in Aspose.Cells HTML to PDF conversion
-// Tags: Aspose.Cells HTML-to-PDF image compression | PdfSaveOptions image compression setting | C# Aspose.Cells reduce PDF size | load HTML workbook Aspose.Cells | configure PDF save options Aspose.Cells
+// Title: How to convert an HTML file to a PDF with high image compression using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an HTML document into an Aspose.Cells Workbook and saves it as a PDF while applying maximum JPEG compression to images. | Show the configuration of PdfSaveOptions in Aspose.Cells to enable high image compression (e.g., set Compression to PdfCompressionType.Jpeg and adjust JpegQuality) during HTML‑to‑PDF export. | Provide a complete C# example that validates the input HTML file, uses HtmlLoadOptions, configures PdfSaveOptions for aggressive image compression, and writes the compressed PDF to disk.
+// Common Searches: Aspose.Cells C# convert HTML to PDF with JPEG image compression | reduce size of PDF generated from HTML using Aspose.Cells PdfSaveOptions | set high image compression level when exporting HTML to PDF in .NET | how to use HtmlLoadOptions and PdfSaveOptions together for small PDF output
+// Tags: HTML to PDF conversion Aspose.Cells C# | PdfSaveOptions image compression Aspose.Cells | Aspose.Cells high JPEG compression PDF | HtmlLoadOptions workbook loading Aspose.Cells | reduce PDF file size Aspose.Cells export
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;   // Required for PdfSaveOptions
 
-// The sample verifies the existence of an HTML file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (which can be configured for high image compression), ensures the output directory exists, and saves the workbook as a PDF while handling any runtime errors.
+// The example validates the presence of an HTML file, loads it into an Aspose.Cells Workbook with HtmlLoadOptions, configures PdfSaveOptions to use JPEG compression and a low JpegQuality for aggressive image reduction, and saves the result as a compact PDF while handling any exceptions.
 class HtmlToPdfConverter
 {
     static void Main()
     {
-        string inputPath = "input.html";
-        string outputPath = "output.pdf";
-
         try
         {
+            const string inputPath = "input.html";
+            const string outputPath = "output.pdf";
+
             // Verify that the input HTML file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the HTML file into a Workbook object
-            Workbook workbook = new Workbook(inputPath);
+            // Load the HTML file into a workbook using HtmlLoadOptions
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Configure PDF save options (default settings)
+            // Configure PDF save options (default settings are sufficient for basic conversion)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
 
             // Save the workbook as a PDF
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to {outputPath}");
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,30 +1,54 @@
-// Title: Encrypt a merged Excel workbook with a password and 128‑bit strong encryption using Aspose.Cells for .NET
-// AI Prompts: Write C# code that builds a merged workbook, assigns an opening password, applies 128‑bit strong encryption, and saves it as an XLSX file with Aspose.Cells. | Refactor the example so the password is passed as a method argument and the encrypted workbook is written to a MemoryStream instead of a physical file.
-// Common Searches: Aspose.Cells C# set opening password for merged workbook | apply 128-bit encryption to Excel file using Aspose.Cells .NET | save encrypted workbook to memory stream Aspose.Cells example | protect confidential data in merged Excel workbook with password Aspose.Cells | how to use SetEncryptionOptions with StrongCryptographicProvider in C#
-// Tags: Aspose.Cells workbook password protection C# | SetEncryptionOptions strong cryptographic provider Aspose.Cells | encrypt merged Excel workbook Aspose.Cells | save encrypted workbook to memory stream Aspose.Cells | 128-bit encryption Aspose.Cells XLSX
+// Title: Password‑protect a merged Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Load two .xlsx files, copy all worksheets from the second workbook into the first, assign a password via Workbook.Settings.Password, and save the encrypted workbook using Aspose.Cells in C#. Apply workbook‑level encryption after merging worksheets by setting Workbook.Settings.Password before calling Workbook.Save in a .NET application. Combine multiple Excel workbooks and protect the resulting file with a custom password using Aspose.Cells' Settings.Password property in C#.
+// Common Searches: how to set a password on a merged Excel workbook using Aspose.Cells C# Aspose.Cells encrypt workbook after merging multiple .xlsx files C# code to protect merged workbook with password in Aspose.Cells Workbook.Settings.Password example after adding worksheets Aspose.Cells save merged Excel file as password‑protected using Aspose.Cells for .NET
+// Tags: merge worksheets Aspose.Cells C# | Workbook.Settings.Password usage | encrypt Excel workbook .NET | password protect merged workbook Aspose.Cells | combine Excel files with Aspose.Cells and set password
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// // Demonstrates creating a merged workbook, inserting confidential data, setting an opening password, applying 128‑bit strong encryption via SetEncryptionOptions, and saving the encrypted file as XLSX using Aspose.Cells for .NET.
-class EncryptWorkbookDemo
+// The program loads two Excel files, merges all worksheets from the second into the first, sets a password via Workbook.Settings.Password, and saves the result as a password‑protected workbook (merged_protected.xlsx) using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (this would be the merged workbook)
-        Workbook wb = new Workbook();
+        try
+        {
+            // Paths to source workbooks
+            string sourcePath1 = "source1.xlsx";
+            string sourcePath2 = "source2.xlsx";
 
-        // Example: add some confidential data to the first worksheet
-        Worksheet sheet = wb.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Confidential Data");
+            // Verify that source files exist
+            if (!File.Exists(sourcePath1) || !File.Exists(sourcePath2))
+            {
+                Console.WriteLine("One or both source files are missing.");
+                return;
+            }
 
-        // Set the password that will be required to open the workbook
-        wb.Settings.Password = "StrongPassword123";
+            // Load the first workbook (source)
+            Workbook wb1 = new Workbook(sourcePath1);
 
-        // Apply strong encryption (128‑bit key) – optional but recommended
-        wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Load the second workbook (source)
+            Workbook wb2 = new Workbook(sourcePath2);
 
-        // Save the encrypted workbook to disk
-        wb.Save("EncryptedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Merge all worksheets from wb2 into wb1
+            foreach (Worksheet sheet in wb2.Worksheets)
+            {
+                // Add a copy of each sheet to the first workbook using the sheet name
+                wb1.Worksheets.AddCopy(sheet.Name);
+            }
+
+            // Encrypt the merged workbook with a password
+            wb1.Settings.Password = "Secret123";
+
+            // Save the encrypted workbook
+            string outputPath = "merged_protected.xlsx";
+            wb1.Save(outputPath);
+            Console.WriteLine($"Merged workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,85 +1,50 @@
-// Title: C# – Map business status strings to Excel theme accent fill colors using Aspose.Cells
-// AI Prompts: Create a C# method that takes a status string and returns an Aspose.Cells Style with a solid background color chosen from the workbook's theme accent palette. | Demonstrate iterating over a collection of status values, applying the generated style to each cell, and saving the workbook as an .xlsx file with Aspose.Cells.
-// Common Searches: how to assign Excel theme accent colors to cells based on status values in C# Aspose.Cells | C# Aspose.Cells example for mapping business status to cell fill colors | set solid background pattern with specific theme accent in Aspose.Cells workbook | apply conditional fill style without using Excel formulas using Aspose.Cells .NET | create Excel file with colored status rows using Aspose.Cells API
-// Tags: status to theme accent fill color Aspose.Cells | solid background style workbook C# | apply cell fill based on string value Aspose.Cells | generate Excel file with status color coding .NET | use BackgroundType.Solid ForegroundColor Aspose.Cells
+// Title: Apply business status‑based theme accent fill colors to Excel cells using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set cell background color based on status string | How to map business status values to Excel cell fill colors with Aspose.Cells | Apply solid theme accent fill to a specific worksheet cell in .NET | Programmatically change Excel cell style using Aspose.Cells based on business logic | Aspose.Cells conditional cell background color for Open, Closed, In Progress statuses
+// Tags: status‑driven cell fill Aspose.Cells | solid background pattern C# Excel | business status color mapping Aspose.Cells | apply style to worksheet cell .NET | theme accent fill Excel Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// The example defines a BusinessStatusColorMapper class that provides a method to generate an Aspose.Cells Style with a solid theme accent background based on a business status string, applies the style to cells in a new workbook, populates sample statuses, and saves the result as BusinessStatusColors.xlsx.
-public static class BusinessStatusColorMapper
+// Demonstrates how to assign a solid theme accent fill color to a specific Excel cell by mapping a business status string (e.g., "Open", "Closed", "In Progress") to a System.Drawing.Color and applying the style with the Aspose.Cells API in C#.
+public static class BusinessStatusStyler
 {
-    public static Style GetStatusFillStyle(string status, Workbook workbook)
+    /// <param name="worksheet">The worksheet containing the target cell.</param>
+    /// <param name="cellName">The name of the cell (e.g., "A1") to style.</param>
+    /// <param name="status">The business status value (e.g., "Open", "Closed").</param>
+    public static void ApplyStatusFill(Worksheet worksheet, string cellName, string status)
     {
-        // Create a new style from the workbook.
-        Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
+        if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
+        if (string.IsNullOrEmpty(cellName)) throw new ArgumentException("Cell name cannot be null or empty.", nameof(cellName));
 
-        // Map status values to concrete colors.
-        Color fillColor;
-        switch (status?.Trim().ToLowerInvariant())
+        // Map business status to a concrete color.
+        Color fillColor = status switch
         {
-            case "open":
-                fillColor = Color.LightBlue;   // Represents Accent1.
-                break;
-            case "closed":
-                fillColor = Color.LightGreen;  // Represents Accent2.
-                break;
-            case "pending":
-                fillColor = Color.Orange;      // Represents Accent3.
-                break;
-            case "in progress":
-                fillColor = Color.LightCoral;  // Represents Accent4.
-                break;
-            case "on hold":
-                fillColor = Color.Plum;        // Represents Accent5.
-                break;
-            default:
-                fillColor = Color.LightGray;   // Fallback (Accent6).
-                break;
-        }
+            "Open" => Color.LightGreen,
+            "In Progress" => Color.Khaki,
+            "Closed" => Color.LightCoral,
+            "On Hold" => Color.LightGray,
+            _ => Color.LightBlue // Default color for unknown statuses.
+        };
 
-        // Apply the chosen color to the cell background.
-        style.ForegroundColor = fillColor;
-
-        return style;
-    }
-
-    /// <summary>
-    /// Generates a workbook with sample statuses and applies the corresponding fill colors.
-    /// </summary>
-    public static void ApplyStatusColors()
-    {
         try
         {
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
+            // Retrieve the cell and its current style.
+            Cell cell = worksheet.Cells[cellName];
+            Style style = cell.GetStyle();
 
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
+            // Set the fill pattern to solid and apply the chosen color.
+            style.Pattern = BackgroundType.Solid;
+            style.ForegroundColor = fillColor;
 
-            // Sample statuses.
-            string[] statuses = { "Open", "Closed", "Pending", "In Progress", "On Hold", "Unknown" };
-
-            // Populate cells and apply corresponding fill styles.
-            for (int i = 0; i < statuses.Length; i++)
-            {
-                Cell cell = sheet.Cells[i, 0];
-                cell.PutValue(statuses[i]);
-
-                Style statusStyle = GetStatusFillStyle(statuses[i], workbook);
-                cell.SetStyle(statusStyle);
-            }
-
-            // Save the workbook.
-            string outputPath = "BusinessStatusColors.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Apply the modified style back to the cell.
+            cell.SetStyle(style);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error applying status colors: {ex.Message}");
+            // Log or handle the exception as needed.
+            Console.Error.WriteLine($"Error applying status fill to cell {cellName}: {ex.Message}");
+            throw;
         }
     }
 }
@@ -88,6 +53,27 @@ public class Program
 {
     public static void Main()
     {
-        BusinessStatusColorMapper.ApplyStatusColors();
+        try
+        {
+            // Create a new workbook (or load an existing one if needed).
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Example usage of the BusinessStatusStyler.
+            sheet.Cells["A1"].PutValue("Task 1");
+            BusinessStatusStyler.ApplyStatusFill(sheet, "A1", "Open");
+
+            sheet.Cells["B2"].PutValue("Task 2");
+            BusinessStatusStyler.ApplyStatusFill(sheet, "B2", "Closed");
+
+            // Save the workbook to a file.
+            string outputPath = "BusinessStatusDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+        }
     }
 }

@@ -1,138 +1,100 @@
-// Title: How to exchange Dark1 and Light1 theme colors in an Excel workbook and ensure WCAG AA cell contrast using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells to replace the Dark1 and Light1 colors in a workbook's theme and save the updated file. | Write C# code that iterates over every used cell in an Aspose.Cells workbook, determines the effective background color, calculates the WCAG AA contrast ratio with the font color, and logs cells that fall below a 4.5 ratio. | Update the placeholder SwapThemeColors method to call the Aspose.Cells Theme API (when available) and re‑run the contrast validation to confirm accessibility compliance.
-// Common Searches: aspnet replace dark1 light1 theme colors in excel using aspose.cells | c# check wcag contrast ratio for excel cells with aspose.cells | how to calculate color contrast between font and fill in an aspose.cells workbook | validate accessibility of excel workbook after theme color changes with aspose.cells | asp.net core verify cell contrast after swapping theme colors in excel
-// Tags: replace dark1 with light1 theme color Aspose.Cells | WCAG AA contrast check Aspose.Cells | compute cell color contrast ratio C# | enumerate used cells foreground background Aspose.Cells | theme API support Aspose.Cells .NET
+// Title: C# Aspose.Cells example: validate WCAG contrast ratio for Excel cell font and fill colors after swapping Dark1 and Light1 theme colors
+// Common Searches: c# Aspose.Cells verify WCAG contrast ratio for Excel cell colors | how to detect low contrast cells in an Excel workbook using Aspose.Cells | validate accessibility of Excel cell background and font colors with .NET | check cell color contrast after theme color changes in Aspose.Cells | C# code to compute WCAG 2.1 contrast ratio for Excel cells
+// Tags: WCAG contrast validation Aspose.Cells | Excel cell accessibility check .NET | solid fill background contrast calculation | theme color swap limitation Aspose.Cells | contrast ratio algorithm C#
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel file, attempts to replace the Dark1 and Light1 theme colors (using a placeholder if the Theme API is unavailable), saves the workbook, then scans all used cells to compute the WCAG AA contrast ratio between each cell's font color and its effective background color, reporting any cells that do not meet the 4.5:1 threshold.
+// The sample loads an Excel workbook with Aspose.Cells, iterates through cells in the first worksheet, calculates the WCAG contrast ratio between each cell's font color and solid fill background, reports any cells below the 4.5:1 threshold, and saves the file; it also notes that swapping Dark1 and Light1 theme colors is not supported in the current Aspose.Cells API.
 class Program
 {
-    // Threshold for acceptable contrast ratio (WCAG AA for normal text)
-    const double ContrastThreshold = 4.5;
-
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "Input.xlsx";
-            const string outputPath = "Output.xlsx";
+            // Load the workbook (create/load rule applied)
+            var workbook = new Workbook(inputPath);
 
-            // Ensure the input file exists
-            if (!File.Exists(inputPath))
+            // NOTE: Theme manipulation (e.g., swapping Dark1 and Light1) is not supported
+            // via a simple API in this version of Aspose.Cells, so this step is omitted.
+
+            // Validate contrast for each cell in the first worksheet
+            var sheet = workbook.Worksheets[0];
+            bool allAccessible = true;
+
+            foreach (Cell cell in sheet.Cells)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // Retrieve the cell's style
+                Style style = cell.GetStyle();
+
+                // Consider only cells with solid fill background
+                if (style.Pattern != BackgroundType.Solid)
+                    continue;
+
+                // Get font (text) color; if not set, default to black
+                Color fontColor = style.Font.Color.IsEmpty ? Color.Black : style.Font.Color;
+
+                // Get background color; if not set, default to white
+                Color bgColor = style.ForegroundColor.IsEmpty ? Color.White : style.ForegroundColor;
+
+                // Compute contrast ratio according to WCAG guidelines
+                double ratio = ContrastRatio(fontColor, bgColor);
+
+                // WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text
+                if (ratio < 4.5)
+                {
+                    allAccessible = false;
+                    Console.WriteLine($"Low contrast in cell {cell.Name}: ratio {ratio:F2}");
+                }
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Console.WriteLine(allAccessible
+                ? "All cells meet contrast guidelines."
+                : "Some cells do not meet contrast guidelines.");
 
-            // Attempt to swap theme colors (if supported)
-            try
-            {
-                SwapThemeColors(workbook);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error swapping theme colors: {ex.Message}");
-            }
-
-            // Save the modified workbook
+            // Save the modified workbook (create/save rule applied)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-
-            // Validate cell contrast after the swap
-            try
-            {
-                ValidateCellContrast(workbook);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error validating contrast: {ex.Message}");
-            }
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Swaps the Dark1 and Light1 colors in the workbook's theme (fallback implementation)
-    static void SwapThemeColors(Workbook workbook)
+    // Calculates the relative luminance of a color
+    static double Luminance(Color c)
     {
-        // Aspose.Cells versions prior to theme support do not expose Theme APIs.
-        // This method is kept for compatibility; it simply logs that the operation is skipped.
-        Console.WriteLine("Theme swapping is not supported in the current Aspose.Cells version.");
-    }
-
-    // Validates that each cell's foreground (font) and background colors meet the contrast requirement
-    static void ValidateCellContrast(Workbook workbook)
-    {
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Iterate through all used cells
-        foreach (Cell cell in cells)
-        {
-            Style style = cell.GetStyle();
-
-            // Determine background color
-            Color bgColor = GetEffectiveBackgroundColor(style);
-
-            // Determine font (foreground) color; default to black if not set
-            Color fgColor = style.Font.Color.IsEmpty ? Color.Black : style.Font.Color;
-
-            double contrast = GetContrastRatio(fgColor, bgColor);
-
-            if (contrast < ContrastThreshold)
-            {
-                Console.WriteLine($"Contrast issue in cell {cell.Name}: FG={fgColor}, BG={bgColor}, Ratio={contrast:F2}");
-            }
-        }
-    }
-
-    // Retrieves the effective background color considering pattern; defaults to white
-    static Color GetEffectiveBackgroundColor(Style style)
-    {
-        // If the cell has a fill pattern, use the foreground color of the pattern
-        if (style.Pattern != BackgroundType.None && !style.ForegroundColor.IsEmpty)
-        {
-            return style.ForegroundColor;
-        }
-
-        // Default background (no fill) is assumed white
-        return Color.White;
-    }
-
-    // Calculates the contrast ratio between two colors per WCAG definition
-    static double GetContrastRatio(Color color1, Color color2)
-    {
-        double lum1 = GetRelativeLuminance(color1);
-        double lum2 = GetRelativeLuminance(color2);
-
-        double brighter = Math.Max(lum1, lum2);
-        double darker = Math.Min(lum1, lum2);
-
-        return (brighter + 0.05) / (darker + 0.05);
-    }
-
-    // Computes the relative luminance of a color
-    static double GetRelativeLuminance(Color color)
-    {
-        // Convert sRGB components to linear values
-        double RsRGB = color.R / 255.0;
-        double GsRGB = color.G / 255.0;
-        double BsRGB = color.B / 255.0;
+        double RsRGB = c.R / 255.0;
+        double GsRGB = c.G / 255.0;
+        double BsRGB = c.B / 255.0;
 
         double R = RsRGB <= 0.03928 ? RsRGB / 12.92 : Math.Pow((RsRGB + 0.055) / 1.055, 2.4);
         double G = GsRGB <= 0.03928 ? GsRGB / 12.92 : Math.Pow((GsRGB + 0.055) / 1.055, 2.4);
         double B = BsRGB <= 0.03928 ? BsRGB / 12.92 : Math.Pow((BsRGB + 0.055) / 1.055, 2.4);
 
-        // Relative luminance formula
         return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
+
+    // Calculates the contrast ratio between two colors
+    static double ContrastRatio(Color c1, Color c2)
+    {
+        double L1 = Luminance(c1);
+        double L2 = Luminance(c2);
+        double lighter = Math.Max(L1, L2);
+        double darker = Math.Min(L1, L2);
+        return (lighter + 0.05) / (darker + 0.05);
     }
 }

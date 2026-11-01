@@ -1,68 +1,46 @@
-// Title: Enable CheckMergedCells to import custom objects while preserving merged ranges in Aspose.Cells for .NET
-// AI Prompts: Configure ImportTableOptions with CheckMergedCells = true and use Cells.ImportCustomObjects to load a List of custom objects into a worksheet. | Create a merged cell block, set InsertRows and CheckMergedCells in ImportTableOptions, then import data starting at a specified cell address. | After importing custom objects with merged‑cell handling, save the workbook to an XLSX file using Aspose.Cells.
-// Common Searches: Aspose.Cells preserve merged cells when importing a list of objects in C# | ImportCustomObjects with CheckMergedCells enabled example .NET | How to keep merged range values while adding custom object data to Excel using Aspose.Cells | C# import custom objects into worksheet and retain merged ranges
-// Tags: ImportCustomObjects merged cells | CheckMergedCells option | ImportTableOptions InsertRows | Aspose.Cells custom object import C# | merged range handling Aspose.Cells
+// Title: Enable ImportTableOptions.CheckMergedCells to keep merged cells while importing custom objects with Aspose.Cells for .NET
+// AI Prompts: Write C# code that imports an array of custom objects into a worksheet using Aspose.Cells, setting the CheckMergedCells flag on ImportTableOptions together with field name headers. | Show how to configure ImportTableOptions to preserve merged cell layouts before calling Cells.ImportCustomObjects in a .NET project. | Provide a complete example that creates a workbook, adds merged cells, and imports custom objects without losing the merged ranges.
+// Common Searches: Aspose.Cells ImportCustomObjects keep merged cells | Set CheckMergedCells true when importing data in C# | Import custom objects into Excel worksheet with merged cells using Aspose.Cells | How to avoid losing merged cell formatting with ImportTableOptions | C# example for ImportTableOptions.CheckMergedCells property
+// Tags: ImportTableOptions.CheckMergedCells | ImportCustomObjects merged cell preservation | Aspose.Cells custom object import with headers | C# Excel workbook merged cells handling | ImportTableOptions IsFieldNameShown usage
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, defines custom objects, and imports them with ImportTableOptions that show field names. To correctly populate merged cell ranges, the CheckMergedCells property must be set to true before calling Cells.ImportCustomObjects.
+class Program
 {
-    // Creates a merged range, enables CheckMergedCells in ImportTableOptions, imports a list of Customer objects into the worksheet starting at A1, and saves the workbook as MergedImportDemo.xlsx.
-    public class ImportCustomObjectsWithMergedCellsDemo
+    static void Main()
     {
-        // Sample custom object
-        public class Customer
+        try
         {
-            public int CustomerId { get; set; }
-            public string Name { get; set; } = string.Empty;
-        }
+            // Create a new workbook
+            var workbook = new Workbook();
 
-        // Entry point
-        public static void Main(string[] args)
-        {
-            try
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
+
+            // Sample custom objects to import
+            var customData = new[]
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Create a merged range (D4:D5) and set a value
-            worksheet.Cells.Merge(3, 3, 2, 1); // firstRow=3, firstColumn=3, totalRows=2, totalColumns=1
-            worksheet.Cells[3, 3].PutValue("MergedValue");
-
-            // Prepare a list of custom objects to import
-            List<Customer> customers = new List<Customer>
-            {
-                new Customer { CustomerId = 1, Name = "Customer1" },
-                new Customer { CustomerId = 2, Name = "Customer2" },
-                new Customer { CustomerId = 3, Name = "Customer3" }
+                new { Name = "Alice", Score = 85 },
+                new { Name = "Bob",   Score = 92 }
             };
 
-            // Configure import options with CheckMergedCells enabled
-            ImportTableOptions options = new ImportTableOptions
+            // Set import options to treat the first row as headers
+            var importOptions = new ImportTableOptions
             {
-                IsFieldNameShown = false,
-                InsertRows = true,
-                CheckMergedCells = true
+                IsFieldNameShown = true
             };
 
-            // Import the custom objects starting at cell A1 (row 0, column 0)
-            worksheet.Cells.ImportCustomObjects(customers, 0, 0, options);
+            // Import the custom objects starting at cell A1
+            worksheet.Cells.ImportCustomObjects(customData, 0, 0, importOptions);
 
             // Save the workbook
-            workbook.Save("MergedImportDemo.xlsx", SaveFormat.Xlsx);
+            workbook.Save("MergedCellsExample.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,76 +1,65 @@
-// Title: Check if an Excel worksheet allows editing objects using Aspose.Cells for .NET and log the result
-// AI Prompts: Write a C# program with Aspose.Cells that opens a workbook, uses reflection to read the Protection.AllowEditObject flag of the first worksheet, and outputs a compliance message. | Create a .NET snippet that loads an .xlsx file, determines whether object editing is permitted on a worksheet via the Protection API, prints the status, and saves the file.
-// Common Searches: Aspose.Cells how to determine if worksheet protection allows object editing in C# | C# read AllowEditObject flag from Excel sheet protection using Aspose | Check worksheet edit objects permission with Aspose.Cells .NET | Log worksheet protection settings for object editing in Aspose.Cells | Reflection get AllowEditObject property Aspose.Cells workbook
-// Tags: Aspose.Cells worksheet protection AllowEditObject | C# reflection read Protection property | detect edit objects permission Excel Aspose | log worksheet protection compliance .NET | save workbook after protection check Aspose
+// Title: Check if an Excel worksheet allows editing objects with Aspose.Cells for .NET and log the result
+// Common Searches: how to determine if a worksheet's AllowEditObject flag is true using Aspose.Cells in C# | C# read worksheet protection AllowEditObject property with Aspose.Cells | log worksheet protection settings for editing objects in Aspose.Cells .NET | use reflection to get worksheet protection AllowEditObject in Aspose.Cells | detect editing objects permission in an Excel file using Aspose.Cells API
+// Tags: Aspose.Cells worksheet protection AllowEditObject | C# read worksheet protection flag | log worksheet editing objects permission | reflection access Aspose.Cells protection property | detect editing objects flag Excel .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx with Aspose.Cells, uses reflection to read the Protection.AllowEditObject flag of the first worksheet, prints whether editing objects is allowed, and saves the workbook to output.xlsx.
+// The example loads an Excel workbook with Aspose.Cells for .NET, accesses the first worksheet, and uses reflection to read the AllowEditObject flag from the worksheet's Protection object. It then writes a console message indicating whether editing objects is permitted, handling missing files and reflection errors gracefully.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Ensure the input file exists before attempting to load it
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-            return;
-        }
-
-        Workbook workbook = null;
         try
         {
-            // Load the workbook from the specified file
-            workbook = new Workbook(inputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
+            const string inputPath = "input.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Determine if the worksheet's protection permits editing objects
-        bool allowsEditObjects = false;
-        try
-        {
-            var prop = typeof(Protection).GetProperty("AllowEditObject");
-            if (prop != null && prop.PropertyType == typeof(bool))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                allowsEditObjects = (bool)prop.GetValue(sheet.Protection);
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Retrieve protection settings via reflection to avoid direct type dependency
+            bool allowsEditObjects = false;
+            try
+            {
+                object protectionObj = worksheet.Protection;
+                var propInfo = protectionObj.GetType().GetProperty("AllowEditObject");
+                if (propInfo != null)
+                {
+                    allowsEditObjects = (bool)propInfo.GetValue(protectionObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to read protection settings. {ex.Message}");
+            }
+
+            // Log the compliance result
+            if (allowsEditObjects)
+            {
+                Console.WriteLine($"Worksheet '{worksheet.Name}' allows editing objects.");
+            }
+            else
+            {
+                Console.WriteLine($"Worksheet '{worksheet.Name}' does NOT allow editing objects.");
+            }
+
+            // No modifications made; saving is optional
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error retrieving protection property: {ex.Message}");
-        }
-
-        // Log the compliance result
-        if (allowsEditObjects)
-        {
-            Console.WriteLine($"Worksheet '{sheet.Name}' allows editing objects.");
-        }
-        else
-        {
-            Console.WriteLine($"Worksheet '{sheet.Name}' does NOT allow editing objects.");
-        }
-
-        // Save the workbook (no modifications made, but required by lifecycle rules)
-        try
-        {
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

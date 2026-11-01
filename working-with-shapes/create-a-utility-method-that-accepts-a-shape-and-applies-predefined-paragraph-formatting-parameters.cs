@@ -1,99 +1,86 @@
-// Title: Apply paragraph formatting (alignment, font, placeholder) to an Aspose.Cells Shape in C#
-// AI Prompts: Create a C# helper method that takes an Aspose.Cells Shape, validates the argument, inserts "Sample Text" when the shape's Text is empty, centers the paragraph, and sets the font to Calibri 11 pt black using the Shape.Font API. | Write code that adds a rectangle shape to a worksheet, then calls a utility to apply horizontal alignment and font styling to the shape's text, while handling missing template files and ensuring the output directory exists.
-// Common Searches: c# aspocells set shape text alignment to center | aspocells add placeholder text to shape if empty | how to change font of shape text in aspocells workbook | utility method for formatting shape paragraph in aspocells .net | apply paragraph formatting to rectangle shape using aspocells drawing api
-// Tags: shape paragraph formatting aspocells c# | apply text alignment to aspocells shape | set shape font properties aspocells | add default text to empty shape aspocells | c# aspocells shape helper method
+// Title: C# utility to apply paragraph formatting (alignment, font, line breaks, indent) to an Aspose.Cells textbox shape
+// Common Searches: how to set center alignment and bold font for a textbox shape using Aspose.Cells in C# | Aspose.Cells C# collapse consecutive line breaks in shape text | add left indent to textbox shape text with Aspose.Cells .NET | apply custom paragraph formatting to a shape programmatically in Aspose.Cells | C# example of formatting shape text (alignment, font size, color) in an Excel workbook with Aspose.Cells
+// Tags: aspocells shape text alignment and font styling | aspocells textbox collapse multiple line breaks | aspocells shape simulate left indent | c# aspocells shape paragraph formatting method | aspocells shape text vertical horizontal centering
 
 using System;
-using System.IO;
 using System.Drawing;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsUtilities
+// Provides a static C# method ApplyParagraphFormatting that receives an Aspose.Cells Shape, centers its text horizontally and vertically, sets the font to 12‑point bold black, collapses consecutive blank lines, and prefixes each line with four spaces to simulate a left indent. The example loads or creates a workbook, adds a textbox shape, assigns sample text, invokes the utility, and saves the workbook as FormattedShape.xlsx.
+public static class ShapeFormattingUtility
 {
-    // The ShapeHelper class defines ApplyParagraphFormatting, which validates a Shape, adds placeholder text when needed, centers the paragraph, and applies Calibri 11‑point black font settings. The sample program loads or creates a workbook, inserts a rectangle shape, invokes the helper, and saves the result to Result.xlsx.
-    public static class ShapeHelper
+    /// <param name="shape">The Aspose.Cells shape to format.</param>
+    public static void ApplyParagraphFormatting(Shape shape)
     {
-        /// <param name="shape">The shape whose text will be formatted.</param>
-        public static void ApplyParagraphFormatting(Shape shape)
+        // Horizontal and vertical alignment.
+        shape.TextHorizontalAlignment = TextAlignmentType.Center;
+        shape.TextVerticalAlignment = TextAlignmentType.Center;
+
+        // Font formatting.
+        shape.Font.Size = 12;               // 12 pt
+        shape.Font.IsBold = true;           // bold
+        shape.Font.IsItalic = false;        // not italic
+        shape.Font.Color = Color.Black;     // black
+
+        // Collapse multiple line breaks to a single one.
+        if (!string.IsNullOrEmpty(shape.Text))
         {
-            if (shape == null)
-                throw new ArgumentNullException(nameof(shape));
+            shape.Text = Regex.Replace(shape.Text, @"\r?\n{2,}", "\n");
+        }
 
-            // Ensure the shape contains some text; if empty, add a placeholder.
-            if (string.IsNullOrEmpty(shape.Text))
-                shape.Text = "Sample Text";
-
-            // Horizontal alignment
-            shape.TextHorizontalAlignment = TextAlignmentType.Center;
-
-            // Font formatting (use Font property for compatibility with older Aspose.Cells versions)
-            Font font = shape.Font;
-            font.Name = "Calibri";
-            font.Size = 11;
-            font.IsBold = false;
-            font.IsItalic = false;
-            font.Color = Color.Black;
+        // Simulate a left indent by prefixing spaces.
+        if (!string.IsNullOrEmpty(shape.Text))
+        {
+            var lines = shape.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i] = "    " + lines[i];
+            }
+            shape.Text = string.Join("\n", lines);
         }
     }
+}
 
-    class Program
+public class Program
+{
+    private const string InputFile = "Template.xlsx";
+    private const string OutputFile = "FormattedShape.xlsx";
+
+    public static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Load an existing workbook if present; otherwise create a new one.
+            Workbook workbook;
+            if (File.Exists(InputFile))
             {
-                // Path to an optional template workbook.
-                string templatePath = "Template.xlsx";
-
-                Workbook workbook;
-                if (File.Exists(templatePath))
-                {
-                    // Load existing workbook.
-                    workbook = new Workbook(templatePath);
-                }
-                else
-                {
-                    // Create a new workbook if template is missing.
-                    workbook = new Workbook();
-                }
-
-                // Access the first worksheet.
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add a rectangle shape to the worksheet.
-                // Parameters order: type, upperLeftRow, upperLeftColumn, upperLeftRowOffset,
-                // upperLeftColumnOffset, height, width.
-                Shape shape = sheet.Shapes.AddShape(
-                    MsoDrawingType.Rectangle,
-                    2,    // upperLeftRow
-                    1,    // upperLeftColumn
-                    0,    // upperLeftRowOffset (pixels)
-                    0,    // upperLeftColumnOffset (pixels)
-                    100,  // height (pixels)
-                    200   // width (pixels)
-                );
-                shape.Name = "DemoShape";
-
-                // Apply formatting to the shape's text.
-                ShapeHelper.ApplyParagraphFormatting(shape);
-
-                // Ensure output directory exists.
-                string outputPath = "Result.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the result.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook = new Workbook(InputFile);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
             }
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a textbox shape (supports text). Parameters: upperLeftRow, upperLeftColumn, rowOffset, columnOffset, height, width.
+            Shape shape = sheet.Shapes.AddTextBox(2, 1, 0, 0, 100, 200);
+            shape.Text = "Line1\nLine2\n\nLine4";
+
+            // Apply the paragraph formatting.
+            ShapeFormattingUtility.ApplyParagraphFormatting(shape);
+
+            // Save the result.
+            workbook.Save(OutputFile);
+            Console.WriteLine($"Workbook saved to '{OutputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

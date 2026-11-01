@@ -1,68 +1,84 @@
 // Title: Create a combined column and line chart with primary and secondary axes in Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to build a column chart for sales data and adds a profit series as a line plotted on the secondary value axis. | Show how to change a specific series type to Line and enable PlotOnSecondAxis in an Aspose.Cells chart. | Provide a complete Aspose.Cells example that saves the mixed column‑line chart to an Excel workbook.
-// Common Searches: aspocells mixed column line chart secondary axis c# example | how to set a series to secondary axis in Aspose.Cells chart | C# Aspose.Cells create combined chart with column and line series | Aspose.Cells plot profit as line on secondary axis | changing series type to line in Aspose.Cells chart programmatically
-// Tags: combined column line chart Aspose.Cells | plot series on secondary axis Aspose.Cells | set series type line Aspose.Cells | mixed chart creation Aspose.Cells .NET | customize secondary value axis Aspose.Cells
+// AI Prompts: Generate C# code using Aspose.Cells that builds a combo chart where the column series is plotted on the primary axis and the line series on the secondary axis. | Modify the example to change the line series to a spline type and add data labels to both the column and line series. | Extend the program to export the workbook both as an XLSX file and as a PDF while keeping the combined chart intact.
+// Common Searches: aspocells c# combined column and line chart with secondary axis example | how to assign a line series to the secondary axis in an Aspose.Cells chart | save Aspose.Cells workbook containing a combo chart as PDF
+// Tags: Aspose.Cells combo column line chart C# | set secondary axis for line series Aspose.Cells | save workbook as PDF with chart Aspose.Cells | format chart axes Aspose.Cells .NET | customize chart series appearance Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace CombinedColumnLineChartDemo
+namespace CombinedChartExample
 {
-    // Demonstrates creating a workbook, inserting sales and profit data, adding a column chart, converting the profit series to a line, assigning it to the secondary axis, customizing the secondary axis title, and saving the result as CombinedColumnLineChart.xlsx.
+    // The example creates a new workbook, fills cells A1:C5 with month names and sample data, adds a column chart, adds a column series (B2:B5) on the primary axis and a line series (C2:C5) on the secondary axis, switches the second series to a line type, sets axis titles, and saves the file as CombinedColumnLineChart.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data
-            // Category labels
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["A5"].PutValue("Apr");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Column series values (e.g., Sales)
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
-            sheet.Cells["B5"].PutValue(200);
+                // Populate sample data
+                // Column series data (Primary axis)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Column Series");
+                sheet.Cells["C1"].PutValue("Line Series");
 
-            // Line series values (e.g., Profit)
-            sheet.Cells["C1"].PutValue("Profit");
-            sheet.Cells["C2"].PutValue(30);
-            sheet.Cells["C3"].PutValue(45);
-            sheet.Cells["C4"].PutValue(50);
-            sheet.Cells["C5"].PutValue(70);
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["A5"].PutValue("Apr");
 
-            // Add a chart of type Column (primary axis will host column series)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["B3"].PutValue(150);
+                sheet.Cells["B4"].PutValue(170);
+                sheet.Cells["B5"].PutValue(130);
 
-            // Add the column series (primary axis)
-            chart.NSeries.Add("B2:B5", true);          // true => use categories from column A
-            // Add the line series (will be moved to secondary axis)
-            chart.NSeries.Add("C2:C5", true);
+                sheet.Cells["C2"].PutValue(30);
+                sheet.Cells["C3"].PutValue(45);
+                sheet.Cells["C4"].PutValue(40);
+                sheet.Cells["C5"].PutValue(55);
 
-            // Set category (X) axis data
-            chart.NSeries.CategoryData = "A2:A5";
+                // Add a chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Change the second series to a line type
-            chart.NSeries[1].Type = ChartType.Line;
+                // Set chart title (optional)
+                chart.Title.Text = "Combined Column and Line Chart";
 
-            // Plot the second series on the secondary value axis
-            chart.NSeries[1].PlotOnSecondAxis = true;
+                // Add column series (primary axis)
+                // Series range: B2:B5 (values), A2:A5 (categories)
+                chart.NSeries.Add("B2:B5", true);
+                chart.NSeries[0].Name = "Column Series";
 
-            // Optional: customize secondary axis title
-            chart.SecondValueAxis.Title.Text = "Profit (Secondary Axis)";
+                // Add line series (secondary axis)
+                // Series range: C2:C5 (values), A2:A5 (categories)
+                chart.NSeries.Add("C2:C5", true);
+                chart.NSeries[1].Name = "Line Series";
 
-            // Save the workbook
-            workbook.Save("CombinedColumnLineChart.xlsx");
+                // Change the second series to a line chart type
+                chart.NSeries[1].Type = ChartType.Line;
+
+                // Optionally format primary axes
+                chart.CategoryAxis.Title.Text = "Month";
+                chart.ValueAxis.Title.Text = "Column Values";
+
+                // Define output file path
+                string outputPath = "CombinedColumnLineChart.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

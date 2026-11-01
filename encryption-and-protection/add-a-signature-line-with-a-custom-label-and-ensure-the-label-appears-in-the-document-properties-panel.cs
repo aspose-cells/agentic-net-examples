@@ -1,65 +1,61 @@
-// Title: Add a custom signature line label and save it as a workbook custom document property with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a signature line with a custom label and simultaneously adds the same label to the workbook's custom document properties using Aspose.Cells. | Update an existing Aspose.Cells workbook so the signature line text is mirrored in a custom property and confirm the property appears in Excel's properties panel. | Write a routine that checks for a custom document property named "SignatureLabel" and updates it whenever the signature line label changes.
-// Common Searches: how to synchronize a signature line text with a custom document property in Aspose.Cells .NET | Aspose.Cells add custom document property for signature label and display in Excel properties | C# example for adding a signature line label and storing it as a custom property in an Excel file | save custom signature label in workbook properties using Aspose.Cells for .NET | Aspose.Cells create signature line and add matching custom property in Excel workbook
-// Tags: add signature line label Aspose.Cells | custom document property Excel .NET Aspose.Cells | synchronize signature line text with workbook property | store signature label in Excel workbook properties | Aspose.Cells workbook custom properties example | signature line visibility in Excel properties panel
+// Title: Create a signature line with a custom label and add it as a custom document property in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: how to insert a signature placeholder shape with label in an Excel workbook using Aspose.Cells C# | Aspose.Cells add custom document property for signature label in .NET | C# draw rectangle shape as signature line and set alternative text with Aspose.Cells | save signature label as custom property in Excel file using Aspose.Cells for .NET | Aspose.Cells create signature line and expose label in file properties panel
+// Tags: Aspose.Cells insert rectangle shape | shape alternative text Aspose.Cells | Excel custom document property via Aspose.Cells | signature line implementation C# | Aspose.Cells workbook property panel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureExample
+// The example creates a new Excel workbook, adds a rectangular shape positioned on a specific cell to act as a signature line, assigns an alternative text label to the shape, stores the same label as a custom document property named "SignatureLabel", and saves the workbook, making the label visible in the document properties panel.
+class Program
 {
-    // The sample creates a new Workbook, optionally adds a signature line (commented out for compatibility), then adds a custom document property named "SignatureLabel" containing the same text as the intended signature line. It ensures the output directory exists, saves the file as SignedWorkbook.xlsx, and logs success or any errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook
-                var workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                var sheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // NOTE: The Signatures API may not be available in all Aspose.Cells versions.
-                // The following block is kept for reference; if unavailable, it can be omitted.
-                // try
-                // {
-                //     var signatureLine = sheet.Signatures.AddSignatureLine(1, 1);
-                //     signatureLine.SignatureLineText = "Approved by Finance Department";
-                //     signatureLine.SuggestedSigner = "John Doe";
-                //     signatureLine.SuggestedSignerTitle = "Chief Financial Officer";
-                //     signatureLine.SuggestedSignerEmail = "john.doe@example.com";
-                // }
-                // catch (Exception sigEx)
-                // {
-                //     Console.WriteLine("Signature line could not be added: " + sigEx.Message);
-                // }
+            // Define position and size for the signature placeholder (row, column, width, height)
+            int row = 2;          // Row index (0‑based)
+            int column = 1;       // Column index (0‑based)
+            int width = 300;      // Width in pixels
+            int height = 100;     // Height in pixels
 
-                // Add a custom document property with the same label
-                workbook.CustomDocumentProperties.Add("SignatureLabel", "Approved by Finance Department");
+            // Add a rectangular shape to act as a signature line placeholder
+            // The shape is positioned at the specified cell with the given size
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // Shape type
+                row,                      // Upper‑left row
+                column,                   // Upper‑left column
+                0,                        // Upper‑left row offset (pixels)
+                0,                        // Upper‑left column offset (pixels)
+                width,                    // Width (pixels)
+                height);                  // Height (pixels)
 
-                // Define output file path
-                string outputPath = "SignedWorkbook.xlsx";
+            // Set a label for the placeholder (appears when the shape is selected)
+            shape.AlternativeText = "Approved By: John Doe";
 
-                // Ensure the directory for the output file exists (if any)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+            // Optionally, give the shape a name for easier identification
+            shape.Name = "SignaturePlaceholder";
 
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while creating the signed workbook:");
-                Console.WriteLine(ex.Message);
-            }
+            // Add the same label as a custom document property so it shows in the properties panel
+            workbook.CustomDocumentProperties.Add("SignatureLabel", "Approved By: John Doe");
+
+            // Define output file path
+            string outputPath = "SignedWorkbook.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

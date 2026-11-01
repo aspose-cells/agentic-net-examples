@@ -1,14 +1,14 @@
-// Title: Apply MonochromaticPalette6 to the first chart in an existing XLS workbook using Aspose.Cells for .NET
-// AI Prompts: Load an existing .xls workbook with Aspose.Cells, locate the first chart on the first worksheet, assign ChartColorPaletteType.MonochromaticPalette6 to its Palette property, and save the file to a new location. | Using C#, change the color scheme of a specific chart in a legacy Excel file to the built‑in monochrome palette 6 via Aspose.Cells and write the updated workbook back to disk.
-// Common Searches: asp.net change chart palette to monochromaticpalette6 in existing xls file | c# set chart color theme for first chart in legacy Excel workbook using Aspose.Cells | how to apply built‑in monochrome palette to a chart in an .xls workbook with Aspose.Cells | update chart colors in an old Excel file programmatically C# Aspose.Cells | example code for modifying chart theme in an .xls workbook using Aspose.Cells for .NET
-// Tags: Aspose.Cells chart palette modification C# | ChartColorPaletteType MonochromaticPalette6 usage | apply monochrome theme to Excel chart .NET | update chart colors in legacy XLS workbook | programmatic chart theme change Aspose.Cells
+// Title: Change the color palette of a chart to MonochromePalette6 in an existing XLS workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing XLS file, retrieve the first chart, assign ChartColorPaletteType.MonochromePalette6 to its Palette property, and save the workbook with Aspose.Cells in C#. | Use reflection to set the Palette property of a chart to the MonochromePalette6 enum when the direct property is unavailable in the current Aspose.Cells version. | Programmatically update the theme colors of a chart in a legacy XLS workbook and write the modified file to a new location using Aspose.Cells for .NET.
+// Common Searches: how to set chart palette to MonochromePalette6 with Aspose.Cells C# | change chart theme colors in an existing .xls file using Aspose.Cells .NET | using reflection to modify chart properties in Aspose.Cells for legacy Excel files
+// Tags: Aspose.Cells chart palette assignment | MonochromePalette6 chart color theme .NET | update XLS chart theme using Aspose.Cells | reflection based chart property modification | change Excel chart colors programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The sample loads an existing XLS workbook, checks for at least one chart on the first worksheet, optionally sets the chart's Palette to ChartColorPaletteType.MonochromaticPalette6, ensures the output directory exists, and saves the modified workbook to a new file.
+// The example loads an existing XLS workbook, accesses the first worksheet and its first chart, uses reflection to assign the ChartColorPaletteType.MonochromePalette6 enum to the chart's Palette property, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
@@ -16,31 +16,55 @@ class Program
         const string inputPath = "input.xls";
         const string outputPath = "output.xls";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the existing XLS file
             Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Ensure the worksheet contains at least one chart
-            if (sheet.Charts.Count > 0)
+            if (worksheet.Charts.Count > 0)
             {
-                // Get the first chart on the worksheet
-                Chart chart = sheet.Charts[0];
+                // Get the first chart
+                Chart chart = worksheet.Charts[0];
 
-                // Set the chart's color palette if the property is available.
-                // In some versions of Aspose.Cells the Palette property may not exist.
-                // If it does, uncomment the following line:
-                // chart.Palette = ChartColorPaletteType.MonochromaticPalette6;
+                // Attempt to set the chart's palette using reflection (covers different library versions)
+                try
+                {
+                    var paletteProp = chart.GetType().GetProperty("Palette");
+                    if (paletteProp != null && paletteProp.CanWrite)
+                    {
+                        // Try to obtain the ChartColorPaletteType enum type via reflection
+                        var enumType = chart.GetType().Assembly.GetType("Aspose.Cells.Charts.ChartColorPaletteType");
+                        if (enumType != null)
+                        {
+                            var enumValue = Enum.Parse(enumType, "MonochromePalette6");
+                            paletteProp.SetValue(chart, enumValue);
+                            Console.WriteLine("Chart palette set to MonochromePalette6.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ChartColorPaletteType enum not found; cannot set palette.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Chart palette property not available in this Aspose.Cells version.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set chart palette: {ex.Message}");
+                }
             }
             else
             {
@@ -56,10 +80,11 @@ class Program
 
             // Save the workbook with the updated chart theme
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

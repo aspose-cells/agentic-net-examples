@@ -1,57 +1,60 @@
-// Title: Remove all custom document properties prefixed with "Temp_" from an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, scans the CustomDocumentProperties collection, deletes every property whose name begins with "Temp_", and saves the workbook. | Demonstrate how to iterate backwards through Aspose.Cells CustomDocumentProperties in C# to safely remove matching entries without collection errors. | Write a C# snippet that logs each removed temporary custom property name before saving the updated workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells C# remove custom document properties that start with a specific prefix | How to delete temporary metadata from an Excel file using Aspose.Cells .NET | Iterating backwards through CustomDocumentProperties collection in Aspose.Cells | Programmatically clean up custom properties in an Excel workbook with Aspose.Cells
-// Tags: Aspose.Cells remove custom document properties | C# delete custom properties by prefix | Excel workbook metadata cleanup Aspose.Cells | CustomDocumentProperties backward iteration | temporary property removal .NET Excel
+// Title: Delete custom document properties prefixed with "Temp_" from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells remove custom document properties that start with Temp_ | How to clean temporary metadata from an Excel file using Aspose.Cells | Aspose.Cells delete custom properties by name prefix in .NET | Programmatically remove Temp_ properties from a workbook with Aspose.Cells
+// Tags: Aspose.Cells custom document property deletion | C# filter and delete Excel custom properties | temporary workbook metadata cleanup Aspose | dynamic enumeration of custom properties .NET | save workbook after property removal
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook, iterates its custom document properties, identifies those whose names begin with "Temp_", removes the temporary entries, and saves the cleaned file, with checks for missing input and exception handling.
+class Program
 {
-    // The example loads an existing Excel workbook (or creates a new one), accesses its CustomDocumentProperties collection, iterates in reverse order, removes any property whose name starts with "Temp_", optionally logs removed names, and saves the cleaned workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            try
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access custom document properties using dynamic to avoid compile‑time type issues
+            dynamic customProps = workbook.CustomDocumentProperties;
+
+            // Collect names of temporary properties (those starting with "Temp_")
+            List<string> namesToRemove = new List<string>();
+            foreach (dynamic prop in customProps)
             {
-                // Load workbook; create a new one if the input file does not exist.
-                Workbook workbook;
-                if (File.Exists(inputPath))
+                string propName = prop.Name as string;
+                if (!string.IsNullOrEmpty(propName) && propName.StartsWith("Temp_"))
                 {
-                    workbook = new Workbook(inputPath);
+                    namesToRemove.Add(propName);
                 }
-                else
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
-                    workbook = new Workbook();
-                }
-
-                // Access custom document properties.
-                var customProps = workbook.CustomDocumentProperties;
-
-                // Remove properties whose name starts with "Temp_".
-                for (int i = customProps.Count - 1; i >= 0; i--)
-                {
-                    var prop = customProps[i];
-                    if (!string.IsNullOrEmpty(prop.Name) && prop.Name.StartsWith("Temp_", StringComparison.Ordinal))
-                    {
-                        customProps.Remove(prop.Name);
-                    }
-                }
-
-                // Save the modified workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
+
+            // Remove the identified temporary properties
+            foreach (string name in namesToRemove)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                customProps.Remove(name);
             }
+
+            // Save the cleaned workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

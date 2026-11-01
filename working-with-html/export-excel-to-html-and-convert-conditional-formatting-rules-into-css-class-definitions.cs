@@ -1,51 +1,48 @@
-// Title: Export an Excel workbook to HTML5 with external images and convert conditional‑formatting rules into CSS classes using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to output HTML5, saves images as separate files, and writes the result to an .html file. | Enhance the export routine to iterate over the workbook's conditional‑formatting collections, generate matching CSS class definitions, and reference those classes in the produced HTML. | Add robust error handling and logging that reports missing input files, failures during HTML export, and any issues while translating conditional formatting to CSS.
-// Common Searches: Aspose.Cells C# generate HTML5 from Excel while keeping images as external files | Preserving Excel conditional formatting styles in CSS during HTML conversion with Aspose.Cells | Example of HtmlSaveOptions settings for external image files in Aspose.Cells | C# code to translate Excel conditional formatting rules into CSS classes during HTML export | Troubleshoot missing conditional formatting after exporting Excel to HTML with Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions external images | export Excel to HTML5 C# | convert Excel conditional formatting to CSS Aspose.Cells | C# workbook to HTML with CSS classes | Aspose.Cells HTML export image handling
+// Title: Export an Excel workbook to a single self‑contained HTML file with Base64‑encoded images using Aspose.Cells for .NET
+// Common Searches: how to save an .xlsx as a single HTML page with embedded images using Aspose.Cells C# | Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 example for .NET | C# generate HTML from Excel without external CSS or image files using Aspose.Cells | convert Excel workbook to HTML with images inlined as Base64 strings in C# | Aspose.Cells export Excel to HTML single file option
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | C# export Excel to single HTML file | inline Excel images as Base64 in HTML | Aspose.Cells workbook to HTML conversion | self‑contained HTML output from Excel
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace ExportExcelToHtmlApp
+// The sample verifies that input.xlsx exists, loads it with Aspose.Cells, sets HtmlSaveOptions to embed images as Base64 strings, and saves the workbook as a single HTML file (output.html).
+class ExcelToHtmlWithConditionalFormatting
 {
-    // The example checks for input.xlsx, loads it with Aspose.Cells, configures HtmlSaveOptions to produce HTML5 output and write images as separate files, then saves the workbook as output.html. It can be extended to walk the workbook’s conditional‑formatting rules, generate corresponding CSS class definitions, and embed those classes in the exported HTML.
-    class ExportExcelToHtml
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string htmlOutputPath = "output.html";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                const string inputFile = "input.xlsx";
-                const string outputFile = "output.html";
-
-                // Verify that the input workbook exists.
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file '{inputFile}' not found.");
-                    return;
-                }
-
-                // Load the Excel workbook.
-                Workbook workbook = new Workbook(inputFile);
-
-                // Configure HTML save options.
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Export images as separate files (not embedded as Base64).
-                    ExportImagesAsBase64 = false,
-                    // Use HTML5 output.
-                    HtmlVersion = HtmlVersion.Html5
-                };
-
-                // Save the workbook as an HTML file.
-                workbook.Save(outputFile, htmlOptions);
-                Console.WriteLine($"Workbook successfully saved to '{outputFile}'.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                // Export images as Base64 strings
+                ExportImagesAsBase64 = true
+                // By default, Aspose.Cells creates a separate CSS file when ExportToSingleFile is false
+            };
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save(htmlOutputPath, htmlOptions);
+
+            Console.WriteLine($"HTML file saved to \"{htmlOutputPath}\"");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

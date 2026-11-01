@@ -1,63 +1,83 @@
-// Title: How to read the number of frozen header rows in an Excel worksheet using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, accesses the first worksheet, and returns the count of frozen rows, using reflection to handle library versions where FreezePanes may be a property. | Provide a .NET snippet that checks for the existence of Worksheet.FreezePanes and extracts its RowCount to determine how many header rows are frozen.
-// Common Searches: C# Aspose.Cells get frozen rows count from worksheet | how to determine number of frozen header rows in Excel using Aspose.Cells .NET | read FreezePanes.RowCount with Aspose.Cells for .NET | Aspose.Cells retrieve frozen pane rows via reflection | check if FreezePanes property exists Aspose.Cells C#
-// Tags: aspocells read freeze panes row count | c# get frozen header rows aspocells | worksheet freezepanes reflection aspocells | excel workbook frozen rows detection .net | aspocells compatibility read freezepanes property
+// Title: Read the number of frozen header rows in an Excel worksheet using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells get count of frozen rows in a worksheet | how to read FreezePanes.Row value with Aspose.Cells .NET | determine how many header rows are frozen in an Excel file using Aspose.Cells | retrieve frozen pane row index from workbook with Aspose.Cells C#
+// Tags: Aspose.Cells FreezePanes.Row retrieval | C# read frozen rows index Excel | worksheet freeze panes inspection Aspose.Cells | determine frozen header rows .NET | reflection based FreezePanes access Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook with Aspose.Cells, accesses the first worksheet, and uses reflection to safely obtain the FreezePanes.RowCount (when available) to determine how many header rows are frozen, storing the result in a variable and printing it.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses the first worksheet, and uses reflection to read the FreezePanes.Row property, obtaining the count of frozen header rows, which is then displayed and optionally saved.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (index 0)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            int headerRowsToFreeze = 0;
-
-            // Attempt to read the number of frozen rows using reflection.
-            // This works for versions where Worksheet.FreezePanes is a property.
             try
             {
-                var freezeProp = typeof(Worksheet).GetProperty("FreezePanes");
-                if (freezeProp != null)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    var freezeObj = freezeProp.GetValue(sheet);
-                    var rowCountProp = freezeObj?.GetType().GetProperty("RowCount");
-                    if (rowCountProp != null)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (index 0)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the number of frozen rows (header rows)
+                int headerRowsToFreeze = 0;
+                try
+                {
+                    // Use reflection to safely access FreezePanes.Row if the property exists
+                    var freezeProp = worksheet.GetType().GetProperty("FreezePanes");
+                    if (freezeProp != null)
                     {
-                        headerRowsToFreeze = (int)rowCountProp.GetValue(freezeObj);
+                        var freezeObj = freezeProp.GetValue(worksheet);
+                        var rowProp = freezeObj?.GetType().GetProperty("Row");
+                        if (rowProp != null)
+                        {
+                            headerRowsToFreeze = (int)rowProp.GetValue(freezeObj);
+                        }
                     }
                 }
-            }
-            catch
-            {
-                // Property not available or other issue; keep default value (0)
-                headerRowsToFreeze = 0;
-            }
+                catch (Exception ex)
+                {
+                    // If reflection fails, keep default value (0)
+                    Console.WriteLine($"Unable to read frozen rows: {ex.Message}");
+                }
 
-            Console.WriteLine($"Number of header rows frozen: {headerRowsToFreeze}");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected exceptions and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Number of header rows frozen: {headerRowsToFreeze}");
+
+                // Ensure the output directory exists
+                try
+                {
+                    string outputDir = Path.GetDirectoryName(outputPath);
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    // Save the workbook (optional, if any changes were made)
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to: {outputPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

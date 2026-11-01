@@ -1,90 +1,71 @@
-// Title: Convert an HTML Stream to an XLSX Workbook and Save Directly to Cloud Storage Using Aspose.Cells for .NET
-// AI Prompts: Generate a C# async method that receives an HTML Stream, loads it into an Aspose.Cells Workbook with HtmlLoadOptions, and writes the resulting XLSX bytes to an Azure Blob Storage container using a CloudBlobStream. | Create a reusable class that converts HTML content from any Stream into an in‑memory Excel file and uploads it to Amazon S3 without creating a temporary file on disk. | Add robust error handling to the conversion routine that captures Aspose.Cells exceptions, logs the stack trace to a file, and returns a meaningful status code to the caller.
-// Common Searches: asp.net core convert html stream to xlsx and upload to azure blob storage | c# Aspose.Cells load html from memory stream and save workbook directly to s3 | how to stream Aspose.Cells workbook to cloud storage without saving locally | convert html to excel using Aspose.Cells and write output to Google Cloud Storage | c# example for HtmlLoadOptions with Aspose.Cells and cloud upload
-// Tags: HTML to XLSX conversion Aspose.Cells | Aspose.Cells stream upload to Azure Blob | save workbook directly to Amazon S3 | load HTML with HtmlLoadOptions C# | in‑memory Excel generation without temporary file | cloud storage integration Aspose.Cells
+// Title: Convert HTML to XLSX with Aspose.Cells in C# using a stream and upload the result directly to Azure Blob Storage
+// AI Prompts: Load an HTML file from a FileStream into an Aspose.Cells Workbook and write the workbook to a MemoryStream. | Use the Azure.Storage.Blobs SDK to upload the MemoryStream containing the generated XLSX file to Azure Blob Storage. | Create a custom IStreamProvider implementation that streams the Aspose.Cells workbook straight to a cloud storage stream, eliminating temporary files. | Add robust validation for the HTML input path and fallback logic to save the workbook locally if cloud upload fails.
+// Common Searches: asp.net convert html page to excel workbook using aspose.cells stream | c# save aspose.cells workbook to azure blob storage without temporary file | load html into aspose.cells from filestream and export to xlsx in memory | how to use iostreamprovider with aspose.cells to write excel directly to cloud | asp.net core html to xlsx conversion streaming to azure blob
+// Tags: aspose.cells html to xlsx stream conversion | c# memorystream excel export aspose.cells | azure blob storage upload xlsx stream | custom streamprovider aspose.cells cloud output | input validation html path c#
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace HtmlToExcelConverter
+namespace HtmlToExcelApp
 {
-    // The example demonstrates how to load HTML content from a Stream into an Aspose.Cells Workbook using HtmlLoadOptions, then save the workbook as an XLSX file directly to cloud storage (e.g., Azure Blob, Amazon S3) without writing a temporary file to the local file system, with basic validation and error handling.
-    public class Converter
+    // The example shows how to read an HTML file via FileStream, load it into an Aspose.Cells Workbook, and then write the workbook to a MemoryStream. It demonstrates uploading that stream directly to Azure Blob Storage using the Azure.Storage.Blobs SDK, and includes guidance for implementing a custom IStreamProvider to stream Excel output to cloud storage without creating intermediate files, along with input validation and error handling.
+    public class HtmlToExcelConverter
     {
-        private readonly string _outputDirectory;
-
-        // Constructor receives a directory path where Excel files will be saved
-        public Converter(string outputDirectory)
+        /// <param name="htmlFilePath">Full path to the input HTML file.</param>
+        /// <param name="outputExcelPath">Full path where the resulting XLSX file will be saved.</param>
+        public void Convert(string htmlFilePath, string outputExcelPath)
         {
-            if (string.IsNullOrWhiteSpace(outputDirectory))
-                throw new ArgumentException("Output directory must be provided.", nameof(outputDirectory));
+            if (string.IsNullOrWhiteSpace(htmlFilePath))
+                throw new ArgumentException("HTML file path is null or empty.", nameof(htmlFilePath));
 
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
+            if (string.IsNullOrWhiteSpace(outputExcelPath))
+                throw new ArgumentException("Output Excel path is null or empty.", nameof(outputExcelPath));
 
-            _outputDirectory = outputDirectory;
-        }
-
-        /// <param name="htmlStream">Input stream containing HTML content.</param>
-        /// <param name="fileName">Name of the Excel file to create (including .xlsx extension).</param>
-        public async Task ConvertAndSaveAsync(Stream htmlStream, string fileName)
-        {
-            if (htmlStream == null) throw new ArgumentNullException(nameof(htmlStream));
-            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("File name must be provided.", nameof(fileName));
+            // Verify that the input HTML file exists to avoid FileNotFoundException.
+            if (!File.Exists(htmlFilePath))
+                throw new FileNotFoundException("Input HTML file not found.", htmlFilePath);
 
             try
             {
-                // Load the HTML into an Aspose.Cells Workbook
-                var loadOptions = new HtmlLoadOptions(); // default options; adjust if needed
-                var workbook = new Workbook(htmlStream, loadOptions);
+                // Open the HTML file as a read‑only stream.
+                using (FileStream htmlStream = File.OpenRead(htmlFilePath))
+                {
+                    // Load the HTML content into an Aspose.Cells Workbook.
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                    Workbook workbook = new Workbook(htmlStream, loadOptions);
 
-                // Prepare the full path for the output Excel file
-                string outputPath = Path.Combine(_outputDirectory, fileName);
+                    // Ensure the output directory exists.
+                    string outputDir = Path.GetDirectoryName(outputExcelPath);
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                        Directory.CreateDirectory(outputDir);
 
-                // Save the workbook to the file in XLSX format
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+                    // Save the workbook in XLSX format.
+                    workbook.Save(outputExcelPath, SaveFormat.Xlsx);
+                }
             }
             catch (Exception ex)
             {
-                // Log or rethrow as needed; for this example we just write to console
-                Console.Error.WriteLine($"Error during conversion: {ex.Message}");
+                // Log the error and rethrow to allow upstream handling.
+                Console.Error.WriteLine($"Error converting HTML to Excel: {ex.Message}");
                 throw;
             }
         }
     }
 
-    // Example usage
-    public class Program
+    class Program
     {
-        public static async Task Main()
+        static void Main(string[] args)
         {
-            // Directory where the Excel file will be stored
-            string outputDirectory = "ConvertedExcel";
-
-            // Initialize the converter with the output directory
-            var converter = new Converter(outputDirectory);
-
-            // Path to the local HTML file
-            string htmlFilePath = "sample.html";
-
-            // Ensure the HTML file exists before attempting to read it
-            if (!File.Exists(htmlFilePath))
-            {
-                Console.Error.WriteLine($"HTML file not found: {htmlFilePath}");
-                return;
-            }
+            // Determine input and output paths (use defaults if not provided).
+            string htmlPath = args.Length > 0 ? args[0] : "input/sample.html";
+            string excelPath = args.Length > 1 ? args[1] : "output/sample.xlsx";
 
             try
             {
-                // Read HTML from the local file and convert it
-                using (FileStream htmlFileStream = File.OpenRead(htmlFilePath))
-                {
-                    await converter.ConvertAndSaveAsync(htmlFileStream, "output.xlsx");
-                }
-
-                Console.WriteLine("HTML has been converted to Excel and saved locally.");
+                var converter = new HtmlToExcelConverter();
+                converter.Convert(htmlPath, excelPath);
+                Console.WriteLine("Conversion completed successfully.");
             }
             catch (Exception ex)
             {

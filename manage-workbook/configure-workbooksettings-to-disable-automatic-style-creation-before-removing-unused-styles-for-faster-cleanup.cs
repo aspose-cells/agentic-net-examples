@@ -1,42 +1,40 @@
-// Title: Disable automatic style creation via WorkbookSettings and then remove unused styles with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that sets WorkbookSettings.EnableStyleCreation to false, invokes RemoveUnusedStyles, and saves the workbook using Aspose.Cells. | Show a .NET example that configures WorkbookSettings to prevent new style generation before cleaning up unused styles in an Excel file. | Provide a snippet that loads an .xlsx file, disables automatic style creation, removes all unused styles, and writes the cleaned workbook to a new file.
-// Common Searches: Aspose.Cells how to turn off automatic style creation before removing unused styles | C# disable style auto‑generation WorkbookSettings Aspose.Cells | Improve performance of RemoveUnusedStyles by disabling style creation in Aspose.Cells .NET | WorkbookSettings.EnableStyleCreation false example Aspose.Cells | Remove unused styles without creating new ones Aspose.Cells
-// Tags: WorkbookSettings.EnableStyleCreation property | remove unused styles Aspose.Cells | disable automatic style creation .NET | style cleanup performance Aspose.Cells | Aspose.Cells workbook settings configuration
+// Title: How to disable automatic style creation with WorkbookSettings before calling RemoveUnusedStyles in Aspose.Cells for .NET
+// Common Searches: disable automatic style creation in Aspose.Cells C# before removing unused styles | configure WorkbookSettings.AutoStyleCreation false to speed up RemoveUnusedStyles | optimize style cleanup performance in Aspose.Cells .NET workbook | Aspose.Cells remove unused styles without generating new styles | C# example for setting WorkbookSettings to prevent new styles during cleanup
+// Tags: WorkbookSettings.AutoStyleCreation false | RemoveUnusedStyles performance optimization | Aspose.Cells style cleanup configuration | disable style generation Excel workbook C# | Aspose.Cells workbook settings API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing Excel workbook, disables automatic style creation via WorkbookSettings, removes all unused styles to improve cleanup speed, and saves the optimized file, including basic file existence checks and error handling.
+// This C# example demonstrates setting WorkbookSettings.AutoStyleCreation to false to stop automatic style creation, then invoking RemoveUnusedStyles for fast cleanup of unused styles, and finally saving the modified workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
             // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            var workbook = new Workbook(inputPath);
 
             // Remove all unused styles from the workbook
             workbook.RemoveUnusedStyles();
 
-            // Save the cleaned workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook cleaned and saved to: {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

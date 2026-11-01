@@ -1,43 +1,64 @@
-// Title: How to enable RotateTextWithShape and rotate a rectangle shape’s text in Aspose.Cells for .NET (C#)
-// AI Prompts: Set shape.RotateTextWithShape = true, assign text, set shape.RotationAngle = 45, and save the workbook as an XLSX file using Aspose.Cells in C#. | Create a new Workbook, add a rectangle shape, enable text‑with‑shape rotation, rotate the shape, and export the result with Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# rotate shape text together with shape | Enable RotateTextWithShape property in Aspose.Cells example | Rotate rectangle shape and its text using Aspose.Cells for .NET | C# Aspose.Cells shape rotation angle with text rotation | Save rotated shape with text to XLSX using Aspose.Cells
-// Tags: Aspose.Cells RotateTextWithShape API | C# shape rotation with text | Aspose.Cells rectangle shape example | export rotated shape to XLSX | text-with-shape rotation .NET
+// Title: How to enable RotateTextWithShape in Aspose.Cells for .NET to rotate shape text together with the shape
+// AI Prompts: Create a new workbook, add a rectangle shape, set its Text property, enable RotateTextWithShape, apply a 45‑degree RotationAngle, and save the file as .xlsx. | Update existing C# Aspose.Cells code to turn on the RotateTextWithShape flag so that any rotation applied to a shape also rotates its embedded text. | Generate a C# example that demonstrates setting RotateTextWithShape = true on a Shape object, assigning text, rotating the shape, and exporting the workbook.
+// Common Searches: Aspose.Cells C# enable RotateTextWithShape property to rotate shape text | rotate shape text together with shape using Aspose.Cells .NET | C# example for rotating a shape and its text in an Excel file with Aspose.Cells | how to set RotateTextWithShape flag in Aspose.Cells for .NET workbook
+// Tags: shape text rotation flag Aspose.Cells .NET | set RotateTextWithShape property C# | add rectangle shape worksheet Aspose.Cells | apply rotation angle to shape Aspose.Cells | export workbook with rotated shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a Workbook, adds a rectangle shape, sets its Text, enables the RotateTextWithShape property so the text rotates with the shape, applies a 45‑degree RotationAngle, and saves the file as RotateTextWithShape.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample creates a workbook, inserts a rectangle shape at row 2 column 2, assigns the text “Rotated Text”, enables RotateTextWithShape, rotates the shape 45°, and saves the file as RotateTextWithShape.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+                // Add a rectangle shape to the worksheet
+                // Parameters: shape type, upper‑left row, upper‑left column, top offset, left offset, height, width
+                Shape shape = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // shape type
+                    2,   // row index (zero‑based)
+                    2,   // column index (zero‑based)
+                    0,   // top offset in pixels
+                    0,   // left offset in pixels
+                    100, // height in points
+                    200  // width in points
+                );
 
-            // Set the text inside the shape
-            shape.Text = "Rotated Text";
+                // Set the shape's text
+                shape.Text = "Rotated Text";
 
-            // Rotate the shape (including its text) by 45 degrees
-            shape.RotationAngle = 45;
+                // Rotate the shape (e.g., 45 degrees). Text rotates together with the shape.
+                shape.RotationAngle = 45;
 
-            // Save the workbook to a file
-            string outputPath = "RotateTextWithShape.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Define output file path
+                string outputPath = "RotateTextWithShape.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

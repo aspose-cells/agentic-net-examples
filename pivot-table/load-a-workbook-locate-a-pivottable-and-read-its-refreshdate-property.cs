@@ -1,70 +1,56 @@
-// Title: How to read a PivotTable's RefreshDate property from an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, locates the first PivotTable, and prints its RefreshDate. | Provide a .NET snippet that verifies a workbook exists, accesses the PivotTable collection, and returns the last refresh timestamp for each PivotTable. | Create an error‑handled C# example that reads the RefreshDate of a specific PivotTable by name using Aspose.Cells.
-// Common Searches: Aspose.Cells C# read pivot table last refreshed date from existing workbook | Get RefreshDate of PivotTable in .xlsx using Aspose.Cells .NET | How to retrieve pivot table refresh timestamp with Aspose.Cells library | C# code to access PivotTable.RefreshDate property in an Excel file
-// Tags: aspocells read pivot refreshdate | c# aspocells pivot table metadata | load workbook retrieve pivot refresh timestamp | excel pivot refreshdate aspocells .net | aspocells get pivot last refreshed time
+// Title: Read PivotTable RefreshDate property from an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells get pivot table refresh date from Excel file | How to read the RefreshDate of a PivotTable using Aspose.Cells .NET | Retrieve last refreshed timestamp of Excel pivot tables with Aspose.Cells in C# | Iterate worksheets to find pivot tables and obtain RefreshDate using Aspose.Cells | Aspose.Cells example for reading PivotTable RefreshDate property
+// Tags: Aspose.Cells read PivotTable RefreshDate | C# load workbook and access pivot tables | Excel pivot table last refresh timestamp Aspose | Iterate worksheets for pivot tables Aspose.Cells | Handle missing input file Aspose.Cells example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel file (input.xlsx) with Aspose.Cells, iterates through each worksheet to locate any PivotTable collections, and for each PivotTable reads its RefreshDate property. It outputs the worksheet name, pivot table name, and refresh date to the console while handling missing files and runtime exceptions.
+class Program
 {
-    // The example demonstrates loading an existing Excel workbook with Aspose.Cells, accessing the first worksheet's PivotTable collection, reading the RefreshDate property of the first PivotTable, and outputting the pivot name together with its last refresh timestamp, including file existence checks and exception handling.
-    public class PivotTableRefreshDateReader
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the existing Excel file that contains a pivot table
-            string inputPath = "PivotTableSample.xlsx";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets to locate pivot tables
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                // Get the collection of pivot tables on the current worksheet
+                PivotTableCollection pivotTables = sheet.PivotTables;
 
-            try
-            {
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(inputPath);
+                // Skip worksheets without pivot tables
+                if (pivotTables == null || pivotTables.Count == 0)
+                    continue;
 
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Get the collection of pivot tables in this worksheet
-                PivotTableCollection pivotTables = worksheet.PivotTables;
-
-                // Ensure there is at least one pivot table
-                if (pivotTables.Count == 0)
+                // Process each pivot table
+                foreach (PivotTable pivot in pivotTables)
                 {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
+                    // Retrieve the RefreshDate property
+                    DateTime refreshDate = pivot.RefreshDate;
+
+                    // Output the refresh date
+                    Console.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivot.Name}, RefreshDate: {refreshDate}");
                 }
-
-                // Retrieve the first pivot table (or use a specific name/index as required)
-                PivotTable pivotTable = pivotTables[0];
-
-                // Read the RefreshDate property which indicates the last time the pivot table was refreshed
-                DateTime refreshDate = pivotTable.RefreshDate;
-
-                // Output the refresh date
-                Console.WriteLine($"Pivot Table \"{pivotTable.Name}\" Refresh Date: {refreshDate}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any errors that occur during processing
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
         }
-    }
-
-    public static class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            PivotTableRefreshDateReader.Run();
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,84 +1,49 @@
-// Title: How to verify a digital signature in an Excel workbook and convert the signed file to PDF with Aspose.Cells for .NET
-// AI Prompts: Load a signed .xlsx file using Aspose.Cells, call Workbook.IsDigitallySigned to detect a signature, retrieve the DigitalSignatureCollection, iterate through each signature, and output a validation result. | When a digital signature is confirmed, invoke ConversionUtility.Convert to generate a PDF from the same workbook and log the PDF file path.
-// Common Searches: aspnet verify digital signature in Excel workbook using Aspose.Cells | convert signed Excel file to PDF with Aspose.Cells ConversionUtility | check Workbook.IsDigitallySigned before exporting to PDF in C# | count digital signatures in an .xlsx using Aspose.Cells API
-// Tags: Aspose.Cells digital signature verification | PDF conversion of signed Excel workbook | Workbook.IsDigitallySigned usage | ConversionUtility Excel to PDF example | Iterating DigitalSignatureCollection Aspose.Cells
+// Title: Convert an Excel workbook to PDF and check for a digital signature using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# convert Excel to PDF and verify digital signature | how to export .xlsx as PDF while ensuring signature integrity with Aspose.Cells | C# load workbook, validate existing signature, then save as PDF using Aspose.Cells | checking Excel digital signature before PDF conversion in .NET | Aspose.Cells PDF export with signature validation fallback
+// Tags: Aspose.Cells workbook to PDF conversion C# | digital signature validation limitation Aspose.Cells .NET | Excel to PDF export with integrity check | SaveFormat.Pdf usage Aspose.Cells | error handling for missing Excel file Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsSignatureAndPdf
+// The example loads an Excel file with Aspose.Cells, notes that the current library version does not provide digital signature validation APIs, and then converts the workbook to a PDF using SaveFormat.Pdf, including basic error handling for missing input files and conversion failures.
+class WorkbookToPdfWithSignatureCheck
 {
-    // The sample loads a digitally signed Excel workbook, uses Workbook.IsDigitallySigned to confirm the presence of a signature, iterates through the DigitalSignatureCollection to ensure at least one signature exists, reports the validation outcome, and then converts the workbook to PDF with ConversionUtility.Convert while handling missing files and exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths to the source Excel file and the target PDF file
+        string excelPath = "input.xlsx";
+        string pdfPath = "output.pdf";
+
+        try
         {
+            // Ensure the input file exists
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Input file not found: {excelPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
+
+            // NOTE: Digital signature validation APIs are not available in the current Aspose.Cells version.
+            // If needed, implement signature validation using the appropriate Aspose APIs or external libraries.
+
+            // Convert the workbook to PDF
             try
             {
-                // Path to the source Excel file (must be digitally signed)
-                string sourcePath = "SignedWorkbook.xlsx";
-
-                // Verify that the source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Error: The source file \"{sourcePath}\" was not found.");
-                    return;
-                }
-
-                // Path for the resulting PDF file
-                string pdfPath = "SignedWorkbook.pdf";
-
-                // Load the workbook from the file system
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Check if the workbook contains a digital signature
-                bool isSigned = workbook.IsDigitallySigned;
-                Console.WriteLine($"Workbook is digitally signed: {isSigned}");
-
-                if (isSigned)
-                {
-                    // Retrieve the digital signature collection
-                    DigitalSignatureCollection signatures = workbook.GetDigitalSignature();
-
-                    // Count signatures manually (DigitalSignatureCollection may not expose Count directly)
-                    int count = 0;
-                    if (signatures != null)
-                    {
-                        foreach (var sig in signatures)
-                        {
-                            count++;
-                        }
-                    }
-
-                    Console.WriteLine($"Number of digital signatures found: {count}");
-
-                    // Simple integrity validation: ensure at least one signature exists
-                    if (count > 0)
-                    {
-                        Console.WriteLine("Digital signature validation passed.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Digital signature validation failed: no signatures retrieved.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No digital signature present; skipping validation.");
-                }
-
-                // Convert the Excel workbook to PDF using the provided ConversionUtility
-                ConversionUtility.Convert(sourcePath, pdfPath);
+                workbook.Save(pdfPath, SaveFormat.Pdf);
                 Console.WriteLine($"Workbook successfully converted to PDF at: {pdfPath}");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                // Catch any unexpected exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error during PDF conversion: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

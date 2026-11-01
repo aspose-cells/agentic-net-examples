@@ -1,68 +1,77 @@
-// Title: Save an Aspose.Cells workbook as an XLSX file with OoxmlSaveOptions and ensure the output folder exists in C#
-// AI Prompts: Write C# code that creates a new Aspose.Cells Workbook, puts "Hello" in cell A1 and "World" in cell B1, and saves it as an XLSX file using OoxmlSaveOptions. | Show how to check for the target directory and create it if missing before calling Workbook.Save in a C# console program. | Provide a C# example that wraps Workbook.Save in a try‑catch block to log any errors that occur while exporting an Excel file with Aspose.Cells.
-// Common Searches: c# aspose.cells save workbook to xlsx with OoxmlSaveOptions example | how to create output folder before saving Aspose.Cells workbook in console app | asp.net core return excel file from Aspose.Cells with content-disposition attachment | exception handling when exporting Excel using Aspose.Cells C# | write values to specific cells using Aspose.Cells C# tutorial
-// Tags: xlsx export using OoxmlSaveOptions | write cell values Aspose.Cells C# | ensure output directory exists C# | exception handling Aspose.Cells workbook save | aspose.cells console application excel generation
+// Title: How to stream an existing Excel workbook as an XLSX attachment in an ASP.NET Core response using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook from a file path with Aspose.Cells and returns it as a downloadable XLSX file from an ASP.NET Core controller, setting the Content‑Disposition header to attachment. | Show how to adapt the ExportAsAttachment method to accept an HttpResponse object and write the workbook directly to HttpResponse.Body in an ASP.NET Core MVC action. | Provide a minimal ASP.NET Core endpoint that uses Aspose.Cells to open a .xlsx file and streams it to the client as an attachment with the correct MIME type.
+// Common Searches: asp.net core download excel file as attachment using aspose.cells SaveFormat.Xlsx | c# Aspose.Cells stream workbook to HttpResponse.Body with content-disposition header | how to return generated Excel workbook from ASP.NET Core API as file download | Aspose.Cells export existing workbook to HTTP response without saving to disk | set Content-Disposition: attachment for Excel file in ASP.NET Core controller using Aspose.Cells
+// Tags: Aspose.Cells export workbook to HTTP response | stream XLSX file as attachment in ASP.NET Core | Content-Disposition header for Excel download | SaveFormat.Xlsx with Aspose.Cells | C# load workbook from file path Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-// // Creates a workbook, writes "Hello" to A1 and "World" to B1, guarantees the output directory exists, and saves the file as SampleOutput.xlsx with OoxmlSaveOptions while handling possible exceptions.
-public class ExcelDownloadHandler
+// The example defines a WorkbookExporter class that validates inputs, loads an existing workbook with Aspose.Cells, and saves it in XLSX format to a supplied stream. By passing HttpResponse.Body as the output stream, the workbook can be streamed directly to the client as a downloadable attachment, with the appropriate Content‑Disposition header set in an ASP.NET Core controller.
+public class WorkbookExporter
 {
-    // Saves a workbook with sample data to the specified file path.
-    public void SendWorkbook(string outputPath)
+    /// <param name="outputStream">The stream to which the workbook will be written (e.g., HttpResponse.Body).</param>
+    /// <param name="filePath">Full path to the workbook to be opened.</param>
+    public void ExportAsAttachment(Stream outputStream, string filePath)
     {
+        if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
+        if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException("File path must be provided.", nameof(filePath));
+
         try
         {
-            // Create a new workbook (default format is Xlsx)
-            Workbook workbook = new Workbook();
+            // Verify that the workbook file exists.
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Workbook file not found.", filePath);
 
-            // Add some sample data (optional)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(filePath);
 
-            // Configure save options for Xlsx format using OoxmlSaveOptions (compatible with all versions)
-            SaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-
-            // Save the workbook to the given file path
-            workbook.Save(outputPath, saveOptions);
+            // Write the workbook to the output stream in XLSX format.
+            workbook.Save(outputStream, SaveFormat.Xlsx);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Log or handle the exception as needed
-            Console.Error.WriteLine($"Error saving workbook: {ex.Message}");
+            // Rethrow after any necessary logging or handling.
+            throw;
         }
     }
 }
 
 public class Program
 {
-    // Entry point required for console applications
+    // Usage: dotnet run <inputWorkbookPath> <outputFilePath>
     public static void Main(string[] args)
     {
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: <inputWorkbookPath> <outputFilePath>");
+            return;
+        }
+
+        string inputPath = args[0];
+        string outputPath = args[1];
+
         try
         {
-            string outputFile = "SampleOutput.xlsx";
-
-            // Ensure the output directory exists
-            string directory = Path.GetDirectoryName(outputFile) ?? string.Empty;
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            // Ensure the input workbook exists.
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(directory);
+                Console.WriteLine($"Error: Input file not found: {inputPath}");
+                return;
             }
 
-            // Generate and save the workbook
-            ExcelDownloadHandler handler = new ExcelDownloadHandler();
-            handler.SendWorkbook(outputFile);
+            // Create or overwrite the output file.
+            using (FileStream outputStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            {
+                WorkbookExporter exporter = new WorkbookExporter();
+                exporter.ExportAsAttachment(outputStream, inputPath);
+            }
 
-            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            Console.WriteLine($"Workbook exported successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

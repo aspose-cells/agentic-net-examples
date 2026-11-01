@@ -1,42 +1,25 @@
-// Title: Delete rows 60‑65 from an Excel worksheet and export the workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that removes rows 60‑65 from the first sheet of an Excel file and saves the result as a PDF with Aspose.Cells. | Show how to delete a range of rows in a workbook, persist the changes as XLSX, and then use ConversionUtility to produce a PDF. | Provide a step‑by‑step example of using Aspose.Cells to delete rows by index and export the modified workbook to PDF.
-// Common Searches: Aspose.Cells C# delete rows 60 to 65 and export to PDF | How to remove a specific row range from an Excel file before converting to PDF in .NET | C# code example for deleting rows in an Excel worksheet and saving as PDF using Aspose.Cells | Delete rows 60‑65 in Excel with Aspose.Cells then generate PDF output
-// Tags: Aspose.Cells delete rows worksheet | Aspose.Cells convert workbook to PDF | Aspose.Cells SaveFormat Xlsx after modification | C# remove specific rows Excel Aspose | ConversionUtility Excel to PDF Aspose
+// Title: Delete rows 60‑65 from an Excel worksheet and export to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# program with Aspose.Cells that opens an .xlsx file, removes the rows numbered 60 through 65 from the first sheet, and saves the workbook as a PDF. | Show how to use Aspose.Cells in C# to programmatically delete a block of rows and then generate a PDF document from the modified worksheet. | Write Aspose.Cells code that loads a workbook, eliminates a specific row range, and outputs the result as a PDF file in C#.
+// Common Searches: Aspose.Cells C# delete rows 60‑65 before converting to PDF | how to remove a range of rows in Excel with Aspose.Cells and save as PDF | C# example for deleting specific rows in a worksheet and exporting to PDF using Aspose.Cells | Aspose.Cells delete rows 60 to 65 and generate PDF output | remove rows from Excel file programmatically and convert to PDF in .NET
+// Tags: Aspose.Cells delete rows C# | Excel row removal PDF conversion Aspose.Cells | C# delete specific row range Aspose.Cells | Aspose.Cells export worksheet to PDF after row deletion | remove rows 60-65 Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsExample
+// // Loads input.xlsx, deletes rows 60‑65 from the first worksheet, and saves the modified workbook as output.pdf using Aspose.Cells.
+class Program
 {
-    // // Loads an Excel file, deletes rows 60‑65 from the first worksheet, saves the intermediate workbook as XLSX, and converts it to PDF using Aspose.Cells.
-    class DeleteRowsAndConvertToPdf
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the original Excel file
-            string sourceFile = "input.xlsx";
+        // Load the existing Excel file
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Path for the intermediate workbook after row deletion
-            string modifiedFile = "modified.xlsx";
+        // Get the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Path for the final PDF output
-            string pdfFile = "output.pdf";
+        // Delete rows 60 through 65 (zero‑based index: start at 59, delete 6 rows)
+        sheet.Cells.DeleteRows(59, 6);
 
-            // Load the workbook (load rule)
-            Workbook workbook = new Workbook(sourceFile);
-
-            // Delete rows 60 through 65 (1‑based). 
-            // Cells indices are zero‑based, so start at row index 59 and delete 6 rows.
-            workbook.Worksheets[0].Cells.DeleteRows(59, 6);
-
-            // Save the modified workbook (save rule)
-            workbook.Save(modifiedFile, SaveFormat.Xlsx);
-
-            // Convert the modified Excel file to PDF (conversion rule)
-            ConversionUtility.Convert(modifiedFile, pdfFile);
-
-            Console.WriteLine("Rows deleted and PDF saved successfully.");
-        }
+        // Save the modified workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

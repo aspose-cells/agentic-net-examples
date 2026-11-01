@@ -1,109 +1,103 @@
-// Title: Extract and Save Embedded OLE Objects from an Excel Workbook with Aspose.Cells for .NET, Including Decompression and Original File Extension Preservation
-// AI Prompts: Write C# code using Aspose.Cells that iterates through every worksheet, extracts each OleObject's raw byte array, checks the IsCompressed flag, decompresses the data when needed, determines the original file extension from FileExtension or Name, and writes the result to a user‑specified folder with a unique filename. | Create a reusable C# method that accepts a workbook path and an output directory, loads the workbook with Aspose.Cells, extracts all embedded OLE objects, handles possible Deflate compression, resolves the correct file extension, and saves each object as a separate file.
-// Common Searches: c# aspnet extract ole objects from xlsx using aspose.cells | how to decompress embedded ole data when extracting from Excel with Aspose | save ole object to original file type aspose.cells .net | iterate worksheets to get oleobject data aspose.cells example | extract embedded pdf from excel workbook using Aspose.Cells C#
-// Tags: oleobject raw byte extraction Aspose.Cells | deflate decompression of oleobject data | original file extension resolution OleObject | write oleobject bytes to filesystem | worksheet iteration for oleobjects Aspose
+// Title: Extract embedded OLE objects from an Excel workbook and save them in their original file formats with Aspose.Cells for .NET
+// Common Searches: C# code to extract OLE objects from an .xlsx file using Aspose.Cells | how to save embedded OLE object data to its original extension with Aspose.Cells .NET | retrieve raw ObjectData from worksheet OleObjectCollection in Aspose.Cells | export all OLE objects from Excel workbook to a folder using C# Aspose.Cells | Aspose.Cells extract embedded Word or PDF OLE objects from Excel
+// Tags: Aspose.Cells OLE extraction workflow | saving OleObject.ObjectData as original file | inferring file type from OleObject.Name | iterating OleObjectCollection across worksheets | writing binary OLE payload to filesystem C# | handling embedded OLE content in Excel
 
 using System;
 using System.IO;
-using System.IO.Compression;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;   // Required for OleObject
+using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet, extracts every embedded OleObject, decompresses the data if the IsCompressed flag is true, determines the original file extension via the OleObject's FileExtension or Name property, and saves each object as a uniquely named file in a specified output folder.
-class OleExtractor
+// The sample loads a workbook, walks through each worksheet's OleObjectCollection, reads each OleObject's ObjectData, derives a filename from the object's Name (preserving the original extension when present), and writes the byte array to a specified output directory, logging successes and handling missing data or errors.
+class OleObjectExtractor
 {
     static void Main()
     {
-        // Path to the workbook that contains OLE objects
-        string workbookPath = @"C:\Path\To\Input.xlsx";
+        // Path to the source Excel workbook
+        string sourceFile = @"C:\Input\Workbook.xlsx";
 
-        // Folder where extracted OLE files will be saved
-        string outputFolder = @"C:\Path\To\OleOutput";
+        // Folder where extracted OLE objects will be saved
+        string outputFolder = @"C:\Output\OleObjects";
 
+        // Verify that the source file exists
+        if (!File.Exists(sourceFile))
+        {
+            Console.WriteLine($"Source file not found: {sourceFile}");
+            return;
+        }
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        Workbook workbook;
         try
         {
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
-
-            // Verify the workbook file exists before loading
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException($"Workbook not found: {workbookPath}");
-
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            int oleIndex = 0; // Counter for unique file names
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through all OLE objects on the current sheet
-                foreach (OleObject ole in sheet.OleObjects)
-                {
-                    try
-                    {
-                        // Use dynamic to access members that may vary between Aspose.Cells versions
-                        dynamic dynOle = ole;
-
-                        // Retrieve the raw data of the OLE object
-                        byte[] oleData = dynOle.OleObjectData as byte[];
-
-                        // If the OLE data is compressed, decompress it
-                        bool isCompressed = dynOle.IsCompressed;
-                        if (isCompressed && oleData != null)
-                        {
-                            using (MemoryStream compressedStream = new MemoryStream(oleData))
-                            using (DeflateStream deflate = new DeflateStream(compressedStream, CompressionMode.Decompress))
-                            using (MemoryStream decompressedStream = new MemoryStream())
-                            {
-                                deflate.CopyTo(decompressedStream);
-                                oleData = decompressedStream.ToArray();
-                            }
-                        }
-
-                        // Determine the original file extension
-                        string extension = ".bin"; // Default fallback
-                        string fileExt = dynOle.FileExtension as string;
-                        if (!string.IsNullOrEmpty(fileExt))
-                        {
-                            extension = fileExt.StartsWith(".") ? fileExt : "." + fileExt;
-                        }
-                        else
-                        {
-                            string name = dynOle.Name as string;
-                            if (!string.IsNullOrEmpty(name))
-                            {
-                                int dotPos = name.LastIndexOf('.');
-                                if (dotPos > -1 && dotPos < name.Length - 1)
-                                    extension = name.Substring(dotPos);
-                            }
-                        }
-
-                        // Build a unique file name for the extracted object
-                        string fileName = $"OleObject_{oleIndex}{extension}";
-                        string outputPath = Path.Combine(outputFolder, fileName);
-
-                        // Save the extracted (and possibly decompressed) data to disk
-                        if (oleData != null)
-                            File.WriteAllBytes(outputPath, oleData);
-                        else
-                            Console.WriteLine($"Warning: OLE object {oleIndex} has no data.");
-
-                        oleIndex++;
-                    }
-                    catch (Exception innerEx)
-                    {
-                        Console.WriteLine($"Failed to extract an OLE object: {innerEx.Message}");
-                    }
-                }
-            }
-
-            Console.WriteLine($"Extraction complete. {oleIndex} OLE object(s) saved to \"{outputFolder}\".");
+            workbook = new Workbook(sourceFile);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
+
+        int oleIndex = 0;
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            OleObjectCollection oleObjects = sheet.OleObjects;
+
+            // Process each OLE object
+            foreach (OleObject ole in oleObjects)
+            {
+                oleIndex++;
+
+                // Determine a file name for the extracted object.
+                // Use the OLE object's name if it contains an extension; otherwise generate one.
+                string baseName = $"OleObject_{oleIndex}";
+                string extension = "bin";
+
+                if (!string.IsNullOrEmpty(ole.Name))
+                {
+                    string name = ole.Name;
+                    int dotPos = name.LastIndexOf('.');
+                    if (dotPos > -1 && dotPos < name.Length - 1)
+                    {
+                        baseName = name.Substring(0, dotPos);
+                        extension = name.Substring(dotPos + 1);
+                    }
+                    else
+                    {
+                        baseName = name;
+                    }
+                }
+
+                string fileName = $"{baseName}.{extension}";
+                string savePath = Path.Combine(outputFolder, fileName);
+
+                try
+                {
+                    // Retrieve the raw OLE object data (use ObjectData property)
+                    byte[] data = ole.ObjectData;
+
+                    if (data != null && data.Length > 0)
+                    {
+                        // Write the data to disk
+                        File.WriteAllBytes(savePath, data);
+                        Console.WriteLine($"Saved OLE object #{oleIndex} to \"{savePath}\".");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"OLE object #{oleIndex} contains no data.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save OLE object #{oleIndex}: {ex.Message}");
+                }
+            }
+        }
+
+        Console.WriteLine($"Extraction complete. {oleIndex} OLE object(s) processed.");
     }
 }

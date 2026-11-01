@@ -1,72 +1,62 @@
-// Title: Remove a chart series by index from an Excel column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that builds a column chart with two data series using Aspose.Cells, then deletes the series at index 0 with NSeries.RemoveAt and saves the workbook. | Show how to call the NSeries.RemoveAt method on an Aspose.Cells chart to eliminate a specific series and output the remaining series count. | Demonstrate removing a chart series by its zero‑based index in Aspose.Cells and verify the chart updates correctly.
-// Common Searches: Aspose.Cells C# remove first series from column chart | How to delete a specific series from an Excel chart using Aspose.Cells .NET | Aspose.Cells NSeries.RemoveAt example C# | Remove chart series by index in Aspose.Cells workbook | C# Aspose.Cells chart series count after removal
-// Tags: Aspose.Cells chart series removal | NSeries.RemoveAt method C# | column chart series manipulation Aspose.Cells | Excel chart series deletion .NET | Aspose.Cells workbook chart editing
+// Title: How to remove a specific data series from an Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx workbook, verifies the first worksheet contains a chart, and removes the series at index 1 from that chart. | Generate a robust C# example that checks for the input file, ensures the chart exists, uses NSeries.RemoveAt to delete a data series by zero‑based index, and saves the updated workbook. | Create a C# snippet that handles FileNotFound and out‑of‑range series index exceptions while programmatically dropping a specified series from an Excel chart with Aspose.Cells.
+// Common Searches: aspnet remove chart series by index Aspose.Cells example | C# Aspose.Cells delete second series from chart in existing workbook | how to programmatically drop a data series from an Excel chart using Aspose.Cells | remove unwanted series from Excel chart with Aspose.Cells .NET
+// Tags: Aspose.Cells remove chart series C# | NSeries.RemoveAt Excel chart | delete data series from Excel chart .NET | chart series index removal Aspose.Cells | handle missing chart Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Loads an existing .xlsx file, checks for a chart in the first worksheet, removes the data series at the specified zero‑based index using NSeries.RemoveAt, and saves the workbook with the updated chart.
+class Program
 {
-    // The example creates a workbook, adds category data and two series, builds a column chart, removes the first series using NSeries.RemoveAt(0), prints the remaining series count, and saves the file as RemoveSeriesByIndexDemo.xlsx.
-    public class RemoveSeriesByIndexDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Verify that the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+                throw new InvalidOperationException("No charts found in the first worksheet.");
+
+            // Access the target chart (here we use the first chart in the sheet)
+            int chartIndex = 0;
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Index of the series to remove (0‑based). Change as required.
+            int seriesIndexToRemove = 1; // example: remove the second series
+
+            // Verify the index is valid before removal
+            if (seriesIndexToRemove >= 0 && seriesIndexToRemove < chart.NSeries.Count)
             {
-                Run();
+                // Remove the specified series from the chart
+                chart.NSeries.RemoveAt(seriesIndexToRemove);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Series index {seriesIndexToRemove} is out of range. No series removed.");
             }
-        }
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for two series
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-
-            worksheet.Cells["B1"].PutValue("Series1");
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["B3"].PutValue(200);
-            worksheet.Cells["B4"].PutValue(300);
-
-            worksheet.Cells["C1"].PutValue("Series2");
-            worksheet.Cells["C2"].PutValue(150);
-            worksheet.Cells["C3"].PutValue(250);
-            worksheet.Cells["C4"].PutValue(350);
-
-            // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set data ranges for the two series
-            chart.NSeries.Add("B2:B4", true); // Series1
-            chart.NSeries.Add("C2:C4", true); // Series2
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Remove the first series (index 0) to simplify the chart
-            int seriesToRemove = 0;
-            chart.NSeries.RemoveAt(seriesToRemove);
-
-            // Optional: display remaining series count
-            Console.WriteLine($"Remaining series count: {chart.NSeries.Count}");
-
-            // Save the workbook
-            string outputPath = "RemoveSeriesByIndexDemo.xlsx";
+            // Save the workbook with the updated chart
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

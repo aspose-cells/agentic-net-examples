@@ -1,102 +1,88 @@
-// Title: Export a named range from an Excel workbook to a JSON file with cell addresses and values using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, retrieves a specific named range, and creates a JSON array where each element contains the cell's A1 address and its value. | Generate a .NET console program that validates the input workbook, extracts all cells from a given named range, and serializes the address/value pairs to a formatted JSON file. | Provide a C# method that iterates over an Aspose.Cells named range and returns a JSON string representing each cell's address and value.
-// Common Searches: how to read a named range with Aspose.Cells and export it to JSON in C# | Aspose.Cells C# convert named range cells to JSON array of address/value | C# export Excel named range data to JSON file using Aspose.Cells | serialize Aspose.Cells named range to JSON with cell addresses
-// Tags: Aspose.Cells named range JSON export | C# serialize Excel range to JSON | extract cell address value pairs .NET | Aspose.Cells range iteration for JSON output | convert Excel named range to JSON array
+// Title: How to export a named range from an Excel workbook to a JSON array of cell addresses and values using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export named range to JSON file with cell addresses | How to retrieve cell address and value from a named range using Aspose.Cells in .NET | Save Excel named range as a JSON array with Aspose.Cells C# example | Aspose.Cells .NET get all cells in a named range and write to JSON | Export Excel named range data to JSON using Aspose.Cells library
+// Tags: Aspose.Cells named range JSON export | C# Aspose.Cells range cell address extraction | Aspose.Cells serialize range values to JSON | Excel named range to JSON with .NET | Aspose.Cells iterate named range cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
+using System.Text.Json;
+
+// Alias to avoid conflict with System.Range
 using AsposeRange = Aspose.Cells.Range;
 
-// The example checks for the existence of an input workbook, loads it with Aspose.Cells, retrieves a named range called "MyRange", iterates through each cell to collect its A1 address and value, serializes the collection into an indented JSON array, and writes the result to "namedRange.json" while handling loading and I/O errors.
-class Program
+// The example loads an Excel workbook, accesses a specified named range, iterates through each cell to collect its address and value, serializes the collection into a formatted JSON array, and writes the output to a file while handling missing files and I/O errors.
+class ExportNamedRangeToJson
 {
     static void Main()
     {
+        // Paths
+        string excelPath = "input.xlsx";
+        string jsonPath = "output.json";
+        string namedRangeName = "MyRange";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "namedRange.json";
-            const string rangeName = "MyRange";
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Verify input file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {excelPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception loadEx)
-            {
-                Console.WriteLine($"Error loading workbook: {loadEx.Message}");
-                return;
-            }
+            // Load workbook
+            Workbook workbook = new Workbook(excelPath);
 
-            // Retrieve the named range; GetRangeByName returns an Aspose.Cells.Range object
-            AsposeRange namedRange = workbook.Worksheets.GetRangeByName(rangeName);
+            // Retrieve named range
+            Name namedRange = workbook.Worksheets.Names[namedRangeName];
             if (namedRange == null)
             {
-                Console.WriteLine($"Error: Named range \"{rangeName}\" does not exist in the workbook.");
+                Console.WriteLine($"Named range '{namedRangeName}' not found.");
                 return;
             }
 
-            // Get the worksheet that contains the range
-            Worksheet ws = namedRange.Worksheet;
-            if (ws == null)
-            {
-                Console.WriteLine("Error: Unable to determine the worksheet for the named range.");
-                return;
-            }
+            // Get the range object
+            AsposeRange range = namedRange.GetRange();
 
-            // Prepare a list to hold address/value pairs for JSON serialization
-            List<Dictionary<string, object>> jsonItems = new List<Dictionary<string, object>>();
+            // Worksheet that contains the range
+            Worksheet ws = range.Worksheet;
 
-            // Iterate through each cell in the range
-            for (int i = 0; i < namedRange.RowCount; i++)
+            // Collect cell address/value pairs
+            var cellsInfo = new List<Dictionary<string, object>>();
+
+            for (int row = range.FirstRow; row < range.FirstRow + range.RowCount; row++)
             {
-                for (int j = 0; j < namedRange.ColumnCount; j++)
+                for (int col = range.FirstColumn; col < range.FirstColumn + range.ColumnCount; col++)
                 {
-                    Cell cell = ws.Cells[namedRange.FirstRow + i, namedRange.FirstColumn + j];
-                    var item = new Dictionary<string, object>
+                    Cell cell = ws.Cells[row, col];
+
+                    var cellData = new Dictionary<string, object>
                     {
-                        ["address"] = cell.Name,   // A1 style address
-                        ["value"] = cell.Value     // Cell value (object)
+                        { "Address", cell.Name },
+                        { "Value", cell.Value }
                     };
-                    jsonItems.Add(item);
+
+                    cellsInfo.Add(cellData);
                 }
             }
 
-            // Serialize the list to a formatted JSON string
-            string json = JsonSerializer.Serialize(jsonItems, new JsonSerializerOptions { WriteIndented = true });
+            // Serialize to formatted JSON
+            string json = JsonSerializer.Serialize(cellsInfo, new JsonSerializerOptions { WriteIndented = true });
 
-            // Ensure the output directory exists and write the JSON file
+            // Write JSON output safely
             try
             {
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                File.WriteAllText(outputPath, json);
-                Console.WriteLine($"Named range data has been written to \"{outputPath}\".");
+                File.WriteAllText(jsonPath, json);
+                Console.WriteLine($"Named range '{namedRangeName}' exported to '{jsonPath}'.");
             }
-            catch (Exception ioEx)
+            catch (Exception writeEx)
             {
-                Console.WriteLine($"Error writing JSON file: {ioEx.Message}");
+                Console.WriteLine($"Failed to write JSON file: {writeEx.Message}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

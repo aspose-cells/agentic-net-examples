@@ -1,32 +1,91 @@
-// Title: Apply German culture‑specific currency formatting to Excel cells with Aspose.Cells for .NET without altering thread culture
-// AI Prompts: Load an Excel workbook, set workbook.Settings.CultureInfo to "de-DE", iterate through column B, and assign the built‑in German currency number format (Number = 164) to each numeric cell. | Using Aspose.Cells for .NET, format all numeric cells in a worksheet as Euro currency based on the German locale while keeping the current thread culture unchanged. | Retrieve each cell's style, set Style.Number to 164 for the German € format, and save the workbook without modifying thread settings.
-// Common Searches: aspnet aspocells format column as german euro currency without changing thread culture | set workbook culture to de-de and apply currency number format index 164 in Aspose.Cells | apply german locale number format to excel cells using Aspose.Cells C# | how to use built‑in number format 164 for € in Aspose.Cells workbook | preserve thread culture while formatting cells with german currency in Aspose.Cells
-// Tags: Aspose.Cells workbook culture configuration | German Euro number style | locale‑specific cell formatting .NET | thread‑independent culture setting | format column B as currency
+// Title: Apply German culture‑specific currency formatting to Excel workbook cells using Aspose.Cells for .NET without altering thread culture
+// Common Searches: Aspose.Cells set workbook culture to de-DE for currency formatting only | C# apply German number format to existing Excel file using Aspose.Cells | How to format cells as German Euro currency in Aspose.Cells without changing thread culture | Use built‑in German currency format index 164 in Aspose.Cells .NET example | Iterate through worksheets and apply culture‑specific currency style with Aspose.Cells
+// Tags: Workbook.Settings.CultureInfo de-DE Aspose.Cells | apply built‑in German currency format index 164 | culture‑specific number formatting Excel .NET | iterate cells set currency style Aspose.Cells | format currency cells without thread culture change
 
-// Load the workbook (the file path can be adjusted as needed)
-Aspose.Cells.LoadOptions loadOptions = new Aspose.Cells.LoadOptions();
-Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx", loadOptions);
+using System;
+using System.Globalization;
+using System.IO;
+using Aspose.Cells;
 
-// Apply German culture to the workbook (does not affect the current thread)
-workbook.Settings.CultureInfo = new System.Globalization.CultureInfo("de-DE");
-
-// Example: apply currency formatting to all numeric cells in column B of the first worksheet
-Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
-int firstRow = sheet.Cells.MinRow;
-int lastRow = sheet.Cells.MaxRow;
-int columnIndex = 1; // Column B (zero‑based index)
-
-for (int row = firstRow; row <= lastRow; row++)
+namespace AsposeCellsExample
 {
-    Aspose.Cells.Cell cell = sheet.Cells[row, columnIndex];
-    if (cell.Type == Aspose.Cells.CellValueType.IsNumeric)
+    // The example loads an Excel workbook, assigns German (de-DE) culture to Workbook.Settings, scans all worksheets to detect currency cells by built‑in format index 164 or currency symbols, reapplies the German built‑in currency format (index 164) to those cells, and saves the updated workbook—all without modifying the thread's culture.
+    class Program
     {
-        // Use the built‑in German currency format (index 164 corresponds to "€ #,##0.00")
-        Aspose.Cells.Style style = cell.GetStyle();
-        style.Number = 164;
-        cell.SetStyle(style);
+        static void Main(string[] args)
+        {
+            // Define input and output file paths (replace placeholders with actual paths)
+            string inputPath = "{InputFilePath}";
+            string outputPath = "{OutputFilePath}";
+
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Apply German culture to the workbook settings (does not affect thread culture)
+                workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+                // Iterate through all worksheets and cells to adjust currency formatting
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    int maxRow = cells.MaxDataRow;
+                    int maxCol = cells.MaxDataColumn;
+
+                    for (int row = 0; row <= maxRow; row++)
+                    {
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            Cell cell = cells[row, col];
+                            Style style = cell.GetStyle();
+
+                            bool isCurrency = false;
+
+                            // Check built‑in currency format index (164 is the built‑in German currency format)
+                            if (style.Number == 164)
+                            {
+                                isCurrency = true;
+                            }
+                            // Check custom format strings that contain typical currency symbols
+                            else if (!string.IsNullOrEmpty(style.Custom) &&
+                                     (style.Custom.Contains("$") || style.Custom.Contains("€") || style.Custom.Contains("£")))
+                            {
+                                isCurrency = true;
+                            }
+
+                            if (isCurrency)
+                            {
+                                // Apply the built‑in German currency format (index 164)
+                                style.Number = 164;
+                                cell.SetStyle(style);
+                            }
+                        }
+                    }
+                }
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
-
-// Save the modified workbook
-workbook.Save("output.xlsx");

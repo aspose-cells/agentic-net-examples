@@ -1,37 +1,44 @@
-// Title: How to set a solid blue ODS page background using Aspose.Cells for .NET and save the workbook
-// AI Prompts: Write C# code that creates a new Workbook, sets the ODS page background to a solid blue color via OdsPageBackground, and saves it as an .ods file. | Demonstrate using Aspose.Cells PageSetup.ODSPageBackground to apply a solid color background to the first worksheet in a .NET application. | Provide a complete example that configures OdsPageBackground.Type and OdsPageBackground.Color to produce a blue background in an ODS document.
-// Common Searches: Aspose.Cells C# set ODS page background color to blue | How to apply solid color background to ODS file with Aspose.Cells .NET | Saving ODS workbook with custom page background using Aspose.Cells API | C# example for OdsPageBackground Type Color property | Change ODS page background to solid color in Aspose.Cells
-// Tags: Aspose.Cells OdsPageBackground set solid color | C# ODS page background color | Aspose.Cells save ODS with background | PageSetup ODSPageBackground API | Workbook ODS blue background
+// Title: Set a solid blue background for an ODS worksheet using Aspose.Cells for .NET and save the file
+// Common Searches: how to apply a solid blue background to an ODS sheet with Aspose.Cells in C# | Aspose.Cells C# set worksheet background color before saving as ODS | create ODS file with blue page background using Aspose.Cells for .NET | C# code to fill entire worksheet range with solid color and export to ODS
+// Tags: solid background style Aspose.Cells | worksheet range fill color C# | export workbook to ODS format Aspose | backgroundtype solid usage Aspose.Cells | ODS generation with page color .NET
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-namespace OdsPageBackgroundExample
+// Alias to avoid conflict with System.Range introduced in C# 8.0
+using AsposeRange = Aspose.Cells.Range;
+
+// The example creates a new Workbook, defines a solid blue style, applies it to a large worksheet range, and saves the result as an ODS file named 'BlueBackground.ods' using Aspose.Cells for .NET.
+class Program
 {
-    // // Creates a new Workbook, accesses the first worksheet, configures the ODSPageBackground to a solid blue color via PageSetup, and saves the file as OdsPageBackgroundBlue.ods.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle create rule)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the ODS page background object from the worksheet's page setup
-            OdsPageBackground background = sheet.PageSetup.ODSPageBackground;
+            // Define a solid blue fill style
+            Style blueStyle = workbook.CreateStyle();
+            blueStyle.ForegroundColor = Color.Blue;
+            blueStyle.Pattern = BackgroundType.Solid;
 
-            // Set the background type to solid color
-            background.Type = OdsPageBackgroundType.Color;
+            // Apply the style to a large range covering typical sheet area
+            AsposeRange range = sheet.Cells.CreateRange("A1", "Z1000");
+            range.ApplyStyle(blueStyle, new StyleFlag { All = true });
 
-            // Apply a solid blue color as the background
-            background.Color = Color.Blue;
-
-            // Save the workbook as an ODS file with the background applied
-            workbook.Save("OdsPageBackgroundBlue.ods");
+            // Save the workbook as ODS (lifecycle save rule)
+            string outputPath = "BlueBackground.ods";
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

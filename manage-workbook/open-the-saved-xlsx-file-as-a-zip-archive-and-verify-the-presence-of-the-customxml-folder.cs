@@ -1,40 +1,48 @@
-// Title: Check for a customXml folder inside a saved .xlsx workbook using Aspose.Cells and C# ZipArchive
-// AI Prompts: Generate C# code that loads an existing .xlsx file with Aspose.Cells, saves it, opens the file as a ZipArchive, and returns true when any entry begins with "customXml/". | Create a .NET snippet that enumerates the parts of an Excel package via ZipArchive and determines whether the customXml directory is present.
-// Common Searches: C# how to verify that an Excel .xlsx file contains a customXml part | Aspose.Cells detect customXml folder in workbook package programmatically | using System.IO.Compression to list customXml entries in an .xlsx file | check for customXml directory in Office Open XML file with .NET
-// Tags: Aspose.Cells inspect xlsx package with ZipArchive | C# verify customXml part in Office Open XML | detect customXml folder in Excel workbook using .NET | zip archive enumeration of Excel file contents | customXml directory presence check in saved workbook
+// Title: Verify the customXml folder in an .xlsx workbook by opening it as a ZipArchive with Aspose.Cells in C#
+// Common Searches: how to check for customXml folder inside an .xlsx file using C# and Aspose.Cells | C# open Excel .xlsx as zip to inspect customXml directory | Aspose.Cells verify presence of customXml package part in workbook | read .xlsx package structure with ZipArchive and detect customXml folder | determine if an Excel file contains customXml part using Aspose.Cells C#
+// Tags: Aspose.Cells open workbook zip archive | C# inspect Excel package customXml folder | ZipArchive filter entries for customXml | verify customXml part in .xlsx file | read .xlsx internal structure with Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Aspose.Cells;
 
-// Loads an existing workbook, ensures it is saved as .xlsx, opens the file as a ZipArchive, and checks whether any entry resides in the "customXml/" folder, outputting the verification result.
+// The example loads an existing .xlsx workbook with Aspose.Cells, then reopens the same file as a ZipArchive to examine its internal entries. It checks whether any entry starts with the "customXml/" path, indicating the presence of the customXml folder, and outputs the verification result while handling potential errors.
 class Program
 {
     static void Main()
     {
-        // Path to the existing Excel file
-        string excelPath = "output.xlsx";
+        // Path to the existing .xlsx file
+        string filePath = @"C:\Path\To\YourFile.xlsx";
 
-        // Load the workbook (if you need to work with it before verification)
-        Workbook workbook = new Workbook(excelPath);
-
-        // Ensure the file is saved (optional if already saved)
-        workbook.Save(excelPath, SaveFormat.Xlsx);
-
-        // Open the .xlsx file as a zip archive
-        using (FileStream fs = new FileStream(excelPath, FileMode.Open, FileAccess.Read))
-        using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Check for any entry that resides in the "customXml" folder
-            bool hasCustomXmlFolder = archive.Entries
-                .Any(entry => entry.FullName.StartsWith("customXml/", StringComparison.OrdinalIgnoreCase));
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
-            // Output the verification result
-            Console.WriteLine(hasCustomXmlFolder
-                ? "customXml folder exists in the .xlsx package."
-                : "customXml folder NOT found in the .xlsx package.");
+        try
+        {
+            // Load the workbook using Aspose.Cells
+            Workbook workbook = new Workbook(filePath);
+
+            // Open the .xlsx file as a zip archive to inspect its internal structure
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Read))
+            {
+                // Check for the presence of the "customXml" folder
+                bool hasCustomXmlFolder = zip.Entries.Any(entry => entry.FullName.StartsWith("customXml/", StringComparison.OrdinalIgnoreCase));
+
+                // Output the verification result
+                Console.WriteLine($"customXml folder present: {hasCustomXmlFolder}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors that occur during loading or processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

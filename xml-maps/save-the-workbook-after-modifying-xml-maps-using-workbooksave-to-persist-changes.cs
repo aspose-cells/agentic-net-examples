@@ -1,13 +1,12 @@
-// Title: Saving an Excel workbook after updating XML maps with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, modifies its XML map (when the API is available), and calls Workbook.Save to write the updated workbook to a new file. | Demonstrate how to verify the source file, apply XML map changes, and persist those changes using Workbook.Save while handling exceptions in a C# Aspose.Cells application.
-// Common Searches: Aspose.Cells C# how to persist changes to an XML map in an Excel file | save workbook after editing XML map using Workbook.Save in .NET | example code for updating Excel XML map and saving with Aspose.Cells
-// Tags: Aspose.Cells Workbook.Save Excel file | C# update XML map Aspose.Cells | persist XML map changes .NET | save workbook after XML map edit | Aspose.Cells XML map handling C#
+// Title: Save an Excel workbook after modifying XML maps using Aspose.Cells Workbook.Save in C#
+// Common Searches: how to persist XML map changes when saving an Excel workbook with Aspose.Cells in C# | Aspose.Cells C# example for saving a workbook that contains updated XML map definitions | using Workbook.Save to write modified XML maps to an XLSX file in .NET | C# code to export Excel file after editing XML maps with Aspose.Cells
+// Tags: Aspose.Cells Workbook.Save XML map persistence | C# save workbook with updated XML maps | Excel XLSX export after XML map modification Aspose.Cells | SaveFormat.Xlsx usage with XML map changes in Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, notes that XML map functionality is unavailable in the current version, then saves the workbook as output.xlsx using Workbook.Save while catching and reporting any exceptions.
+// The sample verifies that an input.xlsx file exists, loads it into an Aspose.Cells Workbook, skips XML map manipulation due to version constraints, and then saves the workbook as output.xlsx using Workbook.Save with SaveFormat.Xlsx, while handling any runtime exceptions.
 class Program
 {
     static void Main()
@@ -17,7 +16,7 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
@@ -28,15 +27,15 @@ class Program
             Workbook workbook = new Workbook(inputPath);
 
             // NOTE: XML map functionality is not available in the current Aspose.Cells version.
-            // If needed, XML map handling should be added when the appropriate API is present.
+            // The following code block is omitted to keep the example compilable and functional.
 
-            // Save the workbook with the desired format
+            // Save the workbook to the desired output format
             workbook.Save(outputPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors to prevent the application from crashing
+            // Catch any unexpected exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,119 +1,76 @@
-// Title: Convert a Gregorian DateTime to a Japanese era string and save it in an Excel workbook using Aspose.Cells (C#)
-// AI Prompts: Write a C# method that takes a DateTime and returns a Japanese era formatted string (e.g., "R3年5月1日"), correctly handling era start dates and the "元" first year. | Create an Aspose.Cells workbook, place the formatted Japanese era string into cell A1, and save the file as an .xlsx document. | Add validation to throw an exception for dates earlier than the Meiji era and ensure the output directory exists before saving.
-// Common Searches: c# how to format date as Japanese era using Aspose.Cells | convert DateTime to Reiwa era string in .NET | write localized Japanese calendar date to Excel with Aspose.Cells | example of Japanese era date conversion for Excel export in C# | Aspose.Cells save workbook with custom Japanese era date format
-// Tags: c# japanese era date conversion | aspocells add era formatted text | japanese calendar formatting .net | excel workbook save custom date string | era start date handling c#
+// Title: C# – Convert a Gregorian DateTime to a Japanese era string and write it to an Excel worksheet using Aspose.Cells
+// Common Searches: how to format a .NET DateTime as Japanese era (gengō) string | aspnet write japanese era date into Excel cell with Aspose.Cells | c# get japanese era name and year from Gregorian date | convert gregorian calendar date to reiwa era format in C# | save custom formatted japanese era date to .xlsx using Aspose.Cells
+// Tags: japanese era representation c# | aspocells write string to excel cell | gregorian to reiwa conversion .net | excel export custom formatted date aspocells | japanese calendar usage with Aspose.Cells
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace JapaneseEraExample
+// The example defines a ToJapaneseEraString method that leverages .NET's JapaneseCalendar and Japanese culture info to produce a string such as "令和3年4月30日" from a Gregorian DateTime, handling the first year as "元". It then creates an Aspose.Cells Workbook, writes the formatted era string to cell A1, deletes any existing file with the same name, saves the workbook as JapaneseEra.xlsx, and logs the output path.
+public static class JapaneseEraFormatter
 {
-    // Utility class to convert Gregorian dates to Japanese era format.
-    // The example defines a JapaneseEraFormatter with a ToJapaneseEraString method that converts a Gregorian DateTime to a Japanese era representation (e.g., "R3年5月1日"), then creates an Aspose.Cells Workbook, writes the formatted string to cell A1, and saves the workbook as JapaneseEraDate.xlsx.
-    public static class JapaneseEraFormatter
+    /// <param name="date">The Gregorian date to convert.</param>
+    /// <returns>A string representing the date in Japanese era format.</returns>
+    public static string ToJapaneseEraString(DateTime date)
     {
-        // Represents a Japanese era with its name, abbreviation and start date.
-        private class Era
-        {
-            public string Name { get; }
-            public string Abbreviation { get; }
-            public DateTime StartDate { get; }
+        // Use the Japanese calendar.
+        JapaneseCalendar jpCalendar = new JapaneseCalendar();
 
-            public Era(string name, string abbreviation, DateTime startDate)
-            {
-                Name = name;
-                Abbreviation = abbreviation;
-                StartDate = startDate;
-            }
-        }
+        // Obtain the era number for the given date.
+        int era = jpCalendar.GetEra(date);
 
-        // List of eras in chronological order (oldest first).
-        private static readonly Era[] Eras = new Era[]
-        {
-            new Era("Meiji",   "M", new DateTime(1868,  1, 25)),
-            new Era("Taisho",  "T", new DateTime(1912,  7, 30)),
-            new Era("Showa",   "S", new DateTime(1926, 12, 25)),
-            new Era("Heisei",  "H", new DateTime(1989,  1,  8)),
-            new Era("Reiwa",   "R", new DateTime(2019,  5,  1))
-        };
+        // Get the era name (e.g., "令和", "平成", "昭和", etc.).
+        CultureInfo jaCulture = new CultureInfo("ja-JP");
+        string eraName = jaCulture.DateTimeFormat.GetEraName(era);
 
-        /// <param name="date">Gregorian date to convert.</param>
-        /// <returns>Formatted Japanese era date string.</returns>
-        public static string ToJapaneseEraString(DateTime date)
-        {
-            // Ensure the date is not earlier than the first supported era.
-            if (date < Eras[0].StartDate)
-                throw new ArgumentOutOfRangeException(nameof(date), "Date is earlier than supported Japanese eras.");
+        // Determine the year within the era.
+        int yearInEra = jpCalendar.GetYear(date);
+        // In Japanese notation, the first year is expressed as "元" (gan).
+        string yearString = yearInEra == 1 ? "元" : yearInEra.ToString();
 
-            // Find the era that the date belongs to.
-            Era currentEra = null;
-            for (int i = Eras.Length - 1; i >= 0; i--)
-            {
-                if (date >= Eras[i].StartDate)
-                {
-                    currentEra = Eras[i];
-                    break;
-                }
-            }
+        // Month and day are straightforward.
+        int month = jpCalendar.GetMonth(date);
+        int day = jpCalendar.GetDayOfMonth(date);
 
-            // Compute the year within the era.
-            int eraYear = date.Year - currentEra.StartDate.Year + 1;
-            // Adjust for dates before the start month/day of the era year.
-            if (date.Month < currentEra.StartDate.Month ||
-                (date.Month == currentEra.StartDate.Month && date.Day < currentEra.StartDate.Day))
-            {
-                eraYear--;
-            }
-
-            // First year is represented by "元".
-            string yearPart = eraYear == 1 ? "元" : eraYear.ToString();
-
-            // Build the final string: e.g., "R3年5月1日"
-            return $"{currentEra.Abbreviation}{yearPart}年{date.Month}月{date.Day}日";
-        }
+        // Assemble the formatted string: {Era}{Year}年{Month}月{Day}日
+        return $"{eraName}{yearString}年{month}月{day}日";
     }
+}
 
-    // Entry point of the console application.
-    class Program
+public class Program
+{
+    public static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Example Gregorian date.
+            DateTime gregorian = new DateTime(2021, 4, 30);
+            string japaneseEra = JapaneseEraFormatter.ToJapaneseEraString(gregorian);
+            Console.WriteLine(japaneseEra); // Output: 令和3年4月30日
+
+            // Save the result into an Excel file using Aspose.Cells.
+            string outputPath = "JapaneseEra.xlsx";
+
+            // Ensure we don't attempt to overwrite a locked file.
+            if (File.Exists(outputPath))
             {
-                // Define output file path.
-                string outputPath = "JapaneseEraDate.xlsx";
-
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet.
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Get current date and format it using the Japanese era formatter.
-                DateTime now = DateTime.Now;
-                string eraString = JapaneseEraFormatter.ToJapaneseEraString(now);
-
-                // Write the formatted date into cell A1.
-                sheet.Cells["A1"].PutValue($"Current Japanese Era Date: {eraString}");
-
-                // Save the workbook.
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook successfully saved to: {Path.GetFullPath(outputPath)}");
+                File.Delete(outputPath);
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors.
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Create a new workbook and write the formatted date to cell A1.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(japaneseEra);
+
+            // Save the workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors.
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

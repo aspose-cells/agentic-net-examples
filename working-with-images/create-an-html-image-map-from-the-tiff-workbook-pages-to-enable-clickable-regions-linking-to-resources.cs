@@ -1,91 +1,149 @@
-// Title: Create an HTML image map from Excel worksheets and replace cell click links with custom URLs using Aspose.Cells for .NET
-// AI Prompts: Generate an HTML file that contains an image map for each worksheet in an Excel workbook with Aspose.Cells, then edit the HTML to swap the default CellClick JavaScript links for selected cells with your own external URLs. | Load a .xlsx workbook, call Workbook.Save using SaveFormat.Html to produce an image map, read the resulting HTML, locate href attributes that invoke javascript:CellClick for cells such as A1 or B2, and replace them with absolute hyperlinks to the desired resources.
-// Common Searches: how to export Excel worksheets to HTML with clickable image map using Aspose.Cells .NET | replace Aspose.Cells generated CellClick JavaScript links with custom URLs | customize HTML image map generated from workbook pages in C# | Aspose.Cells save workbook as HTML and edit cell hyperlinks programmatically | map specific Excel cells to external web pages in Aspose.Cells HTML output
-// Tags: Aspose.Cells HTML image map generation | custom cell hyperlink replacement Aspose.Cells | save workbook as HTML with image map .NET | modify generated HTML from Aspose.Cells | map Excel cell to external URL C#
+// Title: Generate an HTML image map with clickable cells from Excel worksheets rendered as PNG using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, renders each worksheet to a PNG image, and builds an HTML <map> containing <area> elements for every cell that has a hyperlink. | Implement a method that calculates the pixel rectangle of a specific cell based on column widths and row heights, then uses those coordinates to define rectangular clickable regions in an HTML image map. | Create a single HTML file that embeds the rendered worksheet images with usemap attributes, linking each image to its corresponding map of hyperlink areas.
+// Common Searches: how to generate an HTML image map from Excel sheets using Aspose.Cells C# | Aspose.Cells render worksheet to PNG and create clickable regions for cell hyperlinks | C# calculate Excel cell pixel coordinates for image map generation | export Excel workbook as images with hyperlink areas in HTML | build HTML <map> from Excel hyperlinks using Aspose.Cells .NET
+// Tags: Aspose.Cells render worksheet to PNG | HTML image map generation from Excel cells | calculate cell pixel rectangle C# | hyperlink area tags for Excel image map | export Excel as images with clickable regions | C# image map creation using Aspose.Cells
 
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example loads an Excel workbook, saves it as HTML (which automatically creates an image map for each sheet), reads the generated HTML file, replaces the default CellClick JavaScript links for specified cells (e.g., A1, B2) with custom external URLs, and writes the updated HTML back to disk.
-class HtmlImageMapGenerator
+// The example loads an Excel workbook, renders each worksheet to a PNG image with Aspose.Cells, computes pixel rectangles for cells containing hyperlinks, constructs an HTML <map> with <area> elements using those coordinates, and writes a single HTML file that displays the images linked to their respective clickable regions.
+class TiffImageMapGenerator
 {
     static void Main()
     {
         try
         {
-            const string sourcePath = "SourceWorkbook.xlsx";
-            const string htmlPath = "WorkbookWithMap.html";
+            // Input workbook path
+            string inputPath = "input.xlsx";
 
-            // Verify source workbook exists
-            if (!File.Exists(sourcePath))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source workbook not found: {sourcePath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the source workbook
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as HTML (default options generate an image map and images)
-            workbook.Save(htmlPath, SaveFormat.Html);
+            // Prepare output directories
+            string outputDir = "output";
+            string imageDir = Path.Combine(outputDir, "Images");
+            Directory.CreateDirectory(imageDir);
+            Directory.CreateDirectory(outputDir);
 
-            // OPTIONAL: Map specific cell addresses to custom resource URLs
-            var cellToUrl = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            // HTML builder
+            StringBuilder htmlBuilder = new StringBuilder();
+            htmlBuilder.AppendLine("<!DOCTYPE html>");
+            htmlBuilder.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Image Map</title></head><body>");
+
+            // Options for image rendering (default PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                { "A1", "https://example.com/resource1" },
-                { "B2", "https://example.com/resource2" }
-                // Add more mappings as needed
+                HorizontalResolution = 96,
+                VerticalResolution = 96,
+                OnePagePerSheet = true
             };
 
-            // Verify the HTML file was created before attempting to modify it
-            if (!File.Exists(htmlPath))
+            // Iterate through each worksheet
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
             {
-                Console.WriteLine($"Generated HTML not found: {htmlPath}");
-                return;
+                try
+                {
+                    Worksheet sheet = workbook.Worksheets[sheetIndex];
+                    string sheetName = sheet.Name;
+
+                    // ---------- 1. Render the worksheet as an image ----------
+                    string imgFileName = $"{sheetName}.png";
+                    string imgPath = Path.Combine(imageDir, imgFileName);
+
+                    // Ensure full sheet is printed
+                    sheet.PageSetup.PrintArea = "";
+                    sheet.PageSetup.PrintTitleRows = "";
+                    sheet.PageSetup.PrintTitleColumns = "";
+
+                    // Render the sheet to a single-page image
+                    SheetRender renderer = new SheetRender(sheet, imgOptions);
+                    renderer.ToImage(0, imgPath);
+
+                    // ---------- 2. Build image map based on cells that contain hyperlinks ----------
+                    StringBuilder mapBuilder = new StringBuilder();
+                    string mapName = $"map_{sheetIndex}";
+                    mapBuilder.AppendLine($"<map name=\"{mapName}\">");
+
+                    foreach (Hyperlink hl in sheet.Hyperlinks)
+                    {
+                        // Only process external hyperlinks (address not empty)
+                        if (string.IsNullOrEmpty(hl.Address))
+                            continue;
+
+                        int row = hl.Area.StartRow;
+                        int col = hl.Area.StartColumn;
+
+                        // Compute pixel rectangle for the cell
+                        Rectangle rect = GetCellRectangle(sheet, row, col);
+
+                        // Build the <area> element
+                        string area = $"<area shape=\"rect\" coords=\"{rect.Left},{rect.Top},{rect.Right},{rect.Bottom}\" href=\"{hl.Address}\" alt=\"{sheet.Cells[row, col].StringValue}\" />";
+                        mapBuilder.AppendLine(area);
+                    }
+
+                    mapBuilder.AppendLine("</map>");
+
+                    // ---------- 3. Insert the image and its map into the HTML ----------
+                    string relativeImagePath = Path.Combine("Images", imgFileName).Replace("\\", "/");
+                    htmlBuilder.AppendLine($"<h2>{sheetName}</h2>");
+                    htmlBuilder.AppendLine($"<img src=\"{relativeImagePath}\" usemap=\"#{mapName}\" alt=\"{sheetName}\" />");
+                    htmlBuilder.AppendLine(mapBuilder.ToString());
+                }
+                catch (Exception sheetEx)
+                {
+                    Console.WriteLine($"Error processing sheet index {sheetIndex}: {sheetEx.Message}");
+                }
             }
 
-            // Read the generated HTML
-            string htmlContent;
-            try
-            {
-                htmlContent = File.ReadAllText(htmlPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to read HTML file: {ex.Message}");
-                return;
-            }
+            htmlBuilder.AppendLine("</body></html>");
 
-            // Replace default cell links with custom URLs
-            foreach (var kvp in cellToUrl)
-            {
-                string cellAddress = kvp.Key;
-                string url = kvp.Value;
+            // Save the final HTML file
+            string htmlPath = Path.Combine(outputDir, "WorkbookImageMap.html");
+            File.WriteAllText(htmlPath, htmlBuilder.ToString());
 
-                // Pattern matches: href="javascript:CellClick('Sheet1!A1')"
-                string pattern = $@"href\s*=\s*""javascript:CellClick\('([^']+)!{Regex.Escape(cellAddress)}'\)""";
-                htmlContent = Regex.Replace(htmlContent, pattern, $"href=\"{url}\"", RegexOptions.IgnoreCase);
-            }
-
-            // Save the modified HTML back to file
-            try
-            {
-                File.WriteAllText(htmlPath, htmlContent);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to write modified HTML: {ex.Message}");
-                return;
-            }
-
-            Console.WriteLine("HTML image map generated and customized successfully.");
+            Console.WriteLine("Images and HTML image map have been generated successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Calculates the pixel rectangle of a cell based on column widths and row heights.
+    private static Rectangle GetCellRectangle(Worksheet sheet, int row, int col)
+    {
+        // Left offset: sum of widths of all preceding columns
+        int left = 0;
+        for (int c = 0; c < col; c++)
+        {
+            left += sheet.Cells.GetColumnWidthPixel(c);
+        }
+
+        // Top offset: sum of heights of all preceding rows (convert points to pixels)
+        int top = 0;
+        for (int r = 0; r < row; r++)
+        {
+            double heightPoints = sheet.Cells.GetRowHeight(r);
+            int heightPixels = (int)Math.Round(heightPoints * 96.0 / 72.0);
+            top += heightPixels;
+        }
+
+        // Width and height of the current cell
+        int width = sheet.Cells.GetColumnWidthPixel(col);
+        double heightPts = sheet.Cells.GetRowHeight(row);
+        int height = (int)Math.Round(heightPts * 96.0 / 72.0);
+
+        return new Rectangle(left, top, width, height);
     }
 }

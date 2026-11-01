@@ -1,67 +1,54 @@
-// Title: Export a specific Excel table range to an indented JSON file with column headers using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, extracts a defined CellArea into a DataTable using ExportDataTable (including headers), and saves the DataTable as pretty‑printed JSON. | Show how to use System.Text.Json to serialize a DataTable with the WriteIndented option and write the resulting JSON to a file path.
-// Common Searches: C# Aspose.Cells export selected worksheet range to JSON with column names as keys | How to convert an Excel table to formatted JSON file using Aspose.Cells and System.Text.Json | Save Excel range as indented JSON file preserving header row in .NET
-// Tags: Aspose.Cells ExportDataTable to JSON | C# serialize DataTable with System.Text.Json | Excel range to indented JSON file | Aspose.Cells extract table with headers | pretty‑printed JSON output from Excel
+// Title: Export an Excel worksheet table to indented JSON with column headers as keys using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export worksheet to pretty printed JSON with column names as keys | Save Excel table as formatted JSON file using Aspose.Cells .NET | Generate indented JSON from Excel data with column headers using Aspose.Cells in C# | C# code to convert an Excel range to readable JSON with indentation via Aspose.Cells | Aspose.Cells JsonSaveOptions example for readable JSON output
+// Tags: Aspose.Cells JsonSaveOptions pretty-printed output | export worksheet to JSON C# | Excel to JSON conversion with column headers Aspose.Cells | indented JSON generation from Excel Aspose.Cells | C# Aspose.Cells save as JSON file
 
 using System;
-using System.Data;
-using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
 
-// The example loads 'input.xlsx', extracts cells A1:D10 (including the header row) into a DataTable via Aspose.Cells' ExportDataTable, serializes the DataTable to indented JSON using System.Text.Json, and writes the result to 'output.json'.
+// The sample creates a workbook, adds a worksheet named "Data" with column headers and sample rows, applies JsonSaveOptions, and saves the worksheet content as an indented JSON file (TableData.json) where each column header becomes a JSON key.
 class ExportTableToJson
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.json";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Verify that the input workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the workbook that contains the table.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet (adjust index if needed).
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Define the area of the table to export (including the header row).
-            // Example: A1:D10 => rows 0‑9, columns 0‑3
-            CellArea tableArea = new CellArea
-            {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = 9,
-                EndColumn = 3
-            };
+            // Populate column headers
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Age");
+            sheet.Cells["D1"].PutValue("Country");
 
-            // Export the defined range to a DataTable (first row used as column headers).
-            int totalRows = tableArea.EndRow - tableArea.StartRow + 1;
-            int totalColumns = tableArea.EndColumn - tableArea.StartColumn + 1;
-            DataTable dataTable = sheet.Cells.ExportDataTable(
-                tableArea.StartRow,
-                tableArea.StartColumn,
-                totalRows,
-                totalColumns,
-                true);
+            // Populate sample data rows
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("John");
+            sheet.Cells["C2"].PutValue(30);
+            sheet.Cells["D2"].PutValue("USA");
 
-            // Serialize the DataTable to formatted JSON.
-            string json = JsonSerializer.Serialize(dataTable, new JsonSerializerOptions { WriteIndented = true });
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Emma");
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["D3"].PutValue("Canada");
 
-            // Write JSON to the output file.
-            File.WriteAllText(outputPath, json);
-            Console.WriteLine($"JSON file has been saved to '{outputPath}'.");
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Liu");
+            sheet.Cells["C4"].PutValue(28);
+            sheet.Cells["D4"].PutValue("China");
+
+            // Use default JSON save options
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
+
+            // Save the workbook data to a JSON file
+            workbook.Save("TableData.json", jsonOptions);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

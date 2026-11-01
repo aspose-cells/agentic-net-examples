@@ -1,75 +1,76 @@
-// Title: Copy cell formatting between two equal-sized ranges after loading a workbook from a memory stream with Aspose.Cells for .NET
-// AI Prompts: Load an Excel workbook from a byte array using a MemoryStream and transfer the style from range A1:B2 to range D5:E6 without writing the file to disk. | Validate that the source and destination ranges have identical dimensions, then copy each cell's style from the source range to the destination range entirely in memory using Aspose.Cells.
-// Common Searches: asp.net copy cell style between ranges using Aspose.Cells memory stream | load Excel workbook from byte array and duplicate formatting in Aspose.Cells C# | how to transfer range formatting without saving workbook Aspose.Cells .NET | in‑memory range style copy Aspose.Cells example
-// Tags: copy cell style Aspose.Cells | load workbook from memory stream C# | in-memory range formatting Aspose.Cells | validate equal range dimensions Aspose.Cells
+// Title: Copy cell formatting between two ranges in an in‑memory workbook using Aspose.Cells for .NET
+// Common Searches: how to copy cell formatting from one range to another using Aspose.Cells without saving the workbook | load an Excel workbook from a byte array and copy style between ranges in C# | Aspose.Cells Range.CopyStyle example with MemoryStream | copy style between A1:B2 and C3:D4 in a workbook loaded from memory | C# Aspose.Cells copy range style without writing file to disk
+// Tags: Aspose.Cells Range.CopyStyle in-memory workbook | copy cell style between ranges C# | load workbook from byte array Aspose.Cells | memory stream Excel workbook Aspose.Cells | transfer formatting without saving Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The example loads an Excel file from a byte array via a MemoryStream, creates matching source and destination ranges, checks that their sizes match, and copies each cell's style from the source range to the destination range, all without persisting the workbook to disk.
-class Program
+// The example loads an Excel workbook from a byte array wrapped in a MemoryStream, accesses the first worksheet, creates source (A1:B2) and destination (C3:D4) ranges, and uses Range.CopyStyle to transfer the source range's formatting to the destination range—all without writing the file to disk.
+public class StyleCopyExample
 {
-    static void Main()
+    public void CopyStyleBetweenRanges(byte[] workbookData)
     {
         try
         {
-            // Obtain the Excel file as a byte array (could come from DB, network, etc.)
-            byte[] workbookData = GetWorkbookBytes();
-
-            // Load the workbook from a memory stream (no disk I/O)
-            using (MemoryStream ms = new MemoryStream(workbookData))
+            // Load the workbook from a memory stream
+            using (MemoryStream stream = new MemoryStream(workbookData))
             {
-                Workbook wb = new Workbook(ms);
+                Workbook workbook = new Workbook(stream);
 
                 // Access the first worksheet
-                Worksheet ws = wb.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Define source and destination ranges
-                // Example: copy style from A1:B2 to D5:E6
-                Aspose.Cells.Range srcRange = ws.Cells.CreateRange("A1", "B2");
-                Aspose.Cells.Range destRange = ws.Cells.CreateRange("D5", "E6");
+                AsposeRange sourceRange = sheet.Cells.CreateRange("A1:B2");
+                AsposeRange destinationRange = sheet.Cells.CreateRange("C3:D4");
 
-                // Ensure both ranges have the same dimensions
-                if (srcRange.RowCount != destRange.RowCount ||
-                    srcRange.ColumnCount != destRange.ColumnCount)
-                {
-                    throw new InvalidOperationException("Source and destination ranges must be the same size.");
-                }
-
-                // Copy style cell by cell
-                for (int i = 0; i < srcRange.RowCount; i++)
-                {
-                    for (int j = 0; j < srcRange.ColumnCount; j++)
-                    {
-                        Cell srcCell = srcRange[i, j];
-                        Cell destCell = destRange[i, j];
-                        destCell.SetStyle(srcCell.GetStyle());
-                    }
-                }
-
-                // Workbook remains in memory; no saving to disk required
+                // Copy style from source to destination
+                destinationRange.CopyStyle(sourceRange);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error during style copy: {ex.Message}");
         }
     }
+}
 
-    // Helper method to provide a sample workbook as a byte array.
-    // Replace with actual source of the Excel file in real usage.
-    static byte[] GetWorkbookBytes()
+public class Program
+{
+    public static void Main(string[] args)
     {
-        Workbook tempWb = new Workbook();
-        Worksheet ws = tempWb.Worksheets[0];
-        ws.Cells["A1"].PutValue("Header");
-        ws.Cells["A1"].GetStyle().Font.IsBold = true; // Apply a style to source cell
-
-        using (MemoryStream ms = new MemoryStream())
+        try
         {
-            tempWb.Save(ms, SaveFormat.Xlsx);
-            return ms.ToArray();
+            string filePath = "sample.xlsx";
+            byte[] workbookData;
+
+            if (File.Exists(filePath))
+            {
+                // Load existing workbook file
+                workbookData = File.ReadAllBytes(filePath);
+            }
+            else
+            {
+                // Create a new workbook and obtain its byte array
+                Workbook wb = new Workbook();
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.Save(ms, SaveFormat.Xlsx);
+                    workbookData = ms.ToArray();
+                }
+            }
+
+            // Execute the style copy example
+            StyleCopyExample example = new StyleCopyExample();
+            example.CopyStyleBetweenRanges(workbookData);
+
+            Console.WriteLine("Style copy operation completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled error: {ex.Message}");
         }
     }
 }

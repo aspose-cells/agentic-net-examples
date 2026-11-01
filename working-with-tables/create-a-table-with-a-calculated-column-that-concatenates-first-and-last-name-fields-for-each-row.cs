@@ -1,14 +1,13 @@
-// Title: Add a calculated FullName column to an Excel table that concatenates FirstName and LastName using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that creates a ListObject and sets a formula to join FirstName and LastName into a FullName column. | Show how to use structured references in an Aspose.Cells table to define a derived column that combines two text fields. | Provide a complete example that auto‑fits columns and saves the workbook after adding the calculated column.
-// Common Searches: aspnet aspose.cells create table with derived column concatenating names | c# structured reference formula for full name column in Aspose.Cells | how to set ListObject column formula in Aspose.Cells .NET | auto fit columns and save workbook using Aspose.Cells C# example
-// Tags: Aspose.Cells column formula with structured references | C# add ListObject to worksheet | concatenate text fields in Excel table using Aspose.Cells | auto‑fit columns Aspose.Cells workbook | save workbook as .xlsx C# Aspose.Cells
+// Title: Generate an Excel table with a FullName calculated column that concatenates FirstName and LastName using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add calculated column to ListObject that joins first and last name | how to create a concatenated FullName column in an Excel table with Aspose.Cells .NET | C# set cell formula dynamically for each row in an Aspose.Cells table | populate Excel ListObject with sample data and a derived column using Aspose.Cells | Aspose.Cells create table and assign formula to cells in C#
+// Tags: Aspose.Cells derived column formula | C# ListObject creation with concatenated field | Excel table full name generation Aspose.Cells | dynamic cell formula assignment in .NET | save workbook as xlsx using Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// The program creates a new workbook, inserts a ListObject named PeopleTable with FirstName, LastName, and FullName columns, fills sample data, assigns a structured‑reference formula to the FullName column that joins the first and last names, auto‑fits the columns, and saves the file as PeopleTable.xlsx.
+// The example creates a new workbook, adds FirstName, LastName, and FullName headers, fills sample names, assigns a formula to each FullName cell that joins the corresponding first and last names with a space, builds a ListObject (Excel table) over the range, and saves the file as PeopleTable.xlsx.
 class Program
 {
     static void Main()
@@ -19,63 +18,55 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add headers
+            // Set headers
             sheet.Cells["A1"].PutValue("FirstName");
             sheet.Cells["B1"].PutValue("LastName");
             sheet.Cells["C1"].PutValue("FullName");
 
             // Sample data
-            string[,] data = {
-                { "John", "Doe" },
-                { "Jane", "Smith" },
-                { "Bob", "Johnson" }
-            };
+            string[] firstNames = { "John", "Jane", "Bob", "Alice", "Mike" };
+            string[] lastNames = { "Doe", "Smith", "Brown", "Johnson", "Davis" };
 
-            // Populate first and last name columns
-            for (int i = 0; i < data.GetLength(0); i++)
+            // Populate FirstName and LastName columns
+            for (int i = 0; i < firstNames.Length; i++)
             {
-                sheet.Cells[i + 1, 0].PutValue(data[i, 0]); // Column A
-                sheet.Cells[i + 1, 1].PutValue(data[i, 1]); // Column B
+                sheet.Cells[i + 1, 0].PutValue(firstNames[i]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(lastNames[i]); // Column B
+            }
+
+            // Add calculated column that concatenates FirstName and LastName
+            for (int row = 1; row <= firstNames.Length; row++)
+            {
+                // Formula: =A2 & " " & B2 (adjusted for each row)
+                sheet.Cells[row, 2].Formula = $"=A{row + 1} & \" \" & B{row + 1}";
             }
 
             // Define the range for the table (including header row)
-            int totalRows = data.GetLength(0) + 1; // header + data rows
+            int totalRows = firstNames.Length + 1; // header + data rows
             int totalCols = 3; // FirstName, LastName, FullName
 
-            CellArea tableArea = new CellArea
-            {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = totalRows - 1,      // zero‑based index
-                EndColumn = totalCols - 1    // zero‑based index
-            };
-
-            // Add a ListObject (Excel table) to the worksheet
-            int tableIndex = sheet.ListObjects.Add(
-                tableArea.StartRow,
-                tableArea.StartColumn,
-                tableArea.EndRow,
-                tableArea.EndColumn,
-                true);
-
+            // Create a table (ListObject) over the defined range
+            int tableIndex = sheet.ListObjects.Add(0, 0, totalRows - 1, totalCols - 1, true);
             ListObject table = sheet.ListObjects[tableIndex];
             table.DisplayName = "PeopleTable";
+            table.ShowHeaderRow = true;
+            // ShowTotalRow defaults to false; no need to set it explicitly
 
-            // Set formula for the FullName column using structured references
-            // Column index 2 corresponds to the third column (FullName)
-            table.ListColumns[2].Formula = "=[@FirstName] & \" \" & [@LastName]";
-
-            // Auto‑fit columns for better visibility
-            sheet.AutoFitColumns();
+            // Determine output path and ensure directory exists
+            string outputPath = "PeopleTable.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "PeopleTable.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

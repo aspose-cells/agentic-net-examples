@@ -1,38 +1,62 @@
-// Title: How to recalculate all formulas in an Aspose.Cells workbook after updating cell values using C#
-// AI Prompts: Update cells A1 and B1 with numeric values, assign the formula "=A1+B1" to C1, then invoke workbook.CalculateFormula() and read the computed result. | After modifying worksheet data, call Workbook.CalculateFormula() to refresh every dependent formula before saving the workbook.
-// Common Searches: C# Aspose.Cells recalculate formulas after changing cell data | Workbook.CalculateFormula example for updating Excel formulas programmatically | How to force formula evaluation in Aspose.Cells before saving workbook | Recalculate dependent formulas in Aspose.Cells after setting cell values | Aspose.Cells .NET recalc all formulas in workbook
-// Tags: Aspose.Cells Workbook.CalculateFormula usage | recalculate formulas C# Aspose.Cells | update cell values then evaluate formulas Aspose.Cells | force Excel formula evaluation Aspose.Cells .NET | save workbook after formula recalculation Aspose.Cells
+// Title: Recalculate all formulas in an Excel workbook after changing cell values using Aspose.Cells Workbook.CalculateFormula in C#
+// Common Searches: C# Aspose.Cells recalculate workbook formulas after updating cell values | How to force formula recalculation in an Excel file with Aspose.Cells | Using Workbook.CalculateFormula to refresh formulas after modifying worksheet data in .NET | Aspose.Cells update formulas programmatically after cell edit C# | Recompute all Excel formulas in a saved workbook with Aspose.Cells .NET
+// Tags: Workbook.CalculateFormula C# | Aspose.Cells formula recalculation | programmatic Excel formula update | modify worksheet cells Aspose.Cells | recalculate all workbook formulas .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace RecalculateFormulasDemo
+// The example loads an existing Excel file (or creates a new workbook if missing), changes the values of cells A1 and B1 on the first worksheet, calls Workbook.CalculateFormula to recompute every formula in the workbook, and saves the updated file, handling password‑protected workbooks and general exceptions.
+class Program
 {
-    // Demonstrates creating a workbook, setting numeric values in A1 and B1, adding a formula to C1, invoking Workbook.CalculateFormula() to recalculate all formulas, outputting the result, and saving the workbook as RecalculatedFormulas.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            // Load existing workbook if it exists
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    // Attempt to load; if the file is password‑protected an exception will be thrown
+                    var loadOptions = new LoadOptions();
+                    workbook = new Workbook(inputPath, loadOptions);
+                }
+                catch (CellsException ex) when (ex.Message.Contains("password"))
+                {
+                    Console.WriteLine("The input workbook is password protected. Unable to load it.");
+                    return;
+                }
+            }
+            else
+            {
+                // Create a new workbook when the input file is missing
+                workbook = new Workbook();
+                Console.WriteLine("Input file not found. A new workbook has been created.");
+            }
 
-            // Access the first worksheet and its cells
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Modify worksheet data
-            cells["A1"].PutValue(10);          // Set a numeric value
-            cells["B1"].PutValue(20);          // Set another numeric value
-            cells["C1"].Formula = "=A1+B1";    // Add a formula that depends on the modified cells
+            // Modify some cell values
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["B1"].PutValue(20);
 
-            // Recalculate all formulas in the workbook (rule: CalculateFormula)
+            // Recalculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Output the result of the formula to verify calculation
-            Console.WriteLine("Result of C1 (A1+B1): " + cells["C1"].Value);
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("RecalculatedFormulas.xlsx");
+            // Save the workbook with updated values and formulas
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

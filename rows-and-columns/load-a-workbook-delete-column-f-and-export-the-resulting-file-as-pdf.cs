@@ -1,33 +1,23 @@
-// Title: Delete column F from an Excel worksheet and export the workbook as a PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, removes column F from the first sheet, and saves the workbook directly to a PDF with one page per sheet using Aspose.Cells. | Generate a snippet that deletes a specific column in a worksheet, updates any dependent formulas, and applies PdfSaveOptions before exporting to PDF with Aspose.Cells. | Show how to combine Cells.DeleteColumn and PdfSaveOptions to convert an edited Excel file to a PDF in C#.
-// Common Searches: asp.net delete column F from Excel and convert to PDF with Aspose.Cells | c# remove specific column before exporting workbook to PDF using Aspose.Cells | how to keep formula references after deleting a column in Aspose.Cells | Aspose.Cells PdfSaveOptions one page per sheet example | delete column in first worksheet and save as PDF in C#
-// Tags: delete column Aspose.Cells C# | excel to pdf conversion Aspose.Cells | PdfSaveOptions one page per sheet | update formulas after column deletion Aspose.Cells | remove specific worksheet column before pdf export
+// Title: Delete column F from an Excel worksheet and save the workbook as a PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, removes column F from the first sheet, and saves the result as a PDF. | Generate a snippet that uses Aspose.Cells to delete a zero‑based column index (5) from a worksheet and then export the workbook to PDF. | Provide an example of loading a workbook, calling Cells.DeleteColumn on column 5, and calling Workbook.Save with SaveFormat.Pdf in C#.
+// Common Searches: Aspose.Cells C# delete column F from Excel and export to PDF | How to remove a specific column from an Excel file and save as PDF using Aspose.Cells | C# code to delete column index 5 in a worksheet and save workbook as PDF with Aspose.Cells | Aspose.Cells example for column deletion and PDF conversion in .NET
+// Tags: Aspose.Cells column removal C# | Aspose.Cells PDF export after column removal | remove specific column from Excel worksheet | Cells.DeleteColumn usage example | save workbook as PDF Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // for PdfSaveOptions if needed
 
-// The example loads an existing Excel workbook, deletes column F (zero‑based index 5) from the first worksheet while preserving formula references, configures PdfSaveOptions to place each sheet on a single PDF page, and saves the modified workbook as a PDF file.
-class DeleteColumnAndExportPdf
+// The program loads 'input.xlsx' into an Aspose.Cells Workbook, deletes column F (zero‑based index 5) from the first worksheet, and saves the modified workbook as 'output.pdf' using the PDF save format.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook from file
+        // Load the workbook from the source file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (index 0)
+        // Delete column F (zero‑based index 5) from the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.DeleteColumn(5);
 
-        // Delete column F (zero‑based index 5) and update references in other worksheets
-        sheet.Cells.DeleteColumn(5, true);
-
-        // Create PDF save options (optional – you can customize as needed)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            OnePagePerSheet = true // example option
-        };
-
-        // Save the modified workbook as a PDF file
-        workbook.Save("output.pdf", pdfOptions);
+        // Export the modified workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

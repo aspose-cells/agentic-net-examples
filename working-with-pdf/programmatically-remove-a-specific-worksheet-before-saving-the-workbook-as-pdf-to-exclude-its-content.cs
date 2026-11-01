@@ -1,62 +1,33 @@
-// Title: Delete a named worksheet from an Excel file and export the remaining workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Generate C# code with Aspose.Cells that loads an .xlsx file, removes the worksheet called "SheetToRemove" if it exists, and saves the workbook as a PDF. | Show how to programmatically locate and delete a specific sheet in a workbook before calling Workbook.Save with SaveFormat.Pdf in C#.
-// Common Searches: Aspose.Cells C# remove worksheet before PDF conversion | how to skip a sheet when converting Excel to PDF with Aspose.Cells | C# code to delete a sheet by name and then save workbook as PDF using Aspose.Cells | exclude specific worksheet from PDF output in Aspose.Cells .NET
-// Tags: worksheet removal Aspose.Cells C# | PDF export after worksheet deletion Aspose.Cells | skip sheet during PDF conversion Aspose.Cells | C# delete Excel sheet before PDF | Aspose.Cells workbook modification prior to PDF
+// Title: Remove a specific worksheet from an Excel file and save the remaining content as PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, checks for a worksheet named 'SheetToExclude', removes it if present, and then exports the workbook to a PDF file. | Show how to safely delete a worksheet by name in Aspose.Cells before performing a PDF conversion, including handling the case where the sheet does not exist. | Provide a complete Aspose.Cells workflow that programmatically excludes a particular sheet from the PDF output, covering loading, sheet removal, and saving as PDF.
+// Common Searches: aspnet remove worksheet named SheetToExclude before converting Excel to PDF with Aspose.Cells | how to exclude a single sheet from PDF export using Aspose.Cells C# | Aspose.Cells delete specific worksheet then save workbook as PDF example
+// Tags: worksheet removal Aspose.Cells | PDF export without target sheet | Aspose.Cells omit sheet during PDF conversion | delete sheet by name Aspose.Cells | convert Excel to PDF after sheet exclusion
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// The example loads "input.xlsx", searches for a worksheet named "SheetToRemove", removes it if found, and then saves the modified workbook as "output.pdf" in PDF format, handling missing files and runtime exceptions.
+// The example loads an existing Excel workbook, looks for a worksheet called 'SheetToExclude', removes it if found, and then saves the modified workbook as a PDF using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-        const string sheetToRemove = "SheetToRemove";
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
+        // Name of the worksheet to be removed
+        string sheetToRemove = "SheetToExclude";
+
+        // Find the worksheet by name
+        Worksheet sheet = workbook.Worksheets[sheetToRemove];
+
+        // If the worksheet exists, remove it from the workbook
+        if (sheet != null)
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
+            int index = sheet.Index;
+            workbook.Worksheets.RemoveAt(index);
         }
 
-        try
-        {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Find the index of the worksheet to remove by name
-            int sheetIndex = -1;
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                if (workbook.Worksheets[i].Name.Equals(sheetToRemove, StringComparison.OrdinalIgnoreCase))
-                {
-                    sheetIndex = i;
-                    break;
-                }
-            }
-
-            if (sheetIndex != -1)
-            {
-                workbook.Worksheets.RemoveAt(sheetIndex);
-                Console.WriteLine($"Worksheet \"{sheetToRemove}\" removed.");
-            }
-            else
-            {
-                Console.WriteLine($"Worksheet \"{sheetToRemove}\" not found; no removal performed.");
-            }
-
-            // Save the modified workbook as PDF
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved as PDF to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any runtime exceptions (e.g., Aspose.Cells errors, IO issues)
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the modified workbook as PDF (replace with your desired output path)
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

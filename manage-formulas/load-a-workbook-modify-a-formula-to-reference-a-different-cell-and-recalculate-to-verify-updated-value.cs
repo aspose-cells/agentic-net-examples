@@ -1,72 +1,63 @@
-// Title: Change a cell reference in an Excel formula and recalculate the workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Load input.xlsx using Aspose.Cells, replace the reference A1 with A3 in the formula of cell B2, invoke CalculateFormula, and save the result as output.xlsx. | Open a workbook, edit the Formula property of a specific cell, trigger a full recalculation, then read the updated Value property in C# with Aspose.Cells.
-// Common Searches: Aspose.Cells C# edit formula to point to another cell and recalculate workbook | replace cell reference in Excel formula programmatically using Aspose.Cells .NET | how to update an Excel formula and get the new value with Aspose.Cells in C# | calculate updated formula result after changing cell reference in Aspose.Cells
-// Tags: modify cell formula Aspose.Cells C# | calculate workbook formulas Aspose.Cells | change cell reference in Excel formula .NET | update formula and recalculate Aspose.Cells | load edit save workbook Aspose.Cells
+// Title: Change a cell reference in an Excel formula and recalculate the workbook with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# replace cell reference in existing formula | How to update an Excel formula to use a different cell and recalculate with Aspose.Cells | Recalculate workbook after modifying a formula programmatically in .NET | Load workbook and edit B2 formula from A1 to A2 using Aspose.Cells | Get updated formula result after changing cell reference in Aspose.Cells
+// Tags: Aspose.Cells modify formula reference | recalculate workbook formulas .NET | programmatic Excel formula update C# | change cell address in Aspose.Cells formula | get updated formula value Aspose.Cells
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example ensures an input.xlsx exists (creating a simple workbook if needed), loads it with Aspose.Cells, changes the formula in cell B2 from referencing A1 to A3, recalculates all formulas, prints the updated value, and saves the modified workbook as output.xlsx.
+// The example loads an existing Excel workbook (or creates one), changes the formula in cell B2 from referencing A1 to referencing A2, triggers a full recalculation of all formulas, prints the new value of the modified cell, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Workbook workbook;
 
-            // Ensure the input file exists; if not, create a simple workbook for demonstration.
-            if (!File.Exists(inputPath))
+            // Load existing workbook if it exists; otherwise create a sample workbook
+            if (File.Exists(inputPath))
             {
-                var tempWb = new Workbook();
-                var tempSheet = tempWb.Worksheets[0];
-                // Populate cells A1 and A3 with sample numbers.
-                tempSheet.Cells["A1"].PutValue(10);
-                tempSheet.Cells["A3"].PutValue(30);
-                // Place a formula in B2 that references A1.
-                tempSheet.Cells["B2"].Formula = "=A1*2";
-                tempWb.Save(inputPath);
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Cells["A1"].PutValue(10);
+                ws.Cells["B2"].Formula = "=A1*2";
             }
 
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cell formulaCell = worksheet.Cells["B2"];
 
-            // Access the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Identify the cell that contains the formula (example: B2).
-            Cell formulaCell = sheet.Cells["B2"];
-
-            // Verify that the cell actually contains a formula.
-            if (string.IsNullOrEmpty(formulaCell.Formula))
+            // Modify the formula only if it exists
+            if (!string.IsNullOrEmpty(formulaCell.Formula))
             {
-                Console.WriteLine($"Cell {formulaCell.Name} does not contain a formula.");
-                return;
+                string originalFormula = formulaCell.Formula;
+                string updatedFormula = originalFormula.Replace("A1", "A2");
+                formulaCell.Formula = updatedFormula;
             }
 
-            // Store the original formula.
-            string originalFormula = formulaCell.Formula;
-
-            // Modify the formula to reference a different cell.
-            // Example: change reference from A1 to A3 while keeping the rest of the formula unchanged.
-            string modifiedFormula = originalFormula.Replace("A1", "A3");
-            formulaCell.Formula = modifiedFormula;
-
-            // Recalculate all formulas in the workbook.
+            // Recalculate all formulas
             workbook.CalculateFormula();
 
-            // Retrieve and display the updated value of the modified cell.
-            object updatedValue = formulaCell.Value;
-            Console.WriteLine($"Updated value in {formulaCell.Name}: {updatedValue}");
+            // Display the updated value
+            Console.WriteLine($"Updated value in {formulaCell.Name}: {formulaCell.Value}");
 
-            // Save the workbook with the changes.
+            // Save the workbook with changes
             workbook.Save(outputPath);
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

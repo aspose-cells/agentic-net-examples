@@ -1,72 +1,69 @@
-// Title: How to display every other depth level on a 3‑D column chart by setting the Z‑axis interval with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a 3‑D column chart in a workbook and set the series (Z) axis TickMarkSpacing to 2 using Aspose.Cells for .NET. | Adjust the depth axis of an Aspose.Cells chart so that only alternate depth labels are shown. | Save the workbook after configuring the Z‑axis interval for a 3‑D chart in a C# application.
-// Common Searches: Aspose.Cells C# set Z axis tick spacing for 3D column chart | Show every second depth level in Excel 3D chart using Aspose.Cells | How to configure series axis interval in a 3‑D chart with Aspose.Cells .NET
-// Tags: Aspose.Cells TickMarkSpacing on series axis C# | 3D column chart depth axis interval Aspose.Cells | configure Z axis label spacing .NET Excel chart | Aspose.Cells chart axis customization example | C# Excel 3D chart depth level display
+// Title: Configure Z‑axis tick interval to display every second depth level on a 3D clustered column chart using Aspose.Cells for .NET (currently unsupported)
+// Common Searches: Aspose.Cells C# set Z axis tick interval for 3D column chart | display every other depth level on a 3D clustered column chart Aspose.Cells | how to adjust Z axis spacing in 3D Excel chart with Aspose.Cells .NET | Aspose.Cells 3D chart depth level labeling options | Z axis interval not available in current Aspose.Cells version
+// Tags: Aspose.Cells 3D chart Z axis interval | C# configure Z axis tick spacing Aspose.Cells | 3D clustered column chart depth level labeling .NET | Excel 3D chart axis configuration Aspose.Cells | Aspose.Cells chart axis settings limitation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The example creates a workbook, adds sample data, inserts a 3D clustered column chart, and demonstrates that the Z‑axis interval (to show every second depth level) cannot be set with the current Aspose.Cells API, then saves the file as 3DChart_ZAxisInterval.xlsx.
+class Program
 {
-    // The sample creates a workbook, adds data, inserts a 3‑D column chart, sets the series (Z) axis TickMarkSpacing to 2 so that only every second depth level is shown, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series1");
+            sheet.Cells["C1"].PutValue("Series2");
+
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            sheet.Cells["C2"].PutValue(15);
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["C4"].PutValue(35);
+
+            // Add a 3D clustered column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column3DClustered, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the series and categories
+            chart.NSeries.Add("B2:C4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // NOTE: The ZAxis property is not available in the current Aspose.Cells version.
+            // If needed, configure Z‑axis settings using the appropriate API when it becomes available.
+
+            // Save the workbook to a file
+            string outputPath = "3DChart_ZAxisInterval.xlsx";
+
+            // Ensure the directory exists before saving
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add sample data for a 3‑D column chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Q1");
-                worksheet.Cells["A3"].PutValue("Q2");
-                worksheet.Cells["A4"].PutValue("Q3");
-
-                worksheet.Cells["B1"].PutValue("Series 1");
-                worksheet.Cells["B2"].PutValue(120);
-                worksheet.Cells["B3"].PutValue(150);
-                worksheet.Cells["B4"].PutValue(180);
-
-                worksheet.Cells["C1"].PutValue("Series 2");
-                worksheet.Cells["C2"].PutValue(90);
-                worksheet.Cells["C3"].PutValue(110);
-                worksheet.Cells["C4"].PutValue(130);
-
-                // Add a 3‑D column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:C4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Configure the depth (Z) axis to show every second depth level
-                // The depth axis corresponds to the series axis in a 3‑D chart.
-                // Setting TickMarkSpacing to 2 makes a tick (and thus a label) appear every second series.
-                Axis seriesAxis = chart.SeriesAxis;
-                seriesAxis.TickMarkSpacing = 2;
-
-                // Prepare output directory
-                string outputPath = "ZAxisIntervalEverySecondDepthLevel.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(directory);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

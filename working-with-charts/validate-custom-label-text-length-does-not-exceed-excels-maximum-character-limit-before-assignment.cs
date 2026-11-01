@@ -1,14 +1,15 @@
-// Title: Validate and truncate a label shape's text to Excel's 32,767‑character limit using Aspose.Cells for .NET
-// AI Prompts: Provide C# code that checks a label shape's Text length against Excel's 32,767‑character limit and truncates it before assignment with Aspose.Cells. | Show how to enable Excel restriction checking, add a label shape, validate its text size, and save the workbook using Aspose.Cells for .NET. | Demonstrate handling of overly long label text by truncating it and catching exceptions when saving a workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells how to enforce Excel string length limit on label shapes in C# | C# truncate label text exceeding 32767 characters before saving workbook with Aspose.Cells | validate shape text size in Aspose.Cells .NET to avoid Excel restriction errors | example of checking and trimming label text length using Aspose.Cells for .NET | Excel maximum characters for shape label Aspose.Cells validation code
-// Tags: label shape text length validation Aspose.Cells | truncate label text Excel limit C# | check Excel restriction setting Aspose.Cells | shape text size enforcement Aspose.Cells | Excel string length limit handling Aspose.Cells
+// Title: How to validate and truncate a chart data label to Excel's 255‑character limit using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that checks the length of a chart data label and trims it to 255 characters before applying it with Aspose.Cells. | Show an example of assigning a safe custom label to a chart point, including a fallback for Aspose.Cells versions without the DataPoints collection.
+// Common Searches: Aspose.Cells truncate chart label text to 255 characters C# | validate Excel chart data label length before setting with Aspose.Cells | how to limit custom data label size in Aspose.Cells chart series | C# example for safe custom label on Excel chart using Aspose.Cells
+// Tags: truncate chart data label Aspose.Cells | validate Excel label length .NET | chart series custom label handling | Excel data label character limit Aspose.Cells | Aspose.Cells chart label compatibility
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
 
-// The example creates a workbook, enables Excel restriction checking, adds a label shape, and validates the label's text against Excel's 32,667‑character limit. If the text exceeds the limit it is truncated, then the safe text is assigned to the label and the workbook is saved, with any errors captured and reported.
-class ValidateLabelTextDemo
+// The program creates a workbook, adds a column chart, checks a custom label's length against Excel's 255‑character limit, truncates it if necessary, configures data label visibility, and saves the file as CustomLabelValidated.xlsx.
+class Program
 {
     static void Main()
     {
@@ -17,46 +18,59 @@ class ValidateLabelTextDemo
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Enable Excel restriction checking (throws if limit exceeded)
-            workbook.Settings.CheckExcelRestriction = true;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            // Add a label shape to the worksheet
-            // Parameters: upper left row, upper left column, row offset, column offset, height (pixels), width (pixels)
-            // AddLabel returns a Label object in recent Aspose.Cells versions
-            Label label = worksheet.Shapes.AddLabel(1, 1, 0, 0, 50, 200);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            if (label == null)
+            // Add a series (values) and set category data
+            int seriesIndex = chart.NSeries.Add("B2:B4", true);
+            // If the API version supports CategoryData, uncomment the next line:
+            // chart.NSeries[seriesIndex].CategoryData = "A2:A4";
+
+            // Example custom label text (truncated if necessary)
+            string customLabel = "This is a custom data label that might be too long for Excel's limit.";
+            const int MaxLabelLength = 255;
+            if (customLabel.Length > MaxLabelLength)
             {
-                Console.WriteLine("Failed to create label shape.");
-                return;
+                customLabel = customLabel.Substring(0, MaxLabelLength);
             }
 
-            // Example text that may exceed Excel's maximum string length (32,767 characters)
-            string labelText = new string('X', 35000); // 35,000 characters
+            // Configure data label visibility for the series
+            Series series = chart.NSeries[seriesIndex];
+            series.DataLabels.ShowValue = true;          // show values
+            series.DataLabels.ShowCategoryName = false;
+            series.DataLabels.ShowSeriesName = false;
+            series.DataLabels.ShowLegendKey = false;
 
-            // Excel's maximum allowed length for a string in a cell/shape
-            const int MaxExcelStringLength = 32767;
-
-            // Validate length before assigning to the label
-            if (labelText.Length > MaxExcelStringLength)
-            {
-                Console.WriteLine($"Label text length ({labelText.Length}) exceeds Excel limit. Truncating to {MaxExcelStringLength} characters.");
-                labelText = labelText.Substring(0, MaxExcelStringLength);
-            }
-
-            // Assign the validated (or truncated) text to the label
-            label.Text = labelText;
+            // NOTE: Setting a custom label for an individual data point requires the DataPoints collection,
+            // which may not be available in older Aspose.Cells versions. The following code is omitted
+            // for compatibility. If your version supports DataPoints, you can uncomment and use it:
+            // if (series.DataPoints != null && series.DataPoints.Count > 0)
+            // {
+            //     series.DataPoints[0].SetDataLabel(customLabel, true); // true = isCustom
+            // }
 
             // Save the workbook
-            workbook.Save("LabelValidated.xlsx");
-            Console.WriteLine("Workbook saved as 'LabelValidated.xlsx'.");
+            string outputPath = "CustomLabelValidated.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

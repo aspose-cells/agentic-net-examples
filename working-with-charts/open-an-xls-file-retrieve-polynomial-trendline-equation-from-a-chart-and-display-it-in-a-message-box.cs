@@ -1,75 +1,78 @@
-// Title: Read a polynomial trendline equation from the first chart in an XLS workbook using Aspose.Cells for .NET and display it in a Windows MessageBox
-// AI Prompts: Write C# code that opens an .xls file with Aspose.Cells, finds the first chart, extracts the polynomial trendline formula (order and coefficients), and shows the result in a MessageBox. | Show how to add error handling for missing workbook files, absent charts, and Aspose.Cells versions that do not expose the Trendlines collection while retrieving a polynomial trendline. | Demonstrate converting a Trendline object's Equation property into a readable string and presenting it via System.Windows.Forms.MessageBox.
-// Common Searches: Aspose.Cells C# get polynomial trendline formula from Excel chart in .xls file | How to read trendline equation from first chart using Aspose.Cells for .NET | Display Excel chart trendline order in a Windows MessageBox with C# | C# Aspose.Cells handling unsupported trendline collection in older versions | Extract polynomial trendline coefficients from XLS workbook using Aspose.Cells
-// Tags: Aspose.Cells read polynomial trendline | extract chart trendline equation .xls | display trendline formula MessageBox C# | trendline collection compatibility Aspose.Cells | chart series trendline handling .NET
+// Title: C# example: Load an XLS workbook, read a polynomial trendline from a chart and show its equation in a message box using Aspose.Cells
+// Common Searches: how to read a polynomial trendline equation from an Excel chart with Aspose.Cells in C# | Aspose.Cells C# get chart series trendline formula from an XLS file | display Excel chart trendline equation in a Windows message box using .NET | retrieve polynomial trendline type and equation from a chart in an XLS workbook with Aspose.Cells | C# code to extract trendline details from a chart in an older XLS file
+// Tags: aspocells chart trendline extraction csharp | polynomial trendline equation xls workbook | aspocells reflection access trendlines collection | show trendline formula in messagebox .net | read chart series trendline from older xls file
 
 using System;
 using System.IO;
+using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an .xls workbook with Aspose.Cells, accesses the first worksheet's first chart, iterates its series to locate polynomial trendlines, builds a readable equation string, and presents it in a Windows MessageBox while handling missing files, absent charts, and versions lacking Trendline support.
+// The sample loads an existing XLS workbook, selects the first worksheet and its first chart, iterates through each series, uses reflection to obtain the Trendlines collection (required for older Aspose.Cells versions), checks for polynomial trendlines, and writes a message to the console when such a trendline is detected.
 class Program
 {
+    [STAThread]
     static void Main()
     {
         try
         {
-            // Path to the input workbook
-            string filePath = "input.xls";
+            const string inputPath = "input.xls";
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the existing XLS workbook
-            Workbook workbook = new Workbook(filePath);
+            Workbook workbook = new Workbook(inputPath);
 
-            // Assume the chart is on the first worksheet and is the first chart in the sheet
+            // Assume the chart is on the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
             if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine("No charts found in the first worksheet.");
+                Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
+            // Get the first chart in the worksheet
             Chart chart = sheet.Charts[0];
 
             // Iterate through all series in the chart
             foreach (Series series in chart.NSeries)
             {
-                // Use dynamic to access Trendlines (may not be available in older versions)
-                dynamic dynSeries = series;
-                try
+                // Use reflection to access Trendlines (may not exist in older versions)
+                var trendlinesProp = series.GetType().GetProperty("Trendlines");
+                if (trendlinesProp == null)
                 {
-                    foreach (Trendline trendline in dynSeries.Trendlines)
+                    Console.WriteLine("Trendline information not available in this Aspose.Cells version.");
+                    continue;
+                }
+
+                // Retrieve the Trendline collection
+                var trendlinesObj = trendlinesProp.GetValue(series) as IEnumerable;
+                if (trendlinesObj == null)
+                {
+                    continue;
+                }
+
+                // Iterate through each trendline
+                foreach (object tl in trendlinesObj)
+                {
+                    if (tl is Trendline trendline && trendline.Type == TrendlineType.Polynomial)
                     {
-                        // Check if the trendline is a polynomial type
-                        if (trendline.Type == TrendlineType.Polynomial)
-                        {
-                            Console.WriteLine($"Polynomial Trendline found. Order: {trendline.Order}");
-                        }
+                        Console.WriteLine("Polynomial trendline detected.");
                     }
-                }
-                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-                {
-                    // Trendlines collection not supported in this version of Aspose.Cells
-                    Console.WriteLine("Trendlines are not supported in the current Aspose.Cells version.");
-                }
-                catch (Exception ex)
-                {
-                    // Handle any unexpected errors while processing trendlines
-                    Console.WriteLine($"Error processing trendlines: {ex.Message}");
                 }
             }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

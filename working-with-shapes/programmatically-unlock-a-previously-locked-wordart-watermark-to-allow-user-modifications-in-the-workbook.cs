@@ -1,61 +1,65 @@
-// Title: Unlock a locked WordArt watermark in an Excel workbook with Aspose.Cells for .NET
-// AI Prompts: Iterate through every worksheet's ShapeCollection with Aspose.Cells and set Shape.IsLocked = false, then save the workbook. | Programmatically remove the lock from WordArt objects in an existing .xlsx file using C# and Aspose.Cells. | Load an Excel file, unlock all shapes including WordArt watermarks, and write the updated file to a new location.
-// Common Searches: aspnet unlock WordArt watermark in existing Excel file using Aspose.Cells | c# Aspose.Cells set shape IsLocked false for all shapes in workbook | how to edit locked WordArt objects in .xlsx with Aspose.Cells | remove shape lock from Excel watermark programmatically .NET
-// Tags: shape.IsLocked property Aspose.Cells | modify WordArt lock status Excel | iterate worksheet ShapeCollection C# | save workbook after unlocking shapes Aspose.Cells | programmatic Excel watermark editing .NET
+// Title: Unlock WordArt watermarks in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that opens a .xlsx file, iterates through all shapes on a specified worksheet, checks the IsWordArt flag, and sets IsLocked to false for each WordArt shape. | Adapt the sample to receive the worksheet name as an argument and unlock WordArt shapes only on that sheet while leaving other sheets untouched. | Enhance the example with robust try‑catch logic that logs a warning when a shape does not support the IsWordArt property and then continues processing the remaining shapes.
+// Common Searches: C# Aspose.Cells unlock WordArt shape in Excel worksheet | how to remove WordArt watermark protection using Aspose.Cells .NET | iterate over Excel shapes and change IsLocked property with Aspose.Cells | unlock WordArt objects in a specific sheet programmatically in .xlsx | Aspose.Cells example for editing locked WordArt in Excel file
+// Tags: unlock WordArt shape Aspose.Cells | set shape IsLocked false Excel | iterate worksheet shapes C# | handle IsWordArt exception Aspose.Cells | modify Excel watermark programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing .xlsx file, loops through each worksheet's ShapeCollection, sets each Shape's IsLocked property to false (unlocking WordArt watermarks), and saves the modified workbook to a new file.
-class Program
+namespace UnlockWordArtExample
 {
-    static void Main()
+    // The program loads an Excel workbook, loops through all shapes on the first worksheet, detects WordArt objects via the IsWordArt property, unlocks them by setting IsLocked to false, and saves the updated file.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        static void Main()
         {
-            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-            return;
-        }
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook.xlsx";
 
-        try
-        {
-            // Load the existing workbook that contains the locked WordArt watermark
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Access the collection of shapes (including WordArt) on the worksheet
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Unlock each shape; this includes WordArt objects
-                for (int i = 0; i < shapes.Count; i++)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Shape shape = shapes[i];
-                    shape.IsLocked = false;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
-            }
 
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Unlock WordArt shapes (if any) in the worksheet
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    try
+                    {
+                        // Some Shape objects may not support IsWordArt; guard against exceptions
+                        if (shape.IsWordArt)
+                        {
+                            shape.IsLocked = false;
+                        }
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        // Log shape-specific errors and continue processing other shapes
+                        Console.WriteLine($"Warning: Unable to process a shape. Details: {shapeEx.Message}");
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                // General error handling
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook with the unlocked WordArt watermark
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

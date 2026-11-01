@@ -1,48 +1,50 @@
-// Title: Hide the first worksheet tab, show formulas on the second sheet, and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing .xlsx with Aspose.Cells, hides the first worksheet tab, enables formula view on the second worksheet, and saves the modified file. | Write a C# snippet using Aspose.Cells to set Worksheet.IsVisible = false for the first sheet, activate Workbook.Settings.ShowFormula for the second sheet only, and export the workbook. | Provide step‑by‑step instructions for hiding a worksheet tab, displaying formulas on another sheet, and persisting the changes with Aspose.Cells in a .NET project.
-// Common Searches: how to hide a worksheet tab in Aspose.Cells C# | show formulas on a specific sheet using Aspose.Cells .NET | save workbook after modifying sheet visibility with Aspose.Cells | Aspose.Cells hide first sheet and display formulas on second sheet example | C# Aspose.Cells set ShowFormula for one worksheet only
-// Tags: Aspose.Cells worksheet.IsVisible property | Aspose.Cells Workbook.Settings.ShowFormula option | Aspose.Cells first sheet visibility | Aspose.Cells enable formula view on second sheet | Aspose.Cells save workbook after sheet modifications
+// Title: Hide the first worksheet tab, display formulas on the second sheet, and save the workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing Excel file, set the first worksheet's IsVisible property to false, enable ShowFormulas on the second worksheet, and save the updated workbook to a new file using Aspose.Cells in C#. | Using Aspose.Cells for .NET, programmatically hide the tab of the first sheet, turn on formula view for the second sheet, and write the modified workbook to a specified output path.
+// Common Searches: Aspose.Cells C# hide first worksheet tab programmatically | show formulas instead of values on a specific sheet with Aspose.Cells .NET | save workbook after changing sheet visibility using Aspose.Cells in C# | how to set ShowFormulas property for a worksheet in Aspose.Cells | C# example to hide a sheet tab and display formulas on another sheet with Aspose.Cells
+// Tags: worksheet.IsVisible false Aspose.Cells | worksheet.ShowFormulas true C# | modify sheet tab visibility Aspose.Cells .NET | display formulas on worksheet Aspose.Cells | write updated workbook to file C#
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The program loads input.xlsx, hides the first worksheet tab, optionally enables formula display for the second sheet, and saves the updated workbook as output.xlsx.
+// // This C# program loads an existing Excel workbook, hides the first worksheet tab, enables formula display on the second worksheet (if present), and saves the modified file to a new location using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
             // Hide the first worksheet tab
             Worksheet firstSheet = workbook.Worksheets[0];
-            firstSheet.IsVisible = false; // Tab will be hidden in the UI
+            firstSheet.IsVisible = false; // Tab will be hidden
 
-            // Display formulas on all worksheets (if supported by the current Aspose.Cells version)
-            // Note: Some versions may not expose ShowFormula; this line can be omitted if unavailable.
-            // workbook.Settings.ShowFormula = true;
+            // Show formulas on the second worksheet (if it exists)
+            if (workbook.Worksheets.Count > 1)
+            {
+                Worksheet secondSheet = workbook.Worksheets[1];
+                secondSheet.ShowFormulas = true; // Display formulas instead of values
+            }
 
-            // Save the workbook with the applied changes
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

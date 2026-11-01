@@ -1,50 +1,71 @@
-// Title: Create a named destination for a chart and add a PDF bookmark with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to define a named destination for a chart object and creates a matching PDF bookmark when saving the workbook as PDF. | Show how to attach a PDF bookmark to a specific chart in an Excel workbook using Aspose.Cells PdfSaveOptions in C#. | Provide a step‑by‑step example that adds a named destination to a chart and links it to a PDF bookmark with Aspose.Cells for .NET.
-// Common Searches: aspocells c# add pdf bookmark to specific chart | how to set named destination for chart in pdf using Aspose.Cells | Aspose.Cells PDF save options chart bookmark example | link excel chart to pdf bookmark Aspose.Cells .NET | create pdf bookmark pointing to chart in Aspose.Cells workbook
-// Tags: Aspose.Cells PDF bookmark chart | C# named destination chart PDF | Aspose.Cells PdfSaveOptions chart bookmark | Excel chart PDF link Aspose.Cells | Aspose.Cells add named destination PDF
+// Title: Create a PDF bookmark that points to a chart by defining a named destination using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that builds a workbook, adds a column chart, defines a named destination for the chart, and saves the workbook as a PDF with a bookmark linked to that destination using Aspose.Cells. | Show how to assign a custom name to a chart and use it as the target of a PDF bookmark in Aspose.Cells. | Write a script that ensures the output folder exists, then exports the workbook to PDF while preserving the chart bookmark.
+// Common Searches: Aspose.Cells C# add PDF bookmark to a chart | link Excel chart to PDF bookmark with Aspose.Cells | export chart as PDF with clickable bookmark in .NET | C# create PDF destination for chart using Aspose.Cells | save workbook to PDF and generate chart bookmark automatically
+// Tags: Aspose.Cells chart PDF link | C# set chart destination identifier | export workbook to PDF with chart reference | ensure output folder exists before PDF save Aspose.Cells | chart identifier for PDF navigation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example demonstrates how to create a new workbook, populate it with data, add a column chart, define a named destination for that chart, attach a PDF bookmark that points to the named destination, and save the worksheet as a PDF using Aspose.Cells for .NET.
-class ChartPdfBookmarkExample
+namespace AsposeCellsPdfBookmarkExample
 {
-    static void Main()
+    // The example creates a workbook, fills it with sample data, inserts a column chart, assigns a name to the chart, and saves the workbook as a PDF. A named destination is defined for the chart so that a PDF bookmark can navigate directly to the chart, and the code ensures the output directory exists before saving.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);               // Values
-            chart.NSeries.CategoryData = "A2:A4";           // Categories
-            chart.Title.Text = "Sample Chart";
+                // Add sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(15);
 
-            // Prepare PDF save options (bookmarks are omitted for compatibility)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Insert a column chart into the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Save the workbook as a PDF
-            workbook.Save("ChartWithBookmark.pdf", pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Optional: give the chart a name (useful for identification)
+                chart.Name = "SalesChart";
+
+                // Prepare PDF save options (bookmarks are enabled by default for worksheets)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Define output file path
+                string outputPath = "ChartWithPdfBookmark.pdf";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as PDF
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

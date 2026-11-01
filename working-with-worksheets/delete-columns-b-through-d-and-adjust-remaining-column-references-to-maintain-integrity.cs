@@ -1,48 +1,49 @@
-// Title: Delete columns B‑D in an Excel worksheet and automatically adjust formulas using Aspose.Cells for .NET
-// AI Prompts: Remove the contiguous column range B through D from a worksheet and have all dependent formulas automatically re‑reference the new cells with Aspose.Cells DeleteOptions.UpdateReference in C#. | Programmatically delete columns B‑D in a .NET workbook while preserving the integrity of SUM or other formulas that originally pointed to those columns.
-// Common Searches: aspnet cells delete columns b-d and keep formula references updated | c# remove multiple columns in excel workbook using Aspose.Cells DeleteOptions | how to preserve SUM formula after deleting columns with Aspose.Cells | update cell references automatically after column deletion Aspose.Cells .NET | delete column range B to D in Excel using Aspose.Cells C# example
-// Tags: delete columns with reference update Aspose.Cells | Aspose.Cells DeleteOptions.UpdateReference | adjust formulas after column removal .NET | C# remove column range B-D Excel workbook | preserve formula integrity Aspose.Cells
+// Title: Delete columns B through D and shift remaining columns left in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Remove columns B, C, and D from the first worksheet and automatically shift the subsequent columns left with Aspose.Cells. | Invoke the DeleteColumns method with updateReferences set to true to delete a range of columns and keep formulas consistent in a C# project. | Create or load a workbook, delete a specific column range, and save the modified file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# delete columns B to D and shift left example | How to delete multiple adjacent columns and preserve formulas with Aspose.Cells .NET | DeleteColumns method updateReferences parameter usage in Aspose.Cells | Remove column range from Excel file using Aspose.Cells for .NET | C# code to delete columns and adjust column references in an .xlsx workbook
+// Tags: Aspose.Cells DeleteColumns method usage | delete column range in .xlsx with C# | shift remaining columns after deletion Aspose.Cells | preserve formulas when removing columns .NET | C# Excel column removal example | update column references Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsColumnDeletionDemo
+// The program creates a sample workbook if it doesn't exist, loads it, deletes columns B through D on the first worksheet using DeleteColumns with updateReferences=true to shift remaining columns left and keep formulas intact, then saves the result as output.xlsx.
+class Program
 {
-    // The example creates a workbook, populates columns A‑E, adds a SUM formula in E2 that references B2:D2, then deletes columns B‑D using DeleteOptions.UpdateReference so the formula automatically shifts to the new range (C2), and finally saves the workbook as ColumnDeletionResult.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Populate sample data in columns A through E
-            for (int col = 0; col < 5; col++)
+        try
+        {
+            // Ensure the input file exists; create a simple one if missing.
+            if (!File.Exists(inputPath))
             {
-                cells[0, col].PutValue($"Header {(char)('A' + col)}");
-                cells[1, col].PutValue($"Data{col + 1}");
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Cells["A1"].PutValue("A");
+                tempSheet.Cells["B1"].PutValue("B");
+                tempSheet.Cells["C1"].PutValue("C");
+                tempSheet.Cells["D1"].PutValue("D");
+                tempWb.Save(inputPath);
             }
 
-            // Add a formula that references columns B through D
-            // Example: sum of B2:D2
-            cells["E2"].Formula = "=SUM(B2:D2)";
+            // Load the existing workbook.
+            var workbook = new Workbook(inputPath);
 
-            // Set up DeleteOptions to update references after deletion
-            DeleteOptions options = new DeleteOptions
-            {
-                UpdateReference = true
-            };
+            // Access the first worksheet.
+            var sheet = workbook.Worksheets[0];
 
-            // Delete columns B (index 1) through D (index 3) – total of 3 columns
-            cells.DeleteColumns(1, 3, options);
+            // Delete columns B through D (indices 1,2,3). Update references.
+            sheet.Cells.DeleteColumns(1, 3, true);
 
-            // After deletion, the formula in E2 should automatically adjust to reference the new range
-            Console.WriteLine("Formula after column deletion: " + cells["C2"].Formula); // Formerly E2 shifts left
-
-            // Save the modified workbook
-            workbook.Save("ColumnDeletionResult.xlsx");
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

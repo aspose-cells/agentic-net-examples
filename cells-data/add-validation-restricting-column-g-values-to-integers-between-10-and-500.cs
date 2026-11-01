@@ -1,45 +1,64 @@
-// Title: Apply integer validation (10‑500) to column G rows 0‑999 using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that adds a whole‑number validation to column G (rows 0‑999) restricting values to 10‑500 and includes custom input and error messages. | Generate a C# example that creates a validation rule for column G, sets the operator to Between, defines Formula1 = 10 and Formula2 = 500, and saves the workbook as ColumnG_Validation.xlsx.
-// Common Searches: aspnet aspose.cells how to restrict column G values to integers between 10 and 500 | c# add data validation for a specific column in Excel using Aspose.Cells | set whole number validation range for column G rows 0 to 999 Aspose.Cells | aspose.cells validation with custom input and error messages example | c# create Excel file with integer range validation using Aspose.Cells library
-// Tags: Aspose.Cells integer range validation C# | Excel column G whole number validation | data validation between operator Aspose.Cells | custom input error messages Aspose.Cells | validate rows 0-999 column G Aspose.Cells
+// Title: Enforce integer values between 10 and 500 in column G with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to restrict column G to integers between 10 and 500 | Add whole‑number data validation to an Excel column using Aspose.Cells .NET | Set numeric range validation for column G in a workbook with Aspose.Cells | Aspose.Cells example for integer range validation (10‑500) in C# | Validate Excel cells to accept only numbers 10‑500 using Aspose.Cells
+// Tags: Aspose.Cells integer validation | C# Excel column G numeric range | data validation whole number Aspose.Cells | Excel column validation between 10 and 500 | Aspose.Cells set validation for column
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to use Aspose.Cells for .NET to add a whole‑number validation to column G (rows 0‑999), enforcing integer values between 10 and 500, with custom input and error prompts, and saves the result as an .xlsx workbook.
-class ColumnGIntegerValidation
+// The code loads or creates an Excel workbook, selects the first worksheet, determines the last used row, defines a range covering column G, and adds a whole‑number validation that only allows integers from 10 to 500. The workbook is then saved with the validation applied.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Load existing workbook if it exists; otherwise create a new one.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+            }
 
-        // Define the validation area for column G (zero‑based column index 6)
-        // Here we apply the validation to rows 0‑999 (adjust as needed)
-        CellArea validationArea = CellArea.CreateCellArea(0, 6, 999, 6);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a new validation to the worksheet for the defined area
-        int validationIndex = worksheet.Validations.Add(validationArea);
-        Validation validation = worksheet.Validations[validationIndex];
+            // Determine the last used row; if none, default to row 0.
+            int lastRow = sheet.Cells.MaxDataRow >= 0 ? sheet.Cells.MaxDataRow : 0;
 
-        // Configure the validation to allow whole numbers between 10 and 500
-        validation.Type = ValidationType.WholeNumber;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "10";
-        validation.Formula2 = "500";
+            // Define the range covering the entire column G (zero‑based column index 6)
+            CellArea range = new CellArea
+            {
+                StartRow = 0,
+                EndRow = lastRow,
+                StartColumn = 6,
+                EndColumn = 6
+            };
 
-        // Optional: set user‑friendly messages
-        validation.InputTitle = "Enter Integer";
-        validation.InputMessage = "Please enter an integer between 10 and 500.";
-        validation.ErrorTitle = "Invalid Input";
-        validation.ErrorMessage = "The value must be an integer between 10 and 500.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
+            // Add a validation rule that restricts values to whole numbers between 10 and 500
+            int validationIndex = sheet.Validations.Add(range);
+            Validation validation = sheet.Validations[validationIndex];
+            validation.Type = ValidationType.WholeNumber;   // integer validation
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = "10";
+            validation.Formula2 = "500";
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Input";
+            validation.ErrorMessage = "Please enter an integer between 10 and 500.";
 
-        // Save the workbook
-        workbook.Save("ColumnG_Validation.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

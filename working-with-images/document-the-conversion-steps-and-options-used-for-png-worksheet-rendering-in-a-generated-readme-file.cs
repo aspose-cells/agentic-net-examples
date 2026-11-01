@@ -1,107 +1,79 @@
-// Title: Convert Excel worksheets to PNG images with custom DPI and white background using Aspose.Cells for .NET and generate a README of the rendering steps
-// AI Prompts: Write a C# console application that loads an .xlsx workbook, configures ImageOrPrintOptions (OnePagePerSheet = false, Transparent = false, 150 DPI), renders every worksheet page to separate PNG files, and creates a README.txt documenting the source file, option values, and output locations. | Adjust the PNG export code to produce a single combined PNG per worksheet by setting OnePagePerSheet = true, while still generating a README that records the applied rendering settings. | Add robust error handling to the rendering loop so that missing or corrupt worksheets are skipped and success or error messages are appended to the generated README summary.
-// Common Searches: aspnet render excel sheet to png with specific dpi using aspose.cells | how to set transparent background to false when exporting Excel to PNG in C# | generate a readme file automatically after converting Excel worksheets to images | export each page of an Excel worksheet as separate PNG files with Aspose.Cells | configure ImageOrPrintOptions for multi-page PNG output in Aspose.Cells .NET
-// Tags: Aspose.Cells ImageOrPrintOptions PNG export | C# render Excel worksheet to PNG | custom DPI setting Aspose.Cells | multiple page per sheet PNG output | auto-generate README after image conversion
+// Title: Generate a high‑resolution transparent PNG from an Excel worksheet and create a README that logs the rendering steps using Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds a Workbook, fills cells with sample data, configures ImageOrPrintOptions for 300 DPI PNG with a transparent background, and uses SheetRender to save the first worksheet as a PNG file. | Add logic to the program that writes a README.txt file describing each conversion step, the chosen ImageOrPrintOptions values, and the generated output files. | Modify the rendering options to change the DPI, toggle the OnePagePerSheet flag, or disable transparency, and observe how the PNG output changes.
+// Common Searches: asp.net c# how to export an Excel sheet to a transparent PNG with specific DPI using Aspose.Cells | example code for SheetRender ToImage with ImageOrPrintOptions one page per sheet | create README file programmatically after rendering Excel to image in C# | set horizontal and vertical resolution for PNG export in Aspose.Cells .NET | fit entire worksheet on one page when converting to PNG with Aspose.Cells
+// Tags: worksheet PNG export using Aspose.Cells | ImageOrPrintOptions high DPI configuration | PNG rendering with alpha channel Aspose.Cells | SheetRender single-page PNG output | generate conversion README C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPngRenderingDemo
+// // This C# program creates a workbook with sample data, configures ImageOrPrintOptions for a 300 DPI PNG with a transparent background, renders the first worksheet to 'Worksheet.png' using SheetRender, and writes a README.txt that documents each step, the option values, and the resulting files.
+class Program
 {
-    // // Loads an Excel workbook, sets ImageOrPrintOptions (OnePagePerSheet = false, Transparent = false, 150 DPI), renders each worksheet page to individual PNG files, and writes a README.txt that records the source file, rendering options, and output locations.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Define input and output paths
-            string inputFile = "input.xlsx";               // Source workbook
-            string outputFolder = "Output";                // Folder for PNG images
-            string readmeFile = Path.Combine(outputFolder, "README.txt");
+            // Step 1: Create a new workbook and add sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "SampleSheet";
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.2);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.8);
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
+            // Step 2: Define PNG rendering options (ImageFormat defaults to PNG)
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
-                return;
+                // Set the resolution (DPI)
+                HorizontalResolution = 300,
+                VerticalResolution = 300,
+                // Fit the entire sheet on one page
+                OnePagePerSheet = true,
+                // Make background transparent (optional)
+                Transparent = true
+            };
+
+            // Step 3: Render the worksheet to PNG
+            SheetRender sr = new SheetRender(sheet, options);
+            string pngPath = "Worksheet.png";
+            sr.ToImage(0, pngPath);
+
+            // Step 4: Generate README file documenting the conversion steps and options
+            string readmePath = "README.txt";
+            using (StreamWriter writer = new StreamWriter(readmePath))
+            {
+                writer.WriteLine("PNG Worksheet Rendering - Conversion Steps and Options");
+                writer.WriteLine("----------------------------------------------------");
+                writer.WriteLine();
+                writer.WriteLine("1. Workbook Creation");
+                writer.WriteLine("   - A new Workbook instance was created.");
+                writer.WriteLine("   - Sample data was added to the first worksheet.");
+                writer.WriteLine();
+                writer.WriteLine("2. Rendering Options (ImageOrPrintOptions)");
+                writer.WriteLine($"   - HorizontalResolution: {options.HorizontalResolution} DPI");
+                writer.WriteLine($"   - VerticalResolution: {options.VerticalResolution} DPI");
+                writer.WriteLine($"   - OnePagePerSheet: {options.OnePagePerSheet}");
+                writer.WriteLine($"   - Transparent background: {options.Transparent}");
+                writer.WriteLine();
+                writer.WriteLine("3. Rendering Process");
+                writer.WriteLine("   - SheetRender was instantiated with the target worksheet and options.");
+                writer.WriteLine($"   - The first page of the sheet was exported to '{pngPath}' using ToImage(0, ...).");
+                writer.WriteLine();
+                writer.WriteLine("4. Output Files");
+                writer.WriteLine($"   - {pngPath} : The rendered PNG image of the worksheet.");
+                writer.WriteLine($"   - {readmePath}    : This documentation file.");
             }
 
-            try
-            {
-                // Load the workbook from the input file
-                Workbook workbook = new Workbook(inputFile);
-
-                // Configure rendering options for PNG output
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-                {
-                    // Render the entire sheet on a single page (false = multiple pages if needed)
-                    OnePagePerSheet = false,
-
-                    // Set background to white (transparent = false)
-                    Transparent = false,
-
-                    // Set the resolution (DPI) for the output image
-                    HorizontalResolution = 150,
-                    VerticalResolution = 150
-                };
-
-                // Iterate through each worksheet and render it to PNG
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
-
-                    // Create a SheetRender object for the current worksheet
-                    SheetRender sheetRender = new SheetRender(sheet, renderOptions);
-
-                    // Render each page of the worksheet (if multiple pages are generated)
-                    for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
-                    {
-                        // Build the output PNG file name
-                        string pngFileName = Path.Combine(outputFolder, $"{sheet.Name}_Page{pageIndex + 1}.png");
-
-                        // Render the page to the PNG file (format inferred from file extension)
-                        sheetRender.ToImage(pageIndex, pngFileName);
-                    }
-                }
-
-                // Generate README file documenting the conversion steps and options used
-                using (StreamWriter writer = new StreamWriter(readmeFile))
-                {
-                    writer.WriteLine("PNG Worksheet Rendering - Conversion Steps and Options");
-                    writer.WriteLine("---------------------------------------------------");
-                    writer.WriteLine();
-                    writer.WriteLine("1. Load Workbook");
-                    writer.WriteLine($"   - Source file: {inputFile}");
-                    writer.WriteLine("   - API used: new Workbook(string fileName)");
-                    writer.WriteLine();
-                    writer.WriteLine("2. Configure ImageOrPrintOptions");
-                    writer.WriteLine("   - OnePagePerSheet: false (allows multiple pages per sheet)");
-                    writer.WriteLine("   - Transparent: false (white background)");
-                    writer.WriteLine("   - HorizontalResolution: 150 DPI");
-                    writer.WriteLine("   - VerticalResolution: 150 DPI");
-                    writer.WriteLine();
-                    writer.WriteLine("3. Render Each Worksheet");
-                    writer.WriteLine("   - For each worksheet, a SheetRender object is created.");
-                    writer.WriteLine("   - Each page of the worksheet is rendered to a separate PNG file.");
-                    writer.WriteLine("   - File naming pattern: <WorksheetName>_Page<Number>.png");
-                    writer.WriteLine();
-                    writer.WriteLine("4. Output Files");
-                    writer.WriteLine($"   - PNG images are saved in the \"{outputFolder}\" directory.");
-                    writer.WriteLine($"   - README file (this document) is also saved in the same directory.");
-                    writer.WriteLine();
-                    writer.WriteLine("All steps are performed using Aspose.Cells for .NET APIs.");
-                }
-
-                Console.WriteLine("Rendering completed. PNG files and README.txt have been saved to the Output folder.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred during processing: {ex.Message}");
-            }
+            Console.WriteLine("Rendering completed. PNG and README files have been generated.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

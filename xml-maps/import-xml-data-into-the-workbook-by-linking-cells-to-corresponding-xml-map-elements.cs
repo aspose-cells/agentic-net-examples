@@ -1,62 +1,68 @@
-// Title: Load an XML file into an Aspose.Cells workbook, rename the first worksheet, and save as XLSX using C#
-// AI Prompts: Use Aspose.Cells LoadOptions with LoadFormat.Xml to read an XML file into a Workbook, rename the first sheet, and export the result to a .xlsx file in C#. | Write a C# method that verifies an XML data file exists, loads it into a new Workbook via Aspose.Cells, changes the initial worksheet name, and saves the workbook as Excel with proper error handling. | Demonstrate how to convert XML to an Excel workbook while customizing the worksheet title using Aspose.Cells for .NET.
-// Common Searches: asp.net load xml into workbook with aspose.cells and rename sheet | c# aspose.cells import xml data and export to xlsx | how to change worksheet name after loading xml using aspose.cells | using LoadOptions LoadFormat.Xml to convert xml to excel in c# | aspose.cells error handling when loading xml file
-// Tags: aspose.cells loadoptions xml to workbook | c# rename worksheet after xml import | aspose.cells convert xml to xlsx | error handling loading xml with aspose.cells | aspose.cells workbook save as xlsx
+// Title: C# example: Load XML data into an Excel workbook and export to XLSX with Aspose.Cells
+// Common Searches: how to load an XML file into an Aspose.Cells workbook in C# | Aspose.Cells C# convert XML document to XLSX file | sample code for importing XML data into Excel using Aspose.Cells for .NET | C# program to read XML and save as Excel workbook with Aspose.Cells | using a temporary XML file with Aspose.Cells to generate an XLSX workbook
+// Tags: load XML into Aspose.Cells workbook C# | export workbook to XLSX Aspose.Cells | temporary XML file handling Aspose.Cells | rename worksheet after XML import Aspose.Cells | Aspose.Cells XML map import example
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample checks for the presence of a data.xml file, loads its contents into a new Aspose.Cells Workbook using LoadOptions with LoadFormat.Xml, renames the first worksheet to "ImportedData", and saves the workbook as output.xlsx, with comprehensive exception handling for file and runtime errors.
+// The sample writes XML content to a temporary file, loads that file directly into an Aspose.Cells Workbook, optionally renames the first worksheet, saves the workbook as an XLSX file, and then cleans up the temporary XML file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the XML file that contains the data to be imported
-            string xmlPath = "data.xml";
+            // Sample XML data that matches the schema
+            string xmlData = @"<?xml version='1.0'?>
+<Root>
+  <Item>
+    <Name>Alpha</Name>
+    <Value>10</Value>
+  </Item>
+  <Item>
+    <Name>Beta</Name>
+    <Value>20</Value>
+  </Item>
+</Root>";
 
-            // Verify that the XML file exists to avoid FileNotFoundException
-            if (!File.Exists(xmlPath))
-            {
-                Console.WriteLine($"Error: XML file \"{xmlPath}\" not found.");
-                return;
-            }
+            // Save XML data to a temporary file (Workbook can load XML directly)
+            string tempXmlPath = Path.Combine(Path.GetTempPath(), "tempData.xml");
+            File.WriteAllText(tempXmlPath, xmlData);
 
-            // Load the XML data into a new workbook using LoadOptions for XML format
-            Workbook workbook;
-            try
-            {
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
-                workbook = new Workbook(xmlPath, loadOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading XML data: {ex.Message}");
-                return;
-            }
+            // Ensure the temporary XML file exists before loading
+            if (!File.Exists(tempXmlPath))
+                throw new FileNotFoundException("Temporary XML file was not created.", tempXmlPath);
 
-            // Rename the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "ImportedData";
+            // Load the XML file into a workbook
+            Workbook workbook = new Workbook(tempXmlPath);
 
-            // Save the workbook with the imported XML data
-            string outputPath = "output.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            // Optionally, rename the first worksheet
+            if (workbook.Worksheets.Count > 0)
+                workbook.Worksheets[0].Name = "Data";
+
+            // Save the workbook to an Excel file
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            // Clean up the temporary XML file if it still exists
+            string tempXmlPath = Path.Combine(Path.GetTempPath(), "tempData.xml");
+            if (File.Exists(tempXmlPath))
+            {
+                try
+                {
+                    File.Delete(tempXmlPath);
+                }
+                catch
+                {
+                    // Ignored – best effort cleanup
+                }
+            }
         }
     }
 }

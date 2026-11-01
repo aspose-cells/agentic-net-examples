@@ -1,37 +1,42 @@
-// Title: Export an Excel workbook to PDF with a custom document title using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a new Workbook, sets the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the workbook as a PDF file. | Show how to configure Aspose.Cells PDF export options so the PDF viewer displays a specified document title in the window title bar.
-// Common Searches: Aspose.Cells how to set PDF document title when converting Excel to PDF in C# | C# export Excel file to PDF with custom title bar using PdfSaveOptions DisplayDocTitle | Set built‑in document properties before saving workbook as PDF with Aspose.Cells | DisplayDocTitle option Aspose.Cells PDF conversion example | Add metadata title to PDF generated from Excel using Aspose.Cells .NET
-// Tags: Aspose.Cells PDF export with custom document title | C# PdfSaveOptions DisplayDocTitle | set built-in document properties Aspose.Cells | Excel to PDF conversion with title metadata | Workbook.Save PDF with document title property
+// Title: Convert an Excel workbook to PDF and assign a custom document title with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set PDF document title while exporting Excel to PDF | How to add a title property to a PDF generated from an XLSX using Aspose.Cells | Aspose.Cells workbook.Save PDF with custom metadata in .NET | Set WorkbookProperties.Title before saving Excel as PDF with Aspose.Cells | Convert Excel file to PDF and embed document title using Aspose.Cells C#
+// Tags: Aspose.Cells PDF export with custom document title | C# Excel to PDF conversion using Aspose.Cells | WorkbookProperties.Title API Aspose.Cells | setting PDF metadata in Aspose.Cells | save workbook as PDF with metadata .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-namespace AsposeCellsPdfExport
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook, optionally sets the WorkbookProperties.Title, and then saves the workbook as a PDF using SaveFormat.Pdf, handling any runtime exceptions.
+class Program
 {
-    // // Creates a Workbook, adds sample data, sets the built‑in Title property, enables DisplayDocTitle in PdfSaveOptions, and saves the workbook as a PDF.
-    public class ConvertToPdfWithTitle
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Optionally add some data to the workbook
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample content for PDF export.");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set the built‑in document title property (used by PDF title bar)
-            workbook.BuiltInDocumentProperties.Title = "My Sample Document";
+            // Optional: set document title if needed (requires Aspose.Cells version that supports it)
+            // workbook.WorkbookProperties.Title = "My Document Title";
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Instruct the PDF viewer to display the document title in the window title bar
-            pdfOptions.DisplayDocTitle = true;
-
-            // Save the workbook as a PDF file using the specified options (lifecycle: save)
-            workbook.Save("SampleDocument.pdf", pdfOptions);
+            // Convert and save the workbook as a PDF file
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

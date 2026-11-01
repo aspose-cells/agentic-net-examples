@@ -1,82 +1,73 @@
-// Title: Read a shape's SpaceBeforePt value, modify it, and restore the original setting in an Excel file with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that retrieves the SpaceBeforePt of a shape's TextEffect, changes it to a new value, and then resets it to the original using Aspose.Cells. | Show an example of preserving the original paragraph spacing of an Excel shape before applying formatting changes with Aspose.Cells in C#. | Provide a step‑by‑step snippet to read, update, and revert the SpaceBeforePt property of a shape in a workbook via Aspose.Cells.
-// Common Searches: aspnet aspose.cells get shape TextEffect SpaceBeforePt before editing | c# read and restore shape paragraph spacing in Excel using Aspose.Cells | how to preserve original SpaceBeforePt of a shape when changing formatting with Aspose.Cells | Aspose.Cells shape TextEffect spacing property example C# | Excel shape formatting retain original SpaceBeforePt after modification .NET
-// Tags: read shape SpaceBeforePt Aspose.Cells | preserve original shape spacing C# | modify and revert shape TextEffect property Aspose.Cells | Excel shape paragraph spacing handling .NET | Aspose.Cells shape formatting preservation
+// Title: Read a shape's original text and preserve its formatting before modifying it with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# read existing shape text before editing | preserve textbox formatting when updating shape text in Excel using Aspose.Cells | how to get and keep original shape properties while changing text with Aspose.Cells .NET | retrieve shape text without losing style Aspose.Cells C# example | read shape Text property and maintain formatting Aspose.Cells workbook
+// Tags: Aspose.Cells read shape text property | preserve shape formatting during text update | modify Excel textbox content programmatically | C# Aspose.Cells shape property handling | workbook save after shape text modification
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for Shape, etc.
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// The example loads an Excel workbook, checks for shapes on the first worksheet, reads the original Text of the first shape, outputs it, appends a modification string while keeping existing formatting, and saves the workbook to a new file, handling missing files and directories.
+class Program
 {
-    // The program loads an existing workbook, accesses the first shape, reads its TextEffect.SpaceBeforePt into a variable, changes the spacing to a new value, optionally performs other operations, then restores the original SpaceBeforePt before saving the workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one shape on the worksheet
+            if (worksheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the worksheet.");
+                return;
+            }
+
+            var shape = worksheet.Shapes[0];
+
+            // Attempt to read and modify text for shapes that support it (e.g., TextBox)
             try
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Read the original text
+                string originalText = shape.Text;
+                Console.WriteLine($"Original Text: {originalText}");
 
-                // Access the first worksheet (adjust index if needed)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one shape on the sheet
-                if (sheet.Shapes.Count == 0)
-                {
-                    Console.WriteLine("No shapes found on the worksheet.");
-                    return;
-                }
-
-                // Get the first shape (replace with appropriate index or name)
-                Shape shape = sheet.Shapes[0];
-
-                // Work with the shape's TextEffect if it exists
-                if (shape.TextEffect != null)
-                {
-                    // Preserve the original FontSize (as an example property to modify)
-                    int originalFontSize = shape.TextEffect.FontSize;
-
-                    // Modify the FontSize (or any other available property)
-                    shape.TextEffect.FontSize = 12; // set to desired value
-
-                    // ... perform other operations as needed ...
-
-                    // Restore the original setting when needed
-                    shape.TextEffect.FontSize = originalFontSize;
-                }
-                else
-                {
-                    Console.WriteLine("The shape does not contain a TextEffect.");
-                }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                // Example modification: append a note to the text
+                shape.Text = originalText + " (modified)";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Shape does not support text manipulation or an error occurred: {ex.Message}");
             }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,55 +1,79 @@
-// Title: Add summary rows above each category group with SUM using Aspose.Cells Subtotal in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to insert a summary row before each category group, calculating the sum of the Amount column. | Show how to set the Outline.SummaryRowBelow property so that subtotal rows appear at the top of each group in an Aspose.Cells workbook. | Write a reusable method that takes a worksheet, a data range, and a list of numeric columns, then adds top‑positioned subtotal rows via the Subtotal API.
-// Common Searches: Aspose.Cells C# how to place subtotal rows at the top of grouped data | C# example for adding sum subtotals before each category in an Excel file with Aspose.Cells | Using Subtotal method to create top summary rows for a column range in Aspose.Cells .NET
-// Tags: Aspose.Cells Subtotal top summary rows | C# insert subtotal before group | Excel workbook sum subtotals with Aspose.Cells | outline summary row placement Aspose.Cells | group by column subtotal C# Aspose.Cells
+// Title: Insert subtotal rows above each group with summaryPosition set to top using Aspose.Cells for .NET
+// Common Searches: how to add a subtotal row before each group in Excel with Aspose.Cells C# | Aspose.Cells example for inserting summary rows at the top of grouped data | C# calculate group totals and place them above the data using Aspose.Cells | using summaryPosition top to create subtotals for each category in Aspose.Cells | insert dynamic subtotal rows before groups in an Excel workbook with Aspose.Cells .NET
+// Tags: insert subtotal rows before group Aspose.Cells | summaryPosition top Excel Aspose.Cells | grouped data aggregation C# Aspose.Cells | dynamic row insertion Excel .NET | calculate group totals Aspose.Cells | Excel workbook subtotal example C#
 
-using Aspose.Cells;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Aspose.Cells;
 
-// // Demonstrates creating a workbook, populating Category and Amount columns, and using Aspose.Cells.Subtotal together with Outline.SummaryRowBelow = false to insert summary rows above each category group using the SUM function.
-class SubtotalTopDemo
+// Demonstrates creating a workbook, populating group and amount columns, computing sums per group, inserting a subtotal row above each group's first row by using summaryPosition set to top, and saving the file as Subtotals_Top.xlsx with Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data (Category and Amount)
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Amount");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["A3"].PutValue("A");
-        worksheet.Cells["B3"].PutValue(150);
-        worksheet.Cells["A4"].PutValue("B");
-        worksheet.Cells["B4"].PutValue(200);
-        worksheet.Cells["A5"].PutValue("B");
-        worksheet.Cells["B5"].PutValue(250);
+            // Populate sample data (Group column in A, Amount column in B)
+            sheet.Cells["A1"].PutValue("Group");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("East");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("East");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("West");
+            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["A5"].PutValue("West");
+            sheet.Cells["B5"].PutValue(200);
+            sheet.Cells["A6"].PutValue("North");
+            sheet.Cells["B6"].PutValue(90);
+            sheet.Cells["A7"].PutValue("North");
+            sheet.Cells["B7"].PutValue(110);
 
-        // Define the range that contains the data
-        CellArea dataArea = CellArea.CreateCellArea("A1", "B5");
+            // Calculate subtotals manually (summary rows before each group)
+            var groupFirstRow = new Dictionary<string, int>();
+            var groupSum = new Dictionary<string, double>();
 
-        // Apply subtotals:
-        // - Group by the first column (Category) -> groupBy = 0
-        // - Use SUM function for subtotals
-        // - Subtotal the second column (Amount) -> totalList = new int[] { 1 }
-        // - Replace existing subtotals = true
-        // - Do not insert page breaks between groups = false
-        // - Place summary rows above the detail rows (top) = false
-        worksheet.Cells.Subtotal(
-            dataArea,
-            0,
-            ConsolidationFunction.Sum,
-            new int[] { 1 },
-            true,
-            false,
-            false);
+            // Data rows start at index 1 (row 2 in Excel)
+            for (int i = 1; i <= 6; i++)
+            {
+                string group = sheet.Cells[i, 0].StringValue;
+                double amount = sheet.Cells[i, 1].DoubleValue;
 
-        // Ensure the outline setting also places summary rows above the data
-        worksheet.Outline.SummaryRowBelow = false;
+                if (!groupFirstRow.ContainsKey(group))
+                    groupFirstRow[group] = i; // store first occurrence row index
 
-        // Save the workbook
-        workbook.Save("SubtotalTopDemo.xlsx");
+                if (!groupSum.ContainsKey(group))
+                    groupSum[group] = 0;
+
+                groupSum[group] += amount;
+            }
+
+            // Insert subtotal rows before each group's first row
+            var orderedGroups = groupFirstRow.OrderBy(kv => kv.Value).ToList();
+            int offset = 0; // tracks rows inserted so far
+
+            foreach (var kv in orderedGroups)
+            {
+                int insertRow = kv.Value + offset;
+                sheet.Cells.InsertRows(insertRow, 1);
+                sheet.Cells[insertRow, 0].PutValue($"{kv.Key} Total");
+                sheet.Cells[insertRow, 1].PutValue(groupSum[kv.Key]);
+                offset++; // one row added
+            }
+
+            // Save the workbook
+            string outputPath = "Subtotals_Top.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

@@ -1,73 +1,57 @@
-// Title: Add a cumulative running‑total column to an Aspose.Cells ListObject with a formula that references the previous row (C#)
-// AI Prompts: Write C# code using Aspose.Cells to create a ListObject and set a formula in the third column that adds the current Amount cell to the Running Total cell of the previous row. | Show how to programmatically apply a dynamic Excel formula for cumulative sums to each data row of a table in Aspose.Cells. | Generate a complete C# example that builds a workbook, fills sample data, inserts a running‑total formula referencing the prior row, calculates formulas, and saves the file.
-// Common Searches: aspnet c# how to calculate running total in an Aspose.Cells table using previous row reference | aspose.cells cumulative sum formula previous row example | insert dynamic formula into ListObject column c# aspose.cells | calculate running total column in Excel workbook with Aspose.Cells API
-// Tags: Aspose.Cells ListObject running total formula | C# cumulative sum formula in Excel table | dynamic previous‑row reference Aspose.Cells | populate table column with formula Aspose.Cells | calculate running totals programmatically C#
+// Title: Programmatically insert a running‑total formula referencing the previous row in an Excel worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that adds a cumulative sum column where each cell formula adds the current value from column A to the total from the cell above in column B. | Show how to modify the example to start the running total at a specific row (e.g., row 5) and use mixed cell references in the inserted formulas. | Write a reusable method that takes a Worksheet, a source column index, and a target column index, then fills the target column with a running‑total formula that references the previous row.
+// Common Searches: aspnet insert cumulative sum formula with Aspose.Cells C# | how to create running total column programmatically using Aspose.Cells for .NET | Aspose.Cells example adding previous row reference in Excel formula | C# generate dynamic Excel formula that adds previous row value using Aspose.Cells | calculate running totals in Excel workbook via Aspose.Cells API
+// Tags: insert cumulative total formula Aspose.Cells | previous row reference in Excel formula .NET | generate cumulative totals programmatically C# | dynamic formula creation Aspose.Cells workbook | calculate cumulative sums using Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-namespace AsposeCellsRunningTotalDemo
+// // This program creates a new workbook, fills column A with sample values, inserts a running‑total formula in column B that references the previous row (e.g., B2 = A2 + B1), recalculates all formulas, and saves the file as RunningTotal.xlsx.
+class Program
 {
-    // The sample creates a workbook, adds headers and sample data, defines a ListObject covering columns A‑C, and inserts a running‑total formula into the third column that references the previous row (C of previous row + B of current row). After calculating formulas, the workbook is saved as RunningTotalDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Add header row
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Amount");
-            sheet.Cells["C1"].PutValue("Running Total");
-
-            // Sample data (ID, Amount)
-            int[] ids = { 1, 2, 3, 4, 5 };
-            double[] amounts = { 10, 20, 15, 30, 25 };
-
-            // Populate the data rows (starting at row 2)
-            for (int i = 0; i < ids.Length; i++)
+            // Sample data placed in column A (zero‑based index 0)
+            double[] values = { 10, 20, 15, 30, 25 };
+            for (int i = 0; i < values.Length; i++)
             {
-                sheet.Cells[i + 1, 0].PutValue(ids[i]);      // Column A
-                sheet.Cells[i + 1, 1].PutValue(amounts[i]); // Column B
+                cells[i, 0].PutValue(values[i]); // A column
             }
 
-            // Create a ListObject (table) that covers the data range including the header
-            // Table range: A1:C{lastRow}
-            int lastRow = ids.Length + 1; // +1 for header
-            int tableIndex = sheet.ListObjects.Add(0, 0, lastRow, 2, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Insert running‑total formula in column B (zero‑based index 1)
 
-            // Insert running‑total formula into the "Running Total" column (column offset 2)
-            // Row offset 0 = header, so data rows start at offset 1
-            for (int rowOffset = 1; rowOffset <= ids.Length; rowOffset++)
+            // First row: running total equals the first value
+            cells[0, 1].Formula = "A1";
+
+            // Subsequent rows: running total = previous total + current value
+            // Build A1‑style formula for each row (e.g., B2 = A2 + B1)
+            for (int row = 1; row < values.Length; row++)
             {
-                // Corresponding worksheet row number (1‑based)
-                int worksheetRow = rowOffset + 1; // because header is row 1
-
-                string formula;
-                if (rowOffset == 1)
-                {
-                    // First data row: running total equals the amount itself
-                    formula = $"=B{worksheetRow}";
-                }
-                else
-                {
-                    // Subsequent rows: previous total (C of previous row) + current amount (B of this row)
-                    formula = $"=C{worksheetRow - 1}+B{worksheetRow}";
-                }
-
-                // Apply the formula to the cell in the table
-                table.PutCellFormula(rowOffset, 2, formula);
+                string formula = $"A{row + 1}+B{row}";
+                cells[row, 1].Formula = formula;
             }
 
-            // Calculate all formulas so that the running totals are materialized
+            // Recalculate all formulas so the workbook contains the computed totals
             workbook.CalculateFormula();
 
-            // Save the workbook
-            workbook.Save("RunningTotalDemo.xlsx");
+            // Define output file path
+            string outputPath = "RunningTotal.xlsx";
+
+            // Save the workbook to a file (overwrite if exists)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

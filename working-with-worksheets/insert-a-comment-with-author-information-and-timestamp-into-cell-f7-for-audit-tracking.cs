@@ -1,38 +1,50 @@
-// Title: Insert an audit comment with author and timestamp into cell F7 of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Add a comment to cell F7 that records the editor name and current date‑time, then save the workbook with Aspose.Cells. | Generate an audit‑trail comment for a specific cell by setting the Comment.Author and Comment.Note properties in C#. | Change the timestamp format to yyyy‑MM‑dd HH:mm:ss and write the comment to a new output file.
-// Common Searches: Aspose.Cells C# how to add a comment with author and date to a specific cell | C# insert audit comment into Excel cell F7 using Aspose.Cells library | save workbook after adding comment Aspose.Cells .NET example | set comment author and timestamp programmatically with Aspose.Cells
-// Tags: comment author property Aspose.Cells | comment note timestamp Aspose.Cells | cell F7 comment Aspose.Cells | persist workbook after comment Aspose.Cells | audit log comment Excel Aspose.Cells
+// Title: Add an author and timestamp audit comment to cell F7 in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: how to add a comment with author and current date to a specific cell using Aspose.Cells C# | Aspose.Cells C# insert multi‑line audit comment into Excel cell F7 | C# code to create Excel comment for audit tracking with timestamp using Aspose.Cells | add author information to Excel comment programmatically with Aspose.Cells .NET | save workbook after adding comment to cell F7 Aspose.Cells example
+// Tags: add comment to Excel cell Aspose.Cells | author timestamp audit comment Aspose.Cells | insert multi‑line comment worksheet Aspose.Cells | save workbook after adding comment Aspose.Cells | cell F7 comment insertion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The program loads an existing workbook, creates a comment in cell F7 that includes the author "AuditUser" and the current timestamp, and saves the modified workbook as output.xlsx.
+// The example creates a new workbook, builds a multi‑line comment containing an author name and the current timestamp, inserts the comment into cell F7 (row 6, column 5) of the first worksheet, and saves the workbook as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            // Create a new workbook (or load an existing one if needed)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet (or specify by name/index as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Author and timestamp information
+            string author = "John Doe";
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-        // Target cell F7
-        Cell targetCell = worksheet.Cells["F7"];
+            // Compose the comment text
+            string commentText = $"Author: {author}\nTimestamp: {timestamp}\nAudit: Record updated.";
 
-        // Add a comment to the cell if it doesn't already have one
-        int commentIndex = worksheet.Comments.Add("F7");
-        Comment comment = worksheet.Comments[commentIndex];
+            // Insert the comment into cell F7 (zero‑based indices: row 6, column 5)
+            int commentIndex = sheet.Comments.Add(6, 5); // Add empty comment at the cell
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Author = author;
+            comment.Note = commentText; // Store the full text
 
-        // Prepare author and timestamp information
-        string author = "AuditUser";
-        string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            // Ensure the output directory exists
+            string outputPath = "Output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Set comment properties
-        comment.Author = author;
-        comment.Note = $"Edited by {author} on {timestamp}";
-
-        // Save the workbook with the new comment
-        workbook.Save("output.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

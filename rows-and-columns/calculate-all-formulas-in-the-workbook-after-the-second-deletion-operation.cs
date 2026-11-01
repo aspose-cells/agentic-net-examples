@@ -1,51 +1,54 @@
-// Title: Recalculate all formulas in an Aspose.Cells workbook after deleting a column and a row with UpdateReference enabled (C#)
-// AI Prompts: Delete column B and row 1 using DeleteOptions.UpdateReference, then call Workbook.CalculateFormula to refresh every dependent formula in Aspose.Cells (C#). | Show how to preserve formula references when removing rows or columns and subsequently recalculate the entire sheet with Aspose.Cells for .NET. | Demonstrate updating formula references after structural deletions and performing a full workbook calculation in C# using Aspose.Cells.
-// Common Searches: Aspose.Cells calculate all formulas after deleting a column with UpdateReference in C# | How to keep formula references when removing rows in an Aspose.Cells workbook | C# example for DeleteRows and DeleteColumns with reference update and workbook recalculation | Recalculate dependent formulas after structural changes in Aspose.Cells .NET | Update formula links after column deletion and then recalc workbook using Aspose.Cells
-// Tags: DeleteOptions.UpdateReference formula preservation Aspose.Cells | calculate workbook formulas after column deletion C# | recalculate after row removal Aspose.Cells | Aspose.Cells structural changes formula recalculation | C# DeleteRows DeleteColumns with reference update example
+// Title: Recalculate all workbook formulas after deleting the second row and second column using Aspose.Cells for .NET
+// AI Prompts: Load an Excel file, delete row index 1, delete column index 1 with reference updates, recalculate all formulas, and save the result with Aspose.Cells in C#. | Using Aspose.Cells, remove the second row and second column from the first worksheet, trigger a full formula recalculation, and export the modified workbook. | In C#, apply DeleteRows and DeleteColumns (updateReference=true) on a workbook, then call CalculateFormula to refresh all calculations before saving.
+// Common Searches: Aspose.Cells calculate formulas after deleting a column in C# | how to recalculate workbook after removing rows with Aspose.Cells .NET | delete second row then second column and refresh formulas using Aspose.Cells | C# Aspose.Cells DeleteRows DeleteColumns recalculate all formulas example
+// Tags: Aspose.Cells DeleteRows API | Aspose.Cells DeleteColumns with reference update | Aspose.Cells CalculateFormula after structural changes | C# recalculate workbook formulas Aspose.Cells | Excel row and column deletion Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsFormulaAfterDeletion
+// The example loads an Excel workbook, deletes the second row and then the second column (updating references), recalculates every formula in the workbook, and saves the modified file to a new location using Aspose.Cells for .NET.
+class Program
 {
-    // The example creates a workbook, adds values and formulas, deletes column B and then row 1 with UpdateReference enabled, recalculates all formulas, prints the updated cell values, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (index 0)
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data and formulas
-            cells["A1"].PutValue(10);          // Value
-            cells["B1"].PutValue(20);          // Value
-            cells["C1"].Formula = "=A1+B1";    // Formula dependent on A1 and B1
-            cells["A2"].PutValue(5);
-            cells["B2"].Formula = "=A2*2";     // Formula dependent on A2
-            cells["C2"].Formula = "=C1+B2";    // Formula dependent on previous formulas
+            // ----- First deletion operation -----
+            // Delete the second row (zero‑based index 1)
+            sheet.Cells.DeleteRows(1, 1);
 
-            // First deletion: delete column B (index 1)
-            // Use DeleteOptions to update references in formulas
-            DeleteOptions delOpts = new DeleteOptions { UpdateReference = true };
-            cells.DeleteColumns(1, 1, delOpts); // Deletes column B
+            // ----- Second deletion operation -----
+            // Delete the second column (zero‑based index 1) and update references
+            sheet.Cells.DeleteColumns(1, 1, true);
 
-            // Second deletion: delete row 1 (index 0)
-            // Again update references so formulas stay consistent
-            cells.DeleteRows(0, 1, delOpts); // Deletes first row
-
-            // After the second deletion, calculate all formulas in the workbook
+            // Recalculate all formulas after deletions
             workbook.CalculateFormula();
 
-            // Output the results to verify calculation
-            Console.WriteLine("After deletions and calculation:");
-            Console.WriteLine($"C1 value (now at C0 after row deletion): {cells["C1"].Value}");
-            Console.WriteLine($"B2 value (now at B1 after row deletion): {cells["B1"].Value}");
-            Console.WriteLine($"C2 value (now at C1 after row deletion): {cells["C1"].Value}");
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("ResultAfterDeletion.xlsx");
+            // Save the updated workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

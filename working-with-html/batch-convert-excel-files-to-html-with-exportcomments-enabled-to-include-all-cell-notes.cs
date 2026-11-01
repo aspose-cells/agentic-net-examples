@@ -1,56 +1,65 @@
 // Title: Batch convert Excel workbooks to HTML with cell comments using Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that scans a given folder, loads every .xls or .xlsx file with Aspose.Cells, and saves each workbook as an HTML file. | Demonstrate how to set HtmlSaveOptions.ExportComments to true so that cell notes are included when converting Excel to HTML with Aspose.Cells. | Add comprehensive try‑catch blocks and per‑file logging to a batch Excel‑to‑HTML conversion script in C#.
-// Common Searches: aspocells c# batch convert xls xlsx to html with comments | how to export cell notes to html using Aspose.Cells in a loop | c# program to convert all Excel files in a directory to html preserving comments
-// Tags: Aspose.Cells batch Excel to HTML conversion | HtmlSaveOptions export comments Aspose.Cells | C# directory based workbook processing | preserve cell notes when saving Excel as HTML | programmatic .xlsx to .html conversion
+// AI Prompts: Write a C# console application that scans a folder for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, and saves it as an HTML file with ExportComments enabled. | Enhance the batch converter to create the output directory automatically and log the conversion result (success or error) for every processed file. | Add robust exception handling that skips unreadable or corrupted Excel files while continuing the batch conversion.
+// Common Searches: c# aspose.cells batch convert xlsx files to html with comments | how to include cell notes when exporting Excel to html using aspose.cells | save all worksheets of a workbook as separate html files c# aspose | aspose.cells HtmlSaveOptions ExportComments property not available in version | automate conversion of multiple Excel files to html in a Windows service
+// Tags: batch excel to html conversion aspose.cells | exportcellcomments htmlsaveoptions c# | convert multiple xlsx files to html .net | aspose.cells htmlsaveoptions exportcomments usage | process workbook folder programmatically c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample enumerates .xls and .xlsx files in a source folder, loads each workbook with Aspose.Cells, configures HtmlSaveOptions (including ExportComments when supported), saves the workbook as an HTML file in a target folder, and logs success or error messages for every file processed.
-class BatchExcelToHtml
+// The sample iterates through all .xls, .xlsx, and .xlsm files in a specified input directory, loads each workbook with Aspose.Cells, configures HtmlSaveOptions to export the entire workbook, and saves the result as an HTML file in an output folder. It creates the output folder if needed, skips non‑Excel files, handles missing files and runtime exceptions, and logs each conversion. Note that the ExportComments property may not be available in older Aspose.Cells versions, so enabling cell comments may require a newer release.
+class ExcelToHtmlBatchConverter
 {
     static void Main()
     {
-        // Folder containing the source Excel files
-        string inputFolder = @"C:\ExcelFiles";
+        // Folder containing the Excel files to convert
+        string inputFolder = @"C:\InputExcelFiles";
         // Folder where the HTML files will be saved
-        string outputFolder = @"C:\HtmlOutput";
+        string outputFolder = @"C:\OutputHtmlFiles";
+
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
+        {
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
+        }
 
         // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Get all files in the input folder
-        string[] files = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-        foreach (string filePath in files)
+        // Get all Excel files (xls, xlsx, xlsm) in the input folder
+        string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+        foreach (string filePath in excelFiles)
         {
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            if (extension != ".xls" && extension != ".xlsx")
+            if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm")
                 continue; // Skip non‑Excel files
 
-            // Verify the file exists before attempting to load
+            // Verify the file still exists before loading
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"File not found (skipped): {filePath}");
                 continue;
             }
 
             try
             {
-                // Load the workbook from the current Excel file
+                // Load the workbook
                 Workbook workbook = new Workbook(filePath);
 
                 // Configure HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-                // Note: Exporting comments is not supported in this version of Aspose.Cells.
-                // If needed, upgrade to a version that provides ExportComments property.
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    ExportActiveWorksheetOnly = false // Export the entire workbook
+                    // Note: ExportComments and ExportChartImageFormat are not available in this version of Aspose.Cells
+                };
 
-                // Build the output HTML file path (same name, .html extension)
-                string outputFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
-                string outputPath = Path.Combine(outputFolder, outputFileName);
+                // Determine output HTML file name
+                string htmlFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
+                string htmlFilePath = Path.Combine(outputFolder, htmlFileName);
 
                 // Save the workbook as HTML with the specified options
-                workbook.Save(outputPath, saveOptions);
+                workbook.Save(htmlFilePath, saveOptions);
 
                 Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to HTML.");
             }

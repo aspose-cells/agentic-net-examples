@@ -1,82 +1,101 @@
-// Title: How to unmerge a header row and add thin black borders to each cell in an exported Excel file using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loads an existing workbook, unmerges a specified header range (e.g., A1:D1), and applies thin black borders to every cell in that range for print‑ready output. | Create a reusable C# method using Aspose.Cells to remove merged header cells and set individual border styles before saving the workbook.
-// Common Searches: aspnet unmerge merged header cells and set borders with Aspose.Cells | c# Aspose.Cells apply individual borders after unmerging header row | how to add thin black borders to each cell of a previously merged range in Excel using Aspose.Cells | printing Excel file with unmerged header and cell borders using Aspose.Cells .NET | remove merged cells from exported Excel and style header cells Aspose.Cells
-// Tags: header range unmerge Aspose.Cells | thin black cell borders Aspose.Cells | cell style customization Excel .NET | merged cells removal Aspose.Cells | print formatting Excel workbook C#
+// Title: How to unmerge a header row and reapply individual thin borders to each cell in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# unmerge merged header cells and add thin borders for printing | C# code to split merged cells A1:D1 and set individual borders with Aspose.Cells | Unmerge range and apply cell borders after exporting Excel using Aspose.Cells .NET | How to programmatically remove a merged header and set borders in an Aspose.Cells workbook | Aspose.Cells example for unmerging a range and styling borders in C#
+// Tags: unmerge header range Aspose.Cells C# | set individual cell borders Aspose.Cells | range.UnMerge usage example | cell style border configuration .NET | address to row column conversion Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.Drawing;
 using System.IO;
+using Aspose.Cells;
 
-// The example loads an exported Excel workbook, detects and removes a merged header range (A1:D1), then iterates over each cell in that range to apply thin black borders on all sides, and finally saves the modified workbook ready for printing.
-class Program
+namespace AsposeCellsHeaderUnmerge
 {
-    static void Main()
+    // The sample loads an existing workbook, unmerges a specified header range (e.g., A1:D1), reapplies thin borders to each cell in that range, and saves the modified file ready for printing.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "ExportedData.xlsx";
-            const string outputPath = "ExportedData_WithHeaderBorders.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the source workbook exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that was created during data export
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the header range that was previously merged (e.g., A1:D1)
-            CellArea headerArea = new CellArea
+            try
             {
-                StartRow = 0,      // Row 1 (zero‑based)
-                StartColumn = 0,   // Column A
-                EndRow = 0,        // Row 1
-                EndColumn = 3      // Column D
-            };
+                // Load the workbook that contains the exported data
+                Workbook workbook = new Workbook(inputPath);
 
-            // Unmerge the header range if it is merged
-            // Aspose.Cells may not expose Cells.Unmerge in some versions; use MergedCells collection instead
-            if (sheet.Cells.MergedCells.Contains(headerArea))
-            {
-                sheet.Cells.MergedCells.Remove(headerArea);
-            }
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Apply individual borders to each cell in the header range
-            for (int row = headerArea.StartRow; row <= headerArea.EndRow; row++)
-            {
-                for (int col = headerArea.StartColumn; col <= headerArea.EndColumn; col++)
+                // Define the header range that was previously merged (e.g., A1:D1)
+                string startAddress = "A1";
+                string endAddress = "D1";
+
+                // Convert the addresses to zero‑based row and column indices
+                (int startRow, int startColumn) = GetRowColumnFromAddress(startAddress);
+                (int endRow, int endColumn) = GetRowColumnFromAddress(endAddress);
+
+                // Calculate the size of the range for unmerge
+                int totalRows = endRow - startRow + 1;
+                int totalColumns = endColumn - startColumn + 1;
+
+                // Unmerge the header range using a Range object
+                Aspose.Cells.Range range = worksheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
+                range.UnMerge();
+
+                // Reapply individual borders to each cell in the former merged area
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    Style style = cell.GetStyle();
+                    for (int col = startColumn; col <= endColumn; col++)
+                    {
+                        // Retrieve the current style of the cell
+                        Style cellStyle = worksheet.Cells[row, col].GetStyle();
 
-                    // Set thin black borders on all sides
-                    style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                    style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                    style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                    style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                        // Set thin borders on all sides
+                        cellStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                        cellStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                        cellStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                        cellStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
 
-                    style.Borders[BorderType.TopBorder].Color = Color.Black;
-                    style.Borders[BorderType.BottomBorder].Color = Color.Black;
-                    style.Borders[BorderType.LeftBorder].Color = Color.Black;
-                    style.Borders[BorderType.RightBorder].Color = Color.Black;
-
-                    cell.SetStyle(style);
+                        // Apply the modified style back to the cell
+                        worksheet.Cells[row, col].SetStyle(cellStyle);
+                    }
                 }
-            }
 
-            // Save the workbook ready for printing
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                // Save the workbook ready for printing
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        private static (int row, int column) GetRowColumnFromAddress(string address)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Separate letters (column) from numbers (row)
+            int i = 0;
+            while (i < address.Length && char.IsLetter(address[i]))
+                i++;
+
+            string columnPart = address.Substring(0, i).ToUpperInvariant();
+            string rowPart = address.Substring(i);
+
+            // Convert column letters to zero‑based index
+            int columnIndex = CellsHelper.ColumnNameToIndex(columnPart);
+
+            // Convert row number to zero‑based index
+            if (!int.TryParse(rowPart, out int rowNumber) || rowNumber < 1)
+                throw new ArgumentException($"Invalid cell address: {address}");
+
+            int rowIndex = rowNumber - 1;
+
+            return (rowIndex, columnIndex);
         }
     }
 }

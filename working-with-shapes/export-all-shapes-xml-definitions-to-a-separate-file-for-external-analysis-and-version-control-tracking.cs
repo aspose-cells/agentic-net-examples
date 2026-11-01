@@ -1,66 +1,73 @@
 // Title: Export all worksheet shape definitions to an XML file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, loops through every worksheet, extracts each shape's Name and Type, and writes a custom XML file containing those definitions. | Create a C# method that gathers shape metadata from a Workbook object and saves it as a version‑control‑friendly XML document using Aspose.Cells APIs.
-// Common Searches: how to extract shape metadata from an Excel workbook and save as XML using Aspose.Cells C# | Aspose.Cells example for exporting worksheet shapes to an external XML file | C# code to list all shapes in each sheet and generate XML for version control | save Aspose.Cells shape definitions to XML for change tracking
-// Tags: aspocells shape xml export | c# extract worksheet shapes aspocells | serialize shape definitions to xml aspocells | version control friendly shape metadata aspocells | iterate workbook shapes c# aspocells
+// Common Searches: how to extract shape information from an Excel workbook to XML with Aspose.Cells C# | Aspose.Cells C# export worksheet shapes metadata to external XML file | save shape name and type from Excel sheets as XML using Aspose.Cells | C# code to iterate workbook shapes and write definitions to XML for version control | Aspose.Cells example for exporting shape attributes to a separate XML document
+// Tags: Aspose.Cells shape metadata XML export | C# iterate Excel shapes Aspose.Cells | export worksheet shape definitions to XML | track shape attributes version control Aspose.Cells | generate external XML for Excel shape objects
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 using System.Text;
+using System.Xml;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, iterates each worksheet's Shapes collection, builds a simple XML snippet with each shape's Name and Type, and writes the combined XML to ShapesDefinitions.xml for external analysis and version‑control tracking.
+// The sample loads an Excel workbook, loops through each worksheet and its Shapes collection, creates an XML document with a <Shapes> root, adds a <Shape> element for every shape containing SheetName, Name, and Type attributes, and saves the result to a separate XML file while handling missing files and shape‑specific errors.
 class ExportShapesXml
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "ShapesDefinitions.xml";
 
-            // Verify that the input workbook exists
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Collect XML definitions of all shapes
-            StringBuilder xmlBuilder = new StringBuilder();
+            // Create an XML document that will hold all shape definitions
+            XmlDocument shapesDoc = new XmlDocument();
+            XmlElement rootElement = shapesDoc.CreateElement("Shapes");
+            shapesDoc.AppendChild(rootElement);
 
-            // Iterate through each worksheet
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each shape on the worksheet
+                // Iterate through each shape on the current worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Build a simple XML representation of the shape
-                    string shapeXml = $"<Shape Name=\"{shape.Name}\" Type=\"{shape.Type}\" />";
+                    try
+                    {
+                        // Create an element representing the shape
+                        XmlElement shapeElement = shapesDoc.CreateElement("Shape");
 
-                    // Add a comment to identify the shape's location
-                    xmlBuilder.AppendLine($"<!-- Worksheet: {sheet.Name}, Shape: {shape.Name}, Type: {shape.Type} -->");
-                    xmlBuilder.AppendLine(shapeXml);
-                    xmlBuilder.AppendLine(); // separate entries
+                        // Add identification attributes
+                        shapeElement.SetAttribute("SheetName", sheet.Name);
+                        shapeElement.SetAttribute("Name", shape.Name ?? string.Empty);
+                        shapeElement.SetAttribute("Type", shape.Type.ToString());
+
+                        // Append the shape element to the root
+                        rootElement.AppendChild(shapeElement);
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        // Log shape‑specific errors but continue processing other shapes
+                        Console.WriteLine($"Warning: Could not process a shape on sheet \"{sheet.Name}\": {shapeEx.Message}");
+                    }
                 }
             }
 
-            // Write the collected XML to an external file
-            string outputPath = "ShapesDefinitions.xml";
-            try
-            {
-                File.WriteAllText(outputPath, xmlBuilder.ToString());
-                Console.WriteLine($"Shape definitions saved to {outputPath}");
-            }
-            catch (Exception writeEx)
-            {
-                Console.WriteLine($"Failed to write output file: {writeEx.Message}");
-            }
+            // Save the combined XML definitions to an external file
+            shapesDoc.Save(outputPath);
+            Console.WriteLine($"Shape definitions have been saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

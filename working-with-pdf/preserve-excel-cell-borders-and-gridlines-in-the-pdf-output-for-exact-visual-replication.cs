@@ -1,43 +1,41 @@
-// Title: C# – Export an Excel workbook to PDF with Aspose.Cells while retaining cell borders and gridlines
-// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, sets PdfSaveOptions to show gridlines and preserve border styles, and saves the workbook as a PDF. | Show how to check for the source Excel file, apply robust error handling, and ensure the generated PDF matches the original worksheet's visual layout. | Demonstrate configuring PdfSaveOptions (e.g., ShowGridlines = true) to keep exact formatting when converting Excel to PDF with Aspose.Cells.
-// Common Searches: Aspose.Cells C# keep Excel cell borders when exporting to PDF | How to show gridlines in PDF generated from .xlsx using Aspose.Cells .NET | C# code sample for saving workbook as PDF with exact visual appearance | PdfSaveOptions ShowGridlines true Aspose.Cells example | Export Excel to PDF preserving formatting Aspose.Cells .NET
-// Tags: Aspose.Cells PdfSaveOptions ShowGridlines | export Excel to PDF with borders .NET | preserve worksheet formatting Aspose.Cells PDF | C# convert .xlsx to .pdf retaining gridlines | Aspose.Cells PDF visual fidelity
+// Title: How to retain Excel cell borders and gridlines when converting to PDF with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# preserve cell borders in PDF export | Save Excel workbook to PDF with gridlines using Aspose.Cells .NET | C# convert .xlsx to PDF while keeping borders and gridlines Aspose | PdfSaveOptions default settings keep Excel gridlines Aspose.Cells | Ensure exact visual layout when exporting Excel to PDF in C#
+// Tags: Aspose.Cells PDF export preserve borders | PdfSaveOptions retain gridlines | Excel to PDF visual fidelity C# | Workbook.Save PDF options Aspose.Cells | C# Excel PDF conversion exact layout
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (which display gridlines by default), and saves the workbook as output.pdf. The resulting PDF retains the original cell borders and gridlines, providing an exact visual replica of the Excel worksheet while handling errors gracefully.
+// The example loads an Excel workbook, creates a PdfSaveOptions object (which by default keeps gridlines and cell borders), and saves the workbook as a PDF, handling missing files and runtime errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
             // Load the source Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure PDF save options (gridlines are shown by default in recent versions)
+            // Create PDF save options (default options preserve gridlines and cell borders)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF with the specified options
+            // Save the workbook as a PDF with the specified options
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

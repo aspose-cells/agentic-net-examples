@@ -1,20 +1,23 @@
-// Title: Freeze the first row in all worksheets of multiple Excel workbooks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a collection of .xlsx file paths, iterates through each worksheet, and applies FreezePanes to lock the top row with Aspose.Cells. | Create a reusable function that accepts workbook paths and customizable frozen‑row/column counts, then applies the same FreezePanes settings to every sheet in each workbook. | Add robust logging and error handling to a batch‑processing script so it skips missing files, continues with the remaining workbooks, and saves changes in place.
-// Common Searches: Aspose.Cells C# batch freeze first row across multiple Excel files | How to apply FreezePanes to every worksheet in a set of workbooks using .NET | C# loop through list of .xlsx files and set identical freeze pane configuration with Aspose.Cells | Programmatically lock top row in all sheets of several Excel workbooks in C# | Error handling for missing Excel files when using Aspose.Cells FreezePanes in a batch script
-// Tags: batch freeze panes Aspose.Cells C# | freeze top row multiple workbooks .NET | apply FreezePanes to all worksheets programmatically | iterate workbook collection Aspose.Cells | skip missing Excel files error handling
+// Title: Batch freeze the first row in multiple Excel workbooks using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that accepts an array of .xlsx file paths, opens each workbook with Aspose.Cells, freezes the top row on every worksheet, and saves the modified file with a "_frozen" suffix. | Create a C# console application that loops through ten Excel files, applies FreezePanes(0,0,1,0) to each sheet via Aspose.Cells, and logs missing files without interrupting the batch.
+// Common Searches: c# aspose.cells batch freeze first row in all worksheets of multiple Excel files | how to apply FreezePanes to several workbooks programmatically with Aspose.Cells | process a list of .xlsx files and add row freeze using Aspose.Cells in .NET | save modified Excel workbooks with custom suffix after applying freeze panes in C#
+// Tags: freeze panes first row aspose.cells c# | batch process multiple excel workbooks aspose.cells | save workbook with custom suffix aspose.cells | iterate worksheets apply freeze panes c#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The C# program iterates over a list of Excel workbook paths, loads each file with Aspose.Cells, applies FreezePanes to lock the first row on every worksheet, saves the changes back to the original files, and logs success while gracefully handling missing files.
+// The program iterates over ten specified .xlsx files, loads each workbook with Aspose.Cells, freezes the first row (no columns) on every worksheet using FreezePanes, saves the result with a "_frozen" suffix, and logs progress while handling missing files.
 class BatchFreezeRows
 {
     static void Main()
     {
-        // List of workbook file paths to process (adjust paths as needed)
-        List<string> workbookPaths = new List<string>
+        // Define the row freeze configuration: freeze the first row, no columns frozen.
+        int rowsToFreeze = 1;
+        int columnsToFreeze = 0;
+
+        // List of input workbook file paths (adjust paths as needed).
+        string[] inputFiles = new string[10]
         {
             @"C:\Workbooks\Book1.xlsx",
             @"C:\Workbooks\Book2.xlsx",
@@ -28,42 +31,52 @@ class BatchFreezeRows
             @"C:\Workbooks\Book10.xlsx"
         };
 
-        // Define the row and column indices to start freezing (0‑based).
-        // To freeze the first row, set freezeRow = 1 and freezeColumn = 0.
-        int freezeRow = 1;
-        int freezeColumn = 0;
-        // Number of rows and columns to keep frozen (1 row, 0 columns in this case)
-        int frozenRows = 1;
-        int frozenColumns = 0;
-
-        foreach (string path in workbookPaths)
+        try
         {
-            try
+            // Process each workbook.
+            foreach (string inputPath in inputFiles)
             {
-                if (!File.Exists(path))
+                // Verify the input file exists.
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"File not found: {path}");
+                    Console.WriteLine($"File not found: {inputPath}");
                     continue;
                 }
 
-                // Load the workbook from file
-                Workbook workbook = new Workbook(path);
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-                // Apply the same freeze configuration to every worksheet in the workbook
+                // Apply the freeze configuration to each worksheet.
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     // FreezePanes(row, column, totalRows, totalColumns)
-                    sheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
+                    // Row and column specify the split position (0‑based). To freeze the first row,
+                    // split occurs before row 1 (row index 0). TotalRows indicates how many rows to freeze.
+                    sheet.FreezePanes(0, 0, rowsToFreeze, columnsToFreeze);
                 }
 
-                // Save the workbook back to the same file (overwrites original)
-                workbook.Save(path, SaveFormat.Xlsx);
-                Console.WriteLine($"Processed: {path}");
+                // Build the output file path (adds "_frozen" before the extension).
+                string directory = Path.GetDirectoryName(inputPath) ?? string.Empty;
+                string filenameWithoutExt = Path.GetFileNameWithoutExtension(inputPath);
+                string extension = Path.GetExtension(inputPath);
+                string outputPath = Path.Combine(directory, $"{filenameWithoutExt}_frozen{extension}");
+
+                // Ensure the output directory exists.
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processed and saved: {outputPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing '{path}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch processing completed. Row freeze applied to all workbooks.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

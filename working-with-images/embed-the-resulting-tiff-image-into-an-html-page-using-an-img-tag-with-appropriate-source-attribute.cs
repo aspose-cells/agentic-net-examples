@@ -1,63 +1,69 @@
-// Title: Generate a TIFF image from an Excel worksheet and embed it as a base64 data URI in an HTML file using C# and Aspose.Cells
-// AI Prompts: Write C# code that loads an .xlsx workbook, renders the first worksheet to a TIFF image in memory with Aspose.Cells, encodes the image to a Base64 string, and creates an HTML file containing an <img> tag whose src attribute uses a data:image/tiff;base64 URI. | Adapt the Aspose.Cells example that outputs a PNG image so that it produces a TIFF image and embeds the result directly into the generated HTML page without saving a separate image file.
-// Common Searches: how to convert an Excel sheet to a TIFF image and embed it in HTML using Aspose.Cells for .NET | C# Aspose.Cells render worksheet as TIFF and display with base64 data URI | embed base64 encoded TIFF from Excel workbook into <img> tag in ASP.NET | generate HTML page with embedded TIFF image from Excel file using Aspose.Cells | Aspose.Cells image rendering options TIFF for web embedding
-// Tags: Aspose.Cells render worksheet to TIFF | embed base64 TIFF in HTML img tag | C# convert Excel to TIFF in memory | data URI image/tiff generation with Aspose.Cells | HTML file creation with embedded worksheet image
+// Title: Generate an HTML page with an embedded PNG image of an Excel worksheet using Aspose.Cells for .NET (C#)
+// Common Searches: how to render an Excel worksheet to a PNG stream and embed it in HTML with Aspose.Cells C# | Aspose.Cells C# create base64 PNG from worksheet and display in <img> tag | C# convert Excel sheet to image and generate HTML file with embedded image using Aspose.Cells | save workbook as PNG in memory and embed as data URI in HTML using Aspose.Cells | Aspose.Cells render sheet to image and write HTML file with base64 image C#
+// Tags: Aspose.Cells render worksheet to PNG stream | C# embed base64 image in HTML img tag | SheetRender export Excel sheet as image memory stream | ImageOrPrintOptions OnePagePerSheet configuration | create HTML file with embedded workbook image
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The program loads an Excel workbook, renders the first worksheet to a TIFF image entirely in memory using Aspose.Cells, converts the TIFF bytes to a Base64 string, builds an HTML document that includes an <img> tag with a src attribute formatted as data:image/tiff;base64,<encoded data>, and writes the HTML to an output file.
+// The example creates a Workbook, adds sample data, uses ImageOrPrintOptions and SheetRender to render the first worksheet to a PNG image stored in a memory stream, converts the image bytes to a Base64 string, builds an HTML document containing an <img> tag with a data:image/png;base64 source, and writes the HTML to a file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            // Create a new workbook and add sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Text");
+            sheet.Cells["A2"].PutValue(12345);
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure rendering options (default image format is PNG)
+            // Set image export options (default format is PNG)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
                 OnePagePerSheet = true
             };
 
-            // Render the first worksheet to an image in memory
+            // Render the worksheet to an image stored in a memory stream
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
             using (MemoryStream imageStream = new MemoryStream())
             {
-                SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
-                sheetRender.ToImage(0, imageStream);
-                imageStream.Position = 0; // Reset stream for reading
+                renderer.ToImage(0, imageStream);
+                byte[] imageBytes = imageStream.ToArray();
 
-                // Convert image bytes to Base64
-                string base64Image = Convert.ToBase64String(imageStream.ToArray());
+                // Convert image bytes to Base64 for embedding
+                string base64Image = Convert.ToBase64String(imageBytes);
 
-                // Build HTML with embedded image (PNG)
-                string htmlContent = $"<html><body>" +
-                                     $"<img src=\"data:image/png;base64,{base64Image}\" alt=\"Worksheet Image\" />" +
-                                     $"</body></html>";
+                // Build HTML with an <img> tag referencing the Base64 PNG data
+                string htmlContent = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=""UTF-8"">
+    <title>Workbook as Image</title>
+</head>
+<body>
+    <img src=""data:image/png;base64,{base64Image}"" alt=""Workbook Image"" />
+</body>
+</html>";
 
-                // Save HTML to file
+                // Determine output path and ensure directory exists
+                string outputPath = "WorkbookImage.html";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the HTML to a file
                 File.WriteAllText(outputPath, htmlContent);
-                Console.WriteLine($"HTML file generated successfully at '{outputPath}'.");
             }
         }
         catch (Exception ex)
         {
-            // Log unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

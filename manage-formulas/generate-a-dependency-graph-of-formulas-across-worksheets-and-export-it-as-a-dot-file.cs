@@ -1,7 +1,6 @@
-// Title: Generate a cross‑worksheet formula dependency graph and export it as a GraphViz DOT file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, scans every worksheet for formula cells, extracts the referenced cells, and builds a GraphViz DOT representation of the dependencies. | Extend the example to include defined ranges in the analysis and output the resulting graph in Mermaid markdown instead of DOT. | Add robust error handling that logs cells with unparsable formulas while still producing a complete dependency graph file.
-// Common Searches: how to visualize Excel formula relationships with Aspose.Cells in C# | C# extract cell references from formulas across multiple sheets using Aspose.Cells | export Excel cell dependency map to GraphViz format with .NET | parse cross‑sheet formulas and generate DOT file programmatically | Aspose.Cells example for building a formula connection diagram
-// Tags: extract Excel formula references with Aspose.Cells C# | create DOT file for formula relationships using GraphViz | parse cross‑sheet cell addresses via regular expression C# | process defined ranges in formula graph Aspose.Cells | log unparsable formulas during dependency extraction .NET
+// Title: Create a formula dependency graph across Excel worksheets and export it as a Graphviz DOT file using Aspose.Cells for .NET
+// Common Searches: how to build a formula dependency graph from an Excel workbook with Aspose.Cells in C# | export Excel cell dependency relationships to a Graphviz DOT file using .NET | C# code to list precedent cells for formulas across multiple worksheets with Aspose.Cells | generate Graphviz DOT representation of Excel formula links in a .NET application | extract cross‑sheet formula references from .xlsx using Aspose.Cells API
+// Tags: Aspose.Cells extract formula precedents | C# generate Graphviz DOT from Excel formulas | cross‑worksheet formula dependency mapping | export Excel formula graph to DOT format | regex cell reference parsing Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -10,105 +9,115 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, iterates through each worksheet to find formula cells, uses a regular expression to identify same‑sheet and cross‑sheet cell references, constructs a GraphViz DOT representation of the dependency graph, and writes the result to a .dot file.
-class FormulaDependencyGraph
+// The example loads or creates an Excel workbook, scans every worksheet for formula cells, uses a regular expression to capture referenced cells (including sheet names), builds a dictionary of dependent‑to‑precedent relationships, constructs a left‑to‑right Graphviz DOT representation with proper identifier escaping, and writes the dependency graph to a .dot file.
+class FormulaDependencyGraphGenerator
 {
-    static void Main()
+    static void Main(string[] args)
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "dependency_graph.dot";
+
+        Workbook workbook = null;
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "dependency_graph.dot";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Load existing workbook if it exists; otherwise create a sample workbook.
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
-            Workbook workbook;
-            try
-            {
-                // Load the workbook
                 workbook = new Workbook(inputPath);
             }
-            catch (Exception loadEx)
+            else
             {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Name = "Sheet1";
+                ws.Cells["A1"].Formula = "=B1+C1";
+                ws.Cells["B1"].PutValue(5);
+                ws.Cells["C1"].PutValue(10);
+                workbook.Save(inputPath);
+                Console.WriteLine($"Sample workbook created at '{inputPath}'.");
             }
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return;
+        }
 
-            // Build DOT file content
-            StringBuilder dotBuilder = new StringBuilder();
-            dotBuilder.AppendLine("digraph G {");
+        // Dictionary to store edges: key = dependent cell, value = set of precedent cells
+        var dependencies = new Dictionary<string, HashSet<string>>();
 
-            // Track declared nodes to prevent duplicates
-            HashSet<string> nodes = new HashSet<string>();
+        // Regex to capture cell references, with optional sheet name
+        Regex refRegex = new Regex(
+            @"(?:(?:'(?<sheet>[^']+)'|(?<sheet>[^'!]+))!)?(?<cell>\$?[A-Z]+\$?\d+)",
+            RegexOptions.Compiled);
 
-            // Regex for sheet and cell references (sheet part optional)
-            Regex refRegex = new Regex(
-                @"(?:(?:'(?<sheet>[^']+)')|(?<sheet>[^'!]+))?!?(?<cell>\$?[A-Za-z]+\$?\d+)",
-                RegexOptions.Compiled);
-
+        try
+        {
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
+                Cells cells = sheet.Cells;
+
                 // Iterate through all cells that contain formulas
-                foreach (Cell cell in sheet.Cells)
+                foreach (Cell cell in cells)
                 {
                     if (!cell.IsFormula) continue;
 
-                    // Target node identifier (sheet name + cell address)
-                    string targetNode = $"{EscapeId(sheet.Name)}!{cell.Name}";
-                    if (nodes.Add(targetNode))
-                    {
-                        dotBuilder.AppendLine($"    \"{targetNode}\";");
-                    }
+                    string dependent = $"{sheet.Name}!{cell.Name}";
 
-                    // Parse the formula text for all references (same‑sheet and cross‑sheet)
+                    if (!dependencies.ContainsKey(dependent))
+                        dependencies[dependent] = new HashSet<string>();
+
                     string formula = cell.Formula;
-                    if (string.IsNullOrEmpty(formula)) continue;
 
                     foreach (Match match in refRegex.Matches(formula))
                     {
-                        string refSheet = match.Groups["sheet"].Success && !string.IsNullOrEmpty(match.Groups["sheet"].Value)
-                                          ? match.Groups["sheet"].Value
-                                          : sheet.Name; // default to current sheet if not specified
+                        string sheetName = match.Groups["sheet"].Success
+                            ? match.Groups["sheet"].Value
+                            : sheet.Name;
 
-                        string refCell = match.Groups["cell"].Value.Replace("$", ""); // remove absolute markers
+                        string cellRef = match.Groups["cell"].Value.Replace("$", "");
 
-                        string sourceNode = $"{EscapeId(refSheet)}!{refCell}";
-                        if (nodes.Add(sourceNode))
-                        {
-                            dotBuilder.AppendLine($"    \"{sourceNode}\";");
-                        }
-                        dotBuilder.AppendLine($"    \"{sourceNode}\" -> \"{targetNode}\";");
+                        string precedent = $"{sheetName}!{cellRef}";
+                        dependencies[dependent].Add(precedent);
                     }
+                }
+            }
+
+            // Build DOT representation
+            StringBuilder dotBuilder = new StringBuilder();
+            dotBuilder.AppendLine("digraph FormulaDependencyGraph {");
+            dotBuilder.AppendLine("    rankdir=LR;");
+
+            foreach (var kvp in dependencies)
+            {
+                string fromNode = kvp.Key;
+                foreach (string toNode in kvp.Value)
+                {
+                    dotBuilder.AppendLine($"    \"{EscapeDotId(fromNode)}\" -> \"{EscapeDotId(toNode)}\";");
                 }
             }
 
             dotBuilder.AppendLine("}");
 
-            // Write DOT representation to file
-            try
-            {
-                File.WriteAllText(outputPath, dotBuilder.ToString());
-                Console.WriteLine($"Dependency graph written to \"{outputPath}\".");
-            }
-            catch (Exception writeEx)
-            {
-                Console.WriteLine($"Failed to write output file: {writeEx.Message}");
-            }
+            // Write DOT file
+            File.WriteAllText(outputPath, dotBuilder.ToString());
+            Console.WriteLine($"Dependency graph exported to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 
-    // Helper to escape double quotes and backslashes in DOT identifiers
-    private static string EscapeId(string id)
+    // Escape double quotes and backslashes for DOT identifiers
+    private static string EscapeDotId(string id)
     {
         return id.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }

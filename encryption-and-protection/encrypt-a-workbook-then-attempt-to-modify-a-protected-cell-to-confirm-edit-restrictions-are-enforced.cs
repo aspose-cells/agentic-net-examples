@@ -1,76 +1,98 @@
-// Title: How to encrypt an Excel workbook, protect a worksheet, and verify locked‑cell edit restrictions using Aspose.Cells for .NET
-// AI Prompts: Create a new workbook, apply a worksheet password, encrypt the file with a workbook password, then attempt to write to a locked cell and capture the resulting CellsException. | Open a password‑protected Excel file via LoadOptions, modify only unlocked cells, and save the workbook while preserving its encryption.
-// Common Searches: asp.net encrypt excel file and protect sheet with Aspose.Cells | prevent editing of locked cells after workbook password protection using Aspose.Cells | catch CellsException when modifying a protected cell in an encrypted workbook Aspose.Cells | load encrypted Excel workbook with password and save changes without removing protection Aspose.Cells
-// Tags: apply workbook password encryption Aspose.Cells | set worksheet protection password Aspose.Cells | prevent edit of locked cells Aspose.Cells | load password‑protected Excel with LoadOptions Aspose.Cells | save modified workbook retaining encryption Aspose.Cells
+// Title: Encrypt an Excel workbook with a password and verify that worksheet protection blocks cell edits using Aspose.Cells for .NET
+// Common Searches: C# encrypt Excel file with password using Aspose.Cells while keeping sheet protection active | Aspose.Cells protect worksheet and prevent editing of locked cells after saving encrypted workbook | Load a password‑protected XLSX with Aspose.Cells and test if cell lock is still enforced | How to catch CellsException when trying to edit a protected cell in an encrypted workbook with Aspose.Cells
+// Tags: encrypt workbook with password Aspose.Cells C# | worksheet protection enforce cell lock Aspose.Cells | load password‑protected XLSX using LoadOptions Aspose.Cells | handle CellsException for protected cell edit Aspose.Cells | save encrypted Excel file Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, protects the first worksheet with a password, encrypts the file using a workbook password, reloads it with LoadOptions, attempts to modify a locked cell (capturing the expected CellsException), successfully updates an unlocked cell, and saves the changes while keeping the workbook encrypted.
-class Program
+// The example creates a workbook, protects the first worksheet, attempts to edit a locked cell (capturing the expected CellsException), sets a workbook password to encrypt the file, saves it, reloads the encrypted workbook with LoadOptions, and tries to edit the same cell again to confirm that protection remains enforced after decryption.
+class WorkbookProtectionDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
+            sheet.Name = "DataSheet";
 
-            // Populate cells: A1 will be editable, B1 will be protected
-            sheet.Cells["A1"].PutValue("Editable");
-            sheet.Cells["B1"].PutValue("Protected");
+            // Put an initial value into cell A1 (default cells are locked)
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.PutValue("Original Value");
 
-            // Protect the entire sheet with a password (cells are locked by default)
-            // The third parameter is the old password; not needed here, so pass null
-            sheet.Protect(ProtectionType.All, "sheetpwd", null);
+            // Protect the worksheet to enforce cell lock (oldPassword not required)
+            sheet.Protect(ProtectionType.All, "sheetPassword", null);
 
-            // Encrypt the workbook with a password
-            workbook.Settings.Password = "workbookpwd";
-
-            // Save the encrypted workbook
-            string filePath = "EncryptedWorkbook.xlsx";
-            workbook.Save(filePath);
-            Console.WriteLine($"Workbook saved to {filePath}");
-
-            // Ensure the file exists before attempting to load it
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException("The workbook file was not found.", filePath);
-
-            // Load the workbook using the encryption password
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = "workbookpwd"
-            };
-            Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-            // Attempt to modify the protected cell B1
+            // Attempt to modify the protected cell A1
             try
             {
-                loadedSheet.Cells["B1"].PutValue("Attempted Change");
-                Console.WriteLine("Protected cell modified successfully (unexpected).");
+                targetCell.PutValue("Attempted Edit");
+                Console.WriteLine("Cell edited successfully (unexpected).");
             }
-            catch (CellsException ex)
+            catch (CellsException)
             {
-                // Expected exception because the cell is locked
-                Console.WriteLine($"Modification failed as expected: {ex.Message}");
+                Console.WriteLine("Edit prevented: cell is protected.");
             }
 
-            // Modify the editable cell A1 to demonstrate allowed changes
-            loadedSheet.Cells["A1"].PutValue("Changed");
-            Console.WriteLine("Editable cell changed successfully.");
+            // Encrypt the workbook with a password
+            workbook.Settings.Password = "workbookPassword";
 
-            // Save the workbook after modifications (optional)
-            string modifiedPath = "ModifiedWorkbook.xlsx";
-            loadedWorkbook.Save(modifiedPath);
-            Console.WriteLine($"Modified workbook saved to {modifiedPath}");
+            // Save the encrypted workbook to disk
+            string filePath = "EncryptedProtectedWorkbook.xlsx";
+            try
+            {
+                workbook.Save(filePath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved and encrypted at: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                return;
+            }
+
+            // Verify the file exists before loading
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Load the encrypted workbook using the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = "workbookPassword"
+            };
+
+            Workbook loadedWorkbook;
+            try
+            {
+                loadedWorkbook = new Workbook(filePath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
+            }
+
+            Worksheet loadedSheet = loadedWorkbook.Worksheets["DataSheet"];
+            Cell loadedCell = loadedSheet.Cells["A1"];
+
+            // Attempt to modify the protected cell after loading
+            try
+            {
+                loadedCell.PutValue("Second Attempted Edit");
+                Console.WriteLine("Cell edited after load (unexpected).");
+            }
+            catch (CellsException)
+            {
+                Console.WriteLine("Edit prevented after load: cell is still protected.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

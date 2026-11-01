@@ -1,56 +1,44 @@
-// Title: Link a TEXTJOIN formula result to a rectangle shape in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that fills cells A1:A5, inserts a TEXTJOIN formula in C1, adds a rectangle shape, and sets the shape's text to =C1. | Show how to format a rectangle shape (fill color, line weight) and save the workbook as an .xlsx file after linking its text to a cell formula using Aspose.Cells. | Create a C# example that links multiple shapes to different TEXTJOIN results across several worksheets with Aspose.Cells.
-// Common Searches: how to bind a shape's text to a cell formula with Aspose.Cells C# | using TEXTJOIN in Aspose.Cells and displaying result in a shape | Aspose.Cells C# rectangle shape linked to cell value example | set shape text to =C1 in Excel workbook via Aspose.Cells .NET | concatenate range values with TEXTJOIN and show in shape using Aspose.Cells
-// Tags: Aspose.Cells link shape to cell formula | C# TEXTJOIN formula Aspose.Cells | rectangle shape text binding Aspose.Cells | format shape fill color Aspose.Cells | save workbook with linked shape .xlsx
+// Title: How to bind a rectangle shape to a TEXTJOIN result cell in Aspose.Cells for .NET (C#)
+// AI Prompts: Create a workbook, fill column A with values, set a TEXTJOIN formula in B1, calculate the workbook, add a rectangle shape, and assign the shape's text to the evaluated TEXTJOIN result using Aspose.Cells C#. | Use Aspose.Cells to insert a rectangle shape at a specific location and programmatically link its displayed text to the concatenated string produced by a TEXTJOIN formula in another cell.
+// Common Searches: Aspose.Cells C# set shape text from cell formula result | link rectangle shape to TEXTJOIN output in Excel using Aspose.Cells | display concatenated list from column A in a shape with Aspose.Cells .NET | how to bind shape text to calculated cell value Aspose.Cells | Aspose.Cells example TEXTJOIN and shape text binding
+// Tags: Aspose.Cells rectangle shape text binding | C# TEXTJOIN formula example | link shape to calculated cell value Aspose.Cells | set shape text from workbook formula | display concatenated list in Excel shape .NET
 
-using System;
-using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// // Demonstrates creating a workbook, populating A1:A5, applying TEXTJOIN in C1, adding a rectangle shape, linking its text to the formula result, styling the shape, and saving as ShapeLinkedWithTextJoin.xlsx using Aspose.Cells for .NET.
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+// Get the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells A1:A5 with sample text values
-            sheet.Cells["A1"].PutValue("Apple");
-            sheet.Cells["A2"].PutValue("Banana");
-            sheet.Cells["A3"].PutValue("Cherry");
-            sheet.Cells["A4"].PutValue("Date");
-            sheet.Cells["A5"].PutValue("Elderberry");
+// Fill some sample data in column A (A1:A5)
+sheet.Cells["A1"].PutValue("Apple");
+sheet.Cells["A2"].PutValue("Banana");
+sheet.Cells["A3"].PutValue("Cherry");
+sheet.Cells["A4"].PutValue("Date");
+sheet.Cells["A5"].PutValue("Elderberry");
 
-            // In cell C1, set a TEXTJOIN formula that concatenates the values in A1:A5
-            // The result will be: Apple, Banana, Cherry, Date, Elderberry
-            sheet.Cells["C1"].Formula = @"TEXTJOIN("","", TRUE, A1:A5)";
+// Set a TEXTJOIN formula in cell B1 to concatenate the values from A1:A5
+sheet.Cells["B1"].Formula = "TEXTJOIN(\", \", TRUE, A1:A5)";
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 1, 0, 0, 100, 200);
+// Calculate formulas so that B1 contains the concatenated result
+workbook.CalculateFormula();
 
-            // Link the shape's displayed text to the cell containing the TEXTJOIN result (C1)
-            shape.Text = "=C1";
+// Insert a rectangle shape that will display the concatenated list
+// Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+Aspose.Cells.Drawing.Shape shape = sheet.Shapes.AddShape(
+    Aspose.Cells.Drawing.MsoDrawingType.Rectangle, // shape type
+    2,    // upper left row (row index starts at 0, so row 2 = third row)
+    0,    // upper left column
+    5,    // top offset (points)
+    5,    // left offset (points)
+    200,  // height (points)
+    300   // width (points)
+);
 
-            // Optionally format the shape (e.g., fill color, line)
-            shape.FillFormat.ForeColor = System.Drawing.Color.LightYellow;
-            shape.Line.Weight = 1.0;
+// Set the shape's text to the value calculated in B1
+shape.Text = sheet.Cells["B1"].StringValue;
 
-            // Define output file path
-            string outputPath = "ShapeLinkedWithTextJoin.xlsx";
+// Optionally, format the shape's text (e.g., font size)
+shape.Font.Size = 12;
 
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
+// Save the workbook to a file
+workbook.Save("LinkedShapeWithTextJoin.xlsx");

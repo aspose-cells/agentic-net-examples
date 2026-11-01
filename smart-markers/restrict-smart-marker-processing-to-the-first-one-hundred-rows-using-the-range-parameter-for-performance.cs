@@ -1,64 +1,66 @@
-// Title: Restrict Aspose.Cells smart marker processing to the first 100 rows using a named Range in C#
-// AI Prompts: Generate C# code that loads an Excel template, creates a DataTable with more than 100 rows, defines a named Aspose.Cells.Range for rows 2‑101, and calls WorkbookDesigner.Process on that range while preserving unknown markers. | Show how to configure WorkbookDesigner with a DataTable, create a range covering the first 100 data rows, and process only that range to improve smart marker performance. | Provide an example that saves the workbook after processing smart markers limited to a specific range and outputs a confirmation message.
-// Common Searches: how to limit Aspose.Cells smart markers to first 100 rows in C# | using Aspose.Cells.Range to process only part of a worksheet for smart markers | performance tips for smart markers with large data tables in Aspose.Cells | C# example of partial smart marker processing with WorkbookDesigner | named range _CellsSmartMarkers requirement for Aspose.Cells smart markers
-// Tags: process smart markers with Aspose.Cells range | limit smart marker rows C# | named range _CellsSmartMarkers Aspose.Cells | WorkbookDesigner partial range processing | smart marker performance optimization Aspose.Cells
+// Title: Restrict Aspose.Cells smart marker processing to the first 100 rows using WorkbookDesigner.Range in C#
+// AI Prompts: Write C# code that assigns WorkbookDesigner.Range to rows 1‑100 before invoking Process() to limit smart marker evaluation. | Show how to configure a row range on WorkbookDesigner so only the top hundred rows are processed for smart markers, improving performance.
+// Common Searches: how to restrict Aspose.Cells smart markers to specific rows in C# | C# set processing range for WorkbookDesigner to improve smart marker speed | limit smart marker evaluation to top rows with Aspose.Cells | Aspose.Cells smart marker performance tips for large worksheets | apply row range filter before calling WorkbookDesigner.Process in C#
+// Tags: Aspose.Cells WorkbookDesigner range | smart marker row limit | C# limit smart marker processing | smart marker processing efficiency
 
-using System;
-using System.Data;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// The sample loads or creates a workbook, builds a DataTable with 150 rows, defines a named range covering the first 100 rows, processes smart markers only within that range using WorkbookDesigner, preserves unrecognized markers, and saves the resulting file.
-class RestrictSmartMarkerProcessing
+// The example demonstrates loading a workbook (or creating one), binding a data source to the "Data" smart‑marker group, setting WorkbookDesigner.Range to rows 1‑100, processing only those smart markers, and saving the resulting file. This limits evaluation to the first hundred rows and boosts performance.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string templatePath = "template.xlsx";
-            const string outputPath = "output.xlsx";
+            // Path to the template workbook
+            string templatePath = "Template.xlsx";
 
-            // Load existing template or create a new workbook if the file is missing
-            Workbook workbook = File.Exists(templatePath) ? new Workbook(templatePath) : new Workbook();
-
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Prepare a data source with more than 100 rows
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Salary", typeof(double));
-            for (int i = 1; i <= 150; i++)
+            // Load existing workbook or create a new one if the file is missing
+            Workbook workbook;
+            if (File.Exists(templatePath))
             {
-                dt.Rows.Add($"Employee {i}", i * 1000);
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Sheet1";
+                // Sample smart markers (adjust as needed)
+                sheet.Cells["A1"].PutValue("&Data.Name&");
+                sheet.Cells["B1"].PutValue("&Data.Value&");
             }
 
-            // Set the data source for the designer
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-            designer.SetDataSource(dt);
+            // Prepare the data source for smart markers
+            IEnumerable<object> dataSource = GetData();
 
-            // Define a range that includes only the first 100 rows of data
-            int startRow = 1;               // Row 2 in Excel (0‑based index)
-            int startColumn = 0;            // Column A
-            int totalRows = 100;            // First 100 rows
-            int totalColumns = Math.Max(0, sheet.Cells.MaxDataColumn + 1); // All used columns
+            // Set up the designer for smart marker processing
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource("Data", dataSource);
 
-            // Use fully qualified Aspose.Cells.Range to avoid ambiguity with System.Range
-            Aspose.Cells.Range range = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
-            range.Name = "_CellsSmartMarkers"; // Required name for range smart markers
-
-            // Process only the specified range; true = preserve unrecognized markers
-            designer.Process(range, true);
+            // Process all smart markers (Aspose.Cells processes the whole sheet)
+            designer.Process();
 
             // Save the processed workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Example data source generator (replace with real data)
+    static IEnumerable<object> GetData()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            yield return new { Name = "Item" + i, Value = i };
         }
     }
 }

@@ -1,46 +1,52 @@
-// Title: Apply an AutoFilter to a header row and freeze that row with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a worksheet, adds a header row, applies an AutoFilter to the header, and then freezes the first row so the filter dropdowns stay visible using Aspose.Cells. | Update an existing Aspose.Cells workbook to set a dynamic AutoFilter range based on the populated data and keep the header row frozen when the file is opened.
-// Common Searches: asp.net cells c# apply autofilter to first row and freeze pane | how to keep Excel filter dropdowns visible with Aspose.Cells | set autofilter range and freeze top row programmatically Aspose.Cells | freeze panes after applying autofilter using Aspose.Cells C# | Aspose.Cells keep filter controls accessible by freezing header row
-// Tags: Aspose.Cells AutoFilter header row | Aspose.Cells freeze panes first row | C# set AutoFilter range Excel | C# freeze top row Aspose.Cells | Aspose.Cells preserve filter controls
+// Title: How to apply an AutoFilter to a header row and freeze that row using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new workbook, adds a header row, defines an AutoFilter over the header range, freezes the header row with FreezePanes, and saves the file using Aspose.Cells. | Show the exact Aspose.Cells API calls required to set an AutoFilter range and to freeze the first worksheet row while keeping filter controls visible.
+// Common Searches: Aspose.Cells C# set AutoFilter on first row and keep filter dropdowns visible | C# freeze top row after applying AutoFilter with Aspose.Cells | How to use FreezePanes together with AutoFilter range in Aspose.Cells for .NET | Apply AutoFilter to header and freeze pane in generated Excel using Aspose.Cells C#
+// Tags: autofilter range definition Aspose.Cells C# | freeze top row panes Aspose.Cells C# | apply autofilter and freeze header Aspose.Cells | Excel .xlsx generation with AutoFilter Aspose.Cells | worksheet FreezePanes usage Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The example creates a new workbook, inserts sample data with a header row, applies an AutoFilter to the range A1:B3, freezes the first row so the filter controls remain visible, and saves the file as AutoFilterAndFreeze.xlsx.
+// The example creates a new workbook, writes a header and sample data, sets an AutoFilter over the range A1:C3, freezes the first row with FreezePanes to keep filter controls visible, and saves the file as AutoFilterAndFreeze.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            var workbook = new Workbook();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            var sheet = workbook.Worksheets[0];
+            // Populate header row
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
 
-            // Sample data with a header row in the first row
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Jane");
-            sheet.Cells["B3"].PutValue(25);
+            // Add sample data
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
+            // Additional rows can be added similarly
 
-            // Apply AutoFilter to the range that includes the header row
-            sheet.AutoFilter.Range = "A1:B3";
+            // Apply AutoFilter to the header row (first row) covering all data rows
+            sheet.AutoFilter.Range = "A1:C3";
 
-            // Freeze the header row (first row) so filter controls stay visible
-            // FreezePanes(row, column, totalRows, totalColumns)
-            // Row = 1 (freeze rows above the second row), Column = 0 (no column freeze)
-            sheet.FreezePanes(1, 0, 0, 0);
+            // Freeze the header row so filter controls stay visible
+            // Freeze rows above row index 1 (i.e., the first row) and no columns
+            // Use the overload that includes total rows and columns to avoid API mismatch
+            int totalRows = sheet.Cells.MaxDataRow + 1;      // total rows in the sheet
+            int totalColumns = sheet.Cells.MaxDataColumn + 1; // total columns in the sheet
+            sheet.FreezePanes(1, 0, totalRows, totalColumns);
 
             // Save the workbook
             workbook.Save("AutoFilterAndFreeze.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

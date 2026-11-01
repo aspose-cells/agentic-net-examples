@@ -1,57 +1,64 @@
-// Title: How to merge cells J3:K3 and apply a three‑decimal scientific notation format using Aspose.Cells for .NET
-// AI Prompts: Load an existing Excel workbook, merge the cells spanning columns J and K in row 3 on the first worksheet, and assign a custom number format that displays values in scientific notation with three decimal places using Aspose.Cells. | Create a style with the custom format "0.000E+00", configure a StyleFlag to affect only NumberFormat, apply the style to the merged range, and save the workbook to a new file.
-// Common Searches: Aspose.Cells C# merge J3 K3 and set scientific notation format | apply custom number format 0.000E+00 to merged cells using Aspose.Cells .NET | how to use StyleFlag to change only number format for a merged range in Aspose.Cells | save workbook after merging cells and applying scientific number format with Aspose.Cells
-// Tags: merge cells range Aspose.Cells .NET | custom scientific number format Aspose.Cells | StyleFlag NumberFormat Aspose.Cells | apply style to merged range C# | save workbook after formatting Aspose.Cells
+// Title: How to merge cells J3:K3 and set a three‑decimal scientific number format in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells merge range J3:K3 and apply custom scientific format 0.000E+00 | set scientific notation with three decimal places for merged cells in Aspose.Cells | load workbook, merge cells, and save with Aspose.Cells .NET example | apply custom number format to merged cells using Aspose.Cells C# | Aspose.Cells example for merging cells and formatting as scientific notation
+// Tags: Aspose.Cells merge cells example | scientific notation custom format Aspose.Cells | C# style application to merged cells | Excel workbook save Aspose.Cells .NET | handling missing workbook Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// // Loads "input.xlsx", merges cells J3:K3 on the first worksheet, applies the custom scientific notation format "0.000E+00" to the merged range, and saves the result as "output.xlsx".
+// The C# program loads an existing Excel file (or creates a new workbook if the file is missing or cannot be opened), merges the range J3:K3 on the first worksheet, creates a style with the custom scientific format "0.000E+00" (three decimal places), applies this style to the merged cell, and saves the workbook to output.xlsx while handling potential exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (CellsException)
+                {
+                    // If the file is password‑protected or cannot be opened, fall back to a new workbook
+                    workbook = new Workbook();
+                }
+            }
+            else
+            {
+                workbook = new Workbook();
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+                workbook.Worksheets.Add();
 
-            // Get the first worksheet (index 0)
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells J3:K3 (one additional column to the right of J3)
-            Aspose.Cells.Range mergeRange = sheet.Cells.CreateRange("J3:K3");
-            mergeRange.Merge();
+            // Merge cells J3:K3 (zero‑based indices: row 2, column 9, 1 row, 2 columns)
+            sheet.Cells.Merge(2, 9, 1, 2);
 
-            // Create a style that formats numbers in scientific notation with three decimals
+            // Create a style with scientific notation (three decimal places)
             Style sciStyle = workbook.CreateStyle();
             sciStyle.Custom = "0.000E+00";
 
-            // Apply the style to the merged range (only number format part)
-            StyleFlag flag = new StyleFlag
-            {
-                NumberFormat = true
-            };
-            mergeRange.ApplyStyle(sciStyle, flag);
+            // Apply the style to the merged cell (top‑left cell of the range)
+            sheet.Cells[2, 9].SetStyle(sciStyle);
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

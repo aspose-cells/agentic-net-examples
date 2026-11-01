@@ -1,34 +1,16 @@
-// Title: Saving a workbook to Flat ODS (FODS) with Aspose.Cells OdsSaveOptions in C#
-// AI Prompts: Write C# code that creates a Workbook, populates cells, configures OdsSaveOptions for the LibreOffice generator and ODF 1.2 strict mode, and saves the result as a .fods file. | Show how to use Aspose.Cells OdsSaveOptions to export a workbook to Flat ODS, including setting GeneratorType and OdfStrictVersion before calling Workbook.Save.
-// Common Searches: C# Aspose.Cells export workbook to flat ODS file with custom OdsSaveOptions | How to set LibreOffice generator when saving as .fods using Aspose.Cells | Specify ODF 1.2 strict version in Aspose.Cells OdsSaveOptions C# | Save Excel workbook as Flat ODS (FODS) using Aspose.Cells API
-// Tags: Aspose.Cells OdsSaveOptions flat ODS export | C# save workbook as FODS | set LibreOffice generator OdsSaveOptions | configure ODF strict version Aspose.Cells | export to Flat ODS using Aspose.Cells
+// Title: Save an Aspose.Cells workbook as Flat ODS (FODS) using OdsSaveOptions in C#
+// Common Searches: C# code example for saving an Excel workbook as Flat ODS with Aspose.Cells | How to use OdsSaveOptions to generate a .fods file in .NET | Aspose.Cells export to FODS format from a workbook programmatically | Convert Excel worksheet to Flat ODS using Aspose.Cells library in C# | Saving workbook as FODS using Aspose.Cells OdsSaveOptions tutorial
+// Tags: Aspose.Cells OdsSaveOptions FODS export | C# generate Flat ODS file | Save workbook as .fods format | Flat ODS conversion with Aspose.Cells .NET | Aspose.Cells generate FODS output
 
-using System;
-using Aspose.Cells;
-using Aspose.Cells.Ods;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// Creates a new Workbook, adds sample text and a date, configures OdsSaveOptions with the LibreOffice generator and ODF 1.2 strict version, and saves the workbook as a Flat ODS (.fods) file named output.fods.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+// (Optional) Add some data to the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
+sheet.Cells["A1"].PutValue("Sample data");
 
-        // Access the first worksheet and add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["B1"].PutValue("World");
-        sheet.Cells["A2"].PutValue(DateTime.Now);
+// Configure ODS save options for Flat ODS (FODS) format
+Aspose.Cells.OdsSaveOptions odsOptions = new Aspose.Cells.OdsSaveOptions(Aspose.Cells.SaveFormat.FODS);
 
-        // Create OdsSaveOptions for saving as Flat ODS (FODS)
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        // Optional: specify the generator type
-        saveOptions.GeneratorType = OdsGeneratorType.LibreOffice;
-        // Optional: set the ODF version
-        saveOptions.OdfStrictVersion = OpenDocumentFormatVersionType.Odf12;
-
-        // Save the workbook as FODS using the save options
-        workbook.Save("output.fods", saveOptions);
-    }
-}
+// Save the workbook as a FODS file
+workbook.Save("output.fods", odsOptions);

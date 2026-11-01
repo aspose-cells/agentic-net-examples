@@ -1,52 +1,35 @@
-// Title: How to set Worksheet TabId to zero and capture the resulting exception using Aspose.Cells for .NET
-// AI Prompts: Assign a TabId value of 0 to every worksheet in a workbook and record any exception that is thrown. | Create code that logs the exception message when setting Worksheet.TabId to zero fails with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set worksheet TabId to 0 and handle exception | C# catch exception when assigning zero TabId to worksheets in Aspose.Cells | Logging errors for invalid TabId value in Aspose.Cells workbook | Why does setting Worksheet.TabId to zero throw an exception in Aspose.Cells .NET
-// Tags: worksheet TabId zero exception Aspose.Cells | Aspose.Cells set TabId property error handling | C# Aspose.Cells workbook worksheet TabId assignment | exception logging for Aspose.Cells worksheet TabId | Aspose.Cells .NET worksheet TabId validation
+// Title: How to set worksheet TabId to zero for all sheets and handle the resulting exception using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells set worksheet TabId to 0 and catch exception in C# | C# loop through workbook worksheets and handle TabId assignment error with Aspose.Cells | How to log exception when setting TabId property to zero in Aspose.Cells | Saving workbook after attempting to set TabId to zero for each sheet using Aspose.Cells | Why does assigning zero to worksheet TabId throw an exception in Aspose.Cells
+// Tags: worksheet TabId modification Aspose.Cells | exception handling for TabId property C# | iterate workbook worksheets Aspose.Cells | log TabId assignment errors Aspose.Cells | save workbook after property changes Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The example creates a new workbook, removes the default sheet, adds two uniquely named worksheets, then iterates through each sheet attempting to set its TabId to zero. The expected exception is caught and logged, and the workbook is saved as Result.xlsx.
+// The example loads an Excel file, iterates over every worksheet, attempts to set each sheet's TabId to zero (which triggers an exception), catches and logs the exception message, and finally saves the workbook.
 class Program
 {
     static void Main()
     {
-        try
+        // Load the workbook (using the provided load rule)
+        var workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Remove the default worksheet to avoid duplicate names
-            workbook.Worksheets.Clear();
-
-            // Add worksheets with unique names
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-
-            // Iterate through all worksheets and attempt to set TabId to zero
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                try
-                {
-                    // This operation is expected to throw an exception
-                    sheet.TabId = 0;
-                    Console.WriteLine($"Worksheet '{sheet.Name}': TabId set to 0 successfully.");
-                }
-                catch (Exception ex)
-                {
-                    // Log the expected exception
-                    Console.WriteLine($"Worksheet '{sheet.Name}': Exception caught - {ex.Message}");
-                }
+                // Attempt to set TabId to zero (expected to throw)
+                sheet.TabId = 0;
+                Console.WriteLine($"Worksheet '{sheet.Name}': TabId set to 0 successfully.");
             }
+            catch (Exception ex)
+            {
+                // Log the expected exception
+                Console.WriteLine($"Worksheet '{sheet.Name}': Exception when setting TabId - {ex.Message}");
+            }
+        }
 
-            // Save the workbook
-            workbook.Save("Result.xlsx");
-            Console.WriteLine("Workbook saved as 'Result.xlsx'.");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
+        // Save the workbook (using the provided save rule)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,53 +1,66 @@
-// Title: Set radar chart data label font size to 12 pt and color to blue using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a radar chart in C# with Aspose.Cells and format its data labels to 12‑point blue text. | Update an existing Aspose.Cells radar chart so that every series data label uses a 12 pt font and blue color. | Programmatically apply font size and color styling to the data labels of a radar chart series with Aspose.Cells for .NET.
-// Common Searches: how to change data label font size and color in a radar chart using Aspose.Cells C# | Aspose.Cells C# set radar chart data labels to blue 12 point font | formatting data labels on radar charts with Aspose.Cells .NET example
-// Tags: Aspose.Cells radar chart data label styling | C# set data label font size Aspose.Cells | Aspose.Cells chart series label color blue | modify radar chart label appearance .NET | apply font to chart data labels Aspose
+// Title: Set radar chart data label font size to 12 points and color to blue with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, add sample data, generate a radar chart, and apply a 12‑pt blue font to all data labels using Aspose.Cells in C#. | Modify an existing radar chart so that its series data labels display values in a twelve‑point blue typeface with Aspose.Cells for .NET. | Write C# code that builds a radar chart and formats the data labels to use a 12‑point blue font.
+// Common Searches: Aspose.Cells how to change radar chart data label font size to 12 points | C# set data label color to blue in Excel radar chart using Aspose.Cells | formatting data labels on a radar chart with Aspose.Cells .NET example | sample code for customizing radar chart labels font and color in Aspose.Cells
+// Tags: Aspose.Cells radar chart data label formatting | C# set data label font size Aspose.Cells | Aspose.Cells data label color blue | Excel radar chart label styling with Aspose | Aspose.Cells chart series label customization
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates creating a radar chart, adding a series, enabling data labels, and setting their font size to 12 points and color to blue with Aspose.Cells for .NET (C#).
-class RadarChartDataLabelDemo
+// Creates a workbook, fills sample data, adds a radar chart, enables data labels, and sets their font to 12 pt blue before saving as RadarChartWithLabels.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-        // Populate sample data for the radar chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Cat1");
-        sheet.Cells["A3"].PutValue("Cat2");
-        sheet.Cells["A4"].PutValue("Cat3");
+            // Access the first worksheet
+            Worksheet ws = wb.Worksheets[0];
 
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["B2"].PutValue(4);
-        sheet.Cells["B3"].PutValue(2);
-        sheet.Cells["B4"].PutValue(5);
+            // Populate sample data for the radar chart
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Series1");
+            ws.Cells["C1"].PutValue("Series2");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["A4"].PutValue("C");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["B4"].PutValue(30);
+            ws.Cells["C2"].PutValue(15);
+            ws.Cells["C3"].PutValue(25);
+            ws.Cells["C4"].PutValue(35);
 
-        // Add a radar chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Radar, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a radar chart to the worksheet
+            int chartIndex = ws.Charts.Add(ChartType.Radar, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIndex];
 
-        // Set the data source for the chart
-        int seriesIndex = chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Set the data range for the series (including categories)
+            chart.NSeries.Add("B2:C4", true);
 
-        // Enable data labels for the series
-        Series series = chart.NSeries[seriesIndex];
-        series.DataLabels.ShowValue = true;
+            // Show data labels for each series
+            foreach (Series series in chart.NSeries)
+            {
+                series.DataLabels.ShowValue = true;               // display values
+                series.DataLabels.Font.Size = 12;                 // set font size
+                series.DataLabels.Font.Color = Color.Blue;       // set font color
+            }
 
-        // Change data label font size to 12 points and color to blue
-        series.DataLabels.Font.Size = 12;
-        series.DataLabels.Font.Color = Color.Blue;
+            // Define output file name
+            string outputPath = "RadarChartWithLabels.xlsx";
 
-        // Apply the font settings to all data labels
-        series.DataLabels.ApplyFont();
-
-        // Save the workbook
-        workbook.Save("RadarChartDataLabels.xlsx");
+            // Save the workbook with the radar chart
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

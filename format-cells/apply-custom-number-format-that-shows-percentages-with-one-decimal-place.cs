@@ -1,38 +1,52 @@
-// Title: How to format Excel cells as percentages with one decimal place using Aspose.Cells for .NET (C#)
-// AI Prompts: Create a custom style with the format string "0.0%" and apply it to a specific cell range using Aspose.Cells StyleFlag. | Generate an Excel workbook in C# where numeric values are automatically displayed as percentages with one decimal precision. | Save the workbook after applying the percentage style to cells A1 through A3 with Aspose.Cells.
-// Common Searches: Aspose.Cells C# format cells as percentage with one decimal place | custom number format 0.0% using Aspose.Cells .NET | apply number format only to a range with StyleFlag in Aspose.Cells | C# create Excel file showing 12.3% instead of 0.123 using Aspose.Cells
-// Tags: custom percentage number format Aspose.Cells | apply style to cell range Aspose.Cells C# | StyleFlag number format only Aspose.Cells | Excel percentage formatting .NET | Aspose.Cells generate workbook with custom format
+// Title: How to apply a custom number format (0.0%) to display percentages with one decimal place using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# format cell as percentage with one decimal place | set custom number format 0.0% in Excel workbook using Aspose.Cells .NET | apply percentage style with one decimal to a cell in Aspose.Cells | C# Aspose.Cells custom number format for percentages | display decimal value as 12.3% in Excel using Aspose.Cells
+// Tags: percentage custom format 0.0% Aspose.Cells | percentage formatting one decimal C# | apply style to cell Aspose.Cells | Excel workbook custom format .NET | Aspose.Cells percentage style example
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example creates a new workbook, inserts decimal values, defines a custom style with the format "0.0%" to display percentages with one decimal place, applies this style to the range A1:A3 using a StyleFlag that targets only the number format, and saves the file as PercentagesWithOneDecimal.xlsx.
+// The example creates a workbook, writes a decimal to cell A1, defines a style with the custom number format "0.0%" to show percentages with one decimal place, applies the style to the cell, ensures the output directory exists, and saves the file as PercentageFormatted.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook.
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet.
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Put some sample numeric values (e.g., 0.1234 = 12.34%).
-        sheet.Cells["A1"].PutValue(0.1234);
-        sheet.Cells["A2"].PutValue(0.5678);
-        sheet.Cells["A3"].PutValue(0.9);
+            // Put a decimal value in cell A1 (e.g., 0.1234 will display as 12.3%)
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue(0.1234);
 
-        // Define a custom number format that shows percentages with one decimal place.
-        // "0.0%" means the value will be multiplied by 100 and displayed with one decimal.
-        Style percentStyle = workbook.CreateStyle();
-        percentStyle.Custom = "0.0%";
+            // Create a style and set a custom number format for percentages with one decimal place
+            Style style = workbook.CreateStyle();
+            style.Custom = "0.0%";
 
-        // Apply the custom style to the range containing the numbers.
-        StyleFlag flag = new StyleFlag();
-        flag.NumberFormat = true; // Apply only the number format part of the style.
-        sheet.Cells.CreateRange("A1:A3").ApplyStyle(percentStyle, flag);
+            // Apply the style to the cell (entire style is safe here)
+            cell.SetStyle(style);
 
-        // Save the workbook to a file.
-        workbook.Save("PercentagesWithOneDecimal.xlsx");
+            // Define output file path
+            string outputPath = "PercentageFormatted.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

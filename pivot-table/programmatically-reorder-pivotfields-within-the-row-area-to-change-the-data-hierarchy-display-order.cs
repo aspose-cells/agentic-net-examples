@@ -1,69 +1,99 @@
-// Title: How to reorder row fields in an Aspose.Cells pivot table using C# to change hierarchy display order
-// AI Prompts: Generate C# code that uses Aspose.Cells to move a pivot table row field from one position to another. | Show a snippet that changes the row field order in a pivot table from Category→SubCategory to SubCategory→Category with Aspose.Cells. | Provide an example of using the RowFields collection to reorder pivot row fields in a .NET workbook.
-// Common Searches: Aspose.Cells C# reorder pivot table row fields programmatically | How to change the order of row fields in a pivot table using Aspose.Cells .NET | Move pivot table row field to a different position with Aspose.Cells API | Changing pivot hierarchy order in a C# Aspose.Cells workbook
-// Tags: pivot row field reorder Aspose.Cells | pivot hierarchy change Aspose.Cells | reorder pivot fields programmatically | Aspose.Cells pivot table row positioning | C# pivot table field manipulation
+// Title: Programmatically move row PivotFields to change hierarchy order in an Excel pivot table with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells example to change the order of row fields in an Excel pivot table | how to move a pivot table row field to a different position using Aspose.Cells .NET | reorder row hierarchy in Excel pivot table programmatically with Aspose.Cells | Aspose.Cells move PivotFields in row area after loading password‑protected workbook | sample code for shifting pivot table row fields using Aspose.Cells in C#
+// Tags: aspocells pivotrowfields move c# | excel pivot table row hierarchy reorder .net | load password protected workbook aspocells | pivot table refresh calculate aspocells | c# reorder pivotfields programmatically | aspocells row area field sequence
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace PivotFieldReorderDemo
+// The example loads an Excel workbook (handling optional password protection), accesses the first worksheet, verifies a pivot table exists, and if there are at least three row fields, moves the first row field to the third position using PivotFields.Move. It then refreshes and recalculates the pivot table before saving the modified workbook to a new file.
+class Program
 {
-    // The example creates a workbook, adds sample data, builds a pivot table with Category and SubCategory as row fields, then uses the RowFields collection's Move method to swap their positions so SubCategory appears before Category, refreshes and calculates the pivot, and saves the result as an Excel file.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify input file exists
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "SubCategory";
-            cells["C1"].Value = "Amount";
+        Workbook workbook = null;
 
-            cells["A2"].Value = "Fruit";
-            cells["B2"].Value = "Apple";
-            cells["C2"].Value = 120;
+        try
+        {
+            // Try to load workbook without password
+            workbook = new Workbook(inputPath);
+        }
+        catch (CellsException)
+        {
+            // Assume password is required and prompt the user
+            Console.WriteLine("The workbook is password protected.");
+            Console.Write("Enter password: ");
+            string password = Console.ReadLine() ?? string.Empty;
 
-            cells["A3"].Value = "Fruit";
-            cells["B3"].Value = "Banana";
-            cells["C3"].Value = 80;
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+            try
+            {
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook with password: {ex.Message}");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            cells["A4"].Value = "Vegetable";
-            cells["B4"].Value = "Carrot";
-            cells["C4"].Value = 150;
+        try
+        {
+            // Access first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-            cells["A5"].Value = "Vegetable";
-            cells["B5"].Value = "Broccoli";
-            cells["C5"].Value = 90;
+            // Ensure a pivot table exists
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the first worksheet.");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            PivotTableCollection pivotTables = sheet.PivotTables;
-            int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
-            PivotTable pivotTable = pivotTables[pivotIndex];
+            var pivotTable = worksheet.PivotTables[0];
 
-            // Add two fields to the row area: Category (index 0) and SubCategory (index 1)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0); // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 1); // SubCategory
+            // Reorder row fields if enough fields are present
+            if (pivotTable.RowFields.Count > 2)
+            {
+                pivotTable.RowFields.Move(0, 2);
+            }
+            else
+            {
+                Console.WriteLine("Insufficient row fields to change order.");
+            }
 
-            // Add the data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2); // Amount
-
-            // At this point the hierarchy is: Category -> SubCategory
-            // To change the display order to SubCategory -> Category, move the fields
-            // RowFields is a PivotFieldCollection; use its Move method (currPos, destPos)
-            // Current positions are zero‑based: 0 = Category, 1 = SubCategory
-            pivotTable.RowFields.Move(0, 1); // Move Category from position 0 to position 1
-
-            // Refresh and calculate the pivot table to apply changes
+            // Refresh and recalculate pivot table
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook
-            workbook.Save("ReorderedPivotTable.xlsx");
+            // Save modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing pivot table: {ex.Message}");
         }
     }
 }

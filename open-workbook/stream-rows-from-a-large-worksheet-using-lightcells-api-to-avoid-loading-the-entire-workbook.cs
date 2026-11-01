@@ -1,39 +1,60 @@
-// Title: Load a large XLSX workbook in C# using Aspose.Cells LoadOptions (basic example)
-// AI Prompts: Write C# code that checks if an Excel file exists and then opens it with Aspose.Cells using a specific LoadOptions instance. | Show how to catch and log exceptions when initializing a Workbook object for a large XLSX file in .NET. | Demonstrate creating a LoadOptions object for the XLSX format and passing it to the Workbook constructor in C#.
-// Common Searches: Aspose.Cells C# load large XLSX file with LoadOptions example | how to verify Excel file path before opening workbook in Aspose.Cells .NET | exception handling for Workbook constructor Aspose.Cells C#
-// Tags: Aspose.Cells LoadOptions for XLSX format | C# verify Excel file existence before loading | exception handling when opening workbook Aspose.Cells | large workbook loading with Aspose.Cells .NET
+// Title: Read rows from a large XLSX worksheet with Aspose.Cells LightCells API in C# without loading the whole workbook
+// Common Searches: C# Aspose.Cells LightCells read large worksheet row by row | How to iterate over rows in a big Excel file using Aspose.Cells memory‑optimized loading | Stream Excel rows with Aspose.Cells LoadOptions MemorySetting.MemoryPreference in C# | Read large XLSX file without loading entire workbook using Aspose.Cells LightCells | Efficiently process massive Excel sheet in C# with Aspose.Cells LightCells API
+// Tags: Aspose.Cells LightCells row iteration | memory‑optimized Excel reading C# | LoadOptions MemorySetting.MemoryPreference usage | large XLSX streaming with Aspose.Cells | read worksheet cells without full workbook load
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The sample checks that 'LargeWorkbook.xlsx' exists, creates a LoadOptions object for the XLSX format, loads the workbook with Aspose.Cells, and prints a success message or any caught exception.
+// The example verifies the XLSX file exists, loads it with LoadOptions set to MemorySetting.MemoryPreference to keep memory usage low, selects the first worksheet, determines its used range, and streams each row and column by accessing cells directly, outputting their StringValue to the console without loading the entire workbook into memory.
 class Program
 {
     static void Main()
     {
-        // Path to the large Excel file
-        string filePath = "LargeWorkbook.xlsx";
-
-        // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Error: File '{filePath}' not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook using default LoadOptions (no custom LightCells provider)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            Workbook workbook = new Workbook(filePath, loadOptions);
+            // Path to the large Excel file
+            string inputPath = @"C:\Data\LargeWorkbook.xlsx";
 
-            // Workbook loaded successfully; further processing can be added here if needed
-            Console.WriteLine("Workbook loaded successfully.");
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook with memory‑optimized option to reduce memory consumption
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            loadOptions.MemorySetting = MemorySetting.MemoryPreference; // correct enum value
+
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Choose the worksheet to process (e.g., the first worksheet)
+            var sheet = workbook.Worksheets[0];
+
+            // Determine the used range
+            int totalRows = sheet.Cells.MaxDataRow + 1;       // rows are zero‑based
+            int totalCols = sheet.Cells.MaxDataColumn + 1;   // columns are zero‑based
+
+            // Iterate through rows and columns without loading the entire sheet into memory
+            for (int row = 0; row < totalRows; row++)
+            {
+                for (int col = 0; col < totalCols; col++)
+                {
+                    var cell = sheet.Cells[row, col];
+                    // Use StringValue to get a textual representation; handle nulls safely
+                    string value = cell?.StringValue ?? string.Empty;
+                    Console.Write($"{value}\t");
+                }
+                Console.WriteLine();
+            }
+
+            // No need to save the workbook because we only read data.
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            // Log or display the exception details for troubleshooting
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

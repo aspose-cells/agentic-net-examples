@@ -1,57 +1,46 @@
-// Title: Center legend text horizontally and vertically in an Aspose.Cells column chart while applying a transparent background (C#)
-// AI Prompts: Generate a column chart in a new workbook, set the legend's TextHorizontalAlignment and TextVerticalAlignment to Center, and apply BackgroundMode.Transparent using Aspose.Cells for .NET. | Add verification code that confirms the legend's alignment properties stay Center after the transparent background is set and output the result to the console.
-// Common Searches: Aspose.Cells C# set legend text alignment to center for both horizontal and vertical | make chart legend background transparent without changing alignment Aspose.Cells | verify legend alignment after changing background mode in Aspose.Cells chart | center legend text in column chart using Aspose.Cells for .NET | Aspose.Cells example transparent legend background C#
-// Tags: legend text alignment center Aspose.Cells | transparent legend background Aspose.Cells | column chart legend formatting C# | verify legend alignment after background change Aspose.Cells | chart legend properties Aspose.Cells .NET
+// Title: Center a chart legend at the bottom and apply a fully transparent fill without altering its alignment using Aspose.Cells for .NET
+// Common Searches: c# aspose.cells set chart legend to bottom and keep it centered | apply 100% transparent fill to a chart legend in aspose.cells without moving it | how to verify legend position after changing fill transparency with aspose.cells | asp.net aspose.cells chart legend alignment after setting fill transparency | make chart legend transparent while preserving bottom alignment in aspose.cells
+// Tags: set legend position bottom Aspose.Cells | center legend alignment Aspose.Cells | legend fill transparency Aspose.Cells | verify legend placement Aspose.Cells | solid fill full transparency chart legend Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLegendAlignmentDemo
+// The example creates a workbook, adds a column chart, positions the legend at the bottom (centered), applies a solid fill with 100 % transparency to the legend area, confirms the legend remains bottom‑centered, and saves the file as LegendAlignmentDemo.xlsx.
+class Program
 {
-    // The sample creates a workbook, adds sample data, builds a column chart, centers the legend's horizontal and vertical text alignment, sets the legend's background to transparent, verifies that the alignment remains centered, prints the verification results, and saves the file as LegendAlignmentTransparentDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(50);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
 
-            // Access the legend and configure alignment
-            Legend legend = chart.Legend;
-            legend.TextHorizontalAlignment = TextAlignmentType.Center; // Center horizontally
-            legend.TextVerticalAlignment   = TextAlignmentType.Center; // Center vertically
+            // Set legend position to bottom (centered)
+            chart.Legend.Position = LegendPositionType.Bottom;
 
-            // Set transparent background to verify it does not affect alignment
-            legend.BackgroundMode = BackgroundMode.Transparent;
+            // Apply a fully transparent fill to the legend (Transparency = 1.0 means 100% transparent)
+            chart.Legend.Area.FillFormat.FillType = FillType.Solid;
+            chart.Legend.Area.FillFormat.Transparency = 1.0;
 
-            // Simple verification that alignment properties remain centered
-            bool alignmentIntact = legend.TextHorizontalAlignment == TextAlignmentType.Center &&
-                                   legend.TextVerticalAlignment == TextAlignmentType.Center;
-
-            Console.WriteLine("Legend alignment centered: " + alignmentIntact);
-            Console.WriteLine("Legend background is transparent: " + (legend.BackgroundMode == BackgroundMode.Transparent));
+            // Verify that the legend is positioned at the bottom
+            bool isPositionBottom = chart.Legend.Position == LegendPositionType.Bottom;
+            Console.WriteLine("Legend position is bottom (centered): " + isPositionBottom);
 
             // Save the workbook
-            workbook.Save("LegendAlignmentTransparentDemo.xlsx");
+            workbook.Save("LegendAlignmentDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

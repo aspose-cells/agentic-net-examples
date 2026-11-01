@@ -1,60 +1,59 @@
-// Title: Copy only formatting from one range to another in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Copy the formatting of cells A1:C3 to cells E1:G3 in a workbook while keeping the original values unchanged using Aspose.Cells C#. | Use Aspose.Cells PasteOptions with PasteType.Formats to transfer styles between two equal‑sized ranges in a .NET application.
-// Common Searches: Aspose.Cells how to copy cell styles without values in C# | Copy only formatting between ranges in Excel using Aspose.Cells .NET | PasteOptions PasteType.Formats example for range formatting transfer | Preserve cell values while copying formatting with Aspose.Cells | Copy formatting from A1:C3 to E1:G3 using Aspose.Cells API
-// Tags: range formatting copy Aspose.Cells | PasteOptions Formats C# | copy cell styles Aspose.Cells | preserve cell values while copying formatting .NET | Excel range formatting transfer Aspose.Cells
+// Title: Copy only cell formatting from source range A1:C3 to destination range E1:G3 using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy only formatting from a source range to a destination range | How to transfer cell styles without changing values using Aspose.Cells .NET | Copy Excel range formatting to another area while keeping original data in C# | Range.CopyStyle method example for non‑adjacent ranges in Aspose.Cells | Preserve cell values when copying styles with Aspose.Cells for .NET
+// Tags: Aspose.Cells Range.CopyStyle method example | Excel range formatting transfer C# | copy cell style without data modification | nonadjacent range style copy .NET | preserve data during style copy Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// The program loads source.xlsx, defines source range A1:C3 and destination range E1:G3 on the first worksheet, copies only the formatting using PasteOptions with PasteType.Formats, and saves the result to output.xlsx.
+// The sample creates or loads an Excel workbook, defines a source range (A1:C3) and a destination range (E1:G3) on the first worksheet, and uses the Range.CopyStyle method to copy only the formatting while leaving cell values unchanged, then saves the result to output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the source workbook
-            string sourcePath = "source.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Ensure the input file exists; create a sample workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
+                var sampleWorkbook = new Workbook();
+                var ws = sampleWorkbook.Worksheets[0];
+                ws.Cells["A1"].PutValue("Header1");
+                ws.Cells["B1"].PutValue("Header2");
+                ws.Cells["C1"].PutValue("Header3");
+                ws.Cells["A2"].PutValue(1);
+                ws.Cells["B2"].PutValue(2);
+                ws.Cells["C2"].PutValue(3);
+                ws.Cells["A3"].PutValue(4);
+                ws.Cells["B3"].PutValue(5);
+                ws.Cells["C3"].PutValue(6);
+                sampleWorkbook.Save(inputPath);
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the workbook.
+            var workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet.
+            var sheet = workbook.Worksheets[0];
 
-            // Define the source range (A1:C3)
+            // Define the source range (A1:C3).
             AsposeRange sourceRange = sheet.Cells.CreateRange("A1", "C3");
 
-            // Define the destination range (E1:G3) – must be the same size as the source
-            AsposeRange destRange = sheet.Cells.CreateRange("E1", "G3");
+            // Define the destination range (E1:G3).
+            AsposeRange destinationRange = sheet.Cells.CreateRange("E1", "G3");
 
-            // Set up paste options to transfer only formatting
-            PasteOptions pasteOptions = new PasteOptions
-            {
-                // Copy only cell formats (includes conditional formats in most versions)
-                PasteType = PasteType.Formats
-            };
+            // Copy only the formatting from source to destination.
+            sourceRange.CopyStyle(destinationRange);
 
-            // Perform the copy operation using the defined options
-            destRange.Copy(sourceRange, pasteOptions);
-
-            // Save the workbook with the applied formatting
-            string outputPath = "output.xlsx";
+            // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

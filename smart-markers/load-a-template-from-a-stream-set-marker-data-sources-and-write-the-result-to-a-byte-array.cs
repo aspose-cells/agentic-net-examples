@@ -1,101 +1,94 @@
-// Title: Load Excel template from byte array, bind smart marker data source, and retrieve processed workbook as byte array with Aspose.Cells for .NET
-// AI Prompts: Load a workbook from a MemoryStream, attach an ArrayList of Person objects to the 'Persons' smart marker via WorkbookDesigner, invoke processing, and obtain the resulting file as a byte array. | Given a byte[] containing an Excel template, initialize WorkbookDesigner, set a custom data source, run Process, and capture the updated workbook in another byte array without writing to disk.
-// Common Searches: aspnet load excel template from byte array for smart marker replacement | binding a collection to a smart marker using WorkbookDesigner in C# | convert processed Aspose.Cells workbook to byte array without saving to disk | how to use MemoryStream with Aspose.Cells to apply smart markers
-// Tags: Aspose.Cells WorkbookDesigner smart marker binding | read Excel template into memory from byte array C# | execute smart marker processing in memory | export workbook to byte array Aspose.Cells | associate Person POCO list with smart marker named Persons
+// Title: Load an Excel template from a Stream, assign smart‑marker data sources, and retrieve the processed workbook as a byte array using Aspose.Cells for .NET
+// AI Prompts: Read an Excel template from a Stream, assign each smart‑marker data source with WorkbookDesigner.SetDataSource, execute the marker processing, and return the workbook as a byte[] in XLSX format. | Refactor the method to accept a strongly‑typed collection of data source objects, process the smart markers, and write the resulting workbook directly to a MemoryStream without creating an intermediate file.
+// Common Searches: Aspose.Cells how to load an Excel template from a Stream and process smart markers | C# save processed workbook to a byte array using WorkbookDesigner | Set multiple smart marker data sources programmatically with Aspose.Cells .NET | Convert processed Excel workbook to byte[] without writing to disk Aspose.Cells
+// Tags: WorkbookDesigner SetDataSource C# | load workbook from stream Aspose.Cells | process smart markers in memory | save workbook to byte array XLSX | Excel template processing Aspose.Cells .NET
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Collections;
 using Aspose.Cells;
 
-namespace SmartMarkerApp
+namespace AsposeCellsExample
 {
-    // The example shows how to load an Excel template from a byte array using a MemoryStream, bind an ArrayList of Person POCO objects to a smart marker called 'Persons' with WorkbookDesigner, process all smart markers, and return the modified workbook as a byte array, enabling in‑memory template manipulation without file I/O.
-    public class SmartMarkerProcessor
+    // The ProcessTemplate method loads an Excel workbook from a Stream, uses WorkbookDesigner to assign smart‑marker data sources from a dictionary, processes all markers, and saves the resulting workbook as an XLSX byte array, enabling in‑memory template handling.
+    public class ExcelProcessor
     {
-        // Loads a workbook template from a byte array, applies smart marker data,
-        // processes the markers, and returns the resulting workbook as a byte array.
-        public static byte[] ProcessTemplate(byte[] templateBytes)
+        /// <param name="templateStream">Stream containing the Excel template.</param>
+        /// <param name="markerDataSources">Dictionary where key is the marker name and value is the data source object.</param>
+        /// <returns>Byte array of the processed workbook.</returns>
+        public byte[] ProcessTemplate(Stream templateStream, Dictionary<string, object> markerDataSources)
         {
             try
             {
-                using (MemoryStream templateStream = new MemoryStream(templateBytes))
+                // Load the workbook from the provided stream
+                Workbook workbook = new Workbook(templateStream);
+
+                // Initialize WorkbookDesigner for smart marker processing
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // Set each marker's data source
+                foreach (KeyValuePair<string, object> entry in markerDataSources)
                 {
-                    Workbook workbook = new Workbook(templateStream);
+                    designer.SetDataSource(entry.Key, entry.Value);
+                }
 
-                    // Set up the WorkbookDesigner to work with smart markers.
-                    WorkbookDesigner designer = new WorkbookDesigner
-                    {
-                        Workbook = workbook
-                    };
+                // Process all smart markers in the workbook
+                designer.Process();
 
-                    // Example data source: a collection of Person objects.
-                    ArrayList persons = new ArrayList
-                    {
-                        new Person { Name = "John Doe", Age = 30 },
-                        new Person { Name = "Jane Smith", Age = 28 }
-                    };
-
-                    // Bind the data source to the smart marker name used in the template.
-                    designer.SetDataSource("Persons", persons);
-
-                    // Process all smart markers in the workbook.
-                    designer.Process();
-
-                    // Save the processed workbook to a memory stream and return its byte array.
-                    using (MemoryStream resultStream = workbook.SaveToStream())
-                    {
-                        return resultStream.ToArray();
-                    }
+                // Save the processed workbook to a memory stream
+                using (MemoryStream outputStream = new MemoryStream())
+                {
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
+                    return outputStream.ToArray();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing template: {ex.Message}");
-                return Array.Empty<byte>();
+                // Wrap and rethrow for caller handling
+                throw new ApplicationException("Error processing the Excel template.", ex);
             }
         }
-    }
-
-    // Simple POCO class used as a data source for smart markers.
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            const string templatePath = "template.xlsx";
-            const string outputPath = "result.xlsx";
+            // Expect the template file path as the first argument
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the path to the Excel template file as an argument.");
+                return;
+            }
 
-            // Prevent FileNotFoundException for the template file.
+            string templatePath = args[0];
+
+            // Prevent FileNotFoundException
             if (!File.Exists(templatePath))
             {
-                Console.WriteLine($"Template file '{templatePath}' not found.");
+                Console.WriteLine($"Template file not found: {templatePath}");
                 return;
             }
 
             try
             {
-                byte[] templateBytes = File.ReadAllBytes(templatePath);
-                byte[] resultBytes = SmartMarkerProcessor.ProcessTemplate(templateBytes);
+                using (FileStream templateStream = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Example: empty data sources; populate as needed
+                    var dataSources = new Dictionary<string, object>();
 
-                if (resultBytes.Length > 0)
-                {
-                    File.WriteAllBytes(outputPath, resultBytes);
-                    Console.WriteLine($"Processed workbook saved to '{outputPath}'.");
-                }
-                else
-                {
-                    Console.WriteLine("Processing failed; no output generated.");
+                    ExcelProcessor processor = new ExcelProcessor();
+                    byte[] processedBytes = processor.ProcessTemplate(templateStream, dataSources);
+
+                    // Save the processed workbook next to the template
+                    string outputPath = Path.Combine(Path.GetDirectoryName(templatePath) ?? string.Empty, "ProcessedOutput.xlsx");
+                    File.WriteAllBytes(outputPath, processedBytes);
+                    Console.WriteLine($"Processed workbook saved to: {outputPath}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred during processing: {ex.Message}");
             }
         }
     }

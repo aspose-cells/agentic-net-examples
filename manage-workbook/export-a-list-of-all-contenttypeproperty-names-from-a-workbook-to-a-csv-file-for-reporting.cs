@@ -1,14 +1,13 @@
-// Title: Export all ContentTypeProperty names from an Excel workbook to a CSV file using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that loads an .xlsx file with Aspose.Cells, iterates over Workbook.ContentTypeProperties, and writes each property Name to a CSV file with a header row. | Show how to verify the input workbook exists, catch exceptions, and export the list of content type property names to a CSV using StreamWriter. | Generate code that escapes commas in property names and saves the output to "ContentTypeNames.csv" while using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# export workbook ContentTypeProperties to CSV | How to list custom content type property names from an Excel file using Aspose.Cells | C# write Excel content type property names into a CSV file | Extract workbook metadata (ContentTypeProperty) with Aspose.Cells .NET | Save Aspose.Cells ContentTypeProperty collection to a CSV report
-// Tags: Aspose.Cells export ContentTypeProperty names to CSV | C# iterate Workbook.ContentTypeProperties collection | extract Excel custom content type properties using .NET | StreamWriter write property names to CSV | handle missing workbook file Aspose.Cells
+// Title: Export workbook ContentTypeProperty names to a CSV file with Aspose.Cells for .NET (C#)
+// Common Searches: how to list ContentTypeProperty names from an Excel workbook using Aspose.Cells C# | Aspose.Cells export custom content type properties to CSV in .NET | C# code to write workbook ContentTypeProperties collection to a CSV file | save Excel content type property names as CSV with Aspose.Cells | extract ContentTypeProperty names from .xlsx using Aspose.Cells for .NET
+// Tags: Aspose.Cells ContentTypeProperties export to CSV | C# write workbook metadata to CSV | extract custom content type property names .NET | list Excel content type properties using Aspose.Cells | save workbook property names as CSV file
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console application that loads an Excel workbook with Aspose.Cells, checks the file's existence, iterates through its ContentTypeProperties collection, and writes each property's Name to a CSV file named ContentTypeNames.csv, including a header row and basic error handling.
-class ExportContentTypeNames
+// The example verifies the input Excel file, loads it with Aspose.Cells, iterates over the workbook's ContentTypeProperties collection, and writes each property's Name to a CSV file (ContentTypeProperties.csv) with a header row, handling quote escaping.
+class Program
 {
     static void Main()
     {
@@ -17,10 +16,10 @@ class ExportContentTypeNames
             // Path to the input workbook
             string workbookPath = "input.xlsx";
 
-            // Verify that the workbook file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Error: Workbook file '{workbookPath}' not found.");
+                Console.WriteLine($"Input file not found: {workbookPath}");
                 return;
             }
 
@@ -28,28 +27,31 @@ class ExportContentTypeNames
             Workbook workbook = new Workbook(workbookPath);
 
             // Path for the CSV output
-            string csvPath = "ContentTypeNames.csv";
+            string csvPath = "ContentTypeProperties.csv";
 
-            // Write content type property names to CSV
+            // Write property names to CSV
             using (StreamWriter writer = new StreamWriter(csvPath, false))
             {
-                // Optional header
-                writer.WriteLine("ContentTypePropertyName");
+                // CSV header
+                writer.WriteLine("PropertyName");
 
-                // Iterate through all content type properties
+                // Iterate through content type properties
                 foreach (var prop in workbook.ContentTypeProperties)
                 {
-                    // Escape commas if needed (names typically don't contain commas)
-                    string name = prop.Name?.Replace(",", "\\,");
-                    writer.WriteLine(name);
+                    // Escape double quotes in the property name
+                    string name = prop.Name?.Replace("\"", "\"\"");
+
+                    // Write the name as a quoted CSV field
+                    writer.WriteLine($"\"{name}\"");
                 }
             }
 
-            Console.WriteLine($"Export completed. Names saved to '{csvPath}'.");
+            Console.WriteLine("Content type property names have been exported to CSV.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

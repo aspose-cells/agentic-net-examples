@@ -1,40 +1,64 @@
-// Title: Generate sequential invoice numbers with a custom prefix in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates an Excel workbook, adds an "InvoiceNumber" column, and fills each row with a value that concatenates a specified label (e.g., "INV-") and an auto‑incremented index, then saves the file as XLSX using Aspose.Cells. | Adapt the example to accept parameters for the starting index, total invoice count, and label, and generate the corresponding invoice numbers in the worksheet.
-// Common Searches: Aspose.Cells C# generate invoice numbers with custom prefix and sequential index | How to add prefixed invoice IDs to an Excel sheet using Aspose.Cells for .NET | C# example for auto‑incrementing cell values with a label in an XLSX file | Create invoice list in Excel programmatically with Aspose.Cells and custom label
-// Tags: prefixed invoice number generation Aspose.Cells | auto increment cell values C# | save workbook as XLSX Aspose.Cells | populate invoice worksheet programmatically | custom label for sequential records Excel
+// Title: Generate sequential invoice numbers with a custom prefix in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that uses Aspose.Cells to insert an 'Invoice Number' column where each value combines a configurable prefix and a zero‑padded incremental index. | Refactor the sample to accept the prefix string and the starting index as method arguments and return the populated Workbook object. | Add logic to auto‑fit all columns, save the workbook to a given .xlsx path, and print the full file path to the console after the export.
+// Common Searches: asp.net aspose.cells generate invoice numbers with custom prefix and zero padding | c# create sequential invoice IDs in Excel using Aspose.Cells library | how to add auto‑incrementing invoice column with prefix in Aspose.Cells workbook | aspose.cells c# zero‑pad sequential numbers for invoice report
+// Tags: generate sequential invoice numbers Aspose.Cells | custom prefix invoice ID Excel C# | zero‑padded numbering Aspose.Cells workbook | auto‑fit columns Aspose.Cells export | save workbook as xlsx Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// The sample creates a new workbook, adds column headers, and populates 15 rows with invoice numbers that combine the "INV-" prefix and an incrementing index, along with sample customer names and amounts, then saves the result as Invoices.xlsx.
-class GenerateInvoiceNumbers
+// Creates an Excel workbook (InvoiceReport.xlsx) with a header row and sample customer data, adding an 'Invoice Number' column where each entry is the fixed "INV-" prefix followed by a zero‑padded sequential index starting at 1, then auto‑fits columns and saves the file.
+class InvoiceNumberGenerator
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Define the prefix for invoice numbers
+        const string invoicePrefix = "INV-";
 
-        // Add column headers
-        sheet.Cells["A1"].PutValue("InvoiceNumber");
+        // Starting index for the first invoice (can be changed as needed)
+        int startIndex = 1;
+
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Invoices";
+
+        // Add header row
+        sheet.Cells["A1"].PutValue("Invoice Number");
         sheet.Cells["B1"].PutValue("Customer");
         sheet.Cells["C1"].PutValue("Amount");
 
-        // Define the number of invoices and the custom prefix
-        int invoiceCount = 15;
-        string prefix = "INV-";
-
-        // Fill the worksheet with sequential invoice numbers
-        for (int i = 0; i < invoiceCount; i++)
+        // Sample data rows (replace with actual data source as needed)
+        var customers = new[]
         {
-            int row = i + 2; // Data starts from row 2
-            string invoiceNumber = prefix + (i + 1); // Prefix + auto‑incremented index
-            sheet.Cells[row, 0].PutValue(invoiceNumber);
-            sheet.Cells[row, 1].PutValue($"Customer {i + 1}");
-            sheet.Cells[row, 2].PutValue(100 + i * 20);
+            new { Name = "Acme Corp", Amount = 1250.00 },
+            new { Name = "Beta Ltd", Amount = 980.50 },
+            new { Name = "Gamma Inc", Amount = 4320.75 }
+        };
+
+        // Populate data and generate sequential invoice numbers
+        for (int i = 0; i < customers.Length; i++)
+        {
+            // Row index in Excel (1‑based, plus header row)
+            int excelRow = i + 2;
+
+            // Generate invoice number: prefix + zero‑padded index
+            string invoiceNumber = $"{invoicePrefix}{(startIndex + i):D5}";
+
+            // Write invoice number and other data to cells
+            sheet.Cells[excelRow, 0].PutValue(invoiceNumber);               // Column A
+            sheet.Cells[excelRow, 1].PutValue(customers[i].Name);          // Column B
+            sheet.Cells[excelRow, 2].PutValue(customers[i].Amount);       // Column C
         }
 
-        // Save the workbook to an XLSX file
-        workbook.Save("Invoices.xlsx", SaveFormat.Xlsx);
+        // Auto‑fit columns for better readability
+        sheet.AutoFitColumns();
+
+        // Save the workbook to a file
+        string outputPath = "InvoiceReport.xlsx";
+        workbook.Save(outputPath);
+
+        Console.WriteLine($"Invoice report generated and saved to '{outputPath}'.");
     }
 }

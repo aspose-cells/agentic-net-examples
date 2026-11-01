@@ -1,19 +1,18 @@
-// Title: Set calculation mode to Manual for every .xls and .xlsx workbook in a folder using Aspose.Cells for .NET
-// AI Prompts: Write a C# console program that enumerates all .xls and .xlsx files in a specified directory, opens each workbook with Aspose.Cells, sets Workbook.Settings.CalcMode to Manual, and saves the file back to its original path. | Update the provided Aspose.Cells example to enable manual calculation mode before saving each workbook, add handling for missing files and unsupported extensions, and log each processed file name.
-// Common Searches: Aspose.Cells C# batch change workbook calculation mode to manual | How to set manual calculation for multiple Excel files using Aspose.Cells .NET | C# loop through folder and update Settings.CalcMode for each workbook | Overwrite original Excel workbook after changing calculation settings with Aspose.Cells | Process all .xls and .xlsx files in a directory to disable automatic calculation using Aspose.Cells
-// Tags: Aspose.Cells manual calculation mode | batch modify workbook settings .NET | enumerate Excel files in folder C# | save workbook with updated settings Aspose | disable automatic calculation Aspose.Cells
+// Title: How to batch set Excel workbook calculation mode to Manual for all .xls and .xlsx files in a folder using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells set calculation mode to Manual for every workbook in a directory | Batch process Excel files to disable automatic calculation with Aspose.Cells .NET | How to iterate over a folder of .xls and .xlsx files and change CalcMode using Aspose.Cells | Programmatically change workbook Settings.CalcMode to Manual for multiple Excel files in C# | Aspose.Cells example for updating calculation mode of all workbooks in a folder
+// Tags: Aspose.Cells set manual calculation mode | batch update workbook calculation mode .NET | process folder of Excel workbooks Aspose.Cells | disable automatic formula recalculation C# | iterate Excel files directory Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The C# program scans a given directory for .xls and .xlsx files, loads each workbook with Aspose.Cells, optionally sets the calculation mode to Manual, and overwrites the original file while handling missing files and unsupported extensions.
+// The C# program scans a specified directory for .xls and .xlsx files, loads each workbook with Aspose.Cells, sets the workbook's Settings.CalcMode to Manual, saves the workbook back to its original location, and logs processing results while handling missing files and exceptions.
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Folder containing the Excel files to process
-        string folderPath = @"C:\Path\To\ExcelFolder";
+        // Specify the folder containing Excel files
+        string folderPath = @"C:\ExcelFolder";
 
         // Verify that the folder exists
         if (!Directory.Exists(folderPath))
@@ -22,19 +21,18 @@ class Program
             return;
         }
 
-        // Get all Excel files in the folder (supports .xls and .xlsx)
+        // Get all Excel files in the folder (both .xls and .xlsx)
         string[] excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
         foreach (string filePath in excelFiles)
         {
-            // Process only supported Excel extensions
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
             if (extension != ".xls" && extension != ".xlsx")
-                continue;
+                continue; // Skip non‑Excel files
 
-            // Ensure the file exists before loading
+            // Ensure the file still exists before processing
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"File not found (skipped): {filePath}");
                 continue;
             }
 
@@ -48,7 +46,7 @@ class Program
 
                 // Save the workbook, overwriting the original file
                 workbook.Save(filePath);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                Console.WriteLine($"Processed: {filePath}");
             }
             catch (Exception ex)
             {

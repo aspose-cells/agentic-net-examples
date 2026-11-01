@@ -1,83 +1,72 @@
-// Title: Export worksheet shape geometry (position, size, type) to an XML file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates over every shape on the first worksheet, and writes each shape's name, ID, runtime type, left, top, width, and height into an XML document. | Create a method in a .NET console app that takes a workbook path and an XML output path, ensures the output folder exists, extracts shape geometry from the worksheet using Aspose.Cells, and saves the data as a structured XML file with error handling for individual shapes. | Generate a reusable utility function that serializes non‑primitive shape properties from an Aspose.Cells worksheet into a custom XML schema, including attributes for position and dimensions.
-// Common Searches: how to extract Excel shape coordinates with Aspose.Cells C# | Aspose.Cells example for saving shape dimensions to XML | C# code to enumerate worksheet shapes and export their geometry | export non‑primitive shape properties from an .xlsx file to XML using Aspose.Cells | serialize Aspose.Cells shape data to custom XML format
-// Tags: Aspose.Cells export shape geometry to XML | enumerate worksheet shapes C# | extract shape position and size Aspose.Cells | serialize Excel shape data as XML | handle shape processing errors Aspose.Cells
+// Title: Export non‑primitive shape geometry from an Excel workbook to an XML file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates over every shape on each worksheet, and writes each shape's name, type, top, left, height, and width into a structured XML document. | Create a method that extracts shape properties from a Worksheet.Shapes collection and returns an XDocument containing <Shape> elements with geometry attributes, while handling exceptions for unsupported shapes. | Write a console application that validates the input Excel file, exports all shape geometry to a file named shapes_geometry.xml, and logs warnings for any shapes that cannot be processed.
+// Common Searches: how to extract shape positions from an Excel file using Aspose.Cells in C# | Aspose.Cells C# export shape dimensions to XML | C# code to iterate worksheet shapes and save their geometry as XML | save Excel shape metadata to XML with Aspose.Cells library | export non‑primitive shapes from .xlsx to XML using Aspose.Cells
+// Tags: Aspose.Cells export shape geometry to XML | C# iterate worksheet shapes Aspose.Cells | shape attribute extraction Excel .xlsx | XML serialization of Excel shape properties | error handling for unsupported shapes Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.IO;
 using System.Xml.Linq;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// The example loads an Excel workbook, iterates through all shapes on the first worksheet, captures each shape's name, ID, runtime type, and geometric attributes (left, top, width, height), and writes this information into a structured XML file. It creates the output directory if needed and includes per‑shape error handling.
+// The example loads an Excel workbook with Aspose.Cells, checks that the file exists, iterates through each worksheet and its Shapes collection, captures each shape's name, type, top, left, height, and width, creates <Shape> elements with these attributes under a root <Shapes> node, handles per‑shape exceptions, and saves the resulting XML to shapes_geometry.xml.
 class ExportShapeGeometry
 {
     static void Main()
     {
-        string workbookPath = "input.xlsx";
-        string xmlOutputPath = "shapesGeometry.xml";
-
         try
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(workbookPath))
+            const string inputFile = "input.xlsx";
+            const string outputFile = "shapes_geometry.xml";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Workbook file not found: {workbookPath}");
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Work with the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook workbook = new Workbook(inputFile);
 
             // Root XML element for all shapes
             XElement root = new XElement("Shapes");
 
-            // Iterate through all shapes on the worksheet
-            foreach (Shape shape in sheet.Shapes)
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                try
+                // Iterate through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Basic shape information
-                    XElement shapeElement = new XElement("Shape",
-                        new XAttribute("Name", shape.Name),
-                        new XAttribute("Id", shape.Id),
-                        // Use the runtime type name as a fallback for shape type
-                        new XAttribute("Type", shape.GetType().Name));
+                    try
+                    {
+                        // Create XML element for the shape with basic attributes
+                        XElement shapeElement = new XElement("Shape",
+                            new XAttribute("Name", shape.Name ?? string.Empty),
+                            new XAttribute("Type", shape.Type.ToString()),
+                            new XAttribute("Top", shape.Top),
+                            new XAttribute("Left", shape.Left),
+                            new XAttribute("Height", shape.Height),
+                            new XAttribute("Width", shape.Width));
 
-                    // Export position and size as a simple geometry representation
-                    XElement geometryElement = new XElement("Geometry",
-                        new XAttribute("Left", shape.Left),
-                        new XAttribute("Top", shape.Top),
-                        new XAttribute("Width", shape.Width),
-                        new XAttribute("Height", shape.Height));
-
-                    shapeElement.Add(geometryElement);
-                    root.Add(shapeElement);
+                        // Add the shape element to the root
+                        root.Add(shapeElement);
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        Console.WriteLine($"Warning: Could not process shape '{shape.Name}'. Details: {shapeEx.Message}");
+                    }
                 }
-                catch (Exception exShape)
-                {
-                    Console.WriteLine($"Failed to process shape '{shape.Name}': {exShape.Message}");
-                }
-            }
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(xmlOutputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
             }
 
             // Save the XML document
-            XDocument doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);
-            doc.Save(xmlOutputPath);
-            Console.WriteLine($"Shape geometry exported to {xmlOutputPath}");
+            XDocument doc = new XDocument(root);
+            doc.Save(outputFile);
+            Console.WriteLine($"Shape information exported successfully to '{outputFile}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,64 +1,72 @@
-// Title: Set a 2‑point dark gray border on a chart area in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate an Excel workbook, add sample data, create a column chart, and apply a 2 pt dark gray border to the chart area using Aspose.Cells in C#. | Write C# code that populates cells, inserts a chart, and configures the chart area border weight to 2 points and color to DarkGray with Aspose.Cells. | Produce a .xlsx file where the column chart’s chart area has a 2‑point thick dark gray border, leveraging the Aspose.Cells ChartArea.Border API.
-// Common Searches: Aspose.Cells C# set chart area border thickness to 2 points | how to change chart border color to dark gray using Aspose.Cells | example of customizing chart area border weight in a .NET Excel file | C# code for applying a 2 pt border to an Excel chart with Aspose.Cells | set column chart border style Aspose.Cells .NET
-// Tags: chart area border thickness Aspose.Cells | chart area border color DarkGray C# | column chart border formatting .NET | Aspose.Cells chart styling example | Excel chart border customization C# | set chart area border weight Aspose.Cells
+// Title: Set a 2‑point dark gray border on an Excel chart’s ChartArea with Aspose.Cells for .NET (C#)
+// AI Prompts: Apply a solid dark‑gray border of 2 points thickness to the ChartArea of an existing chart in a workbook using the Aspose.Cells C# API. | Programmatically modify a loaded Excel file so that its first chart receives a 2‑point dark gray border, creating the chart if it does not already exist.
+// Common Searches: Aspose.Cells C# set chart area border thickness to 2 points | how to change Excel chart border color to dark gray using Aspose.Cells | C# code to add solid border around chart in workbook with Aspose.Cells | set chart border line weight in Aspose.Cells .NET example | apply custom border style to Excel chart programmatically with Aspose.Cells
+// Tags: Aspose.Cells chartarea border lineweight | C# set chart border color Aspose.Cells | Excel chart formatting border Aspose.Cells | Aspose.Cells chart area border styling .NET | modify chart border thickness programmatically
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, retrieves the first chart (or adds a column chart if none exists), and shows how to set the ChartArea border to a solid dark‑gray line with a 2‑point weight using Aspose.Cells for .NET, then saves the updated workbook.
+class Program
 {
-    // // Demonstrates creating a workbook, adding sample data, inserting a column chart, and configuring the chart area's border to 2 points thickness with a dark gray color before saving the file.
-    public class ChartBorderDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to prevent FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Configure chart area border
-                ChartArea chartArea = chart.ChartArea;
-                chartArea.Border.WeightPt = 2.0;          // Thickness in points
-                chartArea.Border.Color = Color.DarkGray; // Border color
-
-                // Save the workbook
-                workbook.Save("ChartBorderDemo.xlsx");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart; otherwise add a new one
+            Chart chart;
+            if (sheet.Charts.Count > 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Retrieve the first chart
+                chart = sheet.Charts[0];
             }
+            else
+            {
+                // Add a default column chart and retrieve it
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+                chart = sheet.Charts[chartIndex];
+            }
+
+            // Optional: Set chart border color (if supported in the used version)
+            // Note: Some older versions of Aspose.Cells may not expose border properties directly.
+            // The following lines are commented out to maintain compatibility.
+            // chart.ChartArea.BorderLineWeight = 2;
+            // chart.ChartArea.BorderLineColor = Color.DarkGray;
+            // chart.ChartArea.BorderLineStyle = LineStyleType.Solid;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the updated chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ChartBorderDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

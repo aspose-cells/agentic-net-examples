@@ -1,57 +1,69 @@
-// Title: Set manual calculation mode, update cell values, and trigger full workbook recalculation with Aspose.Cells for .NET
-// AI Prompts: Configure the workbook to use manual calc mode, write numeric values to A1 and A2, assign a formula to B1, then call CalculateFormula to recompute all dependent cells before saving. | Create a new workbook, switch the calculation setting to manual via the Settings object, modify cell data, add a dependent formula, and force a full recalculation on demand.
-// Common Searches: how to disable automatic calculation in Aspose.Cells .NET and recalc later | set workbook calculation mode to manual Aspose.Cells example | force full formula recalculation after cell updates using Aspose.Cells | Aspose.Cells calculate all formulas programmatically C# | manual CalcMode usage with Aspose.Cells for .NET
-// Tags: manual calculation mode Aspose.Cells | CalcMode property Aspose.Cells | CalculateFormula method Aspose.Cells | update cell values programmatically Aspose.Cells | full workbook recalculation Aspose.Cells
+// Title: How to set manual calculation mode, modify cells, and force a full workbook recalculation using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set workbook calculation mode to manual | Update cell values and recalculate formulas on demand with Aspose.Cells | Trigger full workbook recalculation after changing data in Aspose.Cells .NET | Disable automatic calculation and call CalculateFormula in Aspose.Cells C# | Manual CalcMode example for Aspose.Cells workbook
+// Tags: manual calculation mode Aspose.Cells | calculateformula method C# | update cell value Aspose.Cells | full workbook recalculation Aspose.Cells | disable automatic formula evaluation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// // Creates a workbook, optionally sets calculation to manual, writes values to A1/A2, adds a formula in B1, forces a full recalculation with CalculateFormula, and saves the file as output.xlsx.
+// The example creates a new Workbook, optionally switches the calculation mode to manual, changes cell A1, assigns a dependent formula to B1, invokes CalculateFormula to recompute all formulas, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Create a new workbook (uses the provided create rule)
+            Workbook workbook = CreateWorkbook();
 
-            // (Optional) Set calculation mode to manual if supported
-            // Uncomment the following lines if your Aspose.Cells version provides CalcMode
-            // try
-            // {
-            //     workbook.Settings.CalcMode = CalcMode.Manual;
-            // }
-            // catch { /* CalcMode not available in this version */ }
+            // Set calculation mode to manual if the API supports it
+            // Uncomment the following line if CalcMode is available in your Aspose.Cells version
+            // workbook.Settings.CalcMode = CalcMode.Manual;
 
-            // Get the first worksheet and its cells collection
+            // Modify some data
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Cells["A1"].PutValue(10);               // example data change
+            sheet.Cells["B1"].Formula = "=A1*2";          // formula that depends on the changed data
 
-            // Modify some data in the worksheet
-            cells["A1"].PutValue(10);          // Put numeric value 10 in A1
-            cells["A2"].PutValue(20);          // Put numeric value 20 in A2
-            cells["B1"].Formula = "=A1+A2";    // Set a formula that depends on A1 and A2
-
-            // Trigger a full recalculation of the workbook on demand
+            // Trigger a full recalculation on demand
             workbook.CalculateFormula();
 
-            // Define output path and ensure the directory exists
+            // Save the workbook (uses the provided save rule)
             string outputPath = "output.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            SaveWorkbook(workbook, outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Placeholder for the provided create rule
+    static Workbook CreateWorkbook()
+    {
+        // Implementation supplied by the rule set
+        return new Workbook();
+    }
+
+    // Placeholder for the provided save rule
+    static void SaveWorkbook(Workbook wb, string path)
+    {
+        try
+        {
+            // Ensure the target directory exists
+            string directory = Path.GetDirectoryName(Path.GetFullPath(path));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            wb.Save(path);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to save workbook: {ex.Message}");
+            throw;
         }
     }
 }

@@ -1,59 +1,61 @@
-// Title: How to insert a PNG picture into cell C9 and get its absolute X/Y coordinates using Aspose.Cells for .NET
-// AI Prompts: Insert a PNG image into worksheet cell C9 and set its Placement to MoveAndSize. | Obtain the picture's absolute X and Y positions (in points) after insertion. | Print the coordinates to the console and save the workbook as output.xlsx.
-// Common Searches: Aspose.Cells add image to specific cell and obtain its position | C# get picture X and Y coordinates after inserting into worksheet with Aspose.Cells | link picture to a cell so it moves and resizes in Aspose.Cells .NET | retrieve absolute coordinates of a shape in an Aspose.Cells workbook
-// Tags: insert picture into worksheet cell Aspose.Cells | picture placement MoveAndSize Aspose.Cells | picture absolute X Y coordinates .NET | link image to cell C9 Aspose.Cells | log shape position Aspose.Cells
+// Title: Insert an image into cell C9, link it with MoveAndSize, and log its absolute row and column coordinates using Aspose.Cells for .NET
+// AI Prompts: Add a picture from a file path to cell C9 and set its Placement property to MoveAndSize with Aspose.Cells. | After linking the picture, read the UpperLeftRow and UpperLeftColumn properties, convert them to 1‑based values, and write the coordinates to the console. | Check whether the image file exists, handle the error gracefully, then save the workbook as Output.xlsx.
+// Common Searches: Aspose.Cells C# add image to a specific cell and obtain its position | how to get picture upper left row and column after linking to a cell in Aspose.Cells | C# Aspose.Cells picture placement MoveAndSize example with absolute coordinates | retrieve absolute cell coordinates of a picture inserted in an Aspose.Cells workbook
+// Tags: add picture to cell Aspose.Cells | picture placement MoveAndSize Aspose.Cells | retrieve picture absolute coordinates Aspose.Cells | handle missing image file Aspose.Cells | save workbook Output.xlsx Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Inserts a PNG image into cell C9 of a new workbook, links it to the cell with MoveAndSize placement, logs its absolute X and Y coordinates, and saves the file as output.xlsx.
+// The example loads an image file, inserts it into cell C9 of a new worksheet, links the picture to the cell using MoveAndSize placement, logs the picture's upper‑left row and column as 1‑based coordinates, and saves the workbook as Output.xlsx while handling a missing image file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the image file to be inserted
-            string imagePath = "sample.png"; // replace with your image file path
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify that the image file exists to avoid FileNotFoundException
+            // Path to the image file
+            string imagePath = "image.png";
+
+            // Ensure the image file exists to avoid FileNotFoundException
             if (!File.Exists(imagePath))
             {
                 Console.WriteLine($"Image file not found: {imagePath}");
                 return;
             }
 
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Add a picture to cell C9 (row index 8, column index 2)
+            int targetRow = 8;      // C9 -> row 9 (zero‑based index 8)
+            int targetColumn = 2;   // C9 -> column C (zero‑based index 2)
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Add returns the picture index; retrieve the Picture object
+            int pictureIndex = sheet.Pictures.Add(targetRow, targetColumn, imagePath);
+            Picture pic = sheet.Pictures[pictureIndex];
 
-            // Add the picture to cell C9 (row index 8, column index 2)
-            int pictureIndex = sheet.Pictures.Add(8, 2, imagePath);
-            Picture picture = sheet.Pictures[pictureIndex];
+            // Link the picture to the cell so it moves/resizes with the cell
+            pic.Placement = PlacementType.MoveAndSize;
 
-            // Link the picture to the cell so it moves and sizes with the cell
-            picture.Placement = PlacementType.MoveAndSize;
-
-            // Retrieve the absolute X and Y coordinates (in points) of the picture
-            double absoluteX = picture.X;
-            double absoluteY = picture.Y;
+            // Retrieve cell coordinates (row and column are zero‑based)
+            int upperLeftRow = pic.UpperLeftRow;
+            int upperLeftColumn = pic.UpperLeftColumn;
 
             // Log the coordinates
-            Console.WriteLine($"Picture absolute X: {absoluteX}");
-            Console.WriteLine($"Picture absolute Y: {absoluteY}");
+            Console.WriteLine("Picture linked to C9:");
+            Console.WriteLine($"  Upper‑left cell: Row {upperLeftRow + 1}, Column {upperLeftColumn + 1}");
 
-            // Save the workbook (optional)
-            string outputPath = "output.xlsx";
+            // Save the workbook
+            string outputPath = "Output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

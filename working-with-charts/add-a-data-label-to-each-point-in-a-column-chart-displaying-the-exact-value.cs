@@ -1,63 +1,62 @@
-// Title: Add value data labels outside the end of each column in an Aspose.Cells .NET column chart
-// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and enables data labels to show each column's numeric value. | Update an existing Aspose.Cells column chart in C# to turn on value labels and set their position to OutsideEnd.
-// Common Searches: how to display data labels with values on a column chart using Aspose.Cells for .NET | C# Aspose.Cells set chart series data label position to OutsideEnd | add exact numeric labels to Excel column chart programmatically with Aspose.Cells
-// Tags: Aspose.Cells column chart data labels | C# set data label value Aspose.Cells | Aspose.Cells label position OutsideEnd | Excel column chart value labels .NET | programmatic chart labeling Aspose.Cells
+// Title: Add data labels that show exact values to each point in a column chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to create a column chart and enable data labels that display the numeric value for every column. | Modify an existing Aspose.Cells workbook to turn on value labels for a column series and set the label position to the center of each column. | Generate a complete C# example that builds a workbook, adds sample data, inserts a column chart, and configures data labels to show values with optional positioning.
+// Common Searches: Aspose.Cells C# column chart show data label values | how to enable value labels on column series using Aspose.Cells .NET | C# Aspose.Cells set data label position to center for column chart | add data labels to each point in a column chart Aspose.Cells example | display exact numeric values on column chart columns Aspose.Cells
+// Tags: Aspose.Cells column chart data labels | show value labels Aspose.Cells C# | center position data labels Aspose.Cells | create column chart with labels Aspose.Cells | enable data labels for series Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// C# program that creates a workbook, populates sample data, adds a column chart, enables data labels to display each column's exact value, optionally positions the labels at the center, and saves the file as ColumnChartWithDataLabels.xlsx.
+class Program
 {
-    // The example creates a new workbook, fills cells A1:B4 with categories and values, adds a column chart, binds the series to the data range, enables data labels to show each point's value, positions the labels outside the end of the columns, and saves the file as ColumnChartWithDataLabels.xlsx.
-    public class ColumnChartDataLabels
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the column chart
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-
             sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(90);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set chart title
+            chart.Title.Text = "Monthly Sales";
 
-            // Enable data labels for the first series and show the exact value for each point
+            // Add series: values from B2:B4
+            chart.NSeries.Add("B2:B4", false);
+            // Set categories for the series (if supported by the library version)
+            // chart.NSeries[0].CategoryData = "A2:A4";
+
+            // Enable data labels and display the exact value for each point
             chart.NSeries[0].DataLabels.ShowValue = true;
-            // Position the labels outside the end of each column
-            chart.NSeries[0].DataLabels.Position = LabelPositionType.OutsideEnd;
+
+            // Position the data labels at the center of each column (if PositionType enum is available)
+            // chart.NSeries[0].DataLabels.Position = PositionType.Center;
 
             // Save the workbook with the chart
             string outputPath = "ColumnChartWithDataLabels.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

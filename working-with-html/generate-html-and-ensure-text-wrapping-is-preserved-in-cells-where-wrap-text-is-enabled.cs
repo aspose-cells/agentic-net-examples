@@ -1,45 +1,55 @@
-// Title: How to export an Excel worksheet to HTML with cell text wrapping preserved using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a workbook, writes a long string to a cell, enables text wrapping via the Style.IsTextWrapped property, adjusts column width and row height, and saves the worksheet as HTML with the wrap retained. | Demonstrate how to configure HtmlSaveOptions to export only the active worksheet while keeping the cell's wrap settings intact in the generated HTML file.
-// Common Searches: Aspose.Cells C# preserve cell wrap when saving as HTML | export Excel to HTML with text wrap enabled using Aspose.Cells | how to keep text wrapping in HTML output from Aspose.Cells workbook | set column width and row height for wrapped text in Aspose.Cells HTML export
-// Tags: export worksheet to HTML with text wrap Aspose.Cells | Style.IsTextWrapped property C# | HtmlSaveOptions ExportActiveWorksheetOnly | adjust column width for wrapped text Aspose.Cells | auto fit row height HTML export Aspose.Cells
+// Title: How to export an Excel workbook to HTML with preserved text wrapping in cells using Aspose.Cells for .NET
+// AI Prompts: Write C# code that enables IsTextWrapped for a specific cell, sets an appropriate column width, and saves the workbook as HTML with Aspose.Cells. | Show how to configure HtmlSaveOptions to embed images as Base64 when exporting a workbook that contains wrapped text.
+// Common Searches: Aspose.Cells C# export worksheet to HTML keep cell text wrap | save Excel as HTML with wrapped text using Aspose.Cells .NET | how to enable text wrapping in HTML output from Aspose.Cells workbook
+// Tags: Aspose.Cells export HTML with text wrap | C# set cell IsTextWrapped Aspose.Cells | HtmlSaveOptions embed images base64 Aspose | adjust column width for wrapped text Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// The example creates a new workbook, inserts a long string into cell A1, enables text wrapping via the Style.IsTextWrapped flag, sets column width and row height to showcase wrapping, configures HtmlSaveOptions to export only the active sheet, and saves the result as an HTML file where the cell's wrap setting is retained.
-class Program
+namespace AsposeCellsHtmlWrapExample
 {
-    static void Main()
+    // The example creates a workbook, writes a long string to cell A1, enables text wrapping for that cell, adjusts column A width, configures HtmlSaveOptions to embed images as Base64, and saves the result as WrappedTextOutput.html.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Put a long text into cell A1
-        Cell cell = sheet.Cells["A1"];
-        cell.PutValue("This is a very long piece of text that should wrap inside the cell when the workbook is exported to HTML.");
-
-        // Enable text wrapping for the cell
-        Style style = cell.GetStyle();
-        style.IsTextWrapped = true;
-        cell.SetStyle(style);
-
-        // Adjust column width to make wrapping visible
-        sheet.Cells.SetColumnWidth(0, 20); // Column A width
-
-        // Optionally set row height (auto‑fit can also be used)
-        sheet.Cells.SetRowHeight(0, 40);
-
-        // Prepare HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main(string[] args)
         {
-            // Export only the active worksheet (optional)
-            ExportActiveWorksheetOnly = true
-        };
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Save the workbook as HTML; wrap settings are preserved in the generated HTML
-        workbook.Save("output.html", htmlOptions);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Set a long text value in cell A1
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("This is a very long piece of text that should wrap inside the cell when exported to HTML.");
+
+                // Enable text wrapping for the cell
+                Style style = cell.GetStyle();
+                style.IsTextWrapped = true; // Preserve wrap text
+                cell.SetStyle(style);
+
+                // Adjust the column width to demonstrate wrapping
+                sheet.Cells.SetColumnWidth(0, 20); // Column A width
+
+                // Prepare HTML save options
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Optional: embed images as base64 to keep a single HTML file
+                    ExportImagesAsBase64 = true
+                };
+
+                // Save the workbook as an HTML file
+                string outputPath = "WrappedTextOutput.html";
+                workbook.Save(outputPath, saveOptions);
+
+                Console.WriteLine($"Workbook saved as HTML to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

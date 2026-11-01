@@ -1,98 +1,60 @@
-// Title: Create versioned Excel files after each slicer property change using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that adds a slicer to a PivotTable, updates its caption, lock state, column count, and dimensions, refreshes the slicer, and saves the workbook to sequentially numbered .xlsx files. | Show how to implement incremental versioning of an Excel workbook by invoking Workbook.Save with a dynamic filename after each slicer adjustment in Aspose.Cells.
-// Common Searches: Aspose.Cells C# save workbook after each slicer update with versioned filenames | how to implement incremental Excel file versioning when changing slicer properties in .NET | C# example for tracking slicer changes by saving separate Excel files using Aspose.Cells | automate slicer property modifications and file versioning in Aspose.Cells for .NET | generate sequentially named Excel files after slicer adjustments with Aspose.Cells
-// Tags: Aspose.Cells save workbook after slicer change | incremental Excel versioning Aspose.Cells C# | slicer property modification Aspose.Cells | refresh slicer linked pivot Aspose.Cells | dynamic filename generation C# Aspose.Cells
+// Title: Generate sequentially versioned Excel workbooks after modifying each slicer caption with Aspose.Cells for .NET
+// AI Prompts: Iterate over all slicers in a workbook, change each slicer's Caption property, and save the workbook to a uniquely numbered file (e.g., Output_v1.xlsx, Output_v2.xlsx) using Aspose.Cells in C#. | Create a C# routine that applies a modification to a slicer, then persists the workbook with an incremental filename pattern to track changes with Aspose.Cells.
+// Common Searches: Aspose.Cells C# save workbook after each slicer update with versioned filenames | how to create incremental Excel file names when changing slicer captions in .NET | loop through slicers and export separate workbook versions using Aspose.Cells | C# generate Output_v1.xlsx Output_v2.xlsx for each slicer modification Aspose
+// Tags: slicer caption modification Aspose.Cells | incremental workbook versioning C# | save workbook after slicer change Aspose | generate sequential Excel filenames .NET | track slicer edits with versioned files
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
+using System;
+using System.IO;
 
-namespace AsposeCellsSlicerVersioningDemo
+// The example loads an Excel workbook, loops through each slicer on the first worksheet, updates the slicer's caption, and saves the workbook after each change to a uniquely numbered file (Output_v1.xlsx, Output_v2.xlsx, etc.), demonstrating incremental versioning of workbooks using Aspose.Cells for .NET.
+class Program
 {
-    // The sample program creates a workbook with sample data, builds a PivotTable, adds a slicer linked to the PivotTable, then sequentially modifies slicer properties (caption, locked position, column count, size). After each modification the slicer is refreshed and the workbook is saved to a uniquely numbered file (SlicerVersion_0.xlsx through SlicerVersion_5.xlsx), demonstrating incremental versioning for change tracking.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Initialize a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "Input.xlsx";
 
-            // -------------------------------------------------
-            // 1. Prepare sample data for a PivotTable
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Header row
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Sample rows
-            dataSheet.Cells["A2"].PutValue("Food");
-            dataSheet.Cells["B2"].PutValue(120);
-            dataSheet.Cells["A3"].PutValue("Food");
-            dataSheet.Cells["B3"].PutValue(80);
-            dataSheet.Cells["A4"].PutValue("Beverage");
-            dataSheet.Cells["B4"].PutValue(150);
-            dataSheet.Cells["A5"].PutValue("Beverage");
-            dataSheet.Cells["B5"].PutValue(200);
-            dataSheet.Cells["A6"].PutValue("Supplies");
-            dataSheet.Cells["B6"].PutValue(90);
+            // Assume slicers are on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            SlicerCollection slicers = sheet.Slicers;
 
-            // -------------------------------------------------
-            // 2. Create a PivotTable based on the data
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B6", "C3", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sum of Amount
+            // Counter for versioned file names
+            int version = 1;
 
-            // -------------------------------------------------
-            // 3. Add a slicer linked to the PivotTable
-            // -------------------------------------------------
-            Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
-            int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Category");
-            Slicer slicer = slicerSheet.Slicers[slicerIndex];
+            // Iterate through each slicer, apply a modification, and save the workbook
+            for (int i = 0; i < slicers.Count; i++)
+            {
+                // Access the current slicer
+                Slicer slicer = slicers[i];
 
-            // Initial save (version 0)
-            workbook.Save("SlicerVersion_0.xlsx");
+                // Example modification: change the slicer's caption
+                slicer.Caption = $"Modified Slicer {i + 1}";
 
-            // -------------------------------------------------
-            // 4. Modify slicer properties and save after each change
-            // -------------------------------------------------
+                // Save the workbook with an incremental versioned file name
+                string outputPath = $"Output_v{version}.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Saved modified workbook to: {outputPath}");
 
-            // Change 1: Update caption
-            slicer.Caption = "Category Filter";
-            slicer.Refresh(); // Refresh slicer and underlying PivotTable
-            workbook.Save("SlicerVersion_1.xlsx");
-
-            // Change 2: Lock the slicer position
-            slicer.LockedPosition = true;
-            slicer.Refresh();
-            workbook.Save("SlicerVersion_2.xlsx");
-
-            // Change 3: Set number of columns displayed in the slicer
-            slicer.NumberOfColumns = 2;
-            slicer.Refresh();
-            workbook.Save("SlicerVersion_3.xlsx");
-
-            // Change 4: Adjust size of the slicer
-            slicer.WidthPixel = 250;
-            slicer.HeightPixel = 180;
-            slicer.Refresh();
-            workbook.Save("SlicerVersion_4.xlsx");
-
-            // Change 5: Unlock the slicer position
-            slicer.LockedPosition = false;
-            slicer.Refresh();
-            workbook.Save("SlicerVersion_5.xlsx");
-
-            // Cleanup
-            workbook.Dispose();
-
-            Console.WriteLine("Slicer modifications saved with incremental versioned files.");
+                version++;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

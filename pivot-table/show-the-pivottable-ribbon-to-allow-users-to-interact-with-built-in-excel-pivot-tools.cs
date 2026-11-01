@@ -1,70 +1,63 @@
-// Title: Show the Excel PivotTable Tools ribbon by enabling field list, dialog, and wizard in a C# Aspose.Cells workbook
-// AI Prompts: Generate C# code with Aspose.Cells that creates a pivot table, assigns Region as a row field and Sales as a data field, then turns on the field list, field dialog, and wizard so the PivotTable Tools ribbon becomes visible in Excel. | Write a .NET example that adds a pivot table, refreshes and calculates its data, activates the UI features (EnableFieldList, EnableFieldDialog, EnableWizard), and saves the workbook with the PivotTable ribbon exposed.
-// Common Searches: how to programmatically display the PivotTable Tools ribbon with Aspose.Cells for .NET | C# Aspose.Cells enable field list on a pivot table to show Excel UI | show Excel pivot table ribbon using EnableWizard property in Aspose.Cells | Aspose.Cells pivot table UI options EnableFieldDialog example | display pivot field list pane in generated Excel file using Aspose.Cells C#
-// Tags: Aspose.Cells pivot UI activation C# | expose PivotTable ribbon via Aspose.Cells | configure pivot row and data fields Aspose.Cells | refresh calculate pivot cache Aspose.Cells | add pivot table to worksheet Aspose.Cells
+// Title: Generate an Excel workbook with a PivotTable and display the PivotTable ribbon using Aspose.Cells for .NET (C#)
+// Common Searches: how to show the PivotTable ribbon in an Excel file generated with Aspose.Cells C# | Aspose.Cells C# create pivot table and enable built‑in pivot UI ribbon | add a PivotTable to a new worksheet and keep Excel pivot tools visible using Aspose.Cells | C# code to create pivot table and preserve PivotTable ribbon in saved .xlsx | Aspose.Cells example for displaying pivot ribbon after saving workbook
+// Tags: Aspose.Cells create pivot table programmatically | show pivot ribbon in saved workbook | add row and data fields to pivot table C# | save workbook with pivot UI enabled | populate sample data for pivot table Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample creates a new workbook, fills sample data, adds a PivotTable on a separate sheet, assigns the Category column as a row field and the Amount column as a data field, and saves the file as PivotTableWithRibbon.xlsx so that the PivotTable ribbon is available when the workbook is opened.
+class Program
 {
-    // The example creates a new workbook, fills it with Region and Sales data, adds a pivot table on A1:B5, places Region in the row area and Sales in the data area, enables the field list, field dialog, and wizard to make the PivotTable Tools ribbon appear, refreshes and calculates the pivot, and saves the file as ShowPivotTableRibbonDemo.xlsx.
-    public class ShowPivotTableRibbonDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Region";
-                sheet.Cells["B1"].Value = "Sales";
-                sheet.Cells["A2"].Value = "North";
-                sheet.Cells["B2"].Value = 1200;
-                sheet.Cells["A3"].Value = "South";
-                sheet.Cells["B3"].Value = 1500;
-                sheet.Cells["A4"].Value = "East";
-                sheet.Cells["B4"].Value = 800;
-                sheet.Cells["A5"].Value = "West";
-                sheet.Cells["B5"].Value = 950;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a pivot table to the worksheet
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Food");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Travel");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("Food");
+            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["A5"].PutValue("Travel");
+            sheet.Cells["B5"].PutValue(200);
 
-                // Configure pivot fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Define the source data range as a string (e.g., "A1:B5")
+            string sourceData = "A1:B5";
 
-                // Enable UI features that cause Excel to display the PivotTable ribbon
-                pivotTable.EnableFieldList = true;   // Shows the field list pane and activates the PivotTable Tools ribbon
-                pivotTable.EnableFieldDialog = true; // Allows the field dialog to be opened on double‑click
-                pivotTable.EnableWizard = true;      // Makes the PivotTable Wizard available
+            // Add a new worksheet to host the pivot table
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "PivotReport";
 
-                // Refresh and calculate the pivot data using the correct API
-                pivotTable.RefreshData();   // Refreshes the pivot cache
-                pivotTable.CalculateData(); // Calculates the pivot table values
+            // Create the pivot table at cell A1 on the new sheet
+            int pivotTableIndex = pivotSheet.PivotTables.Add("PivotTable1", "A1", sourceData);
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
 
-                // Save the workbook
-                workbook.Save("ShowPivotTableRibbonDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Add "Category" as a row field (field index 0) and "Amount" as a data field (field index 1)
+            // In newer Aspose.Cells versions RowFields.Add expects a PivotField object.
+            // Retrieve the source fields from the pivot table and add them to the respective collections.
+            PivotField categoryField = pivotTable.RowFields[0];   // source field at index 0 (Category)
+            PivotField amountField = pivotTable.DataFields[0];   // source field at index 1 (Amount)
+
+            pivotTable.RowFields.Add(categoryField);
+            pivotTable.DataFields.Add(amountField);
+
+            // Save the workbook
+            workbook.Save("PivotTableWithRibbon.xlsx", SaveFormat.Xlsx);
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ShowPivotTableRibbonDemo.Run();
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

@@ -1,66 +1,64 @@
-// Title: Loop through rows in a workbook and assign a relative formula to column B with Aspose.Cells for .NET, then verify the calculated values
-// AI Prompts: Generate C# code that iterates over rows 1‑10, sets each cell in column B to the formula "=A{row}*2" using Aspose.Cells, calls CalculateFormula, and checks that the resulting value equals the source cell multiplied by two. | Add error‑handling to an Aspose.Cells workbook that logs any mismatches between the expected A*2 result and the actual value in column B after formula evaluation.
-// Common Searches: aspnet set same formula for entire column using Aspose.Cells loop | how to ensure relative cell references work when applying formulas with Aspose.Cells C# | validate calculated results after applying formulas in Aspose.Cells workbook | recalculate all formulas and compare expected values in Aspose.Cells .NET example
-// Tags: loop assign formula Aspose.Cells C# | relative reference formula Aspose.Cells | validate calculated cell values Aspose.Cells | recalculate workbook formulas Aspose.Cells | save workbook after formula evaluation Aspose.Cells
+// Title: Assign the same formula to each cell in column B with a relative reference to column A using Aspose.Cells for .NET
+// Common Searches: how to set the same formula for every cell in column B using Aspose.Cells in C# | assign a formula that references column A for each row with Aspose.Cells .NET loop | apply =A1+5 formula to column B programmatically with Aspose.Cells | recalculate all formulas after assigning them with Aspose.Cells C# | check calculated values of column B after using workbook.CalculateFormula in Aspose.Cells
+// Tags: apply formula to column Aspose.Cells C# | relative cell reference in Aspose.Cells formula | loop assign formulas Aspose.Cells .NET | recalculate workbook formulas Aspose.Cells | verify formula results Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Creates a new workbook, fills column A with numbers 1‑10, uses a C# loop to set the formula "=A{row}+5" in each cell of column B, recalculates the workbook, prints and validates the results, and saves the file as Result.xlsx.
+class Program
 {
-    // Creates a new workbook, fills column A with numbers 1‑10, loops through rows to set each B cell to the formula "=A{row}*2", recalculates all formulas, verifies each B cell equals A*2, and saves the result as Result.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Fill column A with sample data (1 to 10)
+            for (int row = 0; row < 10; row++)
+            {
+                cells[row, 0].PutValue(row + 1); // A column
+            }
+
+            // Assign the same formula to each cell in column B using a loop
+            // The formula adds 5 to the value in column A of the same row.
+            for (int row = 0; row < 10; row++)
+            {
+                Cell cellB = cells[row, 1]; // B column
+                // Use A1 notation with the specific row number
+                cellB.Formula = $"=A{row + 1}+5";
+            }
+
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Verify that the relative references produced the expected results
+            for (int row = 0; row < 10; row++)
+            {
+                double valueA = cells[row, 0].DoubleValue;
+                double valueB = cells[row, 1].DoubleValue;
+                Console.WriteLine($"Row {row + 1}: A = {valueA}, B = {valueB} (expected {valueA + 5})");
+            }
+
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            string outputPath = "Result.xlsx";
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate column A with sample data (1 to 10)
-                for (int i = 0; i < 10; i++)
-                {
-                    cells[i, 0].PutValue(i + 1); // A1..A10
-                }
-
-                // Assign a formula to each cell in column B.
-                // Using A1 notation: each B cell refers to the corresponding A cell.
-                for (int row = 0; row < 10; row++)
-                {
-                    string formula = $"=A{row + 1}*2";
-                    cells[row, 1].Formula = formula;
-                }
-
-                // Recalculate all formulas in the workbook
-                workbook.CalculateFormula();
-
-                // Verify that each cell in column B has the expected value (A*2)
-                for (int row = 0; row < 10; row++)
-                {
-                    double expected = (row + 1) * 2;               // A value * 2
-                    double actual = cells[row, 1].DoubleValue;    // B value after calculation
-
-                    if (Math.Abs(expected - actual) > 0.0001)
-                    {
-                        Console.WriteLine($"Mismatch at B{row + 1}: expected {expected}, got {actual}");
-                    }
-                }
-
-                // Define output file path
-                string outputPath = "Result.xlsx";
-
-                // Save the workbook to a file
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

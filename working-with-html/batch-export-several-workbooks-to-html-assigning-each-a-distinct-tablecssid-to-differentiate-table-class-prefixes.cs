@@ -1,68 +1,90 @@
-// Title: Batch export multiple Excel workbooks to HTML with a distinct TableCssId for each file using Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates over a list of .xlsx paths, loads each workbook with Aspose.Cells, and saves it as HTML while assigning a unique TableCssId (e.g., table0, table1) via HtmlSaveOptions. | Generate a C# program that batch converts Excel files to HTML, creates a separate output folder, and includes error handling for missing source files and exceptions. | Provide a C# example that demonstrates how to set the TableCssId property in HtmlSaveOptions for each workbook in a loop to produce HTML files with different table CSS identifiers.
-// Common Searches: how to set a different TableCssId for each workbook when exporting to HTML with Aspose.Cells | c# batch convert several xlsx files to html using Aspose.Cells and customize table ids | Aspose.Cells HtmlSaveOptions TableCssId unique per file example | export multiple Excel workbooks to HTML with custom table CSS prefixes in .NET | handle missing Excel files while batch converting to HTML using Aspose.Cells
-// Tags: batch export excel to html Aspose.Cells | HtmlSaveOptions TableCssId customization | c# loop convert multiple workbooks | error handling missing source files Aspose.Cells | unique table css identifier per html export
+// Title: Batch converting Excel workbooks to HTML with distinct TableCssId values using Aspose.Cells for .NET
+// Common Searches: c# aspnet convert all xlsx files in a folder to html with Aspose.Cells | set different TableCssId for each workbook when saving to html using Aspose.Cells | batch export excel workbooks to html and avoid table id conflicts Aspose.Cells | aspocells htmlsaveoptions tablecssid per file example | process multiple excel files to html and handle password protected workbooks in c#
+// Tags: batch excel to html conversion Aspose.Cells | HtmlSaveOptions TableCssId configuration | unique table css identifier per workbook | c# iterate over xlsx files export html | skip password protected workbooks Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The program loops through a predefined list of Excel file paths, loads each workbook with Aspose.Cells, and saves it as an HTML file in a target directory. For every export it sets a distinct TableCssId (e.g., table0, table1) via HtmlSaveOptions, ensures the output folder exists, skips missing files, and logs any processing errors.
-class BatchHtmlExport
+// The C# program scans a directory for *.xlsx files, loads each workbook with Aspose.Cells, assigns a unique TableCssId (e.g., tbl_0, tbl_1) via HtmlSaveOptions, and saves the workbook as an HTML file in a target folder. It creates missing output directories, skips missing or password‑protected files, and logs processing results.
+class BatchWorkbookToHtml
 {
     static void Main()
     {
-        // List of source workbook file paths to be exported.
-        List<string> workbookPaths = new List<string>
+        // Folder containing the source Excel workbooks
+        string sourceFolder = @"C:\Workbooks";
+
+        // Folder where the HTML files will be saved
+        string outputFolder = @"C:\HtmlExports";
+
+        // Verify source directory exists
+        if (!Directory.Exists(sourceFolder))
         {
-            @"C:\Data\Report1.xlsx",
-            @"C:\Data\Report2.xlsx",
-            @"C:\Data\Report3.xlsx"
-        };
+            Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+            return;
+        }
 
-        // Destination folder for the generated HTML files.
-        string outputFolder = @"C:\Data\HtmlExport\";
-
-        // Ensure the output folder exists.
+        // Ensure output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Process each workbook.
-        for (int i = 0; i < workbookPaths.Count; i++)
-        {
-            string wbPath = workbookPaths[i];
+        // Get all Excel files in the source folder
+        string[] workbookFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
 
-            // Verify that the source file exists.
-            if (!File.Exists(wbPath))
+        if (workbookFiles.Length == 0)
+        {
+            Console.WriteLine("No workbook files found to process.");
+            return;
+        }
+
+        // Process each workbook
+        for (int i = 0; i < workbookFiles.Length; i++)
+        {
+            string workbookPath = workbookFiles[i];
+            string workbookName = Path.GetFileNameWithoutExtension(workbookPath);
+
+            // Verify the file still exists before loading
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"File not found: '{wbPath}'. Skipping.");
+                Console.WriteLine($"File not found, skipping: {workbookPath}");
                 continue;
             }
 
             try
             {
-                // Load the workbook.
-                Workbook workbook = new Workbook(wbPath);
+                // Load the workbook (no password supplied)
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Create HTML save options.
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    // Assign a distinct TableCssId for each workbook (e.g., "table0", "table1", etc.).
-                    TableCssId = $"table{i}"
+                    // Assign a unique TableCssId for each workbook (e.g., "tbl_0", "tbl_1", ...)
+                    TableCssId = $"tbl_{i}"
                 };
 
-                // Determine the output HTML file name.
-                string htmlFileName = Path.GetFileNameWithoutExtension(wbPath) + ".html";
-                string htmlPath = Path.Combine(outputFolder, htmlFileName);
+                // Define the output HTML file path
+                string htmlPath = Path.Combine(outputFolder, $"{workbookName}.html");
 
-                // Save the workbook as HTML with the specified options.
-                workbook.Save(htmlPath, saveOptions);
+                // Save the workbook as HTML using the configured options
+                workbook.Save(htmlPath, htmlOptions);
 
-                Console.WriteLine($"Exported '{wbPath}' to HTML with TableCssId='{saveOptions.TableCssId}'.");
+                Console.WriteLine($"Exported '{workbookName}' to HTML with TableCssId = '{htmlOptions.TableCssId}'.");
+            }
+            catch (CellsException ex)
+            {
+                // Handle password‑protected files based on exception message
+                if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine($"Skipped password‑protected workbook: {workbookName}");
+                }
+                else
+                {
+                    Console.WriteLine($"CellsException processing '{workbookName}': {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing '{wbPath}': {ex.Message}");
+                // General error handling for other issues
+                Console.WriteLine($"Error processing '{workbookName}': {ex.Message}");
             }
         }
 

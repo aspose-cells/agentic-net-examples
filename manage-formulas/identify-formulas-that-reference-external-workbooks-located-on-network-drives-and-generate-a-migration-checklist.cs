@@ -1,96 +1,106 @@
-// Title: Identify and list Excel formulas that reference UNC network paths and create a migration checklist with Aspose.Cells for .NET
-// AI Prompts: Write a C# program using Aspose.Cells that iterates through every cell in an .xlsx workbook, detects formulas containing UNC network paths, and records the worksheet name, cell address, full formula, and external path. | Create a script that outputs a plain‑text migration checklist summarizing all detected network‑share references, suitable for reviewing before moving files to a new location. | Enhance the solution to parse the sheet and cell reference inside each external link and include those details in the generated checklist.
-// Common Searches: C# Aspose.Cells how to list formulas that point to files on a \\ network share | extract external workbook links from an Excel file using Aspose.Cells .NET | generate a migration checklist of Excel cells with UNC path references | scan all worksheets for external references in .xlsx with Aspose.Cells
-// Tags: Aspose.Cells scan external UNC references | C# detect network share links in Excel formulas | generate migration checklist for external workbook links | extract external file paths from .xlsx using Aspose.Cells | list cells with external workbook references in .NET
+// Title: Scan Excel workbook for UNC external references in formulas and generate a migration checklist using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# find formulas that reference network share workbooks | extract external workbook paths from Excel formulas with Aspose.Cells | create migration checklist for UNC links in .xlsx files using .NET | list unique external references in Excel formulas programmatically | how to scan all worksheets for external workbook references in C#
+// Tags: extract UNC workbook references Aspose.Cells | scan Excel formulas for external links C# | generate migration checklist for external workbook paths | collect unique external references in .xlsx | process network drive links with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and cell, checks for formulas, extracts any path enclosed in brackets, and if the path starts with a UNC prefix (\\) records the worksheet name, cell address, full formula, and external path. All findings are written to a text file that serves as a migration checklist for updating or removing network‑share references.
-class ExternalFormulaChecker
+// Loads a workbook with Aspose.Cells, iterates every worksheet and cell, detects formulas containing UNC paths ("\\"), extracts the referenced workbook name between brackets, aggregates distinct external references, and writes a plain‑text migration checklist that advises verification, path update, and testing of each link.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Input Excel file path (replace with actual path)
-        string inputPath = @"C:\Input\Workbook.xlsx";
+        // Path to the workbook that needs to be scanned
+        string inputPath = "input.xlsx";
 
-        // Output checklist file path
-        string outputPath = @"C:\Output\MigrationChecklist.txt";
-
-        // Verify that the input file exists before attempting to load it
+        // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
-        // Ensure the output directory exists
-        string outputDir = Path.GetDirectoryName(outputPath);
-        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-        {
-            Directory.CreateDirectory(outputDir);
-        }
-
         Workbook workbook = null;
+
         try
         {
-            // Load the workbook
+            // Load the workbook; if the file is password‑protected this will throw an exception
             workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
             return;
         }
 
-        // List to hold checklist entries
-        List<string> checklist = new List<string>();
+        // Store unique external workbook references found in formulas
+        var externalReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate through all cells in the used range
-            foreach (Cell cell in sheet.Cells)
+            // Iterate through every worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Process only cells that contain formulas
-                if (cell.IsFormula)
+                // Iterate through every cell that contains a formula
+                foreach (Cell cell in sheet.Cells)
                 {
-                    string formula = cell.Formula;
-
-                    // Look for external reference pattern: [path]Sheet!Cell
-                    if (formula.Contains("[") && formula.Contains("]"))
+                    if (cell.IsFormula)
                     {
-                        int startIdx = formula.IndexOf('[') + 1;
-                        int endIdx = formula.IndexOf(']');
+                        string formula = cell.Formula;
 
-                        if (startIdx < endIdx)
+                        // External references on network drives typically start with "\\" (escaped as "\\\\")
+                        if (formula.Contains(@"\\"))
                         {
-                            string externalReference = formula.Substring(startIdx, endIdx - startIdx);
+                            // Attempt to extract the workbook part that appears between '[' and ']'
+                            int startIdx = formula.IndexOf('[');
+                            int endIdx = formula.IndexOf(']');
 
-                            // Identify network drive references (start with \\)
-                            if (externalReference.StartsWith(@"\\"))
+                            if (startIdx >= 0 && endIdx > startIdx)
                             {
-                                // Build checklist entry
-                                string entry = $"Worksheet: {sheet.Name}, Cell: {cell.Name}, Formula: {formula}, External Path: {externalReference}";
-                                checklist.Add(entry);
+                                // Extract the text inside the brackets (e.g., \\Server\Share\Book1.xlsx)
+                                string externalPart = formula.Substring(startIdx + 1, endIdx - startIdx - 1);
+                                externalReferences.Add(externalPart);
+                            }
+                            else
+                            {
+                                // If brackets are not present, store the whole formula as a fallback
+                                externalReferences.Add(formula);
                             }
                         }
                     }
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing formulas: {ex.Message}");
+            return;
+        }
+
+        // Build a migration checklist based on the collected external references
+        var checklistLines = new List<string>();
+        foreach (string reference in externalReferences)
+        {
+            checklistLines.Add($"- Verify external workbook reference: {reference}");
+            checklistLines.Add("  • Ensure the workbook is accessible in the target environment.");
+            checklistLines.Add("  • Update the path to a relative or new location if required.");
+            checklistLines.Add("  • Test the formula after migration to confirm correct results.");
+            checklistLines.Add(string.Empty); // Blank line for readability
+        }
+
+        // Output the checklist to a text file
+        string outputPath = "MigrationChecklist.txt";
 
         try
         {
-            // Write the checklist to a text file
-            File.WriteAllLines(outputPath, checklist);
-            Console.WriteLine($"Checklist written to: {outputPath}");
+            File.WriteAllLines(outputPath, checklistLines);
+            Console.WriteLine($"Migration checklist generated at: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to write checklist: {ex.Message}");
+            Console.WriteLine($"Error writing checklist file: {ex.Message}");
         }
     }
 }

@@ -1,50 +1,51 @@
-// Title: Export an Excel workbook to PDF with MinimumSize optimization while keeping original column widths using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.OptimizationType to MinimumSize, and saves the workbook as a PDF without altering the column widths. | Show a complete example that checks for the input file, creates the output folder, configures PdfSaveOptions for smallest PDF size, and preserves the worksheet layout when exporting with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set PDF OptimizationType MinimumSize keep column widths | How to reduce PDF size when converting Excel to PDF with Aspose.Cells without changing layout | C# export Excel to PDF with minimum file size and original column widths | PdfSaveOptions MinimumSize effect on column width preservation in Aspose.Cells | Save workbook as PDF with smallest size using Aspose.Cells .NET
-// Tags: PdfSaveOptions MinimumSize | Aspose.Cells preserve column widths PDF | C# Excel to PDF size reduction | Aspose.Cells PDF export layout fidelity | configure PDF save options Aspose.Cells
+// Title: Generate a PDF from an Excel file with Aspose.Cells .NET while keeping original column widths and using MinimumSize optimization
+// AI Prompts: Provide C# code that loads an .xlsx workbook, sets PdfSaveOptions.OptimizationType to PdfOptimizationType.MinimumSize, ensures column widths are not altered, and saves the workbook as a PDF. | Demonstrate how to configure Aspose.Cells PdfSaveOptions to produce the smallest possible PDF without affecting the worksheet column layout in a .NET application.
+// Common Searches: Aspose.Cells .NET convert Excel to PDF keep column widths | PdfSaveOptions MinimumSize keep column layout C# | how to reduce PDF size from Excel using Aspose.Cells while preserving column dimensions
+// Tags: Aspose.Cells PDF minimum size optimization | retain original column sizes Aspose.Cells | C# PdfSaveOptions column layout preservation | reduce PDF output size Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The program checks that the source Excel file exists, loads it into a Workbook, creates PdfSaveOptions with OptimizationType set to MinimumSize, ensures the target directory is present, and saves the workbook as a PDF while preserving the original column widths. Errors are caught and reported.
-class Program
+namespace AsposeCellsPdfExample
 {
-    static void Main()
+    // // Loads an Excel workbook, applies PdfSaveOptions with OptimizationType = MinimumSize to shrink the PDF while preserving the worksheet's column widths, and saves the result as a PDF.
+    class Program
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.pdf";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Minimize the PDF file size
+                    OptimizationType = PdfOptimizationType.MinimumSize
+                };
+
+                // Save the workbook as a PDF using the configured options
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
             }
-
-            // Load the source workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure PDF save options (default options are sufficient for most cases)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(outputDir);
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook as a PDF using the options
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

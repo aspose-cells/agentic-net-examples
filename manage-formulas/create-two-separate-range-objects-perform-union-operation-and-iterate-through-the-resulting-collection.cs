@@ -1,12 +1,12 @@
-// Title: Merge two non‑contiguous cell ranges with UnionRanges and loop through the resulting UnionRange using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that defines two separate Range objects (A1:B2 and C3:D3) on a worksheet and merges them using the UnionRanges API. | Create a foreach loop that iterates over the UnionRange returned by UnionRanges and outputs each cell's address and value. | Demonstrate how to persist the workbook after performing the range union, including specifying the output file name.
-// Common Searches: Aspose.Cells C# example for unioning non‑contiguous ranges | How to combine A1:B2 and C3:D3 into a single range with UnionRanges | Iterate over cells in a UnionRange object in Aspose.Cells for .NET | Saving workbook after using UnionRanges method in Aspose.Cells | UnionRanges usage for merging separate ranges in C#
-// Tags: unionranges method Aspose.Cells | merge noncontiguous ranges C# | enumerate cells in UnionRange | save workbook after range union Aspose.Cells | create multiple Range objects Aspose.Cells
+// Title: How to union two non‑contiguous ranges and iterate over their cells using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# union non‑contiguous ranges and read cell values | C# iterate over multiple ranges after UnionRanges in Aspose.Cells | example of using UnionRanges to combine A1:B2 and C3:D4 in Aspose.Cells | how to loop through cells in a unioned range with Aspose.Cells for .NET | Aspose.Cells create range objects and union them programmatically
+// Tags: unionranges method Aspose.Cells | create range objects worksheet Aspose.Cells | iterate cells in unioned range C# | combine noncontiguous ranges Aspose.Cells | loop through unioned ranges .NET
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// The sample creates a workbook, defines two separate ranges (A1:B2 and C3:D3), merges them with the UnionRanges method to obtain a UnionRange, iterates through each cell printing its address and value, and saves the file as UnionResult.xlsx.
+// The sample creates a workbook, fills cells A1 through D4, defines two separate Range objects (A1:B2 and C3:D4), merges them with the UnionRanges API, and then iterates over each range and its cells, printing each cell's address and value.
 class Program
 {
     static void Main()
@@ -15,33 +15,36 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["B1"].PutValue(20);
-            sheet.Cells["A2"].PutValue(30);
-            sheet.Cells["B2"].PutValue(40);
-            sheet.Cells["C3"].PutValue(50);
-            sheet.Cells["D3"].PutValue(60);
+            // Populate sample data
+            worksheet.Cells["A1"].PutValue(10);
+            worksheet.Cells["A2"].PutValue(20);
+            worksheet.Cells["B1"].PutValue(30);
+            worksheet.Cells["B2"].PutValue(40);
+            worksheet.Cells["C3"].PutValue(50);
+            worksheet.Cells["C4"].PutValue(60);
+            worksheet.Cells["D3"].PutValue(70);
+            worksheet.Cells["D4"].PutValue(80);
 
-            // Create two separate Range objects (use fully qualified name to avoid ambiguity with System.Range)
-            Aspose.Cells.Range range1 = sheet.Cells.CreateRange("A1:B2"); // 2x2 block
-            Aspose.Cells.Range range2 = sheet.Cells.CreateRange("C3:D3"); // single row block
+            // Create two separate Range objects
+            AsposeRange range1 = worksheet.Cells.CreateRange("A1:B2");
+            AsposeRange range2 = worksheet.Cells.CreateRange("C3:D4");
 
-            // Combine the ranges using the UnionRanges method (returns UnionRange)
-            UnionRange unionRange = range1.UnionRanges(new Aspose.Cells.Range[] { range2 });
+            // Perform Union operation using the recommended API
+            UnionRange unionRange = range1.UnionRanges(new AsposeRange[] { range2 });
 
-            // Iterate through the cells in the resulting union range
-            foreach (Cell cell in unionRange)
+            // Iterate through the cells in all unioned ranges
+            foreach (AsposeRange r in unionRange)
             {
-                Console.WriteLine($"Cell {cell.Name} = {cell.Value}");
+                foreach (Cell cell in r)
+                {
+                    Console.WriteLine($"Cell {cell.Name} = {cell.Value}");
+                }
             }
 
-            // Save the workbook (optional)
-            string outputPath = "UnionResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Optional: Save the workbook if needed
+            // workbook.Save("Result.xlsx");
         }
         catch (Exception ex)
         {

@@ -1,70 +1,92 @@
-// Title: Save each worksheet of an Excel workbook as a separate HTML file while reusing the same TableCssId with Aspose.Cells for .NET
-// AI Prompts: Write C# code that iterates through every worksheet in a Workbook and saves each one as an individual .html file, using HtmlSaveOptions.TableCssId set to a common identifier. | Show how to configure Aspose.Cells HtmlSaveOptions to export only the active worksheet and apply a uniform CSS table ID for multiple HTML outputs.
-// Common Searches: how to export each worksheet to its own html file using aspose.cells c# | asp.net generate separate html files for workbook sheets with shared TableCssId | c# loop through workbook worksheets and save as html with common css id Aspose.Cells | aspose.cells HtmlSaveOptions ExportActiveWorksheetOnly example c#
-// Tags: Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly | Aspose.Cells TableCssId shared across HTML exports | C# export workbook worksheets to individual HTML files | Aspose.Cells generate separate HTML per worksheet | C# set common CSS id for Aspose.Cells HTML tables
+// Title: C# – Export each worksheet to its own HTML file using Aspose.Cells and reuse a single TableCssId
+// Common Searches: how to batch export all worksheets to individual HTML files using Aspose.Cells in C# | Aspose.Cells C# export active worksheet only to HTML with shared TableCssId | create safe file names from worksheet names when saving as HTML in .NET | set TableCssId for multiple HTML outputs with Aspose.Cells HtmlSaveOptions | C# example for exporting each Excel sheet to separate HTML files using Aspose.Cells
+// Tags: Aspose.Cells export worksheets to separate HTML files C# | shared TableCssId for multiple HTML exports Aspose.Cells | HtmlSaveOptions ExportActiveWorksheetOnly usage | safe filename generation for worksheet names .NET | batch HTML conversion of Excel workbook Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program loads an Excel workbook, creates an output folder, then loops through each worksheet, sets it as the active sheet, and saves it as a separate HTML file using HtmlSaveOptions with ExportActiveWorksheetOnly=true and a shared TableCssId ("myTable").
-class ExportWorksheetsToHtml
+// The C# program loads an Excel workbook, creates an output folder, and iterates through each worksheet. For every sheet it activates the worksheet, configures HtmlSaveOptions with ExportActiveWorksheetOnly=true and a common TableCssId, generates a filesystem‑safe file name from the sheet name, and saves the sheet as an individual HTML file, reusing the same CSS table identifier across all files.
+class Program
 {
     static void Main()
     {
+        // Path to the source Excel file
+        string excelPath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(excelPath))
+        {
+            Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
+            return;
+        }
+
+        Workbook workbook = null;
+
         try
         {
-            // Path to the source Excel file
-            string excelPath = @"C:\Input\Workbook.xlsx";
-
-            // Verify that the source file exists
-            if (!File.Exists(excelPath))
-            {
-                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
-                return;
-            }
-
-            // Folder where HTML files will be saved
-            string outputFolder = @"C:\Output\HtmlFiles";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Load the workbook
-            Workbook workbook = new Workbook(excelPath);
-
-            // Define a common TableCssId to be used for all worksheets
-            string commonTableCssId = "myTable";
-
-            // Iterate through each worksheet in the workbook
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                // Get the current worksheet name for file naming
-                string sheetName = workbook.Worksheets[i].Name;
-
-                // Set the current worksheet as active
-                workbook.Worksheets.ActiveSheetIndex = i;
-
-                // Configure HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    ExportActiveWorksheetOnly = true, // Export only the active worksheet
-                    TableCssId = commonTableCssId      // Reuse the same TableCssId across all files
-                    // Additional options can be set here if needed
-                };
-
-                // Build the output HTML file path
-                string htmlFilePath = Path.Combine(outputFolder, $"{sheetName}.html");
-
-                // Save the current worksheet as an HTML file
-                workbook.Save(htmlFilePath, saveOptions);
-            }
-
-            Console.WriteLine("Export completed successfully.");
+            // Load the workbook (no password)
+            LoadOptions loadOptions = new LoadOptions();
+            workbook = new Workbook(excelPath, loadOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Detect password protection via exception message
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Provide a password to load it.");
+            }
+            else
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
+            return;
         }
+
+        // Directory where HTML files will be saved
+        string outputDir = "HtmlOutput";
+        Directory.CreateDirectory(outputDir);
+
+        // Define a common TableCssId to be used for all exported HTML files
+        const string commonTableCssId = "myTable";
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            try
+            {
+                // Set the current worksheet as the active one so that ExportActiveWorksheetOnly works correctly
+                workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+
+                // Configure HTML save options
+                HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    ExportActiveWorksheetOnly = true, // Export only the active worksheet
+                    TableCssId = commonTableCssId       // Reuse the same TableCssId for all files
+                };
+
+                // Build a safe file name based on the worksheet name
+                string safeSheetName = MakeValidFileName(sheet.Name);
+                string htmlPath = Path.Combine(outputDir, safeSheetName + ".html");
+
+                // Save the active worksheet as an HTML file
+                workbook.Save(htmlPath, options);
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" exported to \"{htmlPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error exporting worksheet \"{sheet.Name}\": {ex.Message}");
+            }
+        }
+    }
+
+    // Helper method to replace invalid filename characters
+    static string MakeValidFileName(string name)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(c, '_');
+        }
+        return name;
     }
 }

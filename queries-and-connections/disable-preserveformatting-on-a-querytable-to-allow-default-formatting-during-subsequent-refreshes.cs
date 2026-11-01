@@ -1,39 +1,33 @@
-// Title: Disable PreserveFormatting for a QueryTable in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Use Aspose.Cells in C# to set QueryTable.PreserveFormatting to false and save the workbook. | Load a workbook, find the first QueryTable, turn off its PreserveFormatting property, and write the changes back. | Write C# code that iterates over all QueryTables in a worksheet and disables PreserveFormatting with Aspose.Cells.
-// Common Searches: Aspose.Cells C# disable PreserveFormatting on QueryTable | How to turn off formatting preservation when refreshing an Excel QueryTable with Aspose.Cells | Set QueryTable PreserveFormatting false programmatically .NET | Refresh Excel query table without keeping original formatting using Aspose.Cells
-// Tags: Aspose.Cells QueryTable PreserveFormatting property | disable PreserveFormatting for Excel QueryTable .NET | set QueryTable.PreserveFormatting false C# | refresh QueryTable without preserving formatting Aspose.Cells | modify QueryTable settings programmatically C#
+// Title: How to turn off PreserveFormatting for a QueryTable in Aspose.Cells for .NET to use default formatting on refresh
+// AI Prompts: Set queryTable.PreserveFormatting = false and save the workbook with Aspose.Cells. | Iterate over every QueryTable in a worksheet, disable PreserveFormatting, then refresh the table using C#. | Modify an existing Excel file so that its QueryTable applies default cell styles after each refresh with Aspose.Cells.
+// Common Searches: aspocells c# turn off preserveformatting for querytable before refresh | how to make querytable use default styles after refresh using Aspose.Cells | c# Aspose.Cells example disabling formatting preservation on Excel querytable | remove formatting lock on querytable refresh Aspose.Cells .NET
+// Tags: aspocells querytable preserveformatting flag | disable formatting preservation on querytable .net | default cell style on querytable refresh aspocells | c# modify querytable properties workbook | excel querytable refresh formatting control aspocells
 
 using Aspose.Cells;
 using System;
 
-// Loads an existing workbook, accesses the first worksheet, disables the PreserveFormatting flag of the first QueryTable, outputs the new setting, and saves the workbook as a new file.
-class DisableQueryTablePreserveFormatting
+// The sample loads an Excel workbook, accesses the first worksheet, checks for a QueryTable, disables its PreserveFormatting property so that default formatting is applied on subsequent refreshes, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook that contains a query table
+        // Load the workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Access the worksheet containing the QueryTable
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Check if the worksheet has any query tables
-        if (worksheet.QueryTables.Count > 0)
+        // Ensure there is at least one QueryTable
+        if (sheet.QueryTables.Count > 0)
         {
-            // Get the first query table
-            QueryTable queryTable = worksheet.QueryTables[0];
+            // Get the first QueryTable (adjust index as needed)
+            QueryTable queryTable = sheet.QueryTables[0];
 
             // Disable PreserveFormatting so default formatting is applied on refresh
             queryTable.PreserveFormatting = false;
-
-            Console.WriteLine("PreserveFormatting set to: " + queryTable.PreserveFormatting);
-        }
-        else
-        {
-            Console.WriteLine("No query tables found in the worksheet.");
         }
 
-        // Save the workbook with the updated setting
+        // Save the modified workbook
         workbook.Save("output.xlsx");
     }
 }

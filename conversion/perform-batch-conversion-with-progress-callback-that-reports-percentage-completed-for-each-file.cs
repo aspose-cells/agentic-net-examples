@@ -1,69 +1,69 @@
-// Title: Convert multiple Excel .xlsx files to PDF with per‑file progress reporting using Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that scans a folder for .xlsx files, converts each workbook to PDF with Aspose.Cells, and prints the conversion percentage for every file. | Implement a progress callback in the Aspose.Cells PDF conversion loop that outputs the percent completed while saving each workbook. | Modify the batch conversion sample to record the progress percentages to a log file instead of writing them to the console.
-// Common Searches: c# aspocells batch convert xlsx to pdf with progress indicator | how to display conversion percentage for each Excel file in a console app using Aspose.Cells | asp.net core console batch excel to pdf conversion progress callback example | aspocells pdfsaveoptions show progress per workbook | c# iterate folder convert all .xlsx to .pdf using Aspose.Cells and show progress
-// Tags: aspose.cells batch conversion xlsx pdf c# | pdfsaveoptions progress callback aspocells | loadoptions xlsx workbook loading aspocells | directory enumeration excel files c# | console progress logging file conversion
+// Title: C# batch conversion of Excel workbooks to PDF with per‑file progress reporting using Aspose.Cells
+// Common Searches: how to convert all .xlsx files in a folder to PDF and show progress in C# with Aspose.Cells | Aspose.Cells C# example for batch processing Excel files and displaying conversion percentage | C# code to iterate through Excel files, save as PDF and log batch progress using Aspose.Cells | report per‑file conversion status while batch converting Excel to PDF in .NET | Aspose.Cells console app batch convert Excel to PDF with progress output
+// Tags: batch convert Excel to PDF Aspose.Cells C# | per-file conversion progress reporting Aspose.Cells | iterate Excel files folder Aspose.Cells save as PDF | console progress output Aspose.Cells batch conversion | handle missing workbook files Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console program that enumerates all .xlsx files in a specified input directory, loads each workbook with Aspose.Cells using LoadOptions, converts them to PDF via PdfSaveOptions, saves the PDFs to an output folder, and reports the conversion percentage for each file through a progress callback.
-class BatchConversionWithProgress
+// The sample enumerates every .xlsx file in a specified input directory, loads each workbook with Aspose.Cells, saves it as PDF (or another format) to an output directory, and writes the overall batch progress percentage to the console after each file, while handling missing files and exceptions.
+class BatchConverter
 {
-    static void Main()
+    static void Main(string[] args)
     {
         // Folder containing source Excel files
-        string inputFolder = @"C:\InputFiles";
+        string inputFolder = @"C:\Input";
         // Folder where converted files will be saved
-        string outputFolder = @"C:\OutputFiles";
+        string outputFolder = @"C:\Output";
+        // Desired output format (e.g., Pdf, Xlsx, Csv, etc.)
+        SaveFormat outputFormat = SaveFormat.Pdf;
 
-        // Ensure output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify that the input folder exists; if not, inform the user and exit gracefully
+        // Validate input folder
         if (!Directory.Exists(inputFolder))
         {
-            Console.WriteLine($"Input folder not found: {inputFolder}");
-            Console.WriteLine("Please create the folder and add Excel files before running the program.");
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
             return;
         }
 
-        // Get all Excel files in the input folder
-        string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
-
-        foreach (string sourcePath in excelFiles)
+        // Ensure output folder exists
+        if (!Directory.Exists(outputFolder))
         {
-            string fileName = Path.GetFileName(sourcePath);
-            Console.WriteLine($"Processing file: {fileName}");
+            Directory.CreateDirectory(outputFolder);
+        }
 
+        // Get all Excel files in the input folder
+        string[] files = Directory.GetFiles(inputFolder, "*.xlsx");
+        int totalFiles = files.Length;
+        int processedFiles = 0;
+
+        foreach (string filePath in files)
+        {
             try
             {
-                // Verify that the source file exists (redundant after GetFiles, but kept for safety)
-                if (!File.Exists(sourcePath))
+                processedFiles++;
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                string outPath = Path.Combine(outputFolder, $"{fileName}.{outputFormat.ToString().ToLower()}");
+
+                // Verify source file exists before loading
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    Console.WriteLine($"Source file not found: {filePath}");
                     continue;
                 }
 
-                // Load the workbook
-                var loadOptions = new LoadOptions(LoadFormat.Xlsx);
-                var workbook = new Workbook(sourcePath, loadOptions);
+                // Load the source Excel file
+                Workbook workbook = new Workbook(filePath);
 
-                // Prepare save options (convert to PDF)
-                var saveOptions = new PdfSaveOptions();
+                // Save the workbook in the desired format
+                workbook.Save(outPath, outputFormat);
 
-                // Determine output file path (same name, different extension)
-                string outputPath = Path.Combine(outputFolder,
-                    Path.GetFileNameWithoutExtension(sourcePath) + ".pdf");
-
-                // Save the workbook as PDF
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Finished processing {fileName}\n");
+                // Report overall batch progress
+                int batchPercent = (int)((processedFiles / (double)totalFiles) * 100);
+                Console.WriteLine($"Processed \"{fileName}\". Batch progress: {batchPercent}% ({processedFiles}/{totalFiles})");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing {fileName}: {ex.Message}");
+                Console.WriteLine($"Error processing file \"{filePath}\": {ex.Message}");
             }
         }
 

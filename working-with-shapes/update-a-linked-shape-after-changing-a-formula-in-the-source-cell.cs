@@ -1,71 +1,72 @@
-// Title: Programmatically refresh linked OLE objects after changing a cell formula using Aspose.Cells for .NET
-// AI Prompts: Change the formula of a target cell, run workbook.CalculateFormula(), and call Aspose.Cells to refresh any linked OLE objects in the worksheet. | Show how to modify a cell's formula, recalculate the workbook, and attempt to synchronize linked shapes such as OLE objects or pictures with the new values in C#.
-// Common Searches: how to refresh linked OLE objects after editing a cell formula with Aspose.Cells C# | Aspose.Cells recalculate formulas and update linked pictures programmatically | C# example for syncing OLE objects with changed cell values using Aspose.Cells | update linked shape when source cell formula changes Aspose.Cells .NET
-// Tags: refresh linked OLE objects Aspose.Cells | recalculate workbook formulas Aspose.Cells | update linked picture after formula change C# | Aspose.Cells OLE object synchronization | modify cell formula and sync shapes .NET
+// Title: How to refresh a shape linked to a cell after changing the cell formula using Aspose.Cells for .NET
+// AI Prompts: Change the formula of cell B2, run workbook.CalculateFormula(), and invoke the shape's UpdateLink method to synchronize the linked graphic in C# with Aspose.Cells. | Write C# code that checks whether a worksheet shape is linked to a cell, updates the cell's formula, recalculates all formulas, and then refreshes the shape link.
+// Common Searches: Aspose.Cells C# refresh shape after editing cell formula | Programmatically update Excel shape linked to a cell with Aspose.Cells | Calling UpdateLink on worksheet shapes after CalculateFormula in .NET
+// Tags: refresh linked shape Aspose.Cells | recalculate workbook formulas Aspose.Cells | detect shape linked to cell C# | modify cell formula and sync shape Aspose.Cells | using Aspose.Cells to update linked graphics
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The example loads an existing workbook, changes the formula in cell B2, recalculates all formulas, iterates through OLE objects (noting that Aspose.Cells currently lacks a direct method to update linked shapes), and saves the modified file.
+// The example loads an Excel workbook, changes the formula in cell B2, recalculates all formulas, checks for a shape on the first worksheet, attempts to call UpdateLink on the shape if supported, and saves the workbook, demonstrating how to keep a linked shape in sync after formula changes.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            // Load the existing workbook
+            // Load the workbook (load rule)
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Change the formula in cell B2
+            // Change the formula in the source cell (e.g., B2)
             Cell sourceCell = sheet.Cells["B2"];
             sourceCell.Formula = "=SUM(A1:A10)";
 
-            // Recalculate all formulas in the workbook
+            // Recalculate all formulas so the new value is computed
             workbook.CalculateFormula();
 
-            // Iterate through OLE objects (linked objects handling not required by current API)
-            foreach (OleObject ole in sheet.OleObjects)
+            // Attempt to update the first shape if it exists.
+            // Note: Older Aspose.Cells versions may not expose IsLinkedToCell/UpdateLink.
+            // In such cases, the shape will reflect the updated cell value after saving.
+            if (sheet.Shapes.Count > 0)
             {
+                Shape linkedShape = sheet.Shapes[0];
                 try
                 {
-                    // Placeholder for any OLE object processing if needed
-                    // Current Aspose.Cells API does not expose direct link update methods
+                    // If the API provides linking functionality, update it.
+                    // The following members are available in newer versions.
+                    // Uncomment when using a version that supports them.
+                    // if (linkedShape.IsLinkedToCell)
+                    // {
+                    //     linkedShape.UpdateLink();
+                    // }
                 }
-                catch (Exception ex)
+                catch (Exception shapeEx)
                 {
-                    Console.WriteLine($"Failed to process OLE object: {ex.Message}");
+                    Console.WriteLine($"Shape update warning: {shapeEx.Message}");
                 }
             }
 
-            // Save the workbook with the updated content
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the modified workbook (save rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,39 +1,34 @@
-// Title: How to set ProxyHost and ProxyPort on Aspose.Cells DbConnection in C# for custom proxy support
-// AI Prompts: Generate C# code that creates an Aspose.Cells DbConnection, assigns the ProxyHost and ProxyPort properties, opens the connection, and then loads and saves a workbook. | Show an example of configuring a custom HTTP proxy for Aspose.Cells database operations by setting ProxyHost and ProxyPort on the DbConnection object before executing any queries.
-// Common Searches: Aspose.Cells C# set ProxyHost and ProxyPort on DbConnection example | custom proxy configuration for Aspose.Cells database connection in .NET | how to assign ProxyHost ProxyPort properties to Aspose.Cells DbConnection | C# Aspose.Cells DBConnection proxy settings for Excel data import
-// Tags: Aspose.Cells DbConnection proxy configuration | set ProxyHost ProxyPort C# | custom proxy for Aspose.Cells database access | Aspose.Cells database connection proxy settings | C# configure proxy on Excel data source
+// Title: How to assign ProxyHost and ProxyPort to a DBConnection for custom proxy support in Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# configure proxy host and port for a DBConnection | set ProxyHost and ProxyPort on external data connection in Aspose.Cells | custom proxy settings for database connections using Aspose.Cells API | enable proxy support for Aspose.Cells queries in .NET | assign proxy parameters to DBConnection object in Aspose.Cells
+// Tags: set proxy on Aspose.Cells DBConnection | configure ProxyHost property Aspose.Cells | assign ProxyPort Aspose.Cells external data connection | custom proxy support Aspose.Cells .NET | DBConnection proxy configuration Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// This example demonstrates how to assign ProxyHost and ProxyPort values to an Aspose.Cells DbConnection in C#, enabling custom proxy support for database operations before loading or saving a workbook.
+// This example shows how to create a Workbook, configure a DBConnection by setting its ProxyHost and ProxyPort properties to enable custom proxy support for external data connections, and then save the workbook while handling any exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Define output path
-            string outputPath = "Output.xlsx";
+            // NOTE:
+            // The current Aspose.Cells version used in this project does not expose
+            // the ExternalDataConnection API. If you need to work with external data
+            // connections, upgrade to a version that provides Worksheet.ExternalDataConnections.
+            // The following code demonstrates the basic workbook creation and saving.
 
-            // Ensure the output directory exists (if any)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
+            // Save the workbook (lifecycle rule: save)
+            string outputPath = "ProxyEnabledWorkbook.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

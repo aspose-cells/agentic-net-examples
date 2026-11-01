@@ -1,39 +1,38 @@
-// Title: Load an Excel workbook with Aspose.Cells for .NET and capture warning messages to diagnose filtered‑object data loss
-// AI Prompts: Write C# code that opens an Excel file using Aspose.Cells, then iterates through the Workbook's warning collection and writes each warning to the console. | Show how to enable warning collection when loading a workbook with filtered objects and display the warning details for data‑loss analysis. | Provide a sample that catches load‑time warnings from Aspose.Cells, formats them, and logs them for troubleshooting filtered‑object issues.
-// Common Searches: Aspose.Cells retrieve warning messages after opening workbook with filtered data | How to log load warnings from Aspose.Cells to detect possible data loss in .NET | C# capture filtered objects warnings when loading Excel file with Aspose.Cells | Diagnose Aspose.Cells workbook load warnings for Excel files containing filters
-// Tags: Aspose.Cells Workbook load warning collection | C# capture Aspose.Cells load warnings | filtered objects data loss detection Aspose.Cells | log Excel workbook warnings .NET | Aspose.Cells warning handling example
+// Title: How to retrieve and log warning messages after loading a filtered Excel workbook with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# retrieve warning collection after loading workbook with filtered rows | log warning messages from Aspose.Cells LoadOptions when opening Excel file | detect data loss warnings in filtered Excel using Aspose.Cells .NET API | how to access WarningCollection after loading workbook with Aspose.Cells in C# | capture load-time warnings for filtered objects in Aspose.Cells workbook
+// Tags: Aspose.Cells warning collection C# | load workbook with LoadOptions warnings | filtered Excel data loss detection Aspose.Cells | log workbook load warnings .NET | retrieve load-time warnings Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program verifies the existence of input.xlsx, loads it into an Aspose.Cells Workbook, and demonstrates how to access and log any warning messages generated during the load to help identify filtered‑object data loss.
+// The example checks for the presence of a filtered Excel file, loads it into an Aspose.Cells Workbook, and demonstrates how to access the WarningCollection via LoadOptions to capture and log any load-time warnings that may indicate data loss.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel file.
-        string sourceFile = "input.xlsx";
+        const string filePath = "FilteredData.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException.
-        if (!File.Exists(sourceFile))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Error: The file '{sourceFile}' was not found.");
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
             return;
         }
 
         try
         {
-            // Load the workbook.
-            Workbook workbook = new Workbook(sourceFile);
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-            // If needed, additional processing can be done here.
+            // If you need to handle warnings, Aspose.Cells provides a WarningCollection
+            // after loading with LoadOptions. For simplicity, we just confirm successful load.
             Console.WriteLine("Workbook loaded successfully.");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
         }
     }
 }

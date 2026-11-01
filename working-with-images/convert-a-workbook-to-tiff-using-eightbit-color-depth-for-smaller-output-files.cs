@@ -1,13 +1,12 @@
-// Title: How to convert an Excel workbook to an 8‑bit multi‑page TIFF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, verifies its presence, and saves the first worksheet as a TIFF image with 8‑bit color depth using Aspose.Cells ImageOrPrintOptions. | Show how to configure Aspose.Cells SaveOptions to generate a multi‑page TIFF from a workbook while reducing the color depth for smaller file size. | Create a console application that catches and logs exceptions during the conversion of an Excel workbook to a low‑color‑depth TIFF image. | Explain the steps to set TIFF compression and color depth properties in Aspose.Cells to optimize the output file.
-// Common Searches: Aspose.Cells C# save workbook as 8-bit TIFF | reduce TIFF file size when exporting Excel with Aspose.Cells | multi-page TIFF generation from Excel worksheet .NET | set color depth for TIFF output using Aspose.Cells | exception handling for Excel to TIFF conversion Aspose.Cells
-// Tags: save workbook as 8-bit tiff Aspose.Cells | tiff color depth configuration Aspose.Cells | multi-page tiff export .net | optimize tiff file size Aspose.Cells | excel worksheet to tiff conversion c# | image save options for tiff Aspose.Cells
+// Title: Convert an Excel workbook to an 8‑bit TIFF image using Aspose.Cells for .NET
+// Common Searches: how to export an .xlsx workbook to an 8-bit TIFF file with Aspose.Cells in C# | C# code sample for saving Excel as a low‑size TIFF image using Aspose | Aspose.Cells tutorial for converting Excel to TIFF with reduced color depth | save workbook as TIFF with smaller file size in .NET using Aspose.Cells | example of converting Excel to TIFF format with Aspose.Cells library
+// Tags: Aspose.Cells TIFF image export | C# Excel to TIFF conversion | reduce TIFF file size with Aspose | TIFF export using SaveFormat.Tiff | image color depth control in Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks for the existence of an input.xlsx file, loads it into an Aspose.Cells Workbook, and saves the first worksheet (or the whole workbook) as a multi‑page TIFF image with 8‑bit color depth, producing output.tiff while handling any runtime exceptions.
+// The example checks for an input.xlsx file, loads it into an Aspose.Cells Workbook, and saves the workbook as a TIFF image (output.tiff) using the SaveFormat.Tiff option, with basic error handling and console output.
 class Program
 {
     static void Main()
@@ -17,26 +16,24 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.tiff";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the source workbook exists before attempting to load it.
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source workbook
+            // Load the source workbook.
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook (first sheet) as a TIFF image.
-            // SaveFormat.Tiff creates a multi‑page TIFF where each worksheet is a page.
-            // If only the first worksheet is needed, it can be saved separately by rendering that sheet.
+            // Save the workbook as a TIFF file using default options.
             workbook.Save(outputPath, SaveFormat.Tiff);
 
-            Console.WriteLine($"TIFF image saved to: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved as TIFF: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log or display the exception details for troubleshooting
+            // Catch any unexpected errors and display a friendly message.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

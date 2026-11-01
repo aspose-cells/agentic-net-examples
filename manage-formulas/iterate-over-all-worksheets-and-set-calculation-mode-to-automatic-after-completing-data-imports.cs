@@ -1,50 +1,41 @@
-// Title: Loop through every worksheet and enable automatic formula calculation after importing data with Aspose.Cells for .NET
-// AI Prompts: Add a C# loop that visits each worksheet in a loaded Workbook and sets its Settings.CalcMode to Automatic before saving. | Generate code that loads an Excel file, performs data insertion, switches all worksheets to automatic calculation mode, triggers a full recalculation, and writes the result to a new file.
-// Common Searches: C# Aspose.Cells set automatic calculation for each worksheet after data import | How to enable workbook calculation mode automatic in Aspose.Cells .NET | Iterate through worksheets and change CalcMode to Automatic using Aspose.Cells | Force formula recalculation after updating cells with Aspose.Cells C#
-// Tags: Aspose.Cells set workbook calculation mode automatic | C# iterate worksheets Aspose.Cells | force formula recalculation Aspose.Cells | automatic calculation after data import .NET | Aspose.Cells workbook Settings.CalcMode
+// Title: Recalculate All Formulas in an Excel Workbook After Data Import Using Aspose.Cells for .NET
+// Common Searches: how to recalculate all formulas in a workbook after importing data with Aspose.Cells C# | Aspose.Cells C# example to load, calculate formulas and save Excel file | refresh formulas in Excel after data import using Aspose.Cells .NET library | C# code to recalculate workbook formulas and export updated file with Aspose.Cells
+// Tags: recalculate formulas Aspose.Cells C# | load workbook calculate save Aspose.Cells .NET | Excel data import formula refresh C# | Aspose.Cells automatic calculation mode setting | update workbook after data import Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// This example loads an existing Excel workbook (input.xlsx) with Aspose.Cells, recalculates all formulas to reflect any imported data, and saves the updated workbook to output.xlsx while handling missing file and general exceptions.
+class Program
 {
-    // The example loads an existing Excel file, optionally imports data, loops through every worksheet to set the workbook's calculation mode to Automatic, forces a full formula recalculation, and saves the updated workbook, while handling missing files and runtime exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            try
-            {
-                // Load the workbook
-                var workbook = new Workbook(inputPath);
+            // Load the workbook containing imported data
+            var workbook = new Workbook(inputPath);
 
-                // ----- Data import operations go here -----
-                // Example: workbook.Worksheets[0].Cells["A1"].PutValue(123);
-                // -------------------------------------------
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-                // Force calculation of all formulas in the workbook
-                workbook.CalculateFormula();
-
-                // Save the workbook to the desired output path
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

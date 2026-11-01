@@ -1,21 +1,20 @@
-// Title: Load an Excel workbook from a UNC network share path using Aspose.Cells for .NET
-// AI Prompts: Verify that a UNC file exists with File.Exists before creating a Workbook instance via Aspose.Cells. | Wrap the Workbook constructor in a try‑catch block to gracefully handle I/O or format errors when opening a file from a network share. | After the workbook is loaded, read the Name property of the first Worksheet and write it to the console.
-// Common Searches: how to open an Excel file from a UNC share using Aspose.Cells in C# | Aspose.Cells check file existence before loading workbook from network location | catch exceptions when loading workbook from a network path with Aspose.Cells | read first worksheet name after loading workbook from UNC path in .NET
-// Tags: Aspose.Cells network share file loading | C# UNC path existence verification | Workbook constructor error handling | Extract first worksheet name with Aspose.Cells
+// Title: Load an Excel workbook from a UNC network share using Aspose.Cells Workbook constructor in C#
+// Common Searches: C# Aspose.Cells load Excel file from UNC path with file path constructor | How to open a workbook located on a network share using Aspose.Cells in .NET | Check file existence before creating Aspose.Cells Workbook from UNC location | Reading first worksheet name from Excel file on a network share with Aspose.Cells | Handling UNC path errors when loading Excel workbook with Aspose.Cells C#
+// Tags: Aspose.Cells workbook constructor UNC path | C# load Excel from network share | verify file existence Aspose.Cells | read first worksheet name Aspose.Cells | handle UNC path errors Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example demonstrates checking for the presence of an Excel file on a UNC network share, loading it with Aspose.Cells' Workbook constructor, printing the name of the first worksheet, and handling any errors that may occur during the process.
+// The example demonstrates how to verify a UNC network‑share path, load the Excel file with the Aspose.Cells Workbook constructor, retrieve the name of the first worksheet, and gracefully handle any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // UNC path to the workbook on a network share.
-        string uncPath = @"\\ServerName\SharedFolder\MyWorkbook.xlsx";
+        // UNC path to the workbook on a network share
+        string uncPath = @"\\ServerName\ShareFolder\MyWorkbook.xlsx";
 
-        // Verify that the file exists before attempting to load.
+        // Verify that the file exists before attempting to load
         if (!File.Exists(uncPath))
         {
             Console.WriteLine($"File not found: {uncPath}");
@@ -24,17 +23,24 @@ class Program
 
         try
         {
-            // Load the workbook.
+            // Load the workbook using the file path constructor (handles UNC correctly)
             Workbook workbook = new Workbook(uncPath);
 
-            // Example usage: print the name of the first worksheet.
-            Worksheet firstSheet = workbook.Worksheets[0];
-            Console.WriteLine("First worksheet name: " + firstSheet.Name);
+            // Output the name of the first worksheet, if any
+            if (workbook.Worksheets.Count > 0)
+            {
+                Console.WriteLine("First worksheet: " + workbook.Worksheets[0].Name);
+            }
+            else
+            {
+                Console.WriteLine("The workbook contains no worksheets.");
+            }
         }
         catch (Exception ex)
         {
-            // Handle any errors that occur during loading or processing.
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Handle any errors that occur during loading or processing
+            Console.WriteLine("An error occurred while processing the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

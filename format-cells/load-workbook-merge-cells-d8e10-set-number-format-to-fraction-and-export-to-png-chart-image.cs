@@ -1,57 +1,79 @@
-// Title: Merge cells D8:E10, apply a fraction number format, and export the worksheet as a PNG image using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing Excel file, merges the range D8:E10, sets the custom number format '# ?/?' on the merged cell, and saves the first worksheet as a PNG image with Aspose.Cells. | Write a C# snippet that uses Aspose.Cells Rendering to apply a fraction format to a merged cell and render the sheet to a PNG file.
-// Common Searches: Aspose.Cells C# merge D8:E10 then export worksheet to PNG | How to set '# ?/?' fraction format on merged cells using Aspose.Cells .NET | Render Excel sheet as PNG after merging cells with Aspose.Cells for .NET | C# Aspose.Cells image rendering options for exporting worksheet to PNG
-// Tags: cell range merging Aspose.Cells C# | fraction custom number format Aspose.Cells | worksheet PNG rendering Aspose.Cells | image rendering options Aspose.Cells .NET | sheetrender to image C#
+// Title: Merge cells D8:E10, apply a fraction number format, and export the first worksheet chart to PNG using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# merge cells D8:E10 and set custom fraction format | How to export an Excel chart to PNG with Aspose.Cells .NET | Apply '# ?/?' number format to a merged range using Aspose.Cells in C# | Save workbook after merging cells and rendering chart image with Aspose.Cells | Create fraction style and apply to merged cells Aspose.Cells example
+// Tags: merge cells D8:E10 Aspose.Cells C# | fraction custom number format Aspose.Cells | export chart to PNG Aspose.Cells .NET | apply style to merged range Aspose.Cells | chart rendering image Aspose.Cells | save workbook after cell merge Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExample
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The C# program loads an existing Excel workbook, merges the range D8:E10 on the first worksheet, creates a custom fraction number format "# ?/?" and applies it to the merged cells, checks for a chart on the sheet and, if present, renders the first chart to a PNG image, and finally saves the modified workbook.
+class Program
 {
-    // The program loads input.xlsx, merges cells D8:E10, applies the custom fraction format '# ?/?' to the merged cell, and renders the first worksheet to output.png as a PNG image using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.png";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string chartImagePath = "chart.png";
 
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Merge cells D8:E10 (zero‑based indices: row 7, column 3)
+            sheet.Cells.Merge(7, 3, 3, 2); // firstRow, firstColumn, totalRows, totalColumns
+
+            // Create a fraction number format style
+            Style fractionStyle = workbook.CreateStyle();
+            fractionStyle.Custom = "# ?/?";
+
+            // Apply the style to the merged range
+            AsposeRange mergedRange = sheet.Cells.CreateRange("D8:E10");
+            StyleFlag flag = new StyleFlag { NumberFormat = true };
+            mergedRange.ApplyStyle(fractionStyle, flag);
+
+            // Export the first chart (if any) to a PNG image
+            if (sheet.Charts.Count > 0)
+            {
+                try
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    Chart chart = sheet.Charts[0];
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // defaults to PNG
+                    chart.ToImage(chartImagePath, imgOptions);
+                    Console.WriteLine($"Chart exported to '{chartImagePath}'.");
                 }
-
-                // Load the workbook
-                var workbook = new Workbook(inputPath);
-                var worksheet = workbook.Worksheets[0];
-
-                // Merge cells D8:E10 (zero‑based: row 7, column 3, 3 rows, 2 columns)
-                worksheet.Cells.Merge(7, 3, 3, 2);
-
-                // Apply a fraction number format to the first cell of the merged range
-                var style = worksheet.Cells[7, 3].GetStyle();
-                style.Custom = "# ?/?"; // Fraction format like 1 1/2
-                worksheet.Cells[7, 3].SetStyle(style);
-
-                // Set image rendering options (default format is PNG)
-                var imgOptions = new ImageOrPrintOptions();
-
-                // Render the worksheet to a PNG image
-                var sheetRender = new SheetRender(worksheet, imgOptions);
-                sheetRender.ToImage(0, outputPath);
-
-                Console.WriteLine($"Worksheet rendered successfully to '{outputPath}'.");
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to export chart: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

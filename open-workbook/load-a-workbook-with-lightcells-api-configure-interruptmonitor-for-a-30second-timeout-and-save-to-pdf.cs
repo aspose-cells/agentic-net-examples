@@ -1,40 +1,40 @@
-// Title: Load an Excel workbook with Aspose.Cells LightCells API, set a 30‑second InterruptMonitor, and export it to PDF in C#
-// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells LightCells API, applies an InterruptMonitor with a 30‑second timeout, and saves the workbook as a PDF. | Show how to add a file‑existence check before loading the workbook and log any errors during LightCells PDF conversion in C#. | Provide a sample that configures LightCells options for PDF output and demonstrates handling a timeout exception from InterruptMonitor.
-// Common Searches: c# aspocells lightcells api convert excel to pdf with interruptmonitor timeout | how to set a 30 second processing timeout for lightcells in aspocells c# | excel to pdf conversion using lightcells api and file existence validation c# | aspocells interruptmonitor example for large workbook PDF export c# | c# code to load workbook, check file, and save as pdf using lightcells api
-// Tags: aspose.cells lightcells pdf export | aspose.cells interruptmonitor timeout | c# excel workbook loading with file check | c# lightcells api pdf conversion | c# handling timeout exception aspocells
+// Title: Load an .xlsx workbook and export it to PDF with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells code to read an .xlsx file and save as PDF | How to use Aspose.Cells SaveFormat.Pdf in a .NET console app | Check file existence before converting Excel to PDF with Aspose.Cells | Example of exception handling during Excel to PDF conversion in C# | Aspose.Cells workbook to PDF conversion tutorial for .NET developers
+// Tags: Aspose.Cells load workbook from .xlsx | Aspose.Cells export workbook to PDF | C# file existence verification for Excel conversion | Aspose.Cells SaveFormat.Pdf parameter usage | Aspose.Cells error handling during PDF export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates C# code that verifies the presence of an input.xlsx file, loads it with Aspose.Cells LightCells API, configures an InterruptMonitor to abort after 30 seconds, and saves the workbook as output.pdf while handling errors.
+// The program verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, and saves the workbook as output.pdf using the SaveFormat.Pdf option, with try‑catch handling to report any runtime errors.
 class Program
 {
     static void Main()
     {
+        // Input Excel file and output PDF file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the workbook using the standard API
+            // Load the workbook from the existing Excel file
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as PDF
+            // Save the workbook to PDF format
             workbook.Save(outputPath, SaveFormat.Pdf);
 
-            Console.WriteLine($"Workbook successfully converted to PDF: {outputPath}");
+            Console.WriteLine($"PDF successfully saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

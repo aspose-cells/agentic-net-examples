@@ -1,49 +1,52 @@
-// Title: Convert an HTML file to PDF with Aspose.Cells for .NET and embed Title and Author metadata
-// AI Prompts: Generate C# code that loads a local HTML file into an Aspose.Cells Workbook, assigns BuiltInDocumentProperties.Title and Author, and saves it as a PDF using PdfSaveOptions. | Show how to verify the existence of an HTML source file before converting it to PDF with Aspose.Cells and adding custom document properties. | Demonstrate setting PDF metadata (title, author) when exporting an HTML‑based workbook to PDF in a .NET console application.
-// Common Searches: Aspose.Cells .NET convert HTML spreadsheet to PDF with custom title and author metadata | C# set PDF document properties when exporting HTML to PDF using Aspose.Cells | How to add built‑in document properties before saving a workbook as PDF in Aspose.Cells | Validate HTML file existence before converting to PDF with Aspose.Cells in a console app
-// Tags: Aspose.Cells HTML to PDF conversion with metadata | set built-in document properties Aspose.Cells | PdfSaveOptions for PDF export Aspose.Cells | C# validate input file before conversion | embed title author in PDF Aspose.Cells
+// Title: How to convert an HTML file to PDF and embed title and author metadata using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an HTML file with Aspose.Cells, assigns BuiltInDocumentProperties for Title and Author, and saves it as a PDF. | Write a C# snippet that reads metadata values (Title, Author, Subject) from a JSON configuration file, applies them to a Workbook loaded from HTML, and exports the result to PDF using Aspose.Cells. | Show how to programmatically create the output directory if it does not exist before saving the PDF generated from HTML with Aspose.Cells.
+// Common Searches: Aspose.Cells C# convert HTML to PDF with custom PDF metadata | add custom PDF metadata using Aspose.Cells HtmlLoadOptions | C# example for adding PDF metadata after converting HTML with Aspose.Cells | how to ensure output folder exists before saving PDF with Aspose.Cells in .NET
+// Tags: Aspose.Cells HTML to PDF with built‑in document properties | C# set PDF title author using Aspose.Cells | HtmlLoadOptions workbook conversion to PDF | save workbook as PDF with custom metadata | ensure output directory exists C# Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Saving; // For PdfSaveOptions
 
-// // This C# console program checks for an input HTML file, loads it into an Aspose.Cells Workbook, sets the built‑in Title and Author properties, and saves the workbook as a PDF using PdfSaveOptions.
-class HtmlToPdfConverter
+// The example verifies the presence of an input HTML file, loads it into an Aspose.Cells Workbook via HtmlLoadOptions, sets the built‑in document properties Title and Author, creates the output folder if needed, and saves the workbook as a PDF while handling exceptions.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.html";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input HTML file exists to avoid FileNotFoundException.
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the HTML file into an Aspose.Cells Workbook.
-            // The HTML is interpreted as a spreadsheet.
-            Workbook workbook = new Workbook(inputPath);
+            // Define input and output file paths
+            string htmlPath = "input.html";
+            string pdfPath = "output.pdf";
 
-            // Set document properties that will be transferred to the PDF.
+            // Verify that the HTML source file exists
+            if (!File.Exists(htmlPath))
+            {
+                Console.WriteLine($"Error: Input file not found – {htmlPath}");
+                return;
+            }
+
+            // Load the HTML file into a workbook using HtmlLoadOptions
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Embed document metadata using built‑in properties
             workbook.BuiltInDocumentProperties.Title = "Sample Document Title";
-            workbook.BuiltInDocumentProperties.Author = "Jane Doe";
+            workbook.BuiltInDocumentProperties.Author = "John Doe";
 
-            // Configure PDF save options (no metadata properties needed here).
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook as a PDF file.
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"PDF successfully created at \"{outputPath}\".");
+            // Save the workbook as a PDF file
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF successfully saved to: {pdfPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully.
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

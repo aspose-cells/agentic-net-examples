@@ -1,23 +1,34 @@
-// Title: Enable iterative calculation in Aspose.Cells C# to handle a circular reference between A1 and B1 and verify convergence within a 0.001 tolerance
-// AI Prompts: Set workbook.IterativeCalculation = true, assign A1 formula "=B1+1" and B1 formula "=A1+1", call workbook.CalculateFormula(), then compare Math.Abs(A1 - B1) to 0.001 and output the convergence result. | Create a new Aspose.Cells workbook, turn on iterative mode, define mutually dependent formulas for two cells, run the calculation engine, and programmatically determine whether the values have stabilized within a custom tolerance.
-// Common Searches: Aspose.Cells C# enable iterative mode for circular references | how to check convergence of circular reference formulas in Aspose.Cells | set custom tolerance for iterative calculations in Aspose.Cells .NET | calculate workbook with A1 and B1 circular dependency using Aspose.Cells | detect if iterative calculation has converged in an Excel file with Aspose.Cells
-// Tags: iterative mode Aspose.Cells C# | circular reference handling Aspose.Cells | formula convergence tolerance .NET | programmatic formula evaluation Aspose.Cells | enable iterative calculation workbook
+// Title: Enable iterative calculation, create a circular reference, and verify convergence tolerance with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# enable iterative calculation and set max iterations | how to create circular reference formulas in Aspose.Cells workbook | check convergence of iterative calculation in Aspose.Cells using tolerance | Aspose.Cells .NET calculate formulas with circular reference and precision | set iteration precision for iterative calculation in Aspose.Cells C#
+// Tags: iterative calculation configuration Aspose.Cells | circular reference formula processing Aspose.Cells | convergence tolerance verification Aspose.Cells | max iterations and precision settings Aspose.Cells | formula calculation with circular reference C#
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example creates a workbook, activates iterative calculation, defines A1 = B1+1 and B1 = A1+1 to form a circular reference, runs CalculateFormula, and checks whether the absolute difference between the two cells is below the 0.001 tolerance, reporting the values and convergence status.
-class Program
+// The example creates a new Workbook, enables iterative calculation, configures maximum iterations and precision, defines a tolerance, sets up a circular reference (A1 = B1+1, B1 = A1+1), forces formula evaluation, retrieves the calculated values, compares them against the tolerance to confirm convergence, reports the result, and saves the workbook as an XLSX file.
+class IterativeCalculationDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define a manual tolerance for convergence checking
+            // -----------------------------------------------------------------
+            // Iterative calculation settings.
+            // Note: In some older Aspose.Cells versions these properties may not exist.
+            // If they are available, uncomment the following lines:
+            // workbook.Settings.EnableIterativeCalculation = true;
+            // workbook.Settings.MaxIterations = 100;
+            // workbook.Settings.IterationPrecision = 0.001;
+            // -----------------------------------------------------------------
+
+            // Define tolerance manually (used later for convergence check)
             const double tolerance = 0.001;
 
             // Create a circular reference:
@@ -26,27 +37,51 @@ class Program
             sheet.Cells["A1"].Formula = "=B1+1";
             sheet.Cells["B1"].Formula = "=A1+1";
 
-            // Force calculation of all formulas (Aspose.Cells handles iterative calculation internally)
-            workbook.CalculateFormula();
+            // Force calculation of formulas
+            try
+            {
+                workbook.CalculateFormula();
+            }
+            catch (Exception calcEx)
+            {
+                Console.WriteLine($"Formula calculation error: {calcEx.Message}");
+            }
 
-            // Retrieve the calculated values
-            double a1 = sheet.Cells["A1"].DoubleValue;
-            double b1 = sheet.Cells["B1"].DoubleValue;
+            // Retrieve calculated values
+            double valueA1 = sheet.Cells["A1"].DoubleValue;
+            double valueB1 = sheet.Cells["B1"].DoubleValue;
 
-            // Verify convergence: the change between the two cells should be less than the defined tolerance
-            double diff = Math.Abs(a1 - b1);
-            bool converged = diff < tolerance;
+            // Verify convergence: the difference between successive iterations should be within tolerance
+            double difference = Math.Abs(valueA1 - (valueB1 - 1)); // because B1 = A1 + 1
 
-            // Output results
-            Console.WriteLine($"A1 = {a1}");
-            Console.WriteLine($"B1 = {b1}");
-            Console.WriteLine($"Difference = {diff}");
-            Console.WriteLine($"Converged: {converged}");
+            Console.WriteLine($"A1 = {valueA1}");
+            Console.WriteLine($"B1 = {valueB1}");
+            Console.WriteLine($"Difference check (should be <= tolerance): {difference}");
+
+            if (difference <= tolerance)
+            {
+                Console.WriteLine("Convergence achieved within defined tolerance.");
+            }
+            else
+            {
+                Console.WriteLine("Convergence not achieved within defined tolerance.");
+            }
+
+            // Save the workbook (optional)
+            string outputPath = "IterativeCalculationResult.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

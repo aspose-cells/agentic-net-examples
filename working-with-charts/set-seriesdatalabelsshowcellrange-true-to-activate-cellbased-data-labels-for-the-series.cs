@@ -1,53 +1,70 @@
-// Title: Enable cell‑based data labels for a column chart series with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that sets Series.DataLabels.ShowCellRange to true and links the labels to a cell range using Series.DataLabels.LinkedSource in an Aspose.Cells chart. | Show how to display the numeric value, apply a custom font color, and use cell‑based labels for a column chart series in Aspose.Cells.
-// Common Searches: Aspose.Cells C# show data labels from cells in a column chart | How to link custom label text to a chart series using Aspose.Cells | Set ShowCellRange property for series data labels in Aspose.Cells .NET | Display cell range values as data labels in an Aspose.Cells chart | Change font color of data labels when using cell‑based labels in Aspose.Cells
-// Tags: Series.DataLabels.ShowCellRange Aspose.Cells | link data label cells Aspose.Cells chart | column chart cell‑based data labels .NET | custom label font styling Aspose.Cells | chart series data label configuration C#
+// Title: Enable cell‑based data labels for a chart series using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, retrieves the first chart series, and sets its DataLabels.ShowCellRange property to true. | Write a C# example that creates a column chart when none exists on a worksheet and activates cell‑based data labels for every series using Aspose.Cells. | Provide a C# snippet that iterates through all series in an existing Aspose.Cells chart and enables ShowCellRange for each series' data labels.
+// Common Searches: Aspose.Cells C# set chart series data labels to use cell range | Enable cell based data labels for Excel chart series with Aspose.Cells .NET | How to turn on ShowCellRange for a series in an Aspose.Cells chart | C# Aspose.Cells add column chart and activate cell range labels programmatically
+// Tags: Aspose.Cells ShowCellRange property | chart series data labels Aspose.Cells | create column chart programmatically Aspose.Cells | load workbook modify chart Aspose.Cells | C# Aspose.Cells update chart series
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsShowCellRangeDemo
+// The sample loads an existing workbook, obtains or creates the first column chart on the first worksheet, ensures a series is present, sets Series.DataLabels.ShowCellRange to true, and saves the workbook with the updated chart labels.
+class Program
 {
-    // The example creates a workbook, adds sample data, inserts a column chart, and configures the first series to show data labels sourced from cells C2:C3 by enabling ShowCellRange, setting LinkedSource, displaying the numeric value, and applying a blue font color, then saves the file as ShowCellRangeDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["C2"].PutValue("100 units");
-            sheet.Cells["C3"].PutValue("200 units");
+            // Get the first chart on the sheet, or create one if none exist
+            Chart chart;
+            if (sheet.Charts.Count > 0)
+            {
+                chart = sheet.Charts[0];
+            }
+            else
+            {
+                // Add a new column chart and retrieve its instance
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                chart = sheet.Charts[chartIndex];
+            }
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Ensure the chart has at least one series; add a dummy series if necessary
+            if (chart.NSeries.Count == 0)
+            {
+                // Add a series that references a range (adjust as needed)
+                chart.NSeries.Add("A1:A5", true);
+            }
 
-            // Define the data range for the series and categories
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
-
-            // Access the first series
+            // Access the first series of the chart
             Series series = chart.NSeries[0];
 
-            // Enable data labels and activate cell‑based data labels
-            series.DataLabels.ShowValue = true;          // optional: show the numeric value
-            series.DataLabels.ShowCellRange = true;      // activate cell range as data labels
-            series.DataLabels.LinkedSource = "C2:C3";    // link to cells containing custom label text
-            series.DataLabels.Font.Color = Color.Blue;  // optional styling
+            // Activate cell‑based data labels for this series
+            series.DataLabels.ShowCellRange = true;
 
-            // Save the workbook
-            workbook.Save("ShowCellRangeDemo.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

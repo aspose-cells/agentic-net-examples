@@ -1,63 +1,71 @@
-// Title: Set a custom data field caption (e.g., "Sales Amount") for an Aspose.Cells PivotTable in C#
-// AI Prompts: Generate C# code that creates a PivotTable with Aspose.Cells and assigns a custom caption such as "Sales Amount" to the data field using the appropriate property. | Modify an existing Aspose.Cells PivotTable in C# to rename its data column header programmatically.
-// Common Searches: Aspose.Cells C# how to rename pivot table data field header | set DataFieldHeaderName property for pivot table using Aspose.Cells | change pivot table data caption programmatically in .NET | example of customizing pivot table column name with Aspose.Cells | C# Aspose.Cells pivot table custom data caption tutorial
-// Tags: Aspose.Cells pivot table data caption | C# rename pivot table data field | custom data header for Excel pivot via Aspose | programmatic pivot table column naming .NET | Aspose.Cells set pivot data column title
+// Title: C# example: set the caption of a PivotTable data field to "Sales Amount" using Aspose.Cells
+// Common Searches: Aspose.Cells C# change pivot table data field caption to custom text | set pivot table value field name programmatically in .NET with Aspose.Cells | rename first data field of an Excel PivotTable to Sales Amount using Aspose API | how to modify pivot table column heading before saving workbook in C# | update pivot table data field caption in an existing workbook with Aspose.Cells
+// Tags: set pivot table data field name Aspose.Cells | modify pivot table column heading C# | rename pivot table value field programmatically | update Excel pivot table caption using Aspose | Aspose.Cells pivot table field caption change
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotDemo
+// The sample loads an existing Excel workbook, accesses the first worksheet's PivotTable, and if a data field exists, assigns the name "Sales Amount" to the first data field to change its column caption, then saves the workbook.
+class Program
 {
-    // The example creates a new workbook, fills it with sample product, region, and sales data, adds a PivotTable on range A1:C5, assigns Product as rows, Region as columns, and Sales as the data field, then sets the DataFieldHeaderName to "Sales Amount" to provide a clearer column heading, refreshes and calculates the pivot, and finally saves the file as PivotTableWithDataCaption.xlsx.
-    class SetDataCaption
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            Cells cells = sheet.Cells;
-            cells["A1"].Value = "Product";
-            cells["B1"].Value = "Region";
-            cells["C1"].Value = "Sales";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            cells["A2"].Value = "Bike";
-            cells["B2"].Value = "North";
-            cells["C2"].Value = 1200;
+            // Load the existing workbook that contains the PivotTable
+            Workbook workbook = new Workbook(inputPath);
 
-            cells["A3"].Value = "Bike";
-            cells["B3"].Value = "South";
-            cells["C3"].Value = 1500;
+            // Access the worksheet where the PivotTable resides (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            cells["A4"].Value = "Car";
-            cells["B4"].Value = "North";
-            cells["C4"].Value = 2000;
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTable found in the first worksheet.");
+                return;
+            }
 
-            cells["A5"].Value = "Car";
-            cells["B5"].Value = "South";
-            cells["C5"].Value = 2500;
+            // Retrieve the first PivotTable in the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Set a clear column heading for the first data field, if any
+            if (pivotTable.DataFields.Count > 0)
+            {
+                // The Name property of a PivotField defines its caption in the PivotTable
+                pivotTable.DataFields[0].Name = "Sales Amount";
+            }
+            else
+            {
+                Console.WriteLine("PivotTable has no data fields to rename.");
+            }
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Product as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region as column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales as data field
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Set the data field header caption to "Sales Amount"
-            pivotTable.DataFieldHeaderName = "Sales Amount";
-
-            // Refresh and calculate the pivot table to apply changes
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTableWithDataCaption.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

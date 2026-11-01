@@ -1,78 +1,84 @@
-// Title: Load HTML with an <img> tag into an Aspose.Cells workbook in C# while ensuring images are ignored and only text is imported
-// AI Prompts: Use Aspose.Cells HtmlLoadOptions to load an HTML string containing an <img> element into a Workbook and confirm that the image is not imported into any cell. | Retrieve the HtmlString of the target cell and verify that it does not contain an <img> tag, then enumerate cells with place‑in‑cell pictures to ensure the count is zero. | After validation, save the workbook as an XLSX file and output the cell value to demonstrate that only the textual content was preserved.
-// Common Searches: c# aspose.cells load html string without embedding images | how to prevent img tags from creating picture cells when importing html in aspose.cells | verify that GetCellsWithPlaceInCellPicture returns zero after html import aspose.cells | check cell HtmlString for image tags using aspose.cells c# | save workbook after html import ensuring only text is kept aspose.cells
-// Tags: htmlloadoptions ignore images aspose.cells | validate cell htmlstring no img tag c# | enumerate place-in-cell pictures aspose.cells | save workbook xlsx after html import c# | import html string to workbook aspose.cells
+// Title: Load HTML into an Aspose.Cells workbook in C# while ignoring <img> tags and preserving paragraph font styles
+// AI Prompts: Read an HTML string with Aspose.Cells, apply HtmlLoadOptions, and ensure that no Picture objects are created in the worksheet. | Inspect the cells generated from <p> elements to confirm that bold and red font attributes are correctly applied. | Save the validated workbook to an XLSX file after confirming image tags were ignored.
+// Common Searches: Aspose.Cells C# load HTML string without importing images | How to keep bold and colored text from HTML when converting to Excel with Aspose.Cells | Verify that picture collection is empty after loading HTML in Aspose.Cells | Using MemoryStream to load HTML into Aspose.Cells workbook C# example | Check cell style properties after HTML import Aspose.Cells C#
+// Tags: html load ignore images Aspose.Cells | preserve paragraph font styling Aspose.Cells | validate picture count after html import C# | memory stream html to workbook Aspose.Cells | cell style verification Aspose.Cells C#
 
+using Aspose.Cells;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Collections;
-using Aspose.Cells;
 
-namespace AsposeCellsHtmlImportDemo
+// The C# program loads an HTML snippet containing bold text, an <img> tag, and red text into an Aspose.Cells Workbook via a MemoryStream, confirms that no pictures were imported, validates that the first cell is bold and the second cell has red font, and saves the result as Result.xlsx.
+class Program
 {
-    // The example loads an HTML string that includes an <img> tag into an Aspose.Cells Workbook using HtmlLoadOptions, confirms that the image is ignored, validates that the cell's HtmlString contains only text, checks that no cells have place‑in‑cell pictures, and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // HTML containing an image tag and formatted text
+        string html = @"
+            <html>
+                <body>
+                    <p style='font-weight:bold;'>Bold Text</p>
+                    <img src='https://example.com/image.png' />
+                    <p style='color:red;'>Red Text</p>
+                </body>
+            </html>";
+
+        Workbook workbook = null;
+
+        try
         {
-            try
+            // Load the HTML content into a workbook using a memory stream
+            byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+            using (MemoryStream ms = new MemoryStream(htmlBytes))
             {
-                // Sample HTML containing text and an <img> tag.
-                string htmlContent = "<p>Hello World<img src='image.png' alt='test'></p>";
-
-                // Convert the HTML string to a memory stream.
-                byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
-                using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
-                {
-                    // Load options for HTML. No special options needed; images are ignored.
-                    HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-
-                    // Load the HTML content into a workbook.
-                    Workbook workbook = new Workbook(htmlStream, loadOptions);
-
-                    // Access the first worksheet and the first cell where the text is placed.
-                    Worksheet worksheet = workbook.Worksheets[0];
-                    Cell cell = worksheet.Cells["A1"];
-
-                    // Verify that the cell contains only the textual part ("Hello World").
-                    Console.WriteLine("Cell A1 value: " + cell.StringValue);
-                    // Expected output: "Hello World"
-
-                    // Ensure that the HTML string stored in the cell does not contain the <img> tag.
-                    string cellHtml = cell.HtmlString;
-                    bool imgTagPresent = cellHtml != null &&
-                                         cellHtml.IndexOf("<img", StringComparison.OrdinalIgnoreCase) >= 0;
-                    Console.WriteLine("Image tag present in cell HTML: " + imgTagPresent);
-                    // Expected output: False
-
-                    // Verify that no cells contain embedded pictures (image tags are ignored).
-                    int pictureCellCount = 0;
-                    IEnumerator enumerator = worksheet.Cells.GetCellsWithPlaceInCellPicture();
-                    while (enumerator.MoveNext())
-                    {
-                        pictureCellCount++;
-                    }
-                    Console.WriteLine("Number of cells with embedded pictures: " + pictureCellCount);
-                    // Expected output: 0
-
-                    // Save the workbook (ensure the directory exists).
-                    string outputPath = "HtmlImportResult.xlsx";
-                    try
-                    {
-                        workbook.Save(outputPath, SaveFormat.Xlsx);
-                        Console.WriteLine($"Workbook saved to '{outputPath}'.");
-                    }
-                    catch (Exception saveEx)
-                    {
-                        Console.WriteLine("Error saving workbook: " + saveEx.Message);
-                    }
-                }
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                workbook = new Workbook(ms, loadOptions);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading HTML into workbook: {ex.Message}");
+            return;
+        }
+
+        // Reference to the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Verify that image tags were ignored (no pictures should be present)
+        if (sheet.Pictures.Count == 0)
+        {
+            Console.WriteLine("Image tags were ignored as expected.");
+        }
+        else
+        {
+            Console.WriteLine($"Unexpected pictures count: {sheet.Pictures.Count}");
+        }
+
+        // Verify that cell formatting from HTML is applied correctly
+        // Aspose.Cells maps each <p> element to a separate cell
+        Cell cellBold = sheet.Cells[0, 0]; // First <p> (Bold Text)
+        Cell cellRed = sheet.Cells[1, 0];  // Second <p> (Red Text)
+
+        // Check if the first cell is bold
+        bool isBold = cellBold.GetStyle().Font.IsBold;
+
+        // Check if the second cell has red font color
+        bool isRed = cellRed.GetStyle().Font.Color.ToArgb() == Color.Red.ToArgb();
+
+        Console.WriteLine($"Cell A1 bold: {isBold}");
+        Console.WriteLine($"Cell A2 red font: {isRed}");
+
+        // Save the workbook
+        try
+        {
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

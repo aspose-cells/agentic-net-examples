@@ -1,24 +1,21 @@
-// Title: Convert multiple CSV files to JSON with custom date formatting using Aspose.Cells in C#
-// AI Prompts: Write a C# console application that scans a folder for all *.csv files, loads each file with Aspose.Cells TxtLoadOptions (enabling date and numeric conversion), applies the custom date format "dd-MM-yyyy" to every DateTime cell, and saves the workbook as a .json file in a target directory using JsonSaveOptions. | Update the program to use a semicolon as the CSV delimiter and export dates in ISO 8601 format while preserving empty rows and cells in the generated JSON.
-// Common Searches: how to convert many csv files to json with Aspose.Cells in C# | c# load csv with TxtLoadOptions and preserve date values | export Aspose.Cells workbook to json keeping empty rows | apply custom date format when saving json from csv using Aspose.Cells | set csv delimiter to semicolon and output iso 8601 dates in json
-// Tags: batch csv to json conversion Aspose.Cells | date formatting dd-MM-yyyy Aspose.Cells | TxtLoadOptions enable date conversion C# | JsonSaveOptions include empty cells | apply style to DateTime cells Aspose.Cells
+// Title: Convert multiple CSV files to JSON with custom yyyy-MM-dd date formatting using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells batch convert CSV files to JSON with specific date format | How to apply custom date format to cells before saving workbook as JSON in Aspose.Cells | Convert all CSV files in a directory to JSON using Aspose.Cells and preserve date format | Aspose.Cells load CSV, format DateTime cells to yyyy-MM-dd, export to JSON | C# script to process multiple CSVs and output JSON with formatted dates using Aspose.Cells
+// Tags: batch CSV to JSON conversion Aspose.Cells C# | custom date format cells Aspose.Cells | load CSV workbook LoadOptions Aspose.Cells | save workbook as JSON Aspose.Cells | iterate worksheets cells format dates C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
 namespace CsvToJsonConverter
 {
-    // A C# console program that iterates over every CSV file in a source directory, loads each file with Aspose.Cells TxtLoadOptions (converting dates and numbers), formats all DateTime cells to "dd-MM-yyyy", and saves the data as JSON files in a target folder using JsonSaveOptions that retain headers, empty cells, and native data types.
+    // The C# program scans a source folder for CSV files, loads each file into an Aspose.Cells Workbook using LoadOptions, iterates through all worksheets and cells to apply a 'yyyy-MM-dd' custom format to any DateTime values, and then saves each workbook as a JSON file in a target directory, creating the target folder if needed.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Folder containing source CSV files
-            string sourceFolder = @"C:\Data\CsvFiles";
-            // Folder where JSON files will be saved
-            string targetFolder = @"C:\Data\JsonOutput";
+            // Define source folder containing CSV files and target folder for JSON output
+            string sourceFolder = @"C:\SourceCsv";
+            string targetFolder = @"C:\TargetJson";
 
             // Verify source folder exists
             if (!Directory.Exists(sourceFolder))
@@ -27,76 +24,62 @@ namespace CsvToJsonConverter
                 return;
             }
 
-            // Ensure the target folder exists
+            // Ensure the target directory exists
             if (!Directory.Exists(targetFolder))
                 Directory.CreateDirectory(targetFolder);
 
-            // Get all CSV files in the source folder
-            string[] csvFiles = Directory.GetFiles(sourceFolder, "*.csv");
-
-            foreach (string csvPath in csvFiles)
+            string[] csvFiles;
+            try
             {
-                // Guard against missing file (should not happen with GetFiles)
-                if (!File.Exists(csvPath))
-                {
-                    Console.WriteLine($"File not found: {csvPath}");
-                    continue;
-                }
+                // Get all CSV files in the source folder
+                csvFiles = Directory.GetFiles(sourceFolder, "*.csv");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to enumerate CSV files: {ex.Message}");
+                return;
+            }
 
+            foreach (string csvFilePath in csvFiles)
+            {
                 try
                 {
-                    // Load CSV into a workbook with date and numeric conversion enabled
-                    TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
-                    {
-                        Separator = ',',               // CSV delimiter
-                        ConvertDateTimeData = true,    // Convert date strings to DateTime
-                        ConvertNumericData = true      // Convert numeric strings to numbers
-                    };
+                    // Load CSV file into a workbook
+                    var loadOptions = new LoadOptions(LoadFormat.Csv);
+                    var workbook = new Workbook(csvFilePath, loadOptions);
 
-                    Workbook workbook = new Workbook(csvPath, loadOptions);
-                    Worksheet sheet = workbook.Worksheets[0];
-                    Cells cells = sheet.Cells;
-
-                    // Apply desired date format to all DateTime cells
-                    string desiredDateFormat = "dd-MM-yyyy";
-                    for (int row = 0; row <= cells.MaxDataRow; row++)
+                    // Iterate through all worksheets and cells to format date values
+                    foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        for (int col = 0; col <= cells.MaxDataColumn; col++)
+                        Cells cells = sheet.Cells;
+                        foreach (Cell cell in cells)
                         {
-                            Cell cell = cells[row, col];
+                            // Check if the cell contains a DateTime value
                             if (cell.Type == CellValueType.IsDateTime)
                             {
+                                // Apply a custom date format (e.g., yyyy-MM-dd)
                                 Style style = cell.GetStyle();
-                                // Use Custom format for date representation
-                                style.Custom = desiredDateFormat;
+                                style.Custom = "yyyy-MM-dd";
                                 cell.SetStyle(style);
                             }
                         }
                     }
 
-                    // Prepare JSON save options
-                    JsonSaveOptions jsonOptions = new JsonSaveOptions
-                    {
-                        HasHeaderRow = true,          // First row contains column names
-                        ExportEmptyCells = true,      // Export empty cells as null
-                        ExportAsString = false,       // Export values in native types
-                        SkipEmptyRows = false         // Keep empty rows in output
-                    };
+                    // Prepare JSON output path
+                    string jsonFileName = Path.GetFileNameWithoutExtension(csvFilePath) + ".json";
+                    string jsonFilePath = Path.Combine(targetFolder, jsonFileName);
 
-                    // Build JSON file path (same name as CSV but .json extension)
-                    string jsonFileName = Path.GetFileNameWithoutExtension(csvPath) + ".json";
-                    string jsonPath = Path.Combine(targetFolder, jsonFileName);
-
-                    // Save workbook as JSON using the configured options
-                    workbook.Save(jsonPath, jsonOptions);
+                    // Save workbook as JSON
+                    var jsonOptions = new JsonSaveOptions();
+                    workbook.Save(jsonFilePath, jsonOptions);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{csvPath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{csvFilePath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Conversion completed successfully.");
+            Console.WriteLine("Conversion completed.");
         }
     }
 }

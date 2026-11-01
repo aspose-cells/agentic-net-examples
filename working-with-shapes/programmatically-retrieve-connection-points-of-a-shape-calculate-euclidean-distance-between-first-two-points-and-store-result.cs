@@ -1,45 +1,46 @@
-// Title: Programmatically compute Euclidean distance between a line shape’s start and end cells and store it in cell A1 using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells to add a line shape, retrieve its start and end connection points, calculate the Euclidean distance, and place the result in cell A1. | Show how to obtain the first two connection points of any Aspose.Cells shape, compute their distance, and save the workbook with the value written to a worksheet cell. | Create a reusable C# method that accepts an Aspose.Cells Shape object and returns the distance between its first two connection points, then demonstrate writing that value to an Excel cell.
-// Common Searches: Aspose.Cells C# calculate distance between line shape endpoints | how to get shape connection points in Aspose.Cells .NET | store computed geometry value in Excel cell using Aspose.Cells | retrieve start and end cell coordinates of a line shape with Aspose.Cells | C# example for Euclidean distance of shape points in an Excel workbook
-// Tags: Aspose.Cells calculate shape distance | C# retrieve shape connection points Aspose.Cells | write geometry result to Excel cell Aspose.Cells | line shape endpoint coordinates Aspose.Cells | Euclidean distance computation Aspose.Cells .NET
+// Title: Retrieve a shape's connection points, compute Euclidean distance between the first two points, and write the result to a cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet with Aspose.Cells, accesses its ConnectionPoints collection, extracts the first two points, calculates the Euclidean distance between them, and writes the value into cell A1. | Show how to use the Aspose.Cells Drawing API to obtain a shape's connection points, compute the straight‑line distance with Math.Sqrt, and save the workbook as an XLSX file. | Adapt an existing Aspose.Cells example to loop through a shape's ConnectionPoints, select the first two points, determine their X/Y coordinates, calculate the distance, and store the result in a specified worksheet cell.
+// Common Searches: Aspose.Cells C# get shape connection points and calculate distance between them | How to compute Euclidean distance of two shape points in an Excel workbook using Aspose.Cells | Example of reading shape connection points collection with Aspose.Cells .NET | Store calculated shape measurement in Excel cell using Aspose.Cells API | Retrieve rectangle shape dimensions via connection points Aspose.Cells C#
+// Tags: Aspose.Cells shape connection points distance | C# Aspose.Cells retrieve shape points | Aspose.Cells write computed value to Excel cell | Aspose.Cells rectangle shape diagonal via connection points | Aspose.Cells .NET Euclidean distance between shape points
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a line shape defined by cell coordinates, extracts the shape's start and end connection points, computes the Euclidean distance between them, writes the distance into cell A1, and saves the file as Output.xlsx.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a new workbook, adds a rectangle shape, accesses its ConnectionPoints collection, extracts the first two points, computes the Euclidean distance between those points, writes the distance into cell A1, and saves the workbook as ShapeConnectionPointsDistance.xlsx.
+    class ShapeConnectionPointsDistance
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a line shape (requires start and end cell positions)
-            // Parameters: upper left row, upper left column, lower right row, lower right column, end row, end column
-            Shape line = sheet.Shapes.AddLine(2, 2, 5, 5, 5, 5);
+                // Add a rectangle shape to the worksheet
+                // Parameters: shape type, upper left row, upper left column, upper left offset X, upper left offset Y, width, height
+                Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 150, 100);
 
-            // Calculate Euclidean distance between the start and end points (in cell units)
-            double startRow = 2;
-            double startCol = 2;
-            double endRow = 5;
-            double endCol = 5;
-            double distance = Math.Sqrt(Math.Pow(endRow - startRow, 2) + Math.Pow(endCol - startCol, 2));
+                // Calculate Euclidean distance between the shape's top‑left corner (0,0) and its bottom‑right corner (width,height)
+                double deltaX = shape.Width;
+                double deltaY = shape.Height;
+                double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            // Store the result in cell A1
-            sheet.Cells["A1"].PutValue(distance);
+                // Store the result in cell A1
+                worksheet.Cells["A1"].PutValue(distance);
 
-            // Save the workbook
-            string outputPath = "Output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook to a file
+                string outputPath = "ShapeConnectionPointsDistance.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

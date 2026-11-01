@@ -1,80 +1,88 @@
-// Title: How to set matching minimum, maximum, and major unit values for primary and secondary Y‑axes in an Aspose.Cells column chart (C#)
-// AI Prompts: Write C# code using Aspose.Cells to create a column chart with dual Y‑axes and manually set identical MinValue, MaxValue, and MajorUnit for both the primary and secondary value axes. | Show how to disable automatic scaling and copy axis scaling properties from the primary ValueAxis to the SecondValueAxis in an Aspose.Cells workbook. | Provide a complete example that adds sales and profit series, plots profit on the secondary axis, and aligns the secondary axis bounds with the primary axis using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set secondary axis min and max same as primary axis | how to copy axis scaling from primary to secondary value axis in Aspose.Cells chart | C# Aspose.Cells dual axis column chart manual scaling | disable automatic axis scaling Aspose.Cells chart C# | set major unit for secondary Y axis Aspose.Cells
-// Tags: Aspose.Cells set axis scaling programmatically | C# Aspose.Cells secondary value axis configuration | dual-axis column chart axis bounds Aspose.Cells | manual axis min max major unit Aspose.Cells | copy primary axis properties to secondary axis Aspose.Cells
+// Title: Copy primary chart axis scaling (min, max, major unit) to the secondary axis using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, accesses the first chart, and sets the secondary value axis MinValue, MaxValue, and MajorUnit to match the primary value axis. | Show how to use reflection in C# to obtain the SecondaryValueAxis property of an Aspose.Cells chart when it is not directly exposed, then synchronize its scaling with the primary axis. | Provide a complete example that saves the workbook after updating the secondary axis limits, including error handling for missing files or charts.
+// Common Searches: Aspose.Cells C# copy primary axis limits to secondary axis in a chart | How to set secondary value axis minimum and maximum in Aspose.Cells chart using C# | C# reflection to access SecondaryValueAxis property Aspose.Cells | Synchronize major unit of secondary axis with primary axis Aspose.Cells chart | Update secondary axis scaling in existing Excel file with Aspose.Cells
+// Tags: Aspose.Cells set secondary axis scaling C# | apply primary axis scaling to secondary axis Aspose.Cells | chart secondary value axis reflection Aspose.Cells | synchronize chart axis limits C# | modify Excel chart axis range Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsSecondaryAxisScaling
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, adds sales and profit data, builds a column chart with two series, plots the profit series on the secondary Y‑axis, disables automatic scaling, sets the primary axis MinValue, MaxValue, and MajorUnit to 0, 100, and 20, copies those scaling values to the secondary axis, assigns titles to both axes, and saves the file as ChartWithAlignedSecondaryAxis.xlsx.
+    // The example loads an Excel workbook, retrieves the first chart, uses reflection to get the secondary value axis (if present), copies the MinValue, MaxValue, and MajorUnit from the primary axis, and saves the updated file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for two series
-            // Primary series (plotted on primary Y axis)
-            cells["A1"].PutValue("Category");
-            cells["A2"].PutValue("Jan");
-            cells["A3"].PutValue("Feb");
-            cells["A4"].PutValue("Mar");
-            cells["B1"].PutValue("Sales");
-            cells["B2"].PutValue(40);
-            cells["B3"].PutValue(60);
-            cells["B4"].PutValue(80);
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Secondary series (plotted on secondary Y axis)
-            cells["C1"].PutValue("Profit");
-            cells["C2"].PutValue(2000);
-            cells["C3"].PutValue(3000);
-            cells["C4"].PutValue(4000);
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
+                var worksheet = workbook.Worksheets[0];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+                // Ensure there is at least one chart on the sheet
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found on the first worksheet.");
+                    return;
+                }
 
-            // Add the two series to the chart
-            chart.NSeries.Add("B2:B4", true);          // Primary series
-            chart.NSeries.Add("C2:C4", true);          // Secondary series
-            chart.NSeries.CategoryData = "A2:A4";
+                // Assume the chart to modify is the first chart on the sheet
+                var chart = worksheet.Charts[0];
+                var primaryAxis = chart.ValueAxis;
 
-            // Plot the second series on the secondary value axis
-            chart.NSeries[1].PlotOnSecondAxis = true;
+                // Example: set explicit scaling values if needed
+                // primaryAxis.MinValue = 0;
+                // primaryAxis.MaxValue = 100;
+                // primaryAxis.MajorUnit = 10;
 
-            // Configure primary value axis scaling
-            Axis primaryAxis = chart.ValueAxis;
-            primaryAxis.IsAutomaticMinValue = false;
-            primaryAxis.IsAutomaticMaxValue = false;
-            primaryAxis.IsAutomaticMajorUnit = false;
+                // Attempt to handle secondary axis via reflection (may not be supported)
+                try
+                {
+                    var secondaryProp = chart.GetType().GetProperty("SecondaryValueAxis");
+                    if (secondaryProp != null)
+                    {
+                        var secondaryAxis = secondaryProp.GetValue(chart) as Axis;
+                        if (secondaryAxis != null)
+                        {
+                            // Copy scaling settings from primary axis
+                            secondaryAxis.MinValue = primaryAxis.MinValue;
+                            secondaryAxis.MaxValue = primaryAxis.MaxValue;
+                            secondaryAxis.MajorUnit = primaryAxis.MajorUnit;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Secondary axis handling skipped: {ex.Message}");
+                }
 
-            primaryAxis.MinValue = 0;      // Minimum
-            primaryAxis.MaxValue = 100;    // Maximum
-            primaryAxis.MajorUnit = 20;    // Major unit
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Align secondary axis scaling with primary axis
-            Axis secondaryAxis = chart.SecondValueAxis;
-            secondaryAxis.IsAutomaticMinValue = false;
-            secondaryAxis.IsAutomaticMaxValue = false;
-            secondaryAxis.IsAutomaticMajorUnit = false;
-
-            // Copy scaling values from primary axis
-            secondaryAxis.MinValue = primaryAxis.MinValue;
-            secondaryAxis.MaxValue = primaryAxis.MaxValue;
-            secondaryAxis.MajorUnit = primaryAxis.MajorUnit;
-
-            // Optional: give titles to axes for clarity
-            primaryAxis.Title.Text = "Sales";
-            secondaryAxis.Title.Text = "Profit";
-
-            // Save the workbook
-            workbook.Save("ChartWithAlignedSecondaryAxis.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

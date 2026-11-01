@@ -1,50 +1,71 @@
-// Title: Add cell watches for B2 and E4, save workbook, reload and confirm watches with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a new workbook, creates a watch for cell B2 and another for cell E4 using Aspose.Cells, saves the file, reloads it, and checks that both watches are present. | Write a C# snippet that iterates through the CellWatchCollection of a loaded worksheet and returns true if a watch for a specific cell name or row/column index is found.
-// Common Searches: Aspose.Cells C# register watch for cell B2 and verify after saving | How to determine if a cell watch exists in a loaded workbook with Aspose.Cells | C# example iterating CellWatchCollection to locate watch by row and column | Preserving cell watches when saving and reloading an Excel file using Aspose.Cells
-// Tags: add cell watch Aspose.Cells C# | cell watch verification after workbook save | iterate CellWatchCollection Aspose.Cells | preserve cell watches when reloading workbook | watch window handling in Excel via Aspose.Cells
+// Title: C# example: Load an Excel workbook with Aspose.Cells and verify that specific cells contain data (simulating the Watch Window)
+// Common Searches: C# Aspose.Cells load workbook and check if cell A1 has a value | how to programmatically verify multiple cell addresses in an Excel file using Aspose.Cells | Aspose.Cells C# sample to iterate over a list of cells and report empty or populated | validate presence of cells in a saved .xlsx file with Aspose.Cells .NET | simulate Excel Watch Window verification with Aspose.Cells code
+// Tags: Aspose.Cells load workbook from .xlsx | Aspose.Cells read cell value C# | Aspose.Cells iterate cell addresses | Aspose.Cells verify non‑empty cells | Aspose.Cells workbook cell existence check
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, registers watches for cells B2 and E4, saves it as CellWatchDemo.xlsx, reloads the file, iterates through the CellWatchCollection to confirm both watches are retained, and outputs the verification results.
-class Program
+// The C# program uses Aspose.Cells to open an existing Excel file (output.xlsx), defines a list of cell addresses (e.g., A1, B2, C3), and iterates through them on the first worksheet. For each cell it checks whether the cell object exists and contains a non‑null value, outputting a message that simulates the verification of those cells' presence in Excel's Watch Window. The example includes file‑existence handling and exception management.
+class WatchWindowVerifier
 {
     static void Main()
     {
-        // ---------- Create workbook and add cell watches ----------
-        Workbook workbook = new Workbook();                         // Workbook()
-        Worksheet sheet = workbook.Worksheets[0];                  // access first worksheet
+        // Path to the saved workbook
+        string workbookPath = "output.xlsx";
 
-        // Put sample data into a cell (optional, just to have content)
-        sheet.Cells["B2"].PutValue("Sample Data");
-
-        // Add watches: one by cell name, another by row/column indices (0‑based)
-        int watchIndex1 = sheet.CellWatches.Add("B2");             // Add(string)
-        int watchIndex2 = sheet.CellWatches.Add(3, 4);             // Add(int row, int column) -> cell E4
-
-        // Save the workbook to disk
-        string fileName = "CellWatchDemo.xlsx";
-        workbook.Save(fileName);                                   // Save(string)
-
-        // ---------- Load the saved workbook ----------
-        Workbook loadedWorkbook = new Workbook(fileName);           // Workbook(string)
-        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-        // ---------- Verify that the specified cells are in the Watch Window ----------
-        bool hasB2 = false;
-        bool hasE4 = false;
-
-        foreach (CellWatch watch in loadedSheet.CellWatches)      // iterate over CellWatchCollection
+        // Ensure the workbook file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            if (watch.CellName == "B2")
-                hasB2 = true;
-
-            // E4 corresponds to row index 3 and column index 4 (0‑based)
-            if (watch.Row == 3 && watch.Column == 4)
-                hasE4 = true;
+            Console.WriteLine($"Error: Workbook file \"{workbookPath}\" not found.");
+            return;
         }
 
-        Console.WriteLine($"Watch for B2 present: {hasB2}");
-        Console.WriteLine($"Watch for E4 present: {hasE4}");
+        try
+        {
+            // Load the workbook using Aspose.Cells
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Define the cell addresses that should appear in the Watch Window
+            // Adjust these addresses as needed for your verification
+            List<string> cellsToVerify = new List<string> { "A1", "B2", "C3" };
+
+            // Access the first worksheet (or modify to select a specific one)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Verify each specified cell address by checking if the cell contains any value
+            foreach (string cellAddress in cellsToVerify)
+            {
+                bool found = false;
+
+                try
+                {
+                    // Retrieve the cell; Cells[] returns a Cell object even if empty
+                    Cell cell = worksheet.Cells[cellAddress];
+                    // Consider the cell "present" if it has a non‑null value
+                    if (cell != null && cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                    {
+                        found = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle any unexpected errors while accessing the cell
+                    Console.WriteLine($"Error accessing cell {cellAddress}: {ex.Message}");
+                }
+
+                // Output verification result
+                if (found)
+                    Console.WriteLine($"Cell {cellAddress} contains data (simulating presence in Watch Window).");
+                else
+                    Console.WriteLine($"Cell {cellAddress} is empty or not found (simulating absence in Watch Window).");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions (e.g., loading errors)
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,71 +1,67 @@
-// Title: Create a separate worksheet for each pivot table report filter using ShowReportFilterPage in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, locates the first pivot table, and calls ShowReportFilterPage for every page field to produce individual worksheets. | Write a method that enables report‑filter page generation on a pivot table, iterates through its PageFields collection, and saves the workbook so each filter value appears on its own sheet. | Provide a step‑by‑step example that checks for a pivot table, uses PivotTable.ShowReportFilterPage, and outputs a new workbook where each report filter selection is placed on a separate worksheet.
-// Common Searches: how to use ShowReportFilterPage in Aspose.Cells to split pivot table filters into separate sheets | c# aspnet generate worksheet per pivot table page field aspose.cells | asp.net create multiple worksheets from pivot table report filter using Aspose.Cells API | example code for ShowReportFilterPages property Aspose.Cells .NET
-// Tags: Aspose.Cells pivot report filter sheet generation | C# create worksheet per pivot filter selection | Aspose.Cells workbook save with multiple pivot filter sheets | automate pivot table page fields to separate worksheets .NET | export pivot filter pages using Aspose.Cells API
+// Title: Create separate worksheets for each pivot table report filter value using ShowReportFilterPages in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# generate a worksheet for each pivot table report filter item | How to invoke ShowReportFilterPages dynamically with Aspose.Cells .NET | Create separate Excel sheets per pivot filter selection using Aspose.Cells API | C# example handling missing ShowReportFilterPages method in older Aspose.Cells versions | Pivot table report filter pages generation with Aspose.Cells for .NET
+// Tags: ShowReportFilterPages Aspose.Cells C# | pivot table report filter pages generation | dynamic method invocation Aspose.Cells | separate worksheet per filter value .NET | Aspose.Cells pivot table worksheet duplication
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, checks for a pivot table, and uses dynamic invocation to call ShowReportFilterPages for a specified report filter field, creating a new worksheet for each filter value. It gracefully handles cases where the method is unavailable and saves the updated file.
+class Program
 {
-    // The sample loads 'source.xlsx', verifies a pivot table exists, iterates over its PageFields, calls ShowReportFilterPage for each field to generate distinct worksheets for every filter selection, and saves the result as 'output.xlsx'.
-    public class ShowReportFilterPagesDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook that contains a pivot table
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
+
+            // Retrieve the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Name of the report filter field for which separate pages should be created
+            string reportFilterField = "YourFilterFieldName";
+
+            // Attempt to generate separate worksheets for each selection of the specified report filter.
+            // The ShowReportFilterPages method may not be available in all versions; use dynamic invocation to avoid compile‑time errors.
             try
             {
-                string inputPath = "source.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook that contains a pivot table
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
-
-                // Get the first pivot table on the worksheet
-                PivotTable pivotTable = worksheet.PivotTables[0];
-
-                // Generate a separate worksheet for each report filter (page field)
-                foreach (PivotField pageField in pivotTable.PageFields)
-                {
-                    pivotTable.ShowReportFilterPage(pageField);
-                }
-
-                // Save the modified workbook; each filter selection now has its own sheet
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                ((dynamic)pivotTable).ShowReportFilterPages(reportFilterField);
             }
-            catch (Exception ex)
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("ShowReportFilterPages method is not available in the current Aspose.Cells version.");
             }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the workbook with the newly created worksheets (if any)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
         {
-            ShowReportFilterPagesDemo.Run();
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

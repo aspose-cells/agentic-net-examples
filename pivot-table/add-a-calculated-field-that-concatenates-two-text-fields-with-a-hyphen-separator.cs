@@ -1,72 +1,73 @@
-// Title: Create a hyphen‑separated FullName calculated field in an Aspose.Cells pivot table using C#
-// AI Prompts: Generate a C# program that builds a workbook, adds FirstName and LastName columns, creates a pivot table, and defines a calculated field named FullName using the formula =FirstName & "-" & LastName. | Show how to refresh the pivot cache and recalculate the pivot table after inserting a calculated field with Aspose.Cells for .NET. | Explain how to save the workbook as a .xlsx file after adding the concatenated FullName field to the pivot table.
-// Common Searches: Aspose.Cells C# add calculated field that joins two text columns with a hyphen in a pivot table | How to use AddCalculatedField to concatenate FirstName and LastName in an Aspose.Cells pivot table | Refresh pivot data after adding a calculated field in Aspose.Cells .NET | Save workbook with custom calculated field in Aspose.Cells pivot table example
-// Tags: AddCalculatedField concatenation Aspose.Cells | pivot table string concatenation formula C# | refresh pivot cache Aspose.Cells | save workbook with calculated field .xlsx | Aspose.Cells calculated field hyphen separator
+// Title: How to add a calculated column that concatenates two text columns with a hyphen in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# add calculated column that joins two columns with a hyphen | Programmatically insert =A2&"-"&B2 formula into a worksheet with Aspose.Cells | Find next empty column and set header in an Aspose.Cells workbook | Recalculate formulas after adding a concatenated field using Aspose.Cells .NET | Create or load an Excel file and add a hyphen‑separated concatenated column with Aspose.Cells
+// Tags: calculated column insertion Aspose.Cells | text concatenation formula Excel C# | next empty column detection Aspose.Cells | workbook formula recalculation Aspose.Cells | save workbook output.xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook or creates a new one, identifies the next empty column, adds a header named "Concatenated", and writes a formula that joins the values from columns A and B with a hyphen (e.g., =A2&"-"&B2) for each data row. After inserting the formulas it recalculates the workbook and saves the result to output.xlsx.
+class Program
 {
-    // The example creates a new workbook, populates FirstName and LastName columns, adds a pivot table at D3, places the name fields in the row area, defines a calculated field called FullName that concatenates the two columns with a hyphen using the '&' operator, refreshes and recalculates the pivot cache, and finally saves the file as PivotTable_With_ConcatenatedField.xlsx.
-    public class AddCalculatedFieldConcatenateDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one with sample data
+            if (File.Exists(inputPath))
+            {
+                // LoadOptions can be used to specify a password if needed; leaving it empty for unprotected files
+                var loadOptions = new LoadOptions();
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet sampleSheet = workbook.Worksheets[0];
+                // Sample headers
+                sampleSheet.Cells["A1"].PutValue("First");
+                sampleSheet.Cells["B1"].PutValue("Second");
+                // Sample data rows
+                sampleSheet.Cells["A2"].PutValue("Hello");
+                sampleSheet.Cells["B2"].PutValue("World");
+                sampleSheet.Cells["A3"].PutValue("Foo");
+                sampleSheet.Cells["B3"].PutValue("Bar");
+            }
+
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data (FirstName and LastName)
-            sheet.Cells["A1"].PutValue("FirstName");
-            sheet.Cells["B1"].PutValue("LastName");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue("Doe");
-            sheet.Cells["A3"].PutValue("Jane");
-            sheet.Cells["B3"].PutValue("Smith");
-            sheet.Cells["A4"].PutValue("Alice");
-            sheet.Cells["B4"].PutValue("Brown");
+            // Determine the next empty column index
+            int newColIndex = sheet.Cells.MaxColumn + 1;
 
-            // Add a pivot table based on the data range, placed at D3
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Set header for the new calculated field
+            sheet.Cells[0, newColIndex].PutValue("Concatenated");
 
-            // Add FirstName and LastName fields to the Row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "FirstName");
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "LastName");
+            // Get the last row that contains data (excluding header)
+            int lastDataRow = sheet.Cells.MaxDataRow;
 
-            // Add a calculated field that concatenates FirstName and LastName with a hyphen
-            // In pivot calculated fields, '&' is used for string concatenation
-            string formula = "=FirstName & \"-\" & LastName";
-            pivotTable.AddCalculatedField("FullName", formula, true); // dragToDataArea = true
-
-            // Refresh the pivot cache and calculate the pivot data
-            pivotTable.RefreshData();      // Correct API to refresh source data
-            pivotTable.CalculateData();    // Recalculate the pivot table
-
-            // Save the workbook
-            try
+            // Apply concatenation formula to each data row
+            for (int row = 1; row <= lastDataRow; row++)
             {
-                workbook.Save("PivotTable_With_ConcatenatedField.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                // Formula: =A{row+1}&"-"&B{row+1}
+                string formula = $"=A{row + 1}&\"-\"&B{row + 1}";
+                sheet.Cells[row, newColIndex].Formula = formula;
             }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+
+            // Recalculate formulas so that values are stored
+            workbook.CalculateFormula();
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

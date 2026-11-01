@@ -1,61 +1,63 @@
-// Title: How to replace the deprecated REPT function with REPEAT in every formula of an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, iterates all worksheets and cells, and substitutes the REPT function name with REPEAT in any formula. | Create a .NET method that scans a workbook's used range and updates formulas containing REPT to use the REPEAT function, preserving case. | Write a C# routine that uses a regular expression to replace the REPT keyword with REPEAT across all formula cells and then saves the workbook.
-// Common Searches: Aspose.Cells C# replace REPT with REPEAT in all worksheet formulas | bulk update deprecated Excel functions using Aspose.Cells .NET | programmatically change function names in Excel formulas with Aspose.Cells | C# iterate through workbook cells to modify formula functions | replace Excel REPT function in existing file using Aspose.Cells library
-// Tags: update REPT to REPEAT Aspose.Cells C# | bulk formula modification Excel .NET | regex formula substitution Aspose.Cells | iterate workbook cells Aspose.Cells | deprecated Excel function replacement programmatically
+// Title: C# code to replace the deprecated REPT function with REPEAT in Excel formulas using Aspose.Cells
+// Common Searches: C# Aspose.Cells replace REPT with REPEAT in workbook formulas | How to update Excel formulas from REPT to REPEAT programmatically with Aspose.Cells | Iterate through cells and change deprecated REPT function to REPEAT using Aspose.Cells .NET | Replace deprecated Excel function REPT in all worksheets with Aspose.Cells API | Aspose.Cells formula editing replace old function with new function in .NET
+// Tags: Aspose.Cells formula manipulation C# | Excel formula function migration .NET | update deprecated Excel functions using Aspose.Cells | programmatic Excel cell formula editing | Aspose.Cells workbook formula replacement
 
 using Aspose.Cells;
 using System;
-using System.Text.RegularExpressions;
+using System.IO;
 
-// The program loads an Excel workbook with Aspose.Cells, walks through every worksheet and cell in the used range, detects formulas that contain the deprecated REPT function, replaces the function name with REPEAT using a case‑insensitive regular expression, and saves the updated file.
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and cell, detects formulas that contain the obsolete REPT function, replaces each occurrence with the newer REPEAT function, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (load rule)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Get the cells collection for the current worksheet
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Determine the used range boundaries
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
+        try
+        {
+            // Load the workbook (no password is supplied; adjust LoadOptions if a password is required)
+            var loadOptions = new LoadOptions(); // add password here if needed: loadOptions.Password = "yourPassword";
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Loop through each cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    Cell cell = cells[row, col];
+                Cells cells = sheet.Cells;
 
-                    // Process only cells that contain a formula
+                // Loop through all cells that contain formulas
+                foreach (Cell cell in cells)
+                {
                     if (cell.IsFormula)
                     {
                         string formula = cell.Formula;
-
-                        // Identify formulas that use the deprecated REPT function (case‑insensitive)
-                        if (formula.IndexOf("REPT", StringComparison.OrdinalIgnoreCase) >= 0)
+                        // Replace deprecated REPT function with REPEAT, if present
+                        if (!string.IsNullOrEmpty(formula) && formula.Contains("REPT("))
                         {
-                            // Replace the REPT function name with REPEAT while preserving the rest of the formula
-                            string updatedFormula = Regex.Replace(
-                                formula,
-                                @"\bREPT\b",
-                                "REPEAT",
-                                RegexOptions.IgnoreCase);
-
-                            // Assign the corrected formula back to the cell
-                            cell.Formula = updatedFormula;
+                            cell.Formula = formula.Replace("REPT(", "REPEAT(");
                         }
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (save rule)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 }

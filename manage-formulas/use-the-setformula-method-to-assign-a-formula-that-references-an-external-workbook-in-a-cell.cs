@@ -1,13 +1,11 @@
-// Title: Use Aspose.Cells for .NET (C#) to set a cell formula that links to an external workbook
-// AI Prompts: Generate C# code with Aspose.Cells that writes the formula ='[External.xlsx]Sheet1'!A1 into cell B2 and saves the workbook. | Show how to assign an external workbook reference to a cell using the Cell.Formula property in Aspose.Cells for .NET.
-// Common Searches: how to reference a cell from another Excel file using Aspose.Cells C# | Aspose.Cells C# set formula to external workbook example | link external workbook cell in Aspose.Cells .NET | C# Aspose.Cells formula with external file path
-// Tags: set external workbook formula Aspose.Cells | Cell.Formula property external reference | Aspose.Cells link to another Excel file | C# assign formula with external workbook
+// Title: Set a cell formula that references an external workbook using Aspose.Cells in C#
+// Common Searches: how to set a formula that points to another workbook with Aspose.Cells C# | Aspose.Cells example for linking a cell to an external Excel file | C# code to assign external workbook reference in a cell using SetFormula | reference cell A1 from ExternalWorkbook.xlsx in Aspose.Cells | using Aspose.Cells SetFormula to create cross‑workbook formulas in C#
+// Tags: Aspose.Cells SetFormula external workbook linking | C# assign cross‑workbook formula | link cell to another Excel workbook Aspose.Cells | external workbook reference formula C# | Aspose.Cells formula referencing external file
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// // This program creates a new workbook, accesses cell B2 on the first worksheet, assigns a formula that references cell A1 in Sheet1 of an external file named External.xlsx, and saves the workbook as Result.xlsx.
+// The example creates a new Workbook, accesses the first worksheet, and uses the SetFormula property to place a formula in cell B2 that points to cell A1 on Sheet1 of an external file named ExternalWorkbook.xlsx. The workbook is then saved as Output.xlsx, with exception handling included.
 class Program
 {
     static void Main()
@@ -17,24 +15,20 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the target cell
-            Cell targetCell = sheet.Cells["B2"];
+            // Assign a formula that references an external workbook.
+            // Example: reference cell A1 in Sheet1 of ExternalWorkbook.xlsx
+            // Formula syntax: ='[ExternalWorkbook.xlsx]Sheet1'!A1
+            sheet.Cells["B2"].Formula = "='[ExternalWorkbook.xlsx]Sheet1'!A1";
 
-            // Assign a formula that references an external workbook (External.xlsx, Sheet1!A1)
-            // Using the Formula property (SetFormula overload with one argument is not available)
-            targetCell.Formula = "='[External.xlsx]Sheet1'!A1";
-
-            // Save the workbook
-            string resultPath = "Result.xlsx";
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(resultPath)}'.");
+            // Save the workbook to a file
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

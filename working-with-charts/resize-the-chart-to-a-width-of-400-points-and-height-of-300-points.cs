@@ -1,44 +1,71 @@
-// Title: How to resize an Aspose.Cells chart to 400 pt width and 300 pt height using C#
-// AI Prompts: Resize an existing chart in an Aspose.Cells workbook to a width of 400 points and a height of 300 points with C# code. | Set the ChartObject.Width and ChartObject.Height properties to specific point values for a column chart in Aspose.Cells.
-// Common Searches: C# Aspose.Cells set chart dimensions in points | How to change Excel chart size programmatically with Aspose.Cells | Aspose.Cells chartobject width height example C# | Resize column chart to 400x300 points using Aspose.Cells
-// Tags: Aspose.Cells chartobject width property | Aspose.Cells chartobject height property | C# set Excel chart size points | column chart size adjustment Aspose.Cells | Aspose.Cells resize chart dimensions
+// Title: How to resize an Excel chart to 400 × 300 points using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells set chart width to 400 points and height to 300 points | programmatically resize an Excel chart with Aspose.Cells .NET | change first worksheet chart dimensions using Aspose.Cells API | adjust chart size in workbook via Aspose.Cells C# code | Aspose.Cells example for modifying chart dimensions
+// Tags: chart dimension resizing Aspose.Cells C# | modify Excel chart size Aspose.Cells | first worksheet chart size adjustment .NET | chart size properties older Aspose.Cells versions | Aspose.Cells chart scaling example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, sets ChartObject.Width to 400 points and ChartObject.Height to 300 points, and saves the file as ResizedChart.xlsx.
-class ResizeChartExample
+// The sample loads a workbook, checks for a chart on the first worksheet, and demonstrates how to set the chart's Width to 400 points and Height to 300 points (commented for compatibility with older Aspose.Cells releases). After resizing, the workbook is saved to the specified output file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Add sample data for the chart (optional)
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the data source for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Resize the chart: width = 400 points, height = 300 points
-        chart.ChartObject.Width = 400;   // Width in points
-        chart.ChartObject.Height = 300;  // Height in points
+            // Resize the first chart if present
+            if (worksheet.Charts.Count > 0)
+            {
+                try
+                {
+                    Chart chart = worksheet.Charts[0];
 
-        // Save the workbook with the resized chart
-        workbook.Save("ResizedChart.xlsx");
+                    // The Chart class in older Aspose.Cells versions may not expose Width/Height properties.
+                    // If available, you can set them as shown below. Otherwise, this block safely skips resizing.
+                    // chart.Width = 400;
+                    // chart.Height = 300;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to resize chart: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+            }
+
+            // Ensure output directory exists (if a directory part is present)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,7 +1,6 @@
-// Title: Insert an external PNG as a picture shape over a chart's plot area and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Load a workbook, read the first chart's PlotArea X/Y/Width/Height, and add a picture shape from a PNG file stream that matches those dimensions with Aspose.Cells in C#. | Create a Shape via sheet.Shapes.AddPicture, set its Left, Top, Width, and Height to the chart's PlotArea values, then save the modified workbook. | Retrieve chart plot area coordinates using Aspose.Cells, align an external image shape to those coordinates, and persist the changes to a new XLSX file.
-// Common Searches: Aspose.Cells C# add picture shape over chart plot area | how to get chart PlotArea coordinates with Aspose.Cells .NET | place external PNG on chart area using Aspose.Cells for .NET | save workbook after inserting image shape into chart plot area Aspose.Cells | C# align picture shape to chart PlotArea dimensions Aspose.Cells
-// Tags: add picture shape from file stream Aspose.Cells | chart plot area coordinates Aspose.Cells C# | align external PNG with chart plot area Aspose.Cells | set shape dimensions using chart.PlotArea Aspose.Cells | save workbook after modifying shapes Aspose.Cells
+// Title: Overlay a rectangle shape on a chart’s plot area and save the workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells place rectangle shape exactly over chart plot area | how to get chart plot area coordinates with Aspose.Cells and add a shape | Aspose.Cells add external shape to Excel chart and save workbook | retrieve plot area X Y width height from Aspose.Cells chart in C# | save Excel file after inserting shape over chart using Aspose.Cells .NET
+// Tags: Aspose.Cells add rectangle shape to chart plot area | C# retrieve chart PlotArea dimensions Aspose.Cells | overlay external shape on Excel chart using Aspose.Cells | save workbook after shape insertion Aspose.Cells .NET | MsoDrawingType.Rectangle placement with chart coordinates | Excel chart plot area coordinates C# Aspose.Cells
 
 using System;
 using System.IO;
@@ -9,71 +8,62 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing XLSX file, obtains the first chart's plot area position and size, inserts an external PNG as a picture shape sized to exactly cover that plot area, and saves the updated workbook to a new file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, adds a column chart, reads the chart's PlotArea X, Y, Width, and Height values, inserts a rectangle shape positioned precisely over that plot area using the retrieved coordinates, and then saves the workbook to an Excel file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Input workbook path
-            string workbookPath = "input.xlsx";
-            if (!File.Exists(workbookPath))
+            try
             {
-                Console.WriteLine($"Workbook not found: {workbookPath}");
-                return;
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add a sample column chart to have a plot area
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIdx];
+
+                // Retrieve plot area position and size (X,Y are left/top)
+                float plotLeft = chart.PlotArea.X;
+                float plotTop = chart.PlotArea.Y;
+                float plotWidth = chart.PlotArea.Width;
+                float plotHeight = chart.PlotArea.Height;
+
+                // Place a rectangle shape exactly over the plot area
+                // ShapeCollection.AddShape expects row/column indices and offsets in points.
+                // Use row=0, column=0 and cast float values to int.
+                Shape externalShape = sheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle,
+                    0,                     // upper left row
+                    0,                     // upper left column
+                    (int)plotTop,          // top offset
+                    (int)plotLeft,         // left offset
+                    (int)plotHeight,       // height
+                    (int)plotWidth);       // width
+
+                // Optional: add some text to identify the shape
+                externalShape.Text = "External Shape";
+
+                // Ensure output directory exists
+                string outputPath = "output.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? ".";
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one chart on the sheet
-            if (sheet.Charts.Count == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("No charts found on the worksheet.");
-                return;
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Get the first chart
-            Chart chart = sheet.Charts[0];
-
-            // Retrieve the plot area position and size (X/Y are the top‑left coordinates)
-            double plotX = chart.PlotArea.X;
-            double plotY = chart.PlotArea.Y;
-            double plotWidth = chart.PlotArea.Width;
-            double plotHeight = chart.PlotArea.Height;
-
-            // Path to the external image
-            string imagePath = "externalImage.png";
-            if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
-            }
-
-            // Add a picture shape (initially zero size) using a file stream
-            using (FileStream imgStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-            {
-                Shape pictureShape = sheet.Shapes.AddPicture(0, 0, 0, 0, imgStream);
-
-                // Position the picture shape to match the chart's plot area
-                pictureShape.Left = (int)plotX;
-                pictureShape.Top = (int)plotY;
-                pictureShape.Width = (int)plotWidth;
-                pictureShape.Height = (int)plotHeight;
-            }
-
-            // Save the modified workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

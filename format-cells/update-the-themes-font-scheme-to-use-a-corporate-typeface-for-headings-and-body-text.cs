@@ -1,56 +1,61 @@
-// Title: Set a corporate typeface for headings and body text by updating the default style font in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Load an existing .xlsx file, change the workbook’s default font to a corporate typeface for headings and body, and save the changes using Aspose.Cells in C#. | Replace the theme fonts in a workbook by assigning a custom corporate font to Workbook.DefaultStyle.Font.Name and persist the file. | Programmatically apply a corporate font to all cells by updating the workbook’s default style and handling missing input files with Aspose.Cells.
-// Common Searches: how to set a custom default font for an Excel workbook using Aspose.Cells C# | Aspose.Cells change workbook theme fonts to corporate typeface | C# update default style font name in existing .xlsx with Aspose.Cells | apply corporate font to headings and body text in Excel programmatically | Aspose.Cells set global font for all cells in a workbook
-// Tags: Aspose.Cells modify workbook theme fonts | C# apply corporate typeface to Excel workbook | set global font for .xlsx using Aspose.Cells | programmatic font scheme change in Excel | update workbook font scheme Aspose.Cells
+// Title: Update default workbook font and apply a custom heading style in an Excel file using Aspose.Cells for .NET (C#)
+// Common Searches: how to change the default font of an Excel workbook with Aspose.Cells in C# | apply a custom bold heading font to the first row of an Excel sheet using Aspose.Cells .NET | set corporate body font for all cells in an existing .xlsx file with Aspose.Cells C# | programmatically modify Excel theme fonts using Aspose.Cells API | Aspose.Cells C# change font for header row only
+// Tags: default workbook font Aspose.Cells C# | custom heading style Aspose.Cells | apply corporate typeface to Excel workbook | set bold header font programmatically | update Excel theme fonts using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // The example loads 'input.xlsx', sets Workbook.DefaultStyle.Font.Name to a corporate typeface, ensures the output directory exists, saves the modified workbook as 'output.xlsx', and logs any errors such as a missing input file.
+    // The code loads an existing .xlsx workbook, changes the workbook's default body font to a corporate typeface, creates a bold heading style with a separate corporate font, applies that style to the first row, and saves the modified workbook.
     class Program
     {
         static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
             try
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-
                 // Load the existing workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // -----------------------------------------------------------------
-                // Update workbook fonts.
-                // Aspose.Cells versions prior to 22.x expose Theme as a string,
-                // so we modify the default style as a fallback to apply a corporate
-                // typeface throughout the workbook.
-                // -----------------------------------------------------------------
+                // Update the default font for the workbook (as Theme API may not be available in all versions)
+                // This sets the font used for cells that do not have an explicit style applied.
                 workbook.DefaultStyle.Font.Name = "CorporateBodyFont";
 
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Optionally, you can update the style of the first worksheet's cells to use a heading font.
+                // Here we demonstrate setting the first row (assumed headings) to a different font.
+                Worksheet sheet = workbook.Worksheets[0];
+                Style headingStyle = workbook.CreateStyle();
+                headingStyle.Font.Name = "CorporateHeadingFont";
+                headingStyle.Font.IsBold = true;
+
+                // Apply the heading style to the first row (A1 to the last used column in row 1)
+                int lastColumn = sheet.Cells.MaxColumn;
+                for (int col = 0; col <= lastColumn; col++)
                 {
-                    Directory.CreateDirectory(outputDir);
+                    Cell cell = sheet.Cells[0, col];
+                    cell.SetStyle(headingStyle);
                 }
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log the exception details for troubleshooting
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

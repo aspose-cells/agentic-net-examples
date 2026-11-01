@@ -1,64 +1,71 @@
-// Title: Apply a rotating set of background images to multiple worksheets in an Aspose.Cells workbook using C#
-// AI Prompts: Generate C# code that creates a workbook, adds several worksheets, and assigns a distinct background image to each sheet by cycling through a predefined list of image files with Aspose.Cells. | Demonstrate how to read image files into byte arrays, set them as Worksheet.BackgroundImage based on the worksheet index, and save the result as an XLSX file.
-// Common Searches: how to set different background pictures for each sheet in Aspose.Cells C# | cycle through a list of images and apply them to worksheets using Aspose.Cells .NET | assign worksheet background image from byte array Aspose.Cells example | C# Aspose.Cells add multiple worksheets with individual background images | use modulo operator to rotate background images across Excel sheets in Aspose.Cells
-// Tags: worksheet background image Aspose.Cells C# | cycle images across worksheets Aspose.Cells | set worksheet background from byte array | add multiple worksheets with individual backgrounds | save workbook with sheet-specific background images
+// Title: Apply distinct background images to each worksheet in an Aspose.Cells workbook using C#
+// Common Searches: C# Aspose.Cells set a different background picture for each worksheet | How to add rotating background images to Excel sheets with Aspose.Cells | Assign background images to worksheets based on sheet index in C# | Using Pictures.Add to insert worksheet background images in Aspose.Cells | Load multiple background PNG files and apply them to Excel worksheets with Aspose.Cells | Save an Aspose.Cells workbook with custom sheet background pictures
+// Tags: worksheet background picture Aspose.Cells | add picture to worksheet C# | rotate sheet background images Aspose | load background images from file list C# | save workbook with custom sheet backgrounds Aspose.Cells | picture anchored at cell A1 Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, defines a list of image file paths, adds five worksheets, and assigns each sheet a background image selected cyclically from the list (using the sheet index modulo the image count). Each image is read as a byte array and set via Worksheet.BackgroundImage, then the workbook is saved as Output.xlsx.
+// The example creates a new Workbook, adds several worksheets, and defines a list of image file paths. It loops through each worksheet, selects an image using the sheet index modulo the image count, checks that the file exists, and inserts the image as a picture anchored at cell A1 via sheet.Pictures.Add. Finally, the workbook is saved as an XLSX file to the specified output directory.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Predefined collection of background image file paths
+            // Add worksheets for demonstration
+            workbook.Worksheets.Add("Sheet1");
+            workbook.Worksheets.Add("Sheet2");
+            workbook.Worksheets.Add("Sheet3");
+            workbook.Worksheets.Add("Sheet4");
+
+            // Collection of background image file paths
             List<string> backgroundImages = new List<string>
             {
-                "Images/bg1.png",
-                "Images/bg2.jpg",
-                "Images/bg3.png"
+                @"C:\Images\Background1.png",
+                @"C:\Images\Background2.png",
+                @"C:\Images\Background3.png"
+                // Add more image paths as needed
             };
 
-            int imageCount = backgroundImages.Count;
+            // Verify that at least one image exists
+            if (backgroundImages.Count == 0)
+                throw new FileNotFoundException("No background image paths were provided.");
 
-            // Ensure the workbook has 5 worksheets
-            for (int i = 0; i < 5; i++)
+            // Apply an image to each worksheet (as a picture to avoid System.Drawing dependency)
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                Worksheet sheet;
+                Worksheet sheet = workbook.Worksheets[i];
+                string imagePath = backgroundImages[i % backgroundImages.Count];
 
-                if (i == 0)
+                // Ensure the image file exists before loading
+                if (!File.Exists(imagePath))
+                    throw new FileNotFoundException($"Background image not found: {imagePath}");
+
+                try
                 {
-                    // Use the default first worksheet
-                    sheet = workbook.Worksheets[0];
-                    sheet.Name = $"Sheet{i + 1}";
+                    // Add the image as a picture anchored at the top‑left corner (cell A1)
+                    sheet.Pictures.Add(0, 0, imagePath);
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Add additional worksheets
-                    sheet = workbook.Worksheets.Add($"Sheet{i + 1}");
-                }
-
-                // Choose background image based on worksheet index
-                int imgIndex = i % imageCount;
-                string imgPath = backgroundImages[imgIndex];
-
-                // Apply the background image if the file exists
-                if (File.Exists(imgPath))
-                {
-                    // Worksheet.BackgroundImage expects a byte array
-                    sheet.BackgroundImage = File.ReadAllBytes(imgPath);
+                    Console.WriteLine($"Failed to add image to sheet '{sheet.Name}': {ex.Message}");
                 }
             }
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+            // Prepare output directory
+            string outputPath = @"C:\Output\WorkbookWithBackgrounds.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {

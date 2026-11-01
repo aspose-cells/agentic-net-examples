@@ -1,73 +1,56 @@
-// Title: Implement a complete freeze‑pane workflow with Aspose.Cells for .NET: load workbook, apply FreezePanes, verify, unfreeze, and save
-// AI Prompts: Generate C# code that loads an Excel file using Aspose.Cells, freezes panes at cell E5 with 4 rows and 2 columns, retrieves the frozen row/column indices via GetFreezedPanes, and saves the result. | Provide a C# example that removes frozen panes after validation and writes the workbook using XlsbSaveOptions with ValidateMergedAreas set to true.
-// Common Searches: Aspose.Cells C# freeze panes at cell E5 and read back frozen rows and columns | How to check if panes are frozen in an Excel workbook with Aspose.Cells .NET | C# Aspose.Cells unfreeze panes before saving the file | Saving an Excel workbook as .xlsb with ValidateMergedAreas using Aspose.Cells | Load existing workbook and apply FreezePanes overloads in Aspose.Cells for .NET
-// Tags: Aspose.Cells FreezePanes overloads C# | Aspose.Cells GetFreezedPanes verification | Aspose.Cells UnFreezePanes method | Aspose.Cells Workbook.Save XlsbSaveOptions | Aspose.Cells load workbook apply freeze panes
+// Title: How to Load or Create an Excel Workbook, Apply Freeze Panes to the First Row and Column, Save, and Verify the Output Using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to open an existing Excel file (or create a new workbook if the file is missing), freeze the first row and first column, save the workbook to a given path, and return a boolean indicating whether the save succeeded. | Show how to adjust the FreezePanes method parameters in Aspose.Cells to freeze any custom range of rows and columns, then save the workbook and log the result of the operation. | Provide a C# snippet that wraps the freeze‑pane workflow in a try‑catch block, logs detailed error information, and prints a success or failure message after attempting to save the workbook.
+// Common Searches: asp.net c# apply freeze panes to first row and column with Aspose.Cells | Aspose.Cells create workbook if file not found then freeze panes and save | C# verify Excel file was saved after applying freeze panes using Aspose.Cells | example code for FreezePanes method with custom row and column indices in Aspose.Cells .NET
+// Tags: Aspose.Cells freeze panes C# example | load or create workbook Aspose.Cells .NET | apply FreezePanes method Excel C# | save workbook and check file existence Aspose.Cells | Excel freeze pane validation C#
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace FreezePaneWorkflowDemo
+// The sample program checks for an "input.xlsx" file, loads it if present or creates a new workbook with sample data otherwise, accesses the first worksheet, freezes the first row and column using FreezePanes(1,1,1,1), saves the result as "output.xlsx", and then verifies that the output file exists, printing a success or failure message.
+class FreezePaneWorkflow
 {
-    // // Demonstrates loading or creating a workbook, accessing the first worksheet, applying FreezePanes via index and cell-name overloads, retrieving freeze settings with GetFreezedPanes, optionally unfreezing panes, and saving the file (including optional XlsbSaveOptions with ValidateMergedAreas).
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook (or load an existing one)
-            // -------------------------------------------------
-            // Creating a fresh workbook instance
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // If you need to load an existing file, uncomment the line below
-            // Workbook workbook = new Workbook("InputWorkbook.xlsx");
-
-            // -------------------------------------------------
-            // 2. Access the target worksheet
-            // -------------------------------------------------
-            Worksheet worksheet = workbook.Worksheets[0]; // First worksheet
-
-            // -------------------------------------------------
-            // 3. Freeze panes
-            // -------------------------------------------------
-            // Example 1: Freeze using row/column indices
-            // Freeze at cell C3 (row index 2, column index 2) with 3 rows and 3 columns frozen
-            worksheet.FreezePanes(2, 2, 3, 3);
-
-            // Example 2: Freeze using cell name
-            // This will overwrite the previous freeze settings
-            worksheet.FreezePanes("E5", 4, 2); // Freeze at cell E5 with 4 rows and 2 columns frozen
-
-            // -------------------------------------------------
-            // 4. Validate that panes are frozen
-            // -------------------------------------------------
-            int frozenRow, frozenColumn, frozenRows, frozenColumns;
-            bool isFrozen = worksheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
-
-            Console.WriteLine("Freeze panes applied: " + isFrozen);
-            if (isFrozen)
+            // Load existing workbook or create a new one if the input file is missing.
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Freeze position - Row: {frozenRow}, Column: {frozenColumn}");
-                Console.WriteLine($"Number of frozen rows: {frozenRows}, frozen columns: {frozenColumns}");
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a new workbook with one worksheet.
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
             }
 
-            // -------------------------------------------------
-            // 5. (Optional) Unfreeze panes and verify
-            // -------------------------------------------------
-            worksheet.UnFreezePanes();
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            bool isStillFrozen = worksheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
-            Console.WriteLine("After UnFreezePanes, is frozen: " + isStillFrozen);
+            // Apply freeze pane: freeze the first row and first column.
+            sheet.FreezePanes(1, 1, 1, 1);
 
-            // -------------------------------------------------
-            // 6. Save the workbook
-            // -------------------------------------------------
-            // Save to a new file
-            workbook.Save("FreezePaneWorkflowResult.xlsx");
+            // Save the workbook with the freeze pane applied.
+            workbook.Save(outputPath);
 
-            // If you need to use specific save options (e.g., validate merged areas), you can do:
-            // XlsbSaveOptions saveOptions = new XlsbSaveOptions { ValidateMergedAreas = true };
-            // workbook.Save("FreezePaneWorkflowResult.xlsb", saveOptions);
+            // Simple validation: ensure the output file was created.
+            if (File.Exists(outputPath))
+            {
+                Console.WriteLine("Freeze pane applied and file saved successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Failed to save the output file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

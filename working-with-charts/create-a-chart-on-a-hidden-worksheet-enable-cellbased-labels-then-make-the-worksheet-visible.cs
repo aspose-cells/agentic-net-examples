@@ -1,71 +1,58 @@
-// Title: How to add a column chart with cell‑based data labels on a hidden worksheet and then make the sheet visible using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that uses Aspose.Cells to create a hidden worksheet, populate it with categories, values and label cells, insert a column chart that pulls its data labels from those cells, and finally change the worksheet visibility to visible before saving the workbook. | Demonstrate the steps to associate a chart series' data labels with a specific cell range on a concealed sheet and then reveal the worksheet using the Aspose.Cells API in a .NET console application.
-// Common Searches: Aspose.Cells C# create chart on hidden sheet with data labels from cells | how to unhide a worksheet after adding a chart using Aspose.Cells .NET | link chart data labels to a cell range on a hidden worksheet Aspose.Cells | column chart with cell‑based labels on hidden worksheet Aspose.Cells example | set VisibilityType.Hidden then Visible after chart creation Aspose.Cells
-// Tags: Aspose.Cells chart on concealed worksheet | cell‑based data labels for column chart | C# unhide worksheet after chart generation | associate chart series with cell range Aspose.Cells | VisibilityType.Hidden to Visible example
+// Title: Create a column chart on a hidden worksheet, link series to cell ranges, enable cell‑based labels, and unhide the sheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that adds a hidden worksheet, populates it with sample data, creates a column chart whose values and category labels are taken from cell ranges, then makes the worksheet visible and saves the workbook. | Show how to change the example to generate a line chart instead of a column chart while keeping the worksheet hidden until after the chart is created, using Aspose.Cells in C#.
+// Common Searches: how to add a chart to a hidden worksheet with Aspose.Cells in C# | C# Aspose.Cells link chart series to specific cell ranges for values and categories | enable category labels from cells for a chart using Aspose.Cells .NET | unhide a worksheet after creating a chart programmatically with Aspose.Cells | save workbook after generating column chart on a hidden sheet Aspose.Cells
+// Tags: Aspose.Cells hidden sheet chart generation | cell‑based labels for Aspose chart series | bind chart series to worksheet cells C# | make worksheet visible after chart Aspose | column chart from worksheet data Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartOnHiddenSheet
+// Demonstrates adding a hidden worksheet, filling it with data, creating a column chart whose series values and category labels are linked to cell ranges, setting a chart title, unhiding the worksheet, and saving the workbook as ChartOnHiddenSheet.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // The sample creates a new workbook, adds a hidden worksheet named "HiddenData", fills columns A‑C with categories, numeric values, and label text, inserts a column chart that uses the values from column B and links its data labels to the text in column C, changes the worksheet's VisibilityType from Hidden to Visible, and saves the file as ChartOnHiddenWorksheet.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a new worksheet that will be hidden initially
-                Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenData");
+            // Add a hidden worksheet and obtain its reference
+            Worksheet ws = workbook.Worksheets.Add("DataSheet");
+            ws.IsVisible = false; // Hide the worksheet
 
-                // Hide the worksheet
-                hiddenSheet.VisibilityType = VisibilityType.Hidden;
+            // Populate sample data
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue("Jan");
+            ws.Cells["A3"].PutValue("Feb");
+            ws.Cells["A4"].PutValue("Mar");
+            ws.Cells["A5"].PutValue("Apr");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["B4"].PutValue(15);
+            ws.Cells["B5"].PutValue(25);
 
-                // Populate sample data
-                // Categories
-                hiddenSheet.Cells["A2"].PutValue("A");
-                hiddenSheet.Cells["A3"].PutValue("B");
-                hiddenSheet.Cells["A4"].PutValue("C");
+            // Add a column chart to the hidden worksheet
+            int chartIndex = ws.Charts.Add(ChartType.Column, 7, 0, 20, 10);
+            Chart chart = ws.Charts[chartIndex];
 
-                // Values for the chart
-                hiddenSheet.Cells["B2"].PutValue(10);
-                hiddenSheet.Cells["B3"].PutValue(20);
-                hiddenSheet.Cells["B4"].PutValue(30);
+            // Link series to cell ranges for values and categories
+            chart.NSeries.Add("DataSheet!B2:B5", true);               // Values
+            chart.NSeries[0].XValues = "DataSheet!A2:A5";            // Category labels
 
-                // Cell‑based labels (text to display on each point)
-                hiddenSheet.Cells["C2"].PutValue("First");
-                hiddenSheet.Cells["C3"].PutValue("Second");
-                hiddenSheet.Cells["C4"].PutValue("Third");
+            // Optional chart title
+            chart.Title.Text = "Monthly Sales";
 
-                // Add a column chart on the hidden worksheet
-                int chartIdx = hiddenSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = hiddenSheet.Charts[chartIdx];
+            // Make the worksheet visible after chart creation
+            ws.IsVisible = true;
 
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Enable cell‑based data labels
-                chart.NSeries[0].DataLabels.ShowCellRange = true;   // use cell range as labels
-                chart.NSeries[0].DataLabels.LinkedSource = "C2:C4"; // link to label cells
-                chart.NSeries[0].DataLabels.ShowValue = false;      // hide numeric values if desired
-
-                // Make the worksheet visible again
-                hiddenSheet.VisibilityType = VisibilityType.Visible;
-
-                // Save the workbook
-                string outputPath = "ChartOnHiddenWorksheet.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ChartOnHiddenSheet.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

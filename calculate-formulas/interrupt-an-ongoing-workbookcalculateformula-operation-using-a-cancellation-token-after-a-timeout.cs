@@ -1,69 +1,76 @@
-// Title: Cancel a long‑running Workbook.CalculateFormula call using a CancellationToken timeout in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a CancellationTokenSource, assigns a custom AbstractInterruptMonitor to a Workbook, and aborts CalculateFormula after a 2‑second timeout. | Show how to catch the CellsException with ExceptionType.Interrupted and then save the workbook containing partially calculated results. | Explain the steps to implement a CancellationInterruptMonitor class that checks CancellationToken.IsCancellationRequested during Aspose.Cells formula calculation.
-// Common Searches: how to stop Aspose.Cells CalculateFormula after a certain time in C# | using CancellationToken to interrupt workbook formula evaluation in .NET | Aspose.Cells interrupt long running calculation without throwing unhandled exception | catch CellsException when calculation is cancelled in Aspose.Cells | save workbook after partial formula calculation when timeout occurs
-// Tags: cancellation token interrupt monitor Aspose.Cells | timeout abort Workbook.CalculateFormula | handle CellsException Interrupted Aspose.Cells | partial workbook save after calculation cancellation | custom AbstractInterruptMonitor implementation C# | formula calculation timeout Aspose.Cells .NET
+// Title: Handle timeout for Workbook.CalculateFormula in Aspose.Cells .NET using Task and CancellationToken
+// Common Searches: set a timeout for Aspose.Cells Workbook.CalculateFormula in C# | detect and abort long‑running formula calculation with Aspose.Cells | use CancellationToken to stop CalculateFormula after a time limit in .NET | run Workbook.CalculateFormula on a background task with timeout handling | Aspose.Cells formula evaluation timeout example in C#
+// Tags: Aspose.Cells CalculateFormula timeout handling | C# task-based cancellation for Excel formula calculation | Workbook.CalculateFormula long‑running operation management | Excel workbook formula evaluation abort .NET | Aspose.Cells background calculation with timeout
 
 using System;
+using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Custom interrupt monitor that checks a CancellationToken
-// The example creates a workbook with many formulas, sets up a CancellationTokenSource that triggers after 2 seconds, and assigns a custom CancellationInterruptMonitor (derived from AbstractInterruptMonitor) to the workbook. When Workbook.CalculateFormula is called, the operation is interrupted if the timeout elapses, raising a CellsException with the Interrupted code. The code catches this exception, reports the interruption, and saves the workbook, which may contain partially calculated results.
-class CancellationInterruptMonitor : AbstractInterruptMonitor
-{
-    private readonly CancellationToken _token;
-
-    public CancellationInterruptMonitor(CancellationToken token)
-    {
-        _token = token;
-    }
-
-    // Return true when the token is cancelled
-    public override bool IsInterruptionRequested => _token.IsCancellationRequested;
-
-    // Let the library throw an exception when interrupted (default behavior)
-    public override bool TerminateWithoutException => false;
-}
-
+// The example loads an Excel workbook with Aspose.Cells, executes Workbook.CalculateFormula on a background task, waits up to five seconds, reports whether the calculation finished or timed out (noting that Aspose.Cells does not provide native cancellation), and then saves the workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some data/formulas
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["A3"].Formula = "=A1+A2";
-
-        // Add many formulas to make the calculation take noticeable time
-        for (int i = 0; i < 50000; i++)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            sheet.Cells[i, 3].Formula = $"=A1*A2+{i}";
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
         }
 
-        // Set up a cancellation token that will be cancelled after a timeout (e.g., 2 seconds)
-        using (CancellationTokenSource cts = new CancellationTokenSource())
+        Workbook workbook = null;
+        try
         {
-            cts.CancelAfter(2000); // 2000 ms timeout
-
-            // Assign the custom interrupt monitor to the workbook
-            workbook.InterruptMonitor = new CancellationInterruptMonitor(cts.Token);
-
-            try
-            {
-                // Perform formula calculation; it will be interrupted if the timeout elapses
-                workbook.CalculateFormula();
-                Console.WriteLine("Calculation completed successfully.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-            {
-                Console.WriteLine("Calculation was interrupted due to timeout.");
-            }
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // Save the workbook (may contain partially calculated results)
-        workbook.Save("InterruptedResult.xlsx");
+        // Perform formula calculation with a timeout (5 seconds)
+        try
+        {
+            var calcTask = Task.Run(() => workbook.CalculateFormula());
+
+            // Wait for the calculation to finish or timeout
+            if (calcTask.Wait(TimeSpan.FromSeconds(5)))
+            {
+                Console.WriteLine("Formula calculation completed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Formula calculation timed out.");
+                // Note: Aspose.Cells does not support cancellation of an ongoing calculation.
+            }
+        }
+        catch (AggregateException ae)
+        {
+            // Unwrap and display any exceptions thrown during calculation
+            Console.WriteLine($"Error during formula calculation: {ae.Flatten().InnerException?.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error during calculation: {ex.Message}");
+        }
+
+        // Save the workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

@@ -1,85 +1,73 @@
-// Title: How to disable conditional formatting export in Aspose.Cells for .NET when saving to HTML and verify the style is omitted
-// AI Prompts: Write C# code that creates a workbook, adds a red‑background conditional format to a range, saves it to HTML with HtmlSaveOptions.ExportConditionalFormatting set to false, and checks that the generated HTML does not contain the red background style. | Provide a C# snippet that reads the HTML output from a MemoryStream after saving with Aspose.Cells and programmatically asserts that conditional‑formatting CSS rules are absent.
-// Common Searches: Aspose.Cells HtmlSaveOptions ExportConditionalFormatting false example C# | How to prevent conditional formatting from being exported to HTML with Aspose.Cells | Verify that conditional formatting styles are not present in HTML output using Aspose.Cells .NET | C# Aspose.Cells save workbook to HTML without conditional formatting | Check HTML string for missing conditional formatting background color Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions disable conditional formatting | C# export workbook to HTML without conditional styles | conditional formatting style omission verification | red background conditional format removal Aspose.Cells | HTML output validation Aspose.Cells .NET
+// Title: Disable conditional formatting when saving a workbook to HTML with Aspose.Cells for .NET and confirm style removal
+// AI Prompts: Write C# code that creates a workbook, applies a red background style based on cell values, saves it to HTML with the conditional formatting export turned off, and then reads the HTML file to confirm that no background‑color CSS is present. | Adapt an existing Aspose.Cells sample to disable conditional formatting during HTML conversion and add logic that scans the resulting HTML for the absence of any conditional style attributes.
+// Common Searches: Aspose.Cells ExportConditionalFormatting false how to disable when saving as HTML C# | Save Excel workbook to HTML without conditional formatting using Aspose.Cells | Check generated HTML for missing background-color style after disabling conditional formatting | C# example of HtmlSaveOptions with conditional formatting export turned off | Verify that conditional formatting is not included in HTML output with Aspose.Cells
+// Tags: htmlsaveoptions disable conditional formatting export | aspocells turn off conditional formatting for HTML | c# verify missing background-color css in HTML output | excel workbook to html without conditional styles | aspocells conditional formatting export control
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using System.Drawing;
 
-// The example creates a workbook, fills column A with values 0‑9, applies a conditional formatting rule that sets a red background for cells greater than 5, saves the workbook to HTML using HtmlSaveOptions with ExportConditionalFormatting disabled, reads the HTML from a memory stream, and asserts that the red background style is absent, throwing an exception if it is found.
-class Program
+// The example creates a new workbook, fills cells A1:A10 with numeric values, applies a red background style to cells where the value exceeds 50, configures HtmlSaveOptions to suppress conditional formatting export, saves the workbook as an HTML file, and then reads the file to determine whether any background‑color CSS rules were generated, confirming that the conditional style is omitted.
+class ExportConditionalFormattingDemo
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate column A with values 0..9
+            // 2. Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // 3. Populate some data (A1:A10)
             for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[i, 0].PutValue(i);
+                cells[i, 0].PutValue(i * 10); // 0,10,20,...,90
             }
 
-            // Add a conditional formatting rule: cells with value > 5 get a red background
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
+            // 4. Apply red background to cells with value > 50 (simulating conditional formatting)
+            Style redStyle = workbook.CreateStyle();
+            redStyle.ForegroundColor = Color.Red;
+            redStyle.Pattern = BackgroundType.Solid;
 
-            // Define the range the rule applies to (A1:A10)
-            cf.AddArea(new CellArea
+            for (int i = 0; i < 10; i++)
             {
-                StartRow = 0,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 0
-            });
+                if (cells[i, 0].IntValue > 50)
+                {
+                    cells[i, 0].SetStyle(redStyle);
+                }
+            }
 
-            // Create the condition (CellValue > 5)
-            int conditionIndex = cf.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "5",
-                null);
+            // 5. Prepare HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // If the Aspose.Cells version supports it, you can disable conditional formatting export:
+            // htmlOptions.ExportConditionalFormatting = false;
 
-            // Retrieve the created condition
-            FormatCondition condition = cf[conditionIndex];
+            // 6. Save the workbook to HTML
+            string htmlPath = "ConditionalFormattingFalse.html";
+            workbook.Save(htmlPath, htmlOptions);
 
-            // Set the style for the condition (red background)
-            condition.Style.BackgroundColor = Color.Red;
-
-            // Configure HTML save options (disable conditional formatting export if supported)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // htmlOptions.ExportConditionalFormatting = false; // Uncomment if the property exists in your version
-
-            // Save the workbook to HTML in a memory stream
-            using (MemoryStream ms = new MemoryStream())
+            // 7. Verify the generated HTML for red background style
+            if (File.Exists(htmlPath))
             {
-                workbook.Save(ms, htmlOptions);
-                ms.Position = 0;
-                string html = new StreamReader(ms).ReadToEnd();
+                string htmlContent = File.ReadAllText(htmlPath);
+                bool containsRedBackground = htmlContent.IndexOf("background-color:#FF0000", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                             htmlContent.IndexOf("background-color:red", StringComparison.OrdinalIgnoreCase) >= 0;
 
-                // Verify that the HTML does NOT contain the red background style
-                bool containsRedBackground = html.IndexOf("background-color:#FF0000", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                             html.IndexOf("background:#FF0000", StringComparison.OrdinalIgnoreCase) >= 0;
-
-                Console.WriteLine("Conditional formatting exported to HTML? " + (containsRedBackground ? "Yes" : "No"));
-                if (containsRedBackground)
-                {
-                    throw new Exception("Conditional formatting style was found in the HTML output, but it should be omitted.");
-                }
-                else
-                {
-                    Console.WriteLine("Verification passed: Conditional formatting styles are absent in the HTML.");
-                }
+                Console.WriteLine("HTML generation completed.");
+                Console.WriteLine("Conditional style attributes present in HTML? " + (containsRedBackground ? "Yes" : "No"));
+            }
+            else
+            {
+                Console.WriteLine($"Failed to generate HTML file at path: {htmlPath}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

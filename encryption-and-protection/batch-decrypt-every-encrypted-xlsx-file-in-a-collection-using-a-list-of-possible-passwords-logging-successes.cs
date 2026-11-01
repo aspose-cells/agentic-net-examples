@@ -1,102 +1,123 @@
-// Title: Batch decrypt password‑protected XLSX files in C# using Aspose.Cells with a list of possible passwords
-// AI Prompts: Write a C# console application that scans a source directory for *.xlsx files, attempts to open each workbook with every password from a predefined list using Aspose.Cells LoadOptions, and saves the successfully opened workbook to a destination folder without a password. | Enhance the batch decryption program to create a CSV log that records the original file name, the password that succeeded, and the path of the decrypted file for each successful operation. | Extend the solution to handle both .xlsx and .xls files by detecting the file extension and selecting the appropriate LoadFormat when constructing LoadOptions.
-// Common Searches: asp.net batch decrypt multiple encrypted Excel workbooks using Aspose.Cells and password list | c# try several passwords on password‑protected xlsx with Aspose.Cells LoadOptions | how to remove password protection from a folder of Excel files programmatically in .NET | aspocells decrypt xlsx files automatically using a list of possible passwords | log successful Excel decryption results to CSV with Aspose.Cells C#
-// Tags: batch decrypt password‑protected xlsx Aspose.Cells | load encrypted workbook with password list .NET | save workbook without password Aspose.Cells | iterate directory of encrypted Excel files C# | csv logging of decryption results Aspose.Cells
+// Title: Batch decrypt multiple encrypted XLSX workbooks in C# with Aspose.Cells using a password list and log the outcomes
+// Common Searches: C# code to decrypt a folder of password‑protected Excel files with Aspose.Cells | Aspose.Cells load encrypted XLSX workbook using multiple possible passwords in .NET | How to remove workbook password and save decrypted Excel file with Aspose.Cells | Log success and failure when batch processing protected Excel files in C# | Iterate through .xlsx files in a directory and try several passwords using Aspose.Cells
+// Tags: batch decrypt xlsx Aspose.Cells | load encrypted workbook with password list | remove workbook password Aspose.Cells | save decrypted xlsx file .NET | log decryption results C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace BatchDecryptXlsx
+// The example creates an output directory, scans a specified input folder for .xlsx files, and attempts to open each workbook with a list of possible passwords via Aspose.Cells LoadOptions. When the correct password is found, the workbook's password is cleared, the file is saved as a decrypted copy, and a success entry is written to a log file; failures and errors are also logged for each processed file.
+class BatchDecrypt
 {
-    // The program iterates over all XLSX files in a specified source folder, tries each password from a supplied list via Aspose.Cells LoadOptions, saves the workbook without a password to a target folder when decryption succeeds, and reports success, failure, or errors to the console.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Folder containing encrypted XLSX files
+        string inputFolder = @"C:\EncryptedFiles";
+
+        // Folder where decrypted files will be saved
+        string outputFolder = @"C:\DecryptedFiles";
+
+        // Ensure output directory exists
+        try
         {
-            // Folder containing encrypted XLSX files
-            string sourceFolder = @"C:\EncryptedFiles";
+            Directory.CreateDirectory(outputFolder);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to create output folder '{outputFolder}'. Exception: {ex.Message}");
+            return;
+        }
 
-            // Folder where decrypted files will be saved
-            string destFolder = @"C:\DecryptedFiles";
+        // List of possible passwords to try
+        List<string> passwords = new List<string>
+        {
+            "password1",
+            "password2",
+            "123456",
+            "admin"
+        };
 
-            // Verify source folder exists
-            if (!Directory.Exists(sourceFolder))
+        // Path for the log file
+        string logPath = Path.Combine(outputFolder, "decryption_log.txt");
+
+        try
+        {
+            using (StreamWriter logWriter = new StreamWriter(logPath, false))
             {
-                Console.WriteLine($"[ERROR] Source folder not found: {sourceFolder}");
-                return;
-            }
-
-            // Ensure destination folder exists
-            if (!Directory.Exists(destFolder))
-            {
-                Directory.CreateDirectory(destFolder);
-            }
-
-            // List of possible passwords to try
-            List<string> possiblePasswords = new List<string>
-            {
-                "password1",
-                "12345",
-                "letmein",
-                // add more passwords as needed
-            };
-
-            // Process each XLSX file in the source folder
-            foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
-            {
-                // Guard against missing file (should not happen, but safe)
-                if (!File.Exists(filePath))
+                // Verify input folder exists
+                if (!Directory.Exists(inputFolder))
                 {
-                    Console.WriteLine($"[WARN] File not found: {filePath}");
-                    continue;
+                    logWriter.WriteLine($"{DateTime.Now}: ERROR - Input folder '{inputFolder}' does not exist.");
+                    return;
                 }
 
-                bool decrypted = false;
-
-                foreach (string pwd in possiblePasswords)
+                // Process each .xlsx file in the input folder
+                foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
                 {
-                    try
+                    if (!File.Exists(filePath))
                     {
-                        // Load the workbook using the current password
-                        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                        logWriter.WriteLine($"{DateTime.Now}: WARNING - File not found '{filePath}'. Skipping.");
+                        continue;
+                    }
+
+                    bool decrypted = false;
+
+                    // Try each password until one works
+                    foreach (string pwd in passwords)
+                    {
+                        try
                         {
-                            Password = pwd
-                        };
+                            // Load the workbook using the current password
+                            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                            {
+                                Password = pwd
+                            };
+                            Workbook wb = new Workbook(filePath, loadOptions);
 
-                        Workbook workbook = new Workbook(filePath, loadOptions);
+                            // Remove password protection before saving
+                            wb.Settings.Password = null;
 
-                        // If loading succeeds, the password is correct.
-                        // Save the workbook without a password to remove encryption.
-                        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                        string destPath = Path.Combine(destFolder, $"{fileNameWithoutExt}_decrypted.xlsx");
+                            // Save the decrypted workbook
+                            string fileName = Path.GetFileNameWithoutExtension(filePath);
+                            string outputPath = Path.Combine(outputFolder, fileName + "_decrypted.xlsx");
+                            wb.Save(outputPath, SaveFormat.Xlsx);
 
-                        workbook.Save(destPath, SaveFormat.Xlsx);
-
-                        Console.WriteLine($"[SUCCESS] Decrypted '{Path.GetFileName(filePath)}' with password '{pwd}'. Saved to '{destPath}'.");
-                        decrypted = true;
-                        break; // Stop trying other passwords for this file
+                            // Log successful decryption
+                            logWriter.WriteLine($"{DateTime.Now}: SUCCESS - '{filePath}' decrypted with password '{pwd}'. Saved as '{outputPath}'.");
+                            decrypted = true;
+                            break; // Exit password loop for this file
+                        }
+                        catch (CellsException ex)
+                        {
+                            // If the exception message indicates an incorrect password, continue trying other passwords
+                            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                continue;
+                            }
+                            // Log other Aspose.Cells errors and stop trying passwords for this file
+                            logWriter.WriteLine($"{DateTime.Now}: ERROR - '{filePath}' failed with password '{pwd}'. Exception: {ex.Message}");
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log unexpected errors and stop processing this file
+                            logWriter.WriteLine($"{DateTime.Now}: ERROR - Unexpected error processing '{filePath}'. Exception: {ex.Message}");
+                            break;
+                        }
                     }
-                    catch (CellsException)
+
+                    if (!decrypted)
                     {
-                        // Incorrect password – continue with the next one
+                        // Log failure if none of the passwords worked
+                        logWriter.WriteLine($"{DateTime.Now}: FAILURE - Could not decrypt '{filePath}' with provided passwords.");
                     }
-                    catch (Exception ex)
-                    {
-                        // Unexpected error – log and move to next file
-                        Console.WriteLine($"[ERROR] Unexpected error processing '{Path.GetFileName(filePath)}': {ex.Message}");
-                        break;
-                    }
-                }
-
-                if (!decrypted)
-                {
-                    Console.WriteLine($"[FAIL] Could not decrypt '{Path.GetFileName(filePath)}' with provided passwords.");
                 }
             }
-
-            Console.WriteLine("Batch decryption completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write log file '{logPath}'. Exception: {ex.Message}");
         }
     }
 }

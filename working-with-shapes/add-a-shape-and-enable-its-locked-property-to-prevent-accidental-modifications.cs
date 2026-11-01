@@ -1,13 +1,14 @@
-// Title: Create a rectangle shape in an Excel worksheet and lock it with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that adds a rectangle shape to the first worksheet of a new workbook and sets its IsLocked property to true using Aspose.Cells. | Write a .NET example that creates an Excel file, inserts a locked rectangle shape with custom text, and saves it as ShapeLocked.xlsx. | Provide a C# snippet that demonstrates how to enable the locked flag on a shape added via sheet.Shapes.AddShape in Aspose.Cells.
-// Common Searches: Aspose.Cells C# add rectangle shape and prevent editing | how to set IsLocked on a shape in Aspose.Cells .NET | example code to lock drawing objects in Excel using Aspose.Cells | create locked shape in Excel workbook with Aspose.Cells for .NET | C# Aspose.Cells shape lock property tutorial
-// Tags: Aspose.Cells add rectangle shape C# | Aspose.Cells set shape IsLocked .NET | lock drawing object Excel Aspose.Cells | create locked shape worksheet C# | Aspose.Cells shape protection example
+// Title: Add a rectangle shape to an Excel worksheet and lock it using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate an Excel workbook, insert a rectangle shape on the first sheet, and set its IsLocked flag to true with Aspose.Cells in C#. | Create a worksheet, add a rectangle drawing, and lock the shape to prevent edits using the Aspose.Cells API.
+// Common Searches: C# Aspose.Cells how to lock a shape after adding it | example of adding a rectangle shape to a worksheet and making it read‑only with Aspose.Cells | Aspose.Cells set shape IsLocked property to prevent editing | lock Excel shape programmatically using Aspose.Cells .NET | prevent accidental modification of shapes in generated Excel workbook Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells | lock shape IsLocked Aspose.Cells | shape protection Excel C# | worksheet shape locking Aspose.Cells | prevent shape editing Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// // Creates a new workbook, adds a rectangle shape to the first worksheet, locks the shape by setting IsLocked = true, assigns custom text, and saves the file as ShapeLocked.xlsx.
+// The code creates a new workbook, adds a rectangle shape to the first worksheet, locks the shape by setting its IsLocked property to true, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
@@ -17,33 +18,26 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                2,    // upper left row (zero‑based)
-                2,    // upper left column (zero‑based)
-                0,    // top offset in points
-                0,    // left offset in points
-                100,  // height in points
-                200   // width in points
-            );
+            // Parameters: shape type, upper-left row, upper-left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
 
-            // Enable the locked property to prevent accidental modifications
+            // Lock the shape to prevent accidental modifications
             shape.IsLocked = true;
 
-            // Optionally set a text for the shape
-            shape.Text = "Locked Shape";
+            // Define output file path
+            string outputPath = "output.xlsx";
 
             // Save the workbook to a file
-            workbook.Save("ShapeLocked.xlsx");
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

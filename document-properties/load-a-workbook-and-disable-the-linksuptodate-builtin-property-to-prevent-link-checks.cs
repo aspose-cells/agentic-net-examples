@@ -1,47 +1,22 @@
 // Title: Disable the LinksUpToDate built‑in document property in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, sets the built‑in document property "LinksUpToDate" to false, and saves the workbook. | Show how to turn off automatic link validation in an Excel file by updating the LinksUpToDate property via the BuiltInDocumentProperties collection in Aspose.Cells.
-// Common Searches: Aspose.Cells C# disable automatic link update in Excel workbook | set LinksUpToDate property to false using Aspose.Cells .NET | prevent external link checks when saving Excel file with Aspose.Cells | how to modify built‑in document properties in Aspose.Cells C#
-// Tags: disable LinksUpToDate property Aspose.Cells | modify built-in document properties C# | turn off link validation Excel Aspose.Cells | set workbook property false Aspose.Cells | Aspose.Cells built-in properties manipulation
+// Common Searches: Aspose.Cells C# set LinksUpToDate property to false | prevent Excel external link validation using Aspose.Cells | how to turn off link update checks in a workbook with Aspose.Cells | disable built‑in LinksUpToDate property when saving Excel file in .NET
+// Tags: turn off workbook link status flag Aspose.Cells | modify built‑in document properties C# | suppress Excel external link validation Aspose.Cells | C# set workbook property false Aspose.Cells | Excel link check suppression using Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The example loads an existing workbook, checks for the built‑in "LinksUpToDate" property, sets its value to false to stop link validation, and saves the modified file, handling missing files and runtime errors.
+// Loads an existing workbook, sets the LinksUpToDate built‑in document property to false to stop link validation, and saves the workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        // Load the existing workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        try
-        {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+        // Disable the LinksUpToDate built‑in property to prevent link checks
+        workbook.BuiltInDocumentProperties.LinksUpToDate = false;
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Disable the built‑in property "LinksUpToDate" to prevent link checks
-            // The DocumentProperty class exposes a Value property for assignment.
-            if (workbook.BuiltInDocumentProperties["LinksUpToDate"] != null)
-            {
-                workbook.BuiltInDocumentProperties["LinksUpToDate"].Value = false;
-            }
-
-            // Save the workbook (overwrites if the file already exists)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook (optional, depending on whether you want to persist the change)
+        workbook.Save("output.xlsx");
     }
 }

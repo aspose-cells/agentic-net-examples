@@ -1,30 +1,60 @@
-// Title: Set A5 printer paper size for every worksheet and export the workbook as an A5‑sized PDF using Aspose.Cells for .NET
-// AI Prompts: Apply PaperSizeType.PaperA5 to each worksheet's PageSetup, enable FitToPagesWide = 1, then save the workbook as PDF. | Iterate through workbook.Worksheets, set pageSetup.PaperSize to A5, configure fit‑to‑width, and generate output.pdf with matching dimensions.
-// Common Searches: How to set A5 page size for all sheets in Aspose.Cells before converting to PDF | Aspose.Cells .NET export Excel to PDF with A5 page dimensions | Fit worksheet content to page width when saving as A5 PDF using Aspose.Cells
-// Tags: set worksheet paper size a5 Aspose.Cells | export workbook to pdf a5 page size | fit worksheet to page width Aspose.Cells | page setup paper size conversion .net
+// Title: Apply A5 paper size to all worksheets while loading an Excel file and export to PDF with Aspose.Cells for .NET
+// Common Searches: how to set A5 paper size for each worksheet in Aspose.Cells C# | export Excel workbook to PDF with A5 page dimensions using Aspose.Cells | Aspose.Cells C# set PageSetup PaperSize before saving as PDF | C# load workbook and change printer paper size to A5 for PDF output | Aspose.Cells PDF conversion preserving custom page size A5
+// Tags: worksheet page setup A5 Aspose.Cells | PDF export with specific paper size C# | apply printer paper size to all worksheets | Aspose.Cells save workbook as PDF custom dimensions | load Excel workbook set paper size programmatically
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example loads an existing Excel file, loops through each worksheet to set PageSetup.PaperSize to A5, configures the sheet to fit to one page wide with unlimited height, and then saves the workbook as a PDF whose pages match the A5 dimensions.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, iterates through every worksheet to set its PageSetup.PaperSize to A5, ensures the output folder exists, and then saves the workbook as a PDF, handling both Aspose.Cells‑specific and general exceptions.
+    class Program
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Apply A5 paper size to each worksheet's page setup
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            PageSetup pageSetup = sheet.PageSetup;
-            pageSetup.PaperSize = PaperSizeType.PaperA5;   // Set printer paper size to A5
-            // Optional: fit the content to the width of the page
-            pageSetup.FitToPagesWide = 1;
-            pageSetup.FitToPagesTall = 0; // unlimited height
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-        // Save the workbook as a PDF with the A5 page dimensions
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook (no password supplied)
+                Workbook workbook = new Workbook(inputPath);
+
+                // Set paper size to A5 for each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as PDF
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"PDF saved successfully to: {outputPath}");
+            }
+            catch (CellsException ex)
+            {
+                // Handle Aspose.Cells specific errors (e.g., password protected files)
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle all other runtime errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

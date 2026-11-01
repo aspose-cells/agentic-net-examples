@@ -1,60 +1,91 @@
-// Title: How to batch convert multiple XLSX workbooks to 150 DPI PNG images using Aspose.Cells in C#
-// AI Prompts: Generate a C# console program that scans a directory for .xlsx files, sets CellsHelper.DPI to 150, and saves each worksheet as a separate PNG file using Aspose.Cells. | Write .NET code to convert all Excel workbooks in a directory into high‑resolution PNG images, generating one image per sheet and applying a custom DPI. | Create a C# script that creates an output folder, iterates over XLSX files, and uses WorkbookRender with ImageOrPrintOptions to produce PNG files at 150 DPI.
-// Common Searches: C# Aspose.Cells batch export Excel worksheets to PNG with specific DPI | How to set rendering DPI when converting XLSX to PNG using Aspose.Cells | Render each sheet of multiple Excel files to separate PNG files in .NET | Automate conversion of a folder of .xlsx files to high‑resolution PNG images
-// Tags: Aspose.Cells batch XLSX to PNG conversion | CellsHelper DPI configuration for image rendering | WorkbookRender export worksheets as PNG | ImageOrPrintOptions PNG one page per sheet | C# automate Excel to high‑resolution image
+// Title: Convert a folder of XLSX workbooks to high‑resolution 150 DPI PNG images with Aspose.Cells for .NET
+// Common Searches: C# code to batch convert all .xlsx files in a directory to 150 DPI PNG using Aspose.Cells | How to render each worksheet page of multiple Excel files to separate PNG images in .NET | Aspose.Cells example for exporting Excel worksheets to high‑resolution PNG files in a loop | Programmatically save Excel sheets as PNG with specific DPI in C# | Batch process Excel workbooks to PNG images with custom resolution using Aspose.Cells
+// Tags: Aspose.Cells batch XLSX to PNG conversion .NET | render Excel worksheet to PNG at custom DPI | export each worksheet page as separate PNG | high‑resolution Excel to image conversion C# | directory based Excel to PNG processing Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace BatchXlsxToPng
+// The sample scans a given input folder for *.xlsx files, creates an output folder if needed, loads each workbook with Aspose.Cells, sets ImageOrPrintOptions to 150 dpi, iterates through every worksheet and its pages, and saves each page as a PNG file named with the original workbook, sheet name, and page number.
+class BatchXlsxToPngConverter
 {
-    // The C# console app sets CellsHelper.DPI to 150, creates an output directory, iterates over every .xlsx file in a source folder, loads each workbook with Aspose.Cells, and uses WorkbookRender together with ImageOrPrintOptions (PNG format, one page per sheet) to render each worksheet to a separate PNG file named with the original workbook and page index.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Set the desired DPI for rendering
-            CellsHelper.DPI = 150;
-
-            // Folder containing source XLSX files
+            // Folder containing the source XLSX files
             string sourceFolder = @"C:\InputXlsx";
 
-            // Folder where PNG images will be saved
-            string outputFolder = @"C:\BatchPng";
-            Directory.CreateDirectory(outputFolder);
+            // Folder where the PNG images will be saved
+            string outputFolder = @"C:\OutputPng";
 
-            // Image rendering options (PNG format, one page per sheet)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                ImageType = ImageType.Png,
-                OnePagePerSheet = true
-            };
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
+            }
 
-            // Process each XLSX file in the source folder
-            foreach (string xlsxPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputFolder))
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(xlsxPath);
+                Directory.CreateDirectory(outputFolder);
+            }
 
-                // Create a renderer for the whole workbook
-                WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
+            // Get all XLSX files in the source folder
+            string[] xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-                // Render each page (sheet) to a separate PNG file
-                for (int pageIndex = 0; pageIndex < renderer.PageCount; pageIndex++)
+            foreach (string xlsxPath in xlsxFiles)
+            {
+                // Verify the file still exists before loading
+                if (!File.Exists(xlsxPath))
                 {
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
-                    string pngPath = Path.Combine(outputFolder,
-                        $"{fileNameWithoutExt}_page{pageIndex}.png");
+                    Console.WriteLine($"File not found (skipped): {xlsxPath}");
+                    continue;
+                }
 
-                    // Render the page to the specified PNG file
-                    renderer.ToImage(pageIndex, pngPath);
+                try
+                {
+                    // Load the workbook
+                    Workbook workbook = new Workbook(xlsxPath);
+
+                    // Configure image rendering options: 150 DPI
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    {
+                        HorizontalResolution = 150,
+                        VerticalResolution = 150
+                    };
+
+                    // Process each worksheet in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Create a renderer for the current worksheet
+                        SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+
+                        // Render each page of the worksheet (most sheets have a single page)
+                        for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
+                        {
+                            // Build the output file name: OriginalFileName_SheetName_PageIndex.png
+                            string outputFileName = $"{Path.GetFileNameWithoutExtension(xlsxPath)}_{sheet.Name}_Page{pageIndex + 1}.png";
+                            string outputPath = Path.Combine(outputFolder, outputFileName);
+
+                            // Save the rendered page as PNG (format inferred from file extension)
+                            sheetRender.ToImage(pageIndex, outputPath);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{xlsxPath}': {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Batch conversion completed.");
+            Console.WriteLine("Conversion completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

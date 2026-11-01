@@ -1,60 +1,56 @@
-// Title: Unlock Excel shapes with a specific AlternativeText tag using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds shapes whose AlternativeText equals a given tag, and clears the IsLocked flag. | Add logging to the shape‑unlocking script so that each unlocked shape’s name and cell address are written to the console. | Refactor the example to read a user‑defined document property and compare it with each shape’s AlternativeText before clearing IsLocked.
-// Common Searches: C# Aspose.Cells how to unlock shapes based on AlternativeText tag | iterate over all shapes in an Excel workbook and change IsLocked property using Aspose.Cells | filter shapes by custom tag and unlock them in .NET | Aspose.Cells unlock specific shapes in multiple worksheets programmatically
-// Tags: unlock shape IsLocked Aspose.Cells | filter shapes by AlternativeText Aspose.Cells | iterate worksheet shapes C# | Aspose.Cells shape editing by tag | batch unlock Excel shapes .NET
+// Title: Unlock Excel shapes that have a specific AlternativeText tag using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds shapes whose AlternativeText equals a given string, and sets their IsLocked property to false. | Create a script that loads an .xlsx file, iterates through all shapes, unlocks those tagged with a custom AlternativeText value, and saves the workbook. | Generate a robust C# example that checks file existence, handles exceptions, and unlocks shapes by tag using Aspose.Cells.
+// Common Searches: C# Aspose.Cells unlock shapes by AlternativeText tag | How to programmatically unlock specific shapes in an Excel file using Aspose.Cells | Iterate over worksheet shapes and change IsLocked property based on custom tag in .NET | Aspose.Cells example to filter shapes by AlternativeText and modify lock status | Unlock shapes with a particular tag in Excel using Aspose.Cells for .NET
+// Tags: Aspose.Cells unlock shape by AlternativeText | iterate worksheet shapes C# Aspose.Cells | set shape IsLocked property Aspose.Cells | filter Excel shapes using custom tag | modify shape lock status .NET | batch unlock shapes in workbook Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace UnlockShapesByTag
+// The C# program loads 'input.xlsx', verifies the file exists, iterates through every worksheet and each shape, checks if the shape's AlternativeText matches the target tag "UnlockMe", sets the shape's IsLocked property to false for matching shapes, and saves the updated workbook as 'output.xlsx' with exception handling.
+class UnlockShapesByTag
 {
-    // The program loads an input workbook, walks through each worksheet and its collection of shapes, checks each shape's AlternativeText against a target tag, sets IsLocked to false for matches, and saves the result to a new file while handling missing files and runtime exceptions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-            const string targetTag = "EditableShape";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            try
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+            // Tag to search for (stored in AlternativeText)
+            string targetTag = "UnlockMe";
+
+            // Iterate through all worksheets and their shapes
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Iterate through all shapes on the current worksheet
-                    foreach (Aspose.Cells.Drawing.Shape shape in sheet.Shapes)
+                    if (shape.AlternativeText == targetTag)
                     {
-                        // Use AlternativeText as a tag equivalent
-                        if (!string.IsNullOrEmpty(shape.AlternativeText) &&
-                            shape.AlternativeText.Equals(targetTag, StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Unlock the shape for editing
-                            shape.IsLocked = false;
-                        }
+                        // Unlock the shape using the correct property
+                        shape.IsLocked = false;
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

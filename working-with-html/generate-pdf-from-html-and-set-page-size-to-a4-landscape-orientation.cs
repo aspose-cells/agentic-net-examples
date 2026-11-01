@@ -1,31 +1,49 @@
-// Title: Create a PDF from an HTML file with A4 landscape orientation using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an HTML file into an Aspose.Cells workbook, set the first worksheet to A4 landscape, and export it as a PDF in C#. | Show how to configure PageSetup.Orientation and PageSetup.PaperSize before saving a workbook to PDF with Aspose.Cells. | Write C# code that uses HtmlLoadOptions to read HTML, applies landscape orientation, and generates a PDF file.
-// Common Searches: Aspose.Cells C# convert HTML to PDF with landscape orientation and A4 size | how to set worksheet page orientation to landscape when exporting to PDF using Aspose.Cells | specify A4 paper size for PDF output in Aspose.Cells C# example
-// Tags: html to pdf conversion Aspose.Cells C# | set worksheet orientation landscape Aspose.Cells | configure A4 paper size Aspose.Cells PDF export | Workbook.Save PDF format Aspose.Cells | HtmlLoadOptions usage Aspose.Cells
+// Title: Generate a PDF from an HTML file with A4 landscape orientation using Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that reads an HTML file, loads it into an Aspose.Cells Workbook, sets the first worksheet to A4 landscape, and saves the workbook as a PDF. | Create a reusable C# method that accepts an HTML string and returns a PDF byte array with A4 landscape page setup using Aspose.Cells. | Show how to extend the example to apply custom margins and let the caller specify the output directory when saving the PDF.
+// Common Searches: aspocells c# convert html file to pdf with A4 landscape page size | how to set worksheet orientation to landscape before saving as PDF in Aspose.Cells | C# example for loading HTML into Aspose.Cells workbook and exporting to PDF | Aspose.Cells page setup A4 landscape for PDF output from HTML
+// Tags: Aspose.Cells HTML to PDF conversion C# | A4 landscape page setup Aspose.Cells | Set worksheet orientation PDF Aspose.Cells | Load HTML into Aspose.Cells workbook | Export Aspose.Cells workbook as PDF
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// // Loads an HTML file into an Aspose.Cells Workbook, configures the first worksheet for A4 landscape layout, and saves the workbook as a PDF document.
-class Program
+namespace HtmlToPdfConversion
 {
-    static void Main()
+    // Loads an HTML file into an Aspose.Cells Workbook, configures the first worksheet to A4 landscape orientation, and saves the workbook as a PDF document.
+    class HtmlToPdfConverter
     {
-        // Path to the source HTML file
-        string htmlPath = "input.html";
+        static void Main()
+        {
+            try
+            {
+                // Path to the HTML input file
+                string htmlPath = "input.html";
 
-        // Path for the generated PDF file
-        string pdfPath = "output.pdf";
+                // Verify that the HTML file exists
+                if (!File.Exists(htmlPath))
+                {
+                    Console.WriteLine($"Input HTML file not found: {htmlPath}");
+                    return;
+                }
 
-        // Load the HTML content into a workbook
-        Workbook workbook = new Workbook(htmlPath, new HtmlLoadOptions());
+                // Load HTML content into a workbook using HtmlLoadOptions
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-        // Configure page setup for the first worksheet (you can repeat for other sheets if needed)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.PageSetup.Orientation = PageOrientationType.Landscape; // Landscape orientation
-        sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;           // A4 paper size
+                // Configure page setup: A4 size, landscape orientation
+                PageSetup pageSetup = workbook.Worksheets[0].PageSetup;
+                pageSetup.PaperSize = PaperSizeType.PaperA4;
+                pageSetup.Orientation = PageOrientationType.Landscape;
 
-        // Save the workbook as a PDF document
-        workbook.Save(pdfPath, SaveFormat.Pdf);
+                // Save the workbook as a PDF file
+                string pdfPath = "output.pdf";
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+                Console.WriteLine($"PDF successfully saved to: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

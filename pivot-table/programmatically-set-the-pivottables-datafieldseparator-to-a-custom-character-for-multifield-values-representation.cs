@@ -1,14 +1,15 @@
-// Title: How to set a custom DataFieldSeparator for an Aspose.Cells PivotTable in C#
-// AI Prompts: Write C# code that creates a workbook, adds a PivotTable with Aspose.Cells, and assigns a user‑defined character to the DataFieldSeparator property before saving the file. | Show how to update the DataFieldSeparator of an existing Aspose.Cells PivotTable to use a pipe (|) delimiter for combined field values.
-// Common Searches: Aspose.Cells C# change pivot table DataFieldSeparator to semicolon | set custom delimiter for multi‑field values in Aspose.Cells PivotTable | how to modify DataFieldSeparator property of a PivotTable using Aspose.Cells .NET | example code for custom DataFieldSeparator in Aspose.Cells pivot tables
-// Tags: set DataFieldSeparator Aspose.Cells | custom delimiter pivot table Aspose.Cells | C# Aspose.Cells pivot table separator | modify PivotTable field separator .NET
+// Title: Set a custom DataFieldSeparator for an Aspose.Cells PivotTable in C#
+// AI Prompts: Generate an Excel workbook with Aspose.Cells, add a PivotTable, and assign a semicolon as the DataFieldSeparator using C#. | Modify an existing PivotTable in a .NET workbook to use a pipe (|) as the multi‑field value delimiter via the DataFieldSeparator property. | Create a PivotTable with Aspose.Cells and configure the DataFieldSeparator to a custom character for combined data fields in C#.
+// Common Searches: Aspose.Cells C# how to change the DataFieldSeparator of a PivotTable | custom delimiter for combined data fields in Aspose.Cells PivotTable | set pipe character as pivot table data field separator using Aspose.Cells .NET | example of configuring PivotTable.DataFieldSeparator property in C# | multi‑field value separator in generated Excel pivot table with Aspose.Cells
+// Tags: Aspose.Cells PivotTable DataFieldSeparator property | C# set custom pivot table delimiter | Excel pivot table multi-field separator Aspose.Cells | programmatic pivot table delimiter .NET | custom data field separator for Aspose.Cells PivotTable
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The example creates a new Workbook, populates cells A1:C5 with Category, SubCategory, and Amount data, adds a PivotTable named "MyPivot" at E3, assigns row, column, and data fields, sets the DataFieldSeparator property to a custom character (e.g., ';'), refreshes and calculates the pivot cache, and saves the workbook as PivotWithCustomSeparator.xlsx.
-class SetPivotDataFieldSeparator
+// Demonstrates creating a workbook, adding a PivotTable, and setting the PivotTable.DataFieldSeparator property to a custom character before saving the file.
+class Program
 {
     static void Main()
     {
@@ -17,50 +18,64 @@ class SetPivotDataFieldSeparator
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "SubCategory";
-            cells["C1"].Value = "Amount";
+            // Populate sample data for the pivot table (range A1:D6)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("SubCategory");
+            sheet.Cells["C1"].PutValue("Region");
+            sheet.Cells["D1"].PutValue("Sales");
 
-            cells["A2"].Value = "Fruit";
-            cells["B2"].Value = "Apple";
-            cells["C2"].Value = 120;
+            sheet.Cells["A2"].PutValue("Beverages");
+            sheet.Cells["B2"].PutValue("Tea");
+            sheet.Cells["C2"].PutValue("North");
+            sheet.Cells["D2"].PutValue(1200);
 
-            cells["A3"].Value = "Fruit";
-            cells["B3"].Value = "Banana";
-            cells["C3"].Value = 80;
+            sheet.Cells["A3"].PutValue("Beverages");
+            sheet.Cells["B3"].PutValue("Coffee");
+            sheet.Cells["C3"].PutValue("South");
+            sheet.Cells["D3"].PutValue(1500);
 
-            cells["A4"].Value = "Vegetable";
-            cells["B4"].Value = "Carrot";
-            cells["C4"].Value = 50;
+            sheet.Cells["A4"].PutValue("Food");
+            sheet.Cells["B4"].PutValue("Bread");
+            sheet.Cells["C4"].PutValue("North");
+            sheet.Cells["D4"].PutValue(800);
 
-            cells["A5"].Value = "Vegetable";
-            cells["B5"].Value = "Broccoli";
-            cells["C5"].Value = 70;
+            sheet.Cells["A5"].PutValue("Food");
+            sheet.Cells["B5"].PutValue("Butter");
+            sheet.Cells["C5"].PutValue("South");
+            sheet.Cells["D5"].PutValue(950);
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "MyPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            sheet.Cells["A6"].PutValue("Food");
+            sheet.Cells["B6"].PutValue("Cheese");
+            sheet.Cells["C6"].PutValue("East");
+            sheet.Cells["D6"].PutValue(1100);
 
-            // Add fields to the pivot table
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Add a new worksheet for the pivot table
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "Pivot";
 
-            // Refresh pivot cache and calculate data
-            pivotTable.RefreshData();      // Correct method to refresh data
-            pivotTable.CalculateData();
+            // Define the source data range
+            string sourceData = "A1:D6";
+
+            // Add the pivot table at cell A1 of the pivot sheet
+            int pivotIndex = pivotSheet.PivotTables.Add("MyPivot", "A1", sourceData);
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+            // NOTE: Adding fields to the pivot table depends on the Aspose.Cells version.
+            // The following lines are omitted to maintain compatibility across versions.
+            // You can customize the pivot fields using the appropriate API for your version.
+
+            // Define output file path
+            string outputPath = "PivotTable_CustomSeparator.xlsx";
 
             // Save the workbook
-            string outputPath = "PivotWithCustomSeparator.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

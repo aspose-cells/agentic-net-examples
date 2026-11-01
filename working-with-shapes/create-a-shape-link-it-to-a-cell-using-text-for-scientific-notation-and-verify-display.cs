@@ -1,13 +1,13 @@
-// Title: Add a textbox shape linked to a cell and format its value in scientific notation using the TEXT function with Aspose.Cells for .NET
-// AI Prompts: Insert a TextBox shape at a given row and column, set its Text property to =TEXT(A1,"0.00E+00"), call Workbook.CalculateFormula(), and read back the displayed text from the shape. | Create a shape, bind it to cell A1 with a TEXT formula for scientific notation, recalculate formulas, and programmatically verify the shape shows the formatted value.
-// Common Searches: how to link a textbox shape to a cell and show scientific notation with Aspose.Cells .NET | Aspose.Cells set shape text to =TEXT(A1,"0.00E+00") and recalculate | display numeric cell value in scientific notation inside a shape using Aspose.Cells for C# | Aspose.Cells shape formula binding example for scientific format
-// Tags: textbox shape formula binding Aspose.Cells | scientific notation TEXT function shape | recalculate workbook for shape text Aspose.Cells | save workbook with linked shape .NET
+// Title: Create a rectangle shape linked to a worksheet cell and display its value in scientific notation using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a rectangle shape, sets its Text property to a TEXT formula referencing cell A1, and formats the result in scientific notation. | Show how to trigger workbook formula calculation and then read the rendered text of a shape that is bound to a cell in Aspose.Cells.
+// Common Searches: how to bind a shape's text to a cell using TEXT function in Aspose.Cells C# | display cell value in scientific notation inside a rectangle shape Aspose.Cells | force formula evaluation before reading shape text Aspose.Cells .NET | Aspose.Cells example linking shape to cell with custom number format | C# Aspose.Cells shape text formula not updating until CalculateFormula
+// Tags: rectangle shape linked to worksheet cell Aspose.Cells | shape text using TEXT formula scientific notation | force workbook calculation before shape text retrieval | C# Aspose.Cells shape text binding to cell
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, writes a large number to cell A1, adds a textbox shape at row 2 column 1, assigns the formula =TEXT(A1,"0.00E+00") to the shape, recalculates formulas so the shape displays the number in scientific notation, prints the evaluated text, and saves the file as LinkedShape.xlsx.
+// The example creates a new workbook, writes a numeric value to cell A1, adds a rectangle shape, assigns its Text property to a TEXT formula that formats A1 in scientific notation, forces formula calculation, outputs the shape's displayed text, and saves the file as ShapeLinkedToCell.xlsx.
 class Program
 {
     static void Main()
@@ -16,36 +16,27 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Place a numeric value in cell A1
-            worksheet.Cells["A1"].PutValue(123456789.0);
+            // Put a numeric value in cell A1
+            Cell cellA1 = sheet.Cells["A1"];
+            cellA1.PutValue(12345.6789);
 
-            // Add a textbox shape to the worksheet
-            // Parameters: upper left row, upper left column, top offset, left offset, height, width
-            int upperRow = 2;      // Row index (0‑based)
-            int upperColumn = 1;   // Column index (0‑based)
-            int top = 5;           // Pixels from the top of the cell
-            int left = 5;          // Pixels from the left of the cell
-            int height = 50;       // Height in points
-            int width = 200;       // Width in points
+            // Add a rectangle shape to the worksheet
+            // Parameters: drawing type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 0, 0, 100, 50, 200);
 
-            // AddTextBox returns a Shape; we can work directly with the Shape object
-            Shape shape = worksheet.Shapes.AddTextBox(upperRow, upperColumn, top, left, height, width);
-
-            // Set the shape to contain a formula that formats the value of A1 in scientific notation
-            // Note: In recent Aspose.Cells versions the IsFormula property is not required;
-            // the shape automatically treats the text as a formula when it starts with '='.
+            // Link the shape's text to cell A1 using TEXT function with scientific notation
             shape.Text = "=TEXT(A1,\"0.00E+00\")";
 
-            // Recalculate formulas so the shape displays the formatted value
+            // Force calculation of all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Output the evaluated text of the shape
-            Console.WriteLine("Textbox displayed text: " + shape.Text); // Expected format like 1.23E+08
+            // Verify the displayed text of the shape
+            Console.WriteLine("Shape displayed text: " + shape.Text); // Expected: 1.23E+04 (or similar)
 
-            // Save the workbook (optional, demonstrates lifecycle handling)
-            workbook.Save("LinkedShape.xlsx");
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            workbook.Save("ShapeLinkedToCell.xlsx");
         }
         catch (Exception ex)
         {

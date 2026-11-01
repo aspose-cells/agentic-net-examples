@@ -1,25 +1,24 @@
-// Title: How to export an Excel workbook to HTML while suppressing document and workbook properties using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an XLSX workbook and saves it as HTML, configuring HtmlSaveOptions to omit both document and workbook properties. | Show how to use Aspose.Cells HtmlSaveOptions in C# to generate an HTML file from a workbook while suppressing all metadata.
-// Common Searches: Aspose.Cells C# export workbook to HTML without document properties | How to disable ExportWorkbookProperties in HtmlSaveOptions Aspose.Cells | Save Excel as HTML without embedding workbook metadata using Aspose.Cells | C# convert XLSX to HTML and hide workbook properties Aspose.Cells | HtmlSaveOptions ExportDocumentProperties false example
-// Tags: Aspose.Cells HtmlSaveOptions disable document metadata | Aspose.Cells HtmlSaveOptions disable workbook metadata | C# Aspose.Cells HTML export without embedded properties | Suppress workbook properties in HTML conversion Aspose.Cells | Convert XLSX to HTML without metadata using Aspose.Cells
+// Title: Export an Excel workbook to HTML while omitting both document and workbook properties using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions to set ExportDocumentProperties and ExportWorkbookProperties to false, and saves the result as an .html file with Aspose.Cells. | Show how to disable metadata export when converting a workbook to HTML with Aspose.Cells, including the necessary property settings in HtmlSaveOptions.
+// Common Searches: Aspose.Cells how to hide document properties in HTML export | C# convert Excel to HTML without workbook metadata using Aspose | Set HtmlSaveOptions ExportDocumentProperties false Aspose.Cells example | Remove all properties from HTML output when saving workbook with Aspose.Cells .NET
+// Tags: Aspose.Cells HtmlSaveOptions omit document properties | export workbook to html without metadata Aspose.Cells | C# HtmlSaveOptions ExportWorkbookProperties false | convert xlsx to html without workbook properties Aspose
 
-using System;
 using Aspose.Cells;
 
-// Loads 'input.xlsx', sets HtmlSaveOptions to omit document and workbook properties, and saves as 'output.html' without embedding any workbook or document metadata.
+// Loads an Excel workbook, configures HtmlSaveOptions to disable ExportDocumentProperties and ExportWorkbookProperties, and saves the workbook as an HTML file without any document or workbook metadata.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Configure HTML save options to omit document and workbook properties
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        saveOptions.ExportDocumentProperties = false; // Omit document properties
-        saveOptions.ExportWorkbookProperties = false; // Omit workbook properties
+        // Set HTML save options to omit both document and workbook properties
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportDocumentProperties = false; // Do not export document properties
+        htmlOptions.ExportWorkbookProperties = false; // Do not export workbook properties
 
-        // Save the workbook as HTML with the specified options
-        workbook.Save("output.html", saveOptions);
+        // Export the workbook to HTML using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }

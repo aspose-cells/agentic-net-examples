@@ -1,52 +1,24 @@
-// Title: How to retrieve a worksheet by its name using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method that accepts an Excel file path and a sheet name, loads the workbook with Aspose.Cells, returns the Worksheet object, and throws a descriptive exception if the sheet does not exist. | Generate C# code that opens a workbook, accesses the worksheet named "MySheetName", verifies that the worksheet is present, and stores the Worksheet reference for further manipulation.
-// Common Searches: Aspose.Cells C# get worksheet object by sheet name | How to verify worksheet existence before accessing it with Aspose.Cells .NET | Retrieve specific sheet from an Excel workbook using Aspose.Cells in C# | C# Aspose.Cells example for handling missing worksheet | Access worksheet by name and store reference for further processing Aspose.Cells
-// Tags: retrieve worksheet by name Aspose.Cells | load workbook and access specific sheet C# | check worksheet existence Aspose.Cells .NET | handle missing worksheet exception C# | worksheet reference for further processing Aspose.Cells
+// Title: How to retrieve a worksheet by its name and keep a reference using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells and obtains a Worksheet object by specifying the sheet name. | Show how to assign the Worksheet returned from workbook.Worksheets["SheetName"] to a variable for later cell operations.
+// Common Searches: Aspose.Cells C# get worksheet object by sheet name from existing workbook | C# code to access a specific sheet in an Excel file using Aspose.Cells Worksheets collection | How to reference a worksheet for further manipulation after loading a workbook with Aspose.Cells | Retrieve worksheet named "Sheet1" in .NET using Aspose.Cells API
+// Tags: Aspose.Cells retrieve worksheet by name | C# store Worksheet reference | Aspose.Cells load workbook from xlsx | worksheet object for further manipulation Aspose.Cells | access specific sheet Aspose.Cells .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
 
-// The sample loads 'input.xlsx' with Aspose.Cells, attempts to fetch the worksheet named 'MySheetName' via the Worksheets collection, checks for a null result to handle a missing sheet, prints the accessed sheet name, and includes basic error handling.
+// The example loads an existing workbook (input.xlsx) with Aspose.Cells, accesses the worksheet named "Sheet1" via the Worksheets collection, and stores the Worksheet object in a variable for subsequent operations such as reading or writing cell values.
 class WorksheetAccessExample
 {
     static void Main()
     {
-        try
-        {
-            string inputPath = "input.xlsx";
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+        // Access the worksheet by its name and store the reference
+        // Ensure the sheet name exists in the workbook
+        Worksheet sheet = workbook.Worksheets["Sheet1"];
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Attempt to get the worksheet by name
-            string targetSheetName = "MySheetName";
-            Worksheet sheet = workbook.Worksheets[targetSheetName];
-
-            if (sheet == null)
-            {
-                Console.WriteLine($"Worksheet \"{targetSheetName}\" not found in the workbook.");
-                return;
-            }
-
-            // Example operation: read the name to verify access
-            string sheetName = sheet.Name;
-            Console.WriteLine($"Accessed worksheet: {sheetName}");
-
-            // Optional: Save the workbook after any modifications
-            // string outputPath = "output.xlsx";
-            // workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // The 'sheet' variable can now be used for further operations
+        // Example: read a cell value
+        // var value = sheet.Cells["A1"].StringValue;
     }
 }

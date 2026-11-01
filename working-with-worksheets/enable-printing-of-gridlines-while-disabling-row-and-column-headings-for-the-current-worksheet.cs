@@ -1,15 +1,15 @@
-// Title: How to print gridlines but hide row and column headings in an Aspose.Cells worksheet (C#)
-// AI Prompts: Generate C# code that enables PrintGridlines and disables PrintHeadings on the active worksheet using Aspose.Cells. | Show the exact PageSetup property settings required to print only gridlines for a workbook saved as .xlsx. | Explain how to configure worksheet printing options to exclude row/column headings while keeping gridlines in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# enable gridlines printing and turn off headings for the first worksheet | How to set PageSetup.PrintHeadings = false in Aspose.Cells .NET | Print only gridlines in Excel file using Aspose.Cells library | Disable row and column headings when exporting workbook with Aspose.Cells C# | Worksheet printing options Aspose.Cells hide headings keep gridlines
-// Tags: gridlines printing Aspose.Cells C# | hide headings Aspose.Cells | worksheet PageSetup options Aspose.Cells | excel printing settings .NET Aspose.Cells | gridlines without headings Aspose.Cells
+// Title: Print gridlines while suppressing row and column headings on the active worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets PageSetup.PrintGridlines to true and PageSetup.PrintHeadings to false for the currently active worksheet in an Aspose.Cells workbook. | Show how to configure Aspose.Cells to print only gridlines and omit row/column headings when saving an Excel file. | Provide a step‑by‑step example that loads a workbook, modifies the active sheet’s print settings to enable gridlines and disable headings, and saves the result.
+// Common Searches: Aspose.Cells .NET enable gridline printing and hide headings for active sheet | C# Aspose.Cells print only gridlines without row and column headings | How to set PrintHeadings false in Aspose.Cells page setup | Disable printing of row/column headers while keeping gridlines in Excel using Aspose.Cells | Aspose.Cells page setup print options for active worksheet
+// Tags: Aspose.Cells PrintGridlines setting | Aspose.Cells PrintHeadings false | active worksheet page setup Aspose.Cells | disable Excel headings printing Aspose.Cells | enable gridline printing Aspose.Cells .NET
 
 using Aspose.Cells;
 
-// CREATE_WORKBOOK
-var workbook = new Workbook();
+// Load an existing workbook (replace with your file path)
+Workbook workbook = new Workbook("input.xlsx");
 
-// Get the first worksheet (current worksheet)
-Worksheet sheet = workbook.Worksheets[0];
+// Get the currently active worksheet
+Worksheet sheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
 // Enable printing of gridlines
 sheet.PageSetup.PrintGridlines = true;
@@ -17,5 +17,5 @@ sheet.PageSetup.PrintGridlines = true;
 // Disable printing of row and column headings
 sheet.PageSetup.PrintHeadings = false;
 
-// SAVE_WORKBOOK
-workbook.Save("Result.xlsx");
+// Save the modified workbook (replace with your desired output path)
+workbook.Save("output.xlsx");

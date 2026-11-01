@@ -1,67 +1,83 @@
-// Title: How to embed a file as an OLE object and store custom JSON metadata using OleObject.AlternativeText in Aspose.Cells for .NET
-// AI Prompts: Generate C# code that adds a text file as an OLE object and writes a JSON string to its AlternativeText property with Aspose.Cells. | Show how to open a saved Excel workbook, locate the first OLE object, and extract the AlternativeText value using Aspose.Cells for .NET. | Adapt the sample to insert a PDF file as an OLE object and store XML metadata in the AlternativeText field.
-// Common Searches: Aspose.Cells embed OLE object and save custom metadata in AlternativeText | C# read AlternativeText from OLE object in Excel workbook using Aspose.Cells | store JSON string in OLE object's AlternativeText property with Aspose.Cells .NET | how to retrieve embedded file metadata from Excel using Aspose.Cells
-// Tags: OLE object insertion Aspose.Cells C# | AlternativeText property custom metadata | JSON metadata storage in OLE object | AlternativeText retrieval Aspose.Cells | workbook save load with embedded OLE
+// Title: How to embed an OLE object in an Excel worksheet and store custom key‑value metadata using OleObject.AlternativeText with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# embed OLE object from byte array and set alternative text | store custom key value pairs in OleObject.AlternativeText in Excel using .NET | retrieve metadata from an OLE object in a saved workbook with Aspose.Cells | add OLE object to worksheet and read AlternativeText property later | save and load OLE object metadata in Excel file using Aspose.Cells C#
+// Tags: add ole object from byte array Aspose.Cells | set oleobject alternativetext metadata | read oleobject alternativetext property | embed text file as ole object Excel .NET | save workbook with ole object Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example creates a workbook, inserts a text file as an OLE object, saves a JSON string in the object's AlternativeText property, persists the file, then reloads the workbook to read back the stored metadata.
-class OleObjectMetadataExample
+// Demonstrates creating an OLE object from a text file, assigning custom key‑value metadata to its AlternativeText property, saving the workbook, then loading it back and retrieving the stored metadata using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Prepare a sample text file to embed.
-            string sourceFile = @"C:\Temp\Sample.txt";
-            string sourceDir = Path.GetDirectoryName(sourceFile);
-            if (!string.IsNullOrEmpty(sourceDir) && !Directory.Exists(sourceDir))
-            {
-                Directory.CreateDirectory(sourceDir);
-            }
-
-            if (!File.Exists(sourceFile))
-            {
-                File.WriteAllText(sourceFile, "Sample content");
-            }
-
-            // Read file bytes for embedding.
-            byte[] oleData = File.ReadAllBytes(sourceFile);
-
-            // Create a new workbook and get the first worksheet.
+            // ---------- Create ----------
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add an OLE object (embed the text file) at cell A1 with size 200x100 pixels.
-            // Use the overload that accepts byte[] data and progId.
-            int oleObjectIndex = sheet.OleObjects.Add(0, 0, 200, 100, oleData, "Package");
-
-            // Retrieve the OLE object that was just added.
-            OleObject oleObject = sheet.OleObjects[oleObjectIndex];
-
-            // Store custom metadata in the AlternativeText property (e.g., JSON string).
-            string customMetadata = "{\"DocumentId\":12345,\"Author\":\"John Doe\"}";
-            oleObject.AlternativeText = customMetadata;
-
-            // Save the workbook.
-            string filePath = "OleObjectMetadata.xlsx";
-            workbook.Save(filePath);
-
-            // Load the workbook and retrieve the stored metadata.
-            if (File.Exists(filePath))
+            // Ensure the OLE source file exists; create a simple text file if missing
+            string oleFilePath = "sample.txt";
+            if (!File.Exists(oleFilePath))
             {
-                Workbook loadedWorkbook = new Workbook(filePath);
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-                OleObject loadedOleObject = loadedSheet.OleObjects[0];
+                File.WriteAllText(oleFilePath, "This is a sample OLE text file.");
+            }
+
+            // Read the OLE file bytes
+            byte[] oleData = File.ReadAllBytes(oleFilePath);
+
+            // Add an OLE object to the worksheet using the overload that accepts raw data
+            int row = 1;
+            int column = 1;
+            int height = 100;
+            int width = 200;
+
+            // The overload requires: row, column, height, width, unknownInt, dataLength, dataBytes
+            // The unknownInt parameter is not used for simple file embedding; pass 0.
+            OleObject oleObject = worksheet.Shapes.AddOleObject(
+                row, column, height, width, 0, oleData.Length, oleData);
+
+            // Set display options (IconIndex and IconLabel are not available in this API version)
+            oleObject.DisplayAsIcon = false;
+
+            // Store custom metadata in the AlternativeText property
+            oleObject.AlternativeText = "Author=John Doe;Version=1.0;Notes=Sample metadata";
+
+            // Save the workbook
+            string savePath = "OleMetadata.xlsx";
+            workbook.Save(savePath, SaveFormat.Xlsx);
+
+            // ---------- Load ----------
+            // Verify the saved workbook exists before loading
+            if (!File.Exists(savePath))
+                throw new FileNotFoundException($"Saved workbook not found: {savePath}");
+
+            Workbook loadedWorkbook = new Workbook(savePath);
+            Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+
+            // Find the first OLE object in the worksheet
+            OleObject loadedOleObject = null;
+            foreach (Shape shape in loadedWorksheet.Shapes)
+            {
+                if (shape is OleObject obj)
+                {
+                    loadedOleObject = obj;
+                    break;
+                }
+            }
+
+            if (loadedOleObject != null)
+            {
+                // Retrieve the stored metadata from AlternativeText
                 string retrievedMetadata = loadedOleObject.AlternativeText;
                 Console.WriteLine("Retrieved metadata: " + retrievedMetadata);
             }
             else
             {
-                Console.WriteLine($"Workbook file not found: {filePath}");
+                Console.WriteLine("No OLE object found in the loaded worksheet.");
             }
         }
         catch (Exception ex)

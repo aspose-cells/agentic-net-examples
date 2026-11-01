@@ -1,22 +1,54 @@
-// Title: How to remove unused cell styles from an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method that accepts input and output .xlsx file paths, loads the workbook with Aspose.Cells, calls RemoveUnusedStyles, and saves the cleaned file. | Show a .NET console example that iterates over a folder of Excel files and removes unused styles from each workbook using Aspose.Cells. | Demonstrate adding Workbook.RemoveUnusedStyles() into an existing Aspose.Cells workflow that also modifies worksheets before saving.
-// Common Searches: C# Aspose.Cells remove unused cell styles from an existing .xlsx file | How to clean up Excel workbook formatting with Aspose.Cells RemoveUnusedStyles method | Reduce .xlsx file size by deleting unused styles using Aspose.Cells in .NET | Batch remove unused styles from multiple Excel workbooks with Aspose.Cells C# | Aspose.Cells RemoveUnusedStyles example code for .NET developers
-// Tags: Aspose.Cells RemoveUnusedStyles method | C# delete unused cell styles | optimize .xlsx file size Aspose.Cells | clean Excel workbook formatting .NET | batch process Excel files Aspose.Cells
+// Title: C# example: Remove unused cell styles from an Excel workbook using Aspose.Cells
+// Common Searches: C# code to delete unused styles in an Excel file with Aspose.Cells | Aspose.Cells RemoveUnusedStyles method usage example | How to clean up Excel workbook styles programmatically in .NET | Load password‑protected Excel workbook and remove unused styles using Aspose.Cells | Save cleaned Excel file after removing unused styles with Aspose.Cells
+// Tags: Workbook.RemoveUnusedStyles C# | load encrypted Excel workbook Aspose.Cells LoadOptions | save cleaned workbook Aspose.Cells | exception handling CellsException Aspose.Cells | optimize Excel file style footprint Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads 'input.xlsx' with Aspose.Cells, removes all unused cell styles via Workbook.RemoveUnusedStyles(), and saves the cleaned workbook as 'output.xlsx' using C#.
+// The sample loads an Excel workbook (optionally using LoadOptions for a password), calls Workbook.RemoveUnusedStyles() to purge styles that are not referenced by any cell, and saves the cleaned file. It also demonstrates handling CellsException for password‑protected workbooks and generic exception handling.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Remove all styles that are not used in the workbook
-        workbook.RemoveUnusedStyles();
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Save the cleaned workbook to a new file
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the workbook (add password to LoadOptions if required)
+            var loadOptions = new LoadOptions(); // Set loadOptions.Password if needed
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Remove all styles that are not referenced by any cell
+            workbook.RemoveUnusedStyles();
+
+            // Save the cleaned workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handle password‑protected workbook scenario
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: The workbook is password protected. Provide a valid password in LoadOptions.");
+            }
+            else
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

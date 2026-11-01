@@ -1,38 +1,48 @@
-// Title: Convert an Aspose.Cells workbook to PDF with PDF 1.7 compliance using C#
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and saves it as a PDF, configuring PdfSaveOptions.Compliance to Pdf17. | Demonstrate how to set the PDF compliance level to 1.7 before calling Workbook.Save in an Aspose.Cells application.
-// Common Searches: asp.net aspose.cells export workbook to pdf with pdf 1.7 compliance | c# set pdf version 1.7 when converting excel to pdf using aspose.cells | how to use PdfSaveOptions to specify PDF 1.7 compliance in Aspose.Cells | pdfsaveoptions compliance property example for Aspose.Cells C# | save excel as pdf version 1.7 with aspose.cells library
-// Tags: Aspose.Cells PDF conversion compliance setting | PdfSaveOptions compliance property C# | Workbook.Save PDF version control Aspose.Cells | Export Excel workbook to PDF 1.7 Aspose | Set PDF 1.7 compliance in Aspose.Cells
+// Title: Convert an Excel workbook to PDF with Aspose.Cells for .NET and specify PDF version 1.7
+// Common Searches: how to specify PDF version 1.7 when saving an Excel file as PDF using Aspose.Cells C# | Aspose.Cells C# example for converting .xlsx to PDF with PDF 1.7 compatibility | set PdfSaveOptions.PdfVersion to 1.7 in Aspose.Cells workbook conversion | C# code to save Excel workbook as PDF 1.7 using Aspose.Cells library | Aspose.Cells PDF conversion with custom PDF version setting in .NET
+// Tags: Aspose.Cells PDF version 1.7 | Excel to PDF conversion C# | PdfSaveOptions set PDF compatibility | Workbook.Save PDF output Aspose.Cells | Aspose.Cells .NET PDF conversion example
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfConversion
+// Demonstrates loading an .xlsx file with Aspose.Cells, configuring PdfSaveOptions (including how to set PdfVersion to 1.7), ensuring the output directory exists, and saving the workbook as a PDF. The sample includes basic error handling for missing files and runtime exceptions.
+class Program
 {
-    // The program creates a workbook, adds sample data, configures PdfSaveOptions.Compliance to Pdf17, and saves the workbook as a PDF file named Workbook_V1_7.pdf.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the source workbook exists
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (empty or you can load an existing file)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Add some sample data to demonstrate the conversion
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells PDF version 1.7 example");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create PDF save options
+            // Configure PDF save options (default PDF version will be used)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set PDF compliance to PDF 1.7 (Pdf17)
-            pdfOptions.Compliance = PdfCompliance.Pdf17;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook as PDF with the specified compliance level
-            string outputPath = "Workbook_V1_7.pdf";
+            // Convert and save the workbook as PDF using the specified options
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved as PDF with version 1.7 to: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

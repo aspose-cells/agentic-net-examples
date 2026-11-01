@@ -1,52 +1,76 @@
-// Title: How to keep the header row static when merging cells with Aspose.Cells using ImportTableOptions and DeleteBlankOptions in C#
-// AI Prompts: Import a DataTable with ShiftFirstRowDown set to false and merge a data row while keeping the header unchanged using Aspose.Cells. | Configure DeleteBlankColumns to retain only the header part of merged cells by setting MergedCellsShrinkType to KeepHeaderOnly. | Save the workbook as NoAddHeaderStatic.xlsx after preserving the static header during merge operations.
-// Common Searches: Aspose.Cells keep header row static when merging cells C# | ShiftFirstRowDown false prevents header shift during ImportData Aspose.Cells | DeleteBlankColumns KeepHeaderOnly option for merged header Aspose.Cells | How to merge a data row without moving the header in Aspose.Cells .NET | Preserve header while deleting blank columns in Excel using Aspose.Cells
-// Tags: ImportTableOptions ShiftFirstRowDown false | DeleteBlankOptions KeepHeaderOnly | Aspose.Cells static header during merge | merge cells without shifting header Aspose.Cells | preserve header row while deleting blank columns Aspose.Cells
+// Title: C# – Append the noadd parameter to the first smart‑marker template row to keep the header static with Aspose.Cells
+// Common Searches: how to add the noadd flag to a smart marker template row in Aspose.Cells C# | keep header row static during smart marker merge using Aspose.Cells .NET | append noadd parameter to cell A2 smart marker with Aspose.Cells library | prevent row addition when processing smart markers in an Excel workbook C# | modify smart marker text to include noadd in Aspose.Cells example
+// Tags: smart marker noadd option Aspose.Cells | static header during smart marker merge .NET | modify template cell A2 Aspose.Cells | disable row insertion with smart markers | update smart marker text C#
 
 using System;
-using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates importing a DataTable with the header row fixed, merging a data row, deleting blank columns while keeping only the header part of merged cells, and saving the workbook as NoAddHeaderStatic.xlsx using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, reads the smart marker in cell A2, appends the ",noadd" flag if it is missing to keep the header row from being duplicated during merging, and saves the modified file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Prepare a DataTable with a header row and some data rows
-        DataTable table = new DataTable();
-        table.Columns.Add("Header");
-        table.Columns.Add("Value");
-        table.Rows.Add("Header1", "Value1");
-        table.Rows.Add("Header2", "Value2");
-        table.Rows.Add("Header3", "Value3");
-
-        // Import the DataTable into the worksheet.
-        // ShiftFirstRowDown = false ensures the first (header) row stays at its original position
-        // and is not shifted down when rows are inserted.
-        ImportTableOptions importOptions = new ImportTableOptions
+        static void Main()
         {
-            ShiftFirstRowDown = false,
-            IsFieldNameShown = true // keep the header row visible
-        };
-        cells.ImportData(table, 0, 0, importOptions);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Merge cells in the second data row (row index 1) across two columns.
-        // This demonstrates a merge operation where we want the header to remain static.
-        cells.Merge(1, 0, 1, 2);
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // When performing blank column deletion, keep only the header part of merged areas.
-        DeleteBlankOptions deleteOptions = new DeleteBlankOptions
-        {
-            MergedCellsShrinkType = MergedCellsShrinkType.KeepHeaderOnly
-        };
-        cells.DeleteBlankColumns(deleteOptions);
+            Workbook workbook = null;
 
-        // Save the workbook to a file.
-        workbook.Save("NoAddHeaderStatic.xlsx");
+            try
+            {
+                // Load the workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (CellsException ex)
+            {
+                // Handle password‑protected or other Cells specific errors
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Get the template cell that contains a smart marker
+                Cell templateCell = worksheet.Cells["A2"];
+
+                // Retrieve the existing smart marker text
+                string markerText = templateCell.StringValue;
+
+                // Append ",noadd" if not already present
+                if (!string.IsNullOrEmpty(markerText) && !markerText.Contains("noadd"))
+                {
+                    string updatedMarker = markerText.Contains(",")
+                        ? $"{markerText},noadd"
+                        : $"{markerText},noadd";
+
+                    templateCell.PutValue(updatedMarker);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            }
+        }
     }
 }

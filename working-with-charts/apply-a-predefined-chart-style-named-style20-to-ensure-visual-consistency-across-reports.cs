@@ -1,63 +1,78 @@
-// Title: How to apply the built‑in Style20 to a column chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a C# snippet that creates a workbook, adds sample data, inserts a column chart, and sets its Style property to 20 with Aspose.Cells. | Show the steps to format any Aspose.Cells chart with the predefined Style20 index and then save the workbook as an XLSX file. | Provide code that demonstrates assigning a built‑in chart style index to a chart object in Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# apply built‑in chart style 20 to column chart example | set predefined chart style index on Aspose.Cells chart .NET | how to use Style20 for charts in Aspose.Cells workbook
-// Tags: apply chart style20 Aspose.Cells C# | set chart.Style property Aspose.Cells | column chart built‑in style Aspose.Cells | save workbook with styled chart Aspose.Cells
+// Title: Apply the built‑in Style20 chart style to an existing or newly created chart in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook with Aspose.Cells, locate the first worksheet, and set the Style property of its first chart to the built‑in style index 20. | When a worksheet has no charts, create a column chart, assign Style20, and save the workbook to a new file using C#. | Add robust error handling while loading the workbook, applying a predefined chart style, and writing the styled workbook back to disk.
+// Common Searches: how to set chart style 20 in Aspose.Cells C# example | apply predefined chart style to existing chart using Aspose.Cells for .NET | create a column chart and assign built‑in style before saving workbook Aspose.Cells | Aspose.Cells chart style index 20 error handling C#
+// Tags: Aspose.Cells set chart style index | apply built‑in chart style .NET | create column chart if none exists Aspose.Cells | load workbook and style chart C# | save workbook with styled chart Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartStyleDemo
+// The C# program loads 'input.xlsx', accesses the first worksheet, uses the existing chart or creates a new column chart, applies the built‑in Style20 (index 20) to the chart, and saves the modified workbook as 'output.xlsx' with comprehensive error handling for missing files and style assignment issues.
+class Program
 {
-    // Creates a new workbook, populates sample data, adds a column chart, applies the built‑in chart style #20 via the Style property, and saves the file as ChartWithStyle20.xlsx.
-    public class ApplyChartStyle20
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", false);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Apply the predefined built‑in chart style #20 (valid values: 1‑48)
-            chart.Style = 20;
-
-            // Save the workbook
-            workbook.Save("ChartWithStyle20.xlsx");
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
         }
-    }
 
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        Workbook workbook;
+        try
         {
-            try
-            {
-                ApplyChartStyle20.Run();
-                Console.WriteLine("Workbook created successfully: ChartWithStyle20.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Load the existing workbook (lifecycle: load)
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Retrieve an existing chart or create a new one if none exist
+        Chart chart;
+        if (sheet.Charts.Count > 0)
+        {
+            // Use the first chart in the worksheet
+            chart = sheet.Charts[0];
+        }
+        else
+        {
+            // Create a new Column chart as a placeholder (lifecycle: create)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            chart = sheet.Charts[chartIndex];
+        }
+
+        // Apply a predefined chart style using the integer style index.
+        try
+        {
+            // Style index 20 corresponds to a built‑in chart style.
+            chart.Style = 20;
+        }
+        catch (Exception ex)
+        {
+            // Log but continue if style assignment fails.
+            Console.WriteLine($"Warning: Unable to set chart style. {ex.Message}");
+        }
+
+        try
+        {
+            // Save the workbook with the applied style (lifecycle: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

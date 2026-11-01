@@ -1,53 +1,53 @@
-// Title: Insert a PNG image into an Excel worksheet at cell A1 and rotate it 90° clockwise using Aspose.Cells for .NET (C#)
-// AI Prompts: Insert an image file into cell A1 of a new workbook and set its RotationAngle property to 90 degrees with Aspose.Cells in C#. | Add a picture to a worksheet, rotate it ninety degrees clockwise, and save the workbook using the Aspose.Cells API.
-// Common Searches: C# Aspose.Cells how to add a picture to a specific cell and rotate it | rotate inserted image 90 degrees using Aspose.Cells .NET | Aspose.Cells picture rotation example for Excel workbook | insert PNG into Excel sheet programmatically with Aspose.Cells C# | set picture rotation angle in Aspose.Cells workbook
-// Tags: picture insertion at cell A1 Aspose.Cells | image rotation property Aspose.Cells C# | PNG picture embed Excel Aspose.Cells | worksheet picture manipulation Aspose.Cells | save workbook after picture rotation Aspose.Cells
+// Title: Insert a PNG picture into cell B2 and rotate it 90° clockwise with Aspose.Cells for .NET
+// AI Prompts: Add an image from a file path to cell B2, set its RotationAngle to 90 degrees, and save the workbook using Aspose.Cells in C#. | Place a PNG picture on a worksheet, apply a 90‑degree clockwise rotation, and export the file as an XLSX with Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells how to add an image to a specific cell and rotate it | set rotation angle for picture inserted in Excel using Aspose.Cells .NET | insert PNG into Excel worksheet cell B2 with Aspose.Cells and rotate clockwise
+// Tags: add picture to worksheet cell Aspose.Cells C# | apply 90-degree rotation to Excel picture Aspose.Cells | insert PNG image into Excel using Aspose.Cells | picture rotation property Aspose.Cells .NET | place image in cell B2 Aspose.Cells example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a PNG image at cell A1, rotates the picture 90° clockwise via the RotationAngle property, and saves the file as Output.xlsx.
+// The example creates a new workbook, inserts a PNG file into cell B2, rotates the picture 90 degrees clockwise, and saves the workbook as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Path to the image file to be inserted
-            string imagePath = "image.png";
+            string imagePath = @"C:\Images\sample.png";
 
-            // Insert picture only if the file exists
-            if (File.Exists(imagePath))
+            // Verify that the image file exists
+            if (!File.Exists(imagePath))
             {
-                // Add the picture to the worksheet at cell A1 (top‑left corner)
-                // The Add method returns the index of the inserted picture
-                int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
-                Picture picture = sheet.Pictures[pictureIndex];
-
-                // Rotate the picture 90 degrees clockwise to align with column orientation
-                picture.RotationAngle = 90;
-            }
-            else
-            {
-                Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
             }
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("Output.xlsx");
-            Console.WriteLine("Workbook saved successfully as Output.xlsx.");
+            // Add the picture to cell B2 (row index 1, column index 1)
+            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
+
+            // Retrieve the picture object
+            Picture picture = sheet.Pictures[pictureIndex];
+
+            // Rotate the picture 90 degrees clockwise
+            picture.RotationAngle = 90;
+
+            // Save the workbook to a file
+            string outputPath = "Output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

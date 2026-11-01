@@ -1,88 +1,68 @@
-// Title: Copy page setup from a template worksheet to multiple worksheets using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that reads the PageSetup of a source worksheet and applies all its properties (orientation, margins, print area, zoom, fit‑to‑pages, etc.) to each worksheet in a given list using Aspose.Cells. | Generate a loop that iterates over an array of worksheet names, copies the page layout settings from a template sheet to each target sheet, and saves the workbook.
-// Common Searches: Aspose.Cells C# copy page layout from one sheet to several other sheets | C# loop to duplicate worksheet print settings with Aspose.Cells | apply same margins and orientation to multiple worksheets programmatically Aspose.Cells | set identical print area for multiple worksheets using Aspose.Cells .NET
-// Tags: Aspose.Cells copy worksheet page setup | C# replicate print margins across sheets | Aspose.Cells loop copy page layout | apply template page setup to multiple worksheets .NET | programmatic page setup transfer Aspose.Cells
+// Title: Copy page setup from a source worksheet to multiple target worksheets in a loop using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook, retrieve the print settings (PageSetup) of a worksheet named 'Source', and apply them to a list of target worksheets, creating any that are missing, with Aspose.Cells in C#. | Use Aspose.Cells CopyOptions to replicate the worksheet's print settings (orientation, margins, headers/footers) from one sheet to several others within the same workbook. | After copying the print settings to all target sheets, save the workbook to a new file path using Aspose.Cells.
+// Common Searches: Aspose.Cells copy page setup from one sheet to many sheets in C# | C# loop to apply same page setup to multiple worksheets using Aspose.Cells | How to add missing worksheets and duplicate page setup with Aspose.Cells .NET
+// Tags: Aspose.Cells worksheet print settings replication | C# batch copy worksheet print configuration | worksheet print settings copy with Aspose.Cells | add missing worksheets programmatically Aspose.Cells | save modified workbook Aspose.Cells .NET
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing workbook, retrieves the PageSetup from a template worksheet, and copies orientation, paper size, all margin values, header/footer margins, centering options, print area, zoom, fit‑to‑pages settings, and gridline/heading flags to each target worksheet listed. Missing target sheets are skipped, and the modified workbook is saved to a new file.
+// The program loads 'source.xlsx', checks for a worksheet named 'Source', iterates over an array of target sheet names, adds any missing worksheets, copies the source worksheet's PageSetup to each target using default CopyOptions, and saves the updated workbook as 'output.xlsx'.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
+            // Path to the source workbook
+            string sourcePath = "source.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook that contains the source and target worksheets
-            Workbook workbook = new Workbook(inputPath);
-
-            // Define the source worksheet name (the one with the desired page setup)
-            string sourceSheetName = "TemplateSheet";
-
-            // Get the source worksheet and its PageSetup object
-            Worksheet sourceSheet = workbook.Worksheets[sourceSheetName];
-            if (sourceSheet == null)
-                throw new ArgumentException($"Source worksheet \"{sourceSheetName}\" does not exist.");
-
-            PageSetup sourceSetup = sourceSheet.PageSetup;
-
-            // List of target worksheet names that should receive the same page setup
-            List<string> targetSheetNames = new List<string>
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                "Sheet1",
-                "Sheet2",
-                "Sheet3"
-                // add more sheet names as needed
-            };
-
-            // Loop through each target worksheet and copy the page setup settings
-            foreach (string targetName in targetSheetNames)
-            {
-                Worksheet targetSheet = workbook.Worksheets[targetName];
-                if (targetSheet == null)
-                {
-                    Console.WriteLine($"Warning: Target worksheet \"{targetName}\" not found. Skipping.");
-                    continue;
-                }
-
-                PageSetup targetSetup = targetSheet.PageSetup;
-
-                // Copy individual page setup properties
-                targetSetup.Orientation = sourceSetup.Orientation;
-                targetSetup.PaperSize = sourceSetup.PaperSize;
-                targetSetup.TopMargin = sourceSetup.TopMargin;
-                targetSetup.BottomMargin = sourceSetup.BottomMargin;
-                targetSetup.LeftMargin = sourceSetup.LeftMargin;
-                targetSetup.RightMargin = sourceSetup.RightMargin;
-                targetSetup.HeaderMargin = sourceSetup.HeaderMargin;
-                targetSetup.FooterMargin = sourceSetup.FooterMargin;
-                targetSetup.CenterHorizontally = sourceSetup.CenterHorizontally;
-                targetSetup.CenterVertically = sourceSetup.CenterVertically;
-                targetSetup.PrintArea = sourceSetup.PrintArea;
-                targetSetup.Zoom = sourceSetup.Zoom;
-                targetSetup.FitToPagesWide = sourceSetup.FitToPagesWide;
-                targetSetup.FitToPagesTall = sourceSetup.FitToPagesTall;
-                targetSetup.PrintGridlines = sourceSetup.PrintGridlines;
-                targetSetup.PrintHeadings = sourceSetup.PrintHeadings;
-                // Add more property copies if additional settings are required
+                Console.WriteLine($"Error: The source file '{sourcePath}' was not found.");
+                return;
             }
 
-            // Save the workbook with the updated page setups
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Source worksheet whose page setup will be copied
+            Worksheet sourceSheet = workbook.Worksheets["Source"];
+            if (sourceSheet == null)
+            {
+                Console.WriteLine("Error: Worksheet named 'Source' does not exist in the workbook.");
+                return;
+            }
+
+            // Names of target worksheets
+            string[] targetSheetNames = { "Target1", "Target2", "Target3" };
+
+            // Options for copying page setup (default settings)
+            CopyOptions copyOptions = new CopyOptions();
+
+            foreach (string sheetName in targetSheetNames)
+            {
+                // Get the target worksheet if it exists; otherwise, add a new one
+                Worksheet targetSheet = workbook.Worksheets[sheetName];
+                if (targetSheet == null)
+                {
+                    targetSheet = workbook.Worksheets.Add(sheetName);
+                }
+
+                // Copy page setup settings from source to target
+                targetSheet.PageSetup.Copy(sourceSheet.PageSetup, copyOptions);
+            }
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

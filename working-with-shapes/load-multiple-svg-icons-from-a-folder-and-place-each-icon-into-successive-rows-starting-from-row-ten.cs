@@ -1,53 +1,50 @@
-// Title: Load SVG icons from a folder and insert each into successive rows starting at row 10 using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that enumerates all *.svg files in a directory and adds each as a picture to column A, beginning at Excel row 10 and moving down one row per icon. | Include logic to create the target output folder if it does not exist and save the workbook as an XLSX file to a given path.
-// Common Searches: aspnet c# insert multiple svg images into Excel rows starting at row 10 | how to batch add pictures from a folder to an Aspose.Cells worksheet | Aspose.Cells load all svg files from directory into column A | C# save workbook after adding images and ensure output directory exists | place icons in successive rows in Excel using Aspose.Cells API
-// Tags: add svg pictures to worksheet Aspose.Cells | batch insert images into Excel rows C# | create output directory before saving workbook | populate column A with icons starting at row 10 | enumerate files from folder Aspose.Cells picture insertion
+// Title: Insert SVG icons from a folder into successive rows starting at row 10 using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that reads all *.svg files from a directory and adds each as a picture to column A, beginning at row 10, then saves the workbook with Aspose.Cells. | Generate a method that iterates through a folder of SVG icons, inserts each icon into the next worksheet row starting at index 9, and returns the saved Excel file path.
+// Common Searches: Aspose.Cells C# insert multiple SVG images into consecutive rows starting at row 10 | how to batch add SVG icons to Excel worksheet using Aspose.Cells .NET | C# load all SVG files from folder and place them in column A of an Excel file with Aspose.Cells | save workbook after adding pictures from a directory with Aspose.Cells for .NET
+// Tags: batch insert svg pictures Aspose.Cells | add svg icons to column A Aspose.Cells | populate worksheet rows with svg images C# | save workbook after picture insertion Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The example scans a specified folder for SVG files, creates a new workbook, and inserts each SVG as a picture into column A starting at Excel row 10, advancing one row per icon. It also ensures the output directory exists before saving the workbook as an XLSX file.
+// The example scans a specified folder for *.svg files, creates a new workbook, and inserts each SVG as a picture into column A of successive rows beginning with row 10, then saves the workbook to the defined output location.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Folder containing the SVG icons
-            string folderPath = @"C:\Icons";
+            // Folder containing SVG icons – change to your actual folder path
+            string iconsFolder = @"C:\Icons";
 
-            // Verify the source folder exists
-            if (!Directory.Exists(folderPath))
+            // Verify the icons folder exists
+            if (!Directory.Exists(iconsFolder))
             {
-                Console.WriteLine($"Source folder not found: {folderPath}");
+                Console.WriteLine($"Icons folder not found: {iconsFolder}");
                 return;
             }
 
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Get all SVG files in the folder
+            string[] svgFiles = Directory.GetFiles(iconsFolder, "*.svg");
 
-            // Get the first worksheet
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Excel rows are zero‑based in Aspose.Cells.
-            // Row 10 in Excel corresponds to index 9.
-            int currentRow = 9;
-            int columnIndex = 0; // Column A
+            // Starting row index (row 10 in Excel is index 9 because Aspose.Cells uses zero‑based indexing)
+            int startRow = 9;
+            int column = 0; // Column A
 
-            // Retrieve all SVG files from the folder
-            string[] svgFiles = Directory.GetFiles(folderPath, "*.svg");
-
-            foreach (string svgPath in svgFiles)
+            // Loop through each SVG file and insert it into successive rows
+            for (int i = 0; i < svgFiles.Length; i++)
             {
-                // Open the SVG file as a stream and insert it into the worksheet
-                using (FileStream stream = new FileStream(svgPath, FileMode.Open, FileAccess.Read))
-                {
-                    sheet.Pictures.Add(currentRow, columnIndex, stream);
-                }
+                string filePath = svgFiles[i];
 
-                // Advance to the next row for the subsequent icon
-                currentRow++;
+                // Open the SVG file as a stream and add it as a picture
+                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    sheet.Pictures.Add(startRow + i, column, stream);
+                }
             }
 
             // Ensure the output directory exists
@@ -59,12 +56,13 @@ class Program
             }
 
             // Save the workbook to a file
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

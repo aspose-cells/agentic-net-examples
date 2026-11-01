@@ -1,48 +1,54 @@
-// Title: Create a column chart bound to an OFFSET‑based dynamic named range using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# with Aspose.Cells that defines a self‑adjusting named range using an OFFSET formula and links it to a column chart series. | Show how to embed a COUNTA function inside an OFFSET expression to calculate the height of an auto‑growing range for chart data in Aspose.Cells. | Provide the steps to add a column chart to a worksheet, bind its series to the defined range, and save the workbook with Aspose.Cells.
-// Common Searches: asp.net aspose.cells bind chart series to offset named range | c# create auto expanding chart data range with counTA and offset in Aspose.Cells | how to make a column chart update automatically when new rows are added in Aspose.Cells | using offset formula for self adjusting range in Aspose.Cells chart | asp.net aspose.cells chart series from expanding named range
-// Tags: OFFSET dynamic named range Aspose.Cells | auto expanding chart source range C# | column chart series from named range Aspose.Cells | COUNTA in OFFSET formula Aspose.Cells | Aspose.Cells chart binding dynamic range .NET
+// Title: Create a dynamic column chart in C# by binding an Aspose.Cells chart series to an OFFSET‑based named range
+// Common Searches: C# Aspose.Cells bind chart series to OFFSET named range for auto‑expanding data | How to use an OFFSET formula with a named range to make a dynamic chart in Aspose.Cells | Aspose.Cells chart automatically updates when new rows are added in C# | Define a dynamic data range with OFFSET in Aspose.Cells and link it to a column chart | Sample code for a dynamic Excel chart using an OFFSET named range with Aspose.Cells C#
+// Tags: Aspose.Cells OFFSET named range | dynamic chart data range C# | column chart bound to named range | auto expanding Excel chart Aspose.Cells | C# Excel chart using OFFSET formula
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, defines an OFFSET‑based named range that automatically expands with new rows using COUNTA, adds a column chart, binds the chart series to the dynamic range, and saves the file as DynamicChart.xlsx.
-class Program
+// The example creates a new workbook, defines an OFFSET‑based named range that grows as rows are added, inserts a column chart, binds the chart series to that named range, and saves the file as DynamicChart.xlsx.
+class DynamicChartExample
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Name = "Sheet1";
-
-        // Populate initial data (header + 5 rows)
-        ws.Cells["A1"].PutValue("Category");
-        ws.Cells["B1"].PutValue("Value");
-        for (int i = 1; i <= 5; i++)
+        try
         {
-            ws.Cells[i + 1, 0].PutValue("Item " + i);   // Column A
-            ws.Cells[i + 1, 1].PutValue(i * 10);        // Column B
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet and set its name
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
+
+            // Populate sample data (Date in column A, Value in column B)
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["B1"].PutValue("Value");
+            for (int i = 0; i < 5; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(DateTime.Today.AddDays(i)); // Column A
+                sheet.Cells[i + 1, 1].PutValue(i * 10 + 5);               // Column B
+            }
+
+            // Define an OFFSET‑based named range that expands automatically with new rows.
+            // The range starts at A2 and includes both columns (Date and Value).
+            string offsetFormula = "=OFFSET(Sheet1!$A$2,0,0,COUNTA(Sheet1!$A:$A)-1,2)";
+            int nameIndex = workbook.Worksheets.Names.Add("DataRange");
+            workbook.Worksheets.Names[nameIndex].RefersTo = offsetFormula;
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Dynamic Data Chart";
+
+            // Bind the chart series to the OFFSET‑based named range (includes dates and values)
+            chart.NSeries.Add("DataRange", true);
+
+            // Save the workbook
+            workbook.Save("DynamicChart.xlsx");
         }
-
-        // Define an OFFSET‑based named range that expands automatically with new rows
-        // Starts at A2 (first data row), height = number of non‑empty rows in column A minus the header, width = 2 columns
-        int nameIdx = wb.Worksheets.Names.Add("DynamicData");
-        Name dynName = wb.Worksheets.Names[nameIdx];
-        dynName.RefersTo = "=OFFSET(Sheet1!$A$2,0,0,COUNTA(Sheet1!$A:$A)-1,2)";
-
-        // Add a column chart
-        int chartIdx = ws.Charts.Add(ChartType.Column, 7, 0, 25, 7);
-        Chart chart = ws.Charts[chartIdx];
-
-        // Bind the chart to the dynamic named range
-        // The series formula references the named range; 'true' indicates data are organized by column
-        chart.NSeries.Add("=DynamicData", true);
-
-        // Optional: set chart title
-        chart.Title.Text = "Dynamic Data Chart";
-
-        // Save the workbook
-        wb.Save("DynamicChart.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

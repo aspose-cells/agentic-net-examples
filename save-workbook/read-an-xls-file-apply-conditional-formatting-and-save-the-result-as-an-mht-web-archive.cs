@@ -1,78 +1,60 @@
-// Title: Add a cell‑value conditional formatting rule to an XLS workbook and export it as an MHT web archive using Aspose.Cells for .NET
-// AI Prompts: Create a conditional formatting rule that colors cells with values greater than 50 light green, then save the worksheet as an MHTML file. | Load an existing .xls file, apply a greater‑than‑50 cell‑value format, and generate a .mht web archive with Aspose.Cells in C#.
-// Common Searches: asp.net how to apply conditional formatting to a range and export to mhtml with Aspose.Cells | c# code to highlight cells greater than 50 in an xls file and save as mht | using Aspose.Cells to convert xls to mhtml while preserving conditional formats | conditional formatting example Aspose.Cells C# export workbook to web archive | generate MHTML web archive from workbook after applying cell value rule
-// Tags: cell value conditional format Aspose.Cells | MHTML web archive creation Aspose.Cells | XLS workbook conversion to MHT Aspose.Cells | light green background style Aspose.Cells | range A1:A10 formatting Aspose.Cells
+// Title: Load an XLS workbook, add a greater‑than conditional formatting rule to A1:A10, and export it as an MHT web archive using Aspose.Cells for .NET (C#)
+// Common Searches: how to apply conditional formatting to a range in an existing XLS workbook using Aspose.Cells C# | save a workbook as MHT web archive after formatting cells with Aspose.Cells .NET | convert XLS to MHT while preserving conditional formatting with Aspose.Cells | C# example for adding a greater‑than condition and exporting to MHT using Aspose.Cells | load XLS, set cell background based on value, and export as .mht in C#
+// Tags: Aspose.Cells add cell value condition C# | Aspose.Cells style cells based on value | Aspose.Cells export workbook to MHT | Aspose.Cells Html save format for web archive | C# load XLS and apply conditional formatting
 
 using System;
-using System.Drawing;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-// The example loads an existing XLS workbook (or creates one with sample data), adds a conditional formatting rule that highlights cells A1:A10 with values over 50 using a light‑green background, and saves the result as an MHTML web archive (output.mht) via Aspose.Cells for .NET.
+// The sample loads an existing XLS file, creates a conditional formatting rule that highlights cells A1:A10 with a light coral background when their value exceeds 50, and then saves the modified workbook as an MHT web archive using the Html save format. It includes a file‑existence check and basic exception handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "input.xls";
-            const string outputFile = "output.mht";
+            const string inputPath = "input.xls";
+            const string outputPath = "output.mht";
 
-            // Load existing workbook or create a new one if the file is missing
-            Workbook workbook;
-            if (File.Exists(inputFile))
-            {
-                workbook = new Workbook(inputFile);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet wsNew = workbook.Worksheets[0];
-                // Populate sample data (0,10,20,...,90) for demonstration
-                for (int i = 0; i < 10; i++)
-                {
-                    wsNew.Cells[i, 0].PutValue(i * 10);
-                }
-            }
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Access the first worksheet
+            // Load the existing XLS file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range A1:A10 (zero‑based indices)
-            int firstRow = 0;
-            int firstCol = 0;
-            int totalRows = 10;
-            int totalCols = 1;
-
-            // Add a new ConditionalFormatting rule for the defined range
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
-            cf.AddArea(new CellArea
+            // Define the range A1:A10 for conditional formatting
+            CellArea area = new CellArea
             {
-                StartRow = firstRow,
-                StartColumn = firstCol,
-                EndRow = firstRow + totalRows - 1,
-                EndColumn = firstCol + totalCols - 1
-            });
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 9,
+                EndColumn = 0
+            };
 
-            // Create a condition: cell value > 50
-            int conditionIdx = cf.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "50",
-                ""); // second formula required by API (unused for this operator)
+            // Add a new conditional formatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+            fcc.AddArea(area);
 
-            // Retrieve the created condition
-            FormatCondition condition = cf[conditionIdx];
+            // Create a condition: cell value greater than 50
+            FormatCondition condition = fcc[0];
+            condition.Type = FormatConditionType.CellValue;
+            condition.Operator = OperatorType.GreaterThan;
+            condition.Formula1 = "50";
 
-            // Define the style to apply (light green background)
+            // Define the style to apply when the condition is met (light red background)
             Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.LightGreen;
+            style.ForegroundColor = Color.LightCoral;
             style.Pattern = BackgroundType.Solid;
             condition.Style = style;
 
-            // Save the workbook as an MHTML (web archive) file
-            workbook.Save(outputFile, SaveFormat.MHtml);
+            // Save the workbook as an MHT web archive (using Html format with .mht extension)
+            workbook.Save(outputPath, SaveFormat.Html);
         }
         catch (Exception ex)
         {

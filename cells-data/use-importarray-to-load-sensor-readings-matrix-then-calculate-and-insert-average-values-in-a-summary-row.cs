@@ -1,76 +1,84 @@
-// Title: Import a double[,] sensor matrix into Excel and add a column‑average summary row using Aspose.Cells for .NET
-// AI Prompts: Load a two‑dimensional double array into a worksheet horizontally with Cells.ImportArray, then compute column averages and write them to a new row. | Create a summary row labeled "Average" after the imported data and populate it with the calculated averages using Aspose.Cells in C#.
-// Common Searches: Aspose.Cells C# import double[,] matrix into worksheet horizontally | how to calculate column averages and add a summary row with Aspose.Cells | using ImportArray to write sensor readings to Excel and append an average row | C# Aspose.Cells example for inserting a totals row after data import
-// Tags: ImportArray matrix import Aspose.Cells | column average calculation Aspose.Cells | add totals row Excel Aspose.Cells | export sensor readings to XLSX Aspose.Cells | write double[,] to worksheet Aspose.Cells
+// Title: Import a double‑dimensional sensor matrix into Excel and append a row of column averages using Aspose.Cells for .NET
+// AI Prompts: Load a double[,] sensorReadings array into the first worksheet at cell A1 with ImportTwoDimensionArray, then iterate through each column to compute its average value. | Create a new row below the imported matrix, label it "Average", write the calculated column averages into that row, and save the workbook as an .xlsx file.
+// Common Searches: how to use ImportTwoDimensionArray to load a double[,] into an Excel sheet with Aspose.Cells .NET | calculate column-wise averages after importing a data matrix in Aspose.Cells | add a summary row with average values to an Excel workbook using Aspose.Cells for C# | save a workbook after inserting computed averages with Aspose.Cells .NET
+// Tags: ImportTwoDimensionArray double[,] to worksheet | column average calculation Aspose.Cells | append summary row Excel .NET | sensor readings export Aspose.Cells | save workbook as .xlsx with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace SensorReadingsImport
+namespace SensorDataProcessing
 {
-    // The program creates a new workbook, imports a double[,] sensor readings matrix into the first worksheet horizontally via ImportArray, computes column‑wise averages, inserts a labeled "Average" row with those values, and saves the file as SensorReadingsWithAverages.xlsx.
+    // The example creates a Workbook, imports a double[,] sensor readings matrix into the first worksheet using ImportTwoDimensionArray, adds a labeled "Average" row beneath the data, computes each column's average, writes those values into the new row, ensures the output directory exists, and saves the file as SensorReadingsWithAverages.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Sample sensor readings matrix (rows: samples, columns: sensors)
-                double[,] readings = new double[,]
+                // Sample sensor readings matrix (rows: measurements, columns: sensors)
+                double[,] sensorReadings = new double[,]
                 {
-                    { 12.5, 15.2, 13.8, 14.0 },
-                    { 11.0, 16.5, 14.2, 13.7 },
-                    { 13.3, 14.8, 15.1, 12.9 }
+                    { 23.5, 45.2, 12.8 },
+                    { 24.1, 44.9, 13.0 },
+                    { 22.8, 46.1, 12.5 },
+                    { 23.9, 45.5, 13.2 }
                 };
 
-                int rowCount = readings.GetLength(0);
-                int colCount = readings.GetLength(1);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Import each row of the matrix horizontally using ImportArray
+                // Convert the double[,] to object[,] because ImportTwoDimensionArray expects an object array
+                int rowCount = sensorReadings.GetLength(0);
+                int colCount = sensorReadings.GetLength(1);
+                object[,] sensorObj = new object[rowCount, colCount];
                 for (int r = 0; r < rowCount; r++)
                 {
-                    double[] rowData = new double[colCount];
                     for (int c = 0; c < colCount; c++)
                     {
-                        rowData[c] = readings[r, c];
+                        sensorObj[r, c] = sensorReadings[r, c];
                     }
-
-                    // Import the row starting at (r, 0) horizontally (isVertical = false)
-                    cells.ImportArray(rowData, r, 0, false);
                 }
 
-                // Calculate column‑wise averages
-                double[] averages = new double[colCount];
-                for (int c = 0; c < colCount; c++)
+                // Import the sensor readings matrix starting at cell A1
+                sheet.Cells.ImportTwoDimensionArray(sensorObj, 0, 0);
+
+                // Row index for the summary (average) row (zero‑based)
+                int summaryRowIndex = rowCount;
+
+                // Insert a label for the summary row
+                sheet.Cells[summaryRowIndex, 0].PutValue("Average");
+
+                // Calculate and insert average for each column
+                for (int col = 0; col < colCount; col++)
                 {
-                    double sum = 0;
-                    for (int r = 0; r < rowCount; r++)
+                    double sum = 0.0;
+                    for (int row = 0; row < rowCount; row++)
                     {
-                        sum += readings[r, c];
+                        sum += sensorReadings[row, col];
                     }
-                    averages[c] = sum / rowCount;
+                    double average = sum / rowCount;
+                    sheet.Cells[summaryRowIndex, col].PutValue(average);
                 }
 
-                // Insert a summary row after the data rows
-                int summaryRowIndex = rowCount; // zero‑based index; next row after data
+                // Define output file path
+                string outputPath = "SensorReadingsWithAverages.xlsx";
 
-                // Place a label in the first column
-                cells[summaryRowIndex, 0].PutValue("Average");
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Import the averages starting from column 1
-                cells.ImportArray(averages, summaryRowIndex, 1, false);
-
-                // Save the workbook
-                workbook.Save("SensorReadingsWithAverages.xlsx");
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

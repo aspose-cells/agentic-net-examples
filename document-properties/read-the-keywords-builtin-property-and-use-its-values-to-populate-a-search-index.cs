@@ -1,82 +1,41 @@
-// Title: Read the Keywords built‑in document property from an Excel workbook and create a keyword‑to‑cell address search index with Aspose.Cells for .NET
-// AI Prompts: Extract the 'Keywords' built‑in document property from a workbook, split it into individual terms, and build a case‑insensitive dictionary that maps each keyword to the sheet name and cell address where it appears. | Traverse all worksheets and string cells using Aspose.Cells, compare each cell's text to the keyword list, and populate a search‑index dictionary of keyword → list of cell references.
-// Common Searches: how to get the Keywords built‑in property from an Excel file using Aspose.Cells C# | create a keyword index of Excel cells with Aspose.Cells .NET | search Excel worksheet cells for keywords defined in document properties Aspose.Cells | C# dictionary mapping Excel keywords to cell addresses using Aspose.Cells | iterate over used range of worksheets in Aspose.Cells to find matching text
-// Tags: Aspose.Cells built‑in document properties extraction | keyword‑to‑cell address dictionary Aspose.Cells | search index for Excel keywords C# | case‑insensitive cell text matching Aspose.Cells | iterate used range worksheets Aspose.Cells
+// Title: Extract the Keywords built‑in document property from an Excel workbook and create a searchable keyword list with Aspose.Cells for .NET
+// Common Searches: how to get the Keywords built‑in property from an Excel workbook using Aspose.Cells in C# | reading and splitting Excel Keywords document property into a List<string> with Aspose.Cells | populate a keyword collection from Excel metadata for search indexing in .NET | handle missing Keywords property when reading built‑in document properties with Aspose.Cells | convert comma‑separated Keywords property to a searchable list in C#
+// Tags: read built‑in properties with Aspose.Cells | extract Excel Keywords metadata in C# | parse comma‑separated keywords into list | build keyword search index from workbook metadata | gracefully handle absent document property
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Aspose.Cells;
 
-// The example loads an Excel workbook, reads the 'Keywords' built‑in document property, splits it into separate terms, then scans every worksheet's used range for string cells. Each occurrence of a keyword is added to a case‑insensitive dictionary that maps the keyword to the sheet name and cell address, producing a searchable index that is printed to the console.
+// The example loads an Excel workbook using Aspose.Cells, accesses its BuiltInDocumentProperties collection, retrieves the "Keywords" property (or an empty string if the property is missing), splits the comma‑separated keywords, trims each entry, adds them to a List<string> to serve as a simple search index, and writes each term to the console. An optional workbook save line is provided but commented out.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
+        // Load the Excel workbook
         Workbook workbook = new Workbook("input.xlsx");
 
         // Access the built‑in document properties collection
-        var properties = workbook.BuiltInDocumentProperties;
+        var builtInProps = workbook.BuiltInDocumentProperties;
 
-        // Retrieve the "Keywords" property value (it may be null)
-        string keywordsRaw = properties["Keywords"]?.Value?.ToString() ?? string.Empty;
+        // Retrieve the value of the "Keywords" property; handle missing property gracefully
+        string keywords = builtInProps["Keywords"]?.ToString() ?? string.Empty;
 
-        // Split the keywords string into individual terms.
-        // Common delimiters are semicolon, comma, or newline.
-        char[] delimiters = new char[] { ';', ',', '\n', '\r' };
-        List<string> keywordList = keywordsRaw
-            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
-            .Select(k => k.Trim())
-            .Where(k => !string.IsNullOrEmpty(k))
-            .ToList();
+        // Prepare a simple search index (list of individual keyword strings)
+        List<string> searchIndex = new List<string>();
 
-        // Populate a simple search index.
-        // Here we use a Dictionary where each keyword maps to a list of cell addresses that contain it.
-        Dictionary<string, List<string>> searchIndex = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-
-        // Iterate through all worksheets and cells to index occurrences of each keyword.
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Split the Keywords string by commas (common delimiter) and trim whitespace
+        foreach (string keyword in keywords.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
         {
-            // Get the used range of the sheet to limit the search.
-            var cells = sheet.Cells;
-            var maxRow = cells.MaxDataRow;
-            var maxColumn = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    var cell = cells[row, col];
-                    if (cell.Type != CellValueType.IsString) continue;
-
-                    string cellText = cell.StringValue;
-                    foreach (string keyword in keywordList)
-                    {
-                        if (cellText.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            string address = cell.Name; // e.g., "A1"
-                            if (!searchIndex.ContainsKey(keyword))
-                                searchIndex[keyword] = new List<string>();
-
-                            searchIndex[keyword].Add($"{sheet.Name}!{address}");
-                        }
-                    }
-                }
-            }
+            searchIndex.Add(keyword.Trim());
         }
 
-        // Example: output the search index to console
-        foreach (var entry in searchIndex)
+        // Example usage: display the populated search index
+        foreach (string term in searchIndex)
         {
-            Console.WriteLine($"Keyword: {entry.Key}");
-            foreach (var location in entry.Value)
-            {
-                Console.WriteLine($"  Found in: {location}");
-            }
+            Console.WriteLine(term);
         }
 
-        // (Optional) Save the workbook if any modifications were made.
+        // If you need to save changes to the workbook, uncomment the following line
         // workbook.Save("output.xlsx");
     }
 }

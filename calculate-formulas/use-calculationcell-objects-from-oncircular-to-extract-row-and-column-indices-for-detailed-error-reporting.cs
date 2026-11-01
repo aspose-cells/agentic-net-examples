@@ -1,69 +1,61 @@
-// Title: Extract row and column indices from CalculationCell objects in the OnCircular monitor for detailed circular reference reporting with Aspose.Cells for .NET
-// AI Prompts: Create a subclass of AbstractCalculationMonitor that iterates over the circularCellsData enumerator, casts each item to CalculationCell, and logs the worksheet name, zero‑based row, column, and A1 address. | Use CellsHelper.CellIndexToName to convert the retrieved row and column indices to an A1 style address inside the OnCircular method. | Attach the custom monitor to CalculationOptions, enable it in workbook.CalculateFormula, and verify the console output for a workbook containing a circular reference.
-// Common Searches: how to retrieve row and column indices from CalculationCell in Aspose.Cells circular reference monitor | Aspose.Cells OnCircular example with detailed cell logging | convert CalculationCell indices to A1 address in .NET | log worksheet name and cell position for circular references using Aspose.Cells
-// Tags: Aspose.Cells circular reference monitor | CalculationCell row column extraction | convert CalculationCell indices to A1 | custom circular reference monitor .NET | log worksheet name and cell address
+// Title: Extract row and column indices from CalculationCell in Aspose.Cells OnCircular event for detailed circular reference error reporting (C#)
+// Common Searches: asp.net aspose.cells oncircular handler get cell row and column | c# retrieve cell address from CalculationCell during circular reference detection | how to log detailed circular reference errors using CalculationCell in Aspose.Cells | formula calculation exception handling with row/column info Aspose.Cells C# | use CalculationCell.Row and .Column in OnCircular event for error reporting
+// Tags: Aspose.Cells OnCircular event | CalculationCell row column extraction | circular reference error reporting C# | formula calculation exception handling Aspose.Cells | cell coordinate retrieval in OnCircular
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCircularReferenceDemo
 {
-    // Custom monitor to handle circular references and report detailed cell positions
-    // The example shows how to implement a custom CircularReferenceMonitor by overriding OnCircular, iterating through CalculationCell objects, extracting their zero‑based row and column indices, converting them to A1 notation with CellsHelper, and printing the worksheet name and address. The monitor is assigned to CalculationOptions and triggered during workbook.CalculateFormula, enabling detailed reporting of cells involved in circular references.
-    public class CircularReferenceMonitor : AbstractCalculationMonitor
+    // Demonstrates how to subscribe to the Aspose.Cells OnCircular event, use the provided CalculationCell object to obtain the exact row and column of a circular reference, and generate detailed error messages for formula calculation failures in a C# application.
+    class Program
     {
-        // Called when the calculation engine detects circular references
-        public override bool OnCircular(IEnumerator circularCellsData)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Circular reference detected. Involved cells:");
-
-            // Enumerate all CalculationCell objects that are part of the circular chain
-            while (circularCellsData.MoveNext())
+            try
             {
-                // Each item is a CalculationCell; cast safely
-                if (circularCellsData.Current is CalculationCell calcCell)
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Retrieve zero‑based row and column indices
-                    int rowIndex = calcCell.CellRow;
-                    int colIndex = calcCell.CellColumn;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                    // Convert to A1 style address for readability
-                    string cellAddress = CellsHelper.CellIndexToName(rowIndex, colIndex);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                    Console.WriteLine($"- Sheet: {calcCell.Worksheet.Name}, Cell: {cellAddress} (Row={rowIndex}, Column={colIndex})");
+                // Attempt to calculate all formulas.
+                try
+                {
+                    workbook.CalculateFormula();
+                }
+                catch (Exception ex)
+                {
+                    // Handle errors that may occur during formula calculation (e.g., circular references)
+                    Console.WriteLine("An error occurred during formula calculation:");
+                    Console.WriteLine(ex.Message);
+                }
+
+                // Save the workbook (if any changes need to be persisted)
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
                 }
             }
-
-            // Return true to let the engine continue calculating these cells (or false to stop)
-            return true;
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook and obtain the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Set up a simple circular reference: A1 -> B1 -> A1
-            sheet.Cells["A1"].Formula = "=B1";
-            sheet.Cells["B1"].Formula = "=A1";
-
-            // Configure calculation options with the custom monitor
-            CalculationOptions options = new CalculationOptions
+            catch (Exception e)
             {
-                CalculationMonitor = new CircularReferenceMonitor(),
-                // Keep default behavior for other options (IgnoreError = true, Recursive = true)
-            };
-
-            // Perform formula calculation; the monitor will be invoked automatically
-            workbook.CalculateFormula(options);
-
-            // Save the workbook (the file will contain the circular formulas)
-            workbook.Save("CircularReferenceDemo.xlsx");
+                // General exception handling for unexpected errors
+                Console.WriteLine($"Error: {e.Message}");
+            }
         }
     }
 }

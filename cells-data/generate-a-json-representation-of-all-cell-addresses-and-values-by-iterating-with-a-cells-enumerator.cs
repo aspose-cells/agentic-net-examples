@@ -1,67 +1,56 @@
-// Title: Generate a JSON array of populated cell addresses and values by enumerating Aspose.Cells worksheet cells in C#
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate through all non‑empty cells in a worksheet and output each cell's address and value as a JSON object. | Extend the enumeration to include each cell's formula and number format, adding those details to the JSON representation. | Create a reusable C# method that returns a JSON string containing an array of all populated cells from a given Aspose.Cells worksheet.
-// Common Searches: how to export non empty cells from an Aspose.Cells worksheet to JSON in C# | Aspose.Cells C# enumerate cells and get address and value as JSON | C# convert Excel worksheet cells to JSON array using Aspose.Cells enumerator | retrieve cell formulas and formatting with Aspose.Cells and serialize to JSON
-// Tags: Aspose.Cells cell enumeration JSON conversion | C# export worksheet data as JSON with Aspose.Cells | Cell.ToJson for populated cells Aspose.Cells | non‑empty cell address extraction Aspose.Cells C# | serialize Excel cells to JSON using Aspose.Cells
+// Title: Export non‑empty Excel cell addresses and values to indented JSON using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, iterates over every cell in the first worksheet via the Cells enumerator, and builds a JSON array where each element holds the cell's address (e.g., "A1") and its stringified value. | Extend the program to also capture each cell's data type (Number, String, DateTime, etc.) and include it in the JSON objects. | Refactor the solution so that the JSON string is returned from a method instead of being written to a file, making it suitable for an ASP.NET Core API response. | Add a command‑line option to exclude cells whose values are only whitespace when creating the JSON output.
+// Common Searches: Aspose.Cells C# how to export worksheet cells to a JSON file | Iterate over cells with Aspose.Cells and get cell address and value | Serialize non‑empty Excel cells to JSON in .NET Core | C# convert Excel data to JSON including cell coordinates using Aspose.Cells | Skip empty or blank cells when exporting Excel to JSON with Aspose.Cells
+// Tags: Aspose.Cells export cells to JSON | enumerate worksheet cells Aspose.Cells | filter non‑empty cells Aspose.Cells | cell address serialization C# | Excel to JSON conversion Aspose.Cells
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsJsonExport
 {
-    // Demonstrates creating a workbook, populating sample cells, using the Cells enumerator to walk through non‑empty cells, converting each cell to JSON with Cell.ToJson, and assembling the results into a JSON array string.
-    public class CellsEnumeratorToJsonDemo
+    // Loads an Excel workbook with Aspose.Cells, enumerates all cells in the first worksheet, collects the address and string representation of each non‑null cell into a list, serializes the list to indented JSON, and writes the result to a file named cells.json.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            try
+            // Load an existing workbook (replace with your file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Prepare a list to hold cell address/value pairs
+            var cellsData = new List<object>();
+
+            // Iterate over all cells using the Cells enumerator
+            foreach (Cell cell in worksheet.Cells)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                // Skip empty cells if desired
+                if (cell.Value == null) continue;
 
-                // Populate some sample data
-                cells["A1"].PutValue(100);
-                cells["B2"].PutValue("Hello");
-                cells["C3"].PutValue(DateTime.Now);
-                cells["D4"].PutValue(3.14);
-
-                // Get the enumerator for the Cells collection
-                IEnumerator enumerator = cells.GetEnumerator();
-
-                // Collect JSON representation of each non‑empty cell
-                List<string> cellJsonList = new List<string>();
-                while (enumerator.MoveNext())
+                // Add an anonymous object with Address and Value
+                cellsData.Add(new
                 {
-                    Cell cell = (Cell)enumerator.Current;
-                    if (cell.Value != null)
-                    {
-                        // Cell.ToJson returns a JSON string for the individual cell
-                        cellJsonList.Add(cell.ToJson());
-                    }
-                }
-
-                // Combine individual cell JSON strings into a JSON array
-                string jsonResult = "[" + string.Join(",", cellJsonList) + "]";
-
-                // Output the final JSON
-                Console.WriteLine(jsonResult);
+                    Address = cell.Name,          // e.g., "A1"
+                    Value = cell.Value.ToString() // Convert value to string for JSON
+                });
             }
-            catch (Exception ex)
+
+            // Serialize the list to JSON
+            string json = JsonSerializer.Serialize(cellsData, new JsonSerializerOptions
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+                WriteIndented = true
+            });
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CellsEnumeratorToJsonDemo.Run();
+            // Save JSON to a file (replace with your desired output path)
+            string outputPath = "cells.json";
+            File.WriteAllText(outputPath, json);
+
+            Console.WriteLine($"Cell data exported to {outputPath}");
         }
     }
 }

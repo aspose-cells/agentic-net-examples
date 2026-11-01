@@ -1,78 +1,65 @@
-// Title: How to load a named range and bind its columns to a Waterfall chart series using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that fetches the 'WaterfallData' named range and maps its first column to the category axis and second column to the value axis when constructing a Waterfall chart with Aspose.Cells. | Illustrate assigning separate category and value address strings derived from a named range to a Waterfall chart series and setting a custom chart title in Aspose.Cells. | Provide error‑handling for missing input workbook or absent named range, then save the workbook after linking the chart series to the named‑range data in C#.
-// Common Searches: Aspose.Cells example for creating a waterfall chart from a predefined named range | C# code to set category and value ranges for a waterfall chart in Aspose.Cells | How to reference Excel named ranges when building charts with Aspose.Cells .NET | Assigning series data addresses to a waterfall chart using Aspose.Cells API | Saving workbook after adding waterfall chart with Aspose.Cells in C#
-// Tags: waterfall chart series binding Aspose.Cells | named range chart data source C# | set series values address Aspose.Cells | waterfall chart insertion Aspose.Cells | chart title configuration Aspose.Cells
+// Title: Load a named range and bind it to a Waterfall chart series using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# bind named range to waterfall chart series | Load data from a defined name into a Waterfall chart with Aspose.Cells | Create a Waterfall chart from an Excel named range using Aspose.Cells .NET | Set chart series name from named range text in Aspose.Cells C# | Add a Waterfall chart to a workbook and use named range data in C#
+// Tags: bind named range to waterfall chart Aspose.Cells | waterfall chart series from defined name Aspose.Cells | chart.NSeries.Add using named range Aspose.Cells | set series name from named range Aspose.Cells | add waterfall chart to worksheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an existing workbook, retrieves the 'WaterfallData' named range, creates a Waterfall chart, binds the first column as categories and the second column as values to the chart series, sets a chart title, and saves the workbook.
-class WaterfallChartExample
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing workbook, retrieves the named range "WaterfallData", adds a Waterfall chart to the first worksheet, binds the chart series to the named range with chart.NSeries.Add, assigns the series name from the named range's text, and saves the workbook with the new chart.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputFile = "InputData.xlsx";
-            const string outputFile = "WaterfallChartOutput.xlsx";
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Ensure the input workbook exists
-            if (!File.Exists(inputFile))
-                throw new FileNotFoundException($"Input file '{inputFile}' not found.");
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(inputFile);
+                // Load the workbook containing the named range
+                Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Retrieve the named range (e.g., "WaterfallData")
+                Name namedRange = workbook.Worksheets.Names["WaterfallData"];
+                if (namedRange == null)
+                {
+                    Console.WriteLine("Named range 'WaterfallData' not found.");
+                    return;
+                }
 
-            // Retrieve the named range that contains the waterfall data
-            // The named range should include both categories (first column) and values (second column)
-            Aspose.Cells.Range dataRange = workbook.Worksheets.GetRangeByName("WaterfallData");
-            if (dataRange == null)
-                throw new InvalidOperationException("Named range 'WaterfallData' was not found.");
+                // The RefersTo property returns the address of the range (e.g., "Sheet1!$B$2:$B$10")
+                string dataRange = namedRange.RefersTo;
 
-            // Determine addresses for categories (first column) and values (second column)
-            int firstRow = dataRange.FirstRow;
-            int firstCol = dataRange.FirstColumn;
-            int rowCount = dataRange.RowCount;
-            int lastRow = firstRow + rowCount - 1;
+                // Add a new Waterfall chart to the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 5, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Category range (first column of the named range)
-            string catAddress = $"{sheet.Name}!{CellsHelper.CellIndexToName(firstRow, firstCol)}:{CellsHelper.CellIndexToName(lastRow, firstCol)}";
+                // Bind the series to the named range.
+                // The second parameter (true) indicates that the range contains category (X) values.
+                chart.NSeries.Add(dataRange, true);
 
-            // Values range (second column of the named range)
-            string valAddress = $"{sheet.Name}!{CellsHelper.CellIndexToName(firstRow, firstCol + 1)}:{CellsHelper.CellIndexToName(lastRow, firstCol + 1)}";
+                // Set the series name using the defined name's text
+                chart.NSeries[0].Name = namedRange.Text;
 
-            // Add a Waterfall chart to the worksheet
-            // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
-            int chartTopRow = 5;
-            int chartLeftColumn = 0;
-            int chartBottomRow = 25;
-            int chartRightColumn = 10;
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, chartTopRow, chartLeftColumn, chartBottomRow, chartRightColumn);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Add the series using the category range; for column‑type charts the second argument is a bool indicating vertical orientation
-            int seriesIndex = chart.NSeries.Add(catAddress, true);
-            Series series = chart.NSeries[seriesIndex];
-            series.Name = "Waterfall Series";
-
-            // Assign the values range to the series (correct property is Values)
-            series.Values = valAddress;
-
-            // Optional: set chart title
-            chart.Title.Text = "Waterfall Chart from Named Range";
-
-            // Save the workbook with the chart
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook with the new chart
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,60 +1,42 @@
-// Title: C# Aspose.Cells example: catch exception when unprotecting a worksheet with a wrong password
-// AI Prompts: Generate C# code that protects an Aspose.Cells worksheet, attempts to unprotect it with an incorrect password, and captures the thrown exception. | Show how to implement try‑catch around Worksheet.Unprotect to handle invalid password errors in Aspose.Cells for .NET. | Demonstrate saving a workbook after a failed unprotect attempt while preserving exception details in C#.
-// Common Searches: how to catch Aspose.Cells unprotect worksheet wrong password exception c# | Aspose.Cells worksheet.Unprotect throws error with invalid password example | C# code to protect Excel sheet and handle wrong password using Aspose.Cells | saving workbook after failed unprotect attempt Aspose.Cells .NET | exception handling for worksheet protection Aspose.Cells C# tutorial
-// Tags: Aspose.Cells worksheet unprotect exception handling | C# protect worksheet with password Aspose.Cells | invalid password error Aspose.Cells worksheet | save workbook after protection Aspose.Cells C# | try-catch Worksheet.Unprotect Aspose.Cells | Aspose.Cells encryption protection example C#
+// Title: C# code sample: Catch exception when unprotecting an Aspose.Cells worksheet with an invalid password
+// Common Searches: how to catch exception for invalid password when unprotecting a worksheet using Aspose.Cells in C# | Aspose.Cells unprotect worksheet throws error with wrong password example C# | C# handling of Aspose.Cells worksheet protection failure due to incorrect password | capture Aspose.Cells worksheet unprotect exception caused by mismatched password
+// Tags: Aspose.Cells worksheet unprotect API C# | invalid password handling Aspose.Cells protection | exception handling for worksheet unprotect Aspose.Cells | Aspose.Cells Protect and Unprotect methods usage | C# capture Aspose.Cells protection error | worksheet password mismatch Aspose.Cells
 
-using Aspose.Cells;
 using System;
-using System.IO;
+using Aspose.Cells;
 
-// The sample creates a workbook, protects the first worksheet with a password, then tries to unprotect it using an incorrect password. The resulting exception is caught and displayed, and the workbook is saved afterward.
+// The example creates a workbook, protects the first worksheet with a known password, then attempts to unprotect it using an incorrect password. The resulting exception is caught and its message is written to the console, demonstrating proper error handling for worksheet protection failures.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Name = "ProtectedSheet";
 
-            // Protect the worksheet with a known password.
-            // The third parameter (oldPassword) is not required here, so pass null.
-            worksheet.Protect(ProtectionType.All, "correctPassword", null);
+            // Get the first worksheet and give it a name
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "ProtectedSheet";
+
+            // Protect the worksheet with a known password (protect all options)
+            // The third parameter is the old password; for a new protection it can be empty
+            sheet.Protect(ProtectionType.All, "correctPassword", string.Empty);
 
             try
             {
                 // Attempt to unprotect the worksheet using an incorrect password
-                worksheet.Unprotect("wrongPassword");
-                Console.WriteLine("Worksheet unprotected (unexpected).");
+                sheet.Unprotect("wrongPassword");
             }
             catch (Exception ex)
             {
-                // Capture and display the exception thrown due to wrong password
+                // Capture and display the exception that occurs
                 Console.WriteLine("Exception caught while unprotecting worksheet:");
                 Console.WriteLine(ex.Message);
             }
 
-            // Optional: Save the workbook if needed
-            string outputPath = "ProtectedDemo.xlsx";
-            try
-            {
-                // Ensure the directory exists before saving
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine("Error saving workbook:");
-                Console.WriteLine(saveEx.Message);
-            }
+            // (Optional) Save the workbook if needed
+            // workbook.Save("ProtectedWorkbook.xlsx");
         }
         catch (Exception ex)
         {

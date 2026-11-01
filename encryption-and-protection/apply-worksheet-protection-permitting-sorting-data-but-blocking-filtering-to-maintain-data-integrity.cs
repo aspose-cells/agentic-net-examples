@@ -1,54 +1,55 @@
-// Title: Protect an Excel worksheet with Aspose.Cells for .NET while allowing sorting and disabling filtering
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, applies password protection to the first worksheet, enables sorting, disables filtering, and saves the workbook. | Demonstrate how to configure worksheet protection settings in Aspose.Cells for .NET to permit sorting operations but block filter usage.
-// Common Searches: Aspose.Cells .NET protect worksheet allow sorting disable filtering example | C# set worksheet protection to enable sort only using Aspose.Cells | How to apply password protection to an Excel sheet while permitting sorting in Aspose.Cells
-// Tags: Aspose.Cells worksheet protection allow sorting | disable filtering on protected worksheet C# | password protect Excel sheet Aspose.Cells .NET | configure worksheet protection options Aspose.Cells | Excel sorting permission Aspose.Cells
+// Title: How to protect an Excel worksheet while allowing sorting and disabling filtering with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# protect worksheet allow sorting but disable filter | set worksheet protection password and enable sorting only using Aspose.Cells | C# code to enable sorting on protected sheet while blocking auto‑filter in Excel | how to configure worksheet protection options in Aspose.Cells .NET | prevent users from applying filters on a protected worksheet with Aspose.Cells
+// Tags: worksheet protection allow sorting Aspose.Cells | disable filtering on protected Excel sheet C# | set worksheet password Aspose.Cells .NET | configure protection options Excel workbook Aspose.Cells | protect worksheet sorting enabled filtering disabled
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook, accesses the first worksheet, configures its Protection object to permit sorting while blocking filtering, assigns a password, and saves the modified workbook.
+class WorksheetProtectionExample
 {
-    // The sample loads an existing workbook, accesses the first worksheet, configures its protection to allow sorting but prevent filtering, applies a password using ProtectionType.All, and saves the modified file, handling missing input files and runtime exceptions.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             // Define input and output file paths
             string inputPath = "input.xlsx";
             string outputPath = "output.xlsx";
 
-            try
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (index 0)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Allow sorting but disallow filtering
-                sheet.Protection.AllowSorting = true;
-                sheet.Protection.AllowFiltering = false;
-
-                // Protect the worksheet with a password (oldPassword not required, pass null)
-                sheet.Protect(ProtectionType.All, "YourPassword", null);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                // Catch any unexpected exceptions and display the message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get the protection object (read‑only property)
+            var protection = worksheet.Protection;
+
+            // Permit sorting of data
+            protection.AllowSorting = true;
+
+            // Block filtering to maintain data integrity
+            protection.AllowFiltering = false;
+
+            // Set a password for the protection (use the Password property)
+            protection.Password = "securePassword";
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

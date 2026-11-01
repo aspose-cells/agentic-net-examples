@@ -1,39 +1,35 @@
-// Title: Create a VeryHidden worksheet in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a new Workbook, sets the first worksheet's Visibility to VeryHidden, and saves the file as an .xlsx using Aspose.Cells. | Write C# to open an existing Excel workbook, mark a specified sheet as VeryHidden so it cannot be unhidden through the Excel UI, then save the workbook with Aspose.Cells.
-// Common Searches: Aspose.Cells how to set worksheet to VeryHidden in C# | C# make Excel sheet invisible to user using Aspose.Cells | prevent users from unhiding a worksheet with Aspose.Cells .NET | set worksheet visibility to VeryHidden programmatically Aspose.Cells | Aspose.Cells hide sheet from Excel UI C# example
-// Tags: Aspose.Cells set worksheet VeryHidden | C# hide Excel worksheet UI | Aspose.Cells worksheet visibility enum | Excel VeryHidden sheet Aspose.Cells | Aspose.Cells save workbook with hidden sheet
+// Title: How to make a worksheet very hidden (cannot be shown in Excel UI) using Aspose.Cells for .NET C#
+// Common Searches: Aspose.Cells C# set worksheet to very hidden so it doesn't appear in Excel UI | Hide a worksheet permanently with Aspose.Cells .NET workbook | Make Excel worksheet invisible using Aspose.Cells IsVisible property C# | Create a very hidden sheet in Aspose.Cells and save as .xlsx | Prevent users from unhiding a worksheet with Aspose.Cells API
+// Tags: Aspose.Cells very hidden worksheet | C# set worksheet IsVisible false | Aspose.Cells hide sheet from Excel UI | Workbook worksheet visibility .NET | Excel very hidden sheet Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// The program creates a new Workbook, accesses the first Worksheet, marks it as VeryHidden so it cannot be displayed via the Excel UI, saves the workbook as VeryHiddenWorksheet.xlsx, and outputs the full file path.
+// The example creates a new Workbook, renames the first worksheet to "SecretData", sets its IsVisible property to false to make the sheet very hidden (so it cannot be displayed through the Excel UI), and saves the file as VeryHiddenSheet.xlsx, with exception handling for any runtime errors.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "SecretData";
 
-            // Hide the worksheet. In older Aspose.Cells versions the Visibility property is not available,
-            // so we use the IsVisible flag. This makes the sheet hidden (cannot be shown via UI).
-            worksheet.IsVisible = false;
+            // Hide the worksheet (cannot be displayed via Excel UI)
+            // For older Aspose.Cells versions, use IsVisible; newer versions support Visibility,
+            // but IsVisible works across all supported versions.
+            sheet.IsVisible = false;
 
-            // Define output file path
-            string outputPath = "VeryHiddenWorksheet.xlsx";
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook
+            workbook.Save("VeryHiddenSheet.xlsx");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

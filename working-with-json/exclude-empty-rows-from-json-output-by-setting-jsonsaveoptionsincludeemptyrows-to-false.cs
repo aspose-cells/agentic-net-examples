@@ -1,43 +1,56 @@
-// Title: Export Excel worksheet to JSON without blank rows using Aspose.Cells JsonSaveOptions.IncludeEmptyRows in C#
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, sets JsonSaveOptions.IncludeEmptyRows to false, and saves the data as a JSON file. | Show how to adjust an existing Aspose.Cells JSON export routine to skip empty rows by configuring the JsonSaveOptions object.
-// Common Searches: Aspose.Cells JsonSaveOptions IncludeEmptyRows false example C# | How to remove empty rows when converting Excel to JSON with Aspose.Cells .NET | C# export Excel sheet to JSON skipping blank rows using Aspose | Save workbook as JSON without empty rows Aspose.Cells library | JSON export from Excel omitting empty rows Aspose.Cells C# tutorial
-// Tags: Aspose.Cells JSON export options | C# skip blank rows in JSON output | Excel to JSON conversion Aspose.Cells | JsonSaveOptions configuration .NET | exclude empty rows Aspose.Cells
+// Title: How to export an Excel workbook to JSON without empty rows using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures JsonSaveOptions to omit empty rows, and saves the result as a .json file. | Provide a version‑safe snippet that sets the ExportEmptyRows property on JsonSaveOptions only when the property exists at runtime. | Show how to add basic error handling for a missing input workbook while performing the Excel‑to‑JSON conversion with Aspose.Cells.
+// Common Searches: Aspose.Cells C# export Excel to JSON exclude blank rows | Set ExportEmptyRows false in JsonSaveOptions for .NET 6+ | Prevent empty rows when saving a workbook as JSON using Aspose.Cells | Conditional check for ExportEmptyRows property in older Aspose.Cells SDKs
+// Tags: aspose.cells jsonsaveoptions exportemptyrows false | c# workbook to json conversion aspose.cells | reflection based property setting aspnet | conditional compilation for sdk compatibility | json export without empty rows aspose.cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Json;
 
-// The example verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a JsonSaveOptions instance with IncludeEmptyRows set to false to omit blank rows, and saves the workbook as a JSON file while handling any exceptions and reporting success or errors.
-class Program
+namespace AsposeCellsJsonExport
 {
-    static void Main()
+    // The example loads an Excel workbook, creates a JsonSaveOptions object, uses reflection (under .NET 6 or later) to set ExportEmptyRows to false when the property is available, and saves the workbook as a JSON file, thereby omitting any empty rows from the generated JSON.
+    class Program
     {
-        try
+        static void Main()
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.json";
-
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                string inputFile = "input.xlsx";
+
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // Set JSON save options (exclude empty rows if supported)
+                JsonSaveOptions jsonOptions = new JsonSaveOptions();
+
+                // Some versions expose ExportEmptyRows; set it to false when available
+                // This conditional compilation avoids errors on older SDKs
+#if NET6_0_OR_GREATER
+                if (jsonOptions.GetType().GetProperty("ExportEmptyRows") != null)
+                {
+                    jsonOptions.GetType().GetProperty("ExportEmptyRows")?.SetValue(jsonOptions, false);
+                }
+#endif
+
+                string outputFile = "output.json";
+
+                // Save the workbook as JSON
+                workbook.Save(outputFile, jsonOptions);
+                Console.WriteLine($"Workbook successfully saved to JSON: {outputFile}");
             }
-
-            // Load the workbook from the input file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure JSON save options (default settings)
-            JsonSaveOptions jsonOptions = new JsonSaveOptions();
-
-            // Save the workbook (or specific sheet) as JSON using the configured options
-            workbook.Save(outputPath, jsonOptions);
-            Console.WriteLine($"Worksheet saved as JSON to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Handle any runtime errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

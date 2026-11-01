@@ -1,81 +1,71 @@
-// Title: Clone an Excel worksheet in C# with Aspose.Cells, preserving page‑setup settings and background image
-// AI Prompts: Write C# code that uses Aspose.Cells to duplicate a worksheet, copy its BackgroundImage byte array, and transfer all PageSetup properties to the new sheet. | Create a reusable method in C# that clones a worksheet via AddCopy, copies orientation, margins, print area, and background image without sharing references. | Generate a complete example that loads a workbook, clones a specific sheet, preserves page‑setup configuration and background image, and saves the result using Aspose.Cells.
-// Common Searches: aspnet clone worksheet preserve page setup Aspose.Cells | copy background image of Excel sheet using Aspose.Cells C# | how to keep margins and print area when duplicating a worksheet in .NET | Aspose.Cells AddCopy retain background image stream | duplicate Excel sheet with same page setup settings C#
-// Tags: Aspose.Cells sheet copy | background image data copy | page‑setup property transfer | AddCopy sheet cloning method | preserve sheet margins and print area
+// Title: Clone an Excel worksheet, copy its background image, and retain page‑setup settings with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells clone worksheet and keep background image | Copy page setup (margins, print area, orientation) when duplicating a sheet using Aspose.Cells | Preserve print title rows and columns after AddCopy in Aspose.Cells | Transfer background image stream to a copied worksheet in .NET | How to duplicate a worksheet while retaining its page‑setup configuration with Aspose.Cells
+// Tags: clone worksheet Aspose.Cells C# | copy worksheet background image Aspose.Cells | retain page setup properties Aspose.Cells | duplicate sheet preserve print area C# | transfer background image stream Aspose.Cells
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-// The example loads a source workbook, clones the specified worksheet using the AddCopy method, copies every relevant PageSetup property (orientation, margins, print area, etc.) to the cloned sheet, duplicates the background image byte array to avoid reference sharing, and saves the workbook with the new cloned worksheet.
-class WorksheetCloneExample
+// The example loads an existing workbook, clones the first worksheet using AddCopy, assigns the source sheet's BackgroundImage to the cloned sheet, copies key PageSetup properties (paper size, orientation, fit‑to‑pages, print area, title rows/columns, and margins), and saves the result to a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            string sourcePath = "SourceWorkbook.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Ensure the source file exists
-            if (!File.Exists(sourcePath))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the source workbook
+            var workbook = new Workbook(inputPath);
 
-            // Get the source worksheet (by name)
-            Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
-            if (sourceSheet == null)
+            // Reference to the worksheet to be cloned (e.g., the first sheet)
+            var sourceSheet = workbook.Worksheets[0];
+
+            // Clone the worksheet; AddCopy returns the index of the new sheet
+            int clonedIndex = workbook.Worksheets.AddCopy(sourceSheet.Index);
+            var clonedSheet = workbook.Worksheets[clonedIndex];
+
+            // ----- Copy background image -----
+            if (sourceSheet.BackgroundImage != null)
             {
-                Console.WriteLine("Source worksheet 'Sheet1' not found.");
-                return;
+                // Directly assign the Image object to the cloned sheet
+                clonedSheet.BackgroundImage = sourceSheet.BackgroundImage;
             }
 
-            int sourceIndex = workbook.Worksheets.IndexOf(sourceSheet);
+            // ----- Preserve page‑setup configuration -----
+            var srcSetup = sourceSheet.PageSetup;
+            var dstSetup = clonedSheet.PageSetup;
 
-            // Clone the worksheet
-            int clonedIndex = workbook.Worksheets.AddCopy(sourceIndex);
-            Worksheet clonedSheet = workbook.Worksheets[clonedIndex];
-
-            // ----- Preserve original page‑setup configuration -----
-            PageSetup srcSetup = sourceSheet.PageSetup;
-            PageSetup dstSetup = clonedSheet.PageSetup;
-
-            dstSetup.Orientation = srcSetup.Orientation;
+            // Copy common page‑setup properties
             dstSetup.PaperSize = srcSetup.PaperSize;
-            dstSetup.TopMargin = srcSetup.TopMargin;
-            dstSetup.BottomMargin = srcSetup.BottomMargin;
-            dstSetup.LeftMargin = srcSetup.LeftMargin;
-            dstSetup.RightMargin = srcSetup.RightMargin;
-            dstSetup.HeaderMargin = srcSetup.HeaderMargin;
-            dstSetup.FooterMargin = srcSetup.FooterMargin;
-            dstSetup.CenterHorizontally = srcSetup.CenterHorizontally;
-            dstSetup.CenterVertically = srcSetup.CenterVertically;
+            dstSetup.Orientation = srcSetup.Orientation;
+            dstSetup.FitToPagesTall = srcSetup.FitToPagesTall;
+            dstSetup.FitToPagesWide = srcSetup.FitToPagesWide;
             dstSetup.PrintArea = srcSetup.PrintArea;
             dstSetup.PrintTitleRows = srcSetup.PrintTitleRows;
             dstSetup.PrintTitleColumns = srcSetup.PrintTitleColumns;
-            // Add any additional PageSetup properties you need to preserve
+            dstSetup.LeftMargin = srcSetup.LeftMargin;
+            dstSetup.RightMargin = srcSetup.RightMargin;
+            dstSetup.TopMargin = srcSetup.TopMargin;
+            dstSetup.BottomMargin = srcSetup.BottomMargin;
+            // Header and Footer copying omitted if not supported by the current API version
 
-            // ----- Copy background image -----
-            if (sourceSheet.BackgroundImage != null && sourceSheet.BackgroundImage.Length > 0)
-            {
-                // Clone the byte array to avoid sharing the same reference
-                byte[] bgImage = new byte[sourceSheet.BackgroundImage.Length];
-                Array.Copy(sourceSheet.BackgroundImage, bgImage, bgImage.Length);
-                clonedSheet.BackgroundImage = bgImage;
-            }
-
-            // Save the workbook with the cloned worksheet
-            string outputPath = "ClonedWorkbook.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

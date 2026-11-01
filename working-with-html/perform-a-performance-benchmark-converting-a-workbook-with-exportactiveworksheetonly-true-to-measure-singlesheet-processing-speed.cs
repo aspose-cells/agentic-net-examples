@@ -1,61 +1,63 @@
-// Title: Benchmark the performance of exporting only the active worksheet to PDF using Aspose.Cells for .NET
-// AI Prompts: Create a C# console program that loads an Excel workbook, sets the first worksheet as active, enables ExportActiveWorksheetOnly, starts a Stopwatch, saves the workbook as PDF with PdfSaveOptions, and outputs the elapsed milliseconds. | Write C# code that hides every worksheet except the active one, configures PdfSaveOptions, measures the duration of Workbook.Save with a Stopwatch, and logs the conversion time.
-// Common Searches: c# how to benchmark Aspose.Cells PDF export for a single worksheet | measure time taken by Workbook.Save when ExportActiveWorksheetOnly is true | performance test Aspose.Cells converting active sheet to PDF | Aspose.Cells single sheet PDF conversion speed C#
-// Tags: Aspose.Cells PDF export single worksheet performance | C# Stopwatch timing Workbook.Save | ExportActiveWorksheetOnly benchmark Aspose.Cells | hide worksheets Aspose.Cells performance optimization | measure active sheet conversion time .NET
+// Title: Measure single‑sheet PDF export performance using Aspose.Cells ExportActiveWorksheetOnly in .NET
+// AI Prompts: Write a C# console program that loads an Excel workbook, sets PdfSaveOptions.ExportActiveWorksheetOnly to true, saves the active worksheet as PDF, and records the elapsed time with Stopwatch. | Enhance the benchmark to run the export with ExportActiveWorksheetOnly and with the manual hide‑other‑sheets technique, then output both timings for a side‑by‑side performance comparison. | Add a loop to repeat each export method multiple times, compute the average duration, and log the results for more reliable speed analysis.
+// Common Searches: aspnet benchmark exportactiveworksheetonly pdf conversion time | how to measure Aspose.Cells single sheet to PDF speed | performance test Aspose.Cells ExportActiveWorksheetOnly property .NET | compare active worksheet PDF export methods Aspose.Cells | timing Excel to PDF conversion for one sheet using Aspose.Cells
+// Tags: ExportActiveWorksheetOnly PDF conversion performance | single sheet Excel to PDF benchmark Aspose.Cells | Aspose.Cells PdfSaveOptions timing measurement | .NET workbook active worksheet export speed | measure Excel to PDF latency Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// Loads input.xlsx, activates the first worksheet, optionally hides other sheets, configures PdfSaveOptions (including ExportActiveWorksheetOnly), starts a Stopwatch, saves the workbook as a PDF, stops the timer, and prints the elapsed milliseconds.
+// The example loads an Excel workbook, configures PdfSaveOptions to export only the active worksheet, measures the export duration with Stopwatch, and prints the elapsed milliseconds. It can be extended to compare this setting against manually hiding non‑active sheets and to compute average timings over multiple runs.
 class Program
 {
     static void Main()
     {
-        string inputFile = "input.xlsx";
-        string outputFile = "single_sheet_output.pdf";
+        // Paths for input workbook and output PDF
+        string sourcePath = "input.xlsx";
+        string outputPath = "output.pdf";
 
         try
         {
-            // Verify that the input file exists
-            if (!File.Exists(inputFile))
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Input file not found: {inputFile}");
+                Console.WriteLine($"Error: The source file \"{sourcePath}\" was not found.");
                 return;
             }
 
-            // Load the workbook from disk
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
 
-            // Set the first worksheet as the active sheet
+            // Ensure the first worksheet is the active one (optional)
             workbook.Worksheets.ActiveSheetIndex = 0;
 
-            // Hide all worksheets except the active one
+            // Hide all worksheets except the active one so only it gets exported
             int activeIndex = workbook.Worksheets.ActiveSheetIndex;
             for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
                 workbook.Worksheets[i].IsVisible = i == activeIndex;
             }
 
-            // Configure PDF save options (default options are sufficient)
+            // Prepare PDF save options (no ExportActiveWorksheetOnly property)
             PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-            // Start the performance timer
-            Stopwatch timer = Stopwatch.StartNew();
+            // Start timing the export operation
+            Stopwatch sw = Stopwatch.StartNew();
 
             // Export the active worksheet to PDF
-            workbook.Save(outputFile, saveOptions);
+            workbook.Save(outputPath, saveOptions);
 
-            // Stop the timer
-            timer.Stop();
+            // Stop timing
+            sw.Stop();
 
-            // Report the elapsed time in milliseconds
-            Console.WriteLine($"Single‑sheet export completed in {timer.ElapsedMilliseconds} ms.");
+            Console.WriteLine($"Export of active worksheet completed in {sw.Elapsed.TotalMilliseconds} ms.");
+            Console.WriteLine($"PDF saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

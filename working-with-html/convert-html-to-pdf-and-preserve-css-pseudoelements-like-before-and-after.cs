@@ -1,43 +1,45 @@
-// Title: Convert an HTML file with CSS ::before and ::after pseudo‑elements to PDF using Aspose.Cells in C#
-// AI Prompts: Generate C# code that reads an HTML document, loads it into an Aspose.Cells Workbook, and saves it as a PDF while retaining ::before and ::after CSS pseudo‑elements. | Add robust file‑existence validation and exception handling to the HTML‑to‑PDF conversion using Aspose.Cells. | Show how to embed custom fonts in the PDF output when converting HTML that contains CSS pseudo‑elements with Aspose.Cells.
-// Common Searches: asp.net convert html with ::before pseudo element to pdf using Aspose.Cells | c# preserve CSS ::after content during html to pdf export with Aspose.Cells | load html and css pseudo‑elements into Aspose.Cells workbook for pdf generation
-// Tags: Aspose.Cells HTML to PDF conversion | CSS pseudo‑element support in PDF output | C# Workbook.Load HTML with CSS | Workbook.Save PDF preserving styles | embed custom fonts Aspose.Cells PDF
+// Title: Convert HTML to PDF with Aspose.Cells for .NET while preserving CSS ::before and ::after pseudo‑elements
+// AI Prompts: Write C# code that uses Aspose.Cells to load an HTML file, renders CSS ::before and ::after pseudo‑elements, and saves the result as a PDF. | Show how to set up HtmlLoadOptions in Aspose.Cells so that CSS pseudo‑elements are included during HTML‑to‑PDF conversion. | Provide a robust C# example that checks the input HTML file, performs the conversion with Aspose.Cells, and includes error handling for missing files or conversion failures.
+// Common Searches: Aspose.Cells C# HTML to PDF conversion keep CSS pseudo elements | How to render ::before and ::after styles when converting HTML to PDF with Aspose.Cells | HtmlLoadOptions settings for preserving CSS pseudo‑elements in PDF output | Convert HTML file to PDF in .NET while maintaining pseudo‑element formatting | C# Aspose.Cells PDF export with full CSS support including ::before ::after
+// Tags: Aspose.Cells HtmlLoadOptions CSS pseudo‑elements | C# HTML to PDF conversion Aspose.Cells | preserve ::before ::after in PDF generation | Aspose.Cells PDF export with CSS styling | error handling for HTML to PDF conversion .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies that the input HTML file exists, loads it into an Aspose.Cells Workbook (which parses the HTML and associated CSS, including ::before and ::after pseudo‑elements), and saves the workbook as a PDF, with error handling for any conversion issues.
+// The program verifies the existence of an input HTML file, loads it into an Aspose.Cells Workbook using HtmlLoadOptions, and saves the workbook as a PDF, handling any exceptions that may occur during the conversion.
 class HtmlToPdfConverter
 {
     static void Main()
     {
-        // Path to the source HTML file (must contain CSS with ::before / ::after)
-        string htmlFile = "input.html";
+        // Path to the source HTML file
+        string htmlFilePath = "input.html";
 
-        // Desired output PDF file path
-        string pdfFile = "output.pdf";
+        // Path where the resulting PDF will be saved
+        string pdfFilePath = "output.pdf";
+
+        // Verify that the HTML file exists to avoid FileNotFoundException
+        if (!File.Exists(htmlFilePath))
+        {
+            Console.WriteLine($"Error: HTML file not found at '{htmlFilePath}'.");
+            return;
+        }
 
         try
         {
-            // Verify that the input HTML file exists
-            if (!File.Exists(htmlFile))
-            {
-                Console.WriteLine($"Error: The file '{htmlFile}' was not found.");
-                return;
-            }
-
-            // Load the HTML document into a Workbook – Aspose.Cells parses HTML and CSS
-            var workbook = new Workbook(htmlFile);
+            // Load the HTML content into a Workbook using HtmlLoadOptions
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
 
             // Save the workbook as PDF
-            workbook.Save(pdfFile, SaveFormat.Pdf);
+            workbook.Save(pdfFilePath, SaveFormat.Pdf);
 
-            Console.WriteLine($"Conversion completed. PDF saved to: {pdfFile}");
+            Console.WriteLine("Conversion completed. PDF saved to: " + pdfFilePath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine("An error occurred during conversion: " + ex.Message);
         }
     }
 }

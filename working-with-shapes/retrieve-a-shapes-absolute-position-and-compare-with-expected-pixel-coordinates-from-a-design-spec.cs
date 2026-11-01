@@ -1,90 +1,86 @@
-// Title: Determine a shape's absolute pixel coordinates in an Excel worksheet with Aspose.Cells for .NET and validate against a design specification
-// AI Prompts: Write C# code using Aspose.Cells to read a shape's UpperLeftRow and UpperLeftColumn, then compute its absolute X/Y pixel position by accumulating column widths and row heights. | Add logic that compares the computed pixel coordinates with expected design‑spec values, using a configurable tolerance, and prints a pass/fail message. | Update the sample to incorporate UpperLeftOffsetX and UpperLeftOffsetY when they are available in newer Aspose.Cells releases.
-// Common Searches: aspnet retrieve shape pixel location from Excel using Aspose.Cells | how to calculate absolute X Y coordinates of a drawing object in .xlsx with Aspose.Cells | compare Excel shape position to design specification in C# | Aspose.Cells get shape UpperLeftRow UpperLeftColumn pixel conversion | validate shape placement accuracy in Excel workbook programmatically
-// Tags: Aspose.Cells shape pixel position calculation | Excel worksheet shape coordinate conversion | C# shape placement verification Aspose.Cells | absolute pixel coordinates from row column Aspose.Cells | design spec shape location validation .NET
+// Title: Determine a named shape's absolute pixel coordinates in an Excel worksheet using Aspose.Cells for .NET and validate against design spec
+// AI Prompts: Write C# code with Aspose.Cells to locate a shape by its name, calculate its absolute X and Y pixel positions by summing preceding row heights and column widths, and store the results. | Add logic that compares the calculated pixel coordinates with expected design values using a 1‑pixel tolerance and prints a match or mismatch message.
+// Common Searches: aspocells get absolute pixel position of a shape in C# | how to calculate Excel shape coordinates in pixels using Aspose.Cells | verify Excel shape location matches design spec with .NET | C# sum row heights and column widths to find shape top‑left pixel offset | Aspose.Cells shape position tolerance check example
+// Tags: retrieve shape absolute pixel coordinates Aspose.Cells | calculate shape top-left offset from rows columns .NET | compare shape position with design spec using tolerance | excel worksheet shape location verification C# | sum row heights column widths pixel calculation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an Excel workbook, accesses the first worksheet, extracts the first shape's UpperLeftRow and UpperLeftColumn, computes its absolute X and Y pixel coordinates by summing preceding column widths and row heights, and then checks whether those coordinates match expected design‑spec values within a small tolerance, reporting the result.
+// The program loads an Excel workbook, finds a shape by its name, computes the shape's absolute X and Y pixel coordinates by aggregating the heights of preceding rows and the widths of preceding columns, then checks those coordinates against expected design values with a 1‑pixel tolerance, reporting a match or mismatch.
 class ShapePositionChecker
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
+        const string inputFile = "input.xlsx";
+        const string shapeName = "MyShape"; // replace with actual shape name
 
         // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        if (!File.Exists(inputFile))
         {
-            Console.WriteLine($"Error: File not found – \"{inputPath}\"");
+            Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
             return;
         }
 
         try
         {
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputFile);
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape on the sheet
-            if (sheet.Shapes.Count == 0)
+            // Retrieve the shape by name
+            Shape shape = worksheet.Shapes[shapeName];
+            if (shape == null)
             {
-                Console.WriteLine("No shapes found on the first worksheet.");
+                Console.WriteLine($"Error: Shape \"{shapeName}\" not found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first shape (adjust index or use sheet.Shapes[\"ShapeName\"] as needed)
-            Shape shape = sheet.Shapes[0];
+            // Get the cell indices where the shape's top‑left corner is anchored
+            int rowIndex = shape.UpperLeftRow;
+            int columnIndex = shape.UpperLeftColumn;
 
-            // Use shape's position properties to get row/column and offsets
-            int startRow = shape.UpperLeftRow;
-            int startColumn = shape.UpperLeftColumn;
+            // Offsets inside the cell (in pixels) – not available in older API versions, default to 0
+            int rowOffsetPixels = 0;
+            int columnOffsetPixels = 0;
 
-            // Offsets are not available in older API versions; assume zero offset
-            int offsetX = 0; // pixels within the starting column
-            int offsetY = 0; // pixels within the starting row
-
-            // Calculate absolute X coordinate (pixels) by summing column widths before the start column
-            double absoluteX = offsetX;
-            for (int col = 0; col < startColumn; col++)
+            // Calculate absolute Y coordinate (pixels) by summing heights of all preceding rows
+            double absoluteY = 0;
+            for (int i = 0; i < rowIndex; i++)
             {
-                absoluteX += sheet.Cells.GetColumnWidthPixel(col);
+                absoluteY += worksheet.Cells.GetRowHeightPixel(i);
             }
+            absoluteY += rowOffsetPixels;
 
-            // Calculate absolute Y coordinate (pixels) by summing row heights before the start row
-            double absoluteY = offsetY;
-            for (int row = 0; row < startRow; row++)
+            // Calculate absolute X coordinate (pixels) by summing widths of all preceding columns
+            double absoluteX = 0;
+            for (int i = 0; i < columnIndex; i++)
             {
-                absoluteY += sheet.Cells.GetRowHeightPixel(row);
+                absoluteX += worksheet.Cells.GetColumnWidthPixel(i);
             }
+            absoluteX += columnOffsetPixels;
 
-            // Expected pixel coordinates from design specification (replace with actual values)
-            double expectedX = 150.0; // example value
-            double expectedY = 200.0; // example value
+            // Expected pixel coordinates from the design specification
+            int expectedX = 150; // replace with actual expected X
+            int expectedY = 200; // replace with actual expected Y
 
-            // Compare actual position with expected position (allowing a small tolerance)
-            const double tolerance = 0.5; // pixels
+            // Compare with a tolerance of 1 pixel
+            const double tolerance = 1.0;
             bool xMatches = Math.Abs(absoluteX - expectedX) <= tolerance;
             bool yMatches = Math.Abs(absoluteY - expectedY) <= tolerance;
 
-            // Output the results
-            Console.WriteLine($"Shape absolute position: X = {absoluteX} px, Y = {absoluteY} px");
-            Console.WriteLine($"Expected position: X = {expectedX} px, Y = {expectedY} px");
-            Console.WriteLine($"X matches: {xMatches}");
-            Console.WriteLine($"Y matches: {yMatches}");
-
-            // Further action based on the comparison result
+            // Output the result
             if (xMatches && yMatches)
             {
-                Console.WriteLine("Shape is positioned correctly according to the design spec.");
+                Console.WriteLine("Shape position matches the expected coordinates.");
             }
             else
             {
-                Console.WriteLine("Shape position does NOT match the design spec.");
+                Console.WriteLine($"Shape position mismatch. Actual: ({absoluteX:F2}, {absoluteY:F2}) " +
+                                  $"Expected: ({expectedX}, {expectedY})");
             }
         }
         catch (Exception ex)

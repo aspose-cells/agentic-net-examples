@@ -1,80 +1,90 @@
-// Title: C# method to remove a pivot table by index and get remaining pivot table count with Aspose.Cells
-// AI Prompts: Write a static C# function that accepts a Workbook and a zero‑based pivot table index, validates the index, removes the pivot table from the first worksheet using Worksheet.PivotTables.RemoveAt, and returns the updated PivotTables.Count. | Show how to invoke the removal function, catch an ArgumentOutOfRangeException for an invalid index, and save the workbook after the pivot table has been deleted.
-// Common Searches: C# Aspose.Cells how to delete a specific pivot table using its index | example of removing a pivot table and checking remaining count in Aspose.Cells | Aspose.Cells PivotTables.RemoveAt method usage in .NET
-// Tags: Aspose.Cells Worksheet.PivotTables.RemoveAt example | C# delete pivot table by index | pivot table count after removal Aspose.Cells | handle invalid pivot table index ArgumentOutOfRangeException | save workbook after pivot table deletion Aspose.Cells
+// Title: Remove a specific pivot table by index and get the remaining count with Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells delete pivot table at given index and return count | how to remove a pivot table from the first worksheet using Aspose.Cells | Aspose.Cells remove pivot table by zero based index and get remaining tables | count remaining pivot tables after removal in Excel using Aspose.Cells C# | remove pivot table programmatically with Aspose.Cells and save workbook
+// Tags: Aspose.Cells remove pivot table by index | C# pivot table deletion Aspose.Cells | update workbook after pivot table removal | retrieve remaining pivot table count Aspose.Cells | Excel worksheet pivot table management C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The RemovePivotTable method loads an Excel workbook, accesses the first worksheet, validates the zero‑based pivot table index, removes the specified pivot table, saves the workbook, and returns the updated number of pivot tables in that worksheet, or -1 on error.
+public static class PivotTableHelper
 {
-    // Provides a static helper that validates a zero‑based pivot table index, removes the corresponding pivot table from the first worksheet via Worksheet.PivotTables.RemoveAt, and returns the new PivotTables.Count. A demo creates a workbook, adds three pivot tables, removes the second one, prints the remaining count, and saves the file.
-    public static class PivotTableHelper
+    /// <param name="filePath">Full path to the Excel file.</param>
+    /// <param name="pivotTableIndex">Zero‑based index of the pivot table to remove.</param>
+    /// <returns>
+    /// Number of remaining pivot tables in the first worksheet after removal,
+    /// or -1 if an error occurs.
+    /// </returns>
+    public static int RemovePivotTable(string filePath, int pivotTableIndex)
     {
-        /// <param name="workbook">The workbook containing the pivot tables.</param>
-        /// <param name="pivotIndex">Zero‑based index of the pivot table to remove.</param>
-        /// <returns>Number of remaining pivot tables after removal.</returns>
-        public static int RemovePivotTableAtIndex(Workbook workbook, int pivotIndex)
+        try
         {
-            // Access the first worksheet (adjust as needed)
+            // Load the workbook from the given file path.
+            Workbook workbook = new Workbook(filePath);
+
+            // Access the first worksheet (adjust as needed for other sheets).
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the index is within range
-            if (pivotIndex < 0 || pivotIndex >= sheet.PivotTables.Count)
-                throw new ArgumentOutOfRangeException(nameof(pivotIndex), "Invalid pivot table index.");
+            // Ensure the index is within the valid range.
+            if (pivotTableIndex >= 0 && pivotTableIndex < sheet.PivotTables.Count)
+            {
+                // Remove the pivot table at the specified index.
+                sheet.PivotTables.RemoveAt(pivotTableIndex);
+            }
 
-            // Remove the pivot table using the provided RemoveAt method
-            sheet.PivotTables.RemoveAt(pivotIndex);
+            // Save the workbook to persist the changes.
+            workbook.Save(filePath);
 
-            // Return the updated count
+            // Return the updated count of pivot tables in the worksheet.
             return sheet.PivotTables.Count;
         }
-    }
-
-    public class Demo
-    {
-        public static void Run()
+        catch (Exception ex)
         {
-            try
-            {
-                // Create a workbook with sample data and multiple pivot tables
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            Console.Error.WriteLine($"Error removing pivot table: {ex.Message}");
+            return -1;
+        }
+    }
+}
 
-                // Sample data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["B3"].PutValue(200);
-                sheet.Cells["B4"].PutValue(300);
-
-                // Add three pivot tables
-                sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-                sheet.PivotTables.Add("A1:B4", "D10", "PivotTable2");
-                sheet.PivotTables.Add("A1:B4", "D20", "PivotTable3");
-
-                // Remove the second pivot table (index 1) and get the new count
-                int newCount = PivotTableHelper.RemovePivotTableAtIndex(workbook, 1);
-                Console.WriteLine("Remaining pivot tables count: " + newCount);
-
-                // Save the workbook
-                workbook.Save("PivotTableRemoved.xlsx");
-                Console.WriteLine("Workbook saved as PivotTableRemoved.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Expecting two arguments: file path and pivot table index.
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: <exe> <ExcelFilePath> <PivotTableIndex>");
+            return;
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        string filePath = args[0];
+        if (!File.Exists(filePath))
         {
-            Run();
+            Console.Error.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        if (!int.TryParse(args[1], out int pivotIndex))
+        {
+            Console.Error.WriteLine($"Invalid pivot table index: {args[1]}");
+            return;
+        }
+
+        try
+        {
+            int remaining = PivotTableHelper.RemovePivotTable(filePath, pivotIndex);
+            if (remaining >= 0)
+            {
+                Console.WriteLine($"Pivot table removed. Remaining pivot tables: {remaining}");
+            }
+            else
+            {
+                Console.Error.WriteLine("Failed to remove pivot table.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

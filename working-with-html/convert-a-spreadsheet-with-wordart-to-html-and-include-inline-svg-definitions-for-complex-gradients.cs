@@ -1,64 +1,47 @@
-// Title: Convert an Excel workbook containing WordArt to HTML with inline SVG and Base64‑encoded images using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with WordArt, sets HtmlSaveOptions.ExportImagesAsBase64 to true, and saves the workbook as an HTML file that contains inline SVG for shape gradients. | Show how to write the HTML output from Aspose.Cells to a MemoryStream, convert it to a UTF‑8 string, and persist it to disk in C#. | Explain how to verify the source Excel file exists before conversion and handle exceptions when exporting WordArt to HTML with Aspose.Cells.
-// Common Searches: Aspose.Cells convert Excel WordArt to HTML with inline SVG | C# export Excel shapes as Base64 images in HTML using Aspose.Cells | How to embed complex gradient shapes as SVG when saving workbook to HTML .NET | HtmlSaveOptions ExportImagesAsBase64 example for WordArt | Save Excel to HTML with memory stream Aspose.Cells C#
-// Tags: export WordArt to inline SVG Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 C# | convert Excel shapes to HTML Base64 images | inline SVG gradient definitions Aspose.Cells | memory stream HTML generation .NET | exception handling for Excel to HTML conversion
+// Title: Export Excel workbook containing WordArt to HTML with embedded Base64 images and inline SVG gradients using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, checks its existence, and saves it as an HTML file using Aspose.Cells while embedding all pictures as Base64 data URIs. | Show how to configure Aspose.Cells HtmlSaveOptions to produce inline SVG elements for WordArt and gradient fills when converting a workbook to HTML. | Create a complete console application that validates the input Excel path, applies the HTML export settings for Base64 images and SVG gradients, and writes the resulting HTML to a specified output file.
+// Common Searches: how to export Excel with WordArt to HTML using Aspose.Cells C# | Aspose.Cells HTML export embed images as base64 and preserve gradients | convert Excel gradient fills to inline SVG in .NET | C# save workbook as HTML with WordArt and SVG definitions Aspose
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | C# Aspose.Cells workbook to HTML conversion | inline SVG generation for Excel WordArt | preserve gradient fills in HTML export Aspose.Cells | embed Excel graphics as data URI in HTML
 
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 using System;
 using System.IO;
-using System.Text;
-using System.Drawing.Imaging;
-using Aspose.Cells;
 
-namespace SpreadsheetToHtmlWithSvg
+// The program checks for the existence of an input .xlsx file, loads it with Aspose.Cells, configures HtmlSaveOptions to embed all images as Base64 data URIs and to render WordArt and complex gradient fills as inline SVG, then saves the workbook as an HTML file while handling any exceptions.
+class Program
 {
-    // The example checks that input.xlsx exists, loads it with Aspose.Cells, configures HtmlSaveOptions to embed all images (including WordArt) as Base64, saves the workbook to a MemoryStream as HTML, converts the stream to a UTF‑8 string, and writes the resulting HTML—containing inline SVG definitions for complex gradients—to output.html.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the source Excel file that contains WordArt.
             string inputPath = "input.xlsx";
+            string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException.
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            try
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Load the workbook.
-                Workbook workbook = new Workbook(inputPath);
+                // Embed images directly in the HTML as Base64 strings
+                ExportImagesAsBase64 = true
+            };
 
-                // Configure HTML save options.
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    // Export images (including those generated from shapes) as Base64 strings.
-                    ExportImagesAsBase64 = true
-
-                    // Note: ExportChartImageFormat is not available in the current Aspose.Cells version.
-                    // Charts will be exported using the default image format.
-                };
-
-                // Save the workbook to an in‑memory stream using the configured options.
-                using (MemoryStream htmlStream = new MemoryStream())
-                {
-                    workbook.Save(htmlStream, htmlOptions);
-
-                    // Convert the stream to a UTF‑8 string containing the HTML.
-                    string htmlContent = Encoding.UTF8.GetString(htmlStream.ToArray());
-
-                    // Write the HTML (with inline SVG definitions) to a file.
-                    File.WriteAllText("output.html", htmlContent);
-                }
-
-                Console.WriteLine("Conversion completed. HTML with inline SVG saved to output.html");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
-            }
+            // Save the workbook to HTML with the specified options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

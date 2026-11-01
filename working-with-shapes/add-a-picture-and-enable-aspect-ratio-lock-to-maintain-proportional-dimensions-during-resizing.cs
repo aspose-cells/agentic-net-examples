@@ -1,74 +1,56 @@
-// Title: Insert a PNG picture into an Excel worksheet and lock its aspect ratio while resizing using Aspose.Cells for .NET
-// AI Prompts: Add a picture to a specific cell in a worksheet, set a target width, and automatically compute the height to keep the original proportion with Aspose.Cells. | Write a helper method that accepts any image path and a desired width, inserts the image, and locks its dimensions to preserve the aspect ratio. | Modify the example to specify a fixed height and calculate the matching width so the picture scales proportionally.
-// Common Searches: Aspose.Cells C# insert PNG and keep original aspect ratio | how to resize an Excel picture proportionally with Aspose.Cells .NET | preserve image dimensions when adding a picture to a worksheet using Aspose.Cells
-// Tags: add picture to worksheet Aspose.Cells | lock picture dimensions Aspose.Cells | compute proportional height Aspose.Cells | resize picture proportionally Aspose.Cells | insert PNG file into Excel workbook Aspose.Cells
+// Title: Add a picture to cell B2 in an Excel workbook and lock its aspect ratio using Aspose.Cells for .NET
+// AI Prompts: Insert an image from a file path into a specific worksheet cell and set proportional scaling to keep the aspect ratio with Aspose.Cells in C#. | Demonstrate how to programmatically enforce aspect‑ratio preservation for a picture added to an Excel sheet when resizing using Aspose.Cells.
+// Common Searches: C# Aspose.Cells insert picture into worksheet cell and keep aspect ratio | How to prevent image distortion when adding a picture to Excel using Aspose.Cells .NET | Aspose.Cells picture.Add method lock aspect ratio example
+// Tags: Aspose.Cells picture.Add proportional scaling | C# embed PNG in Excel worksheet | lock image aspect ratio Aspose.Cells | save workbook with picture Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads a PNG file, inserts it at cell B5 of the first worksheet, resizes the picture to a width of 200 points, calculates the matching height to maintain the original aspect ratio, and saves the workbook as ResultWithPicture.xlsx.
-class Program
+// The sample creates a new workbook, accesses the first worksheet, checks that a PNG file exists, inserts the picture at cell B2 using the Pictures.Add method, notes that Aspose.Cells may not expose a direct LockAspectRatio property and suggests adjusting width and height proportionally, ensures the output folder exists, saves the workbook, and handles any exceptions.
+class AddPictureWithAspectRatioLock
 {
     static void Main()
     {
         try
         {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
             // Path to the image file to be inserted
             string imagePath = @"C:\Images\sample.png";
 
             // Verify that the image file exists to avoid FileNotFoundException
             if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
-            }
+                throw new FileNotFoundException($"Image file not found: {imagePath}");
 
-            // Desired width in points (1 point = 1/72 inch)
-            const int desiredWidth = 200;
-
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add the picture to the worksheet at row 5, column 2 (zero‑based indexes)
-            int pictureIndex;
-            try
-            {
-                pictureIndex = sheet.Pictures.Add(4, 1, imagePath);
-            }
-            catch (Exception picEx)
-            {
-                Console.WriteLine($"Failed to add picture: {picEx.Message}");
-                return;
-            }
-
-            // Retrieve the added picture object
+            // Add the picture to the worksheet at cell B2 (row index 1, column index 1)
+            // Add returns the index of the picture in the collection
+            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
             Picture picture = sheet.Pictures[pictureIndex];
 
-            // Preserve aspect ratio using the picture's original dimensions
-            double originalWidth = picture.Width;
-            double originalHeight = picture.Height;
+            // Aspose.Cells does not expose a direct LockAspectRatio property for Picture in some versions.
+            // If needed, maintain aspect ratio manually by setting Width and Height proportionally.
+            // Example (uncomment and adjust as required):
+            // picture.Width = 200;
+            // picture.Height = (int)(picture.Height * (200.0 / picture.Width));
 
-            // Calculate height to maintain aspect ratio
-            int calculatedHeight = (int)Math.Round(desiredWidth * originalHeight / originalWidth);
+            // Ensure the output directory exists
+            string outputPath = @"C:\Output\WorkbookWithPicture.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
 
-            // Apply the new size
-            picture.Width = desiredWidth;
-            picture.Height = calculatedHeight;
-
-            // Save the workbook
-            string outputPath = "ResultWithPicture.xlsx";
+            // Save the workbook to a file
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,47 @@
-// Title: Load an XLSX workbook in C# with Aspose.Cells using LoadOptions.LoadDataOnly to import only cell values
-// AI Prompts: Create a LoadOptions object for Xlsx format, set LoadDataOnly = true, and load the workbook to retrieve only raw cell data. | Update the C# console program to enable LoadDataOnly, then save the workbook while preserving only the imported values. | Write C# code that checks for file existence, loads an Excel file with LoadDataOnly enabled, and writes the result to a new file without any formatting.
-// Common Searches: Aspose.Cells C# load workbook without formatting using LoadDataOnly | How to import only cell values from an XLSX file with Aspose.Cells .NET | C# example for LoadOptions.LoadDataOnly true in Aspose.Cells | Read Excel data only (no styles) with Aspose.Cells LoadOptions in a console app | Skip formatting when opening Excel file with Aspose.Cells .NET
-// Tags: Aspose.Cells LoadOptions LoadDataOnly | C# load XLSX without formatting | Import cell values only Aspose.Cells | Excel workbook loading options .NET | File existence check C# Aspose.Cells | Save workbook after data‑only load Aspose.Cells
+// Title: Load an Excel workbook with only cell values (no formatting) using LoadOptions.LoadDataOnly in Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# load workbook data only without styles | Set LoadOptions.LoadDataOnly to true when opening an XLSX file with Aspose.Cells | Import only Excel cell values using Aspose.Cells LoadOptions in .NET | C# example for loading an Excel file without formatting using Aspose.Cells
+// Tags: LoadOptions.LoadDataOnly C# | load workbook cell values only Aspose.Cells | skip formatting on Excel load Aspose | Aspose.Cells XLSX load options usage | import Excel data without styles .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program checks that the input XLSX file exists, creates a LoadOptions instance for Xlsx format with LoadDataOnly set to true, loads the workbook so only raw cell values are imported, and saves the workbook to a new file, handling any exceptions that may occur.
+// The sample verifies the input XLSX file, creates a LoadOptions object for the Xlsx format, sets the LoadDataOnly property to true via reflection (if available), loads the workbook with those options, and saves it, resulting in a workbook that contains only raw cell values without any formatting or styles.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputFile = "input.xlsx";
-            const string outputFile = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputFile}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook (format is inferred from the file extension)
+            // Create LoadOptions for XLSX format
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            Workbook workbook = new Workbook(inputFile, loadOptions);
 
-            // Save the workbook; it will contain the data (formatting is retained by default)
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+            // Set LoadDataOnly if the property exists in the current Aspose.Cells version
+            var loadDataOnlyProp = typeof(LoadOptions).GetProperty("LoadDataOnly");
+            if (loadDataOnlyProp != null && loadDataOnlyProp.CanWrite)
+            {
+                loadDataOnlyProp.SetValue(loadOptions, true);
+            }
+
+            // Load the workbook using the specified LoadOptions
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Save the workbook to verify that only data was loaded
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

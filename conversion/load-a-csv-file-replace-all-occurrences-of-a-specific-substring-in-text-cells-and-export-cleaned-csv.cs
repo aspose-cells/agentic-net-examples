@@ -1,64 +1,84 @@
-// Title: Replace a specific substring in every text cell of a CSV and export the cleaned file using Aspose.Cells for .NET (C#)
-// AI Prompts: Load a CSV into an Aspose.Cells Workbook, scan all string cells, replace each occurrence of a given substring with a new value, and write the result to a new CSV file in C#. | Using Aspose.Cells for .NET, iterate over the used range of a worksheet, perform bulk string substitution on text cells, and save the modified workbook as CSV. | Write C# code that opens a CSV with Aspose.Cells, substitutes "OldValue" with "NewValue" in every text cell, and exports the cleaned data back to CSV.
-// Common Searches: Aspose.Cells C# replace substring in CSV cells and save | How to perform bulk text replacement in a CSV using Aspose.Cells .NET | C# iterate through all cells of a CSV workbook and modify string values with Aspose.Cells | Replace specific text in CSV file using Aspose.Cells for .NET | Save modified CSV after string substitution with Aspose.Cells
-// Tags: csv bulk string replace Aspose.Cells | iterate used range Aspose.Cells C# | export cleaned CSV Aspose.Cells | text cell processing Aspose.Cells .NET | substring substitution in worksheet cells
+// Title: Replace a specific substring in CSV text cells with Aspose.Cells for .NET and save the cleaned file
+// Common Searches: Aspose.Cells C# replace text in CSV file and save as new CSV | How to load a CSV workbook with Aspose.Cells and update string values | C# example for replacing all occurrences of a word in CSV cells using Aspose.Cells | Iterate over used range of a CSV worksheet and modify cell text with Aspose.Cells .NET | Clean CSV data by substituting substrings in cells via Aspose.Cells API
+// Tags: csv cell string replacement using Aspose.Cells | load csv workbook with Aspose.Cells LoadOptions | iterate used range cells Aspose.Cells | save workbook to csv format Aspose.Cells | update worksheet cell string values Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace CsvCleaner
+// The sample loads a CSV file into an Aspose.Cells Workbook, walks through the used range of each worksheet, replaces every occurrence of a specified old substring with a new one in string‑type cells, ensures the output directory exists, and saves the modified workbook back to CSV.
+class Program
 {
-    // // Loads a CSV with Aspose.Cells, iterates over all used cells, replaces a target substring in string cells, and saves the cleaned data to a new CSV file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the source CSV file
+        string inputPath = "input.csv";
+
+        // Path to the cleaned CSV file to be saved
+        string outputPath = "output.csv";
+
+        // Substring to find and its replacement
+        string oldValue = "OldSubstring";
+        string newValue = "NewSubstring";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the source CSV file
-            string inputPath = "input.csv";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Path for the cleaned CSV output
-            string outputPath = "output.csv";
-
-            // Substring to find and its replacement
-            string oldSubstring = "OldValue";
-            string newSubstring = "NewValue";
-
-            // Load the CSV file into a Workbook object
-            Workbook workbook = new Workbook(inputPath);
+        try
+        {
+            // Load the CSV file into a Workbook using CSV load options
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
             // Iterate through all worksheets (CSV typically has one sheet)
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the used range of cells
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
+                // Get the used range of the sheet
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                // Determine start and end indices
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
                 // Loop through each cell in the used range
-                for (int row = 0; row <= maxRow; row++)
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = startCol; col <= endCol; col++)
                     {
-                        Cell cell = cells[row, col];
+                        Cell cell = sheet.Cells[row, col];
 
                         // Process only text (string) cells
-                        if (cell.Type == CellValueType.IsString)
+                        if (cell.Type == CellValueType.IsString && cell.StringValue != null)
                         {
-                            string original = cell.StringValue;
-                            // Replace the target substring
-                            string replaced = original.Replace(oldSubstring, newSubstring);
-                            // Update the cell only if a change occurred
-                            if (!original.Equals(replaced))
-                            {
-                                cell.PutValue(replaced);
-                            }
+                            // Replace all occurrences of the target substring
+                            string updatedText = cell.StringValue.Replace(oldValue, newValue);
+                            cell.PutValue(updatedText);
                         }
                     }
                 }
             }
 
-            // Save the modified workbook back to CSV format
-            workbook.Save(outputPath, SaveFormat.CSV);
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the cleaned workbook back to CSV format
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"File saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

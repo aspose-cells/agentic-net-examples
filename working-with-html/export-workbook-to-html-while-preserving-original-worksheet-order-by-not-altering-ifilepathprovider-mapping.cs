@@ -1,48 +1,43 @@
-// Title: Export an entire Excel workbook to a single HTML file while keeping the original worksheet order using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, configures HtmlSaveOptions to include all worksheets, and saves the result as one HTML file preserving the sheet sequence. | Show how to set Aspose.Cells HtmlSaveOptions.ExportActiveWorksheetOnly = false to convert a multi‑sheet Excel file to HTML without reordering the sheets.
-// Common Searches: asp.net convert multi-sheet Excel to single HTML file preserving sheet order | c# Aspose.Cells HtmlSaveOptions export all worksheets to one HTML page | how to keep worksheet sequence when saving Excel as HTML using Aspose.Cells | save workbook as HTML with original sheet order Aspose.Cells .NET example
-// Tags: Aspose.Cells HtmlSaveOptions export all worksheets | C# convert Excel workbook to single HTML page | maintain original sheet sequence Aspose.Cells | ExportActiveWorksheetOnly false example | multi-sheet workbook HTML export Aspose.Cells
+// Title: Export an Excel workbook to HTML while keeping the original worksheet order using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells export workbook to HTML preserving sheet order | How to save Excel as HTML without reordering worksheets in Aspose.Cells | Aspose.Cells HtmlSaveOptions keep original worksheet sequence | Save Excel file to HTML with same sheet arrangement using .NET | Prevent worksheet order change when converting .xlsx to HTML with Aspose
+// Tags: Aspose.Cells HtmlSaveOptions preserve worksheet order | C# export Excel to HTML Aspose.Cells | save workbook as HTML original sheet sequence | Excel to HTML conversion maintaining sheet order | Aspose.Cells SaveFormat.Html worksheet ordering
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Demonstrates loading an existing .xlsx file with Aspose.Cells, using HtmlSaveOptions (default behavior) to retain the original worksheet sequence, and saving the workbook as an HTML file while handling missing file and runtime errors.
+class Program
 {
-    // The program checks for InputWorkbook.xlsx, loads it with Aspose.Cells, sets HtmlSaveOptions.ExportActiveWorksheetOnly to false so every worksheet is included, and saves the workbook as OutputWorkbook.html, ensuring the original sheet order is retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputFile = "InputWorkbook.xlsx";
-                string outputFile = "OutputWorkbook.html";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(inputFile);
-
-                // Set up HTML save options (export all worksheets)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    ExportActiveWorksheetOnly = false
-                };
-
-                // Save the workbook as HTML using the options
-                workbook.Save(outputFile, htmlOptions);
-                Console.WriteLine($"Workbook successfully exported to: {outputFile}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // No additional settings required to preserve worksheet order; default behavior retains it.
+
+            // Export the workbook to HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

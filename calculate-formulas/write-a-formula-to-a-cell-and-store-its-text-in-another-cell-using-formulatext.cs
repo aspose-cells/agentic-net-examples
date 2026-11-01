@@ -1,35 +1,33 @@
-// Title: Write a SUM formula to cell A1 and retrieve its text in cell D1 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that places values in B1 and C1, writes a SUM formula to A1, uses =FORMULATEXT(A1) in D1 to capture the formula string, calculates all formulas, and saves the workbook. | Show how to extract an Excel formula as plain text by assigning the FORMULATEXT function to another cell and invoking workbook.CalculateFormula() in Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to use FORMULATEXT to get formula string from a cell | C# write SUM formula to a cell and read its text with Aspose.Cells | retrieve Excel formula as text in another cell using Aspose.Cells .NET | calculate formulas and extract formula text in Aspose.Cells workbook | save workbook after extracting formula text with Aspose.Cells C#
-// Tags: Aspose.Cells write SUM formula | Aspose.Cells FORMULATEXT function | Aspose.Cells calculate workbook formulas | Aspose.Cells extract formula as text | C# save Excel workbook with Aspose.Cells
+// Title: Write a formula to a cell and copy its formula text to another cell using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# write SUM formula to A1 and get formula string | How to retrieve formula text from a cell with Aspose.Cells .NET | Copy formula expression to another cell using Aspose.Cells API | Store cell formula as plain text in Excel file with Aspose.Cells C# | Example of using Formula property to read and write formula text in Aspose.Cells
+// Tags: Aspose.Cells write formula C# | Aspose.Cells retrieve formula text | copy formula expression between cells | Formula property for Excel manipulation | save workbook with Aspose.Cells after formula
 
-using System;
 using Aspose.Cells;
 
-// // Creates a workbook, puts numbers in B1/C1, writes =SUM(B1,C1) to A1, stores the formula text in D1 via =FORMULATEXT(A1), calculates all formulas, and saves as FormulaTextDemo.xlsx.
+// Creates a new workbook, writes the formula "=SUM(B1:B5)" to cell A1, reads the formula text via the Formula property, places that text into cell B1, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Put some sample values that will be used in the formula
-        cells["B1"].PutValue(5);
-        cells["C1"].PutValue(10);
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Write a formula to cell A1 (e.g., sum of B1 and C1)
-        cells["A1"].Formula = "=SUM(B1,C1)";
+        // Write a formula to cell A1
+        Cell formulaCell = cells["A1"];
+        formulaCell.Formula = "=SUM(B1:B5)";
 
-        // Store the formula text of A1 into cell D1 using the Excel FORMULATEXT function
-        cells["D1"].Formula = "=FORMULATEXT(A1)";
+        // Retrieve the formula text using the Formula property (FormulaText)
+        string formulaText = formulaCell.Formula;
 
-        // Calculate all formulas so that D1 contains the actual formula string
-        workbook.CalculateFormula();
+        // Store the formula text in cell B1
+        Cell textCell = cells["B1"];
+        textCell.PutValue(formulaText);
 
         // Save the workbook
-        workbook.Save("FormulaTextDemo.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,36 +1,39 @@
-// Title: Apply a StyleFlag to modify only the QuotePrefix property of a cell using Aspose.Cells for .NET
-// AI Prompts: Write C# code that uses Aspose.Cells StyleFlag to enable QuotePrefix on a specific cell while keeping all other formatting unchanged. | Show how to create a Style with QuotePrefix set to true and apply it with a StyleFlag so that only the QuotePrefix attribute is updated. | Provide a complete example that saves an Excel workbook after applying a QuotePrefix‑only style flag to a target cell.
-// Common Searches: Aspose.Cells C# set QuotePrefix without affecting other cell styles | How to use StyleFlag to change only the QuotePrefix attribute in an existing worksheet | C# Aspose.Cells apply QuotePrefix style flag to a single cell | Preserve existing cell formatting while enabling QuotePrefix with Aspose.Cells .NET
-// Tags: Aspose.Cells StyleFlag QuotePrefix | C# cell QuotePrefix style flag | preserve cell formatting Aspose.Cells | apply single style attribute .NET | Excel workbook QuotePrefix style
+// Title: Update only the QuotePrefix property of a cell with a StyleFlag in Aspose.Cells for .NET
+// AI Prompts: Apply a StyleFlag that sets QuotePrefix to true on a specific cell while leaving all other formatting unchanged in C#. | Toggle the QuotePrefix attribute of a cell without resetting its existing style using Aspose.Cells. | Use Aspose.Cells to modify only the QuotePrefix flag of a cell style programmatically.
+// Common Searches: Aspose.Cells C# set QuotePrefix on a cell without changing other styles | How to use StyleFlag to change only the QuotePrefix property in a workbook | Preserve existing cell formatting while enabling QuotePrefix in Aspose.Cells | Apply selective style flag for QuotePrefix in .NET Excel generation | Update cell QuotePrefix flag without affecting font color Aspose.Cells
+// Tags: Aspose.Cells StyleFlag QuotePrefix | C# update cell QuotePrefix without altering style | selective style flag application Aspose.Cells | preserve existing cell formatting Aspose.Cells | modify single style attribute .NET Excel
 
 using Aspose.Cells;
-using System;
 
-// Creates a workbook, enables the QuotePrefix flag on cell A1 using a Style and a StyleFlag so that only the QuotePrefix attribute is changed, then saves the file as QuotePrefixOnly.xlsx.
+// The example creates a workbook, writes text to cell A1, retrieves its current style, sets the QuotePrefix property to true, creates a StyleFlag with only the QuotePrefix flag enabled, applies the style using this flag to keep all other formatting intact, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access cell A1 and put a value that looks like a number
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("12345");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a style and enable the QuotePrefix property
-        Style style = workbook.CreateStyle();
+        // Get cell A1
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Sample text");
+
+        // Retrieve the current style of the cell
+        Style style = cell.GetStyle();
+
+        // Set only the QuotePrefix property to true
         style.QuotePrefix = true;
 
         // Create a StyleFlag and enable only the QuotePrefix flag
         StyleFlag flag = new StyleFlag();
-        flag.QuotePrefix = true; // all other flags remain false
+        flag.QuotePrefix = true;   // other flags remain false (default)
 
-        // Apply the style to the cell using the flag – only QuotePrefix will be updated
+        // Apply the style to the cell using the flag
         cell.SetStyle(style, flag);
 
         // Save the workbook
-        workbook.Save("QuotePrefixOnly.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

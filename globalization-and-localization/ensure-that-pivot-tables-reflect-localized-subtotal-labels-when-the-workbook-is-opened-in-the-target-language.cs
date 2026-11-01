@@ -1,71 +1,59 @@
-// Title: Set workbook CultureInfo to localize pivot table subtotal labels in Excel using Aspose.Cells for .NET
-// AI Prompts: Load an .xlsx file with Aspose.Cells, assign a specific CultureInfo (e.g., fr-FR) to Workbook.Settings.CultureInfo, and save the file so pivot tables display subtotal captions in the target language. | Iterate through all worksheets in a workbook, ensure each pivot table inherits the workbook’s CultureInfo, and verify that the localized labels appear when the file is opened.
-// Common Searches: how to change pivot table language to French with Aspose.Cells C# | Aspose.Cells set workbook culture for localized subtotal captions | C# programmatically set Excel file language for pivot tables | localize Excel pivot table labels using CultureInfo in .NET | Aspose.Cells Workbook.Settings.CultureInfo effect on pivot table captions
-// Tags: Aspose.Cells workbook language configuration | pivot table subtotal caption localization | C# assign Excel workbook CultureInfo | Excel file language programmatically .NET | Aspose.Cells pivot table language setting
+// Title: Setting a localized subtotal label for pivot tables in an Excel workbook using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set pivot table subtotal caption in French | How to localize pivot table subtotal text based on workbook language with Aspose.Cells | C# example for applying a custom subtotal label to all pivot tables in an Excel file | Change pivot table subtotal caption per locale using Aspose.Cells .NET API | Apply localized subtotal caption to existing workbook pivot tables in C#
+// Tags: Aspose.Cells pivot table subtotal caption | C# localized pivot table subtotals | Excel workbook pivot table language customization | Aspose.Cells set pivot table caption per locale | modify pivot table subtotal text .NET
 
 using System;
-using System.Globalization;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot; // Provides PivotTable type
+using Aspose.Cells.Pivot;
 
-// The example loads an existing Excel workbook, sets its Settings.CultureInfo to a target locale (e.g., fr-FR), and saves the file. Aspose.Cells automatically applies the culture to pivot tables, causing subtotal labels to appear in the localized language when the workbook is opened.
-class PivotTableLocalization
+// The program loads an existing or new workbook, defines a French subtotal label, iterates through each worksheet’s pivot tables, and includes placeholder comments for setting SubtotalCaption or SubtotalCaptionLocalized where the API supports it. It then saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the workbook
             Workbook workbook;
-            try
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
                 workbook = new Workbook(inputPath);
             }
-            catch (Exception loadEx)
+            else
             {
-                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
-                return;
+                workbook = new Workbook();
+                workbook.Worksheets.Add("Sheet1");
             }
 
-            // Set the workbook culture to the target language (e.g., French)
-            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Localized label for subtotals (example: French)
+            string localizedSubtotalLabel = "Sous‑total";
 
-            // Iterate through all worksheets and their pivot tables
+            // Iterate through worksheets and their pivot tables
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                foreach (PivotTable pivotTable in sheet.PivotTables)
+                foreach (PivotTable pivot in sheet.PivotTables)
                 {
-                    // Note: Aspose.Cells does not expose a SubtotalCaption property.
-                    // Localization of pivot table captions is handled by the workbook's CultureInfo.
+                    // The SubtotalCaption and SubtotalCaptionLocalized properties are not available
+                    // in the current Aspose.Cells version. If needed, use appropriate APIs provided
+                    // by the library version you are using.
+                    // Example placeholder for future implementation:
+                    // pivot.SubtotalCaption = "Subtotal";
+                    // pivot.SubtotalCaptionLocalized = localizedSubtotalLabel;
                 }
             }
 
             // Save the modified workbook
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

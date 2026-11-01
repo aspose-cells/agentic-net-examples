@@ -1,48 +1,83 @@
-// Title: Copy only visible rows from an Excel worksheet to a new workbook using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens a source .xlsx file, iterates through its rows, skips hidden rows with Cells.IsRowHidden, and copies each visible row to a destination workbook using Cells.CopyRows. | Show how to filter out hidden rows before calling Cells.CopyRows so that only visible rows are duplicated into a new Excel file with Aspose.Cells.
-// Common Searches: aspnet copy visible rows Aspose.Cells skip hidden rows | how to copy only non‑hidden rows from one Excel file to another using Aspose.Cells C# | filter hidden rows before using Cells.CopyRows in Aspose.Cells .NET
-// Tags: copy visible rows Aspose.Cells | pre-filter hidden rows Aspose.Cells | IsRowHidden method Aspose.Cells | Aspose.Cells copy rows to new workbook | copy rows without hidden rows
+// Title: Copy only visible rows from a source worksheet to a new sheet using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# copy rows while ignoring hidden rows | How to skip hidden rows when copying data between worksheets in .NET | Copy visible rows to another sheet using Aspose.Cells API | C# example for filtering hidden rows before copying with Aspose.Cells | Transfer only non‑hidden rows from one Excel sheet to another using Aspose.Cells | Aspose.Cells copy rows without hidden rows performance
+// Tags: copy visible rows Aspose.Cells C# | exclude hidden rows during worksheet copy .NET | pre‑filter rows for CopyRows Aspose.Cells | transfer non‑hidden Excel rows C# | Aspose.Cells row visibility handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCopyVisibleRows
+// The sample creates a source.xlsx (if missing) with a hidden third row, loads the workbook, adds a destination worksheet, iterates through each source row, skips rows where IsHidden is true, copies each cell's value and style to the new sheet, and saves the result as output.xlsx.
+class Program
 {
-    // The example loads Source.xlsx, loops through each data row, ignores rows where IsRowHidden returns true, copies the remaining visible rows to a new workbook with Cells.CopyRows, and saves the result as Destination.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the source workbook (replace with actual path)
-            Workbook sourceWorkbook = new Workbook("Source.xlsx");
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cells sourceCells = sourceSheet.Cells;
+            const string sourcePath = "source.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Create a new workbook for the destination
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-            Cells destinationCells = destinationSheet.Cells;
+            // Ensure the source file exists; create a simple one if missing.
+            if (!File.Exists(sourcePath))
+            {
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Name = "Sheet1";
 
-            // Destination row index starts at 0
+                // Populate sample data
+                tempSheet.Cells["A1"].PutValue("Header");
+                tempSheet.Cells["A2"].PutValue("Row 1");
+                tempSheet.Cells["A3"].PutValue("Row 2");
+                // Hide row 2 as an example (row index 2 corresponds to third row)
+                tempSheet.Cells.Rows[2].IsHidden = true;
+
+                tempWb.Save(sourcePath);
+            }
+
+            // Load the source workbook
+            var workbook = new Workbook(sourcePath);
+
+            // Get the source worksheet by name
+            var srcSheet = workbook.Worksheets["Sheet1"];
+            if (srcSheet == null)
+                throw new InvalidOperationException("Worksheet 'Sheet1' not found in the source workbook.");
+
+            // Add a new worksheet to receive the copied rows
+            var destSheet = workbook.Worksheets.Add("Copy");
+
             int destRowIndex = 0;
+            int lastRow = srcSheet.Cells.MaxDataRow;
+            int maxCol = srcSheet.Cells.MaxDataColumn;
 
-            // Iterate through all rows that contain data in the source sheet
-            for (int srcRowIndex = 0; srcRowIndex <= sourceCells.MaxDataRow; srcRowIndex++)
+            // Iterate through each row in the source sheet
+            for (int srcRowIndex = 0; srcRowIndex <= lastRow; srcRowIndex++)
             {
                 // Skip hidden rows
-                if (sourceCells.IsRowHidden(srcRowIndex))
+                if (srcSheet.Cells.Rows[srcRowIndex].IsHidden)
                     continue;
 
-                // Copy a single visible row from source to destination
-                // Using CopyRows with rowNumber = 1 copies the row data and formats
-                destinationCells.CopyRows(sourceCells, srcRowIndex, destRowIndex, 1);
+                // Copy each cell in the visible row to the destination sheet
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    var srcCell = srcSheet.Cells[srcRowIndex, col];
+                    var destCell = destSheet.Cells[destRowIndex, col];
 
-                // Move to the next destination row
+                    // Copy value
+                    destCell.PutValue(srcCell.Value);
+
+                    // Copy style (optional, can be omitted for performance)
+                    destCell.SetStyle(srcCell.GetStyle());
+                }
+
                 destRowIndex++;
             }
 
-            // Save the result (replace with desired output path)
-            destinationWorkbook.Save("Destination.xlsx", SaveFormat.Xlsx);
+            // Save the workbook with the copied rows
+            workbook.Save(outputPath);
+            Console.WriteLine($"Rows copied successfully. Output saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

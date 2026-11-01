@@ -1,79 +1,58 @@
-// Title: Generate a PDF containing only a named range from an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Create C# code that loads an Excel file, locates a named range, sets the worksheet's print area to that range, and saves the selected area as a PDF with Aspose.Cells. | Show how to extract the worksheet name from a named range's RefersTo string, adjust page‑setup options, and export only that range to PDF using Aspose.Cells in C#. | Provide a step‑by‑step example that verifies the input file, creates missing output directories, and handles errors while converting a named range to PDF with Aspose.Cells.
-// Common Searches: Aspose.Cells C# export only a named range to PDF | set print area from named range before saving workbook as PDF using Aspose.Cells | retrieve worksheet name from named range RefersTo string Aspose.Cells | C# generate PDF of specific Excel range with page setup using Aspose.Cells
-// Tags: named range PDF export Aspose.Cells | set worksheet print area programmatically C# | retrieve named range address Aspose.Cells | configure page setup for PDF Aspose.Cells | handle file existence and output directory Aspose.Cells
+// Title: Create a PDF from a specific named range in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export only a named range to PDF | How to set print area from a named range before saving Excel as PDF with Aspose.Cells | Generate PDF of a selected range in Excel using Aspose.Cells .NET | Aspose.Cells .NET save workbook as PDF limited to MyRange | Retrieve named range and convert to PDF with Aspose.Cells C#
+// Tags: Aspose.Cells named range PDF conversion | C# GetRangeByName method Aspose.Cells | assign worksheet print area programmatically | Aspose.Cells SaveFormat.Pdf with selected range | export Excel worksheet to PDF limited area C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExample
+// The example loads an Excel file, locates the named range “MyRange”, sets the worksheet’s print area to that range, activates the sheet, and saves the workbook as a PDF so only the named range appears in the output, with error handling for missing files or ranges.
+class Program
 {
-    // The example loads an Excel workbook, finds the named range "MyRange", determines its worksheet, sets the worksheet's print area to the range address, optionally configures page‑setup settings, and saves the workbook as a PDF that contains only the defined area.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the named range (replace "MyRange" with your actual range name)
+            Name namedRange = workbook.Worksheets.Names["MyRange"];
+            if (namedRange == null)
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.pdf";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Retrieve the named range
-                Name namedRange = workbook.Worksheets.Names["MyRange"];
-                if (namedRange == null)
-                {
-                    Console.WriteLine("Named range 'MyRange' not found.");
-                    return;
-                }
-
-                // Get the actual range object that the name refers to
-                AsposeRange range = namedRange.GetRange();
-
-                // Determine the worksheet that contains the named range
-                // The RefersTo property contains something like "Sheet1!$A$1:$B$2"
-                string refersTo = namedRange.RefersTo;
-                string sheetName = refersTo.Split('!')[0].Trim('\'');
-                Worksheet sheet = workbook.Worksheets[sheetName];
-                if (sheet == null)
-                {
-                    Console.WriteLine($"Worksheet '{sheetName}' not found.");
-                    return;
-                }
-
-                // Set the print area of the worksheet to the address of the named range
-                sheet.PageSetup.PrintArea = range.Address;
-
-                // Optional page setup adjustments
-                sheet.PageSetup.FitToPagesWide = 1;
-                sheet.PageSetup.FitToPagesTall = 0; // 0 means as many pages tall as needed
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a PDF; only the defined print area will be exported
-                workbook.Save(outputPath, SaveFormat.Pdf);
-                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+                Console.WriteLine("Named range \"MyRange\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Get the worksheet that contains the named range via the Range object
+            AsposeRange range = workbook.Worksheets.GetRangeByName("MyRange");
+            Worksheet sheet = range?.Worksheet ?? workbook.Worksheets[0];
+
+            // Set the print area of the worksheet to the named range's reference
+            sheet.PageSetup.PrintArea = namedRange.RefersTo;
+
+            // Make this worksheet the active sheet so it is the one rendered to PDF
+            workbook.Worksheets.ActiveSheetIndex = sheet.Index;
+
+            // Save the workbook as a PDF; only the defined print area will be included
+            workbook.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

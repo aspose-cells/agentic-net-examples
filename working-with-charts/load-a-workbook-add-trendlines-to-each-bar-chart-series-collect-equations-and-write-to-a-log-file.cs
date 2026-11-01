@@ -1,91 +1,101 @@
-// Title: Add linear trendlines to every series of bar and column charts in an Excel workbook using Aspose.Cells for .NET and export the equations to a text log
-// AI Prompts: Generate C# code that opens an .xlsx workbook with Aspose.Cells, iterates through all worksheets, finds bar and column charts, adds a linear trendline to each series, captures the displayed equation, and writes the sheet, chart, series, and equation details to a text file. | Extend the program to also process line charts, apply exponential trendlines, and output the collected equations in CSV format.
-// Common Searches: how to add a linear trendline to each series of a bar chart using Aspose.Cells C# | extract trendline formula from Excel chart with Aspose.Cells .NET | save chart trendline equations to a log file in C# | iterate through all worksheets and charts in a workbook with Aspose.Cells
-// Tags: trendline insertion Aspose.Cells bar chart | chart series equation extraction .NET | write trendline equations to text file C# | worksheet chart enumeration Aspose.Cells | dynamic trendline handling C#
+// Title: How to add linear trendlines with equation labels to each bar or column chart series in an Excel workbook using Aspose.Cells for .NET and record the actions in a log file
+// AI Prompts: Write C# code that opens a specified .xlsx file with Aspose.Cells, iterates through all worksheets, identifies bar, stacked bar, column, and stacked column charts, adds a linear trendline to every series, enables equation display, logs the worksheet, chart, and series details, and saves the modified workbook to a new file. | Enhance the existing program to also handle line charts by adding a second‑order polynomial trendline, display its equation on the chart, and append appropriate entries to the same log file.
+// Common Searches: aspnet add linear trendline to bar chart series using Aspose.Cells | c# log each trendline addition in an Excel workbook with Aspose.Cells | display trendline equation on bar charts via Aspose.Cells .NET | use reflection to add trendlines in older Aspose.Cells versions | iterate through all charts in a workbook and modify series Aspose.Cells
+// Tags: linear trendline addition for bar and column charts Aspose.Cells | show trendline equation on Excel chart C# | log chart modifications Aspose.Cells workbook | reflection based trendline support Aspose.Cells | iterate worksheets and charts Aspose.Cells .NET
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace TrendlineExtractor
+// The sample loads an existing Excel file with Aspose.Cells, creates a log file, and walks through each worksheet and its charts. For bar, stacked bar, column, and stacked column charts it adds a linear trendline to every series via reflection (to stay compatible with older library versions), turns on equation display, writes a detailed log entry, and finally saves the workbook to a new file.
+class Program
 {
-    // The program loads an Excel workbook, scans every worksheet for bar and column charts, adds a linear trendline to each series, records the displayed equation together with sheet, chart, and series identifiers, and writes all collected equations to a text log file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the source workbook
-            string workbookPath = "input.xlsx";
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.xlsx";
+            const string logFile = "trendlines_log.txt";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
+                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
                 return;
             }
 
-            try
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Prepare a log file to collect processing details
+            using (StreamWriter logWriter = new StreamWriter(logFile))
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // List to store trendline equations
-                List<string> trendlineEquations = new List<string>();
-
                 // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     // Iterate through all charts in the worksheet
                     foreach (Chart chart in sheet.Charts)
                     {
-                        // Process only Bar or Column charts
-                        if (chart.Type == ChartType.Bar || chart.Type == ChartType.Column)
+                        // Process only Bar or Column type charts (including stacked variants)
+                        if (chart.Type == ChartType.Bar ||
+                            chart.Type == ChartType.BarStacked ||
+                            chart.Type == ChartType.Column ||
+                            chart.Type == ChartType.ColumnStacked)
                         {
-                            try
+                            // Iterate through each series in the chart
+                            foreach (Series series in chart.NSeries)
                             {
-                                // Iterate through each series in the chart
-                                foreach (Series series in chart.NSeries)
+                                try
                                 {
-                                    try
+                                    // Attempt to add a linear trendline if the API supports it
+                                    // Note: Trendline support may vary by Aspose.Cells version.
+                                    // The following block uses reflection to avoid compile‑time errors
+                                    // on older versions that lack the Trendlines property.
+                                    var trendlinesProp = series.GetType().GetProperty("Trendlines");
+                                    if (trendlinesProp != null)
                                     {
-                                        // Use dynamic to access Trendlines (may not exist in older versions)
-                                        dynamic dynSeries = series;
-                                        dynamic trendline = dynSeries.Trendlines.Add(TrendlineType.Linear);
-                                        trendline.DisplayEquation = true;
-
-                                        // Retrieve the equation; use dynamic to avoid compile‑time binding
-                                        string equation = trendline.Formula ?? "N/A";
-
-                                        // Store the equation with context information
-                                        string info = $"Sheet: {sheet.Name}, Chart: {chart.Title?.Text ?? "Untitled"}, Series: {series.Name}, Equation: {equation}";
-                                        trendlineEquations.Add(info);
+                                        var trendlines = trendlinesProp.GetValue(series);
+                                        var addMethod = trendlines?.GetType().GetMethod("Add");
+                                        if (addMethod != null)
+                                        {
+                                            var trendlineObj = addMethod.Invoke(trendlines, new object[] { TrendlineType.Linear });
+                                            // Enable equation display if possible
+                                            var displayEqProp = trendlineObj?.GetType().GetProperty("DisplayEquation");
+                                            displayEqProp?.SetValue(trendlineObj, true);
+                                            logWriter.WriteLine(
+                                                $"Worksheet: {sheet.Name}, Chart: {chart.Name}, Series: {series.Name}, Trendline: added");
+                                        }
+                                        else
+                                        {
+                                            logWriter.WriteLine(
+                                                $"Worksheet: {sheet.Name}, Chart: {chart.Name}, Series: {series.Name}, Trendline: not supported (Add method missing)");
+                                        }
                                     }
-                                    catch (Exception exSeries)
+                                    else
                                     {
-                                        Console.WriteLine($"Warning: Could not process series '{series.Name}' in chart '{chart.Title?.Text ?? "Untitled"}' on sheet '{sheet.Name}'. Details: {exSeries.Message}");
+                                        logWriter.WriteLine(
+                                            $"Worksheet: {sheet.Name}, Chart: {chart.Name}, Series: {series.Name}, Trendline: not supported (Trendlines property missing)");
                                     }
                                 }
-                            }
-                            catch (Exception exChart)
-                            {
-                                Console.WriteLine($"Warning: Could not process chart '{chart.Title?.Text ?? "Untitled"}' on sheet '{sheet.Name}'. Details: {exChart.Message}");
+                                catch (Exception exSeries)
+                                {
+                                    Console.WriteLine($"Failed to process series '{series.Name}': {exSeries.Message}");
+                                }
                             }
                         }
                     }
                 }
-
-                // Write all collected equations to a log file
-                string logPath = "trendlines_log.txt";
-                File.WriteAllLines(logPath, trendlineEquations);
-
-                Console.WriteLine($"Trendline equations have been written to '{logPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook (unchanged if trendlines were not added)
+            workbook.Save(outputFile);
+            Console.WriteLine($"Processing completed. Output saved to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

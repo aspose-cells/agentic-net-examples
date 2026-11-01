@@ -1,60 +1,59 @@
-// Title: How to programmatically append custom text to all TextBox shapes in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an existing .xlsx file, iterates through every TextBox shape on the first worksheet, and appends a specified string to its current Text property using Aspose.Cells. | Provide a C# snippet that prepends a custom prefix to a TextBox identified by its name while preserving other shape attributes with Aspose.Cells. | Show how to update the Text of all TextBox shapes in a worksheet without altering their formatting, then save the modified workbook with Aspose.Cells.
-// Common Searches: c# aspose.cells add suffix to textbox shape in existing excel file | how to modify text of textbox objects in a worksheet using Aspose.Cells .NET | iterate over shapes collection and change textbox content aspose.cells | append custom string to every textbox in an Excel workbook programmatically | asp.net read and update textbox shape text in xlsx with Aspose.Cells
-// Tags: append text to TextBox shape Aspose.Cells | iterate worksheet shapes C# | modify textbox content Excel Aspose.Cells | preserve shape formatting while updating text .NET | save updated workbook Aspose.Cells
+// Title: How to programmatically append custom text to an existing TextBox shape in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that locates the first TextBox shape on a worksheet and appends a specified string to its current text using Aspose.Cells. | Create a version of the sample that iterates through all TextBox shapes in a worksheet and appends the same text to each one. | Write code that reads the text to be appended from a command‑line argument or external file and updates the TextBox content accordingly.
+// Common Searches: aspnet cells c# append text to textbox shape in existing excel file | how to modify textbox content in excel using Aspose.Cells library | c# iterate worksheet shapes and update textbox text with Aspose.Cells | append string to Excel textbox without overwriting existing text Aspose.Cells | read append text from file and update Excel textbox Aspose.Cells C#
+// Tags: append text to Excel TextBox Aspose.Cells | modify TextBox shape content .NET | iterate worksheet shapes Aspose.Cells | save workbook after textbox update Aspose.Cells | read append string from external file C# Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// // Loads Input.xlsx, finds the first TextBox shape on the first worksheet, appends " - Appended text." to its existing Text, and saves the modified workbook as Output.xlsx.
+class AppendTextToTextbox
 {
-    // The example loads an existing Excel file, loops through all shapes on the first worksheet, identifies TextBox shapes, concatenates a custom suffix to each TextBox's existing text, and saves the workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            try
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (modify as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes in the worksheet to find a TextBox
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Ensure the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                // Use pattern matching to identify a TextBox shape
+                if (shape is TextBox textbox)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // Append additional text to the existing content
+                    string additionalText = " - Appended text.";
+                    textbox.Text = textbox.Text + additionalText;
+
+                    // If only the first textbox needs modification, exit the loop
+                    break;
                 }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index as needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Iterate through all shapes on the worksheet
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    // Process only TextBox shapes
-                    if (shape is TextBox textBox)
-                    {
-                        // Append additional text to the existing content
-                        string existingText = textBox.Text;
-                        string additionalText = " – Appended text";
-                        textBox.Text = existingText + additionalText;
-                    }
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

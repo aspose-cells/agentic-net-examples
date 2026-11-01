@@ -1,40 +1,37 @@
-// Title: How to read the PreserveFormatting flag of the first QueryTable in a worksheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens a workbook, checks if the first worksheet contains any QueryTables, and returns the PreserveFormatting value of the first QueryTable. | Provide an Aspose.Cells example that safely accesses the QueryTables collection of a worksheet and prints the PreserveFormatting setting, handling the case where no QueryTables are present. | Generate a C# snippet that demonstrates retrieving the PreserveFormatting property from a QueryTable and then saves the workbook.
-// Common Searches: Aspose.Cells get PreserveFormatting from first QueryTable in worksheet | C# read QueryTable PreserveFormatting flag using Aspose.Cells | How to check for QueryTables before accessing PreserveFormatting property in Aspose.Cells | Retrieve formatting preservation setting of Excel query table with Aspose.Cells .NET | Example code for reading PreserveFormatting property of a QueryTable in Aspose.Cells
-// Tags: Aspose.Cells QueryTable PreserveFormatting | read QueryTable formatting flag C# | check QueryTables collection worksheet Aspose.Cells | handle missing QueryTables Aspose.Cells | access first worksheet QueryTables .NET
+// Title: Read the PreserveFormatting flag of the first QueryTable in the first worksheet with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, checks the first worksheet for a QueryTable, and outputs the value of its PreserveFormatting property. | Show how to safely access a QueryTable on a worksheet in Aspose.Cells and retrieve the PreserveFormatting setting in a console application.
+// Common Searches: Aspose.Cells C# how to get PreserveFormatting from a QueryTable in the first sheet | read query table preserve formatting using Aspose.Cells .NET | C# example to check PreserveFormatting attribute of Excel QueryTable with Aspose
+// Tags: Aspose.Cells read QueryTable PreserveFormatting | C# retrieve QueryTable formatting flag | first worksheet QueryTable property access | Excel workbook QueryTable PreserveFormatting .NET
 
 using System;
 using Aspose.Cells;
 
-// Creates or loads a workbook, accesses the first worksheet, verifies the presence of QueryTables, reads the PreserveFormatting flag of the first QueryTable, outputs the value, and saves the workbook.
+// // Loads an Excel workbook with Aspose.Cells, verifies that the first worksheet contains a QueryTable, reads its PreserveFormatting flag, and prints the boolean result to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Retrieve the first worksheet (index 0)
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Verify that the worksheet contains at least one QueryTable
-        if (worksheet.QueryTables.Count > 0)
+        // Ensure the worksheet contains at least one QueryTable
+        if (sheet.QueryTables.Count > 0)
         {
-            // Retrieve the first QueryTable using the collection indexer
-            QueryTable queryTable = worksheet.QueryTables[0];
+            // Access the first QueryTable (index 0)
+            QueryTable queryTable = sheet.QueryTables[0];
 
-            // Read the PreserveFormatting property
+            // Read the PreserveFormatting flag
             bool preserveFormatting = queryTable.PreserveFormatting;
 
-            // Display the retrieved flag value
-            Console.WriteLine("PreserveFormatting: " + preserveFormatting);
+            // Output the flag value
+            Console.WriteLine($"PreserveFormatting: {preserveFormatting}");
         }
         else
         {
-            Console.WriteLine("No QueryTables found in the first worksheet.");
+            Console.WriteLine("No QueryTable found in the first worksheet.");
         }
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("Output.xlsx");
     }
 }

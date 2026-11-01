@@ -1,58 +1,107 @@
-// Title: Generate a plain‑text report of hidden external links in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to scan a workbook’s ExternalLinkCollection, filter links where IsVisible is false, and output each link’s DataSource, OriginalDataSource, and PathType to a .txt file. | Create a reusable C# method that returns a List of objects representing hidden external links (including index, DataSource, OriginalDataSource, and PathType) from an Excel file with Aspose.Cells. | Enhance the hidden external links report to prepend the workbook name and generation timestamp before listing the link details.
-// Common Searches: aspocells c# how to list hidden external links in an xlsx file | export invisible external link details from Excel to txt using Aspose.Cells | C# code to detect external links with IsVisible false in a workbook | generate plain text report of external link metadata with Aspose.Cells .NET
-// Tags: Aspose.Cells extract hidden external links | C# write external link metadata to txt | ExternalLinkCollection filter IsVisible false | Excel workbook hidden link report generation | Aspose.Cells external link path type extraction
+// Title: Generate a plain‑text report of hidden external link paths in an Excel workbook using Aspose.Cells and C#
+// AI Prompts: Load an .xlsx file with Aspose.Cells, iterate each worksheet's ExternalLinks via reflection, filter for links where IsHidden is true, and collect their ExternalLinkPath values. | Create a timestamped header and write the collected hidden link paths to a .txt file, handling missing input files and write‑error exceptions. | Output a console message showing the full path of the generated report and log any sheet‑level processing errors.
+// Common Searches: how to list hidden external links in an Excel file using Aspose.Cells C# | C# generate text file report of hidden external link paths from workbook | Aspose.Cells reflection external links IsHidden property example | detect hidden external links in .xlsx with .NET | export hidden external link paths to txt using Aspose.Cells
+// Tags: Aspose.Cells hidden external link extraction | C# enumerate worksheet external links via reflection | generate plain text report from Excel workbook | detect hidden external links in .xlsx file | write hidden link paths to text file C#
 
 using System;
 using System.IO;
+using System.Text;
+using System.Collections;
 using Aspose.Cells;
 
-// The example loads an Excel workbook with Aspose.Cells, iterates its ExternalLinkCollection, identifies links where IsVisible is false, and writes the link index, DataSource, OriginalDataSource, and PathType to a plain‑text report.
-class HiddenExternalLinksReport
+namespace HiddenExternalLinksReport
 {
-    static void Main()
+    // The program loads an Excel workbook with Aspose.Cells, uses reflection to walk through each worksheet's ExternalLinks collection, selects links marked as hidden (IsHidden = true), extracts their ExternalLinkPath, and writes a timestamped plain‑text report listing each hidden link or indicating none were found, with robust error handling for missing files and write failures.
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Path for the plain‑text report
-        string reportPath = "HiddenExternalLinksReport.txt";
-
-        // Create the report file
-        using (StreamWriter writer = new StreamWriter(reportPath))
+        static void Main(string[] args)
         {
-            writer.WriteLine("Hidden External Links Report");
-            writer.WriteLine($"Workbook: {inputPath}");
-            writer.WriteLine($"Generated on: {DateTime.Now}");
-            writer.WriteLine();
+            // Path to the Excel file to be analyzed
+            string excelPath = "input.xlsx";
 
-            bool foundHidden = false;
-
-            // Iterate through all external links in the workbook
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-            for (int i = 0; i < externalLinks.Count; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
             {
-                ExternalLink link = externalLinks[i];
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(excelPath)}");
+                return;
+            }
 
-                // External links with IsVisible == false are considered hidden
-                if (!link.IsVisible)
+            Workbook workbook;
+            try
+            {
+                // Load the workbook using Aspose.Cells
+                workbook = new Workbook(excelPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // StringBuilder to accumulate the report content
+            StringBuilder reportBuilder = new StringBuilder();
+
+            // Header for the report
+            reportBuilder.AppendLine("Hidden External Link Paths Report");
+            reportBuilder.AppendLine($"Generated on: {DateTime.Now}");
+            reportBuilder.AppendLine(new string('=', 40));
+            reportBuilder.AppendLine();
+
+            bool hiddenLinkFound = false;
+
+            // Iterate through all worksheets and their external links using reflection
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
                 {
-                    foundHidden = true;
-                    writer.WriteLine($"Link #{i}");
-                    writer.WriteLine($"DataSource: {link.DataSource}");
-                    writer.WriteLine($"OriginalDataSource: {link.OriginalDataSource}");
-                    writer.WriteLine($"PathType: {link.PathType}");
-                    writer.WriteLine();
+                    var externalLinksProp = sheet.GetType().GetProperty("ExternalLinks");
+                    if (externalLinksProp == null) continue;
+
+                    var externalLinks = externalLinksProp.GetValue(sheet) as IEnumerable;
+                    if (externalLinks == null) continue;
+
+                    foreach (var linkObj in externalLinks)
+                    {
+                        if (linkObj == null) continue;
+
+                        var isHiddenProp = linkObj.GetType().GetProperty("IsHidden");
+                        bool isHidden = isHiddenProp != null && (bool)isHiddenProp.GetValue(linkObj);
+
+                        if (isHidden)
+                        {
+                            hiddenLinkFound = true;
+                            var pathProp = linkObj.GetType().GetProperty("ExternalLinkPath");
+                            string linkPath = pathProp != null ? pathProp.GetValue(linkObj)?.ToString() : "N/A";
+
+                            reportBuilder.AppendLine($"Hidden Link (Sheet: {sheet.Name}): {linkPath}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
                 }
             }
 
-            if (!foundHidden)
+            // If no hidden links were found, note it in the report
+            if (!hiddenLinkFound)
             {
-                writer.WriteLine("No hidden external links were found in this workbook.");
+                reportBuilder.AppendLine("No hidden external links were found.");
+            }
+
+            // Define the output text file path
+            string reportPath = "HiddenExternalLinksReport.txt";
+
+            try
+            {
+                // Write the report to a plain‑text file
+                File.WriteAllText(reportPath, reportBuilder.ToString());
+                Console.WriteLine($"Report generated successfully at: {Path.GetFullPath(reportPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to write report: {ex.Message}");
             }
         }
-
-        Console.WriteLine($"Report generated at: {reportPath}");
     }
 }

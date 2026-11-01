@@ -1,50 +1,45 @@
-// Title: Enumerate initialized cells that lack a value and add a "Missing value" comment with Aspose.Cells for .NET
-// AI Prompts: Write C# code using Aspose.Cells that iterates through all initialized cells in a worksheet, records the addresses of cells where the Value property is null, and inserts a comment "Missing value" into each of those cells. | Modify the example to export the list of empty‑cell addresses to a CSV file instead of writing them to the console, while still adding comments to the cells.
-// Common Searches: aspocells c# enumerate initialized cells with null value | how to add comment to empty cells using Aspose.Cells .NET | list addresses of cells without data in an Excel worksheet Aspose.Cells | detect and flag cells that have no value in a workbook with Aspose.Cells
-// Tags: iterate over initialized cells Aspose.Cells | detect null cell values Aspose.Cells C# | annotate empty cells Aspose.Cells | write empty cell list to CSV Aspose.Cells | save workbook with comments Aspose.Cells
+// Title: Use Aspose.Cells for .NET to enumerate initialized worksheet cells and flag those with null values by adding comments and highlighting them
+// Common Searches: Aspose.Cells C# enumerate only initialized cells and identify empty values | how to add a comment to blank cells using Aspose.Cells in .NET | highlight cells with null Value property in Excel using Aspose.Cells C# | iterate through worksheet cells with GetEnumerator and flag missing data Aspose.Cells | save workbook after marking cells without values with Aspose.Cells
+// Tags: initialized cell enumeration Aspose.Cells | null value detection Aspose.Cells C# | comment insertion for blank cells Aspose.Cells | yellow cell highlighting Aspose.Cells | workbook save after cell flagging Aspose.Cells
 
-using System;
-using System.Collections.Generic;
 using Aspose.Cells;
+using System;
+using System.Collections;
+using System.Drawing;
 
-// The sample loads an existing workbook, iterates over every initialized cell in the first worksheet, captures the addresses of cells whose Value property is null, adds a "Missing value" comment to each, outputs the addresses, and saves the workbook with the new comments.
+// The example loads an Excel workbook, uses the worksheet's Cells.GetEnumerator() to iterate over all initialized cells, and for each cell whose Value is null it adds a "Missing value" comment and applies a yellow solid background style. The modified workbook is then saved for further analysis.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook
+        // Load the workbook
         Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (adjust index as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // List to collect addresses of initialized cells that have no value
-        List<string> cellsWithoutValue = new List<string>();
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Enumerate all initialized cells in the worksheet
-        foreach (Cell cell in worksheet.Cells)
+        IEnumerator cellEnumerator = sheet.Cells.GetEnumerator();
+
+        while (cellEnumerator.MoveNext())
         {
-            // Check if the cell's Value property is null (i.e., no value assigned)
+            Cell cell = (Cell)cellEnumerator.Current;
+
+            // Flag cells that have no value assigned (Value is null)
             if (cell.Value == null)
             {
-                // Flag the cell by storing its address
-                cellsWithoutValue.Add(cell.Name);
-
-                // Optionally add a comment to the cell for visual identification
-                int commentIndex = worksheet.Comments.Add(cell.Row, cell.Column);
-                Comment comment = worksheet.Comments[commentIndex];
+                // Add a comment to indicate missing value
+                int commentIndex = sheet.Comments.Add(cell.Name);
+                Comment comment = sheet.Comments[commentIndex];
                 comment.Note = "Missing value";
+
+                // Optionally highlight the cell for visual inspection
+                Style style = cell.GetStyle();
+                style.ForegroundColor = Color.Yellow;
+                style.Pattern = BackgroundType.Solid;
+                cell.SetStyle(style);
             }
         }
 
-        // Output the flagged cell addresses for further analysis
-        Console.WriteLine("Initialized cells lacking a value:");
-        foreach (string address in cellsWithoutValue)
-        {
-            Console.WriteLine(address);
-        }
-
-        // Save the workbook (the comments will be persisted)
+        // Save the modified workbook for further analysis
         workbook.Save("output.xlsx");
     }
 }

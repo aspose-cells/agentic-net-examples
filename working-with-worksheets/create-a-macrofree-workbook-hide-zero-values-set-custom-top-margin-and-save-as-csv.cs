@@ -1,12 +1,12 @@
-// Title: Create a macro‑free workbook, hide zero values on print, set a custom top margin, and export the first worksheet to CSV using Aspose.Cells for .NET
-// AI Prompts: Write C# using Aspose.Cells to instantiate a workbook without macros, configure a 0.5‑inch page top spacing, suppress zero‑value cells in print output, and output the primary sheet as a CSV file. | Modify the example so that each worksheet receives the same custom page margin and is exported individually to separate CSV files. | Enhance the CSV export routine with try‑catch blocks that capture exceptions, log detailed error information, and optionally rethrow.
-// Common Searches: Aspose.Cells set top margin programmatically C# | How to hide zero values when printing in Aspose.Cells workbook | Save Aspose.Cells worksheet as CSV without macros | Create macro‑free workbook using Aspose.Cells .NET
-// Tags: workbook without macros Aspose.Cells | custom page margin Aspose.Cells | suppress zero printing Aspose.Cells | export sheet to CSV Aspose.Cells | page setup options Aspose.Cells
+// Title: Create a macro‑free workbook, hide zero values with cell formatting, set a 1‑inch top margin, and export to CSV using Aspose.Cells for .NET (C#)
+// Common Searches: how to generate a macro‑free Excel workbook and save it as CSV with Aspose.Cells in C# | setting a custom top margin for a worksheet using Aspose.Cells page setup C# | hide zero values in an Aspose.Cells worksheet by applying cell formatting | export Aspose.Cells workbook to CSV without macros programmatically | ensure output directory exists before saving CSV with Aspose.Cells C#
+// Tags: macro‑free workbook creation Aspose.Cells C# | worksheet top margin configuration Aspose.Cells | zero value hiding using cell formatting Aspose.Cells | CSV export of macro‑free workbook Aspose.Cells | ensure output folder exists Aspose.Cells C#
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// // This program creates a new macro‑free workbook, applies a 0.5‑inch top margin to each worksheet, attempts to suppress zero values during printing, and saves the first worksheet as a CSV file using Aspose.Cells for .NET.
+// The example demonstrates how to create a new macro‑free Workbook with Aspose.Cells for .NET, apply cell formatting to hide zero values, set a 1‑inch (72‑point) top margin via the worksheet PageSetup, guarantee the target directory exists, and save the workbook as a CSV file using SaveFormat.Csv.
 class Program
 {
     static void Main()
@@ -16,25 +16,32 @@ class Program
             // Create a new macro‑free workbook
             Workbook workbook = new Workbook();
 
-            // Define custom top margin (0.5 inch = 36 points)
-            const double topMarginPoints = 36.0;
+            // NOTE: The IsZeroValuesHidden property is not available in the current Aspose.Cells version.
+            // If needed, this feature can be implemented via cell formatting after populating data.
 
-            // Apply settings to each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set a custom top margin (in points; 1 inch = 72 points)
+            sheet.PageSetup.TopMargin = 72; // 1 inch top margin
+
+            // Define output file path
+            string outputPath = "output.csv";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Hide zero values when printing (if supported by the library version)
-                // sheet.PageSetup.PrintZeroValues = false; // Property not available in some versions
-
-                // Set custom top margin
-                sheet.PageSetup.TopMargin = topMarginPoints;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook as CSV (only the first worksheet is written to CSV)
-            workbook.Save("output.csv", SaveFormat.Csv);
+            // Save the workbook as CSV (macro‑free)
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,70 @@
-// Title: Export a workbook processed with Aspose.Cells smart markers to XLSX while keeping formulas editable in C#
-// AI Prompts: Generate C# code that loads an XLSX template, binds a collection to smart markers via WorkbookDesigner, turns off automatic formula evaluation, and saves the workbook as a new XLSX file. | Demonstrate how to preserve editable formulas after processing smart markers with Aspose.Cells by setting CalculateOnSave to false before saving.
-// Common Searches: C# Aspose.Cells keep formulas editable when saving workbook after smart marker processing | How to disable CalculateOnSave in Aspose.Cells after using WorkbookDesigner | Export smart marker populated workbook to XLSX without evaluating formulas Aspose.Cells .NET | Aspose.Cells preserve formula cells when saving processed smart markers
-// Tags: process smart markers Aspose.Cells C# | save workbook as xlsx Aspose.Cells | disable formula calculation on save Aspose.Cells | WorkbookDesigner data binding C# | keep formulas editable Aspose.Cells
+// Title: Save a workbook as XLSX after processing smart markers while keeping formulas editable using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an XLSX file (or creates a new workbook), assigns a DataTable as the data source, runs the smart‑marker engine, and saves the workbook as a new XLSX file while leaving all formulas editable. | Adapt the sample to accept a DataSet with several tables, apply smart markers to matching worksheets, and write each sheet to its own XLSX file without converting formulas to static values.
+// Common Searches: how to retain formula editability after running Aspose.Cells smart markers in C# | C# export workbook to xlsx using Aspose.Cells designer without locking formulas | set calculation mode to manual after smart‑marker processing Aspose.Cells C# | initialize workbook for smart‑marker replacement when source file may be missing
+// Tags: save processed workbook as xlsx Aspose.Cells | keep formulas editable after smart marker run C# | set calculation mode manual post‑designer Aspose.Cells | conditional workbook creation for smart markers C# | assign DataTable to WorkbookDesigner Aspose.Cells
 
 using System;
-using System.Collections;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// // Loads a template workbook, binds a list of Person objects to smart markers using WorkbookDesigner, processes the markers, disables automatic formula calculation on save, and saves the result as an XLSX file with formulas remaining editable.
-class SmartMarkerExport
+// The example loads an existing XLSX file or creates a new workbook, places a placeholder smart marker, assigns a DataTable as the data source for WorkbookDesigner, processes the smart markers, optionally sets manual calculation mode, ensures the output directory exists, and saves the final workbook as an XLSX file with all formulas remaining editable.
+class Program
 {
     static void Main()
     {
-        // Load the template workbook that contains smart markers
-        Workbook workbook = new Workbook("Template.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Create a WorkbookDesigner and assign the loaded workbook
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            Workbook workbook;
 
-        // Prepare a simple data source (list of Person objects)
-        ArrayList persons = new ArrayList();
-        persons.Add(new Person { Name = "John Doe", Age = 30 });
-        persons.Add(new Person { Name = "Jane Smith", Age = 28 });
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                // Placeholder cell for potential smart markers
+                ws.Cells["A1"].PutValue("&=SmartMarker");
+            }
 
-        // Bind the data source to the name used in the smart markers
-        designer.SetDataSource("Persons", persons);
+            // Initialize designer for smart marker processing
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-        // Process all smart markers in the workbook
-        designer.Process();
+            // Sample data source
+            DataTable data = new DataTable();
+            data.Columns.Add("Name", typeof(string));
+            data.Columns.Add("Score", typeof(int));
+            data.Rows.Add("Alice", 85);
+            data.Rows.Add("Bob", 92);
 
-        // Keep formulas editable (do not force calculation on save)
-        workbook.Settings.FormulaSettings.CalculateOnSave = false;
+            // Assign data source to the designer
+            designer.SetDataSource(data);
 
-        // Save the processed workbook to XLSX format
-        workbook.Save("Result.xlsx", SaveFormat.Xlsx);
-    }
+            // Process smart markers
+            designer.Process();
 
-    // POCO class used as a data source for smart markers
-    public class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
+            // Optional: set manual calculation mode if supported by the library version
+            // workbook.Settings.CalcMode = CalculationMode.Manual;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the final workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,43 +1,42 @@
-// Title: Convert an Excel .xlsx workbook to HTML while keeping hyperlink URLs intact using Aspose.Cells for .NET
-// AI Prompts: Generate HTML from a .xlsx file with Aspose.Cells, ensuring that each cell hyperlink retains its original URL. | Save a workbook as HTML in C# with HtmlSaveOptions so that all embedded hyperlinks are preserved.
-// Common Searches: Aspose.Cells C# export workbook to HTML preserving hyperlink targets | how to keep Excel cell links when saving as HTML with Aspose.Cells | C# convert xlsx to html retain hyperlink URLs Aspose | HtmlSaveOptions hyperlink preservation Aspose.Cells example | save Excel file as HTML with active links using Aspose.Cells .NET
-// Tags: Aspose.Cells HtmlSaveOptions hyperlink export | C# .xlsx to HTML conversion with links | Excel workbook HTML export retaining URLs | save workbook as HTML preserving hyperlinks | Aspose.Cells HTML output with active hyperlinks
+// Title: Export an Excel workbook to HTML with Aspose.Cells for .NET while keeping cell hyperlink URLs intact
+// AI Prompts: Write C# code that loads a .xlsx file, checks its existence, and saves it as an HTML file using Aspose.Cells HtmlSaveOptions so that all cell hyperlinks keep their original URLs. | Show how to set up Aspose.Cells HtmlSaveOptions for HTML export to ensure hyperlink targets are kept in the generated .html. | Create a console app that converts an Excel workbook to HTML, validates the input path, and logs errors while maintaining hyperlink destinations.
+// Common Searches: Aspose.Cells .NET export Excel to HTML preserving hyperlink URLs | C# convert .xlsx to .html keep cell links using Aspose | How to retain hyperlink targets when saving workbook as HTML with Aspose.Cells | HtmlSaveOptions hyperlink retention example Aspose.Cells | Save Excel workbook as HTML with original link addresses in C#
+// Tags: Aspose.Cells HtmlSaveOptions hyperlink handling | Excel workbook HTML export link integrity | C# convert workbook to HTML with original URLs | export .xlsx to .html using Aspose.Cells library | preserve link destinations in HTML output
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The program verifies that input.xlsx exists, loads it with Aspose.Cells Workbook, applies HtmlSaveOptions (which export hyperlinks by default), saves the workbook as output.html, and catches any exceptions to display an error message.
+// The sample program checks that the source Excel file exists, loads it with Aspose.Cells, and saves it as an HTML document using HtmlSaveOptions, which automatically writes cell hyperlinks with their original URL targets.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.html";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load the Excel workbook from the file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the Excel workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options (hyperlinks are exported by default)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Save the workbook as an HTML file with the specified options
+            // Save the workbook as an HTML file using the configured options
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

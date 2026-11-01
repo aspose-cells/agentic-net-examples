@@ -1,13 +1,13 @@
-// Title: How to unprotect an Excel worksheet and remove frozen panes using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, verifies the file exists, calls Worksheet.Unprotect, clears any frozen panes, and saves the workbook. | Generate a try‑catch example that loads a workbook, unprotects the first worksheet, disables pane freezing, and writes the output file to a new location. | Provide a snippet showing how to programmatically unprotect a worksheet and reset its freeze settings using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# unprotect worksheet before unfreeze panes | how to clear frozen panes on a protected Excel sheet using Aspose.Cells | C# code to remove pane freeze after worksheet protection with Aspose.Cells | unfreeze panes fails when worksheet is protected Aspose.Cells .NET
-// Tags: worksheet unprotect Aspose.Cells C# | clear frozen panes Aspose.Cells | Aspose.Cells unfreeze panes .NET | remove pane freeze after sheet protection | load workbook unprotect sheet Aspose.Cells
+// Title: How to unprotect an Excel worksheet and remove frozen panes with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that opens a workbook, calls Worksheet.Unprotect(), then clears any frozen panes with Worksheet.FreezePanes(0,0,0,0), and saves the file. | Show a try‑catch example that verifies the source file, creates missing output directories, and performs worksheet unprotection before unfreezing panes in Aspose.Cells. | Demonstrate how to programmatically reset pane freezing on a protected sheet after calling Unprotect() in a .NET application with Aspose.Cells.
+// Common Searches: aspnet unprotect worksheet before using FreezePanes in Aspose.Cells | remove frozen panes from a protected Excel file using C# Aspose.Cells | how to reset frozen panes after worksheet protection with Aspose.Cells .NET | C# code to unprotect Excel sheet and clear pane freezing using Aspose.Cells library
+// Tags: aspocells unprotect method usage | aspocells freezepanes reset example | c# modify worksheet protection aspocells | excel pane clearing with aspocells | aspocells workbook save after protection change
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks for the presence of 'input.xlsx', loads it into an Aspose.Cells Workbook, retrieves the first worksheet, calls Unprotect() to allow pane modifications, and then saves the workbook as 'output.xlsx'. A note mentions that older Aspose.Cells versions may require manual handling of the UnfreezePanes operation.
+// The sample verifies that input.xlsx exists, loads it with Aspose.Cells, accesses the first worksheet, calls Unprotect() to lift protection, clears any frozen panes using FreezePanes(0,0,0,0), ensures the output directory is present, and saves the modified workbook to output.xlsx while handling exceptions.
 class Program
 {
     static void Main()
@@ -20,29 +20,37 @@ class Program
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Unprotect the worksheet so pane operations are allowed
-            sheet.Unprotect();
+            // Unprotect the worksheet to allow modifications
+            worksheet.Unprotect();
 
-            // NOTE: UnfreezePanes method may not be available in older Aspose.Cells versions.
-            // If needed, you can manually reset the freeze settings here.
+            // Unfreeze any frozen panes (using FreezePanes method with zero parameters)
+            worksheet.FreezePanes(0, 0, 0, 0);
 
-            // Save the workbook
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,62 +1,98 @@
-// Title: Create a calculated pivot item to group Apple and Banana into a custom "FruitGroup" using Aspose.Cells for C#
-// AI Prompts: Generate a C# snippet that adds a calculated item named FruitGroup to a PivotTable row field with the formula =Apple+Banana using Aspose.Cells. | Write code to refresh the PivotTable, recalculate its data, and save the workbook as CustomGroupPivot.xlsx.
-// Common Searches: Aspose.Cells C# how to add a calculated item to a pivot table row field | group specific rows in an Aspose.Cells pivot table programmatically | create custom product group in pivot table using Aspose.Cells API | calculate sum of selected items in an Aspose.Cells pivot table | refresh and calculate pivot data after adding a calculated item in C#
-// Tags: add calculated item Aspose.Cells pivot | pivot table custom group C# | Aspose.Cells refresh pivot data | save workbook as xlsx Aspose.Cells | row field calculated item formula Aspose.Cells
+// Title: Create a custom calculated item to combine product categories in an Excel PivotTable with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# add calculated item to pivot table field | group product categories into a single item in Excel pivot using Aspose.Cells | how to define a calculated item formula for a pivot field in Aspose.Cells .NET | C# code to sum specific categories in a pivot table with Aspose.Cells | add custom group to pivot table rows using Aspose.Cells API
+// Tags: calculated item pivotfield Aspose.Cells | product category custom group pivot Aspose.Cells | pivot table calculated item formula C# | Aspose.Cells Excel pivot manipulation | custom group pivot rows Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsCustomGroupDemo
+namespace Example
 {
-    // The example creates a workbook, fills it with product and sales data, builds a pivot table, adds the Product field to the row area, defines a calculated item called "FruitGroup" that sums the Apple and Banana rows, refreshes and recalculates the pivot, and saves the file as CustomGroupPivot.xlsx.
-    public class Program
+    // The example loads an Excel workbook, locates the first pivot table, finds the 'Product Category' field, and adds a calculated item named 'Custom Group' with the formula ='Category A' + 'Category B' to group those categories, then saves the updated file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Populate sample data: Product category and Sales
-            sheet.Cells["A1"].Value = "Product";
-            sheet.Cells["B1"].Value = "Sales";
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-            sheet.Cells["A2"].Value = "Apple";
-            sheet.Cells["B2"].Value = 1200;
+                // Load workbook (no password)
+                Workbook workbook = new Workbook(inputPath);
 
-            sheet.Cells["A3"].Value = "Banana";
-            sheet.Cells["B3"].Value = 800;
+                // Access first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["A4"].Value = "Orange";
-            sheet.Cells["B4"].Value = 1500;
+                // Ensure there is at least one pivot table
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
+                }
 
-            sheet.Cells["A5"].Value = "Grapes";
-            sheet.Cells["B5"].Value = 900;
+                // Get the first pivot table
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Create a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Name of the pivot field that contains product categories
+                string fieldName = "Product Category";
 
-            // Add the Product field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                // Locate the field in row or column fields
+                PivotField productCategoryField = FindPivotField(pivotTable, fieldName);
 
-            // Add the Sales field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                if (productCategoryField != null)
+                {
+                    // Define the name of the new calculated item
+                    string calculatedItemName = "Custom Group";
 
-            // Get the row pivot field (Product)
-            PivotField productField = pivotTable.RowFields[0];
+                    // Define the formula that sums the desired categories.
+                    // The formula syntax uses single quotes around item names.
+                    string formula = "='Category A' + 'Category B'";
 
-            // Add a calculated item that groups Apple and Banana into a custom group named "FruitGroup"
-            // The formula sums the two items; Excel syntax for pivot calculated items uses item names directly.
-            productField.AddCalculatedItem("FruitGroup", "=Apple + Banana");
+                    // Add the calculated item to the pivot field
+                    productCategoryField.AddCalculatedItem(calculatedItemName, formula);
+                }
+                else
+                {
+                    Console.WriteLine($"Pivot field \"{fieldName}\" not found.");
+                }
 
-            // Refresh and calculate the pivot table to apply the new calculated item
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
 
-            // Save the workbook
-            workbook.Save("CustomGroupPivot.xlsx");
+        // Helper method to locate a pivot field by name
+        private static PivotField FindPivotField(PivotTable pivotTable, string fieldName)
+        {
+            foreach (PivotField field in pivotTable.RowFields)
+            {
+                if (field.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
+                    return field;
+            }
+            foreach (PivotField field in pivotTable.ColumnFields)
+            {
+                if (field.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
+                    return field;
+            }
+            return null;
         }
     }
 }

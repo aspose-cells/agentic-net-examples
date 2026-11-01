@@ -1,45 +1,62 @@
-// Title: Extract raw numeric string from a percent‑formatted cell using GetStringValue with CellValueFormatStrategy.None in Aspose.Cells (.NET)
-// AI Prompts: Write C# code that calls Cell.GetStringValue(CellValueFormatStrategy.None) to obtain the underlying numeric string of a cell formatted as a percentage. | Show how to retrieve the unformatted value "0.25" from a cell displaying "25%" in Aspose.Cells for statistical analysis. | Demonstrate extracting raw percentage values without formatting for further processing in an external module using Aspose.Cells.
-// Common Searches: Aspose.Cells C# get unformatted value from percent formatted cell | Cell.GetStringValue with CellValueFormatStrategy.None example | how to read raw numeric string of a percentage cell in Aspose.Cells | extract underlying value from Excel percent format using Aspose.Cells .NET | retrieve raw data for statistical analysis from formatted Excel cell Aspose
-// Tags: GetStringValue raw value extraction Aspose.Cells | CellValueFormatStrategy.None usage | percentage format raw string C# | unformatted cell value Aspose.Cells | statistical analysis raw Excel data Aspose
+// Title: Read raw percentage strings from specific Excel cells using Aspose.Cells for .NET and calculate their average
+// AI Prompts: Load an .xlsx workbook with Aspose.Cells and retrieve the exact text stored in cells B2, B3, and B4 without applying any number format. | Convert the retrieved percentage strings to double values using CultureInfo.InvariantCulture and compute their arithmetic mean. | Print the original raw strings and the calculated average as invariant‑culture strings to the console.
+// Common Searches: Aspose.Cells get cell value as raw text ignoring number format in C# | How to read percentage values from Excel as plain strings with Aspose.Cells .NET | Calculate average of raw Excel percentage strings using Aspose.Cells in a console application
+// Tags: Aspose.Cells read raw cell string | extract unformatted percentage value Excel .NET | parse raw Excel string to double invariant culture | compute average of Excel cell values C# | Aspose.Cells workbook cell value retrieval
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads 'input.xlsx' with Aspose.Cells, reads the stored text of cells B2, B3, and B4 using the Value property converted to string, parses these raw percentage strings to double with InvariantCulture, calculates their average, and prints both the original raw strings and the average as invariant‑culture strings.
+class Program
 {
-    // The example creates a workbook, writes the numeric value 0.25 to cell A1, applies Excel's built‑in percent format, then uses GetStringValue with CellValueFormatStrategy.None to obtain the raw string "0.25" while StringValue returns the formatted "25%", and finally saves the workbook as RawPercentageDemo.xlsx.
-    class GetRawPercentageStrings
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Put a numeric value that represents 25%
-            Cell percentCell = cells["A1"];
-            percentCell.PutValue(0.25);
+        try
+        {
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Apply Excel's built‑in percentage format (Number = 10)
-            Style percentStyle = percentCell.GetStyle();
-            percentStyle.Number = 10; // 10 = built‑in percent format
-            percentCell.SetStyle(percentStyle);
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-            // Retrieve the raw value as a string without any formatting
-            // CellValueFormatStrategy.None returns the underlying value unchanged
-            string rawValue = percentCell.GetStringValue(CellValueFormatStrategy.None);
-            Console.WriteLine("Raw percentage string (no formatting): " + rawValue);
-            // Expected output: "0.25"
+            // Retrieve raw cell values (as stored in the file) for B2, B3, B4
+            string rawB2 = worksheet.Cells["B2"].Value?.ToString() ?? string.Empty;
+            string rawB3 = worksheet.Cells["B3"].Value?.ToString() ?? string.Empty;
+            string rawB4 = worksheet.Cells["B4"].Value?.ToString() ?? string.Empty;
 
-            // For comparison, show the formatted string that Excel would display
-            string formattedValue = percentCell.StringValue;
-            Console.WriteLine("Formatted percentage string: " + formattedValue);
-            // Expected output: "25%"
+            // Output the raw strings for statistical analysis
+            Console.WriteLine($"Raw B2: {rawB2}");
+            Console.WriteLine($"Raw B3: {rawB3}");
+            Console.WriteLine($"Raw B4: {rawB4}");
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("RawPercentageDemo.xlsx");
+            // Convert raw strings to numeric values for analysis
+            double valB2 = double.Parse(rawB2, CultureInfo.InvariantCulture);
+            double valB3 = double.Parse(rawB3, CultureInfo.InvariantCulture);
+            double valB4 = double.Parse(rawB4, CultureInfo.InvariantCulture);
+
+            // Calculate average
+            double average = (valB2 + valB3 + valB4) / 3.0;
+            Console.WriteLine($"Average (as decimal): {average}");
+
+            // Average as a raw string (e.g., "0.4233333333")
+            string averageRawString = average.ToString(CultureInfo.InvariantCulture);
+            Console.WriteLine($"Average raw string: {averageRawString}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

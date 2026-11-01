@@ -1,42 +1,55 @@
-// Title: Convert a macro‑enabled Excel workbook (XLSM) to PDF and embed the file as an attachment using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an XLSM file with Aspose.Cells, checks that the file exists, and saves it as a PDF while embedding the original workbook as an attachment. | Create a .NET example that converts a macro‑enabled Excel workbook to PDF, includes robust file‑not‑found handling, and shows how to attach the source XLSM to the generated PDF.
-// Common Searches: asp.net aspocells embed xlsm as attachment in pdf | c# convert macro enabled excel to pdf with original file attached | how to save workbook with macros as pdf attachment using Aspose.Cells
-// Tags: Aspose.Cells XLSM to PDF with attachment | embed macro workbook in PDF using .NET | C# workbook.Save PDF with source file attachment | file not found handling Aspose.Cells conversion
+// Title: Embedding an .xlsm macro workbook as an attached file in a PDF using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# embed .xlsm macro as attachment when saving to PDF | How to attach the original Excel macro file to a PDF generated with Aspose.Cells | Which Aspose.Cells version adds PdfSaveOptions EmbedMacros support | C# example for converting a macro-enabled workbook to PDF with macro attachment | Save Excel workbook with macros to PDF and include macro file using Aspose.Cells
+// Tags: Aspose.Cells embed macro attachment PDF | PdfSaveOptions EmbedMacros support | C# convert .xlsm to PDF with attached macro | Aspose.Cells version requirement for macro embedding | preserve Excel macros during PDF export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads a macro‑enabled Excel file (SampleMacro.xlsm), verifies its presence, converts the workbook to PDF with Aspose.Cells, and embeds the original XLSM as an attachment in the resulting PDF, while handling any runtime exceptions.
+// The sample loads a macro-enabled .xlsm workbook, verifies the source file, prepares PdfSaveOptions, notes that the EmbedMacros property is unavailable in the current Aspose.Cells release, creates the output directory if needed, and saves the workbook as a PDF, reporting the result or any errors.
 class EmbedMacroInPdf
 {
     static void Main()
     {
         try
         {
-            // Path to the macro-enabled Excel file (XLSM) that will be converted to PDF
-            string macroFilePath = "SampleMacro.xlsm";
+            // Path to the Excel file that contains macros
+            string excelPath = @"C:\Data\ReportWithMacro.xlsm";
 
-            // Verify that the macro file exists to avoid FileNotFoundException
-            if (!File.Exists(macroFilePath))
+            // Verify the source file exists
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: The file '{macroFilePath}' was not found.");
+                Console.WriteLine($"Excel file not found: {excelPath}");
                 return;
             }
 
-            // Load the workbook (the Excel file may contain macros, but they won't be executed)
-            Workbook workbook = new Workbook(macroFilePath);
+            // Load the workbook (macros are preserved)
+            Workbook workbook = new Workbook(excelPath);
 
-            // Save the workbook directly as the final PDF
-            string outputPdfPath = "WorkbookWithMacroAttachment.pdf";
-            workbook.Save(outputPdfPath, SaveFormat.Pdf);
+            // Prepare PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            Console.WriteLine($"PDF saved successfully to '{outputPdfPath}'.");
+            // NOTE: The EmbedMacros property is not available in the current Aspose.Cells version.
+            // If macro embedding is required, ensure you are using a version that supports it.
+
+            // Destination PDF path
+            string pdfPath = @"C:\Data\ReportWithMacro.pdf";
+
+            // Ensure the output directory exists
+            string? pdfDir = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+            {
+                Directory.CreateDirectory(pdfDir);
+            }
+
+            // Save the workbook as PDF
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine($"PDF created at: {pdfPath}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

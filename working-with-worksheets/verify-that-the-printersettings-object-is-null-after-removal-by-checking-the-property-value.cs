@@ -1,12 +1,12 @@
-// Title: Remove worksheet printer settings and verify null value with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that clears the PageSetup.PrinterSettings of a worksheet using Aspose.Cells and checks if the property is null. | Show an example that sets a worksheet's paper size, assigns null to its printer settings, and confirms the null state before saving the workbook.
-// Common Searches: Aspose.Cells C# how to clear printer settings from a worksheet page setup | verify PrinterSettings property is null after setting to null in Aspose.Cells | remove printer configuration from Excel worksheet using Aspose.Cells .NET | C# Aspose.Cells set paper size then reset printer settings | check null PrinterSettings in Aspose.Cells workbook before saving
-// Tags: clear worksheet printer settings Aspose.Cells | null check PrinterSettings .NET | page setup paper size Aspose.Cells C# | reset printer configuration Excel workbook Aspose.Cells | validate printer settings removal Aspose.Cells
+// Title: Remove printer settings from a worksheet and confirm they are null with Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets Worksheet.PageSetup.PrinterSettings to null and returns a boolean indicating the result. | Generate a console application using Aspose.Cells that clears the printer configuration of the first worksheet and prints whether the property is null. | Create a method that removes printer settings from a workbook's worksheet and validates the removal by checking the PrinterSettings property.
+// Common Searches: aspnet how to clear printer settings on an Excel worksheet using Aspose.Cells | c# verify that Worksheet.PageSetup.PrinterSettings becomes null after assignment | example code to remove printer configuration from Aspose.Cells workbook and check null value
+// Tags: clear worksheet printer settings Aspose.Cells | validate printer settings null Aspose.Cells | Aspose.Cells PageSetup PrinterSettings removal | C# remove printer configuration Excel workbook
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// The example creates a workbook, sets the first worksheet's paper size to A4, clears its PrinterSettings by assigning null, verifies the property is null, and saves the file as output.xlsx.
+// // Demonstrates creating a workbook, setting the first worksheet's PageSetup.PrinterSettings to null, and confirming the property is null by outputting a boolean result.
 class Program
 {
     static void Main()
@@ -16,33 +16,21 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet's page setup (contains printer settings)
             Worksheet sheet = workbook.Worksheets[0];
+            var initialSettings = sheet.PageSetup.PrinterSettings; // capture current settings
 
-            // Set paper size using PageSetup (PrinterSettings property is a byte[] in this API version)
-            sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-
-            // Remove printer settings by setting the property to null
+            // "Remove" the printer settings by setting the property to null
             sheet.PageSetup.PrinterSettings = null;
 
-            // Verify that the PrinterSettings property is null after removal
-            if (sheet.PageSetup.PrinterSettings == null)
-            {
-                Console.WriteLine("PrinterSettings is null after removal.");
-            }
-            else
-            {
-                Console.WriteLine("PrinterSettings is NOT null.");
-            }
+            // Verify that the printer settings are now null
+            bool isPrinterSettingsNull = sheet.PageSetup.PrinterSettings == null;
 
-            // Save the workbook (optional)
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine("PrinterSettings is null after removal: " + isPrinterSettingsNull);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

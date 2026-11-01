@@ -1,62 +1,36 @@
-// Title: Retrieve the exact A1‑style formula text from a worksheet cell with Aspose.Cells GetFormula in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to read a cell's formula as a plain A1‑style string. | Show how to enable Worksheet.ShowFormulas in Aspose.Cells so the worksheet displays formulas instead of calculated values. | Provide a complete example that extracts a formula, prints it to the console, and then saves the workbook using Aspose.Cells.
-// Common Searches: Aspose.Cells C# GetFormula non localized A1 style example | How to read raw Excel formula string from a cell using Aspose.Cells | Display formulas in an Excel file with Aspose.Cells ShowFormulas property | Save workbook after extracting formula text with Aspose.Cells .NET | GetFormula(false, false) usage in Aspose.Cells C# tutorial
-// Tags: retrieve cell formula string Aspose.Cells C# | non‑localized GetFormula A1 style | show formulas worksheet Aspose.Cells | save workbook after reading formula Aspose.Cells | extract raw Excel formula Aspose.Cells
+// Title: Extract the exact formula string from an Excel cell using Aspose.Cells in C#
+// Common Searches: C# Aspose.Cells get formula string from a specific cell | How to read the raw formula of an Excel cell with Aspose.Cells .NET | Retrieve formula text of cell A1 in a workbook using Aspose.Cells C# example | Aspose.Cells Formula property vs FormulaText to obtain Excel formula as plain text | Programmatically extract Excel formula as text in C# with Aspose
+// Tags: Aspose.Cells Formula property extraction C# | read raw Excel formula as text .NET | cell.Formula usage example | retrieve Excel formula string programmatically | Aspose.Cells workbook cell formula retrieval
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, assigns a SUM formula to cell A1, then uses the cell's Formula property to obtain the exact formula text and prints it to the console.
+class Program
 {
-    // The example creates a workbook, assigns a SUM formula to cell C1, uses GetFormula(false, false) to obtain the exact non‑localized A1‑style formula string, prints it, enables ShowFormulas to display the formula directly in the worksheet, and finally saves the workbook to disk.
-    public class FormulaTextDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Set a sample formula in cell C1
-                Cell targetCell = cells["C1"];
-                targetCell.Formula = "=SUM(A1:B1)";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Optionally put values in referenced cells
-                cells["A1"].PutValue(5);
-                cells["B1"].PutValue(10);
+            // Place a formula in cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.Formula = "=SUM(B1:B5)";
 
-                // Obtain the exact textual representation of the formula
-                // GetFormula(false, false) returns the formula in A1 style, non‑localized
-                string formulaText = targetCell.GetFormula(false, false);
+            // Retrieve the formula text
+            string formulaText = cell.Formula; // Use Formula property to get the textual representation
 
-                // Display the retrieved formula text
-                Console.WriteLine("Exact formula text in C1: " + formulaText);
-
-                // Demonstrate that Worksheet.ShowFormulas can display the formula directly in the UI
-                worksheet.ShowFormulas = true;
-                Console.WriteLine("Cell C1 displayed as formula: " + cells["C1"].StringValue);
-
-                // Save the workbook (lifecycle: save)
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "FormulaTextDemo.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Display the formula text
+            Console.WriteLine("Formula in A1: " + formulaText);
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            FormulaTextDemo.Run();
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

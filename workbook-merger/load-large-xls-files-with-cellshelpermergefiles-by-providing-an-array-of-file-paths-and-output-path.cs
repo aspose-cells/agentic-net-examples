@@ -1,95 +1,57 @@
-// Title: Combine multiple large XLS workbooks into one file using Aspose.Cells CellsHelper.MergeFiles in C#
-// AI Prompts: Generate C# code that merges an array of .xls file paths into a single workbook using Aspose.Cells CellsHelper.MergeFiles with a temporary cache file. | Add logic to verify each source .xls file exists before calling MergeFiles and handle missing files gracefully. | Include post‑merge steps to delete the temporary cache file and load the merged workbook to print the total worksheet count.
-// Common Searches: c# how to merge several large .xls workbooks with Aspose.Cells and a cache file | using CellsHelper.MergeFiles to combine multiple Excel files in .NET | validate existence of source XLS files before merging with Aspose.Cells | remove temporary cache after merging Excel workbooks with Aspose.Cells | check worksheet count after merging XLS files using Aspose.Cells
-// Tags: Aspose.Cells merge large xls workbooks | CellsHelper.MergeFiles with temporary cache | validate source xls files before merge | cleanup cache file after Excel merge | verify merged workbook worksheet count
+// Title: Combine several large XLS workbooks into one file with Aspose.Cells CellsHelper.MergeFiles in C#
+// AI Prompts: Generate C# code that accepts a list of .xls file locations, verifies each path, ensures the destination folder exists, and invokes Aspose.Cells.CellsHelper.MergeFiles to create a single merged workbook while handling possible exceptions. | Provide a C# example showing how to combine multiple large Excel 97‑2003 files into one .xls output using Aspose.Cells, including pre‑merge validation and preparation of the output directory.
+// Common Searches: c# how to combine many .xls spreadsheets into a single workbook using Aspose.Cells | using CellsHelper.MergeFiles to merge large Excel files in .net core | sample program for merging multiple Excel 97-2003 files with Aspose.Cells C# | check file existence before merging Excel workbooks with Aspose.Cells
+// Tags: aspose.cells merge xls workbooks c# | cellshelper.mergefiles example | pre-merge file existence check c# | output directory creation for excel merge | exception handling aspnet excel merging
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMergeDemo
+namespace AsposeCellsMergeExample
 {
-    // The example checks that each large .xls source file exists, then calls CellsHelper.MergeFiles with a temporary cache file to produce a single merged workbook (MergedResult.xls). After merging it deletes the cache file and loads the result to display the number of worksheets.
-    public class MergeLargeXlsFiles
+    // // Checks each input .xls file, creates the output folder if missing, and merges the workbooks into a single .xls file using Aspose.Cells.CellsHelper.MergeFiles with exception handling.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            // Paths of the large XLS files to be merged
-            string[] filesToMerge = new string[]
+            // Input workbook files (XLS or XLSX)
+            string[] inputFiles = new string[]
             {
-                "LargeFile1.xls",
-                "LargeFile2.xls",
-                "LargeFile3.xls"
+                @"C:\Data\File1.xls",
+                @"C:\Data\File2.xls",
+                @"C:\Data\File3.xls"
+                // Add more file paths as needed
             };
 
-            // Verify that all source files exist before attempting merge
-            foreach (string file in filesToMerge)
+            // Output merged workbook
+            string outputFile = @"C:\Data\MergedOutput.xls";
+
+            // Verify that all input files exist
+            foreach (string file in inputFiles)
             {
                 if (!File.Exists(file))
                 {
-                    Console.WriteLine($"Source file not found: {file}");
+                    Console.WriteLine($"Input file not found: {file}");
                     return;
                 }
             }
 
-            // Temporary cache file required by the MergeFiles method
-            string cachedFile = "MergeCache.tmp";
-
-            // Destination file that will contain the merged result
-            string outputFile = "MergedResult.xls";
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputFile);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             try
             {
-                // Merge the specified XLS files into a single workbook
-                CellsHelper.MergeFiles(filesToMerge, cachedFile, outputFile);
-                Console.WriteLine($"Files merged successfully. Output saved to: {outputFile}");
+                // Merge the workbooks; third parameter is password (empty for none)
+                CellsHelper.MergeFiles(inputFiles, outputFile, string.Empty);
+                Console.WriteLine($"Files merged successfully into: {outputFile}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error merging files: {ex.Message}");
-                return;
-            }
-            finally
-            {
-                // Clean up the temporary cache file if it exists
-                if (File.Exists(cachedFile))
-                {
-                    try
-                    {
-                        File.Delete(cachedFile);
-                    }
-                    catch (Exception cleanupEx)
-                    {
-                        Console.WriteLine($"Unable to delete cache file: {cleanupEx.Message}");
-                    }
-                }
-            }
-
-            // Optional: Verify the merged workbook by loading it
-            try
-            {
-                Workbook mergedWorkbook = new Workbook(outputFile);
-                Console.WriteLine($"Merged workbook contains {mergedWorkbook.Worksheets.Count} worksheet(s).");
-            }
-            catch (Exception verifyEx)
-            {
-                Console.WriteLine($"Error verifying merged workbook: {verifyEx.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                MergeLargeXlsFiles.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"An error occurred while merging files: {ex.Message}");
             }
         }
     }

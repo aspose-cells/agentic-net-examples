@@ -1,78 +1,74 @@
-// Title: Implement an ASP.NET Core Web API action that returns Excel-to-HTML conversion as a string using Aspose.Cells
-// AI Prompts: Write an ASP.NET Core controller method that loads an uploaded Excel file with Aspose.Cells, configures HtmlSaveOptions to export only the first worksheet and embed images as Base64, then returns the generated HTML string in the HTTP response. | Refactor the console example into a Web API endpoint that accepts a file path parameter, converts the workbook to HTML via a MemoryStream, and sends the HTML content back without creating a physical file. | Demonstrate how to set HtmlSaveOptions (ExportActiveWorksheetOnly, ExportImagesAsBase64) and use Workbook.Save to a MemoryStream for returning HTML from a .NET Web API.
-// Common Searches: asp.net core web api convert excel file to html string using aspose.cells | return html from excel workbook in asp.net core controller | aspose.cells htmlsaveoptions export active worksheet only base64 images | memorystream excel to html conversion asp.net core endpoint | how to send excel to html conversion result as response body in .net api
-// Tags: aspnet core aspose.cells html conversion endpoint | export active worksheet to html memory stream | embed excel images as base64 in html output | return html string from workbook in web api | htmlsaveoptions exportactiveworksheetonly aspose.cells
+// Title: Create an ASP.NET Core Web API endpoint that uses Aspose.Cells to convert an Excel file to an HTML string and returns it as the response
+// AI Prompts: Write a C# ASP.NET Core controller action that receives an uploaded Excel file or a file path, invokes a helper method to convert it to HTML with Aspose.Cells, and returns the HTML string with the Content-Type set to text/html. | Generate code that adds robust error handling to the API endpoint so that a missing or invalid file returns a 400 Bad Request and any conversion exception returns a 500 Internal Server Error with a clear message. | Show how to configure HtmlSaveOptions (ExportImagesAsBase64 = true) and stream the resulting HTML directly from the controller without persisting a temporary file.
+// Common Searches: asp.net core web api convert excel to html using aspose.cells | return html string from asp.net core controller after excel conversion | how to set HtmlSaveOptions ExportImagesAsBase64 in asp.net core api | c# endpoint that accepts uploaded .xlsx and returns html response | asp.net core return 400 when excel file path is missing
+// Tags: Aspose.Cells Excel to HTML conversion in ASP.NET Core | Web API endpoint returning HTML string | HtmlSaveOptions ExportImagesAsBase64 usage | C# memory stream HTML output from workbook | Error handling for file not found in ASP.NET Core API | Upload Excel file and stream HTML response
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace MyExcelApp
+namespace MyApp
 {
-    // Loads an Excel workbook, configures HtmlSaveOptions to export only the first worksheet and embed images as Base64, saves to a MemoryStream, reads the stream into a string, and returns the HTML string from a Web API action.
+    // The example shows how to load an Excel workbook with Aspose.Cells, configure HtmlSaveOptions to embed images as Base64, save the workbook to a MemoryStream in HTML format, read the stream into a UTF‑8 string, and expose this conversion through an ASP.NET Core Web API action that returns the HTML string as the HTTP response, with proper error handling for missing files and conversion failures.
+    public static class ExcelConverter
+    {
+        // Converts an Excel file to an HTML string.
+        public static string ConvertExcelToHtml(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("File path must be provided.", nameof(filePath));
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Excel file not found.", filePath);
+
+            try
+            {
+                // Load the workbook from the specified file.
+                var workbook = new Workbook(filePath);
+
+                // Set HTML save options.
+                var htmlOptions = new HtmlSaveOptions
+                {
+                    ExportImagesAsBase64 = true
+                };
+
+                // Save to a memory stream in HTML format using the options.
+                using var memoryStream = new MemoryStream();
+                workbook.Save(memoryStream, htmlOptions);
+                memoryStream.Position = 0;
+
+                // Read and return the HTML content.
+                using var reader = new StreamReader(memoryStream, Encoding.UTF8);
+                return reader.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                // Wrap any exception for the caller.
+                throw new InvalidOperationException("Failed to convert Excel to HTML.", ex);
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect the first argument to be the Excel file path.
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: MyExcelApp <excelFilePath> [outputHtmlPath]");
+                Console.WriteLine("Usage: ExcelConverter <excelFilePath>");
                 return;
             }
 
-            string excelPath = args[0];
-
-            // Verify the Excel file exists.
-            if (!File.Exists(excelPath))
-            {
-                Console.WriteLine($"Error: File not found - {excelPath}");
-                return;
-            }
-
-            // Determine output HTML path.
-            string outputPath = args.Length > 1 ? args[1] : Path.ChangeExtension(excelPath, ".html");
-
+            var filePath = args[0];
             try
             {
-                // Load the workbook.
-                var workbook = new Workbook(excelPath);
-
-                // Configure HTML save options.
-                var htmlOptions = new HtmlSaveOptions
-                {
-                    ExportActiveWorksheetOnly = true,   // Export only the first worksheet.
-                    ExportImagesAsBase64 = true         // Embed images directly.
-                    // Default chart image format is PNG; other options are not required.
-                };
-
-                // Save the workbook to a memory stream in HTML format.
-                string htmlContent;
-                using (var memoryStream = new MemoryStream())
-                {
-                    workbook.Save(memoryStream, htmlOptions);
-                    memoryStream.Position = 0;
-                    using (var reader = new StreamReader(memoryStream))
-                    {
-                        htmlContent = reader.ReadToEnd();
-                    }
-                }
-
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Write the HTML content to the output file.
-                File.WriteAllText(outputPath, htmlContent);
-                Console.WriteLine($"HTML saved to {outputPath}");
+                string html = ExcelConverter.ConvertExcelToHtml(filePath);
+                Console.WriteLine(html);
             }
             catch (Exception ex)
             {
-                // Handle any errors that occur during processing.
-                Console.WriteLine($"Error processing file: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

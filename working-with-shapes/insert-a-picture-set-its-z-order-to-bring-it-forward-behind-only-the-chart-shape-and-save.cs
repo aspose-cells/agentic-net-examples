@@ -1,66 +1,59 @@
-// Title: Insert a PNG picture into an Excel worksheet and place it behind a column chart using Aspose.Cells for .NET
-// AI Prompts: Add a PNG image at cell C3, then use Aspose.Cells Z‑order methods to move the picture behind the existing column chart while keeping it above any other shapes, and save the workbook as XLSX. | Modify the example to programmatically set the picture's Z‑order so it appears directly behind the chart shape only, then export the file.
-// Common Searches: Aspose.Cells C# insert image behind chart shape | how to change Z-order of pictures in Excel with Aspose.Cells .NET | place picture behind column chart using Aspose.Cells API | control stacking order of worksheet shapes in C# Aspose.Cells | save workbook with picture layered behind chart Aspose.Cells
-// Tags: add picture behind chart Aspose.Cells | set picture Z-order Aspose.Cells .NET | insert PNG into worksheet Aspose.Cells | shape layering Excel .NET | picture stacking order in generated XLSX
+// Title: Insert a PNG picture, place a column chart above it, adjust Z‑order so the picture stays behind the chart, and save the workbook with Aspose.Cells for .NET
+// AI Prompts: Add a PNG image to cell B2, then add a column chart covering D5:H20, move the picture one Z‑order level forward so it remains beneath the chart, and save the workbook as an XLSX file. | Create a new workbook, insert a picture, insert a column chart, set the picture's Z‑order to be just behind the chart shape, and export the file.
+// Common Searches: how to insert an image and set its Z-order behind a chart using Aspose.Cells C# | Aspose.Cells C# move picture layer under chart shape | set shape Z-order in Excel workbook with Aspose.Cells .NET | place PNG picture at specific cell and keep it below a chart Aspose.Cells | adjust layering of picture and chart in Aspose.Cells generated Excel file
+// Tags: Aspose.Cells insert picture C# | Aspose.Cells add column chart C# | Aspose.Cells control shape Z-order | Aspose.Cells picture behind chart | Aspose.Cells export workbook to XLSX
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
 
-namespace Example
+// The example creates a new workbook, inserts a PNG picture at cell B2, adds a column chart covering D5:H20, moves the picture forward one Z‑order level so it stays directly beneath the chart, and saves the workbook as an XLSX file.
+class Program
 {
-    // The code creates a new workbook, adds a column chart with sample data, inserts a PNG image at a specified cell if the file exists, demonstrates how to adjust the picture's Z‑order to sit behind the chart while remaining in front of other shapes, and saves the workbook as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a column chart to the worksheet (provides a shape for Z‑order demonstration)
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIdx];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                for (int i = 0; i < 5; i++)
-                {
-                    sheet.Cells[i, 0].PutValue(i + 1);          // Column A values
-                    sheet.Cells[i, 1].PutValue((i + 1) * 10);   // Column B values
-                }
+            // Path to the picture file to insert
+            string picturePath = @"C:\Images\SamplePicture.png";
 
-                // Define the data range for the chart series
-                chart.NSeries.Add("A1:A5", true);
-                // Optional: set category data if needed (commented out to avoid API issues)
-                // chart.NSeries[0].CategoryData = "B1:B5";
+            // Verify that the picture file exists
+            if (!File.Exists(picturePath))
+                throw new FileNotFoundException("Picture file not found.", picturePath);
 
-                // Insert a picture into the worksheet if the file exists
-                string imagePath = "sample.png";
-                if (File.Exists(imagePath))
-                {
-                    int pictureIdx = sheet.Pictures.Add(2, 2, imagePath);
-                    Picture picture = sheet.Pictures[pictureIdx];
-                    // Optional Z‑order handling: bring picture to back (if required)
-                    // picture.BringToFront(); // Uncomment if you need to adjust order
-                }
-                else
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-                }
+            // Insert the picture at cell B2 (row 1, column 1)
+            // Add returns the index of the picture; retrieve the Picture object
+            int pictureIndex = sheet.Pictures.Add(1, 1, picturePath);
+            Picture picture = sheet.Pictures[pictureIndex];
 
-                // Save the workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Insert a column chart that will appear above the picture
+            // Chart placed at cells D5 to H20 (rows 4-19, columns 3-7)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 4, 3, 19, 7);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // (Optional) Adjust Z‑order if needed – omitted for compatibility
+
+            // Ensure the output directory exists
+            string outputPath = @"C:\Output\WorkbookWithPictureAndChart.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

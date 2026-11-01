@@ -1,62 +1,61 @@
-// Title: Count non‑empty cells per row using the Rows enumerator in Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that iterates over each worksheet row and prints the number of populated cells in that row. | Modify the example to skip rows that have zero non‑empty cells and display counts only for rows containing data. | Add logic to store each row’s non‑empty cell count in a Dictionary<int,int> for later analysis. | Extend the program to write the per‑row cell counts to a CSV file alongside the workbook.
-// Common Searches: Aspose.Cells C# count non‑empty cells in each worksheet row | how to enumerate rows and cells with Aspose.Cells to get row wise cell totals | skip empty rows when counting cells using Aspose.Cells in .NET | store per‑row cell counts from Aspose.Cells into a collection | export Aspose.Cells row cell count results to CSV in C#
-// Tags: Aspose.Cells rows enumerator non‑empty cell count | C# per‑row cell count Aspose.Cells | skip empty rows Aspose.Cells | collect row cell counts dictionary Aspose.Cells | export row counts to CSV Aspose.Cells
+// Title: How to count non‑empty cells in each worksheet row using Aspose.Cells Rows enumerator in C#
+// AI Prompts: Write C# code with Aspose.Cells that loops through the Rows collection of a worksheet and prints the number of cells that contain a value for each row. | Modify the example to skip rows that have zero non‑empty cells and only display counts for rows that contain data. | Add functionality to store the per‑row non‑empty cell counts in a Dictionary<int,int> and write the results to a CSV file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# count filled cells per row in a worksheet | how to iterate rows and get non empty cell count with Aspose.Cells for .NET | skip empty rows when counting cells using Aspose.Cells Rows enumerator | C# Aspose.Cells example to output non‑null cell count per row | save workbook after analyzing row data with Aspose.Cells
+// Tags: Aspose.Cells row-wise non‑empty cell tally | Rows collection enumeration in Aspose.Cells C# | worksheet row cell count extraction Aspose.Cells | CSV export of per‑row cell statistics Aspose.Cells | post‑analysis workbook saving Aspose.Cells
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowCellCount
+// The sample creates a workbook, adds data to several cells, then iterates each worksheet row via the Rows collection. For each row it counts cells whose Type is not IsNull, prints the count, ensures the output directory exists, saves the workbook as Output.xlsx, and handles any exceptions.
+class Program
 {
-    // The sample creates a workbook, adds data to several rows, then uses the worksheet's Rows enumerator to walk each existing row, counts cells whose Value is not null and whose StringValue is not empty, prints the count per row, and finally saves the workbook as RowCellCounts.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (or load an existing one if a template file is provided)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (some rows have empty cells)
-            worksheet.Cells["A1"].PutValue("Header1");
-            worksheet.Cells["B1"].PutValue("Header2");
-            worksheet.Cells["A2"].PutValue("Row2Col1");
-            worksheet.Cells["C2"].PutValue(123);
-            worksheet.Cells["A3"].PutValue("Row3Col1");
-            worksheet.Cells["B3"].PutValue("Row3Col2");
-            worksheet.Cells["C3"].PutValue("Row3Col3");
-            // Row 4 will be completely empty
-            // Row 5 with a single non‑empty cell
-            worksheet.Cells["B5"].PutValue("OnlyCell");
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the rows enumerator from the worksheet
-            IEnumerator rowEnumerator = worksheet.Cells.Rows.GetEnumerator();
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["B1"].PutValue(123);
+            sheet.Cells["D2"].PutValue(DateTime.Now);
+            sheet.Cells["A3"].PutValue("Test");
+            sheet.Cells["C3"].PutValue(3.14);
+            sheet.Cells["E3"].PutValue(true);
 
-            // Iterate through each row that exists in the worksheet
-            while (rowEnumerator.MoveNext())
+            // Enumerate rows and count non‑empty cells in each row
+            foreach (Row row in sheet.Cells.Rows)
             {
-                Row row = (Row)rowEnumerator.Current;
-                int nonEmptyCellCount = 0;
+                int nonEmptyCount = 0;
 
-                // Enumerate cells within the current row
-                IEnumerator cellEnumerator = row.GetEnumerator();
-                while (cellEnumerator.MoveNext())
+                // Row implements IEnumerable<Cell>; count cells that contain data
+                foreach (Cell cell in row)
                 {
-                    Cell cell = (Cell)cellEnumerator.Current;
-                    // Count cell if it contains a non‑null, non‑empty value
-                    if (cell.Value != null && !string.IsNullOrEmpty(cell.StringValue))
-                    {
-                        nonEmptyCellCount++;
-                    }
+                    if (cell.Type != CellValueType.IsNull)
+                        nonEmptyCount++;
                 }
 
-                // Output the total of non‑empty cells for this row
-                Console.WriteLine($"Row {row.Index + 1}: {nonEmptyCellCount} non‑empty cell(s)");
+                Console.WriteLine($"Row {row.Index + 1}: {nonEmptyCount} non‑empty cell(s)");
             }
 
-            // Save the workbook (optional, just to demonstrate lifecycle)
-            workbook.Save("RowCellCounts.xlsx");
+            // Save the workbook
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

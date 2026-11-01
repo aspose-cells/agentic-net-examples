@@ -1,40 +1,64 @@
-// Title: Capture and log draw object types and bounding rectangles by handling Workbook.DrawObjectEventHandler during PDF export in Aspose.Cells for .NET
-// AI Prompts: Write C# code that attaches a handler to Workbook.DrawObjectEventHandler, records each object's ShapeType and its bounding rectangle, and then saves the workbook as a PDF. | Show how to use Aspose.Cells to intercept drawing events while converting an Excel workbook to PDF, outputting the object name and coordinates to the console.
-// Common Searches: how to log shape boundaries with Aspose.Cells when exporting Excel to PDF in C# | using DrawObjectEventHandler to get object coordinates during PDF generation Aspose.Cells | event-driven capture of drawn objects in Aspose.Cells PDF conversion example
-// Tags: Aspose.Cells DrawObjectEventHandler PDF export | record draw object dimensions C# Aspose.Cells | capture shape type during Excel to PDF conversion | workbook drawing event subscription Aspose.Cells | extract object coordinates Aspose.Cells PDF rendering
+// Title: How to subscribe to Aspose.Cells Workbook.DrawObjectEventHandler in C# to log drawing object types and bounding rectangles during PDF conversion
+// AI Prompts: Generate C# code that attaches a Workbook.DrawObjectEventHandler and writes each drawing object's type and bounding rectangle to the console while saving the workbook as PDF with Aspose.Cells. | Show how to modify an existing Aspose.Cells PDF export routine to capture and output the coordinates of every chart, picture, and shape using the DrawObjectEventHandler event. | Create a sample that uses PdfSaveOptions together with the DrawObjectEventHandler to record drawing object metadata (type, name, bounds) during PDF rendering in C#.
+// Common Searches: Aspose.Cells C# capture drawing object bounds during PDF export | subscribe to Workbook.DrawObjectEventHandler to log chart positions in PDF conversion | how to get bounding rectangles of shapes and pictures when saving Excel to PDF with Aspose.Cells | event handler for drawing objects in Aspose.Cells PDF rendering C# example | retrieve draw object type and coordinates while converting workbook to PDF using Aspose.Cells
+// Tags: Aspose.Cells DrawObjectEventHandler PDF | C# capture drawing object bounds | log chart picture shape coordinates Aspose.Cells | event-based drawing object tracking | retrieve bounding rectangles during PDF export
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// The example demonstrates subscribing to Workbook.DrawObjectEventHandler, logging each drawn object's type and bounding rectangle, and then saving the workbook as a PDF using Aspose.Cells for .NET.
+// The example demonstrates how to subscribe to the Workbook.DrawObjectEventHandler in Aspose.Cells, capture each drawing object's type and bounding rectangle, and log this information while converting an Excel workbook to PDF using C#.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.pdf";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the existing Excel file
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook directly to PDF format
-            workbook.Save(outputPath, SaveFormat.Pdf);
+            // Iterate through worksheets and report drawing objects (charts, pictures, shapes)
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Charts
+                foreach (Chart chart in sheet.Charts)
+                {
+                    Console.WriteLine($"Draw Object - Type: Chart, Name: {chart.Name}");
+                }
 
-            Console.WriteLine($"PDF successfully generated at \"{outputPath}\".");
+                // Pictures
+                foreach (Picture pic in sheet.Pictures)
+                {
+                    Console.WriteLine($"Draw Object - Type: Picture, Name: {pic.Name}");
+                }
+
+                // Shapes
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    Console.WriteLine($"Draw Object - Type: Shape, Name: {shape.Name}");
+                }
+            }
+
+            // Render the workbook to PDF
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

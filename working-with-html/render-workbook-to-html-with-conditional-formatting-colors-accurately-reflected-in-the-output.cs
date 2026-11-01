@@ -1,14 +1,13 @@
-// Title: Convert an Excel workbook to a single HTML file while preserving conditional formatting colors using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx file, enables HtmlSaveOptions.ExportConditionalFormatting and ExportSingleFile, embeds images as Base64, and saves the workbook as one HTML document. | Show how to detect and set the ExportConditionalFormatting and ExportSingleFile properties at runtime to ensure conditional formatting colors appear correctly in the generated HTML.
-// Common Searches: how to keep conditional formatting colors when exporting Excel to HTML with Aspose.Cells C# | Aspose.Cells HtmlSaveOptions ExportSingleFile example | C# convert .xlsx to single HTML file preserving conditional formatting | export conditional formatting icons as base64 in Aspose.Cells HTML output | save workbook as HTML with conditional formatting using Aspose.Cells .NET
-// Tags: Aspose.Cells HtmlSaveOptions ExportConditionalFormatting | Aspose.Cells ExportSingleFile single HTML output | C# embed images as Base64 Aspose.Cells HTML | Excel conditional formatting colors HTML export | Aspose.Cells HTML conversion with conditional formatting
+// Title: Convert an Excel workbook to self‑contained HTML while preserving conditional formatting colors using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# export Excel to HTML with conditional formatting colors retained | How to keep conditional format font color when saving workbook as HTML in .NET | C# example for converting .xlsx to HTML with conditional formatting using Aspose.Cells | HtmlSaveOptions preserve cell style colors Aspose.Cells C# | Render Excel conditional formatting in HTML output with Aspose.Cells
+// Tags: Aspose.Cells HTML export preserving conditional formatting | C# workbook to HTML conversion with style retention | HtmlSaveOptions self-contained HTML output | conditional formatting color support in Aspose.Cells HTML | Excel to HTML conversion using Aspose.Cells .NET
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample loads an input.xlsx workbook, configures HtmlSaveOptions to embed images as Base64, dynamically enables ExportConditionalFormatting and ExportSingleFile when available, and saves the workbook as a single output.html file that retains the original conditional formatting colors.
+// The sample creates or loads an Excel file, adds a conditional formatting rule that colors the font red for values greater than 200, and saves the workbook as a self‑contained HTML document using Aspose.Cells HtmlSaveOptions with ExportImagesAsBase64 enabled, ensuring the conditional formatting colors appear correctly in the HTML.
 class Program
 {
     static void Main()
@@ -18,40 +17,39 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.html";
 
-            // Ensure the input file exists before loading
+            // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                var wb = new Workbook();
+                var ws = wb.Worksheets[0];
+                ws.Cells["A1"].PutValue("Sample Data");
+                ws.Cells["A2"].PutValue(123);
+                ws.Cells["A3"].PutValue(456);
+
+                // Add a simple conditional format for demonstration.
+                int cfIndex = ws.ConditionalFormattings.Add();
+                var cf = ws.ConditionalFormattings[cfIndex];
+                // Add a condition: cell value > 200
+                int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "200", null);
+                var condition = cf[conditionIndex];
+                condition.Style.Font.Color = Color.Red;
+
+                wb.Save(inputPath);
             }
 
-            // Load the workbook
+            // Load the source workbook.
             Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            // Configure HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Export images (including conditional formatting icons) as Base64 strings
+                // Embed images as Base64 to keep the HTML self‑contained.
                 ExportImagesAsBase64 = true
             };
 
-            // Set ExportConditionalFormatting if the property exists in the current version
-            var exportCfProp = typeof(HtmlSaveOptions).GetProperty("ExportConditionalFormatting");
-            if (exportCfProp != null && exportCfProp.CanWrite)
-            {
-                exportCfProp.SetValue(htmlOptions, true);
-            }
-
-            // Set ExportSingleFile if the property exists in the current version
-            var exportSingleProp = typeof(HtmlSaveOptions).GetProperty("ExportSingleFile");
-            if (exportSingleProp != null && exportSingleProp.CanWrite)
-            {
-                exportSingleProp.SetValue(htmlOptions, true);
-            }
-
-            // Save the workbook as HTML with the specified options
+            // Save the workbook as HTML.
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+            Console.WriteLine($"Workbook successfully converted to HTML: {outputPath}");
         }
         catch (Exception ex)
         {

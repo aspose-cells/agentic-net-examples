@@ -1,14 +1,13 @@
-// Title: Case‑insensitive search for a keyword across all workbook‑scoped named ranges using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that scans every workbook‑scoped named range and returns the range name, reference address, and the first cell containing the word "invoice" (case‑insensitive). | Adapt the example to collect all cells that contain the search term within each named range instead of stopping after the first match. | Create a reusable method that accepts a workbook file path and a search term, then outputs a list of named ranges with matching cells using Aspose.Cells.
-// Common Searches: aspocells c# find text in workbook scoped named ranges case insensitive | how to list Excel named ranges that contain a specific word using Aspose.Cells | search for keyword in all named ranges of an .xlsx file with Aspose.Cells .NET | retrieve cell address of matching text inside a named range using Aspose.Cells C#
-// Tags: case-insensitive search in workbook scoped named ranges Aspose.Cells | enumerate named ranges and extract matching cells C# | keyword lookup within Excel named ranges using Aspose.Cells | retrieve matching cell address from named range Aspose.Cells | Aspose.Cells .xlsx named range text search
+// Title: Find cells containing the word “invoice” in workbook‑scoped named ranges with a case‑insensitive search using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells how to locate cells with specific text in workbook scoped named ranges | case insensitive string search across all named ranges in an Excel file using Aspose.Cells | retrieve addresses of cells that contain 'invoice' within named ranges with Aspose.Cells .NET | enumerate workbook scoped names and search for a keyword in Aspose.Cells C# | search for a word in Excel named ranges without caring about case using Aspose.Cells
+// Tags: case-insensitive text search in workbook scoped named ranges Aspose.Cells | enumerate workbook scoped names C# Aspose.Cells | collect cell addresses from named ranges Aspose.Cells | filter string cells in Excel workbook Aspose.Cells | iterate named range cells Aspose.Cells C#
 
 using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-// The program loads "input.xlsx", iterates through each workbook‑scoped named range, scans its cells for the string "invoice" using a case‑insensitive comparison, and records the named range name, its reference address, and the first matching cell's address.
+// The example loads an Excel workbook, iterates through every workbook‑scoped named range, examines each string cell, performs a case‑insensitive comparison for the word "invoice", records matching cell addresses together with their worksheet names, and outputs the results.
 class Program
 {
     static void Main()
@@ -17,20 +16,20 @@ class Program
         {
             const string inputPath = "input.xlsx";
 
-            // Ensure the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            string searchTerm = "invoice";
-            var matches = new List<string>();
+            // List to collect addresses of cells that contain the word "invoice"
+            List<string> matches = new List<string>();
 
-            // Iterate over all workbook‑scoped named ranges
+            // Iterate over all named ranges in the workbook
             foreach (Name name in workbook.Worksheets.Names)
             {
                 // Get the range that the name refers to
@@ -39,31 +38,34 @@ class Program
                 // Scan each cell in the range
                 foreach (Cell cell in range)
                 {
+                    // Check only string cells
                     if (cell.Type == CellValueType.IsString)
                     {
-                        string cellText = cell.StringValue;
-                        if (cellText.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
+                        string value = cell.StringValue;
+                        // Case‑insensitive search for "invoice"
+                        if (!string.IsNullOrEmpty(value) &&
+                            value.IndexOf("invoice", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            matches.Add($"Name: {name.Text}, Address: {range.RefersTo}, Cell: {cell.Name}");
-                            break; // stop scanning this range after the first match
+                            // Record the cell address with its sheet name
+                            matches.Add($"{cell.Name} (Sheet: {cell.Worksheet.Name})");
                         }
                     }
                 }
             }
 
             // Output the results
-            Console.WriteLine("Workbook‑scoped named ranges containing the word \"invoice\" (case‑insensitive):");
-            foreach (string result in matches)
+            Console.WriteLine("Cells containing the word \"invoice\" (case‑insensitive) in workbook‑scoped named ranges:");
+            foreach (string address in matches)
             {
-                Console.WriteLine(result);
+                Console.WriteLine(address);
             }
 
-            // Save the workbook if further processing is required
+            // If you need to save any changes, uncomment the line below
             // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

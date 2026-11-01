@@ -1,91 +1,82 @@
-// Title: Batch add a .crtx chart template to multiple Excel workbooks with Aspose.Cells for .NET
-// AI Prompts: Write C# code that reads a .crtx file into a byte array, iterates over a collection of .xlsx files, inserts the chart template into the first worksheet of each workbook, assigns a custom chart title, and saves the workbooks. | Show how to use Aspose.Cells Workbook and Worksheet APIs to apply a predefined chart template to several Excel files in one run, specifying the data range and chart placement programmatically.
-// Common Searches: how to apply a .crtx chart template to multiple Excel files using Aspose.Cells C# | batch insert chart template into several workbooks with Aspose.Cells .NET | C# loop through Excel workbooks and add chart from template file | Aspose.Cells add chart from .crtx to first worksheet of each workbook
-// Tags: Aspose.Cells batch chart template insertion | chart template byte array loading C# | Charts.Add method with template Aspose.Cells | apply chart template to multiple .xlsx files | set custom chart title Aspose.Cells C#
+// Title: Add the same column chart to multiple Excel workbooks and overwrite them using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads each .xlsx file from a supplied list, inserts a column chart with a fixed data range on the first worksheet, sets a custom title and legend, and saves the workbook back to its original location using Aspose.Cells. | Create a .NET batch routine that iterates over a collection of workbook paths, applies a predefined column chart template to each workbook's first sheet, and overwrites the existing files with the updated version.
+// Common Searches: how to add the same chart to many Excel files using Aspose.Cells C# | batch process Excel workbooks to insert a column chart Aspose.Cells | C# loop to add column chart to multiple .xlsx files and save changes | Aspose.Cells add chart to first worksheet programmatically | overwrite existing Excel workbook after adding chart with Aspose.Cells
+// Tags: add column chart to multiple workbooks Aspose.Cells | batch chart insertion .NET Excel | programmatic chart data range Aspose.Cells | overwrite original workbook after chart Aspose.Cells | iterate workbook list Aspose.Cells C#
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// // This C# program reads a .crtx chart template into a byte array, loops through an array of .xlsx workbook paths, adds the template as a chart to the first worksheet of each workbook with a defined data range and position, sets a custom chart title, and saves the updated workbooks.
-class AddChartTemplateToWorkbooks
+// The example iterates over a list of Excel file paths, loads each workbook with Aspose.Cells, adds a column chart to the first worksheet using a predefined data range, customizes the chart title and legend, and saves the workbook back to the original file, effectively overwriting it.
+class Program
 {
     static void Main()
     {
-        // Paths to the workbooks that need the chart template applied
-        string[] workbookFiles = new string[]
+        // Collection of workbook file paths to process
+        List<string> workbookPaths = new List<string>
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx"
+            @"C:\Workbooks\Report1.xlsx",
+            @"C:\Workbooks\Report2.xlsx",
+            // add more paths as needed
         };
 
-        const string templatePath = "ChartTemplate.crtx";
-
-        // Verify that the chart template file exists
-        if (!File.Exists(templatePath))
+        foreach (string path in workbookPaths)
         {
-            Console.WriteLine($"Template file not found: {templatePath}");
-            return;
-        }
-
-        // Load the chart template file (.crtx) into a byte array
-        byte[] chartTemplateData;
-        try
-        {
-            chartTemplateData = File.ReadAllBytes(templatePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error reading template file: {ex.Message}");
-            return;
-        }
-
-        // Define the data range that the chart will use (adjust as needed)
-        const string dataRange = "A1:B5";
-
-        // Define the position of the chart within the worksheet
-        const int topRow = 5;
-        const int leftColumn = 0;
-        const int bottomRow = 20;
-        const int rightColumn = 8;
-
-        foreach (string filePath in workbookFiles)
-        {
-            // Verify that the workbook file exists before loading
-            if (!File.Exists(filePath))
+            // Verify that the file exists before attempting to load
+            if (!File.Exists(path))
             {
-                Console.WriteLine($"Workbook file not found, skipping: {filePath}");
+                Console.WriteLine($"File not found: {path}");
                 continue;
             }
 
             try
             {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(filePath);
+                // Load the workbook
+                Workbook workbook = new Workbook(path);
 
-                // Use the first worksheet (or modify to select a specific one)
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Get the first worksheet (or specify the target worksheet)
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a chart using the preset template
-                int chartIndex = worksheet.Charts.Add(
-                    chartTemplateData,   // Template byte array
-                    dataRange,           // Data range for the chart
-                    true,                // Plot series by column (vertical)
-                    topRow, leftColumn, bottomRow, rightColumn);
+                // Define the position and size of the chart (in cells)
+                int upperLeftRow = 5;      // row index where chart starts
+                int upperLeftColumn = 1;   // column index where chart starts
+                int height = 15;           // number of rows the chart occupies
+                int width = 10;            // number of columns the chart occupies
 
-                // Optional: customize the newly added chart
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.Title.Text = "Chart from Template";
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, upperLeftRow, upperLeftColumn, height, width);
+                Chart chart = sheet.Charts[chartIndex];
 
-                // Save the workbook (overwrites the original file)
-                workbook.Save(filePath);
-                Console.WriteLine($"Chart added and workbook saved: {filePath}");
+                // Set chart title
+                chart.Title.Text = "Sales Summary";
+
+                // Example data range for the chart (adjust to your data layout)
+                // Assuming data is in A1:B5 (A column = categories, B column = values)
+                int dataFirstRow = 0;
+                int dataFirstColumn = 0;
+                int dataLastRow = 4;
+                int dataLastColumn = 1;
+
+                // Build the range string (e.g., Sheet1!$A$1:$B$5)
+                string range = $"{sheet.Name}!${CellsHelper.ColumnIndexToName(dataFirstColumn)}${dataFirstRow + 1}:${CellsHelper.ColumnIndexToName(dataLastColumn)}${dataLastRow + 1}";
+
+                // Add a series to the chart using the data range
+                int seriesIndex = chart.NSeries.Add(range, true);
+                chart.NSeries[seriesIndex].Name = "Quarterly Sales";
+
+                // Optional: customize axes, legend, etc.
+                chart.ShowLegend = true;
+                chart.Legend.Position = LegendPositionType.Right;
+
+                // Save changes back to the original file
+                workbook.Save(path, SaveFormat.Xlsx);
+                Console.WriteLine($"Chart added and workbook saved: {path}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook '{filePath}': {ex.Message}");
+                Console.WriteLine($"Error processing file '{path}': {ex.Message}");
             }
         }
     }

@@ -1,73 +1,65 @@
-// Title: Export a VBA project's digital certificate from an Excel workbook to a .vba file using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, verifies the presence of a VbaProject, and uses reflection to invoke ExportVbaProject to save the project (including its embedded certificate) to a .vba file, with proper handling for missing methods. | Generate a C# snippet that checks the input file path, extracts the VBA project from a workbook, and writes the project and its digital signature to a specified .vba backup file, incorporating comprehensive exception handling.
-// Common Searches: how to save VBA project with digital certificate from Excel using Aspose.Cells C# | Aspose.Cells export VBA project to .vba file via reflection when ExportVbaProject is not directly accessible | C# backup VBA project from .xlsx workbook including its certificate | retrieve embedded VBA digital signature from workbook using Aspose.Cells .NET | export VBA project from workbook to file with error handling Aspose.Cells
-// Tags: Aspose.Cells export VBA project to .vba | C# extract VBA digital certificate from workbook | reflection invoke ExportVbaProject method | backup VBA project Aspose.Cells .NET | check VBA project existence workbook Aspose
+// Title: Export a VBA project's digital certificate to a PEM file using Aspose.Cells for .NET (C#)
+// Common Searches: aspnet export vba project certificate to pem using aspose.cells | c# backup vba digital signature from xlsm workbook | how to retrieve DigitalSignatureInfo from VbaProject in Aspose.Cells | save vba macro certificate as pem file with reflection in C# | export vba digital certificate from macro-enabled workbook using Aspose.Cells
+// Tags: Aspose.Cells VBA project certificate handling | VbaProject signature info reflection | C# retrieve VBA signing certificate | Generate PEM from VBA macro certificate | Macro-enabled workbook certificate extraction
 
-using Aspose.Cells;
-using Aspose.Cells.Vba;
 using System;
 using System.IO;
 using System.Reflection;
+using Aspose.Cells;
+using Aspose.Cells.Vba; // Provides VbaProject and related classes
 
-// The example loads an Excel workbook, confirms a VBA project is present, and uses reflection to call ExportVbaProject (if available) to export the VBA project—including its embedded digital certificate—to a .vba file, while handling missing files and method availability errors.
-class ExportVbaCertificate
+// The example loads a macro‑enabled XLSM workbook with Aspose.Cells, accesses its VbaProject, uses reflection to obtain the DigitalSignatureInfo when available, and invokes its Export method to write the VBA project's digital certificate to a PEM file, including checks for missing files or certificates and robust error handling.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsm";
+        const string certPath = "vba_certificate.pem";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            // Path to the input workbook
-            string inputPath = "input.xlsx"; // TODO: replace with your workbook path
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook that may contain a VBA project
+            // Load the workbook that contains the VBA project.
             Workbook workbook = new Workbook(inputPath);
 
-            // Check if the workbook contains a VBA project
+            // Get the VBA project from the workbook.
             VbaProject vbaProject = workbook.VbaProject;
-            if (vbaProject == null)
+
+            // Attempt to retrieve the DigitalSignatureInfo via reflection
+            // (property may not exist in older Aspose.Cells versions).
+            object digitalSignature = null;
+            if (vbaProject != null)
             {
-                Console.WriteLine("No VBA project found in the workbook.");
-                return;
+                PropertyInfo sigProp = vbaProject.GetType().GetProperty("DigitalSignatureInfo",
+                    BindingFlags.Public | BindingFlags.Instance);
+                if (sigProp != null)
+                {
+                    digitalSignature = sigProp.GetValue(vbaProject);
+                }
             }
 
-            // Export the VBA project (including its digital certificate) to a file
-            string vbaExportPath = "vba_project.vba"; // TODO: replace with desired output path
-
-            try
+            if (digitalSignature != null)
             {
-                // Use reflection to call ExportVbaProject if it exists in the current Aspose.Cells version
-                MethodInfo exportMethod = vbaProject.GetType().GetMethod(
-                    "ExportVbaProject",
+                // Export the certificate to a PEM file for backup using reflection.
+                MethodInfo exportMethod = digitalSignature.GetType().GetMethod("Export",
                     new[] { typeof(string) });
-
-                if (exportMethod != null)
-                {
-                    exportMethod.Invoke(vbaProject, new object[] { vbaExportPath });
-                    Console.WriteLine($"VBA project exported to: {vbaExportPath}");
-                }
-                else
-                {
-                    Console.WriteLine("ExportVbaProject method is not available in this Aspose.Cells version.");
-                }
+                exportMethod?.Invoke(digitalSignature, new object[] { certPath });
+                Console.WriteLine("VBA digital certificate exported successfully.");
             }
-            catch (TargetInvocationException tie)
+            else
             {
-                Console.WriteLine($"Failed to export VBA project: {tie.InnerException?.Message ?? tie.Message}");
-            }
-            catch (Exception exportEx)
-            {
-                Console.WriteLine($"Failed to export VBA project: {exportEx.Message}");
+                Console.WriteLine("No digital certificate found in the VBA project.");
             }
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

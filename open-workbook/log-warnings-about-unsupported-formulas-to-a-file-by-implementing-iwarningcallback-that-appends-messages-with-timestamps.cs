@@ -1,7 +1,6 @@
-// Title: Log unsupported formula warnings to a file using Aspose.Cells IWarningCallback in C#
-// AI Prompts: Write a C# class that implements Aspose.Cells.IWarningCallback and appends each warning description with a UTC timestamp to a specified log file. | Show how to configure LoadOptions to use the custom warning callback when opening an Excel workbook with Aspose.Cells. | Demonstrate thread‑safe file appending and automatic creation of the log directory inside the warning callback implementation.
-// Common Searches: c# Aspose.Cells capture unsupported formula warnings to a log file | how to implement IWarningCallback for warning logging in Aspose.Cells | timestamped warning entries when loading workbook with Aspose.Cells | thread‑safe warning logger for Aspose.Cells load options | save workbook after attaching custom warning callback Aspose.Cells
-// Tags: Aspose.Cells IWarningCallback logging | unsupported formula warning handling | UTC timestamped warning entries | thread‑safe file append C# | custom warning callback load options
+// Title: How to log unsupported formula warnings to a file with a custom IWarningCallback in Aspose.Cells for .NET
+// Common Searches: c# Aspose.Cells capture formula warnings and write them to a log file | using IWarningCallback to log Excel formula warnings with timestamps in .NET | example of Aspose.Cells warning callback for unsupported formulas | append warning messages to a text file during workbook calculation Aspose.Cells | log Aspose.Cells warning info to a file with custom callback
+// Tags: custom IWarningCallback implementation Aspose.Cells | timestamped warning logging C# | unsupported formula warning capture .NET | Workbook.Settings.WarningCallback usage | log formula warnings to file
 
 using System;
 using System.IO;
@@ -9,94 +8,89 @@ using Aspose.Cells;
 
 namespace AsposeCellsWarningLogger
 {
-    // Implements IWarningCallback to capture warnings during workbook operations.
-    // Implements IWarningCallback to capture warnings during workbook loading, writes each warning with a UTC timestamp to a log file, ensures the log directory exists, uses a lock for thread‑safe appending, and demonstrates loading and saving a workbook with the callback attached.
-    public class FileWarningCallback : IWarningCallback
+    // Implements IWarningCallback to capture warnings during workbook processing
+    // Demonstrates a custom IWarningCallback that records each warning generated while processing a workbook—such as unsupported formulas—into a specified log file, prefixing entries with an ISO‑8601 timestamp. The callback is assigned to Workbook.Settings.WarningCallback before formula calculation and workbook saving.
+    public class FormulaWarningLogger : IWarningCallback
     {
         private readonly string _logFilePath;
 
-        public FileWarningCallback(string logFilePath)
+        public FormulaWarningLogger(string logFilePath)
         {
             _logFilePath = logFilePath;
         }
 
-        // This method is called by Aspose.Cells whenever a warning occurs.
+        // Called for each warning encountered
         public void Warning(WarningInfo info)
         {
-            // Build a log entry with a UTC timestamp and the warning description.
-            string logEntry = $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} - {info.Description}{Environment.NewLine}";
-
-            // Ensure the directory exists.
             try
             {
-                string dir = Path.GetDirectoryName(_logFilePath);
-                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                // Log the warning information (fallback to ToString if specific properties are unavailable)
+                using (var writer = new StreamWriter(_logFilePath, true))
                 {
-                    Directory.CreateDirectory(dir);
-                }
-
-                // Append the entry to the log file. Using a lock to avoid race conditions in multithreaded scenarios.
-                lock (this)
-                {
-                    File.AppendAllText(_logFilePath, logEntry);
+                    writer.WriteLine($"{DateTime.Now:O}: {info}");
                 }
             }
             catch
             {
-                // Swallow any logging exceptions to avoid breaking the main workflow.
+                // Suppress any logging failures
             }
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            // Path to the Excel file to be loaded.
-            string inputFile = "input.xlsx";
-
-            // Path to the warning log file.
-            string warningLogFile = "warnings.log";
-
-            // Verify that the input file exists.
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Input file '{inputFile}' not found.");
-                return;
-            }
-
-            // Set up load options and attach the warning callback.
-            LoadOptions loadOptions = new LoadOptions
-            {
-                WarningCallback = new FileWarningCallback(warningLogFile)
-            };
-
-            Workbook workbook = null;
+            // Paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+            string logPath = "warnings.log";
 
             try
             {
-                // Load the workbook; any unsupported formulas will trigger the callback.
-                workbook = new Workbook(inputFile, loadOptions);
+                // Ensure input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Assign the custom warning callback
+                workbook.Settings.WarningCallback = new FormulaWarningLogger(logPath);
+
+                // Perform workbook operations (e.g., calculations)
+                workbook.CalculateFormula();
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+
+                Console.WriteLine("Workbook processed and saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
-            }
-
-            // (Optional) Perform any workbook processing here.
-
-            // Save the workbook to a new file to demonstrate the full lifecycle.
-            string outputFile = "output.xlsx";
-
-            try
-            {
-                workbook?.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                // Log unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                try
+                {
+                    using (var writer = new StreamWriter(logPath, true))
+                    {
+                        writer.WriteLine($"{DateTime.Now:O}: Exception - {ex}");
+                    }
+                }
+                catch
+                {
+                    // Suppress any logging failures
+                }
             }
         }
     }

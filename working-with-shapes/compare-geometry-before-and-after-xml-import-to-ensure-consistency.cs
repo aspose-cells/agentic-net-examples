@@ -1,103 +1,123 @@
-// Title: Compare worksheet column widths, row heights, and merged cell ranges before and after saving to XML with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an Excel workbook, exports it to XML using Aspose.Cells, reloads the XML into a new Workbook object, and confirms that the layout—including column dimensions, row dimensions, and merged ranges—matches the original. | Create a C# helper method that receives two Aspose.Cells Workbook instances and returns a boolean indicating whether their layout properties are identical within a 0.001 tolerance.
-// Common Searches: asp.net verify worksheet layout after saving to XML with Aspose.Cells | C# ensure column size and row size remain unchanged after Excel XML conversion | check if merged cell areas are retained when importing XML using Aspose.Cells | how to compare two workbooks for geometry consistency in .NET | tolerance settings for geometry comparison in Aspose.Cells C#
-// Tags: Aspose.Cells worksheet geometry comparison | XML export column dimension verification | row dimension tolerance check Aspose.Cells | merged area validation C# | Excel layout integrity after XML import
+// Title: Validate shape positions and dimensions before and after SpreadsheetML export/import using Aspose.Cells for .NET
+// Common Searches: how to compare shape coordinates before and after saving a workbook as XML with Aspose.Cells | C# code to detect shape size changes after SpreadsheetML round‑trip in Aspose.Cells | verify that shapes retain top left height width after exporting to SpreadsheetML using Aspose.Cells | Aspose.Cells shape geometry tolerance check after XML import | list missing or new shapes after loading a workbook from XML in C#
+// Tags: shape geometry comparison Aspose.Cells | SpreadsheetML roundtrip shape position validation | extract shape dimensions worksheet Aspose.Cells | tolerance based shape coordinate check C# | detect missing shapes after XML import Aspose.Cells
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// The program loads or creates an Excel workbook, saves it as XML with Aspose.Cells, reloads the XML into a new workbook, and compares column widths, row heights, and merged cell ranges between the original and imported workbooks using a small floating‑point tolerance.
-class GeometryComparison
+// The example extracts each shape's Top, Left, Height, and Width from the first worksheet, saves the workbook as SpreadsheetML (XML), reloads it, and then compares the original and imported geometries with a small tolerance, reporting any missing, new, or altered shapes.
+class GeometryComparer
 {
-    static void Main(string[] args)
+    // Structure to hold shape geometry
+    private class ShapeGeometry
     {
-        try
+        public string Name { get; set; }
+        public double Top { get; set; }
+        public double Left { get; set; }
+        public double Height { get; set; }
+        public double Width { get; set; }
+
+        public override bool Equals(object obj)
         {
-            string originalPath = "original.xlsx";
-            // Ensure the original file exists; create a simple workbook if it does not.
-            if (!File.Exists(originalPath))
+            if (obj is ShapeGeometry other)
             {
-                Workbook wb = new Workbook();
-                wb.Worksheets[0].Cells["A1"].PutValue("Sample");
-                wb.Save(originalPath);
+                // Allow a small tolerance for floating point differences
+                const double tolerance = 0.001;
+                return Name == other.Name &&
+                       Math.Abs(Top - other.Top) < tolerance &&
+                       Math.Abs(Left - other.Left) < tolerance &&
+                       Math.Abs(Height - other.Height) < tolerance &&
+                       Math.Abs(Width - other.Width) < tolerance;
             }
-
-            // Load the original workbook.
-            Workbook originalWorkbook = new Workbook(originalPath);
-
-            // Export the workbook geometry to an intermediate XML file.
-            string tempPath = "temp.xml";
-            originalWorkbook.Save(tempPath, SaveFormat.Xml);
-
-            // Load a new workbook from the exported XML.
-            Workbook importedWorkbook = new Workbook(tempPath);
-
-            // Compare geometry of the two workbooks.
-            bool isConsistent = CompareGeometry(originalWorkbook, importedWorkbook);
-
-            Console.WriteLine("Geometry consistent: " + isConsistent);
+            return false;
         }
-        catch (Exception ex)
+
+        public override int GetHashCode()
         {
-            Console.WriteLine("Error: " + ex.Message);
+            return HashCode.Combine(Name, Top, Left, Height, Width);
         }
     }
 
-    // Compares column widths, row heights and merged cells for all worksheets.
-    private static bool CompareGeometry(Workbook wb1, Workbook wb2)
+    // Extract geometry of all shapes in the first worksheet
+    private static List<ShapeGeometry> ExtractGeometries(Workbook wb)
     {
-        // Ensure the same number of worksheets.
-        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
-            return false;
-
-        const double tolerance = 0.001; // tolerance for floating‑point comparisons
-
-        for (int sheetIndex = 0; sheetIndex < wb1.Worksheets.Count; sheetIndex++)
+        var geometries = new List<ShapeGeometry>();
+        Worksheet sheet = wb.Worksheets[0];
+        foreach (Shape shape in sheet.Shapes)
         {
-            Worksheet ws1 = wb1.Worksheets[sheetIndex];
-            Worksheet ws2 = wb2.Worksheets[sheetIndex];
-
-            // ----- Compare column widths -----
-            int maxColumn = Math.Max(ws1.Cells.MaxColumn, ws2.Cells.MaxColumn);
-            for (int col = 0; col <= maxColumn; col++)
+            geometries.Add(new ShapeGeometry
             {
-                double width1 = ws1.Cells.GetColumnWidth(col);
-                double width2 = ws2.Cells.GetColumnWidth(col);
-                if (Math.Abs(width1 - width2) > tolerance)
-                    return false;
+                Name = shape.Name,
+                Top = shape.Top,
+                Left = shape.Left,
+                Height = shape.Height,
+                Width = shape.Width
+            });
+        }
+        return geometries;
+    }
+
+    // Compare two geometry collections and report mismatches
+    private static void CompareGeometries(List<ShapeGeometry> before, List<ShapeGeometry> after)
+    {
+        var beforeDict = new Dictionary<string, ShapeGeometry>();
+        foreach (var g in before) beforeDict[g.Name] = g;
+
+        var afterDict = new Dictionary<string, ShapeGeometry>();
+        foreach (var g in after) afterDict[g.Name] = g;
+
+        Console.WriteLine("=== Geometry Comparison Results ===");
+
+        // Check for missing or changed shapes
+        foreach (var kvp in beforeDict)
+        {
+            if (!afterDict.ContainsKey(kvp.Key))
+            {
+                Console.WriteLine($"Shape '{kvp.Key}' missing after import.");
+                continue;
             }
 
-            // ----- Compare row heights -----
-            int maxRow = Math.Max(ws1.Cells.MaxRow, ws2.Cells.MaxRow);
-            for (int row = 0; row <= maxRow; row++)
+            if (!kvp.Value.Equals(afterDict[kvp.Key]))
             {
-                double height1 = ws1.Cells.GetRowHeight(row);
-                double height2 = ws2.Cells.GetRowHeight(row);
-                if (Math.Abs(height1 - height2) > tolerance)
-                    return false;
-            }
-
-            // ----- Compare merged cells -----
-            CellArea[] merged1 = ws1.Cells.GetMergedAreas();
-            CellArea[] merged2 = ws2.Cells.GetMergedAreas();
-
-            if (merged1.Length != merged2.Length)
-                return false;
-
-            for (int i = 0; i < merged1.Length; i++)
-            {
-                string range1 = CellsHelper.CellIndexToName(merged1[i].StartRow, merged1[i].StartColumn) + ":" +
-                                CellsHelper.CellIndexToName(merged1[i].EndRow, merged1[i].EndColumn);
-                string range2 = CellsHelper.CellIndexToName(merged2[i].StartRow, merged2[i].StartColumn) + ":" +
-                                CellsHelper.CellIndexToName(merged2[i].EndRow, merged2[i].EndColumn);
-
-                if (!string.Equals(range1, range2, StringComparison.OrdinalIgnoreCase))
-                    return false;
+                Console.WriteLine($"Shape '{kvp.Key}' geometry changed:");
+                Console.WriteLine($"  Before - Top:{kvp.Value.Top}, Left:{kvp.Value.Left}, Height:{kvp.Value.Height}, Width:{kvp.Value.Width}");
+                var a = afterDict[kvp.Key];
+                Console.WriteLine($"  After  - Top:{a.Top}, Left:{a.Left}, Height:{a.Height}, Width:{a.Width}");
             }
         }
 
-        // All checks passed.
-        return true;
+        // Check for new shapes added after import
+        foreach (var kvp in afterDict)
+        {
+            if (!beforeDict.ContainsKey(kvp.Key))
+            {
+                Console.WriteLine($"New shape '{kvp.Key}' appeared after import.");
+            }
+        }
+
+        Console.WriteLine("=== Comparison Completed ===");
+    }
+
+    static void Main()
+    {
+        // Load the original workbook (replace with your file path)
+        Workbook originalWb = new Workbook("Original.xlsx");
+
+        // Extract geometry before XML export
+        List<ShapeGeometry> beforeGeometries = ExtractGeometries(originalWb);
+
+        // Save the workbook as XML (SpreadsheetML)
+        originalWb.Save("Exported.xml", SaveFormat.Xml);
+
+        // Load the workbook back from the XML file
+        Workbook importedWb = new Workbook("Exported.xml");
+
+        // Extract geometry after XML import
+        List<ShapeGeometry> afterGeometries = ExtractGeometries(importedWb);
+
+        // Compare and output results
+        CompareGeometries(beforeGeometries, afterGeometries);
     }
 }

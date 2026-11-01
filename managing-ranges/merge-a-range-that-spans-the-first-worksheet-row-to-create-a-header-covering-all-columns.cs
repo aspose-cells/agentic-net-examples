@@ -1,12 +1,11 @@
-// Title: Create a centered bold header by merging the first worksheet row across a variable number of columns using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code with Aspose.Cells that merges cells from A1 to the column defined by a variable, writes a header string, centers it, makes the font bold, and saves the workbook. | Show how to programmatically merge the entire first row of a worksheet based on a column count parameter, apply a custom style, and export to an .xlsx file using Aspose.Cells. | Provide a reusable method in C# that accepts a worksheet, column count, and header text, merges the top row, sets a centered bold style, and returns the modified workbook.
-// Common Searches: aspnet merge first row cells into a single header with Aspose.Cells | c# Aspose.Cells dynamic column count for merged header row | how to apply centered bold style to a merged cell in Aspose.Cells .NET | save workbook after merging header row using Aspose.Cells C# example
-// Tags: merge first row cells Aspose.Cells C# | dynamic header merge Aspose.Cells | centered bold style merged cell Aspose.Cells | save merged header workbook Aspose.Cells | worksheet header spanning multiple columns Aspose.Cells
+// Title: Merge the first worksheet row across multiple columns to create a centered header using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# merge first row cells across columns for header | Create a spanning header in Excel with Aspose.Cells .NET | How to set centered bold text in a merged header row using Aspose.Cells | Merge range A1:J1 and apply style with Aspose.Cells C# example | Save workbook after merging first row cells with Aspose.Cells for .NET
+// Tags: merge cells first row Aspose.Cells | spanning header Excel .NET | centered bold header style Aspose.Cells | merge range A1:J1 Aspose.Cells | apply style to merged cell Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// // Merges the first row (A1 to the column defined by totalColumns) into a single cell, inserts "Report Header", centers the text, makes it bold, and saves the workbook as HeaderMerged.xlsx using Aspose.Cells for .NET.
+// The example creates a new workbook, accesses the first worksheet, merges the cells in the first row across the first ten columns (A‑J), inserts "Report Header" into the merged cell, applies centered bold styling, and saves the file as MergedHeader.xlsx.
 class Program
 {
     static void Main()
@@ -14,26 +13,29 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Get the first worksheet
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Define how many columns the header should cover (e.g., 10 columns: A to J)
+        // Define how many columns the header should span.
+        // Here we assume a header covering the first 10 columns (A to J).
         int totalColumns = 10;
 
-        // Merge the cells in the first row across the defined columns (A1 to J1)
+        // Merge the cells in the first row across the defined columns.
+        // Parameters: firstRow, firstColumn, totalRows, totalColumns
         sheet.Cells.Merge(0, 0, 1, totalColumns);
 
-        // Set the header text in the merged cell
+        // Set the header text in the merged cell (top‑left cell of the range)
         sheet.Cells[0, 0].PutValue("Report Header");
 
-        // Optional: Apply a simple style to the header
-        Style headerStyle = workbook.CreateStyle();
-        headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-        headerStyle.Font.IsBold = true;
-        headerStyle.Font.Size = 14;
-        sheet.Cells[0, 0].SetStyle(headerStyle);
+        // Optionally, apply some styling to the header
+        Style style = sheet.Cells[0, 0].GetStyle();
+        style.HorizontalAlignment = TextAlignmentType.Center;
+        style.VerticalAlignment = TextAlignmentType.Center;
+        style.Font.IsBold = true;
+        style.Font.Size = 14;
+        sheet.Cells[0, 0].SetStyle(style);
 
         // Save the workbook to a file
-        workbook.Save("HeaderMerged.xlsx");
+        workbook.Save("MergedHeader.xlsx");
     }
 }

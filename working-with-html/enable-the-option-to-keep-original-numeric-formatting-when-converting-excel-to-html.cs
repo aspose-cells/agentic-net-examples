@@ -1,46 +1,43 @@
-// Title: How to keep original numeric formatting when converting an Excel workbook to HTML with Aspose.Cells for .NET
-// AI Prompts: Write C# code that configures HtmlSaveOptions to retain Excel number formats during HTML export using Aspose.Cells. | Update the sample program to explicitly enable numeric format preservation when saving a workbook as HTML. | Identify the HtmlSaveOptions property that controls number format export and state its default behavior.
-// Common Searches: Aspose.Cells preserve number format Excel to HTML C# example | HtmlSaveOptions keep numeric display unchanged during conversion | C# export Excel workbook to HTML with original number formatting | how to retain Excel cell number formatting in HTML output using Aspose.Cells
-// Tags: Aspose.Cells HtmlSaveOptions numeric format | preserve Excel number formatting HTML conversion | C# export workbook to HTML with original formatting | keep cell numeric display Aspose.Cells | HTML save options retain number formats
+// Title: How to preserve original numeric formatting when converting an Excel workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as HTML, configuring HtmlSaveOptions to keep the workbook's original numeric formats. | Show how to enable the numeric‑format export option in Aspose.Cells HtmlSaveOptions so that numbers retain their Excel formatting in the generated HTML.
+// Common Searches: Aspose.Cells keep original number format when converting Excel to HTML in C# | C# HtmlSaveOptions preserve numeric formatting Aspose.Cells example | how to retain Excel numeric styles in HTML output using Aspose.Cells .NET | export Excel workbook to HTML without losing number formatting Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions numeric format | Excel to HTML numeric formatting C# | preserve number format Aspose.Cells HTML conversion | C# save workbook as HTML with original formatting
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions (which retain numeric formatting by default), and saves the workbook as output.html, handling missing files and runtime errors gracefully.
+class Program
 {
-    // The example checks for the source Excel file, loads it into a Workbook, creates an HtmlSaveOptions object (numeric formats are retained by default), and saves the workbook as HTML, handling any runtime exceptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputFile = "input.xlsx";
-                string outputFile = "output.html";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the source Excel workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Set HTML save options (numeric formats are preserved by default)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(outputFile, htmlOptions);
-                Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options (default settings preserve numeric formatting)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

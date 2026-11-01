@@ -1,7 +1,7 @@
-// Title: Create a PDF from an Excel workbook that retains clickable hyperlinks using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF while keeping all cell hyperlinks functional. | Show how to configure PdfSaveOptions in Aspose.Cells to ensure hyperlink preservation during Excel‑to‑PDF conversion. | Explain steps to verify that hyperlinks remain active in the generated PDF after using Aspose.Cells.
-// Common Searches: how to keep Excel cell links active when converting to PDF with Aspose.Cells C# | Aspose.Cells PDF conversion preserving hyperlinks example | C# save workbook as PDF with clickable URLs using PdfSaveOptions | retain hyperlink functionality in PDF generated from .xlsx using Aspose | Aspose.Cells PDFSaveOptions default hyperlink behavior
-// Tags: Aspose.Cells PDF hyperlink preservation | C# Excel to PDF active links | PdfSaveOptions keep hyperlinks | convert .xlsx to PDF clickable URLs | preserve cell hyperlinks Aspose.Cells
+// Title: Generate a PDF from an Excel workbook in C# with Aspose.Cells while keeping cell hyperlinks clickable
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to keep hyperlinks active, and saves it as a PDF. | Show how to verify an Excel file exists before converting it to PDF using Aspose.Cells, ensuring hyperlinks remain functional in the output. | Demonstrate setting up Aspose.Cells PdfSaveOptions in a .NET console app to preserve clickable URLs when exporting a workbook to PDF.
+// Common Searches: asp.net convert excel to pdf retain hyperlinks Aspose.Cells | c# Aspose.Cells PdfSaveOptions keep hyperlink active in PDF output | how to export workbook to PDF with clickable links using Aspose.Cells .NET | preserve Excel cell URLs when saving as PDF with Aspose.Cells library
+// Tags: Aspose.Cells PDF conversion hyperlink retention | PdfSaveOptions preserve active links | C# Excel to PDF export preserving URLs | Aspose.Cells workbook save as PDF clickable hyperlinks | Excel hyperlink preservation in PDF using .NET
 
 using System;
 using System.IO;
@@ -10,7 +10,7 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsExample
 {
-    // The example loads an existing Excel workbook, creates a PdfSaveOptions object (hyperlinks are preserved by default), and saves the file as a PDF, ensuring that any hyperlinks embedded in the original cells stay clickable in the resulting document.
+    // The example checks that an input .xlsx file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (default settings keep hyperlinks active), and saves the workbook as a PDF, producing a document where all cell hyperlinks remain clickable.
     class Program
     {
         static void Main(string[] args)
@@ -20,28 +20,26 @@ namespace AsposeCellsExample
                 string inputPath = "input.xlsx";
                 string outputPath = "output.pdf";
 
-                // Verify that the input file exists to avoid FileNotFoundException
+                // Verify that the input file exists before loading
                 if (!File.Exists(inputPath))
                 {
                     Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the existing Excel file
+                // Load the Excel workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Configure PDF save options (hyperlinks are preserved by default)
+                // Configure PDF save options (default settings keep hyperlinks active)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
                 // Save the workbook as PDF with the specified options
                 workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

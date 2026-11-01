@@ -1,99 +1,85 @@
-// Title: Find and list Excel cells that use volatile functions with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to scan a workbook and return the addresses of all cells whose formulas contain volatile functions such as NOW, TODAY, RAND, OFFSET, etc. | Extend the example to export the identified volatile‑function cell addresses to a CSV file, including worksheet name and cell reference. | Create a reusable C# method that accepts a Worksheet object and a collection of volatile function names, and returns a list of matching cell names using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to detect formulas with volatile functions like NOW or OFFSET | list cell references that contain volatile Excel functions using Aspose.Cells .NET | C# code to enumerate cells with volatile formulas in an Excel workbook with Aspose.Cells | find volatile function usage in Excel file programmatically with Aspose.Cells for .NET | extract addresses of cells using RAND or TODAY in a workbook via Aspose.Cells C#
-// Tags: detect volatile functions Aspose.Cells C# | enumerate cells with volatile formulas .NET | locate volatile formula cells in Excel workbook | scan workbook for volatile formulas using Aspose.Cells | identify volatile function usage in Excel file C#
+// Title: Identify and list Excel cells that contain volatile functions using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, scans every worksheet, and returns a list of addresses for cells whose formulas include volatile functions such as NOW, TODAY, RAND, OFFSET, etc. | Create a reusable C# method that takes a file path and outputs a dictionary mapping each sheet name to the cell addresses of formulas that use any volatile Excel function. | Extend the sample to also report which specific volatile function was detected in each identified cell together with its address.
+// Common Searches: aspocells c# find cells with volatile formulas in an Excel workbook | list addresses of cells that use NOW or RAND functions using Aspose.Cells .NET | how to detect volatile Excel functions programmatically with Aspose.Cells | iterate used range and check for volatile functions in C# Aspose.Cells example
+// Tags: Aspose.Cells workbook scanning for volatile functions | C# extract cell addresses of volatile formulas | used range traversal Aspose.Cells .NET | Excel formula analysis with Aspose.Cells | detect Excel volatile calculations programmatically
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVolatileFinder
+// The example loads an Excel file with Aspose.Cells, iterates each worksheet's used range, checks every formula cell for a set of known volatile functions (NOW, TODAY, RAND, OFFSET, etc.), records the sheet name and cell address of matches, and prints the collected list.
+class Program
 {
-    // The sample loads an input.xlsx workbook, enables the calculation chain, iterates through each worksheet and its used cells, checks each formula for any of the predefined volatile functions (NOW, TODAY, RAND, OFFSET, etc.), records the sheet name and cell address for matches, prints the list of volatile‑function cells, and saves the workbook as output.xlsx.
-    class Program
+    static void Main()
     {
-        // List of common Excel volatile functions
-        private static readonly string[] VolatileFunctions = new[]
+        try
         {
-            "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET()", "INDIRECT()", "INFO()", "CELL()",
-            "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT", "INFO", "CELL"
-        };
+            const string inputPath = "input.xlsx";
 
-        static void Main(string[] args)
-        {
-            // Paths for input and output workbooks
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // List to store addresses of cells that use volatile functions
+            List<string> volatileCellAddresses = new List<string>();
+
+            // Common volatile functions in Excel (uppercase for case‑insensitive comparison)
+            string[] volatileFunctions = new string[]
+            {
+                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN(", "OFFSET(", "INDIRECT(", "INFO(", "CELL(", "AREAS(", "GETPIVOTDATA("
+            };
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Use the used range to limit the iteration to populated cells
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+                // If the worksheet is empty, skip it
+                if (usedRange == null)
+                    continue;
+
+                // Examine each cell in the used range
+                foreach (Cell cell in usedRange)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(inputPath);
-
-                // Enable calculation chain and recalculate formulas
-                workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-                workbook.CalculateFormula();
-
-                // Collect addresses of cells that contain volatile functions
-                List<string> volatileCellAddresses = new List<string>();
-
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-
-                    // Iterate through all used cells in the worksheet
-                    foreach (Cell cell in cells)
+                    // Check if the cell contains a formula
+                    if (cell.IsFormula)
                     {
-                        // Check if the cell contains a formula
-                        if (cell.IsFormula)
-                        {
-                            string formula = cell.Formula ?? string.Empty;
+                        // Get the formula text in a uniform case
+                        string formula = cell.Formula.ToUpperInvariant();
 
-                            // Simple detection: look for any volatile function name in the formula (case‑insensitive)
-                            foreach (string volatileFunc in VolatileFunctions)
+                        // Check if the formula contains any volatile function
+                        foreach (string vf in volatileFunctions)
+                        {
+                            if (formula.Contains(vf))
                             {
-                                if (formula.IndexOf(volatileFunc, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    // Include sheet name for clarity
-                                    volatileCellAddresses.Add($"{sheet.Name}!{cell.Name}");
-                                    break; // No need to check other functions for this cell
-                                }
+                                // Record the address with sheet name (e.g., Sheet1!A1)
+                                volatileCellAddresses.Add($"{sheet.Name}!{cell.Name}");
+                                break; // No need to check other functions for this cell
                             }
                         }
                     }
                 }
-
-                // Output the results
-                Console.WriteLine("Cells containing volatile functions:");
-                foreach (string address in volatileCellAddresses)
-                {
-                    Console.WriteLine(address);
-                }
-
-                // Save the workbook (lifecycle rule: save)
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to {outputPath}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                }
             }
-            catch (Exception ex)
+
+            // Output the collected addresses
+            Console.WriteLine("Cells containing volatile formulas:");
+            foreach (string address in volatileCellAddresses)
             {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine(address);
             }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

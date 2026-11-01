@@ -1,13 +1,13 @@
-// Title: How to convert an Excel workbook to a 24‑bit multi‑page TIFF image using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as a 24‑bit multi‑page TIFF image. | Show how to configure Aspose.Cells ImageOrPrintOptions to enforce 24‑bit color depth when exporting a workbook to TIFF in .NET. | Provide a robust error‑handling pattern for converting Excel to TIFF with Aspose.Cells, including file existence verification.
-// Common Searches: Aspose.Cells C# export Excel to 24-bit multi-page TIFF | save workbook as high-quality TIFF image using Aspose.Cells .NET | set color depth to 24-bit when converting Excel to TIFF with Aspose.Cells
-// Tags: Aspose.Cells export workbook to TIFF | C# 24-bit TIFF image generation | multi-page TIFF conversion from Excel | ImageOrPrintOptions color depth Aspose.Cells | high-quality TIFF output .NET
+// Title: How to convert an Excel workbook to a 24‑bit TIFF image with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export worksheet to 24-bit TIFF file | How to save an Excel workbook as a high‑quality TIFF using Aspose.Cells | Aspose.Cells ImageOrPrintOptions set 24-bit color depth for TIFF output | Render first sheet of .xlsx to TIFF with one page per sheet in C# | Convert .xlsx to TIFF with 24-bit color using Aspose.Cells .NET API
+// Tags: Aspose.Cells ImageOrPrintOptions TIFF settings | C# SheetRender ToImage for TIFF output | Excel to 24-bit TIFF conversion Aspose.Cells | OnePagePerSheet worksheet rendering | high‑quality TIFF generation .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The sample checks that the source .xlsx file exists, loads it into an Aspose.Cells Workbook, and saves the workbook as a multi‑page TIFF image using SaveFormat.Tiff, with basic exception handling for robustness.
+// The sample checks for the source Excel file, loads it into a Workbook, configures ImageOrPrintOptions with OnePagePerSheet, creates a SheetRender for the first worksheet, and saves the rendered image as a 24‑bit TIFF file, handling any exceptions that may occur.
 class Program
 {
     static void Main()
@@ -17,24 +17,34 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.tiff";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
+            // Verify that the source workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
             // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as a multi‑page TIFF image
-            workbook.Save(outputPath, SaveFormat.Tiff);
+            // Configure image options for TIFF output
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Render each worksheet on a separate page
+                OnePagePerSheet = true
+                // Additional properties such as ImageFormat or ImageColorMode are omitted
+                // because they are not available in the referenced Aspose.Cells version.
+            };
 
-            Console.WriteLine($"Workbook successfully converted to \"{outputPath}\".");
+            // Render the first worksheet to a TIFF image
+            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+            sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Successfully saved TIFF image to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display a friendly message
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

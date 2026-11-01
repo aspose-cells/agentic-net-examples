@@ -1,13 +1,12 @@
-// Title: Insert a SORT dynamic array formula into B2 and validate the spilled range size with Aspose.Cells for .NET
-// AI Prompts: Place a =SORT(A2:A6) formula in cell B2 using Aspose.Cells, trigger workbook calculation, then programmatically count the non‑empty cells in column B to ensure the spilled range length matches the original array size. | Write C# code that adds a SORT dynamic array formula to B2, evaluates the workbook, iterates down the spilled column, and asserts that the number of returned rows equals the source data count.
-// Common Searches: asp.net insert SORT dynamic array formula with Aspose.Cells | how to verify spilled range size after dynamic array calculation in C# | Aspose.Cells read spilled cells from a SORT formula | C# count rows returned by a dynamic array formula using Aspose.Cells | validate that SORT(A2:A6) spill matches source range length in .NET
-// Tags: insert SORT formula Aspose.Cells | validate spilled range C# | dynamic array calculation Aspose.Cells | read spilled cells after formula | compare spilled rows to source data
+// Title: How to insert a SORT dynamic array formula in cell B2 and retrieve its spilled range using Aspose.Cells for .NET
+// Common Searches: C# code to apply SORT dynamic array formula with Aspose.Cells and get spill range | Aspose.Cells .NET determine spilled area of a dynamic array formula | Retrieve address of SORT formula spill range in Excel using Aspose.Cells | Calculate dynamic array results and find non‑empty cells with Aspose.Cells C# | Example of inserting SORT(A2:A5) and reading spilled range in Aspose.Cells
+// Tags: SORT dynamic array Aspose.Cells .NET | spilled range detection Aspose.Cells | dynamic array formula evaluation C# | Excel formula calculation Aspose.Cells | retrieve spill address C#
 
 using System;
 using Aspose.Cells;
 
-// The example creates a workbook, fills A2:A6 with numbers, inserts the =SORT(A2:A6) dynamic array formula into B2, calculates the workbook, scans column B from B2 downward to count non‑empty cells, compares this count to the original data length, reports whether the spilled range expands correctly, and saves the file as DynamicArraySort.xlsx.
-class Program
+// The example creates a workbook, fills A2:A5 with numbers, inserts the SORT(A2:A5) dynamic array formula into B2, calculates the workbook, then scans column B until an empty cell is found to build the spilled range address (e.g., B2:B5) and outputs it.
+class SortDynamicArrayExample
 {
     static void Main()
     {
@@ -17,49 +16,47 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate source data in A2:A6
-            int[] numbers = { 5, 2, 9, 1, 7 };
-            for (int i = 0; i < numbers.Length; i++)
-            {
-                // Cells[row, column] - zero based indexing
-                sheet.Cells[i + 1, 0].PutValue(numbers[i]); // A2:A6
-            }
+            // Populate source data in column A (A2:A5)
+            sheet.Cells["A2"].PutValue(5);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["A4"].PutValue(8);
+            sheet.Cells["A5"].PutValue(1);
 
-            // Insert SORT dynamic array formula in B2
-            Cell formulaCell = sheet.Cells[1, 1]; // B2
-            formulaCell.Formula = "=SORT(A2:A6)";
+            // Insert SORT dynamic array formula into B2 (ascending order)
+            sheet.Cells["B2"].Formula = "=SORT(A2:A5)";
 
             // Calculate the workbook to evaluate the formula
             workbook.CalculateFormula();
 
-            // Determine the spilled range size by scanning column B starting at B2
-            int startRow = 1; // zero‑based index for row 2
-            int startCol = 1; // column B
-            int actualRows = 0;
+            // Determine the spilled range of the dynamic array formula manually
+            int startRow = 1;               // Row index for B2 (zero‑based)
+            int columnIndex = 1;            // Column index for column B (zero‑based)
+            int currentRow = startRow;
+
+            // Scan downwards until an empty cell is encountered
             while (true)
             {
-                Cell c = sheet.Cells[startRow + actualRows, startCol];
-                if (c.Value == null || string.IsNullOrEmpty(c.StringValue))
+                Cell c = sheet.Cells[currentRow, columnIndex];
+                // In Aspose.Cells, a cell is considered empty when its Value is null
+                if (c.Value == null)
                     break;
-                actualRows++;
+                currentRow++;
             }
 
-            // Verify that the spilled range size matches source data count
-            int expectedRows = numbers.Length;
+            // The last non‑empty row is one before the empty cell
+            int endRow = currentRow - 1;
 
-            Console.WriteLine($"Expected rows: {expectedRows}, Actual rows: {actualRows}");
+            // Build the address string (Excel uses 1‑based row numbers)
+            string spilledRangeAddress = $"B{startRow + 1}:B{endRow + 1}";
+            Console.WriteLine("Spilled range address: " + spilledRangeAddress);
+            // Expected output: Spilled range address: B2:B5
 
-            if (actualRows == expectedRows)
-                Console.WriteLine("Spilled range expands correctly.");
-            else
-                Console.WriteLine("Spilled range size mismatch.");
-
-            // Save the workbook (optional)
-            workbook.Save("DynamicArraySort.xlsx");
+            // (Optional) Save the workbook to inspect the result manually
+            // workbook.Save("SortDynamicArray.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,61 +1,51 @@
-// Title: Apply a CSS class to heading cells when exporting an Excel worksheet to HTML with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx file, assigns a CSS class named "heading" to each cell in the first row, and saves the workbook as HTML using Aspose.Cells. | Show how to use the Style.Custom property to embed a CSS class name for heading cells during HTML export with Aspose.Cells. | Demonstrate setting HtmlSaveOptions so that only the current worksheet is saved as HTML and the heading cells retain their assigned CSS class.
-// Common Searches: Aspose.Cells C# export first row as HTML with custom CSS class | How to add a CSS class to Excel cells for HTML output using Aspose.Cells .NET | Set custom style property for heading cells when saving workbook to HTML in C# | Export only active worksheet to HTML with Aspose.Cells while preserving CSS classes
-// Tags: apply css class to heading cells Aspose.Cells | style.custom property html export Aspose.Cells | htmlsaveoptions exportactiveworksheetonly C# | excel to html custom css class Aspose.Cells | first row styling during workbook to html conversion
+// Title: Export an Excel workbook to HTML with a bold gray header row rendered as <th> elements using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, formats the first row with bold font and a light‑gray background, enables ExportRowColumnHeadings in HtmlSaveOptions, and saves the workbook as an HTML file. | Show how to assign a custom CSS class to the generated <th> elements when exporting an Excel sheet to HTML with Aspose.Cells in .NET.
+// Common Searches: Aspose.Cells C# export Excel to HTML with header row as <th> tags | how to use ExportRowColumnHeadings in HtmlSaveOptions for .NET | apply bold and gray style to Excel header row before HTML conversion using Aspose.Cells | set custom CSS class for table header cells in Aspose.Cells HTML output | C# example of saving a workbook as HTML with styled heading cells
+// Tags: Aspose.Cells HTML export header row styling | C# ExportRowColumnHeadings property usage | custom CSS class for HTML table headers Aspose.Cells | Excel heading row styling for HTML export | generate HTML with <th> elements from Excel workbook
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example loads an Excel workbook, sets the Style.Custom property of each cell in the first row to "class:heading", configures HtmlSaveOptions to export only the active worksheet, and saves the workbook as an HTML file where the heading cells carry the specified CSS class.
-class ApplyCssToHeadings
+// The example creates a new workbook, writes header values to the first row, applies a bold font and light‑gray background style, enables ExportRowColumnHeadings so the headers are emitted as <th> elements, optionally assigns a CSS class to those headers, and saves the workbook as an HTML file.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Get the first worksheet (adjust index if needed)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // CSS class name to be applied to heading cells
-            const string headingCssClass = "heading";
+            // Populate heading cells (first row)
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["C1"].PutValue("Quantity");
 
-            // Apply the CSS class to all used cells in the first row
-            int lastColumn = sheet.Cells.MaxColumn;
-            for (int col = 0; col <= lastColumn; col++)
-            {
-                Cell cell = sheet.Cells[0, col];
-                Style style = cell.GetStyle();
+            // Define a style for the heading row
+            Style headingStyle = workbook.CreateStyle();
+            headingStyle.Font.IsBold = true;
+            headingStyle.ForegroundColor = Color.LightGray;
+            headingStyle.Pattern = BackgroundType.Solid;
 
-                // Set custom CSS class for HTML export (format: "class:YourClassName")
-                style.Custom = $"class:{headingCssClass}";
-                cell.SetStyle(style);
-            }
+            // Apply the style to the heading range
+            Aspose.Cells.Range headingRange = sheet.Cells.CreateRange("A1:C1");
+            headingRange.ApplyStyle(headingStyle, new StyleFlag() { All = true });
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export only the active worksheet (optional)
-                ExportActiveWorksheetOnly = true
-                // Note: ExportCssClassNames property is not required for this version
-            };
+            // Configure HTML export options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Export row/column headings as <th> elements (new property name)
+            htmlOptions.ExportRowColumnHeadings = true;
 
-            // Save the workbook as an HTML file; heading cells will carry the specified CSS class
+            // Define output file path
+            string outputPath = "ExportedWithHeadings.html";
+
+            // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully exported to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

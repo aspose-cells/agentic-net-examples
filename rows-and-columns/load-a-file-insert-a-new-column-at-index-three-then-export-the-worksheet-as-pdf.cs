@@ -1,42 +1,26 @@
-// Title: Insert a column at index 3 in an Excel worksheet with Aspose.Cells for .NET and export the sheet to PDF
-// AI Prompts: Load an existing .xlsx file, insert a new column at zero‑based index 3 in the first worksheet using Aspose.Cells, save the workbook to a temporary file, and convert it to a PDF. | Using Aspose.Cells for .NET, add a column at position 3 in a workbook, persist the change to a temporary file, then generate a PDF from that file while cleaning up the temporary file.
-// Common Searches: Aspose.Cells C# insert column at specific index before PDF conversion | How to add a column to an Excel file and then export to PDF using Aspose.Cells | C# example inserting a column in the first worksheet and saving as PDF | Convert modified Excel workbook to PDF with a temporary file in Aspose.Cells
-// Tags: Aspose.Cells column insertion C# | Aspose.Cells worksheet to PDF conversion | C# temporary workbook for PDF export | Excel worksheet modification prior to PDF generation | zero‑based column index insertion Aspose.Cells
+// Title: Insert a new column at index 3 in an Excel worksheet and export the sheet to PDF using Aspose.Cells for .NET
+// AI Prompts: Insert a column at zero‑based index 3 in the first worksheet of an Excel file and save the workbook as a PDF with Aspose.Cells. | Add several columns before column D, then generate a PDF from the updated workbook using Aspose.Cells in C#.
+// Common Searches: asp.net insert column at index 3 using Aspose.Cells before PDF export | c# how to add a column to an existing Excel file and convert it to PDF with Aspose.Cells | insert column D in worksheet and save workbook as PDF using Aspose.Cells library
+// Tags: insert column Aspose.Cells C# | export worksheet to PDF Aspose.Cells | add column before PDF conversion .NET | modify Excel file structure programmatically | save workbook as PDF after column insertion
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Loads input.xlsx, inserts a column at zero‑based index 3 in the first worksheet, saves the workbook to a temporary file, converts the temporary file to output.pdf using ConversionUtility, and deletes the temporary file.
+// The example loads 'input.xlsx', accesses the first worksheet, inserts a new column at zero‑based index 3 (before column D), and saves the workbook as 'output.pdf' in PDF format using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Paths for the original file, a temporary modified file, and the final PDF.
-        string inputFile = "input.xlsx";
-        string tempFile = "temp_modified.xlsx";
-        string pdfFile = "output.pdf";
+        // Load the existing workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the existing workbook (load rule).
-        Workbook workbook = new Workbook(inputFile);
+        // Access the first worksheet (you can change the index or name as needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Insert a new column at index 3 (zero‑based) in the first worksheet (insert column rule).
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells.InsertColumn(3);
+        // Insert a new column at index 3 (zero‑based, i.e., before column D)
+        worksheet.Cells.InsertColumn(3);
 
-        // Save the modified workbook to a temporary file (save rule).
-        workbook.Save(tempFile);
-
-        // Convert the temporary Excel file to PDF using the provided ConversionUtility rule.
-        ConversionUtility.Convert(tempFile, pdfFile);
-
-        // Clean up the temporary file.
-        if (File.Exists(tempFile))
-        {
-            File.Delete(tempFile);
-        }
-
-        Console.WriteLine("Worksheet exported to PDF successfully.");
+        // Export the entire workbook (or specific worksheet) as PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

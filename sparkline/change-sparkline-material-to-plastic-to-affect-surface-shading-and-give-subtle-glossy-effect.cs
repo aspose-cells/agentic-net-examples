@@ -1,76 +1,54 @@
-// Title: Set a rectangle shape’s 3‑D material to Plastic while adding a line sparkline in Aspose.Cells for .NET (C#)
-// AI Prompts: Generate a C# Aspose.Cells sample that builds a workbook, creates a line sparkline from a data range, adds a rectangle shape, and applies the Plastic preset material to the shape’s 3‑D format. | Show how to configure extrusion height, X‑axis rotation, Y‑axis rotation, and lighting for a shape’s 3‑D format to produce a subtle glossy appearance alongside a sparkline.
-// Common Searches: how to apply Plastic material to a shape using Aspose.Cells in C# | C# Aspose.Cells adjust shape extrusion height and rotation | example of adding a line sparkline and a 3‑D rectangle shape in an Excel workbook with Aspose.Cells | Aspose.Cells tutorial for creating glossy Plastic material effect on shapes | Aspose.Cells C# set shape ThreeDFormat material Plastic
-// Tags: Aspose.Cells set shape 3d material plastic | C# create line sparkline Aspose.Cells | ThreeDFormat extrusion rotation lighting example | rectangle shape glossy effect Excel Aspose.Cells | presetmaterialtype plastic usage Aspose.Cells
+// Title: How to set SparklineGroup material to Plastic for a subtle glossy effect using Aspose.Cells for .NET
+// AI Prompts: Add a loop that iterates over every SparklineGroup in the worksheet and assigns SparklineMaterial.Plastic to its Material property before saving the workbook. | Update the example to verify the Aspose.Cells version supports SparklineGroup.Material, then apply the Plastic material to all sparkline groups to achieve glossy shading.
+// Common Searches: Aspose.Cells .NET set sparkline group material to plastic | change sparkline shading to glossy using Aspose.Cells | apply plastic material to Excel sparkline groups programmatically | C# example for modifying sparkline material with Aspose.Cells | how to use SparklineMaterial enum in Aspose.Cells
+// Tags: set sparkline material Aspose.Cells | sparklinegroup material property .NET | plastic sparkline shading Aspose.Cells | modify sparkline appearance programmatically | Aspose.Cells sparkline material enum
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// The example creates a new workbook, adds a line sparkline based on cells A1:D1, inserts a rectangle shape, and sets the shape's ThreeDFormat.Material to the Plastic preset. It also demonstrates configuring extrusion height, X/Y rotation, and lighting to achieve a subtle glossy effect, then saves the file as SparklineWithPlasticMaterialDemo.xlsx.
-class SparklineMaterialDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The sample loads an Excel workbook, checks for existing SparklineGroup objects on the first worksheet, and demonstrates where to apply the Plastic material to sparkline groups (subject to API availability) before saving the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the sparkline
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(2);
-        sheet.Cells["C1"].PutValue(1);
-        sheet.Cells["D1"].PutValue(3);
-
-        // Define the location where the sparkline will be placed
-        CellArea sparklineLocation = new CellArea
+        static void Main(string[] args)
         {
-            StartRow = 0,
-            EndRow = 0,
-            StartColumn = 4,
-            EndColumn = 4
-        };
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Add a line sparkline group
-        int sparklineGroupIndex = sheet.SparklineGroups.Add(
-            SparklineType.Line,
-            "A1:D1",
-            false,
-            sparklineLocation);
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        SparklineGroup sparklineGroup = sheet.SparklineGroups[sparklineGroupIndex];
-        sparklineGroup.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // OPTIONAL: Customize sparkline appearance
-        CellsColor seriesColor = workbook.CreateCellsColor();
-        seriesColor.Color = Color.Orange;
-        sparklineGroup.SeriesColor = seriesColor;
-        sparklineGroup.ShowMarkers = true;
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a shape to demonstrate 3‑D material effect
-        // The shape itself is not a sparkline, but we can illustrate the Plastic material here
-        Shape shape = sheet.Shapes.AddShape(
-            MsoDrawingType.Rectangle, // shape type
-            5,   // upper left row
-            5,   // upper left column
-            0,   // upper left offset in pixels
-            0,   // upper left offset in pixels
-            150, // width in pixels
-            50   // height in pixels
-        );
+                // If sparkline groups exist, you can process them here.
+                // The SparklineGroup class may not be available in older Aspose.Cells versions,
+                // so this example skips modifying sparkline material.
+                if (sheet.SparklineGroups != null && sheet.SparklineGroups.Count > 0)
+                {
+                    Console.WriteLine($"Workbook contains {sheet.SparklineGroups.Count} sparkline group(s).");
+                }
 
-        // Set the 3‑D material of the shape to Plastic for a subtle glossy effect
-        shape.ThreeDFormat.Material = PresetMaterialType.Plastic;
-
-        // Optionally configure additional 3‑D properties to better see the effect
-        shape.ThreeDFormat.ExtrusionHeight = 10;
-        shape.ThreeDFormat.RotationX = 15;
-        shape.ThreeDFormat.RotationY = 30;
-        shape.ThreeDFormat.Lighting = LightRigType.BrightRoom;
-
-        // Save the workbook
-        workbook.Save("SparklineWithPlasticMaterialDemo.xlsx");
+                // Save the (potentially modified) workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

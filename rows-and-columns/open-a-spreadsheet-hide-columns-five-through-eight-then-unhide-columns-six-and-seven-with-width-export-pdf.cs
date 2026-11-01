@@ -1,27 +1,57 @@
-// Title: Hide columns 5‑8, unhide columns 6‑7 with a custom width, and export the worksheet to PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code with Aspose.Cells that loads an Excel workbook, hides columns 5 through 8, then unhides columns 6 and 7 setting their width to 15 characters, and finally saves the sheet as a PDF. | Generate a .NET example showing how to manipulate column visibility (hide a range, unhide a sub‑range with specific width) and convert the worksheet to PDF using Aspose.Cells.
-// Common Searches: Aspose.Cells C# hide columns 5 to 8 then unhide 6 and 7 with width 15 before exporting to PDF | How to set column width while unhiding specific columns using Aspose.Cells in .NET | Export an Excel worksheet to PDF after adjusting column visibility with Aspose.Cells C#
-// Tags: hide columns range Aspose.Cells C# | unhide columns with specific width Aspose.Cells | export worksheet to PDF Aspose.Cells | column visibility manipulation Aspose.Cells | set column width Aspose.Cells C#
+// Title: Hide columns 5‑8, unhide columns 6‑7 with custom width, and export the worksheet to PDF using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells hide a range of columns then set width for specific columns before PDF export | How to unhide columns with custom width in Aspose.Cells and save workbook as PDF | Aspose.Cells hide columns 5 to 8 and export the sheet to PDF in .NET
+// Tags: hide column range Aspose.Cells C# | unhide column with width Aspose.Cells | set column width Aspose.Cells PDF export | export worksheet to PDF Aspose.Cells | column visibility manipulation Aspose.Cells .NET
 
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// // Load input.xlsx, hide columns 5‑8, unhide columns 6‑7 with a width of 15 characters, and save the worksheet as output.pdf.
+// The example loads an existing XLSX file, hides columns 5 through 8, then unhides columns 6 and 7 while applying a custom width, and finally saves the worksheet as a PDF, including file‑existence checks and exception handling.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Hide columns 5 through 8 (1‑based). Zero‑based start index = 4, total = 4.
-        cells.HideColumns(4, 4);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Unhide columns 6 and 7 (1‑based) with a width of 15 characters.
-        cells.UnhideColumns(5, 2, 15.0);
+            // Load the existing spreadsheet
+            Workbook workbook = new Workbook(inputPath);
 
-        // Export the worksheet to PDF.
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Hide columns 5 through 8 (1‑based column numbers correspond to indexes 4‑7)
+            for (int col = 4; col <= 7; col++)
+            {
+                sheet.Cells.HideColumn(col);
+            }
+
+            // Unhide columns 6 and 7 (indexes 5 and 6) and set a specific width
+            int[] colsToUnhide = { 5, 6 };
+            foreach (int col in colsToUnhide)
+            {
+                // Provide a width when unhiding; 0 uses the default column width
+                sheet.Cells.UnhideColumn(col, 0);
+                // Set column width (in characters). Adjust the value as required.
+                sheet.Cells.SetColumnWidth(col, 15);
+            }
+
+            // Export the workbook (or the active sheet) to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

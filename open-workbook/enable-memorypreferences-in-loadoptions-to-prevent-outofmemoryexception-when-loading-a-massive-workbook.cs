@@ -1,30 +1,29 @@
-// Title: Load a massive XLSX workbook with Aspose.Cells for .NET using LoadOptions.MemorySetting = MemoryPreference to avoid OutOfMemoryException
-// AI Prompts: Write C# code that opens a large .xlsx file with Aspose.Cells, sets LoadOptions.MemorySetting to MemoryPreference, and saves the workbook to a new file. | Show how to verify the input file exists and catch exceptions while loading a huge workbook with memory‑optimized LoadOptions in Aspose.Cells. | Demonstrate configuring LoadOptions for memory‑efficient processing of big Excel spreadsheets in a .NET application using Aspose.Cells.
-// Common Searches: asp.net how to open a huge xlsx file with aspose.cells memorypreference | c# load large excel workbook without outofmemoryexception using aspose cells | set loadoptions memorysetting to memorypreference for massive workbook | asp.net core aspose cells memory optimization when loading big spreadsheets
-// Tags: Aspose.Cells LoadOptions MemoryPreference | load large XLSX workbook memory optimization | prevent OutOfMemoryException Aspose.Cells | C# Aspose.Cells memory‑efficient workbook loading | massive Excel file handling .NET
+// Title: Load a massive XLSX workbook with Aspose.Cells for .NET using MemoryPreference to avoid OutOfMemoryException
+// Common Searches: Aspose.Cells C# load large XLSX file without OutOfMemoryException | How to use MemoryPreference in LoadOptions for big Excel workbooks in .NET | Set MemorySetting to MemoryPreference when opening massive workbook with Aspose.Cells | Low‑memory loading of huge Excel files using Aspose.Cells LoadOptions C# | Prevent memory overflow when reading large Excel workbook with Aspose.Cells
+// Tags: MemoryPreference LoadOptions Aspose.Cells | load massive XLSX workbook .NET | prevent OutOfMemoryException Aspose.Cells | low‑memory Excel loading C# | configure LoadOptions for large workbooks
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// The example checks that a massive XLSX file exists, configures LoadOptions with MemorySetting = MemoryPreference to reduce memory consumption, loads the workbook using these options, optionally processes it, saves the result to a new file, and handles any exceptions gracefully.
+// The example checks for the XLSX file, creates LoadOptions with MemorySetting set to MemoryPreference to reduce memory consumption, loads the massive workbook using these options, optionally processes it, and saves the result while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "massive_workbook.xlsx";
-            string outputPath = "processed_workbook.xlsx";
+            string inputPath = "MassiveWorkbook.xlsx";
+            string outputPath = "MassiveWorkbook_Processed.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists before attempting to load it
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
                 return;
             }
 
-            // Configure load options with memory preference to reduce memory usage
+            // Configure load options for memory‑efficient loading of large workbooks
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 MemorySetting = MemorySetting.MemoryPreference
@@ -34,15 +33,16 @@ class Program
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
             // (Optional) Perform any required operations on the workbook here
+            // ...
 
             // Save the processed workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Catch and display any runtime errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

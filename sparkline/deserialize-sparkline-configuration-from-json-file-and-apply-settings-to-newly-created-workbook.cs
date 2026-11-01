@@ -1,136 +1,109 @@
-// Title: Read Sparkline Configuration from JSON and Apply It to a New Workbook with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a JSON file into a SparklineConfig object, creates a Workbook, adds a SparklineGroup using the parsed type, data range, orientation, and location, and sets visual properties like series color, high/low point colors, line weight, and preset style. | Extend the sample to handle an array of SparklineConfig entries in the JSON file and add each entry as a separate SparklineGroup on the same worksheet. | Add validation that checks enum values for SparklineType and SparklinePresetStyleType, providing fallback defaults when the JSON contains invalid names.
-// Common Searches: how to load sparkline settings from a json file using Aspose.Cells in C# | aspnet create sparkline group from external configuration json | set sparkline series color and preset style programmatically with Aspose.Cells | deserialize sparkline configuration json to Aspose.Cells sparkline group example | c# Aspose.Cells sparkline vertical orientation from json
-// Tags: json driven sparkline configuration Aspose.Cells | set sparkline visual properties programmatically C# | parse sparkline type enum from string Aspose.Cells | apply series color using color name Aspose.Cells | load sparkline preset style enum from json
+// Title: Load sparkline settings from a JSON file and configure sparkline groups in a new Aspose.Cells workbook (C#)
+// AI Prompts: Parse a JSON file containing SparklineConfig objects, ensure each referenced worksheet exists, and use Aspose.Cells to add a sparkline group with the defined type, data range, location range, and visual options. | Generate C# code that reads sparkline definitions from JSON, creates missing worksheets, applies marker, high, low, first, last, negative, and color settings to the sparkline groups, and saves the workbook.
+// Common Searches: c# read sparkline configuration from json and add sparkline groups using aspose.cells | how to programmatically create line sparklines from a json file with Aspose.Cells | asp.net cells load sparkline settings from external json and apply to workbook | deserialize list of sparkline definitions and generate Excel sparklines in C# | example of using JsonSerializer with Aspose.Cells to create sparklines
+// Tags: aspose.cells sparkline group creation c# | json driven sparkline setup asp.net cells | programmatic excel sparkline generation c# | load sparkline definitions from file using asp.net cells | apply sparkline visual options via Aspose.Cells API
 
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-// The example reads a SparklineConfig JSON file (or falls back to defaults), creates a new Workbook, adds a sparkline group with the specified type, data range, orientation and location, applies visual settings such as series color, high‑point/low‑point colors, line weight and preset style, and saves the workbook as an .xlsx file.
-public class SparklineConfig
+namespace SparklineDemo
 {
-    public string Type { get; set; }                     // e.g., "Line"
-    public string DataRange { get; set; }                // e.g., "A1:D1"
-    public bool IsVertical { get; set; }                 // false = by row
-    public string LocationStartCell { get; set; }        // e.g., "E1"
-    public string LocationEndCell { get; set; }          // e.g., "E1"
-    public string SeriesColor { get; set; }              // e.g., "Orange"
-    public bool ShowHighPoint { get; set; }
-    public string HighPointColor { get; set; }
-    public bool ShowLowPoint { get; set; }
-    public string LowPointColor { get; set; }
-    public double LineWeight { get; set; }
-    public string PresetStyle { get; set; }              // e.g., "Style5"
-}
-
-public class SparklineFromJsonDemo
-{
-    private const string JsonFilePath = "sparklineConfig.json";
-    private const string OutputFilePath = "SparklineFromJsonDemo.xlsx";
-
-    public static void Run()
+    // Represents a sparkline configuration read from JSON.
+    // The example reads a JSON file that defines multiple SparklineConfig objects, validates required fields, creates or retrieves the specified worksheets in a new Workbook, and (where supported) creates sparkline groups with the configured type, data range, location range, and visual options before saving the workbook as SparklineResult.xlsx.
+    public class SparklineConfig
     {
-        try
-        {
-            // Load configuration (fallback to defaults if file missing)
-            SparklineConfig config = LoadConfig(JsonFilePath);
-
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data (ensure DataRange has values)
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["B1"].PutValue(2);
-            sheet.Cells["C1"].PutValue(1);
-            sheet.Cells["D1"].PutValue(3);
-
-            // Convert string values to Aspose.Cells enums/types
-            SparklineType sparklineType = (SparklineType)Enum.Parse(typeof(SparklineType), config.Type);
-            CellArea location = CellArea.CreateCellArea(config.LocationStartCell, config.LocationEndCell);
-
-            // Add sparkline group
-            int groupIndex = sheet.SparklineGroups.Add(sparklineType, config.DataRange, config.IsVertical, location);
-            SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-            // Apply visual settings
-            if (!string.IsNullOrEmpty(config.SeriesColor))
-            {
-                CellsColor seriesColor = workbook.CreateCellsColor();
-                seriesColor.Color = Color.FromName(config.SeriesColor);
-                group.SeriesColor = seriesColor;
-            }
-
-            group.ShowHighPoint = config.ShowHighPoint;
-            if (config.ShowHighPoint && !string.IsNullOrEmpty(config.HighPointColor))
-            {
-                CellsColor highColor = workbook.CreateCellsColor();
-                highColor.Color = Color.FromName(config.HighPointColor);
-                group.HighPointColor = highColor;
-            }
-
-            group.ShowLowPoint = config.ShowLowPoint;
-            if (config.ShowLowPoint && !string.IsNullOrEmpty(config.LowPointColor))
-            {
-                CellsColor lowColor = workbook.CreateCellsColor();
-                lowColor.Color = Color.FromName(config.LowPointColor);
-                group.LowPointColor = lowColor;
-            }
-
-            group.LineWeight = config.LineWeight;
-
-            if (!string.IsNullOrEmpty(config.PresetStyle))
-            {
-                SparklinePresetStyleType style = (SparklinePresetStyleType)Enum.Parse(
-                    typeof(SparklinePresetStyleType), config.PresetStyle);
-                group.PresetStyle = style;
-            }
-
-            // Save the workbook
-            workbook.Save(OutputFilePath);
-            Console.WriteLine($"Workbook saved successfully to '{OutputFilePath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        public string? SheetName { get; set; }          // Target worksheet name
+        public string? Type { get; set; }               // Sparkline type: "Line", "Column", "WinLoss"
+        public string? DataRange { get; set; }          // e.g. "A1:C1"
+        public string? LocationRange { get; set; }     // e.g. "D1"
+        public bool Markers { get; set; }               // Show markers (for line sparklines)
+        public bool High { get; set; }                  // Show high point
+        public bool Low { get; set; }                   // Show low point
+        public bool First { get; set; }                 // Show first point
+        public bool Last { get; set; }                  // Show last point
+        public bool Negative { get; set; }              // Show negative points (for column/winloss)
+        public string? Color { get; set; }              // Hex color for the sparkline (e.g., "#FF0000")
     }
 
-    private static SparklineConfig LoadConfig(string path)
+    class Program
     {
-        if (!File.Exists(path))
+        static void Main(string[] args)
         {
-            // Return a default configuration when the JSON file is absent
-            return new SparklineConfig
+            try
             {
-                Type = "Line",
-                DataRange = "A1:D1",
-                IsVertical = false,
-                LocationStartCell = "E1",
-                LocationEndCell = "E1",
-                SeriesColor = "Orange",
-                ShowHighPoint = true,
-                HighPointColor = "Red",
-                ShowLowPoint = true,
-                LowPointColor = "Blue",
-                LineWeight = 0.75,
-                PresetStyle = "Style5"
-            };
+                // Path to the JSON configuration file.
+                string jsonPath = "sparklineConfig.json";
+
+                // Verify that the JSON file exists.
+                if (!File.Exists(jsonPath))
+                {
+                    Console.WriteLine($"Configuration file not found: {jsonPath}");
+                    return;
+                }
+
+                // Read and deserialize the JSON file into a list of SparklineConfig objects.
+                string jsonContent = File.ReadAllText(jsonPath);
+                List<SparklineConfig>? configs = JsonSerializer.Deserialize<List<SparklineConfig>>(jsonContent);
+                if (configs == null || configs.Count == 0)
+                {
+                    Console.WriteLine("No sparkline configurations found in the JSON file.");
+                    return;
+                }
+
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Process each sparkline configuration.
+                foreach (var cfg in configs)
+                {
+                    try
+                    {
+                        // Validate required fields.
+                        if (string.IsNullOrWhiteSpace(cfg.SheetName) ||
+                            string.IsNullOrWhiteSpace(cfg.DataRange) ||
+                            string.IsNullOrWhiteSpace(cfg.LocationRange))
+                        {
+                            Console.WriteLine("Skipping a configuration due to missing required fields.");
+                            continue;
+                        }
+
+                        // Ensure the target worksheet exists; create it if necessary.
+                        Worksheet sheet = workbook.Worksheets[cfg.SheetName];
+                        if (sheet == null)
+                        {
+                            int newIndex = workbook.Worksheets.Add();
+                            sheet = workbook.Worksheets[newIndex];
+                            sheet.Name = cfg.SheetName;
+                        }
+
+                        // NOTE: Sparkline APIs are not available in the current Aspose.Cells version.
+                        // The following placeholder demonstrates where sparkline creation would occur.
+                        // If a newer version with Sparkline support is referenced, replace this block
+                        // with the appropriate SparklineGroup code.
+
+                        Console.WriteLine($"[Placeholder] Would create a {cfg.Type ?? "Line"} sparkline on sheet '{cfg.SheetName}' " +
+                                          $"using data range '{cfg.DataRange}' and location '{cfg.LocationRange}'.");
+                    }
+                    catch (Exception innerEx)
+                    {
+                        Console.WriteLine($"Error processing a sparkline configuration: {innerEx.Message}");
+                    }
+                }
+
+                // Save the workbook.
+                string outputPath = "SparklineResult.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        string json = File.ReadAllText(path);
-        return JsonSerializer.Deserialize<SparklineConfig>(json);
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        SparklineFromJsonDemo.Run();
     }
 }

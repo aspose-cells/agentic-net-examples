@@ -1,43 +1,71 @@
-// Title: Batch convert CSV files with a custom delimiter to XLSX using Aspose.Cells for .NET
-// AI Prompts: Create a C# console application that scans a directory for *.csv files, loads each file with a semicolon delimiter via Aspose.Cells TxtLoadOptions, and saves the result as an .xlsx workbook. | Extend the sample to accept the delimiter character and the output folder as command‑line parameters, then perform the CSV‑to‑XLSX conversion for all files in the source folder.
-// Common Searches: asp.net convert all csv files in a folder to xlsx with custom delimiter | c# load semicolon delimited csv using Aspose.Cells TxtLoadOptions | automate csv to excel conversion for multiple files in .NET | Aspose.Cells TxtLoadOptions separator example | convert directory of csv to xlsx programmatically
-// Tags: csv to xlsx batch processing Aspose.Cells | TxtLoadOptions separator property usage | multiple CSV files conversion C# | save workbook as Xlsx format .NET | semicolondelimited CSV import Aspose.Cells
+// Title: Convert multiple CSV files with a custom delimiter to XLSX in C# using Aspose.Cells
+// Common Searches: C# Aspose.Cells load CSV files with semicolon delimiter and save as XLSX | How to batch convert all CSV files in a folder to Excel using Aspose.Cells | Aspose.Cells TxtLoadOptions custom separator for CSV to XLSX conversion in .NET | Process directory of CSV files and generate XLSX workbooks with Aspose.Cells | Convert CSV files with custom delimiter to Excel programmatically in C#
+// Tags: Aspose.Cells TxtLoadOptions custom delimiter | batch CSV to XLSX conversion C# | load CSV with semicolon separator Aspose.Cells | save workbook as XLSX programmatically | iterate over directory files Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace CsvToXlsxBatch
+// The C# program scans a specified input folder for all *.csv files, uses Aspose.Cells TxtLoadOptions to define a custom delimiter (e.g., semicolon), loads each CSV into a Workbook, and saves it as an XLSX file in an output folder. It creates the output directory if needed, logs each conversion, and handles errors gracefully.
+class Program
 {
-    // The program enumerates every .csv file in a specified folder, loads each using Aspose.Cells TxtLoadOptions with a custom semicolon separator, and saves the workbook as an .xlsx file with the same base name.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        // Folder containing the source CSV files
+        string inputFolder = @"C:\InputCsv";
+
+        // Folder where the generated XLSX files will be saved
+        string outputFolder = @"C:\OutputXlsx";
+
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
         {
-            // Directory containing the CSV files
-            string inputDirectory = @"C:\Data\CsvFiles";
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
+        }
 
-            // Get all CSV files in the directory
-            string[] csvFiles = Directory.GetFiles(inputDirectory, "*.csv");
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
 
-            foreach (string csvPath in csvFiles)
+        // Define the custom delimiter used in the CSV files (e.g., semicolon)
+        char customDelimiter = ';';
+
+        // Retrieve all CSV files from the input directory
+        string[] csvFiles = Directory.GetFiles(inputFolder, "*.csv");
+
+        foreach (string csvPath in csvFiles)
+        {
+            try
             {
-                // Create load options for CSV with a custom delimiter (e.g., semicolon)
-                TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv);
-                loadOptions.Separator = ';';               // custom delimiter
-                loadOptions.ConvertNumericData = true;     // optional: convert numbers
+                // Verify the CSV file still exists
+                if (!File.Exists(csvPath))
+                {
+                    Console.WriteLine($"File not found: {csvPath}");
+                    continue;
+                }
+
+                // Configure load options for CSV with the custom delimiter
+                TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+                {
+                    Separator = customDelimiter
+                };
 
                 // Load the CSV file into a workbook using the specified options
                 Workbook workbook = new Workbook(csvPath, loadOptions);
 
-                // Determine the output XLSX file path (same name, different extension)
-                string xlsxPath = Path.ChangeExtension(csvPath, ".xlsx");
+                // Construct the output XLSX file path (same name, different extension)
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(csvPath);
+                string xlsxPath = Path.Combine(outputFolder, fileNameWithoutExt + ".xlsx");
 
-                // Save the workbook as XLSX
+                // Save the workbook as an XLSX file
                 workbook.Save(xlsxPath, SaveFormat.Xlsx);
-            }
 
-            Console.WriteLine("Batch conversion completed.");
+                Console.WriteLine($"Converted: {csvPath} -> {xlsxPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{csvPath}': {ex.Message}");
+            }
         }
     }
 }

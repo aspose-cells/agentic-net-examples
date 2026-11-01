@@ -1,16 +1,15 @@
-// Title: PowerShell script that uses Aspose.Cells for .NET to batch convert Excel (.xls, .xlsx, .xlsm) workbooks to HTML files
-// AI Prompts: Generate a PowerShell script that loads the Aspose.Cells .NET assembly and converts every Excel file in a specified directory (including subfolders) to an HTML file. | Add robust error handling and write conversion failures to a separate log file while processing the batch conversion in PowerShell. | Modify the script to recreate the original folder hierarchy inside the HTML output directory so that each converted file mirrors its source location.
-// Common Searches: powershell batch convert xlsx to html using aspose.cells | how to invoke Aspose.Cells .NET library from PowerShell for Excel to HTML conversion | script to recursively process Excel files and save as HTML with Aspose.Cells in PowerShell | preserve folder structure when converting Excel workbooks to HTML via PowerShell
-// Tags: PowerShell invoke Aspose.Cells for Excel to HTML conversion | batch conversion of .xls/.xlsx/.xlsm to .html using Aspose.Cells .NET | recursive folder enumeration in PowerShell for Excel files | error logging for Aspose.Cells Workbook.Save in PowerShell scripts | maintain source directory hierarchy during Excel to HTML batch processing
+// Title: PowerShell script that uses Aspose.Cells for .NET to batch convert .xls and .xlsx workbooks to HTML files
+// AI Prompts: Write PowerShell code that loads the Aspose.Cells .NET assembly, iterates through all .xls and .xlsx files in a given directory (including subfolders), and saves each workbook as an .html file using Workbook.Save with SaveFormat.Html. | Create a PowerShell script that creates the target HTML output folder, includes try/catch blocks for folder creation and file conversion errors, and logs the conversion result for each Excel file.
+// Common Searches: How to convert multiple Excel workbooks to HTML with PowerShell and Aspose.Cells | PowerShell batch processing of .xls and .xlsx files for HTML export using Aspose.Cells .NET | Script to recursively convert Excel files to HTML via Aspose.Cells from the command line | Automating Excel to HTML conversion in PowerShell with error handling | Using Aspose.Cells SaveFormat.Html in a PowerShell automation script
+// Tags: Aspose.Cells PowerShell integration for HTML export | Excel workbook HTML rendering via .NET | PowerShell recursive directory traversal for file conversion | Error handling pattern for PowerShell and Aspose.Cells | Automated HTML generation from spreadsheets using Aspose
 
 using System;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 
 namespace ExcelToHtmlConverter
 {
-    // A PowerShell script that loads the Aspose.Cells .NET assembly, scans a given input folder (recursively), converts each .xls, .xlsx, or .xlsm workbook to an HTML file using Workbook.Save with SaveFormat.Html, creates the output directory if needed, and optionally logs errors and preserves the original folder structure.
+    // The script loads the Aspose.Cells .NET assembly, scans a specified input folder (including subfolders) for .xls and .xlsx files, creates an output directory, converts each workbook to an HTML file with SaveFormat.Html, and logs successes or errors for every file processed.
     class Program
     {
         static void Main(string[] args)
@@ -21,51 +20,54 @@ namespace ExcelToHtmlConverter
 
             try
             {
-                // Ensure the output folder exists
-                if (!Directory.Exists(outputFolder))
-                {
-                    Directory.CreateDirectory(outputFolder);
-                }
-
-                // Supported Excel extensions
-                string[] extensions = { ".xls", ".xlsx", ".xlsm" };
-
-                // Retrieve all Excel files recursively
-                var excelFiles = Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.AllDirectories)
-                                          .Where(f => extensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase));
-
-                foreach (var excelPath in excelFiles)
-                {
-                    try
-                    {
-                        // Verify the file exists before loading
-                        if (!File.Exists(excelPath))
-                        {
-                            Console.WriteLine($"File not found: {excelPath}");
-                            continue;
-                        }
-
-                        // Load the workbook
-                        var workbook = new Workbook(excelPath);
-
-                        // Build the output HTML file path
-                        string htmlFileName = Path.ChangeExtension(Path.GetFileName(excelPath), ".html");
-                        string htmlPath = Path.Combine(outputFolder, htmlFileName);
-
-                        // Save as HTML
-                        workbook.Save(htmlPath, SaveFormat.Html);
-
-                        Console.WriteLine($"Converted: {excelPath} -> {htmlPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
-                    }
-                }
+                // Ensure the output directory exists
+                Directory.CreateDirectory(outputFolder);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Fatal error: {ex.Message}");
+                Console.WriteLine($"Failed to create output folder '{outputFolder}': {ex.Message}");
+                return;
+            }
+
+            // Get all .xls and .xlsx files recursively
+            string[] excelFiles;
+            try
+            {
+                excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.AllDirectories);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error accessing input folder '{inputFolder}': {ex.Message}");
+                return;
+            }
+
+            foreach (string excelPath in excelFiles)
+            {
+                string extension = Path.GetExtension(excelPath);
+                if (!string.Equals(extension, ".xls", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(extension, ".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue; // Skip non‑Excel files
+                }
+
+                // Build HTML output path
+                string htmlFileName = Path.GetFileNameWithoutExtension(excelPath) + ".html";
+                string htmlPath = Path.Combine(outputFolder, htmlFileName);
+
+                try
+                {
+                    // Load the workbook
+                    Workbook workbook = new Workbook(excelPath);
+
+                    // Save as HTML
+                    workbook.Save(htmlPath, SaveFormat.Html);
+
+                    Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
+                }
             }
         }
     }

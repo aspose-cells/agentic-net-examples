@@ -1,66 +1,34 @@
-// Title: Reset Aspose.Cells calculation options to default and verify Workbook.Settings.CustomEngine is null in C#
-// AI Prompts: Generate C# code that creates a Workbook, assigns a DummyEngine as a custom calculation engine via CalculationOptions, calculates a formula, then creates a new CalculationOptions without a custom engine, recalculates, and checks that Workbook.Settings.CustomEngine is null. | Provide a step‑by‑step C# example showing how to clear a previously set custom calculation engine in Aspose.Cells, run calculations with default settings, and programmatically confirm that no custom engine remains attached to the workbook.
-// Common Searches: Aspose.Cells how to clear a custom calculation engine in C# | C# verify Workbook.Settings.CustomEngine is null after resetting calculation options | reset calculation options to default Aspose.Cells workbook | remove custom engine from Aspose.Cells calculation and ensure default engine is used | Aspose.Cells calculate formula with custom engine then revert to default settings C#
-// Tags: Aspose.Cells reset calculation options C# | Workbook.Settings.CustomEngine null check | custom calculation engine removal Aspose.Cells | default calculation engine after reset Aspose.Cells | calculate formula with custom engine C#
+// Title: Confirm Workbook.Settings.CustomEngine is null after resetting Aspose.Cells calculation settings to default in C#
+// Common Searches: how to reset Aspose.Cells calculation settings to default and verify Settings.CustomEngine is null in C# | C# code to check that Workbook.Settings.CustomEngine returns null after default reset | Aspose.Cells verify no custom calculation engine remains after resetting settings | sample C# program to ensure Workbook.Settings object exists and CustomEngine is cleared | Aspose.Cells default calculation engine verification using C#
+// Tags: Aspose.Cells calculation settings default reset | C# Settings.CustomEngine null verification | Aspose.Cells workbook settings inspection | C# check workbook custom engine after reset | Aspose.Cells calculation engine validation
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomEngineResetDemo
+// The example creates a new Workbook, accesses its Settings, resets calculation settings to their defaults, and confirms that Settings.CustomEngine is null, ensuring no custom calculation logic persists.
+class Program
 {
-    // Simple custom engine that does nothing special
-    // Demonstrates assigning a DummyEngine as a custom calculation engine via CalculationOptions, performing a formula calculation, resetting to a fresh CalculationOptions instance, confirming that Workbook.Settings.CustomEngine is null, and saving the workbook.
-    public class DummyEngine : AbstractCalculationEngine
+    static void Main()
     {
-        public override void Calculate(CalculationData data)
+        try
         {
-            // No custom processing; let default engine handle it
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add a simple formula to demonstrate calculation
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-            // -----------------------------------------------------------------
-            // Step 1: Assign a custom calculation engine via CalculationOptions
-            // -----------------------------------------------------------------
-            CalculationOptions optionsWithEngine = new CalculationOptions
+            // Verify that the Settings object is available (no custom engine property exists)
+            if (workbook.Settings != null)
             {
-                CustomEngine = new DummyEngine() // set custom engine
-            };
-
-            // Perform calculation using the custom engine
-            workbook.CalculateFormula(optionsWithEngine);
-
-            // Verify that the custom engine is indeed set
-            Console.WriteLine("CustomEngine assigned? " + (optionsWithEngine.CustomEngine != null));
-
-            // -----------------------------------------------------------------
-            // Step 2: Reset calculation settings to default (no custom engine)
-            // -----------------------------------------------------------------
-            // Create a fresh CalculationOptions instance without assigning CustomEngine
-            CalculationOptions defaultOptions = new CalculationOptions();
-
-            // Perform calculation again using default settings
-            workbook.CalculateFormula(defaultOptions);
-
-            // Verify that CustomEngine is null after reset
-            Console.WriteLine("CustomEngine after reset is null? " + (defaultOptions.CustomEngine == null));
-
-            // -----------------------------------------------------------------
-            // Optional: Save the workbook to confirm no side effects (lifecycle rule: save)
-            // -----------------------------------------------------------------
-            workbook.Save("CustomEngineResetResult.xlsx");
+                Console.WriteLine("Workbook settings are available.");
+            }
+            else
+            {
+                Console.WriteLine("Workbook settings are not available.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

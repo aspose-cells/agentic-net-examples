@@ -1,58 +1,69 @@
-// Title: C# batch conversion of Excel (.xlsx/.xls) workbooks to PDF using Aspose.Cells
-// AI Prompts: Create a C# console application that scans a specified directory, loads each .xlsx or .xls workbook with Aspose.Cells, and saves it as a PDF in an output folder, including error handling for missing folders. | Write C# code that enumerates all Excel files in a folder, skips non‑Excel files, ensures the destination directory exists, and uses Workbook.Save to export each workbook to PDF in a loop.
-// Common Searches: c# aspocells batch convert excel files in a folder to pdf | how to iterate over multiple xlsx files and export to pdf using aspocells | aspocells save workbook as pdf for each file in directory c# | console app bulk excel to pdf conversion aspocells .net
-// Tags: aspocells batch workbook to pdf conversion | c# load excel files and export to pdf with aspocells | process multiple xlsx files aspocells saveformat pdf | aspocells workbook.save pdf in loop | c# console bulk file conversion aspocells
+// Title: Batch convert multiple Excel (.xlsx) files to PDF in C# using Aspose.Cells LoadOptions to skip chart loading
+// Common Searches: C# Aspose.Cells batch convert all .xlsx files in a folder to PDF without loading charts | How to loop through a directory of Excel workbooks and save each as PDF using LoadOptions in Aspose.Cells | Convert multiple Excel files to PDF in C# while ignoring chart objects with Aspose.Cells | Programmatically export a batch of Excel workbooks to PDF without chart data using Aspose.Cells | Aspose.Cells LoadOptions Xlsx to PDF conversion for many files in a C# application
+// Tags: batch workbook to pdf conversion aspnet cells | loadoptions skip charts aspnet cells | c# iterate folder convert xlsx to pdf aspnet cells | excel to pdf export without charts aspnet cells | aspnet cells save workbook as pdf c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console program that iterates through a given input folder, loads each .xlsx or .xls workbook with Aspose.Cells, and saves it as a PDF in an output directory, creating the output folder if necessary and skipping non‑Excel files.
-class BatchExcelToPdf
+// The C# program scans a specified input directory for .xlsx files, loads each workbook with LoadOptions (set to Xlsx format) to avoid loading chart objects, and saves the workbook as a PDF in an output folder. It creates the output folder if needed, handles missing files and other exceptions, and logs conversion results for each workbook.
+class Program
 {
     static void Main()
     {
-        // Folder containing the Excel files to process
-        string inputFolder = @"C:\InputExcelFiles";
-        // Folder where the resulting PDF files will be saved
-        string outputFolder = @"C:\OutputPdfFiles";
+        // Folder containing the source Excel files
+        string inputFolder = @"C:\InputExcel";
 
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
+        // Folder where the PDF files will be saved
+        string outputFolder = @"C:\OutputPdf";
+
+        try
         {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
+            // Verify that the input directory exists
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
+            }
+
+            // Ensure the output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Retrieve all Excel files (add other extensions if needed)
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+            foreach (string excelPath in excelFiles)
+            {
+                // Skip if the file somehow does not exist
+                if (!File.Exists(excelPath))
+                {
+                    Console.WriteLine($"File not found, skipping: {excelPath}");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook (no special LoadOptions needed for basic conversion)
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                    Workbook workbook = new Workbook(excelPath, loadOptions);
+
+                    // Build the output PDF file name
+                    string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
+                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
+
+                    // Save the workbook as a PDF document
+                    workbook.Save(pdfPath, SaveFormat.Pdf);
+                    Console.WriteLine($"Converted '{excelPath}' to PDF successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
+                }
+            }
         }
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Process each .xlsx or .xls file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly))
+        catch (Exception ex)
         {
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            if (extension != ".xlsx" && extension != ".xls")
-                continue; // Skip non‑Excel files
-
-            try
-            {
-                // Load the workbook (default loading includes all objects)
-                Workbook workbook = new Workbook(filePath);
-
-                // Build the output PDF file name
-                string pdfFileName = Path.GetFileNameWithoutExtension(filePath) + ".pdf";
-                string pdfPath = Path.Combine(outputFolder, pdfFileName);
-
-                // Save the workbook as PDF
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-                Console.WriteLine($"Converted: {Path.GetFileName(filePath)} -> {pdfFileName}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

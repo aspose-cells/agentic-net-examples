@@ -1,20 +1,20 @@
-// Title: How to count the number of worksheets that contain shapes in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Write a C# function that loads an .xlsx file with Aspose.Cells and returns the count of worksheets that have at least one shape. | Show how to iterate through a Workbook's Worksheets collection and increment a counter when the Shapes collection size is greater than zero. | Provide sample code that prints the names of all sheets containing shapes and then displays the total number of such sheets.
-// Common Searches: Aspose.Cells .NET how to find worksheets that include drawings or charts | C# get number of Excel sheets with any shape objects using Aspose.Cells API | sample code to list Excel worksheet names that contain shapes with Aspose.Cells | determine which worksheets in a workbook have shape collections populated in C#
-// Tags: worksheet shape detection Aspose.Cells | count sheets with drawings .NET | enumerate shapes per worksheet using Aspose.Cells | Excel workbook shape analysis C# | report worksheets containing graphics Aspose.Cells
+// Title: Count worksheets that contain shapes in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that returns the total number of worksheets having at least one shape in a specified .xlsx file. | Write a method that accepts a workbook path and prints both the count and the names of sheets that contain any drawings with Aspose.Cells. | Create a console program that loads an Excel workbook and reports how many worksheets include shapes, leveraging the Shapes collection in Aspose.Cells.
+// Common Searches: asp.net count worksheets with drawings using Aspose.Cells | c# get number of sheets that contain shapes in an Excel file Aspose.Cells | how to list worksheet names that have shapes with Aspose.Cells .NET | Aspose.Cells shape detection per worksheet example
+// Tags: count worksheets with shapes Aspose.Cells | list sheets containing drawings .NET | worksheet shape enumeration Aspose.Cells | excel workbook shape detection C# | report sheets having shapes using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// // Loads an Excel file with Aspose.Cells, loops through each worksheet, checks the Shapes collection count, increments a counter for worksheets that have shapes, and writes the total count (and optionally the sheet names) to the console.
+// // Loads a workbook and prints the number of worksheets that contain at least one shape using Aspose.Cells.
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Path to the workbook file (modify as needed)
+        // Path to the workbook file
         string filePath = "input.xlsx";
 
-        // Load the workbook from the specified file
+        // Load the workbook
         Workbook workbook = new Workbook(filePath);
 
         int worksheetsWithShapes = 0;
@@ -29,7 +29,7 @@ class Program
             }
         }
 
-        // Print the count of worksheets that contain shapes
+        // Output the count
         Console.WriteLine($"Worksheets containing shapes: {worksheetsWithShapes}");
     }
 }

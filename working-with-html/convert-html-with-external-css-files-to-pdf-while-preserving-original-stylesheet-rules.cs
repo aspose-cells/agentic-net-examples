@@ -1,46 +1,48 @@
-// Title: Convert HTML with linked external CSS to PDF using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that loads an HTML file with external CSS files into an Aspose.Cells Workbook using HtmlLoadOptions and saves it as a PDF. | Demonstrate how to configure Aspose.Cells to automatically include linked stylesheet rules when converting HTML to PDF in a .NET application. | Provide error‑handling logic for missing HTML input files and exceptions during HTML‑to‑PDF conversion with Aspose.Cells.
-// Common Searches: asp.net core convert html page that references external css to pdf with aspose.cells | c# sample that loads html and linked stylesheet then exports to pdf using aspose.cells | how to ensure linked css styles are applied when saving html as pdf in aspose.cells | example of checking html file existence before workbook load in aspose.cells conversion
-// Tags: CSS file inclusion in Aspose.Cells HTML load | preserve stylesheet formatting during PDF generation | console app for styled HTML conversion | pre‑load file existence verification for workbook creation | SaveFormat.Pdf usage with Aspose.Cells
+// Title: Convert HTML with external CSS to PDF using Aspose.Cells in C# while preserving stylesheet formatting
+// AI Prompts: Write C# code that loads an HTML file containing linked CSS into an Aspose.Cells Workbook and saves it as a PDF, keeping the original stylesheet applied. | Create a C# example that verifies the source HTML file exists before invoking Aspose.Cells conversion and logs a clear error if it is missing. | Demonstrate how to set HtmlLoadOptions (e.g., BaseUri) in Aspose.Cells so external CSS files are correctly resolved during HTML‑to‑PDF conversion.
+// Common Searches: how to preserve external CSS when converting HTML to PDF with Aspose.Cells C# | Aspose.Cells HTML to PDF conversion keeping linked stylesheet styles | C# convert html file that references external CSS to PDF using Aspose.Cells | handle missing HTML input file error in Aspose.Cells HTML to PDF example | configure base URL for external stylesheets in Aspose.Cells HtmlLoadOptions
+// Tags: Aspose.Cells HTML to PDF conversion with external CSS | HtmlLoadOptions base URL stylesheet resolution | C# workbook save as PDF preserving CSS styles | file existence validation before Aspose.Cells conversion | linked stylesheet handling in Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks that the input HTML file exists, loads it into an Aspose.Cells Workbook with default HtmlLoadOptions (which automatically processes linked CSS), and saves the result as a PDF using SaveFormat.Pdf, while handling potential errors.
-class Program
+// The sample checks that the HTML source file exists, loads it into an Aspose.Cells Workbook using HtmlLoadOptions, and saves the workbook as a PDF. All linked CSS styles are retained, and basic exception handling reports conversion issues.
+class HtmlToPdfConverter
 {
-    static void Main()
+    // Converts an HTML file (with external CSS) to PDF while preserving stylesheet rules.
+    public static void Convert(string htmlPath, string pdfPath)
     {
+        // Verify that the input HTML file exists.
+        if (!File.Exists(htmlPath))
+        {
+            Console.WriteLine($"Input HTML file not found: {htmlPath}");
+            return;
+        }
+
         try
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
-
-            // Path for the generated PDF file
-            string pdfPath = "output.pdf";
-
-            // Verify that the HTML file exists
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: HTML file not found at '{htmlPath}'.");
-                return;
-            }
-
-            // Configure loading options (default loads external CSS and images)
+            // Load the HTML document into a workbook. HtmlLoadOptions can be customized if needed.
             HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-            // Load the HTML file into a new workbook
             Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-            // Save the workbook as PDF, preserving the original stylesheet formatting
+            // Save the workbook as PDF. Styles from the HTML/CSS are retained.
             workbook.Save(pdfPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"PDF successfully created at '{pdfPath}'.");
+            Console.WriteLine($"Successfully converted '{htmlPath}' to '{pdfPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any runtime errors gracefully.
+            Console.WriteLine($"Error during conversion: {ex.Message}");
         }
+    }
+
+    static void Main()
+    {
+        // Example usage
+        string htmlFile = "input.html";   // Path to the source HTML file
+        string pdfFile = "output.pdf";    // Desired output PDF file path
+
+        Convert(htmlFile, pdfFile);
     }
 }

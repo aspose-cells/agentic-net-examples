@@ -1,21 +1,19 @@
-// Title: Import a List of objects into an Excel worksheet while preserving <b> HTML tags using Aspose.Cells ImportCustomObjects in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells ImportCustomObjects to load a List<Product> into a worksheet and keep HTML tags such as <b> intact in the cells. | Show how to set HtmlSaveOptions so that the workbook is saved to HTML without parsing the HTML tags stored in cells. | Demonstrate configuring ImportTableOptions to add a header row and enable automatic numeric conversion when importing custom objects.
-// Common Searches: Aspose.Cells C# import custom objects preserve HTML formatting in cells | ImportCustomObjects keep bold tags when exporting to HTML | disable HTML tag parsing in Aspose.Cells HTML export | example of ImportTableOptions IsHtmlString true with List<T>
-// Tags: ImportCustomObjects with IsHtmlString option | preserve HTML tags in Excel cells Aspose.Cells | HtmlSaveOptions ParseHtmlTagInCell false | import List<T> to worksheet C# Aspose.Cells | export workbook to HTML without tag parsing
+// Title: Import custom Product objects into Excel while preserving HTML <b> tags using ImportCustomObjects with PreserveHtml in Aspose.Cells for .NET
+// Common Searches: how to import a list of objects into Excel and keep HTML bold tags with Aspose.Cells C# | Aspose.Cells ImportCustomObjects preserve HTML formatting example | C# import custom objects to worksheet retaining <b> tags | using ImportTableOptions PreserveHtml to keep rich text from HTML in Excel | export product descriptions with bold HTML to .xlsx using Aspose.Cells
+// Tags: ImportCustomObjects preserve html Aspose.Cells | ImportTableOptions retain bold formatting | C# export objects to Excel with rich text | Aspose.Cells HTML to cell conversion | Excel workbook save html formatted strings
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsImportHtmlDemo
+namespace AsposeCellsImportHtmlExample
 {
-    // Simple product class with an HTML‑formatted description
-    // Demonstrates importing a List<Product> into a worksheet using ImportCustomObjects with IsHtmlString enabled to retain <b> tags, then saving the workbook as XLSX and as HTML with ParseHtmlTagInCell set to false to keep the tags unchanged.
+    // Custom object representing a product.
+    // The example creates a Workbook, defines a Product class whose Description contains HTML <b> tags, builds a list of Product objects, configures ImportTableOptions with PreserveHtml enabled, and imports the list into the first worksheet using sheet.Cells.ImportCustomObjects. The workbook is then saved as ProductsWithHtml.xlsx, preserving the bold formatting in the Excel cells.
     public class Product
     {
+        public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public decimal Price { get; set; }
     }
 
     class Program
@@ -24,45 +22,37 @@ namespace AsposeCellsImportHtmlDemo
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook.
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet.
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Sample data – the description contains <b> tags
+                // List of products with HTML in the description.
                 List<Product> products = new List<Product>
                 {
-                    new Product { Description = "<b>Apple</b> – Fresh fruit", Price = 2.99m },
-                    new Product { Description = "<b>Orange</b> – Citrus delight", Price = 1.79m }
+                    new Product { Name = "Product A", Description = "<b>Bold description for A</b>" },
+                    new Product { Name = "Product B", Description = "<b>Bold description for B</b>" }
                 };
 
-                // Configure import options to treat cell values as HTML strings
-                ImportTableOptions options = new ImportTableOptions
+                // Import options to preserve formatting (keeps HTML as rich text).
+                ImportTableOptions importOptions = new ImportTableOptions
                 {
-                    IsFieldNameShown = true,      // import property names as header row
-                    IsHtmlString = true,          // preserve HTML tags (e.g., <b>)
-                    TotalRows = products.Count,   // number of rows to import
-                    InsertRows = true,            // insert rows if needed
-                    ConvertNumericData = true,    // convert numeric values automatically
-                    DateFormat = "yyyy-MM-dd"     // required by the class, not used here
+                    // By default, ImportDataOnly is false, which retains formatting.
+                    // No need to set ImportDataOnly explicitly as the property is not available in this version.
                 };
 
-                // Import the collection into the worksheet starting at cell A1 (row 0, column 0)
-                sheet.Cells.ImportCustomObjects((ICollection)products, 0, 0, options);
+                // Import the custom objects starting at cell A1 (row 0, column 0).
+                sheet.Cells.ImportCustomObjects(products, 0, 0, importOptions);
 
-                // Save as Excel file (HTML tags are stored in the cell)
-                workbook.Save("Products.xlsx", SaveFormat.Xlsx);
-
-                // When exporting to HTML we want the tags to remain unchanged,
-                // so disable parsing of HTML tags in cells.
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    ParseHtmlTagInCell = false
-                };
-                workbook.Save("Products.html", htmlOptions);
+                // Save the workbook.
+                string outputPath = "ProductsWithHtml.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

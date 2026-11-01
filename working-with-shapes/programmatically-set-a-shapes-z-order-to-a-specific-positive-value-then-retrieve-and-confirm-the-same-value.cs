@@ -1,13 +1,13 @@
-// Title: Set a specific Z-order value for a shape and verify it in an Excel worksheet with Aspose.Cells for .NET (C#)
-// AI Prompts: Create a rectangle shape on a worksheet, assign a positive ZOrderPosition, then read the property back to confirm the ordering using Aspose.Cells in C#. | Programmatically bring a shape to the front by setting its Z-order and immediately retrieve the ZOrderPosition to validate the change with Aspose.Cells for .NET.
-// Common Searches: C# Aspose.Cells set shape ZOrderPosition to bring shape to front | how to read ZOrderPosition of a shape after setting it in Aspose.Cells | Aspose.Cells example for changing drawing object Z-order in an Excel file | retrieve shape Z-order value using Aspose.Cells .NET API | Aspose.Cells code sample for setting and verifying shape Z-order
-// Tags: Aspose.Cells set shape ZOrderPosition | Aspose.Cells read shape ZOrderPosition | Aspose.Cells shape Z-order manipulation | C# add rectangle shape Aspose.Cells | Excel shape ordering Aspose.Cells
+// Title: How to set and read a shape's Z-order position in an Aspose.Cells workbook using C#
+// AI Prompts: Create a new workbook, add a rectangle shape to the first worksheet, set its ZOrderPosition to 5, then output the Z-order value with Aspose.Cells for .NET. | Show how to change a shape's stacking order and retrieve the ZOrderPosition property in a C# Aspose.Cells example.
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to specific value | Retrieve shape stacking order after setting ZOrderPosition in Aspose.Cells .NET | C# example for changing and confirming shape Z-order in Excel file using Aspose.Cells | How to programmatically control shape order in an Aspose.Cells workbook
+// Tags: Aspose.Cells shape ZOrderPosition set C# | Aspose.Cells retrieve shape Z-order .NET | Aspose.Cells add rectangle shape worksheet C# | Aspose.Cells workbook shape stacking order example | Aspose.Cells Z-order verification C#
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
 
-// The example creates a new Workbook, adds a rectangle shape to the first worksheet, sets its ZOrderPosition to a specific positive integer to bring it to the front, reads the property back to confirm the value, saves the workbook, and includes basic exception handling.
+// Creates a new workbook, inserts a rectangle shape, assigns its ZOrderPosition property to a positive integer (5), reads the property back, prints the value, and saves the file as ZOrderDemo.xlsx.
 class Program
 {
     static void Main()
@@ -18,34 +18,35 @@ class Program
             Workbook workbook = new Workbook();
 
             // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
             // Parameters: shape type, upper left row, upper left column, top, left, height, width
-            Shape shape = sheet.Shapes.AddShape(
+            Shape shape = worksheet.Shapes.AddShape(
                 MsoDrawingType.Rectangle, // shape type
-                2,   // upper left row
-                2,   // upper left column
-                5,   // top offset (pixels)
-                5,   // left offset (pixels)
+                1,   // upper left row
+                0,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
                 100, // height (pixels)
-                200  // width (pixels)
+                100  // width (pixels)
             );
 
-            // Set Z-order to bring the shape to the front (higher value = front)
-            shape.ZOrderPosition = 1;
+            // Set the Z-order to a specific positive value (e.g., 5)
+            shape.ZOrderPosition = 5;
 
-            // Output a confirmation message
-            Console.WriteLine("Shape added and brought to front.");
+            // Retrieve the Z-order to confirm it was set correctly
+            int currentZOrder = shape.ZOrderPosition;
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            string outputFile = "ShapeZOrderDemo.xlsx";
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved to {outputFile}");
+            // Output the result
+            Console.WriteLine("Shape Z-order is set to: " + currentZOrder);
+
+            // Save the workbook (optional, just to demonstrate full lifecycle)
+            workbook.Save("ZOrderDemo.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,62 +1,60 @@
-// Title: Enable major tick marks on the X‑axis of a column chart with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a column chart using Aspose.Cells and sets the category axis major tick marks to Outside. | Show how to apply TickMarkType.Outside to the X‑axis of a chart in Aspose.Cells and then save the workbook. | Demonstrate configuring the CategoryAxis.MajorTickMark property for a column chart in a .NET application.
-// Common Searches: Aspose.Cells C# set axis tick marks on chart X axis | configure category axis tick mark type to outside Aspose.Cells | C# example formatting chart axis tick marks with Aspose.Cells | enable axis tick marks on Excel chart using Aspose.Cells .NET | Aspose.Cells TickMarkType usage for chart axes
-// Tags: Aspose.Cells chart category axis tick mark | C# column chart axis formatting Aspose.Cells | TickMarkType Outside usage Aspose.Cells | Excel chart axis customization Aspose.Cells | set X axis tick marks Aspose.Cells
+// Title: Set major tick marks on the X‑axis of the first chart in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook, accesses the first worksheet's first chart, sets the category axis major tick mark to Inside, and saves the modified file. | Show a C# example that verifies a workbook contains charts, applies inside major tick marks to the X‑axis of a chart with Aspose.Cells, and includes error handling for missing files or charts.
+// Common Searches: Aspose.Cells C# set X axis major tick mark inside for first chart | how to change category axis tick marks in Excel using Aspose.Cells .NET | C# code to add major tick marks to chart axis with Aspose.Cells | example of modifying chart axis tick style in an existing workbook using Aspose.Cells | Aspose.Cells chart formatting tick marks category axis C#
+// Tags: Aspose.Cells chart category axis major tick mark | C# set X axis tick mark inside Aspose.Cells | modify Excel chart axis formatting Aspose.Cells | Aspose.Cells workbook chart customization C# | Excel chart tick mark configuration .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // // This example creates a new workbook, adds sample data, inserts a column chart, sets the X‑axis (category axis) major tick marks to Outside, and saves the file as EnableMajorTickMarksOnXAxis_out.xlsx.
-    public class EnableMajorTickMarksOnXAxis
+    // The sample loads an existing Excel workbook, checks for at least one chart on the first worksheet, sets the major tick mark of the chart's category (X) axis to Inside, and saves the updated workbook, with handling for missing files or absent charts.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+                // Check for at least one chart
+                if (sheet.Charts.Count > 0)
+                {
+                    // Get the first chart
+                    Chart chart = sheet.Charts[0];
 
-                // Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
+                    // Set major tick marks on the X (category) axis
+                    chart.CategoryAxis.MajorTickMark = TickMarkType.Inside;
+                }
+                else
+                {
+                    Console.WriteLine("No charts found in the worksheet.");
+                }
 
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Enable major tick marks on the X‑axis (category axis)
-                chart.CategoryAxis.MajorTickMark = TickMarkType.Outside;
-
-                // Save the workbook
-                workbook.Save("EnableMajorTickMarksOnXAxis_out.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            EnableMajorTickMarksOnXAxis.Run();
         }
     }
 }

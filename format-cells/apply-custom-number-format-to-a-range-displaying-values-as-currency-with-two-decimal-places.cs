@@ -1,45 +1,44 @@
-// Title: Apply a custom currency format ($#,##0.00) with two decimal places to a range of cells using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a workbook, defines a style with the custom number format "$#,##0.00", and applies it to the range A1:A5 using Aspose.Cells. | Write a .NET snippet that formats column A as currency with two decimal places by applying a style via Range.ApplyStyle together with a StyleFlag that enables NumberFormat.
-// Common Searches: Aspose.Cells C# how to format a column as currency with two decimal places | set custom number format $#,##0.00 for multiple cells using Aspose.Cells .NET | apply currency style to a range in Excel with Aspose.Cells API | C# Aspose.Cells example for formatting cells as US dollars | range.ApplyStyle number format flag usage Aspose.Cells
-// Tags: custom currency number format Aspose.Cells .NET | apply style to cell range Aspose.Cells | Range.ApplyStyle number format flag | Excel currency formatting C# Aspose | two decimal places number format Aspose.Cells
+// Title: How to format a range of cells as currency with two decimal places using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# apply $#,##0.00 currency format to multiple cells | set custom number format with two decimal places for a range in Aspose.Cells | C# Aspose.Cells style flag all property to format Excel cells as currency | apply currency number format to A1:A3 using Aspose.Cells .NET API | format numeric values as currency in Aspose.Cells workbook
+// Tags: custom currency number format Aspose.Cells | range style application C# | StyleFlag All attribute Aspose.Cells | Excel $#,##0.00 formatting .NET | Aspose.Cells workbook currency styling
 
 using System;
 using Aspose.Cells;
 
-// The example creates a new workbook, inserts numeric values into cells A1‑A5, defines a style with the custom currency format "$#,##0.00", applies this style to the range A1:A5 using a StyleFlag that enables number formatting, and saves the file as CurrencyFormatted.xlsx.
+// Creates a workbook, inserts numeric values into A1‑A3, defines a custom style with the "$#,##0.00" currency format, applies the style to the range using a StyleFlag with All set to true, and saves the file as FormattedCurrency.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            var workbook = new Workbook();
 
-            // Populate sample numeric values in column A
-            sheet.Cells["A1"].PutValue(1234.5);
-            sheet.Cells["A2"].PutValue(5678.9);
-            sheet.Cells["A3"].PutValue(0);
-            sheet.Cells["A4"].PutValue(-2500.75);
-            sheet.Cells["A5"].PutValue(99999.99);
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Create a style with a custom currency number format
-            Style currencyStyle = workbook.CreateStyle();
-            currencyStyle.Custom = "$#,##0.00";
+            // Sample numeric values
+            sheet.Cells["A1"].PutValue(1234.567);
+            sheet.Cells["A2"].PutValue(89.1);
+            sheet.Cells["A3"].PutValue(-45.678);
 
-            // Apply the style to the range A1:A5
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:A5");
-            range.ApplyStyle(currencyStyle, new StyleFlag() { NumberFormat = true });
+            // Define a custom number format for currency with two decimal places ("$#,##0.00")
+            var style = workbook.CreateStyle();
+            style.Custom = "$#,##0.00";
+
+            // Apply the style to the target range
+            var styleFlag = new StyleFlag();
+            styleFlag.All = true; // Apply all style attributes, including the custom number format
+
+            sheet.Cells.CreateRange("A1:A3").ApplyStyle(style, styleFlag);
 
             // Save the workbook
-            string outputPath = "CurrencyFormatted.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("FormattedCurrency.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

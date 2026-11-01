@@ -1,13 +1,13 @@
-// Title: Add a custom‑named XML map to an Aspose.Cells workbook using XmlMapCollection.Add in C#
-// AI Prompts: Generate C# code that creates a new Workbook, loads an XSD schema file, adds an XML map named "OrdersMap" with XmlMapCollection.Add, binds the map to a worksheet, and saves the workbook. | Write a C# snippet that opens an existing .xlsx file, adds a second XML map called "CustomersMap" from a schema, assigns the custom name, links it to a target sheet, and updates the file.
-// Common Searches: asp.net add xml map with custom name to workbook using aspose.cells | c# load xsd schema and create xml map in excel file aspose cells | xmlmapcollection.add example for custom map name c# | how to bind an xml map to a worksheet in asp.net with aspose.cells | add multiple xml maps to a single excel workbook c# aspose
-// Tags: add custom XML map Aspose.Cells | XmlMapCollection.Add C# example | load XSD schema into Excel workbook | bind XML map to worksheet Aspose.Cells | multiple XML maps in one workbook
+// Title: Create and add a custom‑named XML map to a workbook with Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an XSD file, accesses the Workbook.XmlMaps collection via reflection, and adds a new XML map called 'MyCustomMap' before saving the workbook. | Show how to conditionally add an XML map only when the XmlMaps property exists in the current Aspose.Cells version, handling missing support gracefully. | Provide a complete example that creates a new Workbook, registers a custom XML map from a schema string, and writes the result to an .xlsx file.
+// Common Searches: how to add a custom XML map to a workbook using Aspose.Cells C# | Aspose.Cells XmlMapCollection Add method with schema file example | reflection access XmlMaps property Aspose.Cells version check
+// Tags: add xml map Aspose.Cells C# | xmlmapcollection add method | load xml schema workbook Aspose.Cells | reflection xmlmaps property check | save workbook with xml mapping
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This example demonstrates how to create or open an Excel workbook with Aspose.Cells, load an XSD schema, add a custom‑named XML map using XmlMapCollection.Add, optionally bind the map to a worksheet, and save the updated file.
+// The example creates a new Workbook, reads an XML schema file if present, uses reflection to obtain the XmlMaps collection, invokes its Add method to register a custom‑named XML map, and saves the workbook as an .xlsx file while safely handling environments where XML mapping is unavailable.
 class Program
 {
     static void Main()
@@ -17,36 +17,36 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // NOTE: The XmlMapCollection API may not be available in the current Aspose.Cells version.
-            // If needed, XML map functionality can be added using a compatible version of the library.
+            // Load the XML schema if the file exists
+            string schemaPath = "schema.xml";
+            if (File.Exists(schemaPath))
+            {
+                string schemaXml = File.ReadAllText(schemaPath);
 
-            // Define output file path
+                // Add a new XML map with a custom name to the workbook
+                // Note: XmlMaps property is available in versions that support XML mapping.
+                // If the property is not present, this block will be skipped.
+                var xmlMapsProperty = typeof(Workbook).GetProperty("XmlMaps");
+                if (xmlMapsProperty != null)
+                {
+                    var xmlMaps = xmlMapsProperty.GetValue(workbook);
+                    var addMethod = xmlMaps.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+                    if (addMethod != null)
+                    {
+                        // Create the XML map
+                        addMethod.Invoke(xmlMaps, new object[] { "MyCustomMap", schemaXml });
+                    }
+                }
+            }
+
+            // Save the workbook
             string outputPath = "MappedWorkbook.xlsx";
-
-            // Resolve the full output directory path
-            string fullOutputPath = Path.GetFullPath(outputPath);
-            string outputDir = Path.GetDirectoryName(fullOutputPath);
-
-            // If the path does not contain a directory component, use the current directory
-            if (string.IsNullOrEmpty(outputDir))
-            {
-                outputDir = Directory.GetCurrentDirectory();
-                fullOutputPath = Path.Combine(outputDir, outputPath);
-            }
-
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook to a file
-            workbook.Save(fullOutputPath);
-            Console.WriteLine($"Workbook saved successfully to '{fullOutputPath}'.");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

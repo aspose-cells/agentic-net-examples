@@ -1,66 +1,111 @@
-// Title: Batch convert Excel workbooks to CSV with trimmed leading blanks using Aspose.Cells for .NET
-// AI Prompts: Write a C# method that enumerates all Excel files in a directory and converts each to a CSV file, applying TxtSaveOptions to eliminate any leading empty rows or columns. | Modify the batch converter to generate a separate CSV file for every worksheet in each workbook while preserving the original column headers. | Enhance the conversion loop with try‑catch blocks that log failed files to a text report and continue processing the remaining workbooks.
-// Common Searches: how to batch convert xlsx and ods files to csv with Aspose.Cells .NET | remove leading empty rows and columns when exporting Excel to csv using Aspose.Cells | save only the active worksheet as csv with Aspose.Cells C# | convert multiple Excel formats to csv programmatically Aspose.Cells | Aspose.Cells TxtSaveOptions trim leading blanks example
-// Tags: batch excel to csv Aspose.Cells | TxtSaveOptions trim leading blanks | convert multiple workbook formats csv | export active sheet as csv C# | Aspose.Cells CSV conversion options
+// Title: Convert multiple Excel (.xlsx/.xls) files to CSV in C# while trimming leading blank rows and preserving the first data row as header using Aspose.Cells
+// Common Searches: C# Aspose.Cells batch convert .xlsx and .xls files to CSV with top empty rows removed | How to delete leading empty rows in the first worksheet before saving as CSV using Aspose.Cells | Preserve the first data row as header when exporting Excel workbooks to CSV in .NET | Iterate through a directory of Excel files and generate corresponding CSV files with Aspose.Cells | Trim blank rows at the beginning of a worksheet programmatically with Aspose.Cells API
+// Tags: batch Excel to CSV conversion Aspose.Cells | remove top empty rows worksheet Aspose.Cells | header row preservation CSV export Aspose.Cells | process directory of .xlsx files C# | delete empty rows using Aspose.Cells API
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsBatchConversion
+// The C# program scans a specified folder for .xlsx and .xls workbooks, loads each with Aspose.Cells, removes any completely empty rows at the top of the first worksheet while keeping the first non‑empty row as the header, and saves the result as a CSV file with the same name in an output directory. It handles missing files and runtime errors gracefully.
+class ExcelToCsvBatchConverter
 {
-    // The utility scans a source folder for Excel files (xlsx, xlsm, xls, xlsb, ods), loads each workbook with Aspose.Cells, and saves it as a CSV in a destination folder using TxtSaveOptions that trim leading blank rows and columns while exporting only the active sheet.
-    public class ExcelToCsvConverter
+    static void Main(string[] args)
     {
-        /// <param name="sourceFolder">Folder containing Excel files (e.g., .xlsx, .xlsm).</param>
-        /// <param name="destFolder">Folder where the resulting CSV files will be saved.</param>
-        public static void BatchConvert(string sourceFolder, string destFolder)
+        try
         {
-            // Ensure the destination directory exists
-            if (!Directory.Exists(destFolder))
-                Directory.CreateDirectory(destFolder);
+            // Folder containing source Excel files
+            string sourceFolder = @"C:\InputExcels";
+            // Folder where CSV files will be saved
+            string outputFolder = @"C:\OutputCsvs";
 
-            // Define the Excel file extensions to process
-            string[] excelExtensions = new[] { "*.xlsx", "*.xlsm", "*.xls", "*.xlsb", "*.ods" };
-
-            // Iterate over each supported extension
-            foreach (var pattern in excelExtensions)
+            // Validate source folder
+            if (!Directory.Exists(sourceFolder))
             {
-                foreach (var excelPath in Directory.GetFiles(sourceFolder, pattern, SearchOption.TopDirectoryOnly))
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
+            }
+
+            // Ensure output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Process each .xlsx or .xls file in the source folder
+            foreach (string excelPath in Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly))
+            {
+                string ext = Path.GetExtension(excelPath).ToLowerInvariant();
+                if (ext != ".xlsx" && ext != ".xls")
+                    continue; // Skip non‑Excel files
+
+                // Verify the file exists before loading
+                if (!File.Exists(excelPath))
                 {
-                    // Load the workbook (using default LoadOptions)
+                    Console.WriteLine($"File not found: {excelPath}");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook (lifecycle rule: load)
                     Workbook workbook = new Workbook(excelPath);
 
-                    // Prepare CSV save options
-                    TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
-                    {
-                        // Trim leading blank rows/columns like Excel does
-                        TrimLeadingBlankRowAndColumn = true,
+                    // Work with the first worksheet (adjust if needed)
+                    Worksheet sheet = workbook.Worksheets[0];
 
-                        // Export only the active sheet (change to true if all sheets are required)
-                        ExportAllSheets = false
-                    };
+                    // Trim leading blank rows while preserving the first non‑empty row as header
+                    TrimLeadingBlankRows(sheet);
 
-                    // Build the output CSV file path (same name, .csv extension)
+                    // Build CSV output path (same file name, .csv extension)
                     string csvFileName = Path.GetFileNameWithoutExtension(excelPath) + ".csv";
-                    string csvPath = Path.Combine(destFolder, csvFileName);
+                    string csvPath = Path.Combine(outputFolder, csvFileName);
 
-                    // Save the workbook as CSV using the configured options
-                    workbook.Save(csvPath, saveOptions);
-
+                    // Save as CSV (lifecycle rule: save)
+                    workbook.Save(csvPath, SaveFormat.Csv);
                     Console.WriteLine($"Converted: {excelPath} -> {csvPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
                 }
             }
         }
-
-        // Example usage
-        public static void Main()
+        catch (Exception ex)
         {
-            string sourceFolder = @"C:\InputExcelFiles";
-            string destFolder   = @"C:\OutputCsvFiles";
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
 
-            BatchConvert(sourceFolder, destFolder);
+    // Removes rows that are completely empty at the top of the worksheet.
+    // The first non‑empty row becomes the header row and is kept.
+    private static void TrimLeadingBlankRows(Worksheet sheet)
+    {
+        Cells cells = sheet.Cells;
+        int firstNonEmptyRow = -1;
+
+        // Scan rows from the top until a row with any non‑empty cell is found
+        for (int row = 0; row <= cells.MaxDataRow; row++)
+        {
+            bool rowHasData = false;
+            for (int col = 0; col <= cells.MaxDataColumn; col++)
+            {
+                // A cell is considered non‑empty if its type is not Null
+                if (cells[row, col].Type != CellValueType.IsNull)
+                {
+                    rowHasData = true;
+                    break;
+                }
+            }
+
+            if (rowHasData)
+            {
+                firstNonEmptyRow = row;
+                break;
+            }
+        }
+
+        // If there are leading blank rows, delete them
+        if (firstNonEmptyRow > 0)
+        {
+            // Delete rows from 0 to firstNonEmptyRow‑1
+            sheet.Cells.DeleteRows(0, firstNonEmptyRow);
         }
     }
 }

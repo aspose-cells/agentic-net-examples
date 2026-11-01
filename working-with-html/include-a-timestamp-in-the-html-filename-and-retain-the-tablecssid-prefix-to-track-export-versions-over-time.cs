@@ -1,49 +1,52 @@
-// Title: Export an Excel workbook to HTML with a timestamped filename while preserving the default TableCssId prefix using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads or creates a workbook and saves it as an HTML file whose name contains the current date and time in yyyyMMdd_HHmmss format. | Show how to use Aspose.Cells HtmlSaveOptions to export a workbook to HTML while keeping the default TableCssId prefix. | Provide a try‑catch example that creates a timestamped HTML file name, applies HtmlSaveOptions, and calls Workbook.Save.
-// Common Searches: Aspose.Cells .NET export workbook to HTML with date‑time stamp in file name | How to keep the default TableCssId prefix when saving Excel as HTML using Aspose.Cells | C# generate unique HTML file name for Excel to HTML conversion with Aspose.Cells
-// Tags: Aspose.Cells HTML export with datetime file naming | TableCssId handling in HTML output Aspose.Cells | C# workbook to HTML conversion using HtmlSaveOptions | custom HTML filename pattern for Excel export Aspose.Cells | exception handling for Workbook.Save HTML Aspose.Cells
+// Title: Export an Excel workbook to HTML with a timestamped filename while preserving the TableCssId prefix using Aspose.Cells for .NET
+// AI Prompts: Create C# code that loads or creates a Workbook, sets HtmlSaveOptions.TableCssId to a fixed prefix, and saves the workbook as an HTML file whose name includes the current date and time. | Adapt existing Aspose.Cells HTML export logic to produce a filename such as Export_20231127_154530.html and keep the TableCssId value unchanged across multiple exports.
+// Common Searches: Aspose.Cells C# export workbook to HTML with date and time in the exported file name | how to keep TableCssId prefix when saving Excel as HTML using Aspose.Cells | dynamic HTML file name generation for Aspose.Cells export in .NET | track HTML export versions by adding a timestamp to the filename with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions with date‑time filename | retain TableCssId during HTML export Aspose.Cells | C# Excel to HTML export with dynamic file name | HTML export version tracking Aspose.Cells | generate timestamped HTML output Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example loads an existing 'input.xlsx' workbook or creates a new one with sample data, configures HtmlSaveOptions, builds a filename like 'ExportTable_20231127_154530.html' using the current date and time, and saves the workbook as HTML while retaining the default TableCssId prefix, all wrapped in a try‑catch block to handle errors.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example loads an existing Excel file or creates a new workbook, configures HtmlSaveOptions (including preserving the TableCssId prefix), builds a filename like Export_20231127_154530.html using the current timestamp, saves the workbook as HTML, and writes the output path to the console.
+    class HtmlExportWithTimestamp
     {
-        try
+        static void Main()
         {
-            // Define input workbook path
-            string inputPath = "input.xlsx";
-
-            // Load workbook if file exists; otherwise create a new workbook with sample data
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            try
             {
-                workbook = new Workbook(inputPath);
+                string inputPath = "input.xlsx";
+                Workbook workbook;
+
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    Worksheet sheet = workbook.Worksheets[0];
+                    sheet.Cells["A1"].PutValue("Sample Data");
+                }
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Additional option customizations can be added here if needed
+
+                // Generate timestamped HTML filename
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string htmlFileName = $"Export_{timestamp}.html";
+
+                // Save the workbook as HTML
+                workbook.Save(htmlFileName, htmlOptions);
+                Console.WriteLine($"Workbook exported successfully to {htmlFileName}");
             }
-            else
+            catch (Exception ex)
             {
-                workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample Data");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: TableCssIdPrefix is not available in this version of Aspose.Cells for .NET
-
-            // Create a timestamped filename
-            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string fileName = $"ExportTable_{timestamp}.html";
-
-            // Save the workbook as HTML
-            workbook.Save(fileName, htmlOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

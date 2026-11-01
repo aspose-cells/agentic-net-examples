@@ -1,16 +1,17 @@
-// Title: Add an unchecked 'Select' checkbox form control to a chart sheet using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a chart sheet in an Aspose.Cells workbook, inserts a free‑floating CheckBox shape with the caption 'Select', ensures the box is unchecked by default, and saves the file. | Generate a complete Aspose.Cells example that adds a form control checkbox to a chart sheet, sets its Placement to FreeFloating, assigns the text 'Select', and leaves the Checked property false.
-// Common Searches: aspnet add a free floating checkbox to an Excel chart sheet with Aspose.Cells | c# Aspose.Cells create unchecked form control on chart sheet workbook | how to set checkbox caption to 'Select' in Aspose.Cells chart sheet | Aspose.Cells place a checkbox control on a chart sheet without linking to cells | save chart sheet with checkbox using Aspose.Cells C# example
-// Tags: Aspose.Cells add checkbox to chart sheet | C# free-floating form control placement | unchecked checkbox default state Aspose.Cells | chart sheet checkbox label Select | Aspose.Cells chart sheet form control example
+// Title: Add an unchecked simulated checkbox labeled 'Select' to a chart sheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that inserts a rectangle shape on a chart sheet, sets its text to 'Select', and makes it appear as an unchecked checkbox with Aspose.Cells. | Show how to position a simulated checkbox shape beside a column chart in a workbook and save the result as an .xlsx file using Aspose.Cells for .NET.
+// Common Searches: how to create a simulated checkbox on an Excel chart sheet with Aspose.Cells C# | Aspose.Cells add rectangle shape as checkbox on chart worksheet | C# Aspose.Cells default unchecked checkbox label Select | place UI shape next to chart in Aspose.Cells workbook
+// Tags: add rectangle shape as checkbox Aspose.Cells | simulated form control on chart sheet C# | insert unchecked checkbox label Select Excel | Aspose.Cells chart worksheet shape positioning | save workbook with checkbox shape .xlsx
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new workbook, adds a worksheet named 'ChartSheet' to act as a chart sheet, inserts a free‑floating checkbox form control labeled 'Select', leaves it unchecked, and saves the workbook as ChartSheetWithCheckbox.xlsx.
+    // The example creates a new workbook, adds a worksheet with a column chart, and simulates an unchecked checkbox by inserting a rectangle shape labeled 'Select' on the same sheet. The workbook is then saved as ChartWithCheckbox.xlsx.
     class Program
     {
         static void Main(string[] args)
@@ -18,45 +19,35 @@ namespace AsposeCellsExample
             try
             {
                 // Create a new workbook
-                Workbook workbook = new Workbook();
+                var workbook = new Workbook();
 
-                // Add a regular worksheet (chart sheet not supported in this version)
-                int sheetIndex = workbook.Worksheets.Add();
-                Worksheet chartSheet = workbook.Worksheets[sheetIndex];
-                chartSheet.Name = "ChartSheet";
+                // Add a new worksheet to host the chart and the simulated checkbox
+                var worksheet = workbook.Worksheets.Add("SheetWithChart");
 
-                // Add a checkbox form control to the worksheet
-                // Parameters: upperLeftRow, upperLeftColumn, top (pixels), left (pixels), width (pixels), height (pixels)
-                CheckBox checkBox = chartSheet.Shapes.AddCheckBox(
-                    0,    // Upper left row
-                    0,    // Upper left column
-                    10,   // Top offset in pixels
-                    10,   // Left offset in pixels
-                    100,  // Width in pixels
-                    20    // Height in pixels
+                // Add a simple column chart to the worksheet (positioned at rows 5‑15, columns A‑F)
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                var chart = worksheet.Charts[chartIndex];
+                chart.Title.Text = "Sample Chart";
+
+                // Simulate a checkbox using a rectangle shape (Aspose.Cells older versions may lack form controls)
+                // Parameters: shape type, upper left row, upper left column, top offset, left offset, width, height
+                var checkBoxShape = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // use MsoDrawingType for compatibility
+                    1,   // row index (0‑based)
+                    1,   // column index (0‑based)
+                    0,   // top offset in pixels
+                    0,   // left offset in pixels
+                    100, // width in pixels
+                    20   // height in pixels
                 );
 
-                if (checkBox == null)
-                {
-                    throw new InvalidOperationException("Failed to create a checkbox control.");
-                }
+                // Set the label of the simulated checkbox
+                checkBoxShape.Text = "Select";
 
-                // Set the label text for the checkbox
-                checkBox.Text = "Select";
-
-                // Ensure the checkbox is placed freely (not tied to cells)
-                checkBox.Placement = PlacementType.FreeFloating;
-
-                // Set the default state to unchecked (if supported)
-                // Some versions expose a 'Checked' property; if not, this line can be omitted.
-                // checkBox.Checked = false;
-
-                // Define output file path
-                string outputPath = "ChartSheetWithCheckbox.xlsx";
-
-                // Ensure the output directory exists
+                // Determine output path and ensure directory exists
+                string outputPath = "ChartWithCheckbox.xlsx";
                 string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
@@ -67,7 +58,7 @@ namespace AsposeCellsExample
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

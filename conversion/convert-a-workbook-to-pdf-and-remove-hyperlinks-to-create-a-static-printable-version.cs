@@ -1,59 +1,26 @@
-// Title: Convert an Excel workbook to a static PDF and strip all hyperlinks using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, deletes every hyperlink, removes hyperlink underline and color styling, and saves the workbook as a PDF. | Demonstrate how to clear the Hyperlinks collection of each worksheet and reset cell styles before calling Workbook.Save with SaveFormat.Pdf.
-// Common Searches: aspocells remove hyperlinks before pdf export c# | c# convert excel to pdf without hyperlink formatting using aspose.cells | how to strip hyperlink styling from Excel workbook in .NET | export static printable PDF from Excel workbook Aspose.Cells | clear all hyperlinks in workbook programmatically Aspose.Cells
-// Tags: remove hyperlinks Aspose.Cells | excel to pdf conversion without links | clear cell hyperlink formatting Aspose.Cells | static printable PDF from Excel | hyperlink removal before pdf export C#
+// Title: Convert an Excel workbook to a static printable PDF by removing all hyperlinks with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# remove all hyperlinks before exporting to PDF | How to generate a PDF from Excel without clickable links using Aspose.Cells | C# code to clear worksheet hyperlinks and save as static PDF with Aspose.Cells | Export .xlsx to PDF with hyperlinks disabled in Aspose.Cells .NET | Create a printable PDF from Excel by stripping hyperlinks in C#
+// Tags: clear worksheet hyperlinks Aspose.Cells | export workbook to PDF Aspose.Cells C# | hyperlink removal before PDF conversion | static printable PDF generation Aspose.Cells | SaveFormat.Pdf usage Aspose.Cells
 
 using System;
-using System.IO;
-using System.Drawing;
 using Aspose.Cells;
 
-// The program loads 'input.xlsx', clears every hyperlink and resets underline and font color on all cells, then saves the workbook as a static 'output.pdf' using Aspose.Cells.
-class Program
+// The example loads an Excel file, iterates through each worksheet to clear its Hyperlinks collection, and then saves the workbook as a PDF using Aspose.Cells, resulting in a static, printable PDF with all hyperlinks removed.
+class WorkbookToPdfStatic
 {
     static void Main()
     {
-        try
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet and remove all hyperlinks
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.pdf";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Process each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Remove all hyperlinks from the worksheet
-                sheet.Hyperlinks.Clear();
-
-                // Reset hyperlink‑like formatting on cells
-                foreach (Cell cell in sheet.Cells)
-                {
-                    Style style = cell.GetStyle();
-
-                    // Clear underline and set default font color
-                    style.Font.Underline = FontUnderlineType.None;
-                    style.Font.Color = Color.Black;
-
-                    cell.SetStyle(style);
-                }
-            }
-
-            // Save the workbook as a PDF
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved as PDF: {outputPath}");
+            // Clear the Hyperlinks collection to make the sheet static
+            sheet.Hyperlinks.Clear();
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        // Save the modified workbook as a PDF (static, printable version)
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

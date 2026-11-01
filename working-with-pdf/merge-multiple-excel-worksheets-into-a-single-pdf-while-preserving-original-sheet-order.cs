@@ -1,59 +1,61 @@
-// Title: Combine all worksheets of an Excel workbook into a single PDF while keeping the original sheet order using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, configures PdfSaveOptions to merge all worksheets, and saves the output as one PDF preserving the sheet sequence. | Show how to check for the existence of the source Excel file, create the destination folder if needed, and export the workbook to a concatenated PDF without using OnePagePerSheet. | Provide a C# example that sets PdfSaveOptions.OnePagePerSheet = false to produce a single PDF from multiple sheets in their original order.
-// Common Searches: how to export multiple Excel sheets to a single PDF using Aspose.Cells C# | preserve worksheet order when converting an Excel workbook to PDF with Aspose.Cells | Aspose.Cells PdfSaveOptions merge sheets into one PDF .NET | C# convert Excel workbook with many sheets to one PDF file | save Excel workbook as concatenated PDF Aspose.Cells example
-// Tags: Aspose.Cells PDF conversion with sheet concatenation | PdfSaveOptions configuration for multi-sheet PDF | C# preserve worksheet order in PDF export | Excel workbook to single PDF using Aspose.Cells | create output folder before saving PDF in C#
+// Title: Convert an Excel workbook with multiple worksheets to a single PDF while preserving the original sheet order using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells convert multi‑sheet Excel workbook to one PDF preserving sheet sequence | How to export all worksheets from an .xlsx file into a single PDF document with Aspose.Cells | Aspose.Cells PDFSaveOptions to merge worksheets into one PDF file in C# | Maintain original worksheet order when saving Excel as PDF using Aspose.Cells .NET | Save Excel workbook as single PDF with each sheet on separate pages using Aspose.Cells
+// Tags: Aspose.Cells PDFSaveOptions worksheet order | export multi‑sheet Excel to single PDF C# | convert workbook to PDF preserving sheet sequence | OnePagePerSheet false Aspose.Cells | AllColumnsInOnePagePerSheet option
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The sample verifies the input .xlsx file, ensures the output directory exists, loads the workbook with Aspose.Cells, sets PdfSaveOptions.OnePagePerSheet to false so all worksheets are concatenated in their original order, and saves the result as a single PDF file.
+// The sample loads an .xlsx workbook, sets PdfSaveOptions (OnePagePerSheet = false, AllColumnsInOnePagePerSheet = true) to keep each worksheet on separate pages while retaining the original sheet order, and saves the entire workbook as a single merged PDF file.
 class ExcelToPdfMerger
 {
     static void Main()
     {
         // Path to the source Excel file containing multiple worksheets
-        string excelPath = @"C:\Input\WorkbookWithMultipleSheets.xlsx";
+        string excelPath = "input.xlsx";
 
-        // Path where the merged PDF will be saved
-        string pdfPath = @"C:\Output\MergedWorkbook.pdf";
+        // Desired path for the merged PDF output
+        string pdfPath = "merged_output.pdf";
+
+        // Verify that the input Excel file exists
+        if (!File.Exists(excelPath))
+        {
+            Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
+            return;
+        }
 
         try
         {
-            // Verify that the input Excel file exists
-            if (!File.Exists(excelPath))
-            {
-                Console.WriteLine($"Input file not found: {excelPath}");
-                return;
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(pdfPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Load the Excel workbook (preserves original sheet order)
+            // Load the workbook (all worksheets are loaded preserving their original order)
             Workbook workbook = new Workbook(excelPath);
 
             // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Allow sheets to span multiple pages and concatenate them in order
-                OnePagePerSheet = false
-                // Additional options can be set here, e.g., GridlineType, Headings, etc.
+                // Ensure that each worksheet is rendered on separate pages
+                // but all pages are combined into a single PDF document.
+                // The default behavior already preserves sheet order.
+                OnePagePerSheet = false,
+
+                // Optional: fit all columns of each sheet onto one PDF page
+                // (helps maintain layout when sheets are wide)
+                AllColumnsInOnePagePerSheet = true
             };
 
-            // Save the workbook as a single PDF file using the options
+            // Save the entire workbook as a single PDF file
             workbook.Save(pdfPath, pdfOptions);
 
-            Console.WriteLine("Workbook successfully merged into PDF: " + pdfPath);
+            Console.WriteLine($"Workbook successfully merged into PDF: {pdfPath}");
+        }
+        catch (CellsException ex)
+        {
+            // Handles Aspose.Cells specific errors (e.g., password-protected files)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Handles any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

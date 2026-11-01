@@ -1,58 +1,55 @@
-// Title: How to retrieve chart objects from a worksheet and list all series names using Aspose.Cells for .NET (C#)
-// AI Prompts: Load an Excel workbook with Aspose.Cells, iterate over each chart on the first worksheet, and print the chart name followed by the names of all its data series, using a placeholder for any series without a name. | Using Aspose.Cells for .NET, access the NSeries collection of every chart in a worksheet and output each series' Name property, substituting "(Unnamed Series)" when the property is empty.
-// Common Searches: Aspose.Cells C# get names of all series in a chart on a worksheet | How to list chart series names from an Excel file using Aspose.Cells .NET | C# code to iterate over worksheet charts and read series names with Aspose.Cells | Retrieve chart object and its NSeries collection in Aspose.Cells for .NET | Handle empty series names when reading Excel charts with Aspose.Cells
-// Tags: Aspose.Cells enumerate chart series C# | C# read chart series names Aspose.Cells | Aspose.Cells get chart NSeries collection | Aspose.Cells handle unnamed series | iterate worksheet charts Aspose.Cells
+// Title: How to retrieve a chart from an Excel worksheet and list all its series names using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# get chart object from worksheet and read series names | list series names of the first chart in an Excel file using Aspose.Cells | enumerate NSeries collection in Aspose.Cells chart C# example | C# code to extract chart series labels from an .xlsx workbook with Aspose.Cells | how to iterate over chart series in Aspose.Cells for .NET
+// Tags: Aspose.Cells retrieve chart from worksheet | Aspose.Cells enumerate chart series names | C# Aspose.Cells NSeries iteration | Excel .xlsx chart series extraction C# | Aspose.Cells chart series enumeration example
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example checks for the presence of an input.xlsx file, loads it into a Workbook, accesses the first worksheet, loops through each Chart in the worksheet, prints the chart's name, and then iterates the chart's NSeries collection to display each series name, substituting "(Unnamed Series)" for any missing names, while handling potential runtime exceptions.
-class Program
+// The sample loads an Excel workbook, accesses the first worksheet, checks for charts, retrieves the first chart, and iterates through its NSeries collection to output each series' Name, with error handling for missing files or absent charts.
+class ListChartSeriesNames
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Path to the input workbook
+            string workbookPath = "input.xlsx";
 
-            // Get the first worksheet (adjust index or name as needed)
+            // Verify that the file exists before loading
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"File not found: {workbookPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Iterate through all charts on the worksheet
-            foreach (Chart chart in worksheet.Charts)
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
             {
-                Console.WriteLine($"Chart: {chart.Name}");
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-                // Iterate through each series in the chart
-                foreach (Series series in chart.NSeries)
-                {
-                    // Obtain the series name; if empty, provide a placeholder
-                    string seriesName = series.Name;
-                    if (string.IsNullOrEmpty(seriesName))
-                    {
-                        seriesName = "(Unnamed Series)";
-                    }
+            // Retrieve the first chart
+            Chart chart = worksheet.Charts[0];
 
-                    Console.WriteLine($"  Series: {seriesName}");
-                }
+            // Output the names of all series in the chart
+            foreach (var series in chart.NSeries)
+            {
+                Console.WriteLine(series.Name);
             }
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any runtime errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

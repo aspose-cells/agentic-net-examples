@@ -1,39 +1,41 @@
-// Title: Set MemorySetting.MemoryPreference to Low in Aspose.Cells C# before opening a large XLSX workbook
-// AI Prompts: Write C# code that configures Aspose.Cells MemorySetting.MemoryPreference to Low, then loads a massive .xlsx file and saves it. | Show how to enable low‑memory mode in Aspose.Cells prior to creating a Workbook instance for a big Excel workbook. | Provide a C# example that verifies the file exists, sets low memory preference, opens the workbook, and handles any exceptions.
-// Common Searches: asp.net set memorypreference low before loading large excel with aspose.cells | how to reduce memory consumption when opening big xlsx using Aspose.Cells in C# | Aspose.Cells low memory mode example for massive workbook | configure MemorySetting.MemoryPreference to Low for large Excel files in .NET
-// Tags: Aspose.Cells low memory preference | MemorySetting.MemoryPreference Low example | load large XLSX with reduced RAM Aspose.Cells | C# workbook memory optimization Aspose.Cells | configure memory setting before workbook load
+// Title: How to set MemorySetting.MemoryPreference to Low in Aspose.Cells for .NET before opening a massive XLSX workbook to minimize RAM usage
+// Common Searches: Aspose.Cells set MemoryPreference low before loading large XLSX in C# | reduce memory consumption when opening massive Excel file with Aspose.Cells .NET | configure MemorySetting.MemoryPreference to Low for big workbook in Aspose.Cells | C# example low memory mode Aspose.Cells opening huge XLSX | optimize RAM usage Aspose.Cells workbook load large file
+// Tags: MemoryPreference low Aspose.Cells | load large XLSX low memory Aspose.Cells | Aspose.Cells memory setting for massive workbook | RAM optimization Aspose.Cells workbook loading | Aspose.Cells large Excel file performance tuning | configure MemorySetting before workbook open
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using Aspose.Cells;
 
-// The sample checks that the specified massive.xlsx file exists, sets Aspose.Cells MemorySetting.MemoryPreference to Low to minimize RAM usage, loads the workbook, optionally processes it, saves the result to output.xlsx, and logs any exceptions.
+// Demonstrates checking for the existence of a massive XLSX file, configuring Aspose.Cells MemorySetting.MemoryPreference to Low to lower RAM consumption, loading the workbook, and handling any exceptions.
 class Program
 {
     static void Main()
     {
+        // Path to the massive XLSX file.
+        string filePath = @"C:\Data\MassiveFile.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException.
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"Input file not found: {filePath}");
+            return;
+        }
+
         try
         {
-            // Paths for input and output files
-            const string inputPath = "massive.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load the workbook.
+            Workbook workbook = new Workbook(filePath);
 
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
+            // (Optional) Perform any required operations on the workbook here.
 
-            // Load the workbook (default load options)
-            Workbook workbook = new Workbook(inputPath);
-
-            // (Optional) Perform any required operations on the workbook here
-
-            // Save the workbook to the specified output path
-            workbook.Save(outputPath);
+            // Example: Save the workbook to a new file after processing.
+            // string outputPath = @"C:\Data\ProcessedFile.xlsx";
+            // workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            // Log the exception details for troubleshooting
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

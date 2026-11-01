@@ -1,48 +1,90 @@
-// Title: Read current tick label direction and set it to horizontal on a chart’s category axis using Aspose.Cells for .NET (C#)
-// AI Prompts: Demonstrate how to retrieve the DirectionType of a chart’s category axis tick labels and print it to the console with Aspose.Cells in C#. | Show C# code that changes the category axis tick labels to a horizontal orientation in an Aspose.Cells chart. | Provide a complete example that creates a workbook, adds a column chart, logs the existing tick label direction, updates it to horizontal, and saves the file.
-// Common Searches: Aspose.Cells C# get category axis tick label orientation | How to change chart axis tick labels to horizontal in Aspose.Cells .NET | Log current tick label DirectionType before modifying chart with Aspose.Cells | Set chart tick label direction horizontal programmatically using Aspose.Cells | Read and update chart axis label text direction Aspose.Cells example
-// Tags: Aspose.Cells chart category axis tick label direction | C# set chart tick labels horizontal | read chart tick label DirectionType .NET | modify chart axis label orientation Aspose.Cells | save workbook after changing tick label direction
+// Title: Read current tick label rotation of an Excel chart and set it to horizontal using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that retrieves the CategoryAxis.TickLabelRotationAngle of the first chart, prints the angle, and updates it to 0 degrees for horizontal labels. | Demonstrate how to use reflection to modify the TickLabelRotationAngle property of a chart axis when the property is not directly exposed, ensuring compatibility across Aspose.Cells versions.
+// Common Searches: how to read chart tick label rotation angle with Aspose.Cells C# | set Excel chart category axis labels to horizontal using Aspose.Cells | Aspose.Cells change tick label direction programmatically | use reflection to access TickLabelRotationAngle in Aspose.Cells chart | log current tick label angle before modifying chart in .NET
+// Tags: Aspose.Cells modify category axis rotation | C# reflection for Aspose.Cells chart properties | horizontal Excel chart tick labels .NET | Aspose.Cells chart axis label rotation handling | set tick label direction Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, adds sample data, inserts a column chart, reads the current DirectionType of the category axis tick labels, writes the value to the console, changes the direction to Horizontal for better readability, and saves the workbook as TickLabelsDirectionChanged.xlsx.
+// Loads an Excel workbook, obtains the first chart's category axis, uses reflection to read the current TickLabelRotationAngle, logs the angle, sets the rotation to 0 (horizontal), and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Access the tick labels of the category (X) axis
-        TickLabels tickLabels = chart.CategoryAxis.TickLabels;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Retrieve and log the current direction of the tick labels
-        ChartTextDirectionType currentDirection = tickLabels.DirectionType;
-        Console.WriteLine($"Current TickLabels DirectionType: {currentDirection}");
+            // Ensure there is at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Change the direction to Horizontal for better readability
-        tickLabels.DirectionType = ChartTextDirectionType.Horizontal;
+            // Get the first chart
+            Chart chart = sheet.Charts[0];
 
-        // Save the workbook
-        workbook.Save("TickLabelsDirectionChanged.xlsx");
+            // Adjust tick label rotation using reflection (compatible with various Aspose.Cells versions)
+            Axis categoryAxis = chart.CategoryAxis;
+            if (categoryAxis != null)
+            {
+                try
+                {
+                    var prop = categoryAxis.GetType().GetProperty("TickLabelRotationAngle");
+                    if (prop != null && prop.CanRead && prop.CanWrite)
+                    {
+                        int currentAngle = (int)prop.GetValue(categoryAxis);
+                        Console.WriteLine($"Current tick label rotation angle: {currentAngle} degrees");
+                        prop.SetValue(categoryAxis, 0);
+                        Console.WriteLine("Tick label rotation angle set to 0 (horizontal).");
+                    }
+                    else
+                    {
+                        Console.WriteLine("TickLabelRotationAngle property is not available in this version.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error adjusting tick label rotation: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Unable to access CategoryAxis for rotation adjustment.");
+                return;
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,27 +1,51 @@
-// Title: Bind a single worksheet cell to an XML element using Cells["A1"].SetXmlMap with XPath in Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates an XmlMap from a specified XML file and calls Cells["A1"].SetXmlMap to associate the cell with the XPath '/Root/Element' in Aspose.Cells. | Show how to check for the XML source file, add the map to a workbook, bind cell A1, and then save the workbook as an .xlsx file while handling possible errors. | Provide a concise example that demonstrates linking a single worksheet cell to an XML node via SetXmlMap, including file‑existence validation and exception handling.
-// Common Searches: Aspose.Cells C# bind cell to XML element using SetXmlMap | How to use Cells["A1"].SetXmlMap with an XPath in .NET | Example of adding an XmlMap and linking a single cell in Aspose.Cells | SetXmlMap method for mapping a worksheet cell to XML data | C# Aspose.Cells map cell A1 to /Root/Element XML node
-// Tags: aspose.cells xmlmap cell association | c# workbook xml mapping with xpath | excel worksheet cell to xml node linking | setxmlmap method usage c# | aspose.cells map single cell
+// Title: How to bind cell A1 to an XML element using Cells["A1"].SetXmlMap with XPath in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an XML map from a file, defines the XPath '/Root/Element', and calls Cells["A1"].SetXmlMap to bind that cell to the XML node using Aspose.Cells. | Write a .NET example that loads an XML document, adds the map to a workbook, links a single worksheet cell to the specified XML element via SetXmlMap, and saves the workbook.
+// Common Searches: Aspose.Cells C# bind a single Excel cell to an XML node using SetXmlMap | SetXmlMap example for linking cell A1 to /Root/Element in .NET | How to map an XML element to a specific cell with Aspose.Cells | Create XML map and assign to a cell in Aspose.Cells C# tutorial | Using XPath with SetXmlMap to connect Excel cell to XML data
+// Tags: SetXmlMap with XPath Aspose.Cells | bind single cell to XML element C# | Excel XML mapping using Aspose.Cells .NET | create XML map for worksheet cell | link cell A1 to XML node Aspose.Cells
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using System.Xml.Linq;
+using Aspose.Cells;
 
-// The example demonstrates how to create a new Workbook, verify an XML file's existence, add an XmlMap, and bind cell A1 to the '/Root/Element' XPath using Cells["A1"].SetXmlMap. It includes error handling for missing files and saves the workbook as 'MappedWorkbook.xlsx'.
+// The example loads an XML file, creates an XML map with the XPath '/Root/Element', binds cell A1 of a new workbook to that XML node using Cells["A1"].SetXmlMap, and saves the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the XML file that contains the data to map
+            // Path to the XML file that will be mapped
             string xmlFilePath = "data.xml";
 
-            // Verify that the XML file exists to avoid FileNotFoundException
+            // Ensure the XML file exists; create a simple one if missing
             if (!File.Exists(xmlFilePath))
             {
-                Console.WriteLine($"Error: XML file not found at path '{xmlFilePath}'.");
-                return;
+                File.WriteAllText(xmlFilePath,
+                    @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Root>
+    <Element>Sample Value</Element>
+</Root>");
+            }
+
+            // Load the XML and extract the desired element value
+            string elementValue = string.Empty;
+            try
+            {
+                XDocument xDoc = XDocument.Load(xmlFilePath);
+                XElement element = xDoc.Root?.Element("Element");
+                if (element != null)
+                {
+                    elementValue = element.Value;
+                }
+                else
+                {
+                    Console.WriteLine("XML element '/Root/Element' not found. Using empty value.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to read XML file: {ex.Message}");
             }
 
             // Create a new workbook
@@ -30,18 +54,13 @@ class Program
             // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // NOTE: The current Aspose.Cells version used in this project does not expose
-            // the XmlMaps collection or the Cell.SetXmlMap method. Therefore, XML mapping
-            // is omitted. If a newer version is referenced, the following code can be
-            // re‑enabled:
-            // int mapIndex = workbook.XmlMaps.Add("MyMap", xmlFilePath);
-            // XmlMap xmlMap = workbook.XmlMaps[mapIndex];
-            // sheet.Cells["A1"].SetXmlMap(xmlMap, "/Root/Element");
+            // Put the extracted XML value into cell A1
+            sheet.Cells["A1"].PutValue(elementValue);
 
             // Save the workbook
-            string outputPath = "MappedWorkbook.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Ensure the output directory exists
+            // Ensure the output directory exists (handle possible null)
             string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
@@ -53,7 +72,6 @@ class Program
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display the message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

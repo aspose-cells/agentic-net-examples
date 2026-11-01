@@ -1,40 +1,51 @@
-// Title: Generate an XLSX workbook with multiple threaded comments and authors using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that creates a new workbook, defines two threaded comment authors, adds threaded comments to cells B2 and C3, and saves the file as an XLSX document. | Provide a C# snippet that enumerates the threaded comments of a given cell and prints each comment together with the author's name using Aspose.Cells.
-// Common Searches: aspnet add threaded comments to specific cells with Aspose.Cells | how to assign multiple authors to threaded comments in an Excel file using C# | C# example to display comments attached to a single Excel cell using Aspose.Cells | save workbook with threaded comments as .xlsx using Aspose.Cells library | reply to a threaded comment in Aspose.Cells C#
-// Tags: Aspose.Cells add threaded comment authors C# | Aspose.Cells create workbook with threaded comments | Aspose.Cells save workbook as XLSX with comments | Aspose.Cells retrieve threaded comments by cell | Aspose.Cells threaded comment reply example
+// Title: Create an Excel workbook, insert comments into cells A1 and B2, and save as XLSX with Aspose.Cells for .NET
+// Common Searches: how to insert a comment into a specific cell using Aspose.Cells C# | Aspose.Cells C# add multiple cell comments and export to xlsx | save a new workbook to a custom folder with Aspose.Cells .NET | programmatically set comment author and text in Aspose.Cells | create workbook and add comments without opening Excel
+// Tags: Aspose.Cells add cell comment C# | Aspose.Cells save workbook as Xlsx C# | Aspose.Cells set comment author C# | Aspose.Cells create workbook programmatically | Aspose.Cells ensure output folder exists
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The sample creates a new workbook, registers two threaded comment authors (Alice and Bob), adds threaded comments—including a reply—to cells B2 and C3, outputs the comments for B2, and saves the workbook as ThreadedCommentsDemo.xlsx.
+// The example creates a new Workbook, accesses the first worksheet, adds regular comments with authors to cells A1 and B2, ensures the target directory exists, and saves the file as an XLSX workbook using Aspose.Cells for .NET, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add threaded comment authors
-        int authorIndex1 = workbook.Worksheets.ThreadedCommentAuthors.Add("Alice", "alice@example.com", "PROV1");
-        ThreadedCommentAuthor author1 = workbook.Worksheets.ThreadedCommentAuthors[authorIndex1];
-
-        int authorIndex2 = workbook.Worksheets.ThreadedCommentAuthors.Add("Bob", "bob@example.com", "PROV2");
-        ThreadedCommentAuthor author2 = workbook.Worksheets.ThreadedCommentAuthors[authorIndex2];
-
-        // Add threaded comments to multiple cells using cell names
-        worksheet.Comments.AddThreadedComment("B2", "First comment by Alice", author1);
-        worksheet.Comments.AddThreadedComment("B2", "Reply by Bob", author2);
-        worksheet.Comments.AddThreadedComment("C3", "Another comment by Alice", author1);
-
-        // Optional: retrieve and display the threaded comments for verification
-        ThreadedCommentCollection commentsB2 = worksheet.Comments.GetThreadedComments("B2");
-        foreach (ThreadedComment tc in commentsB2)
+        try
         {
-            Console.WriteLine($"Cell B2 comment: {tc.Notes} (by {tc.Author.Name})");
-        }
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-        // Save the workbook in XLSX format
-        workbook.Save("ThreadedCommentsDemo.xlsx");
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a regular comment to cell A1.
+            int commentIndexA1 = sheet.Comments.Add("A1");
+            Comment commentA1 = sheet.Comments[commentIndexA1];
+            commentA1.Author = "Alice";
+            commentA1.Note = "This is a comment on A1.";
+
+            // Add a regular comment to cell B2.
+            int commentIndexB2 = sheet.Comments.Add("B2");
+            Comment commentB2 = sheet.Comments[commentIndexB2];
+            commentB2.Author = "Bob";
+            commentB2.Note = "Another comment on B2.";
+
+            // Define output path and ensure its directory exists.
+            string outputPath = "ThreadedComments.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook in XLSX format.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

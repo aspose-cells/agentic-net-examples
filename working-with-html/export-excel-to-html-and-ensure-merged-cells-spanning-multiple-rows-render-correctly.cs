@@ -1,13 +1,14 @@
-// Title: Export an Excel workbook to HTML while preserving multi‑row merged cells using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions to keep merged cells that span several rows, and saves the result as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions so that merged cell ranges are rendered correctly in the HTML output. | Add robust file‑existence checking and exception handling to a C# Excel‑to‑HTML conversion that maintains the original merged‑cell layout.
-// Common Searches: Aspose.Cells C# export Excel to HTML with merged cells spanning rows | How to keep multi‑row merged cells when converting .xlsx to HTML using Aspose | HtmlSaveOptions PreserveMergedCells property Aspose.Cells | C# convert workbook to HTML preserving merged cell layout | Export all worksheets to HTML Aspose.Cells merged cells issue
-// Tags: Aspose.Cells HtmlSaveOptions merged cells | C# Excel to HTML conversion preserving layout | Export merged cell ranges to HTML Aspose | HtmlSaveOptions ExportActiveWorksheetOnly false | Exception handling file validation Aspose.Cells
+// Title: Export an Excel workbook to HTML with correct rendering of multi‑row merged cells using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsx file, configures HtmlSaveOptions (ExportGridLines = true, Encoding = UTF8), and saves it as an .html file while preserving any merged cells that span multiple rows. | Show how to programmatically merge a range of cells in a worksheet before exporting to HTML with Aspose.Cells, ensuring the merged region appears correctly in the output. | Provide robust error‑handling for exporting an Excel workbook to HTML with Aspose.Cells, including file‑existence verification and exception logging.
+// Common Searches: how to keep merged cells when converting Excel to HTML using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions preserve row spanning merged regions | C# export .xlsx to .html with grid lines and UTF‑8 encoding | export Excel workbook to HTML while maintaining cell merges Aspose | sample code for saving Excel as HTML with merged cells Aspose.Cells
+// Tags: Aspose.Cells HTML export with merged cells | C# HtmlSaveOptions ExportGridLines UTF-8 | preserve row span merged region Aspose.Cells | Excel to HTML conversion .NET Aspose.Cells | error handling file existence Aspose.Cells export
 
-using Aspose.Cells;
 using System;
 using System.IO;
+using System.Text;
+using Aspose.Cells;
 
-// The example checks for the presence of input.xlsx, loads it with Aspose.Cells Workbook, configures HtmlSaveOptions (ExportActiveWorksheetOnly = false) to retain merged cells that span multiple rows, and saves the workbook as output.html while handling any runtime errors.
+// The example checks for the input.xlsx file, loads it with Aspose.Cells, optionally merges a range of cells, sets HtmlSaveOptions to export grid lines and use UTF‑8 encoding, and saves the workbook as output.html while handling exceptions.
 class Program
 {
     static void Main()
@@ -15,7 +16,7 @@ class Program
         const string inputPath = "input.xlsx";
         const string outputPath = "output.html";
 
-        // Verify that the input file exists to avoid FileNotFoundException
+        // Verify that the source Excel file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
             Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
@@ -24,23 +25,29 @@ class Program
 
         try
         {
-            // Load the Excel workbook
+            // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Set HTML export options
+            // Example of creating a merged region (optional)
+            // workbook.Worksheets[0].Cells.Merge(1, 0, 3, 2); // Merges rows 1‑3 and columns A‑C
+
+            // Configure HTML export options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Export all worksheets; set to true to export only the active sheet
-                ExportActiveWorksheetOnly = false
+                // Preserve grid lines for visual fidelity (optional)
+                ExportGridLines = true,
+
+                // Use UTF‑8 encoding for the output HTML
+                Encoding = Encoding.UTF8
             };
 
-            // Export the workbook to HTML using the configured options
+            // Export the workbook to an HTML file
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
+            // Catch any runtime exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

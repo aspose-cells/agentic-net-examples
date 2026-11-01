@@ -1,46 +1,40 @@
-// Title: Determine if the VLOOKUP function is supported by Aspose.Cells for .NET using reflection to call Workbook.IsFunctionSupported
-// AI Prompts: Generate C# code that uses reflection to invoke Workbook.IsFunctionSupported with "VLOOKUP" and prints the support status. | Create a reusable method that checks whether any Excel function name is supported by Aspose.Cells, handling the case where IsFunctionSupported is unavailable. | Write a console application that reports VLOOKUP compatibility in Aspose.Cells, defaulting to true when the API method cannot be found.
-// Common Searches: how to check if VLOOKUP is supported in Aspose.Cells .NET at runtime | using reflection to call Workbook.IsFunctionSupported in C# | fallback strategy when Workbook.IsFunctionSupported method is missing in Aspose.Cells | list of Excel functions supported by Aspose.Cells via API
-// Tags: Aspose.Cells reflection IsFunctionSupported check | C# verify Excel function support Aspose.Cells | runtime detection of VLOOKUP compatibility Aspose.Cells | handle missing IsFunctionSupported method version | Excel function support query Aspose.Cells .NET
+// Title: Programmatically verify if Aspose.Cells for .NET supports the VLOOKUP function by parsing the Supported Excel Functions page
+// Common Searches: C# code to check if VLOOKUP is listed in Aspose.Cells supported functions documentation | how to programmatically confirm Excel formula support in Aspose.Cells .NET | retrieve Aspose.Cells supported functions list and search for VLOOKUP using HttpClient | determine if VLOOKUP works with Aspose.Cells by inspecting the supported functions page | sample C# script to validate VLOOKUP availability in Aspose.Cells library
+// Tags: Aspose.Cells function availability query | C# HttpClient fetch Aspose.Cells docs | Excel formula support check .NET | VLOOKUP support detection Aspose.Cells | parse documentation for function list
 
 using System;
-using System.Reflection;
-using Aspose.Cells;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-// Demonstrates using reflection to call Workbook.IsFunctionSupported for "VLOOKUP" and outputting the result, with a fallback to true when the method is not present.
+// The example uses HttpClient to download the Aspose.Cells Supported Excel Functions page, searches the HTML for the term "VLOOKUP" (case‑insensitive), and prints whether the function is listed as supported, handling any request errors that may occur.
 class Program
 {
-    static void Main()
+    // URL of the Aspose.Cells Supported Excel Functions documentation
+    private const string SupportedFunctionsUrl = "https://docs.aspose.com/cells/net/supported-excel-functions/";
+
+    static async Task Main()
     {
-        try
+        // Create an HttpClient instance (lifecycle managed by using statement)
+        using (HttpClient client = new HttpClient())
         {
-            // Attempt to use the static IsFunctionSupported method via reflection.
-            // This avoids compile-time errors if the method is unavailable in the referenced version.
-            bool vlookupSupported = false;
-            MethodInfo? method = typeof(Workbook).GetMethod(
-                "IsFunctionSupported",
-                BindingFlags.Public | BindingFlags.Static,
-                null,
-                new[] { typeof(string) },
-                null);
-
-            if (method != null)
+            try
             {
-                // Invoke the method safely.
-                vlookupSupported = (bool)method.Invoke(null, new object[] { "VLOOKUP" });
-            }
-            else
-            {
-                // If the method does not exist, assume the function is supported (or handle as needed).
-                vlookupSupported = true;
-            }
+                // Load the documentation page
+                string pageContent = await client.GetStringAsync(SupportedFunctionsUrl);
 
-            Console.WriteLine($"VLOOKUP supported: {vlookupSupported}");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors.
-            Console.WriteLine($"Error: {ex.Message}");
+                // Verify if the VLOOKUP function is mentioned in the documentation
+                bool isVlookupSupported = pageContent.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                // Output the verification result
+                Console.WriteLine(isVlookupSupported
+                    ? "VLOOKUP function is supported by Aspose.Cells."
+                    : "VLOOKUP function is NOT listed in the supported functions documentation.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that occur during the request
+                Console.WriteLine($"Error while accessing the documentation: {ex.Message}");
+            }
         }
     }
 }

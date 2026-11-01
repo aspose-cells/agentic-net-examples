@@ -1,52 +1,60 @@
-// Title: Calculate a SUM array formula across multiple rows with Aspose.Cells for .NET and extract the scalar result
-// AI Prompts: Use Aspose.Cells CalculateArrayFormula to sum the range A1:B3 and retrieve the single value from the returned object[][] array. | Show how to call CalculateArrayFormula with maxRowCount and maxColumnCount parameters to restrict the output size for large dynamic array formulas. | Demonstrate saving a workbook after evaluating an array formula using Aspose.Cells for .NET.
-// Common Searches: aspnet calculate sum of a range using Aspose.Cells array formula | how to limit result dimensions when using CalculateArrayFormula in Aspose.Cells | retrieve scalar value from CalculateArrayFormula output in C# | example of saving workbook after array formula evaluation with Aspose.Cells
-// Tags: Aspose.Cells CalculateArrayFormula SUM | C# extract scalar from object array result | limit result size CalculateArrayFormula | save workbook after array calculation Aspose.Cells | populate worksheet evaluate array formula .NET
+// Title: Apply row‑wise SUM formulas to a data table using Aspose.Cells for .NET (C#)
+// Common Searches: how to add a SUM formula to each row in an Excel sheet with Aspose.Cells C# | Aspose.Cells C# set formula for a range of cells programmatically | calculate row totals in a worksheet without using array formulas in Aspose.Cells | save an Excel workbook after evaluating formulas with Aspose.Cells .NET | populate sample data and apply formulas using Aspose.Cells for .NET
+// Tags: row-wise sum formula Aspose.Cells C# | set cell formula programmatically Aspose.Cells | calculate workbook formulas .NET | populate Excel data Aspose.Cells | save workbook after formula evaluation Aspose.Cells | apply SUM across columns Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsArrayFormulaDemo
+// The example creates a new workbook, fills rows 2‑10 with numeric data, assigns a standard SUM formula to each cell in column E to total columns A‑D for that row, forces formula calculation, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, fills cells A1:B3, defines a SUM array formula, uses CalculateArrayFormula to compute it, extracts the scalar result from the returned object[][], optionally limits the result dimensions, and saves the workbook to a file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Create a new workbook
+            var workbook = new Workbook();
 
-            // Populate sample data (3 rows x 2 columns)
-            // A1:B3
-            cells["A1"].PutValue(1);
-            cells["A2"].PutValue(2);
-            cells["A3"].PutValue(3);
-            cells["B1"].PutValue(4);
-            cells["B2"].PutValue(5);
-            cells["B3"].PutValue(6);
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Define an array formula that aggregates (sums) all values in the range
-            string arrayFormula = "=SUM(A1:B3)";
+            // Populate sample data in rows 2-10 (A2:D10)
+            for (int i = 0; i < 9; i++) // 9 rows
+            {
+                sheet.Cells[i + 1, 0].PutValue(i + 1);           // A column
+                sheet.Cells[i + 1, 1].PutValue((i + 1) * 2);    // B column
+                sheet.Cells[i + 1, 2].PutValue((i + 1) * 3);    // C column
+                sheet.Cells[i + 1, 3].PutValue((i + 1) * 4);    // D column
+            }
 
-            // Create calculation options (default options are sufficient)
-            CalculationOptions calcOptions = new CalculationOptions();
+            // Apply a row‑wise sum formula in column E (E2:E10)
+            for (int i = 0; i < 9; i++)
+            {
+                // Use a normal formula for each cell (no array formula needed)
+                sheet.Cells[i + 1, 4].Formula = $"=SUM(A{i + 2}:D{i + 2})";
+            }
 
-            // Calculate the array formula. The result is returned as a 2‑dimensional object array.
-            object[][] result = sheet.CalculateArrayFormula(arrayFormula, calcOptions);
+            // Force calculation of all formulas
+            workbook.CalculateFormula();
 
-            // The SUM of the range returns a single value, located at result[0][0]
-            Console.WriteLine("Aggregated sum of A1:B3 = " + result[0][0]);
+            // Determine output file path (ensure absolute path)
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ArrayFormulaResult.xlsx");
+            string outputDir = Path.GetDirectoryName(outputPath) ?? Directory.GetCurrentDirectory();
 
-            // If you need to limit the size of the returned array (e.g., for large dynamic arrays),
-            // you can use the overload with maxRowCount and maxColumnCount.
-            // Here we request at most 1 row and 1 column because SUM returns a scalar.
-            object[][] limitedResult = sheet.CalculateArrayFormula(arrayFormula, calcOptions, 1, 1);
-            Console.WriteLine("Limited result (1x1) = " + limitedResult[0][0]);
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook (optional, demonstrates lifecycle compliance)
-            workbook.Save("ArrayFormulaResult.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

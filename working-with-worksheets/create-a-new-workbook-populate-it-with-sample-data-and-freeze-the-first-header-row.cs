@@ -1,12 +1,13 @@
-// Title: Create a new Excel workbook, fill it with a 2‑D string array, and freeze the first header row using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to create a workbook, insert a two‑dimensional string array into the first worksheet, and apply FreezePanes to lock the top header row. | Show how to determine the populated range and call FreezePanes(1, 0, totalRows, totalCols) so the header stays visible while scrolling in an Aspose.Cells worksheet.
-// Common Searches: Aspose.Cells C# freeze first row after writing data to worksheet | populate Excel worksheet from 2D string array using Aspose.Cells .NET | how to use FreezePanes with dynamic data range in Aspose.Cells | save workbook as xlsx after freezing header row with Aspose.Cells | example code for creating workbook and freezing header row in C# Aspose.Cells
-// Tags: Aspose.Cells create workbook C# | Aspose.Cells write 2d array to worksheet | Aspose.Cells freeze header row | Aspose.Cells set FreezePanes range | Aspose.Cells save as xlsx
+// Title: Create a new Excel workbook, insert sample data rows, and freeze the header row using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds a header row and several data rows, then freezes the first row. | Demonstrate the use of the FreezePanes method to lock the top header row after populating a worksheet with sample values.
+// Common Searches: asp.net freeze first row in Excel with Aspose.Cells C# example | how to programmatically add header and data rows then freeze pane using Aspose.Cells | C# code to create an .xlsx file with sample data and freeze the header row
+// Tags: Aspose.Cells create workbook with sample data | Aspose.Cells FreezePanes header row | C# populate worksheet cells programmatically | save Excel file as .xlsx using Aspose.Cells | initialize worksheet and lock top row
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// // Demonstrates creating a new workbook with Aspose.Cells, writing a 2‑D string array to the first sheet, freezing the top header row using FreezePanes, and saving the file as SampleData.xlsx.
+// C# program that creates a new workbook, writes a header and three data rows, freezes the first row using FreezePanes, and saves the file as SampleData.xlsx with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -16,37 +17,44 @@ class Program
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data to populate
-            string[,] data = new string[,]
-            {
-                { "ID", "Name", "Age", "Country" },
-                { "1", "Alice", "30", "USA" },
-                { "2", "Bob", "25", "UK" },
-                { "3", "Charlie", "28", "Canada" },
-                { "4", "Diana", "32", "Australia" }
-            };
+            // Populate header row
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
 
-            // Fill the worksheet with the sample data
-            for (int row = 0; row < data.GetLength(0); row++)
+            // Populate sample data rows
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
+
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
+
+            sheet.Cells["A4"].PutValue(3);
+            sheet.Cells["B4"].PutValue("Charlie");
+            sheet.Cells["C4"].PutValue(78);
+
+            // Freeze the first header row (freeze rows above row 2)
+            // Parameters: row, column, totalRowsToFreeze, totalColumnsToFreeze
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Define output path
+            string outputPath = "SampleData.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                for (int col = 0; col < data.GetLength(1); col++)
-                {
-                    sheet.Cells[row, col].PutValue(data[row, col]);
-                }
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Freeze the first header row (row index 0)
-            // Use the 4‑parameter overload: freeze rows above 'row' and columns left of 'column',
-            // and set the scrollable area to include all populated cells.
-            int totalRows = sheet.Cells.MaxDataRow + 1;
-            int totalCols = sheet.Cells.MaxDataColumn + 1;
-            sheet.FreezePanes(1, 0, totalRows, totalCols);
-
             // Save the workbook to a file
-            workbook.Save("SampleData.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

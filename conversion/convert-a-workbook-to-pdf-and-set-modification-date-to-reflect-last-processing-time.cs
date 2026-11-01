@@ -1,28 +1,23 @@
-// Title: Convert an Excel workbook to PDF and set the PDF creation timestamp using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that loads an Excel workbook and saves it as a PDF while assigning DateTime.Now to the PDF's CreatedTime via PdfSaveOptions. | Show how to configure Aspose.Cells PdfSaveOptions to embed a custom creation date into the exported PDF. | Provide a C# example that creates a workbook, adds data, and saves it as a PDF with the current processing time recorded in the PDF metadata.
-// Common Searches: how to set PDF creation date when exporting Excel to PDF with Aspose.Cells C# | Aspose.Cells PdfSaveOptions CreatedTime property usage example | C# convert workbook to PDF and include processing timestamp in metadata | set custom PDF metadata during Excel to PDF conversion Aspose.Cells | save Excel as PDF with current timestamp using Aspose.Cells .NET
-// Tags: Aspose.Cells PdfSaveOptions creation timestamp | C# Excel to PDF conversion with metadata | set PDF CreatedTime Aspose.Cells | export workbook as PDF with custom timestamp | Aspose.Cells PDF metadata customization
+// Title: Convert an Excel workbook to PDF and update its file modification timestamp using Aspose.Cells for .NET (C#)
+// Common Searches: c# convert xlsx to pdf with Aspose.Cells and set file last modified date | how to change PDF file timestamp after saving from Excel using Aspose.Cells | Aspose.Cells save workbook as PDF then update file system timestamp in .NET | set last write time on generated PDF after Excel conversion in C# | update file modification time after Aspose.Cells PDF export
+// Tags: Aspose.Cells workbook to PDF conversion C# | File.SetLastWriteTime usage after PDF generation | SaveFormat.Pdf parameter in Aspose.Cells | programmatically set file last write time .NET | Excel workbook PDF export timestamp handling
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// The example creates a workbook, writes a value to cell A1, configures PdfSaveOptions with CreatedTime set to DateTime.Now, and saves the workbook as ConvertedDocument.pdf, embedding the current processing time as the PDF's creation date.
+// The example loads an Excel workbook (input.xlsx), converts it to PDF (output.pdf) using Aspose.Cells' SaveFormat.Pdf, and then sets the PDF file's last write time to the current processing time with File.SetLastWriteTime.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-        // Example data
-        workbook.Worksheets[0].Cells["A1"].PutValue("Converted to PDF");
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Set PDF save options; CreatedTime reflects the processing time
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            CreatedTime = DateTime.Now
-        };
+        // Convert and save the workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
 
-        // Save the workbook as PDF using the options
-        workbook.Save("ConvertedDocument.pdf", pdfOptions);
+        // Set the PDF file's modification date to the current processing time
+        File.SetLastWriteTime("output.pdf", DateTime.Now);
     }
 }

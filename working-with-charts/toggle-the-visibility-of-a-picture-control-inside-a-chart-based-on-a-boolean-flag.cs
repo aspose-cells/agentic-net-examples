@@ -1,87 +1,83 @@
-// Title: How to toggle the visibility of a named picture inside an Excel chart using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, locates a chart picture called "MyPicture", and updates its IsVisible flag according to a Boolean variable. | Show how to employ .NET reflection to retrieve the hidden Pictures collection of a Chart object in Aspose.Cells and change a picture's visibility. | Create a snippet that conditionally hides or shows a chart image and saves the workbook using Aspose.Cells for .NET.
-// Common Searches: Aspose.Cells C# hide chart picture called MyPicture based on a condition | how to change chart image visibility programmatically with Aspose.Cells | reflection technique for accessing chart pictures in Aspose.Cells .NET | conditional display of Excel chart picture using Aspose.Cells C#
-// Tags: Aspose.Cells chart picture visibility control | C# reflection Aspose.Cells chart pictures | Excel chart picture conditional visibility | modify chart picture IsVisible Aspose | programmatic chart picture toggle C#
+// Title: Toggle visibility of an embedded picture in an Excel chart using Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells hide picture inside chart based on condition | How to set IsVisible for chart picture with Aspose.Cells .NET | Toggle embedded chart image visibility in Excel using Aspose.Cells | Aspose.Cells chart Pictures collection hide or show picture programmatically | Conditional display of chart picture in workbook with Aspose.Cells C#
+// Tags: Aspose.Cells chart picture visibility | C# set chart picture IsVisible | Aspose.Cells toggle embedded chart image | Excel chart picture manipulation .NET | Aspose.Cells Pictures property usage | conditional chart picture display Aspose.Cells
 
 using System;
 using System.IO;
-using System.Collections;
-using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example loads an Excel workbook, accesses the first chart, uses reflection to enumerate its Pictures collection, finds the picture named "MyPicture", sets its IsVisible property based on a Boolean flag, and saves the updated workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an existing workbook, accesses the first worksheet and its first chart, and uses a Boolean flag to set the IsVisible property of the first picture in the chart (if present). Handles versions without the Pictures property gracefully and saves the modified workbook.
+    class Program
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input workbook exists
-        if (!File.Exists(inputPath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
-        }
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        try
-        {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Get the first chart on the worksheet (adjust index or name as needed)
-            Chart chart = worksheet.Charts[0];
-
-            // Flag that determines visibility of the picture
-            bool showPicture = true; // set to false to hide the picture
-
-            // Attempt to manipulate chart pictures via reflection to stay compatible with older versions
             try
             {
-                PropertyInfo picturesProp = typeof(Chart).GetProperty("Pictures");
-                if (picturesProp != null)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    object picturesObj = picturesProp.GetValue(chart);
-                    if (picturesObj is IEnumerable pictures)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index or name as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one chart
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found on the worksheet.");
+                    return;
+                }
+
+                Chart chart = sheet.Charts[0];
+
+                // Flag that determines the picture visibility
+                bool showPicture = true; // Set to false to hide the picture
+
+                // Attempt to toggle picture visibility if the API supports it
+                try
+                {
+                    // The Chart.Pictures property is available in newer versions of Aspose.Cells.
+                    // If unavailable, this block will be skipped safely.
+                    var pictures = chart.Pictures;
+                    if (pictures != null && pictures.Count > 0)
                     {
-                        foreach (object picture in pictures)
-                        {
-                            Type picType = picture.GetType();
-                            PropertyInfo nameProp = picType.GetProperty("Name");
-                            PropertyInfo visibleProp = picType.GetProperty("IsVisible");
-                            if (nameProp != null && visibleProp != null)
-                            {
-                                string name = nameProp.GetValue(picture) as string;
-                                if (name == "MyPicture")
-                                {
-                                    visibleProp.SetValue(picture, showPicture);
-                                    break;
-                                }
-                            }
-                        }
+                        pictures[0].IsVisible = showPicture;
+                    }
+                    else
+                    {
+                        Console.WriteLine("No pictures found inside the chart.");
                     }
                 }
-                else
+                catch (MissingMemberException)
                 {
-                    Console.WriteLine("Chart picture manipulation is not supported in the current Aspose.Cells version.");
+                    // Property not available in the current Aspose.Cells version
+                    Console.WriteLine("Chart picture manipulation is not supported in this Aspose.Cells version.");
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error handling chart pictures: {ex.Message}");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while processing chart pictures: {ex.Message}");
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

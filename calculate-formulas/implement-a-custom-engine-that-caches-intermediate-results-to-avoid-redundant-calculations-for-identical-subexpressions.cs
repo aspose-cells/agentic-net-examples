@@ -1,111 +1,139 @@
-// Title: Create a C# Aspose.Cells custom calculation engine that caches identical sub‑expression results
-// AI Prompts: Write a C# class inheriting AbstractCalculationEngine that generates a cache key from the function name and its arguments and stores computed values in a Dictionary. | Set up CalculationOptions to use the custom engine, then invoke Workbook.CalculateFormula to demonstrate cache hits for repeated MYCACHEFUNC calls. | Extend the caching logic to handle ReferredArea parameters so that identical cell range values also retrieve results from the cache.
-// Common Searches: Aspose.Cells how to implement a custom calculation engine with result caching in C# | C# example of caching user‑defined function results in Aspose.Cells workbook | Avoid redundant formula calculations using a custom engine in Aspose.Cells | Cache identical sub‑expression evaluations for custom functions in Aspose.Cells | Performance optimization for Aspose.Cells custom functions by reusing previous results
-// Tags: Aspose.Cells custom calculation engine caching | C# dictionary cache for user-defined functions | reuse formula results Aspose.Cells | cache key generation based on function arguments | performance optimization Aspose.Cells custom functions
+// Title: Build a cached formula evaluation engine in C# using Aspose.Cells to efficiently compute and replace Excel formulas
+// Common Searches: C# Aspose.Cells cache identical sub‑expressions when evaluating Excel formulas | how to create a custom formula evaluator that avoids redundant calculations in Aspose.Cells | replace Excel cell formulas with computed values using a cached engine in C# | recursive evaluation of cell references with caching in Aspose.Cells | optimize performance of bulk formula calculation in Aspose.Cells C#
+// Tags: cached formula evaluation Aspose.Cells | recursive cell reference resolution C# | DataTable.Compute expression parsing | replace Excel formulas with static values C# | optimize Excel calculation performance Aspose.Cells | avoid redundant subexpression computation C#
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// The example defines a CachingEngine class that inherits AbstractCalculationEngine, builds a unique cache key from the function name and its parameters, returns a cached sum when the same argument set is encountered, and stores new results otherwise. The engine is attached via CalculationOptions and used with Workbook.CalculateFormula, showing cache hits for repeated MYCACHEFUNC calls and improving calculation performance.
-class CachingEngine : AbstractCalculationEngine
+// The example defines a CachedFormulaEngine that evaluates Excel formulas on a Worksheet, substitutes cell references (including nested formulas) with their numeric values, computes the arithmetic using DataTable.Compute, and caches results of identical sub‑expressions to prevent repeated work. The program loads a workbook, runs the engine on each formula cell, replaces the formula with the calculated value, and saves the updated file.
+class CachedFormulaEngine
 {
-    // Cache keyed by a string that represents the function name and its parameter values
-    private readonly Dictionary<string, object> _cache = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    private readonly Worksheet _worksheet;
+    private readonly Dictionary<string, double> _cache = new Dictionary<string, double>();
 
-    public override void Calculate(CalculationData data)
+    public CachedFormulaEngine(Worksheet worksheet)
     {
-        // Handle only the custom function MYCACHEFUNC
-        if (data.FunctionName.Equals("MYCACHEFUNC", StringComparison.OrdinalIgnoreCase))
-        {
-            // Build a unique cache key
-            var keyParts = new List<string> { data.FunctionName };
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object param = data.GetParamValue(i);
-                if (param is ReferredArea area)
-                {
-                    // Assume single‑cell area for simplicity
-                    object val = area.GetValue(0, 0);
-                    keyParts.Add(Convert.ToString(val));
-                }
-                else
-                {
-                    keyParts.Add(Convert.ToString(param));
-                }
-            }
-            string cacheKey = string.Join("|", keyParts);
-
-            // Return cached result if it exists
-            if (_cache.TryGetValue(cacheKey, out object cachedResult))
-            {
-                data.CalculatedValue = cachedResult;
-                return;
-            }
-
-            // Compute the result (sum of all parameters)
-            double sum = 0;
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object p = data.GetParamValue(i);
-                double d;
-                if (p is ReferredArea ra)
-                {
-                    d = Convert.ToDouble(ra.GetValue(0, 0));
-                }
-                else
-                {
-                    d = Convert.ToDouble(p);
-                }
-                sum += d;
-            }
-
-            // Store and return the result
-            data.CalculatedValue = sum;
-            _cache[cacheKey] = sum;
-        }
+        _worksheet = worksheet;
     }
 
-    // No need to force recalculation; cache will be used when possible
-    public override bool ForceRecalculate(string functionName) => false;
+    // Public entry point for evaluating a formula string
+    public double Evaluate(string formula)
+    {
+        // Remove leading '=' if present (Aspose.Cells stores formulas with '=')
+        if (formula.StartsWith("="))
+            formula = formula.Substring(1);
+
+        return EvaluateExpression(formula);
+    }
+
+    // Core evaluator that caches results of identical sub‑expressions
+    private double EvaluateExpression(string expr)
+    {
+        expr = expr.Trim();
+
+        // Return cached result if this exact expression was evaluated before
+        if (_cache.TryGetValue(expr, out double cachedResult))
+            return cachedResult;
+
+        // Replace all cell references (e.g., A1, B12) with their numeric values
+        string replacedExpr = Regex.Replace(expr, @"[A-Za-z]+\d+", match =>
+        {
+            string address = match.Value;
+            Cell refCell = _worksheet.Cells[address];
+
+            // If the referenced cell itself contains a formula, evaluate it recursively
+            if (refCell.IsFormula)
+                return Evaluate(refCell.Formula).ToString();
+
+            // Otherwise use the cell's current value (default to 0 if empty)
+            return refCell.Value?.ToString() ?? "0";
+        });
+
+        // Use DataTable.Compute to evaluate the arithmetic expression
+        double result;
+        try
+        {
+            var dt = new DataTable();
+            result = Convert.ToDouble(dt.Compute(replacedExpr, string.Empty));
+        }
+        catch
+        {
+            // In case of an invalid expression, return NaN
+            result = double.NaN;
+        }
+
+        // Cache the computed result for future identical sub‑expressions
+        _cache[expr] = result;
+        return result;
+    }
 }
 
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate cells with values
-        ws.Cells["A1"].PutValue(10);
-        ws.Cells["A2"].PutValue(20);
-        ws.Cells["A3"].PutValue(10);
-        ws.Cells["A4"].PutValue(20);
-
-        // Use the custom function in several cells; some have identical sub‑expressions
-        ws.Cells["B1"].Formula = "=MYCACHEFUNC(A1, A2)"; // first evaluation
-        ws.Cells["B2"].Formula = "=MYCACHEFUNC(A3, A4)"; // identical values, should hit cache
-        ws.Cells["B3"].Formula = "=MYCACHEFUNC(A1, A2)"; // same as B1, cache again
-
-        // Set calculation options with the caching engine
-        CalculationOptions opts = new CalculationOptions
+        // Ensure the input file exists before loading
+        if (!File.Exists(inputPath))
         {
-            CustomEngine = new CachingEngine(),
-            IgnoreError = false,
-            Recursive = true
-        };
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
 
-        // Calculate all formulas in the workbook
-        wb.CalculateFormula(opts);
+        Workbook workbook = null;
+        try
+        {
+            // Load an existing workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-        // Display the results
-        Console.WriteLine("B1 = " + ws.Cells["B1"].Value);
-        Console.WriteLine("B2 = " + ws.Cells["B2"].Value);
-        Console.WriteLine("B3 = " + ws.Cells["B3"].Value);
+        // Work with the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook (uses the provided lifecycle rule)
-        wb.Save("CachingEngineDemo.xlsx");
+        // Instantiate the custom cached formula engine
+        var engine = new CachedFormulaEngine(sheet);
+
+        // Iterate over all cells in the worksheet
+        foreach (Cell cell in sheet.Cells)
+        {
+            // Process only cells that contain formulas
+            if (cell.IsFormula)
+            {
+                try
+                {
+                    // Evaluate the formula using the caching engine
+                    double value = engine.Evaluate(cell.Formula);
+
+                    // Replace the formula with the calculated value (PutValue clears the formula)
+                    cell.PutValue(value);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error evaluating cell {cell.Name}: {ex.Message}");
+                }
+            }
+        }
+
+        // Save the modified workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

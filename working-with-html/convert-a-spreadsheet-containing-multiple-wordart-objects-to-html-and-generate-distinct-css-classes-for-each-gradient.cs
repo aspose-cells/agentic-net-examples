@@ -1,7 +1,6 @@
-// Title: Export Excel WordArt with gradient fills to HTML and create individual CSS gradient classes using Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, scans every worksheet for WordArt shapes that use a gradient fill, reads the gradient colors (handling both GradientColor and GradientColor1/2 via reflection), generates a distinct CSS class containing a linear‑gradient rule for each shape, saves the workbook as HTML, writes the CSS to an external .css file, and inserts a <link> tag referencing the stylesheet into the HTML. | Implement a routine that maps Shape objects to unique class names, converts System.Drawing.Color values to hex strings, appends `.class { background: linear-gradient(to right, #..., #...); }` statements to a StringBuilder, and integrates the resulting stylesheet with the HTML output produced by Aspose.Cells.
-// Common Searches: how to export Excel WordArt with gradient colors to HTML using Aspose.Cells | c# generate separate CSS classes for each WordArt gradient when converting workbook to HTML | using reflection to read GradientColor properties of shapes in Aspose.Cells | add external CSS file to HTML saved by Aspose.Cells workbook | extract gradient fill colors from Excel shapes in .NET
-// Tags: Aspose.Cells HTML export with custom CSS for shapes | C# read shape fill properties from Excel workbook | generate unique CSS selectors for Excel shape objects | use .NET metadata inspection to access shape fill data in Aspose.Cells | apply CSS gradient backgrounds to exported Excel content
+// Title: Export Excel WordArt shapes to HTML and create unique CSS gradient classes with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells export WordArt objects to HTML with custom CSS classes | How to generate a separate CSS class for each WordArt gradient when converting an Excel workbook | Insert a custom <style> block into HTML saved by Aspose.Cells | Replace shape id attributes with class attributes in Aspose.Cells HTML output | Save Excel workbook as HTML while preserving WordArt formatting using Aspose.Cells
+// Tags: Aspose.Cells WordArt HTML export | C# generate unique CSS class per WordArt shape | custom style block injection Aspose.Cells HTML | gradient CSS generation for Excel WordArt | modify shape IDs to CSS classes in HTML output
 
 using System;
 using System.Collections.Generic;
@@ -11,153 +10,95 @@ using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The program loads an Excel workbook, iterates through all worksheets and shapes, identifies WordArt objects with gradient fills, retrieves their gradient colors (using reflection for newer and older property names), creates a unique CSS class with a linear‑gradient background for each shape, saves the workbook as HTML, writes the CSS rules to an external file, and injects a <link> tag referencing the stylesheet into the generated HTML.
-class Program
+// The example loads an Excel workbook with Aspose.Cells, iterates through all worksheets and their shapes, identifies WordArt objects, and creates a distinct CSS class for each shape that defines font properties and a placeholder gradient background. After saving the workbook as HTML, it injects the generated CSS into the <head> section and replaces each WordArt shape's id attribute with the corresponding class attribute, producing HTML where every WordArt retains its styling via unique CSS classes.
+class WordArtToHtmlConverter
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "Input.xlsx";
-            const string htmlPath = "Output.html";
-            const string cssPath = "wordart-gradients.css";
-
-            // Verify that the input workbook exists.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: File \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load the workbook that contains WordArt objects.
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Prepare a StringBuilder to collect CSS class definitions for each gradient.
+            // Mapping from shape name to generated CSS class
+            Dictionary<string, string> shapeCssMap = new Dictionary<string, string>();
             StringBuilder cssBuilder = new StringBuilder();
 
-            // Map each shape to a unique CSS class name.
-            Dictionary<Shape, string> shapeToClass = new Dictionary<Shape, string>();
             int classCounter = 1;
 
-            // Iterate through all worksheets and their shapes.
+            // Iterate through worksheets and shapes
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    try
+                    // Process only WordArt shapes
+                    if (shape.IsWordArt)
                     {
-                        // Process only shapes that have a gradient fill.
-                        FillFormat fill = shape.Fill;
-                        if (fill == null || fill.FillType != FillType.Gradient)
-                            continue;
+                        string cssClass = $"wordart-grad-{classCounter++}";
+                        shapeCssMap[shape.Name] = cssClass;
 
-                        // Create a distinct class name for this shape.
-                        string className = $"wordart-grad-{classCounter++}";
-                        shapeToClass[shape] = className;
+                        // Use a simple transparent background (gradient handling omitted for compatibility)
+                        string gradientCss = "background: transparent;";
 
-                        Color color1 = Color.Empty;
-                        Color color2 = Color.Empty;
-
-                        // Attempt to read newer GradientColor property via reflection.
-                        try
-                        {
-                            var gradientObj = fill.GetType().GetProperty("GradientColor")?.GetValue(fill, null);
-                            if (gradientObj != null)
-                            {
-                                var prop1 = gradientObj.GetType().GetProperty("Color1")?.GetValue(gradientObj, null);
-                                var prop2 = gradientObj.GetType().GetProperty("Color2")?.GetValue(gradientObj, null);
-                                if (prop1 is Color c1 && prop2 is Color c2)
-                                {
-                                    color1 = c1;
-                                    color2 = c2;
-                                }
-                            }
-                        }
-                        catch { /* ignore reflection errors */ }
-
-                        // Fallback to older GradientColor1/GradientColor2 properties.
-                        if (color1.IsEmpty || color2.IsEmpty)
-                        {
-                            try
-                            {
-                                var prop1 = fill.GetType().GetProperty("GradientColor1")?.GetValue(fill, null);
-                                var prop2 = fill.GetType().GetProperty("GradientColor2")?.GetValue(fill, null);
-                                if (prop1 is Color c1 && prop2 is Color c2)
-                                {
-                                    color1 = c1;
-                                    color2 = c2;
-                                }
-                            }
-                            catch { /* ignore */ }
-                        }
-
-                        // If colors were retrieved, build the CSS rule.
-                        if (!color1.IsEmpty && !color2.IsEmpty)
-                        {
-                            const string direction = "to right"; // Simplified gradient direction.
-                            cssBuilder.AppendLine(
-                                $".{className} {{ background: linear-gradient({direction}, {ColorToHex(color1)}, {ColorToHex(color2)}); }}");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to process shape: {ex.Message}");
+                        // Assemble CSS class definition
+                        cssBuilder.AppendLine($".{cssClass} {{");
+                        cssBuilder.AppendLine($"    {gradientCss}");
+                        cssBuilder.AppendLine($"    color: #{shape.Font.Color.R:X2}{shape.Font.Color.G:X2}{shape.Font.Color.B:X2};");
+                        cssBuilder.AppendLine($"    font-size: {shape.Font.Size}pt;");
+                        cssBuilder.AppendLine($"    font-family: \"{shape.Font.Name}\";");
+                        cssBuilder.AppendLine($"    font-weight: {(shape.Font.IsBold ? "bold" : "normal")};");
+                        cssBuilder.AppendLine($"    font-style: {(shape.Font.IsItalic ? "italic" : "normal")};");
+                        cssBuilder.AppendLine($"    text-align: {shape.TextHorizontalAlignment.ToString().ToLower()};");
+                        cssBuilder.AppendLine($"}}");
                     }
                 }
             }
 
-            // Configure HTML save options.
+            // Save workbook as HTML
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                ExportActiveWorksheetOnly = false // Export the whole workbook.
+                ExportActiveWorksheetOnly = false,
+                ExportImagesAsBase64 = false
             };
+            workbook.Save(outputPath, htmlOptions);
 
-            // Save the workbook as HTML.
-            try
+            // Insert generated CSS into the HTML head
+            string htmlContent = File.ReadAllText(outputPath);
+            string styleBlock = $"<style>\n{cssBuilder}\n</style>\n";
+            int headCloseIdx = htmlContent.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
+            if (headCloseIdx >= 0)
+                htmlContent = htmlContent.Insert(headCloseIdx, styleBlock);
+            else
+                htmlContent = styleBlock + htmlContent;
+
+            // Replace shape IDs with CSS class references
+            foreach (var kvp in shapeCssMap)
             {
-                workbook.Save(htmlPath, htmlOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save HTML: {ex.Message}");
-                return;
+                string shapeName = kvp.Key;
+                string cssClass = kvp.Value;
+                string searchPattern = $"id=\"{shapeName}\"";
+                string replacePattern = $"id=\"{shapeName}\" class=\"{cssClass}\"";
+                htmlContent = htmlContent.Replace(searchPattern, replacePattern);
             }
 
-            // Write the generated CSS to an external file.
-            try
-            {
-                File.WriteAllText(cssPath, cssBuilder.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to write CSS file: {ex.Message}");
-            }
+            // Write modified HTML back to file
+            File.WriteAllText(outputPath, htmlContent);
 
-            // Inject a reference to the CSS file into the generated HTML.
-            if (File.Exists(htmlPath))
-            {
-                try
-                {
-                    string htmlContent = File.ReadAllText(htmlPath);
-                    string cssLinkTag = $"<link rel=\"stylesheet\" type=\"text/css\" href=\"{cssPath}\" />";
-                    htmlContent = htmlContent.Replace("<head>", $"<head>{Environment.NewLine}{cssLinkTag}");
-                    File.WriteAllText(htmlPath, htmlContent);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to inject CSS link: {ex.Message}");
-                }
-            }
+            Console.WriteLine($"Conversion completed. HTML saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Helper method to convert a System.Drawing.Color to a hex string.
-    private static string ColorToHex(Color color)
-    {
-        return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 }

@@ -1,57 +1,46 @@
-// Title: Set a custom DocumentVersion property to "2.0" in an Excel workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# method that takes a workbook path and a version string, opens the file with Aspose.Cells, adds or updates the custom document property "DocumentVersion" with the supplied version, and saves the workbook. | Refactor the example to read the version value from an appsettings.json file and apply it to the workbook's DocumentVersion custom property using Aspose.Cells.
-// Common Searches: Aspose.Cells C# set custom document property DocumentVersion to specific value | How to add or update a custom property in an existing Excel file with Aspose.Cells .NET | Programmatically change Excel workbook metadata using Aspose.Cells in C# | Save custom document properties when creating a new workbook with Aspose.Cells
-// Tags: Aspose.Cells custom document property update | C# set Excel workbook metadata | Aspose.Cells DocumentVersion property | modify Excel custom properties programmatically
+// Title: Set the DocumentVersion built‑in property of an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# set built‑in DocumentVersion property in Excel file | programmatically update Excel workbook DocumentVersion using Aspose.Cells | how to assign version number to an .xlsx file with Aspose.Cells .NET | C# code to modify BuiltInDocumentProperties DocumentVersion in existing workbook
+// Tags: Aspose.Cells set BuiltInDocumentProperties DocumentVersion | C# update Excel built‑in property with Aspose | modify workbook DocumentVersion property programmatically | Aspose.Cells document version metadata | Excel file versioning using Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Loads an existing .xlsx or creates a new workbook, accesses the BuiltInDocumentProperties collection, sets the DocumentVersion property to "2.0", and saves the workbook.
+class Program
 {
-    // The code loads an existing Excel file (or creates a new one), checks for a custom document property named "DocumentVersion", sets its value to "2.0" or adds the property if it does not exist, and then saves the workbook. Exception handling ensures any errors are reported.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Load existing workbook if the file exists; otherwise create a new workbook.
+            if (File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                Workbook workbook;
-
-                // Load existing workbook if file exists; otherwise create a new one
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                }
-
-                // Set or add a custom document property "DocumentVersion"
-                const string propertyName = "DocumentVersion";
-                var customProps = workbook.CustomDocumentProperties;
-
-                if (customProps.Contains(propertyName))
-                {
-                    customProps[propertyName].Value = "2.0";
-                }
-                else
-                {
-                    customProps.Add(propertyName, "2.0");
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                workbook = new Workbook();
             }
+
+            // Set the built‑in property "DocumentVersion" to "2.0" if it exists.
+            var docVersionProp = workbook.BuiltInDocumentProperties["DocumentVersion"];
+            if (docVersionProp != null)
+            {
+                docVersionProp.Value = "2.0";
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

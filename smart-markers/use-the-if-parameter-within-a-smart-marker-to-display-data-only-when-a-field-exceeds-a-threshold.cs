@@ -1,74 +1,25 @@
-// Title: How to use an IF smart marker in Aspose.Cells (C#) to display scores only above a given threshold
-// AI Prompts: Write C# code that creates a workbook, defines a smart‑marker range, and uses the IF function to show the Score column only when the value exceeds a specified limit. | Generate a reusable C# method that accepts a data collection and a numeric threshold, then applies WorkbookDesigner with an IF smart marker to conditionally display the field. | Adapt the example to output "Pass" or "Fail" instead of the raw score by using a configurable threshold in an Aspose.Cells IF smart marker.
-// Common Searches: Aspose.Cells C# smart marker IF expression threshold example | how to conditionally hide Excel cell values with Aspose.Cells smart markers | process a named smart marker range with WorkbookDesigner in C# | display only high scores using smart markers in Aspose.Cells | C# Aspose.Cells conditional smart marker for numeric fields
-// Tags: Aspose.Cells IF smart marker C# | WorkbookDesigner conditional display | named range smart marker processing | threshold-based smart marker | Excel export with conditional smart markers
+// Title: Show rows only when a numeric field exceeds a threshold using an IF smart marker with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel template containing a smart marker like ${if:Amount>100}${Amount}${endif}, binds a DataTable as the data source, processes the markers with WorkbookDesigner, and saves the filtered workbook. | Adapt an existing Aspose.Cells workbook to include a conditional smart marker that outputs a column only when its value is greater than a specified limit, using WorkbookDesigner in C#.
+// Common Searches: Aspose.Cells WorkbookDesigner IF smart marker example C# | filter Excel rows with smart markers based on numeric value in .NET | how to use ${if:field>value} syntax in Aspose.Cells templates | conditional data rendering in Excel using Aspose.Cells smart markers | display only rows where Amount > 100 with Aspose.Cells smart markers
+// Tags: Aspose.Cells IF smart marker | WorkbookDesigner conditional row output | C# smart marker numeric threshold | Excel template conditional data rendering | Aspose.Cells data source filtering
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+// Create a DataTable with sample data
+System.Data.DataTable dt = new System.Data.DataTable();
+dt.Columns.Add("Amount", typeof(double));
+dt.Rows.Add(50);   // Below threshold, will not be displayed
+dt.Rows.Add(150);  // Above threshold, will be displayed
+dt.Rows.Add(250);  // Above threshold, will be displayed
 
-// The sample creates a workbook, adds headers, inserts smart markers—including an IF expression that shows the Score only when it exceeds 80—binds a List<Person> as the data source, defines a named range for the markers, processes that range with WorkbookDesigner while preserving unrecognized markers, and saves the result to SmartMarkerIfOutput.xlsx.
-class SmartMarkerIfDemo
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+// Load the Excel template that contains the smart marker
+// Template should have a smart marker like: ${if:Amount>100}${Amount}${endif}
+Aspose.Cells.WorkbookDesigner designer = new Aspose.Cells.WorkbookDesigner();
+designer.Workbook = new Aspose.Cells.Workbook("Template.xlsx");
 
-            // Add column headers
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Score");
-            sheet.Cells["C1"].PutValue("High Score");
+// Set the data source for the smart marker
+designer.SetDataSource(dt);
 
-            // Insert smart markers (line‑by‑line mode)
-            // &Name and &Score will be replaced directly
-            // &IF(Score>80,Score,"") will display the score only when it exceeds 80
-            sheet.Cells["A2"].PutValue("&=Name");
-            sheet.Cells["B2"].PutValue("&=Score");
-            sheet.Cells["C2"].PutValue("&=IF(Score>80,Score,\"\")");
+// Process the smart markers – the IF condition will evaluate for each row
+designer.Process();
 
-            // Prepare sample data
-            List<Person> data = new List<Person>
-            {
-                new Person { Name = "Alice",   Score = 75 },
-                new Person { Name = "Bob",     Score = 92 },
-                new Person { Name = "Charlie", Score = 68 }
-            };
-
-            // Set up the WorkbookDesigner and bind the data source
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-            designer.SetDataSource("Data", data);
-
-            // Define the range that contains the smart markers and give it the required name
-            AsposeRange smartMarkerRange = sheet.Cells.CreateRange("A2:C2");
-            smartMarkerRange.Name = "_CellsSmartMarkers";
-
-            // Process only the defined range (true = preserve unrecognized markers)
-            designer.Process(smartMarkerRange, true);
-
-            // Save the resulting workbook
-            string outputPath = "SmartMarkerIfOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Simple data class used as the data source
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Score { get; set; }
-    }
-}
+// Save the resulting workbook
+designer.Workbook.Save("Output.xlsx");

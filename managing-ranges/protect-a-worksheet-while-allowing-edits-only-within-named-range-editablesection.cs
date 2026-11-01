@@ -1,54 +1,65 @@
-// Title: How to protect an Excel worksheet with Aspose.Cells for .NET while keeping only the A1:B2 range editable
-// AI Prompts: Write C# code using Aspose.Cells to lock an entire worksheet with a password but unlock cells A1:B2 for editing. | Show the steps to create an unlocked style, apply it to a specific range, and then call Worksheet.Protect with ProtectionType.All in Aspose.Cells. | Generate a complete example that creates a workbook, defines a named editable range, unlocks it, protects the sheet, and saves the file.
-// Common Searches: Aspose.Cells C# protect worksheet and allow editing only in a specific range | How to unlock cells A1:B2 before applying worksheet protection with Aspose.Cells | C# example for setting password protection on Excel sheet while keeping certain cells editable using Aspose.Cells | Apply unlocked style to a range then protect sheet Aspose.Cells .NET | Worksheet.Protect with ProtectionType.All and unlocked cells Aspose.Cells tutorial
-// Tags: worksheet protection with unlocked range Aspose.Cells | unlock cells A1:B2 using StyleFlag Aspose.Cells | apply password to Excel workbook Aspose.Cells .NET | create unlocked style for specific range Aspose.Cells | protect sheet while allowing edits in defined range C#
+// Title: How to protect an Excel worksheet while allowing edits only in a named range using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# protect worksheet while keeping a specific named range editable | how to unlock cells in a named range before protecting a sheet with Aspose.Cells | C# example to protect Excel sheet and allow edits only in the 'EditableSection' range using Aspose.Cells | retrieve a named range by name and set IsLocked false with Aspose.Cells .NET | apply an unlocked style to a range and then protect the worksheet using ProtectionType.All in Aspose.Cells
+// Tags: worksheet protection with selective unlocked range Aspose.Cells | style.IsLocked false for named range Aspose.Cells | range.ApplyStyle using StyleFlag.Locked Aspose.Cells | Workbook.GetRangeByName to retrieve named range Aspose.Cells | sheet.Protect with ProtectionType.All Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a new workbook, unlocks cells A1:B2 by applying an unlocked style, then protects the entire worksheet with a password using Worksheet.Protect, allowing only the specified range to be edited, and saves the file as an .xlsx.
+// The C# program loads an existing workbook, retrieves the named range "EditableSection", creates a style with IsLocked set to false, applies this unlocked style to the range using a StyleFlag, then protects the worksheet with ProtectionType.All so only the unlocked cells remain editable, and finally saves the protected workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Define the range A1:B2 that should remain editable (rows 0-1, columns 0-1)
-            Aspose.Cells.Range editableRange = sheet.Cells.CreateRange(0, 0, 2, 2);
-
-            // Create a style that unlocks cells
-            Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;
-
-            // Apply the style to the defined range (apply all style attributes)
-            StyleFlag flag = new StyleFlag { All = true };
-            editableRange.ApplyStyle(unlockedStyle, flag);
-
-            // Protect the worksheet while allowing edits only in unlocked cells
-            // The Protect method requires the old password parameter; pass null if not needed
-            sheet.Protect(ProtectionType.All, "YourPassword", null);
-
-            // Save the protected workbook
-            string outputPath = "ProtectedWorkbook.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(outputDir);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the named range "EditableSection"
+            Aspose.Cells.Range editableRange = workbook.Worksheets.GetRangeByName("EditableSection");
+
+            if (editableRange != null)
+            {
+                // Create a style where cells are unlocked
+                Style unlockedStyle = workbook.CreateStyle();
+                unlockedStyle.IsLocked = false; // Unlock cells
+
+                // Specify that only the Locked attribute should be applied
+                StyleFlag flag = new StyleFlag();
+                flag.Locked = true;
+
+                // Apply the unlocked style to all cells in the named range
+                editableRange.ApplyStyle(unlockedStyle, flag);
+            }
+            else
+            {
+                Console.WriteLine("Named range 'EditableSection' not found.");
+            }
+
+            // Protect the worksheet; only unlocked cells can be edited
+            sheet.Protect(ProtectionType.All);
+
+            // Save the workbook with the protection applied
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,63 +1,62 @@
-// Title: Retrieve absolute positions of worksheet shapes, sort them by Y (Top) coordinate, and output the sorted order with Aspose.Cells for .NET (C#)
-// AI Prompts: Write a C# console program that loads an Excel workbook using Aspose.Cells, iterates through the ShapeCollection of the first worksheet, records each shape's Top and Left values, sorts the shapes by the Top coordinate, and prints the shape index with its coordinates. | Generate C# code that verifies the existence of an input .xlsx file, extracts absolute positions of all shapes on a worksheet via Aspose.Cells, orders the shapes vertically, and includes robust exception handling. | Create a reusable C# method that accepts a Worksheet object, returns a list of shape indexes sorted by their Y position, and demonstrate its usage with Aspose.Cells.
-// Common Searches: C# Aspose.Cells get shape Top and Left coordinates from worksheet | How to sort Excel shapes by vertical position using Aspose.Cells .NET | List all shapes on a worksheet with absolute positions in Aspose.Cells | Retrieve and order shape indexes by Y coordinate in an Excel file with C# | Aspose.Cells shape collection enumeration and sorting example
-// Tags: Aspose.Cells retrieve shape coordinates | C# sort worksheet shapes by Y position | enumerate ShapeCollection absolute positions | Aspose.Cells shape sorting example | console output shape index with coordinates
+// Title: Retrieve absolute positions of all shapes on an Excel worksheet and sort them by Y coordinate using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates through every Shape in a worksheet, captures each shape's Top (Y) position in points, sorts the shapes from top to bottom, and prints their Name, Top and Left values. | Extend the shape‑sorting example to additionally order shapes by their Left (X) coordinate after the Y‑axis sort and write the sorted list to a new Excel file.
+// Common Searches: aspocells get absolute Y coordinate of shapes in worksheet c# | sort excel worksheet shapes by vertical position using Aspose.Cells | list shape names and positions in an Excel file with Aspose.Cells .NET | how to order shapes by top property in Aspose.Cells | retrieve shape top and left values from workbook using C#
+// Tags: Aspose.Cells enumerate worksheet shapes | Aspose.Cells retrieve shape top property | Aspose.Cells sort shapes by vertical coordinate | Aspose.Cells output shape name and position | Aspose.Cells save workbook after shape ordering
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// // Loads input.xlsx, reads all shapes from the first worksheet, captures each shape's Top (Y) and Left (X) coordinates, sorts the shapes ascending by Top, and prints the sorted shape index along with its coordinates.
+// The program loads an Excel workbook, gathers each shape on the first worksheet with its absolute Top (Y) and Left (X) coordinates, sorts the shapes by the Y coordinate, prints the sorted order (name, top, left), and saves the workbook.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
-            return;
-        }
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve all shapes on the worksheet
-            ShapeCollection shapes = sheet.Shapes;
+            // Collect each shape together with its absolute Y coordinate (Top)
+            var shapeData = new List<(Shape shape, double top)>();
 
-            // Store shape index and its absolute position (Top = Y, Left = X)
-            var shapeInfos = new List<(int Index, double Top, double Left)>();
-
-            for (int i = 0; i < shapes.Count; i++)
+            foreach (Shape shape in worksheet.Shapes)
             {
-                Shape shape = shapes[i];
-
-                // Top and Left provide absolute coordinates in points
-                shapeInfos.Add((i, shape.Top, shape.Left));
+                // Top property gives the absolute Y position in points
+                double topPosition = shape.Top;
+                shapeData.Add((shape, topPosition));
             }
 
-            // Sort shapes by Y coordinate (Top) ascending
-            var sortedShapes = shapeInfos.OrderBy(s => s.Top).ToList();
+            // Sort the shapes by their Y coordinate (ascending)
+            var sortedShapes = shapeData.OrderBy(item => item.top).ToList();
 
             // Output the sorted order
             Console.WriteLine("Shapes sorted by Y coordinate (Top):");
-            foreach (var info in sortedShapes)
+            for (int i = 0; i < sortedShapes.Count; i++)
             {
-                Console.WriteLine($"Shape Index: {info.Index}, Top: {info.Top}, Left: {info.Left}");
+                Shape s = sortedShapes[i].shape;
+                Console.WriteLine($"{i + 1}. Name: {s.Name}, Top: {s.Top}, Left: {s.Left}");
             }
 
-            // Uncomment and modify the path if you need to save changes
-            // workbook.Save("output.xlsx");
+            // Save the workbook if any changes were made (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

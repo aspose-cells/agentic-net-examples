@@ -1,45 +1,55 @@
-// Title: Check for primary and secondary category axes in a column chart using Chart.HasAxis with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that creates a workbook, adds a column chart, and uses Chart.HasAxis to determine if the primary category axis exists. | Show how to call Chart.HasAxis with AxisType.Category for both primary and secondary axes in Aspose.Cells and output the results to the console. | Generate a console application that prints true/false for the presence of primary and secondary category axes in an Excel chart using Aspose.Cells .NET.
-// Common Searches: aspnet cells chart.HasAxis category axis check c# example | how to detect if an Excel chart has a secondary category axis using Aspose.Cells | C# Aspose.Cells determine presence of primary category axis in column chart
-// Tags: Chart.HasAxis category axis detection | primary category axis verification Aspose.Cells | secondary category axis check Aspose.Cells | column chart axis existence C#
+// Title: How to detect a primary category (X) axis in an Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, retrieves the first chart, and uses chart.HasAxis(AxisType.Category, true) to return a boolean indicating the presence of a primary category axis. | Create a .NET console snippet that prints "Category axis present: true/false" after checking a chart's primary X‑axis using Aspose.Cells' HasAxis method.
+// Common Searches: aspnet check if Excel chart has X axis using Aspose.Cells | C# sample to verify chart axis existence with Aspose | determine if a chart includes a category axis in .xlsx file | how to use Aspose.Cells to inspect chart axes | example of checking chart axes in a .NET console app
+// Tags: Aspose.Cells chart.HasAxis method usage | detect category axis in .NET Excel chart | C# chart axis presence check with Aspose | Excel chart validation using Aspose.Cells | AxisType.Category check in C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// The example creates a workbook, populates sample data, adds a column chart, and uses Chart.HasAxis to check for both primary and secondary category axes, prints the results, and saves the file as ChartHasCategoryAxis.xlsx.
+// The program loads an .xlsx workbook with Aspose.Cells, accesses the first worksheet's first chart, calls chart.HasAxis(AxisType.Category, true) to determine whether a primary category (X) axis exists, and prints the boolean result to the console, with basic file existence verification and error handling.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
 
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.SetChartDataRange("A1:B4", true);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Use HasAxis to check for the presence of a category axis
-        bool hasPrimaryCategoryAxis = chart.HasAxis(AxisType.Category, true);
-        bool hasSecondaryCategoryAxis = chart.HasAxis(AxisType.Category, false);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Output the results
-        Console.WriteLine("Primary Category Axis exists: " + hasPrimaryCategoryAxis);
-        Console.WriteLine("Secondary Category Axis exists: " + hasSecondaryCategoryAxis);
+            // Ensure there is at least one chart in the worksheet
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Save the workbook
-        workbook.Save("ChartHasCategoryAxis.xlsx");
+            // Get the first chart
+            Chart chart = worksheet.Charts[0];
+
+            // Check if a primary Category (X) axis exists
+            bool hasCategoryAxis = chart.HasAxis(AxisType.Category, true);
+
+            // Output the result
+            Console.WriteLine($"Category axis present: {hasCategoryAxis}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,74 +1,65 @@
-// Title: Programmatically set an Excel table's style to TableStyleLight10 using Aspose.Cells for .NET
-// AI Prompts: Set the TableStyleName of the first ListObject in a worksheet to "TableStyleLight10" and save the workbook. | Loop through all tables (ListObjects) in a workbook and apply the built‑in "TableStyleLight10" style with Aspose.Cells for .NET. | Load an existing Excel file, verify that it contains tables, change their style to TableStyleLight10, and handle missing files or style errors gracefully.
-// Common Searches: Aspose.Cells C# set Excel table style to TableStyleLight10 | How to apply a built‑in table style to a ListObject using Aspose.Cells .NET | Change Excel table formatting programmatically with Aspose.Cells for .NET
-// Tags: Aspose.Cells apply TableStyleLight10 to ListObject | C# set Excel table style programmatically | Aspose.Cells built‑in table formatting | Excel workbook table style matching color palette .NET | ListObject TableStyleName property usage
+// Title: How to apply the built‑in TableStyleLight10 to an Excel table using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# change existing ListObject style to TableStyleLight10 | set table style programmatically in .xlsx with Aspose.Cells .NET | apply built‑in table style to Excel table via C# Aspose.Cells API | update ListObject TableStyleType enum in C# Aspose.Cells example | change Excel table formatting to TableStyleLight10 using Aspose.Cells
+// Tags: Aspose.Cells set ListObject style | TableStyleLight10 usage Aspose.Cells | programmatic Excel table styling .NET | C# update table style enum | apply built‑in table style to worksheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
+using Aspose.Cells.Tables;
 
-// The example loads a workbook, checks for tables on the first worksheet, sets the first table's TableStyleName to "TableStyleLight10" (a built‑in style that aligns with the workbook's palette), and saves the result, with error handling for missing files and style‑application failures.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an existing workbook, retrieves a ListObject named "Table1" from the first worksheet, parses the string "TableStyleLight10" into the TableStyleType enum, assigns this style to the table, and saves the modified workbook.
+    class Program
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string tableName = "Table1";
+            const string styleName = "TableStyleLight10";
+
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (or change the index as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Check if the worksheet contains at least one table (ListObject)
-            if (worksheet.ListObjects.Count > 0)
-            {
-                // Retrieve the first table in the worksheet
-                ListObject table = worksheet.ListObjects[0];
-
-                // Apply a built‑in table style using the TableStyleName property
-                try
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
                 {
-                    // Aspose.Cells allows setting the style by name (e.g., "TableStyleLight10")
-                    table.TableStyleName = "TableStyleLight10";
+                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                    return;
                 }
-                catch (Exception ex)
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index or name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the table (ListObject) by name
+                ListObject table = worksheet.ListObjects[tableName];
+                if (table == null)
                 {
-                    // Log but continue if style application fails
-                    Console.WriteLine($"Table style could not be applied: {ex.Message}");
+                    Console.WriteLine($"Error: Table \"{tableName}\" not found in the worksheet.");
+                    return;
                 }
-            }
-            else
-            {
-                Console.WriteLine("No tables found in the worksheet.");
-            }
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Parse the style name to the corresponding enum value
+                if (!Enum.TryParse<TableStyleType>(styleName, out TableStyleType styleType))
+                {
+                    Console.WriteLine($"Error: Table style \"{styleName}\" is not a valid built‑in style.");
+                    return;
+                }
 
-            // Save the modified workbook to the desired output path
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Apply the desired table style
+                table.TableStyleType = styleType;
+
+                // Save the workbook with the updated table style
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }

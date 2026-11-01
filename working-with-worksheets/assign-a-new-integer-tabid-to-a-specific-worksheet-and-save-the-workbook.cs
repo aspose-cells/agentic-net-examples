@@ -1,26 +1,51 @@
-// Title: Assign a custom integer TabId to a specific worksheet and save the workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Use Aspose.Cells in C# to set the TabId property of a chosen worksheet to a specific integer and then write the workbook to a new file. | Programmatically change the tab identifier of an existing Excel sheet with Aspose.Cells and persist the changes by saving the workbook. | Update the TabId of a worksheet named 'Sheet1' in an input.xlsx file and export the modified workbook as output.xlsx using Aspose.Cells.
-// Common Searches: Aspose.Cells C# how to change worksheet TabId value | set Excel sheet tab identifier programmatically with Aspose.Cells | example of assigning TabId to a worksheet and saving workbook in .NET | modify worksheet TabId property and export new Excel file using Aspose.Cells
-// Tags: worksheet TabId assignment Aspose.Cells | update Excel sheet TabId C# | save workbook after TabId change Aspose.Cells | modify worksheet tab identifier programmatically | Aspose.Cells set TabId property example
+// Title: Assign a custom integer TabId to a worksheet and save the workbook using Aspose.Cells for .NET
+// AI Prompts: Load an Excel file (or create a new workbook if it does not exist), locate a worksheet by name, set its TabId property to a given integer, and write the workbook to a new file with Aspose.Cells in C#. | Using Aspose.Cells for .NET, retrieve a specific sheet (or the first sheet), assign a numeric TabId value, and persist the change by saving the workbook to a different path.
+// Common Searches: C# Aspose.Cells set worksheet TabId example | How to change Excel sheet tab identifier programmatically with Aspose.Cells | Saving workbook after modifying TabId property in .NET | Assign numeric TabId to a specific worksheet using Aspose.Cells API
+// Tags: Aspose.Cells worksheet TabId assignment | C# Excel TabId property update | Aspose.Cells workbook save after TabId change | Excel sheet TabId manipulation .NET | load or create workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// The code loads an existing Excel file, sets the TabId of the specified worksheet to a custom integer, and saves the updated workbook to a new file.
-class Program
+// The code loads an existing workbook or creates a new one, obtains the worksheet named "Sheet1" (or the first sheet), assigns the integer 12345 to its TabId property, and saves the updated workbook to a separate output file.
+class AssignTabIdExample
 {
     static void Main()
     {
-        // Load an existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            // Define the folder and file names.
+            string dataDir = @"C:\Data\";
+            string inputFile = Path.Combine(dataDir, "input.xlsx");
+            string outputFile = Path.Combine(dataDir, "output.xlsx");
 
-        // Access the target worksheet (by name or index)
-        Worksheet worksheet = workbook.Worksheets["Sheet1"]; // replace with your sheet name or use workbook.Worksheets[0]
+            Workbook workbook;
 
-        // Assign a new integer TabId to the worksheet
-        worksheet.TabId = 12345; // set desired TabId value
+            // Load existing workbook or create a new one if the file is missing.
+            if (File.Exists(inputFile))
+            {
+                workbook = new Workbook(inputFile);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a workbook with a default sheet
+                workbook.Worksheets[0].Name = "Sheet1";
+                // Optionally save the newly created workbook for future runs.
+                workbook.Save(inputFile);
+            }
 
-        // Save the modified workbook to a new file
-        workbook.Save("output.xlsx");
+            // Get the worksheet named "Sheet1" or fallback to the first worksheet.
+            Worksheet worksheet = workbook.Worksheets["Sheet1"] ?? workbook.Worksheets[0];
+
+            // Assign a new integer TabId to the worksheet.
+            worksheet.TabId = 12345;
+
+            // Save the workbook with the updated TabId.
+            workbook.Save(outputFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
     }
 }

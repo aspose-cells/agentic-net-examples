@@ -1,59 +1,63 @@
-// Title: Find a cell containing a specific XML attribute value in a mapped Excel worksheet using Aspose.Cells Worksheet.Cells.Find (C#)
-// AI Prompts: Use Aspose.Cells FindOptions to perform a case‑insensitive search for the XML attribute value "123" in a workbook that has an XML map, and return the address of the matching cell. | Write C# code that verifies an Excel file exists, loads it with Aspose.Cells, and calls Worksheet.Cells.Find to locate the cell that holds a given XML attribute string.
-// Common Searches: asp.net locate mapped data cell using aspose.cells | c# find cell by mapped xml value in worksheet | how to get cell address for a specific value in an XML‑mapped Excel file with Aspose.Cells | search for a particular value in a workbook that has an XML map using C#
-// Tags: worksheet.cells.find xml attribute lookup | aspose.cells findoptions for xml mapped cells | c# locate xml mapped cell in excel | aspose.cells retrieve cell address from xml map | excel file existence validation with aspose.cells
+// Title: Locate a cell containing a specific XML map attribute (e.g., CustomerID) using Worksheet.Cells.Find in Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, uses Worksheet.Cells.Find with FindOptions.LookInType.Values to locate the cell holding the XML map attribute 'CustomerID', and prints the cell address. | Generate a C# example that searches the first worksheet for any exact XML attribute name supplied at runtime, using Aspose.Cells FindOptions, and returns the corresponding cell reference.
+// Common Searches: how to use Worksheet.Cells.Find to locate an XML map attribute in an Excel file with Aspose.Cells C# | Aspose.Cells FindOptions LookInType.Values example for searching XML attribute names | retrieve cell address of a specific XML mapped column header using Aspose.Cells | search for exact XML attribute value in worksheet cells with Aspose.Cells .NET | C# code to find the cell that contains a given XML attribute name in an .xlsx workbook
+// Tags: Worksheet.Cells.Find XML attribute lookup | FindOptions LookInType.Values Aspose.Cells | search XML mapped attribute cell C# | locate XML attribute in .xlsx using Aspose.Cells | Aspose.Cells cell address retrieval for XML map
 
 using Aspose.Cells;
 using System;
 using System.IO;
 
-// The example checks that 'MappedData.xlsx' exists, loads it with Aspose.Cells, accesses the first worksheet, and uses Worksheet.Cells.Find with a FindOptions object (searching cell values, case‑insensitive) to locate the cell containing the XML attribute value "123". If found, it prints the cell name and its string value.
+// The example loads 'input.xlsx', searches the first worksheet for the exact XML map attribute name (e.g., CustomerID) using Worksheet.Cells.Find with LookInType.Values, prints the found cell's address, and saves the workbook as 'output.xlsx'.
 class Program
 {
     static void Main()
     {
-        const string filePath = "MappedData.xlsx";
-
-        // Ensure the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook that already has XML data mapped to cells
-            Workbook workbook = new Workbook(filePath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // The XML attribute value we want to locate in the worksheet
-            string xmlAttributeValue = "123";
+            // The XML attribute name we want to locate in the worksheet
+            string xmlAttributeName = "CustomerID";
 
-            // Configure find options: search cell values, case‑insensitive
+            // Configure find options:
+            // - LookInType.Values searches cell values (not formulas or notes)
+            // - Default LookAtType matches the whole cell content; no explicit setting needed
             FindOptions findOptions = new FindOptions
             {
-                LookInType = LookInType.Values,
-                CaseSensitive = false
-                // LookAtType = LookAtType.WholeContent // Uncomment if the enum is available in your version
-                // SearchOrder and SearchDirection are omitted for compatibility with older API versions
+                LookInType = LookInType.Values
             };
 
-            // Locate the cell that contains the XML attribute value
-            Cell foundCell = worksheet.Cells.Find(xmlAttributeValue, null, findOptions);
+            // Perform the search starting from the first cell (null startCell)
+            Cell foundCell = worksheet.Cells.Find(xmlAttributeName, null, findOptions);
 
             if (foundCell != null)
             {
-                Console.WriteLine($"Cell found at {foundCell.Name} with value '{foundCell.StringValue}'.");
+                Console.WriteLine($"Attribute '{xmlAttributeName}' found at cell {foundCell.Name}");
             }
             else
             {
-                Console.WriteLine("No cell containing the specified XML attribute value was found.");
+                Console.WriteLine($"Attribute '{xmlAttributeName}' not found in the worksheet.");
             }
+
+            // Save the workbook (optional if modifications were made)
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

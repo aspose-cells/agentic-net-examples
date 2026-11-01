@@ -1,97 +1,69 @@
-// Title: How to embed images into Excel cells using custom smart markers and byte arrays with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that scans a worksheet for {{marker}} strings, retrieves the matching image bytes from a user‑defined provider, and assigns them to the cell’s EmbeddedImage property using Aspose.Cells. | Show an example of mapping marker keys to PNG or JPEG byte arrays in a dictionary and embedding those images into specific cells of an .xlsx file. | Explain how to clear the placeholder text after embedding the image and save the workbook while preserving the embedded pictures.
-// Common Searches: Aspose.Cells replace smart marker {{logo}} with image from byte array in C# | C# embed PNG bytes into Excel cell using EmbeddedImage property | custom image provider for smart markers Aspose.Cells .NET example | how to iterate cells and insert images based on markers in Aspose.Cells | save workbook with embedded images using Aspose.Cells for .NET
-// Tags: embed image bytes into Excel cell using Aspose.Cells | custom smart marker image provider .NET | map marker keys to PNG/JPEG byte arrays Aspose.Cells | remove marker text after image insertion | iterate worksheet cells for image markers Aspose.Cells
+// Title: How to embed a PNG image into an Excel cell using Aspose.Cells smart image markers and a byte[] data source in C#
+// AI Prompts: Write C# code that reads a PNG file into a byte array, adds it to a DataTable, and uses Aspose.Cells WorkbookDesigner to replace an `Image:Photo` smart marker in cell A1 with the image. | Show how to configure a DataSet as the data source for WorkbookDesigner so that binary image data stored in a DataTable is rendered as an image marker in an Excel worksheet. | Demonstrate the complete workflow: create a workbook, place an `Image:{Property}` marker, load image bytes, bind them to a custom object, process the markers, and save the resulting .xlsx file.
+// Common Searches: aspocells c# embed image in cell using smart markers from byte array | how to use WorkbookDesigner to replace Image:Photo marker with picture | load png into DataTable for Aspose.Cells image marker | Aspose.Cells smart image marker example with custom object source | C# generate Excel file with images from binary data using Aspose
+// Tags: Aspose.Cells WorkbookDesigner image marker | embed PNG into Excel cell C# | binary image data source for smart markers | DataSet to Excel image marker Aspose | smart marker Image:Photo usage
 
 using System;
-using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsImageMarkerDemo
+namespace ImageMarkerExample
 {
-    // Custom source that provides image bytes based on a marker key
-    // The sample creates a workbook, writes smart‑marker placeholders like {{logo}} into cells, uses a CustomImageProvider that stores PNG/JPEG files as byte arrays, scans all used cells, detects markers, retrieves the corresponding byte array, assigns it to the cell’s EmbeddedImage property, clears the placeholder text, and saves the workbook as an .xlsx file with the images embedded.
-    public class CustomImageProvider
+    // Custom class that holds binary image data
+    // The sample creates a new workbook, inserts an `Image:Photo` smart marker into cell A1, reads a PNG file into a byte array, stores the bytes in a DataTable within a DataSet, sets this DataSet as the data source for WorkbookDesigner, processes the marker to embed the image, and saves the result as ImageMarkerResult.xlsx.
+    public class ImageSource
     {
-        private readonly Dictionary<string, byte[]> _imageStore = new Dictionary<string, byte[]>();
-
-        public CustomImageProvider()
-        {
-            // Initialize with sample images (replace with real paths or streams as needed)
-            // Example: marker "logo" maps to a PNG file
-            AddImage("logo", "logo.png");
-            AddImage("photo", "photo.jpg");
-        }
-
-        private void AddImage(string key, string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                _imageStore[key] = File.ReadAllBytes(filePath);
-            }
-        }
-
-        // Returns image bytes for the given marker; null if not found
-        public byte[] GetImageBytes(string marker)
-        {
-            _imageStore.TryGetValue(marker, out var data);
-            return data;
-        }
+        // Property name will be used in the marker (e.g., Image:Photo)
+        public byte[]? Photo { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook and obtain the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate some cells with image markers (e.g., {{logo}})
-            sheet.Cells["A1"].PutValue("{{logo}}");
-            sheet.Cells["B2"].PutValue("{{photo}}");
-            sheet.Cells["C3"].PutValue("No image here");
-
-            // Initialize the custom image provider
-            CustomImageProvider imageProvider = new CustomImageProvider();
-
-            // Iterate through all used cells to replace markers with embedded images
-            Cells cells = sheet.Cells;
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                // 1. Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // 2. Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // 3. Place an image marker in a cell (A1). The marker format is "Image:{PropertyName}"
+                sheet.Cells["A1"].PutValue("Image:Photo");
+
+                // 4. Load binary image data from a file (or any other source)
+                const string imagePath = "sample.png";
+                if (!File.Exists(imagePath))
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.Type == CellValueType.IsString)
-                    {
-                        string text = cell.StringValue.Trim();
-
-                        // Simple marker detection: text enclosed in double curly braces
-                        if (text.StartsWith("{{") && text.EndsWith("}}"))
-                        {
-                            string marker = text.Substring(2, text.Length - 4); // extract key
-                            byte[] imageBytes = imageProvider.GetImageBytes(marker);
-                            if (imageBytes != null)
-                            {
-                                // Embed the image into the cell using the EmbeddedImage property
-                                cell.EmbeddedImage = imageBytes;
-
-                                // Optionally clear the placeholder text
-                                cell.PutValue(string.Empty);
-                            }
-                        }
-                    }
+                    Console.WriteLine($"Image file not found: {imagePath}");
+                    return;
                 }
-            }
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
 
-            // Save the workbook; the embedded images are stored inside the .xlsx file
-            string outputPath = "ImageMarkerDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                // 5. Create a DataSet with a DataTable that contains the image bytes
+                DataTable table = new DataTable("ImageSource");
+                table.Columns.Add("Photo", typeof(byte[]));
+                table.Rows.Add(imageBytes);
+                DataSet dataSet = new DataSet();
+                dataSet.Tables.Add(table);
+
+                // 6. Use WorkbookDesigner to process the image marker.
+                //    The designer will replace the marker with the actual image.
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dataSet);
+                designer.Process(); // Replaces the marker with the image
+
+                // 7. Save the resulting workbook
+                const string outputPath = "ImageMarkerResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

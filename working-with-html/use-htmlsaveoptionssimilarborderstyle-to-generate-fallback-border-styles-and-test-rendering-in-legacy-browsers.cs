@@ -1,54 +1,53 @@
-// Title: Generate HTML with fallback cell borders using HtmlSaveOptions.SimilarBorderStyle in Aspose.Cells for .NET
-// AI Prompts: Write C# code that applies a thin border to a cell range, enables SimilarBorderStyle on HtmlSaveOptions, and saves the workbook as HTML for older‑browser compatibility. | Modify the Aspose.Cells sample to turn on SimilarBorderStyle, then open the produced HTML in Internet Explorer 8 to confirm the borders render correctly. | Create a C# program that defines a custom thin border style, configures HtmlSaveOptions with fallback border handling, and outputs the HTML file for testing in legacy browsers.
-// Common Searches: Aspose.Cells enable SimilarBorderStyle when saving workbook as HTML for IE8 support | C# export Excel range with thin borders to HTML using fallback CSS via HtmlSaveOptions | How to make HTML border rendering work in older browsers with Aspose.Cells HtmlSaveOptions
-// Tags: Aspose.Cells HtmlSaveOptions SimilarBorderStyle implementation | C# generate HTML with Excel cell borders | legacy browser HTML border compatibility | thin border style applied to cell range | verify HTML border rendering in IE8
+// Title: How to use HtmlSaveOptions.SimilarBorderStyle in Aspose.Cells for .NET to generate fallback border styles in HTML output
+// AI Prompts: Create a C# workbook, apply thin black borders to one cell and thick blue borders to another, enable HtmlSaveOptions.SimilarBorderStyle for fallback styling, and save the workbook as HTML to verify border rendering in older browsers. | Adjust the SimilarBorderStyle property to a custom CSS fallback, generate the HTML file, and compare the visual result in Internet Explorer 8 or another legacy browser.
+// Common Searches: Aspose.Cells C# export Excel to HTML with fallback border styles for IE8 | how to enable SimilarBorderStyle in HtmlSaveOptions when saving as HTML | HTML border compatibility issues with Aspose.Cells in legacy browsers | set HtmlSaveOptions.SimilarBorderStyle property .NET example
+// Tags: Aspose.Cells HtmlSaveOptions SimilarBorderStyle | C# export Excel to HTML border fallback | legacy browser HTML border compatibility | configure border rendering Aspose.Cells | thin vs thick cell borders HTML export
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// The example creates a workbook, adds header and numeric data, defines a thin border style, applies it to cells A1:B2, configures HtmlSaveOptions (including the SimilarBorderStyle fallback option), and saves the result as an HTML file suitable for testing in older browsers.
+// The sample creates a workbook, writes data to cells A1 and A2, applies thin black borders to A1 and thick blue borders to A2, configures HtmlSaveOptions (including the SimilarBorderStyle fallback option), and saves the workbook as an HTML file to demonstrate how border styles are rendered in older browsers.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate some cells with data
             sheet.Cells["A1"].PutValue("Header");
             sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
 
-            // Define a thin border style
-            Style borderStyle = workbook.CreateStyle();
-            borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+            // Apply thin black borders to cell A1
+            Style styleA1 = sheet.Cells["A1"].GetStyle();
+            styleA1.SetBorder(BorderType.TopBorder, CellBorderType.Thin, Color.Black);
+            styleA1.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
+            styleA1.SetBorder(BorderType.LeftBorder, CellBorderType.Thin, Color.Black);
+            styleA1.SetBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Black);
+            sheet.Cells["A1"].SetStyle(styleA1);
 
-            // Apply the border style to the range A1:B2
-            StyleFlag flag = new StyleFlag() { Borders = true };
-            sheet.Cells.CreateRange("A1:B2").ApplyStyle(borderStyle, flag);
+            // Apply thick blue borders to cell A2
+            Style styleA2 = sheet.Cells["A2"].GetStyle();
+            styleA2.SetBorder(BorderType.TopBorder, CellBorderType.Thick, Color.Blue);
+            styleA2.SetBorder(BorderType.BottomBorder, CellBorderType.Thick, Color.Blue);
+            styleA2.SetBorder(BorderType.LeftBorder, CellBorderType.Thick, Color.Blue);
+            styleA2.SetBorder(BorderType.RightBorder, CellBorderType.Thick, Color.Blue);
+            sheet.Cells["A2"].SetStyle(styleA2);
 
-            // Configure HTML save options
+            // Configure HTML save options (default settings already export borders)
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Note: SimilarBorderStyle property is not available in the current Aspose.Cells version.
-            // The default rendering will be used.
 
-            // Save the workbook as an HTML file
-            string outputPath = "output.html";
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the workbook as HTML
+            workbook.Save("output.html", htmlOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

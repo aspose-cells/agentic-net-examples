@@ -1,49 +1,71 @@
-// Title: List hidden external links and their data source paths in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, iterates over Workbook.Worksheets.ExternalLinks, and prints the DataSource of each link where IsVisible is false. | Create a .NET console example that counts all external links in a workbook and displays each link’s visibility status (Visible/Hidden) together with its data source. | Write a C# program using Aspose.Cells that extracts and logs the source paths of hidden external links from an Excel file without modifying the workbook.
-// Common Searches: how to retrieve hidden external link paths from an Excel file using Aspose.Cells C# | Aspose.Cells list external links and check IsVisible property in .NET | C# code to enumerate external links in a workbook and identify invisible links | detect and log hidden external links in .xlsx with Aspose.Cells for .NET | Aspose.Cells external link collection example for hidden links
-// Tags: Aspose.Cells enumerate external links .xlsx | C# detect hidden external links Aspose.Cells | ExternalLinkCollection IsVisible check | list external link data source Aspose.Cells | Excel workbook hidden link extraction .NET
+// Title: How to detect and list hidden external links in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, accesses the ExternalLinks collection via reflection, and prints the SourceFullName of each link where IsHidden is true. | Show a robust .NET method that checks for the presence of the ExternalLinks property, safely reads hidden external connections, and returns their source paths as a string list. | Provide a sample program that handles missing files and absent ExternalLinks members while enumerating hidden workbook links with Aspose.Cells.
+// Common Searches: aspocells list hidden external links in workbook c# | c# detect hidden external connections in xlsx using Aspose.Cells | how to read ExternalLinks collection with reflection Aspose.Cells older version | enumerate hidden external link source paths .NET Excel file | handle missing ExternalLinks property Aspose.Cells example
+// Tags: list hidden external links Aspose.Cells | retrieve ExternalLinks collection via reflection | filter external links by IsHidden property | enumerate workbook external connections .NET | handle absent ExternalLinks property Aspose.Cells
 
 using System;
+using System.IO;
+using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsExternalLinkDetection
+namespace AsposeCellsExample
 {
-    // // Loads an Excel workbook, accesses its Worksheets.ExternalLinks collection, and prints each link’s DataSource along with its visibility status, enabling detection of hidden external links.
+    // The example loads an Excel workbook, iterates through each worksheet, uses reflection to obtain the ExternalLinks collection when available, checks the IsHidden flag on each link, and outputs the SourceFullName of hidden links. It includes file‑existence validation and graceful handling of missing properties for compatibility with older Aspose.Cells versions.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the workbook to be inspected
-            string workbookPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the collection of external links in the workbook
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-            // Check if any external links exist
-            if (externalLinks.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No external links found in the workbook.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            Console.WriteLine($"Total external links found: {externalLinks.Count}");
-            Console.WriteLine("Listing external link source paths (including hidden links):");
-
-            // Iterate through each external link and output its data source.
-            // Hidden links are those where IsVisible is false.
-            for (int i = 0; i < externalLinks.Count; i++)
+            try
             {
-                ExternalLink link = externalLinks[i];
-                string visibility = link.IsVisible ? "Visible" : "Hidden";
-                Console.WriteLine($"Link {i + 1}:");
-                Console.WriteLine($"  Data Source : {link.DataSource}");
-                Console.WriteLine($"  Visibility  : {visibility}");
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // No modifications are made, so no need to save (lifecycle rule: save not required here)
+                // Iterate through all worksheets and attempt to read external links via reflection
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Use reflection to get the ExternalLinks property (may not exist in older versions)
+                    var externalLinksProp = sheet.GetType().GetProperty("ExternalLinks");
+                    if (externalLinksProp == null)
+                    {
+                        // Property not available – skip this worksheet
+                        continue;
+                    }
+
+                    var externalLinks = externalLinksProp.GetValue(sheet) as IEnumerable;
+                    if (externalLinks == null) continue;
+
+                    foreach (var linkObj in externalLinks)
+                    {
+                        // Use reflection to access IsHidden and SourceFullName safely
+                        var linkType = linkObj.GetType();
+
+                        var isHiddenProp = linkType.GetProperty("IsHidden");
+                        var sourceFullNameProp = linkType.GetProperty("SourceFullName");
+
+                        bool isHidden = isHiddenProp != null && (bool)isHiddenProp.GetValue(linkObj);
+                        string sourceFullName = sourceFullNameProp != null ? sourceFullNameProp.GetValue(linkObj)?.ToString() : string.Empty;
+
+                        if (isHidden && !string.IsNullOrEmpty(sourceFullName))
+                        {
+                            Console.WriteLine(sourceFullName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

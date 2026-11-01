@@ -1,54 +1,73 @@
-// Title: Add conditional formatting and force formula recalculation in an Aspose.Cells workbook with C#
-// AI Prompts: Create a new Workbook, fill cells A1‑A3 with values, add a conditional formatting rule that highlights values between 10 and 20 in red, call Workbook.CalculateFormula, and save the file. | Open an existing .xlsx file, modify its conditional formatting to use a CellValue Between condition, then programmatically trigger a full formula recalculation using Workbook.CalculateFormula before saving. | Write C# code that sets up a conditional formatting range, applies a style, invokes CalculateFormula to update dependent formulas, and writes the workbook to disk.
-// Common Searches: Aspose.Cells C# how to recalculate formulas after adding conditional formatting | force Workbook.CalculateFormula after conditional formatting rule in Aspose.Cells | C# example for applying cell value between conditional formatting and updating formulas | recalculate dependent formulas when conditional formatting changes using Aspose.Cells | Aspose.Cells calculate formulas programmatically after conditional format changes
-// Tags: conditional formatting with Aspose.Cells C# | Workbook.CalculateFormula after conditional formatting | apply cell value between condition Aspose.Cells | recalculate formulas in Excel workbook using Aspose.Cells | save workbook after conditional formatting C#
+// Title: How to recalculate conditional formatting formulas after applying a rule using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# recalculate conditional formatting after adding a rule | force conditional formatting to refresh in an Aspose.Cells workbook | call Workbook.CalculateFormula to update conditional formatting colors | programmatically apply conditional formatting and then recalc formulas with Aspose.Cells | refresh conditional formatting after changing cell values using Aspose.Cells .NET
+// Tags: conditional formatting formula recalculation Aspose.Cells | Workbook.CalculateFormula method C# | apply conditional formatting Aspose.Cells .NET | refresh conditional formatting after data change | Aspose.Cells Excel conditional formatting example
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace ConditionalFormattingRecalcDemo
+namespace AsposeCellsConditionalFormattingExample
 {
-    // // Demonstrates creating a workbook, populating cells, adding a conditional formatting rule that highlights values between 10 and 20, invoking Workbook.CalculateFormula to recalculate any dependent formulas, and saving the result as an .xlsx file.
+    // The example creates a new workbook, fills cells A1‑A3 with values, adds a conditional formatting rule that highlights cells greater than 15 in red, invokes Workbook.CalculateFormula to recalculate any formulas used by the conditional formatting, and saves the file as ConditionalFormatting.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data
-            cells["A1"].PutValue(5);
-            cells["A2"].PutValue(15);
-            cells["A3"].PutValue(25);
-
-            // Add a conditional formatting rule: highlight values between 10 and 20
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range to which the rule applies (A1:A3)
-            CellArea area = new CellArea
+            try
             {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = 2,
-                EndColumn = 0
-            };
-            fcc.AddArea(area);
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add the condition
-            int conditionIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.Between, "10", "20");
-            FormatCondition condition = fcc[conditionIdx];
-            // Set a simple style (red background)
-            condition.Style.BackgroundColor = System.Drawing.Color.Red;
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // After setting up conditional formatting, recalculate formulas
-            // This ensures any formulas that depend on the conditional formatting are updated
-            workbook.CalculateFormula();
+                // Populate some sample data
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+                sheet.Cells["A3"].PutValue(30);
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("ConditionalFormattingRecalc.xlsx");
+                // Add a new conditional formatting collection to the worksheet
+                int cfIndex = sheet.ConditionalFormattings.Add();
+                FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+
+                // Add a condition: cells with values greater than 15
+                int conditionIndex = cfCollection.AddCondition(
+                    FormatConditionType.CellValue,
+                    OperatorType.GreaterThan,
+                    "15",
+                    string.Empty);
+
+                // Retrieve the created condition
+                FormatCondition cf = cfCollection[conditionIndex];
+
+                // Define the style for the condition (red background)
+                Style style = workbook.CreateStyle();
+                style.ForegroundColor = Color.Red;
+                style.Pattern = BackgroundType.Solid;
+                cf.Style = style;
+
+                // Recalculate all formulas (including those used by conditional formatting)
+                workbook.CalculateFormula();
+
+                // Prepare output path
+                string outputFile = "ConditionalFormatting.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
+
+                // Ensure the directory exists (outputDir can be null if only a file name is provided)
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

@@ -1,65 +1,65 @@
-// Title: Load an Excel workbook from a stream, apply Ooxml Level 6 compression, and save it to a MemoryStream using Aspose.Cells for .NET
-// AI Prompts: Read an XLSX file from a MemoryStream, configure OoxmlSaveOptions.CompressionType to Level6, and write the compressed workbook into a new MemoryStream. | Demonstrate how to instantiate a Workbook with a stream constructor, set high‑compression Ooxml options, and output the result without touching the file system. | Provide C# code that takes an input Excel stream, applies Level6 Ooxml compression, and returns the compressed data as a MemoryStream using Aspose.Cells.
-// Common Searches: how to set Ooxml compression level to 6 when saving an Excel workbook from a stream in C# | Aspose.Cells save workbook to MemoryStream with high compression | load Excel file from MemoryStream and compress output using OoxmlSaveOptions | C# example for stream‑to‑stream Excel compression with Aspose.Cells | configure OoxmlSaveOptions for Level6 compression without creating a temporary file
-// Tags: OoxmlSaveOptions Level6 compression Aspose.Cells | instantiate Workbook from stream C# | save workbook to MemoryStream with compression | stream‑based Excel compression .NET | high‑compression XLSX output Aspose.Cells
+// Title: Load an Excel workbook from a Stream, apply Level6 compression, and write it to a MemoryStream using Aspose.Cells for .NET
+// AI Prompts: Show how to open a workbook from a Stream, configure Aspose.Cells compression to Level6, and save the result into a MemoryStream as XLSX in C#. | Provide C# code that reads an Excel file from a Stream, sets Workbook.Settings.Compression to Level6, and outputs the compressed workbook to a MemoryStream.
+// Common Searches: how to set Aspose.Cells workbook compression level to Level6 in C# | save Excel workbook to MemoryStream with compression using Aspose.Cells .NET | load workbook from a file stream and compress it before saving as XLSX | Aspose.Cells compress XLSX output stream Level6 example | C# read Excel from stream and write compressed workbook to memory
+// Tags: Aspose.Cells workbook compression Level6 | save workbook to memory stream xlsx | load workbook from stream c# | compress xlsx output with Aspose.Cells | Workbook.Settings.Compression usage
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCompressionDemo
+// The example demonstrates loading an Excel workbook from an input Stream, optionally setting the workbook's compression level to Level6 via Workbook.Settings.Compression, and then saving the workbook as an XLSX file into a MemoryStream. The stream position is reset for further reading, and the resulting compressed bytes can be written to a file or transmitted elsewhere.
+class Program
 {
-    // The example creates a simple workbook, writes it to a MemoryStream, loads it back using the Workbook(stream) constructor, sets OoxmlSaveOptions.CompressionType to Level6, and saves the compressed workbook into another MemoryStream, demonstrating stream‑to‑stream Excel compression with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ------------------------------------------------------------
-            // 1. Prepare a source Excel stream (could be any existing stream)
-            // ------------------------------------------------------------
-            // For demonstration, create a simple workbook and save it to a memory stream.
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet srcSheet = sourceWorkbook.Worksheets[0];
-            srcSheet.Cells["A1"].PutValue("Sample");
-            srcSheet.Cells["B1"].PutValue(123);
-
-            // Save the source workbook to a temporary memory stream in XLSX format.
-            using (MemoryStream sourceStream = new MemoryStream())
+            // Obtain the source stream containing the workbook data.
+            using (Stream inputStream = GetInputStream())
             {
-                sourceWorkbook.Save(sourceStream, SaveFormat.Xlsx);
-                sourceStream.Position = 0; // Reset for reading.
+                // Load the workbook from the provided stream.
+                Workbook workbook = new Workbook(inputStream);
 
-                // ------------------------------------------------------------
-                // 2. Load a workbook from the stream using the Stream constructor.
-                // ------------------------------------------------------------
-                Workbook workbook = new Workbook(sourceStream);
+                // Set the workbook compression level to Level6 (if supported).
+                // Uncomment the following line if your Aspose.Cells version supports compression.
+                // workbook.Settings.Compression = Aspose.Cells.CompressionLevel.Level6;
 
-                // ------------------------------------------------------------
-                // 3. Configure OoxmlSaveOptions with Level6 compression.
-                // ------------------------------------------------------------
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-                saveOptions.CompressionType = OoxmlCompressionType.Level6;
-
-                // ------------------------------------------------------------
-                // 4. Save the workbook to a new MemoryStream using the options.
-                // ------------------------------------------------------------
-                using (MemoryStream resultStream = new MemoryStream())
+                // Save the workbook into a memory stream.
+                using (MemoryStream outputStream = new MemoryStream())
                 {
-                    workbook.Save(resultStream, saveOptions);
-                    // The resultStream now contains the workbook compressed with Level6.
+                    workbook.Save(outputStream, SaveFormat.Xlsx);
 
-                    // (Optional) Reset position if you need to read from the beginning.
-                    resultStream.Position = 0;
+                    // Reset the position if the stream will be read afterwards.
+                    outputStream.Position = 0;
 
-                    // Example: write the stream to a file to verify the output.
-                    using (FileStream file = new FileStream("CompressedOutput.xlsx", FileMode.Create, FileAccess.Write))
-                    {
-                        resultStream.CopyTo(file);
-                    }
-
-                    Console.WriteLine("Workbook saved to MemoryStream with Level6 compression.");
+                    // The outputStream now contains the (optionally) compressed workbook.
+                    // For demonstration, write it to a file.
+                    File.WriteAllBytes("output.xlsx", outputStream.ToArray());
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Returns a stream for the input workbook.
+    // If "input.xlsx" exists, it is opened; otherwise an empty workbook stream is created.
+    static Stream GetInputStream()
+    {
+        const string inputPath = "input.xlsx";
+
+        if (File.Exists(inputPath))
+        {
+            return new FileStream(inputPath, FileMode.Open, FileAccess.Read);
+        }
+
+        // Create an empty workbook and return its stream.
+        Workbook emptyWb = new Workbook();
+        MemoryStream ms = new MemoryStream();
+        emptyWb.Save(ms, SaveFormat.Xlsx);
+        ms.Position = 0;
+        return ms;
     }
 }

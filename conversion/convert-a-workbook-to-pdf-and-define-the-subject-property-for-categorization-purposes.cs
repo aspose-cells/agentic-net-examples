@@ -1,32 +1,22 @@
-// Title: Convert an Aspose.Cells workbook to PDF and set the Subject built‑in document property in C#
-// AI Prompts: Generate C# code that uses Aspose.Cells to create a workbook, assign a Subject built‑in document property, and save it as a PDF with standard properties exported. | Show how to configure PdfSaveOptions.CustomPropertiesExport to include built‑in properties when converting an Excel file to PDF with Aspose.Cells.
-// Common Searches: Aspose.Cells C# set Subject property before saving workbook as PDF | How to export built‑in document properties to PDF using PdfSaveOptions in Aspose.Cells | C# example converting Excel to PDF with metadata like Subject using Aspose.Cells | PdfSaveOptions CustomPropertiesExport Standard usage in Aspose.Cells conversion
-// Tags: Aspose.Cells PDF conversion with built‑in document properties | set workbook Subject property Aspose.Cells | PdfSaveOptions CustomPropertiesExport Standard | export Excel metadata to PDF Aspose.Cells | C# workbook to PDF with subject categorization
+// Title: Set the Subject built‑in document property and convert an Excel workbook to PDF using Aspose.Cells for .NET
+// Common Searches: how to assign a Subject built‑in document property to an Excel workbook before exporting to PDF with Aspose.Cells C# | Aspose.Cells C# convert XLSX to PDF while adding custom document properties | C# code example for setting Excel file Subject metadata and saving as PDF using Aspose.Cells | set built‑in document property Subject in Aspose.Cells and generate PDF | Aspose.Cells PDF export with custom Subject metadata in .NET
+// Tags: Subject built‑in property API Aspose.Cells | Excel workbook PDF export with custom metadata C# | Aspose.Cells SaveFormat.Pdf with document properties | C# assign Excel Subject metadata prior to PDF export | Aspose.Cells document property handling for PDF categorization
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-// The example creates a new workbook, adds sample data, sets the Subject built‑in document property, configures PdfSaveOptions to export standard properties, and saves the workbook as a PDF file.
-class ConvertWorkbookToPdfWithSubject
+// The program loads 'input.xlsx', assigns 'Financial Report Q3' to the Subject built‑in document property, and saves the workbook as 'output.pdf' using the PDF save format.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load the existing Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add sample data to the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample data for PDF conversion");
+        // Define the Subject property for categorization
+        workbook.BuiltInDocumentProperties.Subject = "Financial Report Q3";
 
-        // Define the subject property for categorization
-        workbook.BuiltInDocumentProperties.Subject = "Financial Report Q1";
-
-        // Configure PDF save options to export built‑in/custom properties
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.CustomPropertiesExport = PdfCustomPropertiesExport.Standard;
-
-        // Convert the workbook to PDF using the specified options
-        workbook.Save("ConvertedWorkbook.pdf", pdfOptions);
+        // Convert and save the workbook as a PDF file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

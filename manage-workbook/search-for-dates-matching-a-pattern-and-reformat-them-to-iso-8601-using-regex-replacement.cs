@@ -1,61 +1,83 @@
-// Title: Reformat MM/dd/yyyy date strings to ISO 8601 (yyyy-MM-dd) across all worksheets in an Excel file using Aspose.Cells for .NET (C#)
-// AI Prompts: Scan every string cell in a workbook and replace dates matching MM/dd/yyyy with yyyy-MM-dd using Aspose.Cells C#. | Apply a regular expression to convert US‑style dates to ISO 8601 format while iterating through all worksheets in an Excel file. | Update an Excel workbook by bulk‑editing cell values with a regex date transformation and save the result with Aspose.Cells.
-// Common Searches: C# Aspose.Cells replace US date format with ISO 8601 in all sheets | how to use regex to change mm/dd/yyyy to yyyy-mm-dd in an Excel workbook with Aspose | iterate through cells in Aspose.Cells and reformat date strings | bulk update string cells containing dates in .xlsx using Aspose.Cells and C# | convert date strings to ISO 8601 while saving workbook with Aspose.Cells
-// Tags: regex date conversion Aspose.Cells C# | bulk cell string replacement Excel .xlsx | reformat US date strings to ISO 8601 Aspose | iterate worksheets update cell values Aspose.Cells | save modified workbook Aspose.Cells .NET
+// Title: Replace dd/MM/yyyy and dd-MM-yyyy strings with ISO 8601 (yyyy‑MM‑dd) in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: how to convert date strings dd/MM/yyyy to yyyy-MM-dd in an Excel file with Aspose.Cells C# | using regular expressions to reformat dates in Excel cells via Aspose.Cells .NET | iterate over used range and update string cells to ISO 8601 format with Aspose.Cells | replace date patterns in worksheet cells using Aspose.Cells and Regex in C# | convert mixed date formats to ISO 8601 in an .xlsx using Aspose.Cells library
+// Tags: regex date reformatting Aspose.Cells | replace string cell values Excel .NET | maxdisplayrange iteration Aspose.Cells | ISO 8601 conversion Excel workbook C# | handle varied date patterns Aspose.Cells
 
-using System;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
-// The example loads an Excel workbook, iterates through every worksheet and cell, identifies string cells that match the MM/dd/yyyy pattern, rewrites each matched date to ISO 8601 (yyyy‑MM‑dd) using a regular expression, updates the cell only when a change occurs, and saves the transformed workbook.
+// The example loads an input.xlsx workbook with Aspose.Cells, scans the used range of the first worksheet, uses a regular expression to find dates in dd/MM/yyyy or dd‑MM‑yyyy format, converts each match to ISO 8601 (yyyy‑MM‑dd) via DateTime, updates the cell only when a change occurs, and saves the modified workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Define the regex pattern for dates (e.g., MM/dd/yyyy)
-        Regex datePattern = new Regex(@"\b(\d{2})/(\d{2})/(\d{4})\b");
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            for (int row = 0; row <= maxRow; row++)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Regex pattern to match dates like dd/MM/yyyy or dd-MM-yyyy
+            string pattern = @"\b(?<day>\d{2})[\/\-](?<month>\d{2})[\/\-](?<year>\d{4})\b";
+
+            // Get the used range of the worksheet (fully qualified to avoid ambiguity)
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = startRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = startCol + usedRange.ColumnCount - 1;
+
+            // Iterate through each cell in the used range
+            for (int row = startRow; row <= endRow; row++)
             {
-                for (int col = 0; col <= maxCol; col++)
+                for (int col = startCol; col <= endCol; col++)
                 {
-                    Cell cell = cells[row, col];
+                    Cell cell = sheet.Cells[row, col];
 
-                    // Process only string values (skip empty or non‑string cells)
-                    if (cell.Type == CellValueType.IsString)
+                    // Process only string cells
+                    if (cell.Type == CellValueType.IsString && !string.IsNullOrEmpty(cell.StringValue))
                     {
-                        string original = cell.StringValue;
+                        string originalText = cell.StringValue;
 
                         // Replace matched dates with ISO 8601 format (yyyy-MM-dd)
-                        string replaced = datePattern.Replace(original, m =>
+                        string newText = Regex.Replace(originalText, pattern, match =>
                         {
-                            // m.Groups: 1 = month, 2 = day, 3 = year
-                            return $"{m.Groups[3].Value}-{m.Groups[1].Value}-{m.Groups[2].Value}";
+                            int day = int.Parse(match.Groups["day"].Value);
+                            int month = int.Parse(match.Groups["month"].Value);
+                            int year = int.Parse(match.Groups["year"].Value);
+                            DateTime dt = new DateTime(year, month, day);
+                            return dt.ToString("yyyy-MM-dd");
                         });
 
                         // Update the cell only if a replacement occurred
-                        if (!original.Equals(replaced))
+                        if (!newText.Equals(originalText))
                         {
-                            cell.PutValue(replaced);
+                            cell.PutValue(newText);
                         }
                     }
                 }
             }
-        }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

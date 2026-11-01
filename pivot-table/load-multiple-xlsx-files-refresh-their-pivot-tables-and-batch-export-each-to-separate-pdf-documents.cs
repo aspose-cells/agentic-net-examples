@@ -1,60 +1,81 @@
-// Title: Refresh pivot tables in multiple XLSX workbooks and export each workbook to a PDF with Aspose.Cells for .NET
-// AI Prompts: Write C# code that loads a list of .xlsx files, calls Worksheets.RefreshPivotTables on each workbook, and saves the result as a PDF using ConversionUtility.Convert. | Generate a batch routine in .NET that iterates over Excel files, refreshes all pivot tables, and creates separate PDF files for each workbook with Aspose.Cells. | Create a console application that validates file existence, refreshes pivot caches, and converts refreshed workbooks to PDFs in a single pass.
-// Common Searches: aspnet refresh all pivot tables in a folder of Excel files using Aspose.Cells | batch convert refreshed XLSX workbooks to PDF with C# Aspose.Cells | how to loop through multiple Excel workbooks and update pivot tables programmatically | Aspose.Cells Worksheets.RefreshPivotTables example for bulk processing | convert Excel workbook to PDF after pivot refresh using ConversionUtility in .NET
-// Tags: bulk refresh pivot tables Aspose.Cells | pivot table refresh and PDF export .NET | Worksheets.RefreshPivotTables batch processing | ConversionUtility.Convert PDF generation | process multiple XLSX files Aspose.Cells | export refreshed workbook to PDF C#
+// Title: Refresh all pivot tables in multiple XLSX workbooks and export each workbook to a separate PDF using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, refreshes and recalculates every pivot table, then saves the workbook as a PDF with the same base name in an output folder. | Generate C# code that iterates through all worksheets and their pivot tables, calls PivotTable.RefreshData() and PivotTable.CalculateData(), and uses Workbook.Save to export each workbook to PDF, including folder creation and per‑file error handling.
+// Common Searches: how to refresh pivot tables in all Excel files in a folder using Aspose.Cells C# | batch convert multiple XLSX files to PDF after updating pivot tables with .NET | C# loop through directory, refresh Excel pivot tables and save each workbook as PDF | Aspose.Cells bulk export of Excel workbooks to PDF after pivot refresh
+// Tags: bulk Excel to PDF conversion Aspose.Cells | traverse workbook worksheets and pivot tables C# | automated folder processing for XLSX files .NET | error handling during batch workbook export | create output directory programmatically C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Pivot;   // Required for PivotTable class
 
-namespace PivotRefreshAndPdfExport
+namespace PivotTablePdfExport
 {
-    // The example iterates over a collection of XLSX files, loads each workbook with Aspose.Cells, refreshes all pivot tables via Worksheets.RefreshPivotTables, saves the workbook, and then converts the refreshed file to a separate PDF using ConversionUtility.Convert.
+    // The sample program enumerates every .xlsx file in a given input folder, loads each workbook with Aspose.Cells, refreshes and recalculates all pivot tables on every worksheet, and then saves the updated workbook as an individual PDF in a specified output folder, handling missing files, folder creation, and per‑file exceptions.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // List of source Excel files (XLSX) to process
-            List<string> sourceFiles = new List<string>
-            {
-                "Report1.xlsx",
-                "Report2.xlsx",
-                "Report3.xlsx"
-                // Add more file paths as needed
-            };
+            // Folder containing the source XLSX files
+            string sourceFolder = @"C:\InputXlsx";
+            // Folder where the PDF files will be saved
+            string outputFolder = @"C:\OutputPdf";
 
-            // Process each file
-            foreach (string sourcePath in sourceFiles)
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                // Ensure the source file exists
-                if (!File.Exists(sourcePath))
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
+            }
+
+            // Ensure output directory exists
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+
+            // Get all XLSX files in the source folder
+            string[] xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            foreach (string xlsxPath in xlsxFiles)
+            {
+                // Guard against missing file (should not happen with GetFiles, but added for safety)
+                if (!File.Exists(xlsxPath))
                 {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    Console.WriteLine($"File not found: {xlsxPath}");
                     continue;
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(sourcePath);
+                try
+                {
+                    // Load the workbook
+                    Workbook workbook = new Workbook(xlsxPath);
 
-                // Refresh all pivot tables in the workbook
-                workbook.Worksheets.RefreshPivotTables();
+                    // Refresh all pivot tables in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        foreach (PivotTable pivotTable in sheet.PivotTables)
+                        {
+                            // Refresh the data source of the pivot table
+                            pivotTable.RefreshData();
+                            // Recalculate the pivot table after refresh
+                            pivotTable.CalculateData();
+                        }
+                    }
 
-                // Save the refreshed workbook back to the same file (or to a temp file)
-                // Using the standard Save method as there is no specific rule for saving.
-                workbook.Save(sourcePath);
+                    // Build the output PDF file path (same name, .pdf extension)
+                    string pdfFileName = Path.GetFileNameWithoutExtension(xlsxPath) + ".pdf";
+                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
 
-                // Determine the PDF output path (same name with .pdf extension)
-                string pdfPath = Path.ChangeExtension(sourcePath, ".pdf");
-
-                // Convert the refreshed Excel file to PDF using the provided ConversionUtility.Convert rule
-                ConversionUtility.Convert(sourcePath, pdfPath);
-
-                Console.WriteLine($"Converted '{sourcePath}' to PDF '{pdfPath}'.");
+                    // Save the workbook as PDF
+                    workbook.Save(pdfPath, SaveFormat.Pdf);
+                    Console.WriteLine($"Converted: {Path.GetFileName(xlsxPath)} -> {pdfFileName}");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors for the current file and continue processing others
+                    Console.WriteLine($"Error processing file '{xlsxPath}': {ex.Message}");
+                }
             }
 
-            Console.WriteLine("All files processed.");
+            Console.WriteLine("All files have been processed and exported to PDF.");
         }
     }
 }

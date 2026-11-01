@@ -1,17 +1,28 @@
-// Title: Configure a worksheet for unlimited printed pages by setting FitToPagesWide and FitToPagesTall to zero with Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that sets worksheet.PageSetup.FitToPagesWide = 0 and FitToPagesTall = 0 using Aspose.Cells and saves the workbook. | Provide a snippet that disables page scaling limits in Aspose.Cells by assigning zero to the FitToPagesWide and FitToPagesTall properties. | Write a method that creates a new workbook, configures unlimited printed page dimensions, and writes output.xlsx with Aspose.Cells.
-// Common Searches: how to remove page fit constraints in Aspose.Cells C# | Aspose.Cells example for unlimited columns per printed page | C# code to set FitToPagesTall zero for full sheet printing | Aspose.Cells page setup to print entire worksheet without scaling | unlimited page width and height settings in Aspose.Cells
-// Tags: Aspose.Cells page setup unlimited scaling | set FitToPagesWide to zero Aspose.Cells | set FitToPagesTall to zero Aspose.Cells | disable page fit constraints Aspose.Cells | print all rows on a single sheet Aspose.Cells
+// Title: Set FitToPagesWide and FitToPagesTall to zero for unlimited page scaling with Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set FitToPagesWide to 0 for unlimited width | How to remove page height limit using FitToPagesTall in Aspose.Cells | Print scaling without page count limit Aspose.Cells .NET example | Configure worksheet page setup to ignore page limits in C# | Aspose.Cells unlimited page dimensions for Excel export
+// Tags: FitToPagesWide zero unlimited scaling | FitToPagesTall zero unlimited scaling | Aspose.Cells page setup print scaling | C# Aspose.Cells worksheet page configuration | unlimited page dimensions Aspose.Cells
 
-// Create a new workbook
-var workbook = new Aspose.Cells.Workbook();
+using Aspose.Cells;
 
-// Get the first worksheet (or any worksheet you need)
-var worksheet = workbook.Worksheets[0];
+// The example creates a workbook, accesses the first worksheet's PageSetup, sets FitToPagesWide and FitToPagesTall to 0 to allow unlimited page width and height, and saves the file as Result.xlsx.
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-// Set unlimited page width and height by assigning zero
-worksheet.PageSetup.FitToPagesWide = 0;   // Unlimited columns per page
-worksheet.PageSetup.FitToPagesTall = 0;   // Unlimited rows per page
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-// Save the workbook to a file
-workbook.Save("output.xlsx");
+        // Get the page setup object for the worksheet
+        PageSetup pageSetup = worksheet.PageSetup;
+
+        // Set FitToPagesWide and FitToPagesTall to 0 for unlimited pages
+        pageSetup.FitToPagesWide = 0;   // Unlimited page width
+        pageSetup.FitToPagesTall = 0;   // Unlimited page height
+
+        // Save the workbook to a file
+        workbook.Save("Result.xlsx");
+    }
+}

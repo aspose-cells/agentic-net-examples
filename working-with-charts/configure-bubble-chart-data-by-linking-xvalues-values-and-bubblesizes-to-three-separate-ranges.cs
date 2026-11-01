@@ -1,57 +1,78 @@
-// Title: Configure a bubble chart in Aspose.Cells for .NET by linking XValues, YValues, and BubbleSizes to separate cell ranges
-// AI Prompts: Generate C# code using Aspose.Cells that creates a bubble chart and assigns the XValues, Values, and BubbleSizes properties to three distinct cell ranges. | Show how to change the data orientation of a bubble chart series in Aspose.Cells while preserving separate ranges for X, Y, and size values. | Provide a full example that populates sample data, adds a bubble chart, links XValues, Values, and BubbleSizes to ranges, and saves the workbook as an Excel file.
-// Common Searches: Aspose.Cells C# assign XValues range for a bubble chart series | binding separate columns to X, Y, and bubble size in Aspose.Cells bubble chart | set bubble chart data source from multiple ranges using Aspose.Cells .NET | example of creating a bubble chart with custom X and size ranges in Aspose.Cells
-// Tags: Aspose.Cells bubble chart XValues binding | Aspose.Cells set bubble series values range | Aspose.Cells configure bubble sizes from cells | C# Aspose.Cells create bubble chart example | Excel bubble chart multiple data ranges Aspose.Cells
+// Title: Configure a bubble chart in Aspose.Cells for .NET by linking XValues, YValues, and BubbleSizes to separate worksheet ranges
+// AI Prompts: Write C# code with Aspose.Cells that creates a bubble chart, fills worksheet columns with X, Y, and size data, and assigns the series XValues, Values, and BubbleSizes to specific cell ranges. | Demonstrate how to add a bubble chart to a worksheet, bind distinct ranges for the X axis, Y axis, and bubble sizes, and save the workbook as an .xlsx file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to set XValues range for a bubble chart | binding bubble size data to a chart series in Aspose.Cells .NET | example linking separate columns to bubble chart series with Aspose.Cells | create bubble chart with custom data ranges Aspose.Cells C# | Aspose.Cells bubble chart series data source from worksheet cells
+// Tags: Aspose.Cells bubble chart data ranges | C# Aspose.Cells set series XValues | Aspose.Cells link bubble sizes to cells | create bubble chart Aspose.Cells .NET | populate worksheet for bubble chart Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// The example creates a new workbook, fills columns A, B, and C with X, Y, and size data, adds a bubble chart, and links the series to the ranges A2:A5 (XValues), B2:B5 (Values), and C2:C5 (BubbleSizes) before saving the file as BubbleChartConfigured.xlsx.
+// The example creates a new workbook, writes X, Y, and bubble size values into columns A‑C, adds a bubble chart, links the series XValues, Values, and BubbleSizes to the ranges A1:A5, B1:B5, and C1:C5, sets a chart title, and saves the workbook as an .xlsx file.
 class BubbleChartExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // -------------------------------------------------
-        // Populate sample data for the bubble chart
-        // Column A : X values
-        // Column B : Y values (Values)
-        // Column C : Bubble sizes
-        // -------------------------------------------------
-        sheet.Cells["A1"].PutValue("X");
-        sheet.Cells["B1"].PutValue("Y");
-        sheet.Cells["C1"].PutValue("Size");
-
-        for (int i = 2; i <= 5; i++)
+        try
         {
-            sheet.Cells[$"A{i}"].PutValue(i);          // X = i
-            sheet.Cells[$"B{i}"].PutValue(i * 2);      // Y = i * 2
-            sheet.Cells[$"C{i}"].PutValue(i * 0.5);    // Size = i * 0.5
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for X values, Y values, and bubble sizes
+            double[] xValues = { 1, 2, 3, 4, 5 };
+            double[] yValues = { 10, 20, 30, 40, 50 };
+            double[] bubbleSizes = { 5, 10, 15, 20, 25 };
+
+            for (int i = 0; i < xValues.Length; i++)
+            {
+                sheet.Cells[i, 0].PutValue(xValues[i]); // Column A
+                sheet.Cells[i, 1].PutValue(yValues[i]); // Column B
+                sheet.Cells[i, 2].PutValue(bubbleSizes[i]); // Column C
+            }
+
+            // Define chart position
+            int chartUpperLeftRow = 7;
+            int chartUpperLeftColumn = 0;
+            int chartLowerRightRow = 25;
+            int chartLowerRightColumn = 7;
+
+            // Add a bubble chart to the worksheet (returns the chart index)
+            int chartIndex = sheet.Charts.Add(ChartType.Bubble,
+                                              chartUpperLeftRow, chartUpperLeftColumn,
+                                              chartLowerRightRow, chartLowerRightColumn);
+            Chart bubbleChart = sheet.Charts[chartIndex];
+
+            // Add an empty series (Add returns the series index)
+            int seriesIndex = bubbleChart.NSeries.Add("", false);
+            Series series = bubbleChart.NSeries[seriesIndex];
+
+            // Link data ranges for X values, Y values, and bubble sizes
+            series.XValues = "A1:A5";        // X axis values
+            series.Values = "B1:B5";        // Y axis values
+            series.BubbleSizes = "C1:C5";   // Bubble size values
+
+            // Optional: set chart title
+            bubbleChart.Title.Text = "Sample Bubble Chart";
+
+            // Save the workbook to a file
+            string outputPath = "BubbleChartOutput.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // -------------------------------------------------
-        // Add a bubble chart to the worksheet
-        // Parameters: chart type, top row, left column, bottom row, right column
-        // -------------------------------------------------
-        int chartIndex = sheet.Charts.Add(ChartType.Bubble, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Add a series using the Y values range (Values)
-        // The second argument 'true' indicates that the data is arranged vertically (by column)
-        chart.NSeries.Add("B2:B5", true);
-
-        // Link X values and bubble sizes to their respective ranges
-        chart.NSeries[0].XValues = "A2:A5";        // X values range
-        chart.NSeries[0].BubbleSizes = "C2:C5";   // Bubble sizes range
-
-        // Optional: force chart layout calculation before saving
-        chart.Calculate();
-
-        // Save the workbook with the configured bubble chart
-        workbook.Save("BubbleChartConfigured.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

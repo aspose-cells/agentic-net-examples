@@ -1,51 +1,79 @@
-// Title: Automatically highlight formula error cells in an Excel workbook using Aspose.Cells for .NET conditional formatting
-// AI Prompts: Write C# code that creates a workbook, inserts formulas, calls CalculateFormula, and adds a ContainsErrors conditional formatting rule that colors error cells with a light salmon background. | Adapt the sample to apply the ContainsErrors conditional formatting only to the range A1:B10 after the workbook has been calculated.
-// Common Searches: Aspose.Cells C# highlight cells that contain #DIV/0! after calculating formulas | How to add a ContainsErrors conditional format to an Excel file with Aspose.Cells | Programmatically color Excel error values using Aspose.Cells .NET API | Apply conditional formatting for formula errors only in a specific range with Aspose.Cells | Auto style error cells after workbook.CalculateFormula in C#
-// Tags: Aspose.Cells ContainsErrors conditional formatting | C# highlight Excel formula errors | apply background color to error cells Aspose.Cells | calculate formulas then style error values | conditional formatting for #DIV/0! Aspose.Cells
+// Title: Automatically highlight cells with formula errors using Aspose.Cells conditional formatting in C#
+// Common Searches: how to use Aspose.Cells in C# to apply conditional formatting that flags #DIV/0! errors | C# code example for highlighting Excel cells containing errors with Aspose.Cells | apply red background to error cells after CalculateFormula with Aspose.Cells .NET | Aspose.Cells conditional formatting for cells that contain errors in a workbook | automate error detection and highlighting in Excel using Aspose.Cells for .NET
+// Tags: Aspose.Cells error cell highlighting | C# red fill for formula errors | calculate formulas before applying style Aspose.Cells | Excel workbook error detection Aspose.Cells .NET | apply style to cells containing errors Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace HighlightErrorCellsDemo
+// The example loads an existing XLSX file, forces formula recalculation, defines the used range, adds a formatting rule that detects cells with errors, applies a red solid background to those cells, and saves the workbook, demonstrating automatic error highlighting with Aspose.Cells for .NET.
+class HighlightErrorCells
 {
-    // The example creates a workbook, inserts formulas that generate errors, calculates all formulas, and then adds a ContainsErrors conditional formatting rule that fills any error cells with a light salmon background before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate some cells with formulas that will produce errors
-            cells["A1"].Formula = "=1/0";                 // #DIV/0! error
-            cells["A2"].Formula = "=UNKNOWNFUNC(5)";      // #NAME? error
-            cells["A3"].Formula = "=B1";                  // B1 is empty, no error (valid)
-            cells["B1"].PutValue(10);
-            cells["B2"].Formula = "=A2+A3";               // Depends on error cell A2
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Calculate all formulas so that error values are materialized
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure all formulas are calculated so that error values are up‑to‑date
             workbook.CalculateFormula();
 
-            // Add a conditional formatting rule that highlights cells containing errors
+            // Get the first worksheet (or specify the desired one)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the range to which the conditional formatting will be applied.
+            // Here we apply it to the entire used range of the worksheet.
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = sheet.Cells.MaxDataRow,
+                EndColumn = sheet.Cells.MaxDataColumn
+            };
+
+            // Add a conditional formatting collection to the worksheet
             int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            FormatConditionCollection collection = sheet.ConditionalFormattings[cfIndex];
+            collection.AddArea(area);
 
-            // Define the range to which the rule applies (entire used range)
-            CellArea area = CellArea.CreateCellArea(0, 0, cells.MaxDataRow, cells.MaxDataColumn);
-            cfCollection.AddArea(area);
+            // Create a condition that checks for cells containing errors
+            int conditionIndex = collection.AddCondition(FormatConditionType.ContainsErrors);
+            FormatCondition condition = collection[conditionIndex];
 
-            // Add a condition of type ContainsErrors (no operator or formulas needed)
-            int conditionIndex = cfCollection.AddCondition(FormatConditionType.ContainsErrors);
-            FormatCondition condition = cfCollection[conditionIndex];
+            // Define the style to apply when the condition is met (e.g., red fill)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
 
-            // Set the style for cells that meet the condition (e.g., light red background)
-            condition.Style.BackgroundColor = Color.LightSalmon;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook
-            workbook.Save("HighlightedErrors.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

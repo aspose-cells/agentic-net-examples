@@ -1,82 +1,74 @@
-// Title: Use Aspose.Cells for .NET to select SmartArt shapes containing a keyword and change their line weight in an Excel workbook (C#)
-// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, filters SmartArt shapes whose extracted text includes a specified keyword, sets each shape's line weight to 2 points, and saves the workbook. | Show how to create a custom LINQ predicate on Shape.IsSmartArt and Shape.Text to identify SmartArt diagrams containing a given word and apply border formatting using the Aspose.Cells API.
-// Common Searches: Aspose.Cells C# filter SmartArt shapes by keyword in extracted text | How to change border thickness of specific SmartArt diagrams in Excel using .NET | LINQ query to select SmartArt objects based on their text with Aspose.Cells | Programmatically highlight SmartArt shapes that contain a certain word in an Excel file | Set line weight for selected SmartArt shapes using Aspose.Cells API
-// Tags: SmartArt text filter Aspose.Cells | apply SmartArt border thickness C# | LINQ SmartArt selection Aspose.Cells | Excel SmartArt border formatting .NET | conditional SmartArt formatting Aspose.Cells
+// Title: Use Aspose.Cells for .NET to highlight SmartArt shapes whose AlternativeText contains a specific keyword
+// AI Prompts: Write C# code that loads an Excel workbook, uses a LINQ predicate to select SmartArt shapes whose AlternativeText includes a given keyword, and changes their FillFormat.ForeColor to yellow with Aspose.Cells. | Create a reusable method that accepts a file path, keyword, and color, then iterates all worksheets to find SmartArt shapes matching the keyword in AlternativeText and updates their fill color.
+// Common Searches: asp.net c# find SmartArt shapes with specific alternative text using Aspose.Cells | how to change fill color of SmartArt shapes based on a keyword in an Excel file with Aspose.Cells | filter SmartArt shapes by AlternativeText property in a .xlsx workbook using LINQ | highlight Excel SmartArt objects that contain the word "Important" programmatically
+// Tags: filter SmartArt shapes by AlternativeText Aspose.Cells | highlight SmartArt shape fill color C# | LINQ predicate for SmartArt selection Aspose.Cells | modify Excel SmartArt fill based on keyword | Aspose.Cells shape processing with AlternativeText
 
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The example loads an existing Excel workbook, verifies the input file, retrieves the first worksheet, locates all SmartArt shapes, filters those whose extracted text contains a target keyword, sets each matching shape's line weight to 2 points (with optional color change), ensures the output directory exists, saves the modified workbook to a new file, and logs any errors encountered.
-class SmartArtFilter
+// The program loads an Excel workbook, iterates through each worksheet, selects SmartArt shapes whose AlternativeText contains the keyword "Important", sets their fill color to yellow via the FillFormat property, and saves the updated file while handling possible file and shape errors.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string keyword = "Important";
+
+        // Verify input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify that the input file exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Find SmartArt shapes
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Select SmartArt shapes whose alternative text contains the keyword
             var smartArtShapes = sheet.Shapes
-                .Where(shape => shape.IsSmartArt)
-                .ToList();
+                .Where(s => s.IsSmartArt && !string.IsNullOrEmpty(s.AlternativeText) && s.AlternativeText.Contains(keyword));
 
-            // Highlight each SmartArt shape
+            // Highlight each matching SmartArt shape
             foreach (Shape shape in smartArtShapes)
             {
                 try
                 {
-                    // Set line weight
-                    shape.Line.Weight = 2.0;
-
-                    // Note: Line color property may not be available in some versions.
-                    // If needed, uncomment the following line after confirming API support:
-                    // shape.Line.Color = Color.Red;
+                    // Set fill color using the correct FillFormat property
+                    shape.FillFormat.ForeColor = Color.Yellow;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Unable to set line formatting for shape '{shape.Name}': {ex.Message}");
+                    Console.WriteLine($"Failed to modify shape fill: {ex.Message}");
                 }
             }
+        }
 
-            // Ensure the output directory exists
-            try
-            {
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+        try
+        {
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

@@ -1,51 +1,45 @@
-// Title: Load an Excel workbook and retrieve the address string of range A1:C5 using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, creates a range covering cells A1 through C5 on the first worksheet, and prints its address as a string. | Show how to use CellsHelper in Aspose.Cells to convert a range's first row/column and dimensions into the standard A1:C5 address format. | Provide a robust example that checks for file existence, loads the workbook, and extracts the address of any specified range using Aspose.Cells.
-// Common Searches: asp.net aspose.cells get address of cells A1 through C5 in C# | how to convert Aspose.Cells range indices to Excel address string C# | extract address of a selected range from worksheet using Aspose.Cells | C# example for retrieving range address with Aspose.Cells
-// Tags: Aspose.Cells range address extraction | C# Aspose.Cells define custom cell range | Aspose.Cells CellsHelper address conversion | load Excel workbook using Aspose.Cells .NET
+// Title: Load an Excel workbook and get the address string of range A1:C5 with Aspose.Cells for .NET (C#)
+// Common Searches: C# Aspose.Cells how to retrieve the address of a specific range after loading a workbook | Get range reference string A1:C5 using Aspose.Cells .NET | Aspose.Cells create range and read RefersTo property in C# example | Load Excel file and obtain range address without using Excel Interop | Aspose.Cells read cell range address from first worksheet in C#
+// Tags: Aspose.Cells load workbook C# | Aspose.Cells create range A1:C5 | Aspose.Cells RefersTo property usage | Aspose.Cells get range address string | Aspose.Cells first worksheet range address
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// The sample loads 'input.xlsx' with Aspose.Cells, accesses the first worksheet, creates a range covering A1:C5, uses CellsHelper to translate the range's first row/column and size into start and end cell names, builds the address string "A1:C5", and prints it to the console.
+// The example checks for the presence of "input.xlsx", loads it into an Aspose.Cells Workbook, accesses the first worksheet, creates the range A1:C5, reads the range's RefersTo property to obtain its address string, prints the address, and includes basic exception handling.
 class Program
 {
     static void Main()
     {
         const string inputPath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the Excel workbook from the specified file
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (index 0)
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a range that covers cells A1 to C5
-            AsposeRange range = sheet.Cells.CreateRange("A1:C5");
+            // Create the range A1:C5 (use fully qualified Aspose.Cells.Range to avoid ambiguity)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1", "C5");
 
-            // Build the address string of the range using its properties
-            string startCell = CellsHelper.CellIndexToName(range.FirstRow, range.FirstColumn);
-            string endCell = CellsHelper.CellIndexToName(
-                range.FirstRow + range.RowCount - 1,
-                range.FirstColumn + range.ColumnCount - 1);
-            string address = $"{startCell}:{endCell}";
+            // Obtain the address string of the range
+            string address = range.RefersTo;
 
-            // Display the address
+            // Output the address
             Console.WriteLine(address);
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
+            // Catch any unexpected exceptions and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

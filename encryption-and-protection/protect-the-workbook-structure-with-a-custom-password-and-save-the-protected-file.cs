@@ -1,23 +1,31 @@
-// Title: How to protect an Excel workbook's structure with a custom password and save it as XLSX using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that uses Aspose.Cells to apply structure protection with a specified password to a workbook and then save it as an XLSX file. | Show how to lock sheet addition, deletion, hiding, and reordering by calling Workbook.Protect with ProtectionType.Structure and a custom password, then persist the workbook.
-// Common Searches: Aspose.Cells C# protect workbook structure with password example | C# code to prevent adding or deleting sheets in Excel using Aspose.Cells | Save a password‑protected XLSX file with Aspose.Cells .NET | Workbook.Protect ProtectionType.Structure usage in Aspose.Cells
-// Tags: Aspose.Cells workbook.Protect structure password | C# protect Excel workbook structure | save password‑protected XLSX Aspose.Cells | ProtectionType.Structure usage Aspose.Cells | custom password Excel protection .NET
+// Title: Protect Excel workbook structure with a custom password in C# using Aspose.Cells and save as XLSX
+// Common Searches: C# Aspose.Cells protect workbook structure with password and save as xlsx | How to lock Excel workbook structure programmatically using Aspose.Cells .NET | Set custom password for workbook protection in Aspose.Cells for .NET | Saving a password protected Excel file with Aspose.Cells C# | Aspose.Cells workbook.Protect structure example in C#
+// Tags: Aspose.Cells workbook.Protect method | Excel workbook structure lock C# | save password‑protected XLSX Aspose.Cells | custom password for workbook protection .NET | protect workbook structure Aspose.Cells API
 
 using Aspose.Cells;
+using System;
 
-// The example creates a new Workbook (or loads an existing one), applies structure protection with the password "MyCustomPassword" using ProtectionType.Structure, and saves the protected workbook as "ProtectedWorkbook.xlsx" in XLSX format.
+// The example creates a new Workbook, applies structure protection with a custom password via workbook.Protect(ProtectionType.Structure, password), and saves the protected file as 'ProtectedWorkbook.xlsx', handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (you can also load an existing one with new Workbook("input.xlsx"))
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Protect the workbook structure with a custom password
-        // ProtectionType.Structure ensures that sheets cannot be added, deleted, hidden, or reordered
-        workbook.Protect(ProtectionType.Structure, "MyCustomPassword");
+            // Protect the workbook structure with a custom password
+            string password = "MySecretPassword";
+            workbook.Protect(ProtectionType.Structure, password);
 
-        // Save the protected workbook to a file
-        workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Save the protected workbook to a file
+            workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

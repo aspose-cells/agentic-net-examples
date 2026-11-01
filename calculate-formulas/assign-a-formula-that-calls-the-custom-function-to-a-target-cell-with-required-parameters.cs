@@ -1,64 +1,29 @@
-// Title: How to assign a custom Excel function (MYFUNC) to a cell using Aspose.Cells for .NET with parameters
-// AI Prompts: Generate C# code that creates a workbook, defines a MyCustomFunctionDefinition, and sets the formula =MYFUNC(A1,B1) in cell C1 using FormulaParseOptions. | Show how to configure Aspose.Cells to parse a custom function call and calculate the result after assigning the formula. | Write a snippet that outputs the calculated value of a custom function placed in a worksheet cell and saves the file.
-// Common Searches: Aspose.Cells set custom function formula in C# workbook example | C# assign user-defined function to Excel cell using Aspose.Cells FormulaParseOptions | How to calculate workbook after adding custom function MYFUNC with Aspose.Cells | Using CustomFunctionDefinition to enable array mode parameters in Aspose.Cells
-// Tags: assign custom function to cell Aspose.Cells | FormulaParseOptions custom function parsing | CustomFunctionDefinition array‑mode configuration | calculate workbook with user‑defined function | export workbook containing custom function result
+// Title: Assign a custom function formula with cell references to a worksheet cell using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# set formula to call a user-defined function with cell arguments | How to use a custom Excel function in a workbook created with Aspose.Cells .NET | Assign MyCustomFunc(A1,B2) formula to a cell in Aspose.Cells C# example | Register and invoke custom functions in Aspose.Cells workbook programmatically | Set formula for cell C3 that calls a custom function in Aspose.Cells
+// Tags: assign custom function formula Aspose.Cells | invoke user-defined Excel function C# | register custom functions collection Aspose.Cells | set cell formula with cell references .NET | Aspose.Cells workbook custom function usage
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomFunctionDemo
+// Creates a new workbook, writes values to A1 and B2, assigns the formula =MyCustomFunc(A1,B2) to cell C3, and saves the file. The custom function must be registered in the workbook's CustomFunctions collection beforehand.
+class Program
 {
-    // Custom function definition (optional override for array‑mode parameters)
-    // Creates a workbook, defines a custom function MYFUNC with array‑mode for the first argument, assigns the formula =MYFUNC(A1,B1) to cell C1 via FormulaParseOptions, calculates the workbook, prints the result, and saves the file as CustomFunctionResult.xlsx.
-    public class MyCustomFunctionDefinition : CustomFunctionDefinition
+    static void Main()
     {
-        // Example: indicate that the first parameter should be calculated in array mode
-        public override int[] GetArrayModeParameters(string functionName)
-        {
-            if (functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-                return new int[] { 0 }; // first argument
-            return base.GetArrayModeParameters(functionName);
-        }
-    }
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-    class Program
-    {
-        static void Main()
-        {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Put some sample data that will be used as parameters
-            cells["A1"].PutValue(5);
-            cells["B1"].PutValue(10);
+        // Set example values for the parameters of the custom function
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["B2"].PutValue(20);
 
-            // 3. Prepare formula‑parse options with the custom function definition
-            FormulaParseOptions parseOptions = new FormulaParseOptions
-            {
-                Parse = true,                                 // enable parsing
-                CustomFunctionDefinition = new MyCustomFunctionDefinition()
-            };
+        // Assign a formula that calls the custom function MyCustomFunc with parameters A1 and B2
+        // The custom function must be registered with the workbook's CustomFunctions collection elsewhere in the code.
+        sheet.Cells["C3"].Formula = "=MyCustomFunc(A1,B2)";
 
-            // 4. Assign a formula that calls the custom function to the target cell (C1)
-            //    The formula string must start with '='.
-            //    The third argument (value) is set to null because we want Aspose.Cells
-            //    to calculate the result after we invoke the calculation engine.
-            cells["C1"].SetFormula("=MYFUNC(A1,B1)", parseOptions, null);
-
-            // 5. (Optional) If you have a custom calculation engine, configure it here.
-            //    For this example we use the default engine, so no custom engine is set.
-            //    CalculationOptions options = new CalculationOptions();
-
-            // 6. Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // 7. Display the calculated result
-            Console.WriteLine("Result of MYFUNC(A1,B1) in C1: " + cells["C1"].Value);
-
-            // 8. Save the workbook (lifecycle rule: use provided save method)
-            workbook.Save("CustomFunctionResult.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("Output.xlsx");
     }
 }

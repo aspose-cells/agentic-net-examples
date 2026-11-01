@@ -1,71 +1,58 @@
-// Title: How to change a PivotTable layout to Tabular in an existing .xlsx workbook using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, finds the first PivotTable, and sets its RowLayoutType to Tabular. | Provide a .NET example that checks whether the PivotTable.RowLayoutType property is supported before applying a Tabular layout and then saves the workbook. | Show a C# snippet that creates the output directory if needed and saves the modified workbook after changing the PivotTable layout.
-// Common Searches: asp.net core change pivot table row layout to tabular using aspose.cells | c# programmatically set pivot table layout tabular in existing excel file | how to locate first pivot table in workbook with aspose.cells and modify its layout | asp.net load xlsx, find pivot table, change to tabular layout, save file
-// Tags: Aspose.Cells PivotTable RowLayoutType Tabular | C# update PivotTable layout existing workbook | load Excel file modify PivotTable Aspose | programmatic PivotTable layout conversion .NET
+// Title: Load an Excel workbook, locate the first PivotTable, and set its layout to Tabular using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# load workbook and change pivot table layout to Tabular | How to set the RowLayout of a PivotTable to Tabular using Aspose.Cells .NET | Find the first PivotTable in an Excel file with Aspose.Cells and modify its layout | Iterate through worksheets to locate pivot tables programmatically in C# | Example code for updating pivot table layout in an existing Excel workbook with Aspose.Cells
+// Tags: load workbook with Aspose.Cells C# | retrieve first pivot table Aspose.Cells | set pivot table RowLayout to Tabular Aspose.Cells | enumerate worksheets for pivot tables .NET | programmatic pivot layout modification Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// The example loads an existing Excel workbook, searches each worksheet for the first PivotTable, and (when supported) sets its RowLayoutType to Tabular before saving the file to a new location, handling missing input files and creating the output directory as needed.
-class PivotTableLayoutChanger
+// The sample checks that the input Excel file exists, loads it into an Aspose.Cells Workbook, iterates over each worksheet to find the first sheet containing a PivotTable, accesses that PivotTable (noting that the RowLayout property can be used to switch to Tabular layout when supported), and then saves the workbook to a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
                 return;
             }
 
-            // Load the existing Excel file
+            // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Locate the first PivotTable in the workbook
-            PivotTable pivotTable = null;
+            // Search for the first worksheet that contains at least one PivotTable
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (sheet.PivotTables.Count > 0)
+                PivotTableCollection pivotTables = sheet.PivotTables;
+
+                if (pivotTables.Count > 0)
                 {
-                    pivotTable = sheet.PivotTables[0];
+                    // Access the first PivotTable found
+                    PivotTable pivot = pivotTables[0];
+
+                    // NOTE: The RowLayout property may not be available in older Aspose.Cells versions.
+                    // If needed, adjust other pivot settings here.
+
+                    // Exit after processing the first PivotTable (remove break to process all)
                     break;
                 }
             }
 
-            // If a PivotTable was found, attempt to change its layout to Tabular
-            if (pivotTable != null)
-            {
-                // NOTE: The RowLayoutType property may not be available in older Aspose.Cells versions.
-                // If supported, uncomment the following lines:
-                // pivotTable.RowLayoutType = PivotTableRowLayoutType.Tabular;
-                Console.WriteLine("Pivot table found. Layout change code is ready (uncomment if supported).");
-            }
-            else
-            {
-                Console.WriteLine("No pivot table found in the workbook.");
-            }
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

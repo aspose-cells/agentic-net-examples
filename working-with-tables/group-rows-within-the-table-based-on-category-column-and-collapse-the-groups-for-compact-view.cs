@@ -1,67 +1,71 @@
-// Title: C# Aspose.Cells example to group rows by category column and collapse them for a compact worksheet view
-// AI Prompts: Generate C# code using Aspose.Cells that reads an Excel file, groups consecutive rows with identical values in column A, and collapses each group. | Write a C# console program that loads a workbook, detects changes in the first column, applies row grouping with hidden detail rows, and saves the updated file. | Adapt an existing Aspose.Cells script to automatically hide the rows after grouping them based on a category column.
-// Common Searches: Aspose.Cells C# how to auto‑group rows based on column value | C# collapse grouped rows in an Excel workbook using Aspose.Cells | Programmatically hide row groups in a .xlsx file with Aspose.Cells for .NET | Create a compact view of Excel data by grouping rows with Aspose.Cells C# example | How to group rows by category and hide details in Excel using Aspose.Cells
-// Tags: Aspose.Cells row grouping by first column | collapse row groups in Excel with Aspose.Cells | auto hide grouped rows .NET Aspose.Cells | category column grouping Aspose.Cells | compact worksheet view Aspose.Cells
+// Title: Group rows by a category column and collapse them in an Excel worksheet with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# group rows by column value and hide the group | How to create outline groups in an Excel sheet using Aspose.Cells .NET | Programmatically collapse rows with the same category in Excel using Aspose.Cells | C# code to hide grouped rows based on a category column with Aspose.Cells | Excel row grouping and collapsing example using Aspose.Cells for .NET
+// Tags: group rows by column value Aspose.Cells .NET | collapse outline groups Excel C# | hide grouped rows programmatically Aspose.Cells | create row outlines based on category Aspose.Cells | Excel worksheet row grouping Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsGroupingExample
+namespace Example
 {
-    // The sample loads an existing Excel workbook, scans column A for category changes, groups consecutive rows that share the same category, collapses each group to produce a compact view, and saves the modified workbook to a new file.
+    // The sample loads an Excel workbook, scans the first worksheet, groups consecutive rows that share the same value in a designated category column, collapses each group by hiding the rows, and saves the modified file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Input and output file paths (can be supplied via command‑line arguments)
-            string inputFilePath = args.Length > 0 ? args[0] : "input.xlsx";
-            string outputFilePath = args.Length > 1 ? args[1] : "output.xlsx";
-
             try
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputFilePath))
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Ensure the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file not found: {inputFilePath}");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the existing workbook
-                var workbook = new Workbook(inputFilePath);
-                var worksheet = workbook.Worksheets[0];
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Assume the first row (index 0) contains headers; data starts at row 1
-                int startDataRow = 1;
+                // Column that contains the category (0 = column A)
+                int categoryColumnIndex = 0;
+
+                // Data range (assumes first row is header)
+                int firstDataRow = 1; // zero‑based index
                 int lastDataRow = worksheet.Cells.MaxDataRow;
-                int categoryColumnIndex = 0; // Column A
 
-                // No data to process
-                if (lastDataRow < startDataRow)
+                if (lastDataRow < firstDataRow)
                 {
-                    Console.WriteLine("No data rows found in the worksheet.");
-                    workbook.Save(outputFilePath);
+                    Console.WriteLine("No data rows found.");
                     return;
                 }
 
-                // Initialize grouping variables
-                int groupStartRow = startDataRow;
-                string previousCategory = worksheet.Cells[groupStartRow, categoryColumnIndex].StringValue;
+                // Track current group
+                int groupStartRow = firstDataRow;
+                string previousCategory = worksheet.Cells[groupStartRow, categoryColumnIndex]?.StringValue ?? string.Empty;
 
-                // Iterate through data rows to detect category changes
-                for (int row = startDataRow + 1; row <= lastDataRow; row++)
+                // Detect category changes and create outline groups
+                for (int row = firstDataRow + 1; row <= lastDataRow; row++)
                 {
-                    string currentCategory = worksheet.Cells[row, categoryColumnIndex].StringValue;
+                    string currentCategory = worksheet.Cells[row, categoryColumnIndex]?.StringValue ?? string.Empty;
 
                     if (!currentCategory.Equals(previousCategory, StringComparison.Ordinal))
                     {
-                        // If the previous group has more than one row, collapse it
+                        // Close previous group if it has more than one row
                         if (row - 1 > groupStartRow)
                         {
-                            worksheet.Cells.GroupRows(groupStartRow, row - 1, false);
+                            // Group rows and hide them
+                            int totalRows = (row - 1) - groupStartRow + 1;
+                            worksheet.Cells.GroupRows(groupStartRow, totalRows, true);
+                            for (int i = groupStartRow; i <= row - 1; i++)
+                            {
+                                worksheet.Cells.Rows[i].IsHidden = true;
+                            }
                         }
 
-                        // Start a new group
+                        // Start new group
                         groupStartRow = row;
                         previousCategory = currentCategory;
                     }
@@ -70,17 +74,28 @@ namespace AsposeCellsGroupingExample
                 // Handle the final group
                 if (lastDataRow > groupStartRow)
                 {
-                    worksheet.Cells.GroupRows(groupStartRow, lastDataRow, false);
+                    int totalRows = lastDataRow - groupStartRow + 1;
+                    worksheet.Cells.GroupRows(groupStartRow, totalRows, true);
+                    for (int i = groupStartRow; i <= lastDataRow; i++)
+                    {
+                        worksheet.Cells.Rows[i].IsHidden = true;
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
                 }
 
                 // Save the modified workbook
-                workbook.Save(outputFilePath);
-                Console.WriteLine($"Workbook saved successfully to: {outputFilePath}");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

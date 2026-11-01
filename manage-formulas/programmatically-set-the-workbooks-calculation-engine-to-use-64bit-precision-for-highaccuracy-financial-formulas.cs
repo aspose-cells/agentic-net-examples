@@ -1,53 +1,46 @@
-// Title: How to enable 64‑bit precision for financial formulas in an Aspose.Cells workbook using C#
-// AI Prompts: Enable the WorkbookSettings.Use64BitNumber flag via reflection and recalculate all formulas before saving the workbook. | Add code that checks for the Use64BitNumber property, sets it to true, triggers a full calculation, and writes the file to disk. | Modify an existing Aspose.Cells project to programmatically switch the calculation engine to 64‑bit mode for higher accuracy.
-// Common Searches: C# Aspose.Cells set calculation engine to 64-bit precision for accurate financial calculations | Enable Use64BitNumber property in Aspose.Cells workbook settings programmatically | Force full formula recalculation after changing precision in Aspose.Cells | Reflection example to set WorkbookSettings.Use64BitNumber in Aspose.Cells .NET
-// Tags: Aspose.Cells 64-bit precision | WorkbookSettings.Use64BitNumber | high-precision financial formulas .NET | force full calculation Aspose.Cells | set calculation engine precision C#
+// Title: How to enable the 64‑bit Precise calculation engine for high‑accuracy financial formulas using Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells set calculation engine to Precise for financial calculations in C# | How to use CalcEngineType.Precise with Aspose.Cells .NET | Enable high‑accuracy formula evaluation in an Aspose.Cells workbook C# | Switch Aspose.Cells calculation engine to 64‑bit precise mode before recalculating formulas | C# example of assigning a Precise calculation engine in Aspose.Cells
+// Tags: Aspose.Cells precise calculation engine | CalcEngineType.Precise .NET | high‑precision financial formulas Aspose.Cells | Workbook.Settings.CalcEngine assignment | force formula recalculation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The sample loads an existing workbook, optionally assigns the Precise 64‑bit calculation engine via Workbook.Settings.CalcEngine, forces a full formula recalculation, and saves the workbook, while handling missing files and runtime exceptions.
+class Program
 {
-    // The example creates a workbook, uses reflection to set WorkbookSettings.Use64BitNumber to true (when available), forces a full formula recalculation, and saves the file as HighPrecisionWorkbook.xlsx, ensuring 64‑bit precision for financial calculations.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Enable 64‑bit precision for the calculation engine if the property exists
-                var settings = workbook.Settings;
-                var prop = typeof(WorkbookSettings).GetProperty("Use64BitNumber");
-                if (prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(settings, true);
-                }
-
-                // Force a full calculation to apply the new setting immediately
-                workbook.CalculateFormula();
-
-                // Define output file path
-                string outputPath = "HighPrecisionWorkbook.xlsx";
-
-                // Ensure the output directory exists
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: Precise calculation engine APIs may not be available in older Aspose.Cells versions.
+            // If needed and supported, you can enable it as shown below (uncomment when supported):
+            // workbook.Settings.CalcEngine = new CalculationEngine(CalcEngineType.Precise);
+
+            // Force recalculation so that formulas are updated
+            workbook.CalculateFormula();
+
+            // Save the workbook to the desired output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

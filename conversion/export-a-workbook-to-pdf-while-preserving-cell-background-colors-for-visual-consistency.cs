@@ -1,76 +1,49 @@
-// Title: How to export an Aspose.Cells workbook to PDF with cell background colors retained using C#
-// AI Prompts: Generate C# code that creates a workbook, applies solid fill colors to cells, and saves it as a PDF using Aspose.Cells PdfSaveOptions so the colors stay visible. | Show the required PdfSaveOptions configuration in C# to prevent background shading from being lost during Excel‑to‑PDF conversion with Aspose.Cells. | Explain which Aspose.Cells properties must be enabled to keep cell fill colors when exporting a worksheet to PDF in a .NET application.
-// Common Searches: Aspose.Cells C# export Excel to PDF keep cell fill colors | PdfSaveOptions preserve background shading Aspose.Cells .NET | How to retain worksheet cell colors when saving as PDF with Aspose.Cells | C# code sample for exporting a colored Excel sheet to PDF using Aspose.Cells
-// Tags: Aspose.Cells PdfSaveOptions background shading | export Excel to PDF with cell colors C# | preserve cell fill colors Aspose.Cells PDF conversion | C# Aspose.Cells PDF export settings
+// Title: Convert an Excel workbook to PDF with cell background colors preserved using Aspose.Cells for .NET
+// Common Searches: Aspose.Cells C# export Excel to PDF keeping cell fill colors | How to retain background shading when saving .xlsx as PDF with Aspose.Cells | C# PdfSaveOptions to preserve cell background in PDF conversion | Generate PDF/A-1b from Excel while maintaining cell colors using Aspose.Cells | Save workbook to PDF without losing cell background colors in .NET
+// Tags: Aspose.Cells PdfSaveOptions background colors | C# Excel to PDF preserving cell shading | PDF/A-1b compliance Aspose.Cells export | AllColumnsInOnePagePerSheet false PDF output | Workbook.Save PDF cell fill preservation
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExport
+// The example loads an existing XLSX file with Aspose.Cells, configures PdfSaveOptions (disabling AllColumnsInOnePagePerSheet and enabling PDF/A‑1b compliance), and saves the workbook as a PDF, ensuring that cell background colors are retained in the generated document.
+class Program
 {
-    // The example creates a workbook, fills cells with data, applies solid background colors to header and data rows, calculates formulas, configures PdfSaveOptions with ExportDocumentStructure enabled, and saves the workbook as a PDF while preserving all cell background colors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate some data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["A2"].PutValue("Apples");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Bananas");
-                sheet.Cells["B3"].PutValue(85);
-
-                // Apply background colors to header row
-                Style styleHeader = workbook.CreateStyle();
-                styleHeader.ForegroundColor = Color.LightGray;
-                styleHeader.Pattern = BackgroundType.Solid;
-                sheet.Cells.CreateRange("A1:B1").SetStyle(styleHeader);
-
-                // Apply background colors to Apples row
-                Style styleApples = workbook.CreateStyle();
-                styleApples.ForegroundColor = Color.LightGreen;
-                styleApples.Pattern = BackgroundType.Solid;
-                sheet.Cells.CreateRange("A2:B2").SetStyle(styleApples);
-
-                // Apply background colors to Bananas row
-                Style styleBananas = workbook.CreateStyle();
-                styleBananas.ForegroundColor = Color.LightYellow;
-                styleBananas.Pattern = BackgroundType.Solid;
-                sheet.Cells.CreateRange("A3:B3").SetStyle(styleBananas);
-
-                // Ensure any formulas are calculated before saving
-                workbook.CalculateFormula();
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Preserve the document structure (rule: ExportDocumentStructure property)
-                    ExportDocumentStructure = true
-                    // Optionally, preserve gridline color if needed
-                    // GridlineColor = Color.DarkGray
-                };
-
-                // Save the workbook to PDF while preserving cell background colors (lifecycle rule: save)
-                string outputPath = "WorkbookWithColors.pdf";
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine("PDF exported successfully with cell background colors preserved.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                // Keep the original column widths and layout
+                AllColumnsInOnePagePerSheet = false,
+                // Set PDF/A compliance for better compatibility
+                Compliance = PdfCompliance.PdfA1b
+                // RenderGridLines property is not available for PdfSaveOptions; grid lines are rendered by default
+            };
+
+            // Export the workbook to PDF while preserving cell background colors
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

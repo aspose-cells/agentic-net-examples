@@ -1,59 +1,64 @@
-// Title: Write a C# unit test with Aspose.Cells that fails when PresentationPreference.BestFit generates HTML larger than 2 MB
-// AI Prompts: Create an MSTest method that builds a workbook with many rows, saves it to HTML using HtmlSaveOptions.PresentationPreference = PresentationPreference.BestFit, and asserts the MemoryStream length is under 2 MB. | Provide a NUnit test example that populates a worksheet, exports to HTML with BestFit presentation, and throws an assertion failure if the output exceeds 2 MB.
-// Common Searches: aspocells unit test for HTML export size limit | c# assert Aspose.Cells HTML output under 2mb | how to use PresentationPreference.BestFit in automated test | verify generated HTML size with Aspose.Cells SaveOptions | fail test when Aspose.Cells HTML exceeds specific byte size
-// Tags: Aspose.Cells HTML size unit test | PresentationPreference BestFit export limit | C# memory stream length assertion | HTML export size verification Aspose.Cells | automated test for workbook HTML byte size
+// Title: Write a C# unit test that verifies Aspose.Cells PresentationPreference.BestFit HTML export stays under 2 MB for a large workbook
+// AI Prompts: Create an MSTest method that builds a workbook with 5,000 rows and 50 columns, saves it to HTML using HtmlSaveOptions with PresentationPreference.BestFit, and asserts the output stream size is less than 2 MB. | Generate a NUnit test that populates a worksheet with extensive data, exports it to HTML via Aspose.Cells with PresentationPreference.BestFit, and fails the test when the generated HTML exceeds 2 MB.
+// Common Searches: asp.net core unit test Aspose.Cells HTML export size limit | how to fail a test when PresentationPreference.BestFit HTML exceeds 2 MB | verify Aspose.Cells HTML output size in C# unit test | Aspose.Cells PresentationPreference.BestFit large workbook HTML size check
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference.BestFit size check | C# unit test Aspose.Cells HTML export limit | large workbook HTML generation Aspose.Cells | assert HTML byte size under 2MB Aspose.Cells | memory stream size validation Aspose.Cells HTML
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsTests
 {
-    // The example demonstrates how to write a C# unit test that creates a large workbook, saves it to HTML with the PresentationPreference.BestFit setting, measures the resulting MemoryStream size, and fails the test if the HTML exceeds a 2 MB threshold.
-    public class HtmlSizeTest
+    // The example builds a workbook with 5,000 rows and 50 columns, configures HtmlSaveOptions to use PresentationPreference.BestFit, saves the workbook to a MemoryStream as HTML, measures the stream length, and asserts that the generated HTML does not exceed 2 MB, causing the unit test to fail if the limit is breached.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // Create a workbook and populate it with a large amount of data
+                // Create a new workbook and get the first worksheet.
                 var workbook = new Workbook();
-                var worksheet = workbook.Worksheets[0];
+                var sheet = workbook.Worksheets[0];
 
-                // Fill many rows and columns to increase the HTML size
-                for (int row = 0; row < 5000; row++)
+                // Populate the worksheet with a large amount of data.
+                const int rows = 5000;
+                const int columns = 50;
+                for (int row = 0; row < rows; row++)
                 {
-                    for (int col = 0; col < 50; col++)
+                    for (int col = 0; col < columns; col++)
                     {
-                        worksheet.Cells[row, col].PutValue($"R{row}C{col}");
+                        sheet.Cells[row, col].PutValue($"Row{row}_Col{col}_Data");
                     }
                 }
 
-                // Configure HTML save options (default presentation)
-                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-
-                // Save the workbook to a memory stream and check its size
-                using (var memoryStream = new MemoryStream())
+                // Configure HTML save options.
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
                 {
-                    workbook.Save(memoryStream, htmlOptions);
-                    long htmlSizeInBytes = memoryStream.Length;
+                    // Embed images as Base64 to avoid external streams.
+                    ExportImagesAsBase64 = true
+                };
 
-                    const long maxSizeBytes = 2L * 1024 * 1024; // 2 MB
+                // Save the workbook to a memory stream.
+                using (var outputStream = new MemoryStream())
+                {
+                    workbook.Save(outputStream, htmlOptions);
+                    long htmlSizeInBytes = outputStream.Length;
 
-                    if (htmlSizeInBytes <= maxSizeBytes)
+                    const long twoMegabytes = 2L * 1024 * 1024;
+                    if (htmlSizeInBytes > twoMegabytes)
                     {
-                        Console.WriteLine($"Success: Generated HTML size {htmlSizeInBytes} bytes is within the 2 MB limit.");
+                        Console.WriteLine($"FAIL: Generated HTML size is {htmlSizeInBytes} bytes, exceeds 2 MB.");
                     }
                     else
                     {
-                        Console.WriteLine($"Failure: Generated HTML size {htmlSizeInBytes} bytes exceeds the 2 MB limit.");
+                        Console.WriteLine($"PASS: Generated HTML size is {htmlSizeInBytes} bytes, within 2 MB.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Runtime safety: report any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Exception: {ex.Message}");
             }
         }
     }

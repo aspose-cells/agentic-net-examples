@@ -1,154 +1,189 @@
-// Title: Check that a decrypted Excel workbook keeps all original cell comments and data‑validation rules using Aspose.Cells for .NET
-// AI Prompts: Write C# code that opens an encrypted .xlsx file with a password via Aspose.Cells, decrypts it, and verifies that every comment (text and cell address) matches the corresponding comment in an unencrypted reference workbook. | Create a reusable C# method that takes two Aspose.Cells Workbook objects and returns true only if their comment collections and data‑validation collections are identical across all worksheets. | Generate a C# unit test that loads an original workbook and its password‑protected copy, decrypts the latter, and asserts that comment counts, comment texts, and validation settings are equal.
-// Common Searches: aspnet compare comments between original and password protected Excel file using Aspose.Cells | how to ensure data validation rules are preserved after decrypting an XLSX with Aspose.Cells | C# verify that decrypted workbook retains cell comments and validations | Aspose.Cells load encrypted workbook and compare workbook objects for comment integrity | unit test for comment and validation equality after workbook decryption Aspose.Cells
-// Tags: compare workbook comments Aspose.Cells | validate data validation preservation Aspose.Cells | load encrypted XLSX with password Aspose.Cells | workbook decryption integrity check | comment and validation equality C#
+// Title: How to confirm that cell comments and data validation rules survive workbook decryption with Aspose.Cells for .NET
+// Common Searches: C# code to compare comments in original and decrypted Excel workbook using Aspose.Cells | verify that data validation objects remain unchanged after opening a password‑protected XLSX with Aspose.Cells | check integrity of cell comments after decrypting an encrypted workbook in .NET | Aspose.Cells compare worksheet validations between two workbooks | detect missing comments when loading an encrypted Excel file in C#
+// Tags: compare worksheet comments Aspose.Cells | validate data validation preservation Aspose.Cells | load password protected XLSX Aspose.Cells | workbook integrity check .NET | cell comment dictionary Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an original (unencrypted) workbook and an encrypted workbook, decrypts the latter with a password using Aspose.Cells, then iterates through each worksheet to confirm that comment counts, positions, and texts match, and that all data‑validation rules are identical between the two workbooks.
-class WorkbookValidation
+namespace WorkbookIntegrityCheck
 {
-    static void Main()
+    // The example loads an original unencrypted workbook and an encrypted workbook (decrypted with a password) using Aspose.Cells for .NET, then verifies that both workbooks contain identical cell comments and data validation rules by building comment dictionaries and validation lists for each worksheet and comparing their counts and contents.
+    class Program
     {
-        try
+        static void Main()
         {
             // Paths to the original (unencrypted) and encrypted workbooks
             string originalPath = "original.xlsx";
             string encryptedPath = "encrypted.xlsx";
-            string password = "yourPassword";
 
-            // Ensure the files exist before attempting to load them
+            // Password used to encrypt the workbook
+            string password = "YourPassword";
+
+            // Verify that input files exist
             if (!File.Exists(originalPath))
-                throw new FileNotFoundException($"Original workbook not found: {originalPath}");
+            {
+                Console.WriteLine($"File not found: {originalPath}");
+                return;
+            }
+
             if (!File.Exists(encryptedPath))
-                throw new FileNotFoundException($"Encrypted workbook not found: {encryptedPath}");
-
-            // Load the original workbook (no password needed)
-            Workbook originalWb = new Workbook(originalPath);
-
-            // Load the encrypted workbook using the password
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Password = password
-            };
-            Workbook decryptedWb = new Workbook(encryptedPath, loadOptions);
-
-            // Validate comments and data validations
-            bool commentsMatch = CompareComments(originalWb, decryptedWb);
-            bool validationsMatch = CompareDataValidations(originalWb, decryptedWb);
-
-            Console.WriteLine($"Comments match: {commentsMatch}");
-            Console.WriteLine($"Data validations match: {validationsMatch}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Compare all comments in both workbooks
-    private static bool CompareComments(Workbook wb1, Workbook wb2)
-    {
-        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
-            return false;
-
-        for (int i = 0; i < wb1.Worksheets.Count; i++)
-        {
-            Worksheet ws1 = wb1.Worksheets[i];
-            Worksheet ws2 = wb2.Worksheets[i];
-
-            // Compare comment counts
-            if (ws1.Comments.Count != ws2.Comments.Count)
-                return false;
-
-            // Build a dictionary of comments from the second workbook for quick lookup
-            Dictionary<string, string> ws2Comments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (Comment c in ws2.Comments)
-            {
-                // Use row/column to build cell name (e.g., "A1")
-                string cellName = CellsHelper.CellIndexToName(c.Row, c.Column);
-                ws2Comments[cellName] = c.Note;
+                Console.WriteLine($"File not found: {encryptedPath}");
+                return;
             }
 
-            // Verify each comment from the first workbook exists and has identical text
-            foreach (Comment c1 in ws1.Comments)
+            try
             {
-                string cellName = CellsHelper.CellIndexToName(c1.Row, c1.Column);
-                if (!ws2Comments.TryGetValue(cellName, out string note2))
-                    return false;
+                // Load the original workbook (no password needed)
+                Workbook wbOriginal = new Workbook(originalPath);
 
-                if (!string.Equals(c1.Note, note2, StringComparison.Ordinal))
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-    // Compare all data validation rules in both workbooks
-    private static bool CompareDataValidations(Workbook wb1, Workbook wb2)
-    {
-        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
-            return false;
-
-        for (int i = 0; i < wb1.Worksheets.Count; i++)
-        {
-            Worksheet ws1 = wb1.Worksheets[i];
-            Worksheet ws2 = wb2.Worksheets[i];
-
-            // Compare validation counts
-            if (ws1.Validations.Count != ws2.Validations.Count)
-                return false;
-
-            // Create a mutable list of validations from the second workbook for one‑to‑one matching
-            List<Aspose.Cells.Validation> ws2Validations = new List<Aspose.Cells.Validation>(ws2.Validations);
-
-            foreach (Aspose.Cells.Validation v1 in ws1.Validations)
-            {
-                bool matchFound = false;
-                for (int j = 0; j < ws2Validations.Count; j++)
+                // Load the encrypted workbook using the password (this decrypts it in memory)
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
                 {
-                    Aspose.Cells.Validation v2 = ws2Validations[j];
-                    if (ValidationsAreEqual(v1, v2))
+                    Password = password
+                };
+                Workbook wbDecrypted = new Workbook(encryptedPath, loadOptions);
+
+                // Perform validation
+                bool isValid = ValidateComments(wbOriginal, wbDecrypted) &&
+                               ValidateDataValidations(wbOriginal, wbDecrypted);
+
+                Console.WriteLine(isValid
+                    ? "Decrypted workbook retains all original comments and data validation rules."
+                    : "Validation failed: differences were found.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Compare comments in all worksheets
+        private static bool ValidateComments(Workbook original, Workbook decrypted)
+        {
+            bool allMatch = true;
+
+            // Ensure both workbooks have the same number of worksheets
+            if (original.Worksheets.Count != decrypted.Worksheets.Count)
+            {
+                Console.WriteLine("Worksheet count mismatch.");
+                return false;
+            }
+
+            for (int i = 0; i < original.Worksheets.Count; i++)
+            {
+                Worksheet wsOriginal = original.Worksheets[i];
+                Worksheet wsDecrypted = decrypted.Worksheets[i];
+
+                // Build dictionaries keyed by cell address (e.g., "A1")
+                var originalComments = BuildCommentDictionary(wsOriginal);
+                var decryptedComments = BuildCommentDictionary(wsDecrypted);
+
+                // Compare counts
+                if (originalComments.Count != decryptedComments.Count)
+                {
+                    Console.WriteLine($"Comment count mismatch in sheet '{wsOriginal.Name}'.");
+                    allMatch = false;
+                }
+
+                // Compare each comment
+                foreach (var kvp in originalComments)
+                {
+                    if (!decryptedComments.TryGetValue(kvp.Key, out string decryptedText))
                     {
-                        matchFound = true;
-                        ws2Validations.RemoveAt(j); // Ensure one‑to‑one matching
-                        break;
+                        Console.WriteLine($"Missing comment at {kvp.Key} in sheet '{wsOriginal.Name}'.");
+                        allMatch = false;
+                        continue;
+                    }
+
+                    if (!string.Equals(kvp.Value, decryptedText, StringComparison.Ordinal))
+                    {
+                        Console.WriteLine($"Comment text mismatch at {kvp.Key} in sheet '{wsOriginal.Name}'.");
+                        allMatch = false;
                     }
                 }
-                if (!matchFound)
-                    return false;
             }
+
+            return allMatch;
         }
 
-        return true;
-    }
+        // Helper to create a dictionary of comments for a worksheet
+        private static Dictionary<string, string> BuildCommentDictionary(Worksheet sheet)
+        {
+            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Comment comment in sheet.Comments)
+            {
+                string address = CellsHelper.CellIndexToName(comment.Row, comment.Column);
+                // Treat null notes as empty strings
+                dict[address] = comment.Note ?? string.Empty;
+            }
+            return dict;
+        }
 
-    // Helper to compare two Validation objects (area comparison omitted for compatibility)
-    private static bool ValidationsAreEqual(Aspose.Cells.Validation v1, Aspose.Cells.Validation v2)
-    {
-        // Compare validation type, operator, and formulas
-        if (v1.Type != v2.Type ||
-            v1.Operator != v2.Operator ||
-            !string.Equals(v1.Formula1, v2.Formula1, StringComparison.Ordinal) ||
-            !string.Equals(v1.Formula2, v2.Formula2, StringComparison.Ordinal))
-            return false;
+        // Compare data validation rules in all worksheets
+        private static bool ValidateDataValidations(Workbook original, Workbook decrypted)
+        {
+            bool allMatch = true;
 
-        // Compare additional properties that affect behavior
-        if (v1.IgnoreBlank != v2.IgnoreBlank ||
-            v1.InCellDropDown != v2.InCellDropDown ||
-            v1.ShowError != v2.ShowError ||
-            v1.ShowInput != v2.ShowInput)
-            return false;
+            if (original.Worksheets.Count != decrypted.Worksheets.Count)
+            {
+                Console.WriteLine("Worksheet count mismatch.");
+                return false;
+            }
 
-        // Compare error and input messages (if any)
-        if (!string.Equals(v1.ErrorMessage, v2.ErrorMessage, StringComparison.Ordinal) ||
-            !string.Equals(v1.InputMessage, v2.InputMessage, StringComparison.Ordinal))
-            return false;
+            for (int i = 0; i < original.Worksheets.Count; i++)
+            {
+                Worksheet wsOriginal = original.Worksheets[i];
+                Worksheet wsDecrypted = decrypted.Worksheets[i];
 
-        return true;
+                var originalValidations = BuildValidationList(wsOriginal);
+                var decryptedValidations = BuildValidationList(wsDecrypted);
+
+                if (originalValidations.Count != decryptedValidations.Count)
+                {
+                    Console.WriteLine($"Data validation count mismatch in sheet '{wsOriginal.Name}'.");
+                    allMatch = false;
+                }
+
+                // Compare each original validation with a matching one in the decrypted workbook
+                foreach (Validation valOrig in originalValidations)
+                {
+                    bool matchFound = false;
+
+                    foreach (Validation valDec in decryptedValidations)
+                    {
+                        if (valOrig.Type == valDec.Type &&
+                            valOrig.Operator == valDec.Operator &&
+                            string.Equals(valOrig.Formula1, valDec.Formula1, StringComparison.Ordinal) &&
+                            string.Equals(valOrig.Formula2, valDec.Formula2, StringComparison.Ordinal))
+                        {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!matchFound)
+                    {
+                        Console.WriteLine($"Missing or mismatched data validation (Type={valOrig.Type}) in sheet '{wsOriginal.Name}'.");
+                        allMatch = false;
+                    }
+                }
+            }
+
+            return allMatch;
+        }
+
+        // Helper to collect all validations from a worksheet into a list
+        private static List<Validation> BuildValidationList(Worksheet sheet)
+        {
+            var list = new List<Validation>();
+            foreach (Validation val in sheet.Validations)
+            {
+                list.Add(val);
+            }
+            return list;
+        }
     }
 }

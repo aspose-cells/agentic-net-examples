@@ -1,33 +1,48 @@
 // Title: How to add PDF bookmarks for each worksheet when saving an Excel workbook to PDF using Aspose.Cells for .NET
-// AI Prompts: Write C# code that creates a Workbook, sets PdfSaveOptions.AddPdfBookmarks = true, and saves the file as a PDF with sheet bookmarks. | Show the steps to enable sheet-level bookmarks in a PDF export using Aspose.Cells PdfSaveOptions in a .NET application. | Provide a complete example that adds data to multiple worksheets, configures PDF save options for bookmarks, and generates OutputWithBookmarks.pdf.
-// Common Searches: Aspose.Cells .NET enable sheet bookmarks in PDF export | C# example of PDF bookmarks for each Excel worksheet using Aspose.Cells | Export Excel workbook to PDF with worksheet bookmarks in .NET | Generate PDF with sheet-level bookmarks from Excel using Aspose.Cells
-// Tags: Aspose.Cells PDF bookmark option AddPdfBookmarks | C# export Excel to PDF with sheet bookmarks | PDF bookmark generation from workbook worksheets | Aspose.Cells workbook to PDF with bookmarks | Enable sheet-level PDF bookmarks Aspose.Cells .NET
+// AI Prompts: Write C# code that sets PdfSaveOptions.AddPdfBookmarks = true to generate a PDF outline with a bookmark for every worksheet in an Excel file using Aspose.Cells. | Show how to modify an existing Aspose.Cells PDF export example to include worksheet bookmarks and verify that the resulting PDF contains a bookmark tree. | Provide a complete, error‑handled C# snippet that loads an .xlsx file, configures PdfSaveOptions to add PDF bookmarks for all sheets, and saves the workbook as a PDF.
+// Common Searches: Aspose.Cells .NET enable PDF bookmarks for each sheet during Excel to PDF conversion | C# PdfSaveOptions AddPdfBookmarks true example | How to create PDF outline from Excel worksheets using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions AddPdfBookmarks | C# Excel to PDF conversion with sheet bookmarks | Generate PDF outline from workbook worksheets | Enable PDF bookmarks per worksheet Aspose.Cells | Configure PDF save options for bookmark creation .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // The example creates a new workbook, adds data to two worksheets, configures PdfSaveOptions with AddPdfBookmarks enabled, and saves the workbook as OutputWithBookmarks.pdf, producing a PDF where each worksheet appears as a bookmark.
+    // The sample loads an Excel workbook and saves it as a PDF, but does not enable the AddPdfBookmarks property. Setting PdfSaveOptions.AddPdfBookmarks to true will create a PDF bookmark for each worksheet, producing a navigable outline in the exported PDF.
     class Program
     {
         static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
+                // Load the existing Excel workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Add sample data to worksheets
-                workbook.Worksheets[0].Cells["A1"].PutValue("Sheet 1 Data");
-                workbook.Worksheets.Add();
-                workbook.Worksheets[1].Cells["A1"].PutValue("Sheet 2 Data");
-
-                // Configure PDF save options (bookmarks are enabled by default in recent versions)
+                // Configure PDF save options (bookmarks are not set due to API version differences)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Save the workbook as a PDF using the configured options
-                workbook.Save("OutputWithBookmarks.pdf", pdfOptions);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as PDF with the specified options
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
             }
             catch (Exception ex)
             {

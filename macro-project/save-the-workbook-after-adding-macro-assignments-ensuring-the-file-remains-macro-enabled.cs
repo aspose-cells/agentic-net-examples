@@ -1,14 +1,14 @@
-// Title: Insert a rectangular button shape, assign a macro, and save the workbook as a macro‑enabled XLSM file with Aspose.Cells for .NET
-// AI Prompts: Generate C# code that adds a free‑floating rectangle shape to the first worksheet, sets its Name and Caption, links it to a macro identifier, and saves the workbook as an XLSM file while preserving existing macros using Aspose.Cells. | Demonstrate how to verify the source .xlsm file, create the destination folder if it does not exist, and call Workbook.Save with SaveFormat.Xlsm to keep macros intact. | Explain the steps required to enable macro assignment on a shape after upgrading to a version of Aspose.Cells that supports the Shape.Macro property.
-// Common Searches: how to add a button shape to an Excel worksheet with Aspose.Cells C# | assign a macro to a shape in a macro‑enabled workbook using Aspose.Cells | save an Aspose.Cells workbook as .xlsm while preserving macros | ensure output directory exists before calling Workbook.Save in C# | Aspose.Cells shape macro property not available older version
-// Tags: add rectangle shape button Aspose.Cells | macro assignment to shape Aspose.Cells | save workbook as xlsm preserving macros | create output directory before saving Aspose.Cells | macro‑enabled workbook handling Aspose.Cells .NET
+// Title: How to save a macro‑enabled Excel workbook after assigning a VBA macro to a button using Aspose.Cells for .NET
+// Common Searches: C# Aspose.Cells add a button to a worksheet and keep the workbook macro‑enabled when saving | Saving an .xlsm file after setting button.MacroName with Aspose.Cells .NET | Assign VBA macro to shape in Aspose.Cells and preserve macros on save | Use OoxmlSaveOptions to save macro‑enabled workbook after adding button in C# | Aspose.Cells preserve existing VBA macros while adding new button shape
+// Tags: button shape macro assignment Aspose.Cells | OoxmlSaveOptions for .xlsm output | VBA macro binding to worksheet shape C# | retain VBA macros during Aspose.Cells save | macro‑enabled Excel file generation Aspose.Cells
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
+using Aspose.Cells.Saving;
 
-// // Loads a macro‑enabled workbook, inserts a free‑floating rectangular shape named 'MyButton' with the caption 'Run Macro', optionally links it to a macro, ensures the output folder exists, and saves the file as an .xlsm preserving all macros.
+// The example loads an existing .xlsm workbook, adds a button shape to the first worksheet, sets its caption, assigns the VBA macro "MyMacro" to the button, and then saves the workbook as a macro‑enabled file using OoxmlSaveOptions with SaveFormat.Xlsm, while handling potential errors.
 class Program
 {
     static void Main()
@@ -18,47 +18,33 @@ class Program
             const string inputPath = "input.xlsm";
             const string outputPath = "output.xlsm";
 
-            // Verify that the input file exists
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
 
-            // Load the macro‑enabled workbook
+            // Load an existing macro‑enabled workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangular shape (used as a placeholder for a button)
-            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
-            Shape button = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // generic rectangle shape
-                1, 0, 0, 100, 30, 80);    // row, column, top, left, height, width
+            // Add a button shape to the worksheet.
+            // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, height, width
+            Button button = sheet.Shapes.AddButton(2, 1, 2, 1, 30, 100);
 
-            button.Name = "MyButton";
-            button.Placement = PlacementType.FreeFloating;
+            // Set the button caption
             button.Text = "Run Macro";
 
-            // Note: Assigning a macro to a shape requires a newer Aspose.Cells version.
-            // If supported, you can uncomment the following line after upgrading:
-            // button.Macro = "MyMacro";
+            // Assign a macro to the button (the macro must exist in the VBA project)
+            button.MacroName = "MyMacro";
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook preserving macros
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook as a macro‑enabled file
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsm);
+            workbook.Save(outputPath, saveOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

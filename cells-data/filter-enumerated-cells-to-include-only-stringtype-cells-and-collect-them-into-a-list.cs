@@ -1,47 +1,41 @@
-// Title: How to enumerate cells in an Aspose.Cells worksheet and collect only string‑type values into a List<string> (C#)
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through every cell in the first worksheet using the Cells enumerator, checks if the cell's Type equals CellValueType.IsString, and adds the cell's StringValue to a List<string>. | Show a C# example that filters out non‑text cells while enumerating a worksheet's cells with Aspose.Cells and returns a List<string> containing only the text values. | Demonstrate how to use Aspose.Cells in .NET to collect all string cells from a worksheet, print each value to the console, and then save the workbook without modifications.
-// Common Searches: Aspose.Cells C# get only text cells from a worksheet | enumerate Excel cells and extract string values using Aspose.Cells | list of string values from Excel file with Aspose.Cells .NET | how to retrieve only string cells from a workbook in C# | Aspose.Cells filter non‑numeric cells example
-// Tags: Aspose.Cells enumerate worksheet cells C# | filter cells by CellValueType.IsString | extract string values from Excel worksheet | collect text cells into List<string> | Aspose.Cells read-only workbook processing
+// Title: Extract only string‑type cells from an Excel worksheet into a List<string> using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every cell in a worksheet and appends only cells whose Type equals IsString to a List<string>. | Adapt an Aspose.Cells example to skip numeric, date, and formula cells and return a collection of the cells' StringValue properties.
+// Common Searches: Aspose.Cells C# get text values from all cells in a worksheet | How to filter Excel cells by string type using Aspose.Cells .NET | Collect only string cells into a List in C# with Aspose.Cells | Iterate worksheet cells and retrieve only string values Aspose.Cells example | C# Aspose.Cells enumerate cells and extract only string entries
+// Tags: filter string cells Aspose.Cells | extract text values from Excel worksheet .NET | enumerate worksheet cells Aspose.Cells C# | list<string> of Excel string cells Aspose.Cells | cell type checking IsString Aspose.Cells
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// The program loads an Excel workbook with Aspose.Cells, enumerates every cell in the first worksheet, adds the StringValue of cells whose Type is CellValueType.IsString to a List<string>, prints the collected strings, and saves the workbook unchanged.
+// The example loads an Excel workbook with Aspose.Cells, iterates through every cell in the first worksheet, checks each cell's Type for IsString, adds the StringValue of matching cells to a List<string>, and outputs the collected strings.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace the path with your actual file)
+        // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // List to store string values from cells
+        // Get the first worksheet (or specify the desired one)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // List to hold string‑type cell values
         List<string> stringValues = new List<string>();
 
-        // Enumerate all cells in the worksheet
-        IEnumerator enumerator = cells.GetEnumerator();
-        while (enumerator.MoveNext())
+        // Iterate through all cells in the worksheet
+        foreach (Cell cell in sheet.Cells)
         {
-            Cell cell = (Cell)enumerator.Current;
-
-            // Filter only cells whose type is string
+            // Check if the cell contains a string value
             if (cell.Type == CellValueType.IsString)
             {
+                // Add the string value to the list
                 stringValues.Add(cell.StringValue);
             }
         }
 
-        // Display the collected string values
-        Console.WriteLine("Collected string cells:");
-        foreach (string value in stringValues)
+        // Example usage: print collected strings
+        foreach (string s in stringValues)
         {
-            Console.WriteLine(value);
+            Console.WriteLine(s);
         }
-
-        // Save the workbook (no modifications made, just demonstrating save lifecycle)
-        workbook.Save("output.xlsx");
     }
 }

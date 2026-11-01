@@ -1,7 +1,7 @@
-// Title: Use Parallel.ForEach to freeze the top row and first column in multiple Excel workbooks with Aspose.Cells for .NET
-// AI Prompts: Write C# code that scans a folder for .xlsx files, processes each workbook concurrently with Parallel.ForEach, applies Worksheet.FreezePanes to lock the first row and column, and saves the changes. | Adapt the sample to add robust error handling for missing files and I/O exceptions while performing concurrent FreezePanes operations using Aspose.Cells.
-// Common Searches: c# parallel processing freeze panes aspose.cells multiple workbooks | how to apply freeze panes to first row and column in batch of Excel files using Aspose.Cells | concurrent processing of .xlsx files with Aspose.Cells FreezePanes method | best practice for thread‑safe workbook updates with Aspose.Cells in .NET
-// Tags: Aspose.Cells FreezePanes parallel execution | batch freeze panes .xlsx C# | thread‑safe workbook modification Aspose.Cells | exception handling for concurrent Excel processing | enumerate .xlsx files directory C#
+// Title: Freeze the first row and column in multiple Excel workbooks concurrently using Parallel.ForEach and Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates a collection of .xlsx file paths, uses Parallel.ForEach to open each workbook with Aspose.Cells, applies FreezePanes(1,1,1,1) to every worksheet, and saves the file. | Adapt the sample to freeze panes only on the first worksheet of each workbook while still processing the files in parallel. | Add robust error handling that logs missing files and exceptions without breaking the Parallel.ForEach loop. | Show how to limit the degree of parallelism when freezing panes in a large batch of Excel workbooks.
+// Common Searches: c# parallel foreach freeze panes aspose.cells multiple workbooks | how to apply FreezePanes to all worksheets in a batch using Aspose.Cells | using Parallel.ForEach to process Excel files with Aspose.Cells .NET | freeze top row and left column in each sheet of many Excel files programmatically | batch freeze panes aspose.cells performance parallel processing
+// Tags: parallel freeze panes aspose.cells | batch freeze panes .net | apply FreezePanes to all worksheets aspose.cells | process multiple Excel workbooks concurrently c# | aspocells parallel workbook modification
 
 using System;
 using System.Collections.Generic;
@@ -9,61 +9,59 @@ using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// The example enumerates all .xlsx files in a folder, then uses Parallel.ForEach to open each workbook with Aspose.Cells, applies Worksheet.FreezePanes(0,0,1,1) to lock the first row and column of the first worksheet, saves the workbook back to the same file, and logs successes or errors while safely handling missing files and other exceptions.
-class Program
+namespace FreezePanesParallel
 {
-    static void Main()
+    // The program loads a list of Excel file paths, processes each workbook in parallel with Parallel.ForEach, freezes the first row and column on every worksheet using FreezePanes(1,1,1,1), saves the workbook, and logs successes or errors.
+    class Program
     {
-        // Retrieve workbook file paths to process
-        IEnumerable<string> filePaths = GetWorkbookFilePaths();
-
-        // Process each workbook in parallel with safety checks
-        Parallel.ForEach(filePaths, path =>
+        static void Main(string[] args)
         {
-            try
+            // Example list of Excel file paths to process
+            List<string> excelFilePaths = new List<string>
+            {
+                @"C:\Data\Report1.xlsx",
+                @"C:\Data\Report2.xlsx",
+                @"C:\Data\Report3.xlsx"
+                // Add more paths as needed
+            };
+
+            // Process each workbook concurrently
+            Parallel.ForEach(excelFilePaths, filePath =>
             {
                 // Ensure the file exists before attempting to load
-                if (!File.Exists(path))
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {path}");
+                    Console.WriteLine($"File not found: {filePath}");
                     return;
                 }
 
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(path);
+                try
+                {
+                    // Load the workbook from the file
+                    Workbook workbook = new Workbook(filePath);
 
-                // Access the first worksheet (index 0)
-                Worksheet sheet = workbook.Worksheets[0];
+                    // Iterate through all worksheets in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Freeze the first row and first column.
+                        // Parameters: row, column, totalRows, totalColumns
+                        // Setting row = 1, column = 1, totalRows = 1, totalColumns = 1
+                        // freezes the top row and leftmost column.
+                        sheet.FreezePanes(1, 1, 1, 1);
+                    }
 
-                // Freeze the top row and leftmost column (cell A2)
-                // FreezePanes(totalRows, totalColumns, rows, columns)
-                // Using 0 for totalRows/totalColumns lets Aspose calculate automatically.
-                sheet.FreezePanes(0, 0, 1, 1);
+                    // Save the workbook, overwriting the original file
+                    workbook.Save(filePath);
+                    Console.WriteLine($"Processed and saved: {filePath}");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors that occur during processing
+                    Console.WriteLine($"Error processing {filePath}: {ex.Message}");
+                }
+            });
 
-                // Save the workbook back to the same file (overwrites original)
-                workbook.Save(path);
-                Console.WriteLine($"Processed: {path}");
-            }
-            catch (Exception ex)
-            {
-                // Log any errors for this file without stopping other tasks
-                Console.WriteLine($"Error processing '{path}': {ex.Message}");
-            }
-        });
-    }
-
-    // Placeholder method to retrieve workbook file paths.
-    // Replace with actual implementation as needed.
-    static IEnumerable<string> GetWorkbookFilePaths()
-    {
-        // Example: return all .xlsx files in a directory
-        string folder = @"C:\Workbooks";
-        if (!Directory.Exists(folder))
-        {
-            Console.WriteLine($"Directory not found: {folder}");
-            return new List<string>();
+            Console.WriteLine("All files have been processed.");
         }
-
-        return Directory.EnumerateFiles(folder, "*.xlsx", SearchOption.TopDirectoryOnly);
     }
 }

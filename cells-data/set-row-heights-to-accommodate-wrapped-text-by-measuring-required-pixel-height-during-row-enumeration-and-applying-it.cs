@@ -1,69 +1,69 @@
 // Title: How to auto‑fit Excel row heights for wrapped text using Aspose.Cells in C#
-// AI Prompts: Write C# code with Aspose.Cells that sets IsTextWrapped = true for every cell in a worksheet and then calls AutoFitRow for each row. | Update the logic to capture the height returned by GetRowHeight after AutoFitRow and apply SetRowHeight with that exact value. | Include a check that creates the destination folder if it does not already exist before saving the workbook.
-// Common Searches: resize rows after text wrapping with Aspose.Cells | C# example to calculate required row height in points using Aspose.Cells | wrap text in all cells and adjust row sizes Aspose.Cells .NET | save workbook to new folder creating directory if missing Aspose.Cells C#
-// Tags: auto‑fit row height Aspose.Cells C# | enable text wrap all cells Aspose.Cells | get row height points Aspose.Cells | create output directory before saving C# | programmatic Excel row height adjustment .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through each worksheet row, detects cells with text wrapping enabled, and calls AutoFitRow only for those rows. | Create a C# method that determines the used range of a workbook, checks each row for wrapped cells, adjusts the row height automatically, and saves the workbook. | Extend the example to also recalculate column widths after adjusting row heights for wrapped text in an Aspose.Cells workbook.
+// Common Searches: aspocells c# auto fit row height when text is wrapped | adjust Excel row height based on wrapped cell content using Aspose.Cells | c# iterate worksheet rows and apply AutoFitRow only for wrapped cells | measure required row height for wrapped text Aspose.Cells .NET | how to programmatically auto‑fit rows with text wrap in Aspose.Cells
+// Tags: auto-fit row height Aspose.Cells C# | detect wrapped text cells Aspose.Cells | conditional AutoFitRow based on text wrap | row height adjustment for wrapped text .NET | Excel row height auto‑fit using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The program loads an Excel workbook, enables text wrapping for every cell, auto‑fits each row, reads the calculated row height in points, explicitly sets that height, ensures the output folder exists, and saves the modified file.
+// The example loads an Excel workbook with Aspose.Cells, iterates through each used row, checks if any cell in the row has text wrapping enabled, and calls AutoFitRow to automatically adjust the row height before saving the updated file.
 class RowHeightAdjuster
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
         try
         {
             // Verify input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
             // Load the workbook
-            var workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            var sheet = workbook.Worksheets[0];
+            // Determine the used range
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-            // Iterate through rows that contain data
-            for (int rowIndex = 0; rowIndex <= sheet.Cells.MaxDataRow; rowIndex++)
+            // Adjust row heights for rows that contain wrapped text
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Enable text wrapping for each cell in the current row
-                for (int colIndex = 0; colIndex <= sheet.Cells.MaxDataColumn; colIndex++)
+                bool hasWrapped = false;
+
+                // Check each cell in the current row for text wrapping
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    var cell = sheet.Cells[rowIndex, colIndex];
-                    var style = cell.GetStyle();
-                    style.IsTextWrapped = true; // enable wrapping
-                    cell.SetStyle(style);
+                    Cell cell = sheet.Cells[row, col];
+                    Style style = cell.GetStyle();
+
+                    if (style.IsTextWrapped && !string.IsNullOrEmpty(cell.StringValue))
+                    {
+                        hasWrapped = true;
+                        break;
+                    }
                 }
 
-                // Auto‑fit the row height based on wrapped content
-                sheet.AutoFitRow(rowIndex);
-
-                // Retrieve the calculated height (in points) and re‑apply it
-                double requiredPoints = sheet.Cells.GetRowHeight(rowIndex);
-                sheet.Cells.SetRowHeight(rowIndex, requiredPoints);
-            }
-
-            // Ensure output directory exists
-            var outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
+                // Auto‑fit the row height if any wrapped cell is present
+                if (hasWrapped)
+                {
+                    sheet.AutoFitRow(row);
+                }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

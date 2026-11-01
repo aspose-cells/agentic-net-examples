@@ -1,46 +1,66 @@
-// Title: Import a string array of file paths into column A and generate "Open" hyperlinks in column B using Aspose.Cells for .NET
-// AI Prompts: Write C# code with Aspose.Cells that reads a list of file paths, writes them to column A, and inserts a clickable "Open" hyperlink in column B for each row. | Show how to use Worksheet.Hyperlinks.Add to create file‑path hyperlinks next to values imported into an Excel worksheet with Aspose.Cells.
-// Common Searches: aspnet load file path list into Excel and add hyperlinks with Aspose.Cells | c# Aspose.Cells create "Open" link in adjacent column for each file path | how to use Worksheet.Hyperlinks.Add after ImportArray in Aspose.Cells | generate Excel workbook containing file paths and open links using Aspose.Cells for .NET | add clickable link next to data column in Aspose.Cells workbook
-// Tags: populate worksheet with file paths Aspose.Cells | add adjacent cell hyperlink Aspose.Cells | Worksheet.Hyperlinks.Add C# example | file path hyperlink column generation | hyperlink column creation Aspose.Cells
+// Title: Create an Excel workbook with file‑path text in column A and clickable hyperlinks in column B using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through a string array of file paths, writes each path into column A of a new workbook, verifies the file exists, and inserts an "Open File" hyperlink in column B using Aspose.Cells. | Demonstrate how to convert a Windows file path to a file:// URI and use the Aspose.Cells Hyperlinks.Add method to add the link, while writing "File not found" when the target file is missing.
+// Common Searches: How to create Excel hyperlinks that open local PDF files using Aspose.Cells in C# | C# Aspose.Cells add hyperlink only when the referenced file exists | Convert Windows file path to URI for Excel hyperlink with Aspose.Cells | Write an array of file paths to column A and link them in column B using Aspose.Cells
+// Tags: Aspose.Cells hyperlink cell API | C# generate Excel links from local files | file existence check before Excel hyperlink Aspose | Windows path to file URI conversion C# | write file paths to worksheet column C#
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// The example creates a new workbook, loads a string[] of file paths into column A, adds an "Open" hyperlink in column B for each path using Worksheet.Hyperlinks.Add, and saves the file as HyperlinksFromArray.xlsx.
-class Program
+// The example iterates over a string array of file paths, writes each path to column A of a new workbook, checks if the file exists, adds a clickable "Open File" hyperlink in column B (or a "File not found" note), and saves the result as Hyperlinks.xlsx.
+class HyperlinkExample
 {
     static void Main()
     {
-        // Array of file paths to be imported
-        string[] filePaths = new string[]
+        try
         {
-            @"C:\Docs\file1.pdf",
-            @"C:\Docs\file2.pdf",
-            @"C:\Docs\file3.pdf"
-        };
+            // Array of file paths to be linked
+            string[] filePaths = new string[]
+            {
+                @"C:\Docs\file1.pdf",
+                @"C:\Docs\file2.pdf",
+                @"C:\Docs\file3.pdf"
+            };
 
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Import the file paths vertically starting at cell A1 (row 0, column 0)
-        cells.ImportArray(filePaths, 0, 0, true);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // For each imported path, add a hyperlink in the adjacent column (B)
-        for (int i = 0; i < filePaths.Length; i++)
-        {
-            // Convert row/column index to cell name (e.g., B1, B2, ...)
-            string hyperlinkCell = CellsHelper.CellIndexToName(i, 1);
+            // Loop through the file paths and add them to column A,
+            // then create a hyperlink in column B pointing to each file
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                // Write the file path text in column A (zero‑based index)
+                sheet.Cells[i, 0].PutValue(filePaths[i]);
 
-            // Add the hyperlink pointing to the file path
-            worksheet.Hyperlinks.Add(hyperlinkCell, 1, 1, filePaths[i]);
+                // Verify that the target file exists to avoid FileNotFoundException
+                if (File.Exists(filePaths[i]))
+                {
+                    // Convert Windows path to URI format for the hyperlink
+                    string uri = "file:///" + filePaths[i].Replace("\\", "/");
 
-            // Set display text for the hyperlink cell
-            worksheet.Cells[hyperlinkCell].PutValue("Open");
+                    // Add a hyperlink to column B (same row)
+                    // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+                    sheet.Hyperlinks.Add(i, 1, 1, 1, uri);
+
+                    // Set display text for the hyperlink cell
+                    sheet.Cells[i, 1].PutValue("Open File");
+                }
+                else
+                {
+                    // If the file does not exist, indicate it in column B
+                    sheet.Cells[i, 1].PutValue("File not found");
+                }
+            }
+
+            // Save the workbook to a file
+            workbook.Save("Hyperlinks.xlsx");
         }
-
-        // Save the workbook
-        workbook.Save("HyperlinksFromArray.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

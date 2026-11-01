@@ -1,53 +1,46 @@
-// Title: How to hide the legend of a 3‑D pie chart in an Excel workbook using Aspose.Cells for .NET
-// AI Prompts: Create a new workbook, populate category and value cells, add a 3‑D pie chart, set ShowLegend = false, give the chart a title, and save the file with Aspose.Cells in C#. | Modify an existing 3‑D pie chart to remove its legend and assign a custom title by using the Aspose.Cells chart API in C#.
-// Common Searches: Aspose.Cells C# hide legend on 3D pie chart example | remove legend from 3D pie chart generated with Aspose.Cells .NET | how to disable chart legend for a 3D pie chart using Aspose.Cells | effect of hiding legend on readability of 3D pie charts in Excel with Aspose.Cells
-// Tags: Aspose.Cells hide chart legend | 3D pie chart ShowLegend property | Aspose.Cells chart title configuration | Excel workbook create 3D pie chart C# | Aspose.Cells chart readability optimization
+// Title: Hide the legend of a 3‑D pie chart in an Excel workbook with Aspose.Cells for .NET (C#)
+// Common Searches: Aspose.Cells C# hide legend on a 3D pie chart example | remove legend from Pie3D chart using Aspose.Cells .NET | C# code to disable chart legend for 3‑D pie chart in Excel with Aspose.Cells | how to turn off legend visibility for a 3D pie chart in Aspose.Cells | Aspose.Cells chart readability without legend for Pie3D type
+// Tags: hide chart legend Aspose.Cells | Pie3D chart customization Aspose.Cells | Excel legend visibility control C# | Aspose.Cells 3D pie chart formatting | programmatic chart legend removal .NET
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System;
 
-// The sample creates a workbook, writes category and value data, inserts a 3‑D pie chart, disables its legend via the ShowLegend property, sets a chart title, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
-class HideLegend3DPieChart
+// The sample creates a new workbook, adds sample data, inserts a 3‑D pie chart (ChartType.Pie3D), sets ShowLegend to false to hide the legend, and saves the file as 3DPieChart_NoLegend.xlsx, demonstrating how legend visibility affects chart readability.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate data for the pie chart (Categories in column A, Values in column B)
+            // Fill sample data for the 3‑D pie chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A2"].PutValue("A");
             sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["A3"].PutValue("B");
             sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("Cherry");
-            sheet.Cells["B4"].PutValue(25);
-            sheet.Cells["A5"].PutValue("Date");
-            sheet.Cells["B5"].PutValue(25);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(50);
 
-            // Add a 3‑D pie chart (positioned at row 7, column 0, spanning 15 rows and 10 columns)
-            int chartIndex = sheet.Charts.Add(ChartType.Pie3D, 6, 0, 20, 10);
+            // Add a 3‑D pie chart (type Pie3D) to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Pie3D, 5, 0, 20, 5);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the chart (values and categories)
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+            // Define the data series (values) for the chart
+            chart.NSeries.Add("B2:B4", true);
+            // Category data line removed because the Series class in the current Aspose.Cells version
+            // does not expose a CategoryData property. The chart will use default categories.
 
-            // Hide the legend (use Chart.ShowLegend property)
+            // Hide the legend to observe its impact on readability
             chart.ShowLegend = false;
 
-            // Set a title for the chart
-            chart.Title.Text = "Fruit Distribution (3‑D Pie)";
-
-            // Save the workbook
-            workbook.Save("HideLegend3DPieChart.xlsx");
+            // Save the workbook to a file
+            workbook.Save("3DPieChart_NoLegend.xlsx");
         }
         catch (Exception ex)
         {

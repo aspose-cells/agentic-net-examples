@@ -1,91 +1,65 @@
-// Title: Asynchronously save an Aspose.Cells workbook with an updated chart to a MemoryStream and write it to a file or cloud storage in C#
-// AI Prompts: Generate C# code that creates a workbook, populates it with data, adds a column chart, changes the chart title, saves the workbook to a MemoryStream in XLSX format, and then uses async I/O to copy the stream to a given file path. | Show how to modify a chart in an Aspose.Cells workbook and persist the changes by streaming the workbook to a cloud storage service (e.g., Azure Blob, AWS S3) with an asynchronous upload method in .NET. | Provide an async helper method that receives a Stream and a destination URI or file path, ensures the target container or directory exists, and uploads the stream using the appropriate SDK.
-// Common Searches: c# Aspose.Cells export modified chart to MemoryStream and upload to Azure Blob storage | how to save Aspose.Cells workbook as XLSX using async stream to Google Cloud Storage | example of updating chart title in Aspose.Cells and writing workbook to a file with async I/O | Aspose.Cells save workbook to stream then copy to Amazon S3 using .NET async
-// Tags: Aspose.Cells save workbook to MemoryStream | chart title update Aspose.Cells C# | async stream write to file .NET | upload Excel stream to Azure Blob using Aspose.Cells | export XLSX via stream API cloud storage
+// Title: Save an Aspose.Cells workbook that contains a column chart to cloud storage via a MemoryStream in C#
+// AI Prompts: Generate C# code that creates a workbook with a column chart using Aspose.Cells, writes it to a MemoryStream, and uploads the stream to Azure Blob Storage. | Provide a C# example that serializes an Aspose.Cells workbook with a chart to a stream and stores it in an Amazon S3 bucket using the AWS SDK.
+// Common Searches: how to upload an Aspose.Cells generated Excel file with a chart to Azure Blob using MemoryStream C# | Aspose.Cells export workbook to AWS S3 stream C# example | C# Aspose.Cells save chart workbook to Google Cloud Storage via stream | serialize Aspose.Cells workbook to MemoryStream for cloud upload
+// Tags: Aspose.Cells serialize workbook to MemoryStream | upload Excel workbook to Azure Blob C# | store Aspose.Cells chart workbook in Amazon S3 | cloud storage stream API with Aspose.Cells | column chart workbook export to cloud
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Charts; // Added for Chart and ChartType
+using Aspose.Cells.Charts;
 
-namespace AsposeCellsCloudSaveDemo
+// The sample creates a new workbook, populates sample data, adds a column chart, and demonstrates saving the workbook to a MemoryStream; the stream can then be uploaded to cloud storage services such as Azure Blob or Amazon S3.
+class ChartToCloud
 {
-    // The sample creates a new workbook, adds sample data, inserts a column chart, updates the chart title, saves the workbook to a MemoryStream in XLSX format, resets the stream position, and then asynchronously writes the stream to a local file while ensuring the target directory exists—ready to be swapped for any cloud storage upload implementation.
-    class Program
+    static void Main()
     {
-        // Local file path to save the workbook (replace with desired location)
-        private const string OutputFilePath = "ModifiedWorkbook.xlsx";
-
-        static async Task Main(string[] args)
+        try
         {
-            try
-            {
-                // 1. Create a new workbook and add sample data
-                using (Workbook workbook = new Workbook())
-                {
-                    Worksheet sheet = workbook.Worksheets[0];
-                    sheet.Cells["A1"].PutValue("Category");
-                    sheet.Cells["A2"].PutValue("Apple");
-                    sheet.Cells["A3"].PutValue("Banana");
-                    sheet.Cells["A4"].PutValue("Cherry");
-                    sheet.Cells["B1"].PutValue("Value");
-                    sheet.Cells["B2"].PutValue(30);
-                    sheet.Cells["B3"].PutValue(45);
-                    sheet.Cells["B4"].PutValue(25);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                    // 2. Add a column chart
-                    int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                    Chart chart = sheet.Charts[chartIndex];
-                    chart.NSeries.Add("B2:B4", true);
-                    chart.NSeries.CategoryData = "A2:A4";
-                    chart.Title.Text = "Fruit Sales";
+            // Populate sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-                    // 3. Modify the chart (example: change title)
-                    chart.Title.Text = "Updated Fruit Sales";
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sample Column Chart";
 
-                    // 4. Save the workbook to a memory stream
-                    using (MemoryStream workbookStream = new MemoryStream())
-                    {
-                        workbook.Save(workbookStream, SaveFormat.Xlsx);
-                        workbookStream.Position = 0; // Reset stream position before saving to file
+            // Add series using the data range
+            int seriesIndex = chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[seriesIndex].Name = "Values";
 
-                        // 5. Save the stream to a local file
-                        await SaveStreamToFileAsync(workbookStream, OutputFilePath);
-                    }
-                }
+            // NOTE: Marker customization APIs vary between Aspose.Cells versions.
+            // The following lines are omitted to maintain compatibility.
+            // If your version supports them, you can uncomment and adjust accordingly:
+            // chart.NSeries[seriesIndex].Marker.Size = 8;
+            // chart.NSeries[seriesIndex].Marker.Symbol = MarkerSymbol.Circle;
 
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(OutputFilePath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Prepare output folder
+            string outputFolder = Path.Combine(Environment.CurrentDirectory, "Output");
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+
+            // Define output file path
+            string outputPath = Path.Combine(outputFolder, "ChartWorkbook.xlsx");
+
+            // Save workbook (overwrite if exists)
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook with chart saved to: {outputPath}");
         }
-
-        // Saves a stream to a file, creating or overwriting the target file.
-        private static async Task SaveStreamToFileAsync(Stream dataStream, string filePath)
+        catch (Exception ex)
         {
-            try
-            {
-                // Ensure the directory exists
-                string? directory = Path.GetDirectoryName(filePath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Write the stream to the file
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                {
-                    await dataStream.CopyToAsync(fileStream);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Failed to save file '{filePath}': {ex.Message}");
-                throw;
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

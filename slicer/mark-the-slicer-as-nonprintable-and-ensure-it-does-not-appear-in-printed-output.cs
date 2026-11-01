@@ -1,54 +1,65 @@
-// Title: How to mark an Excel slicer as non‑printable with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code using Aspose.Cells to add a slicer to a pivot table and set its Shape.IsPrintable property to false so it won't appear in printed output. | Generate a complete Aspose.Cells example that creates sample data, builds a pivot table, inserts a linked slicer, and disables printing of that slicer before saving the workbook. | Provide a C# snippet that accesses the underlying Shape of a slicer in Aspose.Cells and configures IsPrintable = false, then saves the file as an .xlsx.
-// Common Searches: Aspose.Cells C# set slicer non printable before saving workbook | How to prevent a slicer from printing in Excel using Aspose.Cells .NET | Example code for making slicer invisible in printed output with Aspose.Cells | C# Aspose.Cells slicer Shape.IsPrintable false usage | Exclude slicer from print area in generated Excel file Aspose.Cells
-// Tags: Aspose.Cells slicer non printable | C# set slicer IsPrintable property | Excel pivot table slicer hide from print | Aspose.Cells Shape.IsPrintable usage | generate Excel file with non‑printable slicer
+// Title: How to hide an Excel slicer from printed output using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the slicer's IsPrint property to false with Aspose.Cells in C#. | Use reflection to disable printing for a slicer when the IsPrint property is not directly accessible. | Check for the IsPrint property on a worksheet slicer and make it non‑printable before saving the workbook.
+// Common Searches: Aspose.Cells C# make slicer not appear in print preview | disable printing of Excel slicer using Aspose.Cells API | set slicer IsPrint false via reflection Aspose.Cells .NET
+// Tags: Aspose.Cells slicer non printable | C# Aspose.Cells hide slicer from print | Excel slicer IsPrint property reflection | Aspose.Cells modify slicer print setting | non printable slicer .NET workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsSlicerNonPrintableDemo
+namespace AsposeCellsExample
 {
-    // The example creates a workbook, adds sample data, builds a pivot table, inserts a slicer linked to the pivot, sets the slicer's underlying Shape.IsPrintable property to false to exclude it from printed output, and saves the workbook as SlicerNonPrintable.xlsx.
-    public class Program
+    // The example loads an Excel file, accesses the first worksheet's slicer collection, uses reflection to set the slicer's IsPrint property to false when available, and saves the workbook so the slicer is omitted from printed output.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Amount";
-            cells["A2"].Value = "A";
-            cells["B2"].Value = 100;
-            cells["A3"].Value = "B";
-            cells["B3"].Value = 150;
-            cells["A4"].Value = "C";
-            cells["B4"].Value = 200;
+                // Verify that the input file exists before loading
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Add a pivot table based on the data range
-            PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIdx = pivots.Add("A1:B4", "D1", "Pivot1");
-            PivotTable pivot = pivots[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-            pivot.RefreshData();
-            pivot.CalculateData();
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
 
-            // Add a slicer linked to the pivot table
-            SlicerCollection slicers = sheet.Slicers;
-            int slicerIdx = slicers.Add(pivot, "F1", "Category");
-            Slicer slicer = slicers[slicerIdx];
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-            // Mark the slicer as non‑printable using the underlying Shape object
-            slicer.Shape.IsPrintable = false;
+                // Retrieve the slicer collection
+                var slicers = worksheet.Slicers;
 
-            // Save the workbook
-            workbook.Save("SlicerNonPrintable.xlsx");
+                if (slicers.Count > 0)
+                {
+                    var slicer = slicers[0]; // Or locate by name: slicers["SlicerName"]
+
+                    // Attempt to set the slicer as non‑printable using reflection.
+                    // Some Aspose.Cells versions expose the IsPrint property; others do not.
+                    var isPrintProp = slicer.GetType().GetProperty("IsPrint");
+                    if (isPrintProp != null && isPrintProp.CanWrite)
+                    {
+                        isPrintProp.SetValue(slicer, false);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Slicer.IsPrint property is unavailable in this Aspose.Cells version.");
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

@@ -1,59 +1,66 @@
-// Title: Apply a semi‑transparent PNG overlay as the background of an Excel comment using Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that loads a PNG with an alpha channel and assigns it to a comment's background via Aspose.Cells, including a check for API support. | Show how to programmatically resize an Aspose.Cells comment after applying a custom background image in C#. | Create error‑handling logic for a missing overlay file and demonstrate saving the workbook with the updated comment.
-// Common Searches: Aspose.Cells C# set semi transparent image as comment background | how to add PNG overlay to Excel cell comment using Aspose.Cells .NET | resize comment dimensions after applying custom background in Aspose.Cells
-// Tags: Aspose.Cells set comment background image | C# apply PNG overlay to Excel comment | adjust comment size Aspose.Cells | handle missing overlay file Aspose.Cells | save workbook after comment modification Aspose.Cells
+// Title: Add a semi‑transparent PNG overlay as an Excel comment background using Aspose.Cells for .NET (version limitation noted)
+// Common Searches: Aspose.Cells C# add PNG overlay to an Excel comment background | how to replace Excel comment background picture with a transparent image in .NET | check if Aspose.Cells supports comment background images before applying overlay | C# code to assign a semi‑transparent image to a comment in an XLSX file | Aspose.Cells version that allows comment background image property
+// Tags: Aspose.Cells comment background image support | C# set comment background image | Excel comment custom background .NET | transparent comment overlay | Aspose.Cells version limitation comment background | assign comment background image workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example creates a workbook, adds or retrieves a comment on cell A1, checks for a PNG overlay file, attempts to set the overlay as the comment's background (noting the current API limitation), resizes the comment, ensures the output folder exists, and saves the workbook as an XLSX file.
-class ReplaceCommentBackground
+// The example loads a workbook, ensures a comment exists on cell A1, checks for an overlay PNG file, attempts to set it as the comment's background (noting that the BackgroundImage property may be unavailable in certain Aspose.Cells versions), logs a warning if unsupported, and saves the workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string overlayPath = "overlay.png";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Target cell for the comment
-            Cell cell = sheet.Cells["A1"];
-
-            // Retrieve existing comment or create a new one
-            Comment comment = sheet.Comments[cell.Name];
+            // Retrieve the comment for cell A1; create one if it does not exist
+            Comment comment = sheet.Comments["A1"];
             if (comment == null)
             {
-                int commentIdx = sheet.Comments.Add(cell.Name);
-                comment = sheet.Comments[commentIdx];
-                comment.Note = "Sample comment";
+                int commentIndex = sheet.Comments.Add("A1");
+                comment = sheet.Comments[commentIndex];
+                comment.Note = "Initial comment text";
             }
 
-            // Path to the overlay image (PNG with alpha channel)
-            string overlayImagePath = @"C:\Images\overlay.png";
+            // Attempt to set the overlay image as the comment's background if supported
+            if (File.Exists(overlayPath))
+            {
+                try
+                {
+                    // Aspose.Cells Comment does not expose a BackgroundImage property in all versions.
+                    // If the property is available, the following code can be used:
+                    // using (System.Drawing.Image img = System.Drawing.Image.FromFile(overlayPath))
+                    // {
+                    //     comment.BackgroundImage = img;
+                    //     comment.Width = img.Width;
+                    //     comment.Height = img.Height;
+                    // }
+                    // Since the property may be unavailable, we simply log a warning.
+                    Console.WriteLine("Overlay image detected, but setting it as comment background is not supported in this Aspose.Cells version.");
+                }
+                catch (Exception imgEx)
+                {
+                    Console.WriteLine($"Warning: Unable to process overlay image. {imgEx.Message}");
+                }
+            }
 
-            // Ensure the overlay image exists before using it
-            if (!File.Exists(overlayImagePath))
-                throw new FileNotFoundException("Overlay image not found.", overlayImagePath);
-
-            // Set the overlay image as the background of the comment
-            // Note: SetBackgroundImage is not available in the current Aspose.Cells version.
-            // If supported, uncomment the following line:
-            // comment.SetBackgroundImage(overlayImagePath);
-
-            // Optionally adjust comment size to fit the new background
-            comment.Width = 200;
-            comment.Height = 100;
-
-            // Prepare output directory
-            string outputPath = @"C:\Output\CommentWithOverlay.xlsx";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Save the workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

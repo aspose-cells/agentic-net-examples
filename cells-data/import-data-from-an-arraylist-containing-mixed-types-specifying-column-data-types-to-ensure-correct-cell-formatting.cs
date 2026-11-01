@@ -1,70 +1,52 @@
-// Title: Import a mixed‑type ArrayList into an Excel worksheet and set column‑specific number formats using Aspose.Cells for .NET
-// AI Prompts: Use Cells.ImportArrayList to load a mixed‑type list (string, int, DateTime, double, bool) horizontally into a worksheet, then create and apply distinct Style objects for text, integer, date, decimal, and boolean columns. | Create a workbook, import the mixed data, define Style objects with appropriate Number or Custom formats for each column, apply them with a StyleFlag, and save the workbook as an .xlsx file.
-// Common Searches: how to load mixed‑type data from an ArrayList into an Excel sheet using Aspose.Cells C# | set different number formats for each column after ImportArrayList in Aspose.Cells | Aspose.Cells C# apply custom date and boolean formats to imported data | import horizontal data from ArrayList and format columns in a .NET workbook | specify column data types when using Cells.ImportArrayList in Aspose.Cells
-// Tags: import mixed data into worksheet Aspose.Cells | set column number format Aspose.Cells C# | apply text style to column Aspose.Cells | custom date column format Aspose.Cells | boolean true/false display format Aspose.Cells
+// Title: Import a mixed‑type ArrayList into an Excel worksheet and set date and currency formats for specific columns using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to import an ArrayList of object arrays into a worksheet starting at A1, then apply a mm‑dd‑yy date format to column C and a $#,##0.00 currency format to column D, and save the file. | Create custom Style objects for date and currency, apply them with StyleFlag to the appropriate column ranges after calling Worksheet.Cells.ImportArrayList in C#. | Handle mixed data types (string, int, DateTime, double, bool) from an ArrayList, import them into a new workbook, format the birth‑date and salary columns, and write the workbook to disk.
+// Common Searches: Aspose.Cells C# import ArrayList with mixed data types and format columns | how to apply date number format to a column after ImportArrayList in Aspose.Cells | set currency style for a specific column in an Excel file using Aspose.Cells .NET | example of using Worksheet.Cells.ImportArrayList with custom styles for date and currency | C# Aspose.Cells import object[] rows and format birthdate column
+// Tags: ImportArrayList with mixed data Aspose.Cells | apply date number format column Aspose.Cells | apply currency style column Aspose.Cells | custom StyleFlag column formatting .NET | C# worksheet data import and styling Aspose.Cells
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsArrayListImportDemo
+// Demonstrates importing a mixed‑type ArrayList into a worksheet, then applying a mm‑dd‑yy date format to the BirthDate column and a $#,##0.00 currency format to the Salary column, and finally saving the workbook as MixedData.xlsx.
+class Program
 {
-    // Shows how to create a workbook, import a mixed‑type ArrayList horizontally into the first worksheet, define and apply specific number formats (text, integer, date, double, boolean) to each column using Style objects, and save the result as MixedArrayListImport.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Prepare an ArrayList with mixed data types
-            // Column 0: Text, Column 1: Integer, Column 2: DateTime, Column 3: Double, Column 4: Boolean
-            ArrayList mixedData = new ArrayList
-            {
-                "Product",          // Text
-                150,                // Integer
-                new DateTime(2023, 12, 31), // Date
-                99.95,              // Double
-                true                // Boolean
-            };
+            // Prepare mixed data (each row is an object array)
+            ArrayList data = new ArrayList();
+            data.Add(new object[] { "John", 30, new DateTime(1990, 5, 1), 1234.56, true });
+            data.Add(new object[] { "Alice", 25, new DateTime(1995, 8, 15), 7890.12, false });
+            data.Add(new object[] { "Bob", 40, new DateTime(1980, 12, 31), 3456.78, true });
 
-            // Import the ArrayList horizontally starting at cell A1 (row 0, column 0)
-            // isVertical = false means data will be placed across columns
-            cells.ImportArrayList(mixedData, 0, 0, false);
+            // Import the data starting at cell A1 (no header row)
+            worksheet.Cells.ImportArrayList(data, 0, 0, false);
 
-            // Specify column data types / formatting to ensure correct display
-            // Column 0 (Text) - treat as text explicitly
-            Style textStyle = workbook.CreateStyle();
-            textStyle.Number = 49; // Text format
-            cells.Columns[0].ApplyStyle(textStyle, new StyleFlag { NumberFormat = true });
-
-            // Column 1 (Integer) - standard number format
-            Style intStyle = workbook.CreateStyle();
-            intStyle.Number = 1; // "0" format
-            cells.Columns[1].ApplyStyle(intStyle, new StyleFlag { NumberFormat = true });
-
-            // Column 2 (Date) - custom date format
+            // Apply date format to the BirthDate column (index 2)
             Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14; // "m/d/yyyy" format
-            // Or use a custom format string
-            // dateStyle.Custom = "yyyy-mm-dd";
-            cells.Columns[2].ApplyStyle(dateStyle, new StyleFlag { NumberFormat = true });
+            dateStyle.Number = 14; // mm-dd-yy
+            StyleFlag dateFlag = new StyleFlag { NumberFormat = true };
+            worksheet.Cells.CreateRange(0, 2, data.Count, 1).ApplyStyle(dateStyle, dateFlag);
 
-            // Column 3 (Double) - two decimal places
-            Style doubleStyle = workbook.CreateStyle();
-            doubleStyle.Number = 2; // "0.00" format
-            cells.Columns[3].ApplyStyle(doubleStyle, new StyleFlag { NumberFormat = true });
+            // Apply currency format to the Salary column (index 3)
+            Style currencyStyle = workbook.CreateStyle();
+            currencyStyle.Number = 164; // $#,##0.00
+            StyleFlag currencyFlag = new StyleFlag { NumberFormat = true };
+            worksheet.Cells.CreateRange(0, 3, data.Count, 1).ApplyStyle(currencyStyle, currencyFlag);
 
-            // Column 4 (Boolean) - display as "TRUE"/"FALSE" (default)
-            // No special formatting needed, but you can set a custom format if desired
-            // Example: "TRUE;FALSE"
-            Style boolStyle = workbook.CreateStyle();
-            boolStyle.Custom = "TRUE;FALSE";
-            cells.Columns[4].ApplyStyle(boolStyle, new StyleFlag { NumberFormat = true });
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("MixedArrayListImport.xlsx");
+            // Save the workbook
+            string outputPath = "MixedData.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

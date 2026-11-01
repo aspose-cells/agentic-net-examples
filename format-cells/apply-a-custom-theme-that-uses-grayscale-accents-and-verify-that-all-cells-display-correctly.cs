@@ -1,72 +1,65 @@
-// Title: Apply a custom grayscale font style to a cell range and verify the result using Aspose.Cells for .NET
-// AI Prompts: Create a dark gray Font style, assign it to a Style object, and apply it to the range A1:A3 in a new workbook with Aspose.Cells. | Save the workbook as GrayscaleTheme.xlsx, then open the file again and retrieve the style of cell A1. | Compare the retrieved font color with the original gray value and output whether they match. | Handle missing‑file scenarios and display a clear verification message.
-// Common Searches: how to set a custom gray font color for a range of cells using Aspose.Cells C# | verify font color of a cell after saving and reloading an Excel workbook with Aspose.Cells | apply grayscale theme to specific cells in an XLSX file using Aspose.Cells for .NET | check if a cell uses a particular RGB color after workbook reload in C# Aspose.Cells
-// Tags: apply grayscale font style Aspose.Cells | range.ApplyStyle set font color C# | verify cell font color after workbook reload Aspose.Cells | save workbook as XLSX with custom theme Aspose.Cells | create custom color style Aspose.Cells .NET
+// Title: Apply a grayscale accent theme to a workbook and validate cell background colors with Aspose.Cells for .NET
+// Common Searches: how to set a custom gray accent color for cells using Aspose.Cells in C# | verify cell background color after applying a style with Aspose.Cells .NET | apply style to a range of cells with only cell shading using StyleFlag in Aspose.Cells | save workbook with a custom theme using Aspose.Cells for .NET | check if a cell's foreground color matches a specific RGB value in Aspose.Cells
+// Tags: grayscale cell style Aspose.Cells | cell shading StyleFlag Aspose.Cells | foreground color verification Aspose.Cells | custom workbook theme Aspose.Cells .NET | save workbook with custom theme Aspose.Cells
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Drawing; // Retained for potential future drawing features
+using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-// The example creates a new workbook, defines a dark gray color, builds a font style with that color, applies the style to cells A1‑A3, saves the file as GrayscaleTheme.xlsx, reloads the workbook, reads the font color of cell A1, and prints whether the loaded color matches the defined gray.
+// The example creates a new Workbook, defines a dark gray color as a custom accent, builds a solid fill Style, and applies it to the range A1:B2 using a StyleFlag that targets only cell shading. It then confirms that cell A1's foreground color matches the defined gray and saves the file as GrayscaleTheme.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
 
-            // Define grayscale color (used later for styling)
-            Color accentGray = Color.FromArgb(0xFF, 0x33, 0x33, 0x33); // Dark gray
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some cells
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue("Header");
-            ws.Cells["A2"].PutValue(123);
-            ws.Cells["A3"].PutValue(456);
+            // Populate some cells with sample data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B2"].PutValue(456);
 
-            // Create a style that uses the defined gray for the font
-            Style accentStyle = wb.CreateStyle();
-            accentStyle.Font.Color = accentGray;
-            accentStyle.Font.Size = 12;
+            // Define a gray color to simulate Accent1
+            Color accent1Gray = Color.FromArgb(64, 64, 64); // Dark gray
 
-            // Apply the style to the range A1:A3
-            AsposeRange range = ws.Cells.CreateRange("A1:A3");
-            range.ApplyStyle(accentStyle, new StyleFlag { Font = true });
+            // Create a style that uses the defined gray as the background fill
+            Style grayStyle = workbook.CreateStyle();
+            grayStyle.ForegroundColor = accent1Gray;
+            grayStyle.Pattern = BackgroundType.Solid;
 
-            // Save the workbook
-            string filePath = "GrayscaleTheme.xlsx";
-            wb.Save(filePath);
+            // Define which style attributes to apply (only cell shading)
+            StyleFlag flag = new StyleFlag { CellShading = true };
 
-            // ---- Verification ----
-            // Reload the workbook only if the file exists
-            if (File.Exists(filePath))
+            // Apply the style to a range of cells
+            AsposeRange range = sheet.Cells.CreateRange("A1:B2");
+            range.ApplyStyle(grayStyle, flag);
+
+            // Verify that a cell's background color matches the defined gray color
+            Cell testCell = sheet.Cells["A1"];
+            Color appliedColor = testCell.GetStyle().ForegroundColor;
+
+            if (appliedColor.ToArgb() == accent1Gray.ToArgb())
             {
-                try
-                {
-                    Workbook wbVerify = new Workbook(filePath);
-                    Worksheet wsVerify = wbVerify.Worksheets[0];
-                    Style verifyStyle = wsVerify.Cells["A1"].GetStyle();
-
-                    bool usesGray = verifyStyle.Font.Color.ToArgb() == accentGray.ToArgb();
-                    Console.WriteLine("Verification - Font uses defined gray: " + usesGray);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Verification error: " + ex.Message);
-                }
+                Console.WriteLine("Theme applied correctly: cell background matches the defined gray color.");
             }
             else
             {
-                Console.WriteLine("Verification failed: file not found.");
+                Console.WriteLine("Theme verification failed.");
             }
+
+            // Save the workbook (lifecycle rule)
+            workbook.Save("GrayscaleTheme.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

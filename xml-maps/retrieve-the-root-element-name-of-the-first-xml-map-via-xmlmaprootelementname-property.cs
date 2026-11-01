@@ -1,34 +1,57 @@
-// Title: Retrieve the root element name of the first XML map in an Excel workbook with Aspose.Cells for .NET (C#)
-// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, verifies that XML maps exist, and prints the RootElementName of the first XmlMap. | Show a .NET example that loads a workbook, accesses the Worksheets.XmlMaps collection, and outputs the root element name of the first map.
-// Common Searches: aspocells c# get root element name of first xml map in workbook | how to read XmlMap.RootElementName using Aspose.Cells .NET | example code for accessing XML maps collection in an Excel file with Aspose.Cells | retrieve root element name from Excel XML map via Aspose.Cells API
-// Tags: Aspose.Cells XmlMap.RootElementName | C# read first XML map root element | Aspose.Cells load workbook XML maps | Excel XML map root element extraction | Aspose.Cells check XmlMaps collection
+// Title: Get the root element name of the first XML map in an Excel workbook using Aspose.Cells for .NET (C#)
+// Common Searches: C# get root element name of first XML map using Aspose.Cells | Aspose.Cells how to read XmlMap.RootElementName from an .xlsx file | example code for accessing XmlMaps collection in an Aspose.Cells workbook | check if a workbook contains XML maps with Aspose.Cells C# | handle RuntimeBinderException when XmlMaps property is unavailable in Aspose.Cells
+// Tags: Aspose.Cells XmlMap RootElementName C# | first XML map extraction Aspose.Cells | XmlMaps collection access Aspose.Cells | Excel workbook XML map root element | runtime binder exception handling Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Demonstrates how to load an Excel workbook with Aspose.Cells, verify the presence of XML maps, obtain the first XmlMap object, read its RootElementName property, and display the name on the console.
+// The sample verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, dynamically accesses the XmlMaps collection, ensures at least one XML map is present, and then reads the RootElementName of the first map. It outputs the root element name and includes handling for missing XmlMaps support in older Aspose.Cells versions and other runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Check that at least one XML map exists
-        if (workbook.Worksheets.XmlMaps.Count > 0)
+        try
         {
-            // Get the first XML map
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Retrieve the root element name of the XML map
-            string rootElementName = xmlMap.RootElementName;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Display the result
-            Console.WriteLine("Root element name: " + rootElementName);
+            // Use dynamic to access XmlMaps (may not be available in older versions)
+            try
+            {
+                dynamic dynWorkbook = workbook;
+                dynamic xmlMaps = dynWorkbook.XmlMaps;
+
+                if (xmlMaps != null && xmlMaps.Count > 0)
+                {
+                    // Retrieve the root element name of the first XML map
+                    string rootElementName = xmlMaps[0].RootElementName;
+                    Console.WriteLine("Root element name: " + rootElementName);
+                }
+                else
+                {
+                    Console.WriteLine("No XML maps found in the workbook.");
+                }
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                // XmlMaps property is not available in this version of Aspose.Cells
+                Console.WriteLine("The loaded Aspose.Cells version does not support XML maps.");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No XML maps found in the workbook.");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

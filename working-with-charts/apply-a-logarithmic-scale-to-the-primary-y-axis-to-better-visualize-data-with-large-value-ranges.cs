@@ -1,52 +1,62 @@
-// Title: How to apply a logarithmic scale to the primary Y‑axis of a column chart using Aspose.Cells for .NET
-// AI Prompts: Generate a column chart in a new workbook and enable a logarithmic Y axis with base 10 via the Aspose.Cells .NET API. | Set custom minimum and maximum values for the logarithmic Y axis and assign a descriptive title using Aspose.Cells chart properties.
-// Common Searches: Aspose.Cells .NET set primary Y axis to log scale for column chart | C# example of configuring logarithmic axis base and limits in Aspose.Cells | how to add a title to a logarithmic value axis in Aspose.Cells chart | create column chart with wide value range using logarithmic Y axis Aspose.Cells
-// Tags: logarithmic Y axis Aspose.Cells .NET | column chart logarithmic scaling Aspose.Cells | set chart axis min max Aspose.Cells | configure value axis base Aspose.Cells | add axis title Aspose.Cells chart
+// Title: How to set a logarithmic scale on the primary Y‑axis of an Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook, locates the first chart, and sets its primary Y‑axis to a logarithmic scale with base 10 using Aspose.Cells. | Show a snippet that verifies a worksheet contains charts before applying IsLogarithmic = true to the chart's value axis. | Demonstrate how to save the workbook after changing the chart axis to logarithmic scaling in a .NET console application.
+// Common Searches: Aspose.Cells C# set chart primary Y axis to logarithmic scale | Enable log base 10 on Excel chart axis using Aspose.Cells .NET | Change value axis to log scale in existing workbook with Aspose.Cells | C# example for applying logarithmic scaling to chart axis in Excel file
+// Tags: Aspose.Cells chart logarithmic Y axis | set primary value axis log scale .NET | logarithmic axis base 10 Aspose.Cells | modify Excel chart axis C# Aspose | apply log scaling to chart using Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Loads an existing Excel workbook, accesses the first chart on the first worksheet, enables logarithmic scaling on its primary Y‑axis (value axis) with a base of 10, and saves the modified workbook to a new file.
+class Program
 {
-    // Demonstrates creating a workbook, inserting data, adding a column chart, and configuring the primary Y axis to use a base‑10 logarithmic scale with custom min/max limits and a title, then saving the file as LogarithmicYAxisDemo.xlsx.
-    public class LogarithmicYAxisDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Add sample data with a wide range of values
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Low");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Medium");
-            sheet.Cells["B3"].PutValue(1000);
-            sheet.Cells["A4"].PutValue("High");
-            sheet.Cells["B4"].PutValue(1000000);
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Insert a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Load the workbook that contains the chart
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set the chart data source
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Apply logarithmic scaling to the primary Y axis
-            chart.ValueAxis.IsLogarithmic = true;   // Enable logarithmic scale
-            chart.ValueAxis.LogBase = 10;           // Set logarithmic base (default is 10)
-            chart.ValueAxis.MinValue = 1;           // Minimum value for the log axis
-            chart.ValueAxis.MaxValue = 10000000;    // Maximum value for the log axis
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-            // Optional: give the axis a descriptive title
-            chart.ValueAxis.Title.Text = "Value (Log Scale)";
+            // Get the first chart on the worksheet (adjust index if needed)
+            Chart chart = worksheet.Charts[0];
 
-            // Save the workbook
-            workbook.Save("LogarithmicYAxisDemo.xlsx");
+            // Access the primary Y axis (value axis) of the chart
+            Axis primaryYAxis = chart.ValueAxis;
+
+            // Enable logarithmic scaling for the Y axis
+            primaryYAxis.IsLogarithmic = true;
+
+            // Optionally set the logarithmic base (default is 10)
+            primaryYAxis.LogBase = 10;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }
